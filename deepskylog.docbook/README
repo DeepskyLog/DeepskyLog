@@ -1,0 +1,74 @@
+Producing HTML output
+
+# if my-html-styles.xsl includes docbook.xsl
+#xsltproc --output dp-um.html my-html-styles.xsl dp-um.xml
+xsltproc --output html/index.html my-html-styles.xsl deepskylog_nl.docbook
+
+# if my-html-styles.xsl includes chunk.xsl
+xsltproc my-html-styles.xsl dp-um.xml
+
+
+Producing JavaHelp output
+
+$ xsltproc my-javahelp-styles.xsl dp-um.xml
+
+# optionally you can regenerate the HTML output in order to have headers and
+# footers with Prev/Next links.
+$ xsltproc my-html-styles.xsl dp-um.xml
+
+$ jhelp --hs file:jhelpset.hs --id ch01 
+
+
+
+Produce a PDF file
+
+$ xsltproc --output dp-um.fo --stringparam fop.extensions 1 my-fo-styles.xsl dp-um.xml
+$ fop -fo dp-um.fo -pdf dp-um.pdf
+$ acroread dp-um.pdf
+
+
+
+Profile - include or exclude certain section/chapters of the documentation
+
+We have assigned the 'instrument' attribute to some of the sections specific for
+PACS, HIFI or SPIRE. Making a document with only the common parts and those
+specific for HIFI, do the following:
+
+$ xsltproc --output hifi.xml --stringparam  profile.attribute  "instrument" --stringparam profile.value "hifi" /software/share/docbook/docbook-xsl/profiling/profile.xsl dp-um.xml
+$ xsltproc my-html-styles.xsl hifi.xml
+
+
+
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Converting the XML code
+
+$ ./convert <filename>.xml
+
+# the s is introduced manually for each para that should be replaced by screen.
+# This is for single line screen areas.
+$ perl -pi -e 's#<spara>(.*?)</para>#<screen>$1</screen>#g;' <filename>.xml
+
+The convert script does the following:
+
+#!/usr/bin/perl -pi
+s/<phrase.*?>//g;
+s/<section>/$&\n/g;
+s#<para/>##g;
+s/&#x2013;/-/g;
+s/&#x201[CD];/"/g;
+s/&#x2026;/.../g;
+s/&#x201[89];/'/g;
+s/<para>/\n$&/g;
+s/<listitem>/\n$&/g;
+s/IA&gt;&gt;/&prompt;/g;
+s/IA>>/&prompt;/g;
+
+Run this script only once on an XML file or it will produce more unwanted
+newlines.
+
+In JEdit replace in a selection the </?para> where there should not be any e.g.
+within a screen area.
+
+

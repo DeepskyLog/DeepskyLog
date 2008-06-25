@@ -1,0 +1,189 @@
+<?php
+
+class Theme_vvs2 extends BaseTheme {
+
+  function system($field) {
+    $system["name"] = "vvs2";
+    $system["author"] = "Chris Dorreman";
+    $system["description"] = "opmaakprofiel VVS-site versie 3";
+
+    return $system[$field];
+  }
+
+  function header($title = "") {
+?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <title>Vereniging Voor Sterrenkunde</title>
+  <?php print theme_head($main); ?>
+  <link href="themes/vvs2/vvs.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body MARGINHEIGHT="0" MARGINWIDTH="0" <?php print theme_onload_attribute(); ?>>
+
+<TABLE CELLSPACING="0" CELLPADDING="0" WIDTH="100%">
+
+  <tr>
+    <td valign="top" class="headersitename">
+	<!-- BEGIN: search_box -->
+      <form action="search" method="post">
+        <div id="search" ALIGN="right">
+          <input class="form-text" type="text" size="15" value="" name="keys" />
+          <input class="form-submit" type="submit" value="zoek" />
+        </div>
+      </form>
+    <!-- END: search_box -->
+    </td>
+  </tr>
+	
+  <tr>
+    <td  class="headerlinks">
+      <a href="home" title="homepage">home</a>&nbsp;<span class="delimiterdark">&nbsp;&nbsp;</span>
+	  <a href="inleiding" title="voorstelling, structuur en werking van de VVS">info VVS</a>&nbsp;<span class="delimiterdark">&nbsp;&nbsp;</span>
+	  <a href="werkgroepen" title="werkgroepensites">werkgroepen</a>&nbsp;<span class="delimiterdark">&nbsp;&nbsp;</span>
+	  <a href="jvs" title="JongerenVereniging Voor Sterrenkunde">JVS</a>&nbsp;<span class="delimiterdark">&nbsp;&nbsp;</span>
+	  <a href="publicaties" title="publicaties">publicaties</a>&nbsp;<span class="delimiterdark">&nbsp;&nbsp;</span><img src="misc/menuicon.gif" border="0" align="TEXTTOP" title="enkel voor VVS leden" alt="enkel voor VVS leden">
+	  <a href="dossier" title="dossiers">dossier</a>&nbsp;<span class="delimiterdark">&nbsp;&nbsp;</span><img src="misc/menuicon.gif" border="0" align="TEXTTOP" title="enkel voor VVS leden" alt="enkel voor VVS leden">
+	  <a href="encyclopedie" title="encyclopedie sterrenkundige gebeurtenissen">het gebeurde toen</a>&nbsp;<span class="delimiterdark">&nbsp;&nbsp;</span>
+	  <a href="forum" title="forums">forum</a>&nbsp;<span class="delimiterdark">&nbsp;&nbsp;</span>
+	  <a href="?q=image" title="beeldengallerij">galerij</a>&nbsp;<span class="delimiterdark">&nbsp;&nbsp;</span>
+	  <a href="blog" title="logboek">blog</a>&nbsp;<span class="delimiterdark">&nbsp;&nbsp;</span>
+	  <a href="contact" title="contacteer ons">contact</a>
+    </td>
+  </tr>
+		
+  <tr>
+    <td class="headerspace"></td>
+  </tr>
+</table>
+
+<TABLE CELLSPACING="0" CELLPADDING="0">
+
+  <tr>
+    <td valign="top" class="leftcolumn">
+      <?php theme_blocks("left", $this); ?>
+	  <!-- Begin Nedstat Basic code -->
+		<!-- Title: Vereniging Voor Sterrenkunde -->
+		<!-- URL: http://www.vvs.be -->
+		<script language="JavaScript" src="http://m1.nedstatbasic.net/basic.js"></script>
+		<script language="JavaScript">
+		<!--
+		  nedstatbasic("AAzB7w6yplYsSJuyDutsHo+9NRwA", 1);
+		// -->
+		</script>
+		<noscript>
+		<a target="_blank" href="http://v1.nedstatbasic.net/stats?AAzB7w6yplYsSJuyDutsHo+9NRwA"><img src="nedstat.gif" border="0" width="18" height="18" nosave></a>
+		</noscript>
+	<!-- End Nedstat Basic code -->
+
+	<!-- Start of ReferStat -->
+		<script type="text/javascript" language="JavaScript">
+		<!--
+		d=document;
+		d.write("<img src=\"http://nl.nedstatbasic.net");
+		d.write("/cgi-bin/referstat.gif?");d.write("name=vvs_be&refer=");
+		d.write(escape(top.document.referrer));
+		d.write("\" width=1 height=1 align=\"right\">");
+		// -->
+		</script>
+	<!-- End of ReferStat -->
+    </td>
+    
+    <td valign="top" class="middlecolumn">
+<?php
+  }
+
+  function node($node, $main = 0) {
+?>
+      <!-- node: "<?php print $node->title; ?>" -->
+      <div class="nodetitle"><?php print $node->title; ?></div>
+      <div class="nodebody">
+        <span class="nodedate"><?php
+  $nodedate = array(format_name($node), format_date($node->created, "small"));
+
+  if (module_exist("taxonomy") && ($taxonomy = taxonomy_link("taxonomy terms", $node))) {
+    foreach ($taxonomy as $taxo) {
+      $nodedate[] = $taxo;
+    }
+  }
+
+  $nodedate[] = "&nbsp;";
+
+  print $this->links($nodedate); ?></span>
+        <?php print ($main && $node->teaser ? $node->teaser : $node->body); ?>
+      </div>
+<?php
+    if ($links = link_node($node, $main)) {
+?>
+      <div class="nodelinks"><?php print $this->links($links); ?></div>
+<?php
+    }
+  }
+
+  function comment($comment, $link = "") {
+    print "<a name=\"$comment->cid\">\n";
+
+    print "<div class=\"boxtitle\">$comment->subject</div>";
+
+    print "<div class=\"nodebody\"><span class=\"nodedate\">".$this->links(array(format_name($comment),format_date($comment->timestamp, "small"),"&nbsp;"))."</span>";
+
+    if ($comment->comment) {
+       print $comment->comment;
+    }
+
+    print "</div>";
+
+    print " <div class=\"nodelinks\">". $link ."</div>\n";
+    print "<br />\n\n";
+  }
+
+  function box($subject, $content, $region = "main") {
+?>
+
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+
+  <tr>
+    <td valign="top" class="boxtitle">
+
+    <?php print $subject; ?>
+
+    </td>
+  </tr>
+
+  <tr>
+    <td valign="top" class="boxbody">
+
+    <?php print $content; ?>
+
+    </td>
+  </tr>
+
+  </table>
+  <br />
+  <br />
+
+  <?php
+  }
+
+  function links($links, $delimiter = " &middot; ") {
+    return implode("<span class=\"delimiter
+	\">&nbsp;&nbsp;</span>", $links);
+  }
+
+  function footer() {
+?>
+    </td>
+    
+    <td valign="top" class="rightcolumn">
+      <?php theme_blocks("right", $this); ?>
+    </td>
+  </tr>
+</table>
+</body>
+</html>
+<?php
+  }
+}
+?>

@@ -1,0 +1,318 @@
+TODO DeepskyLog 3.2
+-------------------
+
+- naast de objectenlijsten zou ook waarneemlijsten interessant zijn. Stel: je bekijkt de waarnemingen van die dag en je valt plots op een waarneming
+  van iemand die een object op een speciale of interessante wijze gezien heeft. In plaats van het object toe te voegen aan de lijst van objecten die
+  wil waarnemen, kan je de waarneming toevoegen aan de lijst. Als je die dan meeneemt naar buiten of in de AN steekt (de waarneemtekst komt dan
+  als de beschrijving van het object in de AN), dan kan je die nog eens nalezen terwijl je zelf het object bekijkt. Dat vermijdt dat je het object gaat
+  waarnemen en vergeten bent wat er zo speciaal aan was. Ook het maken van artikels � la J. Hambsch wordt dan een makkie: je selecteert de interessante
+  waarnemingen van een object en je exporteert die lijst.
+
+- Deepsky startup page:
+    contains - Top 10 / top 50 objects of the past month
+             - Top 10 / top 50 objects of the month to come (based on previous years of data)
+             - Free text/news by admins (or public ?) 
+                   (e.g. challenge objects like J. Hambsch in Heelal, 
+                         next event like StarNights 
+                         new public lists that are created
+                         new catalogs that are finished like Arp or HCG
+                         nova / supernova, who makes a drawing?
+                         etc. ?)
+             - changelog with explanation about the important changes             
+             - a "links" link, bringing you to a page with links, banners etc.
+             - a don't show again checkbox + the code behind it via cookies
+             - a menu item to get to the page (handy if you checked the bow, but want the page to see anyway)
+
+- Query objects and observations that are part of a particular list or not part of a particular list.
+  Programming this is started by DE.
+
+- New object: first the RA/decl has to be entered. Then a page wit hthe nearby objects should be shown. 
+  Then the user has to check if the object is not already known (maybe a slightly different name?). 
+  If object is not present => continue with entering a new object, else, the user has the choice to enter a new observation etc.
+  Programming will start soon by DE.
+
+- Database Eye&Telescope overnemen : -> WDM
+		- OK voor alle catalogi
+		- Check objecten uit SAC en zelf toegevoegde objecten die niet in E&T zitten
+
+- XML schema :
+
+   - Observations : Extra velden
+      -smallDiameter : een schatting van de kleine diameter
+      -largeDiameter : een schatting van de grote diameter
+      -stellar : true als het object stervormig is.
+      -extended : true als het object extended is.
+      -resolved : true als de sterrenhoop resolved is.
+      -mottled : true als de galaxy mottled is.
+      -magnificationUsed
+
+   In het geval het waargenomen object een open cluster is :
+    -characterType : 
+      - A : - zie pagina 17 van http://deepsky.fg-vds.de/download/dsl8.pdf
+      - B : 
+      - C :
+      - D :
+      - E :
+      - F : 
+      - G : 
+      - H : 
+      - I : 
+      - X :
+    -unusualShape : true/false
+    -partlyUnresolved : true/false
+    -colorContrasts : true/false
+
+   - Export van XML waarnemingen
+   - Import van XML waarnemingen
+
+
+   - Boven horizon???
+
+
+TODO DeepskyLog 3.11 
+--------------------
+
+- database vervolledigen met partofs
+- database vervolledigen met catalogussen (Arp, HCG, etc.)
+- database vervolledigen met populaire namen
+
+- Fout in object DB? IC 4381 verwijst naar NGC 5008 = correct volgens ngcic.org /= MegaStar!!!
+  Correct volgens Starry Night, Correct volgens ngcic.org
+  Fout volgens Megastar, Messier45.com
+
+Ik zal zelf eens gaan kijken, maar ik vermoed dat DSL en ngcic.org juist zullen zijn. 
+Aan de deepsky foto's te zien is er niets op de oude lokatie..
+
+- observaties met "niet gezien" in, op niet gezien van zichtbaarheid zetten.
+
+TODO DeepskyLog 3.12 
+--------------------
+
+- Instrumenten : enkel nog type, diameter en f-waarde
+
+- CAT berekenen voor verschillende grensmagnitudes?
+
+- Database -> <br /> en andere html codes verwijderen uit de database...
+
+- ICQ import / export comet module
+
+- Make it possible (for the comet administrator) to upload observations from other people in the VVS format
+
+- Update the database to the Eye & Telescope database of the Deepsky objects (or to SAC 7.70, or the list from www.messier45.com, ...)
+
+- Add the following fields to the database (COMAST meeting 12/11/2006)
+   -> Instruments :
+         - Add magnification (for spotting scopes and binoculars with fixed magnification)
+         - Add picture for instruments?
+   -> Observation : Add magnification
+
+- XML import / export
+
+- There still seems to be a problem with people being able to enter observations without object. No details are seen when clicking on the observation and the user cannot delete the observation. (aka Gert Beeckman problem) JV 20061118
+
+OTHER PROBLEMS/THINGS TO DO
+---------------------------
+
+ACTION ITEMS
+
+- controleren of overal waar nul ingevuld kan worden, alles correct ingevoerd wordt bv. 0H00M of 0d00m00s enz...
+
+- probleem bij pdf files bij sommige tekeningen
+
+COMET MODULE
+
+- export to icq (3.1)
+
+- import from icq (3.1)
+
+- export to pdf (?)
+
+- manual uitbreiden naar waarnemingen van kometen (3.1)
+
+- link toevoegen naar de betekenis van de condensatiegraad (3.1)
+
+VARIA
+
+- add 'table view' link to my observations which links to table
+
+// COMETS
+
+ - Datum bij toevoegen moet 2005 zijn ipv 05
+ - NGC 7318 doorklikken op details waarneming stephans quintet -> object bestaat niet -> controleren of objecten bestaan in waarnemingsbeschrijving vooraleer link aan te maken
+ - aantal resultaten per pagina aanpasbaar maken in query
+ - Controleren op integers in url's + correcte invoer url-hacking!
+ - eerste object na inloggen bij toevoegen objecten -> 0
+ - controleren of tijd bestaat
+ - controleren of datum bestaat
+ - sorteren op andere afkortingen / documenteren?
+ - automatisch linken naar objecten in beschrijvingen uitbreiden voor alle deepsky catalogi?
+ - inverteren van tekeningen + onMouseOver
+ - ipv GET -> POST variabelen gebruiken? security!
+ - longitude en latitude in 3 velden ipv decimals
+
+* Option for eyepiece, both to add as an accessory and select during
+observation entry. I had to keep retyping my primary eyepiece for each
+entry.
+
+* Default seeing for location that could be manually overwritten.
+
+* Extended object list to other object such as planets, comets, asteroids.
+I know that they are not DSOs but I'd still like to add entries and enter
+observing reports.
+
+ - Stylesheet problem when something goes wrong during import of csv file
+
+DEEPSKYLOG VERSION 2.X PROBLEMS / EXTRAS
+----------------------------------------
+
+  -> check correct input on query observations
+
+     -> eg valid date with checkdate command
+
+  -> correct implementation of sort on constellations 
+
+     -> done on query_objects but not in overview_objects (takes too much time)
+
+  -> cross-query on objects seen/not seen by me/all
+
+  -> default image size of DSS and deepskylive chart based on object size directly
+
+  -> add checkbox to include unknown values in query results
+
+  -> idem for adapt_site.php
+
+  -> sort objects on fields not available in listing (eg ra / dec / subr)
+
+     -> necessary for making a sorted pdf-file
+
+  -> remove right column from observer/location/instruments overview (low priority)
+
+  -> RSS feed
+
+  -> automatically send a PDF-certificate to an observer when he observed eg 100 / 500 / 1000 objects + all Messier objects / Herschel 400
+
+  -> create new database overview
+
+  -> multiple standard instruments instead of 1 and list these when an observer has to make an observation (Wega)
+
+  -> multiple standard locations instead of 1 and list these when an observer has to make an observation (Wega)
+
+  -> remove name from PDF-lists when all observations of a particular observer are chosen
+
+  -> crash test?
+
+  -> add quality label for observations (observer/location) ?
+
+  -> overlap charts -> objects on multiple charts?
+
+  -> help page + contact (VVS-site) 
+
+  -> possibility to add a title to the PDF-document (eg queried parameters)
+
+  -> extra dropdown box sort on sb, ra, decl
+
+  -> W3C validation
+
+  -> add seeing scale to information of howto create a csv file + 1st line
+
+  -> dutch language file -> howto create csv file
+
+DEEPSKYLOG.BE
+-------------
+
+  -> view_observers.php on deepskylog.be -> sometimes too wide!
+
+  -> add extra spaces between observations
+
+  -> change font of table headers
+
+
+STYLES & VALIDATION
+-------------------
+
+- valid XHTML & CSS ?!
+
+  -> clean up style sheet and xhtml
+
+
+PHP-INSTALLATION PROBLEMS
+-------------------------
+
+- the file .htaccess must exist and have the line 
+
+  -> php_value memory_limit 12M
+
+
+USER INPUT
+----------
+
+- add trim & htmlspecialchars functions on user input
+
+- check on correct input from user
+
+  -> eg digits within limits
+
+  -> digits before calculating something
+
+
+ERROR & MESSAGE HANDLING
+------------------------
+
+- control if every error/message is caught inside page structures
+
+
+IMAGES
+------
+
+- only allow image files for upload
+
+
+INSTRUMENTS
+-----------
+
+- change drop-down box of instruments if 2 instruments have the same name
+
+  -> ~ locations
+
+
+OBSERVERS
+---------
+
+- detail_observer.php
+
+  -> Newbie - Intermediate - Advanced - Expert - Master of the universe
+
+
+OBJECTS
+-------
+
+- setup_query_objects.php
+
+  -> checkbox for inclusion of objects with unknown magnitude / SB
+
+- add control minmag < maxmag and minRA < maxRA -> invert  
+
+
+OBSERVATIONS
+------------
+
+- control date and time input values
+
+- 3rd box in new_observation too wide (because of long location names)
+
+- remove remaining errors (if any) when an empty database is used
+
+
+GENERAL
+-------
+
+- split validate_account.php into validate_changeaccount.php and validate_registration.php
+ 
+
+FUTURE VERSIONS
+---------------
+
+- help page with possibility of bug tracking (developer/database related)
+
+- make a map with distributions of all observers, locations and observations
+

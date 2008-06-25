@@ -1,0 +1,4761 @@
+FIPS_Country_Code	FIPS_ADM1_Code	ADM1_Name	Language_Code	Region_Code
+AA	00	Aruba (general)		1
+AC	00	Antigua and Barbuda (general)		1
+AC	01	Barbuda		1
+AC	03	Saint George		1
+AC	04	Saint John		1
+AC	05	Saint Mary		1
+AC	06	Saint Paul		1
+AC	07	Saint Peter		1
+AC	08	Saint Philip		1
+AE	00	United Arab Emirates (general)		3
+AE	01	Abu Dhaby		3
+AE	02	'Ajman		3
+AE	03	Dubayy		3
+AE	04	Al Fujayrah		3
+AE	05	Ra's al Khaymah		3
+AE	06	Ash Shariqah		3
+AE	07	Umm al Qaywayn		3
+AF	00	Afghanistan (general)		4
+AF	01	Badakhsan		4
+AF	02	Badghis		4
+AF	03	Baghlan		4
+AF	05	Bamian		4
+AF	06	Farah		4
+AF	07	Faryab		4
+AF	08	Ghazni		4
+AF	09	Ghowr		4
+AF	10	Helmand		4
+AF	11	Herat		4
+AF	13	Kabol		4
+AF	14	Kapisa		4
+AF	15	(AF15)		4
+AF	16	(AF16)		4
+AF	17	Lowgar		4
+AF	18	Nangarhar		4
+AF	19	Nemroz		4
+AF	20	Oruzgan		4
+AF	21	(AF21)		4
+AF	22	Parvan		4
+AF	23	Kandahar		4
+AF	24	Kondoz		4
+AF	26	Takhar		4
+AF	27	Vardak		4
+AF	28	Zabol		4
+AF	29	Paktia		4
+AF	30	Balkh		4
+AF	31	Jowzjan		4
+AF	32	Samangan		4
+AF	33	Sar-e Pol		4
+AF	34	Konar		4
+AF	35	Laghman		4
+AF	36	Paktika		4
+AF	37	Khowst		4
+AF	38	Nurestan		4
+AG	00	Algeria (general)		1
+AG	01	Alger		1
+AG	03	Batna		1
+AG	04	Constantine		1
+AG	06	Medea		1
+AG	07	Mostaganem		1
+AG	09	Oran		1
+AG	10	Saida		1
+AG	12	Setif		1
+AG	13	Tiaret		1
+AG	14	Tizi Ouzou		1
+AG	15	Tlemcen		1
+AG	18	Bejaia		1
+AG	19	Biskra		1
+AG	20	Blida		1
+AG	21	Bouira		1
+AG	22	Djelfa		1
+AG	23	Guelma		1
+AG	24	Jijel		1
+AG	25	Laghouat		1
+AG	26	Mascara		1
+AG	27	M'sila		1
+AG	29	Oum el Bouaghi		1
+AG	30	Sidi Bel Abbes		1
+AG	31	Skikda		1
+AG	33	Tebessa		1
+AG	34	Adrar		1
+AG	35	Ain Defla		1
+AG	36	Ain Temouchent		1
+AG	37	Annaba		1
+AG	38	Bechar		1
+AG	39	Bordj Bou Arreridj		1
+AG	40	Boumerdes		1
+AG	41	Chlef		1
+AG	42	El Bayadh		1
+AG	43	El Oued		1
+AG	44	El Tarf		1
+AG	45	Ghardaia		1
+AG	46	Illizi		1
+AG	47	Khenchela		1
+AG	48	Mila		1
+AG	49	Naama		1
+AG	50	Ouargla		1
+AG	51	Relizane		1
+AG	52	Souk Ahras		1
+AG	53	Tamanghasset		1
+AG	54	Tindouf		1
+AG	55	Tipaza		1
+AG	56	Tissemsilt		1
+AJ	00	Azerbaijan (general)		4
+AJ	01	Abseron		4
+AJ	02	Agcabadi		4
+AJ	03	Agdam		4
+AJ	04	Agdas		4
+AJ	05	Agstafa		4
+AJ	06	Agsu		4
+AJ	07	Ali Bayramli		4
+AJ	08	Astara		4
+AJ	09	Baki		4
+AJ	10	Balakan		4
+AJ	11	Barda		4
+AJ	12	Beylaqan		4
+AJ	13	Bilasuvar		4
+AJ	14	Cabrayil		4
+AJ	15	Calilabad		4
+AJ	16	Daskasan		4
+AJ	17	Davaci		4
+AJ	18	Fuzuli		4
+AJ	19	Gadabay		4
+AJ	20	Ganca		4
+AJ	21	Goranboy		4
+AJ	22	Goycay		4
+AJ	23	Haciqabul		4
+AJ	24	Imisli		4
+AJ	25	Ismayilli		4
+AJ	26	Kalbacar		4
+AJ	27	Kurdamir		4
+AJ	28	Lacin		4
+AJ	29	Lankaran		4
+AJ	30	Lankaran*		4
+AJ	31	Lerik		4
+AJ	32	Masalli		4
+AJ	33	Mingacevir*		4
+AJ	34	Naftalan*		4
+AJ	35	Naxcivan**		4
+AJ	36	Neftcala		4
+AJ	37	Oguz		4
+AJ	38	Qabala		4
+AJ	39	Qax		4
+AJ	40	Qazax		4
+AJ	41	Qobustan		4
+AJ	42	Quba		4
+AJ	43	Qubadli		4
+AJ	44	Qusar		4
+AJ	45	Saatli		4
+AJ	46	Sabirabad		4
+AJ	47	Saki		4
+AJ	48	Saki*		4
+AJ	49	Salyan		4
+AJ	50	Samaxi		4
+AJ	51	Samkir		4
+AJ	52	Samux		4
+AJ	53	Siyazan		4
+AJ	54	Sumqayit*		4
+AJ	55	Susa		4
+AJ	56	Susa*		4
+AJ	57	Tartar		4
+AJ	58	Tovuz		4
+AJ	59	Ucar		4
+AJ	60	Xacmaz		4
+AJ	61	Xankandi*		4
+AJ	62	Xanlar		4
+AJ	63	Xizi		4
+AJ	64	Xocali		4
+AJ	65	Xocavand		4
+AJ	66	Yardimli		4
+AJ	67	Yevlax		4
+AJ	68	Yevlax*		4
+AJ	69	Zangilan		4
+AJ	70	Zaqatala		4
+AJ	71	Zardab		4
+AL	00	Albania (general)		2
+AL	40	Berat		2
+AL	41	Diber		2
+AL	42	Durres		2
+AL	43	Elbasan		2
+AL	44	Fier		2
+AL	45	Gjirokaster		2
+AL	46	Korce		2
+AL	47	Kukes		2
+AL	48	Lezhe		2
+AL	49	Shkoder		2
+AL	50	Tirane		2
+AL	51	Vlore		2
+AM	00	Armenia (general)		2
+AM	01	Aragatsotn		2
+AM	02	Ararat		2
+AM	03	Armavir		2
+AM	04	Geghark'unik'		2
+AM	05	Kotayk'		2
+AM	06	Lorri		2
+AM	07	Shirak		2
+AM	08	Syunik'		2
+AM	09	Tavush		2
+AM	10	Vayots' Dzor		2
+AM	11	Yerevan*		2
+AN	00	Andorra (general)		1
+AN	01	Andorra		1
+AN	02	Canillo		1
+AN	03	Encamp		1
+AN	04	La Massana		1
+AN	05	Ordino		1
+AN	06	Sant Julia de Loria		1
+AN	07	Andorra la Vella		1
+AN	08	Escaldes-Engordany		1
+AO	00	Angola (general)		3
+AO	01	Benguela		3
+AO	02	Bie		3
+AO	03	Cabinda		3
+AO	04	Cuando Cubango		3
+AO	05	Cuanza Norte		3
+AO	06	Cuanza Sul		3
+AO	07	Cunene		3
+AO	08	Huambo		3
+AO	09	Huila		3
+AO	10	Luanda		3
+AO	12	Malanje		3
+AO	13	Namibe		3
+AO	14	Moxico		3
+AO	15	Uige		3
+AO	16	Zaire		3
+AO	17	Lunda Norte		3
+AO	18	Lunda Sul		3
+AO	19	Bengo		3
+AR	00	Argentina (general)		1
+AR	01	Buenos Aires		1
+AR	02	Catamarca		1
+AR	03	Chaco		1
+AR	04	Chubut		1
+AR	05	Cordoba		1
+AR	06	Corrientes		1
+AR	07	Distrito Federal		1
+AR	08	Entre Rios		1
+AR	09	Formosa		1
+AR	10	Jujuy		1
+AR	11	La Pampa		1
+AR	12	La Rioja		1
+AR	13	Mendoza		1
+AR	14	Misiones		1
+AR	15	Neuquen		1
+AR	16	Rio Negro		1
+AR	17	Salta		1
+AR	18	San Juan		1
+AR	19	San Luis		1
+AR	20	Santa Cruz		1
+AR	21	Santa Fe		1
+AR	22	Santiago del Estero		1
+AR	23	Tierra del Fuego, Antartida e Islas del Atlantico Sur		1
+AR	24	Tucuman		1
+AS	00	Australia (general)		1
+AS	01	Australian Capital Territory		1
+AS	02	New South Wales		1
+AS	03	Northern Territory		1
+AS	04	Queensland		1
+AS	05	South Australia		1
+AS	06	Tasmania		1
+AS	07	Victoria		1
+AS	08	Western Australia		1
+AT	00	Ashmore and Cartier Islands (general)		1
+AU	00	Austria (general)		1
+AU	01	Burgenland		1
+AU	02	Kartnen		1
+AU	03	Niederosterreich		1
+AU	04	Oberosterreich		1
+AU	05	Salzburg		1
+AU	06	Steiermark		1
+AU	07	Tirol		1
+AU	08	Vorarlberg		1
+AU	09	Wien		1
+AV	00	Anguilla (general)		1
+BA	00	Bahrain (general)		3
+BA	01	Al Hadd		3
+BA	02	Al Manamah		3
+BA	03	Al Muharraq		3
+BA	05	Jidd Hafs		3
+BA	06	Sitrah		3
+BA	07	(BA07)		3
+BA	08	Al Mintaqah al Gharbiyah		3
+BA	09	Mintaqat Juzur Hawar		3
+BA	10	Al Mintaqah ash Shamaliyah		3
+BA	11	Al Mintaqah al Wusta		3
+BA	12	Madinat 'Isa		3
+BA	13	Ar Rifa' wa al Mintaqah al Janubiyah		3
+BA	14	Madinat Hamad		3
+BB	00	Barbados (general)		1
+BB	01	Christ Church		1
+BB	02	Saint Andrew		1
+BB	03	Saint George		1
+BB	04	Saint James		1
+BB	05	Saint John		1
+BB	06	Saint Joseph		1
+BB	07	Saint Lucy		1
+BB	08	Saint Michael		1
+BB	09	Saint Peter		1
+BB	10	Saint Philip		1
+BB	11	Saint Thomas		1
+BC	00	Botswana (general)		3
+BC	01	Central		3
+BC	02	(BC02)		3
+BC	03	Ghanzi		3
+BC	04	Kgalagadi		3
+BC	05	Kgatleng		3
+BC	06	Kweneng		3
+BC	07	(BC07)		3
+BC	08	North East		3
+BC	09	South East		3
+BC	10	Southern		3
+BC	11	North West		3
+BD	00	Bermuda (general)		1
+BD	01	Devonshire		1
+BD	02	Hamilton		1
+BD	03	Hamilton		1
+BD	04	Paget		1
+BD	05	Pembroke		1
+BD	06	Saint George		1
+BD	07	Saint George's		1
+BD	08	Sandys		1
+BD	09	Smith's		1
+BD	10	Southampton		1
+BD	11	Warwick		1
+BE	00	Belgium (general)		1
+BE	01	Antwerpen		1
+BE	02	Brabant		1
+BE	03	Hainaut		1
+BE	04	Liege		1
+BE	05	Limburg		1
+BE	06	Luxembourg		1
+BE	07	Namur		1
+BE	08	Oost-Vlaanderen		1
+BE	09	West-Vlaanderen		1
+BE	10	Brabant Wallon		1
+BE	11	Bruxelles-Capitale	FR	1
+BE	12	Vlaams-Brabant		1
+BF	00	Bahamas, The (general)		1
+BF	05	Bimini		1
+BF	06	Cat Island		1
+BF	10	Exuma		1
+BF	13	Inagua		1
+BF	15	Long Island		1
+BF	16	Mayaguana		1
+BF	18	Ragged Island		1
+BF	22	Harbour Island		1
+BF	23	New Providence		1
+BF	24	Acklins and Crooked Islands		1
+BF	25	Freeport		1
+BF	26	Fresh Creek		1
+BF	27	Governor's Harbour		1
+BF	28	Green Turtle Cay		1
+BF	29	High Rock		1
+BF	30	Kemps Bay		1
+BF	31	Marsh Harbour		1
+BF	32	Nichollstown and Berry Islands		1
+BF	33	Rock Sound		1
+BF	34	Sandy Point		1
+BF	35	San Salvador and Rum Cay		1
+BG	00	Bangladesh (general)		5
+BG	80	BG80		5
+BG	81	Dhaka		5
+BG	82	Khulna		5
+BG	83	Rajshahi		5
+BG	84	Barisal		5
+BG	85	Chittagong		5
+BG	86	Sylhet		5
+BH	00	Belize (general)		1
+BH	01	Belize		1
+BH	02	Cayo		1
+BH	03	Corozal		1
+BH	04	Orange Walk		1
+BH	05	Stann Creek		1
+BH	06	Toledo		1
+BK	00	Bosnia and Herzegovina (general)		2
+BK	01	Federation of Bosnia and Herzegovina		2
+BK	02	Republika Srpska		2
+BK	BD	Brcko Distrikt		2
+BL	00	Bolivia (general)		1
+BL	01	Chuquisaca		1
+BL	02	Cochabamba		1
+BL	03	El Beni		1
+BL	04	La Paz		1
+BL	05	Oruro		1
+BL	06	Pando		1
+BL	07	Potosi≠		1
+BL	08	Santa Cruz		1
+BL	09	Tarija		1
+BM	00	Burma (general)		5
+BM	01	Rakhine State		5
+BM	02	Chin State		5
+BM	03	Ayeyarwady		5
+BM	04	Kachin State		5
+BM	05	Kayin State		5
+BM	06	Kayah State		5
+BM	07	(BM07)		5
+BM	08	Mandalay		5
+BM	09	(BM09)		5
+BM	10	Sagain		5
+BM	11	Shan State		5
+BM	12	Tanintharyi		5
+BM	13	Mon State		5
+BM	14	(BM14)		5
+BM	15	Magway		5
+BM	16	Bago		5
+BM	17	Yangon		5
+BM	22	(BM22)		5
+BN	00	Benin (general)		3
+BN	01	(BN01)		3
+BN	02	(BN02)		3
+BN	03	(BN03)		3
+BN	04	(BN04)		3
+BN	05	(BN05)		3
+BN	06	(BN06)		3
+BN	07	Alibori		3
+BN	08	Atakora		3
+BN	09	Atlantique		3
+BN	10	Borgou		3
+BN	11	Collines		3
+BN	12	Kouffo		3
+BN	13	Donga		3
+BN	14	Littoral		3
+BN	15	Mono		3
+BN	16	Oueme		3
+BN	17	Plateau		3
+BN	18	Zou		3
+BO	00	Belarus (general)		2
+BO	01	Brestskaya Voblasts'		2
+BO	02	Homyel ºskaya Voblasts'		2
+BO	03	Hrodzyenskaya Voblasts'		2
+BO	04	Mahilyowskaya Voblasts'		2
+BO	05	Minsk, Horad		2
+BO	06	Minskaya Voblasts'		2
+BO	07	Vitsyebskaya Voblasts'		2
+BP	00	Solomon Islands (general)		5
+BP	03	Malaita		5
+BP	04	Western		5
+BP	05	Central		5
+BP	06	Guadalcanal		5
+BP	07	Isabel		5
+BP	08	Makira		5
+BP	09	Temotu		5
+BP	11	Choiseul		5
+BP	12	Rennell and Bellona		5
+BR	00	Brazil (general)		1
+BR	01	Acre		1
+BR	02	Alagoas		1
+BR	03	Amapa		1
+BR	04	Amazonas		1
+BR	05	Bahia		1
+BR	06	Ceara		1
+BR	07	Distrito Federal		1
+BR	08	Espirito Santo		1
+BR	09	(BR09)		1
+BR	10	(BR10)		1
+BR	11	Mato Grosso do Sul		1
+BR	13	Maranhao		1
+BR	14	Mato Grosso		1
+BR	15	Minas Gerais		1
+BR	16	Para		1
+BR	17	Paraiba		1
+BR	18	Parana		1
+BR	19	(BR19)		1
+BR	20	Piaui		1
+BR	21	Rio de Janeiro		1
+BR	22	Rio Grande do Norte		1
+BR	23	Rio Grande do Sul		1
+BR	24	Rondonia		1
+BR	25	Roraima		1
+BR	26	Santa Catarina		1
+BR	27	Sao Paulo		1
+BR	28	Sergipe		1
+BR	29	Goias		1
+BR	30	Pernambuco		1
+BR	31	Tocantins		1
+BS	00	Bassas da India (general)		3
+BT	00	Bhutan (general)		5
+BT	05	Bumthang		5
+BT	06	Chhukha		5
+BT	07	Chirang		5
+BT	08	Daga		5
+BT	09	Geylegphug		5
+BT	10	Ha		5
+BT	11	Lhuntshi		5
+BT	12	Mongar		5
+BT	13	Paro		5
+BT	14	Pemagatsel		5
+BT	15	Punakha		5
+BT	16	Samchi		5
+BT	17	Samdrup		5
+BT	18	Shemgang		5
+BT	19	Tashigang		5
+BT	20	Thimphu		5
+BT	21	Tongsa		5
+BT	22	Wangdi Phodrang		5
+BU	00	Bulgaria (general)		2
+BU	29	(BU29)		2
+BU	30	(BU30)		2
+BU	31	(BU31)		2
+BU	32	(BU32)		2
+BU	33	(BU33)		2
+BU	34	(BU34)		2
+BU	35	(BU35)		2
+BU	36	(BU36)		2
+BU	37	(BU37)		2
+BU	38	Blagoevgrad		2
+BU	39	Burgas		2
+BU	40	Dobrich		2
+BU	41	Gabrovo		2
+BU	42	Sofiya-Grad		2
+BU	43	Khaskovo		2
+BU	44	Kurdzhali		2
+BU	45	Kyustendil		2
+BU	46	Lovech		2
+BU	47	Montana		2
+BU	48	Pazardzhit		2
+BU	49	Pernik		2
+BU	50	Pleven		2
+BU	51	Plovdiv		2
+BU	52	Razgrad		2
+BU	53	Ruse		2
+BU	54	Shumen		2
+BU	55	Silistra		2
+BU	56	Sliven		2
+BU	57	Smolyan		2
+BU	58	Sofiya		2
+BU	59	Stara Zagora		2
+BU	60	Turgovishte		2
+BU	61	Varna		2
+BU	62	Veliko Turnovo		2
+BU	63	Vidin		2
+BU	64	Vratsa		2
+BU	65	Yambol		2
+BV	00	Bouvet Island (general)		1
+BX	00	Brunei (general)		5
+BX	01	Belait		5
+BX	02	Brunei and Muara		5
+BX	03	Temburong		5
+BX	04	Tutong		5
+BY	00	Burundi (general)		1
+BY	02	Bujumbura		1
+BY	05	(BY05)		1
+BY	09	Bubanza		1
+BY	10	Bururi		1
+BY	11	Cankuzo		1
+BY	12	Cibitoke		1
+BY	13	Gitega		1
+BY	14	Karuzi		1
+BY	15	Kayanza		1
+BY	16	Kirundo		1
+BY	17	Makamba		1
+BY	18	Muyinga		1
+BY	19	Ngozi		1
+BY	20	Rutana		1
+BY	21	Ruyigi		1
+BY	22	Muramvya		1
+BY	23	Mwaro		1
+CA	00	Canada (general)		1
+CA	01	Alberta		1
+CA	02	British Columbia		1
+CA	03	Manitoba		1
+CA	04	New Brunswick		1
+CA	05	Newfoundland		1
+CA	07	Nova Scotia		1
+CA	08	Ontario		1
+CA	09	Prince Edward Island		1
+CA	10	Quebec		1
+CA	11	Saskatchewan		1
+CA	12	Yukon		1
+CA	13	Northwest Territories		1
+CA	14	Nunavut		1
+CB	00	Cambodia (general)		5
+CB	01	(CB01)		5
+CB	02	Kampong Cham		5
+CB	03	Kampong Chhnang		5
+CB	04	Kampong Spoe		5
+CB	05	Kampong Thum		5
+CB	06	(CB06)		5
+CB	07	Kandal		5
+CB	08	Kaoh Kong		5
+CB	09	Kracheh		5
+CB	10	Mondol Kiri		5
+CB	11	(CB11)		5
+CB	12	Pouthisat		5
+CB	13	Preah Vihear		5
+CB	14	Prey Veng		5
+CB	15	(CB15)		5
+CB	16	(CB16)		5
+CB	17	Stoeng Treng		5
+CB	18	Svay Rieng		5
+CB	19	Takev		5
+CB	20	(CB20)		5
+CB	21	Kampot		5
+CB	22	Phnum Penh		5
+CB	23	Rotanah Kiri		5
+CB	24	Siem Reab		5
+CB	25	Banteay Mean Cheay		5
+CB	26	Keb		5
+CB	27	Otdar Mean Cheay		5
+CB	28	Preah Seihanu		5
+CB	29	Batdambang		5
+CB	30	Palin		5
+CD	00	Chad (general)		3
+CD	01	Batha		3
+CD	02	Biltine		3
+CD	03	Borkou-Ennedi-Tibesti		3
+CD	04	Chari-Baguirmi		3
+CD	05	Guera		3
+CD	06	Kanem		3
+CD	07	Lac		3
+CD	08	Logone Occidental		3
+CD	09	Logone Oriental		3
+CD	10	Mayo-Kebbi		3
+CD	11	Moyen-Chari		3
+CD	12	Ouaddai		3
+CD	13	Salamat		3
+CD	14	Tandjile		3
+CE	00	Sri Lanka (general)		5
+CE	29	Central		5
+CE	30	North Central		5
+CE	31	North Eastern		5
+CE	32	North Western		5
+CE	33	Sabaragamuwa		5
+CE	34	Southern		5
+CE	35	Uva		5
+CE	36	Western		5
+CF	00	Congo (general)		3
+CF	01	Bouenza		3
+CF	03	CF03		3
+CF	04	Kouilou		3
+CF	05	Lekoumou		3
+CF	06	Likouala		3
+CF	07	Niari		3
+CF	08	Plateaux		3
+CF	10	Sangha		3
+CF	11	Pool		3
+CF	12	Brazzaville		3
+CF	13	Cuvette		3
+CF	14	Cuvette-Ouest		3
+CG	00	Congo, Democratic Republic of The (general)		3
+CG	01	Bandundu		3
+CG	02	Equateur		3
+CG	03	Kasai-Occidental		3
+CG	04	Kasai-Oriental		3
+CG	05	Katanga		3
+CG	06	Kinshasa		3
+CG	07	(CG07)		3
+CG	08	Bas-Congo		3
+CG	09	Orientale		3
+CG	10	Maniema		3
+CG	11	Nord-Kivu		3
+CG	12	Sud-Kivu		3
+CH	00	China (general)		5
+CH	01	Anhui		5
+CH	02	Zhejiang		5
+CH	03	Jiangxi		5
+CH	04	Jiangsu		5
+CH	05	Jilin		5
+CH	06	Qinghai		5
+CH	07	Fujian		5
+CH	08	Heilongjiang		5
+CH	09	Henan		5
+CH	10	Hebei		5
+CH	11	Hunan		5
+CH	12	Hubei		5
+CH	13	Xinjiang		5
+CH	14	Xizang		5
+CH	15	Gansu		5
+CH	16	Guangxi		5
+CH	18	Guizhou		5
+CH	19	Liaoning		5
+CH	20	Nei Mongol		5
+CH	21	Ningxia		5
+CH	22	Beijing		5
+CH	23	Shanghai		5
+CH	24	Shanxi		5
+CH	25	Shandong		5
+CH	26	Shaanxi		5
+CH	28	Tianjin		5
+CH	29	Yunnan		5
+CH	30	Guangdong		5
+CH	31	Hainan		5
+CH	32	Sichuan		5
+CH	33	Chongqing		5
+CI	00	Chile (general)		1
+CI	01	Valparaiso		1
+CI	02	Aisen del General Carlos Ibanez del Campo		1
+CI	03	Antofagasta		1
+CI	04	Araucania		1
+CI	05	Atacama		1
+CI	06	Bio-Bio		1
+CI	07	Coquimbo		1
+CI	08	Libertador General Bernardo O'Higgins		1
+CI	09	Los Lagos		1
+CI	10	Magallanes y Antartica Chilena		1
+CI	11	Maule		1
+CI	12	Region Metropolitana		1
+CI	13	Tarapaca		1
+CJ	00	Cayman Islands (general)		1
+CJ	01	Creek		1
+CJ	02	Eastern		1
+CJ	03	Midland		1
+CJ	04	South Town		1
+CJ	05	Spot Bay		1
+CJ	06	Stake Bay		1
+CJ	07	West End		1
+CJ	08	Western		1
+CK	00	Cocos (Keeling) Islands (general)		1
+CM	00	Cameroon (general)		3
+CM	04	Est		3
+CM	05	Littoral		3
+CM	07	Nord-Ouest		3
+CM	08	Ouest		3
+CM	09	Sud-Ouest		3
+CM	10	Adamaoua		3
+CM	11	Centre		3
+CM	12	Extreme-Nord		3
+CM	13	Nord		3
+CM	14	Sud		3
+CN	00	Comoros (general)		1
+CN	01	Anjouan		1
+CN	02	Grande Comore		1
+CN	03	Moheli		1
+CO	00	Colombia (general)		1
+CO	01	Amazonas		1
+CO	02	Antioquia		1
+CO	03	Arauca		1
+CO	04	Atlantico		1
+CO	05	Bolivar		1
+CO	06	Boyaca		1
+CO	07	Caldas		1
+CO	08	Caqueta		1
+CO	09	Cauca		1
+CO	10	Cesar		1
+CO	11	Choco		1
+CO	12	Cordoba		1
+CO	14	Guaviare		1
+CO	15	Guainia		1
+CO	16	Huila		1
+CO	17	La Guajira		1
+CO	18	Magdalena		1
+CO	19	Meta		1
+CO	20	Narino		1
+CO	21	Norte de Santander		1
+CO	22	Putumayo		1
+CO	23	Quindio		1
+CO	24	Risaralda		1
+CO	25	San Andres y Providencia		1
+CO	26	Santander		1
+CO	27	Sucre		1
+CO	28	Tolima		1
+CO	29	Valle del Cauca		1
+CO	30	Vaupes		1
+CO	31	Vichada		1
+CO	32	Casanare		1
+CO	33	Cundinamarca		1
+CO	34	Distrito Capital		1
+CO	35	Bolivar		1
+CO	36	Boyaca		1
+CO	37	Caldas		1
+CO	38	Magdalena		1
+CR	00	Coral Sea Islands (general)		1
+CS	00	Costa Rica (general)		1
+CS	01	Alajuela		1
+CS	02	Cartago		1
+CS	03	Guanacaste		1
+CS	04	Heredia		1
+CS	06	Limon		1
+CS	07	Puntarenas		1
+CS	08	San Jose		1
+CT	00	Central African Republic (general)		3
+CT	01	Bamingui-Bangoran		3
+CT	02	Basse-Kotto		3
+CT	03	Haute-Kotto		3
+CT	04	Mambere-Kadei		3
+CT	05	Haut-Mbomou		3
+CT	06	Kemo		3
+CT	07	Lobaye		3
+CT	08	Mbomou		3
+CT	09	Nana-Mambere		3
+CT	11	Ouaka		3
+CT	12	Ouham		3
+CT	13	Ouham-Pende		3
+CT	14	Vakaga		3
+CT	15	Nana-Grebizi		3
+CT	16	Sangha-M'baere		3
+CT	17	Ombella-Mpoko		3
+CT	18	Bangui		3
+CU	00	Cuba (general)		1
+CU	01	Pinar del Rio		1
+CU	02	Ciudad de La Habana		1
+CU	03	Matanzas		1
+CU	04	Isla de la Juventud		1
+CU	05	Camaguey		1
+CU	07	Ciego de Avila		1
+CU	08	Cienfuegos		1
+CU	09	Granma		1
+CU	10	Guantanamo		1
+CU	11	La Habana		1
+CU	12	Holguin		1
+CU	13	Las Tunas		1
+CU	14	Sancti Spiritus		1
+CU	15	Santiago de Cuba		1
+CU	16	Villa Clara		1
+CV	00	Cape Verde (general)		1
+CV	01	Boa Vista		1
+CV	02	Brava		1
+CV	03	(CV03)		1
+CV	04	Maio		1
+CV	05	Paul		1
+CV	06	(CV06)		1
+CV	07	Ribeira Grande		1
+CV	08	Sal		1
+CV	09	(CV09)		1
+CV	10	Sao Nicolau		1
+CV	11	Sao Vicente		1
+CV	12	(CV12)		1
+CV	13	Mosteiros		1
+CV	14	Praia		1
+CV	15	Santa Catarina		1
+CV	16	Santa Cruz		1
+CV	17	Sao Domingos		1
+CV	18	Sao Filipe		1
+CV	19	Sao Miguel		1
+CV	20	Tarrafal		1
+CW	00	Cook Islands (general)		1
+CY	00	Cyprus (general)		2
+CY	01	Famagusta		2
+CY	02	Kyrenia		2
+CY	03	Larnaca		2
+CY	04	Nicosia		2
+CY	05	Limassol		2
+CY	06	Paphos		2
+DA	00	Denmark (general)		1
+DA	01	Arhus		1
+DA	02	Bornholms		1
+DA	03	Frederiksborg		1
+DA	04	Fyn		1
+DA	05	Kobenhavn*		1
+DA	06	Kobenhavn		1
+DA	07	Nordjylland		1
+DA	08	Ribe		1
+DA	09	Ringkobing		1
+DA	10	Roskilde		1
+DA	11	Sonderjylland		1
+DA	12	Storstrom		1
+DA	13	Vejle		1
+DA	14	Vestsjalland		1
+DA	15	Viborg		1
+DA	16	Frederiksberg*		1
+DJ	00	Djibouti (general)		3
+DJ	01	'Ali Sabih		3
+DJ	02	Dikhil		3
+DJ	03	Djibouti		3
+DJ	04	Obock		3
+DJ	05	Tadjoura		3
+DO	00	Dominica (general)		1
+DO	02	Saint Andrew		1
+DO	03	Saint David		1
+DO	04	Saint George		1
+DO	05	Saint John		1
+DO	06	Saint Joseph		1
+DO	07	Saint Luke		1
+DO	08	Saint Mark		1
+DO	09	Saint Patrick		1
+DO	10	Saint Paul		1
+DO	11	Saint Peter		1
+DR	00	Dominican Republic (general)		1
+DR	01	Azua		1
+DR	02	Baoruco		1
+DR	03	Barahona		1
+DR	04	Dajabon		1
+DR	05	Distrito Nacional		1
+DR	06	Duarte		1
+DR	08	Espaillat		1
+DR	09	Independencia		1
+DR	10	La Altagracia		1
+DR	11	Elias Pina		1
+DR	12	La Romana		1
+DR	14	Maria Trinidad Sanchez		1
+DR	15	Monte Cristi		1
+DR	16	Pedernales		1
+DR	17	Peravia		1
+DR	18	Puerto Plata		1
+DR	19	Salcedo		1
+DR	20	Samana		1
+DR	21	Sanchez Ramirez		1
+DR	23	San Juan		1
+DR	24	San Pedro de Macoris		1
+DR	25	Santiago		1
+DR	26	Santiago Rodriguez		1
+DR	27	Valverde		1
+DR	28	El Seybo		1
+DR	29	Hato Mayor		1
+DR	30	La Vega		1
+DR	31	Monsenor Nouel		1
+DR	32	Monte Plata		1
+DR	33	San Cristobal		1
+EC	00	Ecuador (general)		1
+EC	01	Galapagos		1
+EC	02	Azuay		1
+EC	03	Bolivar		1
+EC	04	Canar		1
+EC	05	Carchi		1
+EC	06	Chimborazo		1
+EC	07	Cotopaxi		1
+EC	08	El Oro		1
+EC	09	Esmeraldas		1
+EC	10	Guayas		1
+EC	11	Imbabura		1
+EC	12	Loja		1
+EC	13	Los Rios		1
+EC	14	Manabi		1
+EC	15	Morona-Santiago		1
+EC	16	(EC16)		1
+EC	17	Pastaza		1
+EC	18	Pichincha		1
+EC	19	Tungurahua		1
+EC	20	Zamora-Chinchipe		1
+EC	22	Sucumbios		1
+EC	23	Napo		1
+EC	24	Orellana		1
+EG	00	Egypt (general)		3
+EG	01	Ad Daqahliyah		3
+EG	02	Al Bahr al Ahmar		3
+EG	03	Al Buhayrah		3
+EG	04	Al Fayyum		3
+EG	05	Al Gharbiyah		3
+EG	06	Al Iskandariyah		3
+EG	07	Al Isma'iliyah		3
+EG	08	Al Jizah		3
+EG	09	Al Minufiyah		3
+EG	10	Al Minya		3
+EG	11	Al Qahirah		3
+EG	12	Al Qalyubiyah		3
+EG	13	Al Wadi al Jadid		3
+EG	14	Ash Sharqiyah		3
+EG	15	As Suways		3
+EG	16	Aswan		3
+EG	17	Asyut		3
+EG	18	Bani Suwayf		3
+EG	19	Bur Sa'id		3
+EG	20	Dumyat		3
+EG	21	Kafr ash Shaykh		3
+EG	22	Matruh		3
+EG	23	Qina		3
+EG	24	Suhaj		3
+EG	26	Janub Sina'		3
+EG	27	Shamal Sina'		3
+EI	00	Ireland (general)		1
+EI	01	Carlow		1
+EI	02	Cavan		1
+EI	03	Clare		1
+EI	04	Cork		1
+EI	06	Donegal		1
+EI	07	Dublin		1
+EI	10	Galway		1
+EI	11	Kerry		1
+EI	12	Kildare		1
+EI	13	Kilkenny		1
+EI	14	Leitrim		1
+EI	15	Laois		1
+EI	16	Limerick		1
+EI	18	Longford		1
+EI	19	Louth		1
+EI	20	Mayo		1
+EI	21	Meath		1
+EI	22	Monaghan		1
+EI	23	Offaly		1
+EI	24	Roscommon		1
+EI	25	Sligo		1
+EI	26	Tipperary		1
+EI	27	Waterford		1
+EI	29	Westmeath		1
+EI	30	Wexford		1
+EI	31	Wicklow		1
+EK	00	Equatorial Guinea (general)		3
+EK	03	Annobon		3
+EK	04	Bioko Norte		3
+EK	05	Bioko Sur		3
+EK	06	Centro Sur		3
+EK	07	Kie-Ntem		3
+EK	08	Litoral		3
+EK	09	Wele-Nzas		3
+EN	00	Estonia (general)		2
+EN	01	Harjumaa		2
+EN	02	Hiiumaa		2
+EN	03	Ida-Virumaa		2
+EN	04	Jarvamaa		2
+EN	05	Jogevamaa		2
+EN	07	Laanemaa		2
+EN	08	Laane-Virumaa		2
+EN	11	Parnumaa		2
+EN	12	Polvamaa		2
+EN	13	Raplamaa		2
+EN	14	Saaremaa		2
+EN	18	Tartumaa		2
+EN	19	Valgamaa		2
+EN	20	Viljandimaa		2
+EN	21	Vorumaa		2
+ER	00	Eritrea (general)		3
+ES	00	El Salvador (general)		1
+ES	01	Ahuachapan		1
+ES	02	Cabanas		1
+ES	03	Chalatenango		1
+ES	04	Cuscatlan		1
+ES	05	La Libertad		1
+ES	06	La Paz		1
+ES	07	La Union		1
+ES	08	Morazan		1
+ES	09	San Miguel		1
+ES	10	San Salvador		1
+ES	11	Santa Ana		1
+ES	12	San Vicente		1
+ES	13	Sonsonate		1
+ES	14	Usulutan		1
+ET	00	Ethiopia (general)		3
+ET	01	(ET01)		3
+ET	02	(ET02)		3
+ET	03	(ET03)		3
+ET	04	(ET04)		3
+ET	05	(ET05)		3
+ET	06	(ET06)		3
+ET	07	(ET07)		3
+ET	08	(ET08)		3
+ET	09	(ET09)		3
+ET	10	(ET10)		3
+ET	11	(ET11)		3
+ET	12	(ET12)		3
+ET	13	(ET13)		3
+ET	14	(ET14)		3
+ET	15	(ET15)		3
+ET	17	(ET17)		3
+ET	18	(ET18)		3
+ET	19	(ET19)		3
+ET	20	(ET20)		3
+ET	21	(ET21)		3
+ET	22	(ET22)		3
+ET	23	(ET23)		3
+ET	24	(ET24)		3
+ET	25	(ET25)		3
+ET	26	(ET26)		3
+ET	27	(ET27)		3
+ET	28	(ET28)		3
+ET	29	(ET29)		3
+ET	30	(ET30)		3
+ET	31	(ET31)		3
+ET	32	(ET32)		3
+ET	33	(ET33)		3
+ET	34	(ET34)		3
+ET	35	(ET35)		3
+ET	37	(ET37)		3
+ET	38	(ET38)		3
+ET	39	(ET39)		3
+ET	40	(ET40)		3
+ET	41	(ET41)		3
+ET	42	(ET42)		3
+ET	43	(ET43)		3
+ET	44	Adis Abeba		3
+ET	45	Afar		3
+ET	46	Amara		3
+ET	47	Binshangul Gumuz		3
+ET	48	Dire Dawa		3
+ET	49	Gambela Hizboch		3
+ET	50	Hareri Hizb		3
+ET	51	Oromiya		3
+ET	52	Sumale		3
+ET	53	Tigray		3
+ET	54	YeDebub Biheroch Bihereseboch na Hizboch		3
+EU	00	Europa Island (general)		1
+EZ	00	Czech Republic (general)		2
+EZ	20	(EZ20)		2
+EZ	21	(EZ21)		2
+EZ	23	(EZ23)		2
+EZ	24	(EZ24)		2
+EZ	30	(EZ30)		2
+EZ	33	(EZ33)		2
+EZ	36	(EZ36)		2
+EZ	37	(EZ37)		2
+EZ	39	(EZ39)		2
+EZ	41	(EZ41)		2
+EZ	45	(EZ45)		2
+EZ	52	Praha		2
+EZ	61	(EZ61)		2
+EZ	70	(EZ70)		2
+EZ	73	(EZ73)		2
+EZ	78	Jihomoravsky Kraj		2
+EZ	79	Jihocesky Kraj		2
+EZ	80	Vysocina		2
+EZ	81	Karlovarsky Kraj		2
+EZ	82	Kralovehradecky Kraj		2
+EZ	83	Liberecky Kraj		2
+EZ	84	Olomoucky Kraj		2
+EZ	85	Moravskoslezsky Kraj		2
+EZ	86	Pardubicky Kraj		2
+EZ	87	Plzensky Kraj		2
+EZ	88	Stredocesky Kraj		2
+EZ	89	Ustecky Kraj		2
+EZ	90	Zlinsky Kraj		2
+FG	00	French Guiana (general)		1
+FI	00	Finland (general)		1
+FI	01	Ahvenanmaa		1
+FI	02	(FI02)		1
+FI	03	(FI03)		1
+FI	04	(FI04)		1
+FI	05	(FI05)		1
+FI	06	Lappi		1
+FI	07	(FI07)		1
+FI	08	Oulu Laani		1
+FI	09	(FI09)		1
+FI	10	(FI10)		1
+FI	11	(FI11)		1
+FI	12	(FI12)		1
+FI	13	Etela-Suomen Laani		1
+FI	14	Ita-Suomen Laani		1
+FI	15	Lansi-Suomen Laani		1
+FJ	00	Fiji (general)		1
+FJ	01	Central		1
+FJ	02	Eastern		1
+FJ	03	Northern		1
+FJ	04	Rotuma		1
+FJ	05	Western		1
+FK	00	Falkland Islands (Islas Malvinas) (general)		1
+FM	00	Micronesia, Federated States of (general)		5
+FM	01	Kosrae		5
+FM	02	Pohnpei		5
+FM	03	Chuuk		5
+FM	04	Yap		5
+FO	00	Faroe Islands (general)		1
+FP	00	French Polynesia (general)		1
+FR	00	France (general)		1
+FR	97	Aquitaine		1
+FR	98	Auvergne		1
+FR	99	Basse-Normandie		1
+FR	A1	Bourgogne		1
+FR	A2	Bretagne		1
+FR	A3	Centre		1
+FR	A4	Champagne-Ardenne		1
+FR	A5	Corse		1
+FR	A6	Franche-Comte		1
+FR	A7	Haute-Normandie		1
+FR	A8	Ile-de-France		1
+FR	A9	Languedoc-Roussillon		1
+FR	B1	Limousin		1
+FR	B2	Lorraine		1
+FR	B3	Midi-Pyrenees		1
+FR	B4	Nord-Pas-de-Calais		1
+FR	B5	Pays de la Loire		1
+FR	B6	Picardie		1
+FR	B7	Poitou-Charentes		1
+FR	B8	Provence-Alpes-Cote d'Azur		1
+FR	B9	Rhone-Alpes		1
+FR	C1	Alsace		1
+FS	00	French Southern and Antarctic Lands (general)		1
+GA	00	Gambia, The (general)		3
+GA	01	Banjul		3
+GA	02	Lower River		3
+GA	03	Central River		3
+GA	04	Upper River		3
+GA	05	Western		3
+GA	07	North Bank		3
+GB	00	Gabon (general)		3
+GB	01	Estuaire		3
+GB	02	Haut-Ogooue		3
+GB	03	Moyen-Ogooue		3
+GB	04	Ngounie		3
+GB	05	Nyanga		3
+GB	06	Ogooue-Ivindo		3
+GB	07	Ogooue-Lolo		3
+GB	08	Ogooue-Maritime		3
+GB	09	Woleu-Ntem		3
+GG	00	Georgia (general)		2
+GG	01	Abashis Raioni		2
+GG	02	Abkhazia**		2
+GG	03	Adigenis Raioni		2
+GG	04	Ajaria**		2
+GG	05	Akhalgoris Raioni		2
+GG	06	Akhalki'alak'is Raioni		2
+GG	07	Akhalts'ikhis Raioni		2
+GG	08	Akhmetis Raioni		2
+GG	09	Ambrolauris Raioni		2
+GG	10	Aspindzis Raioni		2
+GG	11	Baghdat'is Raioni		2
+GG	12	Bolnisis Raioni		2
+GG	13	Borjomis Raioni		2
+GG	14	Chiat'ura*		2
+GG	15	Ch'khorotsqus Raioni		2
+GG	16	Ch'okhatauris Raioni		2
+GG	17	Dedop'listsqaros Raioni		2
+GG	18	Dmanisis Raioni		2
+GG	19	Dushet'is Raioni		2
+GG	20	Gardabanis Raioni		2
+GG	21	Gori*		2
+GG	22	Goris Raioni		2
+GG	23	Gurjaanis Raioni		2
+GG	24	Javis Raioni		2
+GG	25	K'arelis Raioni		2
+GG	26	Kaspis Raioni		2
+GG	27	Kharagaulis Raioni		2
+GG	28	Khashuris Raioni		2
+GG	29	Khobis Raioni		2
+GG	30	Khonis Raioni		2
+GG	31	K'ut'aisi*		2
+GG	32	Lagodekhis Raioni		2
+GG	33	Lanch'khut'is Raioni		2
+GG	34	Lentekhis Raioni		2
+GG	35	Marneulis Raioni		2
+GG	36	Martvilis Raioni		2
+GG	37	Mestiis Raioni		2
+GG	38	Mts'khet'is Raioni		2
+GG	39	Ninotsmindis Raioni		2
+GG	40	Onis Raioni		2
+GG	41	Ozurget'is Raioni		2
+GG	42	P'ot'i*		2
+GG	43	Qazbegis Raioni		2
+GG	44	Qvarlis Raioni		2
+GG	45	Rust'avi*		2
+GG	46	Sach'kheris Raioni		2
+GG	47	Sagarejos Raioni		2
+GG	48	Samtrediis Raioni		2
+GG	49	Senakis Raioni		2
+GG	50	Sighnaghis Raioni		2
+GG	51	T'bilisi*		2
+GG	52	T'elavis Raioni		2
+GG	53	T'erjolis Raioni		2
+GG	54	T'et'ritsqaros Raioni		2
+GG	55	T'ianet'is Raioni		2
+GG	56	Tqibuli*		2
+GG	57	Ts'ageris Raioni		2
+GG	58	Tsalenjikhis Raioni		2
+GG	59	Tsalkis Raioni		2
+GG	60	Tsqaltubo*		2
+GG	61	Vanis Raioni		2
+GG	62	Zestap'onis Raioni		2
+GG	63	Zugdidi*		2
+GG	64	Zugdidis Raioni		2
+GH	00	Ghana (general)		3
+GH	01	Greater Accra		3
+GH	02	Ashanti		3
+GH	03	Brong-Ahafo		3
+GH	04	Central		3
+GH	05	Eastern		3
+GH	06	Northern		3
+GH	08	Volta		3
+GH	09	Western		3
+GH	10	Upper East		3
+GH	11	Upper West		3
+GI	00	Gibraltar (general)		1
+GJ	00	Grenada (general)		1
+GJ	01	Saint Andrew		1
+GJ	02	Saint David		1
+GJ	03	Saint George		1
+GJ	04	Saint John		1
+GJ	05	Saint Mark		1
+GJ	06	Saint Patrick		1
+GK	00	Guernsey (general)		1
+GL	00	Greenland (general)		1
+GL	01	Nordgronland		1
+GL	02	Ostgronland		1
+GL	03	Vestgronland		1
+GM	00	Germany (general)		1
+GM	01	Baden-Wurttemberg		1
+GM	02	Bayern		1
+GM	03	Bremen		1
+GM	04	Hamburg		1
+GM	05	Hessen		1
+GM	06	Niedersachsen		1
+GM	07	Nordrhein-Westfalen		1
+GM	08	Rheinland-Pfalz		1
+GM	09	Saarland		1
+GM	10	Schleswig-Holstein		1
+GM	11	Brandenburg		1
+GM	12	Mecklenburg-Vorpommern		1
+GM	13	Sachsen		1
+GM	14	Sachsen-Anhalt		1
+GM	15	Thuringen		1
+GM	16	Berlin		1
+GO	00	Glorioso Islands (general)		1
+GP	00	Guadeloupe (general)		1
+GR	00	Greece (general)		2
+GR	01	Evros		2
+GR	02	Rodhopi		2
+GR	03	Xanthi		2
+GR	04	Drama		2
+GR	05	Serrai		2
+GR	06	Kilkis		2
+GR	07	Pella		2
+GR	08	Florina		2
+GR	09	Kastoria		2
+GR	10	Grevena		2
+GR	11	Kozani		2
+GR	12	Imathia		2
+GR	13	Thessaloniki		2
+GR	14	Kavala		2
+GR	15	Chalkidiki		2
+GR	16	Pieria		2
+GR	17	Ioannina		2
+GR	18	Thesprotia		2
+GR	19	Preveza		2
+GR	20	Arta		2
+GR	21	Larisa		2
+GR	22	Trikala		2
+GR	23	Karditsa		2
+GR	24	Magnisia		2
+GR	25	Kerkyra		2
+GR	26	Lefkas		2
+GR	27	Kefallinia		2
+GR	28	Zakynthos		2
+GR	29	Fthiotis		2
+GR	30	Evrytania		2
+GR	31	Aitolia kai Akarnania		2
+GR	32	Fokidos		2
+GR	33	Voiotia		2
+GR	34	Evvoia		2
+GR	35	Attika		2
+GR	36	Argolis		2
+GR	37	Korinthia		2
+GR	38	Achaia		2
+GR	39	Ilia		2
+GR	40	Messinia		2
+GR	41	Arkadia		2
+GR	42	Lakonia		2
+GR	43	Chanion		2
+GR	44	Rethimnis		2
+GR	45	Irakleion		2
+GR	46	Lasithi		2
+GR	47	Dodekanisos		2
+GR	48	Samos		2
+GR	49	Kyklades		2
+GR	50	Chaos		2
+GR	51	Lesvos		2
+GT	00	Guatemala (general)		1
+GT	01	Alta Verapaz		1
+GT	02	Baja Verapaz		1
+GT	03	Chimaltenango		1
+GT	04	Chiquimula		1
+GT	05	El Progreso		1
+GT	06	Escuintla		1
+GT	07	Guatemala		1
+GT	08	Huehuetenango		1
+GT	09	Izabal		1
+GT	10	Jalapa		1
+GT	11	Jutiapa		1
+GT	12	Peten		1
+GT	13	Quetzaltenango		1
+GT	14	Quiche		1
+GT	15	Retalhuleu		1
+GT	16	Sacatepequez		1
+GT	17	San Marcos		1
+GT	18	Santa Rosa		1
+GT	19	Solola		1
+GT	20	Suchitepequez		1
+GT	21	Totonicapan		1
+GT	22	Zacapa		1
+GV	00	Guinea (general)		1
+GV	01	Beyla		1
+GV	02	Boffa		1
+GV	03	Boke		1
+GV	04	Conakry		1
+GV	05	Dabola		1
+GV	06	Dalaba		1
+GV	07	Dinguiraye		1
+GV	08	(GV08)		1
+GV	09	Faranah		1
+GV	10	Forecariah		1
+GV	11	Fria		1
+GV	12	Gaoual		1
+GV	13	Gueckedou		1
+GV	14	(GV14)		1
+GV	15	Kerouane		1
+GV	16	Kindia		1
+GV	17	Kissidougou		1
+GV	18	Koundara		1
+GV	19	Kouroussa		1
+GV	20	(GV20)		1
+GV	21	Macenta		1
+GV	22	Mali		1
+GV	23	Mamou		1
+GV	24	(GV24)		1
+GV	25	Pita		1
+GV	26	(GV26)		1
+GV	27	Telimele		1
+GV	28	Tougue		1
+GV	29	Yomou		1
+GV	30	Coyah		1
+GV	31	Dubreka		1
+GV	32	Kankan		1
+GV	33	Koubia		1
+GV	34	Labe		1
+GV	35	Lelouma		1
+GV	36	Lola		1
+GV	37	Mandiana		1
+GV	38	Nzerekore		1
+GV	39	Siguiri		1
+GY	00	Guyana (general)		1
+GY	10	Barima-Waini		1
+GY	11	Cuyuni-Mazaruni		1
+GY	12	Demerara-Mahaica		1
+GY	13	East Berbice-Corentyne		1
+GY	14	Essequibo Islands-West Demerara		1
+GY	15	Mahaica-Berbice		1
+GY	16	Pomeroon-Supenaam		1
+GY	17	Potaro-Siparuni		1
+GY	18	Upper Demerara-Berbice		1
+GY	19	Upper Takutu-Upper Essequibo		1
+GZ	00	Gaza Strip (general)		3
+HA	00	Haiti (general)		1
+HA	03	Nord-Ouest		1
+HA	06	Artibonite		1
+HA	07	Centre		1
+HA	08	Grand'Anse		1
+HA	09	Nord		1
+HA	10	Nord-Est		1
+HA	11	Ouest		1
+HA	12	Sud		1
+HA	13	Sud-Est		1
+HK	00	Hong Kong (general)		1
+HM	00	Heard Island and McDonald Islands (general)		1
+HO	00	Honduras (general)		1
+HO	01	Atlantida		1
+HO	02	Choluteca		1
+HO	03	Colon		1
+HO	04	Comayagua		1
+HO	05	Copan		1
+HO	06	Cortes		1
+HO	07	El Paraiso		1
+HO	08	Francisco Morazan		1
+HO	09	Gracias a Dios		1
+HO	10	Intibuca		1
+HO	11	Islas de la Bahia		1
+HO	12	La Paz		1
+HO	13	Lempira		1
+HO	14	Ocotepeque		1
+HO	15	Olancho		1
+HO	16	Santa Barbara		1
+HO	17	Valle		1
+HO	18	Yoro		1
+HR	00	Croatia (general)		2
+HR	01	Bjelovarsko-Bilogorska		2
+HR	02	Brodsko-Posavska		2
+HR	03	Dubrovacko-Neretvanska		2
+HR	04	Istarska		2
+HR	05	Karlovacka		2
+HR	06	Koprivnicko-Krizevacka		2
+HR	07	Krapinsko-Zagorska		2
+HR	08	Licko-Senjska		2
+HR	09	Medimurska		2
+HR	10	Osjecko-Baranjska		2
+HR	11	Pozesko-Slavonska		2
+HR	12	Primorsko-Goranska		2
+HR	13	Sibensko-Kniniska		2
+HR	14	Sisacko-Moslavacka		2
+HR	15	Splitsko-Dalmatinska		2
+HR	16	Varazdinska		2
+HR	17	Viroviticko-Podravska		2
+HR	18	Vukovarsko-Srijemska		2
+HR	19	Zadarska		2
+HR	20	Zagrebacka		2
+HR	21	Zagreb, Grad		2
+HU	00	Hungary (general)		2
+HU	01	Bacs-Kiskun		2
+HU	02	Baranya		2
+HU	03	Bekes		2
+HU	04	Borsod-Abauj-Zemplen		2
+HU	05	Budapest		2
+HU	06	Csongrad		2
+HU	07	Debrecen		2
+HU	08	Fejer		2
+HU	09	Gyor-Moson-Sopron		2
+HU	10	Hajdu-Bihar		2
+HU	11	Heves		2
+HU	12	Komarom-Esztergom		2
+HU	13	Miskolc		2
+HU	14	Nograd		2
+HU	15	Pecs		2
+HU	16	Pest		2
+HU	17	Somogy		2
+HU	18	Szabolcs-Szatmar-Bereg		2
+HU	19	Szeged		2
+HU	20	Jasz-Nagykun-Szolnok		2
+HU	21	Tolna		2
+HU	22	Vas		2
+HU	23	Veszprem		2
+HU	24	Zala		2
+HU	25	Gyor		2
+HU	26	Bekescsaba		2
+HU	27	Dunaujvaros		2
+HU	28	Eger		2
+HU	29	Hodmezovasarhely		2
+HU	30	Kaposvar		2
+HU	31	Kecskemet		2
+HU	32	Nagykanizsa		2
+HU	33	Nyiregyhaza		2
+HU	34	Sopron		2
+HU	35	Szekesfehervar		2
+HU	36	Szolnok		2
+HU	37	Szombathely		2
+HU	38	Tatabanya		2
+HU	39	Veszprem		2
+HU	40	Zalaegerszeg		2
+IC	00	Iceland (general)		1
+IC	01	(IC01)		1
+IC	02	(IC02)		1
+IC	03	(IC03)		1
+IC	04	(IC04)		1
+IC	05	(IC05)		1
+IC	06	(IC06)		1
+IC	07	(IC07)		1
+IC	08	(IC08)		1
+IC	09	(IC09)		1
+IC	10	(IC10)		1
+IC	11	(IC11)		1
+IC	12	(IC12)		1
+IC	13	(IC13)		1
+IC	14	(IC14)		1
+IC	15	(IC15)		1
+IC	16	(IC16)		1
+IC	17	(IC17)		1
+IC	18	(IC18)		1
+IC	19	(IC19)		1
+IC	20	(IC20)		1
+IC	21	(IC21)		1
+IC	22	(IC22)		1
+IC	23	(IC23)		1
+IC	24	(IC24)		1
+IC	25	(IC25)		1
+IC	26	(IC26)		1
+IC	27	(IC27)		1
+IC	28	(IC28)		1
+IC	29	(IC29)		1
+IC	30	(IC30)		1
+IC	31	(IC31)		1
+IC	32	(IC32)		1
+IC	33	(IC33)		1
+IC	34	(IC34)		1
+IC	35	(IC35)		1
+IC	36	(IC36)		1
+IC	37	(IC37)		1
+IC	38	Austurland		1
+IC	39	Hafudhborgarsvadhi		1
+IC	40	Nordhurland Eystra		1
+IC	41	Nordhurland Vestra		1
+IC	42	Sudhurland		1
+IC	43	Sudhurnes		1
+IC	44	Vestfirdhir		1
+IC	45	Vesturland		1
+ID	00	Indonesia (general)		5
+ID	01	Aceh		5
+ID	02	Bali		5
+ID	03	Bengkulu		5
+ID	04	Jakarta Raya		5
+ID	05	Jambi		5
+ID	06	(ID06)		5
+ID	07	Jawa Tengah		5
+ID	08	Jawa Timur		5
+ID	09	Papua		5
+ID	10	Yogyakarta		5
+ID	11	Kalimantan Barat		5
+ID	12	Kalimantan Selatan		5
+ID	13	Kalimantan Tengah		5
+ID	14	Kalimantan Timur		5
+ID	15	Lampung		5
+ID	16	(ID16)		5
+ID	17	Nusa Tenggara Barat		5
+ID	18	Nusa Tenggara Timur		5
+ID	19	Riau		5
+ID	20	Sulawesi Selatan		5
+ID	21	Sulawesi Tengah		5
+ID	22	Sulawesi Tenggara		5
+ID	23	(ID23)		5
+ID	24	Sumatera Barat		5
+ID	25	(ID25)		5
+ID	26	Sumatera Utara		5
+ID	27	Timor Timur		5
+ID	28	Maluku		5
+ID	29	Maluku Utara		5
+ID	30	Jawa Barat		5
+ID	31	Sulawesi Utara		5
+ID	32	Sumatera Selatan		5
+ID	33	Banten		5
+ID	34	Gorontalo		5
+ID	35	Kepulauan Bangka Belitung		5
+IM	00	Isle of Man (general)		1
+IN	00	India (general)		5
+IN	01	Andaman and Nicobar Islands		5
+IN	02	Andhra Pradesh		5
+IN	03	Assam		5
+IN	04	(IN04)		5
+IN	05	Chandigarh		5
+IN	06	Dadra and Nagar Haveli		5
+IN	07	Delhi		5
+IN	09	Gujarat		5
+IN	10	Haryana		5
+IN	11	Himachal Pradesh		5
+IN	12	Jammu and Kashmir		5
+IN	13	Kerala		5
+IN	14	Lakshadweep		5
+IN	15	(IN15)		5
+IN	16	Maharashtra		5
+IN	17	Manipur		5
+IN	18	Meghalaya		5
+IN	19	Karnataka		5
+IN	20	Nagaland		5
+IN	21	Orissa		5
+IN	22	Pondicherry		5
+IN	23	Punjab		5
+IN	24	Rajasthan		5
+IN	25	Tamil Nadu		5
+IN	26	Tripura		5
+IN	27	(IN27)		5
+IN	28	West Bengal		5
+IN	29	Sikkim		5
+IN	30	Arunachal Pradesh		5
+IN	31	Mizoram		5
+IN	32	Daman and Diu		5
+IN	33	Goa		5
+IN	34	Bihar		5
+IN	35	Madhya Pradesh		5
+IN	36	Uttar Pradesh		5
+IN	37	Chhattisgarh		5
+IN	38	Jharkhand		5
+IN	39	Uttaranchal		5
+IO	00	British Indian Ocean Territory (general)		1
+IP	00	Clipperton Island (general)		1
+IR	00	Iran (general)		4
+IR	01	Azarbayjan-e Gharbi		4
+IR	02	(IR02)		4
+IR	03	Chahar Mahall va Bakhtiari		4
+IR	04	Sistan va Baluchestan		4
+IR	05	Kohgiluyeh va Buyer Ahmad		4
+IR	07	Fars		4
+IR	08	Gilan		4
+IR	09	Hamadan		4
+IR	10	Ilam		4
+IR	11	Hormozgan		4
+IR	12	(IR12)		4
+IR	13	Kermanshah		4
+IR	15	Khuzestan		4
+IR	16	Kordestan		4
+IR	17	(IR17)		4
+IR	18	(IR18)		4
+IR	19	(IR19)		4
+IR	21	(IR21)		4
+IR	22	Bushehr		4
+IR	23	Lorestan		4
+IR	24	(IR24)		4
+IR	25	Semnan		4
+IR	26	Tehran		4
+IR	27	(IR27)		4
+IR	28	Esfahan		4
+IR	29	Kerman		4
+IR	30	Khorasan		4
+IR	31	Yazd		4
+IR	32	Ardebil		4
+IR	33	Azarbayjan-e Sharqi		4
+IR	34	Markazi		4
+IR	35	Mazandaran		4
+IR	36	Zanjan		4
+IR	37	Golestan		4
+IR	38	Qazvin		4
+IR	39	Qom		4
+IS	00	Israel (general)		3
+IS	01	HaDarom		3
+IS	02	HaMerkaz		3
+IS	03	HaZafon		3
+IS	04	Hefa		3
+IS	05	Tel Aviv		3
+IS	06	Yerushalayim		3
+IT	00	Italy (general)		1
+IT	01	Abruzzo		1
+IT	02	Basilicata		1
+IT	03	Calabria		1
+IT	04	Campania		1
+IT	05	Emilia-Romagna		1
+IT	06	Friuli-Venezia Giulia		1
+IT	07	Lazio		1
+IT	08	Liguria		1
+IT	09	Lombardia		1
+IT	10	Marche		1
+IT	11	Molise		1
+IT	12	Piemonte		1
+IT	13	Puglia		1
+IT	14	Sardegna		1
+IT	15	Sicilia		1
+IT	16	Toscana		1
+IT	17	Trentino-Alto Adige		1
+IT	18	Umbria		1
+IT	19	Valle d'Aosta		1
+IT	20	Veneto		1
+IV	00	Cote d'Ivoire (general)		1
+IV	01	(IV01)		1
+IV	03	(IV03)		1
+IV	04	(IV04)		1
+IV	05	(IV05)		1
+IV	06	(IV06)		1
+IV	07	(IV07)		1
+IV	11	(IV11)		1
+IV	12	(IV12)		1
+IV	14	(IV14)		1
+IV	16	(IV16)		1
+IV	17	(IV17)		1
+IV	18	(IV18)		1
+IV	20	(IV20)		1
+IV	21	(IV21)		1
+IV	23	(IV23)		1
+IV	25	(IV25)		1
+IV	26	(IV26)		1
+IV	27	(IV27)		1
+IV	28	(IV28)		1
+IV	29	(IV29)		1
+IV	30	(IV30)		1
+IV	31	(IV31)		1
+IV	32	(IV32)		1
+IV	33	(IV33)		1
+IV	34	(IV34)		1
+IV	35	(IV35)		1
+IV	36	(IV36)		1
+IV	37	(IV37)		1
+IV	38	(IV38)		1
+IV	39	(IV39)		1
+IV	40	(IV40)		1
+IV	41	(IV41)		1
+IV	42	(IV42)		1
+IV	43	(IV43)		1
+IV	44	(IV44)		1
+IV	45	(IV45)		1
+IV	46	(IV46)		1
+IV	47	(IV47)		1
+IV	48	(IV48)		1
+IV	49	(IV49)		1
+IV	50	(IV50)		1
+IV	51	(IV51)		1
+IV	52	(IV52)		1
+IV	53	(IV53)		1
+IV	54	(IV54)		1
+IV	55	(IV55)		1
+IV	56	(IV56)		1
+IV	57	(IV57)		1
+IV	58	(IV58)		1
+IV	59	(IV59)		1
+IV	60	(IV60)		1
+IV	61	(IV61)		1
+IV	62	(IV62)		1
+IV	63	(IV63)		1
+IV	64	(IV64)		1
+IV	65	(IV65)		1
+IV	66	(IV66)		1
+IV	67	(IV67)		1
+IV	68	(IV68)		1
+IV	69	(IV69)		1
+IV	70	(IV70)		1
+IV	71	(IV71)		1
+IV	72	(IV72)		1
+IV	73	(IV73)		1
+IV	74	Agneby		1
+IV	75	Bafing		1
+IV	76	Bas-Sassandra		1
+IV	77	Denguele		1
+IV	78	Dix-Huit Montagnes		1
+IV	79	Fromager		1
+IV	80	Haut-Sassandra		1
+IV	81	Lacs		1
+IV	82	Lagunes		1
+IV	83	Marahoue		1
+IV	84	Moyen-Cavally		1
+IV	85	Moyen-Comoe		1
+IV	86	N'zi-Comoe		1
+IV	87	Savanes		1
+IV	88	Sud-Bandama		1
+IV	89	Sud-Comoe		1
+IV	90	Vallee du Bandama		1
+IV	91	Worodougou		1
+IV	92	Zanzan		1
+IZ	00	Iraq (general)		3
+IZ	01	Al Anbar		3
+IZ	02	Al Basrah		3
+IZ	03	Al Muthanna		3
+IZ	04	Al Qadisiyah		3
+IZ	05	As Sulaymaniyah		3
+IZ	06	Babil		3
+IZ	07	Baghdad		3
+IZ	08	Dahuk		3
+IZ	09	Dhi Qar		3
+IZ	10	Diyala		3
+IZ	11	Arbil		3
+IZ	12	Karbala'		3
+IZ	13	At Ta'mim		3
+IZ	14	Maysan		3
+IZ	15	Ninawa		3
+IZ	16	Wasit		3
+IZ	17	An Najaf		3
+IZ	18	Salah ad Din		3
+JA	00	Japan (general)		5
+JA	01	Aichi		5
+JA	02	Akita		5
+JA	03	Aomori		5
+JA	04	Chiba		5
+JA	05	Ehime		5
+JA	06	Fukui		5
+JA	07	Fukuoka		5
+JA	08	Fukushima		5
+JA	09	Gifu		5
+JA	10	Gumma		5
+JA	11	Hiroshima		5
+JA	12	Hokkaido		5
+JA	13	Hyogo		5
+JA	14	Ibaraki		5
+JA	15	Ishikawa		5
+JA	16	Iwate		5
+JA	17	Kagawa		5
+JA	18	Kagoshima		5
+JA	19	Kanagawa		5
+JA	20	Kochi		5
+JA	21	Kumamoto		5
+JA	22	Kyoto		5
+JA	23	Mie		5
+JA	24	Miyagi		5
+JA	25	Miyazaki		5
+JA	26	Nagano		5
+JA	27	Nagasaki		5
+JA	28	Nara		5
+JA	29	Niigata		5
+JA	30	Oita		5
+JA	31	Okayama		5
+JA	32	Osaka		5
+JA	33	Saga		5
+JA	34	Saitama		5
+JA	35	Shiga		5
+JA	36	Shimane		5
+JA	37	Shizuoka		5
+JA	38	Tochigi		5
+JA	39	Tokushima		5
+JA	40	Tokyo		5
+JA	41	Tottori		5
+JA	42	Toyama		5
+JA	43	Wakayama		5
+JA	44	Yamagata		5
+JA	45	Yamaguchi		5
+JA	46	Yamanashi		5
+JA	47	Okinawa		5
+JE	00	Jersey (general)		1
+JM	00	Jamaica (general)		1
+JM	01	Clarendon		1
+JM	02	Hanover		1
+JM	04	Manchester		1
+JM	07	Portland		1
+JM	08	Saint Andrew		1
+JM	09	Saint Ann		1
+JM	10	Saint Catherine		1
+JM	11	Saint Elizabeth		1
+JM	12	Saint James		1
+JM	13	Saint Mary		1
+JM	14	Saint Thomas		1
+JM	15	Trelawny		1
+JM	16	Westmoreland		1
+JM	17	Kingston-Saint John		1
+JN	00	Jan Mayen (general)		1
+JO	00	Jordan (general)		3
+JO	02	Al Balqa'		3
+JO	07	(JO07)		3
+JO	09	Al Karak		3
+JO	10	(JO10)		3
+JO	11	(JO11)		3
+JO	12	At Tafilah		3
+JO	13	(JO13)		3
+JO	14	(JO14)		3
+JO	15	Al Mafraq		3
+JO	16	'Amman		3
+JO	17	At Tafilah		3
+JO	18	Irbid		3
+JO	19	Ma'an		3
+JO	20	Ajlun		3
+JO	21	Al'Aqabah		3
+JO	22	Jarash		3
+JO	23	Madaba		3
+JU	00	Juan de Nova Island (general)		1
+KE	00	Kenya (general)		3
+KE	01	Central		3
+KE	02	Coast		3
+KE	03	Eastern		3
+KE	05	Nairobi Area		3
+KE	06	North-Eastern		3
+KE	07	Nyanza		3
+KE	08	Rift Valley		3
+KE	09	Western		3
+KG	00	Kyrgyzstan (general)		4
+KG	01	Bishkek		4
+KG	02	Chuy		4
+KG	03	Jalal-Abad		4
+KG	04	Naryn		4
+KG	05	(KG05)		4
+KG	06	Talas		4
+KG	07	Ysyk-Kol		4
+KG	08	Osh		4
+KG	09	Batken		4
+KN	00	North Korea (general)		5
+KN	01	Chagang-do		5
+KN	03	Hamgyong-namdo		5
+KN	06	Hwanghae-namdo		5
+KN	07	Hwanghae-bukto		5
+KN	08	Kaesong-si		5
+KN	09	Kangwon-do		5
+KN	11	P'yongan-bukto		5
+KN	12	P'yongyang-si		5
+KN	13	Yanggang-do		5
+KN	14	Namp'o-si		5
+KN	15	P'yongan-namdo		5
+KN	16	(KN16)		5
+KN	17	Hamgyong-bukto		5
+KN	18	Najin Sonbong-si		5
+KR	00	Kiribati (general)		5
+KR	01	Gilbert Islands		5
+KR	02	Line Islands		5
+KR	03	Phoenix Islands		5
+KS	00	South Korea (general)		5
+KS	01	Cheju-do		5
+KS	03	Cholla-bukto		5
+KS	05	Ch'ungch'ong-bukto		5
+KS	06	Kangwon-do		5
+KS	10	Pusan-gwangyoksi		5
+KS	11	Soul-t'≈≠kpyolsi		5
+KS	12	Inch'on-gwangyoksi		5
+KS	13	Kyonggi-do		5
+KS	14	Kyongsang-bukto		5
+KS	15	Taegu-gwangyoksi		5
+KS	16	Cholla-namdo		5
+KS	17	Ch'ungch'ong-namdo		5
+KS	18	Kwangju-gwangyoksi		5
+KS	19	Taejon-gwangyoksi		5
+KS	20	Kyongsang-namdo		5
+KS	21	Ulsan-gwangyoksi		5
+KT	00	Christmas Island (general)		1
+KU	00	Kuwait (general)		3
+KU	02	Al Asimah		3
+KU	03	Hawalli		3
+KU	04	Al Ahmadi		3
+KU	05	Al Jahra'		3
+KU	06	Al Farwaniyah		3
+KZ	00	Kazakhstan (general)		4
+KZ	01	Almaty		4
+KZ	02	Almaty Qalasy		4
+KZ	03	Aqmola		4
+KZ	04	Aqtobe		4
+KZ	05	Astana Qalasy		4
+KZ	06	Atyrau		4
+KZ	07	Batys Qazaqstan		4
+KZ	08	Bayqongyr Qalasy		4
+KZ	09	Mangghystau		4
+KZ	10	Ongtustik Qazaqstan		4
+KZ	11	Pavlodar		4
+KZ	12	Qaraghandy		4
+KZ	13	Qostanay		4
+KZ	14	Qyzylorda		4
+KZ	15	Shyghys Qazaqstan		4
+KZ	16	Soltustik Qazaqstan		4
+KZ	17	Zhambyl		4
+LA	00	Laos (general)		5
+LA	01	Attapu		5
+LA	02	Champasak		5
+LA	03	Houaphan		5
+LA	04	(LA04)		5
+LA	05	(LA05)		5
+LA	06	(LA06)		5
+LA	07	Oudomxai		5
+LA	08	(LA08)		5
+LA	09	(LA09)		5
+LA	10	(LA10)		5
+LA	11	(LA11)		5
+LA	13	Xiagnabouli		5
+LA	14	Xiangkhoang		5
+LA	15	Khammouan		5
+LA	16	Loungnamtha		5
+LA	17	Louangphabang		5
+LA	18	Phongsali		5
+LA	19	Salavan		5
+LA	20	Savannahkhet		5
+LA	21	(LA21)		5
+LA	22	Bokeo		5
+LA	23	Bolikhamxai		5
+LA	24	Viangchan		5
+LA	25	Xaisomboun		5
+LA	26	Xekong		5
+LA	27	Viangchan		5
+LE	00	Lebanon (general)		3
+LE	01	Beqaa		3
+LE	02	(LE02)		3
+LE	03	Liban-Nord		3
+LE	04	Beyrouth		3
+LE	05	Mont-Liban		3
+LE	06	Liban-Sud		3
+LE	07	Nabatiye		3
+LG	00	Latvia (general)		2
+LG	01	Aizkraukles Rajons		2
+LG	02	Aluksnes Rajons		2
+LG	03	Balvu Rajons		2
+LG	04	Bauskas Rajons		2
+LG	05	Cesu Rajons		2
+LG	06	Daugavpils		2
+LG	07	Daugavpils Rajons		2
+LG	08	Dobeles Rajons		2
+LG	09	Gulbenes Rajons		2
+LG	10	Jekabpils Rajons		2
+LG	11	Jelgava		2
+LG	12	Jelgavas Rajons		2
+LG	13	Jurmala		2
+LG	14	Kraslavas Rajons		2
+LG	15	Kuldigas Rajons		2
+LG	16	Liepaja		2
+LG	17	Liepajas Rajons		2
+LG	18	Limbazu Rajons		2
+LG	19	Ludzas Rajons		2
+LG	20	Madonas Rajons		2
+LG	21	Ogres Rajons		2
+LG	22	Preilu Rajons		2
+LG	23	Rezekne		2
+LG	24	Rezeknes Rajons		2
+LG	25	Riga		2
+LG	26	Rigas Rajons		2
+LG	27	Saldus Rajons		2
+LG	28	Talsu Rajons		2
+LG	29	Tukuma Rajons		2
+LG	30	Valkas Rajons		2
+LG	31	Valmieras Rajons		2
+LG	32	Ventspils		2
+LG	33	Ventspils Rajons		2
+LH	00	Lithuania (general)		2
+LH	40	(LH40)		2
+LH	56	Alytaus Apskritis		2
+LH	57	Kauno Apskritis		2
+LH	58	Klaipedos Apskritis		2
+LH	59	Marijampoles Apskritis		2
+LH	60	Panevezio Apskritis		2
+LH	61	Siauliu Apskritis		2
+LH	62	Taurages Apskritis		2
+LH	63	Telsiu Apskritis		2
+LH	64	Utenos Apskritis		2
+LH	65	Vilniaus Apskritis		2
+LI	00	Liberia (general)		3
+LI	01	Bong		3
+LI	02	(LI02)		3
+LI	04	(LI04)		3
+LI	05	(LI05)		3
+LI	07	Monrovia		3
+LI	08	(LI08)		3
+LI	09	Nimba		3
+LI	10	Sinoe		3
+LI	11	Grand Bassa		3
+LI	12	Grand Cape Mount		3
+LI	13	Maryland		3
+LI	14	Montserrado		3
+LI	15	Bomi		3
+LI	16	Grand Kru		3
+LI	17	Margibi		3
+LI	18	River Cess		3
+LI	19	Grand Gedeh		3
+LI	20	Lofa		3
+LI	21	Gbarpolu		3
+LI	22	River Gee		3
+LO	00	Slovakia (general)		2
+LO	01	Banskobystricky		2
+LO	02	Bratislavsky		2
+LO	03	Kosicky		2
+LO	04	Nitriansky		2
+LO	05	Presovsky		2
+LO	06	Trenciansky		2
+LO	07	Trnavsky		2
+LO	08	Zilinsky		2
+LS	00	Liechtenstein (general)		1
+LS	01	Balzers		1
+LS	02	Eschen		1
+LS	03	Gamprin		1
+LS	04	Mauren		1
+LS	05	Planken		1
+LS	06	Ruggell		1
+LS	07	Schaan		1
+LS	08	Schellenberg		1
+LS	09	Triesen		1
+LS	10	Triesenberg		1
+LS	11	Vaduz		1
+LT	00	Lesotho (general)		3
+LT	01	(LT01)		3
+LT	02	(LT02)		3
+LT	03	(LT03)		3
+LT	04	(LT04)		3
+LT	05	(LT05)		3
+LT	06	(LT06)		3
+LT	10	Berea		3
+LT	11	Butha-Buthe		3
+LT	12	Leribe		3
+LT	13	Mafeteng		3
+LT	14	Maseru		3
+LT	15	Mohales Hoek		3
+LT	16	Mokhotlong		3
+LT	17	Qacha's Nek		3
+LT	18	Quthing		3
+LT	19	Thaba-Tseka		3
+LU	00	Luxembourg (general)		1
+LU	01	Diekirch		1
+LU	02	Grevenmacher		1
+LU	03	Luxembourg		1
+LY	00	Libya (general)		3
+LY	02	(LY02)		3
+LY	03	Al Aziziyah		3
+LY	04	(LY04)		3
+LY	05	Al Jufrah		3
+LY	06	(LY06)		3
+LY	08	Al Kufrah		3
+LY	09	(LY09)		3
+LY	10	(LY10)		3
+LY	11	(LY11)		3
+LY	12	(LY12)		3
+LY	13	Ash Shati'		3
+LY	15	(LY15)		3
+LY	18	(LY18)		3
+LY	19	(LY19)		3
+LY	23	(LY23)		3
+LY	24	(LY24)		3
+LY	25	(LY25)		3
+LY	26	(LY26)		3
+LY	27	(LY27)		3
+LY	29	(LY29)		3
+LY	30	Murzuq		3
+LY	31	(LY31)		3
+LY	32	(LY32)		3
+LY	33	(LY33)		3
+LY	34	Sabha		3
+LY	35	(LY35)		3
+LY	36	(LY36)		3
+LY	37	(LY37)		3
+LY	39	(LY39)		3
+LY	41	Tarhunah		3
+LY	42	Tubruq		3
+LY	43	(LY43)		3
+LY	45	Zlitan		3
+LY	46	(LY46)		3
+LY	47	Ajdabiya		3
+LY	48	Al Fatih		3
+LY	49	Al Jabal al Akhdar		3
+LY	50	Al Khums		3
+LY	51	An Nuqat al Khams		3
+LY	52	Awbari		3
+LY	53	Az Zawiyah		3
+LY	54	Banghazi		3
+LY	55	Darnah		3
+LY	56	Ghadamis		3
+LY	57	Gharyan		3
+LY	58	Misratah		3
+LY	59	Sawfajjin		3
+LY	60	Surt		3
+LY	61	Tarabulus		3
+LY	62	Yafran		3
+MA	00	Madagascar (general)		3
+MA	01	Antsiranana		3
+MA	02	Fianarantsoa		3
+MA	03	Mahajanga		3
+MA	04	Toamasina		3
+MA	05	Antananarivo		3
+MA	06	Toliara		3
+MB	00	Martinique (general)		1
+MC	00	Macau (general)		1
+MC	01	Ilhas		1
+MC	02	Macau		1
+MD	00	Moldova (general)		2
+MD	01	(MD01)		2
+MD	02	(MD02)		2
+MD	03	(MD03)		2
+MD	04	(MD04)		2
+MD	05	(MD05)		2
+MD	06	Cahul		2
+MD	07	(MD07)		2
+MD	08	(MD08)		2
+MD	09	Camenca		2
+MD	10	Cantemir		2
+MD	11	Causeni		2
+MD	12	Ceadar-Lunga		2
+MD	13	Chisinau		2
+MD	14	Cimislia		2
+MD	15	Comrat		2
+MD	16	Criuleni		2
+MD	17	Donduseni		2
+MD	18	Drochia		2
+MD	19	Dubasari		2
+MD	20	Edinet		2
+MD	21	Falesti		2
+MD	22	Floresti		2
+MD	23	Gagauzia		2
+MD	24	Glodeni		2
+MD	25	Grigoriopol		2
+MD	26	Hancesti		2
+MD	27	Ialoveni		2
+MD	28	Leova		2
+MD	29	Nisporeni		2
+MD	30	Ocnita		2
+MD	31	Orhei		2
+MD	32	Rezina		2
+MD	33	Rabnita		2
+MD	34	Riscani		2
+MD	35	Sangerei		2
+MD	36	Slobozia		2
+MD	37	Soldanesti		2
+MD	38	Soroca		2
+MD	39	Stefan-Voda		2
+MD	40	Straseni		2
+MD	41	Taraclia		2
+MD	42	Telenesti		2
+MD	43	Tiraspol		2
+MD	44	Ungheni		2
+MD	45	Vulcanesti		2
+MD	46	Balti		2
+MD	47	Cahul		2
+MD	48	Chisinau		2
+MD	49	Stinga Nistrului		2
+MD	50	Edinet		2
+MD	51	Gagauzia		2
+MD	52	Lapusna		2
+MD	53	Orhei		2
+MD	54	Soroca		2
+MD	55	Tighina		2
+MD	56	Ungheni		2
+MF	00	Mayotte (general)		1
+MG	00	Mongolia (general)		5
+MG	01	Arhangay		5
+MG	02	Bayanhongor		5
+MG	03	Bayan-Olgiy		5
+MG	06	Dornod		5
+MG	07	Dornogovi≠		5
+MG	08	Dundgovi≠		5
+MG	09	Dzavhan		5
+MG	10	Govi-Altay		5
+MG	11	Hentiy		5
+MG	12	Hovd		5
+MG	13	Hovsgol		5
+MG	14	Omnogovi≠		5
+MG	15	Ovorhangay		5
+MG	16	Selenge		5
+MG	17	Suhbaatar		5
+MG	18	Tov		5
+MG	19	Uvs		5
+MG	20	Ulaanbaatar		5
+MG	21	Bulgan		5
+MG	23	Darhan Uul		5
+MG	24	Govi-Sumber		5
+MG	25	Orhon		5
+MH	00	Montserrat (general)		1
+MH	01	Saint Anthony		1
+MH	02	Saint Georges		1
+MH	03	Saint Peter		1
+MI	00	Malawi (general)		3
+MI	02	Chikwawa		3
+MI	03	Chiradzulu		3
+MI	04	Chitipa		3
+MI	05	Thyolo		3
+MI	06	Dedza		3
+MI	07	Dowa		3
+MI	08	Karonga		3
+MI	09	Kasungu		3
+MI	10	(MI10)		3
+MI	11	Lilongwe		3
+MI	12	Mangochi		3
+MI	13	Mchinji		3
+MI	14	(MI14)		3
+MI	15	Mzimba		3
+MI	16	Ntcheu		3
+MI	17	Nkhata Bay		3
+MI	18	Nkhotakota		3
+MI	19	Nsanje		3
+MI	20	Ntchisi		3
+MI	21	Rumphi		3
+MI	22	Salima		3
+MI	23	Zomba		3
+MI	24	Blantyre		3
+MI	25	Mwanza		3
+MI	26	Balaka		3
+MI	27	Likoma		3
+MI	28	Machinga		3
+MI	29	Mulanje		3
+MI	30	Phalombe		3
+MK	00	Macedonia, The Former Yugoslav Republic of (general)		2
+MK	01	Aracinovo		2
+MK	02	Bac		2
+MK	03	Belcista		2
+MK	04	Berovo		2
+MK	05	Bistrica		2
+MK	06	Bitola		2
+MK	07	Blatec		2
+MK	08	Bogdanci		2
+MK	09	Bogomila		2
+MK	10	Bogovinje		2
+MK	11	Bosilovo		2
+MK	12	Brvenica		2
+MK	13	Cair		2
+MK	14	Capari		2
+MK	15	Caska		2
+MK	16	Cegrana		2
+MK	17	Centar		2
+MK	18	Centar Zupa		2
+MK	19	Cecinovo		2
+MK	20	Cucer-Sandevo		2
+MK	21	Debar		2
+MK	22	Delcevo		2
+MK	23	Delogozdi		2
+MK	24	Demir Hisar		2
+MK	25	Demir Kapija		2
+MK	26	Dobrusevo		2
+MK	27	Dolna Banjica		2
+MK	28	Dolneni		2
+MK	29	Dorce Petrov		2
+MK	30	Drugovo		2
+MK	31	Dzepciste		2
+MK	32	Gazi Baba		2
+MK	33	Gevgelija		2
+MK	34	Gostivar		2
+MK	35	Gradsko		2
+MK	36	Ilinden		2
+MK	37	Izvor		2
+MK	38	Jegunovce		2
+MK	39	Kamenjane		2
+MK	40	Karbinci		2
+MK	41	Karpos		2
+MK	42	Kavadarci		2
+MK	43	Kicevo		2
+MK	44	Kisela Voda		2
+MK	45	Klecevce		2
+MK	46	Kocani		2
+MK	47	Konce		2
+MK	48	Kondovo		2
+MK	49	Konopiste		2
+MK	50	Kosel		2
+MK	51	Kratovo		2
+MK	52	Kriva Palanka		2
+MK	53	Krivogastani		2
+MK	54	Krusevo		2
+MK	55	Kuklis		2
+MK	56	Kukurecani		2
+MK	57	Kumanovo		2
+MK	58	Labunista		2
+MK	59	Lipkovo		2
+MK	60	Lozovo		2
+MK	61	Lukovo		2
+MK	62	Makedonska Kamenica		2
+MK	63	Makedonski Brod		2
+MK	64	Mavrovi Anovi		2
+MK	65	Meseista		2
+MK	66	Miravci		2
+MK	67	Mogila		2
+MK	68	Murtino		2
+MK	69	Negotino		2
+MK	70	Negotino-Polosko		2
+MK	71	Novaci		2
+MK	72	Novo Selo		2
+MK	73	Oblesevo		2
+MK	74	Ohrid		2
+MK	75	Orasac		2
+MK	76	Orizari		2
+MK	77	Oslomej		2
+MK	78	Pehcevo		2
+MK	79	Petrovec		2
+MK	80	Plasnica		2
+MK	81	Podares		2
+MK	82	Prilep		2
+MK	83	Probistip		2
+MK	84	Radovis		2
+MK	85	Rankovce		2
+MK	86	Resen		2
+MK	87	Rosoman		2
+MK	88	Rostusa		2
+MK	89	Samokov		2
+MK	90	Saraj		2
+MK	91	Sipkovica		2
+MK	92	Sopiste		2
+MK	93	Sopotnica		2
+MK	94	Srbinovo		2
+MK	95	Staravina		2
+MK	96	Star Dojran		2
+MK	97	Staro Nagoricane		2
+MK	98	Stip		2
+MK	99	Struga		2
+MK	A1	Strumica		2
+MK	A2	Studenicani		2
+MK	A3	Suto Orizari		2
+MK	A4	Sveti Nikole		2
+MK	A5	Tearce		2
+MK	A6	Tetovo		2
+MK	A7	Topolcani		2
+MK	A8	Valandovo		2
+MK	A9	Vasilevo		2
+MK	B1	Veles		2
+MK	B2	Velesta		2
+MK	B3	Vevcani		2
+MK	B4	Vinica		2
+MK	B5	Vitoliste		2
+MK	B6	Vranestica		2
+MK	B7	Vrapciste		2
+MK	B8	Vratnica		2
+MK	B9	Vrutok		2
+MK	C1	Zajas		2
+MK	C2	Zelenikovo		2
+MK	C3	Zelino		2
+MK	C4	Zitose		2
+MK	C5	Zletovo		2
+MK	C6	Zrnovci		2
+ML	00	Mali (general)		3
+ML	01	Bamako		3
+ML	02	Gao		3
+ML	03	Kayes		3
+ML	04	Mopti		3
+ML	05	Segou		3
+ML	06	Sikasso		3
+ML	07	Koulikoro		3
+ML	08	Tombouctou		3
+MN	00	Monaco (general)		1
+MO	00	Morocco (general)		3
+MO	01	Agadir		3
+MO	02	Al Hoceima		3
+MO	03	Azilal		3
+MO	04	Ben Slimane		3
+MO	05	Beni Mellal		3
+MO	06	Boulemane		3
+MO	07	Casablanca		3
+MO	08	Chaouen		3
+MO	09	El Jadida		3
+MO	10	El Kelaa des Sraghna		3
+MO	11	Er Rachidia		3
+MO	12	Essaouira		3
+MO	13	Fes		3
+MO	14	Figuig		3
+MO	15	Kenitra		3
+MO	16	Khemisset		3
+MO	17	Khenifra		3
+MO	18	Khouribga		3
+MO	19	Marrakech		3
+MO	20	Meknes		3
+MO	21	Nador		3
+MO	22	Ouarzazate		3
+MO	23	Oujda		3
+MO	24	Rabat-Sale		3
+MO	25	Safi		3
+MO	26	Settat		3
+MO	27	Tanger		3
+MO	29	Tata		3
+MO	30	Taza		3
+MO	32	Tiznit		3
+MO	33	(MO33)		3
+MO	34	Ifrane		3
+MO	35	Laayoune		3
+MO	36	Tan-Tan		3
+MO	37	Taounate		3
+MO	38	Sidi Kacem		3
+MO	39	Taroudannt		3
+MO	40	Tatouan		3
+MO	41	Larache		3
+MO	42	Guelmim		3
+MO	43	Assa-Zag		3
+MO	44	Es Smara		3
+MP	00	Mauritius (general)		1
+MP	12	Black River		1
+MP	13	Flacq		1
+MP	14	Grand Port		1
+MP	15	Moka		1
+MP	16	Pamplemousses		1
+MP	17	Plaines Wilhems		1
+MP	18	Port Louis		1
+MP	19	Riviere du Rempart		1
+MP	20	Savanne		1
+MP	21	Agalega Islands		1
+MP	22	Cargados Carajos		1
+MP	23	Rodrigues		1
+MR	00	Mauritania (general)		1
+MR	01	Hodh Ech Chargui		1
+MR	02	Hodh El Gharbi		1
+MR	03	Assaba		1
+MR	04	Gorgol		1
+MR	05	Brakna		1
+MR	06	Trarza		1
+MR	07	Adrar		1
+MR	08	Dakhlet Nouadhibou		1
+MR	09	Tagant		1
+MR	10	Guidimaka		1
+MR	11	Tiris Zemmour		1
+MR	12	Inchiri		1
+MT	00	Malta (general)		3
+MU	00	Oman (general)		3
+MU	01	Ad Dakhiliyah		3
+MU	02	Al Batinah		3
+MU	03	Al Wusta		3
+MU	04	Ash Sharqiyah		3
+MU	05	Az Zahirah		3
+MU	06	Masqat		3
+MU	07	Musandam		3
+MU	08	Zufar		3
+MV	00	Maldives (general)		5
+MV	01	Seenu		5
+MV	02	(MV02)		5
+MV	03	(MV03)		5
+MV	04	(MV04)		5
+MV	05	Laamu		5
+MV	07	(MV07)		5
+MV	08	(MV08)		5
+MV	12	(MV12)		5
+MV	13	(MV13)		5
+MV	14	(MV14)		5
+MV	17	(MV17)		5
+MV	20	(MV20)		5
+MV	23	(MV23)		5
+MV	24	(MV24)		5
+MV	25	(MV25)		5
+MV	26	(MV26)		5
+MV	27	(MV27)		5
+MV	28	(MV28)		5
+MV	29	(MV29)		5
+MV	30	Alifu		5
+MV	31	Baa		5
+MV	32	Dhaalu		5
+MV	33	Faafu		5
+MV	34	Gaafu Alifu		5
+MV	35	Gaafu Dhaalu		5
+MV	36	Haa Alifu		5
+MV	37	Haa Dhaalu		5
+MV	38	Kaafu		5
+MV	39	Lhaviyani		5
+MV	40	Maale		5
+MV	41	Meemu		5
+MV	42	Gnaviyani		5
+MV	43	Noonu		5
+MV	44	Raa		5
+MV	45	Shaviyani		5
+MV	46	Thaa		5
+MV	47	Vaavu		5
+MX	00	Mexico (general)		1
+MX	01	Aguascalientes		1
+MX	02	Baja California		1
+MX	03	Baja California Sur		1
+MX	04	Campeche		1
+MX	05	Chiapas		1
+MX	06	Chihuahua		1
+MX	07	Coahuila de Zaragoza		1
+MX	08	Colima		1
+MX	09	Distrito Federal		1
+MX	10	Durango		1
+MX	11	Guanajuato		1
+MX	12	Guerrero		1
+MX	13	Hidalgo		1
+MX	14	Jalisco		1
+MX	15	Mexico		1
+MX	16	Michoacan de Ocampo		1
+MX	17	Morelos		1
+MX	18	Nayarit		1
+MX	19	Nuevo Leon		1
+MX	20	Oaxaca		1
+MX	21	Puebla		1
+MX	22	Queretaro de Arteaga		1
+MX	23	Quintana Roo		1
+MX	24	San Luis Potosi		1
+MX	25	Sinaloa		1
+MX	26	Sonora		1
+MX	27	Tabasco		1
+MX	28	Tamaulipas		1
+MX	29	Tlaxcala		1
+MX	30	Veracruz-Llave		1
+MX	31	Yucatan		1
+MX	32	Zacatecas		1
+MY	00	Malaysia (general)		5
+MY	01	Johor		5
+MY	02	Kedah		5
+MY	03	Kelantan		5
+MY	04	Melaka		5
+MY	05	Negeri Sembilan		5
+MY	06	Pahang		5
+MY	07	Perak		5
+MY	08	Perlis		5
+MY	09	Pulau Pinang		5
+MY	11	Sarawak		5
+MY	12	Selangor		5
+MY	13	Terengganu		5
+MY	14	Wilayah Persekutuan		5
+MY	15	Labuan		5
+MY	16	Sabah		5
+MZ	00	Mozambique (general)		3
+MZ	01	Cabo Delgado		3
+MZ	02	Gaza		3
+MZ	03	Inhambane		3
+MZ	04	Maputo		3
+MZ	05	Sofala		3
+MZ	06	Nampula		3
+MZ	07	Niassa		3
+MZ	08	Tete		3
+MZ	09	Zambezia		3
+MZ	10	Manica		3
+MZ	11	Maputo		3
+NC	00	New Caledonia (general)		1
+NE	00	Niue (general)		1
+NF	00	Norfolk Island (general)		1
+NG	00	Niger (general)		3
+NG	01	Agadez		3
+NG	02	Diffa		3
+NG	03	Dosso		3
+NG	04	Maradi		3
+NG	05	(NG05)		3
+NG	06	Tahoua		3
+NG	07	Zinder		3
+NG	08	Niamey		3
+NG	09	Tillaberi		3
+NH	00	Vanuatu (general)		5
+NH	05	(NH05)		5
+NH	06	(NH06)		5
+NH	07	Torba		5
+NH	08	(NH08)		5
+NH	09	(NH09)		5
+NH	10	(NH10)		5
+NH	11	(NH11)		5
+NH	12	(NH12)		5
+NH	13	Sanma		5
+NH	14	Shepherd		5
+NH	15	Tafea		5
+NH	16	Malampa		5
+NH	17	Penama		5
+NH	18	Shefa		5
+NI	00	Nigeria (general)		3
+NI	05	Lagos		3
+NI	10	(NI10)		3
+NI	11	Abuja Federal Capital Territory		3
+NI	12	(NI12)		3
+NI	16	Ogun		3
+NI	17	(NI17)		3
+NI	18	(NI18)		3
+NI	20	(NI20)		3
+NI	21	Akwa Ibom		3
+NI	22	Cross River		3
+NI	23	Kaduna		3
+NI	24	Katsina		3
+NI	25	Anambra		3
+NI	26	Benue		3
+NI	27	Borno		3
+NI	28	Imo		3
+NI	29	Kano		3
+NI	30	Kwara		3
+NI	31	Niger		3
+NI	32	Oyo		3
+NI	34	(NI34)		3
+NI	35	Adamawa		3
+NI	36	Delta		3
+NI	37	Edo		3
+NI	39	Jigawa		3
+NI	40	Kebbi		3
+NI	41	Kogi		3
+NI	42	Osun		3
+NI	43	Taraba		3
+NI	44	Yobe		3
+NI	45	Abia		3
+NI	46	Bauchi		3
+NI	47	Enugu		3
+NI	48	Ondo		3
+NI	49	Plateau		3
+NI	50	Rivers		3
+NI	51	Sokoto		3
+NI	52	Bayelsa		3
+NI	53	Ebonyi		3
+NI	54	Ekiti		3
+NI	55	Gombe		3
+NI	56	Nassarawa		3
+NI	57	Zamfara		3
+NL	00	Netherlands (general)		1
+NL	01	Drenthe		1
+NL	02	Friesland		1
+NL	03	Gelderland		1
+NL	04	Groningen		1
+NL	05	Limburg		1
+NL	06	Noord-Brabant		1
+NL	07	Noord-Holland		1
+NL	09	Utrecht		1
+NL	10	Zeeland		1
+NL	11	Zuid-Holland		1
+NL	15	Overijssel		1
+NL	16	Flevoland		1
+NM	00	No Man's Land (general)		3
+NO	00	Norway (general)		1
+NO	01	Akershus		1
+NO	02	Aust-Agder		1
+NO	04	Buskerud		1
+NO	05	Finnmark		1
+NO	06	Hedmark		1
+NO	07	Hordaland		1
+NO	08	More og Romsdal		1
+NO	09	Nordland		1
+NO	10	Nord-Trondelag		1
+NO	11	Oppland		1
+NO	12	Oslo		1
+NO	13	Ostfold		1
+NO	14	Rogaland		1
+NO	15	Sogn og Fjordane		1
+NO	16	Sor-Trondelag		1
+NO	17	Telemark		1
+NO	18	Troms		1
+NO	19	Vest-Agder		1
+NO	20	Vestfold		1
+NP	00	Nepal (general)		5
+NP	01	Bagmati		5
+NP	02	Bheri		5
+NP	03	Dhawalagiri		5
+NP	04	Gandaki		5
+NP	05	Janakpur		5
+NP	06	Karnali		5
+NP	07	Kosi		5
+NP	08	Lumbini		5
+NP	09	Mahakali		5
+NP	10	Mechi		5
+NP	11	Narayani		5
+NP	12	Rapti		5
+NP	13	Sagarmatha		5
+NP	14	Seti		5
+NR	00	Nauru (general)		5
+NR	01	Aiwo		5
+NR	02	Anabar		5
+NR	03	Anetan		5
+NR	04	Anibare		5
+NR	05	Baiti		5
+NR	06	Boe		5
+NR	07	Buada		5
+NR	08	Denigomodu		5
+NR	09	Ewa		5
+NR	10	Ijuw		5
+NR	11	Meneng		5
+NR	12	Nibok		5
+NR	13	Uaboe		5
+NR	14	Yaren		5
+NS	00	Suriname (general)		1
+NS	10	Brokopondo		1
+NS	11	Commewijne		1
+NS	12	Coronie		1
+NS	13	Marowijne		1
+NS	14	Nickerie		1
+NS	15	Para		1
+NS	16	Paramaribo		1
+NS	17	Saramacca		1
+NS	18	Sipaliwini		1
+NS	19	Wanica		1
+NT	00	Netherlands Antilles (general)		1
+NU	00	Nicaragua (general)		1
+NU	01	Boaco		1
+NU	02	Carazo		1
+NU	03	Chinandega		1
+NU	04	Chontales		1
+NU	05	Esteli		1
+NU	06	Granada		1
+NU	07	Jinotega		1
+NU	08	Leon		1
+NU	09	Madriz		1
+NU	10	Managua		1
+NU	11	Masaya		1
+NU	12	Matagalpa		1
+NU	13	Nueva Segovia		1
+NU	14	Rio San Juan		1
+NU	15	Rivas		1
+NU	16	(NU16)		1
+NU	17	Atlantico Norte		1
+NU	18	Atlantico Sur		1
+NZ	00	New Zealand (general)		1
+NZ	01	Akaroa		1
+NZ	03	Amuri		1
+NZ	04	Ashburton		1
+NZ	07	Bay of Islands		1
+NZ	08	Bruce		1
+NZ	09	Buller		1
+NZ	10	Chatham Islands		1
+NZ	11	Cheviot		1
+NZ	12	Clifton		1
+NZ	13	Clutha		1
+NZ	14	Cook		1
+NZ	16	Dannevirke		1
+NZ	17	Egmont		1
+NZ	18	Eketahuna		1
+NZ	19	Ellesmere		1
+NZ	20	Eltham		1
+NZ	21	Eyre		1
+NZ	22	Featherston		1
+NZ	24	Franklin		1
+NZ	26	Golden Bay		1
+NZ	27	Great Barrier Island		1
+NZ	28	Grey		1
+NZ	29	Hauraki Plains		1
+NZ	30	Hawera		1
+NZ	31	Hawke's Bay		1
+NZ	32	Heathcote		1
+NZ	33	Hobson		1
+NZ	34	Hokianga		1
+NZ	35	Horowhenua		1
+NZ	36	Hutt		1
+NZ	37	Inangahua		1
+NZ	38	Inglewood		1
+NZ	39	Kaikoura		1
+NZ	40	Kairanga		1
+NZ	41	Kiwitea		1
+NZ	43	Lake		1
+NZ	45	Mackenzie		1
+NZ	46	Malvern		1
+NZ	47	Manawatu		1
+NZ	48	Mangonui		1
+NZ	49	Maniototo		1
+NZ	50	Marlborough		1
+NZ	51	Masterton		1
+NZ	52	Matamata		1
+NZ	53	Mount Herbert		1
+NZ	54	Ohinemuri		1
+NZ	55	Opotiki		1
+NZ	56	Oroua		1
+NZ	57	Otamatea		1
+NZ	58	Otorohanga		1
+NZ	59	Oxford		1
+NZ	60	Pahiatua		1
+NZ	61	Paparua		1
+NZ	63	Patea		1
+NZ	65	Piako		1
+NZ	66	Pohangina		1
+NZ	67	Raglan		1
+NZ	68	Rangiora		1
+NZ	69	Rangitikei		1
+NZ	70	Rodney		1
+NZ	71	Rotorua		1
+NZ	72	Southland		1
+NZ	73	Stewart Island		1
+NZ	74	Stratford		1
+NZ	76	Taranaki		1
+NZ	77	Taumarunui		1
+NZ	78	Taupo		1
+NZ	79	Tauranga		1
+NZ	81	Tuapeka		1
+NZ	82	Vincent		1
+NZ	83	Waiapu		1
+NZ	84	Waihemo		1
+NZ	85	Waikato		1
+NZ	86	Waikohu		1
+NZ	88	Waimairi		1
+NZ	89	Waimarino		1
+NZ	90	Waimate		1
+NZ	91	Waimate West		1
+NZ	92	Waimea		1
+NZ	93	Waipa		1
+NZ	95	Waipawa		1
+NZ	96	Waipukurau		1
+NZ	97	Wairarapa South		1
+NZ	98	Wairewa		1
+NZ	99	Wairoa		1
+NZ	A1	Whangarei		1
+NZ	A2	Whangaroa		1
+NZ	A3	Woodville		1
+NZ	A4	Waitaki		1
+NZ	A6	Waitomo		1
+NZ	A8	Waitotara		1
+NZ	B2	Wanganui		1
+NZ	B3	Westland		1
+NZ	B4	Whakatane		1
+NZ	D4	Hurunui		1
+NZ	D5	Silverpeaks		1
+NZ	D6	Strathallan		1
+NZ	D8	Waiheke		1
+NZ	D9	Hikurangi		1
+NZ	E1	Manaia		1
+NZ	E2	Runanga		1
+NZ	E3	Saint Kilda		1
+NZ	E4	Thames-Coromandel		1
+NZ	E5	Waverley		1
+NZ	E6	Wallace		1
+OS	00	Oceans (general)		1
+PA	00	Paraguay (general)		1
+PA	01	Alto Parana		1
+PA	02	Amambay		1
+PA	04	Caaguazu		1
+PA	05	Caazapa		1
+PA	06	Central		1
+PA	07	Concepcion		1
+PA	08	Cordillera		1
+PA	10	Guaira		1
+PA	11	Itapua		1
+PA	12	Misiones		1
+PA	13	Neembucu		1
+PA	15	Paraguari		1
+PA	16	Presidente Hayes		1
+PA	17	San Pedro		1
+PA	19	Canindeyu		1
+PA	22	Asuncion		1
+PA	23	Alto Paraguay		1
+PA	24	Boqueron		1
+PC	00	Pitcairn Islands (general)		1
+PE	00	Peru (general)		1
+PE	01	Amazonas		1
+PE	02	Ancash		1
+PE	03	Apurimac		1
+PE	04	Arequipa		1
+PE	05	Ayacucho		1
+PE	06	Cajamarca		1
+PE	07	Callao		1
+PE	08	Cusco		1
+PE	09	Huancavelica		1
+PE	10	Huanuco		1
+PE	11	Ica		1
+PE	12	Junin		1
+PE	13	La Libertad		1
+PE	14	Lambayeque		1
+PE	15	Lima		1
+PE	16	Loreto		1
+PE	17	Madre de Dios		1
+PE	18	Moquegua		1
+PE	19	Pasco		1
+PE	20	Piura		1
+PE	21	Puno		1
+PE	22	San Martin		1
+PE	23	Tacna		1
+PE	24	Tumbes		1
+PE	25	Ucayali		1
+PF	00	Paracel Islands (general)		5
+PF	0Z	disputed		5
+PF	99	PF99		5
+PG	00	Spratly Islands (general)		5
+PG	0Z	disputed		5
+PK	00	Pakistan (general)		5
+PK	01	Federally Administered Tribal Areas		5
+PK	02	Balochistan		5
+PK	03	North-West Frontier		5
+PK	04	Punjab		5
+PK	05	Sindh		5
+PK	06	Azad Kashmir		5
+PK	07	Northern Areas		5
+PK	08	Islamabad		5
+PL	00	Poland (general)		2
+PL	23	(PL23)		2
+PL	24	(PL24)		2
+PL	25	(PL25)		2
+PL	26	(PL26)		2
+PL	27	(PL27)		2
+PL	28	(PL28)		2
+PL	29	(PL29)		2
+PL	30	(PL30)		2
+PL	31	(PL31)		2
+PL	32	(PL32)		2
+PL	33	(PL33)		2
+PL	34	(PL34)		2
+PL	35	(PL35)		2
+PL	36	(PL36)		2
+PL	37	(PL37)		2
+PL	38	(PL38)		2
+PL	39	(PL39)		2
+PL	40	(PL40)		2
+PL	41	(PL41)		2
+PL	42	(PL42)		2
+PL	43	(PL43)		2
+PL	44	(PL44)		2
+PL	45	(PL45)		2
+PL	46	(PL46)		2
+PL	47	(PL47)		2
+PL	48	(PL48)		2
+PL	49	(PL49)		2
+PL	50	(PL50)		2
+PL	51	(PL51)		2
+PL	52	(PL52)		2
+PL	53	(PL53)		2
+PL	54	(PL54)		2
+PL	55	(PL55)		2
+PL	56	(PL56)		2
+PL	57	(PL57)		2
+PL	58	(PL58)		2
+PL	59	(PL59)		2
+PL	60	(PL60)		2
+PL	61	(PL61)		2
+PL	62	(PL62)		2
+PL	63	(PL63)		2
+PL	64	(PL64)		2
+PL	65	(PL65)		2
+PL	66	(PL66)		2
+PL	67	(PL67)		2
+PL	68	(PL68)		2
+PL	69	(PL69)		2
+PL	70	(PL70)		2
+PL	71	(PL71)		2
+PL	72	Dolnoslaskie		2
+PL	73	Kujawsko-Pomorskie		2
+PL	74	Lodzkie		2
+PL	75	Lubelskie		2
+PL	76	Lubuskie		2
+PL	77	Malopolskie		2
+PL	78	Mazowieckie		2
+PL	79	Opolskie		2
+PL	80	Podkarpackie		2
+PL	81	Podlaskie		2
+PL	82	Pomorskie		2
+PL	83	Slaskie		2
+PL	84	Swietokrzyskie		2
+PL	85	Warmiinsko-Mazurskie		2
+PL	86	Wielkopolskie		2
+PL	87	Zachodniopomorskie		2
+PM	00	Panama (general)		1
+PM	01	Bocas del Toro		1
+PM	02	Chiriqui		1
+PM	03	Cocle		1
+PM	04	Colon		1
+PM	05	Darien		1
+PM	06	Herrera		1
+PM	07	Los Santos		1
+PM	08	Panama		1
+PM	09	San Blas		1
+PM	10	Veraguas		1
+PO	00	Portugal (general)		1
+PO	02	Aveiro		1
+PO	03	Beja		1
+PO	04	Braga		1
+PO	05	Braganca		1
+PO	06	Castelo Branco		1
+PO	07	Coimbra		1
+PO	08	Evora		1
+PO	09	Faro		1
+PO	10	Madeira		1
+PO	11	Guarda		1
+PO	13	Leiria		1
+PO	14	Lisboa		1
+PO	16	Portalegre		1
+PO	17	Porto		1
+PO	18	Santarem		1
+PO	19	Setubal		1
+PO	20	Viana do Castelo		1
+PO	21	Vila Real		1
+PO	22	Viseu		1
+PO	23	Azores		1
+PP	00	Papua New Guinea (general)		5
+PP	01	Central		5
+PP	02	Gulf		5
+PP	03	Milne Bay		5
+PP	04	Northern		5
+PP	05	Southern Highlands		5
+PP	06	Western		5
+PP	07	Bougainville		5
+PP	08	Chimbu		5
+PP	09	Eastern Highlands		5
+PP	10	East New Britain		5
+PP	11	East Sepik		5
+PP	12	Madang		5
+PP	13	Manus		5
+PP	14	Morobe		5
+PP	15	New Ireland		5
+PP	16	Western Highlands		5
+PP	17	West New Britain		5
+PP	18	Sandaun		5
+PP	19	Enga		5
+PP	20	National Capital		5
+PS	00	Palau (general)		5
+PU	00	Guinea-Bissau (general)		3
+PU	01	Bafata		3
+PU	02	Quinara		3
+PU	04	Oio		3
+PU	05	Bolama		3
+PU	06	Cacheu		3
+PU	07	Tombali		3
+PU	10	Gabu		3
+PU	11	Bissau		3
+PU	12	Biombo		3
+QA	00	Qatar (general)		3
+QA	01	Ad Dawhah		3
+QA	02	Al Ghuwayriyah		3
+QA	03	Al Jumayliyah		3
+QA	04	Al Khawr		3
+QA	05	(QA05)		3
+QA	06	Ar Rayyan		3
+QA	07	(QA07)		3
+QA	08	Madinat ash Shamal		3
+QA	09	Umm Salal		3
+QA	10	Al Wakrah		3
+QA	11	Jarayan al Batinah		3
+QA	12	Umm Sa'id		3
+RE	00	Reunion (general)		1
+RM	00	Marshall Islands (general)		5
+RO	00	Romania (general)		2
+RO	01	Alba		2
+RO	02	Arad		2
+RO	03	Arges		2
+RO	04	Bacau		2
+RO	05	Bihor		2
+RO	06	Bistrita-Nasaud		2
+RO	07	Botosani		2
+RO	08	Braila		2
+RO	09	Brasov		2
+RO	10	Bucuresti		2
+RO	11	Buzau		2
+RO	12	Caras-Severin		2
+RO	13	Cluj		2
+RO	14	Constanta		2
+RO	15	Covasna		2
+RO	16	Dimbovita		2
+RO	17	Dolj		2
+RO	18	Galati		2
+RO	19	Gorj		2
+RO	20	Harghita		2
+RO	21	Hunedoara		2
+RO	22	Ialomita		2
+RO	23	Iasi		2
+RO	25	Maramures		2
+RO	26	Mehedinti		2
+RO	27	Mures		2
+RO	28	Neamt		2
+RO	29	Olt		2
+RO	30	Prahova		2
+RO	31	Salaj		2
+RO	32	Satu Mare		2
+RO	33	Sibiu		2
+RO	34	Suceava		2
+RO	35	Teleorman		2
+RO	36	Timis		2
+RO	37	Tulcea		2
+RO	38	Vaslui		2
+RO	39	Vilcea		2
+RO	40	Vrancea		2
+RO	41	Calarasi		2
+RO	42	Giurgiu		2
+RO	43	Ilfov	RQ	2
+RP	00	Philippines (general)		5
+RP	01	Abra		5
+RP	02	Agusan del Norte		5
+RP	03	Agusan del Sur		5
+RP	04	Aklan		5
+RP	05	Albay		5
+RP	06	Antique		5
+RP	07	Bataan		5
+RP	08	Batanes		5
+RP	09	Batangas		5
+RP	10	Benguet		5
+RP	11	Bohol		5
+RP	12	Bukidnon		5
+RP	13	Bulacan		5
+RP	14	Cagayan		5
+RP	15	Camarines Norte		5
+RP	16	Camarines Sur		5
+RP	17	Camiguin		5
+RP	18	Capiz		5
+RP	19	Catanduanes		5
+RP	20	Cavite		5
+RP	21	Cebu		5
+RP	22	Basilan		5
+RP	23	Eastern Samar		5
+RP	24	Davao		5
+RP	25	Davao del Sur		5
+RP	26	Davao Oriental		5
+RP	27	Ifugao		5
+RP	28	Ilocos Norte		5
+RP	29	Ilocos Sur		5
+RP	30	Iloilo		5
+RP	31	Isabela		5
+RP	32	Kalinga-Apayao		5
+RP	33	Laguna		5
+RP	34	Lanao del Norte		5
+RP	35	Lanao del Sur		5
+RP	36	La Union		5
+RP	37	Leyte		5
+RP	38	Marinduque		5
+RP	39	Masbate		5
+RP	40	Mindoro Occidental		5
+RP	41	Mindoro Oriental		5
+RP	42	Misamis Occidental		5
+RP	43	Misamis Oriental		5
+RP	44	Mountain		5
+RP	45	(RP45)		5
+RP	46	Negros Oriental		5
+RP	47	Nueva Ecija		5
+RP	48	Nueva Vizcaya		5
+RP	49	Palawan		5
+RP	50	Pampanga		5
+RP	51	Pangasinan		5
+RP	53	Rizal		5
+RP	54	Romblon		5
+RP	55	Samar		5
+RP	56	Maguindanao		5
+RP	57	North Cotabato		5
+RP	58	Sorsogon		5
+RP	59	Southern Leyte		5
+RP	60	Sulu		5
+RP	61	Surigao del Norte		5
+RP	62	Surigao del Sur		5
+RP	63	Tarlac		5
+RP	64	Zambales		5
+RP	65	Zamboanga del Norte		5
+RP	66	Zamboanga del Sur		5
+RP	67	Northern Samar		5
+RP	68	Quirino		5
+RP	69	Siquijor		5
+RP	70	South Cotabato		5
+RP	71	Sultan Kudarat		5
+RP	72	Tawi-Tawi		5
+RP	A1	Angeles		5
+RP	A2	Bacolod		5
+RP	A3	Bago		5
+RP	A4	Baguio		5
+RP	A5	Bais		5
+RP	A6	Basilan		5
+RP	A7	Batangas		5
+RP	A8	Butuan		5
+RP	A9	Cabanatuan		5
+RP	B1	Cadiz		5
+RP	B2	Cagayan de Oro		5
+RP	B3	Calbayog		5
+RP	B4	Caloocan		5
+RP	B5	Canlaon		5
+RP	B6	Cavite		5
+RP	B7	Cebu		5
+RP	B8	Cotabato		5
+RP	B9	Dagupan		5
+RP	C1	Danao		5
+RP	C2	Dapitan		5
+RP	C3	Davao		5
+RP	C4	Dipolog		5
+RP	C5	Dumaguete		5
+RP	C6	General Santos		5
+RP	C7	Gingoog		5
+RP	C8	Iligan		5
+RP	C9	Iloilo		5
+RP	D1	Iriga		5
+RP	D2	La Carlota		5
+RP	D3	Laoag		5
+RP	D4	Lapu-Lapu		5
+RP	D5	Legaspi		5
+RP	D6	Lipa		5
+RP	D7	Lucena		5
+RP	D8	Mandaue		5
+RP	D9	Manila		5
+RP	E1	Marawi		5
+RP	E2	Naga		5
+RP	E3	Olongapo		5
+RP	E4	Ormoc		5
+RP	E5	Oroquieta		5
+RP	E6	Ozamis		5
+RP	E7	Pagadian		5
+RP	E8	Palayan		5
+RP	E9	Pasay		5
+RP	F1	Puerto Princesa		5
+RP	F2	Quezon		5
+RP	F3	Roxas		5
+RP	F4	San Carlos, Negros Occidental		5
+RP	F5	San Carlos, Pangasinan		5
+RP	F6	San Jose		5
+RP	F7	San Pablo		5
+RP	F8	Silay		5
+RP	F9	Surigao		5
+RP	G1	Tacloban		5
+RP	G2	Tagaytay		5
+RP	G3	Tagbilaran		5
+RP	G4	Tangub		5
+RP	G5	Toledo		5
+RP	G6	Trece Martires		5
+RP	G7	Zamboanga		5
+RP	G8	Aurora		5
+RP	H2	Quezon		5
+RP	H3	Negros Occidental		5
+RS	00	Russia (general)		4
+RS	01	Adygeya		4
+RS	02	Aginskiy Buryatskiy Avtonomnyy Okrug		4
+RS	03	Altay		4
+RS	04	Altayskiy Kray		4
+RS	05	Amurskaya Oblast'		4
+RS	06	Arkhangel'skaya Oblast'		4
+RS	07	Astrakhanskaya Oblast'		4
+RS	08	Bashkortostan		4
+RS	09	Belgorodskaya Oblast'		4
+RS	10	Bryanskaya Oblast'		4
+RS	11	Buryatiya		4
+RS	12	Chechnya		4
+RS	13	Chelyabinskaya Oblast'		4
+RS	14	Chitinskaya Oblast'		4
+RS	15	Chukotskiy Avtonomnyy Okrug		4
+RS	16	Chuvashiya		4
+RS	17	Dagestan		4
+RS	18	Evenkiyskiy Avtonomnyy Okrug		4
+RS	19	Ingushetiya		4
+RS	20	Irkutskaya Oblast'		4
+RS	21	Ivanovskaya Oblast'		4
+RS	22	Kabardino-Balkariya		4
+RS	23	Kaliningradskaya Oblast'		4
+RS	24	Kalmykiya		4
+RS	25	Kaluzhskaya Oblast'		4
+RS	26	Kamchatskaya Oblast'		4
+RS	27	Karachayevo-Cherkesiya		4
+RS	28	Kareliya		4
+RS	29	Kemerovskaya Oblast'		4
+RS	30	Khabarovskiy Kray		4
+RS	31	Khakasiya		4
+RS	32	Khanty-Mansiyskiy Avtonomnyy Okrug		4
+RS	33	Kirovskaya Oblast'		4
+RS	34	Komi		4
+RS	35	Komi-Permyatskiy Avtonomnyy Okrug		4
+RS	36	Koryakskiy Avtonomnyy Okrug		4
+RS	37	Kostromskaya Oblast'		4
+RS	38	Kransnodarskiy Kray		4
+RS	39	Kransoyarskiy Kray		4
+RS	40	Kurganskaya Oblast'		4
+RS	41	Kurskaya Oblast'		4
+RS	42	Leningradskaya Oblast'		4
+RS	43	Lipetskaya Oblast'		4
+RS	44	Magadanskaya Oblast'		4
+RS	45	Mariy-El		4
+RS	46	Mordoviya		4
+RS	47	Moskovskaya Oblast'		4
+RS	48	Moskva		4
+RS	49	Murmanskaya Oblast'		4
+RS	50	Nenetskiy Avtonomnyy Okrug		4
+RS	51	Nizhegorodskaya Oblast'		4
+RS	52	Novgorodskaya Oblast'		4
+RS	53	Novosibirskaya Oblast'		4
+RS	54	Omskaya Oblast'		4
+RS	55	Orenburgskaya Oblast'		4
+RS	56	Orlovskaya Oblast'		4
+RS	57	Penzenskaya Oblast'		4
+RS	58	Permskaya Oblast'		4
+RS	59	Primorskiy Kray		4
+RS	60	Pskovskaya Oblast'		4
+RS	61	Rostovskaya Oblast'		4
+RS	62	Ryazanskaya Oblast'		4
+RS	63	Sakha (Yakutiya)		4
+RS	64	Sakhalinskaya Oblast'		4
+RS	65	Samarskaya Oblast'		4
+RS	66	Sankt-Peterburg		4
+RS	67	Saratovskaya Oblast'		4
+RS	68	Severnaya Osetiya-Alaniya		4
+RS	69	Smolenskaya Oblast'		4
+RS	70	Stavropol'skiy Kray		4
+RS	71	Sverdlovskaya Oblast'		4
+RS	72	Tambovskaya Oblast'		4
+RS	73	Tatarstan		4
+RS	74	Taymyrskiy (Dolgano-Nenetskiy) Avtonomnyy Okrug		4
+RS	75	Tomskaya Oblast'		4
+RS	76	Tul'skaya Oblast'		4
+RS	77	Tverskaya Oblast'		4
+RS	78	Tyumenskaya Oblast'		4
+RS	79	Tyva		4
+RS	80	Udmurtiya		4
+RS	81	Ul'yanovskaya Oblast'		4
+RS	82	Ust'-Ordynskiy Buryatskiy Avtonomnyy Okrug		4
+RS	83	Vladimirskaya Oblast'		4
+RS	84	Volgogradskaya Oblast'		4
+RS	85	Vologodskaya Oblast'		4
+RS	86	Voronezhskaya Oblast'		4
+RS	87	Yamalo-Nenetskiy Avtonomnyy Okrug		4
+RS	88	Yaroslavskaya Oblast'		4
+RS	89	Yevreyskaya Avtonomnaya Oblast'		4
+RS	CI	Chechnya and Ingushetiya		4
+RS	JA	RSJA		4
+RW	00	Rwanda (general)		1
+RW	01	Butare		1
+RW	02	Byumba		1
+RW	03	Cyangugu		1
+RW	04	Gikongoro		1
+RW	05	Gisenyi		1
+RW	06	Gitarama		1
+RW	07	Kibungo		1
+RW	08	Kibuye		1
+RW	09	Kigali		1
+RW	10	Ruhengeri		1
+SA	00	Saudi Arabia (general)		3
+SA	02	Al Bahah		3
+SA	05	Al Madinah		3
+SA	06	Ash Sharqiyah		3
+SA	08	Al Qasim		3
+SA	10	Ar Riyad		3
+SA	11	'Asir		3
+SA	13	Ha'il		3
+SA	14	Makkah		3
+SA	15	Al Hudud ash Shamaliyah		3
+SA	16	Najran		3
+SA	17	Jizan		3
+SA	19	Tabuk		3
+SA	20	Al Jawf		3
+SB	00	Saint Pierre and Miquelon (general)		1
+SC	00	Saint Kitts and Nevis (general)		1
+SC	01	Christ Church Nichola Town		1
+SC	02	Saint Anne Sandy Point		1
+SC	03	Saint George Basseterre		1
+SC	04	Saint George Gingerland		1
+SC	05	Saint James Windwa		1
+SC	06	Saint John Capesterre		1
+SC	07	Saint John Figtree		1
+SC	08	Saint Mary Cayon		1
+SC	09	Saint Paul Capesterre		1
+SC	10	Saint Paul Charlestown		1
+SC	11	Saint Peter Basseterre		1
+SC	12	Saint Thomas Lowland		1
+SC	13	Saint Thomas Middle Island		1
+SC	15	Trinity Palmetto Point		1
+SE	00	Seychelles (general)		1
+SE	01	Anse aux Pins		1
+SE	02	Anse Boileau		1
+SE	03	Anse Etoile		1
+SE	04	Anse Louis		1
+SE	05	Anse Royale		1
+SE	06	Baie Lazare		1
+SE	07	Baie Sainte Anne		1
+SE	08	Beau Vallon		1
+SE	09	Bel Air		1
+SE	10	Bel Ombre		1
+SE	11	Cascade		1
+SE	12	Glacis		1
+SE	13	Grand'Anse		1
+SE	14	Grand'Anse		1
+SE	15	La Digue		1
+SE	16	La Riviere Anglaise		1
+SE	17	Mont Buxton		1
+SE	18	Mont Fleuri		1
+SE	19	Plaisance		1
+SE	20	Pointe La Rue		1
+SE	21	Port Glaud		1
+SE	22	Saint Louis		1
+SE	23	Takamaka		1
+SF	00	South Africa (general)		3
+SF	01	(SF01)		3
+SF	02	KwaZulu-Natal		3
+SF	03	Free State		3
+SF	04	(SF04)		3
+SF	05	Eastern Cape		3
+SF	06	Gauteng		3
+SF	07	Mpumalanga		3
+SF	08	Northern Cape		3
+SF	09	Northern Province		3
+SF	10	North-West		3
+SF	11	Western Cape		3
+SG	00	Senegal (general)		3
+SG	01	Dakar		3
+SG	03	Diourbel		3
+SG	04	(SG04)		3
+SG	05	Tambacounda		3
+SG	07	Thies		3
+SG	08	(SG08)		3
+SG	09	Fatick		3
+SG	10	Kaolack		3
+SG	11	Kolda		3
+SG	12	Ziguinchor		3
+SG	13	Louga		3
+SG	14	Saint-Louis		3
+SG	15	Matam		3
+SH	00	Saint Helena (general)		1
+SH	01	Ascension		1
+SH	02	Saint Helena		1
+SH	03	Tristan da Cunha		1
+SI	00	Slovenia (general)		2
+SI	01	Ajdovscina		2
+SI	02	Beltinci		2
+SI	03	Bled		2
+SI	04	Bohinj		2
+SI	05	Borovnica		2
+SI	06	Bovec		2
+SI	07	Brda		2
+SI	08	Brezice		2
+SI	09	Brezovica		2
+SI	11	Celje		2
+SI	12	Cerklje na Gorenjskem		2
+SI	13	Cerknica		2
+SI	14	Cerkno		2
+SI	15	Crensovci		2
+SI	16	Crna na Koroskem		2
+SI	17	Crnomelj		2
+SI	19	Divaca		2
+SI	20	Dobrepolje		2
+SI	22	Dol pri Ljubljani		2
+SI	24	Dornava		2
+SI	25	Dravograd		2
+SI	26	Duplek		2
+SI	27	Gorenja Vas-Poljane		2
+SI	28	Gorisnica		2
+SI	29	Gornja Radgona		2
+SI	30	Gornji Grad		2
+SI	31	Gornji Petrovci		2
+SI	32	Grosuplje		2
+SI	34	Hrastnik		2
+SI	35	Hrpelje-Kozina		2
+SI	36	Idrija		2
+SI	37	Ig		2
+SI	38	Ilirska Bistrica		2
+SI	39	Ivancna Gorica		2
+SI	40	Izola-Isola		2
+SI	42	Jursinci		2
+SI	44	Kanal		2
+SI	45	Kidricevo		2
+SI	46	Kobarid		2
+SI	47	Kobilje		2
+SI	49	Komen		2
+SI	50	Koper-Capodistria		2
+SI	51	Kozje		2
+SI	52	Kranj		2
+SI	53	Kranjska Gora		2
+SI	54	Krsko		2
+SI	55	Kungota		2
+SI	57	Lasko		2
+SI	61	Ljubljana		2
+SI	62	Ljubno		2
+SI	64	Logatec		2
+SI	66	Loski Potok		2
+SI	68	Lukovica		2
+SI	71	Medvode		2
+SI	72	Menges		2
+SI	73	Metlika		2
+SI	74	Mezica		2
+SI	76	Mislinja		2
+SI	77	Moravce		2
+SI	78	Moravske Toplice		2
+SI	79	Mozirje		2
+SI	80	Murska Sobota		2
+SI	81	Muta		2
+SI	82	Naklo		2
+SI	83	Nazarje		2
+SI	84	Nova Gorica		2
+SI	86	Odranci		2
+SI	87	Ormoz		2
+SI	88	Osilnica		2
+SI	89	Pesnica		2
+SI	91	Pivka		2
+SI	92	Podcetrtek		2
+SI	94	Postojna		2
+SI	97	Puconci		2
+SI	98	Race-Fram		2
+SI	99	Radece		2
+SI	A1	Radenci		2
+SI	A2	Radlje ob Dravi		2
+SI	A3	Radovljica		2
+SI	A6	Rogasovci		2
+SI	A7	Rogaska Slatina		2
+SI	A8	Rogatec		2
+SI	B1	Semic		2
+SI	B2	Sencur		2
+SI	B3	Sentilj		2
+SI	B4	Sentjernej		2
+SI	B6	Sevnica		2
+SI	B7	Sezana		2
+SI	B8	Skocjan		2
+SI	B9	Skofja Loka		2
+SI	C1	Skofljica		2
+SI	C2	Slovenj Gradec		2
+SI	C4	Slovenska Konjice		2
+SI	C5	Smarje pri Jelsah		2
+SI	C6	Smartno ob Paki		2
+SI	C7	Sostanj		2
+SI	C8	Starse		2
+SI	C9	Store		2
+SI	D1	Sveti Jurij		2
+SI	D2	Tolmin		2
+SI	D3	Trbovlje		2
+SI	D4	Trebnje		2
+SI	D5	Trzic		2
+SI	D6	Turnisce		2
+SI	D7	Velenje		2
+SI	D8	Velike Lasce		2
+SI	E1	Vipava		2
+SI	E2	Vitanje		2
+SI	E3	Vodice		2
+SI	E5	Vrhnika		2
+SI	E6	Vuzenica		2
+SI	E7	Zagorje ob Savi		2
+SI	E9	Zavrc		2
+SI	F1	Zelezniki		2
+SI	F2	Ziri		2
+SI	F3	Zrece		2
+SI	F4	Benedikt		2
+SI	F5	Bistrica ob Sotli		2
+SI	F6	Bloke		2
+SI	F7	Braslovce		2
+SI	F8	Cankova		2
+SI	F9	Cerkvenjak		2
+SI	G1	Destrnik		2
+SI	G2	Dobje		2
+SI	G3	Dobrna		2
+SI	G4	Dobrova-Horjul-Polhov Gradec		2
+SI	G5	Dobrovnik-Dobronak		2
+SI	G6	Dolenjske Toplice		2
+SI	G7	Domzale		2
+SI	G8	Grad		2
+SI	G9	Hajdina		2
+SI	H1	Hoce-Slivnica		2
+SI	H2	Hodos-Hodos		2
+SI	H3	Horjul		2
+SI	H4	Jesenice		2
+SI	H5	Jezersko		2
+SI	H6	Kamnik		2
+SI	H7	Kocevje		2
+SI	H8	Komenda		2
+SI	H9	Kostel		2
+SI	I1	Krizevci		2
+SI	J1	Majsperk		2
+SI	J2	Maribor		2
+SI	J3	Markovci		2
+SI	J4	Miklavz na Dravskem Polju		2
+SI	J5	Miren-Kostanjevica		2
+SI	J6	Mirna Pec		2
+SI	J7	Novo Mesto		2
+SI	J8	Oplotnica		2
+SI	J9	Piran-Pirano		2
+SI	K1	Podlehnik		2
+SI	K2	Podvelka		2
+SI	K3	Polzela		2
+SI	K4	Prebold		2
+SI	K5	Preddvor		2
+SI	K6	Prevalje		2
+SI	K7	Ptuj		2
+SI	K8	Ravne na Koroskem		2
+SI	K9	Razkrizje		2
+SI	L1	Ribnica		2
+SI	L2	Ribnica na Pohorju		2
+SI	L3	Ruse		2
+SI	L4	Salovci		2
+SI	L5	Selnica ob Dravi		2
+SI	L6	Sempeter-Vrtojba		2
+SI	L7	Sentjur pri Celju		2
+SI	L8	Slovenska Bistrica		2
+SI	L9	Smartno pri Litiji		2
+SI	M1	Sodrazica		2
+SI	M2	Solcava		2
+SI	M3	Sveta Ana		2
+SI	M4	Sveti AndraZ v Slovenskih Goricah		2
+SI	M5	Tabor		2
+SI	M6	Tisina		2
+SI	M7	Trnovska Vas		2
+SI	M8	Trzin		2
+SI	M9	Velika Polana		2
+SI	N1	Verzej		2
+SI	N2	Videm		2
+SI	N3	Vojnik		2
+SI	N4	Vransko		2
+SI	N5	Zalec		2
+SI	N6	Zetale		2
+SI	N7	Zirovnica		2
+SI	N8	Zuzemberk		2
+SL	00	Sierra Leone (general)		3
+SL	01	Eastern		3
+SL	02	Northern		3
+SL	03	Southern		3
+SL	04	Western Area		3
+SM	00	San Marino (general)		1
+SM	01	Acquaviva		1
+SM	02	Chiesanuova		1
+SM	03	Domagnano		1
+SM	04	Faetano		1
+SM	05	Fiorentino		1
+SM	06	Borgo Maggiore		1
+SM	07	San Marino		1
+SM	08	Montegiardino		1
+SM	09	Serravalle		1
+SN	00	Singapore (general)		5
+SO	00	Somalia (general)		3
+SO	01	Bakool		3
+SO	02	Banaadir		3
+SO	03	Bari		3
+SO	04	Bay		3
+SO	05	Galguduud		3
+SO	06	Gedo		3
+SO	07	Hiiraan		3
+SO	08	Jubbada Dhexe		3
+SO	09	Jubbada Hoose		3
+SO	10	Mudug		3
+SO	11	Nugaal		3
+SO	12	Sanaag		3
+SO	13	Shabeellaha Dhexe		3
+SO	14	Shabeellaha Hoose		3
+SO	15	Togdheer		3
+SO	16	Woqooyi Galbeed		3
+SO	17	(SO17)		3
+SP	00	Spain (general)		1
+SP	07	Islas Baleares		1
+SP	27	La Rioja		1
+SP	28	(SP28)		1
+SP	29	Madrid		1
+SP	31	Murcia		1
+SP	32	Navarra		1
+SP	34	Asturias		1
+SP	39	Cantabria		1
+SP	51	Andalucia		1
+SP	52	Aragon		1
+SP	53	Canarias		1
+SP	54	Castilla-La Manacha		1
+SP	55	Castilla y Leon		1
+SP	56	Cataluna		1
+SP	57	Extremadura		1
+SP	58	Galicia		1
+SP	59	Pais Vasco		1
+SP	60	Valenciana		1
+ST	00	Saint Lucia (general)		1
+ST	01	Anse-la-Raye		1
+ST	02	Dauphin		1
+ST	03	Castries		1
+ST	04	Choiseul		1
+ST	05	Dennery		1
+ST	06	Gros-Islet		1
+ST	07	Laborie		1
+ST	08	Micoud		1
+ST	09	Soufriere		1
+ST	10	Vieux-Fort		1
+ST	11	Praslin		1
+SU	00	Sudan (general)		3
+SU	26	(SU26)		3
+SU	27	(SU27)		3
+SU	28	(SU28)		3
+SU	29	Al Khartum		3
+SU	30	(SU30)		3
+SU	31	(SU31)		3
+SU	32	(SU32)		3
+SU	33	(SU33)		3
+SU	34	(SU34)		3
+SU	35	A'ali an Nil		3
+SU	36	Al Bahr al Ahmar		3
+SU	37	Al Buhayrat		3
+SU	38	Al Jazirah		3
+SU	39	Al Qadarif		3
+SU	40	Al Wahdah		3
+SU	41	An Nil al Abyad		3
+SU	42	An Nil al Azraq		3
+SU	43	Ash Shamaliyah		3
+SU	44	Bahr al Jabal		3
+SU	45	Gharb al Istiwa'iyah		3
+SU	46	Gharb Bahr al Ghazal		3
+SU	47	Gharb Darfur		3
+SU	48	Gharb Kurdufan		3
+SU	49	Janub Darfur		3
+SU	50	Janub Kurdufan		3
+SU	51	Junqali		3
+SU	52	Kassala		3
+SU	53	Nahr an Nil		3
+SU	54	Shamal Bahr al Ghazal		3
+SU	55	Shamal Darfur		3
+SU	56	Shamal Kurdufan		3
+SU	57	Sharq al Istiwa'iyah		3
+SU	58	Sinnar		3
+SU	59	Warab		3
+SV	00	Svalbard (general)		1
+SW	00	Sweden (general)		1
+SW	02	Blekinge Lan		1
+SW	03	Gavleborgs Lan		1
+SW	05	Gotlands Lan		1
+SW	06	Hallands Lan		1
+SW	07	Jamtlands Lan		1
+SW	08	Jonkopings Lan		1
+SW	09	Kalmar Lan		1
+SW	10	Dalarnas Lan		1
+SW	12	Kronobergs Lan		1
+SW	14	Norrbottens Lan		1
+SW	15	Orebro Lan		1
+SW	16	Ostergotlands Lan		1
+SW	18	Sodermanlands Lan		1
+SW	21	Uppsala Lan		1
+SW	22	Varmlands Lan		1
+SW	23	Vasterbottens Lan		1
+SW	24	Vasternorrlands Lan		1
+SW	25	Vastmanlands Lan		1
+SW	26	Stockholms Lan		1
+SW	27	Skane Lan		1
+SW	28	Vastra Gotaland		1
+SX	00	South Georgia and The South Sandwich Islands (general)		1
+SY	00	Syria (general)		3
+SY	01	Al Hasakah		3
+SY	02	Al Ladhiqiyah		3
+SY	03	Al Qunaytirah		3
+SY	04	Ar Raqqah		3
+SY	05	As Suwayda'		3
+SY	06	Dar'a		3
+SY	07	Dayr az Zawr		3
+SY	08	Rif Dimashq		3
+SY	09	Halab		3
+SY	10	Hamah		3
+SY	11	Hims		3
+SY	12	Idlib		3
+SY	13	Dimashq		3
+SY	14	Tartus		3
+SZ	00	Switzerland (general)		1
+SZ	01	Aargau		1
+SZ	02	Ausserrhoden		1
+SZ	03	Basel-Landschaft		1
+SZ	04	Basel-Stadt		1
+SZ	05	Bern		1
+SZ	06	Fribourg		1
+SZ	07	Geneve		1
+SZ	08	Glarus		1
+SZ	09	Graubunden		1
+SZ	10	Innerrhoden		1
+SZ	11	Luzern		1
+SZ	12	Neuchatel		1
+SZ	13	Nidwalden		1
+SZ	14	Obwalden		1
+SZ	15	Sankt Gallen		1
+SZ	16	Schaffhausen		1
+SZ	17	Schwyz		1
+SZ	18	Solothurn		1
+SZ	19	Thurgau		1
+SZ	20	Ticino		1
+SZ	21	Uri		1
+SZ	22	Valais		1
+SZ	23	Vaud		1
+SZ	24	Zug		1
+SZ	25	Zurich		1
+SZ	26	Jura		1
+TD	00	Trinidad and Tobago (general)		1
+TD	01	Arima		1
+TD	02	Caroni		1
+TD	03	Mayaro		1
+TD	04	Nariva		1
+TD	05	Port-of-Spain		1
+TD	06	Saint Andrew		1
+TD	07	Saint David		1
+TD	08	Saint George		1
+TD	09	Saint Patrick		1
+TD	10	San Fernando		1
+TD	11	Tobago		1
+TD	12	Victoria		1
+TE	00	Tromelin Island (general)		1
+TH	00	Thailand (general)		5
+TH	01	Mae Hong Son		5
+TH	02	Chiang Mai		5
+TH	03	Chiang Rai		5
+TH	04	Nan		5
+TH	05	Lamphun		5
+TH	06	Lampang		5
+TH	07	Phrae		5
+TH	08	Tak		5
+TH	09	Sukhothai		5
+TH	10	Uttaradit		5
+TH	11	Kamphaeng Phet		5
+TH	12	Phitsanulok		5
+TH	13	Phichit		5
+TH	14	Phetchabun		5
+TH	15	Uthai Thani		5
+TH	16	Nakhon Sawan		5
+TH	17	Nong Khai		5
+TH	18	Loei		5
+TH	19	(TH19)		5
+TH	20	Sakon Nakhon		5
+TH	21	(TH21)		5
+TH	22	Khon Kaen		5
+TH	23	Kalasin		5
+TH	24	Maha Sarakham		5
+TH	25	Roi Et		5
+TH	26	Chaiyaphum		5
+TH	27	Nakhon Ratchasima		5
+TH	28	Buriram		5
+TH	29	Surin		5
+TH	30	Sisaket		5
+TH	31	Narathiwat		5
+TH	32	Chai Nat		5
+TH	33	Sing Buri		5
+TH	34	Lop Buri		5
+TH	35	Ang Thong		5
+TH	36	Phra Nakhon Si Ayutthaya		5
+TH	37	Sara Buri		5
+TH	38	Nonthaburi		5
+TH	39	Pathum Thani		5
+TH	40	Krung Thep Mahanakhon		5
+TH	41	Phayao		5
+TH	42	Samut Prakan		5
+TH	43	Nakhon Nayok		5
+TH	44	Chachoengsao		5
+TH	45	(TH45)		5
+TH	46	Chon Buri		5
+TH	47	Rayong		5
+TH	48	Chanthaburi		5
+TH	49	Trat		5
+TH	50	Kanchanaburi		5
+TH	51	Suphan Buri		5
+TH	52	Ratchaburi		5
+TH	53	Nakhon Pathom		5
+TH	54	Samut Songkhram		5
+TH	55	Samut Sakhon		5
+TH	56	Phetchaburi		5
+TH	57	Prachuap Khiri Khan		5
+TH	58	Chumphon		5
+TH	59	Ranong		5
+TH	60	Surat Thani		5
+TH	61	Phangnga		5
+TH	62	Phuket		5
+TH	63	Krabi		5
+TH	64	Nakhon Si Thammarat		5
+TH	65	Trang		5
+TH	66	Phatthalung		5
+TH	67	Satun		5
+TH	68	Songkhla		5
+TH	69	Pattani		5
+TH	70	Yala		5
+TH	71	(TH71)		5
+TH	72	Yasothon		5
+TH	73	Nakhon Phanom		5
+TH	74	Prachin Buri		5
+TH	75	Ubon Ratchathani		5
+TH	76	Udon Thani		5
+TH	77	Amnat Charoen		5
+TH	78	Mukdahan		5
+TH	79	Nong Bua Lamphu		5
+TH	80	Sa Kaeo		5
+TI	00	Tajikistan (general)		4
+TI	01	Kuhistoni Badakhshon		4
+TI	02	Khatlon		4
+TI	03	Leninobod		4
+TK	00	Turks and Caicos Islands (general)		1
+TL	00	Tokelau (general)		1
+TN	00	Tonga (general)		5
+TN	01	Ha'apai		5
+TN	02	Tongatapu		5
+TN	03	Vava'u		5
+TO	00	Togo (general)		1
+TO	01	(TO01)		1
+TO	02	(TO02)		1
+TO	03	(TO03)		1
+TO	04	(TO04)		1
+TO	05	(TO05)		1
+TO	06	(TO06)		1
+TO	07	(TO07)		1
+TO	08	(TO08)		1
+TO	09	(TO09)		1
+TO	10	(TO10)		1
+TO	11	(TO11)		1
+TO	12	(TO12)		1
+TO	13	(TO13)		1
+TO	14	(TO14)		1
+TO	15	(TO15)		1
+TO	16	(TO16)		1
+TO	17	(TO17)		1
+TO	18	(TO18)		1
+TO	19	(TO19)		1
+TO	20	(TO20)		1
+TO	21	(TO21)		1
+TO	22	Centrale		1
+TO	23	Kara		1
+TO	24	Maritime		1
+TO	25	Plateaux		1
+TO	26	Savanes		1
+TP	00	Sao Tome and Principe (general)		1
+TP	01	Principe		1
+TP	02	Sao Tome		1
+TS	00	Tunisia (general)		3
+TS	02	Al Qasrayn		3
+TS	03	Al Qayrawan		3
+TS	06	Jundubah		3
+TS	14	Kef		3
+TS	15	Al Mahdiyah		3
+TS	16	Al Munastir		3
+TS	17	Bajah		3
+TS	18	Banzart		3
+TS	19	Nabul		3
+TS	22	Silyanah		3
+TS	23	Susah		3
+TS	26	(TS26)		3
+TS	27	Bin 'Arus		3
+TS	28	Madanin		3
+TS	29	Qabis		3
+TS	30	Qafsah		3
+TS	31	Qibili		3
+TS	32	Safaqis		3
+TS	33	Sidi Bu Zayd		3
+TS	34	Tatawin		3
+TS	35	Tawzar		3
+TS	36	Tunis		3
+TS	37	Zaghwan		3
+TS	38	Ariana		3
+TS	39	Manouba		3
+TT	00	East Timor (general)		5
+TU	00	Turkey (general)		4
+TU	02	Adiyaman		4
+TU	03	Afyon		4
+TU	04	Agri		4
+TU	05	Amasya		4
+TU	07	Antalya		4
+TU	08	Artvin		4
+TU	09	Aydin		4
+TU	10	Balikesir		4
+TU	11	Bilecik		4
+TU	12	Bingol		4
+TU	13	Bitlis		4
+TU	14	Bolu		4
+TU	15	Burdur		4
+TU	16	Bursa		4
+TU	17	Canakkale		4
+TU	19	Corum		4
+TU	20	Denizli		4
+TU	21	Diyarbakir		4
+TU	22	Edirne		4
+TU	23	Elazig		4
+TU	24	Erzincan		4
+TU	25	Erzurum		4
+TU	26	Eskisehir		4
+TU	28	Giresun		4
+TU	31	Hatay		4
+TU	32	Icel		4
+TU	33	Isparta		4
+TU	34	Istanbul		4
+TU	35	Izmir		4
+TU	37	Kastamonu		4
+TU	38	Kayseri		4
+TU	39	Kirklareli		4
+TU	40	Kirsehir		4
+TU	41	Kocaeli		4
+TU	43	Kutahya		4
+TU	44	Malatya		4
+TU	45	Manisa		4
+TU	46	Kahramanmaras		4
+TU	48	Mugla		4
+TU	49	Mus		4
+TU	50	Nevsehir		4
+TU	52	Ordu		4
+TU	53	Rize		4
+TU	54	Sakarya		4
+TU	55	Samsun		4
+TU	57	Sinop		4
+TU	58	Sivas		4
+TU	59	Tekirdag		4
+TU	60	Tokat		4
+TU	61	Trabzon		4
+TU	62	Tunceli		4
+TU	63	Sanliurfa		4
+TU	64	Usak		4
+TU	65	Van		4
+TU	66	Yozgat		4
+TU	68	Ankara		4
+TU	69	Gumushane		4
+TU	70	Hakkari		4
+TU	71	Konya		4
+TU	72	Mardin		4
+TU	73	Nigde		4
+TU	74	Siirt		4
+TU	75	Aksaray		4
+TU	76	Batman		4
+TU	77	Bayburt		4
+TU	78	Karaman		4
+TU	79	Kirikkale		4
+TU	80	Sirnak		4
+TU	81	Adana		4
+TU	82	Cankiri		4
+TU	83	Gaziantep		4
+TU	84	Kars		4
+TU	85	Zonguldak		4
+TU	86	Ardahan		4
+TU	87	Bartin		4
+TU	88	Igdir		4
+TU	89	Karabuk		4
+TU	90	Kilis		4
+TU	91	Osmaniye		4
+TU	92	Yalova		4
+TU	93	Duzce		4
+TV	00	Tuvalu (general)		5
+TW	00	Taiwan (general)		5
+TW	01	Fu-chien		5
+TW	02	Kao-hsiung		5
+TW	03	T'ai-pei		5
+TW	04	T'ai-wan		5
+TX	00	Turkmenistan (general)		4
+TX	01	Ahal		4
+TX	02	Balkan		4
+TX	03	Dasoguz		4
+TX	04	Lebap		4
+TX	05	Mary		4
+TZ	00	Tanzania (general)		1
+TZ	01	(TZ01)		1
+TZ	02	Dar es Salaam		1
+TZ	03	Dodoma		1
+TZ	04	Iringa		1
+TZ	05	Kigoma		1
+TZ	06	Kilimanjaro		1
+TZ	07	Lindi		1
+TZ	08	Mara		1
+TZ	09	Mbeya		1
+TZ	10	Morogoro		1
+TZ	11	Mtwara		1
+TZ	12	Mwanza		1
+TZ	13	Pemba North		1
+TZ	14	Ruvuma		1
+TZ	15	Shinyanga		1
+TZ	16	Singida		1
+TZ	17	Tabora		1
+TZ	18	Tanga		1
+TZ	19	Ziwa Magharibi		1
+TZ	20	Pemba South		1
+TZ	21	Zanzibar Central/South		1
+TZ	22	Zanzibar North		1
+TZ	23	Dar es Salaam		1
+TZ	24	Rukwa		1
+TZ	25	Zanzibar Urban/West		1
+TZ	26	Arusha		1
+TZ	27	Manyara		1
+UF	00	Undersea Features (general)		1
+UG	00	Uganda (general)		1
+UG	26	Apac		1
+UG	27	(UG27)		1
+UG	28	Bundibugyo		1
+UG	29	Bushenyi		1
+UG	30	Gulu		1
+UG	31	Hoima		1
+UG	32	(UG32)		1
+UG	33	Jinja		1
+UG	34	Kabale		1
+UG	35	(UG35)		1
+UG	36	Kalangala		1
+UG	37	Kampala		1
+UG	38	Kamuli		1
+UG	39	Kapchorwa		1
+UG	40	Kasese		1
+UG	41	Kibale		1
+UG	42	Kiboga		1
+UG	43	Kisoro		1
+UG	44	(UG44)		1
+UG	45	Kotido		1
+UG	46	Kumi		1
+UG	47	Lira		1
+UG	48	(UG48)		1
+UG	49	(UG49)		1
+UG	50	Masindi		1
+UG	51	(UG51)		1
+UG	52	Mbarara		1
+UG	53	(UG53)		1
+UG	54	(UG54)		1
+UG	55	(UG55)		1
+UG	56	Mubende		1
+UG	57	(UG57)		1
+UG	58	Nebbi		1
+UG	59	Ntungamo		1
+UG	60	Pallisa		1
+UG	61	Rakai		1
+UG	62	(UG62)		1
+UG	63	(UG63)		1
+UG	64	(UG64)		1
+UG	65	Adjumani		1
+UG	66	Bugiri		1
+UG	67	Busia		1
+UG	68	(UG68)		1
+UG	69	Katakwi		1
+UG	70	Luwero		1
+UG	71	Masaka		1
+UG	72	Moyo		1
+UG	73	Nakasongola		1
+UG	74	Sembabule		1
+UG	75	(UG75)		1
+UG	76	Tororo		1
+UG	77	Arua		1
+UG	78	Iganga		1
+UG	79	Kabarole		1
+UG	80	Kaberamaido		1
+UG	81	Kamwenge		1
+UG	82	Kanungu		1
+UG	83	Kayunga		1
+UG	84	Kitgum		1
+UG	85	Kyenjojo		1
+UG	86	Mayuge		1
+UG	87	Mbale		1
+UG	88	Moroto		1
+UG	89	Mpigi		1
+UG	90	Mukono		1
+UG	91	Nakapiripirit		1
+UG	92	Pader		1
+UG	93	Rukungiri		1
+UG	94	Sironko		1
+UG	95	Soroti		1
+UG	96	Wakiso		1
+UG	97	Yumbe		1
+UK	00	United Kingdom (general)		1
+UK	01	(UK01)		1
+UK	08	(UK08)		1
+UK	11	(UK11)		1
+UK	12	(UK12)		1
+UK	13	(UK13)		1
+UK	17	(UK17)		1
+UK	19	(UK19)		1
+UK	29	(UK29)		1
+UK	32	(UK32)		1
+UK	36	(UK36)		1
+UK	52	(UK52)		1
+UK	64	(UK64)		1
+UK	80	(UK80)		1
+UK	81	(UK81)		1
+UK	82	(UK82)		1
+UK	83	(UK83)		1
+UK	84	(UK84)		1
+UK	85	(UK85)		1
+UK	86	(UK86)		1
+UK	87	(UK87)		1
+UK	88	(UK88)		1
+UK	89	(UK89)		1
+UK	90	(UK90)		1
+UK	91	(UK91)		1
+UK	92	(UK92)		1
+UK	93	(UK93)		1
+UK	96	(UK96)		1
+UK	A1	Barking and Dagenham		1
+UK	A2	Barnet		1
+UK	A3	Barnsley		1
+UK	A4	Bath and North East Somerset		1
+UK	A5	Bedfordshire		1
+UK	A6	Bexley		1
+UK	A7	Birmingham		1
+UK	A8	Blackburn with Darwen		1
+UK	A9	Blackpool		1
+UK	B1	Bolton		1
+UK	B2	Bournemouth		1
+UK	B3	Bracknell Forest		1
+UK	B4	Bradford		1
+UK	B5	Brent		1
+UK	B6	Brighton and Hove		1
+UK	B7	Bristol, City of		1
+UK	B8	Bromley		1
+UK	B9	Buckinghamshire		1
+UK	C1	Bury		1
+UK	C2	Calderdale		1
+UK	C3	Cambridgeshire		1
+UK	C4	Camden		1
+UK	C5	Cheshire		1
+UK	C6	Cornwall		1
+UK	C7	Coventry		1
+UK	C8	Croydon		1
+UK	C9	Cumbria		1
+UK	D1	Darlington		1
+UK	D2	Derby		1
+UK	D3	Derbyshire		1
+UK	D4	Deven		1
+UK	D5	Doncaster		1
+UK	D6	Dorset		1
+UK	D7	Dudley		1
+UK	D8	Durham		1
+UK	D9	Ealing		1
+UK	E1	East Riding of Yorkshire		1
+UK	E2	East Sussex		1
+UK	E3	Enfield		1
+UK	E4	Essex		1
+UK	E5	Gateshead		1
+UK	E6	Gloucestershire		1
+UK	E7	Greenwich		1
+UK	E8	Hackney		1
+UK	E9	Halton		1
+UK	F1	Hammersmith and Fulham		1
+UK	F2	Hampshire		1
+UK	F3	Haringey		1
+UK	F4	Harrow		1
+UK	F5	Hartlepool		1
+UK	F6	Havering		1
+UK	F7	Herefordshire		1
+UK	F8	Hertfordshire		1
+UK	F9	Hillingdon		1
+UK	G1	Hounslow		1
+UK	G2	Isle of Wight		1
+UK	G3	Islington		1
+UK	G4	Kensington and Chelsea		1
+UK	G5	Kent		1
+UK	G6	Kingston upon Hull, City of		1
+UK	G7	Kingston upon Thames		1
+UK	G8	Kirklees		1
+UK	G9	Knowsley		1
+UK	H1	Lambeth		1
+UK	H2	Lancashire		1
+UK	H3	Leeds		1
+UK	H4	Leicester		1
+UK	H5	Leicestershire		1
+UK	H6	Lewisham		1
+UK	H7	Lincolnshire		1
+UK	H8	Liverpool		1
+UK	H9	London, City of		1
+UK	I1	Luton		1
+UK	I2	Manchester		1
+UK	I3	Medway		1
+UK	I4	Merton		1
+UK	I5	Middlesbough		1
+UK	I6	Milton Keynes		1
+UK	I7	Newcastle upon Tyne		1
+UK	I8	Newham		1
+UK	I9	Norfolk		1
+UK	J1	Northamptonshire		1
+UK	J2	North East Lincolnshire		1
+UK	J3	North Lincolnshire		1
+UK	J4	North Somerset		1
+UK	J5	North Tyneside		1
+UK	J6	Northumberland		1
+UK	J7	North Yorkshire		1
+UK	J8	Nottingham		1
+UK	J9	Nottinghamshire		1
+UK	K1	Oldham		1
+UK	K2	Oxfordshire		1
+UK	K3	Peterborough		1
+UK	K4	Plymouth		1
+UK	K5	Poole		1
+UK	K6	Portsmouth		1
+UK	K7	Reading		1
+UK	K8	Redbridge		1
+UK	K9	Redcar and Cleveland		1
+UK	L1	Richmond upon Thames		1
+UK	L2	Rochdale		1
+UK	L3	Rotherham		1
+UK	L4	Rutland		1
+UK	L5	Salford		1
+UK	L6	Shropshire		1
+UK	L7	Sandwell		1
+UK	L8	Sefton		1
+UK	L9	Sheffield		1
+UK	M1	Slough		1
+UK	M2	Solihull		1
+UK	M3	Somerset		1
+UK	M4	Southampton		1
+UK	M5	Southend-on-Sea		1
+UK	M6	South Gloucestershire		1
+UK	M7	South Tyneside		1
+UK	M8	Southwark		1
+UK	M9	St. Helens		1
+UK	N1	Staffordshire		1
+UK	N2	Stockport		1
+UK	N3	Stockport-on-Tees		1
+UK	N4	Stoke-on-Trent		1
+UK	N5	Suffolk		1
+UK	N6	Sunderland		1
+UK	N7	Surrey		1
+UK	N8	Sutton		1
+UK	N9	Swindon		1
+UK	O1	Tameside		1
+UK	O2	Telford and Wrekin		1
+UK	O3	Thurrock		1
+UK	O4	Torbay		1
+UK	O5	Tower Hamlets		1
+UK	O6	Trafford		1
+UK	O7	Wakefield		1
+UK	O8	Walsall		1
+UK	O9	Waltham Forest		1
+UK	P1	Wandsworth		1
+UK	P2	Warrington		1
+UK	P3	Warwickshire		1
+UK	P4	West Berkshire		1
+UK	P5	Westminster		1
+UK	P6	West Sussex		1
+UK	P7	Wigan		1
+UK	P8	Wiltshire		1
+UK	P9	Windsor and Maidenhead		1
+UK	Q1	Wirral		1
+UK	Q2	Wokingham		1
+UK	Q3	Wolverhampton		1
+UK	Q4	Worcestershire		1
+UK	Q5	York		1
+UK	Q6	Antrim		1
+UK	Q7	Ards		1
+UK	Q8	Armagh		1
+UK	Q9	Ballymena		1
+UK	R1	Ballymoney		1
+UK	R2	Banbridge		1
+UK	R3	Belfast		1
+UK	R4	Carrickfergus		1
+UK	R5	Castlereagh		1
+UK	R6	Coleraine		1
+UK	R7	Cookstown		1
+UK	R8	Craigavon		1
+UK	R9	Down		1
+UK	S1	Dungannon		1
+UK	S2	Fermanagh		1
+UK	S3	Larne		1
+UK	S4	Limavady		1
+UK	S5	Lisburn		1
+UK	S6	Derry		1
+UK	S7	Magherafelt		1
+UK	S8	Moyle		1
+UK	S9	Newry and Mourne		1
+UK	T1	Newtownabbey		1
+UK	T2	North Down		1
+UK	T3	Omagh		1
+UK	T4	Strabane		1
+UK	T5	Aberdeen City		1
+UK	T6	Aberdeenshire		1
+UK	T7	Angus		1
+UK	T8	Argyll and Bute		1
+UK	T9	Scottish Borders, The		1
+UK	U1	Clackmannanshire		1
+UK	U2	Dumfries and Galloway		1
+UK	U3	Dundee City		1
+UK	U4	East Ayrshire		1
+UK	U5	East Dunbartonshire		1
+UK	U6	East Lothian		1
+UK	U7	East Renfrewshire		1
+UK	U8	Edinburgh, City of		1
+UK	U9	Falkirk		1
+UK	V1	Fife		1
+UK	V2	Glasgow City		1
+UK	V3	Highland		1
+UK	V4	Inverclyde		1
+UK	V5	Midlothian		1
+UK	V6	Moray		1
+UK	V7	North Ayrshire		1
+UK	V8	North Lanarkshire		1
+UK	V9	Orkney Islands		1
+UK	W1	Perth and Kinross		1
+UK	W2	Renfrewshire		1
+UK	W3	Shetland Islands		1
+UK	W4	South Ayrshire		1
+UK	W5	South Lanarkshire		1
+UK	W6	Stirling		1
+UK	W7	West Dunbartonshire		1
+UK	W8	Eilean Siar		1
+UK	W9	West Lothian		1
+UK	X1	Isle of Anglesey		1
+UK	X2	Blaenau Gwent		1
+UK	X3	Bridgend		1
+UK	X4	Caerphilly		1
+UK	X5	Cardiff		1
+UK	X6	Ceredigion		1
+UK	X7	Carmarthenshire		1
+UK	X8	Conwy		1
+UK	X9	Denbighshire		1
+UK	Y1	Flintshire		1
+UK	Y2	Gwynedd		1
+UK	Y3	Merthyr Tydfil		1
+UK	Y4	Monmouthshire		1
+UK	Y5	Neath Port Talbot		1
+UK	Y6	Newport		1
+UK	Y7	Pembrokeshire		1
+UK	Y8	Powys		1
+UK	Y9	Rhondda Cynon Taff		1
+UK	Z1	Swansea		1
+UK	Z2	Torfaen		1
+UK	Z3	Vale of Glamorgan, The		1
+UK	Z4	Wrexham		1
+UP	00	Ukraine (general)		4
+UP	01	Cherkas'ka Oblast'		4
+UP	02	Chernihivs'ka Oblast'		4
+UP	03	Chernivets'ka Oblast'		4
+UP	04	Dnipropetrovs'ka Oblast'		4
+UP	05	Donets'ka Oblast'		4
+UP	06	Ivano-Frankivs'ka Oblast'		4
+UP	07	Kharkivs'ka Oblast'		4
+UP	08	Khersons'ka Oblast'		4
+UP	09	Khmel'nyts'ka Oblast'		4
+UP	10	Kirovohrads'ka Oblast'		4
+UP	11	Krym, Avtonomna Respublika		4
+UP	12	Kyyiv, Misto		4
+UP	13	Kyyivs'ka Oblast'		4
+UP	14	Luhans'ka Oblast'		4
+UP	15	L'vivs'ka Oblast'		4
+UP	16	Mykolayivs'ka Oblast'		4
+UP	17	Odes'ka Oblast		4
+UP	18	Poltavs'ka Oblast'		4
+UP	19	Rivnens'ka Oblast'		4
+UP	20	Sevastopol', Misto		4
+UP	21	Sums'ka Oblast'		4
+UP	22	Ternopil's'ka Oblast'		4
+UP	23	Vinnyts'ka Oblast'		4
+UP	24	Volyns'ka Oblast'		4
+UP	25	Zakarpats'ka Oblast'		4
+UP	26	Zaporiz'ka Oblast'		4
+UP	27	Zhytomyrs'ka Oblast'		4
+US	00	United States (general)		1
+UV	00	Burkina Faso (general)		3
+UV	15	Bam		3
+UV	16	(UV16)		3
+UV	17	(UV17)		3
+UV	18	(UV18)		3
+UV	19	Boulkiemde		3
+UV	20	Ganzourgou		3
+UV	21	Gnagna		3
+UV	22	(UV22)		3
+UV	23	(UV23)		3
+UV	24	(UV24)		3
+UV	25	(UV25)		3
+UV	26	(UV26)		3
+UV	27	(UV27)		3
+UV	28	Kouritenga		3
+UV	29	(UV29)		3
+UV	30	(UV30)		3
+UV	31	(UV31)		3
+UV	32	(UV32)		3
+UV	33	Oudalan		3
+UV	34	Passore		3
+UV	35	(UV35)		3
+UV	36	Sanguie		3
+UV	37	(UV37)		3
+UV	38	(UV38)		3
+UV	39	(UV39)		3
+UV	40	Soum		3
+UV	41	(UV41)		3
+UV	42	Tapoa		3
+UV	43	(UV43)		3
+UV	44	Zoundweogo		3
+UV	45	Bale		3
+UV	46	Banwa		3
+UV	47	Bazega		3
+UV	48	Bougouriba		3
+UV	49	Boulgou		3
+UV	50	Gourma		3
+UV	51	Houet		3
+UV	52	Ioba		3
+UV	53	Kadiogo		3
+UV	54	Kenedougou		3
+UV	55	Comoe		3
+UV	56	Komondjari		3
+UV	57	Kompienga		3
+UV	58	Kossi		3
+UV	59	Koulpelogo		3
+UV	60	Kourweogo		3
+UV	61	Leraba		3
+UV	62	Loroum		3
+UV	63	Mouhoun		3
+UV	64	Namentenga		3
+UV	65	Nahouri		3
+UV	66	Nayala		3
+UV	67	Noumbiel		3
+UV	68	Oubritenga		3
+UV	69	Poni		3
+UV	70	Sanmatenga		3
+UV	71	Seno		3
+UV	72	Sissili		3
+UV	73	Sourou		3
+UV	74	Tuy		3
+UV	75	Yagha		3
+UV	76	Yatenga		3
+UV	77	Ziro		3
+UV	78	Zondoma		3
+UY	00	Uruguay (general)		1
+UY	01	Artigas		1
+UY	02	Canelones		1
+UY	03	Cerro Largo		1
+UY	04	Colonia		1
+UY	05	Durazno		1
+UY	06	Flores		1
+UY	07	Florida		1
+UY	08	Lavalleja		1
+UY	09	Maldonado		1
+UY	10	Montevideo		1
+UY	11	Paysandu		1
+UY	12	Rio Negro		1
+UY	13	Rivera		1
+UY	14	Rocha		1
+UY	15	Salto		1
+UY	16	San Jose		1
+UY	17	Soriano		1
+UY	18	Tacuarembo		1
+UY	19	Treinta y Tres		1
+UZ	00	Uzbekistan (general)		4
+UZ	01	Andijon		4
+UZ	02	Buxoro		4
+UZ	03	Farg ona		4
+UZ	05	Xorazm		4
+UZ	06	Namangan		4
+UZ	07	Navoiy		4
+UZ	08	Qashqadaryo		4
+UZ	09	Qoraqalpog iston		4
+UZ	10	Samarqand		4
+UZ	12	Surxondaryo		4
+UZ	13	Toshkent Shahri		4
+UZ	14	Toshkent		4
+UZ	15	Jizzax		4
+UZ	16	Sirdaryo		4
+VC	00	Saint Vincent and The Grenadines (general)		1
+VC	01	Charlotte		1
+VC	02	Saint Andrew		1
+VC	03	Saint David		1
+VC	04	Saint George		1
+VC	05	Saint Patrick		1
+VC	06	Grenadines		1
+VE	00	Venezuela (general)		1
+VE	01	Amazonas		1
+VE	02	Anzoategui		1
+VE	03	Apure		1
+VE	04	Aragua		1
+VE	05	Barinas		1
+VE	06	Bolivar		1
+VE	07	Carabobo		1
+VE	08	Cojedes		1
+VE	09	Delta Amacuro		1
+VE	10	(VE10)		1
+VE	11	Falcon		1
+VE	12	Guarico		1
+VE	13	Lara		1
+VE	14	Merida		1
+VE	15	Miranda		1
+VE	16	Monagas		1
+VE	17	Nueva Esparta		1
+VE	18	Portuguesa		1
+VE	19	Sucre		1
+VE	20	Tachira		1
+VE	21	Trujillo		1
+VE	22	Yaracuy		1
+VE	23	Zulia		1
+VE	24	Dependencias Federales		1
+VE	25	Distrito Federal		1
+VE	26	Vargas		1
+VE	99	(VE99)		1
+VI	00	British Virgin Islands (general)		1
+VM	00	Vietnam (general)		6
+VM	01	An Giang		6
+VM	02	(VM02)		6
+VM	03	Ben Tre		6
+VM	04	(VM04)		6
+VM	05	Cao Bang		6
+VM	06	(VM06)		6
+VM	07	Dak Lak		6
+VM	09	Dong Thap		6
+VM	10	(VM10)		6
+VM	11	(VM11)		6
+VM	12	(VM12)		6
+VM	13	Hai Phong		6
+VM	14	(VM14)		6
+VM	15	(VM15)		6
+VM	16	(VM16)		6
+VM	17	(VM17)		6
+VM	19	(VM19)		6
+VM	20	Ho Chi Minh		6
+VM	21	Kien Giang		6
+VM	22	Lai Chau		6
+VM	23	Lam Dong		6
+VM	24	Long An		6
+VM	25	(VM25)		6
+VM	26	(VM26)		6
+VM	27	(VM27)		6
+VM	28	(VM28)		6
+VM	29	(VM29)		6
+VM	30	Quang Ninh		6
+VM	31	(VM31)		6
+VM	32	Son La		6
+VM	33	Tay Ninh		6
+VM	34	Thanh Hoa		6
+VM	35	Thai Binh		6
+VM	36	(VM36)		6
+VM	37	Tien Giang		6
+VM	38	(VM38)		6
+VM	39	Lang Son		6
+VM	40	(VM40)		6
+VM	41	(VM41)		6
+VM	43	Dong Nai		6
+VM	44	Ha Noi		6
+VM	45	Ba Ria-Vung Tau		6
+VM	46	Binh Duonh		6
+VM	47	Binh Thuan		6
+VM	48	Can Tho		6
+VM	49	Gai Lai		6
+VM	50	Ha Giang		6
+VM	51	Ha Tay		6
+VM	52	Ha Tinh		6
+VM	53	Hoa Binh		6
+VM	54	Khanh Hoa		6
+VM	55	Kon Tum		6
+VM	56	Lao Cai		6
+VM	57	(VM57)		6
+VM	58	Nghe An		6
+VM	59	Ninh Binh		6
+VM	60	Ninh Thuan		6
+VM	61	Phu Yen		6
+VM	62	Quang Binh		6
+VM	64	Quang Tri		6
+VM	65	Soc Trang		6
+VM	66	Thua Thien-Hue		6
+VM	67	Tra Vinh		6
+VM	68	Tuyen Quang		6
+VM	69	Vinh Long		6
+VM	70	Yen Bai		6
+VM	71	Bac Giang		6
+VM	72	Bac Kan		6
+VM	73	Bac Lieu		6
+VM	74	Bac Ninh		6
+VM	75	Bin Duong		6
+VM	76	Bin Phuoc		6
+VM	77	Ca Mau		6
+VM	78	Da Nang		6
+VM	79	Hai Duong		6
+VM	80	Ha Nam		6
+VM	81	Hung Yen		6
+VM	82	Nam Dinh		6
+VM	83	Phu Tho		6
+VM	84	Quang Nam		6
+VM	85	Thai Nguyen		6
+VM	86	Vinh Phuc		6
+VQ	00	Virgin Islands (general)		1
+VT	00	Vatican City (general)		1
+WA	00	Namibia (general)		1
+WA	01	(WA01)		1
+WA	02	(WA02)		1
+WA	03	(WA03)		1
+WA	04	(WA04)		1
+WA	05	(WA05)		1
+WA	06	(WA06)		1
+WA	07	(WA07)		1
+WA	08	(WA08)		1
+WA	09	(WA09)		1
+WA	10	(WA10)		1
+WA	11	(WA11)		1
+WA	12	(WA12)		1
+WA	13	(WA13)		1
+WA	14	(WA14)		1
+WA	15	(WA15)		1
+WA	16	(WA16)		1
+WA	17	(WA17)		1
+WA	18	(WA18)		1
+WA	20	(WA20)		1
+WA	21	Khomas		1
+WA	22	(WA22)		1
+WA	23	(WA23)		1
+WA	24	(WA24)		1
+WA	25	(WA25)		1
+WA	26	(WA26)		1
+WA	27	(WA27)		1
+WA	28	Caprivi		1
+WA	29	Erongo		1
+WA	30	Hardap		1
+WA	31	Karas		1
+WA	32	Kunene		1
+WA	33	Ohangwena		1
+WA	34	Okavango		1
+WA	35	Omaheke		1
+WA	36	Omusati		1
+WA	37	Oshana		1
+WA	38	Oshikoto		1
+WA	39	Otjozondjupa		1
+WA	40	(WA40)		1
+WE	00	West Bank (general)		3
+WF	00	Wallis and Futuna (general)		1
+WI	00	Western Sahara (general)		3
+WS	00	Samoa (general)		5
+WS	01	A'ana		5
+WS	02	Aiga-i-le-Tai		5
+WS	03	Atua		5
+WS	04	Fa'asaleleaga		5
+WS	05	Gaga'emauga		5
+WS	06	Va'a-o-Fonoti		5
+WS	07	Gagaifomauga		5
+WS	08	Palauli		5
+WS	09	Satupa'itea		5
+WS	10	Tuamasaga		5
+WS	11	Vaisigano		5
+WZ	00	Swaziland (general)		3
+WZ	01	Hhohho		3
+WZ	02	Lubombo		3
+WZ	03	Manzini		3
+WZ	04	Shiselweni		3
+YI	00	Serbia and Montenegro (general)		2
+YI	01	Crna Gora (Montenegro)		2
+YI	02	Srbija (Serbia)		2
+YM	00	Yemen (general)		3
+YM	01	Abyan		3
+YM	02	'Adan		3
+YM	03	Al Mahrah		3
+YM	04	Hadhramawt		3
+YM	05	Shabwah		3
+YM	06	(YM06)		3
+YM	07	(YM07)		3
+YM	08	Al Hudaydah		3
+YM	09	(YM09)		3
+YM	10	Al Mahwit		3
+YM	11	Dhamar		3
+YM	12	(YM12)		3
+YM	13	(YM13)		3
+YM	14	Ma'rib		3
+YM	15	Sa'dah		3
+YM	16	San'a'		3
+YM	17	(YM17)		3
+YM	18	(YM18)		3
+YM	19	'Ataq		3
+YM	20	Al Bayda'		3
+YM	21	Al Jawf		3
+YM	22	Hajjah		3
+YM	23	Ibb		3
+YM	24	Lahij		3
+YM	25	Ta'izz		3
+ZA	00	Zambia (general)		1
+ZA	01	North-Western		1
+ZA	02	Copperbelt		1
+ZA	03	Western		1
+ZA	04	Southern		1
+ZA	05	Central		1
+ZA	06	Eastern		1
+ZA	07	Northern		1
+ZA	08	Luapula		1
+ZA	09	Lusaka		1
+ZI	00	Zimbabwe (general)		1
+ZI	01	Manicaland		1
+ZI	02	Midlands		1
+ZI	03	Mashonaland Central		1
+ZI	04	Mashonaland East		1
+ZI	05	Mashonaland West		1
+ZI	06	Matabeleland North		1
+ZI	07	Matabeleland South		1
+ZI	08	Masvingo		1
+ZI	09	Bulawayo		1
+ZI	10	Harare		1

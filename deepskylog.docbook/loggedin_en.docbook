@@ -1,0 +1,186 @@
+<chapter id="LoggedIn">
+	<title>&deepskylog; with an account</title>
+	<sect1><title>Request an account</title>
+        <para>With a deepskylog account you can benefit more from all the features covered in deepskylog. 
+        With a deepskylog account you can keep track of your own observations and compare them with other observers.</para>
+        <para>Registration consists of two consecutive steps: registration of your username and approval of your username</para> 
+        <para>To register, click on the 
+        register link in the login section. You will get a form where you need to provide some identification info:
+        </para>
+        <itemizedlist>
+        <listitem>
+        <emphasis>Username</emphasis>: this is a sort of nickname to login to deepskylog 
+        </listitem>
+        <listitem>
+        <emphasis>Email address</emphasis>: this will be used to notify you when your account is approved
+        </listitem>
+        <listitem>
+        <emphasis>First name</emphasis>: your first name
+        </listitem>
+        <listitem>
+        <emphasis>Name</emphasis>: your name
+        </listitem>
+        <listitem>
+        <emphasis>Password</emphasis>: choose a password to enter deepskylog. Don't choose anything obvious and please 
+        don't use the same password as the one you need for your email account!
+        </listitem>
+        <listitem>
+        <emphasis>Confirm password</emphasis>: type the above password again to check for typing errors
+        </listitem>
+        </itemizedlist>  
+        <para>After you have provided the above information, click the register button.</para>     
+        <para>
+        If everything went well, you will be notified by email that your account has been registered. 
+        You <emphasis>cannot</emphasis> 
+        login with this account yet though! Your account needs to be manually approved by the administrators of the deepskylog 
+        website to exclude abuses.</para>
+        <para>
+        When your account is approved, you will be notified by email again and you can access the deepskylog 
+        website by entering your chosen username and password in the login fields</para>
+        </para>
+        </sect1>
+	<sect1><title>First steps after logging in</title>
+        <para>After your account has been approved, you can login with your new username and password. Deepskylog makes use of cookies, 
+        your username and password will be saved and you are automatically logged in when you return to the deepskylog website.</para>
+        <para>To benefit the most from 
+        all the deepskylog features, we advise you that you enter some extra information in your account details first. To do this, 
+        click on the <emphasis>account details</emphasis> link in the add/edit section.
+        </para>
+        <para>
+        You will be provided with a webform with your account details:
+        </para>
+        <para>
+        <itemizedlist>
+        <listitem>
+        <emphasis>Username</emphasis>: your username
+        </listitem>
+        <listitem>
+        <emphasis>Email address</emphasis>: your email address
+        </listitem>
+        <listitem>
+        <emphasis>First name</emphasis>: your first name
+        </listitem>
+        <listitem>
+        <emphasis>Name</emphasis>: your name
+        </listitem>
+        <listitem>
+        <emphasis>Password</emphasis>: your password
+        </listitem>
+        </itemizedlist>
+        <note>Every time you want to change something in your account details, you have to enter your password and confirm it!
+        Otherwise your changes will <emphasis>not</emphasis> be stored.</note>
+        <note>You can change your old password by providing a new password
+        in the password and confirm password fields</note>
+        <itemizedlist>
+        <listitem>
+        <emphasis>Confirm password</emphasis>: confirm your password to check for typing errors
+        </listitem>
+        <listitem>
+        <emphasis>ICQ code</emphasis>: here you can enter your ICQ code for comet observations. This may be left empty.
+        </listitem>
+        <listitem>
+        <emphasis>Default observing site</emphasis>: choose your default observing site from the dropdown box or enter a new 
+        observing site by clicking on the link next to it. By entering a default observing site here, every new observation 
+        will automatically be linked to your default observing site. As a benefit, entering new observations will be much faster. This 
+        behaviour can be overridden for each observation though. 
+        </listitem>
+        <listitem>
+        <emphasis>Default instrument</emphasis>: choose your default instrument from the dropdown box or enter a new instrument 
+        by clicking on the link next to it. By entering a default instrument here, every new observation will automatically be 
+        linked to your default instrument. As a benefit, entering new observations will be much faster. This behaviour can be 
+        overridden for each observation though.
+        </listitem>
+        <listitem>
+        <emphasis>Default atlas</emphasis>: choose your default atlas from the dropdown box. When you query objects or view the 
+        details of an object, the page number of your default atlas will be shown. Deepskylog currently supports the following atlases: 
+        Uranometria (1st and 2nd edition), Sky Atlas and Millenium Star Atlas.
+        </listitem>
+        <listitem>
+        <emphasis>Picture</emphasis>: you can upload a (new) picture so everyone can see how you look like. 
+        </listitem>
+        <listitem>
+        <emphasis>Default language</emphasis>: choose your default language from the dropdown box. The graphical user interface will 
+        be changed to the selected language. 
+        </listitem>
+        </itemizedlist>
+        </para> 
+        </sect1>
+	<sect1><title>Account details</title></sect1>
+	<sect1><title>New observation</title>
+	In this section, we do not try to give an overview of all the possibilities while entering a deepsky 
+	observation, but we try to elaborate on a few real live examples a typical deepsky observer will encounter
+	sooner or later. The examples we will give are :
+
+	<itemizedlist>
+        <listitem>Adding existing observations in deepskylog</listitem>
+	<listitem>Adding a single observation of a deepsky object</listitem>
+	<listitem>Adding all observations of one observing night</listitem>
+        </itemizedlist>
+
+	<sect2><title>Adding existing observations in deepskylog</title>
+	<para>Most deepsky observers keep track of their observations somehow. Some observers just 
+        have a book where they note down all descriptions and drawings, others use a computer application to 
+	keep track of their observations. This section describes how to import all your observations from a 
+	computer application (like excel, or any other application which can export to 'comma separated values'
+	files (CSV-files)) into &deepskylog;.</para> <note>If you import your observations this way, please remember 
+	that your drawings will never be imported in &deepskylog;. You will need to import all your drawings 
+	one by one after the descriptions are imported.</note> 
+	<para>Before importing your CSV file into deepskylog, you need to make sure that the following things are 
+	done:
+	<itemizedlist><listitem>You need of course a &deepskylog; account. If you do not have a &deepskylog; account
+	yet, you should register on a &deepskylog; site and await approval from one of the administrators.
+	</listitem></itemizedlist>
+	<itemizedlist><listitem>All the locations available in your CSV file should also be known in
+	&deepskylog;. Normally, this will not be the case. You should make a list of all locations
+	which are not available in &deepskylog;. You can see the list of all available locations in the 
+	'Account details', under the item 'Default observing site'. All the unknown locations should 
+	be added using the 'New location' item. There you can search into the database of locations (which 
+	should always be your first step) or enter the coordinates of the location manually.</listitem></itemizedlist>
+	<itemizedlist><listitem>Not only the observations of your CSV file should be available in &deepskylog;,
+	but also the instruments. You can see the list of all available instruments in the 'Account details',
+	under the item 'New instrument'.</listitem></itemizedlist>
+	<itemizedlist><listitem>The CSV file should start with the following line: 
+	<para>Object;Observer;Date;UT;Location;Instrument;Seeing;LimMag;Description</para>
+	</listitem></itemizedlist>
+	<itemizedlist><listitem>The observations should be entered the following way :
+	<itemizedlist><listitem>The name of the object, for example M 13. A space should be available between the 
+	catalogue name (in this case M for Messier) and the number. You can browse a &deepskylog; site for more details
+	on the names of the objects.</listitem></itemizedlist>
+	<itemizedlist><listitem>Your observing name as known on the &deepskylog; site (eg John Smith). 
+	</listitem></itemizedlist>
+	<itemizedlist><listitem>The date using the European format (dd-mm-yyyy).</listitem></itemizedlist>
+	<itemizedlist><listitem>The time in UT. This field can be left blank!</listitem></itemizedlist>
+	<itemizedlist><listitem>The location, written exactly as it is known on the &deepskylog; site. 
+	</listitem></itemizedlist>
+	<itemizedlist><listitem>The telescope name, written exactly as it is known on the &deepskylog; site.
+	</listitem></itemizedlist>
+	<itemizedlist><listitem>The seeing, a number ('Excellent' = 5, 'Good' = 4, 'Moderate' = 3, 'Poor' = 2 or 
+	'Bad' = 1). This field is not mandatory!</listitem></itemizedlist>
+	<itemizedlist><listitem>Limiting magnitude, a number describing the limiting magnitude when you did 
+	your observation (for example 6.4). 
+	This field is also not mandatory.</listitem></itemizedlist>
+	<itemizedlist><listitem>The description of your observation. Do not use enters or ; in your
+	description!</listitem></itemizedlist>
+	</listitem></itemizedlist>
+	<itemizedlist><listitem>Your CSV file should look like this:
+    <programlisting>Object;Observer;Date;UT;Location;Instrument;Seeing;LimMag;Description</whiteline>
+NGC 2392;John Smith;21-01-2005;20:45;Aalst;Obsession 15";2;4.0;Nice planetary nebula with a very bright central star! 
+M 35;John Smith;21-01-2005;20:53;Aalst;Obsession 15";2;4.0;About thirty members with several curved chains of stars.
+...
+    </programlisting>
+	</listitem></itemizedlist>
+	<itemizedlist><listitem>Now that you have your CSV file, you can insert the file into &deepskylog;. Select
+	'New observation' from the menu, and select 'import observations from a CSV file'. In the form you see, you 
+	have to enter the location of your file. After you click the 'Import!' button, your observations should be 
+	inserted. If a problem occurs, &deepskylog; will complain and tell what the problem is.	</listitem></itemizedlist>
+	</sect2>
+	<sect2><title>Adding a single observation of a deepsky object</title></sect2>
+<note>&deepskylog; automatically adds a link to the Messier, NGC and IC objects in your descriptions.</note>
+	<sect2><title>Adding all observations of an observing night</title></sect2>
+	</sect1>
+	
+	<sect1><title>New instrument</title></sect1>
+	<sect1><title>New location</title></sect1> 
+	<sect1><title>New object</title></sect1>
+</chapter>
+

@@ -1,0 +1,21 @@
+<?php 
+  header ("Content-Type: application/pdf");
+  header ("Content-Disposition: attachment; filename=\"observations.pdf\"");
+
+  $_SESSION['module'] = "comets";
+  $_SESSION['pdfname'] = "observations.pdf"; // necessary for class.pdf.php
+
+  include_once "../lib/cometobservations.php";
+  include_once "../lib/util.php";
+  $util = new util;
+  $util->checkUserInput();
+
+  $result = $_SESSION['observation_query'];
+
+  if ($result != "")
+  {
+   $util = new util();
+
+   $util->pdfCometObservations($result);
+  }
+?>

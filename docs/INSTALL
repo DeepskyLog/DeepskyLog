@@ -1,0 +1,115 @@
+How to install deepskylog?
+----------------------------
+
+- Untar the tarball to the directory where deepskylog should be installed.
+    tar zxvf deepskylog-2.1.tar.gz
+
+- Make a database in mysql where you want to store the data
+
+  - If you don't have the permission to add a new database by yourself, 
+     your system administrator should add the database for you and 
+     give you the rights to use and adapt it.
+
+     mysql -p -u root
+      create database [db_name];
+      use mysql;
+      grant all on [db_name] to [user]@[host];
+      grant all on [db_name].* to [user]@[host];
+      grant all on [db_name] to [user]@localhost;
+      grant all on [db_name].* to [user]@localhost;
+      quit
+      
+  - If you have the permission to add a new database, the command to execute is:
+
+     mysql -p
+      create database [db_name];
+      quit
+
+  - Perform the following steps :
+
+     mysql -p [db_name] < sql/tables.sql
+
+  - Adapt the file lib/setup/databaseInfo.php with the name of the database, 
+     the loginname and password and the hostname. This is the file where other 
+     settings can be adapted.
+
+  - Make a new directory 'observer_pics' in the main directory and assign the 
+    correct rights, so the webserver can write into it:
+
+    mkdir observer_pics
+    chown webaccount observer_pics
+    chmod 700 observer_pics 
+
+  - Make a new directory 'drawings' in the main directory and assign the 
+    correct rights, so the webserver can write into it:
+
+    mkdir drawings 
+    chown webaccount drawings
+    chmod 700 drawings
+
+  - Log in as soon as possible as administrator (admin - deepskylog),
+     change the password and add an emailaddress! 
+
+  - Enjoy deepskylog!
+  
+
+
+Adding extra languages
+----------------------
+
+  - Make a directory with the name of the new language in lib/setup/language
+
+  - Make a lang_main.php file in this directory.
+
+  - Send the new lang_main.php file to translation@deepskylog.org so that the 
+     new language will be available in a next release of deepskylog.
+
+Adding extra location databases
+-------------------------------
+1) For all countries but the USA
+
+  - Download the location database for the chosen country from 
+	ftp://ftp.nga.mil/pub/gns_data
+
+  - Put the file in lib/setup/locations/
+
+  - Unzip the file 
+
+  - Execute 
+     adaptLocationDatabase.pl countryname.txt
+    A new file (countryname.ast) will be created. You can now delete the old 
+    country.txt file.
+
+2) For the USA
+  You should never try to add the same file more than once. Doing so will make
+  the location database for the USA corrupt!
+
+  - Download the database (state.zip) for the chosen state from the 'Columnar 
+     Format Files' on 
+	http://geonames.usgs.gov/stategaz/index.html
+
+  - Put the file in lib/setup/locations/
+
+  - Unzip the file
+
+  - Execute 
+     adaptUSADatabase.pl STATE.TXT
+    The locations will be added to usa.ast. You can now delete the old 
+    STATE.TXT file.
+
+Adding objects to the Object database
+-------------------------------------
+  - It is possible to import the Sac list into the database. You can download
+     the Sac list from http://www.saguaroastro.org/content/db/sac72.zip
+
+  - Unzip the file in the lib-directory. 
+
+  - Execute 
+      php Sac.php
+    After a while (ca 20 seconds), the Sac list is inserted in the database.
+ 
+Intregrate DeepskyLog in our existing website
+---------------------------------------------
+  - DeepskyLog can be integrated in your existing website. You can adapt the 
+     files menu/headmenu.php and styles/style.css to suit your needs better.
+

@@ -1,0 +1,24 @@
+<?php 
+  include_once "../lib/util.php";
+
+  $util = new Util();
+  $util->checkUserInput();
+
+  header ("Content-Type: application/pdf");
+  header ("Content-Disposition: Attachment; filename=objects.pdf");
+
+  $_SESSION['pdfname'] = "objects.pdf"; // necessary for class.pdf.php
+
+  include_once "../lib/observers.php";
+
+  if(array_key_exists('SID', $_GET)&&$_GET['SID'])
+    $_SID=$_GET['SID'];
+  $result = $_SESSION[$_SID];
+
+  if ($result != "")
+  {
+   $util = new util();
+
+   $util->pdfObjectsDetails($result);
+  }
+?>

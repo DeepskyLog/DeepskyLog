@@ -1,0 +1,6 @@
+Local installation of DeepskyLog :
+----------------------------------
+
+- Adapt the settings in .../lib/setup/databaseInfo.php
+- Change the following setting in .../common/head.php
+    base href=\"http://PATH_TO_LOCAL_INSTALLATION/\

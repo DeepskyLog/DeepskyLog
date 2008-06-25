@@ -1,0 +1,214 @@
+Changes in version 3.2
+----------------------
+
+- query observations: je kan ook de observaties van een maand (bv. alle observaties gedaan in april), ongeacht het jaar opvragen, oog tussen bepaalde dagen in een maand.
+
+- Query objects: analyse input parameters ons the page itself before jumping to execute_query_objects. This way, errors can be reported 
+  on the page itself.
+
+- import and export of (public or private) lists.
+
+- Sorteren op lijst van nabijgelegen objecten
+
+- Nabijgelegen objecten en detail van een object moet in de waarneemlijst kunnen worden gestoken
+
+- Waarnemingen die niet werden gezien stonden als waarneming in de lijst van top_observers
+
+- Berekenen van contrast reserve voor objecten
+
+- Locatie opgesplitst per waarnemer. Waarnemers kunnen zelf waarneemplaatsen verwijderen (indien daar nog geen waarneming is gebeurd...).
+
+- Instrumenten opgesplitst per waarnemer. Waarnemers kunnen zelf instrumenten verwijderen (indien daar nog geen waarneming is gebeurd...).
+
+- Toevoegen van vaste vergroting bij instrumenten (voor verrekijkers en zoekers)
+
+- Toevoegen van filters
+
+- Toevoegen van oculairs
+
+- Toevoegen van (barlow of shapley) lenzen
+
+Changes in version 3.11
+-----------------------
+
+- Onder Konqueror en Safari werkt de onchange actie niet van de kolom met Messier, H400... en ga je terug naar de hoofdpagina van deepskylog.be
+
+- export to pdf of csv van objecten herneemt de position angle
+
+- export to pdf of csv herneemt het aantal keren dat een ongezien object werd gezien door anderen
+
+- export to pdf of csv herneemt het aantal keren dat je zelf het object zag en wanneer voor het laatst dat was
+
+- query objects toont bij X objecten hoeveel keren ze werden gezien door anderen
+
+- query object toont bij Y objecten hoeveel keren je ze al zag
+
+- vraag EvdJ om fotos in compact en compact LO is verwerkt
+
+- code om partof en catalogussen makkelijker te laden en verwerken voor admins zodat database beheer vanop afstand makkelijker wordt
+
+- Vraag EvdJ: opzoeken van waarnemingen tussen breedtegraad X en Y
+
+- bij de lijst van nabij gelegen objecten, moet daar ook het object zelf bij ingeladen worden als je pdf of csv download? 
+  zou wel logischer zijn...
+
+- argo navis link zou ook moeten bestaan bij de lijst van nabijgelegen objecten
+
+- dropdown box maken met download pdf-file, exporteer naar csv, argo navis... nu staan daar nogal veel links bijeen...
+  IS EEN LIJNTJE OOK GOED?
+
+CHANGES IN VERSION 3.1
+----------------------
+PHP 5.2 is required!!!
+
+- als je een object opzoekt, en er is maar 1 resultaat, dan ga je onmiddellijk naar de details van het object
+
+- toevoegen nieuw object is mogelijk: alternatieve naam niet meer nodig. Pagina voor alternatieve namen en part of... volgt later
+
+- Zoeken op waarnemingen die je zelf niet hebt gedaan: ok voor objecten en voor waarnemingen
+
+- overzicht nabije objecten op de object pagina of bij de nieuwe waarneming, zodat ook snel een volgend object kan ingegeven worden.
+
+- Sorteren op Messier, Caldwell, ... bij 'Meest actieve waarnemers'
+
+- Maak query sneller by 'Meest actieve waarnemers'
+
+- Caldwell, H400, HII, ... -> extra kolommen gebruiken... -> Let op voor H400 en HII -> deze komen niet als aparte alternatieve naam + uitbreiden script voor overzicht messier naar H400 en HII
+
+- Visibility -> Waarnemingen die niet zijn gezien, mogen niet in het totaal overzicht van aantal waarnemingen komen. -> op veel plaatsen -> visibility mag niet 0 zijn
+
+- Internationalisation of DeepskyLog. The user can select his preferred 
+   languages and only see the observations in these languages. A language
+   field is added to the observations.
+
+- Make observations at midnight possible
+
+- Security updates
+
+- Removed a lot of warnings in php5
+
+- Solved error with the ICQ name of the observer
+
+- Search possibilities for observations on seeing and limiting magnitude
+
+- Removed hard link to baseURL
+
+- Add visibility to observation
+   - Very simple, prominent object
+   - Object easily percepted with direct vision
+   - Object perceptable with direct vision
+   - Averted vision required to percept object
+   - Object barely perceptable with averted vision
+   - Perception of object is very questionable
+   - Object definitely not seen
+
+- COMAST changes :
+   - Objects : Change newObject to datasource and adapt database
+   - Local time
+      - User can set a property to use local time
+      - Locations have a timezone, daylight saving time is taken into account
+
+- Added extra instrument types : Cassegrain, Schmidt-Cassegrain, Kutter and Maksutov
+
+- Add new object : It is now possible to enter objects with a declination between 0 and -1°
+
+CHANGES IN VERSION 3.0
+----------------------
+
+- Added Comets module.
+
+- Cross queries for observations of deepsky objects.
+
+- 'Most active observer' and 'Most popular object' are not longer restricted to a list of 25 entries.
+
+- Possibility to search for text in the description of an observation
+
+- Total reorganisation of the code, to create the possibility to add new
+modules.
+
+- removed IE related errors
+
+CHANGES IN VERSION 2.2
+----------------------
+
+- Limiting magnitude and seeing are separate database entries. This solves
+many bugs and makes it possible to search for observations with a given
+limiting magnitude or seeing.
+
+- Exporting objects to csv format
+
+- Error message shown when login failed
+
+- Sorting queried objects on seen/not seen
+
+- Query on observations from/till year only
+
+- Query on observations where a drawing is available
+
+- Query on observations with an instrument with given diameter
+
+CHANGES IN VERSION 2.1
+----------------------
+
+- Possibility to import and export observations in csv format
+
+- Cleaned up SAC database
+
+- Observation details overwrite user default values now to make the input of
+  multiple observations of one single night much faster
+
+- Query on object size
+
+
+CHANGES IN VERSION 2.0
+----------------------
+
+- All observers can be a member of a club and it is possible to show 
+   only the observations of a given club.
+
+- Implemented cookies so users should only login once (until they explicitely log out) 
+
+- Changed alt text on observer image
+
+- Added size of DSS image
+
+- Automatic insertion of links to messier, ngc and ic objects in observation descriptions
+
+- Better basic stylesheet concerning observation drawings
+ 
+- Added default atlas to observer profile. The page of the atlas appears in the
+list of objects after a query and in the details of an object.
+
+- Added an extra link to add an observation from an object details page directly
+
+- PDF files can be generated from every list of objects and observations.
+
+- Solved installation problem in .../lib/setup/language.php
+
+- Bug fixes in query objects.
+
+- Query on observations
+
+- Adjustable DSS image size from dropdown box
+
+- Observers, locations and instruments overview pages (admin) are spread over multiple pages
+
+- Deepskylive (http://users.telenet.be/deepskylive) integration
+
+- Number of observations this year
+
+- Output of observation date can be formatted (also in PDF-files)
+
+- Changed instrument drop down box to prevent erroneous input of new instruments in database
+
+- Error in calculation of Uranometria pages with a declination between -72 and -61 degrees.
+
+- When adding a location, the country can be chosen from dropdown box
+
+- extra information to active observers' overview : number of messier objects seen, number of objects seen this year and number of different objects seen.
+
+- Further cleaning up of the Saguaro database
+
+- administrators can exclude the language menu
+
+- administrators can remove locations and instruments which have no associated observations with yet

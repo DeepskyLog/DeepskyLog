@@ -1,0 +1,19 @@
+<!DOCTYPE webproject>
+<webproject>
+  <project usePreviewPrefix="0" type="Local" previewPrefix="" name="deepskylog" encoding="koi8-r" >
+    <upload/>
+    <author>Wim De Meester</author>
+    <email>wim.demeester@deepskylog.org</email>
+    <defaultDTD>-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN</defaultDTD>
+    <item url="administration_nl.docbook" uploadstatus="1" />
+    <item url="appendix_nl.docbook" uploadstatus="1" />
+    <item url="deepskylog_en.docbook" uploadstatus="1" />
+    <item url="deepskylog_nl.docbook" uploadstatus="1" />
+    <item url="introduction_nl.docbook" uploadstatus="1" />
+    <item url="loggedin_nl.docbook" uploadstatus="1" />
+    <item url="notloggedin_nl.docbook" uploadstatus="1" />
+    <item url="" uploadstatus="1" />
+    <templates>templates/</templates>
+    <toolbars>toolbars/</toolbars>
+  </project>
+</webproject>

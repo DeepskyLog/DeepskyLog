@@ -1,0 +1,101 @@
+body{
+	background-color: #5C7D9D;
+}
+
+# adapted li otherwise not visible in vvs style
+
+li{
+	color: #000000;
+}
+
+ol{
+        color: #000000;
+}
+
+ul{
+        color: #000000;
+}
+
+h2 {
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 120%;
+        font-weight: bold;
+        color: #777777;
+        padding-bottom: 10px;
+#	padding-top: 20px;
+}
+
+div#main {
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        #color: #FFFFFF;
+        line-height: 130%;
+        font-size: 100%;
+        font-weight: normal;
+	#margin-top: -15px;
+	float: top;
+	#height:100%;
+        text-align: left;
+}
+
+img.account {
+	border: 0;
+}
+
+.type2 { 
+ # background-color: #002244;
+	background-color : #E0E6EC;
+	padding: 2px;
+	color: #000000;
+} 
+.type3 { 
+    background-color : #F0F3F6;
+	padding: 2px;
+	color: #000000;
+#  font-weight: bold;
+}
+
+.typeNotVisible { 
+    background-color : #777777;
+	padding: 2px;
+	color: #000000;
+}
+
+.typeQuestionable { 
+    background-color : #999999;
+	padding: 2px;
+	color: #000000;
+}
+
+.typeDifficult { 
+    background-color : #CC0000;
+	padding: 2px;
+	color: #000000;
+}
+
+.typeQuiteDifficult { 
+    background-color : #FF6600;
+	padding: 2px;
+	color: #000000;
+}
+
+.typeEasy { 
+    background-color : #339900;
+	padding: 2px;
+	color: #000000;
+}
+
+.typeVeryEasy { 
+    background-color : #66FF00;
+	padding: 2px;
+	color: #000000;
+}
+
+td.seen{
+        text-align: center;
+}
+
+textarea.description{
+        height: 120px;
+        width: 720px;
+}
+

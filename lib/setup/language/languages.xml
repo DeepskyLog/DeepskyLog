@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<languages xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="languages.xsd">
+<lang code="bg" name_en="Bulgarian" name_fr="Bulgare" name_de="Bulgarisch" name_nl="Bulgaars" />
+<lang code="cs" name_en="Czech" name_fr="Tcheque" name_de="Tschechisch" name_nl="Tsjechisch" />
+<lang code="da" name_en="Danish" name_fr="Danois" name_de="Danisch" name_nl="Deens" />
+<lang code="de" name_en="German" name_fr="Allemand" name_de="Deutsch" name_nl="Duits" />
+<lang code="el" name_en="Greek" name_fr="Grec" name_de="Griechisch" name_nl="Grieks" />
+<lang code="en" name_en="English" name_fr="Anglais" name_de="Englisch" name_nl="Engels" />
+<lang code="eo" name_en="Esperanto" name_fr="Esperanto" name_de="Esperanto" name_nl="Esperanto" />
+<lang code="es" name_en="Spanish" name_fr="Espagnol" name_de="Spanisch" name_nl="Spaans" />
+<lang code="fi" name_en="Finnish" name_fr="Finnois" name_de="Finnisch" name_nl="Fins" />
+<lang code="fr" name_en="French" name_fr="Francais" name_de="Franzosisch" name_nl="Frans" />
+<lang code="it" name_en="Italian" name_fr="Italien" name_de="Italienisch" name_nl="Italiaans" />
+<lang code="nl" name_en="Dutch" name_fr="Neerlandais" name_de="Hollandisch" name_nl="Nederlands" />
+<lang code="no" name_en="Norwegian" name_fr="Norvegien" name_de="Norwegisch" name_nl="Noors" />
+<lang code="pl" name_en="Polish" name_fr="Polonais" name_de="Polnisch" name_nl="Pools" />
+<lang code="pt" name_en="Portuguese" name_fr="Portugais" name_de="Portugiesisch" name_nl="Portugees" />
+<lang code="sv" name_en="Swedish" name_fr="Suedois" name_de="Schwedisch" name_nl="Zweeds" />
+</languages>

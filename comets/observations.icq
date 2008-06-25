@@ -1,0 +1,18 @@
+<?php 
+  header ("Content-Type: text/plain");
+  header ("Content-Disposition: attachment; filename=\"observations.icq\"");
+
+  $_SESSION['module'] = "comets";
+
+  include_once "../lib/cometobservations.php";
+  include_once "../lib/util.php";
+  $util = new util;
+  $util->checkUserInput();
+
+  $result = $_SESSION['observation_query'];
+
+  if ($result != "")
+  {
+    print "ICQ LIST OF OBSERVATIONS";
+  }
+?>

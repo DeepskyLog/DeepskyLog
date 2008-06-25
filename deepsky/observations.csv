@@ -1,0 +1,20 @@
+<?php 
+
+  include_once "../lib/util.php";
+
+  $util = new Util();
+  $util->checkUserInput();
+
+  header ("Content-Type: application/vnd.ms-excel");
+  header ("Content-Disposition: attachment; filename=\"observations.csv\"");
+
+  include_once "../lib/observers.php";
+  $result = $_SESSION['observation_query'];
+
+  if ($result != "")
+  {
+   $util = new util();
+
+   $util->csvObservations($result);
+  }
+?>
