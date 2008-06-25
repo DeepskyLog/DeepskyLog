@@ -124,7 +124,7 @@
 										include_once "../lib/lists.php";
 										$list=new Lists;
                     
-                    if(array_key_exists('addList',$_GET) && array_key_exists('addlistname',$_GET) && ($_SESSION['listname']<>"----------"))
+                    if(array_key_exists('addList',$_GET) && array_key_exists('addlistname',$_GET))
                     {
 										  unset($_SESSION['QOL']);
                      	$listnameToAdd = $_GET['addlistname'];
