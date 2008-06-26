@@ -27,12 +27,14 @@ if(array_key_exists('emptyList',$_GET) && ($list->checkList($listname)==2))
 {
   $list->emptyList($listname);
   echo LangToListEmptied . $listname . ".";
+	$_SESSION['QOL'] = $list->getObjectsFromList($_SESSION['listname']);
 	echo "<hr>";
 }
 
 if(array_key_exists('ObjectDownInList',$_GET) && $_GET['ObjectDownInList'] && $listname)
 {
 	$list->ObjectDownInList($_GET['ObjectDownInList']);
+	$_SESSION['QOL'] = $list->getObjectsFromList($_SESSION['listname']);
   echo LangToListMoved1 . $_GET['ObjectDownInList'] . LangToListMoved3 . "<a href=\"deepsky/index.php?indexAction=listaction&manage=manage\">" . $listname . "</a>.";
 	echo "<HR>";
 }
@@ -40,6 +42,7 @@ if(array_key_exists('ObjectDownInList',$_GET) && $_GET['ObjectDownInList'] && $l
 if(array_key_exists('ObjectUpInList',$_GET) && $_GET['ObjectUpInList'] && $listname)
 { 
 	$list->ObjectUpInList($_GET['ObjectUpInList']);
+	$_SESSION['QOL'] = $list->getObjectsFromList($_SESSION['listname']);
   echo LangToListMoved1 . $_GET['ObjectUpInList'] . LangToListMoved2 . "<a href=\"deepsky/index.php?indexAction=listaction&manage=manage\">" . $listname . "</a>.";
 	echo "<HR>";
 }
@@ -47,6 +50,7 @@ if(array_key_exists('ObjectUpInList',$_GET) && $_GET['ObjectUpInList'] && $listn
 if(array_key_exists('ObjectToPlaceInList',$_GET) && $_GET['ObjectToPlaceInList'] && $listname)
 { 
 	$list->ObjectFromToInList($_GET['ObjectFromPlaceInList'],$_GET['ObjectToPlaceInList']);
+	$_SESSION['QOL'] = $list->getObjectsFromList($_SESSION['listname']);
   echo LangToListMoved7 . $_GET['ObjectToPlaceInList'] . ".";
 	echo "<HR>";
 }
@@ -54,6 +58,7 @@ if(array_key_exists('ObjectToPlaceInList',$_GET) && $_GET['ObjectToPlaceInList']
 if(array_key_exists('removeObjectFromList',$_GET) && $_GET['removeObjectFromList'] && $listname)
 {
 	$list->removeObjectFromList($_GET['removeObjectFromList']);
+	$_SESSION['QOL'] = $list->getObjectsFromList($_SESSION['listname']);
   echo LangToListMoved1 . "<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($_GET['removeObjectFromList']) . "\">" . $_GET['removeObjectFromList'] . "</a>" . LangToListObjectRemoved . "<a href=\"deepsky/index.php?indexAction=listaction&manage=manage\">" . $listname . "</a>.";
 	echo "<HR>";
 }
@@ -72,6 +77,7 @@ if(array_key_exists('removePageObjectsFromList',$_GET) && $_GET['removePageObjec
 		  $list->removeObjectFromList($_SESSION['QOL'][$count][0],$_SESSION['QOL'][$count][4]);
 		  $count++;
     }
+	  $_SESSION['QOL'] = $list->getObjectsFromList($_SESSION['listname']);
     echo LangToListPageRemoved;
 	  echo "<HR>";
 	}
