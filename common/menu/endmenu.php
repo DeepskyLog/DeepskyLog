@@ -126,23 +126,27 @@
                     
                     if(array_key_exists('addList',$_GET) && array_key_exists('addlistname',$_GET))
                     {
-										  unset($_SESSION['QOL']);
+                      if(array_key_exists('QOL',$_SESSION))
+											  unset($_SESSION['QOL']);
                      	$listnameToAdd = $_GET['addlistname'];
                     	if(array_key_exists("PublicList",$_GET))
                     		if(substr($listnameToAdd,0,7)!="Public:")
                           $listnameToAdd = "Public: " . $listnameToAdd;  
-                      if($list->checkList($_SESSION['listname'])!=0)
+                      if($list->checkList($_GET['addlistname'])!=0)
                     	  $_GET['listnameMessage'] = LangToListList . $listnameToAdd . LangToListExists;
                     	else
                     	{
                     	  $list->addList($listnameToAdd);
+                        if(array_key_exists('QOL',$_SESSION))
+												  unset($_SESSION['QOL']);
                     	  $_SESSION['listname'] = $listnameToAdd;
                     	  $_GET['listnameMessage'] = LangToListList . $_SESSION['listname'] . LangToListAdded;
                     	}                    	echo "<hr>";
                     }
 										if(array_key_exists('renameList',$_GET) && array_key_exists('addlistname',$_GET))
 									  { 
-										  unset($_SESSION['QOL']);
+                      if(array_key_exists('QOL',$_SESSION))
+											  unset($_SESSION['QOL']);
                       $listnameFrom = $_SESSION['listname'];
                      	$listnameTo = $_GET['addlistname'];
                       if(array_key_exists("PublicList",$_GET))
@@ -159,7 +163,8 @@
 									  }
                     if(array_key_exists('removeList',$_GET) && ($list->checkList($_SESSION['listname'])==2))
                     {
-										  unset($_SESSION['QOL']);
+                      if(array_key_exists('QOL',$_SESSION))
+											  unset($_SESSION['QOL']);
                       $list->removeList($_SESSION['listname']);
                     	$_GET['listnameMessage'] = LangToListRemoved . $_SESSION['listname'] . ".";
                       $_SESSION['listname']="----------";
@@ -167,7 +172,8 @@
                     }
                     if(array_key_exists('activateList',$_GET) && array_key_exists('listname',$_GET))
                     {
- 										  unset($_SESSION['QOL']);
+                      if(array_key_exists('QOL',$_SESSION))
+											  unset($_SESSION['QOL']);
                       $_SESSION['listname'] = $_GET['listname'];
 											if($_GET['listname']<>"----------")
                       	$_GET['listnameMessage'] = LangToListList . $_SESSION['listname'] . LangToListActivation1 . LangBack . LangToListActivation2;
