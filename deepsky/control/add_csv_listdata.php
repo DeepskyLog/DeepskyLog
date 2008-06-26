@@ -37,7 +37,7 @@ else
   {
     if(trim($parts_array[$i][0]))
     {
-		  $objectsquery = $obj->getObjectFromQuery(array("name" => trim($parts_array[$i][0])), $exact = 1);
+		  $objectsquery = $obj->getExactObject(trim($parts_array[$i][0]));
       if (count($objectsquery)==0)
       {
         $objectsMissing[$j] = ucwords(trim($parts_array[$i][0]));
@@ -45,10 +45,10 @@ else
       }
   		else
 			{
-  		  if(($parts_array[$i][1]<>'')&&(ucwords(trim($parts_array[$i][1]))<>$objectsquery[0][0]))
-				  $objects[$i] = array($objectsquery[0][0], trim($parts_array[$i][1]).' ('.$objectsquery[0][0].')');
+  		  if(array_key_exists(1,$parts_array[$i])&&($parts_array[$i][1]<>'')&&(ucwords(trim($parts_array[$i][1]))<>$objectsquery[0][0]))
+				  $objects[$i] = array($objectsquery[0], trim($parts_array[$i][1]).' ('.$objectsquery[0].')');
 				else
-				  $objects[$i] = array($objectsquery[0][0], trim($parts_array[$i][0]));
+				  $objects[$i] = array($objectsquery[0], trim($parts_array[$i][0]));
 			}
 		}
   }
@@ -69,7 +69,7 @@ else
 		  if(array_key_exists('listname',$_SESSION) && $_SESSION['listname'] && ($list->checkList($_SESSION['listname'])==2))
 			{
         for ($i=0;$i<count($objects);$i++)
-					$list->addObjectToList($objects[$i][0],$objects[$i][1]);
+  			  $list->addObjectToList($objects[$i][0],$objects[$i][1]);
 				header("Location:../index.php?indexAction=listaction");
 			}
 			else

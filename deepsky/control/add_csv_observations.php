@@ -86,7 +86,7 @@ else
 
   for ( $i = 0;$i < count($objects); $i++)
   {
-    $objectsquery = $obj->getObjectFromQuery(array("name" => $objects[$i]), $exact = 1);
+    $objectsquery = $obj->getObjectFromQuery(array("name" => $objects[$i]), $exact = 2);
 
     if (count($objectsquery) == 0)
     {
