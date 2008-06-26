@@ -159,6 +159,8 @@ class Lists
     mysql_query($sql) or die(mysql_error());
   }
 	$db->logout();
+  if(array_key_exists('QOL',$_SESSION))
+    unset($_SESSION['QOL']);
  }
  
  function removeObjectFromList($name)
@@ -178,6 +180,8 @@ class Lists
     mysql_query($sql) or die(mysql_error());
 	}
 	$db->logout();
+  if(array_key_exists('QOL',$_SESSION))
+    unset($_SESSION['QOL']);
  }
  
  function ObjectDownInList($place)
@@ -196,6 +200,8 @@ class Lists
     mysql_query($sql) or die(mysql_error());
   }
 	$db->logout();
+  if(array_key_exists('QOL',$_SESSION))
+    unset($_SESSION['QOL']);
  }
 	
  function ObjectUpInList($place)
@@ -217,6 +223,8 @@ class Lists
     mysql_query($sql) or die(mysql_error());
   }
 	$db->logout();
+  if(array_key_exists('QOL',$_SESSION))
+    unset($_SESSION['QOL']);
  }
  
  function ObjectFromToInList($from, $to)
@@ -251,6 +259,8 @@ class Lists
 	  }
 	}
   $db->logout();
+  if(array_key_exists('QOL',$_SESSION))
+    unset($_SESSION['QOL']);
  }
  
  function getObjectsFromList($listname)
