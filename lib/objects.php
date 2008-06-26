@@ -1001,8 +1001,10 @@ $type = $this->getType($value);
   if (array_key_exists('name',$queries) && $queries["name"] != "")
     if ($exact == 0)
       $sqland = $sqland . " AND (objectnames.catalog = \"" . $queries["name"] . "\")"; 
-    else
+    elseif ($exact == 1)
       $sqland = $sqland . " AND (UPPER(objectnames.altname) like \"" . strtoupper($queries["name"]) . "\")";
+    else
+      $sqland = $sqland . " AND (UPPER(objectnames.altname) = \"" . strtoupper($queries["name"]) . "\")";
   if (array_key_exists('type',$queries) && ($queries["type"] != ""))
     $sqland = $sqland . " and objects.type = \"" . $queries["type"] . "\"";
   if (array_key_exists('constellation',$queries) && ($queries["constellation"] != ""))
