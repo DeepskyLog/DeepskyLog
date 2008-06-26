@@ -34,7 +34,7 @@
       <td width="100%" height="4" align="center" bgcolor="#5C7D9D">
 	      Copyright 2004 - 2008 
 			  <a href="http://www.vvs.be">Vereniging voor Sterrenkunde</a> - Powered by 
-			  <a href="http://www.deepskylog.org">DeepskyLog</a> 3.2
+			  <a href="http://www.deepskylog.org">DeepskyLog</a> 3.3-trunk
 			</td>
       <td height="18" width="6" bgcolor="#5C7D9D"></td>
       <td height="18" width="5" bgcolor="#5C7D9D"></td>
