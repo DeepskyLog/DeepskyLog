@@ -167,9 +167,7 @@ if($_SESSION['listname']<>"----------")
     // OUTPUT RESULT
     echo "<table width=\"100%\">\n";
     echo "<tr class=\"type3\">\n";
-  	if($listname && ($sort=="objectplace"))
-  	  echo "<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>";
-    echo "<td align=\"right\"><a href=\"deepsky/index.php?indexAction=listaction&sort=objectplace&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader0) . "\">".LangOverviewObjectsHeader0."</a></td>\n";
+    echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=listaction&sort=objectplace&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader0) . "\">".LangOverviewObjectsHeader0."</a></td>\n";
     echo "<td><a href=\"deepsky/index.php?indexAction=listaction&sort=showname&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader1) . "\">".LangOverviewObjectsHeader1."</a></td>\n";
     echo "<td><a href=\"deepsky/index.php?indexAction=listaction&sort=con&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader2) . "\">".LangOverviewObjectsHeader2."</a></td>\n";
     echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=listaction&sort=mag&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader3) . "\">".LangOverviewObjectsHeader3."</a></td>\n";
@@ -237,18 +235,15 @@ if($_SESSION['listname']<>"----------")
         echo "<tr $typefield>\n";
   		if($listname && ($sort=="objectplace"))
       {
-  		  echo "<td align=\"center\"><a href=\"$link&amp;ObjectUpInList=" . $place . "&amp;min=" . $min . "\" title=\"" . LangToListMoved5 . "\">D</a></td>";
-        
 				echo "<td align=\"center\">
               <a href=\"\"
                  onclick=\"theplace = prompt('Please enter the new position','" . $place . "');
 								           location.href='" . $link . "&amp;ObjectFromPlaceInList=" . $place . "&amp;ObjectToPlaceInList='+theplace+'&amp;min=" . $min . "'
 					                 return false\"
-								 title=\"" . LangToListMoved6 . "\">T</a></td>";
-
-  			echo "<td align=\"center\"><a href=\"$link&amp;ObjectDownInList=" . $place . "&amp;min=" . $min . "\" title=\"" . LangToListMoved4 . "\">U</a></td>";
+								 title=\"" . LangToListMoved6 . "\">".$place."</a></td>";
       }
-      echo "<td align=\"right\"\">".$place."</td>\n";
+      else
+        echo "<td align=\"center\"\">".$place."</td>\n";
       echo "<td><a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($name) . "\">" . $showname . "</a></td>\n";
       echo "<td>".$$con."</td>\n";
       echo "<td align=\"center\">$magnitude</td>\n";
