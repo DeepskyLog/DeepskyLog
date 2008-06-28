@@ -1740,6 +1740,9 @@ print $value."<br />";
           echo($observer->getFirstName($this->getObserverId($LOid)) . "&nbsp;" . $observer->getName($this->getObserverId($LOid)));
           print("</a>");
   	  	print("</td>");
+  	  print("</tr>");
+
+    	print("<tr class=\"type1\">");
        echo("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
           echo LangViewObservationField3;
         echo("</td>");
@@ -1750,23 +1753,6 @@ print $value."<br />";
             $inst = InstrumentsNakedEye;
           }
           echo("<a href=\"common/detail_instrument.php?instrument=" . $this->getInstrumentId($LOid) . "\">" . $inst . "</a>");
-        print("</td>");
-  	  print("</tr>");
-
-    	print("<tr class=\"type1\">");
-       print("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
-          echo LangViewObservationField30;
-        echo("</td>");
-       echo("<td width=\"25%\">");
-          $eyepiece = $this->getEyepieceId($LOid);
-          if ($eyepiece == "" || $eyepiece == 0)
-          {
-            echo ("-");
-          }
-          else
-          {
-            echo("<a href=\"common/detail_eyepiece.php?eyepiece=" . $eyepiece . "\">" . $eyepieces->getName($eyepiece) . "</a>");
-          }
         print("</td>");
         print("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
           echo LangViewObservationField31;
@@ -1784,8 +1770,22 @@ print $value."<br />";
         echo("</td>");
   	  echo("</tr>");
 
-    	print("<tr class=\"type1\">");
-       print("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
+    	print("<tr class=\"type2\">");
+        print("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
+          echo LangViewObservationField30;
+        echo("</td>");
+       echo("<td width=\"25%\">");
+          $eyepiece = $this->getEyepieceId($LOid);
+          if ($eyepiece == "" || $eyepiece == 0)
+          {
+            echo ("-");
+          }
+          else
+          {
+            echo("<a href=\"common/detail_eyepiece.php?eyepiece=" . $eyepiece . "\">" . $eyepieces->getName($eyepiece) . "</a>");
+          }
+        print("</td>");
+      print("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
           echo LangViewObservationField32;
         echo("</td>");
        echo("<td width=\"25%\">");

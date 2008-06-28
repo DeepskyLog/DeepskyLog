@@ -146,7 +146,8 @@ if($observations->getObjectId($_GET['observation'])) // check if observation exi
   elseif($_GET['dalm']=="MO") $AOid = $observations->getMOObservationsId($object, $_SESSION['deepskylog_id'], $_GET['observation']);
   elseif($_GET['dalm']=="LO") $AOid = $observations->getLOObservationId($object, $_SESSION['deepskylog_id'], $_GET['observation']);
 	else $AOid=array();
-	while(list($key, $LOid) = each($AOid)) $observations->showObservation($LOid);
+	while(list($key, $LOid) = each($AOid)) 
+	  $observations->showObservation($LOid);
 }
 echo("</div></body></html>");
 
