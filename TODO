@@ -1,5 +1,7 @@
-TODO DeepskyLog 3.2
+TODO DeepskyLog 3.3
 -------------------
+
+- Look into astroplanner file (example in datafiles/)
 
 - naast de objectenlijsten zou ook waarneemlijsten interessant zijn. Stel: je bekijkt de waarnemingen van die dag en je valt plots op een waarneming
   van iemand die een object op een speciale of interessante wijze gezien heeft. In plaats van het object toe te voegen aan de lijst van objecten die
