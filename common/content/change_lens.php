@@ -14,7 +14,7 @@ $util->checkUserInput();
 
 echo("<div id=\"main\">\n<h2>");
 
-echo stripslashes($lenses->getName($_GET['lens']));
+echo stripslashes($lenses->getLensName($_GET['lens']));
 
 echo("</h2>"); ?>
    <form action="common/control/validate_lens.php" method="post">
@@ -24,7 +24,7 @@ echo("</h2>"); ?>
 	     <?php 
 			 echo(LangAddLensField1);
 			 ?></td>
-   <td><input type="text" class="inputfield" maxlength="64" name="lensname" size="30" value="<?php echo stripslashes($lenses->getName($_GET['lens']));?>" /></td>
+   <td><input type="text" class="inputfield" maxlength="64" name="lensname" size="30" value="<?php echo stripslashes($lenses->getLensName($_GET['lens']));?>" /></td>
    <td class="explanation"><?php echo(LangAddLensField1Expl); ?></td>
    </tr>
    <tr>

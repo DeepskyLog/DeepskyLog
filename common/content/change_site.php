@@ -16,7 +16,7 @@ $locations = new Locations();
 echo("<div id=\"main\">
    \n<h2>");
 
-echo stripslashes($locations->getName($_GET['location']));
+echo stripslashes($locations->getLocationName($_GET['location']));
 
 echo("</h2>
 
@@ -30,7 +30,7 @@ echo(LangAddSiteField1);
 echo("</td>
    <td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"sitename\" size=\"30\" value=\"");
 
-echo stripslashes($locations->getName($_GET['location']));
+echo stripslashes($locations->getLocationName($_GET['location']));
 
 echo("\" /></td>
    <td class=\"explanation\"></td>
@@ -136,7 +136,7 @@ while(list ($key, $value) = each($timezone_identifiers))
 
 echo("</select>");
 
-$lm = $locations->getLimitingMagnitude($_GET['location']);
+$lm = $locations->getLocationLimitingMagnitude($_GET['location']);
 $sb = $locations->getSkyBackground($_GET['location']);
 
 echo("</td>

@@ -108,7 +108,7 @@ if ($insts != null)
     $typefield = "class=\"type2\"";
    }
 
-   $name = $instruments->getName($value);
+   $name = $instruments->getInstrumentName($value);
    $diameter = round($instruments->getDiameter($value), 0);
    $fd = round($instruments->getFd($value), 1);
    if ($fd == "0")
@@ -209,7 +209,7 @@ echo(LangAddInstrumentTitle); ?>
   $insts = $instruments->getSortedInstruments('name', "", true);
   while(list($key, $value) = each($insts))
   {
-	  echo("<option value=\"" . $baseURL . "common/add_instrument.php?instrumentid=$value\">" . $instruments->getName($value) . "</option>\n");
+	  echo("<option value=\"" . $baseURL . "common/add_instrument.php?instrumentid=$value\">" . $instruments->getInstrumentName($value) . "</option>\n");
   }
   echo("</select>\n");
   echo("</form>");
@@ -235,7 +235,7 @@ echo(LangAddInstrumentTitle); ?>
 			 } 
 			 if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
        {
-			    echo stripslashes($instruments->getName($_GET['instrumentid']));
+			    echo stripslashes($instruments->getInstrumentName($_GET['instrumentid']));
 			 } 
 			 ?>" /></td>
    </tr>
@@ -333,7 +333,7 @@ echo(LangAddInstrumentTitle); ?>
 			 } 
 			 if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
        {
-			    echo stripslashes($instruments->getFocallength($_GET['instrumentid']));
+			    echo stripslashes($instruments->getInstrumentFocalLength($_GET['instrumentid']));
 			 } 
 			 ?>" />
    <select name="focallengthunits"><option>inch</option><option selected="selected">mm</option></select>

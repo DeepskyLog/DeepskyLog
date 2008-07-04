@@ -104,7 +104,7 @@ while(list ($key, $value) = each($lns))
     $type = "class=\"type2\"";
    }
 
-   $name = stripslashes($lenses->getName($value));
+   $name = stripslashes($lenses->getLensName($value));
    $factor = $lenses->getFactor($value);
    $observer = $lenses->getObserver($value);
 

@@ -1052,7 +1052,7 @@ function printListHeader($list, $link, $min, $step, $total)
 	
   while(list ($key, $value) = each($result))
   {
-    $obs = $observation->getAllInfo($value);
+    $obs = $observation->getAllInfoDsObservation($value);
     $objectname = $obs["name"];
     $observerid = $obs["observer"];
     $inst = $obs["instrument"];
@@ -1081,12 +1081,12 @@ function printListHeader($list, $link, $min, $step, $total)
     {
       $visibility = "";
     }
-    $name = $observer->getFirstname($obs["observer"]). " ".$observer->getName($obs["observer"]); 
+    $name = $observer->getFirstname($obs["observer"]). " ".$observer->getObserverName($obs["observer"]); 
     $seeing = $observation->getSeeing($value);
 	  $limmag = $observation->getLimitingMagnitude($value);
     $description = preg_replace("/(\r\n|\n|\r)/", "", $description);
     $description = preg_replace("/(\")/", "", $description);
-    echo (html_entity_decode($objectname) . ";" . html_entity_decode($name) . ";" . $date[2] . "-" . $date[1] . "-" . $date[0] . ";" . $time . ";" . html_entity_decode($location->getName($loc)) . ";" . html_entity_decode($instrument->getName($inst)) . ";" . html_entity_decode($eyepiece->getName($eyep)) . ";" . html_entity_decode($filter->getName($filt)) . ";" . html_entity_decode($lens->getName($lns)) . ";" . $seeing . ";" . $limmag . ";" . $visibility . ";" . $langObs . ";" . $description . "\n");
+    echo (html_entity_decode($objectname) . ";" . html_entity_decode($name) . ";" . $date[2] . "-" . $date[1] . "-" . $date[0] . ";" . $time . ";" . html_entity_decode($location->getLocationName($loc)) . ";" . html_entity_decode($instrument->getInstrumentName($inst)) . ";" . html_entity_decode($eyepiece->getEyepieceName($eyep)) . ";" . html_entity_decode($filter->getFilterName($filt)) . ";" . html_entity_decode($lens->getLensName($lns)) . ";" . $seeing . ";" . $limmag . ";" . $visibility . ";" . $langObs . ";" . $description . "\n");
   }
  } 
 
@@ -1325,12 +1325,9 @@ function printListHeader($list, $link, $min, $step, $total)
 
   while(list ($key, $value) = each($result))
   {
-   $obs = $observation->getAllInfo($value);
-
+   $obs = $observation->getAllInfoDsObservation($value);
    $objectname = $obs["name"];
-
-   $object = $objects->getAllInfo($objectname);
-
+   $object = $objects->getAllInfoDsObject($objectname);
    $type = $object["type"];
    $con = $object["con"];
    $observerid = $obs["observer"];
@@ -1430,19 +1427,19 @@ function printListHeader($list, $link, $min, $step, $total)
 
    if ($filt > 0)
    {
-     $filtername = $filter->getName($filt);
+     $filtername = $filter->getFilterName($filt);
      $filtstr = LangViewObservationField31. " : " . $filtername;
    }
 
    if ($eyep > 0)
    {
-     $eyepiecename = $eyepiece->getName($eyep);
+     $eyepiecename = $eyepiece->getEyepieceName($eyep);
      $eyepstr = LangViewObservationField30. " : " . $eyepiecename;
    }
 
    if ($lns > 0)
    {
-     $lensname = $lens->getName($lns);
+     $lensname = $lens->getLensName($lns);
      $lnsstr = LangViewObservationField32 . " : " . $lensname;
    }
 
@@ -1455,9 +1452,9 @@ function printListHeader($list, $link, $min, $step, $total)
                  "filter" => $filtstr,
                  "eyepiece" => $eyepstr,
 								 "lens" => $lnsstr,
-                 "observer" => html_entity_decode(LangPDFMessage13).$observer->getFirstName($observerid)." ".$observer->getName($observerid).html_entity_decode(LangPDFMessage14).$formattedDate,
-                 "instrument" => html_entity_decode(LangPDFMessage11)." : ".$instrument->getName($inst),
-                 "location" => html_entity_decode(LangPDFMessage10)." : ".$location->getName($loc),
+                 "observer" => html_entity_decode(LangPDFMessage13).$observer->getFirstName($observerid)." ".$observer->getObserverName($observerid).html_entity_decode(LangPDFMessage14).$formattedDate,
+                 "instrument" => html_entity_decode(LangPDFMessage11)." : ".$instrument->getInstrumentName($inst),
+                 "location" => html_entity_decode(LangPDFMessage10)." : ".$location->getLocationName($loc),
                  "description" => $description,
                  "desc" => html_entity_decode(LangPDFMessage15)
                 );
@@ -1582,7 +1579,7 @@ function printListHeader($list, $link, $min, $step, $total)
 
   while(list ($key, $value) = each($result))
   {
-   $objectname = $objects->getName($observation->getObjectId($value));
+   $objectname = $objects->getDsObjectName($observation->getObjectId($value));
 
    $pdf->ezText($objectname, "14");
 
@@ -1608,7 +1605,7 @@ function printListHeader($list, $link, $min, $step, $total)
     $minute = "0".$minute;
    }
 
-   $observername = LangPDFMessage13.$observer->getFirstName($observerid)." ".$observer->getName($observerid).html_entity_decode(LangPDFMessage14).$formattedDate." (".$hour.":".$minute.")";
+   $observername = LangPDFMessage13.$observer->getFirstName($observerid)." ".$observer->getObserverName($observerid).html_entity_decode(LangPDFMessage14).$formattedDate." (".$hour.":".$minute.")";
 
    
    $pdf->ezText($observername, "12");
@@ -1619,7 +1616,7 @@ function printListHeader($list, $link, $min, $step, $total)
    {
     if ($observation->getLocationId($value) != 0 && $observation->getLocationId($value) != 1)
     {
-     $locationname = LangPDFMessage10." : ".$location->getName($observation->getLocationId($value));
+     $locationname = LangPDFMessage10." : ".$location->getLocationName($observation->getLocationId($value));
      $extra = ", ";
     }
     else 
@@ -1629,7 +1626,7 @@ function printListHeader($list, $link, $min, $step, $total)
 
     if ($observation->getInstrumentId($value) != 0)
     {
-     $instr = $instrument->getName($observation->getInstrumentId($value));
+     $instr = $instrument->getInstrumentName($observation->getInstrumentId($value));
       if ($instr == "Naked eye")
       {
        $instr = InstrumentsNakedEye;
@@ -1736,7 +1733,7 @@ function printListHeader($list, $link, $min, $step, $total)
    }
 
    // Description 
-   $description = $observation->getDescription($value); 
+   $description = $observation->getDescriptionDsObservation($value); 
 
    if (strcmp($description, "") != 0)
    {

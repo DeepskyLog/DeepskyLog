@@ -223,7 +223,7 @@ if(array_key_exists('object', $_GET) && $_GET['object'])
   echo("<option value=\"\"></option>\n"); // include empty filter
   while(list ($key, $value) = each($filts)) // go through instrument array
   {
-    $filtername = $filters->getName($value);
+    $filtername = $filters->getFilterName($value);
     $val = $value;
     print("<option value=\"$val\">");
     echo("$filtername</option>\n");
@@ -244,7 +244,7 @@ if(array_key_exists('object', $_GET) && $_GET['object'])
   echo("<option value=\"\"></option>\n"); // include empty instrument
   while(list ($key, $value) = each($eyeps)) // go through instrument array
   {
-    $eyepiecename = $eyepieces->getName($value);
+    $eyepiecename = $eyepieces->getEyepieceName($value);
     $val = $value;
     print("<option value=\"$val\">");
     echo("$eyepiecename</option>\n");
@@ -261,7 +261,7 @@ if(array_key_exists('object', $_GET) && $_GET['object'])
   echo("<option value=\"\"></option>\n"); // include empty lens
   while(list ($key, $value) = each($lns)) // go through instrument array
   {
-    $lensname = $lenses->getName($value);
+    $lensname = $lenses->getLensName($value);
     $val = $value;
     print("<option value=\"$val\">");
     echo("$lensname</option>\n");

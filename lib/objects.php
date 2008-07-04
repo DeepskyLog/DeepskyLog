@@ -153,7 +153,7 @@ class Objects
  }
 
  // getAllInfo returns all information of an object
- function getAllInfo($name)
+ function getAllInfoDsObject($name)
  { 
   $db = new database;
   $db->login();
@@ -357,7 +357,7 @@ class Objects
  }
 
  // getMagnitude returns the magnitude of the object
- function getMagnitude($name)
+ function getDsObjectMagnitude($name)
  {
   $db = new database;
   $db->login();
@@ -1142,7 +1142,7 @@ function getObjectsFromCatalog($cat)
 
  // getExactObject returns an array with the name of the object where the
  // databasefield has the given name.
- function getExactObject($value, $cat='', $catindex='')
+ function getExactDsObject($value, $cat='', $catindex='')
  {
   $db = new database;
   $db->login();
@@ -1708,8 +1708,8 @@ function getPartOfNames($name)
   return (int)$urano;
  }
 
- // getName returns the name when the alternative name is given.
- function getName($name)
+ // getDsObjectName returns the name when the alternative name is given.
+ function getDsObjectName($name)
  {
   $db = new database;
   $db->login();
@@ -1724,7 +1724,7 @@ function getPartOfNames($name)
  }
 
 // getDescription returns the Description when the name is given.
- function getDescription($name)
+ function getDescriptionDsObject($name)
  {
   $db = new database;
   $db->login();
@@ -2266,7 +2266,7 @@ function getPartOfNames($name)
 
   $db->logout();
 
-	$mag = $this->getMagnitude($name);
+	$mag = $this->getDsObjectMagnitude($name);
   $diam2 = $this->getDiam2($name);
 
 	// Calculate and set the SBObj
@@ -2302,7 +2302,7 @@ function getPartOfNames($name)
 
   $db->logout();
 
-	$mag = $this->getMagnitude($name);
+	$mag = $this->getDsObjectMagnitude($name);
   $diam1 = $this->getDiam1($name);
 
 	// Calculate and set the SBObj
@@ -2652,7 +2652,7 @@ function getPartOfNames($name)
     <td class=\"fieldname\" align=\"right\" width=\"25%\">");
       if ($this->getRa($object) == "")
       {
-        $object = $this->getName($object);
+        $object = $this->getDsObjectName($object);
       }
       echo LangViewObjectField1;
     echo("</td><td width=\"25%\">");
@@ -2808,7 +2808,7 @@ function getPartOfNames($name)
   echo("<tr class=\"type2\"><td class=\"fieldname\" align=\"right\" width=\"25%\">");
   echo LangViewObjectField7;
   echo("</td><td width=\"25%\">");
-  $magnitude = sprintf("%01.1f", $this->getMagnitude($object));
+  $magnitude = sprintf("%01.1f", $this->getDsObjectMagnitude($object));
   if(($magnitude == 99.9) || ($magnitude=="")) // unknown magnitude
   {
     $magnitude = "-";
@@ -2928,14 +2928,14 @@ function getPartOfNames($name)
 	echo $prefMag;
 	echo "</td>";
 	echo "</tr>";
-	if($this->getdescription($object))
+	if($this->getDescriptionDsObject($object))
 	{
   	echo "<tr>";
   	echo "<td align=\"right\">";
   	echo "Description";
   	echo "</td>";
   	echo "<td colspan=\"3\">";
-  	echo $this->getdescription($object);
+  	echo $this->getDescriptionDsObject($object);
   	echo "</td>";
   	echo "</tr>";
   }

@@ -14,7 +14,7 @@ $util->checkUserInput();
 
 echo("<div id=\"main\">\n<h2>");
 
-$name = $instruments->getName($_GET['instrument']);
+$name = $instruments->getInstrumentName($_GET['instrument']);
 
 if ($name == "Naked eye")
 {
@@ -242,9 +242,9 @@ echo(LangAddInstrumentField4);
 echo("</td>
    <td><input value=\"");
 
-if(round($instruments->getFocalLength($_GET['instrument']), 0) != "0")
+if(round($instruments->getInstrumentFocalLength($_GET['instrument']), 0) != "0")
 {
-echo(round($instruments->getFocalLength($_GET['instrument']), 0));
+echo(round($instruments->getInstrumentFocalLength($_GET['instrument']), 0));
 }
 
 echo("\" type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"focallength\" size=\"10\" />

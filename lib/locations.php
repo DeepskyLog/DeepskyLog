@@ -54,7 +54,7 @@ class Locations
  }
 
  // getId returns the id for this instrument
- function getId($name, $observer)
+ function getLocationId($name, $observer)
  {
   $db = new database;
   $db->login();
@@ -136,8 +136,8 @@ class Locations
    return $countries;
  }
 
- // getLocationId returns the id of the given name of the location
- function getLocationId($name)
+ // getLocationsId returns the id of the given name of the location
+ function getLocationsId($name)
  {
   $db = new database;
   $db->login();
@@ -301,8 +301,8 @@ class Locations
   return $longitude;
  }
 
- // getName returns the name of the given id
- function getName($id)
+ // getLocationName returns the name of the given id
+ function getLocationName($id)
  {
   $db = new database;
   $db->login();
@@ -326,7 +326,7 @@ class Locations
  }
 
  // getLimitingMagnitude returns the typical limiting magnitude of the given id
- function getLimitingMagnitude($id)
+ function getLocationLimitingMagnitude($id)
  {
   $db = new database;
   $db->login();
@@ -451,12 +451,12 @@ class Locations
   {
    $adapt[$i] = 0;
 
-   if ($this->getName($sites[$i]) == $previous)
+   if ($this->getLocationName($sites[$i]) == $previous)
    {
     $adapt[$i] = 1;
     $adapt[$i - 1] = 1;
    }
-   $previous = $this->getName($sites[$i]);
+   $previous = $this->getLocationName($sites[$i]);
   }
 
   for ($i = 0;$i < count($sites);$i++)
@@ -464,12 +464,12 @@ class Locations
    if ($adapt[$i])
    {
     $new_sites[$i][0] = $sites[$i];
-    $new_sites[$i][1] = $this->getName($sites[$i])." (".$this->getRegion($sites[$i]).")";
+    $new_sites[$i][1] = $this->getLocationName($sites[$i])." (".$this->getRegion($sites[$i]).")";
    }
    else
    {
     $new_sites[$i][0] = $sites[$i];
-    $new_sites[$i][1] = $this->getName($sites[$i]);
+    $new_sites[$i][1] = $this->getLocationName($sites[$i]);
    }
   }
   return $new_sites;
@@ -625,7 +625,7 @@ class Locations
     $type = "class=\"type2\"";
    }
 
-   $name = $this->getName($value);
+   $name = $this->getLocationName($value);
    $longitude = $this->getLongitude($value);
    $latitude = $this->getLatitude($value);
    $region = $this->getRegion($value);

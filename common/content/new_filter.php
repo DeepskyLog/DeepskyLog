@@ -106,7 +106,7 @@ if ($filts != null)
     $type = "class=\"type2\"";
    }
 
-   $name = stripslashes($filters->getName($value));
+   $name = stripslashes($filters->getFilterName($value));
    $type = $filters->getType($value);
    $color = $filters->getColor($value);
    $wratten = $filters->getWratten($value);
@@ -216,7 +216,7 @@ echo(LangAddFilterTitle); ?>
   $filts = $filters->getSortedFilters('name', "", true);
   while(list($key, $value) = each($filts))
   {
-	  echo("<option value=\"" . $baseURL . "common/add_filter.php?filterid=$value\">" . $filters->getName($value) . "</option>\n");
+	  echo("<option value=\"" . $baseURL . "common/add_filter.php?filterid=$value\">" . $filters->getFilterName($value) . "</option>\n");
   }
   echo("</select>\n");
   echo("</form>");
@@ -245,7 +245,7 @@ echo(LangAddFilterTitle); ?>
 			 } 
 			 if(array_key_exists('filterid',$_GET) && $_GET['filterid'])
        {
-			    echo stripslashes($filters->getName($_GET['filterid']));
+			    echo stripslashes($filters->getFilterName($_GET['filterid']));
 			 } 
 			 ?>" /></td>
    <td class="explanation"><?php echo(LangAddFilterField1Expl); ?></td>

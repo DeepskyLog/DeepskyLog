@@ -24,9 +24,9 @@ $_SESSION['location'] = $_GET['location'];
 include("head.php"); // HTML head
 
 $head = new head();
-$head->printHeader($browsertitle . " - " . $locations->getName($_GET['location']));
+$head->printHeader($browsertitle . " - " . $locations->getLocationName($_GET['location']));
 $head->printMenu();
-$head->printMeta("DeepskyLog, " . $locations->getName($_GET['location']));
+$head->printMeta("DeepskyLog, " . $locations->getLocationName($_GET['location']));
 
 include("menu/headmenu.php"); // HEAD MENU
 

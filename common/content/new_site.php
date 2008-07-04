@@ -111,7 +111,7 @@ if ($sites != null)
     $type = "class=\"type2\"";
    }
 
-   $sitename = stripslashes($locations->getName($value));
+   $sitename = stripslashes($locations->getLocationName($value));
    $region = stripslashes($locations->getRegion($value));
    $country = $locations->getCountry($value);
    if($locations->getLongitude($value) > 0)
@@ -132,7 +132,7 @@ if ($sites != null)
    }
    $timezone = $locations->getTimezone($value);
    $observer = $locations->getObserver($value);
-   $limmag = $locations->getLimitingMagnitude($value);
+   $limmag = $locations->getLocationLimitingMagnitude($value);
    if ($limmag < -900)
    {
      $limmag = "&nbsp;";
@@ -217,7 +217,7 @@ echo(LangAddSiteTitle); ?>
   $sites = $locations->getSortedLocations('name', "", true);
   while(list($key, $value) = each($sites))
   {
-		  echo("<option value=\"" . $baseURL . "common/add_site.php?locationid=$value\">" . $locations->getName($value) . "</option>\n");
+		  echo("<option value=\"" . $baseURL . "common/add_site.php?locationid=$value\">" . $locations->getLocationName($value) . "</option>\n");
   }
   echo("</select>\n");
   echo("</form>");
@@ -250,7 +250,7 @@ echo(LangAddSiteTitle); ?>
 			 } 
 			 if(array_key_exists('locationid',$_GET) && $_GET['locationid'])
        {
-			    echo stripslashes($locations->getName($_GET['locationid']));
+			    echo stripslashes($locations->getLocationName($_GET['locationid']));
 			 } 
 			 ?>" /></td>
    <td class="explanation"></td>
@@ -403,9 +403,9 @@ echo(LangAddSiteTitle); ?>
    <td><input type="text" class="inputfield" maxlength="5" name="lm" size="5" value="<?php
      if(array_key_exists('locationid',$_GET) && $_GET['locationid'])
      {
-       if ($locations->getLimitingMagnitude($_GET['locationid']) > -900)
+       if ($locations->getLocationLimitingMagnitude($_GET['locationid']) > -900)
        {
-        echo $locations->getLimitingMagnitude($_GET['locationid']);
+        echo $locations->getLocationLimitingMagnitude($_GET['locationid']);
        }
      }
      ?>" /></td>

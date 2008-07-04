@@ -16,7 +16,7 @@ echo("<div id=\"main\">\n<h2>");
 
 $filters = new Filters();
 
-echo stripslashes($filters->getName($_GET['filter']));
+echo stripslashes($filters->getFilterName($_GET['filter']));
 
 echo("</h2>"); ?>
    <form action="common/control/validate_filter.php" method="post">
@@ -26,7 +26,7 @@ echo("</h2>"); ?>
 	     <?php 
 			 echo(LangAddFilterField1);
 			 ?></td>
-   <td><input type="text" class="inputfield" maxlength="64" name="filtername" size="30" value="<?php echo stripslashes($filters->getName($_GET['filter']));?>" /></td>
+   <td><input type="text" class="inputfield" maxlength="64" name="filtername" size="30" value="<?php echo stripslashes($filters->getFilterName($_GET['filter']));?>" /></td>
    <td class="explanation"><?php echo(LangAddFilterField1Expl); ?></td>
    </tr>
    <tr>

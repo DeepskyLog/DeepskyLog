@@ -42,7 +42,7 @@ class Eyepieces
  }
  
  // getId returns the id for this eyepiece
- function getId($name, $observer)
+ function getEyepieceId($name, $observer)
  {
   $db = new database;
   $db->login();
@@ -236,8 +236,8 @@ class Eyepieces
   return $fov;
  }
 
- // getName returns the name of the given eyepiece
- function getName($id)
+ // getEyepieceName returns the name of the given eyepiece
+ function getEyepieceName($id)
  {
   $db = new database;
   $db->login();
@@ -418,7 +418,7 @@ class Eyepieces
     $class = "class=\"type2\"";
    }
 
-   $name = $this->getName($value);
+   $name = $this->getEyepieceName($value);
    $focalLength = $this->getFocalLength($value);
    $apparentFOV = $this->getApparentFOV($value);
 

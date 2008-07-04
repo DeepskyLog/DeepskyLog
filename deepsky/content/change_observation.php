@@ -55,7 +55,7 @@ echo LangViewObservationField2;
 
 echo("</td><td><a href=\"common/detail_observer.php?user=" . $observations->getObserverId($_GET['observation']) . "\">");
 
-echo($observers->getFirstName($observations->getObserverId($_GET['observation'])) . "&nbsp;" . $observers->getName($observations->getObserverId($_GET['observation'])));
+echo($observers->getFirstName($observations->getObserverId($_GET['observation'])) . "&nbsp;" . $observers->getObserverName($observations->getObserverId($_GET['observation'])));
 
 print("</a></td></tr>");
 
@@ -69,14 +69,12 @@ echo("</td>
 
 if ($observers->getUseLocal($_SESSION['deepskylog_id']))
 {
-  $date = sscanf($observations->getLocalDate($_GET['observation']), "%4d%2d%2d");
-
-  $timestr = $observations->getLocalTime($_GET['observation']);
+  $date = sscanf($observations->getDsObservationLocalDate($_GET['observation']), "%4d%2d%2d");
+  $timestr = $observations->getDsObservationLocalTime($_GET['observation']);
 }
 else
 {
-  $date = sscanf($observations->getDate($_GET['observation']), "%4d%2d%2d");
-
+  $date = sscanf($observations->getDateDsObservation($_GET['observation']), "%4d%2d%2d");
   $timestr = $observations->getTime($_GET['observation']);
 }
 
@@ -237,7 +235,7 @@ echo("</td><td>
       {
          $locationname = $value[1];
 
-         if($observations->getLocationId($_GET['observation']) == $value[0])
+         if($observations->getDsObservationLocationId($_GET['observation']) == $value[0])
          {
             print("<option selected=\"selected\" value=\"".$value[0]."\">$locationname</option>\n");
          }
@@ -273,7 +271,7 @@ echo("</td><td>
           $instrumentname = InstrumentsNakedEye;
          }
 
-         if($observations->getInstrumentId($_GET['observation']) == $val)
+         if($observations->getDsObservationInstrumentId($_GET['observation']) == $val)
          {
             print("<option selected=\"selected\" value=\"$val\">$instrumentname</option>\n");
          }
@@ -299,7 +297,7 @@ print("</td></tr>");
   while(list ($key, $value) = each($eyeps)) // go through eyepiece array
   {
 
-    $eyepiecename = $eyepieces->getName($value);
+    $eyepiecename = $eyepieces->getEyepieceName($value);
     $val = $value;
     if($observations->getEyepieceId($_GET['observation']) == $val)
     {
@@ -326,9 +324,9 @@ print("</td></tr>");
   while(list ($key, $value) = each($filts)) // go through instrument array
   {
 
-    $filtername = $filters->getName($value);
+    $filtername = $filters->getFilterName($value);
     $val = $value;
-    if($observations->getFilterId($_GET['observation']) == $value)
+    if($observations->getDsObservationFilterId($_GET['observation']) == $value)
     {
       print("<option selected=\"selected\" value=\"$val\">");
     }
@@ -353,9 +351,9 @@ print("</td></tr>");
   while(list ($key, $value) = each($lns)) // go through instrument array
   {
 
-    $lensname = $lenses->getName($value);
+    $lensname = $lenses->getLensName($value);
     $val = $value;
-    if($observations->getLensId($_GET['observation']) == $value)
+    if($observations->getDsObservationLensId($_GET['observation']) == $value)
     {
       print("<option selected=\"selected\" value=\"$val\">");
     }
@@ -513,7 +511,7 @@ echo ("\" /></td></tr>");
     echo("</select></td><td></td></tr>");
 
    // Language of observation
-   $lang = $observations->getLanguage($_GET['observation']);
+   $lang = $observations->getDsObservationLanguage($_GET['observation']);
 
    echo("<td class=\"fieldname\">" . LangViewObservationField29 . "&nbsp;*</td><td>");
 
@@ -543,7 +541,7 @@ echo("<tr>
 
 echo LangViewObservationField8;
 
-echo("</td></tr><tr><td colspan=\"2\"><textarea name=\"description\" class=\"description\">" . $util->br2nl(html_entity_decode($observations->getDescription($_GET['observation']))) . "</textarea></td></tr>");
+echo("</td></tr><tr><td colspan=\"2\"><textarea name=\"description\" class=\"description\">" . $util->br2nl(html_entity_decode($observations->getDescriptionDsObservation($_GET['observation']))) . "</textarea></td></tr>");
 
 echo("</td></tr>");
 

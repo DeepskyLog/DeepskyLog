@@ -61,7 +61,7 @@ class Instruments
  }
 
  // getId returns the id for this instrument
- function getId($name, $observer)
+ function getInstrumentId($name, $observer)
  {
   $db = new database;
   $db->login();
@@ -237,7 +237,7 @@ class Instruments
  }
 
  // getFocalLength returns the focal length of the given instrument
- function getFocalLength($id)
+ function getInstrumentFocalLength($id)
  {
   $db = new database;
   $db->login();
@@ -265,8 +265,8 @@ class Instruments
   return $focalLength;
  }
 
- // getName returns the name of the given instrument
- function getName($id)
+ // getInstrumentName returns the name of the given instrument
+ function getInstrumentName($id)
  {
   $db = new database;
   $db->login();
@@ -371,12 +371,12 @@ class Instruments
   {
    $adapt[$i] = 0;
 
-   if ($this->getName($instruments[$i]) == $previous)
+   if ($this->getInstrumentName($instruments[$i]) == $previous)
    {
     $adapt[$i] = 1;
     $adapt[$i - 1] = 1;
    }
-   $previous = $this->getName($instruments[$i]);
+   $previous = $this->getInstrumentName($instruments[$i]);
   }
 
   for ($i = 0;$i < count($instruments);$i++)
@@ -384,7 +384,7 @@ class Instruments
    if ($adapt[$i])
    {
     $new_instruments[$i][0] = $instruments[$i];
-    $new_instruments[$i][1] = $this->getName($instruments[$i])." (F/".$this->getFd($instruments[$i]).")";
+    $new_instruments[$i][1] = $this->getInstrumentName($instruments[$i])." (F/".$this->getFd($instruments[$i]).")";
    }
    else
    {
@@ -395,7 +395,7 @@ class Instruments
     }
     else
     {
-      $new_instruments[$i][1] = $this->getName($instruments[$i]);
+      $new_instruments[$i][1] = $this->getInstrumentName($instruments[$i]);
     }
    }
   }
@@ -506,10 +506,10 @@ class Instruments
     $class = "class=\"type2\"";
    }
 
-   $name = $this->getName($value);
+   $name = $this->getInstrumentName($value);
    $diameter = $this->getDiameter($value);
    $fd = $this->getFd($value);
-   $focalLength = $this->getFocalLength($value);
+   $focalLength = $this->getInstrumentFocalLength($value);
    $type = $this->getType($value);
 
    if ($type == InstrumentNakedEye)

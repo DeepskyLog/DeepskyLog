@@ -27,7 +27,7 @@ echo(LangViewLocationLocation);
 
 echo("</td>\n<td>\n");
 
-echo(stripslashes($locations->getName($_GET['location'])));
+echo(stripslashes($locations->getLocationName($_GET['location'])));
 
 echo("</td></tr>");
 
@@ -85,7 +85,7 @@ echo($timezone);
 
 echo("</td></tr>");
 
-$lm = $locations->getLimitingMagnitude($_GET['location']);
+$lm = $locations->getLocationLimitingMagnitude($_GET['location']);
 $sb = $locations->getSkyBackground($_GET['location']);
 
 if ($lm > -900 || $sb > -900)

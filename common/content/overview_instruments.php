@@ -105,7 +105,7 @@ while(list ($key, $value) = each($telescopes))
     $typefield = "class=\"type2\"";
    }
 
-   $name = $instruments->getName($value);
+   $name = $instruments->getInstrumentName($value);
    $diameter = round($instruments->getDiameter($value), 0);
    $fd = round($instruments->getFd($value), 1);
    if ($fd == "0")

@@ -104,7 +104,7 @@ if ($eyeps != null)
     $type = "class=\"type2\"";
    }
 
-   $name = stripslashes($eyepieces->getName($value));
+   $name = stripslashes($eyepieces->getEyepieceName($value));
    $focalLength = $eyepieces->getFocalLength($value);
    $apparentFOV = $eyepieces->getApparentFOV($value);
    $maxFocalLength = $eyepieces->getMaxFocalLength($value);
@@ -166,7 +166,7 @@ echo(LangAddEyepieceTitle); ?>
 
   while(list($key, $value) = each($eyeps))
   {
-		  echo("<option value=\"" . $baseURL . "common/add_eyepiece.php?eyepieceid=$value\">" . $eyepieces->getName($value) . "</option>\n");
+		  echo("<option value=\"" . $baseURL . "common/add_eyepiece.php?eyepieceid=$value\">" . $eyepieces->getEyepieceName($value) . "</option>\n");
   }
   echo("</select>\n");
   echo("</form>");
@@ -195,7 +195,7 @@ echo(LangAddEyepieceTitle); ?>
 			 } 
 			 if(array_key_exists('eyepieceid',$_GET) && $_GET['eyepieceid'])
        {
-			    echo stripslashes($eyepieces->getName($_GET['eyepieceid']));
+			    echo stripslashes($eyepieces->getEyepieceName($_GET['eyepieceid']));
 			 } 
 			 ?>" /></td>
    <td class="explanation"><?php echo(LangAddEyepieceField1Expl); ?></td>

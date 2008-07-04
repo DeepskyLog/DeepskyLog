@@ -19,7 +19,7 @@ if(!$_GET['lens']) // no lens defined
    header("Location: ../index.php");
 }
 
-$name = $lenses->getName($_GET['lens']);
+$name = $lenses->getLensName($_GET['lens']);
 $factor = $lenses->getFactor($_GET['lens']);
 
 echo("<div id=\"main\">\n<h2>" . $name . "</h2><table width=\"490\">\n

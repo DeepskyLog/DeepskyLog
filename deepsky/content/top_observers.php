@@ -97,7 +97,7 @@ if(sizeof($testobservations) > 0)
             $type = "class=\"type2\"";
          }
  
-         $name = $obs->getName($key);
+         $name = $obs->getObserverName($key);
          $firstname = $obs->getFirstName($key);
 
          $outputtable .= "<tr $type><td>" . ($count + 1) . "</td><td> <a href=\"common/detail_observer.php?user=" . $key . "\">$firstname&nbsp;$name</a> </td>";

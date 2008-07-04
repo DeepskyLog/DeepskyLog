@@ -303,8 +303,8 @@ class Observers
   return $locations;
  }
 
- // getName returns the name of the given id
- function getName($id)
+ // getObserverName returns the name of the given id
+ function getObserverName($id)
  {
   $db = new database;
   $db->login();
@@ -959,13 +959,13 @@ class Observers
     $type = "class=\"type2\"";
    }
 
-   $name = $this->getName($value);
+   $name = $this->getObserverName($value);
    $firstname = $this->getFirstName($value);
    $email = $this->getEmail($value);
    $loc = $this->getStandardLocation($value);
-   $location = $locations->getName($loc);
+   $location = $locations->getLocationName($loc);
    $inst = $this->getStandardTelescope($value);
-   $telescope = $instruments->getName($inst);
+   $telescope = $instruments->getInstrumentName($inst);
    $password = $this->getPassword($value);
 
    echo "<tr $type><td> $value </td><td> $name </td><td> $firstname </td><td> <a href=\"mailto:$email\"> $email</a> </td><td> $location </td><td> $telescope </td><td> $password </td><td> ";

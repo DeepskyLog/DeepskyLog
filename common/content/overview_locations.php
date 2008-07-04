@@ -115,7 +115,7 @@ while(list ($key, $value) = each($sites))
     $type = "class=\"type2\"";
    }
 
-   $sitename = stripslashes($locations->getName($value));
+   $sitename = stripslashes($locations->getLocationName($value));
    $region = stripslashes($locations->getRegion($value));
    $country = $locations->getCountry($value);
    if($locations->getLongitude($value) > 0)
@@ -136,7 +136,7 @@ while(list ($key, $value) = each($sites))
    }
    $timezone = $locations->getTimezone($value);
    $observer = $locations->getObserver($value);
-   $limmag = $locations->getLimitingMagnitude($value);
+   $limmag = $locations->getLocationLimitingMagnitude($value);
    if ($limmag < -900)
    {
      $limmag = "&nbsp;";

@@ -27,7 +27,7 @@ echo LangViewInstrumentField1;
 
 echo("</td>\n<td>\n");
 
-$name = $instruments->getName($_GET['instrument']);
+$name = $instruments->getInstrumentName($_GET['instrument']);
 
 if ($name == "Naked eye")
 {
@@ -72,7 +72,7 @@ if($instruments->getType($_GET['instrument']) != InstrumentBinoculars && $instru
 
    echo("</td><td>");
 
-   echo(round($instruments->getFocalLength($_GET['instrument']), 0));
+   echo(round($instruments->getInstrumentFocalLength($_GET['instrument']), 0));
 
    print("&nbsp;mm</td>
    </tr>");

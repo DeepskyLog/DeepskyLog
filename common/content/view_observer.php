@@ -38,14 +38,14 @@ $user = str_replace("&amp;", "&", $user);
 $user = str_replace("&amp;", "&", $user);
 
 // test if user exists
-if(!array_key_exists('user', $_SESSION) || $obs->getName($user) == "") // no session variable set 
+if(!array_key_exists('user', $_SESSION) || $obs->getObserverName($user) == "") // no session variable set 
 {
  echo(LangViewObserverInexistant); 
 }  
 else
 {
  $firstname = $obs->getFirstName($_SESSION['user']);
- $name = $obs->getName($_SESSION['user']);
+ $name = $obs->getObserverName($_SESSION['user']);
 
  echo("<div id=\"main\">\n");
  echo("<h2>$firstname $name</h2>");
@@ -103,7 +103,7 @@ $file) || fnmatch($_SESSION['user']. ".png", $file))
 
  echo("</td><td>");
 
- print($obs->getName($_SESSION['user']));
+ print($obs->getObserverName($_SESSION['user']));
 
  print("</td>
         </tr>");
@@ -117,7 +117,7 @@ $file) || fnmatch($_SESSION['user']. ".png", $file))
        <td colspan=\"" . sizeof($modules) . "\">");
 
  $location_id = $obs->getStandardLocation($_SESSION['user']);
- $location_name = $locations->getName($location_id);
+ $location_name = $locations->getLocationName($location_id);
 
 
  $url = "common/detail_location.php?location=" . "$location_id";
@@ -138,9 +138,9 @@ $file) || fnmatch($_SESSION['user']. ".png", $file))
  include_once "../lib/instruments.php";
  $instruments = new Instruments;
 
- if($instruments->getName($obs->getStandardTelescope($_SESSION['user'])))
+ if($instruments->getInstrumentName($obs->getStandardTelescope($_SESSION['user'])))
  {
-  $instrumentname = $instruments->getName($obs->getStandardTelescope($_SESSION['user']));
+  $instrumentname = $instruments->getInstrumentName($obs->getStandardTelescope($_SESSION['user']));
   if ($instrumentname == "Naked eye")
   {
    $instrumentname = InstrumentsNakedEye;

@@ -102,7 +102,7 @@ echo(LangChangeAccountField4."&nbsp;*");
 echo("</td>
    <td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"name\" size=\"25\" value=\"");
 
-print($obs->getName($_SESSION['deepskylog_id']));
+print($obs->getObserverName($_SESSION['deepskylog_id']));
 
 print("\" /></td>
    <td class=\"explanation\">");
@@ -201,12 +201,12 @@ echo("<select name=\"site\">");
       {
        $adapt[$i] = 0;
 
-       if ($locations->getName($sites[$i]) == $previous)
+       if ($locations->getLocationName($sites[$i]) == $previous)
        {
         $adapt[$i] = 1;
         $adapt[$i - 1] = 1;
        }
-       $previous = $locations->getName($sites[$i]);
+       $previous = $locations->getLocationName($sites[$i]);
       }
 
       for ($i = 0;$i < count($sites);$i++)
@@ -214,11 +214,11 @@ echo("<select name=\"site\">");
       {
          if ($adapt[$i])
          {
-          $sitename = $locations->getName($sites[$i])." (".$locations->getRegion($sites[$i]).")";
+          $sitename = $locations->getLocationName($sites[$i])." (".$locations->getRegion($sites[$i]).")";
          }
          else
          {
-          $sitename = $locations->getName($sites[$i]);
+          $sitename = $locations->getLocationName($sites[$i]);
          }
 
          if($obs->getStandardLocation($_SESSION['deepskylog_id']) == $sites[$i])
@@ -258,7 +258,7 @@ echo("</td>
 		  $noStd = false;
       while(list ($key, $value) = each($instr))
       {
-         $instrumentname = $instruments->getName($value);
+         $instrumentname = $instruments->getInstrumentName($value);
          if ($instrumentname == "Naked eye")
          {
           $instrumentname = InstrumentsNakedEye;

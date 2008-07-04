@@ -83,7 +83,7 @@ elseif (array_key_exists('indexAction',$_GET) && ($_GET['indexAction'] == 'quick
 {
   include_once "../lib/objects.php";
   $objects = new Objects;
-  $temp = $objects->getExactObject($_GET['object']);
+  $temp = $objects->getExactDsObject($_GET['object']);
   if($temp)
   {
 	  $_GET['object'] = $temp[0];

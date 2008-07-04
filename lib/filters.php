@@ -42,7 +42,7 @@ class Filters
  }
  
  // getId returns the id for this filter
- function getId($name, $observer)
+ function getFilterId($name, $observer)
  {
   $db = new database;
   $db->login();
@@ -98,7 +98,7 @@ class Filters
  }
 
  // getFiltersId returns the id of the given name of the filter
- function getFilterId($name)
+ function getFiltersId($name)
  {
   $db = new database;
   $db->login();
@@ -186,8 +186,8 @@ class Filters
   return $type;
  }
 
- // getName returns the name of the given filter
- function getName($id)
+ // getFilterName returns the name of the given filter
+ function getFilterName($id)
  {
   $db = new database;
   $db->login();
@@ -454,7 +454,7 @@ class Filters
     $class = "class=\"type2\"";
    }
 
-   $name = $this->getName($value);
+   $name = $this->getFilterName($value);
    $type = $this->getType($value);
    $color = $this->getColor($value);
    $wratten = $this->getWratten($value);

@@ -21,7 +21,7 @@ include_once "../lib/observations.php"; // observations table
 $observations = new Observations;
 
 $firstname = $obs->getFirstName($_GET['user']);
-$name = $obs->getName($_GET['user']);
+$name = $obs->getObserverName($_GET['user']);
 
 $partof=0;
 if(array_key_exists('partof', $_GET))

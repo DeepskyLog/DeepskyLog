@@ -103,7 +103,7 @@ else
   $j = 0;
   for ( $i = 0;$i < count($locations); $i++)
   {
-		if ($loc->getId($locations[$i], $_SESSION['deepskylog_id']) == -1)
+		if ($loc->getLocationId($locations[$i], $_SESSION['deepskylog_id']) == -1)
 		{
       $locationsMissing[$j] = $locations[$i];
       $j++;
@@ -115,7 +115,7 @@ else
   $j = 0;
   for ( $i = 0;$i < count($instruments); $i++)
   {
-    if ($inst->getId($instruments[$i], $_SESSION['deepskylog_id']) == -1)
+    if ($inst->getInstrumentId($instruments[$i], $_SESSION['deepskylog_id']) == -1)
     {
       $instrumentsMissing[$j] = $instruments[$i];
       $j++;
@@ -128,7 +128,7 @@ else
   {
     if ($eyepieces[$i] != "")
     {
-      if ($eyep->getId($eyepieces[$i], $_SESSION['deepskylog_id']) == -1)
+      if ($eyep->getEyepieceId($eyepieces[$i], $_SESSION['deepskylog_id']) == -1)
       {
         $eyepiecesMissing[$j] = $eyepieces[$i];
         $j++;
@@ -142,7 +142,7 @@ else
   {
     if ($filters[$i] != "")
     {
-      if ($filt->getId($filters[$i], $_SESSION['deepskylog_id']) == -1)
+      if ($filt->getFilterId($filters[$i], $_SESSION['deepskylog_id']) == -1)
       {
         $filtersMissing[$j] = $filters[$i];
         $j++;
@@ -156,7 +156,7 @@ else
   {
     if ($lenses[$i] != "")
     {
-      if ($lns->getId($lenses[$i], $_SESSION['deepskylog_id']) == -1)
+      if ($lns->getLensId($lenses[$i], $_SESSION['deepskylog_id']) == -1)
       {
         $lensesMissing[$j] = $lenses[$i];
         $j++;
@@ -252,14 +252,14 @@ else
   }
   else
   {
-    $username = $obs->getFirstname($_SESSION['deepskylog_id']). " ".$obs->getName($_SESSION['deepskylog_id']);
+    $username = $obs->getFirstname($_SESSION['deepskylog_id']). " ".$obs->getObserverName($_SESSION['deepskylog_id']);
     for ( $i = 1; $i < count($parts_array); $i++)
     {
-      $observername = $obs->getFirstname($parts_array[$i][1]). " ".$obs->getName($parts_array[$i][1]);
+      $observername = $obs->getFirstname($parts_array[$i][1]). " ".$obs->getObserverName($parts_array[$i][1]);
       if ($parts_array[$i][1] == $username)
       {
-        $instrum = $inst->getId(htmlspecialchars($parts_array[$i][5]), $_SESSION['deepskylog_id']);
-        $locat = $loc->getId(htmlspecialchars($parts_array[$i][4]), $_SESSION['deepskylog_id']);
+        $instrum = $inst->getInstrumentId(htmlspecialchars($parts_array[$i][5]), $_SESSION['deepskylog_id']);
+        $locat = $loc->getLocationId(htmlspecialchars($parts_array[$i][4]), $_SESSION['deepskylog_id']);
         $dates = sscanf($parts_array[$i][2], "%2d%c%2d%c%4d");
         $date = sprintf("%04d%02d%02d", $dates[4], $dates[2], $dates[0]);
         $times = sscanf($parts_array[$i][3], "%2d%c%2d");
@@ -287,15 +287,15 @@ else
 
 				if ($parts_array[$i][6] != "")
 				{
-					$observation->setEyepieceId($obsid, $eyep->getId($parts_array[$i][6], $_SESSION['deepskylog_id']));
+					$observation->setEyepieceId($obsid, $eyep->getEyepieceId($parts_array[$i][6], $_SESSION['deepskylog_id']));
 				}
 				if ($parts_array[$i][7] != "")
 				{
-					$observation->setFilterId($obsid, $filt->getId($parts_array[$i][7], $_SESSION['deepskylog_id']));
+					$observation->setFilterId($obsid, $filt->getFilterId($parts_array[$i][7], $_SESSION['deepskylog_id']));
 				}
 				if ($parts_array[$i][8] != "")
 				{
-					$observation->setLensId($obsid, $lns->getId($parts_array[$i][8], $_SESSION['deepskylog_id']));
+					$observation->setLensId($obsid, $lns->getLensId($parts_array[$i][8], $_SESSION['deepskylog_id']));
 				}
       }
     }

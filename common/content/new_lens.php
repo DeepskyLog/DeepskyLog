@@ -103,7 +103,7 @@ if ($lns != null)
     $type = "class=\"type2\"";
    }
 
-   $name = stripslashes($lenses->getName($value));
+   $name = stripslashes($lenses->getLensName($value));
    $factor = $lenses->getFactor($value);
 
    print("<tr $type>
@@ -157,7 +157,7 @@ echo(LangAddLensTitle); ?>
   $lns = $lenses->getSortedLenses('name', "", true);
   while(list($key, $value) = each($lns))
   {
-		  echo("<option value=\"" . $baseURL . "common/add_lens.php?lensid=$value\">" . $lenses->getName($value) . "</option>\n");
+		  echo("<option value=\"" . $baseURL . "common/add_lens.php?lensid=$value\">" . $lenses->getLensName($value) . "</option>\n");
   }
   echo("</select>\n");
   echo("</form>");
@@ -186,7 +186,7 @@ echo(LangAddLensTitle); ?>
 			 } 
 			 if(array_key_exists('lensid',$_GET) && $_GET['lensid'])
        {
-			    echo stripslashes($lenses->getName($_GET['lensid']));
+			    echo stripslashes($lenses->getLensName($_GET['lensid']));
 			 } 
 			 ?>" /></td>
    <td class="explanation"><?php echo(LangAddLensField1Expl); ?></td>

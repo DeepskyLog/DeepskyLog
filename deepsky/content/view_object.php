@@ -18,7 +18,7 @@ $_SID='QOO';
 
 if(!$_GET['object']) // no object defined in url 
   header("Location: ../index.php");
-if($objects->getName($_GET['object'])) // check whether object exists
+if($objects->getDsObjectName($_GET['object'])) // check whether object exists
 {
   if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
   {

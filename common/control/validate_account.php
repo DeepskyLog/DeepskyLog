@@ -43,7 +43,7 @@ else // all fields filled in
 
       if(array_key_exists('register',$_POST) && array_key_exists('deepskylog_id', $_POST) && ($_POST['register'] && $_POST['deepskylog_id'])) // pressed register button and username filled in 
       {
-         if(!$obs->getName($_POST['deepskylog_id'])) // user doesn't exist yet
+         if(!$obs->getObserverName($_POST['deepskylog_id'])) // user doesn't exist yet
          {
             // fill database
             $obs->addObserver($_POST['deepskylog_id'], $_POST['name'], $_POST['firstname'], $_POST['email'], md5($_POST['passwd']));

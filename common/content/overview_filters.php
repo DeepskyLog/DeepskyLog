@@ -106,7 +106,7 @@ while(list ($key, $value) = each($filts))
     $type = "class=\"type2\"";
    }
 
-   $name = stripslashes($filters->getName($value));
+   $name = stripslashes($filters->getFilterName($value));
    $type = $filters->getType($value);
    $color = $filters->getColor($value);
    $wratten = $filters->getWratten($value);

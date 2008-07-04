@@ -117,7 +117,7 @@ else
 
 $objectarray=array();
 if(array_key_exists('number',$_GET) && $_GET['number'])
-  $objectarray = $objects->getExactObject("",$_GET['catalogue'], $_GET['number']);
+  $objectarray = $objects->getExactDsObject("",$_GET['catalogue'], $_GET['number']);
 
 if($objectarray && ($objectarray!=''))
 {
@@ -732,7 +732,7 @@ elseif($object ||
        $new_obs = Array();
        while(list ($key, $value) = each($obs)) // go through observations array
        {
-         $newdate = $observations->getLocalDate($value);
+         $newdate = $observations->getDsObservationLocalDate($value);
          if ($mindate != "" && $maxdate != "")
            if (($newdate >= $mindate) && ($newdate <= $maxdate))
            {

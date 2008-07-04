@@ -40,7 +40,7 @@ else
   {
     if(trim($parts_array[$i][0]))
     {
-		  $objectsquery = $obj->getExactObject(trim($parts_array[$i][0]));
+		  $objectsquery = $obj->getExactDsObject(trim($parts_array[$i][0]));
       if (count($objectsquery)==0)
       {
         $objectsMissing[$j] = ucwords(trim($parts_array[$i][0]));

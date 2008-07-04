@@ -101,7 +101,7 @@ else
     $type = "class=\"type2\"";
    }
 
-   $name = $obs->getName($value);
+   $name = $obs->getObserverName($value);
    $firstname = $obs->getFirstName($value);
    $email = $obs->getEmail($value);
 

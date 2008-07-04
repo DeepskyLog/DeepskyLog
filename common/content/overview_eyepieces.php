@@ -105,7 +105,7 @@ while(list ($key, $value) = each($eyeps))
     $type = "class=\"type2\"";
    }
 
-   $name = stripslashes($eyepieces->getName($value));
+   $name = stripslashes($eyepieces->getEyepieceName($value));
    $focalLength = stripslashes($eyepieces->getFocalLength($value));
    $apparentFOV = $eyepieces->getApparentFOV($value);
    $observer = $eyepieces->getObserver($value);

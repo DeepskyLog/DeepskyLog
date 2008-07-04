@@ -76,7 +76,7 @@ class Observations
  }
  
  // getLocalDate returns the date of the given observation in local time
- function getLocalDate($id)
+ function getDsObservationLocalDate($id)
  {
    include_once "locations.php";
    $locations = new Locations();
@@ -141,7 +141,7 @@ class Observations
 
 
  // getAllInfo returns all information of an observation
- function getAllInfo($id)
+ function getAllInfoDsObservation($id)
  {
   $db = new database;
   $db->login();
@@ -160,9 +160,9 @@ class Observations
   $ob["seeing"] = $get->seeing;
   $ob["limmag"] = $get->limmag;
   $ob["visibility"] = $get->visibility;
-  $ob["localdate"] = $this->getLocalDate($id);
-  $ob["localtime"] = $this->getLocalTime($id);
-  $ob["language"] = $this->getLanguage($id);
+  $ob["localdate"] = $this->getDsObservationLocalDate($id);
+  $ob["localtime"] = $this->getDsObservationLocalTime($id);
+  $ob["language"] = $this->getDsObservationLanguage($id);
   $ob["eyepiece"] = $get->eyepieceid;
   $ob["filter"] = $get->filterid;
   $ob["lens"] = $get->lensid;
@@ -886,7 +886,7 @@ function getObservedCountFromCatalogue($id, $catalog)
  }
 
  // getInstrumentId returns the id of the instrument of the observation
- function getInstrumentId($id)
+ function getDsObservationInstrumentId($id)
  {
   $db = new database;
   $db->login();
@@ -936,7 +936,7 @@ function getObservedCountFromCatalogue($id, $catalog)
  }
 
  // getFilterId returns the id of the filter of the observation
- function getFilterId($id)
+ function getDsObservationFilterId($id)
  {
   $db = new database;
   $db->login();
@@ -961,7 +961,7 @@ function getObservedCountFromCatalogue($id, $catalog)
  }
 
  // getLensId returns the id of the lens of the observation
- function getLensId($id)
+ function getDsObservationLensId($id)
  {
   $db = new database;
   $db->login();
@@ -986,7 +986,7 @@ function getObservedCountFromCatalogue($id, $catalog)
  }
 
  // getLanguage returns the idlanguage of the observation
- function getLanguage($id)
+ function getDsObservationLanguage($id)
  {
   $db = new database;
   $db->login();
@@ -1011,7 +1011,7 @@ function getObservedCountFromCatalogue($id, $catalog)
  }
 
  // getLocationId returns the location of the observation
- function getLocationId($id)
+ function getDsObservationLocationId($id)
  {
   $db = new database;
   $db->login();
@@ -1032,7 +1032,7 @@ function getObservedCountFromCatalogue($id, $catalog)
  }
 
  // getDate returns the date of the given observation in UT
- function getDate($id)
+ function getDateDsObservation($id)
  {
   $db = new database;
   $db->login();
@@ -1126,7 +1126,7 @@ function getObservedCountFromCatalogue($id, $catalog)
  }
 
  // getLocalTime returns the time of the given observation in local time
- function getLocalTime($id)
+ function getDsObservationLocalTime($id)
  {
   include_once "locations.php";
   $locations = new Locations();
@@ -1201,7 +1201,7 @@ function getObservedCountFromCatalogue($id, $catalog)
  }
 
  // getDescription returns the description of the given observation
- function getDescription($id)
+ function getDescriptionDsObservation($id)
  {
   $db = new database;
   $db->login();
@@ -1631,13 +1631,13 @@ print $value."<br />";
 
    $objectname = $this->getObjectId($value);
    $observername = $this->getObserverId($value);
-   $instrumentid = $this->getInstrumentId($value);
-   $instrument = $inst->getName($instrumentid);
-   $locationid = $this->getLocationId($value);
-   $location = $loc->getName($locationid);
+   $instrumentid = $this->getDsObservationInstrumentId($value);
+   $instrument = $inst->getInstrumentName($instrumentid);
+   $locationid = $this->getDsObservationLocationId($value);
+   $location = $loc->getLocationName($locationid);
    $date = $this->getDate($value);
    $time = $this->getTime($value);
-   $description = $this->getDescription($value);
+   $description = $this->getDescriptionDsObservation($value);
    $seeing = $this->getSeeing($value);
    $visibility = $this->getVisibility($value);
    $limmag = $this->getLimitingMagnitude($value);
@@ -1737,7 +1737,7 @@ print $value."<br />";
       echo("</td>");
     	echo("<td width=\"25%\">");
        echo("<a href=\"common/detail_observer.php?user=" . $this->getObserverId($LOid) . "&amp;back=index.php?indexAction=detail_observation\">");
-          echo($observer->getFirstName($this->getObserverId($LOid)) . "&nbsp;" . $observer->getName($this->getObserverId($LOid)));
+          echo($observer->getFirstName($this->getObserverId($LOid)) . "&nbsp;" . $observer->getObserverName($this->getObserverId($LOid)));
           print("</a>");
   	  	print("</td>");
   	  print("</tr>");
@@ -1747,25 +1747,25 @@ print $value."<br />";
           echo LangViewObservationField3;
         echo("</td>");
   	  	echo("<td width=\"25%\">");
-          $inst =  $instruments->getName($this->getInstrumentId($LOid));
+          $inst =  $instruments->getInstrumentName($this->getDsObservationInstrumentId($LOid));
           if ($inst == "Naked eye")
           {
             $inst = InstrumentsNakedEye;
           }
-          echo("<a href=\"common/detail_instrument.php?instrument=" . $this->getInstrumentId($LOid) . "\">" . $inst . "</a>");
+          echo("<a href=\"common/detail_instrument.php?instrument=" . $this->getDsObservationInstrumentId($LOid) . "\">" . $inst . "</a>");
         print("</td>");
         print("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
           echo LangViewObservationField31;
           echo("</td>");
           echo("<td width=\"25%\">");
-          $filter = $this->getFilterId($LOid);
+          $filter = $this->getDsObservationFilterId($LOid);
           if ($filter == "" || $filter == 0)
           {
             echo ("-");
           }
           else
           {
-            echo("<a href=\"common/detail_filter.php?filter=" . $filter . "\">" . $filters->getName($filter) . "</a>");
+            echo("<a href=\"common/detail_filter.php?filter=" . $filter . "\">" . $filters->getFilterName($filter) . "</a>");
           }
         echo("</td>");
   	  echo("</tr>");
@@ -1782,21 +1782,21 @@ print $value."<br />";
           }
           else
           {
-            echo("<a href=\"common/detail_eyepiece.php?eyepiece=" . $eyepiece . "\">" . $eyepieces->getName($eyepiece) . "</a>");
+            echo("<a href=\"common/detail_eyepiece.php?eyepiece=" . $eyepiece . "\">" . $eyepieces->getEyepieceName($eyepiece) . "</a>");
           }
         print("</td>");
       print("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
           echo LangViewObservationField32;
         echo("</td>");
        echo("<td width=\"25%\">");
-          $lens = $this->getLensId($LOid);
+          $lens = $this->getDsObservationLensId($LOid);
           if ($lens == "" || $lens == 0)
           {
             echo ("-");
           }
           else
           {
-            echo("<a href=\"common/detail_lens.php?lens=" . $lens . "\">" . $lenses->getName($lens) . "</a>");
+            echo("<a href=\"common/detail_lens.php?lens=" . $lens . "\">" . $lenses->getLensName($lens) . "</a>");
           }
         echo("</td>");
   	  echo("</tr>");
@@ -1806,7 +1806,7 @@ print $value."<br />";
           echo LangViewObservationField4;
         echo("</td>");
        echo("<td width=\"25%\">");
-          echo("<a href=\"common/detail_location.php?location=" . $this->getLocationId($LOid) . "\">" . $locations->getName($this->getLocationId($LOid)) . "</a>");
+          echo("<a href=\"common/detail_location.php?location=" . $this->getDsObservationLocationId($LOid) . "\">" . $locations->getLocationName($this->getDsObservationLocationId($LOid)) . "</a>");
         print("</td>");
         print("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
           echo LangViewObservationField5;
@@ -1816,7 +1816,7 @@ print $value."<br />";
           {
             if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && ($observer->getUseLocal($_SESSION['deepskylog_id'])))
             {
-              $date = sscanf($this->getLocalDate($LOid), "%4d%2d%2d");
+              $date = sscanf($this->getDsObservationLocalDate($LOid), "%4d%2d%2d");
             } 
           }
           if($this->getTime($LOid) >= 0)
@@ -1824,7 +1824,7 @@ print $value."<br />";
             if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && $observer->getUseLocal($_SESSION['deepskylog_id']))
             {
   	        echo("&nbsp;" . LangViewObservationField9lt);
-  		  	  $time = $this->getLocalTime($LOid);
+  		  	  $time = $this->getDsObservationLocalTime($LOid);
             }
             else
    				{
@@ -1952,7 +1952,7 @@ print $value."<br />";
     echo("<tr>");
         echo("<td width=\"100%\">");
   	  
-    		  $LOdescription = $this->getDescription($LOid);
+    		  $LOdescription = $this->getDescriptionDsObservation($LOid);
   	
           // automatically add links towards Messier, NGC, IC and Arp objects in description
           $patterns[0] = "/\s+(M)\s*(\d+)\s/";
@@ -2015,10 +2015,10 @@ print $value."<br />";
 	
   $object = $this->getObjectId($value);
   $observer = $this->getObserverId($value);
-  $temp = $this->getInstrumentId($value);
-  $instrument = $instruments->getName($temp);
+  $temp = $this->getDsObservationInstrumentId($value);
+  $instrument = $instruments->getInstrumentName($temp);
   $instrumentsize = round($instruments->getDiameter($temp), 0);
-  $desc = $this->getDescription($value);
+  $desc = $this->getDescriptionDsObservation($value);
   $patterns[0] = "/\s+(M)\s*(\d+)/";
   $replacements[0] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
   $patterns[1] = "/(NGC|Ngc|ngc)\s*(\d+\w+)/";
@@ -2034,7 +2034,7 @@ print $value."<br />";
   if($AOid)
   {
    	list($LOid) = $AOid;
-    $LOdesc = $this->getDescription($LOid);
+    $LOdesc = $this->getDescriptionDsObservation($LOid);
     $patterns[0] = "/\s+(M)\s*(\d+)/";
     $replacements[0] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
   	$patterns[1] = "/(NGC|Ngc|ngc)\s*(\d+\w+)/";
@@ -2047,8 +2047,8 @@ print $value."<br />";
   }
   if($LOdescription)
   {
-    $LOtemp = $this->getInstrumentId($LOid);
-    $LOinstrument = $instruments->getName($LOtemp);
+    $LOtemp = $this->getDsObservationInstrumentId($LOid);
+    $LOinstrument = $instruments->getInstrumentName($LOtemp);
   	$LOinstrumentsize = round($instruments->getDiameter($LOtemp), 0);
   }
   else
@@ -2068,7 +2068,7 @@ print $value."<br />";
   }
   if ($observers->getUseLocal($_SESSION['deepskylog_id']))
   {
-    $date = sscanf($this->getLocalDate($value), "%4d%2d%2d");
+    $date = sscanf($this->getDsObservationLocalDate($value), "%4d%2d%2d");
   }
   else
   {
@@ -2076,7 +2076,7 @@ print $value."<br />";
   }
   if ($observers->getUseLocal($_SESSION['deepskylog_id']))
   {
-    $LOdate = sscanf($this->getLocalDate($LOid), "%4d%2d%2d");
+    $LOdate = sscanf($this->getDsObservationLocalDate($LOid), "%4d%2d%2d");
   }
   else
   {
@@ -2089,7 +2089,7 @@ print $value."<br />";
          <td> " . $$con . "</td>\n
         <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . 
 	                                                        $observers->getFirstName($observer) . "&nbsp;" . 
-                                                          $observers->getName($observer) . "</a></td>\n
+                                                          $observers->getObserverName($observer) . "</a></td>\n
         <td><a href=\"common/detail_instrument.php?instrument=" . $temp . "\">$instrument &nbsp;"
 	     );
   if($instrument != InstrumentsNakedEye)
@@ -2258,11 +2258,11 @@ print $value."<br />";
    // OBSERVER 
    $observer = $this->getObserverId($value);
    // INSTRUMENT 
-   $temp = $this->getInstrumentId($value);
-   $instrument = $instruments->getName($temp);
+   $temp = $this->getDsObservationInstrumentId($value);
+   $instrument = $instruments->getInstrumentName($temp);
    $instrumentsize = round($instruments->getDiameter($temp), 0);
 	 // DESCRIPTION
-	 $desc = $this->getDescription($value);
+	 $desc = $this->getDescriptionDsObservation($value);
    $patterns[0] = "/\s+(M)\s*(\d+)/";
    $replacements[0] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
    $patterns[1] = "/(NGC|Ngc|ngc)\s*(\d+\w+)/";
@@ -2283,7 +2283,7 @@ print $value."<br />";
          <td> " . $$con . "</td>\n
          <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . 
 			                                                   $observers->getFirstName($observer) . "&nbsp;" . 
-																												 $observers->getName($observer) . "</a></td>\n
+																												 $observers->getObserverName($observer) . "</a></td>\n
          <td><a href=\"common/detail_instrument.php?instrument=" . $temp . "\">$instrument &nbsp;"
 		   );
    if($instrument != InstrumentsNakedEye)
@@ -2294,7 +2294,7 @@ print $value."<br />";
    // DATE
    if (array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id']&&$observers->getUseLocal($_SESSION['deepskylog_id']))
    {
-     $date = sscanf($this->getLocalDate($value), "%4d%2d%2d");
+     $date = sscanf($this->getDsObservationLocalDate($value), "%4d%2d%2d");
    }
    else
    {
@@ -2418,8 +2418,8 @@ print $value."<br />";
     // OBSERVER 
    $observer = $this->getObserverId($value);
    // INSTRUMENT 
-   $temp = $this->getInstrumentId($value);
-   $instrument = $instruments->getName($temp);
+   $temp = $this->getDsObservationInstrumentId($value);
+   $instrument = $instruments->getInstrumentName($temp);
    $instrumentsize = round($instruments->getDiameter($temp), 0);
    if ($instrument == "Naked eye")
    { 
@@ -2432,7 +2432,7 @@ print $value."<br />";
          <td> " . $$con . "</td>\n
          <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . 
 	                                                 $observers->getFirstName($observer) . "&nbsp;" . 
-																									 $observers->getName($observer) . "</a></td>\n
+																									 $observers->getObserverName($observer) . "</a></td>\n
          <td><a href=\"common/detail_instrument.php?instrument=" . $temp . "\">$instrument &nbsp;"
 		     );
    if($instrument != InstrumentsNakedEye)
@@ -2443,7 +2443,7 @@ print $value."<br />";
    // DATE
    if (array_key_exists('deepskylog_id', $_SESSION) && $observers->getUseLocal($_SESSION['deepskylog_id']))
    {
-     $date = sscanf($this->getLocalDate($value), "%4d%2d%2d");
+     $date = sscanf($this->getDsObservationLocalDate($value), "%4d%2d%2d");
    }
    else
    {

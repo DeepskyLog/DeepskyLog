@@ -16,7 +16,7 @@ $eyepieces = new Eyepieces();
 echo("<div id=\"main\">
    \n<h2>");
 
-echo stripslashes($eyepieces->getName($_GET['eyepiece']));
+echo stripslashes($eyepieces->getEyepieceName($_GET['eyepiece']));
 
 echo("</h2>
 
@@ -30,7 +30,7 @@ echo(LangAddEyepieceField1);
 echo("</td>
    <td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"eyepiecename\" size=\"30\" value=\"");
 
-echo stripslashes($eyepieces->getName($_GET['eyepiece']));
+echo stripslashes($eyepieces->getEyepieceName($_GET['eyepiece']));
 
 echo("\" /></td>
    <td class=\"explanation\">" . LangAddEyepieceField1Expl . "</td>

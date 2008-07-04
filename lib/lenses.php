@@ -42,7 +42,7 @@ class Lenses
  }
  
  // getId returns the id for this lens
- function getId($name, $observer)
+ function getLensId($name, $observer)
  {
   $db = new database;
   $db->login();
@@ -97,8 +97,8 @@ class Lenses
   return $ids;
  }
 
- // getLensId returns the id of the given name of the lens
- function getLensId($name)
+ // getLensesId returns the id of the given name of the lens
+ function getLensesId($name)
  {
   $db = new database;
   $db->login();
@@ -186,8 +186,8 @@ class Lenses
   return $factor;
  }
 
- // getName returns the name of the given lens
- function getName($id)
+ // getLensName returns the name of the given lens
+ function getLensName($id)
  {
   $db = new database;
   $db->login();
@@ -344,7 +344,7 @@ class Lenses
     $class = "class=\"type2\"";
    }
 
-   $name = $this->getName($value);
+   $name = $this->getLensName($value);
    $factor = $this->getFactor($value);
    $observer = $this->getObserver($value);
 

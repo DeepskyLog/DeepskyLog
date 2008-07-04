@@ -19,7 +19,7 @@ if(!$_GET['eyepiece']) // no instrument defined
    header("Location: ../index.php");
 }
 
-$name = $eyepieces->getName($_GET['eyepiece']);
+$name = $eyepieces->getEyepieceName($_GET['eyepiece']);
 
 echo("<div id=\"main\">\n<h2>" . $name . "</h2><table width=\"490\">\n
 <tr>\n

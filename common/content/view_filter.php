@@ -19,7 +19,7 @@ if(!$_GET['filter']) // no instrument defined
    header("Location: ../index.php");
 }
 
-$name = $filters->getName($_GET['filter']);
+$name = $filters->getFilterName($_GET['filter']);
 
 echo("<div id=\"main\">\n<h2>" . $name . "</h2><table width=\"490\">\n
 <tr>\n

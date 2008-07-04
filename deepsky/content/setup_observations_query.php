@@ -234,7 +234,7 @@ echo("<option value=\"\"></option>"); // empty field
 //$obs = $observers->getSortedObservers('name'); 
 $obs = $observations->getPopularObservers();
 while(list($key) = each($obs))
-  $sortobs[$key] = $observers->getName($key)." ".$observers->getFirstName($key);
+  $sortobs[$key] = $observers->getObserverName($key)." ".$observers->getFirstName($key);
 natcasesort($sortobs);
 while(list($value, $key) = each($sortobs))
    echo("<option value=\"$value\">".$key."</option>\n");
@@ -350,7 +350,7 @@ echo("<option value=\"\"></option>"); // empty field
 $sites = $locations->getSortedLocations('name', '', true);
 while(list($key, $value) = each($sites))
   if($key != 0) // remove empty location in database
-    echo("<option value=\"$value\">".$locations->getName($value)."</option>\n");
+    echo("<option value=\"$value\">".$locations->getLocationName($value)."</option>\n");
 echo("</select>\n");
 echo("</td>");
 echo("<td width=\"25%\"> &nbsp </td> <td width=\"25%\"> &nbsp</td>"); 

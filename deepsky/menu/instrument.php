@@ -38,9 +38,9 @@ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] &&
 	echo("<select style=\"width: 140px\" onchange=\"location = this.options[this.selectedIndex].value;\" name=\"activateTelescope\">\n");
   while(list($key, $value) = each($result))
     if($value==$instr)
-		  echo("<option selected value=\""  . $link . "&amp;activeTelescopeId=$value\">" . $instrument->getName($value) . "</option>\n");
+		  echo("<option selected value=\""  . $link . "&amp;activeTelescopeId=$value\">" . $instrument->getInstrumentName($value) . "</option>\n");
     else
-		  echo("<option value=\""  . $link . "activeTelescopeId=$value\">" . $instrument->getName($value) . "</option>\n");
+		  echo("<option value=\""  . $link . "activeTelescopeId=$value\">" . $instrument->getInstrumentName($value) . "</option>\n");
 	echo("</select>\n");
 }
 echo "</td>";

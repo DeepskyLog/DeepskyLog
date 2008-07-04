@@ -28,7 +28,7 @@ else // all fields filled in
 {
   $_SESSION['observedobject'] = $_POST['catalogue'] . " " . $_POST['number'];
 	$_SESSION['found'] = "no";
-  $_SESSION['result'] = $objects->getExactObject('',$_POST['catalogue'], $_POST['number']);
+  $_SESSION['result'] = $objects->getExactDsObject('',$_POST['catalogue'], $_POST['number']);
   if(array_key_exists('result', $_SESSION) && $_SESSION['result']) // object found
   {
     $_SESSION['observedobject'] = $_SESSION['result'][0]; // use name in database

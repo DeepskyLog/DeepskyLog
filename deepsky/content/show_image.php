@@ -42,7 +42,7 @@ if(!$_GET['object']) // no object defined in url
 {
   header("Location: ../index.php");
 }
-if($objects->getRa($objects->getName($_GET['object'])) != "") // check whether object exists
+if($objects->getRa($objects->getDsObjectName($_GET['object'])) != "") // check whether object exists
 {
   if(array_key_exists('addObjectToList',$_GET) && $_GET['addObjectToList'] && $myList)
   {
