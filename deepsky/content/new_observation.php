@@ -7,11 +7,13 @@
 // include statements
 // $$ ok
 
+// Code cleanup - removed by David on 20080704
+//include_once "../common/control/ra_to_hms.php";
+//include_once "../common/control/dec_to_dm.php";
+
 include_once "../lib/objects.php";
 include_once "../lib/observations.php";
 include_once "../lib/observers.php";
-include_once "../common/control/ra_to_hms.php";
-include_once "../common/control/dec_to_dm.php";
 include_once "../lib/util.php";
 include_once "../lib/lists.php";
 

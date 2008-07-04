@@ -4,6 +4,15 @@
 // generates an overview of selected observations in the database
 // version 0.4: 2005/11/05, WDM
 
+// Code cleanup - removed by David on 20080704
+//include_once "../lib/locations.php";
+//$locations = new Locations;
+//include_once "../lib/instruments.php";
+//$instruments = new Instruments;
+
+
+
+
 if (!function_exists('fnmatch')) 
 {
   function fnmatch($pattern, $string)
@@ -15,18 +24,14 @@ if (!function_exists('fnmatch'))
 include_once "../lib/lists.php";
 include_once "../lib/observations.php";
 include_once "../lib/setup/language.php";
-include_once "../lib/instruments.php";
 include_once "../lib/observers.php";
-include_once "../lib/locations.php";
 include_once "../lib/objects.php";
 include_once "../lib/util.php";
 include_once "../lib/setup/databaseInfo.php";
 
 $observations = new Observations;
-$instruments = new Instruments;
 $observers = new Observers;
 $objects = new Objects;
-$locations = new Locations;
 $util = new util;
 $util->checkUserInput();
 $list = new Lists;

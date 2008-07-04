@@ -4,7 +4,11 @@
 // checks if the change new observation form is correctly filled in
 // Version 0.1: JV, 20040923
 
-include_once "../../lib/objects.php";
+// Code cleanup - removed by David on 20080704
+//include_once "../../lib/objects.php";
+//$objects = new Objects;
+
+
 include_once "../../lib/observations.php";
 include_once "../../lib/observers.php";
 include_once "../../lib/setup/vars.php";
@@ -13,7 +17,6 @@ include_once "../../lib/util.php";
 $util = new Util();
 $util->checkUserInput();
 
-$objects = new Objects;
 $observations = new Observations;
 $observers = new Observers;
 

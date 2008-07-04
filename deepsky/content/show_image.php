@@ -4,17 +4,22 @@
 // shows the DSS image of an object 
 // Version 0.3: 2004/12/26, JV
 
+//Code cleanup - removed by David on 20080704
+//include_once "../lib/observations.php";
+//include_once "../lib/contrast.php";
+//$contrastObj = new Contrast;
+
+
+
 include_once "../lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
 include_once "../lib/objects.php";
 include_once "../lib/setup/language.php";
-include_once "../lib/observations.php";
 include_once "../lib/locations.php";
 include_once "../lib/observers.php";
 include_once "../lib/util.php";
-include_once "../lib/contrast.php";
 include_once "../lib/instruments.php";
 include_once "../lib/lists.php";
 
@@ -25,7 +30,6 @@ $objects = new Objects;
 $observer = new Observers;
 $locations = new Locations;
 $instrumentObj = new Instruments;
-$contrastObj = new Contrast;
 $list = new Lists;
 
 $_GET['object'] = $_POST['name'];

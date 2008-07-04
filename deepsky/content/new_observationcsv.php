@@ -4,12 +4,15 @@
 // GUI to add a new observation to the database
 // Version 0.3: 2005/04/05, JV
 
+// Code cleanup - removed by David on 20080704
+//include_once "../lib/objects.php";
+//include_once "../lib/observations.php";
+//include_once "../common/control/ra_to_hms.php";
+//include_once "../common/control/dec_to_dm.php";
+
+
 session_start(); // start session
 
-include_once "../lib/objects.php";
-include_once "../lib/observations.php";
-include_once "../common/control/ra_to_hms.php";
-include_once "../common/control/dec_to_dm.php";
 include_once "../lib/util.php";
 
 $util = new Util();

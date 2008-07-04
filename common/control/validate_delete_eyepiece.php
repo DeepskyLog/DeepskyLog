@@ -6,10 +6,12 @@
 
 session_start(); // start session
 
+// Code cleanup - removed by David on 20080704
+//include_once "../../lib/objects.php";
+
 include_once "../../lib/eyepieces.php";
 include_once "../../lib/observations.php";
 include_once "../../lib/cometobservations.php";
-include_once "../../lib/objects.php";
 include_once "../../lib/setup/vars.php";
 include_once "../../lib/util.php";
 

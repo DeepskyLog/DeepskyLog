@@ -4,8 +4,10 @@
 // prints the locations looked up into the database 
 // version 0.2: JV, 20050130
 
+// Code cleanup - removed by David on 20080704
+//include_once "../lib/observers.php";
+
 include_once "../lib/locations.php";
-include_once "../lib/observers.php";
 include_once "../lib/util.php";
 
 $util = new Util();

@@ -3,10 +3,13 @@
 // validate_search_object.php
 // checks if the add new observation form is correctly filled in
 
+// Code cleanup - removed by David on 20080704
+//include_once "../../lib/observers.php";
+
+
 session_start(); // start session
 
 include "../../lib/objects.php";
-include_once "../../lib/observers.php";
 include_once "../../lib/setup/vars.php";
 include_once "../../lib/util.php";
 

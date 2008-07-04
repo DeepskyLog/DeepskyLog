@@ -1,5 +1,10 @@
 <?php 
 
+// Code cleanup - removed by David on 20080704
+//  include_once "../lib/observers.php";
+
+
+
   include_once "../lib/util.php";
 
   $util = new Util();
@@ -10,13 +15,10 @@
 
   $_SESSION['pdfname'] = "observations.pdf"; // necessary for class.pdf.php
 
-  include_once "../lib/observers.php";
   $result = $_SESSION['observation_query'];
-
   if ($result != "")
   {
    $util = new util();
-
    $util->pdfObservations($result);
   }
 ?>

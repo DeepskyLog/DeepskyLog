@@ -3,20 +3,23 @@
 // validate_observation.php
 // checks if the add new observation form is correctly filled in
 
-include_once "../../lib/objects.php";
+// Code cleanup - removed by David on 20080704
+//include_once "../../lib/objects.php";
+//$objects = new Objects;
+//include_once "../../lib/locations.php";
+//$locations = new Locations;
+
+
 include_once "../../lib/observations.php";
 include_once "../../lib/observers.php";
 include_once "../../lib/setup/vars.php";
 include_once "../../lib/util.php";
-include_once "../../lib/locations.php";
 
 $util = new Util();
 $util->checkUserInput();
 
-$objects = new Objects;
 $observations = new Observations;
 $observers = new Observers;
-$locations = new Locations;
 
 if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id']) // logged in
 {

@@ -4,10 +4,13 @@
 // deletes an observation
 // Version 0.1: JV, 20040930
 
+// Code cleanup - removed by David on 20080704
+//include_once "../../lib/objects.php";
+
+
 session_start(); // start session
 
 include_once "../../lib/observations.php";
-include_once "../../lib/objects.php";
 include_once "../../lib/setup/vars.php";
 include_once "../../lib/util.php";
 

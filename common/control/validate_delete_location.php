@@ -4,12 +4,15 @@
 // deletes a location if no observations done from this location yet 
 // version 0.1: JV, 20050212
 
+// Code cleanup - removed by David on 20080704
+//include_once "../../lib/objects.php";
+
+
 session_start(); // start session
 
 include_once "../../lib/locations.php";
 include_once "../../lib/observations.php";
 include_once "../../lib/cometobservations.php";
-include_once "../../lib/objects.php";
 include_once "../../lib/setup/vars.php";
 include_once "../../lib/util.php";
 

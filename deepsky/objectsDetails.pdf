@@ -1,4 +1,9 @@
 <?php 
+
+// Code cleanup - removed by David on 20080704
+//  include_once "../lib/observers.php";
+
+
   include_once "../lib/util.php";
 
   $util = new Util();
@@ -9,16 +14,16 @@
 
   $_SESSION['pdfname'] = "objects.pdf"; // necessary for class.pdf.php
 
-  include_once "../lib/observers.php";
-
   if(array_key_exists('SID', $_GET)&&$_GET['SID'])
+	{
     $_SID=$_GET['SID'];
-  $result = $_SESSION[$_SID];
-
-  if ($result != "")
-  {
-   $util = new util();
-
-   $util->pdfObjectsDetails($result);
-  }
+    $result = $_SESSION[$_SID];
+  
+    if ($result != "")
+    {
+     $util = new util();
+  
+     $util->pdfObjectsDetails($result);
+    }
+	}
 ?>

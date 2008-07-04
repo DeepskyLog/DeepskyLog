@@ -4,20 +4,22 @@
 // GUI to add a new observation to the database
 // Version 0.3: 2005/04/05, JV
 
+// Code cleanup - removed by David on 20080704
+//include_once "../common/control/ra_to_hms.php";
+//include_once "../common/control/dec_to_dm.php";
+//$observer = $_SESSION['deepskylog_id'];
+//include_once "../lib/objects.php";
+//include_once "../lib/observations.php";
+
+
 session_start(); // start session
 
-include_once "../lib/objects.php";
-include_once "../lib/observations.php";
-include_once "../common/control/ra_to_hms.php";
-include_once "../common/control/dec_to_dm.php";
 include_once "../lib/util.php";
 include_once "../lib/lists.php";
 $list=new Lists;
-
 $util = new Util();
 $util->checkUserInput();
 
-$observer = $_SESSION['deepskylog_id'];
 
 echo("<div id=\"main\">\n");
 echo("<h2>");

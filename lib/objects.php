@@ -2454,6 +2454,7 @@ function getPartOfNames($name)
   global $ASTER,$BRTNB,$CLANB,$DRKNB,$EMINB,$ENRNN,$ENSTR, $GALCL,$GALXY,$GLOCL,$GXADN,$GXAGC,$GACAN,$HII,$LMCCN,$LMCDN,$LMCGC,$LMCOC,$NONEX,$OPNCL,$PLNNB,$REFNB,$RNHII,
 	       $SMCCN,$SMCDN,$SMCGC,$SMCOC,$SNREM,$STNEB,$QUASR,$WRNEB,$AA1STAR,$AA2STAR,$AA3STAR,$AA4STAR,$AA8STAR;
 
+  include_once "../common/control/dec_to_dm.php";
   include_once "../common/control/ra_to_hms.php";
   include_once "../lib/lists.php";
   include_once "../lib/observers.php";

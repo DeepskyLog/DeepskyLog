@@ -3,18 +3,20 @@
 // execute_query_objects.php
 // executes the object query passed by setup_query_objects.php
 // version 0.5: 2005/06/29, JV
-//$$ ok
+// $$ ok
+
+// Code cleanup - removed by David on 20080704
+//include_once "../common/control/dec_to_dm.php";
+//include_once "../common/control/ra_to_hms.php";
+//include_once "../lib/observers.php";
+//$observer = new Observers;
 
 include_once "../lib/lists.php";
 include_once "../lib/objects.php";
-include_once "../lib/observers.php";
 include_once "../lib/setup/language.php";
-include_once "../common/control/ra_to_hms.php";
-include_once "../common/control/dec_to_dm.php";
 include_once "../lib/util.php";
 
 $objects = new Objects;
-$observer = new Observers;
 $util = new util;
 $util->checkUserInput();
 $list = new Lists;

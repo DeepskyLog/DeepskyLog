@@ -25,14 +25,14 @@ class Contrast
  // 1.00 < contrast difference : Leicht Sichtbar - Light green : 66FF00
 	function calculateContrast($objMag, $SBObj, $minObjArcmin, $maxObjArcmin)
 	{
-  	include_once "eyepieces.php";
-  	$eyepieces = new Eyepieces;
-
-  	include_once "instruments.php";
-  	$telescopes = new Instruments;
-
-  	include_once "observers.php";
-  	$observer = new Observers;
+  	// Code cleanup - removed by David on 20080704
+    //include_once "eyepieces.php";
+  	//$eyepieces = new Eyepieces;
+  	//include_once "instruments.php";
+  	//$telescopes = new Instruments;
+  	//include_once "observers.php";
+  	//$observer = new Observers;
+    
 
   	if( $minObjArcmin > $maxObjArcmin)
   	{

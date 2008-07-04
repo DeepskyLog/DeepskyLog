@@ -3,9 +3,13 @@
 // add_csv_observations.php
 // adds observations from a csv file to the database
 
+// Code cleanup - removed by David on 20080704
+//include_once "../../lib/observers.php";
+//$obs = new Observers;
+
+
 session_start(); // start session
 
-include_once "../../lib/observers.php";
 include_once "../../lib/objects.php";
 include_once "../../lib/lists.php";
 include_once "../../lib/setup/vars.php"; // sets language for errors
@@ -14,7 +18,6 @@ include_once "../../lib/util.php";
 $util = new Util();
 $util->checkUserInput();
 
-$obs = new Observers;
 $obj = new Objects;
 $list = new Lists;
 

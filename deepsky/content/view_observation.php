@@ -5,26 +5,29 @@
 // version 0.3: JV 20041228
 // version 3.1, DE 20061119
 
+// Code cleanup - removed by David on 20080704
+//include_once "../lib/observers.php"; // observers table
+//$observer = new Observers;
+//include_once "../lib/locations.php"; // locations table
+//$locations = new Locations;
+//include_once "../lib/filters.php"; // filters table
+//$filters = new Filters;
+//include_once "../lib/eyepieces.php"; // eyepieces table
+//$eyepieces = new Eyepieces;
+//include_once "../common/control/ra_to_hms.php";
+//include_once "../common/control/dec_to_dm.php";
+//include_once "../lib/instruments.php"; // instruments table
+//$instruments = new Instruments;
+
+
 include_once "../lib/setup/databaseInfo.php";
 include_once "../lib/observations.php"; // observation table
 $observations = new Observations;
-include_once "../lib/instruments.php"; // instruments table
-$instruments = new Instruments;
-include_once "../lib/locations.php"; // locations table
-$locations = new Locations;
-include_once "../lib/observers.php"; // observers table
-$observer = new Observers;
 include_once "../lib/objects.php"; // objects table
 $objects = new Objects;
-include_once "../lib/eyepieces.php"; // eyepieces table
-$eyepieces = new Eyepieces;
-include_once "../lib/filters.php"; // filters table
-$filters = new Filters;
 include_once "../lib/util.php";
 $util = new Util();
 $util->checkUserInput();
-include_once "../common/control/ra_to_hms.php";
-include_once "../common/control/dec_to_dm.php";
 include_once "../lib/lists.php";
 $list = new Lists;
 $myList = False;

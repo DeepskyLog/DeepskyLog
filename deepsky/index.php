@@ -1,8 +1,10 @@
 <?php
 // index.php
 // main entrance to deepsky modules of DeepskyLog
-session_start();
 
+// Code cleanup - removed by David on 20080704
+
+session_start();
 
 if((!array_key_exists('module',$_SESSION)) ||
    (array_key_exists('module',$_SESSION) && ($_SESSION['module'] != "deepsky")))

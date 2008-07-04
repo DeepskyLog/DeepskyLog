@@ -12,7 +12,7 @@ $util->checkUserInput();
 
 //include_once $instDir."lib/setup/databaseInfo.php";
 
-include "common/login.php"; 				 		 // LOGIN if cookie present 
+include "common/loginuser.php"; 				 		 // LOGIN if cookie present 
 
 print "<META HTTP-EQUIV=\"Refresh\"
       CONTENT=\"0; URL=".$_SESSION['module']."\">";

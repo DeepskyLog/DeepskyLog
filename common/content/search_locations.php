@@ -3,8 +3,10 @@
 // search_location.php
 // allows the user to search a location in the database 
 
+// Code cleanup - removed by David on 20080704
+//include_once "../lib/observers.php";
+
 include_once "../lib/locations.php";
-include_once "../lib/observers.php";
 include_once "../lib/util.php";
 
 $util = new Util();

@@ -4,12 +4,15 @@
 // deletes a lens if no observations done with this lens yet 
 // version 3.2: WDM, 21/01/2008
 
+// Code cleanup - removed by David on 20080704
+//include_once "../../lib/objects.php";
+
+
 session_start(); // start session
 
 include_once "../../lib/lenses.php";
 include_once "../../lib/observations.php";
 include_once "../../lib/cometobservations.php";
-include_once "../../lib/objects.php";
 include_once "../../lib/setup/vars.php";
 include_once "../../lib/util.php";
 
