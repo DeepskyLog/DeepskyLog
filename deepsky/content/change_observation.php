@@ -299,7 +299,7 @@ print("</td></tr>");
 
     $eyepiecename = $eyepieces->getEyepieceName($value);
     $val = $value;
-    if($observations->getEyepieceId($_GET['observation']) == $val)
+    if($observations->getDsObservationEyepieceId($_GET['observation']) == $val)
     {
       print("<option selected=\"selected\" value=\"$val\">");
     }

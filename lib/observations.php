@@ -911,7 +911,7 @@ function getObservedCountFromCatalogue($id, $catalog)
  }
  
  // getEyepieceId returns the id of the eyepiece of the observation
- function getEyepieceId($id)
+ function getDsObservationEyepieceId($id)
  {
   $db = new database;
   $db->login();
