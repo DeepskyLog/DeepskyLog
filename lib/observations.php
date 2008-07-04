@@ -1635,7 +1635,7 @@ print $value."<br />";
    $instrument = $inst->getInstrumentName($instrumentid);
    $locationid = $this->getDsObservationLocationId($value);
    $location = $loc->getLocationName($locationid);
-   $date = $this->getDate($value);
+   $date = $this->getDateDsObservation($value);
    $time = $this->getTime($value);
    $description = $this->getDescriptionDsObservation($value);
    $seeing = $this->getSeeing($value);
@@ -1810,7 +1810,7 @@ print $value."<br />";
         print("</td>");
         print("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
           echo LangViewObservationField5;
-          $date = sscanf($this->getDate($LOid), "%4d%2d%2d");
+          $date = sscanf($this->getDateDsObservation($LOid), "%4d%2d%2d");
           $time="";
 					if($this->getTime($LOid) >= 0)
           {
@@ -2072,7 +2072,7 @@ print $value."<br />";
   }
   else
   {
-    $date = sscanf($this->getDate($value), "%4d%2d%2d");
+    $date = sscanf($this->getDateDsObservation($value), "%4d%2d%2d");
   }
   if ($observers->getUseLocal($_SESSION['deepskylog_id']))
   {
@@ -2080,7 +2080,7 @@ print $value."<br />";
   }
   else
   {
-    $LOdate = sscanf($this->getDate($LOid), "%4d%2d%2d");
+    $LOdate = sscanf($this->getDateDsObservation($LOid), "%4d%2d%2d");
   }
   // OUTPUT
 	 $con = $objects->getConstellation($object);
@@ -2298,7 +2298,7 @@ print $value."<br />";
    }
    else
    {
-     $date = sscanf($this->getDate($value), "%4d%2d%2d");
+     $date = sscanf($this->getDateDsObservation($value), "%4d%2d%2d");
    }
    echo date ($dateformat, mktime (0,0,0,$date[1],$date[2],$date[0]));
    echo("</td>\n");
@@ -2447,7 +2447,7 @@ print $value."<br />";
    }
    else
    {
-     $date = sscanf($this->getDate($value), "%4d%2d%2d");
+     $date = sscanf($this->getDateDsObservation($value), "%4d%2d%2d");
    }
    echo date ($dateformat, mktime (0,0,0,$date[1],$date[2],$date[0]));
    echo("</td>\n
