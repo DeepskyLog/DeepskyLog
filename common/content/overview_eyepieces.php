@@ -4,10 +4,12 @@
 // generates an overview of all eyepieces (admin only)
 // version 3.2: WDM 22/01/2008
 
+//include_once "../lib/observers.php";
+//$observers = new observers;
+
 include_once "../lib/eyepieces.php";
 include_once "../lib/util.php";
 include_once "../lib/observations.php";
-include_once "../lib/observers.php";
 include_once "../lib/cometobservations.php";
 
 $eyepieces = new Eyepieces;
@@ -16,7 +18,6 @@ $util->checkUserInput();
 $observations = new observations;
 $cometobservations = new CometObservations;
 
-$observers = new observers;
 
 // sort
 

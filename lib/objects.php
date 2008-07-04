@@ -814,12 +814,13 @@ $type = $this->getType($value);
  
  function getSeenObjectDetails($obs, $seen="D")
  {
+//  include_once "locations.php";
+//  $locations = new Locations;
+
   include_once "observers.php";
   $observer = new Observers;
   include_once "instruments.php";
   $instrumentObj = new Instruments;
-  include_once "locations.php";
-  $locations = new Locations;
   include_once "contrast.php";
   $contrastObj = new Contrast;
   $db = new database;
@@ -2630,17 +2631,18 @@ function getPartOfNames($name)
 
   global $deepskylive;
 
+//  include_once "../lib/locations.php";
+//  $locations = new Locations;
+ 
   include_once "../common/control/ra_to_hms.php";
   include_once "../common/control/dec_to_dm.php";
 
   include_once "../lib/observations.php"; 
   include_once "../lib/observers.php";
-  include_once "../lib/locations.php";
   include_once "../lib/contrast.php";
   include_once "../lib/instruments.php";
 
   $observer = new Observers;
-  $locations = new Locations;
   $contrastObj = new Contrast;
   $instrumentObj = new Instruments;
 

@@ -8,6 +8,12 @@
 //include_once "../lib/observations.php";
 //include_once "../lib/contrast.php";
 //$contrastObj = new Contrast;
+//include_once "../lib/instruments.php";
+//$instrumentObj = new Instruments;
+//include_once "../lib/locations.php";
+//$locations = new Locations;
+//include_once "../lib/observers.php";
+//$observer = new Observers;
 
 
 
@@ -17,19 +23,13 @@ $util = new Util();
 $util->checkUserInput();
 include_once "../lib/objects.php";
 include_once "../lib/setup/language.php";
-include_once "../lib/locations.php";
-include_once "../lib/observers.php";
 include_once "../lib/util.php";
-include_once "../lib/instruments.php";
 include_once "../lib/lists.php";
 
 $util = new Util();
 $util->checkUserInput();
 
 $objects = new Objects; 
-$observer = new Observers;
-$locations = new Locations;
-$instrumentObj = new Instruments;
 $list = new Lists;
 
 $_GET['object'] = $_POST['name'];

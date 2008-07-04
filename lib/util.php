@@ -1579,7 +1579,7 @@ function printListHeader($list, $link, $min, $step, $total)
 
   while(list ($key, $value) = each($result))
   {
-   $objectname = $objects->getDsObjectName($observation->getObjectId($value));
+   $objectname = $objects->getName($observation->getId($value));
 
    $pdf->ezText($objectname, "14");
 

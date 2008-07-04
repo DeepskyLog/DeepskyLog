@@ -4,7 +4,8 @@
 // allows the administrator to change site details 
 // version 0.1: JV 20041126
 
-include_once "../lib/observers.php";
+//include_once "../lib/observers.php";
+
 include_once "../lib/locations.php";
 include_once "../lib/util.php";
 

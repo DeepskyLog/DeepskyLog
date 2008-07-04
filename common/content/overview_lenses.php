@@ -4,10 +4,13 @@
 // generates an overview of all lenses (admin only)
 // version 3.2: WDM 11/05/2008
 
+//include_once "../lib/observers.php";
+//$observers = new observers;
+
+
 include_once "../lib/lenses.php";
 include_once "../lib/util.php";
 include_once "../lib/observations.php";
-include_once "../lib/observers.php";
 include_once "../lib/cometobservations.php";
 
 $lenses = new Lenses;
@@ -16,7 +19,6 @@ $util->checkUserInput();
 $observations = new observations;
 $cometobservations = new CometObservations;
 
-$observers = new observers;
 
 // sort
 

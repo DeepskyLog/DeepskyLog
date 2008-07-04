@@ -3,7 +3,9 @@
 // new_site.php
 // allows the user to add a new site
 
-include_once "../lib/observers.php";
+//include_once "../lib/observers.php";
+//$observers = new observers;
+
 include_once "../lib/eyepieces.php";
 include_once "../lib/util.php";
 include_once "../lib/cometobservations.php";
@@ -13,7 +15,6 @@ $util = new util;
 $util->checkUserInput();
 $observations = new observations;
 $cometobservations = new CometObservations;
-$observers = new observers;
 
 // sort
 

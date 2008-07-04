@@ -4,7 +4,8 @@
 // allows the administrator to change eyepiece details 
 // version 3.2 : WDM, 16/01/2008
 
-include_once "../lib/observers.php";
+//include_once "../lib/observers.php";
+
 include_once "../lib/eyepieces.php";
 include_once "../lib/util.php";
 

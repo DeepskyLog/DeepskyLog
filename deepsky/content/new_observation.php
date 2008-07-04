@@ -10,9 +10,9 @@
 // Code cleanup - removed by David on 20080704
 //include_once "../common/control/ra_to_hms.php";
 //include_once "../common/control/dec_to_dm.php";
+include_once "../lib/observations.php";
 
 include_once "../lib/objects.php";
-include_once "../lib/observations.php";
 include_once "../lib/observers.php";
 include_once "../lib/util.php";
 include_once "../lib/lists.php";
@@ -103,7 +103,7 @@ if(array_key_exists('object', $_GET) && $_GET['object'])
     }
     else // first observation of session
     {
-      if($obs->getStandardLocation($_SESSION['deepskylog_id']) == $sites[$i][0]) // location equals standard location
+      if($observer->getStandardLocation($_SESSION['deepskylog_id']) == $sites[$i][0]) // location equals standard location
       {
         print("<option selected=\"selected\" value=\"".$sites[$i][0]."\">$sitename</option>\n");
       }
@@ -205,7 +205,7 @@ if(array_key_exists('object', $_GET) && $_GET['object'])
       else
         print("<option value=\"$val\">");
     }
-    elseif($obs->getStandardTelescope($_SESSION['deepskylog_id']) == $val) // not executed when previous observation
+    elseif($observer->getStandardTelescope($_SESSION['deepskylog_id']) == $val) // not executed when previous observation
       print("<option selected=\"selected\" value=\"$val\">");
     else // first observation of session and not the standard instrument
       print("<option value=\"$val\">");
@@ -327,10 +327,10 @@ if(array_key_exists('object', $_GET) && $_GET['object'])
   if(array_key_exists('language', $_SESSION) && array_key_exists('savedata', $_SESSION) && ($_SESSION['savedata'] == "yes"))
     $current_language = $_SESSION['language'];
   else
-    $current_language = $obs->getObservationLanguage($_SESSION['deepskylog_id']);
+    $current_language = $observer->getObservationLanguage($_SESSION['deepskylog_id']);
   echo("<td class=\"fieldname\" align=\"right\">" . LangViewObservationField29 . "&nbsp;*</td><td>");
   $language = new Language(); 
-  $allLanguages = $language->getAllLanguages($obs->getLanguage($_SESSION['deepskylog_id']));
+  $allLanguages = $language->getAllLanguages($observer->getLanguage($_SESSION['deepskylog_id']));
   echo("<select name=\"description_language\" style=\"width: 147px\">");
   while(list ($key, $value) = each($allLanguages))
     if($current_language == $key)
