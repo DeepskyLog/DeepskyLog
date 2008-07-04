@@ -910,7 +910,7 @@ function getObservedCountFromCatalogue($id, $catalog)
   return $instrumentid;
  }
  
- // getEyepieceId returns the id of the eyepiece of the observation
+ // getDsObservationEyepieceId returns the id of the eyepiece of the observation
  function getDsObservationEyepieceId($id)
  {
   $db = new database;
@@ -1775,14 +1775,14 @@ print $value."<br />";
           echo LangViewObservationField30;
         echo("</td>");
        echo("<td width=\"25%\">");
-          $eyepiece = $this->getEyepieceId($LOid);
+          $eyepiece = $this->getDsObservationEyepieceId($LOid);
           if ($eyepiece == "" || $eyepiece == 0)
           {
             echo ("-");
           }
           else
           {
-            echo("<a href=\"common/detail_eyepiece.php?eyepiece=" . $eyepiece . "\">" . $eyepieces->getEyepieceName($eyepiece) . "</a>");
+            echo("<a href=\"common/detail_eyepiece.php?eyepiece=" . $eyepiece . "\">" . $eyepieces->getDsObservationEyepieceId($eyepiece) . "</a>");
           }
         print("</td>");
       print("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
