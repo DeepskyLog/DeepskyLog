@@ -47,7 +47,7 @@ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
 else
 {
    include("../common/menu/help.php"); // HELP MENU 
-   include_once("menu/language.php"); // LANGUAGE MENU
+   include_once("menu/languagemennu.php"); // LANGUAGE MENU
 }
 include_once("menu/endmenu.php"); // END MENU
 

@@ -34,7 +34,7 @@ include_once("../".$_SESSION['module']."/menu/search.php"); // SEARCH MENU
         
 include("../common/menu/help.php"); // HELP MENU 
 
-include("menu/language.php"); // LANGUAGE MENU
+include("menu/languagemenu.php"); // LANGUAGE MENU
 
 include("menu/endmenu.php"); // END MENU	
 

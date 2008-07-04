@@ -49,7 +49,7 @@ if(array_key_exists('lens', $_GET) && ($_GET['lens'])) // lens defined
    else
    {
       include("../common/menu/help.php"); // HELP MENU 
-      include_once("menu/language.php"); // LANGUAGE MENU 
+      include_once("menu/languagemenu.php"); // LANGUAGE MENU 
    }
 
    include_once("menu/endmenu.php"); // END MENU

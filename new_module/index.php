@@ -44,7 +44,7 @@ if(isset($_COOKIE["deepskylogsec"])) 											// cookie set
 }
 else // cookie not set
 {
-   include("../common/menu/language.php"); 								// LANGUAGE MENU
+   include("../common/menu/languagemenu.php"); 								// LANGUAGE MENU
 }
 include("../common/menu/endmenu.php"); 										// END MENU
 

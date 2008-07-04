@@ -39,7 +39,7 @@ if($_SESSION['deepskylog_id']) // LOGGED IN
 else
 {
         include("../common/menu/help.php"); // HELP MENU
-        include("../common/menu/language.php"); // LANGUAGE MENU
+        include("../common/menu/languagemenu.php"); // LANGUAGE MENU
 }
 include("../common/menu/endmenu.php"); // END MENU	
 	include("content/overview_objects.php"); // SHOW OVERVIEW OBJECTS 

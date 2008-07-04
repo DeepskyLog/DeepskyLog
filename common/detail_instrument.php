@@ -58,7 +58,7 @@ if(array_key_exists('instrument', $_GET) && ($_GET['instrument'])) // instrument
    else
    {
       include("../common/menu/help.php"); // HELP MENU 
-      include_once("menu/language.php"); // LANGUAGE MENU 
+      include_once("menu/languagemenu.php"); // LANGUAGE MENU 
    }
 
    include_once("menu/endmenu.php"); // END MENU

@@ -32,7 +32,7 @@ include_once("menu/login.php"); // LOGIN MENU
 
 include_once("../".$_SESSION['module']."/menu/search.php"); // SEARCH MENU
 
-include_once("menu/language.php"); // LANGUAGE MENU
+include_once("menu/languagemenu.php"); // LANGUAGE MENU
 
 include_once("menu/endmenu.php"); // END MENU
 

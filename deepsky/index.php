@@ -38,7 +38,7 @@ if (array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!
 else 																						 // cookie not set
 {
    include("../common/menu/help.php"); 			 		 // HELP MENU
-   include("../common/menu/language.php"); 	 		 // LANGUAGE MENU
+   include("../common/menu/languagemenu.php"); 	 		 // LANGUAGE MENU
 }
 include("../common/menu/endmenu.php"); 			 		 
 if(array_key_exists('indexAction',$_GET) && ($_GET['indexAction'] == 'adapt_observation') && 
