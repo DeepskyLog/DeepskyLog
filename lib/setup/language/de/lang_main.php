@@ -675,6 +675,7 @@ define("LangValidateAccountEmailLine3", "Name : ");
 define("LangValidateAccountEmailLine4", "Diese eMail wurde automatisch von DeepskyLog versand");
 define("LangValidateAccountEmailTitle", "DeepskyLog - Registrierung");
 define("LangValidateAccountEmailTitleObject", "DeepskyLog - Objekt - ");
+define("LangValidateAccountEmailTitleObjectObserver", "durch Benutzer ");
 define("LangValidateAccountMessage4", "Es existiert bereits ein Benutzer mit diesem Namen. Bitte w&auml;hlen Sie einen anderen Namen!");
 define("LangValidateAccountMessage5", "Ihr Benutzer wurde erfolgreich ge&auml;ndert!");
 define("LangValidateAccountMessage", "Message");

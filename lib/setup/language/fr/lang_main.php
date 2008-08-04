@@ -675,6 +675,7 @@ define("LangValidateAccountEmailLine3", "Nom: ");
 define("LangValidateAccountEmailLine4", "Cet &eacute;mail a &eacute;t&eacute; envoy&eacute; automatiquement par l'application DeepSkyLog");
 define("LangValidateAccountEmailTitle", "DeepskyLog - enregistrement");
 define("LangValidateAccountEmailTitleObject", "DeepskyLog - Objet - ");
+define("LangValidateAccountEmailTitleObjectObserver", "par l'observateur ");
 define("LangValidateAccountMessage4", "Il y a d&eacute;j&agrave; un utilisateur avec ce nom, veuillez choisir un autre nom!");
 define("LangValidateAccountMessage5", "Les adaptations ont &eacute;t&eacute; enregistr&eacute;es!");
 define("LangValidateAccountMessage", "Message");

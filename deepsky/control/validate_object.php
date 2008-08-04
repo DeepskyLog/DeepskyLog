@@ -228,8 +228,8 @@ if ($_POST['newobject']) // pushed add new object button
     $administrators = $obs->getAdministrators();
     $fromMail = $obs->getEmail($administrators[0]);
     $headers = "From:".$fromMail;
-    $body = LangValidateAccountEmailTitleObject . " " . $name;
-
+    $body = LangValidateAccountEmailTitleObject . " " . $name . " " . LangValidateAccountEmailTitleObjectObserver;
+		
 		// send message
     mail($to, $subject, $body, $headers);
     

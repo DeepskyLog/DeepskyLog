@@ -41,11 +41,6 @@ class Objects
   $newcatindex = ucwords(trim($catindex));
   $sql= "INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")))";
   mysql_query($sql) or die(mysql_error());	
-
-  $query = "SELECT id FROM objects ORDER BY id DESC LIMIT 1";
-  $run = mysql_query($query) or die(mysql_error());
-  $db->logout();
-  $get = mysql_fetch_object($run);
   
 	// Calculate and set the SBObj
 	if ($mag != 99.9 && ($diam1 != 0 || $diam2 != 0))

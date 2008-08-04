@@ -18,7 +18,7 @@ echo("<div id=\"main\">\n<h2>");
 
 echo (LangNewObjectTitle); 
 
-echo("</h2>\n<table width=\"490\">\n");
+echo("</h2>\n<table width=\"100%\">\n");
 
 echo("<form action=\"deepsky/control/validate_object.php\" method=\"post\">");
 
@@ -173,8 +173,15 @@ echo LangViewObjectField9;
 
 echo("</td>\n<td>\n");
 
-echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"size_x\" size=\"4\" value=\"\"/>&nbsp;&nbsp;<select name=\"size_x_units\"><option></option><option value=\"min\">" . LangNewObjectSizeUnits1 . "</option><option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option></select>&nbsp;&nbsp;X&nbsp;&nbsp;<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"size_y\" size=\"4\" value=\"\"/>&nbsp;&nbsp;<select name=\"size_y_units\"><option></option><option value=\"min\">" . LangNewObjectSizeUnits1 . "</option><option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option></select>");
-
+echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"size_x\" size=\"4\" value=\"\"/>&nbsp;&nbsp;
+      <select name=\"size_x_units\"> <option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>
+			                               <option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>
+			</select>
+			&nbsp;&nbsp;X&nbsp;&nbsp;
+			<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"size_y\" size=\"4\" value=\"\"/>&nbsp;&nbsp;
+			<select name=\"size_y_units\"> <option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>
+			                               <option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>
+			</select>");
 echo("</td>\n<td>\n</td>\n</tr>\n");
 
 // POSITION ANGLE 
