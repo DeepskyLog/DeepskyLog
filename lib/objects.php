@@ -35,7 +35,7 @@ class Objects
   $skyatlas = $this->calculateSkyAtlasPage($ra, $dec);
   $millenium = $this->calculateMilleniumPage($ra, $dec);
   $taki = $this->calculateTakiPage($ra, $dec);
-  $array = array("INSERT INTO objects (name, type, con, ra, decl, mag, subr, diam1, diam2, pa, catalogs, datasource, urano, urano_new, sky, millenium, taki) VALUES (\"$name\", \"$type\", \"$con\", \"$ra\", \"$dec\", \"$mag\", \"$subr\", \"$diam1\", \"$diam2\", \"$pa\", \"$catalogs\", \"$datasource\", \"$urano\", \"$uranonew\", \"$skyatlas\", \"$millenium\", \"$taki\")");
+  $array = array("INSERT INTO objects (name, type, con, ra, decl, mag, subr, diam1, diam2, pa, datasource, urano, urano_new, sky, millenium, taki) VALUES (\"$name\", \"$type\", \"$con\", \"$ra\", \"$dec\", \"$mag\", \"$subr\", \"$diam1\", \"$diam2\", \"$pa\", \"$datasource\", \"$urano\", \"$uranonew\", \"$skyatlas\", \"$millenium\", \"$taki\")");
   $sql = implode("", $array);
   mysql_query($sql) or die(mysql_error());
   $newcatindex = ucwords(trim($catindex));
