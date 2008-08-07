@@ -27,10 +27,6 @@ menu($title); // SUBTITLE
 
 include("menu/login.php");
 
-if(array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes"))
-{
-   include("menu/admin.php"); // ADMINISTRATION MENU
-}
 
 include_once("../".$_SESSION['module']."/menu/search.php"); // SEARCH MENU
 
@@ -38,6 +34,10 @@ if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']))
 {
     include_once("../".$_SESSION['module']."/menu/change.php"); // CHANGE MENU
     include("../common/menu/help.php"); // HELP MENU
+    if(array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes"))
+    {
+       include("menu/admin.php"); // ADMINISTRATION MENU
+    }
     include("menu/out.php"); // LOG OUT MENU
 }
 else
