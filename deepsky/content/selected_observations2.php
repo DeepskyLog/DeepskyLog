@@ -87,18 +87,15 @@ if(array_key_exists('object', $_GET) &&($_GET['object']))
     echo("<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($_GET['object']) . "\">" . LangViewObjectViewNearbyObject . " " . $_GET['object']);
   	echo("</td><td width=\"25%\" align=\"center\">");
     if (array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
-      echo("<a href=\"deepsky/index.php?indexAction=add_observation&object=" . 
-  		     urlencode($_GET['object']) . 
-  				 "\">" . LangViewObjectAddObservation . 
-  				 $_GET['object'] . "</a>");
+      echo("<a href=\"deepsky/index.php?indexAction=add_observation&object=" . urlencode($_GET['object']) . "\">" . LangViewObjectAddObservation . $_GET['object'] . "</a>");
   	echo("</td>");
   	if($myList)
   	{
       echo("<td width=\"25%\" align=\"center\">");
       if($list->checkObjectInMyActiveList($_GET['object']))
-        echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . $_GET['object'] . "&amp;removeObjectFromList=" . urlencode($_GET['object']) . "\">" . $_GET['object'] . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "</a>");
+        echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($_GET['object']) . "&amp;removeObjectFromList=" . urlencode($_GET['object']) . "\">" . $_GET['object'] . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "</a>");
       else
-        echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . $_GET['object'] . "&amp;addObjectToList=" . urlencode($_GET['object']) . "&amp;showname=" . $_GET['object'] . "\">" . $_GET['object'] . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>");
+        echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($_GET['object']) . "&amp;addObjectToList=" . urlencode($_GET['object']) . "&amp;showname=" . urlencode($_GET['object']) . "\">" . $_GET['object'] . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>");
   	  echo("</td>");
   	}	
   	echo("</tr>");
@@ -837,13 +834,13 @@ elseif($object ||
    }
    $step = 25;
 
-   $link = "deepsky/index.php?indexAction=result_selected_observations&catalogue=" . $catalogue . 
-                                         "&amp;observer=" . $observer . 
+   $link = "deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) . 
+                                         "&amp;observer=" . urlencode($observer) . 
                                          "&amp;object=" . urlencode($object) . 
                                          "&amp;lco=" . $lco . 
-                                         "&amp;number=" . $number . 
-                                         "&amp;instrument=" . $instrument . 
-                                         "&amp;site=" . $site . 
+                                         "&amp;number=" . urlencode($number) . 
+                                         "&amp;instrument=" . urlencode($instrument) . 
+                                         "&amp;site=" . urlencode($site) . 
                                          "&amp;minyear=" . $minyear . 
                                          "&amp;minmonth=" . $minmonth . 
                                          "&amp;minday=" . $minday . 
@@ -926,13 +923,13 @@ elseif($object ||
         echo "<table width=\"100%\">\n";
         echo "<tr width=\"100%\" class=\"type3\">\n";
         // OBJECT NAME
-        echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . $catalogue .
-                                                    "&amp;instrument=" . $instrument .
+        echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) .
+                                                    "&amp;instrument=" . urlencode($instrument) .
                                                     "&amp;object=" . urlencode($object) . 
                                                     "&amp;lco=" . $lco . 
-                                                    "&amp;number=" . $number .
-                                                    "&amp;observer=" . $observer .
-                                                    "&amp;site=" . $site .
+                                                    "&amp;number=" . urlencode($number) .
+                                                    "&amp;observer=" . urlencode($observer) .
+                                                    "&amp;site=" . urlencode($site) .
                                                     "&amp;minyear=" . $minyear .
                                                     "&amp;minmonth=" . $minmonth .
                                                     "&amp;minday=" . $minday .
@@ -981,13 +978,13 @@ elseif($object ||
                                                     "&amp;sort=objectname&amp;previous=$previous\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObservationsHeader1) . "\">" . 
                                                     LangOverviewObservationsHeader1 . "</a></td>\n";
        
-			  echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . $catalogue .
-                                                    "&amp;instrument=" . $instrument .
+			  echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) .
+                                                    "&amp;instrument=" . urlencode($instrument) .
                                                     "&amp;object=" . urlencode($object) . 
                                                     "&amp;lco=" . $lco . 
-                                                    "&amp;number=" . $number .
-                                                    "&amp;observer=" . $observer .
-                                                    "&amp;site=" . $site .
+                                                    "&amp;number=" . urlencode($number) .
+                                                    "&amp;observer=" . urlencode($observer) .
+                                                    "&amp;site=" . urlencode($site) .
                                                     "&amp;minyear=" . $minyear .
                                                     "&amp;minmonth=" . $minmonth .
                                                     "&amp;minday=" . $minday .
@@ -1038,13 +1035,13 @@ elseif($object ||
 
          // OBSERVER
 
-         echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . $catalogue .
-                                                    "&amp;instrument=" . $instrument .
+         echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) .
+                                                    "&amp;instrument=" . urlencode($instrument) .
                                                     "&amp;object=" . urlencode($object) . 
                                                     "&amp;lco=" . $lco . 
-                                                    "&amp;number=" . $number .
-                                                    "&amp;observer=" . $observer .
-                                                    "&amp;site=" . $site .
+                                                    "&amp;number=" . urlencode($number) .
+                                                    "&amp;observer=" . urlencode($observer) .
+                                                    "&amp;site=" . urlencode($site) .
                                                     "&amp;minyear=" . $minyear .
                                                     "&amp;minmonth=" . $minmonth .
                                                     "&amp;minday=" . $minday .
@@ -1095,13 +1092,13 @@ elseif($object ||
 
          // INSTRUMENT
 
-         echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . $catalogue .
-                                                    "&amp;instrument=" . $instrument .
-                                                    "&amp;number=" . $number .
+         echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) .
+                                                    "&amp;instrument=" . urlencode($instrument) .
+                                                    "&amp;number=" . urlencode($number) .
                                                     "&amp;object=" . urlencode($object) . 
                                                     "&amp;lco=" . $lco . 
-                                                    "&amp;observer=" . $observer .
-                                                    "&amp;site=" . $site .
+                                                    "&amp;observer=" . urlencode($observer) .
+                                                    "&amp;site=" . urlencode($site) .
                                                     "&amp;minyear=" . $minyear .
                                                     "&amp;minmonth=" . $minmonth .
                                                     "&amp;minday=" . $minday .
@@ -1152,13 +1149,13 @@ elseif($object ||
 
          // DATE
 
-         echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . $catalogue .
-                                                    "&amp;instrument=" . $instrument .
-                                                    "&amp;number=" . $number .
+         echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) .
+                                                    "&amp;instrument=" . urlencode($instrument) .
+                                                    "&amp;number=" . urlencode($number) .
                                                     "&amp;object=" . urlencode($object) . 
                                                     "&amp;lco=" . $lco . 
-                                                    "&amp;observer=" . $observer .
-                                                    "&amp;site=" . $site .
+                                                    "&amp;observer=" . urlencode($observer) .
+                                                    "&amp;site=" . urlencode($site) .
                                                     "&amp;minyear=" . $minyear .
                                                     "&amp;minmonth=" . $minmonth .
                                                     "&amp;minday=" . $minday .

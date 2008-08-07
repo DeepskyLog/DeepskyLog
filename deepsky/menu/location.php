@@ -31,7 +31,7 @@ if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id'] !
 	  if(array_key_exists('QOP',$_SESSION))
 		  $_SESSION['QOP']=$object->getObjectVisibilities($_SESSION['QOP']);
 	  if(array_key_exists('QOL',$_SESSION))
-		  $_SESSION['QOL']=$object->getObjectVisibilities($_SESSION['QOP']);
+		  $_SESSION['QOL']=$object->getObjectVisibilities($_SESSION['QOL']);
   }
 	$result=$location->getSortedLocations('name',$_SESSION['deepskylog_id']);
   $loc=$observer->getStandardLocation($_SESSION['deepskylog_id']);	

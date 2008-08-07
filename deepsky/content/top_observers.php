@@ -48,15 +48,15 @@ $objectsInCatalog = $objects->getNumberOfObjectsInCatalogue($catalog);
 if(sizeof($testobservations) > 0)
 {
   $rank = $observations->getPopularObserversOverview($sort, $catalog);
-  $link = "deepsky/index.php?indexAction=rank_observers&sort=$sort&size=25&catalogue=$catalog";
+  $link = "deepsky/index.php?indexAction=rank_observers&sort=$sort&size=25&catalogue=" . urlencode($catalog);
   list($min, $max) = $util->printListHeader($rank, $link, $min, $step, "");
   $count = 0;
   echo "<table width=\"100%\">";
   echo "<tr class=\"type3\">
           <td>" . LangTopObserversHeader1 . "</td>
-          <td><a href=\"deepsky/index.php?indexAction=rank_observers&sort=observer&catalogue=$catalog\">" . LangTopObserversHeader2 . "</a></td>
-          <td><a href=\"deepsky/index.php?indexAction=rank_observers&sort=totaal&catalogue=$catalog\">" . LangTopObserversHeader3 . "</a></td>
-          <td><a href=\"deepsky/index.php?indexAction=rank_observers&sort=jaar&catalogue=$catalog\">" . LangTopObserversHeader4 . "</a></td>
+          <td><a href=\"deepsky/index.php?indexAction=rank_observers&sort=observer&catalogue=" . urlencode($catalog) . "\">" . LangTopObserversHeader2 . "</a></td>
+          <td><a href=\"deepsky/index.php?indexAction=rank_observers&sort=totaal&catalogue=" . urlencode($catalog) . "\">" . LangTopObserversHeader3 . "</a></td>
+          <td><a href=\"deepsky/index.php?indexAction=rank_observers&sort=jaar&catalogue=" . urlencode($catalog) . "\">" . LangTopObserversHeader4 . "</a></td>
           <td>";
 	echo("<form name=\"overviewform\">\n ");		
 	echo("<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalogue\">\n");
@@ -76,7 +76,7 @@ if(sizeof($testobservations) > 0)
   echo("</select>\n");
 	echo("</form>");				
   echo("</a></td>");
-  echo "<td><a href=\"deepsky/index.php?indexAction=rank_observers&sort=objecten&catalogue=$catalog\">" . LangTopObserversHeader6 . "</a></td>
+  echo "<td><a href=\"deepsky/index.php?indexAction=rank_observers&sort=objecten&catalogue=" . urlencode($catalog) . "\">" . LangTopObserversHeader6 . "</a></td>
         </tr>";
    $numberOfObservations = $observations->getNumberOfObservations();
    $numberOfObservationsThisYear = $observations->getNumberOfObservationsLastYear();
@@ -100,7 +100,7 @@ if(sizeof($testobservations) > 0)
          $name = $obs->getObserverName($key);
          $firstname = $obs->getFirstName($key);
 
-         $outputtable .= "<tr $type><td>" . ($count + 1) . "</td><td> <a href=\"common/detail_observer.php?user=" . $key . "\">$firstname&nbsp;$name</a> </td>";
+         $outputtable .= "<tr $type><td>" . ($count + 1) . "</td><td> <a href=\"common/detail_observer.php?user=" . urlencode($key) . "\">$firstname&nbsp;$name</a> </td>";
 				 if($sort=="totaal")
 				 {
 				   $value2 = $value;
@@ -136,7 +136,7 @@ if(sizeof($testobservations) > 0)
 				 {
 				   $objectsCount = $observations->getObservedCountFromCatalogue($key,$catalog);
 				 }
-				 $outputtable .= "<td> <a href=\"deepsky/index.php?indexAction=view_observer_catalog&catalog=$catalog&user=" . $key . "\">". $objectsCount . "</a> (" . sprintf("%.2f",(($objectsCount / $objectsInCatalog)*100)) . "%)</td>";
+				 $outputtable .= "<td> <a href=\"deepsky/index.php?indexAction=view_observer_catalog&catalog=" . urlencode($catalog) . "&user=" . urlencode($key) . "\">". $objectsCount . "</a> (" . sprintf("%.2f",(($objectsCount / $objectsInCatalog)*100)) . "%)</td>";
    
 	       if($sort=="objecten")
 				 {

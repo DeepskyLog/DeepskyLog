@@ -90,18 +90,15 @@ if($observations->getObjectId($_GET['observation'])) // check if observation exi
   echo("<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">" . LangViewObjectViewNearbyObject . " " . $object);
 	echo("</td><td width=\"25%\" align=\"center\">");
   if (array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
-    echo("<a href=\"deepsky/index.php?indexAction=add_observation&object=" . 
-		     urlencode($object) . 
-				 "\">" . LangViewObjectAddObservation . 
-				 $object . "</a>");
+    echo("<a href=\"deepsky/index.php?indexAction=add_observation&object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object . "</a>");
 	echo("</td>");
 	if($myList)
 	{
     echo("<td width=\"25%\" align=\"center\">");
     if($list->checkObjectInMyActiveList($object))
-      echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . $object . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "</a>");
+      echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "</a>");
     else
-      echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . $object . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . $object . "\">" . $object . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>");
+      echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>");
 	  echo("</td>");
 	}	
 	echo("</tr>");

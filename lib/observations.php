@@ -2087,9 +2087,7 @@ print $value."<br />";
    echo("<tr class=\"type2\">\n
          <td><a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">$object</a></td>\n
          <td> " . $$con . "</td>\n
-        <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . 
-	                                                        $observers->getFirstName($observer) . "&nbsp;" . 
-                                                          $observers->getObserverName($observer) . "</a></td>\n
+        <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . $observers->getFirstName($observer) . "&nbsp;" . $observers->getObserverName($observer) . "</a></td>\n
         <td><a href=\"common/detail_instrument.php?instrument=" . $temp . "\">$instrument &nbsp;"
 	     );
   if($instrument != InstrumentsNakedEye)
@@ -2281,9 +2279,7 @@ print $value."<br />";
    echo("<tr class=\"type2\">\n
          <td><a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">$object</a></td>\n
          <td> " . $$con . "</td>\n
-         <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . 
-			                                                   $observers->getFirstName($observer) . "&nbsp;" . 
-																												 $observers->getObserverName($observer) . "</a></td>\n
+         <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . $observers->getFirstName($observer) . "&nbsp;" . $observers->getObserverName($observer) . "</a></td>\n
          <td><a href=\"common/detail_instrument.php?instrument=" . $temp . "\">$instrument &nbsp;"
 		   );
    if($instrument != InstrumentsNakedEye)
@@ -2430,9 +2426,7 @@ print $value."<br />";
    echo("<tr $typefield>\n
          <td><a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">$object</a></td>\n
          <td> " . $$con . "</td>\n
-         <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . 
-	                                                 $observers->getFirstName($observer) . "&nbsp;" . 
-																									 $observers->getObserverName($observer) . "</a></td>\n
+         <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . $observers->getFirstName($observer) . "&nbsp;" . $observers->getObserverName($observer) . "</a></td>\n
          <td><a href=\"common/detail_instrument.php?instrument=" . $temp . "\">$instrument &nbsp;"
 		     );
    if($instrument != InstrumentsNakedEye)

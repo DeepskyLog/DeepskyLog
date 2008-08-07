@@ -67,7 +67,7 @@ if(sizeof($testobservations) > 0)
             $type = "class=\"type2\"";
          }
 
-         echo "<tr $type><td>" . ($count + 1) . "</td><td> <a href=\"deepsky/index.php?indexAction=detail_object&object=" . $key . "\">$key</a> </td>";
+         echo "<tr $type><td>" . ($count + 1) . "</td><td> <a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($key) . "\">$key</a> </td>";
     
 		     $type = $obs->getType($key);
 

@@ -131,11 +131,12 @@ for ($i = 1; $i <= $numberOfObjects; $i++)
 	next($resultarray);
 }
 echo "</table>";
+echo "<P>";
 
 if($partof)
-  echo "<a href=\"deepsky/index.php?indexAction=view_observer_catalog&catalog=" . $cat . "&user=" . $_GET['user'] . "&partof=0\">Toon zonder deelobjecten</a> "; 			
+  echo "<a href=\"deepsky/index.php?indexAction=view_observer_catalog&catalog=" . urlencode($cat) . "&user=" . urlencode($_GET['user']) . "&partof=0\">Toon zonder deelobjecten</a> "; 			
 else
-  echo "<a href=\"deepsky/index.php?indexAction=view_observer_catalog&catalog=" . $cat . "&user=" . $_GET['user'] . "&partof=1\">Toon met deelobjecten</a> ";			
+  echo "<a href=\"deepsky/index.php?indexAction=view_observer_catalog&catalog=" . urlencode($cat) . "&user=" . urlencode($_GET['user']) . "&partof=1\">Toon met deelobjecten</a> ";			
 
 
 ?>

@@ -93,18 +93,15 @@ if($objects->getRa($objects->getDsObjectName($_GET['object'])) != "") // check w
 	  echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($_GET['object']) . "\">" . LangViewObjectObservations . " " . $_GET['object']);
 	echo("</td><td width=\"25%\" align=\"center\">");
   if (array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
-    echo("<a href=\"deepsky/index.php?indexAction=add_observation&object=" . 
-		     urlencode($_GET['object']) . 
-				 "\">" . LangViewObjectAddObservation . 
-				 $_GET['object'] . "</a>");
+    echo("<a href=\"deepsky/index.php?indexAction=add_observation&object=" . urlencode($_GET['object']) . "\">" . LangViewObjectAddObservation . $_GET['object'] . "</a>");
 	echo("</td>");
 	if($myList)
 	{
     echo("<td width=\"25%\" align=\"center\">");
     if($list->checkObjectInMyActiveList($_GET['object']))
-      echo("<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . $_GET['object'] . "&amp;removeObjectFromList=" . urlencode($_GET['object']) . "\">" . $_GET['object'] . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "</a>");
+      echo("<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['object']) . "&amp;removeObjectFromList=" . urlencode($_GET['object']) . "\">" . $_GET['object'] . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "</a>");
     else
-      echo("<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . $_GET['object'] . "&amp;addObjectToList=" . urlencode($_GET['object']) . "&amp;showname=" . $_GET['object'] . "\">" . $_GET['object'] . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>");
+      echo("<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['object']) . "&amp;addObjectToList=" . urlencode($_GET['object']) . "&amp;showname=" . urlencode($_GET['object']) . "\">" . $_GET['object'] . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>");
 	  echo("</td>");
 	}	
 	echo("</tr>");
