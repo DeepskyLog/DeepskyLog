@@ -2266,7 +2266,7 @@ print $value."<br />";
    $patterns[0] = "/\s+(M)\s*(\d+)/";
    $replacements[0] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
    $patterns[1] = "/(NGC|Ngc|ngc)\s*(\d+\w+)/";
-   $replacements[1] = "<a href=\"deepsky/index.php?indexAcion=detail_object&object=NGC%20\\2\">NGC&nbsp;\\2</a>";
+   $replacements[1] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=NGC%20\\2\">NGC&nbsp;\\2</a>";
    $patterns[2] = "/(IC|Ic|ic)\s*(\d+)/";
    $replacements[2] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=IC%20\\2\">IC&nbsp;\\2</a>";
    $patterns[3] = "/(Arp|ARP|arp)\s*(\d+)/";
