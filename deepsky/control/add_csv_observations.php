@@ -300,7 +300,7 @@ else
       }
     }
     // upload successful
-    header("Location:../index.php?indexAction=result_selected_observations&catalogue=*");
+    header("Location:../index.php");
   }
 }
 ?>
