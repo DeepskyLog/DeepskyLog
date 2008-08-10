@@ -57,7 +57,7 @@ $lco='';
 $object = '';
 $cataloguesearch = ''; // variable to check if only catalogue has been filled in
 
-if(array_key_exists('object', $_GET) &&($_GET['object']))
+if(array_key_exists('object', $_GET) && ($_GET['object']))
 {  
 	$object = $_GET['object'];
   if(array_key_exists('lco', $_GET) && $_GET['lco']) // lco = List, Compact or compactlO;
@@ -133,8 +133,12 @@ else
 
 // TITLE
 echo("<div id=\"main\">\n<h2>");
-
-if ($catalogue=="*")
+$theDate = date('Ymd', strtotime('-1 month')) ;
+if(($_GET['minyear'] == substr($theDate,0,4)) &&
+   ($_GET['minmonth'] == substr($theDate,4,2)) &&
+   ($_GET['minday'] == substr($theDate,6,2)))
+  echo (LangSelectedObservationsTitle3); 
+elseif ($catalogue=="*")
   echo (LangOverviewObservationsTitle); 
 elseif($object)
   echo (LangSelectedObservationsTitle . $object);

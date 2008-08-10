@@ -160,6 +160,7 @@ define("LangSearchMenuItem4", "Alle objecten");
 define("LangSearchMenuItem5", "Zoek objecten");
 define("LangSearchMenuItem6", "Waarnemers");
 define("LangSearchMenuItem7", "Populaire&nbsp;objecten");
+define("LangSearchMenuItem8", "Maandwaarnemingen");
 
 define("LangChangeMenuTitle", "Toevoegen / Wijzigen");
 define("LangChangeMenuItem1", "Persoonlijke data");
@@ -891,6 +892,7 @@ define("LangVisibility7", "Object niet zichtbaar");
 // content/selected_observations.php
  
 define("LangSelectedObservationsTitle2", "Overzicht geselecteerde waarnemingen");
+define("LangSelectedObservationsTitle3", "Overzicht van de waarnemingen van de laatste maand");
  
 // lib/util.php
 

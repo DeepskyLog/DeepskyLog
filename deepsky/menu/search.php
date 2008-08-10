@@ -26,8 +26,12 @@ if(isset($_SESSION['deepskylog_id'])) // logged in
     }
   } 
 }
-echo "<tr align=\"left\" height=\"25px\">\n<td>\n<a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=*\" class=\"mainlevel\">";
-echo (LangSearchMenuItem2);
+$theDate = date('Ymd', strtotime('-1 month')) ;
+$lastMinYear = substr($theDate,0,4);
+$lastMinMonth = substr($theDate,4,2);
+$lastMinDay = substr($theDate,6,2);
+echo "<tr align=\"left\" height=\"25px\">\n<td>\n<a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=*&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay\" class=\"mainlevel\">";
+echo (LangSearchMenuItem8);
 echo "</a>\n</td>\n</tr>\n";
 echo "<tr align=\"left\" height=\"25px\">\n<td>\n<a href=\"deepsky/index.php?indexAction=query_observations\" class=\"mainlevel\">";
 echo (LangSearchMenuItem3);
@@ -40,6 +44,8 @@ echo (LangSearchMenuItem6);
 echo "</a>\n</td>\n</tr>\n";
 echo "<tr align=\"left\" height=\"25px\">\n<td>\n<a href=\"deepsky/index.php?indexAction=rank_objects\" class=\"mainlevel\">";
 echo (LangSearchMenuItem7);
+echo "<tr align=\"left\" height=\"25px\">\n<td>\n<a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=*\" class=\"mainlevel\">";
+echo (LangSearchMenuItem2);
 echo "</a>\n</td>\n</tr>\n";
 echo "</table>\n</td>\n
       </tr>\n

@@ -160,6 +160,7 @@ define("LangSearchMenuItem4", "Tous les objets");
 define("LangSearchMenuItem5", "Recherche d'objets");
 define("LangSearchMenuItem6", "Les observateurs");
 define("LangSearchMenuItem7", "Les objets fr&eacute;quents");
+define("LangSearchMenuItem8", "Les observations du mois");
 
 define("LangChangeMenuTitle", "Rajoutez / Modifiez");
 define("LangChangeMenuItem1", "Donn&eacute;es personelles");
@@ -891,6 +892,7 @@ define("LangVisibility7", "L'objet n'est pas visible");
 // content/selected_observations.php
  
 define("LangSelectedObservationsTitle2", "Aper&ccedil;u des observations s&eacute;lectionn&eacute;es");
+define("LangSelectedObservationsTitle3", "Aper&ccedil;u des observations du dernier mois");
  
 // lib/util.php
 
