@@ -230,7 +230,20 @@
 							</td>
 						</tr>							
 						
+				    <?php
+				    if ($_SESSION['lang'] == "nl")
+				    {
+				    print "<tr>
+				           <th valign=\"top\">Help</th>
+				           </tr><tr>
+				           <td valign=\"top\" height=\"60\">
+				           <a href=\"http://www.astrowiki.nl/index.php/Deepskylog\" target=\"_blank\">Handleiding</a>
+				           </td>
+				           </tr>";
+				    }
+				    ?>
 				    <tr>
+				    
 							  <?php
                   if ($_SESSION['module'] == "deepsky")
                   {
