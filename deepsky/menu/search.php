@@ -26,7 +26,7 @@ if(isset($_SESSION['deepskylog_id'])) // logged in
     }
   } 
 }
-$theDate = date('Ymd', strtotime('-1 month')) ;
+$theDate = date('Ymd', strtotime('-1 year')) ;
 $lastMinYear = substr($theDate,0,4);
 $lastMinMonth = substr($theDate,4,2);
 $lastMinDay = substr($theDate,6,2);

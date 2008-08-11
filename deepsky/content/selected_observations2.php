@@ -133,7 +133,7 @@ else
 
 // TITLE
 echo("<div id=\"main\">\n<h2>");
-$theDate = date('Ymd', strtotime('-1 month')) ;
+$theDate = date('Ymd', strtotime('-1 year')) ;
 if(($_GET['minyear'] == substr($theDate,0,4)) &&
    ($_GET['minmonth'] == substr($theDate,4,2)) &&
    ($_GET['minday'] == substr($theDate,6,2)))
