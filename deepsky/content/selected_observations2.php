@@ -726,9 +726,9 @@ elseif($object ||
     if ($mindate != "" || $maxdate != "")
     {
       if ($mindate != "")
-      $mindate = $mindate + 1;
+        $mindate = $mindate + 1;
       if ($maxdate != "")
-      $maxdate = $maxdate - 1;
+        $maxdate = $maxdate - 1;
       $newkey = 0;
       $new_obs = Array();
       while(list ($key, $value) = each($obs)) // go through observations array
