@@ -1,4 +1,5 @@
-- Bug fix for bugzilla bug 6
+- Bug fix for bugzilla bug 10 : Queries to observations with a date given don't work when using local time
+- Bug fix for bugzilla bug 6 : TYPO wrong linking to NGC objects in description of observations
 
 Changes in version 3.2
 ----------------------

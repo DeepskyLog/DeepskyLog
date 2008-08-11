@@ -720,42 +720,50 @@ elseif($object ||
    else
       $allobs = $observations->getObservationFromQuery($query,"",1, true, $seenpar); // EXACT MATCH
 
-   // Dates can changes when we use local time!
-   if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && $observers->getUseLocal($_SESSION['deepskylog_id']))
-   {
-     if ($mindate != "" || $maxdate != "")
-     {
-       if ($mindate != "")
-         $mindate = $mindate + 1;
-       if ($maxdate != "")
-         $maxdate = $maxdate - 1;
-       $newkey = 0;
-       $new_obs = Array();
-       while(list ($key, $value) = each($obs)) // go through observations array
-       {
-         $newdate = $observations->getDsObservationLocalDate($value);
-         if ($mindate != "" && $maxdate != "")
-           if (($newdate >= $mindate) && ($newdate <= $maxdate))
-           {
-             $new_obs[$newkey] = $value;
-             $newkey++;
-           } 
-         else if ($maxdate != "")
-           if ($newdate <= $maxdate)
-           {
-             $new_obs[$newkey] = $value;
-             $newkey++;
-           } 
-         else if ($mindate != "")
-           if ($newdate >= $mindate)
-           {
-             $new_obs[$newkey] = $value;
-             $newkey++;
-           } 
-       }
-       $obs = $new_obs;
-     }
-   }
+  // Dates can change when we use local time!
+  if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && $observers->getUseLocal($_SESSION['deepskylog_id']))
+  {
+    if ($mindate != "" || $maxdate != "")
+    {
+      if ($mindate != "")
+      $mindate = $mindate + 1;
+      if ($maxdate != "")
+      $maxdate = $maxdate - 1;
+      $newkey = 0;
+      $new_obs = Array();
+      while(list ($key, $value) = each($obs)) // go through observations array
+      {
+        $newdate = $observations->getDsObservationLocalDate($value);
+
+        if ($mindate != "" && $maxdate != "") 
+        {
+          if (($newdate >= $mindate) && ($newdate <= $maxdate)) 
+          {
+            $new_obs[$newkey] = $value;
+            $newkey++;
+          }
+        }
+        else if ($maxdate != "") 
+        {
+          if ($newdate <= $maxdate)
+          {
+            $new_obs[$newkey] = $value;
+            $newkey++;
+          }
+        }
+        else if ($mindate != "")
+        {
+          if ($newdate >= $mindate)
+          {
+            $new_obs[$newkey] = $value;
+            $newkey++;
+          }
+        }
+      }
+      $obs = $new_obs;
+    }
+  }
+      
    // Check if only the observations with a drawing should be shown
    if(array_key_exists('drawings',$_GET) && $_GET['drawings'])
    {
