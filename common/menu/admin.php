@@ -18,7 +18,7 @@ echo("</th>");
 echo("</tr>");
 
 echo("<tr>");
-echo("<td>");
+echo("<td height=\"25px\">");
 echo("<a href=\"common/view_observers.php\" class=\"mainlevel\">\n");
 echo(LangAdminMenuItem1);
 echo("</a>");
@@ -26,7 +26,7 @@ echo("</td>");
 echo("</tr>");
 
 echo("<tr align=\"left\">");
-echo("<td>");
+echo("<td height=\"25px\">");
 echo("<a href=\"common/view_locations.php\" class=\"mainlevel\">");
 echo(LangAdminMenuItem2);
 echo("</a>");
@@ -34,7 +34,7 @@ echo("</td>");
 echo("</tr>");
 
 echo("<tr align=\"left\">");
-echo("<td>");
+echo("<td height=\"25px\">");
 echo("<a href=\"common/view_instruments.php\" class=\"mainlevel\">");
 echo(LangAdminMenuItem3);
 echo("</a>");
@@ -42,7 +42,7 @@ echo("</td>");
 echo("</tr>");
 
 echo("<tr align=\"left\">");
-echo("<td>");
+echo("<td height=\"25px\">");
 echo("<a href=\"common/view_eyepieces.php\" class=\"mainlevel\">");
 echo(LangAdminMenuItem4);
 echo("</a>");
@@ -50,7 +50,7 @@ echo("</td>");
 echo("</tr>");;
 
 echo("<tr align=\"left\">");
-echo("<td>");
+echo("<td height=\"25px\">");
 echo("<a href=\"common/view_filters.php\" class=\"mainlevel\">");
 echo(LangAdminMenuItem5);
 echo("</a>");
@@ -58,7 +58,7 @@ echo("</td>");
 echo("</tr>");
 
 echo("<tr align=\"left\">");
-echo("<td>");
+echo("<td height=\"25px\">");
 echo("<a href=\"common/view_lenses.php\" class=\"mainlevel\">");
 echo(LangAdminMenuItem6);
 echo("</a>");

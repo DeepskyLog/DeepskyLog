@@ -29,9 +29,9 @@ if(array_key_exists('user', $_GET) && $_GET['user']) // user defined
   {
     include_once("../".$_SESSION['module']."/menu/change.php"); // CHANGE MENU
     include("../common/menu/help.php"); // HELP MENU 
-    include_once("menu/out.php"); // LOG OUT MENU 
     if(array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes"))
       include_once("menu/admin.php"); // ADMINISTRATION MENU
+    include_once("menu/out.php"); // LOG OUT MENU 
   }
   else
   {
