@@ -13,7 +13,7 @@ $util = new Util();
 $util->checkUserInput();
 
 echo("<div id=\"main\">\n
-   <h2>Search location</h2>
+   <h2>" . LangSearchLocations0 . "</h2>
    <form action=\"common/site_result.php\" method=\"post\">
    <table>
 <tr><td colspan=\"3\">   
@@ -54,7 +54,7 @@ print("
    </tr>
    <tr>
    <td></td>
-   <td><input type=\"submit\" name=\"search\" value=\"Search\" /></td>
+   <td><input type=\"submit\" name=\"search\" value=\"" . LangSearchLocations7 . "\" /></td>
    <td></td>
    </tr>
    </table>

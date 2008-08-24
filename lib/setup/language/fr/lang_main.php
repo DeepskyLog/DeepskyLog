@@ -160,7 +160,7 @@ define("LangSearchMenuItem4", "Tous les objets");
 define("LangSearchMenuItem5", "Recherche d'objets");
 define("LangSearchMenuItem6", "Les observateurs");
 define("LangSearchMenuItem7", "Les objets fr&eacute;quents");
-define("LangSearchMenuItem8", "Les observations de l'année");
+define("LangSearchMenuItem8", "Les observations de l'annï¿½e");
 
 define("LangChangeMenuTitle", "Rajoutez / Modifiez");
 define("LangChangeMenuItem1", "Donn&eacute;es personelles");
@@ -211,7 +211,7 @@ define("LangViewLensName", "Nom");
 define("LangViewLensFactor", "Facteur");
 define("LangAddLensTitle", "Rajoutez une nouvelle lentille Barlow");
 define("LangAddLensExisting", "Rajoutez une lentille Barlow existante");
-define("LangAddLensFieldManually", "Specifiez manuellement les détails de la lentille Barlow");
+define("LangAddLensFieldManually", "Specifiez manuellement les dï¿½tails de la lentille Barlow");
 define("LangAddLensField1", "Nom");
 define("LangAddLensField1Expl", "ex. Televue 2x Barlow");
 define("LangAddLensField2", "Facteur");
@@ -231,7 +231,7 @@ define("LangViewFilterWratten", "Num&#233;ro Wratten");
 define("LangViewFilterSchott", "Num&#233;ro Schott");
 define("LangAddFilterTitle", "Rajoutez un nouveau filtre");
 define("LangAddFilterExisting", "Rajoutez un filtre existant");
-define("LangAddFilterFieldManually", "Specifiez manuellement les détails du filtre");
+define("LangAddFilterFieldManually", "Specifiez manuellement les dï¿½tails du filtre");
 define("LangAddFilterField1", "Nom");
 define("LangAddFilterField1Expl", "(ex Lumicon O-III)"); 
 define("LangAddFilterField2", "Type");
@@ -291,12 +291,14 @@ define("LangAddSiteButton", "Rajoutez un endroit");
 define("LangAddSiteButton2", "Changez d'entroit");
 define("LangAddSiteStdLocation", "Modifiez l'endroit standard");
 
+define("LangSearchLocations0", "Cherchez votre endroit");
 define("LangSearchLocations1", "Choissisez votre pays");
 define("LangSearchLocations2", "Pays");
 define("LangSearchLocations3", "Si votre pays ne figure pas dans la liste, veuillez contacter l'administrateur.");
 define("LangSearchLocations4", "S&eacute;lectionnez votre endroit");
 define("LangSearchLocations5", "Endroit");
 define("LangSearchLocations6", "Nom exact");
+define("LangSearchLocations7", "Cherchez");
 
 define("LangGetLocation1", "R&eacute;sultats");
 define("LangGetLocation2", "Cliquez le r&eacute;sultat correspondant &agrave; votre endroit<a href=\"common/search_sites.php\">Nouvelle recherche</a>");
@@ -319,12 +321,12 @@ define("LangAddInstrumentField4Expl", "(ex 1200mm)");
 define("LangAddInstrumentField5", "Type");
 define("LangAddInstrumentField5Expl", "");
 define("LangAddInstrumentField6", "Agrandissement fixe");
-define("LangAddInstrumentField6Expl", "Uniquement pour jumelles, chercheurs, …");
+define("LangAddInstrumentField6Expl", "Uniquement pour jumelles, chercheurs, ï¿½");
 define("LangAddInstrumentOr", "ou");
 define("LangAddInstrumentAdd", "Rajoutez un instrument");
 define("LangAddInstrumentStdTelescope", "Modifier l'instrument standard");
 define("LangAddInstrumentExisting", "Rajouter un instrument existant");
-define("LangAddInstrumentManually", "Rajouter un nouvel instrument à la main");
+define("LangAddInstrumentManually", "Rajouter un nouvel instrument ï¿½ la main");
 
 // content/change_instrument.php
 
@@ -396,7 +398,7 @@ define("LangSeen", "D&eacute;j&agrave; vu");
 define("LangListQueryObjectsMessage1", "Rajouter&nbsp;les&nbsp;rsultats&nbsp;de&nbsp;la&nbsp;page&nbsp;&nbsp;la&nbsp;liste&nbsp;");
 define("LangListQueryObjectsMessage2", "&nbsp;&nbsp;rajoutez&nbsp;&nbsp;la&nbsp;liste&nbsp;");
 define("LangListQueryObjectsMessage3", "&nbsp;enlever&nbsp;de&nbsp;la&nbsp;liste&nbsp;");
-define("LangListQueryObjectsMessage4", "Rajoutez&nbsp;tous&nbsp;les&nbsp;résultats&nbsp;de&nbsp;la&nbsp;liste&nbsp;");
+define("LangListQueryObjectsMessage4", "Rajoutez&nbsp;tous&nbsp;les&nbsp;rï¿½sultats&nbsp;de&nbsp;la&nbsp;liste&nbsp;");
 define("LangListQueryObjectsMessage5", "Liste&nbsp;active:&nbsp;");
 define("LangListQueryObjectsMessage6", "&nbsp;a &#233;t&#233; rajout&#233; &#224; la liste&nbsp;");
 define("LangListQueryObjectsMessage7", "&nbsp;a &#233;t&#233; enlev&#233; de la liste&nbsp;");
@@ -500,7 +502,7 @@ define("LangOverviewInstrumentsType", "Type");
 define("LangOverviewInstrumentsFixedMagnification", "Agrandissement fixed");
 define("InstrumentsNakedEye", "Oeil nu");
 define("InstrumentsFinderscope", "Chercheur");
-define("InstrumentsReflector", "Réflecteur");
+define("InstrumentsReflector", "Rï¿½flecteur");
 define("InstrumentsRefractor", "Refracteur");
 define("InstrumentsOther", "Autre");
 define("InstrumentsBinoculars", "Lunette");
@@ -885,14 +887,14 @@ define("LangVisibility1", "Objet tr&egrave;s facile et clair");
 define("LangVisibility2", "Objet facilement visible &agrave; vision directe");
 define("LangVisibility3", "Objet visible &agrave; vision direct");
 define("LangVisibility4", "Vision p&eacute;riph&eacute;rique n&eacute;cessaire pour voir l'objet");
-define("LangVisibility5", "Objet difficilement visible en vision péréférique");
+define("LangVisibility5", "Objet difficilement visible en vision pï¿½rï¿½fï¿½rique");
 define("LangVisibility6", "Visibilit&eacute; de l'objet est douteuse");
 define("LangVisibility7", "L'objet n'est pas visible");
 
 // content/selected_observations.php
  
 define("LangSelectedObservationsTitle2", "Aper&ccedil;u des observations s&eacute;lectionn&eacute;es");
-define("LangSelectedObservationsTitle3", "Aper&ccedil;u des observations de la dernière année");
+define("LangSelectedObservationsTitle3", "Aper&ccedil;u des observations de la derniï¿½re annï¿½e");
  
 // lib/util.php
 

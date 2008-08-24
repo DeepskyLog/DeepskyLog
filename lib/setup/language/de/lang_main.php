@@ -160,7 +160,7 @@ define("LangSearchMenuItem4", "Alle Objekte");
 define("LangSearchMenuItem5", "Objekte abfragen");
 define("LangSearchMenuItem6", "Beobachter");
 define("LangSearchMenuItem7", "Beliebteste Objekte");
-define("LangSearchMenuItem8", "Year observations");
+define("LangSearchMenuItem8", "Jahres Beobachtungen");
 
 define("LangChangeMenuTitle", "Neu / &Auml;ndern");
 define("LangChangeMenuItem1", "Benutzer Details");
@@ -291,12 +291,14 @@ define("LangAddSiteButton", "Beobachtungsplatz anlegen");
 define("LangAddSiteButton2", "Beobachtungsplatz &auml;ndern");
 define("LangAddSiteStdLocation", "Als Standard Beobachtungsplatz w&auml;hlen");
 
+define("LangSearchLocations0", "Suche Beobachtungsplatz");
 define("LangSearchLocations1", "W&auml;hlen Sie ihr Land aus");
 define("LangSearchLocations2", "Land");
 define("LangSearchLocations3", "Wenn Ihr Land nicht in der Liste auftaucht, bitte kontakieren Sie einen Administrator, damit er Ihr Land zur Liste hinzuf&uuml;gen kann.");
 define("LangSearchLocations4", "Geben Sie Ihren Beobachtungsplatz an");
 define("LangSearchLocations5", "Beobachtungsplatz");
 define("LangSearchLocations6", "Genaue Angabe (Gro&szlig;- Kleinschreibung sind egal).");
+define("LangSearchLocations7", "Suche");
 
 define("LangGetLocation1", "Ergebnis");
 define("LangGetLocation2", "Klicken Sie auf ein Ergebnis, da&szlig; Ihrem Beobachtungsplatz entspricht, oder <a href=\"common/search_sites.php\">&auml;ndern Sie ihre Suche</a>");
@@ -394,8 +396,8 @@ define("LangNotSeenByMeOrNotSeenAtAll", "Nicht von mir, oder noch &uuml;berhaupt
 define("LangNotSeen", "Noch nicht beobachtet");
 define("LangSeen", "Beobachtet");
 define("LangListQueryObjectsMessage1", "Alle Ergebnisse der Seite zur Liste hinzuf&uuml;gen");
-define("LangListQueryObjectsMessage2", "zur Liste hinzuf&uuml;gen");
-define("LangListQueryObjectsMessage3", "von der Liste entfernen");
+define("LangListQueryObjectsMessage2", "&nbsp;hinzuf&uuml;gen&nbsp;zur&nbsp;Liste&nbsp;");
+define("LangListQueryObjectsMessage3", "&nbsp;entfernen&nbsp;von&nbsp;der&nbsp;Liste&nbsp;");
 define("LangListQueryObjectsMessage4", "Alle Ergebnisse zur Liste hinzuf&uuml;gen");
 define("LangListQueryObjectsMessage5", "Liste aktivieren");
 define("LangListQueryObjectsMessage6", "wurde zur Liste hinzugef&uuml;gt");

@@ -160,7 +160,7 @@ define("LangSearchMenuItem4", "All objects");
 define("LangSearchMenuItem5", "Query objects");
 define("LangSearchMenuItem6", "Observers");
 define("LangSearchMenuItem7", "Popular objects");
-define("LangSearchMenuItem8", "Year observations");
+define("LangSearchMenuItem8", "Year of observations");
 
 define("LangChangeMenuTitle", "Add / Change");
 define("LangChangeMenuItem1", "Account details");
@@ -291,12 +291,14 @@ define("LangAddSiteButton", "Add site");
 define("LangAddSiteButton2", "Change site");
 define("LangAddSiteStdLocation", "Adapt standard location");
 
+define("LangSearchLocations0", "Search location");
 define("LangSearchLocations1", "Select your country");
 define("LangSearchLocations2", "Country");
 define("LangSearchLocations3", "If your country is not listed, please contact the administrator to add your country to the database.");
 define("LangSearchLocations4", "Specify your location");
 define("LangSearchLocations5", "Locatie");
 define("LangSearchLocations6", "Exact match (not case-sensitive).");
+define("LangSearchLocations7", "Search");
 
 define("LangGetLocation1", "Results");
 define("LangGetLocation2", "Click on the result which matches your location or <a href=\"common/search_sites.php\">perform another search</a>");
@@ -395,7 +397,7 @@ define("LangNotSeen", "Not seen at all");
 define("LangSeen", "Seen");
 define("LangListQueryObjectsMessage1", "Add&nbsp;all&nbsp;results&nbsp;of&nbsp;the&nbsp;page&nbsp;to&nbsp;list&nbsp;");
 define("LangListQueryObjectsMessage2", "&nbsp;to&nbsp;add&nbsp;to&nbsp;the&nbsp;list&nbsp;");
-define("LangListQueryObjectsMessage3", "to&nbsp;remove&nbsp;from&nbsp;the&nbsp;list&nbsp;");
+define("LangListQueryObjectsMessage3", "&nbsp;to&nbsp;remove&nbsp;from&nbsp;the&nbsp;list&nbsp;");
 define("LangListQueryObjectsMessage4", "Add&nbsp;all&nbsp;resultats&nbsp;to&nbsp;the&nbsp;list&nbsp;");
 define("LangListQueryObjectsMessage5", "Actif&nbsp;list:&nbsp;");
 define("LangListQueryObjectsMessage6", "&nbsp;is added to the list&nbsp;");

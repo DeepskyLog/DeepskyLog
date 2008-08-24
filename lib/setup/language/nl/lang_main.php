@@ -291,12 +291,14 @@ define("LangAddSiteButton", "Voeg locatie toe");
 define("LangAddSiteButton2", "Wijzig locatie");
 define("LangAddSiteStdLocation", "Wijzig standaard locatie");
 
+define("LangSearchLocations0", "Zoek locatie");
 define("LangSearchLocations1", "Kies je land");
 define("LangSearchLocations2", "Land");
 define("LangSearchLocations3", "Als je land niet voorkomt in de lijst, contacteer dan de administrator om je land aan de database toe te voegen.");
 define("LangSearchLocations4", "Specifieer je locatie");
 define("LangSearchLocations5", "Locatie");
 define("LangSearchLocations6", "Exacte naam");
+define("LangSearchLocations7", "Zoeken");
 
 define("LangGetLocation1", "Resultaten");
 define("LangGetLocation2", "Klik op het resultaat dat overeenkomt met je locatie of <a href=\"common/search_sites.php\">zoek opnieuw</a>");

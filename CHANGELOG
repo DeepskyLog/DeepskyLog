@@ -1,6 +1,8 @@
 Changes in version 3.3
 ----------------------
 
+- Bugzilla problem 13 : Translation - search location
+
 - Bugzilla Wish 9 : Add link to documentation on astrowiki (only when language is Dutch)
 
 - Bug fix for bugzilla bug 10 : Queries to observations with a date given don't work when using local time
