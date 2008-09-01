@@ -1704,6 +1704,266 @@ function getPartOfNames($name)
   return (int)$urano;
  }
 
+ // calculatePocketSkyAtlas calculates the pocket sky atlas page of the object
+ function calculatePocketSkyAtlasPage($ra, $decl)
+ {
+  $psa = 0;
+
+  /* Page from pocket sky atlas */
+  if ($ra >= 0.0 && $ra <= 3.0) 
+  {
+   if ($decl >= 60)
+   {
+     $psa = 1;
+   } else if ($decl >= 30) {
+     if ($ra <= 1.5) {
+       $psa = 3;
+     } else {
+       $psa = 2;
+     }
+   } else if ($decl >= 0) {
+     if ($ra <= 1.5) {
+       $psa = 5;
+     } else {
+       $psa = 4;
+     }
+   } else if ($decl >= -30) {
+     if ($ra <= 1.5) {
+       $psa = 7;
+     } else {
+       $psa = 6;
+     }
+   } else if ($decl >= -60) {
+     if ($ra <= 1.5) {
+       $psa = 9;
+     } else {
+       $psa = 8;
+     }
+   } else {
+     $psa = 10;
+   }
+  } else if ($ra >= 3.0 && $ra <= 6.0) 
+  {
+   if ($decl >= 60)
+   {
+     $psa = 11;
+   } else if ($decl >= 30) {
+     if ($ra <= 4.5) {
+       $psa = 13;
+     } else {
+       $psa = 12;
+     }
+   } else if ($decl >= 0) {
+     if ($ra <= 4.5) {
+       $psa = 15;
+     } else {
+       $psa = 14;
+     }
+   } else if ($decl >= -30) {
+     if ($ra <= 4.5) {
+       $psa = 17;
+     } else {
+       $psa = 16;
+     }
+   } else if ($decl >= -60) {
+     if ($ra <= 4.5) {
+       $psa = 19;
+     } else {
+       $psa = 18;
+     }
+   } else {
+     $psa = 20;
+   }
+  } else if ($ra >= 6.0 && $ra <= 9.0) {
+   if ($decl >= 60)
+   {
+     $psa = 21;
+   } else if ($decl >= 30) {
+     if ($ra <= 7.5) {
+       $psa = 23;
+     } else {
+       $psa = 22;
+     }
+   } else if ($decl >= 0) {
+     if ($ra <= 7.5) {
+       $psa = 25;
+     } else {
+       $psa = 24;
+     }
+   } else if ($decl >= -30) {
+     if ($ra <= 7.5) {
+       $psa = 27;
+     } else {
+       $psa = 26;
+     }
+   } else if ($decl >= -60) {
+     if ($ra <= 7.5) {
+       $psa = 29;
+     } else {
+       $psa = 28;
+     }
+   } else {
+     $psa = 30;
+   }
+  } else if ($ra >= 9.0 && $ra <= 12.0) {
+   if ($decl >= 60)
+   {
+     $psa = 31;
+   } else if ($decl >= 30) {
+     if ($ra <= 10.5) {
+       $psa = 33;
+     } else {
+       $psa = 32;
+     }
+   } else if ($decl >= 0) {
+     if ($ra <= 10.5) {
+       $psa = 35;
+     } else {
+       $psa = 34;
+     }
+   } else if ($decl >= -30) {
+     if ($ra <= 10.5) {
+       $psa = 37;
+     } else {
+       $psa = 36;
+     }
+   } else if ($decl >= -60) {
+     if ($ra <= 10.5) {
+       $psa = 39;
+     } else {
+       $psa = 38;
+     }
+   } else {
+     $psa = 40;
+   }
+  } else if ($ra >= 12.0 && $ra <= 15.0) {
+   if ($decl >= 60)
+   {
+     $psa = 41;
+   } else if ($decl >= 30) {
+     if ($ra <= 13.5) {
+       $psa = 43;
+     } else {
+       $psa = 42;
+     }
+   } else if ($decl >= 0) {
+     if ($ra <= 13.5) {
+       $psa = 45;
+     } else {
+       $psa = 44;
+     }
+   } else if ($decl >= -30) {
+     if ($ra <= 13.5) {
+       $psa = 47;
+     } else {
+       $psa = 46;
+     }
+   } else if ($decl >= -60) {
+     if ($ra <= 13.5) {
+       $psa = 49;
+     } else {
+       $psa = 48;
+     }
+   } else {
+     $psa = 50;
+   }
+  } else if ($ra >= 15.0 && $ra <= 18.0) {
+   if ($decl >= 60)
+   {
+     $psa = 51;
+   } else if ($decl >= 30) {
+     if ($ra <= 16.5) {
+       $psa = 53;
+     } else {
+       $psa = 52;
+     }
+   } else if ($decl >= 0) {
+     if ($ra <= 16.5) {
+       $psa = 55;
+     } else {
+       $psa = 54;
+     }
+   } else if ($decl >= -30) {
+     if ($ra <= 16.5) {
+       $psa = 57;
+     } else {
+       $psa = 56;
+     }
+   } else if ($decl >= -60) {
+     if ($ra <= 16.5) {
+       $psa = 59;
+     } else {
+       $psa = 58;
+     }
+   } else {
+     $psa = 60;
+   }
+  } else if ($ra >= 18.0 && $ra <= 21.0) {
+   if ($decl >= 60)
+   {
+     $psa = 61;
+   } else if ($decl >= 30) {
+     if ($ra <= 19.5) {
+       $psa = 63;
+     } else {
+       $psa = 62;
+     }
+   } else if ($decl >= 0) {
+     if ($ra <= 19.5) {
+       $psa = 65;
+     } else {
+       $psa = 64;
+     }
+   } else if ($decl >= -30) {
+     if ($ra <= 19.5) {
+       $psa = 67;
+     } else {
+       $psa = 66;
+     }
+   } else if ($decl >= -60) {
+     if ($ra <= 19.5) {
+       $psa = 69;
+     } else {
+       $psa = 68;
+     }
+   } else {
+     $psa = 70;
+   }
+  } else if ($ra >= 21.0) {
+   if ($decl >= 60)
+   {
+     $psa = 71;
+   } else if ($decl >= 30) {
+     if ($ra <= 22.5) {
+       $psa = 73;
+     } else {
+       $psa = 72;
+     }
+   } else if ($decl >= 0) {
+     if ($ra <= 22.5) {
+       $psa = 75;
+     } else {
+       $psa = 74;
+     }
+   } else if ($decl >= -30) {
+     if ($ra <= 22.5) {
+       $psa = 77;
+     } else {
+       $psa = 76;
+     }
+   } else if ($decl >= -60) {
+     if ($ra <= 22.5) {
+       $psa = 79;
+     } else {
+       $psa = 78;
+     }
+   } else {
+     $psa = 80;
+   }   
+  }
+  return (int)$psa;
+ }
+ 
  // getDsObjectName returns the name when the alternative name is given.
  function getDsObjectName($name)
  {
