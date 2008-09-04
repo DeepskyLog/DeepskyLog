@@ -1964,7 +1964,122 @@ function getPartOfNames($name)
   return (int)$psa;
  }
  
- // getDsObjectName returns the name when the alternative name is given.
+ // calculateTorresC calculates the TriAtlas C (torres) page of the object
+ function calculateTorresCPage($ra, $decl)
+ {
+  $torresC = 0;
+
+  /* Page from torres C atlas */
+  if ($decl >= 79.0) {
+   if ($ra <= 1.2 || $ra >= 22.8) {
+     $torresC = 1;
+   } else {
+     $torresC = 10 - int(($ra - 1.2) / 2.4);
+   }
+  } else if ($decl >= 69.0 ) {
+   if ($ra <= 0.666 || $ra >= 23.333) {
+     $torresC = 11;
+   } else {
+     $torresC = 28 - int(($ra - 0.666) / 1.33);
+   }
+  } else if ($decl >= 58.0 ) {
+   if ($ra <= 0.4616 || $ra >= 23.5383) {
+     $torresC = 29;
+   } else {
+     $torresC = 54 - int(($ra - 0.4616) / 0.9233);
+   }
+  } else if ($decl >= 48.0 ) {
+   if ($ra <= 0.3633 || $ra >= 23.6366) {
+     $torresC = 55;
+   } else {
+     $torresC = 87 - int(($ra - 0.3633) / 0.7266);
+   }
+  } else if ($decl >= 37.0 ) {
+   if ($ra <= 0.315 || $ra >= 23.685) {
+     $torresC = 88;
+   } else {
+     $torresC = 125 - int(($ra - 0.315) / 0.630);
+   }
+  } else if ($decl >= 27.0 ) {
+   if ($ra <= 0.2783 || $ra >= 23.7216) {
+     $torresC = 126;
+   } else {
+     $torresC = 168 - int(($ra - 0.2783) / 0.5566);
+   }
+  } else if ($decl >= 16.0 ) {
+   if ($ra <= 0.2616 || $ra >= 23.7383) {
+     $torresC = 169;
+   } else {
+     $torresC = 214 - int(($ra - 0.2616) / 0.5233);
+   }
+  } else if ($decl >= 5.0 ) {
+   if ($ra <= 0.25 || $ra >= 23.75) {
+     $torresC = 215;
+   } else {
+     $torresC = 262 - int(($ra - 0.25) / 0.5);
+   }
+  } else if ($decl >= -5.0 ) {
+   if ($ra <= 0.255 || $ra >= 23.745) {
+     $torresC = 263;
+   } else {
+     $torresC = 309 - int(($ra - 0.255) / 0.51);
+   }
+  } else if ($decl >= -16.0 ) {
+   if ($ra <= 0.25 || $ra >= 23.75) {
+     $torresC = 310;
+   } else {
+     $torresC = 357 - int(($ra - 0.25) / 0.5);
+   }
+  } else if ($decl >= -26.0 ) {
+   if ($ra <= 0.2616 || $ra >= 23.7383) {
+     $torresC = 358;
+   } else {
+     $torresC = 403 - int(($ra - 0.2616) / 0.5233);
+   }
+  } else if ($decl >= -37.0 ) {
+   if ($ra <= 0.2783 || $ra >= 23.7216) {
+     $torresC = 404;
+   } else {
+     $torresC = 446 - int(($ra - 0.2783) / 0.5566);
+   }
+  } else if ($decl >= -47.0 ) {
+   if ($ra <= 0.315 || $ra >= 23.685) {
+     $torresC = 447;
+   } else {
+     $torresC = 484 - int(($ra - 0.315) / 0.63);
+   }
+   
+  } else if ($decl >= -58.0 ) {
+   if ($ra <= 0.3633 || $ra >= 23.6366) {
+     $torresC = 485;
+   } else {
+     $torresC = 517 - int(($ra - 0.3633) / 0.7266);
+   }
+  } else if ($decl >= -68.0 ) {
+   if ($ra <= 0.4616 || $ra >= 23.5383) {
+     $torresC = 518;
+   } else {
+     $torresC = 543 - int(($ra - 0.4616) / 0.9233);
+   }
+  } else if ($decl >= -79.0 ) {
+   if ($ra <= 0.666 || $ra >= 23.333) {
+   	$torresC = 544;
+   } else {
+    $torresC = 561 - int(($ra - 0.666) / 1.33);
+   }
+  } else {
+   if ($ra <= 1.2 || $ra >= 22.8)
+   {
+     $torresC = 562;
+   } else {
+     $torresC = 571 - int(($ra - 1.2) / 2.4);
+   }
+  }
+
+  return (int)$torresC;
+ }
+  
+  // getDsObjectName returns the name when the alternative name is given.
  function getDsObjectName($name)
  {
   $db = new database;
