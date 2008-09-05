@@ -2078,8 +2078,131 @@ function getPartOfNames($name)
 
   return (int)$torresC;
  }
-  
-  // getDsObjectName returns the name when the alternative name is given.
+   
+ // calculateTorresBC calculates the TriAtlas BC (torres) page of the object
+ function calculateTorresBCPage($ra, $decl)
+ {
+  $torresBC = 0;
+
+  /* Page from torres BC atlas */
+  if ($decl >= 72.0) {
+   if ($ra <= 1.2 || $ra >= 22.8) {
+     $torresBC = 1;
+   } else {
+     $torresBC = 10 - int(($ra - 1.2) / 2.4);
+   }
+  } else if ($decl >= 54.0 ) {
+   if ($ra <= 0.666 || $ra >= 23.333) {
+     $torresBC = 11;
+   } else {
+     $torresBC = 28 - int(($ra - 0.666) / 1.33);
+   }
+  } else if ($decl >= 36.0 ) {
+   if ($ra <= 0.5 || $ra >= 23.5) {
+     $torresBC = 29;
+   } else {
+     $torresBC = 52 - int(($ra - 0.5) / 1.0);
+   }
+  } else if ($decl >= 18.0 ) {
+   if ($ra <= 0.42833 || $ra >= 23.57166) {
+     $torresBC = 53;
+   } else {
+     $torresBC = 80 - int(($ra - 0.42833) / 0.85666);
+   }
+  } else if ($decl >= 0.0 ) {
+   if ($ra <= 0.41333 || $ra >= 23.5866) {
+     $torresBC = 81;
+   } else {
+     $torresBC = 109 - int(($ra - 0.41333) / 0.82666);
+   }
+  } else if ($decl >= -18.0 ) {
+   if ($ra <= 0.41333 || $ra >= 23.5866) {
+     $torresBC = 110;
+   } else {
+     $torresBC = 138 - int(($ra - 0.41333) / 0.82666);
+   }
+  } else if ($decl >= -36.0 ) {
+   if ($ra <= 0.42833 || $ra >= 23.57166) {
+     $torresBC = 139;
+   } else {
+     $torresBC = 166 - int(($ra - 0.42833) / 0.85666);
+   }
+  } else if ($decl >= -54.0 ) {
+   if ($ra <= 0.5 || $ra >= 23.5) {
+     $torresBC = 167;
+   } else {
+     $torresBC = 190 - int(($ra - 0.5) / 1.0);
+   }
+  } else if ($decl >= -72.0 ) {
+   if ($ra <= 0.6666 || $ra >= 23.3333) {
+     $torresBC = 191;
+   } else {
+     $torresBC = 208 - int(($ra - 0.6666) / 1.3333);
+   }
+  } else {
+   if ($ra <= 1.2 || $ra >= 22.8) {
+     $torresBC = 209;
+   } else {
+     $torresBC = 218 - int(($ra - 1.2) / 2.4);
+   }
+  }
+
+  return (int)$torresBC;
+ }
+
+  // calculateTorresB calculates the TriAtlas B (torres) page of the object
+ function calculateTorresBPage($ra, $decl)
+ {
+  $torresB = 0;
+
+  /* Page from torres B atlas */
+  if ($decl >= 64.28333) {
+   if ($ra <= 1.2 || $ra >= 22.8) {
+     $torresB = 1;
+   } else {
+     $torresB = 9 - int(($ra - 1.2) / 2.4);
+   }
+  } else if ($decl >= 38.56666 ) {
+   if ($ra <= 0.75 || $ra >= 23.25) {
+     $torresB = 10;
+   } else {
+     $torresB = 25 - int(($ra - 0.75) / 1.5);
+   }
+  } else if ($decl >= 12.85 ) {
+   if ($ra <= 0.63166 || $ra >= 23.36833) {
+     $torresB = 26;
+   } else {
+     $torresB = 44 - int(($ra - 0.63166) / 1.2633);
+   }
+  } else if ($decl >= -12.85 ) {
+   if ($ra <= 0.63166 || $ra >= 23.36833) {
+     $torresB = 45;
+   } else {
+     $torresB = 63 - int(($ra - 0.63166) / 1.2633);
+   }
+  } else if ($decl >= -38.56666 ) {
+   if ($ra <= 0.63166 || $ra >= 23.36833) {
+     $torresB = 64;
+   } else {
+     $torresB = 82 - int(($ra - 0.63166) / 1.2633);
+   }
+  } else if ($decl >= -64.28333 ) {
+   if ($ra <= 0.75 || $ra >= 23.25) {
+     $torresB = 83;
+   } else {
+     $torresB = 98 - int(($ra - 0.75) / 1.5);
+   }
+  } else {
+   if ($ra <= 1.2 || $ra >= 22.8) {
+     $torresB = 99;
+   } else {
+     $torresB = 107 - int(($ra - 1.2) / 2.4);
+   }
+  }
+  return (int)$torresB;
+ }
+ 
+ // getDsObjectName returns the name when the alternative name is given.
  function getDsObjectName($name)
  {
   $db = new database;
