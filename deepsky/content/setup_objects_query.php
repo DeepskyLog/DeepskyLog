@@ -349,16 +349,16 @@ if(
      (array_key_exists('type',$_GET) && ($_GET['type']!=""))                     || 
      (array_key_exists('catalog',$_GET) && ($_GET['catalog']!=""))               || 
      (array_key_exists('catPageNumber',$_GET) && ($_GET['catPageNumber']!=""))   || 
-     (array_key_exists('minmag',$_GET) && ($_GET['minmag']!=""))                 || 
-     (array_key_exists('maxmag',$_GET) && ($_GET['maxmag']!=""))                 || 
-     (array_key_exists('maxsb',$_GET) && ($_GET['maxsb']!=""))                   || 
-     (array_key_exists('minsb',$_GET) && ($_GET['minsb']!=""))                   || 
+     (array_key_exists('minMag',$_GET) && ($_GET['minMag']!=""))                 || 
+     (array_key_exists('maxMag',$_GET) && ($_GET['maxMag']!=""))                 || 
+     (array_key_exists('maxSB',$_GET) && ($_GET['maxSB']!=""))                   || 
+     (array_key_exists('minSB',$_GET) && ($_GET['minSB']!=""))                   || 
      (array_key_exists('minRAhours',$_GET) && ($_GET['minRAhours']!=""))         ||
      (array_key_exists('minDeclDegrees',$_GET) && ($_GET['minDeclDegrees']!="")) || 
      (array_key_exists('maxRAhours',$_GET) && ($_GET['maxRAhours']!=""))         || 
      (array_key_exists('maxDeclDegrees',$_GET) && ($_GET['maxDeclDegrees']!="")) || 
-     (array_key_exists('minsize',$_GET) && ($_GET['minsize']!=""))               || 
-     (array_key_exists('maxsize',$_GET) && ($_GET["maxsize"]!=""))
+     (array_key_exists('minSize',$_GET) && ($_GET['minSize']!=""))               || 
+     (array_key_exists('maxSize',$_GET) && ($_GET["maxSize"]!=""))
    )
 	 )
   && 
