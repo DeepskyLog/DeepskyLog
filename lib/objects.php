@@ -2978,56 +2978,52 @@ function getPartOfNames($name)
   else
 	  echo "<td><a href=\"" . $link . "&amp;SO=type\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObjectsHeader4) . "\">".LangOverviewObjectsHeader4."</a></td>\n";
   if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
+	{
 	  $atlas2 = $observer->getStandardAtlas($_SESSION['deepskylog_id']);
-  else
-	  $atlas2 = -1;
-	if ($atlas2 == 0) 
-	{     
-	  if((array_key_exists('SO',$_GET) && ($_GET['SO']=="urano"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="urano")))
-		  echo "<td><a href=\"" . $link . "&amp;RO=urano\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";  
+  	if ($atlas2 == 0) 
+  	{     
+  	  if((array_key_exists('SO',$_GET) && ($_GET['SO']=="urano"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="urano")))
+  		  echo "<td><a href=\"" . $link . "&amp;RO=urano\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";  
+      else
+  		  echo "<td><a href=\"" . $link . "&amp;SO=urano\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";  
+    }
+  	if ($atlas2 == 1) 
+  	{
+  	  if((array_key_exists('SO',$_GET) && ($_GET['SO']=="urano"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="urano")))
+  		  echo "<td><a href=\"" . $link . "&amp;RO=urano_new\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
+  	  else
+  		  echo "<td><a href=\"" . $link . "&amp;SO=urano_new\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
+    }
+  	if ($atlas2 == 2) 
+  	{
+  	  if((array_key_exists('SO',$_GET) && ($_GET['SO']=="sky"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="sky")))
+  		  echo "<td><a href=\"" . $link . "&amp;RO=sky\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
+  	  else
+  		  echo "<td><a href=\"" . $link . "&amp;SO=sky\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
+    }
+  	if ($atlas2 == 3) 
+    {     
+  	  if((array_key_exists('SO',$_GET) && ($_GET['SO']=="millenium"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="millenium")))
+  		  echo "<td><a href=\"" . $link . "&amp;RO=millenium\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";			 
+      else
+  		  echo "<td><a href=\"" . $link . "&amp;SO=millenium\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";			 
+    }
+  	if ($atlas2 == 4) 
+  	{
+  	  if((array_key_exists('SO',$_GET) && ($_GET['SO']=="taki"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="taki")))
+  	    echo "<td><a href=\"" . $link . "&amp;RO=taki\" title=\"". $seenpar . LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
+  	  else
+  	    echo "<td><a href=\"" . $link . "&amp;SO=taki\" title=\"". $seenpar . LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
+  	}
+  	if((array_key_exists('SO',$_GET) && ($_GET['SO']=="contrast"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="contrast")))
+  	  echo "<td><a href=\"" . $link . "&amp;RO=contrast\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldContrastReserve) . "\">".  LangViewObjectFieldContrastReserve . "</a></td>\n";
     else
-		  echo "<td><a href=\"" . $link . "&amp;SO=urano\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";  
-  }
-	if ($atlas2 == 1) 
-	{
-	  if((array_key_exists('SO',$_GET) && ($_GET['SO']=="urano"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="urano")))
-		  echo "<td><a href=\"" . $link . "&amp;RO=urano_new\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
-	  else
-		  echo "<td><a href=\"" . $link . "&amp;SO=urano_new\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
-  }
-	if ($atlas2 == 2) 
-	{
-	  if((array_key_exists('SO',$_GET) && ($_GET['SO']=="sky"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="sky")))
-		  echo "<td><a href=\"" . $link . "&amp;RO=sky\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
-	  else
-		  echo "<td><a href=\"" . $link . "&amp;SO=sky\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
-  }
-	if ($atlas2 == 3) 
-  {     
-	  if((array_key_exists('SO',$_GET) && ($_GET['SO']=="millenium"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="millenium")))
-		  echo "<td><a href=\"" . $link . "&amp;RO=millenium\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";			 
+  	  echo "<td><a href=\"" . $link . "&amp;SO=contrast\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldContrastReserve) . "\">".  LangViewObjectFieldContrastReserve . "</a></td>\n";
+  	if((array_key_exists('SO',$_GET) && ($_GET['SO']=="magnification"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="magnification")))
+  	  echo "<td><a href=\"" . $link . "&amp;RO=magnification\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldMagnification) . "\">".  LangViewObjectFieldMagnification . "</a></td>\n";
     else
-		  echo "<td><a href=\"" . $link . "&amp;SO=millenium\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";			 
+  	  echo "<td><a href=\"" . $link . "&amp;SO=magnification\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldMagnification) . "\">".  LangViewObjectFieldMagnification . "</a></td>\n";
   }
-	if ($atlas2 == 4) 
-	{
-	  if((array_key_exists('SO',$_GET) && ($_GET['SO']=="taki"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="taki")))
-	    echo "<td><a href=\"" . $link . "&amp;RO=taki\" title=\"". $seenpar . LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
-	  else
-	    echo "<td><a href=\"" . $link . "&amp;SO=taki\" title=\"". $seenpar . LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
-	}
-	if ($atlas2 == -1) 
-	{
-	  echo "<td>Atlas</td>\n";
-	}
-	if((array_key_exists('SO',$_GET) && ($_GET['SO']=="contrast"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="contrast")))
-	  echo "<td><a href=\"" . $link . "&amp;RO=contrast\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldContrastReserve) . "\">".  LangViewObjectFieldContrastReserve . "</a></td>\n";
-  else
-	  echo "<td><a href=\"" . $link . "&amp;SO=contrast\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldContrastReserve) . "\">".  LangViewObjectFieldContrastReserve . "</a></td>\n";
-	if((array_key_exists('SO',$_GET) && ($_GET['SO']=="magnification"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="magnification")))
-	  echo "<td><a href=\"" . $link . "&amp;RO=magnification\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldMagnification) . "\">".  LangViewObjectFieldMagnification . "</a></td>\n";
-  else
-	  echo "<td><a href=\"" . $link . "&amp;SO=magnification\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldMagnification) . "\">".  LangViewObjectFieldMagnification . "</a></td>\n";
 	if((array_key_exists('SO',$_GET) && ($_GET['SO']=="seen"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="seen")))
 	  echo "<td><a href=\"" . $link . "&amp;RO=seen\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader7) . "\">".LangOverviewObjectsHeader7."</a></td>\n";
   else
@@ -3061,16 +3057,6 @@ function getPartOfNames($name)
       $ra = RAToString($_SESSION[$_SID][$count][7]);
       // DECLINATION
       $decl = decToStringDegMin($_SESSION[$_SID][$count][8]);
-      // Page number in atlas
-      if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id']) 
-			{ $atlas = $observer->getStandardAtlas($_SESSION['deepskylog_id']); 
-        $page = $_SESSION[$_SID][$count][$atlas+9];
-			}
-      else 
-			{  
-			  $atlas="";
-			  $page="-";
-			}	
 			// SEEN
       $seen="<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($value) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
       if(substr($_SESSION[$_SID][$count][3],0,1)=="X")
@@ -3083,17 +3069,22 @@ function getPartOfNames($name)
       echo "<td>$magnitude</td>\n";
       echo "<td>$sb</td>\n";
       echo "<td>".$$type."</td>\n";
-      echo "<td>".$page."</td>\n";
-      echo "<td class=\"" . $_SESSION[$_SID][$count][18] . "\" onmouseover=\"Tip('" . $_SESSION[$_SID][$count][19] . "')\">" .
-           $_SESSION[$_SID][$count][17] . "</td>\n";
-  
-  		if ($_SESSION[$_SID][$count][17] == "-")
-      {
-        $magnification = "-";
-      } else {
-  			$magnification = $_SESSION[$_SID][$count][21];
-  		}
-      echo "<td>".$magnification."</td>\n";
+      // Page number in atlas
+      if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id']) 
+			{ $atlas = $observer->getStandardAtlas($_SESSION['deepskylog_id']); 
+        $page = $_SESSION[$_SID][$count][$atlas+9];
+        echo "<td>".$page."</td>\n";
+        echo "<td class=\"" . $_SESSION[$_SID][$count][18] . "\" onmouseover=\"Tip('" . $_SESSION[$_SID][$count][19] . "')\">" .
+             $_SESSION[$_SID][$count][17] . "</td>\n";
+    
+    		if ($_SESSION[$_SID][$count][17] == "-")
+        {
+          $magnification = "-";
+        } else {
+    			$magnification = $_SESSION[$_SID][$count][21];
+    		}
+        echo "<td>".$magnification."</td>\n";
+			}
   
       echo "<td class=\"seen\">$seen</td>";
     	if($myList)
