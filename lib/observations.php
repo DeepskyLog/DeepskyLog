@@ -378,6 +378,7 @@ class Observations
 
   $sql = $sql.";";
   $run = mysql_query($sql) or die(mysql_error());
+echo $sql . '<p>';
   while($get = mysql_fetch_object($run))
   {
     if($seenpar != "D")
@@ -827,7 +828,7 @@ function getObservedCountFromCatalogue($id, $catalog)
 	  $t = getdate(); 
     $sql = "SELECT COUNT(*) AS Cnt " .
 	         "FROM observations " .
-					 "WHERE observations.date > \"" . date("Ymd", ($t[0]-31536000)) . "\" AND observations.visibility != 7 ";
+					 "WHERE observations.date >= \"" . date('Ymd', strtotime('-1 year')) . "\"";
 	  $run = mysql_query($sql) or die(mysql_error());
     $get = mysql_fetch_object($run);
     $observations = $get->Cnt;
