@@ -378,7 +378,6 @@ class Observations
 
   $sql = $sql.";";
   $run = mysql_query($sql) or die(mysql_error());
-echo $sql . '<p>';
   while($get = mysql_fetch_object($run))
   {
     if($seenpar != "D")
