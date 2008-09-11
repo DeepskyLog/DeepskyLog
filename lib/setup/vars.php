@@ -39,13 +39,21 @@
  define("SkyAtlas", 2);
  define("MilleniumStarAtlas", 3);
  define("Taki", 4);
-
+ define("psa", 5);
+ define("torresB", 6);
+ define("torresBC", 7);
+ define("torresC", 8);
+ 
  $atlases[0] = LangQueryObjectsUrano;
  $atlases[1] = LangQueryObjectsUranonew;
  $atlases[2] = LangQueryObjectsSkyAtlas;
  $atlases[3] = LangQueryObjectsMsa;
  $atlases[4] = LangQueryObjectsTaki;
-
+ $atlases[5] = LangQueryObjectsPsa;
+ $atlases[6] = LangQueryObjectsTorresB;
+ $atlases[7] = LangQueryObjectsTorresBC;
+ $atlases[8] = LangQueryObjectsTorresC;
+  
  define("InstrumentOther", -1);
  define("InstrumentNakedEye", 0);
  define("InstrumentBinoculars", 1);
