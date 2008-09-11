@@ -3,23 +3,20 @@
 // validate_observation.php
 // checks if the add new observation form is correctly filled in
 
-// Code cleanup - removed by David on 20080704
-//include_once "../../lib/objects.php";
-//$objects = new Objects;
-//include_once "../../lib/locations.php";
-//$locations = new Locations;
-
-
+include_once "../../lib/objects.php";
 include_once "../../lib/observations.php";
 include_once "../../lib/observers.php";
 include_once "../../lib/setup/vars.php";
 include_once "../../lib/util.php";
+include_once "../../lib/locations.php";
 
 $util = new Util();
 $util->checkUserInput();
 
+$objects = new Objects;
 $observations = new Observations;
 $observers = new Observers;
+$locations = new Locations;
 
 if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id']) // logged in
 {
@@ -34,50 +31,50 @@ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id']) /
 
          // save filled in fields to automatically fill form fields when back button is used 
 
-         $_SESSION['year'] = $_POST['year']; // save current year
-         $_SESSION['month'] = $_POST['month']; // save current month
-         $_SESSION['day'] = $_POST['day']; // save current day
-         $_SESSION['instrument'] = $_POST['instrument']; // save current instrument for new observations
-         $_SESSION['location'] = $_POST['site']; // save current location
-         $_SESSION['seeing'] = $_POST['seeing']; // save current seeing
-         $_SESSION['savedata'] = "yes"; // session variable to tag multiple observations
-         $_SESSION['observation_query'] = "";
+         $_SESSION['newObsYear'] = $_POST['year']; // save current year
+         $_SESSION['newObsMonth'] = $_POST['month']; // save current month
+         $_SESSION['newObsDay'] = $_POST['day']; // save current day
+         $_SESSION['newObsInstrument'] = $_POST['instrument']; // save current instrument for new observations
+         $_SESSION['newObsLocation'] = $_POST['site']; // save current location
+         $_SESSION['newObsSeeing'] = $_POST['seeing']; // save current seeing
+         $_SESSION['newObsSavedata'] = "yes"; // session variable to tag multiple observations
+         $_SESSION['newObsObservation_query'] = "";
 
          if(array_key_exists('limit', $_POST) && $_POST['limit'])
          {
             if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST['limit'], $matches)) // limiting magnitude like X.X or X,X with X a number between 0 and 9
             {
                // valid limiting magnitude
-               $_SESSION['limit'] = $matches[1] . ".";
+               $_SESSION['newObsLimit'] = $matches[1] . ".";
                if($matches[2] != "")
                {
-                  $_SESSION['limit'] = $_SESSION['limit'] . $matches[2];
+                  $_SESSION['newObsLimit'] = $_SESSION['newObsLimit'] . $matches[2];
                }
                else
                {
-                  $_SESSION['limit'] = $_SESSION['limit'] . "0";
+                  $_SESSION['newObsLimit'] = $_SESSION['newObsLimit'] . "0";
                }
             }
             else // invalid limiting magnitude
             {
-               $_SESSION['limit'] = ""; // clear current magnitude limit
+               $_SESSION['newObsLimit'] = ""; // clear current magnitude limit
             }
          }
          else
          {
-            $_SESSION['limit'] = "";
+            $_SESSION['newObsLimit'] = "";
          }
 
-         $_SESSION['visibility'] = $_POST['visibility'];
+         $_SESSION['newObsVisibility'] = $_POST['visibility'];
 
          // add session variables for retaining description and time
          // check in new observation form
          // these should be cleared when an observation has been validated successfully!!!
 
                // Security is handled in CheckUserInput
-	       $_SESSION['description'] = nl2br($_POST['description']);
-	       $_SESSION['hours'] = $_POST['hours'];
-	       $_SESSION['minutes'] = $_POST['minutes'];
+	       $_SESSION['newObsDescription'] = nl2br($_POST['description']);
+	       $_SESSION['newObsHours'] = $_POST['hours'];
+	       $_SESSION['newObsMinutes'] = $_POST['minutes'];
 
          header("Location:../../common/error.php");
       }
@@ -123,20 +120,20 @@ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id']) /
                if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST['limit'], $matches)) // limiting magnitude like X.X or X,X with X a number between 0 and 9
                {
                   // valid limiting magnitude
-                  $_SESSION['limit'] = $matches[1] . "." . $matches[2]; // save current magnitude limit
+                  $_SESSION['newObsLimit'] = $matches[1] . "." . $matches[2]; // save current magnitude limit
                }
                else // invalid limiting magnitude
                {
-                  $_SESSION['limit'] = ""; // clear current magnitude limit 
+                  $_SESSION['newObsLimit'] = ""; // clear current magnitude limit 
                }
             }
             else
             {
-               $_SESSION['limit'] = "";
+               $_SESSION['newObsLimit'] = "";
             }
 
             // add observation to database
-            $current_observation = $observations->addDSObservation($_POST['observedobject'], $_SESSION['deepskylog_id'], $_POST['instrument'], $_POST['site'], $date, $time, nl2br($_POST['description']), $_POST['seeing'], $_SESSION['limit'], $visibility, $_POST['description_language']);
+            $current_observation = $observations->addDSObservation($_POST['observedobject'], $_SESSION['deepskylog_id'], $_POST['instrument'], $_POST['site'], $date, $time, nl2br($_POST['description']), $_POST['seeing'], $_SESSION['newObsLimit'], $visibility, $_POST['description_language']);
 
 						if ($_POST['filter'])
 						{
@@ -180,22 +177,22 @@ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id']) /
 
             // save current details for faster submission of multiple observations
 
-            $_SESSION['year'] = $_POST['year']; // save current year
-            $_SESSION['month'] = $_POST['month']; // save current month
-            $_SESSION['day'] = $_POST['day']; // save current day
-            $_SESSION['instrument'] = $_POST['instrument']; // save current instrument for new observations
-            $_SESSION['location'] = $_POST['site']; // save current location
-            $_SESSION['seeing'] = $_POST['seeing']; // save current seeing
-            $_SESSION['language'] = $_POST['description_language']; // save current language
-            $_SESSION['savedata'] = "yes"; // session variable to tag multiple observations 
-            $_SESSION['visibility'] = "";
-            $_SESSION['observation_query'] = "";
+            $_SESSION['newObsYear'] = $_POST['year']; // save current year
+            $_SESSION['newObsMonth'] = $_POST['month']; // save current month
+            $_SESSION['newObsDay'] = $_POST['day']; // save current day
+            $_SESSION['newObsInstrument'] = $_POST['instrument']; // save current instrument for new observations
+            $_SESSION['newObsLocation'] = $_POST['site']; // save current location
+            $_SESSION['newObsSeeing'] = $_POST['seeing']; // save current seeing
+            $_SESSION['newObsLanguage'] = $_POST['description_language']; // save current language
+            $_SESSION['newObsSavedata'] = "yes"; // session variable to tag multiple observations 
+            $_SESSION['newObsVisibility'] = "";
+            $_SESSION['newObsObservation_query'] = "";
 
 	    // clear session variables for description and time when form was not correctly filled in
 
-	    $_SESSION['description'] = "";
-	    $_SESSION['hours'] = "";
-	    $_SESSION['minutes'] = "";
+	    $_SESSION['newObsDescription'] = "";
+	    $_SESSION['newObsHours'] = "";
+	    $_SESSION['newObsMinutes'] = "";
 
             header("Location:../index.php?indexAction=detail_observation&dalm=D&observation=" . $current_observation . "&new=yes");
          }  
@@ -203,7 +200,7 @@ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id']) /
    }
    elseif(array_key_exists('clearfields', $_POST) && $_POST['clearfields']) // pushed clear fields button
    {
-      $_SESSION['savedata'] = "no";
+      $_SESSION['newObsSavedata'] = "no";
       header("Location:../index.php?indexAction=add_observation");
    }
 }
