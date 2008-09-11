@@ -18,7 +18,8 @@ class Objects
  // type, constellation, right ascension, declination, magnitude, surface 
  // brightness, diam1, diam2, position angle and info about the catalogs should
  // be given as parameters. The chart numbers for uranometria, uranometria
- // second edition, sky atlas, taki and millenium star atlas are also put in the
+ // second edition, sky atlas, taki, pocket sky atlas, torresB, torresBC, 
+ // torresC and millenium star atlas are also put in the
  // database. $datasource describes where the data comes from eg : SAC7.2, 
  // DeepskyLogUser or E&T 2.5
  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec, $mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource)
@@ -35,7 +36,11 @@ class Objects
   $skyatlas = $this->calculateSkyAtlasPage($ra, $dec);
   $millenium = $this->calculateMilleniumPage($ra, $dec);
   $taki = $this->calculateTakiPage($ra, $dec);
-  $array = array("INSERT INTO objects (name, type, con, ra, decl, mag, subr, diam1, diam2, pa, datasource, urano, urano_new, sky, millenium, taki) VALUES (\"$name\", \"$type\", \"$con\", \"$ra\", \"$dec\", \"$mag\", \"$subr\", \"$diam1\", \"$diam2\", \"$pa\", \"$datasource\", \"$urano\", \"$uranonew\", \"$skyatlas\", \"$millenium\", \"$taki\")");
+  $psa = $this->calculatePocketSkyAtlasPage($ra, $dec);
+  $torresB = $this->calculateTorresBPage($ra, $dec);
+  $torresBC = $this->calculateTorresBCPage($ra, $dec);
+  $torresC = $this->calculateTorresCPage($ra, $dec);
+  $array = array("INSERT INTO objects (name, type, con, ra, decl, mag, subr, diam1, diam2, pa, datasource, urano, urano_new, sky, millenium, taki, psa, torresB, torresBC, torresC) VALUES (\"$name\", \"$type\", \"$con\", \"$ra\", \"$dec\", \"$mag\", \"$subr\", \"$diam1\", \"$diam2\", \"$pa\", \"$datasource\", \"$urano\", \"$uranonew\", \"$skyatlas\", \"$millenium\", \"$taki\", \"$psa\", \"$torresB\", \"$torresBC\", \"$torresC\")");
   $sql = implode("", $array);
   mysql_query($sql) or die(mysql_error());
   $newcatindex = ucwords(trim($catindex));
@@ -166,6 +171,10 @@ class Objects
   $object["sky"] = $get->sky;
   $object["taki"] = $get->taki;
   $object["msa"] = $get->millenium;
+  $object["psa"] = $get->psa;
+  $object["torresB"] = $get->torresB;
+  $object["torresBC"] = $get->torresBC;
+  $object["torresC"] = $get->torresC;
   $object["ra"] = $get->ra;
   $object["dec"] = $get->decl;
 	if($get->pa != 999)
@@ -388,23 +397,6 @@ class Objects
     $obs[] = $get->name;
   $db->logout();
 
-/*  while(list ($key, $value) = each($obs)) // go through observations array
-  {
-print LangValidateMail1." ".$QUASR." ".$UMA;
-print $key." ".$value."<br />";
-$type = $this->getType($value);
-//    $obsname[$value] = $observations->getObjectId($value);
-  }*/
-
-/*  natcasesort($obsname);
-  reset($obsname);
-  $count = 0;
-  while(list ($key, $value) = each($obsname)) // go through observations array    {
-    $obs2[$count] = $key;
-    $count++;
-  }
-  $obs = $obs2;
-*/
   return $obs;
  }
 
@@ -480,18 +472,56 @@ $type = $this->getType($value);
 			$cnt = $cnt + 1;
 		}
 	}
+  if($sort == "psa")
+  {
+    $cnt = 0;
+    while(list($key, $value) = each($result))
+		{
+      $result3[$value[14].sprintf("%05d", $cnt) / 10000] = $value;
+			$cnt = $cnt + 1;
+		}
+	}
+  if($sort == "torresB")
+  {
+    $cnt = 0;
+    while(list($key, $value) = each($result))
+		{
+		$result3[$value[15].sprintf("%05d", $cnt) / 10000] = $value;
+			$cnt = $cnt + 1;
+		}
+	}
+  if($sort == "torresBC")
+  {
+    $cnt = 0;
+    while(list($key, $value) = each($result))
+		{
+		$result3[$value[16].sprintf("%05d", $cnt) / 10000] = $value;
+			$cnt = $cnt + 1;
+		}
+	}
+  if($sort == "torresC")
+  {
+    $cnt = 0;
+    while(list($key, $value) = each($result))
+		{
+		// UPDATE!!
+		$result3[$value[17].sprintf("%05d", $cnt) / 10000] = $value;
+			$cnt = $cnt + 1;
+		}
+	}
+	
   if($sort == "contrast")
   {
     $sortmethod = array( new contrastcompare( $reverse ), "compare" );
     while(list($key, $value) = each($result))
     {
-      if (strcmp($value[17], "-") == 0)
+      if (strcmp($value[21], "-") == 0)
       {
         $result3["-/".$value[4]] = $value;
       }
       else
       {
-       $result3[sprintf("%.2f", $value[17])."/".$value[4]] = $value;
+       $result3[sprintf("%.2f", $value[21])."/".$value[4]] = $value;
       }
     }
   }
@@ -500,18 +530,18 @@ $type = $this->getType($value);
     $cnt = 0;
     while(list($key, $value) = each($result))
 		{
-			if($value[17] == "-")
+			if($value[21] == "-")
 			{
 				$result3["-".sprintf("%05d", $cnt) / 10000] = $value;
 			} else {
-      	$result3[$value[21].sprintf("%05d", $cnt) / 10000] = $value;
+      	$result3[$value[25].sprintf("%05d", $cnt) / 10000] = $value;
 			}
 			$cnt = $cnt + 1;
 		}
 	}
   if($sort == "objectplace")     
     while(list($key, $value) = each($result))
-      $result3[$value[20].$value[4]] = $value;
+      $result3[$value[24].$value[4]] = $value;
   uksort($result3, $sortmethod);
   $result=array();
   while(list($key, $value) = each($result3))
@@ -746,19 +776,19 @@ $type = $this->getType($value);
 		  else
       {
         $magni = $result2[$j][5];
-				$subrobj = $result2[$j][22];
+				$subrobj = $result2[$j][26];
         if($magni>90)
           $popup = LangContrastNoMagnitude;
         else 
 		    {
-          $diam1 = $result2[$j][14];
+          $diam1 = $result2[$j][18];
           $diam1 = $diam1 / 60.0;
 
           if($diam1==0)
             $popup = LangContrastNoDiameter;
           else
           {
-            $diam2 = $result2[$j][15];
+            $diam2 = $result2[$j][19];
             $diam2 = $diam2 / 60.0;
             if ($diam2 == 0)
               $diam2 = $diam1;
@@ -793,10 +823,10 @@ $type = $this->getType($value);
       }
 
 
-      $result2[$j][17] = $contrast;
-      $result2[$j][18] = $contype;
-      $result2[$j][19] = $popup;
-      $result2[$j][21] = $contrastcalc1;
+      $result2[$j][21] = $contrast;
+      $result2[$j][22] = $contype;
+      $result2[$j][23] = $popup;
+      $result2[$j][25] = $contrastcalc1;
 
       $j++;		
     }
@@ -874,13 +904,17 @@ $type = $this->getType($value);
   	      $result2[$j][11] = $get->sky;
   	      $result2[$j][12] = $get->millenium;
   	      $result2[$j][13] = $get->taki;
-  	      $result2[$j][14] = $get->diam1;
-  	      $result2[$j][15] = $get->diam2;
-  	      $result2[$j][16] = $get->pa;
-          $result2[$j][20] = $value[0]; 
-          $result2[$j][22] = $get->SBObj; 
-  				$result2[$j][23] = $get->description;
-				}
+          $result2[$j][14] = $get->psa;
+          $result2[$j][15] = $get->torresB;
+          $result2[$j][16] = $get->torresBC;
+          $result2[$j][17] = $get->torresC;
+  	      $result2[$j][18] = $get->diam1;
+  	      $result2[$j][19] = $get->diam2;
+  	      $result2[$j][20] = $get->pa;
+          $result2[$j][24] = $value[0]; 
+          $result2[$j][26] = $get->SBObj; 
+          $result2[$j][27] = $get->description;
+		}
         $j++;		
       }
     }
@@ -926,7 +960,8 @@ $type = $this->getType($value);
  //             "maxsubr" => "14.0", "minra" => "0.3", "maxra" => "0.9", 
  //             "mindecl" => "24.0", "maxdecl" => "30.0", "urano" => "111", 
  // 		        "uranonew" => "111", "sky" => "11", "msa" => "222",
- //             "taki" => "1N", "mindiam1" => "12.2", "maxdiam1" => "13.2", 
+ //             "taki" => "11", "psa" => "12", "torresB" => "11", "torresBC" => "13",
+ //             "torresC" => "31", "mindiam1" => "12.2", "maxdiam1" => "13.2", 
  // 		"mindiam2" => "11.1", "maxdiam2" => "22.2", "inList" => "Public: Edge-ons", "notInList" => "My observed Edge-ons");
  function getObjectFromQuery($queries, $exact = 0, $seen="D", $partof = 0)
  {
@@ -1037,6 +1072,14 @@ $type = $this->getType($value);
     $sqland = $sqland . " AND objects.sky = \"" . $queries["sky"] . "\"";
   if(array_key_exists('taki',$queries) && ($queries["taki"] != ""))
     $sqland = $sqland . " AND objects.taki = \"" . $queries["taki"] . "\"";
+  if(array_key_exists('psa',$queries) && ($queries["psa"] != ""))
+    $sqland = $sqland . " AND objects.psa = \"" . $queries["psa"] . "\"";
+  if(array_key_exists('torresB',$queries) && ($queries["torresB"] != ""))
+    $sqland = $sqland . " AND objects.torresB = \"" . $queries["torresB"] . "\"";
+  if(array_key_exists('torresBC',$queries) && ($queries["torresBC"] != ""))
+    $sqland = $sqland . " AND objects.torresBC = \"" . $queries["torresBC"] . "\"";
+  if(array_key_exists('torresC',$queries) && ($queries["torresC"] != ""))
+    $sqland = $sqland . " AND objects.torresC = \"" . $queries["torresC"] . "\"";
   if(array_key_exists('msa',$queries) && ($queries["msa"] != ""))
     $sqland = $sqland . " AND objects.millenium = \"" . $queries["msa"] . "\"";
 	$sqland = substr($sqland, 4);
@@ -1076,7 +1119,7 @@ $type = $this->getType($value);
     $new_obs = Array(Array());
     $cnt = 0;
     for($i = 0;$i < count($obs);$i++)
-      if ($obs[$i][17] <= $queries["maxContrast"])
+      if ($obs[$i][21] <= $queries["maxContrast"])
         $new_obs[$cnt++] = $obs[$i];
     $obs = Array();
     if ($cnt > 0)
@@ -1088,7 +1131,7 @@ $type = $this->getType($value);
     $new_obs = Array(Array());
     $cnt = 0;
     for($i = 0;$i < count($obs);$i++)
-      if ($obs[$i][17] >= $queries["minContrast"])
+      if ($obs[$i][21] >= $queries["minContrast"])
         $new_obs[$cnt++] = $obs[$i];
     $obs = Array();
     if ($cnt > 0)
@@ -1704,6 +1747,24 @@ function getPartOfNames($name)
   return (int)$urano;
  }
 
+ // getPocketSkyAtlasPage returns the pocket sky atlas page of the object
+ function getPocketSkyAtlasPage($name)
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $get = mysql_fetch_object($run);
+
+  $psa = $get->psa;
+
+  $db->logout();
+
+  return $psa;
+ }
+
  // calculatePocketSkyAtlas calculates the pocket sky atlas page of the object
  function calculatePocketSkyAtlasPage($ra, $decl)
  {
@@ -1964,7 +2025,25 @@ function getPartOfNames($name)
   return (int)$psa;
  }
  
- // calculateTorresC calculates the TriAtlas C (torres) page of the object
+ // getTorresCPage returns the TriAtlas C (torres) page of the object
+ function getTorresCPage($name)
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $get = mysql_fetch_object($run);
+
+  $torresC = $get->torresC;
+
+  $db->logout();
+
+  return $torresC;
+ }
+
+// calculateTorresC calculates the TriAtlas C (torres) page of the object
  function calculateTorresCPage($ra, $decl)
  {
   $torresC = 0;
@@ -1974,111 +2053,129 @@ function getPartOfNames($name)
    if ($ra <= 1.2 || $ra >= 22.8) {
      $torresC = 1;
    } else {
-     $torresC = 10 - int(($ra - 1.2) / 2.4);
+     $torresC = 10 - (int)(($ra - 1.2) / 2.4);
    }
   } else if ($decl >= 69.0 ) {
    if ($ra <= 0.666 || $ra >= 23.333) {
      $torresC = 11;
    } else {
-     $torresC = 28 - int(($ra - 0.666) / 1.33);
+     $torresC = 28 - (int)(($ra - 0.666) / 1.33);
    }
   } else if ($decl >= 58.0 ) {
    if ($ra <= 0.4616 || $ra >= 23.5383) {
      $torresC = 29;
    } else {
-     $torresC = 54 - int(($ra - 0.4616) / 0.9233);
+     $torresC = 54 - (int)(($ra - 0.4616) / 0.9233);
    }
   } else if ($decl >= 48.0 ) {
    if ($ra <= 0.3633 || $ra >= 23.6366) {
      $torresC = 55;
    } else {
-     $torresC = 87 - int(($ra - 0.3633) / 0.7266);
+     $torresC = 87 - (int)(($ra - 0.3633) / 0.7266);
    }
   } else if ($decl >= 37.0 ) {
    if ($ra <= 0.315 || $ra >= 23.685) {
      $torresC = 88;
    } else {
-     $torresC = 125 - int(($ra - 0.315) / 0.630);
+     $torresC = 125 - (int)(($ra - 0.315) / 0.630);
    }
   } else if ($decl >= 27.0 ) {
    if ($ra <= 0.2783 || $ra >= 23.7216) {
      $torresC = 126;
    } else {
-     $torresC = 168 - int(($ra - 0.2783) / 0.5566);
+     $torresC = 168 - (int)(($ra - 0.2783) / 0.5566);
    }
   } else if ($decl >= 16.0 ) {
    if ($ra <= 0.2616 || $ra >= 23.7383) {
      $torresC = 169;
    } else {
-     $torresC = 214 - int(($ra - 0.2616) / 0.5233);
+     $torresC = 214 - (int)(($ra - 0.2616) / 0.5233);
    }
   } else if ($decl >= 5.0 ) {
    if ($ra <= 0.25 || $ra >= 23.75) {
      $torresC = 215;
    } else {
-     $torresC = 262 - int(($ra - 0.25) / 0.5);
+     $torresC = 262 - (int)(($ra - 0.25) / 0.5);
    }
   } else if ($decl >= -5.0 ) {
    if ($ra <= 0.255 || $ra >= 23.745) {
      $torresC = 263;
    } else {
-     $torresC = 309 - int(($ra - 0.255) / 0.51);
+     $torresC = 309 - (int)(($ra - 0.255) / 0.51);
    }
   } else if ($decl >= -16.0 ) {
    if ($ra <= 0.25 || $ra >= 23.75) {
      $torresC = 310;
    } else {
-     $torresC = 357 - int(($ra - 0.25) / 0.5);
+     $torresC = 357 - (int)(($ra - 0.25) / 0.5);
    }
   } else if ($decl >= -26.0 ) {
    if ($ra <= 0.2616 || $ra >= 23.7383) {
      $torresC = 358;
    } else {
-     $torresC = 403 - int(($ra - 0.2616) / 0.5233);
+     $torresC = 403 - (int)(($ra - 0.2616) / 0.5233);
    }
   } else if ($decl >= -37.0 ) {
    if ($ra <= 0.2783 || $ra >= 23.7216) {
      $torresC = 404;
    } else {
-     $torresC = 446 - int(($ra - 0.2783) / 0.5566);
+     $torresC = 446 - (int)(($ra - 0.2783) / 0.5566);
    }
   } else if ($decl >= -47.0 ) {
    if ($ra <= 0.315 || $ra >= 23.685) {
      $torresC = 447;
    } else {
-     $torresC = 484 - int(($ra - 0.315) / 0.63);
+     $torresC = 484 - (int)(($ra - 0.315) / 0.63);
    }
    
   } else if ($decl >= -58.0 ) {
    if ($ra <= 0.3633 || $ra >= 23.6366) {
      $torresC = 485;
    } else {
-     $torresC = 517 - int(($ra - 0.3633) / 0.7266);
+     $torresC = 517 - (int)(($ra - 0.3633) / 0.7266);
    }
   } else if ($decl >= -68.0 ) {
    if ($ra <= 0.4616 || $ra >= 23.5383) {
      $torresC = 518;
    } else {
-     $torresC = 543 - int(($ra - 0.4616) / 0.9233);
+     $torresC = 543 - (int)(($ra - 0.4616) / 0.9233);
    }
   } else if ($decl >= -79.0 ) {
    if ($ra <= 0.666 || $ra >= 23.333) {
    	$torresC = 544;
    } else {
-    $torresC = 561 - int(($ra - 0.666) / 1.33);
+    $torresC = 561 - (int)(($ra - 0.666) / 1.33);
    }
   } else {
    if ($ra <= 1.2 || $ra >= 22.8)
    {
      $torresC = 562;
    } else {
-     $torresC = 571 - int(($ra - 1.2) / 2.4);
+     $torresC = 571 - (int)(($ra - 1.2) / 2.4);
    }
   }
 
   return (int)$torresC;
  }
    
+ // getTorresBCPage returns the TriAtlas BC (torres) page of the object
+ function getTorresBCPage($name)
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $get = mysql_fetch_object($run);
+
+  $torresBC = $get->torresBC;
+
+  $db->logout();
+
+  return $torresBC;
+ }
+ 
  // calculateTorresBC calculates the TriAtlas BC (torres) page of the object
  function calculateTorresBCPage($ra, $decl)
  {
@@ -2089,68 +2186,87 @@ function getPartOfNames($name)
    if ($ra <= 1.2 || $ra >= 22.8) {
      $torresBC = 1;
    } else {
-     $torresBC = 10 - int(($ra - 1.2) / 2.4);
+     $torresBC = 10 - (int)(($ra - 1.2) / 2.4);
    }
   } else if ($decl >= 54.0 ) {
    if ($ra <= 0.666 || $ra >= 23.333) {
      $torresBC = 11;
    } else {
-     $torresBC = 28 - int(($ra - 0.666) / 1.33);
+     $torresBC = 28 - (int)(($ra - 0.666) / 1.33);
    }
   } else if ($decl >= 36.0 ) {
    if ($ra <= 0.5 || $ra >= 23.5) {
      $torresBC = 29;
    } else {
-     $torresBC = 52 - int(($ra - 0.5) / 1.0);
+     $torresBC = 52 - (int)(($ra - 0.5) / 1.0);
    }
   } else if ($decl >= 18.0 ) {
    if ($ra <= 0.42833 || $ra >= 23.57166) {
      $torresBC = 53;
    } else {
-     $torresBC = 80 - int(($ra - 0.42833) / 0.85666);
+     $torresBC = 80 - (int)(($ra - 0.42833) / 0.85666);
    }
   } else if ($decl >= 0.0 ) {
    if ($ra <= 0.41333 || $ra >= 23.5866) {
      $torresBC = 81;
    } else {
-     $torresBC = 109 - int(($ra - 0.41333) / 0.82666);
+     $torresBC = 109 - (int)(($ra - 0.41333) / 0.82666);
    }
   } else if ($decl >= -18.0 ) {
    if ($ra <= 0.41333 || $ra >= 23.5866) {
      $torresBC = 110;
    } else {
-     $torresBC = 138 - int(($ra - 0.41333) / 0.82666);
+     $torresBC = 138 - (int)(($ra - 0.41333) / 0.82666);
    }
   } else if ($decl >= -36.0 ) {
    if ($ra <= 0.42833 || $ra >= 23.57166) {
      $torresBC = 139;
    } else {
-     $torresBC = 166 - int(($ra - 0.42833) / 0.85666);
+     $torresBC = 166 - (int)(($ra - 0.42833) / 0.85666);
    }
   } else if ($decl >= -54.0 ) {
    if ($ra <= 0.5 || $ra >= 23.5) {
      $torresBC = 167;
    } else {
-     $torresBC = 190 - int(($ra - 0.5) / 1.0);
+     $torresBC = 190 - (int)(($ra - 0.5) / 1.0);
    }
   } else if ($decl >= -72.0 ) {
    if ($ra <= 0.6666 || $ra >= 23.3333) {
      $torresBC = 191;
    } else {
-     $torresBC = 208 - int(($ra - 0.6666) / 1.3333);
+     $torresBC = 208 - (int)(($ra - 0.6666) / 1.3333);
    }
   } else {
    if ($ra <= 1.2 || $ra >= 22.8) {
      $torresBC = 209;
    } else {
-     $torresBC = 218 - int(($ra - 1.2) / 2.4);
+     $torresBC = 218 - (int)(($ra - 1.2) / 2.4);
    }
   }
 
   return (int)$torresBC;
  }
 
-  // calculateTorresB calculates the TriAtlas B (torres) page of the object
+ // getTorresBPage returns the TriAtlas B (torres) page of the object
+ function getTorresBPage($name)
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $get = mysql_fetch_object($run);
+
+  $torresB = $get->torresB;
+
+  $db->logout();
+
+  return $torresB;
+ }
+ 
+ 
+ // calculateTorresB calculates the TriAtlas B (torres) page of the object
  function calculateTorresBPage($ra, $decl)
  {
   $torresB = 0;
@@ -2160,43 +2276,43 @@ function getPartOfNames($name)
    if ($ra <= 1.2 || $ra >= 22.8) {
      $torresB = 1;
    } else {
-     $torresB = 9 - int(($ra - 1.2) / 2.4);
+     $torresB = 9 - (int)(($ra - 1.2) / 2.4);
    }
   } else if ($decl >= 38.56666 ) {
    if ($ra <= 0.75 || $ra >= 23.25) {
      $torresB = 10;
    } else {
-     $torresB = 25 - int(($ra - 0.75) / 1.5);
+     $torresB = 25 - (int)(($ra - 0.75) / 1.5);
    }
   } else if ($decl >= 12.85 ) {
    if ($ra <= 0.63166 || $ra >= 23.36833) {
      $torresB = 26;
    } else {
-     $torresB = 44 - int(($ra - 0.63166) / 1.2633);
+     $torresB = 44 - (int)(($ra - 0.63166) / 1.2633);
    }
   } else if ($decl >= -12.85 ) {
    if ($ra <= 0.63166 || $ra >= 23.36833) {
      $torresB = 45;
    } else {
-     $torresB = 63 - int(($ra - 0.63166) / 1.2633);
+     $torresB = 63 - (int)(($ra - 0.63166) / 1.2633);
    }
   } else if ($decl >= -38.56666 ) {
    if ($ra <= 0.63166 || $ra >= 23.36833) {
      $torresB = 64;
    } else {
-     $torresB = 82 - int(($ra - 0.63166) / 1.2633);
+     $torresB = 82 - (int)(($ra - 0.63166) / 1.2633);
    }
   } else if ($decl >= -64.28333 ) {
    if ($ra <= 0.75 || $ra >= 23.25) {
      $torresB = 83;
    } else {
-     $torresB = 98 - int(($ra - 0.75) / 1.5);
+     $torresB = 98 - (int)(($ra - 0.75) / 1.5);
    }
   } else {
    if ($ra <= 1.2 || $ra >= 22.8) {
      $torresB = 99;
    } else {
-     $torresB = 107 - int(($ra - 1.2) / 2.4);
+     $torresB = 107 - (int)(($ra - 1.2) / 2.4);
    }
   }
   return (int)$torresB;
@@ -2690,7 +2806,11 @@ function getPartOfNames($name)
   $skyatlas = $this->calculateSkyAtlasPage($ra, $decl);
   $msa = $this->calculateMilleniumPage($ra, $decl);
   $taki = $this->calculateTakiPage($ra, $decl);
-
+  $psa = $this->calculatePocketSkyAtlasPage($ra, $decl);
+  $torresB = $this->calculateTorresBPage($ra, $decl);
+  $torresBC = $this->calculateTorresBCPage($ra, $decl);
+  $torresC = $this->calculateTorresCPage($ra, $decl);
+  
   $sql = "UPDATE objects SET urano = \"$urano\" WHERE name = \"$name\"";
   $run = mysql_query($sql) or die(mysql_error());
   
@@ -2706,6 +2826,18 @@ function getPartOfNames($name)
   $sql = "UPDATE objects SET taki = \"$taki\" WHERE name = \"$name\"";
   $run = mysql_query($sql) or die(mysql_error());
 
+  $sql = "UPDATE objects SET psa = \"$psa\" WHERE name = \"$name\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $sql = "UPDATE objects SET torresB = \"$torresB\" WHERE name = \"$name\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $sql = "UPDATE objects SET torresBC = \"$torresBC\" WHERE name = \"$name\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $sql = "UPDATE objects SET torresC = \"$torresC\" WHERE name = \"$name\"";
+  $run = mysql_query($sql) or die(mysql_error());
+  
   $db->logout();
  }
 
@@ -2731,10 +2863,14 @@ function getPartOfNames($name)
   $skyatlas = $this->calculateSkyAtlasPage($ra, $decl);
   $msa = $this->calculateMilleniumPage($ra, $decl);
   $taki = $this->calculateTakiPage($ra, $decl);
-
+  $psa = $this->calculatePocketSkyAtlasPage($ra, $decl);
+  $torresB = $this->calculateTorresBPage($ra, $decl);
+  $torresBC = $this->calculateTorresBCPage($ra, $decl);
+  $torresC = $this->calculateTorresCPage($ra, $decl);
+  
   $sql = "UPDATE objects SET urano = \"$urano\" WHERE name = \"$name\"";
   $run = mysql_query($sql) or die(mysql_error());
-
+  
   $sql = "UPDATE objects SET urano_new = \"$uranonew\" WHERE name = \"$name\"";
   $run = mysql_query($sql) or die(mysql_error());
 
@@ -2747,6 +2883,18 @@ function getPartOfNames($name)
   $sql = "UPDATE objects SET taki = \"$taki\" WHERE name = \"$name\"";
   $run = mysql_query($sql) or die(mysql_error());
 
+  $sql = "UPDATE objects SET psa = \"$psa\" WHERE name = \"$name\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $sql = "UPDATE objects SET torresB = \"$torresB\" WHERE name = \"$name\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $sql = "UPDATE objects SET torresBC = \"$torresBC\" WHERE name = \"$name\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $sql = "UPDATE objects SET torresC = \"$torresC\" WHERE name = \"$name\"";
+  $run = mysql_query($sql) or die(mysql_error());
+  
   $db->logout();
  }
 
@@ -3015,6 +3163,34 @@ function getPartOfNames($name)
   	  else
   	    echo "<td><a href=\"" . $link . "&amp;SO=taki\" title=\"". $seenpar . LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
   	}
+  	if ($atlas2 == 5) 
+  	{
+  	  if((array_key_exists('SO',$_GET) && ($_GET['SO']=="psa"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="psa")))
+  	    echo "<td><a href=\"" . $link . "&amp;RO=psa\" title=\"". $seenpar . LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
+  	  else
+  	    echo "<td><a href=\"" . $link . "&amp;SO=psa\" title=\"". $seenpar . LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
+  	}
+  	if ($atlas2 == 6) 
+  	{
+  	  if((array_key_exists('SO',$_GET) && ($_GET['SO']=="torresB"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="torresB")))
+  	    echo "<td><a href=\"" . $link . "&amp;RO=torresB\" title=\"". $seenpar . LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
+  	  else
+  	    echo "<td><a href=\"" . $link . "&amp;SO=torresB\" title=\"". $seenpar . LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
+  	}
+  	if ($atlas2 == 7) 
+  	{
+  	  if((array_key_exists('SO',$_GET) && ($_GET['SO']=="torresBC"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="torresBC")))
+  	    echo "<td><a href=\"" . $link . "&amp;RO=torresBC\" title=\"". $seenpar . LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
+  	  else
+  	    echo "<td><a href=\"" . $link . "&amp;SO=torresBC\" title=\"". $seenpar . LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
+  	}
+  	if ($atlas2 == 8) 
+  	{
+  	  if((array_key_exists('SO',$_GET) && ($_GET['SO']=="torresC"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="torresC")))
+  	    echo "<td><a href=\"" . $link . "&amp;RO=torresC\" title=\"". $seenpar . LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
+  	  else
+  	    echo "<td><a href=\"" . $link . "&amp;SO=torresC\" title=\"". $seenpar . LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
+  	}
   	if((array_key_exists('SO',$_GET) && ($_GET['SO']=="contrast"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="contrast")))
   	  echo "<td><a href=\"" . $link . "&amp;RO=contrast\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldContrastReserve) . "\">".  LangViewObjectFieldContrastReserve . "</a></td>\n";
     else
@@ -3074,14 +3250,14 @@ function getPartOfNames($name)
 			{ $atlas = $observer->getStandardAtlas($_SESSION['deepskylog_id']); 
         $page = $_SESSION[$_SID][$count][$atlas+9];
         echo "<td>".$page."</td>\n";
-        echo "<td class=\"" . $_SESSION[$_SID][$count][18] . "\" onmouseover=\"Tip('" . $_SESSION[$_SID][$count][19] . "')\">" .
-             $_SESSION[$_SID][$count][17] . "</td>\n";
+        echo "<td class=\"" . $_SESSION[$_SID][$count][22] . "\" onmouseover=\"Tip('" . $_SESSION[$_SID][$count][23] . "')\">" .
+             $_SESSION[$_SID][$count][21] . "</td>\n";
     
-    		if ($_SESSION[$_SID][$count][17] == "-")
+    		if ($_SESSION[$_SID][$count][21] == "-")
         {
           $magnification = "-";
         } else {
-    			$magnification = $_SESSION[$_SID][$count][21];
+    			$magnification = $_SESSION[$_SID][$count][25];
     		}
         echo "<td>".$magnification."</td>\n";
 			}
@@ -3188,6 +3364,42 @@ function getPartOfNames($name)
         echo LangViewObjectField15;
       echo("</td><td width=\"25%\">");
         echo($this->getTakiPage($object));
+      echo("</td>");
+    }
+    else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 5)
+    {
+      // POCKET SKY ATLAS PAGE
+      echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
+      echo LangViewObjectField16;
+      echo("</td><td width=\"25%\">");
+      echo($this->getPocketSkyAtlasPage($object));
+      echo("</td>");
+    }
+    else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 6)
+    {
+      // TORRES B ATLAS PAGE
+      echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
+      echo LangViewObjectField17;
+      echo("</td><td width=\"25%\">");
+      echo($this->getTorresBPage($object));
+      echo("</td>");
+    }
+    else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 7)
+    {
+      // TORRES BC ATLAS PAGE
+      echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
+      echo LangViewObjectField18;
+      echo("</td><td width=\"25%\">");
+      echo($this->getTorresBCPage($object));
+      echo("</td>");
+    }
+    else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 8)
+    {
+      // TORRES C ATLAS PAGE
+      echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
+      echo LangViewObjectField19;
+      echo("</td><td width=\"25%\">");
+      echo($this->getTorresCPage($object));
       echo("</td>");
     }
     else
