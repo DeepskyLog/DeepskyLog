@@ -53,17 +53,12 @@ elseif(array_key_exists('removeObjectFromList',$_GET) && $_GET['removeObjectFrom
 	echo "<HR>";
 }
 
-$lco='';
 $object = '';
 $cataloguesearch = ''; // variable to check if only catalogue has been filled in
 
 if(array_key_exists('object', $_GET) && ($_GET['object']))
 {  
 	$object = $_GET['object'];
-  if(array_key_exists('lco', $_GET) && $_GET['lco']) // lco = List, Compact or compactlO;
-    $lco=$_GET['lco'];
-  else
-    $lco="C";
   if(($object!='* ') && ((!array_key_exists('catalogue',$_GET)) || (array_key_exists('catalogue',$_GET) && $_GET['catalogue']=="") || ($_GET['number']!='')))
 	{
     // SEEN
@@ -103,10 +98,6 @@ if(array_key_exists('object', $_GET) && ($_GET['object']))
 	  $objects->showObject($object);
 	}
 }	
-if(array_key_exists('lco', $_GET) && $_GET['lco'] && ($lco=='')) // lco = List, Compact or compactlO;
-  $lco=$_GET['lco'];
-elseif($lco=='')
-  $lco="L";
 if(array_key_exists('seen', $_GET) && $_GET['seen'])
   $seenpar=$_GET['seen'];
 else
@@ -134,9 +125,9 @@ else
 // TITLE
 echo("<div id=\"main\">\n<h2>");
 $theDate = date('Ymd', strtotime('-1 year')) ;
-if(($_GET['minyear'] == substr($theDate,0,4)) &&
-   ($_GET['minmonth'] == substr($theDate,4,2)) &&
-   ($_GET['minday'] == substr($theDate,6,2)))
+if(array_key_exists('minyear',$_GET) && ($_GET['minyear'] == substr($theDate,0,4)) &&
+   array_key_exists('minmonth',$_GET) && ($_GET['minmonth'] == substr($theDate,4,2)) &&
+   array_key_exists('minday',$_GET) && ($_GET['minday'] == substr($theDate,6,2)))
   echo (LangSelectedObservationsTitle3); 
 elseif ($catalogue=="*")
   echo (LangOverviewObservationsTitle); 
@@ -849,7 +840,7 @@ elseif($object ||
    $link = "deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) . 
                                          "&amp;observer=" . urlencode($observer) . 
                                          "&amp;object=" . urlencode($object) . 
-                                         "&amp;lco=" . $lco . 
+                                         "&amp;lco=" . $_SESSION['lco'] . 
                                          "&amp;number=" . urlencode($number) . 
                                          "&amp;instrument=" . urlencode($instrument) . 
                                          "&amp;site=" . urlencode($site) . 
@@ -908,22 +899,22 @@ elseif($object ||
 	 
    if(count($obs)>0)
 	 {
-  	 if($lco!="L")
+  	 if($_SESSION['lco']!="L")
   	   echo(" - <a href=\"". $link . "&amp;lco=L" . "&amp;min=" . $min . "\" title=\"" . LangOverviewObservationTitle . "\">" . 
   		       LangOverviewObservations . "</a>");
   	 if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
-       if($lco!="C")
+       if($_SESSION['lco']!="C")
          echo(" - <a href=\"". $link . "&amp;lco=C" . "&amp;min=" . $min . "\" title=\"" . LangCompactObservationsTitle . "\">" . 
   			        LangCompactObservations . "</a>");
   	 if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
-       if($lco!="O")
+       if($_SESSION['lco']!="O")
   		   echo(" - <a href=\"". $link . "&amp;lco=O" . "&amp;min=" . $min . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . 
   			        LangCompactObservationsLO . "</a>");
 	 }
 	 echo "</h2>";	 
 	
    list($min, $max) = $util->printListHeader($obs, $link, $min, $step, $total);
-	 if($lco=="O")
+	 if($_SESSION['lco']=="O")
      echo "<p align=\"right\">" .  LangOverviewObservationsHeader5a;
 	 
    if(sizeof($obs) > 0)
@@ -938,7 +929,7 @@ elseif($object ||
         echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) .
                                                     "&amp;instrument=" . urlencode($instrument) .
                                                     "&amp;object=" . urlencode($object) . 
-                                                    "&amp;lco=" . $lco . 
+                                                    "&amp;lco=" . $_SESSION['lco'] . 
                                                     "&amp;number=" . urlencode($number) .
                                                     "&amp;observer=" . urlencode($observer) .
                                                     "&amp;site=" . urlencode($site) .
@@ -993,7 +984,7 @@ elseif($object ||
 			  echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) .
                                                     "&amp;instrument=" . urlencode($instrument) .
                                                     "&amp;object=" . urlencode($object) . 
-                                                    "&amp;lco=" . $lco . 
+                                                    "&amp;lco=" . $_SESSION['lco'] . 
                                                     "&amp;number=" . urlencode($number) .
                                                     "&amp;observer=" . urlencode($observer) .
                                                     "&amp;site=" . urlencode($site) .
@@ -1050,7 +1041,7 @@ elseif($object ||
          echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) .
                                                     "&amp;instrument=" . urlencode($instrument) .
                                                     "&amp;object=" . urlencode($object) . 
-                                                    "&amp;lco=" . $lco . 
+                                                    "&amp;lco=" . $_SESSION['lco'] . 
                                                     "&amp;number=" . urlencode($number) .
                                                     "&amp;observer=" . urlencode($observer) .
                                                     "&amp;site=" . urlencode($site) .
@@ -1108,7 +1099,7 @@ elseif($object ||
                                                     "&amp;instrument=" . urlencode($instrument) .
                                                     "&amp;number=" . urlencode($number) .
                                                     "&amp;object=" . urlencode($object) . 
-                                                    "&amp;lco=" . $lco . 
+                                                    "&amp;lco=" . $_SESSION['lco'] . 
                                                     "&amp;observer=" . urlencode($observer) .
                                                     "&amp;site=" . urlencode($site) .
                                                     "&amp;minyear=" . $minyear .
@@ -1165,7 +1156,7 @@ elseif($object ||
                                                     "&amp;instrument=" . urlencode($instrument) .
                                                     "&amp;number=" . urlencode($number) .
                                                     "&amp;object=" . urlencode($object) . 
-                                                    "&amp;lco=" . $lco . 
+                                                    "&amp;lco=" . $_SESSION['lco'] . 
                                                     "&amp;observer=" . urlencode($observer) .
                                                     "&amp;site=" . urlencode($site) .
                                                     "&amp;minyear=" . $minyear .
@@ -1215,7 +1206,7 @@ elseif($object ||
 																				            "&amp;seen=" . $seenpar . 
                                                     "&amp;sort=date&amp;previous=$previous\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObservationsHeader4) . "\">" .
                                                     LangOverviewObservationsHeader4 . "</a></td>";
-				 if($lco!="O")
+				 if($_SESSION['lco']!="O")
 				   echo("<td></td>\n");
 				 else
 				   echo("<td width=\"15%\">" . LangOverviewObservationsHeader8 . "</td>\n
@@ -1226,11 +1217,11 @@ elseif($object ||
          {
             if($count >= $min && $count < $max)
             { 
-						  if($lco=="L")
+						  if($_SESSION['lco']=="L")
                 $observations->showOverviewObservation($value, $count, $link . "&amp;min=" . $min, $myList);
-							elseif($lco=="C")
+							elseif($_SESSION['lco']=="C")
                 $observations->showCompactObservation($value, $link . "&amp;min=" . $min, $myList);
-							elseif($lco="O")
+							elseif($_SESSION['lco']o="O")
                 $observations->showCompactObservationLO($value, $link . "&amp;min=" . $min, $myList);
             }
             $count++; // increase counter

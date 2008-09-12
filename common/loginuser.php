@@ -26,7 +26,14 @@ if (array_key_exists('deepskylogsec', $_COOKIE) && $_COOKIE['deepskylogsec'])
 		  if ($passwd_db == $passwd)                  // check if passwords match
       {  
 		     $_SESSION['deepskylog_id'] = $login;
-			 				 
+				 if(array_key_exists('lco',$_COOKIE))
+				   $_SESSION['lco'] = $_COOKIE['lco'];
+				else
+				{
+          $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+				  $_SESSION['lco'] = 'L';
+          $setcookie("lco","L",$cookietime, "/");
+		 		}		 			 				 
 				 if($obs->getRole($login) == "0")         // administrator logs in 
          {
             $_SESSION['admin'] = "yes";           // set session variable 
