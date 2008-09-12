@@ -81,34 +81,17 @@ if(array_key_exists('object', $_GET) && $_GET['object'])
   $locations = new Locations;
   echo("<tr><td class=\"fieldname\" align=\"right\">" . LangViewObservationField4 . "&nbsp;*</td><td><select name=\"site\" style=\"width: 147px\">");
   $sites = $locations->getSortedLocationsList("name", $_SESSION['deepskylog_id']);
-
+  if(!(array_key_exists('newObsSavedata', $_SESSION) && ($_SESSION['newObsSavedata'] == "yes")))
+	  $_SESSION['newObsLocation']=$obs->getStandardLocation($_SESSION['deepskylog_id']);
   for ($i = 0;$i < count($sites);$i++)
   {
     $sitename = $sites[$i][1];
-    if(array_key_exists('newObsSavedata', $_SESSION) && ($_SESSION['newObsSavedata'] == "yes")) // multiple observations
-    {
-      if(array_key_exists('newObsLocation', $_SESSION) && ($_SESSION['newObsLocation'] == $sites[$i][1])) // location equals session location
-      {
-        print("<option selected=\"selected\" value=\"".$sites[$i][0]."\">$sitename</option>\n");
-      }
-      else
-      {
-        print("<option value=\"".$sites[$i][0]."\">$sitename</option>\n");
-      }
-    }
-    else // first observation of session
-    {
-      if($obs->getStandardLocation($_SESSION['deepskylog_id']) == $sites[$i][0]) // location equals standard location
-      {
-        print("<option selected=\"selected\" value=\"".$sites[$i][0]."\">$sitename</option>\n");
-      }
-      else
-      {
-        print("<option value=\"".$sites[$i][0]."\">$sitename</option>\n");
-      }
-    }
-  }
-  echo("</select></td><td class=\"explanation\"><a href=\"common/add_site.php\">" . LangChangeAccountField7Expl ."</a></td>");
+    if(array_key_exists('newObsLocation', $_SESSION) && ($_SESSION['newObsLocation'] == $sites[$i][0])) // location equals session location
+      print("<option selected=\"selected\" value=\"".$sites[$i][0]."\">$sitename</option>\n");
+    else
+      print("<option value=\"".$sites[$i][0]."\">$sitename</option>\n");
+   }
+	echo("</select></td><td class=\"explanation\"><a href=\"common/add_site.php\">" . LangChangeAccountField7Expl ."</a></td>");
 	echo("</tr>");
 	
 	

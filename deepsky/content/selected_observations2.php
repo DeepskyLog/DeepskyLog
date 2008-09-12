@@ -1221,7 +1221,7 @@ elseif($object ||
                 $observations->showOverviewObservation($value, $count, $link . "&amp;min=" . $min, $myList);
 							elseif($_SESSION['lco']=="C")
                 $observations->showCompactObservation($value, $link . "&amp;min=" . $min, $myList);
-							elseif($_SESSION['lco']o="O")
+							elseif($_SESSION['lco']=="O")
                 $observations->showCompactObservationLO($value, $link . "&amp;min=" . $min, $myList);
             }
             $count++; // increase counter
