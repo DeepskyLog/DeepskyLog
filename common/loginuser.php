@@ -32,7 +32,7 @@ if (array_key_exists('deepskylogsec', $_COOKIE) && $_COOKIE['deepskylogsec'])
 				{
           $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
 				  $_SESSION['lco'] = 'L';
-          $setcookie("lco","L",$cookietime, "/");
+          setcookie("lco","L",$cookietime, "/");
 		 		}		 			 				 
 				 if($obs->getRole($login) == "0")         // administrator logs in 
          {
