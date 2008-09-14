@@ -222,7 +222,7 @@ if(array_key_exists('object', $_GET) && $_GET['object'])
   echo("<option value=\"\"></option>\n"); // include empty instrument
   while(list ($key, $value) = each($eyeps)) // go through instrument array
   {
-    $eyepiecename = $eyepieces->getEyepiecesName($value);
+    $eyepiecename = $eyepieces->getEyepieceName($value);
     $val = $value;
     print("<option value=\"$val\">");
     echo("$eyepiecename</option>\n");
