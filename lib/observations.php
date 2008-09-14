@@ -183,9 +183,12 @@ class Observations
  //             "uranonew" => "111", "sky" => "11", "msa" => "222",
  //             "mindiam1" => "12.2", "maxdiam1" => "13.2", "mindiam2" => "11.1",
  //             "maxdiam2" => "22.2", "description" => "Doughnut", "minvisibility" => "5", 
- //		"maxvisibility" => "3", "minseeing" => "2", "maxseeing" => "4", 
+ //		          "maxvisibility" => "3", "minseeing" => "2", "maxseeing" => "4", 
  //             "minlimmag" => "5.5", "maxlimmag" => "6.0", $languages =>  Array ( [0] => en )), 
- //             "eyepiece" => "4", "filter" => "2", "lens" => "3";
+ //             "eyepiece" => "4", "filter" => "2", "lens" => "3", "minSmallDiameter" => "3.4", 
+ //             "maxSmallDiameter" => "3.7", "minLargeDiameter" => "5.3", "maxLargeDiameter" => "6.5", 
+ //             "stellar" => "1", "extended" => "0", "resolved" => "0", "mottled" => "1", 
+ //             "characterType" => "A", "unusualShape" => "0", "partlyUnresolved" => "1", "colorContrasts" => "0";
  function getObservationFromQuery($queries, $sort = "", $exactmatch = "1", $clubOnly = "True", $seenpar="D", $exactinstrumentlocation = "0")
  {
   include "setup/databaseInfo.php";
@@ -346,6 +349,18 @@ class Observations
   if (isset($queries["maxseeing"]) && ($queries["maxseeing"] != ""))          $sqland .= "AND observations.seeing >= \"".$queries["maxseeing"]."\" ";
   if (isset($queries["minlimmag"]) && ($queries["minlimmag"] != ""))          $sqland .= "AND observations.limmag >= \"".$queries["minlimmag"]."\" ";
   if (isset($queries["maxlimmag"]) && ($queries["maxlimmag"] != ""))          $sqland .= "AND observations.limmag <= \"".$queries["maxlimmag"]."\" ";
+  if (isset($queries["minSmallDiameter"]) && ($queries["minSmallDiameter"] != ""))          $sqland .= "AND observations.smallDiameter >= \"".$queries["smallDiameter"]."\" ";
+  if (isset($queries["maxSmallDiameter"]) && ($queries["maxSmallDiameter"] != ""))          $sqland .= "AND observations.smallDiameter <= \"".$queries["smallDiameter"]."\" ";
+  if (isset($queries["minLargeDiameter"]) && ($queries["minLargeDiameter"] != ""))          $sqland .= "AND observations.largeDiameter >= \"".$queries["largeDiameter"]."\" ";
+  if (isset($queries["maxLargeDiameter"]) && ($queries["maxLargeDiameter"] != ""))          $sqland .= "AND observations.largeDiameter <= \"".$queries["largeDiameter"]."\" ";
+  if (isset($queries["stellar"]) && ($queries["stellar"] != ""))              $sqland .= "AND observations.stellar = \"".$queries["stellar"]."\" ";
+  if (isset($queries["extended"]) && ($queries["extended"] != ""))            $sqland .= "AND observations.extended = \"".$queries["extended"]."\" ";
+  if (isset($queries["resolved"]) && ($queries["resolved"] != ""))            $sqland .= "AND observations.resolved = \"".$queries["resolved"]."\" ";
+  if (isset($queries["mottled"]) && ($queries["mottled"] != ""))              $sqland .= "AND observations.mottled = \"".$queries["mottled"]."\" ";
+  if (isset($queries["characterType"]) && ($queries["characterType"] != ""))  $sqland .= "AND observations.characterType = \"".$queries["characterType"]."\" ";
+  if (isset($queries["unusualShape"]) && ($queries["unusualShape"] != ""))    $sqland .= "AND observations.unusualShape = \"".$queries["unusualShape"]."\" ";
+  if (isset($queries["partlyUnresolved"]) && ($queries["partlyUnresolved"] != ""))          $sqland .= "AND observations.partlyUnresolved = \"".$queries["partlyUnresolved"]."\" ";
+  if (isset($queries["colorContrasts"]) && ($queries["colorContrasts"] != ""))              $sqland .= "AND observations.colorContrasts = \"".$queries["colorContrasts"]."\" ";
   if (isset($queries["languages"]))
   {
     $extra2 = "";
@@ -985,6 +1000,256 @@ function getObservedCountFromCatalogue($id, $catalog)
   return $lensid;
  }
 
+ // getDsSmallDiameter returns the small diameter estimation of the observation
+ function getDsSmallDiameter($id)
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT * FROM observations WHERE id = \"$id\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $get = mysql_fetch_object($run);
+
+  if($get)
+  {
+     $smallDiameter = $get->smallDiameter;
+  }
+  else
+  {
+    $smallDiameter = '';
+  }
+  
+  $db->logout();
+
+  return $smallDiameter;
+ }
+ 
+ // getDsLargeDiameter returns the large diameter estimation of the observation
+ function getDsLargeDiameter($id)
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT * FROM observations WHERE id = \"$id\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $get = mysql_fetch_object($run);
+
+  if($get)
+  {
+     $largeDiameter = $get->largeDiameter;
+  }
+  else
+  {
+    $largeDiameter = '';
+  }
+  
+  $db->logout();
+
+  return $largeDiameter;
+ }
+ 
+ // getDsStellar returns true if the object was seen stellar
+ function getDsStellar($id)
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT * FROM observations WHERE id = \"$id\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $get = mysql_fetch_object($run);
+
+  if($get)
+  {
+     $stellar = $get->stellar;
+  }
+  else
+  {
+    $stellar = '';
+  }
+  
+  $db->logout();
+
+  return $stellar;
+ }
+ 
+ // getDsExtended returns true if the object was seen stellar
+ function getDsExtended($id)
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT * FROM observations WHERE id = \"$id\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $get = mysql_fetch_object($run);
+
+  if($get)
+  {
+     $extended = $get->extended;
+  }
+  else
+  {
+    $extended = '';
+  }
+  
+  $db->logout();
+
+  return $extended;
+ }
+ 
+ // getDsResolved returns true if the object was seen resolved
+ function getDsResolved($id)
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT * FROM observations WHERE id = \"$id\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $get = mysql_fetch_object($run);
+
+  if($get)
+  {
+     $resolved = $get->resolved;
+  }
+  else
+  {
+    $resolved = '';
+  }
+  
+  $db->logout();
+
+  return $resolved;
+ }
+ 
+ // getDsMottled returns true if the object was seen mottled
+ function getDsMottled($id)
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT * FROM observations WHERE id = \"$id\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $get = mysql_fetch_object($run);
+
+  if($get)
+  {
+     $mottled = $get->mottled;
+  }
+  else
+  {
+    $mottled = '';
+  }
+  
+  $db->logout();
+
+  return $mottled;
+ }
+ 
+ // getDsCharacterType returns the character type of the observation
+ function getDsCharacterType($id)
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT * FROM observations WHERE id = \"$id\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $get = mysql_fetch_object($run);
+
+  if($get)
+  {
+     $characterType = $get->characterType;
+  }
+  else
+  {
+    $characterType = '';
+  }
+  
+  $db->logout();
+
+  return $characterType;
+ }
+ 
+ // getDsUnusualShape returns true if the object was seen with an unusual shape
+ function getDsUnusualShape($id)
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT * FROM observations WHERE id = \"$id\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $get = mysql_fetch_object($run);
+
+  if($get)
+  {
+     $unusualShape = $get->unusualShape;
+  }
+  else
+  {
+    $unusualShape = '';
+  }
+  
+  $db->logout();
+
+  return $unusualShape;
+ }
+
+ // getDsPartlyUnresolved returns true if the object was seen partly unresolved
+ function getDsPartlyUnresolved($id)
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT * FROM observations WHERE id = \"$id\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $get = mysql_fetch_object($run);
+
+  if($get)
+  {
+     $partlyUnresolved = $get->partlyUnresolved;
+  }
+  else
+  {
+    $partlyUnresolved = '';
+  }
+  
+  $db->logout();
+
+  return $partlyUnresolved;
+ }
+
+  // getDsColorContrasts returns true if the object was seen with color contrasts
+ function getDsColorContrasts($id)
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT * FROM observations WHERE id = \"$id\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $get = mysql_fetch_object($run);
+
+  if($get)
+  {
+     $colorContrasts = $get->colorContrasts;
+  }
+  else
+  {
+    $colorContrasts = '';
+  }
+  
+  $db->logout();
+
+  return $colorContrasts;
+ }
+    
  // getLanguage returns the idlanguage of the observation
  function getDsObservationLanguage($id)
  {
