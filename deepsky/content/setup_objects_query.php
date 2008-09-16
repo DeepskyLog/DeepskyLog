@@ -387,9 +387,8 @@ if($_SID)
 			unset($_SESSION['QOP']);
       $_GET['SO']="showname";
   }
-  else
-	  if(array_key_exists('QO',$_SESSION))
-  		unset($_SESSION['QO']);
+  elseif(array_key_exists('QO',$_SESSION))
+  	unset($_SESSION['QO']);
 }
 
 if($_SID && array_key_exists('QO',$_SESSION) && (count($_SESSION['QO']) > 0)) // valid result
