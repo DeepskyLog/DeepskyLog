@@ -99,9 +99,9 @@ echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField12;
 echo("</td>\n<td>\n");
 echo("<select name=\"atlas\">\n");
-  while(list($key,$value)=each($atlassesCodes))
-	  if($value[0]==$atlas) echo("<option selected value=\"" . $value[0] . "\">".$$value[1]."</option>\n"); 
-		else echo("<option value=\"" . $value[0] . "\">".$$value[1]."</option>\n");
+  while(list($key,$value)=each($atlasses))
+	  if($atlassesCodes[$key][0]==$atlas) echo("<option selected value=\"" . $atlassesCodes[$key][0] . "\">".$$atlassesCodes[$key][1]."</option>\n"); 
+		else echo("<option value=\"" . $atlassesCodes[$key][0] . "\">".$$atlassesCodes[$key][1]."</option>\n");
 echo("</select>\n");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"page\" size=\"4\" value=\"\" />");
 echo("</td>");
