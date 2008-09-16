@@ -914,7 +914,7 @@ class Objects
           $result2[$j][24] = $value[0]; 
           $result2[$j][26] = $get->SBObj; 
           $result2[$j][27] = $get->description;
-		}
+		    }
         $j++;		
       }
     }
@@ -1064,24 +1064,9 @@ class Objects
     $sqland = $sqland . " AND (objects.diam2 > \"" . $queries["mindiam2"] . "\" or objects.diam2 like \"" . $queries["mindiam2"] . "\")";
   if(array_key_exists('maxdiam2',$queries) && (strcmp($queries["maxdiam2"], "") != 0))
     $sqland = $sqland . " AND(objects.diam2 <= \"" . $queries["maxdiam2"] . "\" or objects.diam2 like \"" . $queries["maxdiam2"] . "\")";
-  if(array_key_exists('urano',$queries) && ($queries["urano"] != ""))
-    $sqland = $sqland . " AND objects.urano = \"" . $queries["urano"] . "\"";
-  if(array_key_exists('uranonew',$queries) && ($queries["uranonew"] != ""))
-    $sqland = $sqland . " AND objects.urano_new = \"" . $queries["uranonew"] . "\"";
-  if(array_key_exists('sky',$queries) && ($queries["sky"] != ""))
-    $sqland = $sqland . " AND objects.sky = \"" . $queries["sky"] . "\"";
-  if(array_key_exists('taki',$queries) && ($queries["taki"] != ""))
-    $sqland = $sqland . " AND objects.taki = \"" . $queries["taki"] . "\"";
-  if(array_key_exists('psa',$queries) && ($queries["psa"] != ""))
-    $sqland = $sqland . " AND objects.psa = \"" . $queries["psa"] . "\"";
-  if(array_key_exists('torresB',$queries) && ($queries["torresB"] != ""))
-    $sqland = $sqland . " AND objects.torresB = \"" . $queries["torresB"] . "\"";
-  if(array_key_exists('torresBC',$queries) && ($queries["torresBC"] != ""))
-    $sqland = $sqland . " AND objects.torresBC = \"" . $queries["torresBC"] . "\"";
-  if(array_key_exists('torresC',$queries) && ($queries["torresC"] != ""))
-    $sqland = $sqland . " AND objects.torresC = \"" . $queries["torresC"] . "\"";
-  if(array_key_exists('msa',$queries) && ($queries["msa"] != ""))
-    $sqland = $sqland . " AND objects.millenium = \"" . $queries["msa"] . "\"";
+  if(array_key_exists('atlas',$queries) && ($queries["atlas"] != "") &&
+	   array_key_exists('atlasPageNumber',$queries) && ($queries["atlasPageNumber"] != ""))
+    $sqland = $sqland . " AND objects." . $queries["atlas"] . " = \"" . $queries["atlasPageNumber"] . "\"";
 	$sqland = substr($sqland, 4);
 	
 	if(trim($sqland)=='') $sqland = " (objectnames.altname like \"%\")";
@@ -1089,7 +1074,7 @@ class Objects
   if($partof)
     $sql = "(" . $sql1. $sqland . ") UNION (" . $sql2 . $sqland . ")";
   else
-    $sql = $sql1 . $sqland;	
+    $sql = $sql1 . $sqland;		
   $run = mysql_query($sql) or die(mysql_error());
   $db->logout();
   $obs=array();
@@ -3137,7 +3122,7 @@ function getPartOfNames($name)
     }
   	if ($atlas2 == 1) 
   	{
-  	  if((array_key_exists('SO',$_GET) && ($_GET['SO']=="urano"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="urano")))
+  	  if((array_key_exists('SO',$_GET) && ($_GET['SO']=="urano_new"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="urano_new")))
   		  echo "<td><a href=\"" . $link . "&amp;RO=urano_new\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
   	  else
   		  echo "<td><a href=\"" . $link . "&amp;SO=urano_new\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";

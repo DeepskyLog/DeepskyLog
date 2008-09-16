@@ -298,25 +298,20 @@ echo("</a></td>
    <td class=\"fieldname\">");
 
 echo(LangChangeAccountField9);
-echo("</td>
-      <td>
-       <select name=\"atlas\">");
+echo("</td>");
 
-while(list ($key, $value) = each($atlases))
-{
-  if ($key == $obs->getStandardAtlas($_SESSION['deepskylog_id']))
-  {
-   print("<option selected=\"selected\" value=\"$key\">$value</option>\n");
-  }
-  else
-  {
-   print("<option value=\"$key\">$value</option>\n");
-  }
-} 
+echo("<td>");
+echo("<select name=\"atlas\">");
+ $theKey=$obs->getStandardAtlas($_SESSION['deepskylog_id']);
+ while(list ($key, $value) = each($atlasses))
+ { if ($key == $theKey) print("<option selected=\"selected\" value=\"$key\">" . $value . "</option>\n");
+   else print("<option value=\"$key\">" . $value . "</option>\n");
+ }
 echo("</select>");
+echo("</td>");
 
-echo("</td>
-      </tr>");
+echo("</tr>");
+
 echo("<tr>
    <td class=\"fieldname\">");
 

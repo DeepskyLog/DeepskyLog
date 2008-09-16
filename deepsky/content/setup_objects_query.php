@@ -56,14 +56,10 @@ $exact = 0;
 if(array_key_exists('catalog',$_GET) && $_GET['catalog']) $name = $_GET['catalog'];
 if(array_key_exists('catalog',$_GET)) $catalog = $_GET['catalog'];
 if(array_key_exists('catNumber',$_GET)) $catNumber = $_GET['catNumber'];
-if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']) && (!array_key_exists('atlas',$_GET) || (array_key_exists('atlas',$_GET) && !$_GET['atlas'])))
-{
-  if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 0) $atlas="urano";
-  elseif ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 1) $atlas="uranonew";
-  elseif ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 2) $atlas="sky";
-  elseif ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 3) $atlas="msa";
-  elseif ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 4) $atlas="taki";
-}
+if(array_key_exists('atlas',$_GET) && $_GET['atlas'])
+  $atlas=$_GET['atlas'];
+elseif(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
+  $atlas=$atlassesCodes[$observer->getStandardAtlas($_SESSION['deepskylog_id'])][0];
 if(array_key_exists('atlasPageNumber',$_GET)) $atlasPageNumber = $_GET['atlasPageNumber']; else $atlasPageNumber='';
 if(array_key_exists('inList', $_GET)) $inList = $_GET['inList']; else $inList = '';
 if(array_key_exists('notInList', $_GET)) $notInList = $_GET['notInList']; else $notInList = '';
@@ -75,30 +71,13 @@ if(array_key_exists('catNumber',$_GET) && $_GET['catNumber'])
   $exact = "1";
 }
 // ATLAS PAGE
-if(array_key_exists('atlas',$_GET) && array_key_exists('atlasPageNumber',$_GET) && ($_GET['atlas'] == 'msa' && $_GET['atlasPageNumber'])) // millenium star atlas
-{ 
-  $atlas = $_GET['atlas'];
-  if(!is_numeric($_GET['atlasPageNumber']) || ($_GET['atlasPageNumber']<1) || ($_GET['atlasPageNumber']>1551))
-    $pageError = true;
-  elseif(array_key_exists('atlasPageNumber', $_GET) && ($_GET['atlasPageNumber'] < 517)) // first book
-    $atlasPageNumber = $_GET['atlasPageNumber'] . "/I";
-  elseif(array_key_exists('atlasPageNumber', $_GET) && ($_GET['atlasPageNumber'] < 1033)) // second book
-    $atlasPageNumber = $_GET['atlasPageNumber'] . "/II";
-  else // third book
-    $atlasPageNumber = $_GET['atlasPageNumber'] . "/III";
-}
-elseif(array_key_exists('atlas',$_GET) && array_key_exists('atlasPageNumber',$_GET) && $_GET['atlas'] && $_GET['atlasPageNumber']) // other atlases
+if(array_key_exists('atlasPageNumber',$_GET) && $_GET['atlasPageNumber'])
 {
-  if(!is_numeric($_GET['atlasPageNumber']) || ($_GET['atlasPageNumber']<1) || ($_GET['atlasPageNumber']>500))
+  if(!is_numeric($_GET['atlasPageNumber']) || ($_GET['atlasPageNumber']<1) || ($_GET['atlasPageNumber']>5000))
     $pageError = true;
   else
-  {
-    $atlas = $_GET['atlas'];
     $atlasPageNumber = $_GET['atlasPageNumber'];
-  }
 }
-elseif(array_key_exists('atlasPageNumber',$_GET) && $_GET['atlasPageNumber'])
-  $pageError = True;
 // CONSTELLATION
 if(array_key_exists('con',$_GET) && $_GET['con'])     $con = $_GET['con'];
 // TYPE
@@ -180,8 +159,10 @@ if(array_key_exists('minRAHours',$_GET) && $_GET['minRAHours']!='')
 {
   $minRAHours = $_GET['minRAHours'];
   if((!is_numeric($_GET['minRAHours'])) || ($_GET['minRAHours']<0) || ($_GET['minRAHours']>24))
-    $minRAHoursError = True;
-  if(array_key_exists('minRAMinutes',$_GET) && $_GET['minRAMinutes']!='') 
+  {  $minRAHoursError = True;
+echo 'MinRAHours: ' .$_GET['minRAHours'];
+  
+	}if(array_key_exists('minRAMinutes',$_GET) && $_GET['minRAMinutes']!='') 
   {  
     $minRAMinutes = $_GET['minRAMinutes']; 
     if((!is_numeric($_GET['minRAMinutes'])) || ($_GET['minRAMinutes']<0) || ($_GET['minRAMinutes']>=60))
@@ -381,22 +362,23 @@ if($_SID)
   {
       $query = array("name"          => $name,
                      "type"          => $type,
-                     "constellation" => $con,             
-                     "minmag"        => $minMag,
-                     "maxmag"        => $maxMag,
-                     "minsubr"       => $minSB,             
-                     "maxsubr"       => $maxSB,
-                     "minra"         => $minRA,   
-                     "maxra"         => $maxRA,
-                     "mindecl"       => $minDecl,
-                     "maxdecl"       => $maxDecl,
-                     "mindiam1"      => $minSizeC,
-                     "maxdiam1"      => $maxSizeC, 
-                     "minContrast"   => $minContrast,
-                     "maxContrast"   => $maxContrast,
-                     "inList"        => $inList,
-                     "notInList"     => $notInList,
-                     $atlas          => $atlasPageNumber);
+                     "constellation"   => $con,             
+                     "minmag"          => $minMag,
+                     "maxmag"          => $maxMag,
+                     "minsubr"         => $minSB,             
+                     "maxsubr"         => $maxSB,
+                     "minra"           => $minRA,   
+                     "maxra"           => $maxRA,
+                     "mindecl"         => $minDecl,
+                     "maxdecl"         => $maxDecl,
+                     "mindiam1"        => $minSizeC,
+                     "maxdiam1"        => $maxSizeC, 
+                     "minContrast"     => $minContrast,
+                     "maxContrast"     => $maxContrast,
+                     "inList"          => $inList,
+                     "notInList"       => $notInList,
+                     "atlas"           => $atlas,
+										 "atlasPageNumber" => $atlasPageNumber);
       if(array_key_exists('seen',$_GET) && $_GET['seen'])
         $seenPar = $_GET['seen'];
       else
@@ -405,6 +387,9 @@ if($_SID)
 			unset($_SESSION['QOP']);
       $_GET['SO']="showname";
   }
+  else
+	  if(array_key_exists('QO',$_SESSION))
+  		unset($_SESSION['QO']);
 }
 
 if($_SID && array_key_exists('QO',$_SESSION) && (count($_SESSION['QO']) > 0)) // valid result
@@ -484,11 +469,9 @@ else
   echo LangQueryObjectsField12; 
   echo("</td>\n<td width=\"25%\">\n");
   echo("<select name=\"atlas\">\n");
-  if($atlas=="msa") echo("<option selected value=\"msa\">".LangQueryObjectsMsa."</option>\n"); else echo("<option value=\"msa\">".LangQueryObjectsMsa."</option>\n");
-  if($atlas=="sky") echo("<option selected value=\"sky\">".LangQueryObjectsSkyAtlas."</option>\n"); else echo("<option value=\"sky\">".LangQueryObjectsSkyAtlas."</option>\n");
-  if($atlas=="taki") echo("<option selected value=\"taki\">".LangQueryObjectsTaki."</option>\n"); else echo("<option value=\"taki\">".LangQueryObjectsTaki."</option>\n");
-  if($atlas=="urano") echo("<option selected value=\"urano\">".LangQueryObjectsUrano."</option>\n"); else echo("<option value=\"urano\">".LangQueryObjectsUrano."</option>\n");
-  if($atlas=="uranonew") echo("<option selected value=\"uranonew\">".LangQueryObjectsUranonew."</option>\n"); else echo("<option value=\"uranonew\">".LangQueryObjectsUranonew."</option>\n");
+  while(list($key,$value)=each($atlassesCodes))
+	  if($value[0]==$atlas) echo("<option selected value=\"" . $value[0] . "\">".$$value[1]."</option>\n"); 
+		else echo("<option value=\"" . $value[0] . "\">".$$value[1]."</option>\n");
   echo("</select>\n");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"atlasPageNumber\" size=\"4\" value=\"" . $atlasPageNumber .  "\" />"); 
   echo("</td>");

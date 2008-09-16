@@ -44,6 +44,8 @@
  define("torresBC", 7);
  define("torresC", 8);
  
+ /*
+ replaced by $atlasses - see lib/atlasses.php
  $atlases[0] = LangQueryObjectsUrano;
  $atlases[1] = LangQueryObjectsUranonew;
  $atlases[2] = LangQueryObjectsSkyAtlas;
@@ -53,6 +55,7 @@
  $atlases[6] = LangQueryObjectsTorresB;
  $atlases[7] = LangQueryObjectsTorresBC;
  $atlases[8] = LangQueryObjectsTorresC;
+ */
   
  define("InstrumentOther", -1);
  define("InstrumentNakedEye", 0);

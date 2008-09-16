@@ -6,9 +6,11 @@
 
 include_once "../lib/setup/databaseInfo.php";
 include_once "../lib/util.php";
-
 $util = new Util();
 $util->checkUserInput();
+include("../lib/atlasses.php");
+$atlas=new Atlasses;
+$atlasses = $atlas->getSortedAtlasses();
 
 if(!$_SESSION['module'])
 {

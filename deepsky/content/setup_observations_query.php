@@ -39,6 +39,13 @@ $util->checkUserInput();
 
 $_SESSION['result'] = "";
 
+
+if(array_key_exists('atlas',$_GET) && $_GET['atlas'])
+  $atlas=$_GET['atlas'];
+elseif(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
+  $atlas=$atlassesCodes[$observer->getStandardAtlas($_SESSION['deepskylog_id'])][0];
+
+
 echo("<div id=\"main\">\n");
 echo("<h2>");
 echo LangQueryObservationsTitle;
@@ -92,12 +99,9 @@ echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField12;
 echo("</td>\n<td>\n");
 echo("<select name=\"atlas\">\n");
-echo("<option value=\"\"></option>"); // empty field
-echo("<option value=\"msa\">".LangQueryObjectsMsa."</option>\n");
-echo("<option value=\"sky\">".LangQueryObjectsSkyAtlas."</option>\n");
-echo("<option value=\"taki\">".LangQueryObjectsTaki."</option>\n");
-echo("<option value=\"urano\">".LangQueryObjectsUrano."</option>\n");
-echo("<option value=\"uranonew\">".LangQueryObjectsUranonew."</option>\n");
+  while(list($key,$value)=each($atlassesCodes))
+	  if($value[0]==$atlas) echo("<option selected value=\"" . $value[0] . "\">".$$value[1]."</option>\n"); 
+		else echo("<option value=\"" . $value[0] . "\">".$$value[1]."</option>\n");
 echo("</select>\n");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"page\" size=\"4\" value=\"\" />");
 echo("</td>");

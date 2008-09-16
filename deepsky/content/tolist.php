@@ -185,12 +185,11 @@ if($_SESSION['listname']<>"----------")
     else if ($atlas2 == 4)
       echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=listaction&sort=taki&amp;previous=$previous\" title=\"". $seenpar . LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
   
-   echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=listaction&sort=contrast&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldContrastReserve) . "\">". LangViewObjectFieldContrastReserve . "</a></td>\n";
-   echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=listaction&sort=magnification&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldMagnification) . "\">". LangViewObjectFieldMagnification . "</a></td>\n";
-   echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=listaction&sort=seen&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader7) . "\">".LangOverviewObjectsHeader7."</a></td>\n";
-   if($listname && ($sort=="objectplace"))
-     echo "<td><a href=\"deepsky/index.php?indexAction=listaction&removePageObjectsFromList=true\" title=\"". LangToListRemovePageObjectsFromList . "\">". LangToListRemovePageObjectsFromListText ."</a></td>\n";
-
+    echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=listaction&sort=contrast&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldContrastReserve) . "\">". LangViewObjectFieldContrastReserve . "</a></td>\n";
+    echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=listaction&sort=magnification&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldMagnification) . "\">". LangViewObjectFieldMagnification . "</a></td>\n";
+    echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=listaction&sort=seen&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader7) . "\">".LangOverviewObjectsHeader7."</a></td>\n";
+    if($listname && ($sort=="objectplace"))
+      echo "<td><a href=\"deepsky/index.php?indexAction=listaction&removePageObjectsFromList=true\" title=\"". LangToListRemovePageObjectsFromList . "\">". LangToListRemovePageObjectsFromListText ."</a></td>\n";
   	if(array_key_exists('previous',$_GET) && ($_GET['previous'] == $_GET['sort'])) // reverse sort when pushed twice
   	  $previous = $sort;
     else
@@ -207,7 +206,7 @@ if($_SESSION['listname']<>"----------")
   
       $name = $_SESSION['QOL'][$count][0];
 			$showname=$_SESSION['QOL'][$count][4]; 
-      $place = $_SESSION['QOL'][$count][20];
+      $place = $_SESSION['QOL'][$count][24];
       $con = $_SESSION['QOL'][$count][2];
       $type = $_SESSION['QOL'][$count][1];
       $magnitude = sprintf("%01.1f", $_SESSION['QOL'][$count][5]);
@@ -220,19 +219,13 @@ if($_SESSION['listname']<>"----------")
       $decl = decToStringDegMin($_SESSION['QOL'][$count][8]);
   
       $atlas = $observer->getStandardAtlas($_SESSION['deepskylog_id']);
-      if ($atlas == 0)      $page = $_SESSION['QOL'][$count][9];
-      else if ($atlas == 1) $page = $_SESSION['QOL'][$count][10];
-      else if ($atlas == 2) $page = $_SESSION['QOL'][$count][11];
-      else if ($atlas == 3) $page = $_SESSION['QOL'][$count][12];
-      else if ($atlas == 4) $page = $_SESSION['QOL'][$count][13];
-  
-       $seen="<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($name) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
-        if(substr($_SESSION['QOL'][$count][3],0,1)=="X")
-          $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($name) . "\" title=\"" . LangObjectXSeen . "\">" . $_SESSION['QOL'][$count][3] . "</a>";
-        if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($_SESSION['QOL'][$count][3],0,1)=="Y"))
-          $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($name) . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION['QOL'][$count][3] . "</a>";
-  
-        echo "<tr $typefield>\n";
+      $page = $_SESSION['QOL'][$count][9 + $atlas];  
+      $seen="<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($name) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
+      if(substr($_SESSION['QOL'][$count][3],0,1)=="X")
+        $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($name) . "\" title=\"" . LangObjectXSeen . "\">" . $_SESSION['QOL'][$count][3] . "</a>";
+      if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($_SESSION['QOL'][$count][3],0,1)=="Y"))
+        $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($name) . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION['QOL'][$count][3] . "</a>";
+      echo "<tr $typefield>\n";
   		if($listname && ($sort=="objectplace"))
       {
 				echo "<td align=\"center\">
@@ -250,13 +243,13 @@ if($_SESSION['listname']<>"----------")
       echo "<td align=\"center\">$sb</td>\n";
       echo "<td>".$$type."</td>\n";
       echo "<td align=\"center\">".$page."</td>\n";
-      echo "<td align=\"center\" class=\"" . $_SESSION['QOL'][$count][18] . "\" onmouseover=\"Tip('" . $_SESSION['QOL'][$count][19] . "')\">" .
-           $_SESSION['QOL'][$count][17] . "</td>\n";
-			if ($_SESSION['QOL'][$count][17] == "-")
+      echo "<td align=\"center\" class=\"" . $_SESSION['QOL'][$count][22] . "\" onmouseover=\"Tip('" . $_SESSION['QOL'][$count][23] . "')\">" .
+           $_SESSION['QOL'][$count][21] . "</td>\n";
+			if ($_SESSION['QOL'][$count][21] == "-")
       {
 				$magnification = "-";
       } else {
-				$magnification = ($_SESSION['QOL'][$count][21]);
+				$magnification = ($_SESSION['QOL'][$count][25]);
 			}
       echo "<td align=\"center\">" . $magnification . "</td>\n";
       echo "<td align=\"center\" class=\"seen\">$seen</td>";

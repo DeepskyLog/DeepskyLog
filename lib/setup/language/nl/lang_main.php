@@ -948,6 +948,17 @@ define("LangContrastEasy", " is eenvoudig zichtbaar vanuit ");
 define("LangContrastVeryEasy", " is zeer eenvoudig zichtbaar vanuit ");
 define("LangContrastPlace", " met je ");
 
+// Names of Atlasses
+$AtlasNameurano = "Uranometria";
+$AtlasNameurano_new = "Uranometria (2de editie)";
+$AtlasNamesky = "Sky Atlas";
+$AtlasNamemilleniumbase = "Millenium Star Atlas";
+$AtlasNametaki = "Taki Atlas";
+$AtlasNamepsa = "Pocket Sky Atlas";
+$AtlasNametorresB = "Triatlas B (Torres)";
+$AtlasNametorresBC = "Triatlas BC (Torres)";
+$AtlasNametorresC = "Triatlas C (Torres)";
+
 // Types of Observations
 $ASTER = "Asterisme";
 $BRTNB = "Heldere nevel";

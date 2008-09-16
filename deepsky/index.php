@@ -55,7 +55,12 @@ else 																						 // cookie not set
    include("../common/menu/help.php"); 			 		 // HELP MENU
    include("../common/menu/languagemenu.php"); 	 		 // LANGUAGE MENU
 }
-include("../common/menu/endmenu.php"); 			 		 
+include("../common/menu/endmenu.php"); 		
+include("../lib/atlasses.php");
+$atlas=new Atlasses;
+$atlasses = $atlas->getSortedAtlasses();
+$atlassesCodes = $atlas->getAtlasses();
+
 if(array_key_exists('indexAction',$_GET) && ($_GET['indexAction'] == 'adapt_observation') && 
    array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
   include("content/change_observation.php"); 
