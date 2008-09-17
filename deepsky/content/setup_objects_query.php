@@ -59,7 +59,7 @@ if(array_key_exists('catNumber',$_GET)) $catNumber = $_GET['catNumber'];
 if(array_key_exists('atlas',$_GET) && $_GET['atlas'])
   $atlas=$_GET['atlas'];
 elseif(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
-  $atlas=$atlassesCodes[$observer->getStandardAtlas($_SESSION['deepskylog_id'])][0];
+  $atlas=$atlassesCodes[$observer->getStandardAtlasCode($_SESSION['deepskylog_id'])];
 if(array_key_exists('atlasPageNumber',$_GET)) $atlasPageNumber = $_GET['atlasPageNumber']; else $atlasPageNumber='';
 if(array_key_exists('inList', $_GET)) $inList = $_GET['inList']; else $inList = '';
 if(array_key_exists('notInList', $_GET)) $notInList = $_GET['notInList']; else $notInList = '';

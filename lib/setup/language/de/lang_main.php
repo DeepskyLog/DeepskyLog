@@ -428,7 +428,7 @@ define("LangViewObjectField6", "Typ");
 define("LangViewObjectField7", "Helligkeit");
 define("LangViewObjectField8", "Fl&auml;chenhelligkeit");
 define("LangViewObjectField9", "Gr&ouml;&szlig;e");
-define("LangViewObjectField10", "Uranometria Seite");
+define("LangViewObjectField10", " Seite");
 define("LangViewObjectField11", "Uranometria (Vers.2) Seite");
 define("LangViewObjectField12", "Positionswinkel");
 define("LangViewObjectField13", "Sky Atlas Seite");

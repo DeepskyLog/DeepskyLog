@@ -636,9 +636,25 @@ class Observers
 
   return $obs;
  }
+ 
+  // getStandardAtlas returns the standard atlas of the given id
+ function getStandardAtlasCode($id)
+ {
+  $atlas = '';    
+	$db = new database;
+  $db->login();
+  $sql = "SELECT standardAtlasCode FROM observers WHERE id = \"$id\"";
+  $run = mysql_query($sql) or die(mysql_error());
+  $get = mysql_fetch_object($run);
+  if($get)
+	  $atlas = $get->standardAtlasCode;
+  $db->logout();
+  return $atlas;
+ }
+
 
  // getStandardAtlas returns the standard atlas of the given id
- function getStandardAtlas($id)
+ function zgetStandardAtlas($id)
  {
   $db = new database;
   $db->login();

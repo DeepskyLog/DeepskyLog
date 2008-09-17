@@ -130,8 +130,11 @@ if($objects->getDsObjectName($_GET['object'])) // check whether object exists
 	if(array_key_exists('zoom',$_GET) && $_GET['zoom']) $zoom=$_GET['zoom'];
   else $zoom=30;
 	$objects->showObject($_GET['object'], $zoom);
-	$_SESSION[$_SID] = $objects->getOtherObjects($_GET['object'], $zoom);
-  $_SESSION[$_SID] = $objects->getSeenObjectDetails($_SESSION[$_SID]);
+	if(!array_key_exists('QOO',$_SESSION))
+	{
+	  $_SESSION[$_SID] = $objects->getOtherObjects($_GET['object'], $zoom);
+    $_SESSION[$_SID] = $objects->getSeenObjectDetails($_SESSION[$_SID]);
+	}
 	echo("<form name=\"zoomform\" action=\"deepsky/index.php\" method=\"get\">");
 	  echo "<table width=\"100%\"><tr><td width=\"50%\">";
 		echo "<h2> " . LangViewObjectNearbyObjects . (count($_SESSION[$_SID])-1) . "</h2>";
