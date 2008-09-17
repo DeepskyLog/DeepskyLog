@@ -468,9 +468,9 @@ else
   echo LangQueryObjectsField12; 
   echo("</td>\n<td width=\"25%\">\n");
   echo("<select name=\"atlas\">\n");
-  while(list($key,$value)=each($atlasses))
-	  if($atlassesCodes[$key][0]==$atlas) echo("<option selected value=\"" . $atlassesCodes[$key][0] . "\">".$$atlassesCodes[$key][1]."</option>\n"); 
-		else echo("<option value=\"" . $atlassesCodes[$key][0] . "\">".$$atlassesCodes[$key][1]."</option>\n");
+  while(list($key,$value)=each($atlassesCodes))
+	  if($key==$atlas) echo("<option selected value=\"" . $key . "\">".$value."</option>\n"); 
+		else echo("<option value=\"" . $key . "\">".$value."</option>\n");
   echo("</select>\n");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"atlasPageNumber\" size=\"4\" value=\"" . $atlasPageNumber .  "\" />"); 
   echo("</td>");

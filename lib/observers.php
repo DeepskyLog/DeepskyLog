@@ -652,33 +652,6 @@ class Observers
   return $atlas;
  }
 
-
- // getStandardAtlas returns the standard atlas of the given id
- function zgetStandardAtlas($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM observers WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if($get)
-	{
-	   $atlas = $get->stdatlas;
-	}
-	else
-	{
-	   $atlas = ''; 
-	}  
-  
-
-  $db->logout();
-
-  return $atlas;
- }
-
  // getStandardLocation returns the standard location of the given id
  function getStandardLocation($id)
  {
@@ -859,7 +832,7 @@ class Observers
   $db = new database;
   $db->login();
 
-  $sql = "UPDATE observers SET stdatlas = \"$atlas\" WHERE id = \"$id\"";
+  $sql = "UPDATE observers SET standardAtlasCode = \"$atlas\" WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
 
   $db->logout();

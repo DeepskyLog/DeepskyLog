@@ -141,7 +141,7 @@ if(count($_SESSION[$_SID]) > 1) // valid result
 													 
 								 target=\"new_window\">".LangExecuteQueryObjectsMessage4c."</a> &nbsp;-&nbsp;";
   echo "<a href=\"deepsky/objects.argo?SID=".$_SID."\" target=\"new_window\">".LangExecuteQueryObjectsMessage8."</a> &nbsp;-&nbsp;";
-  if(array_key_exists('listname',$_SESSION) && $_SESSION['listname'])
+  if(array_key_exists('listname',$_SESSION) && $_SESSION['listname'] && $myList)
     echo "<a href=\"" . $link . "&amp;min=" . $min . "&amp;addAllObjectsFromQueryToList=true\" title=\"" . LangListQueryObjectsMessage5 . $_SESSION['listname'] . "\">"
          .LangListQueryObjectsMessage4."</a> &nbsp;-&nbsp;";
   echo "<a href=\"deepsky/objects.csv?SID=".$_SID."\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a>";

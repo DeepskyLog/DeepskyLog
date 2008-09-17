@@ -356,6 +356,10 @@ class util
     global $EMINB,$REFNB,$ENRNN,$ENSTR,$HII,$RNHII,$STNEB,$WRNEB;
 
     global $deepskylive, $dateformat;
+		
+		include_once "../lib/atlasses.php";
+		$atlas = new Atlasses;
+		$atlasses = $atlas->getSortedAtlasses();
 
     while(list ($key, $valueA) = each($result))
     {
@@ -377,52 +381,8 @@ class util
 
       $con = $valueA[2];
       $type = $valueA[1];
-
-      if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 3)
-      {
-        $page = $valueA[12];
-        $atlas = "MSA";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 1)
-      {
-        $page = $valueA[10];
-        $atlas = "U2k 2nd";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 2)
-      {
-        $page = $valueA[11];
-        $atlas = "Sky Atlas";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 4)
-      {
-        $page = $valueA[13];
-        $atlas = "Taki";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 5)
-      {
-        $page = $valueA[14];
-        $atlas = "psa";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 6)
-      {
-        $page = $valueA[15];
-        $atlas = "Torres B";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 7)
-      {
-        $page = $valueA[16];
-        $atlas = "Torres BC";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 8)
-      {
-        $page = $valueA[17];
-        $atlas = "Torres C";
-      }
-      else
-      {
-        $page = $valueA[9];
-        $atlas = "U2k";
-      }
+      $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
+      $page = $valueA[$atlas];
       $diam1 = $valueA[18];
       $diam2 = $valueA[19];
       $size = "";
@@ -494,7 +454,7 @@ class util
                       "sb" =>   html_entity_decode(LangPDFMessage8),
                       "diam" => html_entity_decode(LangPDFMessage9),
                       "pa" =>   html_entity_decode(LangPDFMessage16),  
-                      "page" => html_entity_decode($atlas),
+                      "page" => html_entity_decode($atlasses[$atlas]),
                       "contrast" => html_entity_decode(LangPDFMessage17),
                       "magnification" => html_entity_decode(LangPDFMessage18),
                       "seen" => html_entity_decode(LangOverviewObjectsHeader7)
@@ -510,7 +470,7 @@ class util
               											  "sb" =>   array('justification'=>'center','width'=>35),
 							              			  	"diam" => array('justification'=>'center','width'=>70),
        											          "pa" =>   array('justification'=>'center','width'=>35),
-				              							  "page" => array('justification'=>'center', 'width'=>35),
+				              							  "page" => array('justification'=>'center', 'width'=>40),
           														"contrast" => array('justification'=>'center', 'width'=>35),
           														"magnification" => array('justification'=>'center', 'width'=>35),
 											                "seen" => array('justification'=>'center','width'=>50)
@@ -570,6 +530,10 @@ class util
     global $EMINB,$REFNB,$ENRNN,$ENSTR,$HII,$RNHII,$STNEB,$WRNEB;
 
     global $deepskylive, $dateformat;
+		
+		include_once "atlasses.php";
+		$atlas = new Atlasses;
+		$atlasses = $atlas->getSortedAtlasses();
 
     while(list($key, $valueA) = each($result))
     {
@@ -591,52 +555,8 @@ class util
 
       $con = $valueA[2];
       $type = $valueA[1];
-
-      if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 3)
-      {
-        $page = $valueA[12];
-        $atlas = "MSA";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 1)
-      {
-        $page = $valueA[10];
-        $atlas = "U2k 2nd";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 2)
-      {
-        $page = $valueA[11];
-        $atlas = "Sky Atlas";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 4)
-      {
-        $page = $valueA[13];
-        $atlas = "Taki";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 5)
-      {
-        $page = $valueA[14];
-        $atlas = "psa";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 6)
-      {
-        $page = $valueA[15];
-        $atlas = "Torres B";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 7)
-      {
-        $page = $valueA[16];
-        $atlas = "Torres BC";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 8)
-      {
-        $page = $valueA[17];
-        $atlas = "Torres C";
-      }
-      else
-      {
-        $page = $valueA[9];
-        $atlas = "U2k";
-      }
+      $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
+      $page = $valueA[$atlas];
       $diam1 = $valueA[18];
       $diam2 = $valueA[19];
       $size = "";
@@ -716,7 +636,7 @@ class util
                       "pa"             => html_entity_decode(LangPDFMessage16),  
                       "contrast"       => html_entity_decode(LangPDFMessage17),
                       "magnification"  => html_entity_decode(LangPDFMessage18),
-                      "page"           => html_entity_decode($atlas)
+                      "page"           => html_entity_decode($atlasses[$atlas])
     ),
                   '',
     array("width" => "375",
@@ -729,7 +649,7 @@ class util
 			                                "ra"             => array('justification'=>'center','width'=>32),
 		              									  "decl"           => array('justification'=>'center','width'=>25),
               											  "con"            => array('justification'=>'center','width'=>25),
-							              			  	"diam"           => array('justification'=>'center','width'=>35),
+							              			  	"diam"           => array('justification'=>'center','width'=>40),
        											          "pa"             => array('justification'=>'center','width'=>17),
           														"contrast"       => array('justification'=>'center','width'=>17),
           														"magnification"  => array('justification'=>'center','width'=>17),
@@ -783,52 +703,8 @@ class util
 
       $con = $valueA[2];
       $type = $valueA[1];
-
-      if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 3)
-      {
-        $page = $valueA[12];
-        $atlas = "MSA";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 1)
-      {
-        $page = $valueA[10];
-        $atlas = "U2k 2nd";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 2)
-      {
-        $page = $valueA[11];
-        $atlas = "Sky Atlas";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 4)
-      {
-        $page = $valueA[13];
-        $atlas = "Taki";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 5)
-      {
-        $page = $valueA[14];
-        $atlas = "psa";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 6)
-      {
-        $page = $valueA[15];
-        $atlas = "Torres B";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 7)
-      {
-        $page = $valueA[16];
-        $atlas = "Torres BC";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 8)
-      {
-        $page = $valueA[17];
-        $atlas = "Torres C";
-      }
-      else
-      {
-        $page = $valueA[9];
-        $atlas = "U2k";
-      }
+      $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
+      $page = $valueA[$atlas];
       $diam1 = $valueA[18];
       $diam2 = $valueA[19];
       $size = "";
@@ -901,52 +777,8 @@ class util
 
         $con = $valueA[2];
         $type = $valueA[1];
-
-        if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 3)
-        {
-          $page = $valueA[12];
-          $atlas = "MSA";
-        }
-        else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 1)
-        {
-          $page = $valueA[10];
-          $atlas = "U2k 2nd";
-        }
-        else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 2)
-        {
-          $page = $valueA[11];
-          $atlas = "Sky Atlas";
-        }
-        else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 4)
-        {
-          $page = $valueA[13];
-          $atlas = "Taki";
-        }
-        else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 5)
-        {
-          $page = $valueA[14];
-          $atlas = "psa";
-        }
-        else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 6)
-        {
-          $page = $valueA[15];
-          $atlas = "Torres B";
-        }
-        else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 7)
-        {
-          $page = $valueA[16];
-          $atlas = "Torres BC";
-        }
-        else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 8)
-        {
-          $page = $valueA[17];
-          $atlas = "Torres C";
-        }
-        else
-        {
-          $page = $valueA[9];
-          $atlas = "U2k";
-        }
+        $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
+        $page = $valueA[$atlas];
         $diam1 = $valueA[18];
         $diam2 = $valueA[19];
         $size = "";
@@ -1040,7 +872,7 @@ class util
                       "pa"             => html_entity_decode(LangPDFMessage16),  
                       "contrast"       => html_entity_decode(LangPDFMessage17),
                       "magnification"  => html_entity_decode(LangPDFMessage18),
-                      "page"           => html_entity_decode($atlas),
+                      "page"           => html_entity_decode($page),
                       "separator"      => ' ',
 								      "seenB"          => html_entity_decode(LangOverviewObjectsHeader7),
 											"NameB"          => html_entity_decode(LangPDFMessage1), 
@@ -1054,7 +886,7 @@ class util
                       "paB"            => html_entity_decode(LangPDFMessage16),  
                       "contrastB"      => html_entity_decode(LangPDFMessage17),
                       "magnificationB" => html_entity_decode(LangPDFMessage18),
-                      "pageB"          => html_entity_decode($atlas)
+                      "pageB"          => html_entity_decode($page)
     ),
     $_GET['pdfTitle'],
 
@@ -1211,51 +1043,8 @@ class util
       if($pa==999)
       $pa="";
       $type = $valueA[1];
-      if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 3)
-      {
-        $page = $valueA[12];
-        $atlas = "MSA";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 1)
-      {
-        $page = $valueA[10];
-        $atlas = "U2k 2nd";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 2)
-      {
-        $page = $valueA[11];
-        $atlas = "Sky Atlas";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 4)
-      {
-        $page = $valueA[13];
-        $atlas = "Taki";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 5)
-      {
-        $page = $valueA[14];
-        $atlas = "psa";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 6)
-      {
-        $page = $valueA[15];
-        $atlas = "Torres B";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 7)
-      {
-        $page = $valueA[16];
-        $atlas = "Torres BC";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 8)
-      {
-        $page = $valueA[17];
-        $atlas = "Torres C";
-      }
-      else
-      {
-        $page = $valueA[9];
-        $atlas = "U2k";
-      }
+      $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
+      $page = $valueA[$atlas];
       $diam1 = $valueA[18];
       $diam2 = $valueA[19];
       $size = "";
@@ -1323,51 +1112,8 @@ class util
       $sb = $sb.".0";
       $con = $valueA[2];
       $argotype = "argo".$valueA[1];
-      if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 3)
-      {
-        $page = $valueA[12];
-        $atlas = "MSA";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 1)
-      {
-        $page = $valueA[10];
-        $atlas = "U2k 2nd";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 2)
-      {
-        $page = $valueA[11];
-        $atlas = "Sky Atlas";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 4)
-      {
-        $page = $valueA[13];
-        $atlas = "Taki";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 5)
-      {
-        $page = $valueA[14];
-        $atlas = "psa";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 6)
-      {
-        $page = $valueA[15];
-        $atlas = "Torres B";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 7)
-      {
-        $page = $valueA[16];
-        $atlas = "Torres BC";
-      }
-      else if ($observer->getStandardAtlas($_SESSION['deepskylog_id']) == 8)
-      {
-        $page = $valueA[17];
-        $atlas = "Torres C";
-      }
-      else
-      {
-        $page = $valueA[9];
-        $atlas = "U2k";
-      }
+      $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
+      $page = $valueA[$atlas];
       $size = "";
       $diam1 = $valueA[18];
       $diam2 = $valueA[19];

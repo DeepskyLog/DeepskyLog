@@ -302,7 +302,7 @@ echo("</td>");
 
 echo("<td>");
 echo("<select name=\"atlas\">");
- $theKey=$obs->getStandardAtlas($_SESSION['deepskylog_id']);
+ $theKey=$obs->getStandardAtlasCode($_SESSION['deepskylog_id']);
  while(list ($key, $value) = each($atlasses))
  { if ($key == $theKey) print("<option selected=\"selected\" value=\"$key\">" . $value . "</option>\n");
    else print("<option value=\"$key\">" . $value . "</option>\n");
