@@ -1143,7 +1143,7 @@ class util
         if ($diam2 != 0.0)
         $size = $size.sprintf("x%.1f''", $diam2);
       }
-      echo "DSL " . sprintf("%03d", $counter) . " " . $valueA[0]."|".$this->raToString($valueA[7])."|".$this->decToString($valueA[8], 0)."|".$$argotype."|".$mag."|".$size.";".$atlas." ".$page.";CR ".$valueA[21].";".$valueA[3]."\n";
+      echo "DSL " . sprintf("%03d", $counter) . " " . $valueA[0]."|".$this->raArgoToString($valueA[7])."|".$this->decToArgoString($valueA[8], 0)."|".$$argotype."|".$mag."|".$size.";".$atlas." ".$page.";CR ".$valueA[21].";".$valueA[3]."\n";
       $counter++;
     }
   }
