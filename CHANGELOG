@@ -1,6 +1,10 @@
 Changes in version 3.3
 ----------------------
 
+- Bugzilla Wish 15 : Add extra atlases to DeepskyLog.
+
+- Bugzilla Wish 19 : When exporting a list to argo navis format, the argo navis name of the list should be given.
+
 - Bugzilla problem 13 : Translation - search location
 
 - Bugzilla Wish 9 : Add link to documentation on astrowiki (only when language is Dutch)
