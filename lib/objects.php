@@ -1273,6 +1273,30 @@ function getObjectsFromCatalog($cat)
   return $ret;
  }
 
+ function getCataloguesAndLists()
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT DISTINCT objectnames.catalog FROM objectnames";
+  $run = mysql_query($sql) or die(mysql_error());
+  while($get = mysql_fetch_object($run))
+    $cats[]=$get->catalog;
+  $db->logout();
+  $ret = $this->my_array_unique($cats);
+  natcasesort($ret);
+  reset($ret);
+  array_unshift($ret, "M", "NGC", "Caldwell", "H400", "HII", "IC");
+	if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
+	{ include_once "../lib/lists.php";
+	  $lst = new Lists;
+		$lsts = $lst->getLists();
+		while(list($key,$value)=each($lsts))
+		  $ret[]='List:'.$value; 
+	}
+  return $ret;
+ }
+ 
  // getTypes returns a list of all different types
  function getTypes()
  {
@@ -1382,16 +1406,11 @@ function getPartOfNames($name)
  {
   $db = new database;
   $db->login();
-
   $sql = "SELECT * FROM objects WHERE name = \"$name\"";
   $run = mysql_query($sql) or die(mysql_error());
-
   $get = mysql_fetch_object($run);
-
   $cats = $get->catalogs;
-
   $db->logout();
-
   return $cats;
  }
 
@@ -1779,8 +1798,13 @@ function getPartOfNames($name)
  {
   $db = new database;
   $db->login();
-
-  $sql = "SELECT COUNT( DISTINCT catindex) AS number FROM objectnames WHERE catalog = \"$catalogue\"";
+	if(substr($catalogue,0,5)=="List:")
+    if(substr($catalogue,5,7)=="Public:")
+      $sql = "SELECT COUNT(DISTINCT observerobjectlist.objectname)-1 AS number FROM observerobjectlist WHERE observerobjectlist.listname = \"" . substr($catalogue,5) . "\"";
+	  else
+      $sql = "SELECT COUNT(DISTINCT observerobjectlist.objectname)-1 AS number FROM observerobjectlist WHERE observerobjectlist.listname = \"" . substr($catalogue,5) . "\" AND observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\"";		
+	else
+    $sql = "SELECT COUNT(DISTINCT catindex) AS number FROM objectnames WHERE catalog = \"$catalogue\"";
   $run = mysql_query($sql) or die(mysql_error());
   $get = mysql_fetch_object($run);
   $db->logout();

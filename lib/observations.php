@@ -573,7 +573,7 @@ class Observations
   // getPopularObservers() returns the number of observations of the
   // observers
 
-  function getPopularObserversOverview($sort, $cat="")
+  function getPopularObserversOverviewCatOrList($sort, $cat="")
   {
     include "setup/databaseInfo.php";
     $observers = new Observers;
@@ -588,15 +588,32 @@ class Observations
       $sql = "SELECT observations.observerid, COUNT(*) AS Cnt, observers.name " .
 	         "FROM observations " .
 					 "JOIN observers on observations.observerid = observers.id " .
-					 "WHERE observations.date > \"" . date("Ymd", ($t[0]-31536000)) . "\" AND observations.visibility != \"7\" ";
+					 "WHERE observations.date > \"" . date('Ymd', strtotime('-1 year')) . "\" AND observations.visibility != \"7\" ";
     }
     elseif($sort=="catalog")
     {
-      $sql = "SELECT observations.observerid, COUNT(DISTINCT objectnames.catindex) AS Cnt, observers.name " .
-	         "FROM observations " .
-					 "JOIN objectnames on observations.objectname=objectnames.objectname " .
-					 "JOIN observers on observations.observerid = observers.id " .
-		       "WHERE objectnames.catalog=\"$cat\" AND observations.visibility != 7 ";
+		  if(substr($cat,0,5)=="List:")
+        if(substr($cat,5,7)=="Public:")
+				  $sql = "SELECT observations.observerid, COUNT(DISTINCT observations.objectname) AS Cnt, observers.name " .
+	               "FROM observations " .
+					       "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " . 
+					       "JOIN observers on observations.observerid = observers.id " .
+						     "WHERE observerobjectlist.listname=\"" . substr($cat,5) . "\" " .
+						     "AND observations.visibility != 7 ";
+				else
+				  $sql = "SELECT observations.observerid, COUNT(DISTINCT observations.objectname) AS Cnt, observers.name " .
+	               "FROM observations " .
+					       "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " . 
+					       "JOIN observers on observations.observerid = observers.id " .
+						     "WHERE observerobjectlist.listname=\"" . substr($cat,5) . "\" " .
+						     "AND observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\" " .
+						     "AND observations.visibility != 7 ";
+			else
+        $sql = "SELECT observations.observerid, COUNT(DISTINCT objectnames.catindex) AS Cnt, observers.name " .
+	             "FROM observations " .
+					     "JOIN objectnames on observations.objectname=objectnames.objectname " .
+					     "JOIN observers on observations.observerid = observers.id " .
+		           "WHERE objectnames.catalog=\"$cat\" AND observations.visibility != 7 ";
     }
     elseif($sort=="objecten")
     {
@@ -620,7 +637,6 @@ class Observations
       $sql .= "ORDER BY Cnt DESC, observers.name ASC ";
     }
     $sql .=  $extra;
-
     $run = mysql_query($sql) or die(mysql_error());
     while($get = mysql_fetch_object($run))
     {
@@ -753,6 +769,26 @@ class Observations
     $run = mysql_query($sql) or die(mysql_error());
     return mysql_result($run, 0, 0);
   }
+
+  function getObservedCountFromCatalogueOrList($id, $catalog)
+  {
+    $db = new database;
+    $db->login();
+		if(substr($catalog,0,5)=='List:')
+		{ $ret=10;
+		}
+    else
+		{	$sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt FROM objectnames " .
+             "INNER JOIN observations ON observations.objectname = objectnames.objectname " . 
+	  		     "WHERE objectnames.catalog = \"$catalog\" " .
+		         "AND observations.observerid=\"$id\" " .
+				     "AND observations.visibility != 7 ";
+      $run = mysql_query($sql) or die(mysql_error());
+			$ret = mysql_result($run, 0, 0);
+    }
+		return $ret;
+  }
+
 
   // getNumberOfObservations() returns the total number of observations
   function getNumberOfObservations()

@@ -132,10 +132,11 @@ elseif (array_key_exists('indexAction',$_GET) && ($_GET['indexAction'] == 'view_
 else
 {
   $_GET['catalogue']="*";
-	$theDate = date('Ymd', strtotime('-1 year')) ;
+	$theDate = date('Ymd', strtotime('-1 year'));
   $_GET['minyear'] = substr($theDate,0,4);
   $_GET['minmonth'] = substr($theDate,4,2);
-  $_GET['minday'] = substr($theDate,6,2);  include("content/selected_observations2.php"); 	 // WELCOME
+  $_GET['minday'] = substr($theDate,6,2);  
+	include("content/selected_observations2.php"); 	 // WELCOME
 }
 include("../common/tail.php"); 									 // HTML END CODE
 ?>
