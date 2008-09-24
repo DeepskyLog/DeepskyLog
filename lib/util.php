@@ -431,7 +431,8 @@ class util
                  "page" => $page,
                  "contrast" => $contrast,
                  "magnification" => $magnifi,
-                 "seen" => $valueA[3]
+                 "seen" => $valueA[3],
+								 "seendate" => $valueA[28]
       );
       $obs1[] = $temp;
     }
@@ -457,23 +458,25 @@ class util
                       "page" => html_entity_decode($atlasses[$atlas]),
                       "contrast" => html_entity_decode(LangPDFMessage17),
                       "magnification" => html_entity_decode(LangPDFMessage18),
-                      "seen" => html_entity_decode(LangOverviewObjectsHeader7)
+                      "seen" => html_entity_decode(LangOverviewObjectsHeader7),
+                      "seendate" => html_entity_decode(LangOverviewObjectsHeader8)
     ),
     $_GET['pdfTitle'],
     array("width" => "750",
 			                "cols" => array("Name" => array('justification'=>'left',  'width'=>100),
 			                                "ra" =>   array('justification'=>'center','width'=>65),
 		              									  "decl" => array('justification'=>'center','width'=>50),
-									              		  "type" => array('justification'=>'left',  'width'=>120),
-              											  "con" =>  array('justification'=>'left',  'width'=>100),
+									              		  "type" => array('justification'=>'left',  'width'=>110),
+              											  "con" =>  array('justification'=>'left',  'width'=>90),
 							              				  "mag" =>  array('justification'=>'center','width'=>35),
               											  "sb" =>   array('justification'=>'center','width'=>35),
-							              			  	"diam" => array('justification'=>'center','width'=>70),
-       											          "pa" =>   array('justification'=>'center','width'=>35),
-				              							  "page" => array('justification'=>'center', 'width'=>40),
+							              			  	"diam" => array('justification'=>'center','width'=>65),
+       											          "pa" =>   array('justification'=>'center','width'=>30),
+				              							  "page" => array('justification'=>'center', 'width'=>45),
           														"contrast" => array('justification'=>'center', 'width'=>35),
           														"magnification" => array('justification'=>'center', 'width'=>35),
-											                "seen" => array('justification'=>'center','width'=>50)
+											                "seen" => array('justification'=>'center','width'=>50),
+											                "seendate" => array('justification'=>'center','width'=>50)
     ),
 											"fontSize" => "7"				         
 											)
@@ -1081,7 +1084,7 @@ class util
         $magnifi = (int)$valueA[25];
       }
 
-      echo $valueA[0].";". $alt .";".$this->raToString($valueA[7]).";".$this->decToString($valueA[8], 0).";".$$con.";".$$type.";".$mag.";".$sb.";".$size.";".$pa.";".$page.";".$valueA[21].";".$magnifi.";".$valueA[3]."\n";
+      echo $valueA[0].";". $alt .";".$this->raToString($valueA[7]).";".$this->decToString($valueA[8], 0).";".$$con.";".$$type.";".$mag.";".$sb.";".$size.";".$pa.";".$page.";".$valueA[21].";".$magnifi.";".$valueA[3].";".$valueA[28]."\n";
     }
   }
 
@@ -1143,7 +1146,7 @@ class util
         if ($diam2 != 0.0)
         $size = $size.sprintf("x%.1f''", $diam2);
       }
-      echo "DSL " . sprintf("%03d", $counter) . " " . $valueA[0]."|".$this->raArgoToString($valueA[7])."|".$this->decToArgoString($valueA[8], 0)."|".$$argotype."|".$mag."|".$size.";".$atlas." ".$page.";CR ".$valueA[21].";".$valueA[3]."\n";
+      echo "DSL " . sprintf("%03d", $counter) . " " . $valueA[0]."|".$this->raArgoToString($valueA[7])."|".$this->decToArgoString($valueA[8], 0)."|".$$argotype."|".$mag."|".$size.";".$atlas." ".$page.";CR ".$valueA[21].";".$valueA[3].";".$valueA[28]."\n";
       $counter++;
     }
   }

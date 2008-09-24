@@ -370,6 +370,7 @@ define("LangOverviewObjectsHeader4", "Type");
 define("LangOverviewObjectsHeader5", "AD");
 define("LangOverviewObjectsHeader6", "Decl");
 define("LangOverviewObjectsHeader7", "Vu");
+define("LangOverviewObjectsHeader8", "Vu récemment");
 
 // content/execute_query_objects.php
 

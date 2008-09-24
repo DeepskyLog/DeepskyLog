@@ -370,6 +370,7 @@ define("LangOverviewObjectsHeader4", "Typ");
 define("LangOverviewObjectsHeader5", "RA");
 define("LangOverviewObjectsHeader6", "Dekl");
 define("LangOverviewObjectsHeader7", "Beobachtet?");
+define("LangOverviewObjectsHeader8", "Last Seen");
 
 // content/execute_query_objects.php
 

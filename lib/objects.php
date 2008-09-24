@@ -417,6 +417,9 @@ class Objects
   if($sort == "seen")
     while(list($key, $value) = each($result))
 	    $result3[$value[3].$value[4]] = $value;
+  if($sort == "seendate")
+    while(list($key, $value) = each($result))
+	    $result3[$value[28].$value[4]] = $value;
   if($sort == "showname")
     while(list($key, $value) = each($result))
       $result3[$value[4]] = $value;
@@ -661,11 +664,11 @@ class Objects
      $seen="X(" . $get2->ObsCnt . ")";
      if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($_SESSION['deepskylog_id'] != ""))
      {
-       $sql = "SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $_SESSION['deepskylog_id'] . "\" AND visibility != 7";
+       $sql = "SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $_SESSION['deepskylog_id'] . "\" AND visibility != 7";
        $run = mysql_query($sql) or die(mysql_error());
        $get3 = mysql_fetch_object($run);
        if ($get3->PersObsCnt)
-         $seen="Y(" . $get2->ObsCnt . "/" . $get3->PersObsCnt . ")";
+         $seen="Y(" . $get2->ObsCnt . "/" . $get3->PersObsCnt . ") " . $get3->PersObsMaxDate;
      }
 	 }
 	 $db->logout();
@@ -799,7 +802,8 @@ class Objects
         if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($_SESSION['deepskylog_id'] != ""))
         {
           $user = $_SESSION['deepskylog_id'];
-          $sql = "SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"$user\" AND visibility != 7";
+          $sql = "SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate, MAX(observations.id) As PersObsMaxId " .
+					       "FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"$user\" AND visibility != 7";
           $run = mysql_query($sql) or die(mysql_error());
           $get3 = mysql_fetch_object($run);
           if ($get3->PersObsCnt)
@@ -822,6 +826,8 @@ class Objects
           $result2[$j][3] = "-";
   	      if($seentype == "X") $result2[$j][3] = "X(" . $get2->ObsCnt . ")";
           if($seentype == "Y") $result2[$j][3] = "Y(" . $get2->ObsCnt . "/" . $get3->PersObsCnt . ")";
+          if($seentype == "Y") $result2[$j][28] = $get3->PersObsMaxDate; else $result2[$j][28] = '';
+          if($seentype == "Y") $result2[$j][29] = $get3->PersObsMaxId; else $result2[$j][29] = 0;
           $result2[$j][4] =  $key;
   	      $result2[$j][5] =  $get->mag;
   	      $result2[$j][6] =  $get->subr;
@@ -1866,6 +1872,10 @@ function getPartOfNames($name)
 	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;RO=seen\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader7) . "\">".LangOverviewObjectsHeader7."</a></td>\n";
   else
 	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;SO=seen\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader7) . "\">".LangOverviewObjectsHeader7."</a></td>\n";
+	if((array_key_exists('SO',$_GET) && ($_GET['SO']=="seendate"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="seendate")))
+	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;RO=seendate\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader8) . "\">".LangOverviewObjectsHeader8."</a></td>\n";
+  else
+	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;SO=seendate\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader8) . "\">".LangOverviewObjectsHeader8."</a></td>\n";
   if($myList)
     echo("<td align=\"center\"><a href=\"" . $link . "&amp;min=" . $min . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $_SESSION['listname'] . "\">P</a></td>");
  	$count = $min; // counter for altering table colors
@@ -1901,7 +1911,10 @@ function getPartOfNames($name)
         $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($value) . "\" title=\"" . LangObjectXSeen . "\">" . $_SESSION[$_SID][$count][3] . "</a>";
       if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($_SESSION[$_SID][$count][3],0,1)=="Y"))
         $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($value) . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION[$_SID][$count][3] . "</a>";
-      echo "<tr $typefield>\n";
+      $seendate = "<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($value) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
+      if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($_SESSION[$_SID][$count][3],0,1)=="Y"))
+        $seendate = "<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $_SESSION[$_SID][$count][29] . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION[$_SID][$count][28] . "</a>";
+			echo "<tr $typefield>\n";
       echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($value) . "\">$showname</a></td>\n";
       echo "<td align=\"center\">".$$con."</td>\n";
       echo "<td align=\"center\">$magnitude</td>\n";
@@ -1925,6 +1938,7 @@ function getPartOfNames($name)
 			}
   
       echo "<td align=\"center\" class=\"seen\">$seen</td>";
+      echo "<td align=\"center\" class=\"seen\">$seendate</td>";
     	if($myList)
     	{
      	  echo("<td>");
