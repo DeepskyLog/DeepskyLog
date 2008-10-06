@@ -13,7 +13,7 @@ if(!$_SESSION['module'])
 
 if(array_key_exists('user', $_GET) && $_GET['user']) // user defined
 {
-  $_SESSION['user'] = $_GET['user'];
+  $_SESSION['user'] = htmlspecialchars_decode($_GET['user']);
   include("head.php"); // HTML head
   
   $head = new head();

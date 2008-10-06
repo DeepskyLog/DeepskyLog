@@ -20,8 +20,8 @@ $objects = new Objects;
 include_once "../lib/observations.php"; // observations table
 $observations = new Observations;
 
-$firstname = $obs->getFirstName($_GET['user']);
-$name = $obs->getObserverName($_GET['user']);
+$firstname = $obs->getFirstName(htmlspecialchars_decode($_GET['user']));
+$name = $obs->getObserverName(htmlspecialchars_decode($_GET['user']));
 
 $partof=0;
 if(array_key_exists('partof', $_GET))
@@ -39,7 +39,7 @@ echo("<h2>$firstname $name</h2>");
     {
       continue; // skip current directory and directory above
     }
-    if(fnmatch($_GET['user']. ".gif", $file) || fnmatch($_GET['user']. ".jpg", $file) || fnmatch($_GET['user']. ".png", $file))
+    if(fnmatch(htmlspecialchars_decode($_GET['user']). ".gif", $file) || fnmatch(htmlspecialchars_decode($_GET['user']). ".jpg", $file) || fnmatch(htmlspecialchars_decode($_GET['user']). ".png", $file))
     {
       echo("<p><img class=\"viewobserver\" src=\"$upload_dir" . "/" . "$file\" alt=\"" . $firstname . "&nbsp;" . $name . "\"></img></p>");
     }
@@ -47,9 +47,9 @@ echo("<h2>$firstname $name</h2>");
   echo("<table width=\"490\">\n");
   // NUMBER OF OBSERVATIONS
   $cat = $_GET['catalog']; // name of the catalogue
-  $observedObjectsFromCatalogue = $observations->getObservedFromCatalogue($_GET['user'], $cat); // number of objects observed by this observer
+  $observedObjectsFromCatalogue = $observations->getObservedFromCatalogue(htmlspecialchars_decode($_GET['user']), $cat); // number of objects observed by this observer
   if($partof)
-    $observedObjectsFromCataloguePartOf = $observations->getObservedFromCataloguePartOf($_GET['user'], $cat); // number of objects observed by this observer	
+    $observedObjectsFromCataloguePartOf = $observations->getObservedFromCataloguePartOf(htmlspecialchars_decode($_GET['user']), $cat); // number of objects observed by this observer	
   $numberOfObjects = $objects->getNumberOfObjectsInCatalogue($cat); // number of objects in catalogue
 
   echo"<tr>" .
@@ -59,7 +59,7 @@ echo("<h2>$firstname $name</h2>");
   else
     echo " (geen deelobjecten)";			
 	echo "</b></p></td>" . 
-       "<td><b>" . $observations->getObservedCountFromCatalogue($_GET['user'], $cat) . " / " . $numberOfObjects .  
+       "<td><b>" . $observations->getObservedCountFromCatalogue(htmlspecialchars_decode($_GET['user']), $cat) . " / " . $numberOfObjects .  
        "</b></td></tr>";
   echo("<tr>
         <td>");
@@ -118,7 +118,7 @@ for ($i = 1; $i <= $numberOfObjects; $i++)
 	if (in_array($object, $observedObjectsFromCatalogue)) 
     echo '<td style="background: #33FF00; padding: 5px 5px 5px 5px; text-align: center;">
 		      <a title="' . $object . '" href="deepsky/index.php?indexAction=result_selected_observations&object=' . 
-		      urlencode($object) . '&observer=' . $_GET['user'] . '" style="color: #000000;">' . $altname . '</a></td>';
+		      urlencode($object) . '&observer=' . urlencode($_GET['user']) . '" style="color: #000000;">' . $altname . '</a></td>';
   else
 	  if ($partof && in_array($object, $observedObjectsFromCataloguePartOf)) 
   		echo '<td style="background: #FFFF00; padding: 5px 5px 5px 5px; text-align: center;\"><a title="' . $object . '" href="deepsky/index.php?indexAction=detail_object&object=' . 
