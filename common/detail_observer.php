@@ -38,7 +38,7 @@ if(array_key_exists('user', $_GET) && $_GET['user']) // user defined
   else
   {
     include("../common/menu/help.php"); // HELP MENU 
-    include_once("menu/language.php"); // LANGUAGE MENU
+    include_once("menu/languagemenu.php"); // LANGUAGE MENU
   }
 include_once("menu/endmenu.php"); // END MENU
 include_once("content/view_observer.php"); // USER DETAILS 
