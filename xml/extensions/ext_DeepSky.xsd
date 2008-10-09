@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<xsd:schema targetNamespace="http://observation.sourceforge.net/comast" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:fgca="http://observation.sourceforge.net/comast" version="1.8">
+	<!-- 
+	    Schema for documentation and exchange of observations of astronomical objects. 
+		 Author: Thomas Pfleger 
+		         Dirk Lehmann
+		 Revision date: 2008/07/30
+	     (c) 2005 - 2008 by Fachgruppe Computerastronomie of the Vereinigung der Sternfreunde e.V. (VdS) 
+	-->
+
+	<!--
+		Include the base elements
+	-->
+	<xsd:include schemaLocation="../base/base.xsd"/>
+
+
+	<!-- abstract base type definition for DEEP SKY targets -->
+	<xsd:complexType name="deepSkyTargetType" abstract="true">
+		<xsd:complexContent>
+			<xsd:extension base="fgca:observationTargetType">
+				<xsd:sequence>
+					<!-- apparent angular dimensions -->
+					<xsd:element name="smallDiameter" type="fgca:nonNegativeAngleType" minOccurs="0"/>
+					<xsd:element name="largeDiameter" type="fgca:nonNegativeAngleType" minOccurs="0"/>
+					<!-- visual magnitude in [mag] -->
+					<xsd:element name="visMag" minOccurs="0">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:double"/>
+						</xsd:simpleType>
+					</xsd:element>
+					<!-- surface brightness in [mags/sq.arcmin] -->
+					<xsd:element name="surfBr" minOccurs="0">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:double"/>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- New in V1.8: type definition for multiple stars -->
+	<xsd:complexType name="deepSkyMS">
+		<xsd:complexContent>
+			<!-- pls. note that this element does not derive from fgca:deepSkyTargetType -->
+			<xsd:extension base="fgca:observationTargetType">
+				<xsd:sequence>
+					<!-- star which is a component of the multiple star system -->
+					<!-- refers to fgca:starTargetType -->
+					<!-- Must occur at least three times. For double stars please use fcga:deepSkyDS -->
+					<xsd:element name="component" type="xsd:IDREF" minOccurs="3" maxOccurs="unbounded"/>					
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- New in V1.7: type definition for asterisms -->
+	<xsd:complexType name="deepSkyAS">
+		<xsd:complexContent>
+			<xsd:extension base="fgca:deepSkyTargetType">
+				<xsd:sequence>
+					<!-- position angle of large axis in [deg] -->
+					<xsd:element name="pa" type="fgca:positionAngleType" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- New in V1.7: type definition for star clouds -->
+	<xsd:complexType name="deepSkySC">
+		<xsd:complexContent>
+			<xsd:extension base="fgca:deepSkyTargetType">
+				<xsd:sequence>
+					<!-- position angle of large axis in [deg] -->
+					<xsd:element name="pa" type="fgca:positionAngleType" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- type definition for globular clusters -->
+	<xsd:complexType name="deepSkyGC">
+		<xsd:complexContent>
+			<xsd:extension base="fgca:deepSkyTargetType">
+				<xsd:sequence>
+					<!-- magnitude of brightest stars in [mag] -->
+					<xsd:element name="magStars" type="xsd:double" minOccurs="0"/>
+					<!-- degree of concentration [I..XII]-->
+					<xsd:element name="conc" type="xsd:string" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- type definition for galaxies -->
+	<xsd:complexType name="deepSkyGX">
+		<xsd:complexContent>
+			<xsd:extension base="fgca:deepSkyTargetType">
+				<xsd:sequence>
+					<xsd:element name="hubbleType" type="xsd:string" minOccurs="0"/>
+					<!-- position angle of large axis in [deg] -->
+					<xsd:element name="pa" type="fgca:positionAngleType" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- type definition for galactic nebulae -->
+	<xsd:complexType name="deepSkyGN">
+		<xsd:complexContent>
+			<xsd:extension base="fgca:deepSkyTargetType">
+				<xsd:sequence>
+					<!-- indicates emission, reflection or dark nebula -->
+					<!-- not rescricted to an enum to cover exotic objects -->
+					<xsd:element name="nebulaType" type="xsd:string" minOccurs="0"/>
+					<!-- position angle of large axis in [deg] -->
+					<xsd:element name="pa" type="fgca:positionAngleType" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- type definition for open clusters -->
+	<xsd:complexType name="deepSkyOC">
+		<xsd:complexContent>
+			<xsd:extension base="fgca:deepSkyTargetType">
+				<xsd:sequence>
+					<!-- number of stars -->
+					<xsd:element name="stars" type="xsd:positiveInteger" minOccurs="0"/>
+					<!-- magnitude of brightest star in [mag] -->
+					<xsd:element name="brightestStar" type="xsd:double" minOccurs="0"/>
+					<!-- classification according to Trumpler -->
+					<xsd:element name="class" type="xsd:string" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- type definition for planetary nebulae -->
+	<xsd:complexType name="deepSkyPN">
+		<xsd:complexContent>
+			<xsd:extension base="fgca:deepSkyTargetType">
+				<xsd:sequence>
+					<!-- magnitude of central star in [mag] -->
+					<xsd:element name="magStar" type="xsd:double" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- type definition for quasars -->
+	<xsd:complexType name="deepSkyQS">
+		<xsd:complexContent>
+			<xsd:extension base="fgca:deepSkyTargetType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- type definition for dark nebulae -->
+	<xsd:complexType name="deepSkyDN">
+		<xsd:complexContent>
+			<xsd:extension base="fgca:deepSkyTargetType">
+				<xsd:sequence>
+					<!-- position angle of large axis in [deg] -->
+					<xsd:element name="pa" type="fgca:positionAngleType" minOccurs="0"/>
+					<!-- opacity acc. to Lynds (1: min, 6:max) -->
+					<xsd:element name="opacity" minOccurs="0">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer">
+								<xsd:minInclusive value="1"/>
+								<xsd:maxInclusive value="6"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- type definition for double stars -->
+	<xsd:complexType name="deepSkyDS">
+		<xsd:complexContent>
+			<xsd:extension base="fgca:deepSkyTargetType">
+				<xsd:sequence>
+					<!-- separation -->
+					<xsd:element name="separation" type="fgca:nonNegativeAngleType" minOccurs="0"/>
+					<!-- position angle in [deg] -->
+					<xsd:element name="pa" type="fgca:positionAngleType" minOccurs="0"/>
+					<!-- magnitude of companion star in [mag] -->
+					<xsd:element name="magComp" type="xsd:double" minOccurs="0"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- type definition for uncategorized/miscellaneous targets -->
+	<xsd:complexType name="deepSkyNA">
+		<xsd:complexContent>
+			<xsd:extension base="fgca:deepSkyTargetType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- this type extension is used for  the findings of visual deep sky observations -->
+	<xsd:complexType name="findingsDeepSkyType">
+		<xsd:complexContent>
+			<xsd:extension base="fgca:findingsType">
+				<xsd:sequence>
+					<!-- estimated small diameter -->
+					<xsd:element name="smallDiameter" type="fgca:nonNegativeAngleType" minOccurs="0"/>
+					<!-- estimated large diameter -->
+					<xsd:element name="largeDiameter" type="fgca:nonNegativeAngleType" minOccurs="0"/>
+					<!-- rating according to the scale of the "Deep Sky Liste" -->
+					<xsd:element name="rating">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:integer">
+								<xsd:minInclusive value="1"/>
+								<xsd:maxInclusive value="7"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:sequence>
+				<xsd:attribute name="stellar" type="xsd:boolean" use="optional"/>
+				<xsd:attribute name="extended" type="xsd:boolean" use="optional"/>
+				<xsd:attribute name="resolved" type="xsd:boolean" use="optional"/>
+				<xsd:attribute name="mottled" type="xsd:boolean" use="optional"/>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- character of open clusters according to explanations/samples given in the Deep Sky Liste -->
+	<xsd:simpleType name="clusterCharacterType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="A"/>
+			<xsd:enumeration value="B"/>
+			<xsd:enumeration value="C"/>
+			<xsd:enumeration value="D"/>
+			<xsd:enumeration value="E"/>
+			<xsd:enumeration value="F"/>
+			<xsd:enumeration value="G"/>
+			<xsd:enumeration value="H"/>
+			<xsd:enumeration value="I"/>
+			<xsd:enumeration value="X"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<!-- findings for observations of open clusters -->
+	<xsd:complexType name="findingsDeepSkyOCType">
+		<xsd:complexContent>
+			<xsd:extension base="fgca:findingsDeepSkyType">
+				<xsd:sequence>
+					<!-- character of the cluster according to "Deep Sky Liste" definition -->
+					<xsd:element name="character" type="fgca:clusterCharacterType" minOccurs="0"/>
+				</xsd:sequence>
+				<xsd:attribute name="unusualShape" type="xsd:boolean" use="optional"/>
+				<xsd:attribute name="partlyUnresolved" type="xsd:boolean" use="optional"/>
+				<xsd:attribute name="colorContrasts" type="xsd:boolean" use="optional"/>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- color recognized in double star observations -->
+	<xsd:simpleType name="starColorType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="white"/>
+			<xsd:enumeration value="red"/>
+			<xsd:enumeration value="orange"/>
+			<xsd:enumeration value="yellow"/>
+			<xsd:enumeration value="green"/>
+			<xsd:enumeration value="blue"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<!-- findings for observations of binary stars -->
+	<xsd:complexType name="findingsDeepSkyDSType">
+		<xsd:complexContent>
+			<xsd:extension base="fgca:findingsDeepSkyType">
+				<xsd:sequence>
+					<!-- colors of main star and companion (if percepted) -->
+					<xsd:element name="colorMain" type="fgca:starColorType" minOccurs="0"/>
+					<xsd:element name="colorCompanion" type="fgca:starColorType" minOccurs="0"/>
+				</xsd:sequence>
+				<xsd:attribute name="equalBrightness" type="xsd:boolean" use="optional"/>
+				<xsd:attribute name="niceSurrounding" type="xsd:boolean" use="optional"/>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+
+	<!-- description of seeing conditions (1: best, 5: worst) -->
+	<xsd:simpleType name="seeingType">
+		<xsd:restriction base="xsd:nonNegativeInteger">
+			<xsd:minInclusive value="1"/>
+			<xsd:maxInclusive value="5"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+</xsd:schema>
