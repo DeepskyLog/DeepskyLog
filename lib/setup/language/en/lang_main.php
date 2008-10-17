@@ -568,6 +568,8 @@ define("LangViewObservationField31", "Filter");
 define("LangViewObservationField31Expl", "Add a new filter");
 define("LangViewObservationField32", "Lens");
 define("LangViewObservationField32Expl", "Add a new lens");
+define("LangViewObservationField33", "Estimated diameter");
+define("LangViewObservationField34", "SQM");
 define("LangViewObservationButton1", "Add observation");
 define("LangViewObservationButton2", "Clear fields");
 define("SeeingExcellent", "Excellent");

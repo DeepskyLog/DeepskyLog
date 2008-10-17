@@ -568,6 +568,9 @@ define("LangViewObservationField31", "Filter");
 define("LangViewObservationField31Expl", "Filter hinzuf&uuml;gen");
 define("LangViewObservationField32", "Linse");
 define("LangViewObservationField32Expl", "Linse hinzuf&uuml;gen");
+//Translate
+define("LangViewObservationField33", "Estimated diameter");
+define("LangViewObservationField34", "SQM");
 define("LangViewObservationButton1", "Beobachtung anlegen");
 define("LangViewObservationButton2", "Felder l&ouml;schen");
 define("SeeingExcellent", "Exzellent");

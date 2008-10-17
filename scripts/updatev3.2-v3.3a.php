@@ -43,5 +43,9 @@ $run = mysql_query($sql) or die(mysql_error());
 $sql="ALTER TABLE observations ADD COLUMN colorContrasts int(1) NOT NULL default '-1'";
 $run = mysql_query($sql) or die(mysql_error());
 
-print "Database update was successful!"
+// SQM for the observations
+$sql="ALTER TABLE observations ADD COLUMN SQM float NOT NULL default '-1.0'";
+$run = mysql_query($sql) or die(mysql_error());
+
+print "Database update was successful!\n"
 ?>

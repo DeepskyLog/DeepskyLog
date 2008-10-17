@@ -10,6 +10,8 @@
 
 include_once "database.php";
 include_once "observations.php";
+//include_once "atlasses.php";
+
 //include_once "setup/vars.php";
 
 class Objects
@@ -26,19 +28,21 @@ class Objects
   $db = new database;
   $db->login();
 
+  $atlas = new Atlasses;
+
   if (!$_SESSION['lang'])
   {
    $_SESSION['lang'] = "English";
   }
-  $urano = $this->calculateUranometriaPage($ra, $dec);
-  $uranonew = $this->calculateNewUranometriaPage($ra, $dec);
-  $skyatlas = $this->calculateSkyAtlasPage($ra, $dec);
-  $millenium = $this->calculateMilleniumPage($ra, $dec);
-  $taki = $this->calculateTakiPage($ra, $dec);
-  $psa = $this->calculatePocketSkyAtlasPage($ra, $dec);
-  $torresB = $this->calculateTorresBPage($ra, $dec);
-  $torresBC = $this->calculateTorresBCPage($ra, $dec);
-  $torresC = $this->calculateTorresCPage($ra, $dec);
+  $urano = $atlas->calculateUranometriaPage($ra, $dec);
+  $uranonew = $atlas->calculateNewUranometriaPage($ra, $dec);
+  $skyatlas = $atlas->calculateSkyAtlasPage($ra, $dec);
+  $millenium = $atlas->calculateMilleniumPage($ra, $dec);
+  $taki = $atlas->calculateTakiPage($ra, $dec);
+  $psa = $atlas->calculatePocketSkyAtlasPage($ra, $dec);
+  $torresB = $atlas->calculateTorresBPage($ra, $dec);
+  $torresBC = $atlas->calculateTorresBCPage($ra, $dec);
+  $torresC = $atlas->calculateTorresCPage($ra, $dec);
   $array = array("INSERT INTO objects (name, type, con, ra, decl, mag, subr, diam1, diam2, pa, datasource, urano, urano_new, sky, millenium, taki, psa, torresB, torresBC, torresC) VALUES (\"$name\", \"$type\", \"$con\", \"$ra\", \"$dec\", \"$mag\", \"$subr\", \"$diam1\", \"$diam2\", \"$pa\", \"$datasource\", \"$urano\", \"$uranonew\", \"$skyatlas\", \"$millenium\", \"$taki\", \"$psa\", \"$torresB\", \"$torresBC\", \"$torresC\")");
   $sql = implode("", $array);
   mysql_query($sql) or die(mysql_error());
@@ -1533,6 +1537,8 @@ function getPartOfNames($name)
   $db = new database;
   $db->login();
 
+  $atlas = new Atlasses;
+  
   $sql = "UPDATE objects SET ra = \"$ra\" WHERE name = \"$name\"";
   
   $run = mysql_query($sql) or die(mysql_error());
@@ -1545,15 +1551,15 @@ function getPartOfNames($name)
 
   $decl = $get->decl;
 
-  $urano = $this->calculateUranometriaPage($ra, $decl);
-  $uranonew = $this->calculateNewUranometriaPage($ra, $decl);
-  $skyatlas = $this->calculateSkyAtlasPage($ra, $decl);
-  $msa = $this->calculateMilleniumPage($ra, $decl);
-  $taki = $this->calculateTakiPage($ra, $decl);
-  $psa = $this->calculatePocketSkyAtlasPage($ra, $decl);
-  $torresB = $this->calculateTorresBPage($ra, $decl);
-  $torresBC = $this->calculateTorresBCPage($ra, $decl);
-  $torresC = $this->calculateTorresCPage($ra, $decl);
+  $urano = $atlas->calculateUranometriaPage($ra, $decl);
+  $uranonew = $atlas->calculateNewUranometriaPage($ra, $decl);
+  $skyatlas = $atlas->calculateSkyAtlasPage($ra, $decl);
+  $msa = $atlas->calculateMilleniumPage($ra, $decl);
+  $taki = $atlas->calculateTakiPage($ra, $decl);
+  $psa = $atlas->calculatePocketSkyAtlasPage($ra, $decl);
+  $torresB = $atlas->calculateTorresBPage($ra, $decl);
+  $torresBC = $atlas->calculateTorresBCPage($ra, $decl);
+  $torresC = $atlas->calculateTorresCPage($ra, $decl);
   
   $sql = "UPDATE objects SET urano = \"$urano\" WHERE name = \"$name\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -1591,6 +1597,8 @@ function getPartOfNames($name)
   $db = new database;
   $db->login();
 
+  $atlas = new Atlasses;
+
   $sql = "UPDATE objects SET decl = \"$decl\" WHERE name = \"$name\"";
   $run = mysql_query($sql) or die(mysql_error());
 
@@ -1602,15 +1610,15 @@ function getPartOfNames($name)
 
   $ra = $get->ra;
 
-  $urano = $this->calculateUranometriaPage($ra, $decl);
-  $uranonew = $this->calculateNewUranometriaPage($ra, $decl);
-  $skyatlas = $this->calculateSkyAtlasPage($ra, $decl);
-  $msa = $this->calculateMilleniumPage($ra, $decl);
-  $taki = $this->calculateTakiPage($ra, $decl);
-  $psa = $this->calculatePocketSkyAtlasPage($ra, $decl);
-  $torresB = $this->calculateTorresBPage($ra, $decl);
-  $torresBC = $this->calculateTorresBCPage($ra, $decl);
-  $torresC = $this->calculateTorresCPage($ra, $decl);
+  $urano = $atlas->calculateUranometriaPage($ra, $decl);
+  $uranonew = $atlas->calculateNewUranometriaPage($ra, $decl);
+  $skyatlas = $atlas->calculateSkyAtlasPage($ra, $decl);
+  $msa = $atlas->calculateMilleniumPage($ra, $decl);
+  $taki = $atlas->calculateTakiPage($ra, $decl);
+  $psa = $atlas->calculatePocketSkyAtlasPage($ra, $decl);
+  $torresB = $atlas->calculateTorresBPage($ra, $decl);
+  $torresBC = $atlas->calculateTorresBCPage($ra, $decl);
+  $torresC = $atlas->calculateTorresCPage($ra, $decl);
   
   $sql = "UPDATE objects SET urano = \"$urano\" WHERE name = \"$name\"";
   $run = mysql_query($sql) or die(mysql_error());

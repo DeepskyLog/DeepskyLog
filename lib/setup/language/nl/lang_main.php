@@ -568,6 +568,8 @@ define("LangViewObservationField31", "Filter");
 define("LangViewObservationField31Expl", "Nieuwe filter");
 define("LangViewObservationField32", "Lens");
 define("LangViewObservationField32Expl", "Nieuwe lens");
+define("LangViewObservationField33", "Geschatte diameter");
+define("LangViewObservationField34", "SQM");
 define("LangViewObservationButton1", "Voeg toe");
 define("LangViewObservationButton2", "Wis velden");
 define("SeeingExcellent", "Uitstekend");

@@ -370,7 +370,7 @@ define("LangOverviewObjectsHeader4", "Type");
 define("LangOverviewObjectsHeader5", "AD");
 define("LangOverviewObjectsHeader6", "Decl");
 define("LangOverviewObjectsHeader7", "Vu");
-define("LangOverviewObjectsHeader8", "Vu récemment");
+define("LangOverviewObjectsHeader8", "Vu rï¿½cemment");
 
 // content/execute_query_objects.php
 
@@ -568,6 +568,9 @@ define("LangViewObservationField31", "Filtre");
 define("LangViewObservationField31Expl", "Rajoutez un nouveau filtre");
 define("LangViewObservationField32", "Lentille Barlow");
 define("LangViewObservationField32Expl", "Rajoutez une nouvelle lentille Barlow");
+//Translate
+define("LangViewObservationField33", "Estimated diameter");
+define("LangViewObservationField34", "SQM");
 define("LangViewObservationButton1", "Rajoutez");
 define("LangViewObservationButton2", "Videz les champs");
 define("SeeingExcellent", "Excellent");

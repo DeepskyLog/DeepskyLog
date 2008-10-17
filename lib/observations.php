@@ -188,7 +188,8 @@ class Observations
   //             "eyepiece" => "4", "filter" => "2", "lens" => "3", "minSmallDiameter" => "3.4",
   //             "maxSmallDiameter" => "3.7", "minLargeDiameter" => "5.3", "maxLargeDiameter" => "6.5",
   //             "stellar" => "1", "extended" => "0", "resolved" => "0", "mottled" => "1",
-  //             "characterType" => "A", "unusualShape" => "0", "partlyUnresolved" => "1", "colorContrasts" => "0";
+  //             "characterType" => "A", "unusualShape" => "0", "partlyUnresolved" => "1", 
+  //             "colorContrasts" => "0", "minSQM" => "18.9", "maxSQM" => "21.2";
   function getObservationFromQuery($queries, $sort = "", $exactmatch = "1", $clubOnly = "True", $seenpar="D", $exactinstrumentlocation = "0")
   {
     include "setup/databaseInfo.php";
@@ -361,6 +362,8 @@ class Observations
     if (isset($queries["unusualShape"]) && ($queries["unusualShape"] != ""))    $sqland .= "AND observations.unusualShape = \"".$queries["unusualShape"]."\" ";
     if (isset($queries["partlyUnresolved"]) && ($queries["partlyUnresolved"] != ""))          $sqland .= "AND observations.partlyUnresolved = \"".$queries["partlyUnresolved"]."\" ";
     if (isset($queries["colorContrasts"]) && ($queries["colorContrasts"] != ""))              $sqland .= "AND observations.colorContrasts = \"".$queries["colorContrasts"]."\" ";
+    if (isset($queries["minSQM"]) && ($queries["minSQM"] != ""))                $sqland .= "AND observations.SQM >= \"".$queries["minSQM"]."\" ";
+    if (isset($queries["maxSQM"]) && ($queries["maxSQM"] != ""))                $sqland .= "AND observations.SQM <= \"".$queries["minSQM"]."\" ";
     if (isset($queries["languages"]))
     {
       $extra2 = "";
@@ -1373,6 +1376,24 @@ class Observations
     return $limmag;
   }
 
+  // getSQM returns the SQM of the observation
+  function getSQM($id)
+  {
+    $db = new database;
+    $db->login();
+
+    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
+    $run = mysql_query($sql) or die(mysql_error());
+
+    $get = mysql_fetch_object($run);
+
+    $sqm = $get->SQM;
+
+    $db->logout();
+
+    return $sqm;
+  }
+
   // getSeeing returns the seeing of the observation
   function getSeeing($id)
   {
@@ -1878,6 +1899,25 @@ class Observations
     $db->logout();
   }
 
+  // setSQM sets the SQM for the given observation
+  function setSQM($id, $sqm)
+  {
+    $db = new database;
+    $db->login();
+
+    if ($sqm == "")
+    {
+      $sqm = "NULL";
+    }
+
+    $sqm = preg_replace("/,/", ".", $sqm);
+
+    $sql = "UPDATE observations SET limmag = $sqm WHERE id = \"$id\"";
+    $run = mysql_query($sql) or die(mysql_error());
+
+    $db->logout();
+  }
+
   // setVisibility sets a new visibility for the given observation
   function setVisibility($id, $visibility)
   {
@@ -2059,6 +2099,7 @@ class Observations
       $seeing = $this->getSeeing($value);
       $visibility = $this->getVisibility($value);
       $limmag = $this->getLimitingMagnitude($value);
+      $sqm = $this->getSQM($value);
 
       //   echo "<tr $class><td> $value </td><td> $objectname </td><td> $observername </td><td> $instrument </td><td> $location </td><td> $date </td><td> $time </td><td> $seeing </td><td> $limmag </td><td> $visibility </td><td> $description </td>";
 
