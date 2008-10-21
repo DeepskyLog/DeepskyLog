@@ -270,7 +270,7 @@ if($_SESSION['listname']<>"----------")
 								 target=\"new_window\">".LangExecuteQueryObjectsMessage4b."</a> &nbsp;-&nbsp;";
   echo "<a href=\"\"
                  onclick=\"thetitle = prompt(" . LangListQueryObjectsMessage14 . "," . LangListQueryObjectsMessage15 . ");
-								           location.href='deepsky/objectsDetails.pdf?SID=QOL&amp;pdfTitle='+thetitle+''
+								           location.href='deepsky/objectsDetails.pdf?SID=QOL&amp;sort=" . $sort . "&amp;pdfTitle='+thetitle+''
 					                 return false\"
 													 
 								 target=\"new_window\">".LangExecuteQueryObjectsMessage4c."</a> &nbsp;-&nbsp;";

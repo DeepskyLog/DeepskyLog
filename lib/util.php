@@ -518,8 +518,8 @@ class util
 
 
   // Creates a pdf document from an array of objects
-  function pdfObjectsDetails($result)
-  {
+  function pdfObjectsDetails($result, $sort='')
+  { if($sort!='con') $sort='';
     include_once "observers.php";
     $observer = new Observers;
 
@@ -538,24 +538,35 @@ class util
 		$atlas = new Atlasses;
 		$atlasses = $atlas->getSortedAtlasses();
 
-    while(list($key, $valueA) = each($result))
+    // Create pdf file
+    $pdf = new Cezpdf('a4', 'landscape');
+    $fontdir = /*realpath*/('../lib/fonts/Helvetica.afm');
+    $pdf->selectFont('../lib/fonts/Helvetica.afm');
+
+    $y = 0;
+    $bottom = 40;
+    $bottomsection = 30;
+    $top = 550;
+    $header = 600;
+    $xleft = 20;
+    $xmid = 431;
+    $fontSizeSection = 10;
+    $fontSizeText = 8;
+    $deltaline = $fontSizeText+4;
+		$deltalineSection = 2;
+		$pagenr = 0;
+    $xbase = $xmid;
+		$sectionBarHeight = $fontSizeSection + 4;
+		$descriptionLeadingSpace = 20;
+		$sectionBarSpace = 3;
+		$SectionBarWidth = 400+$sectionBarSpace;
+
+		while(list($key, $valueA) = each($result))
     {
-      $mag = round($valueA[5],1);
-      if ($mag == 99.9)
-      $mag = "";
-      else if ($mag - (int)$mag == 0.0)
-      $mag = $mag.".0";
-
-      $sb = round($valueA[6],1);
-      if ($sb == 99.9)
-      $sb = "";
-      else if ($sb - (int)$sb == 0.0)
-      $sb = $sb.".0";
-
-      $pa = $valueA[20];
-      if($pa==999)
-      $pa="-";
-
+			$mag = round($valueA[5],1); if ($mag == 99.9) $mag = ""; else if ($mag - (int)$mag == 0.0) $mag = $mag.".0";
+      $sb = round($valueA[6],1);  if ($sb == 99.9)  $sb = "";  else if ($sb - (int)$sb == 0.0)   $sb = $sb.".0";
+      $pa = $valueA[20];          if($pa==999)      $pa="-";
+			
       $con = $valueA[2];
       $type = $valueA[1];
       $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
@@ -563,30 +574,33 @@ class util
       $diam1 = $valueA[18];
       $diam2 = $valueA[19];
       $size = "";
-      if ($diam1 != 0.0)
       if ($diam1 >= 40.0)
       {
         if (round($diam1 / 60.0) == ($diam1 / 60.0))
-        if ($diam1 / 60.0 > 30.0)
-        $size = sprintf("%.0f'", $diam1 / 60.0);
-        else
-        $size = sprintf("%.1f'", $diam1 / 60.0);
-        else
-        $size = sprintf("%.1f'", $diam1 / 60.0);
-        if ($diam2 != 0.0)
-        if (round($diam2 / 60.0) == ($diam2 / 60.0))
-        if ($diam2 / 60.0 > 30.0)
-        $size = $size.sprintf("x%.0f'", $diam2 / 60.0);
-        else
-        $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
-        else
-        $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
+				{ if ($diam1 / 60.0 > 30.0)
+            $size = sprintf("%.0f'", $diam1 / 60.0);
+          else
+            $size = sprintf("%.1f'", $diam1 / 60.0);
+        }
+				else
+          $size = sprintf("%.1f'", $diam1 / 60.0);
+        
+				if ($diam2 != 0.0)
+        { if (round($diam2 / 60.0) == ($diam2 / 60.0))
+          { if ($diam2 / 60.0 > 30.0)
+              $size = $size.sprintf("x%.0f'", $diam2 / 60.0);
+            else
+              $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
+          }
+				  else
+            $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
+				}
       }
-      else
+      elseif ($diam1 != 0.0) 
       {
         $size = sprintf("%.1f''", $diam1);
         if ($diam2 != 0.0)
-        $size = $size.sprintf("x%.1f''", $diam2);
+          $size = $size.sprintf("x%.1f''", $diam2);
       }
       $contrast = $valueA[21];
       if ($contrast == "-")
@@ -595,78 +609,108 @@ class util
       } else {
         $magnifi = (int)$valueA[25];
       }
-
-      $tempA = array(
-	               "seen" => $valueA[3],
-                 "Name" => $valueA[4], 
-                 "type" => $type,
-                 "mag" => $mag,
-                 "sb" => $sb,
-                 "ra" => $this->raToStringHM($valueA[7]),
-                 "decl" => $this->decToString($valueA[8],0),
-                 "con" => $con,
-                 "diam" => $size,
-                 "pa" => $pa, 
-                 "contrast"       => $contrast,
-                 "magnification"  => $magnifi,
-                 "page" => $page
-      );
-      $obs1[] = array_merge($tempA);
-    }
-
-    // Create pdf file
-    $pdf = new Cezpdf('a4', 'landscape');
-
-    $fontdir = /*realpath*/('../lib/fonts/Helvetica.afm');
-    //  $pdf->selectFont($fontdir);
-    $pdf->selectFont('../lib/fonts/Helvetica.afm');
-
-    $pdf->ezStartPageNumbers(450, 15, 10);
-    $pdf->ezText($_GET['pdfTitle'],18);
-    $pdf->ezColumnsStart(array('num'=>2));
-
-    $pdf->ezTable($obs1,
-    array(
-								      "seen"           => html_entity_decode(LangOverviewObjectsHeader7),
-											"Name"           => html_entity_decode(LangPDFMessage1), 
-                      "type"           => html_entity_decode(LangPDFMessage5),
-                      "mag"            => html_entity_decode(LangPDFMessage7),
-                      "sb"             => html_entity_decode(LangPDFMessage8),
-                      "ra"             => html_entity_decode(LangPDFMessage3),
-                      "decl"           => html_entity_decode(LangPDFMessage4),
-                      "con"            => html_entity_decode(LangPDFMessage6),
-                      "diam"           => html_entity_decode(LangPDFMessage9),
-                      "pa"             => html_entity_decode(LangPDFMessage16),  
-                      "contrast"       => html_entity_decode(LangPDFMessage17),
-                      "magnification"  => html_entity_decode(LangPDFMessage18),
-                      "page"           => html_entity_decode($atlasses[$atlas])
-    ),
-                  '',
-    array("width" => "375",
-			                  "cols" => array(
-											                "seen"           => array('justification'=>'center','width'=>30),
-											                "Name"           => array('justification'=>'left',  'width'=>75),
-									              		  "type"           => array('justification'=>'left',  'width'=>35),
-							              				  "mag"            => array('justification'=>'center','width'=>17),
-              											  "sb"             => array('justification'=>'center','width'=>17),
-			                                "ra"             => array('justification'=>'center','width'=>32),
-		              									  "decl"           => array('justification'=>'center','width'=>25),
-              											  "con"            => array('justification'=>'center','width'=>25),
-							              			  	"diam"           => array('justification'=>'center','width'=>40),
-       											          "pa"             => array('justification'=>'center','width'=>17),
-          														"contrast"       => array('justification'=>'center','width'=>17),
-          														"magnification"  => array('justification'=>'center','width'=>17),
-				              							  "page"           => array('justification'=>'center','width'=>35)
-    ),
-											  "fontSize" => "7",
-											  "showLines" => "0",
-											  "showHeadings" => "0",
-											  "rowGap" => "0",
-											  "colGap" => "0"				         
-											  )
-			          );
-
-			          $pdf->ezStream();
+			
+      if(!$sort || ($actualsort!=$$sort))
+			{
+  			if($y<$bottom) 
+  			{ $y=$top;
+  			  if($xbase==$xmid)
+  				{ if($pagenr++) $pdf->newPage();
+  					$xbase = $xleft;
+  				}
+  				else
+  				{ $xbase = $xmid;
+  				}
+  			}
+				if($sort)
+				{ $y-=$deltalineSection;
+          $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
+          $pdf->addText($xbase, $y, $fontSizeSection, $$$sort);  
+          $y-=$deltaline+$deltalineSection;
+				}
+			}
+      elseif($y<$bottomsection) 
+			{ $y=$top;
+			  if($xbase==$xmid)
+				{ if($pagenr) $pdf->newPage();
+				  $pagenr+=1;
+					$xbase = $xleft;
+          if($sort)
+					{ $y-=$deltalineSection;
+            $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
+            $pdf->addText($xbase, $y, $fontSizeSection, $$$sort);
+            $y-=$deltaline+$deltalineSection;
+					}
+				}
+				else
+				{ $xbase = $xmid;
+          if($sort)
+					{ $y-=$deltalineSection;
+            $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
+					  $pdf->addText($xbase, $y, $fontSizeSection, $$$sort);
+            $y-=$deltaline+$deltalineSection;
+					}
+				}
+			}
+			if(!$sort)
+			{ $pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA[3]);			   // seen
+			  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA[28]);		 // last seen	
+			  $pdf->addTextWrap($xbase+ 70, $y,  65, $fontSizeText, '<b>'.$valueA[4]);		 //	object
+			  $pdf->addTextWrap($xbase+135, $y,  50, $fontSizeText, '</b>'.$$type);			   // type
+			  $pdf->addTextWrap($xbase+185, $y,  50, $fontSizeText, $$con);			   // constellation
+			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, $this->raToStringHM($valueA[7]) . ' '.$this->decToString($valueA[8],0));			   // ra - decl
+			  $pdf->addTextWrap($xbase+295, $y,  60, $fontSizeText, $size . '/' . $pa);			   // size
+			  $pdf->addTextWrap($xbase+355, $y,  40, $fontSizeText, '<b>'.$page.'</b>', 'right');			   // atlas page
+      }
+      else
+			{ $pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA[3]);			   // seen
+			  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA[28]);		 // last seen	
+			  $pdf->addTextWrap($xbase+ 70, $y, 105, $fontSizeText, '<b>'.$valueA[4]);		 //	object
+			  $pdf->addTextWrap($xbase+175, $y,  30, $fontSizeText, '</b>'.$type);			   // type
+			  $pdf->addTextWrap($xbase+205, $y,  20, $fontSizeText, $mag, 'left');			   // mag
+			  $pdf->addTextWrap($xbase+225, $y,  20, $fontSizeText, $sb, 'left');			   // sb
+			  $pdf->addTextWrap($xbase+245, $y,  60, $fontSizeText, $this->raToStringHM($valueA[7]) . ' '.$this->decToString($valueA[8],0), 'center');			   // ra - decl
+			  $pdf->addTextWrap($xbase+305, $y,  55, $fontSizeText, $size . '/' . $pa, 'center');			   // size
+	  		$pdf->addTextWrap($xbase+360, $y,  20, $fontSizeText, $valueA[21], 'center');			   // contrast				
+			  $pdf->addTextWrap($xbase+380, $y,  20, $fontSizeText, '<b>'.$page.'</b>', 'right');			   // atlas page
+      }
+			$y-=$deltaline;
+      $actualsort = $$sort;
+			if($valueA[27])
+      { $theText= $valueA[27];
+			  $theText= $pdf->addTextWrap($xbase+$descriptionLeadingSpace, $y, $xmid-$xleft-$descriptionLeadingSpace-10 ,$fontSizeText, '<i>'.$theText);
+  			$y-=$deltaline;	
+        while($theText)
+				{ if($y<$bottomsection) 
+			    { $y=$top;
+			      if($xbase==$xmid)
+				    { if($pagenr) $pdf->newPage();
+				      $pagenr+=1;
+					    $xbase = $xleft;
+              if($sort)
+							{ $y-=$deltalineSection;
+                $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
+                $pdf->addText($xbase, $y, $fontSizeSection, $$$sort);
+                $y-=$deltaline+$deltalineSection;
+							}
+				    }
+				    else
+				    { $xbase = $xmid;
+              if($sort)
+							{ $y-=$deltalineSection;
+                $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
+					      $pdf->addText($xbase, $y, $fontSizeSection, $$$sort);
+                $y-=$deltaline+$deltalineSection;
+							}
+				    }
+			    }
+	      $theText= $pdf->addTextWrap($xbase+$descriptionLeadingSpace, $y, $xmid-$xleft-$descriptionLeadingSpace-10 ,$fontSizeText, $theText);
+  			$y-=$deltaline;	
+				}
+			  $pdf->addText(0,0,10,'</i>');
+			}			
+		}		
+    $pdf->Stream();
   }
 
   // Creates a pdf document from an array of objects

@@ -136,7 +136,7 @@ if(count($_SESSION[$_SID]) > 1) // valid result
 								 target=\"new_window\">".LangExecuteQueryObjectsMessage4b."</a> &nbsp;-&nbsp;";
   echo "<a href=\"\"
                  onclick=\"thetitle = prompt(" . LangListQueryObjectsMessage14 . "," . LangListQueryObjectsMessage15 . ");
-								           location.href='deepsky/objectsDetails.pdf?SID=" . $_SID . "&amp;pdfTitle='+thetitle+''
+								           location.href='deepsky/objectsDetails.pdf?SID=" . $_SID . "&amp;sort=" . $sort . "&amp;pdfTitle='+thetitle+''
 					                 return false\"
 													 
 								 target=\"new_window\">".LangExecuteQueryObjectsMessage4c."</a> &nbsp;-&nbsp;";

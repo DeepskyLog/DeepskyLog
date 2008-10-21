@@ -23,7 +23,7 @@
     {
      $util = new util();
   
-     $util->pdfObjectsDetails($result);
+     $util->pdfObjectsDetails($result, $_GET['sort']);
     }
 	}
 ?>
