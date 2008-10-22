@@ -843,6 +843,7 @@ class Objects
           $result2[$j][24] = $value[0]; 
           $result2[$j][26] = $get->SBObj; 
           $result2[$j][27] = $get->description;
+					$result2[$j][30] = $value[2]; // optional description from lists
 					reset($atlassesCodes);
 					while(list($key,$value)=each($atlassesCodes))
 					  $result2[$j][$key] =  $get->$key;

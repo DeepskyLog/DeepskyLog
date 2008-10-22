@@ -163,6 +163,44 @@ class Lists
     unset($_SESSION['QOL']);
  }
  
+ function addObservationToList($id)
+ {
+  $db = new database;
+  $db->login();
+	$observer = $_SESSION['deepskylog_id'];
+	$listname = $_SESSION['listname'];
+  $sql = "SELECT objectname, description FROM observations WHERE id=" . $id;
+  $run = mysql_query($sql) or die(mysql_error());
+	$get = mysql_fetch_object($run);
+  if($get)
+	{ $name = $get->objectname;
+	  $description = $get->description;
+    $sql = "SELECT objectplace AS ObjPl, description FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectname=\"$name\"";
+    $run = mysql_query($sql) or die(mysql_error());
+  	$get = mysql_fetch_object($run);
+    if(!$get)
+  	{
+  	  $sql = "SELECT MAX(objectplace) AS ObjPl FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$listname\"";
+      $run = mysql_query($sql) or die(mysql_error());
+  	  $get = mysql_fetch_object($run);
+      $objpl = ($get->ObjPl) + 1;
+      $sql = "INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, description) VALUES (\"$observer\", \"$name\", \"$listname\", \"$objpl\", \"$name\", \"" . substr($description,0,1024) . "\")";
+      mysql_query($sql) or die(mysql_error());
+    }
+		else
+		{
+      if($get->description)
+			  $sql = "UPDATE observerobjectlist SET description = \"" . substr($get->description . " " . $description,0,1024) . "\" WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectname=\"$name\"";
+      else
+        $sql = "UPDATE observerobjectlist SET description = \"" . substr($description,0,1024) . "\" WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectname=\"$name\"";
+			mysql_query($sql) or die(mysql_error());
+		}
+	}
+	$db->logout();
+  if(array_key_exists('QOL',$_SESSION))
+    unset($_SESSION['QOL']);
+ }
+ 
  function removeObjectFromList($name)
  {
   $db = new database;
@@ -272,18 +310,19 @@ class Lists
   $obs=array();
 	$observer = $_SESSION['deepskylog_id'];
 	if(substr($listname,0,7)=="Public:")
-    $sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname FROM observerobjectlist " .
+    $sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " .
 	         "JOIN objects ON observerobjectlist.objectname = objects.name " .
 		    	 "WHERE listname = \"$listname\" AND objectname <>\"\"";
 	else
-    $sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname FROM observerobjectlist " .
+    $sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " .
 	         "JOIN objects ON observerobjectlist.objectname = objects.name " .
 		    	 "WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectname <>\"\"";
   $run = mysql_query($sql) or die(mysql_error());
   while($get = mysql_fetch_object($run))
    if(!in_array($get->objectname, $obs))
-	   $obs[$get->objectshowname] = array($get->objectplace,$get->objectname);
+	   $obs[$get->objectshowname] = array($get->objectplace,$get->objectname,$get->description);
 	$obs=$objects->getSeenObjectDetails($obs, "D");	 
+
   $db->logout();
   return $obs;
  } 

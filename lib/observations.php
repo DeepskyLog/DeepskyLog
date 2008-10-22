@@ -2619,10 +2619,10 @@ class Observations
       $run = mysql_query($sql) or die(mysql_error());
       $db->logout();
       $get = mysql_fetch_object($run);
-      if($get->ObjCnt > 0)
-      echo("<a href=" . $link . "&amp;removeObjectFromList=" . urlencode($object) . ">R</a>");
-      else
-      echo("<a href=" . $link . "&amp;addObjectToList=" . urlencode($object) . ">L</a>");
+ //     if($get->ObjCnt > 0)
+ //      echo("<a href=" . $link . "&amp;removeObjectFromList=" . urlencode($object) . ">R</a>");
+ //     else
+       echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">L</a>");
       echo("</td>");
     }
     echo("</tr>\n");
@@ -2801,11 +2801,11 @@ class Observations
       $run = mysql_query($sql) or die(mysql_error());
       $db->logout();
       $get = mysql_fetch_object($run);
-      if($get->ObjCnt > 0)
-  	   echo("<a href=" . $link . "&amp;removeObjectFromList=" . urlencode($object) . ">R</a>");
-  	   else
-  	   echo("<a href=" . $link . "&amp;addObjectToList=" . urlencode($object) . ">L</a>");
-  	   echo("</td>");
+//      if($get->ObjCnt > 0)
+//  	   echo("<a href=" . $link . "&amp;removeObjectFromList=" . urlencode($object) . ">R</a>");
+//  	  else
+  	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">L</a>");
+  	  echo("</td>");
     }
     echo("</tr>\n");
     echo("<tr class=\"type1\">\n");
@@ -2950,11 +2950,11 @@ class Observations
       $run = mysql_query($sql) or die(mysql_error());
       $db->logout();
       $get = mysql_fetch_object($run);
-      if($get->ObjCnt > 0)
-  	   echo("<a href=" . $link . "&amp;removeObjectFromList=" . urlencode($object) . ">R</a>");
-  	   else
-  	   echo("<a href=" . $link . "&amp;addObjectToList=" . urlencode($object) . ">L</a>");
-  	   echo("</td>");
+//      if($get->ObjCnt > 0)
+//  	   echo("<a href=" . $link . "&amp;removeObjectFromList=" . urlencode($object) . ">R</a>");
+//  	  else
+  	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">L</a>");
+  	  echo("</td>");
     }
     echo("</tr>\n");
   }

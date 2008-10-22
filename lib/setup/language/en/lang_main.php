@@ -929,6 +929,10 @@ define("LangPDFMessage15", "Description");
 define("LangPDFMessage16", "Pos. Angle");
 define("LangPDFMessage17", "Contr. res.");
 define("LangPDFMessage18", "Opt. mag.");
+define("LangPDFMessage19", "Prepared for ");
+define("LangPDFMessage20", "with ");
+define("LangPDFMessage21", "at ");
+define("LangPDFMessage22", "Page ");
 define("LangNumberOfRecords", "results");
 define("LangPDFTitle3", "DeepskyLog Comet Observations");
 

@@ -38,10 +38,10 @@ $list = new Lists;
 $myList = False;
 if(array_key_exists('listname',$_SESSION) && $list->checkList($_SESSION['listname'])==2)
   $myList=True;
-if(array_key_exists('addObjectToList',$_GET) && $_GET['addObjectToList'] && $myList)
+if(array_key_exists('addObservationToList',$_GET) && $_GET['addObservationToList'] && $myList)
 {
-  $listobjectname = $_GET['addObjectToList'];
-	$list->addObjectToList($listobjectname);
+  $listobservationname = $_GET['addObservationToList'];
+	$list->addObservationToList($listobservationname);
   echo LangListQueryObjectsMessage8 . "<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($listobjectname) . "\">" . $listobjectname . "</a>" . LangListQueryObjectsMessage6 . "<a href=\"deepsky/index.php?indexAction=listaction&manage=manage\">" . $_SESSION['listname'] . "</a>.";
 	echo "<HR>";
 }

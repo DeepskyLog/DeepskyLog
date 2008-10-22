@@ -930,6 +930,10 @@ define("LangPDFMessage15", "Beschreibung");
 define("LangPDFMessage16", "Positionswinkel");
 define("LangPDFMessage17", "Kontr. Res.");
 define("LangPDFMessage18", "Opt. Mag.");
+define("LangPDFMessage19", "Prepared for ");
+define("LangPDFMessage20", "with ");
+define("LangPDFMessage21", "at ");
+define("LangPDFMessage22", "Page ");
 define("LangNumberOfRecords", "Ergebnisse");
 define("LangPDFTitle3", "DeepskyLog Kometen Beobachtungen");
 

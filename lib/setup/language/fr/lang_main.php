@@ -930,6 +930,10 @@ define("LangPDFMessage15", "Description");
 define("LangPDFMessage16", "Angle de pos.");
 define("LangPDFMessage17", "R&#233;s. de contr.");
 define("LangPDFMessage18", "Agr. opt.");
+define("LangPDFMessage19", "Préparé pour ");
+define("LangPDFMessage20", "avec un  ");
+define("LangPDFMessage21", "à ");
+define("LangPDFMessage22", "Pagina ");
 define("LangNumberOfRecords", "r&#233;sultats");
 define("LangPDFTitle3", "Observations des com&#232;tes de DeepskyLog");
 

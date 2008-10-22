@@ -929,6 +929,10 @@ define("LangPDFMessage15", "Beschrijving");
 define("LangPDFMessage16", "Pos. hoek");
 define("LangPDFMessage17", "Contr. res.");
 define("LangPDFMessage18", "Opt. vergr.");
+define("LangPDFMessage19", "Klaargemaakt voor ");
+define("LangPDFMessage20", "met een  ");
+define("LangPDFMessage21", "te ");
+define("LangPDFMessage22", "Pagina ");
 define("LangNumberOfRecords", "resultaten");
 define("LangPDFTitle3", "DeepskyLog komeet waarnemingen");
 
