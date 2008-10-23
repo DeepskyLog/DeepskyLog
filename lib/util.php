@@ -723,48 +723,6 @@ class util
       }
 			$y-=$deltaline;
       $actualsort = $$sort;
-			if($valueA[27])
-      { $theText= $valueA[27];
-			  $theText= $pdf->addTextWrap($xbase+$descriptionLeadingSpace, $y, $xmid-$xleft-$descriptionLeadingSpace-10 ,$fontSizeText, '<i>'.$theText);
-  			$y-=$deltaline;	
-        while($theText)
-				{ if($y<$bottomsection) 
-			    { $y=$top;
-			      if($xbase==$xmid)
-				    { if($pagenr++) 
-						  { $pdf->newPage();
-							  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
-          		  $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
-		                     LangPDFMessage19 . $observer->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
-		                                        $observer->getFirstName($_SESSION['deepskylog_id']) . 
-                         LangPDFMessage20 . $instrument->getInstrumentName($observer->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
-				                 LangPDFMessage21 . $location->getLocationName($observer->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
-		            $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, $_GET['pdfTitle'], 'center' );
-		            $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
-          	  }
-							$xbase = $xleft;
-              if($sort)
-							{ $y-=$deltalineSection;
-                $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
-                $pdf->addText($xbase, $y, $fontSizeSection, $$$sort);
-                $y-=$deltaline+$deltalineSection;
-							}
-				    }
-				    else
-				    { $xbase = $xmid;
-              if($sort)
-							{ $y-=$deltalineSection;
-                $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
-					      $pdf->addText($xbase, $y, $fontSizeSection, $$$sort);
-                $y-=$deltaline+$deltalineSection;
-							}
-				    }
-					}
-				$theText= $pdf->addTextWrap($xbase+$descriptionLeadingSpace, $y, $xmid-$xleft-$descriptionLeadingSpace-10 ,$fontSizeText, $theText);
-  			$y-=$deltaline;	
-				}
-			  $pdf->addText(0,0,10,'</i>');			
-			}
 			if($valueA[30])
       { $theText= $valueA[30];
 			  $theText= $pdf->addTextWrap($xbase+$descriptionLeadingSpace, $y, $xmid-$xleft-$descriptionLeadingSpace-10 ,$fontSizeText, '<i>'.$theText);

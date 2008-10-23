@@ -2241,7 +2241,7 @@ class Observations
     }
     else
     {
-      echo("<a href=\"common/detail_eyepiece.php?eyepiece=" . $eyepiece . "\">" . $eyepieces->getDsObservationEyepieceId($eyepiece) . "</a>");
+      echo("<a href=\"common/detail_eyepiece.php?eyepiece=" . $eyepiece . "\">" . $eyepieces->getEyepieceName($eyepiece) . "</a>");
     }
     print("</td>");
     print("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
