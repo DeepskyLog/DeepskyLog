@@ -843,7 +843,8 @@ class Objects
           $result2[$j][24] = $value[0]; 
           $result2[$j][26] = $get->SBObj; 
           $result2[$j][27] = $get->description;
-					$result2[$j][30] = $value[2]; // optional description from lists
+					if(count($vaule=3))
+					  $result2[$j][30] = $value[2]; // optional description from lists
 					reset($atlassesCodes);
 					while(list($key,$value)=each($atlassesCodes))
 					  $result2[$j][$key] =  $get->$key;
@@ -2268,7 +2269,7 @@ function getPartOfNames($name)
       echo("<input type=\"submit\" name=\"Go\" value=\"" . 'Edit Description' . "\" />");
   	  echo "</td>";
   	  echo "<td colspan=\"3\">";
-      echo("<textarea name=\"description\" class=\"description\">");
+      echo("<textarea name=\"description\" class=\"listdescription\">");
 		  echo $list->getListObjectDescription($object); 
 		  echo("</textarea>");
       echo("</form>");

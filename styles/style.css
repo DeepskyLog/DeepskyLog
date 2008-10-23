@@ -96,6 +96,10 @@ td.seen{
 
 textarea.description{
         height: 120px;
-        width: 720px;
+        width: 100%;
+}
+textarea.listdescription{
+        height: 120px;
+        width: 100%;
 }
 

@@ -722,7 +722,8 @@ class util
 			  $pdf->addTextWrap($xbase+380, $y,  20, $fontSizeText, '<b>'.$page.'</b>', 'right');			   // atlas page
       }
 			$y-=$deltaline;
-      $actualsort = $$sort;
+      if($sort)
+			  $actualsort = $$sort;
 			if($valueA[30])
       { $theText= $valueA[30];
 			  $theText= $pdf->addTextWrap($xbase+$descriptionLeadingSpace, $y, $xmid-$xleft-$descriptionLeadingSpace-10 ,$fontSizeText, '<i>'.$theText);

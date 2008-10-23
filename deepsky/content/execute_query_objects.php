@@ -75,7 +75,7 @@ if(array_key_exists('addAllObjectsFromQueryToList',$_GET) && $_GET['addAllObject
 	echo LangListQueryObjectsMessage9 . "<a href=\"deepsky/index.php?indexAction=listaction&amp;manage=manage\">" .  $_SESSION['listname'] . "</a>.";
 	echo "<HR>";
 }
-
+$sort='';
 if(array_key_exists('SO',$_GET) && (count($_SESSION[$_SID])>1))
 {
   $sort = "showname";

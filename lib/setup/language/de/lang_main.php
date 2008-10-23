@@ -411,6 +411,7 @@ define("LangListQueryObjectsMessage12", "Zeige keine assoziierten Objekte");
 define("LangListQueryObjectsMessage13", "Zeige assoziierte Objekte");
 define("LangListQueryObjectsMessage14", "'Bitte geben Sie den Titel an'");
 define("LangListQueryObjectsMessage15", "'DeepskyLog Objekte'");
+define("LangListQueryObjectsMessage16", "&nbsp;The observation&nbsp;");
 
 // content/register.php
 

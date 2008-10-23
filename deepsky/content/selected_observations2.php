@@ -42,7 +42,7 @@ if(array_key_exists('addObservationToList',$_GET) && $_GET['addObservationToList
 {
   $listobservationname = $_GET['addObservationToList'];
 	$list->addObservationToList($listobservationname);
-  echo LangListQueryObjectsMessage8 . "<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($listobjectname) . "\">" . $listobjectname . "</a>" . LangListQueryObjectsMessage6 . "<a href=\"deepsky/index.php?indexAction=listaction&manage=manage\">" . $_SESSION['listname'] . "</a>.";
+  echo LangListQueryObjectsMessage16 . LangListQueryObjectsMessage6 . "<a href=\"deepsky/index.php?indexAction=listaction&manage=manage\">" . $_SESSION['listname'] . "</a>.";
 	echo "<HR>";
 }
 elseif(array_key_exists('removeObjectFromList',$_GET) && $_GET['removeObjectFromList'] && $myList)

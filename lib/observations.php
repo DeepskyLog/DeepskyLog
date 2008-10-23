@@ -2619,9 +2619,9 @@ class Observations
       $run = mysql_query($sql) or die(mysql_error());
       $db->logout();
       $get = mysql_fetch_object($run);
- //     if($get->ObjCnt > 0)
- //      echo("<a href=" . $link . "&amp;removeObjectFromList=" . urlencode($object) . ">R</a>");
- //     else
+      if($get->ObjCnt > 0)
+       echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($object) . ">E</a>");
+      else
        echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">L</a>");
       echo("</td>");
     }
@@ -2801,9 +2801,9 @@ class Observations
       $run = mysql_query($sql) or die(mysql_error());
       $db->logout();
       $get = mysql_fetch_object($run);
-//      if($get->ObjCnt > 0)
-//  	   echo("<a href=" . $link . "&amp;removeObjectFromList=" . urlencode($object) . ">R</a>");
-//  	  else
+      if($get->ObjCnt > 0)
+  	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($object) . ">E</a>");
+  	  else
   	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">L</a>");
   	  echo("</td>");
     }
@@ -2949,10 +2949,9 @@ class Observations
       $sql = "SELECT Count(observerobjectlist.objectname) As ObjCnt FROM observerobjectlist WHERE observerid = \"$observer\" AND objectname=\"$object\" AND listname=\"$listname\"";
       $run = mysql_query($sql) or die(mysql_error());
       $db->logout();
-      $get = mysql_fetch_object($run);
-//      if($get->ObjCnt > 0)
-//  	   echo("<a href=" . $link . "&amp;removeObjectFromList=" . urlencode($object) . ">R</a>");
-//  	  else
+      $get = mysql_fetch_object($run);      if($get->ObjCnt > 0)
+  	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($object) . ">E</a>");
+  	  else
   	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">L</a>");
   	  echo("</td>");
     }

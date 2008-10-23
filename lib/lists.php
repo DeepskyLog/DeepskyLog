@@ -179,6 +179,10 @@ class Lists
   if($get)
 	{ $name = $get->objectname;
 	  $description = $get->description;
+    $sql = "SELECT description FROM objects WHERE name=\"" . $name . "\"";
+    $run = mysql_query($sql) or die(mysql_error());
+  	$get = mysql_fetch_object($run);
+    $description = $get->description . '\n' . $description;
     $sql = "SELECT objectplace AS ObjPl, description FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectname=\"$name\"";
     $run = mysql_query($sql) or die(mysql_error());
   	$get = mysql_fetch_object($run);
@@ -393,7 +397,9 @@ class Lists
   $sql = "UPDATE observerobjectlist SET description=\"$description\" WHERE observerid=\"$observerid\" AND objectname=\"$object\" AND listname=\"$listname\"";
   $run = mysql_query($sql) or die(mysql_error());
   $db->logout();
-  return 0;
+  if(array_key_exists('QOL',$_SESSION))
+    unset($_SESSION['QOL']);
+  return;
  }
  
 }
