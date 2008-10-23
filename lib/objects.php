@@ -2010,12 +2010,14 @@ function getPartOfNames($name)
   include_once "../lib/observers.php";
   include_once "../lib/contrast.php";
   include_once "../lib/instruments.php";
+  include_once "../lib/lists.php";
   include_once "atlasses.php";
 	$atlas = new Atlasses;
   $observer = new Observers;
   $contrastObj = new Contrast;
   $instrumentObj = new Instruments;
-
+  $list = new Lists;
+	
   $_SESSION['object']=$object;
   //$objectDetails= $this->getSeenObjectDetails(array($object));
   echo("<table width=\"100%\">\n");
@@ -2254,14 +2256,42 @@ function getPartOfNames($name)
 	echo $prefMag;
 	echo "</td>";
 	echo "</tr>";
-	if($this->getDescriptionDsObject($object))
+	if(array_key_exists('listname',$_SESSION) && ($list->checkObjectInMyActiveList($object)))
+	{
+  	if(($list->checkList($_SESSION['listname'])==2))
+    { echo("<form action=\"deepsky/index.php?indexAction=detail_object\">\n");    	
+      echo("<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />");
+      echo("<input type=\"hidden\" name=\"object\" value=\"" . $object . "\" />");
+      echo("<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>");
+		  echo "<td align=\"right\">";
+  	  echo LangViewObjectListDescription;
+      echo("<input type=\"submit\" name=\"Go\" value=\"" . 'Edit Description' . "\" />");
+  	  echo "</td>";
+  	  echo "<td colspan=\"3\">";
+      echo("<textarea name=\"description\" class=\"description\">");
+		  echo $list->getListObjectDescription($object); 
+		  echo("</textarea>");
+      echo("</form>");
+		}
+		else
+		{	echo "<tr>";
+  	  echo "<td align=\"right\">";
+  	  echo LangViewObjectListDescription;
+  	  echo "</td>";
+  	  echo "<td colspan=\"3\">";
+		  echo $list->getListObjectDescription($object);
+  	}
+		echo "</td>";
+  	echo "</tr>";
+  }
+	elseif($descriptionDsOject=$this->getDescriptionDsObject($object))
 	{
   	echo "<tr>";
   	echo "<td align=\"right\">";
-  	echo "Description";
+  	echo LangViewObjectNGCDescription;
   	echo "</td>";
   	echo "<td colspan=\"3\">";
-  	echo $this->getDescriptionDsObject($object);
+  	echo $descriptionDsOject;
   	echo "</td>";
   	echo "</tr>";
   }

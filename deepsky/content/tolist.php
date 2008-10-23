@@ -10,7 +10,7 @@ $list = new Lists;
 $observer = new Observers;
 $objects = new Objects;
 
-
+global $baseURL;
 
 if(($list->checkList($_SESSION['listname'])==2) && ($_SESSION['listname']<>"----------"))
   $listname = $_SESSION['listname'];
@@ -258,19 +258,19 @@ if($_SESSION['listname']<>"----------")
     list($min, $max) = $util->printListHeader($_SESSION['QOL'], $link, $min, 25, "");
     echo "<a href=\"\"
                  onclick=\"thetitle = prompt(" . LangListQueryObjectsMessage14 . "," . LangListQueryObjectsMessage15 . ");
-								           location.href='deepsky/objects.pdf?SID=QOL&amp;pdfTitle='+thetitle+''
+								           location.href='".$baseURL."deepsky/objects.pdf?SID=QOL&amp;pdfTitle='+thetitle+''
 					                 return false\"
 													 
 								 target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a> &nbsp;-&nbsp;";
   echo "<a href=\"\"
                  onclick=\"thetitle = prompt(" . LangListQueryObjectsMessage14 . "," . LangListQueryObjectsMessage15 . ");
-								           location.href='deepsky/objectnames.pdf?SID=QOL&amp;pdfTitle='+thetitle+''
+								           location.href='".$baseURL."deepsky/objectnames.pdf?SID=QOL&amp;pdfTitle='+thetitle+''
 					                 return false\"
 													 
 								 target=\"new_window\">".LangExecuteQueryObjectsMessage4b."</a> &nbsp;-&nbsp;";
   echo "<a href=\"\"
                  onclick=\"thetitle = prompt(" . LangListQueryObjectsMessage14 . "," . LangListQueryObjectsMessage15 . ");
-								           location.href='deepsky/objectsDetails.pdf?SID=QOL&amp;sort=" . $sort . "&amp;pdfTitle='+thetitle+''
+								           location.href='".$baseURL."deepsky/objectsDetails.pdf?SID=QOL&amp;sort=" . $sort . "&amp;pdfTitle='+thetitle+''
 					                 return false\"
 													 
 								 target=\"new_window\">".LangExecuteQueryObjectsMessage4c."</a> &nbsp;-&nbsp;";

@@ -16,6 +16,8 @@ include_once "../lib/objects.php";
 include_once "../lib/setup/language.php";
 include_once "../lib/util.php";
 
+global $baseURL;
+
 $objects = new Objects;
 $util = new util;
 $util->checkUserInput();
@@ -124,19 +126,19 @@ if(count($_SESSION[$_SID]) > 1) // valid result
 	
   echo "<a href=\"\"
                  onclick=\"thetitle = prompt(" . LangListQueryObjectsMessage14 . "," . LangListQueryObjectsMessage15 . ");
-								           location.href='deepsky/objects.pdf?SID=" . $_SID . "&amp;pdfTitle='+thetitle+''
+								           location.href='" . $baseURL . "deepsky/objects.pdf?SID=" . $_SID . "&amp;pdfTitle='+thetitle+''
 					                 return false\"
 													 
 								 target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a> &nbsp;-&nbsp;";
   echo "<a href=\"\"
                  onclick=\"thetitle = prompt(" . LangListQueryObjectsMessage14 . "," . LangListQueryObjectsMessage15 . ");
-								           location.href='deepsky/objectnames.pdf?SID=" . $_SID . "&amp;pdfTitle='+thetitle+''
+								           location.href='" . $baseURL . "deepsky/objectnames.pdf?SID=" . $_SID . "&amp;pdfTitle='+thetitle+''
 					                 return false\"
 													 
 								 target=\"new_window\">".LangExecuteQueryObjectsMessage4b."</a> &nbsp;-&nbsp;";
   echo "<a href=\"\"
                  onclick=\"thetitle = prompt(" . LangListQueryObjectsMessage14 . "," . LangListQueryObjectsMessage15 . ");
-								           location.href='deepsky/objectsDetails.pdf?SID=" . $_SID . "&amp;sort=" . $sort . "&amp;pdfTitle='+thetitle+''
+								           location.href='" . $baseURL . "deepsky/objectsDetails.pdf?SID=" . $_SID . "&amp;sort=" . $sort . "&amp;pdfTitle='+thetitle+''
 					                 return false\"
 													 
 								 target=\"new_window\">".LangExecuteQueryObjectsMessage4c."</a> &nbsp;-&nbsp;";

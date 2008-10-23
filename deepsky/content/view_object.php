@@ -62,7 +62,10 @@ if($objects->getDsObjectName($_GET['object'])) // check whether object exists
   		  $objects->setPositionAngle($_GET['object'], $_GET['newnumber']);
   	}
   }
-	
+	if($_GET['editListObjectDescription'])
+  { echo "WP";
+    $list->setListObjectDescription($_GET['object'], $_GET['description']);
+	}
   if(array_key_exists('addObjectToList',$_GET) && $_GET['addObjectToList'] && $myList)
   {
   	$list->addObjectToList($_GET['addObjectToList'], $_GET['showname']);

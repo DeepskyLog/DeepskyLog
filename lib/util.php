@@ -538,6 +538,8 @@ class util
 
     global $deepskylive, $dateformat;
 		
+		global $baseURL, $dbname;
+		
 		include_once "atlasses.php";
 		$atlas = new Atlasses;
 		$atlasses = $atlas->getSortedAtlasses();
@@ -689,8 +691,10 @@ class util
 			if(!$sort)
 			{ $pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA[3]);			                   // seen
 			  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA[28]);		                     // last seen	
-			  $pdf->addTextWrap($xbase+ 70, $y,  85, $fontSizeText, '<b>'.$valueA[4]);		               //	object
-			  $pdf->addTextWrap($xbase+150, $y,  30, $fontSizeText, '</b>'.$type);			                 // type
+			  $pdf->addTextWrap($xbase+ 70, $y,  85, $fontSizeText, '<b>'.
+				  '<c:alink:'.$baseURL.'deepsky/index.php?indexAction=detail_object&amp;object='.
+					urlencode($valueA[0]).'>'.$valueA[4]);		               //	object
+			  $pdf->addTextWrap($xbase+150, $y,  30, $fontSizeText, '</c:alink></b>'.$type);			                 // type
 			  $pdf->addTextWrap($xbase+180, $y,  20, $fontSizeText, $con);			                         // constellation
 			  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $mag, 'left');  	                 // mag
 			  $pdf->addTextWrap($xbase+217, $y,  18, $fontSizeText, $sb, 'left');		                   // sb
@@ -704,8 +708,10 @@ class util
       else
 			{ $pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA[3]);			                   // seen
 			  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA[28]);		                     // last seen	
-			  $pdf->addTextWrap($xbase+ 70, $y, 100, $fontSizeText, '<b>'.$valueA[4]);		               //	object
-			  $pdf->addTextWrap($xbase+170, $y,  30, $fontSizeText, '</b>'.$type);			                 // type
+			  $pdf->addTextWrap($xbase+ 70, $y, 100, $fontSizeText, '<b>'.
+				  '<c:alink:'.$baseURL.'deepsky/index.php?indexAction=detail_object&amp;object='.
+					urlencode($valueA[0]).'>'.$valueA[4]);		                                       //	object
+			  $pdf->addTextWrap($xbase+170, $y,  30, $fontSizeText, '</c:alink></b>'.$type);			                 // type
 			  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $mag, 'left');			                 // mag
 			  $pdf->addTextWrap($xbase+217, $y,  18, $fontSizeText, $sb, 'left');			                   // sb
 			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, $this->raToStringHM($valueA[7]) . ' '.

@@ -452,6 +452,8 @@ define("LangViewObjectNearbyObjects", "Objets proches: ");
 define("LangViewObjectNearbyObjectsMore", "Plus d'objets");
 define("LangViewObjectNearbyObjectsLess", "Moins d'objets");
 define("LangViewObjectNearbyObjectsMoreLess", "jusqu'&agrave; environ ");
+define("LangViewObjectNGCDescription", "Description NGC");
+define("LangViewObjectListDescription", "Description de liste");
 
 // content/view_observers.php
 

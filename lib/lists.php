@@ -151,11 +151,15 @@ class Lists
 	$get = mysql_fetch_object($run);
   if(!$get)
 	{
+    $sql = "SELECT description FROM objects WHERE name=\"$name\"";
+    $run = mysql_query($sql) or die(mysql_error());
+	  $get = mysql_fetch_object($run);
+		$description=$get->description;
 	  $sql = "SELECT MAX(objectplace) AS ObjPl FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$listname\"";
     $run = mysql_query($sql) or die(mysql_error());
 	  $get = mysql_fetch_object($run);
     $objpl = ($get->ObjPl) + 1;
-    $sql = "INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname) VALUES (\"$observer\", \"$name\", \"$listname\", \"$objpl\", \"$showname\")";
+    $sql = "INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, description) VALUES (\"$observer\", \"$name\", \"$listname\", \"$objpl\", \"$showname\", \"$description\")";
     mysql_query($sql) or die(mysql_error());
   }
 	$db->logout();
@@ -359,6 +363,37 @@ class Lists
     return $get->objectplace;
   else
    return 0;
+ }
+ 
+ function getListObjectDescription($object)
+ {
+  $db = new database;
+  $db->login();
+  $observerid = $_SESSION['deepskylog_id'];
+	$listname = $_SESSION['listname'];
+  if(substr($listname,0,7)=='Public:')
+    $sql = "SELECT observerobjectlist.description FROM observerobjectlist WHERE objectname=\"$object\" AND listname=\"$listname\"";
+  else
+    $sql = "SELECT observerobjectlist.description FROM observerobjectlist WHERE observerid = \"$observerid\" AND objectname=\"$object\" AND listname=\"$listname\"";
+  $run = mysql_query($sql) or die(mysql_error());
+  $db->logout();
+  $get = mysql_fetch_object($run);
+  if($get)
+    return $get->description;
+  else
+   return 0;
+ }
+
+ function setListObjectDescription($object,$description)
+ {
+  $db = new database;
+  $db->login();
+  $observerid = $_SESSION['deepskylog_id'];
+	$listname = $_SESSION['listname'];
+  $sql = "UPDATE observerobjectlist SET description=\"$description\" WHERE observerid=\"$observerid\" AND objectname=\"$object\" AND listname=\"$listname\"";
+  $run = mysql_query($sql) or die(mysql_error());
+  $db->logout();
+  return 0;
  }
  
 }
