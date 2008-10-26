@@ -173,21 +173,29 @@ class Lists
   $db->login();
 	$observer = $_SESSION['deepskylog_id'];
 	$listname = $_SESSION['listname'];
-  $sql = "SELECT objectname, description FROM observations WHERE id=" . $id;
+  $sql = "SELECT observations.objectname, observations.description, observers.name, observers.firstname, locations.name as location, instruments.name AS instrument " .
+	       "FROM observations " .
+				 "JOIN observers ON observations.observerid=observers.id " .
+				 "JOIN locations ON observations.locationid=locations.id " .
+				 "JOIN instruments ON observations.instrumentid=instruments.id " .
+				 "WHERE observations.id=" . $id;
   $run = mysql_query($sql) or die(mysql_error());
 	$get = mysql_fetch_object($run);
   if($get)
 	{ $name = $get->objectname;
-	  $description = $get->description;
-    $sql = "SELECT description FROM objects WHERE name=\"" . $name . "\"";
-    $run = mysql_query($sql) or die(mysql_error());
-  	$get = mysql_fetch_object($run);
-    $description = $get->description . '\n' . $description;
+    $description = '(' . $get->firstname . ' ' . $get->name ;
+	  $description .='/' . $get->instrument;
+	  $description .='/' . $get->location;
+	  $description .=') ' . $get->description;
     $sql = "SELECT objectplace AS ObjPl, description FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectname=\"$name\"";
     $run = mysql_query($sql) or die(mysql_error());
   	$get = mysql_fetch_object($run);
     if(!$get)
   	{
+  		$sql = "SELECT description FROM objects WHERE name=\"" . $name . "\"";
+      $run = mysql_query($sql) or die(mysql_error());
+    	$get = mysql_fetch_object($run);
+      $description = $get->description . ' \n' . $description;
   	  $sql = "SELECT MAX(objectplace) AS ObjPl FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$listname\"";
       $run = mysql_query($sql) or die(mysql_error());
   	  $get = mysql_fetch_object($run);

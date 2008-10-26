@@ -2620,7 +2620,7 @@ class Observations
       $db->logout();
       $get = mysql_fetch_object($run);
       if($get->ObjCnt > 0)
-       echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($object) . ">E</a>");
+       echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">E</a>");
       else
        echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">L</a>");
       echo("</td>");
@@ -2802,7 +2802,7 @@ class Observations
       $db->logout();
       $get = mysql_fetch_object($run);
       if($get->ObjCnt > 0)
-  	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($object) . ">E</a>");
+  	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">E</a>");
   	  else
   	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">L</a>");
   	  echo("</td>");
@@ -2950,7 +2950,7 @@ class Observations
       $run = mysql_query($sql) or die(mysql_error());
       $db->logout();
       $get = mysql_fetch_object($run);      if($get->ObjCnt > 0)
-  	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($object) . ">E</a>");
+  	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">E</a>");
   	  else
   	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">L</a>");
   	  echo("</td>");
