@@ -229,7 +229,7 @@ if ($_POST['newobject']) // pushed add new object button
     $fromMail = $obs->getEmail($administrators[0]);
     $headers = "From:".$fromMail;
     $body = LangValidateAccountEmailTitleObject . " " . $name . " " . " www.deepskylog.org/deepsky/index.php?indexAction=detail_object&object=" . urlencode($name) . " " .
-		        LangValidateAccountEmailTitleObjectObserver . " " . $obs->getName($_SESSION['deepskylog_id']) . " " . $obs->getFirstName($_SESSION['deepskylog_id']) . " www.deepskylog.org/common/detail_observer.php?user=" . urlencode($_SESSION['deepskylog_id']);
+		        LangValidateAccountEmailTitleObjectObserver . " " . $obs->getObserverName($_SESSION['deepskylog_id']) . " " . $obs->getFirstName($_SESSION['deepskylog_id']) . " www.deepskylog.org/common/detail_observer.php?user=" . urlencode($_SESSION['deepskylog_id']);
 						
 		// send message
     mail($to, $subject, $body, $headers);

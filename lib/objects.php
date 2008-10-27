@@ -28,6 +28,7 @@ class Objects
   $db = new database;
   $db->login();
 
+	include_once "atlasses.php";
   $atlas = new Atlasses;
 
   if (!$_SESSION['lang'])
@@ -43,7 +44,8 @@ class Objects
   $torresB = $atlas->calculateTorresBPage($ra, $dec);
   $torresBC = $atlas->calculateTorresBCPage($ra, $dec);
   $torresC = $atlas->calculateTorresCPage($ra, $dec);
-  $array = array("INSERT INTO objects (name, type, con, ra, decl, mag, subr, diam1, diam2, pa, datasource, urano, urano_new, sky, millenium, taki, psa, torresB, torresBC, torresC) VALUES (\"$name\", \"$type\", \"$con\", \"$ra\", \"$dec\", \"$mag\", \"$subr\", \"$diam1\", \"$diam2\", \"$pa\", \"$datasource\", \"$urano\", \"$uranonew\", \"$skyatlas\", \"$millenium\", \"$taki\", \"$psa\", \"$torresB\", \"$torresBC\", \"$torresC\")");
+  $array = array("INSERT INTO objects (name, type, con, ra, decl, mag, subr, diam1, diam2, pa, datasource, urano, urano_new, sky, millenium, taki, psa, torresB, torresBC, torresC, milleniumbase) 
+	                            VALUES (\"$name\", \"$type\", \"$con\", \"$ra\", \"$dec\", \"$mag\", \"$subr\", \"$diam1\", \"$diam2\", \"$pa\", \"$datasource\", \"$urano\", \"$uranonew\", \"$skyatlas\", \"$millenium\", \"$taki\", \"$psa\", \"$torresB\", \"$torresBC\", \"$torresC\", \"$millenium\")");
   $sql = implode("", $array);
   mysql_query($sql) or die(mysql_error());
   $newcatindex = ucwords(trim($catindex));
@@ -843,7 +845,7 @@ class Objects
           $result2[$j][24] = $value[0]; 
           $result2[$j][26] = $get->SBObj; 
           $result2[$j][27] = $get->description;
-					if(count($vaule=3))
+					if(count($value)==3)
 					  $result2[$j][30] = $value[2]; // optional description from lists
 					reset($atlassesCodes);
 					while(list($key,$value)=each($atlassesCodes))

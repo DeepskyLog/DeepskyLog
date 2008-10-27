@@ -549,6 +549,7 @@ class util
     $fontdir = ('../lib/fonts/Helvetica.afm');
     $pdf->selectFont('../lib/fonts/Helvetica.afm');
 
+    $actualsort='';
     $y = 0;
     $bottom = 40;
     $bottomsection = 30;
@@ -641,7 +642,7 @@ class util
                        LangPDFMessage20 . $instrument->getInstrumentName($observer->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
 				               LangPDFMessage21 . $location->getLocationName($observer->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
 		          $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, $_GET['pdfTitle'], 'center' );
-		          $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenrv, 'right');
+		          $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
   					}
 						$xbase = $xleft;
   				}
@@ -724,7 +725,7 @@ class util
 			$y-=$deltaline;
       if($sort)
 			  $actualsort = $$sort;
-			if($valueA[30])
+			if(array_key_exists(30,$valueA) && $valueA[30])
       { $theText= $valueA[30];
 			  $theText= $pdf->addTextWrap($xbase+$descriptionLeadingSpace, $y, $xmid-$xleft-$descriptionLeadingSpace-10 ,$fontSizeText, '<i>'.$theText);
   			$y-=$deltaline;	
@@ -764,8 +765,9 @@ class util
 				$theText= $pdf->addTextWrap($xbase+$descriptionLeadingSpace, $y, $xmid-$xleft-$descriptionLeadingSpace-10 ,$fontSizeText, $theText);
   			$y-=$deltaline;	
 				}
+			  $pdf->addText(0,0,10,'</i>');
 			}
-			elseif($valueA[27])
+			elseif(array_key_exists(27,$valueA) && $valueA[27])
       { $theText= $valueA[27];
 			  $theText= $pdf->addTextWrap($xbase+$descriptionLeadingSpace, $y, $xmid-$xleft-$descriptionLeadingSpace-10 ,$fontSizeText, '<i>'.$theText);
   			$y-=$deltaline;	

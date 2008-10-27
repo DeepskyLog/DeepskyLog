@@ -27,7 +27,7 @@ if($objects->getDsObjectName($_GET['object'])) // check whether object exists
     	if($_GET['newaction']=="NewName")
   	  {
   	    $objects->newName($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
-  		  $_GET['object'] = trim($_GET['newcatalog'] . " " . ucwords(trim($_GET['newnumber'])));
+  		  $_GET['object'] = trim($_GET['newcatalogue'] . " " . ucwords(trim($_GET['newnumber'])));
       }	
     	if($_GET['newaction']=="NewAltName")
   	    $objects->newAltName($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);

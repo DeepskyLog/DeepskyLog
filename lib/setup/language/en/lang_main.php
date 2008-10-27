@@ -392,7 +392,7 @@ define("LangExecuteQueryObjectsMessage9", "Filter objects");
 define("LangInvalidCSVfile", "You didn't provide a valid CSV file!");
 define("LangSeenDontCare", "Don't care");
 define("LangSeenByMe", "Already saw it");
-define("LangSeenSomeoneElse", "Already seen by someone else");
+define("LangSeenSomeoneElse", "Already seen by someone else but not by me");
 define("LangSeenByMeOrSomeoneElse", "Already seen by me or someone else");
 define("LangNotSeenByMeOrNotSeenAtAll", "Not seen by me or not seen at all");
 define("LangNotSeen", "Not seen at all");

@@ -48,7 +48,7 @@ class Atlasses
   $sql = "SELECT " . $atlas . " FROM objects WHERE name = \"$name\"";
   $run = mysql_query($sql) or die(mysql_error());
   $get = mysql_fetch_object($run);
-  $atlaspage = $get->$atlas;
+  if($get) $atlaspage = $get->$atlas; else $atlaspage='';
   $db->logout();
   return $atlaspage;
  }	

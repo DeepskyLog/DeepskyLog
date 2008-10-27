@@ -2957,6 +2957,7 @@ class Observations
  function getObjectsFromObservations($observations)
  {
    $objects = array();
+	 $i=0;
    while(list($key, $observation)=each($observations))
 	 {
     $object = $this->getObjectId($observation);

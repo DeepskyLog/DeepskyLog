@@ -195,7 +195,7 @@ class Lists
   		$sql = "SELECT description FROM objects WHERE name=\"" . $name . "\"";
       $run = mysql_query($sql) or die(mysql_error());
     	$get = mysql_fetch_object($run);
-      $description = $get->description . ' \n' . $description;
+      if($get->description) $description = $get->description . ' \n' . $description;
   	  $sql = "SELECT MAX(objectplace) AS ObjPl FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$listname\"";
       $run = mysql_query($sql) or die(mysql_error());
   	  $get = mysql_fetch_object($run);
