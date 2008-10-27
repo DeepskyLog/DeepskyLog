@@ -388,6 +388,7 @@ define("LangExecuteQueryObjectsMessage5", "Download csv-file");
 define("LangExecuteQueryObjectsMessage6", "Download csv- file");
 define("LangExecuteQueryObjectsMessage7", "Download icq-file");
 define("LangExecuteQueryObjectsMessage8", "Download Argo Navis-file");
+define("LangExecuteQueryObjectsMessage9", "Filter objecten");
 define("LangInvalidCSVfile", "U gaf geen geldige CSV file!");
 define("LangSeenDontCare", "Alle objecten, ongeacht of ik ze waarnam of niet");
 define("LangSeenByMe", "Enkel objecten die ik reeds heb waargenomen");

@@ -454,13 +454,9 @@ class Observations
     $run = mysql_query($sql) or die(mysql_error());
     $get = mysql_fetch_object($run);
     if($get)
-    {
       $name = $get->objectname;
-    }
     else
-    {
       $name = '';
-    }
     $db->logout();
     return $name;
   }
@@ -2957,6 +2953,19 @@ class Observations
     }
     echo("</tr>\n");
   }
+	
+ function getObjectsFromObservations($observations)
+ {
+   $objects = array();
+   while(list($key, $observation)=each($observations))
+	 {
+    $object = $this->getObjectId($observation);
+    if(!array_key_exists($object, $objects))
+   	    $objects[$object] = array($i++,$object);		
+   }
+	 return $objects;
+ }
+
 
 }
 ?>
