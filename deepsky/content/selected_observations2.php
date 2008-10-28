@@ -52,7 +52,13 @@ elseif(array_key_exists('removeObjectFromList',$_GET) && $_GET['removeObjectFrom
   echo LangListQueryObjectsMessage8 . "<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($listobjectname) . "\">" . $listobjectname . "</a>" . LangListQueryObjectsMessage7 . "<a href=\"deepsky/index.php?indexAction=listaction&manage=manage\">" . $_SESSION['listname'] . "</a>.";
 	echo "<HR>";
 }
-
+ // minimum
+ if(array_key_exists('min',$_GET))
+    $min = ($_GET['min']-1)*25;
+ elseif(array_key_exists('min',$_POST))
+    $min = ($_POST['min']-1)*25;
+ else
+    $min = '';
 $object = '';
 $cataloguesearch = ''; // variable to check if only catalogue has been filled in
 
@@ -666,11 +672,6 @@ elseif($object ||
       $sort = "id";
       $_GET['sort'] = $sort;
    }
-   // minimum
-   if(array_key_exists('min',$_GET))
-      $min = $_GET['min'];
-   else
-      $min = '';
    if($cataloguesearch == "yes")
       $obs = $observations->getObservationFromQuery($query,$sort,0,false,$seenpar); // LIKE
    else
@@ -913,7 +914,7 @@ elseif($object ||
 	 }
 	 echo "</h2>";	 
 	
-   list($min, $max) = $util->printListHeader($obs, $link, $min, $step, $total);
+   list($min, $max) = $util->printNewListHeader($obs, $link, $min, $step, $total);
 	 if($_SESSION['lco']=="O")
      echo "<p align=\"right\">" .  LangOverviewObservationsHeader5a;
 	 
@@ -1229,7 +1230,7 @@ elseif($object ||
          echo ("</table>\n");
       }
 			
-      list($min, $max) = $util->printListHeader($obs, $link, $min, $step, $total);
+      list($min, $max) = $util->printNewListHeader($obs, $link, $min, $step, $total);
 
       $_SESSION['observation_query'] = $obs;
 
