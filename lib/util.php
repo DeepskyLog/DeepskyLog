@@ -23,76 +23,61 @@ include_once "class.ezpdf.php";
 class util
 {
   function printNewListHeader($list, $link, $min, $step, $total)
-  {
-	
-	  $pages = ceil(count($list) / $step); // total number of pages
-    if($min) // minimum value
-    { $min = $min - ($min % $step); // start display from number of $steps
-      if ($min < 0)  // minimum value smaller than 0
+  { $pages = ceil(count($list) / $step);       // total number of pages
+    if($min)                                   // minimum value
+    { $min = $min - ($min % $step);            // start display from number of $steps
+      if ($min < 0)                            // minimum value smaller than 0
         $min = 0;
-      if ($min > count($list)) // minimum value bigger than number of elements
+      if ($min > count($list))                 // minimum value bigger than number of elements
         $min = count($list) - (count($list) % $step);
     }
-    else // no minimum value defined
+    else                                       // no minimum value defined
       $min = 0;
-    $max = $min + $step; // maximum number to be displayed
+    $max = $min + $step;                       // maximum number to be displayed
     if(count($list) > $step)
-    {
-      $currentpage = ceil($min / $step) + 1;
-      echo("<p>\n");
-
-		echo("<table>");
-		echo("<td>");	
+    { $currentpage = ceil($min / $step) + 1;
+      echo("<table>");
+		  
+			echo("<td>");	
+      echo("<a href=\"".$link."&amp;multiplepagenr=0\">");
+      echo "<img src=\"../styles/images/allleft20.gif\">"; // link to last page
+      echo("</a>\n");
+	    echo"</td>";
 			
-		echo("<a href=\"".$link."&amp;min=0\">");
-    echo "First"; // link to last page
-    echo("</a>\n");
+		  echo"<td>";
+	    echo("<a href=\"".$link."&amp;multiplepagenr=".($currentpage-1) . "\">");
+      echo "<img src=\"../styles/images/left20.gif\">"; // link to last page
+      echo("</a>\n");
+		  echo"</td>";
+		  
+			echo"<td align=\"center\">";
+      echo("<form action=\"".$link."\" method=\"post\">");
+      echo("<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\"></input>");
+	    echo("</form>");
+    	echo"</td>";	
 	
-	  echo"</td>";
-		echo"<td>";
-		
-	
-    echo("<a href=\"".$link."&amp;min=".($currentpage-1) . "\">");
-    echo "Previous"; // link to last page
-    echo("</a>\n");
+		  echo"<td>";
+      echo("<a href=\"".$link."&amp;multiplepagenr=".($currentpage+1) . "\">");
+      echo "<img src=\"../styles/images/right20.gif\">"; // link to last page
+      echo("</a>\n");
+		  echo"</td>";
 
-		echo"</td>";
-		echo"<td align=\"center\">";
-		
-  echo("<form action=\"".$link."\" method=\"post\">\n");
-  echo("<input type=\"text\" name=\"min\" size=\"4\" class=\"inputfield\" align=\"center\" value=\"".$currentpage."\"></input>");
-	echo("</form>");
-	
-	echo"</td>";	
-	
-		echo"<td>";
-		
-	
-    echo("<a href=\"".$link."&amp;min=".($currentpage+1) . "\">");
-    echo "Next"; // link to last page
-    echo("</a>\n");
+		  echo("<td>");				
+		  echo("<a href=\"".$link."&amp;multiplepagenr=9999999\">");
+      echo "<img src=\"../styles/images/allright20.gif\">"; // link to last page
+      echo("</a>\n");
+	    echo"</td>";
 
-		echo"</td>";
-		echo("<td>");	
-			
-		echo("<a href=\"".$link."&amp;min=9999999\">");
-    echo "Last"; // link to last page
-    echo("</a>\n");
-	
-	  echo"</td>";
-		echo"<td>";
-	
-
+  		echo"<td>";
 			if ($total == "")
         echo("&nbsp;&nbsp;(" . count($list) . "&nbsp;" . LangNumberOfRecords );
       else
         echo("&nbsp;&nbsp;(" . count($list) . "&nbsp;" . LangNumberOfRecords . " / " . $total );
       echo(" in " . $pages . " pages)</p>\n");
+      echo"</td>";
 	
-	echo"</td>";
-	
-	echo"</table>";    
-	}
+	    echo"</table>";    
+	  }
     return array($min, $max);
   }
 

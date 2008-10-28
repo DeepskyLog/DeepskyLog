@@ -53,12 +53,15 @@ elseif(array_key_exists('removeObjectFromList',$_GET) && $_GET['removeObjectFrom
 	echo "<HR>";
 }
  // minimum
- if(array_key_exists('min',$_GET))
-    $min = ($_GET['min']-1)*25;
- elseif(array_key_exists('min',$_POST))
-    $min = ($_POST['min']-1)*25;
+
+if(array_key_exists('min',$_GET))
+   $min=$_GET['min'];
+ elseif(array_key_exists('multiplepagenr',$_GET))
+    $min = ($_GET['multiplepagenr']-1)*25;
+ elseif(array_key_exists('multiplepagenr',$_POST))
+    $min = ($_POST['multiplepagenr']-1)*25;
  else
-    $min = '';
+    $min = 0;
 $object = '';
 $cataloguesearch = ''; // variable to check if only catalogue has been filled in
 
@@ -129,6 +132,8 @@ else
   $catalogue = '';
 
 // TITLE
+echo"<table width=\"100%\">";
+echo"<td>";
 echo("<div id=\"main\">\n<h2>");
 $theDate = date('Ymd', strtotime('-1 year')) ;
 if(array_key_exists('minyear',$_GET) && ($_GET['minyear'] == substr($theDate,0,4)) &&
@@ -790,52 +795,37 @@ elseif($object ||
    if (array_key_exists('sort',$_GET) && ($_GET['sort'] == "objectname"))
    {
       while(list ($key, $value) = each($obs)) // go through observations array
-      {
-         $obsname[$value] = $observations->getObjectId($value);
-      }
+        $obsname[$value] = $observations->getObjectId($value);
       natcasesort($obsname);
       reset($obsname);
       $count = 0;
       while(list ($key, $value) = each($obsname)) // go through observations array
-      {
-         $obs2[$count] = $key;
-         $count++;
+      { $obs2[$count] = $key;
+        $count++;
       }
       $obs = $obs2;
    }
 
    if(sizeof($obs) > 0)
-   {
-      krsort($obs);
-   }
+     krsort($obs);
 
 
   if(array_key_exists('previous',$_GET) && $_GET['previous']) // field to sort on given as a parameter in the url
-  {
     $prev = $_GET['previous'];
-  }
   else
-  {
     $prev = '';
-  }
 
    if(array_key_exists('previous',$_GET) && ($_GET['previous'] == $_GET['sort'])) // reverse sort when pushed twice
-   {
-      if ($_GET['sort'] != "")
-      {
-         $obs = array_reverse($obs, true);
-      }
-      else
-      {
-         krsort($obs);
-         reset($obs);
-      }
-      $previous = ""; // reset previous field to sort on
+   { if ($_GET['sort'] != "")
+       $obs = array_reverse($obs, true);
+     else
+     { krsort($obs);
+       reset($obs);
+     }
+     $previous = ""; // reset previous field to sort on
    }
    else
-   {
-      $previous = $sort;
-   }
+     $previous = $sort;
    $step = 25;
 
    $link = "deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) . 
@@ -912,9 +902,13 @@ elseif($object ||
   		   echo(" - <a href=\"". $link . "&amp;lco=O" . "&amp;min=" . $min . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . 
   			        LangCompactObservationsLO . "</a>");
 	 }
-	 echo "</h2>";	 
-	
+	 echo "</h2>";
+	 echo"</td>";
+	 echo"<td align=\"right\">";	 
    list($min, $max) = $util->printNewListHeader($obs, $link, $min, $step, $total);
+	 echo"</td>";
+	 echo"</table>";
+	 
 	 if($_SESSION['lco']=="O")
      echo "<p align=\"right\">" .  LangOverviewObservationsHeader5a;
 	 
@@ -1210,9 +1204,9 @@ elseif($object ||
 				 if($_SESSION['lco']!="O")
 				   echo("<td></td>\n");
 				 else
-				   echo("<td width=\"15%\">" . LangOverviewObservationsHeader8 . "</td>\n
-                 <td width=\"15%\">" . LangOverviewObservationsHeader9 . "</td>\n
-                 <td width=\"15%\">" . LangOverviewObservationsHeader5. "</td>\n");
+				   echo("<td width=\"15%\">" . LangOverviewObservationsHeader8 . "</td>\n".
+                 "<td width=\"15%\">" . LangOverviewObservationsHeader9 . "</td>\n".
+                 "<td width=\"15%\">" . LangOverviewObservationsHeader5. "</td>\n");
          echo "</tr>\n";
          while(list ($key, $value) = each($obs)) // go through observations array
          {
@@ -1233,7 +1227,6 @@ elseif($object ||
       list($min, $max) = $util->printNewListHeader($obs, $link, $min, $step, $total);
 
       $_SESSION['observation_query'] = $obs;
-
       echo "<p><a href=\"deepsky/observations.pdf\" target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a> - ";
       echo "<a href=\"deepsky/observations.csv\" target=\"new_window\">".LangExecuteQueryObjectsMessage5."</a> - ";
       echo "<a href=\"deepsky/index.php?indexAction=query_objects&amp;source=observation_query\">".LangExecuteQueryObjectsMessage9."</a> - ";
