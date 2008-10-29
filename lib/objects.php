@@ -86,7 +86,11 @@ class Objects
   mysql_query($sql) or die(mysql_error());	
   $sql= "UPDATE objects SET name=\"$newname\" WHERE name = \"$name\"";
   mysql_query($sql) or die(mysql_error());	
-  $sql= "UPDATE observations SET objectname=\"$newname\" WHERE objectname = \"$name\"";
+  $sql= "UPDATE observerobjectlist SET objectshowname=\"$newname\" WHERE objectname = \"$name\"";
+  mysql_query($sql) or die(mysql_error());
+  $sql= "UPDATE observerobjectlist SET objectname=\"$newname\" WHERE objectname = \"$name\"";
+  mysql_query($sql) or die(mysql_error());	
+   $sql= "UPDATE observations SET objectname=\"$newname\" WHERE objectname = \"$name\"";
   mysql_query($sql) or die(mysql_error());	
   $sql= "UPDATE objectpartof SET objectname=\"$newname\" WHERE objectname = \"$name\"";
   mysql_query($sql) or die(mysql_error());	
