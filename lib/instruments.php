@@ -65,7 +65,7 @@ class Instruments
  {
   $db = new database;
   $db->login();
-
+  $name=htmlentities($name);
   $sql = "SELECT * FROM instruments where name=\"$name\" and observer=\"$observer\"";
   $run = mysql_query($sql) or die(mysql_error());
 

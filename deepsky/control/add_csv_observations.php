@@ -86,7 +86,7 @@ else
 
   for ( $i = 0;$i < count($objects); $i++)
   {
-    $objectsquery = $obj->getObjectFromQuery(array("name" => $objects[$i]), $exact = 2);
+    $objectsquery = $obj->getExactObject($objects[$i]);
 
     if (count($objectsquery) == 0)
     {
@@ -95,19 +95,22 @@ else
     }
     else
     {
-      $correctedObjects[] = $objectsquery[0][0];
+      $correctedObjects[] = $objectsquery;
     }
   }
 
   // Check for existence of locations
   $j = 0;
+	$temploc='';
   for ( $i = 0;$i < count($locations); $i++)
   {
-		if ($loc->getLocationId($locations[$i], $_SESSION['deepskylog_id']) == -1)
+		if(($temploc!=$locations[$i]) && ($loc->getLocationId($locations[$i], $_SESSION['deepskylog_id']) == -1))
 		{
       $locationsMissing[$j] = $locations[$i];
       $j++;
     }
+		else
+		  $temploc = $locations[$i];
   }
 
 
