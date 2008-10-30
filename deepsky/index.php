@@ -31,6 +31,7 @@ elseif((!array_key_exists('lco',$_SESSION)) || (!(($_SESSION['lco']=="L") ||( $_
 include_once "../lib/util.php";
 $util = new Util();
 $util->checkUserInput();
+
 include("../common/head.php"); // HTML head
 $head = new head();
 $head->printHeader($browsertitle);

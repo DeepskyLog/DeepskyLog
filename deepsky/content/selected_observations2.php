@@ -52,8 +52,8 @@ elseif(array_key_exists('removeObjectFromList',$_GET) && $_GET['removeObjectFrom
   echo LangListQueryObjectsMessage8 . "<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($listobjectname) . "\">" . $listobjectname . "</a>" . LangListQueryObjectsMessage7 . "<a href=\"deepsky/index.php?indexAction=listaction&manage=manage\">" . $_SESSION['listname'] . "</a>.";
 	echo "<HR>";
 }
- // minimum
 
+ // minimum
 if(array_key_exists('min',$_GET))
    $min=$_GET['min'];
  elseif(array_key_exists('multiplepagenr',$_GET))
@@ -826,62 +826,64 @@ elseif($object ||
    }
    else
      $previous = $sort;
-   $step = 25;
+   
+	 $step = 25;
+	 $link2 = "deepsky/index.php?indexAction=result_selected_observations&"    .
+				                                                 "catalogue="        . urlencode($catalogue) .
+                                                    "&amp;instrument="       . urlencode($instrument) .
+                                                    "&amp;object="           . urlencode($object) . 
+                                                    "&amp;lco="              . urlencode($_SESSION['lco']) . 
+                                                    "&amp;number="           . urlencode($number) .
+                                                    "&amp;observer="         . urlencode($observer) .
+                                                    "&amp;site="             . urlencode($site) .
+                                                    "&amp;minyear="          . urlencode($minyear) .
+                                                    "&amp;minmonth="         . urlencode($minmonth) .
+                                                    "&amp;minday="           . urlencode($minday) .
+                                                    "&amp;maxyear="          . urlencode($maxyear) . 
+                                                    "&amp;maxmonth="         . urlencode($maxmonth) .
+                                                    "&amp;maxday="           . urlencode($maxday) . 
+        	                                          "&amp;maxdiameter="      . urlencode($maxdiameter) .
+                                                    "&amp;maxdiameterunits=" . urlencode($maxdiameterunits) .
+	                                                  "&amp;mindiameter="      . urlencode($mindiameter) .
+                                                    "&amp;mindiameterunits=" . urlencode($mindiameterunits) .
+                                                    "&amp;type="             . urlencode($type) .
+                                                    "&amp;con="              . urlencode($con) . 
+                                                    "&amp;minLatDegrees="    . urlencode($minLatDegrees) .
+		                                                "&amp;minLatMinutes="    . urlencode($minLatMinutes) .
+		                                                "&amp;minLatSeconds="    . urlencode($minLatSeconds) .
+	                                                  "&amp;maxLatDegrees="    . urlencode($maxLatDegrees) .
+			                                              "&amp;maxLatMinutes="    . urlencode($maxLatMinutes) .
+			                                              "&amp;maxLatSeconds="    . urlencode($maxLatSeconds) .
+                                                    "&amp;maxmag="           . urlencode($maxmag) .
+                                                    "&amp;minmag="           . urlencode($minmag) .
+                                                    "&amp;maxsb="            . urlencode($maxsb) .
+                                                    "&amp;minsb="            . urlencode($minsb) .
+                                                    "&amp;minRAhours="       . urlencode($minRAhours) .
+                                                    "&amp;minRAminutes="     . urlencode($minRAminutes) .
+                                                    "&amp;minRAseconds="     . urlencode($minRAseconds) .
+                                                    "&amp;maxRAhours="       . urlencode($maxRAhours) .
+                                                    "&amp;maxRAminutes="     . urlencode($maxRAminutes) .
+                                                    "&amp;maxRAseconds="     . urlencode($maxRAseconds) .
+                                                    "&amp;maxDeclDegrees="   . urlencode($maxDeclDegrees) .
+                                                    "&amp;maxDeclMinutes="   . urlencode($maxDeclMinutes) .
+                                                    "&amp;maxDeclSeconds="   . urlencode($maxDeclSeconds) .
+                                                    "&amp;minDeclDegrees="   . urlencode($minDeclDegrees) .
+                                                    "&amp;minDeclMinutes="   . urlencode($minDeclMinutes) .
+                                                    "&amp;minDeclSeconds="   . urlencode($minDeclSeconds) .
+                                                    "&amp;minsize="          . urlencode($minsize) .
+                                                    "&amp;size_min_units="   . urlencode($size_min_units) .
+                                                    "&amp;maxsize="          . urlencode($maxsize) .
+                                                    "&amp;size_max_units="   . urlencode($size_max_units) .
+                                                    "&amp;atlas="            . urlencode($atlas) .
+                                                    "&amp;page="             . urlencode($page) .
+                                                    "&amp;description="      . urlencode($description) .
+                                                    "&amp;drawings="         . urlencode($drawings) .
+	                                                  "&amp;minvisibility="    . urlencode($minvisibility) .
+           	                                        "&amp;maxvisibility="    . urlencode($maxvisibility) .
+																				            "&amp;seen="             . urlencode($seenpar) . 
+																										"&amp;previous="         . urlencode($previous);
 
-   $link = "deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) . 
-                                         "&amp;observer=" . urlencode($observer) . 
-                                         "&amp;object=" . urlencode($object) . 
-                                         "&amp;lco=" . $_SESSION['lco'] . 
-                                         "&amp;number=" . urlencode($number) . 
-                                         "&amp;instrument=" . urlencode($instrument) . 
-                                         "&amp;site=" . urlencode($site) . 
-                                         "&amp;minyear=" . $minyear . 
-                                         "&amp;minmonth=" . $minmonth . 
-                                         "&amp;minday=" . $minday . 
-                                         "&amp;maxyear=" . $maxyear . 
-                                         "&amp;maxmonth=" . $maxmonth . 
-                                         "&amp;maxday=" . $maxday . 
-                                         "&amp;maxdiameter=" . $maxdiameter .
-                                         "&amp;maxdiameterunits=" . $maxdiameterunits .
-                                         "&amp;mindiameter=" . $mindiameter .
-                                         "&amp;mindiameterunits=" . $mindiameterunits .
-                                         "&amp;type=" . $type .
-                                         "&amp;con=" . $con .
-              	                         "&amp;minLatDegrees=" . $minLatDegrees .
-		                                     "&amp;minLatMinutes=" . $minLatMinutes .
-		                                     "&amp;minLatSeconds=" . $minLatSeconds .
-	                                       "&amp;maxLatDegrees=" . $maxLatDegrees .
-			                                   "&amp;maxLatMinutes=" . $maxLatMinutes .
-			                                   "&amp;maxLatSeconds=" . $maxLatSeconds .
-									                       "&amp;maxLat=" . $maxLat .
-                                         "&amp;minmag=" . $minmag .
-                                         "&amp;maxsb=" . $maxsb .
-                                         "&amp;minsb=" . $minsb .
-                                         "&amp;minRAhours=" . $minRAhours .
-                                         "&amp;minRAminutes=" . $minRAminutes .
-                                         "&amp;minRAseconds=" . $minRAseconds .
-                                         "&amp;maxRAhours=" . $maxRAhours .
-                                         "&amp;maxRAminutes=" . $maxRAminutes .
-                                         "&amp;maxRAseconds=" . $maxRAseconds .
-                                         "&amp;maxDeclDegrees=" . $maxDeclDegrees .
-                                         "&amp;maxDeclMinutes=" . $maxDeclMinutes .
-                                         "&amp;maxDeclSeconds=" . $maxDeclSeconds .
-                                         "&amp;minDeclDegrees=" . $minDeclDegrees .
-                                         "&amp;minDeclMinutes=" . $minDeclMinutes .
-                                         "&amp;minDeclSeconds=" . $minDeclSeconds .
-                                         "&amp;minsize=" . $minsize . 
-                                         "&amp;size_min_units=" . $size_min_units . 
-                                         "&amp;maxsize=" . $maxsize . 
-                                         "&amp;size_max_units=" . $size_max_units .
-                                         "&amp;atlas=" . $atlas .
-                                         "&amp;page=" . $page .
-                                         "&amp;description=" . $description .
-                                         "&amp;sort=" . $sort . 
-                                         "&amp;drawings=" . $drawings .
-					                               "&amp;minvisibility=" . $minvisibility .
-					                               "&amp;maxvisibility=" . $maxvisibility . 
-                                         "&amp;previous=" . $prev . 
-																				 "&amp;seen=" . $seenpar;
+   $link = $link2 . "&amp;sort=" . $sort;
 
    $total = count($allobs);
 
@@ -891,15 +893,15 @@ elseif($object ||
    if(count($obs)>0)
 	 {
   	 if($_SESSION['lco']!="L")
-  	   echo(" - <a href=\"". $link . "&amp;lco=L" . "&amp;min=" . $min . "\" title=\"" . LangOverviewObservationTitle . "\">" . 
+  	   echo(" - <a href=\"". $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">" . 
   		       LangOverviewObservations . "</a>");
   	 if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
        if($_SESSION['lco']!="C")
-         echo(" - <a href=\"". $link . "&amp;lco=C" . "&amp;min=" . $min . "\" title=\"" . LangCompactObservationsTitle . "\">" . 
+         echo(" - <a href=\"". $link . "&amp;lco=C" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsTitle . "\">" . 
   			        LangCompactObservations . "</a>");
   	 if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
        if($_SESSION['lco']!="O")
-  		   echo(" - <a href=\"". $link . "&amp;lco=O" . "&amp;min=" . $min . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . 
+  		   echo(" - <a href=\"". $link . "&amp;lco=O" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . 
   			        LangCompactObservationsLO . "</a>");
 	 }
 	 echo "</h2>";
@@ -920,291 +922,18 @@ elseif($object ||
         // LINKS TO SORT ON OBSERVATION TABLE HEADERS
         echo "<table width=\"100%\">\n";
         echo "<tr width=\"100%\" class=\"type3\">\n";
-        // OBJECT NAME
-        echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) .
-                                                    "&amp;instrument=" . urlencode($instrument) .
-                                                    "&amp;object=" . urlencode($object) . 
-                                                    "&amp;lco=" . $_SESSION['lco'] . 
-                                                    "&amp;number=" . urlencode($number) .
-                                                    "&amp;observer=" . urlencode($observer) .
-                                                    "&amp;site=" . urlencode($site) .
-                                                    "&amp;minyear=" . $minyear .
-                                                    "&amp;minmonth=" . $minmonth .
-                                                    "&amp;minday=" . $minday .
-                                                    "&amp;maxyear=" . $maxyear . 
-                                                    "&amp;maxmonth=" . $maxmonth .
-                                                    "&amp;maxday=" . $maxday . 
-        	                                          "&amp;maxdiameter=" . $maxdiameter .
-                                                    "&amp;maxdiameterunits=" . $maxdiameterunits .
-	                                                  "&amp;mindiameter=" . $mindiameter .
-                                                    "&amp;mindiameterunits=" . $mindiameterunits .
-                                                    "&amp;type=" . $type .
-                                                    "&amp;con=" . $con .
-                                                    "&amp;minLatDegrees=" . $minLatDegrees .
-		                                                "&amp;minLatMinutes=" . $minLatMinutes .
-		                                                "&amp;minLatSeconds=" . $minLatSeconds .
-	                                                  "&amp;maxLatDegrees=" . $maxLatDegrees .
-			                                              "&amp;maxLatMinutes=" . $maxLatMinutes .
-			                                              "&amp;maxLatSeconds=" . $maxLatSeconds .
-                                                    "&amp;maxmag=" . $maxmag .
-                                                    "&amp;minmag=" . $minmag .
-                                                    "&amp;maxsb=" . $maxsb .
-                                                    "&amp;minsb=" . $minsb .
-                                                    "&amp;minRAhours=" . $minRAhours .
-                                                    "&amp;minRAminutes=" . $minRAminutes .
-                                                    "&amp;minRAseconds=" . $minRAseconds .
-                                                    "&amp;maxRAhours=" . $maxRAhours .
-                                                    "&amp;maxRAminutes=" . $maxRAminutes .
-                                                    "&amp;maxRAseconds=" . $maxRAseconds .
-                                                    "&amp;maxDeclDegrees=" . $maxDeclDegrees .
-                                                    "&amp;maxDeclMinutes=" . $maxDeclMinutes .
-                                                    "&amp;maxDeclSeconds=" . $maxDeclSeconds .
-                                                    "&amp;minDeclDegrees=" . $minDeclDegrees .
-                                                    "&amp;minDeclMinutes=" . $minDeclMinutes .
-                                                    "&amp;minDeclSeconds=" . $minDeclSeconds .
-                                                    "&amp;minsize=" . $minsize .
-                                                    "&amp;size_min_units=" . $size_min_units .
-                                                    "&amp;maxsize=" . $maxsize .
-                                                    "&amp;size_max_units=" . $size_max_units .
-                                                    "&amp;atlas=" . $atlas .
-                                                    "&amp;page=" . $page .
-                                                    "&amp;description=" . $description .
-                                                    "&amp;drawings=" . $drawings .
-	                                                  "&amp;minvisibility=" . $minvisibility .
-           	                                        "&amp;maxvisibility=" . $maxvisibility .
-																				            "&amp;seen=" . $seenpar . 
-                                                    "&amp;sort=objectname&amp;previous=$previous\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObservationsHeader1) . "\">" . 
-                                                    LangOverviewObservationsHeader1 . "</a></td>\n";
-       
-			  echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) .
-                                                    "&amp;instrument=" . urlencode($instrument) .
-                                                    "&amp;object=" . urlencode($object) . 
-                                                    "&amp;lco=" . $_SESSION['lco'] . 
-                                                    "&amp;number=" . urlencode($number) .
-                                                    "&amp;observer=" . urlencode($observer) .
-                                                    "&amp;site=" . urlencode($site) .
-                                                    "&amp;minyear=" . $minyear .
-                                                    "&amp;minmonth=" . $minmonth .
-                                                    "&amp;minday=" . $minday .
-                                                    "&amp;maxyear=" . $maxyear . 
-                                                    "&amp;maxmonth=" . $maxmonth .
-                                                    "&amp;maxday=" . $maxday . 
-        	                                          "&amp;maxdiameter=" . $maxdiameter .
-                                                    "&amp;maxdiameterunits=" . $maxdiameterunits .
-	                                                  "&amp;mindiameter=" . $mindiameter .
-                                                    "&amp;mindiameterunits=" . $mindiameterunits .
-                                                    "&amp;type=" . $type .
-                                                    "&amp;con=" . $con .
-                                                    "&amp;minLatDegrees=" . $minLatDegrees .
-		                                                "&amp;minLatMinutes=" . $minLatMinutes .
-		                                                "&amp;minLatSeconds=" . $minLatSeconds .
-	                                                  "&amp;maxLatDegrees=" . $maxLatDegrees .
-			                                              "&amp;maxLatMinutes=" . $maxLatMinutes .
-			                                              "&amp;maxLatSeconds=" . $maxLatSeconds .
-                                                    "&amp;maxmag=" . $maxmag .
-                                                    "&amp;minmag=" . $minmag .
-                                                    "&amp;maxsb=" . $maxsb .
-                                                    "&amp;minsb=" . $minsb .
-                                                    "&amp;minRAhours=" . $minRAhours .
-                                                    "&amp;minRAminutes=" . $minRAminutes .
-                                                    "&amp;minRAseconds=" . $minRAseconds .
-                                                    "&amp;maxRAhours=" . $maxRAhours .
-                                                    "&amp;maxRAminutes=" . $maxRAminutes .
-                                                    "&amp;maxRAseconds=" . $maxRAseconds .
-                                                    "&amp;maxDeclDegrees=" . $maxDeclDegrees .
-                                                    "&amp;maxDeclMinutes=" . $maxDeclMinutes .
-                                                    "&amp;maxDeclSeconds=" . $maxDeclSeconds .
-                                                    "&amp;minDeclDegrees=" . $minDeclDegrees .
-                                                    "&amp;minDeclMinutes=" . $minDeclMinutes .
-                                                    "&amp;minDeclSeconds=" . $minDeclSeconds .
-                                                    "&amp;minsize=" . $minsize .
-                                                    "&amp;size_min_units=" . $size_min_units .
-                                                    "&amp;maxsize=" . $maxsize .
-                                                    "&amp;size_max_units=" . $size_max_units .
-                                                    "&amp;atlas=" . $atlas .
-                                                    "&amp;page=" . $page .
-                                                    "&amp;description=" . $description .
-                                                    "&amp;drawings=" . $drawings .
-	                                                  "&amp;minvisibility=" . $minvisibility .
-           	                                        "&amp;maxvisibility=" . $maxvisibility .
-																				            "&amp;seen=" . $seenpar . 
-                                                    "&amp;sort=objects.con&amp;previous=$previous\" title=\"" . LangSortOn . mb_strtolower(LangViewObservationField1b) . "\">" . 
-                                                    LangViewObservationField1b . "</a></td>\n";
+				
+				
 
-         // OBSERVER
-
-         echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) .
-                                                    "&amp;instrument=" . urlencode($instrument) .
-                                                    "&amp;object=" . urlencode($object) . 
-                                                    "&amp;lco=" . $_SESSION['lco'] . 
-                                                    "&amp;number=" . urlencode($number) .
-                                                    "&amp;observer=" . urlencode($observer) .
-                                                    "&amp;site=" . urlencode($site) .
-                                                    "&amp;minyear=" . $minyear .
-                                                    "&amp;minmonth=" . $minmonth .
-                                                    "&amp;minday=" . $minday .
-                                                    "&amp;maxyear=" . $maxyear .
-                                                    "&amp;maxmonth=" . $maxmonth .
-                                                    "&amp;maxday=" . $maxday .
-                                                    "&amp;maxdiameter=" . $maxdiameter .
-                                                    "&amp;maxdiameterunits=" . $maxdiameterunits .
-                                                    "&amp;mindiameter=" . $mindiameter .
-                                                    "&amp;mindiameterunits=" . $mindiameterunits .
-                                                    "&amp;type=" . $type .
-                                                    "&amp;con=" . $con .
-                                                    "&amp;minLatDegrees=" . $minLatDegrees .
-		                                                "&amp;minLatMinutes=" . $minLatMinutes .
-		                                                "&amp;minLatSeconds=" . $minLatSeconds .
-	                                                  "&amp;maxLatDegrees=" . $maxLatDegrees .
-			                                              "&amp;maxLatMinutes=" . $maxLatMinutes .
-			                                              "&amp;maxLatSeconds=" . $maxLatSeconds .
-                                                    "&amp;maxmag=" . $maxmag .
-                                                    "&amp;minmag=" . $minmag .
-                                                    "&amp;maxsb=" . $maxsb .
-                                                    "&amp;minsb=" . $minsb .
-                                                    "&amp;minRAhours=" . $minRAhours .
-                                                    "&amp;minRAminutes=" . $minRAminutes .
-                                                    "&amp;minRAseconds=" . $minRAseconds .
-                                                    "&amp;maxRAhours=" . $maxRAhours .
-                                                    "&amp;maxRAminutes=" . $maxRAminutes .
-                                                    "&amp;maxRAseconds=" . $maxRAseconds .
-                                                    "&amp;maxDeclDegrees=" . $maxDeclDegrees .
-                                                    "&amp;maxDeclMinutes=" . $maxDeclMinutes .
-                                                    "&amp;maxDeclSeconds=" . $maxDeclSeconds .
-                                                    "&amp;minDeclDegrees=" . $minDeclDegrees .
-                                                    "&amp;minDeclMinutes=" . $minDeclMinutes .
-                                                    "&amp;minDeclSeconds=" . $minDeclSeconds .
-                                                    "&amp;minsize=" . $minsize .
-                                                    "&amp;size_min_units=" . $size_min_units .
-                                                    "&amp;maxsize=" . $maxsize .
-                                                    "&amp;size_max_units=" . $size_max_units .
-                                                    "&amp;description=" . $description .
-                                                    "&amp;atlas=" . $atlas .
-                                                    "&amp;page=" . $page .
-                                                    "&amp;drawings=" . $drawings .
-       	                                            "&amp;minvisibility=" . $minvisibility .
-              	                                    "&amp;maxvisibility=" . $maxvisibility .
-																				            "&amp;seen=" . $seenpar . 
-                                                    "&amp;sort=observerid&amp;previous=$previous\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObservationsHeader2) . "\">" .
-                                                    LangOverviewObservationsHeader2 . "</a></td>\n";
-
-         // INSTRUMENT
-
-         echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) .
-                                                    "&amp;instrument=" . urlencode($instrument) .
-                                                    "&amp;number=" . urlencode($number) .
-                                                    "&amp;object=" . urlencode($object) . 
-                                                    "&amp;lco=" . $_SESSION['lco'] . 
-                                                    "&amp;observer=" . urlencode($observer) .
-                                                    "&amp;site=" . urlencode($site) .
-                                                    "&amp;minyear=" . $minyear .
-                                                    "&amp;minmonth=" . $minmonth .
-                                                    "&amp;minday=" . $minday .
-                                                    "&amp;maxyear=" . $maxyear .
-                                                    "&amp;maxmonth=" . $maxmonth .
-                                                    "&amp;maxday=" . $maxday .
-                                                    "&amp;maxdiameter=" . $maxdiameter .
-                                                    "&amp;maxdiameterunits=" . $maxdiameterunits .
-                                                    "&amp;mindiameter=" . $mindiameter .
-                                                    "&amp;mindiameterunits=" . $mindiameterunits .
-                                                    "&amp;type=" . $type .
-                                                    "&amp;con=" . $con .
-                                                    "&amp;minLatDegrees=" . $minLatDegrees .
-		                                                "&amp;minLatMinutes=" . $minLatMinutes .
-		                                                "&amp;minLatSeconds=" . $minLatSeconds .
-	                                                  "&amp;maxLatDegrees=" . $maxLatDegrees .
-			                                              "&amp;maxLatMinutes=" . $maxLatMinutes .
-			                                              "&amp;maxLatSeconds=" . $maxLatSeconds .
-                                                    "&amp;maxmag=" . $maxmag .
-                                                    "&amp;minmag=" . $minmag .
-                                                    "&amp;maxsb=" . $maxsb .
-                                                    "&amp;minsb=" . $minsb .
-                                                    "&amp;minRAhours=" . $minRAhours .
-                                                    "&amp;minRAminutes=" . $minRAminutes .
-                                                    "&amp;minRAseconds=" . $minRAseconds .
-                                                    "&amp;maxRAhours=" . $maxRAhours .
-                                                    "&amp;maxRAminutes=" . $maxRAminutes .
-                                                    "&amp;maxRAseconds=" . $maxRAseconds .
-                                                    "&amp;maxDeclDegrees=" . $maxDeclDegrees .
-                                                    "&amp;maxDeclMinutes=" . $maxDeclMinutes .
-                                                    "&amp;maxDeclSeconds=" . $maxDeclSeconds .
-                                                    "&amp;minDeclDegrees=" . $minDeclDegrees .
-                                                    "&amp;minDeclMinutes=" . $minDeclMinutes .
-                                                    "&amp;minDeclSeconds=" . $minDeclSeconds .
-                                                    "&amp;minsize=" . $minsize .
-                                                    "&amp;size_min_units=" . $size_min_units .
-                                                    "&amp;maxsize=" . $maxsize .
-                                                    "&amp;size_max_units=" . $size_max_units .
-                                                    "&amp;description=" . $description .
-                                                    "&amp;atlas=" . $atlas .
-                                                    "&amp;page=" . $page .
-                                                    "&amp;drawings=" . $drawings .
-	                                            "&amp;minvisibility=" . $minvisibility .
-           	                                    "&amp;maxvisibility=" . $maxvisibility .
-																				            "&amp;seen=" . $seenpar . 
-                                                    "&amp;sort=instrumentid&amp;previous=$previous\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObservationsHeader3) . "\">" .
-                                                    LangOverviewObservationsHeader3 . "</a></td>\n";
-
-         // DATE
-
-         echo "<td><a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=" . urlencode($catalogue) .
-                                                    "&amp;instrument=" . urlencode($instrument) .
-                                                    "&amp;number=" . urlencode($number) .
-                                                    "&amp;object=" . urlencode($object) . 
-                                                    "&amp;lco=" . $_SESSION['lco'] . 
-                                                    "&amp;observer=" . urlencode($observer) .
-                                                    "&amp;site=" . urlencode($site) .
-                                                    "&amp;minyear=" . $minyear .
-                                                    "&amp;minmonth=" . $minmonth .
-                                                    "&amp;minday=" . $minday .
-                                                    "&amp;maxyear=" . $maxyear .
-                                                    "&amp;maxmonth=" . $maxmonth .
-                                                    "&amp;maxday=" . $maxday .
-                                                    "&amp;maxdiameter=" . $maxdiameter .
-                                                    "&amp;maxdiameterunits=" . $maxdiameterunits .
-                                                    "&amp;mindiameter=" . $mindiameter .
-                                                    "&amp;mindiameterunits=" . $mindiameterunits .
-                                                    "&amp;type=" . $type .
-                                                    "&amp;con=" . $con .
-                                                    "&amp;minLatDegrees=" . $minLatDegrees .
-		                                                "&amp;minLatMinutes=" . $minLatMinutes .
-		                                                "&amp;minLatSeconds=" . $minLatSeconds .
-	                                                  "&amp;maxLatDegrees=" . $maxLatDegrees .
-			                                              "&amp;maxLatMinutes=" . $maxLatMinutes .
-			                                              "&amp;maxLatSeconds=" . $maxLatSeconds .
-                                                    "&amp;maxmag=" . $maxmag .
-                                                    "&amp;minmag=" . $minmag .
-                                                    "&amp;maxsb=" . $maxsb .
-                                                    "&amp;minsb=" . $minsb .
-                                                    "&amp;minRAhours=" . $minRAhours . 
-                                                    "&amp;minRAminutes=" . $minRAminutes . 
-                                                    "&amp;minRAseconds=" . $minRAseconds . 
-                                                    "&amp;maxRAhours=" . $maxRAhours . 
-                                                    "&amp;maxRAminutes=" . $maxRAminutes . 
-                                                    "&amp;maxRAseconds=" . $maxRAseconds .
-                                                    "&amp;maxDeclDegrees=" . $maxDeclDegrees .
-                                                    "&amp;maxDeclMinutes=" . $maxDeclMinutes .
-                                                    "&amp;maxDeclSeconds=" . $maxDeclSeconds .
-                                                    "&amp;minDeclDegrees=" . $minDeclDegrees .
-                                                    "&amp;minDeclMinutes=" . $minDeclMinutes .
-                                                    "&amp;minDeclSeconds=" . $minDeclSeconds .
-                                                    "&amp;minsize=" . $minsize .
-                                                    "&amp;size_min_units=" . $size_min_units .
-                                                    "&amp;maxsize=" . $maxsize .
-                                                    "&amp;size_max_units=" . $size_max_units .
-                                                    "&amp;description=" . $description .
-                                                    "&amp;atlas=" . $atlas .
-                                                    "&amp;page=" . $page .
-                                                    "&amp;drawings=" . $drawings .
-	                                                  "&amp;minvisibility=" . $minvisibility .
-           	                                        "&amp;maxvisibility=" . $maxvisibility .
-																				            "&amp;seen=" . $seenpar . 
-                                                    "&amp;sort=date&amp;previous=$previous\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObservationsHeader4) . "\">" .
-                                                    LangOverviewObservationsHeader4 . "</a></td>";
-				 if($_SESSION['lco']!="O")
-				   echo("<td></td>\n");
-				 else
-				   echo("<td width=\"15%\">" . LangOverviewObservationsHeader8 . "</td>\n".
+        echo "<td><a href=\"" . $link2 . "&amp;sort=objectname \"  title=\"" . LangSortOn . mb_strtolower(LangOverviewObservationsHeader1) . "\">" . LangOverviewObservationsHeader1 . "</a></td>\n";
+			  echo "<td><a href=\"" . $link2 . "&amp;sort=objects.con\"  title=\"" . LangSortOn . mb_strtolower(LangViewObservationField1b) . "\">" . LangViewObservationField1b . "</a></td>\n";
+        echo "<td><a href=\"" . $link2 . "&amp;sort=observerid \"  title=\"" . LangSortOn . mb_strtolower(LangOverviewObservationsHeader2) . "\">" . LangOverviewObservationsHeader2 . "</a></td>\n";
+        echo "<td><a href=\"" . $link2 . "&amp;sort=instrumentid\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObservationsHeader3) . "\">" . LangOverviewObservationsHeader3 . "</a></td>\n";
+        echo "<td><a href=\"" . $link2 . "&amp;sort=date\"         title=\"" . LangSortOn . mb_strtolower(LangOverviewObservationsHeader4) . "\">" . LangOverviewObservationsHeader4 . "</a></td>";
+        if($_SESSION['lco']!="O")
+				  echo("<td></td>\n");
+				else
+				  echo("<td width=\"15%\">" . LangOverviewObservationsHeader8 . "</td>\n".
                  "<td width=\"15%\">" . LangOverviewObservationsHeader9 . "</td>\n".
                  "<td width=\"15%\">" . LangOverviewObservationsHeader5. "</td>\n");
          echo "</tr>\n";
