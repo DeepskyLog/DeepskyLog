@@ -261,8 +261,8 @@ else
       $observername = $obs->getFirstname($parts_array[$i][1]). " ".$obs->getObserverName($parts_array[$i][1]);
       if ($parts_array[$i][1] == $username)
       {
-        $instrum = $inst->getInstrumentId(htmlspecialchars($parts_array[$i][5]), $_SESSION['deepskylog_id']);
-        $locat = $loc->getLocationId(htmlspecialchars($parts_array[$i][4]), $_SESSION['deepskylog_id']);
+        $instrum = $inst->getInstrumentId($parts_array[$i][5], $_SESSION['deepskylog_id']);
+        $locat = $loc->getLocationId($parts_array[$i][4], $_SESSION['deepskylog_id']);
         $dates = sscanf($parts_array[$i][2], "%2d%c%2d%c%4d");
         $date = sprintf("%04d%02d%02d", $dates[4], $dates[2], $dates[0]);
         $times = sscanf($parts_array[$i][3], "%2d%c%2d");

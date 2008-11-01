@@ -908,27 +908,16 @@ class Observations
     include "setup/databaseInfo.php";
     $observers = new Observers;
     $extra = $observers->getObserversFromClub($club);
-
+    $i=1;
     $db = new database;
     $db->login();
-
-    if ($extra != "")
-    {
-      $sql = "SELECT * FROM observations".$extra. " AND visibility != 7 ";
-    }
-    else
-    {
-      $sql = "SELECT * FROM observations".$extra;
-    }
+    $sql = "SELECT observations.objectname, COUNT(observations.id) As ObservationCount FROM observations GROUP BY observations.objectname ORDER BY ObservationCount DESC".$extra;
     $run = mysql_query($sql) or die(mysql_error());
-
     while($get = mysql_fetch_object($run))
-    {
-      $observations[] = $get->objectname;
-    }
+      $numberOfObservations[$get->objectname.' ('.$i.')'] = array($i++,$get->objectname);
     $db->logout();
-    $numberOfObservations = array_count_values ($observations);
-    arsort($numberOfObservations);
+    //$numberOfObservations = array_count_values ($observations);
+    //arsort($numberOfObservations);
     return $numberOfObservations;
   }
 

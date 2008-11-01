@@ -1852,7 +1852,7 @@ function getPartOfNames($name)
  }
 
 
- function showObjects($link, $_SID, $min, $max, $myList, $noShow='')
+ function showObjects($link, $_SID, $min, $max, $myList, $noShow='', $showRank=0)
  {
   global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
          $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
@@ -1981,7 +1981,7 @@ function getPartOfNames($name)
       echo "<td align=\"center\" class=\"seen\">$seendate</td>";
     	if($myList)
     	{
-     	  echo("<td>");
+     	  echo("<td align=\"center\">");
         if($list->checkObjectInMyActiveList($name))
           echo("<a href=\"" . $link . "&amp;min=" . $min . "&amp;removeObjectFromList=" . urlencode($name) . "\" title=\"" . $name . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "\">R</a>");
         else

@@ -12,23 +12,28 @@
 //$observer = new Observers;
 
 include_once "../lib/lists.php";
+$list = new Lists;
 include_once "../lib/objects.php";
+$objects = new Objects;
 include_once "../lib/setup/language.php";
 include_once "../lib/util.php";
+$util = new util;
+$util->checkUserInput();
 
 global $baseURL;
 
-$objects = new Objects;
-$util = new util;
-$util->checkUserInput();
-$list = new Lists;
 $myList = False;
 if(array_key_exists('listname',$_SESSION) && ($list->checkList($_SESSION['listname'])==2))
   $myList=True;
-if(array_key_exists('min',$_GET) && $_GET['min'])
- $min=$_GET['min'];
+// minimum
+if(array_key_exists('min',$_GET))
+  $min=$_GET['min'];
+elseif(array_key_exists('multiplepagenr',$_GET))
+  $min = ($_GET['multiplepagenr']-1)*25;
+elseif(array_key_exists('multiplepagenr',$_POST))
+  $min = ($_POST['multiplepagenr']-1)*25;
 else
- $min=0;
+  $min = 0;
 $showPartOfs = 0;
 $name='';
 $exact = 0;
@@ -98,7 +103,11 @@ if(count($_SESSION[$_SID]) > 1) // valid result
   $link = 'deepsky/index.php?indexAction=result_query_objects&amp;SID=' . $_SID;
 
 	// PAGE TITLE
-  echo("<div id=\"main\">\n<h2>");
+  echo"<div id=\"main\">";
+	echo"<table width=\"100%\">";
+	echo"<tr>";
+	echo"<td>";
+	echo"<h2>";
   echo LangSelectedObjectsTitle; // page title
 	if($showPartOfs)	
 	  echo LangListQueryObjectsMessage10;
@@ -108,13 +117,17 @@ if(count($_SESSION[$_SID]) > 1) // valid result
 	   array_key_exists("listname",$_SESSION) && $_SESSION['listname'] && $_SESSION['listname'] && ($_SESSION['listname']<>"----------") && $myList)
     echo(" - <a href=\"" . $link . "&amp;min=" . $min . "&amp;addAllObjectsFromQueryToList=true\" title=\"" . LangListQueryObjectsMessage5 . $_SESSION['listname'] . "\">"  . LangListQueryObjectsMessage4 . "</a>");
 	echo("</h2>\n");
+	echo"</td>";
+	echo"<td align=\"right\">";
+  list($min, $max) = $util->printNewListHeader($_SESSION[$_SID], $link, $min, 25, "");	
+	echo"</td>";
+	echo"</table>";
 	if($showPartOfs)
     echo("<a href=\"" . $link . "&amp;showPartOfs=" . 0 ."\">" . LangListQueryObjectsMessage12 . "</a>");
 	else
     echo("<a href=\"" . $link . "&amp;showPartOfs=" . 1 . "\">" . LangListQueryObjectsMessage13 . "</a>");
 	$link .= "&amp;showPartOfs=" . $showPartOfs;
 
-  list($min, $max) = $util->printListHeader($_SESSION[$_SID], $link , $min, 25, "");
 	if($max>count($_SESSION[$_SID]))
 		$max=count($_SESSION[$_SID]);
 	echo "<HR>";
@@ -122,7 +135,7 @@ if(count($_SESSION[$_SID]) > 1) // valid result
   $objects->showObjects($link, $_SID, $min, $max, $myList);
 	echo("<hr>");
 
-  list($min, $max) = $util->printListHeader($_SESSION[$_SID], $link, $min, 25, "");	
+  list($min, $max) = $util->printNewListHeader($_SESSION[$_SID], $link, $min, 25, "");	
 	
   echo "<a href=\"\"
                  onclick=\"thetitle = prompt(" . LangListQueryObjectsMessage14 . "," . LangListQueryObjectsMessage15 . ");

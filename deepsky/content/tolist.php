@@ -186,6 +186,7 @@ if($_SESSION['listname']<>"----------")
     $link = "deepsky/index.php?indexAction=listaction&amp;sort=$sort";
   	$count=$min;
   	$maxcount = count($_SESSION['QOL']);
+//		$objects->showObjects($link, $_SID, $min, $max, $myList, 1); 
     while(($count<$max) && ($count<$maxcount))
     {
       if ($count % 2)
