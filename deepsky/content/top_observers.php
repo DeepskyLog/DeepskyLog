@@ -49,7 +49,7 @@ echo("</a></td>");
 echo "<td><a href=\"deepsky/index.php?indexAction=rank_observers&sort=objecten&catalogue=" . urlencode($catalog) . "\">" . LangTopObserversHeader6 . "</a></td>";
 echo"</tr>";
  
-$numberOfObservations = $observations->getNumberOfObservations();
+$numberOfObservations = $observations->getNumberOfDsObservations();
 $numberOfObservationsThisYear = $observations->getNumberOfObservationsLastYear();
 $numberOfDifferentObjects = $observations->getNumberOfDifferentObjects();
 $outputtable = ""; // output string 

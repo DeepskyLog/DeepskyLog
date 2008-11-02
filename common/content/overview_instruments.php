@@ -112,13 +112,13 @@ while(list ($key, $value) = each($telescopes))
    {
     $fd = "-";
    }
-   $type = $instruments->getType($value);
+   $type = $instruments->getInstrumentType($value);
    $fixedMagnification = $instruments->getFixedMagnification($value);
    if ($fixedMagnification == "0")
    {
     $fixedMagnification = "-";
    }
-   $observer = $instruments->getObserver($value);
+   $observer = $instruments->getObserverFromInstrument($value);
 
    print("<tr $typefield>
            <td><a href=\"common/adapt_instrument.php?instrument=$value\">".$name."</a></td>\n

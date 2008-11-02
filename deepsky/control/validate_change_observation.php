@@ -118,23 +118,13 @@ if(array_key_exists('changeobservation', $_POST) && $_POST['changeobservation'])
           }
       }
       else
-      {
           $_SESSION['limit'] = "";
-      }
-
-      $observations->setLimitingMagnitude($_POST['observationid'], $_SESSION['limit']);
-
-      $observations->setLanguage($_POST['observationid'], $_POST['description_language']);
-
+      $observations->setObservationLimitingMagnitude($_POST['observationid'], $_SESSION['limit']);
+      $observations->setObservationLanguage($_POST['observationid'], $_POST['description_language']);
       if(array_key_exists('visibility', $_POST) && $_POST['visibility'])
-      {
          $visibility = $_POST['visibility'];
-      }
       else
-      {
          $visibility = 0;
-      }
-
       $observations->setVisibility($_POST['observationid'], $visibility);
 
       if($_FILES['drawing']['tmp_name'] != "")

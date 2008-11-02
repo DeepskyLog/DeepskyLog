@@ -95,7 +95,7 @@ else
   	elseif ($instruction[$i] == "CON")
   	  $objects->setConstellation($object[$i], $catindex_data[$i]);
   	elseif ($instruction[$i] == "TYP")
-  	  $objects->setType($object[$i], $catindex_data[$i]);
+  	  $objects->setDsObjectType($object[$i], $catindex_data[$i]);
   	elseif ($instruction[$i] == "MG")
   	  $objects->setMagnitude($object[$i], $catindex_data[$i]);
   	elseif ($instruction[$i] == "SB")

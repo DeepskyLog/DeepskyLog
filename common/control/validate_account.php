@@ -61,9 +61,9 @@ else // all fields filled in
 
             $obs->setUsedLanguages($_POST['deepskylog_id'], $usedLanguages);
 
-            $obs->setObservationLanguage($_POST['deepskylog_id'], $_POST['description_language']);
+            $obs->setObserverObservationLanguage($_POST['deepskylog_id'], $_POST['description_language']);
 
-            $obs->setLanguage($_POST['deepskylog_id'], $_POST['language']);
+            $obs->setObserverLanguage($_POST['deepskylog_id'], $_POST['language']);
 
             // send mail to administrator
 
@@ -136,12 +136,12 @@ else // all fields filled in
           }
           $obs->setUsedLanguages($_SESSION['deepskylog_id'], $usedLanguages);
 
-          $obs->setName($_SESSION['deepskylog_id'], $_POST['name']);  
+          $obs->setObserverName($_SESSION['deepskylog_id'], $_POST['name']);  
           $obs->setFirstName($_SESSION['deepskylog_id'], $_POST['firstname']);
           $obs->setEmail($_SESSION['deepskylog_id'], $_POST['email']);
           $obs->setPassword($_SESSION['deepskylog_id'], md5($_POST['passwd'])); 
-          $obs->setLanguage($_SESSION['deepskylog_id'], $_POST['language']);
-          $obs->setObservationLanguage($_SESSION['deepskylog_id'], $_POST['description_language']);
+          $obs->setObserverLanguage($_SESSION['deepskylog_id'], $_POST['language']);
+          $obs->setObserverObservationLanguage($_SESSION['deepskylog_id'], $_POST['description_language']);
           $obs->setStandardLocation($_SESSION['deepskylog_id'], $_POST['site']);
           $obs->setStandardTelescope($_SESSION['deepskylog_id'], $_POST['instrument']);
           $obs->setStandardAtlas($_SESSION['deepskylog_id'], $_POST['atlas']);

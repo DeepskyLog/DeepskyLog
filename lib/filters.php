@@ -162,7 +162,7 @@ class Filters
  }
 
  // getType returns the type of the given filter
- function getType($id)
+ function getFilterType($id)
  {
   $db = new database;
   $db->login();
@@ -335,7 +335,7 @@ class Filters
 
 
  // setType sets a new type for the given filter
- function setType($id, $type)
+ function setFilterType($id, $type)
  {
   $db = new database;
   $db->login();
@@ -347,7 +347,7 @@ class Filters
  }
 
  // setColor sets a new color for the given filter
- function setColor($id, $color)
+ function setFilterColor($id, $color)
  {
   $db = new database;
   $db->login();
@@ -359,7 +359,7 @@ class Filters
  }
 
  // setName sets the name for the given filter
- function setName($id, $name)
+ function setFilterName($id, $name)
  {
   $db = new database;
   $db->login();
@@ -395,7 +395,7 @@ class Filters
  }
 
  // setObserver sets the observer for the filter with id = $id
- function setObserver($id, $observer)
+ function setFilterObserver($id, $observer)
  {
   $db = new database;
   $db->login();
@@ -407,20 +407,15 @@ class Filters
  }
 
  // getObserver returns the observerid for this filter
- function getObserver($id)
+ function getObserverFromFilter($id)
  {
   $db = new database;
   $db->login();
-
   $sql = "SELECT * FROM filters WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
-
   $get = mysql_fetch_object($run);
-
   $observer = $get->observer;
-
   $db->logout();
-
   return $observer;
  }
 
@@ -455,7 +450,7 @@ class Filters
    }
 
    $name = $this->getFilterName($value);
-   $type = $this->getType($value);
+   $type = $this->getFilterType($value);
    $color = $this->getColor($value);
    $wratten = $this->getWratten($value);
    $schott = $this->getSchott($value);

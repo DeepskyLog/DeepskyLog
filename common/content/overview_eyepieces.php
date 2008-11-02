@@ -109,7 +109,7 @@ while(list ($key, $value) = each($eyeps))
    $name = stripslashes($eyepieces->getEyepieceName($value));
    $focalLength = stripslashes($eyepieces->getFocalLength($value));
    $apparentFOV = $eyepieces->getApparentFOV($value);
-   $observer = $eyepieces->getObserver($value);
+   $observer = $eyepieces->getObserverFromEyepiece($value);
    $maxFocalLength = $eyepieces->getMaxFocalLength($value);
    if ($maxFocalLength == "-1")
    {

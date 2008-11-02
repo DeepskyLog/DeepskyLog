@@ -8,6 +8,7 @@
 // every page should contain the same number of locations
 // this is not the case now as we need to remove the empty location manually
 
+include_once "../common/control/dec_to_dm.php";
 include_once "../lib/locations.php";
 include_once "../lib/util.php";
 include_once "../lib/observations.php";
@@ -120,22 +121,22 @@ while(list ($key, $value) = each($sites))
    $country = $locations->getCountry($value);
    if($locations->getLongitude($value) > 0)
    {
-      $longitude = "&nbsp;" . $util->decToString($locations->getLongitude($value));
+      $longitude = "&nbsp;" . decToString($locations->getLongitude($value));
    }
    else
    {
-      $longitude = $util->decToString($locations->getLongitude($value));
+      $longitude = decToString($locations->getLongitude($value));
    }
    if($locations->getLatitude($value) > 0)
    {
-      $latitude = "&nbsp;" . $util->decToString($locations->getLatitude($value));
+      $latitude = "&nbsp;" . decToString($locations->getLatitude($value));
    }
    else
    {
-      $latitude = $util->decToString($locations->getLatitude($value));
+      $latitude = decToString($locations->getLatitude($value));
    }
    $timezone = $locations->getTimezone($value);
-   $observer = $locations->getObserver($value);
+   $observer = $locations->getObserverFromLocation($value);
    $limmag = $locations->getLocationLimitingMagnitude($value);
    if ($limmag < -900)
    {

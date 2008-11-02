@@ -17,7 +17,7 @@ if(!$_SESSION['module'])
 
 // ADMINISTRATOR LOGGED IN or USER is the owner of the eyepiece.
 if((array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes")) || 
-   ($_SESSION['deepskylog_id'] == $eps->getObserver($_GET['eyepiece']))) 
+   ($_SESSION['deepskylog_id'] == $eps->getObserverFromEyepiece($_GET['eyepiece']))) 
 {
   include("head.php"); // HTML head
   $head = new head();

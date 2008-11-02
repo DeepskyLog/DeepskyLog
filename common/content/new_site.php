@@ -3,6 +3,8 @@
 // new_site.php
 // allows the user to add a new site
 
+include_once "../common/control/dec_to_dm.php";
+include_once "../common/control/ra_to_hms.php";
 include_once "../lib/observers.php";
 include_once "../lib/locations.php";
 include_once "../lib/util.php";
@@ -117,27 +119,27 @@ if ($sites != null)
       $country = $locations->getCountry($value);
       if($locations->getLongitude($value) > 0)
       {
-        $longitude = "&nbsp;" . $util->decToString($locations->getLongitude($value));
+        $longitude = "&nbsp;" . decToString($locations->getLongitude($value));
       }
       else
       {
-        $longitude = $util->decToString($locations->getLongitude($value));
+        $longitude = decToString($locations->getLongitude($value));
       }
       if($locations->getLatitude($value) > 0)
       {
-        $latitude = "&nbsp;" . $util->decToString($locations->getLatitude($value));
+        $latitude = "&nbsp;" . decToString($locations->getLatitude($value));
       }
       else
       {
-        $latitude = $util->decToString($locations->getLatitude($value));
+        $latitude = decToString($locations->getLatitude($value));
       }
       $timezone = $locations->getTimezone($value);
-      $observer = $locations->getObserver($value);
+      $observer = $locations->getObserverFromLocation($value);
       $limmag = $locations->getLocationLimitingMagnitude($value);
       $sb = $locations->getSkyBackground($value);
+      $c = new Contrast();
       if ($limmag < -900 && $sb > 0)
       {
-        $c = new Contrast();
         $limmag = sprintf("%.1f", $c->calculateLimitingMagnitudeFromSkyBackground($sb));
       } else if ($limmag < -900 && $sb < -900) {
         $limmag = "&nbsp;";
@@ -301,10 +303,10 @@ echo(LangAddSiteTitle); ?>
 	 {
 	   if (array_key_exists('latitude',$_GET))
 	   {
-	     $latitudestr = $util->decToString($_GET['latitude'], 1);
+	     $latitudestr = decToString($_GET['latitude'], 1);
 	   } else
 	   {
-	     $latitudestr = $util->decToString($locations->getLatitude($_GET['locationid']), 1);
+	     $latitudestr = decToString($locations->getLatitude($_GET['locationid']), 1);
 	   }
 	   $latarray = explode("&deg;", $latitudestr);
 	   $latitudedeg = $latarray[0];
@@ -314,10 +316,10 @@ echo(LangAddSiteTitle); ?>
 	 {
 	   if (array_key_exists('latitude',$_GET))
 	   {
-	     $longitudestr = $util->decToString($_GET['longitude'], 1);
+	     $longitudestr = decToString($_GET['longitude'], 1);
 	   } else
 	   {
-	     $longitudestr = $util->decToString($locations->getLongitude($_GET['locationid']), 1);
+	     $longitudestr = decToString($locations->getLongitude($_GET['locationid']), 1);
 	   }
 	   $longarray = explode("&deg;", $longitudestr);
 	   $longitudedeg = $longarray[0];

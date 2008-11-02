@@ -115,7 +115,7 @@ if ($insts != null)
    {
     $fd = "-";
    }
-   $type = $instruments->getType($value);
+   $type = $instruments->getInstrumentType($value);
    $fixedMagnification = $instruments->getFixedMagnification($value);
 
    if ($name == "Naked eye")
@@ -265,7 +265,7 @@ echo(LangAddInstrumentTitle); ?>
 	 }
 	 if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
    {
-      $type = $instruments->getType($_GET['instrumentid']);
+      $type = $instruments->getInstrumentType($_GET['instrumentid']);
 	 } 
    ?>
    <option <?php 

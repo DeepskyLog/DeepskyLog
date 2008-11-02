@@ -42,7 +42,7 @@ echo("</td></tr>");
 
 echo("<tr><td class=\"fieldname\">");
 
-if ($instruments->getType($_GET['instrument']) != InstrumentNakedEye)
+if ($instruments->getInstrumentType($_GET['instrument']) != InstrumentNakedEye)
 {
  echo LangViewInstrumentField2;
 
@@ -53,7 +53,7 @@ if ($instruments->getType($_GET['instrument']) != InstrumentNakedEye)
  print("&nbsp;mm</td></tr>");
 }
 
-if($instruments->getType($_GET['instrument']) != InstrumentBinoculars && $instruments->getType($_GET['instrument']) != InstrumentFinderscope  && $instruments->getType($_GET['instrument']) != InstrumentNakedEye)
+if($instruments->getInstrumentType($_GET['instrument']) != InstrumentBinoculars && $instruments->getInstrumentType($_GET['instrument']) != InstrumentFinderscope  && $instruments->getInstrumentType($_GET['instrument']) != InstrumentNakedEye)
 {
 
    echo("<tr><td class=\"fieldname\">");
@@ -90,45 +90,45 @@ if ($fixedMagnification > 0)
 }
 echo("<tr><td class=\"fieldname\">");
 
-if ($instruments->getType($_GET['instrument']) != InstrumentNakedEye)
+if ($instruments->getInstrumentType($_GET['instrument']) != InstrumentNakedEye)
 {
  echo LangViewInstrumentField5;
 }
 echo("</td><td>");
 
-if($instruments->getType($_GET['instrument']) == InstrumentBinoculars)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentBinoculars)
    {
    echo(InstrumentsBinoculars);
    }
-if($instruments->getType($_GET['instrument']) == InstrumentFinderscope)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentFinderscope)
    {
    echo(InstrumentsFinderscope);
    }
-if($instruments->getType($_GET['instrument']) == InstrumentReflector)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentReflector)
    {
    echo(InstrumentsReflector);
    }
-if($instruments->getType($_GET['instrument']) == InstrumentRefractor)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentRefractor)
    {
    echo(InstrumentsRefractor);
    }
-if($instruments->getType($_GET['instrument']) == InstrumentRest)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentRest)
    {
    echo(InstrumentsOther);
    }
-if($instruments->getType($_GET['instrument']) == InstrumentCassegrain)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentCassegrain)
    {
    echo(InstrumentsCassegrain);
    }
-if($instruments->getType($_GET['instrument']) == InstrumentSchmidtCassegrain)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentSchmidtCassegrain)
    {
    echo(InstrumentsSchmidtCassegrain);
    }
-if($instruments->getType($_GET['instrument']) == InstrumentKutter)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentKutter)
    {
    echo(InstrumentsKutter);
    }
-if($instruments->getType($_GET['instrument']) == InstrumentMaksutov)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentMaksutov)
    {
    echo(InstrumentsMaksutov);
    }

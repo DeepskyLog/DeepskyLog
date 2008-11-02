@@ -108,7 +108,7 @@ if ($filts != null)
    }
 
    $name = stripslashes($filters->getFilterName($value));
-   $type = $filters->getType($value);
+   $type = $filters->getFilterType($value);
    $color = $filters->getColor($value);
    $wratten = $filters->getWratten($value);
    $schott = $filters->getSchott($value);
@@ -267,7 +267,7 @@ echo(LangAddFilterTitle); ?>
 	 }
 	 if(array_key_exists('filterid',$_GET) && $_GET['filterid'])
    {
-      $type = $filters->getType($_GET['filterid']);
+      $type = $filters->getFilterType($_GET['filterid']);
 	 } 
    ?>
 

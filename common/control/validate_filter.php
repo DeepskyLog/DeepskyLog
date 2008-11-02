@@ -28,18 +28,18 @@ if(array_key_exists('add', $_POST) && $_POST['add'])
       // fill database
     	$id = $filters->addFilter($_POST['filtername'], $_POST['type'], $_POST['color'], $_POST['wratten'], $_POST['schott']);
 
-      $filters->setObserver($id, $_SESSION['deepskylog_id']);
+      $filters->setFilterObserver($id, $_SESSION['deepskylog_id']);
       $_SESSION['message'] = LangValidateEyepieceMessage2;
   	  $_SESSION['title'] = LangValidateEyepieceMessage3;
 }
 if(array_key_exists('change', $_POST) && $_POST['change'])
 {
-          $filters->setName($_POST['id'], $_POST['filtername']);
-          $filters->setType($_POST['id'], $_POST['type']);
-          $filters->setColor($_POST['id'], $_POST['color']);
+          $filters->setFilterName($_POST['id'], $_POST['filtername']);
+          $filters->setFilterType($_POST['id'], $_POST['type']);
+          $filters->setFilterColor($_POST['id'], $_POST['color']);
           $filters->setWratten($_POST['id'], $_POST['wratten']);
           $filters->setSchott($_POST['id'], $_POST['schott']);
-          $filters->setObserver($_POST['id'], $_SESSION['deepskylog_id']);
+          $filters->setFilterObserver($_POST['id'], $_SESSION['deepskylog_id']);
           $_SESSION['message'] = LangValidateEyepieceMessage5;
           $_SESSION['title'] = LangValidateEyepieceMessage4;
 }

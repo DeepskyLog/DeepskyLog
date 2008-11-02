@@ -31,7 +31,7 @@ if (!$_GET['lensid']) // no filterid given as a parameter
 elseif(array_key_exists('lensid', $_GET) && $_GET['lensid']) // lensid given
 {
   if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes") || 
-  array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] == $lenses->getObserver($_GET['lensid'])) // only admin may delete locations 
+  array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] == $lenses->getObserverFromLens($_GET['lensid'])) // only admin may delete locations 
   {
    $queries = array("lens" => $_GET['lensid'], "observer" => $_SESSION['deepskylog_id']);
    $obs = $observations->getObservationFromQuery($queries);

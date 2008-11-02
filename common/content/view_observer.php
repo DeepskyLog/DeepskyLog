@@ -212,7 +212,7 @@ $file) || fnmatch($_SESSION['user']. ".png", $file))
  }
 
  // NUMBER OF OBSERVATIONS
- $number_of_observations = $obs->getNumberOfObservations($_SESSION['user']);
+ $number_of_observations = $obs->getNumberOfDsObservations($_SESSION['user']);
 
  $rank = $obs->getRank($_SESSION['user']);
  if ($rank == 0)
@@ -236,7 +236,7 @@ $file) || fnmatch($_SESSION['user']. ".png", $file))
    print "<td>" . $$mod . "</td>\n";
   }
 
-  $numberOfObservations = $observations->getNumberOfObservations();
+  $numberOfObservations = $observations->getNumberOfDsObservations();
   $numberOfObservationsThisYear = $observations->getNumberOfObservationsLastYear();
   $numberOfDifferentObjects = $observations->getNumberOfDifferentObjects();
   $observationsThisYear = $observations->getObservationsLastYear($_SESSION['user']);

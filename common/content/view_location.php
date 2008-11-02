@@ -124,7 +124,7 @@ if ($lm > -900 || $sb > -900)
  echo("</td></tr>");
 }
 
-if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($locations->getObserver($_GET['location']) == $_SESSION['deepskylog_id']))
+if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($locations->getObserverFromLocation($_GET['location']) == $_SESSION['deepskylog_id']))
 {
   echo("<tr>
          <td class=\"fieldname\"><input type=\"submit\" name=\"change\" value=\"");

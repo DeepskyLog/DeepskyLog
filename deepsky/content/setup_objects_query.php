@@ -515,7 +515,7 @@ else
   echo("</td>\n<td width=\"25%\">\n");
   echo("<select name=\"type\">\n");
   echo("<option value=\"\"></option>"); // empty field
-  $types = $objects->getTypes(); 
+  $types = $objects->getDsObjectTypes(); 
   while(list($key, $value) = each($types))
     $stypes[$value] = $$value;
   asort($stypes);

@@ -49,7 +49,7 @@ if($objects->getDsObjectName($_GET['object'])) // check whether object exists
     	if($_GET['newaction']=="LangObjectSetCon")
   	    $objects->setConstellation($_GET['object'], $_GET['newnumber']);
     	if($_GET['newaction']=="LangObjectSetType")
-  	    $objects->setType($_GET['object'], $_GET['newnumber']);
+  	    $objects->setDsObjectType($_GET['object'], $_GET['newnumber']);
     	if($_GET['newaction']=="LangObjectSetMag")
   	    $objects->setMagnitude($_GET['object'], $_GET['newnumber']);
      	if($_GET['newaction']=="LangObjectSetSUBR")

@@ -17,7 +17,7 @@ if(!$_SESSION['module'])
 	
 // ADMINISTRATOR LOGGED IN or USER is the owner of the filter.
 if((array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes")) || 
-   ($_SESSION['deepskylog_id'] == $loc->getObserver($_GET['location']))) 
+   ($_SESSION['deepskylog_id'] == $loc->getObserverFromLocation($_GET['location']))) 
 {
   include("head.php"); // HTML head
   $head = new head();

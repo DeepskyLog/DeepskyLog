@@ -17,7 +17,7 @@ if(!$_SESSION['module'])
 
 // ADMINISTRATOR LOGGED IN or USER is the owner of the lens.
 if((array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes")) || 
-   ($_SESSION['deepskylog_id'] == $lns->getObserver($_GET['lens']))) 
+   ($_SESSION['deepskylog_id'] == $lns->getObserverFromLens($_GET['lens']))) 
 {
   include("head.php"); // HTML head
   $head = new head();

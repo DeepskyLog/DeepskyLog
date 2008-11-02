@@ -31,7 +31,7 @@ if (!$_GET['locationid']) // no locationid given as a parameter
 elseif(array_key_exists('locationid', $_GET) && $_GET['locationid']) // locationid given
 {
   if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes") || 
-  array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] == $locations->getObserver($_GET['locationid'])) // only admin may delete locations 
+  array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] == $locations->getObserverFromLocation($_GET['locationid'])) // only admin may delete locations 
   {
    $queries = array("location" => $_GET['locationid'], "observer" => $_SESSION['deepskylog_id']);
    $obs = $observations->getObservationFromQuery($queries, "", "1", "False", "D", "1");

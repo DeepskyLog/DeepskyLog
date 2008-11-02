@@ -27,9 +27,7 @@ if(array_key_exists('add', $_POST) && $_POST['add'])
 {
       // fill database
     	$id = $eyepieces->addEyepiece($_POST['eyepiecename'], $_POST['focalLength'], $_POST['apparentFOV']);
-
-      $eyepieces->setObserver($id, $_SESSION['deepskylog_id']);
-
+      $eyepieces->setEyepieceObserver($id, $_SESSION['deepskylog_id']);
 			if ($_POST['maxFocalLength']) {
 				$eyepieces->setMaxFocalLength($id, $_POST['maxFocalLength']);
 			} else {
@@ -40,10 +38,10 @@ if(array_key_exists('add', $_POST) && $_POST['add'])
 }
 if(array_key_exists('change', $_POST) && $_POST['change'])
 {
-          $eyepieces->setName($_POST['id'], $_POST['eyepiecename']);
-          $eyepieces->setFocalLength($_POST['id'], $_POST['focalLength']);
+          $eyepieces->setEyepieceName($_POST['id'], $_POST['eyepiecename']);
+          $eyepieces->setEyepieceFocalLength($_POST['id'], $_POST['focalLength']);
           $eyepieces->setApparentFOV($_POST['id'], $_POST['apparentFOV']);
-          $eyepieces->setObserver($_POST['id'], $_SESSION['deepskylog_id']);
+          $eyepieces->setEyepieceObserver($_POST['id'], $_SESSION['deepskylog_id']);
 					if ($_POST['maxFocalLength']) {
 						$eyepieces->setMaxFocalLength($_POST['id'], $_POST['maxFocalLength']);
 					} else {

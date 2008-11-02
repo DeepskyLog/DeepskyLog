@@ -95,7 +95,7 @@ else
     }
     else
     {
-      $correctedObjects[] = $objectsquery;
+      $correctedObjects[] = $objectsquery[0];
     }
   }
 

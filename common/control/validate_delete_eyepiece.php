@@ -30,7 +30,7 @@ if (!$_GET['eyepieceid']) // no eyepieceid given as a parameter
 elseif(array_key_exists('eyepieceid', $_GET) && $_GET['eyepieceid']) // eyepieceid given
 {
   if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes") || 
-  array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] == $eyepieces->getObserver($_GET['eyepieceid'])) // only admin may delete locations 
+  array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] == $eyepieces->getObserverFromEyepiece($_GET['eyepieceid'])) // only admin may delete locations 
   {
    $queries = array("eyepiece" => $_GET['eyepieceid'], "observer" => $_SESSION['deepskylog_id']);
    $obs = $observations->getObservationFromQuery($queries);

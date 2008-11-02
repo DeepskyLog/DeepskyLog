@@ -313,7 +313,7 @@ class Eyepieces
 
 
  // setFocalLength sets a new focal length for the given eyepiece
- function setFocalLength($id, $focalLength)
+ function setEyepieceFocalLength($id, $focalLength)
  {
   $db = new database;
   $db->login();
@@ -349,7 +349,7 @@ class Eyepieces
  }
 
  // setName sets the name for the given eyepiece
- function setName($id, $name)
+ function setEyepieceName($id, $name)
  {
   $db = new database;
   $db->login();
@@ -361,7 +361,7 @@ class Eyepieces
  }
 
  // setObserver sets the observer for the eyepiece with id = $id
- function setObserver($id, $observer)
+ function setEyepieceObserver($id, $observer)
  {
   $db = new database;
   $db->login();
@@ -373,7 +373,7 @@ class Eyepieces
  }
 
  // getObserver returns the observerid for this location
- function getObserver($id)
+ function getObserverFromEyepiece($id)
  {
   $db = new database;
   $db->login();

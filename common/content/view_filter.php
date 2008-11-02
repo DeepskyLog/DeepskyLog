@@ -40,7 +40,7 @@ echo LangViewFilterType;
 
 echo("</td><td>");
 
-$type = $filters->getType($_GET['filter']);
+$type = $filters->getFilterType($_GET['filter']);
 
 if($type == FilterOther) {echo(FiltersOther);}
 if($type == FilterBroadBand) {echo(FiltersBroadBand);}

@@ -39,7 +39,7 @@ echo("</h2>"); ?>
 <?php
 	 echo("<select name=\"type\">");
    
-   $type = $filters->getType($_GET['filter']);
+   $type = $filters->getFilterType($_GET['filter']);
    ?>
 
    <option <?php 

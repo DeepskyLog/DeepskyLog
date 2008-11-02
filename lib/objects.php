@@ -298,7 +298,7 @@ class Objects
 
  
  // getType returns the type of the object
- function getType($name)
+ function getDsObjectType($name)
  {
   $db = new database;
   $db->login();
@@ -1310,7 +1310,7 @@ function getObjectsFromCatalog($cat)
  }
  
  // getTypes returns a list of all different types
- function getTypes()
+ function getDsObjectTypes()
  {
   $db = new database;
   $db->login();
@@ -1516,7 +1516,7 @@ function getPartOfNames($name)
 
 
  // setType sets a new type for the object
- function setType($name, $type)
+ function setDsObjectType($name, $type)
  {
   $db = new database;
   $db->login();
@@ -1942,7 +1942,7 @@ function getPartOfNames($name)
       if($sb == 99.9)
         $sb = "&nbsp;&nbsp;-&nbsp;";
       // RIGHT ASCENSION
-      $ra = RAToString($_SESSION[$_SID][$count][7]);
+      $ra = raToString($_SESSION[$_SID][$count][7]);
       // DECLINATION
       $decl = decToStringDegMin($_SESSION[$_SID][$count][8]);
 			// SEEN
@@ -2114,7 +2114,7 @@ function getPartOfNames($name)
   $ra = $this->getRa($object);
   $raDSS = raToStringDSS($ra); // TODO add this method to util class!
   $util = new Util();
-  echo($util->raToString($ra));
+  echo(raToString($ra));
   echo("</td>");
   // DECLINATION
   echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
@@ -2136,7 +2136,7 @@ function getPartOfNames($name)
   echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
   echo LangViewObjectField6;
   echo("</td><td width=\"25%\">");
-  $type = $this->getType($object);
+  $type = $this->getDsObjectType($object);
   echo $$type;
   echo("</td></tr>");
   // MAGNITUDE

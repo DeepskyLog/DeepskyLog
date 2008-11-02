@@ -155,7 +155,7 @@ class Locations
  }
 
  // getObserver returns the observerid for this location
- function getObserver($id)
+ function getObserverFromLocation($id)
  {
   $db = new database;
   $db->login();
@@ -526,7 +526,7 @@ class Locations
  }
 
  // setName sets the name for the location with id = $id
- function setName($id, $name)
+ function setLocationName($id, $name)
  {
   $db = new database;
   $db->login();
@@ -538,7 +538,7 @@ class Locations
  }
 
  // Set the typical limiting magnitude for the location
- function setLimitingMagnitude($id, $lm)
+ function setLocationLimitingMagnitude($id, $lm)
  {
   $db = new database;
   $db->login();
@@ -574,7 +574,7 @@ class Locations
  }
 
  // setObserver sets the observer for the location with id = $id
- function setObserver($id, $observer)
+ function setLocationObserver($id, $observer)
  {
   $db = new database;
   $db->login();

@@ -168,217 +168,6 @@ class util
     }
   }
 
-  // raToString converts ra to a String representation
-  function raToString($ra)
-  {
-    $ra_hours = floor($ra);
-    $subminutes = 60 * ($ra - $ra_hours);
-    $ra_minutes = floor($subminutes);
-    $ra_seconds = round(60 * ($subminutes - $ra_minutes));
-
-    if($ra_seconds == 60)
-    {
-      $ra_seconds = 0;
-      $ra_minutes++;
-    }
-    if($ra_minutes == 60)
-    {
-      $ra_minutes = 0;
-      $ra_hours++;
-    }
-    if($ra_hours == 24)
-    {
-      $ra_hours = 0;
-    }
-
-    if($ra_hours <= 9)
-    {
-      $ra_hours = "0" . $ra_hours;
-    }
-    if($ra_minutes <= 9)
-    {
-      $ra_minutes = "0" . $ra_minutes;
-    }
-    if($ra_seconds <= 9)
-    {
-      $ra_seconds = "0" . $ra_seconds;
-    }
-
-    return("$ra_hours" . "h" . "$ra_minutes" . "m" . "$ra_seconds" . "s");
-  }
-
-  // raToString converts ra to a String representation
-  function raToStringHM($ra)
-  {
-    $ra_hours = floor($ra);
-    $subminutes = 60 * ($ra - $ra_hours);
-    $ra_minutes = floor($subminutes);
-    $ra_seconds = round(60 * ($subminutes - $ra_minutes));
-
-    if($ra_seconds >= 30)
-    $ra_minutes++;
-    if($ra_minutes == 60)
-    {
-      $ra_minutes = 0;
-      $ra_hours++;
-    }
-    if($ra_hours == 24)
-    $ra_hours = 0;
-
-    if($ra_hours <= 9)
-    {
-      $ra_hours = "0" . $ra_hours;
-    }
-
-    return("$ra_hours" . "h" . "$ra_minutes" . "m");
-  }
-  // raArgoToString converts ra to a String representation
-  function raArgoToString($ra)
-  {
-    $ra_hours = floor($ra);
-    $subminutes = 60 * ($ra - $ra_hours);
-    $ra_minutes = floor($subminutes);
-    $ra_seconds = round(60 * ($subminutes - $ra_minutes));
-
-    if($ra_seconds == 60)
-    {
-      $ra_seconds = 0;
-      $ra_minutes++;
-    }
-    if($ra_minutes == 60)
-    {
-      $ra_minutes = 0;
-      $ra_hours++;
-    }
-    if($ra_hours == 24)
-    {
-      $ra_hours = 0;
-    }
-
-    if($ra_hours <= 9)
-    {
-      $ra_hours = "0" . $ra_hours;
-    }
-    if($ra_minutes <= 9)
-    {
-      $ra_minutes = "0" . $ra_minutes;
-    }
-    if($ra_seconds <= 9)
-    {
-      $ra_seconds = "0" . $ra_seconds;
-    }
-
-    return("$ra_hours" . ":" . "$ra_minutes" . ":" . "$ra_seconds");
-  }
-
-  // decToString converts dec to a String representation
-  function decToString($decl, $web = 1)
-  {
-    $sign =0;
-    if($decl < 0)
-    {
-      $sign = -1;
-      $decl = -$decl;
-    }
-    $decl_degrees = floor($decl);
-    $subminutes = 60 * ($decl - $decl_degrees);
-    $decl_minutes = round($subminutes);
-
-    if($decl_minutes == 60)
-    {
-      $decl_minutes = 0;
-      $decl_degrees++;
-    }
-
-    if($decl_degrees >= 0 && $decl_degrees <= 9)
-    {
-      $decl_degrees = "0" . $decl_degrees;
-    }
-
-    if ($sign == -1)
-    {
-      $decl_degrees = "-" . $decl_degrees;
-    }
-    else
-    {
-      if ($web == 1)
-      {
-        //$decl_degrees = "&nbsp;" . $decl_degrees; // add white space for overview locations
-        $decl_degrees = $decl_degrees; // remove white space for object details
-      }
-      else
-      {
-        $decl_degrees = " " . $decl_degrees;
-      }
-    }
-
-    if($decl_minutes <= 9)
-    {
-      $decl_minutes = "0" . $decl_minutes;
-    }
-
-    if ($web == 1)
-    {
-      $d = "&deg;";
-      $m = "&#39;";
-    }
-    else
-    {
-      $d = "d";
-      $m = "'";
-    }
-    return("$decl_degrees" .$d. "$decl_minutes" . $m);
-  }
-
-  // decToArgoString converts dec to a String representation
-  function decToArgoString($decl)
-  {
-    $sign =0;
-    if($decl < 0)
-    {
-      $sign = -1;
-      $decl = -$decl;
-    }
-    $decl_degrees = floor($decl);
-    $subminutes = 60 * ($decl - $decl_degrees);
-    //  $decl_minutes = round($subminutes);
-    $decl_minutes = floor($subminutes);
-    $subseconds = round(60 * ($subminutes - $decl_minutes));
-
-    if($subseconds == 60)
-    {
-      $subseconds = 0;
-      $decl_minutes++;
-    }
-
-    if($decl_minutes == 60)
-    {
-      $decl_minutes = 0;
-      $decl_degrees++;
-    }
-
-    if($decl_degrees >= 0 && $decl_degrees <= 9)
-    {
-      $decl_degrees = "0" . $decl_degrees;
-    }
-
-    if ($sign == -1)
-    {
-      $decl_degrees = "-" . $decl_degrees;
-    }
-    else
-    {
-      $decl_degrees = "+" . $decl_degrees;
-    }
-
-    if($decl_minutes <= 9)
-    {
-      $decl_minutes = "0" . $decl_minutes;
-    }
-
-    return("$decl_degrees" . ":" . "$decl_minutes" . ":" . sprintf("%02d", $subseconds));
-  }
-
   // Creates a pdf document from an array of objects
   function pdfObjects($result)
   {
@@ -396,6 +185,8 @@ class util
 
     global $deepskylive, $dateformat;
 		
+		include_once "../commmon/control/ra_to_hms.php";
+		include_once "../commmon/control/dec_to_dm.php";
 		include_once "../lib/atlasses.php";
 		$atlas = new Atlasses;
 		$atlasses = $atlas->getSortedAtlasses();
@@ -459,8 +250,8 @@ class util
       }
 
       $temp = array("Name" => $valueA[4],
-                 "ra" => $this->raToString($valueA[7]),
-                 "decl" => $this->decToString($valueA[8], 0),
+                 "ra" => raToString($valueA[7]),
+                 "decl" => decToString($valueA[8], 0),
                  "mag" => $mag,
                  "sb" => $sb,
                  "con" => $$con,
@@ -579,6 +370,8 @@ class util
 		
 		global $baseURL, $dbname;
 		
+		include_once "../commmon/control/ra_to_hms.php";
+		include_once "../commmon/control/dec_to_dm.php";
 		include_once "atlasses.php";
 		$atlas = new Atlasses;
 		$atlasses = $atlas->getSortedAtlasses();
@@ -738,8 +531,8 @@ class util
 			  $pdf->addTextWrap($xbase+180, $y,  20, $fontSizeText, $con);			                         // constellation
 			  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $mag, 'left');  	                 // mag
 			  $pdf->addTextWrap($xbase+217, $y,  18, $fontSizeText, $sb, 'left');		                   // sb
-			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, $this->raToStringHM($valueA[7]) . ' '.
-				                                                      $this->decToString($valueA[8],0));	 // ra - decl
+			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, raToStringHM($valueA[7]) . ' '.
+				                                                      decToString($valueA[8],0));	 // ra - decl
 			  $pdf->addTextWrap($xbase+295, $y,  55, $fontSizeText, $size . '/' . $pa);			             // size
 	  		$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $contrast, 'left');			             // contrast				
 	  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, $magnifi, 'left');			             // magnification				
@@ -754,8 +547,8 @@ class util
 			  $pdf->addTextWrap($xbase+170, $y,  30, $fontSizeText, '</c:alink></b>'.$type);			                 // type
 			  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $mag, 'left');			                 // mag
 			  $pdf->addTextWrap($xbase+217, $y,  18, $fontSizeText, $sb, 'left');			                   // sb
-			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, $this->raToStringHM($valueA[7]) . ' '.
-				                                                      $this->decToString($valueA[8],0));	 // ra - decl
+			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, raToStringHM($valueA[7]) . ' '.
+				                                                      decToString($valueA[8],0));	 // ra - decl
 			  $pdf->addTextWrap($xbase+295, $y,  55, $fontSizeText, $size . '/' . $pa);         			   // size
 	  		$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $contrast, 'left');			             // contrast				
 	  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, $magnifi, 'left');		               // magnification				
@@ -1191,6 +984,8 @@ class util
   // Creates a csv file from an array of objects
   function csvObjects($result)
   {
+		include_once "../commmon/control/ra_to_hms.php";
+		include_once "../commmon/control/dec_to_dm.php";
     include_once "observers.php";
     include_once "objects.php";
     include "setup/vars.php";
@@ -1267,13 +1062,15 @@ class util
         $magnifi = (int)$valueA[25];
       }
 
-      echo $valueA[0].";". $alt .";".$this->raToString($valueA[7]).";".$this->decToString($valueA[8], 0).";".$$con.";".$$type.";".$mag.";".$sb.";".$size.";".$pa.";".$page.";".$valueA[21].";".$magnifi.";".$valueA[3].";".$valueA[28]."\n";
+      echo $valueA[0].";". $alt .";".raToString($valueA[7]).";".decToString($valueA[8], 0).";".$$con.";".$$type.";".$mag.";".$sb.";".$size.";".$pa.";".$page.";".$valueA[21].";".$magnifi.";".$valueA[3].";".$valueA[28]."\n";
     }
   }
 
   // Creates an argo navis file from an array of objects
   function argoObjects($result)
   {
+		include_once "../commmon/control/ra_to_hms.php";
+		include_once "../commmon/control/dec_to_dm.php";
     include_once "objects.php";
     include_once "observers.php";
     include "setup/vars.php";
@@ -1329,7 +1126,7 @@ class util
         if ($diam2 != 0.0)
         $size = $size.sprintf("x%.1f''", $diam2);
       }
-      echo "DSL " . sprintf("%03d", $counter) . " " . $valueA[0]."|".$this->raArgoToString($valueA[7])."|".$this->decToArgoString($valueA[8], 0)."|".$$argotype."|".$mag."|".$size.";".$atlas." ".$page.";CR ".$valueA[21].";".$valueA[3].";".$valueA[28]."\n";
+      echo "DSL " . sprintf("%03d", $counter) . " " . $valueA[0]."|".$this->raArgoToString($valueA[7])."|".decToArgoString($valueA[8], 0)."|".$$argotype."|".$mag."|".$size.";".$atlas." ".$page.";CR ".$valueA[21].";".$valueA[3].";".$valueA[28]."\n";
       $counter++;
     }
   }

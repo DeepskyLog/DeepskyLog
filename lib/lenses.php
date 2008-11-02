@@ -274,8 +274,8 @@ class Lenses
   $db->logout();
  }
 
- // setName sets the name for the given lens
- function setName($id, $name)
+ // setLensName sets the name for the given lens
+ function setLensName($id, $name)
  {
   $db = new database;
   $db->login();
@@ -286,8 +286,8 @@ class Lenses
   $db->logout();
  }
 
- // setObserver sets the observer for the lens with id = $id
- function setObserver($id, $observer)
+ // setLensObserver sets the observer for the lens with id = $id
+ function setLensObserver($id, $observer)
  {
   $db = new database;
   $db->login();
@@ -299,7 +299,7 @@ class Lenses
  }
 
  // getObserver returns the observerid for this lens
- function getObserver($id)
+ function getObserverFromLens($id)
  {
   $db = new database;
   $db->login();
@@ -346,7 +346,7 @@ class Lenses
 
    $name = $this->getLensName($value);
    $factor = $this->getFactor($value);
-   $observer = $this->getObserver($value);
+   $observer = $this->getObserverFromLens($value);
 
    echo "<tr $class><td> $value </td><td> $name </td><td> $factor </td><td> $observer </td>";
 

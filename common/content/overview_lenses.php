@@ -108,7 +108,7 @@ while(list ($key, $value) = each($lns))
 
    $name = stripslashes($lenses->getLensName($value));
    $factor = $lenses->getFactor($value);
-   $observer = $lenses->getObserver($value);
+   $observer = $lenses->getObserverFromLens($value);
 
    if ($value != "1")
    {

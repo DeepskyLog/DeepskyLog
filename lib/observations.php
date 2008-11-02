@@ -1702,7 +1702,7 @@ class Observations
   }
 
   // setLanguage sets the language for the given observation
-  function setLanguage($id, $language)
+  function setObservationLanguage($id, $language)
   {
     $db = new database;
     $db->login();
@@ -1866,7 +1866,7 @@ class Observations
   }
 
   // setLimitingMagnitude sets the limiting magnitude for the given observation
-  function setLimitingMagnitude($id, $limmag)
+  function setObservationLimitingMagnitude($id, $limmag)
   {
     $db = new database;
     $db->login();

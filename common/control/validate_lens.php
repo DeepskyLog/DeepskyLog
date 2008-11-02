@@ -28,15 +28,15 @@ if(array_key_exists('add', $_POST) && $_POST['add'])
       // fill database
     	$id = $lenses->addLens($_POST['lensname'], $_POST['factor']);
 
-      $lenses->setObserver($id, $_SESSION['deepskylog_id']);
+      $lenses->setLensObserver($id, $_SESSION['deepskylog_id']);
       $_SESSION['message'] = LangValidateLensMessage2;
   	  $_SESSION['title'] = LangValidateLensMessage3;
 }
 if(array_key_exists('change', $_POST) && $_POST['change'])
 {
-          $lenses->setName($_POST['id'], $_POST['lensname']);
+          $lenses->setLensName($_POST['id'], $_POST['lensname']);
           $lenses->setFactor($_POST['id'], $_POST['factor']);
-          $lenses->setObserver($_POST['id'], $_SESSION['deepskylog_id']);
+          $lenses->setLensObserver($_POST['id'], $_SESSION['deepskylog_id']);
           $_SESSION['message'] = LangValidateLensMessage5;
           $_SESSION['title'] = LangValidateLensMessage4;
 }

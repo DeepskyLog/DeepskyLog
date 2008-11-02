@@ -108,11 +108,11 @@ while(list ($key, $value) = each($filts))
    }
 
    $name = stripslashes($filters->getFilterName($value));
-   $type = $filters->getType($value);
+   $type = $filters->getFilterType($value);
    $color = $filters->getColor($value);
    $wratten = $filters->getWratten($value);
    $schott = $filters->getSchott($value);
-   $observer = $filters->getObserver($value);
+   $observer = $filters->getObserverFromFilter($value);
 
    if ($value != "1")
    {

@@ -73,7 +73,7 @@ echo InstrumentReflector;
  
 echo("\""); 
  
-if($instruments->getType($_GET['instrument']) == InstrumentReflector)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentReflector)
 { 
   echo(" selected=\"selected\">");
 } 
@@ -91,7 +91,7 @@ echo InstrumentRefractor;
 
 echo("\"");
 
-if($instruments->getType($_GET['instrument']) == InstrumentRefractor)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentRefractor)
 {
   echo(" selected=\"selected\">");
 }
@@ -109,7 +109,7 @@ echo InstrumentCassegrain;
 
 echo("\"");
 
-if($instruments->getType($_GET['instrument']) == InstrumentCassegrain)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentCassegrain)
 {
   echo(" selected=\"selected\">");
 }
@@ -127,7 +127,7 @@ echo InstrumentSchmidtCassegrain;
 
 echo("\"");
 
-if($instruments->getType($_GET['instrument']) == InstrumentSchmidtCassegrain)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentSchmidtCassegrain)
 {
   echo(" selected=\"selected\">");
 }
@@ -145,7 +145,7 @@ echo InstrumentKutter;
 
 echo("\"");
 
-if($instruments->getType($_GET['instrument']) == InstrumentKutter)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentKutter)
 {
   echo(" selected=\"selected\">");
 }
@@ -163,7 +163,7 @@ echo InstrumentMaksutov;
 
 echo("\"");
 
-if($instruments->getType($_GET['instrument']) == InstrumentMaksutov)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentMaksutov)
 {
   echo(" selected=\"selected\">");
 }
@@ -181,7 +181,7 @@ echo InstrumentBinoculars;
 
 echo("\"");
 
-if($instruments->getType($_GET['instrument']) == InstrumentBinoculars)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentBinoculars)
 {
   echo(" selected=\"selected\">");
 }
@@ -198,7 +198,7 @@ echo InstrumentFinderscope;
 
 echo("\"");
 
-if($instruments->getType($_GET['instrument']) == InstrumentFinderscope)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentFinderscope)
 {
   echo(" selected=\"selected\">");
 }
@@ -216,7 +216,7 @@ echo InstrumentRest;
  
 echo("\"");  
     
-if($instruments->getType($_GET['instrument']) == InstrumentsOther)
+if($instruments->getInstrumentType($_GET['instrument']) == InstrumentsOther)
 {   
   echo(" selected=\"selected\">");
 }   

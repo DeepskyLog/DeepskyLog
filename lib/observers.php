@@ -331,23 +331,22 @@ class Observers
 
  // getNumberOfObservations($name) returns the number of observations of the
  // given observerid
- function getNumberOfObservations($observerid)
- {
-  $observations = new Observations;
-  $obs = $observations->getPopularObservers();
-  $observations = 0;
-
-  if ($obs)
-  {
-   while(list($key, $value) = each($obs))
-   {
-    if ($key == $observerid)
-    {
-     $observations = $value;
-    }
-   }
-  }
-  return $observations;
+ function getNumberOfDsObservations($observerid)
+ { $db = new database;
+   $db->login();
+   if($id )
+   { $sql = "SELECT COUNT(observations.id) As Cnt FROM observations WHERE observerid = \"$id\"";
+     $run = mysql_query($sql) or die(mysql_error());
+     $get = mysql_fetch_object($run);
+     return $get->Cnt;
+	 }
+	 else
+	 {
+     $sql = "SELECT COUNT(observations.id) As Cnt FROM observations";
+     $run = mysql_query($sql) or die(mysql_error());
+     $get = mysql_fetch_object($run);
+     return $get->Cnt;
+	 }
  }
 
  // getNumberOfCometObservations($name) returns the number of comet observations
@@ -753,7 +752,7 @@ class Observers
  }
 
  // setLanguage sets the language for the observer with id = $id
- function setLanguage($id, $language)
+ function setObserverLanguage($id, $language)
  {
   $db = new database;
   $db->login();
@@ -778,8 +777,8 @@ class Observers
   $db->logout();
  }
 
- // setObservationLanguage sets the language of the observations for the observer with id = $id
- function setObservationLanguage($id, $language)
+ // setObserverObservationLanguage sets the language of the observations for the observer with id = $id
+ function setObserverObservationLanguage($id, $language)
  {
   $db = new database;
   $db->login();
@@ -791,7 +790,7 @@ class Observers
  }
 
  // setName sets a new name for the observer with id = $id
- function setName($id, $name)
+ function setObserverName($id, $name)
  {
   $db = new database;
   $db->login();

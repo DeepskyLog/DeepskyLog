@@ -79,8 +79,8 @@ else
       if(array_key_exists('change', $_POST) && $_POST['change']) // change instrument
       {
         $id = $_POST['id'];
-        $instruments->setType($id, $type);
-        $instruments->setName($id, $instrumentname);
+        $instruments->setInstrumentType($id, $type);
+        $instruments->setInstrumentName($id, $instrumentname);
         $instruments->setDiameter($id, $diameter);
         $instruments->setFd($id, $fd);
         $instruments->setFixedMagnification($id, $fixedMagnification);

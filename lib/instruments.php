@@ -29,21 +29,10 @@ class Instruments
 
   $db->logout();
  }
- 
- // setObserver sets the observer for the instrument with id = $id
- function setObserver($id, $observer)
- {
-  $db = new database;
-  $db->login();
 
-  $sql = "UPDATE instruments SET observer = \"$observer\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
 
  // getObserver returns the observerid for this instrument
- function getObserver($id)
+ function getObserverFromInstrument($id)
  {
   $db = new database;
   $db->login();
@@ -290,7 +279,7 @@ class Instruments
  }
 
  // getType returns the type of the given instrument
- function getType($id)
+ function getInstrumentType($id)
  {
   $db = new database;
   $db->login();
@@ -389,7 +378,7 @@ class Instruments
    else
    {
     $new_instruments[$i][0] = $instruments[$i];
-    if ($this->getType($instruments[$i]) == InstrumentNakedEye)
+    if ($this->getInstrumentType($instruments[$i]) == InstrumentNakedEye)
     {
       $new_instruments[$i][1] = InstrumentsNakedEye;
     }
@@ -438,23 +427,9 @@ class Instruments
   $db->logout();
  }
 
- // setFocalLength sets the focal length for the given instrument
- function setFocalLength($id, $focalLength)
- {
-  $diameter = $this->getDiameter($id);
-
-  $db = new database;
-  $db->login();
-
-  $fd = $focalLength / $diameter;
-  $sql = "UPDATE instruments SET fd = \"$fd\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
 
  // setName sets the name for the given instrument
- function setName($id, $name)
+ function setInstrumentName($id, $name)
  {
   $db = new database;
   $db->login();
@@ -466,7 +441,7 @@ class Instruments
  }
 
  // setType sets the type for the given instrument
- function setType($id, $type)
+ function setInstrumentType($id, $type)
  {
   $db = new database;
   $db->login();
@@ -510,7 +485,7 @@ class Instruments
    $diameter = $this->getDiameter($value);
    $fd = $this->getFd($value);
    $focalLength = $this->getInstrumentFocalLength($value);
-   $type = $this->getType($value);
+   $type = $this->getInstrumentType($value);
 
    if ($type == InstrumentNakedEye)
    {
@@ -570,4 +545,39 @@ class Instruments
   return $ids;
  }
 }
+
+
+
+//VERSION 3.3 OBSOLETE ?
+// setFocalLength sets the focal length for the given instrument
+/*
+ function setFocalLength($id, $focalLength)
+ {
+  $diameter = $this->getDiameter($id);
+
+  $db = new database;
+  $db->login();
+
+  $fd = $focalLength / $diameter;
+  $sql = "UPDATE instruments SET fd = \"$fd\" WHERE id = \"$id\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $db->logout();
+ }
+*/
+ 
+ /* OBSOLETE in VERSION 3.3 ?
+ // setInstrumentObserver sets the observer for the instrument with id = $id
+ function setInstrumentObserver($id, $observer)
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "UPDATE instruments SET observer = \"$observer\" WHERE id = \"$id\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $db->logout();
+ }
+*/
+
 ?>
