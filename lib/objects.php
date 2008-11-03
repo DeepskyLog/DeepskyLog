@@ -1094,10 +1094,10 @@ function getObjectsFromCatalog($cat)
   $db->login();
 	if(substr($cat,0,5)=="List:")
     if(substr($cat,5,7)=="Public:")
-      $sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As Altname, observerobjectlist.objectplace As catindex  FROM observerobjectlist " .
+      $sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As altname, observerobjectlist.objectplace As catindex  FROM observerobjectlist " .
 	  		     "WHERE (observerobjectlist.listname = \"" . substr($cat,5) . "\")";
 	  else
-      $sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As Altname, observerobjectlist.objectplace As catindex FROM observerobjectlist " .
+      $sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As altname, observerobjectlist.objectplace As catindex FROM observerobjectlist " .
 	  	   	   "WHERE (observerobjectlist.listname = \"" . substr($cat,5) . "\") AND (observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\")";
 	else
     $sql = "SELECT DISTINCT objectnames.objectname, objectnames.catindex, objectnames.altname " .
