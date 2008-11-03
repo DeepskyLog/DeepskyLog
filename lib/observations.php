@@ -717,20 +717,34 @@ class Observations
     $db = new database;
     $db->login();
     $obs=array();
-    $sql = "SELECT DISTINCT objectnames.objectname FROM objectnames " .
-         "INNER JOIN observations ON observations.objectname = objectnames.objectname " . 
-	  		 "WHERE ((objectnames.catalog = \"$catalog\") " .
-		     "AND (observations.observerid=\"$id\") " .
-				 "AND (observations.visibility != 7))";
+  	if(substr($catalog,0,5)=="List:")
+      if(substr($catalog,5,7)=="Public:")
+        $sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
+               "INNER JOIN observations ON observations.objectname = observerobjectlist.objectname " . 
+  	  		     "WHERE ((observerobjectlist.listname = \"" . substr($catalog,5) . "\") " .
+							 "AND (observations.observerid = \"" . $id . "\") " .
+  				     "AND (observations.visibility != 7))";
+  	  else
+        $sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
+               "INNER JOIN observations ON observations.objectname = observerobjectlist.objectname " . 
+  	  	   	   "WHERE ((observerobjectlist.listname = \"" . substr($catalog,5) . "\") AND (observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\") " .
+							 "AND (observations.observerid = \"" . $id . "\") " .
+  				     "AND (observations.visibility != 7))";
+  	else
+      $sql = "SELECT DISTINCT objectnames.objectname FROM objectnames " .
+             "INNER JOIN observations ON observations.objectname = objectnames.objectname " . 
+  	  		   "WHERE ((objectnames.catalog = \"$catalog\") " .
+  		       "AND (observations.observerid=\"$id\") " .
+  				   "AND (observations.visibility != 7))";
     $run = mysql_query($sql) or die(mysql_error());
     while($get = mysql_fetch_object($run))
-    if(!in_array($get->objectname, $obs))
-    $obs[] = $get->objectname;
+      if(!in_array($get->objectname, $obs))
+        $obs[] = $get->objectname;
     $db->logout();
     if(isset($obs))
-    return $obs;
+      return $obs;
     else
-    return null;
+      return null;
   }
 
   function getObservedFromCataloguePartOf($id, $catalog)
@@ -790,7 +804,7 @@ class Observations
 
 
   // getNumberOfObservations() returns the total number of observations
-  function getNumberOfObservations()
+  function getNumberOfDsObservations()
   {
     include "setup/databaseInfo.php";
     include_once "observers.php";

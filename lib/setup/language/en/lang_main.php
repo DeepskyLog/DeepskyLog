@@ -40,6 +40,8 @@ define("LangGooglemaps", "Click on the map to view location in Google Maps");
 // Tooltips
 
 define("LangSortOn", "Sort on ");
+define("LangSortOnAsc", "Sort ascending ");
+define("LangSortOnDesc", "Sort descending");
 
 //ToList
 define("LangToListList", "The list \"");

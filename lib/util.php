@@ -160,11 +160,11 @@ class util
   {
     foreach($_POST as $foo => $bar)
     {
-      $_POST[$foo] = htmlentities($bar, ENT_COMPAT, "ISO-8859-15");
+      $_POST[$foo] = htmlentities($bar, ENT_COMPAT, "ISO-8859-15", 0);
     }
     foreach($_GET as $foo => $bar)
     {
-      $_GET[$foo] = htmlentities($bar, ENT_COMPAT, "ISO-8859-15");
+      $_GET[$foo] = htmlentities($bar, ENT_COMPAT, "ISO-8859-15", 0);
     }
   }
 

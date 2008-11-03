@@ -1092,12 +1092,21 @@ function getObjectsFromCatalog($cat)
  {
   $db = new database;
   $db->login();
-  $sql = "SELECT DISTINCT objectnames.objectname, objectnames.catindex, objectnames.altname " .
-	       "FROM objectnames WHERE objectnames.catalog = \"$cat\"";
+	if(substr($cat,0,5)=="List:")
+    if(substr($cat,5,7)=="Public:")
+      $sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As Altname, observerobjectlist.objectplace As catindex  FROM observerobjectlist " .
+	  		     "WHERE (observerobjectlist.listname = \"" . substr($cat,5) . "\")";
+	  else
+      $sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As Altname, observerobjectlist.objectplace As catindex FROM observerobjectlist " .
+	  	   	   "WHERE (observerobjectlist.listname = \"" . substr($cat,5) . "\") AND (observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\")";
+	else
+    $sql = "SELECT DISTINCT objectnames.objectname, objectnames.catindex, objectnames.altname " .
+	         "FROM objectnames WHERE objectnames.catalog = \"$cat\"";
   $run = mysql_query($sql) or die(mysql_error());
   $obs=array();
 	while($get = mysql_fetch_object($run))
-   $obs[$get->catindex] = array($get->objectname, $get->altname);
+	  if($get->objectname)
+      $obs[$get->catindex] = array($get->objectname, $get->altname);
 	uksort($obs,"strnatcasecmp");
   $db->logout();
   return $obs;
@@ -1810,17 +1819,17 @@ function getPartOfNames($name)
 
  // getNumberOfObjectsInCatalogue($catalogue)
  // returns the number of objects in the catalogue given as a parameter
- function getNumberOfObjectsInCatalogue($catalogue)
+ function getNumberOfObjectsInCatalogue($catalog)
  {
   $db = new database;
   $db->login();
-	if(substr($catalogue,0,5)=="List:")
-    if(substr($catalogue,5,7)=="Public:")
-      $sql = "SELECT COUNT(DISTINCT observerobjectlist.objectname)-1 AS number FROM observerobjectlist WHERE observerobjectlist.listname = \"" . substr($catalogue,5) . "\"";
+	if(substr($catalog,0,5)=="List:")
+    if(substr($catalog,5,7)=="Public:")
+      $sql = "SELECT COUNT(DISTINCT observerobjectlist.objectname)-1 AS number FROM observerobjectlist WHERE observerobjectlist.listname = \"" . substr($catalog,5) . "\"";
 	  else
-      $sql = "SELECT COUNT(DISTINCT observerobjectlist.objectname)-1 AS number FROM observerobjectlist WHERE observerobjectlist.listname = \"" . substr($catalogue,5) . "\" AND observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\"";		
+      $sql = "SELECT COUNT(DISTINCT observerobjectlist.objectname)-1 AS number FROM observerobjectlist WHERE observerobjectlist.listname = \"" . substr($catalog,5) . "\" AND observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\"";		
 	else
-    $sql = "SELECT COUNT(DISTINCT catindex) AS number FROM objectnames WHERE catalog = \"$catalogue\"";
+    $sql = "SELECT COUNT(DISTINCT catindex) AS number FROM objectnames WHERE catalog = \"$catalog\"";
   $run = mysql_query($sql) or die(mysql_error());
   $get = mysql_fetch_object($run);
   $db->logout();

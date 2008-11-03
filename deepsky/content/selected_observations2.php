@@ -127,7 +127,7 @@ elseif(array_key_exists('catalogue',$_GET) && ($_GET['catalogue']))
 }  
  
 if(array_key_exists('catalogue',$_GET))
-  $catalogue = $_GET['catalogue']; // field to sort on 
+  $catalogue = $_GET['catalogue']; 
 else
   $catalogue = '';
 
@@ -807,7 +807,7 @@ elseif($object ||
    }
 
    if(sizeof($obs) > 0)
-     krsort($obs);
+     ksort($obs);
 
 
   if(array_key_exists('previous',$_GET) && $_GET['previous']) // field to sort on given as a parameter in the url
@@ -924,12 +924,13 @@ elseif($object ||
         echo "<tr width=\"100%\" class=\"type3\">\n";
 				
 				
-
-        echo "<td><a href=\"" . $link2 . "&amp;sort=objectname \"  title=\"" . LangSortOn . mb_strtolower(LangOverviewObservationsHeader1) . "\">" . LangOverviewObservationsHeader1 . "</a></td>\n";
-			  echo "<td><a href=\"" . $link2 . "&amp;sort=objects.con\"  title=\"" . LangSortOn . mb_strtolower(LangViewObservationField1b) . "\">" . LangViewObservationField1b . "</a></td>\n";
-        echo "<td><a href=\"" . $link2 . "&amp;sort=observerid \"  title=\"" . LangSortOn . mb_strtolower(LangOverviewObservationsHeader2) . "\">" . LangOverviewObservationsHeader2 . "</a></td>\n";
-        echo "<td><a href=\"" . $link2 . "&amp;sort=instrumentid\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObservationsHeader3) . "\">" . LangOverviewObservationsHeader3 . "</a></td>\n";
-        echo "<td><a href=\"" . $link2 . "&amp;sort=date\"         title=\"" . LangSortOn . mb_strtolower(LangOverviewObservationsHeader4) . "\">" . LangOverviewObservationsHeader4 . "</a></td>";
+        include "../common/layout/tables.php";
+        tableSortHeader(LangOverviewObservationsHeader1, $link2 . "&amp;sort=objectname\"");
+        tableSortHeader(LangViewObservationField1b,      $link2 . "&amp;sort=objects.con\"");
+        tableSortHeader(LangOverviewObservationsHeader2, $link2 . "&amp;sort=observerid\"");
+        tableSortHeader(LangOverviewObservationsHeader3, $link2 . "&amp;sort=instrumentid\"");
+        tableSortHeader(LangOverviewObservationsHeader4, $link2 . "&amp;sort=date\"");
+								
         if($_SESSION['lco']!="O")
 				  echo("<td></td>\n");
 				else
