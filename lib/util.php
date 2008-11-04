@@ -1,27 +1,76 @@
 <?php
 
-// The util class is a collection of usefull functions, mostly needed for the
-// user interface.
-//
-// Version 0.5 : 21/08/2005, WDM
-// version 3.1, DE 20061119
-//
-// $$ ok
+//CLASS util
+// INTERFACE
+//   public function utiltiesDispatchIndexActionDS() -> returns the file to be included to execute the action specified in $_GET['indexAcction']
+//   public function utilitiesSetModuleCookie($module)
+// ..
+// PUBLIC OBJECT
+//  $objUtil  
+
 
 if (!function_exists('fnmatch'))
 {
   function fnmatch($pattern, $string)
-  {
-    return @preg_match('/^' . strtr(addcslashes($pattern, '\\.+^$(){}=!<>|'), array('*' => '.*', '?' => '.?')) . '$/i', $string);
+  {return @preg_match('/^' . strtr(addcslashes($pattern, '\\.+^$(){}=!<>|'), array('*' => '.*', '?' => '.?')) . '$/i', $string);
   }
 }
-
 
 include_once "setup/vars.php";
 include_once "class.ezpdf.php";
 
 class util
 {
+  public function __construct()
+	{ $this->checkUserInput();
+  }
+  private function utilitiesGetIndexActionDSdefaultAction()
+  { $_GET['catalogue']="*";
+  	$theDate = date('Ymd', strtotime('-1 year'));
+    $_GET['minyear'] = substr($theDate,0,4);
+    $_GET['minmonth'] = substr($theDate,4,2);
+    $_GET['minday'] = substr($theDate,6,2);  
+  	return 'content/selected_observations2.php';
+  }
+  private function utilitiesCheckIndexActionDSquickPick()
+  { if (array_key_exists('indexAction',$_GET) && ($_GET['indexAction'] == 'quickpick'))
+    { $indexAction='quickpick';
+      $objects = $GLOBALS['objObject'];
+      $temp = $objects->getExactDsObject($_GET['object']);
+      if($temp)
+      {
+    	  $_GET['object'] = $temp[0];
+        if(array_key_exists('searchObservations', $_GET))
+          return 'content/selected_observations2.php';  
+        elseif(array_key_exists('newObservation', $_GET))
+          return 'content/new_observation.php';   
+        else
+          return 'content/view_object.php';  
+      }
+      else
+      {
+    	  $_SID=time();
+    		$_GET['SID']=$_SID;
+    	  $_GET['catNumber']=ucwords(trim($_GET['object']));
+        return 'content/setup_objects_query.php';  	
+      }
+    }
+  }
+  private function utilitiesCheckIndexActionDSall($action, $includefile)
+  { if(array_key_exists('indexAction',$_GET) && ($_GET['indexAction'] == $action))
+      return $includefile;
+  }
+  private function utilitiesCheckIndexActionDSmember($action, $includefile)
+  { if(array_key_exists('indexAction',$_GET) && ($_GET['indexAction'] == $action) && 
+       array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
+      return $includefile; 
+  }
+  private function utilitiesCheckIndexActionDSadmin($action, $includefile)
+  { if(array_key_exists('indexAction',$_GET) && ($_GET['indexAction'] == $action) && 
+       array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes"))
+      return $includefile; 
+  }
+	
   function printNewListHeader($list, $link, $min, $step, $total)
   { $pages = ceil(count($list) / $step);       // total number of pages
     if($min)                                   // minimum value
@@ -40,13 +89,13 @@ class util
 		  
 			echo("<td>");	
       echo("<a href=\"".$link."&amp;multiplepagenr=0\">");
-      echo "<img src=\"../styles/images/allleft20.gif\">"; // link to last page
+      echo "<img src=\"../styles/images/allleft20.gif\" border=\"0\">"; // link to last page
       echo("</a>\n");
 	    echo"</td>";
 			
 		  echo"<td>";
 	    echo("<a href=\"".$link."&amp;multiplepagenr=".($currentpage-1) . "\">");
-      echo "<img src=\"../styles/images/left20.gif\">"; // link to last page
+      echo "<img src=\"../styles/images/left20.gif\" border=\"0\">"; // link to last page
       echo("</a>\n");
 		  echo"</td>";
 		  
@@ -58,13 +107,13 @@ class util
 	
 		  echo"<td>";
       echo("<a href=\"".$link."&amp;multiplepagenr=".($currentpage+1) . "\">");
-      echo "<img src=\"../styles/images/right20.gif\">"; // link to last page
+      echo "<img src=\"../styles/images/right20.gif\" border=\"0\">"; // link to last page
       echo("</a>\n");
 		  echo"</td>";
 
 		  echo("<td>");				
 		  echo("<a href=\"".$link."&amp;multiplepagenr=9999999\">");
-      echo "<img src=\"../styles/images/allright20.gif\">"; // link to last page
+      echo "<img src=\"../styles/images/allright20.gif\" border=\"0\">"; // link to last page
       echo("</a>\n");
 	    echo"</td>";
 
@@ -1613,5 +1662,38 @@ class util
 
     $pdf->ezStream();
   }
+  public function utiltiesDispatchIndexActionDS()
+  {
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSadmin('manage_csv_object','content/manage_objects_csv.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSmember('adapt_observation','content/change_observation.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSmember('adapt_observation','content/change_observation.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSmember('add_csv','content/new_observationcsv.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSmember('import_csv_list','content/new_listdatacsv.php')))  
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSmember('add_object','content/new_object.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSmember('add_observation','content/new_observation.php'))) 
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSall('detail_object','content/view_object.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSall('detail_observation','content/view_observation.php'))) 
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSall('rank_observers','content/top_observers.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSall('result_query_objects','content/execute_query_objects.php'))) 
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSall('result_selected_observations','content/selected_observations2.php')))  
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSall('query_observations','content/setup_observations_query.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSall('query_objects','content/setup_objects_query.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSall('rank_objects','content/top_objects.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSall('view_image','content/show_image.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSall('listaction','content/tolist.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSall('view_observer_catalog','content/details_observer_catalog.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSquickPick()))
+      $indexActionInclude=$this->utilitiesGetIndexActionDSdefaultAction();
+    return $indexActionInclude;
+  }
+  public function utilitiesSetModuleCookie($module)
+  { if((!array_key_exists('module',$_SESSION)) ||
+     (array_key_exists('module',$_SESSION) && ($_SESSION['module'] != $module)))
+    { $_SESSION['module'] = $module;
+      $cookietime = time() + 365 * 24 * 60 * 60;     // 1 year
+      setcookie("module",$module, $cookietime, "/");
+    }
+  }	
 }
+$objUtil=new Util();
 ?>

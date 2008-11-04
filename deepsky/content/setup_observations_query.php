@@ -22,28 +22,12 @@ echo "    document.forms['ObservationsQueryForm'].maxyear.value = y;";
 echo "	}";
 echo "	</SCRIPT>";
 
-include_once "../lib/observations.php";
-include_once "../lib/objects.php";
-include_once "../lib/observers.php";
-include_once "../lib/instruments.php";
-include_once "../lib/locations.php";
-include_once "../lib/util.php";
-
-$objects = new Objects; 
-$observations = new Observations;
-$observers = new Observers;
-$instruments = new Instruments;
-$locations = new Locations;
-$util = new util;
-$util->checkUserInput();
 
 $_SESSION['result'] = "";
-
-
 if(array_key_exists('atlas',$_GET) && $_GET['atlas'])
   $atlas=$_GET['atlas'];
 elseif(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
-  $atlas=$atlassesCodes[$observer->getStandardAtlasCode($_SESSION['deepskylog_id'])];
+  $atlas=$objAtlas->atlasCodes[$observer->getStandardAtlasCode($_SESSION['deepskylog_id'])];
 
 
 echo("<div id=\"main\">\n");
@@ -88,7 +72,7 @@ echo LangViewObservationField1;
 echo("</td>\n<td width=\"25%\">\n");
 echo("<select name=\"catalogue\">\n");
 echo("<option value=\"\"></option>"); // empty field
-$catalogs = $objects->getCatalogues(); // should be sorted
+$catalogs = $objObject->getCatalogues(); // should be sorted
 while(list($key, $value) = each($catalogs))
   echo("<option value=\"$value\">$value</option>\n");
 echo("</select>\n");
@@ -99,7 +83,7 @@ echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField12;
 echo("</td>\n<td>\n");
 echo("<select name=\"atlas\">\n");
-  while(list($key,$value)=each($atlassesCodes))
+  while(list($key,$value)=each($objAtlas->atlasCodes))
 	  if($key==$atlas) echo("<option selected value=\"" . $key . "\">".$value."</option>\n"); 
 		else echo("<option value=\"" . $key . "\">".$value."</option>\n");
 echo("</select>\n");
@@ -114,7 +98,7 @@ echo LangQueryObjectsField2;
 echo("</td>\n<td>\n");
 echo("<select name=\"con\">\n");
 echo("<option value=\"\"></option>"); // empty field
-$constellations = $objects->getConstellations(); // should be sorted
+$constellations = $objObject->getConstellations(); // should be sorted
 while(list($key, $value) = each($constellations))
   $cons[$value] = $$value;
 asort($cons);
@@ -140,7 +124,7 @@ echo LangQueryObjectsField11;
 echo("</td>\n<td>\n");
 echo("<select name=\"type\">\n");
 echo("<option value=\"\"></option>"); // empty field
-$types = $objects->getDsObjectTypes();
+$types = $objObject->getDsObjectTypes();
 while(list($key, $value) = each($types))
   $stypes[$value] = $$value;
 asort($stypes);
@@ -235,10 +219,10 @@ echo LangViewObservationField2;
 echo("</td>\n<td width=\"25%\">\n");
 echo("<select name=\"observer\">\n");
 echo("<option value=\"\"></option>"); // empty field
-//$obs = $observers->getSortedObservers('name'); 
-$obs = $observations->getPopularObservers();
+//$obs = $objObserver->getSortedObservers('name'); 
+$obs = $objObservation->getPopularObservers();
 while(list($key) = each($obs))
-  $sortobs[$key] = $observers->getObserverName($key)." ".$observers->getFirstName($key);
+  $sortobs[$key] = $objObserver->getObserverName($key)." ".$objObserver->getFirstName($key);
 natcasesort($sortobs);
 while(list($value, $key) = each($sortobs))
    echo("<option value=\"$value\">".$key."</option>\n");
@@ -250,7 +234,7 @@ echo LangViewObservationField3;
 echo("</td>\n<td>\n");
 echo("<select name=\"instrument\">\n");
 echo("<option value=\"\"></option>"); // empty field
-$inst = $instruments->getSortedInstrumentsList('name', '', true, InstrumentsNakedEye);
+$inst = $objInstrument->getSortedInstrumentsList('name', '', true, InstrumentsNakedEye);
 while(list($key, $value) = each($inst))
   echo("<option value=\"".$value[0]."\">".$value[1]."</option>\n");
 echo("</select>\n");
@@ -351,10 +335,10 @@ echo LangViewObservationField4;
 echo("</td>\n<td width=\"25%\">\n");
 echo("<select name=\"site\">\n");
 echo("<option value=\"\"></option>"); // empty field
-$sites = $locations->getSortedLocations('name', '', true);
+$sites = $objLocation->getSortedLocations('name', '', true);
 while(list($key, $value) = each($sites))
   if($key != 0) // remove empty location in database
-    echo("<option value=\"$value\">".$locations->getLocationName($value)."</option>\n");
+    echo("<option value=\"$value\">".$objLocation->getLocationName($value)."</option>\n");
 echo("</select>\n");
 echo("</td>");
 echo("<td width=\"25%\"> &nbsp </td> <td width=\"25%\"> &nbsp</td>"); 

@@ -1,17 +1,6 @@
 <?php
-
 // selected_observations2.php
 // generates an overview of selected observations in the database
-// version 0.4: 2005/11/05, WDM
-
-// Code cleanup - removed by David on 20080704
-//include_once "../lib/locations.php";
-//$locations = new Locations;
-//include_once "../lib/instruments.php";
-//$instruments = new Instruments;
-
-
-
 
 if (!function_exists('fnmatch')) 
 {
@@ -21,34 +10,20 @@ if (!function_exists('fnmatch'))
   }
 }
 
-include_once "../lib/lists.php";
-include_once "../lib/observations.php";
-include_once "../lib/setup/language.php";
-include_once "../lib/observers.php";
-include_once "../lib/objects.php";
-include_once "../lib/util.php";
-include_once "../lib/setup/databaseInfo.php";
-
-$observations = new Observations;
-$observers = new Observers;
-$objects = new Objects;
-$util = new util;
-$util->checkUserInput();
-$list = new Lists;
 $myList = False;
-if(array_key_exists('listname',$_SESSION) && $list->checkList($_SESSION['listname'])==2)
+if(array_key_exists('listname',$_SESSION) && $objList->checkList($_SESSION['listname'])==2)
   $myList=True;
 if(array_key_exists('addObservationToList',$_GET) && $_GET['addObservationToList'] && $myList)
 {
   $listobservationname = $_GET['addObservationToList'];
-	$list->addObservationToList($listobservationname);
+	$objList->addObservationToList($listobservationname);
   echo LangListQueryObjectsMessage16 . LangListQueryObjectsMessage6 . "<a href=\"deepsky/index.php?indexAction=listaction&manage=manage\">" . $_SESSION['listname'] . "</a>.";
 	echo "<HR>";
 }
 elseif(array_key_exists('removeObjectFromList',$_GET) && $_GET['removeObjectFromList'] && $myList)
 {
   $listobjectname = $_GET['removeObjectFromList'];
-	$list->removeObjectFromList($listobjectname);
+	$objList->removeObjectFromList($listobjectname);
   echo LangListQueryObjectsMessage8 . "<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($listobjectname) . "\">" . $listobjectname . "</a>" . LangListQueryObjectsMessage7 . "<a href=\"deepsky/index.php?indexAction=listaction&manage=manage\">" . $_SESSION['listname'] . "</a>.";
 	echo "<HR>";
 }
@@ -72,7 +47,7 @@ if(array_key_exists('object', $_GET) && ($_GET['object']))
 	{
     // SEEN
     $seen = "<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($_GET['object']) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
-    $seenDetails = $objects->getSeen($_GET['object']);
+    $seenDetails = $objObject->getSeen($_GET['object']);
     if(substr($seenDetails,0,1)=="X") // object has been seen already
     {
       $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($_GET['object']) . "\" title=\"" . LangObjectXSeen . "\">" . $seenDetails . "</a>";
@@ -96,7 +71,7 @@ if(array_key_exists('object', $_GET) && ($_GET['object']))
   	if($myList)
   	{
       echo("<td width=\"25%\" align=\"center\">");
-      if($list->checkObjectInMyActiveList($_GET['object']))
+      if($objList->checkObjectInMyActiveList($_GET['object']))
         echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($_GET['object']) . "&amp;removeObjectFromList=" . urlencode($_GET['object']) . "\">" . $_GET['object'] . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "</a>");
       else
         echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($_GET['object']) . "&amp;addObjectToList=" . urlencode($_GET['object']) . "&amp;showname=" . urlencode($_GET['object']) . "\">" . $_GET['object'] . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>");
@@ -104,7 +79,7 @@ if(array_key_exists('object', $_GET) && ($_GET['object']))
   	}	
   	echo("</tr>");
   	echo("</table>");
-	  $objects->showObject($object);
+	  $objObject->showObject($object);
 	}
 }	
 if(array_key_exists('seen', $_GET) && $_GET['seen'])
@@ -114,7 +89,7 @@ else
 
 $objectarray=array();
 if(array_key_exists('number',$_GET) && $_GET['number'])
-  $objectarray = $objects->getExactDsObject("",$_GET['catalogue'], $_GET['number']);
+  $objectarray = $objObject->getExactDsObject("",$_GET['catalogue'], $_GET['number']);
 
 if($objectarray && ($objectarray!=''))
 {
@@ -618,7 +593,7 @@ elseif($object ||
    //$mindiam = $mindiameter;
    //$maxdiam = $maxdiameter;
 
-   if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && $observers->getUseLocal($_SESSION['deepskylog_id']))
+   if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && $objObserver->getUseLocal($_SESSION['deepskylog_id']))
      if ($mindate != "")
       $mindate = $mindate - 1;
      if ($maxdate != "")
@@ -678,9 +653,9 @@ elseif($object ||
       $_GET['sort'] = $sort;
    }
    if($cataloguesearch == "yes")
-      $obs = $observations->getObservationFromQuery($query,$sort,0,false,$seenpar); // LIKE
+      $obs = $objObservation->getObservationFromQuery($query,$sort,0,false,$seenpar); // LIKE
    else
-      $obs = $observations->getObservationFromQuery($query,$sort,1,true,$seenpar); // EXACT MATCH
+      $obs = $objObservation->getObservationFromQuery($query,$sort,1,true,$seenpar); // EXACT MATCH
 
    $query = array("object" => $object,
                   "observer" => $observer,
@@ -713,12 +688,12 @@ elseif($object ||
                   "minseeing" => $minseeing,
                   "maxseeing" => $maxseeing);
 	 if($cataloguesearch == "yes")
-      $allobs = $observations->getObservationFromQuery($query,"",0, false, $seenpar); // LIKE
+      $allobs = $objObservation->getObservationFromQuery($query,"",0, false, $seenpar); // LIKE
    else
-      $allobs = $observations->getObservationFromQuery($query,"",1, true, $seenpar); // EXACT MATCH
+      $allobs = $objObservation->getObservationFromQuery($query,"",1, true, $seenpar); // EXACT MATCH
 
   // Dates can change when we use local time!
-  if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && $observers->getUseLocal($_SESSION['deepskylog_id']))
+  if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && $objObserver->getUseLocal($_SESSION['deepskylog_id']))
   {
     if ($mindate != "" || $maxdate != "")
     {
@@ -730,7 +705,7 @@ elseif($object ||
       $new_obs = Array();
       while(list ($key, $value) = each($obs)) // go through observations array
       {
-        $newdate = $observations->getDsObservationLocalDate($value);
+        $newdate = $objObservation->getDsObservationLocalDate($value);
 
         if ($mindate != "" && $maxdate != "") 
         {
@@ -795,7 +770,7 @@ elseif($object ||
    if (array_key_exists('sort',$_GET) && ($_GET['sort'] == "objectname"))
    {
       while(list ($key, $value) = each($obs)) // go through observations array
-        $obsname[$value] = $observations->getObjectId($value);
+        $obsname[$value] = $objObservation->getObjectId($value);
       natcasesort($obsname);
       reset($obsname);
       $count = 0;
@@ -907,7 +882,7 @@ elseif($object ||
 	 echo "</h2>";
 	 echo"</td>";
 	 echo"<td align=\"right\">";	 
-   list($min, $max) = $util->printNewListHeader($obs, $link, $min, $step, $total);
+   list($min, $max) = $objUtil->printNewListHeader($obs, $link, $min, $step, $total);
 	 echo"</td>";
 	 echo"</table>";
 	 
@@ -943,18 +918,18 @@ elseif($object ||
             if($count >= $min && $count < $max)
             { 
 						  if($_SESSION['lco']=="L")
-                $observations->showOverviewObservation($value, $count, $link . "&amp;min=" . $min, $myList);
+                $objObservation->showOverviewObservation($value, $count, $link . "&amp;min=" . $min, $myList);
 							elseif($_SESSION['lco']=="C")
-                $observations->showCompactObservation($value, $link . "&amp;min=" . $min, $myList);
+                $objObservation->showCompactObservation($value, $link . "&amp;min=" . $min, $myList);
 							elseif($_SESSION['lco']=="O")
-                $observations->showCompactObservationLO($value, $link . "&amp;min=" . $min, $myList);
+                $objObservation->showCompactObservationLO($value, $link . "&amp;min=" . $min, $myList);
             }
             $count++; // increase counter
          }
          echo ("</table>\n");
       }
 			
-      list($min, $max) = $util->printNewListHeader($obs, $link, $min, $step, $total);
+      list($min, $max) = $objUtil->printNewListHeader($obs, $link, $min, $step, $total);
 
       $_SESSION['observation_query'] = $obs;
       echo "<p><a href=\"deepsky/observations.pdf\" target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a> - ";

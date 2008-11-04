@@ -409,6 +409,6 @@ class Lists
     unset($_SESSION['QOL']);
   return;
  }
- 
 }
+$objList=new Lists;
 ?>

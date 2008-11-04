@@ -1,35 +1,14 @@
 <?php
-
 // setup_objects_query.php
 // interface to query objects
-// version 0.4: 2005/06/28, JV 
-// version 3.1, DE 20061119
-
-include_once "../lib/objects.php";
-$objects = new Objects; 
-
-include_once "../lib/util.php";
-$util = new Util();
-$util->checkUserInput();
-
-include_once "../lib/lists.php";
-$list = new Lists;
-
-include_once "../lib/observers.php";
-$observer = new Observers;
-
-include_once "../lib/observations.php";
-$observation = new Observations;
-
 
 if(array_key_exists('SID', $_GET) && $_GET['SID']) $_SID=$_GET['SID']; else $_SID='';
 if(array_key_exists('source',$_GET)&&($_GET['source']=='observation_query'))
 {
-  $_SESSION['QO'] = $objects->getSeenObjectDetails($observation->getObjectsFromObservations($_SESSION['observation_query']),'D');
+  $_SESSION['QO'] = $objObject->getSeenObjectDetails($objObservation->getObjectsFromObservations($_SESSION['observation_query']),'D');
 	unset($_SESSION['QOP']);
   $_GET['SO']="showname"; 
   $_SID=time();
-//echo 'Setup_objects_query line 32: ' . count($_SESSION['QO']);
 }
 else
 {
@@ -72,7 +51,7 @@ else
   if(array_key_exists('atlas',$_GET) && $_GET['atlas'])
     $atlas=$_GET['atlas'];
   elseif(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
-    $atlas=$atlassesCodes[$observer->getStandardAtlasCode($_SESSION['deepskylog_id'])];
+    $atlas=$objAtlas->atlasCodes[$objObserver->getStandardAtlasCode($_SESSION['deepskylog_id'])];
   if(array_key_exists('atlasPageNumber',$_GET)) $atlasPageNumber = $_GET['atlasPageNumber']; else $atlasPageNumber='';
   if(array_key_exists('inList', $_GET)) $inList = $_GET['inList']; else $inList = '';
   if(array_key_exists('notInList', $_GET)) $notInList = $_GET['notInList']; else $notInList = '';
@@ -396,7 +375,7 @@ else
           $seenPar = $_GET['seen'];
         else
           $seenPar = "D";
-        $_SESSION['QO'] = $objects->getObjectFromQuery($query, $exact, $seenPar);
+        $_SESSION['QO'] = $objObject->getObjectFromQuery($query, $exact, $seenPar);
   			unset($_SESSION['QOP']);
         $_GET['SO']="showname";
     }
@@ -465,7 +444,7 @@ else
   echo("</td>\n<td width=\"25%\">\n");
   echo("<select name=\"catalog\">\n");
   echo("<option value=\"\"></option>"); // empty field
-  $catalogs = $objects->getCatalogues(); // should be sorted
+  $catalogs = $objObject->getCatalogues(); // should be sorted
   while(list($key, $value) = each($catalogs))
     if($value==$catalog)
       echo("<option selected value=\"$value\">$value</option>\n");
@@ -481,7 +460,7 @@ else
   echo LangQueryObjectsField12; 
   echo("</td>\n<td width=\"25%\">\n");
   echo("<select name=\"atlas\">\n");
-  while(list($key,$value)=each($atlassesCodes))
+  while(list($key,$value)=each($objAtlas->atlasCodes))
 	  if($key==$atlas) echo("<option selected value=\"" . $key . "\">".$value."</option>\n"); 
 		else echo("<option value=\"" . $key . "\">".$value."</option>\n");
   echo("</select>\n");
@@ -496,7 +475,7 @@ else
   echo("</td>\n<td width=\"25%\">\n");
   echo("<select name=\"con\">\n");
   echo("<option value=\"\"></option>"); // empty field
-  $constellations = $objects->getConstellations(); // should be sorted
+  $constellations = $objObject->getConstellations(); // should be sorted
   while(list($key, $value) = each($constellations))
     $cons[$value] = $$value;
   asort($cons);
@@ -515,7 +494,7 @@ else
   echo("</td>\n<td width=\"25%\">\n");
   echo("<select name=\"type\">\n");
   echo("<option value=\"\"></option>"); // empty field
-  $types = $objects->getDsObjectTypes(); 
+  $types = $objObject->getDsObjectTypes(); 
   while(list($key, $value) = each($types))
     $stypes[$value] = $$value;
   asort($stypes);
@@ -669,7 +648,7 @@ else
     echo("</td>\n<td width=\"25%\">\n");
     echo("<select name=\"inList\">\n");
     echo("<option value=\"\"></option>"); // empty field
-    $lists = $list->getLists(); 
+    $lists = $objList->getLists(); 
     while(list($key, $value) = each($lists))
       if($value==$inList)
         echo("<option selected value=\"$value\">$value</option>\n");
@@ -686,7 +665,7 @@ else
     echo("</td>\n<td width=\"25%\">\n");
     echo("<select name=\"notInList\">\n");
     echo("<option value=\"\"></option>"); // empty field
-    $lists = $list->getLists(); 
+    $lists = $objList->getLists(); 
     while(list($key, $value) = each($lists))
       if($value==$notInList)
         echo("<option selected value=\"$value\">$value</option>\n");

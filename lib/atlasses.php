@@ -1,6 +1,8 @@
 <?php
 
 // Class Atlasses
+// INTERFACE
+//   property atlassesCodes
 //   function getAtlasses()
 //   function getSortedAtlasses()
 //   function getAtlasPage($atlas, $name)
@@ -13,11 +15,19 @@
 //   function calculateTakiPage($ra, $decl)
 //   function calculateSkyAtlasPage($ra, $decl)
 //   function calculateMilleniumPage($ra, $decl)
- 
+// PUBLIC OBJECT
+//   $objAtlas
 
 
 class Atlasses
 {
+
+  public $atlasCodes=array();
+	
+ 	public function __construct()
+	{ $this->atlasCodes=$this->getSortedAtlasses();
+  }	
+
   function getAtlasses()
 	{ $atlasses = array();
 	  $db = new database;
@@ -1070,7 +1080,8 @@ class Atlasses
  // return $ch."/".$vol;
   return $ch;
  }
- 	
-	
+ 
 }
+$objAtlas=new Atlasses;
+
 ?>

@@ -25,6 +25,7 @@ global $baseURL;
 $myList = False;
 if(array_key_exists('listname',$_SESSION) && ($list->checkList($_SESSION['listname'])==2))
   $myList=True;
+$listname_ss=stripslashes($_SESSION['listname']);
 // minimum
 if(array_key_exists('min',$_GET))
   $min=$_GET['min'];
@@ -81,15 +82,15 @@ if(array_key_exists('addAllObjectsFromQueryToList',$_GET) && $_GET['addAllObject
 	echo "<HR>";
 }
 $sort='';
-if(array_key_exists('SO',$_GET) && (count($_SESSION[$_SID])>1))
+if(array_key_exists('sort',$_GET) && (count($_SESSION[$_SID])>1))
 {
-  $sort = "showname";
   // SORTING
-  if($_GET['SO']) // field to sort on given as a parameter in the url
-    $sort = $_GET['SO'];
+  if($_GET['sort']) // field to sort on given as a parameter in the url
+    $sort = $_GET['sort'];
   $_SESSION[$_SID] = $objects->sortObjects($_SESSION[$_SID], $sort);
+  $_SESSION['QOsort'] = "showname";
 }
-if(array_key_exists('RO',$_GET) && (count($_SESSION[$_SID])>1))
+if(array_key_exists('sortdirection',$_GET) && (count($_SESSION[$_SID])>1))
 {
   $sort = "showname";
   // SORTING

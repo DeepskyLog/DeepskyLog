@@ -778,17 +778,7 @@ class Objects
  
  function getSeenObjectDetails($obs, $seen="D")
  {
-//  include_once "locations.php";
-//  $locations = new Locations;
-
-  global $atlassesCodes;
-
-  include_once "observers.php";
-  $observer = new Observers;
-  include_once "instruments.php";
-  $instrumentObj = new Instruments;
-  include_once "contrast.php";
-  $contrastObj = new Contrast;
+  global $objAtlas;
   $db = new database;
   $db->login();
 
@@ -851,8 +841,8 @@ class Objects
           $result2[$j][27] = $get->description;
 					if(count($value)==3)
 					  $result2[$j][30] = $value[2]; // optional description from lists
-					reset($atlassesCodes);
-					while(list($key,$value)=each($atlassesCodes))
+					reset($objAtlas->atlasCodes);
+					while(list($key,$value)=each($objAtlas->atlasCodes))
 					  $result2[$j][$key] =  $get->$key;
 		    }
         $j++;		
@@ -1861,70 +1851,43 @@ function getPartOfNames($name)
  }
 
 
- function showObjects($link, $_SID, $min, $max, $myList, $noShow='', $showRank=0)
+ function showObjects($link, $_SID, $min, $max, $myList, $noShow='', $showRank=0, $ranklist='')
  {
   global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
          $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
          $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL; 
  
   global $ASTER,$BRTNB,$CLANB,$DRKNB,$EMINB,$ENRNN,$ENSTR, $GALCL,$GALXY,$GLOCL,$GXADN,$GXAGC,$GACAN,$HII,$LMCCN,$LMCDN,$LMCGC,$LMCOC,$NONEX,$OPNCL,$PLNNB,$REFNB,$RNHII,
-	       $SMCCN,$SMCDN,$SMCGC,$SMCOC,$SNREM,$STNEB,$QUASR,$WRNEB,$AA1STAR,$AA2STAR,$AA3STAR,$AA4STAR,$AA8STAR;
-
-	global $atlassesCodes;			 
+	       $SMCCN,$SMCDN,$SMCGC,$SMCOC,$SNREM,$STNEB,$QUASR,$WRNEB,$AA1STAR,$AA2STAR,$AA3STAR,$AA4STAR,$AA8STAR;	 
 				 
+	global $objAtlas;
+	
   include_once "../common/control/dec_to_dm.php";
   include_once "../common/control/ra_to_hms.php";
   include_once "../lib/lists.php";
   include_once "../lib/observers.php";
+	include_once "../common/layout/tables.php";
+	
   $list = new Lists;
   $observer = new Observers;
   $atlas='';
   echo "<table width=\"100%\">\n";
   echo "<tr class=\"type3\">\n";
-	if(array_key_exists('SO',$_GET) && ($_GET['SO']=="showname"))
-    echo "<td align=\"center\"><a href=\"" . $link . "&amp;RO=showname\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObjectsHeader1) . "\">".LangOverviewObjectsHeader1."</a></td>\n";
-	else
-    echo "<td align=\"center\"><a href=\"" . $link . "&amp;SO=showname\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObjectsHeader1) . "\">".LangOverviewObjectsHeader1."</a></td>\n";
-	if(array_key_exists('SO',$_GET) && ($_GET['SO']=="con"))
-    echo "<td align=\"center\"><a href=\"" . $link . "&amp;RO=con\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObjectsHeader2) . "\">".LangOverviewObjectsHeader2."</a></td>\n";
-  else
-    echo "<td align=\"center\"><a href=\"" . $link . "&amp;SO=con\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObjectsHeader2) . "\">".LangOverviewObjectsHeader2."</a></td>\n";
-	if(array_key_exists('SO',$_GET) && ($_GET['SO']=="mag"))
-    echo "<td align=\"center\"><a href=\"" . $link . "&amp;RO=mag\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObjectsHeader3) . "\">".LangOverviewObjectsHeader3."</a></td>\n";
-  else
-	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;SO=mag\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObjectsHeader3) . "\">".LangOverviewObjectsHeader3."</a></td>\n";
-	if(array_key_exists('SO',$_GET) && ($_GET['SO']=="subr"))
-	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;RO=subr\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObjectsHeader3b) . "\">".LangOverviewObjectsHeader3b."</a></td>\n";
-	else
-	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;SO=subr\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObjectsHeader3b) . "\">".LangOverviewObjectsHeader3b."</a></td>\n";
-	if(array_key_exists('SO',$_GET) && ($_GET['SO']=="type"))
-	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;RO=type\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObjectsHeader4) . "\">".LangOverviewObjectsHeader4."</a></td>\n";
-  else
-	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;SO=type\" title=\"" . LangSortOn . mb_strtolower(LangOverviewObjectsHeader4) . "\">".LangOverviewObjectsHeader4."</a></td>\n";
+	tableSortHeader(LangOverviewObjectsHeader1, $link."&amp;sort=showname");
+	tableSortHeader(LangOverviewObjectsHeader2, $link."&amp;sort=con");
+	tableSortHeader(LangOverviewObjectsHeader3, $link."&amp;sort=mag");
+	tableSortHeader(LangOverviewObjectsHeader3b, $link."&amp;sort=subr");
+	tableSortHeader(LangOverviewObjectsHeader4, $link."&amp;sort=type");
+	
   if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
 	{
 	  $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
- 	  if(array_key_exists('SO',$_GET) && ($_GET['SO']=='atlas'.$atlas))
- 		  echo "<td align=\"center\"><a href=\"" . $link . "&amp;RO=atlas" . $atlas . "\" title=\"". LangSortOn . $atlassesCodes[$atlas] . "\">"."Atlas"."</a></td>\n";  
-    else
- 		  echo "<td align=\"center\"><a href=\"" . $link . "&amp;SO=atlas" . $atlas . "\" title=\"". LangSortOn . $atlassesCodes[$atlas] . "\">"."Atlas"."</a></td>\n";  
-  	if((array_key_exists('SO',$_GET) && ($_GET['SO']=="contrast"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="contrast")))
-  	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;RO=contrast\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldContrastReserve) . "\">".  LangViewObjectFieldContrastReserve . "</a></td>\n";
-    else
-  	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;SO=contrast\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldContrastReserve) . "\">".  LangViewObjectFieldContrastReserve . "</a></td>\n";
-  	if((array_key_exists('SO',$_GET) && ($_GET['SO']=="magnification"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="magnification")))
-  	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;RO=magnification\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldMagnification) . "\">".  LangViewObjectFieldMagnification . "</a></td>\n";
-    else
-  	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;SO=magnification\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldMagnification) . "\">".  LangViewObjectFieldMagnification . "</a></td>\n";
+  	tableSortHeader($objAtlas->atlasCodes[$atlas], $link."&amp;sort=".$objAtlas->atlasCodes[$atlas]);
+	  tableSortHeader(LangViewObjectFieldContrastReserve, $link."&amp;sort=contrast");
+	  tableSortHeader(LangViewObjectFieldMagnification, $link."&amp;sort=magnification");
   }
-	if((array_key_exists('SO',$_GET) && ($_GET['SO']=="seen"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="seen")))
-	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;RO=seen\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader7) . "\">".LangOverviewObjectsHeader7."</a></td>\n";
-  else
-	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;SO=seen\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader7) . "\">".LangOverviewObjectsHeader7."</a></td>\n";
-	if((array_key_exists('SO',$_GET) && ($_GET['SO']=="seendate"))||(array_key_exists('RO',$_GET) && ($_GET['RO']=="seendate")))
-	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;RO=seendate\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader8) . "\">".LangOverviewObjectsHeader8."</a></td>\n";
-  else
-	  echo "<td align=\"center\"><a href=\"" . $link . "&amp;SO=seendate\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader8) . "\">".LangOverviewObjectsHeader8."</a></td>\n";
+	tableSortHeader(LangOverviewObjectsHeader7, $link."&amp;sort=seen");
+	tableSortHeader(LangOverviewObjectsHeader8, $link."&amp;sort=seendate");
   if($myList)
     echo("<td align=\"center\"><a href=\"" . $link . "&amp;min=" . $min . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $_SESSION['listname'] . "\">P</a></td>");
  	$count = $min; // counter for altering table colors
@@ -1972,7 +1935,7 @@ function getPartOfNames($name)
       // Page number in atlas
       if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id']) 
 			{ $page = $_SESSION[$_SID][$count][$atlas];
-        echo "<td align=\"center\" onmouseover=\"Tip('" . $GLOBALS['atlassesCodes'][$atlas] . "')\">" .
+        echo "<td align=\"center\" onmouseover=\"Tip('" . $objAtlas->atlasCodes[$atlas] . "')\">" .
              $page . "</td>\n";
         echo "<td align=\"center\" class=\"" . $_SESSION[$_SID][$count][22] . "\" onmouseover=\"Tip('" . $_SESSION[$_SID][$count][23] . "')\">" .
              $_SESSION[$_SID][$count][21] . "</td>\n";
@@ -2014,6 +1977,7 @@ function getPartOfNames($name)
   global $ASTER,$BRTNB,$CLANB,$DRKNB,$EMINB,$ENRNN,$ENSTR, $GALCL,$GALXY,$GLOCL,$GXADN,$GXAGC,$GACAN,$HII,$LMCCN,$LMCDN,$LMCGC,$LMCOC,$NONEX,$OPNCL,$PLNNB,$REFNB,$RNHII,
 	       $SMCCN,$SMCDN,$SMCGC,$SMCOC,$SNREM,$STNEB,$QUASR,$WRNEB,$AA1STAR,$AA2STAR,$AA3STAR,$AA4STAR,$AA8STAR;
 
+  global $objAtlas;
   global $deepskylive;
 
 //  include_once "../lib/locations.php";
@@ -2052,7 +2016,7 @@ function getPartOfNames($name)
 	   $_SESSION['deepskylog_id'] && 
 		 ($standardAtlasCode = $observer->getStandardAtlasCode($_SESSION['deepskylog_id'])))
   { echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">"); 
-    echo $GLOBALS['atlassesCodes'][$standardAtlasCode] . LangViewObjectField10;
+    echo $objAtlas->atlasCodes[$standardAtlasCode] . LangViewObjectField10;
     echo("</td><td width=\"25%\">");
     echo $atlas->getAtlasPage($standardAtlasCode, $object);
     echo("</td>");
@@ -2417,4 +2381,5 @@ class contrastcompare {
       }
      }
  }
+$objObject=new Objects;
 ?>

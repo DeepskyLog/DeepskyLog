@@ -546,7 +546,7 @@ class Instruments
  }
 }
 
-
+$objInstrument=new Instruments;
 
 //VERSION 3.3 OBSOLETE ?
 // setFocalLength sets the focal length for the given instrument

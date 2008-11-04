@@ -1,20 +1,9 @@
 <?php
-
 // top_objects.php
 // generates an overview of all observed objects and their rank 
-// $$ ok
-
-include_once "../lib/objects.php";
-$obs = new Objects;
-include_once "../lib/observations.php";
-$observations = new Observations;
-include_once "../lib/util.php";
-$util = new Util;
-$util->checkUserInput();
-
 
 $myList = False;
-if(array_key_exists('listname',$_SESSION) && ($list->checkList($_SESSION['listname'])==2))
+if(array_key_exists('listname',$_SESSION) && ($objList->checkList($_SESSION['listname'])==2))
   $myList=True;
 
  // minimum
@@ -28,8 +17,8 @@ else
   $min = 0;
 $step=25;
 if(!array_key_exists('TO',$_SESSION))
-{ $rank = $observations->getPopularObservations();
-  $_SESSION['TO'] = $obs->getSeenObjectDetails($rank);
+{ $rank = $objObservation->getPopularObservations();
+  $_SESSION['TO'] = $objObject->getSeenObjectDetails($rank);
 }
 $link = "deepsky/index.php?indexAction=rank_objects";
 echo"<div id=\"main\">";
@@ -39,7 +28,7 @@ echo"<td>";
 echo"<h2>" . LangTopObjectsTitle . "</h2>";
 echo"</td>";
 echo"<td align=\"right\">";
-list($min, $max) = $util->printNewListHeader($_SESSION['TO'], $link, $min, $step, "");
+list($min, $max) = $objUtil->printNewListHeader($_SESSION['TO'], $link, $min, $step, "");
 echo"</td>";
 echo"</tr>";
 echo"</table>";
@@ -54,7 +43,7 @@ $count = 0;
         <td>" . LangTopObjectsHeader5 . "</td>
        </tr>";
 */
-   $obs->showObjects($link, 'TO', $min, $max, $myList, '', 1);
+   $objObject->showObjects($link, 'TO', $min, $max, $myList, '', 1);
 
 /*
  while(list ($key, $value) = each($rank))
@@ -75,7 +64,7 @@ $count = 0;
 */
 /* echo "</table>";
 */
-list($min, $max) = $util->printNewListHeader($_SESSION['TO'], $link, $min, $step, "");
+list($min, $max) = $objUtil->printNewListHeader($_SESSION['TO'], $link, $min, $step, "");
 echo "</div></body></html>";
 
 ?>

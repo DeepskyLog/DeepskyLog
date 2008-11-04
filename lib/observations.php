@@ -2697,7 +2697,7 @@ class Observations
 
   function ShowCompactObservation($value, $link, $myList = false)
   {
-    global $instruments, $observers, $observer, $dateformat;
+    global $instruments, $observer, $dateformat, $objObserver;
 
     global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
     $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
@@ -2737,7 +2737,7 @@ class Observations
     echo("<tr class=\"type2\">\n
          <td><a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">$object</a></td>\n
     <td> " . $$con . "</td>\n
-         <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . $observers->getFirstName($observer) . "&nbsp;" . $observers->getObserverName($observer) . "</a></td>\n
+         <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . $objObserver->getFirstName($observer) . "&nbsp;" . $objObserver->getObserverName($observer) . "</a></td>\n
          <td><a href=\"common/detail_instrument.php?instrument=" . $temp . "\">$instrument &nbsp;"
     );
     if($instrument != InstrumentsNakedEye)
@@ -2746,7 +2746,7 @@ class Observations
     }
     echo("</a></td><td>");
     // DATE
-    if (array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id']&&$observers->getUseLocal($_SESSION['deepskylog_id']))
+    if (array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id']&&$objObserver->getUseLocal($_SESSION['deepskylog_id']))
     {
       $date = sscanf($this->getDsObservationLocalDate($value), "%4d%2d%2d");
     }
@@ -2969,7 +2969,6 @@ class Observations
    }
 	 return $objects;
  }
-
-
 }
+$objObservation=new Observations;
 ?>

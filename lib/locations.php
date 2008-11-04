@@ -640,4 +640,5 @@ class Locations
   echo "</table>";
  }
 }
+$objLocation=new Locations;
 ?>

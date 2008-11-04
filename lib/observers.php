@@ -334,8 +334,8 @@ class Observers
  function getNumberOfDsObservations($observerid)
  { $db = new database;
    $db->login();
-   if($id )
-   { $sql = "SELECT COUNT(observations.id) As Cnt FROM observations WHERE observerid = \"$id\"";
+   if($observerid )
+   { $sql = "SELECT COUNT(observations.id) As Cnt FROM observations WHERE observerid = \"$observerid\"";
      $run = mysql_query($sql) or die(mysql_error());
      $get = mysql_fetch_object($run);
      return $get->Cnt;
@@ -986,4 +986,5 @@ class Observers
   echo "</table>";
  }
 }
+$objObserver=new Observers;
 ?>
