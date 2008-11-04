@@ -2466,16 +2466,15 @@ class Observations
     $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
     $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL;
 
-    include_once "../lib/instruments.php";
-    $instruments = new Instruments;
-    include_once "objects.php";
-    $objects = new Objects;
+		global $objInstrument;
+		global $objObject;
+		global $objObserver;
 
     $object = $this->getObjectId($value);
     $observer = $this->getObserverId($value);
     $temp = $this->getDsObservationInstrumentId($value);
-    $instrument = $instruments->getInstrumentName($temp);
-    $instrumentsize = round($instruments->getDiameter($temp), 0);
+    $instrument = $objInstrument->getInstrumentName($temp);
+    $instrumentsize = round($objInstrument->getDiameter($temp), 0);
     $desc = $this->getDescriptionDsObservation($value);
     $patterns[0] = "/\s+(M)\s*(\d+)/";
     $replacements[0] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
@@ -2506,8 +2505,8 @@ class Observations
     if($LOdescription)
     {
       $LOtemp = $this->getDsObservationInstrumentId($LOid);
-      $LOinstrument = $instruments->getInstrumentName($LOtemp);
-      $LOinstrumentsize = round($instruments->getDiameter($LOtemp), 0);
+      $LOinstrument = $objInstrument->getInstrumentName($LOtemp);
+      $LOinstrumentsize = round($objInstrument->getDiameter($LOtemp), 0);
     }
     else
     {
@@ -2524,7 +2523,7 @@ class Observations
     {
       $LOinstrument = InstrumentsNakedEye;
     }
-    if ($observers->getUseLocal($_SESSION['deepskylog_id']))
+    if ($objObserver->getUseLocal($_SESSION['deepskylog_id']))
     {
       $date = sscanf($this->getDsObservationLocalDate($value), "%4d%2d%2d");
     }
@@ -2532,7 +2531,7 @@ class Observations
     {
       $date = sscanf($this->getDateDsObservation($value), "%4d%2d%2d");
     }
-    if ($observers->getUseLocal($_SESSION['deepskylog_id']))
+    if ($objObserver->getUseLocal($_SESSION['deepskylog_id']))
     {
       $LOdate = sscanf($this->getDsObservationLocalDate($LOid), "%4d%2d%2d");
     }
@@ -2541,11 +2540,11 @@ class Observations
       $LOdate = sscanf($this->getDateDsObservation($LOid), "%4d%2d%2d");
     }
     // OUTPUT
-    $con = $objects->getConstellation($object);
+    $con = $objObject->getConstellation($object);
     echo("<tr class=\"type2\">\n
          <td><a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">$object</a></td>\n
     <td> " . $$con . "</td>\n
-        <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . $observers->getFirstName($observer) . "&nbsp;" . $observers->getObserverName($observer) . "</a></td>\n
+        <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . $objObserver->getFirstName($observer) . "&nbsp;" . $objObserver->getObserverName($observer) . "</a></td>\n
         <td><a href=\"common/detail_instrument.php?instrument=" . $temp . "\">$instrument &nbsp;"
     );
     if($instrument != InstrumentsNakedEye)
@@ -2628,7 +2627,7 @@ class Observations
 
     echo("<tr class=\"type1\">\n");
     echo("<td valign=\"top\">");
-    $altnames = $objects->getAlternativeNames($object);
+    $altnames = $objObject->getAlternativeNames($object);
     $alt="";
     while(list($key, $altvalue) = each($altnames)) // go through names array
     {
