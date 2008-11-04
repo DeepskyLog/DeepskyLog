@@ -837,6 +837,7 @@ define("LangQueryObservationsMessage2", "Beschreibung enth&auml;lt");
 define("LangFromDate", "Von");
 define("LangTillDate", "bis");
 define("LangObservationQueryError1", "Sie haben keine Suchkriterien eingegeben!");
+define("LangObservationQueryError1b", "There is no object with those specifications.");
 define("LangObservationOR", "oder");
 define("LangObservationQueryError2", "Neue Suche");
 define("LangObservationQueryError3", "Ansicht aller Beobachtungen");

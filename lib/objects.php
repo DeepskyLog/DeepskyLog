@@ -1102,9 +1102,30 @@ function getObjectsFromCatalog($cat)
   return $obs;
  }
 
+// getExactObject returns the exact name of an object
+ function getLikeDsObject($value, $cat='', $catindex='')
+ {$result=array();
+  $db = new database;
+  $db->login();
+	$value2=trim($value);
+	$value=strtoupper(trim($value));
+  if($value!='')
+    $sql = "SELECT objectnames.objectname FROM objectnames " .
+		  	   "WHERE UPPER(altname) LIKE \"$value\" " .
+					 "OR altname LIKE \"$value2\"";
+	else
+	{ $catindex=ucwords($catindex);
+    $sql = "SELECT objectnames.objectname FROM objectnames " .
+		       "WHERE CONCAT(objectnames.catalog, ' ', objectnames.catindex) LIKE \"$cat $catindex\"";
+	}
+	$run = mysql_query($sql) or die(mysql_error());
+  $db->logout();
+	while($get = mysql_fetch_object($run))
+    $result[] = $get->objectname;
+	return $result;
+ }
 
- // getExactObject returns an array with the name of the object where the
- // databasefield has the given name.
+ // getExactObject returns the exact name of an object
  function getExactDsObject($value, $cat='', $catindex='')
  {
   $db = new database;
@@ -1116,19 +1137,14 @@ function getObjectsFromCatalog($cat)
 		  	   "WHERE UPPER(altname) = \"$value\" " .
 					 "OR altname = \"$value2\"";
 	else
-	{
-	  $catindex=ucwords($catindex);
+	{ $catindex=ucwords($catindex);
     $sql = "SELECT objectnames.objectname FROM objectnames " .
 		       "WHERE objectnames.catalog = \"$cat\" AND objectnames.catindex = \"$catindex\"";
 	}
 	$run = mysql_query($sql) or die(mysql_error());
-	$obs=array();
-  while($get = mysql_fetch_object($run))
-  {
-   $obs[] = $get->objectname;
-  }
   $db->logout();
-  return $obs;
+	if($get = mysql_fetch_object($run))
+    return $get->objectname;
  }
 
  // getSurfaceBrightness returns the surface brightness of the object

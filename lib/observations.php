@@ -252,7 +252,16 @@ class Observations
       else
       $sqland .= "AND (objectnames.altname like \"" . $queries["object"] . "%\") ";
     }
-
+    else
+    {
+      if ($exactmatch == "1")
+      $sqland .= "AND (objectnames.altname = \"" . trim($queries["catalogue"] . ' ' . $queries['number']) . "\") ";
+      else
+      if($queries["object"]=="* ")
+      $sqland .= "AND (objectnames.altname like \"%\")";
+      else
+      $sqland .= "AND (objectnames.altname like \"" . trim($queries["catalogue"] . ' ' . $queries['number']) . "%\") ";
+    }
     if (isset($queries["observer"]) && ($queries["observer"] != ""))
     $sqland .= " AND observations.observerid = \"" . $queries["observer"] . "\" ";
     if (isset($queries["instrument"]) && ($queries["instrument"] != ""))
@@ -2469,7 +2478,6 @@ class Observations
 		global $objInstrument;
 		global $objObject;
 		global $objObserver;
-
     $object = $this->getObjectId($value);
     $observer = $this->getObserverId($value);
     $temp = $this->getDsObservationInstrumentId($value);
@@ -2853,10 +2861,9 @@ class Observations
     $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
     $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL;
 
-    include_once "../lib/instruments.php";
-    $instruments = new Instruments;
-    include_once "objects.php";
-    $objects = new Objects;
+    global $objInstrument;
+		global $objObject;
+		global $objObserver;
 
     if ($count % 2)
     {
@@ -2872,18 +2879,18 @@ class Observations
     $observer = $this->getObserverId($value);
     // INSTRUMENT
     $temp = $this->getDsObservationInstrumentId($value);
-    $instrument = $instruments->getInstrumentName($temp);
-    $instrumentsize = round($instruments->getDiameter($temp), 0);
+    $instrument = $objInstrument->getInstrumentName($temp);
+    $instrumentsize = round($objInstrument->getDiameter($temp), 0);
     if ($instrument == "Naked eye")
     {
       $instrument = InstrumentsNakedEye;
     }
     // OUTPUT
-    $con = $objects->getConstellation($object);
+    $con = $objObject->getConstellation($object);
     echo("<tr $typefield>\n
     <td><a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">$object</a></td>\n
     <td> " . $$con . "</td>\n
-         <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . $observers->getFirstName($observer) . "&nbsp;" . $observers->getObserverName($observer) . "</a></td>\n
+         <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . $objObserver->getFirstName($observer) . "&nbsp;" . $objObserver->getObserverName($observer) . "</a></td>\n
          <td><a href=\"common/detail_instrument.php?instrument=" . $temp . "\">$instrument &nbsp;"
     );
     if($instrument != InstrumentsNakedEye)
@@ -2892,7 +2899,7 @@ class Observations
     }
     echo("</a></td><td>");
     // DATE
-    if (array_key_exists('deepskylog_id', $_SESSION) && $observers->getUseLocal($_SESSION['deepskylog_id']))
+    if (array_key_exists('deepskylog_id', $_SESSION) && $objObserver->getUseLocal($_SESSION['deepskylog_id']))
     {
       $date = sscanf($this->getDsObservationLocalDate($value), "%4d%2d%2d");
     }

@@ -837,6 +837,7 @@ define("LangQueryObservationsMessage2", "Description contient");
 define("LangFromDate", "Du");
 define("LangTillDate", "Jusqu'&agrave;, y compris,");
 define("LangObservationQueryError1", "Vous n'avez pas sp&eacute;cifi&eacute; de crit&egrave;re.");
+define("LangObservationQueryError1b", "Il n'y a pas d'objet avec ces spécifications.");
 define("LangObservationOR", "ou");
 define("LangObservationQueryError2", "Nouvelle recherche");
 define("LangObservationQueryError3", "Toutes les observations");

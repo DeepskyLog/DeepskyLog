@@ -836,6 +836,7 @@ define("LangQueryObservationsMessage2", "Beschrijving bevat");
 define("LangFromDate", "Vanaf");
 define("LangTillDate", "Tot en met");
 define("LangObservationQueryError1", "Je hebt geen zoekopdracht gespecifieerd.");
+define("LangObservationQueryError1b", "Er is geen object gevonden met die specificaties.");
 define("LangObservationOR", "of");
 define("LangObservationQueryError2", "Zoek opnieuw");
 define("LangObservationQueryError3", "Bekijk alle waarnemingen");

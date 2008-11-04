@@ -832,6 +832,7 @@ define("LangTopObjectsHeader5", "Number of observations");
  
 define("LangQueryObservationsTitle", "Query observations");
 define("LangQueryObservationsMessage1", "Only observations with drawing");
+define("LangObservationQueryError1b", "There is no object with those specifications.");
 define("LangQueryObservationsMessage2", "Description contains");
 define("LangFromDate", "From");
 define("LangTillDate", "Till");
