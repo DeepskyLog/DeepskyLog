@@ -16,7 +16,6 @@ $util = new Util;
 $util->checkUserInput();
 
 $step = 25; // number of observers to be shown
-echo("<div id=\"main\">\n<h2>" . LangTopObserversTitle . "</h2>");
 if(array_key_exists('min',$_GET)) $min = $_GET['min']; else $min = 0;
 if(array_key_exists('sort',$_GET) && $_GET['sort']) $sort=$_GET['sort']; else $sort='totaal';
 $catalog="M";
@@ -25,8 +24,19 @@ if(array_key_exists('catalogue',$_GET))
 $objectsInCatalog = $objects->getNumberOfObjectsInCatalogue($catalog);
 $rank = $observations->getPopularObserversOverviewCatOrList($sort, $catalog);
 $link = "deepsky/index.php?indexAction=rank_observers&sort=$sort&size=25&catalogue=" . urlencode($catalog);
-list($min, $max) = $util->printListHeader($rank, $link, $min, $step, "");
 $count = 0;
+
+echo '<div id=\"main\">';
+echo '<table width=\"100%\">';
+echo '<tr width=\"100%\">';
+echo '<td>';
+echo '<h2>' . LangTopObserversTitle . '</h2>';
+echo '</td>';
+echo '<td align=\"right\">';
+list($min, $max) = $util->printNewListHeader($rank, $link, $min, $step, "");
+echo '</td>';
+echo '</tr>';
+echo '</table>';
 echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td>" . LangTopObserversHeader1 . "</td>";

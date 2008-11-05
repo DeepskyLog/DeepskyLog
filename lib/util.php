@@ -25,7 +25,7 @@ class util
 	{ $this->checkUserInput();
   }
   private function utilitiesGetIndexActionDSdefaultAction()
-  { $_GET['catalogue']="*";
+  { $_GET['catalogue']='%';
   	$theDate = date('Ymd', strtotime('-1 year'));
     $_GET['minyear'] = substr($theDate,0,4);
     $_GET['minmonth'] = substr($theDate,4,2);
@@ -118,7 +118,7 @@ class util
 	    echo"</td>";
 
   		echo"<td>";
-			if ($total == "")
+			if(($total == "") || $total==count($list))
         echo("&nbsp;&nbsp;(" . count($list) . "&nbsp;" . LangNumberOfRecords );
       else
         echo("&nbsp;&nbsp;(" . count($list) . "&nbsp;" . LangNumberOfRecords . " / " . $total );

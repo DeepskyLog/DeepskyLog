@@ -13,60 +13,11 @@ elseif(array_key_exists('number',$_GET) && $_GET['number'])
 	if(count($objectarray)==1)
 	  $object=$objectarray[0];
 }
+else
+  $cataloguesearch=true;
 $theDate = date('Ymd', strtotime('-1 year')) ;
 
-//=============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT AND IT'S OBSERVATIONS =====================================================================================
-if($object)
-{ $object_ss = stripslashes($object);
-  if(($object!='* ') && ((!array_key_exists('catalogue',$_GET)) || (array_key_exists('catalogue',$_GET) && $_GET['catalogue']=="") || ($_GET['number']!='')))
-	{ $seen = "<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
-    $seenDetails = $objObject->getSeen($object);
-    if(substr($seenDetails,0,1)=="X") // object has been seen already
-      $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($object) . "\" title=\"" . LangObjectXSeen . "\">" . $seenDetails . "</a>";
-    if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
-    { if (substr($seenDetails,0,1)=="Y") // object has been seen by the observer logged in
-        $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($object) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
-    }
-    echo("<div id=\"main\"><h2>");
-    echo (LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss);
-    echo "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen;
-    echo("</h2>");
-  	echo "<table width=\"100%\"><tr>";
-  	echo("<td width=\"25%\" align=\"left\">");
-    echo("<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">" . LangViewObjectViewNearbyObject . " " . $object_ss);
-  	echo("</td><td width=\"25%\" align=\"center\">");
-    if (array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
-      echo("<a href=\"deepsky/index.php?indexAction=add_observation&object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object_ss . "</a>");
-  	echo("</td>");
-  	if($myList)
-  	{ echo("<td width=\"25%\" align=\"center\">");
-      if($objList->checkObjectInMyActiveList($object))
-        echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage3 . $listname_ss . "</a>");
-      else
-        echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a>");
-  	  echo("</td>");
-  	}	
-  	echo("</tr>");
-  	echo("</table>");
-	  $objObject->showObject($object);
-	}
-}	
-	
-//=============================================================================================== START PAGE OUTPUT =====================================================================================
-// TITLE
-echo"<table width=\"100%\">";
-echo"<td>";
-echo("<div id=\"main\">\n<h2>");
-if(array_key_exists('minyear',$_GET) && ($_GET['minyear'] == substr($theDate,0,4)) &&
-   array_key_exists('minmonth',$_GET) && ($_GET['minmonth'] == substr($theDate,4,2)) &&
-   array_key_exists('minday',$_GET) && ($_GET['minday'] == substr($theDate,6,2)))
-  echo (LangSelectedObservationsTitle3); 
-elseif ($catalogue=="*")
-  echo (LangOverviewObservationsTitle); 
-elseif($object)
-  echo (LangSelectedObservationsTitle . $object);
-else
-  echo(LangSelectedObservationsTitle2);
+
 //=========================================================================================== LOOKING FOR SPECIFIC OBJECT, BUT NO OBJECT FOUND WITH THAT NAME ================================================================== 
 /*if(((array_key_exists('number',$_GET) && $_GET['number']) || 
     (array_key_exists('catalogue',$_GET) && $_GET['catalogue'])) && ($object==''))
@@ -74,11 +25,17 @@ else
 	echo "<p>" . LangObservationQueryError1b . "</p>";
   echo "<a href=\"deepsky/index.php?indexAction=query_observations\">" . LangObservationQueryError2 . "</a>";
   echo " " . LangObservationOR . " ";
-  echo "<a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=*\">" . LangObservationQueryError3 . "</a>";
+  echo "<a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=%\">" . LangObservationQueryError3 . "</a>";
 }*/
+
+
+
+
+
 //=========================================================================================== LOOKING FOR SPECIFIC OBJECT, OR LOOKING FOR SOME OTHER CHARACTERISTIC ============================================================
 if($object ||
-       (array_key_exists('observer',$_GET) && $_GET['observer']) || 
+       (array_key_exists('catalogue',$_GET) && $_GET['catalogue']) || 
+       (array_key_exists('number',$_GET) && $_GET['number']) || 
        (array_key_exists('instrument',$_GET) && $_GET['instrument']) || 
 			 (array_key_exists('site',$_GET) && $_GET['site']) || 
 			 (array_key_exists('minyear',$_GET) && $_GET['minyear']) || 
@@ -91,7 +48,7 @@ if($object ||
 			    && $_GET['maxdiameter']!="" && $_GET['maxdiameterunits'])) || 
 	     (array_key_exists('con',$_GET) && $_GET['con']) || 
 	     (array_key_exists('type',$_GET) && $_GET['type']) || 
-	     (array_key_exists('catalogue',$_GET) && $_GET['catalogue']) || 
+	     (array_key_exists('observer',$_GET) && $_GET['observer']) || 
 	     (array_key_exists('minmag',$_GET) && $_GET['minmag']!="") || 
 	     (array_key_exists('maxmag',$_GET) && $_GET['maxmag']!="") || 
 	     (array_key_exists('maxsb',$_GET) && $_GET['maxsb']!="") || 
@@ -118,6 +75,8 @@ if($object ||
 	       array_key_exists('page',$_GET) && $_GET['page'])) || 
 	     ((array_key_exists('minsize',$_GET) && array_key_exists('size_min_units',$_GET)
 			    && $_GET['minsize']!=""  && $_GET['size_min_units'])) || 
+	     ((array_key_exists('maxsize',$_GET) && array_key_exists('size_max_units',$_GET)
+			    && $_GET['maxsize']!=""  && $_GET['size_max_units'])) || 
 	     (array_key_exists('description',$_GET) && $_GET['description']) ||
 			 (array_key_exists('minvisibility',$_GET) && $_GET['minvisibility']!="") || 
 	     (array_key_exists('maxvisibility',$_GET) && $_GET['maxvisibility']!="") || 
@@ -128,14 +87,18 @@ if($object ||
 {
   $catalogue = '';
   if(!$object && array_key_exists('catalogue',$_GET) && ($_GET['catalogue']))
-  { $object = $_GET['catalogue'] . " " . $_GET['number'];
-    $catalogue = $_GET['catalogue']; 
-    $cataloguesearch = "yes";
+  { $catalogue = $_GET['catalogue']; 
   }  
-   if(array_key_exists('observer',$_GET))	    $observer = $_GET['observer'];
-	 else $observer = '';
-   if(array_key_exists('number',$_GET))       $number = $_GET['number'];
-	 else $number = '';
+  if(array_key_exists('number',$_GET) && ($_GET['number']!=''))
+	  $number = $_GET['number'];
+  if(array_key_exists('observer',$_GET))	    
+	  $observer = $_GET['observer'];
+	else 
+	  $observer = '';
+  if(array_key_exists('number',$_GET))       
+	  $number = $_GET['number'];
+	else 
+	  $number = '';
 	 if(array_key_exists('minyear',$_GET) && array_key_exists('minmonth',$_GET) && array_key_exists('minday',$_GET) && $_GET['minyear'] && $_GET['minmonth'] && $_GET['minday']) // exact date given
    { $minyear = $_GET['minyear'];
 		 $minmonth = $_GET['minmonth'];
@@ -531,9 +494,8 @@ if($object ||
      $allLanguages = Array();
    $usedLanguages = Array();
    while(list ($key, $value) = each($allLanguages))
-     if(array_key_exists($key, $_GET) || array_key_exists($key, $_SESSION))
-     {
-       $_SESSION[$key] = $key;
+     if(array_key_exists($key, $_GET) /*|| array_key_exists($key, $_SESSION)*/)
+     { $_SESSION[$key] = $key;
        $usedLanguages[] = $key;
      }
 
@@ -579,11 +541,18 @@ if($object ||
    {
       $sort = "id";
       $_GET['sort'] = $sort;
+			$_GET['sortdirection']="desc";
    }
+	 if(array_key_exists('sortdirection',$_GET)&&($_GET['sortdirection']=="desc"))
+	   $sortdirection="DESC";
+	 else
+	 { $_GET['sortdirection']="asc";
+	   $sortdirection="ASC";
+	 }
    if($cataloguesearch == "yes")
-      $obs = $objObservation->getObservationFromQuery($query,$sort,0,false,$seenpar); // LIKE
+      $obs = $objObservation->getObservationFromQuery($query,$sort,$sortdirection,0,false,$seenpar); // LIKE
    else
-      $obs = $objObservation->getObservationFromQuery($query,$sort,1,true,$seenpar); // EXACT MATCH
+      $obs = $objObservation->getObservationFromQuery($query,$sort,$sortdirection,1,true,$seenpar); // EXACT MATCH
 
 
    $query = array("object" => $object,
@@ -619,9 +588,9 @@ if($object ||
                   "minseeing" => $minseeing,
                   "maxseeing" => $maxseeing);
 	 if($cataloguesearch == "yes")
-      $allobs = $objObservation->getObservationFromQuery($query,"",0, false, $seenpar); // LIKE
+      $total = $objObservation->getObservationFromQuery($query,"",0, false, $seenpar); // LIKE
    else
-      $allobs = $objObservation->getObservationFromQuery($query,"",1, true, $seenpar); // EXACT MATCH
+      $total = $objObservation->getObservationFromQuery($query,"",1, true, $seenpar); // EXACT MATCH
 
   // Dates can change when we use local time!
   if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && $objObserver->getUseLocal($_SESSION['deepskylog_id']))
@@ -695,7 +664,6 @@ if($object ||
 			else
 			  $obs = false;
    }
-
    // natural sort of object names
    if (array_key_exists('sort',$_GET) && ($_GET['sort'] == "objectname"))
    {
@@ -709,14 +677,9 @@ if($object ||
         $count++;
       }
       $obs = $obs2;
-   }
-
-   if(sizeof($obs) > 0) 
-	 { if(array_key_exists('sortdirection',$_GET) && ($_GET['sortdirection']=="desc")) 
-	     krsort($obs); 
-		 else ksort($obs);
+      if(array_key_exists('sortdirection',$_GET) && ($_GET['sortdirection']=="desc")) 
+	      krsort($obs); 
 	 }
-	  
    
 	 $step = 25;
 	 $link2 = "deepsky/index.php?indexAction=result_selected_observations&"    .
@@ -772,13 +735,65 @@ if($object ||
 	                                                  "&amp;minvisibility="    . urlencode($minvisibility) .
            	                                        "&amp;maxvisibility="    . urlencode($maxvisibility) .
 																				            "&amp;seen="             . urlencode($seenpar);
+   while(list($key,$value)=each($usedLanguages))
+	   $link2 = $link2 . "&amp;" . $value . "=" . $value;
+		  
+   $link = $link2 . "&amp;sort=" . $sort . "&amp;sortdirection=" . $_GET['sortdirection'];
+	 
+  //=============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT AND IT'S OBSERVATIONS =====================================================================================
+  if($object)
+  { $object_ss = stripslashes($object);
+    if(($object!='* ') && ((!array_key_exists('catalogue',$_GET)) || (array_key_exists('catalogue',$_GET) && $_GET['catalogue']=="") || ($_GET['number']!='')))
+  	{ $seen = "<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
+      $seenDetails = $objObject->getSeen($object);
+      if(substr($seenDetails,0,1)=="X") // object has been seen already
+        $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($object) . "\" title=\"" . LangObjectXSeen . "\">" . $seenDetails . "</a>";
+      if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
+      { if (substr($seenDetails,0,1)=="Y") // object has been seen by the observer logged in
+          $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($object) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
+      }
+      echo("<div id=\"main\"><h2>");
+      echo (LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss);
+      echo "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen;
+      echo("</h2>");
+    	echo "<table width=\"100%\"><tr>";
+    	echo("<td width=\"25%\" align=\"left\">");
+      echo("<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">" . LangViewObjectViewNearbyObject . " " . $object_ss);
+    	echo("</td><td width=\"25%\" align=\"center\">");
+      if (array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
+        echo("<a href=\"deepsky/index.php?indexAction=add_observation&object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object_ss . "</a>");
+    	echo("</td>");
+    	if($myList)
+    	{ echo("<td width=\"25%\" align=\"center\">");
+        if($objList->checkObjectInMyActiveList($object))
+          echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage3 . $listname_ss . "</a>");
+        else
+          echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a>");
+    	  echo("</td>");
+    	}	
+    	echo("</tr>");
+    	echo("</table>");
+  	  $objObject->showObject($object);
+  	}
+  }	
+	
+//=============================================================================================== START PAGE OUTPUT =====================================================================================
+// TITLE
+echo"<table width=\"100%\">";
+echo"<td>";
+echo("<div id=\"main\">\n<h2>");
+if(array_key_exists('minyear',$_GET) && ($_GET['minyear'] == substr($theDate,0,4)) &&
+   array_key_exists('minmonth',$_GET) && ($_GET['minmonth'] == substr($theDate,4,2)) &&
+   array_key_exists('minday',$_GET) && ($_GET['minday'] == substr($theDate,6,2)))
+  echo (LangSelectedObservationsTitle3); 
+elseif ($catalogue=="*")
+  echo (LangOverviewObservationsTitle); 
+elseif($object)
+  echo (LangSelectedObservationsTitle . $object);
+else
+  echo(LangSelectedObservationsTitle2);
 
-   $link = $link2 . "&amp;sort=" . $sort;
 
-   $total = count($allobs);
-
-   if (count($obs) == $total)
-     $total = "";
 	 
    if(count($obs)>0)
 	 {
@@ -867,7 +882,7 @@ else //=========================================================================
 	 echo "<p>" . LangObservationQueryError1 . "</p>";
    echo "<a href=\"deepsky/index.php?indexAction=query_observations\">" . LangObservationQueryError2 . "</a>";
    echo " " . LangObservationOR . " ";
-   echo "<a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=*\">" . LangObservationQueryError3 . "</a>";
+   echo "<a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=%\">" . LangObservationQueryError3 . "</a>";
 }
 echo("</div>\n</div>\n</body>\n</html>");
 ?>

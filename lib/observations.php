@@ -190,7 +190,7 @@ class Observations
   //             "stellar" => "1", "extended" => "0", "resolved" => "0", "mottled" => "1",
   //             "characterType" => "A", "unusualShape" => "0", "partlyUnresolved" => "1", 
   //             "colorContrasts" => "0", "minSQM" => "18.9", "maxSQM" => "21.2";
-  function getObservationFromQuery($queries, $sort = "", $exactmatch = "1", $clubOnly = "True", $seenpar="D", $exactinstrumentlocation = "0")
+  function getObservationFromQuery($queries, $sort = "", $sortdirection="ASC", $exactmatch = "1", $clubOnly = "True", $seenpar="D", $exactinstrumentlocation = "0")
   {
     include "setup/databaseInfo.php";
     $observers = new Observers;
@@ -207,8 +207,11 @@ class Observations
     $extra = $observers->getObserversFromClub($club);
     $db = new database;
     $db->login();
-    $sql1 = "SELECT DISTINCT observations.id, observations.objectname ";
-    if (isset($sort) && ($sort != ""))
+		if (array_key_exists('languages',$queries))
+      $sql1 = "SELECT DISTINCT observations.id, observations.objectname ";
+    else
+		  $sql1 = "SELECT count(DISTINCT observations.id) as ObsCnt ";
+		if (isset($sort) && ($sort != ""))
     {
       if ($sort=="instrumentid")
       $sql1 .= ",instruments.diameter AS A, instruments.id AS B ";
@@ -218,11 +221,11 @@ class Observations
       $sql1 .= ",$sort AS A ";
     }
     $sql1.= "FROM observations " .
-	        "LEFT JOIN instruments on observations.instrumentid=instruments.id " .
-					"LEFT JOIN objects on observations.objectname=objects.name " .
-					"LEFT JOIN locations on observations.locationid=locations.id " .
-					"LEFT JOIN objectnames on observations.objectname=objectnames.objectname " .
-					"LEFT JOIN observers on observations.observerid=observers.id WHERE ";
+	        "JOIN instruments on observations.instrumentid=instruments.id " .
+					"JOIN objects on observations.objectname=objects.name " .
+					"JOIN locations on observations.locationid=locations.id " .
+					"JOIN objectnames on observations.objectname=objectnames.objectname " .
+					"JOIN observers on observations.observerid=observers.id WHERE ";
 
     $sql2 = "SELECT DISTINCT observations.id, observations.objectname ";
     if (isset($sort) && ($sort != ""))
@@ -245,22 +248,19 @@ class Observations
     if(array_key_exists('object',$queries) && ($queries["object"] != ""))
     {
       if ($exactmatch == "1")
-      $sqland .= "AND (objectnames.altname = \"" . $queries["object"] . "\") ";
+        $sqland .= "AND (objectnames.altname = \"" . $queries["object"] . "\") ";
       else
-      if($queries["object"]=="* ")
-      $sqland .= "AND (objectnames.altname like \"%\")";
-      else
-      $sqland .= "AND (objectnames.altname like \"" . $queries["object"] . "%\") ";
+        if($queries["object"]=="* ")
+          $sqland .= "AND (objectnames.altname like \"%\")";
+        else
+          $sqland .= "AND (objectnames.altname like \"" . $queries["object"] . "%\") ";
     }
     else
     {
       if ($exactmatch == "1")
-      $sqland .= "AND (objectnames.altname = \"" . trim($queries["catalogue"] . ' ' . $queries['number']) . "\") ";
+        $sqland .= "AND (objectnames.altname = \"" . trim($queries["catalog"] . ' ' . $queries['number']) . "\") ";
       else
-      if($queries["object"]=="* ")
-      $sqland .= "AND (objectnames.altname like \"%\")";
-      else
-      $sqland .= "AND (objectnames.altname like \"" . trim($queries["catalogue"] . ' ' . $queries['number']) . "%\") ";
+        $sqland .= "AND (objectnames.altname like \"" . trim($queries["catalog"] . ' ' . $queries['number'] . '%') . "\")";
     }
     if (isset($queries["observer"]) && ($queries["observer"] != ""))
     $sqland .= " AND observations.observerid = \"" . $queries["observer"] . "\" ";
@@ -379,11 +379,12 @@ class Observations
       for($i=0;$i<count($queries["languages"]);$i++)
       $extra2 .= "OR " . "observations.language = \"" . $queries["languages"][$i] . "\" ";
       if ($extra2 != "")
-      $sqland .= " AND (" . substr($extra2,3) . ") ";;
+      $sqland .= " AND (" . substr($extra2,3) . ") ";
     }
     $sql = "(" . $sql1 . substr($sqland,4);
     if ($extra != "" && $clubOnly == "True")
     $sql .= "AND " . $extra;
+		
     if(array_key_exists('object',$queries)&&($queries["object"]!="")&&($queries["object"]!="* "))
     {
       $sql =  $sql . ") UNION (" . $sql2 . substr($sqland,4);
@@ -394,40 +395,49 @@ class Observations
     if (isset($sort) && ($sort != ""))
     {
       if ($sort=="instrumentid")
-      $sql .= " ORDER BY A, B";
+      $sql .= " ORDER BY A, B " . $sortdirection . ", id DESC";
       else if (isset($sort) && ($sort == "observerid"))
-      $sql .= " ORDER BY A, B";
+      $sql .= " ORDER BY A, B " . $sortdirection . ", id DESC";
       else if (isset($sort) && ($sort != "id") && ($sort!="objectname"))
-      $sql .= " ORDER BY A";
+      $sql .= " ORDER BY A " . $sortdirection . ", id DESC";
+      else if (isset($sort) && ($sort=="objectname"))
+      $sql .= " ORDER BY $sort " . $sortdirection . ", id DESC";
       else
-      $sql .= " ORDER BY $sort";
+      $sql .= " ORDER BY $sort " . $sortdirection;
     }
-
     $sql = $sql.";";
+// echo $sql.'<p>';
     $run = mysql_query($sql) or die(mysql_error());
-    while($get = mysql_fetch_object($run))
-    {
-      if($seenpar != "D")
+		if(array_key_exists('languages',$queries))
+		{ while($get = mysql_fetch_object($run))
       {
-        $sql = "SELECT COUNT(observations.id) AS cnt " .
-		         "FROM observations " .
-				  	 "WHERE objectname = \"". $get->objectname ."\" " .
-					   "AND observerid = \"" . $_SESSION['deepskylog_id'] . "\"";
-        $run2 = mysql_query($sql) or die(mysql_error());
-        $get2 = mysql_fetch_object($run2);
-        if ($get2->cnt > 0) // object has been seen by the observer logged in
-        $seentype="Y";
-        else
-        $seentype="X";
+        if($seenpar != "D")
+        {
+          $sql = "SELECT COUNT(observations.id) AS cnt " .
+  		         "FROM observations " .
+  				  	 "WHERE objectname = \"". $get->objectname ."\" " .
+  					   "AND observerid = \"" . $_SESSION['deepskylog_id'] . "\"";
+          $run2 = mysql_query($sql) or die(mysql_error());
+          $get2 = mysql_fetch_object($run2);
+          if ($get2->cnt > 0) // object has been seen by the observer logged in
+          $seentype="Y";
+          else
+          $seentype="X";
+        }
+        if(($seenpar == "D")||($seenpar == $seentype))
+        $obs[] = $get->id;
       }
-      if(($seenpar == "D")||($seenpar == $seentype))
-      $obs[] = $get->id;
+      $db->logout();
+      if(isset($obs))
+        return $obs;
+      else
+      return null;
     }
-    $db->logout();
-    if(isset($obs))
-    return $obs;
-    else
-    return null;
+		else
+		{
+      $get = mysql_fetch_object($run);
+		  return $get->ObsCnt;
+		} 
   }
 
   // getObservations returns an array with all observations

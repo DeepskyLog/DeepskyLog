@@ -2,13 +2,14 @@
 // index.php: main entrance to deepsky modules of DeepskyLog
 try{
 include '../common/entryexit/preludes.php';
+include '../common/entryexit/preludesDS.php';
 $objUtil->utilitiesSetModuleCookie("deepsky");
-include '../common/entryexit/menus.php';
+include '../common/entryexit/menu.php';
 include $objUtil->utiltiesDispatchIndexActionDS();	
-include("../common/tail.php");
+include '../common/tail.php';
 }
 catch (Exception $e)
 {
-echo "Report problem: " . $e->getMessage();
+echo 'Report problem: ' . $e->getMessage();
 }
 ?>
