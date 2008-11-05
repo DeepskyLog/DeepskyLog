@@ -190,7 +190,7 @@ class Observations
   //             "stellar" => "1", "extended" => "0", "resolved" => "0", "mottled" => "1",
   //             "characterType" => "A", "unusualShape" => "0", "partlyUnresolved" => "1", 
   //             "colorContrasts" => "0", "minSQM" => "18.9", "maxSQM" => "21.2";
-  function getObservationFromQuery($queries, $sort = "", $sortdirection="ASC", $exactmatch = "1", $clubOnly = "True", $seenpar="D", $exactinstrumentlocation = "0")
+  function getObservationFromQuery($queries, $sort = "", $sortdirection="ASC", $seenpar="D", $exactinstrumentlocation = "0")
   {
     include "setup/databaseInfo.php";
     $observers = new Observers;
@@ -204,11 +204,19 @@ class Observations
     $sqland = "";
     $alternative = "";
 
-    $extra = $observers->getObserversFromClub($club);
     $db = new database;
     $db->login();
 		if (array_key_exists('languages',$queries))
-      $sql1 = "SELECT DISTINCT observations.id, observations.objectname ";
+      $sql1 = "SELECT DISTINCT observations.id as id, 
+			                         observations.objectname as objectname,
+															 observations.date as observationdate,
+															 observations.description as observationdescription, 
+															 CONCAT(observers.firstname , ' ' , observers.name) as observername,
+															 objects.con as objectconstellation, 
+														   instruments.id as instrumentid,
+															 instruments.name as instrumentname,
+															 instruments.diameter as instrumentdiameter
+															 ";
     else
 		  $sql1 = "SELECT count(DISTINCT observations.id) as ObsCnt ";
 		if (isset($sort) && ($sort != ""))
@@ -227,7 +235,16 @@ class Observations
 					"JOIN objectnames on observations.objectname=objectnames.objectname " .
 					"JOIN observers on observations.observerid=observers.id WHERE ";
 
-    $sql2 = "SELECT DISTINCT observations.id, observations.objectname ";
+    $sql2 = "SELECT DISTINCT observations.id as id, 
+		                         observations.objectname as objectname, 
+														 observations.date as observationdate, 
+					  								 observations.description as observationdescription, 
+														 CONCAT(observers.firstname , ' ' , observers.name) as observername,
+														 objects.con as objectconstellation, 
+														 instruments.id as instrumentid,
+														 instruments.name as instrumentname,
+														 instruments.diameter as instrumentdiameter
+														 ";
     if (isset($sort) && ($sort != ""))
     {
       if ($sort=="instrumentid")
@@ -247,19 +264,19 @@ class Observations
 
     if(array_key_exists('object',$queries) && ($queries["object"] != ""))
     {
-      if ($exactmatch == "1")
+//      if ($exactmatch == "1")
         $sqland .= "AND (objectnames.altname = \"" . $queries["object"] . "\") ";
-      else
+/*      else
         if($queries["object"]=="* ")
           $sqland .= "AND (objectnames.altname like \"%\")";
         else
-          $sqland .= "AND (objectnames.altname like \"" . $queries["object"] . "%\") ";
+          $sqland .= "AND (objectnames.altname like \"" . $queries["object"] . "%\") ";*/
     }
     else
     {
-      if ($exactmatch == "1")
+/*      if ($exactmatch == "1")
         $sqland .= "AND (objectnames.altname = \"" . trim($queries["catalog"] . ' ' . $queries['number']) . "\") ";
-      else
+      else*/
         $sqland .= "AND (objectnames.altname like \"" . trim($queries["catalog"] . ' ' . $queries['number'] . '%') . "\")";
     }
     if (isset($queries["observer"]) && ($queries["observer"] != ""))
@@ -382,22 +399,16 @@ class Observations
       $sqland .= " AND (" . substr($extra2,3) . ") ";
     }
     $sql = "(" . $sql1 . substr($sqland,4);
-    if ($extra != "" && $clubOnly == "True")
-    $sql .= "AND " . $extra;
 		
-    if(array_key_exists('object',$queries)&&($queries["object"]!="")&&($queries["object"]!="* "))
-    {
+    if(array_key_exists('object',$queries)&&($queries["object"]!="")&&(array_key_exists('languages',$queries)))
       $sql =  $sql . ") UNION (" . $sql2 . substr($sqland,4);
-      if ($extra != "" && $clubOnly == "True")
-      $sql .= "AND " . $extra;
-    }
     $sql = $sql . ")";
     if (isset($sort) && ($sort != ""))
     {
       if ($sort=="instrumentid")
-      $sql .= " ORDER BY A, B " . $sortdirection . ", id DESC";
+      $sql .= " ORDER BY A " . $sortdirection . ", B " . $sortdirection . ", id DESC";
       else if (isset($sort) && ($sort == "observerid"))
-      $sql .= " ORDER BY A, B " . $sortdirection . ", id DESC";
+      $sql .= " ORDER BY A " . $sortdirection . ", B " . $sortdirection . ", id DESC";
       else if (isset($sort) && ($sort != "id") && ($sort!="objectname"))
       $sql .= " ORDER BY A " . $sortdirection . ", id DESC";
       else if (isset($sort) && ($sort=="objectname"))
@@ -406,10 +417,11 @@ class Observations
       $sql .= " ORDER BY $sort " . $sortdirection;
     }
     $sql = $sql.";";
-// echo $sql.'<p>';
+ echo $sql.'<p>';
     $run = mysql_query($sql) or die(mysql_error());
 		if(array_key_exists('languages',$queries))
-		{ while($get = mysql_fetch_object($run))
+		{ $j=0;
+		  while($get = mysql_fetch_object($run))
       {
         if($seenpar != "D")
         {
@@ -425,13 +437,23 @@ class Observations
           $seentype="X";
         }
         if(($seenpar == "D")||($seenpar == $seentype))
-        $obs[] = $get->id;
+				{ $result[$j]['observationid']=$get->id;
+				  $result[$j]['objectname']=$get->objectname;
+				  $result[$j]['observationdescription']=$get->observationdescription;
+				  $result[$j]['observationdate']=$get->observationdate;
+				  $result[$j]['observername']=$get->observername;
+				  $result[$j]['objectconstellation']=$get->objectconstellation;
+				  $result[$j]['instrumentid']=$get->instrumentid;
+				  $result[$j]['instrumentname']=$get->instrumentname;
+				  $result[$j]['instrumentdiameter']=$get->instrumentdiameter;
+          $j++;
+				}
       }
       $db->logout();
-      if(isset($obs))
-        return $obs;
+      if(isset($result))
+        return $result;
       else
-      return null;
+        return array();
     }
 		else
 		{
@@ -445,16 +467,13 @@ class Observations
   {
     include "setup/databaseInfo.php";
     $observers = new Observers;
-    $extra = $observers->getObserversFromClub($club);
 
     $db = new database;
     $db->login();
-    $sql = "SELECT * FROM observations ".$extra;
+    $sql = "SELECT * FROM observations";
     $run = mysql_query($sql) or die(mysql_error());
     while($get = mysql_fetch_object($run))
-    {
       $observations[] = $get->id;
-    }
     $db->logout();
 
     if ($observations)
@@ -2488,12 +2507,12 @@ class Observations
 		global $objInstrument;
 		global $objObject;
 		global $objObserver;
-    $object = $this->getObjectId($value);
-    $observer = $this->getObserverId($value);
-    $temp = $this->getDsObservationInstrumentId($value);
-    $instrument = $objInstrument->getInstrumentName($temp);
-    $instrumentsize = round($objInstrument->getDiameter($temp), 0);
-    $desc = $this->getDescriptionDsObservation($value);
+    $object = $value['objectname'];
+    $observer = $value['observername'];
+    $temp = $value['instrumentid'];
+		$instrument = $value['instrumentname'];
+    $instrumentsize = round($value['instrumentdiameter'], 0);
+    $desc = $value['observationdescription'];
     $patterns[0] = "/\s+(M)\s*(\d+)/";
     $replacements[0] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
     $patterns[1] = "/(NGC|Ngc|ngc)\s*(\d+\w+)/";
@@ -2503,7 +2522,7 @@ class Observations
     $patterns[3] = "/(Arp|ARP|arp)\s*(\d+)/";
     $replacements[3] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=Arp%20\\2\">Arp&nbsp;\\2</a>";
     $description = preg_replace($patterns,$replacements,$desc);
-    $AOid = $this->getLOObservationId($object, $_SESSION['deepskylog_id'], $value);
+    $AOid = $this->getLOObservationId($object, $_SESSION['deepskylog_id'], $value['observationid']);
     $LOid="";
     $LOdescription="";
     if($AOid)
@@ -2543,11 +2562,11 @@ class Observations
     }
     if ($objObserver->getUseLocal($_SESSION['deepskylog_id']))
     {
-      $date = sscanf($this->getDsObservationLocalDate($value), "%4d%2d%2d");
+      $date = sscanf($this->getDsObservationLocalDate($value['observationid']), "%4d%2d%2d");
     }
     else
     {
-      $date = sscanf($this->getDateDsObservation($value), "%4d%2d%2d");
+      $date = sscanf($this->getDateDsObservation($value['observationid']), "%4d%2d%2d");
     }
     if ($objObserver->getUseLocal($_SESSION['deepskylog_id']))
     {
@@ -2558,7 +2577,7 @@ class Observations
       $LOdate = sscanf($this->getDateDsObservation($LOid), "%4d%2d%2d");
     }
     // OUTPUT
-    $con = $objObject->getConstellation($object);
+    $con = $value['objectconstellation'];
     echo("<tr class=\"type2\">\n
          <td><a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">$object</a></td>\n
     <td> " . $$con . "</td>\n
@@ -2590,7 +2609,7 @@ class Observations
     }
     echo("</td>");
     echo("<td>");
-    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value . "&dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText);
+    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText);
     // LINK TO DRAWING (IF AVAILABLE)
     $upload_dir = 'drawings';
     $dir = opendir($upload_dir);
@@ -2600,25 +2619,25 @@ class Observations
       {
         continue; // skip current directory and directory above
       }
-      if(fnmatch($value . "_resized.jpg",$file))
+      if(fnmatch($value['observationid'] . "_resized.jpg",$file))
       {
         echo LangDetailDrawingText;
       }
     }
     echo("</a>&nbsp;");
-    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value . "&dalm=AO\" title=\"" . LangAO . "\">");
+    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=AO\" title=\"" . LangAO . "\">");
     echo LangAOText;
     echo("</a>");
     echo("&nbsp;");
     if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])                  // LOGGED IN
     {
-      $objectid = $this->getObjectId($value);
+      $objectid = $this->getObjectId($value['observationid']);
       if ($LOdescription)
       {
-        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value . "&dalm=MO\" title=\"" . LangMO . "\">");
+        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=MO\" title=\"" . LangMO . "\">");
         echo LangMOText;
         echo("</a>&nbsp;");
-        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value . "&dalm=LO\" title=\"" . LangLO . "\">");
+        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=LO\" title=\"" . LangLO . "\">");
         echo LangLOText;
         echo("</a>&nbsp;");
       }
@@ -2636,9 +2655,9 @@ class Observations
       $db->logout();
       $get = mysql_fetch_object($run);
       if($get->ObjCnt > 0)
-       echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">E</a>");
+       echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value['observationid']) . ">E</a>");
       else
-       echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">L</a>");
+       echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value['observationid']) . ">L</a>");
       echo("</td>");
     }
     echo("</tr>\n");
@@ -2669,7 +2688,7 @@ class Observations
 
     echo"<tr>";
     echo"<td> &nbsp; </td>";
-    echo"<td colspan=3>";
+    echo"<td colspan=4>";
     $upload_dir = 'drawings';
     $dir = opendir($upload_dir);
     while (FALSE !== ($file = readdir($dir)))
@@ -2678,9 +2697,9 @@ class Observations
       {
         continue; // skip current directory and directory above
       }
-      if(fnmatch($value . "_resized.jpg", $file))
+      if(fnmatch($value['observationid'] . "_resized.jpg", $file))
       {
-        echo("<p><a href=\"deepsky/" . $upload_dir . "/" . $value . ".jpg" . "\">
+        echo("<p><a href=\"deepsky/" . $upload_dir . "/" . $value['observationid'] . ".jpg" . "\">
         <img class=\"account\" src=\"deepsky/$upload_dir" . "/" . "$file\">
         </img></a></p>");
       }
@@ -2727,9 +2746,9 @@ class Observations
 
 
     // OBJECT
-    $object = $this->getObjectId($value);
+    $object = $value[1];
     // OBSERVER
-    $observer = $this->getObserverId($value);
+    $observer = $value[4];
     // INSTRUMENT
     $temp = $this->getDsObservationInstrumentId($value);
     $instrument = $instruments->getInstrumentName($temp);
