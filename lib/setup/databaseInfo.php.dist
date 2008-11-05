@@ -17,12 +17,6 @@
   // The first part of the title that has to appear on each browser window
   $browsertitle = "DeepskyLog";
 
-  // DeepskyLog can show only the observations of a given club. 
-  // This makes it possible to have one central database in a country.
-  // All clubs can have a local installation of DeepskyLog where only the 
-  // observations of their own club can be shown.
-  $club = "";
-
   // Allow users to register from within the DeepskyLog application directly
   // If you want to use a already existing database with users and passwords
   // eg ppb you should set this variable to "no" 
