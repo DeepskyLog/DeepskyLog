@@ -417,7 +417,7 @@ class Observations
       $sql .= " ORDER BY $sort " . $sortdirection;
     }
     $sql = $sql.";";
- echo $sql.'<p>';
+ //echo $sql.'<p>';
     $run = mysql_query($sql) or die(mysql_error());
 		if(array_key_exists('languages',$queries))
 		{ $j=0;
@@ -2746,15 +2746,15 @@ class Observations
 
 
     // OBJECT
-    $object = $value[1];
+    $object = $value['objectname'];
     // OBSERVER
-    $observer = $value[4];
+    $observer = $value['observername'];
     // INSTRUMENT
-    $temp = $this->getDsObservationInstrumentId($value);
-    $instrument = $instruments->getInstrumentName($temp);
-    $instrumentsize = round($instruments->getDiameter($temp), 0);
+    $temp = $value['instrumentid'];
+    $instrument = $value['instrumentname'];
+    $instrumentsize = round($value['instrumentdiameter'], 0);
     // DESCRIPTION
-    $desc = $this->getDescriptionDsObservation($value);
+    $desc = $value['observationdescription'];
     $patterns[0] = "/\s+(M)\s*(\d+)/";
     $replacements[0] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
     $patterns[1] = "/(NGC|Ngc|ngc)\s*(\d+\w+)/";
@@ -2784,16 +2784,16 @@ class Observations
     // DATE
     if (array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id']&&$objObserver->getUseLocal($_SESSION['deepskylog_id']))
     {
-      $date = sscanf($this->getDsObservationLocalDate($value), "%4d%2d%2d");
+      $date = sscanf($this->getDsObservationLocalDate($value['observationid']), "%4d%2d%2d");
     }
     else
     {
-      $date = sscanf($this->getDateDsObservation($value), "%4d%2d%2d");
+      $date = sscanf($this->getDateDsObservation($value['observationid']), "%4d%2d%2d");
     }
     echo date ($dateformat, mktime (0,0,0,$date[1],$date[2],$date[0]));
     echo("</td>\n");
     echo("<td>");
-    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value . "&dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText);
+    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText);
     // LINK TO DRAWING (IF AVAILABLE)
     $upload_dir = 'drawings';
     $dir = opendir($upload_dir);
@@ -2803,23 +2803,23 @@ class Observations
       {
         continue; // skip current directory and directory above
       }
-      if(fnmatch($value . "_resized.gif", $file) || fnmatch($value . "_resized.jpg",$file) || fnmatch($value. "_resized.png", $file))
+      if(fnmatch($value['observationid'] . "_resized.gif", $file) || fnmatch($value['observationid'] . "_resized.jpg",$file) || fnmatch($value['observationid']. "_resized.png", $file))
       {
         echo LangDetailDrawingText;
       }
     }
     echo("</a>&nbsp;");
-    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value . "&dalm=AO\" title=\"" . LangAO . "\">");
+    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=AO\" title=\"" . LangAO . "\">");
     echo LangAOText;
     echo("</a>&nbsp;");
     if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])                  // LOGGED IN
     {
-      if($this->getLOObservationId($object, $_SESSION['deepskylog_id'], $value))
+      if($this->getLOObservationId($object, $_SESSION['deepskylog_id'], $value['observationid']))
       {
-        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $value . "&amp;dalm=MO\" title=\"" . LangMO . "\">");
+        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;dalm=MO\" title=\"" . LangMO . "\">");
         echo LangMOText;
         echo("</a>&nbsp;");
-        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $value . "&amp;dalm=LO\" title=\"" . LangLO . "\">");
+        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;dalm=LO\" title=\"" . LangLO . "\">");
         echo LangLOText;
         echo("</a>&nbsp;");
       }
@@ -2837,9 +2837,9 @@ class Observations
       $db->logout();
       $get = mysql_fetch_object($run);
       if($get->ObjCnt > 0)
-  	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">E</a>");
+  	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value['observationid']) . ">E</a>");
   	  else
-  	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">L</a>");
+  	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value['observationid']) . ">L</a>");
   	  echo("</td>");
     }
     echo("</tr>\n");
@@ -2872,8 +2872,8 @@ class Observations
     {
       if ("." == $file OR ".." == $file)
       continue; // skip current directory and directory above
-      if(fnmatch($value . "_resized.jpg", $file))
-      echo("<p><a href=\"deepsky/" . $upload_dir . "/" . $value . ".jpg" . "\">
+      if(fnmatch($value['observationid'] . "_resized.jpg", $file))
+      echo("<p><a href=\"deepsky/" . $upload_dir . "/" . $value['observationid'] . ".jpg" . "\">
       <img class=\"account\" src=\"deepsky/$upload_dir" . "/" . "$file\">
       </img></a></p>");
     }
@@ -2903,13 +2903,13 @@ class Observations
       $typefield = "class=\"type2\"";
     }
     // OBJECT
-    $object = $this->getObjectId($value);
+    $object = $value['objectname'];
     // OBSERVER
-    $observer = $this->getObserverId($value);
+    $observer = $value['observername'];
     // INSTRUMENT
-    $temp = $this->getDsObservationInstrumentId($value);
-    $instrument = $objInstrument->getInstrumentName($temp);
-    $instrumentsize = round($objInstrument->getDiameter($temp), 0);
+    $temp = $value['instrumentid'];
+    $instrument = $value['instrumentname'];
+    $instrumentsize = round($value['instrumentdiameter'], 0);
     if ($instrument == "Naked eye")
     {
       $instrument = InstrumentsNakedEye;
@@ -2930,15 +2930,15 @@ class Observations
     // DATE
     if (array_key_exists('deepskylog_id', $_SESSION) && $objObserver->getUseLocal($_SESSION['deepskylog_id']))
     {
-      $date = sscanf($this->getDsObservationLocalDate($value), "%4d%2d%2d");
+      $date = sscanf($this->getDsObservationLocalDate($value['observationid']), "%4d%2d%2d");
     }
     else
     {
-      $date = sscanf($this->getDateDsObservation($value), "%4d%2d%2d");
+      $date = sscanf($this->getDateDsObservation($value['observationid']), "%4d%2d%2d");
     }
     echo date ($dateformat, mktime (0,0,0,$date[1],$date[2],$date[0]));
     echo("</td>\n
-         <td><a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value . "&dalm=D\" title=\"" . LangDetail . "\">" . LangDetails);
+         <td><a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=D\" title=\"" . LangDetail . "\">" . LangDetails);
     // LINK TO DRAWING (IF AVAILABLE)
     $upload_dir = 'drawings';
     $dir = opendir($upload_dir);
@@ -2948,7 +2948,7 @@ class Observations
       {
         continue; // skip current directory and directory above
       }
-      if(fnmatch($value . "_resized.gif", $file) || fnmatch($value . "_resized.jpg",$file) || fnmatch($value. "_resized.png", $file))
+      if(fnmatch($value['observationid'] . "_resized.gif", $file) || fnmatch($value['observationid'] . "_resized.jpg",$file) || fnmatch($value['observationid']. "_resized.png", $file))
       {
         echo("&nbsp;+&nbsp;");
         echo LangDrawing;
@@ -2956,18 +2956,18 @@ class Observations
     }
     echo("</a>&nbsp;");
 
-    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value . "&dalm=AO\" title=\"" . LangAO . "\">");
+    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=AO\" title=\"" . LangAO . "\">");
     echo LangAOText;
     echo("</a>");
     echo("&nbsp;");
     if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])                  // LOGGED IN
     {
-      if($this->getLOObservationId($object, $_SESSION['deepskylog_id'], $value))
+      if($this->getLOObservationId($object, $_SESSION['deepskylog_id'], $value['observationid']))
       {
-        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value . "&dalm=MO\" title=\"" . LangMO . "\">");
+        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=MO\" title=\"" . LangMO . "\">");
         echo LangMOText;
         echo("</a>&nbsp;");
-        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value . "&dalm=LO\" title=\"" . LangLO . "\">");
+        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=LO\" title=\"" . LangLO . "\">");
         echo LangLOText;
         echo("</a>&nbsp;");
       }
@@ -2984,9 +2984,9 @@ class Observations
       $run = mysql_query($sql) or die(mysql_error());
       $db->logout();
       $get = mysql_fetch_object($run);      if($get->ObjCnt > 0)
-  	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">E</a>");
+  	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value['observationid']) . ">E</a>");
   	  else
-  	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value) . ">L</a>");
+  	   echo("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value['observationid']) . ">L</a>");
   	  echo("</td>");
     }
     echo("</tr>\n");
