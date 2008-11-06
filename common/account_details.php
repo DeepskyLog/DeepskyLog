@@ -1,7 +1,5 @@
 <?php
-
 // account_details.php
-// version 2.0, JV 20050904
 // lets the user change his account details 
 
 include_once "../lib/setup/databaseInfo.php";

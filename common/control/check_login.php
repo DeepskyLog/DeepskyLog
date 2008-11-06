@@ -5,7 +5,7 @@
 // version 2.0, JV 20050821
 // version 3.1, DE 20061124
 
-session_start(); // start session
+if(!session_id()) session_start(); // start session
 
 include_once "../../lib/observers.php";
 include_once "../../lib/setup/vars.php";

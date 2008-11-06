@@ -72,7 +72,8 @@ class util
   }
 	
   function printNewListHeader($list, $link, $min, $step, $total)
-  { $pages = ceil(count($list) / $step);       // total number of pages
+  { global $baseURL;
+	  $pages = ceil(count($list) / $step);       // total number of pages
     if($min)                                   // minimum value
     { $min = $min - ($min % $step);            // start display from number of $steps
       if ($min < 0)                            // minimum value smaller than 0
@@ -89,13 +90,13 @@ class util
 		  
 			echo("<td>");	
       echo("<a href=\"".$link."&amp;multiplepagenr=0\">");
-      echo "<img src=\"../styles/images/allleft20.gif\" border=\"0\">"; // link to last page
+      echo "<img src=\"".$baseURL."/styles/images/allleft20.gif\" border=\"0\">"; // link to last page
       echo("</a>\n");
 	    echo"</td>";
 			
 		  echo"<td>";
 	    echo("<a href=\"".$link."&amp;multiplepagenr=".($currentpage-1) . "\">");
-      echo "<img src=\"../styles/images/left20.gif\" border=\"0\">"; // link to last page
+      echo "<img src=\"".$baseURL."/styles/images/left20.gif\" border=\"0\">"; // link to last page
       echo("</a>\n");
 		  echo"</td>";
 		  
@@ -107,13 +108,13 @@ class util
 	
 		  echo"<td>";
       echo("<a href=\"".$link."&amp;multiplepagenr=".($currentpage+1) . "\">");
-      echo "<img src=\"../styles/images/right20.gif\" border=\"0\">"; // link to last page
+      echo "<img src=\"".$baseURL."/styles/images/right20.gif\" border=\"0\">"; // link to last page
       echo("</a>\n");
 		  echo"</td>";
 
 		  echo("<td>");				
 		  echo("<a href=\"".$link."&amp;multiplepagenr=9999999\">");
-      echo "<img src=\"../styles/images/allright20.gif\" border=\"0\">"; // link to last page
+      echo "<img src=\"".$baseURL."/styles/images/allright20.gif\" border=\"0\">"; // link to last page
       echo("</a>\n");
 	    echo"</td>";
 

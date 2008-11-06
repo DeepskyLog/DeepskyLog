@@ -7,7 +7,9 @@ if (!function_exists('fnmatch'))
   }
 }
 
-//session_start(); opnieuw activeren wanneer het verwijderd is uit vars.php
+if(!session_id()) session_start();
+if(!array_key_exists('module',$_SESSION) || !$_SESSION['module'])
+  $_SESSION['module'] = $modules[0];
 
 require_once "../lib/setup/vars.php";
 require_once "../lib/setup/databaseInfo.php";
@@ -15,9 +17,8 @@ require_once "../lib/setup/language.php";
 require_once "../lib/util.php";
 require_once "../lib/atlasses.php";
 require_once "../lib/instruments.php";
+require_once "../common/layout/tables.php";
 
-if(!$_SESSION['module'])
-  $_SESSION['module'] = $modules[0];
 
 // pagenumbers
 if(array_key_exists('min',$_GET))

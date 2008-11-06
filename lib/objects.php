@@ -1,18 +1,9 @@
 <?php
-
 // The objects class collects all functions needed to enter, retrieve and
 // adapt object data from the database and functions to display the data.
-//
-// Version 0.9 : 21/06/2005, WDM
-// version 3.1, DE 20061119
-//
-// $$ ok
 
 include_once "database.php";
 include_once "observations.php";
-//include_once "atlasses.php";
-
-//include_once "setup/vars.php";
 
 class Objects
 {

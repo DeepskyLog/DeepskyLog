@@ -21,7 +21,7 @@
 
 include 'content/data_get_observations.php';
 
-if(count($obs))
+if(count($_SESSION['Qobs']))
 {   
 	 $step = 25;
 	 $link2 = "deepsky/index.php?indexAction=result_selected_observations&"    .
@@ -81,7 +81,7 @@ if(count($obs))
    while(list($key,$value)=each($usedLanguages))
 	   $link2 = $link2 . "&amp;" . $value . "=" . $value;
 		  
-   $link = $link2 . "&amp;sort=" . $sort . "&amp;sortdirection=" . $_GET['sortdirection'];
+   $link = $link2 . "&amp;sort=" . $_GET['sort'] . "&amp;sortdirection=" . $_GET['sortdirection'];
 	 
   //=============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT AND IT'S OBSERVATIONS =====================================================================================
   if($object)
@@ -138,7 +138,7 @@ else
 
 
 	 
-   if(count($obs)>0)
+   if(count($_SESSION['Qobs'])>0)
 	 {
   	 if($_SESSION['lco']!="L")
   	   echo(" - <a href=\"". $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">" . 
@@ -155,29 +155,28 @@ else
 	 echo "</h2>";
 	 echo"</td>";
 	 echo"<td align=\"right\">";	 
-   list($min, $max) = $objUtil->printNewListHeader($obs, $link, $min, $step, $total);
+   list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
 	 echo"</td>";
 	 echo"</table>";
 	 
 	 if($_SESSION['lco']=="O")
      echo "<p align=\"right\">" .  LangOverviewObservationsHeader5a;
 	 
-   if(sizeof($obs) > 0)
+   if(sizeof($_SESSION['Qobs']) > 0)
    {
       $count = 0; // counter for altering table colors
-      if(sizeof($obs) > 0) // ONLY WHEN OBSERVATIONS AVAILABLE
+      if(sizeof($_SESSION['Qobs']) > 0) // ONLY WHEN OBSERVATIONS AVAILABLE
       {
         // LINKS TO SORT ON OBSERVATION TABLE HEADERS
         echo "<table width=\"100%\">\n";
         echo "<tr width=\"100%\" class=\"type3\">\n";
 				
 				
-        include "../common/layout/tables.php";
         tableSortHeader(LangOverviewObservationsHeader1, $link2 . "&amp;sort=objectname");
-        tableSortHeader(LangViewObservationField1b,      $link2 . "&amp;sort=objects.con");
-        tableSortHeader(LangOverviewObservationsHeader2, $link2 . "&amp;sort=observerid");
-        tableSortHeader(LangOverviewObservationsHeader3, $link2 . "&amp;sort=instrumentid");
-        tableSortHeader(LangOverviewObservationsHeader4, $link2 . "&amp;sort=date");
+        tableSortHeader(LangViewObservationField1b,      $link2 . "&amp;sort=objectconstellation");
+        tableSortHeader(LangOverviewObservationsHeader2, $link2 . "&amp;sort=observersortname");
+        tableSortHeader(LangOverviewObservationsHeader3, $link2 . "&amp;sort=instrumentsort");
+        tableSortInverseHeader(LangOverviewObservationsHeader4, $link2 . "&amp;sort=observationdate");
 								
         if($_SESSION['lco']!="O")
 				  echo("<td></td>\n");
@@ -186,7 +185,7 @@ else
                  "<td width=\"15%\">" . LangOverviewObservationsHeader9 . "</td>\n".
                  "<td width=\"15%\">" . LangOverviewObservationsHeader5. "</td>\n");
          echo "</tr>\n";
-         while(list ($key, $value) = each($obs)) // go through observations array
+         while(list ($key, $value) = each($_SESSION['Qobs'])) // go through observations array
          {
             if($count >= $min && $count < $max)
             { 
@@ -202,9 +201,8 @@ else
          echo ("</table>\n");
       }
 			
-      list($min, $max) = $objUtil->printNewListHeader($obs, $link, $min, $step, $total);
+      list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
 
-      $_SESSION['observation_query'] = $obs;
       echo "<p><a href=\"deepsky/observations.pdf\" target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a> - ";
       echo "<a href=\"deepsky/observations.csv\" target=\"new_window\">".LangExecuteQueryObjectsMessage5."</a> - ";
       echo "<a href=\"deepsky/index.php?indexAction=query_objects&amp;source=observation_query\">".LangExecuteQueryObjectsMessage9."</a> - ";

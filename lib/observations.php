@@ -190,7 +190,7 @@ class Observations
   //             "stellar" => "1", "extended" => "0", "resolved" => "0", "mottled" => "1",
   //             "characterType" => "A", "unusualShape" => "0", "partlyUnresolved" => "1", 
   //             "colorContrasts" => "0", "minSQM" => "18.9", "maxSQM" => "21.2";
-  function getObservationFromQuery($queries, $sort = "", $sortdirection="ASC", $seenpar="D", $exactinstrumentlocation = "0")
+  function getObservationFromQuery($queries, $seenpar="D", $exactinstrumentlocation = "0")
   {
     include "setup/databaseInfo.php";
     $observers = new Observers;
@@ -206,54 +206,41 @@ class Observations
 
     $db = new database;
     $db->login();
-		if (array_key_exists('languages',$queries))
-      $sql1 = "SELECT DISTINCT observations.id as id, 
+		if(!array_key_exists('countquery',$queries))
+      $sql1 = "SELECT DISTINCT observations.id as observationid, 
 			                         observations.objectname as objectname,
 															 observations.date as observationdate,
 															 observations.description as observationdescription, 
+  														 observers.id as observerid,
 															 CONCAT(observers.firstname , ' ' , observers.name) as observername,
+  														 CONCAT(observers.name , ' ' , observers.firstname) as observersortname,
 															 objects.con as objectconstellation, 
 														   instruments.id as instrumentid,
 															 instruments.name as instrumentname,
-															 instruments.diameter as instrumentdiameter
+															 instruments.diameter as instrumentdiameter,
+  														 CONCAT(instruments.diameter,' ',instruments.name) as instrumentsort
 															 ";
     else
 		  $sql1 = "SELECT count(DISTINCT observations.id) as ObsCnt ";
-		if (isset($sort) && ($sort != ""))
-    {
-      if ($sort=="instrumentid")
-      $sql1 .= ",instruments.diameter AS A, instruments.id AS B ";
-      else if (isset($sort) && ($sort == "observerid"))
-      $sql1 .= ",observers.name AS A, observers.firstname AS B ";
-      else if (isset($sort) && ($sort != "id") && ($sort!="objectname"))
-      $sql1 .= ",$sort AS A ";
-    }
     $sql1.= "FROM observations " .
-	        "JOIN instruments on observations.instrumentid=instruments.id " .
-					"JOIN objects on observations.objectname=objects.name " .
-					"JOIN locations on observations.locationid=locations.id " .
-					"JOIN objectnames on observations.objectname=objectnames.objectname " .
-					"JOIN observers on observations.observerid=observers.id WHERE ";
-
-    $sql2 = "SELECT DISTINCT observations.id as id, 
+	          "JOIN instruments on observations.instrumentid=instruments.id " .
+  					"JOIN objects on observations.objectname=objects.name " .
+	  				"JOIN locations on observations.locationid=locations.id " .
+		  			"JOIN objectnames on observations.objectname=objectnames.objectname " .
+			  		"JOIN observers on observations.observerid=observers.id WHERE ";
+    $sql2 = "SELECT DISTINCT observations.id as observationid, 
 		                         observations.objectname as objectname, 
 														 observations.date as observationdate, 
 					  								 observations.description as observationdescription, 
+														 observers.id as observerid,
 														 CONCAT(observers.firstname , ' ' , observers.name) as observername,
+														 CONCAT(observers.name , ' ' , observers.firstname) as observersortname,
 														 objects.con as objectconstellation, 
 														 instruments.id as instrumentid,
 														 instruments.name as instrumentname,
-														 instruments.diameter as instrumentdiameter
+														 instruments.diameter as instrumentdiameter,
+														 CONCAT(instruments.diameter,' ',instruments.name) as instrumentsort
 														 ";
-    if (isset($sort) && ($sort != ""))
-    {
-      if ($sort=="instrumentid")
-      $sql2 .= ",instruments.diameter AS A, instruments.id AS B ";
-      else if (isset($sort) && ($sort == "observerid"))
-      $sql2 .= ",observers.name AS A, observers.firstname AS B ";
-      else if (isset($sort) && ($sort != "id") && ($sort!="objectname"))
-      $sql2 .= ",$sort AS A ";
-    }
     $sql2.= "FROM observations " .
 	        "JOIN objectpartof on objectpartof.objectname=observations.objectname " .
 	        "JOIN instruments on observations.instrumentid=instruments.id " .
@@ -282,22 +269,18 @@ class Observations
     if (isset($queries["observer"]) && ($queries["observer"] != ""))
     $sqland .= " AND observations.observerid = \"" . $queries["observer"] . "\" ";
     if (isset($queries["instrument"]) && ($queries["instrument"] != ""))
-    {
-      $sqland .= "AND (observations.instrumentid = \"" . $queries["instrument"] . "\" ";
+    { $sqland .= "AND (observations.instrumentid = \"" . $queries["instrument"] . "\" ";
       if(!$exactinstrumentlocation == 1)
-      {
-        $insts = $instruments->getAllInstrumentsIds($queries["instrument"]);
+      { $insts = $instruments->getAllInstrumentsIds($queries["instrument"]);
         while(list($key,$value)=each($insts))
         $sqland .= " || observations.instrumentid = \"" . $value . "\" ";
       }
       $sqland .= ") ";
     }
     if (isset($queries["eyepiece"]) && ($queries["eyepiece"] != ""))
-    {
-      $sqland .= "AND (observations.eyepieceid = \"" . $queries["eyepiece"] . "\" ";
+    { $sqland .= "AND (observations.eyepieceid = \"" . $queries["eyepiece"] . "\" ";
       if(!$exactinstrumentlocation)
-      {
-        $eyeps = $eyepieces->getAllEyepiecesIds($queries["eyepiece"]);
+      { $eyeps = $eyepieces->getAllEyepiecesIds($queries["eyepiece"]);
         while(list($key,$value)=each($eyeps))
         $sqland .= " || observations.eyepieceid = \"" . $value . "\" ";
       }
@@ -399,53 +382,34 @@ class Observations
       $sqland .= " AND (" . substr($extra2,3) . ") ";
     }
     $sql = "(" . $sql1 . substr($sqland,4);
-		
-    if(array_key_exists('object',$queries)&&($queries["object"]!="")&&(array_key_exists('languages',$queries)))
+    if(array_key_exists('object',$queries)&&($queries["object"]!="")&&(!array_key_exists('countquery',$queries)))
       $sql =  $sql . ") UNION (" . $sql2 . substr($sqland,4);
-    $sql = $sql . ")";
-    if (isset($sort) && ($sort != ""))
-    {
-      if ($sort=="instrumentid")
-      $sql .= " ORDER BY A " . $sortdirection . ", B " . $sortdirection . ", id DESC";
-      else if (isset($sort) && ($sort == "observerid"))
-      $sql .= " ORDER BY A " . $sortdirection . ", B " . $sortdirection . ", id DESC";
-      else if (isset($sort) && ($sort != "id") && ($sort!="objectname"))
-      $sql .= " ORDER BY A " . $sortdirection . ", id DESC";
-      else if (isset($sort) && ($sort=="objectname"))
-      $sql .= " ORDER BY $sort " . $sortdirection . ", id DESC";
-      else
-      $sql .= " ORDER BY $sort " . $sortdirection;
-    }
+    $sql .= ")";
+		if(!array_key_exists('countquery',$queries))
+		  $sql .= " ORDER BY observationid DESC"; 
     $sql = $sql.";";
  //echo $sql.'<p>';
     $run = mysql_query($sql) or die(mysql_error());
-		if(array_key_exists('languages',$queries))
+		if(!array_key_exists('countquery',$queries))
 		{ $j=0;
 		  while($get = mysql_fetch_object($run))
       {
         if($seenpar != "D")
         {
           $sql = "SELECT COUNT(observations.id) AS cnt " .
-  		         "FROM observations " .
-  				  	 "WHERE objectname = \"". $get->objectname ."\" " .
-  					   "AND observerid = \"" . $_SESSION['deepskylog_id'] . "\"";
+  		           "FROM observations " .
+  				  	   "WHERE objectname = \"". $get->objectname ."\" " .
+  					     "AND observerid = \"" . $_SESSION['deepskylog_id'] . "\"";
           $run2 = mysql_query($sql) or die(mysql_error());
           $get2 = mysql_fetch_object($run2);
           if ($get2->cnt > 0) // object has been seen by the observer logged in
-          $seentype="Y";
+            $seentype="Y";
           else
-          $seentype="X";
+            $seentype="X";
         }
         if(($seenpar == "D")||($seenpar == $seentype))
-				{ $result[$j]['observationid']=$get->id;
-				  $result[$j]['objectname']=$get->objectname;
-				  $result[$j]['observationdescription']=$get->observationdescription;
-				  $result[$j]['observationdate']=$get->observationdate;
-				  $result[$j]['observername']=$get->observername;
-				  $result[$j]['objectconstellation']=$get->objectconstellation;
-				  $result[$j]['instrumentid']=$get->instrumentid;
-				  $result[$j]['instrumentname']=$get->instrumentname;
-				  $result[$j]['instrumentdiameter']=$get->instrumentdiameter;
+				{ while(list($key,$value) = each($get))
+				    $result[$j][$key]=$value;
           $j++;
 				}
       }
@@ -575,37 +539,20 @@ class Observations
   {
     include "setup/databaseInfo.php";
     $observers = new Observers;
-    $extra = $observers->getObserversFromClub($club);
-
     $db = new database;
     $db->login();
-
-    if ($extra != "")
-    {
-      $sql = "SELECT * FROM observations ".$extra." AND visibility != 7 ";
-    }
-    else
-    {
-      $sql = "SELECT * FROM observations WHERE visibility != 7 ";
-    }
+    $sql = "SELECT * FROM observations WHERE visibility != 7 ";
     $run = mysql_query($sql) or die(mysql_error());
-
     while($get = mysql_fetch_object($run))
-    {
       $observations[] = $get->observerid;
-    }
     $db->logout();
-
     if ($observations)
-    {
-      $numberOfObservations = array_count_values ($observations);
+    { $numberOfObservations = array_count_values ($observations);
       arsort($numberOfObservations);
       return $numberOfObservations;
     }
     else
-    {
       return null;
-    }
   }
   // getPopularObservers() returns the number of observations of the
   // observers
@@ -614,22 +561,17 @@ class Observations
   {
     include "setup/databaseInfo.php";
     $observers = new Observers;
-    $extra = $observers->getObserversFromClub($club);
-
     $db = new database;
     $db->login();
-
     if($sort=="jaar")
-    {
-      $t = getdate();
+    { $t = getdate();
       $sql = "SELECT observations.observerid, COUNT(*) AS Cnt, observers.name " .
-	         "FROM observations " .
-					 "JOIN observers on observations.observerid = observers.id " .
-					 "WHERE observations.date > \"" . date('Ymd', strtotime('-1 year')) . "\" AND observations.visibility != \"7\" ";
+	           "FROM observations " .
+					   "JOIN observers on observations.observerid = observers.id " .
+					   "WHERE observations.date > \"" . date('Ymd', strtotime('-1 year')) . "\" AND observations.visibility != \"7\" ";
     }
     elseif($sort=="catalog")
-    {
-		  if(substr($cat,0,5)=="List:")
+    { if(substr($cat,0,5)=="List:")
         if(substr($cat,5,7)=="Public:")
 				  $sql = "SELECT observations.observerid, COUNT(DISTINCT observations.objectname) AS Cnt, observers.name " .
 	               "FROM observations " .
@@ -653,34 +595,25 @@ class Observations
 		           "WHERE objectnames.catalog=\"$cat\" AND observations.visibility != 7 ";
     }
     elseif($sort=="objecten")
-    {
-      $sql = "SELECT observations.observerid, COUNT(DISTINCT observations.objectname) AS Cnt " .
-	         "FROM observations " . 
-					 "JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 ";
+    { $sql = "SELECT observations.observerid, COUNT(DISTINCT observations.objectname) AS Cnt " .
+	           "FROM observations " . 
+				  	 "JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 ";
     }
     else
-    {
-      $sql = "SELECT observations.observerid, COUNT(*) AS Cnt " .
-	         "FROM observations " .
-					 "JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 ";
+    { $sql = "SELECT observations.observerid, COUNT(*) AS Cnt " .
+	           "FROM observations " .
+				  	 "JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 ";
     }
     $sql .= "GROUP BY observations.observerid, observers.name ";
     if ($sort=="observer")
-    {
       $sql .= "ORDER BY observers.name ASC ";
-    }
     else
-    {
       $sql .= "ORDER BY Cnt DESC, observers.name ASC ";
-    }
     $sql .=  $extra;
     $run = mysql_query($sql) or die(mysql_error());
     while($get = mysql_fetch_object($run))
-    {
       $observations[$get->observerid] = $get->Cnt;
-    }
     $db->logout();
-
     return $observations;
   }
 
@@ -702,7 +635,7 @@ class Observations
     $db = new database;
     $db->login();
     $sql = "SELECT COUNT(*) As ObsCnt FROM observations " .
-	       "WHERE observerid = \"$userid\" AND observations.objectname = \"$object\"";
+	         "WHERE observerid = \"$userid\" AND observations.objectname = \"$object\"";
     $run = mysql_query($sql) or die(mysql_error());
     $get = mysql_fetch_object($run);
     $observations = $get->ObsCnt;
@@ -2200,18 +2133,8 @@ class Observations
   }
 
   function showObservation($LOid)
-  {
-
-    global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
-    $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
-    $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL;
-
-    global $ASTER,$BRTNB,$CLANB,$DRKNB,$GALCL,$GALXY,$GLOCL,$GXADN,$GXAGC,$GACAN,$LMCCN,$LMCDN,$LMCGC,$LMCOC,$NONEX,$OPNCL,$PLNNB,
-    $SMCCN,$SMCDN,$SMCGC,$SMCOC,$SNREM,$QUASR,$AA1STAR,$AA2STAR,$AA3STAR,$AA4STAR,$AA8STAR;
-
-    global $dateformat;
-
-
+  { global $dateformat;
+		
     include_once "../lib/instruments.php";
     $instruments = new Instruments;
     include_once "../lib/observers.php";
@@ -2498,17 +2421,17 @@ class Observations
 
   function showCompactObservationLO($value, $link, $myList = false)
   {
-    global $instruments, $observers, $observer, $dateformat;
-
+    global $observers, $dateformat;
+/*
     global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
     $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
     $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL;
-
+*/
 		global $objInstrument;
 		global $objObject;
 		global $objObserver;
     $object = $value['objectname'];
-    $observer = $value['observername'];
+    $observer = $value['observerid'];
     $temp = $value['instrumentid'];
 		$instrument = $value['instrumentname'];
     $instrumentsize = round($value['instrumentdiameter'], 0);
@@ -2580,8 +2503,8 @@ class Observations
     $con = $value['objectconstellation'];
     echo("<tr class=\"type2\">\n
          <td><a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">$object</a></td>\n
-    <td> " . $$con . "</td>\n
-        <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . $objObserver->getFirstName($observer) . "&nbsp;" . $objObserver->getObserverName($observer) . "</a></td>\n
+    <td> " . $GLOBALS[$con] . "</td>\n
+        <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" .$value['observername'] . "</a></td>\n
         <td><a href=\"common/detail_instrument.php?instrument=" . $temp . "\">$instrument &nbsp;"
     );
     if($instrument != InstrumentsNakedEye)
@@ -2733,14 +2656,8 @@ class Observations
 
   function ShowCompactObservation($value, $link, $myList = false)
   {
-    global $instruments, $observer, $dateformat, $objObserver;
+    global $dateformat, $objObserver;
 
-    global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
-    $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
-    $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL;
-
-    include_once "../lib/instruments.php";
-    $instruments = new Instruments;
     include_once "objects.php";
     $objects = new Objects;
 
@@ -2748,7 +2665,7 @@ class Observations
     // OBJECT
     $object = $value['objectname'];
     // OBSERVER
-    $observer = $value['observername'];
+    $observer = $value['observerid'];
     // INSTRUMENT
     $temp = $value['instrumentid'];
     $instrument = $value['instrumentname'];
@@ -2772,8 +2689,8 @@ class Observations
     $con = $objects->getConstellation($object);
     echo("<tr class=\"type2\">\n
          <td><a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">$object</a></td>\n
-    <td> " . $$con . "</td>\n
-         <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . $objObserver->getFirstName($observer) . "&nbsp;" . $objObserver->getObserverName($observer) . "</a></td>\n
+    <td> " . $GLOBALS[$con] . "</td>\n
+         <td><a href=\"common/detail_observer.php?user=" . $value['observerid'] . "\">" . $value['observername'] . "</a></td>\n
          <td><a href=\"common/detail_instrument.php?instrument=" . $temp . "\">$instrument &nbsp;"
     );
     if($instrument != InstrumentsNakedEye)
@@ -2883,29 +2800,17 @@ class Observations
   }
 
   function showOverviewObservation($value, $count, $link, $myList = false)
-  {
-    global $instruments, $observers, $observer, $dateformat;
-
-    global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
-    $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
-    $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL;
+  { global $dateformat;
 
     global $objInstrument;
 		global $objObject;
 		global $objObserver;
 
-    if ($count % 2)
-    {
-      $typefield = "class=\"type1\"";
-    }
-    else
-    {
-      $typefield = "class=\"type2\"";
-    }
+    $typefield = "class=\"type" . (2-($count%2)) . "\"";
     // OBJECT
     $object = $value['objectname'];
     // OBSERVER
-    $observer = $value['observername'];
+    $observer = $value['observerid'];
     // INSTRUMENT
     $temp = $value['instrumentid'];
     $instrument = $value['instrumentname'];
@@ -2918,8 +2823,8 @@ class Observations
     $con = $objObject->getConstellation($object);
     echo("<tr $typefield>\n
     <td><a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">$object</a></td>\n
-    <td> " . $$con . "</td>\n
-         <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . $objObserver->getFirstName($observer) . "&nbsp;" . $objObserver->getObserverName($observer) . "</a></td>\n
+    <td> " . $GLOBALS[$con] . "</td>\n
+         <td><a href=\"common/detail_observer.php?user=" . $value['observerid'] . "\">" . $value['observername'] . "</a></td>\n
          <td><a href=\"common/detail_instrument.php?instrument=" . $temp . "\">$instrument &nbsp;"
     );
     if($instrument != InstrumentsNakedEye)

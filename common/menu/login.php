@@ -18,7 +18,7 @@ if ((!(array_key_exists('deepskylog_id', $_SESSION))) ||
   echo (LangLoginMenuTitle);
   echo "</th>\n</tr>\n<tr>\n<td>\n
       <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-  echo "<form action=\"common/control/check_login.php\" method=\"post\">";
+  echo "<form action=\"../common/control/check_login.php\" method=\"post\">";
   echo "<tr align=\"left\">\n<td>";
   echo (LangLoginMenuItem1);
   echo ("\n<br></br>\n
