@@ -1,18 +1,8 @@
 <?php
 
-include_once "../lib/lists.php";
-include_once "../lib/observers.php";
-include_once "../lib/objects.php";
-include_once "../common/control/ra_to_hms.php";
-include_once "../common/control/dec_to_dm.php";
-
-$list = new Lists;
-$observer = new Observers;
-$objects = new Objects;
-
 global $baseURL;
 
-if(($list->checkList($_SESSION['listname'])==2) && ($_SESSION['listname']<>"----------"))
+if(($objList->checkList($_SESSION['listname'])==2) && ($_SESSION['listname']<>"----------"))
  $listname=$_SESSION['listname'];	
 else
   $listname='';
@@ -24,33 +14,33 @@ if(array_key_exists('listnameMessage',$_GET) && $_GET['listnameMessage'])
 	echo "<hr>";
 }
 
-if(array_key_exists('emptyList',$_GET) && ($list->checkList($listname)==2))
+if(array_key_exists('emptyList',$_GET) && ($objList->checkList($listname)==2))
 {
-  $list->emptyList($listname);
+  $objList->emptyList($listname);
   echo LangToListEmptied . $listname_ss . ".";
-	$_SESSION['QOL'] = $list->getObjectsFromList($_SESSION['listname']);
+	$_SESSION['QOL'] = $objList->getObjectsFromList($_SESSION['listname']);
 	echo "<hr>";
 }
 
 if(array_key_exists('ObjectDownInList',$_GET) && $_GET['ObjectDownInList'] && $listname)
 {
-	$list->ObjectDownInList($_GET['ObjectDownInList']);
-	$_SESSION['QOL'] = $list->getObjectsFromList($_SESSION['listname']);
+	$objList->ObjectDownInList($_GET['ObjectDownInList']);
+	$_SESSION['QOL'] = $objList->getObjectsFromList($_SESSION['listname']);
   echo LangToListMoved1 . $_GET['ObjectDownInList'] . LangToListMoved3 . "<a href=\"deepsky/index.php?indexAction=listaction&manage=manage\">" . $listname_ss . "</a>.";
 	echo "<HR>";
 }
 
 if(array_key_exists('ObjectUpInList',$_GET) && $_GET['ObjectUpInList'] && $listname)
 { 
-	$list->ObjectUpInList($_GET['ObjectUpInList']);
-	$_SESSION['QOL'] = $list->getObjectsFromList($_SESSION['listname']);
+	$objList->ObjectUpInList($_GET['ObjectUpInList']);
+	$_SESSION['QOL'] = $objList->getObjectsFromList($_SESSION['listname']);
   echo LangToListMoved1 . $_GET['ObjectUpInList'] . LangToListMoved2 . "<a href=\"deepsky/index.php?indexAction=listaction&manage=manage\">" . $listname_ss . "</a>.";
 	echo "<HR>";
 }
 
 if(array_key_exists('ObjectToPlaceInList',$_GET) && $_GET['ObjectToPlaceInList'] && $listname)
 { 
-	$list->ObjectFromToInList($_GET['ObjectFromPlaceInList'],$_GET['ObjectToPlaceInList']);
+	$objList->ObjectFromToInList($_GET['ObjectFromPlaceInList'],$_GET['ObjectToPlaceInList']);
 	$_SESSION['QOL'] = $list->getObjectsFromList($_SESSION['listname']);
   echo LangToListMoved7 . $_GET['ObjectToPlaceInList'] . ".";
 	echo "<HR>";
@@ -58,8 +48,8 @@ if(array_key_exists('ObjectToPlaceInList',$_GET) && $_GET['ObjectToPlaceInList']
 
 if(array_key_exists('removeObjectFromList',$_GET) && $_GET['removeObjectFromList'] && $listname)
 {
-	$list->removeObjectFromList($_GET['removeObjectFromList']);
-	$_SESSION['QOL'] = $list->getObjectsFromList($_SESSION['listname']);
+	$objList->removeObjectFromList($_GET['removeObjectFromList']);
+	$_SESSION['QOL'] = $objList->getObjectsFromList($_SESSION['listname']);
   echo LangToListMoved1 . "<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($_GET['removeObjectFromList']) . "\">" . $_GET['removeObjectFromList'] . "</a>" . LangToListObjectRemoved . "<a href=\"deepsky/index.php?indexAction=listaction&manage=manage\">" . $listname_ss . "</a>.";
 	echo "<HR>";
 }
@@ -75,10 +65,10 @@ if(array_key_exists('removePageObjectsFromList',$_GET) && $_GET['removePageObjec
 		$count=$min;
 	  while(($count<($min+25)) && ($count<count($_SESSION['QOL'])))
 	  {
-		  $list->removeObjectFromList($_SESSION['QOL'][$count][0],$_SESSION['QOL'][$count][4]);
+		  $objList->removeObjectFromList($_SESSION['QOL'][$count][0],$_SESSION['QOL'][$count][4]);
 		  $count++;
     }
-	  $_SESSION['QOL'] = $list->getObjectsFromList($_SESSION['listname']);
+	  $_SESSION['QOL'] = $objList->getObjectsFromList($_SESSION['listname']);
     echo LangToListPageRemoved;
 	  echo "<HR>";
 	}
@@ -113,7 +103,7 @@ if($_SESSION['listname']<>"----------")
 	else
 	  $sort="objectplace";
 	if(!array_key_exists('QOL',$_SESSION))
-	  $_SESSION['QOL'] = $list->getObjectsFromList($_SESSION['listname']);
+	  $_SESSION['QOL'] = $objList->getObjectsFromList($_SESSION['listname']);
 	echo "<table>";
 	echo "<tr>";
 	echo "<td>";
@@ -155,7 +145,7 @@ if($_SESSION['listname']<>"----------")
       $previous = $sort;
     }
   
-    $_SESSION['QOL'] = $objects->sortObjects($_SESSION['QOL'], $sort, $reverse);
+    $_SESSION['QOL'] = $objObject->sortObjects($_SESSION['QOL'], $sort, $reverse);
   	
     $link = "deepsky/index.php?indexAction=listaction&amp;sort=$sort&amp;";
     if(array_key_exists('min',$_GET))
@@ -163,7 +153,7 @@ if($_SESSION['listname']<>"----------")
   	else
   	  $min = '';
   
-    list($min, $max) = $util->printNewListHeader($_SESSION['QOL'], $link, $min, 25, "");	
+    list($min, $max) = $objUtil->printNewListHeader($_SESSION['QOL'], $link, $min, 25, "");	
   
     // OUTPUT RESULT
     echo "<table width=\"100%\">\n";
@@ -174,7 +164,7 @@ if($_SESSION['listname']<>"----------")
     echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=listaction&sort=mag&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader3) . "\">".LangOverviewObjectsHeader3."</a></td>\n";
     echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=listaction&sort=subr&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader3b) . "\">".LangOverviewObjectsHeader3b."</a></td>\n";
     echo "<td><a href=\"deepsky/index.php?indexAction=listaction&sort=type&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader4) . "\">".LangOverviewObjectsHeader4."</a></td>\n";
-    echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=listaction&sort=atlas" . $objAtlas->atlasCodes[$observer->getStandardAtlasCode($_SESSION['deepskylog_id'])] . "&amp;previous=$previous\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
+    echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=listaction&sort=atlas" . $objAtlas->atlasCodes[$objObserver->getStandardAtlasCode($_SESSION['deepskylog_id'])] . "&amp;previous=$previous\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
     echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=listaction&sort=contrast&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldContrastReserve) . "\">". LangViewObjectFieldContrastReserve . "</a></td>\n";
     echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=listaction&sort=magnification&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldMagnification) . "\">". LangViewObjectFieldMagnification . "</a></td>\n";
     echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=listaction&sort=seen&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader7) . "\">".LangOverviewObjectsHeader7."</a></td>\n";
@@ -206,10 +196,10 @@ if($_SESSION['listname']<>"----------")
       $sb = sprintf("%01.1f", $_SESSION['QOL'][$count][6]);
       if($sb == 99.9)
         $sb = "&nbsp;&nbsp;-&nbsp;";
-      $ra = RAToString($_SESSION['QOL'][$count][7]);
+      $ra = raToString($_SESSION['QOL'][$count][7]);
       $decl = decToStringDegMin($_SESSION['QOL'][$count][8]);
   
-      $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
+      $atlas = $objObserver->getStandardAtlasCode($_SESSION['deepskylog_id']);
       $page = $_SESSION['QOL'][$count][$atlas];  
       $seen="<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($name) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
       if(substr($_SESSION['QOL'][$count][3],0,1)=="X")
@@ -257,7 +247,7 @@ if($_SESSION['listname']<>"----------")
     echo "</table>\n";
     echo("<hr>");
   
-    list($min, $max) = $util->printListHeader($_SESSION['QOL'], $link, $min, 25, "");
+    list($min, $max) = $objUtil->printListHeader($_SESSION['QOL'], $link, $min, 25, "");
     echo "<a href=\"\"
                  onclick=\"thetitle = prompt(" . LangListQueryObjectsMessage14 . ",'" . $listname_ss . "');
 								           location.href='".$baseURL."deepsky/objects.pdf?SID=QOL&amp;pdfTitle='+thetitle+''

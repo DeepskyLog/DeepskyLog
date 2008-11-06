@@ -652,8 +652,7 @@ class Objects
  }
  
  function getSeen($object)
- {
-   $db = new database;
+ { $db = new database;
    $db->login();
 
    $seen='-';

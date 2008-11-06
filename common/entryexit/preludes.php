@@ -18,6 +18,8 @@ require_once "../lib/util.php";
 require_once "../lib/atlasses.php";
 require_once "../lib/instruments.php";
 require_once "../common/layout/tables.php";
+require_once "../common/control/ra_to_hms.php";
+require_once "../common/control/dec_to_dm.php";
 
 
 // pagenumbers

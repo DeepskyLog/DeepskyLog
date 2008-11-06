@@ -218,7 +218,7 @@ class Observations
 														   instruments.id as instrumentid,
 															 instruments.name as instrumentname,
 															 instruments.diameter as instrumentdiameter,
-  														 CONCAT(instruments.diameter,' ',instruments.name) as instrumentsort
+  														 CONCAT(10000+instruments.diameter,' mm ',instruments.name) as instrumentsort
 															 ";
     else
 		  $sql1 = "SELECT count(DISTINCT observations.id) as ObsCnt ";
@@ -239,7 +239,7 @@ class Observations
 														 instruments.id as instrumentid,
 														 instruments.name as instrumentname,
 														 instruments.diameter as instrumentdiameter,
-														 CONCAT(instruments.diameter,' ',instruments.name) as instrumentsort
+														 CONCAT(10000+instruments.diameter,' mm ',instruments.name) as instrumentsort
 														 ";
     $sql2.= "FROM observations " .
 	        "JOIN objectpartof on objectpartof.objectname=observations.objectname " .
