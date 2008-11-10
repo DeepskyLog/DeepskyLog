@@ -8,11 +8,10 @@ if (!function_exists('fnmatch'))
 }
 
 if(!session_id()) session_start();
+require_once "../lib/setup/databaseInfo.php";
 if(!array_key_exists('module',$_SESSION) || !$_SESSION['module'])
   $_SESSION['module'] = $modules[0];
-
 require_once "../lib/setup/vars.php";
-require_once "../lib/setup/databaseInfo.php";
 require_once "../lib/setup/language.php";
 require_once "../lib/util.php";
 require_once "../lib/atlasses.php";
@@ -21,6 +20,8 @@ require_once "../common/layout/tables.php";
 require_once "../common/control/ra_to_hms.php";
 require_once "../common/control/dec_to_dm.php";
 
+$db1 = new database;
+$db1->login();
 
 // pagenumbers
 if(array_key_exists('min',$_GET))

@@ -609,7 +609,6 @@ class Observations
       $sql .= "ORDER BY observers.name ASC ";
     else
       $sql .= "ORDER BY Cnt DESC, observers.name ASC ";
-    $sql .=  $extra;
     $run = mysql_query($sql) or die(mysql_error());
     while($get = mysql_fetch_object($run))
       $observations[$get->observerid] = $get->Cnt;
@@ -777,25 +776,13 @@ class Observations
   // getNumberOfObservations() returns the total number of observations
   function getNumberOfDsObservations()
   {
-    include "setup/databaseInfo.php";
+   include "setup/databaseInfo.php";
     include_once "observers.php";
-
     $observers = new Observers;
-    $extra = $observers->getObserversFromClub($club);
-
     $db = new database;
     $db->login();
-    if ($extra != "")
-    {
-      $sql = "SELECT COUNT(objectname) FROM observations ".$extra." AND visibility != 7 ";
-    }
-    else
-    {
-      $sql = "SELECT COUNT(objectname) FROM observations WHERE visibility != 7 ";
-    }
-
+    $sql = "SELECT COUNT(objectname) FROM observations WHERE visibility != 7 ";
     $run = mysql_query($sql) or die(mysql_error());
-
     return mysql_result($run, 0, 0);
   }
 

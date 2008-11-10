@@ -1,6 +1,6 @@
 <?php
 
-$entryMessage=''
+$entryMessage='';
 
 if(array_key_exists('addObservationToList',$_GET) && $_GET['addObservationToList'] && $myList)
 { $objList->addObservationToList($_GET['addObservationToList']);

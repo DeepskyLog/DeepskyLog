@@ -36,7 +36,14 @@ echo "</tr>";
 echo "</table>";
 echo "</td>";        
 }
-
+function tableMenuItem($link, $menuItem)
+{
+echo "<tr align=\"center\" height=\"25px\">";
+echo "<td>";
+echo "<a href=\"".$link."\" class=\"mainlevel\">".$menuItem."</a>";
+echo "</td>";
+echo "</tr>";
+}
 
 // Older designs
 function tableSortHeader1($header0, $link0)
