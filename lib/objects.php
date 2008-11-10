@@ -1117,12 +1117,9 @@ function getObjectsFromCatalog($cat)
 
  // getExactObject returns the exact name of an object
  function getExactDsObject($value, $cat='', $catindex='')
- {
-  $db = new database;
-  $db->login();
-	$value2=trim($value);
-	$value=strtoupper(trim($value));
-  if($value!='')
+ { $value2=trim($value);
+	 $value=strtoupper(trim($value));
+   if($value!='')
     $sql = "SELECT objectnames.objectname FROM objectnames " .
 		  	   "WHERE UPPER(altname) = \"$value\" " .
 					 "OR altname = \"$value2\"";
@@ -1131,10 +1128,7 @@ function getObjectsFromCatalog($cat)
     $sql = "SELECT objectnames.objectname FROM objectnames " .
 		       "WHERE objectnames.catalog = \"$cat\" AND objectnames.catindex = \"$catindex\"";
 	}
-	$run = mysql_query($sql) or die(mysql_error());
-  $db->logout();
-	if($get = mysql_fetch_object($run))
-    return $get->objectname;
+	return $GLOBALS['objDatabase']->selectSingleValue($sql,'objectname','');
  }
 
  // getSurfaceBrightness returns the surface brightness of the object
@@ -2338,27 +2332,15 @@ function getPartOfNames($name)
  }
  
  function getOtherObjects($objectname, $dist)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT objects.ra, objects.decl FROM objects WHERE name = \"$objectname\"";
-  $run = mysql_query($sql) or die(mysql_error());
-	$get = mysql_fetch_object($run);
-	$ra = $get->ra;
-	$decl = $get->decl;
-	$dra = 0.0011 * $dist / cos($decl/180*3.1415926535);
-
-  $sql = "SELECT objects.name FROM objects " .
-	       "WHERE ((objects.ra > $ra - $dra) AND (objects.ra < $ra + $dra) " .
-				 "AND (objects.decl > $decl - ($dist/60)) AND (objects.decl < $decl + ($dist/60)))";
-  $run = mysql_query($sql) or die(mysql_error());
-  $db->logout();
-	$result = array();
-	$i=0;
-  while($get = mysql_fetch_object($run))
-	  $result[$get->name] = array($i++, $get->name);
-	return $result;
+ { $run=$GLOBALS['objDatabase']->selectRecordset("SELECT objects.ra, objects.decl FROM objects WHERE name = \"$objectname\"");
+   $get = mysql_fetch_object($run);
+	 $ra = $get->ra; $decl = $get->decl;
+	 $dra = 0.0011 * $dist / cos($decl/180*3.1415926535);
+   $run = $GLOBALS['objDatabase']->selectRecordset("SELECT objects.name FROM objects WHERE ((objects.ra > $ra - $dra) AND (objects.ra < $ra + $dra) AND (objects.decl > $decl - ($dist/60)) AND (objects.decl < $decl + ($dist/60)))");
+	 $result = array(); $i=0;
+   while($get = mysql_fetch_object($run))
+	   $result[$get->name] = array($i++, $get->name);
+	 return $result;
  } 
 }
 

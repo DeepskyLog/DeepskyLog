@@ -36,13 +36,12 @@ class util
   	return 'content/selected_observations2.php';
   }
   private function utilitiesCheckIndexActionDSquickPick()
-  { if (array_key_exists('indexAction',$_GET) && ($_GET['indexAction'] == 'quickpick'))
+  { if(array_key_exists('indexAction',$_GET)&&($_GET['indexAction'] == 'quickpick'))
     { $indexAction='quickpick';
       $objects = $GLOBALS['objObject'];
       $temp = $objects->getExactDsObject($_GET['object']);
       if($temp)
-      {
-    	  $_GET['object'] = $temp[0];
+      { $_GET['object'] = $temp;
         if(array_key_exists('searchObservations', $_GET))
           return 'content/selected_observations2.php';  
         elseif(array_key_exists('newObservation', $_GET))
@@ -51,8 +50,7 @@ class util
           return 'content/view_object.php';  
       }
       else
-      {
-    	  $_SID=time();
+      { $_SID=time();
     		$_GET['SID']=$_SID;
     	  $_GET['catNumber']=ucwords(trim($_GET['object']));
         return 'content/setup_objects_query.php';  	

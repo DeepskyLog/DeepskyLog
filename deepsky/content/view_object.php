@@ -2,23 +2,12 @@
 // view_object.php
 // view all information of one object 
 
-include_once "../lib/setup/language.php";
-include_once "../lib/util.php";
-include_once "../lib/objects.php";
-include_once "../lib/lists.php";
-
-$util = new Util();
-$util->checkUserInput();
-$objects = new Objects; 
-$list = new Lists;
-
-if(array_key_exists('listname',$_SESSION) && ($list->checkList($_SESSION['listname'])==2)) $myList=True; else $myList = False;
 if(array_key_exists('min',$_GET) && $_GET['min']) $min=$_GET['min']; else $min=0;
 $_SID='QOO';
 
 if(!$_GET['object']) // no object defined in url 
   header("Location: ../index.php");
-if($objects->getDsObjectName($_GET['object'])) // check whether object exists
+if($objObject->getDsObjectName($_GET['object'])) // check whether object exists
 {
   if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
   {
@@ -26,54 +15,54 @@ if($objects->getDsObjectName($_GET['object'])) // check whether object exists
   	{
     	if($_GET['newaction']=="NewName")
   	  {
-  	    $objects->newName($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
+  	    $objObject->newName($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
   		  $_GET['object'] = trim($_GET['newcatalogue'] . " " . ucwords(trim($_GET['newnumber'])));
       }	
     	if($_GET['newaction']=="NewAltName")
-  	    $objects->newAltName($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
+  	    $objObject->newAltName($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
     	if($_GET['newaction']=="RemoveAltNameName")
-  	    $objects->removeAltName($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
+  	    $objObject->removeAltName($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
     	if($_GET['newaction']=="NewPartOf")
-  	    $objects->newPartOf($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
+  	    $objObject->newPartOf($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
     	if($_GET['newaction']=="RemovePartOf")
-  	    $objects->removePartOf($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
+  	    $objObject->removePartOf($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
     	if($_GET['newaction']=="RemoveAndReplaceObjectBy")
   	  {
-  	    $objects->removeAndReplaceObjectBy($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
+  	    $objObject->removeAndReplaceObjectBy($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
   		  $_GET['object'] = trim($_GET['newcatalog'] . " " . ucwords(trim($_GET['newnumber'])));
   	  }			
     	if($_GET['newaction']=="LangObjectSetRA")
-  	    $objects->setRA($_GET['object'], $_GET['newnumber']);
+  	    $objObject->setRA($_GET['object'], $_GET['newnumber']);
     	if($_GET['newaction']=="LangObjectSetDECL")
-  	    $objects->setDeclination($_GET['object'], $_GET['newnumber']);
+  	    $objObject->setDeclination($_GET['object'], $_GET['newnumber']);
     	if($_GET['newaction']=="LangObjectSetCon")
-  	    $objects->setConstellation($_GET['object'], $_GET['newnumber']);
+  	    $objObject->setConstellation($_GET['object'], $_GET['newnumber']);
     	if($_GET['newaction']=="LangObjectSetType")
-  	    $objects->setDsObjectType($_GET['object'], $_GET['newnumber']);
+  	    $objObject->setDsObjectType($_GET['object'], $_GET['newnumber']);
     	if($_GET['newaction']=="LangObjectSetMag")
-  	    $objects->setMagnitude($_GET['object'], $_GET['newnumber']);
+  	    $objObject->setMagnitude($_GET['object'], $_GET['newnumber']);
      	if($_GET['newaction']=="LangObjectSetSUBR")
-  	    $objects->setSurfaceBrightness($_GET['object'], $_GET['newnumber']);
+  	    $objObject->setSurfaceBrightness($_GET['object'], $_GET['newnumber']);
      	if($_GET['newaction']=="LangObjectSetDiam1")
-  		  $objects->setDiam1($_GET['object'], $_GET['newnumber']);
+  		  $objObject->setDiam1($_GET['object'], $_GET['newnumber']);
      	if($_GET['newaction']=="LangObjectSetDiam2")
-  		  $objects->setDiam2($_GET['object'], $_GET['newnumber']);
+  		  $objObject->setDiam2($_GET['object'], $_GET['newnumber']);
      	if($_GET['newaction']=="LangObjectSetPA")
-  		  $objects->setPositionAngle($_GET['object'], $_GET['newnumber']);
+  		  $objObject->setPositionAngle($_GET['object'], $_GET['newnumber']);
   	}
   }
 	if(array_key_exists('editListObjectDescription',$_GET) && $_GET['editListObjectDescription'])
-  { $list->setListObjectDescription($_GET['object'], $_GET['description']);
+  { $objList->setListObjectDescription($_GET['object'], $_GET['description']);
 	}
   if(array_key_exists('addObjectToList',$_GET) && $_GET['addObjectToList'] && $myList)
   {
-  	$list->addObjectToList($_GET['addObjectToList'], $_GET['showname']);
+  	$objList->addObjectToList($_GET['addObjectToList'], $_GET['showname']);
     echo "The object <a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['addObjectToList']) . "\">" . $_GET['showname'] . "</a> is added to the list <a href=\"deepsky/index.php?indexAction=listaction&amp;manage=manage\">" . $_SESSION['listname'] . "</a>.";
   	echo "<HR>";
   }
   if(array_key_exists('removeObjectFromList',$_GET) && $_GET['removeObjectFromList'] && $myList)
   {
-  	$list->removeObjectFromList($_GET['removeObjectFromList']);
+  	$objList->removeObjectFromList($_GET['removeObjectFromList']);
     echo "The object <a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['removeObjectFromList']) . "\">" . $_GET['removeObjectFromList'] . "</a> is removed from the list <a href=\"deepsky/index.php?indexAction=listaction&amp;manage=manage\">" . $_SESSION['listname'] . "</a>.";
   	echo "<HR>";
   }
@@ -82,7 +71,7 @@ if($objects->getDsObjectName($_GET['object'])) // check whether object exists
 	  $count=0;
   	while(($count<($min+25)) && ($count<count($_SESSION[$_SID])))
 	  {
-		  $list->addObjectToList($_SESSION[$_SID][$count][0],$_SESSION[$_SID][$count][4]);
+		  $objList->addObjectToList($_SESSION[$_SID][$count][0],$_SESSION[$_SID][$count][4]);
 		  $count++;
     }
 	echo "The objects have been added to the list <a href=\"deepsky/index.php?indexAction=listaction&amp;manage=manage\">" .  $_SESSION['listname'] . "</a>.";
@@ -93,7 +82,7 @@ if($objects->getDsObjectName($_GET['object'])) // check whether object exists
 	
   // SEEN
   $seen = "<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($_GET['object']) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
-  $seenDetails = $objects->getSeen($_GET['object']);
+  $seenDetails = $objObject->getSeen($_GET['object']);
   if(substr($seenDetails,0,1)=="X") // object has been seen already
   {
     $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($_GET['object']) . "\" title=\"" . LangObjectXSeen . "\">" . $seenDetails . "</a>";
@@ -119,7 +108,7 @@ if($objects->getDsObjectName($_GET['object'])) // check whether object exists
 	if($myList)
 	{
     echo("<td width=\"25%\" align=\"center\">");
-    if($list->checkObjectInMyActiveList($_GET['object']))
+    if($objList->checkObjectInMyActiveList($_GET['object']))
       echo("<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['object']) . "&amp;removeObjectFromList=" . urlencode($_GET['object']) . "\">" . $_GET['object'] . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "</a>");
     else
       echo("<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['object']) . "&amp;addObjectToList=" . urlencode($_GET['object']) . "&amp;showname=" . urlencode($_GET['object']) . "\">" . $_GET['object'] . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>");
@@ -131,12 +120,12 @@ if($objects->getDsObjectName($_GET['object'])) // check whether object exists
 	
 	if(array_key_exists('zoom',$_GET) && $_GET['zoom']) $zoom=$_GET['zoom'];
   else $zoom=30;
-	$objects->showObject($_GET['object'], $zoom);
-	if(!array_key_exists('QOO',$_SESSION))
-	{
-	  $_SESSION[$_SID] = $objects->getOtherObjects($_GET['object'], $zoom);
-    $_SESSION[$_SID] = $objects->getSeenObjectDetails($_SESSION[$_SID]);
-	}
+	$objObject->showObject($_GET['object'], $zoom);
+//	if(!array_key_exists('QOO',$_SESSION))
+//	{
+	  $_SESSION[$_SID] = $objObject->getOtherObjects($_GET['object'], $zoom);
+    $_SESSION[$_SID] = $objObject->getSeenObjectDetails($_SESSION[$_SID]);
+//	}
 	echo("<form name=\"zoomform\" action=\"deepsky/index.php\" method=\"get\">");
 	  echo "<table width=\"100%\"><tr><td width=\"50%\">";
 		echo "<h2> " . LangViewObjectNearbyObjects . (count($_SESSION[$_SID])-1) . "</h2>";
@@ -161,7 +150,7 @@ if($objects->getDsObjectName($_GET['object'])) // check whether object exists
     // SORTING
     if($_GET['SO']) // field to sort on given as a parameter in the url
       $sort = $_GET['SO'];
-    $_SESSION[$_SID] = $objects->sortObjects($_SESSION[$_SID], $sort);
+    $_SESSION[$_SID] = $objObject->sortObjects($_SESSION[$_SID], $sort);
   }
   if(array_key_exists('RO',$_GET) && (count($_SESSION[$_SID])>1))
   {
@@ -169,7 +158,7 @@ if($objects->getDsObjectName($_GET['object'])) // check whether object exists
     // SORTING
     if($_GET['RO']) // field to sort on given as a parameter in the url
       $sort = $_GET['RO'];
-    $_SESSION[$_SID] = $objects->sortObjects($_SESSION[$_SID], $sort);
+    $_SESSION[$_SID] = $objObject->sortObjects($_SESSION[$_SID], $sort);
 	  $_SESSION[$_SID] = array_reverse($_SESSION[$_SID], false); 
   }
 
@@ -178,10 +167,10 @@ if($objects->getDsObjectName($_GET['object'])) // check whether object exists
   if($maxcount>1)
 	{
     $link = 'deepsky/index.php?indexAction=detail_object&amp;object=' . $_GET['object'] . '&amp;zoom=' . $zoom . '&amp;SID=' . $_SID;
-	  list($min, $max) = $util->printListHeader($_SESSION[$_SID], $link , $min, 25, "");
+	  list($min, $max) = $objUtil->printListHeader($_SESSION[$_SID], $link , $min, 25, "");
 	  if($max>count($_SESSION[$_SID]))
 		  $max=count($_SESSION[$_SID]);
-    $objects->showObjects($link, $_SID, $min, $max, $myList, $_GET['object']);
+    $objObject->showObjects($link, $_SID, $min, $max, $myList, $_GET['object']);
   }
 	echo "<hr>";
 
@@ -227,7 +216,7 @@ if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
 
   echo("<select name=\"newcatalogue\">\n");
   echo("<option value=\"\"></option>"); // empty field
-  $catalogs = $objects->getCatalogues(); // should be sorted
+  $catalogs = $objObject->getCatalogues(); // should be sorted
   while(list($key, $value) = each($catalogs))
   {
     echo("<option value=\"$value\">$value</option>\n");
