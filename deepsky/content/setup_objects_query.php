@@ -5,7 +5,7 @@
 if(array_key_exists('SID', $_GET) && $_GET['SID']) $_SID=$_GET['SID']; else $_SID='';
 if(array_key_exists('source',$_GET)&&($_GET['source']=='observation_query'))
 {
-  $_SESSION['QO'] = $objObject->getSeenObjectDetails($objObservation->getObjectsFromObservations($_SESSION['observation_query']),'D');
+  $_SESSION['QO'] = $objObject->getSeenObjectDetails($objObservation->getObjectsFromObservations($_SESSION['Qobs']),'D');
 	unset($_SESSION['QOP']);
   $_GET['SO']="showname"; 
   $_SID=time();

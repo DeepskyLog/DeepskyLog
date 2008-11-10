@@ -1,12 +1,10 @@
 <?php
-
 // check_login.php
 // check whether user is allowed to login 
-// version 2.0, JV 20050821
-// version 3.1, DE 20061124
 
 if(!session_id()) session_start(); // start session
 
+include_once "../../lib/database.php";
 include_once "../../lib/observers.php";
 include_once "../../lib/setup/vars.php";
 include_once "../../lib/util.php";
@@ -18,17 +16,13 @@ $obs = new Observers;
 
 $_SESSION['admin'] = "no";
 $_SESSION['deepskylog_id'] = "";
-
 if(!(array_key_exists('module',$_SESSION)))
-{
   $_SESSION['module']="deepsky";
-}
 
 if(isset($_POST['submit']))                                     // pushed submit button
 {
    if(array_key_exists('deepskylog_id', $_POST) && $_POST['deepskylog_id'] && array_key_exists('passwd', $_POST) && $_POST['passwd'])              // all fields filled in
-   {
-      // get password from form and encrypt
+   {  // get password from form and encrypt
       $login  = $_POST['deepskylog_id'];
 			$passwd = md5($_POST['passwd']);
 

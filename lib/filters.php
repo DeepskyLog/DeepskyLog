@@ -1,12 +1,6 @@
 <?php
-
 // The filters class collects all functions needed to enter, retrieve and
 // adapt filters data from the database.
-//
-// Version 3.2, WDM 20/01/2007
-
-include_once "database.php";
-include_once "setup/language.php";
 
 class Filters
 {
@@ -464,4 +458,6 @@ class Filters
   echo "</table>";
  }
 }
+
+$objFilter=new Filters;
 ?>

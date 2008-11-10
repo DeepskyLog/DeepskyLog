@@ -28,7 +28,8 @@ if(array_key_exists('atlas',$_GET) && $_GET['atlas'])
   $atlas=$_GET['atlas'];
 elseif(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
   $atlas=$objAtlas->atlasCodes[$observer->getStandardAtlasCode($_SESSION['deepskylog_id'])];
-
+else
+  $atlas="";
 
 echo("<div id=\"main\">\n");
 echo("<h2>");

@@ -823,12 +823,11 @@ class CometObservations
  {
   include "setup/databaseInfo.php";
   $observers = new Observers;
-  $extra = $observers->getObserversFromClub($club);
 
   $db = new database;
   $db->login();
 
-  $sql = "SELECT * FROM cometobservations ".$extra;
+  $sql = "SELECT * FROM cometobservations";
 
   $run = mysql_query($sql) or die(mysql_error());
 
@@ -853,12 +852,11 @@ class CometObservations
  {
   include "setup/databaseInfo.php";
   $observers = new Observers;
-  $extra = $observers->getObserversFromClub($club);
 
   $db = new database;
   $db->login();
 
-  $sql = "SELECT * FROM cometobservations".$extra;
+  $sql = "SELECT * FROM cometobservations";
   $run = mysql_query($sql) or die(mysql_error());
 
   while($get = mysql_fetch_object($run))
@@ -889,11 +887,9 @@ class CometObservations
   include_once "observers.php";
 
   $observers = new Observers;
-  $extra = $observers->getObserversFromClub($club);
-
   $db = new database;
   $db->login();
-  $sql = "SELECT COUNT(DISTINCT objectid) FROM cometobservations".$extra;
+  $sql = "SELECT COUNT(DISTINCT objectid) FROM cometobservations";
 
   $run = mysql_query($sql) or die(mysql_error());
 
@@ -907,11 +903,10 @@ class CometObservations
   include_once "observers.php";
 
   $observers = new Observers;
-  $extra = $observers->getObserversFromClub($club);
 
   $db = new database;
   $db->login();
-  $sql = "SELECT COUNT(id) FROM cometobservations".$extra;
+  $sql = "SELECT COUNT(id) FROM cometobservations";
 
   $run = mysql_query($sql) or die(mysql_error());
 
@@ -926,20 +921,12 @@ class CometObservations
   include_once "observers.php";
 
   $observers = new Observers;
-  $extra = $observers->getObserversFromClub($club);
 
   $date = date("Y")."0101";
 
   $db = new database;
   $db->login();
-  if ($extra != "")
-  {
-   $sql = "SELECT COUNT(id) FROM cometobservations ".$extra." AND date > \"$date\"";
-  }
-  else
-  {
-   $sql = "SELECT COUNT(id) FROM cometobservations WHERE date > \"$date\"";
-  }
+  $sql = "SELECT COUNT(id) FROM cometobservations WHERE date > \"$date\"";
 
   $run = mysql_query($sql) or die(mysql_error());
 
@@ -978,12 +965,11 @@ class CometObservations
  {
   include "setup/databaseInfo.php";
   $observers = new Observers;
-  $extra = $observers->getObserversFromClub($club);
 
   $db = new database;
   $db->login();
 
-  $sql = "SELECT * FROM cometobservations".$extra;
+  $sql = "SELECT * FROM cometobservations";
   $run = mysql_query($sql) or die(mysql_error());
 
   while($get = mysql_fetch_object($run))
@@ -1005,7 +991,6 @@ class CometObservations
  {
   include "setup/databaseInfo.php";
   $observers = new Observers;
-  $extra = $observers->getObserversFromClub($club);
 
   $db = new database;
   $db->login();
@@ -1017,7 +1002,7 @@ class CometObservations
 
   if ($sort == "objectname")
   {
-   $sql = "SELECT cometobservations.id FROM cometobservations LEFT JOIN cometobjects on cometobservations.objectid=cometobjects.id ".$extra."ORDER BY cometobjects.name ";
+   $sql = "SELECT cometobservations.id FROM cometobservations LEFT JOIN cometobjects on cometobservations.objectid=cometobjects.id ORDER BY cometobjects.name ";
 
    $run = mysql_query($sql) or die(mysql_error());
    $get = mysql_fetch_object($run);
@@ -1032,7 +1017,7 @@ class CometObservations
    {
     $sort = " observers.name, observers.firstname";
    }
-   $sql = "SELECT cometobservations.* FROM cometobservations ".$extra." LEFT JOIN instruments on cometobservations.instrumentid=instruments.id LEFT JOIN observers on cometobservations.observerid=observers.id ORDER BY $sort";
+   $sql = "SELECT cometobservations.* FROM cometobservations LEFT JOIN instruments on cometobservations.instrumentid=instruments.id LEFT JOIN observers on cometobservations.observerid=observers.id ORDER BY $sort";
   }
 
   $run = mysql_query($sql) or die(mysql_error());
@@ -1083,20 +1068,12 @@ class CometObservations
    }
   }
 
-  $extra = $observers->getObserversFromClub($club);
 
   $db = new database;
   $db->login();
 
-  if ($extra != "" && $clubOnly == "True")
-  {
-   $sql = "SELECT cometobservations.* FROM cometobservations LEFT JOIN instruments on cometobservations.instrumentid=instruments.id LEFT JOIN cometobjects on cometobservations.objectid=cometobjects.id LEFT JOIN observers on cometobservations.observerid=observers.id ".$extra." AND ";
-  }
-  else
-  {
-   $sql = "SELECT cometobservations.* FROM cometobservations LEFT JOIN instruments on cometobservations.instrumentid=instruments.id LEFT JOIN cometobjects on cometobservations.objectid=cometobjects.id LEFT JOIN observers on cometobservations.observerid=observers.id where";
-  }
-
+  $sql = "SELECT cometobservations.* FROM cometobservations LEFT JOIN instruments on cometobservations.instrumentid=instruments.id LEFT JOIN cometobjects on cometobservations.objectid=cometobjects.id LEFT JOIN observers on cometobservations.observerid=observers.id where";
+ 
   if ($object != "")
   {
    if ($exactmatch == "1")

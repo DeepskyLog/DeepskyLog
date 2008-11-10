@@ -6,7 +6,7 @@ echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">";
 echo "<tr>";
 echo "<th valign=\"top\">";
 echo LangChangeMenuTitle;
-echo "</th>"
+echo "</th>";
 echo "</tr>";
 //echo "<tr>";
 //echo "<td>";

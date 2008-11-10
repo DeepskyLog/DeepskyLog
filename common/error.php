@@ -14,7 +14,7 @@ include_once "../lib/util.php";
 $util = new Util();
 $util->checkUserInput();
 
-session_start();
+if(!session_id()) session_start();
 
 if(!$_SESSION['module'])
 {
@@ -22,14 +22,14 @@ if(!$_SESSION['module'])
 }
 
 
-include("head.php"); // HTML head
+include_once("head.php"); // HTML head
 
 $head = new head();
 $head->printHeader($browsertitle);
 $head->printMenu();
 $head->printMeta("DeepskyLog");
 
-include("menu/headmenu.php"); // HEAD MENU
+include_once("menu/headmenu.php"); // HEAD MENU
 menu($title); // SUBTITLE
 include("menu/login.php"); // LOGIN MENU
 

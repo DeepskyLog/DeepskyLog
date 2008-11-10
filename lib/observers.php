@@ -1,16 +1,6 @@
 <?php
-
 // The observers class collects all functions needed to enter, retrieve and
 // adapt observer data from the database and functions to display the data.
-//
-// Version 0.8 : 19/11/2006, WDM
-// Version 3.1, DE 20061119
-//
-
-include_once "database.php";
-//include "setup/vars.php"; // if $_SESSION['deepskylog_id'] not set yet, $_SESSION['lang'] = $defaultLanguage!
-include_once "observations.php";
-include "setup/databaseInfo.php";
 
 class Observers
 {
@@ -20,971 +10,202 @@ class Observers
  // log in yet. Before being able to do so, the administrator must validate 
  // the new user.
  function addObserver($id, $name, $firstname, $email, $password)
- {
-  include_once "setup/databaseInfo.php";
-
-  $db = new database;
-  $db->login();
-
-  if (!$_SESSION['lang'])
-  {
-   $_SESSION['lang'] = "English";
-  }
-
-  $array = array("INSERT INTO observers (id, name, firstname, email, password, role, language, club) VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\", \"$password\", \"", RoleWaitlist, "\", \"", $_SESSION['lang'], "\", \"", $club, "\")");
-
-  $sql = implode("", $array);
-
-  mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
+ { if(!$_SESSION['lang'])
+     $_SESSION['lang']="English";
+   $GLOBALS['objDatabase']->execSQL("INSERT INTO observers (id, name, firstname, email, password, role, language) VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\", \"$password\", \"".RoleWaitlist."\", \"".$_SESSION['lang']."\"");
  }
- 
- // checkPassword returns true if the password for the given id is the given 
- // password, otherwise false.
  function checkPassword($id, $passwd)
- {
-  $ret = "false";
-
-  if ($this->getPassword($id) == $passwd)
-  {
-   $ret = "true";
-  }
-
-  return $ret;
+ { return($this->getPassword($id) == $passwd);
  }
-
- // deleteObserver removes the observer with id = $id 
- function deleteObserver($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "DELETE FROM observers WHERE id=\"$id\"";
-  mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // getAdministrators returns an array with the ids of all administrators
  function getAdministrators()
- {
-  include_once "setup/databaseInfo.php";
-
-  $db = new database;
-  $db->login();
-
-  if ($club !="")
-  {
-   $sql = "SELECT * FROM observers WHERE role = \"RoleAdmin\" and club = \"$club\"";
-  }
-  else
-  {
-   $sql = "SELECT * FROM observers WHERE role = \"RoleAdmin\"";
-  }
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $admins[] = $get->id;
-  }
-
-  $db->logout();
-
-  return $admins;
+ { return $GLOBALS['objDatabase']->selectSingleArray("SELECT id FROM observers WHERE role = \"RoleAdmin\"",'id');
  }
-
- // getClub returns the club of the observer with the given id
- function getClub($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM observers WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if($get)
-	{
-	   $club = $get->club;
-	}
-	else
-	{
-	   $club = ''; 
-	}
-  
-
-  $db->logout();
-
-  return $club;
- }
-
- // getEmail returns the email of the given id
  function getEmail($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM observers WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-
-  if($get)
-	{
-	   $email = $get->email;
-	}
-	else
-	{
-	   $email = ''; 
-	}
-
-
-  $db->logout();
-
-  return $email;
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT email FROM observers WHERE id = \"$id\"",'email','');
  }
-
- // getFirstName returns the first name of the given id
  function getFirstName($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM observers WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if($get)
-	{
-	   $name = $get->firstname;
-	}
-	else
-	{
-	   $name = ''; 
-	}
-	
-	
-
-  $db->logout();
-
-  return $name;
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT firstname FROM observers WHERE id = \"$id\"",'firstname','');
  }
-
- // getIcqName returns the Icqname of the given id
  function getIcqName($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM observers WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if($get)
-	{
-	   $name = $get->icqname;
-	}
-	else
-	{
-	   $name = ''; 
-	}  
-
-  $db->logout();
-
-  return $name;
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT icqname FROM observers WHERE id = \"$id\"",'icqname','');
  }
-
- // getLanguage returns the language of the given id
  function getLanguage($id)
- {
-  include "setup/databaseInfo.php";
-
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM observers WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if ($get)
-  {
-    $lang = $get->language;
-  }
-  else
-  {
-    $lang = $defaultLanguage;
-  }
-
-  $db->logout();
-
-  return $lang;
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT language FROM observers WHERE id = \"$id\"",'language','');
  }
-
- // getUsedLanguages returns the languages of the observations to list
  function getUsedLanguages($id)
- {
-  include "setup/databaseInfo.php";
-
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM observers WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $lang = $get->usedLanguages;
-
-  $db->logout();
-
-  return unserialize($lang);
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT usedLanguages FROM observers WHERE id = \"$id\"",'usedLanguages','');
  }
-
- // getObservationLanguage returns the preferred language of the observations for the given id
  function getObservationLanguage($id)
- {
-  include "setup/databaseInfo.php";
-
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM observers WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $lang = $get->observationlanguage;
-
-  $db->logout();
-
-  return $lang;
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT observationlanguage FROM observers WHERE id = \"$id\"",'observationlanguage','');
  }
-
- // getListOfInstruments returns a list of all StandardInstruments of all 
- // observers
- function getListOfInstruments()
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT stdtelescope FROM observers GROUP BY stdtelescope";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $telescopes[] = $get->stdtelescope;
-  }
-  $db->logout();
-
-  return $telescopes;
+ function getListOfInstruments()                                                // getListOfInstruments returns a list of all StandardInstruments of all observers
+ { return $GLOBALS['objDatabase']->selectSingleArray("SELECT stdtelescope FROM observers GROUP BY stdtelescope",'stdtelescope');
  }
-
- // getListOfLocations returns a list of all StandardLocations of all observers
- function getListOfLocations()
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT stdlocation FROM observers GROUP BY stdlocation";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $locations[] = $get->stdlocation;
-  }
-  $db->logout();
- 
-  return $locations;
+ function getListOfLocations()                                                  // getListOfLocations returns a list of all StandardLocations of all observers
+ { return $GLOBALS['objDatabase']->selectSingleArray("SELECT stdlocation FROM observers GROUP BY stdlocation",'stdlocation');
  }
-
- // getObserverName returns the name of the given id
  function getObserverName($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM observers WHERE id = \"$id\"";
-
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if($get)
-	{
-	   $name = $get->name;
-	}
-	else
-	{
-	   $name = ''; 
-	}
-
-  $db->logout();
-
-  return $name;
+ {return $GLOBALS['objDatabase']->selectSingleValue("SELECT name FROM observers WHERE id = \"$id\"",'name','');
  }
-
- // getNumberOfObservations($name) returns the number of observations of the
- // given observerid
- function getNumberOfDsObservations($observerid)
- { $db = new database;
-   $db->login();
-   if($observerid )
-   { $sql = "SELECT COUNT(observations.id) As Cnt FROM observations WHERE observerid = \"$observerid\"";
-     $run = mysql_query($sql) or die(mysql_error());
-     $get = mysql_fetch_object($run);
-     return $get->Cnt;
-	 }
-	 else
-	 {
-     $sql = "SELECT COUNT(observations.id) As Cnt FROM observations";
-     $run = mysql_query($sql) or die(mysql_error());
-     $get = mysql_fetch_object($run);
-     return $get->Cnt;
-	 }
- }
-
- // getNumberOfCometObservations($name) returns the number of comet observations
- // for the given observerid
- function getNumberOfCometObservations($observerid)
- {
-  $observations = new CometObservations;
-  $obs = $observations->getPopularObservers();
-
-  $observations = 0;
-
-  if ($obs)
-  {
-   while(list($key, $value) = each($obs))
-   {
-    if ($key == $observerid)
-    {
-     $observations = $value;
-    }
-   }
-  }
-
-  return $observations;
- }
-
- // getRank() returns the number of observations of the given observer
- function getRank($observer)
- {
-  $observations = new Observations;
-  $numberOfObservations = $observations->getPopularObservers();
-
-  $rank = 0;
-  $counter = 0;
-
-  if ($numberOfObservations)
-  {
-   while(list($key, $value) = each($numberOfObservations))
-   {
-    $counter++;
-    if ($key == $observer)
-    {
-     $rank = $counter;
-    }
-   }
-  }
-  return $rank;
- }
-
- // getCometRank() returns the number of observations of the given observer
- function getCometRank($observer)
- {
-  $observations = new CometObservations;
-  $numberOfObservations = $observations->getPopularObservers();
-
-  $rank = 0;
-  $counter = 0;
-
-  if ($numberOfObservations)
-  {
-   while(list($key, $value) = each($numberOfObservations))
-   {
-    $counter++;
-    if ($key == $observer)
-    {
-     $rank = $counter;
-    }
-   }
-  }
-  return $rank;
- }
-
- // getUseLocal returns if the user wants to use local time or UTC
- function getUseLocal($id)
- {
-  $db = new database;
-  $db->login();
-
-  if($id != "")
-  {
-   $sql = "SELECT * FROM observers WHERE id = \"$id\"";
-   $run = mysql_query($sql) or die(mysql_error());
-
-   $get = mysql_fetch_object($run);
-
-   $useLocal = $get->UT;
-
-   $db->logout();
-  }
-  else
-  {
-   $useLocal = 0;
-  }
-
-  return !$useLocal;
- }
-
- // getObservers returns an array with the ids of all observers
- function getObservers()
- {
-  include_once "setup/databaseInfo.php";
-
-  $db = new database;
-  $db->login();
-
-  if ($club !="")
-  {
-   $sql = "SELECT * FROM observers WHERE club =\"$club\"";
-  }
-  else
-  {
-   $sql = "SELECT * FROM observers";
-  }
-
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $obs[] = $get->id;
-  }
-
-  $db->logout();
-
-  return $obs;
- }
-
- // getObserversFromClub returns the id's of all observers from a 
- // given club in a sql-query to be used.
- function getObserversFromClub($club)
- {
-  if ($club != "")
-  {
-   $db = new database;
-   $db->login();
-
-   $sql = "SELECT * FROM observers where club = \"$club\"";
-   $run = mysql_query($sql) or die(mysql_error());
-	 $sqlquery="";
-   while($get = mysql_fetch_object($run))
-     $sqlquery .= "OR observerid = \"$get->id\" ";
-   $db->logout();
-   return substr($sqlquery.")",4);
-  }
- }
-  
- // getPassword returns the password of the given id
- function getPassword($id)
- {
-  include "setup/databaseInfo.php";
-
-  if ($club != "")
-  {
-   if ($this->getClub($id) == $club)
-   {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observers WHERE BINARY id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-	  {
-	     $pwd = $get->password;
-	  }
-	  else
-	  {
-	     $pwd = ''; 
-	  }  
-
-    
-
-    $db->logout();
-   }
-  }
-  else
-  {
-   $db = new database;
-   $db->login();
-
-   $sql = "SELECT * FROM observers WHERE BINARY id = \"$id\"";
-   $run = mysql_query($sql) or die(mysql_error());
-
-   $get = mysql_fetch_object($run);
-
-    if($get)
-	  {
-	     $pwd = $get->password;
-	  }
-	  else
-	  {
-	     $pwd = ''; 
-	  }  
-
-   $db->logout();
-  }
-  return $pwd;
- }
-
- // getRole returns the role of the given id
- function getRole($id)
- {
-  if ($id != "")
-  {
-   $db = new database;
-   $db->login();
-
-   $sql = "SELECT * FROM observers WHERE id = \"$id\"";
-   $run = mysql_query($sql) or die(mysql_error());
-
-   $get = mysql_fetch_object($run);
-
-   if ($get)
-   {
-    $role = $get->role;
-   }
+ function getNumberOfDsObservations($observerid)                                // getNumberOfObservations($name) returns the number of observations of the given observerid
+ { if($observerid )
+     return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(observations.id) As Cnt FROM observations WHERE observerid = \"$observerid\"",'Cnt',0);
    else
-   {
-    $role = 2;    
-   }
-
-   $db->logout();
-  }
-  else
-  {
-   $role = 2;
-  }
-  return $role;
+	   return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(observations.id) As Cnt FROM observations",'Cnt',0);
  }
-
- // getSortedObservers returns an array with the ids of all observers, sorted by the
- // column specified in $sort
- function getSortedObservers($sort)
- {
-  include "setup/databaseInfo.php";
-
-  $db = new database;
-  $db->login();
-
-  if ($club !="")
-  {
-   $sql = "SELECT * FROM observers WHERE club =\"$club\" ORDER BY $sort";
-  }
-  else
-  {
-   $sql = "SELECT * FROM observers ORDER BY $sort";
-  }
-
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $obs[] = $get->id;
-  }
-
-  $db->logout();
-
-  return $obs;
- }
-
- // getSortedActiveObservers returns an array with the ids of all active 
- // observers, sorted by the column specified in $sort
- function getSortedActiveObservers($sort)
- {
-  include_once "setup/databaseInfo.php";
-
-  $db = new database;
-  $db->login();
-
-  if ($club !="")
-  {
-   $sql = "SELECT * FROM observers WHERE club =\"$club\" AND observers.id IN (SELECT observerid FROM observations) ORDER BY observers." . $sort;
-  }
-  else
-  {
-   $sql = "SELECT DISTINCT * FROM observers JOIN observations ON (observers.id = observations.observerid) ORDER BY observers." . $sort;
-  }
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $obs[] = $get->id;
-  }
-
-  $db->logout();
-
-  return $obs;
- }
- 
-  // getStandardAtlas returns the standard atlas of the given id
- function getStandardAtlasCode($id)
- {
-  $atlas = '';    
-	$db = new database;
-  $db->login();
-  $sql = "SELECT standardAtlasCode FROM observers WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  $get = mysql_fetch_object($run);
-  if($get)
-	  $atlas = $get->standardAtlasCode;
-  $db->logout();
-  return $atlas;
- }
-
- // getStandardLocation returns the standard location of the given id
- function getStandardLocation($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM observers WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if($get)
-	{
-	   $loc = $get->stdlocation;
-	}
-	else
-	{
-	   $loc = ''; 
-	}  
-  
-
-  $db->logout();
-
-  return $loc;
- }
-
- // getStandardTelescope returns the standard telescope of the given id
- function getStandardTelescope($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM observers WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if($get)
-	{
-	   $telescope = $get->stdtelescope;
-	}
-	else
-	{
-	   $telescope = ''; 
-	}  
-  
-
-  $db->logout();
-
-  return $telescope;
- }
- 
- // setClub sets a new club for the observer with id = $id
- function setClub($id, $club)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "UPDATE observers SET club = \"$club\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // setEmail sets a new email for the observer with id = $id
- function setEmail($id, $email)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "UPDATE observers SET email = \"$email\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // setFirstName sets a new first name for the observer with id = $id
- function setFirstName($id, $firstname)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "UPDATE observers SET firstname = \"$firstname\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // setIcqName sets a new icqname for the observer with id = $id
- function setIcqName($id, $icqname)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "UPDATE observers SET icqname = \"$icqname\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // setLanguage sets the language for the observer with id = $id
- function setObserverLanguage($id, $language)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "UPDATE observers SET language = \"$language\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // setUsedLanguages sets all the used languages for the observer with id = $id
- function setUsedLanguages($id, $language)
- {
-  $db = new database;
-  $db->login();
-
-  $usedLanguages = serialize($language);
-  $sql = "UPDATE observers SET usedLanguages = '$usedLanguages' WHERE id = \"$id\"";
-
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // setObserverObservationLanguage sets the language of the observations for the observer with id = $id
- function setObserverObservationLanguage($id, $language)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "UPDATE observers SET observationlanguage = \"$language\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // setName sets a new name for the observer with id = $id
- function setObserverName($id, $name)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "UPDATE observers SET name = \"$name\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // setPassword sets a new password for the observer with id = $id
- function setPassword($id, $pwd)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "UPDATE observers SET password = \"$pwd\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // setRole sets a new role for the observer with id = $id
- function setRole($id, $role)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "UPDATE observers SET role = \"$role\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // setStandardAtlas sets a new standard atlas for the given observer
- function setStandardAtlas($id, $atlas)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "UPDATE observers SET standardAtlasCode = \"$atlas\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // setStandardLocation sets a new standard location for the given observer
- function setStandardLocation($id, $location)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "UPDATE observers SET stdlocation = \"$location\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // setStandardTelescope sets a new standard telescope for the given observer
- function setStandardTelescope($id, $telescope)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "UPDATE observers SET stdtelescope = \"$telescope\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // setUseLocal lets the user use local time for everything
- function setUseLocal($id, $local_time)
- {
-  $db = new database;
-  $db->login();
-
-  if ($local_time == 0)
-  {
-    $ut = 1;
-  }
-  else
-  {
-    $ut = 0;
-  }
-
-  $sql = "UPDATE observers SET UT = \"$ut\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // validateObserver validates the user with the given id and gives the user 
- // the given role (which should be $ADMIN or $USER).
- function validateObserver($id, $role)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "UPDATE observers SET role = \"$role\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
-
-  $subject = LangValidateSubject;
-
-  $ad = "";
-
-  if ($role == RoleAdmin)
-  {
-   $ad = LangValidateAdmin;
-  }
-
-  $array = array(LangValidateMail1, $id, LangValidateMail2, $ad, LangValidateMail3);
-
-  $body = implode("", $array);
-
-  $administrators = $this->getAdministrators();
-  $fromMail = $this->getEmail($administrators[0]);
-  $headers = "From:".$fromMail;
-
-  mail($this->getEmail($id), $subject, $body, $headers);
- }
-
- // showObservers prints a table showing all observers. 
- function showObservers()
- {
-  $observers = $this->getObservers();
-  $locations = new Locations;
-  $instruments = new Instruments;
-
-  $count = 0;
-
-  echo "<table width=\"100%\">
-         <tr class=\"type3\">
-          <td>id</td>
-          <td>Name</td>
-          <td>First Name</td>
-          <td>Email</td>
-          <td>Std. Location</td>
-          <td>Std. Instrument</td>
-          <td>pwd</td>
-          <td>role</td>
-          <td>language</td>
-         </tr>";
-
-  while(list ($key, $value) = each($observers))
-  {
-   if ($count % 2)
-   {
-    $type = "class=\"type1\"";
-   }
+ function getNumberOfCometObservations($observerid)                             // getNumberOfCometObservations($name) returns the number of comet observations for the given observerid
+ { if($observerid )
+     return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(cometobservations.id) As Cnt FROM cometobservations WHERE observerid = \"$observerid\"",'Cnt',0);
    else
-   {
-    $type = "class=\"type2\"";
-   }
-
-   $name = $this->getObserverName($value);
-   $firstname = $this->getFirstName($value);
-   $email = $this->getEmail($value);
-   $loc = $this->getStandardLocation($value);
-   $location = $locations->getLocationName($loc);
-   $inst = $this->getStandardTelescope($value);
-   $telescope = $instruments->getInstrumentName($inst);
-   $password = $this->getPassword($value);
-
-   echo "<tr $type><td> $value </td><td> $name </td><td> $firstname </td><td> <a href=\"mailto:$email\"> $email</a> </td><td> $location </td><td> $telescope </td><td> $password </td><td> ";
-
-   $role = $this->getRole($value);
-
-   if ($role == RoleAdmin)
-   {
-    echo "admin";
-   }
-   elseif ($role == RoleUser)
-   {
-    echo "user";
-   }
-   elseif ($role == RoleCometAdmin)
-   {
-    echo "comet admin";
-   }
-   elseif ($role == RoleWaitlist)
-   {
-    echo "waitlist";
-   }
-
-   $language = $this->getLanguage($value);
-
-   echo "</td><td> $language </td></tr>\n";
-
-   $count++;
+	   return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(cometobservations.id) As Cnt FROM cometobservations",'Cnt',0);
+ }
+ function getRank($observer)                                                    // getRank() returns the number of observations of the given observer
+ { return(array_search($observer,$GLOBALS['objObservation']->getPopularObservers())+1);
+ }
+ function getCometRank($observer)                                               // getCometRank() returns the number of observations of the given observer
+ { $observations = new CometObservations;
+   $numberOfObservations = $observations->getPopularObservers();
+   return(array_search($observer,$numberOfObservations)+1);
+ }
+ function getUseLocal($id)                                                      // getUseLocal returns if the user wants to use local time or UTC
+ { return (!($GLOBALS['objDatabase']->selectSingleValue("SELECT observers.UT FROM observers WHERE id = \"$id\"",'UT',0)));
+ }
+ function getObservers()                                                        // getObservers returns an array with the ids of all observers
+ { return $GLOBALS['objDatabase']->selectSingleArray("SELECT observers.id FROM observers",'id');
+ }
+ function getPassword($id)                                                      // getPassword returns the password of the given id
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT observers.password FROM observers WHERE BINARY id=\"$id\"", 'password', '');
+ }
+ function getRole($id)                                                          // getRole returns the role of the given id
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT observers.role FROM observers WHERE id=\"$id\"",'role',2);
+ }
+ function getSortedObservers($sort)                                             // getSortedObservers returns an array with the ids of all observers, sorted by the column specified in $sort
+ { return $GLOBALS['objDatabase']->selectSingleArray("SELECT observers.id FROM observers ORDER BY $sort",'id');
+ }
+ function getSortedActiveObservers($sort)                                       // getSortedActiveObservers returns an array with the ids of all active observers, sorted by the column specified in $sort
+ { return $GLOBALS['objDatabase']->selectSingleArray("SELECT DISTINCT observers.id FROM observers JOIN observations ON (observers.id = observations.observerid) ORDER BY observers." . $sort,'id');
+ }
+ function getStandardAtlasCode($id)                                             // getStandardAtlas returns the standard atlas of the given id
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT standardAtlasCode FROM observers WHERE id=\"$id\"",'standardAtlasCode','');
+ }
+ function getStandardLocation($id)                                              // getStandardLocation returns the standard location of the given id
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT * FROM observers WHERE id=\"$id\"",'stdlocation','');
+ }
+ function getStandardTelescope($id)                                             // getStandardTelescope returns the standard telescope of the given id
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT * FROM observers WHERE id=\"$id\"",'stdtelescope','');
+ }
+ function setEmail($id, $email)                                                 // setEmail sets a new email for the observer with id = $id
+ { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET email = \"$email\" WHERE id=\"$id\"");
+ }
+ function setFirstName($id, $firstname)                                         // setFirstName sets a new first name for the observer with id = $id
+ { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET firstname = \"$firstname\" WHERE id=\"$id\"");
+ }
+ function setIcqName($id, $icqname)                                             // setIcqName sets a new icqname for the observer with id = $id
+ { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET icqname = \"$icqname\" WHERE id=\"$id\"");
+ }
+ function setObserverLanguage($id, $language)                                   //setLanguage sets the language for the observer with id = $id
+ { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET language = \"$language\" WHERE id = \"$id\"");
+ }
+ function setUsedLanguages($id, $language)                                      // setUsedLanguages sets all the used languages for the observer with id = $id
+ { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET usedLanguages = '$usedLanguages' WHERE id=\"$id\"");
+ }
+ function setObserverObservationLanguage($id, $language)                        // setObserverObservationLanguage sets the language of the observations for the observer with id = $id
+ { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET observationlanguage = \"$language\" WHERE id=\"$id\"");
+ }
+ function setObserverName($id, $name)                                           // setName sets a new name for the observer with id = $id
+ { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET name = \"$name\" WHERE id=\"$id\"");
+ }
+ function setPassword($id, $pwd)                                                // setPassword sets a new password for the observer with id = $id
+ { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET password = \"$pwd\" WHERE id=\"$id\"");
+ }
+ function setRole($id, $role)                                                   // setRole sets a new role for the observer with id = $id
+ { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET role = \"$role\" WHERE id=\"$id\"");
+ }
+ function setStandardAtlas($id, $atlas)                                         // setStandardAtlas sets a new standard atlas for the given observer
+ { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET standardAtlasCode = \"$atlas\" WHERE id=\"$id\"");
+ }
+ function setStandardLocation($id, $location)                                   // setStandardLocation sets a new standard location for the given observer
+ { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET stdlocation = \"$location\" WHERE id=\"$id\"");
+ }
+ function setStandardTelescope($id, $telescope)                                 // setStandardTelescope sets a new standard telescope for the given observer
+ { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET stdtelescope = \"$telescope\" WHERE id=\"$id\"");
+ }
+ function setUseLocal($id, $local_time)                                         // setUseLocal lets the user use local time for everything
+ { if ($local_time == 0)
+    $GLOBALS['objDatabase']->execSQL("UPDATE observers SET UT=\"1\" WHERE id=\"$id\"");
+   else
+    $GLOBALS['objDatabase']->execSQL("UPDATE observers SET UT=\"0\" WHERE id=\"$id\"");
+ }
+ function validateObserver($id, $role)                                          // validateObserver validates the user with the given id and gives the user  the given role (which should be $ADMIN or $USER).
+ { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET role = \"$role\" WHERE id=\"$id\"");
+   $subject = LangValidateSubject;
+   if ($role == RoleAdmin) $ad = LangValidateAdmin;
+	 else                    $ad = "";
+   $array = array(LangValidateMail1, $id, LangValidateMail2, $ad, LangValidateMail3);
+   $body = implode("", $array);
+   $administrators = $this->getAdministrators();
+   $fromMail = $this->getEmail($administrators[0]);
+   $headers = "From:".$fromMail;
+   mail($this->getEmail($id), $subject, $body, $headers);
+ }
+ function showObservers()                                                       // showObservers prints a table showing all observers. 
+ { $observers = $this->getObservers();
+   $locations = new Locations;
+   $instruments = new Instruments;
+   $count = 0;
+   echo "<table width=\"100%\">";
+	 echo "<tr class=\"type3\">";
+	 echo "<td>id</td>";
+	 echo "<td>Name</td>";
+	 echo "<td>First Name</td>";
+	 echo "<td>Email</td>";
+	 echo "<td>Std. Location</td>";
+	 echo "<td>Std. Instrument</td>";
+	 echo "<td>pwd</td>";
+	 echo "<td>role</td>";
+	 echo "<td>language</td>";
+	 echo "</tr>";
+   while(list ($key, $value) = each($observers))
+   { $type = "class=\"type\"".(2-($count%2));
+     $name = $this->getObserverName($value);
+     $firstname = $this->getFirstName($value);
+     $email = $this->getEmail($value);
+     $loc = $this->getStandardLocation($value);
+     $location = $locations->getLocationName($loc);
+     $inst = $this->getStandardTelescope($value);
+     $telescope = $instruments->getInstrumentName($inst);
+     $password = $this->getPassword($value);
+     echo "<tr $type>";
+		 echo "<td> $value </td>";
+		 echo "<td> $name </td>";
+		 echo "<td> $firstname </td>";
+		 echo "<td> <a href=\"mailto:$email\"> $email</a> </td>";
+		 echo "<td> $location </td>";
+		 echo "<td> $telescope </td>";
+		 echo "<td> $password </td>";
+		 echo "<td> ";
+     $role = $this->getRole($value);
+     if ($role == RoleAdmin)
+       echo "admin";
+     elseif ($role == RoleUser)
+       echo "user";
+     elseif ($role == RoleCometAdmin)
+       echo "comet admin";
+     elseif ($role == RoleWaitlist)
+       echo "waitlist";
+     $language = $this->getLanguage($value);
+     echo "</td>";
+		 echo "<td> $language </td>";
+		 echo "</tr>";
+     $count++;
   }
   echo "</table>";
  }
 }
 $objObserver=new Observers;
+/* OBSOLETE FUNCTION
+ function deleteObserver($id)                                                   // deleteObserver removes the observer with id = $id 
+ { $GLOBALS['objDatabase']->execSQL("DELETE FROM observers WHERE id=\"$id\"");
+ }
+*/
 ?>

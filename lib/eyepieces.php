@@ -1,5 +1,4 @@
 <?php
-
 // The eyepieces class collects all functions needed to enter, retrieve and
 // adapt eyepiece data from the database.
 //
@@ -431,4 +430,5 @@ class Eyepieces
   echo "</table>";
  }
 }
+$objEyepiece=new Eyepieces;
 ?>

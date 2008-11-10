@@ -25,7 +25,7 @@ class util
 	{ $this->checkUserInput();
   }
   private function utilitiesGetIndexActionCommonDefaultAction()
-  { return 'content/selected_observations2.php';
+  { return 'error.php';
   }
   private function utilitiesGetIndexActionDSdefaultAction()
   { $_GET['catalogue']='%';
@@ -1692,7 +1692,7 @@ class util
   }
 	public function utiltiesDispatchIndexActionCommon()
   {
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAdmin('account_details','content/change_account.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('account_details','content/change_account.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_eyepiece','content/change_eyepiece.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_filter','content/change_filter.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_instrument','content/change_instrument.php')))
@@ -1709,7 +1709,7 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_instrument','content/view_instrument.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_lens','content/view_lens.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_location','content/view_location.php')))		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_observer.php','content/view_observer.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_observer','content/view_observer.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('search_sites','content/search_locations.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('site_result','content/getLocation.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('subscribe','content/register.php')))
@@ -1718,7 +1718,7 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_instruments','content/overview_instruments.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_lenses','content/overview_lenses.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_locations','content/overview_locations.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_observers.php','content/overview_observers.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_observers','content/overview_observers.php')))
       $indexActionInclude=$this->utilitiesGetIndexActionCommonDefaultAction();
     return $indexActionInclude;
   }

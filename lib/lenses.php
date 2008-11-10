@@ -1,12 +1,6 @@
 <?php
-
 // The lenses class collects all functions needed to enter, retrieve and
 // adapt lenses data from the database.
-//
-// Version 3.2, WDM 11/05/2008
-
-include_once "database.php";
-include_once "setup/language.php";
 
 class Lenses
 {
@@ -357,4 +351,5 @@ class Lenses
   echo "</table>";
  }
 }
+$objLens=new Lenses;
 ?>
