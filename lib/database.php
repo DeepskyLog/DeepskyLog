@@ -54,6 +54,14 @@ class Database
 		if($result) return $result;
 		else        return array();
   }
+	function selectKeyValueArray($sql,$key,$value)
+	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
+	  $run = mysql_query($sql) or die(mysql_error());
+    while($get = mysql_fetch_object($run))
+		  $result[$get->$key]=$get->$value;
+		if($result) return $result;
+		else        return array();
+  }
 	function selectRecordset($sql)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
 	  $run = mysql_query($sql) or die(mysql_error());

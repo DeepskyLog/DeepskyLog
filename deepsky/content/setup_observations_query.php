@@ -220,13 +220,9 @@ echo LangViewObservationField2;
 echo("</td>\n<td width=\"25%\">\n");
 echo("<select name=\"observer\">\n");
 echo("<option value=\"\"></option>"); // empty field
-//$obs = $objObserver->getSortedObservers('name'); 
-$obs = $objObservation->getPopularObservers();
-while(list($key) = each($obs))
-  $sortobs[$key] = $objObserver->getObserverName($key)." ".$objObserver->getFirstName($key);
-natcasesort($sortobs);
-while(list($value, $key) = each($sortobs))
-   echo("<option value=\"$value\">".$key."</option>\n");
+$obs = $objObserver->getPopularObserversByName();
+while(list($key, $value) = each($obs))
+   echo("<option value=\"$key\">".$value."</option>\n");
 echo("</select>\n");
 echo("</td>");
 // INSTRUMENT 

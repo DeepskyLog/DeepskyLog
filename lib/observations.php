@@ -495,12 +495,6 @@ class Observations
   // number of different objects observed
   // the field to be sorted on should be given as a parameter
 
-  function getPopularObserversSorted($sort) // NOG NA TE KIJKEN
-  { $result = array();
-    $observerids = $GLOBALS['objObserver']->getSortedActiveObservers('id');
-    return $result;
-  }
-
   function getPopularObservers()                                                // getPopularObservers() returns the number of observations of the observers
   { return $GLOBALS['objDatabase']->selectSingleArray("SELECT observations.observerid, COUNT(observations.id) As Cnt FROM observations GROUP BY observations.observerid ORDER BY Cnt DESC", 'observerid');
   }
@@ -869,8 +863,8 @@ class Observations
 		else
 		  throw new Exception("Error in getDsObservationLocalTime of observations.php");
   }
-  function getDescriptionDsObservation($id)                                     // getDescription returns the description of the given observation
-  { return preg_replace("/&amp;/", "&", $GLOBALS['objDatabase']->selectSingleValue("SELECT time FROM observations WHERE id = \"$id\"",'time',''));
+  function getDescriptionDsObservation($id)                                                         // getDescription returns the description of the given observation
+  { return preg_replace("/&amp;/", "&", $GLOBALS['objDatabase']->selectSingleValue("SELECT description FROM observations WHERE id = \"$id\"",'description',''));
   }
 
 
@@ -1438,22 +1432,7 @@ class Observations
   }
 
   function getLOObservationId($objectname, $userid, $notobservation)
-  {
-    $db = new database;
-    $db->login();
-    $sql = "SELECT * FROM observations WHERE objectname = \"$objectname\" and observerid = \"$userid\" and id != \"$notobservation\" ORDER BY id DESC";
-    $run = mysql_query($sql) or die(mysql_error());
-    $get = mysql_fetch_object($run);
-    $db->logout();
-    if($get)
-    {
-      $obs[] = $get->id;
-      return $obs;
-    }
-    else
-    {
-      return array();
-    }
+  { return array($GLOBALS['objDatabase']->selectSingleValue("SELECT id FROM observations WHERE objectname = \"$objectname\" and observerid = \"$userid\" and id != \"$notobservation\" ORDER BY id DESC",'id',''));
   }
 
   function getMOObservationsId($object, $userid, $notobservation)
@@ -1779,11 +1758,6 @@ class Observations
   function showCompactObservationLO($value, $link, $myList = false)
   {
     global $observers, $dateformat;
-/*
-    global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
-    $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
-    $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL;
-*/
 		global $objInstrument;
 		global $objObject;
 		global $objObserver;

@@ -13,6 +13,7 @@ if(!(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']))
 	echo "<td>";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
 	echo "<form action=\"../".$_SESSION['module']."/index.php?indexAction=check_login\" method=\"post\">";
+	echo "<input type=\"hidden\" name=\"logtime\" value=".$_SESSION['logtime']."></input>";
   echo "<tr align=\"left\">";
 	echo "<td>";
   echo LangLoginMenuItem1;

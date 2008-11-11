@@ -612,7 +612,7 @@ define("LangNoObservations", "Keine Beobachtungen");
 // content/overview_observations.php
 
 define("LangOverviewObservationsTitle", "&Uuml;bersicht aller Beobachtungen");
-define("LangOverviewObservationsHeader1", "Objektname &nbsp;");
+define("LangOverviewObservationsHeader1", "Objektname");
 define("LangOverviewObservationsHeader2", "Beobachter");
 define("LangOverviewObservationsHeader3", "Beobachtungsger&auml;t");
 define("LangOverviewObservationsHeader4", "Datum");

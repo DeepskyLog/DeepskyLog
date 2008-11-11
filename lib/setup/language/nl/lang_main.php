@@ -611,7 +611,7 @@ define("LangNoObservations", "Geen waarnemingen beschikbaar");
 // content/overview_observations.php
 
 define("LangOverviewObservationsTitle", "Overzicht alle waarnemingen");
-define("LangOverviewObservationsHeader1", "Objectnaam&nbsp;");
+define("LangOverviewObservationsHeader1", "Objectnaam");
 define("LangOverviewObservationsHeader2", "Waarnemer");
 define("LangOverviewObservationsHeader3", "Instrument");
 define("LangOverviewObservationsHeader4", "Datum");

@@ -1,93 +1,27 @@
 <?php
-
 // execute_query_objects.php
 // executes the object query passed by setup_query_objects.php
-// version 0.5: 2005/06/29, JV
-// $$ ok
 
-// Code cleanup - removed by David on 20080704
-//include_once "../common/control/dec_to_dm.php";
-//include_once "../common/control/ra_to_hms.php";
-//include_once "../lib/observers.php";
-//$observer = new Observers;
-
-include_once "../lib/lists.php";
-$list = new Lists;
-include_once "../lib/objects.php";
-$objects = new Objects;
-include_once "../lib/setup/language.php";
-include_once "../lib/util.php";
-$util = new util;
-$util->checkUserInput();
-
-global $baseURL;
-
-$myList = False;
-if(array_key_exists('listname',$_SESSION) && ($list->checkList($_SESSION['listname'])==2))
-  $myList=True;
-$listname_ss=stripslashes($_SESSION['listname']);
-// minimum
-if(array_key_exists('min',$_GET))
-  $min=$_GET['min'];
-elseif(array_key_exists('multiplepagenr',$_GET))
-  $min = ($_GET['multiplepagenr']-1)*25;
-elseif(array_key_exists('multiplepagenr',$_POST))
-  $min = ($_POST['multiplepagenr']-1)*25;
-else
-  $min = 0;
 $showPartOfs = 0;
 $name='';
 $exact = 0;
-$_SID='QO';
+$_SID='Qobj';
 if(array_key_exists('showPartOfs',$_GET) && $_GET['showPartOfs'])
   $showPartOfs = $_GET['showPartOfs'];
 if($showPartOfs=="1")
-{  
-  if(!array_key_exists('QOP',$_SESSION))
-		$_SESSION['QOP']=$objects->getPartOfObjects($_SESSION['QO']);
+{ if(!array_key_exists('QOP',$_SESSION))
+		$_SESSION['QOP']=$objObject->getPartOfObjects($_SESSION['Qobj']);
   $_SID='QOP';
 }	  
-if(array_key_exists('addObjectToList',$_GET) && $_GET['addObjectToList'] && $myList)
-{
-	$list->addObjectToList($_GET['addObjectToList'], $_GET['showname']);
-  echo LangListQueryObjectsMessage8 . "<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['addObjectToList']) . "\">" . $_GET['showname'] . "</a>" . LangListQueryObjectsMessage6 . "<a href=\"deepsky/index.php?indexAction=listaction&amp;manage=manage\">" . $_SESSION['listname'] . "</a>.";
-	echo "<HR>";
-}
-if(array_key_exists('removeObjectFromList',$_GET) && $_GET['removeObjectFromList'] && $myList)
-{
-	$list->removeObjectFromList($_GET['removeObjectFromList']);
-  echo LangListQueryObjectsMessage8 . "<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['removeObjectFromList']) . "\">" . $_GET['removeObjectFromList'] . "</a>" . LangListQueryObjectsMessage7 . "<a href=\"deepsky/index.php?indexAction=listaction&amp;manage=manage\">" . $_SESSION['listname'] . "</a>.";
-	echo "<HR>";
-}
-if(array_key_exists('addAllObjectsFromPageToList',$_GET) && $_GET['addAllObjectsFromPageToList'] && $myList)
-{
-	$count=$min;
-	while(($count<($min+25)) && ($count<count($_SESSION[$_SID])))
-	{
-		$list->addObjectToList($_SESSION[$_SID][$count][0],$_SESSION[$_SID][$count][4]);
-		$count++;
-  }
-	echo LangListQueryObjectsMessage9 . "<a href=\"deepsky/index.php?indexAction=listaction&amp;manage=manage\">" .  $_SESSION['listname'] . "</a>.";
-	echo "<HR>";
-}
-if(array_key_exists('addAllObjectsFromQueryToList',$_GET) && $_GET['addAllObjectsFromQueryToList'] && $myList)
-{
-	$count=0;
-	while($count<count($_SESSION[$_SID]))
-	{
-		$list->addObjectToList($_SESSION[$_SID][$count][0],$_SESSION[$_SID][$count][4]);
-		$count++;
-  }
-	echo LangListQueryObjectsMessage9 . "<a href=\"deepsky/index.php?indexAction=listaction&amp;manage=manage\">" .  $_SESSION['listname'] . "</a>.";
-	echo "<HR>";
-}
+if($entryMessage)
+  echo $entryMessage.'<hr>';
 $sort='';
 if(array_key_exists('sort',$_GET) && (count($_SESSION[$_SID])>1))
 {
   // SORTING
   if($_GET['sort']) // field to sort on given as a parameter in the url
     $sort = $_GET['sort'];
-  $_SESSION[$_SID] = $objects->sortObjects($_SESSION[$_SID], $sort);
+  $_SESSION[$_SID] = $objObject->sortObjects($_SESSION[$_SID], $sort);
   $_SESSION['QOsort'] = "showname";
 }
 if(array_key_exists('sortdirection',$_GET) && (count($_SESSION[$_SID])>1))
@@ -96,12 +30,12 @@ if(array_key_exists('sortdirection',$_GET) && (count($_SESSION[$_SID])>1))
   // SORTING
   if($_GET['RO']) // field to sort on given as a parameter in the url
     $sort = $_GET['RO'];
-  $_SESSION[$_SID] = $objects->sortObjects($_SESSION[$_SID], $sort);
+  $_SESSION[$_SID] = $objObject->sortObjects($_SESSION[$_SID], $sort);
   $_SESSION[$_SID] = array_reverse($_SESSION[$_SID], false); 
 }	
 if(count($_SESSION[$_SID]) > 1) // valid result
 {
-  $link = 'deepsky/index.php?indexAction=result_query_objects&amp;SID=' . $_SID;
+  //$link = 'deepsky/index.php?indexAction=result_query_objects&amp;SID=' . $_SID;
 
 	// PAGE TITLE
   echo"<div id=\"main\">";
@@ -120,7 +54,7 @@ if(count($_SESSION[$_SID]) > 1) // valid result
 	echo("</h2>\n");
 	echo"</td>";
 	echo"<td align=\"right\">";
-  list($min, $max) = $util->printNewListHeader($_SESSION[$_SID], $link, $min, 25, "");	
+  list($min, $max) = $objUtil->printNewListHeader($_SESSION[$_SID], $link, $min, 25, "");	
 	echo"</td>";
 	echo"</table>";
 	if($showPartOfs)
@@ -133,10 +67,10 @@ if(count($_SESSION[$_SID]) > 1) // valid result
 		$max=count($_SESSION[$_SID]);
 	echo "<HR>";
   // OUTPUT RESULT
-  $objects->showObjects($link, $_SID, $min, $max, $myList);
+  $objObject->showObjects($link, $_SID, $min, $max, $myList);
 	echo("<hr>");
 
-  list($min, $max) = $util->printNewListHeader($_SESSION[$_SID], $link, $min, 25, "");	
+  list($min, $max) = $objUtil->printNewListHeader($_SESSION[$_SID], $link, $min, 25, "");	
 	
   echo "<a href=\"\"
                  onclick=\"thetitle = prompt(" . LangListQueryObjectsMessage14 . "," . LangListQueryObjectsMessage15 . ");

@@ -1,9 +1,7 @@
 <?php
-if (!function_exists('fnmatch')) 
-{
-  function fnmatch($pattern, $string)
-	{
-    return @preg_match('/^' . strtr(addcslashes($pattern, '\\.+^$(){}=!<>|'), array('*' => '.*', '?' => '.?')) . '$/i', $string);
+if (!function_exists('fnmatch')) {
+  function fnmatch($pattern, $string) {
+	  return @preg_match('/^' . strtr(addcslashes($pattern, '\\.+^$(){}=!<>|'), array('*' => '.*', '?' => '.?')) . '$/i', $string);
   }
 }
 

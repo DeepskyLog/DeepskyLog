@@ -464,7 +464,7 @@ if($object ||
   if(array_key_exists('QobsParams',$_SESSION))
 	  $validQobs=true;
 	while($validQobs && (list($key,$value) = each($_SESSION['QobsParams'])))
-	  if($value != $query[$key])
+	  if(array_key_exists($key,$query) && ($value != $query[$key]))
 	    $validQobs=false;	 
   if(!$validQobs)
 	{ $obs = $objObservation->getObservationFromQuery($query, $seenpar);
@@ -512,8 +512,7 @@ if($object ||
 	}	
 	
 	
-// Dates can change when we use local time!
-/*  if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && $objObserver->getUseLocal($_SESSION['deepskylog_id']))
+  if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && $objObserver->getUseLocal($_SESSION['deepskylog_id']))
   {
     if ($mindate != "" || $maxdate != "")
     {
@@ -555,8 +554,8 @@ if($object ||
       $obs = $new_obs;
     }
   }
-*/      
-   // Check if only the observations with a drawing should be shown
+     
+   // Check if only the observations with a drawing should be shown: THERE SHOULD COME A FIELD IN THE DB SHOWING IF AN OBSERVATION HAS A DRAWING
 /*   if(array_key_exists('drawings',$_GET) && $_GET['drawings'])
    {
 	    $drawingslist[] = false;
@@ -585,23 +584,7 @@ if($object ||
 			  $obs = false;
    }
 */
-   // natural sort of object names
-/*   if (array_key_exists('sort',$_GET) && ($_GET['sort'] == "objectname"))
-   {
-      while(list ($key, $value) = each($obs)) // go through observations array
-        $obsname[$value] = $objObservation->getObjectId($value);
-      natcasesort($obsname);
-      reset($obsname);
-      $count = 0;
-      while(list ($key, $value) = each($obsname)) // go through observations array
-      { $obs2[$count] = $key;
-        $count++;
-      }
-      $obs = $obs2;
-      if(array_key_exists('sortdirection',$_GET) && ($_GET['sortdirection']=="desc")) 
-	      krsort($obs); 
-	 }
-*/
+
 }
 
 else
