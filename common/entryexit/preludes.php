@@ -10,7 +10,7 @@ if (!function_exists('fnmatch'))
 if(!session_id()) session_start();
 require_once "../lib/setup/databaseInfo.php";
 require_once "../lib/database.php";
-$objDatabase->newlogin();
+$objDatabase->newlogin();                                                       // TO BE MOVED TO CONSTRUCTOR OF CLASS WHEN ALL CODE CLEANUP IS FINISHED - DAVID 11 NOV 2008
 if(!array_key_exists('module',$_SESSION) || !$_SESSION['module'])
   $_SESSION['module'] = $modules[0];
 require_once "../lib/setup/vars.php";

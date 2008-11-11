@@ -8,8 +8,8 @@ require_once "../lib/observers.php";
 
 
 //listnames
-$myList = False;
-$listname    = '';
+$myList=False;
+$listname='';
 if(array_key_exists('listname', $_SESSION))
   $listname=$_SESSION['listname'];
 $listname_ss = stripslashes($listname);

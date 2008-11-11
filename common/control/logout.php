@@ -10,5 +10,4 @@ if(array_key_exists('deepskylog_id',$_SESSION))
   session_unregister($_SESSION['deepskylog_id']);
 if(array_key_exists('admin',$_SESSION))
   session_unregister($_SESSION['admin']);
-header("Location: ../".$temp."/index.php"); 		 				 // return to main entrance 
 ?>

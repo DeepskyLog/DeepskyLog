@@ -1710,7 +1710,7 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_observer','content/view_observer.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('search_sites','content/search_locations.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('site_result','content/getLocation.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('subscribe','content/register.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('subscribe','content/register.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_eyepieces','content/overview_eyepieces.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_filters','content/overview_filters.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_instruments','content/overview_instruments.php')))

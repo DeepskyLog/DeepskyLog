@@ -754,656 +754,123 @@ class Observations
     return mysql_result($run, 0, 0);
   }
 
-  // getNumberOfObservationsThisYear() returns the number of observations this
-  // year
-  function getNumberOfObservationsLastYear()
-  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.date >= \"" . date('Ymd', strtotime('-1 year')) . "\"", 'Cnt');
+  function getNumberOfObservationsLastYear()                                    // getNumberOfObservationsThisYear() returns the number of observations this year
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.date >= \"" . date('Ymd', strtotime('-1 year')) . "\"", 'Cnt', 0);
   }
-
-  // getNumberOfObjects($id) return the number of different objects seen by
-  // the observer
-  function getNumberOfObjects($id)
-  {
-    include "setup/databaseInfo.php";
-
-    $db = new database;
-    $db->login();
-    $sql = "SELECT COUNT(DISTINCT objectname) FROM observations WHERE observerid=\"$id\" AND visibility != 7 ";
-
-    $run = mysql_query($sql) or die(mysql_error());
-
-    return mysql_result($run, 0, 0);
+  function getNumberOfObjects($id)                                              // getNumberOfObjects($id) return the number of different objects seen by the observer
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE observerid=\"$id\" AND visibility != 7 ",'Cnt',0);
   }
-
-
-  // getPopularObservations() returns the number of observations of the
-  // objects
-  function getPopularObservations()
-  {
-    include "setup/databaseInfo.php";
-    $observers = new Observers;
-    $extra = $observers->getObserversFromClub($club);
-    $i=1;
-    $db = new database;
-    $db->login();
-    $sql = "SELECT observations.objectname, COUNT(observations.id) As ObservationCount FROM observations GROUP BY observations.objectname ORDER BY ObservationCount DESC".$extra;
-    $run = mysql_query($sql) or die(mysql_error());
-    while($get = mysql_fetch_object($run))
+  function getPopularObservations()                                             // getPopularObservations() returns the number of observations of the objects
+  { $run = $GLOBALS['objDatabase']->selectRecordset("SELECT observations.objectname, COUNT(observations.id) As ObservationCount FROM observations GROUP BY observations.objectname ORDER BY ObservationCount DESC");
+    $i=0;
+		while($get = mysql_fetch_object($run))
       $numberOfObservations[$get->objectname.' ('.$i.')'] = array($i++,$get->objectname);
-    $db->logout();
-    //$numberOfObservations = array_count_values ($observations);
-    //arsort($numberOfObservations);
     return $numberOfObservations;
   }
-
-  // getInstrumentId returns the id of the instrument of the observation
   function getDsObservationInstrumentId($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $instrumentid = $get->instrumentid;
-    }
-    else
-    {
-      $instrumentid = '';
-    }
-
-    $db->logout();
-
-    return $instrumentid;
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT instrumentid FROM observations WHERE id = \"$id\"",'instrumentid','');
   }
-
-  // getDsObservationEyepieceId returns the id of the eyepiece of the observation
-  function getDsObservationEyepieceId($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $eyepieceid = $get->eyepieceid;
-    }
-    else
-    {
-      $eyepieceid = '';
-    }
-
-    $db->logout();
-
-    return $eyepieceid;
+  function getDsObservationEyepieceId($id)                                      // getDsObservationEyepieceId returns the id of the eyepiece of the observation
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT eyepieceid FROM observations WHERE id = \"$id\"",'eyepieceid','');
   }
-
-  // getFilterId returns the id of the filter of the observation
-  function getDsObservationFilterId($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $filterid = $get->filterid;
-    }
-    else
-    {
-      $filterid = '';
-    }
-
-    $db->logout();
-
-    return $filterid;
+  function getDsObservationFilterId($id)                                        // getFilterId returns the id of the filter of the observation
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT filterid FROM observations WHERE id = \"$id\"",'filterid','');
   }
-
-  // getLensId returns the id of the lens of the observation
-  function getDsObservationLensId($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $lensid = $get->lensid;
-    }
-    else
-    {
-      $lensid = '';
-    }
-
-    $db->logout();
-
-    return $lensid;
+  function getDsObservationLensId($id)                                          // getLensId returns the id of the lens of the observation
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT lensid FROM observations WHERE id = \"$id\"",'lensid','');
   }
-
-  // getDsSmallDiameter returns the small diameter estimation of the observation
-  function getDsSmallDiameter($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $smallDiameter = $get->smallDiameter;
-    }
-    else
-    {
-      $smallDiameter = '';
-    }
-
-    $db->logout();
-
-    return $smallDiameter;
+  function getDsSmallDiameter($id)                                              // getDsSmallDiameter returns the small diameter estimation of the observation
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT smallDiameter FROM observations WHERE id = \"$id\"",'smallDiameter','');
   }
-
-  // getDsLargeDiameter returns the large diameter estimation of the observation
-  function getDsLargeDiameter($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $largeDiameter = $get->largeDiameter;
-    }
-    else
-    {
-      $largeDiameter = '';
-    }
-
-    $db->logout();
-
-    return $largeDiameter;
+  function getDsLargeDiameter($id)                                              // getDsLargeDiameter returns the large diameter estimation of the observation
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT largeDiameter FROM observations WHERE id = \"$id\"",'largeDiameter','');
   }
-
-  // getDsStellar returns true if the object was seen stellar
-  function getDsStellar($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $stellar = $get->stellar;
-    }
-    else
-    {
-      $stellar = '';
-    }
-
-    $db->logout();
-
-    return $stellar;
+  function getDsStellar($id)                                                    // getDsStellar returns true if the object was seen stellar
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT stellar FROM observations WHERE id = \"$id\"",'stellar','');
   }
-
-  // getDsExtended returns true if the object was seen stellar
-  function getDsExtended($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $extended = $get->extended;
-    }
-    else
-    {
-      $extended = '';
-    }
-
-    $db->logout();
-
-    return $extended;
+ function getDsExtended($id)                                                   // getDsExtended returns true if the object was seen stellar
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT extended FROM observations WHERE id = \"$id\"",'extended','');
   }
-
-  // getDsResolved returns true if the object was seen resolved
-  function getDsResolved($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $resolved = $get->resolved;
-    }
-    else
-    {
-      $resolved = '';
-    }
-
-    $db->logout();
-
-    return $resolved;
+	function getDsResolved($id)                                                   // getDsResolved returns true if the object was seen resolved
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT resolved FROM observations WHERE id = \"$id\"",'resolved','');
   }
-
-  // getDsMottled returns true if the object was seen mottled
-  function getDsMottled($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $mottled = $get->mottled;
-    }
-    else
-    {
-      $mottled = '';
-    }
-
-    $db->logout();
-
-    return $mottled;
+  function getDsMottled($id)                                                    // getDsMottled returns true if the object was seen mottled
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT mottled FROM observations WHERE id = \"$id\"",'mottled','');
   }
-
-  // getDsCharacterType returns the character type of the observation
-  function getDsCharacterType($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $characterType = $get->characterType;
-    }
-    else
-    {
-      $characterType = '';
-    }
-
-    $db->logout();
-
-    return $characterType;
+  function getDsCharacterType($id)                                              // getDsCharacterType returns the character type of the observation
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT characterType FROM observations WHERE id = \"$id\"",'characterType','');
   }
-
-  // getDsUnusualShape returns true if the object was seen with an unusual shape
-  function getDsUnusualShape($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $unusualShape = $get->unusualShape;
-    }
-    else
-    {
-      $unusualShape = '';
-    }
-
-    $db->logout();
-
-    return $unusualShape;
+  function getDsUnusualShape($id)                                               // getDsUnusualShape returns true if the object was seen with an unusual shape
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT unusualShape FROM observations WHERE id = \"$id\"",'unusualShape','');
   }
-
-  // getDsPartlyUnresolved returns true if the object was seen partly unresolved
-  function getDsPartlyUnresolved($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $partlyUnresolved = $get->partlyUnresolved;
-    }
-    else
-    {
-      $partlyUnresolved = '';
-    }
-
-    $db->logout();
-
-    return $partlyUnresolved;
+  function getDsPartlyUnresolved($id)                                           // getDsPartlyUnresolved returns true if the object was seen partly unresolved
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT partlyUnresolved FROM observations WHERE id = \"$id\"",'partlyUnresolved','');
   }
-
-  // getDsColorContrasts returns true if the object was seen with color contrasts
-  function getDsColorContrasts($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $colorContrasts = $get->colorContrasts;
-    }
-    else
-    {
-      $colorContrasts = '';
-    }
-
-    $db->logout();
-
-    return $colorContrasts;
+  function getDsColorContrasts($id)                                             // getDsColorContrasts returns true if the object was seen with color contrasts
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT colorContrasts FROM observations WHERE id = \"$id\"",'colorContrasts','');
   }
-
-  // getLanguage returns the idlanguage of the observation
-  function getDsObservationLanguage($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $language = $get->language;
-    }
-    else
-    {
-      $language = '';
-    }
-
-    $db->logout();
-
-    return $language;
+  function getDsObservationLanguage($id)                                        // getLanguage returns the idlanguage of the observation
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT language FROM observations WHERE id = \"$id\"",'language','');
   }
-
-  // getLocationId returns the location of the observation
-  function getDsObservationLocationId($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-    $get = mysql_fetch_object($run);
-    if($get)
-    {
-    }
-    else
-    {
-      echo("ERROR ID: " . $id);
-    }
-    $locationid = $get->locationid;
-    $db->logout();
-    return $locationid;
+  function getDsObservationLocationId($id)                                      // getLocationId returns the location of the observation
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT locationid FROM observations WHERE id = \"$id\"",'locationid',"ERROR ID: " . $id);
   }
-
-  // getDate returns the date of the given observation in UT
-  function getDateDsObservation($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $thedate = $get->date;
-    }
-    else
-    {
-      $thedate = '';
-    }
-
-    $db->logout();
-
-    return $thedate;
+  function getDateDsObservation($id)  // getDate returns the date of the given observation in UT
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT date FROM observations WHERE id = \"$id\"",'date','');
   }
-
-
-  // getLimitingMagnitude returns the limiting magnitude of the observation
-  function getLimitingMagnitude($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    $limmag = $get->limmag;
-
-    $db->logout();
-
-    return $limmag;
+  function getLimitingMagnitude($id)                                            // getLimitingMagnitude returns the limiting magnitude of the observation
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT limmag FROM observations WHERE id = \"$id\"",'limmag','');
   }
-
-  // getSQM returns the SQM of the observation
-  function getSQM($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    $sqm = $get->SQM;
-
-    $db->logout();
-
-    return $sqm;
+  function getSQM($id)                                                          // getSQM returns the SQM of the observation
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT SQM FROM observations WHERE id = \"$id\"",'SQM','');
   }
-
-  // getSeeing returns the seeing of the observation
-  function getSeeing($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $seeing = $get->seeing;
-    }
-    else
-    {
-      $seeing = '';
-    }
-
-    $db->logout();
-
-    return $seeing;
+  function getSeeing($id)                                                       // getSeeing returns the seeing of the observation
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT seeing FROM observations WHERE id = \"$id\"",'seeing','');
   }
-
-  // getTime returns the time of the given observation in UT
-  function getTime($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $time = $get->time;
-    }
-    else
-    {
-      $time = '';
-    }
-
-    $db->logout();
-
-    return $time;
+  function getTime($id)                                                         // getTime returns the time of the given observation in UT
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT time FROM observations WHERE id = \"$id\"",'time','');
   }
-
-  // getLocalTime returns the time of the given observation in local time
-  function getDsObservationLocalTime($id)
-  {
-    include_once "locations.php";
-    $locations = new Locations();
-
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $date = $get->date;
+  function getDsObservationLocalTime($id)                                       // getLocalTime returns the time of the given observation in local time
+  { if($get=mysql_fetch_object($GLOBALS['objDatabase']->selectrecordset("SELECT date, time, locationid FROM observations WHERE id = \"$id\"")))
+    { $date = $get->date;
       $time = $get->time;
       $loc = $get->locationid;
-
-      $db->logout();
-
       $date = sscanf($date, "%4d%2d%2d");
-
-      $timezone = $locations->getTimezone($loc);
-
+      $timezone = $GLOBALS['objLocation']->getTimezone($loc);
       $dateTimeZone = new DateTimeZone($timezone);
-
       $datestr =  sprintf("%02d", $date[1]) . "/" . sprintf("%02d", $date[2]) . "/" . $date[0];
-
       $dateTime = new DateTime($datestr, $dateTimeZone);
       // Geeft tijdsverschil terug in seconden
       $timedifference = $dateTimeZone->getOffset($dateTime);
       $timedifference = $timedifference / 3600.0;
-
       if ($time < 0)
-      {
         return $time;
-      }
       $time = sscanf(sprintf("%04d", $time), "%2d%2d");
-
       $hours = $time[0] + (int)$timedifference;
       $minutes = $time[1];
-
       // We are converting from UT to local time -> we should add the time difference!
       $timedifferenceminutes = ($timedifference - (int)$timedifference) * 60;
-
       $minutes = $minutes + $timedifferenceminutes;
-
       if ($minutes < 0)
-      {
-        $hours = $hours - 1;
+      { $hours = $hours - 1;
         $minutes = $minutes + 60;
       }
       else if ($minutes > 60)
-      {
-        $hours = $hours + 1;
+      { $hours = $hours + 1;
         $minutes = $minutes - 60;
       }
-
       if ($hours < 0)
-      {
         $hours = $hours + 24;
-      }
       if ($hours >= 24)
-      {
         $hours = $hours - 24;
-      }
-
       $time = $hours * 100 + $minutes;
-    }
-
-    return $time;
+      return $time;
+		}
+		else
+		  throw new Exception("Error in getDsObservationLocalTime of observations.php");
   }
-
-  // getDescription returns the description of the given observation
-  function getDescriptionDsObservation($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $description = $get->description;
-
-      $description = preg_replace("/&amp;/", "&", $description);;
-    }
-    else
-    {
-      $description = '';
-    }
-
-    $db->logout();
-
-    return $description;
+  function getDescriptionDsObservation($id)                                     // getDescription returns the description of the given observation
+  { return preg_replace("/&amp;/", "&", $GLOBALS['objDatabase']->selectSingleValue("SELECT time FROM observations WHERE id = \"$id\"",'time',''));
   }
 
 

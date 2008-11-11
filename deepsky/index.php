@@ -3,6 +3,7 @@
 try{
 include '../common/entryexit/preludes.php';
 include '../common/entryexit/preludesDS.php';
+include '../common/entryexit/instructions.php';
 include '../common/entryexit/instructionsDS.php';
 $objUtil->utilitiesSetModuleCookie("deepsky");
 include '../common/entryexit/menu.php';

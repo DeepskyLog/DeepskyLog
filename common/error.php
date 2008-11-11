@@ -1,26 +1,11 @@
 <?php
-
 // error.php
 // displays error message 
-
-// Code cleanup - removed by David on 20080704
-//include_once "../lib/observers.php";
-//$obs = new Observers;
-
-
-include_once "../lib/setup/databaseInfo.php";
-include_once "../lib/util.php";
-
-$util = new Util();
-$util->checkUserInput();
 
 if(!session_id()) session_start();
 
 if(!$_SESSION['module'])
-{
    $_SESSION['module'] = $modules[0];
-}
-
 
 include_once("head.php"); // HTML head
 
