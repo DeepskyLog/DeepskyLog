@@ -1432,7 +1432,7 @@ class Observations
   }
 
   function getLOObservationId($objectname, $userid, $notobservation)
-  { return array($GLOBALS['objDatabase']->selectSingleValue("SELECT id FROM observations WHERE objectname = \"$objectname\" and observerid = \"$userid\" and id != \"$notobservation\" ORDER BY id DESC",'id',''));
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT id FROM observations WHERE objectname = \"$objectname\" and observerid = \"$userid\" and id != \"$notobservation\" ORDER BY id DESC",'id',0);
   }
 
   function getMOObservationsId($object, $userid, $notobservation)
@@ -1780,8 +1780,7 @@ class Observations
     $LOid="";
     $LOdescription="";
     if($AOid)
-    {
-      list($LOid) = $AOid;
+    { $LOid = $AOid;
       $LOdesc = $this->getDescriptionDsObservation($LOid);
       $patterns[0] = "/\s+(M)\s*(\d+)/";
       $replacements[0] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
@@ -2013,9 +2012,7 @@ class Observations
     $replacements[3] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=Arp%20\\2\">Arp&nbsp;\\2</a>";
     $description = preg_replace($patterns,$replacements,$desc);
     if ($instrument == "Naked eye")
-    {
       $instrument = InstrumentsNakedEye;
-    }
     // OUTPUT
     $con = $objects->getConstellation($object);
     echo("<tr class=\"type2\">\n
@@ -2025,19 +2022,13 @@ class Observations
          <td><a href=\"common/indexCommon.php?detail_instrument&amp;instrument=".urlencode($temp)."\">$instrument &nbsp;"
     );
     if($instrument != InstrumentsNakedEye)
-    {
       echo("(" . $instrumentsize . "&nbsp;mm" . ")");
-    }
     echo("</a></td><td>");
     // DATE
     if (array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id']&&$objObserver->getUseLocal($_SESSION['deepskylog_id']))
-    {
       $date = sscanf($this->getDsObservationLocalDate($value['observationid']), "%4d%2d%2d");
-    }
     else
-    {
       $date = sscanf($this->getDateDsObservation($value['observationid']), "%4d%2d%2d");
-    }
     echo date ($dateformat, mktime (0,0,0,$date[1],$date[2],$date[0]));
     echo("</td>\n");
     echo("<td>");
@@ -2061,10 +2052,8 @@ class Observations
     echo LangAOText;
     echo("</a>&nbsp;");
     if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])                  // LOGGED IN
-    {
-      if($this->getLOObservationId($object, $_SESSION['deepskylog_id'], $value['observationid']))
-      {
-        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;dalm=MO\" title=\"" . LangMO . "\">");
+    { if($this->getLOObservationId($object, $_SESSION['deepskylog_id'], $value['observationid']))
+      { echo("<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;dalm=MO\" title=\"" . LangMO . "\">");
         echo LangMOText;
         echo("</a>&nbsp;");
         echo("<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;dalm=LO\" title=\"" . LangLO . "\">");
@@ -2074,8 +2063,7 @@ class Observations
     }
     echo("</td>");
     if(array_key_exists("listname",$_SESSION) && $_SESSION['listname'] && array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && $myList)
-    {
-      echo("<td>");
+    { echo("<td>");
       $db = new database;
       $db->login();
       $listname=$_SESSION['listname'];

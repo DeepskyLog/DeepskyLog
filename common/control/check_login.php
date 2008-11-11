@@ -6,7 +6,7 @@ if(!session_id()) session_start(); // start session
 $_SESSION['admin'] = "no";
 $_SESSION['deepskylog_id'] = "";
 if(isset($_POST['submit']))                                     // pushed submit button
-{ if(array_key_exists('deepskylog_id', $_POST) && $_POST['deepskylog_id'] && array_key_exists('passwd', $_POST) && $_POST['passwd'] && ($_POST['logtime']==$_SESSION['prevlogtime']))              // all fields filled in
+{ if(array_key_exists('deepskylog_id', $_POST) && $_POST['deepskylog_id'] && array_key_exists('passwd', $_POST) && $_POST['passwd'])              // all fields filled in
   { // get password from form and encrypt
     $login  = $_POST['deepskylog_id'];
 	  $passwd = md5($_POST['passwd']);

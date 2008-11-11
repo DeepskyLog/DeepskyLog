@@ -68,8 +68,7 @@ if($object ||
 	     (array_key_exists('maxlimmag',$_GET) && $_GET['maxlimmag']!="") || 
 	     (array_key_exists('minseeing',$_GET) && $_GET['minseeing']!="") || 
 	     (array_key_exists('maxseeing',$_GET) && $_GET['maxseeing']!="")) // at least 1 field to search on 
-{
-  $catalogue = '';
+{ $catalogue = '';
   if(!$object && array_key_exists('catalogue',$_GET) && ($_GET['catalogue']))
   { $catalogue = $_GET['catalogue']; 
   }  
@@ -459,12 +458,13 @@ if($object ||
                  "maxseeing" => $maxseeing,
                  "languages" => $usedLanguages);
 
+
   //============================================ CHECK TO SEE IF OBSERVATIONS ALREADY FETCHED BEFORE, OTHERWISE FETCH DATA FROM DB ===============================
 	$validQobs=false;
-  if(array_key_exists('QobsParams',$_SESSION))
+  if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])>1)&&(count($_SESSION['Qobs'])>0))
 	  $validQobs=true;
 	while($validQobs && (list($key,$value) = each($_SESSION['QobsParams'])))
-	  if(array_key_exists($key,$query) && ($value != $query[$key]))
+	  if(array_key_exists($key,$query) && ($value!=$query[$key]))
 	    $validQobs=false;	 
   if(!$validQobs)
 	{ $obs = $objObservation->getObservationFromQuery($query, $seenpar);
@@ -556,35 +556,27 @@ if($object ||
   }
      
    // Check if only the observations with a drawing should be shown: THERE SHOULD COME A FIELD IN THE DB SHOWING IF AN OBSERVATION HAS A DRAWING
-/*   if(array_key_exists('drawings',$_GET) && $_GET['drawings'])
-   {
-	    $drawingslist[] = false;
-			if ($handle = opendir('drawings/'))
-      {
-         while (false !== ($file = readdir($handle)))
-         {
-            $file = preg_replace("/.jpg/", "", $file);
-            $file = preg_replace("/_resized/", "", $file);
-            if ($file != "." && $file != "..")
-               $drawingslist[] = $file;
-         }
-         closedir($handle);
-      }
-			
-			if($drawings)
-      {
-				 $drawingslist = array_unique($drawingslist);
-			
-         for ($i = 0;$i < count($obs);$i++)
-           if ($test = array_search($obs[$i][, $drawingslist))
-             $new_obs[] = $obs[$i];
-         $obs = $new_obs;
-      }
-			else
-			  $obs = false;
+   if(array_key_exists('drawings',$_GET) && $_GET['drawings'])
+   { $drawingslist[] = false;
+		 if ($handle = opendir('drawings/'))
+     { while (false !== ($file = readdir($handle)))
+       { $file = preg_replace("/.jpg/", "", $file);
+         $file = preg_replace("/_resized/", "", $file);
+         if ($file != "." && $file != "..")
+           $drawingslist[] = $file;
+       }
+       closedir($handle);
+     }
+		 if($drawings)
+     { $drawingslist = array_unique($drawingslist);
+			 for ($i = 0;$i < count($obs);$i++)
+         if ($test = array_search($obs[$i], $drawingslist))
+           $new_obs[] = $obs[$i];
+       $obs = $new_obs;
+     }
+		 else
+			 $obs = false;
    }
-*/
-
 }
 
 else
