@@ -59,13 +59,7 @@ else
 }
 
 if (isset($_COOKIE['module']))
-{
 	$_SESSION['module'] = $_COOKIE['module'];
-}
 else
-{
-//  $_SESSION['module'] = $defaultmodule;
   $_SESSION['module'] = $modules[0];
-}
-
 ?>
