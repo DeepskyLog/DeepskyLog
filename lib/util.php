@@ -72,7 +72,7 @@ class util
       return $includefile; 
   }
 	
-  function printNewListHeader($list, $link, $min, $step, $total)
+  function printNewListHeader(&$list, $link, $min, $step, $total)
   { global $baseURL;
 	  $pages = ceil(count($list) / $step);       // total number of pages
     if($min)                                   // minimum value

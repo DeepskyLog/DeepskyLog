@@ -470,83 +470,72 @@ if($object ||
 	{ $obs = $objObservation->getObservationFromQuery($query, $seenpar);
     $_SESSION['QobsParams']=$query;
 	  $_SESSION['Qobs']=$obs;
-		$_SESSION['QobsSort']='id';
+		$_SESSION['QobsSort']='observationid';
 	  $_SESSION['QobsSortDirection']='desc';
 		$query['countquery']='true';
     $_SESSION['QobsTotal'] = $objObservation->getObservationFromQuery($query, $seenpar); 
 	}
-	
-	
 	//=========================================== CHECK TO SEE IF SORTING IS NECESSARY ===========================================
   if(!array_key_exists('sort',$_GET))      
-  { $_GET['sort'] = 'observationid';
-		$_GET['sortdirection']='desc';
-    $_SESSION['sort']=$_GET['sort'];
-		$_SESSION['QobsSortDirection']='desc';
+  { $_GET['sort'] = $_SESSION['QobsSort'];
+		$_GET['sortdirection']=$_SESSION['QobsSortDirection'];
   }
 	if(!array_key_exists('sortdirection',$_GET))
-	{	$_GET['sortdirection']='asc';
-		$_SESSION['QobsSortDirection']='asc';	
-	}
-  if($_SESSION['sort']!=$_GET['sort'])
+	 	$_GET['sortdirection']=$_SESSION['QobsSortDirection'];
+  if($_SESSION['QobsSort']!=$_GET['sort'])
 	{ if($_GET['sortdirection']=='desc')
-	  { while(list($key, $value)=each($_SESSION['Qobs']))
-			  $sortarray[$value[$_GET['sort']].' '.$value['observationid']]=$value;
-			krsort($sortarray);
-			$_SESSION['Qobs']=$sortarray;
-			$_SESSION['sort']=$_GET['sort'];
+	  { if(count($_SESSION['Qobs'])>1)
+		  { while(list($key, $value)=each($_SESSION['Qobs']))
+			    $sortarray[$value[$_GET['sort']].'_'.(99999999-$value['observationid'])]=$value;
+			  uksort($sortarray,"strnatcasecmp");
+			  $_SESSION['Qobs']=array_reverse($sortarray,true);
+      }
+			$_SESSION['QobsSort']=$_GET['sort'];
 			$_SESSION['QobsSortDirection']='desc';
 		}
 		else
-	  { while(list($key, $value)=each($_SESSION['Qobs']))
-  		  $sortarray[$value[$_GET['sort']].' '.$value['observationid']]=$value;
-			ksort($sortarray);
-			$_SESSION['Qobs']=$sortarray;
-			$_SESSION['sort']=$_GET['sort'];
+	  { if(count($_SESSION['Qobs'])>1)
+		  { while(list($key, $value)=each($_SESSION['Qobs']))
+  	      $sortarray[$value[$_GET['sort']].'_'.(99999999-$value['observationid'])]=$value;
+			  uksort($sortarray,"strnatcasecmp");
+			  $_SESSION['Qobs']=$sortarray;
+			}
+			$_SESSION['QobsSort']=$_GET['sort'];
 			$_SESSION['QobsSortDirection']='asc';
 		}
 	}
   if($_SESSION['QobsSortDirection']!=$_GET['sortdirection'])
-	{ $_SESSION['Qobs']=array_reverse($_SESSION['Qobs']);
+	{ if(count($_SESSION['Qobs'])>1)
+		 	$_SESSION['Qobs']=array_reverse($_SESSION['Qobs'],true);
 		$_SESSION['QobsSortDirection']=$_GET['sortdirection'];
 	}	
 	
 	
   if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && $objObserver->getUseLocal($_SESSION['deepskylog_id']))
-  {
-    if ($mindate != "" || $maxdate != "")
-    {
-      if ($mindate != "")
+  { if ($mindate != "" || $maxdate != "")
+    { if ($mindate != "")
         $mindate = $mindate + 1;
       if ($maxdate != "")
         $maxdate = $maxdate - 1;
       $newkey = 0;
       $new_obs = Array();
       while(list ($key, $value) = each($obs)) // go through observations array
-      {
-        $newdate = $objObservation->getDsObservationLocalDate($value);
-
+      { $newdate = $objObservation->getDsObservationLocalDate($value);
         if ($mindate != "" && $maxdate != "") 
-        {
-          if (($newdate >= $mindate) && ($newdate <= $maxdate)) 
-          {
-            $new_obs[$newkey] = $value;
+        { if (($newdate >= $mindate) && ($newdate <= $maxdate)) 
+          { $new_obs[$newkey] = $value;
             $newkey++;
           }
         }
         else if ($maxdate != "") 
-        {
-          if ($newdate <= $maxdate)
-          {
-            $new_obs[$newkey] = $value;
+        { if ($newdate <= $maxdate)
+          { $new_obs[$newkey] = $value;
             $newkey++;
           }
         }
         else if ($mindate != "")
-        {
-          if ($newdate >= $mindate)
-          {
-            $new_obs[$newkey] = $value;
+        { if ($newdate >= $mindate)
+          { $new_obs[$newkey] = $value;
             $newkey++;
           }
         }
@@ -575,10 +564,9 @@ if($object ||
        $obs = $new_obs;
      }
 		 else
-			 $obs = false;
+			 $obs = array();
    }
 }
-
 else
   $obs=array(); 
 ?>

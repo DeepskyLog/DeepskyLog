@@ -995,7 +995,7 @@ class Objects
     $sql = "(" . $sql1. $sqland . ") UNION (" . $sql2 . $sqland . ")";
   else
     $sql = $sql1 . $sqland;		
-  $run = mysql_query($sql) or die(mysql_error());
+	$run = mysql_query($sql) or die(mysql_error());
   $db->logout();
   $obs=array();
   $i=0;

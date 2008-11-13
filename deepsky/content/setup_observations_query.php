@@ -48,6 +48,8 @@ echo("</form>");
 echo("</td><td>");
 echo("<form action=\"deepsky/index.php\" method=\"get\" name=\"ObservationsQueryForm\">\n");
 echo("<input type=\"hidden\" name=\"indexAction\" value=\"result_selected_observations\">");
+echo "<input type=\"hidden\" name=\"sort\" value=\"objectname\">";
+echo "<input type=\"hidden\" name=\"sortdirection\" value=\"asc\">";
 echo("<td align=\"right\" width=\"25%\">" . LangSeen . "</td><td width=\"25%\">");
 echo("<select name=\"seen\">");
 echo("<option selected value=\"D\">" . LangSeenDontCare . "</option>");
