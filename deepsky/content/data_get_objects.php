@@ -1,4 +1,6 @@
 <?php
+
+// ========================================= filter objects from observation query
 if(array_key_exists('source',$_GET)&&($_GET['source']=='observation_query'))
 {	unset($_SESSION['QOP']);
 	$validQobj=false;
@@ -20,32 +22,6 @@ elseif(array_key_exists('seen',$_GET))
   $min=0;
   $previous = '';
   $prev = '';		
-  
-  $pageError = false;       
-  $minDeclDegreesError = false;    $minDeclMinutesError = false;    $minDeclSecondsError = false;
-  $maxDeclDegreesError = false;    $maxDeclMinutesError = false;    $maxDeclSecondsError = false;
-  $minRAHoursError = false;        $minRAMinutesError = false;      $minRASecondsError = false;
-  $maxRAHoursError = false;        $maxRAMinutesError = false;      $maxRASecondsError = false;
-  $minMagError = false;            $maxMagError = false;               
-  $minSBError = false;             $maxSBError = false;
-  $minSizeError = false;           $maxSizeError = false;
-  $minContrastError = false;       $maxContrastError = false; 
-  $listError = false;
-  
-  $name = '';                                 $atlas = '';          $atlasPageNumber = '';
-  $catalog = '';        $catNumber = '';
-  $type = '';                                 $con = '';		
-  $minDecl = '';        $minDeclDegrees = ''; $minDeclMinutes = ''; $minDeclSeconds = '';
-  $maxDecl = '';        $maxDeclDegrees = ''; $maxDeclMinutes = ''; $maxDeclSeconds = '';
-  $minRA = '';          $minRAHours = '';     $minRAMinutes = '';   $minRASeconds = '';
-  $maxRA = '';          $maxRAHours = '';     $maxRAMinutes = '';   $maxRASeconds = '';
-  $maxMag = '';       	                      $minMag = '';
-  $maxSB = '';                                $minSB = '';
-  $minSize = '';        $minSizeC = '';       $size_min_units = ''; 
-  $maxSize = '';        $maxSizeC = '';       $size_max_units = ''; 
-  $minContrast = '';                          $maxContrast = '';    
-  $inList = '';                               $notInList = '';
-  
   
   $min=0;   if(array_key_exists('min',$_GET) && $_GET['min'])  $min = $_GET['min'];
   // CATALOG AND / OR NUMBER
@@ -69,8 +45,7 @@ elseif(array_key_exists('seen',$_GET))
   }
   // ATLAS PAGE
   if(array_key_exists('atlasPageNumber',$_GET) && $_GET['atlasPageNumber'])
-  {
-    if(!is_numeric($_GET['atlasPageNumber']) || ($_GET['atlasPageNumber']<1) || ($_GET['atlasPageNumber']>5000))
+  { if(!is_numeric($_GET['atlasPageNumber']) || ($_GET['atlasPageNumber']<1) || ($_GET['atlasPageNumber']>5000))
       $pageError = true;
     else
       $atlasPageNumber = $_GET['atlasPageNumber'];
@@ -349,6 +324,8 @@ elseif(array_key_exists('seen',$_GET))
     $maxContrastError = True;
   	$minContrastError = True;
   }
+	
+	
   if(!($pageError || $minDeclDegreesError || $minDeclMinutesError || $minDeclSecondsError || 
          $maxDeclDegreesError || $maxDeclMinutesError || $maxDeclSecondsError || $minRAHoursError || 
          $minRAMinutesError || $minRASecondsError || $maxRAHoursError || $maxRAMinutesError || 
@@ -380,10 +357,10 @@ elseif(array_key_exists('seen',$_GET))
         $seenPar = "D";
 			
     	$validQobj=false;
-      if(array_key_exists('QobjParams',$_SESSION))
+      if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])>1)&&(count($_SESSION['Qobj'])>0))
     	  $validQobj=true;
     	while($validQobj && (list($key,$value) = each($_SESSION['QobjParams'])))
-    	  if(array_key_exists($key,$query)&&($value!=$query[$key]))
+        if(!array_key_exists($key,$query)||($value!=$query[$key]))
     	    $validQobj=false;	 
       if(!$validQobj)
     	{ $_SESSION['QobjParams']=$query;
@@ -393,7 +370,54 @@ elseif(array_key_exists('seen',$_GET))
     	}
 			unset($_SESSION['QOP']);
   }
-  elseif(array_key_exists('QO',$_SESSION))
-  	unset($_SESSION['QO']);
+  else
+  { $_SESSION['QobjParams']=array();
+    $_SESSION['Qobj']=array();
+    $_SESSION['QobjSort']='';
+    $_SESSION['QobjSortDirection']='';
+  }	
 }
+else
+{ $_SESSION['QobjParams']=array();
+  $_SESSION['Qobj']=array();
+  $_SESSION['QobjSort']='';
+  $_SESSION['QobjSortDirection']='';
+}
+
+//=========================================== CHECK TO SEE IF SORTING IS NECESSARY ===========================================
+if(!array_key_exists('sort',$_GET))      
+{ $_GET['sort'] = $_SESSION['QobjSort'];
+  $_GET['sortdirection']=$_SESSION['QobjSortDirection'];
+}
+if(!array_key_exists('sortdirection',$_GET))
+	$_GET['sortdirection']=$_SESSION['QobjSortDirection'];
+if($_SESSION['QobjSort']!=$_GET['sort'])
+{ if($_GET['sortdirection']=='desc')
+  { if(count($_SESSION['Qobj'])>1)
+    { while(list($key, $value)=each($_SESSION['Qobj']))
+	      $sortarray[$value[$_GET['sort']].'_'.($value['showname'])]=$value;
+	    uksort($sortarray,"strnatcasecmp");
+	    $_SESSION['Qobj']=array_reverse($sortarray,false);
+    }
+	  $_SESSION['QobjSort']=$_GET['sort'];
+	  $_SESSION['QobjSortDirection']='desc';
+  }
+  else
+  { if(count($_SESSION['Qobj'])>1)
+    { while(list($key, $value)=each($_SESSION['Qobj']))
+	      $sortarray[$value[$_GET['sort']].'_'.($value['showname'])]=$value;
+	    uksort($sortarray,"strnatcasecmp");
+	    $_SESSION['Qobj']=$sortarray;
+	  }
+	  $_SESSION['QobjSort']=$_GET['sort'];
+	  $_SESSION['QobjSortDirection']='asc'; 
+  }
+}
+if($_SESSION['QobjSortDirection']!=$_GET['sortdirection'])
+{ if(count($_SESSION['Qobj'])>1)
+ 	  $_SESSION['Qobj']=array_reverse($_SESSION['Qobj'],false);
+  $_SESSION['QobjSortDirection']=$_GET['sortdirection'];
+}	
+
+
 ?>

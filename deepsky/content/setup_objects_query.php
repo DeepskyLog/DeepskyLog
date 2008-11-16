@@ -2,31 +2,46 @@
 // setup_objects_query.php
 // interface to query objects
 
+$pageError = false;       
+$minDeclDegreesError = false;    $minDeclMinutesError = false;    $minDeclSecondsError = false;
+$maxDeclDegreesError = false;    $maxDeclMinutesError = false;    $maxDeclSecondsError = false;
+$minRAHoursError = false;        $minRAMinutesError = false;      $minRASecondsError = false;
+$maxRAHoursError = false;        $maxRAMinutesError = false;      $maxRASecondsError = false;
+$minMagError = false;            $maxMagError = false;               
+$minSBError = false;             $maxSBError = false;
+$minSizeError = false;           $maxSizeError = false;
+$minContrastError = false;       $maxContrastError = false; 
+$listError = false;
+
+$name = '';                                 $atlas = '';          $atlasPageNumber = '';
+$catalog = '';        $catNumber = '';
+$type = '';                                 $con = '';		
+$minDecl = '';        $minDeclDegrees = ''; $minDeclMinutes = ''; $minDeclSeconds = '';
+$maxDecl = '';        $maxDeclDegrees = ''; $maxDeclMinutes = ''; $maxDeclSeconds = '';
+$minRA = '';          $minRAHours = '';     $minRAMinutes = '';   $minRASeconds = '';
+$maxRA = '';          $maxRAHours = '';     $maxRAMinutes = '';   $maxRASeconds = '';
+$maxMag = '';       	                      $minMag = '';
+$maxSB = '';                                $minSB = '';
+$minSize = '';        $minSizeC = '';       $size_min_units = ''; 
+$maxSize = '';        $maxSizeC = '';       $size_max_units = ''; 
+$minContrast = '';                          $maxContrast = '';    
+$inList = '';                               $notInList = '';
+  
+
 require_once '../deepsky/content/data_get_objects.php';
+
 $link="../deepsky/index.php?indexAction=query_objects";
+reset($_GET);
 while(list($key,$value)=each($_GET))
-  $link.='&amp;'.$key.'='.$value;
+	if($key!='indexAction')
+    $link.='&amp;'.$key.'='.$value;
 if(array_key_exists('Qobj',$_SESSION) && (count($_SESSION['Qobj'])>0)) // valid result
   include("content/execute_query_objects.php"); 
 else
-{
-  if($_SID)
-	{
-	  echo("<div id=\"main\">\n<h2>");
-    echo LangSelectedObjectsTitle; // page title
-    echo("</h2>\n");
-    echo(LangExecuteQueryObjectsMessage2);		
-    echo "<hr>";
-  }
-  else
-	  $_SID=time();
-  echo("<div id=\"main\">\n");
+{ echo("<div id=\"main\">\n");
   echo("<h2>");
-  
   echo LangQueryObjectsTitle;
-  
   echo("</h2>\n");
-  
   echo("<table width=\"100%\">\n");
   echo("<tr><td align=\"centre\" width=\"25%\">");
 	echo("<form action=\"deepsky/index.php\">");
@@ -39,8 +54,6 @@ else
   echo("<td>");
   echo("<form action=\"deepsky/index.php\" method=\"get\">\n");
   echo("<input type=\"hidden\" name=\"indexAction\" value=\"query_objects\"></input>");
-  $_SID=(int) time();
-  echo("<input type=\"hidden\" name=\"SID\" value=\"".$_SID."\"></input>");
   echo("<select name=\"seen\">");
   echo("<option selected value=\"D\">" . LangSeenDontCare . "</option>".
        "<option value=\"-\">" . LangNotSeen . "</option>");

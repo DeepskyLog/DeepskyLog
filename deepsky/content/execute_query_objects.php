@@ -15,24 +15,6 @@ if($showPartOfs=="1")
 }	  
 if($entryMessage)
   echo $entryMessage.'<hr>';
-$sort='';
-if(array_key_exists('sort',$_GET) && (count($_SESSION[$_SID])>1))
-{
-  // SORTING
-  if($_GET['sort']) // field to sort on given as a parameter in the url
-    $sort = $_GET['sort'];
-  $_SESSION[$_SID] = $objObject->sortObjects($_SESSION[$_SID], $sort);
-  $_SESSION['QOsort'] = "showname";
-}
-if(array_key_exists('sortdirection',$_GET) && (count($_SESSION[$_SID])>1))
-{
-  $sort = "showname";
-  // SORTING
-  if($_GET['RO']) // field to sort on given as a parameter in the url
-    $sort = $_GET['RO'];
-  $_SESSION[$_SID] = $objObject->sortObjects($_SESSION[$_SID], $sort);
-  $_SESSION[$_SID] = array_reverse($_SESSION[$_SID], false); 
-}	
 if(count($_SESSION[$_SID]) > 1) // valid result
 {
   //$link = 'deepsky/index.php?indexAction=result_query_objects&amp;SID=' . $_SID;

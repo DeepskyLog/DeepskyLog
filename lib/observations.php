@@ -64,27 +64,14 @@ class Observations
 
   // getLocalDate returns the date of the given observation in local time
   function getDsObservationLocalDate($id)
-  {
-    include_once "locations.php";
-    $locations = new Locations();
-
-    $db = new database;
-    $db->login();
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-    $get = mysql_fetch_object($run);
-    $db->logout();
-
-    $date = "";
-    if($get)
-    {
-      $date = $get->date;
+  { $run=$GLOBALS['objDatabase']->selectRecordset("SELECT date, time, locationid FROM observations WHERE id = \"".$id."\"");
+    if($get=mysql_fetch_object($run))
+    { $date = $get->date;
       $time = $get->time;
       $loc = $get->locationid;
       if($time >= 0)
-      {
-        $date = sscanf($date, "%4d%2d%2d");
-        $timezone = $locations->getTimezone($loc);
+      { $date = sscanf($get->date, "%4d%2d%2d");
+        $timezone = $locations->getTimezone($get->locationid);
         $dateTimeZone = new DateTimeZone($timezone);
         $datestr =  sprintf("%02d", $date[1]) . "/" . sprintf("%02d", $date[2]) . "/" . $date[0];
         $dateTime = new DateTime($datestr, $dateTimeZone);
@@ -99,23 +86,19 @@ class Observations
         $timedifferenceminutes = ($timedifference - (int)$timedifference) * 60;
         $minutes = $minutes + $timedifferenceminutes;
         if ($minutes < 0)
-        {
-          $hours = $hours - 1;
+        { $hours = $hours - 1;
           $minutes = $minutes + 60;
         }
         else if ($minutes > 60)
-        {
-          $hours = $hours + 1;
+        { $hours = $hours + 1;
           $minutes = $minutes - 60;
         }
         if ($hours < 0)
-        {
-          $hours = $hours + 24;
+        { $hours = $hours + 24;
           $jd = $jd - 1;
         }
         if ($hours >= 24)
-        {
-          $hours = $hours - 24;
+        { $hours = $hours - 24;
           $jd = $jd + 1;
         }
         $dte = JDToGregorian($jd);
@@ -375,12 +358,12 @@ class Observations
 		if(!array_key_exists('countquery',$queries))
 		  $sql .= " ORDER BY observationid DESC"; 
     $sql = $sql.";";
- //echo $sql.'<p>';
+//echo $sql.'<p>';
     $run = mysql_query($sql) or die(mysql_error());
 		if(!array_key_exists('countquery',$queries))
 		{ $j=0;
-		  while($get = mysql_fetch_object($run))
-      { if($seenpar != "D")
+			while($get = mysql_fetch_object($run))
+      { if($seenpar!="D")
         { $sql = "SELECT COUNT(observations.id) AS cnt " .
   		           "FROM observations " .
   				  	   "WHERE objectname = \"". $get->objectname ."\" " .
@@ -392,13 +375,12 @@ class Observations
           else
             $seentype="X";
         }
-        if(($seenpar == "D")||($seenpar == $seentype))
+        if(($seenpar=="D")||($seenpar==$seentype))
 				{ while(list($key,$value) = each($get))
 				    $result[$j][$key]=$value;
           $j++;
 				}
       }
-      $db->logout();
       if(isset($result))
         return $result;
       else
@@ -782,7 +764,7 @@ class Observations
   function getDsStellar($id)                                                    // getDsStellar returns true if the object was seen stellar
   { return $GLOBALS['objDatabase']->selectSingleValue("SELECT stellar FROM observations WHERE id = \"$id\"",'stellar','');
   }
- function getDsExtended($id)                                                   // getDsExtended returns true if the object was seen stellar
+  function getDsExtended($id)                                                   // getDsExtended returns true if the object was seen stellar
   { return $GLOBALS['objDatabase']->selectSingleValue("SELECT extended FROM observations WHERE id = \"$id\"",'extended','');
   }
 	function getDsResolved($id)                                                   // getDsResolved returns true if the object was seen resolved
@@ -2099,19 +2081,20 @@ class Observations
     echo($description . "<P>" );
     echo("</td>\n");
     echo("</tr>\n");
-
     echo"<tr>";
-    echo"<td colspan=7>";
-    $upload_dir = 'drawings';
-    $dir = opendir($upload_dir);
-    while (FALSE !== ($file = readdir($dir)))
-    {
-      if ("." == $file OR ".." == $file)
+		echo "<td>";
+		echo"</td>";
+    echo"<td colspan=6>";
+    $upload_dir='drawings';
+    $dir=opendir($upload_dir);
+    while(FALSE!==($file=readdir($dir)))
+    { if ("." == $file OR ".." == $file)
       continue; // skip current directory and directory above
       if(fnmatch($value['observationid'] . "_resized.jpg", $file))
-      echo("<p><a href=\"deepsky/" . $upload_dir . "/" . $value['observationid'] . ".jpg" . "\">
-      <img class=\"account\" src=\"deepsky/$upload_dir" . "/" . "$file\">
-      </img></a></p>");
+      { echo "<p>";
+			  echo "<a href=\"deepsky/" . $upload_dir . "/" . $value['observationid'] . ".jpg" . "\"> <img class=\"account\" src=\"deepsky/".$upload_dir."/".$file."\"> </img></a>";
+			  echo "</p>";
+			}
     }
     echo"</td>";
     echo"</tr>";

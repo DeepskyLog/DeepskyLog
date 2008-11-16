@@ -4,6 +4,9 @@
 // INTERFACE
 //   public function utiltiesDispatchIndexActionDS() -> returns the file to be included to execute the action specified in $_GET['indexAcction']
 //   public function utilitiesSetModuleCookie($module)
+//	 public function checkGetKey($key,$default='')
+//   public function checkGetDate($year,$month,$day)
+//   public function checkGetTimeOrDegrees($hr,$min,$sec)
 // ..
 // PUBLIC OBJECT
 //  $objUtil  
@@ -1727,7 +1730,28 @@ class util
       $cookietime = time() + 365 * 24 * 60 * 60;     // 1 year
       setcookie("module",$module, $cookietime, "/");
     }
-  }	
+  }
+	public function checkGetKey($key,$default='')
+  { return array_key_exists($key,$_GET)?$_GET[$key]:$default;
+  }
+	public function checkGetKeyReturnString($key,$string,$default='')
+  { return array_key_exists($key,$_GET)?$string:$default;
+  }
+  public function checkGetDate($year,$month,$day)
+  { if($year=$this->checkGetKey($year))
+      return $year.$this->checkGetKey($month,'00').$this->checkGetKey($day,'00');
+    elseif($month=$this->checkGetKey($month))
+      return $month.$this->checkGetKey($day,'00');
+    else
+  	  return '';
+  }
+  public function checkGetTimeOrDegrees($hr,$min,$sec)
+  { if($this->checkGetKey($hr).$this->checkGetKey($min).$this->checkGetKey($sec))
+      if(substr($this->checkGetKey($hr),0,1)=="-")
+	      return -(abs($this->checkGetKey($hr,0))+($this->checkGetKey($min,0)/60)+($this->checkGetKey($sec,0)/3600));
+			else
+	      return $this->checkGetKey($hr,0)+($this->checkGetKey($min,0)/60)+($this->checkGetKey($sec,0)/3600);
+  }
 }
 $objUtil=new Util();
 ?>
