@@ -2,19 +2,6 @@
 // top_objects.php
 // generates an overview of all observed objects and their rank 
 
-$myList = False;
-if(array_key_exists('listname',$_SESSION) && ($objList->checkList($_SESSION['listname'])==2))
-  $myList=True;
-
- // minimum
-if(array_key_exists('min',$_GET))
-  $min=$_GET['min'];
-elseif(array_key_exists('multiplepagenr',$_GET))
-  $min = ($_GET['multiplepagenr']-1)*25;
-elseif(array_key_exists('multiplepagenr',$_POST))
-  $min = ($_POST['multiplepagenr']-1)*25;
-else
-  $min = 0;
 $step=25;
 if(!array_key_exists('TO',$_SESSION))
 { $rank = $objObservation->getPopularObservations();
@@ -32,38 +19,7 @@ list($min, $max) = $objUtil->printNewListHeader($_SESSION['TO'], $link, $min, $s
 echo"</td>";
 echo"</tr>";
 echo"</table>";
-
-$count = 0;
-/*echo "<table width=\"100%\"
-       <tr class=\"type3\">
-        <td>" . LangTopObjectsHeader1 . "</td>
-        <td>" . LangTopObjectsHeader2 . "</td>
-        <td>" . LangTopObjectsHeader3 . "</td>
-        <td>" . LangTopObjectsHeader4 . "</td>
-        <td>" . LangTopObjectsHeader5 . "</td>
-       </tr>";
-*/
-   $objObject->showObjects($link, 'TO', $min, $max, $myList, '', 1);
-
-/*
- while(list ($key, $value) = each($rank))
- {
-    if($count >= $min && $count < $max)
-    {
-       if ($count % 2) $type = "class=\"type1\""; else $type = "class=\"type2\"";
-       echo "<tr $type><td>" . ($count + 1) . "</td><td> <a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($key) . "\">$key</a> </td>";
-       $type = $obs->getDsObjectType($key);
-       echo "<td>" . $$type . "</td>";
-       $con = $obs->getConstellation($key);
-       echo "<td>" . $$con . "</td>";
-       echo "<td> $value </td>";
-       echo("</tr>");
-    }
-    $count++;
- }
-*/
-/* echo "</table>";
-*/
+$objObject->showObjects($link, 'TO', $min, $max, $myList, '', 1);
 list($min, $max) = $objUtil->printNewListHeader($_SESSION['TO'], $link, $min, $step, "");
 echo "</div></body></html>";
 

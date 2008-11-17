@@ -1752,6 +1752,9 @@ class util
 			else
 	      return $this->checkGetKey($hr,0)+($this->checkGetKey($min,0)/60)+($this->checkGetKey($sec,0)/3600);
   }
+  public function promptWithLink($prompt,$promptDefault,$javaLink,$text)
+	{ echo "<a href=\"\"onclick=\"thetitle = prompt(".$prompt.",".$promptDefault.");location.href='".$javaLink."&amp;pdfTitle='+thetitle+''return false\"	target=\"new_window\">".$text."</a>";
+  }
 }
 $objUtil=new Util();
 ?>

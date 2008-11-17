@@ -386,18 +386,9 @@ class Objects
   return $SBObj;
  }
 
- // getObjects returns an array with the names of all objects
- function getObjects()
- {
-  $db = new database;
-  $db->login();
-  $sql = "SELECT objects.name FROM objects";
-  $run = mysql_query($sql) or die(mysql_error());
-  while($get = mysql_fetch_object($run))
-    $obs[] = $get->name;
-  $db->logout();
-
-  return $obs;
+ 
+ function getObjects()   // getObjects returns an array with the names of all objects
+ { return $GLOBALS['objDatabase']->selectSingleArray("SELECT objects.name FROM OBJECTS",'name');
  }
 
  function sortObjects($result, $sort, $reverse=false)
@@ -797,7 +788,8 @@ class Objects
            $result2[$j]['objectconstellation'] =  $con;
            $result2[$j][3]="-";
            $result2[$j]['objectseen']="-";
-  	       if($seentype == "X") $result2[$j][3] = "X(" . $get2->ObsCnt . ")";
+  	       $result2[$j]['objectlastseen']='-';
+					 if($seentype == "X") $result2[$j][3] = "X(" . $get2->ObsCnt . ")";
   	       if($seentype == "X") $result2[$j]['objectseen'] = "X(" . $get2->ObsCnt . ")";
            if($seentype == "Y") $result2[$j][3] = "Y(" . $get2->ObsCnt . "/" . $get3->PersObsCnt . ")";
            if($seentype == "Y") $result2[$j]['objectseen'] = "Y(" . $get2->ObsCnt . "/" . $get3->PersObsCnt . ")";
@@ -944,49 +936,32 @@ class Objects
        $sqland = $sqland . " AND (UPPER(objectnames.altname) like \"" . strtoupper($queries["name"]) . "\")";
      else
        $sqland = $sqland . " AND (UPPER(objectnames.altname) = \"" . strtoupper($queries["name"]) . "\")";
-   $sqland.=(array_key_exists('type',$_GET)&&$_GET['type'])?" AND objects.type=\"".$_GET['type']."\"":'';
-   if (array_key_exists('constellation',$queries) && ($queries["constellation"] != ""))
-     $sqland = $sqland . " AND objects.con = \"" . $queries["constellation"] . "\"";
-  if (array_key_exists('minmag',$queries) && (strcmp($queries["minmag"], "") != 0))
-    $sqland = $sqland . " AND (objects.mag > \"" . $queries["minmag"] . "\" or objects.mag like \"" . $queries["minmag"] . "\")";
-  if (array_key_exists('maxmag',$queries) && (strcmp($queries["maxmag"], "") != 0))
-    $sqland = $sqland . " AND (objects.mag < \"" . $queries["maxmag"] . "\" or objects.mag like \"" . $queries["maxmag"] . "\")";
-  if (array_key_exists('minsubr',$queries) && (strcmp($queries["minsubr"], "") != 0))
-    $sqland = $sqland . " AND objects.subr >= \"" . $queries["minsubr"] . "\"";
-  if (array_key_exists('maxsubr',$queries) && (strcmp($queries["maxsubr"], "") != 0))
-    $sqland = $sqland . " AND objects.subr <= \"" . $queries["maxsubr"] . "\"";
-  if (array_key_exists('minra',$queries) && (strcmp($queries["minra"], "") != 0))
-    $sqland = $sqland . " AND (objects.ra > \"" . $queries["minra"] . "\" or objects.ra like \"" . $queries["minra"] . "\")";
-  if (array_key_exists('maxra',$queries) && (strcmp($queries["maxra"], "") != 0))
-    $sqland = $sqland . " AND (objects.ra <= \"" . $queries["maxra"] . "\" or objects.ra like \"" . $queries["maxra"] . "\")";
-  if (array_key_exists('mindecl',$queries) && (strcmp($queries["mindecl"], "") != 0))
-    $sqland = $sqland . " AND objects.decl >= \"" . $queries["mindecl"] . "\"";
-  if (array_key_exists('maxdecl',$queries) && (strcmp($queries["maxdecl"], "") != 0))
-    $sqland = $sqland . " AND objects.decl <= \"" . $queries["maxdecl"] . "\"";
-  if(array_key_exists('mindiam1',$queries) && (strcmp($queries["mindiam1"], "") != 0))
-    $sqland  = $sqland . " AND (objects.diam1 > \"" . $queries["mindiam1"] . "\" or objects.diam1 like \"" . $queries["mindiam1"] . "\")";
-  if(array_key_exists('maxdiam1',$queries) && (strcmp($queries["maxdiam1"], "") != 0))
-    $sqland = $sqland . " AND (objects.diam1 <= \"" . $queries["maxdiam1"] . "\" or objects.diam1 like \"" . $queries["maxdiam1"] . "\")";
-  if(array_key_exists('mindiam2',$queries) && (strcmp($queries["mindiam2"], "") != 0))
-    $sqland = $sqland . " AND (objects.diam2 > \"" . $queries["mindiam2"] . "\" or objects.diam2 like \"" . $queries["mindiam2"] . "\")";
-  if(array_key_exists('maxdiam2',$queries) && (strcmp($queries["maxdiam2"], "") != 0))
-    $sqland = $sqland . " AND(objects.diam2 <= \"" . $queries["maxdiam2"] . "\" or objects.diam2 like \"" . $queries["maxdiam2"] . "\")";
-  if(array_key_exists('atlas',$queries) && ($queries["atlas"] != "") &&
-	   array_key_exists('atlasPageNumber',$queries) && ($queries["atlasPageNumber"] != ""))
-    $sqland = $sqland . " AND objects." . $queries["atlas"] . " = \"" . $queries["atlasPageNumber"] . "\"";
-	$sqland = substr($sqland, 4);
-	
-	if(trim($sqland)=='') $sqland = " (objectnames.altname like \"%\")";
-	
-  if($partof)
-    $sql = "(" . $sql1. $sqland . ") UNION (" . $sql2 . $sqland . ")";
-  else
-    $sql = $sql1 . $sqland;		
+   $sqland.=(array_key_exists('type',$queries)&&$queries['type'])?" AND (objects.type=\"".$queries['type']."\")":'';
+   $sqland.=(array_key_exists('con',$queries)&&$queries['con'])?" AND (objects.con=\"".$queries['con']."\")":'';
+   $sqland.=(array_key_exists('minmag',$queries)&&$queries['minmag'])?" AND (objects.mag>\"".$queries["minmag"]."\" or objects.mag like \"" . $queries["minmag"] . "\")":'';
+   $sqland.=(array_key_exists('maxmag',$queries)&&$queries['maxmag'])?" AND (objects.mag<\"".$queries["maxmag"]."\" or objects.mag like \"" . $queries["maxmag"] . "\")":'';
+   $sqland.=(array_key_exists('minsubr',$queries)&&$queries['minsubr'])?" AND objects.subr>=\"".$queries["minsubr"]."\"":'';
+   $sqland.=(array_key_exists('maxsubr',$queries)&&$queries['maxsubr'])?" AND objects.subr<=\"".$queries["maxsubr"]."\"":'';
+   $sqland.=(array_key_exists('ra',$queries)&&$queries['ra'])?" AND (objects.ra > \"" . $queries["minra"] . "\" or objects.ra like \"" . $queries["minra"] . "\")":'';
+   $sqland.=(array_key_exists('ra',$queries)&&$queries['ra'])?" AND (objects.ra <= \"" . $queries["maxra"] . "\" or objects.ra like \"" . $queries["maxra"] . "\")":'';
+   $sqland.=(array_key_exists('mindecl',$queries)&&$queries['mindecl'])?" AND objects.decl >= \"" . $queries["mindecl"] . "\"":'';
+   $sqland.=(array_key_exists('maxdecl',$queries)&&$queries['maxdecl'])?" AND objects.decl <= \"" . $queries["maxdecl"] . "\"":'';
+   $sqland.=(array_key_exists('mindiam1',$queries)&&$queries['mindiam1'])?" AND (objects.diam1 > \"" . $queries["mindiam1"] . "\" or objects.diam1 like \"" . $queries["mindiam1"] . "\")":'';
+   $sqland.=(array_key_exists('maxdiam1',$queries)&&$queries['maxdiam1'])?" AND (objects.diam1 <= \"" . $queries["maxdiam1"] . "\" or objects.diam1 like \"" . $queries["maxdiam1"] . "\")":'';
+   $sqland.=(array_key_exists('mindiam2',$queries)&&$queries['mindiam2'])?" AND (objects.diam2 > \"" . $queries["mindiam2"] . "\" or objects.diam2 like \"" . $queries["mindiam2"] . "\")":'';
+   $sqland.=(array_key_exists('maxdiam2',$queries)&&$queries['maxdiam2'])?" AND(objects.diam2 <= \"" . $queries["maxdiam2"] . "\" or objects.diam2 like \"" . $queries["maxdiam2"] . "\")":'';
+   $sqland.=(array_key_exists('atlas',$queries)&&$queries['atlas']&&array_key_exists('atlasPageNumber',$queries)&&$queries["atlasPageNumber"])?" AND (objects.".$queries["atlas"]."=\"".$queries["atlasPageNumber"]."\")":'';
+	 $sqland = substr($sqland, 4);
+   if(trim($sqland)=='') 
+	   $sqland=" (objectnames.altname like \"%\")";
+   if($partof)
+     $sql="(".$sql1.$sqland.") UNION (".$sql2. $sqland.")";
+   else
+     $sql = $sql1 . $sqland;		
 //echo $sql;
 	$run=$GLOBALS['objDatabase']->selectRecordset($sql);
   $i=0;
-
-  if (array_key_exists('name',$queries) && $queries["name"] != "")
+  if (array_key_exists('name',$queries)&&$queries["name"])
 	{ while($get = mysql_fetch_object($run))
       if($get->showname==$get->name)
       { if(!array_key_exists($get->showname, $obs))
@@ -1001,26 +976,15 @@ class Objects
       if(!array_key_exists($get->name, $obs))
    	    $obs[$get->name] = array($i++,$get->name);				
   $obs = $this->getSeenObjectDetails($obs, $seen);
-  if(array_key_exists('maxContrast', $queries) && ($queries["maxContrast"] != ""))
-  { $new_obs = Array(Array());
-    $cnt = 0;
-    for($i = 0;$i < count($obs);$i++)
-      if ($obs[$i][21] <= $queries["maxContrast"])
-        $new_obs[$cnt++] = $obs[$i];
-    $obs = Array();
-    if ($cnt > 0)
-      $obs = $new_obs;
-  } 
-  if(array_key_exists('minContrast', $queries) && ($queries["minContrast"] != ""))
-  { $new_obs = Array(Array());
-    $cnt = 0;
-    for($i = 0;$i < count($obs);$i++)
-      if ($obs[$i][21] >= $queries["minContrast"])
-        $new_obs[$cnt++] = $obs[$i];
-    $obs = Array();
-    if ($cnt > 0)
-      $obs = $new_obs;
-  }        
+  if(array_key_exists('minContrast', $queries)&&$queries["minContrast"])
+    for($new_obs=$obs,$obs=array();list($key,$value)=each($new_obs);)
+      if ($value['objectcontrast']>=$queries["minContrast"])
+			  $obs[]=$value;
+  if(array_key_exists('maxContrast', $queries)&&$queries["maxContrast"])
+    for($new_obs=$obs,$obs=array();list($key,$value)=each($new_obs);)
+      if ($value['objectcontrast']<=$queries["maxContrast"])
+			  $obs[]=$value;
+
  return $obs;
  }
 
@@ -1832,10 +1796,6 @@ function getPartOfNames($name)
 
  function showObjects($link, $_SID, $min, $max, $myList, $noShow='', $showRank=0, $ranklist='')
  {
-  global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
-         $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
-         $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL; 
- 
   global $ASTER,$BRTNB,$CLANB,$DRKNB,$EMINB,$ENRNN,$ENSTR, $GALCL,$GALXY,$GLOCL,$GXADN,$GXAGC,$GACAN,$HII,$LMCCN,$LMCDN,$LMCGC,$LMCOC,$NONEX,$OPNCL,$PLNNB,$REFNB,$RNHII,
 	       $SMCCN,$SMCDN,$SMCGC,$SMCOC,$SNREM,$STNEB,$QUASR,$WRNEB,$AA1STAR,$AA2STAR,$AA3STAR,$AA4STAR,$AA8STAR;	 
 				 
@@ -1852,16 +1812,14 @@ function getPartOfNames($name)
   $atlas='';
   echo "<table width=\"100%\">\n";
   echo "<tr class=\"type3\">\n";
-	tableSortHeader(LangOverviewObjectsHeader1, $link."&amp;sort=showname");
-	tableSortHeader(LangOverviewObjectsHeader2, $link."&amp;sort=objectconstellation");
-	tableSortHeader(LangOverviewObjectsHeader3, $link."&amp;sort=objectmagnitude");
+	tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=showname");
+	tableSortHeader(LangOverviewObjectsHeader2,  $link."&amp;sort=objectconstellation");
+	tableSortHeader(LangOverviewObjectsHeader3,  $link."&amp;sort=objectmagnitude");
 	tableSortHeader(LangOverviewObjectsHeader3b, $link."&amp;sort=objectsurfacebrightness");
-	tableSortHeader(LangOverviewObjectsHeader4, $link."&amp;sort=objecttype");
-	
+	tableSortHeader(LangOverviewObjectsHeader4,  $link."&amp;sort=objecttype");
   if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
-	{
-	  $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
-  	tableSortHeader($objAtlas->atlasCodes[$atlas], $link."&amp;sort=".$objAtlas->atlasCodes[$atlas]);
+	{ $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
+  	tableSortHeader($objAtlas->atlasCodes[$atlas], $link."&amp;sort=".$atlas);
 	  tableSortHeader(LangViewObjectFieldContrastReserve, $link."&amp;sort=objectcontrast");
 	  tableSortHeader(LangViewObjectFieldMagnification, $link."&amp;sort=objectoptimalmagnification");
   }
@@ -1871,19 +1829,16 @@ function getPartOfNames($name)
     echo("<td align=\"center\"><a href=\"" . $link . "&amp;min=" . $min . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $_SESSION['listname'] . "\">P</a></td>");
  	$count = $min; // counter for altering table colors
 	$countline = 0;
+	if($max>count($_SESSION[$_SID]))
+		$max=count($_SESSION[$_SID]);
 	while($count < $max)
   { if($_SESSION[$_SID][$count]['objectname']!=$noShow)
-  	{ if ($countline % 2)
-        $typefield = "class=\"type1\"";
-      else
-        $typefield = "class=\"type2\"";	
-      // NAME
+  	{ $typefield = "class=\"type".(2-($countline%2)."\"");
       $value = $_SESSION[$_SID][$count][0];
       $name = $_SESSION[$_SID][$count]['objectname'];
       $showname = $_SESSION[$_SID][$count]['showname'];
       $con = $_SESSION[$_SID][$count]['objectconstellation'];
       $type = $_SESSION[$_SID][$count]['objecttype'];
-      // MAGNITUDE   
       $magnitude = sprintf("%01.1f", $_SESSION[$_SID][$count]['objectmagnitude']);
       if($magnitude == 99.9)
         $magnitude = "&nbsp;&nbsp;-&nbsp;";		
@@ -1905,7 +1860,7 @@ function getPartOfNames($name)
         $seendate = "<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $_SESSION[$_SID][$count][29] . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION[$_SID][$count][28] . "</a>";
 			echo "<tr $typefield>\n";
       echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($value) . "\">$showname</a></td>\n";
-      echo "<td align=\"center\">".$$con."</td>\n";
+      echo "<td align=\"center\">".$GLOBALS[$_SESSION[$_SID][$count]['objectconstellation']]."</td>\n";
       echo "<td align=\"center\">$magnitude</td>\n";
       echo "<td align=\"center\">$sb</td>\n";
       echo "<td align=\"center\">".$$type."</td>\n";
@@ -2188,18 +2143,16 @@ function getPartOfNames($name)
         
 
 	if ($contrastCalc != "")
-	{	
-  	$contrast = sprintf("%.2f", $contrastCalc[0]);
+	{ $contrast = sprintf("%.2f", $contrastCalc[0]);
 		if ($contrastCalc[2] == "")
-		{
-			$prefMag = sprintf("%d", $contrastCalc[1]) . "x";
+		{ $prefMag = sprintf("%d", $contrastCalc[1]) . "x";
 		}
 		else
-		{
-			$prefMag = sprintf("%d", $contrastCalc[1]) . "x - " . $contrastCalc[2];
+		{ $prefMag = sprintf("%d", $contrastCalc[1]) . "x - " . $contrastCalc[2];
 		}
-  } else {
-  	$contrast = "-";
+  } 
+	else 
+	{ $contrast = "-";
   	$prefMag = "-";
   }
 

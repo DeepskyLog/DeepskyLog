@@ -33,10 +33,10 @@ require_once '../deepsky/content/data_get_objects.php';
 $link="../deepsky/index.php?indexAction=query_objects";
 reset($_GET);
 while(list($key,$value)=each($_GET))
-	if($key!='indexAction')
+	if(($key!='indexAction')&&($key!='multiplepagenr')&&($key!='sort')&&($key!='sortdirection'))
     $link.='&amp;'.$key.'='.$value;
 if(array_key_exists('Qobj',$_SESSION) && (count($_SESSION['Qobj'])>0)) // valid result
-  include("content/execute_query_objects.php"); 
+  include("content/execute_query_objects.php");
 else
 { echo("<div id=\"main\">\n");
   echo("<h2>");
@@ -54,6 +54,8 @@ else
   echo("<td>");
   echo("<form action=\"deepsky/index.php\" method=\"get\">\n");
   echo("<input type=\"hidden\" name=\"indexAction\" value=\"query_objects\"></input>");
+  echo("<input type=\"hidden\" name=\"sort\" value=\"showname\"></input>");
+  echo("<input type=\"hidden\" name=\"sortdirection\" value=\"asc\"></input>");
   echo("<select name=\"seen\">");
   echo("<option selected value=\"D\">" . LangSeenDontCare . "</option>".
        "<option value=\"-\">" . LangNotSeen . "</option>");

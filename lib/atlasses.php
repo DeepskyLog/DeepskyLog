@@ -29,15 +29,7 @@ class Atlasses
   }	
 
   function getAtlasses()
-	{ $atlasses = array();
-	  $db = new database;
-    $db->login();
-    $run = mysql_query('SELECT atlasCode FROM atlasses;') 
-		       or die(mysql_error());
-    $db->logout();
-	  while($get = mysql_fetch_object($run))
-		  $atlasses[]=$get->atlasCode;
-	  return $atlasses;
+	{ return $GLOBALS['objDatabase']->selectSingleArray('SELECT atlasCode FROM atlasses;',atlasCode);
 	}
   function getSortedAtlasses()
 	{ $atlasses = array();

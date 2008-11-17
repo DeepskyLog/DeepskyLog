@@ -18,14 +18,7 @@ if(array_key_exists('source',$_GET)&&($_GET['source']=='observation_query'))
 	}
 }
 elseif(array_key_exists('seen',$_GET))
-{
-  $min=0;
-  $previous = '';
-  $prev = '';		
-  
-  $min=0;   if(array_key_exists('min',$_GET) && $_GET['min'])  $min = $_GET['min'];
-  // CATALOG AND / OR NUMBER
-  $exact = 0;
+{ $exact = 0;
   if(array_key_exists('catalog',$_GET) && $_GET['catalog']) $name = $_GET['catalog'];
   if(array_key_exists('catalog',$_GET)) $catalog = $_GET['catalog'];
   if(array_key_exists('catNumber',$_GET)) $catNumber = $_GET['catNumber'];
@@ -332,9 +325,9 @@ elseif(array_key_exists('seen',$_GET))
          $maxRASecondsError || $minMagError || $maxMagError || $minSBError || $maxSBError || 
          $minSizeError || $maxSizeError || $minContrastError || $maxContrastError ||$listError))
   {
-      $query = array("name"          => $name,
-                     "type"          => $type,
-                     "constellation"   => $con,             
+      $query = array("name"            => $name,
+                     "type"            => $type,
+                     "con"             => $con,             
                      "minmag"          => $minMag,
                      "maxmag"          => $maxMag,
                      "minsubr"         => $minSB,             
@@ -365,8 +358,9 @@ elseif(array_key_exists('seen',$_GET))
       if(!$validQobj)
     	{ $_SESSION['QobjParams']=$query;
     	  $_SESSION['Qobj']= $objObject->getObjectFromQuery($query, $exact, $seenPar);
-    		$_SESSION['QobjSort']='showname';
+    		$_SESSION['QobjSort']='name';
     	  $_SESSION['QobjSortDirection']='asc';
+				$min=0;
     	}
 			unset($_SESSION['QOP']);
   }
@@ -397,26 +391,30 @@ if($_SESSION['QobjSort']!=$_GET['sort'])
     { while(list($key, $value)=each($_SESSION['Qobj']))
 	      $sortarray[$value[$_GET['sort']].'_'.($value['showname'])]=$value;
 	    uksort($sortarray,"strnatcasecmp");
-	    $_SESSION['Qobj']=array_reverse($sortarray,false);
+			$sortarray=array_reverse($sortarray);
+			$_SESSION['Qobj']=array_values($sortarray);
     }
 	  $_SESSION['QobjSort']=$_GET['sort'];
 	  $_SESSION['QobjSortDirection']='desc';
+		$min=0;
   }
   else
   { if(count($_SESSION['Qobj'])>1)
     { while(list($key, $value)=each($_SESSION['Qobj']))
 	      $sortarray[$value[$_GET['sort']].'_'.($value['showname'])]=$value;
 	    uksort($sortarray,"strnatcasecmp");
-	    $_SESSION['Qobj']=$sortarray;
+			$_SESSION['Qobj']=array_values($sortarray);
 	  }
 	  $_SESSION['QobjSort']=$_GET['sort'];
 	  $_SESSION['QobjSortDirection']='asc'; 
+	  $min=0;
   }
 }
 if($_SESSION['QobjSortDirection']!=$_GET['sortdirection'])
 { if(count($_SESSION['Qobj'])>1)
  	  $_SESSION['Qobj']=array_reverse($_SESSION['Qobj'],false);
   $_SESSION['QobjSortDirection']=$_GET['sortdirection'];
+	$min=0;
 }	
 
 
