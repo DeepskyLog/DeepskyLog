@@ -1,9 +1,9 @@
 <?php
 
 require_once "../lib/lists.php";
+require_once "../lib/observations.php";
 require_once "../lib/locations.php";
 require_once "../lib/objects.php";
-require_once "../lib/observations.php";
 require_once "../lib/observers.php";
 
 

@@ -1922,7 +1922,7 @@ function stream($options=''){
 
   // JV, 20050528 dynamic naming of exported pdf file
 
-  $fileName = (isset($options['Content-Disposition'])?$options['Content-Disposition']:$_SESSION['pdfname']);
+  $fileName = (isset($options['Content-Disposition'])?$options['Content-Disposition']:$_GET['pdfTitle']);
   header("Content-Disposition: inline; filename=".$fileName);
   if (isset($options['Accept-Ranges']) && $options['Accept-Ranges']==1){
     header("Accept-Ranges: ".strlen(ltrim($tmp))); 

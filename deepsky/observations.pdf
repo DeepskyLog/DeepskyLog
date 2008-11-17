@@ -1,24 +1,8 @@
 <?php 
-
-// Code cleanup - removed by David on 20080704
-//  include_once "../lib/observers.php";
-
-
-
-  include_once "../lib/util.php";
-
-  $util = new Util();
-  $util->checkUserInput();
-
-  header ("Content-Type: application/pdf");
-  header ("Content-Disposition: attachment; filename=\"observations.pdf\"");
-
-  $_SESSION['pdfname'] = "observations.pdf"; // necessary for class.pdf.php
-
-  $result = $_SESSION['observation_query'];
-  if ($result != "")
-  {
-   $util = new util();
-   $util->pdfObservations($result);
-  }
+include '../common/entryexit/preludes.php';
+include '../common/entryexit/preludesDS.php';
+header ("Content-Type: application/pdf");
+header ("Content-Disposition: attachment; filename=\"observations.pdf\"");
+if(array_key_exists('Qobs',$_SESSION&&$_SESSION['Qobs'])
+  $objUtil->pdfObservations($_SESSION['Qobs']);
 ?>

@@ -1822,9 +1822,9 @@ function getPartOfNames($name)
   	tableSortHeader($objAtlas->atlasCodes[$atlas], $link."&amp;sort=".$atlas);
 	  tableSortHeader(LangViewObjectFieldContrastReserve, $link."&amp;sort=objectcontrast");
 	  tableSortHeader(LangViewObjectFieldMagnification, $link."&amp;sort=objectoptimalmagnification");
+	  tableSortHeader(LangOverviewObjectsHeader7, $link."&amp;sort=objectseen");
+	  tableSortHeader(LangOverviewObjectsHeader8, $link."&amp;sort=objectlastseen");
   }
-	tableSortHeader(LangOverviewObjectsHeader7, $link."&amp;sort=objectseen");
-	tableSortHeader(LangOverviewObjectsHeader8, $link."&amp;sort=objectlastseen");
   if($myList)
     echo("<td align=\"center\"><a href=\"" . $link . "&amp;min=" . $min . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $_SESSION['listname'] . "\">P</a></td>");
  	$count = $min; // counter for altering table colors
@@ -1857,7 +1857,7 @@ function getPartOfNames($name)
         $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($value) . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION[$_SID][$count][3] . "</a>";
       $seendate = "<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($value) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
       if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($_SESSION[$_SID][$count][3],0,1)=="Y"))
-        $seendate = "<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $_SESSION[$_SID][$count][29] . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION[$_SID][$count][28] . "</a>";
+        $seendate = "<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $_SESSION[$_SID][$count]['objectlastobservationid'] . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION[$_SID][$count]['objectlastseen'] . "</a>";
 			echo "<tr $typefield>\n";
       echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($value) . "\">$showname</a></td>\n";
       echo "<td align=\"center\">".$GLOBALS[$_SESSION[$_SID][$count]['objectconstellation']]."</td>\n";
@@ -1867,25 +1867,14 @@ function getPartOfNames($name)
       // Page number in atlas
       if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id']) 
 			{ $page = $_SESSION[$_SID][$count][$atlas];
-        echo "<td align=\"center\" onmouseover=\"Tip('" . $objAtlas->atlasCodes[$atlas] . "')\">" .
-             $page . "</td>\n";
-        echo "<td align=\"center\" class=\"" . $_SESSION[$_SID][$count][22] . "\" onmouseover=\"Tip('" . $_SESSION[$_SID][$count][23] . "')\">" .
-             $_SESSION[$_SID][$count][21] . "</td>\n";
-    
-    		if ($_SESSION[$_SID][$count][21] == "-")
-        {
-          $magnification = "-";
-        } else {
-    			$magnification = $_SESSION[$_SID][$count]['objectoptimalmagnification'];
-    		}
-        echo "<td align=\"center\">".$magnification."</td>\n";
+        echo "<td align=\"center\" onmouseover=\"Tip('".$objAtlas->atlasCodes[$atlas]."')\">".$page."</td>\n";
+        echo "<td align=\"center\" class=\"".$_SESSION[$_SID][$count][22]."\" onmouseover=\"Tip('".$_SESSION[$_SID][$count][23]."')\">".$_SESSION[$_SID][$count][21]."</td>\n";
+        echo "<td align=\"center\">".$_SESSION[$_SID][$count]['objectoptimalmagnification']."</td>\n";
+        echo "<td align=\"center\" class=\"seen\">$seen</td>";
+        echo "<td align=\"center\" class=\"seen\">$seendate</td>";
 			}
-  
-      echo "<td align=\"center\" class=\"seen\">$seen</td>";
-      echo "<td align=\"center\" class=\"seen\">$seendate</td>";
     	if($myList)
-    	{
-     	  echo("<td align=\"center\">");
+    	{ echo("<td align=\"center\">");
         if($list->checkObjectInMyActiveList($name))
           echo("<a href=\"" . $link . "&amp;min=" . $min . "&amp;removeObjectFromList=" . urlencode($name) . "\" title=\"" . $name . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "\">R</a>");
         else
@@ -1911,9 +1900,6 @@ function getPartOfNames($name)
 
   global $objAtlas;
   global $deepskylive;
-
-//  include_once "../lib/locations.php";
-//  $locations = new Locations;
  
   include_once "../common/control/ra_to_hms.php";
   include_once "../common/control/dec_to_dm.php";

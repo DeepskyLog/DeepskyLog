@@ -76,13 +76,14 @@ while($validQobs && (list($key,$value) = each($_SESSION['QobsParams'])))
  if(!array_key_exists($key,$query)||($value!=$query[$key]))
    $validQobs=false;	 
 if(!$validQobs)
-{ $_SESSION['QobsParams']=$query;
+{ $_SESSION['QobsParams']=$query; 
   $_SESSION['Qobs']=$objObservation->getObservationFromQuery($query, $GLOBALS['objUtil']->checkGetKey('seen','D'));
   $_SESSION['QobsSort']='observationid';
   $_SESSION['QobsSortDirection']='desc';
   $query['countquery']='true';
   $_SESSION['QobsTotal'] = $objObservation->getObservationFromQuery($query, $GLOBALS['objUtil']->checkGetKey('seen')); 
-  if(array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && $objObserver->getUseLocal($_SESSION['deepskylog_id']))
+  $min=0;
+	if(array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && $objObserver->getUseLocal($_SESSION['deepskylog_id']))
   { if(($mindate!="")||($maxdate!=""))
     { if($mindate!="")
         $mindate=$mindate + 1;
@@ -108,6 +109,7 @@ if(!$validQobs)
     }
   }
 }
+
 //=========================================== CHECK TO SEE IF SORTING IS NECESSARY ===========================================
 if(!array_key_exists('sort',$_GET))      
 { $_GET['sort'] = $_SESSION['QobsSort'];
@@ -125,6 +127,7 @@ if($_SESSION['QobsSort']!=$_GET['sort'])
     }
 	  $_SESSION['QobsSort']=$_GET['sort'];
 	  $_SESSION['QobsSortDirection']='desc';
+		$min=0;
   }
   else
   { if(count($_SESSION['Qobs'])>1)
@@ -135,12 +138,14 @@ if($_SESSION['QobsSort']!=$_GET['sort'])
 	  }
 	  $_SESSION['QobsSort']=$_GET['sort'];
 	  $_SESSION['QobsSortDirection']='asc'; 
+		$min=0;
   }
 }
 if($_SESSION['QobsSortDirection']!=$_GET['sortdirection'])
 { if(count($_SESSION['Qobs'])>1)
  	  $_SESSION['Qobs']=array_reverse($_SESSION['Qobs'],true);
   $_SESSION['QobsSortDirection']=$_GET['sortdirection'];
+	$min=0;
 }	
 	
 	

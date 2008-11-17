@@ -224,30 +224,11 @@ class util
 
   // Creates a pdf document from an array of objects
   function pdfObjects($result)
-  {
-    include_once "observers.php";
-    $observer = new Observers;
-
-    global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
-    $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
-    $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL;
-
-    global $ASTER,$BRTNB,$CLANB,$DRKNB,$GALCL,$GALXY,$GLOCL,$GXADN,$GXAGC,$GACAN,$LMCCN,$LMCDN,$LMCGC,$LMCOC,$NONEX,$OPNCL,$PLNNB,
-    $SMCCN,$SMCDN,$SMCGC,$SMCOC,$SNREM,$QUASR,$AA1STAR,$AA2STAR,$AA3STAR,$AA4STAR,$AA8STAR;
-
-    global $EMINB,$REFNB,$ENRNN,$ENSTR,$HII,$RNHII,$STNEB,$WRNEB;
-
-    global $deepskylive, $dateformat;
+  { global $deepskylive, $dateformat;
+		$atlasses = $GLOBALS['objAtlas']->getSortedAtlasses();
 		
-		include_once "../commmon/control/ra_to_hms.php";
-		include_once "../commmon/control/dec_to_dm.php";
-		include_once "../lib/atlasses.php";
-		$atlas = new Atlasses;
-		$atlasses = $atlas->getSortedAtlasses();
-
     while(list ($key, $valueA) = each($result))
-    {
-      $mag = $valueA[5];
+    { $mag = $valueA[5];
       if ($mag == 99.9)
       $mag = "";
       else if ($mag - (int)$mag == 0.0)
@@ -265,7 +246,7 @@ class util
 
       $con = $valueA[2];
       $type = $valueA[1];
-      $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
+      $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
       $page = $valueA[$atlas];
       $diam1 = $valueA[18];
       $diam2 = $valueA[19];
@@ -308,10 +289,10 @@ class util
                  "decl" => decToString($valueA[8], 0),
                  "mag" => $mag,
                  "sb" => $sb,
-                 "con" => $$con,
+                 "con" => $GLOBALS[$con],
                  "diam" => $size,
                  "pa" => $pa, 
-                 "type" => $$type,
+                 "type" => $GLOBALS[$type],
                  "page" => $page,
                  "contrast" => $contrast,
                  "magnification" => $magnifi,
@@ -404,31 +385,12 @@ class util
   // Creates a pdf document from an array of objects
   function pdfObjectsDetails($result, $sort='')
   { if($sort!='con') $sort='';
-    include_once "observers.php";
-    $observer = new Observers;
-    include_once "instruments.php";
-    $instrument = new Instruments;
-    include_once "../lib/locations.php";
-    $location=new Locations;
-
-    global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
-    $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
-    $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL;
-
-    global $ASTER,$BRTNB,$CLANB,$DRKNB,$GALCL,$GALXY,$GLOCL,$GXADN,$GXAGC,$GACAN,$LMCCN,$LMCDN,$LMCGC,$LMCOC,$NONEX,$OPNCL,$PLNNB,
-    $SMCCN,$SMCDN,$SMCGC,$SMCOC,$SNREM,$QUASR,$AA1STAR,$AA2STAR,$AA3STAR,$AA4STAR,$AA8STAR;
-
-    global $EMINB,$REFNB,$ENRNN,$ENSTR,$HII,$RNHII,$STNEB,$WRNEB;
-
+	
     global $deepskylive, $dateformat;
 		
 		global $baseURL, $dbname;
 		
-		include_once "../commmon/control/ra_to_hms.php";
-		include_once "../commmon/control/dec_to_dm.php";
-		include_once "atlasses.php";
-		$atlas = new Atlasses;
-		$atlasses = $atlas->getSortedAtlasses();
+		$atlasses = $GLOBALS['objAtlas']->getSortedAtlasses();
 
     // Create pdf file
     $pdf = new Cezpdf('a4', 'landscape');
@@ -457,10 +419,10 @@ class util
     $theDate=date('d/m/Y');
 		$pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
 		$pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
-		    LangPDFMessage19 . $observer->getFirstName($_SESSION['deepskylog_id']) . ' ' . 
-				                   $observer->getObserverName($_SESSION['deepskylog_id']) . ' ' .
-		    LangPDFMessage20 . $instrument->getInstrumentName($observer->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
-				LangPDFMessage21 . $location->getLocationName($observer->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
+		    LangPDFMessage19 . $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . ' ' . 
+				                   $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' .
+		    LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
+				LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
 		$pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, $_GET['pdfTitle'], 'center' );
 		$pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . '1', 'right');
 		while(list($key, $valueA) = each($result))
@@ -471,7 +433,7 @@ class util
 			
       $con = $valueA[2];
       $type = $valueA[1];
-      $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
+      $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
       $page = $valueA[$atlas];
       $diam1 = $valueA[18];
       $diam2 = $valueA[19];
@@ -523,10 +485,10 @@ class util
 					  { $pdf->newPage();
 						  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
           		$pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
-		                   LangPDFMessage19 . $observer->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
-		                                      $observer->getFirstName($_SESSION['deepskylog_id']) . ' ' .
-                       LangPDFMessage20 . $instrument->getInstrumentName($observer->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
-				               LangPDFMessage21 . $location->getLocationName($observer->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
+		                   LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
+		                                      $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . ' ' .
+                       LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
+				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
 		          $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, $_GET['pdfTitle'], 'center' );
 		          $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
   					}
@@ -539,7 +501,7 @@ class util
 				if($sort)
 				{ $y-=$deltalineSection;
           $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
-          $pdf->addText($xbase, $y, $fontSizeSection, $$$sort);  
+          $pdf->addText($xbase, $y, $fontSizeSection, $GLOBALS[$$sort]);  
           $y-=$deltaline+$deltalineSection;
 				}
 			}
@@ -550,10 +512,10 @@ class util
 				  { $pdf->newPage();
 					  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
         		$pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
-	                   LangPDFMessage19 . $observer->getObserverName($_SESSION['deepskylog_id']) . ' ' .
-	                                      $observer->getFirstName($_SESSION['deepskylog_id']) . ' ' .
-                     LangPDFMessage20 . $instrument->getInstrumentName($observer->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
-			               LangPDFMessage21 . $location->getLocationName($observer->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
+	                   LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' .
+	                                      $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . ' ' .
+                     LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
+			               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
             $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, $_GET['pdfTitle'], 'center' );
 	          $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
 					}
@@ -561,7 +523,7 @@ class util
           if($sort)
 					{ $y-=$deltalineSection;
             $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
-            $pdf->addText($xbase, $y, $fontSizeSection, $$$sort);
+            $pdf->addText($xbase, $y, $fontSizeSection, $GLOBALS[$$sort]);
             $y-=$deltaline+$deltalineSection;
 					}
 				}
@@ -570,7 +532,7 @@ class util
           if($sort)
 					{ $y-=$deltalineSection;
             $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
-					  $pdf->addText($xbase, $y, $fontSizeSection, $$$sort);
+					  $pdf->addText($xbase, $y, $fontSizeSection, $GLOBALS[$$sort]);
             $y-=$deltaline+$deltalineSection;
 					}
 				}
@@ -623,10 +585,10 @@ class util
 						  { $pdf->newPage();
 							  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
           		  $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
-		                   LangPDFMessage19 . $observer->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
-		                                      $observer->getFirstName($_SESSION['deepskylog_id']) . 
-                       LangPDFMessage20 . $instrument->getInstrumentName($observer->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
-				               LangPDFMessage21 . $location->getLocationName($observer->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
+		                   LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
+		                                      $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . 
+                       LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
+				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
 		            $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, $_GET['pdfTitle'], 'center' );
 		            $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
           	  }
@@ -665,10 +627,10 @@ class util
 						  { $pdf->newPage();
 							  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
           		  $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
-		                   LangPDFMessage19 . $observer->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
-		                                      $observer->getFirstName($_SESSION['deepskylog_id']) . 
-                       LangPDFMessage20 . $instrument->getInstrumentName($observer->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
-				               LangPDFMessage21 . $location->getLocationName($observer->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
+		                   LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
+		                                      $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . 
+                       LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
+				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
 		            $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, $_GET['pdfTitle'], 'center' );
 		            $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
           	  }
@@ -701,11 +663,7 @@ class util
 
   // Creates a pdf document from an array of objects
   function pdfObjectsDetails2($result)
-  {
-    include_once "observers.php";
-    $observer = new Observers;
-
-    global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
+  { global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
     $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
     $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL;
 
@@ -736,7 +694,7 @@ class util
 
       $con = $valueA[2];
       $type = $valueA[1];
-      $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
+      $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
       $page = $valueA[$atlas];
       $diam1 = $valueA[18];
       $diam2 = $valueA[19];
@@ -810,7 +768,7 @@ class util
 
         $con = $valueA[2];
         $type = $valueA[1];
-        $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
+        $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
         $page = $valueA[$atlas];
         $diam1 = $valueA[18];
         $diam2 = $valueA[19];
@@ -973,31 +931,9 @@ class util
 
   // Creates a csv file from an array of observations
   function csvObservations($result)
-  {
-    include_once "objects.php";
-    include_once "observers.php";
-    include_once "instruments.php";
-    include_once "eyepieces.php";
-    include_once "filters.php";
-    include_once "lenses.php";
-    include_once "locations.php";
-    include_once "setup/vars.php";
-    include_once "setup/databaseInfo.php";
-    $objects = new Objects;
-    $observer = new Observers;
-    $instrument = new Instruments;
-    $eyepiece = new Eyepieces;
-    $filter = new Filters;
-    $lens = new Lenses;
-    $observation = new Observations;
-    $location = new Locations;
-    $util = new Util;
-
-    print LangCSVMessage3."\n";
-
+  { print LangCSVMessage3."\n";
     while(list ($key, $value) = each($result))
-    {
-      $obs = $observation->getAllInfoDsObservation($value);
+    { $obs = $GLOBALS['objObservation']->getAllInfoDsObservation($value);
       $objectname = $obs["name"];
       $observerid = $obs["observer"];
       $inst = $obs["instrument"];
@@ -1019,39 +955,29 @@ class util
       {
         $time = "";
       }
-      $description = $util->br2nl(html_entity_decode($obs["description"]));
+      $description = $this->br2nl(html_entity_decode($obs["description"]));
       $description = preg_replace("/;/", ",", $description);
       $visibility = $obs["visibility"];
       if ($visibility == "0")
       {
         $visibility = "";
       }
-      $name = $observer->getFirstname($obs["observer"]). " ".$observer->getObserverName($obs["observer"]);
-      $seeing = $observation->getSeeing($value);
-      $limmag = $observation->getLimitingMagnitude($value);
+      $name = $GLOBALS['objObserver']->getFirstname($obs["observer"]). " ".$GLOBALS['objObserver']->getObserverName($obs["observer"]);
+      $seeing = $GLOBALS['objObservation']->getSeeing($value);
+      $limmag = $GLOBALS['objObservation']->getLimitingMagnitude($value);
       $description = preg_replace("/(\r\n|\n|\r)/", "", $description);
       $description = preg_replace("/(\")/", "", $description);
-      echo (html_entity_decode($objectname) . ";" . html_entity_decode($name) . ";" . $date[2] . "-" . $date[1] . "-" . $date[0] . ";" . $time . ";" . html_entity_decode($location->getLocationName($loc)) . ";" . html_entity_decode($instrument->getInstrumentName($inst)) . ";" . html_entity_decode($eyepiece->getEyepieceName($eyep)) . ";" . html_entity_decode($filter->getFilterName($filt)) . ";" . html_entity_decode($lens->getLensName($lns)) . ";" . $seeing . ";" . $limmag . ";" . $visibility . ";" . $langObs . ";" . $description . "\n");
+      echo (html_entity_decode($objectname) . ";" . html_entity_decode($name) . ";" . $date[2] . "-" . $date[1] . "-" . $date[0] . ";" . $time . ";" . html_entity_decode($GLOBALS['objLocation']->getLocationName($loc)) . ";" . html_entity_decode($GLOBALS['objInstrument']->getInstrumentName($inst)) . ";" . html_entity_decode($GLOBALS['objEyepiece']->getEyepieceName($eyep)) . ";" . html_entity_decode($GLOBALS['objFilter']->getFilterName($filt)) . ";" . html_entity_decode($GLOBALS['objLens']->getLensName($lns)) . ";" . $seeing . ";" . $limmag . ";" . $visibility . ";" . $langObs . ";" . $description . "\n");
     }
   }
 
   // Creates a csv file from an array of objects
   function csvObjects($result)
-  {
-		include_once "../commmon/control/ra_to_hms.php";
-		include_once "../commmon/control/dec_to_dm.php";
-    include_once "observers.php";
-    include_once "objects.php";
-    include "setup/vars.php";
-    include "setup/databaseInfo.php";
-    $object = new objects;
-    $observer = new Observers;
-    print html_entity_decode(LangCSVMessage7)."\n";
+  { print html_entity_decode(LangCSVMessage7)."\n";
 
     while(list ($key, $valueA) = each($result))
-    {
-      $alt="";
-      $alts = $object->getAlternativeNames($valueA[0]);
+    { $alt="";
+      $alts = $GLOBALS['objObject']->getAlternativeNames($valueA[0]);
       $first = true;
       while(list($key,$value)=each($alts))
       if($value!=$valueA[0])
@@ -1078,7 +1004,7 @@ class util
       if($pa==999)
       $pa="";
       $type = $valueA[1];
-      $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
+      $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
       $page = $valueA[$atlas];
       $diam1 = $valueA[18];
       $diam2 = $valueA[19];
@@ -1116,7 +1042,7 @@ class util
         $magnifi = (int)$valueA[25];
       }
 
-      echo $valueA[0].";". $alt .";".raToString($valueA[7]).";".decToString($valueA[8], 0).";".$$con.";".$$type.";".$mag.";".$sb.";".$size.";".$pa.";".$page.";".$valueA[21].";".$magnifi.";".$valueA[3].";".$valueA[28]."\n";
+      echo $valueA[0].";". $alt .";".raToString($valueA[7]).";".decToString($valueA[8], 0).";".$GLOBALS[$con].";".$GLOBALS[$type].";".$mag.";".$sb.";".$size.";".$pa.";".$page.";".$valueA[21].";".$magnifi.";".$valueA[3].";".$valueA[28]."\n";
     }
   }
 
@@ -1149,7 +1075,7 @@ class util
       $sb = $sb.".0";
       $con = $valueA[2];
       $argotype = "argo".$valueA[1];
-      $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
+      $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
       $page = $valueA[$atlas];
       $size = "";
       $diam1 = $valueA[18];
@@ -1187,16 +1113,7 @@ class util
 
   // Creates a pdf document from an array of observations
   function pdfObservations($result)
-  {
-    include_once "objects.php";
-    include_once "observers.php";
-    include_once "instruments.php";
-    include_once "locations.php";
-    include_once "eyepieces.php";
-    include_once "filters.php";
-    include_once "lenses.php";
-
-    global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
+  { global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
     $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
     $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL;
 
@@ -1228,9 +1145,9 @@ class util
 
     while(list ($key, $value) = each($result))
     {
-      $obs = $observation->getAllInfoDsObservation($value);
+      $obs = $GLOBALS['objObservation']->getAllInfoDsObservation($value);
       $objectname = $obs["name"];
-      $object = $objects->getAllInfoDsObject($objectname);
+      $object = $GLOBALS['objObject']->getAllInfoDsObject($objectname);
       $type = $object["type"];
       $con = $object["con"];
       $observerid = $obs["observer"];
@@ -1243,7 +1160,7 @@ class util
       $eyep = $obs["eyepiece"];
       $lns = $obs["lens"];
 
-      if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($observer->getUseLocal($_SESSION['deepskylog_id'])))
+      if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($GLOBALS['objObserver']->getUseLocal($_SESSION['deepskylog_id'])))
       {
         $date = sscanf($obs["localdate"], "%4d%2d%2d");
       }
@@ -1252,7 +1169,7 @@ class util
         $date = sscanf($obs["date"], "%4d%2d%2d");
       }
 
-      $description = $util->br2nl(html_entity_decode($obs["description"]));
+      $description = $this->br2nl(html_entity_decode($obs["description"]));
 
       $formattedDate = date($dateformat, mktime(0,0,0,$date[1],$date[2],$date[0]));
 
@@ -1330,19 +1247,19 @@ class util
 
       if ($filt > 0)
       {
-        $filtername = $filter->getFilterName($filt);
+        $filtername = $GLOBALS['objFilter']->getFilterName($filt);
         $filtstr = LangViewObservationField31. " : " . $filtername;
       }
 
       if ($eyep > 0)
       {
-        $eyepiecename = $eyepiece->getEyepieceName($eyep);
+        $eyepiecename = $GLOBALS['objEyepiece']->getEyepieceName($eyep);
         $eyepstr = LangViewObservationField30. " : " . $eyepiecename;
       }
 
       if ($lns > 0)
       {
-        $lensname = $lens->getLensName($lns);
+        $lensname = $GLOBALS['objLens']->getLensName($lns);
         $lnsstr = LangViewObservationField32 . " : " . $lensname;
       }
 
@@ -1355,9 +1272,9 @@ class util
                  "filter" => $filtstr,
                  "eyepiece" => $eyepstr,
 								 "lens" => $lnsstr,
-                 "observer" => html_entity_decode(LangPDFMessage13).$observer->getFirstName($observerid)." ".$observer->getObserverName($observerid).html_entity_decode(LangPDFMessage14).$formattedDate,
-                 "instrument" => html_entity_decode(LangPDFMessage11)." : ".$instrument->getInstrumentName($inst),
-                 "location" => html_entity_decode(LangPDFMessage10)." : ".$location->getLocationName($loc),
+                 "observer" => html_entity_decode(LangPDFMessage13).$GLOBALS['objObserver']->getFirstName($observerid)." ".$GLOBALS['objObserver']->getObserverName($observerid).html_entity_decode(LangPDFMessage14).$formattedDate,
+                 "instrument" => html_entity_decode(LangPDFMessage11)." : ".$GLOBALS['objInstrument']->getInstrumentName($inst),
+                 "location" => html_entity_decode(LangPDFMessage10)." : ".$GLOBALS['objLocation']->getLocationName($loc),
                  "description" => $description,
                  "desc" => html_entity_decode(LangPDFMessage15)
       );
@@ -1668,8 +1585,7 @@ class util
     $pdf->ezStream();
   }
   public function utiltiesDispatchIndexActionDS()
-  {
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAdmin('manage_csv_object','content/manage_objects_csv.php')))
+  { if(!($indexActionInclude=$this->utilitiesCheckIndexActionAdmin('manage_csv_object','content/manage_objects_csv.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_observation','content/change_observation.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_observation','content/change_observation.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_csv','content/new_observationcsv.php')))
@@ -1692,8 +1608,7 @@ class util
     return $indexActionInclude;
   }
 	public function utiltiesDispatchIndexActionCommon()
-  {
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('account_details','content/change_account.php')))
+  { if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('account_details','content/change_account.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_eyepiece','content/change_eyepiece.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_filter','content/change_filter.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_instrument','content/change_instrument.php')))
@@ -1753,7 +1668,7 @@ class util
 	      return $this->checkGetKey($hr,0)+($this->checkGetKey($min,0)/60)+($this->checkGetKey($sec,0)/3600);
   }
   public function promptWithLink($prompt,$promptDefault,$javaLink,$text)
-	{ echo "<a href=\"\"onclick=\"thetitle = prompt(".$prompt.",".$promptDefault.");location.href='".$javaLink."&amp;pdfTitle='+thetitle+''return false\"	target=\"new_window\">".$text."</a>";
+	{ echo "<a href=\"\" onclick=\"thetitle = prompt(".$prompt.",".$promptDefault."); location.href='".$javaLink."&amp;pdfTitle='+thetitle+''; return false;\"	target=\"new_window\">".$text."</a>";
   }
 }
 $objUtil=new Util();

@@ -38,7 +38,7 @@ if(count($_SESSION[$_SID]) > 1) // valid result
 	else
     echo("<a href=\"" . $link . "&amp;showPartOfs=" . 1 . "\">" . LangListQueryObjectsMessage13 . "</a>");
 	$link .= "&amp;showPartOfs=" . $showPartOfs;
-	echo "<HR>";
+	echo "<hr>";
   $objObject->showObjects($link, 'Qobj', $min, $max, $myList);
 	echo("<hr>");
   list($min, $max) = $objUtil->printNewListHeader($_SESSION[$_SID], $link, $min, 25, "");	
@@ -57,7 +57,7 @@ if(count($_SESSION[$_SID]) > 1) // valid result
 	echo "<p><a href=\"deepsky/index.php?indexAction=query_objects\">".LangExecuteQueryObjectsMessage1."</a>";
 	echo "</div>\n</body>\n</html>";
 }
-elseif(count($_SESSION['Qobj']) == 1)
+elseif(count($_SESSION['Qobj'])==1)
 { $_GET['object'] =  $_SESSION['Qobj'][0]['name'];
   include "view_object.php";
 } 

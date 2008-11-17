@@ -153,7 +153,7 @@ if($_SESSION['listname']<>"----------")
   	else
   	  $min = '';
   
-    list($min, $max) = $objUtil->printNewListHeader($_SESSION['QOL'], $link, $min, 25, "");	
+    list($min, $max) = $objUtil->printListHeader($_SESSION['QOL'], $link, $min, 25, "");	
   
     // OUTPUT RESULT
     echo "<table width=\"100%\">\n";
@@ -179,12 +179,7 @@ if($_SESSION['listname']<>"----------")
   	$maxcount = count($_SESSION['QOL']);
 //		$objects->showObjects($link, $_SID, $min, $max, $myList, 1); 
     while(($count<$max) && ($count<$maxcount))
-    {
-      if ($count % 2)
-        $typefield = "class=\"type1\"";
-      else
-        $typefield = "class=\"type2\"";
-  
+    { $typefield = "class=\"type".(2-($count%2))."\"";
       $name = $_SESSION['QOL'][$count][0];
 			$showname=$_SESSION['QOL'][$count][4]; 
       $place = $_SESSION['QOL'][$count][24];
