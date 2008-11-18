@@ -2,18 +2,33 @@
 
 // ========================================= filter objects from observation query
 if(array_key_exists('source',$_GET)&&($_GET['source']=='observation_query'))
-{	unset($_SESSION['QOP']);
-	$validQobj=false;
+{	$validQobj=false;
   if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='observation_query'))
 	  $validQobj=true;
-	while($validQobj && (list($key,$value) = each($_SESSION['QobjParams'])))
-	  if(array_key_exists($key,$_SESSION['QobsParams'])&&($value != $_SESSION['QobsParams'][$key]))
+	while($validQobj&&(list($key,$value) = each($_SESSION['QobjParams'])))
+	  if(!array_key_exists($key,$_SESSION['QobsParams'])||($value!=$_SESSION['QobsParams'][$key]))
+	    $validQobj=false;	 
+	while($validQobj&&(list($key,$value) = each($_SESSION['QobsParams'])))
+	  if(!array_key_exists($key,$_SESSION['QobjParams'])||($value!=$_SESSION['QobjParams'][$key]))
 	    $validQobj=false;	 
   if(!$validQobj)
 	{ $obj = $objObject->getSeenObjectDetails($objObservation->getObjectsFromObservations($_SESSION['Qobs']),'D');
-    $_SESSION['QobjParams']=array('source'=>'observation_query',$_SESSION['QobsParams']);
+    $_SESSION['QobjParams']=array_merge(array('source'=>'observation_query'),$_SESSION['QobsParams']);
 	  $_SESSION['Qobj']=$obj;
 		$_SESSION['QobjSort']='showname';
+	  $_SESSION['QobjSortDirection']='asc';
+	}
+}
+elseif(array_key_exists('source',$_GET)&&($_GET['source']=='objects_nearby'))
+{ $validQobj=false;
+  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='objects_nearby')
+	 &&array_key_exists('object',$_GET)        &&array_key_exists('object',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['object']==$_GET['object'])
+	 &&array_key_exists('zoom',$_GET)          &&array_key_exists('zoom',  $_SESSION['QobjParams'])&&($_SESSION['QobjParams']['zoom']==$_GET['zoom']))
+	  $validQobj=true;
+  if(!$validQobj)
+	{ $_SESSION['QobjParams']=array('source'=>'objects_nearby','object'=>$_GET['object'],'zoom'=>$_GET['zoom']);
+	  $_SESSION['Qobj']=$GLOBALS['objObject']->getSeenObjectDetails($GLOBALS['objObject']->getOtherObjects($_GET['object'],$_GET['zoom']));
+	  $_SESSION['QobjSort']='objectname';
 	  $_SESSION['QobjSortDirection']='asc';
 	}
 }
@@ -22,16 +37,15 @@ elseif(array_key_exists('seen',$_GET))
   if(array_key_exists('catalog',$_GET) && $_GET['catalog']) $name = $_GET['catalog'];
   if(array_key_exists('catalog',$_GET)) $catalog = $_GET['catalog'];
   if(array_key_exists('catNumber',$_GET)) $catNumber = $_GET['catNumber'];
-  if(array_key_exists('atlas',$_GET) && $_GET['atlas'])
-  $atlas=$GLOBALS['objUtil']->checkGetKey('atlas',(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])?$objAtlas->atlasCodes[$objObserver->getStandardAtlasCode($_SESSION['deepskylog_id'])]:'';
+  if(array_key_exists('atlas',$_GET) && $_GET['atlas']);
+  $atlas=$GLOBALS['objUtil']->checkGetKey('atlas',(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])?$objAtlas->atlasCodes[$objObserver->getStandardAtlasCode($_SESSION['deepskylog_id'])]:'');
   $atlasPageNumber=$objUtil->checkGetKey('atlasPageNumber','');
   if(array_key_exists('inList', $_GET)) $inList = $_GET['inList']; else $inList = '';
   if(array_key_exists('notInList', $_GET)) $notInList = $_GET['notInList']; else $notInList = '';
   if(array_key_exists('size_min_units',$_GET)) $size_min_units=$_GET['size_min_units']; else $size_min_units='';
   if(array_key_exists('size_max_units',$_GET)) $size_max_units=$_GET['size_max_units']; else $size_max_units='';
   if(array_key_exists('catNumber',$_GET) && $_GET['catNumber'])
-  {
-    $name = ucwords(trim($name . " " . trim($_GET['catNumber'])));
+  { $name = ucwords(trim($name . " " . trim($_GET['catNumber'])));
     $exact = "1";
   }
   // ATLAS PAGE
@@ -349,11 +363,11 @@ elseif(array_key_exists('seen',$_GET))
     	$validQobj=false;
       if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])>1)&&(count($_SESSION['Qobj'])>0))
     	  $validQobj=true;
-    	while($validQobj && (list($key,$value) = each($_SESSION['QobjParams'])))
-        if(!array_key_exists($key,$query)||($value!=$query[$key]))
+    	while($validQobj&&(list($key,$value)=each($_SESSION['QobjParams'])))
+        if((!array_key_exists($key,$query))||($value!=$query[$key]))
     	    $validQobj=false;	 
-     	while($validQobj && (list($key,$value) = each($query))
-        if(!array_key_exists($key,$_SESSION['QobjParams'])||($value!=$_SESSION['QobjParams'][$key]))
+     	while($validQobj&&(list($key,$value)=each($query)))
+        if((!array_key_exists($key,$_SESSION['QobjParams']))||($value!=$_SESSION['QobjParams'][$key]))
     	    $validQobj=false;	 
       if(!$validQobj)
     	{ $_SESSION['QobjParams']=$query;

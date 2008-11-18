@@ -6,22 +6,21 @@
 include 'content/data_get_observations.php';
 
 if(count($_SESSION['Qobs'])==0) //================================================================================================== no reult present =======================================================================================
-{
-   echo("</h2>\n");
-   echo "<a href=\"deepsky/index.php?indexAction=query_observations\">" . LangObservationNoResults . "</a>";
-   echo " " . LangObservationOR . " ";
-   echo "<a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=%\">" . LangObservationQueryError3 . "</a>";
+{ echo("</h2>\n");
+  echo "<a href=\"deepsky/index.php?indexAction=query_observations\">" . LangObservationNoResults . "</a>";
+  echo " " . LangObservationOR . " ";
+  echo "<a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=%\">" . LangObservationQueryError3 . "</a>";
 }
 else                           //================================================================================================== show results in $_SESSION['Qobs'] =======================================================================================
-{  $step = 25;
-	 $link2 = 'deepsky/index.php?indexAction=result_selected_observations&amp;lco='.urlencode($_SESSION['lco']); 
-   reset($_GET);
-	 while(list($key,$value)=each($_GET))
-	   if($key!='indexAction')
-		   $link2.="&amp;".$key."=".urlencode($value);
-   while(list($key,$value)=each($usedLanguages))
-	   $link2=$link2.'&amp;'.$value.'='.$value; 
-   $link = $link2.'&amp;sort='.$_GET['sort'].'&amp;sortdirection='.$_GET['sortdirection'];
+{ $step = 25;
+	$link2 = 'deepsky/index.php?indexAction=result_selected_observations&amp;lco='.urlencode($_SESSION['lco']); 
+  reset($_GET);
+	while(list($key,$value)=each($_GET))
+	  if($key!='indexAction')
+	    $link2.="&amp;".$key."=".urlencode($value);
+  while(list($key,$value)=each($usedLanguages))
+	  $link2=$link2.'&amp;'.$value.'='.$value; 
+  $link = $link2.'&amp;sort='.$_GET['sort'].'&amp;sortdirection='.$_GET['sortdirection'];
   //====================== the remainder of the pages formats the page output and calls showObject (if necessary) and showObservations
   //=============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT BEFORE SHOWING ITS OBSERVATIONS =====================================================================================
   if($object)

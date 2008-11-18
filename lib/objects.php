@@ -1966,7 +1966,7 @@ function getPartOfNames($name)
    $get = mysql_fetch_object($run);
 	 $ra = $get->ra; $decl = $get->decl;
 	 $dra = 0.0011 * $dist / cos($decl/180*3.1415926535);
-   $run = $GLOBALS['objDatabase']->selectRecordset("SELECT objects.name FROM objects WHERE ((objects.ra > $ra - $dra) AND (objects.ra < $ra + $dra) AND (objects.decl > $decl - ($dist/60)) AND (objects.decl < $decl + ($dist/60)))");
+   $run = $GLOBALS['objDatabase']->selectRecordset("SELECT objects.name FROM objects WHERE ((objects.ra > $ra - $dra) AND (objects.ra < $ra + $dra) AND (objects.decl > $decl - ($dist/60)) AND (objects.decl < $decl + ($dist/60))) ORDER BY objects.name");
 	 $result = array(); $i=0;
    while($get = mysql_fetch_object($run))
 	   $result[$get->name] = array($i++, $get->name);

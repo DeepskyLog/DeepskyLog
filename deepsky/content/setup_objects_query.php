@@ -29,7 +29,6 @@ $inList = '';                               $notInList = '';
   
 
 require_once '../deepsky/content/data_get_objects.php';
-
 $link="../deepsky/index.php?indexAction=query_objects";
 reset($_GET);
 while(list($key,$value)=each($_GET))
