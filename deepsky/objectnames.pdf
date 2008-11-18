@@ -1,6 +1,6 @@
 <?php 
-include '../common/entryexit/preludes.php';
-include '../common/entryexit/preludesDS.php';
+include_once '../common/entryexit/preludes.php';
+include_once '../common/entryexit/preludesDS.php';
 header ("Content-Type: application/pdf");
 header ("Content-Disposition: Attachment; filename=objects.pdf");
 if(array_key_exists('SID', $_GET)&&$_GET['SID']&&array_key_exists($_GET['SID'],$_SESSION)&&$_SESSION[$_GET['SID']])

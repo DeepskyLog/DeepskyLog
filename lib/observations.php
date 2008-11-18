@@ -75,11 +75,11 @@ class Observations
         sscanf($dte, "%2d/%2d/%4d", $month, $day, $year);
         $date = sprintf("%d%02d%02d", $year, $month, $day);
       }
-    }
     return $date;
+    }
   }
   function getAllInfoDsObservation($id)                                         // getAllInfo returns all information of an observation
-  { $get = mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT * FROM observations WHERE id = \"$id\""));
+  { $get = mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT * FROM observations WHERE id=\"$id\""));
     $ob["name"] = $get->objectname;
     $ob["observer"] = $get->observerid;
     $ob["instrument"] = $get->instrumentid;
@@ -145,18 +145,18 @@ class Observations
   					"JOIN objects on observations.objectname=objects.name " .
 	  				"JOIN locations on observations.locationid=locations.id " .
 		  			"JOIN objectnames on observations.objectname=objectnames.objectname " .
-			  		"JOIN observers on observations.observerid=observers.id WHERE ";
+			  		"JOIN observers on observations.observerid=observers.id ";
     $sql2.= "FROM observations " .
 	          "JOIN objectpartof on objectpartof.objectname=observations.objectname " .
 	          "JOIN instruments on observations.instrumentid=instruments.id " .
 				 	  "JOIN objects on observations.objectname=objects.name " .
 				 	  "JOIN locations on observations.locationid=locations.id " .
 					  "JOIN objectnames on objectpartof.partofname=objectnames.objectname " .
-					  "JOIN observers on observations.observerid=observers.id WHERE ";
+					  "JOIN observers on observations.observerid=observers.id ";
     if(array_key_exists('object',$queries) && ($queries["object"] != ""))
       $sqland.="AND (objectnames.altname like \"".$queries["object"]."\") ";
-    else
-      $sqland.="AND (objectnames.altname like \"".trim($queries["catalog"].' '.$queries['number'].'%')."\")"; 
+    elseif(array_key_exists('catalog',$queries)&&$queries["catalog"]&&$queries['catalog']!='%')
+      $sqland.="AND (objectnames.altname like \"".trim($queries["catalog"].' '.$queries['number'].'%')."\") "; 
     $sqland.=(isset($queries["observer"])&&$queries["observer"])?" AND observations.observerid = \"" . $queries["observer"] . "\" ":'';
     if (isset($queries["instrument"]) && ($queries["instrument"] != ""))
     { $sqland .= "AND (observations.instrumentid = \"" . $queries["instrument"] . "\" ";
@@ -206,9 +206,9 @@ class Observations
     }
     if (isset($queries["maxdate"]) && ($queries["maxdate"] != ""))
     if(strlen($queries["maxdate"])>4)
-    $sqland .= "AND observations.date <= \"" . $queries["maxdate"] . "\" ";
+      $sqland .= "AND observations.date <= \"" . $queries["maxdate"] . "\" ";
     else
-    $sqland .= "AND RIGHT(observations.date,4) <= \"" . $queries["maxdate"] . "\" ";
+      $sqland .= "AND RIGHT(observations.date,4) <= \"" . $queries["maxdate"] . "\" ";
     if (isset($queries["mindate"]) && ($queries["mindate"] != ""))
     if(strlen($queries["mindate"])>4)
       $sqland .= "AND observations.date >= \"".$queries["mindate"]."\" ";
@@ -233,11 +233,7 @@ class Observations
     if (isset($queries["maxdiam1"]) && (strcmp($queries["maxdiam1"], "") != 0)) $sqland .= "AND (objects.diam1 <= \"$diam1\" or objects.diam1 like \"".$queries["maxdiam1"]."\") ";
     if (isset($queries["mindiam2"]) && (strcmp($queries["mindiam2"], "") != 0)) $sqland .= "AND (objects.diam2 > \"$diam2\" or objects.diam2 like \"".$queries["mindiam2"]."\") ";
     if (isset($queries["maxdiam2"]) && (strcmp($queries["maxdiam2"], "") != 0)) $sqland .= "AND (objects.diam2 <= \"$diam2\" or objects.diam2 like \"".$queries["mindiam2"]."\") ";
-    if (isset($queries["urano"]) && ($queries["urano"] != ""))                  $sqland .= "AND objects.urano = \"".$queries["urano"]."\" ";
-    if (isset($queries["uranonew"]) && ($queries["uranonew"] != ""))            $sqland .= "AND objects.urano_new = \"".$queries["uranonew"]."\" ";
-    if (isset($queries["sky"]) && ($queries["sky"] != ""))                      $sqland .= "AND objects.sky = \"".$queries["sky"]."\" ";
-    if (isset($queries["msa"]) && ($queries["msa"] != ""))                      $sqland .= "AND objects.millenium = \"".$queries["msa"]."\" ";
-    if (isset($queries["taki"]) && ($queries["taki"] != ""))                    $sqland .= "AND objects.taki = \"".$queries["taki"]."\" ";
+    $sqland.=(isset($queries["atlas"])&&$queries["atlas"]&&isset($queries["atlasPageNumber"])&&$queries["atlasPageNumber"])?"AND ".$queries["atlas"]."=\"".$queries["atlasPageNumber"]."\" ":'';
     if (isset($queries["minvisibility"]) && ($queries["minvisibility"] != ""))  $sqland .= "AND observations.visibility <= \"".$queries["minvisibility"]."\" AND observations.visibility >= \"1\" ";
     if (isset($queries["maxvisibility"]) && ($queries["maxvisibility"] != ""))  $sqland .= "AND observations.visibility >= \"".$queries["maxvisibility"]."\" ";
     if (isset($queries["minseeing"]) && ($queries["minseeing"] != ""))          $sqland .= "AND observations.seeing <= \"".$queries["minseeing"]."\" ";
@@ -265,40 +261,35 @@ class Observations
       if($extra2)
         $sqland.=" AND (".substr($extra2,3).") ";
     }
-    $sql="(".$sql1.substr($sqland,4);
+    $sql="(".$sql1;
+		if($sqland)
+		  $sql.=" WHERE " . substr($sqland,4);
     if(array_key_exists('object',$queries)&&($queries["object"]!="")&&(!array_key_exists('countquery',$queries)))
-      $sql.=") UNION (".$sql2.substr($sqland,4);
-    $sql.=")";
+    { $sql.=") UNION (".$sql2;
+		  if($sqland)
+		    $sql.=" WHERE " . substr($sqland,4);
+    }
+		$sql.=")";
 		if(!array_key_exists('countquery',$queries))
 		  $sql .= " ORDER BY observationid DESC"; 
     $sql = $sql.";";
 //echo $sql.'<p>';
-    $run = mysql_query($sql) or die(mysql_error());
+      $run = mysql_query($sql) or die(mysql_error());
 		if(!array_key_exists('countquery',$queries))
 		{ $j=0;
+		  $result=array();
 			while($get = mysql_fetch_object($run))
-      { if($seenpar!="D")
-        { $sql = "SELECT COUNT(observations.id) AS cnt " .
-  		           "FROM observations " .
-  				  	   "WHERE objectname = \"". $get->objectname ."\" " .
-  					     "AND observerid = \"" . $_SESSION['deepskylog_id'] . "\"";
-          $run2 = mysql_query($sql) or die(mysql_error());
-          $get2 = mysql_fetch_object($run2);
-          if ($get2->cnt > 0) // object has been seen by the observer logged in
+      { $seentype="X";
+        if(array_key_exists('deepskylog_id',$_SESSION)&&($seenpar!="D"))
+          if ($GLOBALS['objDatabase']->SelectSingleValue("SELECT observations.id FROM observations WHERE objectname = \"". $get->objectname ."\" AND observerid = \"".$_SESSION['deepskylog_id']."\"",'id')) // object has been seen by the observer logged in
             $seentype="Y";
-          else
-            $seentype="X";
-        }
         if(($seenpar=="D")||($seenpar==$seentype))
 				{ while(list($key,$value) = each($get))
 				    $result[$j][$key]=$value;
           $j++;
 				}
       }
-      if(isset($result))
-        return $result;
-      else
-        return array();
+      return $result;
     }
 		else
 		{ $get = mysql_fetch_object($run);
@@ -721,7 +712,7 @@ class Observations
   { return $GLOBALS['objDatabase']->selectSingleValue("SELECT time FROM observations WHERE id = \"$id\"",'time','');
   }
   function getDsObservationLocalTime($id)                                       // getLocalTime returns the time of the given observation in local time
-  { if($get=mysql_fetch_object($GLOBALS['objDatabase']->selectrecordset("SELECT date, time, locationid FROM observations WHERE id = \"$id\"")))
+  { if($get=mysql_fetch_object($GLOBALS['objDatabase']->selectrecordset("SELECT date, time, locationid FROM observations WHERE id=\"$id\"")))
     { $date = $get->date;
       $time = $get->time;
       $loc = $get->locationid;

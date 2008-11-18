@@ -244,8 +244,8 @@ class util
       if($pa==999)
       $pa="-";
 
-      $con = $valueA[2];
-      $type = $valueA[1];
+      $con = $valueA['objectconstellation'];
+      $type = $valueA['objecttype'];
       $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
       $page = $valueA[$atlas];
       $diam1 = $valueA[18];
@@ -384,10 +384,8 @@ class util
 
   // Creates a pdf document from an array of objects
   function pdfObjectsDetails($result, $sort='')
-  { if($sort!='con') $sort='';
-	
-    global $deepskylive, $dateformat;
-		
+  { if($sort=='objectconstellation') $sort='con'; else $sort='';
+	  global $deepskylive, $dateformat;
 		global $baseURL, $dbname;
 		
 		$atlasses = $GLOBALS['objAtlas']->getSortedAtlasses();
@@ -431,8 +429,8 @@ class util
       $sb = round($valueA[6],1);  if ($sb == 99.9)  $sb = "";  else if ($sb - (int)$sb == 0.0)   $sb = $sb.".0";
       $pa = $valueA[20];          if($pa==999)      $pa="-";
 			
-      $con = $valueA[2];
-      $type = $valueA[1];
+      $con = $valueA['objectconstellation'];
+      $type = $valueA['objecttype'];
       $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
       $page = $valueA[$atlas];
       $diam1 = $valueA[18];
@@ -542,7 +540,7 @@ class util
 			  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA[28]);		                     // last seen	
 			  $pdf->addTextWrap($xbase+ 70, $y,  85, $fontSizeText, '<b>'.
 				  '<c:alink:'.$baseURL.'deepsky/index.php?indexAction=detail_object&amp;object='.
-					urlencode($valueA[0]).'>'.$valueA[4]);		               //	object
+					urlencode($valueA['objectname']).'>'.$valueA[4]);		               //	object
 			  $pdf->addTextWrap($xbase+150, $y,  30, $fontSizeText, '</c:alink></b>'.$type);			                 // type
 			  $pdf->addTextWrap($xbase+180, $y,  20, $fontSizeText, $con);			                         // constellation
 			  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $mag, 'left');  	                 // mag
@@ -559,7 +557,7 @@ class util
 			  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA[28]);		                     // last seen	
 			  $pdf->addTextWrap($xbase+ 70, $y, 100, $fontSizeText, '<b>'.
 				  '<c:alink:'.$baseURL.'deepsky/index.php?indexAction=detail_object&amp;object='.
-					urlencode($valueA[0]).'>'.$valueA[4]);		                                       //	object
+					urlencode($valueA['objectname']).'>'.$valueA[4]);		                                       //	object
 			  $pdf->addTextWrap($xbase+170, $y,  30, $fontSizeText, '</c:alink></b>'.$type);			                 // type
 			  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $mag, 'left');			                 // mag
 			  $pdf->addTextWrap($xbase+217, $y,  18, $fontSizeText, $sb, 'left');			                   // sb
@@ -692,8 +690,8 @@ class util
       if($pa==999)
       $pa="-";
 
-      $con = $valueA[2];
-      $type = $valueA[1];
+      $con = $valueA['objectconstellation'];
+      $type = $valueA['objecttype'];
       $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
       $page = $valueA[$atlas];
       $diam1 = $valueA[18];
@@ -766,8 +764,8 @@ class util
         if($pa==999)
         $pa="-";
 
-        $con = $valueA[2];
-        $type = $valueA[1];
+        $con = $valueA['objectconstellation'];
+        $type = $valueA['objecttype'];
         $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
         $page = $valueA[$atlas];
         $diam1 = $valueA[18];
@@ -925,15 +923,14 @@ class util
 
   // The opposite of nl2br
   function br2nl($data)
-  {
-    return preg_replace( '!<br.*>!iU', " ", $data );
+  { return preg_replace( '!<br.*>!iU', " ", $data );
   }
 
   // Creates a csv file from an array of observations
   function csvObservations($result)
   { print LangCSVMessage3."\n";
     while(list ($key, $value) = each($result))
-    { $obs = $GLOBALS['objObservation']->getAllInfoDsObservation($value);
+    { $obs = $GLOBALS['objObservation']->getAllInfoDsObservation($value['observationid']);
       $objectname = $obs["name"];
       $observerid = $obs["observer"];
       $inst = $obs["instrument"];
@@ -977,10 +974,10 @@ class util
 
     while(list ($key, $valueA) = each($result))
     { $alt="";
-      $alts = $GLOBALS['objObject']->getAlternativeNames($valueA[0]);
+      $alts = $GLOBALS['objObject']->getAlternativeNames($valueA['objectname']);
       $first = true;
       while(list($key,$value)=each($alts))
-      if($value!=$valueA[0])
+      if($value!=$valueA['objectname'])
       if ($first)
       {
         $alt = $value;
@@ -999,11 +996,11 @@ class util
       $sb = "";
       else if ($sb - (int)$sb == 0.0)
       $sb = $sb.".0";
-      $con = $valueA[2];
+      $con = $valueA['objectconstellation'];
       $pa = $valueA[20];
       if($pa==999)
       $pa="";
-      $type = $valueA[1];
+      $type = $valueA['objecttype'];
       $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
       $page = $valueA[$atlas];
       $diam1 = $valueA[18];
@@ -1042,71 +1039,56 @@ class util
         $magnifi = (int)$valueA[25];
       }
 
-      echo $valueA[0].";". $alt .";".raToString($valueA[7]).";".decToString($valueA[8], 0).";".$GLOBALS[$con].";".$GLOBALS[$type].";".$mag.";".$sb.";".$size.";".$pa.";".$page.";".$valueA[21].";".$magnifi.";".$valueA[3].";".$valueA[28]."\n";
+      echo $valueA['objectname'].";". $alt .";".raToString($valueA[7]).";".decToString($valueA[8], 0).";".$GLOBALS[$con].";".$GLOBALS[$type].";".$mag.";".$sb.";".$size.";".$pa.";".$page.";".$valueA[21].";".$magnifi.";".$valueA[3].";".$valueA[28]."\n";
     }
   }
 
   // Creates an argo navis file from an array of objects
   function argoObjects($result)
-  {
-		include_once "../commmon/control/ra_to_hms.php";
-		include_once "../commmon/control/dec_to_dm.php";
-    include_once "objects.php";
-    include_once "observers.php";
-    include "setup/vars.php";
-    include "setup/databaseInfo.php";
-
-    $objects = new Objects;
-    $observer = new Observers;
-
-    $counter = 0;
-
+  { $counter = 0;
     while(list ($key, $valueA) = each($result))
-    {
-      $mag = $valueA[5];
+    { $mag = $valueA['objectmagnitude'];
       if ($mag == 99.9)
-      $mag = "";
+        $mag = "";
       else if ($mag - (int)$mag == 0.0)
-      $mag = $mag.".0";
+        $mag = $mag.".0";
       $sb = $valueA[6];
       if ($sb == 99.9)
-      $sb = "";
+        $sb = "";
       else if ($sb - (int)$sb == 0.0)
-      $sb = $sb.".0";
-      $con = $valueA[2];
-      $argotype = "argo".$valueA[1];
+        $sb = $sb.".0";
+      $con = $valueA['objectconstellation'];
+      $argotype = "argo".$valueA['objecttype'];
       $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
       $page = $valueA[$atlas];
       $size = "";
-      $diam1 = $valueA[18];
-      $diam2 = $valueA[19];
-
-      if ($diam1 != 0.0)
-      if ($diam1 >= 40.0)
-      {
-        if (round($diam1 / 60.0) == ($diam1 / 60.0))
-        if ($diam1 / 60.0 > 30.0)
-        $size = sprintf("%.0f'", $diam1 / 60.0);
+			
+      $diam1 = $valueA['objectdiam1'];
+      $diam2 = $valueA['objectdiam2'];
+      if ($diam1!=0.0)
+        if ($diam1>=40.0)
+        { if (round($diam1 / 60.0) == ($diam1 / 60.0))
+            if ($diam1 / 60.0 > 30.0)
+              $size = sprintf("%.0f'", $diam1 / 60.0);
+            else
+              $size = sprintf("%.1f'", $diam1 / 60.0);
+          else
+            $size = sprintf("%.1f'", $diam1 / 60.0);
+          if ($diam2 != 0.0)
+            if (round($diam2 / 60.0) == ($diam2 / 60.0))
+              if ($diam2 / 60.0 > 30.0)
+                $size = $size.sprintf("x%.0f'", $diam2 / 60.0);
+              else
+                $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
+            else
+              $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
+        }
         else
-        $size = sprintf("%.1f'", $diam1 / 60.0);
-        else
-        $size = sprintf("%.1f'", $diam1 / 60.0);
-        if ($diam2 != 0.0)
-        if (round($diam2 / 60.0) == ($diam2 / 60.0))
-        if ($diam2 / 60.0 > 30.0)
-        $size = $size.sprintf("x%.0f'", $diam2 / 60.0);
-        else
-        $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
-        else
-        $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
-      }
-      else
-      {
-        $size = sprintf("%.1f''", $diam1);
-        if ($diam2 != 0.0)
-        $size = $size.sprintf("x%.1f''", $diam2);
-      }
-      echo "DSL " . sprintf("%03d", $counter) . " " . $valueA[0]."|".$this->raArgoToString($valueA[7])."|".decToArgoString($valueA[8], 0)."|".$$argotype."|".$mag."|".$size.";".$atlas." ".$page.";CR ".$valueA[21].";".$valueA[3].";".$valueA[28]."\n";
+        { $size = sprintf("%.1f''", $diam1);
+          if ($diam2 != 0.0)
+            $size = $size.sprintf("x%.1f''", $diam2);
+        }
+      echo "DSL " . sprintf("%03d", $counter) . " " . $valueA['objectname']."|".raArgoToString($valueA['objectra'])."|".decToArgoString($valueA['objectdecl'], 0)."|".$GLOBALS[$argotype]."|".$mag."|".$size.";".$atlas." ".$page.";CR ".$valueA['objectconstrast'].";".$valueA['objectseen'].";".$valueA['seendate']."\n";
       $counter++;
     }
   }
@@ -1124,16 +1106,6 @@ class util
 
     global $deepskylive, $dateformat;
 
-    $objects = new Objects;
-    $observer = new Observers;
-    $instrument = new Instruments;
-    $observation = new Observations;
-    $location = new Locations;
-    $util = new Util;
-    $eyepiece = new Eyepieces;
-    $filter = new Filters;
-    $lens = new Lenses;
-
     // Create pdf file
     $pdf = new Cezpdf('a4', 'portrait');
     $pdf->ezStartPageNumbers(300, 30, 10);
@@ -1144,8 +1116,7 @@ class util
     $pdf->ezText(LangPDFTitle2."\n");
 
     while(list ($key, $value) = each($result))
-    {
-      $obs = $GLOBALS['objObservation']->getAllInfoDsObservation($value);
+    { $obs = $GLOBALS['objObservation']->getAllInfoDsObservation($value['observationid']);
       $objectname = $obs["name"];
       $object = $GLOBALS['objObject']->getAllInfoDsObject($objectname);
       $type = $object["type"];
@@ -1369,8 +1340,7 @@ class util
 
   // Creates a pdf document from an array of comet observations
   function pdfCometObservations($result)
-  {
-    include_once "cometobjects.php";
+  { include_once "cometobjects.php";
     include_once "observers.php";
     include_once "instruments.php";
     include_once "locations.php";

@@ -90,7 +90,7 @@ echo("<select name=\"atlas\">\n");
 	  if($key==$atlas) echo("<option selected value=\"" . $key . "\">".$value."</option>\n"); 
 		else echo("<option value=\"" . $key . "\">".$value."</option>\n");
 echo("</select>\n");
-echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"page\" size=\"4\" value=\"\" />");
+echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"atlasPageNumber\" size=\"4\" value=\"\" />");
 echo("</td>");
 echo("</tr>\n");
 

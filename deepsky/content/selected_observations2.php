@@ -5,11 +5,9 @@
 //====================== data_get_observations fetches the data, sorts it and places it in $_SESSION['Qobs'] and puts the toal number of observations in all languages in $_SESSION['QobsTotal'];
 include 'content/data_get_observations.php';
 
-
 if(count($_SESSION['Qobs'])==0) //================================================================================================== no reult present =======================================================================================
 {
    echo("</h2>\n");
-	 echo "<p>" . LangObservationNoResults . "</p>";
    echo "<a href=\"deepsky/index.php?indexAction=query_observations\">" . LangObservationNoResults . "</a>";
    echo " " . LangObservationOR . " ";
    echo "<a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=%\">" . LangObservationQueryError3 . "</a>";
@@ -75,9 +73,9 @@ else                           //===============================================
   else
     echo(LangSelectedObservationsTitle2);
 	if(count($_SESSION['Qobs'])>0)
-	 {
-  	 if($_SESSION['lco']!="L")
-  	   echo(" - <a href=\"". $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">" . 
+	 { if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
+       if($_SESSION['lco']!="L")
+  	     echo(" - <a href=\"". $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">" . 
   		       LangOverviewObservations . "</a>");
   	 if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
        if($_SESSION['lco']!="C")
@@ -134,7 +132,8 @@ else                           //===============================================
 
       echo "<p>";
 			$objUtil->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."deepsky/observations.pdf?SID=Qobs",LangExecuteQueryObjectsMessage4);
-//			echo "<a href=\"deepsky/observations.pdf\" target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a> - ";
+//			echo "<a href=\"deepsky/observations.pdf\" target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a>";
+      echo " - ";
 //			$objUtil->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."deepsky/observations.csv?SID=Qobs",LangExecuteQueryObjectsMessage5);
       echo "<a href=\"deepsky/observations.csv\" target=\"new_window\">".LangExecuteQueryObjectsMessage5."</a> - ";
       echo "<a href=\"deepsky/index.php?indexAction=query_objects&amp;source=observation_query\">".LangExecuteQueryObjectsMessage9."</a> - ";
@@ -151,6 +150,4 @@ else                           //===============================================
 }
 echo "</div>";
 echo "</div>";
-echo "</body>";
-echo "</html>";
 ?>

@@ -1,13 +1,6 @@
 <?php
-
 // head.php
 // prints the html headers and the main menu
-// version 0.2, JV 20050424
-
-//include_once "../lib/setup/language.php";
-//include_once "../lib/util.php";
-//$util = new Util();
-//$util->checkUserInput();
 
 class head
 {
@@ -20,8 +13,8 @@ class head
 	 <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />
 	 <meta name=\"revisit-after\" content=\"1 day\">
 	 <META NAME=\"copyright\" CONTENT=\"Copyright &copy; 2005-2006 VVS. Alle Rechten Voorbehouden.\">
-	 <META NAME=\"author\" CONTENT=\"Vereniging Voor Sterrenkunde\">
-	 <title>Vereniging Voor Sterrenkunde - Home</title>
+	 <META NAME=\"author\" CONTENT=\"DeepskyLog - VVS\">
+	 <title>DeepskyLog ". $GLOBALS['objUtil']->checkGetKey('indexAction','')."</title>
 	 <meta name=\"description\" content=\"Vereniging voor sterrenkunde\" />
 	 <meta name=\"keywords\" content=\"VVS, Vereniging Voor Sterrenkunde, astronomie, sterrenkunde, JVS, Heelal, Astra, Hemelkalender, Sterrenkijkdag, Sterrenkijkdagen, sterr, Nieuws, Laatste nieuws\" />
 	 <meta name=\"Generator\" content=\"Mambo - Copyright 2000 - 2005 Miro International Pty Ltd.  All rights reserved.\" />

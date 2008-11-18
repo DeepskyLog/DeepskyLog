@@ -23,10 +23,8 @@ elseif(array_key_exists('seen',$_GET))
   if(array_key_exists('catalog',$_GET)) $catalog = $_GET['catalog'];
   if(array_key_exists('catNumber',$_GET)) $catNumber = $_GET['catNumber'];
   if(array_key_exists('atlas',$_GET) && $_GET['atlas'])
-    $atlas=$_GET['atlas'];
-  elseif(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
-    $atlas=$objAtlas->atlasCodes[$objObserver->getStandardAtlasCode($_SESSION['deepskylog_id'])];
-  if(array_key_exists('atlasPageNumber',$_GET)) $atlasPageNumber = $_GET['atlasPageNumber']; else $atlasPageNumber='';
+  $atlas=$GLOBALS['objUtil']->checkGetKey('atlas',(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])?$objAtlas->atlasCodes[$objObserver->getStandardAtlasCode($_SESSION['deepskylog_id'])]:'';
+  $atlasPageNumber=$objUtil->checkGetKey('atlasPageNumber','');
   if(array_key_exists('inList', $_GET)) $inList = $_GET['inList']; else $inList = '';
   if(array_key_exists('notInList', $_GET)) $notInList = $_GET['notInList']; else $notInList = '';
   if(array_key_exists('size_min_units',$_GET)) $size_min_units=$_GET['size_min_units']; else $size_min_units='';
@@ -348,12 +346,14 @@ elseif(array_key_exists('seen',$_GET))
         $seenPar = $_GET['seen'];
       else
         $seenPar = "D";
-			
     	$validQobj=false;
       if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])>1)&&(count($_SESSION['Qobj'])>0))
     	  $validQobj=true;
     	while($validQobj && (list($key,$value) = each($_SESSION['QobjParams'])))
         if(!array_key_exists($key,$query)||($value!=$query[$key]))
+    	    $validQobj=false;	 
+     	while($validQobj && (list($key,$value) = each($query))
+        if(!array_key_exists($key,$_SESSION['QobjParams'])||($value!=$_SESSION['QobjParams'][$key]))
     	    $validQobj=false;	 
       if(!$validQobj)
     	{ $_SESSION['QobjParams']=$query;

@@ -52,8 +52,9 @@ $query = array("object"        => $object,
                "mindecl"       => $GLOBALS['objUtil']->checkGetTimeOrDegrees('minDeclDegrees','minDeclMinutes','minDeclSeconds'),
 						   "minLat"        => $GLOBALS['objUtil']->checkGetTimeOrDegrees('minLatDegrees','minLatMinutes','minLatSeconds'),
 						   "maxLat"        => $GLOBALS['objUtil']->checkGetTimeOrDegrees('maxLatDegrees','maxLatMinutes','maxLatSeconds'),
-               $GLOBALS['objUtil']->checkGetKey('atlas','atlas') 
-							                 => $GLOBALS['objUtil']->checkGetKey('page'),
+               "atlas"         => $GLOBALS['objUtil']->checkGetKey('atlas'),
+							 "atlasPageNumber"
+							                 => $GLOBALS['objUtil']->checkGetKey('atlasPageNumber'),
                "minra"         => $GLOBALS['objUtil']->checkGetTimeOrDegrees('minRAhours','minRAminutes','minRAseconds'),
                "maxra"         => $GLOBALS['objUtil']->checkGetTimeOrDegrees('maxRAhours','maxRAminutes','maxRAseconds'),
                "mindiam1"      => ($GLOBALS['objUtil']->checkGetKey('minsize')?($GLOBALS['objUtil']->checkGetKey('size_min_units')=="min"?$_GET['minsize']*60:$_GET['minsize']):''),
@@ -75,9 +76,12 @@ if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])>1)&
 while($validQobs && (list($key,$value) = each($_SESSION['QobsParams'])))
  if(!array_key_exists($key,$query)||($value!=$query[$key]))
    $validQobs=false;	 
+while($validQobs && (list($key,$value) = each($query)))
+ if(!array_key_exists($key,$_SESSION['QobsParams'])||($value!=$_SESSION['QobsParams'][$key]))
+   $validQobs=false;
 if(!$validQobs)
-{ $_SESSION['QobsParams']=$query; 
-  $_SESSION['Qobs']=$objObservation->getObservationFromQuery($query, $GLOBALS['objUtil']->checkGetKey('seen','D'));
+{ $_SESSION['Qobs']=$objObservation->getObservationFromQuery($query, $GLOBALS['objUtil']->checkGetKey('seen','D'));
+  $_SESSION['QobsParams']=$query; 
   $_SESSION['QobsSort']='observationid';
   $_SESSION['QobsSortDirection']='desc';
   $query['countquery']='true';

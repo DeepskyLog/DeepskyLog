@@ -3,6 +3,6 @@ include '../common/entryexit/preludes.php';
 include '../common/entryexit/preludesDS.php';
 header ("Content-Type: application/pdf");
 header ("Content-Disposition: attachment; filename=\"observations.pdf\"");
-if(array_key_exists('Qobs',$_SESSION&&$_SESSION['Qobs'])
+if(array_key_exists('Qobs',$_SESSION)&&$_SESSION['Qobs'])
   $objUtil->pdfObservations($_SESSION['Qobs']);
 ?>
