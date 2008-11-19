@@ -1,95 +1,54 @@
 <?php
-
 // new_observation.php
 // GUI to add a new observation to the database
-// Version 0.4: 2005/05/29, JV
-
-// include statements
-// $$ ok
-
-include_once "../lib/objects.php";
-include_once "../lib/observations.php";
-include_once "../lib/observers.php";
-include_once "../common/control/ra_to_hms.php";
-include_once "../common/control/dec_to_dm.php";
-include_once "../lib/util.php";
-include_once "../lib/lists.php";
-
-$util = new Util();
-$util->checkUserInput();
-$objects = new Objects;
-$observer = new Observers;
-$list = new Lists;
-
-if(array_key_exists('listname',$_SESSION) && ($list->checkList($_SESSION['listname'])==2)) $myList=True; else $myList = False;
 
 echo("<div id=\"main\">\n");
 if(array_key_exists('object', $_GET) && $_GET['object'])
-{
-  $seen = "<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($_GET['object']) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
-  $seenDetails = $objects->getSeen($_GET['object']);
-  if(substr($seenDetails,0,1)=="X") // object has been seen already
-  {
-    $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($_GET['object']) . "\" title=\"" . LangObjectXSeen . "\">" . $seenDetails . "</a>";
-  }
-  if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
-  {
-    if (substr($seenDetails,0,1)=="Y") // object has been seen by the observer logged in
-    $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($_GET['object']) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
-  }
-  echo("<h2>");
-  echo (LangNewObservationTitle . "&nbsp;" . $_GET['object']);
-  echo "&nbsp;:&nbsp;" . $seen;
-  echo("</h2>\n");
-  $id = $_GET['object'];
-  // check if an observation has already been submitted during this session
-  // not correct as this form is processed twice (after looking up of object)
-  // and $_GET['new'] is not passed again...
-  // to be corrected
-  $_SESSION['backlink'] = "new_observation.php";
-
-  //  echo("<ol><li value=\"2\">" . LangNewObservationSubtitle2 . "</li></ol>");
-  //  echo("<p></p>");
-  echo "<table width=\"100%\"><tr>";
-  echo("<td width=\"25%\" align=\"left\">");
-  if($seen!="<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($_GET['object']) . "\" title=\"" . LangObjectNSeen . "\">-</a>")
-  echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($_GET['object']) . "\">" . LangViewObjectObservations . " " . $_GET['object']);
-  echo("</td><td width=\"25%\" align=\"center\">");
-  if (array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
-  echo("<a href=\"deepsky/index.php?indexAction=add_observation&object=" . urlencode($_GET['object']) . "\">" . LangViewObjectAddObservation . $_GET['object'] . "</a>");
-  echo("</td>");
+{ $seen = $GLOBALS['objObject']->getDSOSeen($_GET['object']);
+  echo "<h2>";
+  echo LangNewObservationTitle . "&nbsp;" . $_GET['object'];
+  echo "&nbsp;:&nbsp;".$seen;
+  echo "</h2>";
+  $id=$_GET['object'];
+  echo "<table width=\"100%\">";
+	echo "<tr>";
+  echo "<td width=\"25%\" align=\"left\">";
+  if(substr($GLOBALS['objObject']->getSeen($_GET['object']),0,1)!="-")
+    echo "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($_GET['object']) . "\">" . LangViewObjectObservations . " " . $_GET['object'];
+  echo "</td>";
+	echo "<td width=\"25%\" align=\"center\">";
+  if(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
+    echo("<a href=\"deepsky/index.php?indexAction=add_observation&object=" . urlencode($_GET['object']) . "\">" . LangViewObjectAddObservation . $_GET['object'] . "</a>");
+  echo "</td>";
   if($myList)
-  {
-    echo("<td width=\"25%\" align=\"center\">");
+  { echo "<td width=\"25%\" align=\"center\">";
     if($list->checkObjectInMyActiveList($_GET['object']))
-    echo("<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['object']) . "&amp;removeObjectFromList=" . urlencode($_GET['object']) . "\">" . $_GET['object'] . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "</a>");
+      echo "<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['object']) . "&amp;removeObjectFromList=" . urlencode($_GET['object']) . "\">" . $_GET['object'] . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "</a>";
     else
-    echo("<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['object']) . "&amp;addObjectToList=" . urlencode($_GET['object']) . "&amp;showname=" . urlencode($_GET['object']) . "\">" . $_GET['object'] . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>");
-    echo("</td>");
+      echo "<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['object']) . "&amp;addObjectToList=" . urlencode($_GET['object']) . "&amp;showname=" . urlencode($_GET['object']) . "\">" . $_GET['object'] . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>";
+    echo "</td>";
   }
-  echo("</tr>");
-  echo("</table>");
-
-  $objects->showObject($id);
-
-  echo("<ol><li value=\"3\">" . LangNewObservationSubtitle3 . "</li></ol>");
-  echo("<p></p><form action=\"deepsky/control/validate_observation.php\" method=\"post\" enctype=\"multipart/form-data\">");
-  echo("<table id=\"content\">");
-  // LOCATION
-  echo("<tr>");
-  include_once "../lib/locations.php";
-  $locations = new Locations;
-  echo("<tr><td class=\"fieldname\" align=\"right\">" . LangViewObservationField4 . "&nbsp;*</td><td><select name=\"site\" style=\"width: 147px\">");
-  $sites = $locations->getSortedLocationsList("name", $_SESSION['deepskylog_id']);
+  echo "</tr>";
+  echo "</table>";
+  $GLOBALS['objObject']->showObject($id);
+  echo "<ol>";
+	echo "<li value=\"3\">" . LangNewObservationSubtitle3 . "</li>";
+	echo "</ol>";
+  echo "<p><p/>";
+	echo "<form action=\"deepsky/index.php?indexAction=validate_observation\" method=\"post\" enctype=\"multipart/form-data\">";
+  echo "<table id=\"content\">";
+  echo "<tr>";// LOCATION
+  echo "<tr><td class=\"fieldname\" align=\"right\">" . LangViewObservationField4 . "&nbsp;*</td>";
+	echo "<td><select name=\"site\" style=\"width: 147px\">";
+  $sites=$GLOBAL['objLocation']->getSortedLocationsList("name", $_SESSION['deepskylog_id']);
   if(!(array_key_exists('newObsSavedata', $_SESSION) && ($_SESSION['newObsSavedata'] == "yes")))
-  $_SESSION['newObsLocation']=$obs->getStandardLocation($_SESSION['deepskylog_id']);
+    $_SESSION['newObsLocation']=$obs->getStandardLocation($_SESSION['deepskylog_id']);
   for ($i = 0;$i < count($sites);$i++)
-  {
-    $sitename = $sites[$i][1];
+  { $sitename = $sites[$i][1];
     if(array_key_exists('newObsLocation', $_SESSION) && ($_SESSION['newObsLocation'] == $sites[$i][0])) // location equals session location
-    print("<option selected=\"selected\" value=\"".$sites[$i][0]."\">$sitename</option>\n");
+      echo "<option selected=\"selected\" value=\"".$sites[$i][0]."\">$sitename</option>");
     else
-    print("<option value=\"".$sites[$i][0]."\">$sitename</option>\n");
+      echo "<option value=\"".$sites[$i][0]."\">$sitename</option>";
   }
   echo("</select></td><td class=\"explanation\"><a href=\"common/add_site.php\">" . LangChangeAccountField7Expl ."</a></td>");
   echo("</tr>");
@@ -319,53 +278,56 @@ if(array_key_exists('object', $_GET) && $_GET['object'])
   echo("<td align=\"right\">");
   // Language of observation
   if(array_key_exists('newObsLanguage', $_SESSION) && array_key_exists('newObsSavedata', $_SESSION) && ($_SESSION['newObsSavedata'] == "yes"))
-  $current_language = $_SESSION['newObsLanguage'];
+    $current_language = $_SESSION['newObsLanguage'];
   else
-  $current_language = $obs->getObservationLanguage($_SESSION['deepskylog_id']);
+    $current_language = $obs->getObservationLanguage($_SESSION['deepskylog_id']);
   echo("<td class=\"fieldname\" align=\"right\">" . LangViewObservationField29 . "&nbsp;*</td><td>");
   $language = new Language();
   $allLanguages = $language->getAllLanguages($obs->getLanguage($_SESSION['deepskylog_id']));
   echo("<select name=\"description_language\" style=\"width: 147px\">");
   while(list ($key, $value) = each($allLanguages))
-  if($current_language == $key)
-  print("<option value=\"".$key."\" selected=\"selected\">".$value."</option>\n");
-  else
-  print("<option value=\"".$key."\">".$value."</option>\n");
+    if($current_language == $key)
+      print("<option value=\"".$key."\" selected=\"selected\">".$value."</option>\n");
+    else
+      print("<option value=\"".$key."\">".$value."</option>\n");
   echo("</select></td>");
   echo("</tr>");
   echo("</table>");
   echo("<input type=\"hidden\" name=\"observedobject\" value=\"" . $id . "\"></form>");
 }
 else // no object found or not pushed on search button yet
-{
-  echo("<h2>");
+{ echo "<h2>";
   echo (LangNewObservationTitle);
-  echo("</h2>\n");
+  echo "</h2>";
   // upper form
-  echo("<form action=\"deepsky/control/validate_search_object.php\" method=\"post\" enctype=\"multipart/form-data\">\n");
-  echo("<ol><li value=\"1\">" . LangNewObservationSubtitle1a . "");
-  echo(LangNewObservationSubtitle1abis);
-  echo("<a href=\"deepsky/index.php?indexAction=add_csv\">" . LangNewObservationSubtitle1b . "</a>");
-  echo("</li></ol>");
-  echo("<table width=\"100%\" id=\"content\">\n");
+  echo "<form action=\"deepsky/index.php?indexAction=add_observation\" method=\"post\">";
+  echo "<ol>";
+	echo "<li value=\"1\">" . LangNewObservationSubtitle1a.LangNewObservationSubtitle1abis;
+  echo "<a href=\"deepsky/index.php?indexAction=add_csv\">" . LangNewObservationSubtitle1b . "</a>";
+  echo "</li>";
+	echo "</ol>";
+  echo "<table width=\"100%\" id=\"content\">";
   // OBJECT NAME
-  echo("<tr>\n");
-  echo("<td class=\"fieldname\">");
+  echo "<tr>";
+  echo "<td class=\"fieldname\">";
   echo LangQueryObjectsField1;
-  echo("</td>\n<td colspan=\"2\">\n");
-  echo("<select name=\"catalogue\">\n");
-  echo("<option value=\"\"></option>"); // empty field
-  $catalogs = $objects->getCatalogues();
+  echo "</td>";
+	echo "<td colspan=\"2\">";
+  echo "<select name=\"catalogue\">";
+  echo "<option value=\"\"></option>";
+  $catalogs = $GLOBALS['objObject']->getCatalogues();
   while(list($key, $value) = each($catalogs))
-  echo("<option value=\"$value\">$value</option>\n");
-  echo("</select>\n");
-  echo("<input type=\"text\" class=\"inputfield\" maxlength=\"255\" name=\"number\" size=\"50\" value=\"\" /></td>");
-  echo("<td><input type=\"submit\" name=\"objectsearch\" value=\"" . LangNewObservationButton1 . "\" />\n</td>");
-  echo("</tr>");
-  echo("</table>");
-  echo("</form>");
+    echo "<option value=\"$value\">$value</option>";
+  echo "</select>";
+  echo "<input type=\"text\" class=\"inputfield\" maxlength=\"255\" name=\"number\" size=\"50\" value=\"\" />";
+	echo "</td>";
+  echo "<td>";
+	echo "<input type=\"submit\" name=\"objectsearch\" value=\"" . LangNewObservationButton1 . "\" />";
+	echo "</td>";
+  echo "</tr>";
+  echo "</table>";
+  echo "</form>";
   // end upper form
-  $_SESSION['backlink'] = "new_observation.php";
+  //OBSOLETE? $_SESSION['backlink'] = "new_observation.php";
 }
-echo("</div>\n</div>\n</body>\n</html>");
 ?>

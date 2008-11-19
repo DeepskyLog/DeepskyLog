@@ -116,11 +116,11 @@ else                           //===============================================
          while(list ($key, $value) = each($_SESSION['Qobs'])) // go through observations array
          {  if($count >= $min && $count < $max)
             { if(($_SESSION['lco']=="O")&&array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
-                $objObservation->showCompactObservationLO($value, $link . "&amp;min=" . $min, $myList);
+                $objObservation->showCompactObservationLO($key, $link . "&amp;min=" . $min, $myList);
 							elseif(($_SESSION['lco']=="C")&&array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
-                $objObservation->showCompactObservation($value, $link . "&amp;min=" . $min, $myList);
+                $objObservation->showCompactObservation($key, $link . "&amp;min=" . $min, $myList);
               else
-                $objObservation->showOverviewObservation($value, $count, $link . "&amp;min=" . $min, $myList);
+                $objObservation->showOverviewObservation($key, $count, $link . "&amp;min=" . $min, $myList);
 						}
             $count++; // increase counter
          }
@@ -131,9 +131,7 @@ else                           //===============================================
 
       echo "<p>";
 			$objUtil->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."deepsky/observations.pdf?SID=Qobs",LangExecuteQueryObjectsMessage4);
-//			echo "<a href=\"deepsky/observations.pdf\" target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a>";
       echo " - ";
-//			$objUtil->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."deepsky/observations.csv?SID=Qobs",LangExecuteQueryObjectsMessage5);
       echo "<a href=\"deepsky/observations.csv\" target=\"new_window\">".LangExecuteQueryObjectsMessage5."</a> - ";
       echo "<a href=\"deepsky/index.php?indexAction=query_objects&amp;source=observation_query\">".LangExecuteQueryObjectsMessage9."</a> - ";
 

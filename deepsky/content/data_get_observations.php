@@ -127,7 +127,7 @@ if($_SESSION['QobsSort']!=$_GET['sort'])
     { while(list($key, $value)=each($_SESSION['Qobs']))
 	      $sortarray[$value[$_GET['sort']].'_'.(99999999-$value['observationid'])]=$value;
 	    uksort($sortarray,"strnatcasecmp");
-	    $_SESSION['Qobs']=array_reverse($sortarray,true);
+	    $_SESSION['Qobs']=array_values(array_reverse($sortarray,true));
     }
 	  $_SESSION['QobsSort']=$_GET['sort'];
 	  $_SESSION['QobsSortDirection']='desc';
@@ -138,7 +138,7 @@ if($_SESSION['QobsSort']!=$_GET['sort'])
     { while(list($key, $value)=each($_SESSION['Qobs']))
 	      $sortarray[$value[$_GET['sort']].'_'.(99999999-$value['observationid'])]=$value;
 	    uksort($sortarray,"strnatcasecmp");
-	    $_SESSION['Qobs']=$sortarray;
+	    $_SESSION['Qobs']=array_values($sortarray);
 	  }
 	  $_SESSION['QobsSort']=$_GET['sort'];
 	  $_SESSION['QobsSortDirection']='asc'; 

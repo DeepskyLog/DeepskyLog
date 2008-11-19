@@ -33,26 +33,15 @@ class Atlasses
 	}
   function getSortedAtlasses()
 	{ $atlasses = array();
-	  $db = new database;
-    $db->login();
     $run = mysql_query('SELECT atlasCode FROM atlasses;') 
 		       or die(mysql_error());
-    $db->logout();
 	  while($get = mysql_fetch_object($run))
 	    $atlasses[$get->atlasCode]=$GLOBALS['AtlasName' . $get->atlasCode];
     asort($atlasses);
 		return $atlasses;
 	}
- function getAtlasPage($atlas, $name)
- {
-  $db = new database;
-  $db->login();
-  $sql = "SELECT " . $atlas . " FROM objects WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  $get = mysql_fetch_object($run);
-  if($get) $atlaspage = $get->$atlas; else $atlaspage='';
-  $db->logout();
-  return $atlaspage;
+ function getAtlasPage($atlas, $object)
+ {return $GLOBALS['objDatabase']->selectSingleValue("SELECT " . $atlas . " FROM objects WHERE name = \"".$object."\"",$atlas);
  }	
  // calculateUranometriaPage calculates the old uranometriapage of the object
  function calculateUranometriaPage($ra, $decl)

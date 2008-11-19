@@ -197,23 +197,22 @@ class Observations
     if (isset($queries["location"]) && ($queries["location"] != ""))
     { $sqland .= "AND (observations.locationid = \"" . $queries["location"] . "\" ";
       if(!$exactinstrumentlocation)
-      {
-        $locs = $GLOBALS['objLocation']->getAllLocationsIds($queries["location"]);
+      { $locs = $GLOBALS['objLocation']->getAllLocationsIds($queries["location"]);
         while(list($key,$value)=each($locs))
         if($value!=$queries["location"]) $sqland .= " || observations.locationid = \"" . $value ."\" ";
       }
-      $sqland .= ") ";
+      $sqland.=") ";
     }
     if (isset($queries["maxdate"]) && ($queries["maxdate"] != ""))
-    if(strlen($queries["maxdate"])>4)
-      $sqland .= "AND observations.date <= \"" . $queries["maxdate"] . "\" ";
-    else
-      $sqland .= "AND RIGHT(observations.date,4) <= \"" . $queries["maxdate"] . "\" ";
+      if(strlen($queries["maxdate"])>4)
+        $sqland.="AND observations.date <= \"".$queries["maxdate"]."\" ";
+      else
+        $sqland.="AND RIGHT(observations.date,4) <= \"".$queries["maxdate"]."\" ";
     if (isset($queries["mindate"]) && ($queries["mindate"] != ""))
-    if(strlen($queries["mindate"])>4)
-      $sqland .= "AND observations.date >= \"".$queries["mindate"]."\" ";
-    else
-      $sqland .= "AND RIGHT(observations.date,4) >= \"".$queries["mindate"]."\" ";
+      if(strlen($queries["mindate"])>4)
+        $sqland.="AND observations.date >= \"".$queries["mindate"]."\" ";
+      else
+        $sqland.="AND RIGHT(observations.date,4) >= \"".$queries["mindate"]."\" ";
     $sqland.=(isset($queries["description"])&&$queries["description"])?"AND observations.description like \"%".$queries["description"]."%\" ":'';
     $sqland.=(isset($queries["mindiameter"])&&$queries["mindiameter"])?"AND instruments.diameter >= \"".$queries["mindiameter"]."\" ":'';
     $sqland.=(isset($queries["maxdiameter"])&&$queries["maxdiameter"])?"AND instruments.diameter <= \"".$queries["maxdiameter"]."\" ":'';
@@ -273,7 +272,7 @@ class Observations
 		if(!array_key_exists('countquery',$queries))
 		  $sql .= " ORDER BY observationid DESC"; 
     $sql = $sql.";";
-//echo $sql.'<p>';
+//echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
       $run = mysql_query($sql) or die(mysql_error());
 		if(!array_key_exists('countquery',$queries))
 		{ $j=0;
@@ -1642,12 +1641,13 @@ class Observations
   }
 
 
-  function showCompactObservationLO($value, $link, $myList = false)
+  function showCompactObservationLO($obsKey, $link, $myList = false)
   {
     global $observers, $dateformat;
 		global $objInstrument;
 		global $objObject;
 		global $objObserver;
+		$value=$_SESSION['Qobs'][$obsKey];
     $object = $value['objectname'];
     $observer = $value['observerid'];
     $temp = $value['instrumentid'];
@@ -1749,7 +1749,7 @@ class Observations
     }
     echo("</td>");
     echo("<td>");
-    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText);
+    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;QobsKey=".$key."&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText);
     // LINK TO DRAWING (IF AVAILABLE)
     $upload_dir = 'drawings';
     $dir = opendir($upload_dir);
@@ -1871,14 +1871,14 @@ class Observations
     echo"</tr>";
   }
 
-  function ShowCompactObservation($value, $link, $myList = false)
+  function ShowCompactObservation($obsKey, $link, $myList = false)
   {
     global $dateformat, $objObserver;
 
     include_once "objects.php";
     $objects = new Objects;
 
-
+		$value=$_SESSION['Qobs'][$obsKey];
     // OBJECT
     $object = $value['objectname'];
     // OBSERVER
@@ -1919,7 +1919,7 @@ class Observations
     echo date ($dateformat, mktime (0,0,0,$date[1],$date[2],$date[0]));
     echo("</td>\n");
     echo("<td>");
-    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText);
+    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;QobsKey=".$obsKey."&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText);
     // LINK TO DRAWING (IF AVAILABLE)
     $upload_dir = 'drawings';
     $dir = opendir($upload_dir);
@@ -2006,13 +2006,14 @@ class Observations
 
   }
 
-  function showOverviewObservation($value, $count, $link, $myList = false)
+  function showOverviewObservation($obsKey, $count, $link, $myList = false)
   { global $dateformat;
 
     global $objInstrument;
 		global $objObject;
 		global $objObserver;
 
+		$value=$_SESSION['Qobs'][$obsKey];
     $typefield = "class=\"type" . (2-($count%2)) . "\"";
     // OBJECT
     $object = $value['objectname'];
@@ -2050,7 +2051,7 @@ class Observations
     }
     echo date ($dateformat, mktime (0,0,0,$date[1],$date[2],$date[0]));
     echo("</td>\n
-         <td><a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=D\" title=\"" . LangDetail . "\">" . LangDetails);
+         <td><a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;QobsKey=".$obsKey."&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetails);
     // LINK TO DRAWING (IF AVAILABLE)
     $upload_dir = 'drawings';
     $dir = opendir($upload_dir);

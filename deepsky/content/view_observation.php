@@ -1,154 +1,91 @@
 <?php
-
 // view_observation.php
 // view information of observation 
-// version 0.3: JV 20041228
-// version 3.1, DE 20061119
 
-// Code cleanup - removed by David on 20080704
-//include_once "../lib/observers.php"; // observers table
-//$observer = new Observers;
-//include_once "../lib/locations.php"; // locations table
-//$locations = new Locations;
-//include_once "../lib/filters.php"; // filters table
-//$filters = new Filters;
-//include_once "../lib/eyepieces.php"; // eyepieces table
-//$eyepieces = new Eyepieces;
-//include_once "../common/control/ra_to_hms.php";
-//include_once "../common/control/dec_to_dm.php";
-//include_once "../lib/instruments.php"; // instruments table
-//$instruments = new Instruments;
-
-
-include_once "../lib/setup/databaseInfo.php";
-include_once "../lib/observations.php"; // observation table
-$observations = new Observations;
-include_once "../lib/objects.php"; // objects table
-$objects = new Objects;
-include_once "../lib/util.php";
-$util = new Util();
-$util->checkUserInput();
-include_once "../lib/lists.php";
-$list = new Lists;
-$myList = False;
-if(array_key_exists('listname',$_SESSION) && $list->checkList($_SESSION['listname'])==2)
-  $myList=True;
-
-
-if (!function_exists('fnmatch'))
-{
-   function fnmatch($pattern, $string) 
-	 {
-      return @preg_match('/^' . strtr(addcslashes($pattern, '\\.+^$(){}=!<>|'), array('*' => '.*', '?' => '.?')) . '$/i', $string);
-   }
+if(!$_GET['observation']) //  
+   throw new Exception ("No observation defined in view_observation.php");
+if(!($object=$GLOBALS['objObservation']->getObjectId($_GET['observation'])))    // check if observation exists
+   throw new Exception ("No observed object found in view_observation.php");
+echo "<table width=\"100%\">";
+echo "<tr>";
+echo "<td>";
+echo "<div id=\"main\">";
+echo "<h2>".LangViewObservationTitle;
+$seen=$GLOBALS['objObject']->getDSOseen($object);
+echo "&nbsp;-&nbsp;".stripslashes($object);
+echo "&nbsp;-&nbsp;".LangOverviewObjectsHeader7.":&nbsp;".$seen;
+echo "</h2>";
+echo "</td>";
+echo "<td align=\"right\">";
+if(array_key_exists('Qobs',$_SESSION)&&count($_SESSION['Qobs'])&&array_key_exists('QobsKey',$_GET))                // array of observations
+{ if($_GET['QobsKey']>0)
+    echo "&nbsp;<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=".$_SESSION['Qobs'][$_GET['QobsKey']-1]['observationid']."&amp;QobsKey=".($_GET['QobsKey']-1)."&amp;dalm=".$_GET['dalm']."\" title=\"".LangPreviousObservation."\">"."<img src=\"".$baseURL."/styles/images/left20.gif\" border=\"0\">"."</a>&nbsp;&nbsp;";
+  if($_GET['QobsKey']<(count($_SESSION['Qobs'])-1))
+    echo "&nbsp;<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=".$_SESSION['Qobs'][$_GET['QobsKey']+1]['observationid']."&amp;QobsKey=".($_GET['QobsKey']+1)."&amp;dalm=".$_GET['dalm']."\" title=\"".LangNextObservation."\">"."<img src=\"".$baseURL."/styles/images/right20.gif\" border=\"0\">"."</a>";
 }
-if(!$_GET['observation']) // no observation defined 
-   header("Location: ../index.php");
+echo "</td>";
+echo "</tr>";
+echo "</table>";
 
-if($observations->getObjectId($_GET['observation'])) // check if observation exists
-{
-  $object = $observations->getObjectId($_GET['observation']);
-  echo("<div id=\"main\">\n");
-	echo("<h2>" . LangViewObservationTitle);
+echo "<table width=\"100%\"><tr>";
+echo("<td width=\"25%\" align=\"left\">");
+echo("<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">" . LangViewObjectViewNearbyObject . " " . $object);
+echo("</td><td width=\"25%\" align=\"center\">");
+if (array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
+  echo("<a href=\"deepsky/index.php?indexAction=add_observation&object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object . "</a>");
+echo("</td>");
+if($myList)
+{ echo("<td width=\"25%\" align=\"center\">");
+  if($list->checkObjectInMyActiveList($object))
+    echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "</a>");
+  else
+    echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>");
+ echo("</td>");
+}	
+echo("</tr>");
+echo("</table>");
 
-	 
-  // SEEN
-  $seen = "<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
-  $seenDetails = $objects->getSeen($object);
-  if(substr($seenDetails,0,1)=="X") // object has been seen already
-  {
-    $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($object) . "\" title=\"" . LangObjectXSeen . "\">" . $seenDetails . "</a>";
-  }
-  if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
-  {
-    if (substr($seenDetails,0,1)=="Y") // object has been seen by the observer logged in
-      $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($object) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
-  }
-  echo ("&nbsp;-&nbsp;" . stripslashes($object));
-  echo "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen;
-  echo("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-  if(array_key_exists('observation_query', $_SESSION) && $_SESSION['observation_query']) // array of observations
-  {
-    $arrayIndex = array_search($_GET['observation'],$_SESSION['observation_query']);
-    $previousIndex = $arrayIndex + 1;
-	  if (array_key_exists($previousIndex, $_SESSION['observation_query']))
-      $previousObservation = $_SESSION['observation_query'][$previousIndex];
- 	  else
-      $previousObservation = "";
-	  $nextIndex = $arrayIndex - 1;
-    if ($nextIndex < 0) 
-    $nextObservation = "";
-    else 
-	  $nextObservation = $_SESSION['observation_query'][$nextIndex];
-    if ($previousObservation != "") echo "<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $previousObservation . "&dalm=" . $_GET['dalm'] . "\" title=\"" . LangPreviousObservation . "\">&lt</a>&nbsp;&nbsp;&nbsp;";
-    if ($nextObservation != "") echo "<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $nextObservation . "&dalm=" . $_GET['dalm'] . "\" title=\"" . LangNextObservation . "\">&gt;</a> ";
-  }
-  echo("</h2>");
-
-	echo "<table width=\"100%\"><tr>";
-	echo("<td width=\"25%\" align=\"left\">");
-  echo("<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">" . LangViewObjectViewNearbyObject . " " . $object);
-	echo("</td><td width=\"25%\" align=\"center\">");
-  if (array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
-    echo("<a href=\"deepsky/index.php?indexAction=add_observation&object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object . "</a>");
-	echo("</td>");
-	if($myList)
+$GLOBALS['objObject']->showObject($object);
+if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])                  // LOGGED IN
+{ if($_GET['dalm']!="D")
 	{
-    echo("<td width=\"25%\" align=\"center\">");
-    if($list->checkObjectInMyActiveList($object))
-      echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "</a>");
-    else
-      echo("<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>");
-	  echo("</td>");
-	}	
-	echo("</tr>");
-	echo("</table>");
-
-  $objects->showObject($object);
-  if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])                  // LOGGED IN
-  {
-  	if($_GET['dalm']!="D")
-  	{
-  		echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $_GET['observation'] . "&dalm=D\" title=\"" . LangDetail . "\">");
-        echo(LangDetailText); 
-  	  echo("</a>");
-  	  echo("&nbsp;");
-  	}
-  	if($_GET["dalm"]!="AO")
-  	{
-  	  echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $_GET['observation'] . "&dalm=AO\" title=\"" . LangAO . "\">");
-        echo(LangAOText); 
-  	  echo("</a>");
-  	  echo("&nbsp;");
-  	}
- 		if ($observations->getObservationsUserObject($_SESSION['deepskylog_id'], $object)>0)
-		{
- 			if($_GET['dalm']!="MO")
-			{
-			  echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $_GET['observation'] . "&dalm=MO\" title=\"" . LangMO . "\">");
-          echo(LangMOText); 
-	      echo("</a>&nbsp;");
-	    }
-			if($_GET['dalm']!="LO")
-			{
-			  echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $_GET['observation'] . "&dalm=LO\" title=\"" . LangLO . "\">");
-          echo(LangLOText); 
-	      echo("</a>&nbsp;");
-      }
-	  }
-	  echo(LangOverviewObservationsHeader5a);
-	  echo "<hr>";
-  }
-	
-  $observations->showObservation($_GET['observation']);
-	
-  if($_GET['dalm']=="AO") $AOid = $observations->getAOObservationsId($object, $_GET['observation']);
-  elseif($_GET['dalm']=="MO") $AOid = $observations->getMOObservationsId($object, $_SESSION['deepskylog_id'], $_GET['observation']);
-  elseif($_GET['dalm']=="LO") $AOid = array($observations->getLOObservationId($object, $_SESSION['deepskylog_id'], $_GET['observation']));
-	else $AOid=array();
-	while(list($key, $LOid) = each($AOid)) 
-	  $observations->showObservation($LOid);
+		echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $_GET['observation'] . "&dalm=D\" title=\"" . LangDetail . "\">");
+      echo(LangDetailText); 
+	  echo("</a>");
+	  echo("&nbsp;");
+	}
+	if($_GET["dalm"]!="AO")
+	{
+	  echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $_GET['observation'] . "&dalm=AO\" title=\"" . LangAO . "\">");
+      echo(LangAOText); 
+	  echo("</a>");
+	  echo("&nbsp;");
+	}
+	if ($GLOBALS['objObservation']->getObservationsUserObject($_SESSION['deepskylog_id'], $object)>0)
+{
+		if($_GET['dalm']!="MO")
+	{
+	  echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $_GET['observation'] . "&dalm=MO\" title=\"" . LangMO . "\">");
+        echo(LangMOText); 
+     echo("</a>&nbsp;");
+   }
+	if($_GET['dalm']!="LO")
+	{
+	  echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $_GET['observation'] . "&dalm=LO\" title=\"" . LangLO . "\">");
+        echo(LangLOText); 
+     echo("</a>&nbsp;");
+    }
+ }
+ echo(LangOverviewObservationsHeader5a);
+ echo "<hr>";
 }
-echo("</div></body></html>");
 
+$GLOBALS['objObservation']->showObservation($_GET['observation']);
+
+if($_GET['dalm']=="AO") $AOid = $GLOBALS['objObservation']->getAOObservationsId($object, $_GET['observation']);
+elseif($_GET['dalm']=="MO") $AOid = $GLOBALS['objObservation']->getMOObservationsId($object, $_SESSION['deepskylog_id'], $_GET['observation']);
+elseif($_GET['dalm']=="LO") $AOid = array($GLOBALS['objObservation']->getLOObservationId($object, $_SESSION['deepskylog_id'], $_GET['observation']));
+else $AOid=array();
+while(list($key, $LOid) = each($AOid)) 
+ $GLOBALS['objObservation']->showObservation($LOid);
 ?>

@@ -6,17 +6,12 @@ if(!$_GET['object']) // no object defined in url
   throw new Exception("// no object defined in url, line 6 in view_object.php");
 if(!($_GET['object']=$objObject->getDsObjectName($_GET['object'])))
   throw new Exception("// no corresponding object found, line 8 in view_object.php");
+
 $_GET['source']='objects_nearby';
 $_GET['zoom']=$GLOBALS['objUtil']->checkGetKey('zoom',30);	
 include "../deepsky/content/data_get_objects.php";	
 
-$seen = "<a href=\"deepsky/index.php?indexAction=detail_object&object=".urlencode($_GET['object'])."\" title=\"".LangObjectNSeen."\">-</a>";
-$seenDetails = $objObject->getSeen($_GET['object']);
-if(substr($seenDetails,0,1)=="X") // object has been seen already
-  $seen="<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=".urlencode($_GET['object'])."\" title=\"".LangObjectXSeen."\">".$seenDetails."</a>";
-if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
-  if(substr($seenDetails,0,1)=="Y") // object has been seen by the observer logged in
-    $seen="<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=".urlencode($_GET['object'])."\" title=\"".LangObjectYSeen."\">".$seenDetails."</a>";
+$seen=$GLOBALS['objObject']->getDSOseen($_GET['object']);
 echo "<div id=\"main\">";
 echo "<h2>";
 echo LangViewObjectTitle."&nbsp;-&nbsp;".stripslashes($_GET['object']);
@@ -24,7 +19,7 @@ echo "&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen;
 echo "</h2>";
 echo "<table width=\"100%\"><tr>";
 echo "<td width=\"25%\" align=\"left\">";
-if($seen!="<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object'])."\" title=\"".LangObjectNSeen."\">-</a>")
+if(substr($GLOBALS['objObject']->getSeen($_GET['object']),0,1)!='-')
   echo "<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=".urlencode($_GET['object'])."\">".LangViewObjectObservations."&nbsp;".$_GET['object'];
 echo "</td>";
 echo "<td width=\"25%\" align=\"center\">";
@@ -84,6 +79,7 @@ if($maxcount>1)
 }
 echo "</div>";
 
+//============================================================================== Admin section permits to change object settings in DB remotely
 if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
 {
   echo "<hr>";

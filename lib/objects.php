@@ -526,34 +526,30 @@ class Objects
  }
  
  function getSeen($object)
- { $db = new database;
-   $db->login();
-
-   $seen='-';
-   $sql = "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ";
-   $run = mysql_query($sql) or die(mysql_error());
-   $get2 = mysql_fetch_object($run);
-   if ($get2->ObsCnt)
-   {
-     $seen="X(" . $get2->ObsCnt . ")";
-     if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($_SESSION['deepskylog_id'] != ""))
-     {
-       $sql = "SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $_SESSION['deepskylog_id'] . "\" AND visibility != 7";
-       $run = mysql_query($sql) or die(mysql_error());
-       $get3 = mysql_fetch_object($run);
-       if ($get3->PersObsCnt)
-         $seen="Y(" . $get2->ObsCnt . "/" . $get3->PersObsCnt . ") " . $get3->PersObsMaxDate;
-     }
+ { $seen='-';
+   if($ObsCnt=$GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ",'ObsCnt'))
+   { $seen='X('.$ObsCnt.')';
+     if(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
+       if($get3=mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $_SESSION['deepskylog_id'] . "\" AND visibility != 7")))
+         $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')&nbsp;'.$get3->PersObsMaxDate;
 	 }
-	 $db->logout();
 	 return $seen;
  }
- 
-
+ function getDSOseen($object)
+ { $seenDetails=$this->getSeen($object);
+   $seen = "<a href=\"deepsky/index.php?indexAction=detail_object&object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
+   if(substr($seenDetails,0,1)=="X")                                            // object has been seen already
+     $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=".urlencode($object)."\" title=\"".LangObjectXSeen."\">".$seenDetails."</a>";
+   if(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id'])
+     if (substr($seenDetails,0,1)=="Y")                                         // object has been seen by the observer logged in
+       $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=".urlencode($object)."\" title=\"".LangObjectYSeen."\">".$seenDetails."</a>";
+   return $seen;
+ }
  function getObjectVisibilities($obs)
  { include_once "contrast.php";
    $contrastObj = new Contrast;
 
+	 
 	 $popup='';
    $popupT = $this->prepareObjectsContrast();
    $result2=$obs;
@@ -1031,9 +1027,6 @@ function getObjectsFromCatalog($cat)
  }
  function getCataloguesAndLists()
  { $cats=$GLOBALS['objDatabase']->selectSingleArray("SELECT DISTINCT objectnames.catalog FROM objectnames",'catalog');
-   while($get = mysql_fetch_object($run))
-     $cats[]=$get->catalog;
-   $ret = $this->my_array_unique($cats);
    natcasesort($ret);
    reset($ret);
    array_unshift($ret, "M", "NGC", "Caldwell", "H400", "HII", "IC");
@@ -1573,8 +1566,8 @@ function getPartOfNames($name)
 	 tableSortHeader(LangOverviewObjectsHeader3b, $link."&amp;sort=objectsurfacebrightness");
 	 tableSortHeader(LangOverviewObjectsHeader4,  $link."&amp;sort=objecttype");
    if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
-	 { $atlas = $observer->getStandardAtlasCode($_SESSION['deepskylog_id']);
-     tableSortHeader($objAtlas->atlasCodes[$atlas], $link."&amp;sort=".$atlas);
+	 { $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
+     tableSortHeader($GLOBALS['objAtlas']->atlasCodes[$atlas], $link."&amp;sort=".$atlas);
 	   tableSortHeader(LangViewObjectFieldContrastReserve, $link."&amp;sort=objectcontrast");
 	   tableSortHeader(LangViewObjectFieldMagnification, $link."&amp;sort=objectoptimalmagnification");
 	   tableSortHeader(LangOverviewObjectsHeader7, $link."&amp;sort=objectseen");
@@ -1621,7 +1614,7 @@ function getPartOfNames($name)
        // Page number in atlas
        if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id']) 
 			 { $page = $_SESSION[$_SID][$count][$atlas];
-         echo "<td align=\"center\" onmouseover=\"Tip('".$objAtlas->atlasCodes[$atlas]."')\">".$page."</td>\n";
+         echo "<td align=\"center\" onmouseover=\"Tip('".$GLOBALS['objAtlas']->atlasCodes[$atlas]."')\">".$page."</td>\n";
          echo "<td align=\"center\" class=\"".$_SESSION[$_SID][$count][22]."\" onmouseover=\"Tip('".$_SESSION[$_SID][$count][23]."')\">".$_SESSION[$_SID][$count][21]."</td>\n";
          echo "<td align=\"center\">".$_SESSION[$_SID][$count]['objectoptimalmagnification']."</td>\n";
          echo "<td align=\"center\" class=\"seen\">$seen</td>";
@@ -1644,11 +1637,12 @@ function getPartOfNames($name)
  }
  
  function showObject($object, $zoom = 30)
- { global $objAtlas;
+ { include_once "contrast.php";
+   $contrastObj = new Contrast;
    global $deepskylive;	
    $object = $this->getDsObjectName($object);
    $_SESSION['object']=$object;
-   echo("<table width=\"100%\">\n");
+   echo "<table width=\"100%\">";
    echo "<tr class=\"type2\">";
 	 echo "<td class=\"fieldname\" align=\"right\" width=\"25%\">";
    echo LangViewObjectField1;
@@ -1659,12 +1653,11 @@ function getPartOfNames($name)
    { echo "<td class=\"fieldname\" align=\"right\" width=\"25%\">"; 
      echo $GLOBALS['objAtlas']->atlasCodes[$standardAtlasCode].LangViewObjectField10;
      echo "</td><td width=\"25%\">";
-     echo $atlas->getAtlasPage($standardAtlasCode, $object);
+     echo $GLOBALS['objAtlas']->getAtlasPage($standardAtlasCode, $object);
      echo"</td>" ;
    }	
    else
-   {
-     echo "<td class=\"fieldname\" align=\"right\" width=\"25%\">";
+   { echo "<td class=\"fieldname\" align=\"right\" width=\"25%\">";
      echo "&nbsp;";
      echo "</td><td width=\"25%\">";
      echo "&nbsp;";

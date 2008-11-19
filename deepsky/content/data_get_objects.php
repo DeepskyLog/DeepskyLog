@@ -403,7 +403,7 @@ if($_SESSION['QobjSort']!=$_GET['sort'])
 { if($_GET['sortdirection']=='desc')
   { if(count($_SESSION['Qobj'])>1)
     { while(list($key, $value)=each($_SESSION['Qobj']))
-	      $sortarray[$value[$_GET['sort']].'_'.($value['showname'])]=$value;
+	      $sortarray[$value[$_GET['sort']].' _'.($value['showname'])]=$value;
 	    uksort($sortarray,"strnatcasecmp");
 			$sortarray=array_reverse($sortarray);
 			$_SESSION['Qobj']=array_values($sortarray);
@@ -415,7 +415,7 @@ if($_SESSION['QobjSort']!=$_GET['sort'])
   else
   { if(count($_SESSION['Qobj'])>1)
     { while(list($key, $value)=each($_SESSION['Qobj']))
-	      $sortarray[$value[$_GET['sort']].'_'.($value['showname'])]=$value;
+	      $sortarray[$value[$_GET['sort']].' _'.($value['showname'])]=$value;
 	    uksort($sortarray,"strnatcasecmp");
 			$_SESSION['Qobj']=array_values($sortarray);
 	  }

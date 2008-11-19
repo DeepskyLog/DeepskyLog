@@ -1617,7 +1617,7 @@ class util
     }
   }
 	public function checkGetKey($key,$default='')
-  { return array_key_exists($key,$_GET)?$_GET[$key]:$default;
+  { return (array_key_exists($key,$_GET)&&$_GET[$key])?$_GET[$key]:$default;
   }
 	public function checkGetKeyReturnString($key,$string,$default='')
   { return array_key_exists($key,$_GET)?$string:$default;
