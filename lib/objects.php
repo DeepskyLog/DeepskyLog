@@ -929,18 +929,16 @@ function getObjectsFromCatalog($cat)
 
  // getExactObject returns the exact name of an object
  function getExactDsObject($value, $cat='', $catindex='')
- { $value2=trim($value);
-	 $value=strtoupper(trim($value));
-   if($value!='')
+ { if($value)
     $sql = "SELECT objectnames.objectname FROM objectnames " .
-		  	   "WHERE UPPER(altname) = \"$value\" " .
-					 "OR altname = \"$value2\"";
-	else
-	{ $catindex=ucwords($catindex);
-    $sql = "SELECT objectnames.objectname FROM objectnames " .
-		       "WHERE objectnames.catalog = \"$cat\" AND objectnames.catindex = \"$catindex\"";
-	}
-	return $GLOBALS['objDatabase']->selectSingleValue($sql,'objectname','');
+		  	   "WHERE UPPER(altname) = \"".strtoupper(trim($value))."\" " .
+					 "OR altname = \"".trim($value)."\"";
+	 else
+	 { $catindex=ucwords($catindex);
+     $sql = "SELECT objectnames.objectname FROM objectnames " .
+		        "WHERE objectnames.catalog=\"".$cat."\" AND objectnames.catindex=\"".$catindex."\"";
+	 }
+	 return $GLOBALS['objDatabase']->selectSingleValue($sql,'objectname','');
  }
 
  // getSurfaceBrightness returns the surface brightness of the object

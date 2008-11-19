@@ -6,17 +6,8 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_observation
 { if(array_key_exists('number',$_POST)&&(!$_POST['number']))
     $_GET['indexAction']="query_objects";
   elseif(array_key_exists('number',$_POST)) // all fields filled in
-  { $_SESSION['observedobject']=$_POST['catalogue']." ".$_POST['number'];
-	  $_SESSION['found'] = "no";
-    $_SESSION['result'] = $GLOBALS['objObject']->getExactDsObject('',$_POST['catalogue'], $_POST['number']);
-		if(array_key_exists('result',$_SESSION)&&$_SESSION['result'])
-    { $_SESSION['observedobject'] = $_SESSION['result']; 
-      $_SESSION['found'] = "yes";
-      $_SESSION['backlink'] = "validate_search_object.php";
-      $_GET['object']=$_SESSION['observedobject'];
-    }
-    else
-    { $entryMessage.="No corresponding object found.";
+  { if(!($_GET['object']=$GLOBALS['objObject']->getExactDsObject('',$GLOBALS['objUtil']->checkPostKey('catalogue'), $GLOBALS['objUtil']->checkPostKey('number'))))
+    { $entryMessage.="No corresponding object found for ".$GLOBALS['objUtil']->checkPostKey('catalogue')." ".$GLOBALS['objUtil']->checkPostKey('number');
 		  $_GET['indexAction']="query_objects";
     }
   }
@@ -33,7 +24,6 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_observ
     $_SESSION['newObsMonth'] = $_POST['month']; // save current month
     $_SESSION['newObsDay'] = $_POST['day']; // save current day
     $_SESSION['newObsInstrument'] = $_POST['instrument']; // save current instrument for new observations
-    $_SESSION['newObsLocation'] = $_POST['site']; // save current location
     $_SESSION['newObsSeeing'] = $_POST['seeing']; // save current seeing
     $_SESSION['newObsSavedata'] = "yes"; // session variable to tag multiple observations
     $_SESSION['newObsObservation_query'] = "";
@@ -63,7 +53,6 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_observ
     $_SESSION['newObsMinutes'] = $_POST['minutes'];
     $entryMessage.="Not all necessary fields are filled in.";
 		$_GET['indexAction']='add_observation';
-		$_GET['object']=$_SESSION['observedobject'];
   }
   else // all fields filled in
   { if($_FILES['drawing']['size'] > $maxFileSize) // file size of drawing too big

@@ -963,6 +963,27 @@ define("LangContrastEasy", " est facilement visible &#224; partir de ");
 define("LangContrastVeryEasy", " est facilement visible &#224; partir de ");
 define("LangContrastPlace", " avec votre ");
 
+//Seeing definitions
+$Seeing1="Excellent";
+$Seeing2="Bien";
+$Seeing3="M&eacute;diocre";
+$Seeing4="Faible";
+$Seeing5="Mauvais";
+
+//Names of Months
+$Month1="Janvier";
+$Month2="Février";
+$Month3="Mars";
+$Month4="Avril";
+$Month5="Mai";
+$Month6="Juin";
+$Month7="Juillet";
+$Month8="Août";
+$Month9="Septembre";
+$Month10="Octobre";
+$Month11="Novembre";
+$Month12="Decembre";
+
 // Names of Atlasses
 $AtlasNameurano = "Uranometria";
 $AtlasNameurano_new = "Uranometria (2&egrave;me edition)";

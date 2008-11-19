@@ -962,6 +962,27 @@ define("LangContrastEasy", " is easy to see from ");
 define("LangContrastVeryEasy", " is very easy to see from ");
 define("LangContrastPlace", " with your ");
 
+//Seeing definitions
+$Seeing1="Excellent";
+$Seeing2="Good";
+$Seeing3="Moderate";
+$Seeing4="Poor";
+$Seeing5="Bad";
+
+//Names of Months
+$Month1="Januar";
+$Month2="Februar";
+$Month3="March";
+$Month4="April";
+$Month5="May";
+$Month6="June";
+$Month7="July";
+$Month8="August";
+$Month9="September";
+$Month10="October";
+$Month11="November";
+$Month12="December";
+
 // Names of Atlasses
 $AtlasNameurano = "Uranometria";
 $AtlasNameurano_new = "Uranometria (2nd edition)";
