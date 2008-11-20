@@ -566,11 +566,6 @@ $file) || fnmatch($_GET['observation']. "_resized.png", $file))
    }
 }
 
-if(isset($_GET['new']) && $_GET['new'] == "yes")
-{
-echo("<p><a href=\"index.php?indexAction=add_observation\">" . LangViewObservationNew . "</a></p>");
-}
-
 echo("</div></div></body></html>");
 
 ?>

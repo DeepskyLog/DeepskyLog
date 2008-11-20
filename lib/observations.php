@@ -348,29 +348,9 @@ class Observations
     return $cnt;
   }
 
-  // getObserverId returns the name of the observer
-  function getObserverId($id)
-  {
-    $db = new database;
-    $db->login();
-
-    $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-    $run = mysql_query($sql) or die(mysql_error());
-
-    $get = mysql_fetch_object($run);
-
-    if($get)
-    {
-      $observerid = $get->observerid;
-    }
-    else
-    {
-      $observerid = 0;
-    }
-
-    $db->logout();
-
-    return $observerid;
+  
+  function getObserverId($id)                                                   // getObserverId returns the name of the observer
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT observerid FROM observations WHERE id=\"".$id."\"",'observerid',0);
   }
 
   // getPopularObserversSorted()
@@ -1630,11 +1610,7 @@ class Observations
     if(array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && ($this->getObserverId($LOid) == $_SESSION['deepskylog_id'])) // own observation
     {
       echo("<td width=\"33%\"><a href=\"deepsky/index.php?indexAction=adapt_observation&observation=" . $LOid . "\">" . LangChangeObservationTitle . "</a><td>");
-      echo("<td width=\"33%\"><a href=\"deepsky/control/validate_delete_observation.php?observationid=" . $LOid . "\">" . LangDeleteObservation . "</a></td>");
-    }
-    if(isset($_GET['new']) && ($_GET['new'] == "yes")) // follow-up observation of multiple observations
-    {
-      echo("<td width=\"33%\"><a href=\"deepsky/index.php?indexAction=add_observation&object=" . urlencode($this->getObjectId($LOid)) .  "&new=yes\">" . LangViewObservationNew . "</a></td>");
+      echo("<td width=\"33%\"><a href=\"deepsky/index.php?indexAction=validate_delete_observation&amp;observationid=" . $LOid . "\">" . LangDeleteObservation . "</a></td>");
     }
     echo "</tr></table>";
     echo("<hr>");

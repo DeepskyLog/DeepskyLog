@@ -180,27 +180,27 @@ if($_SESSION['listname']<>"----------")
 //		$objects->showObjects($link, $_SID, $min, $max, $myList, 1); 
     while(($count<$max) && ($count<$maxcount))
     { $typefield = "class=\"type".(2-($count%2))."\"";
-      $name = $_SESSION['QOL'][$count][0];
-			$showname=$_SESSION['QOL'][$count][4]; 
+      $name = $_SESSION['QOL'][$count]['objectname'];
+			$showname=$_SESSION['QOL'][$count]['showname']; 
       $place = $_SESSION['QOL'][$count][24];
-      $con = $_SESSION['QOL'][$count][2];
-      $type = $_SESSION['QOL'][$count][1];
-      $magnitude = sprintf("%01.1f", $_SESSION['QOL'][$count][5]);
+      $con = $_SESSION['QOL'][$count]['objectconstellation'];
+      $type = $_SESSION['QOL'][$count]['objecttype'];
+      $magnitude = sprintf("%01.1f", $_SESSION['QOL'][$count]['objectmagnitude']);
       if($magnitude == 99.9)
         $magnitude = "&nbsp;&nbsp;-&nbsp;";
-      $sb = sprintf("%01.1f", $_SESSION['QOL'][$count][6]);
+      $sb = sprintf("%01.1f", $_SESSION['QOL'][$count]['objectsurfacebrightness']);
       if($sb == 99.9)
         $sb = "&nbsp;&nbsp;-&nbsp;";
-      $ra = raToString($_SESSION['QOL'][$count][7]);
-      $decl = decToStringDegMin($_SESSION['QOL'][$count][8]);
+      $ra = raToString($_SESSION['QOL'][$count]['objectra']);
+      $decl = decToStringDegMin($_SESSION['QOL'][$count]['objectdecl']);
   
       $atlas = $objObserver->getStandardAtlasCode($_SESSION['deepskylog_id']);
       $page = $_SESSION['QOL'][$count][$atlas];  
       $seen="<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($name) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
-      if(substr($_SESSION['QOL'][$count][3],0,1)=="X")
-        $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($name) . "\" title=\"" . LangObjectXSeen . "\">" . $_SESSION['QOL'][$count][3] . "</a>";
-      if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($_SESSION['QOL'][$count][3],0,1)=="Y"))
-        $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($name) . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION['QOL'][$count][3] . "</a>";
+      if(substr($_SESSION['QOL'][$count]['objectseen'],0,1)=="X")
+        $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($name) . "\" title=\"" . LangObjectXSeen . "\">" . $_SESSION['QOL'][$count]['objectseen'] . "</a>";
+      if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($_SESSION['QOL'][$count]['objectseen'],0,1)=="Y"))
+        $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=" . urlencode($name) . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION['QOL'][$count]['objectseen'] . "</a>";
       echo "<tr $typefield>\n";
   		if($listname && ($sort=="objectplace"))
       {

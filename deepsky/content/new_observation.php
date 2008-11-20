@@ -35,18 +35,15 @@ if(array_key_exists('object',$_GET)&&$_GET['object'])
 	echo "</ol>";
   echo "<p><p/>";
 	echo "<form action=\"deepsky/index.php?indexAction=validate_observation&amp;object=".urlencode($_GET['object'])."\" method=\"post\" enctype=\"multipart/form-data\">";
-	echo "<input type=\"hidden\" name=\"object\" value=\"".$_GET['object']."\">";
+  echo "<input type=\"hidden\" name=\"timestamp\" value=\"".$_POST['timestamp']."\">";
+  echo "<input type=\"hidden\" name=\"object\" value=\"".$_GET['object']."\">";
   echo "<table id=\"content\">";
   echo "<tr>";                                                                  // LOCATION
   echo "<tr><td class=\"fieldname\" align=\"right\">" . LangViewObservationField4 . "&nbsp;*</td>";
 	echo "<td><select name=\"site\" style=\"width: 147px\">";
   $sites=$GLOBALS['objLocation']->getSortedLocationsList("name", $_SESSION['deepskylog_id']);
-  $_POST['site']=$GLOBALS['objUtil']->checkPostKey('site',$GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']));
-  for ($i = 0;$i < count($sites);$i++)
-    if(array_key_exists('newObsLocation', $_SESSION) && ($_SESSION['newObsLocation'] == $sites[$i][0])) // location equals session location
-      echo "<option selected=\"selected\" value=\"".$sites[$i][0]."\">".$sites[$i][1]."</option>";
-    else
-      echo "<option value=\"".$sites[$i][0]."\">".$sites[$i][1]."</option>";
+  while(list($key,$value)=each($sites))
+		echo "<option ".(($GLOBALS['objUtil']->checkPostKey('site',0)==$value[0])?"selected=\"selected\"":(($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id'])==$value[0])?"selected=\"selected\"":''))." value=\"".$value[0]."\">".$value[1]."</option>";
   echo "</select></td><td class=\"explanation\"><a href=\"common/add_site.php\">" . LangChangeAccountField7Expl ."</a>";
 	echo "</td>";
   echo "</tr>";
@@ -55,24 +52,24 @@ if(array_key_exists('object',$_GET)&&$_GET['object'])
 	echo LangViewObservationField5 . "&nbsp;*";
 	echo "</td>";
   echo "<td>";
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"3\" name=\"day\" value=\"".$GLOBALS['objUtil']->checkPostKey('day')."\" />";
+	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"3\" style=\"text-align:center\" name=\"day\" value=\"".$GLOBALS['objUtil']->checkPostKey('day')."\" />";
   echo "&nbsp;&nbsp;";
-	echo "<select name=\"month\">";
+	echo "<select name=\"month\" style=\"text-align:center\">";
   echo "<option value=\"\"></option>";
 	for($i=1;$i<13;$i++)
     echo "<option value=\"".$i."\"".(($GLOBALS['objUtil']->checkPostKey('month')==$i)?" selected=\"selected\"":"").">" . $GLOBALS['Month'.$i] . "</option>";
   echo "</select>";
 	echo "&nbsp;&nbsp";
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" name=\"year\" value=\"".$GLOBALS['objUtil']->checkPostKey('year')."\" />";
+	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" style=\"text-align:center\" name=\"year\" value=\"".$GLOBALS['objUtil']->checkPostKey('year')."\" />";
   echo "</td>";
 	echo "<td class=\"explanation\">".LangViewObservationField10."</td>";
   echo "<td class=\"fieldname\" align=\"right\">";
 	echo (($observer->getUseLocal($_SESSION['deepskylog_id']))?LangViewObservationField9lt:LangViewObservationField9);
   echo  "</td>";
 	echo "<td>";
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"hours\" value=\"".$GLOBALS['objUtil']->checkPostKey('hours')."\"";
+	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" style=\"text-align:center\" name=\"hours\" value=\"".$GLOBALS['objUtil']->checkPostKey('hours')."\">";
 	echo "&nbsp;&nbsp;";
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"minutes\" value=\"".$GLOBALS['objUtil']->checkPostKey('minutes')."\"";
+	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" style=\"text-align:center\" name=\"minutes\" value=\"".$GLOBALS['objUtil']->checkPostKey('minutes')."\">";
   echo "</td>";
 	echo "<td class=\"explanation\">";
 	echo LangViewObservationField11;
@@ -83,10 +80,10 @@ if(array_key_exists('object',$_GET)&&$_GET['object'])
 	echo LangViewObservationField7;
 	echo "</td>";
 	echo "<td>";
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"limit\" size=\"3\" value=\"".($GLOBALS['objUtil']->checkPostKey('limit')?sprintf("%1.1f", $GLOBALS['objUtil']->checkPostKey('limit')):'')."\" />";
+	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"limit\" size=\"3\" style=\"text-align:center\" value=\"".($GLOBALS['objUtil']->checkPostKey('limit')?sprintf("%1.1f", $GLOBALS['objUtil']->checkPostKey('limit')):'')."\" />";
   echo "&nbsp;&nbsp;";
-	echo LangViewObservationField34;                                              // SQM
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"sqm\" size=\"4\" value=\"" .($GLOBALS['objUtil']->checkPostKey('sqm')?sprintf("%2.1f", $GLOBALS['objUtil']->checkPostKey('sqm')):'')."\" />";
+	echo LangViewObservationField34."&nbsp;";                                     // SQM
+	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"sqm\" size=\"4\" style=\"text-align:center\" value=\"" .($GLOBALS['objUtil']->checkPostKey('sqm')?sprintf("%2.1f", $GLOBALS['objUtil']->checkPostKey('sqm')):'')."\" />";
   echo "</td>";
 	echo "<td></td>";
   echo "<td class=\"fieldname\" align=\"right\">";
@@ -185,12 +182,13 @@ if(array_key_exists('object',$_GET)&&$_GET['object'])
   echo "</tr>";
   echo "<tr>";
    echo "<td class=\"fieldname\" align=\"right\">";
-	echo LangViewObservationField33;                                              // Visible dimensions of observations
+	echo LangViewObservationField33;                                              // Estimated diameter
 	echo "</td>";
 	echo "<td>";
 	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"largeDiam\" size=\"5\" style=\"text-align:center\" value=\"".$GLOBALS['objUtil']->checkPostKey('largeDiam')."\">";
 	echo "&nbsp;x&nbsp;";
 	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"smallDiam\" size=\"5\" style=\"text-align:center\" value=\"".$GLOBALS['objUtil']->checkPostKey('smallDiam')."\">";
+	echo "&nbsp;";
 	echo "<select name=\"size_units\">";
 	echo "<option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>";
   echo "<option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>";
@@ -225,7 +223,7 @@ if(array_key_exists('object',$_GET)&&$_GET['object'])
   $allLanguages = $language->getAllLanguages($obs->getLanguage($_SESSION['deepskylog_id']));
   echo "<select name=\"description_language\" style=\"width: 147px\">";
   while(list ($key, $value) = each($allLanguages))
-    echo "<option value=\"".$key."\"". (($GLOBALS['objUtil']->checkPostKey('visibility')==$key)?"selected=\"selected\"":($GLOBALS['objObserver']->getObservationLanguage($_SESSION['deepskylog_id'])==$key)?"selected=\"selected\"":'') .">".$value."</option>";
+    echo "<option value=\"".$key."\"".(($GLOBALS['objUtil']->checkPostKey('visibility')==$key)?"selected=\"selected\"":($GLOBALS['objObserver']->getObservationLanguage($_SESSION['deepskylog_id'])==$key)?"selected=\"selected\"":'') .">".$value."</option>";
   echo "</select>";
 	echo "</td>";
   echo "</tr>";

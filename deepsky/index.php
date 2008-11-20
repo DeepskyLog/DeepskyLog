@@ -7,12 +7,14 @@ try
   include '../common/entryexit/instructionsDS.php';
   $objUtil->utilitiesSetModuleCookie("deepsky");
   include '../common/entryexit/menu.php';
-	if($entryMessage) echo $entryMessage.'<hr />';
+  if($entryMessage) echo $entryMessage.'<hr />';
   include $objUtil->utiltiesDispatchIndexActionDS();	
   include '../common/tail.php';
 }
 catch (Exception $e)
 {
   echo 'Report problem: ' . $e->getMessage();
+	$_GET['indexAction']='default_action';
+  include $objUtil->utiltiesDispatchIndexActionDS();	
 }
 ?>

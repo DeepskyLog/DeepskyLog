@@ -10,21 +10,61 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_observation
 	  $_GET['indexAction']="query_objects";
    }
   else
-	{ $_POST['year']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear'); 
-    $_POST['month']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsMonth'); 
-    $_POST['day']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsDay');
-    $_POST['instrument']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsInstrument'); 
-    $_POST['site']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLocation'); 
-    $_POST['limit']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLimit'); 
-    $_POST['sqm']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsSQM'); 
-    $_POST['seeing']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsSeeing'); 
-    $_POST['description_language']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLanguage');
+	{ $GLOBALS['objUtil']->checkPostKey('year',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear'));;
+	  $_POST['year']=$GLOBALS['objUtil']->checkPostKey('year',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear')); 
+    $_POST['month']=$GLOBALS['objUtil']->checkPostKey('month',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsMonth')); 
+    $_POST['day']=$GLOBALS['objUtil']->checkPostKey('day',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsDay'));
+    $_POST['instrument']=$GLOBALS['objUtil']->checkPostKey('instrument',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsInstrument')); 
+    $_POST['site']=$GLOBALS['objUtil']->checkPostKey('site',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLocation')); 
+    $_POST['limit']=$GLOBALS['objUtil']->checkPostKey('limit',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLimit')); 
+    $_POST['sqm']=$GLOBALS['objUtil']->checkPostKey('sqm',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsSQM')); 
+    $_POST['seeing']=$GLOBALS['objUtil']->checkPostKey('seeing',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsSeeing')); 
+    $_POST['description_language']=$GLOBALS['objUtil']->checkPostKey('description_language',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLanguage'));
+		$_POST['timestamp']=time();
+		$_SESSION['addObs']=$_POST['timestamp'];
 	} 
+}
+elseif(array_key_exists('newObservation',$_GET))                                // From quickpick
+{ if(array_key_exists('object',$_GET)&&(!($_GET['object']=$GLOBALS['objObject']->getExactDsObject($_GET['object'],'', ''))))
+  { $entryMessage.="No corresponding object found.";
+	  $_GET['indexAction']="query_objects";
+   }
+  else
+	{ $GLOBALS['objUtil']->checkPostKey('year',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear'));;
+	  $_POST['year']=$GLOBALS['objUtil']->checkPostKey('year',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear')); 
+    $_POST['month']=$GLOBALS['objUtil']->checkPostKey('month',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsMonth')); 
+    $_POST['day']=$GLOBALS['objUtil']->checkPostKey('day',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsDay'));
+    $_POST['instrument']=$GLOBALS['objUtil']->checkPostKey('instrument',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsInstrument')); 
+    $_POST['site']=$GLOBALS['objUtil']->checkPostKey('site',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLocation')); 
+    $_POST['limit']=$GLOBALS['objUtil']->checkPostKey('limit',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLimit')); 
+    $_POST['sqm']=$GLOBALS['objUtil']->checkPostKey('sqm',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsSQM')); 
+    $_POST['seeing']=$GLOBALS['objUtil']->checkPostKey('seeing',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsSeeing')); 
+    $_POST['description_language']=$GLOBALS['objUtil']->checkPostKey('description_language',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLanguage'));
+		$_POST['timestamp']=time();
+		$_SESSION['addObs']=$_POST['timestamp'];
+	} 
+}
+elseif(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="clear_observation")
+{ $_POST['year']='';                                                             // empty the fields of the new observation form
+  $_POST['month']=''; 
+  $_POST['day']='';
+  $_POST['instrument']=''; 
+  $_POST['site']=''; 
+  $_POST['limit']=''; 
+  $_POST['sqm']=''; 
+  $_POST['seeing']=''; 
+  $_POST['description_language']='';
+	$_GET['indexAction']="add_observation";
 }
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_observation")
 { if(!array_key_exists('deepskylog_id', $_SESSION)||!$_SESSION['deepskylog_id'])
-    throw new Exception("Not logged in");
-  if (!$_POST['day'] || !$_POST['month'] || !$_POST['year'] || $_POST['site'] == "1" || !$_POST['instrument'] || !$_POST['description'])
+    throw new Exception("Not logged in");                                       // Register the new observation
+  elseif($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)!=$GLOBALS['objUtil']->checkPostKey('timestamp',-1))
+	{ $_GET['indexAction']="detail_observation";
+		$_GET['dalm']='D';
+		$_GET['observation']=$current_observation;
+  }
+	elseif(!$_POST['day'] || !$_POST['month'] || !$_POST['year'] || $_POST['site'] == "1" || !$_POST['instrument'] || !$_POST['description'])
   { if($GLOBALS['objUtil']->checkPostKey('limit'))
       if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})',$_POST['limit'],$matches))     // limiting magnitude like X.X or X,X with X a number between 0 and 9
         $_POST['limit']=$matches[1].".".(($matches[2])?$matches[2]:"0");
@@ -42,7 +82,7 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_observ
 		  $_GET['indexAction']='add_observation';
     }
     else
-    { $date=$_POST['year'].printf("%02d", $_POST['month']).sprintf("%02d",$_POST['day']);
+    { $date=$_POST['year'].sprintf("%02d", $_POST['month']).sprintf("%02d",$_POST['day']);
       if($_POST['hours'])
       { if(isset($_POST['minutes']))
           $time=($_POST['hours']*100)+$_POST['minutes'];
@@ -51,14 +91,15 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_observ
       }
       else
         $time = -9999;
-      // add observation to database
 		  if($GLOBALS['objUtil']->checkPostKey('limit'))
-        if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})',$_POST['limit'],$matches))     // limiting magnitude like X.X or X,X with X a number between 0 and 9
+        if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})',$_POST['limit'],$matches))   // limiting magnitude like X.X or X,X with X a number between 0 and 9
           $_POST['limit']=$matches[1].".".(($matches[2])?$matches[2]:"0");
-  	    else
-          $_POST['limit']="";                                                     // clear current magnitude limit
-      // add observation to database
+  	    else                                                                    // clear current magnitude limit
+          $_POST['limit']="";                                                   
       $current_observation =  $GLOBALS['objObservation']->addDSObservation($_POST['object'], $_SESSION['deepskylog_id'], $_POST['instrument'], $_POST['site'], $date, $time, nl2br($_POST['description']), $_POST['seeing'], $_POST['limit'], $GLOBALS['objUtil']->checkPostKey('visibility'), $_POST['description_language']);
+			$_SESSION['addObs']='';
+			$_SESSION['Qobs']=array();
+			$_SESISON['QobsParams']=array();
 			if ($_POST['filter'])   $GLOBALS['objObservation']->setFilterId($current_observation, $_POST['filter']);
 			if ($_POST['lens'])     $GLOBALS['objObservation']->setLensId($current_observation, $_POST['lens']);
 			if ($_POST['eyepiece']) $GLOBALS['objObservation']->setEyepieceId($current_observation, $_POST['eyepiece']);
@@ -90,8 +131,21 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_observ
       $_GET['indexAction']="detail_observation";
 			$_GET['dalm']='D';
 			$_GET['observation']=$current_observation;
-			$_GET['new']='yes';
     }  
+  }
+}
+if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_delete_observation")
+{ if(!$_GET['observationid'])
+    throw new Exception("No observation to delete.");                           
+  elseif($GLOBALS['objUtil']->checkGetKey('observationid'))
+  { if($GLOBALS['objObservation']->getObserverId($_GET['observationid'])==$GLOBALS['objUtil']->checkArrayKey($_SESSION,'deepskylog_id',-1)) // only allowed to delete your own observations
+    { $GLOBALS['objObservation']->deleteDSObservation($_GET['observationid']);
+		  $_GET['indexAction']='default_action';
+			$_SESSION['Qobs']=array();
+			$_SESSION['QobsParams']=array();
+    }
+    else                                                                        // try to delete an observation which doesn't belong to the observer logged in
+		  $_GET['indexAction']='default_action';
   }
 }
 // ============================================================================ LIST COMMANDS
