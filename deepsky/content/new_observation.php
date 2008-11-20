@@ -150,7 +150,7 @@ if(array_key_exists('object',$_GET)&&$_GET['object'])
   echo "</td>";
   echo "<td class=\"fieldname\" align=\"right\">".LangViewObservationField32."&nbsp;";
 	echo "</td>";
-  echo "<td> <select name=\"lens\" style=\"width: 147px\">";                 // LENS
+  echo "<td> <select name=\"lens\" style=\"width: 147px\">";                    // LENS
   echo "<option value=\"\"></option>";
   $lns = $GLOBALS['objLens']->getSortedLensesList("name",$_SESSION['deepskylog_id'],false);
   while(list ($key, $value) = each($lns))
@@ -164,81 +164,73 @@ if(array_key_exists('object',$_GET)&&$_GET['object'])
   echo "<tr>";
 	echo "<td>&nbsp;</td>";
 	echo "</tr>";
-  // VISIBILITY / DRAWING
-  echo("<tr>");
-  // Visibility of observations
-  echo("<td class=\"fieldname\" align=\"right\">" . LangViewObservationField22 . "</td>
-	           <td><select name=\"visibility\"><option value=\"0\"></option>");
-  // Very simple, prominent object
-  echo("<option value=\"1\">".LangVisibility1."</option>");
-  // Object easily percepted with direct vision
-  echo("<option value=\"2\">".LangVisibility2."</option>");
-  // Object perceptable with direct vision
-  echo("<option value=\"3\">".LangVisibility3."</option>");
-  // Averted vision required to percept object
-  echo("<option value=\"4\">".LangVisibility4."</option>");
-  // Object barely perceptable with averted vision
-  echo("<option value=\"5\">".LangVisibility5."</option>");
-  // Perception of object is very questionable
-  echo("<option value=\"6\">".LangVisibility6."</option>");
-  // Object definitely not seen
-  echo("<option value=\"7\">".LangVisibility7."</option>");
-  echo("</select></td>");
-  echo("<td></td>");
-  //DRAWING
-  echo("<td class=\"fieldname\" align=\"right\">".LangViewObservationField12."</td>");
-  echo("<td colspan=\"2\"><input type=\"file\" name=\"drawing\" /></td>");
-  echo("</tr>");
-
-  // Small/Large diameter
-  echo("<tr>");
-  // Visibility of observations
-  echo("<td class=\"fieldname\" align=\"right\">" . LangViewObservationField33 . "</td>
-            <td><input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"largeDiam\" size=\"5\"> 
-             x <input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"smallDiam\" size=\"5\"> " 
-            . "<select name=\"size_units\"> <option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>
-                                     <option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>
-      </select></td>");
-  echo("</tr>");
-
-  // DESCRIPTION
-  echo("<tr>");
-  echo("<td class=\"fieldname\" align=\"right\">" . LangViewObservationField8 . "&nbsp;*");
-  echo("<br>");
-  echo("<a href=\"http://www.deepsky.be/beschrijfobjecten.php\" target=\"new_window\">" . LangViewObservationFieldHelpDescription . "</a></td>");
-  echo("<td width=\"100%\" colspan=\"5\">");
-  echo("<textarea name=\"description\" class=\"description\">");
-  // keep description after wrong observation
-  if(array_key_exists('newObsDescription', $_SESSION) && ($_SESSION['newObsDescription'] != ""))
-  echo $_SESSION['newObsDescription'];
-  echo("</textarea>");
-  echo("</td>");
-  echo("</tr>");
-
-  echo("<tr>");
-  echo("<td></td>");
-  echo("<td>");
-  echo("<input type=\"submit\" name=\"addobservation\" value=\"".LangViewObservationButton1."\" />&nbsp;");
-  echo("<input type=\"submit\" name=\"clearfields\" value=\"".LangViewObservationButton2."\" /></td>");
-  echo("<td align=\"right\">");
-  // Language of observation
-  if(array_key_exists('newObsLanguage', $_SESSION) && array_key_exists('newObsSavedata', $_SESSION) && ($_SESSION['newObsSavedata'] == "yes"))
-    $current_language = $_SESSION['newObsLanguage'];
-  else
-    $current_language = $obs->getObservationLanguage($_SESSION['deepskylog_id']);
-  echo("<td class=\"fieldname\" align=\"right\">" . LangViewObservationField29 . "&nbsp;*</td><td>");
+  echo "<tr>";
+ 
+  echo "<td class=\"fieldname\" align=\"right\">";
+	echo LangViewObservationField22;
+	echo "</td>";
+	echo "<td>";                                                                  // Visibility of observations
+	echo "<select name=\"visibility\"><option value=\"".$i."\"></option>";
+	for($i=1;$i<8;$i++)  
+    echo "<option value=\"".$i."\"".(($GLOBALS['objUtil']->checkPostKey('visibility')==$i)?" selected=\"selected\" ":'').">".$GLOBALS['Visibility'.$i]."</option>";
+  echo "</select>";
+	echo "</td>";
+  echo "<td> </td>";
+  echo "<td class=\"fieldname\" align=\"right\">";
+	echo LangViewObservationField12;                                              //DRAWING
+	echo "</td>";
+  echo "<td colspan=\"2\">";
+	echo "<input type=\"file\" name=\"drawing\" value=\"".$GLOBALS['objUtil']->checkPostKey('drawing')."\" />";
+	echo "</td>";
+  echo "</tr>";
+  echo "<tr>";
+   echo "<td class=\"fieldname\" align=\"right\">";
+	echo LangViewObservationField33;                                              // Visible dimensions of observations
+	echo "</td>";
+	echo "<td>";
+	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"largeDiam\" size=\"5\" style=\"text-align:center\" value=\"".$GLOBALS['objUtil']->checkPostKey('largeDiam')."\">";
+	echo "&nbsp;x&nbsp;";
+	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"smallDiam\" size=\"5\" style=\"text-align:center\" value=\"".$GLOBALS['objUtil']->checkPostKey('smallDiam')."\">";
+	echo "<select name=\"size_units\">";
+	echo "<option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>";
+  echo "<option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>";
+  echo "</select>";
+	echo "</td>";
+  echo "</tr>";
+  echo "<tr>";
+  echo "<td class=\"fieldname\" align=\"right\">";
+	echo LangViewObservationField8 . "&nbsp;*";                                   // DESCRIPTION
+  echo "<br />";
+  echo "<a href=\"http://www.deepsky.be/beschrijfobjecten.php\" target=\"new_window\">".LangViewObservationFieldHelpDescription."</a>";
+	echo "</td>";
+  echo "<td width=\"100%\" colspan=\"5\">";
+  echo "<textarea name=\"description\" class=\"description\">";
+  echo $GLOBALS['objUtil']->checkPostKey('description');
+  echo "</textarea>";
+  echo "</td>";
+  echo "</tr>";
+  echo "<tr>";
+  echo "<td></td>";
+  echo "<td>";
+  echo "<input type=\"submit\" name=\"addobservation\" value=\"".LangViewObservationButton1."\" />&nbsp;";
+  echo "<input type=\"submit\" name=\"clearfields\" value=\"".LangViewObservationButton2."\" />";
+	echo "</td>";
+  echo "<td align=\"right\">";
+  echo "<td class=\"fieldname\" align=\"right\">";
+	echo LangViewObservationField29."&nbsp;*";                                    // Language of observation
+	echo "</td>";
+	echo "<td>";
   $language = new Language();
+  $description_language = $GLOBALS['objUtil']->checkPostKey('visibility',$obs->getObservationLanguage($_SESSION['deepskylog_id']));
   $allLanguages = $language->getAllLanguages($obs->getLanguage($_SESSION['deepskylog_id']));
-  echo("<select name=\"description_language\" style=\"width: 147px\">");
+  echo "<select name=\"description_language\" style=\"width: 147px\">";
   while(list ($key, $value) = each($allLanguages))
-    if($current_language == $key)
-      print("<option value=\"".$key."\" selected=\"selected\">".$value."</option>\n");
-    else
-      print("<option value=\"".$key."\">".$value."</option>\n");
-  echo("</select></td>");
-  echo("</tr>");
-  echo("</table>");
-  echo("<input type=\"hidden\" name=\"observedobject\" value=\"" . $_GET['object'] . "\"></form>");
+    echo "<option value=\"".$key."\"". (($GLOBALS['objUtil']->checkPostKey('visibility')==$key)?"selected=\"selected\"":($GLOBALS['objObserver']->getObservationLanguage($_SESSION['deepskylog_id'])==$key)?"selected=\"selected\"":'') .">".$value."</option>";
+  echo "</select>";
+	echo "</td>";
+  echo "</tr>";
+  echo "</table>";
+	echo "</form>";
 }
 else // no object found or not pushed on search button yet
 { echo "<h2>";
@@ -272,7 +264,5 @@ else // no object found or not pushed on search button yet
   echo "</tr>";
   echo "</table>";
   echo "</form>";
-  // end upper form
-  //OBSOLETE? $_SESSION['backlink'] = "new_observation.php";
 }
 ?>

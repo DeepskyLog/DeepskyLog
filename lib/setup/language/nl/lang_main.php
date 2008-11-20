@@ -962,6 +962,15 @@ define("LangContrastEasy", " is eenvoudig zichtbaar vanuit ");
 define("LangContrastVeryEasy", " is zeer eenvoudig zichtbaar vanuit ");
 define("LangContrastPlace", " met je ");
 
+//Visibility
+$Visibility1="Zeer eenvoudig, helder object";
+$Visibility2="Object eenvoudig te zien bij direct kijken";
+$Visibility3="Object zichtbaar bij direct kijken";
+$Visibility4="Perifeer kijken nodig om object te zien";
+$Visibility5="Object amper zichtbaar bij perifeer kijken";
+$Visibility6="Zichtbaarheid van object is twijfelachtig";
+$Visibility7="Object niet zichtbaar";
+
 //Seeing definitions
 $Seeing1="Uitstekend";
 $Seeing2="Goed";

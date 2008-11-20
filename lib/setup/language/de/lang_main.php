@@ -963,6 +963,15 @@ define("LangContrastEasy", " ist einfach zu sehen von ");
 define("LangContrastVeryEasy", " ist sehr einfach zu sehen von  ");
 define("LangContrastPlace", " mit Ihrer ");
 
+//Visibility
+$Visibility1="Sehr einfaches, auff&auml;lliges Objekt im Okular";
+$Visibility2="Objekt bei direktem Beobachten gut zu sehen";
+$Visibility3="Objekt bei direktem Beobachten zu sehen";
+$Visibility4="Indirektes Beobachten ist n&ouml;tig, um das Objekt zu sehen";
+$Visibility5="Objekt bei indirektem Beobachten gerade noch wahrnehmbar";
+$Visibility6="Sichtung des Objektes sehr fraglich";
+$Visibility7="Objekt sicher nicht zu sehen";
+
 //Seeing definitions
 $Seeing1="Exzellent";
 $Seeing2="Gut";

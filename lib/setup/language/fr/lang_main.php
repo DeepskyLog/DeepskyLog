@@ -963,6 +963,15 @@ define("LangContrastEasy", " est facilement visible &#224; partir de ");
 define("LangContrastVeryEasy", " est facilement visible &#224; partir de ");
 define("LangContrastPlace", " avec votre ");
 
+//Visibility
+$Visibility1="Objet tr&egrave;s facile et clair";
+$Visibility2="Objet facilement visible &agrave; vision directe";
+$Visibility3="Objet visible &agrave; vision direct";
+$Visibility4="Vision p&eacute;riph&eacute;rique n&eacute;cessaire pour voir l'objet";
+$Visibility5="Objet difficilement visible en vision péréférique";
+$Visibility6="Visibilit&eacute; de l'objet est douteuse";
+$Visibility7="L'objet n'est pas visible";
+
 //Seeing definitions
 $Seeing1="Excellent";
 $Seeing2="Bien";

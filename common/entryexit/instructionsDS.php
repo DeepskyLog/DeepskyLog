@@ -5,127 +5,88 @@ $entryMessage='';
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_observation")
 { if(array_key_exists('number',$_POST)&&(!$_POST['number']))
     $_GET['indexAction']="query_objects";
-  elseif(array_key_exists('number',$_POST)) // all fields filled in
-  { if(!($_GET['object']=$GLOBALS['objObject']->getExactDsObject('',$GLOBALS['objUtil']->checkPostKey('catalogue'), $GLOBALS['objUtil']->checkPostKey('number'))))
-    { $entryMessage.="No corresponding object found for ".$GLOBALS['objUtil']->checkPostKey('catalogue')." ".$GLOBALS['objUtil']->checkPostKey('number');
-		  $_GET['indexAction']="query_objects";
-    }
-  }
+  elseif(array_key_exists('number',$_POST)&&(!($_GET['object']=$GLOBALS['objObject']->getExactDsObject('',$GLOBALS['objUtil']->checkPostKey('catalogue'), $GLOBALS['objUtil']->checkPostKey('number')))))
+  { $entryMessage.="No corresponding object found for ".$GLOBALS['objUtil']->checkPostKey('catalogue')." ".$GLOBALS['objUtil']->checkPostKey('number');
+	  $_GET['indexAction']="query_objects";
+   }
+  else
+	{ $_POST['year']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear'); 
+    $_POST['month']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsMonth'); 
+    $_POST['day']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsDay');
+    $_POST['instrument']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsInstrument'); 
+    $_POST['site']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLocation'); 
+    $_POST['limit']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLimit'); 
+    $_POST['sqm']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsSQM'); 
+    $_POST['seeing']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsSeeing'); 
+    $_POST['description_language']=$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLanguage');
+	} 
 }
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_observation")
 { if(!array_key_exists('deepskylog_id', $_SESSION)||!$_SESSION['deepskylog_id'])
-  throw new Exception("Not logged in");
+    throw new Exception("Not logged in");
   if (!$_POST['day'] || !$_POST['month'] || !$_POST['year'] || $_POST['site'] == "1" || !$_POST['instrument'] || !$_POST['description'])
-  { // user forgot required field
-    $_SESSION['message'] = LangValidateObservationMessage1;
-    $_SESSION['backlink'] = "validate_observation.php"; // also show lower form when back button used
-    // save filled in fields to automatically fill form fields when back button is used 
-    $_SESSION['newObsYear'] = $_POST['year']; // save current year
-    $_SESSION['newObsMonth'] = $_POST['month']; // save current month
-    $_SESSION['newObsDay'] = $_POST['day']; // save current day
-    $_SESSION['newObsInstrument'] = $_POST['instrument']; // save current instrument for new observations
-    $_SESSION['newObsSeeing'] = $_POST['seeing']; // save current seeing
-    $_SESSION['newObsSavedata'] = "yes"; // session variable to tag multiple observations
-    $_SESSION['newObsObservation_query'] = "";
-    if(array_key_exists('limit', $_POST) && $_POST['limit'])
-    { if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST['limit'], $matches)) // limiting magnitude like X.X or X,X with X a number between 0 and 9
-      { // valid limiting magnitude
-        $_SESSION['newObsLimit'] = $matches[1] . ".";
-        if($matches[2] != "")
-          $_SESSION['newObsLimit'] = $_SESSION['newObsLimit'] . $matches[2];
-        else
-          $_SESSION['newObsLimit'] = $_SESSION['newObsLimit'] . "0";
-        }
-  	  else // invalid limiting magnitude
-      { $_SESSION['newObsLimit'] = ""; // clear current magnitude limit
-      }
-    }
+  { if($GLOBALS['objUtil']->checkPostKey('limit'))
+      if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})',$_POST['limit'],$matches))     // limiting magnitude like X.X or X,X with X a number between 0 and 9
+        $_POST['limit']=$matches[1].".".(($matches[2])?$matches[2]:"0");
+  	  else
+        $_POST['limit']="";                                                     // clear current magnitude limit
     else
-    { $_SESSION['newObsLimit'] = "";
-    }
-    $_SESSION['newObsVisibility'] = $_POST['visibility'];
-    // add session variables for retaining description and time
-    // check in new observation form
-    // these should be cleared when an observation has been validated successfully!!!
-    // Security is handled in CheckUserInput
-    $_SESSION['newObsDescription'] = nl2br($_POST['description']);
-    $_SESSION['newObsHours'] = $_POST['hours'];
-    $_SESSION['newObsMinutes'] = $_POST['minutes'];
-    $entryMessage.="Not all necessary fields are filled in.";
+      $_POST['limit']="";
+    $entryMessage.="Not all necessary fields are filled in.".LangValidateObservationMessage1;
 		$_GET['indexAction']='add_observation';
   }
-  else // all fields filled in
-  { if($_FILES['drawing']['size'] > $maxFileSize) // file size of drawing too big
-    { $_SESSION['message'] = LangValidateObservationMessage6;
-      $entryMessage.="file size of drawing too big";
+  else                                                                          // all fields filled in
+  { if($_FILES['drawing']['size'] > $maxFileSize)                               // file size of drawing too big
+    { $entryMessage.=LangValidateObservationMessage6;
+      $entryMessage.="File size of drawing too big";
+		  $_GET['indexAction']='add_observation';
     }
     else
-    { $date = $_POST['year'] . sprintf("%02d", $_POST['month']) . sprintf("%02d", $_POST['day']);
-      if ($_POST['hours'] != "")
+    { $date=$_POST['year'].printf("%02d", $_POST['month']).sprintf("%02d",$_POST['day']);
+      if($_POST['hours'])
       { if(isset($_POST['minutes']))
-          $time = ($_POST['hours'] * 100) + $_POST['minutes'];
+          $time=($_POST['hours']*100)+$_POST['minutes'];
         else
-          $time = ($_POST['hours'] * 100);
+          $time=($_POST['hours']*100);
       }
       else
-      { $time = -9999;
-      }
-      if(array_key_exists('visibility', $_POST) && $_POST['visibility'])
-        $visibility = $_POST['visibility'];
-      else
-        $visibility = 0;
+        $time = -9999;
       // add observation to database
-      if(array_key_exists('limit', $_POST) && $_POST['limit'])
-      { if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST['limit'], $matches)) // valid limiting magnitude// limiting magnitude like X.X or X,X with X a number between 0 and 9
-          $_SESSION['newObsLimit'] = $matches[1] . "." . $matches[2]; // save current magnitude limit
-        else // invalid limiting magnitude
-          $_SESSION['newObsLimit'] = ""; // clear current magnitude limit 
-      }
-      else
-      { $_SESSION['newObsLimit'] = "";
-      }
+		  if($GLOBALS['objUtil']->checkPostKey('limit'))
+        if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})',$_POST['limit'],$matches))     // limiting magnitude like X.X or X,X with X a number between 0 and 9
+          $_POST['limit']=$matches[1].".".(($matches[2])?$matches[2]:"0");
+  	    else
+          $_POST['limit']="";                                                     // clear current magnitude limit
       // add observation to database
-      $current_observation = $GLOBALS['objObservation']->addDSObservation($_POST['observedobject'], $_SESSION['deepskylog_id'], $_POST['instrument'], $_POST['site'], $date, $time, nl2br($_POST['description']), $_POST['seeing'], $_SESSION['newObsLimit'], $visibility, $_POST['description_language']);
-			if ($_POST['filter'])
-			{ $GLOBALS['objObservation']->setFilterId($current_observation, $_POST['filter']);
-			}
-			if ($_POST['lens'])
-  		{ $GLOBALS['objObservation']->setLensId($current_observation, $_POST['lens']);
-			}
-			if ($_POST['eyepiece'])
-   		{$GLOBALS['objObservation']->setEyepieceId($current_observation, $_POST['eyepiece']);
-			}
+      $current_observation =  $GLOBALS['objObservation']->addDSObservation($_POST['object'], $_SESSION['deepskylog_id'], $_POST['instrument'], $_POST['site'], $date, $time, nl2br($_POST['description']), $_POST['seeing'], $_POST['limit'], $GLOBALS['objUtil']->checkPostKey('visibility'), $_POST['description_language']);
+			if ($_POST['filter'])   $GLOBALS['objObservation']->setFilterId($current_observation, $_POST['filter']);
+			if ($_POST['lens'])     $GLOBALS['objObservation']->setLensId($current_observation, $_POST['lens']);
+			if ($_POST['eyepiece']) $GLOBALS['objObservation']->setEyepieceId($current_observation, $_POST['eyepiece']);
 			if ($GLOBALS['objObserver']->getUseLocal($_SESSION['deepskylog_id']))
-      { $GLOBALS['objObservation']->setLocalDateAndTime($current_observation, $date, $time);
-      }
-      if($_FILES['drawing']['tmp_name'] != "") // drawing to upload
+                              $GLOBALS['objObservation']->setLocalDateAndTime($current_observation, $date, $time);
+      if($_FILES['drawing']['tmp_name'] != "")                                  // drawing to upload
       { $upload_dir = '../drawings';
         $dir = opendir($upload_dir);
-        // resize code
-        include "../../common/control/resize.php";
         $original_image = $_FILES['drawing']['tmp_name'];
         $destination_image = $upload_dir . "/" . $current_observation . "_resized.jpg";
         $max_width = "490";
         $max_height = "490";
         $resample_quality = "100";
+   
+        include $instDir."/common/control/resize.php";                          // resize code
         $new_image = image_createThumb($original_image, $destination_image, $max_width, $max_height, $resample_quality);
         move_uploaded_file($_FILES['drawing']['tmp_name'], $upload_dir . "/" . $current_observation . ".jpg");
       }
-      // save current details for faster submission of multiple observations
-      $_SESSION['newObsYear'] = $_POST['year']; // save current year
-      $_SESSION['newObsMonth'] = $_POST['month']; // save current month
-      $_SESSION['newObsDay'] = $_POST['day']; // save current day
-      $_SESSION['newObsInstrument'] = $_POST['instrument']; // save current instrument for new observations
-      $_SESSION['newObsLocation'] = $_POST['site']; // save current location
-      $_SESSION['newObsSeeing'] = $_POST['seeing']; // save current seeing
-      $_SESSION['newObsLanguage'] = $_POST['description_language']; // save current language
-      $_SESSION['newObsSavedata'] = "yes"; // session variable to tag multiple observations 
-      $_SESSION['newObsVisibility'] = "";
-      $_SESSION['newObsObservation_query'] = "";
-      // clear session variables for description and time when form was not correctly filled in
-      $_SESSION['newObsDescription'] = "";
-      $_SESSION['newObsHours'] = "";
-      $_SESSION['newObsMinutes'] = "";
+      $_SESSION['newObsYear'] =       $_POST['year'];                           // save current details for faster submission of multiple observations
+      $_SESSION['newObsMonth'] =      $_POST['month'];
+      $_SESSION['newObsDay'] =        $_POST['day'];
+      $_SESSION['newObsInstrument'] = $_POST['instrument'];
+      $_SESSION['newObsLocation'] =   $_POST['site'];
+      $_SESSION['newObsLimit'] =      $_POST['limit'];
+      $_SESSION['newObsSQM'] =        $_POST['sqm'];
+      $_SESSION['newObsSeeing'] =     $_POST['seeing'];
+      $_SESSION['newObsLanguage'] =   $_POST['description_language'];
+      $_SESSION['newObsSavedata'] =   "yes";
       $_GET['indexAction']="detail_observation";
 			$_GET['dalm']='D';
 			$_GET['observation']=$current_observation;

@@ -962,6 +962,15 @@ define("LangContrastEasy", " is easy to see from ");
 define("LangContrastVeryEasy", " is very easy to see from ");
 define("LangContrastPlace", " with your ");
 
+//Visibility
+$Visibility1="Very simple, prominent object";
+$Visibility2="Object easily percepted with direct vision";
+$Visibility3="Object perceptable with direct vision";
+$Visibility4="Averted vision required to percept object";
+$Visibility5="Object barely perceptable with averted vision";
+$Visibility6="Perception of object is very questionable";
+$Visibility7="Object definitely not seen";
+
 //Seeing definitions
 $Seeing1="Excellent";
 $Seeing2="Good";
