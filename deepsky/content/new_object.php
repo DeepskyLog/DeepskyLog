@@ -11,17 +11,11 @@ include_once "../lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
-
 $objects = new Objects; 
-
 echo("<div id=\"main\">\n<h2>");
-
 echo (LangNewObjectTitle); 
-
 echo("</h2>\n<table width=\"100%\">\n");
-
-echo("<form action=\"deepsky/control/validate_object.php\" method=\"post\">");
-
+echo("<form action=\"deepsky/index.php?indexAction=validate_object\" method=\"post\">");
 // NAME
 
 echo("<tr>\n

@@ -1,32 +1,12 @@
 <?php
-
 // validate_change_observation.php
 // checks if the change new observation form is correctly filled in
-// Version 0.1: JV, 20040923
-
-// Code cleanup - removed by David on 20080704
-//include_once "../../lib/objects.php";
-//$objects = new Objects;
-
-
-include_once "../../lib/observations.php";
-include_once "../../lib/observers.php";
-include_once "../../lib/setup/vars.php";
-include_once "../../lib/util.php";
-
-$util = new Util();
-$util->checkUserInput();
-
-$observations = new Observations;
-$observers = new Observers;
 
 if(array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']) // pushed change observation button
-{
-   if (!$_POST['day'] || !$_POST['month'] || !$_POST['year'] || $_POST['location'] == "1" || !$_POST['instrument'] || !$_POST['description'])
-   {
-       $_SESSION['message'] = LangValidateObservationMessage1;
-       header("Location:../../common/error.php");
-   }
+{ if(!$_POST['day']||!$_POST['month']||!$_POST['year']||$_POST['location']=="1"||!$_POST['instrument']||!$_POST['description'])
+  {  $_SESSION['message'] = LangValidateObservationMessage1;
+     header("Location:../../common/error.php");
+  }
    elseif($_FILES['drawing']['size'] > $maxFileSize) // file size of drawing too big
    {
        $_SESSION['message'] = LangValidateObservationMessage6;

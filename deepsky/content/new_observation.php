@@ -41,7 +41,7 @@ if(array_key_exists('object',$_GET)&&$_GET['object'])
   echo "<tr>";                                                                  // LOCATION
   echo "<tr><td class=\"fieldname\" align=\"right\">" . LangViewObservationField4 . "&nbsp;*</td>";
 	echo "<td><select name=\"site\" style=\"width: 147px\">";
-  $sites=$GLOBALS['objLocation']->getSortedLocationsList("name", $_SESSION['deepskylog_id']);
+  $sites=$GLOBALS['objLocation']->getSortedLocationsList("name",$_SESSION['deepskylog_id']);
   while(list($key,$value)=each($sites))
 		echo "<option ".(($GLOBALS['objUtil']->checkPostKey('site',0)==$value[0])?"selected=\"selected\"":(($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id'])==$value[0])?"selected=\"selected\"":''))." value=\"".$value[0]."\">".$value[1]."</option>";
   echo "</select></td><td class=\"explanation\"><a href=\"common/add_site.php\">" . LangChangeAccountField7Expl ."</a>";
@@ -218,12 +218,11 @@ if(array_key_exists('object',$_GET)&&$_GET['object'])
 	echo LangViewObservationField29."&nbsp;*";                                    // Language of observation
 	echo "</td>";
 	echo "<td>";
-  $language = new Language();
   $description_language = $GLOBALS['objUtil']->checkPostKey('visibility',$obs->getObservationLanguage($_SESSION['deepskylog_id']));
-  $allLanguages = $language->getAllLanguages($obs->getLanguage($_SESSION['deepskylog_id']));
+  $allLanguages = $objLanguage->getAllLanguages($obs->getLanguage($_SESSION['deepskylog_id']));
   echo "<select name=\"description_language\" style=\"width: 147px\">";
   while(list ($key, $value) = each($allLanguages))
-    echo "<option value=\"".$key."\"".(($GLOBALS['objUtil']->checkPostKey('visibility')==$key)?"selected=\"selected\"":($GLOBALS['objObserver']->getObservationLanguage($_SESSION['deepskylog_id'])==$key)?"selected=\"selected\"":'') .">".$value."</option>";
+    echo "<option value=\"".$key."\"".(($GLOBALS['objUtil']->checkPostKey('description_language')==$key)?"selected=\"selected\"":($GLOBALS['objObserver']->getObservationLanguage($_SESSION['deepskylog_id'])==$key)?"selected=\"selected\"":'') .">".$value."</option>";
   echo "</select>";
 	echo "</td>";
   echo "</tr>";

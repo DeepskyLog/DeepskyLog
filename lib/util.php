@@ -1570,6 +1570,7 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('query_observations','content/setup_observations_query.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('query_objects','content/setup_objects_query.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('rank_objects','content/top_objects.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('report_message','../common/report_message.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('view_image','content/show_image.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('listaction','content/tolist.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('view_observer_catalog','content/details_observer_catalog.php')))
@@ -1646,6 +1647,9 @@ class util
   public function promptWithLink($prompt,$promptDefault,$javaLink,$text)
 	{ echo "<a href=\"\" onclick=\"thetitle = prompt(".$prompt.",".$promptDefault."); location.href='".$javaLink."&amp;pdfTitle='+thetitle+''; return false;\"	target=\"new_window\">".$text."</a>";
   }
+	public function checkLimitsInclusive($value,$low,$high)
+	{ return(($value>=$low)&&($value<=$high));
+	}
 }
 $objUtil=new Util();
 ?>
