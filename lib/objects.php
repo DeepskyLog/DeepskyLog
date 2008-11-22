@@ -1024,7 +1024,7 @@ function getObjectsFromCatalog($cat)
    return $ret;
  }
  function getCataloguesAndLists()
- { $cats=$GLOBALS['objDatabase']->selectSingleArray("SELECT DISTINCT objectnames.catalog FROM objectnames",'catalog');
+ { $ret=$GLOBALS['objDatabase']->selectSingleArray("SELECT DISTINCT objectnames.catalog FROM objectnames",'catalog');
    natcasesort($ret);
    reset($ret);
    array_unshift($ret, "M", "NGC", "Caldwell", "H400", "HII", "IC");
