@@ -11,14 +11,6 @@
 // PUBLIC OBJECT
 //  $objUtil  
 
-
-if (!function_exists('fnmatch'))
-{
-  function fnmatch($pattern, $string)
-  {return @preg_match('/^' . strtr(addcslashes($pattern, '\\.+^$(){}=!<>|'), array('*' => '.*', '?' => '.?')) . '$/i', $string);
-  }
-}
-
 include_once "setup/vars.php";
 include_once "class.ezpdf.php";
 

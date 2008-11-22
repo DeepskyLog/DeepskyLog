@@ -8,11 +8,11 @@ if (!function_exists('fnmatch')) {
 if(!session_id()) session_start();
 require_once "../lib/setup/databaseInfo.php";
 require_once "../lib/database.php";
-$objDatabase->newlogin();                                                       // TO BE MOVED TO CONSTRUCTOR OF CLASS WHEN ALL CODE CLEANUP IS FINISHED - DAVID 11 NOV 2008
-if(!array_key_exists('module',$_SESSION) || !$_SESSION['module'])
-  $_SESSION['module'] = $modules[0];
-require_once "../lib/setup/vars.php";
 require_once "../lib/setup/language.php";
+$objDatabase->newlogin();                                                       // TO BE MOVED TO CONSTRUCTOR OF CLASS WHEN ALL CODE CLEANUP IS FINISHED - DAVID 11 NOV 2008
+require_once "../lib/observers.php";
+require_once "../common/loginuser.php";
+require_once "../lib/setup/vars.php";
 require_once "../lib/util.php";
 require_once "../lib/atlasses.php";
 require_once "../lib/instruments.php";

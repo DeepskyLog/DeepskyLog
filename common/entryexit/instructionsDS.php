@@ -1,6 +1,4 @@
 <?php
-
-$entryMessage='';
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_observation")
 { if(array_key_exists('number',$_POST)&&(!$_POST['number']))
     $_GET['indexAction']="query_objects";

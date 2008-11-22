@@ -7,7 +7,7 @@ try
   include '../common/entryexit/instructionsDS.php';
   $objUtil->utilitiesSetModuleCookie("deepsky");
   include '../common/entryexit/menu.php';
-  if($entryMessage) echo $entryMessage.'<hr />';
+  if(isset($entryMessage)) echo $entryMessage.'<hr />';
   include $objUtil->utiltiesDispatchIndexActionDS();	
   include '../common/tail.php';
 }

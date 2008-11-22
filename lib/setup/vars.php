@@ -1,29 +1,10 @@
 <?php
-if(!session_id()) session_start();
- 
-include_once "language.php";
-include_once "databaseInfo.php";
-include_once $instDir . "/lib/observers.php";
 
 define("RoleAdmin", 0);
 define("RoleUser", 1);
 define("RoleWaitlist", 2);
 define("RoleRemoved", 3);
 define("RoleCometAdmin", 4);
-
-// Include the definitions for the specific language.
-$lang = new Language;
-if (isset($_COOKIE["deepskylogsec"]))
-{ $_SESSION['deepskylog_id'] = substr($_COOKIE['deepskylogsec'],32,255);
-  $obs = new Observers();
-  if($obs->getRole($_SESSION['deepskylog_id']) == "0") // administrator logs in
-    $_SESSION['admin'] = "yes";
-  $_SESSION['lang'] = $obs->getLanguage($_SESSION['deepskylog_id']);
-}
-else if (!array_key_exists('lang',$_SESSION) || !$_SESSION['lang'])
-  $_SESSION['lang'] = $defaultLanguage;
-$language = $lang->getPath($_SESSION['lang']);
-include "$language";
   
 define("InstrumentOther", -1);
 define("InstrumentNakedEye", 0);
@@ -60,25 +41,4 @@ define("FilterColorPaleBlue", "12");
 define("FilterColorBlue", "13");
 define("FilterColorDeepBlue", "14");
 define("FilterColorDeepViolet", "15");
-/*
-replaced by $atlasses - see lib/atlasses.php
-define("OldUranometria", 0);
-define("NewUranometria", 1);
-define("SkyAtlas", 2);
-define("MilleniumStarAtlas", 3);
-define("Taki", 4);
-define("psa", 5);
-define("torresB", 6);
-define("torresBC", 7);
-define("torresC", 8);
-$atlases[0] = LangQueryObjectsUrano;
-$atlases[1] = LangQueryObjectsUranonew;
-$atlases[2] = LangQueryObjectsSkyAtlas;
-$atlases[3] = LangQueryObjectsMsa;
-$atlases[4] = LangQueryObjectsTaki;
-$atlases[5] = LangQueryObjectsPsa;
-$atlases[6] = LangQueryObjectsTorresB;
-$atlases[7] = LangQueryObjectsTorresBC;
-$atlases[8] = LangQueryObjectsTorresC;
-*/
 ?>

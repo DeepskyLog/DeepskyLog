@@ -25,6 +25,6 @@ if(array_key_exists('admin',$_SESSION))
   session_unregister($_SESSION['admin']);
 }
 */
-$_SESSION['admin']='';
+$_SESSION['admin']='no';
 $_SESSION['deepskylog_id']='';															// destroy session
 ?>
