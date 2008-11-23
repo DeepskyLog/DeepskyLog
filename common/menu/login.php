@@ -3,7 +3,8 @@
 // menu which allows the user to log in  
 
 if(!(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']))
-{ echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">";
+{ 
+	echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">";
   echo "<tr>";
 	echo "<th valign=\"top\">";
   echo LangLoginMenuTitle;
@@ -12,7 +13,7 @@ if(!(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']))
 	echo "<tr>";
 	echo "<td>";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
-	echo "<form action=\"../".$_SESSION['module']."/index.php?indexAction=check_login\" method=\"post\">";
+	echo "<form action=\"".$baseURL."/".$_SESSION['module']."/index.php?indexAction=check_login\" method=\"post\">";
   echo "<tr align=\"left\">";
 	echo "<td>";
   echo LangLoginMenuItem1;

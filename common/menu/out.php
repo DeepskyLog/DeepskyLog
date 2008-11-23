@@ -13,7 +13,7 @@ echo "<td>";
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
 echo "<tr align=\"left\">";
 echo "<td>";
-echo "<a href=\"../".$_SESSION['module']."/index.php?indexAction=logout\" class=\"mainlevel\">".LangLogoutMenuItem1."</a>";
+echo "<a href=\"". $baseURL . "/".$_SESSION['module']."/index.php?indexAction=logout\" class=\"mainlevel\">".LangLogoutMenuItem1."</a>";
 echo "</td>";
 echo "</tr>";
 ?>
