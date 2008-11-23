@@ -33,7 +33,7 @@ class Observers
  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT language FROM observers WHERE id = \"$id\"",'language','');
  }
  function getUsedLanguages($id)
- { return $GLOBALS['objDatabase']->selectSingleValue("SELECT usedLanguages FROM observers WHERE id = \"$id\"",'usedLanguages','');
+ { return  unserialize($GLOBALS['objDatabase']->selectSingleValue("SELECT usedLanguages FROM observers WHERE id = \"$id\"",'usedLanguages',''));
  }
  function getObservationLanguage($id)
  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT observationlanguage FROM observers WHERE id = \"$id\"",'observationlanguage','');

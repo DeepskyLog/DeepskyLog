@@ -13,9 +13,10 @@ try
   include '../common/tail.php';
 }
 catch (Exception $e)
-{
+{ // TEMPORARY SOLUTION: WILL BE EXPANDED IN FURTHER DETAIL
   echo 'Report problem: ' . $e->getMessage();
-	$_GET['indexAction']='default_action';
-  include $objUtil->utiltiesDispatchIndexActionDS();	
+	//$_GET['indexAction']='default_action';
+	//include_once '../lib/util.php';
+  //include $objUtil->utiltiesDispatchIndexActionDS();	
 }
 ?>
