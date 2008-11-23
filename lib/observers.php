@@ -107,7 +107,7 @@ class Observers
  { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET language = \"$language\" WHERE id = \"$id\"");
  }
  function setUsedLanguages($id, $language)                                      // setUsedLanguages sets all the used languages for the observer with id = $id
- { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET usedLanguages = '$usedLanguages' WHERE id=\"$id\"");
+ { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET usedLanguages = '".serialize($language)."' WHERE id=\"$id\"");
  }
  function setObserverObservationLanguage($id, $language)                        // setObserverObservationLanguage sets the language of the observations for the observer with id = $id
  { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET observationlanguage = \"$language\" WHERE id=\"$id\"");

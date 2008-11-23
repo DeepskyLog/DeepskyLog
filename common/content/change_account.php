@@ -18,7 +18,7 @@ while (FALSE !== ($file = readdir($dir)))
 		echo "</p>";
 	}
 }
-echo "<form class=\"content\" action=\"common/control/validate_account.php\" enctype=\"multipart/form-data\" method=\"post\">";
+echo "<form class=\"content\" action=\"".$baseURL.$_SESSION['module']."/index.php?indexAction=validate_account\" enctype=\"multipart/form-data\" method=\"post\">";
 echo "<table width=\"490\">";
 echo "<tr>";
 echo "<td class=\"fieldname\">";
@@ -236,7 +236,7 @@ $_SESSION['alllanguages']=$allLanguages;
 $usedLanguages=$objObserver->getUsedLanguages($_SESSION['deepskylog_id']);
 reset($allLanguages);
 while(list($key,$value)=each($allLanguages))
-  echo "<input type=\"checkbox\" ".(array_search($key,$usedLanguages)?"checked=\"true\"":"")." name=\"".$key."\" value=\"".$key."\" />".$value."<br />";
+  echo "<input type=\"checkbox\" ".(!(array_search($key,$usedLanguages)===FALSE)?"checked=\"true\"":"")." name=\"".$key."\" value=\"".$key."\" />".$value."<br />";
 echo "</td>";
 echo "<td class=\"explanation\">";
 echo LangChangeVisibleLanguagesExpl;
