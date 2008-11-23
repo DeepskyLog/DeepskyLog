@@ -6,7 +6,6 @@ echo "<div id=\"main\">";
 echo "<h2>";
 echo LangChangeAccountTitle;
 echo "</h2>";
-
 $upload_dir = 'observer_pics';
 $dir = opendir($upload_dir);
 while (FALSE !== ($file = readdir($dir)))
@@ -141,7 +140,7 @@ for ($i = 0;$i < count($sites);$i++)
 echo "</select>";
 echo "</td>";
 echo "<td class=\"explanation\">";
-echo "<a href=\"common/add_site.php\">".LangChangeAccountField7Expl."</a>";
+echo "<a href=\"".$baseURL."common/indexCommon.php?indexAction=add_site\">".LangChangeAccountField7Expl."</a>";
 echo "</td>";
 echo "</tr>";
 echo "<tr>";
@@ -166,7 +165,7 @@ while(list($key,$value)=each($instr))
 echo "</select>";
 echo "</td>";
 echo "<td class=\"explanation\">";
-echo "<a href=\"".$baseURL."common/add_instrument.php\">".LangChangeAccountField8Expl."</a>";
+echo "<a href=\"".$baseURL."common/indexCommon.php?indexAction=add_instrument\">".LangChangeAccountField8Expl."</a>";
 echo "</td>";
 echo "</tr>";
 echo "<tr>";

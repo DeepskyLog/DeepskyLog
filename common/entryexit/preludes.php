@@ -4,7 +4,7 @@ if (!function_exists('fnmatch')) {
 	  return @preg_match('/^' . strtr(addcslashes($pattern, '\\.+^$(){}=!<>|'), array('*' => '.*', '?' => '.?')) . '$/i', $string);
   }
 }
-
+$entryMessage="";
 if(!session_id()) session_start();
 require_once "../lib/setup/databaseInfo.php";
 require_once "../lib/database.php";

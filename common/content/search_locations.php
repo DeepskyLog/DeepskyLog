@@ -1,65 +1,51 @@
 <?php
-
 // search_location.php
 // allows the user to search a location in the database 
 
-// Code cleanup - removed by David on 20080704
-//include_once "../lib/observers.php";
-
-include_once "../lib/locations.php";
-include_once "../lib/util.php";
-
-$util = new Util();
-$util->checkUserInput();
-
-echo("<div id=\"main\">\n
-   <h2>" . LangSearchLocations0 . "</h2>
-   <form action=\"common/site_result.php\" method=\"post\">
-   <table>
-<tr><td colspan=\"3\">   
-<ol>
-   <li value=\"1\">".LangSearchLocations1."</li>
-</ol>
-</td>
-</tr>
-<tr><td class=\"fieldname\">".LangSearchLocations2."</td><td>");
-
-$locations = new Locations;
- 
-echo("<select name=\"country\">");
- 
-      $countries = $locations->getDatabaseCountries();
-
-      while(list ($key, $value) = each($countries))
-      {
-      echo("<option>$value</option>\n");
-      }
-print("
-   </select>
-   </td>
-   <td class=\"explanation\">".LangSearchLocations3."
-   </td>
-   </tr>
-<tr><td colspan=\"3\">
-<ol>
-   <li value=\"2\">".LangSearchLocations4."</li>
-</ol>
-   </td>
-   </tr>
-   <tr>
-   <td class=\"fieldname\">".LangSearchLocations5."</td>
-   <td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"location_name\" size=\"30\" value=\"\" /></td>
-   <td class=\"explanation\">".LangSearchLocations6."
-   </td>
-   </tr>
-   <tr>
-   <td></td>
-   <td><input type=\"submit\" name=\"search\" value=\"" . LangSearchLocations7 . "\" /></td>
-   <td></td>
-   </tr>
-   </table>
-   </form>
-</div>
-</div></body></html>");
-
+echo "<div id=\"main\">";
+echo "<h2>" . LangSearchLocations0 . "</h2>";
+echo "<form action=\"".$baseURL."common/index.common.php?indexAction=site_result\" method=\"post\">";
+echo "<table>";
+echo "<tr>";
+echo "<td colspan=\"3\">";
+echo "<ol>";
+echo "<li value=\"1\">".LangSearchLocations1."</li>";
+echo "</ol>";
+echo "</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td class=\"fieldname\">".LangSearchLocations2."</td>";
+echo "<td>";
+echo "<select name=\"country\">";
+$countries = $objLocation->getDatabaseCountries();
+while(list ($key, $value) = each($countries))
+  echo "<option>".$value."</option>";
+echo "</select>";
+echo "</td>";
+echo "<td class=\"explanation\">".LangSearchLocations3."</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td colspan=\"3\">";
+echo "<ol>";
+echo "<li value=\"2\">".LangSearchLocations4."</li>";
+echo "</ol>";
+echo "</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td class=\"fieldname\">".LangSearchLocations5."</td>";
+echo "<td>";
+echo "<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"location_name\" size=\"30\" value=\"\" />";
+echo "</td>";
+echo "<td class=\"explanation\">".LangSearchLocations6."</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td></td>";
+echo "<td>";
+echo "<input type=\"submit\" name=\"search\" value=\"" . LangSearchLocations7 . "\" />";
+echo "</td>";
+echo "<td></td>";
+echo "</tr>";
+echo "</table>";
+echo "</form>";
+echo "</div>";
 ?>
