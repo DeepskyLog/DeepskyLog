@@ -1,7 +1,7 @@
 <?php
 // index.php
 // main entrance to DeepskyLog
-
+session_start();
 if (isset($_COOKIE['module']))
 	$_SESSION['module'] = $_COOKIE['module'];
 else
