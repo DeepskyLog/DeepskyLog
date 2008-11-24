@@ -42,10 +42,8 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
       { session_regenerate_id(true);
 			  $_SESSION['deepskylog_id']=$login;                              
         $_SESSION['admin']="yes";                           
-        if(!array_key_exists('deepskylog_id',$_SESSION)&&($_SESSION['deepskylog_id']=="admin"))            
-        { $cookietime=time()+(365*24*60*60);         // 1 year
-          setcookie("deepskylogsec",$passwd.$login,$cookietime,"/");
-	      }
+        $cookietime=time()+(365*24*60*60);                                    // 1 year
+        setcookie("deepskylogsec",$passwd.$login,$cookietime,"/");
       }
     }
     else // passwords don't match

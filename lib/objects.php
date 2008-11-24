@@ -530,8 +530,10 @@ class Objects
    if($ObsCnt=$GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ",'ObsCnt'))
    { $seen='X('.$ObsCnt.')';
      if(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
-       if($get3=mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $_SESSION['deepskylog_id'] . "\" AND visibility != 7")))
+     { $get3=mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $_SESSION['deepskylog_id'] . "\" AND visibility != 7"));
+		   if($get3->PersObsCnt>0)
          $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')&nbsp;'.$get3->PersObsMaxDate;
+		 }
 	 }
 	 return $seen;
  }
@@ -566,7 +568,9 @@ class Objects
        if($popupT)
 		     $popup=$popupT;
 		   else
-       { $magni = $result2[$j]['objectmagnitude'];
+       { if(!array_key_exists('objectmagnitude',$result2[$j]))
+			     echo "no objectmagnitude for ".$result2[$j]['objectname'];
+			   $magni = $result2[$j]['objectmagnitude'];
 				 $subrobj = $result2[$j]['objectsbcalc'];
          if($magni>90)
            $popup = LangContrastNoMagnitude;
@@ -639,16 +643,14 @@ class Objects
        $run = mysql_query($sql) or die(mysql_error());
        $get2 = mysql_fetch_object($run);
        if ($get2->ObsCnt)
-       {
-         $seentype="X";
-         if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($_SESSION['deepskylog_id'] != ""))
-         { $user = $_SESSION['deepskylog_id'];
-           $sql = "SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate, MAX(observations.id) As PersObsMaxId " .
-					        "FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"$user\" AND visibility != 7";
+       { $seentype="X";
+         if(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
+         { $sql = "SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate, MAX(observations.id) As PersObsMaxId " .
+					        "FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"".$_SESSION['deepskylog_id']."\" AND visibility != 7";
            $run = mysql_query($sql) or die(mysql_error());
            $get3 = mysql_fetch_object($run);
-           if ($get3->PersObsCnt)
-				    $seentype="Y";
+           if ($get3->PersObsCnt>0)
+				     $seentype="Y";
          }
        }
 			 if(($seen == "D") ||
@@ -670,9 +672,9 @@ class Objects
            if($seentype == "Y") $result2[$j][3] = "Y(" . $get2->ObsCnt . "/" . $get3->PersObsCnt . ")";
            if($seentype == "Y") $result2[$j]['objectseen'] = "Y(" . $get2->ObsCnt . "/" . $get3->PersObsCnt . ")";
            if($seentype == "Y") $result2[$j][28] = $get3->PersObsMaxDate; else $result2[$j][28] = '';
-           if($seentype == "Y") $result2[$j]['objectlastseen'] = $get3->PersObsMaxDate; else $result2[$j][28] = '';
+           if($seentype == "Y") $result2[$j]['objectlastseen'] = $get3->PersObsMaxDate; else $result2[$j]['objectlastseen'] = '';
            if($seentype == "Y") $result2[$j][29] = $get3->PersObsMaxId; else $result2[$j][29] = 0;
-           if($seentype == "Y") $result2[$j]['objectlastobservationid'] = $get3->PersObsMaxId; else $result2[$j][29] = 0;
+           if($seentype == "Y") $result2[$j]['objectlastobservationid'] = $get3->PersObsMaxId; else $result2[$j]['objectlastobservationid'] = 0;
            $result2[$j][4] =  $key;
            $result2[$j]['showname'] =  $key;
   	       $result2[$j][5] =  $get->mag;
@@ -1645,7 +1647,7 @@ function getPartOfNames($name)
 	 echo "<td class=\"fieldname\" align=\"right\" width=\"25%\">";
    echo LangViewObjectField1;
    echo "</td><td width=\"25%\">";
-   echo"<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode(stripslashes($object)) . "\">" . (stripslashes($object)) . "</a>";
+   echo "<a href=\"".$GLOBALS['baseURL']."deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode(stripslashes($object)) . "\">" . (stripslashes($object)) . "</a>";
    echo("</td>");
 	 if(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id']&&($standardAtlasCode=$GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id'])))
    { echo "<td class=\"fieldname\" align=\"right\" width=\"25%\">"; 

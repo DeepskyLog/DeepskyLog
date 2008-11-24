@@ -48,7 +48,7 @@
               <!-- set height -->
               <td height="30" valign="top">
                 <?php
-                include_once "../lib/setup/databaseInfo.php"; 
+                include_once $instDir."lib/setup/databaseInfo.php"; 
                 for ($i = 0; $i < count($modules);$i++)
                 {
                   $mod = $modules[$i];
@@ -72,9 +72,9 @@
 							  <?php
                   if ($_SESSION['module'] == "deepsky")
                   {
-								?>	
-                <FORM action="deepsky/index.php" method="get">
-								<?php echo LangQuickPickHelp; ?>
+									
+                echo "<FORM action=\"".$baseURL."deepsky/index.php\" method=\"get\">";
+								echo LangQuickPickHelp; ?>
 								<input type="hidden" name="indexAction" value="quickpick"></input>
                 <input type="text" class="inputfield" maxlength="255" name="object" cvalue="" 
 								       value=<?php echo "\"";
@@ -114,14 +114,14 @@
 							  <?php
                   if (($_SESSION['module'] == "deepsky") && (array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id']))
                   {
-								?>
-                    <FORM action="deepsky/index.php" method="get">
-								    <input type="hidden" name="indexAction" value="listaction"></input>
-                    <input type="submit" name="manage" value="<?php echo LangListManage; ?>" style="width: 147px" >
-                    </FORM>
-                <?php
-								    include_once "../lib/database.php";
-										include_once "../lib/lists.php";
+								
+                echo "<FORM action=\"".$baseURL."deepsky/index.php\" method=\"get\">";
+								echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\"></input>";
+								echo "<input type=\"submit\" name=\"manage\" value=\"".LangListManage."\" style=\"width: 147px\">";
+                echo "</FORM>";
+                
+								    include_once $instDir."lib/database.php";
+										include_once $instDir."lib/lists.php";
 										$list=new Lists;
                     
                     if(array_key_exists('addList',$_GET) && array_key_exists('addlistname',$_GET))

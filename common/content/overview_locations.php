@@ -175,7 +175,7 @@ while(list ($key, $value) = each($sites))
 
     //       $comobs = $cometobservations->getObservationFromQuery($queries, "", "1", "False");
 
-           if(!sizeof($obs) > 0 && !array_search($value, $locs)) // && !sizeof($comobs) > 0) // no observations from location yet
+           if(!sizeof($obs) > 0 && !in_array($value, $locs)) // && !sizeof($comobs) > 0) // no observations from location yet
            {
               echo("<a href=\"common/control/validate_delete_location.php?locationid=" . $value . "\">" . LangRemove . "</a>");
            }

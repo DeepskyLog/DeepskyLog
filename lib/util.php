@@ -28,7 +28,7 @@ class util
     $_GET['minyear'] = substr($theDate,0,4);
     $_GET['minmonth'] = substr($theDate,4,2);
     $_GET['minday'] = substr($theDate,6,2);  
-  	return 'content/selected_observations2.php';
+  	return 'deepsky/content/selected_observations2.php';
   }
   private function utilitiesCheckIndexActionDSquickPick()
   { if(array_key_exists('indexAction',$_GET)&&($_GET['indexAction'] == 'quickpick'))
@@ -40,15 +40,15 @@ class util
         if(array_key_exists('searchObservations', $_GET))
           return 'content/selected_observations2.php';  
         elseif(array_key_exists('newObservation', $_GET))
-          return 'content/new_observation.php';   
+          return 'deepsky/content/new_observation.php';   
         else
-          return 'content/view_object.php';  
+          return 'deepsky/content/view_object.php';  
       }
       else
       { $_SID=time();
     		$_GET['SID']=$_SID;
     	  $_GET['catNumber']=ucwords(trim($_GET['object']));
-        return 'content/setup_objects_query.php';  	
+        return 'deepsky/content/setup_objects_query.php';  	
       }
     }
   }
@@ -1547,57 +1547,57 @@ class util
     $pdf->ezStream();
   }
   public function utiltiesDispatchIndexActionDS()
-  { if(!($indexActionInclude=$this->utilitiesCheckIndexActionAdmin('manage_csv_object','content/manage_objects_csv.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_observation','content/change_observation.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_observation','content/change_observation.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_csv','content/new_observationcsv.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('import_csv_list','content/new_listdatacsv.php')))  
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_object','content/new_object.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_observation','content/new_observation.php'))) 
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('detail_object','content/view_object.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('detail_observation','content/view_observation.php'))) 
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('rank_observers','content/top_observers.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('result_query_objects','content/execute_query_objects.php'))) 
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('result_selected_observations','content/selected_observations2.php')))  
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('query_observations','content/setup_observations_query.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('query_objects','content/setup_objects_query.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('rank_objects','content/top_objects.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('report_message','../common/report_message.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('view_image','content/show_image.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('listaction','content/tolist.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('view_observer_catalog','content/details_observer_catalog.php')))
+  { if(!($indexActionInclude=$this->utilitiesCheckIndexActionAdmin('manage_csv_object','deepsky/content/manage_objects_csv.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_observation','deepsky/content/change_observation.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_observation','deepsky/content/change_observation.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_csv','deepsky/content/new_observationcsv.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('import_csv_list','deepsky/content/new_listdatacsv.php')))  
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_object','deepsky/content/new_object.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_observation','deepsky/content/new_observation.php'))) 
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('detail_object','deepsky/content/view_object.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('detail_observation','deepsky/content/view_observation.php'))) 
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('rank_observers','deepsky/content/top_observers.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('result_query_objects','deepsky/content/execute_query_objects.php'))) 
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('result_selected_observations','deepsky/content/selected_observations2.php')))  
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('query_observations','deepsky/content/setup_observations_query.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('query_objects','deepsky/content/setup_objects_query.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('rank_objects','deepsky/content/top_objects.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('report_message','common/report_message.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('view_image','deepsky/content/show_image.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('listaction','deepsky/content/tolist.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('view_observer_catalog','deepsky/content/details_observer_catalog.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSquickPick()))
       $indexActionInclude=$this->utilitiesGetIndexActionDSdefaultAction();
     return $indexActionInclude;
   }
 	public function utiltiesDispatchIndexActionCommon()
-  { if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('account_details','content/change_account.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_eyepiece','content/change_eyepiece.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_filter','content/change_filter.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_instrument','content/change_instrument.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_lens','content/change_lens.php')))	  
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_site','content/change_site.php')))		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_eyepiece','content/new_eyepiece.php')))		 
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_filter','content/new_filter.php')))		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_instrument','content/new_instrument.php'))) 		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_lens','content/new_lens.php')))		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_site','content/new_site.php'))) 		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('confirm_subscribe','content/confirm.php'))) 		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_eyepiece','content/view_eyepiece.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_filter','content/view_filter.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_instrument','content/view_instrument.php')))		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_lens','content/view_lens.php')))		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_location','content/view_location.php')))		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_observer','content/view_observer.php')))		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('search_sites','content/search_locations.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('site_result','content/getLocation.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('subscribe','content/register.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_eyepieces','content/overview_eyepieces.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_filters','content/overview_filters.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_instruments','content/overview_instruments.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_lenses','content/overview_lenses.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_locations','content/overview_locations.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_observers','content/overview_observers.php')))
+  { if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('account_details','common/content/change_account.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_eyepiece','common/content/change_eyepiece.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_filter','common/content/change_filter.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_instrument','common/content/change_instrument.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_lens','common/content/change_lens.php')))	  
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_site','common/content/change_site.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_eyepiece','common/content/new_eyepiece.php')))		 
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_filter','common/content/new_filter.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_instrument','common/content/new_instrument.php'))) 		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_lens','common/content/new_lens.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_site','common/content/new_site.php'))) 		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('confirm_subscribe','common/content/confirm.php'))) 		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_eyepiece','common/content/view_eyepiece.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_filter','common/content/view_filter.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_instrument','common/content/view_instrument.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_lens','common/ontent/view_lens.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_location','common/content/view_location.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_observer','common/content/view_observer.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('search_sites','common/content/search_locations.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('site_result','common/content/getLocation.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('subscribe','common/content/register.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_eyepieces','common/content/overview_eyepieces.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_filters','common/content/overview_filters.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_instruments','common/content/overview_instruments.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_lenses','common/content/overview_lenses.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_locations','common/content/overview_locations.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_observers','common/content/overview_observers.php')))
       $indexActionInclude=$this->utilitiesGetIndexActionCommonDefaultAction();
     return $indexActionInclude;
   }

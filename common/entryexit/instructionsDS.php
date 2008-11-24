@@ -1,14 +1,14 @@
 <?php
+$object=$objUtil->checkPostKey('object',$objUtil->checkGetKey('object'));
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_observation")
 { if(array_key_exists('number',$_POST)&&(!$_POST['number']))
     $_GET['indexAction']="query_objects";
   elseif(array_key_exists('number',$_POST)&&(!($_GET['object']=$GLOBALS['objObject']->getExactDsObject('',$GLOBALS['objUtil']->checkPostKey('catalogue'), $GLOBALS['objUtil']->checkPostKey('number')))))
   { $entryMessage.="No corresponding object found for ".$GLOBALS['objUtil']->checkPostKey('catalogue')." ".$GLOBALS['objUtil']->checkPostKey('number');
-	  $_GET['indexAction']="query_objects";
+    $_GET['indexAction']="query_objects";
    }
   else
-	{ $GLOBALS['objUtil']->checkPostKey('year',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear'));;
-	  $_POST['year']=$GLOBALS['objUtil']->checkPostKey('year',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear')); 
+	{ $_POST['year']=$GLOBALS['objUtil']->checkPostKey('year',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear')); 
     $_POST['month']=$GLOBALS['objUtil']->checkPostKey('month',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsMonth')); 
     $_POST['day']=$GLOBALS['objUtil']->checkPostKey('day',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsDay'));
     $_POST['instrument']=$GLOBALS['objUtil']->checkPostKey('instrument',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsInstrument')); 
@@ -27,8 +27,7 @@ elseif(array_key_exists('newObservation',$_GET))                                
 	  $_GET['indexAction']="query_objects";
    }
   else
-	{ $GLOBALS['objUtil']->checkPostKey('year',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear'));;
-	  $_POST['year']=$GLOBALS['objUtil']->checkPostKey('year',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear')); 
+	{ $_POST['year']=$GLOBALS['objUtil']->checkPostKey('year',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear')); 
     $_POST['month']=$GLOBALS['objUtil']->checkPostKey('month',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsMonth')); 
     $_POST['day']=$GLOBALS['objUtil']->checkPostKey('day',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsDay'));
     $_POST['instrument']=$GLOBALS['objUtil']->checkPostKey('instrument',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsInstrument')); 
@@ -41,7 +40,7 @@ elseif(array_key_exists('newObservation',$_GET))                                
 		$_SESSION['addObs']=$_POST['timestamp'];
 	} 
 }
-elseif(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="clear_observation")
+elseif(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="clear_observation")
 { $_POST['year']='';                                                             // empty the fields of the new observation form
   $_POST['month']=''; 
   $_POST['day']='';
@@ -53,7 +52,7 @@ elseif(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="clear_obser
   $_POST['description_language']='';
 	$_GET['indexAction']="add_observation";
 }
-if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_observation")
+if(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="validate_observation")
   include_once $instDir."/deepsky/control/validate_observation.php";
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_change_observation")
   include_once $instDir."/deepsky/control/validate_change_observation.php";

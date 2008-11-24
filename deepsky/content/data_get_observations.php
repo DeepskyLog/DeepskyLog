@@ -169,7 +169,7 @@ if($GLOBALS['objUtil']->checkGetKey('drawings'))
   }
   $new_obs=array();
   while(list($key,$value)=each($_SESSION['Qobs']))
-    if(array_search($value['observationid'], $drawingslist))
+    if(in_array($value['observationid'], $drawingslist))
         $new_obs[] = $value;
   $_SESSION['Qobs'] = $new_obs;
 }

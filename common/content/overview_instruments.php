@@ -145,7 +145,7 @@ while(list ($key, $value) = each($telescopes))
    $obs = $observations->getObservationFromQuery($queries, "", "1", "False");
    $obscom = $cometobservations->getObservationFromQuery($queries, "", "1", "False");
 
-   if(!sizeof($obs) > 0 && !sizeof($obscom) > 0 && !array_search($value, $insts) && $value != "1") // no observations with instrument yet
+   if(!sizeof($obs) > 0 && !sizeof($obscom) > 0 && !in_array($value, $insts) && $value != "1") // no observations with instrument yet
    {
       echo("<a href=\"common/control/validate_delete_instrument.php?instrumentid=" . $value . "\">" . LangRemove . "</a>");
    }

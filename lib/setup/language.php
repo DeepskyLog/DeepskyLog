@@ -9,7 +9,7 @@ class Language
    $exclude=array("index.php",".","..",".svn","languages.xml");
    $langs=array();
    while($fn=readdir($mydir))
-     if(!array_search($fn,$exclude)) 
+     if(!in_array($fn,$exclude)) 
        $langs[] = $fn;
    closedir($mydir);
    for($i=0;$i<count($langs);$i++)                                              // $langs is now a list of all available translations (en, nl, de, ...)

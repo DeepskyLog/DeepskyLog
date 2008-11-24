@@ -235,7 +235,7 @@ $_SESSION['alllanguages']=$allLanguages;
 $usedLanguages=$objObserver->getUsedLanguages($_SESSION['deepskylog_id']);
 reset($allLanguages);
 while(list($key,$value)=each($allLanguages))
-  echo "<input type=\"checkbox\" ".(!(array_search($key,$usedLanguages)===FALSE)?"checked=\"true\"":"")." name=\"".$key."\" value=\"".$key."\" />".$value."<br />";
+  echo "<input type=\"checkbox\" ".(in_array($key,$usedLanguages)?"checked=\"true\"":"")." name=\"".$key."\" value=\"".$key."\" />".$value."<br />";
 echo "</td>";
 echo "<td class=\"explanation\">";
 echo LangChangeVisibleLanguagesExpl;

@@ -22,7 +22,6 @@ $obs = new Observers;
 $locations = new Locations;
 $observations = new Observations;
 $cometobservations = new CometObservations;
-$testobservations = $observations->getObservations(); // test if observations in database
 
 
 //just for David's Windows environment
