@@ -4,17 +4,13 @@
 
 if(array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']) // pushed change observation button
 { if(!$_POST['day']||!$_POST['month']||!$_POST['year']||$_POST['location']=="1"||!$_POST['instrument']||!$_POST['description'])
-  {  $_SESSION['message'] = LangValidateObservationMessage1;
-     header("Location:../../common/error.php");
-  }
+    throw new Exception(LangValidateObservationMessage1);
    elseif($_FILES['drawing']['size'] > $maxFileSize) // file size of drawing too big
-   {
-       $_SESSION['message'] = LangValidateObservationMessage6;
-       header("Location:../../common/error.php");
+   { throw new Exception (LangValidateObservationMessage6);
    }
    elseif(array_key_exists('observationid', $_POST) && $_POST['observationid']) // all fields filled in and observationid given
    {
-      if($observations->getObserverId($_POST['observationid']) == $_SESSION['deepskylog_id']) // only allowed to change your own observations
+      if($objObservation->getObserverId($_POST['observationid']) == $_SESSION['deepskylog_id']) // only allowed to change your own observations
       {
         $date = $_POST['year'] . sprintf("%02d", $_POST['month']) . sprintf("%02d", $_POST['day']);
 
@@ -34,48 +30,48 @@ if(array_key_exists('changeobservation', $_POST) && $_POST['changeobservation'])
           $time = -9999;
         }
 
-      $observations->setDescription($_POST['observationid'], nl2br($_POST['description']));
+      $objObservation->setDescription($_POST['observationid'], nl2br($_POST['description']));
 
 			if ($_POST['filter'])
 			{
-				$observations->setFilterId($_POST['observationid'], $_POST['filter']);
+				$objObservation->setFilterId($_POST['observationid'], $_POST['filter']);
 			}
       else
       {
-				$observations->setFilterId($_POST['observationid'], 0);
+				$objObservation->setFilterId($_POST['observationid'], 0);
       }
 
 			if ($_POST['lens'])
 			{
-				$observations->setLensId($_POST['observationid'], $_POST['lens']);
+				$objObservation->setLensId($_POST['observationid'], $_POST['lens']);
 			}
       else
       {
-				$observations->setLensId($_POST['observationid'], 0);
+				$objObservation->setLensId($_POST['observationid'], 0);
       }
 
 			if ($_POST['eyepiece'])
 			{
-				$observations->setEyepieceId($_POST['observationid'], $_POST['eyepiece']);
+				$objObservation->setEyepieceId($_POST['observationid'], $_POST['eyepiece']);
 			}
       else
       {
-				$observations->setEyepieceId($_POST['observationid'], 0);
+				$objObservation->setEyepieceId($_POST['observationid'], 0);
       }
 
-      if ($observers->getUseLocal($_SESSION['deepskylog_id']))
+      if ($objObserver->getUseLocal($_SESSION['deepskylog_id']))
       {
-        $observations->setLocalDateAndTime($_POST['observationid'], $date, $time);
+        $objObservation->setLocalDateAndTime($_POST['observationid'], $date, $time);
       }
       else
       {
-        $observations->setTime($_POST['observationid'], $time);
-        $observations->setDate($_POST['observationid'], $date);
+        $objObservation->setTime($_POST['observationid'], $time);
+        $objObservation->setDate($_POST['observationid'], $date);
       }
-      $observations->setInstrumentId($_POST['observationid'], $_POST['instrument']);
-      $observations->setLocationId($_POST['observationid'], $_POST['location']);
+      $objObservation->setInstrumentId($_POST['observationid'], $_POST['instrument']);
+      $objObservation->setLocationId($_POST['observationid'], $_POST['location']);
 
-      $observations->setSeeing($_POST['observationid'], $_POST['seeing']);
+      $objObservation->setSeeing($_POST['observationid'], $_POST['seeing']);
 
       if(array_key_exists('limit', $_POST) && $_POST['limit'])
       {
@@ -99,22 +95,22 @@ if(array_key_exists('changeobservation', $_POST) && $_POST['changeobservation'])
       }
       else
           $_SESSION['limit'] = "";
-      $observations->setObservationLimitingMagnitude($_POST['observationid'], $_SESSION['limit']);
-      $observations->setObservationLanguage($_POST['observationid'], $_POST['description_language']);
+      $objObservation->setObservationLimitingMagnitude($_POST['observationid'], $_SESSION['limit']);
+      $objObservation->setObservationLanguage($_POST['observationid'], $_POST['description_language']);
       if(array_key_exists('visibility', $_POST) && $_POST['visibility'])
          $visibility = $_POST['visibility'];
       else
          $visibility = 0;
-      $observations->setVisibility($_POST['observationid'], $visibility);
+      $objObservation->setVisibility($_POST['observationid'], $visibility);
 
       if($_FILES['drawing']['tmp_name'] != "")
       {
-         $upload_dir = '../drawings';
+         $upload_dir = $instDir.'deepsky/drawings';
          $dir = opendir($upload_dir);
 
 // resize code
 
-         include "../../common/control/resize.php";
+         include $instDir."/common/control/resize.php";
 
          $original_image = $_FILES['drawing']['tmp_name'];
          $destination_image = $upload_dir . "/" . $_POST['observationid'] . "_resized.jpg";
@@ -138,19 +134,20 @@ if(array_key_exists('changeobservation', $_POST) && $_POST['changeobservation'])
             $_SESSION['seeing'] = $_POST['seeing']; // save current seeing
             $_SESSION['savedata'] = "yes"; // session variable to tag multiple observations
 
-      header("Location:../index.php?indexAction=detail_observation&dalm=D&observation=" . $_POST['observationid'] . "&new=yes");
+      $_GET['indexAction']='detail_observation';
+			$_GET['dalm']='D';
+			$_GET['observation']=$_POST['observationid'];
+			$_GET['new']="yes";
 
    } // end if own observation.php
    else // try to change an observation which doesn't belong to the observer logged in
    {
-      unset($_SESSION['deepskylog_id']);
-      header("Location: ../index.php"); // back to entrance page
+      $_GET['indexAction']='default_action';
    }
  }
  else // no observation id given
   {
-      unset($_SESSION['deepskylog_id']);
-      header("Location: ../index.php"); // back to entrance page
+      $_GET['indexAction']='default_action';
   }
 
 }
