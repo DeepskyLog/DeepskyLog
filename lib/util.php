@@ -38,7 +38,7 @@ class util
       if($temp)
       { $_GET['object'] = $temp;
         if(array_key_exists('searchObservations', $_GET))
-          return 'content/selected_observations2.php';  
+          return 'deepsky/content/selected_observations2.php';  
         elseif(array_key_exists('newObservation', $_GET))
           return 'deepsky/content/new_observation.php';   
         else
@@ -1592,6 +1592,7 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('search_sites','common/content/search_locations.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('site_result','common/content/getLocation.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('subscribe','common/content/register.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('validate_lens','common/control/validate_lens.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_eyepieces','common/content/overview_eyepieces.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_filters','common/content/overview_filters.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_instruments','common/content/overview_instruments.php')))
@@ -1623,9 +1624,9 @@ class util
   }
   public function checkGetDate($year,$month,$day)
   { if($year=$this->checkGetKey($year))
-      return $year.$this->checkGetKey($month,'00').$this->checkGetKey($day,'00');
+      return sprintf("%04d",$year).sprintf("%02d",$this->checkGetKey($month,'00')).sprintf("%02d",$this->checkGetKey($day,'00'));
     elseif($month=$this->checkGetKey($month))
-      return $month.$this->checkGetKey($day,'00');
+      return sprintf("%02d",$month).sprintf("%02d",$this->checkGetKey($day,'00'));
     else
   	  return '';
   }

@@ -75,14 +75,14 @@ $step = 25;
 
 echo("<div id=\"main\">\n<h2>".LangOverviewLensTitle."</h2>");
 
-$link = "common/add_lens.php?sort=" . $sort . "&amp;previous=" . $orig_previous;
+$link = $baseURL."common/indexCommon.php?indexAction=add_lens&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
 
 list($min, $max) = $util->printListHeader($lns, $link, $min, $step, "");
 
 echo "<table>
       <tr class=\"type3\">
-      <td><a href=\"common/add_lens.php?sort=name&amp;previous=$previous\">".LangViewLensName."</a></td>
-      <td><a href=\"common/add_lens.php?sort=factor&amp;previous=$previous\">".LangViewLensFactor."</a></td>";
+      <td><a href=\"".$baseURL."common/indexCommon.php?indexAction=add_lens&amp;sort=name&amp;previous=$previous\">".LangViewLensName."</a></td>
+      <td><a href=\"".$baseURL."common/indexCommon.php?indexAction=add_lens.&amp;sort=factor&amp;previous=$previous\">".LangViewLensFactor."</a></td>";
 
 
 echo "<td></td>";
@@ -159,7 +159,7 @@ echo(LangAddLensTitle); ?>
   $lns = $lenses->getSortedLenses('name', "", true);
   while(list($key, $value) = each($lns))
   {
-		  echo("<option value=\"" . $baseURL . "common/add_lens.php?lensid=$value\">" . $lenses->getLensName($value) . "</option>\n");
+		  echo("<option value=\"".$baseURL."common/indexCommon.php?indexAction=add_lens&amp;lensid=$value\">" . $lenses->getLensName($value) . "</option>\n");
   }
   echo("</select>\n");
   echo("</form>");
@@ -173,8 +173,9 @@ echo(LangAddLensTitle); ?>
 <ol>
 <li value="2"><?php echo (LangAddLensFieldManually); ?></li>
 </ol>
- 
-   <form action="common/control/validate_lens.php" method="post">
+ <?php
+   echo "<form action=\"".$baseURL."common/indexCommon.php?indexAction=validate_lens\" method=\"post\">";
+ ?>
    <table>
    <tr>
    <td class="fieldname">

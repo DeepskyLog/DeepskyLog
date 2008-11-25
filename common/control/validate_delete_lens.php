@@ -1,5 +1,4 @@
 <?php
-
 // validate_delete_lens.php
 // deletes a lens if no observations done with this lens yet 
 // version 3.2: WDM, 21/01/2008
@@ -39,19 +38,19 @@ elseif(array_key_exists('lensid', $_GET) && $_GET['lensid']) // lensid given
 
    if(!sizeof($obs) > 0) // && !sizeof($comobs) > 0) // no observations from location yet
    {
-    $lenses->deleteLens($_GET['lensid']);
-    header("Location:../add_lens.php");
+    $objLens->deleteLens($_GET['lensid']);
+    $_GET['indexAction']="add_lens";
    }
    else // still observations with given lens 
    {
     unset($_SESSION['deepskylog_id']);
-    header("Location: ../add_lens.php"); // back to entrance page
+    $_GET['indexAction']="add_lens"; // back to entrance page
    }
   } 
   else // not logged in as an administrator 
   {
     unset($_SESSION['deepskylog_id']);
-    header("Location: ../add_lens.php"); // back to entrance page
+    $_GET['indexAction']="add_lens"; // back to entrance page
   }
 }
 ?>

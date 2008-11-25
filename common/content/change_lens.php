@@ -1,23 +1,14 @@
 <?php
-
 // change_lens.php
 // form which allows the administrator to change a lens
 // version 3.2: WDM 11/05/2008
-
-include_once "../lib/lenses.php";
-$lenses = new Lenses();
-
-include_once "../lib/util.php";
-
-$util = new Util();
-$util->checkUserInput();
 
 echo("<div id=\"main\">\n<h2>");
 
 echo stripslashes($lenses->getLensName($_GET['lens']));
 
 echo("</h2>"); ?>
-   <form action="common/control/validate_lens.php" method="post">
+   <form action=$baseURL."common/control/indexCommon.php?indexAction=validate_lens" method="post">
    <table>
    <tr>
    <td class="fieldname">

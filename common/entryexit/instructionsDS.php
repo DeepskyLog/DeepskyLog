@@ -60,6 +60,12 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_object
   include_once $instDir."/deepsky/control/validate_object.php";
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_delete_observation")
   include_once $instDir."/deepsky/control/validate_delete_observation.php";
+if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="manage_csv_objects")
+  include_once $instDir."/deepsky/control/manage_csv_objects.php";
+if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_csv_observations")
+  include_once $instDir."/deepsky/control/add_csv_observations.php";
+if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_csv_listdata")
+  include_once $instDir."/deepsky/control/add_csv_listdata.php";
 // ============================================================================ LIST COMMANDS
 if(array_key_exists('addObjectToList',$_GET)&&$_GET['addObjectToList']&&array_key_exists('listname',$_SESSION)&&$_SESSION['listname']&&$myList)
 { $objList->addObjectToList($_GET['addObjectToList'],$GLOBALS['objUtil']->checkGetKey('showname',$_GET['addObjectToList']));

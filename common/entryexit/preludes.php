@@ -15,6 +15,7 @@ require_once "../common/loginuser.php";
 require_once "../lib/setup/vars.php";
 require_once "../lib/util.php";
 require_once "../lib/atlasses.php";
+require_once "../lib/locations.php";
 require_once "../lib/instruments.php";
 require_once "../lib/filters.php";
 require_once "../lib/lenses.php";
