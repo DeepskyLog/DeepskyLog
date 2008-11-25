@@ -1,150 +1,75 @@
 <?php
-
 // view_observer.php
 // shows information of an observer 
 // Version 0.4: 20060108, JV
 
-// include statements
-//$$ ok
-
-include_once "../lib/observers.php"; // observer table
-include_once "../lib/locations.php"; // location table
-include_once "../lib/observations.php"; // observations table
 include_once "../lib/cometobservations.php"; // observations table
-include_once "../lib/util.php";
-
-$util = new Util();
-$util->checkUserInput();
-
-// creation of objects
-
-$obs = new Observers; 
-$locations = new Locations;
-$observations = new Observations;
 $cometobservations = new CometObservations;
-
-
-//just for David's Windows environment
-   if (!function_exists('fnmatch')) {
-       function fnmatch($pattern, $string) {
-           return @preg_match('/^' . strtr(addcslashes($pattern, '\\.+^$(){}=!<>|'), array('*' => '.*', '?' => '.?')) . '$/i', $string);
-       }
-   }
-//end of David's window environment
-
-$user = urldecode($_GET['user']);
-$user = str_replace("&amp;", "&", $user);
-$user = str_replace("&amp;", "&", $user);
-
-// test if user exists
-if(!array_key_exists('user', $_SESSION) || $obs->getObserverName($user) == "") // no session variable set 
-{
- echo(LangViewObserverInexistant); 
-}  
-else
-{
- $firstname = $obs->getFirstName($_SESSION['user']);
- $name = $obs->getObserverName($_SESSION['user']);
-
- echo("<div id=\"main\">\n");
- echo("<h2>$firstname $name</h2>");
-
- $upload_dir = 'observer_pics';
- $dir = opendir($upload_dir);
-
- while (FALSE !== ($file = readdir($dir)))
- {
-   if ("." == $file OR ".." == $file)
-   {
-    continue; // skip current directory and directory above
-   }
-   if(fnmatch($_SESSION['user']. ".gif", $file) || fnmatch($_SESSION['user']. ".jpg",
-$file) || fnmatch($_SESSION['user']. ".png", $file))
-   {
-    echo("<p><img class=\"viewobserver\" src=\"common/$upload_dir" . "/" . "$file\" alt=\"" . $firstname . "&nbsp;" . $name . "\"></img></p>");
-   }
- }
-
- echo("<form action=\"common/control/change_role.php\">");
-
- echo("<table width=\"490\">\n");
-
- if(array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes")) // admin logged in
- {
-  echo("<tr class=\"type1\"><td class=\"fieldname\">");
-
-  echo(LangChangeAccountField2);
-
-  echo("</td><td colspan=\"" . sizeof($modules) . "\"><a href=\"mailto:");
-
-  echo($obs->getEmail($_SESSION['user']));
-
-  echo("\">");
-
-  echo($obs->getEmail($_SESSION['user']));
-
-  echo("</a>");
-
-  print("</td></tr>");
- }
-
- echo("<tr class=\"type2\"><td class=\"fieldname\">");
-
- echo(LangChangeAccountField3);
-
- echo("</td><td colspan=\"" . sizeof($modules) . "\">");
-
- print($obs->getFirstName($_SESSION['user']));
-
- print("</td></tr><tr class=\"type1\"><td class=\"fieldname\">");
-
- echo(LangChangeAccountField4);
-
- echo("</td><td>");
-
- print($obs->getObserverName($_SESSION['user']));
-
- print("</td>
-        </tr>");
-
- echo("<tr class=\"type2\">
-       <td class=\"fieldname\">");
-
- echo(LangChangeAccountField7);
-
- echo("</td>
-       <td colspan=\"" . sizeof($modules) . "\">");
-
- $location_id = $obs->getStandardLocation($_SESSION['user']);
- $location_name = $locations->getLocationName($location_id);
-
-
- $url = "common/detail_location.php?location=" . "$location_id";
-
- echo("<a href=\"$url\">$location_name</a>");
-
- echo("</td>
-       </tr>");
-
- echo("<tr class=\"type1\">
-       <td class=\"fieldname\">");
-
- echo(LangChangeAccountField8);
-
- echo("</td>
-       <td colspan=\"" . sizeof($modules) . "\">");
-
- include_once "../lib/instruments.php";
- $instruments = new Instruments;
-
- if($instruments->getInstrumentName($obs->getStandardTelescope($_SESSION['user'])))
- {
-  $instrumentname = $instruments->getInstrumentName($obs->getStandardTelescope($_SESSION['user']));
-  if ($instrumentname == "Naked eye")
-  {
-   $instrumentname = InstrumentsNakedEye;
-  }
-  echo("<a href=\"common/detail_instrument.php?instrument=" . $obs->getStandardTelescope($_SESSION['user']) . "\">");
+$user=urldecode($_GET['user']);
+$user=str_replace("&amp;", "&", $user);
+$user=str_replace("&amp;", "&", $user);
+if(!($objObserver->getObserverName($user)))                                     // no session variable set 
+  throw new Exception(LangViewObserverInexistant); 
+$firstname=$objObserver->getFirstName($user);
+$name=$objObserver->getObserverName($user);
+echo "<div id=\"main\">";
+echo "<h2>$firstname $name</h2>";
+$upload_dir = 'observer_pics';
+$dir = opendir($upload_dir);
+while(FALSE!==($file=readdir($dir)))
+{ if(("." == $file)OR(".."== $file))
+    continue;                                                                   // skip current directory and directory above
+  if(fnmatch($user. ".gif", $file) || fnmatch($user. ".jpg",$file) || fnmatch($user. ".png", $file))
+    echo "<p><img class=\"viewobserver\" src=\"common/$upload_dir" . "/" . "$file\" alt=\"" . $firstname . "&nbsp;" . $name . "\"></img></p>";
+}
+echo "<form action=\"".$baseURL."common/indexCommon?indexActionchange_role\">";
+echo "<table width=\"490\">";
+if(array_key_exists('admin',$_SESSION)&&($_SESSION['admin']=="yes"))       // admin logged in
+{ echo "<tr class=\"type1\">";
+  echo "<td class=\"fieldname\">";
+  echo LangChangeAccountField2;
+  echo "</td>";
+  echo "<td colspan=\"".sizeof($modules)."\">";
+  echo "<a href=\"mailto:".$objObserver->getEmail($user)."\">".$objObserver->getEmail($user)."</a>";
+  echo "</td>";
+	echo "</tr>";
+}
+echo "<tr class=\"type2\">";
+echo "<td class=\"fieldname\">";
+echo LangChangeAccountField3;
+echo "</td>";
+echo "<td colspan=\"".sizeof($modules)."\">";
+echo "$obs->getFirstName($user)";
+echo "</td>";
+echo "</tr>";
+echo "<tr class=\"type1\">";
+echo "<td class=\"fieldname\">";
+echo LangChangeAccountField4;
+echo "</td>";
+echo "<td>";
+echo $objObserver->getObserverName($user);
+echo "</td>";
+echo "</tr>";
+echo "<tr class=\"type2\">";
+echo "<td class=\"fieldname\">";
+echo LangChangeAccountField7;
+echo "</td>";
+echo "<td colspan=\"" . sizeof($modules) . "\">";
+$location_id = $objObserver->getStandardLocation($user);
+$location_name = $objLocation->getLocationName($location_id);
+$url = $baseURL."indexCommon?indexAction=detail_location&amp;location=".$location_id;
+echo "<a href=\"".$url."\">".$location_name."</a>";
+echo"</td>";
+echo "</tr>";
+echo "<tr class=\"type1\">";
+echo "<td class=\"fieldname\">";
+echo LangChangeAccountField8;
+echo "</td>";
+echo "<td colspan=\"".sizeof($modules)."\">";
+if($instrumentname=$objInstrument->getInstrumentName($objObserver->getStandardTelescope($user)))
+{ if($instrumentname=="Naked eye")
+    $instrumentname=InstrumentsNakedEye;
+  echo("<a href=\"common/detail_instrument.php?instrument=" . $obs->getStandardTelescope($user) . "\">");
   echo $instrumentname;
   echo("</a>");
  }
@@ -158,37 +83,37 @@ $file) || fnmatch($_SESSION['user']. ".png", $file))
         <td class=\"fieldname\">".LangViewObserverRole."
         </td>");
 
-  if(array_key_exists('user', $_SESSION) && ($_SESSION['user'] != "admin")) // normal user
+  if(array_key_exists('user', $_SESSION) && ($user != "admin")) // normal user
   {
 
-   if($obs->getRole($_SESSION['user']) != RoleWaitlist && $_SESSION['user'] != "admin") // user not in waitlist
+   if($obs->getRole($user) != RoleWaitlist && $user != "admin") // user not in waitlist
    {
     echo("<td colspan=\"" . sizeof($modules) . "\">\n
           <select name=\"role\">
           <option ");
 
-    if($obs->getRole($_SESSION['user']) == RoleAdmin) 
+    if($obs->getRole($user) == RoleAdmin) 
     {
      echo "selected=\"selected\"";
     }
 
     echo(" value=\"0\">".LangViewObserverAdmin."</option>\n<option ");
 
-    if($obs->getRole($_SESSION['user']) == RoleUser) 
+    if($obs->getRole($user) == RoleUser) 
     {
      echo "selected=\"selected\"";
     }
 
     echo(" value=\"1\">".LangViewObserverUser."</option>\n<option ");
 
-    if($obs->getRole($_SESSION['user']) == RoleCometAdmin)
+    if($obs->getRole($user) == RoleCometAdmin)
     {
      echo "selected=\"selected\"";
     }
 
     echo(" value=\"4\">".LangViewObserverCometAdmin."</option>\n<option ");
 
-    if($obs->getRole($_SESSION['user']) == RoleWaitlist)
+    if($obs->getRole($user) == RoleWaitlist)
     {
      echo "selected=\"selected\"";
     }
@@ -197,7 +122,7 @@ $file) || fnmatch($_SESSION['user']. ".png", $file))
           <input type=\"submit\" name=\"change\" value=\"".LangViewObserverChange."\" />");
 
    }
-   elseif ($obs->getRole($_SESSION['user']) == RoleWaitlist)
+   elseif ($obs->getRole($user) == RoleWaitlist)
    {
      echo(LangViewObserverWaitlist."</td>");
    }
@@ -211,14 +136,14 @@ $file) || fnmatch($_SESSION['user']. ".png", $file))
  }
 
  // NUMBER OF OBSERVATIONS
- $number_of_observations = $obs->getNumberOfDsObservations($_SESSION['user']);
+ $number_of_observations = $obs->getNumberOfDsObservations($user);
 
- $rank = $obs->getRank($_SESSION['user']);
+ $rank = $obs->getRank($user);
  if ($rank == 0)
  {
   $rank = "-";
  }
- $number_of_comet_observations = $obs->getNumberOfCometObservations($_SESSION['user']);
+ $number_of_comet_observations = $obs->getNumberOfCometObservations($user);
 
  if($number_of_observations != 0 || $number_of_comet_observations != 0)
  {
@@ -238,9 +163,9 @@ $file) || fnmatch($_SESSION['user']. ".png", $file))
   $numberOfObservations = $observations->getNumberOfDsObservations();
   $numberOfObservationsThisYear = $observations->getNumberOfObservationsLastYear();
   $numberOfDifferentObjects = $observations->getNumberOfDifferentObjects();
-  $observationsThisYear = $observations->getObservationsLastYear($_SESSION['user']);
+  $observationsThisYear = $observations->getObservationsLastYear($user);
 
-  $cometrank = $obs->getCometRank($_SESSION['user']);
+  $cometrank = $obs->getCometRank($user);
   if ($cometrank == 0)
   {
    $cometrank = "-";
@@ -252,7 +177,7 @@ $file) || fnmatch($_SESSION['user']. ".png", $file))
   {
    $numberOfDifferentCometObjects = 0;
   }
-  $cometobservationsThisYear = $cometobservations->getObservationsThisYear($_SESSION['user']);
+  $cometobservationsThisYear = $cometobservations->getObservationsThisYear($user);
 
   // Loop over all the modules. Put the information in an array, sorted on the 
   // modules.
@@ -288,7 +213,7 @@ $file) || fnmatch($_SESSION['user']. ".png", $file))
     $information[$i][1] = $observationsThisYear . " / ".$numberOfObservationsThisYear."&nbsp;&nbsp;&nbsp;&nbsp;(".sprintf("%.2f", $percentObservations)."%)";
 
    // Deepsky : Number of different objects
-    $numberOfObjects = $observations->getNumberOfObjects($_SESSION['user']);
+    $numberOfObjects = $observations->getNumberOfObjects($user);
 
     if ($numberOfDifferentObjects != 0)
     {
@@ -331,7 +256,7 @@ $file) || fnmatch($_SESSION['user']. ".png", $file))
                           sprintf("%.2f", $percentCometObservations)."%)";
 
     // Comets : Number of different objects
-    $numberOfCometObjects = $cometobservations->getNumberOfObjects($_SESSION['user']);
+    $numberOfCometObjects = $cometobservations->getNumberOfObjects($user);
 
     if ($numberOfDifferentCometObjects != 0)
     {
@@ -394,7 +319,7 @@ $file) || fnmatch($_SESSION['user']. ".png", $file))
       echo("<td>");
       if ($key == $i)
       {
-        echo($observations->getObservedCountFromCatalogue($_SESSION['user'],"M") . " / 110");
+        echo($observations->getObservedCountFromCatalogue($user,"M") . " / 110");
       }
       else
       {
@@ -410,7 +335,7 @@ $file) || fnmatch($_SESSION['user']. ".png", $file))
       echo("<td>");
       if ($key == $i)
       {
-        echo($observations->getObservedCountFromCatalogue($_SESSION['user'],"Caldwell") . " / 110");
+        echo($observations->getObservedCountFromCatalogue($user,"Caldwell") . " / 110");
       }
       else
       {
@@ -426,7 +351,7 @@ $file) || fnmatch($_SESSION['user']. ".png", $file))
       echo("<td>");
       if ($key == $i)
       {
-        echo($observations->getObservedCountFromCatalogue($_SESSION['user'],"H400") . " / 400");
+        echo($observations->getObservedCountFromCatalogue($user,"H400") . " / 400");
       }
       else
       {
@@ -442,7 +367,7 @@ $file) || fnmatch($_SESSION['user']. ".png", $file))
       echo("<td>");
       if ($key == $i)
       {
-        echo($observations->getObservedCountFromCatalogue($_SESSION['user'],"HII") . " / 400");
+        echo($observations->getObservedCountFromCatalogue($user,"HII") . " / 400");
       }
       else
       {

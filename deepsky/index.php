@@ -1,8 +1,7 @@
 <?php
 // index.php: main entrance to deepsky modules of DeepskyLog
 try
-{ $instDir="d:/accounts/DSLTrunk";
-  include $instDir.'/common/entryexit/preludes.php';
+{ include '../common/entryexit/preludes.php';
   $objUtil->utilitiesSetModuleCookie("deepsky");
   include $instDir.'/common/entryexit/instructions.php';
   include $instDir.'/common/entryexit/preludesDS.php';
