@@ -50,7 +50,7 @@ else                                                                          //
 	  if ($GLOBALS['objObserver']->getUseLocal($_SESSION['deepskylog_id']))
                             $GLOBALS['objObservation']->setLocalDateAndTime($current_observation, $date, $time);
     if($_FILES['drawing']['tmp_name'] != "")                                  // drawing to upload
-    { $upload_dir = '../drawings';
+    { $upload_dir =$instDir. 'deepsky/drawings';
       $dir = opendir($upload_dir);
       $original_image = $_FILES['drawing']['tmp_name'];
       $destination_image = $upload_dir . "/" . $current_observation . "_resized.jpg";

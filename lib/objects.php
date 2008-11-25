@@ -411,7 +411,9 @@ class Objects
     if(!array_key_exists('angle',$_SESSION)||(!$_SESSION['angle']))
       $_SESSION['angle'] = array(-0.2255, 0.5563, 0.9859, 1.260, 1.742, 2.083, 2.556);
     $popup="";
- 		if(!(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id'])))
+ 		$magnificationsName='';
+		$fov='';
+		if(!(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id'])))
 		  $popup = LangContrastNotLoggedIn;
     else
 		{ $sql5 = "SELECT stdlocation, stdtelescope from observers where id = \"" . $_SESSION['deepskylog_id'] . "\"";
