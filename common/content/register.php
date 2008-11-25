@@ -1,24 +1,14 @@
 <?php
-
 // register.php
 // allows the user to apply for an deepskylog account
-
-include_once "../lib/observers.php";
-include_once "../lib/setup/language.php";
-include_once "../lib/util.php";
-
-$util = new Util();
-$util->checkUserInput();
-
-$obs=new Observers;
 
 echo("<div id=\"main\">\n
       <h2>" . LangRegisterNewTitle . "</h2>");        
 
-?>
 
-   <form action="common/control/validate_account.php" method="post">
-   <table>
+
+echo "<form action=\"".$baseURL."common/indexCommon.php?indexAction=validate_account\" method=\"post\">";
+?>   <table>
    <tr>
    <td class="fieldname"><?php echo(LangChangeAccountField1); ?></td>
    <td><input type="text" class="inputfield" maxlength="64" name="deepskylog_id" size="30" value="" /></td>
@@ -55,7 +45,7 @@ echo("<div id=\"main\">\n
 
  echo("</td><td>");
 
- $allLanguages = $language->getAllLanguages($obs->getLanguage($_SESSION['deepskylog_id']));
+ $allLanguages = $objLanguage->getAllLanguages($_SESSION['lang']);
 
  echo("<select name=\"description_language\">");
 
@@ -90,12 +80,11 @@ echo("<td>");
     <td>   <select name=\"language\">");
  
 
-      $language = new Language(); 
-      $languages = $language->getLanguages(); 
+      $languages = $objLanguage->getLanguages(); 
 
       while(list ($key, $value) = each($languages))
       {
-         if($obs->getLanguage($_SESSION['deepskylog_id']) == $key)
+         if($objObserver->getLanguage($_SESSION['deepskylog_id']) == $key)
          {
             print("<option value=\"" . $key . "\" selected=\"selected\">$value</option>\n");
          }
@@ -121,7 +110,7 @@ echo("<tr><td class=\"fieldname\">");
  echo("</td><td>");
  include_once "../lib/setup/language.php";
 
- $allLanguages = $language->getAllLanguages($_SESSION['lang']);
+ $allLanguages = $objLanguage->getAllLanguages($_SESSION['lang']);
  $_SESSION['alllanguages'] = $allLanguages; 
 
  $usedLanguages = $languagesDuringRegistration;

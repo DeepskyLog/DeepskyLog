@@ -22,7 +22,7 @@ if($object)
   echo "</td>";
   if($myList)
   { echo "<td width=\"25%\" align=\"center\">";
-    if($list->checkObjectInMyActiveList($object))
+    if($objList->checkObjectInMyActiveList($object))
       echo "<a href=\"".$baseURL."deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "</a>";
     else
       echo "<a href=\"".$baseURL."deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>";
@@ -66,7 +66,7 @@ if($object)
   echo "</td>";
 	echo "<td class=\"explanation\">".LangViewObservationField10."</td>";
   echo "<td class=\"fieldname\" align=\"right\">";
-	echo (($observer->getUseLocal($_SESSION['deepskylog_id']))?LangViewObservationField9lt:LangViewObservationField9);
+	echo (($objObserver->getUseLocal($_SESSION['deepskylog_id']))?LangViewObservationField9lt:LangViewObservationField9);
   echo  "</td>";
 	echo "<td>";
 	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" style=\"text-align:center\" name=\"hours\" value=\"".$GLOBALS['objUtil']->checkPostKey('hours')."\">";
@@ -220,8 +220,8 @@ if($object)
 	echo LangViewObservationField29."&nbsp;*";                                    // Language of observation
 	echo "</td>";
 	echo "<td>";
-  $description_language = $GLOBALS['objUtil']->checkPostKey('visibility',$obs->getObservationLanguage($_SESSION['deepskylog_id']));
-  $allLanguages = $objLanguage->getAllLanguages($obs->getLanguage($_SESSION['deepskylog_id']));
+  $description_language = $GLOBALS['objUtil']->checkPostKey('visibility',$objObserver->getObservationLanguage($_SESSION['deepskylog_id']));
+  $allLanguages = $objLanguage->getAllLanguages($objObserver->getLanguage($_SESSION['deepskylog_id']));
   echo "<select name=\"description_language\" style=\"width: 147px\">";
   while(list ($key, $value) = each($allLanguages))
     echo "<option value=\"".$key."\"".(($GLOBALS['objUtil']->checkPostKey('description_language')==$key)?"selected=\"selected\"":($GLOBALS['objObserver']->getObservationLanguage($_SESSION['deepskylog_id'])==$key)?"selected=\"selected\"":'') .">".$value."</option>";

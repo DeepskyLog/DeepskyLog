@@ -1891,7 +1891,7 @@ class Observations
     echo("</td>\n
          <td><a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;QobsKey=".$obsKey."&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetails);
     // LINK TO DRAWING (IF AVAILABLE)
-    $upload_dir = 'drawings';
+    $upload_dir = $GLOBALS['instDir'].'deepsky/drawings';
     $dir = opendir($upload_dir);
     while (FALSE !== ($file = readdir($dir)))
     {

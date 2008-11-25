@@ -1329,3 +1329,5 @@ class CometObservations
   }
  }
 }
+$objCometObservation = new cometObservations;
+?>

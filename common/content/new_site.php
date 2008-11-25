@@ -1,85 +1,40 @@
 <?php
-
 // new_site.php
 // allows the user to add a new site
-
-include_once "../common/control/dec_to_dm.php";
-include_once "../common/control/ra_to_hms.php";
-include_once "../lib/observers.php";
-include_once "../lib/locations.php";
-include_once "../lib/util.php";
-include_once "../lib/cometobservations.php";
-include_once "../lib/contrast.php";
- 
-$locations = new locations;
-$util = new util;
-$util->checkUserInput();
-$observations = new observations;
-$cometobservations = new CometObservations;
-$observers = new observers;
-
-// sort
-
 if(isset($_GET['sort']))
-{
-  $sort = $_GET['sort']; // field to sort on
-}
+  $sort = $_GET['sort']; 
 else
-{
   $sort = "name"; // standard sort on location name
-}
-
-// minimum
-
 if(isset($_GET['min']))
-{
   $min = $_GET['min'];
-}
 else
-{
   $min = 0;
-}
-
 // the code below looks very strange but it works
-
 if((isset($_GET['previous'])))
-{
-  $orig_previous = $_GET['previous'];
+{ $orig_previous = $_GET['previous'];
 }
 else
-{
-  $orig_previous = "";
+{ $orig_previous = "";
 }
-
-$sites = $locations->getSortedLocations($sort, $_SESSION['deepskylog_id']);
-$locs = $observers->getListOfLocations();
-
+$sites = $objLocation->getSortedLocations($sort, $_SESSION['deepskylog_id']);
+$locs = $objObserver->getListOfLocations();
 if((isset($_GET['sort'])) && $_GET['previous'] == $_GET['sort']) // reverse sort when pushed twice
-{
-  if ($_GET['sort'] == "name")
-  {
-    $sites = array_reverse($sites, true);
+{ if ($_GET['sort'] == "name")
+  { $sites = array_reverse($sites, true);
   }
   else
-  {
-    krsort($sites);
+  { krsort($sites);
     reset($sites);
   }
   $previous = ""; // reset previous field to sort on
 }
 else
-{
-  $previous = $sort;
+{ $previous = $sort;
 }
-
 $step = 25;
-
 echo("<div id=\"main\">\n<h2>".LangOverviewSiteTitle."</h2>");
-
 $link = "common/add_site.php?sort=" . $sort . "&amp;previous=" . $orig_previous;
-
-list($min, $max) = $util->printListHeader($sites, $link, $min, $step, "");
-
+list($min, $max) = $objUtil->printListHeader($sites, $link, $min, $step, "");
 echo "<table>
       <tr class=\"type3\">
       <td><a href=\"common/add_site.php?sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>
@@ -100,57 +55,45 @@ echo "<form action=\"common/control/validate_site.php\" method=\"post\">";
 $count = 0;
 
 if ($sites != null)
-{
-  while(list ($key, $value) = each($sites))
-  {
-    if($count >= $min && $count < $max) // selection
-    {
-      if ($count % 2)
-      {
-        $type = "class=\"type1\"";
+{ while(list ($key, $value) = each($sites))
+  { if($count >= $min && $count < $max) // selection
+    { if ($count % 2)
+      { $type = "class=\"type1\"";
       }
       else
-      {
-        $type = "class=\"type2\"";
+      { $type = "class=\"type2\"";
       }
 
-      $sitename = stripslashes($locations->getLocationName($value));
-      $region = stripslashes($locations->getRegion($value));
-      $country = $locations->getCountry($value);
-      if($locations->getLongitude($value) > 0)
-      {
-        $longitude = "&nbsp;" . decToString($locations->getLongitude($value));
+      $sitename = stripslashes($objLocation->getLocationName($value));
+      $region = stripslashes($objLocation->getRegion($value));
+      $country = $objLocation->getCountry($value);
+      if($objLocation->getLongitude($value) > 0)
+      { $longitude = "&nbsp;" . decToString($objLocation->getLongitude($value));
       }
       else
-      {
-        $longitude = decToString($locations->getLongitude($value));
+      { $longitude = decToString($objLocation->getLongitude($value));
       }
-      if($locations->getLatitude($value) > 0)
-      {
-        $latitude = "&nbsp;" . decToString($locations->getLatitude($value));
+      if($objLocation->getLatitude($value) > 0)
+      { $latitude = "&nbsp;" . decToString($objLocation->getLatitude($value));
       }
       else
-      {
-        $latitude = decToString($locations->getLatitude($value));
+      { $latitude = decToString($objLocation->getLatitude($value));
       }
-      $timezone = $locations->getTimezone($value);
-      $observer = $locations->getObserverFromLocation($value);
-      $limmag = $locations->getLocationLimitingMagnitude($value);
-      $sb = $locations->getSkyBackground($value);
-      $c = new Contrast();
+      $timezone = $objLocation->getTimezone($value);
+      $observer = $objLocation->getObserverFromLocation($value);
+      $limmag = $objLocation->getLocationLimitingMagnitude($value);
+      $sb = $objLocation->getSkyBackground($value);
       if ($limmag < -900 && $sb > 0)
-      {
-        $limmag = sprintf("%.1f", $c->calculateLimitingMagnitudeFromSkyBackground($sb));
+      { $limmag = sprintf("%.1f", $objContrast->calculateLimitingMagnitudeFromSkyBackground($sb));
       } else if ($limmag < -900 && $sb < -900) {
         $limmag = "&nbsp;";
         $sb = "&nbsp;";
       } else {
-        $sb = sprintf("%.1f", $c->calculateSkyBackgroundFromLimitingMagnitude($limmag));
+        $sb = sprintf("%.1f", $objContrast->calculateSkyBackgroundFromLimitingMagnitude($limmag));
       }
 
       if ($value != "1")
-      {
-        print("<tr $type>
+      { print("<tr $type>
            <td><a href=\"common/adapt_site.php?location=$value\">$sitename</a></td>\n
            <td>$region</td>\n
            <td>$country</td>\n
@@ -168,9 +111,8 @@ if ($sites != null)
 
         // Radio button for the standard instrument
 
-        if ($value == $observers->getStandardLocation($_SESSION['deepskylog_id']))
-        {
-          echo("<input type=\"radio\" name=\"stdlocation\" value=\"". $value ."\" checked>&nbsp;<br>");
+        if ($value == $objObserver->getStandardLocation($_SESSION['deepskylog_id']))
+        { echo("<input type=\"radio\" name=\"stdlocation\" value=\"". $value ."\" checked>&nbsp;<br>");
         } else {
           echo("<input type=\"radio\" name=\"stdlocation\" value=\"". $value ."\">&nbsp;<br>");
         }
@@ -178,12 +120,11 @@ if ($sites != null)
 
         // check if there are no observations made from this location
         $queries = array("location" => $value, "observer" => $_SESSION['deepskylog_id']);
-        $obs = $observations->getObservationFromQuery($queries, "", "1", "False", "D", "1");
-        $comobs = $cometobservations->getObservationFromQuery($queries, "", "1", "False");
+        $obs = $objObservation->getObservationFromQuery($queries, "", "1", "False", "D", "1");
+        $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
 
         if(!sizeof($obs) > 0 && !in_array($value, $locs) && !sizeof($comobs) > 0) // no observations from location yet
-        {
-          echo("<a href=\"common/control/validate_delete_location.php?locationid=" . $value . "\">" . LangRemove . "</a>");
+        { echo("<a href=\"common/control/validate_delete_location.php?locationid=" . $value . "\">" . LangRemove . "</a>");
         }
 
         echo("</td>\n</tr>");
@@ -199,7 +140,7 @@ echo("<input type=\"hidden\" name=\"adaption\" value=\"1\">");
 echo("<input type=\"submit\" name=\"adapt\" value=\"" . LangAddSiteStdLocation . "\" />");
 echo "</form>";
 
-list($min, $max) = $util->printListHeader($sites, $link, $min, $step, "");
+list($min, $max) = $objUtil->printListHeader($sites, $link, $min, $step, "");
 
 echo "</div></div>";
 
@@ -216,10 +157,10 @@ echo(LangAddSiteTitle); ?>
 	echo("<form name=\"overviewform\">\n ");
 	echo("<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalogue\">\n");
 
-	$sites = $locations->getSortedLocations('name', "", true);
+	$sites = $objLocation->getSortedLocations('name', "", true);
 	while(list($key, $value) = each($sites))
 	{
-	  echo("<option value=\"" . $baseURL . "common/add_site.php?locationid=$value\">" . $locations->getLocationName($value) . "</option>\n");
+	  echo("<option value=\"" . $baseURL . "common/add_site.php?locationid=$value\">" . $objLocation->getLocationName($value) . "</option>\n");
 	}
 	echo("</select>\n");
 	echo("</form>");
@@ -252,7 +193,7 @@ echo(LangAddSiteTitle); ?>
 			 } 
 			 if(array_key_exists('locationid',$_GET) && $_GET['locationid'])
        {
-			    echo stripslashes($locations->getLocationName($_GET['locationid']));
+			    echo stripslashes($objLocation->getLocationName($_GET['locationid']));
 			 } 
 			 ?>" /></td>
 		<td class="explanation"></td>
@@ -270,7 +211,7 @@ echo(LangAddSiteTitle); ?>
 			 } 
 			 if(array_key_exists('locationid',$_GET) && $_GET['locationid'])
        {
-			    echo stripslashes($locations->getRegion($_GET['locationid']));
+			    echo stripslashes($objLocation->getRegion($_GET['locationid']));
 			 } 
 			 ?>" /></td>
 		<td class="explanation"><?php echo(LangAddSiteField2Expl); ?></td>
@@ -279,7 +220,7 @@ echo(LangAddSiteTitle); ?>
 		<td class="fieldname"><?php echo(LangAddSiteField3); ?></td>
 		<td><?php 
 	 echo("<select name=\"country\">");
-	 $countries = $locations->getCountries();
+	 $countries = $objLocation->getCountries();
 
 	 echo "<option value=\"\"></option>"; // empty field
 
@@ -289,7 +230,7 @@ echo(LangAddSiteTitle); ?>
 	   {
 	     echo("<option selected=\"selected\" value=\"$value\">$value</option>\n");
 	   }
-	   else if(array_key_exists('locationid',$_GET) && $locations->getCountry($_GET['locationid']) == $value)
+	   else if(array_key_exists('locationid',$_GET) && $objLocation->getCountry($_GET['locationid']) == $value)
 	   {
 	     echo("<option selected=\"selected\" value=\"$value\">$value</option>\n");
 	   }
@@ -306,7 +247,7 @@ echo(LangAddSiteTitle); ?>
 	     $latitudestr = decToString($_GET['latitude'], 1);
 	   } else
 	   {
-	     $latitudestr = decToString($locations->getLatitude($_GET['locationid']), 1);
+	     $latitudestr = decToString($objLocation->getLatitude($_GET['locationid']), 1);
 	   }
 	   $latarray = explode("&deg;", $latitudestr);
 	   $latitudedeg = $latarray[0];
@@ -319,7 +260,7 @@ echo(LangAddSiteTitle); ?>
 	     $longitudestr = decToString($_GET['longitude'], 1);
 	   } else
 	   {
-	     $longitudestr = decToString($locations->getLongitude($_GET['locationid']), 1);
+	     $longitudestr = decToString($objLocation->getLongitude($_GET['locationid']), 1);
 	   }
 	   $longarray = explode("&deg;", $longitudestr);
 	   $longitudedeg = $longarray[0];
@@ -376,7 +317,7 @@ echo(LangAddSiteTitle); ?>
 		{
 		  if (array_key_exists('locationid',$_GET) && $_GET['locationid'])
 		  {
-		    if ($value == $locations->getTimeZone($_GET['locationid']))
+		    if ($value == $objLocation->getTimeZone($_GET['locationid']))
 		    {
 		      echo("<option value=\"$value\" selected>$value</option>\n");
 		    }
@@ -407,9 +348,9 @@ echo(LangAddSiteTitle); ?>
 			value="<?php
      if(array_key_exists('locationid',$_GET) && $_GET['locationid'])
      {
-       if ($locations->getLocationLimitingMagnitude($_GET['locationid']) > -900)
+       if ($objLocation->getLocationLimitingMagnitude($_GET['locationid']) > -900)
        {
-        echo $locations->getLocationLimitingMagnitude($_GET['locationid']);
+        echo $objLocation->getLocationLimitingMagnitude($_GET['locationid']);
        }
      }
      ?>" /></td>
@@ -425,9 +366,9 @@ echo(LangAddSiteTitle); ?>
 			value="<?php
      if(array_key_exists('locationid',$_GET) && $_GET['locationid'])
      {
-       if ($locations->getSkyBackground($_GET['locationid']) > -900)
+       if ($objLocation->getSkyBackground($_GET['locationid']) > -900)
        {
-        echo $locations->getSkyBackground($_GET['locationid']);
+        echo $objLocation->getSkyBackground($_GET['locationid']);
        }
      }
      ?>" /></td>

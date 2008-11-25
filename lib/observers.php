@@ -12,7 +12,7 @@ class Observers
  function addObserver($id, $name, $firstname, $email, $password)
  { if(!$_SESSION['lang'])
      $_SESSION['lang']="English";
-   $GLOBALS['objDatabase']->execSQL("INSERT INTO observers (id, name, firstname, email, password, role, language) VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\", \"$password\", \"".RoleWaitlist."\", \"".$_SESSION['lang']."\"");
+   $GLOBALS['objDatabase']->execSQL("INSERT INTO observers (id, name, firstname, email, password, role, language) VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\", \"$password\", \"".RoleWaitlist."\", \"".$_SESSION['lang']."\")");
  }
  function checkPassword($id, $passwd)
  { return($this->getPassword($id) == $passwd);

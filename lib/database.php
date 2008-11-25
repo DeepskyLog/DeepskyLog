@@ -37,7 +37,8 @@ class Database
 	
 	function execSQL($sql)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
-	  $run = mysql_query($sql) or die(mysql_error());
+	  echo $sql;
+		$run = mysql_query($sql) or die(mysql_error());
   }
 	function selectSingleValue($sql,$name,$nullvalue='')
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}

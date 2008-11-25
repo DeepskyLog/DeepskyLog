@@ -16,7 +16,7 @@ tableMenuItem($baseURL."deepsky/index.php?indexAction=add_object",           Lan
 tableMenuItem($baseURL."common/indexCommon.php?indexAction=account_details", LangChangeMenuItem1);
 tableMenuItem($baseURL."common/indexCommon.php?indexAction=add_site",        LangChangeMenuItem4);
 tableMenuItem($baseURL."common/indexCommon.php?indexAction=add_instrument",  LangChangeMenuItem3);
-tableMenuItem($baseURL."common/indexCommon.php?indexAction=add_eyepiece.php",LangChangeMenuItem6);
+tableMenuItem($baseURL."common/indexCommon.php?indexAction=add_eyepiece",    LangChangeMenuItem6);
 tableMenuItem($baseURL."common/indexCommon.php?indexAction=add_filter",      LangChangeMenuItem7);
 tableMenuItem($baseURL."common/indexCommon.php?indexAction=add_lens",        LangChangeMenuItem8);
 //echo "</table>";

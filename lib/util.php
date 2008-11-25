@@ -20,7 +20,10 @@ class util
 	{ $this->checkUserInput();
   }
   private function utilitiesGetIndexActionCommonDefaultAction()
-  { return 'error.php';
+  { if($_SESSION['module']='deepsky')
+	    return $this->utilitiesGetIndexActionDSdefaultAction();
+		else
+		  throw new Exception("No default action yet for comets in funtcion utilitiesGetIndexActionCommonDefaultAction in util.php");
   }
   private function utilitiesGetIndexActionDSdefaultAction()
   { $_GET['catalogue']='%';

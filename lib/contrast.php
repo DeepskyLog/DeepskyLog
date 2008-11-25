@@ -236,4 +236,5 @@ class Contrast
    return (7.97 - 5 * log10(1 + pow(10, 4.316 - $initBB / 5.0)));
  }
 }
+$objContrast = new Contrast;
 ?>
