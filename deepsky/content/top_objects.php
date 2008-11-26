@@ -7,7 +7,7 @@ if(!array_key_exists('TO',$_SESSION))
 { $rank = $objObservation->getPopularObservations();
   $_SESSION['TO'] = $objObject->getSeenObjectDetails($rank);
 }
-$link = "deepsky/index.php?indexAction=rank_objects";
+$link=$baseURL."index.php?indexAction=rank_objects";
 echo"<div id=\"main\">";
 echo"<table width=\"100%\">";
 echo"<tr>";

@@ -2,8 +2,6 @@
 // The observations class collects all functions needed to enter, retrieve and
 // adapt observation data from the database.
 
-include_once "database.php";
-
 class Observations
 {
   // addObservation adds a new observation to the database. The name, observerid,
@@ -452,14 +450,7 @@ class Observations
 
   // getNumberOfObservations() returns the total number of observations
   function getNumberOfDsObservations()
-  {
-   include "setup/databaseInfo.php";
-    include_once "observers.php";
-    $observers = new Observers;
-    $db = new database;
-    $db->login();
-    $sql = "SELECT COUNT(objectname) FROM observations WHERE visibility != 7 ";
-    $run = mysql_query($sql) or die(mysql_error());
+  { $run = $GLOBALS['objDatabase']->selectRecordset("SELECT COUNT(objectname) FROM observations WHERE visibility != 7 ");
     return mysql_result($run, 0, 0);
   }
 
@@ -603,10 +594,7 @@ class Observations
   // getSortedObservations returns an array with the ids of all observations,
   // sorted by the column specified in $sort
   function getSortedObservationsId($sort, $AscDesc)
-  {
-    include "setup/databaseInfo.php";
-    $observers = new Observers;
-    $extra = $GLOBALS['objObserver']->getObserversFromClub($club);
+  { $extra = $GLOBALS['objObserver']->getObserversFromClub($club);
     $extra3 = "";
     $extra4 = "";
     $sort = "observations.".$sort;
@@ -1198,28 +1186,13 @@ class Observations
 
   function showObservation($LOid)
   { global $dateformat;
-		
-    include_once "../lib/instruments.php";
-    $instruments = new Instruments;
-    include_once "../lib/observers.php";
-    $observer = new Observers;
-    include_once "../lib/locations.php";
-    $locations = new Locations;
-    include_once "../lib/eyepieces.php";
-    $eyepieces = new Eyepieces;
-    include_once "../lib/filters.php";
-    $filters = new Filters;
-    include_once "../lib/lenses.php";
-    $lenses = new Lenses;
-
-
     echo("<table width=\"100%\">");
     echo("<tr class=\"type3\">");
     echo("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
     echo LangViewObservationField2;
     echo("</td>");
     echo("<td width=\"25%\">");
-    echo("<a href=\"".$GLOBALS['baseURL']."common/indexCommon.php?indexAction=detail_observer&amp;user=".urlencode($this->getObserverId($LOid))."&amp;back=index.php?indexAction=detail_observation\">");
+    echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observer&amp;user=".urlencode($this->getObserverId($LOid))."&amp;back=index.php?indexAction=detail_observation\">");
     echo($GLOBALS['objObserver']->getFirstName($this->getObserverId($LOid)) . "&nbsp;" . $GLOBALS['objObserver']->getObserverName($this->getObserverId($LOid)));
     print("</a>");
     print("</td>");
@@ -1235,7 +1208,7 @@ class Observations
     {
       $inst = InstrumentsNakedEye;
     }
-    echo("<a href=\"common/detail_instrument.php?instrument=" . $this->getDsObservationInstrumentId($LOid) . "\">" . $inst . "</a>");
+    echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_instrument&amp;instrument=" . urlencode($this->getDsObservationInstrumentId($LOid)) . "\">" . $inst . "</a>");
     print("</td>");
     print("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
     echo LangViewObservationField31;
@@ -1248,7 +1221,7 @@ class Observations
     }
     else
     {
-      echo("<a href=\"common/detail_filter.php?filter=" . $filter . "\">" . $GLOBALS['objFilter']->getFilterName($filter) . "</a>");
+      echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_filter&amp;filter=" . urlencode($filter) . "\">" . $GLOBALS['objFilter']->getFilterName($filter) . "</a>");
     }
     echo("</td>");
     echo("</tr>");
@@ -1265,7 +1238,7 @@ class Observations
     }
     else
     {
-      echo("<a href=\"common/detail_eyepiece.php?eyepiece=" . $eyepiece . "\">" . $GLOBALS['objEyepiece']->getEyepieceName($eyepiece) . "</a>");
+      echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_eyepiece&amp;eyepiece=" . urlencode($eyepiece) . "\">" . $GLOBALS['objEyepiece']->getEyepieceName($eyepiece) . "</a>");
     }
     print("</td>");
     print("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
@@ -1279,7 +1252,7 @@ class Observations
     }
     else
     {
-      echo("<a href=\"common/detail_lens.php?lens=" . $lens . "\">" . $GLOBALS['objLens']->getLensName($lens) . "</a>");
+      echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_lens&amp;lens=" . urlencode($lens) . "\">" . $GLOBALS['objLens']->getLensName($lens) . "</a>");
     }
     echo("</td>");
     echo("</tr>");
@@ -1289,7 +1262,7 @@ class Observations
     echo LangViewObservationField4;
     echo("</td>");
     echo("<td width=\"25%\">");
-    echo("<a href=\"common/detail_location.php?location=" . $this->getDsObservationLocationId($LOid) . "\">" . $GLOBALS['objLocation']->getLocationName($this->getDsObservationLocationId($LOid)) . "</a>");
+    echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_location&amp;location=" . urlencode($this->getDsObservationLocationId($LOid)) . "\">" . $GLOBALS['objLocation']->getLocationName($this->getDsObservationLocationId($LOid)) . "</a>");
     print("</td>");
     print("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
     echo LangViewObservationField5;
@@ -1439,18 +1412,18 @@ class Observations
      
     // automatically add links towards Messier, NGC, IC and Arp objects in description
     $patterns[0] = "/\s+(M)\s*(\d+)\s/";
-    $replacements[0] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=M%20\\2\">&nbsp;M&nbsp;\\2&nbsp;</a>";
+    $replacements[0] = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=M%20\\2\">&nbsp;M&nbsp;\\2&nbsp;</a>";
     $patterns[1] = "/(NGC|Ngc|ngc)\s*(\d+\w+)/";
-    $replacements[1] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=NGC%20\\2\">NGC&nbsp;\\2</a>";
+    $replacements[1] = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=NGC%20\\2\">NGC&nbsp;\\2</a>";
     $patterns[2] = "/(IC|Ic|ic)\s*(\d+)/";
-    $replacements[2] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=IC%20\\2\">IC&nbsp;\\2</a>";
+    $replacements[2] = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=IC%20\\2\">IC&nbsp;\\2</a>";
     $patterns[3] = "/(Arp|ARP|arp)\s*(\d+)/";
-    $replacements[3] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=Arp%20\\2\">Arp&nbsp;\\2</a>";
+    $replacements[3] = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=Arp%20\\2\">Arp&nbsp;\\2</a>";
     echo preg_replace($patterns,$replacements,$LOdescription);
     echo("</td>");
     echo("</tr>");
     echo("</table>");
-    $upload_dir = 'drawings';
+    $upload_dir = $GLOBALS['instDir'].'deepsky/drawings';
     $dir = opendir($upload_dir);
     while (FALSE !== ($file = readdir($dir)))
     {
@@ -1461,18 +1434,17 @@ class Observations
       if(fnmatch($LOid . "_resized.gif", $file) ||
       fnmatch($LOid . "_resized.jpg", $file) ||
     	 fnmatch($LOid. "_resized.png", $file))
-      {
-        echo("<p><a href=\"deepsky/" . $upload_dir . "/" . $LOid . ".jpg" . "\">
-        <img class=\"account\" src=\"deepsky/$upload_dir" . "/" . "$file\">
-        </img></a></p>");
+      { echo "<p>";
+				echo "<a href=\"".$GLOBALS['baseURL']."deepsky/drawings/".$LOid.".jpg"."\"> <img class=\"account\" src=\"".$GLOBALS['baseURL']."deepsky/drawings/".$file."\"></img></a>";
+				echo "</p>";
       }
     }
     echo "<table width=\"100%\">";
     echo "<tr>";
     if(array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && ($this->getObserverId($LOid) == $_SESSION['deepskylog_id'])) // own observation
     {
-      echo("<td width=\"33%\"><a href=\"deepsky/index.php?indexAction=adapt_observation&observation=" . $LOid . "\">" . LangChangeObservationTitle . "</a><td>");
-      echo("<td width=\"33%\"><a href=\"deepsky/index.php?indexAction=validate_delete_observation&amp;observationid=" . $LOid . "\">" . LangDeleteObservation . "</a></td>");
+      echo("<td width=\"33%\"><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=adapt_observation&amp;observation=" . $LOid . "\">" . LangChangeObservationTitle . "</a><td>");
+      echo("<td width=\"33%\"><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=validate_delete_observation&amp;observationid=" . $LOid . "\">" . LangDeleteObservation . "</a></td>");
     }
     echo "</tr></table>";
     echo("<hr>");
@@ -1481,7 +1453,7 @@ class Observations
 
   function showCompactObservationLO($obsKey, $link, $myList = false)
   {
-    global $observers, $dateformat;
+    global $dateformat;
 		global $objInstrument;
 		global $objObject;
 		global $objObserver;
@@ -1493,13 +1465,13 @@ class Observations
     $instrumentsize = round($value['instrumentdiameter'], 0);
     $desc = $value['observationdescription'];
     $patterns[0] = "/\s+(M)\s*(\d+)/";
-    $replacements[0] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
+    $replacements[0] = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
     $patterns[1] = "/(NGC|Ngc|ngc)\s*(\d+\w+)/";
-    $replacements[1] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=NGC%20\\2\">NGC&nbsp;\\2</a>";
+    $replacements[1] = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=NGC%20\\2\">NGC&nbsp;\\2</a>";
     $patterns[2] = "/(IC|Ic|ic)\s*(\d+)/";
-    $replacements[2] = "<a 	href=\"deepsky/index.php?indexAction=detail_object&object=IC%20\\2\">IC&nbsp;\\2</a>";
+    $replacements[2] = "<a 	href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=IC%20\\2\">IC&nbsp;\\2</a>";
     $patterns[3] = "/(Arp|ARP|arp)\s*(\d+)/";
-    $replacements[3] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=Arp%20\\2\">Arp&nbsp;\\2</a>";
+    $replacements[3] = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=Arp%20\\2\">Arp&nbsp;\\2</a>";
     $description = preg_replace($patterns,$replacements,$desc);
     $AOid = $this->getLOObservationId($object, $_SESSION['deepskylog_id'], $value['observationid']);
     $LOid="";
@@ -1508,13 +1480,13 @@ class Observations
     { $LOid = $AOid;
       $LOdesc = $this->getDescriptionDsObservation($LOid);
       $patterns[0] = "/\s+(M)\s*(\d+)/";
-      $replacements[0] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
+      $replacements[0] = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
       $patterns[1] = "/(NGC|Ngc|ngc)\s*(\d+\w+)/";
-      $replacements[1] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=NGC%20\\2\">NGC&nbsp;\\2</a>";
+      $replacements[1] = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=NGC%20\\2\">NGC&nbsp;\\2</a>";
       $patterns[2] = "/(IC|Ic|ic)\s*(\d+)/";
-      $replacements[2] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=IC%20\\2\">IC&nbsp;\\2</a>";
+      $replacements[2] = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=IC%20\\2\">IC&nbsp;\\2</a>";
       $patterns[3] = "/(Arp|ARP|arp)\s*(\d+)/";
-      $replacements[3] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=Arp%20\\2\">Arp&nbsp;\\2</a>";
+      $replacements[3] = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=Arp%20\\2\">Arp&nbsp;\\2</a>";
       $LOdescription = preg_replace($patterns,$replacements,$LOdesc);
     }
     if($LOdescription)
@@ -1557,10 +1529,10 @@ class Observations
     // OUTPUT
     $con = $value['objectconstellation'];
     echo("<tr class=\"type2\">\n
-         <td><a href=\"deepsky/index.php?indexAction=detail_object&object=".urlencode($object)."\">$object</a></td>\n
+         <td><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\">$object</a></td>\n
     <td> " . $GLOBALS[$con] . "</td>\n
-        <td><a href=\"common/indexCommon.php?indexAction=detail_observer&amp;user=".urlencode($observer)."\">" .$value['observername'] . "</a></td>\n
-        <td><a href=\"common/indexCommon.php?indexAction=detail_instrument&amp;instrument=".urlencode($temp)."\">$instrument &nbsp;"
+        <td><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observer&amp;user=".urlencode($observer)."\">" .$value['observername'] . "</a></td>\n
+        <td><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($temp)."\">".$instrument." &nbsp;"
     );
     if($instrument != InstrumentsNakedEye)
     {
@@ -1572,7 +1544,7 @@ class Observations
     echo("<td>");
     if($LOdescription)
     {
-      echo("<a href=\"common/detail_instrument.php?instrument=" . $LOtemp . "\">$LOinstrument &nbsp;");
+      echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_instrument&amp;instrument=" . urlencode($LOtemp) . "\">".$LOinstrument." &nbsp;");
       if($LOinstrument != InstrumentsNakedEye)
       {
         echo("(" . $LOinstrumentsize . "&nbsp;mm" . ")");
@@ -1587,9 +1559,9 @@ class Observations
     }
     echo("</td>");
     echo("<td>");
-    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;QobsKey=".$key."&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText);
+    echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;QobsKey=".$obsKey."&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText);
     // LINK TO DRAWING (IF AVAILABLE)
-    $upload_dir = 'drawings';
+    $upload_dir = $GLOBALS['instDir'].'deepsky/drawings';
     $dir = opendir($upload_dir);
     while (FALSE !== ($file = readdir($dir)))
     {
@@ -1603,7 +1575,7 @@ class Observations
       }
     }
     echo("</a>&nbsp;");
-    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=AO\" title=\"" . LangAO . "\">");
+    echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&amp;dalm=AO\" title=\"" . LangAO . "\">");
     echo LangAOText;
     echo("</a>");
     echo("&nbsp;");
@@ -1612,10 +1584,10 @@ class Observations
       $objectid = $this->getObjectId($value['observationid']);
       if ($LOdescription)
       {
-        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=MO\" title=\"" . LangMO . "\">");
+        echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&amp;dalm=MO\" title=\"" . LangMO . "\">");
         echo LangMOText;
         echo("</a>&nbsp;");
-        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=LO\" title=\"" . LangLO . "\">");
+        echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&amp;dalm=LO\" title=\"" . LangLO . "\">");
         echo LangLOText;
         echo("</a>&nbsp;");
       }
@@ -1667,7 +1639,7 @@ class Observations
     echo"<tr>";
     echo"<td> &nbsp; </td>";
     echo"<td colspan=4>";
-    $upload_dir = 'drawings';
+    $upload_dir = $GLOBALS['instDir'].'deepsky/drawings';
     $dir = opendir($upload_dir);
     while (FALSE !== ($file = readdir($dir)))
     {
@@ -1676,10 +1648,9 @@ class Observations
         continue; // skip current directory and directory above
       }
       if(fnmatch($value['observationid'] . "_resized.jpg", $file))
-      {
-        echo("<p><a href=\"deepsky/" . $upload_dir . "/" . $value['observationid'] . ".jpg" . "\">
-        <img class=\"account\" src=\"deepsky/$upload_dir" . "/" . "$file\">
-        </img></a></p>");
+      {echo "<p>";
+				echo "<a href=\"".$GLOBALS['baseURL']."deepsky/drawings/".$value['observationid'].".jpg"."\"> <img class=\"account\" src=\"".$GLOBALS['baseURL']."deepsky/drawings/".$file."\"></img></a>";
+				echo "</p>";
       }
     }
     echo"</td>";
@@ -1688,7 +1659,7 @@ class Observations
     {
       if ($LOdescription)
       {
-        $upload_dir = 'drawings';
+        $upload_dir = $GLOBALS['instDir'].'deepsky/drawings';
         $dir = opendir($upload_dir);
         while (FALSE !== ($file = readdir($dir)))
         {
@@ -1697,10 +1668,9 @@ class Observations
             continue; // skip current directory and directory above
           }
           if(fnmatch($LOid . "_resized.jpg", $file))
-          {
-            echo("<p><a href=\"deepsky/" . $upload_dir . "/" . $LOid . ".jpg" . "\">
-            <img class=\"account\" src=\"deepsky/$upload_dir" . "/" . "$file\">
-            </img></a></p>");
+          { echo "<p>";
+				    echo "<a href=\"".$GLOBALS['baseURL']."deepsky/drawings/".$LOid.".jpg"."\"> <img class=\"account\" src=\"".$GLOBALS['baseURL']."deepsky/drawings/".$file."\"></img></a>";
+				    echo "</p>";
           }
         }
       }
@@ -1710,12 +1680,7 @@ class Observations
   }
 
   function ShowCompactObservation($obsKey, $link, $myList = false)
-  {
-    global $dateformat, $objObserver;
-
-    include_once "objects.php";
-    $objects = new Objects;
-
+  { global $dateformat, $objObserver;
 		$value=$_SESSION['Qobs'][$obsKey];
     // OBJECT
     $object = $value['objectname'];
@@ -1728,23 +1693,23 @@ class Observations
     // DESCRIPTION
     $desc = $value['observationdescription'];
     $patterns[0] = "/\s+(M)\s*(\d+)/";
-    $replacements[0] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
+    $replacements[0] = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
     $patterns[1] = "/(NGC|Ngc|ngc)\s*(\d+\w+)/";
-    $replacements[1] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=NGC%20\\2\">NGC&nbsp;\\2</a>";
+    $replacements[1] = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=NGC%20\\2\">NGC&nbsp;\\2</a>";
     $patterns[2] = "/(IC|Ic|ic)\s*(\d+)/";
-    $replacements[2] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=IC%20\\2\">IC&nbsp;\\2</a>";
+    $replacements[2] = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=IC%20\\2\">IC&nbsp;\\2</a>";
     $patterns[3] = "/(Arp|ARP|arp)\s*(\d+)/";
-    $replacements[3] = "<a href=\"deepsky/index.php?indexAction=detail_object&object=Arp%20\\2\">Arp&nbsp;\\2</a>";
+    $replacements[3] = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=Arp%20\\2\">Arp&nbsp;\\2</a>";
     $description = preg_replace($patterns,$replacements,$desc);
     if ($instrument == "Naked eye")
       $instrument = InstrumentsNakedEye;
     // OUTPUT
     $con = $GLOBALS['objObject']->getConstellation($object);
     echo("<tr class=\"type2\">\n
-         <td><a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">$object</a></td>\n
+         <td><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "\">$object</a></td>\n
     <td> " . $GLOBALS[$con] . "</td>\n
-         <td><a href=\"common/indexCommon.php?indexAction=detail_observer&amp;user=".urlencode($value['observerid'])."\">".$value['observername']."</a></td>\n
-         <td><a href=\"common/indexCommon.php?detail_instrument&amp;instrument=".urlencode($temp)."\">$instrument &nbsp;"
+         <td><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observer&amp;user=".urlencode($value['observerid'])."\">".$value['observername']."</a></td>\n
+         <td><a href=\"".$GLOBALS['baseURL']."index.php?detail_instrument&amp;instrument=".urlencode($temp)."\">$instrument &nbsp;"
     );
     if($instrument != InstrumentsNakedEye)
       echo("(" . $instrumentsize . "&nbsp;mm" . ")");
@@ -1757,9 +1722,9 @@ class Observations
     echo date ($dateformat, mktime (0,0,0,$date[1],$date[2],$date[0]));
     echo("</td>\n");
     echo("<td>");
-    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;QobsKey=".$obsKey."&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText);
+    echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;QobsKey=".$obsKey."&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText);
     // LINK TO DRAWING (IF AVAILABLE)
-    $upload_dir = 'drawings';
+    $upload_dir = $GLOBALS['instDir'].'deepsky/drawings';
     $dir = opendir($upload_dir);
     while (FALSE !== ($file = readdir($dir)))
     {
@@ -1773,15 +1738,15 @@ class Observations
       }
     }
     echo("</a>&nbsp;");
-    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=AO\" title=\"" . LangAO . "\">");
+    echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&dalm=AO\" title=\"" . LangAO . "\">");
     echo LangAOText;
     echo("</a>&nbsp;");
     if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])                  // LOGGED IN
     { if($this->getLOObservationId($object, $_SESSION['deepskylog_id'], $value['observationid']))
-      { echo("<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;dalm=MO\" title=\"" . LangMO . "\">");
+      { echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;dalm=MO\" title=\"" . LangMO . "\">");
         echo LangMOText;
         echo("</a>&nbsp;");
-        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;dalm=LO\" title=\"" . LangLO . "\">");
+        echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;dalm=LO\" title=\"" . LangLO . "\">");
         echo LangLOText;
         echo("</a>&nbsp;");
       }
@@ -1828,15 +1793,15 @@ class Observations
 		echo "<td>";
 		echo"</td>";
     echo"<td colspan=6>";
-    $upload_dir='drawings';
+    $upload_dir=$GLOBALS['instDir'].'deepsky/drawings';
     $dir=opendir($upload_dir);
     while(FALSE!==($file=readdir($dir)))
     { if ("." == $file OR ".." == $file)
       continue; // skip current directory and directory above
       if(fnmatch($value['observationid'] . "_resized.jpg", $file))
       { echo "<p>";
-			  echo "<a href=\"deepsky/" . $upload_dir . "/" . $value['observationid'] . ".jpg" . "\"> <img class=\"account\" src=\"deepsky/".$upload_dir."/".$file."\"> </img></a>";
-			  echo "</p>";
+				echo "<a href=\"".$GLOBALS['baseURL']."deepsky/drawings/".$value['observationid'].".jpg"."\"> <img class=\"account\" src=\"".$GLOBALS['baseURL']."deepsky/drawings/".$file."\"></img></a>";
+				echo "</p>";
 			}
     }
     echo"</td>";
@@ -1868,10 +1833,10 @@ class Observations
     // OUTPUT
     $con = $GLOBALS['objObject']->getConstellation($object);
     echo("<tr $typefield>\n
-    <td><a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode($object) . "\">$object</a></td>\n
+    <td><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "\">".$object."</a></td>\n
     <td> " . $GLOBALS[$con] . "</td>\n
-         <td><a href=\"common/indexCommon.php?indexAction=detail_observer&amp;user=".urlencode($value['observerid'])."\">" . $value['observername'] . "</a></td>\n
-         <td><a href=\"common/indexCommon.php?indexAction=detail_instrument&amp;instrument=".urlencode($temp)."\">$instrument &nbsp;"
+         <td><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observer&amp;user=".urlencode($value['observerid'])."\">" . $value['observername'] . "</a></td>\n
+         <td><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($temp)."\">".$instrument." &nbsp;"
     );
     if($instrument != InstrumentsNakedEye)
     {
@@ -1889,7 +1854,7 @@ class Observations
     }
     echo date ($dateformat, mktime (0,0,0,$date[1],$date[2],$date[0]));
     echo("</td>\n
-         <td><a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;QobsKey=".$obsKey."&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetails);
+         <td><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;QobsKey=".$obsKey."&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetails);
     // LINK TO DRAWING (IF AVAILABLE)
     $upload_dir = $GLOBALS['instDir'].'deepsky/drawings';
     $dir = opendir($upload_dir);
@@ -1907,7 +1872,7 @@ class Observations
     }
     echo("</a>&nbsp;");
 
-    echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=AO\" title=\"" . LangAO . "\">");
+    echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;dalm=AO\" title=\"" . LangAO . "\">");
     echo LangAOText;
     echo("</a>");
     echo("&nbsp;");
@@ -1915,10 +1880,10 @@ class Observations
     {
       if($this->getLOObservationId($object, $_SESSION['deepskylog_id'], $value['observationid']))
       {
-        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=MO\" title=\"" . LangMO . "\">");
+        echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;dalm=MO\" title=\"" . LangMO . "\">");
         echo LangMOText;
         echo("</a>&nbsp;");
-        echo("<a href=\"deepsky/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&dalm=LO\" title=\"" . LangLO . "\">");
+        echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;dalm=LO\" title=\"" . LangLO . "\">");
         echo LangLOText;
         echo("</a>&nbsp;");
       }

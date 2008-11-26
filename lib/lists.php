@@ -318,12 +318,7 @@ class Lists
  }
  
  function getObjectsFromList($listname)
- {
-  include_once "../lib/objects.php";
-  $db = new database;
-  $db->login();
-	$objects=new Objects;
-  $obs=array();
+ {$obs=array();
 	$observer = $_SESSION['deepskylog_id'];
 	if(substr($listname,0,7)=="Public:")
     $sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " .
@@ -337,21 +332,14 @@ class Lists
   while($get = mysql_fetch_object($run))
    if(!in_array($get->objectname, $obs))
 	   $obs[$get->objectshowname] = array($get->objectplace,$get->objectname,$get->description);
-	$obs=$objects->getSeenObjectDetails($obs, "D");	 
-
-  $db->logout();
-  return $obs;
+	return $GLOBALS['objObject']->getSeenObjectDetails($obs, "D");	 
  } 
  
  function checkObjectInMyActiveList($value)
- {
-  $db = new database;
-  $db->login();
-  $observerid = $_SESSION['deepskylog_id'];
+ {$observerid = $_SESSION['deepskylog_id'];
 	$listname = $_SESSION['listname'];
   $sql = "SELECT observerobjectlist.objectplace FROM observerobjectlist WHERE observerid = \"$observerid\" AND objectname=\"$value\" AND listname=\"$listname\"";
   $run = mysql_query($sql) or die(mysql_error());
-  $db->logout();
   $get = mysql_fetch_object($run);
   if($get)
     return $get->objectplace;

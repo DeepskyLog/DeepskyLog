@@ -4,20 +4,24 @@
 
 if (!$_POST['email']||!$_POST['firstname']||!$_POST['name']||!$_POST['passwd']||!$_POST['passwd_again'])
 { $entryMessage=LangValidateAccountMessage1;
-	$_GET['indexAction']='subscribe';
+	if($objUtil->checkPostKey('change')) $_GET['indexAction']='common_content_change_account';
+	else  $_GET['indexAction']='subscribe';
 }
 elseif ($_POST['passwd']!=$_POST['passwd_again'])
 { $entryMessage=LangValidateAccountMessage2;                                                              
-	$_GET['indexAction']='subscribe';
+	if($objUtil->checkPostKey('change')) $_GET['indexAction']='common_content_change_account';
+	else  $_GET['indexAction']='subscribe';
 }
 elseif (!preg_match("/.*@.*..*/", $_POST['email']) | preg_match("/(<|>)/", $_POST['email']))
 { $entryMessage=LangValidateAccountMessage3;                              // check if email address is legal (contains @ symbol)
-	$_GET['indexAction']='subscribe';
+	if($objUtil->checkPostKey('change')) $_GET['indexAction']='common_content_change_account';
+	else  $_GET['indexAction']='subscribe';
 } 
 elseif(array_key_exists('register',$_POST)&&array_key_exists('deepskylog_id',$_POST)&&$_POST['register']&&$_POST['deepskylog_id']) 
 { if($objObserver->getObserverName($_POST['deepskylog_id']))               // user doesn't exist yet
   { $entryMessage=LangValidateAccountMessage4;                              // check if email address is legal (contains @ symbol)
-	  $_GET['indexAction']='subscribe';
+	  if($objUtil->checkPostKey('change')) $_GET['indexAction']='common_content_change_account';
+	  else  $_GET['indexAction']='subscribe';
   }  
   else
 	{ $objObserver->addObserver($_POST['deepskylog_id'],$_POST['name'],$_POST['firstname'],$_POST['email'],md5($_POST['passwd']));
@@ -53,7 +57,8 @@ elseif(array_key_exists('register',$_POST)&&array_key_exists('deepskylog_id',$_P
 elseif(array_key_exists('change', $_POST)&&$_POST['change'])                // pressed change button
 { if(!$_SESSION['deepskylog_id'])                                           // extra control on login
   { $entryMessage=LangValidateAccountMessage1;                              
-	  $_GET['indexAction']='subscribe';
+	  if($objUtil->checkPostKey('change')) $_GET['indexAction']='common_content_change_account';
+	  else  $_GET['indexAction']='subscribe';
   }
   else
 	{ $allLanguages=$objLanguage->getAllLanguages($_SESSION['lang']);         // READ ALL THE LANGUAGES FROM THE CHECKBOXES

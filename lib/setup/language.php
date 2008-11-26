@@ -5,7 +5,7 @@
 class Language
 {
  function getLanguages()                                                        // getLanguages returns a list of all available translations.
- { $mydir=opendir("../lib/setup/language/") ;
+ { $mydir=opendir("lib/setup/language/") ;
    $exclude=array("index.php",".","..",".svn","languages.xml");
    $langs=array();
    while($fn=readdir($mydir))
@@ -23,7 +23,7 @@ class Language
    return $languages[$lang];
  }
  function getAvailableLanguages()
- { $xml=simplexml_load_file("../lib/setup/language/languages.xml");
+ { $xml=simplexml_load_file("lib/setup/language/languages.xml");
    $lang=$xml->lang;
    $countrylist=array();
    foreach ($lang as $item=>$data) 
@@ -31,7 +31,7 @@ class Language
    return $countrylist;
  }
  function getAllLanguages($cur_language)                                        // getAllLanguages returns all the available languages, in the given language
- { $xml=simplexml_load_file("../lib/setup/language/languages.xml");
+ { $xml=simplexml_load_file($GLOBALS['instDir']."lib/setup/language/languages.xml");
    $lang=$xml->lang;
    $countrylist=array();
    $country="name_".$cur_language;
@@ -40,7 +40,7 @@ class Language
    return $countrylist;
  }
  function getLanguageKeys($cur_language)                                        // getAllLanguages returns all keys of the available languages, in the given language
- { $xml = simplexml_load_file("../lib/setup/language/languages.xml");
+ { $xml = simplexml_load_file("lib/setup/language/languages.xml");
    $lang = $xml->lang;
    $countrylist = array();
    $country="name_".$cur_language;

@@ -82,7 +82,7 @@ class Locations
  function getCountries()
  {
    // Reading the file with the country codes.
-   $filename = "../lib/setup/locations/countries.txt";
+   $filename = "lib/setup/locations/countries.txt";
    $fh = fopen($filename, "r") or die("Could not open countries file" + $filename);
 
    while (!feof($fh))
@@ -104,7 +104,7 @@ class Locations
  {
    // Reading the file with the country codes.
    //$filename = "lib/setup/locations/_country_code_help.txt";
-   $filename = "../lib/setup/locations/countries.txt";
+   $filename = "lib/setup/locations/countries.txt";
    $fh = fopen($filename, "r") or die("Could not open countries file");
 
    while (!feof($fh))
@@ -117,7 +117,7 @@ class Locations
    }
    fclose($fh);
 
-   $maindir = "../lib/setup/locations/" ;
+   $maindir = "lib/setup/locations/" ;
    $mydir = opendir($maindir) ;
    $exclude = array( "index.php" , ".", "..") ;
    $countries = array();
@@ -216,7 +216,7 @@ class Locations
  function getLocationsFromDatabase($name, $country)
  {
   // Reading the file with the country codes.
-  $filename = "../lib/setup/locations/countries.txt";
+  $filename = "lib/setup/locations/countries.txt";
 
   $fh = fopen($filename, "r") or die("Could not open countries file");
 
@@ -230,7 +230,7 @@ class Locations
   }
   fclose($fh);
   
-  $filename = "../lib/setup/locations/".strtolower($countriesConversion[$country]).".ast";
+  $filename = "lib/setup/locations/".strtolower($countriesConversion[$country]).".ast";
 
   $fh = fopen($filename, "r") or die("Could not read file");
 

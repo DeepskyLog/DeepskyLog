@@ -3,17 +3,17 @@
 // generates an overview of selected observations in the database
 
 //====================== data_get_observations fetches the data, sorts it and places it in $_SESSION['Qobs'] and puts the toal number of observations in all languages in $_SESSION['QobsTotal'];
-include $instDir.'deepsky/content/data_get_observations.php';
+include 'deepsky/content/data_get_observations.php';
 
 if(count($_SESSION['Qobs'])==0) //================================================================================================== no reult present =======================================================================================
 { echo("</h2>\n");
-  echo "<a href=\"deepsky/index.php?indexAction=query_observations\">" . LangObservationNoResults . "</a>";
+  echo "<a href=\"".$baseURL."index.php?indexAction=query_observations\">" . LangObservationNoResults . "</a>";
   echo " " . LangObservationOR . " ";
-  echo "<a href=\"deepsky/index.php?indexAction=result_selected_observations&catalogue=%\">" . LangObservationQueryError3 . "</a>";
+  echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;catalogue=%\">" . LangObservationQueryError3 . "</a>";
 }
 else                           //================================================================================================== show results in $_SESSION['Qobs'] =======================================================================================
 { $step = 25;
-	$link2 = 'deepsky/index.php?indexAction=result_selected_observations&amp;lco='.urlencode($_SESSION['lco']); 
+	$link2 = $baseURL."index.php?indexAction=result_selected_observations&amp;lco=".urlencode($_SESSION['lco']); 
   reset($_GET);
 	while(list($key,$value)=each($_GET))
 	  if($key!='indexAction')
@@ -25,13 +25,13 @@ else                           //===============================================
   //=============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT BEFORE SHOWING ITS OBSERVATIONS =====================================================================================
   if($object)
   { $object_ss = stripslashes($object);
-    $seen="<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
+    $seen="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
     $seenDetails = $objObject->getSeen($object);
     if(substr($seenDetails,0,1)=="X")
-      $seen="<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\">".$seenDetails."</a>";
+      $seen="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\">".$seenDetails."</a>";
     if(array_key_exists("deepskylog_id", $_SESSION)&&$_SESSION["deepskylog_id"])
       if(substr($seenDetails,0,1)=="Y")
-        $seen="<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen . "\">".$seenDetails."</a>";
+        $seen="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen . "\">".$seenDetails."</a>";
     echo "<div id=\"main\">";
   	echo "<h2>";
     echo LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen;
@@ -39,17 +39,17 @@ else                           //===============================================
   	echo "<table width=\"100%\">";
   	echo "<tr>";
   	echo "<td width=\"25%\" align=\"left\">";
-    echo "<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=".urlencode($object)."\">".LangViewObjectViewNearbyObject." ".$object_ss;
+    echo "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\">".LangViewObjectViewNearbyObject." ".$object_ss;
   	echo "</td><td width=\"25%\" align=\"center\">";
     if(array_key_exists("deepskylog_id", $_SESSION)&&$_SESSION["deepskylog_id"])
-      echo "<a href=\"deepsky/index.php?indexAction=add_observation&object=".urlencode($object)."\">".LangViewObjectAddObservation.$object_ss."</a>";
+      echo "<a href=\"".$baseURL."index.php?indexAction=add_observation&object=".urlencode($object)."\">".LangViewObjectAddObservation.$object_ss."</a>";
   	echo "</td>";
   	if($myList)
   	{ echo "<td width=\"25%\" align=\"center\">";
       if($objList->checkObjectInMyActiveList($object))
-        echo "<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."&amp;removeObjectFromList=".urlencode($object)."\">".$object_ss.LangListQueryObjectsMessage3.$listname_ss."</a>";
+        echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."&amp;removeObjectFromList=".urlencode($object)."\">".$object_ss.LangListQueryObjectsMessage3.$listname_ss."</a>";
       else
-        echo "<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."&amp;addObjectToList=".urlencode($object)."&amp;showname=".urlencode($object)."\">".$object_ss.LangListQueryObjectsMessage2.$listname_ss."</a>";
+        echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."&amp;addObjectToList=".urlencode($object)."&amp;showname=".urlencode($object)."\">".$object_ss.LangListQueryObjectsMessage2.$listname_ss."</a>";
   	  echo "</td>";
   	}	
   	echo "</tr>";
@@ -132,8 +132,8 @@ else                           //===============================================
       echo "<p>";
 			$objUtil->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."deepsky/observations.pdf?SID=Qobs",LangExecuteQueryObjectsMessage4);
       echo " - ";
-      echo "<a href=\"deepsky/observations.csv\" target=\"new_window\">".LangExecuteQueryObjectsMessage5."</a> - ";
-      echo "<a href=\"deepsky/index.php?indexAction=query_objects&amp;source=observation_query\">".LangExecuteQueryObjectsMessage9."</a> - ";
+      echo "<a href=\"".$baseURL."deepsky/observations.csv\" target=\"new_window\">".LangExecuteQueryObjectsMessage5."</a> - ";
+      echo "<a href=\"".$baseURL."index.php?indexAction=query_objects&amp;source=observation_query\">".LangExecuteQueryObjectsMessage9."</a> - ";
 
    }
    else //==================================================================================================== NO OBSERVATIONS FOUND - OUTPUT MESSAGE ===================================================================================== 
@@ -143,7 +143,7 @@ else                           //===============================================
 			echo "<p>";
    }
    //==================================================================================================== PAGE FOOTER - MAKE NEW QUERY ===================================================================================== 
-   echo("<a href=\"deepsky/index.php?indexAction=query_observations\">" . LangObservationQueryError2 . "</a>");
+   echo("<a href=\"".$baseURL."index.php?indexAction=query_observations\">" . LangObservationQueryError2 . "</a>");
 }
 echo "</div>";
 echo "</div>";

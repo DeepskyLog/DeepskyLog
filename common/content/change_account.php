@@ -3,9 +3,7 @@
 // allows the user to view and change his account's details
 
 echo "<div id=\"main\">";
-echo "<h2>";
-echo LangChangeAccountTitle;
-echo "</h2>";
+echo "<h2>".LangChangeAccountTitle."</h2>";
 $upload_dir = 'observer_pics';
 $dir = opendir($upload_dir);
 while (FALSE !== ($file = readdir($dir)))
@@ -17,72 +15,16 @@ while (FALSE !== ($file = readdir($dir)))
 		echo "</p>";
 	}
 }
-echo "<form class=\"content\" action=\"".$baseURL.$_SESSION['module']."/index.php?indexAction=validate_account\" enctype=\"multipart/form-data\" method=\"post\">";
+echo "<form class=\"content\" action=\"".$baseURL."index.php\" enctype=\"multipart/form-data\" method=\"post\">";
+echo "<input type\"hidden\" name=\"indexAction\" value=\"common_control_validate_account\">";
 echo "<table width=\"490\">";
 echo "<tr>";
-echo "<td class=\"fieldname\">";
-echo LangChangeAccountField1;
-echo "</td>";
-echo "<td>";
-echo $_SESSION['deepskylog_id'];
-echo "</td>";
-echo "<td class=\"explanation\">";
-echo LangChangeAccountField1Expl;
-echo "</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">";
-echo LangChangeAccountField2."&nbsp;*";
-echo "</td>";
-echo "<td>";                                                                    // EMAIL
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"email\" size=\"25\" value=\"".$objObserver->getEmail($_SESSION['deepskylog_id'])."\" />";
-echo "</td>";
-echo "<td class=\"explanation\">";
-echo LangChangeAccountField2Expl;
-echo "</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">";
-echo LangChangeAccountField3."&nbsp;*";
-echo "</td>";
-echo "<td>";                                                                    //FIRSTNAME
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"firstname\" size=\"25\" value=\"".$objObserver->getFirstName($_SESSION['deepskylog_id'])."\" />";
-echo "</td>";
-echo "<td class=\"explanation\">";
-echo LangChangeAccountField3Expl;
-echo "</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">";
-echo LangChangeAccountField4."&nbsp;*";
-echo "</td>";
-echo "<td>";                                                                    //NAME
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"name\" size=\"25\" value=\"".$objObserver->getObserverName($_SESSION['deepskylog_id'])."\" />";
-echo "</td>";
-echo "<td class=\"explanation\">";
-echo LangChangeAccountField4Expl;
-echo "</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">";
-echo LangChangeAccountField5."&nbsp;*";
-echo "</td>";
-echo "<td>";                                                                    //PASSWD
-echo "<input type=\"password\" class=\"inputfield\" maxlength=\"64\" name=\"passwd\" size=\"25\" value=\"\" />";
-echo "</td>";
-echo "<td class=\"explanation\">";
-echo LangChangeAccountField5Expl;
-echo "</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">";
-echo LangChangeAccountField6."&nbsp;*";
-echo "</td>";
-echo "<td>";                                                                    //PASSWD CHECK
-echo "<input type=\"password\" class=\"inputfield\" maxlength=\"64\" name=\"passwd_again\" size=\"25\" value=\"\" />";
-echo LangChangeAccountField6Expl;
-echo "</td>";
-echo "</tr>";
+tableFieldnameFieldExplanation(LangChangeAccountField1,"<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkSessionKey('deepskylog_id')."\" />",LangChangeAccountField1Expl);
+tableFieldnameFieldExplanation(LangChangeAccountField2,"<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"email\" size=\"30\" value=\"".$objObserver->getEmail($objUtil->checkSessionKey('deepskylog_id'))."\" />",LangChangeAccountField2Expl);
+tableFieldnameFieldExplanation(LangChangeAccountField3,"<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"firstname\" size=\"30\" value=\"".$objObserver->getFirstName($objUtil->checkSessionKey('deepskylog_id'))."\" />",LangChangeAccountField3Expl);
+tableFieldnameFieldExplanation(LangChangeAccountField4,"<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objObserver->getObserverName($objUtil->checkSessionKey('deepskylog_id'))."\" />",LangChangeAccountField4Expl);
+tableFieldnameFieldExplanation(LangChangeAccountField5,"<input type=\"password\" class=\"inputfield\" maxlength=\"64\" name=\"passwd\" size=\"30\" value=\"\" />",LangChangeAccountField5Expl);
+tableFieldnameFieldExplanation(LangChangeAccountField6,"<input type=\"password\" class=\"inputfield\" maxlength=\"64\" name=\"passwd_again\" size=\"30\" value=\"\" />",LangChangeAccountField6Expl);
 echo "<tr>";
 echo "<td class=\"fieldname\">";
 echo LangChangeAccountField11."&nbsp;*";
@@ -140,7 +82,7 @@ for ($i = 0;$i < count($sites);$i++)
 echo "</select>";
 echo "</td>";
 echo "<td class=\"explanation\">";
-echo "<a href=\"".$baseURL."common/indexCommon.php?indexAction=add_site\">".LangChangeAccountField7Expl."</a>";
+echo "<a href=\"".$baseURL."index.php?indexAction=add_site\">".LangChangeAccountField7Expl."</a>";
 echo "</td>";
 echo "</tr>";
 echo "<tr>";
@@ -165,7 +107,7 @@ while(list($key,$value)=each($instr))
 echo "</select>";
 echo "</td>";
 echo "<td class=\"explanation\">";
-echo "<a href=\"".$baseURL."common/indexCommon.php?indexAction=add_instrument\">".LangChangeAccountField8Expl."</a>";
+echo "<a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeAccountField8Expl."</a>";
 echo "</td>";
 echo "</tr>";
 echo "<tr>";

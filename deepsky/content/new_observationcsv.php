@@ -14,7 +14,7 @@ echo "<br /><br />" . LangCSVMessage3;
 echo "<br /><br />" . LangCSVMessage4;
 echo "<br /><br />" . LangCSVMessage5;
 echo "<br /><br />" . LangCSVMessage6;
-echo "<form action=\"".$baseURL."deepsky/index.php?indexAction=add_csv_observations\" enctype=\"multipart/form-data\" method=\"post\">";
+echo "<form action=\"".$baseURL."index.php?indexAction=add_csv_observations\" enctype=\"multipart/form-data\" method=\"post\">";
 echo "<input type=\"file\" name=\"csv\"><br />"; 
 echo "<input type=\"submit\" name=\"change\" value=\"".LangCSVButton."\" />";
 echo "</form>";

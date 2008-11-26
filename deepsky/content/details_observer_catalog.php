@@ -88,16 +88,21 @@ for ($i = 1; $i <= $numberOfObjects; $i++)
 	else
 	  $ref = $object; 
 	if (in_array($object, $observedObjectsFromCatalogue)) 
-    echo '<td style="background: #33FF00; padding: 5px 5px 5px 5px; text-align: center;">
-		      <a title="' . $ref . '" href="deepsky/index.php?indexAction=result_selected_observations&object=' . 
-		      urlencode($object) . '&observer=' . urlencode($_GET['user']) . '" style="color: #000000;">' . $object . '</a></td>';
-  else
+  { echo "<td style=\"background: #33FF00; padding: 5px 5px 5px 5px; text-align: center;\">";
+		echo "<a title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."&amp;observer=".urlencode($_GET['user'])."\" style=\"color: #000000;\">".$object."</a>";
+		echo "</td>";
+  }
+	else
 	  if ($partof && in_array($object, $observedObjectsFromCataloguePartOf)) 
-  		echo '<td style="background: #FFFF00; padding: 5px 5px 5px 5px; text-align: center;\"><a title="' . $ref . '" href="deepsky/index.php?indexAction=detail_object&object=' . 
-  	     urlencode($object) . '" style="color: #000000;">' . $object . '</td>'; 
+  	{	echo "<td style=\"background: #FFFF00; padding: 5px 5px 5px 5px; text-align: center;\">";
+		  echo "<a title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" style=\"color: #000000;\">".$object."</a>";
+			echo "</td>"; 
+		}
 		else
-  		echo '<td style="background: #FF0000; padding: 5px 5px 5px 5px; text-align: center;\"><a title="' . $ref . '" href="deepsky/index.php?indexAction=detail_object&object=' . 
-  	     urlencode($object) . '" style="color: #000000;">' . $object . '</td>';
+  	{	echo "<td style=\"background: #FF0000; padding: 5px 5px 5px 5px; text-align: center;\">";
+		  echo "<a title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" style=\"color: #000000;\">".$object."</a>";
+			echo "</td>";
+		}
   if(($i % 10) == 0)
     echo  "</tr>";
 	next($resultarray);
@@ -106,9 +111,7 @@ echo "</table>";
 echo "<P>";
 
 if($partof)
-  echo "<a href=\"deepsky/index.php?indexAction=view_observer_catalog&catalog=" . urlencode($cat) . "&user=" . urlencode($_GET['user']) . "&partof=0\">Toon zonder deelobjecten</a> "; 			
+  echo "<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&amp;partof=0\">Toon zonder deelobjecten</a>"; 			
 else
-  echo "<a href=\"deepsky/index.php?indexAction=view_observer_catalog&catalog=" . urlencode($cat) . "&user=" . urlencode($_GET['user']) . "&partof=1\">Toon met deelobjecten</a> ";			
-
-
+  echo "<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&partof=1\">Toon met deelobjecten</a>";			
 ?>

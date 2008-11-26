@@ -1,6 +1,4 @@
-<?php
-// $$ ok
-?>
+
             </table>
           </td>
 	      </td>
@@ -48,10 +46,8 @@
               <!-- set height -->
               <td height="30" valign="top">
                 <?php
-                include_once $instDir."lib/setup/databaseInfo.php"; 
                 for ($i = 0; $i < count($modules);$i++)
-                {
-                  $mod = $modules[$i];
+                { $mod = $modules[$i];
                   print "<a href=\"".$mod."/\">".$$mod."</a><br />";
                 }
                 ?>
@@ -73,7 +69,7 @@
                   if ($_SESSION['module'] == "deepsky")
                   {
 									
-                echo "<FORM action=\"".$baseURL."deepsky/index.php\" method=\"get\">";
+                echo "<FORM action=\"".$baseURL."index.php\" method=\"get\">";
 								echo LangQuickPickHelp; ?>
 								<input type="hidden" name="indexAction" value="quickpick"></input>
                 <input type="text" class="inputfield" maxlength="255" name="object" cvalue="" 
@@ -115,15 +111,11 @@
                   if (($_SESSION['module'] == "deepsky") && (array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id']))
                   {
 								
-                echo "<FORM action=\"".$baseURL."deepsky/index.php\" method=\"get\">";
+                echo "<FORM action=\"".$baseURL."index.php\" method=\"get\">";
 								echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\"></input>";
 								echo "<input type=\"submit\" name=\"manage\" value=\"".LangListManage."\" style=\"width: 147px\">";
                 echo "</FORM>";
                 
-								    include_once $instDir."lib/database.php";
-										include_once $instDir."lib/lists.php";
-										$list=new Lists;
-                    
                     if(array_key_exists('addList',$_GET) && array_key_exists('addlistname',$_GET))
                     {
                       if(array_key_exists('QOL',$_SESSION))
@@ -132,11 +124,11 @@
                     	if(array_key_exists("PublicList",$_GET))
                     		if(substr($listnameToAdd,0,7)!="Public:")
                           $listnameToAdd = "Public: " . $listnameToAdd;  
-                      if($list->checkList($_GET['addlistname'])!=0)
+                      if($objList->checkList($_GET['addlistname'])!=0)
                     	  $_GET['listnameMessage'] = LangToListList . stripslashes($listnameToAdd) . LangToListExists;
                     	else
                     	{
-                    	  $list->addList($listnameToAdd);
+                    	  $objList->addList($listnameToAdd);
                         if(array_key_exists('QOL',$_SESSION))
 												  unset($_SESSION['QOL']);
                     	  $_SESSION['listname'] = $listnameToAdd;
@@ -152,20 +144,20 @@
                       if(array_key_exists("PublicList",$_GET))
                         if(substr($listnameTo,0,7)!="Public:")
                           $listnameTo = "Public: " . $listnameTo;  
-                      if($list->checkList($listnameTo)!=0)
+                      if($objList->checkList($listnameTo)!=0)
                      	  $_GET['listnameMessage'] =  LangToListList . stripslashes($listnameTo) . LangToListExists;
                       else
                       {
-                        $list->renameList($listnameFrom, $listnameTo);
+                        $objList->renameList($listnameFrom, $listnameTo);
                         $_SESSION['listname'] = $listnameTo;
                         $_GET['listnameMessage'] = LangToListList . stripslashes($_SESSION['listname']) . LangToListAdded;
                       }
 									  }
-                    if(array_key_exists('removeList',$_GET) && ($list->checkList($_SESSION['listname'])==2))
+                    if(array_key_exists('removeList',$_GET) && ($objList->checkList($_SESSION['listname'])==2))
                     {
                       if(array_key_exists('QOL',$_SESSION))
 											  unset($_SESSION['QOL']);
-                      $list->removeList($_SESSION['listname']);
+                      $objList->removeList($_SESSION['listname']);
                     	$_GET['listnameMessage'] = LangToListRemoved . stripslashes($_SESSION['listname']) . ".";
                       $_SESSION['listname']="----------";
 											unset($_GET['removeList']);
@@ -216,9 +208,9 @@
                       while(list($key, $value) = each($result))
 											{
                         if($value==$_SESSION['listname'])
-												  echo("<option selected value=\""  . $baseURL . "deepsky/index.php?indexAction=listaction&activateList=true&listname=$value\">$value</option>\n");
+												  echo("<option selected value=\"".$baseURL."index.php?indexAction=listaction&amp;activateList=true&amp;listname=".$value."\">".$value."</option>");
                         elseif (!(array_key_exists('removeList',$_GET) && ($_SESSION['listname']==$value)))
-												  echo("<option value=\""  . $baseURL . "deepsky/index.php?indexAction=listaction&activateList=true&listname=$value\">$value</option>\n");
+												  echo("<option value=\"".$baseURL."index.php?indexAction=listaction&amp;activateList=true&amp;listname=".$value."\">".$value."</option>");
                     	}
 											echo("</select>\n");
 								    }

@@ -1,9 +1,6 @@
 <?php
-
 // setup_observations_query.php
 // interface to query observations
-// version 0.4, JV 20050203 
-// version 3.1, DE 20061119
 
 echo "	<SCRIPT LANGUAGE=\"JavaScript\" SRC=\"" . $baseURL . "lib/javascript/CalendarPopupCC.js\"></SCRIPT>";
 echo "	<SCRIPT LANGUAGE=\"JavaScript\">";
@@ -40,13 +37,13 @@ echo("</h2>\n");
 echo("<table width=\"100%\">\n");
 
 echo("<tr>");
-echo("<td>");
-echo("<form action=\"deepsky/index.php\">
-      <input type=\"hidden\" name=\"indexAction\" value=\"query_observations\">
-      <input type=\"submit\" name=\"clear\" value=\"" . LangQueryObservationsButton2 . "\" />");
+echo "<td>";
+echo "<form action=\"".$baseURL."index.php\">";
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"query_observations\">";
+echo "<input type=\"submit\" name=\"clear\" value=\"" . LangQueryObservationsButton2 . "\" />";
 echo("</form>");
 echo("</td><td>");
-echo("<form action=\"deepsky/index.php\" method=\"get\" name=\"ObservationsQueryForm\">\n");
+echo("<form action=\"".$baseURL."index.php\" method=\"get\" name=\"ObservationsQueryForm\">\n");
 echo("<input type=\"hidden\" name=\"indexAction\" value=\"result_selected_observations\">");
 echo "<input type=\"hidden\" name=\"sort\" value=\"objectname\">";
 echo "<input type=\"hidden\" name=\"sortdirection\" value=\"asc\">";

@@ -6,10 +6,10 @@
 
 session_start(); // start session
 
-include "../../lib/locations.php";
-include "../../lib/observers.php";
-include_once "../../lib/setup/vars.php";
-include_once "../../lib/util.php";
+include "lib/locations.php";
+include "lib/observers.php";
+include_once "lib/setup/vars.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -18,12 +18,9 @@ if(array_key_exists('adaption',$_GET) && ($_POST['adaption'] == 1))
 {
 	$observer = new Observers;
 	$observer->setStandardLocation($_SESSION['deepskylog_id'], $_POST['stdlocation']);
-
-  header("Location:../add_site.php");
+  $_GET['indexAction']="add_site";
 } else if (!$_POST['sitename'] || !$_POST['region'] || !$_POST['country'] || !$_POST['longitude'] || !$_POST['latitude'] || !$_POST['timezone'])
-{
-      $_SESSION['message'] = LangValidateSiteMessage1; 
-      header("Location:../error.php");
+{ throw new Exception(LangValidateSiteMessage1); 
 }
 else // all fields filled in
 {
@@ -81,6 +78,6 @@ if(array_key_exists('change', $_POST) && $_POST['change'])
              $locations-setLocationLimitingMagnitude($_POST['id'], -999);
 					}
 }
-          header("Location:../add_site.php");
+          $_GET['indexAction']="add_site.php";
 }
 ?>

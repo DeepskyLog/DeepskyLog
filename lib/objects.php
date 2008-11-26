@@ -2,9 +2,6 @@
 // The objects class collects all functions needed to enter, retrieve and
 // adapt object data from the database and functions to display the data.
 
-include_once "database.php";
-include_once "observations.php";
-
 class Objects
 {
  // addObject adds a new object to the database. The name, alternative name, 
@@ -541,12 +538,12 @@ class Objects
  }
  function getDSOseen($object)
  { $seenDetails=$this->getSeen($object);
-   $seen = "<a href=\"deepsky/index.php?indexAction=detail_object&object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
+   $seen = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_objectamp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
    if(substr($seenDetails,0,1)=="X")                                            // object has been seen already
-     $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=".urlencode($object)."\" title=\"".LangObjectXSeen."\">".$seenDetails."</a>";
+     $seen = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\">".$seenDetails."</a>";
    if(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id'])
      if (substr($seenDetails,0,1)=="Y")                                         // object has been seen by the observer logged in
-       $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&object=".urlencode($object)."\" title=\"".LangObjectYSeen."\">".$seenDetails."</a>";
+       $seen = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\">".$seenDetails."</a>";
    return $seen;
  }
  function getObjectVisibilities($obs)
@@ -1601,16 +1598,16 @@ function getPartOfNames($name)
      // DECLINATION
      $decl = decToStringDegMin($_SESSION[$_SID][$count]['objectdecl']);
 	 // SEEN
-     $seen="<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
+     $seen="<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
      if(substr($_SESSION[$_SID][$count][3],0,1)=="X")
-       $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectXSeen . "\">" . $_SESSION[$_SID][$count][3] . "</a>";
+       $seen = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectXSeen . "\">" . $_SESSION[$_SID][$count][3] . "</a>";
      if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($_SESSION[$_SID][$count][3],0,1)=="Y"))
-       $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION[$_SID][$count][3] . "</a>";
-     $seendate = "<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
+       $seen = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION[$_SID][$count][3] . "</a>";
+     $seendate = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
      if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($_SESSION[$_SID][$count][3],0,1)=="Y"))
-       $seendate = "<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $_SESSION[$_SID][$count]['objectlastobservationid'] . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION[$_SID][$count]['objectlastseen'] . "</a>";
+       $seendate = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&amp;observation=" . $_SESSION[$_SID][$count]['objectlastobservationid'] . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION[$_SID][$count]['objectlastseen'] . "</a>";
 	 echo "<tr $typefield>\n";
-     echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($name) . "\">$showname</a></td>\n";
+     echo "<td align=\"center\"><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode($name) . "\">$showname</a></td>\n";
      echo "<td align=\"center\">".$GLOBALS[$_SESSION[$_SID][$count]['objectconstellation']]."</td>\n";
      echo "<td align=\"center\">$magnitude</td>\n";
      echo "<td align=\"center\">$sb</td>\n";
@@ -1651,7 +1648,7 @@ function getPartOfNames($name)
 	 echo "<td class=\"fieldname\" align=\"right\" width=\"25%\">";
    echo LangViewObjectField1;
    echo "</td><td width=\"25%\">";
-   echo "<a href=\"".$GLOBALS['baseURL']."deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode(stripslashes($object)) . "\">" . (stripslashes($object)) . "</a>";
+   echo "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode(stripslashes($object)) . "\">" . (stripslashes($object)) . "</a>";
    echo("</td>");
 	 if(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id']&&($standardAtlasCode=$GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id'])))
    { echo "<td class=\"fieldname\" align=\"right\" width=\"25%\">"; 
@@ -1694,9 +1691,9 @@ function getPartOfNames($name)
   while(list($key, $value) = each($contains)) // go through names array
   { if(trim($value)!=trim($object))
 		{ if($containst)
-			  $containst.="/"."(<a href=\"deepsky/index.php?indexAction=detail_object&object=".urlencode(trim($value))."\">".trim($value)."</a>)";
+			  $containst.="/"."(<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=".urlencode(trim($value))."\">".trim($value)."</a>)";
 			else
-			  $containst="(<a href=\"deepsky/index.php?indexAction=detail_object&object=".urlencode(trim($value))."\">".trim($value)."</a>)";
+			  $containst="(<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=".urlencode(trim($value))."\">".trim($value)."</a>)";
     }
   }
 	if($containst=="") echo "(-)/"; else echo $containst . "/";
@@ -1704,9 +1701,9 @@ function getPartOfNames($name)
   while(list($key, $value) = each($partof)) // go through names array
   { if(trim($value)!=trim($object))
 		{ if($partoft)
-			  $partoft .= "/" . "<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode(trim($value)) . "\">" . trim($value) . "</a>";
+			  $partoft .= "/" . "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode(trim($value)) . "\">" . trim($value) . "</a>";
 			else
-			  $partoft= "<a href=\"deepsky/index.php?indexAction=detail_object&object=" . urlencode(trim($value)) . "\">" . trim($value) . "</a>";
+			  $partoft= "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode(trim($value)) . "\">" . trim($value) . "</a>";
     }
   }
 	if($partoft=="") echo "-"; else echo $partoft;
@@ -1866,7 +1863,7 @@ function getPartOfNames($name)
 	echo "</tr>";
 	if(array_key_exists('listname',$_SESSION) && ($GLOBALS['objList']->checkObjectInMyActiveList($object)))
 	{ if($GLOBALS['objList']->checkList($_SESSION['listname'])==2)
-    { echo("<form action=\"deepsky/index.php?indexAction=detail_object\">\n");    	
+    { echo("<form action=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object\">");    	
       echo("<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />");
       echo("<input type=\"hidden\" name=\"object\" value=\"" . $object . "\" />");
       echo("<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>");
@@ -1911,7 +1908,7 @@ function getPartOfNames($name)
 
   echo("<table width=\"100%\"><tr><td width=\"50%\" align=\"center\">");
   // LINK TO DSS IMAGE
-  echo("<form action=\"deepsky/index.php?indexAction=view_image\" method=\"post\">\n");
+  echo("<form action=\"".$GLOBALS['baseURL']."index.php?indexAction=view_image\" method=\"post\">");
   echo("<select name=\"imagesize\">\n");
   if($zoom<=15) echo("<option selected value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"); else echo("<option value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"); // 15 x 15 arcminutes
   if(($zoom>15)&& ($zoom<=30)) echo("<option selected value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>"); else echo("<option value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>"); // 30 x 30 arcminutes
@@ -1930,7 +1927,7 @@ function getPartOfNames($name)
   {
     $raDSL = raToStringDSL($this->getRa($object));
     $declDSL = decToStringDSL($this->getDeclination($object));
-    echo("<form action=\"deepsky/index.php?indexAction=detail_object&object=".urlencode($object)."&zoom=" . $zoom . "\" method=\"post\">");
+    echo("<form action=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;zoom=" . $zoom . "\" method=\"post\">");
       echo("<select name=\"dslsize\">\n");
         if($zoom<=30) echo("<option selected value=\"60\">1&deg;</option>"); else echo("<option value=\"60\">1&deg;</option>");
         if(($zoom>30) && ($zoom<=60)) echo("<option selected value=\"120\">2&deg;</option>"); else echo("<option value=\"120\">2&deg;</option>");

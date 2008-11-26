@@ -1,21 +1,11 @@
 <?php
-
 // new_object.php
 // allows the user to add an object to the database 
-// Version 0.1: 2004/09/05, JV
-//$$ ok
 
-include_once "../lib/objects.php";
-include_once "../lib/setup/language.php";
-include_once "../lib/util.php";
-
-$util = new Util();
-$util->checkUserInput();
-$objects = new Objects; 
 echo("<div id=\"main\">\n<h2>");
 echo (LangNewObjectTitle); 
 echo("</h2>\n<table width=\"100%\">\n");
-echo("<form action=\"deepsky/index.php?indexAction=validate_object\" method=\"post\">");
+echo("<form action=\"".$baseURL."index.php?indexAction=validate_object\" method=\"post\">");
 // NAME
 
 echo("<tr>\n
@@ -44,7 +34,7 @@ echo("<select name=\"type\">\n");
 
 echo("<option value=\"\"></option>"); // empty field
 
-$types = $objects->getDsObjectTypes();
+$types = $objObject->getDsObjectTypes();
 
 while(list($key, $value) = each($types))
 {
@@ -75,7 +65,7 @@ echo("<select name=\"con\">\n");
 
 echo("<option value=\"\"></option>"); // empty field
 
-$constellations = $objects->getConstellations(); // should be sorted
+$constellations = $objObject->getConstellations(); // should be sorted
 
 while(list($key, $value) = each($constellations))
 {
@@ -144,7 +134,7 @@ echo("</td>\n<td></td>\n</tr>\n");
 
 // SIZE
 
-if(array_key_exists('object',$_GET) && ($objects->getSize($_GET['object']) != ""))
+if(array_key_exists('object',$_GET) && ($objObject->getSize($_GET['object']) != ""))
 {
    echo("<tr>\n
          <td class=\"fieldname\">");
@@ -153,7 +143,7 @@ if(array_key_exists('object',$_GET) && ($objects->getSize($_GET['object']) != ""
  
    echo("</td>\n<td>");
  
-   echo($objects->getSize($_GET['object']));
+   echo($objObject->getSize($_GET['object']));
  
    echo("</td>\n</tr>\n"); 
 }

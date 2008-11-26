@@ -6,14 +6,14 @@ if(!$_GET['observation'])
   throw new Exception("No observation selected");
 echo "<div id=\"main\">";
 echo "<h2>".LangChangeObservationTitle."</h2>";
-echo "<form action=\"deepsky/index.php?indexAction=validate_change_observation\" method=\"post\" enctype=\"multipart/form-data\">";
+echo "<form action=\"".$baseURL."index.php?indexAction=validate_change_observation\" method=\"post\" enctype=\"multipart/form-data\">";
 tableNew("width=\"490\"");
 tableNewRow();
 tableFormatCell("class=\"fieldname\" width=\"100\"",LangViewObservationField1);
 tableCell("<a href=\"deepsky/index?indexAction=detail_object&amp;object=".$objObservation->getObjectId($_GET['observation'])."\">".$objObservation->getObjectId($_GET['observation'])."</a>");
 tableNextRow();
 tableFormatCell("class=\"fieldname\"",LangViewObservationField2);
-tableFormatCell('',"<a href=\"common/detail_observer.php?amp;user=".$objObservation->getObserverId($_GET['observation'])."\">".$objObserver->getFirstName($objObservation->getObserverId($_GET['observation'])) . "&nbsp;" . $objObserver->getObserverName($objObservation->getObserverId($_GET['observation']))."</a>");
+tableFormatCell('',"<a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".$objObservation->getObserverId($_GET['observation'])."\">".$objObserver->getFirstName($objObservation->getObserverId($_GET['observation'])) . "&nbsp;" . $objObserver->getObserverName($objObservation->getObserverId($_GET['observation']))."</a>");
 tableNewRow();
 tableFormatCell("class=\"fieldname\"",LangViewObservationField5);
 echo "<td>";

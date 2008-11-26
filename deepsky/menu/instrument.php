@@ -11,7 +11,7 @@ echo "</tr>";
 echo "<tr>";
 echo "<td>";
 if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && ($_SESSION['module']=='deepsky')) 
-{ $link=$baseURL."deepsky/index.php?";
+{ $link=$baseURL."index.php?";
 	reset($_GET);
 	while(list($key,$value)=each($_GET))
 	  $link.=$key.'='.$value.'&amp;';

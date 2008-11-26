@@ -63,7 +63,9 @@ else
 if(isset($_COOKIE['module']))
 	$_SESSION['module']=$_COOKIE['module'];
 else
-  $_SESSION['module']=$modules[0];
+{ $_SESSION['module']=$modules[0];
+  $objUtil->utilitiesSetModuleCookie($_SESSION['module']);
+}
 if(!array_key_exists('lang',$_SESSION))
   $_SESSION['lang']=$defaultLanguage;
 if(array_key_exists('indexAction',$_POST)&&($_POST['indexAction']=="setLanguage"))

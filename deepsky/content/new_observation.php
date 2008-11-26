@@ -14,18 +14,18 @@ if($object)
 	echo "<tr>";
   echo "<td width=\"25%\" align=\"left\">";
   if(substr($GLOBALS['objObject']->getSeen($object),0,1)!="-")
-    echo "<a href=\"".$baseURL."deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object)."\">" . LangViewObjectObservations . " ".$object;
+    echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\">".LangViewObjectObservations." ".$object;
   echo "</td>";
 	echo "<td width=\"25%\" align=\"center\">";
   if(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
-    echo("<a href=\"".$baseURL."deepsky/index.php?indexAction=add_observation&amp;object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object . "</a>");
+    echo "<a href=\"".$baseURL."index.php?indexAction=add_observation&amp;object=".urlencode($object)."\">".LangViewObjectAddObservation.$object."</a>";
   echo "</td>";
   if($myList)
   { echo "<td width=\"25%\" align=\"center\">";
     if($objList->checkObjectInMyActiveList($object))
-      echo "<a href=\"".$baseURL."deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "</a>";
+      echo "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;removeObjectFromList=".urlencode($object)."\">".$object.LangListQueryObjectsMessage3.$_SESSION['listname']."</a>";
     else
-      echo "<a href=\"".$baseURL."deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>";
+      echo "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;addObjectToList=".urlencode($object)."&amp;showname=".urlencode($object)."\">".$object.LangListQueryObjectsMessage2.$_SESSION['listname']."</a>";
     echo "</td>";
   }
   echo "</tr>";
@@ -35,7 +35,7 @@ if($object)
 	echo "<li value=\"3\">" . LangNewObservationSubtitle3 . "</li>";
 	echo "</ol>";
   echo "<p><p/>";
-	echo "<form action=\"".$baseURL."deepsky/index.php\" method=\"post\" enctype=\"multipart/form-data\">";
+	echo "<form action=\"".$baseURL."index.php\" method=\"post\" enctype=\"multipart/form-data\">";
   echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_observation\">";
   echo "<input type=\"hidden\" name=\"timestamp\" value=\"".$_POST['timestamp']."\">";
   echo "<input type=\"hidden\" name=\"object\" value=\"".$object."\">";
@@ -46,7 +46,7 @@ if($object)
   $sites=$GLOBALS['objLocation']->getSortedLocationsList("name",$_SESSION['deepskylog_id']);
   while(list($key,$value)=each($sites))
 		echo "<option ".(($GLOBALS['objUtil']->checkPostKey('site',0)==$value[0])?"selected=\"selected\"":(($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id'])==$value[0])?"selected=\"selected\"":''))." value=\"".$value[0]."\">".$value[1]."</option>";
-  echo "</select></td><td class=\"explanation\"><a href=\"".$baseURL."common/indexCommon.php?indexAction=add_site\">" . LangChangeAccountField7Expl ."</a>";
+  echo "</select></td><td class=\"explanation\"><a href=\"".$baseURL."index.php?indexAction=add_site\">".LangChangeAccountField7Expl."</a>";
 	echo "</td>";
   echo "</tr>";
   echo "<tr>";                                                                  //DATE  / TIME
@@ -117,7 +117,7 @@ if($object)
   echo "</select>";
 	echo "</td>";
   echo "<td class=\"explanation\">";
-	echo "<a href=\"".$baseURL."common/indexCommon.php?indexAction=add_instrument\">" . LangChangeAccountField8Expl . "</a>";
+	echo "<a href=\"".$baseURL."index.php?indexAction=add_instrument\">" . LangChangeAccountField8Expl . "</a>";
 	echo "</td>";
   echo "<td class=\"fieldname\" align=\"right\">";
 	echo LangViewObservationField31 . "&nbsp;";
@@ -130,7 +130,7 @@ if($object)
   echo "</select>";
 	echo "</td>";
   echo "<td class=\"explanation\">";
-	echo "<a href=\"".$baseURL."common/indexCommon.php?indexAction=add_filter\">" . LangViewObservationField31Expl . "</a>";
+	echo "<a href=\"".$baseURL."index.php?indexAction=add_filter\">" . LangViewObservationField31Expl . "</a>";
   echo "</td>";
   echo "</tr>";
   echo "<tr>";
@@ -145,7 +145,7 @@ if($object)
   echo "</select>";
 	echo "</td>";
   echo "<td class=\"explanation\">";
-	echo "<a href=\"".$baseURL."common/indexCommon.php?indexAction=add_eyepiece\">".LangViewObservationField30Expl."</a>";
+	echo "<a href=\"".$baseURL."index.php?indexAction=add_eyepiece\">".LangViewObservationField30Expl."</a>";
   echo "</td>";
   echo "<td class=\"fieldname\" align=\"right\">".LangViewObservationField32."&nbsp;";
 	echo "</td>";
@@ -157,7 +157,7 @@ if($object)
   echo "</select>";
 	echo "</td>";
   echo "<td class=\"explanation\">";
-	echo "<a href=\"".$baseURL."common/indexCommon.php?indexAction=add_lens\">" . LangViewObservationField32Expl . "</a>";
+	echo "<a href=\"".$baseURL."index.php?indexAction=add_lens\">" . LangViewObservationField32Expl . "</a>";
   echo "</td>";
   echo "</tr>";
   echo "<tr>";
@@ -236,10 +236,10 @@ else // no object found or not pushed on search button yet
   echo (LangNewObservationTitle);
   echo "</h2>";
   // upper form
-  echo "<form action=\"".$baseURL."deepsky/index.php?indexAction=add_observation\" method=\"post\">";
+  echo "<form action=\"".$baseURL."index.php?indexAction=add_observation\" method=\"post\">";
   echo "<ol>";
 	echo "<li value=\"1\">" . LangNewObservationSubtitle1a.LangNewObservationSubtitle1abis;
-  echo "<a href=\"".$baseURL."deepsky/index.php?indexAction=add_csv\">" . LangNewObservationSubtitle1b . "</a>";
+  echo "<a href=\"".$baseURL."index.php?indexAction=add_csv\">" . LangNewObservationSubtitle1b . "</a>";
   echo "</li>";
 	echo "</ol>";
   echo "<table width=\"100%\" id=\"content\">";

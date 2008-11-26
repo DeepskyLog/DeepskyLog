@@ -53,31 +53,31 @@ elseif(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="clear_obs
 	$_GET['indexAction']="add_observation";
 }
 if(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="validate_observation")
-  include_once $instDir."/deepsky/control/validate_observation.php";
+  include_once "deepsky/control/validate_observation.php";
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_change_observation")
-  include_once $instDir."/deepsky/control/validate_change_observation.php";
+  include_once "deepsky/control/validate_change_observation.php";
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_object")
-  include_once $instDir."/deepsky/control/validate_object.php";
+  include_once "deepsky/control/validate_object.php";
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_delete_observation")
-  include_once $instDir."/deepsky/control/validate_delete_observation.php";
+  include_once "deepsky/control/validate_delete_observation.php";
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="manage_csv_objects")
-  include_once $instDir."/deepsky/control/manage_csv_objects.php";
+  include_once "deepsky/control/manage_csv_objects.php";
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_csv_observations")
-  include_once $instDir."/deepsky/control/add_csv_observations.php";
+  include_once "deepsky/control/add_csv_observations.php";
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_csv_listdata")
-  include_once $instDir."/deepsky/control/add_csv_listdata.php";
+  include_once "deepsky/control/add_csv_listdata.php";
 // ============================================================================ LIST COMMANDS
 if(array_key_exists('addObjectToList',$_GET)&&$_GET['addObjectToList']&&array_key_exists('listname',$_SESSION)&&$_SESSION['listname']&&$myList)
 { $objList->addObjectToList($_GET['addObjectToList'],$GLOBALS['objUtil']->checkGetKey('showname',$_GET['addObjectToList']));
-  $entryMessage.=LangListQueryObjectsMessage8."<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=".urlencode($_GET['addObjectToList']) . "\">".$_GET['showname']."</a>".LangListQueryObjectsMessage6."<a href=\"deepsky/index.php?indexAction=listaction&amp;manage=manage\">".$listname_ss."</a>.";
+  $entryMessage.=LangListQueryObjectsMessage8."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['addObjectToList']) . "\">".$_GET['showname']."</a>".LangListQueryObjectsMessage6."<a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">".$listname_ss."</a>.";
 }
 if(array_key_exists('addObservationToList',$_GET) && $_GET['addObservationToList'] && $myList)
 { $objList->addObservationToList($_GET['addObservationToList']);
-  $entryMessage.=LangListQueryObjectsMessage16.LangListQueryObjectsMessage6."<a href=\"deepsky/index.php?indexAction=listaction&manage=manage\">".$listname_ss."</a>.";
+  $entryMessage.=LangListQueryObjectsMessage16.LangListQueryObjectsMessage6."<a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">".$listname_ss."</a>.";
 }
 if(array_key_exists('removeObjectFromList',$_GET) && $_GET['removeObjectFromList'] && $myList)
 { $objList->removeObjectFromList($_GET['removeObjectFromList']);
-  $entryMessage.=LangListQueryObjectsMessage8."<a href=\"deepsky/index.php?indexAction=detail_object&object=".urlencode($_GET['removeObjectFromList'])."\">".$_GET['removeObjectFromList']."</a>".LangListQueryObjectsMessage7."<a href=\"deepsky/index.php?indexAction=listaction&manage=manage\">".$listname_ss."</a>.";
+  $entryMessage.=LangListQueryObjectsMessage8."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['removeObjectFromList'])."\">".$_GET['removeObjectFromList']."</a>".LangListQueryObjectsMessage7."<a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">".$listname_ss."</a>.";
 }
 
 if(array_key_exists('addAllObjectsFromPageToList',$_GET) && $_GET['addAllObjectsFromPageToList'] && $myList)
@@ -86,7 +86,7 @@ if(array_key_exists('addAllObjectsFromPageToList',$_GET) && $_GET['addAllObjects
 	{ $objList->addObjectToList($_SESSION['Qobj'][$count]['objectname'],$_SESSION['Qobj'][$count]['showname']);
 		$count++;
   }
-	$entryMessage = LangListQueryObjectsMessage9 . "<a href=\"deepsky/index.php?indexAction=listaction&amp;manage=manage\">".$listname_ss."</a>.";
+	$entryMessage = LangListQueryObjectsMessage9 . "<a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">".$listname_ss."</a>.";
 }
 if(array_key_exists('addAllObjectsFromQueryToList',$_GET)&&$_GET['addAllObjectsFromQueryToList']&&$myList)
 { $count=0;
@@ -94,7 +94,7 @@ if(array_key_exists('addAllObjectsFromQueryToList',$_GET)&&$_GET['addAllObjectsF
 	{ $objList->addObjectToList($_SESSION['Qobj'][$count]['objectname'],$_SESSION['Qobj'][$count]['showname']);
 		$count++;
   }
-	$entryMessage = LangListQueryObjectsMessage9 . "<a href=\"deepsky/index.php?indexAction=listaction&amp;manage=manage\">" .  $_SESSION['listname'] . "</a>.";
+	$entryMessage = LangListQueryObjectsMessage9 . "<a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">" .  $_SESSION['listname'] . "</a>.";
 }
 if(array_key_exists('editListObjectDescription',$_GET)&&$_GET['editListObjectDescription']
  &&array_key_exists('object',$_GET)&&$_GET['object']&&array_key_exists('description',$_GET))

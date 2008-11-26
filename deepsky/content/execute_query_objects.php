@@ -51,19 +51,19 @@ if(count($_SESSION['Qobj'])>1) //===============================================
     echo "<a href=\"".$link."&amp;min=".$min."&amp;addAllObjectsFromQueryToList=true\" title=\"".LangListQueryObjectsMessage5.$_SESSION['listname']."\">".LangListQueryObjectsMessage4."</a>"."&nbsp;-&nbsp;";
   echo "<a href=\"deepsky/objects.csv?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a>";
 	echo "<p>";
-	echo "<a href=\"deepsky/index.php?indexAction=query_objects\">".LangExecuteQueryObjectsMessage1."</a>";
+	echo "<a href=\"".$baseURL."index.php?indexAction=query_objects\">".LangExecuteQueryObjectsMessage1."</a>";
 	echo "</div>";
 }
 elseif(count($_SESSION['Qobj'])==1) // ========================================= 1 object found
 { $_GET['object']=$_SESSION['Qobj'][0]['objectname'];
-  include "view_object.php";
+  include "deepsky/content/view_object.php";
 } 
 else // ========================================================================no results found
 { echo "<div id=\"main\">";
   echo "<h2>".LangSelectedObjectsTitle."</h2>";
   echo LangExecuteQueryObjectsMessage2;
   echo "<p>";
-	echo "<a href=\"deepsky/index.php?indexAction=query_objects\">".LangExecuteQueryObjectsMessage2a."</a>";
+	echo "<a href=\"".$baseURL."index.php?indexAction=query_objects\">".LangExecuteQueryObjectsMessage2a."</a>";
 	echo "</div>";
 }
 

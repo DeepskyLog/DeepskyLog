@@ -11,7 +11,6 @@
 // PUBLIC OBJECT
 //  $objUtil  
 
-include_once "setup/vars.php";
 include_once "class.ezpdf.php";
 
 class util
@@ -19,19 +18,17 @@ class util
   public function __construct()
 	{ $this->checkUserInput();
   }
-  private function utilitiesGetIndexActionCommonDefaultAction()
+  private function utilitiesGetIndexActionDefaultAction()
   { if($_SESSION['module']='deepsky')
-	    return $this->utilitiesGetIndexActionDSdefaultAction();
+	  { $_GET['catalogue']='%';
+  	  $theDate = date('Ymd', strtotime('-1 year'));
+      $_GET['minyear'] = substr($theDate,0,4);
+      $_GET['minmonth'] = substr($theDate,4,2);
+      $_GET['minday'] = substr($theDate,6,2);  
+  	  return 'deepsky/content/selected_observations2.php';
+		}
 		else
-		  throw new Exception("No default action yet for comets in funtcion utilitiesGetIndexActionCommonDefaultAction in util.php");
-  }
-  private function utilitiesGetIndexActionDSdefaultAction()
-  { $_GET['catalogue']='%';
-  	$theDate = date('Ymd', strtotime('-1 year'));
-    $_GET['minyear'] = substr($theDate,0,4);
-    $_GET['minmonth'] = substr($theDate,4,2);
-    $_GET['minday'] = substr($theDate,6,2);  
-  	return 'deepsky/content/selected_observations2.php';
+		  throw new Exception("No default action yet for comets in funtcion utilitiesGetIndexActionCommonDefaultAction in util.php");	
   }
   private function utilitiesCheckIndexActionDSquickPick()
   { if(array_key_exists('indexAction',$_GET)&&($_GET['indexAction'] == 'quickpick'))
@@ -301,9 +298,9 @@ class util
     $pdf = new Cezpdf('a4', 'landscape');
     $pdf->ezStartPageNumbers(450, 15, 10);
 
-    $fontdir = /*realpath*/('../lib/fonts/Helvetica.afm');
+    $fontdir = /*realpath*/('lib/fonts/Helvetica.afm');
     //  $pdf->selectFont($fontdir);
-    $pdf->selectFont('../lib/fonts/Helvetica.afm');
+    $pdf->selectFont('lib/fonts/Helvetica.afm');
 
     $pdf->ezTable($obs1,
     array("Name" => html_entity_decode(LangPDFMessage1),
@@ -355,9 +352,9 @@ class util
     $pdf = new Cezpdf('a4', 'landscape');
     $pdf->ezStartPageNumbers(450, 15, 10);
 
-    $fontdir = /*realpath*/('../lib/fonts/Helvetica.afm');
+    $fontdir = /*realpath*/('lib/fonts/Helvetica.afm');
     //  $pdf->selectFont($fontdir);
-    $pdf->selectFont('../lib/fonts/Helvetica.afm');
+    $pdf->selectFont('lib/fonts/Helvetica.afm');
     $pdf->ezText($_GET['pdfTitle'],18);
     $pdf->ezColumnsStart(array('num'=>10));
     $pdf->ezTable($obs1,
@@ -387,8 +384,8 @@ class util
 
     // Create pdf file
     $pdf = new Cezpdf('a4', 'landscape');
-    $fontdir = ('../lib/fonts/Helvetica.afm');
-    $pdf->selectFont('../lib/fonts/Helvetica.afm');
+    $fontdir = ('lib/fonts/Helvetica.afm');
+    $pdf->selectFont('lib/fonts/Helvetica.afm');
 
     $actualsort='';
     $y = 0;
@@ -838,9 +835,9 @@ class util
     $pdf = new Cezpdf('a4', 'landscape');
     $pdf->ezStartPageNumbers(450, 15, 10);
 
-    $fontdir = /*realpath*/('../lib/fonts/Helvetica.afm');
+    $fontdir = /*realpath*/('lib/fonts/Helvetica.afm');
     $pdf->selectFont($fontdir);
-    $pdf->selectFont('../lib/fonts/Helvetica.afm');
+    $pdf->selectFont('lib/fonts/Helvetica.afm');
 
     $pdf->ezTable($obs1,
     array(
@@ -1105,9 +1102,9 @@ class util
     $pdf = new Cezpdf('a4', 'portrait');
     $pdf->ezStartPageNumbers(300, 30, 10);
 
-    $fontdir = realpath('../lib/fonts/Helvetica.afm');
+    $fontdir = realpath('lib/fonts/Helvetica.afm');
     //$pdf->selectFont($fontdir);
-    $pdf->selectFont('../lib/fonts/Helvetica.afm');
+    $pdf->selectFont('lib/fonts/Helvetica.afm');
     $pdf->ezText(LangPDFTitle2."\n");
 
     while(list ($key, $value) = each($result))
@@ -1358,7 +1355,7 @@ class util
     $pdf = new Cezpdf('a4', 'portrait');
     $pdf->ezStartPageNumbers(300, 30, 10);
 
-    $fontdir = realpath('../lib/fonts/Helvetica.afm');
+    $fontdir = realpath('lib/fonts/Helvetica.afm');
     $pdf->selectFont($fontdir);
     $pdf->ezText(html_entity_decode(LangPDFTitle3)."\n");
 
@@ -1549,7 +1546,7 @@ class util
 
     $pdf->ezStream();
   }
-  public function utiltiesDispatchIndexActionDS()
+  public function utiltiesDispatchIndexAction()
   { if(!($indexActionInclude=$this->utilitiesCheckIndexActionAdmin('manage_csv_object','deepsky/content/manage_objects_csv.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_observation','deepsky/content/change_observation.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_observation','deepsky/content/change_observation.php')))
@@ -1569,12 +1566,7 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('view_image','deepsky/content/show_image.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('listaction','deepsky/content/tolist.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('view_observer_catalog','deepsky/content/details_observer_catalog.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSquickPick()))
-      $indexActionInclude=$this->utilitiesGetIndexActionDSdefaultAction();
-    return $indexActionInclude;
-  }
-	public function utiltiesDispatchIndexActionCommon()
-  { if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('account_details','common/content/change_account.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('common_content_change_account','common/content/change_account.php')))          // former account_details
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_eyepiece','common/content/change_eyepiece.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_filter','common/content/change_filter.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_instrument','common/content/change_instrument.php')))
@@ -1602,7 +1594,8 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_lenses','common/content/overview_lenses.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_locations','common/content/overview_locations.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_observers','common/content/overview_observers.php')))
-      $indexActionInclude=$this->utilitiesGetIndexActionCommonDefaultAction();
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSquickPick()))
+      $indexActionInclude=$this->utilitiesGetIndexActionDefaultAction();
     return $indexActionInclude;
   }
   public function utilitiesSetModuleCookie($module)
@@ -1616,11 +1609,14 @@ class util
 	public function checkGetKey($key,$default='')
   { return (array_key_exists($key,$_GET)&&$_GET[$key])?$_GET[$key]:$default;
   }
-	public function checkArrayKey($theArray,$key,$default='')
-  { return (array_key_exists($key,$theArray)&&$theArray[$key])?$theArray[$key]:$default;
-  }
 	public function checkPostKey($key,$default='')
   { return (array_key_exists($key,$_POST)&&$_POST[$key])?$_POST[$key]:$default;
+  }
+	public function checkSessionKey($key,$default='')
+  { return (array_key_exists($key,$_SESSION)&&$_SESSION[$key])?$_SESSION[$key]:$default;
+  }
+	public function checkArrayKey($theArray,$key,$default='')
+  { return (array_key_exists($key,$theArray)&&$theArray[$key])?$theArray[$key]:$default;
   }
 	public function checkGetKeyReturnString($key,$string,$default='')
   { return array_key_exists($key,$_GET)?$string:$default;
