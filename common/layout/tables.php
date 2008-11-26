@@ -65,4 +65,17 @@ function tableEndRow()
 function tableNew($format='')
 { echo "<table ".$format.">";
 }
+function tableFieldnameFieldExplanation($name, $field, $explanation)
+{ echo "<tr>";
+  echo "<td class=\"fieldname\">";
+  echo $name;
+  echo "</td>";
+  echo "<td>";
+  echo $field;
+	echo "</td>";
+  echo "<td class=\"explanation\">";
+  echo $explanation;
+  echo "</td>";
+  echo "</tr>";
+}
 ?>

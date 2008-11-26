@@ -223,19 +223,19 @@ class util
 		$atlasses = $GLOBALS['objAtlas']->getSortedAtlasses();
 		
     while(list ($key, $valueA) = each($result))
-    { $mag = $valueA[5];
+    { $mag = $valueA['objectmagnitude'];
       if ($mag == 99.9)
       $mag = "";
       else if ($mag - (int)$mag == 0.0)
       $mag = $mag.".0";
 
-      $sb = $valueA[6];
+      $sb = $valueA['objectsurfacebrightness'];
       if ($sb == 99.9)
       $sb = "";
       else if ($sb - (int)$sb == 0.0)
       $sb = $sb.".0";
 
-      $pa = $valueA[20];
+      $pa = $valueA['objectpa'];
       if($pa==999)
       $pa="-";
 
@@ -243,8 +243,8 @@ class util
       $type = $valueA['objecttype'];
       $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
       $page = $valueA[$atlas];
-      $diam1 = $valueA[18];
-      $diam2 = $valueA[19];
+      $diam1 = $valueA['objectdiam1'];
+      $diam2 = $valueA['objectdiam2'];
       $size = "";
       if ($diam1 != 0.0)
       if ($diam1 >= 40.0)
@@ -271,17 +271,17 @@ class util
         if ($diam2 != 0.0)
         $size = $size.sprintf("x%.1f''", $diam2);
       }
-      $contrast = $valueA[21];
+      $contrast = $valueA['objectcontrast'];
       if ($contrast == "-")
       {
         $magnifi = "-";
       } else {
-        $magnifi = (int)$valueA[25];
+        $magnifi = (int)$valueA['objectmagnification'];
       }
 
-      $temp = array("Name" => $valueA[4],
-                 "ra" => raToString($valueA[7]),
-                 "decl" => decToString($valueA[8], 0),
+      $temp = array("Name" => $valueA['showname'],
+                 "ra" => raToString($valueA['objectra']),
+                 "decl" => decToString($valueA['objectdecl'], 0),
                  "mag" => $mag,
                  "sb" => $sb,
                  "con" => $GLOBALS[$con],
@@ -291,8 +291,8 @@ class util
                  "page" => $page,
                  "contrast" => $contrast,
                  "magnification" => $magnifi,
-                 "seen" => $valueA[3],
-								 "seendate" => $valueA[28]
+                 "seen" => $valueA['objectseen'],
+								 "seendate" => $valueA['objectlastseen']
       );
       $obs1[] = $temp;
     }

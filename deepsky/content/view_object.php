@@ -43,7 +43,7 @@ echo("<form name=\"zoomform\" action=\"deepsky/index.php\" method=\"get\">");
 echo "<table width=\"100%\">";
 echo "<tr>";
 echo "<td width=\"50%\">";
-echo "<h2> " . LangViewObjectNearbyObjects . (count($_SESSION['Qobj'])-1) . "</h2>";
+echo "<h2> " . LangViewObjectNearbyObjects.(count($_SESSION['Qobj'])-1)."+".$_GET['object']."</h2>";
 echo "</td>";
 echo "<td width=\"50%\" align=\"right\">";
   echo LangViewObjectNearbyObjectsMoreLess  . ":&nbsp;";
@@ -64,19 +64,17 @@ echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\"> ";
 echo "</form>";
 $maxcount=count($_SESSION['Qobj']);
 $max = 9999;
-if($maxcount>1)
-{ $link = 'deepsky/index.php?indexAction=detail_object&amp;object='.$_GET['object'].'&amp;zoom='.$_GET['zoom'].'&amp;SID=Qobj';
-  list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'],$link ,$min,25,"");
-  if($max>count($_SESSION['Qobj']))
-    $max=count($_SESSION['Qobj']);
-  $objObject->showObjects($link,'Qobj',$min,$max,$myList,$_GET['object']);
-}
+$link = $baseURL.'deepsky/index.php?indexAction=detail_object&amp;object='.urlencode($_GET['object']).'&amp;zoom='.$_GET['zoom'].'&amp;SID=Qobj';
+list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'],$link ,$min,25,"");
+if($max>count($_SESSION['Qobj']))
+  $max=count($_SESSION['Qobj']);
+$objObject->showObjects($link,'Qobj',$min,$max,$myList,$_GET['object']);
+list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'],$link ,$min,25,"");
 echo "<hr />";
-if($maxcount>1)
-{ echo "<a href=\"deepsky/objects.pdf?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a> &nbsp;-&nbsp;";
-  echo "<a href=\"deepsky/objects.csv?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a> &nbsp;-&nbsp;";
-  echo "<a href=\"deepsky/objects.argo?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage8."</a>";
-}
+$objUtil->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."deepsky/objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
+echo "&nbsp;-&nbsp;";
+echo "<a href=\"deepsky/objects.csv?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a> &nbsp;-&nbsp;";
+echo "<a href=\"deepsky/objects.argo?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage8."</a>";
 echo "</div>";
 
 //============================================================================== Admin section permits to change object settings in DB remotely

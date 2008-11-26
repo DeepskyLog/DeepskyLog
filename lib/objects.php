@@ -1582,57 +1582,59 @@ function getPartOfNames($name)
 	 if($max>count($_SESSION[$_SID]))
 		 $max=count($_SESSION[$_SID]);
 	 while($count < $max)
-   { if($_SESSION[$_SID][$count]['objectname']!=$noShow)
-  	 { $typefield = "class=\"type".(2-($countline%2)."\"");
-       $name = $_SESSION[$_SID][$count]['objectname'];
-       $showname = $_SESSION[$_SID][$count]['showname'];
-       $con = $_SESSION[$_SID][$count]['objectconstellation'];
-       $type = $_SESSION[$_SID][$count]['objecttype'];
-       $magnitude = sprintf("%01.1f", $_SESSION[$_SID][$count]['objectmagnitude']);
-       if($magnitude == 99.9)
-         $magnitude = "&nbsp;&nbsp;-&nbsp;";		
-       $sb = sprintf("%01.1f", $_SESSION[$_SID][$count]['objectsurfacebrightness']);
-       if($sb == 99.9)
-         $sb = "&nbsp;&nbsp;-&nbsp;";
-       // RIGHT ASCENSION
-       $ra = raToString($_SESSION[$_SID][$count]['objectra']);
-       // DECLINATION
-       $decl = decToStringDegMin($_SESSION[$_SID][$count]['objectdecl']);
-			 // SEEN
-       $seen="<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
-       if(substr($_SESSION[$_SID][$count][3],0,1)=="X")
-         $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectXSeen . "\">" . $_SESSION[$_SID][$count][3] . "</a>";
-       if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($_SESSION[$_SID][$count][3],0,1)=="Y"))
-         $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION[$_SID][$count][3] . "</a>";
-       $seendate = "<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
-       if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($_SESSION[$_SID][$count][3],0,1)=="Y"))
-         $seendate = "<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $_SESSION[$_SID][$count]['objectlastobservationid'] . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION[$_SID][$count]['objectlastseen'] . "</a>";
-			 echo "<tr $typefield>\n";
-       echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($name) . "\">$showname</a></td>\n";
-       echo "<td align=\"center\">".$GLOBALS[$_SESSION[$_SID][$count]['objectconstellation']]."</td>\n";
-       echo "<td align=\"center\">$magnitude</td>\n";
-       echo "<td align=\"center\">$sb</td>\n";
-       echo "<td align=\"center\">".$GLOBALS[$type]."</td>\n";
-       // Page number in atlas
-       if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id']) 
-			 { $page = $_SESSION[$_SID][$count][$atlas];
-         echo "<td align=\"center\" onmouseover=\"Tip('".$GLOBALS['objAtlas']->atlasCodes[$atlas]."')\">".$page."</td>\n";
-         echo "<td align=\"center\" class=\"".$_SESSION[$_SID][$count][22]."\" onmouseover=\"Tip('".$_SESSION[$_SID][$count][23]."')\">".$_SESSION[$_SID][$count][21]."</td>\n";
-         echo "<td align=\"center\">".$_SESSION[$_SID][$count]['objectoptimalmagnification']."</td>\n";
-         echo "<td align=\"center\" class=\"seen\">$seen</td>";
-         echo "<td align=\"center\" class=\"seen\">$seendate</td>";
-			 }
-    	 if($myList)
-    	 { echo("<td align=\"center\">");
-         if($list->checkObjectInMyActiveList($name))
-           echo("<a href=\"" . $link . "&amp;min=" . $min . "&amp;removeObjectFromList=" . urlencode($name) . "\" title=\"" . $name . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "\">R</a>");
-         else
-           echo("<a href=\"" . $link . "&amp;min=" . $min . "&amp;addObjectToList=" . urlencode($name) . "&amp;showname=" . urlencode($showname) . "\" title=\"" . $name . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "\">L</a>");
-        echo("</td>");
-    	 }
-       echo("</tr>");
-       $countline++; // increase line counter
-		 }
+   { if($_SESSION[$_SID][$count]['objectname']==$noShow)
+  	   $typefield = "class=\"type3\"";
+  	 else
+	     $typefield = "class=\"type".(2-($countline%2)."\"");
+     $name = $_SESSION[$_SID][$count]['objectname'];
+     $showname = $_SESSION[$_SID][$count]['showname'];
+     $con = $_SESSION[$_SID][$count]['objectconstellation'];
+     $type = $_SESSION[$_SID][$count]['objecttype'];
+     $magnitude = sprintf("%01.1f", $_SESSION[$_SID][$count]['objectmagnitude']);
+     if($magnitude == 99.9)
+       $magnitude = "&nbsp;&nbsp;-&nbsp;";		
+     $sb = sprintf("%01.1f", $_SESSION[$_SID][$count]['objectsurfacebrightness']);
+     if($sb == 99.9)
+       $sb = "&nbsp;&nbsp;-&nbsp;";
+     // RIGHT ASCENSION
+     $ra = raToString($_SESSION[$_SID][$count]['objectra']);
+     // DECLINATION
+     $decl = decToStringDegMin($_SESSION[$_SID][$count]['objectdecl']);
+	 // SEEN
+     $seen="<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
+     if(substr($_SESSION[$_SID][$count][3],0,1)=="X")
+       $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectXSeen . "\">" . $_SESSION[$_SID][$count][3] . "</a>";
+     if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($_SESSION[$_SID][$count][3],0,1)=="Y"))
+       $seen = "<a href=\"deepsky/index.php?indexAction=result_selected_observations&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION[$_SID][$count][3] . "</a>";
+     $seendate = "<a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
+     if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($_SESSION[$_SID][$count][3],0,1)=="Y"))
+       $seendate = "<a href=\"deepsky/index.php?indexAction=detail_observation&amp;observation=" . $_SESSION[$_SID][$count]['objectlastobservationid'] . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION[$_SID][$count]['objectlastseen'] . "</a>";
+	 echo "<tr $typefield>\n";
+     echo "<td align=\"center\"><a href=\"deepsky/index.php?indexAction=detail_object&amp;object=" . urlencode($name) . "\">$showname</a></td>\n";
+     echo "<td align=\"center\">".$GLOBALS[$_SESSION[$_SID][$count]['objectconstellation']]."</td>\n";
+     echo "<td align=\"center\">$magnitude</td>\n";
+     echo "<td align=\"center\">$sb</td>\n";
+     echo "<td align=\"center\">".$GLOBALS[$type]."</td>\n";
+     // Page number in atlas
+     if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id']) 
+	 { $page = $_SESSION[$_SID][$count][$atlas];
+       echo "<td align=\"center\" onmouseover=\"Tip('".$GLOBALS['objAtlas']->atlasCodes[$atlas]."')\">".$page."</td>\n";
+       echo "<td align=\"center\" class=\"".$_SESSION[$_SID][$count][22]."\" onmouseover=\"Tip('".$_SESSION[$_SID][$count][23]."')\">".$_SESSION[$_SID][$count][21]."</td>\n";
+       echo "<td align=\"center\">".$_SESSION[$_SID][$count]['objectoptimalmagnification']."</td>\n";
+       echo "<td align=\"center\" class=\"seen\">$seen</td>";
+       echo "<td align=\"center\" class=\"seen\">$seendate</td>";
+	 }
+  	 if($myList)
+  	 { echo("<td align=\"center\">");
+       if($list->checkObjectInMyActiveList($name))
+         echo("<a href=\"" . $link . "&amp;min=" . $min . "&amp;removeObjectFromList=" . urlencode($name) . "\" title=\"" . $name . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "\">R</a>");
+       else
+         echo("<a href=\"" . $link . "&amp;min=" . $min . "&amp;addObjectToList=" . urlencode($name) . "&amp;showname=" . urlencode($showname) . "\" title=\"" . $name . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "\">L</a>");
+      echo("</td>");
+  	 }
+     echo("</tr>");
+     $countline++; // increase line counter
+
      $count++; // increase object counter
    }   
    echo "</table>\n";
@@ -1956,15 +1958,15 @@ function getPartOfNames($name)
 	echo"<hr>";
  }
  
- function getOtherObjects($objectname, $dist)
+ function getNearbyObjects($objectname, $dist)
  { $run=$GLOBALS['objDatabase']->selectRecordset("SELECT objects.ra, objects.decl FROM objects WHERE name = \"$objectname\"");
    $get = mysql_fetch_object($run);
 	 $ra = $get->ra; $decl = $get->decl;
 	 $dra = 0.0011 * $dist / cos($decl/180*3.1415926535);
    $run = $GLOBALS['objDatabase']->selectRecordset("SELECT objects.name FROM objects WHERE ((objects.ra > $ra - $dra) AND (objects.ra < $ra + $dra) AND (objects.decl > $decl - ($dist/60)) AND (objects.decl < $decl + ($dist/60))) ORDER BY objects.name");
-	 $result = array(); $i=0;
-   while($get = mysql_fetch_object($run))
-	   $result[$get->name] = array($i++, $get->name);
+	 for($result=array(),$i=0;($get=mysql_fetch_object($run));$i++)
+//	   if($get->name!=$objectname)
+		   $result[$get->name] = array($i, $get->name);
 	 return $result;
  } 
 }

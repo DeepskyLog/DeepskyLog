@@ -86,7 +86,7 @@ class Observers
  { return $GLOBALS['objDatabase']->selectKeyValueArray("SELECT DISTINCT observers.id, CONCAT(observers.firstname,' ',observers.name) As observername, observers.name FROM observers JOIN observations ON (observers.id = observations.observerid) ORDER BY observers.name",'id','observername');
  }
  function getStandardAtlasCode($id)                                             // getStandardAtlas returns the standard atlas of the given id
- { return $GLOBALS['objDatabase']->selectSingleValue("SELECT standardAtlasCode FROM observers WHERE id=\"$id\"",'standardAtlasCode','');
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT standardAtlasCode FROM observers WHERE id=\"$id\"",'standardAtlasCode','urano');
  }
  function getStandardLocation($id)                                              // getStandardLocation returns the standard location of the given id
  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT * FROM observers WHERE id=\"$id\"",'stdlocation','');
