@@ -1,0 +1,8 @@
+<?php 
+include 'common/entryexit/preludes.php';
+include 'common/entryexit/preludesDS.php';
+header ("Content-Type: application/vnd.ms-excel");
+header ("Content-Disposition: attachment; filename=\"observations.csv\"");
+if(array_key_exists('Qobs',$_SESSION)&&$_SESSION['Qobs'])
+  $objUtil->csvObservations($_SESSION['Qobs']);
+?>

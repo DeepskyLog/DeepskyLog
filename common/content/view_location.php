@@ -1,25 +1,24 @@
 <?php
-
 // view_location.php
 // view information of location 
 
-include_once "../lib/locations.php"; // location table
+include_once "lib/locations.php"; // location table
 $locations = new Locations;
 
-include_once "control/dec_to_dm.php"; 
-include_once "../lib/util.php";
-include_once "../lib/contrast.php";
+include_once "common/control/dec_to_dm.php"; 
+include_once "lib/util.php";
+include_once "lib/contrast.php";
 
 $util = new Util();
 $util->checkUserInput();
 
 if(!$_GET['location']) // no location defined 
 {
-   header("Location: ../index.php");
+   header("Location: index.php");
 }  
 
 echo("<div id=\"main\">\n<h2>".LangViewLocationTitle2."</h2><table width=\"490\">\n
-<form action=\"common/adapt_site.php?location=" . $_GET['location'] . "\" method=\"post\">
+<form action=\"".$baseURL."index.php?indexAction=adapt_site&amp;location=" . urlencode($_GET['location']) . "\" method=\"post\">
 <tr>\n
 <td class=\"fieldname\">\n");
 
@@ -144,7 +143,7 @@ echo "</td>
    </tr>
    <tr>
    <td colspan=\"2\"><br></br>
-   <a href=\"http://maps.google.com/maps?ll=" . $locations->getLatitude($_GET['location']) . "," . $locations->getLongitude($_GET['location']) . "&spn=4.884785,11.585083&t=h&hl=en\"><img class=\"account\" src=\"common/content/map.php?lat=" . $locations->getLatitude($_GET['location']) . "&long=" . $locations->getLongitude($_GET['location']) . "\" width=\"490\" height=\"245\" title=\"";
+   <a href=\"http://maps.google.com/maps?ll=" . $locations->getLatitude($_GET['location']) . "," . $locations->getLongitude($_GET['location']) . "&spn=4.884785,11.585083&t=h&hl=en\"><img class=\"account\" src=\"".$baseURL."index.php?indexAction=map.php?lat=" . $locations->getLatitude($_GET['location']) . "&long=" . $locations->getLongitude($_GET['location']) . "\" width=\"490\" height=\"245\" title=\"";
 
 echo (LangGooglemaps);
 

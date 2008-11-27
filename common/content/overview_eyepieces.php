@@ -4,13 +4,13 @@
 // generates an overview of all eyepieces (admin only)
 // version 3.2: WDM 22/01/2008
 
-//include_once "../lib/observers.php";
+//include_once "lib/observers.php";
 //$observers = new observers;
 
-include_once "../lib/eyepieces.php";
-include_once "../lib/util.php";
-include_once "../lib/observations.php";
-include_once "../lib/cometobservations.php";
+include_once "lib/eyepieces.php";
+include_once "lib/util.php";
+include_once "lib/observations.php";
+include_once "lib/cometobservations.php";
 
 $eyepieces = new Eyepieces;
 $util = new util;
@@ -76,18 +76,18 @@ $step = 25;
 
 echo("<div id=\"main\">\n<h2>".LangViewEyepieceTitle."</h2>");
 
-$link = "common/view_eyepieces.php?sort=" . $sort . "&amp;previous=" . $orig_previous;
+$link = $baseURL."index.php?indexAction=view_eyepieces&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
 
 list($min, $max) = $util->printListHeader($eyeps, $link, $min, $step, "");
 
 echo "<table>
       <tr class=\"type3\">
-      <td><a href=\"common/view_eyepieces.php?sort=name&amp;previous=$previous\">".LangViewEyepieceName."</a></td>
-      <td><a href=\"common/view_eyepieces.php?sort=focalLength&amp;previous=$previous\">".LangViewEyepieceFocalLength."</a></td>
-      <td><a href=\"common/view_eyepieces.php?sort=maxFocalLength&amp;previous=$previous\">".LangViewEyepieceMaxFocalLength."</a></td>
-      <td><a href=\"common/view_eyepieces.php?sort=apparentFOV&amp;previous=$previous\">".LangViewEyepieceApparentFieldOfView."</a></td>";
+      <td><a href=\"".$baseURL."index.php?indexAction=view_eyepieces&amp;sort=name&amp;previous=$previous\">".LangViewEyepieceName."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=view_eyepieces&amp;sort=focalLength&amp;previous=$previous\">".LangViewEyepieceFocalLength."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=view_eyepieces&amp;sort=maxFocalLength&amp;previous=$previous\">".LangViewEyepieceMaxFocalLength."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=view_eyepieces&amp;sort=apparentFOV&amp;previous=$previous\">".LangViewEyepieceApparentFieldOfView."</a></td>";
 
-			echo "<td><a href=\"common/view_eyepieces.php?sort=observer&amp;previous=$previous\">".LangViewObservationField2."</a></td>";
+			echo "<td><a href=\"".$baseURL."index.php?indexAction=view_eyepieces&amp;sort=observer&amp;previous=$previous\">".LangViewObservationField2."</a></td>";
 			echo "<td></td>";
 			echo "</tr>";
 
@@ -119,7 +119,7 @@ while(list ($key, $value) = each($eyeps))
    if ($value != "1")
    {
     print("<tr $type>
-           <td><a href=\"common/adapt_eyepiece.php?eyepiece=$value\">$name</a></td>\n
+           <td><a href=\"".$baseURL."index.php?indexAction=adapt_eyepiece&amp;eyepiece=".urlencode($value)."\">$name</a></td>\n
            <td>$focalLength</td>\n
            <td>$maxFocalLength</td>\n
            <td>$apparentFOV</td>\n
@@ -137,7 +137,7 @@ while(list ($key, $value) = each($eyeps))
 //           if(!sizeof($obs) > 0 && !sizeof($comobs) > 0) // no observations with eyepiece yet
            if(!sizeof($obs) > 0) // no observations with eyepiece yet
            {
-              echo("<a href=\"common/control/validate_delete_eyepiece.php?eyepieceid=" . $value . "\">" . LangRemove . "</a>");
+              echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_eyepiece&amp;eyepieceid=" . urlencode($value) . "\">" . LangRemove . "</a>");
            }
 
            echo("</td>\n</tr>");

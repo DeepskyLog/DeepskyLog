@@ -5,9 +5,9 @@
 
 session_start(); // start session
 
-include_once "../lib/lenses.php"; // location table
-include_once "../lib/util.php";
-include_once "../lib/setup/language.php";
+include_once "lib/lenses.php"; // location table
+include_once "lib/util.php";
+include_once "lib/setup/language.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -16,7 +16,7 @@ $lenses = new Lenses;
 
 if(!$_GET['lens']) // no lens defined 
 {
-   header("Location: ../index.php");
+   header("Location: index.php");
 }
 
 $name = $lenses->getLensName($_GET['lens']);

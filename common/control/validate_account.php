@@ -83,7 +83,7 @@ elseif(array_key_exists('change', $_POST)&&$_POST['change'])                // p
       $objObserver->setIcqName($_SESSION['deepskylog_id'], $_POST['icq_name']);
     $_SESSION['lang']=$_POST['language'];
     if($_FILES['picture']['tmp_name'] != "")
-    { $upload_dir = '../observer_pics';
+    { $upload_dir = 'common/observer_pics';
       $dir = opendir($upload_dir);
       include "resize.php";                                             // resize code
       $original_image = $_FILES['picture']['tmp_name'];

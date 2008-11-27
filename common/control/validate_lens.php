@@ -4,7 +4,7 @@
 
 if (!$_POST['lensname'] || !$_POST['factor'])
 { $_SESSION['message'] = LangValidateEyepieceMessage1; 
-  header("Location:../error.php");
+  header("Location:error.php");
 }
 else
 { if(array_key_exists('add', $_POST) && $_POST['add'])

@@ -33,24 +33,24 @@ else
 }
 $step = 25;
 echo("<div id=\"main\">\n<h2>".LangOverviewSiteTitle."</h2>");
-$link = "common/add_site.php?sort=" . $sort . "&amp;previous=" . $orig_previous;
+$link = $baseURL."index.php?indexAction=add_site&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
 list($min, $max) = $objUtil->printListHeader($sites, $link, $min, $step, "");
 echo "<table>
       <tr class=\"type3\">
-      <td><a href=\"common/add_site.php?sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>
-      <td><a href=\"common/add_site.php?sort=region&amp;previous=$previous\">".LangViewLocationProvince."</a></td>
-      <td><a href=\"common/add_site.php?sort=country&amp;previous=$previous\">".LangViewLocationCountry."</a></td>";
+      <td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=region&amp;previous=$previous\">".LangViewLocationProvince."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=country&amp;previous=$previous\">".LangViewLocationCountry."</a></td>";
 
-echo "<td><a href=\"common/add_site.php?sort=longitude&amp;previous=$previous\">".LangViewLocationLongitude."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=longitude&amp;previous=$previous\">".LangViewLocationLongitude."</a></td>";
 
-echo "<td><a href=\"common/add_site.php?sort=latitude&amp;previous=$previous\">".LangViewLocationLatitude."</a></td>";
-echo "<td><a href=\"common/add_site.php?sort=timezone&amp;previous=$previous\">".LangAddSiteField6."</a></td>";
-echo "<td><a href=\"common/add_site.php?sort=limitingMagnitude&amp;previous=$previous\">".LangViewLocationLimMag."</a></td>";
-echo "<td><a href=\"common/add_site.php?sort=skyBackground&amp;previous=$previous\">".LangViewLocationSB."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=latitude&amp;previous=$previous\">".LangViewLocationLatitude."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=timezone&amp;previous=$previous\">".LangAddSiteField6."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=limitingMagnitude&amp;previous=$previous\">".LangViewLocationLimMag."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=skyBackground&amp;previous=$previous\">".LangViewLocationSB."</a></td>";
 echo "<td>".LangViewLocationStd."</td>";
 echo "<td></td>";
 echo "</tr>";
-echo "<form action=\"common/control/validate_site.php\" method=\"post\">";
+echo "<form action=\"".$baseURL."index.php?indexAction=validate_site\" method=\"post\">";
 
 $count = 0;
 
@@ -94,7 +94,7 @@ if ($sites != null)
 
       if ($value != "1")
       { print("<tr $type>
-           <td><a href=\"common/adapt_site.php?location=$value\">$sitename</a></td>\n
+           <td><a href=\"".$baseURL."index.php?indexAction=adapt_site&amp;location=".urlencode($value)."\">$sitename</a></td>\n
            <td>$region</td>\n
            <td>$country</td>\n
             <td>");
@@ -124,7 +124,7 @@ if ($sites != null)
         $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
 
         if(!sizeof($obs) > 0 && !in_array($value, $locs) && !sizeof($comobs) > 0) // no observations from location yet
-        { echo("<a href=\"common/control/validate_delete_location.php?locationid=" . $value . "\">" . LangRemove . "</a>");
+        { echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_location&amp;locationid=" . urlencode($value) . "\">" . LangRemove . "</a>");
         }
 
         echo("</td>\n</tr>");
@@ -160,7 +160,7 @@ echo(LangAddSiteTitle); ?>
 	$sites = $objLocation->getSortedLocations('name', "", true);
 	while(list($key, $value) = each($sites))
 	{
-	  echo("<option value=\"" . $baseURL . "common/add_site.php?locationid=$value\">" . $objLocation->getLocationName($value) . "</option>\n");
+	  echo("<option value=\"".$baseURL."index.php?indexAction=add_site&amp;locationid=".urlencode($value)."\">" . $objLocation->getLocationName($value) . "</option>\n");
 	}
 	echo("</select>\n");
 	echo("</form>");
@@ -171,14 +171,15 @@ echo(LangAddSiteTitle); ?>
 </ol>
 <p><?php echo (LangAddSiteFieldOr); ?></p>
 <ol>
-	<li value="2"><a href="common/search_sites.php"><?php echo (LangAddSiteFieldSearchDatabase); ?></a></li>
+	<li value="2"><?php echo "<a href=\"".$baseURL."index.php?indexAction=search_sites\">".LangAddSiteFieldSearchDatabase; ?></a></li>
 </ol>
 <p><?php echo (LangAddSiteFieldOr); ?></p>
 <ol>
 	<li value="3"><?php echo (LangAddSiteFieldManually); ?></li>
 </ol>
+<?php
+echo "<form action=\"".$baseURL."index.php?indexAction=validate_site\" method=\"post\">"; ?>
 
-<form action="common/control/validate_site.php" method="post">
 <table>
 	<tr>
 		<td class="fieldname"><?php 

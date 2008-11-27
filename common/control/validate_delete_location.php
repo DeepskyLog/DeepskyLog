@@ -5,16 +5,16 @@
 // version 0.1: JV, 20050212
 
 // Code cleanup - removed by David on 20080704
-//include_once "../../lib/objects.php";
+//include_once "lib/objects.php";
 
 
 session_start(); // start session
 
-include_once "../../lib/locations.php";
-include_once "../../lib/observations.php";
-include_once "../../lib/cometobservations.php";
-include_once "../../lib/setup/vars.php";
-include_once "../../lib/util.php";
+include_once "lib/locations.php";
+include_once "lib/observations.php";
+include_once "lib/cometobservations.php";
+include_once "lib/setup/vars.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -26,7 +26,7 @@ $cometobservations = new CometObservations;
 if (!$_GET['locationid']) // no locationid given as a parameter
 {
   unset($_SESSION['deepskylog_id']);
-  header("Location:../index.php");
+  header("Location:index.php");
 }
 elseif(array_key_exists('locationid', $_GET) && $_GET['locationid']) // locationid given
 {
@@ -40,18 +40,18 @@ elseif(array_key_exists('locationid', $_GET) && $_GET['locationid']) // location
    if(!sizeof($obs) > 0 && !sizeof($comobs) > 0) // no observations from location yet
    {
     $locations->deleteLocation($_GET['locationid']);
-    header("Location:../add_site.php");
+    header("Location:add_site.php");
    }
    else // still observations from given location 
    {
     unset($_SESSION['deepskylog_id']);
-    header("Location: ../add_site.php"); // back to entrance page
+    header("Location: add_site.php"); // back to entrance page
    }
   } 
   else // not logged in as an administrator 
   {
     unset($_SESSION['deepskylog_id']);
-    header("Location: ../add_site.php"); // back to entrance page
+    header("Location: add_site.php"); // back to entrance page
   }
 }
 ?>

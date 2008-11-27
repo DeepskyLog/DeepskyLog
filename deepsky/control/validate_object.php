@@ -121,7 +121,7 @@ if ($_POST['newobject'])
     $subject = LangValidateAccountEmailTitleObject . " " . $name;
     reset($admins);
     $headers="From:".$objObserver->getEmail($admins[0]);
-    $body=LangValidateAccountEmailTitleObject." ".$name." ". "www.deepskylog.org/deepsky/index.php?indexAction=detail_object&amp;object=".urlencode($name)." ".
+    $body=LangValidateAccountEmailTitleObject." ".$name." ". "www.deepskylog.org/index.php?indexAction=detail_object&amp;object=".urlencode($name)." ".
 		      LangValidateAccountEmailTitleObjectObserver." ".$objObserver->getObserverName($_SESSION['deepskylog_id'])." ".$objObserver->getFirstName($_SESSION['deepskylog_id'])." www.deepskylog.org/common/detail_observer.php?amp;user=".urlencode($_SESSION['deepskylog_id']);
     mail($to, $subject, $body, $headers);
     $_GET['indexAction']='detail_object';

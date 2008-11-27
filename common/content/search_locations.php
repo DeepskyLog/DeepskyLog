@@ -4,7 +4,7 @@
 
 echo "<div id=\"main\">";
 echo "<h2>" . LangSearchLocations0 . "</h2>";
-echo "<form action=\"".$baseURL."common/index.common.php?indexAction=site_result\" method=\"post\">";
+echo "<form action=\"".$baseURL."index.php?indexAction=site_result\" method=\"post\">";
 echo "<table>";
 echo "<tr>";
 echo "<td colspan=\"3\">";

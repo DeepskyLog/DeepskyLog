@@ -3,13 +3,13 @@
 // new_filter.php
 // allows the user to add a new filter
 
-//include_once "../lib/observers.php";
+//include_once "lib/observers.php";
 //$observers = new observers;
 
-include_once "../lib/filters.php";
-include_once "../lib/util.php";
-include_once "../lib/cometobservations.php";
-include_once "../lib/observations.php";
+include_once "lib/filters.php";
+include_once "lib/util.php";
+include_once "lib/cometobservations.php";
+include_once "lib/observations.php";
 
 $filters = new Filters;
 $util = new util;
@@ -74,17 +74,17 @@ $step = 25;
 
 echo("<div id=\"main\">\n<h2>".LangOverviewFilterTitle."</h2>");
 
-$link = "common/add_filter.php?sort=" . $sort . "&amp;previous=" . $orig_previous;
+$link = $baseURL."index.php?indexAction=add_filter&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
 
 list($min, $max) = $util->printListHeader($filts, $link, $min, $step, "");
 
 echo "<table>
       <tr class=\"type3\">
-      <td><a href=\"common/add_filter.php?sort=name&amp;previous=$previous\">".LangViewFilterName."</a></td>
-      <td><a href=\"common/add_filter.php?sort=type&amp;previous=$previous\">".LangViewFilterType."</a></td>
-      <td><a href=\"common/add_filter.php?sort=color&amp;previous=$previous\">".LangViewFilterColor."</a></td>
-      <td><a href=\"common/add_filter.php?sort=wratten&amp;previous=$previous\">".LangViewFilterWratten."</a></td>
-      <td><a href=\"common/add_filter.php?sort=schott&amp;previous=$previous\">".LangViewFilterSchott."</a></td>";
+      <td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=name&amp;previous=$previous\">".LangViewFilterName."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=type&amp;previous=$previous\">".LangViewFilterType."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=color&amp;previous=$previous\">".LangViewFilterColor."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=wratten&amp;previous=$previous\">".LangViewFilterWratten."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=schott&amp;previous=$previous\">".LangViewFilterSchott."</a></td>";
 
 
 echo "<td></td>";
@@ -114,7 +114,7 @@ if ($filts != null)
    $schott = $filters->getSchott($value);
 
    print("<tr $type>
-           <td><a href=\"common/adapt_filter.php?filter=$value\">$name</a></td>\n
+           <td><a href=\"".$baseURL."index.php?indexAction=adapt_filter&amp;filter=".urlencode($value)."\">$name</a></td>\n
            <td>");
    if($type == FilterOther) {echo(FiltersOther);}
    if($type == FilterBroadBand) {echo(FiltersBroadBand);}
@@ -184,7 +184,7 @@ if ($filts != null)
 
            if(!sizeof($obs) > 0) // no observations from location yet
            {
-              echo("<a href=\"common/control/validate_delete_filter.php?filterid=" . $value . "\">" . LangRemove . "</a>");
+              echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_filter&amp;filterid=" . urlencode($value) . "\">" . LangRemove . "</a>");
            }
 
            echo("</td>\n</tr>");
@@ -217,7 +217,7 @@ echo(LangAddFilterTitle); ?>
   $filts = $filters->getSortedFilters('name', "", true);
   while(list($key, $value) = each($filts))
   {
-	  echo("<option value=\"" . $baseURL . "common/add_filter.php?filterid=$value\">" . $filters->getFilterName($value) . "</option>\n");
+	  echo("<option value=\"".$baseURL."index.php?indexAction=add_filter&amp;filterid=".urlencode($value)."\">" . $filters->getFilterName($value) . "</option>\n");
   }
   echo("</select>\n");
   echo("</form>");
@@ -232,7 +232,7 @@ echo(LangAddFilterTitle); ?>
 <li value="2"><?php echo (LangAddFilterFieldManually); ?></li>
 </ol>
  
-   <form action="common/control/validate_filter.php" method="post">
+<?php  echo "<form action=\"".$baseURL."index.php?indexAction=validate_filter\" method=\"post\">"; ?>
    <table>
    <tr>
    <td class="fieldname">

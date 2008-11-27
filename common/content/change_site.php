@@ -4,10 +4,10 @@
 // allows the administrator to change site details 
 // version 0.1: JV 20041126
 
-//include_once "../lib/observers.php";
+//include_once "lib/observers.php";
 
-include_once "../lib/locations.php";
-include_once "../lib/util.php";
+include_once "lib/locations.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -21,7 +21,7 @@ echo stripslashes($locations->getLocationName($_GET['location']));
 
 echo("</h2>
 
-   <form action=\"common/control/validate_site.php\" method=\"post\">
+   <form action=\"".$baseURL."index.php?indexAction=validate_site\" method=\"post\">
    <table>
    <tr>
    <td class=\"fieldname\">");

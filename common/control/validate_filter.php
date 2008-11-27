@@ -6,10 +6,10 @@
 
 session_start(); // start session
 
-include "../../lib/filters.php";
-include "../../lib/observers.php";
-include_once "../../lib/setup/vars.php";
-include_once "../../lib/util.php";
+include "lib/filters.php";
+include "lib/observers.php";
+include_once "lib/setup/vars.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -17,7 +17,7 @@ $util->checkUserInput();
 if (!$_POST['filtername'] || !$_POST['type'])
 {
       $_SESSION['message'] = LangValidateEyepieceMessage1; 
-      header("Location:../error.php");
+      header("Location:error.php");
 }
 else
 {
@@ -43,6 +43,6 @@ if(array_key_exists('change', $_POST) && $_POST['change'])
           $_SESSION['message'] = LangValidateEyepieceMessage5;
           $_SESSION['title'] = LangValidateEyepieceMessage4;
 }
-header("Location:../add_filter.php");
+header("Location:add_filter.php");
 }
 ?>

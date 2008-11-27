@@ -8,12 +8,12 @@
 // every page should contain the same number of locations
 // this is not the case now as we need to remove the empty location manually
 
-include_once "../common/control/dec_to_dm.php";
-include_once "../lib/locations.php";
-include_once "../lib/util.php";
-include_once "../lib/observations.php";
-include_once "../lib/observers.php";
-include_once "../lib/cometobservations.php";
+include_once "common/control/dec_to_dm.php";
+include_once "lib/locations.php";
+include_once "lib/util.php";
+include_once "lib/observations.php";
+include_once "lib/observers.php";
+include_once "lib/cometobservations.php";
 
 $locations = new locations;
 $util = new util;
@@ -81,23 +81,23 @@ $step = 25;
 
 echo("<div id=\"main\">\n<h2>".LangViewLocationTitle."</h2>");
 
-$link = "common/view_locations.php?sort=" . $sort . "&amp;previous=" . $orig_previous;
+$link = "".$baseURL."index.php?indexAction=view_locations&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
 
 list($min, $max) = $util->printListHeader($sites, $link, $min, $step, "");
 
 echo "<table>
       <tr class=\"type3\">
-      <td><a href=\"common/view_locations.php?sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>
-      <td><a href=\"common/view_locations.php?sort=region&amp;previous=$previous\">".LangViewLocationProvince."</a></td>
-      <td><a href=\"common/view_locations.php?sort=country&amp;previous=$previous\">".LangViewLocationCountry."</a></td>";
+      <td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=region&amp;previous=$previous\">".LangViewLocationProvince."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=country&amp;previous=$previous\">".LangViewLocationCountry."</a></td>";
 
-echo "<td><a href=\"common/view_locations.php?sort=longitude&amp;previous=$previous\">".LangViewLocationLongitude."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=longitude&amp;previous=$previous\">".LangViewLocationLongitude."</a></td>";
 
-echo "<td><a href=\"common/view_locations.php?sort=latitude&amp;previous=$previous\">".LangViewLocationLatitude."</a></td>";
-echo "<td><a href=\"common/view_locations.php?sort=timezone&amp;previous=$previous\">".LangAddSiteField6."</a></td>";
-echo "<td><a href=\"common/view_locations.php?sort=limitingMagnitude&amp;previous=$previous\">".LangViewLocationLimMag."</a></td>";
-echo "<td><a href=\"common/view_locations.php?sort=skyBackground&amp;previous=$previous\">".LangViewLocationSB."</a></td>";
-echo "<td><a href=\"common/view_locations.php?sort=observer&amp;previous=$previous\">".LangViewObservationField2."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=latitude&amp;previous=$previous\">".LangViewLocationLatitude."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=timezone&amp;previous=$previous\">".LangAddSiteField6."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=limitingMagnitude&amp;previous=$previous\">".LangViewLocationLimMag."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=skyBackground&amp;previous=$previous\">".LangViewLocationSB."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=observer&amp;previous=$previous\">".LangViewObservationField2."</a></td>";
 echo "<td></td>";
 echo "</tr>";
 
@@ -151,7 +151,7 @@ while(list ($key, $value) = each($sites))
    if ($value != "1")
    {
     print("<tr $type>
-           <td><a href=\"common/adapt_site.php?location=$value\">$sitename</a></td>\n
+           <td><a href=\"".$baseURL."index.php?indexAction=adapt_site&amp;location=".urlencode($value)."\">$sitename</a></td>\n
            <td>$region</td>\n
            <td>$country</td>\n
             <td>");
@@ -177,7 +177,7 @@ while(list ($key, $value) = each($sites))
 
            if(!sizeof($obs) > 0 && !in_array($value, $locs)) // && !sizeof($comobs) > 0) // no observations from location yet
            {
-              echo("<a href=\"common/control/validate_delete_location.php?locationid=" . $value . "\">" . LangRemove . "</a>");
+              echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_location&amp;locationid=" . urlencode($value) . "\">" . LangRemove . "</a>");
            }
 
            echo("</td>\n</tr>");

@@ -4,10 +4,10 @@
 // generates an overview of all observers (admin only)
 // version 0.2: JV, 20041226
 
-//  include_once "../lib/locations.php";
+//  include_once "lib/locations.php";
 
-  include_once "../lib/observers.php";
-  include_once "../lib/util.php";
+  include_once "lib/observers.php";
+  include_once "lib/util.php";
 
   $obs = new Observers;
   $util = new util;
@@ -71,7 +71,7 @@ else
 
   $step = 25;
 
-  $link = "common/view_observers.php?sort=" . $sort . "&amp;previous=" . $orig_previous;
+  $link = "".$baseURL."index.php?indexAction=view_observers&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
 
   list($min, $max) = $util->printListHeader($observers, $link, $min, $step, "");
 
@@ -79,13 +79,13 @@ else
 
   echo "<table>
          <tr class=\"type3\">
-          <td><a href=\"common/view_observers.php?sort=id&amp;previous=$previous\">id</a></td>
-          <td><a href=\"common/view_observers.php?sort=name&amp;previous=$previous\">".LangViewObserverName."</a></td>
-          <td><a href=\"common/view_observers.php?sort=firstname&amp;previous=$previous\">".LangViewObserverFirstName."</a></td>";
+          <td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=id&amp;previous=$previous\">id</a></td>
+          <td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=name&amp;previous=$previous\">".LangViewObserverName."</a></td>
+          <td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=firstname&amp;previous=$previous\">".LangViewObserverFirstName."</a></td>";
 
-  echo "<td><a href=\"common/view_observers.php?sort=email&amp;previous=$previous\">Email</a></td>";
+  echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=email&amp;previous=$previous\">Email</a></td>";
 
-  echo "<td><a href=\"common/view_observers.php?sort=role&amp;previous=$previous\">".LangViewObserverRole."</a></td>
+  echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=role&amp;previous=$previous\">".LangViewObserverRole."</a></td>
         <td></td>
          </tr>";
 
@@ -108,7 +108,7 @@ else
 
    $url = $_SERVER['REQUEST_URI'];
 
-   echo "<tr $type><td><a href=\"common/detail_observer.php?user=$value&amp;back=$url\">$value</a> </td><td> $name </td><td> $firstname </td>";
+   echo "<tr $type><td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($value)."&amp;back=$url\">$value</a> </td><td> $name </td><td> $firstname </td>";
 
    echo "<td> <a href=\"mailto:$email\"> $email </a> </td>";
 
@@ -130,7 +130,7 @@ else
    }
    elseif ($role == RoleWaitlist)
    {
-    echo LangViewObserverWaitlist."</td><td><a href=\"common/control/validate_observer.php?validate=$value\">".LangViewObserverValidate."</a></td>";
+    echo LangViewObserverWaitlist."</td><td><a href=\"".$baseURL."index.php?indexAction=validate_observer&amp;validate=".urlencode($value)."\">".LangViewObserverValidate."</a></td>";
    }
   
    echo("</tr>");

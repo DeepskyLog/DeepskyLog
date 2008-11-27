@@ -1,6 +1,6 @@
 <?php
 
-include_once "../../lib/util.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();

@@ -4,7 +4,6 @@
 
 //====================== data_get_observations fetches the data, sorts it and places it in $_SESSION['Qobs'] and puts the toal number of observations in all languages in $_SESSION['QobsTotal'];
 include 'deepsky/content/data_get_observations.php';
-
 if(count($_SESSION['Qobs'])==0) //================================================================================================== no reult present =======================================================================================
 { echo("</h2>\n");
   echo "<a href=\"".$baseURL."index.php?indexAction=query_observations\">" . LangObservationNoResults . "</a>";
@@ -16,7 +15,7 @@ else                           //===============================================
 	$link2 = $baseURL."index.php?indexAction=result_selected_observations&amp;lco=".urlencode($_SESSION['lco']); 
   reset($_GET);
 	while(list($key,$value)=each($_GET))
-	  if($key!='indexAction')
+	  if(($key!='indexAction')&&($key!='lco')&&($key!='sortdirection')&&($key!='sort')&&($key!='multiplepagenr')&&($key!='min'))
 	    $link2.="&amp;".$key."=".urlencode($value);
   while(list($key,$value)=each($usedLanguages))
 	  $link2=$link2.'&amp;'.$value.'='.$value; 
@@ -130,9 +129,9 @@ else                           //===============================================
       list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
 
       echo "<p>";
-			$objUtil->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."deepsky/observations.pdf?SID=Qobs",LangExecuteQueryObjectsMessage4);
+			$objUtil->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."observations.pdf?SID=Qobs",LangExecuteQueryObjectsMessage4);
       echo " - ";
-      echo "<a href=\"".$baseURL."deepsky/observations.csv\" target=\"new_window\">".LangExecuteQueryObjectsMessage5."</a> - ";
+      echo "<a href=\"".$baseURL."observations.csv\" target=\"new_window\">".LangExecuteQueryObjectsMessage5."</a> - ";
       echo "<a href=\"".$baseURL."index.php?indexAction=query_objects&amp;source=observation_query\">".LangExecuteQueryObjectsMessage9."</a> - ";
 
    }

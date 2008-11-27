@@ -10,7 +10,7 @@ if ($name == "Naked eye")
 else
   echo($name);
 echo "</h2>";
-echo "<form action=\"common/control/validate_instrument.php\" method=\"post\">";
+echo "<form action=\"".$baseURL."index.php?indexAction=validate_instrument\" method=\"post\">";
 echo "<table>";
 echo "<tr>";
 echo "<td class=\"fieldname\">";

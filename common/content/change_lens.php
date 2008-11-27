@@ -7,8 +7,8 @@ echo("<div id=\"main\">\n<h2>");
 
 echo stripslashes($lenses->getLensName($_GET['lens']));
 
-echo("</h2>"); ?>
-   <form action=$baseURL."common/control/indexCommon.php?indexAction=validate_lens" method="post">
+echo("</h2>"); 
+echo "<form action=\"".$baseURL."index.php?indexAction=validate_lens\" method=\"post\">"; ?>
    <table>
    <tr>
    <td class="fieldname">

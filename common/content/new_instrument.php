@@ -4,10 +4,10 @@
 // form which allows the user to add a new instrument 
 // version 3.2: WDM, 20/01/2008
 
-include_once "../lib/instruments.php";
-include_once "../lib/util.php";
-include_once "../lib/observers.php";
-include_once "../lib/cometobservations.php";
+include_once "lib/instruments.php";
+include_once "lib/util.php";
+include_once "lib/observers.php";
+include_once "lib/cometobservations.php";
 
 $instruments = new Instruments;
 $util = new util;
@@ -73,23 +73,23 @@ $step = 25;
 
 echo("<div id=\"main\">\n<h2>".LangOverviewInstrumentsTitle."</h2>");
 
-$link = "common/add_instrument.php?sort=" . $sort . "&amp;previous=" . $orig_previous;
+$link = $baseURL."index.php?indexAction=add_instrument&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
 
 list($min, $max) = $util->printListHeader($insts, $link, $min, $step, "");
 
 echo "<table>
       <tr class=\"type3\">
-      <td><a href=\"common/add_instrument.php?sort=name&amp;previous=$previous\">".LangOverviewInstrumentsName."</a></td>
-      <td><a href=\"common/add_instrument.php?sort=diameter&amp;previous=$previous\">".LangOverviewInstrumentsDiameter."</a></td>
-      <td><a href=\"common/add_instrument.php?sort=fd&amp;previous=$previous\">".LangOverviewInstrumentsFD."</a></td>
-      <td><a href=\"common/add_instrument.php?sort=fixedMagnification&amp;previous=$previous\">".LangOverviewInstrumentsFixedMagnification."</a></td>";
+      <td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=name&amp;previous=$previous\">".LangOverviewInstrumentsName."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=diameter&amp;previous=$previous\">".LangOverviewInstrumentsDiameter."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=fd&amp;previous=$previous\">".LangOverviewInstrumentsFD."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=fixedMagnification&amp;previous=$previous\">".LangOverviewInstrumentsFixedMagnification."</a></td>";
 
-echo "<td><a href=\"common/add_instrument.php?sort=type&amp;previous=$previous\">".LangOverviewInstrumentsType."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=type&amp;previous=$previous\">".LangOverviewInstrumentsType."</a></td>";
 echo "<td>".LangChangeAccountField8."</td>";
 echo "<td></td>";
 
 echo "</tr>";
-echo "<form action=\"common/control/validate_instrument.php\" method=\"post\">";
+echo "<form action=\"".$baseURL."index.php?indexAction=validate_instrument\" method=\"post\">";
 
 $count = 0;
 
@@ -121,7 +121,7 @@ if ($insts != null)
    if ($name == "Naked eye")
    {
     print("<tr $typefield>
-           <td><a href=\"common/detail_instrument.php?instrument=$value\">".InstrumentsNakedEye."</a></td>\n
+           <td><a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($value)."\">".InstrumentsNakedEye."</a></td>\n
            <td>$diameter</td>\n
            <td>$fd </td>\n
            <td>$fixedMagnification</td>
@@ -130,7 +130,7 @@ if ($insts != null)
    else
    {
     print("<tr $typefield>
-           <td><a href=\"common/adapt_instrument.php?instrument=$value\">".$name."</a></td>\n
+           <td><a href=\"".$baseURL."index.php?indexAction=adapt_instrument&amp;instrument=".urlencode($value)."\">".$name."</a></td>\n
            <td>$diameter</td>\n
            <td>$fd</td>\n");
     echo("<td>\n");
@@ -173,7 +173,7 @@ if ($insts != null)
 
    if(!sizeof($obs) > 0 && !sizeof($obscom) > 0) // no observations with instrument yet
    {
-      echo("<a href=\"common/control/validate_delete_instrument.php?instrumentid=" . $value . "\">" . LangRemove . "</a>");
+      echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_instrument&amp;instrumentid=" . urlencode($value) . "\">" . LangRemove . "</a>");
    }
    echo("</td>\n</tr>");
   }
@@ -205,11 +205,11 @@ echo(LangAddInstrumentTitle); ?>
       echo("<form name=\"overviewform\">\n ");		
       echo("<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalogue\">\n");
 
-	echo("<option selected value=\"" . $baseURL . "common/add_instrument.php\"> &nbsp; </option>\n");
+	echo("<option selected value=\"".$baseURL."index.php?indexAction=add_instrument\"> &nbsp; </option>\n");
   $insts = $instruments->getSortedInstruments('name', "", true);
   while(list($key, $value) = each($insts))
   {
-	  echo("<option value=\"" . $baseURL . "common/add_instrument.php?instrumentid=$value\">" . $instruments->getInstrumentName($value) . "</option>\n");
+	  echo("<option value=\"".$baseURL."index.php?indexAction=add_instrument&amp;instrumentid=".urlencode($value)."\">" . $instruments->getInstrumentName($value) . "</option>\n");
   }
   echo("</select>\n");
   echo("</form>");
@@ -224,7 +224,7 @@ echo(LangAddInstrumentTitle); ?>
 <li value="2"><?php echo (LangAddInstrumentManually); ?></li>
 </ol>
  
-   <form action="common/control/validate_instrument.php" method="post">
+<?php   echo"<form action=\"".$baseURL."index.php?indexAction=validate_instrument\" method=\"post\">"; ?>
    <table>
    <tr>
    <td class="fieldname"><?php echo(LangAddInstrumentField1); ?></td>

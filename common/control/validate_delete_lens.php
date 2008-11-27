@@ -4,16 +4,16 @@
 // version 3.2: WDM, 21/01/2008
 
 // Code cleanup - removed by David on 20080704
-//include_once "../../lib/objects.php";
+//include_once "lib/objects.php";
 
 
 session_start(); // start session
 
-include_once "../../lib/lenses.php";
-include_once "../../lib/observations.php";
-include_once "../../lib/cometobservations.php";
-include_once "../../lib/setup/vars.php";
-include_once "../../lib/util.php";
+include_once "lib/lenses.php";
+include_once "lib/observations.php";
+include_once "lib/cometobservations.php";
+include_once "lib/setup/vars.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -25,7 +25,7 @@ $cometobservations = new CometObservations;
 if (!$_GET['lensid']) // no filterid given as a parameter
 {
   unset($_SESSION['deepskylog_id']);
-  header("Location:../index.php");
+  header("Location:index.php");
 }
 elseif(array_key_exists('lensid', $_GET) && $_GET['lensid']) // lensid given
 {

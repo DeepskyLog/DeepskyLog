@@ -4,14 +4,14 @@
 // generates an overview of all lenses (admin only)
 // version 3.2: WDM 11/05/2008
 
-//include_once "../lib/observers.php";
+//include_once "lib/observers.php";
 //$observers = new observers;
 
 
-include_once "../lib/lenses.php";
-include_once "../lib/util.php";
-include_once "../lib/observations.php";
-include_once "../lib/cometobservations.php";
+include_once "lib/lenses.php";
+include_once "lib/util.php";
+include_once "lib/observations.php";
+include_once "lib/cometobservations.php";
 
 $lenses = new Lenses;
 $util = new util;
@@ -65,7 +65,7 @@ else
   $orig_previous = "";
 }
 
-$link = "common/view_lenses.php?sort=" . $sort . "&amp;previous=" . $orig_previous;
+$link = "".$baseURL."index.php?indexAction=view_lenses&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
 
 // minimum
 
@@ -82,9 +82,9 @@ list($min, $max) = $util->printListHeader($lns, $link, $min, $step, "");
 
 echo "<table>
       <tr class=\"type3\">
-      <td><a href=\"common/view_lenses.php?sort=name&amp;previous=$previous\">".LangViewLensName."</a></td>
-      <td><a href=\"common/view_lenses.php?sort=type&amp;previous=$previous\">".LangViewLensFactor."</a></td>
-      <td><a href=\"common/view_lenses.php?sort=observer&amp;previous=$previous\">".LangViewObservationField2."</a></td>";
+      <td><a href=\"".$baseURL."index.php?indexAction=view_lenses&amp;sort=name&amp;previous=$previous\">".LangViewLensName."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=view_lenses&amp;sort=type&amp;previous=$previous\">".LangViewLensFactor."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=view_lenses&amp;sort=observer&amp;previous=$previous\">".LangViewObservationField2."</a></td>";
 
 
 
@@ -113,7 +113,7 @@ while(list ($key, $value) = each($lns))
    if ($value != "1")
    {
      print("<tr $type>
-             <td><a href=\"common/adapt_lens.php?lens=$value\">$name</a></td>\n
+             <td><a href=\"".$baseURL."index.php?indexAction=adapt_lens&amp;lens=".urlencode($value)."\">$name</a></td>\n
              <td>");
 		 echo ($factor);
  
@@ -135,7 +135,7 @@ while(list ($key, $value) = each($lns))
 
      if(!sizeof($obs) > 0) // no observations with lens yet
      {
-       echo("<a href=\"common/control/validate_delete_lens.php?lensid=" . $value . "\">" . LangRemove . "</a>");
+       echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_lens&amp;lensid=" . urlencode($value) . "\">" . LangRemove . "</a>");
      }
 
      echo("</td>\n</tr>");

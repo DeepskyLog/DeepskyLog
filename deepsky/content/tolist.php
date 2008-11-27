@@ -245,24 +245,24 @@ if($_SESSION['listname']<>"----------")
     list($min, $max) = $objUtil->printListHeader($_SESSION['QOL'], $link, $min, 25, "");
     echo "<a href=\"\"
                  onclick=\"thetitle = prompt(" . LangListQueryObjectsMessage14 . ",'" . $listname_ss . "');
-								           location.href='".$baseURL."deepsky/objects.pdf?SID=QOL&amp;pdfTitle='+thetitle+''
+								           location.href='".$baseURL."objects.pdf?SID=QOL&amp;pdfTitle='+thetitle+''
 					                 return false\"
 													 
 								 target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a> &nbsp;-&nbsp;";
   echo "<a href=\"\"
                  onclick=\"thetitle = prompt(" . LangListQueryObjectsMessage14 . ",'" . $listname_ss . "');
-								           location.href='".$baseURL."deepsky/objectnames.pdf?SID=QOL&amp;pdfTitle='+thetitle+''
+								           location.href='".$baseURL."objectnames.pdf?SID=QOL&amp;pdfTitle='+thetitle+''
 					                 return false\"
 													 
 								 target=\"new_window\">".LangExecuteQueryObjectsMessage4b."</a> &nbsp;-&nbsp;";
   echo "<a href=\"\"
                  onclick=\"thetitle = prompt(" . LangListQueryObjectsMessage14 . ",'" . $listname_ss . "');
-								           location.href='".$baseURL."deepsky/objectsDetails.pdf?SID=QOL&amp;sort=" . $sort . "&amp;pdfTitle='+thetitle+''
+								           location.href='".$baseURL."objectsDetails.pdf?SID=QOL&amp;sort=" . $sort . "&amp;pdfTitle='+thetitle+''
 					                 return false\"
 													 
 								 target=\"new_window\">".LangExecuteQueryObjectsMessage4c."</a> &nbsp;-&nbsp;";
-    echo "<a href=\"deepsky/objects.argo?SID=QOL\" target=\"new_window\">".LangExecuteQueryObjectsMessage8."</a> &nbsp;-&nbsp;";
-    echo "<a href=\"deepsky/objects.csv?SID=QOL\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a></p>";
+    echo "<a href=\"objects.argo?SID=QOL\" target=\"new_window\">".LangExecuteQueryObjectsMessage8."</a> &nbsp;-&nbsp;";
+    echo "<a href=\"objects.csv?SID=QOL\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a></p>";
   }
 	else
 	{

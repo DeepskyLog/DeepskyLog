@@ -10,7 +10,7 @@ echo "<form action=\"".$baseURL."index.php?indexAction=validate_change_observati
 tableNew("width=\"490\"");
 tableNewRow();
 tableFormatCell("class=\"fieldname\" width=\"100\"",LangViewObservationField1);
-tableCell("<a href=\"deepsky/index?indexAction=detail_object&amp;object=".$objObservation->getObjectId($_GET['observation'])."\">".$objObservation->getObjectId($_GET['observation'])."</a>");
+tableCell("<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($objObservation->getObjectId($_GET['observation']))."\">".$objObservation->getObjectId($_GET['observation'])."</a>");
 tableNextRow();
 tableFormatCell("class=\"fieldname\"",LangViewObservationField2);
 tableFormatCell('',"<a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".$objObservation->getObserverId($_GET['observation'])."\">".$objObserver->getFirstName($objObservation->getObserverId($_GET['observation'])) . "&nbsp;" . $objObserver->getObserverName($objObservation->getObserverId($_GET['observation']))."</a>");
@@ -197,14 +197,14 @@ echo "</tr>";
 echo "</table>";
 echo "<input type=\"hidden\" name=\"observationid\" value=\"".$_GET['observation']."\"></input>";
 echo "</form>";
-$upload_dir = 'drawings';                                                       //DRAWING
+$upload_dir = 'deepsky/drawings';                                                       //DRAWING
 $dir = opendir($upload_dir);
 while(FALSE!==($file=readdir($dir)))
 { if(("."==$file)OR(".."==$file))
     continue; 
   if(fnmatch($_GET['observation']."_resized.gif",$file)||fnmatch($_GET['observation']."_resized.jpg",$file) || fnmatch($_GET['observation']. "_resized.png", $file))
   { echo "<p>";
-	  echo "<a href=\"deepsky/".$upload_dir."/".$_GET['observation'].".jpg"."\"><img class=\"account\" src=\"deepsky/$upload_dir"."/"."$file\"></img></a>";
+	  echo "<a href=\"".$baseURL.$upload_dir."/".$_GET['observation'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/$upload_dir"."/"."$file\"></img></a>";
 		echo "</p>";
    }
 }

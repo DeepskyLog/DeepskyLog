@@ -4,11 +4,11 @@
 // generates an overview of all instruments (admin only)
 // version 3.2: WDM 22/01/2008
 
-include_once "../lib/instruments.php";
-include_once "../lib/observations.php";
-include_once "../lib/cometobservations.php";
-include_once "../lib/observers.php";
-include_once "../lib/util.php";
+include_once "lib/instruments.php";
+include_once "lib/observations.php";
+include_once "lib/cometobservations.php";
+include_once "lib/observers.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -73,19 +73,19 @@ $step = 25;
 
 echo("<div id=\"main\">\n<h2>".LangOverviewInstrumentsTitle."</h2>");
 
-$link = "common/view_instruments.php?sort=" . $sort . "&amp;previous=" . $orig_previous;
+$link = $baseURL."index.php?indexAction=view_instruments&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
 
 list($min, $max) = $util->printListHeader($telescopes, $link, $min, $step, "");
 
 echo "<table>
       <tr class=\"type3\">
-      <td><a href=\"common/view_instruments.php?sort=name&amp;previous=$previous\">".LangOverviewInstrumentsName."</a></td>
-      <td><a href=\"common/view_instruments.php?sort=diameter&amp;previous=$previous\">".LangOverviewInstrumentsDiameter."</a></td>
-      <td><a href=\"common/view_instruments.php?sort=fd&amp;previous=$previous\">".LangOverviewInstrumentsFD."</a></td>
-      <td><a href=\"common/view_instruments.php?sort=fixedMagnification&amp;previous=$previous\">".LangOverviewInstrumentsFixedMagnification."</a></td>";
+      <td><a href=\"".$baseURL."index.php?indexAction=view_instruments&amp;sort=name&amp;previous=$previous\">".LangOverviewInstrumentsName."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=view_instruments&amp;sort=diameter&amp;previous=$previous\">".LangOverviewInstrumentsDiameter."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=view_instruments&amp;sort=fd&amp;previous=$previous\">".LangOverviewInstrumentsFD."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=view_instruments&amp;sort=fixedMagnification&amp;previous=$previous\">".LangOverviewInstrumentsFixedMagnification."</a></td>";
 
-echo "<td><a href=\"common/view_instruments.php?sort=type&amp;previous=$previous\">".LangOverviewInstrumentsType."</a></td>
-      <td><a href=\"common/view_instruments.php?sort=observer&amp;previous=$previous\">".LangViewObservationField2."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_instruments&amp;sort=type&amp;previous=$previous\">".LangOverviewInstrumentsType."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=view_instruments&amp;sort=observer&amp;previous=$previous\">".LangViewObservationField2."</a></td>";
 echo "<td></td>";
 
 echo "</tr>";
@@ -121,7 +121,7 @@ while(list ($key, $value) = each($telescopes))
    $observer = $instruments->getObserverFromInstrument($value);
 
    print("<tr $typefield>
-           <td><a href=\"common/adapt_instrument.php?instrument=$value\">".$name."</a></td>\n
+           <td><a href=\"".$baseURL."index.php?indexAction=adapt_instrument&amp;instrument=$value\">".$name."</a></td>\n
            <td>$diameter</td>\n
            <td>$fd</td>\n
            <td>$fixedMagnification</td>\n
@@ -147,7 +147,7 @@ while(list ($key, $value) = each($telescopes))
 
    if(!sizeof($obs) > 0 && !sizeof($obscom) > 0 && !in_array($value, $insts) && $value != "1") // no observations with instrument yet
    {
-      echo("<a href=\"common/control/validate_delete_instrument.php?instrumentid=" . $value . "\">" . LangRemove . "</a>");
+      echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_instrument&amp;instrumentid=" . urlencode($value) . "\">" . LangRemove . "</a>");
    }
 
    echo("</td>\n</tr>");

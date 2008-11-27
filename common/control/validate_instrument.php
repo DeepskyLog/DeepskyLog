@@ -6,11 +6,11 @@
 
 session_start(); // start session
 
-include_once "../../lib/instruments.php";
-include_once "../../lib/observers.php";
-include_once "../../lib/objects.php";
-include_once "../../lib/setup/vars.php";
-include_once "../../lib/util.php";
+include_once "lib/instruments.php";
+include_once "lib/observers.php";
+include_once "lib/objects.php";
+include_once "lib/setup/vars.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -20,24 +20,24 @@ if ($_POST['adaption'] == 1)
 	$observer = new Observers;
 	$observer->setStandardTelescope($_SESSION['deepskylog_id'], $_POST['stdtelescope']);
 
-  header("Location:../add_instrument.php");
+  header("Location:add_instrument.php");
 } else if (!$_POST['instrumentname'] || !$_POST['diameter'] || !$_POST['type'] && $_POST['type'] != InstrumentBinoculars)
 {
    $_SESSION['message'] = LangValidateAccountMessage1;
-   header("Location:../error.php");
+   header("Location:error.php");
 }
 else
 {
    if (!$_POST['fd'] && !$_POST['focallength'] && ($_POST['type'] != InstrumentBinoculars && $_POST['type'] != InstrumentFinderscope)) // none of fd AND focallength
    {
       $_SESSION['message'] = LangValidateInstrumentMessage2;
-      header("Location:../error.php");
+      header("Location:error.php");
    }
    elseif (!$_POST['fd'] && !$_POST['focallength'] && ($_POST['type'] != InstrumentBinoculars && $_POST['type'] != InstrumentFinderscope)) // fd AND focallength filled in 
    {
 
       $_SESSION['message'] = LangValidateInstrumentMessage2; 
-      header("Location:../error.php");
+      header("Location:error.php");
    }
    else
    {
@@ -87,7 +87,7 @@ else
         $_SESSION['message'] = LangValidateInstrumentMessage4;
       }
 
-      header("Location:../add_instrument.php");
+      header("Location:add_instrument.php");
    }
 }
 ?>

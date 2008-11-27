@@ -3,14 +3,14 @@
 // new_filter.php
 // allows the user to add a new filter
 
-//include_once "../lib/observers.php";
+//include_once "lib/observers.php";
 //$observers = new observers;
 
 
-include_once "../lib/lenses.php";
-include_once "../lib/util.php";
-include_once "../lib/cometobservations.php";
-include_once "../lib/observations.php";
+include_once "lib/lenses.php";
+include_once "lib/util.php";
+include_once "lib/cometobservations.php";
+include_once "lib/observations.php";
 
 $lenses = new Lenses;
 $util = new util;
@@ -75,14 +75,14 @@ $step = 25;
 
 echo("<div id=\"main\">\n<h2>".LangOverviewLensTitle."</h2>");
 
-$link = $baseURL."common/indexCommon.php?indexAction=add_lens&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
+$link = $baseURL."index.php?indexAction=add_lens&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
 
 list($min, $max) = $util->printListHeader($lns, $link, $min, $step, "");
 
 echo "<table>
       <tr class=\"type3\">
-      <td><a href=\"".$baseURL."common/indexCommon.php?indexAction=add_lens&amp;sort=name&amp;previous=$previous\">".LangViewLensName."</a></td>
-      <td><a href=\"".$baseURL."common/indexCommon.php?indexAction=add_lens.&amp;sort=factor&amp;previous=$previous\">".LangViewLensFactor."</a></td>";
+      <td><a href=\"".$baseURL."index.php?indexAction=add_lens&amp;sort=name&amp;previous=$previous\">".LangViewLensName."</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=add_lens.&amp;sort=factor&amp;previous=$previous\">".LangViewLensFactor."</a></td>";
 
 
 echo "<td></td>";
@@ -109,7 +109,7 @@ if ($lns != null)
    $factor = $lenses->getFactor($value);
 
    print("<tr $type>
-           <td><a href=\"common/adapt_lens.php?lens=$value\">$name</a></td>\n
+           <td><a href=\"".$baseURL."index.php?indexAction=adapt_lens&amp;lens=".urlencode($value)."\">$name</a></td>\n
            <td>");
    echo $factor;
    print ("</td>\n");
@@ -126,7 +126,7 @@ if ($lns != null)
 
     if(!sizeof($obs) > 0) // no observations from location yet
     {
-      echo("<a href=\"common/control/validate_delete_lens.php?lensid=" . $value . "\">" . LangRemove . "</a>");
+      echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_lens&amp;lensid=" . urlencode($value) . "\">" . LangRemove . "</a>");
     }
 
     echo("</td>\n</tr>");
@@ -159,7 +159,7 @@ echo(LangAddLensTitle); ?>
   $lns = $lenses->getSortedLenses('name', "", true);
   while(list($key, $value) = each($lns))
   {
-		  echo("<option value=\"".$baseURL."common/indexCommon.php?indexAction=add_lens&amp;lensid=$value\">" . $lenses->getLensName($value) . "</option>\n");
+		  echo("<option value=\"".$baseURL."index.php?indexAction=add_lens&amp;lensid=".urlencode($value)."\">" . $lenses->getLensName($value) . "</option>\n");
   }
   echo("</select>\n");
   echo("</form>");
@@ -174,7 +174,7 @@ echo(LangAddLensTitle); ?>
 <li value="2"><?php echo (LangAddLensFieldManually); ?></li>
 </ol>
  <?php
-   echo "<form action=\"".$baseURL."common/indexCommon.php?indexAction=validate_lens\" method=\"post\">";
+   echo "<form action=\"".$baseURL."index.php?indexAction=validate_lens\" method=\"post\">";
  ?>
    <table>
    <tr>

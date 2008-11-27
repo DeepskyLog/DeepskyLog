@@ -5,9 +5,9 @@
 
 session_start(); // start session
 
-include "../../lib/observers.php";
-include "../../lib/setup/vars.php";
-include_once "../../lib/util.php";
+include "lib/observers.php";
+include "lib/setup/vars.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -20,6 +20,6 @@ $obs->setRole($_SESSION['user'], $role);
 $_SESSION['message'] = "Role is successfully updated!";
 $_SESSION['title'] = "Changed role";
 
-header("Location: ../message.php");  
+header("Location: message.php");  
 
 ?>

@@ -5,9 +5,9 @@
 
 session_start(); // start session
 
-include_once "../lib/eyepieces.php"; // location table
-include_once "../lib/util.php";
-include_once "../lib/setup/language.php";
+include_once "lib/eyepieces.php"; // location table
+include_once "lib/util.php";
+include_once "lib/setup/language.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -16,7 +16,7 @@ $eyepieces = new Eyepieces;
 
 if(!$_GET['eyepiece']) // no instrument defined 
 {
-   header("Location: ../index.php");
+   header("Location: index.php");
 }
 
 $name = $eyepieces->getEyepieceName($_GET['eyepiece']);

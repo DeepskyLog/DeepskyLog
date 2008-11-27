@@ -3,7 +3,7 @@
 // view information of an instrument 
 
 if(!$_GET['instrument']) // no instrument defined 
-  throw(header("Location: ../index.php"));  
+  throw(header("Location: index.php"));  
 
 echo '<div id=\"main\">';
 echo "<h2>" . LangViewInstrumentTitle . "</h2>";
