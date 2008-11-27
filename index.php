@@ -12,6 +12,7 @@ print "<META HTTP-EQUIV=\"Refresh\"
 */
 
 try{
+if(!array_key_exists('indexAction',$_GET)&&array_key_exists('indexAction',$_POST)) $_GET['indexAction']=$_POST['indexAction'];
 include 'common/entryexit/preludes.php';
 include 'common/entryexit/instructions.php';
 include 'common/entryexit/instructionsDS.php';

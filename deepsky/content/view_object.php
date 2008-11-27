@@ -9,7 +9,7 @@ if(!($_GET['object']=$objObject->getDsObjectName($_GET['object'])))
 
 $_GET['source']='objects_nearby';
 $_GET['zoom']=$GLOBALS['objUtil']->checkGetKey('zoom',30);	
-include "/deepsky/content/data_get_objects.php";	
+include "deepsky/content/data_get_objects.php";	
 
 $seen=$GLOBALS['objObject']->getDSOseen($_GET['object']);
 echo "<div id=\"main\">";

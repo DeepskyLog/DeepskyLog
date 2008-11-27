@@ -12,7 +12,7 @@ if(!(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']))
 	echo "<tr>";
 	echo "<td>";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
-	echo "<form action=\"".$baseURL."/".$baseURL."/index.php?indexAction=check_login\" method=\"post\">";
+	echo "<form action=\"".$baseURL."index.php?indexAction=check_login\" method=\"post\">";
   echo "<tr align=\"left\">";
 	echo "<td>";
   echo LangLoginMenuItem1;
@@ -32,7 +32,7 @@ if(!(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']))
   if($register == "yes")                                                        // include register link
   { echo "<tr align=\"left\">";
 	  echo "<td>";
-	  echo "<a class=\"mainlevel\" href=\"".$baseURL."common/index.php?indexAction=subscribe\">";
+	  echo "<a class=\"mainlevel\" href=\"".$baseURL."index.php?indexAction=subscribe\">";
     echo LangLoginMenuRegister;
     echo "</a>";
 		echo "</td>";

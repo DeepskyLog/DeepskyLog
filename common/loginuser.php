@@ -17,10 +17,14 @@ if(array_key_exists('deepskylogsec', $_COOKIE)&&$_COOKIE['deepskylogsec'])
         $_SESSION['admin']="yes";
 	  }
 		else
-		  $loginErrorText="Wrong password cookie"; 																					
+		{ $loginErrorText="Wrong password cookie"; 																					
+		  $_GET['indexAction']='error_action';
+		}
   }
 	else
-		$loginErrorText="Wrong password cookie"; 																					
+	{ $loginErrorText="Wrong password cookie"; 																					
+	  $_GET['indexAction']='error_action';
+	}
 }
 elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_login')&&isset($_POST['submit']))                                                     // pushed submit button
 { if(array_key_exists('deepskylog_id', $_POST)&&$_POST['deepskylog_id']&&array_key_exists('passwd', $_POST)&&$_POST['passwd'])              // all fields filled in
@@ -48,12 +52,12 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
     }
     else // passwords don't match
     { $loginErrorCode="LangErrorWrongPassword";
-		  $loginErrorText=" Wrong password,loginuser.php: Passwords don't match";
+		  $_GET['indexAction']='error_action';
 		}
   }
   else // not all fields are filled in
   { $loginErrorCode="LangErrorEmptyPassword";
-		$loginErrorText="loginuser.php: not all fields are filled in";
+		$_GET['indexAction']='error_action';
 	}
 }
 else
@@ -74,10 +78,10 @@ if(array_key_exists('indexAction',$_POST)&&($_POST['indexAction']=="setLanguage"
 }
 $language=$GLOBALS['objLanguage']->getPath($_SESSION['lang']);
 include $GLOBALS['instDir']."/lib/setup/"."$language";
-if($loginErrorCode||$loginErrorText )
+if($loginErrorCode||$loginErrorText)
 { $_SESSION['deepskylog_id']='';
 	setcookie("deepskylogsec","",time()-3600,"/");
-  throw new Exception(constant($loginErrorCode)." ".$loginErrorText);
+  $entryMessage=constant($loginErrorCode)." ".$loginErrorText;
 }
 
 ?>

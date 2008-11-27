@@ -5,7 +5,6 @@ if(!array_key_exists('deepskylog_id', $_SESSION)||!$_SESSION['deepskylog_id'])
 elseif($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)!=$GLOBALS['objUtil']->checkPostKey('timestamp',-1))
 { $_GET['indexAction']="detail_observation";
   $_GET['dalm']='D';
-	echo "WP1";
   //$_GET['observation']=$current_observation;
 }
 elseif((!$_POST['day'])||(!$_POST['month'])||(!$_POST['year'])||($_POST['site']=="1")||(!$_POST['instrument'])||(!$_POST['description']))

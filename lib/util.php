@@ -53,7 +53,7 @@ class util
     }
   }
   private function utilitiesCheckIndexActionAll($action, $includefile)
-  { if(array_key_exists('indexAction',$_GET) && ($_GET['indexAction'] == $action))
+  { if(array_key_exists('indexAction',$_GET)&&($_GET['indexAction'] == $action))
       return $includefile;
   }
   private function utilitiesCheckIndexActionMember($action, $includefile)
@@ -62,7 +62,7 @@ class util
       return $includefile; 
   }
   private function utilitiesCheckIndexActionAdmin($action, $includefile)
-  { if(array_key_exists('indexAction',$_GET) && ($_GET['indexAction'] == $action) && 
+  { if(array_key_exists('indexAction',$_REQUEST) && ($_REQUEST['indexAction'] == $action) && 
        array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes"))
       return $includefile; 
   }
