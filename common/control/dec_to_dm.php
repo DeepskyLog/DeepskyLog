@@ -1,6 +1,6 @@
 <?php
+// utility functions in representation transformations
 
-// Version 3.1, DE 20061119
 function decToStringDegMin($decl)
 {
    $sign = 0;

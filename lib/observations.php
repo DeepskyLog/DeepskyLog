@@ -756,7 +756,7 @@ class Observations
     $db->logout();
   }
 
-  // setLanguage sets the language for the given observation
+  // setObservationLanguage sets the language for the given observation
   function setObservationLanguage($id, $language)
   {
     $db = new database;

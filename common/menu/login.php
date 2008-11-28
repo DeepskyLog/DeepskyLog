@@ -12,7 +12,8 @@ if(!(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']))
 	echo "<tr>";
 	echo "<td>";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
-	echo "<form action=\"".$baseURL."index.php?indexAction=check_login\" method=\"post\">";
+	echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+	echo "<input type=\"hidden\" name=\"indexAction\" value=\"check_login\">";
   echo "<tr align=\"left\">";
 	echo "<td>";
   echo LangLoginMenuItem1;

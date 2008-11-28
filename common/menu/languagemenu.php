@@ -12,7 +12,7 @@ if($languageMenu==1)
 	echo "<tr>";
 	echo "<td>";
 	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
-  echo "<form action=\"".$baseURL."/index.php\" method=\"post\">";
+  echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"setLanguage\">";
   echo "<tr align=\"left\">";
 	echo "<td>";

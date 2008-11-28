@@ -1,491 +1,206 @@
 <?php
-
 // new_filter.php
 // allows the user to add a new filter
 
-//include_once "lib/observers.php";
-//$observers = new observers;
-
-include_once "lib/filters.php";
-include_once "lib/util.php";
-include_once "lib/cometobservations.php";
-include_once "lib/observations.php";
-
-$filters = new Filters;
-$util = new util;
-$util->checkUserInput();
-$observations = new observations;
-$cometobservations = new CometObservations;
-
-// sort
-
-if(isset($_GET['sort']))
-{
-  $sort = $_GET['sort']; // field to sort on
-}
-else
-{
-  $sort = "name"; // standard sort on location name
-}
-
-// minimum
-
-if(isset($_GET['min']))
-{
-  $min = $_GET['min'];
-}
-else
-{
-  $min = 0;
-}
-
+$sort=$objUtil->checkGetKey('sort','name');
+if(!$min) $min=$objUtil->checkGetKey('min',0);
 // the code below looks very strange but it works
-
 if((isset($_GET['previous'])))
-{
   $orig_previous = $_GET['previous'];
-}
 else
-{
   $orig_previous = "";
-}
-
-$filts = $filters->getSortedFilters($sort, $_SESSION['deepskylog_id']);
-
+$filts=$objFilter->getSortedFilters($sort, $_SESSION['deepskylog_id']);
 if((isset($_GET['sort'])) && $_GET['previous'] == $_GET['sort']) // reverse sort when pushed twice
-{
-  if ($_GET['sort'] == "name")
-  {
+{ if ($_GET['sort'] == "name")
     $filts = array_reverse($filts, true);
-  }
   else
-  {
-    krsort($filts);
+  { krsort($filts);
     reset($filts);
   }
-    $previous = ""; // reset previous field to sort on
+  $previous = ""; // reset previous field to sort on
 }
 else
-{
   $previous = $sort;
-}
-
 $step = 25;
-
-echo("<div id=\"main\">\n<h2>".LangOverviewFilterTitle."</h2>");
-
-$link = $baseURL."index.php?indexAction=add_filter&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
-
-list($min, $max) = $util->printListHeader($filts, $link, $min, $step, "");
-
-echo "<table>
-      <tr class=\"type3\">
-      <td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=name&amp;previous=$previous\">".LangViewFilterName."</a></td>
-      <td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=type&amp;previous=$previous\">".LangViewFilterType."</a></td>
-      <td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=color&amp;previous=$previous\">".LangViewFilterColor."</a></td>
-      <td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=wratten&amp;previous=$previous\">".LangViewFilterWratten."</a></td>
-      <td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=schott&amp;previous=$previous\">".LangViewFilterSchott."</a></td>";
-
-
+echo "<div id=\"main\">";
+echo "<h2>".LangOverviewFilterTitle."</h2>";
+$link=$baseURL."index.php?indexAction=add_filter&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
+list($min, $max)=$objUtil->printListHeader($filts, $link, $min, $step, "");
+echo "<table>";
+echo "<tr class=\"type3\">";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=name&amp;previous=$previous\">".LangViewFilterName."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=type&amp;previous=$previous\">".LangViewFilterType."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=color&amp;previous=$previous\">".LangViewFilterColor."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=wratten&amp;previous=$previous\">".LangViewFilterWratten."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=schott&amp;previous=$previous\">".LangViewFilterSchott."</a></td>";
 echo "<td></td>";
 echo "</tr>";
-
 $count = 0;
-
-if ($filts != null)
-{
- while(list ($key, $value) = each($filts))
- {
-  if($count >= $min && $count < $max) // selection
-  {
-   if ($count % 2)
-   {
-    $type = "class=\"type1\"";
-   }
-   else
-   {
-    $type = "class=\"type2\"";
-   }
-
-   $name = stripslashes($filters->getFilterName($value));
-   $type = $filters->getFilterType($value);
-   $color = $filters->getColor($value);
-   $wratten = $filters->getWratten($value);
-   $schott = $filters->getSchott($value);
-
-   print("<tr $type>
-           <td><a href=\"".$baseURL."index.php?indexAction=adapt_filter&amp;filter=".urlencode($value)."\">$name</a></td>\n
-           <td>");
-   if($type == FilterOther) {echo(FiltersOther);}
-   if($type == FilterBroadBand) {echo(FiltersBroadBand);}
-   if($type == FilterNarrowBand) {echo(FiltersNarrowBand);}
-   if($type == FilterOIII) {echo(FiltersOIII);}
-   if($type == FilterHBeta) {echo(FiltersHBeta);}
-   if($type == FilterHAlpha) {echo(FiltersHAlpha);}
-   if($type == FilterColor) {echo(FiltersColor);}
-   if($type == FilterNeutral) {echo(FiltersNeutral);}
-   if($type == FilterCorrective) {echo(FiltersCorrective);}
- 
-   print("</td>\n
-           <td>");
-   if ($color == 0)
-   {
-     echo ("-");
-   }
-   else
-   {
-     if($color == FilterColorLightRed) {echo(FiltersColorLightRed);}
-     if($color == FilterColorRed) {echo(FiltersColorRed);}
-     if($color == FilterColorDeepRed) {echo(FiltersColorDeepRed);}
-     if($color == FilterColorOrange) {echo(FiltersColorOrange);}
-     if($color == FilterColorLightYellow) {echo(FiltersColorLightYellow);}
-     if($color == FilterColorDeepYellow) {echo(FiltersColorDeepYellow);}
-     if($color == FilterColorYellow) {echo(FiltersColorYellow);}
-     if($color == FilterColorYellowGreen) {echo(FiltersColorYellowGreen);}
-     if($color == FilterColorLightGreen) {echo(FiltersColorLightGreen);}
-     if($color == FilterColorGreen) {echo(FiltersColorGreen);}
-     if($color == FilterColorMediumBlue) {echo(FiltersColorMediumBlue);}
-     if($color == FilterColorPaleBlue) {echo(FiltersColorPaleBlue);}
-     if($color == FilterColorBlue) {echo(FiltersColorBlue);}
-     if($color == FilterColorDeepBlue) {echo(FiltersColorDeepBlue);}
-     if($color == FilterColorDeepViolet) {echo(FiltersColorDeepViolet);}
-   }
-   print("</td>\n
-           <td>");
-   if ($wratten == "")
-   {
-     echo "-";
-   }
-   else
-   {
-     echo $wratten;
-   }
-   print("</td>\n
-           <td>");
-   if ($schott == "")
-   {
-     echo "-";
-   }
-   else
-   {
-     echo $schott;
-   }
-   print ("</td>\n");
-           echo("<td>");
-
-           // check if there are no observations made with this filter
-
-           $queries = array("filter" => $value, "observer" => $_SESSION['deepskylog_id']);
-           $obs = $observations->getObservationFromQuery($queries, "", "1", "False");
-
-// No filters yet for comet observations!!
-//           $queries = array("eyepiece" => $value);
-//           $comobs = $cometobservations->getObservationFromQuery($queries, "", "1", "False");
-
-           if(!sizeof($obs) > 0) // no observations from location yet
-           {
-              echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_filter&amp;filterid=" . urlencode($value) . "\">" . LangRemove . "</a>");
-           }
-
-           echo("</td>\n</tr>");
-   }
- }
-   $count++;
+if(count($filts)>0)
+{ while(list ($key, $value) = each($filts))
+  { $name = stripslashes($objFilter->getFilterName($value));
+    $type = $objFilter->getFilterType($value);
+    $color = $objFilter->getColor($value);
+    $wratten = $objFilter->getWratten($value);
+    $schott = $objFilter->getSchott($value);
+    echo "<tr class=\"type".(2-($count%2))."\">";
+    echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_filter&amp;filter=".urlencode($value)."\">$name</a></td>";
+    echo "<td>";
+    if($type == FilterOther) {echo(FiltersOther);}
+    if($type == FilterBroadBand) {echo(FiltersBroadBand);}
+    if($type == FilterNarrowBand) {echo(FiltersNarrowBand);}
+    if($type == FilterOIII) {echo(FiltersOIII);}
+    if($type == FilterHBeta) {echo(FiltersHBeta);}
+    if($type == FilterHAlpha) {echo(FiltersHAlpha);}
+    if($type == FilterColor) {echo(FiltersColor);}
+    if($type == FilterNeutral) {echo(FiltersNeutral);}
+    if($type == FilterCorrective) {echo(FiltersCorrective);}
+    echo "</td>";
+    echo "<td>";
+    echo ($wratten?$wratten:"-");
+    echo "</td>";
+    echo "<td>";
+    echo ($schott?$schott:"-"); 
+	  echo "</td>";
+    echo "<td>";
+    $queries=array("filter"=>$value,"observer"=>$_SESSION['deepskylog_id']);  // check if there are no observations made with this filter
+    $obs=$objObservation->getObservationFromQuery($queries,"","1","False");
+    //           $queries = array("eyepiece" => $value);                      // No filters yet for comet observations!!
+    //           $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
+    if(!sizeof($obs) > 0) // no observations from location yet
+      echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_filter&amp;filterid=" . urlencode($value) . "\">" . LangRemove . "</a>";
+    echo "</td>";
+    echo "</tr>";
+    $count++;
+	}
 }
-  echo "</table>";
-
-  list($min, $max) = $util->printListHeader($filts, $link, $min, $step, "");
-
-  echo "</div></div>";
-
-echo("<h2>");
-echo(LangAddFilterTitle); ?>
-
-</h2>
-
-<ol>
-<li value="1">
-<?php echo (LangAddFilterExisting);
+echo "</table>";
+list($min,$max)=$objUtil->printListHeader($filts,$link,$min,$step,"");
+echo "</div>";
+echo "<h2>";
+echo LangAddFilterTitle;
+echo "</h2>";
+echo "<ol>";
+echo "<li value=\"1\">";
+echo LangAddFilterExisting;
+echo "<table width=\"100%\">";
+echo "<tr>";
+echo "<td width=\"25%\">";
+echo "<form name=\"overviewform\">";		
+echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalogue\">";
+$filts=$objFilter->getSortedFilters('name', "", true);
+while(list($key, $value) = each($filts))
+  echo("<option value=\"".$baseURL."index.php?indexAction=add_filter&amp;filterid=".urlencode($value)."\">" . $objFilter->getFilterName($value) . "</option>\n");
+echo "</select>";
+echo "</form>";
+echo "</td>";
+echo "</tr>";
+echo "</table>";
+echo "</li>";
+echo "</ol>";
+echo "<p>";
+echo LangAddSiteFieldOr;
+echo "</p>";
+echo "<ol><li value=\"2\">".LangAddFilterFieldManually."</li></ol>";
+echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_filter\" />";
+echo "<table>";
+echo "<tr>";
+echo "<td class=\"fieldname\">";
+echo LangAddFilterField1;
+echo "</td>";
+echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"filtername\" size=\"30\" value=\""; 
+echo stripslashes($objUtil->checkGetKey('filtername',''));
+if($objUtil->checkGetKey('filterid'))
+  echo stripslashes($objFilter->getFilterName($_GET['filterid'])); 
+echo "\" />";
+echo "</td>";
+echo "<td class=\"explanation\">";
+echo LangAddFilterField1Expl;
+echo "</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td class=\"fieldname\">";
+echo LangAddFilterField2;
+echo "</td>";
+echo "<td>";
+echo "<select name=\"type\">";
+$type=$objUtil->checkGetKey('type');
+if($objUtil->checkGetKey('filterid'))
+  $type=$objFilter->getFilterType($_GET['filterid']);
+echo "<option ".(($type==FilterOther)?"selected=\"selected\" ":"")."value=\"".FilterOther."\">".FiltersOther."</option>";
+echo "<option ".(($type==FilterBroadBand)?"selected=\"selected\" ":"")."value=\"".FilterBroadBand."\">".FiltersBroadBand."</option>";
+echo "<option ".(($type==FilterNarrowBand)?"selected=\"selected\" ":"")."value=\"".FilterNarrowBand."\">".FiltersNarrowBand."</option>";
+echo "<option ".(($type==FilterOIII)?"selected=\"selected\" ":"")."value=\"".FilterOIII."\">".FiltersOIII."</option>";
+echo "<option ".(($type==FilterHBeta)?"selected=\"selected\" ":"")."value=\"".FilterHBeta."\">".FiltersHBeta."</option>";
+echo "<option ".(($type==FilterHAlpha)?"selected=\"selected\" ":"")."value=\"".FilterHAlpha."\">".FiltersHAlpha."</option>";
+echo "<option ".(($type==FilterColor)?"selected=\"selected\" ":"")."value=\"".FilterColor."\">".FiltersColor."</option>";
+echo "<option ".(($type==FilterNeutral)?"selected=\"selected\" ":"")."value=\"".FilterNeutral."\">".FiltersNeutral."</option>";
+echo "<option ".(($type==FilterCorrective)?"selected=\"selected\" ":"")."value=\"".FilterCorrective."\">".FiltersCorrective."</option>";
+echo "</select>";
+echo "</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td class=\"fieldname\">";
+echo LangAddFilterField3; 
+echo "</td>";
+echo "<td>";
+if(array_key_exists('color',$_GET) && $_GET['color'])
+  $color = $_GET['color'];
+if(array_key_exists('filterid',$_GET) && $_GET['filterid'])
+  $color = $objFilter->getColor($_GET['filterid']);
+echo "<select name=\"color\">";
+echo "<option value=\"\">&nbsp;</option>";
+echo "<option ".(($color==FilterColorLightRed)?" option selected=\"selected\" ":"")."value=\"".FilterColorLightRed."\">".FiltersColorLightRed."</option>";
+echo "<option ".(($color==FilterColorRed)?" option selected=\"selected\" ":"")."value=\"".FilterColorRed."\">".FiltersColorRed."</option>";
+echo "<option ".(($color==FilterColorDeepRed)?" option selected=\"selected\" ":"")."value=\"".FilterColorDeepRed."\">".FiltersColorDeepRed."</option>";
+echo "<option ".(($color==FilterColorOrange)?" option selected=\"selected\" ":"")."value=\"".FilterColorOrange."\">".FiltersColorOrange."</option>";
+echo "<option ".(($color==FilterColorLightYellow)?" option selected=\"selected\" ":"")."value=\"".FilterColorLightYellow."\">".FiltersColorLightYellow."</option>";
+echo "<option ".(($color==FilterColorDeepYellow)?" option selected=\"selected\" ":"")."value=\"".FilterColorDeepYellow."\">".FiltersColorDeepYellow."</option>";
+echo "<option ".(($color==FilterColorYellow)?" option selected=\"selected\" ":"")."value=\"".FilterColorYellow."\">".FiltersColorYellow."</option>";
+echo "<option ".(($color==FilterColorYellowGreen)?" option selected=\"selected\" ":"")."value=\"".FilterColorYellowGreen."\">".FiltersColorYellowGreen."</option>";
+echo "<option ".(($color==FilterColorLightGreen)?" option selected=\"selected\" ":"")."value=\"".FilterColorLightGreen."\">".FiltersColorLightGreen."</option>";
+echo "<option ".(($color==FilterColorGreen)?" option selected=\"selected\" ":"")."value=\"".FilterColorGreen."\">".FiltersColorGreen."</option>";
+echo "<option ".(($color==FilterColorMediumBlue)?" option selected=\"selected\" ":"")."value=\"".FilterColorMediumBlue."\">".FiltersColorMediumBlue."</option>";
+echo "<option ".(($color==FilterColorPaleBlue)?" option selected=\"selected\" ":"")."value=\"".FilterColorPaleBlue."\">".FiltersColorPaleBlue."</option>";
+echo "<option ".(($color==FilterColorBlue)?" option selected=\"selected\" ":"")."value=\"".FilterColorBlue."\">".FiltersColorBlue."</option>";
+echo "<option ".(($color==FilterColorDeepBlue)?" option selected=\"selected\" ":"")."value=\"".FilterColorDeepBlue."\">".FiltersColorDeepBlue."</option>";
+echo "<option ".(($color==FilterColorDeepViolet)?" option selected=\"selected\" ":"")."value=\"".FilterColorDeepViolet."\">".FiltersColorDeepViolet."</option>";
+echo "</select>";
+echo "</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td class=\"fieldname\">";
+echo LangAddFilterField4;
+echo "</td>";
+echo "<td>";
+echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"wratten\" size=\"5\" value=\"";
+if(array_key_exists('wratten',$_GET) && $_GET['wratten'])
+  echo stripslashes($_GET['wratten']);
+if(array_key_exists('filterid',$_GET) && $_GET['filterid'])
+  echo stripslashes($objFilter->getWratten($_GET['filterid'])); 
+echo "\" />";
+echo "</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td class=\"fieldname\">";
+echo LangAddFilterField5;
+echo "</td>";
+echo "<td>";
+echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"schott\" size=\"5\" value=\"";
+if(array_key_exists('schott',$_GET) && $_GET['schott'])
+  echo stripslashes($_GET['schott']); 
+if(array_key_exists('filterid',$_GET) && $_GET['filterid'])
+  echo stripslashes($objFilter->getSchott($_GET['filterid'])); 
+echo "\" />";
+echo "</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td></td>";
+echo "<td><input type=\"submit\" name=\"add\" value=\"".LangAddFilterButton."\" /></td>";
+echo "<td></td>";
+echo "</tr>";
+echo "</table>";
+echo "</form>";
+echo "</div>";
 ?>
-
-<?php echo("<table width=\"100%\">");
-      echo("<tr>");
-      echo("<td width=\"25%\">\n");
-      echo("<form name=\"overviewform\">\n ");		
-      echo("<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalogue\">\n");
-
-  $filts = $filters->getSortedFilters('name', "", true);
-  while(list($key, $value) = each($filts))
-  {
-	  echo("<option value=\"".$baseURL."index.php?indexAction=add_filter&amp;filterid=".urlencode($value)."\">" . $filters->getFilterName($value) . "</option>\n");
-  }
-  echo("</select>\n");
-  echo("</form>");
-  echo("</td>");
-  echo("</tr>");
-  echo("</table>");
-?>
-</li>
-</ol>
-<p><?php echo (LangAddSiteFieldOr); ?></p>
-<ol>
-<li value="2"><?php echo (LangAddFilterFieldManually); ?></li>
-</ol>
- 
-<?php  echo "<form action=\"".$baseURL."index.php?indexAction=validate_filter\" method=\"post\">"; ?>
-   <table>
-   <tr>
-   <td class="fieldname">
-	     <?php 
-			 echo(LangAddFilterField1);
-			 ?></td>
-   <td><input type="text" class="inputfield" maxlength="64" name="filtername" size="30" value="<?php 
-			 if(array_key_exists('filtername',$_GET) && $_GET['filtername'])
-       {
-			    echo stripslashes($_GET['filtername']);
-			 } 
-			 if(array_key_exists('filterid',$_GET) && $_GET['filterid'])
-       {
-			    echo stripslashes($filters->getFilterName($_GET['filterid']));
-			 } 
-			 ?>" /></td>
-   <td class="explanation"><?php echo(LangAddFilterField1Expl); ?></td>
-   </tr>
-   <tr>
-   <td class="fieldname">
-	     <?php 
-			 echo(LangAddFilterField2); 
-			 ?></td>
-   <td>
-
-<?php
-	 echo("<select name=\"type\">");
-   
-   if(array_key_exists('type',$_GET) && $_GET['type'])
-   {
-      $type = $_GET['type'];
-	 }
-	 if(array_key_exists('filterid',$_GET) && $_GET['filterid'])
-   {
-      $type = $filters->getFilterType($_GET['filterid']);
-	 } 
-   ?>
-
-   <option <?php 
-   if ($type == FilterOther)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterOther;?>"><?php echo FiltersOther; ?></option>
-         <option <?php 
-   if ($type == FilterBroadBand)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterBroadBand; ?>"><?php echo FiltersBroadBand; ?></option>
-         <option <?php 
-   if ($type == FilterNarrowBand)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterNarrowBand; ?>"><?php echo FiltersNarrowBand; ?></option>
-         <option <?php 
-   if ($type == FilterOIII)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterOIII; ?>"><?php echo FiltersOIII; ?></option>
-         <option <?php 
-   if ($type == FilterHBeta)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterHBeta; ?>"><?php echo FiltersHBeta; ?></option>
-         <option <?php 
-   if ($type == FilterHAlpha)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterHAlpha; ?>"><?php echo FiltersHAlpha; ?></option>
-         <option <?php 
-   if ($type == FilterColor)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterColor; ?>"><?php echo FiltersColor; ?></option>
-         <option <?php 
-   if ($type == FilterNeutral)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterNeutral; ?>"><?php echo FiltersNeutral; ?></option>
-         <option <?php 
-   if ($type == FilterCorrective)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterCorrective; ?>"><?php echo FiltersCorrective; ?></option>
-
-   <option 
-
-   </select></td>
-   </tr>
-
-   <tr>
-   <td class="fieldname">
-	     <?php 
-			 echo(LangAddFilterField3); 
-			 ?></td>
-   <td>
-
-<?php
-	 echo("<select name=\"color\">");
-   
-   if(array_key_exists('color',$_GET) && $_GET['color'])
-   {
-      $color = $_GET['color'];
-	 }
-	 if(array_key_exists('filterid',$_GET) && $_GET['filterid'])
-   {
-      $color = $filters->getColor($_GET['filterid']);
-	 } 
-   ?>
-
-   <option value=""><?php echo "&nbsp;"; ?></option>
-   <option <?php 
-   if ($color == FilterColorLightRed)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterColorLightRed; ?>"><?php echo FiltersColorLightRed; ?></option>
-         <option <?php 
-   if ($color == FilterColorRed)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterColorRed; ?>"><?php echo FiltersColorRed; ?></option>
-         <option <?php 
-   if ($color == FilterColorDeepRed)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterColorDeepRed; ?>"><?php echo FiltersColorDeepRed; ?></option>
-         <option <?php 
-   if ($color == FilterColorOrange)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterColorOrange; ?>"><?php echo FiltersColorOrange; ?></option>
-         <option <?php 
-   if ($color == FilterColorLightYellow)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterColorLightYellow; ?>"><?php echo FiltersColorLightYellow; ?></option>
-         <option <?php 
-   if ($color == FilterColorDeepYellow)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterColorDeepYellow; ?>"><?php echo FiltersColorDeepYellow; ?></option>
-         <option <?php 
-   if ($color == FilterColorYellow)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterColorYellow; ?>"><?php echo FiltersColorYellow; ?></option>
-         <option <?php 
-   if ($color == FilterColorYellowGreen)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterColorYellowGreen; ?>"><?php echo FiltersColorYellowGreen; ?></option>
-         <option <?php 
-   if ($color == FilterColorLightGreen)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterColorLightGreen; ?>"><?php echo FiltersColorLightGreen; ?></option>
-         <option <?php 
-   if ($color == FilterColorGreen)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterColorGreen; ?>"><?php echo FiltersColorGreen; ?></option>
-         <option <?php 
-   if ($color == FilterColorMediumBlue)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterColorMediumBlue; ?>"><?php echo FiltersColorMediumBlue; ?></option>
-         <option <?php 
-   if ($color == FilterColorPaleBlue)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterColorPaleBlue; ?>"><?php echo FiltersColorPaleBlue; ?></option>
-         <option <?php 
-   if ($color == FilterColorBlue)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterColorBlue; ?>"><?php echo FiltersColorBlue; ?></option>
-         <option <?php 
-   if ($color == FilterColorDeepBlue)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterColorDeepBlue; ?>"><?php echo FiltersColorDeepBlue; ?></option>
-         <option <?php 
-   if ($color == FilterColorDeepViolet)
-   {
-		 echo " option selected=\"selected\" ";
-   }
-   ?> value="<?php echo FilterColorDeepViolet; ?>"><?php echo FiltersColorDeepViolet; ?></option>
-   </select></td>
-   </tr>
-
-   <tr>
-   <td class="fieldname"><?php echo(LangAddFilterField4); ?></td>
-   <td>
-   <input type="text" class="inputfield" maxlength="5" name="wratten" size="5" value="<?php 
-			 if(array_key_exists('wratten',$_GET) && $_GET['wratten'])
-       {
-			    echo stripslashes($_GET['wratten']);
-			 } 
-			 if(array_key_exists('filterid',$_GET) && $_GET['filterid'])
-       {
-			    echo stripslashes($filters->getWratten($_GET['filterid']));
-			 } 
-			 ?>" />
-   </td> 
-   </tr>
-
-   <tr>
-   <td class="fieldname"><?php echo(LangAddFilterField5); ?></td>
-   <td>
-   <input type="text" class="inputfield" maxlength="5" name="schott" size="5" value="<?php 
-			 if(array_key_exists('schott',$_GET) && $_GET['schott'])
-       {
-			    echo stripslashes($_GET['schott']);
-			 } 
-			 if(array_key_exists('filterid',$_GET) && $_GET['filterid'])
-       {
-			    echo stripslashes($filters->getSchott($_GET['filterid']));
-			 } 
-			 ?>" />
-   </td> 
-   </tr>
-
-   <tr>
-   <td></td>
-   <td><input type="submit" name="add" value="<?php echo (LangAddFilterButton); ?>" /></td>
-   <td></td>
-   </tr>
-   </table>
-   </form>
-</div>
-</div>
-</body>
-</html>
-

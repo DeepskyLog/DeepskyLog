@@ -15,7 +15,6 @@ try{
 if(!array_key_exists('indexAction',$_GET)&&array_key_exists('indexAction',$_POST)) $_GET['indexAction']=$_POST['indexAction'];
 include 'common/entryexit/preludes.php';
 include 'common/entryexit/instructions.php';
-include 'common/entryexit/instructionsDS.php';
 include 'common/entryexit/menu.php';
 if(isset($entryMessage)&&$entryMessage) echo $entryMessage.'<hr />';
 include $objUtil->utiltiesDispatchIndexAction();	

@@ -1,4 +1,5 @@
 <?php
+// utility functions in resizing
 
 function image_createThumb($src,$dest,$maxWidth,$maxHeight,$quality=75) {
    if (file_exists($src)  && isset($dest)) {

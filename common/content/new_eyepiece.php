@@ -1,22 +1,6 @@
 <?php
-
 // new_site.php
 // allows the user to add a new site
-
-//include_once "lib/observers.php";
-//$observers = new observers;
-
-include_once "lib/eyepieces.php";
-include_once "lib/util.php";
-include_once "lib/cometobservations.php";
-
-$eyepieces = new eyepieces;
-$util = new util;
-$util->checkUserInput();
-$observations = new observations;
-$cometobservations = new CometObservations;
-
-// sort
 
 if(isset($_GET['sort']))
 {
@@ -49,7 +33,7 @@ else
   $orig_previous = "";
 }
 
-$eyeps = $eyepieces->getSortedEyepieces($sort, $_SESSION['deepskylog_id']);
+$eyeps = $objEyepiece->getSortedEyepieces($sort, $_SESSION['deepskylog_id']);
 
 if((isset($_GET['sort'])) && $_GET['previous'] == $_GET['sort']) // reverse sort when pushed twice
 {
@@ -105,10 +89,10 @@ if ($eyeps != null)
     $type = "class=\"type2\"";
    }
 
-   $name = stripslashes($eyepieces->getEyepieceName($value));
-   $focalLength = $eyepieces->getFocalLength($value);
-   $apparentFOV = $eyepieces->getApparentFOV($value);
-   $maxFocalLength = $eyepieces->getMaxFocalLength($value);
+   $name = stripslashes($objEyepiece->getEyepieceName($value));
+   $focalLength = $objEyepiece->getFocalLength($value);
+   $apparentFOV = $objEyepiece->getApparentFOV($value);
+   $maxFocalLength = $objEyepiece->getMaxFocalLength($value);
    if ($maxFocalLength == "-1")
 	 {
 		 $maxFocalLength = "-";
@@ -124,11 +108,11 @@ if ($eyeps != null)
            // check if there are no observations made with this eyepiece
 
            $queries = array("eyepiece" => $value, "observer" => $_SESSION['deepskylog_id']);
-           $obs = $observations->getObservationFromQuery($queries, "", "1", "False");
+           $obs = $objObservation->getObservationFromQuery($queries, "", "1", "False");
 
 // No eyepieces yet for comet observations!!
 //           $queries = array("eyepiece" => $value);
-//           $comobs = $cometobservations->getObservationFromQuery($queries, "", "1", "False");
+//           $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
 
            if(!sizeof($obs) > 0) // no observations from location yet
            {
@@ -163,11 +147,11 @@ echo(LangAddEyepieceTitle); ?>
       echo("<form name=\"overviewform\">\n ");		
       echo("<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalogue\">\n");
 
-  $eyeps = $eyepieces->getSortedEyepieces('focalLength', "", true);
+  $eyeps = $objEyepiece->getSortedEyepieces('focalLength', "", true);
 
   while(list($key, $value) = each($eyeps))
   {
-		  echo("<option value=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;eyepieceid=".urlencode($value).\">" . $eyepieces->getEyepieceName($value) . "</option>\n");
+		  echo("<option value=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;eyepieceid=".urlencode($value).\">" . $objEyepiece->getEyepieceName($value) . "</option>\n");
   }
   echo("</select>\n");
   echo("</form>");
@@ -196,7 +180,7 @@ echo(LangAddEyepieceTitle); ?>
 			 } 
 			 if(array_key_exists('eyepieceid',$_GET) && $_GET['eyepieceid'])
        {
-			    echo stripslashes($eyepieces->getEyepieceName($_GET['eyepieceid']));
+			    echo stripslashes($objEyepiece->getEyepieceName($_GET['eyepieceid']));
 			 } 
 			 ?>" /></td>
    <td class="explanation"><?php echo(LangAddEyepieceField1Expl); ?></td>
@@ -213,7 +197,7 @@ echo(LangAddEyepieceTitle); ?>
 			 } 
 			 if(array_key_exists('eyepieceid',$_GET) && $_GET['eyepieceid'])
        {
-			    echo stripslashes($eyepieces->getFocalLength($_GET['eyepieceid']));
+			    echo stripslashes($objEyepiece->getFocalLength($_GET['eyepieceid']));
 			 } 
 			 ?>" /></td>
    <td class="explanation"><?php echo(LangAddEyepieceField2Expl); ?></td>
@@ -231,7 +215,7 @@ echo(LangAddEyepieceTitle); ?>
 			 } 
 			 if(array_key_exists('eyepieceid',$_GET) && $_GET['eyepieceid'])
        {
-			    $mfl = stripslashes($eyepieces->getMaxFocalLength($_GET['eyepieceid']));
+			    $mfl = stripslashes($objEyepiece->getMaxFocalLength($_GET['eyepieceid']));
 			 } 
 			 if ($mfl < 0) {
 				$mfl = "";
@@ -252,7 +236,7 @@ echo(LangAddEyepieceTitle); ?>
 			 }
 			 if(array_key_exists('eyepieceid',$_GET) && $_GET['eyepieceid'])
        {
-			    echo stripslashes($eyepieces->getapparentFOV($_GET['eyepieceid']));
+			    echo stripslashes($objEyepiece->getapparentFOV($_GET['eyepieceid']));
 			 } 
      ?>" /></td>
    <td class="explanation"><?php echo(LangAddEyepieceField3Expl); ?></td>

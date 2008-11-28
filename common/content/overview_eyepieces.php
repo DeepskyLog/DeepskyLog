@@ -1,23 +1,6 @@
 <?php
-
 // overview_eyepieces.php
 // generates an overview of all eyepieces (admin only)
-// version 3.2: WDM 22/01/2008
-
-//include_once "lib/observers.php";
-//$observers = new observers;
-
-include_once "lib/eyepieces.php";
-include_once "lib/util.php";
-include_once "lib/observations.php";
-include_once "lib/cometobservations.php";
-
-$eyepieces = new Eyepieces;
-$util = new util;
-$util->checkUserInput();
-$observations = new observations;
-$cometobservations = new CometObservations;
-
 
 // sort
 
@@ -30,7 +13,7 @@ else
   $sort = "name"; // standard sort on location name
 }
 
-$eyeps = $eyepieces->getSortedEyepieces($sort);
+$eyeps = $objEyepiece->getSortedEyepieces($sort);
 
 // minimum
 
@@ -106,11 +89,11 @@ while(list ($key, $value) = each($eyeps))
     $type = "class=\"type2\"";
    }
 
-   $name = stripslashes($eyepieces->getEyepieceName($value));
-   $focalLength = stripslashes($eyepieces->getFocalLength($value));
-   $apparentFOV = $eyepieces->getApparentFOV($value);
-   $observer = $eyepieces->getObserverFromEyepiece($value);
-   $maxFocalLength = $eyepieces->getMaxFocalLength($value);
+   $name = stripslashes($objEyepiece->getEyepieceName($value));
+   $focalLength = stripslashes($objEyepiece->getFocalLength($value));
+   $apparentFOV = $objEyepiece->getApparentFOV($value);
+   $observer = $objEyepiece->getObserverFromEyepiece($value);
+   $maxFocalLength = $objEyepiece->getMaxFocalLength($value);
    if ($maxFocalLength == "-1")
    {
      $maxFocalLength = "-";
@@ -130,9 +113,9 @@ while(list ($key, $value) = each($eyeps))
            // check if there are no observations made with this eyepiece
 
            $queries = array("eyepiece" => $value);
-           $obs = $observations->getObservationFromQuery($queries, "", "1", "False");
+           $obs = $objObservation->getObservationFromQuery($queries, "", "1", "False");
 
-//           $comobs = $cometobservations->getObservationFromQuery($queries, "", "1", "False");
+//           $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
 
 //           if(!sizeof($obs) > 0 && !sizeof($comobs) > 0) // no observations with eyepiece yet
            if(!sizeof($obs) > 0) // no observations with eyepiece yet

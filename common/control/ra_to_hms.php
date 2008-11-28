@@ -1,4 +1,5 @@
 <?php
+// utility functions in representation transformations
 
 function raToString($ra)
 {

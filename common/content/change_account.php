@@ -4,19 +4,19 @@
 
 echo "<div id=\"main\">";
 echo "<h2>".LangChangeAccountTitle."</h2>";
-$upload_dir = 'observer_pics';
+$upload_dir = 'common/observer_pics';
 $dir = opendir($upload_dir);
 while (FALSE !== ($file = readdir($dir)))
 { if ("." == $file OR ".." == $file)                                            // skip current directory and directory above
     continue; 
   if(fnmatch($_SESSION['deepskylog_id']. ".gif", $file) || fnmatch($_SESSION['deepskylog_id']. ".jpg",$file) || fnmatch($_SESSION['deepskylog_id']. ".png", $file))
   { echo "<p>";
-	  echo "<img class=\"account\" src=\"common/$upload_dir" . "/" . "$file\" alt=\"" . $_SESSION['deepskylog_id'] . "\"></img>";
+	  echo "<img class=\"account\" src=\"".$baseURL."$upload_dir" . "/" . "$file\" alt=\"" . $_SESSION['deepskylog_id'] . "\"></img>";
 		echo "</p>";
 	}
 }
 echo "<form class=\"content\" action=\"".$baseURL."index.php\" enctype=\"multipart/form-data\" method=\"post\">";
-echo "<input type\"hidden\" name=\"indexAction\" value=\"common_control_validate_account\">";
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"common_control_validate_account\">";
 echo "<table width=\"490\">";
 echo "<tr>";
 tableFieldnameFieldExplanation(LangChangeAccountField1,"<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkSessionKey('deepskylog_id')."\" />",LangChangeAccountField1Expl);

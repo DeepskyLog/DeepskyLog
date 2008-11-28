@@ -103,7 +103,7 @@ class Observers
  function setIcqName($id, $icqname)                                             // setIcqName sets a new icqname for the observer with id = $id
  { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET icqname = \"$icqname\" WHERE id=\"$id\"");
  }
- function setObserverLanguage($id, $language)                                   //setLanguage sets the language for the observer with id = $id
+ function setObserverLanguage($id, $language)                                   //setObserverLanguage sets the language for the observer with id = $id
  { $GLOBALS['objDatabase']->execSQL("UPDATE observers SET language = \"$language\" WHERE id = \"$id\"");
  }
  function setUsedLanguages($id, $language)                                      // setUsedLanguages sets all the used languages for the observer with id = $id

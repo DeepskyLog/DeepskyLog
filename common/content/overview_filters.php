@@ -1,206 +1,112 @@
 <?php
-
 // overview_filters.php
 // generates an overview of all filters (admin only)
-// version 3.2: WDM 22/01/2008
-
-//include_once "lib/observers.php";
-//$observers = new observers;
-
-include_once "lib/filters.php";
-include_once "lib/util.php";
-include_once "lib/observations.php";
-include_once "lib/cometobservations.php";
-
-$filters = new Filters;
-$util = new util;
-$util->checkUserInput();
-$observations = new observations;
-$cometobservations = new CometObservations;
-
-
-// sort
 
 if(isset($_GET['sort']))
-{
   $sort = $_GET['sort']; // field to sort on
-}
 else
-{
   $sort = "name"; // standard sort on filter name
-}
-
-$filts = $filters->getSortedFilters($sort);
-
+$filts = $objFilter->getSortedFilters($sort);
 if((isset($_GET['sort'])) && $_GET['previous'] == $_GET['sort']) // reverse sort when pushed twice
-{
-  if ($_GET['sort'] == "name")
-  {
+{ if($_GET['sort']=="name")
     $filts = array_reverse($filts, true);
-  }
   else
-  {
-    krsort($filts);
+  { krsort($filts);
     reset($filts);
   }
-    $previous = ""; // reset previous field to sort on
+  $previous = ""; // reset previous field to sort on
 }
 else
-{
   $previous = $sort;
-}
-
 $step = 25;
-
-echo("<div id=\"main\">\n<h2>".LangOverviewFilterTitle."</h2>");
-
+echo "<div id=\"main\">";
+echo "<h2>".LangOverviewFilterTitle."</h2>");
 // the code below is very strange but works
 if((isset($_GET['previous'])))
-{
   $orig_previous = $_GET['previous'];
-}
 else
-{
   $orig_previous = "";
-}
-
-$link = $baseURL."index.php?indexAction=view_filters&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
-
-// minimum
-
-if(isset($_GET['min']))
-{
-  $min = $_GET['min'];
-}
-else
-{
-  $min = 0;
-}
-
-list($min, $max) = $util->printListHeader($filts, $link, $min, $step, "");
-
-echo "<table>
-      <tr class=\"type3\">
-      <td><a href=\"".$baseURL."index.php?indexAction=view_filters&amp;sort=name&amp;previous=$previous\">".LangViewFilterName."</a></td>
-      <td><a href=\"".$baseURL."index.php?indexAction=view_filters&amp;sort=type&amp;previous=$previous\">".LangViewFilterType."</a></td>
-      <td><a href=\"".$baseURL."index.php?indexAction=view_filters&amp;sort=color&amp;previous=$previous\">".LangViewFilterColor."</a></td>
-      <td><a href=\"".$baseURL."index.php?indexAction=view_filters&amp;sort=wratten&amp;previous=$previous\">".LangViewFilterWratten."</a></td>
-      <td><a href=\"".$baseURL."index.php?indexAction=view_filters&amp;sort=schott&amp;previous=$previous\">".LangViewFilterSchott."</a></td>
-      <td><a href=\"".$baseURL."index.php?indexAction=view_filters&amp;sort=observer&amp;previous=$previous\">".LangViewObservationField2."</a></td>";
-
-
+$link=$baseURL."indexAction=view_filters?sort=".$sort."&amp;previous=".$orig_previous;
+if(!$min) $min=$objUtil->checkGetKey('min',0);
+list($min,$max)=$util->printListHeader($filts,$link,$min,$step,"");
+echo "<table>";
+echo "<tr class=\"type3\">";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_filters&amp;sort=name&amp;previous=$previous\">".LangViewFilterName."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_filters&amp;sort=type&amp;previous=$previous\">".LangViewFilterType."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_filters&amp;sort=color&amp;previous=$previous\">".LangViewFilterColor."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_filters&amp;sort=wratten&amp;previous=$previous\">".LangViewFilterWratten."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_filters&amp;sort=schott&amp;previous=$previous\">".LangViewFilterSchott."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_filters&amp;sort=observer&amp;previous=$previous\">".LangViewObservationField2."</a></td>";
 echo "<td></td>";
 echo "</tr>";
-
 $count = 0;
-
-while(list ($key, $value) = each($filts))
-{
-  if($count >= $min && $count < $max) // selection
-  {
-   if ($count % 2)
-   {
-    $type = "class=\"type1\"";
-   }
-   else
-   {
-    $type = "class=\"type2\"";
-   }
-
-   $name = stripslashes($filters->getFilterName($value));
-   $type = $filters->getFilterType($value);
-   $color = $filters->getColor($value);
-   $wratten = $filters->getWratten($value);
-   $schott = $filters->getSchott($value);
-   $observer = $filters->getObserverFromFilter($value);
-
-   if ($value != "1")
-   {
-     print("<tr $type>
-             <td><a href=\"".$baseURL."index.php?indexAction=adapt_filter&amp;filter=".urlencode($value)."\">$name</a></td>\n
-             <td>");
-     if($type == FilterOther) {echo(FiltersOther);}
-     if($type == FilterBroadBand) {echo(FiltersBroadBand);}
-     if($type == FilterNarrowBand) {echo(FiltersNarrowBand);}
-     if($type == FilterOIII) {echo(FiltersOIII);}
-     if($type == FilterHBeta) {echo(FiltersHBeta);}
-     if($type == FilterHAlpha) {echo(FiltersHAlpha);}
-     if($type == FilterColor) {echo(FiltersColor);}
-     if($type == FilterNeutral) {echo(FiltersNeutral);}
-     if($type == FilterCorrective) {echo(FiltersCorrective);}
- 
-     print("</td>\n
-             <td>");
-     if ($color == 0)
-     {
-       echo ("-");
-     }
-     else
-     {
-       if($color == FilterColorLightRed) {echo(FiltersColorLightRed);}
-       if($color == FilterColorRed) {echo(FiltersColorRed);}
-       if($color == FilterColorDeepRed) {echo(FiltersColorDeepRed);}
-       if($color == FilterColorOrange) {echo(FiltersColorOrange);}
-       if($color == FilterColorLightYellow) {echo(FiltersColorLightYellow);}
-       if($color == FilterColorDeepYellow) {echo(FiltersColorDeepYellow);}
-       if($color == FilterColorYellow) {echo(FiltersColorYellow);}
-       if($color == FilterColorYellowGreen) {echo(FiltersColorYellowGreen);}
-       if($color == FilterColorLightGreen) {echo(FiltersColorLightGreen);}
-       if($color == FilterColorGreen) {echo(FiltersColorGreen);}
-       if($color == FilterColorMediumBlue) {echo(FiltersColorMediumBlue);}
-       if($color == FilterColorPaleBlue) {echo(FiltersColorPaleBlue);}
-       if($color == FilterColorBlue) {echo(FiltersColorBlue);}
-       if($color == FilterColorDeepBlue) {echo(FiltersColorDeepBlue);}
-       if($color == FilterColorDeepViolet) {echo(FiltersColorDeepViolet);}
-     }
-     print("</td>\n
-             <td>");
-     if ($wratten == "")
-     {
-       echo "-";
-     }
-     else
-     {
-       echo $wratten;
-     }
-     print("</td>\n
-             <td>");
-     if ($schott == "")
-     {
-       echo "-";
-     }
-     else
-     {
-       echo $schott;
-     }
-     print ("</td>\n");
-             echo("<td>");
-		 print ($observer);
-     print ("</td>\n");
-
-             echo("<td>");
-     // check if there are no observations made with this filter
-
-     $queries = array("filter" => $value);
-     $obs = $observations->getObservationFromQuery($queries, "", "1", "False");
-
-// No filters yet for comet observations!!
-//           $queries = array("eyepiece" => $value);
-//           $comobs = $cometobservations->getObservationFromQuery($queries, "", "1", "False");
-
+while(list($key,$value)=each($filts))
+{ if($count >= $min && $count < $max) // selection
+  { $name = stripslashes($objFilter->getName($value));
+    $type = $objFilter->getType($value);
+    $color = $objFilter->getColor($value);
+    $wratten = $objFilter->getWratten($value);
+    $schott = $objFilter->getSchott($value);
+    $observer = $objFilter->getObserver($value);
+    if ($value != "1")
+    { echo "<tr class=\"type".(2-($count%2))."\">";
+      echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_filter&amp;filter=".urlencode($value)."\">$name</a></td>";
+      echo "<td>";
+      if($type == FilterOther) {echo(FiltersOther);}
+      if($type == FilterBroadBand) {echo(FiltersBroadBand);}
+      if($type == FilterNarrowBand) {echo(FiltersNarrowBand);}
+      if($type == FilterOIII) {echo(FiltersOIII);}
+      if($type == FilterHBeta) {echo(FiltersHBeta);}
+      if($type == FilterHAlpha) {echo(FiltersHAlpha);}
+      if($type == FilterColor) {echo(FiltersColor);}
+      if($type == FilterNeutral) {echo(FiltersNeutral);}
+      if($type == FilterCorrective) {echo(FiltersCorrective);}
+      echo "</td>";
+      echo "<td>";
+      if ($color == 0)
+        echo ("-");
+      else
+      { if($color == FilterColorLightRed) {echo(FiltersColorLightRed);}
+        if($color == FilterColorRed) {echo(FiltersColorRed);}
+        if($color == FilterColorDeepRed) {echo(FiltersColorDeepRed);}
+        if($color == FilterColorOrange) {echo(FiltersColorOrange);}
+        if($color == FilterColorLightYellow) {echo(FiltersColorLightYellow);}
+        if($color == FilterColorDeepYellow) {echo(FiltersColorDeepYellow);}
+        if($color == FilterColorYellow) {echo(FiltersColorYellow);}
+        if($color == FilterColorYellowGreen) {echo(FiltersColorYellowGreen);}
+        if($color == FilterColorLightGreen) {echo(FiltersColorLightGreen);}
+        if($color == FilterColorGreen) {echo(FiltersColorGreen);}
+        if($color == FilterColorMediumBlue) {echo(FiltersColorMediumBlue);}
+        if($color == FilterColorPaleBlue) {echo(FiltersColorPaleBlue);}
+        if($color == FilterColorBlue) {echo(FiltersColorBlue);}
+        if($color == FilterColorDeepBlue) {echo(FiltersColorDeepBlue);}
+        if($color == FilterColorDeepViolet) {echo(FiltersColorDeepViolet);}
+      }
+      echo "</td>";
+      echo "<td>";
+      echo ($wratten)?$wratten:"-";
+      echo "</td>";
+      echo "<td>";
+      echo ($schott)$schott:"-";
+      echo "</td>";
+      echo "<td>";
+		  echo $observer;
+      echo "</td>";
+      echo("<td>";
+     $queries=array("filter"=>$value);                                          // check if there are no observations made with this filter
+     $obs = $objObservation->getObservationFromQuery($queries, "", "1", "False");
+     // No filters yet for comet observations!!
+     //           $queries = array("eyepiece" => $value);
+     //           $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
      if(!sizeof($obs) > 0) // no observations with filter yet
-     {
        echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_filter&amp;filterid=" . urlencode($value) . "\">" . LangRemove . "</a>");
-     }
-
-     echo("</td>\n</tr>");
+     echo "</td>";
+     echo "</tr>";
    }
  }
  $count++;
 }
-  echo "</table>";
-
-  list($min, $max) = $util->printListHeader($filts, $link, $min, $step, "");
-
-  echo "</div></div></body></html>";
+echo "</table>";
+list($min, $max)=$util->printListHeader($filts,$link,$min,$step,"");
+echo "</div>";
 ?>
