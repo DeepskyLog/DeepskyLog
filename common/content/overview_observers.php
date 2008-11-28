@@ -1,5 +1,4 @@
 <?php
-
 // overview_observers.php
 // generates an overview of all observers (admin only)
 // version 0.2: JV, 20041226

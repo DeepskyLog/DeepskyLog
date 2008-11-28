@@ -1185,7 +1185,7 @@ function getPartOfNames($name)
 		 "instrument" => "", "location" => "", "mindate" => "", 
 		 "maxdate" => "");
 		
-  $obs = $observations->getObservationFromQuery($query);
+  $obs = $GLOBALS['objObservation']->getObservationFromQuery($query);
 
   $return = -1;
   if ($obs != "")
@@ -1205,7 +1205,7 @@ function getPartOfNames($name)
                  "instrument" => "", "location" => "", "mindate" => "",
                  "maxdate" => "");
 
-  $obs = $observations->getObservationFromQuery($query);
+  $obs = $GLOBALS['objObservation']->getObservationFromQuery($query);
 
   $return = -1;
 
@@ -1623,7 +1623,7 @@ function getPartOfNames($name)
 	 }
   	 if($myList)
   	 { echo("<td align=\"center\">");
-       if($list->checkObjectInMyActiveList($name))
+       if($GLOBALS['objList']->checkObjectInMyActiveList($name))
          echo("<a href=\"" . $link . "&amp;min=" . $min . "&amp;removeObjectFromList=" . urlencode($name) . "\" title=\"" . $name . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "\">R</a>");
        else
          echo("<a href=\"" . $link . "&amp;min=" . $min . "&amp;addObjectToList=" . urlencode($name) . "&amp;showname=" . urlencode($showname) . "\" title=\"" . $name . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "\">L</a>");
@@ -1883,7 +1883,7 @@ function getPartOfNames($name)
   	  echo LangViewObjectListDescription;
   	  echo "</td>";
   	  echo "<td colspan=\"3\">";
-		  echo $list->getListObjectDescription($object);
+		  echo $GLOBALS['objList']->getListObjectDescription($object);
   	}
 		echo "</td>";
   	echo "</tr>";
