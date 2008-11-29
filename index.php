@@ -25,6 +25,6 @@ catch (Exception $e)
 echo 'Report problem: ' . $e->getMessage();
 }
 
-
+// DEMO
 
 ?>
