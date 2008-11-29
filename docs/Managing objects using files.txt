@@ -1,0 +1,243 @@
+Managing objects using CSV files
+--------------------------------
+
+See also example files AN.csv, NOC.csv, PO.csv
+
+Beste vrienden,
+ 
+om DSL objecten te beheren kan je een script samenstellen van commando's die worden uitgevoerd.
+Elk commando neemt één lijn in beslag in een csv bestand.
+Elk commando bestaat uit een opdracht, dan een object waarop de opdracht dient uitgevoerd te worden, dan de data1 en dan de data2 die dient gebruikt worden.
+
+De mogelijke commando's zijn:
+
+NO: New Object, data1= catalog, data2=nummer in catalog
+voorbeeld:
+NO;Kemble 2;Kemble;2
+
+NOC: New Object Complete, dit is het enige afwijkende commando, uitleg volgt op het einde
+
+AN: Alternative name, data1= catalog, data2=nummer in catalog
+voorbeeld:
+AN;M 31;NGC;205
+
+
+NN: New name, geeft een nieuwe naam aan een object
+voorbeeld (fictief voorbeeld):
+NN;MCG -3+2+22;PGC;5646
+
+
+RAN: Remove Alternative Name
+voorbeeld (met een nieuwe atl name eveneens)
+RAN;M 31;;The Andromeda Galaxy
+AN;M 31;;Andromeda Galaxy
+(zie ook in dit voorbeeld dat de catalogus leeg is gelaten, gezien het een alternatieve naam zonder catalogus is)
+ 
+ 
+PO: Part Of
+PO;M 66;Arp;317
+ 
+RPO: remove part of
+RPO;M 66;Arp 317
+ 
+RRO: Remove object and Replace observations of this object by observations of Object
+voorbeeld:
+RRO;Kemble's Cascade;Kemble;1
+AN;Kemble 1;;Kemble's Cascade
+ 
+RA: set RA,data1=empty,data2=ra in decimal notation (eg 12h30 = 12.5
+RA;Arp 123;;12.5
+ 
+DE: idem declination
+DE;Arp 123;;75.20
+ 
+CON: set constellation (attention: 3 LETTERS!)
+CON;M 31;AND
+ 
+TYP: set object type (attention 5 LETTERS!)
+TYP;M 31;GALAX
+ 
+MG: magnitude
+MG;M 31;;5.0
+ 
+SB: surface brightness
+SB;M 31;;10.0
+ 
+D1: diameter 1 in Arc SECONDS!
+voorbeeld fictief
+D1;M 31;600
+ 
+D2 idem voor diameter 2
+ 
+PA: postion angle
+PA;M 31;;45
+ 
+het enige afwijkende is NOC, deze geeft alles in één keer:
+NOC;Arp 142;Arp;142;GALXY;HYA;9.629;2.76;13.9;99.9;90;48;999
+NOC;object;catalog;index;type;constellation;ra;decl;mag;sb;diam1;diam2;pa
+ 
+ 
+als mag of sb niet gekend zijn, dan 99.9 opgeven (geen 0 !!!!), als pa niet gekend is, dan 999 opgeven (opnieuw geen 0 om evidente redenen !!!)
+ 
+Het script stopt bij de eerste lege lijn !!
+ 
+ 
+hierbij enkele voorbeeldjes van scripts
+ 
+om nieuwe objecten te maken:
+NOC;MAC 0937+0246;MAC;0937+0246;GALXY;HYA;9.629;2.76;0;99.9;42;12;999
+NOC;Arp 142;Arp;142;GALXY;HYA;9.629;2.76;13.9;99.9;90;48;999
+NOC;Arp 143;Arp;143;GALXY;LYN;7.781333333;39.03166667;13.9;99.9;108;72;999
+NOC;Arp 144;Arp;144;GALXY;CET;0.1075;-13.41666667;14.4;99.9;60;42;999
+NOC;UGC 1840;UGC;1840;GALXY;AND;2.3855;41.37;13.8;99.9;84;60;999
+NOC;Arp 146;Arp;146;GALXY;CET;0.112333333;-6.636666667;16.3;99.9;42;36;999
+NOC;PGC 509;PGC;509;GALXY;CET;0.112333333;-6.636666667;16.3;99.9;18;12;999
+NOC;PGC 510;PGC;510;GALXY;CET;0.112333333;-6.636666667;16.3;99.9;42;36;999
+NOC;Arp 147;Arp;147;GALXY;CET;3.1885;1.313333333;14.3;99.9;30;24;999
+NOC;IC 298;IC;298;GALXY;CET;3.1885;1.313333333;14.3;99.9;30;24;999
+NOC;IC 298A;IC;298A;GALXY;CET;3.1885;1.313333333;15.1;99.9;0;0;999
+ 
+om part-ofs in te stellen:
+ 
+PO;NGC 2937;Arp;142
+PO;NGC 2936;Arp;142
+PO;MAC 0937+0246;Arp;142
+PO;NGC 2445;Arp;143
+PO;NGC 2444;Arp;143
+PO;NGC 7828;Arp;144
+PO;NGC 7829;Arp;144
+PO;PGC 509;Arp;146
+PO;PGC 510;Arp;146
+PO;IC 298;Arp;147
+PO;IC 298A;Arp;147
+ 
+om atlernatieve namen aan te maken:
+ 
+AN;MCG +5-31-135;Arp;139
+AN;UGC 3730;Arp;141
+AN;UGC 1840;Arp;145
+ 
+ 
+ 
+ 
+ 
+ 
+afkortingen:
+// Constellations
+AND = "Andromeda";
+ANT = "Antlia";
+APS = "Apus";
+AQR = "Aquarius";
+AQL = "Aquila";
+ARA = "Ara";
+ARI = "Aries";
+AUR = "Auriga";
+BOO = "Bootes";
+CAE = "Caelum";
+CAM = "Camelopardalis";
+CNC = "Cancer";
+CVN = "Canes Venatici";
+CMA = "Canis Major";
+CMI = "Canis Minor";
+CAP = "Capricornus";
+CAR = "Carina";
+CAS = "Cassiopeia";
+CEN = "Centaurus";
+CEP = "Cepheus";
+CET = "Cetus";
+CHA = "Chamaeleon";
+CIR = "Circinus";
+COL = "Columba";
+COM = "Coma Berenices";
+CRA = "Corona Australis";
+CRB = "Corona Borealis";
+CRV = "Corvus";
+CRT = "Crater";
+CRU = "Crux";
+CYG = "Cygnus";
+DEL = "Delphinus";
+DOR = "Dorado";
+DRA = "Draco";
+EQU = "Equuleus";
+ERI = "Eridanus";
+FOR = "Fornax";
+GEM = "Gemini";
+GRU = "Grus";
+HER = "Hercules";
+HOR = "Horologium";
+HYA = "Hydra";
+HYI = "Hydrus";
+IND = "Indus";
+LAC = "Lacerta";
+LEO = "Leo";
+LMI = "Leo Minor";
+LEP = "Lepus";
+LIB = "Libra";
+LUP = "Lupus";
+LYN = "Lynx";
+LYR = "Lyra";
+MEN = "Mensa";
+MIC = "Microscopium";
+MON = "Monoceros";
+MUS = "Musca";
+NOR = "Norma";
+OCT = "Octans";
+OPH = "Ophiuchus";
+ORI = "Orion";
+PAV = "Pavo";
+PEG = "Pegasus";
+PER = "Perseus";
+PHE = "Phoenix";
+PIC = "Pictor";
+PSC = "Pisces";
+PSA = "Pisces Austrinus";
+PUP = "Puppis";
+PYX = "Pyxis";
+RET = "Reticulum";
+SGE = "Sagitta";
+SGR = "Sagittarius";
+SCO = "Scorpius";
+SCL = "Sculptor";
+SCT = "Scutum";
+SER = "Serpens";
+SEX = "Sextans";
+TAU = "Taurus";
+TEL = "Telescopium";
+TRA = "Triangulum Australe";
+TRI = "Triangulum";
+TUC = "Tucana";
+UMA = "Ursa Major";
+UMI = "Ursa Minor";
+VEL = "Vela";
+VIR = "Virgo";
+VOL = "Volans";
+VUL = "Vulpecula";
+ 
+ASTER = "Asterisme";
+BRTNB = "Heldere nevel";
+CLANB = "Cluster met nevel";
+DRKNB = "Donkere nevel";
+GALCL = "Galaxy cluster";
+GALXY = "Sterrenstelsel";
+GLOCL = "Bolvormige sterrenhoop";
+GXADN = "Diffuse Nevel in galaxy";
+GXAGC = "Bolhoop in galaxy";
+GACAN = "Cluster met nevel in galaxy";
+LMCCN = "Cluster met nevel in LMC";
+LMCDN = "Diffuse Nevel in LMC";
+LMCGC = "Bolhoop in LMC";
+LMCOC = "Open sterrenhoop in LMC";
+NONEX = "Niet bestaand";
+OPNCL = "Open sterrenhoop";
+LNNB = "Planetaire nevel";
+SMCCN = "Cluster met nevel in SMC";
+SMCDN = "Diffuse nevel in SMC";
+SMCGC = "Bolhoop in SMC";
+SMCOC = "Open sterrenhoop in SMC";
+NREM = "Supernova restant";
+QUASR = "Quasar";
+AA1STAR = "Ster";
+AA2STAR = "Dubbelster";
+AA3STAR = "3 sterren";
+A4STAR = "4 sterren";
+AA8STAR = "8 sterren";
