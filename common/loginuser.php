@@ -78,7 +78,7 @@ if(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=="setLanguage"))
 	$_GET['indexAction']='default_action';
 }
 $language=$GLOBALS['objLanguage']->getPath($_SESSION['lang']);
-include $GLOBALS['instDir']."/lib/setup/"."$language";
+include "lib/setup/"."$language";
 if($loginErrorCode||$loginErrorText)
 { $_SESSION['deepskylog_id']='';
 	setcookie("deepskylogsec","",time()-3600,"/");

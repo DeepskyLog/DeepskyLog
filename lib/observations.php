@@ -1452,12 +1452,11 @@ class Observations
 
 
   function showCompactObservationLO($obsKey, $link, $myList = false)
-  {
-    global $dateformat;
-		global $objInstrument;
-		global $objObject;
-		global $objObserver;
-		$value=$_SESSION['Qobs'][$obsKey];
+  { global $dateformat;
+	global $objInstrument;
+	global $objObject;
+	global $objObserver;
+	$value=$_SESSION['Qobs'][$obsKey];
     $object = $value['objectname'];
     $observer = $value['observerid'];
     $temp = $value['instrumentid'];
@@ -1561,7 +1560,7 @@ class Observations
     echo("<td>");
     echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;QobsKey=".$obsKey."&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText);
     // LINK TO DRAWING (IF AVAILABLE)
-    $upload_dir = $GLOBALS['instDir'].'deepsky/drawings';
+    $upload_dir = 'deepsky/drawings';
     $dir = opendir($upload_dir);
     while (FALSE !== ($file = readdir($dir)))
     {
@@ -1639,7 +1638,7 @@ class Observations
     echo"<tr>";
     echo"<td> &nbsp; </td>";
     echo"<td colspan=4>";
-    $upload_dir = $GLOBALS['instDir'].'deepsky/drawings';
+    $upload_dir = 'deepsky/drawings';
     $dir = opendir($upload_dir);
     while (FALSE !== ($file = readdir($dir)))
     {
@@ -1658,15 +1657,11 @@ class Observations
     if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])                  // LOGGED IN
     {
       if ($LOdescription)
-      {
-        $upload_dir = $GLOBALS['instDir'].'deepsky/drawings';
-        $dir = opendir($upload_dir);
+      { $upload_dir='deepsky/drawings';
+        $dir=opendir($upload_dir);
         while (FALSE !== ($file = readdir($dir)))
-        {
-          if ("." == $file OR ".." == $file)
-          {
+        { if ("." == $file OR ".." == $file)
             continue; // skip current directory and directory above
-          }
           if(fnmatch($LOid . "_resized.jpg", $file))
           { echo "<p>";
 				    echo "<a href=\"".$GLOBALS['baseURL']."deepsky/drawings/".$LOid.".jpg"."\"> <img class=\"account\" src=\"".$GLOBALS['baseURL']."deepsky/drawings/".$file."\"></img></a>";
@@ -1724,7 +1719,7 @@ class Observations
     echo("<td>");
     echo("<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;QobsKey=".$obsKey."&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText);
     // LINK TO DRAWING (IF AVAILABLE)
-    $upload_dir = $GLOBALS['instDir'].'deepsky/drawings';
+    $upload_dir = 'deepsky/drawings';
     $dir = opendir($upload_dir);
     while (FALSE !== ($file = readdir($dir)))
     {
@@ -1907,15 +1902,14 @@ class Observations
     }
     echo("</tr>\n");
   }
-	
- function getObjectsFromObservations($observations)
- { $objects = array();
+  function getObjectsFromObservations($observations)
+  { $objects = array();
 	 $i=0;
-   while(list($key, $observation)=each($observations))
+     while(list($key,$observation)=each($observations))
      if(!array_key_exists($observation['objectname'], $objects))
    	    $objects[$observation['objectname']] = array($i++,$observation['objectname']);		
 	 return $objects;
- }
+  }
 }
 $objObservation=new Observations;
 ?>

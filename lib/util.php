@@ -1607,16 +1607,16 @@ class util
     }
   }
 	public function checkGetKey($key,$default='')
-  { return (array_key_exists($key,$_GET)&&$_GET[$key])?$_GET[$key]:$default;
+  { return (array_key_exists($key,$_GET)&&($_GET[$key]!=''))?$_GET[$key]:$default;
   }
 	public function checkPostKey($key,$default='')
-  { return (array_key_exists($key,$_POST)&&$_POST[$key])?$_POST[$key]:$default;
+  { return (array_key_exists($key,$_POST)&&($_POST[$key]!=''))?$_POST[$key]:$default;
   }
 	public function checkSessionKey($key,$default='')
-  { return (array_key_exists($key,$_SESSION)&&$_SESSION[$key])?$_SESSION[$key]:$default;
+  { return (array_key_exists($key,$_SESSION)&&($_SESSION[$key]!=''))?$_SESSION[$key]:$default;
   }
 	public function checkArrayKey($theArray,$key,$default='')
-  { return (array_key_exists($key,$theArray)&&$theArray[$key])?$theArray[$key]:$default;
+  { return (array_key_exists($key,$theArray)&&($theArray[$key]!=''))?$theArray[$key]:$default;
   }
 	public function checkGetKeyReturnString($key,$string,$default='')
   { return array_key_exists($key,$_GET)?$string:$default;

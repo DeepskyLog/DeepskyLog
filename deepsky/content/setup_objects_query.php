@@ -28,8 +28,8 @@ $minContrast = '';                          $maxContrast = '';
 $inList = '';                               $notInList = '';
   
 
-require_once $instDir.'deepsky/content/data_get_objects.php';
-$link=$instDir."index.php?indexAction=query_objects";
+require_once 'deepsky/content/data_get_objects.php';
+$link=$baseURL."index.php?indexAction=query_objects";
 reset($_GET);
 while(list($key,$value)=each($_GET))
 	if(($key!='indexAction')&&($key!='multiplepagenr')&&($key!='sort')&&($key!='sortdirection'))
@@ -43,7 +43,7 @@ else
   echo("</h2>\n");
   echo("<table width=\"100%\">\n");
   echo("<tr><td align=\"centre\" width=\"25%\">");
-	echo("<form action=\"".$instDir."index.php\">");
+	echo("<form action=\"".$baseURL."index.php\">");
 	echo("<input type=\"hidden\" name=\"indexAction\" value=\"query_objects\"></input>");
   echo("<input type=\"submit\" name=\"clear\" value=\"" . LangQueryObjectsButton2 . "\" />");
   echo("</form>");
@@ -51,7 +51,7 @@ else
   echo("<td align=\"right\" width=\"25%\">" . LangSeen);
   echo("</td>");
   echo("<td>");
-  echo("<form action=\"".$instDir."index.php\" method=\"get\">\n");
+  echo("<form action=\"".$baseURL."index.php\" method=\"get\">\n");
   echo("<input type=\"hidden\" name=\"indexAction\" value=\"query_objects\"></input>");
   echo("<input type=\"hidden\" name=\"sort\" value=\"showname\"></input>");
   echo("<input type=\"hidden\" name=\"sortdirection\" value=\"asc\"></input>");

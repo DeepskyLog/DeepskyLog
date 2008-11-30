@@ -130,36 +130,28 @@ elseif(array_key_exists('seen',$_GET))
         $maxDecl = $maxDeclDegrees - ($_GET['maxDeclMinutes'] / 60) - ($_GET['maxDeclSeconds'] / 3600);
       else 
         $maxDecl = $maxDeclDegrees + ($_GET['maxDeclMinutes'] / 60) + ($_GET['maxDeclSeconds'] / 3600);
-  } 
+  }
   // MIN RA
-  if(array_key_exists('minRAHours',$_GET) && $_GET['minRAHours']!='') 
-  {
-    $minRAHours = $_GET['minRAHours'];
-    if((!is_numeric($_GET['minRAHours'])) || ($_GET['minRAHours']<0) || ($_GET['minRAHours']>24))
-    {  $minRAHoursError = True;
-  echo 'MinRAHours: ' .$_GET['minRAHours'];
-    
-  	}if(array_key_exists('minRAMinutes',$_GET) && $_GET['minRAMinutes']!='') 
-    {  
-      $minRAMinutes = $_GET['minRAMinutes']; 
+  if(($minRAHours=$objUtil->checkGetKey('minRAHours','-1'))>=0) 
+  { if((!is_numeric($_GET['minRAHours'])) || ($_GET['minRAHours']<0) || ($_GET['minRAHours']>24))
+      $minRAHoursError = true;
+  	if(array_key_exists('minRAMinutes',$_GET) && $_GET['minRAMinutes']!='') 
+    { $minRAMinutes = $_GET['minRAMinutes']; 
       if((!is_numeric($_GET['minRAMinutes'])) || ($_GET['minRAMinutes']<0) || ($_GET['minRAMinutes']>=60))
         $minRAMinutesError = true;
     }
     else
-    {
-      $minRAMinutes = 0; 
+    { $minRAMinutes = 0; 
       $_GET['minRAMinutes']=0; 
     }
     if(array_key_exists('minRASeconds',$_GET) && $_GET['minRASeconds']!='') 
-    {
-      if((!is_numeric($_GET['minRASeconds'])) || ($_GET['minRASeconds']<0) || ($_GET['minRASeconds']>=60))
+    { if((!is_numeric($_GET['minRASeconds'])) || ($_GET['minRASeconds']<0) || ($_GET['minRASeconds']>=60))
         $minRASecondsError = true;
       else
         $minRASeconds = $_GET['minRASeconds']; 
     }
     else
-    {
-      $minRASeconds = 0;
+    { $minRASeconds = 0;
       $_GET['minRASeconds'] = 0;
     }
     if(!($minRAHoursError || $minRAMinutesError || $minRASecondsError))
@@ -336,8 +328,7 @@ elseif(array_key_exists('seen',$_GET))
          $minRAMinutesError || $minRASecondsError || $maxRAHoursError || $maxRAMinutesError || 
          $maxRASecondsError || $minMagError || $maxMagError || $minSBError || $maxSBError || 
          $minSizeError || $maxSizeError || $minContrastError || $maxContrastError ||$listError))
-  {
-      $query = array("name"            => $name,
+  { $query = array("name"            => $name,
                      "type"            => $type,
                      "con"             => $con,             
                      "minmag"          => $minMag,
