@@ -16,7 +16,7 @@ if(isset($_SESSION['deepskylog_id']))
     if(array_key_exists('deepskylog_id',$_SESSION)&&($_SESSION['deepskylog_id']!="admin")) // admin doesn't have own observations
     { echo "<tr align=\"left\"  height=\"25px\">";
       echo "<td>";
-      echo "<a class=\"mainlevel\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=" . $_SESSION['deepskylog_id'] . "\">".LangSearchMenuItem1."</a>";
+      echo "<a class=\"mainlevel\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".urlencode($_SESSION['deepskylog_id'])."\">".LangSearchMenuItem1."</a>";
       echo "</td>";
       echo "</tr>";
     } 
@@ -27,7 +27,7 @@ $lastMinMonth = substr($theDate,4,2);
 $lastMinDay = substr($theDate,6,2);
 echo "<tr align=\"left\" height=\"25px\">";
 echo "<td>";
-echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;²catalogue=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay\" class=\"mainlevel\">".LangSearchMenuItem8."</a>";
+echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;catalogue=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay\" class=\"mainlevel\">".LangSearchMenuItem8."</a>";
 echo "</td>";
 echo "</tr>";
 echo "<tr align=\"left\" height=\"25px\">";

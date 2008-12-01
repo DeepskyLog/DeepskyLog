@@ -55,51 +55,25 @@ elseif(array_key_exists('seen',$_GET))
     else
       $atlasPageNumber = $_GET['atlasPageNumber'];
   }
-  // CONSTELLATION
-  if(array_key_exists('con',$_GET) && $_GET['con'])     $con = $_GET['con'];
-  // TYPE
-  if(array_key_exists('type',$_GET) && $_GET['type'])   $type = $_GET['type'];
-  // MINIMUM DECLINATION
-  if(array_key_exists('minDeclDegrees',$_GET) && $_GET['minDeclDegrees']!='') 
-  {
-    $minDeclDegrees = $_GET['minDeclDegrees'];
-    if((!is_numeric($_GET['minDeclDegrees'])) || ($_GET['minDeclDegrees']<=-90) || ($_GET['minDeclDegrees']>=90))
+  $con =$objUtil->checkGetKey('con');                                           // CONSTELLATION
+  $type=$objUtil->checkGetKey('type');                                          // TYPE
+  if(($minDeclDegrees=$objUtil->checkGetKey('minDeclDegrees'))!='')             // MINIMUM DECLINATION
+  { if((!is_numeric($minDeclDegrees))||($minDeclDegrees<=-90)||($minDeclDegrees>=90))
       $minDeclDegreesError = True;
-    if(array_key_exists('minDeclMinutes',$_GET) && $_GET['minDeclMinutes']!='') 
-    {  
-      $minDeclMinutes = $_GET['minDeclMinutes']; 
-      if((!is_numeric($_GET['minDeclMinutes'])) || ($_GET['minDeclMinutes']<0) || ($_GET['minDeclMinutes']>=60))
-        $minDeclMinutesError = true;
-    }
-    else
-    {
-      $minDeclMinutes = 0; 
-      $_GET['minDeclMinutes']=0; 
-    }
-    if(array_key_exists('minDeclSeconds',$_GET) && $_GET['minDeclSeconds']!='') 
-    {
-      $minDeclSeconds = $_GET['minDeclSeconds']; 
-      if((!is_numeric($_GET['minDeclSeconds'])) || ($_GET['minDeclSeconds']<0) || ($_GET['minDeclSeconds']>=60))
-        $minDeclSecondsError = true;
-    }
-    else
-    {
-      $minDeclSeconds = 0;
-      $_GET['minDeclSeconds'] = 0;
-    }
-    if($minDeclDegreesError || $minDeclMinutesError || $minDeclSecondsError)
-      $errorQuery = true;
-    else
+    $minDeclMinutes=$objUtil->checkGetKey('minDeclMinutes',0);
+    if((!is_numeric($minDeclMinutes))||($minDeclMinutes<0)||($minDeclMinutes>=60))
+      $minDeclMinutesError = true;
+    $minDeclSeconds=$objUtil->checkGetKey('minDeclSeconds',0); 
+    if((!is_numeric($minDeclSeconds))||($minDeclSeconds<0)||($minDeclSeconds>=60))
+      $minDeclSecondsError = true;
+    if(!($errorQuery=($minDeclDegreesError||$minDeclMinutesError||$minDeclSecondsError)))
       if(substr(trim($_GET['minDeclDegrees']),1,1)=="-")
-        $minDecl = $minDeclDegrees - ($_GET['minDeclMinutes'] / 60) - ($_GET['minDeclSeconds'] / 3600);
+        $minDecl=$minDeclDegrees-($minDeclMinutes/60)-($minDeclSeconds/3600);
       else 
-        $minDecl = $minDeclDegrees + ($_GET['minDeclMinutes'] / 60) + ($_GET['minDeclSeconds'] / 3600);
+        $minDecl=$minDeclDegrees+($minDeclMinutes/60)+($minDeclSeconds/3600);
   }
-  // MAXIMUM DECLINATION 
-  if(array_key_exists('maxDeclDegrees',$_GET) && $_GET['maxDeclDegrees']!='') 
-  {
-    $maxDeclDegrees = $_GET['maxDeclDegrees'];
-    if((!is_numeric($_GET['maxDeclDegrees'])) || ($_GET['maxDeclDegrees']<=-90) || ($_GET['maxDeclDegrees']>=90))
+  if(($maxDeclDegrees=$objUtil->checkGetKey('maxDeclDegrees'))!='')   // MAXIMUM DECLINATION 
+  { if((!is_numeric($_GET['maxDeclDegrees'])) || ($_GET['maxDeclDegrees']<=-90) || ($_GET['maxDeclDegrees']>=90))
       $maxDeclDegreesError = true;
     if(array_key_exists('maxDeclMinutes',$_GET) && $_GET['maxDeclMinutes']!='') 
     {  
@@ -132,7 +106,7 @@ elseif(array_key_exists('seen',$_GET))
         $maxDecl = $maxDeclDegrees + ($_GET['maxDeclMinutes'] / 60) + ($_GET['maxDeclSeconds'] / 3600);
   }
   // MIN RA
-  if(($minRAHours=$objUtil->checkGetKey('minRAHours','-1'))>=0) 
+  if(($minRAHours=$objUtil->checkGetKey('minRAHours'))!='') 
   { if((!is_numeric($_GET['minRAHours'])) || ($_GET['minRAHours']<0) || ($_GET['minRAHours']>24))
       $minRAHoursError = true;
   	if(array_key_exists('minRAMinutes',$_GET) && $_GET['minRAMinutes']!='') 
@@ -158,10 +132,8 @@ elseif(array_key_exists('seen',$_GET))
       $minRA = $minRAHours + ($_GET['minRAMinutes'] / 60) + ($_GET['minRASeconds'] / 3600);
   }
   // MAX RA
-  if(array_key_exists('maxRAHours',$_GET) && $_GET['maxRAHours']!='') 
-  {
-    $maxRAHours = $_GET['maxRAHours'];
-    if((!is_numeric($_GET['maxRAHours'])) || ($_GET['maxRAHours']<0) || ($_GET['maxRAHours']>24))
+  if(($maxRAHours=$objUtil->checkGetKey('maxRAHours')!='')) 
+  { if((!is_numeric($_GET['maxRAHours'])) || ($_GET['maxRAHours']<0) || ($_GET['maxRAHours']>24))
       $maxRAHoursError = True;
     if(array_key_exists('maxRAMinutes',$_GET) && $_GET['maxRAMinutes']!='') 
     {  

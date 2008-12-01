@@ -170,7 +170,7 @@ class Observations
       if(!$exactinstrumentlocation)
       { $eyeps = $GLOBALS['objEyepiece']->getAllEyepiecesIds($queries["eyepiece"]);
         while(list($key,$value)=each($eyeps))
-        $sqland .= " || observations.eyepieceid = \"" . $value . "\" ";
+          $sqland .= " || observations.eyepieceid = \"" . $value . "\" ";
       }
       $sqland .= ") ";
     }
