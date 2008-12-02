@@ -1,7 +1,7 @@
 Installing Eclipse for DeepskyLog development
 ---------------------------------------------
 
-- Download and install java 6 from http://java.sun.com/javase/downloads/index.jsp (Select Java Runtime Environment (JRE) 6 Update 7)
+- Download and install java 6 from http://java.sun.com/javase/downloads/index.jsp (Select Java Runtime Environment (JRE) 6 Update 10)
 
 - Download eclipse inclusive all packages for php development from http://downloads.zend.com/pdt/all-in-one/
 
