@@ -9,6 +9,9 @@
  $object = new Objects;
  $atlas = new Atlasses;
  
+ $sql = "ALTER TABLE objects MODIFY COLUMN description VARCHAR(1024) NOT NULL DEFAULT '';";
+ $run = mysql_query($sql) or die(mysql_error());
+
  // Insert the psa, torresB, torresBC, torresC pages
  $sql="ALTER TABLE objects ADD COLUMN psa varchar(3) NOT NULL default ''";
  $run = mysql_query($sql) or die(mysql_error());
