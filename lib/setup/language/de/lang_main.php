@@ -577,6 +577,17 @@ define("LangViewObservationField32Expl", "Linse hinzuf&uuml;gen");
 //Translate
 define("LangViewObservationField33", "Estimated diameter");
 define("LangViewObservationField34", "SQM");
+define("LangViewObservationField35", "Stellar");
+define("LangViewObservationField36", "Extended");
+define("LangViewObservationField37", "Resolved");
+define("LangViewObservationField38", "Mottled");
+define("LangViewObservationField39", "Magnification used");
+define("LangViewObservationField40", "Cluster type");
+define("LangViewObservationField40Expl", "More information");
+define("LangViewObservationField41", "Unusual Shape");
+define("LangViewObservationField42", "Partly unresolved");
+define("LangViewObservationField43", "Color contrasts");
+
 define("LangViewObservationButton1", "Beobachtung anlegen");
 define("LangViewObservationButton2", "Felder l&ouml;schen");
 define("SeeingExcellent", "Exzellent");

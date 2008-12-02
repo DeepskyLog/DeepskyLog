@@ -577,6 +577,17 @@ define("LangViewObservationField32Expl", "Rajoutez une nouvelle lentille Barlow"
 //Translate
 define("LangViewObservationField33", "Estimated diameter");
 define("LangViewObservationField34", "SQM");
+define("LangViewObservationField35", "Stellar");
+define("LangViewObservationField36", "Extended");
+define("LangViewObservationField37", "Resolved");
+define("LangViewObservationField38", "Mottled");
+define("LangViewObservationField39", "Magnification used");
+define("LangViewObservationField40", "Cluster type");
+define("LangViewObservationField40Expl", "More information");
+define("LangViewObservationField41", "Unusual Shape");
+define("LangViewObservationField42", "Partly unresolved");
+define("LangViewObservationField43", "Color contrasts");
+
 define("LangViewObservationButton1", "Rajoutez");
 define("LangViewObservationButton2", "Videz les champs");
 define("SeeingExcellent", "Excellent");
@@ -837,7 +848,7 @@ define("LangQueryObservationsMessage2", "Description contient");
 define("LangFromDate", "Du");
 define("LangTillDate", "Jusqu'&agrave;, y compris,");
 define("LangObservationQueryError1", "Vous n'avez pas sp&eacute;cifi&eacute; de crit&egrave;re.");
-define("LangObservationQueryError1b", "Il n'y a pas d'objet avec ces spécifications.");
+define("LangObservationQueryError1b", "Il n'y a pas d'objet avec ces spï¿½cifications.");
 define("LangObservationOR", "ou");
 define("LangObservationQueryError2", "Nouvelle recherche");
 define("LangObservationQueryError3", "Toutes les observations");
@@ -937,9 +948,9 @@ define("LangPDFMessage15", "Description");
 define("LangPDFMessage16", "Angle de pos.");
 define("LangPDFMessage17", "R&#233;s. de contr.");
 define("LangPDFMessage18", "Agr. opt.");
-define("LangPDFMessage19", "Préparé pour ");
+define("LangPDFMessage19", "Prï¿½parï¿½ pour ");
 define("LangPDFMessage20", "avec un  ");
-define("LangPDFMessage21", "à ");
+define("LangPDFMessage21", "ï¿½ ");
 define("LangPDFMessage22", "Pagina ");
 define("LangNumberOfRecords", "r&#233;sultats");
 define("LangPDFTitle3", "Observations des com&#232;tes de DeepskyLog");
@@ -968,7 +979,7 @@ $Visibility1="Objet tr&egrave;s facile et clair";
 $Visibility2="Objet facilement visible &agrave; vision directe";
 $Visibility3="Objet visible &agrave; vision direct";
 $Visibility4="Vision p&eacute;riph&eacute;rique n&eacute;cessaire pour voir l'objet";
-$Visibility5="Objet difficilement visible en vision péréférique";
+$Visibility5="Objet difficilement visible en vision pï¿½rï¿½fï¿½rique";
 $Visibility6="Visibilit&eacute; de l'objet est douteuse";
 $Visibility7="L'objet n'est pas visible";
 
@@ -981,13 +992,13 @@ $Seeing5="Mauvais";
 
 //Names of Months
 $Month1="Janvier";
-$Month2="Février";
+$Month2="Fï¿½vrier";
 $Month3="Mars";
 $Month4="Avril";
 $Month5="Mai";
 $Month6="Juin";
 $Month7="Juillet";
-$Month8="Août";
+$Month8="Aoï¿½t";
 $Month9="Septembre";
 $Month10="Octobre";
 $Month11="Novembre";

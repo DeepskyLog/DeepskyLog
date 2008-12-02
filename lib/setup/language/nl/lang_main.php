@@ -576,6 +576,17 @@ define("LangViewObservationField32", "Lens");
 define("LangViewObservationField32Expl", "Nieuwe lens");
 define("LangViewObservationField33", "Geschatte diameter");
 define("LangViewObservationField34", "SQM");
+define("LangViewObservationField35", "Stellair");
+define("LangViewObservationField36", "Extended");
+define("LangViewObservationField37", "Opgelost");
+define("LangViewObservationField38", "Mottled");
+define("LangViewObservationField39", "Vergroting");
+define("LangViewObservationField40", "Cluster type");
+define("LangViewObservationField40Expl", "Meer informatie");
+define("LangViewObservationField41", "Ongebruikelijke vorm");
+define("LangViewObservationField42", "Gedeeltelijk onopgelost");
+define("LangViewObservationField43", "Kleur contrast");
+
 define("LangViewObservationButton1", "Voeg toe");
 define("LangViewObservationButton2", "Wis velden");
 define("SeeingExcellent", "Uitstekend");
