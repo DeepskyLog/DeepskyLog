@@ -171,9 +171,9 @@ if ($object) {
 	echo LangViewObservationField22;
 	echo "</td>";
 	echo "<td>"; // Visibility of observations
-	echo "<select name=\"visibility\"><option value=\"" . $i . "\"></option>";
+	echo "<select name=\"visibility\"><option value=\"0\"></option>";
 	for ($i = 1; $i < 8; $i++)
-		echo "<option value=\"" . $i . "\"" . (($GLOBALS['objUtil']->checkPostKey('visibility') == $i) ? " selected=\"selected\" " : '') . ">" . $GLOBALS['Visibility' . $i] . "</option>";
+		echo "<option value=\"" . $i . "\">" . $GLOBALS['Visibility' . $i] . "</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "<td> </td>";
@@ -209,12 +209,8 @@ if ($object) {
 	echo "</tr>";
 	echo "<tr>";
 	echo "<td class=\"fieldname\" align=\"right\">";
-	echo LangViewObservationField39; // Estimated diameter
 	echo "</td>";
 	echo "<td>";
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"magnificationUsed\" size=\"3\" style=\"text-align:center\" value=\"" . $GLOBALS['objUtil']->checkPostKey('magnificationUsed') . "\">";
-	echo "x";
-
 	echo "</td>";
 	echo "<td> </td>";
 	echo "<td> </td>";
@@ -232,7 +228,7 @@ if ($object) {
 		echo LangViewObservationField40;
 		echo "</td>";
 		echo "<td>";
-		echo "<select name=\"visibility\"><option value=\"" . $i . "\"></option>";
+		echo "<select name=\"characterType\"><option value=\"\"></option>";
 		echo "<option value=\"" . A . "\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'A') ? " selected=\"selected\" " : '') . ">A</option>";
 		echo "<option value=\"" . B . "\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'B') ? " selected=\"selected\" " : '') . ">B</option>";
 		echo "<option value=\"" . C . "\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'C') ? " selected=\"selected\" " : '') . ">C</option>";

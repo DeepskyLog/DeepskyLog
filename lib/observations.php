@@ -949,7 +949,7 @@ class Observations
 
     $sqm = preg_replace("/,/", ".", $sqm);
 
-    $sql = "UPDATE observations SET limmag = $sqm WHERE id = \"$id\"";
+    $sql = "UPDATE observations SET SQM = $sqm WHERE id = \"$id\"";
     $run = mysql_query($sql) or die(mysql_error());
 
     $db->logout();
