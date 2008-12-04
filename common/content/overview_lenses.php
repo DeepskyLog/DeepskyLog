@@ -40,7 +40,7 @@ while(list($key,$value)=each($lns))
     $factor=$objLens->getFactor($value);
     $observer=$objLens->getObserverFromLens($value);
     if($value!="1")
-    { echo "<tr class=\"type".(2-($count%2))."\">"";
+    { echo "<tr class=\"type".(2-($count%2))."\">";
       echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_lens&amp;lens=".urlencode($value)."\">".$name."</a></td>";
       echo "<td>";
 		  echo $factor;

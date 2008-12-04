@@ -38,11 +38,11 @@ if ($lns != null)
   { if($count >= $min && $count < $max) // selection
     { $name = stripslashes($objLens->getLensName($value));
       $factor = $objLens->getFactor($value);
-      echo "<tr class=\"type".(2-($count%2))."\>"";
+      echo "<tr class=\"type".(2-($count%2))."\>";
       echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_lens&amp;lens=".urlencode($value)."\">".$name."</a></td>";
       echo "<td>";
       echo $factor;
-      echo ""</td>";
+      echo "</td>";
       echo "<td>";
       $queries = array("lens" => $value, "observer" => $_SESSION['deepskylog_id']);
       $obs = $objObservation->getObservationFromQuery($queries, "", "1", "False");
@@ -115,7 +115,7 @@ echo "<td class=\"explanation\">".LangAddLensField2Expl."</td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td></td>";
-echo "<td><input type=\"submit\" name=\"add\" value=\""..LangAddLensButton."\" /></td>";
+echo "<td><input type=\"submit\" name=\"add\" value=\"".LangAddLensButton."\" /></td>";
 echo "<td></td>";
 echo "</tr>";
 echo "</table>";

@@ -20,7 +20,7 @@ else
   $previous = $sort;
 $step = 25;
 echo "<div id=\"main\">";
-echo "<h2>".LangOverviewFilterTitle."</h2>");
+echo "<h2>".LangOverviewFilterTitle."</h2>";
 // the code below is very strange but works
 if((isset($_GET['previous'])))
   $orig_previous = $_GET['previous'];
@@ -87,12 +87,12 @@ while(list($key,$value)=each($filts))
       echo ($wratten)?$wratten:"-";
       echo "</td>";
       echo "<td>";
-      echo ($schott)$schott:"-";
+      echo ($schott)?$schott:"-";
       echo "</td>";
       echo "<td>";
 		  echo $observer;
       echo "</td>";
-      echo("<td>";
+      echo "<td>";
      $queries=array("filter"=>$value);                                          // check if there are no observations made with this filter
      $obs = $objObservation->getObservationFromQuery($queries, "", "1", "False");
      // No filters yet for comet observations!!

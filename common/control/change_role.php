@@ -5,5 +5,5 @@
 $role = $_GET['role'];
 $objObserver->setRole($_SESSION['user'],$role);
 $entryMessage.="Role is successfully updated!";
-$_GET['indexAction"]="detail_observer";  
+$_GET['indexAction']="detail_observer";  
 ?>

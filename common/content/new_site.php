@@ -107,7 +107,7 @@ echo "</div>";
 echo "<h2>".LangAddSiteTitle."</h2>";
 echo "<ol>";
 echo "<li value=\"1\">".LangAddSiteExisting;
-echo "<table width=\"100%\">".
+echo "<table width=\"100%\">";
 echo "<tr>";
 echo "<td width=\"25%\">";
 echo "<form name=\"overviewform\">";
@@ -127,14 +127,14 @@ echo LangAddSiteFieldOr;
 echo "</p>";
 echo "<ol>";
 echo "<li value=\"2\">";
-echo "<a href=\"".$baseURL."index.php?indexAction=search_sites\">".LangAddSiteFieldSearchDatabase".</a>";
+echo "<a href=\"".$baseURL."index.php?indexAction=search_sites\">".LangAddSiteFieldSearchDatabase."</a>";
 echo "</li>";
 echo "</ol>";
 echo "<p>";
 echo LangAddSiteFieldOr;
 echo "</p>";
 echo "<ol>";
-echo "<li value=\"3\">"..LangAddSiteFieldManually."</li>";
+echo "<li value=\"3\">".LangAddSiteFieldManually."</li>";
 echo "</ol>";
 echo "<form action=\"".$baseURL."index.php?indexAction=validate_site\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
@@ -182,7 +182,7 @@ while(list ($key, $value) = each($countries))
 	{    echo("<option value=\"$value\">$value</option>\n");
 	}
 }
-";
+
 echo "</select>";
 if(array_key_exists('latitude',$_GET) && $_GET['latitude'] || array_key_exists('locationid',$_GET) && $_GET['locationid'])
 { if (array_key_exists('latitude',$_GET))
@@ -201,7 +201,9 @@ if(array_key_exists('latitude',$_GET) && $_GET['latitude'] || array_key_exists('
 	  $longitudedeg = $longarray[0];
 	  $longitudemin = $longarray[1];
 	}
-	 ?></td>
+	 ?>
+	 
+	 </td>
 	</tr>
 	<tr>
 		<td class="fieldname"><?php echo(LangAddSiteField4); ?></td>
