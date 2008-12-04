@@ -150,7 +150,112 @@ echo "</td>";
 echo "<td>";
 echo "<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"limit\" size=\"3\" value=\"".(($objObservation->getLimitingMagnitude($_GET['observation']))?(sprintf("%1.1f", $objObservation->getLimitingMagnitude($_GET['observation']))):'')."\" />";
 echo "</td>";
+echo "<td colspan = \"2\">";
+echo LangViewObservationField34 . "&nbsp;"; // SQM
+echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"sqm\" size=\"4\" style=\"text-align:center\" value=\"";
+if ($objObservation->getSQM($_GET['observation']) > 0.0)
+{
+	echo sprintf("%2.1f", $objObservation->getSQM($_GET['observation'])); 
+} else {
+	echo "";
+}
+echo "\" />";
+echo "</td>";
 echo "</tr>";
+echo "<td>";
+echo LangViewObservationField33; // Estimated diameter
+echo "</td>";
+echo "<td>";
+echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"largeDiam\" size=\"5\" style=\"text-align:center\" value=\"";
+$min = 0;
+if ($objObservation->getDsLargeDiameter($_GET['observation']) > 0.0)
+{
+	if ($objObservation->getDsLargeDiameter($_GET['observation']) > 60.0)
+	{
+		$min = 1;
+		echo sprintf("%.1f", $objObservation->getDsLargeDiameter($_GET['observation']) / 60.0);
+	} else {
+		echo sprintf("%.1f", $objObservation->getDsLargeDiameter($_GET['observation']));		
+	}
+} else {
+	echo "";
+}
+echo "\" />";
+echo "&nbsp;x&nbsp;";
+echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"smallDiam\" size=\"5\" style=\"text-align:center\" value=\"";
+if ($objObservation->getDsSmallDiameter($_GET['observation']) > 0.0)
+{
+	if ($min == 1)
+	{
+		echo sprintf("%.1f", $objObservation->getDsSmallDiameter($_GET['observation']) / 60.0);
+	} else {
+		echo sprintf("%.1f", $objObservation->getDsSmallDiameter($_GET['observation']));		
+	}
+} else {
+	echo "";
+}
+echo "\" />";
+echo "&nbsp;";
+echo "<select name=\"size_units\">";
+echo "<option value=\"min\"";
+if ($min == 1) {
+	echo " selected";
+}
+echo ">" . LangNewObjectSizeUnits1 . "</option>";
+echo "<option value=\"sec\"";
+if ($min == 0) {
+	echo " selected";
+}
+echo ">" . LangNewObjectSizeUnits2 . "</option>";
+echo "</select>";
+echo "</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td>";
+echo "</td>";
+echo "<td colspan=\"2\">";
+echo "<input type=\"checkbox\" name=\"stellar\" " . (($objObservation->getDsStellar($_GET['observation'])==1)?"checked":'') . "/>" . LangViewObservationField35;
+echo "&nbsp;&nbsp;&nbsp;";
+echo "<input type=\"checkbox\" name=\"extended\" " . (($objObservation->getDsExtended($_GET['observation'])==1)?"checked":'') . "/>" . LangViewObservationField36;
+echo "&nbsp;&nbsp;&nbsp;";
+echo "<input type=\"checkbox\" name=\"resolved\" " . (($objObservation->getDsResolved($_GET['observation'])==1)?"checked":'') . "/>" . LangViewObservationField37;
+echo "&nbsp;&nbsp;&nbsp;";
+echo "<input type=\"checkbox\" name=\"mottled\" " . (($objObservation->getDsMottled($_GET['observation'])==1)?"checked":'') . "/>" . LangViewObservationField38;
+echo "</td>";
+echo "</tr>";
+$object = $objObservation->getObjectId($_GET['observation']);
+// Some extra fields when we are describing open clusters, or asterisms...
+if ($GLOBALS['objObject']->getDsObjectType($object) == "ASTER" || $GLOBALS['objObject']->getDsObjectType($object) == "CLANB" || $GLOBALS['objObject']->getDsObjectType($object) == "DS" || $GLOBALS['objObject']->getDsObjectType($object) == "OPNCL" || $GLOBALS['objObject']->getDsObjectType($object) == "AA1STAR" || $GLOBALS['objObject']->getDsObjectType($object) == "AA2STAR" || $GLOBALS['objObject']->getDsObjectType($object) == "AA3STAR" || $GLOBALS['objObject']->getDsObjectType($object) == "AA4STAR" || $GLOBALS['objObject']->getDsObjectType($object) == "AA8STAR") {
+	echo "<tr>";
+	echo "<td class=\"fieldname\">";
+	echo LangViewObservationField40;
+	echo "</td>";
+	echo "<td>";
+	echo "<select name=\"characterType\">";
+	echo "<option value=\"\"" . (($objObservation->getDsCharacterType($_GET['observation'])== '') ? " selected=\"selected\" " : '') . "></option>";
+	echo "<option value=\"" . A . "\"" . (($objObservation->getDsCharacterType($_GET['observation'])== 'A') ? " selected=\"selected\" " : '') . ">A</option>";
+	echo "<option value=\"" . B . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'B') ? " selected=\"selected\" " : '') . ">B</option>";
+	echo "<option value=\"" . C . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'C') ? " selected=\"selected\" " : '') . ">C</option>";
+	echo "<option value=\"" . D . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'D') ? " selected=\"selected\" " : '') . ">D</option>";
+	echo "<option value=\"" . E . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'E') ? " selected=\"selected\" " : '') . ">E</option>";
+	echo "<option value=\"" . F . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'F') ? " selected=\"selected\" " : '') . ">F</option>";
+	echo "<option value=\"" . G . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'G') ? " selected=\"selected\" " : '') . ">G</option>";
+	echo "<option value=\"" . H . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'H') ? " selected=\"selected\" " : '') . ">H</option>";
+	echo "<option value=\"" . I . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'I') ? " selected=\"selected\" " : '') . ">I</option>";
+	echo "<option value=\"" . X . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'X') ? " selected=\"selected\" " : '') . ">X</option>";
+	echo "</select>";
+	echo "</td>";
+	echo "</tr>";
+	echo "<tr>";
+	echo "<td></td><td colspan = \"2\">";
+	echo "<input type=\"checkbox\" name=\"unusualShape\" " . (($objObservation->getDsUnusualShape($_GET['observation'])==1)?"checked":'') . "/>" . LangViewObservationField41;
+	echo "&nbsp;&nbsp;&nbsp;";
+	echo "<input type=\"checkbox\" name=\"partlyUnresolved\" " . (($objObservation->getDsPartlyUnresolved($_GET['observation'])==1)?"checked":'') . "/>" . LangViewObservationField42;
+	echo "&nbsp;&nbsp;&nbsp;";
+	echo "<input type=\"checkbox\" name=\"colorContrasts\" " . (($objObservation->getDsColorContrasts($_GET['observation'])==1)?"checked":'') . "/>" . LangViewObservationField43;
+	echo "</td>";
+	echo "</tr>";
+}
 echo "<tr>";
 echo "<td class=\"fieldname\">";
 echo LangViewObservationField22;                                                // Visibility
