@@ -80,31 +80,31 @@ elseif ((!$_POST['day']) || (!$_POST['month']) || (!$_POST['year']) || ($_POST['
 			$GLOBALS['objObservation']->setSmallDiameter($current_observation, $_POST['smallDiam']);
 		if ($_POST['largeDiam'])
 			$GLOBALS['objObservation']->setLargeDiameter($current_observation, $_POST['largeDiam']);
-		if ($_POST['stellar'])
+		if (array_key_exists('stellar', $_POST))
 			$GLOBALS['objObservation']->setStellar($current_observation, 1);
 		else
 			$GLOBALS['objObservation']->setStellar($current_observation, -1);
-		if ($_POST['extended'])
+		if (array_key_exists('extended', $_POST))
 			$GLOBALS['objObservation']->setExtended($current_observation, 1);
 		else
 			$GLOBALS['objObservation']->setExtended($current_observation, -1);
-		if ($_POST['resolved'])
+		if (array_key_exists('resolved', $_POST))
 			$GLOBALS['objObservation']->setResolved($current_observation, 1);
 		else
 			$GLOBALS['objObservation']->setResolved($current_observation, -1);
-		if ($_POST['mottled'])
+		if (array_key_exists('mottled', $_POST))
 			$GLOBALS['objObservation']->setMottled($current_observation, 1);
 		else
 			$GLOBALS['objObservation']->setMottled($current_observation, -1);
-		if ($_POST['unusualShape'])
+		if (array_key_exists('unusualShape', $_POST))
 			$GLOBALS['objObservation']->setUnusualShape($current_observation, 1);
 		else
 			$GLOBALS['objObservation']->setUnusualShape($current_observation, -1);
-		if ($_POST['partlyUnresolved'])
+		if (array_key_exists('partlyUnresolved', $_POST))
 			$GLOBALS['objObservation']->setPartlyUnresolved($current_observation, 1);
 		else
 			$GLOBALS['objObservation']->setPartlyUnresolved($current_observation, -1);
-		if ($_POST['colorContrasts'])
+		if (array_key_exists('colorContrasts', $_POST))
 			$GLOBALS['objObservation']->setColorContrasts($current_observation, 1);
 		else
 			$GLOBALS['objObservation']->setColorContrasts($current_observation, -1);
