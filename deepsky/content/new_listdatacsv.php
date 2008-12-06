@@ -15,7 +15,7 @@ if($list->checkList($_SESSION['listname'])==2)
   echo "<br /><br />" . LangCSVListMessage7;
   echo "<br /><br />" . LangCSVListMessage5;
   echo "<br /><br />" . LangCSVListMessage6;
-  echo "<form action=\""$baseURL."index.php?indexAction=add_csv_listdata\" enctype=\"multipart/form-data\" method=\"post\">";
+  echo "<form action=\"".$baseURL."index.php?indexAction=add_csv_listdata\" enctype=\"multipart/form-data\" method=\"post\">";
   echo "<input type=\"file\" name=\"csv\"><br />"; 
   echo "<input type=\"submit\" name=\"change\" value=\"".LangCSVListButton."\" />";
 	echo "</form>";

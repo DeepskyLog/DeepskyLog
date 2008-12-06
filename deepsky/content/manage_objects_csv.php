@@ -7,7 +7,7 @@ echo "<h2>";
 echo LangCSVObjectTitle;
 echo "</h2>";
 echo "<p>";
-echo LangCSVObjectMessage1);
+echo LangCSVObjectMessage1;
 echo "<br /><br />" . LangCSVObjectMessage2;
 echo "<br /><br />" . LangCSVObjectMessage3;
 echo "<br /><br />" . LangCSVObjectMessage4;

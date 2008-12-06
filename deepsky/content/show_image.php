@@ -7,7 +7,7 @@ if(array_key_exists('listname',$_SESSION) && ($objList->checkList($_SESSION['lis
 if(array_key_exists('min',$_GET) && $_GET['min']) $min=$_GET['min']; else $min=0;
 if(array_key_exists('SID',$_GET) && $_GET['SID']) $_SID=$_GET['SID']; else	$_SID=time();
 if(!$_GET['object']) // no object defined in url 
-{ throw new Exception('No object defined in url in show_image.php");;
+{ throw new Exception("No object defined in url in show_image.php");
 }
 if($objObject->getRa($objObject->getDsObjectName($_GET['object'])) != "") // check whether object exists
 {

@@ -6,7 +6,7 @@ echo "<div id=\"main\">";
 echo "<h2>".LangGetLocation1."</h2>";
 $count=0;
 $result=$objLocation->getLocationsFromDatabase($_POST['location_name'],$_POST['country']);
-if($result&& _POST['location_name'])
+if($result&&$_POST['location_name'])
 { echo "<div class=\"results\">".LangGetLocation2."</div>";
   echo "<p>";
 	echo "<table>";
@@ -17,7 +17,7 @@ if($result&& _POST['location_name'])
   echo "<td>".LangGetLocation6."</td>";
   echo "<td>".LangGetLocation7."</td>";
   echo "</tr>";
-  while(list($key, value)=each($result))
+  while(list($key, $value)=each($result))
   { $vars = explode("\t", $value);
     echo "<tr class=\"type".(2-($count%2))."\">";
     echo "<td>";
