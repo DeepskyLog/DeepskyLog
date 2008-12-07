@@ -4,11 +4,11 @@
 
 if (!$_GET['filterid']) // no filterid given as a parameter
 { unset($_SESSION['deepskylog_id']);
-  $_GET['indexAction']="add_filter";
+  $_GET['indexAction']="error_action";
 }
 elseif(array_key_exists('filterid', $_GET) && $_GET['filterid']) // filterid given
-{ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes") || 
-  array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] == $objFilter->getObserverFromFilter($_GET['filterid'])) // only admin may delete locations 
+{ if((array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes")) || 
+     (array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] == $objFilter->getObserverFromFilter($_GET['filterid'])))
   { $queries = array("filter" => $_GET['filterid'], "observer" => $_SESSION['deepskylog_id']);
     $obs = $objObservation->getObservationFromQuery($queries);
 //   $comobs = $objCometObservation->getObservationFromQuery($queries);

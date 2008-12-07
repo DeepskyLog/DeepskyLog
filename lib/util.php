@@ -1,5 +1,4 @@
 <?php
-
 //CLASS util
 // INTERFACE
 //   public function utiltiesDispatchIndexActionDS() -> returns the file to be included to execute the action specified in $_GET['indexAcction']
@@ -14,8 +13,7 @@
 include_once "class.ezpdf.php";
 
 class util
-{
-  public function __construct()
+{ public function __construct()
 	{ $this->checkUserInput();
   }
   private function utilitiesGetIndexActionDefaultAction()
@@ -66,8 +64,7 @@ class util
        array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes"))
       return $includefile; 
   }
-	
-  function printNewListHeader(&$list, $link, $min, $step, $total)
+  public function printNewListHeader(&$list, $link, $min, $step, $total)
   { global $baseURL;
 	  $pages = ceil(count($list) / $step);       // total number of pages
     if($min)                                   // minimum value
@@ -126,14 +123,11 @@ class util
 	  }
     return array($min, $max);
   }
-
-
-	// printListHeader prints the list header of $list if the list has more than
-  // $step entries. The first item from the list that should be shown is $min.
-  // All numbers use the given link. An array is given back, with the min and
-  // max value. Example :
-  // list($min, $max) = $util->printListHeader($obs, $link, $_GET['min'], 25, 1221);
-  function printListHeader($list, $link, $min, $step, $total)
+  public function printListHeader($list, $link, $min, $step, $total)	// printListHeader prints the list header of $list if the list has more than
+																														  // $step entries. The first item from the list that should be shown is $min.
+																														  // All numbers use the given link. An array is given back, with the min and
+																														  // max value. Example :
+																														  // list($min, $max) = $util->printListHeader($obs, $link, $_GET['min'], 25, 1221);
   {
     $pages = ceil(count($list) / $step); // total number of pages
     if($min) // minimum value
@@ -185,9 +179,7 @@ class util
     }
     return array($min, $max);
   }
-
-  // Array slice, but uses also keys.
-  function array_slice_key($array, $offset, $len=-1)
+  public function array_slice_key($array, $offset, $len=-1) // Array slice, but uses also keys.
   {
     if (!is_array($array))
     return FALSE;
@@ -200,9 +192,7 @@ class util
     }
     return $return;
   }
-
-  // function to correct data input of users to eliminate XSS exploits
-  function checkUserInput()
+  public function checkUserInput()  // function to correct data input of users to eliminate XSS exploits
   {
     foreach($_POST as $foo => $bar)
     {
@@ -213,9 +203,7 @@ class util
       $_GET[$foo] = htmlentities($bar, ENT_COMPAT, "ISO-8859-15", 0);
     }
   }
-
-  // Creates a pdf document from an array of objects
-  function pdfObjects($result)
+  public function pdfObjects($result)  // Creates a pdf document from an array of objects
   { global $deepskylive, $dateformat;
 		$atlasses = $GLOBALS['objAtlas']->getSortedAtlasses();
 		
@@ -340,9 +328,7 @@ class util
 											);
 											$pdf->ezStream();
   }
-
-  // Creates a pdf document from an array of objects
-  function pdfObjectnames($result)
+  public function pdfObjectnames($result)  // Creates a pdf document from an array of objects
   {
     $page=1;
     $i=0;
@@ -372,10 +358,7 @@ class util
 											);
 											$pdf->ezStream();
   }
-
-
-  // Creates a pdf document from an array of objects
-  function pdfObjectsDetails($result, $sort='')
+  public function pdfObjectsDetails($result, $sort='')  // Creates a pdf document from an array of objects
   { if($sort=='objectconstellation') $sort='con'; else $sort='';
 	  global $deepskylive, $dateformat;
 		global $baseURL, $dbname;
@@ -650,9 +633,7 @@ class util
 		}		
     $pdf->Stream(); 
   }
-
-  // Creates a pdf document from an array of objects
-  function pdfObjectsDetails2($result)
+  public function pdfObjectsDetails2($result)  // Creates a pdf document from an array of objects
   { global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
     $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
     $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL;
@@ -911,15 +892,10 @@ class util
 
 											$pdf->ezStream();
   }
-
-
-  // The opposite of nl2br
-  function br2nl($data)
+  public function br2nl($data)  // The opposite of nl2br
   { return preg_replace( '!<br.*>!iU', " ", $data );
   }
-
-  // Creates a csv file from an array of observations
-  function csvObservations($result)
+  public function csvObservations($result)  // Creates a csv file from an array of observations
   { print LangCSVMessage3."\n";
     while(list ($key, $value) = each($result))
     { $obs = $GLOBALS['objObservation']->getAllInfoDsObservation($value['observationid']);
@@ -959,9 +935,7 @@ class util
       echo (html_entity_decode($objectname) . ";" . html_entity_decode($name) . ";" . $date[2] . "-" . $date[1] . "-" . $date[0] . ";" . $time . ";" . html_entity_decode($GLOBALS['objLocation']->getLocationName($loc)) . ";" . html_entity_decode($GLOBALS['objInstrument']->getInstrumentName($inst)) . ";" . html_entity_decode($GLOBALS['objEyepiece']->getEyepieceName($eyep)) . ";" . html_entity_decode($GLOBALS['objFilter']->getFilterName($filt)) . ";" . html_entity_decode($GLOBALS['objLens']->getLensName($lns)) . ";" . $seeing . ";" . $limmag . ";" . $visibility . ";" . $langObs . ";" . $description . "\n");
     }
   }
-
-  // Creates a csv file from an array of objects
-  function csvObjects($result)
+  public function csvObjects($result)  // Creates a csv file from an array of objects
   { print html_entity_decode(LangCSVMessage7)."\n";
 
     while(list ($key, $valueA) = each($result))
@@ -1034,9 +1008,7 @@ class util
       echo $valueA['objectname'].";". $alt .";".raToString($valueA[7]).";".decToString($valueA[8], 0).";".$GLOBALS[$con].";".$GLOBALS[$type].";".$mag.";".$sb.";".$size.";".$pa.";".$page.";".$valueA[21].";".$magnifi.";".$valueA[3].";".$valueA[28]."\n";
     }
   }
-
-  // Creates an argo navis file from an array of objects
-  function argoObjects($result)
+  public function argoObjects($result)  // Creates an argo navis file from an array of objects
   { $counter = 0;
     while(list ($key, $valueA) = each($result))
     { $mag = $valueA['objectmagnitude'];
@@ -1084,9 +1056,7 @@ class util
       $counter++;
     }
   }
-
-  // Creates a pdf document from an array of observations
-  function pdfObservations($result)
+  public function pdfObservations($result)  // Creates a pdf document from an array of observations
   { global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
     $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
     $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL;
@@ -1329,9 +1299,7 @@ class util
     }
     $pdf->ezStream();
   }
-
-  // Creates a pdf document from an array of comet observations
-  function pdfCometObservations($result)
+  public function pdfCometObservations($result)// Creates a pdf document from an array of comet observations
   { include_once "cometobjects.php";
     include_once "observers.php";
     include_once "instruments.php";
@@ -1642,6 +1610,12 @@ class util
 	public function checkLimitsInclusive($value,$low,$high)
 	{ return(($value>=$low)&&($value<=$high));
 	}
+  public function checkAdminOrUserID($toCheck)
+  { return array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']&&((array_key_exists('admin', $_SESSION)&&($_SESSION['admin']=="yes"))||($_SESSION['deepskylog_id']==$toCheck));
+  }
+	  public function checkUserID($toCheck)
+  { return array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']&&($_SESSION['deepskylog_id']==$toCheck);
+  }
 }
 $objUtil=new Util();
 ?>

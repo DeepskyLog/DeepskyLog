@@ -187,7 +187,7 @@ echo "<td class=\"fieldname\">".LangAddInstrumentOr."</td>";
 echo "<td></td>";
 echo "</tr>";
 echo "<tr>";
-echo "<td class=\"fieldname\"".LangAddInstrumentField3."</td>";
+echo "<td class=\"fieldname\">".LangAddInstrumentField3."</td>";
 echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"fd\" size=\"10\" value=\"";
 if(array_key_exists('fd',$_GET) && $_GET['fd'])
   echo stripslashes($_GET['fd']);

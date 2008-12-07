@@ -38,14 +38,14 @@ if ($lns != null)
   { if($count >= $min && $count < $max) // selection
     { $name = stripslashes($objLens->getLensName($value));
       $factor = $objLens->getFactor($value);
-      echo "<tr class=\"type".(2-($count%2))."\>";
+      echo "<tr class=\"type".(2-($count%2))."\">";
       echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_lens&amp;lens=".urlencode($value)."\">".$name."</a></td>";
       echo "<td>";
       echo $factor;
       echo "</td>";
       echo "<td>";
       $queries = array("lens" => $value, "observer" => $_SESSION['deepskylog_id']);
-      $obs = $objObservation->getObservationFromQuery($queries, "", "1", "False");
+      $obs = $objObservation->getObservationFromQuery($queries, "D", "1", "False");
       // No filters yet for comet observations!!
       //           $queries = array("eyepiece" => $value);
       //           $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");

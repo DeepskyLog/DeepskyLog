@@ -17,15 +17,15 @@ if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="valida
   require_once $instDir."/common/control/validate_delete_instrument.php";
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_delete_lens"))
   require_once $instDir."/common/control/validate_delete_lens.php";
-	
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_delete_location"))
   require_once $instDir."/common/control/validate_delete_location.php";
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_eyepiece"))
   require_once $instDir."/common/control/validate_eyepiece.php";
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_filter"))
-  require_once $instDir."/common/control/validate_filter.php";
+  require_once $instDir."/common/control/validate_filter.php";  
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_instrument"))
   require_once $instDir."/common/control/validate_instrument.php";
+  
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_lens"))
   require_once $instDir."/common/control/validate_lens.php";
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_observer"))

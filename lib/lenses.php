@@ -291,29 +291,11 @@ class Lenses
 
   $db->logout();
  }
-
- // getObserver returns the observerid for this lens
- function getObserverFromLens($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM lenses WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $observer = $get->observer;
-
-  $db->logout();
-
-  return $observer;
+ public function getObserverFromLens($id) // getObserver returns the observerid for this lens
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT * FROM lenses WHERE id = \"$id\"",'observer');
  }
-
-
- // showLenses prints a table showing all lenses. For testing 
- // purposes only.
- function showLenses()
+ function showLenses() // showLenses prints a table showing all lenses. For testing  purposes only.
+ 
  {
   $filters = $this->getLenses();
 

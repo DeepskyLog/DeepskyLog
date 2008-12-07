@@ -4,11 +4,11 @@
 
 if (!$_GET['instrumentid'])                                                     // no instrumentid given as a parameter
 { unset($_SESSION['deepskylog_id']);
-  $_GET['indexAction']='default_action';
+  $_GET['indexAction']='error_action';
 }
 elseif(array_key_exists('instrumentid', $_GET) && $_GET['instrumentid'])        // instrumentid given
 { if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes") || 
-     array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id']==$objInstrument->getObserverFromInstrument($_GET['insturmentid'])) 
+     array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id']==$objInstrument->getObserverFromInstrument($_GET['instrumentid'])) 
   { $queries = array("instrument" => $_GET['instrumentid'], "observer" => $_SESSION['deepskylog_id']);
     $obs = $objObservation->getObservationFromQuery($queries, "D", "1");
     $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
@@ -26,4 +26,5 @@ elseif(array_key_exists('instrumentid', $_GET) && $_GET['instrumentid'])        
     $_GET['indexAction']='add_instrument';                                      // back to entrance page
   }
 }
+$_GET['indexAction']='add_instrument'
 ?>

@@ -1,48 +1,20 @@
 <?php
-
-// validate_eyepiece.php
+// validate_filter.php
 // checks if the add new eyepiece or change eyepiece form is correctly filled in
-// version 3.2: WDM, 16/01/2008
 
-session_start(); // start session
-
-include "lib/filters.php";
-include "lib/observers.php";
-include_once "lib/setup/vars.php";
-include_once "lib/util.php";
-
-$util = new Util();
-$util->checkUserInput();
-
-if (!$_POST['filtername'] || !$_POST['type'])
-{
-      $_SESSION['message'] = LangValidateEyepieceMessage1; 
-      header("Location:error.php");
+if($objUtil->checkPostKey('add')&&$objUtil->checkSessionKey('deepskylogid')&&$objUtil->checkPostKey('filtername')&&$objUtil->checkPostKey('type'))
+{ $id=$filters->addFilter($objUtil->checkPostKey('filtername'), $objUtil->checkPostKey('type'), $objUtil->checkPostKey('color'), $objUtil->checkPostKey('wratten'), $objUtil->checkPostKey('schott'));
+  $filters->setFilterObserver($id,$_SESSION['deepskylog_id']);
+  $entryMessage=LangValidateEyepieceMessage2.' '.LangValidateEyepieceMessage3;
 }
-else
-{
-$filters = new Filters; // create new Eyepieces object
-
-if(array_key_exists('add', $_POST) && $_POST['add'])
-{
-      // fill database
-    	$id = $filters->addFilter($_POST['filtername'], $_POST['type'], $_POST['color'], $_POST['wratten'], $_POST['schott']);
-
-      $filters->setFilterObserver($id, $_SESSION['deepskylog_id']);
-      $_SESSION['message'] = LangValidateEyepieceMessage2;
-  	  $_SESSION['title'] = LangValidateEyepieceMessage3;
+if($objUtil->checkPostKey('change')&&$objUtil->checkPostKey('id')&&$objUtil->checkPostKey('filtername')&&$objUtil->checkPostKey('type')&&$objUtil->checkAdminOrUserID($objFilter->getObserverFromFilter($_POST['id'])))
+{ $filters->setFilterName($_POST['id'], $objUtil->checkPostKey('filtername'));
+  $filters->setFilterType($_POST['id'], $objUtil->checkPostKey('type'));
+  $filters->setFilterColor($_POST['id'], $objUtil->checkPostKey('color'));
+  $filters->setWratten($_POST['id'], $objUtil->checkPostKey('wratten'));
+  $filters->setSchott($_POST['id'], $objUtil->checkPostKey('schott'));
+  $filters->setFilterObserver($_POST['id'], $_SESSION['deepskylog_id']);
+  $entryMessage=LangValidateEyepieceMessage5.' '.LangValidateEyepieceMessage4;
 }
-if(array_key_exists('change', $_POST) && $_POST['change'])
-{
-          $filters->setFilterName($_POST['id'], $_POST['filtername']);
-          $filters->setFilterType($_POST['id'], $_POST['type']);
-          $filters->setFilterColor($_POST['id'], $_POST['color']);
-          $filters->setWratten($_POST['id'], $_POST['wratten']);
-          $filters->setSchott($_POST['id'], $_POST['schott']);
-          $filters->setFilterObserver($_POST['id'], $_SESSION['deepskylog_id']);
-          $_SESSION['message'] = LangValidateEyepieceMessage5;
-          $_SESSION['title'] = LangValidateEyepieceMessage4;
-}
-header("Location:add_filter.php");
-}
+$_GET['indexAction']='add_filter';
 ?>
