@@ -98,6 +98,17 @@ class Observations {
 		$ob["eyepiece"] = $get->eyepieceid;
 		$ob["filter"] = $get->filterid;
 		$ob["lens"] = $get->lensid;
+		$ob["sqm"] = $get->SQM;
+		$ob["largeDiam"] = $get->largeDiameter;
+		$ob["smallDiam"] = $get->smallDiameter;
+		$ob["stellar"] = $get->stellar;
+		$ob["extended"] = $get->extended;
+		$ob["resolved"] = $get->resolved;
+		$ob["mottled"] = $get->mottled;
+		$ob["characterType"] = $get->characterType;
+		$ob["unusualShape"] = $get->unusualShape;
+		$ob["partlyUnresolved"] = $get->partlyUnresolved;
+		$ob["colorContrasts"] = $get->colorContrasts;
 		return $ob;
 	}
 
