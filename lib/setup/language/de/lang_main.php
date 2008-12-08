@@ -7,6 +7,10 @@ define("LangBecomeMember", "Become member");
 define("LangSearch","Search");
 define("LangContact","Contact");
 define("LangDeepskyLogModules","Deepskylog Modules");
+define("LangWelcome","Welcome&nbsp;in&nbsp;the&nbsp;");
+define("LangWelcome1","&nbsp;module&nbsp;of&nbsp;");
+define("LangWelcome2","You&nbsp;are&nbsp;logged&nbsp;in&nbsp;as&nbsp;");
+define("LangWelcome3","You&nbsp;are&nbsp;not&nbsp;logged&nbsp;in");
 
 define("LangValidateSubject", "DeepskyLog - Registration erfolgreich");
 define("LangValidateAdmin", "\nEiner der Administratoren hat Ihnen Administrator Rechte gegeben.\n");

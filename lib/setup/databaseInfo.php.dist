@@ -17,6 +17,8 @@
   // The first part of the title that has to appear on each browser window
   $browsertitle = "DeepskyLog";
 
+  $versionInfo = "3.3-Trunk";
+  
   // Allow users to register from within the DeepskyLog application directly
   // If you want to use a already existing database with users and passwords
   // eg ppb you should set this variable to "no" 
