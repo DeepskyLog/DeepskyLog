@@ -3,7 +3,7 @@
 // shows information of an observer 
 // Version 0.4: 20060108, JV
 
-$user=urldecode($_GET['user']);
+$user=urldecode($objUtil->checkGetKey('user'));
 $user=str_replace("&amp;", "&", $user);
 $user=str_replace("&amp;", "&", $user);
 if(!($objObserver->getObserverName($user)))                                     // no session variable set 
@@ -12,13 +12,12 @@ $firstname=$objObserver->getFirstName($user);
 $name=$objObserver->getObserverName($user);
 echo "<div id=\"main\">";
 echo "<h2>".$firstname.' '. $name."</h2>";
-$upload_dir='common/observer_pics';
-$dir = opendir($upload_dir);
+$dir = opendir($instDir.'common/observer_pics');
 while(FALSE!==($file=readdir($dir)))
 { if(("." == $file)OR(".."== $file))
     continue;                                                                   // skip current directory and directory above
   if(fnmatch($user. ".gif", $file) || fnmatch($user. ".jpg",$file) || fnmatch($user. ".png", $file))
-    echo "<p><img class=\"viewobserver\" src=\"".$baseURL."common/$upload_dir" . "/" . "$file\" alt=\"" . $firstname . "&nbsp;" . $name . "\"></img></p>";
+    echo "<p><img class=\"viewobserver\" src=\"".$baseURL."common/observer_pics/".$file."\" alt=\"".$firstname."&nbsp;".$name."\"></img></p>";
 }
 echo "<form action=\"".$baseURL."index.php?indexAction=change_role\">";
 echo "<table width=\"490\">";

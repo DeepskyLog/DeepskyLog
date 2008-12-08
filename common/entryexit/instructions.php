@@ -25,15 +25,12 @@ if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="valida
   require_once $instDir."/common/control/validate_filter.php";  
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_instrument"))
   require_once $instDir."/common/control/validate_instrument.php";
-  
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_lens"))
   require_once $instDir."/common/control/validate_lens.php";
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_observer"))
   require_once $instDir."/common/control/validate_observer.php";
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_site"))
   require_once $instDir."/common/control/validate_site.php";
-
-	
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="logout"))
   require_once $instDir."/common/control/logout.php";
 

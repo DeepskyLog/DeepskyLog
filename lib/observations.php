@@ -174,7 +174,7 @@ class Observations {
 		$sqland .= (isset ($queries["observer"]) && $queries["observer"]) ? " AND observations.observerid = \"" . $queries["observer"] . "\" " : '';
 		if (isset ($queries["instrument"]) && ($queries["instrument"] != "")) {
 			$sqland .= "AND (observations.instrumentid = \"" . $queries["instrument"] . "\" ";
-			if (!$exactinstrumentlocation == 1) {
+			if (!$exactinstrumentlocation) {
 				$insts = $GLOBALS['objInstrument']->getAllInstrumentsIds($queries["instrument"]);
 				while (list ($key, $value) = each($insts))
 					$sqland .= " || observations.instrumentid = \"" . $value . "\" ";

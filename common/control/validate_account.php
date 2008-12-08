@@ -51,14 +51,14 @@ elseif(array_key_exists('register',$_POST)&&array_key_exists('deepskylog_id',$_P
     $headers = "From:".$fromMail;
     if(!mail($to, $subject, $body, $headers))
   	  throw new Exception('Unable to mail');
-    $_GET['indexAction']="default_action";
+    $_GET['user']=$_SESSION['deepskylog_id'];
+    $_GET['indexAction']='detail_observer';
   }
 }  
-elseif(array_key_exists('change', $_POST)&&$_POST['change'])                // pressed change button
+elseif($objUtil->checkPostKey('change'))                // pressed change button
 { if(!$_SESSION['deepskylog_id'])                                           // extra control on login
   { $entryMessage=LangValidateAccountMessage1;                              
-	  if($objUtil->checkPostKey('change')) $_GET['indexAction']='common_content_change_account';
-	  else  $_GET['indexAction']='subscribe';
+	  $_GET['indexAction']='common_content_change_account';
   }
   else
 	{ $allLanguages=$objLanguage->getAllLanguages($_SESSION['lang']);         // READ ALL THE LANGUAGES FROM THE CHECKBOXES
@@ -94,7 +94,8 @@ elseif(array_key_exists('change', $_POST)&&$_POST['change'])                // p
       $new_image = image_createThumb($original_image, $destination_image, $max_width, $max_height, $resample_quality);
     }
     $entryMessage=LangValidateAccountMessage5;
-    $_GET['indexAction']='default_action';  
+    $_GET['user']=$_SESSION['deepskylog_id'];
+    $_GET['indexAction']='detail_observer';
   }
 }
 ?>

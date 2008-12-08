@@ -1,6 +1,6 @@
 <?php
-// new_site.php
-// allows the user to add a new site
+// new_eyepiece.php
+// allows the user to add a new eyepiece
 
 $sort=$objUtil->checkGetKey('sort','name');
 if(!$min) $min=$objUtil->checkGetKey('min',0);
@@ -25,7 +25,7 @@ $step = 25;
 echo "<div id=\"main\">";
 echo "<h2>".LangOverviewEyepieceTitle."</h2>";
 $link = $baseURL."index.php?indexAction=add_eyepiece&amp;sort=".$sort."&amp;previous=".$orig_previous;
-list($min, $max) = $util->printListHeader($eyeps, $link, $min, $step, "");
+list($min, $max) = $objUtil->printListHeader($eyeps, $link, $min, $step, "");
 echo "<table>";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=name&amp;previous=$previous\">".LangViewEyepieceName."</a></td>";
@@ -43,28 +43,27 @@ if ($eyeps != null)
     $maxFocalLength = $objEyepiece->getMaxFocalLength($value);
     if ($maxFocalLength == "-1")
 	    $maxFocalLength = "-";
-    echo "<tr class=\type".(2-($count%2))."\">";
+    echo "<tr class=\"type".(2-($count%2))."\">";
 		echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_eyepiece&amp;eyepiece=".urlencode($value)."\">$name</a></td>";
 		echo "<td>".$focalLength."</td>";
 		echo "<td>".$maxFocalLength."</td>";
 		echo "<td>".$apparentFOV."</td>";
 		echo "<td>";
     $queries = array("eyepiece" => $value, "observer" => $_SESSION['deepskylog_id']);           // check if there are no observations made with this eyepiece
-    $obs = $objObservation->getObservationFromQuery($queries, "", "1", "False");
+    $obs = $objObservation->getObservationFromQuery($queries, "D", "1");
 		// No eyepieces yet for comet observations!!
 		//           $queries = array("eyepiece" => $value);
 		//           $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
     if(!sizeof($obs) > 0) // no observations from location yet
       echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_eyepiece&amp;eyepieceid=" . urlencode($value) . "\">" . LangRemove . "</a>");
     echo("</td>\n</tr>");
+    $count++;
   }
-  $count++;
 }
 echo "</table>";
-list($min, $max) = $util->printListHeader($eyeps, $link, $min, $step, "");
+list($min, $max) = $objUtil->printListHeader($eyeps, $link, $min, $step, "");
 echo "</div>";
-echo "<h2>";
-echo(LangAddEyepieceTitle);
+echo "<h2>".LangAddEyepieceTitle."</h2>";
 echo "<ol>";
 echo "<li value=\"1\">";
 echo LangAddEyepieceExisting;
@@ -74,8 +73,8 @@ echo "<td width=\"25%\">";
 echo "<form name=\"overviewform\">";
 echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalogue\">";
 $eyeps = $objEyepiece->getSortedEyepieces('focalLength', "", true);
-while(list($key, $value) = each($eyeps))
-  echo "<option value=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;eyepieceid=".urlencode($value).\">" . $objEyepiece->getEyepieceName($value) . "</option>";
+while(list($key, $value)=each($eyeps))
+  echo "<option value=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;eyepieceid=".urlencode($value)."\" >" . $objEyepiece->getEyepieceName($value) . "</option>";
 echo "</select>";
 echo "</form>";
 echo "</td>";
@@ -90,7 +89,7 @@ echo "<ol>";
 echo "<li value=\"2\">".LangAddSiteFieldManually."</li>";
 echo "</ol>";
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
-echo "<input name=\"indexAction\" value=\"validate_eyepiece\" />";
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_eyepiece\" />";
 echo "<table>";
 echo "<tr>";
 echo "<td class=\"fieldname\">".LangAddEyepieceField1."</td>";
@@ -101,7 +100,7 @@ if(array_key_exists('eyepieceid',$_GET) && $_GET['eyepieceid'])
   echo stripslashes($objEyepiece->getEyepieceName($_GET['eyepieceid']));
 echo "\" />";
 echo "</td>";
-echo "<td class=\"explanation\"".LangAddEyepieceField1Expl."</td>";
+echo "<td class=\"explanation\">".LangAddEyepieceField1Expl."</td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td class=\"fieldname\">".LangAddEyepieceField2."</td>";

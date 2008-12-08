@@ -67,7 +67,7 @@ function tableNew($format='')
 }
 function tableFieldnameFieldExplanation($name, $field, $explanation)
 { echo "<tr>";
-  echo "<td class=\"fieldname\">";
+  echo "<td class=\"fieldname\" align=\"right\">";
   echo $name;
   echo "</td>";
   echo "<td>";

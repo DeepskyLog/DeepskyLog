@@ -136,7 +136,7 @@ echo "</p>";
 echo "<ol>";
 echo "<li value=\"3\">".LangAddSiteFieldManually."</li>";
 echo "</ol>";
-echo "<form action=\"".$baseURL."index.php?indexAction=validate_site\" method=\"post\">";
+echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 echo "<table>";
 echo "<tr>";
@@ -180,6 +180,10 @@ while(list ($key, $value) = each($countries))
     echo "<option value=\"".$value."\">".$value."</option>";
 }
 echo "</select>";
+$latitudedeg='';
+$latitudemin='';
+$longitudedeg='';
+$longitudemin='';
 if(array_key_exists('latitude',$_GET) && $_GET['latitude'] || array_key_exists('locationid',$_GET) && $_GET['locationid'])
 { if (array_key_exists('latitude',$_GET))
     $latitudestr = decToString($_GET['latitude'], 1);
@@ -189,10 +193,6 @@ if(array_key_exists('latitude',$_GET) && $_GET['latitude'] || array_key_exists('
   $latitudedeg = $latarray[0];
   $latitudemin = $latarray[1];
 }
-$latitudedeg='';
-$latitudemin='';
-$longitudedeg='';
-$longitudemin='';
 if(array_key_exists('longitude',$_GET) && $_GET['longitude'] || array_key_exists('locationid',$_GET) && $_GET['locationid'])
 { if (array_key_exists('longitude',$_GET))
       $longitudestr = decToString($_GET['longitude'], 1);
@@ -207,22 +207,22 @@ echo "</tr>";
 echo "<tr>";
 echo "<td class=\"fieldname\">".LangAddSiteField4."</td>";
 echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"latitude\" size=\"3\" value=\"".
-     ((array_key_exists('latitude',$_GET) && $_GET['latitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$latitudedeg:"".
+     (((array_key_exists('latitude',$_GET) && $_GET['latitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$latitudedeg:"").
      "\" />&deg;&nbsp;";
 echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"latitudemin\" size=\"2\"	value=\"".
-     (array_key_exists('latitude',$_GET) && $_GET['latitude'] || array_key_exists('locationid',$_GET) && $_GET['locationid'])?$latitudemin:"".
-     " />&#39;";
+     (((array_key_exists('latitude',$_GET) && $_GET['latitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$latitudemin:"").
+     "\" />&#39;";
 echo "</td>";
 echo "<td class=\"explanation\">".LangAddSiteField4Expl."</td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td class=\"fieldname\">".LangAddSiteField5."</td>";
 echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"".
-     (array_key_exists('longitude',$_GET) && $_GET['longitude'] || array_key_exists('locationid',$_GET) && $_GET['locationid'])?$longitudedeg:"".
-     " />&deg;&nbsp;";
+     (((array_key_exists('longitude',$_GET) && $_GET['longitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$longitudedeg:"").
+     "\" />&deg;&nbsp;";
 echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\"	name=\"longitudemin\" size=\"2\" value=\"".
-     (array_key_exists('longitude',$_GET) && $_GET['longitude'] || array_key_exists('locationid',$_GET) && $_GET['locationid'])?$longitudemin:"".
-     " />&#39;</td>";
+     (((array_key_exists('longitude',$_GET) && $_GET['longitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$longitudemin:"").
+     "\" />&#39;</td>";
 echo "<td class=\"explanation\">".LangAddSiteField5Expl."</td>";
 echo "</tr>";
 echo "<tr>";

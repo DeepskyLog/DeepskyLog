@@ -180,15 +180,15 @@ echo "<select name=\"focallengthunits\">";
 echo "<option>inch</option>";
 echo "<option selected=\"selected\">mm</option>";
 echo "</select>";
-echo "</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddInstrumentOr."</td>";
-echo "<td></td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddInstrumentField3."</td>";
-echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"fd\" size=\"10\" value=\"";
+//echo "</td>";
+//echo "</tr>";
+//echo "<tr>";
+echo "&nbsp;".LangAddInstrumentOr;
+//echo "<td></td>";
+// echo "</tr>";
+// echo "<tr>";
+echo "&nbsp;".LangAddInstrumentField3;
+echo "&nbsp;<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"fd\" size=\"10\" value=\"";
 if(array_key_exists('fd',$_GET) && $_GET['fd'])
   echo stripslashes($_GET['fd']);
 if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
@@ -203,9 +203,7 @@ if(array_key_exists('fixedMagnification',$_GET) && $_GET['fixedMagnification'])
   echo ($_GET['fixedMagnification']);
 if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
   echo stripslashes($objInstrument->getFixedMagnification($_GET['instrumentid']));
-echo "\" />";
-echo "</td>";
-echo "<td class=\"explanation\">".LangAddInstrumentField6Expl."</td>";
+echo "\" />&nbsp;".LangAddInstrumentField6Expl."</td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td></td>";

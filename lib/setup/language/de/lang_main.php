@@ -740,6 +740,11 @@ define("LangValidateEyepieceMessage3", "Okular hinzugef&uuml;gt");
 define("LangValidateEyepieceMessage4", "Okular ge&auml;ndert");
 define("LangValidateEyepieceMessage5", "Okular in der Datenbank ge&auml;ndert");
 
+//control/validate_filter
+define("LangValidateFilterMessage2", "The filter is added to your equipment list");
+define("LangValidateFilterMessage5", "The filter is changed in your equipment list");
+
+
 // control/validate_observer.php
 
 define("LangValidateObserverMessage1", "Der Benutzer wurde erfolgreich hochgeladen!");

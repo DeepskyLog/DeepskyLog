@@ -87,7 +87,7 @@ echo "<li value=\"2\">";
 echo LangAddLensFieldManually;
 echo "</li>";
 echo "</ol>";
-echo "<form action=\"".$baseURL."index.php?indexAction=validate_lens\" method=\"post\">";
+echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_lens\" />";
 echo "<table>";
 echo "<tr>";

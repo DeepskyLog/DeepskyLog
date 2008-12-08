@@ -174,32 +174,9 @@ class Instruments
 
   return $diameter;
  }
-
- // getFixedMagnification returns the fixed magnification of the given instrument
- function getFixedMagnification($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM instruments WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if ($get)
-	{
-	  $fixedMagnification = $get->fixedMagnification;
-  }
-	else
-	{
-		$fixedMagnification = 0.0;
-	}
-		
-  $db->logout();
-
-  return $fixedMagnification;
+ function getFixedMagnification($id) // getFixedMagnification returns the fixed magnification of the given instrument
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT * FROM instruments WHERE id = \"$id\"",'fixedMagnification');
  }
-
  // getFd returns the Fd of the given instrument
  function getFd($id)
  {

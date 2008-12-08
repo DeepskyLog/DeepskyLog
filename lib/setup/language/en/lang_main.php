@@ -224,10 +224,10 @@ define("LangAddLensField2", "Factor");
 define("LangAddLensField2Expl", "> 1.0 for Barlow lenses, < 1.0 for shapley lenses.");
 define("LangAddLensButton", "Add lens");
 define("LangChangeLensButton", "Change lens");
-define("LangValidateLensMessage2", "The lens is added to the database");
+define("LangValidateLensMessage2", "The lens is added to your equipment list");
 define("LangValidateLensMessage3", "Lens added");
 define("LangValidateLensMessage4", "Lens changed");
-define("LangValidateLensMessage5", "The lens is changed in the database");
+define("LangValidateLensMessage5", "The lens is changed in your equipment list");
 
 define("LangOverviewFilterTitle", "Overview filters");
 define("LangViewFilterName", "Name");
@@ -734,10 +734,15 @@ define("LangValidateSiteMessage5", "The location is changed in the database");
 // control/validate_eyepiece.php
 
 define("LangValidateEyepieceMessage1",  "All fields must be filled in!");
-define("LangValidateEyepieceMessage2", "The eyepiece is added to the database");
+define("LangValidateEyepieceMessage2", "The eyepiece is added to your equipment list");
 define("LangValidateEyepieceMessage3", "Eyepiece added");
 define("LangValidateEyepieceMessage4", "Eyepiece changed");
-define("LangValidateEyepieceMessage5", "The eyepiece is changed in the database");
+define("LangValidateEyepieceMessage5", "The eyepiece is changed in your equipment list");
+
+//control/validate_filter
+define("LangValidateFilterMessage2", "The filter is added to your equipment list");
+define("LangValidateFilterMessage5", "The filter is changed in your equipment list");
+
 
 // control/validate_observer.php
 
@@ -755,14 +760,14 @@ define("LangMessageTitle", "Message");
 // control/validate_location.php
 
 define("LangValidateLocationMessage1", "Please, fill in all fields!");
-define("LangValidateLocationMessage2", "The location is added to the database!");
+define("LangValidateLocationMessage2", "The location is added to your observation sites!");
 
 // control/validate_intrument.php
 
 define("LangValidateInstrumentMessage1", "Please, fill in all fields!");
 define("LangValidateInstrumentMessage2", "Please, provide one of both: focallength OR f/d!");
-define("LangValidateInstrumentMessage3", "The instrument is added to the database!");
-define("LangValidateInstrumentMessage4", "The instrument details have been changed in the database!");
+define("LangValidateInstrumentMessage3", "The instrument is added to your equipment list!");
+define("LangValidateInstrumentMessage4", "The instrument details have been changed in your equipment list!");
 define("LangValidateInstrumentMessage", "Message");
 
 // content/setup_query_objects.php

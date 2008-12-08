@@ -224,10 +224,10 @@ define("LangAddLensField2", "Factor");
 define("LangAddLensField2Expl", "> 1.0 voor Barlow lenzen, < 1.0 voor shapley lenzen.");
 define("LangAddLensButton", "Voeg lens toe");
 define("LangChangeLensButton", "Verander lens");
-define("LangValidateLensMessage2", "De lens in toegevoegd in de database");
+define("LangValidateLensMessage2", "De lens in toegevoegd aan je lijst met uitrustingen");
 define("LangValidateLensMessage3", "Lens toegevoegd");
 define("LangValidateLensMessage4", "Lens aangepast");
-define("LangValidateLensMessage5", "De lens is aangepast in de database");
+define("LangValidateLensMessage5", "De lens is aangepast in je lijst met uitrustingen");
 
 define("LangOverviewFilterTitle", "Overzicht filters");
 define("LangViewFilterName", "Naam");
@@ -727,17 +727,22 @@ define("LangValidateSearchObjectMessage3", "Zoek opnieuw");
 
 define("LangValidateSiteMessage1",  "Alle velden moeten worden ingevuld!");
 define("LangValidateSiteMessage2", "De locatie is toegevoegd aan de databank");
-define("LangValidateSiteMessage3", "Locatie toegevoegd");
+define("LangValidateSiteMessage3", "De locatie is toegevoegd aan jouw lijst met waarneemplaatsen");
 define("LangValidateSiteMessage4", "Locatie gewijzigd");
-define("LangValidateSiteMessage5", "De locatiegegevens zijn gewijzigd in de databank");
+define("LangValidateSiteMessage5", "De locatiegegevens zijn gewijzigd in jouw lijst met waarneemplaatsen");
 
 // control/validate_eyepiece.php
 
 define("LangValidateEyepieceMessage1",  "Alle velden moeten worden ingevuld!");
-define("LangValidateEyepieceMessage2", "Het oculair is toegevoegd aan de databank");
+define("LangValidateEyepieceMessage2", "Het oculair is aan je lijst met uitrustingen");
 define("LangValidateEyepieceMessage3", "Oculair toegevoegd");
 define("LangValidateEyepieceMessage4", "Oculair aangepast");
-define("LangValidateEyepieceMessage5", "Het oculair is aangepast in de databank");
+define("LangValidateEyepieceMessage5", "Het oculair is aangepast in je lijst met uitrustingen");
+
+//control/validate_filter
+define("LangValidateFilterMessage2", "De filter is toegevoegd aan je lijst met uitrustingen");
+define("LangValidateFilterMessage5", "De filter is aangepast in je lijst met uitrustingen");
+
 
 // control/validate_observer.php
 
@@ -761,8 +766,8 @@ define("LangValidateLocationMessage2", "De waarnemingsplaats is toegevoegd aan d
 
 define("LangValidateInstrumentMessage1", "Gelieve alle velden in te vullen!");
 define("LangValidateInstrumentMessage2", "Gelieve een van beiden in te vullen: brandpuntsafstand OF f/d!");
-define("LangValidateInstrumentMessage3", "Het instrument is toegevoegd aan de databank!");
-define("LangValidateInstrumentMessage4", "De instrumentgegevens zijn gewijzigd in de databank!");
+define("LangValidateInstrumentMessage3", "Het instrument is toegevoegd aan je lijst met uitrustingen");
+define("LangValidateInstrumentMessage4", "De instrumentgegevens zijn gewijzigd in je lijst met uitrustingen");
 define("LangValidateInstrumentMessage", "Boodschap");
 
 // content/setup_query_objects.php

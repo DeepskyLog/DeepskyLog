@@ -1,198 +1,81 @@
 <?php
-
 // change_site.php
 // allows the administrator to change site details 
-// version 0.1: JV 20041126
 
-//include_once "lib/observers.php";
-
-include_once "lib/locations.php";
-include_once "lib/util.php";
-
-$util = new Util();
-$util->checkUserInput();
-
-$locations = new Locations();
-
-echo("<div id=\"main\">
-   \n<h2>");
-
-echo stripslashes($locations->getLocationName($_GET['location']));
-
-echo("</h2>
-
-   <form action=\"".$baseURL."index.php?indexAction=validate_site\" method=\"post\">
-   <table>
-   <tr>
-   <td class=\"fieldname\">");
-
-echo(LangAddSiteField1);
-
-echo("</td>
-   <td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"sitename\" size=\"30\" value=\"");
-
-echo stripslashes($locations->getLocationName($_GET['location']));
-
-echo("\" /></td>
-   <td class=\"explanation\"></td>
-   </tr>
-   <tr>
-   <td class=\"fieldname\">");
-
-echo(LangAddSiteField2);
-
-echo("</td>
-   <td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"region\" size=\"30\" value=\"");
-
-echo stripslashes($locations->getRegion($_GET['location']));
-
-echo("\" /></td>
-   <td class=\"explanation\">");
-
-echo(LangAddSiteField2Expl);
-
-echo("</td>
-   </tr>
-   <tr>
-   <td class=\"fieldname\">");
-
-echo(LangAddSiteField3);
-
-echo("</td>
-   <td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"country\" size=\"30\" value=\"");
-
-echo $locations->getCountry($_GET['location']);
-
-echo("\" /></td>
-   <td class=\"explanation\">");
-
-echo(LangAddSiteField3Expl);
-
-echo("</td>
-   </tr>
-   <tr>
-   <td class=\"fieldname\">");
-
-echo(LangAddSiteField4);
-
-echo("</td>
-   <td><input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"latitude\" size=\"3\" value=\"");
-
-$latitudestr = $locations->getLatitude($_GET['location']);
+echo "<div id=\"main\">";
+echo "<h2>".stripslashes($objLocation->getLocationName($_GET['location']))."</h2>";
+echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
+echo "<table>";
+echo "<tr>";
+echo "<td class=\"fieldname\">".LangAddSiteField1."</td>";
+echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"sitename\" size=\"30\" value=\"".stripslashes($objLocation->getLocationName($_GET['location']))."\" /></td>";
+echo "<td class=\"explanation\"></td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td class=\"fieldname\">".LangAddSiteField2."</td>";
+echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"region\" size=\"30\" value=\"".stripslashes($objLocation->getRegion($_GET['location']))."\" /></td>";
+echo "<td class=\"explanation\">".LangAddSiteField2Expl."</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td class=\"fieldname\">".LangAddSiteField3."</td>";
+echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"country\" size=\"30\" value=\"".$objLocation->getCountry($_GET['location'])."\" /></td>";
+echo "<td class=\"explanation\">".LangAddSiteField3Expl."</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td class=\"fieldname\">".LangAddSiteField4."</td>";
+echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"latitude\" size=\"3\" value=\"";
+$latitudestr = $objLocation->getLatitude($_GET['location']);
 $latitudedeg = (int)($latitudestr);
 $latitudemin = round(((float)($latitudestr) - (int)($latitudestr)) * 60);
-
 echo $latitudedeg . "\" />&deg;<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"latitudemin\" size=\"2\" value=\"";
 echo $latitudemin . "\" />&#39;</td>";
-
-echo("</td>
-   <td class=\"explanation\">");
-
-echo(LangAddSiteField4Expl);
-
-echo("</td>
-   </tr>
-   <tr>
-   <td class=\"fieldname\">");
-
-echo(LangAddSiteField5);
-
-echo("</td>
-   <td><input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"");
-
-
-$longitudestr = $locations->getLongitude($_GET['location']);
+echo "</td>";
+echo "<td class=\"explanation\">".LangAddSiteField4Expl."</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td class=\"fieldname\">".LangAddSiteField5."</td>";
+echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"";
+$longitudestr = $objLocation->getLongitude($_GET['location']);
 $longitudedeg = (int)($longitudestr);
 $longitudemin = round(((float)($longitudestr) - (int)($longitudestr)) * 60);
-
 echo $longitudedeg . "\" />&deg;<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"longitudemin\" size=\"2\" value=\"";
 echo $longitudemin . "\" />&#39;</td>";
-
-echo("</td>
-   <td class=\"explanation\">");
-
-echo(LangAddSiteField5Expl);
-
-echo("</td>
-   </tr>
-   <tr>
-   <td class=\"fieldname\">" . LangAddSiteField6 . "</td>
-   <td>");
-
+echo "</td>";
+echo "<td class=\"explanation\">".LangAddSiteField5Expl."</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td class=\"fieldname\">" . LangAddSiteField6 . "</td>";
+echo "<td>";
 $timezone_identifiers = DateTimeZone::listIdentifiers();
-
-echo("<select name=\"timezone\">");
-
+$theTimeZone=$objLocation->getTimezone($_GET['location']);
+echo "<select name=\"timezone\">";
 while(list ($key, $value) = each($timezone_identifiers))
-{
-  if ($value == $locations->getTimezone($_GET['location']))
-  {
-    echo("<option value=\"$value\" selected>$value</option>\n");
-  }
-  else
-  {
-    echo("<option value=\"$value\">$value</option>\n");
-  }
-}
-
-echo("</select>");
-
-$lm = $locations->getLocationLimitingMagnitude($_GET['location']);
-$sb = $locations->getSkyBackground($_GET['location']);
-
-echo("</td>
-   </tr>
-
-   <tr>
-   <td class=\"fieldname\">" . LangAddSiteField7 . "
-   </td>
-   <td><input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"");
-
-   if ($lm > -900) 
-   {
-      echo ($lm);
-   } else {
-      echo ("");
-   }
-   echo ("\">
-   </td>
-   <td class=\"explanation\">" . LangAddSiteField7Expl . "</td>
-   </tr>
-
-   <tr>
-   <td class=\"fieldname\">" . LangAddSiteField8 . "</td>
-   <td><input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"");
-
-   if ($sb > -900) 
-   {
-      echo ($sb);
-   } else {
-      echo ("");
-   }
-   echo ("\">
-   </td>
-   <td class=\"explanation\">" . LangAddSiteField8Expl . "</td>
-   </tr>
-
-   <tr>
-   <td></td>
-   <td><input type=\"submit\" name=\"change\" value=\"");
-
-echo (LangAddSiteButton2);
-
-echo("\" /><input type=\"hidden\" name=\"id\" value=\"");
-
-echo ($_GET['location']);
-
-echo("\"></input></td>
-   <td></td>
-   </tr>
-   </table>
-   </form>");
-
-echo("</div>
-</div>
-</body>
-</html>");
+  echo "<option value=\"".$value."\"".(($value==$theTimeZone)?" selected":"")."> ".$value."</option>";
+echo "</select>";
+$lm = $objLocation->getLocationLimitingMagnitude($_GET['location']);
+$sb = $objLocation->getSkyBackground($_GET['location']);
+echo "</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td class=\"fieldname\">".LangAddSiteField7."</td>";
+echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"".(($lm > -900)?$lm:"")."\">";
+echo "</td>";
+echo "<td class=\"explanation\">" . LangAddSiteField7Expl . "</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td class=\"fieldname\">" . LangAddSiteField8 . "</td>";
+echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"".(($sb > -900)?$sb:"")."\">";
+echo "</td>";
+echo "<td class=\"explanation\">" . LangAddSiteField8Expl . "</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td></td>";
+echo "<td><input type=\"submit\" name=\"change\" value=\"".LangAddSiteButton2."\" /><input type=\"hidden\" name=\"id\" value=\"".$_GET['location']."\"></input></td>";
+echo "<td></td>";
+echo "</tr>";
+echo "</table>";
+echo "</form>";
+echo "</div>";
 
 ?>
