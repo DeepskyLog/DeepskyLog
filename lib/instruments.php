@@ -29,26 +29,9 @@ class Instruments
 
   $db->logout();
  }
-
-
- // getObserver returns the observerid for this instrument
- function getObserverFromInstrument($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM instruments WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $observer = $get->observer;
-
-  $db->logout();
-
-  return $observer;
+ function getObserverFromInstrument($id) // getObserver returns the observerid for this instrument
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT * FROM instruments WHERE id = \"$id\"",'observer');
  }
-
  // getId returns the id for this instrument
  function getInstrumentId($name, $observer)
  {
