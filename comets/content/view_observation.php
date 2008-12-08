@@ -8,40 +8,18 @@
 
 // include statements and creation of objects
 
-include_once "../lib/setup/databaseInfo.php";
-
-include_once "../lib/util.php";
-
-$util = new Util();
-$util->checkUserInput();
-
-include_once "../lib/cometobservations.php"; // observation table
-$observations = new CometObservations;
-
-include_once "../lib/instruments.php"; // instruments table
-$instruments = new Instruments;
-
-include_once "../lib/locations.php"; // locations table
-$locations = new Locations;
-
-include_once "../lib/observers.php"; // observers table
-$observers = new Observers;
-
-include_once "../lib/cometobjects.php"; // objects table
-$objects = new CometObjects;
-
-include_once "../lib/ICQMETHOD.php";
+include_once "lib/ICQMETHOD.php";
 $ICQMETHODS = new ICQMETHOD();
 
-include_once "../lib/ICQREFERENCEKEY.php";
+include_once "lib/ICQREFERENCEKEY.php";
 $ICQREFERENCEKEYS = new ICQREFERENCEKEY;
 
 if(!$_GET['observation']) // no observation defined 
 {
-   header("Location: ../index.php");
+   header("Location: ".$baseURL."index.php");
 }  
 
-if($observations->getObjectId($_GET['observation'])) // check if observation exists
+if($objCometObservation->getObjectId($_GET['observation'])) // check if observation exists
 {
 echo("<div id=\"main\">\n<h2>" . LangViewObservationTitle . "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 
@@ -55,12 +33,12 @@ if($_SESSION['observation_query']) // array of observations
 
    if ($previousObservation != "")
    {
-    echo "<a href=\"comets/detail_observation.php?observation=" . $previousObservation . "\">&lt</a>&nbsp;&nbsp;&nbsp;";
+    echo "<a href=\"".$baseURL."index.php?indexAction=comets_detail_observation&amp;observation=" . $previousObservation . "\">&lt</a>&nbsp;&nbsp;&nbsp;";
    }
 
    if ($nextObservation != "")
    {
-    echo "<a href=\"comets/detail_observation.php?observation=" . $nextObservation . "\">&gt;</a> ";
+    echo "<a href=\"".$baseURL."index.php?indexAction=comets_detail_observation&amp;observation=" . $nextObservation . "\">&gt;</a> ";
    }
 
 }
@@ -74,9 +52,9 @@ echo("<tr>\n
 
 echo LangViewObservationField1;
 
-echo("</td>\n<td>\n<a href=\"comets/detail_object.php?object=" . $observations->getObjectId($_GET['observation']) . "\">");
+echo("</td>\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($objCometObservation->getObjectId($_GET['observation'])) . "\">");
 
-echo($objects->getName($observations->getObjectId($_GET['observation'])));
+echo($objCometObject->getName($objCometObservation->getObjectId($_GET['observation'])));
 
 echo("</a></td></tr>");
 
@@ -86,9 +64,9 @@ echo("<tr><td class=\"fieldname\">");
 
 echo LangViewObservationField2;
 
-echo("</td><td><a href=\"common/detail_observer.php?user=" . $observations->getObserverId($_GET['observation']) . "&amp;back=detail_observation.php\">");
+echo("</td><td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($objCometObservation->getObserverId($_GET['observation'])) . "&amp;back=detail_observation.php\">");
 
-echo($observers->getFirstName($observations->getObserverId($_GET['observation'])) . "&nbsp;" . $observers->getName($observations->getObserverId($_GET['observation'])));
+echo($objObserver->getFirstName($objCometObservation->getObserverId($_GET['observation'])) . "&nbsp;" . $objObserver->getObserverName($objCometObservation->getObserverId($_GET['observation'])));
 
 print("</a></td></tr>");
 
@@ -102,13 +80,13 @@ echo LangViewObservationField5;
 echo("</td>
    <td>");
 
-$date = sscanf($observations->getDate($_GET['observation']), "%4d%2d%2d");
+$date = sscanf($objCometObservation->getDate($_GET['observation']), "%4d%2d%2d");
 
-if($observations->getTime($_GET['observation']) >= 0)
+if($objCometObservation->getTime($_GET['observation']) >= 0)
 {
-  if ($observers->getUseLocal($_SESSION['deepskylog_id']))
+  if ($objObserver->getUseLocal($_SESSION['deepskylog_id']))
   {
-    $date = sscanf($observations->getLocalDate($_GET['observation']), "%4d%2d%2d");
+    $date = sscanf($objCometObservation->getLocalDate($_GET['observation']), "%4d%2d%2d");
   }
 }
 
@@ -118,17 +96,17 @@ echo("</td></tr>");
 
 // TIME
 
-if($observations->getTime($_GET['observation']) >= 0)
+if($objCometObservation->getTime($_GET['observation']) >= 0)
 {
-  if ($observers->getUseLocal($_SESSION['deepskylog_id']))
+  if ($objObserver->getUseLocal($_SESSION['deepskylog_id']))
   {
     echo("<tr><td class=\"fieldname\">" . LangViewObservationField9lt . "</td><td>");
-    $time = $observations->getLocalTime($_GET['observation']);
+    $time = $objCometObservation->getLocalTime($_GET['observation']);
   }
   else
   {
     echo("<tr><td class=\"fieldname\">" . LangViewObservationField9 . "</td><td>");
-    $time = $observations->getTime($_GET['observation']);
+    $time = $objCometObservation->getTime($_GET['observation']);
   }
 
   $time = sscanf(sprintf("%04d", $time), "%2d%2d");
@@ -144,7 +122,7 @@ if($observations->getTime($_GET['observation']) >= 0)
 // inconsistency empty location == (0 | 1)
 // empty instrument == 0
 
-if ($observations->getLocationId($_GET['observation']) != 0 && $observations->getLocationId($_GET['observation']) != 1)
+if ($objCometObservation->getLocationId($_GET['observation']) != 0 && $objCometObservation->getLocationId($_GET['observation']) != 1)
 {
  print ("<tr><td class=\"fieldname\">");
 
@@ -152,7 +130,7 @@ if ($observations->getLocationId($_GET['observation']) != 0 && $observations->ge
 
  echo("</td><td>");
 
- echo("<a href=\"common/detail_location.php?location=" . $observations->getLocationId($_GET['observation']) . "\">" . $locations->getName($observations->getLocationId($_GET['observation'])) . "</a>");
+ echo("<a href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=" . urlencode($objCometObservation->getLocationId($_GET['observation'])) . "\">" . $objLocation->getLocationName($objCometObservation->getLocationId($_GET['observation'])) . "</a>");
 
  print("</td>
         </tr>");
@@ -160,7 +138,7 @@ if ($observations->getLocationId($_GET['observation']) != 0 && $observations->ge
 
 // INSTRUMENT & MAGNIFICATION
 
-if ($observations->getInstrumentId($_GET['observation']) != 0)
+if ($objCometObservation->getInstrumentId($_GET['observation']) != 0)
 {
  echo("<tr><td class=\"fieldname\">");
 
@@ -168,26 +146,26 @@ if ($observations->getInstrumentId($_GET['observation']) != 0)
 
  echo("</td><td>");
 
- $inst =  $instruments->getName($observations->getInstrumentId($_GET['observation']));
+ $inst =  $objInstrument->getInstrumentName($objCometObservation->getInstrumentId($_GET['observation']));
 
- if ($observations->getMagnification($_GET['observation']) != 0)
+ if ($objCometObservation->getMagnification($_GET['observation']) != 0)
  {
-  $inst = $inst." (".$observations->getMagnification($_GET['observation'])."x)";
+  $inst = $inst." (".$objCometObservation->getMagnification($_GET['observation'])."x)";
  }
 
- if (strcmp($instruments->getName($observations->getInstrumentId($_GET['observation'])), "Naked eye") == 0)
+ if (strcmp($objInstrument->getInstrumentName($objCometObservation->getInstrumentId($_GET['observation'])), "Naked eye") == 0)
  {
   $inst = InstrumentsNakedEye;
  }
 
- echo("<a href=\"common/detail_instrument.php?instrument=" . $observations->getInstrumentId($_GET['observation']) . "\">" . $inst . "</a>");
+ echo("<a href=\"".$baseURL."index.php?indexAction=detail_instrument.php?instrument=" . urlencode($objCometObservation->getInstrumentId($_GET['observation'])) . "\">" . $inst . "</a>");
 
  print("</td></tr>");
 }
 
 // USED METHOD
 
-if ($observations->getMethode($_GET['observation']) != "")
+if ($objCometObservation->getMethode($_GET['observation']) != "")
 {
  print ("<tr><td class=\"fieldname\">");
 
@@ -195,9 +173,9 @@ if ($observations->getMethode($_GET['observation']) != "")
 
  echo("</td><td>");
 
- $descr = $ICQMETHODS->getDescription($observations->getMethode($_GET['observation']));
+ $descr = $ICQMETHODS->getDescription($objCometObservation->getMethode($_GET['observation']));
 
- echo($observations->getMethode($_GET['observation']) . " - " . $descr);
+ echo($objCometObservation->getMethode($_GET['observation']) . " - " . $descr);
 
  print("</td>
         </tr>");
@@ -205,7 +183,7 @@ if ($observations->getMethode($_GET['observation']) != "")
 
 // USED CHART
 
-if ($observations->getChart($_GET['observation']) != "")
+if ($objCometObservation->getChart($_GET['observation']) != "")
 {
  print ("<tr><td class=\"fieldname\">");
 
@@ -213,9 +191,9 @@ if ($observations->getChart($_GET['observation']) != "")
 
  echo("</td><td>");
 
- $descr = $ICQREFERENCEKEYS->getDescription($observations->getChart($_GET['observation']));
+ $descr = $ICQREFERENCEKEYS->getDescription($objCometObservation->getChart($_GET['observation']));
 
- echo($observations->getChart($_GET['observation']) . " - " . $descr);
+ echo($objCometObservation->getChart($_GET['observation']) . " - " . $descr);
 
  print("</td>
         </tr>");
@@ -223,7 +201,7 @@ if ($observations->getChart($_GET['observation']) != "")
 
 // ESTIMATED MAGNITUDE
 
-if ($observations->getMagnitude($_GET['observation']) > -90)
+if ($objCometObservation->getMagnitude($_GET['observation']) > -90)
 {
  print ("<tr><td class=\"fieldname\">");
 
@@ -231,14 +209,14 @@ if ($observations->getMagnitude($_GET['observation']) > -90)
 
  echo("</td><td>");
 
- if($observations->getMagnitudeWeakerThan($_GET['observation']) == "1")
+ if($objCometObservation->getMagnitudeWeakerThan($_GET['observation']) == "1")
  {
     echo (LangNewComet3 . "&nbsp;");
  }
 
- echo($magnitude = sprintf("%01.1f", $observations->getMagnitude($_GET['observation'])));
+ echo($magnitude = sprintf("%01.1f", $objCometObservation->getMagnitude($_GET['observation'])));
 
- if($observations->getMagnitudeUncertain($_GET['observation']) == "1")
+ if($objCometObservation->getMagnitudeUncertain($_GET['observation']) == "1")
  {
     echo ("&nbsp;(" . LangNewComet2 . ")");
  }
@@ -249,7 +227,7 @@ if ($observations->getMagnitude($_GET['observation']) > -90)
 
 // DEGREE OF CONDENSATION
 
-if ($observations->getDc($_GET['observation']) != '')
+if ($objCometObservation->getDc($_GET['observation']) != '')
 {
  print ("<tr><td class=\"fieldname\">");
 
@@ -257,7 +235,7 @@ if ($observations->getDc($_GET['observation']) != '')
 
  echo("</td><td>");
 
- echo($observations->getDc($_GET['observation']));
+ echo($objCometObservation->getDc($_GET['observation']));
 
  print("</td>
         </tr>");
@@ -265,7 +243,7 @@ if ($observations->getDc($_GET['observation']) != '')
 
 // COMA
 
-if ($observations->getComa($_GET['observation']) > -90)
+if ($objCometObservation->getComa($_GET['observation']) > -90)
 {
  print ("<tr><td class=\"fieldname\">");
 
@@ -273,7 +251,7 @@ if ($observations->getComa($_GET['observation']) > -90)
 
  echo("</td><td>");
 
- echo($observations->getComa($_GET['observation'])."'");
+ echo($objCometObservation->getComa($_GET['observation'])."'");
 
  print("</td>
         </tr>");
@@ -281,7 +259,7 @@ if ($observations->getComa($_GET['observation']) > -90)
 
 // TAIL
 
-if ($observations->getTail($_GET['observation']) > -90)
+if ($objCometObservation->getTail($_GET['observation']) > -90)
 {
  print ("<tr><td class=\"fieldname\">");
 
@@ -289,7 +267,7 @@ if ($observations->getTail($_GET['observation']) > -90)
 
  echo("</td><td>");
 
- echo($observations->getTail($_GET['observation'])."'");
+ echo($objCometObservation->getTail($_GET['observation'])."'");
 
  print("</td>
         </tr>");
@@ -297,7 +275,7 @@ if ($observations->getTail($_GET['observation']) > -90)
 
 // PHASE ANGLE
 
-if ($observations->getPa($_GET['observation']) > -90)
+if ($objCometObservation->getPa($_GET['observation']) > -90)
 {
  print ("<tr><td class=\"fieldname\">");
 
@@ -305,7 +283,7 @@ if ($observations->getPa($_GET['observation']) > -90)
 
  echo("</td><td>");
 
- echo($observations->getPa($_GET['observation'])."&deg;");
+ echo($objCometObservation->getPa($_GET['observation'])."&deg;");
 
  print("</td>
         </tr>");
@@ -313,7 +291,7 @@ if ($observations->getPa($_GET['observation']) > -90)
 
 // DESCRIPTION
 
-$description = $observations->getDescription($_GET['observation']);
+$description = $objCometObservation->getDescription($_GET['observation']);
 
 if ($description != "")
 {
@@ -335,7 +313,7 @@ if ($description != "")
 echo("<tr><td colspan=\"2\">");
 
 $upload_dir = 'cometdrawings';
-$dir = opendir($upload_dir);
+$dir = opendir($instDir.'comets/'.$upload_dir);
 
 while (FALSE !== ($file = readdir($dir)))
 {
@@ -343,10 +321,9 @@ while (FALSE !== ($file = readdir($dir)))
    {
    continue; // skip current directory and directory above
    }
-   if(fnmatch($_GET['observation'] . "_resized.gif", $file) || fnmatch($_GET['observation'] . "_resized.jpg",
-$file) || fnmatch($_GET['observation']. "_resized.png", $file))
+   if(fnmatch($_GET['observation'] . "_resized.gif", $file) || fnmatch($_GET['observation'] . "_resized.jpg", $file) || fnmatch($_GET['observation']. "_resized.png", $file))
    {
-   echo("<p><a href=\"comets/" . $upload_dir . "/" . $_GET['observation'] . ".jpg" . "\"><img class=\"account\" src=\"comets/$upload_dir" . "/" . "$file\">
+   echo("<p><a href=\"".$basqeURL."comets/" . $upload_dir . "/" . $_GET['observation'] . ".jpg" . "\"><img class=\"account\" src=\"comets/$upload_dir" . "/" . "$file\">
          </img></a></p>");
    }
 }
@@ -359,7 +336,7 @@ $role = $obs->getRole($_SESSION['deepskylog_id']);
 
 if ($role == RoleAdmin || $role == RoleCometAdmin)
 {
-echo("<p><a href=\"comets/adapt_observation.php?observation=" . $_GET['observation'] . "\">" . LangChangeObservationTitle . "</a></p>");
+echo("<p><a href=\"".$baseURL."index.php?indexAction=comets_adapt_observation&amp;observation=" . $_GET['observation'] . "\">" . LangChangeObservationTitle . "</a></p>");
 
 //echo("<p><a href=\"comets/control/validate_delete_observation.php?observationid=" . $_GET['observation'] . "\">" . LangDeleteObservation . "</a></p>");
 }

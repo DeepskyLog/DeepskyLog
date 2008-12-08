@@ -2,11 +2,6 @@
 
 // detail_observation.php
 // show details of one observation 
-include_once "../lib/setup/databaseInfo.php";
-include_once "../lib/util.php";
-
-$util = new Util();
-$util->checkUserInput();
 
 $_SESSION['module'] = "comets";
 

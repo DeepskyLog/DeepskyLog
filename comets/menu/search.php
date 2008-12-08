@@ -3,12 +3,6 @@
 // search.php
 // menu which allows the user to search the observation database 
 
-include_once "../lib/observers.php";
-include_once "../lib/setup/vars.php";
-include_once "../lib/util.php";
-
-$util = new Util();
-$util->checkUserInput();
 
 $obs = new Observers;
 

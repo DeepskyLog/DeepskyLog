@@ -3,12 +3,6 @@
 // change.php
 // menu which allows the user to add or change things in the database
 
-include_once "../lib/observers.php";
-include_once "../lib/util.php";
-
-$util = new Util();
-$util->checkUserInput();
-
 echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">\n
       <tr>\n
       <th valign=\"top\">\n";

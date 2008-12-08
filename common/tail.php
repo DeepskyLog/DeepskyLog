@@ -9,11 +9,13 @@ echo "</table>";
 echo "</td>";
 echo "</tr>";
 echo "</table>";
+/*
 echo "<div class=\"back_button\">";
 echo "<a href='javascript:history.go(-1)'>";
 echo "[".LangBack."]";
 echo "</a>";
 echo "</div>";
+*/
 echo "</td>";
 echo "</tr>";
 echo "</table>";

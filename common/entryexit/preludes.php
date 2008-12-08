@@ -24,10 +24,11 @@ require_once "lib/eyepieces.php";
 require_once "lib/observations.php";
 require_once "lib/lists.php";
 require_once "lib/objects.php";
-require_once "lib/cometobservations.php";
 require_once "common/layout/tables.php";
 require_once "common/control/ra_to_hms.php";
 require_once "common/control/dec_to_dm.php";
+include_once "lib/cometobservations.php";
+include_once "lib/cometobjects.php";
 
 // pagenumbers
 if(array_key_exists('min',$_GET))

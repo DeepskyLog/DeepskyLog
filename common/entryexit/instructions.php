@@ -1,8 +1,9 @@
 <?php
 
 //============================================================================== COMMON INSTRUCTIONS
-
-
+while(list($key,$value)=each($modules))
+  if($objUtil->checkGetKey('indexAction')=='module'.$value)
+    $_SESSION['module']=$value;
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="change_role"))
   require_once $instDir."/common/control/change_role.php";
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="check_login"))

@@ -428,4 +428,5 @@ class CometObjects
   $db->logout();
  }
 }
+$objCometObject=new CometObjects;
 ?>

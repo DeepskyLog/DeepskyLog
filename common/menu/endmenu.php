@@ -70,12 +70,12 @@ echo "<tr>";
 echo "<td height=\"30\" valign=\"top\">";
 for ($i = 0; $i < count($modules);$i++)
 { $mod = $modules[$i];
-  echo "<a href=\"".$mod."/\">".$$mod."</a><br />";
+  echo "<a href=\"".$baseURL."index.php?indexAction=module".$mod."\">".$GLOBALS[$mod]."</a><br />";
 }
 echo "</td>";
 echo "</tr>";
 echo "<tr>";
-if ($_SESSION['module'] == "deepsky")
+if ($_SESSION['module']=="deepsky")
   echo "<th valign=\"top\">".LangQuickPickTitle."</th>";
 echo "</tr>";
 echo "<tr>";

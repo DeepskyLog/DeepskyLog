@@ -17,7 +17,7 @@ class util
 	{ $this->checkUserInput();
   }
   private function utilitiesGetIndexActionDefaultAction()
-  { if($_SESSION['module']='deepsky')
+  { if($_SESSION['module']=='deepsky')
 	  { $_GET['catalogue']='%';
   	  $theDate = date('Ymd', strtotime('-1 year'));
       $_GET['minyear'] = substr($theDate,0,4);
@@ -26,7 +26,7 @@ class util
   	  return 'deepsky/content/selected_observations2.php';
 		}
 		else
-		  throw new Exception("No default action yet for comets in funtcion utilitiesGetIndexActionCommonDefaultAction in util.php");	
+		  return 'comets/content/overview_observations.php';	
   }
   private function utilitiesCheckIndexActionDSquickPick()
   { if(array_key_exists('indexAction',$_GET)&&($_GET['indexAction'] == 'quickpick'))
@@ -1549,7 +1549,7 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_eyepiece','common/content/view_eyepiece.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_filter','common/content/view_filter.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_instrument','common/content/view_instrument.php')))		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_lens','common/ontent/view_lens.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_lens','common/content/view_lens.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_location','common/content/view_location.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_observer','common/content/view_observer.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('search_sites','common/content/search_locations.php')))
@@ -1562,6 +1562,24 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_lenses','common/content/overview_lenses.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_locations','common/content/overview_locations.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_observers','common/content/overview_observers.php')))
+    
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_all_observations','comets/content/overview_observations.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_detail_object','comets/content/view_object.php'))) 
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_detail_observation','comets/content/view_observation.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_adapt_observation','comets/content/change_observation.php')))
+
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_all_observations','comets/all_observations.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_all_observations','comets/all_observations.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_all_observations','comets/all_observations.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_all_observations','comets/all_observations.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_all_observations','comets/all_observations.php')))
+    
+    
+    
+    
+    
+    
+        
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSquickPick()))
       $indexActionInclude=$this->utilitiesGetIndexActionDefaultAction();
     return $indexActionInclude;
