@@ -1530,7 +1530,6 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('query_observations','deepsky/content/setup_observations_query.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('query_objects','deepsky/content/setup_objects_query.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('rank_objects','deepsky/content/top_objects.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('report_message','common/report_message.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('view_image','deepsky/content/show_image.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('listaction','deepsky/content/tolist.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll('view_observer_catalog','deepsky/content/details_observer_catalog.php')))

@@ -158,7 +158,7 @@ if ($objCometObservation->getInstrumentId($_GET['observation']) != 0)
   $inst = InstrumentsNakedEye;
  }
 
- echo("<a href=\"".$baseURL."index.php?indexAction=detail_instrument.php?instrument=" . urlencode($objCometObservation->getInstrumentId($_GET['observation'])) . "\">" . $inst . "</a>");
+ echo("<a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=" . urlencode($objCometObservation->getInstrumentId($_GET['observation'])) . "\">" . $inst . "</a>");
 
  print("</td></tr>");
 }

@@ -23,8 +23,8 @@ if ($_POST['newobject']) // pushed add new object button
 
   if (!$_POST['name'])
   {
-    $_SESSION['message'] = LangValidateObjectMessage1;
-    header("Location:../../common/error.php");
+    $entryMessage = LangValidateObjectMessage1;
+    $_GET['indexAction']='default_action';
   }
   else // all required fields filled in
   {
@@ -34,9 +34,9 @@ if ($_POST['newobject']) // pushed add new object button
     $query1 = array("name" => $name);
 	  if(count($objects->getObjectFromQuery($query1, "name")) > 0) // object already exists
     {
-      $_SESSION['message'] = LangValidateObjectMessage2;
-      header("Location:../../common/error.php");
-    }
+    $entryMessage = LangValidateObjectMessage2;
+    $_GET['indexAction']='default_action';
+          }
     else
     {
     // fill database

@@ -610,7 +610,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
       echo("<tr $typefield>\n
             <td><a href=\"comets/detail_object.php?object=" . $object . "\">" . $objects->getName($object) . "</a></td>\n
-            <td><a href=\"common/detail_observer.php?user=" . $observer . "\">" . $observers->getFirstName($observer) . "&nbsp;" . $observers->getName($observer) . "</a></td>\n
+            <td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($observer) . "\">" . $observers->getFirstName($observer) . "&nbsp;" . $observers->getName($observer) . "</a></td>\n
             <td>");
 
       if($instrument != InstrumentsNakedEye && $instrument != "")

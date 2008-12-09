@@ -272,7 +272,7 @@ echo("<tr><td class=\"fieldname\">" . LangViewObservationField4 . "</td><td><sel
          }
       }
 
-    echo("</select></td><td class=\"explanation\"><a href=\"common/add_site.php\">" . LangChangeAccountField7Expl ."</a></td></tr>");
+    echo("</select></td><td class=\"explanation\"><a href=\"".$baseURL."index.php?indexAction=add_site.php\">" . LangChangeAccountField7Expl ."</a></td></tr>");
 
 // INSTRUMENT
 
@@ -318,7 +318,7 @@ echo("<option value=\"\"></option>\n"); // include empty instrument
          echo("$instrumentname</option>\n");
       }
 
-echo("</select></td><td class=\"explanation\"><a href=\"common/add_instrument.php\">" . LangChangeAccountField8Expl . "</a>
+echo("</select></td><td class=\"explanation\"><a href=\"".$baseURL."index.php?indexAction=add_instrument.php\">" . LangChangeAccountField8Expl . "</a>
    </td></tr>");
 
 // MAGNIFICATION

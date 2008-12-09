@@ -27,13 +27,13 @@ if($_SESSION['deepskylog_id'] != "admin") // admin doesn't have to add a new obs
    echo "</a>\n</td>\n</tr>\n";
 }
 
-echo "<tr align=\"left\">\n<td>\n<a href=\"common/add_instrument.php\" class=\"mainlevel\">";
+echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=add_instrument.php\" class=\"mainlevel\">";
 
 echo (LangChangeMenuItem3);
 
 echo "</a>\n</td>\n</tr>\n";
 
-echo "<tr align=\"left\">\n<td>\n<a href=\"common/add_site.php\" class=\"mainlevel\">";
+echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=add_site.php\" class=\"mainlevel\">";
 
 echo (LangChangeMenuItem4);
 

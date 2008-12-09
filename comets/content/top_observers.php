@@ -66,7 +66,7 @@
     $name = $obs->getName($key);
     $firstname = $obs->getFirstName($key);
 
-    echo "<tr $type><td>" . ($count + 1) . "</td><td> <a href=\"common/detail_observer.php?user=" . $key . "\">$firstname&nbsp;$name</a> </td>";
+    echo "<tr $type><td>" . ($count + 1) . "</td><td> <a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($key) . "\">$firstname&nbsp;$name</a> </td>";
 
     echo "<td> $value &nbsp;&nbsp;&nbsp;&nbsp;(".sprintf("%.2f", (($value / $numberOfObservations) * 100))."%)</td>";
 

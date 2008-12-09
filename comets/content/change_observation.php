@@ -51,7 +51,7 @@ echo("<tr><td class=\"fieldname\">");
 
 echo LangViewObservationField2;
 
-echo("</td><td><a href=\"common/detail_observer.php?user=" . $cometobservations->getObserverId($_GET['observation']) . "\">");
+echo("</td><td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($cometobservations->getObserverId($_GET['observation'])) . "\">");
 
 echo($observers->getFirstName($cometobservations->getObserverId($_GET['observation'])) . "&nbsp;" . $observers->getName($cometobservations->getObserverId($_GET['observation'])));
 

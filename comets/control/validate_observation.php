@@ -24,16 +24,16 @@ if($_SESSION['deepskylog_id']) // logged in
       {
          // user forgot required field
 
-         $_SESSION['message'] = LangValidateObservationMessage1;
-         header("Location:../../common/error.php");
-      }
+    $entryMessage = LangValidateObservationMessage1;
+    $_GET['indexAction']='default_action';
+               }
       else // all fields filled in
       {
          if($_FILES['drawing']['size'] > $maxFileSize) // file size of drawing too big
          {
-            $_SESSION['message'] = LangValidateObservationMessage6;
-            header("Location:../../common/error.php");
-         }
+   $entryMessage = LangValidateObservationMessage6;
+    $_GET['indexAction']='default_action';
+         	         }
          else
          {
             $date = $_POST['year'] . sprintf("%02d", $_POST['month']) . sprintf("%02d", $_POST['day']);

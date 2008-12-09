@@ -21,14 +21,14 @@ if($_POST['changeobservation']) // pushed change observation button
 {
    if(!$_POST['day'] || !$_POST['month'] || !$_POST['year'] || (!$_POST['hours'] && strcmp($_POST['hours'], 0) != "0") || (!$_POST['minutes'] && strcmp($_POST['minutes'], 0) != "0"))
    {
-       $_SESSION['message'] = LangValidateObservationMessage1;
-       header("Location:../../common/error.php");
+       $entryMessage = LangValidateObservationMessage1;
+       $_GET['indexAction']='default_action';
    }
    elseif($_FILES['drawing']['size'] > $maxFileSize) // file size of drawing too big
    {
-       $_SESSION['message'] = LangValidateObservationMessage6;
-       header("Location:../../common/error.php");
-   }
+       $entryMessage = LangValidateObservationMessage6;
+       $_GET['indexAction']='default_action';
+          }
 
    elseif($_POST['observationid']) // all fields filled in and observationid given
    {
@@ -122,15 +122,15 @@ if($_POST['changeobservation']) // pushed change observation button
 
       if($_FILES['drawing']['tmp_name'] != "")
       {
-         $upload_dir = '../cometdrawings';
-         $dir = opendir($upload_dir);
+         $upload_dir = 'cometdrawings';
+         $dir = opendir($instDir."comets/".$upload_dir);
 
 // resize code
 
-         include "../../common/control/resize.php";
+         include "common/control/resize.php";
 
          $original_image = $_FILES['drawing']['tmp_name'];
-         $destination_image = $upload_dir . "/" . $_POST['observationid'] . "_resized.jpg";
+         $destination_image = $instDir."comets/".$upload_dir . "/" . $_POST['observationid'] . "_resized.jpg";
          $max_width = "490";
          $max_height = "490";
          $resample_quality = "100";
@@ -138,7 +138,7 @@ if($_POST['changeobservation']) // pushed change observation button
          $new_image = image_createThumb($original_image, $destination_image, $max_width, $max_height, $resample_quality);
 
 
-          move_uploaded_file($_FILES['drawing']['tmp_name'], $upload_dir . "/" . $_POST['observationid'] . ".jpg");
+          move_uploaded_file($_FILES['drawing']['tmp_name'], $instDir."comets/".$upload_dir . "/" . $_POST['observationid'] . ".jpg");
       }
 
             // save current details for faster submission of multiple observations
@@ -151,20 +151,22 @@ if($_POST['changeobservation']) // pushed change observation button
             $_SESSION['seeing'] = $_POST['seeing']; // save current seeing
             $_SESSION['savedata'] = "yes"; // session variable to tag multiple observations
 
-      header("Location:../detail_observation.php?observation=" . $_POST['observationid'] . "&new=yes");
+      $_GET['indexAction']="detail_observation';
+      $_GET['observation']=$_POST['observationid'];
+      $_GET['new']="yes";
 
    } // end if own observation.php
    else // try to change an observation which doesn't belong to the observer logged in
    {
       unset($_SESSION['deepskylog_id']);
-      header("Location: ../index.php"); // back to entrance page
-   }
+       $_GET['indexAction']='default_action';
+         }
  }
  else // no observation id given
   {
       unset($_SESSION['deepskylog_id']);
-      header("Location: ../index.php"); // back to entrance page
-  }
+       $_GET['indexAction']='default_action';
+        }
 
 }
 ?>

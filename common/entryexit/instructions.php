@@ -6,8 +6,6 @@ while(list($key,$value)=each($modules))
     $_SESSION['module']=$value;
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="change_role"))
   require_once $instDir."/common/control/change_role.php";
-if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="check_login"))
-  require_once $instDir."/common/control/check_login.php";
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="common_control_validate_account"))
   require_once $instDir."/common/control/validate_account.php";
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_delete_eyepiece"))

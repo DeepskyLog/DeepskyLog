@@ -1,9 +1,7 @@
 <?php
-include 'common/head.php';                                                   // HTML head
+include 'common/menu/head.php';                                                   // HTML head
 $head = new head();
 $head->printHeader($browsertitle);
-$head->printMenu();
-$head->printMeta("DeepskyLog");
 include 'common/menu/headmenu.php';                                          // HEAD MENU
 menu($title);                                                                   // SUBTITLE
 include 'common/menu/login.php';

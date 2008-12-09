@@ -152,7 +152,7 @@ if(isset($_GET['objectname']))
 
         echo("<td>");
 
-        echo("<a href=\"common/detail_observer.php?user=" . $observer . "\">" . $observers->getFirstName($observer) . "&nbsp;" . $observers->getName($observer) . "</a>");
+        echo("<a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($observer) . "\">" . $observers->getFirstName($observer) . "&nbsp;" . $observers->getName($observer) . "</a>");
 
         echo("</td>");
 

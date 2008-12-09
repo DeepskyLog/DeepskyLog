@@ -18,8 +18,8 @@ $objects = new CometObjects;
 if(!$_POST['name'])
 {
   // error
-  $_SESSION['message'] = LangValidateObservationMessage1;
-  header("Location:../../common/error.php");
+  $entryMessage = LangValidateObservationMessage1;
+  $_GET['indexAction']='default_action';
 }
 else
 {
@@ -37,19 +37,21 @@ else
      $objects->setName($_POST['object'], $name);
      $objects->setIcqName($_POST['object'], $icqname);
 
-     header("Location:../detail_object.php?object=" . $_POST['object']);
+  $_GET['object']=$_POST['oject'];
+  $_GET['indexAction']='detail_object';
+     
 
    }
    else // not logged in as admin
    {
-      unset($_SESSION['deepskylog_id']);
-      header("Location: ../index.php"); // back to entrance page
-   }
+  $_GET['object']=$_POST['oject']
+  $_GET['indexAction']='default_action';
+   	   }
    }
    else // no comet id given
    {
-      unset($_SESSION['deepskylog_id']);
-      header("Location: ../index.php"); // back to entrance page
-   }
+  $_GET['object']=$_POST['oject']
+  $_GET['indexAction']='default_action';
+   	   }
 }
 ?>
