@@ -16,12 +16,11 @@ echo "<META NAME=\"author\" CONTENT=\"DeepskyLog - VVS\">";
 echo "<title>DeepskyLog ". $GLOBALS['objUtil']->checkGetKey('indexAction','')."</title>";  // 20081209 Here should come a better solution, see bug report 44
 echo "<meta name=\"description\" content=\"Vereniging voor sterrenkunde\" />";
 echo "<meta name=\"keywords\" content=\"VVS, Vereniging Voor Sterrenkunde, astronomie, sterrenkunde, JVS, Heelal, Astra, Hemelkalender, Sterrenkijkdag, Sterrenkijkdagen, sterr, Nieuws, Laatste nieuws\" />";
-echo "<meta name=\"Generator\" content=\"Mambo - Copyright 2000 - 2005 Miro International Pty Ltd.  All rights reserved.\" />";
 echo "<meta name=\"robots\" content=\"index, follow\" />";
 echo "<base href=\"" . $baseURL . "\" />";
-echo "<link rel=\"shortcut icon\" href=\"/vvs/images/favicon.ico\" />";
-echo "<link href=\"vvs/css/template_css.css\" rel=\"stylesheet\" type=\"text/css\" />";
-echo "<link href=\"styles/style.css\" rel=\"stylesheet\" type=\"text/css\" />";
+echo "<link rel=\"shortcut icon\" href=\"".$baseURL."/vvs/images/favicon.ico\" />";
+echo "<link href=\"".$baseURL."vvs/css/template_css.css\" rel=\"stylesheet\" type=\"text/css\" />";
+echo "<link href=\"".$baseURL."styles/style.css\" rel=\"stylesheet\" type=\"text/css\" />";
 echo "</head>";
 
 ?>
