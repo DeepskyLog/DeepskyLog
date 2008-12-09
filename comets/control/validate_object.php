@@ -6,12 +6,11 @@
 
 // Version 0.1: 20050921, WDM
 
-session_start(); // start session
 
-include "../../lib/cometobjects.php";
-include_once "../../lib/observers.php";
-include_once "../../lib/setup/vars.php";
-include_once "../../lib/util.php";
+include_once "lib/cometobjects.php";
+include_once "lib/observers.php";
+include_once "lib/setup/vars.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -45,12 +44,13 @@ if ($_POST['newobject']) // pushed add new object button
       {
         $objects->setIcqName($id, $_POST['icqname']);
       }
-      header("Location:../detail_object.php?object=" . $id);
+      $_GET['indexAction']='comets_detail_object';
+      $_GET['object']=$id;
     }
   }
 }
 elseif ($_POST['clearfields']) // pushed clear fields button
 {
-   header("Location:../add_object.php");
+   $_GET['indexAction'] = 'comets_add_object';
 }
 ?>

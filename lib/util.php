@@ -1566,14 +1566,29 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_detail_object','comets/content/view_object.php'))) 
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_detail_observation','comets/content/view_observation.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_adapt_observation','comets/content/change_observation.php')))
-
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_all_observations','comets/all_observations.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_all_observations','comets/all_observations.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_all_observations','comets/all_observations.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_all_observations','comets/all_observations.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_all_observations','comets/all_observations.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_add_observation','comets/content/new_observation.php')))   
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_result_query_observations','comets/content/selected_observations.php')))   
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_detail_observation','comets/content/view_observation.php')))   
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_add_object','comets/content/new_object.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('comets_detail_object','comets/content/view_object.php')))
     
-    
+        if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
+            if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
+            if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
+                if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
+                if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
+                    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
+                    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
+                        if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
+                        if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
+                            if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
+                            if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
+                                if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
+                                if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
+                                    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
+                                    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
+                                        if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
+                                    
     
     
     

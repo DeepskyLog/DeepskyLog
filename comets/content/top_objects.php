@@ -3,9 +3,9 @@
 // top_objects.php
 // generates an overview of all observed objects and their rank 
 
-  include_once "../lib/cometobjects.php";
-  include_once "../lib/cometobservations.php";
-  include_once "../lib/util.php";
+  include_once "lib/cometobjects.php";
+  include_once "lib/cometobservations.php";
+  include_once "lib/util.php";
 
   $obs = new CometObjects;
   $observations = new CometObservations;
@@ -64,7 +64,7 @@
      $type = "class=\"type2\"";
     }
 
-    echo "<tr $type><td>" . ($count + 1) . "</td><td> <a href=\"comets/detail_object.php?object=" . $key . "\">".$object->getName($key)."</a> </td>";
+    echo "<tr $type><td>" . ($count + 1) . "</td><td> <a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($key) . "\">".$object->getName($key)."</a> </td>";
 
     echo "<td> $value </td>";
    

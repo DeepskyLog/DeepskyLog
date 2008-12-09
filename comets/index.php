@@ -5,7 +5,7 @@
 // version 0.2, JV 20050203
 // version 3.1, DE 20061124
 
-include_once "../lib/util.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -19,7 +19,7 @@ if((!array_key_exists('module',$_SESSION)) ||
   setcookie("module","comets", $cookietime, "/");
 }
 
-include_once "../lib/setup/databaseInfo.php";
+include_once "lib/setup/databaseInfo.php";
 
 include("../common/head.php");                 // HTML head
 

@@ -113,7 +113,7 @@ if ($object) {
 	echo "<td>";
 	echo "<select name=\"instrument\" style=\"width: 250px\">";
 	echo "<option value=\"\"></option>";
-	$instr = $GLOBALS['objInstrument']->getSortedInstrumentsList("name", $_SESSION['deepskylog_id'], false, InstrumentsNakedEye);
+	$instr = $GLOBALS['objInstrument']->getSortedInstrumentsList("name", $_SESSION['deepskylog_id'], false);
 	while (list ($key, $value) = each($instr))
 		echo "<option " . (($GLOBALS['objUtil']->checkPostKey('instrument', 0) == $value[0]) ? "selected=\"selected\"" : (($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']) == $value[0]) ? "selected=\"selected\"" : '')) . " value=\"" . $value[0] . "\">" . $value[1] . "</option>";
 	echo "</select>";

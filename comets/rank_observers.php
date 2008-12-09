@@ -2,8 +2,8 @@
 
 // rank_observers.php
 // shows the rank of all observers 
-include_once "../lib/setup/databaseInfo.php";
-include_once "../lib/util.php";
+include_once "lib/setup/databaseInfo.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();

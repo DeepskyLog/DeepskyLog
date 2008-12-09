@@ -4,8 +4,8 @@
 // interface to query comets
 // version 0.4: 2005/09/21, WDM
 
-include_once "../lib/cometobjects.php";
-include_once "../lib/util.php";
+include_once "lib/cometobjects.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();

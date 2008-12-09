@@ -64,9 +64,15 @@ else
 {	$_SESSION['deepskylog_id']='';
 	setcookie("deepskylogsec","",time()-3600,"/");
 }
-if(isset($_COOKIE['module']))
-	$_SESSION['module']=$_COOKIE['module'];
-else
+if(((!array_key_exists('module',$_SESSION))||(!$_SESSION['module']))&&isset($_COOKIE['module']))
+{	$_SESSION['module']=$_COOKIE['module'];
+  $objUtil->utilitiesSetModuleCookie($_SESSION['module']);
+}
+elseif((!array_key_exists('module',$_SESSION))||(!$_SESSION['module']))
+{ $_SESSION['module']=$modules[0];
+  $objUtil->utilitiesSetModuleCookie($_SESSION['module']);
+}
+if(!in_array($_SESSION['module'],$modules))
 { $_SESSION['module']=$modules[0];
   $objUtil->utilitiesSetModuleCookie($_SESSION['module']);
 }

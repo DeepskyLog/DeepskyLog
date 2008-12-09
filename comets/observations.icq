@@ -4,8 +4,8 @@
 
   $_SESSION['module'] = "comets";
 
-  include_once "../lib/cometobservations.php";
-  include_once "../lib/util.php";
+  include_once "lib/cometobservations.php";
+  include_once "lib/util.php";
   $util = new util;
   $util->checkUserInput();
 

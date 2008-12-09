@@ -1,9 +1,6 @@
 <?php
 include 'common/menu/head.php';                                                   // HTML head
-$head = new head();
-$head->printHeader($browsertitle);
-include 'common/menu/headmenu.php';                                          // HEAD MENU
-menu($title);                                                                   // SUBTITLE
+include 'common/menu/headmenu.php';                                               // HEAD MENU
 include 'common/menu/login.php';
 include $_SESSION['module'].'/menu/search.php';                           // SEARCH MENU
 if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])  // LOGGED IN

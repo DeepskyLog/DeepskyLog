@@ -3,9 +3,9 @@
 // top_observers.php
 // generates an overview of all observers and their rank 
 
-  include_once "../lib/observers.php";
-  include_once "../lib/cometobservations.php";
-  include_once "../lib/util.php";
+  include_once "lib/observers.php";
+  include_once "lib/cometobservations.php";
+  include_once "lib/util.php";
 
   $obs = new Observers;
   $observations = new CometObservations;
@@ -63,7 +63,7 @@
      $type = "class=\"type2\"";
     }
  
-    $name = $obs->getName($key);
+    $name = $obs->getObserverName($key);
     $firstname = $obs->getFirstName($key);
 
     echo "<tr $type><td>" . ($count + 1) . "</td><td> <a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($key) . "\">$firstname&nbsp;$name</a> </td>";

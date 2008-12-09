@@ -21,7 +21,7 @@ if($_SESSION['deepskylog_id']) // logged in
    {
       if($_SESSION['deepskylog_id'] != "admin") // admin doesn't have own observations
       {
-      echo "<tr align=\"left\">\n<td>\n<a class=\"mainlevel\" href=\"comets/result_query_observations.php?user=" . $_SESSION['deepskylog_id'] . "\">";
+      echo "<tr align=\"left\">\n<td>\n<a class=\"mainlevel\" href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;user=" . urlencode($_SESSION['deepskylog_id']) . "\">";
       echo (LangSearchMenuItem1);
       echo "</a>\n</td>\n</tr>\n";
       }
@@ -29,38 +29,38 @@ if($_SESSION['deepskylog_id']) // logged in
 }
 
 
-echo "<tr align=\"left\">\n<td>\n<a href=\"comets/all_observations.php\" class=\"mainlevel\">";
+echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_all_observations\" class=\"mainlevel\">";
 
 echo (LangSearchMenuItem2);
 
 echo "</a>\n</td>\n</tr>\n";
 
-echo "<tr align=\"left\">\n<td>\n<a href=\"comets/query_observations.php\" class=\"mainlevel\">";
+echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_query_observations\" class=\"mainlevel\">";
 
 echo (LangSearchMenuItem3);
 
 echo "</a>\n</td>\n</tr>\n";
 
-echo "<tr align=\"left\">\n<td>\n<a href=\"comets/view_objects.php\" class=\"mainlevel\">";
+echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_view_objects\" class=\"mainlevel\">";
 
 echo (LangSearchMenuItem4);
 
 echo "</a>\n</td>\n</tr>\n";
 
-echo "<tr align=\"left\">\n<td>\n<a href=\"comets/query_objects.php\" class=\"mainlevel\">";
+echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_query_objects\" class=\"mainlevel\">";
 
 echo (LangSearchMenuItem5);
 
 echo "</a>\n</td>\n</tr>\n";
 
-echo "<tr align=\"left\">\n<td>\n<a href=\"comets/rank_observers.php\" class=\"mainlevel\">";
+echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_rank_observers\" class=\"mainlevel\">";
 
 echo (LangSearchMenuItem6);
 
 echo "</a>\n</td>\n</tr>\n";
 
 
-echo "<tr align=\"left\">\n<td>\n<a href=\"comets/rank_objects.php\" class=\"mainlevel\">";
+echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_rank_objects\" class=\"mainlevel\">";
 
 echo (LangSearchMenuItem7);
 

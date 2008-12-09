@@ -5,9 +5,9 @@
 
 session_start(); // start session
 
-include_once "../lib/cometobjects.php";
-include_once "../lib/setup/language.php";
-include_once "../lib/util.php";
+include_once "lib/cometobjects.php";
+include_once "lib/setup/language.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();

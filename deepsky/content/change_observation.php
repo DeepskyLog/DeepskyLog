@@ -1,6 +1,5 @@
 <?php
-
-// adapt_observation.php
+// change_observation.php
 // allows a user to change his observation 
 
 if (!$_GET['observation'])
@@ -71,7 +70,7 @@ echo LangViewObservationField3;
 echo "</td>";
 echo "<td>"; // INSTRUMENTS
 echo "<select name=\"instrument\">";
-$instr = $objInstrument->getSortedInstrumentsList("name", $_SESSION['deepskylog_id'], false, InstrumentsNakedEye);
+$instr = $objInstrument->getSortedInstrumentsList("name", $_SESSION['deepskylog_id'], false);
 $theInstr = $objObservation->getDsObservationInstrumentId($_GET['observation']);
 while (list ($key, $value) = each($instr))
 	echo "<option " . (($theInstr == $value[0]) ? "selected=\"selected\"" : '') . " value=\"" . $value[0] . "\">" . $value[1] . "</option>";

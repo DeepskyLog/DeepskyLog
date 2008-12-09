@@ -174,7 +174,7 @@ class CometObjects
    $sqland = 1;
   }
 
-  if ($queries["icqname"] != "")
+  if (array_key_exists('icqname',$queries) && $queries["icqname"] != "")
   {
    $icqname = $queries["icqname"];
    if ($sqland == 1)
@@ -187,7 +187,7 @@ class CometObjects
   $sql = $sql.";";
 
   $run = mysql_query($sql) or die(mysql_error());
-
+  $obs=array();
   while($get = mysql_fetch_object($run))
   {
    $obs[] = $get->name;

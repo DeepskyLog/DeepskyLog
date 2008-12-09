@@ -4,9 +4,9 @@
 // allows the user to add a comet to the database 
 // Version 0.1: 2005/09/21, WDM
 
-include_once "../lib/cometobjects.php";
-include_once "../lib/setup/language.php";
-include_once "../lib/util.php";
+include_once "lib/cometobjects.php";
+include_once "lib/setup/language.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -19,7 +19,7 @@ echo (LangNewObjectTitle);
 
 echo("</h2>\n<table width=\"490\">\n");
 
-echo("<form action=\"comets/control/validate_object.php\" method=\"post\">");
+echo("<form action=\"".$baseURL."index.php?indexAction=comets_validate_object\" method=\"post\">");
 
 // NAME
 

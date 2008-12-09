@@ -273,6 +273,7 @@ echo "<table class=\"blog2\" cellpadding=\"0\" cellspacing=\"0\">";
 echo "<tr>";
 echo "<td valign=\"top\">";
 echo "<div>";
+/*
 echo "<table class=\"contentpaneopen\">";
 echo "<tr>";
 echo "<td class=\"contentheading\" width=\"100%\">";
@@ -284,7 +285,8 @@ echo "</div>";
 echo "</td>";
 echo "</tr>";
 echo "</table>";
-echo "<table class=\"contentpaneopen\">";
+*/
+echo "<table class=\"contentpaneopen\" width=\"100%\">";
 echo "<tr>";
 echo "<td valign=\"top\" colspan=\"2\">";
 ?>

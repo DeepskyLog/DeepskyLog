@@ -230,7 +230,7 @@ echo LangViewObservationField3;
 echo("</td>\n<td>\n");
 echo("<select name=\"instrument\">\n");
 echo("<option value=\"\"></option>"); // empty field
-$inst = $objInstrument->getSortedInstrumentsList('name', '', true, InstrumentsNakedEye);
+$inst = $objInstrument->getSortedInstrumentsList('name', '', true);
 while(list($key, $value) = each($inst))
   echo("<option value=\"".$value[0]."\">".$value[1]."</option>\n");
 echo("</select>\n");

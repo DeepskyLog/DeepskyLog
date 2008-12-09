@@ -6,14 +6,14 @@
 
 // include statements
 
-include_once "../lib/cometobjects.php";
-include_once "../lib/cometobservations.php";
-include_once "../lib/locations.php";
-include_once "../lib/observers.php";
-include_once "../lib/instruments.php";
-include_once "../lib/util.php";
-include_once "../lib/ICQMETHOD.php";
-include_once "../lib/ICQREFERENCEKEY.php";
+include_once "lib/cometobjects.php";
+include_once "lib/cometobservations.php";
+include_once "lib/locations.php";
+include_once "lib/observers.php";
+include_once "lib/instruments.php";
+include_once "lib/util.php";
+include_once "lib/ICQMETHOD.php";
+include_once "lib/ICQREFERENCEKEY.php";
 
 
 // creation of objects
@@ -41,7 +41,7 @@ echo("<table width=\"490\">\n
 
 echo LangQueryObjectsField1;
 
-echo("</td>\n<td>\n<a href=\"comets/detail_object.php?object=" . $cometobservations->getObjectId($_GET['observation']) . "\">");
+echo("</td>\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($cometobservations->getObjectId($_GET['observation'])) . "\">");
 
 echo($cometobjects->getName($cometobservations->getObjectId($_GET['observation'])));
 
@@ -53,7 +53,7 @@ echo LangViewObservationField2;
 
 echo("</td><td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($cometobservations->getObserverId($_GET['observation'])) . "\">");
 
-echo($observers->getFirstName($cometobservations->getObserverId($_GET['observation'])) . "&nbsp;" . $observers->getName($cometobservations->getObserverId($_GET['observation'])));
+echo($observers->getFirstName($cometobservations->getObserverId($_GET['observation'])) . "&nbsp;" . $observers->getObserverName($cometobservations->getObserverId($_GET['observation'])));
 
 print("</a></td></tr>");
 
@@ -488,7 +488,7 @@ $file) || fnmatch($_GET['observation']. "_resized.png", $file))
 
 if(isset($_GET['new']) && $_GET['new'] == "yes")
 {
-echo("<p><a href=\"add_observation.php\">" . LangViewObservationNew . "</a></p>");
+echo("<p><a href=\"".$baseURL."index.php?indexAction=comet_add_observation\">" . LangViewObservationNew . "</a></p>");
 }
 
 echo("</div></div></body></html>");

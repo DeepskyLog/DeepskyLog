@@ -4,11 +4,11 @@
 // checks if the change new observation form is correctly filled in
 // Version 0.1: JV, 20051206
 
-include_once "../../lib/cometobservations.php";
-include_once "../../lib/cometobjects.php";
-include_once "../../lib/observers.php";
-include_once "../../lib/setup/vars.php";
-include_once "../../lib/util.php";
+include_once "../lib/cometobservations.php";
+include_once "../lib/cometobjects.php";
+include_once "../lib/observers.php";
+include_once "../lib/setup/vars.php";
+include_once "../lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -151,7 +151,7 @@ if($_POST['changeobservation']) // pushed change observation button
             $_SESSION['seeing'] = $_POST['seeing']; // save current seeing
             $_SESSION['savedata'] = "yes"; // session variable to tag multiple observations
 
-      $_GET['indexAction']="detail_observation';
+      $_GET['indexAction']='detail_observation';
       $_GET['observation']=$_POST['observationid'];
       $_GET['new']="yes";
 

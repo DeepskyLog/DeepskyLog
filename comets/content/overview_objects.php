@@ -4,11 +4,11 @@
 // generates an overview of all comets in the database
 // Version 0.3: 2005/09/21, WDM
 
-include_once "../lib/cometobjects.php";
-include_once "../lib/setup/language.php";
+include_once "lib/cometobjects.php";
+include_once "lib/setup/language.php";
 include_once "../common/control/ra_to_hms.php";
 include_once "../common/control/dec_to_dm.php";
-include_once "../lib/util.php";
+include_once "lib/util.php";
 
 $objects = new CometObjects;
 $util = new Util();
@@ -123,7 +123,7 @@ if(sizeof($obstest) > 0)
 
       if ($see == 1)
       {
-        $seen = "<a href=\"comets/result_query_observations.php?objectname=" . $objects->getId($value[0]) . "\">X</a>";
+        $seen = "<a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . urlencode($objects->getId($value[0])) . "\">X</a>";
       }
 
       if ($_SESSION['deepskylog_id'] != "")
@@ -132,14 +132,14 @@ if(sizeof($obstest) > 0)
 
         if ($see == 1)
         {
-          $seen = "<a href=\"comets/result_query_observations.php?objectname=" . $objects->getId($value[0]) . "\">Y</a>";
+          $seen = "<a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . urlencode($objects->getId($value[0])) . "\">Y</a>";
         }
       }
  
       // OUTPUT
 
       echo("<tr $typefield>\n");
-      echo("<td><a href=\"comets/detail_object.php?object=" . $objects->getId($value[0]) . "\">$value[0]</a></td>\n");
+      echo("<td><a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($objects->getId($value[0])) . "\">$value[0]</a></td>\n");
       echo("<td>$icqname</td>\n");
       echo("<td class=\"seen\">$seen</td></tr>\n");
 

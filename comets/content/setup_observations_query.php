@@ -4,14 +4,14 @@
 // interface to query observations
 // version 0.5, WDM 20051121
 
-include_once "../lib/cometobservations.php";
-include_once "../lib/cometobjects.php";
-include_once "../lib/observers.php";
-include_once "../lib/instruments.php";
-include_once "../lib/locations.php";
-include_once "../lib/util.php";
-include_once "../lib/ICQMETHOD.php";
-include_once "../lib/ICQREFERENCEKEY.php";
+include_once "lib/cometobservations.php";
+include_once "lib/cometobjects.php";
+include_once "lib/observers.php";
+include_once "lib/instruments.php";
+include_once "lib/locations.php";
+include_once "lib/util.php";
+include_once "lib/ICQMETHOD.php";
+include_once "lib/ICQREFERENCEKEY.php";
 
 $objects = new CometObjects; 
 $observations = new CometObservations;
@@ -99,7 +99,7 @@ $obs = $observations->getPopularObservers();
 
 while(list($key) = each($obs))
 {
- $sortobs[$key] = $observers->getName($key)." ".$observers->getFirstName($key);
+ $sortobs[$key] = $observers->getObserverName($key)." ".$observers->getFirstName($key);
 }
 natcasesort($sortobs);
 
@@ -129,7 +129,7 @@ $inst = $instruments->getSortedInstruments(name, "", true);
 
 while(list($key, $value) = each($inst))
 {
-   echo("<option value=\"$value\">".$instruments->getName($value)."</option>\n");
+   echo("<option value=\"$value\">".$instruments->getInstrumentName($value)."</option>\n");
 }
 
 echo("</select>\n");

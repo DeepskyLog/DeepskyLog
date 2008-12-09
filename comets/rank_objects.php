@@ -2,8 +2,8 @@
 
 // rank_objects.php
 // shows the rank of all observed objects 
-include_once "../lib/setup/databaseInfo.php";
-include_once "../lib/util.php";
+include_once "lib/setup/databaseInfo.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();

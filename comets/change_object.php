@@ -2,8 +2,8 @@
 
 // change_object.php
 // allows administrators to change comet objects 
-include_once "../lib/setup/databaseInfo.php";
-include_once "../lib/util.php";
+include_once "lib/setup/databaseInfo.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();

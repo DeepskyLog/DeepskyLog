@@ -3,8 +3,8 @@
 // result_query_objects.php
 // shows the result of a comet query
 // Version 0.1: 2005/09/21, WDM 
-include_once "../lib/setup/databaseInfo.php";
-include_once "../lib/util.php";
+include_once "lib/setup/databaseInfo.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();

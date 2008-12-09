@@ -4,10 +4,10 @@
 // executes the comet query passed by setup_query_objects.php
 // version 0.5: 2005/09/21, WDM
 
-include_once "../lib/cometobjects.php";
-include_once "../lib/observers.php";
-include_once "../lib/setup/language.php";
-include_once "../lib/util.php";
+include_once "lib/cometobjects.php";
+include_once "lib/observers.php";
+include_once "lib/setup/language.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -136,7 +136,7 @@ if($_GET['name'] || $_GET['icqname']) // at least one search field filled in
   
              if ($see == 1) // object has been seen already
              {
-               $seen = "<a href=\"comets/result_query_observations.php?objectname=" . $objects->getId($value) . "\">X</a>";
+               $seen = "<a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . urlencode($objects->getId($value)) . "\">X</a>";
              }
   
              if ($_SESSION['deepskylog_id'] != "")
@@ -145,12 +145,12 @@ if($_GET['name'] || $_GET['icqname']) // at least one search field filled in
 
                if ($see == 1) // object has been seen by the observer logged in
                { 
-                 $seen = "<a href=\"comets/result_query_observations.php?objectname=" . $objects->getId($value) . "\">Y</a>";
+                 $seen = "<a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . urlencode($objects->getId($value)) . "\">Y</a>";
                }
              }
 
              echo "<tr $typefield>\n";
-             echo "<td><a href=\"comets/detail_object.php?object=" . $objects->getId($value) . "\">$value</a></td>\n";
+             echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($objects->getId($value)) . "\">$value</a></td>\n";
              echo "<td>$icqname</td>\n";
              echo "<td class=\"seen\">$seen</td>\n</tr>\n";
 

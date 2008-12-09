@@ -308,9 +308,8 @@ class Instruments
  // getSortedInstrumentsList returns an array with the ids of all instruments,
  // sorted by the column specified in $sort. Instruments with the same name
  // are adapted by adding the f/d.
- function getSortedInstrumentsList($sort, $observer = "", $unique = false, $InstrumentsNakedEye)
- {
-   $instruments = $this->getSortedInstruments($sort, $observer, $unique);
+ function getSortedInstrumentsList($sort, $observer = "", $unique = false)
+ { $instruments = $this->getSortedInstruments($sort, $observer, $unique);
 
   // If there are locations with the same name, the province should also
   // be shown

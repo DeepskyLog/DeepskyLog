@@ -20,26 +20,26 @@ echo "</a>\n</td>\n</tr>\n";
 
 if($_SESSION['deepskylog_id'] != "admin") // admin doesn't have to add a new observation
 {
-   echo "<tr align=\"left\">\n<td>\n<a href=\"comets/add_observation.php\" class=\"mainlevel\">";
+   echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_add_observation\" class=\"mainlevel\">";
 
    echo (LangChangeMenuItem2);
 
    echo "</a>\n</td>\n</tr>\n";
 }
 
-echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=add_instrument.php\" class=\"mainlevel\">";
+echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=add_instrument\" class=\"mainlevel\">";
 
 echo (LangChangeMenuItem3);
 
 echo "</a>\n</td>\n</tr>\n";
 
-echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=add_site.php\" class=\"mainlevel\">";
+echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=add_site\" class=\"mainlevel\">";
 
 echo (LangChangeMenuItem4);
 
 echo "</a>\n</td>\n</tr>\n";
 
-echo "<tr align=\"left\">\n<td>\n<a href=\"comets/add_object.php\" class=\"mainlevel\">";
+echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_add_object\" class=\"mainlevel\">";
 
 echo (LangChangeMenuItem5);
 

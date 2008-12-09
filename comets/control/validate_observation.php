@@ -3,11 +3,11 @@
 // validate_observation.php
 // checks if the add new observation form is correctly filled in
 
-include_once "../../lib/cometobjects.php";
-include_once "../../lib/cometobservations.php";
-include_once "../../lib/observers.php";
-include_once "../../lib/setup/vars.php";
-include_once "../../lib/util.php";
+include_once "lib/cometobjects.php";
+include_once "lib/cometobservations.php";
+include_once "lib/observers.php";
+include_once "lib/setup/vars.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -130,22 +130,22 @@ if($_SESSION['deepskylog_id']) // logged in
 
             if($_FILES['drawing']['tmp_name'] != "") // drawing to upload
             {
-               $upload_dir = '../cometdrawings';
-               $dir = opendir($upload_dir);
+               $upload_dir = 'cometdrawings';
+               $dir = opendir($instDir."comets/".$upload_dir);
 
                // resize code
 
-                include "../../common/control/resize.php";
+                include "common/control/resize.php";
 
                 $original_image = $_FILES['drawing']['tmp_name'];
-                $destination_image = $upload_dir . "/" . $current_observation . "_resized.jpg";
+                $destination_image = $instDir.'comets/'.$upload_dir . "/" . $current_observation . "_resized.jpg";
                 $max_width = "490";
                 $max_height = "490";
                 $resample_quality = "100";
 
                 $new_image = image_createThumb($original_image, $destination_image, $max_width, $max_height, $resample_quality);
 
-               move_uploaded_file($_FILES['drawing']['tmp_name'], $upload_dir . "/" . $current_observation . ".jpg");
+               move_uploaded_file($_FILES['drawing']['tmp_name'], $instDir.'comets/'.$upload_dir . "/" . $current_observation . ".jpg");
             }
 
             // save current details for faster submission of multiple observations
@@ -158,19 +158,21 @@ if($_SESSION['deepskylog_id']) // logged in
             $_SESSION['savedata'] = "yes"; // session variable to tag multiple observations 
             $_SESSION['observation_query'] = "";
 
-            header("Location:../detail_observation.php?observation=" . $current_observation . "&new=yes");
+            $_GET['indexAction']='comets_detail_observation';
+            $_GET['observation']=$current_observation;
+            $_GET['new']="yes";
          }  
       }
    }
    elseif($_POST['clearfields']) // pushed clear fields button
    {
       $_SESSION['savedata'] = "no";
-      header("Location:../add_observation.php");
+      $_GET['indexAction']="add_observation";
    }
 }
 else // not logged in
 {
-   header("Location:../index.php");
+   $_GET['indexAction']="default_action";
 }
 
 ?>

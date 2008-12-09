@@ -6,10 +6,10 @@
 
 session_start(); // start session
 
-include_once "../../lib/cometobservations.php";
-include_once "../../lib/cometobjects.php";
-include_once "../../lib/setup/vars.php";
-include_once "../../lib/util.php";
+include_once "../lib/cometobservations.php";
+include_once "../lib/cometobjects.php";
+include_once "../lib/setup/vars.php";
+include_once "../lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();

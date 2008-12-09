@@ -6,13 +6,13 @@
 
 // include statements
 
-include_once "../lib/cometobservations.php";
-include_once "../lib/setup/language.php";
-include_once "../lib/instruments.php";
-include_once "../lib/observers.php";
-include_once "../lib/cometobjects.php";
-include_once "../lib/util.php";
-include_once "../lib/setup/databaseInfo.php";
+include_once "lib/cometobservations.php";
+include_once "lib/setup/language.php";
+include_once "lib/instruments.php";
+include_once "lib/observers.php";
+include_once "lib/cometobjects.php";
+include_once "lib/util.php";
+include_once "lib/setup/databaseInfo.php";
 
 // creation of objects
 
@@ -105,7 +105,7 @@ if(isset($_GET['objectname']))
       $min = 0;
    }
 
-  $link = "comets/result_query_observations.php?objectname=" . $_GET['objectname'] . "&amp;sort=".$sort."&amp;previous=".$prev;
+  $link = "".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . $_GET['objectname'] . "&amp;sort=".$sort."&amp;previous=".$prev;
 
   list($min, $max) = $util->printListHeader($obs, $link, $min, 25, "");
 
@@ -113,14 +113,14 @@ if(isset($_GET['objectname']))
   {
     echo "<table>\n
       <tr class=\"type3\">\n
-      <td><a href=\"comets/result_query_observations.php?objectname=" . $_GET['objectname'] . "&amp;sort=objectid&amp;previous=$previous\">" . LangOverviewObservationsHeader1 . "</a></td>\n
-      <td><a href=\"comets/result_query_observations.php?objectname=" . $_GET['objectname'] . "&amp;sort=observerid&amp;previous=$previous\">" . LangOverviewObservationsHeader2 . "</a></td>\n
-      <td><a href=\"comets/result_query_observations.php?objectname=" . $_GET['objectname'] . "&amp;sort=date&amp;previous=$previous\">" . LangOverviewObservationsHeader4 . "</a></td>\n
-      <td><a href=\"comets/result_query_observations.php?objectname=" . $_GET['objectname'] . "&amp;sort=mag&amp;previous=$previous\">" . LangNewComet1 . "</a></td>\n
-      <td><a href=\"comets/result_query_observations.php?objectname=" . $_GET['objectname'] . "&amp;sort=inst&amp;previous=$previous\">" .LangViewObservationField3 . "</a></td>\n
-      <td><a href=\"comets/result_query_observations.php?objectname=" . $_GET['objectname'] . "&amp;sort=coma&amp;previous=$previous\">" . LangViewObservationField19 . "</a></td>\n
-      <td><a href=\"comets/result_query_observations.php?objectname=" . $_GET['objectname'] . "&amp;sort=dc&amp;previous=$previous\">" . LangViewObservationField18b . "</a></td>\n
-      <td><a href=\"comets/result_query_observations.php?objectname=" . $_GET['objectname'] . "&amp;sort=tail&amp;previous=$previous\">" . LangViewObservationField20b . "</a></td>\n
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . $_GET['objectname'] . "&amp;sort=objectid&amp;previous=$previous\">" . LangOverviewObservationsHeader1 . "</a></td>\n
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . $_GET['objectname'] . "&amp;sort=observerid&amp;previous=$previous\">" . LangOverviewObservationsHeader2 . "</a></td>\n
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . $_GET['objectname'] . "&amp;sort=date&amp;previous=$previous\">" . LangOverviewObservationsHeader4 . "</a></td>\n
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . $_GET['objectname'] . "&amp;sort=mag&amp;previous=$previous\">" . LangNewComet1 . "</a></td>\n
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . $_GET['objectname'] . "&amp;sort=inst&amp;previous=$previous\">" .LangViewObservationField3 . "</a></td>\n
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . $_GET['objectname'] . "&amp;sort=coma&amp;previous=$previous\">" . LangViewObservationField19 . "</a></td>\n
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . $_GET['objectname'] . "&amp;sort=dc&amp;previous=$previous\">" . LangViewObservationField18b . "</a></td>\n
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . $_GET['objectname'] . "&amp;sort=tail&amp;previous=$previous\">" . LangViewObservationField20b . "</a></td>\n
       <td></td>\n
       </tr>\n";
 
@@ -144,7 +144,7 @@ if(isset($_GET['objectname']))
         // OUTPUT
 
         echo("<tr $typefield>\n
-            <td><a href=\"comets/detail_object.php?object=" . $object . "\">" . $objects->getName($object) . "</a></td>\n");
+            <td><a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($object) . "\">" . $objects->getName($object) . "</a></td>\n");
 
         // OBSERVER
 
@@ -152,7 +152,7 @@ if(isset($_GET['objectname']))
 
         echo("<td>");
 
-        echo("<a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($observer) . "\">" . $observers->getFirstName($observer) . "&nbsp;" . $observers->getName($observer) . "</a>");
+        echo("<a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($observer) . "\">" . $observers->getFirstName($observer) . "&nbsp;" . $observers->getObserverName($observer) . "</a>");
 
         echo("</td>");
 
@@ -198,7 +198,7 @@ if(isset($_GET['objectname']))
       // INSTRUMENT
 
       $temp = $observations->getInstrumentId($value);
-      $instrument = $instruments->getName($temp);
+      $instrument = $instruments->getInstrumentName($temp);
       $instrumentsize = $instruments->getDiameter($temp);
       if ($instrument == "Naked eye")
       {
@@ -264,7 +264,7 @@ if(isset($_GET['objectname']))
 
      // DETAILS
 
-     echo("<td><a href=\"comets/detail_observation.php?observation=" . $value . "\">details");
+     echo("<td><a href=\"".$baseURL."index.php?indexAction=comets_detail_observation&amp;observation=" . $value . "\">details");
 
       // LINK TO DRAWING (IF AVAILABLE)
 
@@ -288,7 +288,7 @@ echo "</div></body></html>";
 }
 elseif($_GET['user']) // selection of all observations of one observer 
 {
-echo (LangSelectedObservationsTitle . $observers->getFirstName($_GET['user']) . "&nbsp;" . $observers->getName($_GET['user'])); // page title
+echo (LangSelectedObservationsTitle . $observers->getFirstName($_GET['user']) . "&nbsp;" . $observers->getObserverName($_GET['user'])); // page title
 echo("</h2>\n");
 
 // OBJECT TABLE HEADERS
@@ -346,7 +346,7 @@ else
  $previous = '';
 }
 
- $link = "comets/result_query_observations.php?user=" . $_GET['user'] . "&amp;sort=".$sort."&amp;previous=".$previous;
+ $link = "".$baseURL."index.php?indexAction=comets_result_query_observations&amp;user=" . $_GET['user'] . "&amp;sort=".$sort."&amp;previous=".$previous;
 list($min, $max) = $util->printListHeader($obs, $link, $min, 25, "");
 
 if(($sort != '') && $_GET['previous'] == $_GET['sort']) // reverse sort when pushed twice
@@ -367,13 +367,13 @@ if(sizeof($obs) > 0)
 // OBJECT TABLE HEADERS
 echo "<table>\n
       <tr class=\"type3\">\n
-      <td><a href=\"comets/result_query_observations.php?user=" . $_GET['user'] . "&amp;sort=objectid&amp;previous=$previous\">" . LangOverviewObservationsHeader1 . "</a></td>\n
-      <td><a href=\"comets/result_query_observations.php?user=" . $_GET['user'] . "&amp;sort=date&amp;previous=$previous\">" . LangOverviewObservationsHeader4 . "</a></td>\n
-      <td><a href=\"comets/result_query_observations.php?user=" . $_GET['user'] . "&amp;sort=mag&amp;previous=$previous\">" . LangNewComet1 . "</a></td>\n
-      <td><a href=\"comets/result_query_observations.php?user=" . $_GET['user'] . "&amp;sort=inst&amp;previous=$previous\">" . LangViewObservationField3 . "</a></td>\n
-      <td><a href=\"comets/result_query_observations.php?user=" . $_GET['user'] . "&amp;sort=coma&amp;previous=$previous\">" . LangViewObservationField19 . "</a></td>\n
-      <td><a href=\"comets/result_query_observations.php?user=" . $_GET['user'] . "&amp;sort=dc&amp;previous=$previous\">" . LangViewObservationField18b . "</a></td>\n
-      <td><a href=\"comets/result_query_observations.php?user=" . $_GET['user'] . "&amp;sort=tail&amp;previous=$previous\">" . LangViewObservationField20b . "</a></td>\n
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;user=" . $_GET['user'] . "&amp;sort=objectid&amp;previous=$previous\">" . LangOverviewObservationsHeader1 . "</a></td>\n
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;user=" . $_GET['user'] . "&amp;sort=date&amp;previous=$previous\">" . LangOverviewObservationsHeader4 . "</a></td>\n
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;user=" . $_GET['user'] . "&amp;sort=mag&amp;previous=$previous\">" . LangNewComet1 . "</a></td>\n
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;user=" . $_GET['user'] . "&amp;sort=inst&amp;previous=$previous\">" . LangViewObservationField3 . "</a></td>\n
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;user=" . $_GET['user'] . "&amp;sort=coma&amp;previous=$previous\">" . LangViewObservationField19 . "</a></td>\n
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;user=" . $_GET['user'] . "&amp;sort=dc&amp;previous=$previous\">" . LangViewObservationField18b . "</a></td>\n
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;user=" . $_GET['user'] . "&amp;sort=tail&amp;previous=$previous\">" . LangViewObservationField20b . "</a></td>\n
       <td></td>
       </tr>\n";
 
@@ -397,7 +397,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
       // OUTPUT
 
       echo("<tr $typefield>\n
-            <td><a href=\"comets/detail_object.php?object=" . $object . "\">" . $objects->getName($object) . "</a></td>\n
+            <td><a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($object) . "\">" . $objects->getName($object) . "</a></td>\n
             <td>");
 
       // DATE
@@ -437,7 +437,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
       // INSTRUMENT
 
       $temp = $observations->getInstrumentId($value);
-      $instrument = $instruments->getName($temp);
+      $instrument = $instruments->getInstrumentName($temp);
       if ($instrument == "Naked eye")
       {
        $instrument = InstrumentsNakedEye;
@@ -493,12 +493,12 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
      // DETAILS
 
-     echo("<td><a href=\"comets/detail_observation.php?observation=" . $value . "\">details");
+     echo("<td><a href=\"".$baseURL."index.php?indexAction=comets_detail_observation&amp;observation=" . $value . "\">details");
 
       // LINK TO DRAWING (IF AVAILABLE)
 
      $upload_dir = 'cometdrawings';
-     $dir = opendir($upload_dir);
+     $dir = opendir($instDir."comets/".$upload_dir);
 
      while (FALSE !== ($file = readdir($dir)))
      {

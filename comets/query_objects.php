@@ -5,9 +5,9 @@
 
 $_SESSION['module'] = "comets";
 
-include_once "../lib/setup/databaseInfo.php";
+include_once "lib/setup/databaseInfo.php";
 include("../common/head.php"); // HTML head
-include_once "../lib/util.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();

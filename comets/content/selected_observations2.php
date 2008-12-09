@@ -4,13 +4,13 @@
 // generates an overview of selected observations in the database
 // version 0.4: 2005/11/05, WDM
 
-include_once "../lib/observations.php";
-include_once "../lib/setup/language.php";
-include_once "../lib/instruments.php";
-include_once "../lib/observers.php";
-include_once "../lib/cometobjects.php";
-include_once "../lib/util.php";
-include_once "../lib/setup/databaseInfo.php";
+include_once "lib/observations.php";
+include_once "lib/setup/language.php";
+include_once "lib/instruments.php";
+include_once "lib/observers.php";
+include_once "lib/cometobjects.php";
+include_once "lib/util.php";
+include_once "lib/setup/databaseInfo.php";
 
 $observations = new CometObservations;
 $instruments = new Instruments;
@@ -88,7 +88,7 @@ if($_GET['observer'] || $_GET['instrument'] || $_GET['site'] || $_GET['minyear']
 	 if(array_key_exists('instrument',$_GET) && $_GET['instrument'] != "")
 	 {
       $instrument = $_GET['instrument'];
-      $name = $instruments->getName($instrument);
+      $name = $instruments->getInstrumentName($instrument);
       $instrument = $instruments->getId($name, $_SESSION['deepskylog_id']);
 	 }
 	 else
@@ -553,7 +553,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
       // INSTRUMENT 
  
       $temp = $observations->getInstrumentId($value);
-      $instrument = $instruments->getName($temp);
+      $instrument = $instruments->getInstrumentName($temp);
       $instrumentsize = $instruments->getDiameter($temp);
       if ($instrument == "Naked eye")
       {
@@ -609,8 +609,8 @@ while(list ($key, $value) = each($obs)) // go through observations array
       // OUTPUT
 
       echo("<tr $typefield>\n
-            <td><a href=\"comets/detail_object.php?object=" . $object . "\">" . $objects->getName($object) . "</a></td>\n
-            <td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($observer) . "\">" . $observers->getFirstName($observer) . "&nbsp;" . $observers->getName($observer) . "</a></td>\n
+            <td><a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($object) . "\">" . $objects->getName($object) . "</a></td>\n
+            <td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($observer) . "\">" . $observers->getFirstName($observer) . "&nbsp;" . $observers->getObserverName($observer) . "</a></td>\n
             <td>");
 
       if($instrument != InstrumentsNakedEye && $instrument != "")
@@ -660,12 +660,12 @@ while(list ($key, $value) = each($obs)) // go through observations array
             <td>$coma</td>
             <td>$dc</td>
             <td>$tail</td>
-            <td><a href=\"comets/detail_observation.php?observation=" . $value . "\">details");
+            <td><a href=\"".$baseURL."index.php?indexAction=comets_detail_observation&amp;observation=" . $value . "\">details");
 
       // LINK TO DRAWING (IF AVAILABLE)
  
       $upload_dir = 'cometdrawings';
-      $dir = opendir($upload_dir);
+      $dir = opendir($instDir."comets/".$upload_dir);
  
       while (FALSE !== ($file = readdir($dir)))
       {
@@ -673,8 +673,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
         {
           continue; // skip current directory and directory above
         }
-        if(fnmatch($value . "_resized.gif", $file) || fnmatch($value . "_resized.jpg",
-        $file) || fnmatch($value. "_resized.png", $file))
+        if(fnmatch($value . "_resized.gif", $file) || fnmatch($value . "_resized.jpg", $file) || fnmatch($value. "_resized.png", $file))
         {
           echo("&nbsp;+&nbsp;");
           echo LangDrawing; 

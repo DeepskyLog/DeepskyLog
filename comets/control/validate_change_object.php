@@ -6,9 +6,9 @@
 
 session_start(); // start session
 
-include_once "../../lib/cometobjects.php";
-include_once "../../lib/setup/vars.php";
-include_once "../../lib/util.php";
+include_once "../lib/cometobjects.php";
+include_once "../lib/setup/vars.php";
+include_once "../lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -44,13 +44,13 @@ else
    }
    else // not logged in as admin
    {
-  $_GET['object']=$_POST['oject']
+  $_GET['object']=$_POST['oject'];
   $_GET['indexAction']='default_action';
    	   }
    }
    else // no comet id given
    {
-  $_GET['object']=$_POST['oject']
+  $_GET['object']=$_POST['oject'];
   $_GET['indexAction']='default_action';
    	   }
 }

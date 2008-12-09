@@ -3,15 +3,12 @@
 // menu which allows the user to log in  
 
 if(!(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']))
-{ echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">";
+{ echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\" width=\"100%\" border=\"0\">";
   echo "<tr>";
 	echo "<th valign=\"top\">";
   echo LangLoginMenuTitle;
   echo "</th>";
 	echo "</tr>";
-	echo "<tr>";
-	echo "<td>";
-	echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
 	echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"check_login\">";
   echo "<tr align=\"left\">";
@@ -24,9 +21,9 @@ if(!(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']))
   echo "<tr align=\"left\">";
 	echo "<td>";
   echo LangLoginMenuItem2;
-  echo "<br></br>";
+  echo "<br />";
 	echo "<input type=\"password\" class=\"inputfield\" maxlength=\"64\" name=\"passwd\" size=\"12\" value=\"\"></input>";
-	echo "</p><p>";
+	echo "<p />";
 	echo "<input type=\"submit\" name=\"submit\" value=\"".LangLoginMenuButton."\"/>";
   echo "</td>";
 	echo "</tr>";
@@ -40,9 +37,6 @@ if(!(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']))
 		echo "</tr>";
   }
   echo "</form>";
-  echo "</table>";
-	echo "</td>";
-	echo "</tr>";
 	echo "</table>";
 }
 ?>

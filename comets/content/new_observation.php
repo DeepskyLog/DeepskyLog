@@ -6,16 +6,16 @@
 
 // include statements
 
-include_once "../lib/cometobjects.php";
-include_once "../lib/cometobservations.php";
-include_once "../common/control/ra_to_hms.php";
-include_once "../common/control/dec_to_dm.php";
-include_once "../lib/ICQMETHOD.php";
-include_once "../lib/ICQREFERENCEKEY.php";
-include_once "../lib/locations.php";
-include_once "../lib/observers.php";
-include_once "../lib/instruments.php";
-include_once "../lib/util.php";
+include_once "lib/cometobjects.php";
+include_once "lib/cometobservations.php";
+include_once "common/control/ra_to_hms.php";
+include_once "common/control/dec_to_dm.php";
+include_once "lib/ICQMETHOD.php";
+include_once "lib/ICQREFERENCEKEY.php";
+include_once "lib/locations.php";
+include_once "lib/observers.php";
+include_once "lib/instruments.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -35,7 +35,8 @@ echo (LangNewObservationTitle);
 
 echo("</h2>\n");
 
-echo("<form action=\"comets/control/validate_observation.php\" method=\"post\" enctype=\"multipart/form-data\">");
+echo("<form action=\"".$baseURL."index.php\" method=\"post\" enctype=\"multipart/form-data\">");
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"comets_validate_observation\" />";
 
 //echo("<a href=\"comets/add_csv.php\">" . LangNewObservationSubtitle1b . "</a>");
 
@@ -43,9 +44,9 @@ echo("<table width=\"490\" id=\"content\">\n");
 
 // retain object id to easy input of looked up comet
 
-$id = $_SESSION['observedobject'];
+$id = $objUtil->checkSessionKey('observedobject');
 
-if(($_SESSION['backlink'] == "validate_search_object.php" && $_SESSION['found'] == "yes") || ($_SESSION['backlink'] == "view_object.php") || ($_SESSION['backlink'] == "validate_observation.php")) // object validated and found
+if(($objUtil->checkSessionKey('backlink') == "validate_search_object.php" && $objUtil->checkSessionKey('found') == "yes") || ($objUtil->checkSessionKey('backlink') == "view_object.php") || ($objUtil->checkSessionKey('backlink') == "validate_observation.php")) // object validated and found
 {
  $found = true;
 }
@@ -64,10 +65,10 @@ echo("<select name=\"comet\">\n");
 echo("<option value=\"\"></option>\n\">"); // empty value
 
 $catalogs = $objects->getSortedObjects("name");
-
+$found='';
 while(list($key, $value) = each($catalogs))
 {
-   if ($found && $id == $objects->getId($value))
+   if ($found && $id == $objObject->getId($value))
    {
     echo("<option value=\"$value[0]\" selected>$value[0]</option>\n");
    }
@@ -86,9 +87,9 @@ echo("<tr><td class=\"fieldname\">" . LangViewObservationField5 . "&nbsp;*</td><
          <input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"day\"");
 
 
-if($_SESSION['savedata'] == "yes" && $_SESSION['day'] != "")
+if($objUtil->checkSessionKey('savedata') == "yes" && $objUtil->checkSessionKey('day') != "")
 {
-   echo(" value=\"" . $_SESSION['day'] . "\" />");
+   echo(" value=\"" . $objUtil->checkSessionKey('day') . "\" />");
 }
 else
 {
@@ -101,7 +102,7 @@ echo("&nbsp;&nbsp;<select name=\"month\">");
 
 echo ("<option value=\"\"></option>");
 echo ("<option value=\"1\"");
-if ($_SESSION['month'] == "1" && $_SESSION['savedata'] == "yes")
+if ($objUtil->checkSessionKey('month') == "1" && $objUtil->checkSessionKey('savedata') == "yes")
 {
    echo (" selected=\"selected\">" . LangNewObservationMonth1 . "</option>");
 }
@@ -110,7 +111,7 @@ else
    echo (">" . LangNewObservationMonth1 . "</option>");
 }
 echo ("<option value=\"2\"");
-if ($_SESSION['month'] == "2" && $_SESSION['savedata'] == "yes")
+if ($objUtil->checkSessionKey('month') == "2" && $_SESSION['savedata'] == "yes")
 {
    echo (" selected=\"selected\">" . LangNewObservationMonth2 . "</option>");
 }
@@ -119,7 +120,7 @@ else
    echo (">" . LangNewObservationMonth2 . "</option>");
 }
 echo ("<option value=\"3\"");
-if ($_SESSION['month'] == "3" && $_SESSION['savedata'] == "yes")
+if ($objUtil->checkSessionKey('month') == "3" && $_SESSION['savedata'] == "yes")
 {
    echo (" selected=\"selected\">" . LangNewObservationMonth3 . "</option>");
 }
@@ -128,7 +129,7 @@ else
    echo (">" . LangNewObservationMonth3 . "</option>");
 }
 echo ("<option value=\"4\"");
-if ($_SESSION['month'] == "4" && $_SESSION['savedata'] == "yes")
+if ($objUtil->checkSessionKey('month') == "4" && $_SESSION['savedata'] == "yes")
 {
    echo (" selected=\"selected\">" . LangNewObservationMonth4 . "</option>");
 }
@@ -137,7 +138,7 @@ else
    echo (">" . LangNewObservationMonth4 . "</option>");
 }
 echo ("<option value=\"5\"");
-if ($_SESSION['month'] == "5" && $_SESSION['savedata'] == "yes")
+if ($objUtil->checkSessionKey('month') == "5" && $_SESSION['savedata'] == "yes")
 {
    echo (" selected=\"selected\">" . LangNewObservationMonth5 . "</option>");
 }
@@ -146,7 +147,7 @@ else
    echo (">" . LangNewObservationMonth5 . "</option>");
 }
 echo ("<option value=\"6\"");
-if ($_SESSION['month'] == "6" && $_SESSION['savedata'] == "yes")
+if ($objUtil->checkSessionKey('month') == "6" && $_SESSION['savedata'] == "yes")
 {
    echo (" selected=\"selected\">" . LangNewObservationMonth6 . "</option>");
 }
@@ -155,7 +156,7 @@ else
    echo (">" . LangNewObservationMonth6 . "</option>");
 }
 echo ("<option value=\"7\"");
-if ($_SESSION['month'] == "7" && $_SESSION['savedata'] == "yes")
+if ($objUtil->checkSessionKey('month') == "7" && $_SESSION['savedata'] == "yes")
 {
    echo (" selected=\"selected\">" . LangNewObservationMonth7 . "</option>");
 }
@@ -164,7 +165,7 @@ else
    echo (">" . LangNewObservationMonth7 . "</option>");
 }
 echo ("<option value=\"8\"");
-if ($_SESSION['month'] == "8" && $_SESSION['savedata'] == "yes")
+if ($objUtil->checkSessionKey('month') == "8" && $_SESSION['savedata'] == "yes")
 {
    echo (" selected=\"selected\">" . LangNewObservationMonth8 . "</option>");
 }
@@ -173,7 +174,7 @@ else
    echo (">" . LangNewObservationMonth8 . "</option>");
 }
 echo ("<option value=\"9\"");
-if ($_SESSION['month'] == "9" && $_SESSION['savedata'] == "yes")
+if ($objUtil->checkSessionKey('month') == "9" && $_SESSION['savedata'] == "yes")
 {
    echo (" selected=\"selected\">" . LangNewObservationMonth9 . "</option>");
 }
@@ -182,7 +183,7 @@ else
    echo (">" . LangNewObservationMonth9 . "</option>");
 }
 echo ("<option value=\"10\"");
-if ($_SESSION['month'] == "10" && $_SESSION['savedata'] == "yes")
+if ($objUtil->checkSessionKey('month') == "10" && $_SESSION['savedata'] == "yes")
 {
    echo (" selected=\"selected\">" . LangNewObservationMonth10 . "</option>");
 }
@@ -191,7 +192,7 @@ else
    echo (">" . LangNewObservationMonth10 . "</option>");
 }
 echo ("<option value=\"11\"");
-if ($_SESSION['month'] == "11" && $_SESSION['savedata'] == "yes")
+if ($objUtil->checkSessionKey('month') == "11" && $_SESSION['savedata'] == "yes")
 {
    echo (" selected=\"selected\">" . LangNewObservationMonth11 . "</option>");
 }
@@ -200,7 +201,7 @@ else
    echo (">" . LangNewObservationMonth11 . "</option>");
 }
 echo ("<option value=\"12\"");
-if ($_SESSION['month'] == "12" && $_SESSION['savedata'] == "yes")
+if ($objUtil->checkSessionKey('month') == "12" && $_SESSION['savedata'] == "yes")
 {
    echo (" selected=\"selected\">" . LangNewObservationMonth12 . "</option>");
 }
@@ -210,7 +211,7 @@ else
 }
 
 echo("</select>&nbsp;&nbsp<input type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" name=\"year\"");
-if($_SESSION['savedata'] == "yes" && $_SESSION['year'] != "")
+if($objUtil->checkSessionKey('savedata') == "yes" && $objUtil->checkSessionKey('year') != "")
 {
    echo ("value=\"" . $_SESSION['year'] . "\" />");
 }
@@ -248,7 +249,7 @@ echo("<tr><td class=\"fieldname\">" . LangViewObservationField4 . "</td><td><sel
       {
          $sitename = $sites[$i][1];
 
-         if($_SESSION['savedata'] == "yes") // multiple observations
+         if($objUtil->checkSessionKey('savedata') == "yes") // multiple observations
          {
             if($_SESSION['location'] == $sites[$i][0]) // location equals session location
             {
@@ -261,7 +262,7 @@ echo("<tr><td class=\"fieldname\">" . LangViewObservationField4 . "</td><td><sel
          }
          else // first observation of session
          {
-           if($obs->getStandardLocation($_SESSION['deepskylog_id']) == $sites[$i][0]) // location equals standard location
+           if($objObserver->getStandardLocation($_SESSION['deepskylog_id']) == $sites[$i][0]) // location equals standard location
            {
               print("<option selected=\"selected\" value=\"".$sites[$i][0]."\">$sitename</option>\n");
            }
@@ -285,14 +286,14 @@ echo("<tr><td class=\"fieldname\">" . LangViewObservationField3 . "</td><td>
 
 echo("<option value=\"\"></option>\n"); // include empty instrument
 
-      $instr = $instruments->getSortedInstrumentsList("name");
+      $instr = $objInstrument->getSortedInstrumentsList("name",$_SESSION['deepskylog_id']);
 
       while(list ($key, $value) = each($instr)) // go through instrument array
       {
          $instrumentname = $value[1];
          $val = $value[0];
 
-         if($_SESSION['savedata'] == "yes") // multiple observations
+         if($objUtil->checkSessionKey('savedata') == "yes") // multiple observations
          {
            if($val == $_SESSION['instrument']) // instrument of previous observation
            {
@@ -303,7 +304,7 @@ echo("<option value=\"\"></option>\n"); // include empty instrument
              print("<option value=\"$val\">");
            }
          }
-         elseif($obs->getStandardTelescope($_SESSION['deepskylog_id']) == $val) // not executed when previous observation
+         elseif($objObserver->getStandardTelescope($_SESSION['deepskylog_id']) == $val) // not executed when previous observation
          {
            print("<option selected=\"selected\" value=\"$val\">");
          }

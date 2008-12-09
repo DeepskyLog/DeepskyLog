@@ -34,6 +34,8 @@ if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="logout
   require_once $instDir."/common/control/logout.php";
 
 
+  
+  
 //============================================================================== DEEEPSKY INSTRUCTIONS
 $object=$objUtil->checkPostKey('object',$objUtil->checkGetKey('object'));
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_observation")
@@ -102,6 +104,8 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_csv_observa
   include_once "deepsky/control/add_csv_observations.php";
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_csv_listdata")
   include_once "deepsky/control/add_csv_listdata.php";
+  
+  
 // ============================================================================ LIST COMMANDS
 if(array_key_exists('addObjectToList',$_GET)&&$_GET['addObjectToList']&&array_key_exists('listname',$_SESSION)&&$_SESSION['listname']&&$myList)
 { $objList->addObjectToList($_GET['addObjectToList'],$GLOBALS['objUtil']->checkGetKey('showname',$_GET['addObjectToList']));
@@ -136,6 +140,15 @@ if(array_key_exists('editListObjectDescription',$_GET)&&$_GET['editListObjectDes
  &&array_key_exists('object',$_GET)&&$_GET['object']&&array_key_exists('description',$_GET))
 { $objList->setListObjectDescription($_GET['object'],$_GET['description']);
 }
+
+
+// =========================================================================== COMET COMMANDS
+if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="comets_validate_observation")
+  include_once 'comets/control/validate_observation.php';
+if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="comets_validate_object")
+  include_once 'comets/control/validate_object.php';
+  
+   
 
 // ============================================================================ ADMIN COMMANDS
 if(array_key_exists('admin', $_SESSION)&&$_SESSION['admin']=="yes")

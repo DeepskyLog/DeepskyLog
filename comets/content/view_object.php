@@ -4,11 +4,11 @@
 // view all information of one object 
 // version 0.5: 2005/09/21, WDM
 
-include_once "../lib/cometobjects.php";
-include_once "../lib/setup/language.php";
-include_once "../lib/cometobservations.php";
-include_once "../lib/observers.php";
-include_once "../lib/util.php";
+include_once "lib/cometobjects.php";
+include_once "lib/setup/language.php";
+include_once "lib/cometobservations.php";
+include_once "lib/observers.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
@@ -76,7 +76,7 @@ if (count($found_observations) > 0)
 
 if($observation_found == "yes")
 {
-   echo("<p><a href=\"comets/result_query_observations.php?objectname=" . $_GET['object'] . 
+   echo("<p><a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . urlencode($_GET['object']) . 
         "\">" . LangViewObjectObservations . $objects->getName($_GET['object']) . "</a></p>");
 }
 
@@ -90,7 +90,7 @@ if($_SESSION['deepskylog_id'])
    //$_SESSION['observedobject'] = $_SESSION['result'][0]; // use name in database
    $_SESSION['found'] = "yes";
    $_SESSION['backlink'] = "validate_search_object.php";
-   echo("<p><a href=\"comets/add_observation.php\">" . LangViewObjectAddObservation . $objects->getName($_GET['object']) . "</a></p>");
+   echo("<p><a href=\"".$baseURL."index.php?indexAction=comet_add_observation\">" . LangViewObjectAddObservation . $objects->getName($_GET['object']) . "</a></p>");
 }
 
 # extra link for administrators to change comet details

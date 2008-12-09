@@ -4,14 +4,14 @@
 // shows all observations in the database 
 // version 0.2, JV 20050203
 
-include_once "../lib/util.php";
+include_once "lib/util.php";
 
 $util = new Util();
 $util->checkUserInput();
 
 $_SESSION['module'] = "comets";
 
-include_once "../lib/setup/databaseInfo.php";
+include_once "lib/setup/databaseInfo.php";
 
 include("../common/head.php"); // HTML head
 
