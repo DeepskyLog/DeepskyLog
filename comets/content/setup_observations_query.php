@@ -95,7 +95,7 @@ echo("<select name=\"observer\">\n");
 
 echo("<option value=\"\"></option>"); // empty field
 
-$obs = $observers->getSortedObservers(name); 
+$obs = $observers->getSortedObservers('name'); 
 $obs = $observations->getPopularObservers();
 
 while(list($key) = each($obs))
@@ -126,7 +126,7 @@ echo("<select name=\"instrument\">\n");
 
 echo("<option value=\"\"></option>"); // empty field
 
-$inst = $instruments->getSortedInstruments(name, "", true);
+$inst = $instruments->getSortedInstruments("name", "", true);
 
 while(list($key, $value) = each($inst))
 {
@@ -178,7 +178,7 @@ echo("<select name=\"site\">\n");
 
 echo("<option value=\"\"></option>"); // empty field
 
-$sites = $locations->getSortedLocations(name, "", true);
+$sites = $locations->getSortedLocations("name", "", true);
 
 while(list($key, $value) = each($sites))
 {
