@@ -88,7 +88,7 @@ if($_GET['name'] || $_GET['icqname']) // at least one search field filled in
   {
     $count = 0; // counter for altering table colors
     
-    $link = "comets/result_query_objects.php?name=" . $_GET['name'] . "&amp;sort=$sort&amp;previous=" . $prev;
+    $link = $baseURL."index.php?indexAction=comets_result_query_objects&amp;name=" . urlencode($_GET['name']) . "&amp;sort=$sort&amp;previous=" . $prev;
     list($min, $max) = $util->printListHeader($result, $link, $min, 25, "");
  
     // OUTPUT RESULT
@@ -97,14 +97,14 @@ if($_GET['name'] || $_GET['icqname']) // at least one search field filled in
 
     echo "<tr class=\"type3\">\n";
 
-    echo "<td><a href=\"comets/result_query_objects.php?name=" . $_GET['name'] . "&amp;sort=name&amp;previous=$previous\">".LangOverviewObjectsHeader1."</a></td>\n";
-    echo "<td><a href=\"comets/result_query_objects.php?name=" . $_GET['name'] . "&amp;sort=icqname&amp;previous=$previous\">".LangNewObjectIcqname."</a></td>\n";
+    echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_objects&amp;name=" . urlencode($_GET['name']) . "&amp;sort=name&amp;previous=$previous\">".LangOverviewObjectsHeader1."</a></td>\n";
+    echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_objects&amp;name=" . urlencode($_GET['name']) . "&amp;sort=icqname&amp;previous=$previous\">".LangNewObjectIcqname."</a></td>\n";
 
     // Check the number of objects. If there are less than 500 objects, we 
     // enable the sorting on seen. 
     if (count($result) <= 500)
     {
-     echo "<td><a href=\"comets/result_query_objects.php?name=" . $_GET['name'] . "&amp;sort=seen&amp;previous=$previous\">".LangOverviewObjectsHeader7."</a></td>\n";
+     echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_objects&amp;name=" . urlencode($_GET['name']) . "&amp;sort=seen&amp;previous=$previous\">".LangOverviewObjectsHeader7."</a></td>\n";
     }
     else
     {

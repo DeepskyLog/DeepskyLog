@@ -247,7 +247,8 @@ else
  $previous = '';
 }
 
-$link = "comets/result_selected_observations.php?object=" . $_GET['object'] . 
+$link = $baseURL."index.php?indexAction=comets_result_selected_observations".
+                                         "&amp;object=" . $_GET['object'] . 
                                          "&amp;observer=" . $_GET['observer'] . 
                                          "&amp;instrument=" . $_GET['instrument'] . 
                                          "&amp;site=" . $_GET['site'] . 
@@ -311,7 +312,8 @@ echo "<tr class=\"type3\">\n";
 
 // OBJECT NAME
 
-echo "<td><a href=\"comets/result_selected_observations.php?object=" . $_GET['object'] .
+echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_observations".
+                                                    "&amp;object=" . $_GET['object'] .
                                                     "&amp;instrument=" . $_GET['instrument'] .
                                                     "&amp;observer=" . $_GET['observer'] .
                                                     "&amp;site=" . $_GET['site'] .
@@ -321,9 +323,9 @@ echo "<td><a href=\"comets/result_selected_observations.php?object=" . $_GET['ob
                                                     "&amp;maxyear=" . $_GET['maxyear'] . 
                                                     "&amp;maxmonth=" . $_GET['maxmonth'] .
                                                     "&amp;maxday=" . $_GET['maxday'] . 
-        	                                    "&amp;maxdiameter=" . $_GET['maxdiameter'] .
+        	                                          "&amp;maxdiameter=" . $_GET['maxdiameter'] .
                                                     "&amp;maxdiameterunits=" . $_GET['maxdiameterunits'] .
-	                                            "&amp;mindiameter=" . $_GET['mindiameter'] .
+	                                                  "&amp;mindiameter=" . $_GET['mindiameter'] .
                                                     "&amp;mindiameterunits=" . $_GET['mindiameterunits'] .
                                                     "&amp;maxmag=" . $_GET['maxmag'] .
                                                     "&amp;minmag=" . $_GET['minmag'] .
@@ -339,7 +341,8 @@ echo "<td><a href=\"comets/result_selected_observations.php?object=" . $_GET['ob
 
 // OBSERVER
 
-echo "<td><a href=\"comets/result_selected_observations.php?object=" . $_GET['object'] .
+echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_observations".
+                                                    "&amp;object=" . $_GET['object'] .
                                                     "&amp;instrument=" . $_GET['instrument'] .
                                                     "&amp;observer=" . $_GET['observer'] .
                                                     "&amp;site=" . $_GET['site'] .
@@ -367,7 +370,8 @@ echo "<td><a href=\"comets/result_selected_observations.php?object=" . $_GET['ob
 
 // DATE
 
-echo "<td><a href=\"comets/result_selected_observations.php?object=" . $_GET['object'] .
+echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_observations".
+                                                    "&amp;object=" . $_GET['object'] .
                                                     "&amp;instrument=" . $_GET['instrument'] .
                                                     "&amp;observer=" . $_GET['observer'] .
                                                     "&amp;site=" . $_GET['site'] .
@@ -394,7 +398,8 @@ echo "<td><a href=\"comets/result_selected_observations.php?object=" . $_GET['ob
                                                     LangOverviewObservationsHeader4 . "</a></td>\n";
 
 // MAGNITUDE
-echo "<td><a href=\"comets/result_selected_observations.php?object=" . $_GET['object'] .
+echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_observations".
+                                                    "&amp;object=" . $_GET['object'] .
                                                     "&amp;instrument=" . $_GET['instrument'] .
                                                     "&amp;observer=" . $_GET['observer'] .
                                                     "&amp;site=" . $_GET['site'] .
@@ -421,7 +426,8 @@ echo "<td><a href=\"comets/result_selected_observations.php?object=" . $_GET['ob
                                                     LangNewComet1 . "</a></td>\n";
 
 // INSTRUMENT
-echo "<td><a href=\"comets/result_selected_observations.php?object=" . $_GET['object'] .
+echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_observations".
+                                                    "&amp;object=" . $_GET['object'] .
                                                     "&amp;instrument=" . $_GET['instrument'] .
                                                     "&amp;observer=" . $_GET['observer'] .
                                                     "&amp;site=" . $_GET['site'] .
@@ -448,7 +454,8 @@ echo "<td><a href=\"comets/result_selected_observations.php?object=" . $_GET['ob
                                                     LangViewObservationField3 . "</a></td>\n";
 
 // COMA
-echo "<td><a href=\"comets/result_selected_observations.php?object=" . $_GET['object'] .
+echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_observations".
+                                                    "&amp;object=" . $_GET['object'] .
                                                     "&amp;instrument=" . $_GET['instrument'] .
                                                     "&amp;observer=" . $_GET['observer'] .
                                                     "&amp;site=" . $_GET['site'] .
@@ -475,7 +482,8 @@ echo "<td><a href=\"comets/result_selected_observations.php?object=" . $_GET['ob
                                                     LangViewObservationField19 . "</a></td>\n";
 
 // DC
-echo "<td><a href=\"comets/result_selected_observations.php?object=" . $_GET['object'] .
+echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_observations".
+                                                    "&amp;object=" . $_GET['object'] .
                                                     "&amp;instrument=" . $_GET['instrument'] .
                                                     "&amp;observer=" . $_GET['observer'] .
                                                     "&amp;site=" . $_GET['site'] .
@@ -502,7 +510,8 @@ echo "<td><a href=\"comets/result_selected_observations.php?object=" . $_GET['ob
                                                     LangViewObservationField18b . "</a></td>\n";
 
 // TAIL
-echo "<td><a href=\"comets/result_selected_observations.php?object=" . $_GET['object'] .
+echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_observations".
+                                                    "&amp;object=" . $_GET['object'] .
                                                     "&amp;instrument=" . $_GET['instrument'] .
                                                     "&amp;observer=" . $_GET['observer'] .
                                                     "&amp;site=" . $_GET['site'] .
@@ -692,20 +701,20 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
 $_SESSION['observation_query'] = $obs;
 
-echo "<p><a href=\"comets/observations.pdf\" target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a></p>";
-//echo "<p><a href=\"comets/observations.icq\" target=\"new_window\">".LangExecuteQueryObjectsMessage7."</a></p>";
+echo "<p><a href=\"".$baseURL."cometobservations.pdf\" target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a></p>";
+//echo "<p><a href=\"".$baseURL."cometobservations.icq\" target=\"new_window\">".LangExecuteQueryObjectsMessage7."</a></p>";
 
 }
 else // NO OBSERVATIONS FOUND 
 {
   echo "<p>" . LangObservationNoResults . "</p>"; 
 }
-echo("<p><a href=\"comets/query_observations.php\">" . LangObservationQueryError2 . "</a></p>");
+echo("<p><a href=\"".$baseURL."index.php?indexAction=comets_query_observations\">" . LangObservationQueryError2 . "</a></p>");
 }
 else // no search fields filled in
 {
    echo "<p>" . LangObservationQueryError1 . "</p>";
-   echo "<p><a href=\"comets/query_observations.php\">" . LangObservationQueryError2 . "</a>";
+   echo "<p><a href=\"".$baseURL."index.php?indexAction=comets_query_observations\">" . LangObservationQueryError2 . "</a>";
    echo " " . LangObservationOR . " ";
    echo "<a href=\"".$baseURL."index.php?indexAction=comets_all_observations\">" . LangObservationQueryError3 . "</a></p>";
 }

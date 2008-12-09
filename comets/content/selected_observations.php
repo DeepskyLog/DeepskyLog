@@ -521,8 +521,8 @@ echo ("</table>\n");
 
 
 $_SESSION['observation_query'] = $obs;
-echo "<p><a href=\"comets/observations.pdf\" target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a></p>";
-//echo "<p><a href=\"comets/observations.icq\" target=\"new_window\">".LangExecuteQueryObjectsMessage7."</a></p>";
+echo "<p><a href=\"".$baseURL."cometobservations.pdf\" target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a></p>";
+//echo "<p><a href=\"".$baseURL."cometobservations.icq\" target=\"new_window\">".LangExecuteQueryObjectsMessage7."</a></p>";
 
 }
 

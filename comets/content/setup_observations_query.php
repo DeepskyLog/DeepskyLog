@@ -32,7 +32,7 @@ echo("</h2>\n");
 
 echo("<table width=\"490\">\n");
 
-echo("<form action=\"comets/result_selected_observations.php\" method=\"get\">\n");
+echo("<form action=\"".$baseURL."index.php?indexAction=comets_result_selected_observations\" method=\"get\">\n");
 
 // OBJECT NAME
 
@@ -490,7 +490,7 @@ echo("&nbsp;&nbsp;<td class=\"explanation\"></td></tr>\n");
 
 */
 
-echo("<tr>\n<td>\n</td><td><input type=\"submit\" name=\"query\" value=\"" . LangQueryObservationsTitle . "\" />\n</td>\n<td></td></tr></form><form action=\"comets/query_observations.php\"><tr><td></td><td><input type=\"submit\" name=\"clear\" value=\"" . LangQueryObjectsButton2 . "\" /></td><td></td></tr></table>");
+echo("<tr>\n<td>\n</td><td><input type=\"submit\" name=\"query\" value=\"" . LangQueryObservationsTitle . "\" />\n</td>\n<td></td></tr></form><form action=\"".$baseURL."index.php?indexAction=comets_query_observations\"><tr><td></td><td><input type=\"submit\" name=\"clear\" value=\"" . LangQueryObjectsButton2 . "\" /></td><td></td></tr></table>");
 
 echo("\n</div>\n</body>\n</html>");
 ?>

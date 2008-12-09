@@ -324,7 +324,6 @@ class CometObservations
         $dateTimeZone = new DateTimeZone($timezone);
 
         $datestr =  sprintf("%02d", $date[1]) . "/" . sprintf("%02d", $date[2]) . "/" . $date[0];
-
         $dateTime = new DateTime($datestr, $dateTimeZone);
         // Geeft tijdsverschil terug in seconden
         $timedifference = $dateTimeZone->getOffset($dateTime); 

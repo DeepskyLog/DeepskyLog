@@ -22,7 +22,7 @@
   {
   $rank = $observations->getPopularObservers();
 
-  $link = "comets/rank_observers.php?size=25";
+  $link = $baseURL."index.php?indexAction=comets_rank_observers&amp;size=25";
 
   if(isset($_GET['min']))
   {
