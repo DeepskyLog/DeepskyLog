@@ -59,7 +59,6 @@ echo("&nbsp;*</td>\n<td colspan=\"2\">\n");
 echo("<select name=\"comet\">\n");
 
 echo("<option value=\"\"></option>\n\">"); // empty value
-echo $id;
 $catalogs = $objects->getSortedObjects("name");
 while(list($key, $value) = each($catalogs))
 {

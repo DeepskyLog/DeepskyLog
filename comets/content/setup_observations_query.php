@@ -33,6 +33,7 @@ echo("</h2>\n");
 echo("<table width=\"490\">\n");
 
 echo("<form action=\"".$baseURL."index.php?indexAction=comets_result_selected_observations\" method=\"get\">\n");
+$id = $objUtil->checkSessionKey('observedobject',$objUtil->checkGetKey('observedobject'));
 
 // OBJECT NAME
 
@@ -51,7 +52,7 @@ $catalogs = $objects->getSortedObjects("name");
 
 while(list($key, $value) = each($catalogs))
 {
-   if ($found && $id == $objects->getId($value))
+   if ($id && $id == $objects->getId($value))
    {
     echo("<option value=\"".$value[0]."\" selected>$value[0]</option>\n");
    }
@@ -183,7 +184,7 @@ while(list($key, $value) = each($sites))
 {
    if($key != 0) // remove empty location in database
    {
-      echo("<option value=\"$value\">".$locations->getName($value)."</option>\n");
+      echo("<option value=\"$value\">".$locations->getLocationName($value)."</option>\n");
    }
 }
 
