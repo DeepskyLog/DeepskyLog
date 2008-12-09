@@ -22,7 +22,7 @@ $util->checkUserInput();
 
 // create comet object
 
-$objects = new cometObjects;
+$objects = new CometObjects;
 $observers = new Observers();
 
 // PAGE TITLE
@@ -44,12 +44,8 @@ echo("<table width=\"490\" id=\"content\">\n");
 
 // retain object id to easy input of looked up comet
 
-$id = $objUtil->checkSessionKey('observedobject');
+$id = $objUtil->checkSessionKey('observedobject',$objUtil->checkGetKey('observedobject'));
 
-if(($objUtil->checkSessionKey('backlink') == "validate_search_object.php" && $objUtil->checkSessionKey('found') == "yes") || ($objUtil->checkSessionKey('backlink') == "view_object.php") || ($objUtil->checkSessionKey('backlink') == "validate_observation.php")) // object validated and found
-{
- $found = true;
-}
 
 // OBJECT NAME 
 
@@ -63,12 +59,11 @@ echo("&nbsp;*</td>\n<td colspan=\"2\">\n");
 echo("<select name=\"comet\">\n");
 
 echo("<option value=\"\"></option>\n\">"); // empty value
-
+echo $id;
 $catalogs = $objects->getSortedObjects("name");
-$found='';
 while(list($key, $value) = each($catalogs))
 {
-   if ($found && $id == $objObject->getId($value))
+   if ($id && $id == $objects->getId($value[0]))
    {
     echo("<option value=\"$value[0]\" selected>$value[0]</option>\n");
    }
@@ -273,7 +268,7 @@ echo("<tr><td class=\"fieldname\">" . LangViewObservationField4 . "</td><td><sel
          }
       }
 
-    echo("</select></td><td class=\"explanation\"><a href=\"".$baseURL."index.php?indexAction=add_site.php\">" . LangChangeAccountField7Expl ."</a></td></tr>");
+    echo("</select></td><td class=\"explanation\"><a href=\"".$baseURL."index.php?indexAction=add_site\">" . LangChangeAccountField7Expl ."</a></td></tr>");
 
 // INSTRUMENT
 
@@ -319,7 +314,7 @@ echo("<option value=\"\"></option>\n"); // include empty instrument
          echo("$instrumentname</option>\n");
       }
 
-echo("</select></td><td class=\"explanation\"><a href=\"".$baseURL."index.php?indexAction=add_instrument.php\">" . LangChangeAccountField8Expl . "</a>
+echo("</select></td><td class=\"explanation\"><a href=\"".$baseURL."index.php?indexAction=add_instrument\">" . LangChangeAccountField8Expl . "</a>
    </td></tr>");
 
 // MAGNIFICATION

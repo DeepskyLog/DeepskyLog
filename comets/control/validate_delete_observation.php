@@ -30,7 +30,7 @@ elseif($_GET['observationid']) // observationid given
   if ($role == RoleAdmin || $role == RoleCometAdmin)
   {
     $cometobservations->deleteObservation($_GET['observationid']);
-    header("Location:../all_observations.php");
+    $_GET['indexAction']='comets_all_observations';
   }
   else // not logged in as admin 
   {

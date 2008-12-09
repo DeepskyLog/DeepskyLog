@@ -27,7 +27,7 @@ if($objUtil->checkPostKey('sitename')
     } 
     else
     { $objLocation->setSkyBackground($id, -999);
-      $locations-setLocationLimitingMagnitude($id, -999);
+      $objLocation->setLocationLimitingMagnitude($id, -999);
 		}
 		$objLocation->setLocationObserver($id, $_SESSION['deepskylog_id']);
     $_SESSION['message'] = LangValidateSiteMessage2;

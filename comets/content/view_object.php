@@ -90,7 +90,7 @@ if($_SESSION['deepskylog_id'])
    //$_SESSION['observedobject'] = $_SESSION['result'][0]; // use name in database
    $_SESSION['found'] = "yes";
    $_SESSION['backlink'] = "validate_search_object.php";
-   echo("<p><a href=\"".$baseURL."index.php?indexAction=comet_add_observation\">" . LangViewObjectAddObservation . $objects->getName($_GET['object']) . "</a></p>");
+   echo("<p><a href=\"".$baseURL."index.php?indexAction=comets_add_observation&amp;observedobject=" . urlencode($_GET['object']) . "\">" . LangViewObjectAddObservation . $objects->getName($_GET['object']) . "</a></p>");
 }
 
 # extra link for administrators to change comet details
@@ -99,7 +99,7 @@ $role = $observers->getRole($_SESSION['deepskylog_id']);
 
 if ($role == RoleAdmin || $role == RoleCometAdmin)
 {
-   echo("<p><a href=\"comets/change_object.php?object=" . $_GET['object'] . "\">" . LangChangeObject . " " .$objects->getName($_GET['object']) . "</a></p>");
+   echo("<p><a href=\"".$baseURL."index.php?indexAction=comets_change_object&amp;object=" . urlencode($_GET['object']) . "\">" . LangChangeObject . " " .$objects->getName($_GET['object']) . "</a></p>");
 }
 
 echo("\n</div>\n");

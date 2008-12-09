@@ -147,6 +147,8 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="comets_validate
   include_once 'comets/control/validate_observation.php';
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="comets_validate_object")
   include_once 'comets/control/validate_object.php';
+if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="comets_validate_change_object")
+  include_once 'comets/control/validate_change_object.php';
   
    
 

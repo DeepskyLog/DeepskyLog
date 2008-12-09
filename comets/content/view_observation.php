@@ -27,9 +27,9 @@ if($_SESSION['observation_query']) // array of observations
 {
    $arrayIndex = array_search($_GET['observation'],$_SESSION['observation_query']);
    $previousIndex = $arrayIndex + 1;
-   $previousObservation = $_SESSION['observation_query'][$previousIndex];
+   @$previousObservation = $_SESSION['observation_query'][$previousIndex];
    $nextIndex = $arrayIndex - 1;
-   $nextObservation = $_SESSION['observation_query'][$nextIndex];
+   @$nextObservation = $_SESSION['observation_query'][$nextIndex];
 
    if ($previousObservation != "")
    {

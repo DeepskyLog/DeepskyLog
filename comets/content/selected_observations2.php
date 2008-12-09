@@ -707,7 +707,7 @@ else // no search fields filled in
    echo "<p>" . LangObservationQueryError1 . "</p>";
    echo "<p><a href=\"comets/query_observations.php\">" . LangObservationQueryError2 . "</a>";
    echo " " . LangObservationOR . " ";
-   echo "<a href=\"comets/all_observations.php\">" . LangObservationQueryError3 . "</a></p>";
+   echo "<a href=\"".$baseURL."index.php?indexAction=comets_all_observations\">" . LangObservationQueryError3 . "</a></p>";
 }
 echo("</div>\n</div>\n</body>\n</html>");
 ?>

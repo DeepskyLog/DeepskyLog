@@ -20,7 +20,8 @@ echo (LangChangeObject . " " . $objects->getName($_GET['object']));
 
 echo("</h2>\n<table width=\"490\">\n");
 
-echo("<form action=\"comets/control/validate_change_object.php\" method=\"post\">");
+echo("<form action=\"".$baseURL."index.php\" method=\"post\">");
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"comets_validate_change_object\" />";
 
 // NAME
 

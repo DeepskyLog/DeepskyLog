@@ -1,13 +1,12 @@
 <?php
-
 // overview_objects.php
 // generates an overview of all comets in the database
 // Version 0.3: 2005/09/21, WDM
 
 include_once "lib/cometobjects.php";
 include_once "lib/setup/language.php";
-include_once "../common/control/ra_to_hms.php";
-include_once "../common/control/dec_to_dm.php";
+include_once "common/control/ra_to_hms.php";
+include_once "common/control/dec_to_dm.php";
 include_once "lib/util.php";
 
 $objects = new CometObjects;
@@ -42,7 +41,7 @@ if(sizeof($obstest) > 0) // at least one object in database
   $obs = $objects->getSortedObjects($sort);
 
 
-  if(($sort != '') && $_GET['previous'] == $_GET['sort']) // reverse sort when pushed twice
+  if((@$sort != '') && @$_GET['previous'] == @$_GET['sort']) // reverse sort when pushed twice
   {
     if(sizeof($obs) > 0)
     {
@@ -85,17 +84,17 @@ if(sizeof($obstest) > 0)
 {
   $count = 0; // counter for altering table colors
 
-  $link = "comets/view_objects.php?sort=".$sort."&amp;previous=".$prev;
+  $link = "".$baseURL."index.php?indexAction=comets_view_objects&amp;sort=".$sort."&amp;previous=".$prev;
   list($min, $max) = $util->printListHeader($obs, $link, $tempmin, 25, "");
  
   // OBJECT TABLE HEADERS
 
   echo "<table>\n
         <tr class=\"type3\">\n
-        <td><a href=\"comets/view_objects.php?sort=name&amp;previous=$previous\">" . LangOverviewObjectsHeader1 . "</a></td>\n";
-  echo "<td><a href=\"comets/view_objects.php?sort=icqname&amp;previous=$previous\">" . LangNewObjectIcqname . "</a></td>\n";
+        <td><a href=\"".$baseURL."index.php?indexAction=comets_view_objects&amp;name&amp;previous=$previous\">" . LangOverviewObjectsHeader1 . "</a></td>\n";
+  echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_view_objects&amp;icqname&amp;previous=$previous\">" . LangNewObjectIcqname . "</a></td>\n";
 
-      echo "<td><a href=\"comets/view_objects.php?sort=seen&amp;previous=$previous\">".LangOverviewObjectsHeader7."</a></td>\n";
+      echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_view_objects&amp;sort=seen&amp;previous=$previous\">".LangOverviewObjectsHeader7."</a></td>\n";
 
   while(list ($key, $value) = each($obs)) // go through object array
   {
