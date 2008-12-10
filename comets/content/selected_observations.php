@@ -276,7 +276,7 @@ if(isset($_GET['objectname']))
 }
 
 echo ("</table>\n");
-echo "<p><a href=\"comets/observations.pdf\" target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a></p>";
+echo "<p><a href=\"".$baseURL."cometobservations.pdf\" target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a></p>";
 }
 
 else // no observations of object
@@ -361,7 +361,7 @@ else
 {
    $previous = $sort;
 }
-
+echo "Count: " . count($_SESSION['observation_query']);
 if(sizeof($obs) > 0)
 {
 // OBJECT TABLE HEADERS
@@ -518,6 +518,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
    $count++; // increase counter
 }
 echo ("</table>\n");
+
 
 
 $_SESSION['observation_query'] = $obs;

@@ -193,7 +193,7 @@ if (($_SESSION['module'] == "deepsky") && (array_key_exists('deepskylog_id',$_SE
 	}
 	echo("</form>");
 }
-else
+elseif($_SESSION['module'] == "deepsky")
   echo(LangListOnlyMembers);
 echo "</td>";
 echo "</tr>";

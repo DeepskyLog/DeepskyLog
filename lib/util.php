@@ -1307,8 +1307,8 @@ class util
     include_once "cometobservations.php";
     include_once "ICQMETHOD.php";
     include_once "ICQREFERENCEKEY.php";
-    include "setup/vars.php";
-    include "setup/databaseInfo.php";
+    include_once "setup/vars.php";
+    include_once "setup/databaseInfo.php";
 
     $objects = new CometObjects;
     $observer = new Observers;
@@ -1318,18 +1318,18 @@ class util
     $util = new Util;
     $ICQMETHODS = new ICQMETHOD();
     $ICQREFERENCEKEYS = new ICQREFERENCEKEY();
-
+    $_GET['pdfTitle']="CometObservations.pdf";
     // Create pdf file
     $pdf = new Cezpdf('a4', 'portrait');
     $pdf->ezStartPageNumbers(300, 30, 10);
 
-    $fontdir = realpath('lib/fonts/Helvetica.afm');
+    $fontdir = $GLOBALS['instDir'].'lib/fonts/Helvetica.afm';
     $pdf->selectFont($fontdir);
     $pdf->ezText(html_entity_decode(LangPDFTitle3)."\n");
 
     while(list ($key, $value) = each($result))
     {
-      $objectname = $objects->getName($observation->getId($value));
+      $objectname = $GLOBALS['objCometObject']->getName($observation->getObjectId($value));
 
       $pdf->ezText($objectname, "14");
 
@@ -1348,7 +1348,7 @@ class util
 
       $hour = (int)($time / 100);
       $minute = $time - $hour * 100;
-      $formattedDate = date($dateformat, mktime(0,0,0,$date[1],$date[2],$date[0]));
+      $formattedDate = date($GLOBALS['dateformat'], mktime(0,0,0,$date[1],$date[2],$date[0]));
 
       if ($minute < 10)
       {
@@ -1483,7 +1483,7 @@ class util
       }
 
       // Description
-      $description = $observation->getDescriptionDsObservation($value);
+      $description = $observation->getDescription($value);
 
       if (strcmp($description, "") != 0)
       {
@@ -1492,7 +1492,7 @@ class util
       }
 
 
-      $upload_dir = 'cometdrawings';
+      $upload_dir = $GLOBALS['instDir'].'comets/'.'cometdrawings';
       $dir = opendir($upload_dir);
 
       while (FALSE !== ($file = readdir($dir)))
@@ -1503,7 +1503,7 @@ class util
         }
         if(fnmatch($value . ".gif", $file) ||
         fnmatch($value . ".jpg", $file) ||
-        fnmatch($_value. ".png", $file))
+        fnmatch($value. ".png", $file))
         {
           $pdf->ezImage($upload_dir . "/" . $value . ".jpg", 0, 500, "none", "left");
         }
@@ -1548,10 +1548,10 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('confirm_subscribe'                  ,'common/content/confirm.php'))) 		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_eyepiece'                    ,'common/content/view_eyepiece.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_filter'                      ,'common/content/view_filter.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_instrument'                  ,'common/content/view_instrument.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_instrument'                  ,'common/content/view_instrument.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_lens'                        ,'common/content/view_lens.php')))		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_location'                    ,'common/content/view_location.php')))		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_observer'                    ,'common/content/view_observer.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_location'                    ,'common/content/view_location.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_observer'                    ,'common/content/view_observer.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('search_sites'                       ,'common/content/search_locations.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('site_result'                        ,'common/content/getLocation.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('subscribe'                          ,'common/content/register.php')))
