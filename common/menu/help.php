@@ -1,18 +1,16 @@
 <?php
 // help.php
-// help.php 
-/*
-echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">\n
-      <tr>\n
-      <th valign=\"top\">\n";
-echo ("Help");
-echo "</th>\n</tr>\n<tr>\n<td>\n
-      <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-echo "<tr align=\"left\">\n<td>\n<a href=\"deepskylog.docbook/index.html\" class=\"mainlevel\" target=\"_blank\">\n";
-echo ("Help");
-echo "</a>\n</td>\n</tr>\n";
-echo "</table>\n</td>\n
-      </tr>\n
-      </table>\n";
-*/
+
+echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">";
+if ($_SESSION['lang'] == "nl")
+{ echo"<tr>";
+	echo "<th valign=\"top\">Help</th>";
+	echo "</tr><tr>";
+	echo "<td valign=\"top\">";
+	echo "<a href=\"http://www.deepskylog.org/wiki/bin/view/Main/DeepskyLogManualNL\" target=\"_blank\">Handleiding</a>";
+	echo "</td>";
+	echo "</tr>";
+}
+
+echo "</table>";
 ?>

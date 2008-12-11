@@ -16,14 +16,14 @@ if($languageMenu==1)
   echo "<tr align=\"left\">";
 	echo "<td>";
   echo "<p>";
-	echo "<select name=\"language\">";
+	echo "<select name=\"language\" style=\"width: 147px\" >";
   $previous_language=$_SESSION['lang'];
   $languages = $objLanguage->getLanguages();
   while(list ($key, $value) = each($languages))
     echo "<option value=\"".$key."\"".(($key==$_SESSION['lang'])?" selected=\"selected\"":'').">".$value."</option>";
   echo "</select>";
-	echo "</p><p>";
-	echo "<input type=\"submit\" name=\"change_language\" value=\"";
+	echo "<br />";
+	echo "<input type=\"submit\" style=\"width: 147px\" name=\"change_language\" value=\"";
   echo LangLanguageMenuButton;
   echo "\" />";
   echo "</td>";

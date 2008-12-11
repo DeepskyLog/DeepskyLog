@@ -1,15 +1,13 @@
 <?php
 
-echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">";
-
-echo "<tr>";
-echo "<th valign=\"top\">".LangListsTitle."</th>";
-echo "</tr>";
-
-echo "<tr>";
-echo "<td valign=\"top\">";
 if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
-{ echo "<form action=\"".$baseURL."index.php\" method=\"get\">";
+{ echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">";
+  echo "<tr>";
+  echo "<th valign=\"top\">".LangListsTitle."</th>";
+  echo "</tr>";
+  echo "<tr>";
+  echo "<td valign=\"top\">";
+  echo "<form action=\"".$baseURL."index.php\" method=\"get\">";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\"></input>";
 	echo "<input type=\"submit\" name=\"manage\" value=\"".LangListManage."\" style=\"width: 147px\">";
   echo "</form>";
@@ -84,7 +82,7 @@ if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
 	}
 	$result1[]='----------';
 	$result=array_merge($result1,$result2);
-	echo("<form name=\"listform\">\n ");
+	echo("<form name=\"listform\">");
 	if(count($result)>0)
 	{ echo("<select style=\"width: 147px\" onchange=\"location = this.options[this.selectedIndex].value;\" name=\"activatelist\">\n");
 		if((!array_key_exists('listname',$_SESSION)) || (!$_SESSION['listname']))
@@ -98,12 +96,8 @@ if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
     echo("</select>\n");
 	}
 	echo("</form>");
+  echo "</td>";
+  echo "</tr>";
+  echo "</table>";
 }
-else
-  echo(LangListOnlyMembers);
-echo "</td>";
-echo "</tr>";
-
-echo "</table>";
-
 ?>

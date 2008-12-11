@@ -5,7 +5,7 @@ if ($_SESSION['module'] == "deepsky")
   echo "<th valign=\"top\">".LangMailtoTitle."</th>"; 
 echo "</tr>";
 echo "<tr>";
-echo "<td valign=\"top\" height=\"120\">";
+echo "<td valign=\"top\" height=\"60\">";
 if ($_SESSION['module'] == "deepsky")
   echo LangMailtoLink;
 echo "</td>";

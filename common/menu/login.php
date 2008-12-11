@@ -14,17 +14,17 @@ if(!(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']))
   echo "<tr align=\"left\">";
 	echo "<td>";
   echo LangLoginMenuItem1;
-  echo "<br></br>";
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"deepskylog_id\" size=\"12\" value=\"\"></input>";
+  echo "<br />";
+	echo "<input type=\"text\" style=\"width: 143px\" class=\"inputfield\" maxlength=\"64\" name=\"deepskylog_id\" size=\"12\" value=\"\"></input>";
   echo "</td>";
 	echo "</tr>";
   echo "<tr align=\"left\">";
 	echo "<td>";
   echo LangLoginMenuItem2;
   echo "<br />";
-	echo "<input type=\"password\" class=\"inputfield\" maxlength=\"64\" name=\"passwd\" size=\"12\" value=\"\"></input>";
-	echo "<p />";
-	echo "<input type=\"submit\" name=\"submit\" value=\"".LangLoginMenuButton."\"/>";
+	echo "<input type=\"password\" style=\"width: 143px\" class=\"inputfield\" maxlength=\"64\" name=\"passwd\" size=\"12\" value=\"\"></input>";
+	echo "<br />";
+	echo "<input type=\"submit\"style=\"width: 147px\"  name=\"submit\" value=\"".LangLoginMenuButton."\"/>";
   echo "</td>";
 	echo "</tr>";
   if($register == "yes")                                                        // include register link

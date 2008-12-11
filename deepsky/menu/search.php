@@ -10,7 +10,7 @@ echo "</th>";
 echo "</tr>";
 echo "<tr>";
 echo "<td>";
-echo("<select style=\"width: 140px\" onchange=\"location = this.options[this.selectedIndex].value;\" name=\"search\" \">");
+echo("<select style=\"width:147px\" onchange=\"location = this.options[this.selectedIndex].value;\" name=\"search\" \">");
 echo "<option> &nbsp; </option>";
 if(isset($_SESSION['deepskylog_id']))
 { if($objObserver->getRole($_SESSION['deepskylog_id'])!="2")                    // user is not in waitlist
