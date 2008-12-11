@@ -46,14 +46,6 @@ if(array_key_exists('ObjectToPlaceInList',$_GET) && $_GET['ObjectToPlaceInList']
 	echo "<HR>";
 }
 
-if(array_key_exists('removeObjectFromList',$_GET) && $_GET['removeObjectFromList'] && $listname)
-{
-	$objList->removeObjectFromList($_GET['removeObjectFromList']);
-	$_SESSION['QOL'] = $objList->getObjectsFromList($_SESSION['listname']);
-  echo LangToListMoved1 . "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['removeObjectFromList']) . "\">" . $_GET['removeObjectFromList'] . "</a>" . LangToListObjectRemoved . "<a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">" . $listname_ss . "</a>.";
-	echo "<HR>";
-}
-
 if(array_key_exists('removePageObjectsFromList',$_GET) && $_GET['removePageObjectsFromList'] && $listname)
 {
 	if(count($_SESSION['QOL'])>0)

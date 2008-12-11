@@ -99,7 +99,7 @@ define("LangQuickPickTitle", "Quick&nbsp;Pick");
 define("LangQuickPickSearchObject", "Zoek&nbsp;object");
 define("LangQuickPickSearchObservations", "Zoek&nbsp;waarnemingen");
 define("LangQuickPickNewObservation", "Nieuwe&nbsp;waarneming");
-define("LangListsTitle", "Waarneemlijsten");
+define("LangListsTitle", "Lijst");
 define("LangListsAnnouncement", "In de volgende versie kunnen geregistreerde waarnemers zelf hun eigen waarneemlijsten samenstellen, bewerken, bewaren en afdrukken, op basis van wat ze reeds zagen, of niet, de plaats aan de hemel, het type object enz. Ook wanneer ze een andere waarneming van iemand zien, zullen ze het betreffende object aan hun lijsten kunnen toevoegen.");
 define("LangMailtoTitle", "Vertel het ons!");
 define("LangMailtoLink", "Gebruik deze <a href=\"mailto:&#100;&#101;v&#101lop&#101rs&#64&#100;&#101;&#101;pskylog.&#98;&#101;\">link </a> om vragen of opmerkingen over te maken.");

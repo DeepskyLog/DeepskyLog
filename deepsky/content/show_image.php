@@ -17,12 +17,6 @@ if($objObject->getRa($objObject->getDsObjectName($_GET['object'])) != "") // che
     echo "The object <a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['addObjectToList']) . "\">" . $_GET['showname'] . "</a> is added to the list <a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">" . $_SESSION['listname'] . "</a>.";
   	echo "<HR>";
   }
-  if(array_key_exists('removeObjectFromList',$_GET) && $_GET['removeObjectFromList'] && $myList)
-  {
-  	$objList->removeObjectFromList($_GET['removeObjectFromList']);
-    echo "The object <a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['removeObjectFromList']) . "\">" . $_GET['removeObjectFromList'] . "</a> is removed from the list <a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">" . $_SESSION['listname'] . "</a>.";
-  	echo "<HR>";
-  }
 	if(array_key_exists('addAllObjectsFromPageToList',$_GET) && $_GET['addAllObjectsFromPageToList'] && $myList)
   {
 	  $count=0;

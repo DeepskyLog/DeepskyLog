@@ -218,22 +218,18 @@ class Lists
  }
  
  function removeObjectFromList($name)
- {
-  $db = new database;
-  $db->login();
-	$observer = $_SESSION['deepskylog_id'];
+ {$observer = $_SESSION['deepskylog_id'];
 	$listname = $_SESSION['listname'];
   $sql = "SELECT objectplace AS ObjPl FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectname=\"$name\"";
   $run = mysql_query($sql) or die(mysql_error());
 	$get = mysql_fetch_object($run);
-  if($place=$get->ObjPl)
+  if($get && $place=$get->ObjPl)
 	{
 	  $sql = "DELETE FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectname=\"$name\"";
     mysql_query($sql) or die(mysql_error());
     $sql = "UPDATE observerobjectlist SET objectplace=objectplace-1 WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectplace>$place";
     mysql_query($sql) or die(mysql_error());
 	}
-	$db->logout();
   if(array_key_exists('QOL',$_SESSION))
     unset($_SESSION['QOL']);
  }
