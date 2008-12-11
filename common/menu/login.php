@@ -7,9 +7,11 @@ if(!(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']))
   echo "<tr>";
 	echo "<th valign=\"top\">";
   echo LangLoginMenuTitle;
+  if($register == "yes")                                                        // include register link
+    echo "<a class=\"mainlevel\" href=\"".$baseURL."index.php?indexAction=subscribe\">".LangLoginMenuRegister."</a>";
   echo "</th>";
 	echo "</tr>";
-	echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+	echo "<form action=\"".$baseURL."index.php\" method=\"post\" name=\"loginForm\">";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"check_login\">";
   echo "<tr align=\"left\">";
 	echo "<td>";
@@ -22,20 +24,12 @@ if(!(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']))
 	echo "<td>";
   echo LangLoginMenuItem2;
   echo "<br />";
-	echo "<input type=\"password\" style=\"width: 143px\" class=\"inputfield\" maxlength=\"64\" name=\"passwd\" size=\"12\" value=\"\"></input>";
-	echo "<br />";
-	echo "<input type=\"submit\"style=\"width: 147px\"  name=\"submit\" value=\"".LangLoginMenuButton."\"/>";
-  echo "</td>";
+	echo "<input type=\"password\" style=\"width: 143px\" class=\"inputfield\" maxlength=\"64\" name=\"passwd\" size=\"12\" value=\"\" onchange=\"if(event.keyCode=13){this.form.submit()}\"></input>";
+
+ // echo "<input type=\"submit\" style=\"width: 0px\" name=\"submit\" value=\"\"/>";
+
+	echo "</td>";
 	echo "</tr>";
-  if($register == "yes")                                                        // include register link
-  { echo "<tr align=\"left\">";
-	  echo "<td>";
-	  echo "<a class=\"mainlevel\" href=\"".$baseURL."index.php?indexAction=subscribe\">";
-    echo LangLoginMenuRegister;
-    echo "</a>";
-		echo "</td>";
-		echo "</tr>";
-  }
   echo "</form>";
 	echo "</table>";
 }

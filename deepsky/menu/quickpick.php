@@ -1,10 +1,10 @@
 <?php
 echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">";
-/*
+
 echo "<tr>";
-echo "<th valign=\"top\">".LangQuickPickTitle."</th>";
+//echo "<th valign=\"top\">"."&nbsp;"."</th>";
 echo "</tr>";
-*/
+
 echo "<form action=\"".$baseURL."index.php\" method=\"get\">";
 echo "<tr>";
 echo "<td>";

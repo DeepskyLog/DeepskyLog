@@ -15,17 +15,12 @@ if($languageMenu==1)
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"setLanguage\">";
   echo "<tr align=\"left\">";
 	echo "<td>";
-  echo "<p>";
-	echo "<select name=\"language\" style=\"width: 147px\" >";
+	echo "<select name=\"language\" style=\"width: 147px\" onchange=\"this.form.submit()\">";
   $previous_language=$_SESSION['lang'];
   $languages = $objLanguage->getLanguages();
   while(list ($key, $value) = each($languages))
     echo "<option value=\"".$key."\"".(($key==$_SESSION['lang'])?" selected=\"selected\"":'').">".$value."</option>";
   echo "</select>";
-	echo "<br />";
-	echo "<input type=\"submit\" style=\"width: 147px\" name=\"change_language\" value=\"";
-  echo LangLanguageMenuButton;
-  echo "\" />";
   echo "</td>";
 	echo "</tr>";
 	echo "</form>";

@@ -89,7 +89,7 @@ define("LangCSVListError1","Fehler w&auml;hrend des Imports.");
 define("LangCSVListError2","Unbekannte Objekte:");
 
 // List menu
-define("LangListManage", "Bearbeiten");
+define("LangListManage", "Listen");
 define("LangListActivate", "Aktivieren");
 define("LangListOnlyMembers", "Listen sind nur f&uuml;r registrierte Benutzer verf&uuml;gbar.");
 
@@ -155,7 +155,7 @@ define("LangChangeAccountField10Expl", "<a href=\"http://cfa-www.harvard.edu/icq
 define("LangChangeAccountField11", "Benutze Ortszeit");
 define("LangChangeAccountField11Expl", "Ihre Ortszeit zur Eingabe und Abfrage von Beobachtungen");
 
-define("LangLoginMenuTitle", "Login");
+define("LangLoginMenuTitle", "Login or ");
 define("LangLoginMenuItem1", "Benutzername");
 define("LangLoginMenuItem2", "Passwort");
 define("LangLoginMenuButton", "Login");

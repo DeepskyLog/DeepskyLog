@@ -26,7 +26,7 @@ if(array_key_exists('deepskylogsec', $_COOKIE)&&$_COOKIE['deepskylogsec'])
 	  $_GET['indexAction']='error_action';
 	}
 }
-elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_login')&&isset($_POST['submit']))                                                     // pushed submit button
+elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_login'))                                                        // entered password
 { if(array_key_exists('deepskylog_id', $_POST)&&$_POST['deepskylog_id']&&array_key_exists('passwd', $_POST)&&$_POST['passwd'])              // all fields filled in
   { $login  = $_POST['deepskylog_id'];                                          // get password from form and encrypt
 	  $passwd = md5($_POST['passwd']);

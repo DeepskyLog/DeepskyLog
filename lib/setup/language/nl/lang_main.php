@@ -89,7 +89,7 @@ define("LangCSVListError1","Er zijn fouten opgetreden bij het importeren.");
 define("LangCSVListError2","Niet-gekende objecten:");
 
 // List menu
-define("LangListManage", "Beheer/Bekijk");
+define("LangListManage", "Lijsten");
 define("LangListActivate", "Activeer");
 define("LangListOnlyMembers", "Lijsten zijn enkel beschikbaar voor de geregistreerde gebruikers.");
 
@@ -155,7 +155,7 @@ define("LangChangeAccountField10Expl", "<a href=\"http://cfa-www.harvard.edu/icq
 define("LangChangeAccountField11", "Gebruik lokale tijd");
 define("LangChangeAccountField11Expl", "Gebruik lokale tijd voor ingeven en opvragen van waarnemingen");
 
-define("LangLoginMenuTitle", "Aanmelden");
+define("LangLoginMenuTitle", "Log in of ");
 define("LangLoginMenuItem1", "Gebruikersnaam");
 define("LangLoginMenuItem2", "Paswoord");
 define("LangLoginMenuButton", "Log in");

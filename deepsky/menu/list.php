@@ -2,15 +2,21 @@
 
 if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
 { echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">";
+
   echo "<tr>";
   echo "<th valign=\"top\">".LangListsTitle."</th>";
   echo "</tr>";
   echo "<tr>";
+
   echo "<td valign=\"top\">";
   echo "<form action=\"".$baseURL."index.php\" method=\"get\">";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\"></input>";
-	echo "<input type=\"submit\" name=\"manage\" value=\"".LangListManage."\" style=\"width: 147px\">";
-  echo "</form>";
+  echo "</td>";
+  echo "</tr>";
+  echo "<tr";
+  echo "<td>";
+
+	echo "</form>";
   if(array_key_exists('addList',$_GET) && array_key_exists('addlistname',$_GET))
   { if(array_key_exists('QOL',$_SESSION))
       unset($_SESSION['QOL']);
