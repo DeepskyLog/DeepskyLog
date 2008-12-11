@@ -4,5 +4,5 @@
 
 $objObserver->validateObserver($objUtil->checkGetKey('validate'), RoleUser);
 $entryMessage=LangValidateObserverMessage1.' '.LangValidateObserverMessage2;
-$_GET['indexAction']='view_observers'';
+$_GET['indexAction']='view_observers';
 ?>
