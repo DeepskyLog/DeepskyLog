@@ -12,12 +12,17 @@ echo "<td height=\"64\" colspan=\"7\" style=\"background:url(".$baseURL."vvs/ima
   echo "<td width=\"50%\">";
   echo "<img src=\"vvs/images/spacer.gif\" width=\"1\" height=\"64\" />";
   echo "</td>";
+  
   echo "<td whidth=\"150px\">";
   include $_SESSION['module'].'/menu/location.php';
-    echo "</td>";
+  echo "</td>";
   
   echo "<td whidth=\"150px\">";
   include $_SESSION['module'].'/menu/instrument.php';
+  echo "</td>";
+  
+  echo "<td whidth=\"150px\" align=\"right\">";
+//  echo "<img src=\"styles/images/DSL.gif\" width=\"63\" height=\"64\" />";
   echo "</td>";
   
   echo "</tr>";
