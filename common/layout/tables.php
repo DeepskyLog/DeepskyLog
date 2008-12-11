@@ -78,4 +78,5 @@ function tableFieldnameFieldExplanation($name, $field, $explanation)
   echo "</td>";
   echo "</tr>";
 }
+
 ?>

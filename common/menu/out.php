@@ -10,10 +10,10 @@ echo "</th>";
 echo "</tr>";
 echo "<tr>";
 echo "<td>";
-echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
 echo "<tr align=\"left\">";
 echo "<td>";
 echo "<a href=\"".$baseURL."index.php?indexAction=logout\" class=\"mainlevel\">".LangLogoutMenuItem1."</a>";
 echo "</td>";
 echo "</tr>";
+echo "</table>";
 ?>

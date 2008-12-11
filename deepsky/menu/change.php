@@ -8,19 +8,22 @@ echo "<th valign=\"top\">";
 echo LangChangeMenuTitle;
 echo "</th>";
 echo "</tr>";
-//echo "<tr>";
-//echo "<td>";
-//echo "<table>";
-tableMenuItem($baseURL."index.php?indexAction=add_observation",                LangChangeMenuItem2);
-tableMenuItem($baseURL."index.php?indexAction=add_object",                     LangChangeMenuItem5);
-tableMenuItem($baseURL."index.php?indexAction=common_content_change_account",  LangChangeMenuItem1);
-tableMenuItem($baseURL."index.php?indexAction=add_site",                       LangChangeMenuItem4);
-tableMenuItem($baseURL."index.php?indexAction=add_instrument",                 LangChangeMenuItem3);
-tableMenuItem($baseURL."index.php?indexAction=add_eyepiece",                   LangChangeMenuItem6);
-tableMenuItem($baseURL."index.php?indexAction=add_filter",                     LangChangeMenuItem7);
-tableMenuItem($baseURL."index.php?indexAction=add_lens",                       LangChangeMenuItem8);
-//echo "</table>";
-//echo "</td>";
-//echo "</tr>";
+echo "<tr>";
+echo "<td>";
+echo("<select style=\"width: 140px\" onchange=\"location = this.options[this.selectedIndex].value;\" name=\"search\" \">");
+echo "<option> &nbsp; </option>";
+if(isset($_SESSION['deepskylog_id']))
+{ echo "<option ".(($objUtil->checkGetKey('indexAction')=='add_observation')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=add_observation\">".LangChangeMenuItem2."</option>";
+  echo "<option ".(($objUtil->checkGetKey('indexAction')=='add_object')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=add_object\">".LangChangeMenuItem5."</option>";
+  echo "<option ".(($objUtil->checkGetKey('indexAction')=='common_content_change_account')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=common_content_change_account\">".LangChangeMenuItem1."</option>";
+  echo "<option ".(($objUtil->checkGetKey('indexAction')=='add_site')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=add_site\">".LangChangeMenuItem4."</option>";
+  echo "<option ".(($objUtil->checkGetKey('indexAction')=='add_instrument')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeMenuItem3."</option>";
+  echo "<option ".(($objUtil->checkGetKey('indexAction')=='add_eyepiece')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=add_eyepiece\">".LangChangeMenuItem6."</option>";
+  echo "<option ".(($objUtil->checkGetKey('indexAction')=='add_filter')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=add_filter\">".LangChangeMenuItem7."</option>";
+  echo "<option ".(($objUtil->checkGetKey('indexAction')=='add_lens')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=add_lens\">".LangChangeMenuItem8."</option>";                        
+}
+echo("</select>\n");
+echo "</td>";
+echo "</tr>";
 echo "</table>";
 ?>
