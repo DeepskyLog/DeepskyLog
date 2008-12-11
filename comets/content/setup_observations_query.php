@@ -32,7 +32,8 @@ echo("</h2>\n");
 
 echo("<table width=\"490\">\n");
 
-echo("<form action=\"".$baseURL."index.php?indexAction=comets_result_selected_observations\" method=\"get\">\n");
+echo("<form action=\"".$baseURL."index.php\" method=\"get\">\n");
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"comets_result_selected_observations\" />";
 $id = $objUtil->checkSessionKey('observedobject',$objUtil->checkGetKey('observedobject'));
 
 // OBJECT NAME

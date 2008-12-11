@@ -79,7 +79,7 @@ if(!in_array($_SESSION['module'],$modules))
 if(!array_key_exists('lang',$_SESSION))
   $_SESSION['lang']=$defaultLanguage;
 if(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=="setLanguage"))
-{ if(array_key_exists('language',$_GET)&&$_POST['language']&&array_key_exists($_POST['language'],$objLanguage->getLanguages()))
+{ if(array_key_exists('language',$_POST)&&$_POST['language']&&array_key_exists($_POST['language'],$objLanguage->getLanguages()))
     $_SESSION['lang']=$_POST['language'];
 	$_GET['indexAction']='default_action';
 }

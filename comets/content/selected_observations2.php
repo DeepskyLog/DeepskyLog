@@ -25,7 +25,8 @@ $util->checkUserInput();
 echo("<div id=\"main\">\n<h2>");
 echo(LangSelectedObservationsTitle2);
 echo("</h2>\n");
-
+$mindate='';
+$maxdate='';
 if($_GET['observer'] || $_GET['instrument'] || $_GET['site'] || $_GET['minyear'] || $_GET['maxyear'] || ($_GET['mindiameter'] && $_GET['mindiameterunits']) || ($_GET['maxdiameter'] && $_GET['maxdiameterunits']) || $_GET['minmag'] || $_GET['maxmag'] || $_GET['description'] || $_GET['mindc'] || $_GET['maxdc'] || $_GET['mincoma'] || $_GET['maxcoma'] || $_GET['mintail'] || $_GET['maxtail'] || $_GET['object']) // at least 1 field to search on 
 {
 
@@ -112,7 +113,7 @@ if($_GET['observer'] || $_GET['instrument'] || $_GET['site'] || $_GET['minyear']
 $query = array("object" => $object,
                "observer" => $observer,
                "instrument" => $instrument,
-	       "location" => $site,
+	             "location" => $site,
                "mindate" => $mindate,
                "maxdate" => $maxdate, 
                "maxdiameter" => $maxdiam,
