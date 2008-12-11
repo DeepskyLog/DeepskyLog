@@ -18,7 +18,7 @@ include 'common/entryexit/instructions.php';
 include 'common/entryexit/menu.php';
 if(isset($entryMessage)&&$entryMessage) echo $entryMessage.'<hr />';
 include $objUtil->utiltiesDispatchIndexAction();	
-include 'common/tail.php';
+include 'common/menu/tail.php';
 }
 catch (Exception $e)
 {

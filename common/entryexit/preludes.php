@@ -13,7 +13,7 @@ $objDatabase->newlogin();                                                       
 require_once "lib/observers.php";
 require_once "lib/setup/vars.php";
 require_once "lib/util.php";
-require_once "common/loginuser.php";
+require_once "common/control/loginuser.php";
 require_once "lib/atlasses.php";
 require_once "lib/locations.php";
 require_once "lib/instruments.php";
