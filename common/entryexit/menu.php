@@ -8,8 +8,6 @@ include $_SESSION['module'].'/menu/list.php';                                   
 include $_SESSION['module'].'/menu/search.php';                                   // SEARCH MENU
 if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])    // LOGGED IN
 { include $_SESSION['module'].'/menu/change.php';                                 // CHANGE MENU
-  include $_SESSION['module'].'/menu/location.php';
-  include $_SESSION['module'].'/menu/instrument.php';
   include 'common/menu/help.php';                                                 // HELP MENU 
   if(array_key_exists('admin', $_SESSION)&&($_SESSION['admin']=='yes'))
     include 'common/menu/admin.php';                                              // ADMINISTRATION MENU
