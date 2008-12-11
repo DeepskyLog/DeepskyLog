@@ -9,12 +9,13 @@ echo "<tr bgcolor=\"#003366\">";
 echo "<td height=\"64\" colspan=\"7\" style=\"background:url(".$baseURL."vvs/images/header_bg.jpg) no-repeat top left; background-color:#003366\">";
   echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
   echo "<tr>";
+  
   echo "<td width=\"33%\">";
   echo "<img src=\"vvs/images/spacer.gif\" width=\"1\" height=\"64\" />";
   echo "</td>";
   
   echo "<td whidth=\"150px\">";
-  include $_SESSION['module'].'/menu/location.php';
+  include $_SESSION['module'].'/menu/list.php';
   echo "</td>";
   
   echo "<td whidth=\"150px\">";
@@ -22,7 +23,7 @@ echo "<td height=\"64\" colspan=\"7\" style=\"background:url(".$baseURL."vvs/ima
   echo "</td>";
   
   echo "<td whidth=\"150px\">";
-  include $_SESSION['module'].'/menu/list.php';
+  include $_SESSION['module'].'/menu/location.php';
   echo "</td>";
   
   echo "</tr>";
