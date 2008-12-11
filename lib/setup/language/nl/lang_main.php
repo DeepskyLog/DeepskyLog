@@ -1,6 +1,8 @@
 <?php
 // version 3.1, DE 20061119
 
+define("LangCounter","Teller");
+
 define("LangYouAreHere", "U bevindt zich hier:");
 define("LangHome","Home");
 define("LangBecomeMember", "Word lid");

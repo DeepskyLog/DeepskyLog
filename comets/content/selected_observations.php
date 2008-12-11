@@ -361,7 +361,6 @@ else
 {
    $previous = $sort;
 }
-echo "Count: " . count($_SESSION['observation_query']);
 if(sizeof($obs) > 0)
 {
 // OBJECT TABLE HEADERS

@@ -1,6 +1,8 @@
 <?php
 // version 3.1, DE 20061119
 
+define("LangCounter","Compteur");
+
 define("LangYouAreHere", "Vous &ecirc;tes ici:");
 define("LangHome","Acceuil");
 define("LangBecomeMember", "Devenez membre");
