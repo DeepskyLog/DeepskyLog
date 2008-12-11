@@ -1,7 +1,7 @@
 <?php
 include 'common/menu/head.php';                                                   // HTML head
 include 'common/menu/headmenu.php';                                               // HEAD MENU
-include 'common/menu/modulemenu.php';                                             // MODULES Menu
+//include 'common/menu/modulemenu.php';                                             // MODULES Menu
 include 'common/menu/login.php';
 include $_SESSION['module'].'/menu/quickpick.php';                                   // SEARCH MENU
 include $_SESSION['module'].'/menu/list.php';                                   // SEARCH MENU

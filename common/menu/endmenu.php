@@ -5,20 +5,30 @@ echo "</td>";
 echo "<td colspan=\"3\" align=\"right\" valign=\"top\" style=\"background:url(vvs/images/toolbar_bg.jpg) no-repeat top left; background-color:#FFFFFF\">";
   echo "<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">"; 
   echo "<tr width=\"100%\">";
-  echo "<td width=\"50%\">";
+  echo "<td>";
   echo "<span class=\"mainlevel\">";
   echo LangWelcome;
   echo $objUtil->checkSessionKey('module');
   echo LangWelcome1;
   echo $baseURL;
-  echo "</span>";
-  echo "</td>";
-  echo "<td align=\"right\" width=\"50%\" nowrap=\"nowrap\">";
-  echo "<span class=\"mainlevel\">";
+  echo ' - ';
   if($objUtil->checkSessionKey('deepskylog_id'))
     echo LangWelcome2.$objObserver->getFirstName($_SESSION['deepskylog_id'])."&nbsp;".$objObserver->getObserverName($_SESSION['deepskylog_id']);
   else
     echo LangWelcome3;
+  echo "</span>";  
+  echo "</td>";
+
+  echo "<td align=\"right\">";    
+  echo "<span class=\"mainlevel\">";
+  echo LangWelcome4;
+  
+  for ($i = 0; $i < count($modules);$i++)
+  { $mod = $modules[$i];
+    if($i>0) echo " - ";
+    echo "<a href=\"".$baseURL."index.php?indexAction=module".$mod."\">".$GLOBALS[$mod]."</a>";
+  }
+  
   echo "</span>";
   echo "</td>";
   echo "</tr>";

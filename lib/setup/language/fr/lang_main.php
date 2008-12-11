@@ -13,6 +13,7 @@ define("LangWelcome","Bienvenu&nbsp;dans&nbsp;la module&nbsp;");
 define("LangWelcome1","&nbsp;de&nbsp;");
 define("LangWelcome2","Vous&nbsp;êtes&nbsp;rentré&nbsp;comme&nbsp;");
 define("LangWelcome3","Vous&nbsp;n'êtes&nbsp;pas&nbsp;rentré");
+define("LangWelcome4","Les modules: ");
 
 define("LangValidateSubject", "DeepskyLog - votre compte est accept&eacute;");
 define("LangValidateAdmin", "\nUn administrateur vous a donn&eacute; les droits d'administrateur.\n");
