@@ -1,5 +1,4 @@
 <?php
-echo "</table>";
 
 echo "<p height=\"4\" align=\"center\">";
 echo "Copyright 2004 - 2008&nbsp;";
