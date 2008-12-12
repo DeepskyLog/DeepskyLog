@@ -1,6 +1,5 @@
 <?php 
 include_once 'common/entryexit/preludes.php';
-include_once 'common/entryexit/preludesDS.php';
 header ("Content-Type: application/vnd.ms-excel");
 header ("Content-Disposition: attachment; filename=\"objects.argo\"");
 if(array_key_exists('SID', $_GET)&&$_GET['SID']&&array_key_exists($_GET['SID'],$_SESSION)&&$_SESSION[$_GET['SID']])
