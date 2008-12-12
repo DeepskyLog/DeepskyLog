@@ -10,6 +10,7 @@
 
 //print "TEST" . $db;
 
+ /*
  $sql = "CREATE TABLE atlasses (atlasCode VARCHAR(100) NOT NULL DEFAULT 'Atlas', PRIMARY KEY (`atlasCode`))";
  $run = mysql_query($sql) or die(mysql_error());
 
@@ -39,8 +40,9 @@
  
  $sql = "INSERT INTO atlasses(atlasCode) VALUES ('torresC')";
  $run = mysql_query($sql) or die(mysql_error());
-
+*/
  require_once "../lib/atlasses.php";
+
  $object = new Objects;
  $atlas = new Atlasses;
  

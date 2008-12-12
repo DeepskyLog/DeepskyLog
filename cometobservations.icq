@@ -1,7 +1,7 @@
 <?php 
   header ("Content-Type: text/plain");
   header ("Content-Disposition: attachment; filename=\"observations.icq\"");
-session_start();
+  session_start();
   $_SESSION['module'] = "comets";
 
   include_once "lib/cometobservations.php";

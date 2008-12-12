@@ -24,7 +24,7 @@ if(!(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']))
 	echo "<td>";
   echo LangLoginMenuItem2;
   echo "<br />";
-	echo "<input type=\"password\" style=\"width: 143px\" class=\"inputfield\" maxlength=\"64\" name=\"passwd\" size=\"12\" value=\"\" onchange=\"if(event.keyCode=13){this.form.submit()}\"></input>";
+	echo "<input type=\"password\" style=\"width: 143px\" class=\"inputfield\" maxlength=\"64\" name=\"passwd\" size=\"12\" value=\"\" onKeyDown=\"if(event.keyCode==13){this.form.submit()}\"></input>";
 
  // echo "<input type=\"submit\" style=\"width: 0px\" name=\"submit\" value=\"\"/>";
 

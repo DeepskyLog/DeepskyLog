@@ -205,8 +205,7 @@ class util
   }
   public function pdfObjects($result)  // Creates a pdf document from an array of objects
   { global $deepskylive, $dateformat;
-		$atlasses = $GLOBALS['objAtlas']->getSortedAtlasses();
-		
+		$atlasses = $GLOBALS['objAtlas']->getSortedAtlasses();	
     while(list ($key, $valueA) = each($result))
     { $mag = $valueA['objectmagnitude'];
       if ($mag == 99.9)
@@ -285,11 +284,9 @@ class util
     // Create pdf file
     $pdf = new Cezpdf('a4', 'landscape');
     $pdf->ezStartPageNumbers(450, 15, 10);
-
-    $fontdir = /*realpath*/('lib/fonts/Helvetica.afm');
-    //  $pdf->selectFont($fontdir);
-    $pdf->selectFont('lib/fonts/Helvetica.afm');
-
+    $fontdir = $instDir.'lib/fonts/Helvetica.afm';
+    $pdf->selectFont($fontdir);
+        
     $pdf->ezTable($obs1,
     array("Name" => html_entity_decode(LangPDFMessage1),
                       "ra" =>   html_entity_decode(LangPDFMessage3),
@@ -326,7 +323,7 @@ class util
 											"fontSize" => "7"				         
 											)
 											);
-											$pdf->ezStream();
+	$pdf->ezStream();
   }
   public function pdfObjectnames($result)  // Creates a pdf document from an array of objects
   {
@@ -1052,7 +1049,7 @@ class util
           if ($diam2 != 0.0)
             $size = $size.sprintf("x%.1f''", $diam2);
         }
-      echo "DSL " . sprintf("%03d", $counter) . " " . $valueA['objectname']."|".raArgoToString($valueA['objectra'])."|".decToArgoString($valueA['objectdecl'], 0)."|".$GLOBALS[$argotype]."|".$mag."|".$size.";".$atlas." ".$page.";CR ".$valueA['objectconstrast'].";".$valueA['objectseen'].";".$valueA['seendate']."\n";
+      echo "DSL " . sprintf("%03d", $counter) . " " . $valueA['objectname']."|".raArgoToString($valueA['objectra'])."|".decToArgoString($valueA['objectdecl'], 0)."|".$GLOBALS[$argotype]."|".$mag."|".$size.";".$atlas." ".$page.";CR ".$valueA['objectcontrast'].";".$valueA['objectseen'].";".$valueA['objectlastseen']."\n";
       $counter++;
     }
   }

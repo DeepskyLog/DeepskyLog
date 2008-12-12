@@ -425,7 +425,7 @@ class Observations {
 	}
 	function getObservationsLastYear($id) {
 		$t = getdate();
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid=\"$id\" AND observations.date > \"" . date("Ymd", ($t[0] - 31536000)) . "\" AND observations.visibility != 7 ", 'Cnt');
+		return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid=\"$id\" AND observations.date > \"" . date("Ymd", ($t[0] - 31536000)) . "\" AND observations.visibility != 7 ", 'Cnt', 0);
 	}
 	function getObservedFromCatalogue($id, $catalog) {
 		if (substr($catalog, 0, 5) == "List:")
