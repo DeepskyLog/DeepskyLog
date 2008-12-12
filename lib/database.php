@@ -71,7 +71,7 @@ class Database implements iDatabase
 	  $run = mysql_query($sql) or die(mysql_error());
     $get = mysql_fetch_object($run);
 		if($get) 
-		  if ($get->$name)
+		  if ($get->$name!='')
 		    return $get->$name;
 		  else 
 		    return $nullvalue;

@@ -260,7 +260,7 @@ class util
       {
         $magnifi = "-";
       } else {
-        $magnifi = (int)$valueA['objectmagnification'];
+        $magnifi = (int)$valueA['objectoptimalmagnification'];
       }
 
       $temp = array("Name" => $valueA['showname'],
@@ -284,7 +284,7 @@ class util
     // Create pdf file
     $pdf = new Cezpdf('a4', 'landscape');
     $pdf->ezStartPageNumbers(450, 15, 10);
-    $fontdir = $instDir.'lib/fonts/Helvetica.afm';
+    $fontdir = $GLOBALS['instDir'].'lib/fonts/Helvetica.afm';
     $pdf->selectFont($fontdir);
         
     $pdf->ezTable($obs1,
@@ -387,8 +387,11 @@ class util
 		$sectionBarSpace = 3;
 		$SectionBarWidth = 400+$sectionBarSpace;
     $theDate=date('d/m/Y');
-		$pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
-		$pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
+    $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
+		if($GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id'])
+		&& $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))
+		&& $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])))
+      $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
 		    LangPDFMessage19 . $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . ' ' . 
 				                   $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' .
 		    LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
@@ -454,7 +457,10 @@ class util
   				{ if($pagenr++) 
 					  { $pdf->newPage();
 						  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
-          		$pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
+							if($GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id'])
+							&& $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))
+							&& $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])))
+						    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
 		                   LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
 		                                      $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . ' ' .
                        LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
@@ -481,7 +487,10 @@ class util
 				{ if($pagenr++) 
 				  { $pdf->newPage();
 					  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
-        		$pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
+						if($GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id'])
+						&& $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))
+						&& $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])))
+					    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
 	                   LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' .
 	                                      $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . ' ' .
                      LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
@@ -511,7 +520,7 @@ class util
 			{ $pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA[3]);			                   // seen
 			  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA[28]);		                     // last seen	
 			  $pdf->addTextWrap($xbase+ 70, $y,  85, $fontSizeText, '<b>'.
-				  '<c:alink:'.$baseURL.'deepsky/index.php?indexAction=detail_object&amp;object='.
+				  '<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.
 					urlencode($valueA['objectname']).'>'.$valueA[4]);		               //	object
 			  $pdf->addTextWrap($xbase+150, $y,  30, $fontSizeText, '</c:alink></b>'.$type);			                 // type
 			  $pdf->addTextWrap($xbase+180, $y,  20, $fontSizeText, $con);			                         // constellation
@@ -528,7 +537,7 @@ class util
 			{ $pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA[3]);			                   // seen
 			  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA[28]);		                     // last seen	
 			  $pdf->addTextWrap($xbase+ 70, $y, 100, $fontSizeText, '<b>'.
-				  '<c:alink:'.$baseURL.'deepsky/index.php?indexAction=detail_object&amp;object='.
+				  '<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.
 					urlencode($valueA['objectname']).'>'.$valueA[4]);		                                       //	object
 			  $pdf->addTextWrap($xbase+170, $y,  30, $fontSizeText, '</c:alink></b>'.$type);			                 // type
 			  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $mag, 'left');			                 // mag
@@ -554,7 +563,10 @@ class util
 				    { if($pagenr++)
 						  { $pdf->newPage();
 							  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
-          		  $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
+								if($GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id'])
+								&& $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))
+								&& $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])))
+							    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
 		                   LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
 		                                      $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . 
                        LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
@@ -596,7 +608,10 @@ class util
 				    { if($pagenr++)
 						  { $pdf->newPage();
 							  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
-          		  $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
+								if($GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id'])
+								&& $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))
+								&& $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])))
+							    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
 		                   LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
 		                                      $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . 
                        LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
@@ -629,265 +644,6 @@ class util
 			}			
 		}		
     $pdf->Stream(); 
-  }
-  public function pdfObjectsDetails2($result)  // Creates a pdf document from an array of objects
-  { global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
-    $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
-    $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL;
-
-    global $ASTER,$BRTNB,$CLANB,$DRKNB,$GALCL,$GALXY,$GLOCL,$GXADN,$GXAGC,$GACAN,$LMCCN,$LMCDN,$LMCGC,$LMCOC,$NONEX,$OPNCL,$PLNNB,
-    $SMCCN,$SMCDN,$SMCGC,$SMCOC,$SNREM,$QUASR,$AA1STAR,$AA2STAR,$AA3STAR,$AA4STAR,$AA8STAR;
-
-    global $EMINB,$REFNB,$ENRNN,$ENSTR,$HII,$RNHII,$STNEB,$WRNEB;
-
-    global $deepskylive, $dateformat;
-
-    while(list($key, $valueA) = each($result))
-    {
-      $mag = round($valueA[5],1);
-      if ($mag == 99.9)
-      $mag = "";
-      else if ($mag - (int)$mag == 0.0)
-      $mag = $mag.".0";
-
-      $sb = round($valueA[6],1);
-      if ($sb == 99.9)
-      $sb = "";
-      else if ($sb - (int)$sb == 0.0)
-      $sb = $sb.".0";
-
-      $pa = $valueA[20];
-      if($pa==999)
-      $pa="-";
-
-      $con = $valueA['objectconstellation'];
-      $type = $valueA['objecttype'];
-      $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
-      $page = $valueA[$atlas];
-      $diam1 = $valueA[18];
-      $diam2 = $valueA[19];
-      $size = "";
-      if ($diam1 != 0.0)
-      if ($diam1 >= 40.0)
-      {
-        if (round($diam1 / 60.0) == ($diam1 / 60.0))
-        if ($diam1 / 60.0 > 30.0)
-        $size = sprintf("%.0f'", $diam1 / 60.0);
-        else
-        $size = sprintf("%.1f'", $diam1 / 60.0);
-        else
-        $size = sprintf("%.1f'", $diam1 / 60.0);
-        if ($diam2 != 0.0)
-        if (round($diam2 / 60.0) == ($diam2 / 60.0))
-        if ($diam2 / 60.0 > 30.0)
-        $size = $size.sprintf("x%.0f'", $diam2 / 60.0);
-        else
-        $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
-        else
-        $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
-      }
-      else
-      {
-        $size = sprintf("%.1f''", $diam1);
-        if ($diam2 != 0.0)
-        $size = $size.sprintf("x%.1f''", $diam2);
-      }
-      $contrast = $valueA[21];
-      if ($contrast == "-")
-      {
-        $magnifi = "-";
-      } else {
-        $magnifi = (int)$valueA[25];
-      }
-
-      $tempA = array("Name" => $valueA[4],
-                 "ra" => "0",//$this->raToStringHM($valueA[7]),
-                 "decl" => "0",//$this->decToString($valueA[8],0),
-                 "mag" => $mag,
-                 "sb" => $sb,
-                 "con" => $con,
-                 "diam" => $size,
-                 "pa" => $pa, 
-                 "type" => $type,
-                 "page" => $page,
-                 "contrast" => $contrast,
-                 "magnification" => $magnifi,
-                 "seen" => $valueA[3]
-      );
-
-
-      if(list($key, $valueA) = each($result))
-      {
-        $mag = round($valueA[5],1);
-        if ($mag == 99.9)
-        $mag = "";
-        else if ($mag - (int)$mag == 0.0)
-        $mag = $mag.".0";
-
-        $sb = round($valueA[6],1);
-        if ($sb == 99.9)
-        $sb = "";
-        else if ($sb - (int)$sb == 0.0)
-        $sb = $sb.".0";
-
-        $pa = $valueA[20];
-        if($pa==999)
-        $pa="-";
-
-        $con = $valueA['objectconstellation'];
-        $type = $valueA['objecttype'];
-        $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
-        $page = $valueA[$atlas];
-        $diam1 = $valueA[18];
-        $diam2 = $valueA[19];
-        $size = "";
-        if ($diam1 != 0.0)
-        if ($diam1 >= 40.0)
-        {
-          if (round($diam1 / 60.0) == ($diam1 / 60.0))
-          if ($diam1 / 60.0 > 30.0)
-          $size = sprintf("%.0f'", $diam1 / 60.0);
-          else
-          $size = sprintf("%.1f'", $diam1 / 60.0);
-          else
-          $size = sprintf("%.1f'", $diam1 / 60.0);
-          if ($diam2 != 0.0)
-          if (round($diam2 / 60.0) == ($diam2 / 60.0))
-          if ($diam2 / 60.0 > 30.0)
-          $size = $size.sprintf("x%.0f'", $diam2 / 60.0);
-          else
-          $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
-          else
-          $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
-        }
-        else
-        {
-          $size = sprintf("%.1f''", $diam1);
-          if ($diam2 != 0.0)
-          $size = $size.sprintf("x%.1f''", $diam2);
-        }
-        $contrast = $valueA[21];
-        if ($contrast == "-")
-        {
-          $magnifi = "-";
-        } else {
-          $magnifi = (int)$valueA[25];
-        }
-        $tempB = array("NameB" => $valueA[4],
-                   "raB" => "0",//$this->raToStringHM($valueA[7]),
-                   "declB" => "0",//$this->decToString($valueA[8],0),
-                   "magB" => $mag,
-                   "sbB" => $sb,
-                   "conB" => $con,
-                   "diamB" => $size,
-                   "paB" => $pa, 
-                   "typeB" => $type,
-                   "pageB" => $page,
-                   "contrastB" => $contrast,
-                   "magnificationB" => $magnifi,
-                   "seenB" => $valueA[3]
-        );
-
-      }
-      else
-      {
-        $tempB = array("NameB" => '',
-                   "raB" => '',
-                   "declB" => '',
-                   "magB" => '',
-                   "sbB" => '',
-                   "conB" => '',
-                   "diamB" => '',
-                   "paB" => '', 
-                   "typeB" => '',
-                   "pageB" => '',
-                   "contrastB" => '',
-                   "magnificationB" => '',
-                   "seenB" => ''
-                   );
-      }
-      $obs1[] = array_merge($tempA, array(' '), $tempB);
-    }
-
-    // Create pdf file
-    $pdf = new Cezpdf('a4', 'landscape');
-    $pdf->ezStartPageNumbers(450, 15, 10);
-
-    $fontdir = /*realpath*/('lib/fonts/Helvetica.afm');
-    $pdf->selectFont($fontdir);
-    $pdf->selectFont('lib/fonts/Helvetica.afm');
-
-    $pdf->ezTable($obs1,
-    array(
-								      "seen"           => html_entity_decode(LangOverviewObjectsHeader7),
-											"Name"           => html_entity_decode(LangPDFMessage1), 
-                      "type"           => html_entity_decode(LangPDFMessage5),
-                      "mag"            => html_entity_decode(LangPDFMessage7),
-                      "sb"             => html_entity_decode(LangPDFMessage8),
-                      "ra"             => html_entity_decode(LangPDFMessage3),
-                      "decl"           => html_entity_decode(LangPDFMessage4),
-                      "con"            => html_entity_decode(LangPDFMessage6),
-                      "diam"           => html_entity_decode(LangPDFMessage9),
-                      "pa"             => html_entity_decode(LangPDFMessage16),  
-                      "contrast"       => html_entity_decode(LangPDFMessage17),
-                      "magnification"  => html_entity_decode(LangPDFMessage18),
-                      "page"           => html_entity_decode($page),
-                      "separator"      => ' ',
-								      "seenB"          => html_entity_decode(LangOverviewObjectsHeader7),
-											"NameB"          => html_entity_decode(LangPDFMessage1), 
-                      "typeB"          => html_entity_decode(LangPDFMessage5),
-                      "magB"           => html_entity_decode(LangPDFMessage7),
-                      "sbB"            => html_entity_decode(LangPDFMessage8),
-                      "raB"            => html_entity_decode(LangPDFMessage3),
-                      "declB"          => html_entity_decode(LangPDFMessage4),
-                      "conB"           => html_entity_decode(LangPDFMessage6),
-                      "diamB"          => html_entity_decode(LangPDFMessage9),
-                      "paB"            => html_entity_decode(LangPDFMessage16),  
-                      "contrastB"      => html_entity_decode(LangPDFMessage17),
-                      "magnificationB" => html_entity_decode(LangPDFMessage18),
-                      "pageB"          => html_entity_decode($page)
-    ),
-    $_GET['pdfTitle'],
-
-    array("width" => "750",
-			                "cols" => array(
-											                "seen"           => array('justification'=>'center','width'=>30),
-											                "Name"           => array('justification'=>'left',  'width'=>50),
-									              		  "type"           => array('justification'=>'left',  'width'=>60),
-							              				  "mag"            => array('justification'=>'center','width'=>17),
-              											  "sb"             => array('justification'=>'center','width'=>17),
-			                                "ra"             => array('justification'=>'center','width'=>32),
-		              									  "decl"           => array('justification'=>'center','width'=>25),
-              											  "con"            => array('justification'=>'center','width'=>25),
-							              			  	"diam"           => array('justification'=>'center','width'=>35),
-       											          "pa"             => array('justification'=>'center','width'=>17),
-          														"contrast"       => array('justification'=>'center','width'=>17),
-          														"magnification"  => array('justification'=>'center','width'=>17),
-				              							  "page"           => array('justification'=>'center','width'=>35),
-				              							  "separator"      => array('justification'=>'center','width'=>17),
-											                "seenB"          => array('justification'=>'center','width'=>30),
-											                "NameB"          => array('justification'=>'left',  'width'=>50),
-									              		  "typeB"          => array('justification'=>'left',  'width'=>60),
-							              				  "magB"           => array('justification'=>'center','width'=>17),
-              											  "sbB"            => array('justification'=>'center','width'=>17),
-			                                "raB"            => array('justification'=>'center','width'=>32),
-		              									  "declB"          => array('justification'=>'center','width'=>25),
-              											  "conB"           => array('justification'=>'center','width'=>25),
-							              			  	"diamB"          => array('justification'=>'center','width'=>35),
-       											          "paB"            => array('justification'=>'center','width'=>17),
-          														"contrastB"      => array('justification'=>'center','width'=>17),
-          														"magnificationB" => array('justification'=>'center','width'=>17),
-				              							  "pageB"          => array('justification'=>'center','width'=>35)
-    ),
-											"fontSize" => "6",
-											"showLines" => "0",
-											"showHeadings" => "0",
-											"rowGap" => "0",
-											"colGap" => "0"				         
-											)
-											);
-
-											$pdf->ezStream();
   }
   public function br2nl($data)  // The opposite of nl2br
   { return preg_replace( '!<br.*>!iU', " ", $data );

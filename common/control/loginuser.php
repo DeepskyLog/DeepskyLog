@@ -35,18 +35,18 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
     { $_SESSION['lang']=$GLOBALS['objObserver']->getLanguage($login);
 			if($GLOBALS['objObserver']->getRole($login)=="2")                         // user in waitlist already tries to log in
         $loginError="loginuser: user in waitlist";
-      elseif($GLOBALS['objObserver']->getRole($login) == "1")                   // validated user
+      elseif($GLOBALS['objObserver']->getRole($login)=="1")                     // validated user
       { session_regenerate_id(true);
 			  $_SESSION['deepskylog_id']=$login;                                      // set session variable
         $_SESSION['admin']="no";                                                // set session variable
 	      $cookietime=time()+(365*24*60*60);                                      // 1 year	      
 				setcookie("deepskylogsec",$passwd.$login,$cookietime,"/");
 	    }
-      else // administrator logs in 
+      else                                                                      // administrator logs in 
       { session_regenerate_id(true);
 			  $_SESSION['deepskylog_id']=$login;                              
-        $_SESSION['admin']="yes";                           
-        $cookietime=time()+(365*24*60*60);                                    // 1 year
+        $_SESSION['admin']="no";                           
+        $cookietime=time()+(365*24*60*60);                                      // 1 year
         setcookie("deepskylogsec",$passwd.$login,$cookietime,"/");
       }
     }
