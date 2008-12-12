@@ -2,8 +2,11 @@
 // change_role.php
 // allows the adminstrator to change the role of an observer
 
-$role=$objUtil->checkGetKey('role');
-$objObserver->setRole($_SESSION['user'],$role);
-$entryMessage.="Role is successfully updated!";
+if( ($_SESSION['admin']=="yes")
+&& ($objUtil->checkGetKey('user')))
+{  $role=$objUtil->checkGetKey('role',2);
+   $objObserver->setRole($_GET['user'],$role);
+   $entryMessage.="Role is successfully updated!";
+}
 $_GET['indexAction']="detail_observer";  
 ?>

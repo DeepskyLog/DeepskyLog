@@ -19,7 +19,6 @@ while(FALSE!==($file=readdir($dir)))
   if(fnmatch($user. ".gif", $file) || fnmatch($user. ".jpg",$file) || fnmatch($user. ".png", $file))
     echo "<p ><img class=\"viewobserver\"  src=\"".$baseURL."common/observer_pics/".$file."\" alt=\"".$firstname."&nbsp;".$name."\"></img></p>";
 }
-echo "<form action=\"".$baseURL."index.php?indexAction=change_role\">";
 echo "<table width=\"100%\">";
 if(array_key_exists('admin',$_SESSION)&&($_SESSION['admin']=="yes"))       // admin logged in
 { echo "<tr class=\"type1\">";
@@ -67,7 +66,10 @@ echo "</tr>";
 if($objUtil->checkSessionKey('admin')=="yes")
 { echo "<tr class=\"type2\">";
   echo "<td style=\"text-align:right\">".LangViewObserverRole."</td>";
-  if(($objObserver->getRole($user)!=RoleWaitlist)&&($user!="admin") )                 // user not in waitlist
+  echo "<form action=\"".$baseURL."index.php\" >";
+  echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_role\" />";
+  echo "<input type=\"hidden\" name=\"user\" value=\"".$user."\" />";
+  if($user!="admin")
   { echo "<td  style=\"text-align:left\">";
     echo "<select name=\"role\">";
     echo "<option ".(($objObserver->getRole($user)==RoleAdmin)?"selected=\"selected\"":"")." value=\"0\">".LangViewObserverAdmin."</option>";
@@ -82,6 +84,7 @@ if($objUtil->checkSessionKey('admin')=="yes")
   else                                                                          // fixed admin role
   {  echo "<td>".LangViewObserverAdmin."</td>";
   }
+  echo "</form>";
   echo "</tr>";
 }
 echo "</table>";
@@ -262,6 +265,5 @@ echo "<td></td>";
 echo "<td></td>";
 echo "</tr>";
 echo "</table>";
-echo "</form>";
 echo "</div>";
 ?>
