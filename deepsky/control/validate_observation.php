@@ -22,7 +22,7 @@ elseif ((!$_POST['day']) || (!$_POST['month']) || (!$_POST['year']) || ($_POST['
 		$_POST['limit'] = "";
 		$_POST['sqm'] = "";
 	}
-	$entryMessage .= "Not all necessary fields are filled in." . LangValidateObservationMessage1;
+	$entryMessage .= LangValidateObservationMessage1;
 	$_GET['indexAction'] = 'add_observation';
 } else // all fields filled in
 	{

@@ -50,8 +50,8 @@ class Database implements iDatabase
 	  $run = mysql_query($sql) or die(mysql_error());
     while($get = mysql_fetch_object($run))
 		  $result[$get->$key]=$get->$value;
-		if($result) return $result;
-		else        return array();
+		if(isset($result)) return $result;
+		else               return array();
   }
 	public function selectRecordset($sql)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
@@ -63,8 +63,8 @@ class Database implements iDatabase
 	  $run = mysql_query($sql) or die(mysql_error());
     while($get = mysql_fetch_object($run))
 		  $result[]=$get->$name;
-		if($result) return $result;
-		else        return array();
+		if(isset($result)) return $result;
+		else               return array();
   }
   public function selectSingleValue($sql,$name,$nullvalue='')
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}

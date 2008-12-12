@@ -14,11 +14,10 @@ try
   echo "<table width=\"100%\" height=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
   echo "<tr>";
   echo "<td width=\"153px\" align=\"left\" valign=\"top\" style=\"background:url(".$baseURL."vvs/images/left_bg.jpg) repeat-x top left; background-color:#5C7D9D\">";
-  echo "<br />";
   include 'common/entryexit/menu.php';                                              // Left Menu Section
-  if(isset($entryMessage)&&$entryMessage) 
-    echo $entryMessage.'<hr />';
   echo "</td><td style=\"background-color:#FFFFFF\">";
+  if(isset($entryMessage)&&$entryMessage) 
+    echo "<h3 align=\"center\">".$entryMessage.'</h3><hr />';
   include $objUtil->utiltiesDispatchIndexAction();                                  // Center content section	
   echo "</td>";
   echo "<td>&nbsp;</td>";                                                           // Right blue bar

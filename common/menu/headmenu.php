@@ -2,19 +2,20 @@
 echo "<body style=\"background-color:##5C7D9D\"  leftmargin=\"0\" topmargin=\"0\" rightmargin=\"0\" bottommargin=\"0\" marginwidth=\"0\" marginheight=\"0\">";
 echo "<script type=\"text/javascript\" src=\"".$baseURL."common/menu/wz_tooltip.js\"></script>";
 
-// VVS Header and our 3 dropdown boxes 
+// VVS Header and our 3 dropdown boxes if logged in 
 echo "<div style=\"background-color:#003366\" align=\"right\">";
-echo "<div height=\64\" style=\"background:url(".$baseURL."vvs/images/header_bg.jpg) no-repeat top left;\">";
+echo "<div style=\"background:url(".$baseURL."vvs/images/header_bg.jpg) no-repeat top left\">";
 echo "<table>";
 echo "<tr>";
-echo "<td>";
+echo "<td heigth=\"64px\">";
 include $_SESSION['module'].'/menu/list.php';
 echo"</td><td>";
 include $_SESSION['module'].'/menu/instrument.php';
 echo"</td><td>";
 include $_SESSION['module'].'/menu/location.php';
+echo"</td><td>";
+echo "<img src=\"".$baseURL."styles/images/deepskylog.gif\" />";
 echo "</td>";
-echo "</tr>";
 echo "</table>";
 echo "</div>";
 echo "</div>";

@@ -60,7 +60,7 @@ while(list ($key, $value) = each($rank))
     if ($numberOfObservationsThisYear != 0) $percentObservations = ($observationsThisYear / $numberOfObservationsThisYear) * 100; else $percentObservations = 0;
     $outputtable .= "<td>". $observationsThisYear . "&nbsp;&nbsp;&nbsp;&nbsp;(".sprintf("%.2f", $percentObservations)."%)</td>";
     if($sort=="catalog") $objectsCount = $value; else $objectsCount = $objObservation->getObservedCountFromCatalogueOrList($key,$catalog);
-		$outputtable .= "<td align=\"center\"> <a href=\"".$baseURL."index.php?indexAction=view_observer_catalogamp;catalog=" . urlencode($catalog) . "&amp;user=" . urlencode($key) . "\">". $objectsCount . "</a> (" . sprintf("%.2f",(($objectsCount / $objectsInCatalog)*100)) . "%)</td>";
+		$outputtable .= "<td align=\"center\"> <a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=" . urlencode($catalog) . "&amp;user=" . urlencode($key) . "\">". $objectsCount . "</a> (" . sprintf("%.2f",(($objectsCount / $objectsInCatalog)*100)) . "%)</td>";
     if($sort=="objecten") $numberOfObjects = $value; else $numberOfObjects = $objObservation->getNumberOfObjects($key);
     $outputtable .= "<td>". $numberOfObjects . "&nbsp;&nbsp;&nbsp;&nbsp;(".sprintf("%.2f", (($numberOfObjects / $numberOfDifferentObjects) * 100))."%)</td>";
     $outputtable .= "</tr>";
@@ -71,8 +71,8 @@ while(list ($key, $value) = each($rank))
 $outputtable .= "<tr class=\"type3\"><td>".LangTopObservers1."</td><td></td>".
                 "<td>$numberOfObservations</td>" .
 	              "<td>$numberOfObservationsThisYear</td>" .
- 							  "<td>" . $objectsInCatalog . "</td>" .
-							  "<td>$numberOfDifferentObjects</td></tr>";
+ 							  "<td>".$objectsInCatalog."</td>" .
+							  "<td>".$numberOfDifferentObjects."</td></tr>";
 $outputtable .= "</table>";
 
 echo $outputtable;

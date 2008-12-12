@@ -13,7 +13,7 @@ echo "</td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td>";
-echo "<input type=\"text\" style=\"width: 143px\" class=\"inputfield\" maxlength=\"255\" name=\"object\" title=\"".LangQuickPickHelp."\" value=\"".urlencode((array_key_exists('object',$_GET) && ($_GET['object'] != '* '))?$_GET['object']:"")."\" >";
+echo "<input type=\"text\" style=\"width: 143px\" class=\"inputfield\" maxlength=\"255\" name=\"object\" title=\"".LangQuickPickHelp."\" value=\"".((array_key_exists('object',$_GET) && ($_GET['object'] != '* '))?$_GET['object']:"")."\" >";
 echo "</td>";
 echo "</tr>";
 echo "<tr>";

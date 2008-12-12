@@ -567,9 +567,7 @@ class Objects
        if($popupT)
 		     $popup=$popupT;
 		   else
-       { if(!array_key_exists('objectmagnitude',$result2[$j]))
-			     echo "no objectmagnitude for ".$result2[$j]['objectname'];
-			   $magni = $result2[$j]['objectmagnitude'];
+       { $magni = $result2[$j]['objectmagnitude'];
 				 $subrobj = $result2[$j]['objectsbcalc'];
          if($magni>90)
            $popup = LangContrastNoMagnitude;

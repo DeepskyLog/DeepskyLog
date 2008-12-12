@@ -1,52 +1,37 @@
 <?php
-// view_observer.php
-// shows information of number of Messier objects 
+// details_observer_catalog.php
+// shows information of number of catalog objects seen by user
 
-$firstname = $GLOBALS['objObserver']->getFirstName(html_entity_decode($_GET['user']));
-$name = $GLOBALS['objObserver']->getObserverName(html_entity_decode($_GET['user']));
-$partof=0;
-if(array_key_exists('partof', $_GET))
-  $partof = $_GET['partof'];
+if(!$objUtil->checkGetKey('user'))
+  throw new Exception("No user supplied in GET in details_observer_catalog.");
+
+$firstname = $GLOBALS['objObserver']->getFirstName($_GET['user']);
+$name = $GLOBALS['objObserver']->getObserverName($_GET['user']);
+$partof = $objUtil->checkGetKey('partof',0);
+
 echo "<div id=\"main\">";
 echo "<h2>".$firstname."&nbsp;".$name."</h2>";
-$upload_dir=$GLOBALS['instDir'].'common/observer_pics';
-$dir=opendir($upload_dir);
+$upload_dir='common/observer_pics';
+$dir=opendir($GLOBALS['instDir'].$upload_dir);
 while(FALSE!==($file=readdir($dir)))
 { if ("." == $file OR ".." == $file)
-  { continue; // skip current directory and directory above
-  }
+   continue; // skip current directory and directory above
   if(fnmatch(html_entity_decode($_GET['user']). ".gif", $file) || fnmatch(html_entity_decode($_GET['user']). ".jpg", $file) || fnmatch(html_entity_decode($_GET['user']). ".png", $file))
-  { echo("<p><img class=\"viewobserver\" src=\"$upload_dir" . "/" . "$file\" alt=\"" . $firstname . "&nbsp;" . $name . "\"></img></p>");
-  }
+    echo "<p><img class=\"viewobserver\" src=\"".$baseURL.$upload_dir."/".$file."\" alt=\"".$firstname."&nbsp;".$name."\"></img></p>";
 }
-$cat = $_GET['catalog']; // name of the catalogue
-$observedObjectsFromCatalogue = $GLOBALS['objObservation']->getObservedFromCatalogue(html_entity_decode($_GET['user']), $cat); // number of objects observed by this observer
+$cat=$_GET['catalog']; // name of the catalogue
+$observedObjectsFromCatalogue = $GLOBALS['objObservation']->getObservedFromCatalogue($_GET['user'], $cat); // number of objects observed by this observer
 if($partof)
   $observedObjectsFromCataloguePartOf = $GLOBALS['objObservation']->getObservedFromCataloguePartOf(html_entity_decode($_GET['user']), $cat); // number of objects observed by this observer	
 $numberOfObjects = $GLOBALS['objObject']->getNumberOfObjectsInCatalogue($cat); // number of objects in catalogue
-echo("<table width=\"490\">\n");
-echo"<tr>" .                                                                    // NUMBER OF OBSERVATIONS
-     "<td class=\"fieldname\"><p><b>" . LangTopObserversMessierHeader2 . " " . $cat . " " . LangTopObserversMessierHeader3;
-if($partof)
-  echo " of deelobjecten "; 			
-else
-  echo " (geen deelobjecten)";			
-echo "</b>";
-echo "</p>";
-echo "</td>";
-echo "<td>";
-echo "<b>" . count($observedObjectsFromCatalogue) . " / " . $numberOfObjects .  
-     "</b>";
-echo "</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td>";
-echo "</td>";
-echo "<td>";
-echo "</td>";
-echo "</tr>";
-echo "</table>";
+echo LangTopObserversMessierHeader2." ".$cat ." ".LangTopObserversMessierHeader3.(($partof)?" of deelobjecten ":" (geen deelobjecten)").":&nbsp;".count($observedObjectsFromCatalogue) . " / " . $numberOfObjects;
 echo "</div>";
+echo "<p />";
+if($partof)
+  echo "<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&amp;partof=0\">Toon zonder deelobjecten</a>"; 			
+else
+  echo "<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&partof=1\">Toon met deelobjecten</a>";			
+echo "<p />";
 $resultarray=$GLOBALS['objObject']->getObjectsFromCatalog($cat);
 echo "<table>";
 for ($i = 1; $i <= $numberOfObjects; $i++) 
@@ -110,8 +95,4 @@ for ($i = 1; $i <= $numberOfObjects; $i++)
 echo "</table>";
 echo "<P>";
 
-if($partof)
-  echo "<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&amp;partof=0\">Toon zonder deelobjecten</a>"; 			
-else
-  echo "<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&partof=1\">Toon met deelobjecten</a>";			
 ?>
