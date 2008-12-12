@@ -18,5 +18,4 @@ else
 }
 include 'common/menu/tellus.php';
 include 'common/menu/countermenu.php';
-include 'common/menu/endmenu.php';                                                // END MENU
 ?>
