@@ -70,7 +70,11 @@ class Database implements iDatabase
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
 	  $run = mysql_query($sql) or die(mysql_error());
     $get = mysql_fetch_object($run);
-		if($get) return $get->$name;
+		if($get) 
+		  if ($get->$name)
+		    return $get->$name;
+		  else 
+		    return $nullvalue;
 		else     return $nullvalue;
   }
 }

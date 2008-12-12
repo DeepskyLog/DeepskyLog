@@ -156,7 +156,7 @@ if($_SESSION['listname']<>"----------")
     echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=listaction&amp;sort=mag&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader3) . "\">".LangOverviewObjectsHeader3."</a></td>\n";
     echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=listaction&amp;sort=subr&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader3b) . "\">".LangOverviewObjectsHeader3b."</a></td>\n";
     echo "<td><a href=\"".$baseURL."index.php?indexAction=listaction&amp;sort=type&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader4) . "\">".LangOverviewObjectsHeader4."</a></td>\n";
-    echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=listaction&amp;sort=atlas" . $objAtlas->atlasCodes[$objObserver->getStandardAtlasCode($_SESSION['deepskylog_id'])] . "&amp;previous=$previous\" title=\"". LangSortOn . "atlas\">"."Atlas"."</a></td>\n";
+    echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=listaction&amp;sort=atlas" . $objAtlas->atlasCodes[$objObserver->getStandardAtlasCode($_SESSION['deepskylog_id'])] . "&amp;previous=$previous\" title=\"". LangSortOn . $GLOBALS['AtlasName'.$objObserver->getStandardAtlasCode($_SESSION['deepskylog_id'])]. " atlas\">"."Atlas"."</a></td>\n";
     echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=listaction&amp;sort=contrast&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldContrastReserve) . "\">". LangViewObjectFieldContrastReserve . "</a></td>\n";
     echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=listaction&amp;sort=magnification&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangViewObjectFieldMagnification) . "\">". LangViewObjectFieldMagnification . "</a></td>\n";
     echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=listaction&amp;sort=seen&amp;previous=$previous\" title=\"". LangSortOn . mb_strtolower(LangOverviewObjectsHeader7) . "\">".LangOverviewObjectsHeader7."</a></td>\n";
@@ -186,8 +186,10 @@ if($_SESSION['listname']<>"----------")
       $ra = raToString($_SESSION['QOL'][$count]['objectra']);
       $decl = decToStringDegMin($_SESSION['QOL'][$count]['objectdecl']);
   
-      $atlas = $objObserver->getStandardAtlasCode($_SESSION['deepskylog_id']);
-      $page = $_SESSION['QOL'][$count][$atlas];  
+      if($atlas=$objObserver->getStandardAtlasCode($_SESSION['deepskylog_id']))
+        $page = $_SESSION['QOL'][$count][$atlas];
+      else
+        $page='-';
       $seen="<a href=\"".$baseURL."index.php?indexAction=detail_object&object=" . urlencode($name) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
       if(substr($_SESSION['QOL'][$count]['objectseen'],0,1)=="X")
         $seen = "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectXSeen . "\">" . $_SESSION['QOL'][$count]['objectseen'] . "</a>";

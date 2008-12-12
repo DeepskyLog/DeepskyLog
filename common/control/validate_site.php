@@ -23,7 +23,7 @@ if($objUtil->checkPostKey('sitename')
     } 
     elseif(array_key_exists('sb', $_POST) && $_POST['sb'])
     { $objLocation->setSkyBackground($id, $_POST['sb']);
-      $locations-setLocationLimitingMagnitude($id, -999);
+      $objLocation-setLocationLimitingMagnitude($id, -999);
     } 
     else
     { $objLocation->setSkyBackground($id, -999);
@@ -44,7 +44,7 @@ if($objUtil->checkPostKey('sitename')
     $objLocation->setLocationObserver($_POST['id'], $_SESSION['deepskylog_id']);
     $entryMessage=LangValidateSiteMessage5.' '.LangValidateSiteMessage4;
     if($objUtil->checkPostKey('lm'))
-    { $locations-setLocationLimitingMagnitude($_POST['id'], $_POST['lm']);
+    { $objLocation->setLocationLimitingMagnitude($_POST['id'], $_POST['lm']);
       $objLocation->setSkyBackground($_POST['id'], -999);
     } 
     elseif($objUtil->checkPostKey('sb'))
