@@ -112,10 +112,10 @@ $run = mysql_query($sql) or die(mysql_error());
  {
   $ra = $get->ra;
   $dec = $get->decl;
-  $psa = trim($atlas->calculatePocketSkyAtlasPage($ra, $dec));
-  $torresB = trim($atlas->calculateTorresBPage($ra, $dec));
-  $torresBC = trim($atlas->calculateTorresBCPage($ra, $dec));
-  $torresC = trim($atlas->calculateTorresCPage($ra, $dec));
+  $psa = trim($atlas->calculateAtlasPage('psa',$ra, $dec));
+  $torresB = trim($atlas->calculateAtlasPage('torresB',$ra, $dec));
+  $torresBC = trim($atlas->calculateAtlasPage('torresBC',$ra, $dec));
+  $torresC = trim($atlas->calculateAtlasPage('torresC',$ra, $dec));
   $name = $get->name;
 	
   $sql2 = "UPDATE objects SET psa = \"$psa\" WHERE name = \"$name\"";

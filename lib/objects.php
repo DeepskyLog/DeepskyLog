@@ -14,17 +14,17 @@ class Objects
  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec, $mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource)
  { if (!$_SESSION['lang'])
      $_SESSION['lang'] = "English";
-   $urano = $GLOBALS['objAtlas']->calculateUranometriaPage($ra, $dec);
-   $uranonew = $GLOBALS['objAtlas']->calculateNewUranometriaPage($ra, $dec);
-   $skyatlas = $GLOBALS['objAtlas']->calculateSkyAtlasPage($ra, $dec);
-   $millenium = $GLOBALS['objAtlas']->calculateMilleniumPage($ra, $dec);
-   $taki = $GLOBALS['objAtlas']->calculateTakiPage($ra, $dec);
-   $psa = $GLOBALS['objAtlas']->calculatePocketSkyAtlasPage($ra, $dec);
-   $torresB = $GLOBALS['objAtlas']->calculateTorresBPage($ra, $dec);
-   $torresBC = $GLOBALS['objAtlas']->calculateTorresBCPage($ra, $dec);
-   $torresC = $GLOBALS['objAtlas']->calculateTorresCPage($ra, $dec);
+   $urano = $GLOBALS['objAtlas']->calculateAtlasPage('urano',$ra, $dec);
+   $uranonew = $GLOBALS['objAtlas']->calculateAtlasPage('urano_new',$ra, $dec);
+   $skyatlas = $GLOBALS['objAtlas']->calculateAtlasPage('sky',$ra, $dec);
+   $millenium = $GLOBALS['objAtlas']->calculateAtlasPage('milleniumbase',$ra, $dec);
+   $taki = $GLOBALS['objAtlas']->calculateAtlasPage('taki',$ra, $dec);
+   $psa = $GLOBALS['objAtlas']->calculateAtlasPage('psa',$ra, $dec);
+   $torresB = $GLOBALS['objAtlas']->calculateAtlasPage('torresB',$ra, $dec);
+   $torresBC = $GLOBALS['objAtlas']->calculateAtlasPage('torresBC',$ra, $dec);
+   $torresC = $GLOBALS['objAtlas']->calculateAtlasPage('torresC', $ra, $dec);
    $array = array("INSERT INTO objects (name, type, con, ra, decl, mag, subr, diam1, diam2, pa, datasource, urano, urano_new, sky, millenium, taki, psa, torresB, torresBC, torresC, milleniumbase) 
-	                            VALUES (\"$name\", \"$type\", \"$con\", \"$ra\", \"$dec\", \"$mag\", \"$subr\", \"$diam1\", \"$diam2\", \"$pa\", \"$datasource\", \"$urano\", \"$uranonew\", \"$skyatlas\", \"$millenium\", \"$taki\", \"$psa\", \"$torresB\", \"$torresBC\", \"$torresC\", \"$millenium\")");
+	                 VALUES (\"$name\", \"$type\", \"$con\", \"$ra\", \"$dec\", \"$mag\", \"$subr\", \"$diam1\", \"$diam2\", \"$pa\", \"$datasource\", \"$urano\", \"$uranonew\", \"$skyatlas\", \"$millenium\", \"$taki\", \"$psa\", \"$torresB\", \"$torresBC\", \"$torresC\", \"$millenium\")");
    $sql = implode("", $array);
    $GLOBALS['objDatabase']->execSQL($sql);
    $newcatindex = ucwords(trim($catindex));
@@ -1175,15 +1175,15 @@ class Objects
 
   $decl = $get->decl;
 
-  $urano = $atlas->calculateUranometriaPage($ra, $decl);
-  $uranonew = $atlas->calculateNewUranometriaPage($ra, $decl);
-  $skyatlas = $atlas->calculateSkyAtlasPage($ra, $decl);
-  $msa = $atlas->calculateMilleniumPage($ra, $decl);
-  $taki = $atlas->calculateTakiPage($ra, $decl);
-  $psa = $atlas->calculatePocketSkyAtlasPage($ra, $decl);
-  $torresB = $atlas->calculateTorresBPage($ra, $decl);
-  $torresBC = $atlas->calculateTorresBCPage($ra, $decl);
-  $torresC = $atlas->calculateTorresCPage($ra, $decl);
+   $urano = $GLOBALS['objAtlas']->calculateAtlasPage('urano',$ra, $dec);
+   $uranonew = $GLOBALS['objAtlas']->calculateAtlasPage('urano_new',$ra, $dec);
+   $skyatlas = $GLOBALS['objAtlas']->calculateAtlasPage('sky',$ra, $dec);
+   $msa = $GLOBALS['objAtlas']->calculateAtlasPage('milleniumbase',$ra, $dec);
+   $taki = $GLOBALS['objAtlas']->calculateAtlasPage('taki',$ra, $dec);
+   $psa = $GLOBALS['objAtlas']->calculateAtlasPage('psa',$ra, $dec);
+   $torresB = $GLOBALS['objAtlas']->calculateAtlasPage('torresB',$ra, $dec);
+   $torresBC = $GLOBALS['objAtlas']->calculateAtlasPage('torresBC',$ra, $dec);
+   $torresC = $GLOBALS['objAtlas']->calculateAtlasPage('torresC', $ra, $dec);
   
   $sql = "UPDATE objects SET urano = \"$urano\" WHERE name = \"$name\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -1233,16 +1233,16 @@ class Objects
 
   $ra = $get->ra;
 
-  $urano = $atlas->calculateUranometriaPage($ra, $decl);
-  $uranonew = $atlas->calculateNewUranometriaPage($ra, $decl);
-  $skyatlas = $atlas->calculateSkyAtlasPage($ra, $decl);
-  $msa = $atlas->calculateMilleniumPage($ra, $decl);
-  $taki = $atlas->calculateTakiPage($ra, $decl);
-  $psa = $atlas->calculatePocketSkyAtlasPage($ra, $decl);
-  $torresB = $atlas->calculateTorresBPage($ra, $decl);
-  $torresBC = $atlas->calculateTorresBCPage($ra, $decl);
-  $torresC = $atlas->calculateTorresCPage($ra, $decl);
-  
+   $urano = $GLOBALS['objAtlas']->calculateAtlasPage('urano',$ra, $dec);
+   $uranonew = $GLOBALS['objAtlas']->calculateAtlasPage('urano_new',$ra, $dec);
+   $skyatlas = $GLOBALS['objAtlas']->calculateAtlasPage('sky',$ra, $dec);
+   $msa = $GLOBALS['objAtlas']->calculateAtlasPage('milleniumbase',$ra, $dec);
+   $taki = $GLOBALS['objAtlas']->calculateAtlasPage('taki',$ra, $dec);
+   $psa = $GLOBALS['objAtlas']->calculateAtlasPage('psa',$ra, $dec);
+   $torresB = $GLOBALS['objAtlas']->calculateAtlasPage('torresB',$ra, $dec);
+   $torresBC = $GLOBALS['objAtlas']->calculateAtlasPage('torresBC',$ra, $dec);
+   $torresC = $GLOBALS['objAtlas']->calculateAtlasPage('torresC', $ra, $dec);
+   
   $sql = "UPDATE objects SET urano = \"$urano\" WHERE name = \"$name\"";
   $run = mysql_query($sql) or die(mysql_error());
   

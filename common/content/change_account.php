@@ -70,10 +70,9 @@ while(list($key,$value)=each($instr))
 }
 $tempList.="</select>";
 tableFieldnameFieldExplanation(LangChangeAccountField8,$tempList,"<a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeAccountField8Expl."</a>");
-$atlasses=$objAtlas->getSortedAtlasses();
 $theKey=$objObserver->getStandardAtlasCode($_SESSION['deepskylog_id']);
 $tempList="<select name=\"atlas\">";
-while(list($key,$value)=each($atlasses))
+while(list($key,$value)=each($objAtlas->atlasCodes))
   $tempList.="<option ".(($key==$theKey)?"selected=\"selected\"":"")." value=\"$key\">" . $value . "</option>";
 $tempList.="</select>";
 tableFieldnameFieldExplanation(LangChangeAccountField9,$tempList,"");
