@@ -190,45 +190,14 @@ class Objects
   }
   return $size;
  }
- // getType returns the type of the object
- function getDsObjectType($name)
- {
-  $db = new database;
-  $db->login();
-  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  $get = mysql_fetch_object($run);
-	$type = "";
-  if ($get)
-    $type = $get->type;
-  $db->logout();
-  return $type;
+ function getDsObjectType($name)  // getType returns the type of the object
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT type FROM objects WHERE name = \"".$name."\"",'type');
  }
- // getDatasource returns the datasource of the object
- function getDatasource($name)
- {
-  $db = new database;
-  $db->login();
-  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  $get = mysql_fetch_object($run);
-  $datasource = $get->datasource;
-  $db->logout();
-  return $datasource;
+ function getDatasource($name)    // getDatasource returns the datasource of the object
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT datasource FROM objects WHERE name = \"".$name."\"",'datasource');
  }
- // getConstellation returns the constellation of the object
- function getConstellation($name)
- {
-  $db = new database;
-  $db->login();
-  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  $get = mysql_fetch_object($run);
-	$constellation = "";
-  if ($get)
-    $constellation = $get->con;
-  $db->logout();
-  return $constellation;
+ function getConstellation($name) // getConstellation returns the constellation of the object
+ {return $GLOBALS['objDatabase']->selectSingleValue("SELECT con FROM objects WHERE name = \"".$name."\"",'con');
  }
  // getRA returns the right ascension of the object
  function getRA($name)
