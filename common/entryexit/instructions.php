@@ -41,7 +41,7 @@ $object=$objUtil->checkPostKey('object',$objUtil->checkGetKey('object'));
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_observation")
 { if(array_key_exists('number',$_POST)&&(!$_POST['number']))
     $_GET['indexAction']="query_objects";
-  elseif(array_key_exists('number',$_POST)&&(!($_GET['object']=$GLOBALS['objObject']->getExactDsObject('',$GLOBALS['objUtil']->checkPostKey('catalogue'), $GLOBALS['objUtil']->checkPostKey('number')))))
+  elseif(array_key_exists('number',$_POST)&&(!($_GET['object']=$GLOBALS['objObject']->getExactDsObject('',$GLOBALS['objUtil']->checkPostKey('catalog'), $GLOBALS['objUtil']->checkPostKey('number')))))
   { $entryMessage.="No corresponding object found for ".$GLOBALS['objUtil']->checkPostKey('catalogue')." ".$GLOBALS['objUtil']->checkPostKey('number');
     $_GET['indexAction']="query_objects";
    }

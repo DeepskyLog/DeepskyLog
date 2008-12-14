@@ -15,7 +15,7 @@ echo LangViewObjectField1 . "&nbsp;*";
 
 echo("</td>\n<td>");
 
-echo("<input type=\"text\" class=\"inputfield\" maxlength=\"20\" name=\"catalogue\" size=\"20\" value=\"\" />");
+echo("<input type=\"text\" class=\"inputfield\" maxlength=\"20\" name=\"catalog\" size=\"20\" value=\"\" />");
 
 echo("&nbsp;&nbsp;<input type=\"text\" class=\"inputfield\" maxlength=\"20\" name=\"number\" size=\"20\" value=\"\" />");
 

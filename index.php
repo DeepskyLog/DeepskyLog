@@ -15,15 +15,24 @@ try
   echo "<tr>";
   echo "<td width=\"153px\" align=\"left\" valign=\"top\" style=\"background:url(".$baseURL."vvs/images/left_bg.jpg) repeat-x top left; background-color:#5C7D9D\">";
   include 'common/entryexit/menu.php';                                              // Left Menu Section
-  echo "</td><td style=\"background-color:#FFFFFF\">";
+  echo "</td><td style=\"background:url(".$baseURL."vvs/images/lu.gif) no-repeat top left; background-color:#FFFFFF;\">";
   if(isset($entryMessage)&&$entryMessage) 
     echo "<h3 align=\"center\">".$entryMessage.'</h3><hr />';
   include $objUtil->utiltiesDispatchIndexAction();                                  // Center content section	
   echo "</td>";
   echo "<td>&nbsp;</td>";                                                           // Right blue bar
   echo "</tr>"; 
+  echo "<tr>";
+  echo "<td width=\"153px\" style=\"background-color:#5C7D9D\">";
+  echo "&nbsp;";
+  echo "</td>";
+  echo "<td style=\"background:url(".$baseURL."vvs/images/lo.gif) no-repeat bottom left; background-color:#FFFFFF;text-align:center\" >";
+  echo "Copyright 2004 - 2008&nbsp;";
+  echo "<a href=\"http://www.vvs.be\">Vereniging voor Sterrenkunde</a> - Powered by&nbsp;";
+  echo "<a href=\"http://www.deepskylog.org\">DeepskyLog</a>&nbsp;".$versionInfo; //defined in databaseInfo.php
+  echo "</td>";
+  echo "</tr>";
   echo "</table>";
-  include 'common/menu/tail.php';                                                   // Page bottom
 }
 catch (Exception $e)
 { echo 'Report problem: ' . $e->getMessage();

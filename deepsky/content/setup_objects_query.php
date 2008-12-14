@@ -81,7 +81,7 @@ else
   echo("</td>\n<td width=\"25%\">\n");
   echo("<select name=\"catalog\">\n");
   echo("<option value=\"\"></option>"); // empty field
-  $catalogs = $objObject->getCatalogues(); // should be sorted
+  $catalogs = $objObject->getCatalogs(); // should be sorted
   while(list($key, $value) = each($catalogs))
     if($value==$catalog)
       echo("<option selected value=\"$value\">$value</option>\n");

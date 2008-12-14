@@ -315,9 +315,9 @@ if ($object) {
 	echo LangQueryObjectsField1;
 	echo "</td>";
 	echo "<td colspan=\"2\">";
-	echo "<select name=\"catalogue\">";
+	echo "<select name=\"catalog\">";
 	echo "<option value=\"\"></option>";
-	$catalogs = $GLOBALS['objObject']->getCatalogues();
+	$catalogs = $GLOBALS['objObject']->getCatalogs();
 	while (list ($key, $value) = each($catalogs))
 		echo "<option value=\"$value\">$value</option>";
 	echo "</select>";

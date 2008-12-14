@@ -118,7 +118,7 @@ lib/objects.php :
 			Returns the alternative name of the object
   - getCatalogs($name)
 			Returns the catalogs of the object
-  - getCatalogues()
+  - getCatalogs()
 			Returns a list of all different catalogues
   - getConstellation($name)
 			Returns the constellation of the object

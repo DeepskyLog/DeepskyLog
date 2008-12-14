@@ -196,11 +196,11 @@ class util
   {
     foreach($_POST as $foo => $bar)
     {
-      $_POST[$foo] = htmlentities($bar, ENT_COMPAT, "ISO-8859-15", 0);
+      $_POST[$foo] = htmlentities(stripslashes($bar), ENT_COMPAT, "ISO-8859-15", 0);
     }
     foreach($_GET as $foo => $bar)
     {
-      $_GET[$foo] = htmlentities($bar, ENT_COMPAT, "ISO-8859-15", 0);
+      $_GET[$foo] = htmlentities(stripslashes($bar), ENT_COMPAT, "ISO-8859-15", 0);
     }
   }
   public function pdfObjects($result)  // Creates a pdf document from an array of objects
@@ -809,7 +809,7 @@ class util
       $counter++;
     }
   }
-  public function pdfObservations($result)  // Creates a pdf document from an array of observations
+  public function pdfObservations($result) // Creates a pdf document from an array of observations
   { global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
     $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
     $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL;
@@ -1399,7 +1399,7 @@ class util
   public function checkAdminOrUserID($toCheck)
   { return array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']&&((array_key_exists('admin', $_SESSION)&&($_SESSION['admin']=="yes"))||($_SESSION['deepskylog_id']==$toCheck));
   }
-	  public function checkUserID($toCheck)
+	public function checkUserID($toCheck)
   { return array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']&&($_SESSION['deepskylog_id']==$toCheck);
   }
 }

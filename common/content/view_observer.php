@@ -207,7 +207,7 @@ if ($key !== false)
   for($i=0;$i<count($modules);$i++)
   { echo "<td>";
     if($key==$i)
-    { echo $objObservation->getObservedCountFromCatalogue($user,"M")." / 110";
+    { echo $objObservation->getObservedCountFromCatalog($user,"M")." / 110";
     }
     else
     { echo "-";
@@ -219,7 +219,7 @@ if ($key !== false)
   for($i=0;$i<count($modules);$i++)
   { echo "<td>";
     if ($key == $i)
-    { echo $objObservation->getObservedCountFromCatalogue($user,"Caldwell")." / 110";
+    { echo $objObservation->getObservedCountFromCatalog($user,"Caldwell")." / 110";
     }
     else
     { echo "-";
@@ -231,7 +231,7 @@ if ($key !== false)
   for($i=0;$i<count($modules);$i++)
   { echo "<td>";
     if ($key == $i)
-    { echo $objObservation->getObservedCountFromCatalogue($user,"H400")." / 400";
+    { echo $objObservation->getObservedCountFromCatalog($user,"H400")." / 400";
     }
     else
     { echo "-";
@@ -244,7 +244,7 @@ if ($key !== false)
   for($i=0;$i<count($modules);$i++)
   { echo "<td>";
     if($key==$i)
-    { echo $objObservation->getObservedCountFromCatalogue($user,"HII")." / 400";
+    { echo $objObservation->getObservedCountFromCatalog($user,"HII")." / 400";
     }
     else
     { echo "-";

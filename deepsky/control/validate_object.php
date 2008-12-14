@@ -15,11 +15,11 @@ if ($_POST['newobject'])
     $_GET['indexAction']='add_object';
   } 
   if($check)                                                                    // check name
-  { $catalogue=trim($_POST['catalogue']);
-    $catalogues=$objObject->getCatalogues();
-    $foundcatalogue="";
-    while((list($key,$value)=each($catalogues))&&(!$foundcatalogue))
-      if(strtoupper($value) == strtoupper($catalogue))
+  { $catalog=trim($_POST['catalogue']);
+    $catalogs=$objObject->getCatalogs();
+    $foundcatalog="";
+    while((list($key,$value)=each($catalogs))&&(!$foundcatalog))
+      if(strtoupper($value) == strtoupper($catalog))
         $foundcatalogue = $value;
     if($foundcatalogue)
       $catalogue = $foundcatalogue;

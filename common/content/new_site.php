@@ -111,7 +111,7 @@ echo "<table width=\"100%\">";
 echo "<tr>";
 echo "<td width=\"25%\">";
 echo "<form name=\"overviewform\">";
-echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalogue\">";
+echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 $sites = $objLocation->getSortedLocations('name', "", true);
 while(list($key,$value)=each($sites))
   echo "<option value=\"".$baseURL."index.php?indexAction=add_site&amp;locationid=".urlencode($value)."\">" . $objLocation->getLocationName($value) . "</option>";

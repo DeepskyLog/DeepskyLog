@@ -70,9 +70,9 @@ echo("<tr>");
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangViewObservationField1;
 echo("</td>\n<td width=\"25%\">\n");
-echo("<select name=\"catalogue\">\n");
+echo("<select name=\"catalog\">\n");
 echo("<option value=\"\"></option>"); // empty field
-$catalogs = $objObject->getCatalogues(); // should be sorted
+$catalogs = $objObject->getCatalogs(); // should be sorted
 while(list($key, $value) = each($catalogs))
   echo("<option value=\"$value\">$value</option>\n");
 echo("</select>\n");

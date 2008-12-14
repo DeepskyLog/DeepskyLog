@@ -102,9 +102,9 @@ if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
   echo("<option value=\"LangObjectSetDiam2\">" . LangObjectSetDiam2 . "</option>\n");
   echo("<option value=\"LangObjectSetPA\">" . LangObjectSetPA . "</option>\n");
   echo("</select>\n");		
-  echo "<select name=\"newcatalogue\">";
+  echo "<select name=\"newcatalog\">";
   echo "<option value=\"\"></option>"; // empty field
-  $catalogs = $objObject->getCatalogues(); // should be sorted
+  $catalogs = $objObject->getCatalogs(); // should be sorted
   while(list($key, $value) = each($catalogs))
     echo "<option value=\"$value\">".$value."</option>";
   echo "</select>";		

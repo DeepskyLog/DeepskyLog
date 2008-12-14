@@ -71,7 +71,7 @@ echo "<table width=\"100%\">";
 echo "<tr>";
 echo "<td width=\"25%\">";
 echo "<form name=\"overviewform\">";
-echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalogue\">";
+echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 $eyeps = $objEyepiece->getSortedEyepieces('focalLength', "", true);
 while(list($key, $value)=each($eyeps))
   echo "<option value=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;eyepieceid=".urlencode($value)."\" >" . $objEyepiece->getEyepieceName($value) . "</option>";

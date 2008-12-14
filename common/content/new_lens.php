@@ -68,7 +68,7 @@ echo "<table width=\"100%\">";
 echo "<tr>";
 echo "<td width=\"25%\">";
 echo "<form name=\"overviewform\"> ";		
-echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalogue\">";
+echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 $lns=$objLens->getSortedLenses('name', "", true);
 while(list($key, $value) = each($lns))
   echo "<option value=\"".$baseURL."index.php?indexAction=add_lens&amp;lensid=".urlencode($value)."\">".$objLens->getLensName($value)."</option>";

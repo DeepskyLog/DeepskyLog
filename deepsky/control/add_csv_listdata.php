@@ -18,10 +18,12 @@ else
       if(!count($objectsquery))
         $objectsMissing[$j++]=ucwords(trim($parts_array[$i][0]));
   		else
-  		  if(array_key_exists(1,$parts_array[$i])&&($parts_array[$i][1]<>'')&&(ucwords(trim($parts_array[$i][1]))<>$objectsquery[0][0]))
-				  $objects[$i] = array($objectsquery[0], trim($parts_array[$i][1]).' ('.$objectsquery[0].')');
+  		  if(array_key_exists(1,$parts_array[$i])
+  		  && ($parts_array[$i][1]<>'')
+  		  && (ucwords(trim($parts_array[$i][1]))<>$objectsquery))
+				  $objects[$i] = array($objectsquery, trim($parts_array[$i][1]).' ('.$objectsquery.')');
 				else
-				  $objects[$i] = array($objectsquery[0], trim($parts_array[$i][0]));	
+				  $objects[$i] = array($objectsquery, trim($parts_array[$i][0]));	
 		}
   }
   if (count($objectsMissing) > 0)
@@ -33,7 +35,7 @@ else
   }
   else
   { if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
-		{ if(array_key_exists('listname',$_SESSION) && $_SESSION['listname'] && ($list->checkList($_SESSION['listname'])==2))
+		{ if(array_key_exists('listname',$_SESSION) && $_SESSION['listname'] && ($objList->checkList($_SESSION['listname'])==2))
 			{ for ($i=0;$i<count($objects);$i++)
   			  $objList->addObjectToList($objects[$i][0],$objects[$i][1]);
 				$_GET['indexAction']='listaction';

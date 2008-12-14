@@ -8,7 +8,7 @@ if(count($_SESSION['Qobs'])==0) //==============================================
 { echo("</h2>\n");
   echo "<a href=\"".$baseURL."index.php?indexAction=query_observations\">" . LangObservationNoResults . "</a>";
   echo " " . LangObservationOR . " ";
-  echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;catalogue=%\">" . LangObservationQueryError3 . "</a>";
+  echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;catalog=%\">" . LangObservationQueryError3 . "</a>";
 }
 else                           //================================================================================================== show results in $_SESSION['Qobs'] =======================================================================================
 { $step = 25;

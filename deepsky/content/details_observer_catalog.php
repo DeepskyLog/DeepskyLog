@@ -4,7 +4,6 @@
 
 if(!$objUtil->checkGetKey('user'))
   throw new Exception("No user supplied in GET in details_observer_catalog.");
-
 $firstname = $GLOBALS['objObserver']->getFirstName($_GET['user']);
 $name = $GLOBALS['objObserver']->getObserverName($_GET['user']);
 $partof = $objUtil->checkGetKey('partof',0);
@@ -19,12 +18,12 @@ while(FALSE!==($file=readdir($dir)))
   if(fnmatch(html_entity_decode($_GET['user']). ".gif", $file) || fnmatch(html_entity_decode($_GET['user']). ".jpg", $file) || fnmatch(html_entity_decode($_GET['user']). ".png", $file))
     echo "<p><img class=\"viewobserver\" src=\"".$baseURL.$upload_dir."/".$file."\" alt=\"".$firstname."&nbsp;".$name."\"></img></p>";
 }
-$cat=$_GET['catalog']; // name of the catalogue
-$observedObjectsFromCatalogue = $GLOBALS['objObservation']->getObservedFromCatalogue($_GET['user'], $cat); // number of objects observed by this observer
+$cat=$objUtil->checkGetKey('catalog','M');
+$observedObjectsFromCatalog = $GLOBALS['objObservation']->getObservedFromCatalog($_GET['user'], $cat); // number of objects observed by this observer
 if($partof)
-  $observedObjectsFromCataloguePartOf = $GLOBALS['objObservation']->getObservedFromCataloguePartOf(html_entity_decode($_GET['user']), $cat); // number of objects observed by this observer	
-$numberOfObjects = $GLOBALS['objObject']->getNumberOfObjectsInCatalogue($cat); // number of objects in catalogue
-echo LangTopObserversMessierHeader2." ".$cat ." ".LangTopObserversMessierHeader3.(($partof)?" of deelobjecten ":" (geen deelobjecten)").":&nbsp;".count($observedObjectsFromCatalogue) . " / " . $numberOfObjects;
+  $observedObjectsFromCatalogPartOf = $GLOBALS['objObservation']->getObservedFromCatalogPartOf(html_entity_decode($_GET['user']), $cat); // number of objects observed by this observer	
+$numberOfObjects = $GLOBALS['objObject']->getNumberOfObjectsInCatalog($cat); // number of objects in catalogue
+echo LangTopObserversMessierHeader2." ".$cat ." ".LangTopObserversMessierHeader3.(($partof)?" of deelobjecten ":" (geen deelobjecten)").":&nbsp;".count($observedObjectsFromCatalog) . " / " . $numberOfObjects;
 echo "</div>";
 echo "<p />";
 if($partof)
@@ -72,13 +71,13 @@ for ($i = 1; $i <= $numberOfObjects; $i++)
 	  $ref = $cat . " " . $index;
 	else
 	  $ref = $object; 
-	if (in_array($object, $observedObjectsFromCatalogue)) 
+	if (in_array($object, $observedObjectsFromCatalog)) 
   { echo "<td style=\"background: #33FF00; padding: 5px 5px 5px 5px; text-align: center;\">";
 		echo "<a title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."&amp;observer=".urlencode($_GET['user'])."\" style=\"color: #000000;\">".$object."</a>";
 		echo "</td>";
   }
 	else
-	  if ($partof && in_array($object, $observedObjectsFromCataloguePartOf)) 
+	  if ($partof && in_array($object, $observedObjectsFromCatalogPartOf)) 
   	{	echo "<td style=\"background: #FFFF00; padding: 5px 5px 5px 5px; text-align: center;\">";
 		  echo "<a title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" style=\"color: #000000;\">".$object."</a>";
 			echo "</td>"; 

@@ -427,7 +427,7 @@ class Observations {
 		$t = getdate();
 		return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid=\"$id\" AND observations.date > \"" . date("Ymd", ($t[0] - 31536000)) . "\" AND observations.visibility != 7 ", 'Cnt', 0);
 	}
-	function getObservedFromCatalogue($id, $catalog) {
+	function getObservedFromCatalog($id, $catalog) {
 		if (substr($catalog, 0, 5) == "List:")
 			if (substr($catalog, 5, 7) == "Public:")
 				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
@@ -449,7 +449,7 @@ class Observations {
 			"AND (observations.visibility != 7))";
 		return $GLOBALS['objDatabase']->selectSingleArray($sql, 'objectname');
 	}
-	function getObservedFromCataloguePartOf($id, $catalog) {
+	function getObservedFromCatalogPartOf($id, $catalog) {
 		if (substr($catalog, 0, 5) == "List:")
 			if (substr($catalog, 5, 7) == "Public:")
 				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
@@ -475,7 +475,7 @@ class Observations {
 		return $GLOBALS['objDatabase']->selectSingleArray($sql, 'objectname');
 	}
 
-	function getObservedCountFromCatalogue($id, $catalog) {
+	function getObservedCountFromCatalog($id, $catalog) {
 		$db = new database;
 		$db->login();
 		$sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt FROM objectnames " .
@@ -487,7 +487,7 @@ class Observations {
 		return mysql_result($run, 0, 0);
 	}
 
-	function getObservedCountFromCatalogueOrList($id, $catalog) {
+	function getObservedCountFromCatalogOrList($id, $catalog) {
 		$db = new database;
 		$db->login();
 		if (substr($catalog, 0, 5) == 'List:') {

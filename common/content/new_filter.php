@@ -87,7 +87,7 @@ echo "<table width=\"100%\">";
 echo "<tr>";
 echo "<td width=\"25%\">";
 echo "<form name=\"overviewform\">";		
-echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalogue\">";
+echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 $filts=$objFilter->getSortedFilters('name', "", true);
 while(list($key, $value) = each($filts))
   echo("<option value=\"".$baseURL."index.php?indexAction=add_filter&amp;filterid=".urlencode($value)."\">" . $objFilter->getFilterName($value) . "</option>\n");

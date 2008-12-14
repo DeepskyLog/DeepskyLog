@@ -2,7 +2,7 @@
 
 //=========================================================================================== LOOKING FOR SPECIFIC OBJECT, OR LOOKING FOR SOME OTHER CHARACTERISTIC ============================================================
 if(array_key_exists('number',$_GET) && $_GET['number'])
-{ $objectarray = $objObject->getLikeDsObject("",$_GET['catalogue'], $_GET['number']);
+{ $objectarray = $objObject->getLikeDsObject("",$_GET['catalog'], $_GET['number']);
 	if(count($objectarray)==1)
 	  $object=$objectarray[0];
 }

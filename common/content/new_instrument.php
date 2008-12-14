@@ -105,7 +105,7 @@ echo "<table width=\"100%\">";
 echo "<tr>";
 echo "<td width=\"25%\">";
 echo "<form name=\"overviewform\">";
-echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalogue\">";
+echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 echo "<option selected value=\"".$baseURL."index.php?indexAction=add_instrument\"> &nbsp; </option>";
 $insts=$objInstrument->getSortedInstruments('name',"",true);
 while(list($key,$value)=each($insts))

@@ -8,7 +8,7 @@ echo LangCSVListTitle;
 echo "</h2>";
 echo "<p>";
 
-if($list->checkList($_SESSION['listname'])==2)
+if($objList->checkList($_SESSION['listname'])==2)
 { echo LangCSVListMessage1;
   echo "<br /><br />" . LangCSVListMessage2;
   echo "<br /><br />" . LangCSVListMessage3;

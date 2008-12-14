@@ -14,6 +14,7 @@ define("LangWelcome1","&nbsp;de&nbsp;");
 define("LangWelcome2","Vous&nbsp;êtes&nbsp;rentré&nbsp;comme&nbsp;");
 define("LangWelcome3","Vous&nbsp;n'êtes&nbsp;pas&nbsp;rentré");
 define("LangWelcome4","Les modules: ");
+define("LangManage","Gestion");
 
 define("LangValidateSubject", "DeepskyLog - votre compte est accept&eacute;");
 define("LangValidateAdmin", "\nUn administrateur vous a donn&eacute; les droits d'administrateur.\n");
@@ -907,7 +908,7 @@ define("LangNewObjectSubtitle1b", "G&#233;rez les objets &#224; partir d'un fich
 define("LangCSVObjectTitle", "Gestion des objets &#224; partir d'un fichier CSV");
 define("LangCSVObjectMessage1", " Ce formulaire vous donne la possibilit&#233; de rajouter plusieurs objets &#224; la fois &#224; partir d&#8217;un fichier CSV (comma seperated value). De cette fa&#231;on vous pouvez rajouter facilement et tr&#232;s vite des objets, des noms alternatifs, etc.");
 define("LangCSVObjectMessage2", "Le fichier csv file doit suivra la syntax suivante si les instructions concernent un object du type: </b>");
-define("LangCSVObjectMessage3", "Instruction;Objet;Catalogue;Catalogindex;");
+define("LangCSVObjectMessage3", "Instruction;Objet;Catalog;Catalogindex;");
 define("LangCSVObjectMessage4", "ou s'il s'agit de donn&#233;es");
 define("LangCSVObjectMessage5", "Instruction;Objet;;Donn&#233;es");
 define("LangCSVObjectMessage6", "fichier CSV ");

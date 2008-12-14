@@ -5,9 +5,7 @@
 if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id']) 
 { echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">";
 	echo "<tr>";
-	echo "<th valign=\"top\">\n";
-	echo LangInstrumentMenuTitle;
-	echo "</th>";
+	echo "<th valign=\"top\">".LangInstrumentMenuTitle."&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangManage."</a>"."</th>";
 	echo "</tr>";
 	echo "<tr>";
 	echo "<td>";

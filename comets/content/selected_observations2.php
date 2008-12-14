@@ -164,7 +164,7 @@ if ($observers->getUseLocal($_SESSION['deepskylog_id']))
 }
 
 
-if(isset($cataloguesearch))
+if(isset($catalogsearch))
 {
   if($cataloguesearch == "yes")
   {

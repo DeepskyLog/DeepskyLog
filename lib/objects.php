@@ -135,8 +135,7 @@ class Objects
 		     $object["altname"]= $get->altname;
    return $object;
  }
-
- // Construct a string from the sizes
+// Construct a string from the sizes
  function calculateSize($diam1, $diam2)
  {
   $size = "";
@@ -191,9 +190,6 @@ class Objects
   }
   return $size;
  }
-
-
- 
  // getType returns the type of the object
  function getDsObjectType($name)
  {
@@ -208,7 +204,6 @@ class Objects
   $db->logout();
   return $type;
  }
-
  // getDatasource returns the datasource of the object
  function getDatasource($name)
  {
@@ -221,7 +216,6 @@ class Objects
   $db->logout();
   return $datasource;
  }
-
  // getConstellation returns the constellation of the object
  function getConstellation($name)
  {
@@ -236,7 +230,6 @@ class Objects
   $db->logout();
   return $constellation;
  }
-
  // getRA returns the right ascension of the object
  function getRA($name)
  {
@@ -251,7 +244,6 @@ class Objects
   $db->logout();
   return $ra;
  }
-
  // getDeclination returns the declination of the object
  function getDeclination($name)
  {
@@ -265,7 +257,6 @@ class Objects
 
   if($get) return $get->decl; else return "";
  }
-
  // getMagnitude returns the magnitude of the object
  function getDsObjectMagnitude($name)
  {
@@ -278,8 +269,7 @@ class Objects
   $db->logout();
   return $mag;
  }
- 
- // getSBObj returns the SBObj of the object
+  // getSBObj returns the SBObj of the object
  function getSBObj($name)
  {
   $db = new database;
@@ -291,12 +281,9 @@ class Objects
   $db->logout();
   return $SBObj;
  }
-
- 
  function getObjects()   // getObjects returns an array with the names of all objects
  { return $GLOBALS['objDatabase']->selectSingleArray("SELECT objects.name FROM OBJECTS",'name');
  }
-
  function sortObjects($result, $sort, $reverse=false)
  { if(!$result ||count($result)<2)
 	  return $result;
@@ -371,7 +358,6 @@ class Objects
   }
   return $result;
  }
-
  function prepareObjectsContrast($doLogin=false)
  { include_once "contrast.php";
    $contrastObj = new Contrast;
@@ -523,7 +509,6 @@ class Objects
 	 }
    return $popup;
  }
- 
  function getSeen($object)
  { $seen='-';
    if($ObsCnt=$GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ",'ObsCnt'))
@@ -625,7 +610,6 @@ class Objects
 	 $obs = $result2;
    return $obs; 
  }
- 
  function getSeenObjectDetails($obs, $seen="D")
  { global $objAtlas;
    $result2=array();
@@ -710,7 +694,6 @@ class Objects
    $obs=$this->getObjectVisibilities($obs);
    return $obs;
  }
-
  function getPartOfObjects($obs)
  { $poobs=array();
    $i=0;
@@ -730,7 +713,6 @@ class Objects
  	 }
    return $poobs;
  }
-
  // getObjectFromQuery returns an array with the names of all objects where
  // the queries are defined in an array.
  // An example of an array :  
@@ -855,7 +837,6 @@ class Objects
 
  return $obs;
  }
-
  // getSelectedObjects returns an array with the names of all objects where the 
  // databasefield has the given value.
  function getSelectedObjects($dbfield, $value)
@@ -878,8 +859,7 @@ class Objects
   $db->logout();
   return $obs;
  }
-
-function getObjectsFromCatalog($cat)
+ function getObjectsFromCatalog($cat)
  {
   $db = new database;
   $db->login();
@@ -902,7 +882,6 @@ function getObjectsFromCatalog($cat)
   $db->logout();
   return $obs;
  }
-
 // getExactObject returns the exact name of an object
  function getLikeDsObject($value, $cat='', $catindex='')
  {$result=array();
@@ -925,7 +904,6 @@ function getObjectsFromCatalog($cat)
     $result[] = $get->objectname;
 	return $result;
  }
-
  // getExactObject returns the exact name of an object
  function getExactDsObject($value, $cat='', $catindex='')
  { if($value)
@@ -939,7 +917,6 @@ function getObjectsFromCatalog($cat)
 	 }
 	 return $GLOBALS['objDatabase']->selectSingleValue($sql,'objectname','');
  }
-
  // getSurfaceBrightness returns the surface brightness of the object
  function getSurfaceBrightness($name)
  {
@@ -957,7 +934,6 @@ function getObjectsFromCatalog($cat)
 
   return $sb;
  }
-
  // getSize returns the size of the object
  function getSize($name)
  {
@@ -976,7 +952,6 @@ function getObjectsFromCatalog($cat)
 
   return $size;
  }
-
  // getDiam1 returns the size of the object
  function getDiam1($name)
  {
@@ -993,7 +968,6 @@ function getObjectsFromCatalog($cat)
 
   return $diam1;
  }
-
  // getDiam2 returns the size of the object
  function getDiam2($name)
  {
@@ -1010,19 +984,18 @@ function getObjectsFromCatalog($cat)
 
   return $diam2;
  }
-
-
  function getConstellations()                                                   // getConstellations returns a list of all different constellations
  { return $GLOBALS['objDatabase']->selectSingleArray("SELECT DISTINCT con FROM objects ORDER BY con",'con');
  }
- function getCatalogues()                                                       // getCatalogues returns a list of all different catalogues
+
+ function getCatalogs()                                                       // getCatalogs returns a list of all different catalogs
  { $ret=$GLOBALS['objDatabase']->selectSingleArray("SELECT DISTINCT objectnames.catalog FROM objectnames",'catalog');
    natcasesort($ret);
    reset($ret);
    array_unshift($ret, "M", "NGC", "Caldwell", "H400", "HII", "IC");
    return $ret;
  }
- function getCataloguesAndLists()
+ function getCatalogsAndLists()
  { $ret=$GLOBALS['objDatabase']->selectSingleArray("SELECT DISTINCT objectnames.catalog FROM objectnames",'catalog');
    natcasesort($ret);
    reset($ret);
@@ -1046,7 +1019,6 @@ function getObjectsFromCatalog($cat)
     } 
    return $newarr; 
  } 
- 
  function getAlternativeNames($name)
  {
   $db = new database;
@@ -1063,8 +1035,7 @@ function getObjectsFromCatalog($cat)
   $db->logout();
   return $altnames;
  }
- 
-function getContainsNames($name)
+ function getContainsNames($name)
  {
   $db = new database;
   $db->login();
@@ -1079,8 +1050,7 @@ function getContainsNames($name)
   $db->logout();
   return $containsnames;
  }
- 
-function getPartOfNames($name)
+ function getPartOfNames($name)
  {
   $db = new database;
   $db->login();
@@ -1095,7 +1065,6 @@ function getPartOfNames($name)
   $db->logout();
   return $partofnames;
  }
-
  // getPositionAngle returns the position angle of the object
  function getPositionAngle($name)
  {
@@ -1115,19 +1084,6 @@ function getPartOfNames($name)
  }
  
  // getCatalogs returns the catalogs of the object
- function getCatalogs($name)
- {
-  $db = new database;
-  $db->login();
-  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  $get = mysql_fetch_object($run);
-  $cats = $get->catalogs;
-  $db->logout();
-  return $cats;
- }
-
- 
  // getDsObjectName returns the name when the alternative name is given.
  function getDsObjectName($name)
  {
@@ -1142,7 +1098,6 @@ function getPartOfNames($name)
 	else
 		return "";
  }
-
 // getDescription returns the Description when the name is given.
  function getDescriptionDsObject($name)
  {
@@ -1157,7 +1112,6 @@ function getPartOfNames($name)
 	else
 		return "";
  }
-
  // getNameList returns a list of names when a part of the alternative name is 
  // given.
  function getNameList($catalog)
@@ -1172,8 +1126,6 @@ function getPartOfNames($name)
   $db->logout();
   return $name;
  }
-
-
  // getObservedByUser returns +1 if the object is already observed by the 
  // given user, -1 if the object is not yet observed
  function getObservedbyUser($name, $observerid)
@@ -1192,8 +1144,6 @@ function getPartOfNames($name)
   }
   return $return;
  }
-
-
  // getObserved returns +1 if the object is already observed, -1 if the object 
  // is not yet observed
  function getObserved($name)
@@ -1214,8 +1164,6 @@ function getPartOfNames($name)
 
   return $return;
  }
-
-
  // setType sets a new type for the object
  function setDsObjectType($name, $type)
  {
@@ -1227,7 +1175,6 @@ function getPartOfNames($name)
 
   $db->logout();
  }
-
  // setConstellation sets the constellation of the object
  function setConstellation($name, $con)
  {
@@ -1239,7 +1186,6 @@ function getPartOfNames($name)
 
   $db->logout();
  }
-
  // setRA sets a new right ascension for the object
  function setRA($name, $ra)
  {
@@ -1299,7 +1245,6 @@ function getPartOfNames($name)
   
   $db->logout();
  }
-
  // setDeclination sets a new declination for the object
  function setDeclination($name, $decl)
  {
@@ -1358,7 +1303,6 @@ function getPartOfNames($name)
   
   $db->logout();
  }
-
  function setDiam1($name, $diam1)
  {
   $db = new database;
@@ -1394,7 +1338,6 @@ function getPartOfNames($name)
 
   $db->logout();
  }
-
  function setDiam2($name, $diam2)
  {
   $db = new database;
@@ -1430,8 +1373,6 @@ function getPartOfNames($name)
 
   $db->logout();
  }
-
- 
  // setMagnitude sets a new magnitude for the object
  function setMagnitude($name, $mag)
  {
@@ -1469,7 +1410,6 @@ function getPartOfNames($name)
 
   $db->logout();
  }
-
  // setSurfaceBrightness sets a new surface brightness for the given object
  function setSurfaceBrightness($name, $subr)
  {
@@ -1481,7 +1421,6 @@ function getPartOfNames($name)
 
   $db->logout();
  }
-
  // setDatasource sets a new datasource for the given object
  function setDatasource($name, $datasource)
  {
@@ -1508,10 +1447,9 @@ function getPartOfNames($name)
 
   $db->logout();
  }
-
- // getNumberOfObjectsInCatalogue($catalogue)
- // returns the number of objects in the catalogue given as a parameter
- function getNumberOfObjectsInCatalogue($catalog)
+ // getNumberOfObjectsInCatalog($catalog)
+ // returns the number of objects in the catalog given as a parameter
+ function getNumberOfObjectsInCatalog($catalog)
  {
   $db = new database;
   $db->login();
@@ -1527,7 +1465,6 @@ function getPartOfNames($name)
   $db->logout();
   return $get->number; 
  }
-
  // setPositionAngle sets a new position angle for the given object
  function setPositionAngle($name, $pa)
  {
@@ -1539,7 +1476,6 @@ function getPartOfNames($name)
 
   $db->logout();
  }
-
  // setCatalogs sets the new catalogs for the given object
  function setCatalogs($name, $catalogs)
  {
@@ -1551,8 +1487,6 @@ function getPartOfNames($name)
 
   $db->logout();
  }
-
-
  function showObjects($link, $_SID, $min, $max, $myList, $noShow='', $showRank=0, $ranklist='')
  { $atlas='';
    echo "<table width=\"100%\">\n";
@@ -1634,7 +1568,6 @@ function getPartOfNames($name)
    }   
    echo "</table>\n";
  }
- 
  function showObject($object, $zoom = 30)
  { include_once "contrast.php";
    $contrastObj = new Contrast;
@@ -1952,7 +1885,6 @@ function getPartOfNames($name)
 	
 	echo"<hr>";
  }
- 
  function getNearbyObjects($objectname, $dist)
  { $run=$GLOBALS['objDatabase']->selectRecordset("SELECT objects.ra, objects.decl FROM objects WHERE name = \"$objectname\"");
    $get = mysql_fetch_object($run);
