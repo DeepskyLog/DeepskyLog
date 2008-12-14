@@ -23,8 +23,8 @@ echo "</div>";
 // Welcome line with login name
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
 echo "<tr>";
-echo "<td>";
-echo "<span class=\"mainlevel\" style=\"background:url(".$baseURL."vvs/images/left_bg.jpg) repeat-x top left; background-color:#5C7D9D\">";
+echo "<td style=\"line-height:20px\">";
+echo "<span class=\"mainlevel\">";
 echo "&nbsp;".LangWelcome;
 echo $objUtil->checkSessionKey('module');
 echo LangWelcome1;

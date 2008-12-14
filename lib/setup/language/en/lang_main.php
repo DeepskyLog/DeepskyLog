@@ -15,6 +15,7 @@ define("LangWelcome2","You&nbsp;are&nbsp;logged&nbsp;in&nbsp;as&nbsp;");
 define("LangWelcome3","You&nbsp;are&nbsp;not&nbsp;logged&nbsp;in");
 define("LangWelcome4","Modules: ");
 define("LangManage","Manage");
+define("LangManageDots","Manage...");
 
 define("LangValidateSubject", "DeepskyLog - account application approved");
 define("LangValidateAdmin", "\nOne of the administrators made you a new administrator.\n");
