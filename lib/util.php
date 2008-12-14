@@ -87,17 +87,17 @@ class util
       echo("</a>\n");
 	    echo"</td>";
 			
-		  echo"<td>";
-	    echo("<a href=\"".$link."&amp;multiplepagenr=".($currentpage-1) . "\">");
+		  echo "<td>";
+	    echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage-1) . "\">";
       echo "<img src=\"".$baseURL."/styles/images/left20.gif\" border=\"0\">"; // link to last page
-      echo("</a>\n");
-		  echo"</td>";
+      echo "</a>";
+		  echo "</td>";
 		  
-			echo"<td align=\"center\">";
-      echo("<form action=\"".$link."\" method=\"post\">");
-      echo("<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\"></input>");
-	    echo("</form>");
-    	echo"</td>";	
+			echo "<td align=\"center\" valign=\"bottom\">";
+      echo "<form action=\"".$link."\" method=\"post\">";
+      echo "<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\"></input>";
+	    echo "</form>";
+    	echo "</td>";	
 	
 		  echo"<td>";
       echo("<a href=\"".$link."&amp;multiplepagenr=".($currentpage+1) . "\">");

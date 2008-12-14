@@ -4,7 +4,7 @@ echo "<script type=\"text/javascript\" src=\"".$baseURL."common/menu/wz_tooltip.
 
 // VVS Header and our 3 dropdown boxes if logged in 
 echo "<div style=\"background-color:#003366\" align=\"right\">";
-echo "<div style=\"background:url(".$baseURL."vvs/images/header_bg.jpg) no-repeat top left\">";
+echo "<div style=\"background:url(".$baseURL."vvs/images/header_bg.jpg); background-repeat: no-repeat; background-position: 0% 0%;\">";
 echo "<table>";
 echo "<tr>";
 echo "<td heigth=\"64px\">";
