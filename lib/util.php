@@ -79,47 +79,44 @@ class util
     $max = $min + $step;                       // maximum number to be displayed
     if(count($list) > $step)
     { $currentpage = ceil($min / $step) + 1;
-      echo("<table>");
-		  
-			echo("<td>");	
-      echo("<a href=\"".$link."&amp;multiplepagenr=0\">");
+      echo "<table>";
+      echo "<tr style=\"vertical-align:top\">";
+			echo "<td>";	
+      echo "<a href=\"".$link."&amp;multiplepagenr=0\">";
       echo "<img src=\"".$baseURL."/styles/images/allleft20.gif\" border=\"0\">"; // link to last page
-      echo("</a>\n");
-	    echo"</td>";
+      echo "</a>";
+	    echo "</td>";
 			
 		  echo "<td>";
 	    echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage-1) . "\">";
-      echo "<img src=\"".$baseURL."/styles/images/left20.gif\" border=\"0\">"; // link to last page
+      echo "<img src=\"".$baseURL."/styles/images/left20.gif\" border=\"0\">"; // link to previous page
       echo "</a>";
 		  echo "</td>";
 		  
-			echo "<td align=\"center\" valign=\"bottom\">";
+			echo "<td align=\"center\">";
       echo "<form action=\"".$link."\" method=\"post\">";
       echo "<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\"></input>";
 	    echo "</form>";
     	echo "</td>";	
 	
-		  echo"<td>";
-      echo("<a href=\"".$link."&amp;multiplepagenr=".($currentpage+1) . "\">");
-      echo "<img src=\"".$baseURL."/styles/images/right20.gif\" border=\"0\">"; // link to last page
-      echo("</a>\n");
-		  echo"</td>";
+		  echo "<td>";
+      echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage+1) . "\">";
+      echo "<img src=\"".$baseURL."/styles/images/right20.gif\" border=\"0\">"; // link to next page
+      echo "</a>";
+		  echo "</td>";
 
-		  echo("<td>");				
-		  echo("<a href=\"".$link."&amp;multiplepagenr=9999999\">");
+		  echo "<td>";				
+		  echo "<a href=\"".$link."&amp;multiplepagenr=9999999\">";
       echo "<img src=\"".$baseURL."/styles/images/allright20.gif\" border=\"0\">"; // link to last page
-      echo("</a>\n");
-	    echo"</td>";
+      echo "</a>\n";
+	    echo" </td>";
 
   		echo"<td>";
-			if(($total == "") || $total==count($list))
-        echo("&nbsp;&nbsp;(" . count($list) . "&nbsp;" . LangNumberOfRecords );
-      else
-        echo("&nbsp;&nbsp;(" . count($list) . "&nbsp;" . LangNumberOfRecords . " / " . $total );
-      echo(" in " . $pages . " pages)</p>\n");
-      echo"</td>";
-	
-	    echo"</table>";    
+			echo "&nbsp;&nbsp;(".count($list)."&nbsp;".LangNumberOfRecords.(($total&&($total!=count($list)))?" / ".$total:"");
+      echo " in ".$pages." pages)";
+      echo "</td>";
+	    echo "</tr>";
+	    echo "</table>";    
 	  }
     return array($min, $max);
   }
