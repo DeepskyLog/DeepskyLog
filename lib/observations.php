@@ -1,6 +1,4 @@
 <?php
-
-
 // The observations class collects all functions needed to enter, retrieve and
 // adapt observation data from the database.
 
@@ -1792,13 +1790,10 @@ class Observations {
 		echo ("</td>");
 		if (array_key_exists("listname", $_SESSION) && $_SESSION['listname'] && array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && $myList) {
 			echo ("<td>");
-			$db = new database;
-			$db->login();
 			$listname = $_SESSION['listname'];
 			$observer = $_SESSION['deepskylog_id'];
 			$sql = "SELECT Count(observerobjectlist.objectname) As ObjCnt FROM observerobjectlist WHERE observerid = \"$observer\" AND objectname=\"$object\" AND listname=\"$listname\"";
 			$run = mysql_query($sql) or die(mysql_error());
-			$db->logout();
 			$get = mysql_fetch_object($run);
 			if ($get->ObjCnt > 0)
 				echo ("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value['observationid']) . ">E</a>");

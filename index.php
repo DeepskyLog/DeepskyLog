@@ -19,7 +19,7 @@ try
   echo "</td>";
   echo "<td style=\"background:url(".$baseURL."vvs/images/lu.gif) no-repeat top left; background-color:#FFFFFF;\">";
   echo "&nbsp;&nbsp;</td>";                                                         // Left white bar
-  echo "<td style=\"background-color:#FFFFFF;\">"; 
+  echo "<td height=\"100%\" valign=\"top\" style=\"background-color:#FFFFFF;\">"; 
   if(isset($entryMessage)&&$entryMessage)                                           // Entry Message if any
     echo "<h3 align=\"center\">".$entryMessage.'</h3><hr />';
   include $objUtil->utiltiesDispatchIndexAction();                                  // Center content section	<<<===============================================================

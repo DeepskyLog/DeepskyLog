@@ -34,7 +34,7 @@ while(list ($key, $value) = each($allLanguages))
     $usedLanguages[] = $key;
   }
 $query = array("object"        => $object,
-               "catalog"       => $GLOBALS['objUtil']->checkGetKey('catalogue'),
+               "catalog"       => $GLOBALS['objUtil']->checkGetKey('catalog'),
                "number"        => $GLOBALS['objUtil']->checkGetKey('number'),
                "observer"      => $GLOBALS['objUtil']->checkGetKey('observer'),
                "instrument"    => $GLOBALS['objUtil']->checkGetKey('instrument'),

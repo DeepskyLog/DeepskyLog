@@ -22,7 +22,7 @@ $cat=$objUtil->checkGetKey('catalog','M');
 $observedObjectsFromCatalog = $GLOBALS['objObservation']->getObservedFromCatalog($_GET['user'], $cat); // number of objects observed by this observer
 if($partof)
   $observedObjectsFromCatalogPartOf = $GLOBALS['objObservation']->getObservedFromCatalogPartOf(html_entity_decode($_GET['user']), $cat); // number of objects observed by this observer	
-$numberOfObjects = $GLOBALS['objObject']->getNumberOfObjectsInCatalog($cat); // number of objects in catalogue
+$numberOfObjects = $GLOBALS['objObject']->getNumberOfObjectsInCatalog($cat); // number of objects in catalog
 echo LangTopObserversMessierHeader2." ".$cat ." ".LangTopObserversMessierHeader3.(($partof)?" of deelobjecten ":" (geen deelobjecten)").":&nbsp;".count($observedObjectsFromCatalog) . " / " . $numberOfObjects;
 echo "</div>";
 echo "<p />";

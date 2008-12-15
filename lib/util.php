@@ -18,7 +18,7 @@ class util
   }
   private function utilitiesGetIndexActionDefaultAction()
   { if($_SESSION['module']=='deepsky')
-	  { $_GET['catalogue']='%';
+	  { $_GET['catalog']='%';
   	  $theDate = date('Ymd', strtotime('-1 year'));
       $_GET['minyear'] = substr($theDate,0,4);
       $_GET['minmonth'] = substr($theDate,4,2);

@@ -1,195 +1,176 @@
 <?php
 // The objects class collects all functions needed to enter, retrieve and
 // adapt object data from the database and functions to display the data.
+interface iObject
+{                                                                               
+  public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec,  // Add a deepsky object in all detail
+          	                   $mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource);
+//private function calculateSize($diam1, $diam2)                                // Construct a string from the sizes
+  public  function getAllInfoDsObject($name);                                   // Returns all information of an object
+//private function getSize($name)                                               // getSize returns the size of the object
+  public  function newAltName($name, $cat, $catindex);                          // ADMIN FUNCTION, Add a new Altname in objectnames for this object
+  public  function newName($name, $cat, $catindex);                             // ADMIN FUNCTION, Set a new name for a DS object, and adapt all observations, objectnames, partofs and list occurences
+  public  function newPartOf($name, $cat, $catindex);                           // ADMIN FUNCTION, Adds a new partof entry for $name in the partsof table, making it part of $cat $index
+	public  function removeAltName($name, $cat, $catindex);                       // ADMIN FUNCTION, Remove the alternative name $cat $index from the objectnames of $name
+  public  function removeAndReplaceObjectBy($name, $cat, $catindex);            
+  public  function removePartOf($name, $cat, $catindex);                        // ADMIN FUNCTION, Remove the partof entry for $name from the partsof table, so that $name is no longer a part of $cat $index
+	
+/* OBSOLETE FUNCTIONS 
+* public  function deleteDSObject($name);                                       // Removes the object with name = $name
+* function getSortedObjects($sort)                                               // getSortedObjects returns an array with the names of all objects, sorted by  the column specified in $sort
+*/
+}
 
-class Objects
-{
- // addObject adds a new object to the database. The name, alternative name, 
- // type, constellation, right ascension, declination, magnitude, surface 
- // brightness, diam1, diam2, position angle and info about the catalogs should
- // be given as parameters. The chart numbers for different atlasses
- // are put in the
- // database. $datasource describes where the data comes from eg : SAC7.2, 
- // DeepskyLogUser or E&T 2.5
- function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec, $mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource)
- { if (!$_SESSION['lang'])
+class Objects implements iObject
+{ 
+  public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec, $mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource)
+  { // addObject adds a new object to the database. The name, alternative name, 
+    // type, constellation, right ascension, declination, magnitude, surface 
+    // brightness, diam1, diam2, position angle and info about the catalogs should
+    // be given as parameters. The chart numbers for different atlasses
+    // are put in the
+    // database. $datasource describes where the data comes from eg : SAC7.2, 
+    // DeepskyLogUser or E&T 2.5
+    if (!$_SESSION['lang'])
      $_SESSION['lang'] = "English";
-   $urano = $GLOBALS['objAtlas']->calculateAtlasPage('urano',$ra, $dec);
-   $uranonew = $GLOBALS['objAtlas']->calculateAtlasPage('urano_new',$ra, $dec);
-   $skyatlas = $GLOBALS['objAtlas']->calculateAtlasPage('sky',$ra, $dec);
-   $millenium = $GLOBALS['objAtlas']->calculateAtlasPage('milleniumbase',$ra, $dec);
-   $taki = $GLOBALS['objAtlas']->calculateAtlasPage('taki',$ra, $dec);
-   $psa = $GLOBALS['objAtlas']->calculateAtlasPage('psa',$ra, $dec);
-   $torresB = $GLOBALS['objAtlas']->calculateAtlasPage('torresB',$ra, $dec);
-   $torresBC = $GLOBALS['objAtlas']->calculateAtlasPage('torresBC',$ra, $dec);
-   $torresC = $GLOBALS['objAtlas']->calculateAtlasPage('torresC', $ra, $dec);
-   $array = array("INSERT INTO objects (name, type, con, ra, decl, mag, subr, diam1, diam2, pa, datasource, urano, urano_new, sky, millenium, taki, psa, torresB, torresBC, torresC, milleniumbase) 
-	                 VALUES (\"$name\", \"$type\", \"$con\", \"$ra\", \"$dec\", \"$mag\", \"$subr\", \"$diam1\", \"$diam2\", \"$pa\", \"$datasource\", \"$urano\", \"$uranonew\", \"$skyatlas\", \"$millenium\", \"$taki\", \"$psa\", \"$torresB\", \"$torresBC\", \"$torresC\", \"$millenium\")");
-   $sql = implode("", $array);
-   $GLOBALS['objDatabase']->execSQL($sql);
-   $newcatindex = ucwords(trim($catindex));
-   $GLOBALS['objDatabase']->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")))");
-	 if(($mag!=99.9)&&(($diam1!=0)||($diam2!=0)))                                 // Calculate and set the SBObj
-	 { if(($diam1!=0)&&($diam2==0))
-		   $diam2 = $diam1;
-	   elseif(($diam2!=0)&&($diam1==0))
+    $urano = $GLOBALS['objAtlas']->calculateAtlasPage('urano',$ra, $dec);
+    $uranonew = $GLOBALS['objAtlas']->calculateAtlasPage('urano_new',$ra, $dec);
+    $skyatlas = $GLOBALS['objAtlas']->calculateAtlasPage('sky',$ra, $dec);
+    $millenium = $GLOBALS['objAtlas']->calculateAtlasPage('milleniumbase',$ra, $dec);
+    $taki = $GLOBALS['objAtlas']->calculateAtlasPage('taki',$ra, $dec);
+    $psa = $GLOBALS['objAtlas']->calculateAtlasPage('psa',$ra, $dec);
+    $torresB = $GLOBALS['objAtlas']->calculateAtlasPage('torresB',$ra, $dec);
+    $torresBC = $GLOBALS['objAtlas']->calculateAtlasPage('torresBC',$ra, $dec);
+    $torresC = $GLOBALS['objAtlas']->calculateAtlasPage('torresC', $ra, $dec);
+    $array = array("INSERT INTO objects (name, type, con, ra, decl, mag, subr, diam1, diam2, pa, datasource, urano, urano_new, sky, millenium, taki, psa, torresB, torresBC, torresC, milleniumbase) 
+	                  VALUES (\"$name\", \"$type\", \"$con\", \"$ra\", \"$dec\", \"$mag\", \"$subr\", \"$diam1\", \"$diam2\", \"$pa\", \"$datasource\", \"$urano\", \"$uranonew\", \"$skyatlas\", \"$millenium\", \"$taki\", \"$psa\", \"$torresB\", \"$torresBC\", \"$torresC\", \"$millenium\")");
+    $sql = implode("", $array);
+    $GLOBALS['objDatabase']->execSQL($sql);
+    $newcatindex = ucwords(trim($catindex));
+    $GLOBALS['objDatabase']->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")))");
+	  if(($mag!=99.9)&&(($diam1!=0)||($diam2!=0)))                                 // Calculate and set the SBObj
+	  { if(($diam1!=0)&&($diam2==0))
+		    $diam2 = $diam1;
+	    elseif(($diam2!=0)&&($diam1==0))
 		   $diam1=$diam2;
-		 $SBObj=($mag+(2.5*log10(2827.0*($diam1/60)*($diam2/60))));
-	}
-	else
-		$SBObj = -999;
-  $GLOBALS['objDatabase']->execSQL("update objects set SBObj = \"$SBObj\" where name = \"$name\";");
- }
- function newName($name, $cat, $catindex)
- { $newname = trim($cat . " " . ucwords(trim($catindex)));
-	 $newcatindex = ucwords(trim($catindex));
-   $GLOBALS['objDatabase']->execSQL("UPDATE objectnames SET catalog=\"$cat\", catindex=\"$newcatindex\", altname=TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")) WHERE objectname = \"$name\" AND altname = \"$name\"");
-   $GLOBALS['objDatabase']->execSQL("UPDATE objectnames SET objectname=\"$newname\" WHERE objectname = \"$name\"");
-   $GLOBALS['objDatabase']->execSQL("UPDATE objects SET name=\"$newname\" WHERE name = \"$name\"");
-   $GLOBALS['objDatabase']->execSQL("UPDATE observerobjectlist SET objectshowname=\"$newname\" WHERE objectname = \"$name\"");
-   $GLOBALS['objDatabase']->execSQL("UPDATE observerobjectlist SET objectname=\"$newname\" WHERE objectname = \"$name\"");
-   $GLOBALS['objDatabase']->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname = \"$name\"");
-   $GLOBALS['objDatabase']->execSQL("UPDATE objectpartof SET objectname=\"$newname\" WHERE objectname = \"$name\"");
-   $GLOBALS['objDatabase']->execSQL("UPDATE objectpartof SET partofname=\"$newname\" WHERE partofname = \"$name\"");
- } 
- function removeAndReplaceObjectBy($name, $cat, $catindex)
- { $newname = trim($cat . " " . ucwords(trim($catindex)));
-	 $newcatindex = ucwords(trim($catindex));
-   $GLOBALS['objDatabase']->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname=\"$name\"");
-   $GLOBALS['objDatabase']->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname=\"$name\"");
-   $GLOBALS['objDatabase']->execSQL("UPDATE observerobjectlist SET objectname=\"$newname\" WHERE objectname=\"$name\"");
-   $GLOBALS['objDatabase']->execSQL("UPDATE observerobjectlist SET objectshowname=\"$newname\" WHERE objectname=\"$name\"");
-   $GLOBALS['objDatabase']->execSQL("DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\"");
-   $GLOBALS['objDatabase']->execSQL("DELETE objectpartof.* FROM objectpartof WHERE objectname=\"$name\" OR partofname = \"$name\"");
-   $GLOBALS['objDatabase']->execSQL("DELETE objects.* FROM objects WHERE name = \"$name\"");
- } 
- function newAltName($name, $cat, $catindex)
- { $GLOBALS['objDatabase']->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"".ucwords(trim($catindex))."\")))");
- }
- function removeAltName($name, $cat, $catindex)
- { $GLOBALS['objDatabase']->execSQL("DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\" AND catalog = \"$cat\" AND catindex=\"".ucwords(trim($catindex))."\"");
- }
- function newPartOf($name, $cat, $catindex)
- { $GLOBALS['objDatabase']->execSQL("INSERT INTO objectpartof (objectname, partofname) VALUES (\"$name\", \"".trim($cat . " " . ucwords(trim($catindex)))."\")");
- }
- function removePartOf($name, $cat, $catindex)
- { $GLOBALS['objDatabase']->execSQL("DELETE objectpartof.* FROM objectpartof WHERE objectname = \"$name\" AND partofname = \"".trim($cat . " " . ucwords(trim($catindex)))."\"");
- } 
- function deleteDSObject($name) // deleteObject removes the object with name = $name
- { $GLOBALS['objDatabase']->execSQL("DELETE FROM objects WHERE name=\"$name\"");
- }
- function getAllInfoDsObject($name) // getAllInfo returns all information of an object
- { $get = mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT * FROM objects WHERE name = \"$name\""));
-   $object["mag"] = $get->mag;
-   $object["sb"] = $get->subr;
-   $object["con"] = $get->con;
-   $object["type"] = $get->type;
-   $object["urano"] = $get->urano;
-   $object["newurano"] = $get->urano_new;
-   $object["sky"] = $get->sky;
-   $object["taki"] = $get->taki;
-   $object["msa"] = $get->millenium;
-   $object["psa"] = $get->psa;
-   $object["torresB"] = $get->torresB;
-   $object["torresBC"] = $get->torresBC;
-   $object["torresC"] = $get->torresC;
-   $object["ra"] = $get->ra;
-   $object["dec"] = $get->decl;
-   if($get->pa != 999)
-     $object["pa"] =$get->pa;
-   else
-     $object["pa"] = "";
-	 $diam1 = $get->diam1;
-   $diam2 = $get->diam2;
-   $object["seen"] = "-";
-   $object["datasource"] = $get->datasource;
-   $object["size"] = $this->calculateSize($diam1, $diam2); 
-   $sql = "SELECT COUNT(id) As CountId FROM observations " .
-          "WHERE objectname = \"$name\"";
-   $run = mysql_query($sql) or die(mysql_error());
-   $seeget = mysql_fetch_object($run);
-	 $see = $seeget->CountId;
-	 if ($see > 0)
-     $object["seen"] = "X (" . $see . ")";
-   if (array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
-   { $user = $_SESSION['deepskylog_id'];
-     $sql = "SELECT observerid, date FROM observations " .
-	          "WHERE objectname = \"$name\" AND observerid = \"$user\" ORDER BY date DESC";
-     $run = mysql_query($sql) or die(mysql_error());
-     $get = mysql_fetch_object($run);
-     $sql = "SELECT COUNT(id) As CountId FROM observations " .
-	          "WHERE objectname = \"$name\" AND observerid = \"$user\"";
-     $run = mysql_query($sql) or die(mysql_error());
-     $seeget = mysql_fetch_object($run);
-  	 $see = $seeget->CountId;
-     if ($get)
-       $object["seen"] = "Y (" . $get->date . " - " . $see . ")";
-   }
-   $run=$GLOBALS['objDatabase']->selectRecordset("SELECT altname FROM objectnames WHERE objectnames.objectname = \"$name\"");
-   $object["altname"]="";
-	 while($get=mysql_fetch_object($run))
-     if($get->altname!=$name)
-		   if($object["altname"])
-		     $object["altname"].="/".$get->altname;
-			 else
-		     $object["altname"]= $get->altname;
-   return $object;
- }
-// Construct a string from the sizes
- function calculateSize($diam1, $diam2)
- {
-  $size = "";
-  if ($diam1 != 0.0)
-  {
-   if ($diam1 >= 40.0)
-   { 
-    if (round($diam1 / 60.0) == ($diam1 / 60.0))
-    {
-     if ($diam1 / 60.0 > 30.0)
-     {
-      $size = sprintf("%.0f'", $diam1 / 60.0);
-     }
-     else
-     {
-      $size = sprintf("%.1f'", $diam1 / 60.0);
-     }
-    }
-    else
-    {
-     $size = sprintf("%.1f'", $diam1 / 60.0);
-    }
-
-    if ($diam2 != 0.0)
-    {
-     if (round($diam2 / 60.0) == ($diam2 / 60.0))
-     {
-      if ($diam2 / 60.0 > 30.0)
-      {
-       $size = $size.sprintf("x%.0f'", $diam2 / 60.0);
+		  $SBObj=($mag+(2.5*log10(2827.0*($diam1/60)*($diam2/60))));
+	  }
+	  else
+		  $SBObj = -999;
+    $GLOBALS['objDatabase']->execSQL("update objects set SBObj = \"$SBObj\" where name = \"$name\";");
+  }
+  private function calculateSize($diam1, $diam2) // Construct a string from the sizes
+  { $size = "";
+    if ($diam1!=0.0)
+    { if($diam1>=40.0)
+      { if(round($diam1/60.0)==($diam1/60.0))
+          if(($diam1/60.0)>30.0)
+            $size=sprintf("%.0f'",$diam1/60.0);
+          else
+            $size=sprintf("%.1f'",$diam1/60.0); 
+        else
+          $size = sprintf("%.1f'",$diam1/60.0);
+        if($diam2!=0.0)
+        { if(round($diam2/60.0)==($diam2/60.0))
+            if(($diam2/60.0)>30.0)
+              $size=$size.sprintf("x%.0f'",$diam2/60.0);
+            else
+              $size=$size.sprintf("x%.1f'",$diam2/60.0);
+          else
+            $size = $size.sprintf("x%.1f'",$diam2/60.0);
+        }
       }
       else
-      {
-       $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
-      }
-     }
-     else
-     {
-      $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
-     }
+      { $size=sprintf("%.1f''",$diam1); 
+			  if($diam2!=0.0)
+        { $size=$size.sprintf("x%.1f''",$diam2);
+        }
+		  }
     }
-   }
-   else
-   {
-    $size = sprintf("%.1f''", $diam1);
-
-    if ($diam2 != 0.0)
-    {
-     $size = $size.sprintf("x%.1f''", $diam2);
-    }
-   }
+    return $size;
   }
-  return $size;
- }
+  public  function getAllInfoDsObject($name) // getAllInfo returns all information of an object
+  { $get = mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT * FROM objects WHERE name = \"".$name."\""));
+    while(list($key,$value)=each($get))
+		  $object[$key]=$value;
+    $object["size"]=$this->calculateSize($diam1, $diam2); 
+    $object["seen"]="-";
+  	if ($see=$GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(id) As CountId FROM observations WHERE objectname = \"".$name."\"",'CountId',0))
+    { $object["seen"]="X (".$see.")";
+      if((array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
+      && ($get=mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT COUNT(observerid) As seenCnt, MAX(date) seenLastDate FROM observations WHERE objectname = \"".$name."\" AND observerid = \"".$_SESSION['deepskylog_id']."\""))))
+        $object["seen"]="Y (".$get->seenCnt." - ".$get->seenLastDate.")";
+    }
+		$run=$GLOBALS['objDatabase']->selectRecordset("SELECT altname FROM objectnames WHERE objectnames.objectname = \"$name\"");
+    $object["altname"]="";
+	  while($get=mysql_fetch_object($run))
+      if($get->altname!=$name)
+	 	    if($object["altname"])
+		      $object["altname"].="/".$get->altname;
+			  else
+		      $object["altname"]= $get->altname;
+    return $object;
+  }
+  private function getSize($name)                                               // getSize returns the size of the object
+  { $sql = "SELECT * FROM objects WHERE name = \"$name\"";
+    $run = mysql_query($sql) or die(mysql_error());
+    $get = mysql_fetch_object($run);
+    $diam1 = $get->diam1;
+    $diam2 = $get->diam2;
+    $size = $this->calculateSize($diam1, $diam2);
+  }
+  public function newAltName($name, $cat, $catindex)
+  { $GLOBALS['objDatabase']->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"".ucwords(trim($catindex))."\")))");
+  }
+  public  function newName($name, $cat, $catindex)
+  { $newname = trim($cat . " " . ucwords(trim($catindex)));
+	  $newcatindex = ucwords(trim($catindex));
+    $GLOBALS['objDatabase']->execSQL("UPDATE objectnames SET catalog=\"$cat\", catindex=\"$newcatindex\", altname=TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")) WHERE objectname = \"$name\" AND altname = \"$name\"");
+    $GLOBALS['objDatabase']->execSQL("UPDATE objectnames SET objectname=\"$newname\" WHERE objectname = \"$name\"");
+    $GLOBALS['objDatabase']->execSQL("UPDATE objects SET name=\"$newname\" WHERE name = \"$name\"");
+    $GLOBALS['objDatabase']->execSQL("UPDATE observerobjectlist SET objectshowname=\"$newname\" WHERE objectname = \"$name\"");
+    $GLOBALS['objDatabase']->execSQL("UPDATE observerobjectlist SET objectname=\"$newname\" WHERE objectname = \"$name\"");
+    $GLOBALS['objDatabase']->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname = \"$name\"");
+    $GLOBALS['objDatabase']->execSQL("UPDATE objectpartof SET objectname=\"$newname\" WHERE objectname = \"$name\"");
+    $GLOBALS['objDatabase']->execSQL("UPDATE objectpartof SET partofname=\"$newname\" WHERE partofname = \"$name\"");
+  } 
+  public  function newPartOf($name, $cat, $catindex)
+  { $GLOBALS['objDatabase']->execSQL("INSERT INTO objectpartof (objectname, partofname) VALUES (\"$name\", \"".trim($cat . " " . ucwords(trim($catindex)))."\")");
+  }
+  public  function removeAndReplaceObjectBy($name, $cat, $catindex)
+  { $newname = trim($cat . " " . ucwords(trim($catindex)));
+	  $newcatindex = ucwords(trim($catindex));
+    $GLOBALS['objDatabase']->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname=\"$name\"");
+    $GLOBALS['objDatabase']->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname=\"$name\"");
+    $GLOBALS['objDatabase']->execSQL("UPDATE observerobjectlist SET objectname=\"$newname\" WHERE objectname=\"$name\"");
+    $GLOBALS['objDatabase']->execSQL("UPDATE observerobjectlist SET objectshowname=\"$newname\" WHERE objectname=\"$name\"");
+    $GLOBALS['objDatabase']->execSQL("DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\"");
+    $GLOBALS['objDatabase']->execSQL("DELETE objectpartof.* FROM objectpartof WHERE objectname=\"$name\" OR partofname = \"$name\"");
+    $GLOBALS['objDatabase']->execSQL("DELETE objects.* FROM objects WHERE name = \"$name\"");
+  } 
+	public  function removeAltName($name, $cat, $catindex)
+  { $GLOBALS['objDatabase']->execSQL("DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\" AND catalog = \"$cat\" AND catindex=\"".ucwords(trim($catindex))."\"");
+  }
+  public  function removePartOf($name, $cat, $catindex)
+  { $GLOBALS['objDatabase']->execSQL("DELETE objectpartof.* FROM objectpartof WHERE objectname = \"$name\" AND partofname = \"".trim($cat . " " . ucwords(trim($catindex)))."\"");
+  } 
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+
+
+	
  function getDsObjectType($name)  // getType returns the type of the object
  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT type FROM objects WHERE name = \"".$name."\"",'type');
  }
@@ -903,24 +884,7 @@ class Objects
 
   return $sb;
  }
- // getSize returns the size of the object
- function getSize($name)
- {
-  $db = new database;
-  $db->login();
 
-  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $diam1 = $get->diam1;
-  $diam2 = $get->diam2;
-  $size = $this->calculateSize($diam1, $diam2);
-  $db->logout();
-
-  return $size;
- }
  // getDiam1 returns the size of the object
  function getDiam1($name)
  {
@@ -1894,8 +1858,11 @@ class contrastcompare {
  }
 $objObject=new Objects;
 /* OBSOLETE FUNCTIONS
- function getSortedObjects($sort)                                               // getSortedObjects returns an array with the names of all objects, sorted by  the column specified in $sort
- { return $GLOBALS['objDatabase']->selectSingleArray("SELECT name FROM objects ORDER BY $name",'name');
- }
+  function getSortedObjects($sort)                                               // getSortedObjects returns an array with the names of all objects, sorted by  the column specified in $sort
+  { return $GLOBALS['objDatabase']->selectSingleArray("SELECT name FROM objects ORDER BY $name",'name');
+  }
+  public  function deleteDSObject($name) // deleteObject removes the object with name = $name
+  { $GLOBALS['objDatabase']->execSQL("DELETE FROM objects WHERE name=\"$name\"");
+  }
 */
 ?>

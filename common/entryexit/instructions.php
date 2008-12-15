@@ -42,7 +42,7 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_observation
 { if(array_key_exists('number',$_POST)&&(!$_POST['number']))
     $_GET['indexAction']="query_objects";
   elseif(array_key_exists('number',$_POST)&&(!($_GET['object']=$GLOBALS['objObject']->getExactDsObject('',$GLOBALS['objUtil']->checkPostKey('catalog'), $GLOBALS['objUtil']->checkPostKey('number')))))
-  { $entryMessage.="No corresponding object found for ".$GLOBALS['objUtil']->checkPostKey('catalogue')." ".$GLOBALS['objUtil']->checkPostKey('number');
+  { $entryMessage.="No corresponding object found for ".$GLOBALS['objUtil']->checkPostKey('catalog')." ".$GLOBALS['objUtil']->checkPostKey('number');
     $_GET['indexAction']="query_objects";
    }
   else
@@ -204,19 +204,19 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="comets_validate
 if(array_key_exists('admin', $_SESSION)&&$_SESSION['admin']=="yes")
 { if(array_key_exists("newaction",$_GET))
 	{ if($_GET['newaction']=="NewName")
-	  { $objObject->newName($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
-		  $_GET['object'] = trim($_GET['newcatalogue'] . " " . ucwords(trim($_GET['newnumber'])));
+	  { $objObject->newName($_GET['object'], $_GET['newcatalog'],$_GET['newnumber']);
+		  $_GET['object'] = trim($_GET['newcatalog'] . " " . ucwords(trim($_GET['newnumber'])));
     }	
   	if($_GET['newaction']=="NewAltName")
-	    $objObject->newAltName($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
+	    $objObject->newAltName($_GET['object'], $_GET['newcatalog'],$_GET['newnumber']);
   	if($_GET['newaction']=="RemoveAltNameName")
-	    $objObject->removeAltName($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
+	    $objObject->removeAltName($_GET['object'], $_GET['newcatalog'],$_GET['newnumber']);
   	if($_GET['newaction']=="NewPartOf")
-	    $objObject->newPartOf($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
+	    $objObject->newPartOf($_GET['object'], $_GET['newcatalog'],$_GET['newnumber']);
   	if($_GET['newaction']=="RemovePartOf")
-	    $objObject->removePartOf($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
+	    $objObject->removePartOf($_GET['object'], $_GET['newcatalog'],$_GET['newnumber']);
   	if($_GET['newaction']=="RemoveAndReplaceObjectBy")
-	  { $objObject->removeAndReplaceObjectBy($_GET['object'], $_GET['newcatalogue'],$_GET['newnumber']);
+	  { $objObject->removeAndReplaceObjectBy($_GET['object'], $_GET['newcatalog'],$_GET['newnumber']);
 		  $_GET['object'] = trim($_GET['newcatalog'] . " " . ucwords(trim($_GET['newnumber'])));
 	  }			
   	if($_GET['newaction']=="LangObjectSetRA")

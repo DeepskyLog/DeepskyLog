@@ -166,7 +166,7 @@ if ($observers->getUseLocal($_SESSION['deepskylog_id']))
 
 if(isset($catalogsearch))
 {
-  if($cataloguesearch == "yes")
+  if($catalogsearch == "yes")
   {
     $obs = $observations->getObservationFromQuery($query,$sort,0); // LIKE
   }

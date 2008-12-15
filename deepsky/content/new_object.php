@@ -132,21 +132,6 @@ echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"sb\" size
 
 echo("</td>\n<td></td>\n</tr>\n");
 
-// SIZE
-
-if(array_key_exists('object',$_GET) && ($objObject->getSize($_GET['object']) != ""))
-{
-   echo("<tr>\n
-         <td class=\"fieldname\">");
-
-   echo LangViewObjectField9; 
- 
-   echo("</td>\n<td>");
- 
-   echo($objObject->getSize($_GET['object']));
- 
-   echo("</td>\n</tr>\n"); 
-}
 
 // SIZE
 

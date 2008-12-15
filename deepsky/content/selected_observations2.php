@@ -64,7 +64,7 @@ else                           //===============================================
      array_key_exists('minmonth',$_GET) && ($_GET['minmonth'] == substr($theDate,4,2)) &&
      array_key_exists('minday',$_GET) && ($_GET['minday'] == substr($theDate,6,2)))
     echo (LangSelectedObservationsTitle3); 
-  //elseif ($catalogue=="*")
+  //elseif ($catalog=="*")
   //  echo (LangOverviewObservationsTitle); 
   elseif($object)
     echo (LangSelectedObservationsTitle . $object);

@@ -12,7 +12,7 @@ $link=$baseURL."index.php?indexAction=rank_observers&amp;sort=".$sort."&amp;size
 echo "<table width=\"100%\">";
 echo "<tr width=\"100%\">";
 echo "<td>";
-//echo "<div id=\"main\">";
+echo "<div id=\"main\">";
 echo "<h2>" . LangTopObserversTitle . "</h2>";
 echo "</td>";
 echo "<td align=\"right\">";

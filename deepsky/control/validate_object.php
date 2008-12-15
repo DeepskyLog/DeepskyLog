@@ -15,15 +15,15 @@ if ($_POST['newobject'])
     $_GET['indexAction']='add_object';
   } 
   if($check)                                                                    // check name
-  { $catalog=trim($_POST['catalogue']);
+  { $catalog=trim($_POST['catalog']);
     $catalogs=$objObject->getCatalogs();
     $foundcatalog="";
     while((list($key,$value)=each($catalogs))&&(!$foundcatalog))
       if(strtoupper($value) == strtoupper($catalog))
-        $foundcatalogue = $value;
-    if($foundcatalogue)
-      $catalogue = $foundcatalogue;
-    $name = trim($catalogue." ".ucwords(trim($_POST['number'])));
+        $foundcatalog = $value;
+    if($foundcatalog)
+      $catalog = $foundcatalog;
+    $name = trim($catalog." ".ucwords(trim($_POST['number'])));
     $query1=array("name"=>$name);
     if($objObject->getObjectFromQuery($query1, 1))                                // object already exists
     { $entryMessage=LangValidateObjectMessage2;
@@ -112,7 +112,7 @@ if ($_POST['newobject'])
     }
   }
   if($check)                                                                    // fill database
-  { $objObject->addDSObject($name, $catalogue , ucwords(trim($_POST['number'])), $_POST['type'], $_POST['con'], $ra, $declination, $magnitude, $sb, $diam1, $diam2, $posangle, "", "DeepskyLogUser");
+  { $objObject->addDSObject($name, $catalog , ucwords(trim($_POST['number'])), $_POST['type'], $_POST['con'], $ra, $declination, $magnitude, $sb, $diam1, $diam2, $posangle, "", "DeepskyLogUser");
     $admins = $objObserver->getAdministrators();
     while(list($key, $value)=each($admins))
       if ($objObserver->getEmail($value))
