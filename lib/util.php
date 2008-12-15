@@ -201,7 +201,7 @@ class util
     }
   }
   public function pdfObjects($result)  // Creates a pdf document from an array of objects
-  { global $deepskylive, $dateformat;
+  { global $deepskylive, $dateformat, $atlasses;
 		$atlasses = $GLOBALS['objAtlas']->getSortedAtlasses();	
     while(list ($key, $valueA) = each($result))
     { $mag = $valueA['objectmagnitude'];

@@ -3,7 +3,9 @@
 //============================================================================== COMMON INSTRUCTIONS
 while(list($key,$value)=each($modules))
   if($objUtil->checkGetKey('indexAction')=='module'.$value)
-    $_SESSION['module']=$value;
+  { $_SESSION['module']=$value;
+    setcookie("module",$value,time()+(365*24*60*60),"/");
+  }
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="change_role"))
   require_once $instDir."/common/control/change_role.php";
 if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="common_control_validate_account"))

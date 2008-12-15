@@ -1171,7 +1171,7 @@ class Observations {
 	}
 
 	function getLOObservationId($objectname, $userid, $notobservation) {
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT id FROM observations WHERE objectname = \"$objectname\" and observerid = \"$userid\" and id != \"$notobservation\" ORDER BY id DESC", 'id', 0);
+		return $GLOBALS['objDatabase']->selectSingleValue("SELECT id FROM observations WHERE objectname = \"".$objectname."\" and observerid = \"".$userid."\" and id != \"$notobservation\" ORDER BY date DESC", 'id', 0);
 	}
 
 	function getMOObservationsId($object, $userid, $notobservation) {
@@ -1628,10 +1628,9 @@ class Observations {
 		echo ("</a>");
 		echo ("&nbsp;");
 		if (array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id']) // LOGGED IN
-			{
-			$objectid = $this->getObjectId($value['observationid']);
-			if ($LOdescription) {
-				echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&amp;dalm=MO\" title=\"" . LangMO . "\">");
+		{ $objectid = $this->getObjectId($value['observationid']);
+			if ($LOdescription) 
+			{ echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&amp;dalm=MO\" title=\"" . LangMO . "\">");
 				echo LangMOText;
 				echo ("</a>&nbsp;");
 				echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&amp;dalm=LO\" title=\"" . LangLO . "\">");
@@ -1640,8 +1639,8 @@ class Observations {
 			}
 		}
 		echo ("</td>");
-		if (array_key_exists("listname", $_SESSION) && $_SESSION['listname'] && array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && $myList) {
-			echo ("<td>");
+		if (array_key_exists("listname", $_SESSION) && $_SESSION['listname'] && array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && $myList) 
+		{ echo ("<td>");
 			$db = new database;
 			$db->login();
 			$listname = $_SESSION['listname'];

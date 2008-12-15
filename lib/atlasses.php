@@ -5,6 +5,7 @@ interface iAtlas
 { // public $atlasCodes;
   public function calculateAtlasPage($atlas, $ra, $decl); // calculates the atlas page for the ra,decl in atlas
   public function getAtlasPage($atlas, $object);
+  public function getSortedAtlasses();
 }
 
 class Atlasses implements iAtlas
@@ -1005,7 +1006,7 @@ class Atlasses implements iAtlas
   public  function getAtlasPage($atlas, $object)
   { return $GLOBALS['objDatabase']->selectSingleValue("SELECT ".$atlas." FROM objects WHERE name = \"".$object."\"",$atlas);
   }	
-  private function getSortedAtlasses()
+  public  function getSortedAtlasses()
 	{ $atlasses = array();
     $run = mysql_query('SELECT atlasCode FROM atlasses;') 
 		       or die(mysql_error());
