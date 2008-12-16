@@ -5,19 +5,25 @@ interface iObject
 {                                                                               
   public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec,  // Add a deepsky object in all detail
           	                   $mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource);
-//private function calculateSize($diam1, $diam2)                                // Construct a string from the sizes
+//private function calculateSize($diam1, $diam2);                               // Construct a string from the sizes
   public  function getAllInfoDsObject($name);                                   // Returns all information of an object
-//private function getSize($name)                                               // getSize returns the size of the object
+  public  function getDsoProperty($theObject,$theProperty, $default='');        // returns the propperty of the object, or default if not found
+  public  function getDSOseen($object);                                         // Returns the getSeen result, encoded to a href that shows the seen observations
+  public  function getSeen($object);                                            // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
+//private function getSize($name);                                              // Returns the size of the object
   public  function newAltName($name, $cat, $catindex);                          // ADMIN FUNCTION, Add a new Altname in objectnames for this object
   public  function newName($name, $cat, $catindex);                             // ADMIN FUNCTION, Set a new name for a DS object, and adapt all observations, objectnames, partofs and list occurences
   public  function newPartOf($name, $cat, $catindex);                           // ADMIN FUNCTION, Adds a new partof entry for $name in the partsof table, making it part of $cat $index
+//private function prepareObjectsContrast($doLogin=false);                      // internal procedure to speed up contrast calculations
 	public  function removeAltName($name, $cat, $catindex);                       // ADMIN FUNCTION, Remove the alternative name $cat $index from the objectnames of $name
-  public  function removeAndReplaceObjectBy($name, $cat, $catindex);            
+  public  function removeAndReplaceObjectBy($name, $cat, $catindex);            // ADMIN FUNCTION, Remove the object after replacing it in the observations, partofs, lists by the object $cat $index
   public  function removePartOf($name, $cat, $catindex);                        // ADMIN FUNCTION, Remove the partof entry for $name from the partsof table, so that $name is no longer a part of $cat $index
+  public  function sortObjects($objectList, $sort, $reverse=false);             // Sort the array of objectList on the $sort field, and in second order on the showname field 
 	
 /* OBSOLETE FUNCTIONS 
-* public  function deleteDSObject($name);                                       // Removes the object with name = $name
-* function getSortedObjects($sort)                                               // getSortedObjects returns an array with the names of all objects, sorted by  the column specified in $sort
+* function getDatasource($name)                                                 // returns the datasource of the object
+* function deleteDSObject($name);                                               // Removes the object with name = $name
+* function getSortedObjects($sort)                                              // getSortedObjects returns an array with the names of all objects, sorted by  the column specified in $sort
 */
 }
 
@@ -48,7 +54,7 @@ class Objects implements iObject
     $GLOBALS['objDatabase']->execSQL($sql);
     $newcatindex = ucwords(trim($catindex));
     $GLOBALS['objDatabase']->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")))");
-	  if(($mag!=99.9)&&(($diam1!=0)||($diam2!=0)))                                 // Calculate and set the SBObj
+	  if(($mag!=99.9)&&(($diam1!=0)||($diam2!=0)))                                // Calculate and set the SBObj
 	  { if(($diam1!=0)&&($diam2==0))
 		    $diam2 = $diam1;
 	    elseif(($diam2!=0)&&($diam1==0))
@@ -111,6 +117,34 @@ class Objects implements iObject
 		      $object["altname"]= $get->altname;
     return $object;
   }
+  public  function getConstellation($name)                                      // returns the constellation of the object
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT con FROM objects WHERE name = \"".$name."\"",'con');
+  }
+  public  function getDsoProperty($theObject,$theProperty, $default='')         // returns the propperty of the object, or default if not found
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT objects.".$theProperty." FROM objects WHERE name=\"".$theObject."\"",$theProperty,$default);
+  }
+  public  function getDSOseen($object)                                          // Returns the getSeen result, encoded to a href that shows the seen observations
+  { $seenDetails=$this->getSeen($object);
+    $seen = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_objectamp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
+    if(substr($seenDetails,0,1)=="X")                                            // object has been seen already
+      $seen = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\">".$seenDetails."</a>";
+    if(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id'])
+      if (substr($seenDetails,0,1)=="Y")                                         // object has been seen by the observer logged in
+        $seen = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\">".$seenDetails."</a>";
+    return $seen;
+  }
+  public  function getSeen($object)                                             // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
+  { $seen='-';
+    if($ObsCnt=$GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 ",'ObsCnt'))
+    { $seen='X('.$ObsCnt.')';
+      if(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
+      { $get3=mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$_SESSION['deepskylog_id']."\" AND visibility != 7"));
+  		  if($get3->PersObsCnt>0)
+          $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')&nbsp;'.$get3->PersObsMaxDate;
+		  }
+	  }
+	  return $seen;
+  }
   private function getSize($name)                                               // getSize returns the size of the object
   { $sql = "SELECT * FROM objects WHERE name = \"$name\"";
     $run = mysql_query($sql) or die(mysql_error());
@@ -137,6 +171,142 @@ class Objects implements iObject
   public  function newPartOf($name, $cat, $catindex)
   { $GLOBALS['objDatabase']->execSQL("INSERT INTO objectpartof (objectname, partofname) VALUES (\"$name\", \"".trim($cat . " " . ucwords(trim($catindex)))."\")");
   }
+  private function prepareObjectsContrast($doLogin=false)                       // internal procedure to speed up contrast calculations
+  { include_once "contrast.php";
+    $contrastObj = new Contrast;
+    if(!array_key_exists('LTC',$_SESSION)||(!$_SESSION['LTC']))
+		 $_SESSION['LTC'] = array(array(4, -0.3769, -1.8064, -2.3368, -2.4601, -2.5469, -2.5610, -2.5660), 
+                              array(5, -0.3315, -1.7747, -2.3337, -2.4608, -2.5465, -2.5607, -2.5658),
+                              array(6, -0.2682, -1.7345, -2.3310, -2.4605, -2.5467, -2.5608, -2.5658),
+                              array(7, -0.1982, -1.6851, -2.3140, -2.4572, -2.5481, -2.5615, -2.5665),
+                              array(8, -0.1238, -1.6252, -2.2791, -2.4462, -2.5463, -2.5597, -2.5646),
+                              array(9, -0.0424, -1.5529, -2.2297, -2.4214, -2.5343, -2.5501, -2.5552),
+                              array(10, 0.0498, -1.4655, -2.1659, -2.3763, -2.5047, -2.5269, -2.5333),
+                              array(11, 0.1596, -1.3581, -2.0810, -2.3036, -2.4499, -2.4823, -2.4937),
+                              array(12, 0.2934, -1.2256, -1.9674, -2.1965, -2.3631, -2.4092, -2.4318),
+                              array(13, 0.4557, -1.0673, -1.8186, -2.0531, -2.2445, -2.3083, -2.3491),
+                              array(14, 0.6500, -0.8841, -1.6292, -1.8741, -2.0989, -2.1848, -2.2505),
+                              array(15, 0.8808, -0.6687, -1.3967, -1.6611, -1.9284, -2.0411, -2.1375),
+                              array(16, 1.1558, -0.3952, -1.1264, -1.4176, -1.7300, -1.8727, -2.0034),
+                              array(17, 1.4822, -0.0419, -0.8243, -1.1475, -1.5021, -1.6768, -1.8420),
+                              array(18, 1.8559, 0.3458, -0.4924, -0.8561, -1.2661, -1.4721, -1.6624),
+                              array(19, 2.2669, 0.6960, -0.1315, -0.5510, -1.0562, -1.2892, -1.4827),
+                              array(20, 2.6760, 1.0880, 0.2060, -0.3210, -0.8800, -1.1370, -1.3620),
+                              array(21, 2.7766, 1.2065, 0.3467, -0.1377, -0.7361, -0.9964, -1.2439),
+                              array(22, 2.9304, 1.3821, 0.5353, 0.0328, -0.5605, -0.8606, -1.1187),
+                              array(23, 3.1634, 1.6107, 0.7708, 0.2531, -0.3895, -0.7030, -0.9681),
+                              array(24, 3.4643, 1.9034, 1.0338, 0.4943, -0.2033, -0.5259, -0.8288),
+                              array(25, 3.8211, 2.2564, 1.3265, 0.7605, 0.0172, -0.2992, -0.6394),
+                              array(26, 4.2210, 2.6320, 1.6990, 1.1320, 0.2860, -0.0510, -0.4080),
+                              array(27, 4.6100, 3.0660, 2.1320, 1.5850, 0.6520, 0.2410, -0.1210));
+
+     if(!array_key_exists('LTCSize',$_SESSION)||(!$_SESSION['LTCSize']))
+       $_SESSION['LTCSize'] = 24;
+     if(!array_key_exists('angleSize',$_SESSION)||(!$_SESSION['angleSize']))
+       $_SESSION['angleSize'] = 7;
+     if(!array_key_exists('angle',$_SESSION)||(!$_SESSION['angle']))
+       $_SESSION['angle'] = array(-0.2255, 0.5563, 0.9859, 1.260, 1.742, 2.083, 2.556);
+     $popup="";
+  		$magnificationsName='';
+	 	$fov='';
+		 if(!(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id'])))
+		   $popup = LangContrastNotLoggedIn;
+     else
+	 	{ $sql5 = "SELECT stdlocation, stdtelescope from observers where id = \"" . $_SESSION['deepskylog_id'] . "\"";
+       $run5 = mysql_query($sql5) or die(mysql_error());
+       $get5 = mysql_fetch_object($run5);
+       if ($get5->stdlocation==0)
+         $popup = LangContrastNoStandardLocation;
+       elseif($get5->stdtelescope==0)
+	 			$popup = LangContrastNoStandardInstrument;
+		 	else
+			 { // Check for eyepieces or a fixed magnification
+         $sql6 = "SELECT fixedMagnification, diameter, fd from instruments where id = \"" . $get5->stdtelescope . "\"";
+         $run6 = mysql_query($sql6) or die(mysql_error());
+         $get6 = mysql_fetch_object($run6);
+         if ($get6->fd == 0 && $get6->fixedMagnification == 0)
+         { // We are not setting $magnifications
+		 			$magnifications = array();
+			 	}
+         else if ($get6->fixedMagnification == 0)
+         { $sql7 = "SELECT focalLength, name, apparentFOV, maxFocalLength from eyepieces where observer = \"" . $_SESSION['deepskylog_id'] . "\"";
+  	       $run7 = mysql_query($sql7) or die(mysql_error());
+				   while($get7 = mysql_fetch_object($run7))
+           { if ($get7->maxFocalLength > 0.0)
+						 {
+							 $fRange = $get7->maxFocalLength - $get7->focalLength;
+               for ($i = 0;$i < 5;$i++)
+							 { $focalLengthEyepiece = $get7->focalLength + $i * $fRange / 5.0;
+								 $magnifications[] = $get6->diameter * $get6->fd / $focalLengthEyepiece;
+ 						  	 $magnificationsName[] = $get7->name . " - " . $focalLengthEyepiece . "mm";
+								 $fov[] = 1.0 / ($get6->diameter * $get6->fd / $focalLengthEyepiece) * 60.0 * $get7->apparentFOV;
+							 }
+						 }
+						 else
+						 { $magnifications[] = $get6->diameter * $get6->fd / $get7->focalLength;
+ 					  	 $magnificationsName[] = $get7->name;
+							 $fov[] = 1.0 / ($get6->diameter * $get6->fd / $get7->focalLength) * 60.0 * $get7->apparentFOV;
+						 }
+  				 }
+	         $sql8 = "SELECT name, factor from lenses where observer = \"" . $_SESSION['deepskylog_id'] . "\"";
+  	       $run8 = mysql_query($sql8) or die(mysql_error());
+ 					 $origmagnifications = $magnifications;
+					 $origmagnificationsName = $magnificationsName;
+					 $origfov = $fov;
+				   while($get8 = mysql_fetch_object($run8))
+					 { $name=$get8->name;
+						 $factor=$get8->factor;
+						 for($i=0;$i<count($origmagnifications);$i++)
+						 { $magnifications[] = $origmagnifications[$i] * $factor;
+							 $magnificationsName[] = $origmagnificationsName[$i] . ", " . $name;
+							 $fov[] = $fov[$i] / $factor;
+						 }
+					 }
+         }
+         else
+         { $magnifications[] = $get6->fixedMagnification;
+					 $magnificationsName[] = "";
+					 $fov[] = "";
+         }
+         $_SESSION['magnifications'] = $magnifications; 
+         $_SESSION['magnificationsName'] = $magnificationsName; 
+				 $_SESSION['fov'] = $fov;
+				 if (count($magnifications) == 0)
+				 { $popup = LangContrastNoEyepiece;
+				 }
+				 else
+         { $sql6 = "SELECT limitingMagnitude, skyBackground, name from locations where id = \"" . $get5->stdlocation . "\"";
+      	   $run6 = mysql_query($sql6) or die(mysql_error());
+        	 $get6 = mysql_fetch_object($run6);
+    	     if(($get6->limitingMagnitude < -900)&&($get6->skyBackground < -900))
+      	     $popup = LangContrastNoLimMag;
+					 else
+      	   { if($get6->skyBackground < -900)
+          	   $_SESSION['initBB'] = $contrastObj->calculateSkyBackgroundFromLimitingMagnitude($get6->limitingMagnitude);
+        	   else
+          	   $_SESSION['initBB'] = $get6->skyBackground;
+  	         $sql7 = "SELECT diameter, name from instruments where id = \"" . $get5->stdtelescope . "\"";
+    	       $run7 = mysql_query($sql7) or die(mysql_error());
+      	     $get7 = mysql_fetch_object($run7);
+        	   $_SESSION['aperMm'] = $get7->diameter;
+						 $_SESSION['aperIn'] = $_SESSION['aperMm'] / 25.4;
+					   //$scopeTrans = 0.8;
+             //$pupil = 7.5;
+             //$nakedEyeMag = 8.5;
+             //Faintest star
+             //$limitMag = $nakedEyeMag + 2.5 * log10( $_SESSION['aperMm'] * $_SESSION['aperMm'] * $scopeTrans / ($pupil * $pupil));
+	           // Minimum useful magnification
+       			 $_SESSION['minX'] = $_SESSION['aperIn'] * 3.375 + 0.5;
+						 $_SESSION['SBB1'] = $_SESSION['initBB'] - (5 * log10(2.833 * 	$_SESSION['aperIn']));
+						 $_SESSION['SBB2'] = -2.5 * log10( (2.833 * $_SESSION['aperIn']) * (2.833 * $_SESSION['aperIn']));
+						 $_SESSION['telescope'] = $get7->name;
+						 $_SESSION['location'] = $get6->name;
+					 }
+         }
+	    }
+	  }
+    return $popup;
+  }
   public  function removeAndReplaceObjectBy($name, $cat, $catindex)
   { $newname = trim($cat . " " . ucwords(trim($catindex)));
 	  $newcatindex = ucwords(trim($catindex));
@@ -148,339 +318,102 @@ class Objects implements iObject
     $GLOBALS['objDatabase']->execSQL("DELETE objectpartof.* FROM objectpartof WHERE objectname=\"$name\" OR partofname = \"$name\"");
     $GLOBALS['objDatabase']->execSQL("DELETE objects.* FROM objects WHERE name = \"$name\"");
   } 
-	public  function removeAltName($name, $cat, $catindex)
+	public  function removeAltName($name, $cat, $catindex)                        
   { $GLOBALS['objDatabase']->execSQL("DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\" AND catalog = \"$cat\" AND catindex=\"".ucwords(trim($catindex))."\"");
   }
   public  function removePartOf($name, $cat, $catindex)
   { $GLOBALS['objDatabase']->execSQL("DELETE objectpartof.* FROM objectpartof WHERE objectname = \"$name\" AND partofname = \"".trim($cat . " " . ucwords(trim($catindex)))."\"");
   } 
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-
-
-	
- function getDsObjectType($name)  // getType returns the type of the object
- { return $GLOBALS['objDatabase']->selectSingleValue("SELECT type FROM objects WHERE name = \"".$name."\"",'type');
- }
- function getDatasource($name)    // getDatasource returns the datasource of the object
- { return $GLOBALS['objDatabase']->selectSingleValue("SELECT datasource FROM objects WHERE name = \"".$name."\"",'datasource');
- }
- function getConstellation($name) // getConstellation returns the constellation of the object
- {return $GLOBALS['objDatabase']->selectSingleValue("SELECT con FROM objects WHERE name = \"".$name."\"",'con');
- }
- // getRA returns the right ascension of the object
- function getRA($name)
- {
-  $db = new database;
-  $db->login();
-  $sql = "SELECT objects.ra FROM objects WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  $get = mysql_fetch_object($run);
-	$ra = "";
-  if ($get)
-	  $ra = $get->ra;
-  $db->logout();
-  return $ra;
- }
- // getDeclination returns the declination of the object
- function getDeclination($name)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  $get = mysql_fetch_object($run);
-  $db->logout();
-
-  if($get) return $get->decl; else return "";
- }
- // getMagnitude returns the magnitude of the object
- function getDsObjectMagnitude($name)
- {
-  $db = new database;
-  $db->login();
-  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  $get = mysql_fetch_object($run);
-  $mag = $get->mag;
-  $db->logout();
-  return $mag;
- }
-  // getSBObj returns the SBObj of the object
- function getSBObj($name)
- {
-  $db = new database;
-  $db->login();
-  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  $get = mysql_fetch_object($run);
-  $SBObj = $get->SBObj;
-  $db->logout();
-  return $SBObj;
- }
- function getObjects()   // getObjects returns an array with the names of all objects
- { return $GLOBALS['objDatabase']->selectSingleArray("SELECT objects.name FROM OBJECTS",'name');
- }
- function sortObjects($result, $sort, $reverse=false)
- { if(!$result ||count($result)<2)
-	  return $result;
-   $sortmethod = "strnatcasecmp";
-	 $k=0;
-   if($sort == "name")      
-     while(list($key, $value) = each($result))
-	     $result3[$value['objectname'].$value[4]] = $value;
-   if($sort == "type")		  
-     while(list($key, $value) = each($result))
-       $result3[$value['objecttype'].$value[4]] = $value;
-   if($sort == "con")
-     while(list($key, $value) = each($result))
-	     $result3[$value['objectconstellation'].$value[4]] = $value;
-   if($sort == "seen")
-     while(list($key, $value) = each($result))
-	     $result3[$value[3].$value[4]] = $value;
-   if($sort == "seendate")
-     while(list($key, $value) = each($result))
-	     $result3[$value[28].$value[4]] = $value;
-   if($sort == "showname")
-     while(list($key, $value) = each($result))
-       $result3[$value[4]] = $value;
-   if($sort == "mag")
-     while(list($key, $value) = each($result))
-       $result3[sprintf("%.2f", $value[5]).$value[4]] = $value;
-   if($sort == "subr")
-     while(list($key, $value) = each($result))
-       $result3[sprintf("%.2f", $value[6]).$value[4]] = $value;
-   if($sort == "ra")    
-     while(list($key, $value) = each($result))
-       $result3[$value[7].$value[4]] = $value;
-   if($sort == "decl")   
-     while(list($key, $value) = each($result))
-      $result3[$value[8].$value[4]] = $value;
-   if(substr($sort,0,5) == "atlas") 
+  public  function sortObjects($objectList, $sort, $reverse=false)              // Sort the array of objectList on the $sort field, and in second order on the showname field 
+  { if(!$objectList||count($objectList)<2)
+	    return $objectList;
+    $sortmethod = "strnatcasecmp";
+	  $k=0;
+    if($sort == "name")      
+      while(list($key, $value) = each($objectList))
+	      $objectList3[$value['objectname'].$value[4]] = $value;
+    if($sort == "type")		  
+      while(list($key, $value) = each($objectList))
+        $objectList3[$value['objecttype'].$value[4]] = $value;
+    if($sort == "con")
+      while(list($key, $value) = each($objectList))
+	      $objectList3[$value['objectconstellation'].$value[4]] = $value;
+    if($sort == "seen")
+      while(list($key, $value) = each($objectList))
+	      $objectList3[$value[3].$value[4]] = $value;
+    if($sort == "seendate")
+      while(list($key, $value) = each($objectList))
+	      $objectList3[$value[28].$value[4]] = $value;
+    if($sort == "showname")
+      while(list($key, $value) = each($objectList))
+         $objectList3[$value[4]] = $value;
+    if($sort == "mag")
+      while(list($key, $value) = each($objectList))
+        $objectList3[sprintf("%.2f", $value[5]).$value[4]] = $value;
+    if($sort == "subr")
+      while(list($key, $value) = each($objectList))
+        $objectList3[sprintf("%.2f", $value[6]).$value[4]] = $value;
+    if($sort == "ra")    
+      while(list($key, $value) = each($objectList))
+        $objectList3[$value[7].$value[4]] = $value;
+    if($sort == "decl")   
+      while(list($key, $value) = each($objectList))
+       $objectList3[$value[8].$value[4]] = $value;
+    if(substr($sort,0,5) == "atlas") 
+    { $cnt = 0;
+      while(list($key, $value) = each($objectList))
+  		{ $objectList3[$value[substr($sort,5)].sprintf("%05d", $cnt) / 10000] = $value;
+ 			  $cnt = $cnt + 1;
+		  }
+	  }
+   if($sort == "contrast")
+   { $sortmethod = array( new contrastcompare( $reverse ), "compare" );
+     while(list($key, $value) = each($objectList))
+     { if (strcmp($value[21], "-") == 0)
+         $objectList3["-/".$value[4]] = $value;
+       else
+        $objectList3[sprintf("%.2f", $value[21])."/".$value[4]] = $value;
+     }
+   }
+   if($sort == "magnification")
    { $cnt = 0;
-     while(list($key, $value) = each($result))
-		 { $result3[$value[substr($sort,5)].sprintf("%05d", $cnt) / 10000] = $value;
-			 $cnt = $cnt + 1;
-		 }
+     while(list($key, $value) = each($objectList))
+	 	{ if($value[21] == "-")
+	 		{ $objectList3["-".sprintf("%05d", $cnt) / 10000] = $value;
+	 		} else {
+       	$objectList3[$value[25].sprintf("%05d", $cnt) / 10000] = $value;
+	 		}
+	 		$cnt = $cnt + 1;
+	 	}
 	 }
-  if($sort == "contrast")
-  { $sortmethod = array( new contrastcompare( $reverse ), "compare" );
-    while(list($key, $value) = each($result))
-    { if (strcmp($value[21], "-") == 0)
-        $result3["-/".$value[4]] = $value;
-      else
-       $result3[sprintf("%.2f", $value[21])."/".$value[4]] = $value;
-    }
+   if($sort == "objectplace")     
+     while(list($key, $value) = each($objectList))
+       $objectList3[$value[24].$value[4]] = $value;
+   uksort($objectList3, $sortmethod);
+   $objectList=array();
+   while(list($key, $value) = each($objectList3))
+     $objectList[]=$value;
+   if($sort != "contrast" && $reverse == true)
+   { $objectList = array_reverse($objectList, false);
+   }
+   return $objectList;
   }
-  if($sort == "magnification")
-  { $cnt = 0;
-    while(list($key, $value) = each($result))
-		{ if($value[21] == "-")
-			{ $result3["-".sprintf("%05d", $cnt) / 10000] = $value;
-			} else {
-      	$result3[$value[25].sprintf("%05d", $cnt) / 10000] = $value;
-			}
-			$cnt = $cnt + 1;
-		}
-	}
-  if($sort == "objectplace")     
-    while(list($key, $value) = each($result))
-      $result3[$value[24].$value[4]] = $value;
-  uksort($result3, $sortmethod);
-  $result=array();
-  while(list($key, $value) = each($result3))
-    $result[]=$value;
-  if($sort != "contrast" && $reverse == true)
-  { $result = array_reverse($result, false);
-  }
-  return $result;
- }
- function prepareObjectsContrast($doLogin=false)
- { include_once "contrast.php";
-   $contrastObj = new Contrast;
-   if(!array_key_exists('LTC',$_SESSION)||(!$_SESSION['LTC']))
-		$_SESSION['LTC'] = array(array(4, -0.3769, -1.8064, -2.3368, -2.4601, -2.5469, -2.5610, -2.5660), 
-                             array(5, -0.3315, -1.7747, -2.3337, -2.4608, -2.5465, -2.5607, -2.5658),
-                             array(6, -0.2682, -1.7345, -2.3310, -2.4605, -2.5467, -2.5608, -2.5658),
-                             array(7, -0.1982, -1.6851, -2.3140, -2.4572, -2.5481, -2.5615, -2.5665),
-                             array(8, -0.1238, -1.6252, -2.2791, -2.4462, -2.5463, -2.5597, -2.5646),
-                             array(9, -0.0424, -1.5529, -2.2297, -2.4214, -2.5343, -2.5501, -2.5552),
-                             array(10, 0.0498, -1.4655, -2.1659, -2.3763, -2.5047, -2.5269, -2.5333),
-                             array(11, 0.1596, -1.3581, -2.0810, -2.3036, -2.4499, -2.4823, -2.4937),
-                             array(12, 0.2934, -1.2256, -1.9674, -2.1965, -2.3631, -2.4092, -2.4318),
-                             array(13, 0.4557, -1.0673, -1.8186, -2.0531, -2.2445, -2.3083, -2.3491),
-                             array(14, 0.6500, -0.8841, -1.6292, -1.8741, -2.0989, -2.1848, -2.2505),
-                             array(15, 0.8808, -0.6687, -1.3967, -1.6611, -1.9284, -2.0411, -2.1375),
-                             array(16, 1.1558, -0.3952, -1.1264, -1.4176, -1.7300, -1.8727, -2.0034),
-                             array(17, 1.4822, -0.0419, -0.8243, -1.1475, -1.5021, -1.6768, -1.8420),
-                             array(18, 1.8559, 0.3458, -0.4924, -0.8561, -1.2661, -1.4721, -1.6624),
-                             array(19, 2.2669, 0.6960, -0.1315, -0.5510, -1.0562, -1.2892, -1.4827),
-                             array(20, 2.6760, 1.0880, 0.2060, -0.3210, -0.8800, -1.1370, -1.3620),
-                             array(21, 2.7766, 1.2065, 0.3467, -0.1377, -0.7361, -0.9964, -1.2439),
-                             array(22, 2.9304, 1.3821, 0.5353, 0.0328, -0.5605, -0.8606, -1.1187),
-                             array(23, 3.1634, 1.6107, 0.7708, 0.2531, -0.3895, -0.7030, -0.9681),
-                             array(24, 3.4643, 1.9034, 1.0338, 0.4943, -0.2033, -0.5259, -0.8288),
-                             array(25, 3.8211, 2.2564, 1.3265, 0.7605, 0.0172, -0.2992, -0.6394),
-                             array(26, 4.2210, 2.6320, 1.6990, 1.1320, 0.2860, -0.0510, -0.4080),
-                             array(27, 4.6100, 3.0660, 2.1320, 1.5850, 0.6520, 0.2410, -0.1210));
 
-    if(!array_key_exists('LTCSize',$_SESSION)||(!$_SESSION['LTCSize']))
-      $_SESSION['LTCSize'] = 24;
-    if(!array_key_exists('angleSize',$_SESSION)||(!$_SESSION['angleSize']))
-      $_SESSION['angleSize'] = 7;
-    if(!array_key_exists('angle',$_SESSION)||(!$_SESSION['angle']))
-      $_SESSION['angle'] = array(-0.2255, 0.5563, 0.9859, 1.260, 1.742, 2.083, 2.556);
-    $popup="";
- 		$magnificationsName='';
-		$fov='';
-		if(!(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id'])))
-		  $popup = LangContrastNotLoggedIn;
-    else
-		{ $sql5 = "SELECT stdlocation, stdtelescope from observers where id = \"" . $_SESSION['deepskylog_id'] . "\"";
-      $run5 = mysql_query($sql5) or die(mysql_error());
-      $get5 = mysql_fetch_object($run5);
-      if ($get5->stdlocation==0)
-        $popup = LangContrastNoStandardLocation;
-      elseif($get5->stdtelescope==0)
-				$popup = LangContrastNoStandardInstrument;
-			else
-			{ // Check for eyepieces or a fixed magnification
-        $sql6 = "SELECT fixedMagnification, diameter, fd from instruments where id = \"" . $get5->stdtelescope . "\"";
-        $run6 = mysql_query($sql6) or die(mysql_error());
-        $get6 = mysql_fetch_object($run6);
-        if ($get6->fd == 0 && $get6->fixedMagnification == 0)
-        { // We are not setting $magnifications
-					$magnifications = array();
-				}
-        else if ($get6->fixedMagnification == 0)
-        { $sql7 = "SELECT focalLength, name, apparentFOV, maxFocalLength from eyepieces where observer = \"" . $_SESSION['deepskylog_id'] . "\"";
-  	      $run7 = mysql_query($sql7) or die(mysql_error());
-				  while($get7 = mysql_fetch_object($run7))
-					{ if ($get7->maxFocalLength > 0.0)
-						{
-							$fRange = $get7->maxFocalLength - $get7->focalLength;
-							for ($i = 0;$i < 5;$i++)
-							{
-								$focalLengthEyepiece = $get7->focalLength + $i * $fRange / 5.0;
-								$magnifications[] = $get6->diameter * $get6->fd / $focalLengthEyepiece;
- 						  	$magnificationsName[] = $get7->name . " - " . $focalLengthEyepiece . "mm";
-								$fov[] = 1.0 / ($get6->diameter * $get6->fd / $focalLengthEyepiece) * 60.0 * $get7->apparentFOV;
-							}
-						}
-						else
-						{
-							$magnifications[] = $get6->diameter * $get6->fd / $get7->focalLength;
- 					  	$magnificationsName[] = $get7->name;
-							$fov[] = 1.0 / ($get6->diameter * $get6->fd / $get7->focalLength) * 60.0 * $get7->apparentFOV;
-						}
-  				}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
-	        $sql8 = "SELECT name, factor from lenses where observer = \"" . $_SESSION['deepskylog_id'] . "\"";
-  	      $run8 = mysql_query($sql8) or die(mysql_error());
 
-					$origmagnifications = $magnifications;
-					$origmagnificationsName = $magnificationsName;
-					$origfov = $fov;
-
-				  while($get8 = mysql_fetch_object($run8))
-					{
-						$name = $get8->name;
-						$factor = $get8->factor;
-
-						for ($i = 0;$i < count($origmagnifications);$i++)
-						{
-							$magnifications[] = $origmagnifications[$i] * $factor;
-							$magnificationsName[] = $origmagnificationsName[$i] . ", " . $name;
-							$fov[] = $fov[$i] / $factor;
-						}
-					}
-        }
-        else
-        {
-					$magnifications[] = $get6->fixedMagnification;
-					$magnificationsName[] = "";
-					$fov[] = "";
-        }
-
-        $_SESSION['magnifications'] = $magnifications; 
-        $_SESSION['magnificationsName'] = $magnificationsName; 
-				$_SESSION['fov'] = $fov;
-
-				if (count($magnifications) == 0)
-				{
-					$popup = LangContrastNoEyepiece;
-				}
-				else
-        {
-  				$sql6 = "SELECT limitingMagnitude, skyBackground, name from locations where id = \"" . $get5->stdlocation . "\"";
-      	  $run6 = mysql_query($sql6) or die(mysql_error());
-        	$get6 = mysql_fetch_object($run6);
-    	    if(($get6->limitingMagnitude < -900)&&($get6->skyBackground < -900))
-      	    $popup = LangContrastNoLimMag;
-					else
-      	  {
-        	  if($get6->skyBackground < -900)
-          	  $_SESSION['initBB'] = $contrastObj->calculateSkyBackgroundFromLimitingMagnitude($get6->limitingMagnitude);
-        	  else
-          	  $_SESSION['initBB'] = $get6->skyBackground;
-  	        $sql7 = "SELECT diameter, name from instruments where id = \"" . $get5->stdtelescope . "\"";
-    	      $run7 = mysql_query($sql7) or die(mysql_error());
-      	    $get7 = mysql_fetch_object($run7);
-        	  $_SESSION['aperMm'] = $get7->diameter;
-						$_SESSION['aperIn'] = $_SESSION['aperMm'] / 25.4;
-					//$scopeTrans = 0.8;
-          //$pupil = 7.5;
-          //$nakedEyeMag = 8.5;
-          //Faintest star
-          //$limitMag = $nakedEyeMag + 2.5 * log10( $_SESSION['aperMm'] * $_SESSION['aperMm'] * $scopeTrans / ($pupil * $pupil));
-	        // Minimum useful magnification
-       			$_SESSION['minX'] = $_SESSION['aperIn'] * 3.375 + 0.5;
-						$_SESSION['SBB1'] = $_SESSION['initBB'] - (5 * log10(2.833 * 	$_SESSION['aperIn']));
-						$_SESSION['SBB2'] = -2.5 * log10( (2.833 * $_SESSION['aperIn']) * (2.833 * $_SESSION['aperIn']));
-
-						$_SESSION['telescope'] = $get7->name;
-						$_SESSION['location'] = $get6->name;
-					}
-        }
-	   }
-	 }
-   return $popup;
- }
- function getSeen($object)
- { $seen='-';
-   if($ObsCnt=$GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ",'ObsCnt'))
-   { $seen='X('.$ObsCnt.')';
-     if(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
-     { $get3=mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $_SESSION['deepskylog_id'] . "\" AND visibility != 7"));
-		   if($get3->PersObsCnt>0)
-         $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')&nbsp;'.$get3->PersObsMaxDate;
-		 }
-	 }
-	 return $seen;
- }
- function getDSOseen($object)
- { $seenDetails=$this->getSeen($object);
-   $seen = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_objectamp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
-   if(substr($seenDetails,0,1)=="X")                                            // object has been seen already
-     $seen = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\">".$seenDetails."</a>";
-   if(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id'])
-     if (substr($seenDetails,0,1)=="Y")                                         // object has been seen by the observer logged in
-       $seen = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\">".$seenDetails."</a>";
-   return $seen;
- }
+	
  function getObjectVisibilities($obs)
  { include_once "contrast.php";
    $contrastObj = new Contrast;
@@ -1246,7 +1179,7 @@ class Objects implements iObject
 
   $db->logout();
 
-	$mag = $this->getDsObjectMagnitude($name);
+	$mag = $this->getDsoProperty($name,'mag');
   $diam2 = $this->getDiam2($name);
 
 	// Calculate and set the SBObj
@@ -1281,7 +1214,7 @@ class Objects implements iObject
 
   $db->logout();
 
-	$mag = $this->getDsObjectMagnitude($name);
+	$mag = $this->getDsoProperty($name,'mag');
   $diam1 = $this->getDiam1($name);
 
 	// Calculate and set the SBObj
@@ -1576,7 +1509,7 @@ class Objects implements iObject
   echo("<tr class=\"type2\"><td class=\"fieldname\" align=\"right\" width=\"25%\">");
   echo LangViewObjectField3;
   echo("</td><td width=\"25%\">");
-  $ra = $this->getRa($object);
+  $ra = $this->getDsoProperty($object,'ra');
   $raDSS = raToStringDSS($ra); // TODO add this method to util class!
   echo(raToString($ra));
   echo("</td>");
@@ -1584,8 +1517,8 @@ class Objects implements iObject
   echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
   echo LangViewObjectField4;
   echo("</td><td width=\"25%\">");
-  $decl = $this->getDeclination($object);
-  $declDSS = decToStringDSS($this->getDeclination($object));
+  $decl = $this->getDsoProperty($object,'decl');
+  $declDSS = decToStringDSS($this->getDsoProperty($object,'decl'));
   //echo(decToTrimmedString($decl));
   echo(decToStringDegMin($decl));
   echo("</td></tr>");
@@ -1593,21 +1526,21 @@ class Objects implements iObject
   echo("<tr class=\"type1\">\n<td class=\"fieldname\" align=\"right\" width=\"25%\">");
   echo LangViewObjectField5;
   echo("</td><td width=\"25%\">");
-  $const = $this->getConstellation($object);
+  $const = $this->getDsoProperty($object,'con');
   echo $GLOBALS[$const];
   echo("</td>");
   // TYPE
   echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
   echo LangViewObjectField6;
   echo("</td><td width=\"25%\">");
-  $type = $this->getDsObjectType($object);
+  $type = $this->getDsoProperty($object,'type');
   echo $GLOBALS[$type];
   echo("</td></tr>");
   // MAGNITUDE
   echo("<tr class=\"type2\"><td class=\"fieldname\" align=\"right\" width=\"25%\">");
   echo LangViewObjectField7;
   echo("</td><td width=\"25%\">");
-  $magnitude = sprintf("%01.1f", $this->getDsObjectMagnitude($object));
+  $magnitude = sprintf("%01.1f", $this->getDsoProperty($object,'mag'));
   if(($magnitude == 99.9) || ($magnitude=="")) // unknown magnitude
   {
     $magnitude = "-";
@@ -1679,7 +1612,7 @@ class Objects implements iObject
         $diam2 = $diam2 / 60.0;
         if ($diam2 == 0)
           $diam2 = $diam1;
-        $contrastCalc = $contrastObj->calculateContrast($magni, $this->getSBObj($object), $diam1, $diam2);
+        $contrastCalc = $contrastObj->calculateContrast($magni, $this->getObjectProperty($object,'SBobj'), $diam1, $diam2);
         if ($contrastCalc[0] < -0.2)      $popup = $object . LangContrastNotVisible . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
 				else if ($contrastCalc[0] < 0.1)  $popup = LangContrastQuestionable . $object . LangContrastQuestionableB . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
 			  else if ($contrastCalc[0] < 0.35) $popup = $object . LangContrastDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
@@ -1765,10 +1698,10 @@ class Objects implements iObject
   }
 	echo "</table>";
 
-  $ra = $this->getRa($object);
+  $ra = $this->getDsoProperty($object,'ra');
   $raDSS = raToStringDSS($ra); // TODO add this method to util class!
-  $decl = $this->getDeclination($object);
-  $declDSS = decToStringDSS($this->getDeclination($object));
+  $decl = $this->getDsoProperty($object,'decl');
+  $declDSS = decToStringDSS($this->getDsoProperty($object,'decl'));
 
   echo("<table width=\"100%\"><tr><td width=\"50%\" align=\"center\">");
   // LINK TO DSS IMAGE
@@ -1789,8 +1722,8 @@ class Objects implements iObject
   // LINK TO DEEPSKYLIVE CHART
   if ($deepskylive == 1)
   {
-    $raDSL = raToStringDSL($this->getRa($object));
-    $declDSL = decToStringDSL($this->getDeclination($object));
+    $raDSL = raToStringDSL($this->getDsoProperty($object,'ra'));
+    $declDSL = decToStringDSL($this->getDsoProperty($object,'decl'));
     echo("<form action=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;zoom=" . $zoom . "\" method=\"post\">");
       echo("<select name=\"dslsize\">\n");
         if($zoom<=30) echo("<option selected value=\"60\">1&deg;</option>"); else echo("<option value=\"60\">1&deg;</option>");
@@ -1858,11 +1791,17 @@ class contrastcompare {
  }
 $objObject=new Objects;
 /* OBSOLETE FUNCTIONS
-  function getSortedObjects($sort)                                               // getSortedObjects returns an array with the names of all objects, sorted by  the column specified in $sort
-  { return $GLOBALS['objDatabase']->selectSingleArray("SELECT name FROM objects ORDER BY $name",'name');
-  }
   public  function deleteDSObject($name) // deleteObject removes the object with name = $name
   { $GLOBALS['objDatabase']->execSQL("DELETE FROM objects WHERE name=\"$name\"");
+  }
+  function getDatasource($name)    // getDatasource returns the datasource of the object
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT datasource FROM objects WHERE name = \"".$name."\"",'datasource');
+  }
+  function getObjects()   // getObjects returns an array with the names of all objects
+  { return $GLOBALS['objDatabase']->selectSingleArray("SELECT objects.name FROM OBJECTS",'name');
+  }
+  function getSortedObjects($sort)                                               // getSortedObjects returns an array with the names of all objects, sorted by  the column specified in $sort
+  { return $GLOBALS['objDatabase']->selectSingleArray("SELECT name FROM objects ORDER BY $name",'name');
   }
 */
 ?>

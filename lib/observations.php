@@ -1438,7 +1438,7 @@ class Observations {
 		echo ("</tr>");
 
 		$object = $this->getObjectId($LOid);
-		if ($GLOBALS['objObject']->getDsObjectType($object) == "ASTER" || $GLOBALS['objObject']->getDsObjectType($object) == "CLANB" || $GLOBALS['objObject']->getDsObjectType($object) == "DS" || $GLOBALS['objObject']->getDsObjectType($object) == "OPNCL" || $GLOBALS['objObject']->getDsObjectType($object) == "AA1STAR" || $GLOBALS['objObject']->getDsObjectType($object) == "AA2STAR" || $GLOBALS['objObject']->getDsObjectType($object) == "AA3STAR" || $GLOBALS['objObject']->getDsObjectType($object) == "AA4STAR" || $GLOBALS['objObject']->getDsObjectType($object) == "AA8STAR") {
+		if ($GLOBALS['objObject']->getDsoProperty($object,'type') == "ASTER" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "CLANB" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "DS" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "OPNCL" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA1STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA2STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA3STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA4STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA8STAR") {
 			echo ("<tr class=\"type2\">");
 			echo ("<td></td><td class=\"fieldname\" width=\"12%\" align=\"right\">");
 			echo LangViewObservationField40;
@@ -1742,7 +1742,7 @@ class Observations {
 		if ($instrument == "Naked eye")
 			$instrument = InstrumentsNakedEye;
 		// OUTPUT
-		$con = $GLOBALS['objObject']->getConstellation($object);
+		$con = $GLOBALS['objObject']->getDsoProperty($object,'con');
 		echo ("<tr class=\"type2\">\n
 				         <td><a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "\">$object</a></td>\n
 				    <td> " . $GLOBALS[$con] . "</td>\n
@@ -1861,7 +1861,7 @@ class Observations {
 			$instrument = InstrumentsNakedEye;
 		}
 		// OUTPUT
-		$con = $GLOBALS['objObject']->getConstellation($object);
+		$con = $GLOBALS['objObject']->getDsoProperty($object,'con');
 		echo ("<tr $typefield>\n
 				    <td><a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "\">" . $object . "</a></td>\n
 				    <td> " . $GLOBALS[$con] . "</td>\n

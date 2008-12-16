@@ -9,7 +9,7 @@ if(array_key_exists('SID',$_GET) && $_GET['SID']) $_SID=$_GET['SID']; else	$_SID
 if(!$_GET['object']) // no object defined in url 
 { throw new Exception("No object defined in url in show_image.php");
 }
-if($objObject->getRa($objObject->getDsObjectName($_GET['object'])) != "") // check whether object exists
+if($objObject->getDsoProperty($objObject->getDsObjectName($_GET['object']),'ra')!="") // check whether object exists
 {
   if(array_key_exists('addObjectToList',$_GET) && $_GET['addObjectToList'] && $myList)
   {

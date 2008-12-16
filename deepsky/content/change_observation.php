@@ -219,7 +219,7 @@ echo "</td>";
 echo "</tr>";
 $object = $objObservation->getObjectId($_GET['observation']);
 // Some extra fields when we are describing open clusters, or asterisms...
-if ($GLOBALS['objObject']->getDsObjectType($object) == "ASTER" || $GLOBALS['objObject']->getDsObjectType($object) == "CLANB" || $GLOBALS['objObject']->getDsObjectType($object) == "DS" || $GLOBALS['objObject']->getDsObjectType($object) == "OPNCL" || $GLOBALS['objObject']->getDsObjectType($object) == "AA1STAR" || $GLOBALS['objObject']->getDsObjectType($object) == "AA2STAR" || $GLOBALS['objObject']->getDsObjectType($object) == "AA3STAR" || $GLOBALS['objObject']->getDsObjectType($object) == "AA4STAR" || $GLOBALS['objObject']->getDsObjectType($object) == "AA8STAR") {
+if ($GLOBALS['objObject']->getDsoProperty($object,'type') == "ASTER" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "CLANB" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "DS" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "OPNCL" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA1STAR" || $GLOBALS['objObject']->getDsoProperty($object'type') == "AA2STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA3STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA4STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA8STAR") {
 	echo "<tr>";
 	echo "<td class=\"fieldname\">";
 	echo LangViewObservationField40;
