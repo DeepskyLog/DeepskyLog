@@ -219,24 +219,32 @@ echo "</td>";
 echo "</tr>";
 $object = $objObservation->getObjectId($_GET['observation']);
 // Some extra fields when we are describing open clusters, or asterisms...
-if ($GLOBALS['objObject']->getDsoProperty($object,'type') == "ASTER" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "CLANB" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "DS" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "OPNCL" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA1STAR" || $GLOBALS['objObject']->getDsoProperty($object'type') == "AA2STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA3STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA4STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA8STAR") {
-	echo "<tr>";
+if ($GLOBALS['objObject']->getDsoProperty($object,'type') == "ASTER" 
+ || $GLOBALS['objObject']->getDsoProperty($object,'type') == "CLANB" 
+ || $GLOBALS['objObject']->getDsoProperty($object,'type') == "DS" 
+ || $GLOBALS['objObject']->getDsoProperty($object,'type') == "OPNCL" 
+ || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA1STAR"
+ || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA2STAR" 
+ || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA3STAR" 
+ || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA4STAR" 
+ || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA8STAR") 
+{ echo "<tr>";
 	echo "<td class=\"fieldname\">";
 	echo LangViewObservationField40;
 	echo "</td>";
 	echo "<td>";
 	echo "<select name=\"characterType\">";
 	echo "<option value=\"\"" . (($objObservation->getDsCharacterType($_GET['observation']) == '') ? " selected=\"selected\" " : '') . "></option>";
-	echo "<option value=\"" . A . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'A') ? " selected=\"selected\" " : '') . ">A</option>";
-	echo "<option value=\"" . B . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'B') ? " selected=\"selected\" " : '') . ">B</option>";
-	echo "<option value=\"" . C . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'C') ? " selected=\"selected\" " : '') . ">C</option>";
-	echo "<option value=\"" . D . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'D') ? " selected=\"selected\" " : '') . ">D</option>";
-	echo "<option value=\"" . E . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'E') ? " selected=\"selected\" " : '') . ">E</option>";
-	echo "<option value=\"" . F . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'F') ? " selected=\"selected\" " : '') . ">F</option>";
-	echo "<option value=\"" . G . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'G') ? " selected=\"selected\" " : '') . ">G</option>";
-	echo "<option value=\"" . H . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'H') ? " selected=\"selected\" " : '') . ">H</option>";
-	echo "<option value=\"" . I . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'I') ? " selected=\"selected\" " : '') . ">I</option>";
-	echo "<option value=\"" . X . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'X') ? " selected=\"selected\" " : '') . ">X</option>";
+	echo "<option value=\"" . "A" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'A') ? " selected=\"selected\" " : '') . ">A</option>";
+	echo "<option value=\"" . "B" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'B') ? " selected=\"selected\" " : '') . ">B</option>";
+	echo "<option value=\"" . "C" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'C') ? " selected=\"selected\" " : '') . ">C</option>";
+	echo "<option value=\"" . "D" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'D') ? " selected=\"selected\" " : '') . ">D</option>";
+	echo "<option value=\"" . "E" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'E') ? " selected=\"selected\" " : '') . ">E</option>";
+	echo "<option value=\"" . "F" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'F') ? " selected=\"selected\" " : '') . ">F</option>";
+	echo "<option value=\"" . "G" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'G') ? " selected=\"selected\" " : '') . ">G</option>";
+	echo "<option value=\"" . "H" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'H') ? " selected=\"selected\" " : '') . ">H</option>";
+	echo "<option value=\"" . "I" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'I') ? " selected=\"selected\" " : '') . ">I</option>";
+	echo "<option value=\"" . "X" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'X') ? " selected=\"selected\" " : '') . ">X</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "</tr>";

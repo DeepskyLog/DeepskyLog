@@ -10,28 +10,7 @@ if(!$_GET['object']) // no object defined in url
 { throw new Exception("No object defined in url in show_image.php");
 }
 if($objObject->getDsoProperty($objObject->getDsObjectName($_GET['object']),'ra')!="") // check whether object exists
-{
-  if(array_key_exists('addObjectToList',$_GET) && $_GET['addObjectToList'] && $myList)
-  {
-  	$objList->addObjectToList($_GET['addObjectToList'], $_GET['showname']);
-    echo "The object <a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['addObjectToList']) . "\">" . $_GET['showname'] . "</a> is added to the list <a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">" . $_SESSION['listname'] . "</a>.";
-  	echo "<HR>";
-  }
-	if(array_key_exists('addAllObjectsFromPageToList',$_GET) && $_GET['addAllObjectsFromPageToList'] && $myList)
-  {
-	  $count=0;
-  	while(($count<($min+25)) && ($count<count($_SESSION['QO'][$_SID])))
-	  {
-		  $objList->addObjectToList($_SESSION['QO'][$_SID][$count][0],$_SESSION['QO'][$_SID][$count][4]);
-		  $count++;
-    }
-	echo "The objects have been added to the list <a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">" .  $_SESSION['listname'] . "</a>.";
-	echo "<HR>";
-  }
-
-	
-	
-  // SEEN
+{ // SEEN
   $seen = "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_GET['object']) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
   $seenDetails = $objObject->getSeen($_GET['object']);
   if(substr($seenDetails,0,1)=="X") // object has been seen already

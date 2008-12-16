@@ -327,7 +327,7 @@ class util
     $page=1;
     $i=0;
     while(list($key, $valueA) = each($result))
-    $obs1[] = array($valueA[4]);
+    $obs1[] = array($valueA['showname']);
     // Create pdf file
     $pdf = new Cezpdf('a4', 'landscape');
     $pdf->ezStartPageNumbers(450, 15, 10);
@@ -397,16 +397,16 @@ class util
 		$pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . '1', 'right');
 		while(list($key, $valueA) = each($result))
     {
-			$mag = round($valueA[5],1); if ($mag == 99.9) $mag = ""; else if ($mag - (int)$mag == 0.0) $mag = $mag.".0";
-      $sb = round($valueA[6],1);  if ($sb == 99.9)  $sb = "";  else if ($sb - (int)$sb == 0.0)   $sb = $sb.".0";
-      $pa = $valueA[20];          if($pa==999)      $pa="-";
+			$mag = round($valueA['objectmagnitude'],1); if ($mag == 99.9) $mag = ""; else if ($mag - (int)$mag == 0.0) $mag = $mag.".0";
+      $sb = round($valueA['objectsurfacebrightness'],1);  if ($sb == 99.9)  $sb = "";  else if ($sb - (int)$sb == 0.0)   $sb = $sb.".0";
+      $pa = $valueA['objectpa'];          if($pa==999)      $pa="-";
 			
       $con = $valueA['objectconstellation'];
       $type = $valueA['objecttype'];
       $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
       $page = $valueA[$atlas];
-      $diam1 = $valueA[18];
-      $diam2 = $valueA[19];
+      $diam1 = $valueA['objectdiam1'];
+      $diam2 = $valueA['objectdiam2'];
       $size = "";
       if ($diam1 >= 40.0)
       {
@@ -436,14 +436,14 @@ class util
         if ($diam2 != 0.0)
           $size = $size.sprintf("x%.1f''", $diam2);
       }
-			$contrast = $valueA[21];
+			$contrast = $valueA['objectcontrast'];
       if ($contrast == "-")
       {
         $magnifi = "-";
       } 
 			else {
-        $magnifi = (int)$valueA[25];
-        $contrast = round($valueA[21],1);  if ($contrast - (int)$contrast == 0.0) $contrast = $contrast.".0";
+        $magnifi = (int)$valueA['objectoptimalmagnification'];
+        $contrast = round($valueA['objectcontrast'],1);  if ($contrast - (int)$contrast == 0.0) $contrast = $contrast.".0";
       }
 			
       if(!$sort || ($actualsort!=$$sort))
@@ -514,33 +514,33 @@ class util
 				}
 			}
 			if(!$sort)
-			{ $pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA[3]);			                   // seen
-			  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA[28]);		                     // last seen	
+			{ $pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA['objectseen']);			                   // seen
+			  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA['objectlastseen']);		                     // last seen	
 			  $pdf->addTextWrap($xbase+ 70, $y,  85, $fontSizeText, '<b>'.
 				  '<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.
-					urlencode($valueA['objectname']).'>'.$valueA[4]);		               //	object
+					urlencode($valueA['objectname']).'>'.$valueA['showname']);		               //	object
 			  $pdf->addTextWrap($xbase+150, $y,  30, $fontSizeText, '</c:alink></b>'.$type);			                 // type
 			  $pdf->addTextWrap($xbase+180, $y,  20, $fontSizeText, $con);			                         // constellation
 			  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $mag, 'left');  	                 // mag
 			  $pdf->addTextWrap($xbase+217, $y,  18, $fontSizeText, $sb, 'left');		                   // sb
-			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, raToStringHM($valueA[7]) . ' '.
-				                                                      decToString($valueA[8],0));	 // ra - decl
+			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, raToStringHM($valueA['objectra']) . ' '.
+				                                                      decToString($valueA['objectdecl'],0));	 // ra - decl
 			  $pdf->addTextWrap($xbase+295, $y,  55, $fontSizeText, $size . '/' . $pa);			             // size
 	  		$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $contrast, 'left');			             // contrast				
 	  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, $magnifi, 'left');			             // magnification				
 			  $pdf->addTextWrap($xbase+380, $y,  20, $fontSizeText, '<b>'.$page.'</b>', 'right');			   // atlas page
       }
       else
-			{ $pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA[3]);			                   // seen
-			  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA[28]);		                     // last seen	
+			{ $pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA['objectseen']);			                   // seen
+			  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA['objectlastseen']);		                     // last seen	
 			  $pdf->addTextWrap($xbase+ 70, $y, 100, $fontSizeText, '<b>'.
 				  '<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.
-					urlencode($valueA['objectname']).'>'.$valueA[4]);		                                       //	object
+					urlencode($valueA['objectname']).'>'.$valueA['showname']);		                                       //	object
 			  $pdf->addTextWrap($xbase+170, $y,  30, $fontSizeText, '</c:alink></b>'.$type);			                 // type
 			  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $mag, 'left');			                 // mag
 			  $pdf->addTextWrap($xbase+217, $y,  18, $fontSizeText, $sb, 'left');			                   // sb
-			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, raToStringHM($valueA[7]) . ' '.
-				                                                      decToString($valueA[8],0));	 // ra - decl
+			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, raToStringHM($valueA['objectra']) . ' '.
+				                                                      decToString($valueA['objectdecl'],0));	 // ra - decl
 			  $pdf->addTextWrap($xbase+295, $y,  55, $fontSizeText, $size . '/' . $pa);         			   // size
 	  		$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $contrast, 'left');			             // contrast				
 	  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, $magnifi, 'left');		               // magnification				
@@ -549,8 +549,8 @@ class util
 			$y-=$deltaline;
       if($sort)
 			  $actualsort = $$sort;
-			if(array_key_exists(30,$valueA) && $valueA[30])
-      { $theText= $valueA[30];
+			if(array_key_exists('objectlistdecription',$valueA) && $valueA['objectlistdescription'])
+      { $theText= $valueA['objectlistdescription'];
 			  $theText= $pdf->addTextWrap($xbase+$descriptionLeadingSpace, $y, $xmid-$xleft-$descriptionLeadingSpace-10 ,$fontSizeText, '<i>'.$theText);
   			$y-=$deltaline;	
         while($theText)
@@ -594,8 +594,8 @@ class util
 				}
 			  $pdf->addText(0,0,10,'</i>');
 			}
-			elseif(array_key_exists(27,$valueA) && $valueA[27])
-      { $theText= $valueA[27];
+			elseif(array_key_exists('objectdescription',$valueA) && $valueA['objectdescription'])
+      { $theText= $valueA['objectdescription'];
 			  $theText= $pdf->addTextWrap($xbase+$descriptionLeadingSpace, $y, $xmid-$xleft-$descriptionLeadingSpace-10 ,$fontSizeText, '<i>'.$theText);
   			$y-=$deltaline;	
         while($theText)
@@ -702,25 +702,25 @@ class util
       {
   		    $alt = $alt . " - " . $value;
       }
-      $mag = $valueA[5];
+      $mag = $valueA['objectmagnitude'];
       if ($mag == 99.9)
       $mag = "";
       else if ($mag - (int)$mag == 0.0)
       $mag = $mag.".0";
-      $sb = $valueA[6];
+      $sb = $valueA['objectsurfacebrightness'];
       if ($sb == 99.9)
       $sb = "";
       else if ($sb - (int)$sb == 0.0)
       $sb = $sb.".0";
       $con = $valueA['objectconstellation'];
-      $pa = $valueA[20];
+      $pa = $valueA['objectpa'];
       if($pa==999)
       $pa="";
       $type = $valueA['objecttype'];
       $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
       $page = $valueA[$atlas];
-      $diam1 = $valueA[18];
-      $diam2 = $valueA[19];
+      $diam1 = $valueA['objectdiam1'];
+      $diam2 = $valueA['objectdiam2'];
       $size = "";
       if ($diam1 != 0.0)
       if ($diam1 >= 40.0)
@@ -748,14 +748,14 @@ class util
         $size = $size.sprintf("x%.1f''", $diam2);
       }
 
-      if ($valueA[21] == "-")
+      if ($valueA['objectcontrast'] == "-")
       {
         $magnifi = "-";
       } else {
-        $magnifi = (int)$valueA[25];
+        $magnifi = (int)$valueA['objectoptimalmagnification'];
       }
 
-      echo $valueA['objectname'].";". $alt .";".raToString($valueA[7]).";".decToString($valueA[8], 0).";".$GLOBALS[$con].";".$GLOBALS[$type].";".$mag.";".$sb.";".$size.";".$pa.";".$page.";".$valueA[21].";".$magnifi.";".$valueA[3].";".$valueA[28]."\n";
+      echo $valueA['objectname'].";". $alt .";".raToString($valueA['objectra']).";".decToString($valueA['objectdecl'], 0).";".$GLOBALS[$con].";".$GLOBALS[$type].";".$mag.";".$sb.";".$size.";".$pa.";".$page.";".$valueA['objectcontrast'].";".$magnifi.";".$valueA['objectseen'].";".$valueA['objectlastseen']."\n";
     }
   }
   public function argoObjects($result)  // Creates an argo navis file from an array of objects
@@ -766,7 +766,7 @@ class util
         $mag = "";
       else if ($mag - (int)$mag == 0.0)
         $mag = $mag.".0";
-      $sb = $valueA[6];
+      $sb = $valueA['objectsurfacebrightness'];
       if ($sb == 99.9)
         $sb = "";
       else if ($sb - (int)$sb == 0.0)

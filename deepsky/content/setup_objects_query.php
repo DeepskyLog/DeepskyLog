@@ -51,8 +51,9 @@ else
   echo("<td align=\"right\" width=\"25%\">" . LangSeen);
   echo("</td>");
   echo("<td>");
-  echo("<form action=\"".$baseURL."index.php\" method=\"get\">\n");
+  echo("<form action=\"".$baseURL."index.php\" method=\"get\">");
   echo("<input type=\"hidden\" name=\"indexAction\" value=\"query_objects\"></input>");
+  echo("<input type=\"hidden\" name=\"source\" value=\"setup_objects_query\"></input>");
   echo("<input type=\"hidden\" name=\"sort\" value=\"showname\"></input>");
   echo("<input type=\"hidden\" name=\"sortdirection\" value=\"asc\"></input>");
   echo("<select name=\"seen\">");

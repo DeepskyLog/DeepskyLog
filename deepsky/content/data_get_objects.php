@@ -1,7 +1,7 @@
 <?php
 
 // ========================================= filter objects from observation query
-if(array_key_exists('source',$_GET)&&($_GET['source']=='observation_query'))
+if($objUtil->checkGetKey('source')=='observation_query') 
 {	$validQobj=false;
   if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='observation_query'))
 	  $validQobj=true;
@@ -19,7 +19,22 @@ if(array_key_exists('source',$_GET)&&($_GET['source']=='observation_query'))
 	  $_SESSION['QobjSortDirection']='asc';
 	}
 }
-elseif(array_key_exists('source',$_GET)&&($_GET['source']=='objects_nearby'))
+// ========================================= get objects from list
+elseif($objUtil->checkGetKey('source')=='tolist')
+{ $validQobj=false;
+  if(array_key_exists('QobjParams',$_SESSION)
+  && array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist')
+  && array_key_exists('list',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['list']==$listname))
+	  $validQobj=true;
+  if(!$validQobj)
+	{ $_SESSION['QobjParams']=array('source'=>'tolist','list'=>$listname);
+	  $_SESSION['Qobj']=$objList->getObjectsFromList($_SESSION['listname']);
+	  $_SESSION['QobjSort']='objectpositioninlist';
+	  $_SESSION['QobjSortDirection']='asc';
+	}
+}
+// ========================================= get nearby objects for selected object
+elseif($objUtil->checkGetKey('source')=='objects_nearby')
 { $validQobj=false;
   if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='objects_nearby')
 	 &&array_key_exists('object',$_GET)        &&array_key_exists('object',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['object']==$_GET['object'])
@@ -32,7 +47,8 @@ elseif(array_key_exists('source',$_GET)&&($_GET['source']=='objects_nearby'))
 	  $_SESSION['QobjSortDirection']='asc';
 	}
 }
-elseif(array_key_exists('seen',$_GET))
+// ========================================= get objects for objects query page
+elseif($objUtil->checkGetKey('source')=='setup_objects_query')
 { $exact = 0;
   if(array_key_exists('catalog',$_GET) && $_GET['catalog']) $name = $_GET['catalog'];
   if(array_key_exists('catalog',$_GET)) $catalog = $_GET['catalog'];
@@ -348,13 +364,14 @@ elseif(array_key_exists('seen',$_GET))
     $_SESSION['QobjSortDirection']='';
   }	
 }
+// ========================================= get nearby objects for selected object
 else
 { $_SESSION['QobjParams']=array();
   $_SESSION['Qobj']=array();
   $_SESSION['QobjSort']='';
   $_SESSION['QobjSortDirection']='';
 }
-
+		
 //=========================================== CHECK TO SEE IF SORTING IS NECESSARY ===========================================
 if(!array_key_exists('sort',$_GET))      
 { $_GET['sort'] = $_SESSION['QobjSort'];

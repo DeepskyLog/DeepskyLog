@@ -153,7 +153,7 @@ class Objects implements iObject
     $diam2 = $get->diam2;
     $size = $this->calculateSize($diam1, $diam2);
   }
-  public function newAltName($name, $cat, $catindex)
+  public  function newAltName($name, $cat, $catindex)
   { $GLOBALS['objDatabase']->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"".ucwords(trim($catindex))."\")))");
   }
   public  function newName($name, $cat, $catindex)
@@ -331,34 +331,34 @@ class Objects implements iObject
 	  $k=0;
     if($sort == "name")      
       while(list($key, $value) = each($objectList))
-	      $objectList3[$value['objectname'].$value[4]] = $value;
+	      $objectList3[$value['objectname'].$value['showname']] = $value;
     if($sort == "type")		  
       while(list($key, $value) = each($objectList))
-        $objectList3[$value['objecttype'].$value[4]] = $value;
+        $objectList3[$value['objecttype'].$value['showname']] = $value;
     if($sort == "con")
       while(list($key, $value) = each($objectList))
-	      $objectList3[$value['objectconstellation'].$value[4]] = $value;
+	      $objectList3[$value['objectconstellation'].$value['showname']] = $value;
     if($sort == "seen")
       while(list($key, $value) = each($objectList))
-	      $objectList3[$value[3].$value[4]] = $value;
+	      $objectList3[$value['objectseen'].$value['showname']] = $value;
     if($sort == "seendate")
       while(list($key, $value) = each($objectList))
-	      $objectList3[$value[28].$value[4]] = $value;
+	      $objectList3[$value['objectlastseen'].$value['showname']] = $value;
     if($sort == "showname")
       while(list($key, $value) = each($objectList))
-         $objectList3[$value[4]] = $value;
+         $objectList3[$value['showname']] = $value;
     if($sort == "mag")
       while(list($key, $value) = each($objectList))
-        $objectList3[sprintf("%.2f", $value[5]).$value[4]] = $value;
+        $objectList3[sprintf("%.2f", $value['objectmagnitude']).$value['showname']] = $value;
     if($sort == "subr")
       while(list($key, $value) = each($objectList))
-        $objectList3[sprintf("%.2f", $value[6]).$value[4]] = $value;
+        $objectList3[sprintf("%.2f", $value['objectsurfacebrightness']).$value['showname']] = $value;
     if($sort == "ra")    
       while(list($key, $value) = each($objectList))
-        $objectList3[$value[7].$value[4]] = $value;
+        $objectList3[$value['objectra'].$value['showname']] = $value;
     if($sort == "decl")   
       while(list($key, $value) = each($objectList))
-       $objectList3[$value[8].$value[4]] = $value;
+       $objectList3[$value['objectdecl'].$value['showname']] = $value;
     if(substr($sort,0,5) == "atlas") 
     { $cnt = 0;
       while(list($key, $value) = each($objectList))
@@ -369,26 +369,26 @@ class Objects implements iObject
    if($sort == "contrast")
    { $sortmethod = array( new contrastcompare( $reverse ), "compare" );
      while(list($key, $value) = each($objectList))
-     { if (strcmp($value[21], "-") == 0)
-         $objectList3["-/".$value[4]] = $value;
+     { if (strcmp($value['objectcontrast'], "-") == 0)
+         $objectList3["-/".$value['showname']] = $value;
        else
-        $objectList3[sprintf("%.2f", $value[21])."/".$value[4]] = $value;
+        $objectList3[sprintf("%.2f", $value['objectcontrast'])."/".$value['showname']] = $value;
      }
    }
    if($sort == "magnification")
    { $cnt = 0;
      while(list($key, $value) = each($objectList))
-	 	{ if($value[21] == "-")
+	 	{ if($value['objectcontrast'] == "-")
 	 		{ $objectList3["-".sprintf("%05d", $cnt) / 10000] = $value;
 	 		} else {
-       	$objectList3[$value[25].sprintf("%05d", $cnt) / 10000] = $value;
+       	$objectList3[$value['objectoptimalmagnification'].sprintf("%05d", $cnt) / 10000] = $value;
 	 		}
 	 		$cnt = $cnt + 1;
 	 	}
 	 }
    if($sort == "objectplace")     
      while(list($key, $value) = each($objectList))
-       $objectList3[$value[24].$value[4]] = $value;
+       $objectList3[$value['objectpositioninlist'].$value['showname']] = $value;
    uksort($objectList3, $sortmethod);
    $objectList=array();
    while(list($key, $value) = each($objectList3))
@@ -479,13 +479,9 @@ class Objects implements iObject
            }
          }
        }
-       $result2[$j][21] = $contrast;
        $result2[$j]['objectcontrast'] = $contrast;
-       $result2[$j][22] = $contype;
        $result2[$j]['objectcontrasttype'] = $contype;
-       $result2[$j][23] = $popup;
        $result2[$j]['objectcontrastpopup'] = $popup;
-       $result2[$j][25] = $contrastcalc1;
        $result2[$j]['objectoptimalmagnification'] = $contrastcalc1;
        $j++;		
      }
@@ -528,43 +524,36 @@ class Objects implements iObject
            $con = $get->con;
            $result2[$j]['objecttype'] =  $type;
            $result2[$j]['objectconstellation'] =  $con;
-           $result2[$j][3]="-";
-           $result2[$j]['objectseen']="-";
-  	       $result2[$j]['objectlastseen']='-';
-					 if($seentype == "X") $result2[$j][3] = "X(" . $get2->ObsCnt . ")";
+ /* to do */
+           $result2[$j]['objectseen']=$this->getSeen($result2[$j]['objectname']);
+           $result2[$j]['objectseenlink']=$this->getDSOseen($result2[$j]['objectname']);       
+           $result2[$j]['objectlastseen']='/';
+           $result2[$j]['objectlastseenlink']='/';
+           if(substr($result2[$j]['objectseen'],0,1)=="X")
+             $result2[$j]['objectseenlink']="<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=" . urlencode($result2[$j]['objectname']) . "\" title=\"" . LangObjectXSeen . "\">" . $result2[$j]['objectseen'] . "</a>";
+           if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($result2[$j]['objectseen'],0,1)=="Y"))
+             $result2[$j]['objectseen']="<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=" . urlencode($result2[$j]['objectname']) . "\" title=\"" . LangObjectYSeen . "\">" .$result2[$j]['objectseen'] . "</a>";
+           $seendate = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode($result2[$j]['objectname']) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
+           if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($result2[$j]['objectseen'],0,1)=="Y"))
+             $result2[$j]['objectlastseenlink']="<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&amp;observation=" . $result2[$j]['objectname']. "\" title=\"" . LangObjectYSeen . "\">" . $result2[$j]['objectseen'] . "</a>";
   	       if($seentype == "X") $result2[$j]['objectseen'] = "X(" . $get2->ObsCnt . ")";
-           if($seentype == "Y") $result2[$j][3] = "Y(" . $get2->ObsCnt . "/" . $get3->PersObsCnt . ")";
            if($seentype == "Y") $result2[$j]['objectseen'] = "Y(" . $get2->ObsCnt . "/" . $get3->PersObsCnt . ")";
-           if($seentype == "Y") $result2[$j][28] = $get3->PersObsMaxDate; else $result2[$j][28] = '';
-           if($seentype == "Y") $result2[$j]['objectlastseen'] = $get3->PersObsMaxDate; else $result2[$j]['objectlastseen'] = '';
-           if($seentype == "Y") $result2[$j][29] = $get3->PersObsMaxId; else $result2[$j][29] = 0;
+           if($seentype == "Y") $result2[$j]['objectlastseen'] = $get3->PersObsMaxDate;
            if($seentype == "Y") $result2[$j]['objectlastobservationid'] = $get3->PersObsMaxId; else $result2[$j]['objectlastobservationid'] = 0;
-           $result2[$j][4] =  $key;
-           $result2[$j]['showname'] =  $key;
-  	       $result2[$j][5] =  $get->mag;
+ /* */
+                     $result2[$j]['showname'] =  $key;
   	       $result2[$j]['objectmagnitude'] =  $get->mag;
-  	       $result2[$j][6] =  $get->subr;
   	       $result2[$j]['objectsurfacebrightness'] =  $get->subr;
-  	       $result2[$j][7] =  $get->ra;
   	       $result2[$j]['objectra'] =  $get->ra;
-  	       $result2[$j][8] =  $get->decl;
   	       $result2[$j]['objectdecl'] =  $get->decl;
-  	       $result2[$j][18] = $get->diam1;
   	       $result2[$j]['objectdiam1'] = $get->diam1;
-  	       $result2[$j][19] = $get->diam2;
   	       $result2[$j]['objectdiam2'] = $get->diam2;
-  	       $result2[$j][20] = $get->pa;
   	       $result2[$j]['objectpa'] = $get->pa;
-           $result2[$j][24] = $value[0]; 
            $result2[$j]['objectpositioninlist'] = $value[0]; 
-           $result2[$j][26] = $get->SBObj; 
            $result2[$j]['objectsbcalc'] = $get->SBObj; 
-           $result2[$j][27] = $get->description;
            $result2[$j]['objectdescription'] = $get->description;
 					 if(count($value)==3)
-					 { $result2[$j][30] = $value[2]; // optional description from lists
 					   $result2[$j]['objectlistdescription'] = $value[2];
-					 }
 					 reset($objAtlas->atlasCodes);
 					 while(list($key,$value)=each($objAtlas->atlasCodes))
 					   $result2[$j][$key] =  $get->$key;
@@ -1357,6 +1346,8 @@ class Objects implements iObject
  { $atlas='';
    echo "<table width=\"100%\">\n";
    echo "<tr class=\"type3\">\n";
+   if($showRank)
+	   tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=objectpositioninlist");
 	 tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=showname");
 	 tableSortHeader(LangOverviewObjectsHeader2,  $link."&amp;sort=objectconstellation");
 	 tableSortHeader(LangOverviewObjectsHeader3,  $link."&amp;sort=objectmagnitude");
@@ -1381,10 +1372,6 @@ class Objects implements iObject
   	   $typefield = "class=\"type3\"";
   	 else
 	     $typefield = "class=\"type".(2-($countline%2)."\"");
-     $name = $_SESSION[$_SID][$count]['objectname'];
-     $showname = $_SESSION[$_SID][$count]['showname'];
-     $con = $_SESSION[$_SID][$count]['objectconstellation'];
-     $type = $_SESSION[$_SID][$count]['objecttype'];
      $magnitude = sprintf("%01.1f", $_SESSION[$_SID][$count]['objectmagnitude']);
      if($magnitude == 99.9)
        $magnitude = "&nbsp;&nbsp;-&nbsp;";		
@@ -1395,29 +1382,20 @@ class Objects implements iObject
      $ra = raToString($_SESSION[$_SID][$count]['objectra']);
      // DECLINATION
      $decl = decToStringDegMin($_SESSION[$_SID][$count]['objectdecl']);
-	 // SEEN
-     $seen="<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
-     if(substr($_SESSION[$_SID][$count][3],0,1)=="X")
-       $seen = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectXSeen . "\">" . $_SESSION[$_SID][$count][3] . "</a>";
-     if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($_SESSION[$_SID][$count][3],0,1)=="Y"))
-       $seen = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION[$_SID][$count][3] . "</a>";
-     $seendate = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode($name) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
-     if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($_SESSION[$_SID][$count][3],0,1)=="Y"))
-       $seendate = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&amp;observation=" . $_SESSION[$_SID][$count]['objectlastobservationid'] . "\" title=\"" . LangObjectYSeen . "\">" . $_SESSION[$_SID][$count]['objectlastseen'] . "</a>";
-	 echo "<tr $typefield>\n";
-     echo "<td align=\"center\"><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode($name) . "\">$showname</a></td>\n";
+	   echo "<tr $typefield>\n";
+     echo "<td align=\"center\"><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION[$_SID][$count]['objectname']) . "\">".$_SESSION[$_SID][$count]['showname']."</a></td>\n";
      echo "<td align=\"center\">".$GLOBALS[$_SESSION[$_SID][$count]['objectconstellation']]."</td>\n";
      echo "<td align=\"center\">$magnitude</td>\n";
      echo "<td align=\"center\">$sb</td>\n";
-     echo "<td align=\"center\">".$GLOBALS[$type]."</td>\n";
+     echo "<td align=\"center\">".$GLOBALS[$_SESSION[$_SID][$count]['objecttype']]."</td>\n";
      // Page number in atlas
      if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id']) 
 	 { $page = $_SESSION[$_SID][$count][$atlas];
        echo "<td align=\"center\" onmouseover=\"Tip('".$GLOBALS['objAtlas']->atlasCodes[$atlas]."')\">".$page."</td>\n";
-       echo "<td align=\"center\" class=\"".$_SESSION[$_SID][$count][22]."\" onmouseover=\"Tip('".$_SESSION[$_SID][$count][23]."')\">".$_SESSION[$_SID][$count][21]."</td>\n";
+       echo "<td align=\"center\" class=\"".$_SESSION[$_SID][$count]['objectcontrasttype']."\" onmouseover=\"Tip('".$_SESSION[$_SID][$count]['objectcontrastpopup']."')\">".$_SESSION[$_SID][$count]['objectcontrast']."</td>\n";
        echo "<td align=\"center\">".$_SESSION[$_SID][$count]['objectoptimalmagnification']."</td>\n";
-       echo "<td align=\"center\" class=\"seen\">$seen</td>";
-       echo "<td align=\"center\" class=\"seen\">$seendate</td>";
+       echo "<td align=\"center\" class=\"seen\">".$_SESSION[$_SID][$count]['objectseenlink']."</td>";
+       echo "<td align=\"center\" class=\"seen\">".$_SESSION[$_SID][$count]['objectlastseenlink']."</td>";
 	 }
   	 if($myList)
   	 { echo("<td align=\"center\">");
@@ -1612,7 +1590,7 @@ class Objects implements iObject
         $diam2 = $diam2 / 60.0;
         if ($diam2 == 0)
           $diam2 = $diam1;
-        $contrastCalc = $contrastObj->calculateContrast($magni, $this->getObjectProperty($object,'SBobj'), $diam1, $diam2);
+        $contrastCalc = $contrastObj->calculateContrast($magni, $this->getDsoProperty($object,'SBobj'), $diam1, $diam2);
         if ($contrastCalc[0] < -0.2)      $popup = $object . LangContrastNotVisible . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
 				else if ($contrastCalc[0] < 0.1)  $popup = LangContrastQuestionable . $object . LangContrastQuestionableB . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
 			  else if ($contrastCalc[0] < 0.35) $popup = $object . LangContrastDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);

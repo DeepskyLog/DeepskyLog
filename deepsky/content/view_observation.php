@@ -36,7 +36,7 @@ if (array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!
 echo("</td>");
 if($myList)
 { echo("<td width=\"25%\" align=\"center\">");
-  if($list->checkObjectInMyActiveList($object))
+  if($objList->checkObjectInMyActiveList($object))
     echo("<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "</a>");
   else
     echo("<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>");
