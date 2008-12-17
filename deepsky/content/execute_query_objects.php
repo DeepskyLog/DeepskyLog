@@ -36,7 +36,7 @@ if(count($_SESSION['Qobj'])>1) //===============================================
     echo "<a href=\"".$link."&amp;showPartOfs=1\">".LangListQueryObjectsMessage13."</a>";
 	$link.="&amp;showPartOfs=".$showPartOfs;
 	echo "<hr />";
-  $objObject->showObjects($link, 'Qobj', $min, $max, $myList);
+  $objObject->showObjects($link, $min, $max);
 	echo "<hr />";
   list($min,$max)=$objUtil->printNewListHeader($_SESSION['Qobj'],$link,$min,25,'');	
   $objUtil->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);

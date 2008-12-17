@@ -9,7 +9,7 @@ if(!($_GET['object']=$objObject->getDsObjectName($_GET['object'])))
 
 $_GET['source']='objects_nearby';
 $_GET['zoom']=$GLOBALS['objUtil']->checkGetKey('zoom',30);	
-include "deepsky/content/data_get_objects.php";	
+include "deepsky/data/data_get_objects.php";	
 
 $seen=$GLOBALS['objObject']->getDSOseen($_GET['object']);
 echo "<div id=\"main\">";
@@ -68,7 +68,7 @@ $link = $baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($_G
 list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'],$link ,$min,25,"");
 if($max>count($_SESSION['Qobj']))
   $max=count($_SESSION['Qobj']);
-$objObject->showObjects($link,'Qobj',$min,$max,$myList,$_GET['object']);
+$objObject->showObjects($link,$min,$max,$_GET['object']);
 list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'],$link ,$min,25,"");
 echo "<hr />";
 $objUtil->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);

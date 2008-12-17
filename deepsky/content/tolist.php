@@ -3,7 +3,7 @@
 // manages and shows lists
 
 $_GET['source']='tolist';
-require_once 'deepsky/content/data_get_objects.php';
+require_once 'deepsky/data/data_get_objects.php';
 
 if(($objList->checkList($_SESSION['listname'])==2) && ($_SESSION['listname']<>"----------"))
   $listname=$_SESSION['listname'];	
@@ -62,7 +62,7 @@ if($_SESSION['listname']<>"----------")
   
     // OUTPUT RESULT
     $link = "".$baseURL."index.php?indexAction=listaction";
-    $objObject->showObjects($link,'Qobj',$min,$max,$myList, '',1,'');
+    $objObject->showObjects($link,$min,$max, '',1);
     echo("<hr>");
   
     list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'], $link, $min, 25, "");

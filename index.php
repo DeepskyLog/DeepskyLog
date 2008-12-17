@@ -7,6 +7,7 @@ try
     $_GET['indexAction']=$_POST['indexAction'];
   include 'common/entryexit/preludes.php';                                          // Includes of all classes and assistance files
   include 'common/entryexit/instructions.php';                                      // Execution of all non-layout related instructions (login, add objects to lists, etc.)
+  include 'common/entryexit/data.php';                                              // Get data for the form, object data, observation data, etc.
   include 'common/menu/head.php';                                                   // HTML head
   include 'common/menu/headmenu.php';                                               // Page Title and welcome line - modules choices
   

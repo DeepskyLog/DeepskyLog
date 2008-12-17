@@ -473,20 +473,18 @@ echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo(LangChangeVisibleLanguages);
 echo("</td>");
 
- $language = new Language;
- $obs = new Observers;
 
  if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']))
  {
-  $allLanguages = $language->getAllLanguages($obs->getLanguage($_SESSION['deepskylog_id']));
+  $allLanguages = $objLanguage->getAllLanguages($objObserver->getLanguage($_SESSION['deepskylog_id']));
   $_SESSION['alllanguages'] = $allLanguages; 
-  $usedLanguages = $obs->getUsedLanguages($_SESSION['deepskylog_id']);
+  $usedLanguages = $objObserver->getUsedLanguages($_SESSION['deepskylog_id']);
  }
  else
  {
-  $allLanguages = $language->getAllLanguages($_SESSION['lang']);
+  $allLanguages = $objLanguage->getAllLanguages($_SESSION['lang']);
   $_SESSION['alllanguages'] = $allLanguages; 
-  $usedLanguages = $language->getLanguageKeys($_SESSION['lang']);
+  $usedLanguages = $objLanguage->getLanguageKeys($_SESSION['lang']);
  }
 
  $j=0;

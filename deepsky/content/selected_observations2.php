@@ -3,7 +3,7 @@
 // generates an overview of selected observations in the database
 
 //====================== data_get_observations fetches the data, sorts it and places it in $_SESSION['Qobs'] and puts the toal number of observations in all languages in $_SESSION['QobsTotal'];
-include 'deepsky/content/data_get_observations.php';
+include 'deepsky/data/data_get_observations.php';
 if(count($_SESSION['Qobs'])==0) //================================================================================================== no reult present =======================================================================================
 { echo("</h2>\n");
   echo "<a href=\"".$baseURL."index.php?indexAction=query_observations\">" . LangObservationNoResults . "</a>";

@@ -1355,14 +1355,15 @@ class Objects implements iObject
 
   $db->logout();
  }
- function showObjects($link, $_SID, $min, $max, $myList, $noShow='', $showRank=0, $ranklist='')
- { $atlas='';
+ function showObjects($link, $min, $max, $ownShow='', $showRank=0)
+ { // ownShow => object to show in a different color in the list
+ 	 // showRank = 0 for normal operation, 1 for List show, 2 for top objects
+ 	 $atlas='';
    echo "<table width=\"100%\">\n";
    echo "<tr class=\"type3\">\n";
-	 
    if($showRank)
 	   tableSortHeader(LangOverviewObjectsHeader9,  $link."&amp;sort=objectpositioninlist");
-	 tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=showname");
+   tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=showname");
 	 tableSortHeader(LangOverviewObjectsHeader2,  $link."&amp;sort=objectconstellation");
 	 tableSortHeader(LangOverviewObjectsHeader3,  $link."&amp;sort=objectmagnitude");
 	 tableSortHeader(LangOverviewObjectsHeader3b, $link."&amp;sort=objectsurfacebrightness");
@@ -1375,50 +1376,52 @@ class Objects implements iObject
 	   tableSortHeader(LangOverviewObjectsHeader7, $link."&amp;sort=objectseen");
 	   tableSortHeader(LangOverviewObjectsHeader8, $link."&amp;sort=objectlastseen");
    }
-   if($myList)
+   if($GLOBALS['myList'])
      echo("<td align=\"center\"><a href=\"" . $link . "&amp;min=" . $min . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $_SESSION['listname'] . "\">P</a></td>");
  	 $count = $min; // counter for altering table colors
 	 $countline = 0;
-	 if($max>count($_SESSION[$_SID]))
-		 $max=count($_SESSION[$_SID]);
+	 if($max>count($_SESSION['Qobj']))
+		 $max=count($_SESSION['Qobj']);
    while($count < $max)
-   { if($_SESSION[$_SID][$count]['objectname']==$noShow)
+   { if($_SESSION['Qobj'][$count]['objectname']==$ownShow)
   	   $typefield = "class=\"type3\"";
   	 else
 	     $typefield = "class=\"type".(2-($countline%2)."\"");
-     $magnitude = sprintf("%01.1f", $_SESSION[$_SID][$count]['objectmagnitude']);
+     $magnitude = sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']);
      if($magnitude == 99.9)
        $magnitude = "&nbsp;&nbsp;-&nbsp;";		
-     $sb = sprintf("%01.1f", $_SESSION[$_SID][$count]['objectsurfacebrightness']);
+     $sb = sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']);
      if($sb == 99.9)
        $sb = "&nbsp;&nbsp;-&nbsp;";
      // RIGHT ASCENSION
-     $ra = raToString($_SESSION[$_SID][$count]['objectra']);
+     $ra = raToString($_SESSION['Qobj'][$count]['objectra']);
      // DECLINATION
-     $decl = decToStringDegMin($_SESSION[$_SID][$count]['objectdecl']);
+     $decl = decToStringDegMin($_SESSION['Qobj'][$count]['objectdecl']);
 	   echo "<tr $typefield>\n";
-     if($showRank)
-	     echo "<td align=\"center\"><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION[$_SID][$count]['objectname']) . "\">".$_SESSION[$_SID][$count]['objectpositioninlist']."</a></td>\n";
-     echo "<td align=\"center\"><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION[$_SID][$count]['objectname']) . "\">".$_SESSION[$_SID][$count]['showname']."</a></td>\n";
-     echo "<td align=\"center\">".$GLOBALS[$_SESSION[$_SID][$count]['objectconstellation']]."</td>\n";
+     if(($showRank==1) && $GLOBALS['myList'])
+       echo "<td align=\"center\"><a href=\"\" onclick=\"theplace = prompt('Please enter the new position','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
+     elseif($showRank)
+	     echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</td>";
+     echo "<td align=\"center\"><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname']) . "\">".$_SESSION['Qobj'][$count]['showname']."</a></td>\n";
+     echo "<td align=\"center\">".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."</td>\n";
      echo "<td align=\"center\">$magnitude</td>\n";
      echo "<td align=\"center\">$sb</td>\n";
-     echo "<td align=\"center\">".$GLOBALS[$_SESSION[$_SID][$count]['objecttype']]."</td>\n";
+     echo "<td align=\"center\">".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."</td>\n";
      // Page number in atlas
      if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id']) 
-	 { $page = $_SESSION[$_SID][$count][$atlas];
+	   { $page = $_SESSION['Qobj'][$count][$atlas];
        echo "<td align=\"center\" onmouseover=\"Tip('".$GLOBALS['objAtlas']->atlasCodes[$atlas]."')\">".$page."</td>\n";
-       echo "<td align=\"center\" class=\"".$_SESSION[$_SID][$count]['objectcontrasttype']."\" onmouseover=\"Tip('".$_SESSION[$_SID][$count]['objectcontrastpopup']."')\">".$_SESSION[$_SID][$count]['objectcontrast']."</td>\n";
-       echo "<td align=\"center\">".$_SESSION[$_SID][$count]['objectoptimalmagnification']."</td>\n";
-       echo "<td align=\"center\" class=\"seen\">".$_SESSION[$_SID][$count]['objectseenlink']."</td>";
-       echo "<td align=\"center\" class=\"seen\">".$_SESSION[$_SID][$count]['objectlastseenlink']."</td>";
-	 }
-  	 if($myList)
+       echo "<td align=\"center\" class=\"".$_SESSION['Qobj'][$count]['objectcontrasttype']."\" onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectcontrastpopup']."')\">".$_SESSION['Qobj'][$count]['objectcontrast']."</td>\n";
+       echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectoptimalmagnification']."</td>\n";
+       echo "<td align=\"center\" class=\"seen\">".$_SESSION['Qobj'][$count]['objectseenlink']."</td>";
+       echo "<td align=\"center\" class=\"seen\">".$_SESSION['Qobj'][$count]['objectlastseenlink']."</td>";
+	   }
+  	 if($GLOBALS['myList'])
   	 { echo("<td align=\"center\">");
-       if($GLOBALS['objList']->checkObjectInMyActiveList($_SESSION[$_SID][$count]['objectname']))
-         echo("<a href=\"" . $link . "&amp;min=" . $min . "&amp;removeObjectFromList=" . urlencode($_SESSION[$_SID][$count]['objectname']) . "\" title=\"" . $_SESSION[$_SID][$count]['objectname'] . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "\">R</a>");
+       if($GLOBALS['objList']->checkObjectInMyActiveList($_SESSION['Qobj'][$count]['objectname']))
+         echo("<a href=\"" . $link . "&amp;min=" . $min . "&amp;removeObjectFromList=" . urlencode($_SESSION['Qobj'][$count]['objectname']) . "\" title=\"" . $_SESSION['Qobj'][$count]['objectname'] . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "\">R</a>");
        else
-         echo("<a href=\"" . $link . "&amp;min=" . $min . "&amp;addObjectToList=" . urlencode($_SESSION[$_SID][$count]['objectname']) . "&amp;showname=" . urlencode($_SESSION[$_SID][$count]['showname']) . "\" title=\"" .$_SESSION[$_SID][$count]['objectname'] . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "\">L</a>");
+         echo("<a href=\"" . $link . "&amp;min=" . $min . "&amp;addObjectToList=" . urlencode($_SESSION['Qobj'][$count]['objectname']) . "&amp;showname=" . urlencode($_SESSION['Qobj'][$count]['showname']) . "\" title=\"" .$_SESSION['Qobj'][$count]['objectname'] . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "\">L</a>");
       echo("</td>");
   	 }
      echo("</tr>");

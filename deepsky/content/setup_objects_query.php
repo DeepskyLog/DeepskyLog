@@ -26,9 +26,8 @@ $minSize = '';        $minSizeC = '';       $size_min_units = '';
 $maxSize = '';        $maxSizeC = '';       $size_max_units = ''; 
 $minContrast = '';                          $maxContrast = '';    
 $inList = '';                               $notInList = '';
-  
+require_once 'deepsky/data/data_get_objects.php';
 
-require_once 'deepsky/content/data_get_objects.php';
 $link=$baseURL."index.php?indexAction=query_objects";
 reset($_GET);
 while(list($key,$value)=each($_GET))

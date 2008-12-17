@@ -116,7 +116,7 @@ if(array_key_exists('emptyList',$_GET) && $myList)
 }
 
 if(array_key_exists('ObjectDownInList',$_GET) && $_GET['ObjectDownInList']  && $myList)
-{$objList->ObjectDownInList($_GET['ObjectDownInList']);
+{ $objList->ObjectDownInList($_GET['ObjectDownInList']);
 	$_SESSION['QOL'] = $objList->getObjectsFromList($_SESSION['listname']);
   $entryMessage.=LangToListMoved1 . $_GET['ObjectDownInList'] . LangToListMoved3 . "<a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">" . $listname_ss . "</a>.";
 }
@@ -128,9 +128,9 @@ if(array_key_exists('ObjectUpInList',$_GET) && $_GET['ObjectUpInList']  && $myLi
 }
 
 if(array_key_exists('ObjectToPlaceInList',$_GET) && $_GET['ObjectToPlaceInList']  && $myList)
-{$objList->ObjectFromToInList($_GET['ObjectFromPlaceInList'],$_GET['ObjectToPlaceInList']);
-	$_SESSION['QOL'] = $list->getObjectsFromList($_SESSION['listname']);
-  echo LangToListMoved7 . $_GET['ObjectToPlaceInList'] . ".";
+{ $objList->ObjectFromToInList($_GET['ObjectFromPlaceInList'],$_GET['ObjectToPlaceInList']);
+	unset($_SESSION['QobjParams']);
+  $entryMessage.=LangToListMoved7 . $_GET['ObjectToPlaceInList'] . ".";
 }
 
 if(array_key_exists('removePageObjectsFromList',$_GET) && $_GET['removePageObjectsFromList']  && $myList)
