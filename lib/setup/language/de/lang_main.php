@@ -381,6 +381,7 @@ define("LangOverviewObjectsHeader5", "RA");
 define("LangOverviewObjectsHeader6", "Dekl");
 define("LangOverviewObjectsHeader7", "Beobachtet?");
 define("LangOverviewObjectsHeader8", "Last Seen");
+define("LangOverviewObjectsHeader9", "Position");
 
 // content/execute_query_objects.php
 

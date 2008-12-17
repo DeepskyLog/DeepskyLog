@@ -33,6 +33,19 @@ elseif($objUtil->checkGetKey('source')=='tolist')
 	  $_SESSION['QobjSortDirection']='asc';
 	}
 }
+// ========================================= get top objects
+elseif($objUtil->checkGetKey('source')=='top_objects')
+{ $validQobj=false;
+  if(array_key_exists('QobjParams',$_SESSION)
+  && array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='top_objects'))
+	  $validQobj=true;
+  if(!$validQobj)
+	{ $_SESSION['QobjParams']=array('source'=>'top_objects');
+	  $_SESSION['Qobj']=$objObject->getSeenObjectDetails($objObservation->getPopularObservations(),"D");
+	  $_SESSION['QobjSort']='objectpositioninlist';
+	  $_SESSION['QobjSortDirection']='asc';
+	}
+}
 // ========================================= get nearby objects for selected object
 elseif($objUtil->checkGetKey('source')=='objects_nearby')
 { $validQobj=false;

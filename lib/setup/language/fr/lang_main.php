@@ -383,6 +383,7 @@ define("LangOverviewObjectsHeader5", "AD");
 define("LangOverviewObjectsHeader6", "Decl");
 define("LangOverviewObjectsHeader7", "Vu");
 define("LangOverviewObjectsHeader8", "Vu r�cemment");
+define("LangOverviewObjectsHeader9", "Position");
 
 // content/execute_query_objects.php
 

@@ -534,15 +534,10 @@ class Observations {
 		return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE observerid=\"$id\" AND visibility != 7 ", 'Cnt', 0);
 	}
 	function getPopularObservations() // getPopularObservations() returns the number of observations of the objects
-	{
-		$run = $GLOBALS['objDatabase']->selectRecordset("SELECT observations.objectname, COUNT(observations.id) As ObservationCount FROM observations GROUP BY observations.objectname ORDER BY ObservationCount DESC");
-		$i = 0;
-		while ($get = mysql_fetch_object($run))
-			$numberOfObservations[$get->objectname .
-			' (' . $i . ')'] = array (
-				$i++,
-				$get->objectname
-			);
+	{ $run = $GLOBALS['objDatabase']->selectRecordset("SELECT observations.objectname, COUNT(observations.id) As ObservationCount FROM observations GROUP BY observations.objectname ORDER BY ObservationCount DESC");
+		$i=1;
+		while($get=mysql_fetch_object($run))
+			$numberOfObservations[$get->objectname]=array($i++,$get->objectname);
 		return $numberOfObservations;
 	}
 	function getDsObservationInstrumentId($id) {

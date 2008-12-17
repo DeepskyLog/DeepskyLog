@@ -191,9 +191,14 @@ if(array_key_exists('removeList',$_GET)  && $myList)
 	unset($_GET['removeList']);
 }
 if(array_key_exists('activateList',$_GET) && array_key_exists('listname',$_GET))
-{ if(array_key_exists('QOL',$_SESSION))
-    unset($_SESSION['QOL']);
-  $_SESSION['listname'] = $_GET['listname'];
+{ $_SESSION['listname'] = $_GET['listname'];
+  $myList=False;
+  $listname='';
+  if(array_key_exists('listname', $_SESSION))
+    $listname=$_SESSION['listname'];
+  $listname_ss = stripslashes($listname);
+  if(array_key_exists('listname',$_SESSION) && $objList->checkList($_SESSION['listname'])==2)
+    $myList=True;
   if($_GET['listname']<>"----------")
     $entryMessage.=LangToListList . stripslashes($_SESSION['listname']) . LangToListActivation1 . LangBack . LangToListActivation2;
 }

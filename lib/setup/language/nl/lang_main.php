@@ -382,6 +382,7 @@ define("LangOverviewObjectsHeader5", "RA");
 define("LangOverviewObjectsHeader6", "Decl");
 define("LangOverviewObjectsHeader7", "Gezien");
 define("LangOverviewObjectsHeader8", "Laatst gezien");
+define("LangOverviewObjectsHeader9", "Positie");
 
 // content/execute_query_objects.php
 
@@ -880,7 +881,7 @@ define("LangCSVMessage3", "Object;Observer;Datum;UT;Locatie;Instrument;Oculair;F
 define("LangCSVMessage4", "Gevolgd door de eigenlijke waarnemingen in hetzelfde formaat, bv: <br><br>Object;Observer;Date;UT;Location;Instrument;Oculair;Filter;Lens;Seeing;LimMag;Visibility;Language;Description<br>NGC 2392;Piet Janssens;21-01-2005;20:45;Aalst;Obsession 15\";31mm Nagler;Lumicon O-III filter;Televue 2x Barlow;2;4.0;3;nl;Mooie planetaire nevel met een zeer heldere centrale ster!<br>M 35;Piet Janssens;21-01-2005;20:53;Aalst;Obsession 15\";;;;2;4.0;1;nl;Ongeveer dertig leden tellend in gebogen lijnen.<br>...<br><br>Seeing wordt aangegeven door een nummer tussen 1 en 5 (1=uitstekend, 2=goed, 3=middelmatig, 4=zwak, 5=slecht).<br>Zichtbaarheid wordt aangegeven door een nummer tussen 1 en 7 (1=Zeer eenvoudig, helder object, 2=Object eenvoudig te zien bij direct kijken, 3=Object zichtbaar bij direct kijken, 4=Perifeer kijken nodig om object te zien, 5=Object amper zichtbaar bij perifeer kijken, 6=Zichtbaarheid van object is twijfelachtig, 7=Object niet zichtbaar).<br>Een waarneming met het blote oog moet 'Naked Eye' als instrument bevatten.<br>Taal moet de korte naam van de taal zijn (nl voor Nederlands)");
 define("LangCSVMessage5", "Opgepast!<p>De instrumenten, waarnemingsplaatsen, oculairs, filters en objecten in het CSV bestand moeten reeds vooraf bekend zijn in DeepskyLog. Indien dit niet het geval is, zal er een foutboodschap verschijnen en worden er geen(!) waarnemingen toegevoegd. De ontbrekende informatie moet manueel toegevoegd worden totdat er geen foutboodschappen meer verschijnen. Indien alles goed gaat, worden de ingevoerde waarnemingen getoond in het overzicht van alle waarnemingen. Vergewis u er van dat u geen twee maal hetzelfde bestand importeert, aangezien dubbele waarnemingen achteraf &eacute;&eacute;n voor &eacute;&eacute;n manueel verwijderd moeten worden!");
 define("LangCSVMessage6", "CSV bestand ");
-define("LangCSVMessage7", "Naam;AlternatieveNaam;RA;Decl;Sterrenbeeld;Type;Magnitude;OppervlakteHelderheid;Diameter;Positiehoek;Pagina;ContrastReserve;OptimaleVergroting;Gezien");
+define("LangCSVMessage7", "Naam;AlternatieveNaam;RA;Decl;Sterrenbeeld;Type;Magnitude;OppervlakteHelderheid;Diameter;Positie vhoek;Pagina;ContrastReserve;OptimaleVergroting;Gezien");
 define("LangCSVError1", "Het CSV bestand kon niet ingelezen worden omdat: ");
 define("LangCSVError2", "De onderstaande objecten niet gekend zijn in DeepskyLog");
 define("LangCSVError3", "De onderstaande waarnemingsplaatsen niet gekend zijn in DeepskyLog");

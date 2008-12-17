@@ -3,7 +3,6 @@
 // manages and shows lists
 
 $_GET['source']='tolist';
-
 require_once 'deepsky/content/data_get_objects.php';
 
 if(($objList->checkList($_SESSION['listname'])==2) && ($_SESSION['listname']<>"----------"))
@@ -58,14 +57,12 @@ if($_SESSION['listname']<>"----------")
   }
   echo "</table>";
 	if(count($_SESSION['Qobj'])>0)
-	{ 
-		
-		$link = $baseURL."index.php?indexAction=listaction&amp;sort=".$objUtil->checkGetKey('sort','objectpositioninlist');
+	{ $link = $baseURL."index.php?indexAction=listaction&amp;sort=".$objUtil->checkGetKey('sort','objectpositioninlist');
     list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'], $link, $min, 25, "");	
   
     // OUTPUT RESULT
     $link = "".$baseURL."index.php?indexAction=listaction";
-    $objObject->showObjects($link,'Qobj',$min,$max,'',1,'');
+    $objObject->showObjects($link,'Qobj',$min,$max,$myList, '',1,'');
     echo("<hr>");
   
     list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'], $link, $min, 25, "");

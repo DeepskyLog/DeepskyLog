@@ -10,6 +10,7 @@ interface iObject
   public  function getDsoProperty($theObject,$theProperty, $default='');        // returns the propperty of the object, or default if not found
   public  function getDSOseen($object);                                         // Returns the getSeen result, encoded to a href that shows the seen observations
   public  function getSeen($object);                                            // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
+//private function getSeenLastseenLink($object,&$seenlink,&$lastseenlink);      // Returns the -/X(nr)/Y(nr) seen link to all observations of object, and the date last seen link, linking to all user observations inversely sorted by date
 //private function getSize($name);                                              // Returns the size of the object
   public  function newAltName($name, $cat, $catindex);                          // ADMIN FUNCTION, Add a new Altname in objectnames for this object
   public  function newName($name, $cat, $catindex);                             // ADMIN FUNCTION, Set a new name for a DS object, and adapt all observations, objectnames, partofs and list occurences
@@ -145,6 +146,26 @@ class Objects implements iObject
 	  }
 	  return $seen;
   }
+	private  function getSeenLastseenLink($object,&$seen, &$seenlink, &$lastseen, &$lastseenlink)
+	{ $seen = "-";
+    $seenlink = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_objectamp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
+    $lastseenlink = "-";
+    $lastseenlink = "-";
+		if($ObsCnt=$GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 ",'ObsCnt'))
+    { $seen = 'X('.$ObsCnt.')';
+      $seenlink = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\">".'X('.$ObsCnt.')'."</a>";
+      if(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
+      { $get3=mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$_SESSION['deepskylog_id']."\" AND visibility != 7"));
+  		  if($get3->PersObsCnt>0)
+        { $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')';
+          $seenlink="<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\">".'Y('.$ObsCnt.'/'.$get3->PersObsCnt.')'."</a>";
+          $lastseen=$get3->PersObsMaxDate;
+          $lastseenlink="<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;observer=".urlencode($_SESSION['deepskylog_id'])."&amp;sort=observationdate&amp;sortdirection=desc&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\">".$get3->PersObsMaxDate."</a>";
+				}
+		  }
+	  }
+		return;
+	}
   private function getSize($name)                                               // getSize returns the size of the object
   { $sql = "SELECT * FROM objects WHERE name = \"$name\"";
     $run = mysql_query($sql) or die(mysql_error());
@@ -524,24 +545,16 @@ class Objects implements iObject
            $con = $get->con;
            $result2[$j]['objecttype'] =  $type;
            $result2[$j]['objectconstellation'] =  $con;
- /* to do */
-           $result2[$j]['objectseen']=$this->getSeen($result2[$j]['objectname']);
-           $result2[$j]['objectseenlink']=$this->getDSOseen($result2[$j]['objectname']);       
-           $result2[$j]['objectlastseen']='/';
-           $result2[$j]['objectlastseenlink']='/';
-           if(substr($result2[$j]['objectseen'],0,1)=="X")
-             $result2[$j]['objectseenlink']="<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=" . urlencode($result2[$j]['objectname']) . "\" title=\"" . LangObjectXSeen . "\">" . $result2[$j]['objectseen'] . "</a>";
-           if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($result2[$j]['objectseen'],0,1)=="Y"))
-             $result2[$j]['objectseen']="<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=" . urlencode($result2[$j]['objectname']) . "\" title=\"" . LangObjectYSeen . "\">" .$result2[$j]['objectseen'] . "</a>";
-           $seendate = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode($result2[$j]['objectname']) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
-           if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && (substr($result2[$j]['objectseen'],0,1)=="Y"))
-             $result2[$j]['objectlastseenlink']="<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_observation&amp;observation=" . $result2[$j]['objectname']. "\" title=\"" . LangObjectYSeen . "\">" . $result2[$j]['objectseen'] . "</a>";
-  	       if($seentype == "X") $result2[$j]['objectseen'] = "X(" . $get2->ObsCnt . ")";
-           if($seentype == "Y") $result2[$j]['objectseen'] = "Y(" . $get2->ObsCnt . "/" . $get3->PersObsCnt . ")";
-           if($seentype == "Y") $result2[$j]['objectlastseen'] = $get3->PersObsMaxDate;
-           if($seentype == "Y") $result2[$j]['objectlastobservationid'] = $get3->PersObsMaxId; else $result2[$j]['objectlastobservationid'] = 0;
- /* */
-                     $result2[$j]['showname'] =  $key;
+           $objectseen='';
+					 $objectseenlink='';
+           $objectlastseen='';
+					 $objectlastseenlink='';
+           $this->getSeenLastseenLink($result2[$j]['objectname'],$objectseen,$objectseenlink,$objectlastseen,$objectlastseenlink); 
+           $result2[$j]['objectseen']=$objectseen;
+           $result2[$j]['objectlastseen']=$objectlastseen;       
+           $result2[$j]['objectseenlink']=$objectseenlink;
+           $result2[$j]['objectlastseenlink']=$objectlastseenlink;       
+           $result2[$j]['showname'] =  $key;
   	       $result2[$j]['objectmagnitude'] =  $get->mag;
   	       $result2[$j]['objectsurfacebrightness'] =  $get->subr;
   	       $result2[$j]['objectra'] =  $get->ra;
@@ -1346,8 +1359,9 @@ class Objects implements iObject
  { $atlas='';
    echo "<table width=\"100%\">\n";
    echo "<tr class=\"type3\">\n";
+	 
    if($showRank)
-	   tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=objectpositioninlist");
+	   tableSortHeader(LangOverviewObjectsHeader9,  $link."&amp;sort=objectpositioninlist");
 	 tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=showname");
 	 tableSortHeader(LangOverviewObjectsHeader2,  $link."&amp;sort=objectconstellation");
 	 tableSortHeader(LangOverviewObjectsHeader3,  $link."&amp;sort=objectmagnitude");
@@ -1367,7 +1381,7 @@ class Objects implements iObject
 	 $countline = 0;
 	 if($max>count($_SESSION[$_SID]))
 		 $max=count($_SESSION[$_SID]);
-	 while($count < $max)
+   while($count < $max)
    { if($_SESSION[$_SID][$count]['objectname']==$noShow)
   	   $typefield = "class=\"type3\"";
   	 else
@@ -1383,6 +1397,8 @@ class Objects implements iObject
      // DECLINATION
      $decl = decToStringDegMin($_SESSION[$_SID][$count]['objectdecl']);
 	   echo "<tr $typefield>\n";
+     if($showRank)
+	     echo "<td align=\"center\"><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION[$_SID][$count]['objectname']) . "\">".$_SESSION[$_SID][$count]['objectpositioninlist']."</a></td>\n";
      echo "<td align=\"center\"><a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION[$_SID][$count]['objectname']) . "\">".$_SESSION[$_SID][$count]['showname']."</a></td>\n";
      echo "<td align=\"center\">".$GLOBALS[$_SESSION[$_SID][$count]['objectconstellation']]."</td>\n";
      echo "<td align=\"center\">$magnitude</td>\n";
@@ -1399,10 +1415,10 @@ class Objects implements iObject
 	 }
   	 if($myList)
   	 { echo("<td align=\"center\">");
-       if($GLOBALS['objList']->checkObjectInMyActiveList($name))
-         echo("<a href=\"" . $link . "&amp;min=" . $min . "&amp;removeObjectFromList=" . urlencode($name) . "\" title=\"" . $name . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "\">R</a>");
+       if($GLOBALS['objList']->checkObjectInMyActiveList($_SESSION[$_SID][$count]['objectname']))
+         echo("<a href=\"" . $link . "&amp;min=" . $min . "&amp;removeObjectFromList=" . urlencode($_SESSION[$_SID][$count]['objectname']) . "\" title=\"" . $_SESSION[$_SID][$count]['objectname'] . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "\">R</a>");
        else
-         echo("<a href=\"" . $link . "&amp;min=" . $min . "&amp;addObjectToList=" . urlencode($name) . "&amp;showname=" . urlencode($showname) . "\" title=\"" . $name . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "\">L</a>");
+         echo("<a href=\"" . $link . "&amp;min=" . $min . "&amp;addObjectToList=" . urlencode($_SESSION[$_SID][$count]['objectname']) . "&amp;showname=" . urlencode($_SESSION[$_SID][$count]['showname']) . "\" title=\"" .$_SESSION[$_SID][$count]['objectname'] . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "\">L</a>");
       echo("</td>");
   	 }
      echo("</tr>");
@@ -1644,6 +1660,7 @@ class Objects implements iObject
       echo("<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>");
 		  echo "<td align=\"right\">";
   	  echo LangViewObjectListDescription;
+			echo "<br />";
       echo("<input type=\"submit\" name=\"Go\" value=\"" . 'Edit Description' . "\" />");
   	  echo "</td>";
   	  echo "<td colspan=\"3\">";
