@@ -43,7 +43,12 @@ echo("<form name=\"zoomform\" action=\"".$baseURL."index.php\" method=\"get\">")
 echo "<table width=\"100%\">";
 echo "<tr>";
 echo "<td width=\"50%\">";
-echo "<h2> " . LangViewObjectNearbyObjects.(count($_SESSION['Qobj'])-1)."+".$_GET['object']."</h2>";
+echo "<h2>".$_GET['object'];
+if(count($_SESSION['Qobj'])>1)
+ echo ' '.LangViewObjectAndNearbyObjects.' '.(count($_SESSION['Qobj'])-1).' '.LangViewObjectNearbyObjects;
+else
+ echo ' '.LangViewObjectNoNearbyObjects;
+echo "</h2>";
 echo "</td>";
 echo "<td width=\"50%\" align=\"right\">";
   echo LangViewObjectNearbyObjectsMoreLess  . ":&nbsp;";

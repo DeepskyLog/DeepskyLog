@@ -133,42 +133,40 @@ if(array_key_exists('ObjectToPlaceInList',$_GET) && $_GET['ObjectToPlaceInList']
   $entryMessage.=LangToListMoved7 . $_GET['ObjectToPlaceInList'] . ".";
 }
 
-if(array_key_exists('removePageObjectsFromList',$_GET) && $_GET['removePageObjectsFromList']  && $myList)
-{ if(count($_SESSION['QOL'])>0)
+if(array_key_exists('removePageObjectsFromList',$_GET)&&$_GET['removePageObjectsFromList']&&$myList)
+{ if(count($_SESSION['Qobj'])>0)
 	{ if(array_key_exists('min',$_GET) && $_GET['min'])
      $min=$_GET['min'];
     else
      $min=0;
 		$count=$min;
-	  while(($count<($min+25)) && ($count<count($_SESSION['QOL'])))
-	  {
-		  $objList->removeObjectFromList($_SESSION['QOL'][$count]['objectname'],$_SESSION['QOL'][$count]['showname']);
+	  while(($count<($min+25))&&($count<count($_SESSION['Qobj'])))
+	  {$objList->removeObjectFromList($_SESSION['Qobj'][$count]['objectname'],$_SESSION['Qobj'][$count]['showname']);
 		  $count++;
     }
-	  $_SESSION['QOL'] = $objList->getObjectsFromList($_SESSION['listname']);
+	  $_SESSION['Qobj']=$objList->getObjectsFromList($_SESSION['listname']);
     $entryMessage.=LangToListPageRemoved;
 	}
 }
-if(array_key_exists('addList',$_GET) && array_key_exists('addlistname',$_GET))
-{ if(array_key_exists('QOL',$_SESSION))
-    unset($_SESSION['QOL']);
-  $listnameToAdd = $_GET['addlistname'];
+if($listnameToAdd=$objUtil->checkGetKey('addlistname'))
+{ if(array_key_exists('QobjParams',$_SESSION))
+    unset($_SESSION['QobjParams']);
   if(array_key_exists("PublicList",$_GET))
     if(substr($listnameToAdd,0,7)!="Public:")
-      $listnameToAdd = "Public: " . $listnameToAdd;  
+      $listnameToAdd="Public: ".$listnameToAdd;  
   if($objList->checkList($_GET['addlistname'])!=0)
-    $entryMessage.= LangToListList . stripslashes($listnameToAdd) . LangToListExists;
+    $entryMessage.=LangToListList.stripslashes($listnameToAdd).LangToListExists;
   else
   { $objList->addList($listnameToAdd);
-    if(array_key_exists('QOL',$_SESSION))
-		unset($_SESSION['QOL']);
+    if(array_key_exists('QobjParams',$_SESSION))
+		  unset($_SESSION['QobjParams']);
     $_SESSION['listname'] = $listnameToAdd;
-    $entryMessage.= LangToListList . stripslashes($_SESSION['listname']) . LangToListAdded;
+    $entryMessage.=LangToListList.stripslashes($_SESSION['listname']).LangToListAdded;
   }                    	
 }
 if(array_key_exists('renameList',$_GET) && array_key_exists('addlistname',$_GET))
-{ if(array_key_exists('QOL',$_SESSION))
-	  unset($_SESSION['QOL']);
+{ if(array_key_exists('QobjParams',$_SESSION))
+	  unset($_SESSION['QobjParams']);
   $listnameFrom = $_SESSION['listname'];
 	$listnameTo = $_GET['addlistname'];
   if(array_key_exists("PublicList",$_GET))
@@ -183,21 +181,24 @@ if(array_key_exists('renameList',$_GET) && array_key_exists('addlistname',$_GET)
   }
 }
 if(array_key_exists('removeList',$_GET)  && $myList)
-{ if(array_key_exists('QOL',$_SESSION))
-	unset($_SESSION['QOL']);
+{ if(array_key_exists('QobjParams',$_SESSION))
+	  unset($_SESSION['QobjParams']);
 	$objList->removeList($_SESSION['listname']);
 	$entryMessage.=LangToListRemoved . stripslashes($_SESSION['listname']) . ".";
 	$_SESSION['listname']="----------";
 	unset($_GET['removeList']);
+  $myList=False;
+  $listname='';
+  $listname_ss='';
 }
-if(array_key_exists('activateList',$_GET) && array_key_exists('listname',$_GET))
-{ $_SESSION['listname'] = $_GET['listname'];
+if(array_key_exists('activateList',$_GET)&&array_key_exists('listname',$_GET))
+{ $_SESSION['listname']=$_GET['listname'];
   $myList=False;
   $listname='';
   if(array_key_exists('listname', $_SESSION))
     $listname=$_SESSION['listname'];
   $listname_ss = stripslashes($listname);
-  if(array_key_exists('listname',$_SESSION) && $objList->checkList($_SESSION['listname'])==2)
+  if(array_key_exists('listname',$_SESSION)&&$objList->checkList($_SESSION['listname'])==2)
     $myList=True;
   if($_GET['listname']<>"----------")
     $entryMessage.=LangToListList . stripslashes($_SESSION['listname']) . LangToListActivation1 . LangBack . LangToListActivation2;

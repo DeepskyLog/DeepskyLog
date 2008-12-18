@@ -14,8 +14,7 @@ echo "<meta name=\"description\" content=\"Vereniging voor sterrenkunde\" />";
 echo "<meta name=\"keywords\" content=\"VVS, Vereniging Voor Sterrenkunde, astronomie, sterrenkunde, JVS, Heelal, Astra, Hemelkalender, Sterrenkijkdag, Sterrenkijkdagen, sterr, Nieuws, Laatste nieuws\" />";
 echo "<meta name=\"robots\" content=\"index, follow\" />";
 echo "<base href=\"" . $baseURL . "\" />";
-echo "<link rel=\"shortcut icon\" href=\"".$baseURL."/vvs/images/favicon.ico\" />";
-echo "<link href=\"".$baseURL."vvs/css/template_css.css\" rel=\"stylesheet\" type=\"text/css\" />";
+echo "<link rel=\"shortcut icon\" href=\"".$baseURL."/styles/images/favicon.ico\" />";
 echo "<link href=\"".$baseURL."styles/style.css\" rel=\"stylesheet\" type=\"text/css\" />";
 echo "</head>";
 
