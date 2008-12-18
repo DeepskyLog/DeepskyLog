@@ -24,7 +24,7 @@ try
   include $objUtil->utiltiesDispatchIndexAction();                                  // Center content section	<<<===============================================================
   echo "</td>";
   echo "<td align=\"right\" valign=\"bottom\" style=\"background:url(".$baseURL."styles/images/ru.gif) no-repeat top right; background-color:#FFFFFF;\">";
-  echo "<img src=\"".$baseURL."styles/images/ro.gif\"></td>";                          // Right white bar
+  echo "<img src=\"".$baseURL."styles/images/ro.gif\"></td>";                       // Right white bar
   echo "<td>&nbsp;&nbsp;</td>";                                                     // Right blue bar
   echo "</tr>";  
   echo "</table>";	

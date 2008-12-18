@@ -671,7 +671,8 @@ define("LangNewObservationSubtitle1a", "Recherchez l'objet dans la base de donn&
 define("LangNewObservationSubtitle1abis", " ou ");
 define("LangNewObservationSubtitle1b", "importez les observations &agrave; partir d'un fichier csv");
 define("LangNewObservationSubtitle2", "Contr&ocirc;lez les donn&eacute;es de l'objet");
-define("LangNewObservationSubtitle3", "Remplissez les d&eacute;tails de l'observation (*= champs obligatoires)");
+define("LangNewObservationSubtitle3", "Remplissez les d&eacute;tails de l'observation ");
+define("LangNewObservationSubtitle3A", "(*= champs obligatoires)");
 define("LangNewObservationButton1", "Recherchez l'objet");
 define("LangNewObservationField1", "Date *");
 define("LangNewObservationField2", "Temps (TU)");

@@ -6,8 +6,8 @@
 
 echo "<div id=\"main\">";
 $object = $objUtil->checkPostKey('object', $objUtil->checkGetKey('object'));
-if ($object) {
-	$seen = $GLOBALS['objObject']->getDSOSeen($object);
+if ($object) 
+{ $seen = $GLOBALS['objObject']->getDSOSeen($object);
 	echo "<h2>";
 	echo LangNewObservationTitle . "&nbsp;" . $object;
 	echo "&nbsp;:&nbsp;" . $seen;
@@ -33,9 +33,7 @@ if ($object) {
 	echo "</tr>";
 	echo "</table>";
 	$GLOBALS['objObject']->showObject($object);
-	echo "<ol>";
-	echo "<li value=\"3\">" . LangNewObservationSubtitle3 . "</li>";
-	echo "</ol>";
+	echo "<h2>".LangNewObservationSubtitle3."<span class=\"requiredField\">".LangNewObservationSubtitle3A."</span></h2>";
 	echo "<p><p/>";
 	echo "<form action=\"" . $baseURL . "index.php\" method=\"post\" enctype=\"multipart/form-data\">";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_observation\">";
@@ -44,7 +42,7 @@ if ($object) {
 	echo "<table id=\"content\">";
 	echo "<tr>"; // LOCATION
 	echo "<tr><td class=\"fieldname\" align=\"right\">" . LangViewObservationField4 . "&nbsp;*</td>";
-	echo "<td><select name=\"site\" style=\"width: 147px\">";
+	echo "<td><select class=\"requiredField\" name=\"site\" style=\"width: 147px\">";
 	$sites = $GLOBALS['objLocation']->getSortedLocationsList("name", $_SESSION['deepskylog_id']);
 	while (list ($key, $value) = each($sites))
 		echo "<option " . (($GLOBALS['objUtil']->checkPostKey('site', 0) == $value[0]) ? "selected=\"selected\"" : (($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']) == $value[0]) ? "selected=\"selected\"" : '')) . " value=\"" . $value[0] . "\">" . $value[1] . "</option>";
@@ -56,15 +54,15 @@ if ($object) {
 	echo LangViewObservationField5 . "&nbsp;*";
 	echo "</td>";
 	echo "<td>";
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"3\" style=\"text-align:center\" name=\"day\" value=\"" . $GLOBALS['objUtil']->checkPostKey('day') . "\" />";
+	echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" size=\"3\" style=\"text-align:center\" name=\"day\" value=\"" . $GLOBALS['objUtil']->checkPostKey('day') . "\" />";
 	echo "&nbsp;&nbsp;";
-	echo "<select name=\"month\" style=\"text-align:center\">";
+	echo "<select name=\"month\" style=\"text-align:center\" class=\"requiredField\">";
 	echo "<option value=\"\"></option>";
 	for ($i = 1; $i < 13; $i++)
 		echo "<option value=\"" . $i . "\"" . (($GLOBALS['objUtil']->checkPostKey('month') == $i) ? " selected=\"selected\"" : "") . ">" . $GLOBALS['Month' . $i] . "</option>";
 	echo "</select>";
 	echo "&nbsp;&nbsp";
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" style=\"text-align:center\" name=\"year\" value=\"" . $GLOBALS['objUtil']->checkPostKey('year') . "\" />";
+	echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"4\" size=\"4\" style=\"text-align:center\" name=\"year\" value=\"" . $GLOBALS['objUtil']->checkPostKey('year') . "\" />";
 	echo "</td>";
 	echo "<td class=\"explanation\">" . LangViewObservationField10 . "</td>";
 	echo "<td class=\"fieldname\" align=\"right\">";
@@ -111,7 +109,7 @@ if ($object) {
 	echo LangViewObservationField3 . "&nbsp;*";
 	echo "</td>";
 	echo "<td>";
-	echo "<select name=\"instrument\" style=\"width: 250px\">";
+	echo "<select name=\"instrument\" style=\"width: 250px\" class=\"requiredField\">";
 	echo "<option value=\"\"></option>";
 	$instr = $GLOBALS['objInstrument']->getSortedInstrumentsList("name", $_SESSION['deepskylog_id'], false);
 	while (list ($key, $value) = each($instr))
@@ -270,7 +268,7 @@ if ($object) {
 	echo "<a href=\"http://www.deepsky.be/beschrijfobjecten.php\" target=\"new_window\">" . LangViewObservationFieldHelpDescription . "</a>";
 	echo "</td>";
 	echo "<td width=\"100%\" colspan=\"5\">";
-	echo "<textarea name=\"description\" class=\"description\">";
+	echo "<textarea name=\"description\" class=\"description requiredField\">";
 	echo $GLOBALS['objUtil']->checkPostKey('description');
 	echo "</textarea>";
 	echo "</td>";
@@ -296,12 +294,12 @@ if ($object) {
 	echo "</tr>";
 	echo "</table>";
 	echo "</form>";
-} else // no object found or not pushed on search button yet
-	{
-	echo "<h2>";
+} 
+else // no object found or not pushed on search button yet
+{ echo "<h2>";
 	echo (LangNewObservationTitle);
 	echo "</h2>";
-	// upper form
+	
 	echo "<form action=\"" . $baseURL . "index.php?indexAction=add_observation\" method=\"post\">";
 	echo "<ol>";
 	echo "<li value=\"1\">" . LangNewObservationSubtitle1a . LangNewObservationSubtitle1abis;
