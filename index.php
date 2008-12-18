@@ -17,7 +17,7 @@ try
   include 'common/entryexit/menu.php';                                              // Left Menu Section
   echo "</td>";
   echo "<td  align=\"left\" valign=\"bottom\" style=\"background:url(".$baseURL."styles/images/lu.gif) no-repeat top left; background-color:#FFFFFF;\">";
-  echo "<img src=\"".$baseURL."styles/images/lo.gif\"></td>";                          // Left white bar
+  echo "<img src=\"".$baseURL."styles/images/lo.gif\"></td>";                       // Left white bar
   echo "<td height=\"100%\" valign=\"top\" style=\"background-color:#FFFFFF;\">"; 
   if(isset($entryMessage)&&$entryMessage)                                           // Entry Message if any
     echo "<h3 align=\"center\">".$entryMessage.'</h3><hr />';

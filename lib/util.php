@@ -1265,8 +1265,7 @@ class util
     $pdf->ezStream();
   }
   public function utiltiesDispatchIndexAction()
-  { if(!($indexActionInclude=$this->utilitiesCheckIndexActionAdmin('manage_csv_object'                   ,'deepsky/content/manage_objects_csv.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_observation'                  ,'deepsky/content/change_observation.php')))
+  { if(!($indexActionInclude=$this->utilitiesCheckIndexActionAdmin ('manage_csv_object'                  ,'deepsky/content/manage_objects_csv.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_observation'                  ,'deepsky/content/change_observation.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_csv'                            ,'deepsky/content/new_observationcsv.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('import_csv_list'                    ,'deepsky/content/new_listdatacsv.php')))  
