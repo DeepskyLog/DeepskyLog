@@ -2,8 +2,6 @@
 // selected_observations2.php
 // generates an overview of selected observations in the database
 
-//====================== data_get_observations fetches the data, sorts it and places it in $_SESSION['Qobs'] and puts the toal number of observations in all languages in $_SESSION['QobsTotal'];
-include 'deepsky/data/data_get_observations.php';
 if(count($_SESSION['Qobs'])==0) //================================================================================================== no reult present =======================================================================================
 { echo("</h2>\n");
   echo "<a href=\"".$baseURL."index.php?indexAction=query_observations\">" . LangObservationNoResults . "</a>";
@@ -108,10 +106,10 @@ else                           //===============================================
         if($_SESSION['lco']!="O")
 				  echo("<td></td>\n");
 				else
-				  echo("<td width=\"15%\">" . LangOverviewObservationsHeader8 . "</td>\n".
-                 "<td width=\"15%\">" . LangOverviewObservationsHeader9 . "</td>\n".
-                 "<td width=\"15%\">" . LangOverviewObservationsHeader5. "</td>\n");
-         echo "</tr>\n";
+				  echo "<td width=\"15%\">" . LangOverviewObservationsHeader8 . "</td>".
+                 "<td width=\"15%\">" . LangOverviewObservationsHeader9 . "</td>".
+                 "<td width=\"15%\">" . LangOverviewObservationsHeader5. "</td>";
+         echo "</tr>";
          while(list ($key, $value) = each($_SESSION['Qobs'])) // go through observations array
          {  if($count >= $min && $count < $max)
             { if(($_SESSION['lco']=="O")&&array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
@@ -144,6 +142,5 @@ else                           //===============================================
    //==================================================================================================== PAGE FOOTER - MAKE NEW QUERY ===================================================================================== 
    echo("<a href=\"".$baseURL."index.php?indexAction=query_observations\">" . LangObservationQueryError2 . "</a>");
 }
-echo "</div>";
 echo "</div>";
 ?>

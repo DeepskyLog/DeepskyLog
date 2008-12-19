@@ -70,6 +70,10 @@ hr {
   width            : 100%;
 }
 
+.fieldname {
+  text-align       : right;
+}
+
 .mainlevel {
   color            : #FFFF00;
   font-family      : Verdana, Geneva, Arial, Helvetica, serif;

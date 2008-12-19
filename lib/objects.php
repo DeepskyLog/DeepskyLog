@@ -1356,7 +1356,7 @@ class Objects implements iObject
   $db->logout();
  }
  function showObjects($link, $min, $max, $ownShow='', $showRank=0)
- { // ownShow => object to show in a different color in the list
+ { // ownShow => object to show in a different color (type3) in the list
  	 // showRank = 0 for normal operation, 1 for List show, 2 for top objects
  	 $atlas='';
    echo "<table width=\"100%\">\n";
@@ -1397,7 +1397,7 @@ class Objects implements iObject
      $ra = raToString($_SESSION['Qobj'][$count]['objectra']);
      // DECLINATION
      $decl = decToStringDegMin($_SESSION['Qobj'][$count]['objectdecl']);
-	   echo "<tr $typefield>\n";
+	   echo "<tr $typefield>";
      if(($showRank==1) && $GLOBALS['myList'])
        echo "<td align=\"center\"><a href=\"\" onclick=\"theplace = prompt('Please enter the new position','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
      elseif($showRank)

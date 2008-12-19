@@ -12,24 +12,15 @@ if($showPartOfs=="1")
 }	  
 if(count($_SESSION['Qobj'])>1) //=============================================== valid result, multiple objects found
 { echo "<div id=\"main\">";
-	echo "<table width=\"100%\">";
-	echo "<tr>";
-	echo "<td>";
-	echo "<h2>";
-  echo LangSelectedObjectsTitle; // page title
+  $title=LangSelectedObjectsTitle;
 	if($showPartOfs)	
-	  echo LangListQueryObjectsMessage10;
+	  $title.=LangListQueryObjectsMessage10;
 	else
-    echo LangListQueryObjectsMessage11;
+    $title.=LangListQueryObjectsMessage11;
   if(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']&&
 	   array_key_exists('listname',$_SESSION)&&$_SESSION['listname']&&($_SESSION['listname']<>"----------")&&$myList)
-    echo "&nbsp;-&nbsp;<a href=\"".$link."&amp;min=".$min."&amp;addAllObjectsFromQueryToList=true\" title=\"".LangListQueryObjectsMessage5.$listname_ss."\">".LangListQueryObjectsMessage4."</a>";
-	echo "</h2>";
-	echo "</td>";
-	echo "<td align=\"right\">";
-  list($min,$max)=$objUtil->printNewListHeader($_SESSION['Qobj'],$link,$min,25,'');	
-	echo "</td>";
-	echo "</table>";
+    $title.="&nbsp;-&nbsp;<a href=\"".$link."&amp;min=".$min."&amp;addAllObjectsFromQueryToList=true\" title=\"".LangListQueryObjectsMessage5.$listname_ss."\">".LangListQueryObjectsMessage4."</a>";
+  tablePageTitle($title, $link, $_SESSION['Qobj'], $min, $max);
 	if($showPartOfs)
     echo "<a href=\"".$link."&amp;showPartOfs=0\">".LangListQueryObjectsMessage12."</a>";
 	else

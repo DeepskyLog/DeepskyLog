@@ -1265,22 +1265,22 @@ class util
     $pdf->ezStream();
   }
   public function utiltiesDispatchIndexAction()
-  { if(!($indexActionInclude=$this->utilitiesCheckIndexActionAdmin ('manage_csv_object'                  ,'deepsky/content/manage_objects_csv.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_observation'                  ,'deepsky/content/change_observation.php')))
+  { if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_observation'                  ,'deepsky/content/change_observation.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_csv'                            ,'deepsky/content/new_observationcsv.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('import_csv_list'                    ,'deepsky/content/new_listdatacsv.php')))  
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_object'                         ,'deepsky/content/new_object.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_observation'                    ,'deepsky/content/new_observation.php'))) 
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'detail_object'                      ,'deepsky/content/view_object.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'detail_observation'                 ,'deepsky/content/view_observation.php'))) 
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('import_csv_list'                    ,'deepsky/content/new_listdatacsv.php')))  
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'listaction'                         ,'deepsky/content/tolist.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAdmin( 'manage_csv_object'                  ,'deepsky/content/manage_objects_csv.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'query_objects'                      ,'deepsky/content/setup_objects_query.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'query_observations'                 ,'deepsky/content/setup_observations_query.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'rank_objects'                       ,'deepsky/content/top_objects.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'rank_observers'                     ,'deepsky/content/top_observers.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'result_query_objects'               ,'deepsky/content/execute_query_objects.php'))) 
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'result_selected_observations'       ,'deepsky/content/selected_observations2.php')))  
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'query_observations'                 ,'deepsky/content/setup_observations_query.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'query_objects'                      ,'deepsky/content/setup_objects_query.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'rank_objects'                       ,'deepsky/content/top_objects.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'view_image'                         ,'deepsky/content/show_image.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'listaction'                         ,'deepsky/content/tolist.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'view_observer_catalog'              ,'deepsky/content/details_observer_catalog.php')))
     
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('common_content_change_account'      ,'common/content/change_account.php')))          // former account_details
@@ -1329,21 +1329,7 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('comets_rank_objects'                ,'comets/content/top_objects.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('comets_query_observations'          ,'comets/content/setup_observations_query.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionall   ('comets_query_objects'               ,'comets/content/setup_objects_query.php')))
-    
-/*                        
-     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
-                            if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
-                                if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
-                                if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
-                                    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
-                                    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
-                                        if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('','comets/')))
-                                    
-*/    
-    
-    
-    
-        
+
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSquickPick()))
       $indexActionInclude=$this->utilitiesGetIndexActionDefaultAction();
     return $indexActionInclude;

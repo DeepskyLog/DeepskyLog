@@ -1,5 +1,17 @@
 <?php
-
+function tablePageTitle($title, $link, &$list, &$min, &$max)
+{ echo "<table width=\"100%\">";
+	echo "<tr>";
+	echo "<td>";
+	echo "<h2>";
+  echo $title;
+	echo "</h2>";
+	echo "</td>";
+	echo "<td align=\"right\">";
+  list($min,$max)=$GLOBALS['objUtil']->printNewListHeader($list,$link,$min,25,'');	
+	echo "</td>";
+	echo "</table>";
+}
 function tableSortHeader($header0, $link0)
 { global $baseURL;
   echo "<td style=\"vertical-align:top;\">";         
@@ -67,7 +79,7 @@ function tableNew($format='')
 }
 function tableFieldnameFieldExplanation($name, $field, $explanation)
 { echo "<tr>";
-  echo "<td class=\"fieldname\" align=\"right\">";
+  echo "<td class=\"fieldname\">";
   echo $name;
   echo "</td>";
   echo "<td>";

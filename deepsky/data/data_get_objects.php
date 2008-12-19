@@ -377,7 +377,7 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
     $_SESSION['QobjSortDirection']='';
   }	
 }
-// ========================================= get nearby objects for selected object
+// ========================================= no search specified
 else
 { $_SESSION['QobjParams']=array();
   $_SESSION['Qobj']=array();
