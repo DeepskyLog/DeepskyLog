@@ -93,7 +93,7 @@ echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_eyepiece\" />
 echo "<table>";
 echo "<tr>";
 echo "<td class=\"fieldname\">".LangAddEyepieceField1."</td>";
-echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"eyepiecename\" size=\"30\" value=\"";
+echo "<td><input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"eyepiecename\" size=\"30\" value=\"";
 if(array_key_exists('eyepiecename',$_GET) && $_GET['eyepiecename'])
   echo stripslashes($_GET['eyepiecename']);
 if(array_key_exists('eyepieceid',$_GET) && $_GET['eyepieceid'])
@@ -104,7 +104,7 @@ echo "<td class=\"explanation\">".LangAddEyepieceField1Expl."</td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td class=\"fieldname\">".LangAddEyepieceField2."</td>";
-echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"focalLength\" size=\"5\" value=\"";
+echo "<td><input type=\"text\" class=\"inputfield requiredField\" maxlength=\"5\" name=\"focalLength\" size=\"5\" value=\"";
 if(array_key_exists('focalLength',$_GET) && $_GET['focalLength']) 
   echo ($_GET['focalLength']);
 if(array_key_exists('eyepieceid',$_GET) && $_GET['eyepieceid'])

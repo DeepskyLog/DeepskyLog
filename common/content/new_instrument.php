@@ -125,7 +125,7 @@ echo "<form action=\"".$baseURL."index.php?indexAction=validate_instrument\" met
 echo "<table>";
 echo "<tr>";
 echo "<td class=\"fieldname\">".LangAddInstrumentField1."</td>";
-echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"instrumentname\" size=\"30\"  value=\"";
+echo "<td><input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"instrumentname\" size=\"30\"  value=\"";
 if($objUtil->checkGetKey('instrumentname'))
   echo stripslashes($_GET['instrumentname']);
 if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
@@ -136,7 +136,7 @@ echo "</tr>";
 echo "<tr>";
 echo "<td class=\"fieldname\">".LangAddInstrumentField2."</td>";
 echo "<td>";
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"diameter\" size=\"10\" value=\"";
+echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"diameter\" size=\"10\" value=\"";
 if(array_key_exists('diameter',$_GET) && $_GET['diameter'])
   echo stripslashes($_GET['diameter']);
 if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
@@ -156,21 +156,21 @@ if(array_key_exists('type',$_GET) && $_GET['type'])
   $type = $_GET['type'];
 if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
   $type = $objInstrument->getInstrumentType($_GET['instrumentid']);
-echo "<option ".(($type==InstrumentReflector)?"selected=\"selected\" ":"")."value=\"".InstrumentReflector."\">".InstrumentsReflector."</option>";
-echo "<option ".(($type==InstrumentRefractor)?"selected=\"selected\" ":"")."value=\"".InstrumentRefractor."\">".InstrumentsRefractor."</option>";
-echo "<option ".(($type==InstrumentCassegrain)?"selected=\"selected\" ":"")."value=\"".InstrumentCassegrain."\">".InstrumentsCassegrain."</option>";
+echo "<option ".(($type==InstrumentReflector)?        "selected=\"selected\" ":"")."value=\"".InstrumentReflector.        "\">".InstrumentsReflector."</option>";
+echo "<option ".(($type==InstrumentRefractor)?        "selected=\"selected\" ":"")."value=\"".InstrumentRefractor.        "\">".InstrumentsRefractor."</option>";
+echo "<option ".(($type==InstrumentCassegrain)?       "selected=\"selected\" ":"")."value=\"".InstrumentCassegrain.       "\">".InstrumentsCassegrain."</option>";
 echo "<option ".(($type==InstrumentSchmidtCassegrain)?"selected=\"selected\" ":"")."value=\"".InstrumentSchmidtCassegrain."\">".InstrumentsSchmidtCassegrain."</option>";
-echo "<option ".(($type==InstrumentKutter)?"selected=\"selected\" ":"")."value=\"".InstrumentKutter."\">".InstrumentsKutter."</option>";
-echo "<option ".(($type==InstrumentMaksutov)?"selected=\"selected\" ":"")."value=\"".InstrumentMaksutov."\">".InstrumentsMaksutov."</option>";
-echo "<option ".(($type==InstrumentBinoculars)?"selected=\"selected\" ":"")."value=\"".InstrumentBinoculars."\">".InstrumentsBinoculars."</option>";
-echo "<option ".(($type==InstrumentFinderscope)?"selected=\"selected\" ":"")."value=\"".InstrumentFinderscope."\">".InstrumentsFinderscope."</option>";
-echo "<option ".(($type==InstrumentOther)?"selected=\"selected\" ":"")."value=\"".InstrumentRest."\">".InstrumentsOther."</option>";
+echo "<option ".(($type==InstrumentKutter)?           "selected=\"selected\" ":"")."value=\"".InstrumentKutter.           "\">".InstrumentsKutter."</option>";
+echo "<option ".(($type==InstrumentMaksutov)?         "selected=\"selected\" ":"")."value=\"".InstrumentMaksutov.         "\">".InstrumentsMaksutov."</option>";
+echo "<option ".(($type==InstrumentBinoculars)?       "selected=\"selected\" ":"")."value=\"".InstrumentBinoculars.       "\">".InstrumentsBinoculars."</option>";
+echo "<option ".(($type==InstrumentFinderscope)?      "selected=\"selected\" ":"")."value=\"".InstrumentFinderscope.      "\">".InstrumentsFinderscope."</option>";
+echo "<option ".(($type==InstrumentOther)?            "selected=\"selected\" ":"")."value=\"".InstrumentRest.             "\">".InstrumentsOther."</option>";
 echo "</select>";
 echo "</td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td class=\"fieldname\">".LangAddInstrumentField4."</td>";
-echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"focallength\" size=\"10\"  value=\"";
+echo "<td><input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"focallength\" size=\"10\"  value=\"";
 if(array_key_exists('focallength',$_GET) && $_GET['focallength'])
   echo stripslashes($_GET['focallength']);
 if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
@@ -188,7 +188,7 @@ echo "&nbsp;".LangAddInstrumentOr;
 // echo "</tr>";
 // echo "<tr>";
 echo "&nbsp;".LangAddInstrumentField3;
-echo "&nbsp;<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"fd\" size=\"10\" value=\"";
+echo "&nbsp;<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"fd\" size=\"10\" value=\"";
 if(array_key_exists('fd',$_GET) && $_GET['fd'])
   echo stripslashes($_GET['fd']);
 if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])

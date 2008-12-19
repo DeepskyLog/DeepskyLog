@@ -143,7 +143,7 @@ echo "</td>
    </tr>
    <tr>
    <td colspan=\"2\"><br></br>
-   <a href=\"http://maps.google.com/maps?ll=" . $locations->getLatitude($_GET['location']) . "," . $locations->getLongitude($_GET['location']) . "&spn=4.884785,11.585083&t=h&hl=en\"><img class=\"account\" src=\"".$baseURL."map.php?lat=" . $locations->getLatitude($_GET['location']) . "&long=" . $locations->getLongitude($_GET['location']) . "\" width=\"490\" height=\"245\" title=\"";
+   <a href=\"http://maps.google.com/maps?ll=" . $objLocation->getLatitude($_GET['location']) . "," . $objLocation->getLongitude($_GET['location']) . "&spn=4.884785,11.585083&t=h&hl=en\"><img class=\"account\" src=\"".$baseURL."common/content/map.php?lat=" . $objLocation->getLatitude($_GET['location']) . "&long=" . $objLocation->getLongitude($_GET['location']) . "\" width=\"490\" height=\"245\" title=\"";
 
 echo (LangGooglemaps);
 

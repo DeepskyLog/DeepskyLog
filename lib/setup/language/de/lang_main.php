@@ -53,8 +53,8 @@ define("LangSortOnDesc", "Sort descending");
 
 //ToList
 define("LangToListList", "Die Liste \"");
-define("LangToListActivation1", "\" ist aktiviert. Klicken Sie '");
-define("LangToListActivation2", "' um fortzufahren.");
+define("LangToListActivation1", "\" ist aktiviert.");
+define("LangToListActivation2", "");
 define("LangToListExists", "\" existiert bereits.");
 define("LangToListNotExists", "\" existiert nicht.");
 define("LangToListAdded", "\" wurde hinzugef&uuml;gt.");

@@ -201,7 +201,7 @@ if(array_key_exists('activateList',$_GET)&&array_key_exists('listname',$_GET))
   if(array_key_exists('listname',$_SESSION)&&$objList->checkList($_SESSION['listname'])==2)
     $myList=True;
   if($_GET['listname']<>"----------")
-    $entryMessage.=LangToListList . stripslashes($_SESSION['listname']) . LangToListActivation1 . LangBack . LangToListActivation2;
+    $entryMessage.=LangToListList . stripslashes($_SESSION['listname']) . LangToListActivation1;
 }
 if(array_key_exists('addObjectToList',$_GET)&&$_GET['addObjectToList']&&array_key_exists('listname',$_SESSION)&&$_SESSION['listname']&&$myList)
 { $objList->addObjectToList($_GET['addObjectToList'],$GLOBALS['objUtil']->checkGetKey('showname',$_GET['addObjectToList']));

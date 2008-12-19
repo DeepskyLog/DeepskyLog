@@ -92,7 +92,7 @@ echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_lens\" />";
 echo "<table>";
 echo "<tr>";
 echo "<td class=\"fieldname\"".LangAddLensField1."</td>";
-echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"lensname\" size=\"30\" value=\"";
+echo "<td><input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"lensname\" size=\"30\" value=\"";
 if(array_key_exists('lensname',$_GET) && $_GET['lensname'])
   echo stripslashes($_GET['lensname']);
 if(array_key_exists('lensid',$_GET) && $_GET['lensid'])
@@ -104,7 +104,7 @@ echo "</tr>";
 echo "<tr>";
 echo "<td class=\"fieldname\">".LangAddLensField2."</td>";
 echo "<td>";
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"factor\" size=\"5\" value=\"";
+echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"5\" name=\"factor\" size=\"5\" value=\"";
 if(array_key_exists('factor',$_GET) && $_GET['factor'])
   echo stripslashes($_GET['factor']);
 if(array_key_exists('lensid',$_GET) && $_GET['lensid'])

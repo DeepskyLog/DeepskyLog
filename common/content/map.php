@@ -12,7 +12,7 @@ $lat = $_GET['lat'];
 // as the script.
 // This can be any format but we are using JPG in this example // We will also allocate the color for the marker 
 
-$im = imagecreatefromjpeg("styles/images/earth.jpg");
+$im = imagecreatefromjpeg("../../styles/images/earth.jpg");
 $red = imagecolorallocate ($im, 255,0,0);
 
 // Next need to find the base image size.

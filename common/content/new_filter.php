@@ -109,7 +109,7 @@ echo "<tr>";
 echo "<td class=\"fieldname\">";
 echo LangAddFilterField1;
 echo "</td>";
-echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"filtername\" size=\"30\" value=\""; 
+echo "<td><input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"filtername\" size=\"30\" value=\""; 
 echo stripslashes($objUtil->checkGetKey('filtername',''));
 if($objUtil->checkGetKey('filterid'))
   echo stripslashes($objFilter->getFilterName($_GET['filterid'])); 

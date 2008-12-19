@@ -54,8 +54,8 @@ define("LangSortOnDesc", "Trier omgekeerd");
 
 //ToList Page
 define("LangToListList", "La liste \"");
-define("LangToListActivation1", "\" est activ&eacute;e, cliquez '");
-define("LangToListActivation2", "' pour continuer o&ugrave; vous &eacute;tiez.");
+define("LangToListActivation1", "\" est activ&eacute;e");
+define("LangToListActivation2", ".");
 define("LangToListExists", "\" existe d&eacute;j&agrave;.");
 define("LangToListAdded", "\" est ajout&eacute;e.");
 define("LangToListNotExists", "\" n'existe pas.");

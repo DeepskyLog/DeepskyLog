@@ -53,7 +53,7 @@ if($objUtil->checkPostKey('sitename')
     } 
     else
     { $objLocation->setSkyBackground($_POST['id'], -999);
-      $locations-setLocationLimitingMagnitude($_POST['id'], -999);
+      $objLocation->setLocationLimitingMagnitude($_POST['id'], -999);
 		}
   }
 }
