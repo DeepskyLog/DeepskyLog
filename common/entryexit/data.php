@@ -1,11 +1,11 @@
 <?php
-// HERE HAS TO COME THE DATA GETTING PART
 
-if($objUtil->checkGetKey('indexAction')=='rank_objects')
+
+if($includeFile=='deepsky/content/top_objects.php')
 { $_GET['source']='top_objects';
   require_once 'deepsky/data/data_get_objects.php';
 }
-if($objUtil->checkGetKey('indexAction')=='result_selected_observations')
+if($includeFile=='deepsky/content/selected_observations2.php')
   require_once 'deepsky/data/data_get_observations.php';
 
 ?>
