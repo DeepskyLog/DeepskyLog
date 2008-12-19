@@ -75,7 +75,8 @@ class Database implements iDatabase
 		    return $get->$name;
 		  else 
 		    return $nullvalue;
-		else     return $nullvalue;
+		else     
+		  return $nullvalue;
   }
 }
 $objDatabase=new Database;

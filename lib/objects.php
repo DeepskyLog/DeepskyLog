@@ -954,18 +954,9 @@ class Objects implements iObject
  // getCatalogs returns the catalogs of the object
  // getDsObjectName returns the name when the alternative name is given.
  function getDsObjectName($name)
- {
-  $db = new database;
-  $db->login();
-  $sql = "SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"$name\")";
-  $run = mysql_query($sql) or die(mysql_error());
-  $get = mysql_fetch_object($run);
-  $db->logout();
-  if ($get)
-	  return $get->objectname;
-	else
-		return "";
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"".$name."\")",'objectname');
  }
+ 
 // getDescription returns the Description when the name is given.
  function getDescriptionDsObject($name)
  {

@@ -575,7 +575,7 @@ class util
               if($sort)
 							{ $y-=$deltalineSection;
                 $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
-                $pdf->addText($xbase, $y, $fontSizeSection, $$$sort);
+                $pdf->addText($xbase, $y, $fontSizeSection, $GLOBALS[$$sort]);
                 $y-=$deltaline+$deltalineSection;
 							}
 				    }
@@ -584,7 +584,7 @@ class util
               if($sort)
 							{ $y-=$deltalineSection;
                 $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
-					      $pdf->addText($xbase, $y, $fontSizeSection, $$$sort);
+					      $pdf->addText($xbase, $y, $fontSizeSection, $GLOBALS[$$sort]);
                 $y-=$deltaline+$deltalineSection;
 							}
 				    }
@@ -620,7 +620,7 @@ class util
               if($sort)
 							{ $y-=$deltalineSection;
                 $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
-                $pdf->addText($xbase, $y, $fontSizeSection, $$$sort);
+                $pdf->addText($xbase, $y, $fontSizeSection, $GLOBALS[$$sort]);
                 $y-=$deltaline+$deltalineSection;
 							}
 				    }
@@ -629,7 +629,7 @@ class util
               if($sort)
 							{ $y-=$deltalineSection;
                 $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
-					      $pdf->addText($xbase, $y, $fontSizeSection, $$$sort);
+					      $pdf->addText($xbase, $y, $fontSizeSection, $GLOBALS[$$sort]);
                 $y-=$deltaline+$deltalineSection;
 							}
 				    }
