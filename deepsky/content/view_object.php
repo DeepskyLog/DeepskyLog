@@ -2,14 +2,6 @@
 // view_object.php
 // view all information of one object 
 
-if(!$_GET['object']) // no object defined in url 
-  throw new Exception("// no object defined in url, line 6 in view_object.php");
-if(!($_GET['object']=$objObject->getDsObjectName($_GET['object'])))
-  throw new Exception("// no corresponding object found, line 8 in view_object.php");
-
-$_GET['source']='objects_nearby';
-$_GET['zoom']=$GLOBALS['objUtil']->checkGetKey('zoom',30);	
-include "deepsky/data/data_get_objects.php";	
 
 $seen=$GLOBALS['objObject']->getDSOseen($_GET['object']);
 echo "<div id=\"main\">";

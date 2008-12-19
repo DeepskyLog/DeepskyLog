@@ -2,9 +2,6 @@
 // tolist.php
 // manages and shows lists
 
-$_GET['source']='tolist';
-require_once 'deepsky/data/data_get_objects.php';
-
 if(($objList->checkList($_SESSION['listname'])==2) && ($_SESSION['listname']<>"----------"))
   $listname=$_SESSION['listname'];	
 else

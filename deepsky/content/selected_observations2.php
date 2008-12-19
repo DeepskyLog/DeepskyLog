@@ -3,10 +3,11 @@
 // generates an overview of selected observations in the database
 
 if(count($_SESSION['Qobs'])==0) //================================================================================================== no reult present =======================================================================================
-{ echo("</h2>\n");
+{ echo "<h2>";
   echo "<a href=\"".$baseURL."index.php?indexAction=query_observations\">" . LangObservationNoResults . "</a>";
   echo " " . LangObservationOR . " ";
   echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;catalog=%\">" . LangObservationQueryError3 . "</a>";
+  echo "</h2>";
 }
 else                           //================================================================================================== show results in $_SESSION['Qobs'] =======================================================================================
 { $step = 25;

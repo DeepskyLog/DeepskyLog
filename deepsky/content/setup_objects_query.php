@@ -2,33 +2,6 @@
 // setup_objects_query.php
 // interface to query objects
 
-$pageError = false;       
-$minDeclDegreesError = false;    $minDeclMinutesError = false;    $minDeclSecondsError = false;
-$maxDeclDegreesError = false;    $maxDeclMinutesError = false;    $maxDeclSecondsError = false;
-$minRAHoursError = false;        $minRAMinutesError = false;      $minRASecondsError = false;
-$maxRAHoursError = false;        $maxRAMinutesError = false;      $maxRASecondsError = false;
-$minMagError = false;            $maxMagError = false;               
-$minSBError = false;             $maxSBError = false;
-$minSizeError = false;           $maxSizeError = false;
-$minContrastError = false;       $maxContrastError = false; 
-$listError = false;
-
-$name = '';                                 $atlas = '';          $atlasPageNumber = '';
-$catalog = '';        $catNumber = '';
-$type = '';                                 $con = '';		
-$minDecl = '';        $minDeclDegrees = ''; $minDeclMinutes = ''; $minDeclSeconds = '';
-$maxDecl = '';        $maxDeclDegrees = ''; $maxDeclMinutes = ''; $maxDeclSeconds = '';
-$minRA = '';          $minRAHours = '';     $minRAMinutes = '';   $minRASeconds = '';
-$maxRA = '';          $maxRAHours = '';     $maxRAMinutes = '';   $maxRASeconds = '';
-$maxMag = '';       	                      $minMag = '';
-$maxSB = '';                                $minSB = '';
-$minSize = '';        $minSizeC = '';       $size_min_units = ''; 
-$maxSize = '';        $maxSizeC = '';       $size_max_units = ''; 
-$minContrast = '';                          $maxContrast = '';    
-$inList = '';                               $notInList = '';
-
-require_once 'deepsky/data/data_get_objects.php';
-
 $link=$baseURL."index.php?indexAction=query_objects";
 reset($_GET);
 while(list($key,$value)=each($_GET))
