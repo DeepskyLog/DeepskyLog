@@ -1294,7 +1294,6 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_instrument'                     ,'common/content/new_instrument.php'))) 		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_lens'                           ,'common/content/new_lens.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_site'                           ,'common/content/new_site.php'))) 		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('confirm_subscribe'                  ,'common/content/confirm.php'))) 		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_eyepiece'                    ,'common/content/view_eyepiece.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_filter'                      ,'common/content/view_filter.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_instrument'                  ,'common/content/view_instrument.php')))		

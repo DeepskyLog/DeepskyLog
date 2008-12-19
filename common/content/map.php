@@ -1,14 +1,7 @@
 <?php
-
-include_once "lib/util.php";
-
-$util = new Util();
-$util->checkUserInput();
-
-// These are the coordinates the location we wish to plot.<br> // These are being passed in the URL, but we will set them to a 
+// These are the coordinates the location we wish to plot.
+// These are being passed in the URL, but we will set them to a 
 // default if nothing is passed.
-
-
 //if(empty($long))$long = -70.7333;
 //if(empty($lat)) $lat = -29.25;
 
@@ -16,11 +9,10 @@ $long = $_GET['long'];
 $lat = $_GET['lat'];
 
 // First we load the background/base map. We assume it's located in same dir
-
 // as the script.
 // This can be any format but we are using JPG in this example // We will also allocate the color for the marker 
 
-$im = imagecreatefromjpeg("earth.jpg");
+$im = imagecreatefromjpeg("styles/images/earth.jpg");
 $red = imagecolorallocate ($im, 255,0,0);
 
 // Next need to find the base image size.
@@ -42,10 +34,9 @@ imagepng($im);
 imagedestroy($im);
 
 function getlocationcoords($lat, $lon, $width, $height)
-{  
-    $x = (($lon + 180) * ($width / 360));
-    $y = ((($lat * -1) + 90) * ($height / 180));
-    return array("x"=>round($x),"y"=>round($y));
+{ $x = (($lon + 180) * ($width / 360));
+  $y = ((($lat * -1) + 90) * ($height / 180));
+  return array("x"=>round($x),"y"=>round($y));
 }
 // Now we convert the long/lat coordinates into screen coordinates
 ?>
