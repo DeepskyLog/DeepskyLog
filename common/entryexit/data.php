@@ -36,16 +36,15 @@ if($includeFile=='deepsky/content/setup_objects_query.php')
   
   require_once 'deepsky/data/data_get_objects.php'; 
 }   
-if($includeFile='deepsky/content/tolisp.php')
+if($includeFile=='deepsky/content/tolist.php')
 { $_GET['source']='tolist';
   require_once 'deepsky/data/data_get_objects.php';
 }
 if($includeFile=='deepsky/content/view_object.php')
-{if(!$_GET['object']) // no object defined in url 
-  throw new Exception("// no object defined in url, line 6 in view_object.php");
-}
-if(!($_GET['object']=$objObject->getDsObjectName($_GET['object'])))
-{ throw new Exception("// no corresponding object found, line 8 in view_object.php");
+{ if(!$_GET['object']) 
+    throw new Exception("// no object defined in url, line 6 in view_object.php");
+  if(!($_GET['object']=$objObject->getDsObjectName($_GET['object'])))
+    throw new Exception("// no corresponding object found, line 8 in view_object.php");
   $_GET['source']='objects_nearby';
   $_GET['zoom']=$GLOBALS['objUtil']->checkGetKey('zoom',30);	
   include "deepsky/data/data_get_objects.php";	
