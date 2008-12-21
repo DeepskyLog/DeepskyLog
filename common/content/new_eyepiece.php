@@ -2,6 +2,14 @@
 // new_eyepiece.php
 // allows the user to add a new eyepiece
 
+$mfl = -1;
+if(array_key_exists('maxFocalLength',$_GET) && $_GET['maxFocalLength']) 
+  $mfl = $_GET['maxFocalLength'];
+if(array_key_exists('eyepieceid',$_GET) && $_GET['eyepieceid'])
+  $mfl = stripslashes($objEyepiece->getMaxFocalLength($_GET['eyepieceid']));
+if($mfl<0)
+  $mfl="";
+
 $sort=$objUtil->checkGetKey('sort','name');
 if(!$min) $min=$objUtil->checkGetKey('min',0);
 // the code below looks very strange but it works
@@ -25,8 +33,8 @@ $step = 25;
 echo "<div id=\"main\">";
 echo "<h2>".LangOverviewEyepieceTitle."</h2>";
 $link = $baseURL."index.php?indexAction=add_eyepiece&amp;sort=".$sort."&amp;previous=".$orig_previous;
-list($min, $max) = $objUtil->printListHeader($eyeps, $link, $min, $step, "");
-echo "<table>";
+list($min, $max) = $objUtil->printNewListHeader($eyeps, $link, $min, $step, "");
+echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=name&amp;previous=$previous\">".LangViewEyepieceName."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=focalLength&amp;previous=$previous\">".LangViewEyepieceFocalLength."</a></td>";
@@ -63,6 +71,7 @@ if ($eyeps != null)
 echo "</table>";
 list($min, $max) = $objUtil->printListHeader($eyeps, $link, $min, $step, "");
 echo "</div>";
+echo "<hr />";
 echo "<h2>".LangAddEyepieceTitle."</h2>";
 echo "<ol>";
 echo "<li value=\"1\">";
@@ -91,61 +100,21 @@ echo "</ol>";
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_eyepiece\" />";
 echo "<table>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddEyepieceField1."</td>";
-echo "<td><input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"eyepiecename\" size=\"30\" value=\"";
-if(array_key_exists('eyepiecename',$_GET) && $_GET['eyepiecename'])
-  echo stripslashes($_GET['eyepiecename']);
-if(array_key_exists('eyepieceid',$_GET) && $_GET['eyepieceid'])
-  echo stripslashes($objEyepiece->getEyepieceName($_GET['eyepieceid']));
-echo "\" />";
-echo "</td>";
-echo "<td class=\"explanation\">".LangAddEyepieceField1Expl."</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddEyepieceField2."</td>";
-echo "<td><input type=\"text\" class=\"inputfield requiredField\" maxlength=\"5\" name=\"focalLength\" size=\"5\" value=\"";
-if(array_key_exists('focalLength',$_GET) && $_GET['focalLength']) 
-  echo ($_GET['focalLength']);
-if(array_key_exists('eyepieceid',$_GET) && $_GET['eyepieceid'])
-  echo stripslashes($objEyepiece->getFocalLength($_GET['eyepieceid']));
-echo "\" />";
-echo "</td>";
-echo "<td class=\"explanation\">".LangAddEyepieceField2Expl."</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddEyepieceField4."</td>";
-echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"maxFocalLength\" size=\"5\" value=\"";
-$mfl = -1;
-if(array_key_exists('maxFocalLength',$_GET) && $_GET['maxFocalLength']) 
-  $mfl = $_GET['maxFocalLength'];
-if(array_key_exists('eyepieceid',$_GET) && $_GET['eyepieceid'])
-  $mfl = stripslashes($objEyepiece->getMaxFocalLength($_GET['eyepieceid']));
-if($mfl<0)
-  $mfl="";
-echo $mfl;
-echo "\" />";
-echo "</td>";
-echo "<td class=\"explanation\">".LangAddEyepieceField4Expl."</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddEyepieceField3."</td>";
-echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"apparentFOV\" size=\"5\" value=\"";
-if(array_key_exists('apparentFOV',$_GET) && $_GET['apparentFOV'])
-  echo ($_GET['apparentFOV']);
-if(array_key_exists('eyepieceid',$_GET) && $_GET['eyepieceid'])
-  echo stripslashes($objEyepiece->getapparentFOV($_GET['eyepieceid']));
-echo "\" />";
-echo "</td>";
-echo "<td class=\"explanation\">".LangAddEyepieceField3Expl."</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td></td>";
-echo "<td><input type=\"submit\" name=\"add\" value=\"".LangAddEyepieceButton."\" />";
-echo "</td>";
-echo "<td></td>";
-echo "</tr>";
+tableFieldnameFieldExplanation(LangAddEyepieceField1,
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"eyepiecename\" size=\"30\" value=\"".stripslashes($objUtil->checkGetKey('eyepiecename')).stripslashes($objEyepiece->getEyepieceName($objUtil->checkGetKey('eyepieceid')))."\" />",
+                               LangAddEyepieceField1Expl);
+tableFieldnameFieldExplanation(LangAddEyepieceField2,
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"5\" name=\"focalLength\" size=\"5\" value=\"".$objUtil->checkGetKey('focalLength').stripslashes($objEyepiece->getFocalLength($objUtil->checkGetKey('eyepieceid')))."\" />",
+                               LangAddEyepieceField2Expl);
+tableFieldnameFieldExplanation(LangAddEyepieceField4,
+                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"maxFocalLength\" size=\"5\" value=\"".$mfl."\" />",
+                               LangAddEyepieceField4Expl);
+tableFieldnameFieldExplanation(LangAddEyepieceField3,
+                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"apparentFOV\" size=\"5\" value=\"".$objUtil->checkGetKey('apparentFOV').stripslashes($objEyepiece->getapparentFOV($objUtil->checkGetKey('eyepieceid')))."\" />",
+                               LangAddEyepieceField3Expl);
 echo "</table>";
+echo "<hr />";
+echo "<input type=\"submit\" name=\"add\" value=\"".LangAddEyepieceButton."\" />";
 echo "</form>";
 echo "</div>";
 ?>

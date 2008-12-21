@@ -312,13 +312,17 @@ define("LangSearchLocations6", "Exact match (not case-sensitive).");
 define("LangSearchLocations7", "Search");
 
 define("LangGetLocation1", "Results");
-define("LangGetLocation2", "Click on the result which matches your location or <a href=\"common/search_sites.php\">perform another search</a>");
+define("LangGetLocation2", "Click on the result which matches your location or ");
+define("LangGetLocation2a","perform another search");
 define("LangGetLocation3", "Location");
 define("LangGetLocation4", "Longitude");
 define("LangGetLocation5", "Latitude");
 define("LangGetLocation6", "Region / State");
 define("LangGetLocation7", "Country");
-define("LangGetLocation8", "Sorry, your search did not yield any results.<p><a href=\"common/search_sites.php\">Perform another search</a> or <a href=\"common/add_site.php\">Specify your location details manually</a>");
+define("LangGetLocation8", "Sorry, your search did not yield any results.");
+define("LangGetLocation9", "Perform another search");
+define("LangGetLocation10", " or ");
+define("LangGetLocation11", "specify your location details manually");
 
 define("LangAddInstrumentTitle", "Add new instrument");
 define("LangAddInstrumentField1", "Instrument name");
@@ -510,7 +514,7 @@ define("LangViewEyepieceTitle", "Eyepiece overview");
 define("LangViewEyepieceName", "Name");
 define("LangViewEyepieceFocalLength", "Focal Length (in mm)");
 define("LangViewEyepieceMaxFocalLength", "Max focal length (in mm)");
-define("LangViewEyepieceApparentFieldOfView", "Apparent FOV (&deg;");
+define("LangViewEyepieceApparentFieldOfView", "Apparent FOV (&deg;)");
 
 // content/view_location.php
 

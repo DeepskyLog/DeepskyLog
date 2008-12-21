@@ -470,22 +470,55 @@ class Filters
 	 return "Unkown type";
  }
  public function getEchoColor($color)
- { if($color == FilterColorLightRed) return FiltersColorLightRed;
-   if($color == FilterColorRed) return FiltersColorRed;
-   if($color == FilterColorDeepRed) return FiltersColorDeepRed;
-   if($color == FilterColorOrange) return FiltersColorOrange;
+ { if($color == FilterColorLightRed)    return FiltersColorLightRed;
+   if($color == FilterColorRed)         return FiltersColorRed;
+   if($color == FilterColorDeepRed)     return FiltersColorDeepRed;
+   if($color == FilterColorOrange)      return FiltersColorOrange;
    if($color == FilterColorLightYellow) return FiltersColorLightYellow;
-   if($color == FilterColorDeepYellow) return FiltersColorDeepYellow;
-   if($color == FilterColorYellow) return FiltersColorYellow;
+   if($color == FilterColorDeepYellow)  return FiltersColorDeepYellow;
+   if($color == FilterColorYellow)      return FiltersColorYellow;
    if($color == FilterColorYellowGreen) return FiltersColorYellowGreen;
-   if($color == FilterColorLightGreen) return FiltersColorLightGreen;
-   if($color == FilterColorGreen) return FiltersColorGreen;
-   if($color == FilterColorMediumBlue) return FiltersColorMediumBlue;
-   if($color == FilterColorPaleBlue) return FiltersColorPaleBlue;
-   if($color == FilterColorBlue) return FiltersColorBlue;
-   if($color == FilterColorDeepBlue) return FiltersColorDeepBlue;
-   if($color == FilterColorDeepViolet) return FiltersColorDeepViolet;
+   if($color == FilterColorLightGreen)  return FiltersColorLightGreen;
+   if($color == FilterColorGreen)       return FiltersColorGreen;
+   if($color == FilterColorMediumBlue)  return FiltersColorMediumBlue;
+   if($color == FilterColorPaleBlue)    return FiltersColorPaleBlue;
+   if($color == FilterColorBlue)        return FiltersColorBlue;
+   if($color == FilterColorDeepBlue)    return FiltersColorDeepBlue;
+   if($color == FilterColorDeepViolet)  return FiltersColorDeepViolet;
    return "Unknown color";
+ }
+ public function getEchoListColor($color)
+ { $tempColorList="<select name=\"color\" class=\"inputfield\">";
+   $tempColorList.="<option value=\"\">&nbsp;</option>";
+ 	 $tempColorList.="<option ".(($color==FilterColorLightRed)?   "selected=\"selected\" ":"")."value=\"".FilterColorLightRed.   "\">".FiltersColorLightRed."</option>";
+	 $tempColorList.="<option ".(($color==FilterColorRed)?        "selected=\"selected\" ":"")."value=\"".FilterColorRed.        "\">".FiltersColorRed."</option>";
+	 $tempColorList.="<option ".(($color==FilterColorDeepRed)?    "selected=\"selected\" ":"")."value=\"".FilterColorDeepRed.    "\">".FiltersColorDeepRed."</option>";
+	 $tempColorList.="<option ".(($color==FilterColorOrange)?     "selected=\"selected\" ":"")."value=\"".FilterColorOrange.     "\">".FiltersColorOrange."</option>";
+	 $tempColorList.="<option ".(($color==FilterColorLightYellow)?"selected=\"selected\" ":"")."value=\"".FilterColorLightYellow."\">".FiltersColorLightYellow."</option>";
+	 $tempColorList.="<option ".(($color==FilterColorDeepYellow)? "selected=\"selected\" ":"")."value=\"".FilterColorDeepYellow. "\">".FiltersColorDeepYellow."</option>";
+	 $tempColorList.="<option ".(($color==FilterColorYellow)?     "selected=\"selected\" ":"")."value=\"".FilterColorYellow.     "\">".FiltersColorYellow."</option>";
+	 $tempColorList.="<option ".(($color==FilterColorYellowGreen)?"selected=\"selected\" ":"")."value=\"".FilterColorYellowGreen."\">".FiltersColorYellowGreen."</option>";
+	 $tempColorList.="<option ".(($color==FilterColorLightGreen)? "selected=\"selected\" ":"")."value=\"".FilterColorLightGreen. "\">".FiltersColorLightGreen."</option>";
+	 $tempColorList.="<option ".(($color==FilterColorGreen)?      "selected=\"selected\" ":"")."value=\"".FilterColorGreen.      "\">".FiltersColorGreen."</option>";
+	 $tempColorList.="<option ".(($color==FilterColorMediumBlue)? "selected=\"selected\" ":"")."value=\"".FilterColorMediumBlue. "\">".FiltersColorMediumBlue."</option>";
+	 $tempColorList.="<option ".(($color==FilterColorPaleBlue)?   "selected=\"selected\" ":"")."value=\"".FilterColorPaleBlue.   "\">".FiltersColorPaleBlue."</option>";
+	 $tempColorList.="<option ".(($color==FilterColorBlue)?       "selected=\"selected\" ":"")."value=\"".FilterColorBlue.       "\">".FiltersColorBlue."</option>";
+	 $tempColorList.="<option ".(($color==FilterColorDeepBlue)?   "selected=\"selected\" ":"")."value=\"".FilterColorDeepBlue.   "\">".FiltersColorDeepBlue."</option>";
+	 $tempColorList.="<option ".(($color==FilterColorDeepViolet)? "selected=\"selected\" ":"")."value=\"".FilterColorDeepViolet. "\">".FiltersColorDeepViolet."</option>";
+	 $tempColorList.="</select>";
+ 	 return $tempColorList;
+ }
+ public function getEchoListType($type)
+ { $tempTypeList="<select name=\"type\" class=\"inputfield\">";
+   $tempTypeList.= "<option ".(($type==FilterOther)?     " option selected=\"selected\" ":"")." value=\"".FilterOther.     "\">".FiltersOther."</option>";
+   $tempTypeList.= "<option ".(($type==FilterBroadBand)? " option selected=\"selected\" ":"")." value=\"".FilterBroadBand. "\">".FiltersBroadBand."</option>";
+   $tempTypeList.= "<option ".(($type==FilterNarrowBand)?" option selected=\"selected\" ":"")." value=\"".FilterNarrowBand."\">".FiltersNarrowBand."</option>";
+   $tempTypeList.= "<option ".(($type==FilterOIII)?      " option selected=\"selected\" ":"")." value=\"".FilterOIII.      "\">".FiltersOIII."</option>";
+   $tempTypeList.= "<option ".(($type==FilterHAlpha)?    " option selected=\"selected\" ":"")." value=\"".FilterHAlpha.    "\">".FiltersHAlpha."</option>";
+   $tempTypeList.= "<option ".(($type==FilterColor)?     " option selected=\"selected\" ":"")." value=\"".FilterColor.     "\">".FiltersColor."</option>";
+   $tempTypeList.= "<option ".(($type==FilterCorrective)?" option selected=\"selected\" ":"")." value=\"".FilterCorrective."\">".FiltersCorrective."</option>";
+   $tempTypeList.= "</select>";
+   return $tempTypeList;
  }
 }
 

@@ -50,7 +50,7 @@ while(list($key,$value)=each($filts))
     $observer = $objFilter->getObserver($value);
     if ($value != "1")
     { echo "<tr class=\"type".(2-($count%2))."\">";
-      echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_filter&amp;filter=".urlencode($value)."\">$name</a></td>";
+      echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_filter&amp;filter=".urlencode($value)."\">".$name."</a></td>";
       echo "<td>";
       if($type == FilterOther) {echo(FiltersOther);}
       if($type == FilterBroadBand) {echo(FiltersBroadBand);}
@@ -107,6 +107,6 @@ while(list($key,$value)=each($filts))
  $count++;
 }
 echo "</table>";
-list($min, $max)=$util->printListHeader($filts,$link,$min,$step,"");
+list($min, $max)=$util->printNewListHeader($filts,$link,$min,$step,"");
 echo "</div>";
 ?>

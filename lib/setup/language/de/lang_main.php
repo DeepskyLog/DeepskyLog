@@ -311,13 +311,17 @@ define("LangSearchLocations6", "Genaue Angabe (Gro&szlig;- Kleinschreibung sind 
 define("LangSearchLocations7", "Suche");
 
 define("LangGetLocation1", "Ergebnis");
-define("LangGetLocation2", "Klicken Sie auf ein Ergebnis, da&szlig; Ihrem Beobachtungsplatz entspricht, oder <a href=\"common/search_sites.php\">&auml;ndern Sie ihre Suche</a>");
+define("LangGetLocation2", "Klicken Sie auf ein Ergebnis, da&szlig; Ihrem Beobachtungsplatz entspricht, oder ");
+define("LangGetLocation2a","&auml;ndern Sie ihre Suche");
 define("LangGetLocation3", "Beobachtungsplatz");
 define("LangGetLocation4", "L&auml;ngengrad");
 define("LangGetLocation5", "Breitengrad");
 define("LangGetLocation6", "Bundesland");
 define("LangGetLocation7", "Land");
-define("LangGetLocation8", "Ihre Suche lieferte leider keine Ergebnisse.<p><a href=\"common/search_sites.php\">&Auml;ndern Sie ihre Suche</a> oder <a href=\"common/add_site.php\">Legen Sie einen neuen Beobachtungsplatz an</a>");
+define("LangGetLocation8", "Ihre Suche lieferte leider keine Ergebnisse.");
+define("LangGetLocation9", "&Auml;ndern Sie ihre Suche");
+define("LangGetLocation10", " oder ");
+define("LangGetLocation11", "Legen Sie einen neuen Beobachtungsplatz an");
 
 define("LangAddInstrumentTitle", "Neues Beobachtungsger&auml;t anlegen");
 define("LangAddInstrumentField1", "Name");

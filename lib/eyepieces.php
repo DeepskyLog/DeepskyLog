@@ -177,7 +177,7 @@ class Eyepieces
     }
 	else
   {
-		$focalLength = -1.0;
+		$focalLength = '';
 	}
 		
   $db->logout();
@@ -227,7 +227,7 @@ class Eyepieces
 	}
 	else
 	{
-		$fov = -1.0;
+		$fov = '';
 	}
 
   $db->logout();

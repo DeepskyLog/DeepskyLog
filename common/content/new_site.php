@@ -25,10 +25,63 @@ else
 { $previous = $sort;
 }
 $step = 25;
+
+$timezone_identifiers = DateTimeZone::listIdentifiers();
+$tempTimeZoneList="<select name=\"timezone\" class=\"inputfield requiredField\">";
+while(list ($key, $value) = each($timezone_identifiers))
+{ if (array_key_exists('locationid',$_GET) && $_GET['locationid'])
+	{ if ($value == $objLocation->getTimeZone($_GET['locationid']))
+	    $tempTimeZoneList.="<option value=\"$value\" selected>$value</option>";
+	  else
+	    $tempTimeZoneList.="<option value=\"$value\">$value</option>";
+	}
+	else if ($value == "UTC")
+	  $tempTimeZoneList.="<option value=\"".$value."\" selected>".$value."</option>";
+	else
+	  $tempTimeZoneList.="<option value=\"".$value."\">".$value."</option>";
+}
+$tempTimeZoneList.="</select>";
+
+$tempCountryList="<select name=\"country\" class=\"inputfield requiredField\">";
+$countries = $objLocation->getCountries();
+$tempCountryList.="<option value=\"\"></option>";
+while(list ($key, $value) = each($countries))
+{ if(array_key_exists('country',$_GET) && ($_GET['country'] == $value))
+	  $tempCountryList.="<option selected=\"selected\" value=\"".$value."\">".$value."</option>";
+	elseif(array_key_exists('locationid',$_GET)&&($objLocation->getCountry($_GET['locationid'])==$value))
+	  $tempCountryList.="<option selected=\"selected\" value=\"".$value."\">".$value."</option>";
+	else
+    $tempCountryList.="<option value=\"".$value."\">".$value."</option>";
+}
+$tempCountryList.="</select>";
+$latitudedeg='';
+$latitudemin='';
+$longitudedeg='';
+$longitudemin='';
+if(array_key_exists('latitude',$_GET) && $_GET['latitude'] || array_key_exists('locationid',$_GET) && $_GET['locationid'])
+{ if (array_key_exists('latitude',$_GET))
+    $latitudestr = decToString($_GET['latitude'], 1);
+  else
+	$latitudestr = decToString($objLocation->getLatitude($_GET['locationid']), 1);
+  $latarray = explode("&deg;", $latitudestr);
+  $latitudedeg = $latarray[0];
+  $latitudemin = $latarray[1];
+}
+if(array_key_exists('longitude',$_GET) && $_GET['longitude'] || array_key_exists('locationid',$_GET) && $_GET['locationid'])
+{ if (array_key_exists('longitude',$_GET))
+      $longitudestr = decToString($_GET['longitude'], 1);
+  else
+    $longitudestr = decToString($objLocation->getLongitude($_GET['locationid']), 1);
+  $longarray = explode("&deg;", $longitudestr);
+  $longitudedeg = $longarray[0];
+  $longitudemin = $longarray[1];
+}
+
+
 echo "<div id=\"main\">\n<h2>".LangOverviewSiteTitle."</h2>";
 $link=$baseURL."index.php?indexAction=add_site&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
 list($min,$max)=$objUtil->printListHeader($sites, $link, $min, $step, "");
-echo "<table>";
+echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=region&amp;previous=$previous\">".LangViewLocationProvince."</a></td>";
@@ -102,8 +155,9 @@ echo "</table>";
 echo "<input type=\"hidden\" name=\"adaption\" value=\"1\">";
 echo "<input type=\"submit\" name=\"adapt\" value=\"" . LangAddSiteStdLocation . "\" />";
 echo "</form>";
-list($min, $max) = $objUtil->printListHeader($sites, $link, $min, $step, "");
+list($min, $max) = $objUtil->printNewListHeader($sites, $link, $min, $step, "");
 echo "</div>";
+echo "<hr />";
 echo "<h2>".LangAddSiteTitle."</h2>";
 echo "<ol>";
 echo "<li value=\"1\">".LangAddSiteExisting;
@@ -139,135 +193,39 @@ echo "</ol>";
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 echo "<table>";
-echo "<tr>";
-echo "<td class=\"fieldname\">";
-echo LangAddSiteField1;
-echo "</td>";
-echo "<td><input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"sitename\" size=\"30\" value=\"";
-if(array_key_exists('sitename',$_GET) && $_GET['sitename'])
-  echo stripslashes($_GET['sitename']);
-if(array_key_exists('locationid',$_GET) && $_GET['locationid'])
-  echo stripslashes($objLocation->getLocationName($_GET['locationid']));
-echo "\" />";
-echo "</td>";
-echo "<td class=\"explanation\"></td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">";
-echo LangAddSiteField2;
-echo "</td>";
-echo "<td><input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"region\" size=\"30\" value=\"";
-if(array_key_exists('region',$_GET) && $_GET['region']) 
-  echo stripslashes($_GET['region']);
-if(array_key_exists('locationid',$_GET) && $_GET['locationid'])
-  echo stripslashes($objLocation->getRegion($_GET['locationid']));
-echo "\" />";
-echo "</td>";
-echo "<td class=\"explanation\">".LangAddSiteField2Expl."</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddSiteField3."</td>";
-echo "<td>";
-echo "<select name=\"country\" class=\"requiredField\">";
-$countries = $objLocation->getCountries();
-echo "<option value=\"\"></option>";
-while(list ($key, $value) = each($countries))
-{ if(array_key_exists('country',$_GET) && ($_GET['country'] == $value))
-	  echo "<option selected=\"selected\" value=\"".$value."\">".$value."</option>";
-	elseif(array_key_exists('locationid',$_GET)&&($objLocation->getCountry($_GET['locationid'])==$value))
-	  echo "<option selected=\"selected\" value=\"".$value."\">".$value."</option>";
-	else
-    echo "<option value=\"".$value."\">".$value."</option>";
-}
-echo "</select>";
-$latitudedeg='';
-$latitudemin='';
-$longitudedeg='';
-$longitudemin='';
-if(array_key_exists('latitude',$_GET) && $_GET['latitude'] || array_key_exists('locationid',$_GET) && $_GET['locationid'])
-{ if (array_key_exists('latitude',$_GET))
-    $latitudestr = decToString($_GET['latitude'], 1);
-  else
-	$latitudestr = decToString($objLocation->getLatitude($_GET['locationid']), 1);
-  $latarray = explode("&deg;", $latitudestr);
-  $latitudedeg = $latarray[0];
-  $latitudemin = $latarray[1];
-}
-if(array_key_exists('longitude',$_GET) && $_GET['longitude'] || array_key_exists('locationid',$_GET) && $_GET['locationid'])
-{ if (array_key_exists('longitude',$_GET))
-      $longitudestr = decToString($_GET['longitude'], 1);
-  else
-    $longitudestr = decToString($objLocation->getLongitude($_GET['locationid']), 1);
-  $longarray = explode("&deg;", $longitudestr);
-  $longitudedeg = $longarray[0];
-  $longitudemin = $longarray[1];
-}
-echo "</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddSiteField4."</td>";
-echo "<td><input type=\"text\" class=\"inputfield requiredField\" maxlength=\"3\" name=\"latitude\" size=\"3\" value=\"".
-     (((array_key_exists('latitude',$_GET) && $_GET['latitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$latitudedeg:"").
-     "\" />&deg;&nbsp;";
-echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" name=\"latitudemin\" size=\"2\"	value=\"".
-     (((array_key_exists('latitude',$_GET) && $_GET['latitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$latitudemin:"").
-     "\" />&#39;";
-echo "</td>";
-echo "<td class=\"explanation\">".LangAddSiteField4Expl."</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddSiteField5."</td>";
-echo "<td><input type=\"text\" class=\"inputfield requiredField\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"".
-     (((array_key_exists('longitude',$_GET) && $_GET['longitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$longitudedeg:"").
-     "\" />&deg;&nbsp;";
-echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\"	name=\"longitudemin\" size=\"2\" value=\"".
-     (((array_key_exists('longitude',$_GET) && $_GET['longitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$longitudemin:"").
-     "\" />&#39;</td>";
-echo "<td class=\"explanation\">".LangAddSiteField5Expl."</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddSiteField6."</td>";
-echo "<td>";
-$timezone_identifiers = DateTimeZone::listIdentifiers();
-echo "<select name=\"timezone\" class=\"requiredField\">";
-while(list ($key, $value) = each($timezone_identifiers))
-{ if (array_key_exists('locationid',$_GET) && $_GET['locationid'])
-	{ if ($value == $objLocation->getTimeZone($_GET['locationid']))
-	    echo "<option value=\"$value\" selected>$value</option>";
-	  else
-	    echo "<option value=\"$value\">$value</option>";
-	}
-	else if ($value == "UTC")
-	  echo "<option value=\"".$value."\" selected>".$value."</option>";
-	else
-	  echo "<option value=\"".$value."\">".$value."</option>";
-}
-echo "</select>";
-  echo "</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddSiteField7."</td>";
-echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"";
-  if((array_key_exists('locationid',$_GET) && $_GET['locationid'])&&($objLocation->getLocationLimitingMagnitude($_GET['locationid']) > -900))
-    echo $objLocation->getLocationLimitingMagnitude($_GET['locationid']);
-echo "\" />";
-echo "</td>";
-echo "<td class=\"explanation\">".LangAddSiteField7Expl."</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddSiteField8."</td>";
-echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"";
-  if((array_key_exists('locationid',$_GET) && $_GET['locationid'])&&($objLocation->getSkyBackground($_GET['locationid']) > -900))
-    echo $objLocation->getSkyBackground($_GET['locationid']);
-echo "\" /></td>";
-echo "<td class=\"explanation\">".LangAddSiteField8Expl."</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td></td>";
-echo "<td><input type=\"submit\" name=\"add\" value=\"".LangAddSiteButton."\" /></td>";
-echo "<td></td>";
-echo "</tr>";
+tableFieldnameFieldExplanation(LangAddSiteField1,
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"sitename\" size=\"30\" value=\"".stripslashes($objUtil->checkGetKey('sitename')).stripslashes($objLocation->getLocationName($objUtil->checkGetKey('locationid')))."\" />",
+                               '');
+tableFieldnameFieldExplanation(LangAddSiteField2,
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"region\" size=\"30\" value=\"".stripslashes($objUtil->checkGetKey('region')).stripslashes($objLocation->getRegion($objUtil->checkGetKey('locationid')))."\" />",
+                               LangAddSiteField2Expl);
+tableFieldnameFieldExplanation(LangAddSiteField3,$tempCountryList,'');
+tableFieldnameFieldExplanation(LangAddSiteField4,
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"3\" name=\"latitude\" size=\"3\" value=\"".
+                                (((array_key_exists('latitude',$_GET) && $_GET['latitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$latitudedeg:"").
+                                "\" />&deg;&nbsp;".
+                                "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" name=\"latitudemin\" size=\"2\"	value=\"".
+                                (((array_key_exists('latitude',$_GET) && $_GET['latitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$latitudemin:"").
+                                "\" />&#39;",
+                                LangAddSiteField4Expl);
+tableFieldnameFieldExplanation(LangAddSiteField5,
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"".
+                               (((array_key_exists('longitude',$_GET) && $_GET['longitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$longitudedeg:"").
+                               "\" />&deg;&nbsp;".
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\"	name=\"longitudemin\" size=\"2\" value=\"".
+                               (((array_key_exists('longitude',$_GET) && $_GET['longitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$longitudemin:"").
+                               "\" />&#39;</td>",
+                               LangAddSiteField5Expl);
+tableFieldnameFieldExplanation(LangAddSiteField6,$tempTimeZoneList,'');
+tableFieldnameFieldExplanation(LangAddSiteField7,
+                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"".(($objLocation->getLocationLimitingMagnitude($objUtil->checkGetKey('locationid'))>-900)?$objLocation->getLocationLimitingMagnitude($_GET['locationid']):"")."\" />",
+                               LangAddSiteField7Expl);
+tableFieldnameFieldExplanation(LangAddSiteField8,
+                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"".(($objLocation->getSkyBackground($objUtil->checkGetKey('locationid'))>-900)?$objLocation->getSkyBackground($_GET['locationid']):"")."\" />",
+                               LangAddSiteField8Expl);
 echo "</table>";
+echo "<hr />";
+echo "<input type=\"submit\" name=\"add\" value=\"".LangAddSiteButton."\" /></td>";
 echo "</form>";
 echo "</div>";
 ?>

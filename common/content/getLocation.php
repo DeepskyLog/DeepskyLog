@@ -7,7 +7,7 @@ echo "<h2>".LangGetLocation1."</h2>";
 $count=0;
 $result=$objLocation->getLocationsFromDatabase($_POST['location_name'],$_POST['country']);
 if($result&&$_POST['location_name'])
-{ echo "<div class=\"results\">".LangGetLocation2."</div>";
+{ echo "<div class=\"results\">".LangGetLocation2."<a href=\"".$baseURL."index.php?indexAction=search_sites\">".LangGetLocation2a."</div>";
   echo "<p>";
 	echo "<table>";
   echo "<tr class=\"type3\">";
@@ -30,6 +30,10 @@ if($result&&$_POST['location_name'])
 	echo "</p>";
 }
 else
-  echo "<p>".LangGetLocation8."</p>";
+{ echo "<p>".LangGetLocation8."</p>";
+  echo "<p><a href=\"".$baseURL."index.php?indexAction=search_sites\">".LangGetLocation9."</a>";
+  echo LangGetLocation10;
+  echo "<a href=\"".$baseURL."index.php?indexAction=add_site\">".LangGetLocation11."</a>";
+}
 echo "</div>";
 ?>

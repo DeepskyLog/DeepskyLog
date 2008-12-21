@@ -215,7 +215,8 @@ class Locations
  // the country string - e.g. Belgium).
  function getLocationsFromDatabase($name, $country)
  {
-  // Reading the file with the country codes.
+  $locations=array();
+ 	// Reading the file with the country codes.
   $filename = "lib/setup/locations/countries.txt";
 
   $fh = fopen($filename, "r") or die("Could not open countries file");

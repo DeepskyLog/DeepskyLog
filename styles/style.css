@@ -69,7 +69,10 @@ hr {
   height           : 1px;
   width            : 100%;
 }
-
+.inputfield {
+  font-weight      : bold;
+	font-style       : italic;
+}	
 .fieldname {
   text-align       : right;
 	padding-left     : 1em;

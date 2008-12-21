@@ -2,6 +2,19 @@
 // register.php
 // allows the user to apply for an deepskylog account
 
+$allLanguages=$objLanguage->getAllLanguages($objUtil->checkArrayKey($_SESSION,'lang',$standardLanguagesForObservationsDuringRegistration));
+$theAllKey=$objUtil->checkPostKey('description_language',$objUtil->checkArrayKey($_SESSION,'lang',$standardLanguagesForObservationsDuringRegistration));
+$tempAllList="<select name=\"description_language\" class=\"fieldvalue\">";
+while(list($key,$value)=each($allLanguages))
+  $tempAllList.="<option value=\"".$key."\" ".(($theAllKey==$key)?"selected=\"selected\"":"").">".$value."</option>";
+$tempAllList.="</select>";
+$languages=$objLanguage->getLanguages();
+$theKey=$objUtil->checkPostKey('language',$objUtil->checkArrayKey($_SESSION,'lang',$defaultLanguage));
+$tempList="<select name=\"language\" class=\"fieldvalue\">";
+while(list($key,$value)=each($languages))
+  $tempList.="<option value=\"".$key."\"".(($theKey=$key)?" selected=\"selected\"":"").">".$value."</option>";
+$tempList.="</select>";
+
 echo "<div id=\"main\">";
 echo "<h2>".LangRegisterNewTitle."</h2>";        
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
@@ -13,33 +26,12 @@ tableFieldnameFieldExplanation(LangChangeAccountField3,"<input type=\"text\" cla
 tableFieldnameFieldExplanation(LangChangeAccountField4,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objUtil->checkPostKey('name')."\" />",LangChangeAccountField4Expl);
 tableFieldnameFieldExplanation(LangChangeAccountField5,"<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd\" size=\"30\" value=\"".$objUtil->checkPostKey('passwd')."\" />",LangChangeAccountField5Expl);
 tableFieldnameFieldExplanation(LangChangeAccountField6,"<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd_again\" size=\"30\" value=\"".$objUtil->checkPostKey('passwd_again')."\" />",LangChangeAccountField6Expl);
-echo "<tr>";
-echo "<td align=\"right\">".LangChangeAccountObservationLanguage."</td>";
-echo "<td>";
-$allLanguages=$objLanguage->getAllLanguages($objUtil->checkArrayKey($_SESSION,'lang',$standardLanguagesForObservationsDuringRegistration));
-$theKey=$objUtil->checkPostKey('description_language',$objUtil->checkArrayKey($_SESSION,'lang',$standardLanguagesForObservationsDuringRegistration));
-echo "<select name=\"description_language\">";
-while(list($key,$value)=each($allLanguages))
-  echo "<option value=\"".$key."\" ".(($theKey==$key)?"selected=\"selected\"":"").">".$value."</option>";
-echo "</select>";
-echo "</td>";
-echo "<td class=\"explanation\">".LangChangeAccountObservationLanguageExpl."</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td align=\"right\">".LangChangeAccountLanguage."</td>";
-echo "<td>";
-echo "<select name=\"language\">";
-$languages=$objLanguage->getLanguages();
-$theKey=$objUtil->checkPostKey('language',$objUtil->checkArrayKey($_SESSION,'lang',$defaultLanguage));
-while(list($key,$value)=each($languages))
-  echo "<option value=\"".$key."\"".(($theKey=$key)?" selected=\"selected\"":"").">".$value."</option>";
-echo "</select>";
-echo "</td>";
-echo "<td class=\"explanation\">".LangChangeAccountLanguageExpl."</td>";
-echo "</tr>";   	 
+tableFieldnameFieldExplanation(LangChangeAccountObservationLanguage,$tempAllList,LangChangeAccountObservationLanguageExpl);
+tableFieldnameFieldExplanation(LangChangeAccountLanguage,$tempList,LangChangeAccountLanguageExpl);
+   	 
 echo "<tr>";
 echo "<td class=\"fieldname\" align=\"right\">".LangChangeVisibleLanguages."</td>";
-echo "<td>";
+echo "<td class=\"fieldvalue\">";
 $allLanguages=$objLanguage->getAllLanguages($objUtil->checkArrayKey($_SESSION,'lang',$defaultLanguage));
 $_SESSION['alllanguages']=$allLanguages; 
 $usedLanguages=$languagesDuringRegistration;
@@ -52,13 +44,13 @@ while(list($key,$value)=each($allLanguages))
 }
 echo "</tr></table>";
 echo "</td>";
-echo "<td class=\"explanation\">".LangChangeVisibleLanguagesExpl."</td>";
+echo "<td class=\"fieldexplanation\">".LangChangeVisibleLanguagesExpl."</td>";
 echo "</tr>";
 echo "<tr>";
-//echo "<td></td>";
 echo "<td style=\"text-align: right\">";
 echo "<input type=\"submit\" name=\"register\" value=\"" . LangRegisterNewTitle . "\" />";
 echo "</td>";
+echo "<td></td>";
 echo "<td></td>";
 echo "</tr>";
 echo "</table>";

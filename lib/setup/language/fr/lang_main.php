@@ -313,13 +313,17 @@ define("LangSearchLocations6", "Nom exact");
 define("LangSearchLocations7", "Cherchez");
 
 define("LangGetLocation1", "R&eacute;sultats");
-define("LangGetLocation2", "Cliquez le r&eacute;sultat correspondant &agrave; votre endroit<a href=\"common/search_sites.php\">Nouvelle recherche</a>");
+define("LangGetLocation2", "Cliquez le r&eacute;sultat correspondant &agrave; votre endroit ou faites une ");
+define("LangGetLocation2a","nouvelle recherche");
 define("LangGetLocation3", "Endroit");
 define("LangGetLocation4", "Longitude");
 define("LangGetLocation5", "Latitude");
 define("LangGetLocation6", "Province / Etat");
 define("LangGetLocation7", "Pays");
-define("LangGetLocation8", "Votre recherche n'a pas donn&eacute; des r&eacute;sultats.<p><a href=\"common/search_sites.php\">Nouvelle recherche</a> of <a href=\"common/add_site.php\">Rentrez les donn&eacute;es vous m&ecirc;me</a>");
+define("LangGetLocation8", "Votre recherche n'a pas donn&eacute; des r&eacute;sultats.");
+define("LangGetLocation9","Nouvelle recherche");
+define("LangGetLocation10"," ou ");
+define("LangGetLocation11", "rentrer les donn&eacute;es vous m&ecirc;me");
 
 define("LangAddInstrumentTitle", "Rajoutez un nouvel instrument");
 define("LangAddInstrumentField1", "Nom de l'instrument");
@@ -511,7 +515,7 @@ define("LangViewEyepieceTitle", "Aper&#231;u oculaires");
 define("LangViewEyepieceName", "Nom");
 define("LangViewEyepieceFocalLength", "Distance focale (en mm)");
 define("LangViewEyepieceMaxFocalLength", "Distance focale maximum (en mm)");
-define("LangViewEyepieceApparentFieldOfView", "Champs apparent");
+define("LangViewEyepieceApparentFieldOfView", "Champs apparent (&deg;)");
 
 // content/view_location.php
 

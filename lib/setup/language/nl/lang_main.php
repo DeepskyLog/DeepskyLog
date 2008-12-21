@@ -312,13 +312,17 @@ define("LangSearchLocations6", "Exacte naam");
 define("LangSearchLocations7", "Zoeken");
 
 define("LangGetLocation1", "Resultaten");
-define("LangGetLocation2", "Klik op het resultaat dat overeenkomt met je locatie of <a href=\"common/search_sites.php\">zoek opnieuw</a>");
+define("LangGetLocation2", "Klik op het resultaat dat overeenkomt met je locatie of ");
+define("LangGetLocation2a","zoek opnieuw");
 define("LangGetLocation3", "Locatie");
 define("LangGetLocation4", "Lengtegraad");
 define("LangGetLocation5", "Breedtegraad");
 define("LangGetLocation6", "Provincie / staat");
 define("LangGetLocation7", "Land");
-define("LangGetLocation8", "Sorry, je zoekopdracht heeft geen resultaten opgeleverd.<p><a href=\"common/search_sites.php\">Zoek opnieuw</a> of <a href=\"common/add_site.php\">Voeg de gegevens manueel in</a>");
+define("LangGetLocation8", "Sorry, je zoekopdracht heeft geen resultaten opgeleverd.");
+define("LangGetLocation9", "Zoek opnieuw");
+define("LangGetLocation10", " of ");
+define("LangGetLocation11", "voeg de gegevens manueel in");
 
 define("LangAddInstrumentTitle", "Voeg nieuw instrument toe");
 define("LangAddInstrumentField1", "Instrumentnaam");
@@ -510,7 +514,7 @@ define("LangViewEyepieceTitle", "Oculair overzicht");
 define("LangViewEyepieceName", "Naam");
 define("LangViewEyepieceFocalLength", "Brandpunt (in mm)");
 define("LangViewEyepieceMaxFocalLength", "Max. brandpunt (in mm)");
-define("LangViewEyepieceApparentFieldOfView", "Schijnbaar beeldveld (&deg;");
+define("LangViewEyepieceApparentFieldOfView", "Schijnbaar beeldveld (&deg;)");
 
 // content/view_location.php
 
