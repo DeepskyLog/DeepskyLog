@@ -1653,7 +1653,7 @@ class Objects implements iObject
       echo("<input type=\"hidden\" name=\"object\" value=\"" . $object . "\" />");
       echo("<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>");
 		  echo "<td align=\"right\">";
-  	  echo LangViewObjectListDescription;
+  	  echo LangViewObjectListDescription.' ('."<a href=\"http://www.deepskylog.org/wiki/bin/view/DeepskyLog/DreyerDescriptionen\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
 			echo "<br />";
       echo("<input type=\"submit\" name=\"Go\" value=\"" . 'Edit Description' . "\" />");
   	  echo "</td>";
@@ -1666,7 +1666,7 @@ class Objects implements iObject
 		else
 		{	echo "<tr>";
   	  echo "<td align=\"right\">";
-  	  echo LangViewObjectListDescription;
+  	  echo LangViewObjectListDescription.' ('."<a href=\"http://www.deepskylog.org/wiki/bin/view/DeepskyLog/DreyerDescriptionen\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
   	  echo "</td>";
   	  echo "<td colspan=\"3\">";
 		  echo $GLOBALS['objList']->getListObjectDescription($object);
@@ -1675,10 +1675,9 @@ class Objects implements iObject
   	echo "</tr>";
   }
 	elseif($descriptionDsOject=$this->getDescriptionDsObject($object))
-	{
-  	echo "<tr>";
+	{ echo "<tr>";
   	echo "<td align=\"right\">";
-  	echo LangViewObjectNGCDescription;
+  	echo LangViewObjectNGCDescription.' ('."<a href=\"http://www.deepskylog.org/wiki/bin/view/DeepskyLog/DreyerDescriptionen\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
   	echo "</td>";
   	echo "<td colspan=\"3\">";
   	echo $descriptionDsOject;
@@ -1687,6 +1686,7 @@ class Objects implements iObject
   }
 	echo "</table>";
 
+	
   $ra = $this->getDsoProperty($object,'ra');
   $raDSS = raToStringDSS($ra); // TODO add this method to util class!
   $decl = $this->getDsoProperty($object,'decl');
