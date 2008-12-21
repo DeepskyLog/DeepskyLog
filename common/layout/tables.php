@@ -77,18 +77,23 @@ function tableEndRow()
 function tableNew($format='')
 { echo "<table ".$format.">";
 }
-function tableFieldnameFieldExplanation($name, $field, $explanation)
+function tableFieldnameFieldExplanation($name,$field,$explanation)
 { echo "<tr>";
-  echo "<td class=\"fieldname\">";
-  echo $name;
-  echo "</td>";
-  echo "<td>";
-  echo $field;
-	echo "</td>";
-  echo "<td class=\"explanation\">";
-  echo $explanation;
-  echo "</td>";
+  echo "<td class=\"fieldname\">".$name."</td>";
+  echo "<td class=\"fieldvalue\">".$field."</td>";
+  echo "<td class=\"fieldexplanation\">".$explanation."</td>";
   echo "</tr>";
 }
-
+function tableFieldnameField($name,$field)
+{ echo "<tr>";
+  echo "<td class=\"fieldname\">".$name."</td>";
+  echo "<td class=\"fieldvalue\">".$field."</td>";
+  echo "</tr>";
+}
+function tableTypeFieldnameField($type,$name,$field)
+{ echo "<tr class=\"".$type."\">";
+  echo "<td class=\"fieldname\">".$name."</td>";
+  echo "<td class=\"fieldvalue\">".$field."</td>";
+  echo "</tr>";
+}
 ?>

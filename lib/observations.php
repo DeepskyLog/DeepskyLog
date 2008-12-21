@@ -358,8 +358,7 @@ class Observations {
 		return $GLOBALS['objDatabase']->selectSingleValue("SELECT observerid FROM observations WHERE id=\"" . $id . "\"", 'observerid', 0);
 	}
 	function getPopularObservers() // getPopularObservers() returns the number of observations of the observers
-	{
-		return $GLOBALS['objDatabase']->selectSingleArray("SELECT observations.observerid, COUNT(observations.id) As Cnt FROM observations GROUP BY observations.observerid ORDER BY Cnt DESC", 'observerid');
+	{ return $GLOBALS['objDatabase']->selectSingleArray("SELECT observations.observerid, COUNT(observations.id) As Cnt FROM observations GROUP BY observations.observerid ORDER BY Cnt DESC", 'observerid');
 	}
 	function getPopularObserversOverviewCatOrList($sort, $cat = "") {
 		if ($sort == "jaar") {
@@ -506,14 +505,9 @@ class Observations {
 	function getNumberOfDsObservations() {
 		$run = $GLOBALS['objDatabase']->selectRecordset("SELECT COUNT(objectname) FROM observations WHERE visibility != 7 ");
 		return mysql_result($run, 0, 0);
-	}
-
-	// getNumberOfDifferentObjects() returns the number of different objects
-	// observed
-	function getNumberOfDifferentObjects() {
-		$sql = "SELECT COUNT(DISTINCT objectname) FROM observations WHERE visibility != 7 ";
-		$run = mysql_query($sql) or die(mysql_error());
-		return mysql_result($run, 0, 0);
+	} 
+	function getNumberOfDifferentObservedDSObjects() 	// Returns the number of different objects observed
+	{ return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE visibility != 7 ",'Cnt');
 	}
 
 	// getNumberOfObservationsThisYear() returns the number of observations this
@@ -526,12 +520,10 @@ class Observations {
 	}
 
 	function getNumberOfObservationsLastYear() // getNumberOfObservationsThisYear() returns the number of observations this year
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.date >= \"" . date('Ymd', strtotime('-1 year')) . "\"", 'Cnt', 0);
+	{ return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.date >= \"" . date('Ymd', strtotime('-1 year')) . "\"", 'Cnt', 0);
 	}
 	function getNumberOfObjects($id) // getNumberOfObjects($id) return the number of different objects seen by the observer
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE observerid=\"$id\" AND visibility != 7 ", 'Cnt', 0);
+	{ return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE observerid=\"".$id."\" AND visibility != 7 ", 'Cnt', 0);
 	}
 	function getPopularObservations() // getPopularObservations() returns the number of observations of the objects
 	{ $run = $GLOBALS['objDatabase']->selectRecordset("SELECT observations.objectname, COUNT(observations.id) As ObservationCount FROM observations GROUP BY observations.objectname ORDER BY ObservationCount DESC");

@@ -503,6 +503,18 @@ class Instruments
 
   return $ids;
  }
+ public function getInstrumentEchoType($instrumentType)
+ { if($instrumentType== InstrumentBinoculars)        return InstrumentsBinoculars;
+   if($instrumentType== InstrumentFinderscope)       return InstrumentsFinderscope;
+   if($instrumentType== InstrumentReflector)         return InstrumentsReflector;
+   if($instrumentType== InstrumentRefractor)         return InstrumentsRefractor;
+   if($instrumentType== InstrumentRest)              return InstrumentsOther;
+   if($instrumentType== InstrumentCassegrain)        return InstrumentsCassegrain;
+   if($instrumentType== InstrumentSchmidtCassegrain) return InstrumentsSchmidtCassegrain;
+   if($instrumentType== InstrumentKutter)            return InstrumentsKutter;
+   if($instrumentType== InstrumentMaksutov)          return InstrumentsMaksutov;
+   return "unkown instrument type";
+ }
 }
 
 $objInstrument=new Instruments;

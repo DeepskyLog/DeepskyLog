@@ -25,7 +25,7 @@ if((isset($_GET['previous'])))
 else
   $orig_previous = "";
 $link = "".$baseURL."index.php?indexAction=view_lenses&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
-list($min, $max) = $objUtil->printListHeader($lns, $link, $min, $step, "");
+list($min, $max) = $objUtil->printNewListHeader($lns, $link, $min, $step, "");
 echo "<table>";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_lenses&amp;sort=name&amp;previous=$previous\">".LangViewLensName."</a></td>";
@@ -65,6 +65,6 @@ while(list($key,$value)=each($lns))
   }
 }
 echo "</table>";
-list($min,$max)=$objUtil->printListHeader($lns, $link, $min, $step, "");
+list($min,$max)=$objUtil->printNewListHeader($lns, $link, $min, $step, "");
 echo "</div>";
 ?>

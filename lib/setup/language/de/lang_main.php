@@ -508,9 +508,9 @@ define("LangViewLocationStd", "Std. Beobachtungsplatz");
 
 define("LangViewEyepieceTitle", "Okular &uuml;bersicht");
 define("LangViewEyepieceName", "Name");
-define("LangViewEyepieceFocalLength", "Brennweite");
-define("LangViewEyepieceMaxFocalLength", "Max. Brennweite");
-define("LangViewEyepieceApparentFieldOfView", "Scheinbares Gesichtsfeld");
+define("LangViewEyepieceFocalLength", "Brennweite (in mm)");
+define("LangViewEyepieceMaxFocalLength", "Max. Brennweite (in mm)");
+define("LangViewEyepieceApparentFieldOfView", "Scheinbares Gesichtsfeld (&deg;)");
 
 // content/view_location.php
 
@@ -540,7 +540,7 @@ define("InstrumentsMaksutov", "Maksutov");
 
 define("LangViewInstrumentTitle", "Beobachtungsger&auml;t Details");
 define("LangViewInstrumentField1", "Name");
-define("LangViewInstrumentField2", "&Ouml;ffnung");
+define("LangViewInstrumentField2", "&Ouml;ffnung (in mm)");
 define("LangViewInstrumentField3", "&Ouml;ffnungsverh&auml;ltnis (F/D)");
 define("LangViewInstrumentField4", "Brennweite");
 define("LangViewInstrumentField5", "Typ");

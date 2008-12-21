@@ -327,7 +327,7 @@ define("LangAddInstrumentField2", "Diameter");
 define("LangAddInstrumentField2Expl", "(eg 6 inch or 1500mm)");
 define("LangAddInstrumentField3", "F/D");
 define("LangAddInstrumentField3Expl", "");
-define("LangAddInstrumentField4", "Focal length");
+define("LangAddInstrumentField4", "Focal length (in mm)");
 define("LangAddInstrumentField4Expl", "(eg 1200mm)");
 define("LangAddInstrumentField5", "Type");
 define("LangAddInstrumentField5Expl", "");
@@ -508,9 +508,9 @@ define("LangViewLocationStd", "Std location");
 
 define("LangViewEyepieceTitle", "Eyepiece overview");
 define("LangViewEyepieceName", "Name");
-define("LangViewEyepieceFocalLength", "Focal Length");
-define("LangViewEyepieceMaxFocalLength", "Max focal length");
-define("LangViewEyepieceApparentFieldOfView", "Apparent FOV");
+define("LangViewEyepieceFocalLength", "Focal Length (in mm)");
+define("LangViewEyepieceMaxFocalLength", "Max focal length (in mm)");
+define("LangViewEyepieceApparentFieldOfView", "Apparent FOV (&deg;");
 
 // content/view_location.php
 
@@ -542,7 +542,7 @@ define("LangViewInstrumentTitle", "Instrument details");
 define("LangViewInstrumentField1", "Name");
 define("LangViewInstrumentField2", "Diameter");
 define("LangViewInstrumentField3", "F/D");
-define("LangViewInstrumentField4", "Focal length");
+define("LangViewInstrumentField4", "Focal length (in mm)");
 define("LangViewInstrumentField5", "Type");
 
 // content/view_observation.php
@@ -775,7 +775,7 @@ define("LangValidateLocationMessage2", "The location is added to your observatio
 // control/validate_intrument.php
 
 define("LangValidateInstrumentMessage1", "Please, fill in all fields!");
-define("LangValidateInstrumentMessage2", "Please, provide one of both: focallength OR f/d!");
+define("LangValidateInstrumentMessage2", "Please, provide one of both: focal length OR f/d!");
 define("LangValidateInstrumentMessage3", "The instrument is added to your equipment list!");
 define("LangValidateInstrumentMessage4", "The instrument details have been changed in your equipment list!");
 define("LangValidateInstrumentMessage", "Message");

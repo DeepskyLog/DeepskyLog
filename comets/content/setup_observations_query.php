@@ -99,9 +99,9 @@ echo("<option value=\"\"></option>"); // empty field
 $obs = $observers->getSortedObservers('name'); 
 $obs = $observations->getPopularObservers();
 
-while(list($key) = each($obs))
+while(list($key,$value) = each($obs))
 {
- $sortobs[$key] = $observers->getObserverName($key)." ".$observers->getFirstName($key);
+ $sortobs[$value] = $observers->getObserverName($value)." ".$observers->getFirstName($value);
 }
 natcasesort($sortobs);
 

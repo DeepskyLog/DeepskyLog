@@ -213,7 +213,7 @@ define("LangAddEyepieceField2", "Distance focal (mm)");
 define("LangAddEyepieceField2Expl", "ex 31"); 
 define("LangAddEyepieceField3", "Champs apparent (en &deg;)");
 define("LangAddEyepieceField3Expl", "ex 82"); 
-define("LangAddEyepieceField4", "Longeur focal maximum (xn mm)");
+define("LangAddEyepieceField4", "Longeur focal maximum (en mm)");
 define("LangAddEyepieceField4Expl", "Uniquement pour oculaires zoom"); 
 define("LangAddEyepieceButton", "Rajoutez oculaire"); 
 define("LangAddEyepieceButton2", "Modifiez oculaire"); 
@@ -328,7 +328,7 @@ define("LangAddInstrumentField2", "Diam&egrave;tre");
 define("LangAddInstrumentField2Expl", "(ex 1500mm ou 6 inch)");
 define("LangAddInstrumentField3", "F/D");
 define("LangAddInstrumentField3Expl", ""); 
-define("LangAddInstrumentField4", "Distance focale");
+define("LangAddInstrumentField4", "Distance focale (en mm)");
 define("LangAddInstrumentField4Expl", "(ex 1200mm)");
 define("LangAddInstrumentField5", "Type");
 define("LangAddInstrumentField5Expl", "");
@@ -509,8 +509,8 @@ define("LangViewLocationStd", "Endroit standard");
 
 define("LangViewEyepieceTitle", "Aper&#231;u oculaires");
 define("LangViewEyepieceName", "Nom");
-define("LangViewEyepieceFocalLength", "Distance focale");
-define("LangViewEyepieceMaxFocalLength", "Distance focale maximum");
+define("LangViewEyepieceFocalLength", "Distance focale (en mm)");
+define("LangViewEyepieceMaxFocalLength", "Distance focale maximum (en mm)");
 define("LangViewEyepieceApparentFieldOfView", "Champs apparent");
 
 // content/view_location.php
@@ -543,7 +543,7 @@ define("LangViewInstrumentTitle", "D&eacute;tails de l'instrument");
 define("LangViewInstrumentField1", "Nom");
 define("LangViewInstrumentField2", "Diam&egrave;tre");
 define("LangViewInstrumentField3", "F/D");
-define("LangViewInstrumentField4", "Distance focale");
+define("LangViewInstrumentField4", "Distance focale (en mm)");
 define("LangViewInstrumentField5", "Type");
 
 // content/view_observation.php

@@ -1,98 +1,39 @@
 <?php
-
 // overview_locations.php
 // generates an overview of all locations (admin only)
-// version 0.5: JV 20050212
 
-// problems still to solve
-// every page should contain the same number of locations
-// this is not the case now as we need to remove the empty location manually
-
-include_once "common/control/dec_to_dm.php";
-include_once "lib/locations.php";
-include_once "lib/util.php";
-include_once "lib/observations.php";
-include_once "lib/observers.php";
-include_once "lib/cometobservations.php";
-
-$locations = new locations;
-$util = new util;
-$util->checkUserInput();
-$observations = new observations;
-$cometobservations = new CometObservations;
-
-$observers = new observers;
-
-// sort
-
-if(isset($_GET['sort']))
-{
-  $sort = $_GET['sort']; // field to sort on
-}
-else
-{
-  $sort = "name"; // standard sort on location name
-}
-
-$sites = $locations->getSortedLocations($sort);
-$locs = $observers->getListOfLocations();
-
-// minimum
-
-if(isset($_GET['min']))
-{
-  $min = $_GET['min'];
-}
-else
-{
-  $min = 0;
-}
-
+$sort=$objUtil->checkGetKey('sort','name');
+if(!$min) $min=$objUtil->checkGetKey('min',0);
+$sites = $objLocation->getSortedLocations($sort);
+$locs = $objObserver->getListOfLocations();
 // the code below looks very strange but it works
-
 if((isset($_GET['previous'])))
-{
-  $orig_previous = $_GET['previous'];
-}
+ $orig_previous = $_GET['previous'];
 else
-{
-  $orig_previous = "";
-}
-
+ $orig_previous = "";
 if((isset($_GET['sort'])) && $_GET['previous'] == $_GET['sort']) // reverse sort when pushed twice
-{
-  if ($_GET['sort'] == "name")
-  {
-    $sites = array_reverse($sites, true);
-  }
+{if ($_GET['sort'] == "name")
+   $sites = array_reverse($sites, true);
   else
-  {
-    krsort($sites);
+  { krsort($sites);
     reset($sites);
   }
-    $previous = ""; // reset previous field to sort on
+  $previous = ""; 
 }
 else
-{
   $previous = $sort;
-}
 
 $step = 25;
-
-echo("<div id=\"main\">\n<h2>".LangViewLocationTitle."</h2>");
-
-$link = "".$baseURL."index.php?indexAction=view_locations&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
-
-list($min, $max) = $util->printListHeader($sites, $link, $min, $step, "");
-
-echo "<table>
-      <tr class=\"type3\">
-      <td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>
-      <td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=region&amp;previous=$previous\">".LangViewLocationProvince."</a></td>
-      <td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=country&amp;previous=$previous\">".LangViewLocationCountry."</a></td>";
-
+echo "<div id=\"main\">";
+echo "<h2>".LangViewLocationTitle."</h2>";
+$link=$baseURL."index.php?indexAction=view_locations&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
+list($min, $max) = $objUtil->printListHeader($sites, $link, $min, $step, "");
+echo "<table>";
+echo "<tr class=\"type3\">";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=region&amp;previous=$previous\">".LangViewLocationProvince."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=country&amp;previous=$previous\">".LangViewLocationCountry."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=longitude&amp;previous=$previous\">".LangViewLocationLongitude."</a></td>";
-
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=latitude&amp;previous=$previous\">".LangViewLocationLatitude."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=timezone&amp;previous=$previous\">".LangAddSiteField6."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=limitingMagnitude&amp;previous=$previous\">".LangViewLocationLimMag."</a></td>";
@@ -100,95 +41,53 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=sk
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=observer&amp;previous=$previous\">".LangViewObservationField2."</a></td>";
 echo "<td></td>";
 echo "</tr>";
-
 $count = 0;
-
 while(list ($key, $value) = each($sites))
-{
- if($count >= $min && $count < $max) // selection
- {
-   if ($count % 2)
-   {
-    $type = "class=\"type1\"";
-   }
-   else
-   {
-    $type = "class=\"type2\"";
-   }
-
-   $sitename = stripslashes($locations->getLocationName($value));
-   $region = stripslashes($locations->getRegion($value));
-   $country = $locations->getCountry($value);
-   if($locations->getLongitude($value) > 0)
-   {
-      $longitude = "&nbsp;" . decToString($locations->getLongitude($value));
-   }
-   else
-   {
-      $longitude = decToString($locations->getLongitude($value));
-   }
-   if($locations->getLatitude($value) > 0)
-   {
-      $latitude = "&nbsp;" . decToString($locations->getLatitude($value));
-   }
-   else
-   {
-      $latitude = decToString($locations->getLatitude($value));
-   }
-   $timezone = $locations->getTimezone($value);
-   $observer = $locations->getObserverFromLocation($value);
-   $limmag = $locations->getLocationLimitingMagnitude($value);
-   if ($limmag < -900)
-   {
-     $limmag = "&nbsp;";
-   }
-   $sb = $locations->getSkyBackground($value);
-   if ($sb < -900)
-   {
-     $sb = "&nbsp;";
-   }
-
-   if ($value != "1")
-   {
-    print("<tr $type>
-           <td><a href=\"".$baseURL."index.php?indexAction=adapt_site&amp;location=".urlencode($value)."\">$sitename</a></td>\n
-           <td>$region</td>\n
-           <td>$country</td>\n
-            <td>");
-           echo ($longitude);
-           echo("</td><td>");
-           echo ($latitude);
-           echo("</td><td>");
-           echo ($timezone);
-           echo("</td><td>");
-           echo ($limmag);
-           echo("</td><td>");
-           echo ($sb);
-           echo("</td><td>");
-           echo ($observer);
-           echo("</td>\n<td>");
-
-           // check if there are no observations made from this location
-
-           $queries = array("location" => $value);
-           $obs = $observations->getObservationFromQuery($queries, "", "1", "False");
-
-    //       $comobs = $cometobservations->getObservationFromQuery($queries, "", "1", "False");
-
-           if(!sizeof($obs) > 0 && !in_array($value, $locs)) // && !sizeof($comobs) > 0) // no observations from location yet
-           {
-              echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_location&amp;locationid=" . urlencode($value) . "\">" . LangRemove . "</a>");
-           }
-
-           echo("</td>\n</tr>");
-
-   }
- }
-   $count++;
+{ if($count >= $min && $count < $max) // selection
+  { $sitename = stripslashes($objLocation->getLocationName($value));
+    $region = stripslashes($objLocation->getRegion($value));
+    echo " = $objLocation->getCountry($value);
+    if($objLocation->getLongitude($value) > 0)
+      $longitude = "&nbsp;" . decToString($objLocation->getLongitude($value));
+    else
+     $longitude = decToString($objLocation->getLongitude($value));
+    if($objLocation->getLatitude($value) > 0)
+      $latitude = "&nbsp;" . decToString($objLocation->getLatitude($value));
+    else
+      $latitude = decToString($objLocation->getLatitude($value));
+    $timezone = $objLocation->getTimezone($value);
+    $observer = $objLocation->getObserverFromLocation($value);
+    $limmag = $objLocation->getLocationLimitingMagnitude($value);
+    if ($limmag < -900)
+      $limmag = "&nbsp;";
+    $sb = $objLocation->getSkyBackground($value);
+    if ($sb < -900)
+      $sb = "&nbsp;
+    if($value!= "1")
+    { echo "<tr class=\"type".(2-($count%2))."\">";
+      echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_site&amp;location=".urlencode($value)."\">$sitename</a></td>";
+      echo "<td>".$region."</td>";
+      echo "<td>".$country."</td>";
+      echo "<td>".$longitude."</td>";
+			echo "<td>".$latitude."</td>";
+			echo "<td>".$timezone."</td>";
+			echo "<td>".$limmag."</td>";
+			echo "<td>".$sb."</td>";
+			echo "<td>".$observer."</td>";
+      // check if there are no observations made from this location
+      $queries = array("location" => $value);
+      $obs = $objObservation->getObservationFromQuery($queries, "", "1", "False");
+      // $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
+      echo "<td>";
+      if(!sizeof($obs) > 0 && !in_array($value, $locs)) // && !sizeof($comobs) > 0) // no observations from location yet
+        echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_location&amp;locationid=" . urlencode($value) . "\">" . LangRemove . "</a>");
+      echo "</td>";
+			echo "</tr>";
+    }
+  }
+  $count++;
 }
-  echo "</table>";
-
-  list($min, $max) = $util->printListHeader($sites, $link, $min, $step, "");
-
-  echo "</div></div></body></html>";
+echo "</table>";
+list($min, $max) = $objUtil->printNewListHeader($sites, $link, $min, $step, "");
+echo "</div>";
 ?>

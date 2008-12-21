@@ -44,7 +44,7 @@ echo"</tr>";
  
 $numberOfObservations = $objObservation->getNumberOfDsObservations();
 $numberOfObservationsThisYear = $objObservation->getNumberOfObservationsLastYear();
-$numberOfDifferentObjects = $objObservation->getNumberOfDifferentObjects();
+$numberOfDifferentObjects = $objObservation->getNumberOfDifferentObservedDSObjects();
 while(list($key,$value)=each($rank))
 { if(($count>=$min)&&($count<$max))
   { $name = $objObserver->getObserverName($key);

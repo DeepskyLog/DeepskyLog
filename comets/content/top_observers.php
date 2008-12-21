@@ -63,14 +63,14 @@
      $type = "class=\"type2\"";
     }
  
-    $name = $obs->getObserverName($key);
-    $firstname = $obs->getFirstName($key);
+    $name = $obs->getObserverName($value);
+    $firstname = $obs->getFirstName($value);
 
-    echo "<tr $type><td>" . ($count + 1) . "</td><td> <a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($key) . "\">$firstname&nbsp;$name</a> </td>";
+    echo "<tr $type><td>" . ($count + 1) . "</td><td> <a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($value) . "\">$firstname&nbsp;$name</a> </td>";
 
-    echo "<td> $value &nbsp;&nbsp;&nbsp;&nbsp;(".sprintf("%.2f", (($value / $numberOfObservations) * 100))."%)</td>";
+    echo "<td> ".$observations->getObservationsThisObserver($value)." &nbsp;&nbsp;&nbsp;&nbsp;(".sprintf("%.2f", (($observations->getObservationsThisObserver($value) / $numberOfObservations) * 100))."%)</td>";
 
-    $observationsThisYear = $observations->getObservationsThisYear($key);
+    $observationsThisYear = $observations->getObservationsThisYear($value);
     if ($numberOfObservationsThisYear != 0)
     {
      $percentObservations = ($observationsThisYear / $numberOfObservationsThisYear) * 100;   }
@@ -80,7 +80,7 @@
     }
     echo "<td>". $observationsThisYear . "&nbsp;&nbsp;&nbsp;&nbsp;(".sprintf("%.2f", $percentObservations)."%)</td>";
 
-    $numberOfObjects = $observations->getNumberOfObjects($key);
+    $numberOfObjects = $observations->getNumberOfObjects($value);
     echo "<td>". $numberOfObjects . "&nbsp;&nbsp;&nbsp;&nbsp;(".sprintf("%.2f", (($numberOfObjects / $numberOfDifferentObjects) * 100))."%)</td>";
     echo("</tr>");
    }

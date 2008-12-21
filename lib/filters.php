@@ -457,6 +457,36 @@ class Filters
   }
   echo "</table>";
  }
+ public function getEchoType($type)
+ { if($type == FilterOther)      return FiltersOther;
+	 if($type == FilterBroadBand)  return FiltersBroadBand;
+	 if($type == FilterNarrowBand) return FiltersNarrowBand;
+	 if($type == FilterOIII)       return FiltersOIII;
+	 if($type == FilterHBeta)      return FiltersHBeta;
+	 if($type == FilterHAlpha)     return FiltersHAlpha;
+	 if($type == FilterColor)      return FiltersColor;
+	 if($type == FilterNeutral)    return FiltersNeutral;
+	 if($type == FilterCorrective) return FiltersCorrective;
+	 return "Unkown type";
+ }
+ public function getEchoColor($color)
+ { if($color == FilterColorLightRed) return FiltersColorLightRed;
+   if($color == FilterColorRed) return FiltersColorRed;
+   if($color == FilterColorDeepRed) return FiltersColorDeepRed;
+   if($color == FilterColorOrange) return FiltersColorOrange;
+   if($color == FilterColorLightYellow) return FiltersColorLightYellow;
+   if($color == FilterColorDeepYellow) return FiltersColorDeepYellow;
+   if($color == FilterColorYellow) return FiltersColorYellow;
+   if($color == FilterColorYellowGreen) return FiltersColorYellowGreen;
+   if($color == FilterColorLightGreen) return FiltersColorLightGreen;
+   if($color == FilterColorGreen) return FiltersColorGreen;
+   if($color == FilterColorMediumBlue) return FiltersColorMediumBlue;
+   if($color == FilterColorPaleBlue) return FiltersColorPaleBlue;
+   if($color == FilterColorBlue) return FiltersColorBlue;
+   if($color == FilterColorDeepBlue) return FiltersColorDeepBlue;
+   if($color == FilterColorDeepViolet) return FiltersColorDeepViolet;
+   return "Unknown color";
+ }
 }
 
 $objFilter=new Filters;

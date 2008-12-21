@@ -45,7 +45,7 @@ class Observers
  { return $GLOBALS['objDatabase']->selectSingleArray("SELECT stdlocation FROM observers GROUP BY stdlocation",'stdlocation');
  }
  function getObserverName($id)
- {return $GLOBALS['objDatabase']->selectSingleValue("SELECT name FROM observers WHERE id = \"$id\"",'name','');
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT name FROM observers WHERE id = \"".$id."\"",'name','');
  }
  function getNumberOfDsObservations($observerid)                                // getNumberOfObservations($name) returns the number of observations of the given observerid
  { if($observerid )
@@ -60,12 +60,10 @@ class Observers
 	   return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(cometobservations.id) As Cnt FROM cometobservations",'Cnt',0);
  }
  function getRank($observer)                                                    // getRank() returns the number of observations of the given observer
- { return(array_search($observer,$GLOBALS['objObservation']->getPopularObservers())+1);
+ { return $rank=array_search($observer,$GLOBALS['objObservation']->getPopularObservers());
  }
  function getCometRank($observer)                                               // getCometRank() returns the number of observations of the given observer
- { $observations = new CometObservations;
-   $numberOfObservations = $observations->getPopularObservers();
-   return(array_search($observer,$numberOfObservations)+1);
+ { return $rank=array_search($observer,$GLOBALS['objCometObservation']->getPopularObservers());
  }
  function getUseLocal($id)                                                      // getUseLocal returns if the user wants to use local time or UTC
  { return (!($GLOBALS['objDatabase']->selectSingleValue("SELECT observers.UT FROM observers WHERE id = \"$id\"",'UT',0)));

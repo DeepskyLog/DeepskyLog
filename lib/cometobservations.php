@@ -848,34 +848,7 @@ class CometObservations
  // getPopularObservers() returns the number of observations of the
  // observers
  function getPopularObservers()
- {
-  include "setup/databaseInfo.php";
-  $observers = new Observers;
-
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM cometobservations";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $observations[] = $get->observerid;
-  }
-  $db->logout();
-
-  if ($observations)
-  {
-   $numberOfObservations = array_count_values ($observations);
-
-   arsort($numberOfObservations);
-
-   return $numberOfObservations;
-  }
-  else
-  {
-   return null;
-  }
+ { return $GLOBALS['objDatabase']->selectSingleArray("SELECT cometobservations.observerid, COUNT(cometobservations.id) As Cnt FROM cometobservations GROUP BY cometobservations.observerid ORDER BY Cnt DESC", 'observerid');
  }
 
  // getNumberOfDifferentObjects() returns the number of different objects
@@ -942,7 +915,14 @@ class CometObservations
   $numberOfObservations = count($observations);
   return $numberOfObservations;
  }
-
+function getObservationsThisObserver($id)
+ {
+ 	  $q = array("observer" => $id);
+  $observations = $this->getObservationFromQuery($q);
+  $numberOfObservations = count($observations);
+  return $numberOfObservations;
+ }
+ 
  // getNumberOfObjects($id) return the number of different objects seen by
  // the observer
  function getNumberOfObjects($id)

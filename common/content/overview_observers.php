@@ -40,9 +40,8 @@ while(list ($key, $value) = each($observers))
 { $name = $objObserver->getObserverName($value);
   $firstname = $objObserver->getFirstName($value);
   $email = $objObserver->getEmail($value);
-  $url = $_SERVER['REQUEST_URI'];
   echo "<tr class=\"type".(2-($count%2))."\">";
-  echo "<td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($value)."&amp;back=$url\">".$value."</a> </td>";
+  echo "<td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($value)."\">".$value."</a> </td>";
   echo "<td>".$name."</td>";
   echo "<td>".$firstname."</td>";
   echo "<td> <a href=\"mailto:".$email."\"> ".$email." </a> </td>";

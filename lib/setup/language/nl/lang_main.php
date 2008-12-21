@@ -327,7 +327,7 @@ define("LangAddInstrumentField2", "Diameter");
 define("LangAddInstrumentField2Expl", "(bv 1500mm of 6 inch)");
 define("LangAddInstrumentField3", "F/D");
 define("LangAddInstrumentField3Expl", ""); 
-define("LangAddInstrumentField4", "Brandpuntsafstand");
+define("LangAddInstrumentField4", "Brandpuntsafstand (in mm)");
 define("LangAddInstrumentField4Expl", "(bv 1200mm)");
 define("LangAddInstrumentField5", "Type");
 define("LangAddInstrumentField5Expl", "");
@@ -508,9 +508,9 @@ define("LangViewLocationStd", "Std locatie");
 
 define("LangViewEyepieceTitle", "Oculair overzicht");
 define("LangViewEyepieceName", "Naam");
-define("LangViewEyepieceFocalLength", "Brandpunt");
-define("LangViewEyepieceMaxFocalLength", "Max. brandpunt");
-define("LangViewEyepieceApparentFieldOfView", "Schijnbaar beeldveld");
+define("LangViewEyepieceFocalLength", "Brandpunt (in mm)");
+define("LangViewEyepieceMaxFocalLength", "Max. brandpunt (in mm)");
+define("LangViewEyepieceApparentFieldOfView", "Schijnbaar beeldveld (&deg;");
 
 // content/view_location.php
 
@@ -540,9 +540,9 @@ define("InstrumentsMaksutov", "Maksutov");
 
 define("LangViewInstrumentTitle", "Instrument details");
 define("LangViewInstrumentField1", "Naam");
-define("LangViewInstrumentField2", "Diameter");
+define("LangViewInstrumentField2", "Diameter (in mm)");
 define("LangViewInstrumentField3", "F/D");
-define("LangViewInstrumentField4", "Brandpuntsafstand");
+define("LangViewInstrumentField4", "Brandpuntsafstand (in mm)");
 define("LangViewInstrumentField5", "Type");
 
 // content/view_observation.php

@@ -72,8 +72,20 @@ hr {
 
 .fieldname {
   text-align       : right;
+	padding-left     : 1em;
+  padding-right    : 1em;
 }
-
+.fieldvalue {
+	font-weight      : bold;
+	font-style       : italic;
+	padding-left     : 1em;
+  padding-right    : 1em;
+}
+.fieldexplanation {
+	font-style       : italic;
+	padding-left     : 1em;
+  padding-right    : 1em;
+}
 .mainlevel {
   color            : #FFFF00;
   font-family      : Verdana, Geneva, Arial, Helvetica, serif;
@@ -140,7 +152,6 @@ a.moduletable:link, a.moduletable:visited {
 	color            : #ff6600;
 	text-align       : center;
 }
-
 img.account {
 	border           : 0;
 }
