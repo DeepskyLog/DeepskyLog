@@ -427,8 +427,8 @@ define("LangListQueryObjectsMessage10", " (avec objets associ&#233;s)");
 define("LangListQueryObjectsMessage11", " (sans objets associ&#233;s)");
 define("LangListQueryObjectsMessage12", "Ne pas montrer les objets associ&#233;s");
 define("LangListQueryObjectsMessage13", "Montrer les objets associ&#233;s");
-define("LangListQueryObjectsMessage14", "'Veuillez rentrer le titre'");
-define("LangListQueryObjectsMessage15", "'Objets DeepskyLog'");
+define("LangListQueryObjectsMessage14", "Veuillez rentrer le titre");
+define("LangListQueryObjectsMessage15", "Objets DeepskyLog");
 define("LangListQueryObjectsMessage16", "&nbsp;L'observation&nbsp;");
  
 // content/register.php

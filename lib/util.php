@@ -300,7 +300,7 @@ class util
                       "seen" => html_entity_decode(LangOverviewObjectsHeader7),
                       "seendate" => html_entity_decode(LangOverviewObjectsHeader8)
     ),
-    $_GET['pdfTitle'],
+    html_entity_decode($_GET['pdfTitle']),
     array("width" => "750",
 			                "cols" => array("Name" => array('justification'=>'left',  'width'=>100),
 			                                "ra" =>   array('justification'=>'center','width'=>65),
@@ -335,7 +335,7 @@ class util
     $fontdir = /*realpath*/('lib/fonts/Helvetica.afm');
     //  $pdf->selectFont($fontdir);
     $pdf->selectFont('lib/fonts/Helvetica.afm');
-    $pdf->ezText($_GET['pdfTitle'],18);
+    $pdf->ezText(html_entity_decode($_GET['pdfTitle']),18);
     $pdf->ezColumnsStart(array('num'=>10));
     $pdf->ezTable($obs1,
                 '', 
@@ -389,11 +389,11 @@ class util
 		&& $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))
 		&& $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])))
       $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
-		    LangPDFMessage19 . $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . ' ' . 
+		    html_entity_decode(LangPDFMessage19 . $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . ' ' . 
 				                   $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' .
 		    LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
-				LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
-		$pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, $_GET['pdfTitle'], 'center' );
+				LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))), 'center' );
+		$pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($_GET['pdfTitle']), 'center' );
 		$pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . '1', 'right');
 		while(list($key, $valueA) = each($result))
     {
@@ -458,11 +458,12 @@ class util
 							&& $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))
 							&& $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])))
 						    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
+		                   html_entity_decode(
 		                   LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
 		                                      $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . ' ' .
                        LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
-				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
-		          $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, $_GET['pdfTitle'], 'center' );
+				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))), 'center' );
+		          $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($_GET['pdfTitle']), 'center' );
 		          $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
   					}
 						$xbase = $xleft;
@@ -488,11 +489,11 @@ class util
 						&& $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))
 						&& $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])))
 					    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
-	                   LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' .
+	                   html_entity_decode(LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' .
 	                                      $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . ' ' .
                      LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
-			               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
-            $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, $_GET['pdfTitle'], 'center' );
+			               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))), 'center' );
+            $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($_GET['pdfTitle']), 'center' );
 	          $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
 					}
 					$xbase = $xleft;
@@ -564,11 +565,11 @@ class util
 								&& $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))
 								&& $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])))
 							    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
-		                   LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
+		                   html_entity_decode(LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
 		                                      $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . 
                        LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
-				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
-		            $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, $_GET['pdfTitle'], 'center' );
+				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))), 'center' );
+		            $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($_GET['pdfTitle']), 'center' );
 		            $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
           	  }
 						  $xbase = $xleft;
@@ -609,11 +610,11 @@ class util
 								&& $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))
 								&& $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])))
 							    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
-		                   LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
+		                   html_entity_decode(LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
 		                                      $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . 
                        LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
-				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id'])), 'center' );
-		            $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, $_GET['pdfTitle'], 'center' );
+				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))), 'center' );
+		            $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($_GET['pdfTitle']), 'center' );
 		            $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
           	  }
 						  $xbase = $xleft;
@@ -1372,7 +1373,7 @@ class util
 	      return $this->checkGetKey($hr,0)+($this->checkGetKey($min,0)/60)+($this->checkGetKey($sec,0)/3600);
   }
   public function promptWithLink($prompt,$promptDefault,$javaLink,$text)
-	{ echo "<a href=\"\" onclick=\"thetitle = prompt(".$prompt.",".$promptDefault."); location.href='".$javaLink."&amp;pdfTitle='+thetitle+''; return false;\"	target=\"new_window\">".$text."</a>";
+	{ echo "<a href=\"\" onclick=\"thetitle = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;pdfTitle='+thetitle; return false;\"	target=\"new_window\">".$text."</a>";
   }
 	public function checkLimitsInclusive($value,$low,$high)
 	{ return(($value>=$low)&&($value<=$high));
