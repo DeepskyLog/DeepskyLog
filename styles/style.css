@@ -70,7 +70,7 @@ hr {
   width            : 100%;
 }
 .inputfield {
-  font-weight      : bold;
+  font-weight      : normal;
 	font-style       : italic;
 }	
 .fieldname {

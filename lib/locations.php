@@ -376,22 +376,9 @@ class Locations
   return $skyBack;
  }
 
- // getRegion returns the region of the given id
- function getRegion($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM locations WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $region = $get->region;
-
-  $db->logout();
-
-  return $region;
+ 
+ function getRegion($id) // getRegion returns the region of the given id
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT region FROM locations WHERE id=\"".$id."\"",'region');
  }
 
  // getSortedLocations returns an array with the ids of all locations, sorted
