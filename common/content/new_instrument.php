@@ -2,6 +2,22 @@
 // new_instrument.php
 // form which allows the user to add a new instrument 
 
+
+$type = $objUtil->checkGetKey('type');
+if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
+  $type = $objInstrument->getInstrumentType($objUtil->checkGetKey('instrumentid'));
+$tempInstrumentType= "<select name=\"type\">";
+$tempInstrumentType.="<option ".(($type==InstrumentReflector)?        "selected=\"selected\" ":"")."value=\"".InstrumentReflector.        "\">".InstrumentsReflector."</option>";
+$tempInstrumentType.="<option ".(($type==InstrumentRefractor)?        "selected=\"selected\" ":"")."value=\"".InstrumentRefractor.        "\">".InstrumentsRefractor."</option>";
+$tempInstrumentType.="<option ".(($type==InstrumentCassegrain)?       "selected=\"selected\" ":"")."value=\"".InstrumentCassegrain.       "\">".InstrumentsCassegrain."</option>";
+$tempInstrumentType.="<option ".(($type==InstrumentSchmidtCassegrain)?"selected=\"selected\" ":"")."value=\"".InstrumentSchmidtCassegrain."\">".InstrumentsSchmidtCassegrain."</option>";
+$tempInstrumentType.="<option ".(($type==InstrumentKutter)?           "selected=\"selected\" ":"")."value=\"".InstrumentKutter.           "\">".InstrumentsKutter."</option>";
+$tempInstrumentType.="<option ".(($type==InstrumentMaksutov)?         "selected=\"selected\" ":"")."value=\"".InstrumentMaksutov.         "\">".InstrumentsMaksutov."</option>";
+$tempInstrumentType.="<option ".(($type==InstrumentBinoculars)?       "selected=\"selected\" ":"")."value=\"".InstrumentBinoculars.       "\">".InstrumentsBinoculars."</option>";
+$tempInstrumentType.="<option ".(($type==InstrumentFinderscope)?      "selected=\"selected\" ":"")."value=\"".InstrumentFinderscope.      "\">".InstrumentsFinderscope."</option>";
+$tempInstrumentType.="<option ".(($type==InstrumentOther)?            "selected=\"selected\" ":"")."value=\"".InstrumentRest.             "\">".InstrumentsOther."</option>";
+$tempInstrumentType.="</select>";
+
 $sort=$objUtil->checkGetKey('sort','name');
 if(!$min) $min=$objUtil->checkGetKey('min',0);
 // the code below looks very strange but it works
@@ -124,94 +140,29 @@ echo "<li value=\"2\">".LangAddInstrumentManually."</li>";
 echo "</ol>";
 echo "<form action=\"".$baseURL."index.php?indexAction=validate_instrument\" method=\"post\">";
 echo "<table>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddInstrumentField1."</td>";
-echo "<td><input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"instrumentname\" size=\"30\"  value=\"";
-if($objUtil->checkGetKey('instrumentname'))
-  echo stripslashes($_GET['instrumentname']);
-if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
-  echo stripslashes($objInstrument->getInstrumentName($_GET['instrumentid']));
-echo "\" />";
-echo "</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddInstrumentField2."</td>";
-echo "<td>";
-echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"diameter\" size=\"10\" value=\"";
-if(array_key_exists('diameter',$_GET) && $_GET['diameter'])
-  echo stripslashes($_GET['diameter']);
-if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
-  echo stripslashes($objInstrument->getDiameter($_GET['instrumentid']));
-echo "\" />";
-echo "<select name=\"diameterunits\">";
-echo "<option>inch</option>";
-echo "<option selected=\"selected\">mm</option>";
-echo "</select>";
-echo "</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddInstrumentField5."</td>";
-echo "<td>";
-echo "<select name=\"type\">";
-if(array_key_exists('type',$_GET) && $_GET['type'])
-  $type = $_GET['type'];
-if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
-  $type = $objInstrument->getInstrumentType($_GET['instrumentid']);
-echo "<option ".(($type==InstrumentReflector)?        "selected=\"selected\" ":"")."value=\"".InstrumentReflector.        "\">".InstrumentsReflector."</option>";
-echo "<option ".(($type==InstrumentRefractor)?        "selected=\"selected\" ":"")."value=\"".InstrumentRefractor.        "\">".InstrumentsRefractor."</option>";
-echo "<option ".(($type==InstrumentCassegrain)?       "selected=\"selected\" ":"")."value=\"".InstrumentCassegrain.       "\">".InstrumentsCassegrain."</option>";
-echo "<option ".(($type==InstrumentSchmidtCassegrain)?"selected=\"selected\" ":"")."value=\"".InstrumentSchmidtCassegrain."\">".InstrumentsSchmidtCassegrain."</option>";
-echo "<option ".(($type==InstrumentKutter)?           "selected=\"selected\" ":"")."value=\"".InstrumentKutter.           "\">".InstrumentsKutter."</option>";
-echo "<option ".(($type==InstrumentMaksutov)?         "selected=\"selected\" ":"")."value=\"".InstrumentMaksutov.         "\">".InstrumentsMaksutov."</option>";
-echo "<option ".(($type==InstrumentBinoculars)?       "selected=\"selected\" ":"")."value=\"".InstrumentBinoculars.       "\">".InstrumentsBinoculars."</option>";
-echo "<option ".(($type==InstrumentFinderscope)?      "selected=\"selected\" ":"")."value=\"".InstrumentFinderscope.      "\">".InstrumentsFinderscope."</option>";
-echo "<option ".(($type==InstrumentOther)?            "selected=\"selected\" ":"")."value=\"".InstrumentRest.             "\">".InstrumentsOther."</option>";
-echo "</select>";
-echo "</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddInstrumentField4."</td>";
-echo "<td><input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"focallength\" size=\"10\"  value=\"";
-if(array_key_exists('focallength',$_GET) && $_GET['focallength'])
-  echo stripslashes($_GET['focallength']);
-if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
-  echo stripslashes($objInstrument->getInstrumentFocalLength($_GET['instrumentid']));
-echo "\" />";
-echo "<select name=\"focallengthunits\">";
-echo "<option>inch</option>";
-echo "<option selected=\"selected\">mm</option>";
-echo "</select>";
-//echo "</td>";
-//echo "</tr>";
-//echo "<tr>";
-echo "&nbsp;".LangAddInstrumentOr;
-//echo "<td></td>";
-// echo "</tr>";
-// echo "<tr>";
-echo "&nbsp;".LangAddInstrumentField3;
-echo "&nbsp;<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"fd\" size=\"10\" value=\"";
-if(array_key_exists('fd',$_GET) && $_GET['fd'])
-  echo stripslashes($_GET['fd']);
-if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
-  echo stripslashes($objInstrument->getFd($_GET['instrumentid']));
-echo "\" />";
-echo "</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangAddInstrumentField6."</td>";
-echo "<td><input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"fixedMagnification\" size=\"5\" value=\"";
-if(array_key_exists('fixedMagnification',$_GET) && $_GET['fixedMagnification']) 
-  echo ($_GET['fixedMagnification']);
-if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
-  echo stripslashes($objInstrument->getFixedMagnification($_GET['instrumentid']));
-echo "\" />&nbsp;".LangAddInstrumentField6Expl."</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td></td>";
-echo "<td><input type=\"submit\" name=\"add\" value=\"".LangAddInstrumentAdd."\" /></td>";
-echo "<td></td>";
-echo "</tr>";
+tableFieldnameFieldExplanation(LangAddInstrumentField1,
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"instrumentname\" size=\"30\"  value=\"".stripslashes($objUtil->checkGetKey('instrumentname')).stripslashes($objInstrument->getInstrumentName($objUtil->checkGetKey('instrumentid')))."\" />",
+                               "");
+
+tableFieldnameFieldExplanation(LangAddInstrumentField2,
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"diameter\" size=\"10\" value=\"".stripslashes($objUtil->checkGetKey('diameter')).stripslashes($objInstrument->getDiameter($objUtil->checkGetKey('instrumentid')))."\" />".
+                               "<select name=\"diameterunits\"> <option>inch</option> <option selected=\"selected\">mm</option> </select>",
+                               "");
+tableFieldnameFieldExplanation(LangAddInstrumentField5,$tempInstrumentType,"");
+tableFieldnameFieldExplanation(LangAddInstrumentField4,
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"focallength\" size=\"10\"  value=\"".stripslashes($objUtil->checkGetKey('focallength')).stripslashes($objInstrument->getInstrumentFocalLength($objUtil->checkGetKey('instrumentid')))."\" />".
+                               "<select name=\"focallengthunits\"> <option>inch</option> <option selected=\"selected\">mm</option> </select>".
+                               "&nbsp;<span style=\"font-style:normal\">".LangAddInstrumentOr."&nbsp;".
+                               LangAddInstrumentField3."</span>&nbsp;".
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"fd\" size=\"10\" value=\"".stripslashes($objUtil->checkGetKey('fd')).stripslashes($objInstrument->getFd($objUtil->checkGetKey('instrumentid')))."\" />",
+                               "");
+
+tableFieldnameFieldExplanation(LangAddInstrumentField6,
+                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"fixedMagnification\" size=\"5\" value=\"".($objUtil->checkGetKey('fixedMagnification')).stripslashes($objInstrument->getFixedMagnification($objUtil->checkGetKey('instrumentid')))."\" />",
+                               LangAddInstrumentField6Expl);
 echo "</table>";
 echo "</form>";
+echo "<hr />";
+echo "<input type=\"submit\" name=\"add\" value=\"".LangAddInstrumentAdd."\" />";
 echo "</div>";
 ?>

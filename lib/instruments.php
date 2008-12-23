@@ -150,7 +150,7 @@ class Instruments
     }
 	else
 	  {
-		$diameter = 1.0;
+		$diameter = '';
 		}
 		
   $db->logout();
@@ -160,58 +160,16 @@ class Instruments
  function getFixedMagnification($id) // getFixedMagnification returns the fixed magnification of the given instrument
  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT * FROM instruments WHERE id = \"$id\"",'fixedMagnification');
  }
- // getFd returns the Fd of the given instrument
- function getFd($id)
- {
-  $db = new database;
-  $db->login();
 
-  $sql = "SELECT * FROM instruments WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if ($get)
-	  {
-	  $fd = $get->fd;
-	  }
-	else
-	  {
-		$fd = 1.0;
-		}
-
-  $db->logout();
-
-  return $fd;
+ function getFd($id)                    // getFd returns the Fd of the given instrument
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT fd FROM instruments WHERE id = \"".$id."\"",'fd');
  }
-
- // getFocalLength returns the focal length of the given instrument
- function getInstrumentFocalLength($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM instruments WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-  
-	if ($get)
-	  {
-    $diameter = $get->diameter;
-    $fd = $get->fd;
-    }
-	else
-	  {
-    $diameter = 1.0;
-    $fd = 1.0;
-		}
-		
-  $db->logout();
-
-  $focalLength = $diameter * $fd;
-
-  return $focalLength;
+ function getInstrumentFocalLength($id) // getFocalLength returns the focal length of the given instrument
+ { $get = mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT diameter, fd FROM instruments WHERE id = \"".$id."\""));
+   if ($get)
+	   return (($get->diameter) * ($get->fd));
+   else
+	   return '';
  }
 
  // getInstrumentName returns the name of the given instrument

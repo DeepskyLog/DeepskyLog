@@ -69,7 +69,7 @@ if ($eyeps != null)
   }
 }
 echo "</table>";
-list($min, $max) = $objUtil->printListHeader($eyeps, $link, $min, $step, "");
+list($min, $max) = $objUtil->printNewListHeader($eyeps, $link, $min, $step, "");
 echo "</div>";
 echo "<hr />";
 echo "<h2>".LangAddEyepieceTitle."</h2>";

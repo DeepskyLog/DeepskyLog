@@ -79,7 +79,7 @@ hr {
   padding-right    : 1em;
 }
 .fieldvalue {
-	font-weight      : bold;
+	font-weight      : normal;
 	font-style       : italic;
 	padding-left     : 1em;
   padding-right    : 1em;
@@ -89,6 +89,9 @@ hr {
 	padding-left     : 1em;
   padding-right    : 1em;
 }
+.requiredField {
+	background-color : #FFFFCC;
+}   
 .mainlevel {
   color            : #FFFF00;
   font-family      : Verdana, Geneva, Arial, Helvetica, serif;
@@ -143,10 +146,6 @@ a.moduletable:link, a.moduletable:visited {
   font-weight	     : normal;
   text-decoration  : none;
 }
-
-.requiredField {
-	background-color : #FFFFCC;
-}   
 
 .message {
 	font-family      : Verdana, Arial, Helvetica, sans-serif;

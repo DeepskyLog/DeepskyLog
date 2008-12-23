@@ -25,12 +25,12 @@ $step = 25;
 echo "<div id=\"main\">";
 echo "<h2>".LangOverviewLensTitle."</h2>";
 $link = $baseURL."index.php?indexAction=add_lens&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
-list($min, $max) = $objUtil->printListHeader($lns, $link, $min, $step, "");
-echo "<table>";
+list($min, $max) = $objUtil->printNewListHeader($lns, $link, $min, $step, "");
+echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=add_lens&amp;sort=name&amp;previous=$previous\">".LangViewLensName."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=add_lens&amp;sort=factor&amp;previous=$previous\">".LangViewLensFactor."</a></td>";
-echo "<td></td>";
+echo "<td width=\"50%\"></td>";
 echo "</tr>";
 $count = 0;
 if ($lns != null)
@@ -61,6 +61,7 @@ if ($lns != null)
 echo "</table>";
 list($min, $max) = $objUtil->printListHeader($lns, $link, $min, $step, "");
 echo "</div>";
+echo "<hr>";
 echo("<h2>").LangAddLensTitle."</h2>";
 echo "<ol>";
 echo "<li value=\"1\">".LangAddLensExisting;
