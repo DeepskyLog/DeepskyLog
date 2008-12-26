@@ -209,8 +209,8 @@ class Lists
 		}
 	}
 	$db->logout();
-  if(array_key_exists('QOL',$_SESSION))
-    unset($_SESSION['QOL']);
+  if(array_key_exists('QobjParams',$_SESSION))
+    unset($_SESSION['QobjParams']);
  }
  
  function removeObjectFromList($name)
@@ -226,8 +226,8 @@ class Lists
     $sql = "UPDATE observerobjectlist SET objectplace=objectplace-1 WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectplace>$place";
     mysql_query($sql) or die(mysql_error());
 	}
-  if(array_key_exists('QOL',$_SESSION))
-    unset($_SESSION['QOL']);
+  if(array_key_exists('QobjParams',$_SESSION))
+    unset($_SESSION['QobjParams']);
  }
  
  function ObjectDownInList($place)
@@ -246,8 +246,8 @@ class Lists
     mysql_query($sql) or die(mysql_error());
   }
 	$db->logout();
-  if(array_key_exists('QOL',$_SESSION))
-    unset($_SESSION['QOL']);
+  if(array_key_exists('QobjParams',$_SESSION))
+    unset($_SESSION['QobjParams']);
  }
 	
  function ObjectUpInList($place)
@@ -269,8 +269,8 @@ class Lists
     mysql_query($sql) or die(mysql_error());
   }
 	$db->logout();
-  if(array_key_exists('QOL',$_SESSION))
-    unset($_SESSION['QOL']);
+  if(array_key_exists('QobjParams',$_SESSION))
+    unset($_SESSION['QobjParams']);
  }
  
  function ObjectFromToInList($from, $to)
@@ -305,8 +305,8 @@ class Lists
 	  }
 	}
   $db->logout();
-  if(array_key_exists('QOL',$_SESSION))
-    unset($_SESSION['QOL']);
+  if(array_key_exists('QobjParams',$_SESSION))
+    unset($_SESSION['QobjParams']);
  }
  
  function getObjectsFromList($listname)
@@ -385,8 +385,8 @@ class Lists
   $sql = "UPDATE observerobjectlist SET description=\"$description\" WHERE observerid=\"$observerid\" AND objectname=\"$object\" AND listname=\"$listname\"";
   $run = mysql_query($sql) or die(mysql_error());
   $db->logout();
-  if(array_key_exists('QOL',$_SESSION))
-    unset($_SESSION['QOL']);
+  if(array_key_exists('QobjParams',$_SESSION))
+    unset($_SESSION['QobjParams']);
   return;
  }
 }
