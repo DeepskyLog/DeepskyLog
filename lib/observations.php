@@ -1318,7 +1318,7 @@ class Observations {
 			echo ("-");
 		}
 		echo ("</td>");
-		echo ("<td class=\"fieldname\" width=\"13%\" align=\"right\">");
+		echo ("<td class=\"fieldname\" width=\"14%\" align=\"right\">");
 		// LIMITING MAGNITUDE
 		if ($this->getLimitingMagnitude($LOid) != ("-1" & "")) // limiting magnitude is set
 		{
@@ -1376,7 +1376,7 @@ class Observations {
 		echo ("<tr class=\"type1\">");
 		if ($this->getDsLargeDiameter($LOid))
 		{
-			echo ("<td></td><td class=\"fieldname\" width=\"12%\" align=\"right\">" . LangViewObservationField33 . "</td>");
+			echo ("<td class=\"fieldname\" width=\"14%\" align=\"right\">" . LangViewObservationField33 . "</td>");
 			$lDiam = $this->getDsLargeDiameter($LOid);
 			if ($lDiam > 60)
 			{
@@ -1398,7 +1398,7 @@ class Observations {
 			echo ("</td>");		
 		} else
 		{
-			echo ("<td class=\"fieldname\" width=\"12%\" align=\"right\">" . LangViewObservationField33 . "</td>");
+			echo ("<td class=\"fieldname\" width=\"14%\" align=\"right\">" . LangViewObservationField33 . "</td>");
 			echo ("<td>-</td>");
 		}
 		echo ("<td>");
@@ -1421,15 +1421,15 @@ class Observations {
 			echo ($delimiter . LangViewObservationField38);
 			$delimiter = ", ";
 		}
-		echo ("</td>");
+		echo ("</td><td></td>");
 		echo ("</tr>");
 
 		$object = $this->getObjectId($LOid);
 		if ($GLOBALS['objObject']->getDsoProperty($object,'type') == "ASTER" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "CLANB" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "DS" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "OPNCL" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA1STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA2STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA3STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA4STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA8STAR") {
 			echo ("<tr class=\"type2\">");
-			echo ("<td></td><td class=\"fieldname\" width=\"12%\" align=\"right\">");
+			echo ("<td class=\"fieldname\" width=\"12%\" align=\"right\">");
 			echo LangViewObservationField40;
-			echo ("</td");
+			echo ("</td>");
 			echo ("<td>");
 			if ($this->getDsCharacterType($LOid) != "")
 			{
@@ -1454,7 +1454,7 @@ class Observations {
 				echo ($delimiter . LangViewObservationField43);
 				$delimiter = ", ";
 			}
-			echo ("</td>");
+			echo ("</td><td></td>");
 			echo ("</tr>");
 		}
 		echo ("</table>");
