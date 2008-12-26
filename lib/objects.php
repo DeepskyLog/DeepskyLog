@@ -167,12 +167,10 @@ class Objects implements iObject
 		return;
 	}
   private function getSize($name)                                               // getSize returns the size of the object
-  { $sql = "SELECT * FROM objects WHERE name = \"$name\"";
+  { $sql = "SELECT diam1, diam2 FROM objects WHERE name = \"$name\"";
     $run = mysql_query($sql) or die(mysql_error());
     $get = mysql_fetch_object($run);
-    $diam1 = $get->diam1;
-    $diam2 = $get->diam2;
-    $size = $this->calculateSize($diam1, $diam2);
+    return $this->calculateSize($get->diam1, $get->diam2);
   }
   public  function newAltName($name, $cat, $catindex)
   { $GLOBALS['objDatabase']->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"".ucwords(trim($catindex))."\")))");
@@ -1553,8 +1551,8 @@ class Objects implements iObject
   echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
   echo LangViewObjectField9; 
   echo("</td><td width=\"25%\">");
-  if($this->getSize($object) != "")
-    echo($this->getSize($object));
+  if($size=$this->getSize($object))
+    echo($size);
   else
 	  echo("-");
   echo("</td>"); 

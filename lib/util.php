@@ -550,7 +550,7 @@ class util
 			$y-=$deltaline;
       if($sort)
 			  $actualsort = $$sort;
-			if(array_key_exists('objectlistdecription',$valueA) && $valueA['objectlistdescription'])
+			if(array_key_exists('objectlistdescription',$valueA) && $valueA['objectlistdescription'])
       { $theText= $valueA['objectlistdescription'];
 			  $theText= $pdf->addTextWrap($xbase+$descriptionLeadingSpace, $y, $xmid-$xleft-$descriptionLeadingSpace-10 ,$fontSizeText, '<i>'.$theText);
   			$y-=$deltaline;	

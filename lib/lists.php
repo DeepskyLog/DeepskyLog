@@ -139,10 +139,7 @@ class Lists
  }
  
  function addObjectToList($name, $showname='')
- {
-  $db = new database;
-  $db->login();
-	$observer = $_SESSION['deepskylog_id'];
+ {$observer = $_SESSION['deepskylog_id'];
 	$listname = $_SESSION['listname'];
 	if(!$showname)
 	  $showname=$name;
@@ -162,9 +159,8 @@ class Lists
     $sql = "INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, description) VALUES (\"$observer\", \"$name\", \"$listname\", \"$objpl\", \"$showname\", \"$description\")";
     mysql_query($sql) or die(mysql_error());
   }
-	$db->logout();
-  if(array_key_exists('QOL',$_SESSION))
-    unset($_SESSION['QOL']);
+  if(array_key_exists('QobjParams',$_SESSION))
+    unset($_SESSION['QobjParams']);
  }
  
  function addObservationToList($id)
