@@ -18,8 +18,8 @@ tableNewRow();
 tableFormatCell("class=\"fieldname\"", LangViewObservationField5);
 echo "<td>";
 if ($objObserver->getUseLocal($_SESSION['deepskylog_id'])) {
-	$date = sscanf($observations->getDsObservationLocalDate($_GET['observation']), "%4d%2d%2d");
-	$timestr = $observations->getDsObservationLocalTime($_GET['observation']);
+	$date = sscanf($objObservation->getDsObservationLocalDate($_GET['observation']), "%4d%2d%2d");
+	$timestr = $objObservation->getDsObservationLocalTime($_GET['observation']);
 } else {
 	$date = sscanf($objObservation->getDateDsObservation($_GET['observation']), "%4d%2d%2d");
 	$timestr = $objObservation->getTime($_GET['observation']);
