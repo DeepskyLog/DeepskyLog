@@ -5,49 +5,37 @@ include_once "database.php";
 class Lists
 {
  function addList($name)
- {
-  $db = new database;
-  $db->login();
-	$observer = $_SESSION['deepskylog_id'];
-  $sql = "INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname) VALUES (\"$observer\", \"\", \"$name\", '0', \"\")";
-  mysql_query($sql) or die(mysql_error());
-  $db->logout();
+ { $GLOBALS['objDatabase']->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname) VALUES (\"".$GLOBALS['objUtil']->checkSessionKey('deepskylog_id')."\", \"\", \"".$name."\", '0', \"\")");
+   if(array_key_exists('QobjParams',$_SESSION))
+     unset($_SESSION['QobjParams']);
  }
  
  function removeList($name)
- {
-	if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($this->checkList($name)==2))
-  {
-    $db = new database;
-    $db->login();
-    $observer = $_SESSION['deepskylog_id'];
+ {if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($this->checkList($name)==2))
+  { $observer = $_SESSION['deepskylog_id'];
     $sql = "DELETE FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$name\"";
     mysql_query($sql) or die(mysql_error());
-	  $db->logout();
   }
+  if(array_key_exists('QobjParams',$_SESSION))
+   unset($_SESSION['QobjParams']);
  }
  
  function renameList($nameFrom, $nameTo)
- {
-	if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($this->checkList($nameFrom)==2))
-  {
-    $db = new database;
-    $db->login();
-    $observer = $_SESSION['deepskylog_id'];
+ {if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($this->checkList($nameFrom)==2))
+  { $observer = $_SESSION['deepskylog_id'];
     $sql = "UPDATE observerobjectlist SET listname = \"$nameTo\" WHERE observerid = \"$observer\" AND listname = \"$nameFrom\"";
     mysql_query($sql) or die(mysql_error());
-	  $db->logout();
   }
+  if(array_key_exists('QobjParams',$_SESSION))
+    unset($_SESSION['QobjParams']);
  }
  
  function emptyList($listname)
- {
-  $db = new database;
-  $db->login();
-	$observer = $_SESSION['deepskylog_id'];
-	$sql = "DELETE FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectplace<>0";
-  mysql_query($sql) or die(mysql_error());
-  $db->logout();
+ { $observer = $_SESSION['deepskylog_id'];
+	 $sql = "DELETE FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectplace<>0";
+   mysql_query($sql) or die(mysql_error());
+   if(array_key_exists('QobjParams',$_SESSION))
+     unset($_SESSION['QobjParams']);
  }
  
  function checkList($name)
@@ -387,7 +375,6 @@ class Lists
   $db->logout();
   if(array_key_exists('QobjParams',$_SESSION))
     unset($_SESSION['QobjParams']);
-  return;
  }
 }
 $objList=new Lists;

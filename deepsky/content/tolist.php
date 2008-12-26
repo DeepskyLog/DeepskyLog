@@ -45,10 +45,10 @@ if($_SESSION['listname']<>"----------")
     echo("<form action=\"".$baseURL."index.php?indexAction=listaction\">");
     echo("<input type=\"hidden\" name=\"indexAction\" value=\"listaction\"></input>");
     echo "<td width=\"200\" align=\"center\">";
-		echo("<input style=\"width:12em;\"  type=\"submit\" name=\"emptyList\" value=\"" . LangToListEmpty . "\" />");
+		echo("<input style=\"width:12em;\" type=\"submit\" name=\"emptyList\" value=\"" . LangToListEmpty . "\" />");
     echo "</td>";	
     echo "<td width=\"200\" align=\"center\">";
-		echo("<input style=\"width:12em;\"  type=\"submit\" name=\"removeList\" value=\"" . LangToListMyListsRemove . "\" />");
+		echo("<input style=\"width:12em;\" type=\"submit\" name=\"removeList\" value=\"" . LangToListMyListsRemove . "\" />");
     echo "</td>";
 		echo("</form>");
   }
@@ -73,8 +73,7 @@ if($_SESSION['listname']<>"----------")
     echo "<a href=\"objects.csv?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a></p>";
   }
 	else
-	{
-	  echo LangToListEmptyList;
+	{ echo LangToListEmptyList;
 	}
 }
 
