@@ -803,7 +803,7 @@ class util
           if ($diam2 != 0.0)
             $size = $size.sprintf("x%.1f''", $diam2);
         }
-      echo "DSL " . sprintf("%03d", $counter) . " " . $valueA['objectname']."|".raArgoToString($valueA['objectra'])."|".decToArgoString($valueA['objectdecl'], 0)."|".$GLOBALS[$argotype]."|".$mag."|".$size.";".$atlas." ".$page.";CR ".$valueA['objectcontrast'].";".$valueA['objectseen'].";".$valueA['objectlastseen']."\n";
+      echo "DSL " /*. sprintf("%03d", $counter). " " */. $valueA['objectname']."|".raArgoToString($valueA['objectra'])."|".decToArgoString($valueA['objectdecl'], 0)."|".$GLOBALS[$argotype]."|".$mag."|".$size.";".$atlas." ".$page.";CR ".$valueA['objectcontrast'].";".$valueA['objectseen'].";".$valueA['objectlastseen']."\n";
       $counter++;
     }
   }
