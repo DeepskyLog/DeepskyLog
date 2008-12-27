@@ -30,15 +30,15 @@ else {
 	$time[0] = -9;
 	$time[1] = -9;
 }
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"day\" value=\"" . $date[2] . "\" />";
+echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" size=\"2\" name=\"day\" value=\"" . $date[2] . "\" />";
 echo "&nbsp;&nbsp;";
-echo "<select name=\"month\">";
+echo "<select name=\"month\" class=\"inputfield requiredField\">";
 echo "<option value=\"\"></option>";
 for ($i = 1; $i < 13; $i++)
 	echo "<option value=\"" . $i . "\"" . (($date[1] == $i) ? " selected=\"selected\"" : "") . ">" . $GLOBALS['Month' . $i] . "</option>";
 echo "</select>";
 echo "&nbsp;&nbsp";
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" name=\"year\" value=\"" . $date[0] . "\" />";
+echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"4\" size=\"4\" name=\"year\" value=\"" . $date[0] . "\" />";
 echo "</td>";
 echo "</tr>";
 echo "<tr>";
@@ -56,7 +56,7 @@ echo "<td class=\"fieldname\">"; // LOCATION
 echo LangViewObservationField4;
 echo "</td>";
 echo "<td>";
-echo "<select name=\"location\">";
+echo "<select name=\"location\" class=\"inputfield requiredField\">";
 $locs = $objLocation->getSortedLocationsList("name", $_SESSION['deepskylog_id']);
 $theLoc = $objObservation->getDsObservationLocationId($_GET['observation']);
 while (list ($key, $value) = each($locs))
@@ -69,7 +69,7 @@ echo "<td class=\"fieldname\">";
 echo LangViewObservationField3;
 echo "</td>";
 echo "<td>"; // INSTRUMENTS
-echo "<select name=\"instrument\">";
+echo "<select name=\"instrument\" class=\"inputfield requiredField\">";
 $instr = $objInstrument->getSortedInstrumentsList("name", $_SESSION['deepskylog_id'], false);
 $theInstr = $objObservation->getDsObservationInstrumentId($_GET['observation']);
 while (list ($key, $value) = each($instr))
@@ -82,7 +82,7 @@ echo LangViewObservationField30;
 echo "&nbsp;";
 echo "</td>";
 echo "<td>";
-echo "<select name=\"eyepiece\">";
+echo "<select name=\"eyepiece\" class=\"inputfield\">";
 echo "<option value=\"\"></option>";
 $eyeps = $objEyepiece->getSortedEyepiecesList("name", $_SESSION['deepskylog_id'], false);
 $theEyepiece = $objObservation->getDsObservationEyepieceId($_GET['observation']);
@@ -96,7 +96,7 @@ echo LangViewObservationField31; // FILTER
 echo "&nbsp;";
 echo "</td>";
 echo "<td>";
-echo "<select name=\"filter\">";
+echo "<select name=\"filter\" class=\"inputfield\">";
 echo "<option value=\"\"></option>";
 $filts = $objFilter->getSortedFiltersList("name", $_SESSION['deepskylog_id'], false);
 $theFilter = $objObservation->getDsObservationFilterId($_GET['observation']);
@@ -110,7 +110,7 @@ echo LangViewObservationField32; // LENS
 echo "&nbsp;";
 echo "</td>";
 echo "<td>";
-echo "<select name=\"lens\">";
+echo "<select name=\"lens\" class=\"inputfield\">";
 echo "<option value=\"\"></option>";
 $lns = $objLens->getSortedLensesList("name", $_SESSION['deepskylog_id'], false);
 $theLens = $objObservation->getDsObservationLensId($_GET['observation']);
@@ -125,7 +125,7 @@ echo "<td class=\"fieldname\">";
 echo LangViewObservationField6;
 echo "</td>";
 echo "<td>";
-echo "<select name=\"seeing\" style=\"width: 147px\">";
+echo "<select name=\"seeing\" style=\"width: 147px\" class=\"inputfield\">";
 echo "<option value=\"-1\"></option>";
 $theSeeing = $objObservation->getSeeing($_GET['observation']);
 for ($i = 1; $i < 6; $i++)
@@ -138,7 +138,7 @@ echo "<td class=\"fieldname\">";
 echo LangViewObservationField12;
 echo "</td>";
 echo "<td>";
-echo "<input type=\"file\" name=\"drawing\" />";
+echo "<input type=\"file\" name=\"drawing\" class=\"inputfield\" />";
 echo "</td>";
 echo "<td></td>";
 echo "</tr>";
@@ -233,7 +233,7 @@ if ($GLOBALS['objObject']->getDsoProperty($object,'type') == "ASTER"
 	echo LangViewObservationField40;
 	echo "</td>";
 	echo "<td>";
-	echo "<select name=\"characterType\">";
+	echo "<select name=\"characterType\" class=\"inputfield\">";
 	echo "<option value=\"\"" . (($objObservation->getDsCharacterType($_GET['observation']) == '') ? " selected=\"selected\" " : '') . "></option>";
 	echo "<option value=\"" . "A" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'A') ? " selected=\"selected\" " : '') . ">A</option>";
 	echo "<option value=\"" . "B" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'B') ? " selected=\"selected\" " : '') . ">B</option>";
@@ -263,7 +263,7 @@ echo "<td class=\"fieldname\">";
 echo LangViewObservationField22; // Visibility
 echo "</td>";
 echo "<td>";
-echo "<select name=\"visibility\">";
+echo "<select name=\"visibility\" class=\"inputfield\">";
 echo "<option value=\"0\"></option>";
 $visibility = $objObservation->getVisibility($_GET['observation']);
 for ($i = 1; $i < 8; $i++)
@@ -292,7 +292,7 @@ echo "</td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td colspan=\"2\">";
-echo "<textarea name=\"description\" class=\"description\">" . $objUtil->br2nl(html_entity_decode($objObservation->getDescriptionDsObservation($_GET['observation']))) . "</textarea>";
+echo "<textarea name=\"description\" class=\"description inputfield requiredField\">" . $objUtil->br2nl(html_entity_decode($objObservation->getDescriptionDsObservation($_GET['observation']))) . "</textarea>";
 echo "</td>";
 echo "</tr>";
 // ??? echo("</td></tr>"); error ??
