@@ -7,7 +7,7 @@ if (!$_GET['observation'])
 echo "<div id=\"main\">";
 echo "<h2>" . LangChangeObservationTitle . "</h2>";
 echo "<form action=\"" . $baseURL . "index.php?indexAction=validate_change_observation\" method=\"post\" enctype=\"multipart/form-data\">";
-tableNew("width=\"490\"");
+tableNew("width=\"100%\"");
 tableNewRow();
 tableFormatCell("class=\"fieldname\" width=\"100\"", LangViewObservationField1);
 tableCell("<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($objObservation->getObjectId($_GET['observation'])) . "\">" . $objObservation->getObjectId($_GET['observation']) . "</a>");

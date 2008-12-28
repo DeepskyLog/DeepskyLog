@@ -40,16 +40,20 @@ if ($object)
 	echo "<input type=\"hidden\" name=\"timestamp\" value=\"" . $_POST['timestamp'] . "\">";
 	echo "<input type=\"hidden\" name=\"object\" value=\"" . $object . "\">";
 	echo "<table id=\"content\">";
-	echo "<tr>"; // LOCATION
-	echo "<tr><td class=\"fieldname\" align=\"right\">" . LangViewObservationField4 . "&nbsp;*</td>";
-	echo "<td><select class=\"inputfield requiredField\" name=\"site\" style=\"width: 147px\">";
+	echo "<tr>"; //=================================================================================================================== LOCATION
+	echo "<td class=\"fieldname\" align=\"right\" style=\"width:16%\">" . LangViewObservationField4 . "&nbsp;*</td>";
+	echo "<td style=\"width:16%\"><select class=\"inputfield requiredField\" style=\"width:300px\" name=\"site\">";
 	$sites = $GLOBALS['objLocation']->getSortedLocationsList("name", $_SESSION['deepskylog_id']);
 	while (list ($key, $value) = each($sites))
 		echo "<option " . (($GLOBALS['objUtil']->checkPostKey('site', 0) == $value[0]) ? "selected=\"selected\"" : (($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']) == $value[0]) ? "selected=\"selected\"" : '')) . " value=\"" . $value[0] . "\">" . $value[1] . "</option>";
-	echo "</select></td><td class=\"explanation\"><a href=\"" . $baseURL . "index.php?indexAction=add_site\">" . LangChangeAccountField7Expl . "</a>";
+	echo "</select></td>";
+	echo "<td class=\"explanation\" style=\"width:16%\"><a href=\"" . $baseURL . "index.php?indexAction=add_site\">" . LangChangeAccountField7Expl . "</a>";
 	echo "</td>";
+	echo "<td  style=\"width:16%\">&nbsp</td>";
+	echo "<td  style=\"width:16%\">&nbsp</td>";
+	echo "<td  style=\"width:20%\">&nbsp</td>";
 	echo "</tr>";
-	echo "<tr>"; //DATE  / TIME
+	echo "<tr>"; //=================================================================================================================== DATE  / TIME
 	echo "<td class=\"fieldname\" align=\"right\">";
 	echo LangViewObservationField5 . "&nbsp;*";
 	echo "</td>";
@@ -78,7 +82,7 @@ if ($object)
 	echo "</td>";
 	echo "</tr>";
 	echo "<tr>";
-	echo "<td class=\"fieldname\" align=\"right\">"; // LIMITING MAG
+	echo "<td class=\"fieldname\" align=\"right\">"; //============================================================================================== LIMITING MAG
 	echo LangViewObservationField7;
 	echo "</td>";
 	echo "<td>";
@@ -89,10 +93,10 @@ if ($object)
 	echo "</td>";
 	echo "<td></td>";
 	echo "<td class=\"fieldname\" align=\"right\">";
-	echo LangViewObservationField6; // SEEING
+	echo LangViewObservationField6; //=============================================================================================================== SEEING
 	echo "</td>";
 	echo "<td>";
-	echo "<select name=\"seeing\" style=\"width: 147px\" class=\"inputfield\">";
+	echo "<select name=\"seeing\" style=\"width:300px\" class=\"inputfield\">";
 	echo "<option value=\"-1\"></option>";
 	for ($i = 1; $i < 6; $i++)
 		echo "<option value=\"" . $i . "\"" . (($GLOBALS['objUtil']->checkPostKey('seeing', 0) == $i) ? " selected=\"selected\"" : '') . ">" . $GLOBALS['Seeing' . $i] . "</option>";
@@ -109,7 +113,7 @@ if ($object)
 	echo LangViewObservationField3 . "&nbsp;*";
 	echo "</td>";
 	echo "<td>";
-	echo "<select name=\"instrument\" style=\"width: 250px\" class=\"inputfield requiredField\">";
+	echo "<select name=\"instrument\" style=\"width:300px\" class=\"inputfield requiredField\">";
 	echo "<option value=\"\"></option>";
 	$instr = $GLOBALS['objInstrument']->getSortedInstrumentsList("name", $_SESSION['deepskylog_id'], false);
 	while (list ($key, $value) = each($instr))
@@ -122,7 +126,7 @@ if ($object)
 	echo "<td class=\"fieldname\" align=\"right\">";
 	echo LangViewObservationField31 . "&nbsp;";
 	echo "</td>";
-	echo "<td> <select name=\"filter\" style=\"width: 147px\" class=\"inputfield\">"; // FILTER
+	echo "<td> <select name=\"filter\" style=\"width:300px\" class=\"inputfield\">"; //==================================================================== FILTER
 	echo "<option value=\"\"></option>";
 	$filts = $GLOBALS['objFilter']->getSortedFiltersList("name", $_SESSION['deepskylog_id'], false);
 	while (list ($key, $value) = each($filts))
@@ -137,7 +141,7 @@ if ($object)
 	echo "<td class=\"fieldname\" align=\"right\">";
 	echo LangViewObservationField30 . "&nbsp;";
 	echo "</td>";
-	echo "<td> <select name=\"eyepiece\" style=\"width: 147px\" class=\"inputfield\">"; // EYEPIECE
+	echo "<td> <select name=\"eyepiece\" style=\"width:300px\" class=\"inputfield\">"; //=================================================================== EYEPIECE
 	echo "<option value=\"\"></option>";
 	$eyeps = $GLOBALS['objEyepiece']->getSortedEyepiecesList("focalLength", $_SESSION['deepskylog_id'], false);
 	while (list ($key, $value) = each($eyeps))
@@ -149,7 +153,7 @@ if ($object)
 	echo "</td>";
 	echo "<td class=\"fieldname\" align=\"right\">" . LangViewObservationField32 . "&nbsp;";
 	echo "</td>";
-	echo "<td> <select name=\"lens\" style=\"width: 147px\" class=\"inputfield\">"; // LENS
+	echo "<td> <select name=\"lens\" style=\"width:300px\" class=\"inputfield\">"; //========================================================================= LENS
 	echo "<option value=\"\"></option>";
 	$lns = $GLOBALS['objLens']->getSortedLensesList("name", $_SESSION['deepskylog_id'], false);
 	while (list ($key, $value) = each($lns))
@@ -168,8 +172,8 @@ if ($object)
 	echo "<td class=\"fieldname\" align=\"right\">";
 	echo LangViewObservationField22;
 	echo "</td>";
-	echo "<td>"; // Visibility of observations
-	echo "<select name=\"visibility\" class=\"inputfield\"><option value=\"0\"></option>";
+	echo "<td>"; //====================================================================================================================== Visibility of observations
+	echo "<select name=\"visibility\" style=\"width:300px\" class=\"inputfield\"><option value=\"0\"></option>";
 	for ($i = 1; $i < 8; $i++)
 		echo "<option value=\"" . $i . "\">" . $GLOBALS['Visibility' . $i] . "</option>";
 	echo "</select>";
@@ -286,7 +290,7 @@ if ($object)
 	echo "<td>";
 	$description_language = $GLOBALS['objUtil']->checkPostKey('visibility', $objObserver->getObservationLanguage($_SESSION['deepskylog_id']));
 	$allLanguages = $objLanguage->getAllLanguages($objObserver->getLanguage($_SESSION['deepskylog_id']));
-	echo "<select name=\"description_language\" style=\"width: 147px\">";
+	echo "<select name=\"description_language\" >";
 	while (list ($key, $value) = each($allLanguages))
 		echo "<option value=\"" . $key . "\"" . (($GLOBALS['objUtil']->checkPostKey('description_language') == $key) ? "selected=\"selected\"" : ($GLOBALS['objObserver']->getObservationLanguage($_SESSION['deepskylog_id']) == $key) ? "selected=\"selected\"" : '') . ">" . $value . "</option>";
 	echo "</select>";
