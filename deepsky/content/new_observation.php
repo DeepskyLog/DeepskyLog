@@ -5,8 +5,8 @@
 // GUI to add a new observation to the database
 
 echo "<div id=\"main\">";
-$object = $objUtil->checkPostKey('object', $objUtil->checkGetKey('object'));
-if ($object) 
+$object=$objUtil->checkPostKey('object', $objUtil->checkGetKey('object'));
+if($object)
 { $seen = $GLOBALS['objObject']->getDSOSeen($object);
 	echo "<h2>";
 	echo LangNewObservationTitle . "&nbsp;" . $object;

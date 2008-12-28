@@ -9,6 +9,7 @@ echo "<form action=\"".$baseURL."index.php\" method=\"get\">";
 echo "<tr>";
 echo "<td>";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"quickpick\"></input>";
+echo "<input type=\"hidden\" name=\"source\" value=\"quickpick\"></input>";
 echo "</td>";
 echo "</tr>";
 echo "<tr>";

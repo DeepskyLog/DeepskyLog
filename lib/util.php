@@ -29,25 +29,35 @@ class util
 		  return 'comets/content/overview_observations.php';	
   }
   private function utilitiesCheckIndexActionDSquickPick()
-  { if(array_key_exists('indexAction',$_GET)&&($_GET['indexAction'] == 'quickpick'))
-    { $indexAction='quickpick';
-      $objects = $GLOBALS['objObject'];
-      $temp = $objects->getExactDsObject($_GET['object']);
-      if($temp)
-      { $_GET['object'] = $temp;
-        if(array_key_exists('searchObservations', $_GET))
-          return 'deepsky/content/selected_observations2.php';  
-        elseif(array_key_exists('newObservation', $_GET))
-          return 'deepsky/content/new_observation.php';   
-        else
-          return 'deepsky/content/view_object.php';  
-      }
+  { if($this->checkGetKey('indexAction')=='quickpick')
+    { if($this->checkGetKey('object'))
+	    { if($temp=$GLOBALS['objObject']->getExactDsObject($_GET['object']))
+	      { $_GET['object']=$temp;
+	        if(array_key_exists('searchObservations', $_GET))
+	          return 'deepsky/content/selected_observations2.php';  
+	        elseif(array_key_exists('newObservation', $_GET))
+	          return 'deepsky/content/new_observation.php';   
+	        else
+	          return 'deepsky/content/view_object.php';  
+	      }
+	      else
+	      { $_GET['object']=ucwords(trim($_GET['object']));
+	        if(array_key_exists('searchObservations', $_GET))
+	          return 'deepsky/content/setup_observations_query.php';  
+	        elseif(array_key_exists('newObservation', $_GET))
+	          return 'deepsky/content/setup_objects_query.php';   
+	        else
+	          return 'deepsky/content/setup_objects_query.php';  
+	      }
+	    }
       else
-      { $_SID=time();
-    		$_GET['SID']=$_SID;
-    	  $_GET['catNumber']=ucwords(trim($_GET['object']));
-        return 'deepsky/content/setup_objects_query.php';  	
-      }
+      {	if(array_key_exists('searchObservations', $_GET))
+	        return 'deepsky/content/setup_observations_query.php';  
+	      elseif(array_key_exists('newObservation', $_GET))
+	        return 'deepsky/content/new_observation.php';   
+	      else
+	        return 'deepsky/content/setup_objects_query.php';  
+       }
     }
   }
   private function utilitiesCheckIndexActionAll($action, $includefile)

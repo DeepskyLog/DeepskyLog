@@ -6,33 +6,33 @@ while(list($key,$value)=each($modules))
   { $_SESSION['module']=$value;
     setcookie("module",$value,time()+(365*24*60*60),"/");
   }
-if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="change_role"))
+if($objUtil->checkGetKey('indexAction')=="change_role")
   require_once $instDir."/common/control/change_role.php";
-if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="common_control_validate_account"))
+if($objUtil->checkGetKey('indexAction')=="common_control_validate_account")
   require_once $instDir."/common/control/validate_account.php";
-if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_delete_eyepiece"))
+if($objUtil->checkGetKey('indexAction')=="validate_delete_eyepiece")
   require_once $instDir."/common/control/validate_delete_eyepiece.php";
-if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_delete_filter"))
+if($objUtil->checkGetKey('indexAction')=="validate_delete_filter")
   require_once $instDir."/common/control/validate_delete_filter.php";
-if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_delete_instrument"))
+if($objUtil->checkGetKey('indexAction')=="validate_delete_instrument")
   require_once $instDir."/common/control/validate_delete_instrument.php";
-if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_delete_lens"))
+if($objUtil->checkGetKey('indexAction')=="validate_delete_lens")
   require_once $instDir."/common/control/validate_delete_lens.php";
-if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_delete_location"))
+if($objUtil->checkGetKey('indexAction')=="validate_delete_location")
   require_once $instDir."/common/control/validate_delete_location.php";
-if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_eyepiece"))
+if($objUtil->checkGetKey('indexAction')=="validate_eyepiece")
   require_once $instDir."/common/control/validate_eyepiece.php";
-if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_filter"))
+if($objUtil->checkGetKey('indexAction')=="validate_filter")
   require_once $instDir."/common/control/validate_filter.php";  
-if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_instrument"))
+if($objUtil->checkGetKey('indexAction')=="validate_instrument")
   require_once $instDir."/common/control/validate_instrument.php";
-if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_lens"))
+if($objUtil->checkGetKey('indexAction')=="validate_lens")
   require_once $instDir."/common/control/validate_lens.php";
-if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_observer"))
+if($objUtil->checkGetKey('indexAction')=="validate_observer")
   require_once $instDir."/common/control/validate_observer.php";
-if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="validate_site"))
+if($objUtil->checkGetKey('indexAction')=="validate_site")
   require_once $instDir."/common/control/validate_site.php";
-if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="logout"))
+if($objUtil->checkGetKey('indexAction')=="logout")
   require_once $instDir."/common/control/logout.php";
 
 
@@ -40,7 +40,7 @@ if(array_key_exists('indexAction',$_REQUEST)&&($_REQUEST['indexAction']=="logout
   
 //============================================================================== DEEEPSKY INSTRUCTIONS
 $object=$objUtil->checkPostKey('object',$objUtil->checkGetKey('object'));
-if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_observation")
+if($objUtil->checkGetKey('indexAction')=="add_observation")
 { if(array_key_exists('number',$_POST)&&(!$_POST['number']))
     $_GET['indexAction']="query_objects";
   elseif(array_key_exists('number',$_POST)&&(!($_GET['object']=$GLOBALS['objObject']->getExactDsObject('',$GLOBALS['objUtil']->checkPostKey('catalog'), $GLOBALS['objUtil']->checkPostKey('number')))))
@@ -62,12 +62,10 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_observation
 	} 
 }
 elseif(array_key_exists('newObservation',$_GET))                                // From quickpick
-{ if(array_key_exists('object',$_GET)&&(!($_GET['object']=$GLOBALS['objObject']->getExactDsObject($_GET['object'],'', ''))))
-  { $entryMessage.="No corresponding object found.";
-	  $_GET['indexAction']="query_objects";
-   }
-  else
-	{ $_POST['year']=$GLOBALS['objUtil']->checkPostKey('year',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear')); 
+{ if(($objUtil->checkGetKey('indexAction')=='quickpick')
+  &&($objUtil->checkGetKey('object'))
+  &&($objObject->getExactDsObject($_GET['object'])))
+  { $_POST['year']=$GLOBALS['objUtil']->checkPostKey('year',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear')); 
     $_POST['month']=$GLOBALS['objUtil']->checkPostKey('month',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsMonth')); 
     $_POST['day']=$GLOBALS['objUtil']->checkPostKey('day',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsDay'));
     $_POST['instrument']=$GLOBALS['objUtil']->checkPostKey('instrument',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsInstrument')); 

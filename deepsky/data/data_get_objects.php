@@ -377,6 +377,27 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
     $_SESSION['QobjSortDirection']='';
   }	
 }
+elseif($objUtil->checkGetKey('source')=='quickpick')   //========================== from quickpick page
+{ $validQobj=false;
+  if(array_key_exists('QobjParams',$_SESSION)
+  && array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='quickpick')
+  && array_key_exists('object',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['object']==$objUtil->checkGetKey('object')))
+	  $validQobj=true;
+  if(!$validQobj)
+	{ if(!$objUtil->checkGetKey('object'))
+		{ $_SESSION['QobjParams']=array();
+		  $_SESSION['Qobj']=array();
+		  $_SESSION['QobjSort']='';
+		  $_SESSION['QobjSortDirection']='';
+		}
+		else
+		{	$_SESSION['QobjParams']=array('source'=>'quickpick','object'=>$objUtil->checkGetKey('object'));
+	    $_SESSION['Qobj']=$objObject->getObjectFromQuery(array('name'=>$objUtil->checkGetKey('object')),1);
+	    $_SESSION['QobjSort']='objectname';
+	    $_SESSION['QobjSortDirection']='asc';
+		}
+	} 
+}
 // ========================================= no search specified
 else
 { $_SESSION['QobjParams']=array();

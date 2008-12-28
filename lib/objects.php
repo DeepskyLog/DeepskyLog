@@ -667,8 +667,6 @@ class Objects implements iObject
        $sqland = $sqland . " AND (objectnames.catalog = \"" . $queries["name"] . "\")"; 
      elseif ($exact == 1)
        $sqland = $sqland . " AND (UPPER(objectnames.altname) like \"" . strtoupper($queries["name"]) . "\")";
-     else
-       $sqland = $sqland . " AND (UPPER(objectnames.altname) = \"" . strtoupper($queries["name"]) . "\")";
    $sqland.=(array_key_exists('type',$queries)&&$queries['type'])?" AND (objects.type=\"".$queries['type']."\")":'';
    $sqland.=(array_key_exists('con',$queries)&&$queries['con'])?" AND (objects.con=\"".$queries['con']."\")":'';
    $sqland.=(array_key_exists('minmag',$queries)&&$queries['minmag'])?" AND (objects.mag>\"".$queries["minmag"]."\" or objects.mag like \"" . $queries["minmag"] . "\")":'';
@@ -691,7 +689,8 @@ class Objects implements iObject
      $sql="(".$sql1.$sqland.") UNION (".$sql2. $sqland.")";
    else
      $sql = $sql1 . $sqland;		
-//echo $sql;
+   $sql.=" LIMIT 0,10000";
+// echo $sql;
 	$run=$GLOBALS['objDatabase']->selectRecordset($sql);
   $i=0;
   if (array_key_exists('name',$queries)&&$queries["name"])
@@ -787,8 +786,7 @@ class Objects implements iObject
     $result[] = $get->objectname;
 	return $result;
  }
- // getExactObject returns the exact name of an object
- function getExactDsObject($value, $cat='', $catindex='')
+ public function getExactDsObject($value, $cat='', $catindex='')        // getExactObject returns the exact name of an object
  { if($value)
     $sql = "SELECT objectnames.objectname FROM objectnames " .
 		  	   "WHERE UPPER(altname) = \"".strtoupper(trim($value))."\" " .
@@ -817,22 +815,8 @@ class Objects implements iObject
 
   return $sb;
  }
-
- // getDiam1 returns the size of the object
- function getDiam1($name)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $diam1 = $get->diam1;
-  $db->logout();
-
-  return $diam1;
+ function getDiam1($name) // getDiam1 returns the size of the object
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT diam1 FROM objects WHERE name = \"".$name."\"",'diam1');
  }
  // getDiam2 returns the size of the object
  function getDiam2($name)
