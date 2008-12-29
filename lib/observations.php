@@ -324,7 +324,7 @@ class Observations {
 		if (!array_key_exists('countquery', $queries))
 			$sql .= " ORDER BY observationid DESC";
 		$sql = $sql . ";";
-		//echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
+ echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
 		$run = mysql_query($sql) or die(mysql_error());
 		if (!array_key_exists('countquery', $queries)) {
 			$j = 0;

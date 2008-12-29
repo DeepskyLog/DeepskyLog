@@ -15,12 +15,8 @@ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
 	  $link.=$key.'='.$value.'&amp;';
 	if(array_key_exists('activeTelescopeId',$_GET) && $_GET['activeTelescopeId'])
   { $objObserver->setStandardTelescope($_SESSION['deepskylog_id'], $_GET['activeTelescopeId']);
-	  if(array_key_exists('QO',$_SESSION))
-		  $_SESSION['QO']=$objObject->getObjectVisibilities($_SESSION['QO']);
-	  if(array_key_exists('QOP',$_SESSION))
-		  $_SESSION['QOP']=$objObject->getObjectVisibilities($_SESSION['QOP']);
-	  if(array_key_exists('QOL',$_SESSION))
-		  $_SESSION['QOL']=$objObject->getObjectVisibilities($_SESSION['QOL']);
+	  if(array_key_exists('Qobj',$_SESSION))
+		  $_SESSION['Qobj']=$objObject->getObjectVisibilities($_SESSION['Qobj']);
   }
 	$result=$objInstrument->getSortedInstruments('name',$_SESSION['deepskylog_id']);
   $instr=$objObserver->getStandardTelescope($_SESSION['deepskylog_id']);	

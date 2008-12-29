@@ -35,6 +35,8 @@ if($includeFile=='deepsky/content/setup_objects_query.php')
   $inList = '';                               $notInList = '';
   
   require_once 'deepsky/data/data_get_objects.php'; 
+  if(array_key_exists('Qobj',$_SESSION) && (count($_SESSION['Qobj'])>0))
+    $includeFile="deepsky/content/execute_query_objects.php";
 }   
 if($includeFile=='deepsky/content/tolist.php')
 { $_GET['source']='tolist';

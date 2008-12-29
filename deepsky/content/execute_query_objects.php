@@ -5,11 +5,6 @@
 $showPartOfs = 0;
 if(array_key_exists('showPartOfs',$_GET) && $_GET['showPartOfs'])
   $showPartOfs = $_GET['showPartOfs'];
-if($showPartOfs=="1")
-{ if(!array_key_exists('QOP',$_SESSION))
-		$_SESSION['QOP']=$objObject->getPartOfObjects($_SESSION['Qobj']);
-  $_SID='QOP';
-}	  
 if(count($_SESSION['Qobj'])>1) //=============================================== valid result, multiple objects found
 { echo "<div id=\"main\">";
   $title=LangSelectedObjectsTitle;
