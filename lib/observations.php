@@ -324,7 +324,7 @@ class Observations {
 		if (!array_key_exists('countquery', $queries))
 			$sql .= " ORDER BY observationid DESC";
 		$sql = $sql . ";";
- echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
+//echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
 		$run = mysql_query($sql) or die(mysql_error());
 		if (!array_key_exists('countquery', $queries)) {
 			$j = 0;
@@ -1914,16 +1914,15 @@ class Observations {
 		}
 		echo ("</tr>\n");
 	}
-	function getObjectsFromObservations($observations) {
-		$objects = array ();
+	function getObjectsFromObservations($observations,$showPartOfs=0) 
+	{ $objects = array ();
 		$i = 0;
 		while (list ($key, $observation) = each($observations))
 			if (!array_key_exists($observation['objectname'], $objects))
-				$objects[$observation['objectname']] = array (
-					$i++,
-					$observation['objectname']
-				);
-		return $objects;
+				$objects[$observation['objectname']] = array ($i++, $observation['objectname']);
+		if($showPartOfs)
+		  $objects=$GLOBALS['objObject']->getPartOfs($objects);
+	  return $objects;
 	}
 }
 $objObservation = new Observations;

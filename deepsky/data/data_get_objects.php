@@ -14,7 +14,7 @@ if($objUtil->checkGetKey('source')=='observation_query')
   if($showPartOfs!=$objUtil->checkSessionKey('QobjPO',0))
     $validQobj=false;
 	if(!$validQobj)
-	{ $obj = $objObject->getSeenObjectDetails($objObservation->getObjectsFromObservations($_SESSION['Qobs']),'D',$showPartOfs);
+	{ $obj = $objObject->getSeenObjectDetails($objObservation->getObjectsFromObservations($_SESSION['Qobs'],$showPartOfs),'D');
     $_SESSION['QobjParams']=array_merge(array('source'=>'observation_query'),$_SESSION['QobsParams']);
     $_SESSION['QobjPO']=$showPartOfs;
     $_SESSION['Qobj']=$obj;

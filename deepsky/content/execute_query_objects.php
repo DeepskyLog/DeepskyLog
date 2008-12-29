@@ -1,10 +1,12 @@
 <?php
 // execute_query_objects.php
 // executes the object query passed by setup_query_objects.php
-
-$showPartOfs = 0;
-if(array_key_exists('showPartOfs',$_GET) && $_GET['showPartOfs'])
-  $showPartOfs = $_GET['showPartOfs'];
+//$link="";
+$link=$baseURL."index.php?indexAction=query_objects";
+reset($_GET);
+while(list($key,$value)=each($_GET))
+	if(($key!='indexAction')&&($key!='multiplepagenr')&&($key!='sort')&&($key!='sortdirection')&&($key!='showPartOfs'))
+    $link.='&amp;'.$key.'='.$value;
 if(count($_SESSION['Qobj'])>1) //=============================================== valid result, multiple objects found
 { echo "<div id=\"main\">";
   $title=LangSelectedObjectsTitle;

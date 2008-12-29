@@ -9,7 +9,7 @@ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
 	echo "</tr>";
 	echo "<tr>";
 	echo "<td>";
- $link=$baseURL."index.php?";
+  $link=$baseURL."index.php?";
 	reset($_GET);
 	while(list($key,$value)=each($_GET))
 	  $link.=$key.'='.$value.'&amp;';
@@ -27,5 +27,6 @@ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
 	echo "</td>";
 	echo "</tr>";
 	echo "</table>";
+	$link="";
 }
 ?>

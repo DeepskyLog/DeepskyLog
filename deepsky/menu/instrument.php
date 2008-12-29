@@ -27,5 +27,6 @@ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
 	echo "</td>";
 	echo "</tr>";
 	echo "</table>";
+	$link="";
 }
 ?>

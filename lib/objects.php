@@ -690,7 +690,7 @@ class Objects implements iObject
    else
      $sql = $sql1 . $sqland;		
    $sql.=" LIMIT 0,10000";
-// echo $sql;
+//echo $sql;
 	$run=$GLOBALS['objDatabase']->selectRecordset($sql);
   $i=0;
   if (array_key_exists('name',$queries)&&$queries["name"])
@@ -1729,10 +1729,19 @@ class Objects implements iObject
 	 $dra = 0.0011 * $dist / cos($decl/180*3.1415926535);
    $run = $GLOBALS['objDatabase']->selectRecordset("SELECT objects.name FROM objects WHERE ((objects.ra > $ra - $dra) AND (objects.ra < $ra + $dra) AND (objects.decl > $decl - ($dist/60)) AND (objects.decl < $decl + ($dist/60))) ORDER BY objects.name");
 	 for($result=array(),$i=0;($get=mysql_fetch_object($run));$i++)
-//	   if($get->name!=$objectname)
-		   $result[$get->name] = array($i, $get->name);
+     $result[$get->name] = array($i, $get->name);
 	 return $result;
  } 
+ function getPartOfs($objects)
+ { $i=0; $objectPartOfs=array();
+   while(list($key,$value)=each($objects)) 
+   {  $objectsPartOfs[$key]=$value;
+   	  $partofs=$GLOBALS['objDatabase']->selectSingleArray("SELECT objectname FROM objectpartof WHERE partofname=\"".$value[1]."\"","objectname");
+      while(list($key2,$value2)=each($partofs))
+ 	      $objectsPartOfs[$value2]=array($i++,$value2);
+   }
+   return $objectsPartOfs;
+ }
 }
 
 class contrastcompare {
