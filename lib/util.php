@@ -689,8 +689,8 @@ class util
         $visibility = "";
       }
       $name = $GLOBALS['objObserver']->getFirstname($obs["observer"]). " ".$GLOBALS['objObserver']->getObserverName($obs["observer"]);
-      $seeing = $GLOBALS['objObservation']->getSeeing($value);
-      $limmag = $GLOBALS['objObservation']->getLimitingMagnitude($value);
+      $seeing = $GLOBALS['objObservation']->getSeeing($value['observationid']);
+      $limmag = $GLOBALS['objObservation']->getLimitingMagnitude($value['observationid']);
       $description = preg_replace("/(\r\n|\n|\r)/", "", $description);
       $description = preg_replace("/(\")/", "", $description);
       echo (html_entity_decode($objectname) . ";" . html_entity_decode($name) . ";" . $date[2] . "-" . $date[1] . "-" . $date[0] . ";" . $time . ";" . html_entity_decode($GLOBALS['objLocation']->getLocationName($loc)) . ";" . html_entity_decode($GLOBALS['objInstrument']->getInstrumentName($inst)) . ";" . html_entity_decode($GLOBALS['objEyepiece']->getEyepieceName($eyep)) . ";" . html_entity_decode($GLOBALS['objFilter']->getFilterName($filt)) . ";" . html_entity_decode($GLOBALS['objLens']->getLensName($lns)) . ";" . $seeing . ";" . $limmag . ";" . $visibility . ";" . $langObs . ";" . $description . "\n");

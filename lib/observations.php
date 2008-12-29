@@ -608,8 +608,7 @@ class Observations {
 		return $GLOBALS['objDatabase']->selectSingleValue("SELECT SQM FROM observations WHERE id = \"$id\"", 'SQM', '');
 	}
 	function getSeeing($id) // getSeeing returns the seeing of the observation
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT seeing FROM observations WHERE id = \"$id\"", 'seeing', '');
+	{return $GLOBALS['objDatabase']->selectSingleValue("SELECT seeing FROM observations WHERE id = \"$id\"", 'seeing', '');
 	}
 	function getTime($id) // getTime returns the time of the given observation in UT
 	{

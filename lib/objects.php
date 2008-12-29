@@ -1045,7 +1045,7 @@ class Objects implements iObject
 
   $get = mysql_fetch_object($run);
 
-  $decl = $get->decl;
+  $dec = $get->decl;
 
    $urano = $GLOBALS['objAtlas']->calculateAtlasPage('urano',$ra, $dec);
    $uranonew = $GLOBALS['objAtlas']->calculateAtlasPage('urano_new',$ra, $dec);

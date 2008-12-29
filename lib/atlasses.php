@@ -17,7 +17,7 @@ class Atlasses implements iAtlas
   { if($atlas=='milleniumbase') return $this->calculateMilleniumPage($ra,$decl);
     if($atlas=='urano_new')     return $this->calculateNewUranometriaPage($ra,$decl);
     if($atlas=='psa')           return $this->calculatePocketSkyAtlasPage($ra,$decl);
-    if($atlas=='sky')           return $this->calculateSkySkyAtlasPage($ra,$decl);
+    if($atlas=='sky')           return $this->calculateSkyAtlasPage($ra,$decl);
     if($atlas=='taki')          return $this->calculateTakiPage($ra, $decl);
     if($atlas=='torresB')       return $this->calculateTorresBPage($ra, $decl);
     if($atlas=='torresBC')      return $this->calculateTorresBCPage($ra, $decl);

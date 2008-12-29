@@ -148,9 +148,7 @@ echo LangViewObservationField7;
 echo "</td>";
 echo "<td>";
 echo "<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"limit\" size=\"3\" value=\"" . (($objObservation->getLimitingMagnitude($_GET['observation'])) ? (sprintf("%1.1f", $objObservation->getLimitingMagnitude($_GET['observation']))) : '') . "\" />";
-echo "</td>";
-echo "<td colspan = \"2\">";
-echo LangViewObservationField34 . "&nbsp;"; // SQM
+echo "&nbsp;".LangViewObservationField34 . "&nbsp;"; // SQM
 echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"sqm\" size=\"4\" style=\"text-align:center\" value=\"";
 if ($objObservation->getSQM($_GET['observation']) > 0.0) {
 	echo sprintf("%2.1f", $objObservation->getSQM($_GET['observation']));

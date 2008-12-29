@@ -40,10 +40,10 @@ else
   // Test if the objects, locations and instruments are available in the database
   for($i=0,$j=0;$i<count($objects);$i++)
   { $objectsquery=$objObject->getExactDSObject($objects[$i]);
-    if(count($objectsquery)==0)
+    if(!$objectsquery)
       $objectsMissing[$j++]=$objects[$i];
     else
-      $correctedObjects[]=$objectsquery[0];
+      $correctedObjects[]=$objectsquery;
   }
 	// Check for existence of locations
   for($i= 0,$j=0,$temploc='';$i<count($locations);$i++)
@@ -155,6 +155,7 @@ else
 				if ($parts_array[$i][8] != "")
 					$objObservation->setLensId($obsid, $objLens->getLensId($parts_array[$i][8], $_SESSION['deepskylog_id']));
       }
+      unset($_SESSION['QobsParams']);
     }
     // upload successful
     $_GET['indexAction']='default_action';

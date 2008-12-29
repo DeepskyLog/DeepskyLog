@@ -29,7 +29,7 @@ if($myList)
 echo "</tr>";
 echo "</table>";
 
-$objObject->showObject($_GET['object'],$_GET['zoom']);
+$objObject->showObject($_GET['object'],$objUtil->checkGetKey('zoom',30));
 
 echo("<form name=\"zoomform\" action=\"".$baseURL."index.php\" method=\"get\">");
 echo "<table width=\"100%\">";
@@ -45,13 +45,13 @@ echo "</td>";
 echo "<td width=\"50%\" align=\"right\">";
   echo LangViewObjectNearbyObjectsMoreLess  . ":&nbsp;";
   echo("<select name=\"zoom\"  onchange=\"zoomform.submit();\" width=\"50%\">");
-    if ($_GET['zoom']=="180") echo("<option selected value=\"180\">3x3&deg;</option>"); else echo("<option value=\"180\">3x3&deg;</option>"); 
-    if ($_GET['zoom']=="120") echo("<option selected value=\"120\">2x2&deg;</option>"); else echo("<option value=\"120\">2x2&deg;</option>"); 
-    if ($_GET['zoom']=="60") echo("<option selected value=\"60\">1x1&deg;</option>"); else echo("<option value=\"60\">1x1&deg;</option>"); 
-    if ($_GET['zoom']=="30") echo("<option selected value=\"30\">30x30'</option>"); else echo("<option value=\"30\">30x30'</option>"); 
-    if ($_GET['zoom']=="15") echo("<option selected value=\"15\">15x15'</option>"); else echo("<option value=\"15\">15x15'</option>"); 
-    if ($_GET['zoom']=="10") echo("<option selected value=\"10\">10x10'</option>"); else echo("<option value=\"10\">10x10'</option>"); 
-    if ($_GET['zoom']=="5") echo("<option selected value=\"5\">5x5'</option>"); else echo("<option value=\"5\">5x5'</option>"); 
+    if ($objUtil->checkGetKey('zoom',30)=="180") echo("<option selected value=\"180\">3x3&deg;</option>"); else echo("<option value=\"180\">3x3&deg;</option>"); 
+    if ($objUtil->checkGetKey('zoom',30)=="120") echo("<option selected value=\"120\">2x2&deg;</option>"); else echo("<option value=\"120\">2x2&deg;</option>"); 
+    if ($objUtil->checkGetKey('zoom',30)=="60") echo("<option selected value=\"60\">1x1&deg;</option>"); else echo("<option value=\"60\">1x1&deg;</option>"); 
+    if ($objUtil->checkGetKey('zoom',30)=="30") echo("<option selected value=\"30\">30x30'</option>"); else echo("<option value=\"30\">30x30'</option>"); 
+    if ($objUtil->checkGetKey('zoom',30)=="15") echo("<option selected value=\"15\">15x15'</option>"); else echo("<option value=\"15\">15x15'</option>"); 
+    if ($objUtil->checkGetKey('zoom',30)=="10") echo("<option selected value=\"10\">10x10'</option>"); else echo("<option value=\"10\">10x10'</option>"); 
+    if ($objUtil->checkGetKey('zoom',30)=="5") echo("<option selected value=\"5\">5x5'</option>"); else echo("<option value=\"5\">5x5'</option>"); 
   echo("</select>");
 echo "</td>";
 echo "</tr>";
@@ -61,7 +61,7 @@ echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\"> ";
 echo "</form>";
 $maxcount=count($_SESSION['Qobj']);
 $max = 9999;
-$link = $baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($_GET['object']).'&amp;zoom='.$_GET['zoom'].'&amp;SID=Qobj';
+$link = $baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey('zoom',30).'&amp;SID=Qobj';
 list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'],$link ,$min,25,"");
 if($max>count($_SESSION['Qobj']))
   $max=count($_SESSION['Qobj']);

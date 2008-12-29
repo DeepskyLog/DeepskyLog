@@ -46,22 +46,16 @@ if($objObject->getDsoProperty($objObject->getDsObjectName($_GET['object']),'ra')
 	}	
 	echo("</tr>");
 	echo("</table>");
-
-	
 	if(array_key_exists('zoom',$_GET) && $_GET['zoom']) $zoom=$_GET['zoom'];
   else $zoom=30;
 	$objObject->showObject($_GET['object'], $zoom);
-
   echo("<div id=\"main\">\n<h2>");
-  
   echo LangViewDSSImageTitle . $_POST['name'];
-  
-  echo("&nbsp;(" . $_POST['imagesize'] . "&#39;&nbsp;x&nbsp;" . $_POST['imagesize'] . "&#39;)</h2>\n");
-  
+  echo "&nbsp;(" . $_POST['imagesize'] . "&#39;&nbsp;x&nbsp;" . $_POST['imagesize'] . "&#39;)</h2>";
   $_SESSION['imagelink'] = ("http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&amp;r=" . $_POST['raDSS'] . ".0&amp;d=" . $_POST['declDSS'] . "&amp;e=J2000&amp;h=" . $_POST['imagesize'] . ".0&amp;w=" . $_POST['imagesize'] . "&amp;f=gif&amp;c=none&amp;fov=NONE&amp;v3=");
-  
-  echo("<img src=\"" . $_SESSION['imagelink'] . "\" alt=\"" . $_POST['name'] . "\" width=\"495\" height=\"495\"></img><p>&copy;&nbsp;<a href=\"http://archive.stsci.edu/dss/index.html\">STScI Digitized Sky Survey</a></p>");
+  echo "<p style=\"text-align:center\"> <img src=\"".$_SESSION['imagelink']."\" alt=\"".$_POST['name']."\" width=\"495\" height=\"495\"></img> </p>";
+  echo "<p>&copy;&nbsp;<a href=\"http://archive.stsci.edu/dss/index.html\">STScI Digitized Sky Survey</a></p>";
 }
-echo("</div>\n</div>\n</body>\n</html>");
+echo "</div>";
 
 ?>

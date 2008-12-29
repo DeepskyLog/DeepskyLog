@@ -19,18 +19,18 @@ echo "</td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td>";
-echo "<input type=\"submit\" name=\"searchObject\" value=\"".LangQuickPickSearchObject."\" style=\"width: 147px\" >";
+echo "<input type=\"submit\" name=\"searchObject\" value=\"".LangQuickPickSearchObject."\" style=\"width: 147px\" accesskey=\"O\">";
 echo "</td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td>";
-echo "<input type=\"submit\" name=\"searchObservations\" value=\"".LangQuickPickSearchObservations."\" style=\"width: 147px\" >";
+echo "<input type=\"submit\" name=\"searchObservations\" value=\"".LangQuickPickSearchObservations."\" style=\"width: 147px\" accesskey=\"v\">";
 echo "</td>";
 echo "</tr>";
 if (array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
 {	echo "<tr>";
   echo "<td>";
-	echo "<input type=\"submit\" name=\"newObservation\" value=\"".LangQuickPickNewObservation."\" style=\"width: 147px\" >";
+	echo "<input type=\"submit\" name=\"newObservation\" value=\"".LangQuickPickNewObservation."\" style=\"width: 147px\"  accesskey=\"N\">";
 	echo "</td>";
   echo "</tr>";
 }
