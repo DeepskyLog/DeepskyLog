@@ -35,8 +35,16 @@ if($includeFile=='deepsky/content/setup_objects_query.php')
   $inList = '';                               $notInList = '';
   
   require_once 'deepsky/data/data_get_objects.php'; 
-  if(array_key_exists('Qobj',$_SESSION) && (count($_SESSION['Qobj'])>0))
+  if(array_key_exists('Qobj',$_SESSION)&&(count($_SESSION['Qobj'])>1))
     $includeFile="deepsky/content/execute_query_objects.php";
+  elseif(count($_SESSION['Qobj'])==1) // ========================================= 1 object found
+  { $_GET['object']=$_SESSION['Qobj'][0]['objectname'];
+    $includeFile="deepsky/content/view_object.php";
+  }
+  else
+  { if($objUtil->checkGetKey('source')!='')
+  	$entryMessage=LangExecuteQueryObjectsMessage2;
+  }
 }   
 if($includeFile=='deepsky/content/tolist.php')
 { $_GET['source']='tolist';

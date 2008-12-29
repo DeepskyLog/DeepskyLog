@@ -40,10 +40,6 @@ if(count($_SESSION['Qobj'])>1) //===============================================
 	echo "<a href=\"".$baseURL."index.php?indexAction=query_objects\">".LangExecuteQueryObjectsMessage1."</a>";
 	echo "</div>";
 }
-elseif(count($_SESSION['Qobj'])==1) // ========================================= 1 object found
-{ $_GET['object']=$_SESSION['Qobj'][0]['objectname'];
-  include "deepsky/content/view_object.php";
-} 
 else // ========================================================================no results found
 { echo "<div id=\"main\">";
   echo "<h2>".LangSelectedObjectsTitle."</h2>";

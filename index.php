@@ -18,10 +18,10 @@ try
   echo "<td  align=\"left\" valign=\"bottom\" style=\"background:url(".$baseURL."styles/images/lu.gif) no-repeat top left; background-color:#FFFFFF;\">";
   echo "<img src=\"".$baseURL."styles/images/lo.gif\"></td>";                       // Left white bar
   echo "<td height=\"100%\" valign=\"top\" style=\"background-color:#FFFFFF;\">"; 
-  if(isset($entryMessage)&&$entryMessage)                                           // Entry Message if any
-    echo "<h3 align=\"center\">".$entryMessage.'</h3><hr />';
   $includeFile=$objUtil->utiltiesDispatchIndexAction();                             // Determine the page to show
   include 'common/entryexit/data.php';                                              // Get data for the form, object data, observation data, etc.
+  if(isset($entryMessage)&&$entryMessage)                                           // Entry Message if any
+    echo "<h3 align=\"center\">".$entryMessage.'</h3><hr />';
   include $includeFile;                                                             // Center content section	<<<===============================================================
   echo "</td>";
   echo "<td align=\"right\" valign=\"bottom\" style=\"background:url(".$baseURL."styles/images/ru.gif) no-repeat top right; background-color:#FFFFFF;\">";

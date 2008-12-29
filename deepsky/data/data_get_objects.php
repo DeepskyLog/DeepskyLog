@@ -1,5 +1,5 @@
 <?php
-
+$showPartOfs=$objUtil->checkGetKey('showPartOfs',$objUtil->checkSessionKey('QobjPO',0));
 // ========================================= filter objects from observation query
 if($objUtil->checkGetKey('source')=='observation_query') 
 {	$validQobj=false;
@@ -11,10 +11,13 @@ if($objUtil->checkGetKey('source')=='observation_query')
 	while($validQobj&&(list($key,$value) = each($_SESSION['QobsParams'])))
 	  if(!array_key_exists($key,$_SESSION['QobjParams'])||($value!=$_SESSION['QobjParams'][$key]))
 	    $validQobj=false;	 
-  if(!$validQobj)
-	{ $obj = $objObject->getSeenObjectDetails($objObservation->getObjectsFromObservations($_SESSION['Qobs']),'D');
+  if($showPartOfs!=$objUtil->checkSessionKey('QobjPO',0))
+    $validQobj=false;
+	if(!$validQobj)
+	{ $obj = $objObject->getSeenObjectDetails($objObservation->getObjectsFromObservations($_SESSION['Qobs']),'D',$showPartOfs);
     $_SESSION['QobjParams']=array_merge(array('source'=>'observation_query'),$_SESSION['QobsParams']);
-	  $_SESSION['Qobj']=$obj;
+    $_SESSION['QobjPO']=$showPartOfs;
+    $_SESSION['Qobj']=$obj;
 		$_SESSION['QobjSort']='showname';
 	  $_SESSION['QobjSortDirection']='asc';
 	}
@@ -26,7 +29,7 @@ elseif($objUtil->checkGetKey('source')=='tolist')
   && array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist')
   && array_key_exists('list',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['list']==$listname))
 	  $validQobj=true;
-  if(!$validQobj)
+	if(!$validQobj)
 	{ $_SESSION['QobjParams']=array('source'=>'tolist','list'=>$listname);
 	  $_SESSION['Qobj']=$objList->getObjectsFromList($_SESSION['listname']);
 	  $_SESSION['QobjSort']='objectpositioninlist';
@@ -63,7 +66,6 @@ elseif($objUtil->checkGetKey('source')=='objects_nearby')
 // ========================================= get objects for objects query page
 elseif($objUtil->checkGetKey('source')=='setup_objects_query')
 { $exact = 0;
-  $showPartOfs=$objUtil->checkGetKey('showPartOfs',$objUtil->checkSessionKey('QobjPO',0));
   if(array_key_exists('catalog',$_GET) && $_GET['catalog']) $name = $_GET['catalog'];
   if(array_key_exists('catalog',$_GET)) $catalog = $_GET['catalog'];
   if(array_key_exists('catNumber',$_GET)) $catNumber = $_GET['catNumber'];
@@ -386,16 +388,20 @@ elseif($objUtil->checkGetKey('source')=='quickpick')   //=======================
   && array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='quickpick')
   && array_key_exists('object',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['object']==$objUtil->checkGetKey('object')))
 	  $validQobj=true;
-  if(!$validQobj)
+  if($showPartOfs!=$objUtil->checkSessionKey('QobjPO',0))
+    $validQobj=false;
+	if(!$validQobj)
 	{ if(!$objUtil->checkGetKey('object'))
 		{ $_SESSION['QobjParams']=array();
+    	$_SESSION['QobjPO']=$showPartOfs;
 		  $_SESSION['Qobj']=array();
 		  $_SESSION['QobjSort']='';
 		  $_SESSION['QobjSortDirection']='';
 		}
 		else
 		{	$_SESSION['QobjParams']=array('source'=>'quickpick','object'=>$objUtil->checkGetKey('object'));
-	    $_SESSION['Qobj']=$objObject->getObjectFromQuery(array('name'=>$objUtil->checkGetKey('object')),1);
+    	$_SESSION['QobjPO']=$showPartOfs;
+		  $_SESSION['Qobj']=$objObject->getObjectFromQuery(array('name'=>$objUtil->checkGetKey('object')),1,"D",$showPartOfs);
 	    $_SESSION['QobjSort']='objectname';
 	    $_SESSION['QobjSortDirection']='asc';
 		}
