@@ -82,15 +82,10 @@ if(array_key_exists('newObservation',$_GET))                                // F
 	} 
 }
 if(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="clear_observation")
-{ $_POST['year']='';                                                             // empty the fields of the new observation form
-  $_POST['month']=''; 
-  $_POST['day']='';
-  $_POST['instrument']=''; 
-  $_POST['site']=''; 
-  $_POST['limit']=''; 
-  $_POST['sqm']=''; 
-  $_POST['seeing']=''; 
-  $_POST['description_language']='';
+{ $temp=$_POST['object'];
+  foreach($_POST as $foo=>$bar)
+    $_POST[$foo]=="";
+  $_POST['object']=temp;
 	$_GET['indexAction']="add_observation";
 }
 if(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="validate_observation")
