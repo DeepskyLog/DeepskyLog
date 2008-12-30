@@ -20,18 +20,11 @@ if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) 
 }
 //200811151634End
 
-$allLanguages = Array();
-if(array_key_exists('alllanguages', $_SESSION))
-  $allLanguages = $_SESSION['alllanguages'];
+$selectedLanguages=Array();
+while(list($key,$value)=each($allLanguages))
+  if(array_key_exists($key,$_GET)) 
+    $selectedLanguages[]=$key;
 
-$usedLanguages = Array();
-while(list ($key, $value) = each($allLanguages))
-  if(array_key_exists($key, $_GET)) 
-  { //200811151604Q: waar wordt dit nog gebruikt in het project, anders mag dit weg?
-	  $_SESSION[$key] = $key;
-    //200811151604End
-    $usedLanguages[] = $key;
-  }
 $query = array("object"        => $object,
                "catalog"       => $GLOBALS['objUtil']->checkGetKey('catalog'),
                "number"        => $GLOBALS['objUtil']->checkGetKey('number'),
@@ -66,7 +59,7 @@ $query = array("object"        => $object,
                "maxlimmag"     => $GLOBALS['objUtil']->checkGetKey('maxlimmag'),
                "minseeing"     => $GLOBALS['objUtil']->checkGetKey('minseeing'),
                "maxseeing"     => $GLOBALS['objUtil']->checkGetKey('maxseeing'),
-               "languages"     => $usedLanguages);
+               "languages"     => $selectedLanguages);
 
 
 //============================================ CHECK TO SEE IF OBSERVATIONS ALREADY FETCHED BEFORE, OTHERWISE FETCH DATA FROM DB ===============================
