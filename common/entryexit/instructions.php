@@ -107,31 +107,28 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_csv_listdat
   
   
 // ============================================================================ LIST COMMANDS
-if(array_key_exists('emptyList',$_GET) && $myList)
+if($objUtil->checkGetKey('emptyList')&&$myList)
 { $objList->emptyList($listname);
-  $entryMessage.=LangToListEmptied . $listname_ss . ".";
-	$_SESSION['QOL'] = $objList->getObjectsFromList($_SESSION['listname']);
+  $entryMessage.=LangToListEmptied.$listname_ss.".";
+	unset($_SESSION['QobjParams']);
 }
-
-if(array_key_exists('ObjectDownInList',$_GET) && $_GET['ObjectDownInList']  && $myList)
+if($objUtil->checkGetKey('ObjectDownInList')&&$myList)
 { $objList->ObjectDownInList($_GET['ObjectDownInList']);
-	$_SESSION['QOL'] = $objList->getObjectsFromList($_SESSION['listname']);
-  $entryMessage.=LangToListMoved1 . $_GET['ObjectDownInList'] . LangToListMoved3 . "<a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">" . $listname_ss . "</a>.";
+	unset($_SESSION['QobjParams']);
+  $entryMessage.=LangToListMoved1.$_GET['ObjectDownInList'].LangToListMoved3."<a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">".$listname_ss."</a>.";
 }
-
-if(array_key_exists('ObjectUpInList',$_GET) && $_GET['ObjectUpInList']  && $myList)
+if($objUtil->checkGetKey('ObjectUpInList')&&$myList)
 { $objList->ObjectUpInList($_GET['ObjectUpInList']);
-	$_SESSION['QOL'] = $objList->getObjectsFromList($_SESSION['listname']);
-  $entryMessage.=LangToListMoved1 . $_GET['ObjectUpInList'] . LangToListMoved2 . "<a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">" . $listname_ss . "</a>.";
+	unset($_SESSION['QobjParams']);
+  $entryMessage.=LangToListMoved1.$_GET['ObjectUpInList'].LangToListMoved2."<a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">".$listname_ss."</a>.";
 }
 
-if(array_key_exists('ObjectToPlaceInList',$_GET) && $_GET['ObjectToPlaceInList']  && $myList)
+if($objUtil->checkGetKey('ObjectToPlaceInList')&&$myList)
 { $objList->ObjectFromToInList($_GET['ObjectFromPlaceInList'],$_GET['ObjectToPlaceInList']);
 	unset($_SESSION['QobjParams']);
-  $entryMessage.=LangToListMoved7 . $_GET['ObjectToPlaceInList'] . ".";
+  $entryMessage.=LangToListMoved7.$_GET['ObjectToPlaceInList'].".";
 }
-
-if(array_key_exists('removePageObjectsFromList',$_GET)&&$_GET['removePageObjectsFromList']&&$myList)
+if($objUtil->checkGetKey('removePageObjectsFromList')&&$myList)
 { if(count($_SESSION['Qobj'])>0)
 	{ if(array_key_exists('min',$_GET) && $_GET['min'])
      $min=$_GET['min'];
@@ -142,66 +139,64 @@ if(array_key_exists('removePageObjectsFromList',$_GET)&&$_GET['removePageObjects
 	  {$objList->removeObjectFromList($_SESSION['Qobj'][$count]['objectname'],$_SESSION['Qobj'][$count]['showname']);
 		  $count++;
     }
-	  $_SESSION['Qobj']=$objList->getObjectsFromList($_SESSION['listname']);
+	  unset($_SESSION['QobjParams']);
     $entryMessage.=LangToListPageRemoved;
 	}
 }
-if($listnameToAdd=$objUtil->checkGetKey('addlistname'))
-{ if(array_key_exists('QobjParams',$_SESSION))
-    unset($_SESSION['QobjParams']);
+if($objUtil->checkGetKey('addList')&&($listnameToAdd=$objUtil->checkGetKey('addlistname')))
+{ unset($_SESSION['QobjParams']);
   if(array_key_exists("PublicList",$_GET))
     if(substr($listnameToAdd,0,7)!="Public:")
       $listnameToAdd="Public: ".$listnameToAdd;  
-  if($objList->checkList($_GET['addlistname'])!=0)
+  if($objList->checkList($listnameToAdd)!=0)
     $entryMessage.=LangToListList.stripslashes($listnameToAdd).LangToListExists;
   else
   { $objList->addList($listnameToAdd);
-    if(array_key_exists('QobjParams',$_SESSION))
-		  unset($_SESSION['QobjParams']);
     $_SESSION['listname'] = $listnameToAdd;
-    $entryMessage.=LangToListList.stripslashes($_SESSION['listname']).LangToListAdded;
+    $listname=$_SESSION['listname'];
+    $listname_ss=stripslashes($listname);
+    $myList=true;
+    $entryMessage.=LangToListList.$listname_ss.LangToListAdded;
   }                    	
 }
-if(array_key_exists('renameList',$_GET) && array_key_exists('addlistname',$_GET))
-{ if(array_key_exists('QobjParams',$_SESSION))
-	  unset($_SESSION['QobjParams']);
-  $listnameFrom = $_SESSION['listname'];
-	$listnameTo = $_GET['addlistname'];
+if($objUtil->checkGetKey('renameList')&&($listnameToAdd=$objUtil->checkGetKey('addlistname')))
+{ unset($_SESSION['QobjParams']);
+  $listnameTo=$_GET['addlistname'];
   if(array_key_exists("PublicList",$_GET))
 	  if(substr($listnameTo,0,7)!="Public:")
-	    $listnameTo = "Public: " . $listnameTo;  
+	    $listnameTo="Public: ".$listnameTo;  
   if($objList->checkList($listnameTo)!=0)
-     $entryMessage.= LangToListList . stripslashes($listnameTo) . LangToListExists;
+     $entryMessage.=LangToListList.stripslashes($listnameTo).LangToListExists;
   else
-  { $objList->renameList($listnameFrom, $listnameTo);
-    $_SESSION['listname'] = $listnameTo;
-    $entryMessage.=LangToListList . stripslashes($_SESSION['listname']) . LangToListAdded; 
+  { $objList->renameList($listname, $listnameTo);
+    $_SESSION['listname']=$listnameTo;
+    $listname=$_SESSION['listname'];
+    $listname_ss=stripslashes($listname);
+    $myList=true;
+    $entryMessage.=LangToListList.$listname_ss.LangToListAdded; 
   }
 }
-if(array_key_exists('removeList',$_GET)  && $myList)
-{ if(array_key_exists('QobjParams',$_SESSION))
-	  unset($_SESSION['QobjParams']);
-	$objList->removeList($_SESSION['listname']);
-	$entryMessage.=LangToListRemoved . stripslashes($_SESSION['listname']) . ".";
-	$_SESSION['listname']="----------";
+if($objUtil->checkGetKey('removeList')&&$myList)
+{ unset($_SESSION['QobjParams']);
+	$objList->removeList($listname);
+	$entryMessage.=LangToListRemoved.stripslashes($_SESSION['listname']).".";
 	unset($_GET['removeList']);
-  $myList=False;
-  $listname='';
+	$_SESSION['listname']="----------";
+	$listname='';
   $listname_ss='';
-}
-if(array_key_exists('activateList',$_GET)&&array_key_exists('listname',$_GET))
-{ $_SESSION['listname']=$_GET['listname'];
   $myList=False;
-  $listname='';
-  if(array_key_exists('listname', $_SESSION))
-    $listname=$_SESSION['listname'];
-  $listname_ss = stripslashes($listname);
+}
+if($objUtil->checkGetKey('activateList')&&$objUtil->checkGetKey('listname'))
+{ $_SESSION['listname']=$_GET['listname'];
+  $listname=$_SESSION['listname'];
+  $listname_ss=stripslashes($listname);
+  $myList=False;
   if(array_key_exists('listname',$_SESSION)&&$objList->checkList($_SESSION['listname'])==2)
     $myList=True;
   if($_GET['listname']<>"----------")
-    $entryMessage.=LangToListList . stripslashes($_SESSION['listname']) . LangToListActivation1;
+    $entryMessage.=LangToListList.$listname_ss.LangToListActivation1;
 }
-if(array_key_exists('addObjectToList',$_GET)&&$_GET['addObjectToList']&&array_key_exists('listname',$_SESSION)&&$_SESSION['listname']&&$myList)
+if($objUtil->checkGetKey('addObjectToList')&&$listname&&$myList)
 { $objList->addObjectToList($_GET['addObjectToList'],$GLOBALS['objUtil']->checkGetKey('showname',$_GET['addObjectToList']));
   $entryMessage.=LangListQueryObjectsMessage8."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['addObjectToList']) . "\">".$_GET['showname']."</a>".LangListQueryObjectsMessage6."<a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">".$listname_ss."</a>.";
 }

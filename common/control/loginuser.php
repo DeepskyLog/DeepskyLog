@@ -2,7 +2,7 @@
 // loginuser.php
 // checks if the user is logged in based on cookie
 
-$loggedUser=false;
+$loggedUser='';
 $_SESSION['admin']="no";
 $loginErrorCode="";
 $loginErrorText="";
@@ -11,7 +11,7 @@ if(array_key_exists('deepskylogsec', $_COOKIE)&&$_COOKIE['deepskylogsec'])
   { if(substr($_COOKIE['deepskylogsec'],0,32)==$objObserver->getPassword(substr($_COOKIE['deepskylogsec'],32,255)))
     { $_SESSION['deepskylog_id']=substr($_COOKIE['deepskylogsec'],32,255);
 		  $_SESSION['lang']=$objObserver->getLanguage($_SESSION['deepskylog_id']);
-			$loggedUser=true;
+			$loggedUser=$_SESSION['deepskylog_id'];
 		  if($objObserver->getRole($_SESSION['deepskylog_id'])=="0")                // administrator logs in 
         $_SESSION['admin']="yes";
 	  }
@@ -38,7 +38,7 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
       { session_regenerate_id(true);
 			  $_SESSION['deepskylog_id']=$login;                                      // set session variable
         $_SESSION['admin']="no";                                                // set session variable
-        $loggedUser=true;
+        $loggedUser=$_SESSION['deepskylog_id'];
         $cookietime=time()+(365*24*60*60);                                      // 1 year	      
 				setcookie("deepskylogsec",$passwd.$login,$cookietime,"/");
 	    }

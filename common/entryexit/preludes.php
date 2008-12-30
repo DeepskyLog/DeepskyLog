@@ -43,10 +43,10 @@ else
 //listnames
 $myList=False;
 $listname='';
-if(array_key_exists('listname', $_SESSION))
+if(array_key_exists('listname', $_SESSION)&&($_SESSION['listname']<>"----------"))
   $listname=$_SESSION['listname'];
 $listname_ss = stripslashes($listname);
-if(array_key_exists('listname',$_SESSION) && $objList->checkList($_SESSION['listname'])==2)
+if(array_key_exists('listname',$_SESSION)&&$objList->checkList($_SESSION['listname'])==2)
   $myList=True;
 
 // LCO for viewing observation lists in list, compact or last-own compact

@@ -19,15 +19,11 @@ class Lists
   if(array_key_exists('QobjParams',$_SESSION))
    unset($_SESSION['QobjParams']);
  }
- 
  function renameList($nameFrom, $nameTo)
- {if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($this->checkList($nameFrom)==2))
-  { $observer = $_SESSION['deepskylog_id'];
-    $sql = "UPDATE observerobjectlist SET listname = \"$nameTo\" WHERE observerid = \"$observer\" AND listname = \"$nameFrom\"";
-    mysql_query($sql) or die(mysql_error());
-  }
-  if(array_key_exists('QobjParams',$_SESSION))
-    unset($_SESSION['QobjParams']);
+ { if($GLOBALS['loggedUser']&&($this->checkList($nameFrom)==2))
+     $GLOBALS['objDatabase']->execSQL("UPDATE observerobjectlist SET listname=\"".$nameTo."\" WHERE observerid=\"".$GLOBALS['loggedUser']."\" AND listname=\"".$nameFrom."\"");
+   if(array_key_exists('QobjParams',$_SESSION))
+     unset($_SESSION['QobjParams']);
  }
  
  function emptyList($listname)

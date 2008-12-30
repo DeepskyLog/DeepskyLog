@@ -2,35 +2,23 @@
 // tolist.php
 // manages and shows lists
 
-if(($objList->checkList($_SESSION['listname'])==2) && ($_SESSION['listname']<>"----------"))
-  $listname=$_SESSION['listname'];	
-else
-  $listname='';
-$listname_ss = stripslashes($_SESSION['listname']);
-
-echo("<form action=\"".$baseURL."index.php?indexAction=listaction\">");
-echo("<input type=\"hidden\" name=\"indexAction\" value=\"listaction\"></input>");
+echo "<form action=\"".$baseURL."index.php?indexAction=listaction\">";
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
 echo "<table>";
- echo "<tr>";
-  echo "<td align=\"right\">";
-   echo(LangToListAddNew);
-  echo "</td>";
-	echo "<td>";
-	 echo("<input style=\"width:20em;\" type=\"text\" class=\"inputfield\" name=\"addlistname\" size=\"40\" value=\"\" />");
-  echo "</td>";
-	echo "<td>";
-	 echo("<input type=\"checkbox\" name=\"PublicList\" value=\"" . LangToListPublic . "\">");
-	 echo LangToListPublic . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	 echo("<input style=\"width:10em;\"  type=\"submit\" name=\"addList\" value=\"" . LangToListAdd . "\" />");
-	 if($myList)
-  	 echo("<input style=\"width:10em;\"  type=\"submit\" name=\"renameList\" value=\"" . LangToListRename . "\" />");
-	echo "</td>";
- echo"</tr>";
+echo "<tr>";
+echo "<td align=\"right\">".LangToListAddNew."</td>";
+echo "<td>"."<input style=\"width:20em;\" type=\"text\" class=\"inputfield\" name=\"addlistname\" size=\"40\" value=\"\" />"."</td>";
+echo "<td><input type=\"checkbox\" name=\"PublicList\" value=\"" . LangToListPublic . "\">".LangToListPublic . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+echo "<input style=\"width:10em;\"  type=\"submit\" name=\"addList\" value=\"" . LangToListAdd . "\" />";
+if($myList)
+  echo "<input style=\"width:10em;\" type=\"submit\" name=\"renameList\" value=\"" . LangToListRename . "\" />";
+echo "</td>";
+echo"</tr>";
 echo "</table>"; 
-echo("</form>");
+echo "</form>";
 echo "<hr>";
 
-if($_SESSION['listname']<>"----------")
+if($listname)
 { echo "<table>";
 	echo "<tr>";
 	echo "<td>";
