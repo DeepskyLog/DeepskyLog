@@ -174,8 +174,8 @@ if($object)
 	echo "</td>";
 	echo "<td>"; //====================================================================================================================== Visibility of observations
 	echo "<select name=\"visibility\" style=\"width:300px\" class=\"inputfield\"><option value=\"0\"></option>";
-	for ($i = 1; $i < 8; $i++)
-		echo "<option value=\"" . $i . "\">" . $GLOBALS['Visibility' . $i] . "</option>";
+	for($i=1;$i<8;$i++)
+		echo "<option value=\"".$i."\" ".(($objUtil->checkPostKey('visibility')==$i)?"selected ":"").">".$GLOBALS['Visibility'.$i]."</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "<td> </td>";
@@ -183,7 +183,7 @@ if($object)
 	echo LangViewObservationField12; //DRAWING
 	echo "</td>";
 	echo "<td colspan=\"2\">";
-	echo "<input type=\"file\" name=\"drawing\" value=\"" . $GLOBALS['objUtil']->checkPostKey('drawing') . "\ class=\"inputfield\" />";
+	echo "<input type=\"file\" name=\"drawing\" file=\"" . $GLOBALS['objUtil']->checkPostKey('drawing') . "\ class=\"inputfield\" />";
 	echo "</td>";
 	echo "</tr>";
 	echo "<tr>";
@@ -203,10 +203,10 @@ if($object)
 	echo "<td> </td>";
 	echo "<td> </td>";
 	echo "<td>";
-	echo "<input type=\"checkbox\" name=\"stellar\" />" . LangViewObservationField35;
+	echo "<input type=\"checkbox\" name=\"stellar\" ".($objUtil->checkPostKey("stellar")?"checked ":"")."/>" . LangViewObservationField35;
 	echo "</td>";
 	echo "<td>";
-	echo "<input type=\"checkbox\" name=\"extended\" />" . LangViewObservationField36;
+	echo "<input type=\"checkbox\" name=\"extended\" ".($objUtil->checkPostKey("extended")?"checked ":"")." />" . LangViewObservationField36;
 	echo "</td>";
 	echo "</tr>";
 	echo "<tr>";
@@ -217,10 +217,10 @@ if($object)
 	echo "<td> </td>";
 	echo "<td> </td>";
 	echo "<td>";
-	echo "<input type=\"checkbox\" name=\"resolved\" />" . LangViewObservationField37;
+	echo "<input type=\"checkbox\" name=\"resolved\" ".($objUtil->checkPostKey("resolved")?"checked ":"")."/>" . LangViewObservationField37;
 	echo "</td>";
 	echo "<td>";
-	echo "<input type=\"checkbox\" name=\"mottled\" />" . LangViewObservationField38;
+	echo "<input type=\"checkbox\" name=\"mottled\" ".($objUtil->checkPostKey("mottled")?"checked ":"")."/>" . LangViewObservationField38;
 	echo "</td>";
 	echo "</tr>";
 	// Some extra fields when we are describing open clusters, or asterisms...
@@ -317,7 +317,7 @@ else // no object found or not pushed on search button yet
 	echo LangQueryObjectsField1;
 	echo "</td>";
 	echo "<td colspan=\"2\">";
-	echo "<select name=\"catalog\">";
+	echo "<select name=\"catalog\" class=\"inputfield\">";
 	echo "<option value=\"\"></option>";
 	$catalogs = $GLOBALS['objObject']->getCatalogs();
 	while (list ($key, $value) = each($catalogs))

@@ -553,7 +553,7 @@ define("LangViewInstrumentField5", "Type");
 // content/view_observation.php
 
 define("LangViewObservationTitle", "D&eacute;tails de l'observation");
-define("LangViewObservationField1", "Nom de l'objet");
+define("LangViewObservationField1", "Nom&nbsp;de&nbsp;l'objet");
 define("LangViewObservationField1b", "Constellation");
 define("LangViewObservationField2", "Observateur");
 define("LangViewObservationField3", "Instrument");

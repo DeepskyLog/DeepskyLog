@@ -552,7 +552,7 @@ define("LangViewInstrumentField5", "Type");
 // content/view_observation.php
 
 define("LangViewObservationTitle", "Observation details");
-define("LangViewObservationField1", "Object name");
+define("LangViewObservationField1", "Object&nbsp;name");
 define("LangViewObservationField1b", "Constellation");
 define("LangViewObservationField2", "Observer");
 define("LangViewObservationField3", "Instrument");
@@ -639,7 +639,7 @@ define("LangNoObservations", "No observations available");
 // content/overview_observations.php
 
 define("LangOverviewObservationsTitle", "Overview all observations");
-define("LangOverviewObservationsHeader1", "Object name");
+define("LangOverviewObservationsHeader1", "Object&nbs;name");
 define("LangOverviewObservationsHeader2", "Observer");
 define("LangOverviewObservationsHeader3", "Instrument");
 define("LangOverviewObservationsHeader4", "Date");
@@ -787,7 +787,7 @@ define("LangValidateInstrumentMessage", "Message");
 // content/setup_query_objects.php
 
 define("LangQueryObjectsTitle", "Query objects");
-define("LangQueryObjectsField1", "Object name");
+define("LangQueryObjectsField1", "Object&nbsp;name");
 define("LangQueryObjectsField2", "Constellation");
 define("LangQueryObjectsField3", "Magnitude fainter than");
 define("LangQueryObjectsField4", "Magnitude brighter than");
