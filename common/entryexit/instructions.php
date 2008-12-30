@@ -64,7 +64,7 @@ if($objUtil->checkGetKey('indexAction')=="add_observation")
 		$_SESSION['addObs']=$_POST['timestamp'];
 	} 
 }
-elseif(array_key_exists('newObservation',$_GET))                                // From quickpick
+if(array_key_exists('newObservation',$_GET))                                // From quickpick
 { if(($objUtil->checkGetKey('indexAction')=='quickpick')
   &&($objUtil->checkGetKey('object'))
   &&($objObject->getExactDsObject($_GET['object'])))
@@ -81,7 +81,7 @@ elseif(array_key_exists('newObservation',$_GET))                                
 		$_SESSION['addObs']=$_POST['timestamp'];
 	} 
 }
-elseif(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="clear_observation")
+if(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="clear_observation")
 { $_POST['year']='';                                                             // empty the fields of the new observation form
   $_POST['month']=''; 
   $_POST['day']='';
