@@ -1,5 +1,5 @@
 <?php
-if (!function_exists('fnmatch')) {
+if (!function_exists('fnmatch')) {                                              // definition of the php fnmatch function for Windows environments
   function fnmatch($pattern, $string) {
 	  return @preg_match('/^' . strtr(addcslashes($pattern, '\\.+^$(){}=!<>|'), array('*' => '.*', '?' => '.?')) . '$/i', $string);
   }
