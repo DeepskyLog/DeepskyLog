@@ -21,7 +21,7 @@ else                           //===============================================
   $link = $link2.'&amp;sort='.$_GET['sort'].'&amp;sortdirection='.$_GET['sortdirection'];
   //====================== the remainder of the pages formats the page output and calls showObject (if necessary) and showObservations
   //=============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT BEFORE SHOWING ITS OBSERVATIONS =====================================================================================
-  if($object)
+  if($object&&$objObject->getExactDsObject($object))
   { $object_ss = stripslashes($object);
     $seen="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
     $seenDetails = $objObject->getSeen($object);

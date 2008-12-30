@@ -9,7 +9,6 @@ if(array_key_exists('number',$_GET) && $_GET['number'])
 else 
   $object=$GLOBALS['objUtil']->checkGetKey('object');
 
-	
 //200811151634B: dit wordt momenteel niet verwerkt, kan er met CONVERT_TZ(dt,from_tz,to_tz) in het sql statement gewerkt worden?
 $mindate=$objUtil->checkGetKey('mindate');
 $maxdate=$objUtil->checkGetKey('maxdate');

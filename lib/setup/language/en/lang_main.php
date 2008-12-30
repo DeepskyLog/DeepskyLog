@@ -639,7 +639,7 @@ define("LangNoObservations", "No observations available");
 // content/overview_observations.php
 
 define("LangOverviewObservationsTitle", "Overview all observations");
-define("LangOverviewObservationsHeader1", "Object&nbs;name");
+define("LangOverviewObservationsHeader1", "Object&nbsp;name");
 define("LangOverviewObservationsHeader2", "Observer");
 define("LangOverviewObservationsHeader3", "Instrument");
 define("LangOverviewObservationsHeader4", "Date");

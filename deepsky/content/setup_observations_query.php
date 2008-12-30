@@ -472,42 +472,16 @@ echo("<tr>");
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo(LangChangeVisibleLanguages);
 echo("</td>");
-
-
- if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']))
- {
-  $allLanguages = $objLanguage->getAllLanguages($objObserver->getLanguage($_SESSION['deepskylog_id']));
-  $_SESSION['alllanguages'] = $allLanguages; 
-  $usedLanguages = $objObserver->getUsedLanguages($_SESSION['deepskylog_id']);
- }
- else
- {
-  $allLanguages = $objLanguage->getAllLanguages($_SESSION['lang']);
-  $_SESSION['alllanguages'] = $allLanguages; 
-  $usedLanguages = $objLanguage->getLanguageKeys($_SESSION['lang']);
- }
-
- $j=0;
- while(list ($key, $value) = each($allLanguages))
- {
-   echo("<td><input type=\"checkbox\" ");
-   for ($i = 0;$i < count($usedLanguages);$i++)
-   {
-     if ($key == $usedLanguages[$i])
-     {
-       echo("checked ");
-     }
-   }
-   echo ("name=\"" . $key . "\" value=\"" . $key . "\" />". $value);
-	 $j++;
-	 if ($j==3)
-	 {
-	   $j=0;
-	   echo("</tr><tr><td></td>");
-	 } 
- }
- print("</tr>");
-
-echo("</table>");
-echo("\n</div>\n</body>\n</html>");
+$j=1;
+while(list($key,$value)=each($allLanguages))
+{ if($loggedUser)
+    echo "<td><input type=\"checkbox\" ".((in_array($key,$usedLanguages))?"checked ":"")."name=\"".$key."\" value=\"".$key."\" />".$value."</td>";
+  else
+    echo "<td><input type=\"checkbox\" ".(($key==$_SESSION['lang'])?"checked ":"")."name=\"".$key."\" value=\"".$key."\" />".$value."</td>";
+  if(!($j++%3))
+     echo "</tr><tr><td></td>"; 
+} 
+print "</tr>";
+echo "</table>";
+echo "</div>";
 ?>

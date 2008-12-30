@@ -2,18 +2,17 @@
 // loginuser.php
 // checks if the user is logged in based on cookie
 
+$loggedUser=false;
+$_SESSION['admin']="no";
 $loginErrorCode="";
 $loginErrorText="";
-if (isset($_COOKIE['deepskylog']))
-{	 setcookie("deepskylog","",time()-3600,"/");
-}
-$_SESSION['admin']="no";
 if(array_key_exists('deepskylogsec', $_COOKIE)&&$_COOKIE['deepskylogsec'])
 { if(strlen($_COOKIE['deepskylogsec'])>32)
   { if(substr($_COOKIE['deepskylogsec'],0,32)==$objObserver->getPassword(substr($_COOKIE['deepskylogsec'],32,255)))
     { $_SESSION['deepskylog_id']=substr($_COOKIE['deepskylogsec'],32,255);
 		  $_SESSION['lang']=$objObserver->getLanguage($_SESSION['deepskylog_id']);
-			if($objObserver->getRole($_SESSION['deepskylog_id'])=="0")                // administrator logs in 
+			$loggedUser=true;
+		  if($objObserver->getRole($_SESSION['deepskylog_id'])=="0")                // administrator logs in 
         $_SESSION['admin']="yes";
 	  }
 		else
@@ -39,13 +38,15 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
       { session_regenerate_id(true);
 			  $_SESSION['deepskylog_id']=$login;                                      // set session variable
         $_SESSION['admin']="no";                                                // set session variable
-	      $cookietime=time()+(365*24*60*60);                                      // 1 year	      
+        $loggedUser=true;
+        $cookietime=time()+(365*24*60*60);                                      // 1 year	      
 				setcookie("deepskylogsec",$passwd.$login,$cookietime,"/");
 	    }
       else                                                                      // administrator logs in 
       { session_regenerate_id(true);
 			  $_SESSION['deepskylog_id']=$login;                              
         $_SESSION['admin']="yes";                           
+        $loggedUser=true;
         $cookietime=time()+(365*24*60*60);                                      // 1 year
         setcookie("deepskylogsec",$passwd.$login,$cookietime,"/");
       }
@@ -84,6 +85,16 @@ if(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=="setLanguage"))
 	$_GET['indexAction']='default_action';
 }
 $language=$GLOBALS['objLanguage']->getPath($_SESSION['lang']);
+if($loggedUser)
+{ $allLanguages=$objLanguage->getAllLanguages($objObserver->getLanguage($_SESSION['deepskylog_id']));
+  $_SESSION['alllanguages']=$allLanguages; 
+  $usedLanguages=$objObserver->getUsedLanguages($_SESSION['deepskylog_id']);
+}
+else
+{ $allLanguages = $objLanguage->getAllLanguages($_SESSION['lang']);
+  $_SESSION['alllanguages'] = $allLanguages; 
+  $usedLanguages = $objLanguage->getLanguageKeys($_SESSION['lang']);
+}
 include "lib/setup/"."$language";
 if($loginErrorCode||$loginErrorText)
 { $_SESSION['deepskylog_id']='';

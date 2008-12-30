@@ -43,7 +43,7 @@ class util
 	      else
 	      { $_GET['object']=ucwords(trim($_GET['object']));
 	        if(array_key_exists('searchObservations', $_GET))
-	          return 'deepsky/content/setup_observations_query.php';  
+	          return 'deepsky/content/selected_observations2.php';  
 	        elseif(array_key_exists('newObservation', $_GET))
 	          return 'deepsky/content/setup_objects_query.php';   
 	        else
@@ -1339,7 +1339,6 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('comets_rank_objects'                ,'comets/content/top_objects.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('comets_query_observations'          ,'comets/content/setup_observations_query.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionall   ('comets_query_objects'               ,'comets/content/setup_objects_query.php')))
-
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionDSquickPick()))
       $indexActionInclude=$this->utilitiesGetIndexActionDefaultAction();
     return $indexActionInclude;
