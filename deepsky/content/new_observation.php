@@ -62,8 +62,8 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "&nbsp;&nbsp;";
 	echo "<select name=\"month\" style=\"text-align:center\" class=\"inputfield requiredField\">";
 	echo "<option value=\"\"></option>";
-	for ($i = 1; $i < 13; $i++)
-		echo "<option value=\"" . $i . "\"" . (($GLOBALS['objUtil']->checkPostKey('month') == $i) ? " selected=\"selected\"" : "") . ">" . $GLOBALS['Month' . $i] . "</option>";
+	for($i= 1;$i<13;$i++)
+		echo "<option value=\"".$i."\"".(($GLOBALS['objUtil']->checkPostKey('month')==$i)?" selected=\"selected\"" : "").">".$GLOBALS['Month'.$i]."</option>";
 	echo "</select>";
 	echo "&nbsp;&nbsp";
 	echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"4\" size=\"4\" style=\"text-align:center\" name=\"year\" value=\"" . $GLOBALS['objUtil']->checkPostKey('year') . "\" />";
@@ -281,7 +281,7 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "<td></td>";
 	echo "<td>";
 	echo "<input type=\"submit\" name=\"addobservation\" value=\"" . LangViewObservationButton1 . "\" />&nbsp;";
-	echo "<input type=\"submit\" name=\"clearfields\" value=\"" . LangViewObservationButton2 . "\" />";
+	echo "<input type=\"submit\" name=\"clear_observation\" value=\"" . LangViewObservationButton2 . "\" />";
 	echo "</td>";
 	echo "<td align=\"right\">";
 	echo "<td class=\"fieldname\" align=\"right\">";

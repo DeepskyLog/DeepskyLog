@@ -43,6 +43,22 @@ if($objUtil->checkGetKey('indexAction')=="logout")
   
 //============================================================================== DEEEPSKY INSTRUCTIONS
 $object=$objUtil->checkPostKey('object',$objUtil->checkGetKey('object'));
+if(($objUtil->checkGetKey('indexAction')=='quickpick') // From quickpick
+&&($objUtil->checkGetKey('object'))
+&&($objObject->getExactDsObject($_GET['object']))
+&&(array_key_exists('newObservation',$_GET)))
+{ $_POST['year']=$GLOBALS['objUtil']->checkPostKey('year',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear')); 
+  $_POST['month']=$GLOBALS['objUtil']->checkPostKey('month',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsMonth')); 
+  $_POST['day']=$GLOBALS['objUtil']->checkPostKey('day',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsDay'));
+  $_POST['instrument']=$GLOBALS['objUtil']->checkPostKey('instrument',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsInstrument')); 
+  $_POST['site']=$GLOBALS['objUtil']->checkPostKey('site',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLocation')); 
+  $_POST['limit']=$GLOBALS['objUtil']->checkPostKey('limit',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLimit')); 
+  $_POST['sqm']=$GLOBALS['objUtil']->checkPostKey('sqm',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsSQM')); 
+  $_POST['seeing']=$GLOBALS['objUtil']->checkPostKey('seeing',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsSeeing')); 
+  $_POST['description_language']=$GLOBALS['objUtil']->checkPostKey('description_language',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLanguage'));
+	$_POST['timestamp']=time();
+	$_SESSION['addObs']=$_POST['timestamp'];
+} 
 if($objUtil->checkGetKey('indexAction')=="add_observation")
 { if(array_key_exists('number',$_POST)&&(!$_POST['number']))
     $_GET['indexAction']="query_objects";
@@ -64,29 +80,15 @@ if($objUtil->checkGetKey('indexAction')=="add_observation")
 		$_SESSION['addObs']=$_POST['timestamp'];
 	} 
 }
-if(array_key_exists('newObservation',$_GET))                                // From quickpick
-{ if(($objUtil->checkGetKey('indexAction')=='quickpick')
-  &&($objUtil->checkGetKey('object'))
-  &&($objObject->getExactDsObject($_GET['object'])))
-  { $_POST['year']=$GLOBALS['objUtil']->checkPostKey('year',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear')); 
-    $_POST['month']=$GLOBALS['objUtil']->checkPostKey('month',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsMonth')); 
-    $_POST['day']=$GLOBALS['objUtil']->checkPostKey('day',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsDay'));
-    $_POST['instrument']=$GLOBALS['objUtil']->checkPostKey('instrument',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsInstrument')); 
-    $_POST['site']=$GLOBALS['objUtil']->checkPostKey('site',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLocation')); 
-    $_POST['limit']=$GLOBALS['objUtil']->checkPostKey('limit',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLimit')); 
-    $_POST['sqm']=$GLOBALS['objUtil']->checkPostKey('sqm',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsSQM')); 
-    $_POST['seeing']=$GLOBALS['objUtil']->checkPostKey('seeing',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsSeeing')); 
-    $_POST['description_language']=$GLOBALS['objUtil']->checkPostKey('description_language',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLanguage'));
-		$_POST['timestamp']=time();
-		$_SESSION['addObs']=$_POST['timestamp'];
-	} 
-}
-if(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="clear_observation")
+if((array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="validate_observation")
+&& ($objUtil->checkPostKey('clear_observation')==LangViewObservationButton2))
 { $temp=$_POST['object'];
   foreach($_POST as $foo=>$bar)
-    $_POST[$foo]=="";
-  $_POST['object']=temp;
-	$_GET['indexAction']="add_observation";
+    $_POST[$foo]="";
+  $_POST['object']=$temp;
+	$_POST['timestamp']=time();
+	$_SESSION['addObs']=$_POST['timestamp'];
+  $_GET['indexAction']="add_observation";
 }
 if(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="validate_observation")
   include_once "deepsky/control/validate_observation.php";
