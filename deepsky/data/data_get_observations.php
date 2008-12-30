@@ -150,7 +150,7 @@ if($_SESSION['QobsSortDirection']!=$_GET['sortdirection'])
 // Check if only the observations with a drawing should be shown: THERE SHOULD COME A FIELD IN THE DB SHOWING IF AN OBSERVATION HAS A DRAWING
 if($GLOBALS['objUtil']->checkGetKey('drawings'))
 { $drawingslist[] = false;
-  if ($handle = opendir('drawings/'))
+  if ($handle = opendir($instDir.'deepsky/drawings/'))
   { while(false!==($file=readdir($handle)))
     { $file=preg_replace("/.jpg/", "", $file);
       $file=preg_replace("/_resized/", "", $file);
