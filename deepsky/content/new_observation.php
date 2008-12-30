@@ -6,7 +6,7 @@
 
 echo "<div id=\"main\">";
 $object=$objUtil->checkPostKey('object', $objUtil->checkGetKey('object'));
-if($object)
+if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS['objUtil']->checkPostKey('timestamp',-1)))
 { $seen = $GLOBALS['objObject']->getDSOSeen($object);
 	echo "<h2>";
 	echo LangNewObservationTitle . "&nbsp;" . $object;
@@ -304,12 +304,12 @@ else // no object found or not pushed on search button yet
 	echo (LangNewObservationTitle);
 	echo "</h2>";
 	
-	echo "<form action=\"" . $baseURL . "index.php?indexAction=add_observation\" method=\"post\">";
 	echo "<ol>";
 	echo "<li value=\"1\">" . LangNewObservationSubtitle1a . LangNewObservationSubtitle1abis;
 	echo "<a href=\"" . $baseURL . "index.php?indexAction=add_csv\">" . LangNewObservationSubtitle1b . "</a>";
 	echo "</li>";
 	echo "</ol>";
+	echo "<form action=\"" . $baseURL . "index.php?indexAction=add_observation\" method=\"post\">";
 	echo "<table width=\"100%\" id=\"content\">";
 	// OBJECT NAME
 	echo "<tr>";

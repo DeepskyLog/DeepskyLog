@@ -1,8 +1,9 @@
 <?php
+
 if (!array_key_exists('deepskylog_id', $_SESSION) || !$_SESSION['deepskylog_id'])
 	throw new Exception("Not logged in");
-elseif ($GLOBALS['objUtil']->checkArrayKey($_SESSION, 'addObs', 0) != $GLOBALS['objUtil']->checkPostKey('timestamp', -1)) {
-	$_GET['indexAction'] = "detail_observation";
+elseif ($GLOBALS['objUtil']->checkArrayKey($_SESSION, 'addObs',0)!=$GLOBALS['objUtil']->checkPostKey('timestamp', -1)) 
+{ $_GET['indexAction'] = "default_action";
 	$_GET['dalm'] = 'D';
 	//$_GET['observation']=$current_observation;
 }
@@ -147,4 +148,5 @@ elseif ((!$_POST['day']) || (!$_POST['month']) || (!$_POST['year']) || ($_POST['
 		$_GET['observation'] = $current_observation;
 	}
 }
+  
 ?>
