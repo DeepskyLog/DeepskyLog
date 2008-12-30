@@ -29,6 +29,12 @@ define("LangObjectXSeen", "L'objet a d&eacute;j&agrave; &eacute;t&eacute; observ
 define("LangObjectNSeen", "L'objet n'a pas encore &eacute;t&eacute; observe en Deepskylog");
 define("LangBack", "Retour");
 
+define("LangNoPartOfsBrackets"," (no part-of objects)");
+define("LangOrPartOfs"," or part-of objects ");
+
+define("LangShowWithoutPartOfs","Show without part-of objects");
+define("LangShowWithPartOfs","Show with part-of objects");
+
 // content/result_query_observations.php
 
 define("LangResultPrevious", "Pr&eacute;c&eacute;dent");

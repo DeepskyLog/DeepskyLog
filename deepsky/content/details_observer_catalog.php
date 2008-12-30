@@ -23,13 +23,13 @@ $observedObjectsFromCatalog = $GLOBALS['objObservation']->getObservedFromCatalog
 if($partof)
   $observedObjectsFromCatalogPartOf = $GLOBALS['objObservation']->getObservedFromCatalogPartOf(html_entity_decode($_GET['user']), $cat); // number of objects observed by this observer	
 $numberOfObjects = $GLOBALS['objObject']->getNumberOfObjectsInCatalog($cat); // number of objects in catalog
-echo LangTopObserversMessierHeader2." ".$cat ." ".LangTopObserversMessierHeader3.(($partof)?" of deelobjecten ":" (geen deelobjecten)").":&nbsp;".count($observedObjectsFromCatalog) . " / " . $numberOfObjects;
+echo LangTopObserversMessierHeader2." ".$cat ." ".LangTopObserversMessierHeader3.(($partof)?LangOrPartOfs:LangNoPartOfsBrackets).":&nbsp;".count($observedObjectsFromCatalog) . " / " . $numberOfObjects;
 echo "</div>";
 echo "<p />";
 if($partof)
-  echo "<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&amp;partof=0\">Toon zonder deelobjecten</a>"; 			
+  echo "<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&amp;partof=0\">".LangShowWithoutPartOfs."</a>"; 			
 else
-  echo "<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&partof=1\">Toon met deelobjecten</a>";			
+  echo "<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&partof=1\">".LangShowWithPartOfs."</a>";			
 echo "<p />";
 $resultarray=$GLOBALS['objObject']->getObjectsFromCatalog($cat);
 echo "<table>";

@@ -29,6 +29,12 @@ define("LangObjectXSeen", "Object already observed by others, but not by me");
 define("LangObjectNSeen", "Object not logged in Deepskylog");
 define("LangBack", "Back");
 
+define("LangNoPartOfsBrackets"," (no part-of objects)");
+define("LangOrPartOfs"," or part-of objects ");
+
+define("LangShowWithoutPartOfs","Show without part-of objects");
+define("LangShowWithPartOfs","Show with part-of objects");
+
 // content/result_query_observations.php
 
 define("LangResultPrevious", "Previous");

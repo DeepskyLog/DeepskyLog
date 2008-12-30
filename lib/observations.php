@@ -450,25 +450,25 @@ class Observations {
 		if (substr($catalog, 0, 5) == "List:")
 			if (substr($catalog, 5, 7) == "Public:")
 				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
-				"INNER JOIN (objectpartof INNER JOIN objectnames ON objectpartof.partofname = objectnames.objectname) " .
-				"ON observations.objectname = objectpartof.objectname " .
-				"WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") " .
-				"AND (observations.observerid = \"" . $id . "\") " .
-				"AND (observations.visibility != 7))";
+				      " JOIN objectpartof ON objectpartof.partofname = observerobjectlist.objectname " .
+				      " JOIN observations ON observations.objectname = objectpartof.objectname " .
+						  " WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") " .
+				      " AND (observations.observerid = \"" . $id . "\") " .
+				      " AND (observations.visibility != 7))";
 			else
 				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
-				"INNER JOIN (objectpartof INNER JOIN objectnames ON objectpartof.partofname = objectnames.objectname) " .
-				"ON observations.objectname = objectpartof.objectname " .
-				"WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") AND (observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\") " .
-				"AND (observations.observerid = \"" . $id . "\") " .
-				"AND (observations.visibility != 7))";
+				      " JOIN objectpartof ON objectpartof.partofname = observerobjectlist.objectname " .
+				      " JOIN observations ON observations.objectname = objectpartof.objectname " .
+				      " WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") AND (observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\") " .
+				      " AND (observations.observerid = \"" . $id . "\") " .
+				      " AND (observations.visibility != 7))";
 		else
 			$sql = "SELECT DISTINCT objectnames.objectname FROM objectnames " .
-			"INNER JOIN (objectpartof INNER JOIN objectnames ON objectpartof.partofname = objectnames.objectname) " .
-			"ON observations.objectname = objectpartof.objectname " .
-			"WHERE ((objectnames.catalog = \"$catalog\") " .
-			"AND (observations.observerid=\"$id\") " .
-			"AND (observations.visibility != 7))";
+			      " JOIN objectpartof ON objectpartof.partofname = objectnames.objectname " .
+			      " JOIN observations ON observations.objectname = objectpartof.objectname " .
+			      " WHERE ((objectnames.catalog = \"$catalog\") " .
+			      " AND (observations.observerid=\"$id\") " .
+			      " AND (observations.visibility != 7))";
 		return $GLOBALS['objDatabase']->selectSingleArray($sql, 'objectname');
 	}
 

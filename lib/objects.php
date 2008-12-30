@@ -742,10 +742,7 @@ class Objects implements iObject
   return $obs;
  }
  function getObjectsFromCatalog($cat)
- {
-  $db = new database;
-  $db->login();
-	if(substr($cat,0,5)=="List:")
+ {if(substr($cat,0,5)=="List:")
     if(substr($cat,5,7)=="Public:")
       $sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As altname, observerobjectlist.objectplace As catindex  FROM observerobjectlist " .
 	  		     "WHERE (observerobjectlist.listname = \"" . substr($cat,5) . "\")";
@@ -761,7 +758,6 @@ class Objects implements iObject
 	  if($get->objectname)
       $obs[$get->catindex] = array($get->objectname, $get->altname);
 	uksort($obs,"strnatcasecmp");
-  $db->logout();
   return $obs;
  }
 // getExactObject returns the exact name of an object

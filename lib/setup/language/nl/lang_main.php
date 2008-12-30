@@ -29,6 +29,13 @@ define("LangObjectXSeen", "Object reeds waargenomen door anderen maar niet door 
 define("LangObjectNSeen", "Object nog niet waargenomen in Deepskylog");
 define("LangBack", "Terug");
 
+define("LangNoPartOfsBrackets"," (geen deelobjecten)");
+define("LangOrPartOfs"," of deelobjecten ");
+
+define("LangShowWithoutPartOfs","Toon zonder deelobjecten");
+define("LangShowWithPartOfs","Toon met deelobjecten");
+
+
 // content/result_query_observations.php
 
 define("LangResultPrevious", "Vorige");
