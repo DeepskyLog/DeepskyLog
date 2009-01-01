@@ -1083,14 +1083,14 @@ class Objects implements iObject
   $db->logout();
  }
  // setDeclination sets a new declination for the object
- function setDeclination($name, $decl)
+ function setDeclination($name, $dec)
  {
   $db = new database;
   $db->login();
 
   $atlas = new Atlasses;
 
-  $sql = "UPDATE objects SET decl = \"$decl\" WHERE name = \"$name\"";
+  $sql = "UPDATE objects SET decl = \"$dec\" WHERE name = \"$name\"";
   $run = mysql_query($sql) or die(mysql_error());
 
   $sql = "SELECT * FROM objects WHERE name = \"$name\"";
