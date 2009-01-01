@@ -20,7 +20,7 @@ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
 	  }
 	$result=$objLocation->getSortedLocations('name',$_SESSION['deepskylog_id']);
   $loc=$objObserver->getStandardLocation($_SESSION['deepskylog_id']);	
-	echo "<select onchange=\"location=this.options[this.selectedIndex].value;\" name=\"activateLocation\">";
+	echo "<select onchange=\"location=this.options[this.selectedIndex].value;\" name=\"activateLocation\" class=\"inputfield\">";
   while(list($key, $value) = each($result))
 	  echo "<option ".(($value==$loc)?"selected":"")." value=\"".$link."&amp;activeLocationId=$value\">".$objLocation->getLocationName($value)."</option>";
 	echo "</select>";

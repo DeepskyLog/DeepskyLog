@@ -33,7 +33,7 @@ if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
 	$result1[]='----------';
 	$result=array_merge($result1,$result2);
   if(count($result)>0)
-	{ echo("<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"activatelist\">\n");
+	{ echo("<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"activatelist\" class=\"inputfield\">\n");
 		if((!array_key_exists('listname',$_SESSION)) || (!$_SESSION['listname']))
 			$_SESSION['listname']="----------";
     while(list($key, $value) = each($result))
