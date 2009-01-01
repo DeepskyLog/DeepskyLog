@@ -42,8 +42,8 @@ if($includeFile=='deepsky/content/setup_objects_query.php')
     $includeFile="deepsky/content/view_object.php";
   }
   else
-  { if($objUtil->checkGetKey('source')!='')
-  	$entryMessage=LangExecuteQueryObjectsMessage2;
+  { if($objUtil->checkGetKey('source')=='setup_objects_query')
+  	  $entryMessage=LangExecuteQueryObjectsMessage2;
   }
 }   
 if($includeFile=='deepsky/content/tolist.php')

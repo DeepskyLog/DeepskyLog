@@ -474,7 +474,7 @@ define("LangViewObjectAddObservation", "New observation of ");
 define("LangViewObjectInexistant", "This object doesn't exist!");
 define("LangViewObjectNearbyObjects", "nearby objects");
 define("LangViewObjectAndNearbyObjects", " and ");
-define("LangViewObjectNoNearbyObjects", " - there are no objects within the specified distance");
+define("LangViewObjectNoNearbyObjects", " - there are no other objects within the specified distance");
 define("LangViewObjectNearbyObjectsMore", "More objects");
 define("LangViewObjectNearbyObjectsLess", "Less objects");
 define("LangViewObjectNearbyObjectsMoreLess", "up to about ");

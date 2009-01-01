@@ -28,7 +28,7 @@ echo "<td style=\"text-align:center\"><a href=\"".$baseURL."index.php?indexActio
 echo "<td style=\"text-align:center\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&sort=jaar&amp;catalog="    .urlencode($catalog)."\">".LangTopObserversHeader4."</a></td>";
 echo "<td width=\"125px\" align=\"center\">";
 echo("<form name=\"overviewform\">\n ");		
-echo("<select style=\"width:125px\" onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">\n");
+echo("<select style=\"width:125px\" onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\" class=\"inputfield\">");
 $catalogs=$objObject->getCatalogsAndLists();
 while(list($key,$value)=each($catalogs))
 { if($value==stripslashes($catalog))
