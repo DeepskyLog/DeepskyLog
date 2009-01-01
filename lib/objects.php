@@ -1636,7 +1636,7 @@ class Objects implements iObject
       echo("<input type=\"submit\" name=\"Go\" value=\"" . 'Edit Description' . "\" />");
   	  echo "</td>";
   	  echo "<td colspan=\"3\">";
-      echo("<textarea name=\"description\" class=\"listdescription\">");
+      echo("<textarea name=\"description\" class=\"listdescription inputfield\">");
 		  echo $GLOBALS['objList']->getListObjectDescription($object); 
 		  echo("</textarea>");
       echo("</form>");
