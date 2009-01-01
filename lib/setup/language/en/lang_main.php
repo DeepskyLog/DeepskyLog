@@ -128,6 +128,7 @@ define("LangObjectSetSUBR", "Set Surface Brightness");
 define("LangObjectSetDiam1", "Set Diameter 1 (seconds !)");
 define("LangObjectSetDiam2", "Set Diameter 2 (seconds !)");
 define("LangObjectSetPA", "Set Position Angle");
+define("LangEditObjectDescription","Edit Description");
 
 
 // content/change_account.php

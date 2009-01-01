@@ -129,6 +129,7 @@ define("LangObjectSetSUBR", "Changez la magnitude de surface");
 define("LangObjectSetDiam1", "Changez le diam&egrave;ter 1 (en secondes !)");
 define("LangObjectSetDiam2", "Changez le diam&egrave;ter 2 (en secondes !)");
 define("LangObjectSetPA", "Changez l'angle de position");
+define("LangEditObjectDescription","Adapter la description");
 
 
 // content/change_account.php

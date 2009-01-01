@@ -129,7 +129,7 @@ define("LangObjectSetSUBR", "Zet oppervlaktehelderheid");
 define("LangObjectSetDiam1", "Zet diameter 1 (seconden !)");
 define("LangObjectSetDiam2", "Zet diameter 2 (seconden !)");
 define("LangObjectSetPA", "Zet positiehoek");
-
+define("LangEditObjectDescription","Beschrijving aanpassen");
 
 // content/change_account.php
 

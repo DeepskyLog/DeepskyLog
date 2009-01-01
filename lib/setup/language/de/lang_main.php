@@ -127,6 +127,7 @@ define("LangObjectSetSUBR", "Setze Fl&auml;chenhelligkeit");
 define("LangObjectSetDiam1", "Setze Durchmesser 1 (Sekunden!)");
 define("LangObjectSetDiam2", "Setze Duchmesser 2 (Sekunden!)");
 define("LangObjectSetPA", "Setze Positionswinkel");
+define("LangEditObjectDescription","Edit Description");
 
 
 // content/change_account.php

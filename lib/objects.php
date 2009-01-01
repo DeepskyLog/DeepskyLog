@@ -1633,7 +1633,7 @@ class Objects implements iObject
 		  echo "<td align=\"right\">";
   	  echo LangViewObjectListDescription.' ('."<a href=\"http://www.deepskylog.org/wiki/bin/view/DeepskyLog/DreyerDescriptionen\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
 			echo "<br />";
-      echo("<input type=\"submit\" name=\"Go\" value=\"" . 'Edit Description' . "\" />");
+      echo("<input type=\"submit\" name=\"Go\" value=\"" . LangEditObjectDescription . "\" />");
   	  echo "</td>";
   	  echo "<td colspan=\"3\">";
       echo("<textarea name=\"description\" class=\"listdescription inputfield\">");
