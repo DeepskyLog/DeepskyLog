@@ -101,7 +101,7 @@ if(array_key_exists('con',$_GET)) $con=$_GET['con']; else $con='';
   echo("<td class=\"fieldname\" align=\"right\" width=\"300px\">");
   echo LangQueryObjectsField11;
   echo("</td>\n<td width=\"25%\">\n");
-  echo("<select name=\"type\">\n");
+  echo("<select name=\"type\" class=\"inputfield\">");
   echo("<option value=\"\"></option>"); // empty field
   $types = $objObject->getDsObjectTypes(); 
   while(list($key, $value) = each($types))
