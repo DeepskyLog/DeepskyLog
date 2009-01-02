@@ -63,27 +63,14 @@ function raToStringDSL($ra)
 
 
 function raToStringHM($ra)
-{
-  $ra_hours = floor($ra);
-  $subminutes = 60 * ($ra - $ra_hours);
-  $ra_minutes = floor($subminutes);
-  $ra_seconds = round(60 * ($subminutes - $ra_minutes));
-
-  if($ra_seconds >= 30)
-  $ra_minutes++;
-  if($ra_minutes == 60)
-  {
-    $ra_minutes = 0;
+{ $ra_hours=floor($ra);
+  $subminutes=60*($ra-$ra_hours);
+  $ra_minutes=round($subminutes);
+  if($ra_minutes==60)
+  { $ra_minutes=0;
     $ra_hours++;
-  }
-  if($ra_hours == 24)
-  $ra_hours = 0;
-
-  if($ra_hours <= 9)
-  {
-    $ra_hours = "0" . $ra_hours;
-  }
-  return("$ra_hours" . "h" . "$ra_minutes" . "m");
+  } 
+  return sprintf('%02d',($ra_hours%24)).'h'.sprintf('%02d',$ra_minutes).'m';
 }
 
 function raArgoToString($ra)

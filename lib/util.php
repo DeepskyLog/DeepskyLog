@@ -419,8 +419,7 @@ class util
       $diam2 = $valueA['objectdiam2'];
       $size = "";
       if ($diam1 >= 40.0)
-      {
-        if (round($diam1 / 60.0) == ($diam1 / 60.0))
+      { if (round($diam1 / 60.0) == ($diam1 / 60.0))
 				{ if ($diam1 / 60.0 > 30.0)
             $size = sprintf("%.0f'", $diam1 / 60.0);
           else
@@ -428,7 +427,6 @@ class util
         }
 				else
           $size = sprintf("%.1f'", $diam1 / 60.0);
-        
 				if ($diam2 != 0.0)
         { if (round($diam2 / 60.0) == ($diam2 / 60.0))
           { if ($diam2 / 60.0 > 30.0)
@@ -441,24 +439,20 @@ class util
 				}
       }
       elseif ($diam1 != 0.0) 
-      {
-        $size = sprintf("%.1f''", $diam1);
+      { $size = sprintf("%.1f''", $diam1);
         if ($diam2 != 0.0)
           $size = $size.sprintf("x%.1f''", $diam2);
       }
 			$contrast = $valueA['objectcontrast'];
       if ($contrast == "-")
-      {
-        $magnifi = "-";
-      } 
-			else {
-        $magnifi = (int)$valueA['objectoptimalmagnification'];
+        $magnifi = "-"; 
+			else 
+			{ $magnifi = (int)$valueA['objectoptimalmagnification'];
         $contrast = round($valueA['objectcontrast'],1);  if ($contrast - (int)$contrast == 0.0) $contrast = $contrast.".0";
       }
 			
       if(!$sort || ($actualsort!=$$sort))
-			{
-  			if($y<$bottom) 
+			{ if($y<$bottom) 
   			{ $y=$top;
   			  if($xbase==$xmid)
   				{ if($pagenr++) 
