@@ -24,7 +24,13 @@ $selectedLanguages=Array();
 while(list($key,$value)=each($allLanguages))
   if(array_key_exists($key,$_GET)) 
     $selectedLanguages[]=$key;
-
+if(!count($selectedLanguages))
+{ reset($allLanguages);
+  while(list($key,$value)=each($allLanguages))
+    if(($loggedUser&&in_array($key,$usedLanguages))
+    || ($key==$_SESSION['lang']))
+      $selectedLanguages[]=$key;
+}
 $query = array("object"        => $object,
                "catalog"       => $GLOBALS['objUtil']->checkGetKey('catalog'),
                "number"        => $GLOBALS['objUtil']->checkGetKey('number'),

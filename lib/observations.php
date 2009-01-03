@@ -303,7 +303,7 @@ class Observations {
 			$sqland .= "AND observations.SQM >= \"" . $queries["minSQM"] . "\" ";
 		if (isset ($queries["maxSQM"]) && ($queries["maxSQM"] != ""))
 			$sqland .= "AND observations.SQM <= \"" . $queries["minSQM"] . "\" ";
-		if (isset ($queries["languages"])) {
+		if (isset($queries["languages"])) {
 			$extra2 = "";
 			for ($i = 0; $i < count($queries["languages"]); $i++)
 				$extra2 .= "OR observations.language = \"" .
