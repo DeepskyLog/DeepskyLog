@@ -35,6 +35,9 @@ define("LangOrPartOfs"," of deelobjecten ");
 define("LangShowWithoutPartOfs","Toon zonder deelobjecten");
 define("LangShowWithPartOfs","Toon met deelobjecten");
 
+define("LangShowAllLanguages","Toon alle talen");
+define("LangShowInterfaceLanguage", "Toon enkel de nederlandstalige observaties");
+define("LangShowMyLanguages","Toon enkel de observaties in mijn geselecteerde talen");
 
 // content/result_query_observations.php
 

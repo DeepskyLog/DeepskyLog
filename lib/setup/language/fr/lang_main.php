@@ -35,6 +35,11 @@ define("LangOrPartOfs"," or part-of objects ");
 define("LangShowWithoutPartOfs","Show without part-of objects");
 define("LangShowWithPartOfs","Show with part-of objects");
 
+define("LangShowAllLanguages","Montrer toutes les languages");
+define("LangShowInterfaceLanguage", "Ne montrer que les observations en Français");
+define("LangShowMyLanguages","Ne montrer que les observations dans les languages de mon profil");
+
+
 // content/result_query_observations.php
 
 define("LangResultPrevious", "Pr&eacute;c&eacute;dent");

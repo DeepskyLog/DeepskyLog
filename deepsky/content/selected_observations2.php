@@ -14,10 +14,10 @@ else                           //===============================================
 	$link2 = $baseURL."index.php?indexAction=result_selected_observations&amp;lco=".urlencode($_SESSION['lco']); 
   reset($_GET);
 	while(list($key,$value)=each($_GET))
-	  if(($key!='indexAction')&&($key!='lco')&&($key!='sortdirection')&&($key!='sort')&&($key!='multiplepagenr')&&($key!='min'))
+	  if(!in_array($key,array('indexAction','lco','sortdirection','sort','multiplepagenr','min','myLanguages')))
 	    $link2.="&amp;".$key."=".urlencode($value);
-  while(list($key,$value)=each($usedLanguages))
-	  $link2=$link2.'&amp;'.$value.'='.$value; 
+//  while(list($key,$value)=each($usedLanguages))
+//	  $link2=$link2.'&amp;'.$value.'='.$value; 
   $link = $link2.'&amp;sort='.$_GET['sort'].'&amp;sortdirection='.$_GET['sortdirection'];
   //====================== the remainder of the pages formats the page output and calls showObject (if necessary) and showObservations
   //=============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT BEFORE SHOWING ITS OBSERVATIONS =====================================================================================
@@ -66,10 +66,19 @@ else                           //===============================================
   //elseif ($catalog=="*")
   //  echo (LangOverviewObservationsTitle); 
   elseif($object)
-    echo (LangSelectedObservationsTitle . $object);
+    echo LangSelectedObservationsTitle.$object;
   else
-    echo(LangSelectedObservationsTitle2);
-	if(count($_SESSION['Qobs'])>0)
+    echo LangSelectedObservationsTitle2;
+  if($objUtil->checkGetKey('myLanguages'))
+  { echo " (<a href=\"".$link."\">".LangShowAllLanguages."</a>)";
+    $link.="&amp;myLanguages=true";
+    $link2.="&amp;myLanguages=true";
+  }
+  elseif($loggedUser)
+    echo " (<a href=\"".$link."&amp;myLanguages=true\">".LangShowMyLanguages."</a>)";
+  else
+    echo " (<a href=\"".$link."&amp;myLanguages=true\">".LangShowInterfaceLanguage."</a>)";
+  if(count($_SESSION['Qobs'])>0)
 	 { if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
        if($_SESSION['lco']!="L")
   	     echo(" - <a href=\"". $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">" . 
@@ -94,8 +103,7 @@ else                           //===============================================
      echo "<p align=\"right\">" .  LangOverviewObservationsHeader5a;
 	 
    if(sizeof($_SESSION['Qobs']) > 0)
-   {
-      $count = 0; // counter for altering table colors
+   {  $count = 0; // counter for altering table colors
       if(sizeof($_SESSION['Qobs']) > 0) // ONLY WHEN OBSERVATIONS AVAILABLE
       { echo "<table width=\"100%\">\n";
         echo "<tr width=\"100%\" class=\"type3\">\n"; // LINKS TO SORT ON OBSERVATION TABLE HEADERS

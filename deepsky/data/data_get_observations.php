@@ -24,7 +24,7 @@ $selectedLanguages=Array();
 while(list($key,$value)=each($allLanguages))
   if(array_key_exists($key,$_GET)) 
     $selectedLanguages[]=$key;
-if(!count($selectedLanguages))
+if((!count($selectedLanguages))&&$objUtil->checkGetKey('myLanguages'))
 { reset($allLanguages);
   while(list($key,$value)=each($allLanguages))
     if(($loggedUser&&in_array($key,$usedLanguages))
@@ -66,8 +66,6 @@ $query = array("object"        => $object,
                "minseeing"     => $GLOBALS['objUtil']->checkGetKey('minseeing'),
                "maxseeing"     => $GLOBALS['objUtil']->checkGetKey('maxseeing'),
                "languages"     => $selectedLanguages);
-
-
 //============================================ CHECK TO SEE IF OBSERVATIONS ALREADY FETCHED BEFORE, OTHERWISE FETCH DATA FROM DB ===============================
 $validQobs=false;
 if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])>1)&&(count($_SESSION['Qobs'])>0))
