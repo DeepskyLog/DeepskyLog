@@ -235,7 +235,7 @@ class Observations {
 		$sqland .= (isset ($queries["maxdiameter"]) && $queries["maxdiameter"]) ? "AND instruments.diameter <= \"" . $queries["maxdiameter"] . "\" " : '';
 		$sqland .= (isset ($queries["type"]) && $queries["type"]) ? "AND objects.type = \"" . $queries["type"] . "\" " : '';
 		$sqland .= (isset ($queries["con"]) && $queries["con"]) ? "AND objects.con = \"" . $queries["con"] . "\" " : '';
-		$sqland .= (isset ($queries["minmag"]) && (strcmp($queries["minmag"], "") != 0)) ? "AND (objects.mag > \"" . $queries["minmag"] . "\" OR objects.mag like \"" . $queries["minmag"] . "\") " : '';
+		$sqland .= (isset ($queries["minmag"]) && (strcmp($queries["minmag"], "") != 0)) ? "AND (objects.mag > \"" . $queries["minmag"] . "\" OR objects.mag like \"" . $queries["minmag"] . "\") AND (objects.mag < 99)" : '';
 		if (isset ($queries["maxmag"]) && (strcmp($queries["maxmag"], "") != 0))
 			$sqland .= "AND (objects.mag < \"" . $queries["maxmag"] . "\" OR objects.mag like \"" . $queries["maxmag"] . "\") ";
 		if (isset ($queries["minsb"]) && (strcmp($queries["minsb"], "") != 0))
