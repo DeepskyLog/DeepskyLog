@@ -280,7 +280,7 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "<td>";
 	$description_language = $GLOBALS['objUtil']->checkPostKey('visibility', $objObserver->getObservationLanguage($_SESSION['deepskylog_id']));
 	$allLanguages = $objLanguage->getAllLanguages($objObserver->getLanguage($_SESSION['deepskylog_id']));
-	echo "<select name=\"description_language\" >";
+	echo "<select name=\"description_language\"  class=\"inputfield\">";
 	while (list ($key, $value) = each($allLanguages))
 		echo "<option value=\"" . $key . "\"" . (($GLOBALS['objUtil']->checkPostKey('description_language') == $key) ? "selected=\"selected\"" : ($GLOBALS['objObserver']->getObservationLanguage($_SESSION['deepskylog_id']) == $key) ? "selected=\"selected\"" : '') . ">" . $value . "</option>";
 	echo "</select>";

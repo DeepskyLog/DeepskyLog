@@ -56,7 +56,7 @@ echo "<td class=\"fieldname\">"; // LOCATION
 echo LangViewObservationField4;
 echo "</td>";
 echo "<td>";
-echo "<select name=\"location\" class=\"inputfield requiredField\">";
+echo "<select name=\"location\" class=\"inputfield requiredField\" style=\"width:300px\">";
 $locs = $objLocation->getSortedLocationsList("name", $_SESSION['deepskylog_id']);
 $theLoc = $objObservation->getDsObservationLocationId($_GET['observation']);
 while (list ($key, $value) = each($locs))
@@ -69,7 +69,7 @@ echo "<td class=\"fieldname\">";
 echo LangViewObservationField3;
 echo "</td>";
 echo "<td>"; // INSTRUMENTS
-echo "<select name=\"instrument\" class=\"inputfield requiredField\">";
+echo "<select name=\"instrument\" class=\"inputfield requiredField\" style=\"width:300px\">";
 $instr = $objInstrument->getSortedInstrumentsList("name", $_SESSION['deepskylog_id'], false);
 $theInstr = $objObservation->getDsObservationInstrumentId($_GET['observation']);
 while (list ($key, $value) = each($instr))
@@ -82,7 +82,7 @@ echo LangViewObservationField30;
 echo "&nbsp;";
 echo "</td>";
 echo "<td>";
-echo "<select name=\"eyepiece\" class=\"inputfield\">";
+echo "<select name=\"eyepiece\" class=\"inputfield\" style=\"width:300px\">";
 echo "<option value=\"\"></option>";
 $eyeps = $objEyepiece->getSortedEyepiecesList("name", $_SESSION['deepskylog_id'], false);
 $theEyepiece = $objObservation->getDsObservationEyepieceId($_GET['observation']);
@@ -96,7 +96,7 @@ echo LangViewObservationField31; // FILTER
 echo "&nbsp;";
 echo "</td>";
 echo "<td>";
-echo "<select name=\"filter\" class=\"inputfield\">";
+echo "<select name=\"filter\" class=\"inputfield\" style=\"width:300px\">";
 echo "<option value=\"\"></option>";
 $filts = $objFilter->getSortedFiltersList("name", $_SESSION['deepskylog_id'], false);
 $theFilter = $objObservation->getDsObservationFilterId($_GET['observation']);
@@ -110,7 +110,7 @@ echo LangViewObservationField32; // LENS
 echo "&nbsp;";
 echo "</td>";
 echo "<td>";
-echo "<select name=\"lens\" class=\"inputfield\">";
+echo "<select name=\"lens\" class=\"inputfield\" style=\"width:300px\">";
 echo "<option value=\"\"></option>";
 $lns = $objLens->getSortedLensesList("name", $_SESSION['deepskylog_id'], false);
 $theLens = $objObservation->getDsObservationLensId($_GET['observation']);
@@ -125,7 +125,7 @@ echo "<td class=\"fieldname\">";
 echo LangViewObservationField6;
 echo "</td>";
 echo "<td>";
-echo "<select name=\"seeing\" style=\"width: 147px\" class=\"inputfield\">";
+echo "<select name=\"seeing\" style=\"width:300px\" class=\"inputfield\">";
 echo "<option value=\"-1\"></option>";
 $theSeeing = $objObservation->getSeeing($_GET['observation']);
 for ($i = 1; $i < 6; $i++)
@@ -188,7 +188,7 @@ if ($objObservation->getDsSmallDiameter($_GET['observation']) > 0.0) {
 }
 echo "\" />";
 echo "&nbsp;";
-echo "<select name=\"size_units\">";
+echo "<select name=\"size_units\" class=\"inputfield\">";
 echo "<option value=\"min\"";
 if ($min == 1) {
 	echo " selected";
@@ -202,47 +202,41 @@ echo ">" . LangNewObjectSizeUnits2 . "</option>";
 echo "</select>";
 echo "</td>";
 echo "</tr>";
-echo "<tr>";
-echo "<td>";
-echo "</td>";
-echo "<td colspan=\"2\">";
-echo "<input type=\"checkbox\" name=\"stellar\" " . (($objObservation->getDsStellar($_GET['observation']) == 1) ? "checked" : '') . "/>" . LangViewObservationField35;
-echo "&nbsp;&nbsp;&nbsp;";
-echo "<input type=\"checkbox\" name=\"extended\" " . (($objObservation->getDsExtended($_GET['observation']) == 1) ? "checked" : '') . "/>" . LangViewObservationField36;
-echo "&nbsp;&nbsp;&nbsp;";
-echo "<input type=\"checkbox\" name=\"resolved\" " . (($objObservation->getDsResolved($_GET['observation']) == 1) ? "checked" : '') . "/>" . LangViewObservationField37;
-echo "&nbsp;&nbsp;&nbsp;";
-echo "<input type=\"checkbox\" name=\"mottled\" " . (($objObservation->getDsMottled($_GET['observation']) == 1) ? "checked" : '') . "/>" . LangViewObservationField38;
-echo "</td>";
-echo "</tr>";
+if($GLOBALS['objObject']->getDsoProperty($object,'type')=="GALXY")
+{ echo "<tr>";
+  echo "<td>";
+  echo "</td>";
+  echo "<td colspan=\"2\">";
+  echo "<input type=\"checkbox\" name=\"stellar\" " . (($objObservation->getDsStellar($_GET['observation']) == 1) ? "checked" : '') . "/>" . LangViewObservationField35;
+  echo "&nbsp;&nbsp;&nbsp;";
+  echo "<input type=\"checkbox\" name=\"extended\" " . (($objObservation->getDsExtended($_GET['observation']) == 1) ? "checked" : '') . "/>" . LangViewObservationField36;
+  echo "&nbsp;&nbsp;&nbsp;";
+  echo "<input type=\"checkbox\" name=\"resolved\" " . (($objObservation->getDsResolved($_GET['observation']) == 1) ? "checked" : '') . "/>" . LangViewObservationField37;
+  echo "&nbsp;&nbsp;&nbsp;";
+  echo "<input type=\"checkbox\" name=\"mottled\" " . (($objObservation->getDsMottled($_GET['observation']) == 1) ? "checked" : '') . "/>" . LangViewObservationField38;
+  echo "</td>";
+  echo "</tr>";
+}
 $object = $objObservation->getObjectId($_GET['observation']);
 // Some extra fields when we are describing open clusters, or asterisms...
-if ($GLOBALS['objObject']->getDsoProperty($object,'type') == "ASTER" 
- || $GLOBALS['objObject']->getDsoProperty($object,'type') == "CLANB" 
- || $GLOBALS['objObject']->getDsoProperty($object,'type') == "DS" 
- || $GLOBALS['objObject']->getDsoProperty($object,'type') == "OPNCL" 
- || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA1STAR"
- || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA2STAR" 
- || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA3STAR" 
- || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA4STAR" 
- || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA8STAR") 
+if(in_array($GLOBALS['objObject']->getDsoProperty($object,'type'),array("ASTER" ,"CLANB","DS","OPNCL","AA1STAR","AA2STAR","AA3STAR","AA4STAR","AA8STAR"))) 
 { echo "<tr>";
 	echo "<td class=\"fieldname\">";
 	echo LangViewObservationField40;
 	echo "</td>";
 	echo "<td>";
-	echo "<select name=\"characterType\" class=\"inputfield\">";
+	echo "<select name=\"characterType\" class=\"inputfield\" style=\"width:300px\">";
 	echo "<option value=\"\"" . (($objObservation->getDsCharacterType($_GET['observation']) == '') ? " selected=\"selected\" " : '') . "></option>";
-	echo "<option value=\"" . "A" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'A') ? " selected=\"selected\" " : '') . ">A</option>";
-	echo "<option value=\"" . "B" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'B') ? " selected=\"selected\" " : '') . ">B</option>";
-	echo "<option value=\"" . "C" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'C') ? " selected=\"selected\" " : '') . ">C</option>";
-	echo "<option value=\"" . "D" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'D') ? " selected=\"selected\" " : '') . ">D</option>";
-	echo "<option value=\"" . "E" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'E') ? " selected=\"selected\" " : '') . ">E</option>";
-	echo "<option value=\"" . "F" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'F') ? " selected=\"selected\" " : '') . ">F</option>";
-	echo "<option value=\"" . "G" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'G') ? " selected=\"selected\" " : '') . ">G</option>";
-	echo "<option value=\"" . "H" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'H') ? " selected=\"selected\" " : '') . ">H</option>";
-	echo "<option value=\"" . "I" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'I') ? " selected=\"selected\" " : '') . ">I</option>";
-	echo "<option value=\"" . "X" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'X') ? " selected=\"selected\" " : '') . ">X</option>";
+	echo "<option value=\"" . "A" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'A') ? " selected=\"selected\" " : '') . ">A - ".$ClusterTypeA."</option>";
+	echo "<option value=\"" . "B" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'B') ? " selected=\"selected\" " : '') . ">B - ".$ClusterTypeB."</option>";
+	echo "<option value=\"" . "C" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'C') ? " selected=\"selected\" " : '') . ">C - ".$ClusterTypeC."</option>";
+	echo "<option value=\"" . "D" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'D') ? " selected=\"selected\" " : '') . ">D - ".$ClusterTypeD."</option>";
+	echo "<option value=\"" . "E" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'E') ? " selected=\"selected\" " : '') . ">E - ".$ClusterTypeE."</option>";
+	echo "<option value=\"" . "F" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'F') ? " selected=\"selected\" " : '') . ">F - ".$ClusterTypeF."</option>";
+	echo "<option value=\"" . "G" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'G') ? " selected=\"selected\" " : '') . ">G - ".$ClusterTypeG."</option>";
+	echo "<option value=\"" . "H" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'H') ? " selected=\"selected\" " : '') . ">H - ".$ClusterTypeH."</option>";
+	echo "<option value=\"" . "I" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'I') ? " selected=\"selected\" " : '') . ">I - ".$ClusterTypeI."</option>";
+	echo "<option value=\"" . "X" . "\"" . (($objObservation->getDsCharacterType($_GET['observation']) == 'X') ? " selected=\"selected\" " : '') . ">X - ".$ClusterTypeX."</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "</tr>";
@@ -261,7 +255,7 @@ echo "<td class=\"fieldname\">";
 echo LangViewObservationField22; // Visibility
 echo "</td>";
 echo "<td>";
-echo "<select name=\"visibility\" class=\"inputfield\">";
+echo "<select name=\"visibility\" class=\"inputfield\" style=\"width:300px\">";
 echo "<option value=\"0\"></option>";
 $visibility = $objObservation->getVisibility($_GET['observation']);
 for ($i = 1; $i < 8; $i++)
@@ -276,7 +270,7 @@ echo "</td>";
 echo "<td>";
 $allLanguages = $objLanguage->getAllLanguages($objObserver->getLanguage($_SESSION['deepskylog_id']));
 $theLang = $objObservation->getDsObservationLanguage($_GET['observation']);
-echo "<select name=\"description_language\" style=\"width:147px\">";
+echo "<select name=\"description_language\" class=\"inputfield\"  style=\"width:300px\">";
 while (list ($key, $value) = each($allLanguages))
 	echo "<option value=\"" . $key . "\" " . (($theLang == $key) ? "selected=\"selected\"" : '') . ">" . $value . "</option>";
 echo "</select>";
