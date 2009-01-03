@@ -33,9 +33,7 @@ echo("<h2>");
 echo LangQueryObservationsTitle;
 echo("</h2>\n");
 
-
 echo("<table width=\"100%\">\n");
-
 echo("<tr>");
 echo "<td>";
 echo "<form action=\"".$baseURL."index.php\">";
@@ -47,7 +45,7 @@ echo("<form action=\"".$baseURL."index.php\" method=\"get\" name=\"ObservationsQ
 echo("<input type=\"hidden\" name=\"indexAction\" value=\"result_selected_observations\">");
 echo "<input type=\"hidden\" name=\"sort\" value=\"objectname\">";
 echo "<input type=\"hidden\" name=\"sortdirection\" value=\"asc\">";
-echo("<td align=\"right\" width=\"25%\">" . LangSeen . "</td><td width=\"25%\">");
+echo("<td align=\"right\">" . LangSeen . "</td><td>");
 echo("<select name=\"seen\">");
 echo("<option selected value=\"D\">" . LangSeenDontCare . "</option>");
 if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])

@@ -37,6 +37,8 @@ define("LangShowWithPartOfs","Show with part-of objects");
 define("LangShowAllLanguages","Show all languages");
 define("LangShowInterfaceLanguage", "Only show observation in English");
 define("LangShowMyLanguages","Only show the observations from my profile languages");
+define("LangAllLanguagesShown","all languages");
+define("LangSelectedLanguagesShown","selected languages only");
 
 // content/result_query_observations.php
 

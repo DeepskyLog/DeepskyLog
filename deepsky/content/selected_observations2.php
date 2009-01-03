@@ -69,15 +69,14 @@ else                           //===============================================
     echo LangSelectedObservationsTitle.$object;
   else
     echo LangSelectedObservationsTitle2;
+  $link3=$link;
   if($objUtil->checkGetKey('myLanguages'))
-  { echo " (<a href=\"".$link."\">".LangShowAllLanguages."</a>)";
+  { echo " (".LangSelectedLanguagesShown.")";
     $link.="&amp;myLanguages=true";
     $link2.="&amp;myLanguages=true";
   }
-  elseif($loggedUser)
-    echo " (<a href=\"".$link."&amp;myLanguages=true\">".LangShowMyLanguages."</a>)";
   else
-    echo " (<a href=\"".$link."&amp;myLanguages=true\">".LangShowInterfaceLanguage."</a>)";
+    echo " (".LangAllLanguagesShown.")";
   if(count($_SESSION['Qobs'])>0)
 	 { if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
        if($_SESSION['lco']!="L")
@@ -97,10 +96,22 @@ else                           //===============================================
 	 echo"<td align=\"right\">";	 
    list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
 	 echo"</td>";
-	 echo"</table>";
-	 
+	 echo "</tr>";
+	 echo "<tr>";
+	 echo "<td></td>";
+	 echo "<td style=\"text-align:right\">";
+	 if($objUtil->checkGetKey('myLanguages'))
+     echo "<a href=\"".$link3."\">".LangShowAllLanguages."</a>";
+   elseif($loggedUser)
+     echo "<a href=\"".$link3."&amp;myLanguages=true\">".LangShowMyLanguages."</a>";
+   else
+     echo "<a href=\"".$link3."&amp;myLanguages=true\">".LangShowInterfaceLanguage."</a>";
+	 echo "</p>";
 	 if($_SESSION['lco']=="O")
      echo "<p align=\"right\">" .  LangOverviewObservationsHeader5a;
+   echo "</td>";
+	 echo "</tr>";
+	 echo"</table>";
 	 
    if(sizeof($_SESSION['Qobs']) > 0)
    {  $count = 0; // counter for altering table colors

@@ -38,6 +38,8 @@ define("LangShowWithPartOfs","Toon met deelobjecten");
 define("LangShowAllLanguages","Toon alle talen");
 define("LangShowInterfaceLanguage", "Toon enkel de nederlandstalige observaties");
 define("LangShowMyLanguages","Toon enkel de observaties in mijn geselecteerde talen");
+define("LangAllLanguagesShown","alle talen");
+define("LangSelectedLanguagesShown","enkel geselecteerde talen");
 
 // content/result_query_observations.php
 

@@ -87,7 +87,7 @@ class util
     else                                       // no minimum value defined
       $min = 0;
     $max = $min + $step;                       // maximum number to be displayed
-    if(count($list) > $step)
+//    if(count($list) > $step)
     { $currentpage = ceil($min / $step) + 1;
       echo "<table>";
       echo "<tr style=\"vertical-align:top\">";
