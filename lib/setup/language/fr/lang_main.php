@@ -1005,6 +1005,18 @@ define("LangContrastEasy", " est facilement visible &#224; partir de ");
 define("LangContrastVeryEasy", " est facilement visible &#224; partir de ");
 define("LangContrastPlace", " avec votre ");
 
+//Cluster types
+$ClusterTypeA="Rijk, weinig geconc., versch. helderh., los";
+$ClusterTypeB="weinig geconc., versch. helderh., los";
+$ClusterTypeC="Arm, weinig geconc., versch. helderh., los";
+$ClusterTypeD="Rijk, wel geconc., los";
+$ClusterTypeE="Rijk, weinig geconc., zelfde helderh., los";
+$ClusterTypeF="Enkel gelijke kleur of helderh., niet los";
+$ClusterTypeG="Hoge vergr. comp. sterrenhoop, rijk, zwak";
+$ClusterTypeH="Zeer arm, totaal niet los";
+$ClusterTypeI="Hoge vergr. comp. sterrenhoop, arm, zwak";
+$ClusterTypeX="Geen klassificatie mogelijk";
+
 //Visibility
 $Visibility1="Objet tr&egrave;s facile et clair";
 $Visibility2="Objet facilement visible &agrave; vision directe";

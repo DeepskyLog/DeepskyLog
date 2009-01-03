@@ -1004,6 +1004,18 @@ define("LangContrastEasy", " ist einfach zu sehen von ");
 define("LangContrastVeryEasy", " ist sehr einfach zu sehen von  ");
 define("LangContrastPlace", " mit Ihrer ");
 
+//Cluster types
+$ClusterTypeA="Rich, poorly conc., diff. magnit., loose";
+$ClusterTypeB="poorly conc., diff. magnit., loose";
+$ClusterTypeC="Poor, poorly conc., diff. magnit., loose";
+$ClusterTypeD="Rich, concentrated, loose";
+$ClusterTypeE="Rich, poorly conc., same magnit., loose";
+$ClusterTypeF="Only same color or magnit., not loose";
+$ClusterTypeG="High magnif. compact cl., rich, weak";
+$ClusterTypeH="Very poor, not loose at all";
+$ClusterTypeI="High magnif. compact cl., poor, weak";
+$ClusterTypeX="No classification possible";
+
 //Visibility
 $Visibility1="Sehr einfaches, auff&auml;lliges Objekt im Okular";
 $Visibility2="Objekt bei direktem Beobachten gut zu sehen";

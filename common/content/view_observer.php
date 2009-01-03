@@ -50,7 +50,7 @@ for($i =0;$i<count($modules);$i++)
   }
   if(strcmp($$modules[$i], $comets) == 0)
   { $information[$i][0]=$userCometobservation." / ".$totalCometObservations." (".sprintf("%.2f", $userCometobservation/$totalCometObservations*100)."%)";
-    $information[$i][1]=$userCometYearObservations." / ".$totalCometYearObservations."&nbsp;(".sprintf("%.2f", $userCometYearObservations/$totalCometYearObservations*100)."%)";
+    $information[$i][1]=$userCometYearObservations." / ".$totalCometYearObservations."&nbsp;(".sprintf("%.2f", $userCometYearObservations/($totalCometYearObservations?$totalCometYearObservations:1)*100)."%)";
     $information[$i][2]=$userCometObjects . " / ".$totalCometobjects." (" . sprintf("%.2f", $userCometObjects/$totalCometobjects*100)."%)";
     $information[$i][4]=$cometrank;
   }

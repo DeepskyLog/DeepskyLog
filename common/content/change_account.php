@@ -54,7 +54,7 @@ $tempLangList.="</select>";
 
 $allLanguages=$objLanguage->getAllLanguages($objObserver->getLanguage($_SESSION['deepskylog_id']));
 $tempAllLangList="<select name=\"description_language\" class=\"inputfield\">";
-while(list ($key, $value) = each($allLanguages))
+while(list($key,$value)=each($allLanguages))
   $tempAllLangList.="<option value=\"".$key."\"".(($objObserver->getObservationLanguage($_SESSION['deepskylog_id']) == $key)?" selected=\"selected\"":"").">".$value."</option>";
 $tempAllLangList.="</select>";
 

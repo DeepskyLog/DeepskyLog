@@ -91,7 +91,7 @@ if($loggedUser)
   $usedLanguages=$objObserver->getUsedLanguages($_SESSION['deepskylog_id']);
 }
 else
-{ $allLanguages = $objLanguage->getAllLanguages($_SESSION['lang']);
+{ $allLanguages=$objLanguage->getAllLanguages($_SESSION['lang']);
   $_SESSION['alllanguages'] = $allLanguages; 
   $usedLanguages = $objLanguage->getLanguageKeys($_SESSION['lang']);
 }

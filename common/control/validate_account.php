@@ -61,8 +61,8 @@ elseif($objUtil->checkPostKey('change'))                // pressed change button
 	  $_GET['indexAction']='common_content_change_account';
   }
   else
-	{ $allLanguages=$objLanguage->getAllLanguages($_SESSION['lang']);         // READ ALL THE LANGUAGES FROM THE CHECKBOXES
-    while(list($key,$value)=each($allLanguages))
+	{ $usedLanguages=array();
+	  while(list($key,$value)=each($allLanguages))
       if(array_key_exists($key,$_POST))
         $usedLanguages[]=$key;
     $objObserver->setUsedLanguages($_SESSION['deepskylog_id'], $usedLanguages);
