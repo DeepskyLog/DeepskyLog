@@ -180,53 +180,50 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "</td>";
 	echo "<td> </td>";
 	echo "<td class=\"fieldname\" align=\"right\">";
-	echo LangViewObservationField12; //DRAWING
+	echo LangViewObservationField12; //====================================================================================================DRAWING
 	echo "</td>";
 	echo "<td colspan=\"2\">";
-	echo "<input type=\"file\" name=\"drawing\" file=\"" . $GLOBALS['objUtil']->checkPostKey('drawing') . "\ class=\"inputfield\" />";
+	echo "<input type=\"file\" name=\"drawing\" file=\"" . $GLOBALS['objUtil']->checkPostKey('drawing') . "\ class=\"inputfield\" style=\"width:300px\"/>";
 	echo "</td>";
 	echo "</tr>";
+
 	echo "<tr>";
 	echo "<td class=\"fieldname\" align=\"right\">";
-	echo LangViewObservationField33; // Estimated diameter
+	echo LangViewObservationField33; //============================================================================================================== Estimated diameter
 	echo "</td>";
 	echo "<td>";
 	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"largeDiam\" size=\"5\" style=\"text-align:center\" value=\"" . $GLOBALS['objUtil']->checkPostKey('largeDiam') . "\">";
 	echo "&nbsp;x&nbsp;";
 	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"smallDiam\" size=\"5\" style=\"text-align:center\" value=\"" . $GLOBALS['objUtil']->checkPostKey('smallDiam') . "\">";
 	echo "&nbsp;";
-	echo "<select name=\"size_units\">";
+	echo "<select name=\"size_units\" class=\"inputfield\">";
 	echo "<option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>";
 	echo "<option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>";
 	echo "</select>";
 	echo "</td>";
-	echo "<td> </td>";
-	echo "<td> </td>";
-	echo "<td>";
-	echo "<input type=\"checkbox\" name=\"stellar\" ".($objUtil->checkPostKey("stellar")?"checked ":"")."/>" . LangViewObservationField35;
-	echo "</td>";
-	echo "<td>";
-	echo "<input type=\"checkbox\" name=\"extended\" ".($objUtil->checkPostKey("extended")?"checked ":"")." />" . LangViewObservationField36;
-	echo "</td>";
-	echo "</tr>";
-	echo "<tr>";
-	echo "<td class=\"fieldname\" align=\"right\">";
-	echo "</td>";
-	echo "<td>";
-	echo "</td>";
-	echo "<td> </td>";
-	echo "<td> </td>";
-	echo "<td>";
-	echo "<input type=\"checkbox\" name=\"resolved\" ".($objUtil->checkPostKey("resolved")?"checked ":"")."/>" . LangViewObservationField37;
-	echo "</td>";
-	echo "<td>";
-	echo "<input type=\"checkbox\" name=\"mottled\" ".($objUtil->checkPostKey("mottled")?"checked ":"")."/>" . LangViewObservationField38;
-	echo "</td>";
-	echo "</tr>";
+	if($GLOBALS['objObject']->getDsoProperty($object,'type')=="GALXY") 
+	{ echo "<td>";
+		echo "<input type=\"checkbox\" name=\"stellar\" ".($objUtil->checkPostKey("stellar")?"checked ":"")."/>" . LangViewObservationField35;
+		echo "</td>";
+		echo "<td>";
+		echo "<input type=\"checkbox\" name=\"extended\" ".($objUtil->checkPostKey("extended")?"checked ":"")." />" . LangViewObservationField36;
+		echo "</td>";
+		echo "<td>";
+		echo "<input type=\"checkbox\" name=\"resolved\" ".($objUtil->checkPostKey("resolved")?"checked ":"")."/>" . LangViewObservationField37;
+		echo "</td>";
+		echo "<td>";
+		echo "<input type=\"checkbox\" name=\"mottled\" ".($objUtil->checkPostKey("mottled")?"checked ":"")."/>" . LangViewObservationField38;
+		echo "</td>";
+		echo "</tr>";
+	}
+	else
+	{
+		  
+	}
 	// Some extra fields when we are describing open clusters, or asterisms...
-	if ($GLOBALS['objObject']->getDsoProperty($object,'type') == "ASTER" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "CLANB" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "DS" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "OPNCL" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA1STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA2STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA3STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA4STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA8STAR") {
-		echo "<tr>";
-		echo "<td class=\"fieldname\" align=\"right\">";
+	if(in_array($GLOBALS['objObject']->getDsoProperty($object,'type'),array("ASTER","CLANB","DS","OPNCL","AA1STAR","AA2STAR","AA3STAR","AA4STAR","AA8STAR"))) 
+	{ echo "</tr> <tr>";
+    echo "<td class=\"fieldname\" align=\"right\">";
 		echo LangViewObservationField40;
 		echo "</td>";
 		echo "<td>";
@@ -247,19 +244,12 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 		echo "<a href=\"http://www.deepskylog.org/wiki/bin/view/DeepskyLog/CharacterType" . 
 		    $GLOBALS['objObserver']->getLanguage($_SESSION['deepskylog_id']) . "\" target=\"_blank\">" . LangViewObservationField40Expl . "</a>";
 		echo "</td>";
-		echo "<td> </td>";
-		echo "<td>";
+			echo "<td>";
 		echo "<input type=\"checkbox\" name=\"unusualShape\" />" . LangViewObservationField41;
 		echo "</td>";
 		echo "<td>";
 		echo "<input type=\"checkbox\" name=\"partlyUnresolved\" />" . LangViewObservationField42;
 		echo "</td>";
-		echo "</tr>";
-		echo "<tr>";
-		echo "<td></td>";
-		echo "<td></td>";
-		echo "<td></td>";
-		echo "<td></td>";
 		echo "<td>";
 		echo "<input type=\"checkbox\" name=\"colorContrasts\" />" . LangViewObservationField43;
 		echo "</td>";
