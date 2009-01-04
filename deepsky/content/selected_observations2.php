@@ -22,7 +22,7 @@ if(count($_SESSION['Qobs'])==0) //==============================================
   echo "</h2>";
   echo "<p>";
   if($objUtil->checkGetKey('myLanguages'))
-    echo "Look again, all languages.<p />";
+    echo "<a href=\"".$link2."\">".LangSearchAllLanguages."</a><p />";
   echo "<a href=\"".$baseURL."index.php?indexAction=query_observations\">" . "Set up a detailed search" . "</a>";
 }
 else                           //================================================================================================== show results in $_SESSION['Qobs'] =======================================================================================

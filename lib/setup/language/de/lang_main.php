@@ -184,6 +184,8 @@ define("LangSearchMenuItem5", "Objekte abfragen");
 define("LangSearchMenuItem6", "Beobachter");
 define("LangSearchMenuItem7", "Beliebteste Objekte");
 define("LangSearchMenuItem8", "Jahres Beobachtungen");
+define("LangSearchAllLanguages","Look again, using all languages.");
+define("LangSearchDetailPage","Set up a detailed search.");
 
 define("LangChangeMenuTitle", "Neu / &Auml;ndern");
 define("LangChangeMenuItem1", "Benutzer Details");

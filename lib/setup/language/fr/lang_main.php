@@ -187,6 +187,8 @@ define("LangSearchMenuItem5", "Recherche d'objets");
 define("LangSearchMenuItem6", "Les observateurs");
 define("LangSearchMenuItem7", "Les objets fr&eacute;quents");
 define("LangSearchMenuItem8", "Les observations de l'annï¿½e");
+define("LangSearchAllLanguages","Une nouvelle rechrerche dans toutes les languages.");
+define("LangSearchDetailPage","Faire une recherche détaillée.");
 
 define("LangChangeMenuTitle", "Rajoutez / Modifiez");
 define("LangChangeMenuItem1", "Donn&eacute;es personelles");

@@ -186,6 +186,8 @@ define("LangSearchMenuItem5", "Query objects");
 define("LangSearchMenuItem6", "Observers");
 define("LangSearchMenuItem7", "Popular objects");
 define("LangSearchMenuItem8", "Year of observations");
+define("LangSearchAllLanguages","Look again, using all languages.");
+define("LangSearchDetailPage","Set up a detailed search.");
 
 define("LangChangeMenuTitle", "Add / Change");
 define("LangChangeMenuItem1", "Account details");
