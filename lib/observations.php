@@ -165,10 +165,11 @@ class Observations {
 		"JOIN objectnames on objectpartof.partofname=objectnames.objectname " .
 		"JOIN observers on observations.observerid=observers.id ";
 		if (array_key_exists('object', $queries) && ($queries["object"] != ""))
-			$sqland .= "AND (objectnames.altname like \"" .
-			$queries["object"] . "\") ";
-		elseif (array_key_exists('catalog', $queries) && $queries["catalog"] && $queries['catalog'] != '%') $sqland .= "AND (objectnames.altname like \"" .
-		trim($queries["catalog"] . ' ' . $queries['number'] . '%') . "\") ";
+			$sqland .= "AND (objectnames.altname like \"" .$queries["object"] . "\") ";
+		elseif (array_key_exists('catalog', $queries) && $queries["catalog"] && $queries['catalog'] != '%') 
+		  $sqland .= "AND (objectnames.altname like \"" .trim($queries["catalog"] . ' ' . $queries['number'] . '%') . "\") ";
+		elseif (array_key_exists('number', $queries)&&$queries['number']) 
+		  $sqland .= "AND (objectnames.altname like \"" .trim($queries["number"]) . "\") ";
 		$sqland .= (isset ($queries["observer"]) && $queries["observer"]) ? " AND observations.observerid = \"" . $queries["observer"] . "\" " : '';
 		if (isset ($queries["instrument"]) && ($queries["instrument"] != "")) {
 			$sqland .= "AND (observations.instrumentid = \"" . $queries["instrument"] . "\" ";
@@ -324,7 +325,7 @@ class Observations {
 		if (!array_key_exists('countquery', $queries))
 			$sql .= " ORDER BY observationid DESC";
 		$sql = $sql . ";";
-// echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
+ //echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
 		$run = mysql_query($sql) or die(mysql_error());
 		if (!array_key_exists('countquery', $queries)) {
 			$j = 0;

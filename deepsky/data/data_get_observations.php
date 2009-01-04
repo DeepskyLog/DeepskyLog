@@ -21,9 +21,10 @@ if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) 
 //200811151634End
 
 $selectedLanguages=Array();
-while(list($key,$value)=each($allLanguages))
-  if(array_key_exists($key,$_GET)) 
-    $selectedLanguages[]=$key;
+if($objUtil->checkGetKey('myLanguages','false')=='true')
+  while(list($key,$value)=each($allLanguages))
+    if(array_key_exists($key,$_GET)) 
+      $selectedLanguages[]=$key;
 if((!count($selectedLanguages))&&$objUtil->checkGetKey('myLanguages'))
 { reset($allLanguages);
   while(list($key,$value)=each($allLanguages))

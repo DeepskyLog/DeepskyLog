@@ -45,6 +45,7 @@ echo("<form action=\"".$baseURL."index.php\" method=\"get\" name=\"ObservationsQ
 echo("<input type=\"hidden\" name=\"indexAction\" value=\"result_selected_observations\">");
 echo "<input type=\"hidden\" name=\"sort\" value=\"objectname\">";
 echo "<input type=\"hidden\" name=\"sortdirection\" value=\"asc\">";
+echo "<input type=\"hidden\" name=\"myLanguages\" value=\"true\">";
 echo("<td align=\"right\">" . LangSeen . "</td><td>");
 echo("<select name=\"seen\">");
 echo("<option selected value=\"D\">" . LangSeenDontCare . "</option>");
