@@ -112,7 +112,6 @@ else                           //===============================================
    echo "</td>";
 	 echo "</tr>";
 	 echo"</table>";
-	 
    if(sizeof($_SESSION['Qobs']) > 0)
    {  $count = 0; // counter for altering table colors
       if(sizeof($_SESSION['Qobs']) > 0) // ONLY WHEN OBSERVATIONS AVAILABLE
@@ -146,8 +145,8 @@ else                           //===============================================
 			
       list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
 
-      echo "<p>";
-			$objUtil->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."observations.pdf?SID=Qobs",LangExecuteQueryObjectsMessage4);
+	    echo "<hr />";
+      $objUtil->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."observations.pdf?SID=Qobs",LangExecuteQueryObjectsMessage4);
       echo " - ";
       echo "<a href=\"".$baseURL."observations.csv\" target=\"new_window\">".LangExecuteQueryObjectsMessage5."</a> - ";
       echo "<a href=\"".$baseURL."index.php?indexAction=query_objects&amp;source=observation_query\">".LangExecuteQueryObjectsMessage9."</a> - ";

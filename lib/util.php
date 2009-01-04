@@ -87,10 +87,10 @@ class util
     else                                       // no minimum value defined
       $min = 0;
     $max = $min + $step;                       // maximum number to be displayed
-//    if(count($list) > $step)
+    echo "<table>";
+    echo "<tr style=\"vertical-align:top\">";
+    if(count($list)>$step)
     { $currentpage = ceil($min / $step) + 1;
-      echo "<table>";
-      echo "<tr style=\"vertical-align:top\">";
 			echo "<td>";	
       echo "<a href=\"".$link."&amp;multiplepagenr=0\">";
       echo "<img src=\"".$baseURL."/styles/images/allleft20.gif\" border=\"0\">"; // link to last page
@@ -121,14 +121,17 @@ class util
       echo "</a>\n";
 	    echo" </td>";
 
-  		echo"<td>";
-			echo "&nbsp;&nbsp;(".count($list)."&nbsp;".LangNumberOfRecords.(($total&&($total!=count($list)))?" / ".$total:"");
-      echo " in ".$pages." pages)";
-      echo "</td>";
-	    echo "</tr>";
-	    echo "</table>";    
 	  }
-    return array($min, $max);
+    echo"<td>";
+		echo "&nbsp;&nbsp;(".count($list)."&nbsp;".LangNumberOfRecords.(($total&&($total!=count($list)))?" / ".$total:"");
+    if($pages>1)
+      echo " in ".$pages." pages)";
+    else
+      echo ")";
+    echo "</td>";
+	  echo "</tr>";
+	  echo "</table>";    
+	  return array($min, $max);
   }
   public function printListHeader($list, $link, $min, $step, $total)	// printListHeader prints the list header of $list if the list has more than
 																														  // $step entries. The first item from the list that should be shown is $min.

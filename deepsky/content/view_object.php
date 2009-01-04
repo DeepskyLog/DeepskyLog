@@ -62,7 +62,9 @@ echo "</form>";
 $maxcount=count($_SESSION['Qobj']);
 $max = 9999;
 $link = $baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey('zoom',30).'&amp;SID=Qobj';
+echo "<table width=\"100%\"> <tr> <td width=\"100%\" align=\"right\">";
 list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'],$link ,$min,25,"");
+echo "</td> </tr> </table>";
 if($max>count($_SESSION['Qobj']))
   $max=count($_SESSION['Qobj']);
 $objObject->showObjects($link,$min,$max,$_GET['object']);
