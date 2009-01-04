@@ -2,26 +2,31 @@
 // selected_observations2.php
 // generates an overview of selected observations in the database
 
+$link2 = $baseURL."index.php?indexAction=result_selected_observations&amp;lco=".urlencode($_SESSION['lco']); 
+reset($_GET);
+while(list($key,$value)=each($_GET))
+	if(!in_array($key,array('indexAction','lco','sortdirection','sort','multiplepagenr','min','myLanguages')))
+	  $link2.="&amp;".$key."=".urlencode($value);
+//  while(list($key,$value)=each($usedLanguages))
+//	  $link2=$link2.'&amp;'.$value.'='.$value; 
+$link = $link2.'&amp;sort='.$_GET['sort'].'&amp;sortdirection='.$_GET['sortdirection'];
+
+
 if(count($_SESSION['Qobs'])==0) //================================================================================================== no reult present =======================================================================================
 { echo "<h2>";
   echo LangObservationNoResults;
+  if($objUtil->checkGetKey('myLanguages'))
+    echo " (selected languages)";
+  else
+    echo " (all languages)";
   echo "</h2>";
   echo "<p>";
   if($objUtil->checkGetKey('myLanguages'))
-    echo "Look again, all languages.";
-  else
-    echo "<a href=\"".$baseURL."index.php?indexAction=query_observations\">" . "Set up a detailed search" . "</a>";
+    echo "Look again, all languages.<p />";
+  echo "<a href=\"".$baseURL."index.php?indexAction=query_observations\">" . "Set up a detailed search" . "</a>";
 }
 else                           //================================================================================================== show results in $_SESSION['Qobs'] =======================================================================================
 { $step = 25;
-	$link2 = $baseURL."index.php?indexAction=result_selected_observations&amp;lco=".urlencode($_SESSION['lco']); 
-  reset($_GET);
-	while(list($key,$value)=each($_GET))
-	  if(!in_array($key,array('indexAction','lco','sortdirection','sort','multiplepagenr','min','myLanguages')))
-	    $link2.="&amp;".$key."=".urlencode($value);
-//  while(list($key,$value)=each($usedLanguages))
-//	  $link2=$link2.'&amp;'.$value.'='.$value; 
-  $link = $link2.'&amp;sort='.$_GET['sort'].'&amp;sortdirection='.$_GET['sortdirection'];
   //====================== the remainder of the pages formats the page output and calls showObject (if necessary) and showObservations
   //=============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT BEFORE SHOWING ITS OBSERVATIONS =====================================================================================
   if($object&&$objObject->getExactDsObject($object))
