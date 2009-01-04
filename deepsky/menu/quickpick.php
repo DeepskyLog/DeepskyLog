@@ -10,6 +10,7 @@ echo "<tr>";
 echo "<td>";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"quickpick\"></input>";
 echo "<input type=\"hidden\" name=\"source\" value=\"quickpick\"></input>";
+echo "<input type=\"hidden\" name=\"myLanguages\" value=\"true\"></input>";
 echo "</td>";
 echo "</tr>";
 echo "<tr>";

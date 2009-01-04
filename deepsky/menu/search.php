@@ -27,7 +27,7 @@ $lastMinMonth = substr($theDate,4,2);
 $lastMinDay = substr($theDate,6,2);
 echo "<tr align=\"left\" height=\"25px\">";
 echo "<td>";
-echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay\" class=\"mainlevel\">".LangSearchMenuItem8."</a>";
+echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;myLanguages=true&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay\" class=\"mainlevel\">".LangSearchMenuItem8."</a>";
 echo "</td>";
 echo "</tr>";
 /*echo "<tr align=\"left\" height=\"25px\">";

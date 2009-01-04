@@ -4,10 +4,13 @@
 
 if(count($_SESSION['Qobs'])==0) //================================================================================================== no reult present =======================================================================================
 { echo "<h2>";
-  echo "<a href=\"".$baseURL."index.php?indexAction=query_observations\">" . LangObservationNoResults . "</a>";
-  echo " " . LangObservationOR . " ";
-  echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;catalog=%\">" . LangObservationQueryError3 . "</a>";
+  echo LangObservationNoResults;
   echo "</h2>";
+  echo "<p>";
+  if($objUtil->checkGetKey('myLanguages'))
+    echo "Look again, all languages.";
+  else
+    echo "<a href=\"".$baseURL."index.php?indexAction=query_observations\">" . "Set up a detailed search" . "</a>";
 }
 else                           //================================================================================================== show results in $_SESSION['Qobs'] =======================================================================================
 { $step = 25;
