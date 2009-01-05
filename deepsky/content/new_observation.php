@@ -201,50 +201,47 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "<option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>";
 	echo "</select>";
 	echo "</td>";
-	if($GLOBALS['objObject']->getDsoProperty($object,'type')=="GALXY") 
-	{ echo "<td>";
-		echo "<input type=\"checkbox\" name=\"stellar\" ".($objUtil->checkPostKey("stellar")?"checked ":"")."/>" . LangViewObservationField35;
-		echo "</td>";
-		echo "<td>";
-		echo "<input type=\"checkbox\" name=\"extended\" ".($objUtil->checkPostKey("extended")?"checked ":"")." />" . LangViewObservationField36;
-		echo "</td>";
-		echo "<td>";
-		echo "<input type=\"checkbox\" name=\"resolved\" ".($objUtil->checkPostKey("resolved")?"checked ":"")."/>" . LangViewObservationField37;
-		echo "</td>";
-		echo "<td>";
-		echo "<input type=\"checkbox\" name=\"mottled\" ".($objUtil->checkPostKey("mottled")?"checked ":"")."/>" . LangViewObservationField38;
-		echo "</td>";
-		echo "</tr>";
-	}
-	else
-	{
-		  
-	}
+  echo "<td>";
+	echo "<input type=\"radio\" name=\"stellarextended\" value=\"stellar\" ".(($objUtil->checkPostKey("stellarextended")=="stellar")?"checked ":"")."/>" . LangViewObservationField35;
+	echo "</td>";
+	echo "<td>";
+	echo "<input type=\"radio\" name=\"stellarextended\" value=\"extended\" ".(($objUtil->checkPostKey("stellarextended")=="extended")?"checked ":"")." />" . LangViewObservationField36;
+	echo "</td>";
+  echo "<td>";
+	echo "<input type=\"checkbox\" name=\"mottled\" ".($objUtil->checkPostKey("mottled")?"checked ":"")."/>" . LangViewObservationField38;
+	echo "</td>";
 	// Some extra fields when we are describing open clusters, or asterisms...
-	if(in_array($GLOBALS['objObject']->getDsoProperty($object,'type'),array("ASTER","CLANB","DS","OPNCL","AA1STAR","AA2STAR","AA3STAR","AA4STAR","AA8STAR"))) 
-	{ echo "</tr> <tr>";
-    echo "<td class=\"fieldname\" align=\"right\">";
-		echo LangViewObservationField40;
-		echo "</td>";
-		echo "<td>";
-		echo "<select name=\"characterType\" class=\"inputfield\" style=\"width:300px\"><option value=\"\"></option>";
-		echo "<option value=\"A\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'A') ? " selected=\"selected\" " : '') . ">A - ".$ClusterTypeA."</option>";
-		echo "<option value=\"B\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'B') ? " selected=\"selected\" " : '') . ">B - ".$ClusterTypeB."</option>";
-		echo "<option value=\"C\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'C') ? " selected=\"selected\" " : '') . ">C - ".$ClusterTypeC."</option>";
-		echo "<option value=\"D\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'D') ? " selected=\"selected\" " : '') . ">D - ".$ClusterTypeD."</option>";
-		echo "<option value=\"E\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'E') ? " selected=\"selected\" " : '') . ">E - ".$ClusterTypeE."</option>";
-		echo "<option value=\"F\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'F') ? " selected=\"selected\" " : '') . ">F - ".$ClusterTypeF."</option>";
-		echo "<option value=\"G\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'G') ? " selected=\"selected\" " : '') . ">G - ".$ClusterTypeG."</option>";
-		echo "<option value=\"H\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'H') ? " selected=\"selected\" " : '') . ">H - ".$ClusterTypeH."</option>";
-		echo "<option value=\"I\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'I') ? " selected=\"selected\" " : '') . ">I - ".$ClusterTypeI."</option>";
-		echo "<option value=\"X\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'X') ? " selected=\"selected\" " : '') . ">J - ".$ClusterTypeX."</option>";
-		echo "</select>";
-		echo "</td>";
-		echo "<td class=\"explanation\">";
-		echo "<a href=\"http://www.deepskylog.org/wiki/bin/view/DeepskyLog/CharacterType" . 
-		    $GLOBALS['objObserver']->getLanguage($_SESSION['deepskylog_id']) . "\" target=\"_blank\">" . LangViewObservationField40Expl . "</a>";
-		echo "</td>";
+	if(in_array($GLOBALS['objObject']->getDsoProperty($object,'type'),array("ASTER","CLANB","DS","OPNCL","AA1STAR","AA2STAR","AA3STAR","AA4STAR","AA8STAR","GLOCL"))) 
+	{  echo "<td>";
+	  echo "<input type=\"checkbox\" name=\"resolved\" ".($objUtil->checkPostKey("resolved")?"checked ":"")."/>" . LangViewObservationField37;
+	  echo "</td>";
+		echo "</tr> <tr>";
+    if($GLOBALS['objObject']->getDsoProperty($object,'type')!="GLOCL")
+		{ echo "<td class=\"fieldname\" align=\"right\">";
+		  echo LangViewObservationField40;
+		  echo "</td>";
 			echo "<td>";
+		  echo "<select name=\"characterType\" class=\"inputfield\" style=\"width:300px\"><option value=\"\"></option>";
+		  echo "<option value=\"A\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'A') ? " selected=\"selected\" " : '') . ">A - ".$ClusterTypeA."</option>";
+		  echo "<option value=\"B\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'B') ? " selected=\"selected\" " : '') . ">B - ".$ClusterTypeB."</option>";
+		  echo "<option value=\"C\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'C') ? " selected=\"selected\" " : '') . ">C - ".$ClusterTypeC."</option>";
+		  echo "<option value=\"D\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'D') ? " selected=\"selected\" " : '') . ">D - ".$ClusterTypeD."</option>";
+		  echo "<option value=\"E\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'E') ? " selected=\"selected\" " : '') . ">E - ".$ClusterTypeE."</option>";
+		  echo "<option value=\"F\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'F') ? " selected=\"selected\" " : '') . ">F - ".$ClusterTypeF."</option>";
+		  echo "<option value=\"G\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'G') ? " selected=\"selected\" " : '') . ">G - ".$ClusterTypeG."</option>";
+		  echo "<option value=\"H\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'H') ? " selected=\"selected\" " : '') . ">H - ".$ClusterTypeH."</option>";
+		  echo "<option value=\"I\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'I') ? " selected=\"selected\" " : '') . ">I - ".$ClusterTypeI."</option>";
+		  echo "<option value=\"X\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'X') ? " selected=\"selected\" " : '') . ">J - ".$ClusterTypeX."</option>";
+		  echo "</select>";
+		  echo "</td>";
+		
+		  echo "<td class=\"explanation\">";
+		  echo "<a href=\"http://www.deepskylog.org/wiki/bin/view/DeepskyLog/CharacterType" . $GLOBALS['objObserver']->getLanguage($_SESSION['deepskylog_id']) . "\" target=\"_blank\">" . LangViewObservationField40Expl . "</a>";
+		  echo "</td>";
+	  }
+		else
+		  echo "<td></td><td></td><td></td>";
+	  echo "<td>";
 		echo "<input type=\"checkbox\" name=\"unusualShape\" />" . LangViewObservationField41;
 		echo "</td>";
 		echo "<td>";

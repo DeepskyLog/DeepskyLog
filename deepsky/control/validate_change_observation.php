@@ -114,11 +114,11 @@ if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']
 				$GLOBALS['objObservation']->setSmallDiameter($_POST['observationid'], $_POST['smallDiam']);
 			if ($_POST['largeDiam'])
 				$GLOBALS['objObservation']->setLargeDiameter($_POST['observationid'], $_POST['largeDiam']);
-			if (array_key_exists('stellar', $_POST))
+			if (array_key_exists('stellarextended', $_POST)&&($_POST['stellarextended']=="stellar"))
 				$GLOBALS['objObservation']->setStellar($_POST['observationid'], 1);
 			else
 				$GLOBALS['objObservation']->setStellar($_POST['observationid'], -1);
-			if (array_key_exists('extended', $_POST))
+			if (array_key_exists('stellarextended', $_POST)&&($_POST['stellarextended']=="extended"))
 				$GLOBALS['objObservation']->setExtended($_POST['observationid'], 1);
 			else
 				$GLOBALS['objObservation']->setExtended($_POST['observationid'], -1);

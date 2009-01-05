@@ -81,11 +81,11 @@ elseif ((!$_POST['day']) || (!$_POST['month']) || (!$_POST['year']) || ($_POST['
 			$GLOBALS['objObservation']->setSmallDiameter($current_observation, $_POST['smallDiam']);
 		if ($_POST['largeDiam'])
 			$GLOBALS['objObservation']->setLargeDiameter($current_observation, $_POST['largeDiam']);
-		if (array_key_exists('stellar', $_POST))
+		if (array_key_exists('stellarextended', $_POST)&&($_POST['stellarextended']=="stellar"))
 			$GLOBALS['objObservation']->setStellar($current_observation, 1);
 		else
 			$GLOBALS['objObservation']->setStellar($current_observation, -1);
-		if (array_key_exists('extended', $_POST))
+		if (array_key_exists('stellarextended', $_POST)&&($_POST['stellarextended']=="extended"))
 			$GLOBALS['objObservation']->setExtended($current_observation, 1);
 		else
 			$GLOBALS['objObservation']->setExtended($current_observation, -1);
