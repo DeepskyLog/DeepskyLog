@@ -165,8 +165,8 @@ class Observations {
 		"JOIN objectnames on objectpartof.partofname=objectnames.objectname " .
 		"JOIN observers on observations.observerid=observers.id ";
 		if (array_key_exists('object', $queries) && ($queries["object"] != ""))
-//			$sqland .= "AND (objectnames.altname like \"" .$queries["object"] . "\") ";
-      $sqland .= " AND (CONCAT(UPPER(objectnames.catalog),UPPER(objectnames.catindex)) like \"" . strtoupper(str_replace(' ','',$queries["object"])) . "\") ";
+			$sqland .= "AND (objectnames.altname like \"" .$queries["object"] . "\") ";
+//      $sqland .= " AND (CONCAT(UPPER(objectnames.catalog),UPPER(objectnames.catindex)) like \"" . strtoupper(str_replace(' ','',$queries["object"])) . "\") ";
 		elseif (array_key_exists('catalog', $queries) && $queries["catalog"] && $queries['catalog'] != '%') 
 		  $sqland .= "AND (objectnames.altname like \"" .trim($queries["catalog"] . ' ' . $queries['number'] . '%') . "\") ";
 		elseif (array_key_exists('number', $queries)&&$queries['number']) 
