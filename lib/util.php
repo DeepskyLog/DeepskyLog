@@ -33,7 +33,7 @@ class util
     { if($this->checkGetKey('object'))
 	    { if($temp=$GLOBALS['objObject']->getExactDsObject($_GET['object']))
 	      { $_GET['object']=$temp;
-	        if(array_key_exists('searchObservations', $_GET))
+					if(array_key_exists('searchObservations', $_GET))
 	          return 'deepsky/content/selected_observations2.php';  
 	        elseif(array_key_exists('newObservation', $_GET))
 	          return 'deepsky/content/new_observation.php';   

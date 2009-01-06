@@ -961,6 +961,8 @@ define("LangVisibility7", "Object niet zichtbaar");
  
 define("LangSelectedObservationsTitle2", "Overzicht geselecteerde waarnemingen");
 define("LangSelectedObservationsTitle3", "Overzicht van de waarnemingen van het laatste jaar");
+define("LangSelectedObservationsSelectedLanguagesIndication", "geselecteerde talen");
+define("LangSelectedObservationsAllLanguagesIndication","alle talen");
  
 // lib/util.php
 

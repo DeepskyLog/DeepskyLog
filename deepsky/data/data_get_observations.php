@@ -29,7 +29,7 @@ if((!count($selectedLanguages))&&$objUtil->checkGetKey('myLanguages'))
 { reset($allLanguages);
   while(list($key,$value)=each($allLanguages))
     if(($loggedUser&&in_array($key,$usedLanguages))
-    || ($key==$_SESSION['lang']))
+    ||((!$loggedUser)&&($key==$_SESSION['lang'])))
       $selectedLanguages[]=$key;
 }
 $query = array("object"        => $object,

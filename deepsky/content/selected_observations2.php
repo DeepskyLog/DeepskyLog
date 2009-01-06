@@ -11,58 +11,57 @@ while(list($key,$value)=each($_GET))
 //	  $link2=$link2.'&amp;'.$value.'='.$value; 
 $link = $link2.'&amp;sort='.$_GET['sort'].'&amp;sortdirection='.$_GET['sortdirection'];
 
-
+$step = 25;
+//====================== the remainder of the pages formats the page output and calls showObject (if necessary) and showObservations
+//=============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT BEFORE SHOWING ITS OBSERVATIONS =====================================================================================
+if($object&&$objObject->getExactDsObject($object))
+{ $object_ss = stripslashes($object);
+  $seen="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
+  $seenDetails = $objObject->getSeen($object);
+  if(substr($seenDetails,0,1)=="X")
+    $seen="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\">".$seenDetails."</a>";
+  if(array_key_exists("deepskylog_id", $_SESSION)&&$_SESSION["deepskylog_id"])
+    if(substr($seenDetails,0,1)=="Y")
+      $seen="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen . "\">".$seenDetails."</a>";
+  echo "<div id=\"main\">";
+	echo "<h2>";
+  echo LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen;
+  echo "</h2>";
+	echo "<table width=\"100%\">";
+	echo "<tr>";
+	echo "<td width=\"25%\" align=\"left\">";
+  echo "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\">".LangViewObjectViewNearbyObject." ".$object_ss;
+	echo "</td><td width=\"25%\" align=\"center\">";
+  if(array_key_exists("deepskylog_id", $_SESSION)&&$_SESSION["deepskylog_id"])
+    echo "<a href=\"".$baseURL."index.php?indexAction=add_observation&object=".urlencode($object)."\">".LangViewObjectAddObservation.$object_ss."</a>";
+	echo "</td>";
+	if($myList)
+	{ echo "<td width=\"25%\" align=\"center\">";
+    if($objList->checkObjectInMyActiveList($object))
+      echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."&amp;removeObjectFromList=".urlencode($object)."\">".$object_ss.LangListQueryObjectsMessage3.$listname_ss."</a>";
+    else
+      echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."&amp;addObjectToList=".urlencode($object)."&amp;showname=".urlencode($object)."\">".$object_ss.LangListQueryObjectsMessage2.$listname_ss."</a>";
+	  echo "</td>";
+	}	
+	echo "</tr>";
+	echo "</table>";
+ $objObject->showObject($object);
+}	
 if(count($_SESSION['Qobs'])==0) //================================================================================================== no reult present =======================================================================================
 { echo "<h2>";
   echo LangObservationNoResults;
   if($objUtil->checkGetKey('myLanguages'))
-    echo " (selected languages)";
+    echo " (".LangSelectedObservationsSelectedLanguagesIndication.")";
   else
-    echo " (all languages)";
+    echo " (".LangSelectedObservationsAllLanguagesIndication.")";
   echo "</h2>";
   echo "<p>";
   if($objUtil->checkGetKey('myLanguages'))
     echo "<a href=\"".$link2."\">".LangSearchAllLanguages."</a><p />";
-  echo "<a href=\"".$baseURL."index.php?indexAction=query_observations\">" . "Set up a detailed search" . "</a>";
+  echo "<a href=\"".$baseURL."index.php?indexAction=query_observations\">" . LangSearchDetailPage . "</a>";
 }
-else                           //================================================================================================== show results in $_SESSION['Qobs'] =======================================================================================
-{ $step = 25;
-  //====================== the remainder of the pages formats the page output and calls showObject (if necessary) and showObservations
-  //=============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT BEFORE SHOWING ITS OBSERVATIONS =====================================================================================
-  if($object&&$objObject->getExactDsObject($object))
-  { $object_ss = stripslashes($object);
-    $seen="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
-    $seenDetails = $objObject->getSeen($object);
-    if(substr($seenDetails,0,1)=="X")
-      $seen="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\">".$seenDetails."</a>";
-    if(array_key_exists("deepskylog_id", $_SESSION)&&$_SESSION["deepskylog_id"])
-      if(substr($seenDetails,0,1)=="Y")
-        $seen="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen . "\">".$seenDetails."</a>";
-    echo "<div id=\"main\">";
-  	echo "<h2>";
-    echo LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen;
-    echo "</h2>";
-  	echo "<table width=\"100%\">";
-  	echo "<tr>";
-  	echo "<td width=\"25%\" align=\"left\">";
-    echo "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\">".LangViewObjectViewNearbyObject." ".$object_ss;
-  	echo "</td><td width=\"25%\" align=\"center\">";
-    if(array_key_exists("deepskylog_id", $_SESSION)&&$_SESSION["deepskylog_id"])
-      echo "<a href=\"".$baseURL."index.php?indexAction=add_observation&object=".urlencode($object)."\">".LangViewObjectAddObservation.$object_ss."</a>";
-  	echo "</td>";
-  	if($myList)
-  	{ echo "<td width=\"25%\" align=\"center\">";
-      if($objList->checkObjectInMyActiveList($object))
-        echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."&amp;removeObjectFromList=".urlencode($object)."\">".$object_ss.LangListQueryObjectsMessage3.$listname_ss."</a>";
-      else
-        echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."&amp;addObjectToList=".urlencode($object)."&amp;showname=".urlencode($object)."\">".$object_ss.LangListQueryObjectsMessage2.$listname_ss."</a>";
-  	  echo "</td>";
-  	}	
-  	echo "</tr>";
-  	echo "</table>";
-   $objObject->showObject($object);
-  }	
-  //=============================================================================================== START OBSERVATION PAGE OUTPUT =====================================================================================
+else
+{ //=============================================================================================== START OBSERVATION PAGE OUTPUT =====================================================================================
   echo"<table width=\"100%\">";
   echo"<td>";
   echo("<div id=\"main\">\n<h2>");
@@ -85,86 +84,66 @@ else                           //===============================================
   }
   else
     echo " (".LangAllLanguagesShown.")";
-  if(count($_SESSION['Qobs'])>0)
-	 { if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
-       if($_SESSION['lco']!="L")
-  	     echo(" - <a href=\"". $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">" . 
-  		       LangOverviewObservations . "</a>");
-  	 if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
-       if($_SESSION['lco']!="C")
-         echo(" - <a href=\"". $link . "&amp;lco=C" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsTitle . "\">" . 
-  			        LangCompactObservations . "</a>");
-  	 if(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
-       if($_SESSION['lco']!="O")
-  		   echo(" - <a href=\"". $link . "&amp;lco=O" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . 
-  			        LangCompactObservationsLO . "</a>");
-	 }
-	 echo "</h2>";
-	 echo"</td>";
-	 echo"<td align=\"right\">";	 
-   list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
-	 echo"</td>";
-	 echo "</tr>";
-	 echo "<tr>";
-	 echo "<td></td>";
-	 echo "<td style=\"text-align:right\">";
-	 if($objUtil->checkGetKey('myLanguages'))
-     echo "<a href=\"".$link3."\">".LangShowAllLanguages."</a>";
-   elseif($loggedUser)
-     echo "<a href=\"".$link3."&amp;myLanguages=true\">".LangShowMyLanguages."</a>";
-   else
-     echo "<a href=\"".$link3."&amp;myLanguages=true\">".LangShowInterfaceLanguage."</a>";
-	 echo "</p>";
-	 if($_SESSION['lco']=="O")
-     echo "<p align=\"right\">" .  LangOverviewObservationsHeader5a;
-   echo "</td>";
-	 echo "</tr>";
-	 echo"</table>";
-   if(sizeof($_SESSION['Qobs']) > 0)
-   {  $count = 0; // counter for altering table colors
-      if(sizeof($_SESSION['Qobs']) > 0) // ONLY WHEN OBSERVATIONS AVAILABLE
-      { echo "<table width=\"100%\">\n";
-        echo "<tr width=\"100%\" class=\"type3\">\n"; // LINKS TO SORT ON OBSERVATION TABLE HEADERS
-        tableSortHeader(LangOverviewObservationsHeader1, $link2 . "&amp;sort=objectname");
-        tableSortHeader(LangViewObservationField1b,      $link2 . "&amp;sort=objectconstellation");
-        tableSortHeader(LangOverviewObservationsHeader2, $link2 . "&amp;sort=observersortname");
-        tableSortInverseHeader(LangOverviewObservationsHeader3, $link2 . "&amp;sort=instrumentsort");
-        tableSortInverseHeader(LangOverviewObservationsHeader4, $link2 . "&amp;sort=observationdate");				
-        if($_SESSION['lco']!="O")
-				  echo("<td></td>\n");
-				else
-				  echo "<td width=\"15%\">" . LangOverviewObservationsHeader8 . "</td>".
-                 "<td width=\"15%\">" . LangOverviewObservationsHeader9 . "</td>".
-                 "<td width=\"15%\">" . LangOverviewObservationsHeader5. "</td>";
-         echo "</tr>";
-         while(list ($key, $value) = each($_SESSION['Qobs'])) // go through observations array
-         {  if($count >= $min && $count < $max)
-            { if(($_SESSION['lco']=="O")&&array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
-                $objObservation->showCompactObservationLO($key, $link . "&amp;min=" . $min, $myList);
-							elseif(($_SESSION['lco']=="C")&&array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
-                $objObservation->showCompactObservation($key, $link . "&amp;min=" . $min, $myList);
-              else
-                $objObservation->showOverviewObservation($key, $count, $link . "&amp;min=" . $min, $myList);
-						}
-            $count++; // increase counter
-         }
-         echo ("</table>\n");
+  if(($_SESSION['lco']!="L"))
+	  echo(" - <a href=\"". $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">".LangOverviewObservations . "</a>");
+	if(($_SESSION['lco']!="C"))
+    echo(" - <a href=\"". $link . "&amp;lco=C" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsTitle . "\">".LangCompactObservations . "</a>");
+	if($loggedUser&&($_SESSION['lco']!="O"))
+		   echo(" - <a href=\"". $link . "&amp;lco=O" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsLOTitle . "\">".LangCompactObservationsLO . "</a>");
+	echo "</h2>";
+	echo"</td>";
+	echo"<td align=\"right\">";	 
+  list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
+	echo"</td>";
+	echo "</tr>";
+	echo "<tr>";
+	echo "<td colspan=\"2\" style=\"text-align:right\">";
+	if($objUtil->checkGetKey('myLanguages'))
+    echo "<a href=\"".$link3."\">".LangShowAllLanguages."</a>";
+  elseif($loggedUser)
+    echo "<a href=\"".$link3."&amp;myLanguages=true\">".LangShowMyLanguages."</a>";
+  else
+    echo "<a href=\"".$link3."&amp;myLanguages=true\">".LangShowInterfaceLanguage."</a>";
+	echo "</p>";
+	if($_SESSION['lco']=="O")
+    echo "<p align=\"right\">" .  LangOverviewObservationsHeader5a;
+  echo "</td>";
+	echo "</tr>";
+	echo"</table>";
+  $count = 0; // counter for altering table colors
+    if(sizeof($_SESSION['Qobs']) > 0) // ONLY WHEN OBSERVATIONS AVAILABLE
+    { echo "<table width=\"100%\">\n";
+      echo "<tr width=\"100%\" class=\"type3\">\n"; // LINKS TO SORT ON OBSERVATION TABLE HEADERS
+      tableSortHeader(LangOverviewObservationsHeader1, $link2 . "&amp;sort=objectname");
+      tableSortHeader(LangViewObservationField1b,      $link2 . "&amp;sort=objectconstellation");
+      tableSortHeader(LangOverviewObservationsHeader2, $link2 . "&amp;sort=observersortname");
+      tableSortInverseHeader(LangOverviewObservationsHeader3, $link2 . "&amp;sort=instrumentsort");
+      tableSortInverseHeader(LangOverviewObservationsHeader4, $link2 . "&amp;sort=observationdate");				
+      if($_SESSION['lco']!="O")
+		    echo("<td></td>\n");
+		  else
+		    echo "<td width=\"15%\">" . LangOverviewObservationsHeader8 . "</td>".
+             "<td width=\"15%\">" . LangOverviewObservationsHeader9 . "</td>".
+             "<td width=\"15%\">" . LangOverviewObservationsHeader5. "</td>";
+      echo "</tr>";
+      while(list ($key, $value) = each($_SESSION['Qobs'])) // go through observations array
+      {  if($count >= $min && $count < $max)
+         { if(($_SESSION['lco']=="O")&&array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
+             $objObservation->showCompactObservationLO($key, $link . "&amp;min=" . $min, $myList);
+			     elseif(($_SESSION['lco']=="C"))
+             $objObservation->showCompactObservation($key, $link . "&amp;min=" . $min, $myList);
+           else
+             $objObservation->showOverviewObservation($key, $count, $link . "&amp;min=" . $min, $myList);
+				 }
+         $count++; // increase counter
       }
-			
+      echo ("</table>\n");			
       list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
-
 	    echo "<hr />";
       $objUtil->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."observations.pdf?SID=Qobs",LangExecuteQueryObjectsMessage4);
       echo " - ";
       echo "<a href=\"".$baseURL."observations.csv\" target=\"new_window\">".LangExecuteQueryObjectsMessage5."</a> - ";
       echo "<a href=\"".$baseURL."index.php?indexAction=query_objects&amp;source=observation_query\">".LangExecuteQueryObjectsMessage9."</a> - ";
-
-   }
-   else //==================================================================================================== NO OBSERVATIONS FOUND - OUTPUT MESSAGE ===================================================================================== 
-   {
-      echo("</h2>\n");
-			echo LangObservationNoResults; 
-			echo "<p>";
    }
    //==================================================================================================== PAGE FOOTER - MAKE NEW QUERY ===================================================================================== 
    echo("<a href=\"".$baseURL."index.php?indexAction=query_observations\">" . LangObservationQueryError2 . "</a>");

@@ -965,7 +965,9 @@ define("LangVisibility7", "L'objet n'est pas visible");
  
 define("LangSelectedObservationsTitle2", "Aper&ccedil;u des observations s&eacute;lectionn&eacute;es");
 define("LangSelectedObservationsTitle3", "Aper&ccedil;u des observations de la derniï¿½re annï¿½e");
- 
+define("LangSelectedObservationsSelectedLanguagesIndication", "languages sélectionées");
+define("LangSelectedObservationsAllLanguagesIndication","toutes les languages");
+  
 // lib/util.php
 
 define("LangPDFTitle", "Liste  des  objets de DeepskyLog");

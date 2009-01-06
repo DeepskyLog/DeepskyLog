@@ -36,7 +36,7 @@ define("LangShowWithoutPartOfs","Show without part-of objects");
 define("LangShowWithPartOfs","Show with part-of objects");
 
 define("LangShowAllLanguages","Show all languages");
-define("LangShowInterfaceLanguage", "Only show observation in English");
+define("LangShowInterfaceLanguage", "Only show observations in English");
 define("LangShowMyLanguages","Only show the observations from my profile languages");
 define("LangAllLanguagesShown","all languages");
 define("LangSelectedLanguagesShown","selected languages only");
@@ -963,7 +963,9 @@ define("LangVisibility7", "Object definitely not seen");
 
 define("LangSelectedObservationsTitle2", "Overview selected observations");
 define("LangSelectedObservationsTitle3", "Overview of last year's observations");
-
+define("LangSelectedObservationsSelectedLanguagesIndication", "selected languages");
+define("LangSelectedObservationsAllLanguagesIndication","all languages");
+ 
 // lib/util.php
 
 define("LangPDFTitle", "DeepskyLog Object List");

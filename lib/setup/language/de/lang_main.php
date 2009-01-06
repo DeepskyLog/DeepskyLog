@@ -963,6 +963,8 @@ define("LangVisibility7", "Objekt sicher nicht zu sehen");
 
 define("LangSelectedObservationsTitle2", "&Uuml;bersicht der ausgew&auml;hlten Beobachtungen");
 define("LangSelectedObservationsTitle3", "Overview of last year's observations");
+define("LangSelectedObservationsSelectedLanguagesIndication", "selected languages");
+define("LangSelectedObservationsAllLanguagesIndication","all languages");
 
 // lib/util.php
 

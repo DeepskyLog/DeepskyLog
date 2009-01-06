@@ -165,7 +165,8 @@ class Observations {
 		"JOIN objectnames on objectpartof.partofname=objectnames.objectname " .
 		"JOIN observers on observations.observerid=observers.id ";
 		if (array_key_exists('object', $queries) && ($queries["object"] != ""))
-			$sqland .= "AND (objectnames.altname like \"" .$queries["object"] . "\") ";
+//			$sqland .= "AND (objectnames.altname like \"" .$queries["object"] . "\") ";
+      $sqland .= " AND (CONCAT(UPPER(objectnames.catalog),UPPER(objectnames.catindex)) like \"" . strtoupper(str_replace(' ','',$queries["object"])) . "\") ";
 		elseif (array_key_exists('catalog', $queries) && $queries["catalog"] && $queries['catalog'] != '%') 
 		  $sqland .= "AND (objectnames.altname like \"" .trim($queries["catalog"] . ' ' . $queries['number'] . '%') . "\") ";
 		elseif (array_key_exists('number', $queries)&&$queries['number']) 
@@ -304,14 +305,13 @@ class Observations {
 			$sqland .= "AND observations.SQM >= \"" . $queries["minSQM"] . "\" ";
 		if (isset ($queries["maxSQM"]) && ($queries["maxSQM"] != ""))
 			$sqland .= "AND observations.SQM <= \"" . $queries["minSQM"] . "\" ";
-		if (isset($queries["languages"])) {
-			$extra2 = "";
-			for ($i = 0; $i < count($queries["languages"]); $i++)
-				$extra2 .= "OR observations.language = \"" .
-				$queries["languages"][$i] . "\" ";
-			if ($extra2)
-				$sqland .= " AND (" .
-				substr($extra2, 3) . ") ";
+		if ((!array_key_exists('countquery', $queries))
+		&& (isset($queries["languages"]))) 
+		{ $extra2="";
+			for($i=0;$i<count($queries["languages"]);$i++)
+				$extra2.="OR observations.language=\"".$queries["languages"][$i]."\" ";
+			if($extra2)
+				$sqland.=" AND (".substr($extra2,3).") ";
 		}
 		$sql = "(" . $sql1;
 		if ($sqland)

@@ -666,7 +666,8 @@ class Objects implements iObject
      if ($exact == 0)
        $sqland = $sqland . " AND (objectnames.catalog = \"" . $queries["name"] . "\")"; 
      elseif ($exact == 1)
-       $sqland = $sqland . " AND (UPPER(objectnames.altname) like \"" . strtoupper($queries["name"]) . "\")";
+//       $sqland = $sqland . " AND (UPPER(objectnames.altname) like \"" . strtoupper($queries["name"]) . "\")";
+       $sqland = $sqland . " AND (CONCAT(UPPER(objectnames.catalog),UPPER(objectnames.catindex)) like \"" . strtoupper(str_replace(' ','',$queries["name"])) . "\") ";
    $sqland.=(array_key_exists('type',$queries)&&$queries['type'])?" AND (objects.type=\"".$queries['type']."\")":'';
    $sqland.=(array_key_exists('con',$queries)&&$queries['con'])?" AND (objects.con=\"".$queries['con']."\")":'';
    $sqland.=(array_key_exists('minmag',$queries)&&$queries['minmag'])?" AND (objects.mag>\"".$queries["minmag"]."\" or objects.mag like \"" . $queries["minmag"] . "\")":'';
@@ -690,7 +691,7 @@ class Objects implements iObject
    else
      $sql = $sql1 . $sqland;		
    $sql.=" LIMIT 0,10000";
-//echo $sql;
+//echo $sql."<p />";
 	$run=$GLOBALS['objDatabase']->selectRecordset($sql);
   $i=0;
   if (array_key_exists('name',$queries)&&$queries["name"])
@@ -762,25 +763,22 @@ class Objects implements iObject
  }
 // getExactObject returns the exact name of an object
  function getLikeDsObject($value, $cat='', $catindex='')
- {$result=array();
-  $db = new database;
-  $db->login();
-	$value2=trim($value);
-	$value=strtoupper(trim($value));
-  if($value!='')
-    $sql = "SELECT objectnames.objectname FROM objectnames " .
-		  	   "WHERE UPPER(altname) LIKE \"$value\" " .
-					 "OR altname LIKE \"$value2\"";
-	else
-	{ $catindex=ucwords($catindex);
-    $sql = "SELECT objectnames.objectname FROM objectnames " .
-		       "WHERE CONCAT(objectnames.catalog, ' ', objectnames.catindex) LIKE \"$cat $catindex\"";
-	}
-	$run = mysql_query($sql) or die(mysql_error());
-  $db->logout();
-	while($get = mysql_fetch_object($run))
-    $result[] = $get->objectname;
-	return $result;
+ { $result=array();
+	 $value2=trim($value);
+	 $value=strtoupper(trim($value));
+   if($value!='')
+     $sql = "SELECT objectnames.objectname FROM objectnames " .
+		        "WHERE UPPER(altname) LIKE \"$value\" " .
+					  "OR altname LIKE \"$value2\"";
+	 else
+	 { $catindex=ucwords($catindex);
+     $sql = "SELECT objectnames.objectname FROM objectnames " .
+		        "WHERE CONCAT(objectnames.catalog, ' ', objectnames.catindex) LIKE \"$cat $catindex\"";
+	 }
+	 $run = mysql_query($sql) or die(mysql_error());
+	 while($get = mysql_fetch_object($run))
+     $result[] = $get->objectname;
+	 return $result;
  }
  public function getExactDsObject($value, $cat='', $catindex='')        // getExactObject returns the exact name of an object
  { if($value)
@@ -788,11 +786,14 @@ class Objects implements iObject
 		  	   "WHERE UPPER(altname) = \"".strtoupper(trim($value))."\" " .
 					 "OR altname = \"".trim($value)."\"";
 	 else
-	 { $catindex=ucwords($catindex);
-     $sql = "SELECT objectnames.objectname FROM objectnames " .
-		        "WHERE objectnames.catalog=\"".$cat."\" AND objectnames.catindex=\"".$catindex."\"";
-	 }
-	 return $GLOBALS['objDatabase']->selectSingleValue($sql,'objectname','');
+	   $sql = "SELECT objectnames.objectname FROM objectnames " .
+		        "WHERE objectnames.catalog=\"".$cat."\" AND objectnames.catindex=\"".ucwords(trim($catindex))."\"";
+	 if((!($object=$GLOBALS['objDatabase']->selectSingleValue($sql,'objectname','')))&&$value)
+	 { $sql="SELECT objectnames.objectname FROM objectnames " .
+		        "WHERE CONCAT(UPPER(objectnames.catalog),UPPER(objectnames.catindex))=\"".strtoupper(str_replace(' ','',$value))."\"";
+	   $object=$GLOBALS['objDatabase']->selectSingleValue($sql,'objectname','');
+	 }    
+   return $object;
  }
  // getSurfaceBrightness returns the surface brightness of the object
  function getSurfaceBrightness($name)
