@@ -312,15 +312,7 @@ class Lists
  } 
  
  function checkObjectInMyActiveList($value)
- {$observerid = $_SESSION['deepskylog_id'];
-	$listname = $_SESSION['listname'];
-  $sql = "SELECT observerobjectlist.objectplace FROM observerobjectlist WHERE observerid = \"$observerid\" AND objectname=\"$value\" AND listname=\"$listname\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  $get = mysql_fetch_object($run);
-  if($get)
-    return $get->objectplace;
-  else
-    return 0;
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT observerobjectlist.objectplace FROM observerobjectlist WHERE observerid = \"".$GLOBALS['loggedUser']."\" AND objectname=\"".$value."\" AND listname=\"".$GLOBALS['listname']."\"",'objectplace',0);
  }
 
  function checkObjectMyOrPublicList($value, $list)

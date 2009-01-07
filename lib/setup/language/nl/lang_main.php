@@ -617,6 +617,7 @@ define("LangViewObservationField40Expl", "Meer informatie");
 define("LangViewObservationField41", "Ongebruikelijke vorm");
 define("LangViewObservationField42", "Gedeeltelijk onopgelost");
 define("LangViewObservationField43", "Kleur contrast");
+define("LangViewObservationField44", "De waarneming toevoegen aan de lijst ");
 
 define("LangViewObservationButton1", "Voeg toe");
 define("LangViewObservationButton2", "Wis velden");

@@ -402,7 +402,7 @@ elseif($objUtil->checkGetKey('source')=='quickpick')   //=======================
 		{	$_SESSION['QobjParams']=array('source'=>'quickpick','object'=>$objUtil->checkGetKey('object'));
     	$_SESSION['QobjPO']=$showPartOfs;
 		  $_SESSION['Qobj']=$objObject->getObjectFromQuery(array('name'=>$objUtil->checkGetKey('object')),1,"D",$showPartOfs);
-	    $_SESSION['QobjSort']='objectname';
+	    $_SESSION['QobjSort']='';
 	    $_SESSION['QobjSortDirection']='asc';
 		}
 	} 
@@ -417,8 +417,11 @@ else
 		
 //=========================================== CHECK TO SEE IF SORTING IS NECESSARY ===========================================
 if(!array_key_exists('sort',$_GET))      
-{ $_GET['sort'] = $_SESSION['QobjSort'];
-  $_GET['sortdirection']=$_SESSION['QobjSortDirection'];
+{ if(!$objUtil->checkGetKey('sort'))
+    $_GET['sort']=$_SESSION['QobjSort'];
+  if(!$objUtil->checkGetKey('sort'))
+    $_GET['sort']='showname';
+	$_GET['sortdirection']=$_SESSION['QobjSortDirection'];
 }
 if(!array_key_exists('sortdirection',$_GET))
 	$_GET['sortdirection']=$_SESSION['QobjSortDirection'];

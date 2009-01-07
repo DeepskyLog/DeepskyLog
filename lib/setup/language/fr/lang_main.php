@@ -621,6 +621,7 @@ define("LangViewObservationField40Expl", "More information");
 define("LangViewObservationField41", "Unusual Shape");
 define("LangViewObservationField42", "Partly unresolved");
 define("LangViewObservationField43", "Color contrasts");
+define("LangViewObservationField44", "Rajouter l'observation à la liste ");
 
 define("LangViewObservationButton1", "Rajoutez");
 define("LangViewObservationButton2", "Videz les champs");

@@ -718,7 +718,7 @@ class Objects implements iObject
       if ($value['objectcontrast']<=$queries["maxContrast"])
 			  $obs[]=$value;
 
- return $obs;
+   return $obs;
  }
  // getSelectedObjects returns an array with the names of all objects where the 
  // databasefield has the given value.

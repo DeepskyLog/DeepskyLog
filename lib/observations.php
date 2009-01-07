@@ -1202,6 +1202,14 @@ class Observations {
 		echo ($GLOBALS['objObserver']->getFirstName($this->getObserverId($LOid)) . "&nbsp;" . $GLOBALS['objObserver']->getObserverName($this->getObserverId($LOid)));
 		print ("</a>");
 		print ("</td>");
+		echo "<td colspan=\"2\" align=\"right\">";
+		$link=$GLOBALS['baseURL']."index.php?";
+		$linkamp="";
+		reset($_GET);
+		while(list($key,$value)=each($_GET))
+		  $linkamp.=$key."=".urlencode($value)."&amp;";
+	  echo "<a href=\"".$link.$linkamp."addObservationToList=".urlencode($LOid)."\">".LangViewObservationField44.$GLOBALS['listname_ss']."</a>";
+    echo "</td>";
 		print ("</tr>");
 
 		print ("<tr class=\"type1\">");
@@ -1614,7 +1622,7 @@ class Observations {
 		echo LangAOText;
 		echo ("</a>");
 		echo ("&nbsp;");
-		if (array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id']) // LOGGED IN
+		if($GLOBALS['loggedUser'])
 		{ $objectid = $this->getObjectId($value['observationid']);
 			if ($LOdescription) 
 			{ echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&amp;dalm=MO\" title=\"" . LangMO . "\">");
@@ -1626,20 +1634,23 @@ class Observations {
 			}
 		}
 		echo ("</td>");
-		if (array_key_exists("listname", $_SESSION) && $_SESSION['listname'] && array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && $myList) 
+		if($GLOBALS['myList']) 
 		{ echo ("<td>");
-			$db = new database;
-			$db->login();
 			$listname = $_SESSION['listname'];
 			$observer = $_SESSION['deepskylog_id'];
 			$sql = "SELECT Count(observerobjectlist.objectname) As ObjCnt FROM observerobjectlist WHERE observerid = \"$observer\" AND objectname=\"$object\" AND listname=\"$listname\"";
 			$run = mysql_query($sql) or die(mysql_error());
-			$db->logout();
 			$get = mysql_fetch_object($run);
-			if ($get->ObjCnt > 0)
-				echo ("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value['observationid']) . ">E</a>");
+			if($get->ObjCnt>0)
+			{ echo "<a href=\"".$link."&amp;addObservationToList=".urlencode($value['observationid'])."\" title=\"".LangViewObservationField44."\">E</a>";
+			  echo "&nbsp;-&nbsp;";
+				echo "<a href=\"".$link."&amp;removeObjectFromList=".urlencode($objectid)."\" title=\"".$object.LangListQueryObjectsMessage3.$_SESSION['listname']."\">R</a>";
+			}
 			else
-				echo ("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value['observationid']) . ">L</a>");
+      { echo "<a href=\"".$link."&amp;addObjectToList=".urlencode($objectid)."&amp;showname=".urlencode($object)."\" title=\"".$object.LangListQueryObjectsMessage2.$_SESSION['listname']."\">L</a>";
+			  echo "&nbsp;-&nbsp;";
+				echo "<a href=\"".$link."&amp;addObservationToList=".urlencode($value['observationid'])."\" title=\"".LangViewObservationField44."\">E</a>";
+			}
 			echo ("</td>");
 		}
 		echo ("</tr>\n");
@@ -1774,17 +1785,24 @@ class Observations {
 			}
 		}
 		echo ("</td>");
-		if (array_key_exists("listname", $_SESSION) && $_SESSION['listname'] && array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && $myList) {
+		if($GLOBALS['myList']) 
+		{ $objectid = $this->getObjectId($value['observationid']);
 			echo ("<td>");
 			$listname = $_SESSION['listname'];
 			$observer = $_SESSION['deepskylog_id'];
 			$sql = "SELECT Count(observerobjectlist.objectname) As ObjCnt FROM observerobjectlist WHERE observerid = \"$observer\" AND objectname=\"$object\" AND listname=\"$listname\"";
 			$run = mysql_query($sql) or die(mysql_error());
 			$get = mysql_fetch_object($run);
-			if ($get->ObjCnt > 0)
-				echo ("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value['observationid']) . ">E</a>");
+			if($get->ObjCnt>0)
+			{ echo "<a href=\"".$link."&amp;addObservationToList=".urlencode($value['observationid'])."\" title=\"".LangViewObservationField44."\">E</a>";
+			  echo "&nbsp;-&nbsp;";
+				echo "<a href=\"".$link."&amp;removeObjectFromList=".urlencode($objectid)."\" title=\"".$object.LangListQueryObjectsMessage3.$_SESSION['listname']."\">R</a>";
+			}
 			else
-				echo ("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value['observationid']) . ">L</a>");
+      { echo "<a href=\"".$link."&amp;addObjectToList=".urlencode($objectid)."&amp;showname=".urlencode($object)."\" title=\"".$object.LangListQueryObjectsMessage2.$_SESSION['listname']."\">L</a>";
+			  echo "&nbsp;-&nbsp;";
+				echo "<a href=\"".$link."&amp;addObservationToList=".urlencode($value['observationid'])."\" title=\"".LangViewObservationField44."\">E</a>";
+			}
 			echo ("</td>");
 		}
 		echo ("</tr>\n");
@@ -1897,20 +1915,24 @@ class Observations {
 			}
 		}
 		echo ("</td>");
-		if (array_key_exists("listname", $_SESSION) && $_SESSION['listname'] && array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && $myList) {
+		if($GLOBALS['myList']) 
+		{ $objectid = $this->getObjectId($value['observationid']);
 			echo ("<td>");
-			$db = new database;
-			$db->login();
 			$listname = $_SESSION['listname'];
 			$observer = $_SESSION['deepskylog_id'];
 			$sql = "SELECT Count(observerobjectlist.objectname) As ObjCnt FROM observerobjectlist WHERE observerid = \"$observer\" AND objectname=\"$object\" AND listname=\"$listname\"";
 			$run = mysql_query($sql) or die(mysql_error());
-			$db->logout();
 			$get = mysql_fetch_object($run);
-			if ($get->ObjCnt > 0)
-				echo ("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value['observationid']) . ">E</a>");
+			if($get->ObjCnt>0)
+			{ echo "<a href=\"".$link."&amp;addObservationToList=".urlencode($value['observationid'])."\" title=\"".LangViewObservationField44."\">E</a>";
+			  echo "&nbsp;-&nbsp;";
+				echo "<a href=\"".$link."&amp;removeObjectFromList=".urlencode($objectid)."\" title=\"".$object.LangListQueryObjectsMessage3.$_SESSION['listname']."\">R</a>";
+			}
 			else
-				echo ("<a href=" . $link . "&amp;addObservationToList=" . urlencode($value['observationid']) . ">L</a>");
+      { echo "<a href=\"".$link."&amp;addObjectToList=".urlencode($objectid)."&amp;showname=".urlencode($object)."\" title=\"".$object.LangListQueryObjectsMessage2.$_SESSION['listname']."\">L</a>";
+			  echo "&nbsp;-&nbsp;";
+				echo "<a href=\"".$link."&amp;addObservationToList=".urlencode($value['observationid'])."\" title=\"".LangViewObservationField44."\">E</a>";
+			}
 			echo ("</td>");
 		}
 		echo ("</tr>\n");
