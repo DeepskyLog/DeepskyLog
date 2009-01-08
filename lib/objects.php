@@ -9,6 +9,7 @@ interface iObject
   public  function getAllInfoDsObject($name);                                   // Returns all information of an object
   public  function getDsoProperty($theObject,$theProperty, $default='');        // returns the propperty of the object, or default if not found
   public  function getDSOseen($object);                                         // Returns the getSeen result, encoded to a href that shows the seen observations
+  public  function getObjectProperty($object, $property);                       // Returns the selected property of the object
   public  function getSeen($object);                                            // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
 //private function getSeenLastseenLink($object,&$seenlink,&$lastseenlink);      // Returns the -/X(nr)/Y(nr) seen link to all observations of object, and the date last seen link, linking to all user observations inversely sorted by date
 //private function getSize($name);                                              // Returns the size of the object
@@ -134,6 +135,9 @@ class Objects implements iObject
         $seen = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\">".$seenDetails."</a>";
     return $seen;
   }
+  public  function getObjectProperty($object, $property)
+  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT ".$property." FROM objects WHERE name=\"".$object."\"",$property);
+  }		 
   public  function getSeen($object)                                             // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
   { $seen='-';
     if($ObsCnt=$GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 ",'ObsCnt'))
@@ -1418,7 +1422,7 @@ class Objects implements iObject
    { echo "<td class=\"fieldname\" align=\"right\" width=\"25%\">"; 
      echo $GLOBALS['objAtlas']->atlasCodes[$standardAtlasCode].LangViewObjectField10;
      echo "</td><td width=\"25%\">";
-     echo $GLOBALS['objAtlas']->getAtlasPage($standardAtlasCode, $object);
+     echo $this->getObjectProperty($object, $standardAtlasCode);
      echo"</td>" ;
    }	
    else

@@ -2,16 +2,17 @@
 
 
 interface iAtlas
-{ // public $atlasCodes;
-  public function calculateAtlasPage($atlas, $ra, $decl); // calculates the atlas page for the ra,decl in atlas
-  public function getAtlasPage($atlas, $object);
-  public function getSortedAtlasses();
+{ // public $atlasCodes;                                                        //$atlasCodes[code]=AtlasName
+  public function calculateAtlasPage($atlas, $ra, $decl);                       // calculates the atlas page for the ra,decl in atlas
 }
 
 class Atlasses implements iAtlas
 { public  $atlasCodes=array();
-  public  function __construct()
-	{ $this->atlasCodes=$this->getSortedAtlasses();
+  public  function __construct()                                                // Constructor initialises the public atlasCodes property
+	{ $run=$GLOBALS['objDatabase']->selectRecordset('SELECT atlasCode FROM atlasses;'); 
+	  while($get=mysql_fetch_object($run))
+	    $this->atlasCodes[$get->atlasCode]=$GLOBALS['AtlasName'.$get->atlasCode];
+    asort($this->atlasCodes);
   }	
   public  function calculateAtlasPage($atlas, $ra, $decl)
   { if($atlas=='milleniumbase') return $this->calculateMilleniumPage($ra,$decl);
@@ -26,184 +27,41 @@ class Atlasses implements iAtlas
     return '';
   }
   private function calculateMilleniumPage($ra, $decl)
-  { $rao = $ra;
-	  if (abs($decl) > 87)
-	  {
-	   $ra = 0;
-	  }
-	 
-	  if ($ra >= 0 && $ra <= 8)
-	  {
-	   $vol = "I";
-	   $vl = 0;
-	  }
-	  
-	  if ($ra > 8 && $ra <= 16)
-	  {
-	   $vol = "II";
-	   $vl = 1;
-	  }
-	
-	  if ($ra > 16 && $ra < 24)
-	  {
-	   $vol = "III";
-	   $vl = 2;
-	  }
-	
-	  $pa = 0;
-	  $qt = 0;
-	  $qn = 0;
-	
-	  if (abs($decl) <= 90)
-	  {
-	   $pa = 240;
-	   $qt = $qt + 2;
-	   $qn = 2;
-	  }
-	  
-	  if (abs($decl) < 87)
-	  {
-	   $pa = 120;
-	   $qt = $qt + 4;
-	   $qn = 4;
-	  }
-	
-	  if (abs($decl) < 81)
-	  {
-	   $pa = 60;
-	   $qt = $qt + 8;
-	   $qn = 8;
-	  }
-	
-	  if (abs($decl) < 75)
-	  {
-	   $pa = 48;
-	   $qt = $qt + 10;
-	   $qn = 10;
-	  }
-	
-	  if (abs($decl) < 69)
-	  {
-	   $pa = 40;
-	   $qt = $qt + 12;
-	   $qn = 12;
-	  }
-	
-	  if (abs($decl) < 63)
-	  {
-	   $pa = 480 / 14;
-	   $qt = $qt + 14;
-	   $qn = 14;
-	  }
-	
-	  if (abs($decl) < 57)
-	  {
-	   $pa = 30;
-	   $qt = $qt + 16;
-	   $qn = 16;
-	  }
-	
-	  if (abs($decl) < 51)
-	  {
-	   $pa = 24;
-	   $qt = $qt + 20;
-	   $qn = 20;
-	  }
-	
-	  if (abs($decl) < 45)
-	  {
-	   $pa = 24;
-	   $qt = $qt + 20;
-	   $qn = 20;
-	  }
-	
-	  if (abs($decl) < 39)
-	  {
-	   $pa = 480 / 22;
-	   $qt = $qt + 22;
-	   $qn = 22;
-	  }
-	
-	  if (abs($decl) < 33)
-	  {
-	   $pa = 480 / 22;
-	   $qt = $qt + 22;
-	   $qn = 22;
-	  }
-	
-	  if (abs($decl) < 27)
-	  {
-	   $pa = 20;
-	   $qt = $qt + 24;
-	   $qn = 24;
-	  }
-	
-	  if (abs($decl) < 21)
-	  {
-	   $pa = 20;
-	   $qt = $qt + 24;
-	   $qn = 24;
-	  }
-	
-	  if (abs($decl) < 15)
-	  {
-	   $pa = 20;
-	   $qt = $qt + 24;
-	   $qn = 24;
-	  }
-	
-	  if (abs($decl) < 9)
-	  {
-	   $pa = 20;
-	   $qt = $qt + 24;
-	   $qn = 24;
-	  }
-	
-	  if (abs($decl) < 3)
-	  {
-	   $pa = 20;
-	   $qt = $qt + 24;
-	   $qn = 24;
-	  }
-	
-	  if ($ra == 8)
-	  {
-	   $ra = 7.99;
-	  }
-	
-	  if ($ra == 16)
-	  {
-	   $ra = 15.99;
-	  }
-	
-	  if ($ra == 24)
-	  {
-	   $ra = 23.99;
-	  }
-	
-	  if ($ra > $vl * 8)
-	  {
-	   $ra = $ra - ($vl * 8);
-	  }
-	
+  { $rao = $ra;	$pa = 0; $qt = 0; $qn = 0;
+	  if (abs($decl) > 87)      $ra = 0;
+	  if ($ra >= 0 && $ra <= 8) { $vol = "I";  $vl = 0;}
+	  if ($ra > 8 && $ra <= 16) { $vol = "II"; $vl = 1;}
+	  if ($ra > 16 && $ra < 24) { $vol = "III";$vl = 2;}
+	  if (abs($decl) <= 90)     {$pa = 240;    $qt = $qt + 2;  $qn = 2;}
+	  if (abs($decl) < 87)      {$pa = 120;    $qt = $qt + 4;  $qn = 4;}
+	  if (abs($decl) < 81)      {$pa = 60;     $qt = $qt + 8;  $qn = 8;}
+	  if (abs($decl) < 75)  	  {$pa = 48;     $qt = $qt + 10; $qn = 10;}
+	  if (abs($decl) < 69)      {$pa = 40;     $qt = $qt + 12; $qn = 12;}
+	  if (abs($decl) < 63)      {$pa = 480/14; $qt = $qt + 14; $qn = 14;}
+	  if (abs($decl) < 57)      {$pa = 30;	   $qt = $qt + 16; $qn = 16;}
+	  if (abs($decl) < 51)      {$pa = 24;	   $qt = $qt + 20; $qn = 20;}
+	  if (abs($decl) < 45)      {$pa = 24;	   $qt = $qt + 20; $qn = 20;}	
+	  if (abs($decl) < 39)      {$pa = 480/22; $qt = $qt + 22; $qn = 22;}
+	  if (abs($decl) < 33)      {$pa = 480/22; $qt = $qt + 22; $qn = 22;}
+	  if (abs($decl) < 27)      {$pa = 20;     $qt = $qt + 24; $qn = 24;}
+	  if (abs($decl) < 21)      {$pa = 20;     $qt = $qt + 24; $qn = 24;}
+	  if (abs($decl) < 15)      {$pa = 20;     $qt = $qt + 24; $qn = 24;}	
+	  if (abs($decl) < 9)       {$pa = 20;	   $qt = $qt + 24; $qn = 24;}	
+	  if (abs($decl) < 3)   	  {$pa = 20;	   $qt = $qt + 24; $qn = 24;}	
+	  if ($ra == 8)         	  {$ra = 7.99;}	
+	  if ($ra == 16)            {$ra = 15.99;}	
+	  if ($ra == 24)            {$ra = 23.99;}	
+	  if ($ra > $vl * 8)        {$ra = $ra - ($vl * 8);}	
 	  $ca = (int)(($ra * 60) / $pa);
-	
-	  if (abs($decl) > 87 && ($rao > 4 && $rao < 16))
-	  {
-	   $qt = 1;
-	   $qn = 0;
+	  if(abs($decl)>87&&($rao>4&&$rao<16))
+	  { $qt = 1;
+	    $qn = 0;
 	  }
-	
-	  $ch = $qt - $ca + ($vl * 516);
-	
-	  if ($decl < 0)
-	  {
-	   $ch = 516 + ($vl * 516) - $qt + $qn - $ca;
-	  }
-	
-	  // return $ch."/".$vol;
+	  $ch=$qt-$ca+($vl*516);
+	  if($decl<0)
+	    $ch=516+($vl*516)-$qt+$qn-$ca;
 	  return $ch;
-   }  
+  }  
   private function calculateNewUranometriaPage($ra, $decl)
   { $data = array(array(  84.5,   1,  1),  // 1st tier, chart 1
                   array(  73.5,   7,  6),  // 2nd tier, charts 2->7
@@ -222,24 +80,19 @@ class Atlasses implements iAtlas
 		            	array( -73.5, 213, 10),  // 15th tier, charts 204->213
 		            	array( -84.5, 219,  6),  // 16th tier, charts 214->219
 		            	array( -90.0, 220,  1)); // 17th tier, chart 220
-    // find proper tier
-    for ($Tier = 0; $decl < $data[$Tier][0]; $Tier++);
+    for ($Tier = 0; $decl < $data[$Tier][0]; $Tier++);                          // find proper tier
       $HoursPerChart = 24.0 / $data[$Tier][2];
     $ra = $ra - ($HoursPerChart / 2);
-    // Offset; middle of 1st map is in the middle of 0 hours RA
-    $MapOffset = (int)($ra / $HoursPerChart);
+    $MapOffset = (int)($ra / $HoursPerChart);                                   // Offset; middle of 1st map is in the middle of 0 hours RA
     return (int)($data[$Tier][1] - $MapOffset);
   }  
   private function calculatePocketSkyAtlasPage($ra, $decl)
   { $psa = 0;
-	
 	  /* Page from pocket sky atlas */
 	  if ($ra >= 0.0 && $ra <= 3.0) 
-	  {
-	   if ($decl >= 60)
-	   {
-	     $psa = 1;
-	   } else if ($decl >= 30) {
+	  { if ($decl >= 60)
+	      $psa = 1;
+	    else if ($decl >= 30) {
 	     if ($ra <= 1.5) {
 	       $psa = 3;
 	     } else {
@@ -1003,20 +856,6 @@ class Atlasses implements iAtlas
 	
 	  return (int)$urano;
  }
-  public  function getAtlasPage($atlas, $object)
-  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT ".$atlas." FROM objects WHERE name = \"".$object."\"",$atlas);
-  }	
-  public  function getSortedAtlasses()
-	{ $atlasses = array();
-    $run = mysql_query('SELECT atlasCode FROM atlasses;') 
-		       or die(mysql_error());
-	  while($get = mysql_fetch_object($run))
-	    $atlasses[$get->atlasCode]=$GLOBALS['AtlasName' . $get->atlasCode];
-    asort($atlasses);
-		return $atlasses;
-	}
 }
-
 $objAtlas=new Atlasses;
-
 ?>

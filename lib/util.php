@@ -214,8 +214,7 @@ class util
     }
   }
   public function pdfObjects($result)  // Creates a pdf document from an array of objects
-  { global $deepskylive, $dateformat, $atlasses;
-		$atlasses = $GLOBALS['objAtlas']->getSortedAtlasses();	
+  { global $deepskylive, $dateformat;
     while(list ($key, $valueA) = each($result))
     { $mag = $valueA['objectmagnitude'];
       if ($mag == 99.9)
@@ -307,7 +306,7 @@ class util
                       "sb" =>   html_entity_decode(LangPDFMessage8),
                       "diam" => html_entity_decode(LangPDFMessage9),
                       "pa" =>   html_entity_decode(LangPDFMessage16),  
-                      "page" => html_entity_decode($atlasses[$atlas]),
+                      "page" => html_entity_decode($GLOBALS['objAtlas']->atlasCodes[$atlas]),
                       "contrast" => html_entity_decode(LangPDFMessage17),
                       "magnification" => html_entity_decode(LangPDFMessage18),
                       "seen" => html_entity_decode(LangOverviewObjectsHeader7),
@@ -369,9 +368,6 @@ class util
   { if($sort=='objectconstellation') $sort='con'; else $sort='';
 	  global $deepskylive, $dateformat;
 		global $baseURL, $dbname;
-		
-		$atlasses = $GLOBALS['objAtlas']->getSortedAtlasses();
-
     // Create pdf file
     $pdf = new Cezpdf('a4', 'landscape');
     $fontdir = ('lib/fonts/Helvetica.afm');
