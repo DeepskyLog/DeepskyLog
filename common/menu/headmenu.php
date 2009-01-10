@@ -13,6 +13,8 @@ echo"</td><td>";
 include $_SESSION['module'].'/menu/instrument.php';
 echo"</td><td>";
 include $_SESSION['module'].'/menu/location.php';
+echo"</td><td>";
+echo "<img src=\"".$baseURL."styles/images/deepskylog.gif\"/>";
 echo"</td>";
 echo "</table>";
 echo "</div>";
