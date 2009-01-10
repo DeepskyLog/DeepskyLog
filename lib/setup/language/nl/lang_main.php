@@ -481,6 +481,7 @@ define("LangViewObjectViewNearbyObject", "Bekijk alle nabije objecten van ");
 define("LangViewObjectAddObservation", "Nieuwe waarneming van ");
 define("LangViewObjectInexistant", "Dit object bestaat niet!");
 define("LangViewObjectNearbyObjects", "nabij gelegen objecten");
+define("LangViewObjectNearbyObject", "nabij gelegen object");
 define("LangViewObjectAndNearbyObjects", "en");
 define("LangViewObjectNoNearbyObjects", " - er zijn geen andere objecten binnen de opgegeven afstand");
 define("LangViewObjectNearbyObjectsMore", "Meer objecten");

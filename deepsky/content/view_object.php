@@ -36,9 +36,12 @@ echo "<table width=\"100%\">";
 echo "<tr>";
 echo "<td width=\"50%\">";
 echo "<h2>".$_GET['object'];
-if(count($_SESSION['Qobj'])>1)
+if(count($_SESSION['Qobj'])>2)
  echo ' '.LangViewObjectAndNearbyObjects.' '.(count($_SESSION['Qobj'])-1).' '.LangViewObjectNearbyObjects;
+elseif(count($_SESSION['Qobj'])>1)
+ echo ' '.LangViewObjectAndNearbyObjects.' '.(count($_SESSION['Qobj'])-1).' '.LangViewObjectNearbyObject;
 else
+
  echo ' '.LangViewObjectNoNearbyObjects;
 echo "</h2>";
 echo "</td>";
