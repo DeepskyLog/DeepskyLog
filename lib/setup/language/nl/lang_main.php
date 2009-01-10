@@ -411,15 +411,15 @@ define("LangExecuteQueryObjectsMessage2a", "Zoek opnieuw");
 define("LangExecuteQueryObjectsMessage2b", " of ");
 define("LangExecuteQueryObjectsMessage2c", "Bekijk alle objecten");
 define("LangExecuteQueryObjectsMessage3", "Je hebt geen zoekopdracht gespecifieerd.");
-define("LangExecuteQueryObjectsMessage4", "Download list pdf-file");
-define("LangExecuteQueryObjectsMessage4b", "Download namen pdf-file");
-define("LangExecuteQueryObjectsMessage4c", "Download details pdf-file");
-define("LangExecuteQueryObjectsMessage5", "Download csv-file");
-define("LangExecuteQueryObjectsMessage6", "Download csv- file");
-define("LangExecuteQueryObjectsMessage7", "Download icq-file");
-define("LangExecuteQueryObjectsMessage8", "Download Argo Navis-file");
+define("LangExecuteQueryObjectsMessage4", "Download pdf-bestand");
+define("LangExecuteQueryObjectsMessage4b", "Download namen pdf-bestand");
+define("LangExecuteQueryObjectsMessage4c", "Download details pdf-bestand");
+define("LangExecuteQueryObjectsMessage5", "Download csv-bestand");
+define("LangExecuteQueryObjectsMessage6", "Download csv- bestand");
+define("LangExecuteQueryObjectsMessage7", "Download icq-bestand");
+define("LangExecuteQueryObjectsMessage8", "Download Argo Navis-bestand");
 define("LangExecuteQueryObjectsMessage9", "Filter objecten");
-define("LangInvalidCSVfile", "U gaf geen geldige CSV file!");
+define("LangInvalidCSVfile", "U gaf geen geldige CSV bestand!");
 define("LangSeenDontCare", "Alle objecten, ongeacht of ik ze waarnam of niet");
 define("LangSeenByMe", "Enkel objecten die ik reeds heb waargenomen");
 define("LangSeenSomeoneElse", "Enkel objecten die anderen al waarnamen maar ik nog niet");
@@ -666,6 +666,8 @@ define("LangOverviewObservationsHeader5a", "(*) Alle observaties(AO) , Mijn obse
 define("LangOverviewObservationsHeader5b", "(*) Details(D) met tekening(DT), Alle observaties(AO) , Mijn observaties(MO), mijn Laatste observatie(LO)&nbsp;van dit object");
 define("LangOverviewObservationsHeader8", "Mijn&nbsp;LO&nbsp;instrument");
 define("LangOverviewObservationsHeader9", "Mijn&nbsp;LO&nbsp;datum");
+define("LangOverviewObservations10", "Gelieve de titel in te geven");
+define("LangOverviewObservations11", "DeepskyLog waarnemingen");
 
 // tooltips
 

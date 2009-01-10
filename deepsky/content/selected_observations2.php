@@ -140,7 +140,7 @@ else
       echo ("</table>\n");			
       list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
 	    echo "<hr />";
-      $objUtil->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."observations.pdf?SID=Qobs",LangExecuteQueryObjectsMessage4);
+      $objUtil->promptWithLink(LangOverviewObservations10,LangOverviewObservations11,$baseURL."observations.pdf?SID=Qobs",LangExecuteQueryObjectsMessage4);
       echo " - ";
       echo "<a href=\"".$baseURL."observations.csv\" target=\"new_window\">".LangExecuteQueryObjectsMessage5."</a> - ";
       echo "<a href=\"".$baseURL."index.php?indexAction=query_objects&amp;source=observation_query\">".LangExecuteQueryObjectsMessage9."</a> - ";

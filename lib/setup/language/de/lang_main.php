@@ -668,6 +668,8 @@ define("LangOverviewObservationsHeader5a", "(*) Alle Beobachtungen(AO), Meine Be
 define("LangOverviewObservationsHeader5b", "(*) Details(D) mit Zeichnung(DZ), Alle Beobachtungen(AO), Meine Beobachtungen(MO), Meine aktuellsten Beobachtungen(LO) dieses Objektes&nbsp;");
 define("LangOverviewObservationsHeader8", "Mein&nbsp;&nbsp;LO&nbsp;&nbsp;Beobachtungsger&auml;t");
 define("LangOverviewObservationsHeader9", "Mein&nbsp;&nbsp;LO&nbsp;&nbsp;Datum");
+define("LangOverviewObservations10", "Please enter a title");
+define("LangOverviewObservations11", "DeepskyLog observations");
 
 // tooltips
 

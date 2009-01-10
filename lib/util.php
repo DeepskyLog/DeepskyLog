@@ -829,7 +829,7 @@ class util
     $fontdir = realpath('lib/fonts/Helvetica.afm');
     //$pdf->selectFont($fontdir);
     $pdf->selectFont('lib/fonts/Helvetica.afm');
-    $pdf->ezText(LangPDFTitle2."\n");
+    $pdf->ezText(html_entity_decode($_GET['pdfTitle'])."\n");
 
     while(list ($key, $value) = each($result))
     { $obs = $GLOBALS['objObservation']->getAllInfoDsObservation($value['observationid']);
@@ -848,108 +848,31 @@ class util
       $lns = $obs["lens"];
 
       if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($GLOBALS['objObserver']->getUseLocal($_SESSION['deepskylog_id'])))
-      {
         $date = sscanf($obs["localdate"], "%4d%2d%2d");
-      }
-      else
-      {
-        $date = sscanf($obs["date"], "%4d%2d%2d");
-      }
 
+      else
+        $date = sscanf($obs["date"], "%4d%2d%2d");
       $description = $this->br2nl(html_entity_decode($obs["description"]));
 
       $formattedDate = date($dateformat, mktime(0,0,0,$date[1],$date[2],$date[0]));
-
-      if ($seeing == 1)
-      {
-        $seeingstr = SeeingExcellent;
-      }
-      elseif ($seeing == 2)
-      {
-        $seeingstr = SeeingGood;
-      }
-      elseif ($seeing == 3)
-      {
-        $seeingstr = SeeingModerate;
-      }
-      elseif ($seeing == 4)
-      {
-        $seeingstr = SeeingPoor;
-      }
-      elseif ($seeing == 5)
-      {
-        $seeingstr = SeeingBad;
-      }
-      $visstr="";
-      if ($visibility == 1)
-      {
-        $visstr = LangVisibility1;
-      }
-      elseif ($visibility == 2)
-      {
-        $visstr = LangVisibility2;
-      }
-      elseif ($visibility == 3)
-      {
-        $visstr = LangVisibility3;
-      }
-      elseif ($visibility == 4)
-      {
-        $visstr = LangVisibility4;
-      }
-      elseif ($visibility == 5)
-      {
-        $visstr = LangVisibility5;
-      }
-      elseif ($visibility == 6)
-      {
-        $visstr = LangVisibility6;
-      }
-      elseif ($visibility == 7)
-      {
-        $visstr = LangVisibility7;
-      }
-
-      if ($seeing != "")
-      {
-        $sstr = LangViewObservationField6." : ".$seeingstr;
-      }
-      else
-      {
-        $sstr = "";
-      }
-
-      if ($limmag != "")
-      {
-        $lstr = LangViewObservationField7." : ".$limmag;
-      }
-      else
-      {
-        $lstr = "";
-      }
-       
-      $filtstr="";
-      $eyepstr="";
-      $lnsstr="";
-
-      if ($filt > 0)
-      {
-        $filtername = $GLOBALS['objFilter']->getFilterName($filt);
-        $filtstr = LangViewObservationField31. " : " . $filtername;
-      }
-
-      if ($eyep > 0)
-      {
-        $eyepiecename = $GLOBALS['objEyepiece']->getEyepieceName($eyep);
-        $eyepstr = LangViewObservationField30. " : " . $eyepiecename;
-      }
-
-      if ($lns > 0)
-      {
-        $lensname = $GLOBALS['objLens']->getLensName($lns);
-        $lnsstr = LangViewObservationField32 . " : " . $lensname;
-      }
-
+      $visstr=""; $sstr = ""; $lstr = ""; $filtstr=""; $eyepstr=""; $lnsstr="";
+      if     ($seeing == 1) $seeingstr = SeeingExcellent;
+      elseif ($seeing == 2) $seeingstr = SeeingGood;
+      elseif ($seeing == 3) $seeingstr = SeeingModerate;
+      elseif ($seeing == 4) $seeingstr = SeeingPoor;
+      elseif ($seeing == 5) $seeingstr = SeeingBad;
+      if     ($visibility == 1) $visstr = LangVisibility1;
+      elseif ($visibility == 2) $visstr = LangVisibility2;
+      elseif ($visibility == 3) $visstr = LangVisibility3;
+      elseif ($visibility == 4) $visstr = LangVisibility4;
+      elseif ($visibility == 5) $visstr = LangVisibility5;
+      elseif ($visibility == 6) $visstr = LangVisibility6;
+      elseif ($visibility == 7) $visstr = LangVisibility7;
+      if($seeing) $sstr = LangViewObservationField6." : ".$seeingstr;
+      if($limmag) $lstr = LangViewObservationField7." : ".$limmag;
+      if($filt)   $filtstr = LangViewObservationField31. " : " . $GLOBALS['objFilter']->getFilterName($filt);
+      if($eyep)   $eyepstr = LangViewObservationField30. " : " .$GLOBALS['objEyepiece']->getEyepieceName($eyep);
+      if($lns)    $lnsstr = LangViewObservationField32 . " : " . $GLOBALS['objLens']->getLensName($lns);
       $temp = array("Name" => html_entity_decode(LangPDFMessage1)." : ".$objectname,
                  "altname" => html_entity_decode(LangPDFMessage2)." : ".$object["altname"],
                  "type" => $$type.html_entity_decode(LangPDFMessage12).$$con,
@@ -966,89 +889,36 @@ class util
                  "desc" => html_entity_decode(LangPDFMessage15)
       );
       $obs1[] = $temp;
-
-      $nm = $objectname;
-      if ($object["altname"] != "")
-      {
-        $nm = $nm." (".$object["altname"].")";
-      }
-
+      $nm=$objectname;
+      if($object["altname"])
+        $nm=$nm." (".$object["altname"].")";
       $pdf->ezText($nm, "14");
-
-      $tmp=array(array("type"=>$temp["type"]));
-      $pdf->ezTable($tmp,array("type" => html_entity_decode(LangPDFMessage5)),"", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
-
-      $tmp=array(array("location"=>$temp["location"], "instrument"=>$temp["instrument"]));
-      $pdf->ezTable($tmp, array("location" => html_entity_decode(LangPDFMessage1), "instrument" => html_entity_decode(LangPDFMessage2)), "",  array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
-
-      if ($eyep > 0)
-      {
-        $tmp=array(array("eyepiece"=>$temp["eyepiece"]));
-        $pdf->ezTable($tmp, array("eyepiece" => "test"), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
-      }
-      if ($filt > 0)
-      {
-        $tmp=array(array("filter"=>$temp["filter"]));
-        $pdf->ezTable($tmp, array("filter" => "test"), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
-      }
-      if ($lns > 0)
-      {
-        $tmp=array(array("lens"=>$temp["lens"]));
-        $pdf->ezTable($tmp, array("lens" => "test"), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
-      }
-      if ($seeing != "")
-      {
-        $tmp=array(array("seeing"=>$temp["seeing"]));
-        $pdf->ezTable($tmp, array("seeing" => "test"), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
-      }
-
-      if ($limmag != "")
-      {
-        $tmp=array(array("limmag"=>$temp["limmag"]));
-        $pdf->ezTable($tmp, array("limmag" => "test"), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
-      }
-
-      if ($visibility != "0")
-      {
-        $tmp=array(array("visibility"=>$temp["visibility"]));
-        $pdf->ezTable($tmp, array("visibility" => "test"), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
-      }
-
-      $tmp=array(array("observer"=>$temp["observer"]));
-      $pdf->ezTable($tmp, array("observer" => html_entity_decode(LangPDFMessage1)), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
-
+      $pdf->ezTable($tmp=array(array("type"=>$temp["type"])),array("type" => html_entity_decode(LangPDFMessage5)),"", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
+      $pdf->ezTable($tmp=array(array("location"=>$temp["location"], "instrument"=>$temp["instrument"])), array("location" => html_entity_decode(LangPDFMessage1), "instrument" => html_entity_decode(LangPDFMessage2)), "",  array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
+      if ($eyep)      $pdf->ezTable($tmp=array(array("eyepiece"=>$temp["eyepiece"])), array("eyepiece" => "test"), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
+      if($filt)       $pdf->ezTable($tmp=array(array("filter"=>$temp["filter"])), array("filter" => "test"), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
+      if($lns)        $pdf->ezTable($tmp=array(array("lens"=>$temp["lens"])), array("lens" => "test"), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
+      if($seeing)     $pdf->ezTable($tmp=array(array("seeing"=>$temp["seeing"])), array("seeing" => "test"), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
+      if($limmag)     $pdf->ezTable($tmp=array(array("limmag"=>$temp["limmag"])), array("limmag" => "test"), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
+      if($visibility) $pdf->ezTable($tmp=array(array("visibility"=>$temp["visibility"])), array("visibility" => "test"), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
+      $pdf->ezTable($tmp=array(array("observer"=>$temp["observer"])), array("observer" => html_entity_decode(LangPDFMessage1)), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
       //   $pdf->ezText(LangPDFMessage15, "12");
       //   $pdf->ezTable($obs1,
       //         array("desc" => LangPDFMessage1), "",
       //               array("width" => "500", "showHeadings" => "0",
       //                     "showLines" => "0", "shaded" => "0", "fontSize" => "12"));
       $pdf->ezText("");
-
-      $tmp=array(array("description"=>$temp["description"]));
-      $pdf->ezTable($tmp, array("description" => html_entity_decode(LangPDFMessage1)), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
-
-      $upload_dir = 'drawings';
+      $pdf->ezTable($tmp=array(array("description"=>$temp["description"])), array("description" => html_entity_decode(LangPDFMessage1)), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
+      $upload_dir = 'deepsky/drawings';
       $dir = opendir($upload_dir);
-
       while (FALSE !== ($file = readdir($dir)))
-      {
-        if ("." == $file OR ".." == $file)
-        {
+      { if ("." == $file OR ".." == $file)
           continue; // skip current directory and directory above
-        }
-        if(fnmatch($value . ".gif", $file) ||
-        fnmatch($value . ".jpg", $file) ||
-        fnmatch($value. ".png", $file))
-        {
-          $pdf->ezText("");
+        if(fnmatch($value . ".gif", $file) || fnmatch($value . ".jpg", $file) || fnmatch($value. ".png", $file))
+        { $pdf->ezText("");
           $pdf->ezImage($upload_dir . "/" . $value . ".jpg", 0, 500, "none", "left");
         }
       }
-
-
-      $obs1 = array("");
-      $temp = array("");
-
       $pdf->ezText("");
     }
     $pdf->ezStream();

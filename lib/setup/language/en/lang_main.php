@@ -668,6 +668,8 @@ define("LangOverviewObservationsHeader5a", "(*) All Observations(AO), My observa
 define("LangOverviewObservationsHeader5b", "(*) Details(D) with drawing(DD), All Observations(AO), My observations(MO), my Last observations(LO) of this object &nbsp;of this object");
 define("LangOverviewObservationsHeader8", "My&nbsp;&nbsp;LO&nbsp;&nbsp;instrument");
 define("LangOverviewObservationsHeader9", "My&nbsp;&nbsp;LO&nbsp;&nbsp;date");
+define("LangOverviewObservations10", "Please enter a title");
+define("LangOverviewObservations11", "DeepskyLog observations");
 
 // tooltips
 

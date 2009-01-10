@@ -101,7 +101,7 @@ class Objects implements iObject
   { $get = mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT * FROM objects WHERE name = \"".$name."\""));
     while(list($key,$value)=each($get))
 		  $object[$key]=$value;
-    $object["size"]=$this->calculateSize($diam1, $diam2); 
+    $object["size"]=$this->calculateSize($object['diam1'], $object['diam2']); 
     $object["seen"]="-";
   	if ($see=$GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(id) As CountId FROM observations WHERE objectname = \"".$name."\"",'CountId',0))
     { $object["seen"]="X (".$see.")";
