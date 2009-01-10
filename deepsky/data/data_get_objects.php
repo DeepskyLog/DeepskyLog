@@ -5,9 +5,9 @@ if($objUtil->checkGetKey('source')=='observation_query')
 {	$validQobj=false;
   if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='observation_query'))
 	  $validQobj=true;
-	while($validQobj&&(list($key,$value) = each($_SESSION['QobjParams'])))
-	  if(!array_key_exists($key,$_SESSION['QobsParams'])||($value!=$_SESSION['QobsParams'][$key]))
-	    $validQobj=false;	 
+	while($validQobj&&(list($key,$value)=each($_SESSION['QobjParams'])))
+	  if((!array_key_exists($key,$_SESSION['QobsParams'])||($value!=$_SESSION['QobsParams'][$key]))&&($key!='source'))
+	    $validQobj=false;
 	while($validQobj&&(list($key,$value) = each($_SESSION['QobsParams'])))
 	  if(!array_key_exists($key,$_SESSION['QobjParams'])||($value!=$_SESSION['QobjParams'][$key]))
 	    $validQobj=false;	 

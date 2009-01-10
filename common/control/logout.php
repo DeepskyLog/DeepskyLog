@@ -26,5 +26,9 @@ if(array_key_exists('admin',$_SESSION))
 }
 */
 $_SESSION['admin']='no';
-$_SESSION['deepskylog_id']='';															// destroy session
+$_SESSION['deepskylog_id']='';															                    // destroy session
+$_SESSION['lco']='L';
+$cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+setcookie("lco","L",$cookietime, "/");
+
 ?>

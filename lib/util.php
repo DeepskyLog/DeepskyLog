@@ -98,7 +98,7 @@ class util
 	    echo "</td>";
 			
 		  echo "<td>";
-	    echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage-1) . "\">";
+	    echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">";
       echo "<img src=\"".$baseURL."/styles/images/left20.gif\" border=\"0\">"; // link to previous page
       echo "</a>";
 		  echo "</td>";
@@ -110,13 +110,13 @@ class util
     	echo "</td>";	
 	
 		  echo "<td>";
-      echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage+1) . "\">";
+      echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">";
       echo "<img src=\"".$baseURL."/styles/images/right20.gif\" border=\"0\">"; // link to next page
       echo "</a>";
 		  echo "</td>";
 
 		  echo "<td>";				
-		  echo "<a href=\"".$link."&amp;multiplepagenr=9999999\">";
+		  echo "<a href=\"".$link."&amp;multiplepagenr=".$pages."\">";
       echo "<img src=\"".$baseURL."/styles/images/allright20.gif\" border=\"0\">"; // link to last page
       echo "</a>\n";
 	    echo" </td>";
