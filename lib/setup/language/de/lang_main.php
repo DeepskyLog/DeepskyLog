@@ -3,6 +3,8 @@
 
 define("LangCounter","Counter");
 
+define("DreyerDescriptionLink","http://www.deepskylog.org/wiki/bin/view/DeepskyLog/DreyerDescriptionen");
+
 define("LangYouAreHere", "Sie sind hier:");
 define("LangHome","Home");
 define("LangBecomeMember", "Become member");

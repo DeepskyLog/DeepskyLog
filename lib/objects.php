@@ -1636,7 +1636,7 @@ class Objects implements iObject
       echo("<input type=\"hidden\" name=\"object\" value=\"" . $object . "\" />");
       echo("<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>");
 		  echo "<td align=\"right\">";
-  	  echo LangViewObjectListDescription.' ('."<a href=\"http://www.deepskylog.org/wiki/bin/view/DeepskyLog/DreyerDescriptionen\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
+  	  echo LangViewObjectListDescription.' ('."<a href=\"".LangDreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
 			echo "<br />";
       echo("<input type=\"submit\" name=\"Go\" value=\"" . LangEditObjectDescription . "\" />");
   	  echo "</td>";
@@ -1649,7 +1649,7 @@ class Objects implements iObject
 		else
 		{	echo "<tr>";
   	  echo "<td align=\"right\">";
-  	  echo LangViewObjectListDescription.' ('."<a href=\"http://www.deepskylog.org/wiki/bin/view/DeepskyLog/DreyerDescriptionen\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
+  	  echo LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
   	  echo "</td>";
   	  echo "<td colspan=\"3\">";
 		  echo $GLOBALS['objList']->getListObjectDescription($object);
@@ -1660,7 +1660,7 @@ class Objects implements iObject
 	elseif($descriptionDsOject=$this->getDescriptionDsObject($object))
 	{ echo "<tr>";
   	echo "<td align=\"right\">";
-  	echo LangViewObjectNGCDescription.' ('."<a href=\"http://www.deepskylog.org/wiki/bin/view/DeepskyLog/DreyerDescriptionen\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
+  	echo LangViewObjectNGCDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
   	echo "</td>";
   	echo "<td colspan=\"3\">";
   	echo $descriptionDsOject;
