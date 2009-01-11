@@ -4,9 +4,10 @@
 
 if($objUtil->checkGetKey('locationid')
 && $objUtil->checkUserID($objLocation->getObserverFromLocation($objUtil->checkGetKey('locationid'))))
-{ $queries = array("location" => $_GET['locationid'], "observer" => $_SESSION['deepskylog_id']);
+{
+  $queries = array("location" => $_GET['locationid'], "observer" => $_SESSION['deepskylog_id']);
   $obs = $objObservation->getObservationFromQuery($queries, "D", "1");
-  $comobs = $objCometObservation->getObservationFromQuery($queries, "D", "1");
+  $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
   if(!sizeof($obs) > 0 && !sizeof($comobs) > 0) // no observations from location yet
     $objLocation->deleteLocation($_GET['locationid']);
       $_GET['indexAction']='add_site';
