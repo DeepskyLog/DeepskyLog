@@ -21,7 +21,7 @@ if($objUtil->checkPostKey('change')
   $objFilter->setWratten($_POST['id'], $objUtil->checkPostKey('wratten'));
   $objFilter->setSchott($_POST['id'], $objUtil->checkPostKey('schott'));
   $objFilter->setFilterObserver($_POST['id'], $_SESSION['deepskylog_id']);
-  $entryMessage=LangValidateEyepieceMessage5;
+  $entryMessage=LangValidateFilterMessage5;
 }
 $_GET['indexAction']='add_filter';
 ?>
