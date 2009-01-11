@@ -138,7 +138,9 @@ echo "<p>".LangAddSiteFieldOr."</p>";
 echo "<ol>";
 echo "<li value=\"2\">".LangAddInstrumentManually."</li>";
 echo "</ol>";
-echo "<form action=\"".$baseURL."index.php?indexAction=validate_instrument\" method=\"post\">";
+echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_instrument\" />";
+
 echo "<table>";
 tableFieldnameFieldExplanation(LangAddInstrumentField1,
                                "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"instrumentname\" size=\"30\"  value=\"".stripslashes($objUtil->checkGetKey('instrumentname')).stripslashes($objInstrument->getInstrumentName($objUtil->checkGetKey('instrumentid')))."\" />",
@@ -161,8 +163,8 @@ tableFieldnameFieldExplanation(LangAddInstrumentField6,
                                "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"fixedMagnification\" size=\"5\" value=\"".($objUtil->checkGetKey('fixedMagnification')).stripslashes($objInstrument->getFixedMagnification($objUtil->checkGetKey('instrumentid')))."\" />",
                                LangAddInstrumentField6Expl);
 echo "</table>";
-echo "</form>";
 echo "<hr />";
 echo "<input type=\"submit\" name=\"add\" value=\"".LangAddInstrumentAdd."\" />";
+echo "</form>";
 echo "</div>";
 ?>

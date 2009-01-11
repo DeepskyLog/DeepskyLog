@@ -1,0 +1,7 @@
+<?php 
+header ("Content-Type: text/xml");
+header ("Content-Disposition: attachment; filename=\"observations.xml\"");
+include 'common/entryexit/preludes.php';
+if(array_key_exists('Qobs',$_SESSION)&&$_SESSION['Qobs'])
+  $objUtil->comastObservations($_SESSION['Qobs']);
+?>

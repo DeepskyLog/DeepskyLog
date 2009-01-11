@@ -421,6 +421,7 @@ define("LangExecuteQueryObjectsMessage6", "Download csv- bestand");
 define("LangExecuteQueryObjectsMessage7", "Download icq-bestand");
 define("LangExecuteQueryObjectsMessage8", "Download Argo Navis-bestand");
 define("LangExecuteQueryObjectsMessage9", "Filter objecten");
+define("LangExecuteQueryObjectsMessage10", "Download comast-bestand");
 define("LangInvalidCSVfile", "U gaf geen geldige CSV bestand!");
 define("LangSeenDontCare", "Alle objecten, ongeacht of ik ze waarnam of niet");
 define("LangSeenByMe", "Enkel objecten die ik reeds heb waargenomen");

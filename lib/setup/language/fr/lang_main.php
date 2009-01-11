@@ -13,8 +13,8 @@ define("LangContact","Contact");
 define("LangDeepskyLogModules","Modules de Deepskylog");
 define("LangWelcome","Bienvenu&nbsp;dans&nbsp;la module&nbsp;");
 define("LangWelcome1","&nbsp;de&nbsp;");
-define("LangWelcome2","Vous&nbsp;êtes&nbsp;rentré&nbsp;comme&nbsp;");
-define("LangWelcome3","Vous&nbsp;n'êtes&nbsp;pas&nbsp;rentré");
+define("LangWelcome2","Vous&nbsp;ï¿½tes&nbsp;rentrï¿½&nbsp;comme&nbsp;");
+define("LangWelcome3","Vous&nbsp;n'ï¿½tes&nbsp;pas&nbsp;rentrï¿½");
 define("LangWelcome4","Les modules: ");
 define("LangManage","Gestion");
 define("LangManageDots","Gestion...");
@@ -38,10 +38,10 @@ define("LangShowWithoutPartOfs","Show without part-of objects");
 define("LangShowWithPartOfs","Show with part-of objects");
 
 define("LangShowAllLanguages","Montrer toutes les languages");
-define("LangShowInterfaceLanguage", "Ne montrer que les observations en Français");
+define("LangShowInterfaceLanguage", "Ne montrer que les observations en Franï¿½ais");
 define("LangShowMyLanguages","Ne montrer que les observations dans les languages de mon profil");
 define("LangAllLanguagesShown","toutes les languages");
-define("LangSelectedLanguagesShown","juste les languages sélectionées");
+define("LangSelectedLanguagesShown","juste les languages sï¿½lectionï¿½es");
 
 
 // content/result_query_observations.php
@@ -190,7 +190,7 @@ define("LangSearchMenuItem6", "Les observateurs");
 define("LangSearchMenuItem7", "Les objets fr&eacute;quents");
 define("LangSearchMenuItem8", "Les observations de l'annï¿½e");
 define("LangSearchAllLanguages","Une nouvelle rechrerche dans toutes les languages.");
-define("LangSearchDetailPage","Faire une recherche détaillée.");
+define("LangSearchDetailPage","Faire une recherche dï¿½taillï¿½e.");
 
 define("LangChangeMenuTitle", "Rajoutez / Modifiez");
 define("LangChangeMenuItem1", "Donn&eacute;es personelles");
@@ -424,6 +424,7 @@ define("LangExecuteQueryObjectsMessage6", "T&eacute;l&eacute;chargez le fichier 
 define("LangExecuteQueryObjectsMessage7", "T&eacute;l&eacute;chargez le fichier icq");
 define("LangExecuteQueryObjectsMessage8", "T&eacute;l&eacute;chargez le fichier Argo Navis");
 define("LangExecuteQueryObjectsMessage9", "Filtrer les objects");
+define("LangExecuteQueryObjectsMessage5", "T&eacute;l&eacute;chargez le fichier comast");
 define("LangInvalidCSVfile", "Vous n'avez pas sp&eacute;cifi&eacute; un fichier csv valable!");
 define("LangSeenDontCare", "Tous les objets, vus ou pas vus");
 define("LangSeenByMe", "Juste les objets que j'ai vus moi-m&ecirc;me");
@@ -624,7 +625,7 @@ define("LangViewObservationField40Expl", "More information");
 define("LangViewObservationField41", "Unusual Shape");
 define("LangViewObservationField42", "Partly unresolved");
 define("LangViewObservationField43", "Color contrasts");
-define("LangViewObservationField44", "Rajouter l'observation à la liste ");
+define("LangViewObservationField44", "Rajouter l'observation ï¿½ la liste ");
 
 define("LangViewObservationButton1", "Rajoutez");
 define("LangViewObservationButton2", "Videz les champs");
@@ -672,7 +673,7 @@ define("LangOverviewObservationsHeader5a", "(*) Toutes les observations(TO) , Me
 define("LangOverviewObservationsHeader5b", "(*) D&eacute;tails(D)avec dessin(DD), Toutes les observations(TO) , Mes observations(MO), Ma derni&egrave;re observation(DO)&nbsp;de l'objet");
 define("LangOverviewObservationsHeader8", "Mon&nbsp;instrument&nbsp;DO");
 define("LangOverviewObservationsHeader9", "Ma&nbsp;date&nbsp&DO");
-define("LangOverviewObservations10", "Prière de rentrer un titre");
+define("LangOverviewObservations10", "Priï¿½re de rentrer un titre");
 define("LangOverviewObservations11", "Observations DeepskyLog");
 
 // tooltips
@@ -804,8 +805,8 @@ define("LangValidateFilterMessage5", "The filter is changed in your equipment li
 
 define("LangValidateInstrumentMessage1", "Veuillez remplir tous les champs!");
 define("LangValidateInstrumentMessage2", "Veuillez remplir: soit la distance focale, soit f/d!");
-define("LangValidateInstrumentMessage3", "L'instrument a &eacute;t&eacute; rajout&eacute; dans votre liste d'équipement");
-define("LangValidateInstrumentMessage4", "L'instrument a &eacute;t&eacute; adapt&eacute; dans votre liste d'équipement");
+define("LangValidateInstrumentMessage3", "L'instrument a &eacute;t&eacute; rajout&eacute; dans votre liste d'ï¿½quipement");
+define("LangValidateInstrumentMessage4", "L'instrument a &eacute;t&eacute; adapt&eacute; dans votre liste d'ï¿½quipement");
 define("LangValidateInstrumentMessage", "Message");
 
 // content/setup_query_objects.php
@@ -971,7 +972,7 @@ define("LangVisibility7", "L'objet n'est pas visible");
  
 define("LangSelectedObservationsTitle2", "Aper&ccedil;u des observations s&eacute;lectionn&eacute;es");
 define("LangSelectedObservationsTitle3", "Aper&ccedil;u des observations de la derniï¿½re annï¿½e");
-define("LangSelectedObservationsSelectedLanguagesIndication", "languages sélectionées");
+define("LangSelectedObservationsSelectedLanguagesIndication", "languages sï¿½lectionï¿½es");
 define("LangSelectedObservationsAllLanguagesIndication","toutes les languages");
   
 // lib/util.php

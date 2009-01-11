@@ -1206,6 +1206,19 @@ class util
       $indexActionInclude=$this->utilitiesGetIndexActionDefaultAction();
     return $indexActionInclude;
   }
+  public function comastObservations($result)  // Creates a csv file from an array of observations
+  { 
+  	$dom = new DomDocument('1.0', 'ISO-8859-1');
+
+    //generate xml 
+    $dom->formatOutput = true; // set the formatOutput attribute of 
+                               // domDocument to true 
+    // save XML as string or file 
+    $test1 = $dom->saveXML(); // put string in test1 
+ 
+  	print $test1;
+  }
+
   public function utilitiesSetModuleCookie($module)
   { if((!array_key_exists('module',$_SESSION)) ||
      (array_key_exists('module',$_SESSION) && ($_SESSION['module'] != $module)))

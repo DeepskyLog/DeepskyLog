@@ -423,6 +423,7 @@ define("LangExecuteQueryObjectsMessage6", "Download csv- file");
 define("LangExecuteQueryObjectsMessage7", "Download icq-file");
 define("LangExecuteQueryObjectsMessage8", "Download Argo Navis-file");
 define("LangExecuteQueryObjectsMessage9", "Filter objects");
+define("LangExecuteQueryObjectsMessage10", "Download comast-file");
 define("LangInvalidCSVfile", "You didn't provide a valid CSV file!");
 define("LangSeenDontCare", "Don't care");
 define("LangSeenByMe", "Already saw it");

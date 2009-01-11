@@ -421,6 +421,7 @@ define("LangExecuteQueryObjectsMessage6", "Exportiere die Objekte in eine CSV Da
 define("LangExecuteQueryObjectsMessage7", "Download icq-Datei");
 define("LangExecuteQueryObjectsMessage8", "Exportiere Objekte in das Argo Navis Format");
 define("LangExecuteQueryObjectsMessage9", "Filter objects");
+define("LangExecuteQueryObjectsMessage10", "Exportiere die Beobachtungen in eine Comast Datei");
 define("LangInvalidCSVfile", "Sie haben keine g&uuml;ltige CSV Datei angegeben!");
 define("LangSeenDontCare", "Egal");
 define("LangSeenByMe", "Bereits von mir beobachtet");
