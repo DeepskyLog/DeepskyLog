@@ -7,7 +7,8 @@ if($objUtil->checkPostKey('eyepiecename')
 && $objUtil->checkPostKey('focalLength')
 && $objUtil->checkPostKey('apparentFOV')
 && $objUtil->checkPostKey('add'))
-{ $id=$objEyepiece->addEyepiece($_POST['eyepiecename'],$_POST['focalLength'],$_POST['apparentFOV']);
+{
+  $id=$objEyepiece->addEyepiece($_POST['eyepiecename'],$_POST['focalLength'],$_POST['apparentFOV']);
   $objEyepiece->setEyepieceObserver($id, $_SESSION['deepskylog_id']);
 	if ($_POST['maxFocalLength']) 
 	  $objEyepiece->setMaxFocalLength($id, $_POST['maxFocalLength']);
@@ -20,8 +21,9 @@ if($objUtil->checkPostKey('id')
 && $objUtil->checkPostKey('focalLength')
 && $objUtil->checkPostKey('apparentFOV')
 && $objUtil->checkPostKey('change')
-&& $objUtil->checkUserID($objEyepiece->getObserverFromEyepiece($objUtil->checkGetKey('id'))))
-{ $objEyepiece->setEyepieceName($_POST['id'], $_POST['eyepiecename']);
+&& $objUtil->checkAdminOrUserID($objEyepiece->getObserverFromEyepiece($_POST['id'])))
+{ 
+  $objEyepiece->setEyepieceName($_POST['id'], $_POST['eyepiecename']);
   $objEyepiece->setEyepieceFocalLength($_POST['id'], $_POST['focalLength']);
   $objEyepiece->setApparentFOV($_POST['id'], $_POST['apparentFOV']);
   $objEyepiece->setEyepieceObserver($_POST['id'], $_SESSION['deepskylog_id']);
