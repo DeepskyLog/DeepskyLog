@@ -5,9 +5,10 @@
 if($objUtil->checkGetKey('eyepieceid') 
 && $objUtil->checkUserID($objEyepiece->getObserverFromEyepiece($objUtil->checkGetKey('eyepieceid'))))
 { $queries = array("eyepiece" => $_GET['eyepieceid'], "observer" => $_SESSION['deepskylog_id']);
-  $obs = $objObservation->getObservationFromQuery($queries,"D","1");
-  $comobs = $objCometObservation->getObservationFromQuery($queries);
-  if((!sizeof($obs)>0) && (!sizeof($comobs)>0))                               // no observations from location yet
+  $obs = $objObservation->getObservationFromQuery($queries,"D","1");  
+// Comet observations don't have an eyepiece yet!'
+//  $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
+  if(!sizeof($obs) > 0 && !sizeof($comobs) > 0)                               // no observations with eyepiece yet
     $objEyepiece->deleteEyepiece($_GET['eyepieceid']);
 } 
 $_GET['indexAction']='add_eyepiece';
