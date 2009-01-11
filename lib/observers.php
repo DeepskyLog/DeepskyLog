@@ -26,6 +26,9 @@ class Observers
  function getFirstName($id)
  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT firstname FROM observers WHERE id = \"$id\"",'firstname','');
  }
+ function getName($id)
+ { return $GLOBALS['objDatabase']->selectSingleValue("SELECT name FROM observers WHERE id = \"$id\"",'name','');
+ }
  function getIcqName($id)
  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT icqname FROM observers WHERE id = \"$id\"",'icqname','');
  }

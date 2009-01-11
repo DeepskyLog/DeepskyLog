@@ -1208,8 +1208,83 @@ class util
   }
   public function comastObservations($result)  // Creates a csv file from an array of observations
   { 
+    include_once "cometobjects.php";
+    include_once "observers.php";
+    include_once "instruments.php";
+    include_once "locations.php";
+    include_once "cometobservations.php";
+    include_once "ICQMETHOD.php";
+    include_once "ICQREFERENCEKEY.php";
+    include_once "setup/vars.php";
+    include_once "setup/databaseInfo.php";
+
+    $observer = new Observers;
+
   	$dom = new DomDocument('1.0', 'ISO-8859-1');
 
+	$dom->createComment("TEST");
+	
+
+//    $Atom = $dom->appendChild($dom->createElementNS("test1", "test"));
+
+	$observers = array();
+	
+    $cnt = 0;
+    
+    while(list ($key, $value) = each($result))
+    {
+      $obs = $GLOBALS['objObservation']->getAllInfoDsObservation($value['observationid']);
+      $objectname = $obs["name"];
+      $object = $GLOBALS['objObject']->getAllInfoDsObject($objectname);
+      $type = $object["type"];
+      $con = $object["con"];
+      $observerid = $obs["observer"];
+      $inst = $obs["instrument"];
+      $loc = $obs["location"];
+      $visibility = $obs["visibility"];
+      $seeing = $obs["seeing"];
+      $limmag = $obs["limmag"];
+      $filt = $obs["filter"];
+      $eyep = $obs["eyepiece"];
+      $lns = $obs["lens"];
+
+      if (in_array($observerid, $observers) == false) {
+      	$observers[$cnt] = $observerid;
+      	$cnt = $cnt + 1;
+      }
+    }
+
+    //add root - <observers> 
+    $observersDom = $dom->appendChild($dom->createElement('observers')); 
+
+	while(list($key, $value) = each($observers)) 
+	{
+      //add <book> element to <books>
+      $observer2 = $dom->createElement('observer');
+      $observerChild = $observersDom->appendChild($observer2);
+      $attr = $dom->createAttribute("id");
+      $observer2->appendChild($attr);
+
+	  $attrText = $dom->createTextNode($value);
+	  $attr->appendChild($attrText);
+
+      //add <title> element to <book> 
+      $name = $observerChild->appendChild($dom->createElement('name')); 
+      $name->appendChild($dom->createCDATASection($observer->getFirstName($value))); 
+      
+      //add <title> text node element to <title> 
+      $surname = $observerChild->appendChild($dom->createElement('surname')); 
+      $surname->appendChild($dom->createCDataSection($observer->getName($value))); 
+    }
+    
+    //print $observerid . "\n";
+//	$Atom->createAttributeNS("test2", "test3");
+/*
+<fgca:observations version="2.0"
+    xmlns:fgca="http://observation.sourceforge.net/comast"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://observation.
+sourceforge.net/comast comast20.xsd">
+*/
     //generate xml 
     $dom->formatOutput = true; // set the formatOutput attribute of 
                                // domDocument to true 
