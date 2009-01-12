@@ -1947,6 +1947,9 @@ class Observations {
 		  $objects=$GLOBALS['objObject']->getPartOfs($objects);
 	  return $objects;
 	}
+	public  function getMaxObservation()
+	{ global $objDatabase; return $objDatabase->selectSingleValue('SELECT MAX(observations.id) as MaxCnt FROM observations','MaxCnt',0);
+	}
 }
 $objObservation = new Observations;
 ?>

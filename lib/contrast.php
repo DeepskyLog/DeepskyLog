@@ -1,12 +1,16 @@
 <?php
-// The contrast class calculates the contrast and magnification of a certain object, with a 
-// certain instrument, under a certain sky
+// The contrast class calculates the contrast and magnification of a certain object, with a certain instrument, under a certain sky
 
-class Contrast
-{
- private function calcSubroutine($x, $SBObj, $minObjArcmin, $maxObjArcmin, $maxLog, $logObjContrast)// This function should not be used. Only needed for the calculations
- {
-    $SBReduc = 5 * log10( $x / (2.833 * $_SESSION['aperIn']));
+interface iContrast
+{ // private function calcSubroutine($x, $SBObj, $minObjArcmin, $maxObjArcmin, $maxLog, $logObjContrast)// This function should not be used. Only needed for the calculations
+     public	 function calculateContrast($objMag, $SBObj, $minObjArcmin, $maxObjArcmin);
+     public  function calculateLimitingMagnitudeFromSkyBackground($initBB);
+     public  function calculateSkyBackgroundFromLimitingMagnitude($limMag);
+}
+
+class Contrast implements iContrast
+{ private function calcSubroutine($x, $SBObj, $minObjArcmin, $maxObjArcmin, $maxLog, $logObjContrast)// This function should not be used. Only needed for the calculations
+  { $SBReduc = 5 * log10( $x / (2.833 * $_SESSION['aperIn']));
     $SBB = $_SESSION['initBB'] + $SBReduc;
     $SBScopeAtX = -2.5 * log10( pow( 10, (-0.4 * $SBObj))) + $SBReduc;
 
@@ -77,8 +81,7 @@ class Contrast
 		 // 0.50 < contrast difference < 1.0 : Leicht Sichtbar - Dark green : 339900
 		 // 1.00 < contrast difference : Leicht Sichtbar - Light green : 66FF00
   	if( $minObjArcmin > $maxObjArcmin)
-  	{
-  		$temp = $minObjArcmin;
+  	{ $temp = $minObjArcmin;
   		$minObjArcmin = $maxObjArcmin;
   		$maxObjArcmin = $temp;
   	}

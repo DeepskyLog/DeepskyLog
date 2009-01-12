@@ -1,214 +1,67 @@
 <?php
-// The eyepieces class collects all functions needed to enter, retrieve and
-// adapt eyepiece data from the database.
-//
+// The eyepieces class collects all functions needed to enter, retrieve and adapt eyepiece data from the database.
 // Version 3.2, WDM 16/01/2007
 
-include_once "database.php";
-include_once "setup/language.php";
+interface iEyepiece
+{ public  function getAllEyepiecesIds($id);                                          // returns a list with all id's which have the same name as the name of the given id
+  public  function addEyepiece($name, $focalLength, $apparentFOV);                   // adds a new eyepiece to the database. The name, focalLength and apparentFOV should be given as parameters. 
+  public  function deleteEyepiece($id);                                              // removes the eyepiece with id = $id 
+  public  function getEyepieceObserverPropertyFromName($name, $observer, $property); // returns the property for the eyepiece of the observer
+  public  function getFocalLength($id);                                              // returns the focal length of the given eyepiece
+  public  function getMaxFocalLength($id);                                           // returns the maximum focal length of the given eyepiece (for zoom eyepieces)
+} 
 
-class Eyepieces
-{
- // addEyepiece adds a new eyepiece to the database. The name, focalLength and
- // apparentFOV should be given as parameters. 
- function addEyepiece($name, $focalLength, $apparentFOV)
- {
-  $db = new database;
-  $db->login();
-
-  if (!$_SESSION['lang'])
-  {
-   $_SESSION['lang'] = "English";
-  }
-
-  $sql = "INSERT INTO eyepieces (name, focalLength, apparentFOV) VALUES (\"$name\", \"$focalLength\", \"$apparentFOV\")";
-
-  mysql_query($sql) or die(mysql_error());
-
-  $query = "SELECT id FROM eyepieces ORDER BY id DESC LIMIT 1";
-  $run = mysql_query($query) or die(mysql_error());
-
-  $db->logout();
-  $get = mysql_fetch_object($run);
-  if($get) 
-  {
-   return $get->id; 
-  }
-  else
-  {
-   return '';
-  }
+class Eyepieces implements iEyepiece
+{public  function getAllEyepiecesIds($id)                                            // getAllIds returns a list with all id's which have the same name as the name of the given id
+ { global $objDatabase;
+   return $objDatabase->selectSingleArray("SELECT id FROM eyepieces WHERE name=".$objDatabase->selectSingleValue("SELECT name FROM eyepieces WHERE id = \"".$id."\"",'name'),'id');
+ }
+ public function addEyepiece($name, $focalLength, $apparentFOV)                     // addEyepiece adds a new eyepiece to the database. The name, focalLength and apparentFOV should be given as parameters. 
+ { global $objDatabase;
+   if (!$_SESSION['lang'])
+     $_SESSION['lang'] = "English";
+   $objectDatabase->execSQL("INSERT INTO eyepieces (name, focalLength, apparentFOV) VALUES (\"".$name."\", \"".$focalLength."\", \"".$apparentFOV."\")");
+   return $objDatabase->selectSingleValue("SELECT id FROM eyepieces ORDER BY id DESC LIMIT 1",'id','');
+ }
+ public  function deleteEyepiece($id)                                                // deleteEyepiece removes the eyepiece with id = $id 
+ { global $objDatabase;
+   return $objDatabase->execSQL("DELETE FROM eyepieces WHERE id=\"".$id."\"");
+ }
+ public  function getEyepieceObserverPropertyFromName($name, $observer, $property)   // returns the property for the eyepiece of the observer
+ { global $objDatabase; 
+   return $objDatabase->returnSingleValue("SELECT ".$property." FROM eyepieces where name=\"".$name."\" and observer=\"".$observer."\"",$property);
+ }
+ public  function getFocalLength($id)                                               // getFocalLength returns the focal length of the given eyepiece
+ { global $objDatabase; 
+   return $objDatabase->selectSingleValue("SELECT focalLength FROM eyepieces WHERE id = \"".$id."\"","focalLength");
+ }
+ public  function getMaxFocalLength($id)                                           // getMaxFocalLength returns the maximum focal length of the given eyepiece (for zoom eyepieces)
+ { global $objDatabase;
+   return $objDatabase->selectSingleValue("SELECT maxFocalLength FROM eyepieces WHERE id = \"".$id."\"","maxFocalLength",-1.0);
+ }
+ public  function getEyepieceProperty($id,$property,$defaultValue)                // returns the property of the given eyepiece
+ { global $objDatabase; 
+   return $objDatabase->selectSingleValue("SELECT ".$property." FROM eyepieces WHERE id = \"".$id."\"",$property,$defaultValue);
+ }
+ public  function getEyepieceProperties($id)
+ { global $objDatabase;
+   return $objDatabase->selectRecordArray("SELECT * FROM eyepieces WHERE id=\"".$id."\"");
  }
  
- // getId returns the id for this eyepiece
- function getEyepieceId($name, $observer)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM eyepieces where name=\"$name\" and observer=\"$observer\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if ($get)
-  {
-    $id = $get->id;
-  }
-  else
-  {
-    $id = -1;
-  }
-
-  $db->logout();
-
-  return $id;
- }
-
- // deleteEyepiece removes the eyepiece with id = $id 
- function deleteEyepiece($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "DELETE FROM eyepieces WHERE id=\"$id\"";
-  mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // getAllIds returns a list with all id's which have the same name as the name of the given id
- function getAllEyepiecesIds($id)
- {
-  $sql = "SELECT name FROM eyepieces WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $sql = "SELECT id FROM eyepieces WHERE name = \"$get->name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $ids[] = $get->id;
-  }
-
-  return $ids;
- }
-
- // getEyepiecesId returns the id of the given name of the eyepiece
- function getEyepiecesId($name)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM eyepieces where name=\"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
 
-	if ($get)
-	{
-		$eyepieceid = $get->id;
-	}
-	else
-	{
-		$eyepieceid = 0;
-	}
 
-  $db->logout();
 
-  return $eyepieceid;
- }
-
- // getEyepieces returns an array with all eyepieces
- function getEyepieces()
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM eyepieces";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $eyepieces[] = $get->id;
-  }
-
-  $db->logout();
-
-  return $eyepieces;
- }
-
- // getEyepiecesName returns an array with all eyepieces and names
- function getEyepiecesName()
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM eyepieces";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $eps[$get->id] = $get->name;
-  }
-
-  $db->logout();
-
-  return $eps;
- }
-
- // getFocalLength returns the focal length of the given eyepiece
- function getFocalLength($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM eyepieces WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if ($get)
-	{
-	  $focalLength = $get->focalLength;
-    }
-	else
-  {
-		$focalLength = '';
-	}
-		
-  $db->logout();
-
-  return $focalLength;
- }
-
- // getMaxFocalLength returns the maximum focal length of the given eyepiece (for zoom eyepieces)
- function getMaxFocalLength($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM eyepieces WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if ($get)
-	{
-	  $maxFocalLength = $get->maxFocalLength;
-  }
-	else
-  {
-		$maxFocalLength = -1.0;
-	}
-		
-  $db->logout();
-
-  return $maxFocalLength;
- }
 
  // getApparentFOV returns the apparent Field of View of the given eyepiece
  function getApparentFOV($id)
@@ -393,8 +246,8 @@ class Eyepieces
  // showEyepieces prints a table showing all eyepieces. For testing 
  // purposes only.
  function showEyepieces()
- {
-  $eyepieces = $this->getEyepieces();
+ {global $objDatabase;
+  $eyepieces =$objDatabase->selectSingleArray("SELECT id FROM eyepieces",'id');;
 
   $count = 0;
 
@@ -431,4 +284,38 @@ class Eyepieces
  }
 }
 $objEyepiece=new Eyepieces;
+
+/* OBSOLETE ??? 
+ function getEyepiecesId($name)                                                      // getEyepiecesId returns the id of the given name of the eyepiece
+ { $sql = "SELECT * FROM eyepieces where name=\"$name\"";
+   $run = mysql_query($sql) or die(mysql_error());
+   $get = mysql_fetch_object($run);
+	 if($get)
+	  $eyepieceid = $get->id;
+	else
+	  $eyepieceid = 0;
+  return $eyepieceid;
+ }
+ 
+  // getEyepiecesName returns an array with all eyepieces and names
+ function getEyepiecesName()
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT * FROM eyepieces";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  while($get = mysql_fetch_object($run))
+  {
+   $eps[$get->id] = $get->name;
+  }
+
+  $db->logout();
+
+  return $eps;
+ }
+
+
+*/
 ?>

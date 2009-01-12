@@ -37,25 +37,20 @@ list($min, $max) = $objUtil->printNewListHeader($eyeps, $link, $min, $step, "");
 echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=name&amp;previous=$previous\">".LangViewEyepieceName."</a></td>";
-echo "<td><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=focalLength&amp;previous=$previous\">".LangViewEyepieceFocalLength."</a></td>";
-echo "<td><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=maxFocalLength&amp;previous=$previous\">".LangViewEyepieceMaxFocalLength."</a></td>";
-echo "<td><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=apparentFOV&amp;previous=$previous\">".LangViewEyepieceApparentFieldOfView."</a></td>";
+echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=focalLength&amp;previous=$previous\">".LangViewEyepieceFocalLength."</a></td>";
+echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=maxFocalLength&amp;previous=$previous\">".LangViewEyepieceMaxFocalLength."</a></td>";
+echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=apparentFOV&amp;previous=$previous\">".LangViewEyepieceApparentFieldOfView."</a></td>";
 echo "<td></td>";
 echo "</tr>";
 $count = 0;
 if ($eyeps != null)
 { while(list ($key, $value) = each($eyeps))
-  { $name = stripslashes($objEyepiece->getEyepieceName($value));
-    $focalLength = $objEyepiece->getFocalLength($value);
-    $apparentFOV = $objEyepiece->getApparentFOV($value);
-    $maxFocalLength = $objEyepiece->getMaxFocalLength($value);
-    if ($maxFocalLength == "-1")
-	    $maxFocalLength = "-";
+  { $eyepiece=$objEyepiece->getEyepieceProperties($value);
     echo "<tr class=\"type".(2-($count%2))."\">";
-		echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_eyepiece&amp;eyepiece=".urlencode($value)."\">$name</a></td>";
-		echo "<td>".$focalLength."</td>";
-		echo "<td>".$maxFocalLength."</td>";
-		echo "<td>".$apparentFOV."</td>";
+		echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_eyepiece&amp;eyepiece=".urlencode($value)."\">".stripslashes($eyepiece['name'])."</a></td>";
+		echo "<td align=\"center\">".$eyepiece['focalLength']."</td>";
+		echo "<td align=\"center\">".($eyepiece['maxFocalLength']?$eyepiece['maxFocalLength']:"-")."</td>";
+		echo "<td align=\"center\">".$eyepiece['apparentFOV']."</td>";
 		echo "<td>";
     $queries = array("eyepiece" => $value, "observer" => $_SESSION['deepskylog_id']);           // check if there are no observations made with this eyepiece
     $obs = $objObservation->getObservationFromQuery($queries, "D", "1");
@@ -64,7 +59,7 @@ if ($eyeps != null)
 		//           $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
     if(!sizeof($obs) > 0) // no observations from location yet
       echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_eyepiece&amp;eyepieceid=" . urlencode($value) . "\">" . LangRemove . "</a>");
-    echo("</td>\n</tr>");
+    echo "</td></tr>";
     $count++;
   }
 }

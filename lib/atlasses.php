@@ -1,9 +1,17 @@
 <?php
 
-
 interface iAtlas
-{ // public $atlasCodes;                                                        //$atlasCodes[code]=AtlasName
-  public function calculateAtlasPage($atlas, $ra, $decl);                       // calculates the atlas page for the ra,decl in atlas
+{ // public $atlasCodes;                                                        // $atlasCodes[code]=AtlasName
+     public function calculateAtlasPage($atlas, $ra, $decl);                    // calculates the atlas page for the ra,decl in atlas
+  // private function calculateMilleniumPage($ra, $decl);
+	// private function calculateNewUranometriaPage($ra, $decl);
+  // private function calculatePocketSkyAtlasPage($ra, $decl);
+  // private function calculateSkyAtlasPage($ra, $decl);
+  // private function calculateTakiPage($ra, $decl);
+  // private function calculateTorresBPage($ra, $decl);
+  // private function calculateTorresBCPage($ra, $decl);
+  // private function calculateTorresCPage($ra, $decl);
+  // private function calculateUranometriaPage($ra, $decl)
 }
 
 class Atlasses implements iAtlas

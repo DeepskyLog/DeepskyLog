@@ -1,5 +1,5 @@
 <?php
-
+$MaxCnt=$objObservation->getMaxObservation();
 //=========================================================================================== LOOKING FOR SPECIFIC OBJECT, OR LOOKING FOR SOME OTHER CHARACTERISTIC ============================================================
 if(array_key_exists('number',$_GET) && $_GET['number'])
 { $objectarray = $objObject->getLikeDsObject("",$_GET['catalog'], $_GET['number']);
@@ -69,7 +69,7 @@ $query = array("object"        => $object,
                "languages"     => $selectedLanguages);
 //============================================ CHECK TO SEE IF OBSERVATIONS ALREADY FETCHED BEFORE, OTHERWISE FETCH DATA FROM DB ===============================
 $validQobs=false;
-if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])>1)&&(count($_SESSION['Qobs'])>0))
+if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])>1)&&(count($_SESSION['Qobs'])>0)&&($_SESSION['QobsMaxCnt']==$MaxCnt))
  $validQobs=true;
 while($validQobs && (list($key,$value) = each($_SESSION['QobsParams'])))
  if(!array_key_exists($key,$query)||($value!=$query[$key]))
@@ -77,13 +77,15 @@ while($validQobs && (list($key,$value) = each($_SESSION['QobsParams'])))
 while($validQobs && (list($key,$value) = each($query)))
  if(!array_key_exists($key,$_SESSION['QobsParams'])||($value!=$_SESSION['QobsParams'][$key]))
    $validQobs=false;
+
 if(!$validQobs)
 { $_SESSION['Qobs']=$objObservation->getObservationFromQuery($query, $GLOBALS['objUtil']->checkGetKey('seen','D'));
   $_SESSION['QobsParams']=$query; 
   $_SESSION['QobsSort']='observationid';
   $_SESSION['QobsSortDirection']='desc';
   $query['countquery']='true';
-  $_SESSION['QobsTotal'] = $objObservation->getObservationFromQuery($query, $GLOBALS['objUtil']->checkGetKey('seen')); 
+  $_SESSION['QobsTotal']=$objObservation->getObservationFromQuery($query, $GLOBALS['objUtil']->checkGetKey('seen')); 
+  $_SESSION['QobsMaxCnt']=$MaxCnt;
   $min=0;
 	if(array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && $objObserver->getUseLocal($_SESSION['deepskylog_id']))
   { if(($mindate!="")||($maxdate!=""))

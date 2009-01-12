@@ -2,67 +2,34 @@
 // overview_eyepieces.php
 // generates an overview of all eyepieces (admin only)
 
+
 // sort
-
 if(isset($_GET['sort']))
-{
-  $sort = $_GET['sort']; // field to sort on
-}
+ $sort = $_GET['sort']; // field to sort on
 else
-{
-  $sort = "name"; // standard sort on location name
-}
-
+ $sort = "name"; // standard sort on location name
 $eyeps = $objEyepiece->getSortedEyepieces($sort);
-
-// minimum
-
-if(isset($_GET['min']))
-{
-  $min = $_GET['min'];
-}
-else
-{
-  $min = 0;
-}
-
 // the code below looks very strange but it works
-
 if((isset($_GET['previous'])))
-{
   $orig_previous = $_GET['previous'];
-}
 else
-{
   $orig_previous = "";
-}
-
 if((isset($_GET['sort'])) && $_GET['previous'] == $_GET['sort']) // reverse sort when pushed twice
-{
-  if ($_GET['sort'] == "name")
-  {
+{ if ($_GET['sort'] == "name")
     $eyeps = array_reverse($eyeps, true);
-  }
   else
-  {
-    krsort($eyeps);
+  { krsort($eyeps);
     reset($eyeps);
   }
-    $previous = ""; // reset previous field to sort on
+  $previous = ""; // reset previous field to sort on
 }
 else
-{
   $previous = $sort;
-}
-
 $step = 25;
-
-echo("<div id=\"main\">\n<h2>".LangViewEyepieceTitle."</h2>");
-
+echo "<div id=\"main\">";
+echo "<h2>".LangViewEyepieceTitle."</h2>";
 $link = $baseURL."index.php?indexAction=view_eyepieces&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
-
-list($min, $max) = $util->printListHeader($eyeps, $link, $min, $step, "");
-
+list($min, $max) = $objUtil->printListHeader($eyeps, $link, $min, $step, "");
 echo "<table>
       <tr class=\"type3\">
       <td><a href=\"".$baseURL."index.php?indexAction=view_eyepieces&amp;sort=name&amp;previous=$previous\">".LangViewEyepieceName."</a></td>
@@ -75,7 +42,6 @@ echo "<table>
 			echo "</tr>";
 
 $count = 0;
-
 while(list ($key, $value) = each($eyeps))
 {
  if($count >= $min && $count < $max) // selection
@@ -103,9 +69,9 @@ while(list ($key, $value) = each($eyeps))
    {
     print("<tr $type>
            <td><a href=\"".$baseURL."index.php?indexAction=adapt_eyepiece&amp;eyepiece=".urlencode($value)."\">$name</a></td>\n
-           <td>$focalLength</td>\n
-           <td>$maxFocalLength</td>\n
-           <td>$apparentFOV</td>\n
+           <td align=\"center\">$focalLength</td>\n
+           <td align=\"center\">$maxFocalLength</td>\n
+           <td align=\"center\">$apparentFOV</td>\n
             <td>");
            echo ($observer);
            echo("</td>\n<td>");
@@ -131,7 +97,7 @@ while(list ($key, $value) = each($eyeps))
 }
   echo "</table>";
 
-  list($min, $max) = $util->printListHeader($eyeps, $link, $min, $step, "");
+  list($min, $max) = $objUtil->printListHeader($eyeps, $link, $min, $step, "");
 
   echo "</div></div></body></html>";
 ?>

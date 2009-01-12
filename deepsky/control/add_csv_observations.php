@@ -59,7 +59,7 @@ else
 		  $tempinst=$instruments[$i];
   // Check for the existence of the eyepieces
   for($i=0,$j=0;$i<count($eyepieces);$i++)
-    if($eyepieces[$i]&&($objEyepiece->getEyepieceId($eyepieces[$i],$_SESSION['deepskylog_id'])==-1))
+    if($eyepieces[$i]&&($objEyepiece->getEyepieceObserverPropertyFromName($eyepieces[$i],$loggedUser,'id')))
       $eyepiecesMissing[$j++]=$eyepieces[$i];
   // Check for the existence of the filters
   for($i=0,$j=0;$i<count($filters);$i++)
