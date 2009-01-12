@@ -821,6 +821,8 @@ class util
     global $EMINB,$REFNB,$ENRNN,$ENSTR,$HII,$RNHII,$STNEB,$WRNEB;
 
     global $deepskylive, $dateformat;
+    
+    global $instDir;
 
     // Create pdf file
     $pdf = new Cezpdf('a4', 'portrait');
@@ -909,17 +911,18 @@ class util
       //                     "showLines" => "0", "shaded" => "0", "fontSize" => "12"));
       $pdf->ezText("");
       $pdf->ezTable($tmp=array(array("description"=>$temp["description"])), array("description" => html_entity_decode(LangPDFMessage1)), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
-      $upload_dir = 'deepsky/drawings';
+      $upload_dir = $instDir.'deepsky/drawings';
       $dir = opendir($upload_dir);
       while (FALSE !== ($file = readdir($dir)))
       { if ("." == $file OR ".." == $file)
           continue; // skip current directory and directory above
-        if(fnmatch($value . ".gif", $file) || fnmatch($value . ".jpg", $file) || fnmatch($value. ".png", $file))
+        if(fnmatch($value['observationid'].".jpg", $file))
         { $pdf->ezText("");
-          $pdf->ezImage($upload_dir . "/" . $value . ".jpg", 0, 500, "none", "left");
+          $pdf->ezImage($upload_dir."/".$value['observationid'].".jpg", 0, 500, "none", "left");
         }
       }
       $pdf->ezText("");
+      $pdf->ezNewPage();
     }
     $pdf->ezStream();
   }

@@ -1299,6 +1299,7 @@ function ezText($text,$size=0,$options=array(),$test=0){
 // ------------------------------------------------------------------------------
 
 function ezImage($image,$pad = 5,$width = 0,$resize = 'full',$just = 'center',$border = ''){
+	$temp=false;
 	//beta ezimage function
 	if (stristr($image,'://'))//copy to temp file
 	{
