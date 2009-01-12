@@ -1219,7 +1219,8 @@ class util
     include_once "setup/databaseInfo.php";
 
     $observer = new Observers;
-
+	$location = new Locations;
+	
   	$dom = new DomDocument('1.0', 'ISO-8859-1');
 
 	$dom->createComment("TEST");
@@ -1228,9 +1229,11 @@ class util
 //    $Atom = $dom->appendChild($dom->createElementNS("test1", "test"));
 
 	$observers = array();
-	
-    $cnt = 0;
-    
+	$sites = array();
+
+    $cntObservers = 0;
+    $cntSites = 0;
+
     while(list ($key, $value) = each($result))
     {
       $obs = $GLOBALS['objObservation']->getAllInfoDsObservation($value['observationid']);
@@ -1249,17 +1252,49 @@ class util
       $lns = $obs["lens"];
 
       if (in_array($observerid, $observers) == false) {
-      	$observers[$cnt] = $observerid;
-      	$cnt = $cnt + 1;
+      	$observers[$cntObservers] = $observerid;
+      	$cntObservers = $cntObservers + 1;
+      }
+
+      if (in_array($loc, $sites) == false) {
+      	$sites[$cntSites] = $loc;
+      	$cntSites = $cntSites + 1;
       }
     }
 
+	// add root fcga -> The header
+	$fcgaInfo = $dom->createElement('fgca:observations');
+	$fcgaDom = $dom->appendChild($fcgaInfo);
+
+    $attr = $dom->createAttribute("version");
+    $fcgaInfo->appendChild($attr);
+
+    $attrText = $dom->createTextNode("2.0");
+    $attr->appendChild($attrText);
+
+    $attr = $dom->createAttribute("xmlns:fgca");
+    $fcgaInfo->appendChild($attr);
+
+    $attrText = $dom->createTextNode("http://observation.sourceforge.net/comast");
+    $attr->appendChild($attrText);
+
+    $attr = $dom->createAttribute("xmlns:xsi");
+    $fcgaInfo->appendChild($attr);
+
+    $attrText = $dom->createTextNode("http://www.w3.org/2001/XMLSchema-instance");
+    $attr->appendChild($attrText);
+
+    $attr = $dom->createAttribute("xsi:schemaLocation");
+    $fcgaInfo->appendChild($attr);
+
+    $attrText = $dom->createTextNode("http://observation.sourceforge.net/comast comast20.xsd");
+    $attr->appendChild($attrText);
+
     //add root - <observers> 
-    $observersDom = $dom->appendChild($dom->createElement('observers')); 
+    $observersDom = $fcgaDom->appendChild($dom->createElement('observers')); 
 
 	while(list($key, $value) = each($observers)) 
 	{
-      //add <book> element to <books>
       $observer2 = $dom->createElement('observer');
       $observerChild = $observersDom->appendChild($observer2);
       $attr = $dom->createAttribute("id");
@@ -1268,23 +1303,85 @@ class util
 	  $attrText = $dom->createTextNode($value);
 	  $attr->appendChild($attrText);
 
-      //add <title> element to <book> 
+      // TODO : Rene Rijken -> decode!!!!, voor de rest OK!
       $name = $observerChild->appendChild($dom->createElement('name')); 
-      $name->appendChild($dom->createCDATASection($observer->getFirstName($value))); 
+      $name->appendChild($dom->createCDATASection(($observer->getFirstName($value)))); 
       
-      //add <title> text node element to <title> 
       $surname = $observerChild->appendChild($dom->createElement('surname')); 
-      $surname->appendChild($dom->createCDataSection($observer->getName($value))); 
+      $surname->appendChild($dom->createCDataSection(($observer->getName($value)))); 
     }
     
-    //print $observerid . "\n";
-//	$Atom->createAttributeNS("test2", "test3");
-/*
-<fgca:observations version="2.0"
-    xmlns:fgca="http://observation.sourceforge.net/comast"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://observation.
-sourceforge.net/comast comast20.xsd">
-*/
+    //add root - <sites> 
+    $observersDom = $fcgaDom->appendChild($dom->createElement('sites')); 
+
+	while(list($key, $value) = each($sites)) 
+	{
+      $site2 = $dom->createElement('site');
+      $siteChild = $observersDom->appendChild($site2);
+      $attr = $dom->createAttribute("id");
+      $site2->appendChild($attr);
+
+	  $attrText = $dom->createTextNode($value);
+	  $attr->appendChild($attrText);
+
+      // TODO : decode!!!!, voor de rest OK!
+      $name = $siteChild->appendChild($dom->createElement('name')); 
+      $name->appendChild($dom->createCDATASection(($location->getLocationName($value)))); 
+
+      $longitude = $siteChild->appendChild($dom->createElement('longitude')); 
+      $longitude->appendChild($dom->createTextNode($location->getLongitude($value))); 
+
+      $attr = $dom->createAttribute("unit");
+      $longitude->appendChild($attr);
+
+	  $attrText = $dom->createTextNode("deg");
+	  $attr->appendChild($attrText);
+
+
+      $latitude = $siteChild->appendChild($dom->createElement('latitude')); 
+      $latitude->appendChild($dom->createTextNode($location->getLatitude($value))); 
+
+      $attr = $dom->createAttribute("unit");
+      $latitude->appendChild($attr);
+
+	  $attrText = $dom->createTextNode("deg");
+	  $attr->appendChild($attrText);
+
+
+      $timezone = $siteChild->appendChild($dom->createElement('timezone'));
+      $dateTimeZone = new DateTimeZone($location->getTimezone($value));
+	  $datestr = "01/01/2008";
+	  $dateTime = new DateTime($datestr, $dateTimeZone);
+	  // Geeft tijdsverschil terug in seconden
+	  $timedifference = $dateTimeZone->getOffset($dateTime);
+	  $timedifference = $timedifference / 3600.0; 
+      $timezone->appendChild($dom->createTextNode($timedifference)); 
+/*      
+      $surname = $observerChild->appendChild($dom->createElement('surname')); 
+      $surname->appendChild($dom->createCDataSection(($observer->getName($value)))); 
+*/    }
+
+    //add root - <sessions>  DeepskyLog has no sessions
+    $observersDom = $fcgaDom->appendChild($dom->createElement('sessions')); 
+
+    //add root - <targets> 
+    $observersDom = $fcgaDom->appendChild($dom->createElement('targets')); 
+
+    //add root - <scopes> 
+    $observersDom = $fcgaDom->appendChild($dom->createElement('scopes')); 
+
+    //add root - <eyepieces> 
+    $observersDom = $fcgaDom->appendChild($dom->createElement('eyepieces')); 
+
+    //add root - <lenses> 
+    $observersDom = $fcgaDom->appendChild($dom->createElement('lenses')); 
+
+    //add root - <filters> 
+    $observersDom = $fcgaDom->appendChild($dom->createElement('filters')); 
+
+    //add root - <imagers>  DeepskyLog has no imagers
+    $observersDom = $fcgaDom->appendChild($dom->createElement('imagers')); 
+
     //generate xml 
     $dom->formatOutput = true; // set the formatOutput attribute of 
                                // domDocument to true 
