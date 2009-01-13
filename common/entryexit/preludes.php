@@ -31,12 +31,12 @@ include_once "lib/cometobservations.php";
 include_once "lib/cometobjects.php";
 
 // pagenumbers
-if(array_key_exists('min',$_GET))
-   $min=$_GET['min'];
-elseif(array_key_exists('multiplepagenr',$_GET))
+if(array_key_exists('multiplepagenr',$_GET))
   $min = ($_GET['multiplepagenr']-1)*25;
 elseif(array_key_exists('multiplepagenr',$_POST))
   $min = ($_POST['multiplepagenr']-1)*25;
+elseif(array_key_exists('min',$_GET))
+   $min=$_GET['min'];
 else
   $min = 0;
 	

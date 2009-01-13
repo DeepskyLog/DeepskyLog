@@ -6,7 +6,7 @@ class Lists
 {
  function addList($name)
  { $GLOBALS['objDatabase']->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname) VALUES (\"".$GLOBALS['objUtil']->checkSessionKey('deepskylog_id')."\", \"\", \"".$name."\", '0', \"\")");
-   if(array_key_exists('QobjParams',$_SESSION))
+  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
      unset($_SESSION['QobjParams']);
  }
  
@@ -16,13 +16,13 @@ class Lists
     $sql = "DELETE FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$name\"";
     mysql_query($sql) or die(mysql_error());
   }
-  if(array_key_exists('QobjParams',$_SESSION))
+  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
    unset($_SESSION['QobjParams']);
  }
  function renameList($nameFrom, $nameTo)
  { if($GLOBALS['loggedUser']&&($this->checkList($nameFrom)==2))
      $GLOBALS['objDatabase']->execSQL("UPDATE observerobjectlist SET listname=\"".$nameTo."\" WHERE observerid=\"".$GLOBALS['loggedUser']."\" AND listname=\"".$nameFrom."\"");
-   if(array_key_exists('QobjParams',$_SESSION))
+  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
      unset($_SESSION['QobjParams']);
  }
  
@@ -30,7 +30,7 @@ class Lists
  { $observer = $_SESSION['deepskylog_id'];
 	 $sql = "DELETE FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectplace<>0";
    mysql_query($sql) or die(mysql_error());
-   if(array_key_exists('QobjParams',$_SESSION))
+  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
      unset($_SESSION['QobjParams']);
  }
  
@@ -143,7 +143,7 @@ class Lists
     $sql = "INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, description) VALUES (\"$observer\", \"$name\", \"$listname\", \"$objpl\", \"$showname\", \"$description\")";
     mysql_query($sql) or die(mysql_error());
   }
-  if(array_key_exists('QobjParams',$_SESSION))
+  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
     unset($_SESSION['QobjParams']);
  }
  
@@ -193,7 +193,7 @@ class Lists
 		}
 	}
 	$db->logout();
-  if(array_key_exists('QobjParams',$_SESSION))
+  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
     unset($_SESSION['QobjParams']);
  }
  
@@ -210,7 +210,7 @@ class Lists
     $sql = "UPDATE observerobjectlist SET objectplace=objectplace-1 WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectplace>$place";
     mysql_query($sql) or die(mysql_error());
 	}
-  if(array_key_exists('QobjParams',$_SESSION))
+  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
     unset($_SESSION['QobjParams']);
  }
  
@@ -230,7 +230,7 @@ class Lists
     mysql_query($sql) or die(mysql_error());
   }
 	$db->logout();
-  if(array_key_exists('QobjParams',$_SESSION))
+  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
     unset($_SESSION['QobjParams']);
  }
 	
@@ -253,7 +253,7 @@ class Lists
     mysql_query($sql) or die(mysql_error());
   }
 	$db->logout();
-  if(array_key_exists('QobjParams',$_SESSION))
+  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
     unset($_SESSION['QobjParams']);
  }
  
@@ -289,7 +289,7 @@ class Lists
 	  }
 	}
   $db->logout();
-  if(array_key_exists('QobjParams',$_SESSION))
+  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
     unset($_SESSION['QobjParams']);
  }
  
@@ -361,7 +361,7 @@ class Lists
   $sql = "UPDATE observerobjectlist SET description=\"$description\" WHERE observerid=\"$observerid\" AND objectname=\"$object\" AND listname=\"$listname\"";
   $run = mysql_query($sql) or die(mysql_error());
   $db->logout();
-  if(array_key_exists('QobjParams',$_SESSION))
+  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
     unset($_SESSION['QobjParams']);
  }
 }
