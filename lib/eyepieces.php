@@ -7,6 +7,9 @@ interface iEyepiece
   public  function addEyepiece($name, $focalLength, $apparentFOV);                   // adds a new eyepiece to the database. The name, focalLength and apparentFOV should be given as parameters. 
   public  function deleteEyepiece($id);                                              // removes the eyepiece with id = $id 
   public  function getEyepieceObserverPropertyFromName($name, $observer, $property); // returns the property for the eyepiece of the observer
+  public  function getEyepiecePropertiesFromId($id);                                 // returns the properties of the eyepiece with id
+  public  function getEyepiecePropertyFromId($id,$property,$defaultValue='');        // returns the property of the given eyepiece
+  public  function getEyepieceUsedFromId($id);                                       // returns the number of times the eyepiece is used in observations
   public  function getFocalLength($id);                                              // returns the focal length of the given eyepiece
   public  function getMaxFocalLength($id);                                           // returns the maximum focal length of the given eyepiece (for zoom eyepieces)
 } 
@@ -31,21 +34,25 @@ class Eyepieces implements iEyepiece
  { global $objDatabase; 
    return $objDatabase->returnSingleValue("SELECT ".$property." FROM eyepieces where name=\"".$name."\" and observer=\"".$observer."\"",$property);
  }
- public  function getFocalLength($id)                                               // getFocalLength returns the focal length of the given eyepiece
- { global $objDatabase; 
-   return $objDatabase->selectSingleValue("SELECT focalLength FROM eyepieces WHERE id = \"".$id."\"","focalLength");
- }
- public  function getMaxFocalLength($id)                                           // getMaxFocalLength returns the maximum focal length of the given eyepiece (for zoom eyepieces)
+ public  function getEyepiecePropertiesFromId($id)                                   // returns the properties of the eyepiece with id
  { global $objDatabase;
-   return $objDatabase->selectSingleValue("SELECT maxFocalLength FROM eyepieces WHERE id = \"".$id."\"","maxFocalLength",-1.0);
+   return $objDatabase->selectRecordArray("SELECT * FROM eyepieces WHERE id=\"".$id."\"");
  }
- public  function getEyepieceProperty($id,$property,$defaultValue)                // returns the property of the given eyepiece
+ public  function getEyepiecePropertyFromId($id,$property,$defaultValue='')          // returns the property of the given eyepiece
  { global $objDatabase; 
    return $objDatabase->selectSingleValue("SELECT ".$property." FROM eyepieces WHERE id = \"".$id."\"",$property,$defaultValue);
  }
- public  function getEyepieceProperties($id)
+ public  function getEyepieceUsedFromId($id)                                         // returns the number of times the eyepiece is used in observations
+ { global $objDatabase; 
+   return $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM observations WHERE eyepieceid=\"".$id."\"",'ObsCnt',0);
+ }
+ public  function getFocalLength($id)                                                // getFocalLength returns the focal length of the given eyepiece
+ { global $objDatabase; 
+   return $objDatabase->selectSingleValue("SELECT focalLength FROM eyepieces WHERE id = \"".$id."\"","focalLength");
+ }
+ public  function getMaxFocalLength($id)                                             // getMaxFocalLength returns the maximum focal length of the given eyepiece (for zoom eyepieces)
  { global $objDatabase;
-   return $objDatabase->selectRecordArray("SELECT * FROM eyepieces WHERE id=\"".$id."\"");
+   return $objDatabase->selectSingleValue("SELECT maxFocalLength FROM eyepieces WHERE id = \"".$id."\"","maxFocalLength",-1.0);
  }
  
  

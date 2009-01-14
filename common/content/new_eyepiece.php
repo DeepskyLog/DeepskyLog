@@ -1,6 +1,4 @@
-<?php
-// new_eyepiece.php
-// allows the user to add a new eyepiece
+<?php  // new_eyepiece.php - allows the user to add a new eyepiece
 
 $mfl = -1;
 if(array_key_exists('maxFocalLength',$_GET) && $_GET['maxFocalLength']) 
@@ -17,7 +15,7 @@ if((isset($_GET['previous'])))
   $orig_previous = $_GET['previous'];
 else
   $orig_previous = "";
-$eyeps = $objEyepiece->getSortedEyepieces($sort, $_SESSION['deepskylog_id']);
+$eyeps = $objEyepiece->getSortedEyepieces($sort, $loggedUser);
 if((isset($_GET['sort'])) && $_GET['previous'] == $_GET['sort']) // reverse sort when pushed twice
 { if ($_GET['sort'] == "name")
     $eyeps = array_reverse($eyeps, true);
@@ -44,8 +42,8 @@ echo "<td></td>";
 echo "</tr>";
 $count = 0;
 if ($eyeps != null)
-{ while(list ($key, $value) = each($eyeps))
-  { $eyepiece=$objEyepiece->getEyepieceProperties($value);
+{ while(list($key,$value) = each($eyeps))
+  { $eyepiece=$objEyepiece->getEyepiecePropertiesFromId($value);
     echo "<tr class=\"type".(2-($count%2))."\">";
 		echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_eyepiece&amp;eyepiece=".urlencode($value)."\">".stripslashes($eyepiece['name'])."</a></td>";
 		echo "<td align=\"center\">".$eyepiece['focalLength']."</td>";
@@ -78,7 +76,7 @@ echo "<form name=\"overviewform\">";
 echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 $eyeps = $objEyepiece->getSortedEyepieces('focalLength', "", true);
 while(list($key, $value)=each($eyeps))
-  echo "<option value=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;eyepieceid=".urlencode($value)."\" >" . $objEyepiece->getEyepieceName($value) . "</option>";
+  echo "<option value=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;eyepieceid=".urlencode($value)."\" >" . $objEyepiece->getEyepieceName($value) . "</option>"; 
 echo "</select>";
 echo "</form>";
 echo "</td>";
@@ -99,13 +97,13 @@ tableFieldnameFieldExplanation(LangAddEyepieceField1,
                                "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"eyepiecename\" size=\"30\" value=\"".stripslashes($objUtil->checkGetKey('eyepiecename')).stripslashes($objEyepiece->getEyepieceName($objUtil->checkGetKey('eyepieceid')))."\" />",
                                LangAddEyepieceField1Expl);
 tableFieldnameFieldExplanation(LangAddEyepieceField2,
-                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"5\" name=\"focalLength\" size=\"5\" value=\"".$objUtil->checkGetKey('focalLength').stripslashes($objEyepiece->getFocalLength($objUtil->checkGetKey('eyepieceid')))."\" />",
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"5\" name=\"focalLength\" size=\"5\" value=\"".stripslashes($objEyepiece->getEyepiecePropertyFromId($objUtil->checkGetKey('eyepieceid'),'focalLength',$objUtil->checkGetKey('focalLength')))."\" />",
                                LangAddEyepieceField2Expl);
 tableFieldnameFieldExplanation(LangAddEyepieceField4,
                                "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"maxFocalLength\" size=\"5\" value=\"".$mfl."\" />",
                                LangAddEyepieceField4Expl);
 tableFieldnameFieldExplanation(LangAddEyepieceField3,
-                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"apparentFOV\" size=\"5\" value=\"".$objUtil->checkGetKey('apparentFOV').stripslashes($objEyepiece->getapparentFOV($objUtil->checkGetKey('eyepieceid')))."\" />",
+                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"apparentFOV\" size=\"5\" value=\"".stripslashes($objEyepiece->getEyepiecePropertyFromId($objUtil->checkGetKey('eyepieceid'),'apparentFOV',$objUtil->checkGetKey('apparentFOV')))."\" />",
                                LangAddEyepieceField3Expl);
 echo "</table>";
 echo "<hr />";
