@@ -1215,6 +1215,8 @@ class util
     include_once "observers.php";
     include_once "instruments.php";
     include_once "locations.php";
+    include_once "lenses.php";
+    include_once "filters.php";
     include_once "cometobservations.php";
     include_once "ICQMETHOD.php";
     include_once "ICQREFERENCEKEY.php";
@@ -1226,19 +1228,21 @@ class util
 	
   	$dom = new DomDocument('1.0', 'ISO-8859-1');
 
-	$dom->createComment("TEST");
-	
 	$observers = array();
 	$sites = array();
 	$objects = array();
 	$scopes = array();
     $eyepieces = array();
+	$lenses = array();
+	$filters = array();
 
     $cntObservers = 0;
     $cntSites = 0;
     $cntObjects = 0;
 	$cntScopes = 0;
 	$cntEyepieces = 0;
+	$cntLens = 0;
+	$cntFilter = 0;
 	
     while(list ($key, $value) = each($result))
     {
@@ -1278,6 +1282,16 @@ class util
       if (in_array($eyep, $eyepieces) == false) {
       	$eyepieces[$cntEyepieces] = $eyep;
       	$cntEyepieces = $cntEyepieces + 1;
+      }
+
+      if (in_array($lns, $lenses) == false) {
+      	$lenses[$cntLens] = $lns;
+      	$cntLens = $cntLens + 1;
+      }
+
+      if (in_array($filt, $filters) == false) {
+      	$filters[$cntFilter] = $filt;
+      	$cntFilter = $cntFilter + 1;
       }
     }
 
@@ -1328,6 +1342,15 @@ class util
       
       $surname = $observerChild->appendChild($dom->createElement('surname')); 
       $surname->appendChild($dom->createCDataSection(($observer->getName($value)))); 
+
+      $account = $observerChild->appendChild($dom->createElement('account'));
+      $account->appendChild($dom->createCDataSection($value));
+
+      $attr = $dom->createAttribute("name");
+      $account->appendChild($attr);
+
+      $attrText = $dom->createTextNode("www.deepskylog.org");
+      $attr->appendChild($attrText);
     }
     
     //add root - <sites> 
@@ -1618,11 +1641,123 @@ class util
     //add root - <lenses> 
     $observersDom = $fcgaDom->appendChild($dom->createElement('lenses')); 
 
+	while(list($key, $value) = each($lenses)) 
+	{
+	  if ($value != "" && $value > 0) {
+        $lens2 = $dom->createElement('lens');
+        $lensChild = $observersDom->appendChild($lens2);
+        $attr = $dom->createAttribute("id");
+        $lens2->appendChild($attr);
+
+	    $attrText = $dom->createTextNode($value);
+	    $attr->appendChild($attrText);
+
+        // TODO : decode!!!!, voor de rest OK!
+        $model = $lensChild->appendChild($dom->createElement('model')); 
+        $model->appendChild($dom->createCDATASection(($GLOBALS['objLens']->getLensName($value)))); 
+
+        $factor = $lensChild->appendChild($dom->createElement('factor')); 
+        $factor->appendChild($dom->createTextNode(($GLOBALS['objLens']->getFactor($value))));
+      }
+    }
+
     //add root - <filters> 
     $observersDom = $fcgaDom->appendChild($dom->createElement('filters')); 
 
+	while(list($key, $value) = each($filters)) 
+	{
+	  if ($value != "" && $value > 0) {
+        $filter2 = $dom->createElement('filter');
+        $filterChild = $observersDom->appendChild($filter2);
+        $attr = $dom->createAttribute("id");
+        $filter2->appendChild($attr);
+
+	    $attrText = $dom->createTextNode($value);
+	    $attr->appendChild($attrText);
+
+        // TODO : decode!!!!, voor de rest OK!
+        $model = $filterChild->appendChild($dom->createElement('model')); 
+        $model->appendChild($dom->createCDATASection(($GLOBALS['objFilter']->getFilterName($value)))); 
+
+		$tp = $GLOBALS['objFilter']->getFilterType($value);
+		if ($tp == 0) {
+			$filType = "other";
+		} else if ($tp == 1) {
+			$filType = "broad band";
+		} else if ($tp == 2) {
+			$filType = "narrow band";
+		} else if ($tp == 3) {
+			$filType = "O-III";
+		} else if ($tp == 4) {
+			$filType = "H-beta";
+		} else if ($tp == 5) {
+			$filType = "H-alpha";
+		} else if ($tp == 6) {
+			$filType = "color";
+		} else if ($tp == 7) {
+			$filType = "neutral";
+		} else if ($tp == 8) {
+			$filType = "corrective";
+		}
+
+        $type = $filterChild->appendChild($dom->createElement('type')); 
+        $type->appendChild($dom->createCDATASection($filType));
+
+		if ($filType == "color") {
+			$col = $GLOBALS['objFilter']->getColor($value);
+			if ($col == 1) {
+				$colName = "light red";
+			} else if ($col == 2) {
+				$colName = "red";
+			} else if ($col == 3) {
+				$colName = "deep red";
+			} else if ($col == 4) {
+				$colName = "orange";
+			} else if ($col == 5) {
+				$colName = "light yellow";
+			} else if ($col == 6) {
+				$colName = "deep yellow";
+			} else if ($col == 7) {
+				$colName = "yellow";
+			} else if ($col == 8) {
+				$colName = "yellow-green";
+			} else if ($col == 9) {
+				$colName = "light green";
+			} else if ($col == 10) {
+				$colName = "green";
+			} else if ($col == 11) {
+				$colName = "medium blue";
+			} else if ($col == 12) {
+				$colName = "pale blue";
+			} else if ($col == 13) {
+				$colName = "blue";
+			} else if ($col == 14) {
+				$colName = "deep blue";
+			} else if ($col == 15) {
+				$colName = "violet";
+			} 
+			if ($colName != "") {
+              $color = $filterChild->appendChild($dom->createElement('color')); 
+              $color->appendChild($dom->createCDATASection($colName));
+			}
+			
+			if ($GLOBALS['objFilter']->getWratten($value) != "") {
+		      $wratten = $filterChild->appendChild($dom->createElement('wratten')); 
+              $wratten->appendChild($dom->createCDATASection($GLOBALS['objFilter']->getWratten($value)));
+			}
+
+			if ($GLOBALS['objFilter']->getSchott($value) != "") {
+		      $schott = $filterChild->appendChild($dom->createElement('schott')); 
+              $schott->appendChild($dom->createCDATASection($GLOBALS['objFilter']->getSchott($value)));
+			}
+		}
+      }
+    }
+
     //add root - <imagers>  DeepskyLog has no imagers
     $observersDom = $fcgaDom->appendChild($dom->createElement('imagers')); 
+
+
 
     //generate xml 
     $dom->formatOutput = true; // set the formatOutput attribute of 
