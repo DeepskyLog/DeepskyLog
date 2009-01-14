@@ -36,7 +36,14 @@ if($objUtil->checkPostKey('instrumentname')
       $fd=$objUtil->checkPostKey('fd',1.0);
   }
   if($objUtil->checkPostKey('add'))
-  { $objInstrument->addInstrument($instrumentname, $diameter, $fd, $type, $objUtil->checkPostKey('fixedMagnification',0), $_SESSION['deepskylog_id']);
+  { 
+  	if ($fd > 1.0) {
+  		$fixedMag = 0;
+  	} else {
+  		$fixedMag = $objUtil->checkPostKey('fixedMagnification',0);
+  		$fd = 0.0;
+  	}
+  	$objInstrument->addInstrument($instrumentname, $diameter, $fd, $type, $fixedMag, $_SESSION['deepskylog_id']);
     $entryMessage=LangValidateInstrumentMessage3;
   }
   if($objUtil->checkPostKey('change')
@@ -45,8 +52,14 @@ if($objUtil->checkPostKey('instrumentname')
     $objInstrument->setInstrumentType($_POST['id'], $type);
     $objInstrument->setInstrumentName($_POST['id'], $instrumentname);
     $objInstrument->setDiameter($id, $diameter);
-    $objInstrument->setFd($_POST['id'], $fd);
-    $objInstrument->setFixedMagnification($_POST['id'], $objUtil->checkPostKey('fixedMagnification'));
+    if ($fd > 1.0)
+    {
+    	$objInstrument->setFd($_POST['id'], $fd);
+    	$objInstrument->setFixedMagnification($_POST['id'], 0);
+    } else {
+    	$objInstrument->setFd($_POST['id'], 0);
+        $objInstrument->setFixedMagnification($_POST['id'], $objUtil->checkPostKey('fixedMagnification'));
+    }
     $entryMessage=LangValidateInstrumentMessage4;
   }
 }

@@ -1221,29 +1221,30 @@ class util
     include_once "setup/vars.php";
     include_once "setup/databaseInfo.php";
 
-    $observer = new Observers;
-	$location = new Locations;
+    $observer = $GLOBALS['objObserver'];
+	$location = $GLOBALS['objLocation'];
 	
   	$dom = new DomDocument('1.0', 'ISO-8859-1');
 
 	$dom->createComment("TEST");
 	
-
-//    $Atom = $dom->appendChild($dom->createElementNS("test1", "test"));
-
 	$observers = array();
 	$sites = array();
+	$objects = array();
+	$scopes = array();
+    $eyepieces = array();
 
     $cntObservers = 0;
     $cntSites = 0;
-
+    $cntObjects = 0;
+	$cntScopes = 0;
+	$cntEyepieces = 0;
+	
     while(list ($key, $value) = each($result))
     {
       $obs = $GLOBALS['objObservation']->getAllInfoDsObservation($value['observationid']);
       $objectname = $obs["name"];
-      $object = $GLOBALS['objObject']->getAllInfoDsObject($objectname);
-      $type = $object["type"];
-      $con = $object["con"];
+	  $object = 
       $observerid = $obs["observer"];
       $inst = $obs["instrument"];
       $loc = $obs["location"];
@@ -1262,6 +1263,21 @@ class util
       if (in_array($loc, $sites) == false) {
       	$sites[$cntSites] = $loc;
       	$cntSites = $cntSites + 1;
+      }
+      
+      if (in_array($objectname, $objects) == false) {
+      	$objects[$cntObjects] = $objectname;
+      	$cntObjects = $cntObjects + 1;
+      }
+
+      if (in_array($inst, $scopes) == false) {
+      	$scopes[$cntObjects] = $inst;
+      	$cntScopes = $cntScopes + 1;
+      }
+
+      if (in_array($eyep, $eyepieces) == false) {
+      	$eyepieces[$cntEyepieces] = $eyep;
+      	$cntEyepieces = $cntEyepieces + 1;
       }
     }
 
@@ -1357,12 +1373,9 @@ class util
 	  $dateTime = new DateTime($datestr, $dateTimeZone);
 	  // Geeft tijdsverschil terug in seconden
 	  $timedifference = $dateTimeZone->getOffset($dateTime);
-	  $timedifference = $timedifference / 3600.0; 
+	  $timedifference = $timedifference / 60.0; 
       $timezone->appendChild($dom->createTextNode($timedifference)); 
-/*      
-      $surname = $observerChild->appendChild($dom->createElement('surname')); 
-      $surname->appendChild($dom->createCDataSection(($observer->getName($value)))); 
-*/    }
+    }
 
     //add root - <sessions>  DeepskyLog has no sessions
     $observersDom = $fcgaDom->appendChild($dom->createElement('sessions')); 
@@ -1370,11 +1383,237 @@ class util
     //add root - <targets> 
     $observersDom = $fcgaDom->appendChild($dom->createElement('targets')); 
 
+	while(list($key, $value) = each($objects)) 
+	{
+      $object2 = $dom->createElement('target');
+      $objectChild = $observersDom->appendChild($object2);
+      $attr = $dom->createAttribute("id");
+      $object2->appendChild($attr);
+
+	  $attrText = $dom->createTextNode($value);
+	  $attr->appendChild($attrText);
+
+      $attr = $dom->createAttribute("xsi:type");
+      $object2->appendChild($attr);
+
+      $object = $GLOBALS['objObject']->getAllInfoDsObject($value);
+
+	  $type = $object["type"];
+	  if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC")
+	  {
+	  	$type = "fgca:deepSkyOC";
+	  } else if ($type == "GALXY" || $type == "GALCL") {
+	  	$type = "fgca:deepSkyGX";
+	  } else if ($type == "PLNNB") {
+	  	$type = "fgca:deepSkyPN";
+	  } else if ($type == "ASTER" || $type == "AA1STAR" || $type == "AA2STAR" 
+	      || $type == "AA3STAR" || $type == "AA4STAR" || $type == "AA8STAR"
+	      || $type == "DS") {
+	  	$type = "fgca:deepSkyAS";
+	  } else if ($type == "GLOCL" || $type == "GXAGC" || $type == "LMCGC" 
+	      || $type == "SMCGC") {
+	  	$type = "fgca:deepSkyGC";
+	  } else if ($type == "BRTNB" || $type == "CLANB" || $type == "EMINB"
+	      || $type == "ENRNN" || $type == "ENSTR" || $type == "GXADN"
+	      || $type == "GACAN" || $type == "HII" || $type == "LMCCN"
+	      || $type == "LMCDN" || $type == "REFNB" || $type == "RNHII"
+	      || $type == "SMCCN" || $type == "SMCDN" || $type == "SNREM"
+	      || $type == "STNEB" || $type == "WRNEB") {
+	  	$type = "fgca:deepSkyGN";
+	  } else if ($type == "QUASR") {
+	  	$type = "fgca:deepSkyQS";
+	  } else if ($type == "DRKNB") {
+	  	$type = "fgca:deepSkyDN";
+	  } else if ($type == "NONEX") {
+	  	$type = "fgca:deepSkyNA";
+	  }
+	  $attrText = $dom->createTextNode($type);
+	  $attr->appendChild($attrText);
+
+      // TODO : Rene Rijken -> decode!!!!, voor de rest OK!
+      $datasource = $objectChild->appendChild($dom->createElement('datasource')); 
+      $datasource->appendChild($dom->createCDATASection(($object["datasource"]))); 
+      
+      $name = $objectChild->appendChild($dom->createElement('name')); 
+      $name->appendChild($dom->createCDATASection(($value)));
+      
+      $altnames = $GLOBALS['objObject']->getAlternativeNames($value);
+      while(list($key2, $value2) = each($altnames)) // go through names array
+  	  { if(trim($value2)!=trim($value))
+  	  	{
+          $alias = $objectChild->appendChild($dom->createElement('alias')); 
+          $alias->appendChild($dom->createCDataSection((trim($value2))));
+  	  	} 
+      }
+
+      $position = $objectChild->appendChild($dom->createElement('position')); 
+
+	  $raDom = $dom->createElement('ra');
+      $ra = $position->appendChild($raDom); 
+      $ra->appendChild($dom->createTextNode($object["ra"] * 15.0));
+
+      $attr = $dom->createAttribute("unit");
+      $raDom->appendChild($attr);
+
+	  $attrText = $dom->createTextNode("deg");
+	  $attr->appendChild($attrText);
+
+	  $decDom = $dom->createElement('dec');
+      $dec = $position->appendChild($decDom); 
+      $dec->appendChild($dom->createTextNode($object["decl"]));
+
+      $attr = $dom->createAttribute("unit");
+      $decDom->appendChild($attr);
+
+	  $attrText = $dom->createTextNode("deg");
+	  $attr->appendChild($attrText);
+	  
+	  $constellation = $objectChild->appendChild($dom->createElement('constellation')); 
+      $constellation->appendChild($dom->createCDATASection(($object["con"])));
+
+	  if ($object["mag"] < 99.0) {
+	  	$mag = $objectChild->appendChild($dom->createElement('visMag')); 
+      	$mag->appendChild($dom->createTextNode(($object["mag"])));
+	  }
+	  
+	  if ($object["subr"] < 99.0) {
+	  	$mag = $objectChild->appendChild($dom->createElement('surfBr')); 
+      	$mag->appendChild($dom->createTextNode(($object["subr"])));
+	  }
+
+	  if ($object["pa"] < 999.0) {
+	  	$pa = $objectChild->appendChild($dom->createElement('pa')); 
+      	$pa->appendChild($dom->createTextNode(($object["pa"])));
+	  }
+
+      $diameter1 = $object["diam1"];
+	  if ($diameter1 > 0.0 && $diameter1 != 99.9) {
+	  	$ldDom = $dom->createElement('largeDiameter');
+	  	$diam1 = $objectChild->appendChild($ldDom);
+	  	$lDiameter = $diameter1 / 60.0;
+      	$diam1->appendChild($dom->createTextNode($lDiameter));
+
+        $attr = $dom->createAttribute("unit");
+        $ldDom->appendChild($attr);
+
+	    $attrText = $dom->createTextNode("arcmin");
+	    $attr->appendChild($attrText);
+	  }
+
+	  if ($object["diam2"] > 0.0 && $object["diam2"] != 99.9) {
+	  	$sdDom = $dom->createElement('smallDiameter');
+	  	$diam2 = $objectChild->appendChild($sdDom);
+	  	$sDiameter = $object["diam2"] / 60.0;
+      	$diam2->appendChild($dom->createTextNode($sDiameter));
+
+        $attr = $dom->createAttribute("unit");
+        $sdDom->appendChild($attr);
+
+	    $attrText = $dom->createTextNode("arcmin");
+	    $attr->appendChild($attrText);
+	  }
+	}
     //add root - <scopes> 
     $observersDom = $fcgaDom->appendChild($dom->createElement('scopes')); 
 
+	while(list($key, $value) = each($scopes)) 
+	{
+      $scope2 = $dom->createElement('scope');
+      $siteChild = $observersDom->appendChild($scope2);
+      $attr = $dom->createAttribute("id");
+      $scope2->appendChild($attr);
+
+	  $attrText = $dom->createTextNode($value);
+	  $attr->appendChild($attrText);
+
+      $attr = $dom->createAttribute("xsi:type");
+      $scope2->appendChild($attr);
+
+	  if ($GLOBALS['objInstrument']->getFixedMagnification($value) > 0) {
+	  	$typeLong = "fgca:fixedMagnificationOpticsType";
+	  } else {
+	  	$typeLong = "fgca:scopeType";	  	
+	  }
+	  $tp = $GLOBALS['objInstrument']->getInstrumentType($value);
+	  if ($tp == InstrumentOther || $tp == InstrumentRest) {
+	  	$typeShort = "";
+	  } else if ($tp == InstrumentNakedEye) {
+	  	$typeShort = "A";
+	  } else if ($tp == InstrumentBinoculars || $tp == InstrumentFinderscope) {
+	  	$typeShort = "B";
+	  } else if ($tp == InstrumentRefractor) {
+	  	$typeShort = "R";
+	  } else if ($tp == InstrumentReflector) {
+	  	$typeShort = "N";
+	  } else if ($tp == InstrumentCassegrain) {
+	  	$typeShort = "C";
+	  } else if ($tp == InstrumentKutter) {
+	  	$typeShort = "K";
+	  } else if ($tp == InstrumentMaksutov) {
+	  	$typeShort = "M";
+	  } else if ($tp == InstrumentSchmidtCassegrain) {
+	  	$typeShort = "S";
+	  }
+
+	  $attrText = $dom->createTextNode($typeLong);
+	  $attr->appendChild($attrText);
+
+      // TODO : decode!!!!, voor de rest OK!
+      $name = $siteChild->appendChild($dom->createElement('model')); 
+      $name->appendChild($dom->createCDATASection(($GLOBALS['objInstrument']->getInstrumentName($value)))); 
+
+      $type = $siteChild->appendChild($dom->createElement('type')); 
+      $type->appendChild($dom->createCDATASection(($typeShort))); 
+
+      $aperture = $siteChild->appendChild($dom->createElement('aperture')); 
+      $aperture->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getDiameter($value)))); 
+
+	  if ($GLOBALS['objInstrument']->getFixedMagnification($value) > 0) {
+      	$magnification = $siteChild->appendChild($dom->createElement('magnification'));
+        $magnification->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getFixedMagnification($value)))); 
+	  } else {
+      	$focalLength = $siteChild->appendChild($dom->createElement('focalLength'));
+        $focalLength->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getFd($value)) * $GLOBALS['objInstrument']->getDiameter($value))); 
+	  }
+    }
+
     //add root - <eyepieces> 
     $observersDom = $fcgaDom->appendChild($dom->createElement('eyepieces')); 
+
+	while(list($key, $value) = each($eyepieces)) 
+	{
+	  if ($value != "" && $value > 0) {
+        $eyepiece2 = $dom->createElement('eyepiece');
+        $eyepieceChild = $observersDom->appendChild($eyepiece2);
+        $attr = $dom->createAttribute("id");
+        $eyepiece2->appendChild($attr);
+
+	    $attrText = $dom->createTextNode($value);
+	    $attr->appendChild($attrText);
+
+        // TODO : decode!!!!, voor de rest OK!
+        $model = $eyepieceChild->appendChild($dom->createElement('model')); 
+        $model->appendChild($dom->createCDATASection(($GLOBALS['objEyepiece']->getEyepieceName($value)))); 
+
+        $focalLength = $eyepieceChild->appendChild($dom->createElement('focalLength')); 
+        $focalLength->appendChild($dom->createTextNode(($GLOBALS['objEyepiece']->getEyepieceFocalLength($value))));
+
+		if ($GLOBALS['objEyepiece']->getMaxFocalLength($value) > 0) {
+          $maxFocalLength = $eyepieceChild->appendChild($dom->createElement('maxFocalLength')); 
+          $maxFocalLength->appendChild($dom->createTextNode(($GLOBALS['objEyepiece']->getMaxFocalLength($value))));
+		}
+
+        $apparentFOV = $eyepieceChild->appendChild($dom->createElement('apparentFOV')); 
+        $apparentFOV->appendChild($dom->createTextNode(($GLOBALS['objEyepiece']->getApparentFOV($value))));
+
+        $attr = $dom->createAttribute("unit");
+        $apparentFOV->appendChild($attr);
+
+	    $attrText = $dom->createTextNode("deg");
+	    $attr->appendChild($attrText);
+
+      }
+    }
 
     //add root - <lenses> 
     $observersDom = $fcgaDom->appendChild($dom->createElement('lenses')); 

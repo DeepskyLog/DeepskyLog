@@ -112,6 +112,30 @@ class Eyepieces implements iEyepiece
   return $name;
  }
 
+ // getEyepieceFocalLength returns the focal length of the given eyepiece
+ function getEyepieceFocalLength($id)
+ {
+  $db = new database;
+  $db->login();
+
+  $sql = "SELECT * FROM eyepieces WHERE id = \"$id\"";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $get = mysql_fetch_object($run);
+  if ($get)
+	{
+      $focal = $get->focalLength;
+	}
+	else
+	{
+		$focal = "";
+	}
+
+  $db->logout();
+
+  return $focal;
+ }
+
  // getSortedEyepieces returns an array with the ids of all eyepieces, 
  // sorted by the column specified in $sort
  function getSortedEyepieces($sort, $observer = "", $unique = false)

@@ -6,25 +6,25 @@ AddHandler application/x-httpd-php .argo
 AddHandler application/x-httpd-php .icq
 AddHandler application/x-httpd-php .xml
 
-<Files deepsky/observations.pdf>
+<Files observations.pdf>
     ForceType application/x-httpd-php
 </Files>
-<Files deepsky/observations.csv>
+<Files observations.csv>
     ForceType application/x-httpd-php
 </Files>
-<Files deepsky/objects.pdf>
+<Files objects.pdf>
     ForceType application/x-httpd-php
 </Files>
-<Files deepsky/objects.csv>
+<Files objects.csv>
     ForceType application/x-httpd-php
 </Files>
-<Files deepsky/objects.argo>
+<Files objects.argo>
     ForceType application/x-httpd-php
 </Files>
-<Files comets/observations.pdf>
+<Files cometobservations.pdf>
     ForceType application/x-httpd-php
 </Files>
-<Files comets/observations.icq>
+<Files cometobservations.icq>
     ForceType application/x-httpd-php
 </Files>
 <Files observations.xml>
