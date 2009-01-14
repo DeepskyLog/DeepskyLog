@@ -1345,7 +1345,7 @@ class Objects implements iObject
    if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
 	 { $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
      tableSortHeader($GLOBALS['objAtlas']->atlasCodes[$atlas], $link."&amp;sort=".$atlas);
-	   tableSortHeader(LangViewObjectFieldContrastReserve, $link."&amp;sort=objectcontrast");
+	   tableSortInverseHeader(LangViewObjectFieldContrastReserve, $link."&amp;sort=objectcontrast");
 	   tableSortHeader(LangViewObjectFieldMagnification, $link."&amp;sort=objectoptimalmagnification");
 	   tableSortHeader(LangOverviewObjectsHeader7, $link."&amp;sort=objectseen");
 	   tableSortHeader(LangOverviewObjectsHeader8, $link."&amp;sort=objectlastseen");

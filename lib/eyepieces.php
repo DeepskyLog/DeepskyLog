@@ -7,7 +7,7 @@ interface iEyepiece
   public  function addEyepiece($name, $focalLength, $apparentFOV);                   // adds a new eyepiece to the database. The name, focalLength and apparentFOV should be given as parameters. 
   public  function deleteEyepiece($id);                                              // removes the eyepiece with id = $id 
   public  function getEyepieceObserverPropertyFromName($name, $observer, $property); // returns the property for the eyepiece of the observer
-  public  function getEyepiecePropertiesFromId($id);                                 // returns the properties of the eyepiece with id
+  public  function getEyepiecePropertiesFromId($id);                                 // returns the properties of the eyepiece with id in an array(propertyname)=propertyvalue
   public  function getEyepiecePropertyFromId($id,$property,$defaultValue='');        // returns the property of the given eyepiece
   public  function getEyepieceUsedFromId($id);                                       // returns the number of times the eyepiece is used in observations
   public  function getFocalLength($id);                                              // returns the focal length of the given eyepiece
