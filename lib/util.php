@@ -686,7 +686,7 @@ class util
       $limmag = $GLOBALS['objObservation']->getLimitingMagnitude($value['observationid']);
       $description = preg_replace("/(\r\n|\n|\r)/", "", $description);
       $description = preg_replace("/(\")/", "", $description);
-      echo (html_entity_decode($objectname) . ";" . html_entity_decode($name) . ";" . $date[2] . "-" . $date[1] . "-" . $date[0] . ";" . $time . ";" . html_entity_decode($GLOBALS['objLocation']->getLocationName($loc)) . ";" . html_entity_decode($GLOBALS['objInstrument']->getInstrumentName($inst)) . ";" . html_entity_decode($GLOBALS['objEyepiece']->getEyepieceName($eyep)) . ";" . html_entity_decode($GLOBALS['objFilter']->getFilterName($filt)) . ";" . html_entity_decode($GLOBALS['objLens']->getLensName($lns)) . ";" . $seeing . ";" . $limmag . ";" . $visibility . ";" . $langObs . ";" . $description . "\n");
+      echo (html_entity_decode($objectname) . ";" . html_entity_decode($name) . ";" . $date[2] . "-" . $date[1] . "-" . $date[0] . ";" . $time . ";" . html_entity_decode($GLOBALS['objLocation']->getLocationName($loc)) . ";" . html_entity_decode($GLOBALS['objInstrument']->getInstrumentName($inst)) . ";" . html_entity_decode($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($eyep,'name')) . ";" . html_entity_decode($GLOBALS['objFilter']->getFilterName($filt)) . ";" . html_entity_decode($GLOBALS['objLens']->getLensName($lns)) . ";" . $seeing . ";" . $limmag . ";" . $visibility . ";" . $langObs . ";" . $description . "\n");
     }
   }
   public function csvObjects($result)  // Creates a csv file from an array of objects
@@ -873,7 +873,7 @@ class util
       if($seeing) $sstr = LangViewObservationField6." : ".$seeingstr;
       if($limmag) $lstr = LangViewObservationField7." : ".$limmag;
       if($filt)   $filtstr = LangViewObservationField31. " : " . $GLOBALS['objFilter']->getFilterName($filt);
-      if($eyep)   $eyepstr = LangViewObservationField30. " : " .$GLOBALS['objEyepiece']->getEyepieceName($eyep);
+      if($eyep)   $eyepstr = LangViewObservationField30. " : " .$GLOBALS['objEyepiece']->getEyepiecePropertyFromId($eyep,'name');
       if($lns)    $lnsstr = LangViewObservationField32 . " : " . $GLOBALS['objLens']->getLensName($lns);
       $temp = array("Name" => html_entity_decode(LangPDFMessage1)." : ".$objectname,
                  "altname" => html_entity_decode(LangPDFMessage2)." : ".$object["altname"],
@@ -1616,18 +1616,18 @@ class util
 
         // TODO : decode!!!!, voor de rest OK!
         $model = $eyepieceChild->appendChild($dom->createElement('model')); 
-        $model->appendChild($dom->createCDATASection(($GLOBALS['objEyepiece']->getEyepieceName($value)))); 
+        $model->appendChild($dom->createCDATASection(($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value,'name')))); 
 
         $focalLength = $eyepieceChild->appendChild($dom->createElement('focalLength')); 
-        $focalLength->appendChild($dom->createTextNode(($GLOBALS['objEyepiece']->getEyepieceFocalLength($value))));
+        $focalLength->appendChild($dom->createTextNode(($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value,'focalLength'))));
 
-		if ($GLOBALS['objEyepiece']->getMaxFocalLength($value) > 0) {
+		if ($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value,'maxFocalLength') > 0) {
           $maxFocalLength = $eyepieceChild->appendChild($dom->createElement('maxFocalLength')); 
-          $maxFocalLength->appendChild($dom->createTextNode(($GLOBALS['objEyepiece']->getMaxFocalLength($value))));
+          $maxFocalLength->appendChild($dom->createTextNode(($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value,'maxFocalLength'))));
 		}
 
         $apparentFOV = $eyepieceChild->appendChild($dom->createElement('apparentFOV')); 
-        $apparentFOV->appendChild($dom->createTextNode(($GLOBALS['objEyepiece']->getApparentFOV($value))));
+        $apparentFOV->appendChild($dom->createTextNode(($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value,'apparentFOV'))));
 
         $attr = $dom->createAttribute("unit");
         $apparentFOV->appendChild($attr);

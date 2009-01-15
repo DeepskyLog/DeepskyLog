@@ -6,7 +6,7 @@ if(!$loggedUser)
   throw new Exception("No logged user in change_eyepiece.php, please contact the developers with this message.");
 if(!($eyepieceid=$objUtil->checkGetKey('eyepiece')))
   throw new Exception("No eyepiece specified in change_eyepiece.php, please contact the developers with this message.");
-if(!$objEyepiece->getEyepieceName($eyepieceid))
+if(!$objEyepiece->getEyepiecePropertyFromId($eyepieceid,'name'))
   throw new Exception("Eyepiece not found in change_eyepiece.php, please contact the developers with this message:".$eyepieceid);
 $eyepiece=$objEyepiece->getEyepiecePropertiesFromId($_GET['eyepiece']);
 echo "<div id=\"main\">";

@@ -223,6 +223,7 @@ define("LangAddSiteExisting", "Add existing location");
 
 define("LangOverviewEyepieceTitle", "Overview eyepieces");
 define("LangAddEyepieceExisting", "Add existing eyepiece");
+define("LangAddEyepieceManually", "Specify your eyepiece details manually");
 define("LangAddEyepieceTitle", "Add a new eyepiece");
 define("LangAddEyepieceField1", "Name");
 define("LangAddEyepieceField1Expl", "(eg Televue 31mm Nagler)"); 

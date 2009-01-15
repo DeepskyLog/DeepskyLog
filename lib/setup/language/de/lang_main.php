@@ -221,6 +221,7 @@ define("LangAddSiteExisting", "Beobachtungsplatz hinzuf&uuml;gen");
 
 define("LangOverviewEyepieceTitle", "&uuml;bersicht Okulare");
 define("LangAddEyepieceExisting", "Okular hinzuf&uuml;gen");
+define("LangAddLensFieldManually", "Geben Sie das Okulare Details an");
 define("LangAddEyepieceTitle", "Neues Okular");
 define("LangAddEyepieceField1", "Name");
 define("LangAddEyepieceField1Expl", "(z.B. Televue 31mm Nagler)");

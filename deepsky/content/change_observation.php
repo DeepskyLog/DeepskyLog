@@ -84,10 +84,10 @@ echo "</td>";
 echo "<td>";
 echo "<select name=\"eyepiece\" class=\"inputfield\" style=\"width:300px\">";
 echo "<option value=\"\"></option>";
-$eyeps = $objEyepiece->getSortedEyepiecesList("name", $_SESSION['deepskylog_id'], false);
+$eyeps = $objEyepiece->getSortedEyepieces("name", $_SESSION['deepskylog_id']);
 $theEyepiece = $objObservation->getDsObservationEyepieceId($_GET['observation']);
 while (list ($key, $value) = each($eyeps))
-	echo "<option value=\"" . $value . "\"" . (($theEyepiece == $value) ? " selected=\"selected\" " : '') . ">" . $GLOBALS['objEyepiece']->getEyepieceName($value) . "</option>";
+	echo "<option value=\"" . $value . "\"" . (($theEyepiece == $value) ? " selected=\"selected\" " : '') . ">" . $GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value,'name') . "</option>";
 echo "</select>";
 echo "</td>";
 echo "</tr>";

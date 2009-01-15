@@ -143,9 +143,9 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "</td>";
 	echo "<td> <select name=\"eyepiece\" style=\"width:300px\" class=\"inputfield\">"; //=================================================================== EYEPIECE
 	echo "<option value=\"\"></option>";
-	$eyeps = $GLOBALS['objEyepiece']->getSortedEyepiecesList("focalLength", $_SESSION['deepskylog_id'], false);
+	$eyeps = $GLOBALS['objEyepiece']->getSortedEyepieces("focalLength", $_SESSION['deepskylog_id']);
 	while (list ($key, $value) = each($eyeps))
-		echo "<option value=\"" . $value . "\"" . (($GLOBALS['objUtil']->checkPostKey('eyepiece') == $value) ? " selected=\"selected\" " : '') . ">" . $GLOBALS['objEyepiece']->getEyepieceName($value) . "</option>";
+		echo "<option value=\"" . $value . "\"" . (($GLOBALS['objUtil']->checkPostKey('eyepiece') == $value) ? " selected=\"selected\" " : '') . ">" . stripslashes($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value,'name')) . "</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "<td class=\"explanation\">";

@@ -39,15 +39,14 @@ echo "</tr>";
 $count = 0;
 while(list ($key, $value) = each($eyeps))
 { if(($count>=$min)&&($count<$max))
-  { $name=stripslashes($objEyepiece->getEyepieceName($value));
-    $eyepiecProperties=$objEyepiece->getEyepiecePropertiesFromId($value);
+  { $eyepiecProperties=$objEyepiece->getEyepiecePropertiesFromId($value);
     if ($value != "1")
     { echo "<tr class=\"type".(2-($count%2))."\">";
-      echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_eyepiece&amp;eyepiece=".urlencode($value)."\">".$eyepiecProperties['name']."</a></td>";
+      echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_eyepiece&amp;eyepiece=".urlencode($value)."\">".stripslashes($eyepiecProperties['name'])."</a></td>";
       echo "<td align=\"center\">".$eyepiecProperties['focalLength']."</td>";
       echo "<td align=\"center\">".(($eyepiecProperties['maxFocalLength']!=-1)?$eyepiecProperties['maxFocalLength']:"-")."</td>";
       echo "<td align=\"center\">".$eyepiecProperties['apparentFOV']."</td>";
-      echo "<td>".$objEyepiece->getObserverFromEyepiece($value)."</td>";
+      echo "<td>".$objEyepiece->eyepiecProperties['observer']."</td>";
       echo "<td>";
 //    $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
 //    if(!sizeof($obs) > 0 && !sizeof($comobs) > 0) // no observations with eyepiece yet

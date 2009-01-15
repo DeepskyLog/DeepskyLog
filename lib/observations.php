@@ -1245,7 +1245,7 @@ class Observations {
 		if ($eyepiece == "" || $eyepiece == 0) {
 			echo ("-");
 		} else {
-			echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_eyepiece&amp;eyepiece=" . urlencode($eyepiece) . "\">" . $GLOBALS['objEyepiece']->getEyepieceName($eyepiece) . "</a>");
+			echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_eyepiece&amp;eyepiece=" . urlencode($eyepiece) . "\">" . stripslashes($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($eyepiece,'name')). "</a>");
 		}
 		print ("</td>");
 		print ("<td class=\"fieldname\" width=\"25%\" align=\"right\">");

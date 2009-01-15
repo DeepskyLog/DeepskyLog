@@ -224,6 +224,7 @@ define("LangAddSiteExisting", "Rajoutez un endroit existant");
 
 define("LangOverviewEyepieceTitle", "aper&#231;u oculaires");
 define("LangAddEyepieceExisting", "Rajoutez un oculaire existant");
+define("LangAddEyepieceManually", "Specifiez manuellement les d�tails de l'oculaire");
 define("LangAddEyepieceTitle", "Rajoutez un novel oculaire");
 define("LangAddEyepieceField1", "Nom");
 define("LangAddEyepieceField1Expl", "(ex Televue 31mm Nagler)"); 

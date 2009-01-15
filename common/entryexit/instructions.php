@@ -11,9 +11,11 @@ if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAct
   require_once $instDir."/common/control/change_role.php";
 if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="validate_observer"))
   require_once $instDir."/common/control/validate_observer.php";
-
-  if($objUtil->checkGetKey('indexAction')=="validate_delete_eyepiece")
-  require_once $instDir."/common/control/validate_delete_eyepiece.php";
+if($objUtil->checkGetKey('indexAction')=="validate_delete_eyepiece")
+{ $objEyepiece->validateDeleteEyepiece();
+  $_GET['indexAction']='add_eyepiece';
+  unset($_GET['validate_delete_eyepiece']);
+}
 if($objUtil->checkGetKey('indexAction')=="validate_delete_filter")
   require_once $instDir."/common/control/validate_delete_filter.php";
 if($objUtil->checkGetKey('indexAction')=="validate_delete_instrument")
@@ -26,7 +28,10 @@ if($objUtil->checkGetKey('indexAction')=="validate_delete_location")
 if($objUtil->checkGetKey('indexAction')=="common_control_validate_account")
   require_once $instDir."/common/control/validate_account.php";
 if($objUtil->checkGetKey('indexAction')=="validate_eyepiece")
-  require_once $instDir."/common/control/validate_eyepiece.php";
+{ $entryMessage.=$objEyepiece->validateSaveEyepiece();
+  $_GET['indexAction']='add_eyepiece';
+	unset($_GET['validate_eyepiece']);
+}
 if($objUtil->checkGetKey('indexAction')=="validate_filter")
   require_once $instDir."/common/control/validate_filter.php";  
 if($objUtil->checkGetKey('indexAction')=="validate_instrument")
