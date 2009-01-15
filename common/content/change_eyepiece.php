@@ -20,13 +20,13 @@ tableFieldnameFieldExplanation(LangAddEyepieceField1,
                                "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"eyepiecename\" size=\"30\" value=\"".stripslashes($eyepiece['name'])."\" />",
                                LangAddEyepieceField1Expl);
 tableFieldnameFieldExplanation(LangAddEyepieceField2,
-                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"5\" name=\"focalLength\" size=\"5\" value=\"".stripslashes($eyepiece['focalLength'])."\" />",
+                               "<input type=\"text\" class=\"inputfield requiredField\" style=\"text-align:center\" maxlength=\"5\" name=\"focalLength\" size=\"5\" value=\"".stripslashes($eyepiece['focalLength'])."\" />",
                                LangAddEyepieceField2Expl);
 tableFieldnameFieldExplanation(LangAddEyepieceField4,
-                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"maxFocalLength\" size=\"5\" value=\"".((($mfl=stripslashes($eyepiece['maxFocalLength'])) < 0)?"":$mfl)."\" />",
+                               "<input type=\"text\" class=\"inputfield\" style=\"text-align:center\" maxlength=\"5\" name=\"maxFocalLength\" size=\"5\" value=\"".((($mfl=stripslashes($eyepiece['maxFocalLength'])) < 0)?"":$mfl)."\" />",
                                LangAddEyepieceField4Expl);
 tableFieldnameFieldExplanation(LangAddEyepieceField3,
-                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"apparentFOV\" size=\"5\" value=\"".$eyepiece['apparentFOV']."\" />",
+                               "<input type=\"text\" class=\"inputfield requiredField\" style=\"text-align:center\" maxlength=\"5\" name=\"apparentFOV\" size=\"5\" value=\"".$eyepiece['apparentFOV']."\" />",
                                LangAddEyepieceField3Expl);
 echo "</table>";
 echo "<hr>";
