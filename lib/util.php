@@ -1244,11 +1244,12 @@ class util
 	$cntLens = 0;
 	$cntFilter = 0;
 	
+	$allObs = $result;
+	
     while(list ($key, $value) = each($result))
     {
       $obs = $GLOBALS['objObservation']->getAllInfoDsObservation($value['observationid']);
       $objectname = $obs["name"];
-	  $object = 
       $observerid = $obs["observer"];
       $inst = $obs["instrument"];
       $loc = $obs["location"];
@@ -1333,18 +1334,17 @@ class util
       $attr = $dom->createAttribute("id");
       $observer2->appendChild($attr);
 
-	  $attrText = $dom->createTextNode($value);
+	  $attrText = $dom->createTextNode("usr_".$value);
 	  $attr->appendChild($attrText);
 
-      // TODO : Rene Rijken -> decode!!!!, voor de rest OK!
       $name = $observerChild->appendChild($dom->createElement('name')); 
-      $name->appendChild($dom->createCDATASection(($observer->getFirstName($value)))); 
+      $name->appendChild($dom->createCDATASection(utf8_encode(html_entity_decode($observer->getFirstName($value))))); 
       
       $surname = $observerChild->appendChild($dom->createElement('surname')); 
       $surname->appendChild($dom->createCDataSection(($observer->getName($value)))); 
 
       $account = $observerChild->appendChild($dom->createElement('account'));
-      $account->appendChild($dom->createCDataSection($value));
+      $account->appendChild($dom->createCDataSection(utf8_encode(html_entity_decode($value))));
 
       $attr = $dom->createAttribute("name");
       $account->appendChild($attr);
@@ -1366,9 +1366,8 @@ class util
 	  $attrText = $dom->createTextNode($value);
 	  $attr->appendChild($attrText);
 
-      // TODO : decode!!!!, voor de rest OK!
       $name = $siteChild->appendChild($dom->createElement('name')); 
-      $name->appendChild($dom->createCDATASection(($location->getLocationName($value)))); 
+      $name->appendChild($dom->createCDATASection(utf8_encode(html_entity_decode($location->getLocationName($value))))); 
 
       $longitude = $siteChild->appendChild($dom->createElement('longitude')); 
       $longitude->appendChild($dom->createTextNode($location->getLongitude($value))); 
@@ -1757,7 +1756,227 @@ class util
     //add root - <imagers>  DeepskyLog has no imagers
     $observersDom = $fcgaDom->appendChild($dom->createElement('imagers')); 
 
+	// Add the observations.
+	while(list ($key, $value) = each($allObs))
+    {
+      $obs = $GLOBALS['objObservation']->getAllInfoDsObservation($value['observationid']);
+      $objectname = $obs["name"];
+      $observerid = $obs["observer"];
+      $inst = $obs["instrument"];
+      $loc = $obs["location"];
+      $visibility = $obs["visibility"];
+      $seeing = $obs["seeing"];
+      $limmag = $obs["limmag"];
+      $filt = $obs["filter"];
+      $eyep = $obs["eyepiece"];
+      $lns = $obs["lens"];
 
+      $observation = $fcgaDom->appendChild($dom->createElement('observation')); 
+	  $attr = $dom->createAttribute("id");
+      $observation->appendChild($attr);
+
+	  $attrText = $dom->createTextNode($value['observationid']);
+	  $attr->appendChild($attrText);
+
+      $observer = $observation->appendChild($dom->createElement('observer')); 
+      $observer->appendChild($dom->createTextNode("usr_" . $observerid));
+	  
+      $site = $observation->appendChild($dom->createElement('site')); 
+      $site->appendChild($dom->createTextNode($loc));
+
+      $target = $observation->appendChild($dom->createElement('target')); 
+      $target->appendChild($dom->createTextNode($objectname));
+
+	  if ($obs["time"] > 0)
+	  {
+	  	$time = sprintf("T%02d:%02d:00+00:00", (int)($obs["time"] / 100), $obs["time"] - (int)($obs["time"] / 100) * 100);
+	  } else {
+	  	$time = "T22:00:00+00:00";
+	  }
+
+	  $year = (int)($obs["date"] / 10000);
+	  $month = (int)(($obs["date"] - $year * 10000) / 100);
+	  $day = (int)(($obs["date"] - $year * 10000 - $month * 100));
+	  $date = sprintf("%4d-%02d-%02d", $year, $month, $day);
+
+      $begin = $observation->appendChild($dom->createElement('begin')); 
+      $begin->appendChild($dom->createTextNode($date . $time));
+
+	  if ($obs["limmag"] > 0) {
+        $faintestStar = $observation->appendChild($dom->createElement('faintestStar')); 
+        $faintestStar->appendChild($dom->createTextNode($obs["limmag"]));
+	  } else if ($obs["sqm"] > 0) {
+        $magPerSquareArcsecond = $observation->appendChild($dom->createElement('magPerSquareArcsecond')); 
+        $magPerSquareArcsecond->appendChild($dom->createTextNode($obs["sqm"]));
+	  }
+
+	  if ($obs["seeing"] > 0) {
+        $seeing = $observation->appendChild($dom->createElement('seeing')); 
+        $seeing->appendChild($dom->createTextNode($obs["seeing"]));
+	  }
+
+      $scope = $observation->appendChild($dom->createElement('scope')); 
+      $scope->appendChild($dom->createTextNode($inst));
+ 	  
+ 	  if ($eyep > 0) {
+        $eyepiece = $observation->appendChild($dom->createElement('eyepiece')); 
+        $eyepiece->appendChild($dom->createTextNode($eyep));
+ 	  }
+
+	  if ($filt > 0) {
+        $filter = $observation->appendChild($dom->createElement('filter')); 
+        $filter->appendChild($dom->createTextNode($filt));
+	  }
+
+	  if ($lns > 0) {
+        $lens = $observation->appendChild($dom->createElement('lens')); 
+        $lens->appendChild($dom->createTextNode($lns));
+	  }
+
+	  $magni = 0;
+	  if ($GLOBALS['objInstrument']->getFixedMagnification($inst) > 0)
+	  {
+	  	$magni = $GLOBALS['objInstrument']->getFixedMagnification($inst);
+	  } else if ($eyep > 0 && $GLOBALS['objInstrument']->getFd($inst) > 0) {
+	  	$factor = 1.0;
+	  	if ($GLOBALS['objLens']->getFactor($lns) > 0) {
+	  		$factor = $GLOBALS['objLens']->getFactor($lns);
+	  	}
+		$magni = sprintf("%.2f", $GLOBALS['objInstrument']->getFd($inst) * $GLOBALS['objInstrument']->getDiameter($inst) 
+		        * $factor / $GLOBALS['objEyepiece']->getEyepiecePropertyFromId($eyep,'focalLength'));
+	  }
+	  
+	  if ($magni > 0) {
+        $magnification = $observation->appendChild($dom->createElement('magnification')); 
+        $magnification->appendChild($dom->createTextNode($magni));
+	  }
+
+      $result = $observation->appendChild($dom->createElement('result'));
+
+	  if ($obs["colorContrasts"] > 0)
+	  {
+	    $attr = $dom->createAttribute("colorContrasts");
+        $result->appendChild($attr);
+
+	    $attrText = $dom->createTextNode("true");
+	    $attr->appendChild($attrText);
+	  }
+       
+	  if ($obs["extended"] > 0)
+	  {
+	    $attr = $dom->createAttribute("extended");
+        $result->appendChild($attr);
+
+	    $attrText = $dom->createTextNode("true");
+	    $attr->appendChild($attrText);
+	  }
+
+	  $attr = $dom->createAttribute("lang");
+      $result->appendChild($attr);
+
+	  $attrText = $dom->createTextNode($obs["language"]);
+      $attr->appendChild($attrText);
+
+	  if ($obs["mottled"] > 0)
+	  {
+	    $attr = $dom->createAttribute("mottled");
+        $result->appendChild($attr);
+
+	    $attrText = $dom->createTextNode("true");
+	    $attr->appendChild($attrText);
+	  }
+
+	  if ($obs["partlyUnresolved"] > 0)
+	  {
+	    $attr = $dom->createAttribute("partlyUnresolved");
+        $result->appendChild($attr);
+
+	    $attrText = $dom->createTextNode("true");
+	    $attr->appendChild($attrText);
+	  }
+
+	  if ($obs["resolved"] > 0)
+	  {
+	    $attr = $dom->createAttribute("resolved");
+        $result->appendChild($attr);
+
+	    $attrText = $dom->createTextNode("true");
+	    $attr->appendChild($attrText);
+	  }
+
+	  if ($obs["stellar"] > 0)
+	  {
+	    $attr = $dom->createAttribute("stellar");
+        $result->appendChild($attr);
+
+	    $attrText = $dom->createTextNode("true");
+	    $attr->appendChild($attrText);
+	  }
+
+	  if ($obs["unusualShape"] > 0)
+	  {
+	    $attr = $dom->createAttribute("unusualShape");
+        $result->appendChild($attr);
+
+	    $attrText = $dom->createTextNode("true");
+	    $attr->appendChild($attrText);
+	  }
+
+	  $attr = $dom->createAttribute("xsi:type");
+      $result->appendChild($attr);
+
+
+      $object = $GLOBALS['objObject']->getAllInfoDsObject($objectname);
+
+	  $type = $object["type"];
+	  if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC")
+	  {
+	  	$type = "fgca:findingsDeepSkyOCType";
+	  } else {
+	  	$type = "fgca:findingsDeepSkyType";	  	
+	  }
+	  $attrText = $dom->createTextNode($type);
+	  $attr->appendChild($attrText);
+
+      $description = $result->appendChild($dom->createElement('description')); 
+      $description->appendChild($dom->createCDATASection(utf8_encode($this->br2nl(html_entity_decode($obs["description"])))));
+
+	  // TODO : Why is the rating mandatory? Set to 3 if not defined...
+      $rat = $obs["visibility"];
+      if ($rat == 0) {
+      	$rat = 3;
+      }
+
+      $rating = $result->appendChild($dom->createElement('rating')); 
+      $rating->appendChild($dom->createTextNode($rat));
+
+	  if ($obs["smallDiam"] > 0) {
+        $smallDiameter = $result->appendChild($dom->createElement('smallDiameter')); 
+        $smallDiameter->appendChild($dom->createTextNode($obs["smallDiam"]));
+
+        $attr = $dom->createAttribute("unit");
+        $smallDiameter->appendChild($attr);
+
+        $attrText = $dom->createTextNode("arcsec");
+	    $attr->appendChild($attrText);
+	  }
+
+  	  if ($obs["largeDiam"] > 0) {
+        $largeDiameter = $result->appendChild($dom->createElement('largeDiameter')); 
+        $largeDiameter->appendChild($dom->createTextNode($obs["largeDiam"]));
+
+        $attr = $dom->createAttribute("unit");
+        $largeDiameter->appendChild($attr);
+
+        $attrText = $dom->createTextNode("arcsec");
+	    $attr->appendChild($attrText);
+	  }
+
+	  if ($obs["characterType"] != "") {
+        $character = $result->appendChild($dom->createElement('character')); 
+        $character->appendChild($dom->createCDATASection($obs["characterType"]));
+  	  }
+    }
 
     //generate xml 
     $dom->formatOutput = true; // set the formatOutput attribute of 
