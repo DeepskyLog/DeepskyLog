@@ -221,7 +221,7 @@ define("LangAddSiteExisting", "Voeg bestaande waarneemplaats toe");
 
 define("LangOverviewEyepieceTitle", "Overzicht oculairs");
 define("LangAddEyepieceExisting", "Voeg bestaand oculair toe");
-define("LangAddEyepieceManually", "Voeg de gegevens manueel in");
+define("LangAddEyepieceManually", "Voeg de oculairgegevens manueel in");
 define("LangAddEyepieceTitle", "Voeg een nieuw oculair toe");
 define("LangAddEyepieceField1", "Naam");
 define("LangAddEyepieceField1Expl", "(bijv. Televue 31mm Nagler)"); 

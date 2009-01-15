@@ -48,7 +48,7 @@ class Eyepieces implements iEyepiece
  }
  public  function getSortedEyepieces($sort,$observer="")                            // returns an array with the ids of all eyepieces, sorted by the column specified in $sort
  { global $objDatabase; 
-   return $objDatabase->selectSingleArray("SELECT id, name FROM eyepieces ".($observer?"WHERE observer=\"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort,'id');  
+   return $objDatabase->selectSingleArray("SELECT id, name FROM eyepieces ".($observer?"WHERE observer=\"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
  }
  public  function validateDeleteEyepiece()                                          // validates and deletes an eyepiece
  { global $objUtil;

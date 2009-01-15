@@ -98,7 +98,7 @@ tableFieldnameFieldExplanation(LangAddEyepieceField4,
                                "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"maxFocalLength\" size=\"5\" value=\"".$mfl."\" />",
                                LangAddEyepieceField4Expl);
 tableFieldnameFieldExplanation(LangAddEyepieceField3,
-                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"apparentFOV\" size=\"5\" value=\"".stripslashes($objEyepiece->getEyepiecePropertyFromId($objUtil->checkGetKey('eyepieceid'),'apparentFOV',$objUtil->checkGetKey('apparentFOV')))."\" />",
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"5\" name=\"apparentFOV\" size=\"5\" value=\"".stripslashes($objEyepiece->getEyepiecePropertyFromId($objUtil->checkGetKey('eyepieceid'),'apparentFOV',$objUtil->checkGetKey('apparentFOV')))."\" />",
                                LangAddEyepieceField3Expl);
 echo "</table>";
 echo "<hr />";
