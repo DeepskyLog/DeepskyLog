@@ -1,5 +1,14 @@
 php_value memory_limit 128M
 
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteBase /
+RewriteRule deepsky/$ /index.php
+RewriteRule deepsky/index.php(.*)$ /index.php$1
+RewriteRule comets/(.*)\.php(.*)$ /index.php?indexAction=comets_$1$2
+RewriteRule comets/ /index.php?indexAction=comets_all_observations
+</IfModule>
+
 AddHandler application/x-httpd-php .pdf
 AddHandler application/x-httpd-php .csv
 AddHandler application/x-httpd-php .argo
