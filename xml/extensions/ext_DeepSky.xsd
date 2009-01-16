@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<xsd:schema targetNamespace="http://observation.sourceforge.net/comast" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:fgca="http://observation.sourceforge.net/comast" version="1.8">
+<xsd:schema targetNamespace="http://observation.sourceforge.net/comast" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:fgca="http://observation.sourceforge.net/comast" version="2.0">
 	<!-- 
 	    Schema for documentation and exchange of observations of astronomical objects. 
 		 Author: Thomas Pfleger 
 		         Dirk Lehmann
-		 Revision date: 2008/07/30
-	     (c) 2005 - 2008 by Fachgruppe Computerastronomie of the Vereinigung der Sternfreunde e.V. (VdS) 
+			 Phyllis Lang
+		 Revision date: 2009/01/16
+	     (c) 2005 - 2009 by Fachgruppe Computerastronomie of the Vereinigung der Sternfreunde e.V. (VdS) 
 	-->
 
 	<!--
 		Include the base elements
 	-->
-	<xsd:include schemaLocation="../base/base.xsd"/>
+	<xsd:include schemaLocation="../base/comastBase.xsd"/>
 
 
 	<!-- abstract base type definition for DEEP SKY targets -->
@@ -39,7 +40,7 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<!-- New in V1.8: type definition for multiple stars -->
+	<!-- New in V2.0: type definition for multiple stars -->
 	<xsd:complexType name="deepSkyMS">
 		<xsd:complexContent>
 			<!-- pls. note that this element does not derive from fgca:deepSkyTargetType -->
@@ -283,13 +284,5 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
-
-	<!-- description of seeing conditions (1: best, 5: worst) -->
-	<xsd:simpleType name="seeingType">
-		<xsd:restriction base="xsd:nonNegativeInteger">
-			<xsd:minInclusive value="1"/>
-			<xsd:maxInclusive value="5"/>
-		</xsd:restriction>
-	</xsd:simpleType>
 
 </xsd:schema>
