@@ -1673,12 +1673,12 @@ class util
 
 	    $attrText = $dom->createTextNode($value);
 	    $attr->appendChild($attrText);
-
+ 
         // TODO : decode!!!!, voor de rest OK!
         $model = $filterChild->appendChild($dom->createElement('model')); 
-        $model->appendChild($dom->createCDATASection(($GLOBALS['objFilter']->getFilterName($value)))); 
+        $model->appendChild($dom->createCDATASection(($GLOBALS['objFilter']->getFilterPropertyFromId($value,'name')))); 
 
-		$tp = $GLOBALS['objFilter']->getFilterType($value);
+		$tp = $GLOBALS['objFilter']->getFilterPropertyFromId($value,'type');
 		if ($tp == 0) {
 			$filType = "other";
 		} else if ($tp == 1) {
@@ -1703,7 +1703,7 @@ class util
         $type->appendChild($dom->createCDATASection($filType));
 
 		if ($filType == "color") {
-			$col = $GLOBALS['objFilter']->getColor($value);
+			$col = $GLOBALS['objFilter']->getFilterPropertyFromId($value,'color');
 			if ($col == 1) {
 				$colName = "light red";
 			} else if ($col == 2) {
@@ -1740,14 +1740,14 @@ class util
               $color->appendChild($dom->createCDATASection($colName));
 			}
 			
-			if ($GLOBALS['objFilter']->getWratten($value) != "") {
+			if ($GLOBALS['objFilter']->getFilterPropertyFromId($value,'wratten') != "") {
 		      $wratten = $filterChild->appendChild($dom->createElement('wratten')); 
-              $wratten->appendChild($dom->createCDATASection($GLOBALS['objFilter']->getWratten($value)));
+              $wratten->appendChild($dom->createCDATASection($GLOBALS['objFilter']->getFilterPropertyFromId($value,'wratten')));
 			}
 
-			if ($GLOBALS['objFilter']->getSchott($value) != "") {
+			if ($GLOBALS['objFilter']->getFilterPropertyFromId($value,'schott') != "") {
 		      $schott = $filterChild->appendChild($dom->createElement('schott')); 
-              $schott->appendChild($dom->createCDATASection($GLOBALS['objFilter']->getSchott($value)));
+              $schott->appendChild($dom->createCDATASection($GLOBALS['objFilter']->getFilterPropertyFromId($value,'schott')));
 			}
 		}
       }

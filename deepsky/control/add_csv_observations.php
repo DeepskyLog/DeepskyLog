@@ -59,11 +59,11 @@ else
 		  $tempinst=$instruments[$i];
   // Check for the existence of the eyepieces
   for($i=0,$j=0;$i<count($eyepieces);$i++)
-    if($eyepieces[$i]&&($objEyepiece->getEyepieceObserverPropertyFromName($eyepieces[$i],$loggedUser,'id')))
+    if($eyepieces[$i]&&(!($objEyepiece->getEyepieceObserverPropertyFromName($eyepieces[$i],$loggedUser,'id'))))
       $eyepiecesMissing[$j++]=$eyepieces[$i];
   // Check for the existence of the filters
   for($i=0,$j=0;$i<count($filters);$i++)
-    if($filters[$i]&&($objFilter->getFilterId($filters[$i], $_SESSION['deepskylog_id']) == -1))
+    if($filters[$i]&&(!($objFilter->getFilterObserverPropertyFromName($filters[$i], $_SESSION['deepskylog_id'],'id'))))
       $filtersMissing[$j++]=$filters[$i];
   // Check for the existence of the eyepieces
   for($i=0,$j=0;$i<count($lenses);$i++)
@@ -149,9 +149,9 @@ else
           $parts_array[$i][11] = "0";
         $obsid=$objObservation->addDSObservation($correctedObjects[$i-1],$_SESSION['deepskylog_id'],$instrum,$locat,$date,$time,htmlentities($parts_array[$i][13]),$parts_array[$i][9],$parts_array[$i][10],$parts_array[$i][11],$parts_array[$i][12]);
 				if ($parts_array[$i][6] != "")
-				  $objObservation->setEyepieceId($obsid, $objEyepiece->getEyepieceId($parts_array[$i][6], $_SESSION['deepskylog_id']));
+				  $objObservation->setEyepieceId($obsid, $objEyepiece->getEyepieceObserverPropertyFromName($parts_array[$i][6], $_SESSION['deepskylog_id'],'id'));
 				if ($parts_array[$i][7] != "")
-					$objObservation->setFilterId($obsid, $objFilter->getFilterId($parts_array[$i][7], $_SESSION['deepskylog_id']));
+					$objObservation->setFilterId($obsid, $objFilter->getFilterObserverPropertyFromName($parts_array[$i][7], $_SESSION['deepskylog_id'],'id'));
 				if ($parts_array[$i][8] != "")
 					$objObservation->setLensId($obsid, $objLens->getLensId($parts_array[$i][8], $_SESSION['deepskylog_id']));
       }

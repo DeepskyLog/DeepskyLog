@@ -1,184 +1,42 @@
-<?php
-// The filters class collects all functions needed to enter, retrieve and
-// adapt filters data from the database.
-
-class Filters
+<?php  // The filters class collects all functions needed to enter, retrieve and adapt filters data from the database.
+interface iFilters
 {
- // addFilter adds a new filter to the database. The name, type, color, wratten
- // and schott should be given as parameters. 
- function addFilter($name, $type, $color, $wratten, $schott)
- {
-  $db = new database;
-  $db->login();
-
-  if (!$_SESSION['lang'])
-  {
-   $_SESSION['lang'] = "English";
-  }
-
-  $sql = "INSERT INTO filters (name, type, color, wratten, schott) VALUES (\"$name\", \"$type\", \"$color\", \"$wratten\", \"$schott\")";
-
-  mysql_query($sql) or die(mysql_error());
-
-  $query = "SELECT id FROM filters ORDER BY id DESC LIMIT 1";
-  $run = mysql_query($query) or die(mysql_error());
-
-  $db->logout();
-  $get = mysql_fetch_object($run);
-  if($get) 
-  {
-   return $get->id; 
-  }
-  else
-  {
-   return '';
-  }
+ public  function addFilter($name, $type, $color, $wratten, $schott);                    // adds a new filter to the database. The name, type, color, wratten and schott should be given as parameters. 
+ public  function deleteFilter($id);                                                     // removes the filter with id = $id
+ public  function getAllFiltersIds($id);                                                 // returns a list with all id's which have the same name as the name of the given id
+ public  function getFilterObserverPropertyFromName($name, $observer, $property);        // returns the property for the filter of the observer
+ public  function getFilterPropertiesFromId($id);                                        // returns the properties of the filters with id
+ public  function getFilterPropertyFromId($id,$property,$defaultValue='');               // returns the property of the given filter
+}
+class Filters implements iFilters
+{public  function addFilter($name, $type, $color, $wratten, $schott)                    // addFilter adds a new filter to the database. The name, type, color, wratten and schott should be given as parameters. 
+ { global $objDatabase;
+   $objDatabase->execSQL("INSERT INTO filters (name, type, color, wratten, schott) VALUES (\"".$name."\", \"".$type."\", \"".$color."\", \"".$wratten."\", \"".$schott."\")");
+	 return $objDatabase("SELECT id FROM filters ORDER BY id DESC LIMIT 1");
+ }
+ public  function deleteFilter($id)                                                     // removes the filter with id = $id
+ {global $objDatabase;
+  return $objDatabase->execSQL("DELETE FROM filters WHERE id=\"".$id."\"");
+ }
+ public  function getAllFiltersIds($id)                                                 // returns a list with all id's which have the same name as the name of the given id
+ {global $objDatabase;
+  return $objDatabase->selectSinleArray("SELECT id FROM filters WHERE name = \"".$objDatabase->selectSingleValue("SELECT name FROM filters WHERE id = \"".$id."\"")."\"");
+ }
+ public  function getFilterObserverPropertyFromName($name, $observer, $property)        // returns the property for the filter of the observer
+ { global $objDatabase; 
+   return $objDatabase->returnSingleValue("SELECT ".$property." FROM filters where name=\"".$name."\" and observer=\"".$observer."\"",$property);
+ }
+ public  function getFilterPropertiesFromId($id)                                        // returns the properties of the filters with id
+ { global $objDatabase;
+   return $objDatabase->selectRecordArray("SELECT * FROM filters WHERE id=\"".$id."\"");
+ }
+ public  function getFilterPropertyFromId($id,$property,$defaultValue='')               // returns the property of the given eyepiece
+ { global $objDatabase; 
+   return $objDatabase->selectSingleValue("SELECT ".$property." FROM filters WHERE id = \"".$id."\"",$property,$defaultValue);
  }
  
- // getId returns the id for this filter
- function getFilterId($name, $observer)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM filters where name=\"$name\" and observer=\"$observer\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if ($get)
-  {
-    $id = $get->id;
-  }
-  else
-  {
-    $id = -1;
-  }
-
-  $db->logout();
-
-  return $id;
- }
-
- // deleteFilter removes the filter with id = $id 
- function deleteFilter($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "DELETE FROM filters WHERE id=\"$id\"";
-  mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // getAllIds returns a list with all id's which have the same name as the name of the given id
- function getAllFiltersIds($id)
- {
-  $sql = "SELECT name FROM filters WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $sql = "SELECT id FROM filters WHERE name = \"$get->name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $ids[] = $get->id;
-  }
-
-  return $ids;
- }
-
- // getFiltersId returns the id of the given name of the filter
- function getFiltersId($name)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM filters where name=\"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
 
 
-	if ($get)
-	{
-		$filterid = $get->id;
-	}
-	else
-	{
-		$filterid = 0;
-	}
-
-  $db->logout();
-
-  return $filterid;
- }
-
- // getFilters returns an array with all filters
- function getFilters()
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM filters";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $filters[] = $get->id;
-  }
-
-  $db->logout();
-
-  return $filters;
- }
-
- // getFiltersName returns an array with all filters and names
- function getFiltersName()
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM filters";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $fils[$get->id] = $get->name;
-  }
-
-  $db->logout();
-
-  return $fils;
- }
-
- // getType returns the type of the given filter
- function getFilterType($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM filters WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if ($get)
-	{
-	  $type = $get->type;
-  }
-	else
-  {
-		$type = -1.0;
-	}
-		
-  $db->logout();
-
-  return $type;
- }
 
  // getFilterName returns the name of the given filter
  function getFilterName($id)
