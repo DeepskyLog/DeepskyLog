@@ -149,7 +149,7 @@ if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']
 
 				// resize code
 
-				include $instDir . "/common/control/resize.php";
+				include $instDir . "common/control/resize.php";
 
 				$original_image = $_FILES['drawing']['tmp_name'];
 				$destination_image = $upload_dir . "/" . $_POST['observationid'] . "_resized.jpg";

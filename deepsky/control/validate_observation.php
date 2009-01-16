@@ -128,7 +128,7 @@ elseif ((!$_POST['day']) || (!$_POST['month']) || (!$_POST['year']) || ($_POST['
 			$max_height = "490";
 			$resample_quality = "100";
 
-			include $instDir . "/common/control/resize.php"; // resize code
+			include $instDir . "common/control/resize.php"; // resize code
 			$new_image = image_createThumb($original_image, $destination_image, $max_width, $max_height, $resample_quality);
 			move_uploaded_file($_FILES['drawing']['tmp_name'], $upload_dir . "/" . $current_observation . ".jpg");
 		}

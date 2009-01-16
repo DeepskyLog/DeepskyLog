@@ -8,40 +8,40 @@ while(list($key,$value)=each($modules))
   }
   
 if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="change_role"))
-  require_once $instDir."/common/control/change_role.php";
+  require_once $instDir."common/control/change_role.php";
 if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="validate_observer"))
-  require_once $instDir."/common/control/validate_observer.php";
+  require_once $instDir."common/control/validate_observer.php";
 if($objUtil->checkGetKey('indexAction')=="validate_delete_eyepiece")
 { $objEyepiece->validateDeleteEyepiece();
   $_GET['indexAction']='add_eyepiece';
   unset($_GET['validate_delete_eyepiece']);
 }
 if($objUtil->checkGetKey('indexAction')=="validate_delete_filter")
-  require_once $instDir."/common/control/validate_delete_filter.php";
+  require_once $instDir."common/control/validate_delete_filter.php";
 if($objUtil->checkGetKey('indexAction')=="validate_delete_instrument")
-  require_once $instDir."/common/control/validate_delete_instrument.php";
+  require_once $instDir."common/control/validate_delete_instrument.php";
 if($objUtil->checkGetKey('indexAction')=="validate_delete_lens")
-  require_once $instDir."/common/control/validate_delete_lens.php";
+  require_once $instDir."common/control/validate_delete_lens.php";
 if($objUtil->checkGetKey('indexAction')=="validate_delete_location")
-  require_once $instDir."/common/control/validate_delete_location.php";
+  require_once $instDir."common/control/validate_delete_location.php";
 
 if($objUtil->checkGetKey('indexAction')=="common_control_validate_account")
-  require_once $instDir."/common/control/validate_account.php";
+  require_once $instDir."common/control/validate_account.php";
 if($objUtil->checkGetKey('indexAction')=="validate_eyepiece")
 { $entryMessage.=$objEyepiece->validateSaveEyepiece();
   $_GET['indexAction']='add_eyepiece';
 	unset($_GET['validate_eyepiece']);
 }
 if($objUtil->checkGetKey('indexAction')=="validate_filter")
-  require_once $instDir."/common/control/validate_filter.php";  
+  require_once $instDir."common/control/validate_filter.php";  
 if($objUtil->checkGetKey('indexAction')=="validate_instrument")
-  require_once $instDir."/common/control/validate_instrument.php";
+  require_once $instDir."common/control/validate_instrument.php";
 if($objUtil->checkGetKey('indexAction')=="validate_lens")
-  require_once $instDir."/common/control/validate_lens.php";
+  require_once $instDir."common/control/validate_lens.php";
 if($objUtil->checkGetKey('indexAction')=="validate_site")
-  require_once $instDir."/common/control/validate_site.php";
+  require_once $instDir."common/control/validate_site.php";
 if($objUtil->checkGetKey('indexAction')=="logout")
-  require_once $instDir."/common/control/logout.php";
+  require_once $instDir."common/control/logout.php";
 
 
   

@@ -19,9 +19,9 @@ echo "</td>";
 echo "<td align=\"right\">";
 if(array_key_exists('Qobs',$_SESSION)&&count($_SESSION['Qobs'])&&array_key_exists('QobsKey',$_GET))                // array of observations
 { if($_GET['QobsKey']>0)
-    echo "&nbsp;<a href=\"".$baseURL."index.php?indexAction=detail_observation&amp;observation=".$_SESSION['Qobs'][$_GET['QobsKey']-1]['observationid']."&amp;QobsKey=".($_GET['QobsKey']-1)."&amp;dalm=".$_GET['dalm']."\" title=\"".LangPreviousObservation."\">"."<img src=\"".$baseURL."/styles/images/left20.gif\" border=\"0\">"."</a>&nbsp;&nbsp;";
+    echo "&nbsp;<a href=\"".$baseURL."index.php?indexAction=detail_observation&amp;observation=".$_SESSION['Qobs'][$_GET['QobsKey']-1]['observationid']."&amp;QobsKey=".($_GET['QobsKey']-1)."&amp;dalm=".$_GET['dalm']."\" title=\"".LangPreviousObservation."\">"."<img src=\"".$baseURL."styles/images/left20.gif\" border=\"0\">"."</a>&nbsp;&nbsp;";
   if($_GET['QobsKey']<(count($_SESSION['Qobs'])-1))
-    echo "&nbsp;<a href=\"".$baseURL."index.php?indexAction=detail_observation&amp;observation=".$_SESSION['Qobs'][$_GET['QobsKey']+1]['observationid']."&amp;QobsKey=".($_GET['QobsKey']+1)."&amp;dalm=".$_GET['dalm']."\" title=\"".LangNextObservation."\">"."<img src=\"".$baseURL."/styles/images/right20.gif\" border=\"0\">"."</a>";
+    echo "&nbsp;<a href=\"".$baseURL."index.php?indexAction=detail_observation&amp;observation=".$_SESSION['Qobs'][$_GET['QobsKey']+1]['observationid']."&amp;QobsKey=".($_GET['QobsKey']+1)."&amp;dalm=".$_GET['dalm']."\" title=\"".LangNextObservation."\">"."<img src=\"".$baseURL."styles/images/right20.gif\" border=\"0\">"."</a>";
 }
 echo "</td>";
 echo "</tr>";
