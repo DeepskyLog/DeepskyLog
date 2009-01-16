@@ -1941,7 +1941,7 @@ class util
       $description = $result->appendChild($dom->createElement('description')); 
       $description->appendChild($dom->createCDATASection(utf8_encode($this->br2nl(html_entity_decode($obs["description"])))));
 
-	  // TODO : Why is the rating mandatory? Set to 3 if not defined...
+	  // TODO : Why is the rating mandatory? Set to 99 if not defined... Will be so in the upcoming version of comast. Should the visibility be made mandatory in DeepskyLog -> I guess so ;-)
       $rat = $obs["visibility"];
       if ($rat == 0) {
       	$rat = 3;
