@@ -1276,7 +1276,7 @@ class util
       }
 
       if (in_array($inst, $scopes) == false) {
-      	$scopes[$cntObjects] = $inst;
+      	$scopes[$cntScopes] = $inst;
       	$cntScopes = $cntScopes + 1;
       }
 
@@ -1470,8 +1470,10 @@ class util
       while(list($key2, $value2) = each($altnames)) // go through names array
   	  { if(trim($value2)!=trim($value))
   	  	{
-          $alias = $objectChild->appendChild($dom->createElement('alias')); 
-          $alias->appendChild($dom->createCDataSection((trim($value2))));
+  	  	  if (trim($value2) != "") {
+            $alias = $objectChild->appendChild($dom->createElement('alias')); 
+            $alias->appendChild($dom->createCDataSection((trim($value2))));
+  	  	  }
   	  	} 
       }
 
@@ -1500,23 +1502,20 @@ class util
 	  $constellation = $objectChild->appendChild($dom->createElement('constellation')); 
       $constellation->appendChild($dom->createCDATASection(($object["con"])));
 
-	  if ($object["mag"] < 99.0) {
-	  	$mag = $objectChild->appendChild($dom->createElement('visMag')); 
-      	$mag->appendChild($dom->createTextNode(($object["mag"])));
-	  }
-	  
-	  if ($object["subr"] < 99.0) {
-	  	$mag = $objectChild->appendChild($dom->createElement('surfBr')); 
-      	$mag->appendChild($dom->createTextNode(($object["subr"])));
+  	  if ($object["diam2"] > 0.0 && $object["diam2"] != 99.9) {
+	  	$sdDom = $dom->createElement('smallDiameter');
+	  	$diam2 = $objectChild->appendChild($sdDom);
+	  	$sDiameter = $object["diam2"] / 60.0;
+      	$diam2->appendChild($dom->createTextNode($sDiameter));
+
+        $attr = $dom->createAttribute("unit");
+        $sdDom->appendChild($attr);
+
+	    $attrText = $dom->createTextNode("arcmin");
+	    $attr->appendChild($attrText);
 	  }
 
-	  // TODO : Also Planetary nebula, ...
-	  if ($type == "GALXY" && $object["pa"] < 999.0) {
-	  	$pa = $objectChild->appendChild($dom->createElement('pa')); 
-      	$pa->appendChild($dom->createTextNode(($object["pa"])));
-	  }
-
-/*      $diameter1 = $object["diam1"];
+      $diameter1 = $object["diam1"];
 	  if ($diameter1 > 0.0 && $diameter1 != 99.9) {
 	  	$ldDom = $dom->createElement('largeDiameter');
 	  	$diam1 = $objectChild->appendChild($ldDom);
@@ -1530,19 +1529,21 @@ class util
 	    $attr->appendChild($attrText);
 	  }
 
-	  if ($object["diam2"] > 0.0 && $object["diam2"] != 99.9) {
-	  	$sdDom = $dom->createElement('smallDiameter');
-	  	$diam2 = $objectChild->appendChild($sdDom);
-	  	$sDiameter = $object["diam2"] / 60.0;
-      	$diam2->appendChild($dom->createTextNode($sDiameter));
-
-        $attr = $dom->createAttribute("unit");
-        $sdDom->appendChild($attr);
-
-	    $attrText = $dom->createTextNode("arcmin");
-	    $attr->appendChild($attrText);
+	  if ($object["mag"] < 99.0) {
+	  	$mag = $objectChild->appendChild($dom->createElement('visMag')); 
+      	$mag->appendChild($dom->createTextNode(($object["mag"])));
 	  }
-*/	}
+	  
+	  if ($object["subr"] < 99.0) {
+	  	$mag = $objectChild->appendChild($dom->createElement('surfBr')); 
+      	$mag->appendChild($dom->createTextNode(($object["subr"])));
+	  }
+
+	  if ($object["pa"] < 999.0) {
+	  	$pa = $objectChild->appendChild($dom->createElement('pa')); 
+      	$pa->appendChild($dom->createTextNode(($object["pa"])));
+	  }
+	}
     //add root - <scopes> 
     $observersDom = $fcgaDom->appendChild($dom->createElement('scopes')); 
 
@@ -1553,7 +1554,7 @@ class util
       $attr = $dom->createAttribute("id");
       $scope2->appendChild($attr);
 
-	  $attrText = $dom->createTextNode($value);
+	  $attrText = $dom->createTextNode("opt_" . $value);
 	  $attr->appendChild($attrText);
 
       $attr = $dom->createAttribute("xsi:type");
@@ -1588,9 +1589,8 @@ class util
 	  $attrText = $dom->createTextNode($typeLong);
 	  $attr->appendChild($attrText);
 
-      // TODO : decode!!!!, voor de rest OK!
       $name = $siteChild->appendChild($dom->createElement('model')); 
-      $name->appendChild($dom->createCDATASection(($GLOBALS['objInstrument']->getInstrumentName($value)))); 
+      $name->appendChild($dom->createCDATASection(utf8_encode(html_entity_decode($GLOBALS['objInstrument']->getInstrumentName($value))))); 
 
       $type = $siteChild->appendChild($dom->createElement('type')); 
       $type->appendChild($dom->createCDATASection(($typeShort))); 
@@ -1618,12 +1618,11 @@ class util
         $attr = $dom->createAttribute("id");
         $eyepiece2->appendChild($attr);
 
-	    $attrText = $dom->createTextNode($value);
+	    $attrText = $dom->createTextNode("ep_" . $value);
 	    $attr->appendChild($attrText);
 
-        // TODO : decode!!!!, voor de rest OK!
         $model = $eyepieceChild->appendChild($dom->createElement('model')); 
-        $model->appendChild($dom->createCDATASection(($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value,'name')))); 
+        $model->appendChild($dom->createCDATASection(utf8_encode(html_entity_decode($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value,'name'))))); 
 
         $focalLength = $eyepieceChild->appendChild($dom->createElement('focalLength')); 
         $focalLength->appendChild($dom->createTextNode(($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value,'focalLength'))));
@@ -1641,7 +1640,6 @@ class util
 
 	    $attrText = $dom->createTextNode("deg");
 	    $attr->appendChild($attrText);
-
       }
     }
 
@@ -1656,12 +1654,11 @@ class util
         $attr = $dom->createAttribute("id");
         $lens2->appendChild($attr);
 
-	    $attrText = $dom->createTextNode($value);
+	    $attrText = $dom->createTextNode("le_" . $value);
 	    $attr->appendChild($attrText);
 
-        // TODO : decode!!!!, voor de rest OK!
         $model = $lensChild->appendChild($dom->createElement('model')); 
-        $model->appendChild($dom->createCDATASection(($GLOBALS['objLens']->getLensName($value)))); 
+        $model->appendChild($dom->createCDATASection(utf8_encode(html_entity_decode($GLOBALS['objLens']->getLensName($value))))); 
 
         $factor = $lensChild->appendChild($dom->createElement('factor')); 
         $factor->appendChild($dom->createTextNode(($GLOBALS['objLens']->getFactor($value))));
@@ -1679,12 +1676,11 @@ class util
         $attr = $dom->createAttribute("id");
         $filter2->appendChild($attr);
 
-	    $attrText = $dom->createTextNode($value);
+	    $attrText = $dom->createTextNode("flt_" . $value);
 	    $attr->appendChild($attrText);
  
-        // TODO : decode!!!!, voor de rest OK!
         $model = $filterChild->appendChild($dom->createElement('model')); 
-        $model->appendChild($dom->createCDATASection(($GLOBALS['objFilter']->getFilterPropertyFromId($value,'name')))); 
+        $model->appendChild($dom->createCDATASection(utf8_encode(html_entity_decode($GLOBALS['objFilter']->getFilterPropertyFromId($value,'name'))))); 
 
 		$tp = $GLOBALS['objFilter']->getFilterPropertyFromId($value,'type');
 		if ($tp == 0) {
@@ -1783,17 +1779,23 @@ class util
 	  $attr = $dom->createAttribute("id");
       $observation->appendChild($attr);
 
-	  $attrText = $dom->createTextNode($value['observationid']);
+	  $attrText = $dom->createTextNode("obs_" . $value['observationid']);
 	  $attr->appendChild($attrText);
 
+	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\s+/", "_", $observerid )));
       $observer = $observation->appendChild($dom->createElement('observer')); 
-      $observer->appendChild($dom->createTextNode("usr_" . $observerid));
+      $observer->appendChild($dom->createTextNode("usr_" . $correctedValue));
 	  
       $site = $observation->appendChild($dom->createElement('site')); 
       $site->appendChild($dom->createTextNode("site_" . $loc));
 
       $target = $observation->appendChild($dom->createElement('target')); 
-      $target->appendChild($dom->createTextNode($objectname));
+      $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\s+/", "_", $objectname )));
+	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\+/", "_", $correctedValue )));
+	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\//", "_", $correctedValue )));
+	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\,/", "_", $correctedValue )));
+      
+      $target->appendChild($dom->createTextNode("_" . $correctedValue));
 
 	  if ($obs["time"] > 0)
 	  {
@@ -1814,8 +1816,8 @@ class util
         $faintestStar = $observation->appendChild($dom->createElement('faintestStar')); 
         $faintestStar->appendChild($dom->createTextNode($obs["limmag"]));
 	  } else if ($obs["sqm"] > 0) {
-        $magPerSquareArcsecond = $observation->appendChild($dom->createElement('magPerSquareArcsecond')); 
-        $magPerSquareArcsecond->appendChild($dom->createTextNode($obs["sqm"]));
+//        $magPerSquareArcsecond = $observation->appendChild($dom->createElement('magPerSquareArcsecond')); 
+//        $magPerSquareArcsecond->appendChild($dom->createTextNode($obs["sqm"]));
 	  }
 
 	  if ($obs["seeing"] > 0) {
@@ -1824,21 +1826,21 @@ class util
 	  }
 
       $scope = $observation->appendChild($dom->createElement('scope')); 
-      $scope->appendChild($dom->createTextNode($inst));
+      $scope->appendChild($dom->createTextNode("opt_" . $inst));
  	  
  	  if ($eyep > 0) {
         $eyepiece = $observation->appendChild($dom->createElement('eyepiece')); 
-        $eyepiece->appendChild($dom->createTextNode($eyep));
+        $eyepiece->appendChild($dom->createTextNode("ep_" . $eyep));
  	  }
-
-	  if ($filt > 0) {
-        $filter = $observation->appendChild($dom->createElement('filter')); 
-        $filter->appendChild($dom->createTextNode($filt));
-	  }
 
 	  if ($lns > 0) {
         $lens = $observation->appendChild($dom->createElement('lens')); 
-        $lens->appendChild($dom->createTextNode($lns));
+        $lens->appendChild($dom->createTextNode("le_" . $lns));
+	  }
+
+	  if ($filt > 0) {
+        $filter = $observation->appendChild($dom->createElement('filter')); 
+        $filter->appendChild($dom->createTextNode("flt_" . $filt));
 	  }
 
 	  $magni = 0;
@@ -1959,7 +1961,7 @@ class util
       $rating->appendChild($dom->createTextNode($rat));
 
 	  if ($obs["smallDiam"] > 0) {
-        $smallDiameter = $result->appendChild($dom->createElement('smallDiameter')); 
+/*        $smallDiameter = $result->appendChild($dom->createElement('smallDiameter')); 
         $smallDiameter->appendChild($dom->createTextNode($obs["smallDiam"]));
 
         $attr = $dom->createAttribute("unit");
@@ -1967,10 +1969,10 @@ class util
 
         $attrText = $dom->createTextNode("arcsec");
 	    $attr->appendChild($attrText);
-	  }
+*/	  }
 
   	  if ($obs["largeDiam"] > 0) {
-        $largeDiameter = $result->appendChild($dom->createElement('largeDiameter')); 
+/*        $largeDiameter = $result->appendChild($dom->createElement('largeDiameter')); 
         $largeDiameter->appendChild($dom->createTextNode($obs["largeDiam"]));
 
         $attr = $dom->createAttribute("unit");
@@ -1978,9 +1980,9 @@ class util
 
         $attrText = $dom->createTextNode("arcsec");
 	    $attr->appendChild($attrText);
-	  }
+*/	  }
 
-	  if ($obs["characterType"] != "") {
+	  if ($obs["characterType"] != "" && $obs["characterType"] != 0) {
         $character = $result->appendChild($dom->createElement('character')); 
         $character->appendChild($dom->createCDATASection($obs["characterType"]));
   	  }
