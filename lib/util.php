@@ -1303,7 +1303,8 @@ class util
     $attr = $dom->createAttribute("version");
     $fcgaInfo->appendChild($attr);
 
-    $attrText = $dom->createTextNode("2.0");
+//    $attrText = $dom->createTextNode("2.0");
+    $attrText = $dom->createTextNode("1.7");
     $attr->appendChild($attrText);
 
     $attr = $dom->createAttribute("xmlns:fgca");
@@ -1321,7 +1322,8 @@ class util
     $attr = $dom->createAttribute("xsi:schemaLocation");
     $fcgaInfo->appendChild($attr);
 
-    $attrText = $dom->createTextNode("http://observation.sourceforge.net/comast comast20.xsd");
+//    $attrText = $dom->createTextNode("http://observation.sourceforge.net/comast comast20.xsd");
+    $attrText = $dom->createTextNode("http://observation.sourceforge.net/comast comast17.xsd");
     $attr->appendChild($attrText);
 
     //add root - <observers> 
@@ -1334,7 +1336,8 @@ class util
       $attr = $dom->createAttribute("id");
       $observer2->appendChild($attr);
 
-	  $attrText = $dom->createTextNode("usr_".$value);
+	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\s+/", "_", $value )));
+	  $attrText = $dom->createTextNode("usr_".$correctedValue);
 	  $attr->appendChild($attrText);
 
       $name = $observerChild->appendChild($dom->createElement('name')); 
@@ -1343,14 +1346,14 @@ class util
       $surname = $observerChild->appendChild($dom->createElement('surname')); 
       $surname->appendChild($dom->createCDataSection(($observer->getName($value)))); 
 
-      $account = $observerChild->appendChild($dom->createElement('account'));
-      $account->appendChild($dom->createCDataSection(utf8_encode(html_entity_decode($value))));
+//      $account = $observerChild->appendChild($dom->createElement('account'));
+//      $account->appendChild($dom->createCDataSection(utf8_encode(html_entity_decode($value))));
 
-      $attr = $dom->createAttribute("name");
-      $account->appendChild($attr);
+//      $attr = $dom->createAttribute("name");
+//      $account->appendChild($attr);
 
-      $attrText = $dom->createTextNode("www.deepskylog.org");
-      $attr->appendChild($attrText);
+//      $attrText = $dom->createTextNode("www.deepskylog.org");
+//      $attr->appendChild($attrText);
     }
     
     //add root - <sites> 
@@ -1363,7 +1366,7 @@ class util
       $attr = $dom->createAttribute("id");
       $site2->appendChild($attr);
 
-	  $attrText = $dom->createTextNode($value);
+	  $attrText = $dom->createTextNode("site_" . $value);
 	  $attr->appendChild($attrText);
 
       $name = $siteChild->appendChild($dom->createElement('name')); 
@@ -1412,7 +1415,12 @@ class util
       $attr = $dom->createAttribute("id");
       $object2->appendChild($attr);
 
-	  $attrText = $dom->createTextNode($value);
+	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\s+/", "_", $value )));
+	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\+/", "_", $correctedValue )));
+	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\//", "_", $correctedValue )));
+	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\,/", "_", $correctedValue )));
+
+	  $attrText = $dom->createTextNode("_" . $correctedValue);
 	  $attr->appendChild($attrText);
 
       $attr = $dom->createAttribute("xsi:type");
@@ -1452,9 +1460,8 @@ class util
 	  $attrText = $dom->createTextNode($type);
 	  $attr->appendChild($attrText);
 
-      // TODO : Rene Rijken -> decode!!!!, voor de rest OK!
       $datasource = $objectChild->appendChild($dom->createElement('datasource')); 
-      $datasource->appendChild($dom->createCDATASection(($object["datasource"]))); 
+      $datasource->appendChild($dom->createCDATASection(utf8_encode(html_entity_decode($object["datasource"])))); 
       
       $name = $objectChild->appendChild($dom->createElement('name')); 
       $name->appendChild($dom->createCDATASection(($value)));
@@ -1503,12 +1510,13 @@ class util
       	$mag->appendChild($dom->createTextNode(($object["subr"])));
 	  }
 
-	  if ($object["pa"] < 999.0) {
+	  // TODO : Also Planetary nebula, ...
+	  if ($type == "GALXY" && $object["pa"] < 999.0) {
 	  	$pa = $objectChild->appendChild($dom->createElement('pa')); 
       	$pa->appendChild($dom->createTextNode(($object["pa"])));
 	  }
 
-      $diameter1 = $object["diam1"];
+/*      $diameter1 = $object["diam1"];
 	  if ($diameter1 > 0.0 && $diameter1 != 99.9) {
 	  	$ldDom = $dom->createElement('largeDiameter');
 	  	$diam1 = $objectChild->appendChild($ldDom);
@@ -1534,7 +1542,7 @@ class util
 	    $attrText = $dom->createTextNode("arcmin");
 	    $attr->appendChild($attrText);
 	  }
-	}
+*/	}
     //add root - <scopes> 
     $observersDom = $fcgaDom->appendChild($dom->createElement('scopes')); 
 
@@ -1782,7 +1790,7 @@ class util
       $observer->appendChild($dom->createTextNode("usr_" . $observerid));
 	  
       $site = $observation->appendChild($dom->createElement('site')); 
-      $site->appendChild($dom->createTextNode($loc));
+      $site->appendChild($dom->createTextNode("site_" . $loc));
 
       $target = $observation->appendChild($dom->createElement('target')); 
       $target->appendChild($dom->createTextNode($objectname));
