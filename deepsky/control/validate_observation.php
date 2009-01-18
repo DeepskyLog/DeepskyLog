@@ -25,22 +25,32 @@ elseif ((!$_POST['day']) || (!$_POST['month']) || (!$_POST['year']) || ($_POST['
 	}
 	$entryMessage .= LangValidateObservationMessage1;
 	$_GET['indexAction'] = 'add_observation';
-} else // all fields filled in
-	{
-	if ($_FILES['drawing']['size'] > $maxFileSize) // file size of drawing too big
-		{
-		$entryMessage .= LangValidateObservationMessage6;
-		$entryMessage .= "File size of drawing too big";
+} 
+else // all fields filled in
+{ $time = -9999;
+  if ($_POST['hours']) 
+  { if (isset ($_POST['minutes']))
+		  $time = ($_POST['hours'] * 100) + $_POST['minutes'];
+		else
+			$time = ($_POST['hours'] * 100);
+	} 
+  if ($_FILES['drawing']['size'] > $maxFileSize) // file size of drawing too big
+	{ $entryMessage .= LangValidateObservationMessage6;
 		$_GET['indexAction'] = 'add_observation';
-	} else {
-		$date = $_POST['year'] . sprintf("%02d", $_POST['month']) . sprintf("%02d", $_POST['day']);
-		if ($_POST['hours']) {
-			if (isset ($_POST['minutes']))
-				$time = ($_POST['hours'] * 100) + $_POST['minutes'];
-			else
-				$time = ($_POST['hours'] * 100);
-		} else
-			$time = -9999;
+	} 
+  elseif((!is_numeric($_POST['month']))||(!is_numeric($_POST['day']))||(!is_numeric($_POST['year']))||(!checkdate($_POST['month'],$_POST['day'],$_POST['year']))) {
+  	$entryMessage .= LangValidateObservationMessage2;
+		$_GET['indexAction'] = 'add_observation';
+  }
+  elseif(($date=$_POST['year'].sprintf("%02d", $_POST['month']).sprintf("%02d", $_POST['day']))>date('Ymd')) {
+  	$entryMessage .= LangValidateObservationMessage3;
+		$_GET['indexAction'] = 'add_observation';
+  }
+  elseif(($time>-9999)&&((!is_numeric($_POST['hours']))||(!is_numeric($_POST['minutes']))||($_POST['hours']<0)||($_POST['hours']>23)||($_POST['minutes']<0)||($_POST['minutes']>59))) {
+  	$entryMessage .= LangValidateObservationMessage4;
+		$_GET['indexAction'] = 'add_observation';
+  }
+  else {
 		if ($GLOBALS['objUtil']->checkPostKey('limit'))
 			if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST['limit'], $matches)) // limiting magnitude like X.X or X,X with X a number between 0 and 9
 				$_POST['limit'] = $matches[1] . "." . (($matches[2]) ? $matches[2] : "0");

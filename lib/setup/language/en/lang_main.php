@@ -752,6 +752,9 @@ define("LangValidateAccountMessage", "Message");
 // control/validate_observation.php
 
 define("LangValidateObservationMessage1", "You did not fill in a required field!");
+define("LangValidateObservationMessage2", "You filled in an invalid date!");
+define("LangValidateObservationMessage3", "You filled in a future date!");
+define("LangValidateObservationMessage4", "Tou filled in an invalid time!");
 define("LangValidateObservationMessage6", "Please, only upload drawings smaller than 100kb!");
 
 // control/validate_search_object.php

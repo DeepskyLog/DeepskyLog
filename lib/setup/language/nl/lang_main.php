@@ -750,6 +750,9 @@ define("LangValidateAccountMessage", "Boodschap");
 // control/validate_observation.php
 
 define("LangValidateObservationMessage1", "Je hebt de verplichte velden niet allemaal ingevuld!");
+define("LangValidateObservationMessage2", "Je hebt ongeldige datum ingevuld!");
+define("LangValidateObservationMessage3", "Je hebt een toekomstige datum ingevuld!");
+define("LangValidateObservationMessage4", "Je hebt een ongeldige tijd ingevuld!");
 define("LangValidateObservationMessage6", "Gelieve alleen tekeningen kleiner dan 100kb toe te voegen!");
 
 // control/validate_search_object.php

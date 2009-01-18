@@ -754,6 +754,9 @@ define("LangValidateAccountMessage", "Message");
 // control/validate_observation.php
 
 define("LangValidateObservationMessage1", "Vous n'avez pas rempli tous les champs obligatoires!");
+define("LangValidateObservationMessage2", "Vous avez rempli une date invalide!");
+define("LangValidateObservationMessage3", "Vous avez rempli une date futur!");
+define("LangValidateObservationMessage4", "Vous avez rempli un temps invalid!");
 define("LangValidateObservationMessage6", "Veuillez limiter la taille des dessins &agrave; 100 kOctets!");
 
 // control/validate_search_object.php

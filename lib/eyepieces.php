@@ -13,7 +13,7 @@ interface iEyepiece
   public  function validateSaveEyepiece();                                           // validates and saves an eyepiece and returns a message 
 } 
 class Eyepieces implements iEyepiece
-{public function addEyepiece($name, $focalLength, $apparentFOV)                     // addEyepiece adds a new eyepiece to the database. The name, focalLength and apparentFOV should be given as parameters. 
+{public function addEyepiece($name, $focalLength, $apparentFOV)                      // addEyepiece adds a new eyepiece to the database. The name, focalLength and apparentFOV should be given as parameters. 
  { global $objDatabase;
    $objDatabase->execSQL("INSERT INTO eyepieces (name, focalLength, apparentFOV) VALUES (\"".$name."\", \"".$focalLength."\", \"".$apparentFOV."\")");
    return $objDatabase->selectSingleValue("SELECT id FROM eyepieces ORDER BY id DESC LIMIT 1",'id','');
@@ -46,11 +46,11 @@ class Eyepieces implements iEyepiece
  { global $objDatabase;
    return $objDatabase->execSQL("UPDATE eyepieces SET ".$property." = \"".$propertyValue."\" WHERE id = \"".$id."\"");
  }
- public  function getSortedEyepieces($sort,$observer="")                            // returns an array with the ids of all eyepieces, sorted by the column specified in $sort
+ public  function getSortedEyepieces($sort,$observer="")                             // returns an array with the ids of all eyepieces, sorted by the column specified in $sort
  { global $objDatabase; 
    return $objDatabase->selectSingleArray("SELECT id, name FROM eyepieces ".($observer?"WHERE observer=\"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
  }
- public  function validateDeleteEyepiece()                                          // validates and deletes an eyepiece
+ public  function validateDeleteEyepiece()                                           // validates and deletes an eyepiece
  { global $objUtil;
    if($objUtil->checkGetKey('eyepieceid') 
    && $objUtil->checkAdminOrUserID($this->getEyepiecePropertyFromId($_GET['eyepieceid'],'observer'))

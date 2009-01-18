@@ -752,6 +752,9 @@ define("LangValidateAccountMessage", "Message");
 // control/validate_observation.php
 
 define("LangValidateObservationMessage1", "Sie haben ein Pflichtfeld nicht ausgef&uuml;llt!");
+define("LangValidateObservationMessage2", "You filled in an invalid date!");
+define("LangValidateObservationMessage3", "You filled in a future date!");
+define("LangValidateObservationMessage4", "Tou filled in an invalid time!");
 define("LangValidateObservationMessage6", "Bitte laden Sie nur Bilder die kleiner als 100kB sind hoch!");
 
 // control/validate_search_object.php
