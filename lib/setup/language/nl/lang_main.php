@@ -922,6 +922,7 @@ define("LangCSVError4", "De onderstaande instrumenten niet gekend zijn in Deepsk
 define("LangCSVError5", "De onderstaande filters niet gekend zijn in DeepskyLog");
 define("LangCSVError6", "De onderstaande oculairs niet gekend zijn in DeepskyLog");
 define("LangCSVError7", "De onderstaande lenzen niet gekend zijn in DeepskyLog");
+define("LangCSVError8", "De onderstaande datum kan niet ingezen worden in DeepskyLog");
 define("LangCSVButton", "Importeer!");
 define("LangValidateCSVMessage", "Importeren CSV bestand succesvol!");
 

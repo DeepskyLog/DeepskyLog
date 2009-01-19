@@ -924,6 +924,7 @@ define("LangCSVError4", "The following instruments are not available in DeepskyL
 define("LangCSVError5", "The following filters are not available in DeepskyLog");
 define("LangCSVError6", "The following eyepieces are not available in DeepskyLog");
 define("LangCSVError7", "The following lenses are not available in DeepskyLog");
+define("LangCSVError8", "The following date can't be read by DeepskyLog");
 define("LangCSVButton", "Import!");
 define("LangValidateCSVMessage", "Import of CSV file successfull!");
 

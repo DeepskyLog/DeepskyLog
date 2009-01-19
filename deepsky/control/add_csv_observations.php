@@ -6,8 +6,9 @@ if($_FILES['csv']['tmp_name']!="")
 $data_array=file($csvfile); 
 for($i=0;$i<count($data_array);$i++ ) 
   $parts_array[$i]=explode(";",$data_array[$i]); 
-for ( $i = 1; $i < count($parts_array); $i++)
+for($i=1;$i<count($parts_array);$i++)
 { $objects[$i] = $parts_array[$i][0];
+  $dates[$i] = $parts_array[$i][2];
   $locations[$i] = $parts_array[$i][4];
   $instruments[$i] = $parts_array[$i][5];
   $filters[$i] = $parts_array[$i][7];
@@ -31,6 +32,10 @@ else
   $eyepieces = array_values($eyepieces);
   $lenses = array_unique($lenses);
   $lenses = array_values($lenses);
+  $dates = array_unique($dates);
+  $dates = array_values($dates);
+  $nodates=array();
+  $wrongDates=array();
 	$objectsMissing = array();
 	$locationsMissing = array();
 	$instrumentsMissing = array();
@@ -69,9 +74,37 @@ else
   for($i=0,$j=0;$i<count($lenses);$i++)
     if($lenses[$i]&&($objLens->getLensId($lenses[$i],$_SESSION['deepskylog_id'])==-1))
       $lensesMissing[$j++] = $lenses[$i];
-// error catching
-  if((count($objectsMissing)>0)||(count($locationsMissing)>0)||(count($instrumentsMissing)>0)||(count($eyepiecesMissing)>0)||(count($filtersMissing)>0)||(count($lensesMissing)>0))
+  // Check for the correctness of dates
+  for($i=0,$j=0,$k=0;$i<count($dates);$i++)
+  { $datepart=sscanf($dates[$i],"%2d%c%2d%c%4d");
+    if((!is_numeric($datepart[0]))||(!is_numeric($datepart[2]))||(!is_numeric($datepart[4]))||(!checkdate($datepart[2],$datepart[0],$datepart[4])))
+      $noDates[$j++]=$dates[$i]; 
+    elseif((sprintf("%04d",$datepart[4]).sprintf("%02d",$datepart[2]).sprintf("%02d",$datepart[0]))>date('Ymd')) 
+  	  $wrongDates[$k++]=$dates[$i];
+  }
+  // error catching
+  if((count($objectsMissing)>0)||(count($locationsMissing)>0)||(count($instrumentsMissing)>0)||(count($eyepiecesMissing)>0)||(count($filtersMissing)>0)||(count($lensesMissing)>0)||(count($wrongDates)>0)||(count($noDates)>0))
   { $errormessage=LangCSVError1 . "<br />\n";
+    if(count($noDates)>0)
+    { $errormessage = $errormessage . "<ul>";
+      $errormessage = $errormessage .  "<li>".LangCSVError8." : ";
+      $errormessage = $errormessage .  "<ul>";
+      for ( $i = 0;$i < count($noDates);$i++ )
+        $errormessage = $errormessage . "<li>".$noDates[$i]."</li>";
+      $errormessage = $errormessage .  "</ul>";
+      $errormessage = $errormessage .  "</li>\n";
+      $errormessage = $errormessage .  "</ul>";
+    }
+    if(count($wrongDates)>0)
+    { $errormessage = $errormessage . "<ul>";
+      $errormessage = $errormessage .  "<li>".LangValidateObservationMessage3." : ";
+      $errormessage = $errormessage .  "<ul>";
+      for ( $i = 0;$i < count($wrongDates);$i++ )
+        $errormessage = $errormessage . "<li>".$wrongDates[$i]."</li>";
+      $errormessage = $errormessage .  "</ul>";
+      $errormessage = $errormessage .  "</li>\n";
+      $errormessage = $errormessage .  "</ul>";
+    }
     if(count($objectsMissing)>0)
     { $errormessage = $errormessage . "<ul>";
       $errormessage = $errormessage .  "<li>".LangCSVError2." : ";
@@ -132,7 +165,8 @@ else
       $errormessage = $errormessage .  "</li>\n";
       $errormessage = $errormessage .  "</ul>";
     }
-    throw new Exception($errormessage);
+    $entryMessage = $errormessage;
+    $_GET['indexAction']='add_csv';
   }
   else
   { $username=$objObserver->getFirstname($_SESSION['deepskylog_id']). " ".$objObserver->getObserverName($_SESSION['deepskylog_id']);

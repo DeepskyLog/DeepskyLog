@@ -23,7 +23,7 @@ class Eyepieces implements iEyepiece
  }
  public  function getEyepieceObserverPropertyFromName($name, $observer, $property)   // returns the property for the eyepiece of the observer
  { global $objDatabase; 
-   return $objDatabase->returnSingleValue("SELECT ".$property." FROM eyepieces where name=\"".$name."\" and observer=\"".$observer."\"",$property);
+   return $objDatabase->selectSingleValue("SELECT ".$property." FROM eyepieces where name=\"".$name."\" and observer=\"".$observer."\"",$property);
  }
  public  function getEyepiecePropertiesFromId($id)                                   // returns the properties of the eyepiece with id
  { global $objDatabase;
