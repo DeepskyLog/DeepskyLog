@@ -17,7 +17,10 @@ if($objUtil->checkGetKey('indexAction')=="validate_delete_eyepiece")
   unset($_GET['validate_delete_eyepiece']);
 }
 if($objUtil->checkGetKey('indexAction')=="validate_delete_filter")
-  require_once $instDir."common/control/validate_delete_filter.php";
+{ $objFilter->validateDeleteFilter();
+  $_GET['indexAction']='add_filter';
+  unset($_GET['validate_delete_filter']);
+}
 if($objUtil->checkGetKey('indexAction')=="validate_delete_instrument")
   require_once $instDir."common/control/validate_delete_instrument.php";
 if($objUtil->checkGetKey('indexAction')=="validate_delete_lens")
@@ -33,7 +36,10 @@ if($objUtil->checkGetKey('indexAction')=="validate_eyepiece")
 	unset($_GET['validate_eyepiece']);
 }
 if($objUtil->checkGetKey('indexAction')=="validate_filter")
-  require_once $instDir."common/control/validate_filter.php";  
+{ $entryMessage.=$objFilter->validateSaveFilter();
+  $_GET['indexAction']='add_filter';
+	unset($_GET['validate_filter']);
+}
 if($objUtil->checkGetKey('indexAction')=="validate_instrument")
   require_once $instDir."common/control/validate_instrument.php";
 if($objUtil->checkGetKey('indexAction')=="validate_lens")

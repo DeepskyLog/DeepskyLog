@@ -40,8 +40,8 @@ if(count($filts)>0)
   { $filterProperties=$objFilter->getFilterPropertiesFromId($value);
     echo "<tr class=\"type".(2-($count%2))."\">";
     echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_filter&amp;filter=".urlencode($value)."\">".stripslashes($filterProperties['name'])."</a></td>";
-    echo "<td>".$filterProperties['type']."</td>";
-    echo "<td>".$filterProperties['color']."</td>";
+    echo "<td>".$objFilter->getEchoType($filterProperties['type'])."</td>";
+    echo "<td>".$objFilter->getEchoColor($filterProperties['color'])."</td>";
     echo "<td>".($filterProperties['wratten']?$filterProperties['wratten']:"-")."</td>";
     echo "<td>".($filterProperties['schott']?$filterProperties['schott']:"-")."</td>";
     echo "<td>";
@@ -71,7 +71,7 @@ echo "<tr>";
 echo "<td width=\"25%\">";
 echo "<form name=\"overviewform\">";		
 echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
-$filts=$objFilter->getSortedFilters('name', "", true);
+$filts=$objFilter->getSortedFilters('name', "");
 while(list($key, $value) = each($filts))
   echo("<option value=\"".$baseURL."index.php?indexAction=add_filter&amp;filterid=".urlencode($value)."\">" . $objFilter->getFilterPropertyFromId($value,'name') . "</option>\n");
 echo "</select>";

@@ -1231,7 +1231,7 @@ class Observations {
 		if ($filter == "" || $filter == 0) {
 			echo ("-");
 		} else {
-			echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_filter&amp;filter=" . urlencode($filter) . "\">" . $GLOBALS['objFilter']->getFilterName($filter) . "</a>");
+			echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_filter&amp;filter=" . urlencode($filter) . "\">" . $GLOBALS['objFilter']->getFilterPropertyFromId($filter,'name') . "</a>");
 		}
 		echo ("</td>");
 		echo ("</tr>");

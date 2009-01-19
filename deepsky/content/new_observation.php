@@ -128,9 +128,9 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "</td>";
 	echo "<td> <select name=\"filter\" style=\"width:300px\" class=\"inputfield\">"; //==================================================================== FILTER
 	echo "<option value=\"\"></option>";
-	$filts = $GLOBALS['objFilter']->getSortedFiltersList("name", $_SESSION['deepskylog_id'], false);
-	while (list ($key, $value) = each($filts))
-		echo "<option value=\"" . $value . "\"" . (($GLOBALS['objUtil']->checkPostKey('filter') == $value) ? " selected=\"selected\" " : '') . ">" . $GLOBALS['objFilter']->getFilterName($value) . "</option>";
+	$filts=$GLOBALS['objFilter']->getSortedFilters("name", $_SESSION['deepskylog_id']);
+	while(list($key,$value)=each($filts))
+		echo "<option value=\"".$value."\"".(($GLOBALS['objUtil']->checkPostKey('filter')==$value)?" selected=\"selected\" ":'').">".$GLOBALS['objFilter']->getFilterPropertyFromId($value,'name')."</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "<td class=\"explanation\">";

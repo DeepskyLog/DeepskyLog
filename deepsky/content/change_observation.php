@@ -98,7 +98,7 @@ echo "</td>";
 echo "<td>";
 echo "<select name=\"filter\" class=\"inputfield\" style=\"width:300px\">";
 echo "<option value=\"\"></option>";
-$filts = $objFilter->getSortedFiltersList("name", $_SESSION['deepskylog_id'], false);
+$filts = $objFilter->getSortedFilters("name", $_SESSION['deepskylog_id']);
 $theFilter = $objObservation->getDsObservationFilterId($_GET['observation']);
 while (list ($key, $value) = each($filts)) // go through instrument array
 	echo "<option value=\"" . $value . "\"" . (($theFilter == $value) ? " selected=\"selected\" " : '') . ">" . $GLOBALS['objFilter']->getFilterPropertyFromId($value,'name') . "</option>";

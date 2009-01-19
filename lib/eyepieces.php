@@ -1,7 +1,6 @@
 <?php // The eyepieces class collects all functions needed to enter, retrieve and adapt eyepiece data from the database.
 interface iEyepiece
 { public  function addEyepiece($name, $focalLength, $apparentFOV);                   // adds a new eyepiece to the database. The name, focalLength and apparentFOV should be given as parameters. 
-  public  function deleteEyepiece($id);                                              // removes the eyepiece with id = $id 
   public  function getAllEyepiecesIds($id);                                          // returns a list with all id's which have the same name as the name of the given id
   public  function getEyepieceObserverPropertyFromName($name, $observer, $property); // returns the property for the eyepiece of the observer
   public  function getEyepiecePropertiesFromId($id);                                 // returns the properties of the eyepiece with id in an array(propertyname)=propertyvalue
@@ -17,10 +16,6 @@ class Eyepieces implements iEyepiece
  { global $objDatabase;
    $objDatabase->execSQL("INSERT INTO eyepieces (name, focalLength, apparentFOV) VALUES (\"".$name."\", \"".$focalLength."\", \"".$apparentFOV."\")");
    return $objDatabase->selectSingleValue("SELECT id FROM eyepieces ORDER BY id DESC LIMIT 1",'id','');
- }
- public  function deleteEyepiece($id)                                                // deleteEyepiece removes the eyepiece with id = $id 
- { global $objDatabase;
-   return $objDatabase->execSQL("DELETE FROM eyepieces WHERE id=\"".$id."\"");
  }
  public  function getAllEyepiecesIds($id)                                            // getAllIds returns a list with all id's which have the same name as the name of the given id
  { global $objDatabase;
@@ -42,20 +37,20 @@ class Eyepieces implements iEyepiece
  { global $objDatabase; 
    return $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM observations WHERE eyepieceid=\"".$id."\"",'ObsCnt',0);
  }
- public  function setEyepieceProperty($id,$property,$propertyValue)                  // sets the property to the specified value for the given eyepiece
- { global $objDatabase;
-   return $objDatabase->execSQL("UPDATE eyepieces SET ".$property." = \"".$propertyValue."\" WHERE id = \"".$id."\"");
- }
  public  function getSortedEyepieces($sort,$observer="")                             // returns an array with the ids of all eyepieces, sorted by the column specified in $sort
  { global $objDatabase; 
    return $objDatabase->selectSingleArray("SELECT id, name FROM eyepieces ".($observer?"WHERE observer=\"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
  }
- public  function validateDeleteEyepiece()                                           // validates and deletes an eyepiece
- { global $objUtil;
+ public  function setEyepieceProperty($id,$property,$propertyValue)                  // sets the property to the specified value for the given eyepiece
+ { global $objDatabase;
+   return $objDatabase->execSQL("UPDATE eyepieces SET ".$property." = \"".$propertyValue."\" WHERE id = \"".$id."\"");
+ }
+ public  function validateDeleteEyepiece()                                          // validates and deletes an eyepiece
+ { global $objUtil, $objDatabase;
    if($objUtil->checkGetKey('eyepieceid') 
    && $objUtil->checkAdminOrUserID($this->getEyepiecePropertyFromId($_GET['eyepieceid'],'observer'))
    && (!($this->getEyepieceUsedFromId($_GET['eyepieceid']))))
-    $this->deleteEyepiece($_GET['eyepieceid']);
+     return $objDatabase->execSQL("DELETE FROM eyepieces WHERE id=\"".$_GET['eyepieceid']."\"");
  }
  public  function validateSaveEyepiece()                                             // validates and saves an eyepiece and returns a message 
  { global $objUtil;

@@ -48,9 +48,7 @@ while(list ($key, $value) = each($eyeps))
       echo "<td align=\"center\">".$eyepieceProperties['apparentFOV']."</td>";
       echo "<td>".$eyepieceProperties['observer']."</td>";
       echo "<td>";
-//    $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
-//    if(!sizeof($obs) > 0 && !sizeof($comobs) > 0) // no observations with eyepiece yet
-      if(!($objEyepiece->getEyepieceUsedFromId($value))) // no observations with eyepiece yet
+      if(!($objEyepiece->getEyepieceUsedFromId($value)))
         echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_eyepiece&amp;eyepieceid=".urlencode($value)."\">".LangRemove."</a>";
       echo "</td>";
 			echo "</tr>";
