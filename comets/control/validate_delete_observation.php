@@ -25,7 +25,7 @@ elseif($_GET['observationid']) // observationid given
 {
   // only admins may delete a comet observation
 
-  $role = $obs->getRole($_SESSION['deepskylog_id']);
+  $role = $objObserver->getRole($_SESSION['deepskylog_id']);
 
   if ($role == RoleAdmin || $role == RoleCometAdmin)
   {

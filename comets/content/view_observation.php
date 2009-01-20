@@ -332,7 +332,7 @@ echo("</td></tr>");
 
 echo("</table>");
 
-$role = $obs->getRole($_SESSION['deepskylog_id']);
+$role = $objObserver->getRole($_SESSION['deepskylog_id']);
 
 if ($role == RoleAdmin || $role == RoleCometAdmin)
 {

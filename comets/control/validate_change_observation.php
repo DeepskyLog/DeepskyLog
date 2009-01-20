@@ -34,7 +34,7 @@ if($_POST['changeobservation']) // pushed change observation button
    {
       // only admins may change a comet observation
 
-      $role = $obs->getRole($_SESSION['deepskylog_id']);
+      $role = $objObserver->getRole($_SESSION['deepskylog_id']);
 
       if ($role == RoleAdmin || $role == RoleCometAdmin)
       {

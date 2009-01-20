@@ -95,7 +95,7 @@ if($_SESSION['deepskylog_id'])
 
 # extra link for administrators to change comet details
 
-$role = $observers->getRole($_SESSION['deepskylog_id']);
+$role = $objObserver->getRole($_SESSION['deepskylog_id']);
 
 if ($role == RoleAdmin || $role == RoleCometAdmin)
 {
