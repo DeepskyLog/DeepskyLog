@@ -396,11 +396,11 @@ class util
     $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
 		if($GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id'])
 		&& $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))
-		&& $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])))
+		&& $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name'))
       $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
 		    html_entity_decode(LangPDFMessage19 . $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . ' ' . 
 				                   $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' .
-		    LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
+		    LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name') . ' ' . 
 				LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))), 'center' );
 		$pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($_GET['pdfTitle']), 'center' );
 		$pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . '1', 'right');
@@ -459,12 +459,12 @@ class util
 						  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
 							if($GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id'])
 							&& $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))
-							&& $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])))
+							&& $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name'))
 						    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
 		                   html_entity_decode(
 		                   LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
 		                                      $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . ' ' .
-                       LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
+                       LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name') . ' ' . 
 				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))), 'center' );
 		          $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($_GET['pdfTitle']), 'center' );
 		          $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
@@ -490,11 +490,11 @@ class util
 					  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
 						if($GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id'])
 						&& $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))
-						&& $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])))
+						&& $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name'))
 					    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
 	                   html_entity_decode(LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' .
 	                                      $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . ' ' .
-                     LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
+                     LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name') . ' ' . 
 			               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))), 'center' );
             $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($_GET['pdfTitle']), 'center' );
 	          $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
@@ -566,11 +566,11 @@ class util
 							  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
 								if($GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id'])
 								&& $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))
-								&& $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])))
+								&& $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name'))
 							    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
 		                   html_entity_decode(LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
 		                                      $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . 
-                       LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
+                       LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name') . ' ' . 
 				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))), 'center' );
 		            $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($_GET['pdfTitle']), 'center' );
 		            $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
@@ -611,11 +611,11 @@ class util
 							  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
 								if($GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id'])
 								&& $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))
-								&& $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])))
+								&& $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name'))
 							    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
 		                   html_entity_decode(LangPDFMessage19 . $GLOBALS['objObserver']->getObserverName($_SESSION['deepskylog_id']) . ' ' . 
 		                                      $GLOBALS['objObserver']->getFirstName($_SESSION['deepskylog_id']) . 
-                       LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentName($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id'])) . ' ' . 
+                       LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name') . ' ' . 
 				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationName($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']))), 'center' );
 		            $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($_GET['pdfTitle']), 'center' );
 		            $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
@@ -686,7 +686,7 @@ class util
       $limmag = $GLOBALS['objObservation']->getLimitingMagnitude($value['observationid']);
       $description = preg_replace("/(\r\n|\n|\r)/", "", $description);
       $description = preg_replace("/(\")/", "", $description);
-      echo (html_entity_decode($objectname) . ";" . html_entity_decode($name) . ";" . $date[2] . "-" . $date[1] . "-" . $date[0] . ";" . $time . ";" . html_entity_decode($GLOBALS['objLocation']->getLocationName($loc)) . ";" . html_entity_decode($GLOBALS['objInstrument']->getInstrumentName($inst)) . ";" . html_entity_decode($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($eyep,'name')) . ";" . html_entity_decode($GLOBALS['objFilter']->getFilterPropertyFromId($filt,'name')) . ";" . html_entity_decode($GLOBALS['objLens']->getLensName($lns)) . ";" . $seeing . ";" . $limmag . ";" . $visibility . ";" . $langObs . ";" . $description . "\n");
+      echo (html_entity_decode($objectname) . ";" . html_entity_decode($name) . ";" . $date[2] . "-" . $date[1] . "-" . $date[0] . ";" . $time . ";" . html_entity_decode($GLOBALS['objLocation']->getLocationName($loc)) . ";" . html_entity_decode($GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst,'name')) . ";" . html_entity_decode($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($eyep,'name')) . ";" . html_entity_decode($GLOBALS['objFilter']->getFilterPropertyFromId($filt,'name')) . ";" . html_entity_decode($GLOBALS['objLens']->getLensName($lns)) . ";" . $seeing . ";" . $limmag . ";" . $visibility . ";" . $langObs . ";" . $description . "\n");
     }
   }
   public function csvObjects($result)  // Creates a csv file from an array of objects
@@ -885,7 +885,7 @@ class util
                  "eyepiece" => $eyepstr,
 								 "lens" => $lnsstr,
                  "observer" => html_entity_decode(LangPDFMessage13).$GLOBALS['objObserver']->getFirstName($observerid)." ".$GLOBALS['objObserver']->getObserverName($observerid).html_entity_decode(LangPDFMessage14).$formattedDate,
-                 "instrument" => html_entity_decode(LangPDFMessage11)." : ".$GLOBALS['objInstrument']->getInstrumentName($inst),
+                 "instrument" => html_entity_decode(LangPDFMessage11)." : ".$GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst,'name'),
                  "location" => html_entity_decode(LangPDFMessage10)." : ".$GLOBALS['objLocation']->getLocationName($loc),
                  "description" => $description,
                  "desc" => html_entity_decode(LangPDFMessage15)
@@ -1003,7 +1003,7 @@ class util
 
         if ($observation->getInstrumentId($value) != 0)
         {
-          $instr = $instrument->getInstrumentName($observation->getInstrumentId($value));
+          $instr = $instrument->getInstrumentPropertyFromId($observation->getInstrumentId($value),'name');
           if ($instr == "Naked eye")
           {
             $instr = InstrumentsNakedEye;
@@ -1561,12 +1561,12 @@ class util
       $attr = $dom->createAttribute("xsi:type");
       $scope2->appendChild($attr);
 
-	  if ($GLOBALS['objInstrument']->getFixedMagnification($value) > 0) {
+	  if ($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fixedMagnification') > 0) {
 	  	$typeLong = "fgca:fixedMagnificationOpticsType";
 	  } else {
 	  	$typeLong = "fgca:scopeType";	  	
 	  }
-	  $tp = $GLOBALS['objInstrument']->getInstrumentType($value);
+	  $tp = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'type');
 	  if ($tp == InstrumentOther || $tp == InstrumentRest) {
 	  	$typeShort = "";
 	  } else if ($tp == InstrumentNakedEye) {
@@ -1591,7 +1591,7 @@ class util
 	  $attr->appendChild($attrText);
 
       $name = $siteChild->appendChild($dom->createElement('model')); 
-      $name->appendChild($dom->createCDATASection(utf8_encode(html_entity_decode($GLOBALS['objInstrument']->getInstrumentName($value))))); 
+      $name->appendChild($dom->createCDATASection(utf8_encode(html_entity_decode($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'name'))))); 
 
       $type = $siteChild->appendChild($dom->createElement('type')); 
       $type->appendChild($dom->createCDATASection(($typeShort))); 
@@ -1599,12 +1599,12 @@ class util
       $aperture = $siteChild->appendChild($dom->createElement('aperture')); 
       $aperture->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'diameter')))); 
 
-	  if ($GLOBALS['objInstrument']->getFixedMagnification($value) > 0) {
+	  if ($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fixedMagnification') > 0) {
       	$magnification = $siteChild->appendChild($dom->createElement('magnification'));
-        $magnification->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getFixedMagnification($value)))); 
+        $magnification->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fixedMagnification')))); 
 	  } else {
       	$focalLength = $siteChild->appendChild($dom->createElement('focalLength'));
-        $focalLength->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getFd($value)) * $GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'diameter'))); 
+        $focalLength->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fixedMagnification')) * $GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'diameter'))); 
 	  }
     }
 
@@ -1845,15 +1845,15 @@ class util
 	  }
 
 	  $magni = 0;
-	  if ($GLOBALS['objInstrument']->getFixedMagnification($inst) > 0)
+	  if ($GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst,'fixedMagnification') > 0)
 	  {
-	  	$magni = $GLOBALS['objInstrument']->getFixedMagnification($inst);
-	  } else if ($eyep > 0 && $GLOBALS['objInstrument']->getFd($inst) > 0) {
+	  	$magni = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst,'fixedMagnification');
+	  } else if ($eyep > 0 && $GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst,'fixedMagnification') > 0) {
 	  	$factor = 1.0;
 	  	if ($GLOBALS['objLens']->getFactor($lns) > 0) {
 	  		$factor = $GLOBALS['objLens']->getFactor($lns);
 	  	}
-		$magni = sprintf("%.2f", $GLOBALS['objInstrument']->getFd($inst) * $GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst,'diameter') 
+		$magni = sprintf("%.2f", $GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst,'fixedMagnification') * $GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst,'diameter') 
 		        * $factor / $GLOBALS['objEyepiece']->getEyepiecePropertyFromId($eyep,'focalLength'));
 	  }
 	  

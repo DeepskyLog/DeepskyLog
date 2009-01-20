@@ -284,8 +284,8 @@ echo("<option value=\"\"></option>\n"); // include empty instrument
 
       while(list ($key, $value) = each($instr)) // go through instrument array
       {
-         $instrumentname = $value[1];
-         $val = $value[0];
+         $instrumentname = $value;
+         $val = $key;
 
          if($objUtil->checkSessionKey('savedata') == "yes") // multiple observations
          {

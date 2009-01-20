@@ -4,7 +4,7 @@
 
 echo "<div id=\"main\">";
 echo "<h2>";
-$name=$objInstrument->getInstrumentName($_GET['instrument']);
+$name=$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'name');
 if($name=="Naked eye")
   echo InstrumentsNakedEye;
 else
@@ -30,19 +30,7 @@ echo "</tr>";
 echo "<tr>";
 echo "<td class=\"fieldname\">".LangAddInstrumentField5."</td>";
 echo "<td>";
-echo "<select name=\"type\">";
-
-
-echo "<option ".(($objInstrument->getInstrumentType($_GET['instrument'])==InstrumentReflector)?"selected=\"selected\" ":"")."value=\"".InstrumentReflector."\">".InstrumentsReflector."</option>";
-echo "<option ".(($objInstrument->getInstrumentType($_GET['instrument'])==InstrumentRefractor)?"selected=\"selected\" ":"")."value=\"".InstrumentRefractor."\">".InstrumentsRefractor."</option>";
-echo "<option ".(($objInstrument->getInstrumentType($_GET['instrument'])==InstrumentCassegrain)?"selected=\"selected\" ":"")."value=\"".InstrumentCassegrain."\">".InstrumentsCassegrain."</option>";
-echo "<option ".(($objInstrument->getInstrumentType($_GET['instrument'])==InstrumentSchmidtCassegrain)?"selected=\"selected\" ":"")."value=\"".InstrumentSchmidtCassegrain."\">".InstrumentsSchmidtCassegrain."</option>";
-echo "<option ".(($objInstrument->getInstrumentType($_GET['instrument'])==InstrumentKutter)?"selected=\"selected\" ":"")."value=\"".InstrumentKutter."\">".InstrumentsKutter."</option>";
-echo "<option ".(($objInstrument->getInstrumentType($_GET['instrument'])==InstrumentMaksutov)?"selected=\"selected\" ":"")."value=\"".InstrumentMaksutov."\">".InstrumentsMaksutov."</option>";
-echo "<option ".(($objInstrument->getInstrumentType($_GET['instrument'])==InstrumentBinoculars)?"selected=\"selected\" ":"")."value=\"".InstrumentBinoculars."\">".InstrumentsBinoculars."</option>";
-echo "<option ".(($objInstrument->getInstrumentType($_GET['instrument'])==InstrumentFinderscope)?"selected=\"selected\" ":"")."value=\"".InstrumentFinderscope."\">".InstrumentsFinderscope."</option>";
-echo "<option ".(($objInstrument->getInstrumentType($_GET['instrument'])==InstrumentOther)?"selected=\"selected\" ":"")."value=\"".InstrumentRest."\">".InstrumentsOther."</option>";
-echo "</select>";
+echo getInstrumentEchoListType($objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'type'));
 echo "</td>";
 echo "</tr>";
 echo "<tr>";

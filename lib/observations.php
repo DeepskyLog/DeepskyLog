@@ -1137,7 +1137,7 @@ class Observations {
 			$objectname = $this->getObjectId($value);
 			$observername = $this->getObserverId($value);
 			$instrumentid = $this->getDsObservationInstrumentId($value);
-			$instrument = $GLOBALS['objInstrument']->getInstrumentName($instrumentid);
+			$instrument = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($instrumentid,'name');
 			$locationid = $this->getDsObservationLocationId($value);
 			$location = $GLOBALS['objLocation']->getLocationName($locationid);
 			$date = $this->getDateDsObservation($value);
@@ -1217,7 +1217,7 @@ class Observations {
 		echo LangViewObservationField3;
 		echo ("</td>");
 		echo ("<td width=\"25%\">");
-		$inst = $GLOBALS['objInstrument']->getInstrumentName($this->getDsObservationInstrumentId($LOid));
+		$inst = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($this->getDsObservationInstrumentId($LOid),'name');
 		if ($inst == "Naked eye") {
 			$inst = InstrumentsNakedEye;
 		}
@@ -1553,7 +1553,7 @@ class Observations {
 		}
 		if ($LOdescription) {
 			$LOtemp = $this->getDsObservationInstrumentId($LOid);
-			$LOinstrument = $GLOBALS['objInstrument']->getInstrumentName($LOtemp);
+			$LOinstrument = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($LOtemp,'name');
 			$LOinstrumentsize = round($GLOBALS['objInstrument']->getInstrumentPropertyFromId($LOtemp,'diameter'), 0);
 		} else {
 			$LOtemp = '';

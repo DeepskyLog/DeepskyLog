@@ -167,7 +167,7 @@ class Observers
      $loc = $this->getStandardLocation($value);
      $location = $locations->getLocationName($loc);
      $inst = $this->getStandardTelescope($value);
-     $telescope = $instruments->getInstrumentName($inst);
+     $telescope = $instruments->getInstrumentPropertyFromId($inst,'name');
      $password = $this->getPassword($value);
      echo "<tr $type>";
 		 echo "<td> $value </td>";

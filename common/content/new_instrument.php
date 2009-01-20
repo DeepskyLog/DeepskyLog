@@ -5,18 +5,7 @@
 
 $type = $objUtil->checkGetKey('type');
 if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
-  $type = $objInstrument->getInstrumentType($objUtil->checkGetKey('instrumentid'));
-$tempInstrumentType= "<select name=\"type\">";
-$tempInstrumentType.="<option ".(($type==InstrumentReflector)?        "selected=\"selected\" ":"")."value=\"".InstrumentReflector.        "\">".InstrumentsReflector."</option>";
-$tempInstrumentType.="<option ".(($type==InstrumentRefractor)?        "selected=\"selected\" ":"")."value=\"".InstrumentRefractor.        "\">".InstrumentsRefractor."</option>";
-$tempInstrumentType.="<option ".(($type==InstrumentCassegrain)?       "selected=\"selected\" ":"")."value=\"".InstrumentCassegrain.       "\">".InstrumentsCassegrain."</option>";
-$tempInstrumentType.="<option ".(($type==InstrumentSchmidtCassegrain)?"selected=\"selected\" ":"")."value=\"".InstrumentSchmidtCassegrain."\">".InstrumentsSchmidtCassegrain."</option>";
-$tempInstrumentType.="<option ".(($type==InstrumentKutter)?           "selected=\"selected\" ":"")."value=\"".InstrumentKutter.           "\">".InstrumentsKutter."</option>";
-$tempInstrumentType.="<option ".(($type==InstrumentMaksutov)?         "selected=\"selected\" ":"")."value=\"".InstrumentMaksutov.         "\">".InstrumentsMaksutov."</option>";
-$tempInstrumentType.="<option ".(($type==InstrumentBinoculars)?       "selected=\"selected\" ":"")."value=\"".InstrumentBinoculars.       "\">".InstrumentsBinoculars."</option>";
-$tempInstrumentType.="<option ".(($type==InstrumentFinderscope)?      "selected=\"selected\" ":"")."value=\"".InstrumentFinderscope.      "\">".InstrumentsFinderscope."</option>";
-$tempInstrumentType.="<option ".(($type==InstrumentOther)?            "selected=\"selected\" ":"")."value=\"".InstrumentRest.             "\">".InstrumentsOther."</option>";
-$tempInstrumentType.="</select>";
+  $type = $objInstrument->getInstrumentPropertyFromId($objUtil->checkGetKey('instrumentid'),'type');
 
 $sort=$objUtil->checkGetKey('sort','name');
 if(!$min) $min=$objUtil->checkGetKey('min',0);
@@ -57,13 +46,13 @@ echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_instrument\" 
 $count = 0;
 if(count($insts)>0)
 { while(list($key,$value)=each($insts))
-  { $name = $objInstrument->getInstrumentName($value);
+  { $name = $objInstrument->getInstrumentPropertyFromId($value,'name');
     $diameter = round($objInstrument->getInstrumentPropertyFromId($value,'diameter'), 0);
-    $fd=round($objInstrument->getFd($value), 1);
+    $fd=round($objInstrument->getInstrumentPropertyFromId($value,'fd'), 1);
     if($fd=="0")
       $fd = "-";
-    $type = $objInstrument->getInstrumentType($value);
-    $fixedMagnification = $objInstrument->getFixedMagnification($value);
+    $type = $objInstrument->getInstrumentPropertyFromId($value,'type');
+    $fixedMagnification = $objInstrument->getInstrumentPropertyFromId($value,'fixedMagnification');
     echo "<tr class=\"type".(2-($count%2))."\">";
 		if ($name == "Naked eye")
       echo "<td><a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($value)."\">".InstrumentsNakedEye."</a></td>";
@@ -78,15 +67,7 @@ if(count($insts)>0)
       echo("-");
 		echo "</td>";
 		echo "<td>";
-    if($type == InstrumentReflector) {echo(InstrumentsReflector);}
-    if($type == InstrumentFinderscope) {echo(InstrumentsFinderscope);}
-    if($type == InstrumentRefractor) {echo(InstrumentsRefractor);}
-    if($type == InstrumentRest) {echo(InstrumentsOther);}
-    if($type == InstrumentBinoculars) {echo(InstrumentsBinoculars);}
-    if($type == InstrumentCassegrain) {echo(InstrumentsCassegrain);}
-    if($type == InstrumentSchmidtCassegrain) {echo(InstrumentsSchmidtCassegrain);}
-    if($type == InstrumentKutter) {echo(InstrumentsKutter);}
-    if($type == InstrumentMaksutov) {echo(InstrumentsMaksutov);}
+    echo $objInstrument->getInstrumentEchoType($type);
     echo "</td>";
 		echo "<td align=\"center\">";
 		// Radio button for the standard instrument
@@ -126,7 +107,7 @@ echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" na
 echo "<option selected value=\"".$baseURL."index.php?indexAction=add_instrument\"> &nbsp; </option>";
 $insts=$objInstrument->getSortedInstruments('name',"",true);
 while(list($key,$value)=each($insts))
-  echo "<option value=\"".$baseURL."index.php?indexAction=add_instrument&amp;instrumentid=".urlencode($value)."\">" . $objInstrument->getInstrumentName($value) . "</option>";
+  echo "<option value=\"".$baseURL."index.php?indexAction=add_instrument&amp;instrumentid=".urlencode($value)."\">" . $objInstrument->getInstrumentPropertyFromId($value,'name') . "</option>";
 echo "</select>";
 echo "</form>";
 echo "</td>";
@@ -145,22 +126,20 @@ echo "<table>";
 tableFieldnameFieldExplanation(LangAddInstrumentField1,
                                "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"instrumentname\" size=\"30\"  value=\"".stripslashes($objUtil->checkGetKey('instrumentname')).stripslashes($objInstrument->getInstrumentPropertyFromId($objUtil->checkGetKey('instrumentid'),'name'))."\" />",
                                "");
-
 tableFieldnameFieldExplanation(LangAddInstrumentField2,
                                "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"diameter\" size=\"10\" value=\"".stripslashes($objUtil->checkGetKey('diameter')).stripslashes($objInstrument->getInstrumentPropertyFromId($objUtil->checkGetKey('instrumentid'),'diameter'))."\" />".
                                "<select name=\"diameterunits\"> <option>inch</option> <option selected=\"selected\">mm</option> </select>",
                                "");
-tableFieldnameFieldExplanation(LangAddInstrumentField5,$tempInstrumentType,"");
+tableFieldnameFieldExplanation(LangAddInstrumentField5,$objInstrument->getInstrumentEchoListType($type),"");
 tableFieldnameFieldExplanation(LangAddInstrumentField4,
-                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"focallength\" size=\"10\"  value=\"".stripslashes($objUtil->checkGetKey('focallength')).stripslashes($objInstrument->getInstrumentFocalLength($objUtil->checkGetKey('instrumentid')))."\" />".
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"focallength\" size=\"10\"  value=\"".stripslashes($objUtil->checkGetKey('focallength')).stripslashes($objInstrument->getInstrumentPropertyFromId($objUtil->checkGetKey('instrumentid'),'diameter')*$objInstrument->getInstrumentPropertyFromId($objUtil->checkGetKey('instrumentid'),'fd'))."\" />".
                                "<select name=\"focallengthunits\"> <option>inch</option> <option selected=\"selected\">mm</option> </select>".
                                "&nbsp;<span style=\"font-style:normal\">".LangAddInstrumentOr."&nbsp;".
                                LangAddInstrumentField3."</span>&nbsp;".
-                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"fd\" size=\"10\" value=\"".stripslashes($objUtil->checkGetKey('fd')).stripslashes($objInstrument->getFd($objUtil->checkGetKey('instrumentid')))."\" />",
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"fd\" size=\"10\" value=\"".stripslashes($objUtil->checkGetKey('fd')).stripslashes($objInstrument->getInstrumentPropertyFromId($objUtil->checkGetKey('instrumentid'),'fd'))."\" />",
                                "");
-
 tableFieldnameFieldExplanation(LangAddInstrumentField6,
-                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"fixedMagnification\" size=\"5\" value=\"".($objUtil->checkGetKey('fixedMagnification')).stripslashes($objInstrument->getFixedMagnification($objUtil->checkGetKey('instrumentid')))."\" />",
+                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"fixedMagnification\" size=\"5\" value=\"".($objUtil->checkGetKey('fixedMagnification')).stripslashes($objInstrument->getInstrumentPropertyFromId($objUtil->checkGetKey('instrumentid'),'fixedMagnification'))."\" />",
                                LangAddInstrumentField6Expl);
 echo "</table>";
 echo "<hr />";

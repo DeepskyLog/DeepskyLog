@@ -70,10 +70,10 @@ echo LangViewObservationField3;
 echo "</td>";
 echo "<td>"; // INSTRUMENTS
 echo "<select name=\"instrument\" class=\"inputfield requiredField\" style=\"width:300px\">";
-$instr = $objInstrument->getSortedInstrumentsList("name", $_SESSION['deepskylog_id'], false);
+$instr = $objInstrument->getSortedInstrumentsList("name", $_SESSION['deepskylog_id']);
 $theInstr = $objObservation->getDsObservationInstrumentId($_GET['observation']);
 while (list ($key, $value) = each($instr))
-	echo "<option " . (($theInstr == $value[0]) ? "selected=\"selected\"" : '') . " value=\"" . $value[0] . "\">" . $value[1] . "</option>";
+	echo "<option " . (($theInstr == $key) ? "selected=\"selected\"" : '') . " value=\"" . $key . "\">" . $value . "</option>";
 echo "</select>";
 echo "</td>";
 echo "</tr>";

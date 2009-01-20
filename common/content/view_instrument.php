@@ -4,17 +4,17 @@
 
 if(!$objUtil->checkGetKey('instrument')) 
   throw("No instrument specified");  
-if(!($name=$objInstrument->getInstrumentName($_GET['instrument'])))
+if(!($name=$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'name')))
   throw("Instrument not found");
   
 if($name=="Naked eye")
   $name=InstrumentsNakedEye;
   
-$fixedMagnification=$objInstrument->getFixedMagnification($_GET['instrument']);
-$instrumentType=$objInstrument->getInstrumentType($_GET['instrument']);
-$instrumentFD=$objInstrument->getFd($_GET['instrument']);
+$fixedMagnification=$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'fixedMagnification');
+$instrumentType=$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'type');
+$instrumentFD=$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'fd');
 $instrumentDiameter=$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'diameter');
-$instrumentFocalLength=$objInstrument->getInstrumentFocalLength($_GET['instrument']);
+$instrumentFocalLength=$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'diameter')*$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'fd');
 $instrumentEchoType=$objInstrument->getInstrumentEchoType($instrumentType);
 
 echo '<div id=\"main\">';

@@ -28,7 +28,7 @@ $tempInstrumentList="<select name=\"instrument\" class=\"inputfield\">";
 $instr=$objInstrument->getSortedInstruments("name",$_SESSION['deepskylog_id']);
 $noStd=false;
 while(list($key,$value)=each($instr))
-{ $instrumentname=$objInstrument->getInstrumentName($value);
+{ $instrumentname=$objInstrument->getInstrumentPropertyFromId($value,'name');
   if($instrumentname=="Naked eye")
     $instrumentname=InstrumentsNakedEye;
   if($objObserver->getStandardTelescope($_SESSION['deepskylog_id'])=="0")

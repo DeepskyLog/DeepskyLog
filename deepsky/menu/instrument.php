@@ -22,7 +22,7 @@ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
   $instr=$objObserver->getStandardTelescope($_SESSION['deepskylog_id']);	
 	echo("<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"activateTelescope\" class=\"inputfield\">");
   while(list($key, $value) = each($result))
-		echo("<option ".(($value==$instr)?"selected":"")." value=\""  . $link . "&amp;activeTelescopeId=$value\">" . $objInstrument->getInstrumentName($value) . "</option>\n");
+		echo("<option ".(($value==$instr)?"selected":"")." value=\""  . $link . "&amp;activeTelescopeId=$value\">" . $objInstrument->getInstrumentPropertyFromId($value,'name') . "</option>\n");
 	echo("</select>\n");
 	echo "</td>";
 	echo "</tr>";

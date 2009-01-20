@@ -305,8 +305,8 @@ echo("</td><td>
 
       while(list ($key, $value) = each($instr))
       {
-         $instrumentname = $value[1];
-         $val = $value[0];
+         $instrumentname = $value;
+         $val = $key;
 
          if ($instrumentname == "Naked eye")
          {

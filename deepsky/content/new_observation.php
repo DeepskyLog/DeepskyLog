@@ -115,9 +115,9 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "<td>";
 	echo "<select name=\"instrument\" style=\"width:300px\" class=\"inputfield requiredField\">";
 	echo "<option value=\"\"></option>";
-	$instr = $GLOBALS['objInstrument']->getSortedInstrumentsList("name", $_SESSION['deepskylog_id'], false);
+	$instr = $GLOBALS['objInstrument']->getSortedInstrumentsList("name", $_SESSION['deepskylog_id']);
 	while (list ($key, $value) = each($instr))
-		echo "<option " . (($GLOBALS['objUtil']->checkPostKey('instrument', 0) == $value[0]) ? "selected=\"selected\"" : (($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']) == $value[0]) ? "selected=\"selected\"" : '')) . " value=\"" . $value[0] . "\">" . $value[1] . "</option>";
+		echo "<option " . (($GLOBALS['objUtil']->checkPostKey('instrument', 0) == $key) ? "selected=\"selected\"" : (($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']) == $key) ? "selected=\"selected\"" : '')) . " value=\"" . $key . "\">" . $value . "</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "<td class=\"explanation\">";

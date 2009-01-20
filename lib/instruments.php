@@ -4,6 +4,8 @@ interface iInstruments
   public  function getInstrumentId($name, $observer);                                              // returns the id for this instrument
   public  function getInstrumentPropertyFromId($id,$property,$defaultValue='');
   public  function getObserverFromInstrument($id);                                                 // returns the observerid for this instrument
+  public  function getSortedInstruments($sort,$observer="");                                       // returns an array with the ids of all instruments, sorted by the column specified in $sort
+  public  function getSortedInstrumentsList($sort,$observer="");                                   // returns an array with the ids of all instruments as key, and the name as value, sorted by the column specified in $sort
   public  function validateDeleteInstrument();                                                     // validates and deletes the instrument with id = $id 
  
 }
@@ -22,175 +24,34 @@ class Instruments implements iInstruments
   public  function getObserverFromInstrument($id)                                                 // returns the observerid for this instrument
   { global $objDatabase; return $objDatabase->selectSingleValue("SELECT observer FROM instruments WHERE id = \"".$id."\"",'observer');
   }
+  public  function getInstrumentPropertyFromId($id,$property,$defaultValue='')
+  { global $objDatabase; return $objDatabase->selectSingleValue("SELECT ".$property." FROM instruments WHERE id = \"".$id."\"",$property,$defaultValue);
+  }
+  public  function getSortedInstruments($sort,$observer="")                                       // returns an array with the ids of all instruments, sorted by the column specified in $sort
+  { global $objDatabase; 
+    return $objDatabase->selectSingleArray("SELECT id, name FROM instruments ".($observer?"WHERE observer LIKE \"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
+  } 
+  public  function getSortedInstrumentsList($sort,$observer="")                                   // returns an array with the ids of all instruments, sorted by the column specified in $sort
+  { global $objDatabase; 
+    return $objDatabase->selectKeyValueArray("SELECT id, name FROM instruments ".($observer?"WHERE observer LIKE \"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.", name",'id','name');  
+  } 
   public  function validateDeleteInstrument()                                                     // validates and deletes the instrument with id = $id 
   { global $objUtil, $objDatabase;
     if($objUtil->checkGetKey('instrumentid')                                                     
     && $objUtil->checkAdminOrUserID($this->getObserverFromInstrument($objUtil->checkGetKey('instrumentid')))
 		&& (!($this->getInstrumentUsedFromId($_GET['instrumentid']))))
-      return $objDatabase->execSQL("DELETE FROM instruments WHERE id=\"$id\"");
-  }
-  public  function getInstrumentPropertyFromId($id,$property,$defaultValue='')
-  { global $objDatabase; return $objDatabase->selectSingleValue("SELECT ".$property." FROM instruments WHERE id = \"".$id."\"",$property,$defaultValue);
+      return $objDatabase->execSQL("DELETE FROM instruments WHERE id=\"".$_GET['instrumentid']."\"");
   }
 
-
-
-
-
-
-
-
-
- function getFixedMagnification($id) // getFixedMagnification returns the fixed magnification of the given instrument
- { return $GLOBALS['objDatabase']->selectSingleValue("SELECT * FROM instruments WHERE id = \"$id\"",'fixedMagnification');
- }
-
- function getFd($id)                    // getFd returns the Fd of the given instrument
- { return $GLOBALS['objDatabase']->selectSingleValue("SELECT fd FROM instruments WHERE id = \"".$id."\"",'fd');
- }
- function getInstrumentFocalLength($id) // getFocalLength returns the focal length of the given instrument
- { $get = mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT diameter, fd FROM instruments WHERE id = \"".$id."\""));
-   if ($get)
-	   return (($get->diameter) * ($get->fd));
-   else
-	   return '';
- }
-
- // getInstrumentName returns the name of the given instrument
- function getInstrumentName($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM instruments WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-  if ($get)
-	  {
-    $name = $get->name;
-		}
-	else
-	  {
-		$name = "";
-		}
-
-  $db->logout();
-
-  return $name;
- }
-
- // getType returns the type of the given instrument
- function getInstrumentType($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM instruments WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if ($get)
-	  {
-	  $type = $get->type;
-    }
-	else
-	  {
-	  $type = 0;
-		}
-		
-  $db->logout();
-
-  return $type;
- }
-
- // getSortedInstruments returns an array with the ids of all instruments, 
- // sorted by the column specified in $sort
- function getSortedInstruments($sort, $observer = "", $unique = false)
- {
-  $insts = array();
-  $db = new database;
-  $db->login();
-
-  if ($unique == false)
-  {
-   if ($observer == "")
-   {
-    $sql = "SELECT * FROM instruments ORDER BY $sort";
-   } 
-   else
-   {
-    $sql = "SELECT * FROM instruments where observer = \"$observer\" ORDER BY $sort";
-   }
-  }
-  else
-  {
-   if ($observer == "")
-   {
-    $sql = "SELECT id, name FROM instruments GROUP BY name";
-   } 
-   else
-   {
-    $sql = "SELECT id, name FROM instruments where observer = \"$observer\" GROUP BY name ORDER BY $sort";
-   }
-  } 
-
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $insts[] = $get->id;
-  }
-  $db->logout();
-
-  return $insts;
- }
-
- // getSortedInstrumentsList returns an array with the ids of all instruments,
- // sorted by the column specified in $sort. Instruments with the same name
- // are adapted by adding the f/d.
- function getSortedInstrumentsList($sort, $observer = "", $unique = false)
- { $instruments = $this->getSortedInstruments($sort, $observer, $unique);
-
-  // If there are locations with the same name, the province should also
-  // be shown
-  $previous = "fdgdsgsd";
-
-  for ($i = 0;$i < count($instruments);$i++)
-  {
-   $adapt[$i] = 0;
-
-   if ($this->getInstrumentName($instruments[$i]) == $previous)
-   {
-    $adapt[$i] = 1;
-    $adapt[$i - 1] = 1;
-   }
-   $previous = $this->getInstrumentName($instruments[$i]);
-  }
-
-  for ($i = 0;$i < count($instruments);$i++)
-  {
-   if ($adapt[$i])
-   {
-    $new_instruments[$i][0] = $instruments[$i];
-    $new_instruments[$i][1] = $this->getInstrumentName($instruments[$i])." (F/".$this->getFd($instruments[$i]).")";
-   }
-   else
-   {
-    $new_instruments[$i][0] = $instruments[$i];
-    if ($this->getInstrumentType($instruments[$i]) == InstrumentNakedEye)
-    {
-      $new_instruments[$i][1] = InstrumentsNakedEye;
-    }
-    else
-    {
-      $new_instruments[$i][1] = $this->getInstrumentName($instruments[$i]);
-    }
-   }
-  }
-  return $new_instruments;
- }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
  // setDiameter sets a new diameter for the given instrument
  function setDiameter($id, $diameter)
@@ -282,11 +143,11 @@ class Instruments implements iInstruments
     $class = "class=\"type2\"";
    }
 
-   $name = $this->getInstrumentName($value);
+   $name = $this->getInstrumentPropertyFromId($value,'name');
    $diameter = $this->getInstrumentPropertyFromId($value,'diameter');
-   $fd = $this->getFd($value);
-   $focalLength = $this->getInstrumentFocalLength($value);
-   $type = $this->getInstrumentType($value);
+   $fd = $this->getInstrumentPropertyFromId($value,'fd');
+   $focalLength = $this->getInstrumentPropertyFromId($value,'diameter')*$this->getInstrumentPropertyFromId($value,'fd');
+   $type = $this->getInstrumentPropertyFromId($value,'type');
 
    if ($type == InstrumentNakedEye)
    {
@@ -356,6 +217,20 @@ class Instruments implements iInstruments
    if($instrumentType== InstrumentKutter)            return InstrumentsKutter;
    if($instrumentType== InstrumentMaksutov)          return InstrumentsMaksutov;
    return "unkown instrument type";
+ }
+ public function getInstrumentEchoListType($type)
+ { $tempTypeList ="<select name=\"type\" class=\"inputfield\">";
+   $tempTypeList.="<option ".(($type==InstrumentReflector)?"selected=\"selected\" ":"")."value=\"".InstrumentReflector."\">".InstrumentsReflector."</option>";
+   $tempTypeList.="<option ".(($type==InstrumentRefractor)?"selected=\"selected\" ":"")."value=\"".InstrumentRefractor."\">".InstrumentsRefractor."</option>";
+   $tempTypeList.="<option ".(($type==InstrumentCassegrain)?"selected=\"selected\" ":"")."value=\"".InstrumentCassegrain."\">".InstrumentsCassegrain."</option>";
+   $tempTypeList.="<option ".(($type==InstrumentSchmidtCassegrain)?"selected=\"selected\" ":"")."value=\"".InstrumentSchmidtCassegrain."\">".InstrumentsSchmidtCassegrain."</option>";
+   $tempTypeList.="<option ".(($type==InstrumentKutter)?"selected=\"selected\" ":"")."value=\"".InstrumentKutter."\">".InstrumentsKutter."</option>";
+   $tempTypeList.="<option ".(($type==InstrumentMaksutov)?"selected=\"selected\" ":"")."value=\"".InstrumentMaksutov."\">".InstrumentsMaksutov."</option>";
+   $tempTypeList.="<option ".(($type==InstrumentBinoculars)?"selected=\"selected\" ":"")."value=\"".InstrumentBinoculars."\">".InstrumentsBinoculars."</option>";
+   $tempTypeList.="<option ".(($type==InstrumentFinderscope)?"selected=\"selected\" ":"")."value=\"".InstrumentFinderscope."\">".InstrumentsFinderscope."</option>";
+   $tempTypeList.="<option ".(($type==InstrumentOther)?"selected=\"selected\" ":"")."value=\"".InstrumentRest."\">".InstrumentsOther."</option>";
+   $tempTypeList.="</select>";
+   return    $tempTypeList;
  }
 }
 $objInstrument=new Instruments;

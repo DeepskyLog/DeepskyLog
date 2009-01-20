@@ -229,9 +229,9 @@ echo LangViewObservationField3;
 echo("</td>\n<td>\n");
 echo("<select name=\"instrument\" class=\"inputfield\">\n");
 echo("<option value=\"\"></option>"); // empty field
-$inst = $objInstrument->getSortedInstrumentsList('name', '', true);
+$inst = $objInstrument->getSortedInstrumentsList('name');
 while(list($key, $value) = each($inst))
-  echo("<option value=\"".$value[0]."\">".$value[1]."</option>\n");
+  echo("<option value=\"".$key."\">".$value."</option>\n");
 echo("</select>\n");
 echo("</td>");
 echo("</tr>");

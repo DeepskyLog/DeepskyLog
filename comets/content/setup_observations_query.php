@@ -127,11 +127,11 @@ echo("<select name=\"instrument\">\n");
 
 echo("<option value=\"\"></option>"); // empty field
 
-$inst = $instruments->getSortedInstruments("name", "", true);
+$inst = $instruments->getSortedInstrumentsList("name");
 
 while(list($key, $value) = each($inst))
 {
-   echo("<option value=\"$value\">".$instruments->getInstrumentName($value)."</option>\n");
+   echo("<option value=\"$key\">".$value."</option>\n");
 }
 
 echo("</select>\n");

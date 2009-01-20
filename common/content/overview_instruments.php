@@ -4,7 +4,7 @@
 
 $sort=$objUtil->checkGetKey('sort','name');
 if(!$min) $min=$objUtil->checkGetKey('min',0);
-$telescopes=$objInstrument->getSortedInstruments($sort);
+$telescopes=$objInstrument->getSortedInstruments($sort,'%');
 $insts=$objObserver->getListOfInstruments();
 // the code below is very strange but works
 if((isset($_GET['previous'])))
@@ -39,13 +39,13 @@ echo "<td></td>";
 echo "</tr>";
 $count = 0;
 while(list ($key, $value) = each($telescopes))
-{ $name = $objInstrument->getInstrumentName($value);
+{ $name = $objInstrument->getInstrumentPropertyFromId($value,'name');
   $diameter = round($objInstrument->getInstrumentPropertyFromId($value,'diameter'), 0);
-  $fd = round($objInstrument->getFd($value), 1);
+  $fd = round($objInstrument->getInstrumentPropertyFromId($value,'fixedMagnification'), 1);
   if ($fd == "0")
     $fd = "-";
-  $type = $objInstrument->getInstrumentType($value);
-  $fixedMagnification = $objInstrument->getFixedMagnification($value);
+  $type = $objInstrument->getInstrumentPropertyFromId($value,'type');
+  $fixedMagnification = $objInstrument->getInstrumentPropertyFromId($value,'fixedMagnification');
   if ($fixedMagnification == "0")
     $fixedMagnification = "-";
   $observer = $objInstrument->getObserverFromInstrument($value);

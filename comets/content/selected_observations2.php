@@ -89,7 +89,7 @@ if($_GET['observer'] || $_GET['instrument'] || $_GET['site'] || $_GET['minyear']
 	 if(array_key_exists('instrument',$_GET) && $_GET['instrument'] != "")
 	 {
       $instrument = $_GET['instrument'];
-      $name = $instruments->getInstrumentName($instrument);
+      $name = $instruments->getInstrumentPropertyFromId($instrument,'name');
       $instrument = $instruments->getId($name, $_SESSION['deepskylog_id']);
 	 }
 	 else
@@ -563,7 +563,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
       // INSTRUMENT 
  
       $temp = $observations->getInstrumentId($value);
-      $instrument = $instruments->getInstrumentName($temp);
+      $instrument = $instruments->getInstrumentPropertyFromId($temp,'name');
       $instrumentsize = $instruments->getInstrumentPropertyFromId($temp,'diameter');
       if ($instrument == "Naked eye")
       {

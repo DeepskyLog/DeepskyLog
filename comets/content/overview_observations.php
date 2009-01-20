@@ -131,7 +131,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
       // INSTRUMENT 
  
       $temp = $objCometObservation->getInstrumentId($value);
-      $instrument = $objInstrument->getInstrumentName($temp);
+      $instrument = $objInstrument->getInstrumentPropertyFromId($temp,'name');
       $instrumentsize = round($objInstrument->getInstrumentPropertyFromId($temp,'diameter'), 0);
       if ($instrument == "Naked eye")
       {

@@ -25,7 +25,7 @@ class Filters implements iFilters
  {global $objDatabase;
   return $objDatabase->selectSinleArray("SELECT id FROM filters WHERE name = \"".$objDatabase->selectSingleValue("SELECT name FROM filters WHERE id = \"".$id."\"")."\"");
  }
- public function getEchoColor($color)
+ public  function getEchoColor($color)
  { if($color == FilterColorLightRed)    return FiltersColorLightRed;
    if($color == FilterColorRed)         return FiltersColorRed;
    if($color == FilterColorDeepRed)     return FiltersColorDeepRed;
@@ -43,7 +43,7 @@ class Filters implements iFilters
    if($color == FilterColorDeepViolet)  return FiltersColorDeepViolet;
    return "-";
  }
- public function getEchoListColor($color)
+ public  function getEchoListColor($color)
  { $tempColorList="<select name=\"color\" class=\"inputfield\">";
    $tempColorList.="<option value=\"\">&nbsp;</option>";
  	 $tempColorList.="<option ".(($color==FilterColorLightRed)?   "selected=\"selected\" ":"")."value=\"".FilterColorLightRed.   "\">".FiltersColorLightRed."</option>";
@@ -64,7 +64,7 @@ class Filters implements iFilters
 	 $tempColorList.="</select>";
  	 return $tempColorList;
  }
- public function getEchoListType($type)
+ public  function getEchoListType($type)
  { $tempTypeList="<select name=\"type\" class=\"inputfield\">";
    $tempTypeList.= "<option ".(($type==FilterOther)?     " option selected=\"selected\" ":"")." value=\"".FilterOther.     "\">".FiltersOther."</option>";
    $tempTypeList.= "<option ".(($type==FilterBroadBand)? " option selected=\"selected\" ":"")." value=\"".FilterBroadBand. "\">".FiltersBroadBand."</option>";
@@ -76,7 +76,7 @@ class Filters implements iFilters
    $tempTypeList.= "</select>";
    return $tempTypeList;
  }
- public function getEchoType($type)
+ public  function getEchoType($type)
  { if($type == FilterOther)      return FiltersOther;
 	 if($type == FilterBroadBand)  return FiltersBroadBand;
 	 if($type == FilterNarrowBand) return FiltersNarrowBand;
@@ -100,7 +100,7 @@ class Filters implements iFilters
  { global $objDatabase; 
    return $objDatabase->selectSingleValue("SELECT ".$property." FROM filters WHERE id = \"".$id."\"",$property,$defaultValue);
  }
- public  function getFilterUsedFromId($id)                                         // returns the number of times the eyepiece is used in observations
+ public  function getFilterUsedFromId($id)                                              // returns the number of times the eyepiece is used in observations
  { global $objDatabase; 
    return $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM observations WHERE filterid=\"".$id."\"",'ObsCnt',0);
  }
@@ -108,18 +108,18 @@ class Filters implements iFilters
  { global $objDatabase; 
    return $objDatabase->selectSingleArray("SELECT id, name FROM filters ".($observer?"WHERE observer LIKE \"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
  } 
- public  function setFilterProperty($id,$property,$propertyValue)                      // sets the property to the specified value for the given filter
+ public  function setFilterProperty($id,$property,$propertyValue)                       // sets the property to the specified value for the given filter
  { global $objDatabase;
    return $objDatabase->execSQL("UPDATE filters SET ".$property." = \"".$propertyValue."\" WHERE id = \"".$id."\"");
  }
- public  function validateDeleteFilter()                                              // validates and deletes a filter
+ public  function validateDeleteFilter()                                                // validates and deletes a filter
  { global $objUtil, $objDatabase;
    if($objUtil->checkGetKey('filterid') 
    && $objUtil->checkAdminOrUserID($this->getFilterPropertyFromId($_GET['filterid'],'observer'))
    && (!($this->getFilterUsedFromId($_GET['filterid']))))
      return $objDatabase->execSQL("DELETE FROM filters WHERE id=\"".$_GET['filterid']."\"");
  }
- public  function validateSaveFilter()                                             // validates and saves a filter and returns a message 
+ public  function validateSaveFilter()                                                  // validates and saves a filter and returns a message 
  { global $objUtil;
    if($objUtil->checkPostKey('add')
    && $objUtil->checkSessionKey('deepskylog_id')

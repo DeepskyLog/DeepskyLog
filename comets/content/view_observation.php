@@ -146,14 +146,14 @@ if ($objCometObservation->getInstrumentId($_GET['observation']) != 0)
 
  echo("</td><td>");
 
- $inst =  $objInstrument->getInstrumentName($objCometObservation->getInstrumentId($_GET['observation']));
+ $inst =  $objInstrument->getInstrumentPropertyFromId($objCometObservation->getInstrumentId($_GET['observation']),'name');
 
  if ($objCometObservation->getMagnification($_GET['observation']) != 0)
  {
   $inst = $inst." (".$objCometObservation->getMagnification($_GET['observation'])."x)";
  }
 
- if (strcmp($objInstrument->getInstrumentName($objCometObservation->getInstrumentId($_GET['observation'])), "Naked eye") == 0)
+ if (strcmp($objInstrument->getInstrumentPropertyFromId($objCometObservation->getInstrumentId($_GET['observation']),'name'), "Naked eye") == 0)
  {
   $inst = InstrumentsNakedEye;
  }

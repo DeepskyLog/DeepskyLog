@@ -5,7 +5,7 @@ if(isset($_GET['sort']))
  $sort=$_GET['sort'];
 else
  $sort="name";
-$eyeps=$objEyepiece->getSortedEyepieces($sort);
+$eyeps=$objEyepiece->getSortedEyepieces($sort,'%');
 // the code below looks very strange but it works
 if((isset($_GET['previous'])))
   $orig_previous = $_GET['previous'];

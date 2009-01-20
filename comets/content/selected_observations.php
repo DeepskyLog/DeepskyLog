@@ -198,7 +198,7 @@ if(isset($_GET['objectname']))
       // INSTRUMENT
 
       $temp = $observations->getInstrumentId($value);
-      $instrument = $instruments->getInstrumentName($temp);
+      $instrument = $instruments->getInstrumentPropertyFromId($temp,'name');
       $instrumentsize = $instruments->getInstrumentPropertyFromId($temp,'diameter');
       if ($instrument == "Naked eye")
       {
@@ -436,7 +436,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
       // INSTRUMENT
 
       $temp = $observations->getInstrumentId($value);
-      $instrument = $instruments->getInstrumentName($temp);
+      $instrument = $instruments->getInstrumentPropertyFromId($temp,'name');
       if ($instrument == "Naked eye")
       {
        $instrument = InstrumentsNakedEye;
