@@ -40,7 +40,7 @@ echo "</tr>";
 $count = 0;
 while(list ($key, $value) = each($telescopes))
 { $name = $objInstrument->getInstrumentName($value);
-  $diameter = round($objInstrument->getDiameter($value), 0);
+  $diameter = round($objInstrument->getInstrumentPropertyFromId($value,'diameter'), 0);
   $fd = round($objInstrument->getFd($value), 1);
   if ($fd == "0")
     $fd = "-";

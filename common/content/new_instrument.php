@@ -58,7 +58,7 @@ $count = 0;
 if(count($insts)>0)
 { while(list($key,$value)=each($insts))
   { $name = $objInstrument->getInstrumentName($value);
-    $diameter = round($objInstrument->getDiameter($value), 0);
+    $diameter = round($objInstrument->getInstrumentPropertyFromId($value,'diameter'), 0);
     $fd=round($objInstrument->getFd($value), 1);
     if($fd=="0")
       $fd = "-";
@@ -143,11 +143,11 @@ echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_instrument\" 
 
 echo "<table>";
 tableFieldnameFieldExplanation(LangAddInstrumentField1,
-                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"instrumentname\" size=\"30\"  value=\"".stripslashes($objUtil->checkGetKey('instrumentname')).stripslashes($objInstrument->getInstrumentName($objUtil->checkGetKey('instrumentid')))."\" />",
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"instrumentname\" size=\"30\"  value=\"".stripslashes($objUtil->checkGetKey('instrumentname')).stripslashes($objInstrument->getInstrumentPropertyFromId($objUtil->checkGetKey('instrumentid'),'name'))."\" />",
                                "");
 
 tableFieldnameFieldExplanation(LangAddInstrumentField2,
-                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"diameter\" size=\"10\" value=\"".stripslashes($objUtil->checkGetKey('diameter')).stripslashes($objInstrument->getDiameter($objUtil->checkGetKey('instrumentid')))."\" />".
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"diameter\" size=\"10\" value=\"".stripslashes($objUtil->checkGetKey('diameter')).stripslashes($objInstrument->getInstrumentPropertyFromId($objUtil->checkGetKey('instrumentid'),'diameter'))."\" />".
                                "<select name=\"diameterunits\"> <option>inch</option> <option selected=\"selected\">mm</option> </select>",
                                "");
 tableFieldnameFieldExplanation(LangAddInstrumentField5,$tempInstrumentType,"");

@@ -1554,7 +1554,7 @@ class Observations {
 		if ($LOdescription) {
 			$LOtemp = $this->getDsObservationInstrumentId($LOid);
 			$LOinstrument = $GLOBALS['objInstrument']->getInstrumentName($LOtemp);
-			$LOinstrumentsize = round($GLOBALS['objInstrument']->getDiameter($LOtemp), 0);
+			$LOinstrumentsize = round($GLOBALS['objInstrument']->getInstrumentPropertyFromId($LOtemp,'diameter'), 0);
 		} else {
 			$LOtemp = '';
 			$LOinstrument = '';

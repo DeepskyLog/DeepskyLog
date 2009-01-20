@@ -917,6 +917,7 @@ define("LangCSVMessage4", "Followed by the actual observations in the same forma
 define("LangCSVMessage5", "Caution!<p>The instruments, the locations, eyepieces, filters and the objects in the CSV file should already be known by DeepskyLog otherwise an error message will be shown and no (!) observations will be added. Insert the missing data manually until there are no error messages left. If everything went well, your observations will be shown in the \"All observations\" overview. Please be careful not to re-insert the same file twice as observations can only be deleted one by one afterwards!");
 define("LangCSVMessage6", "CSV file to import ");
 define("LangCSVMessage7", "Name;Altname;RA;Decl;Constellation;Type;Magnitude;SurfaceBrightness;Diameter;Position Angle;Page;ContrastReserve;OptimalMagnification;Seen");
+define("LangCSVError0", "The csv observation import has been aborted");
 define("LangCSVError1", "The CSV file could not be imported because: ");
 define("LangCSVError2", "The following objects are not available in DeepskyLog:");
 define("LangCSVError3", "The following locations are not available in DeepskyLog:");
@@ -924,7 +925,9 @@ define("LangCSVError4", "The following instruments are not available in DeepskyL
 define("LangCSVError5", "The following filters are not available in DeepskyLog");
 define("LangCSVError6", "The following eyepieces are not available in DeepskyLog");
 define("LangCSVError7", "The following lenses are not available in DeepskyLog");
-define("LangCSVError8", "The following date can't be read by DeepskyLog");
+define("LangCSVError8", "The following date(s) can't be read by DeepskyLog");
+define("LangCSVError9", "The following date(s) are in the future");
+define("LangCSVError10", "No observations have been read.<br />First, you have to solve the items mentionned above. Then, you can <a href=\"".$baseURL."index.php?indexAction=add_csv\">reimport</a> the complete csv file.");
 define("LangCSVButton", "Import!");
 define("LangValidateCSVMessage", "Import of CSV file successfull!");
 

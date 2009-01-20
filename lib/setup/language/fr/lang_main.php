@@ -919,6 +919,7 @@ define("LangCSVMessage4", "Suivi des observations dans le m&ecirc;me format, par
 define("LangCSVMessage5", "Attention!<p>Les instruments, les endroits, les oculaires, filters et les objets dans le fichier csv doivent d&eacute;j&agrave; &ecirc;tre connus par DeepskyLog. Si ceci n'est pas le cas, un message d'erreur sera affich&eacute; et aucune(!) observation ne sera enregistr&eacute;e. L'information manquante doit &ecirc;tre remplie &agrave; la main jusqu'au moment o&ugrave; il n'y a plus de messages d'erreur. Si tout se passe bien, les observations rentr&eacute;es seront affich&eacute;es utilisant 'Toutes les observations'. N'importez pas deux fois le m&ecirc;me fichier, vous aurez &agrave; effacer manuellement tous les doublons!");
 define("LangCSVMessage6", "Fichier CSV ");
 define("LangCSVMessage7", "Nom;NomAlternatif;AD;Decl;Constellation;Type;Magnitude;MagnitudeSurface;Diam&egrave;tre;Angle de position;Page;ContrastReserve;OptimalMagnification;Vu");
+define("LangCSVError0", "L'import csv des observations a été arrêté");
 define("LangCSVError1", "Le fichier csv n'a pas &eacute;t&eacute; trait&eacute; parce que: ");
 define("LangCSVError2", "Les objets suivants ne sont pas connus par DeepskyLog");
 define("LangCSVError3", "Les endroits suivants ne sont pas connus par DeepskyLog");
@@ -926,7 +927,9 @@ define("LangCSVError4", "Les instruments suivants net sont pas connus par Deepsk
 define("LangCSVError5", "Les filtres suivant ne sont pas connus par DeepskyLog");
 define("LangCSVError6", "Les oculaires suivant ne sont pas connus par DeepskyLog");
 define("LangCSVError7", "Les lentilles suivant ne sont pas connus par DeepskyLog");
-define("LangCSVError8", "La date suivante ne peut être lue par DeepskyLog");
+define("LangCSVError8", "La ou les dates suivantes ne sont pas valides");
+define("LangCSVError9", "La ou les dates suivantes se trouvent dans le futur");
+define("LangCSVError10", "Les observations n'ont pas été enregistrées.<br />Il faut d'abord résoudre les problèmes mentionnés pour ensuite <a href=\"".$baseURL."index.php?indexAction=add_csv\">réimporter</a> le fichier complèt.");
 define("LangCSVButton", "Importez!");
 define("LangValidateCSVMessage", "L'importation du fichier CSV est faite!");
 

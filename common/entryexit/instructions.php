@@ -8,7 +8,14 @@ while(list($key,$value)=each($modules))
   }
   
 if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="change_role"))
-  require_once $instDir."common/control/change_role.php";
+{ if(($_SESSION['admin']=="yes")
+  && ($objUtil->checkGetKey('user')))
+  { $role=$objUtil->checkGetKey('role',2);
+    $objObserver->setRole($_GET['user'],$role);
+    $entryMessage.="Role is successfully updated!";
+  }
+  $_GET['indexAction']="detail_observer";  
+}
 if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="validate_observer"))
   require_once $instDir."common/control/validate_observer.php";
 if($objUtil->checkGetKey('indexAction')=="validate_delete_eyepiece")
@@ -22,7 +29,10 @@ if($objUtil->checkGetKey('indexAction')=="validate_delete_filter")
   unset($_GET['validate_delete_filter']);
 }
 if($objUtil->checkGetKey('indexAction')=="validate_delete_instrument")
-  require_once $instDir."common/control/validate_delete_instrument.php";
+{ $objInstrument->validateDeleteInstrument();
+  $_GET['indexAction']='add_instrument';
+  unset($_GET['validate_delete_instrument']);
+}
 if($objUtil->checkGetKey('indexAction')=="validate_delete_lens")
   require_once $instDir."common/control/validate_delete_lens.php";
 if($objUtil->checkGetKey('indexAction')=="validate_delete_location")

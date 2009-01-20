@@ -1177,6 +1177,7 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_lens'                        ,'common/content/view_lens.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_location'                    ,'common/content/view_location.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_observer'                    ,'common/content/view_observer.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('message'                            ,'common/content/message.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('search_sites'                       ,'common/content/search_locations.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('site_result'                        ,'common/content/getLocation.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('subscribe'                          ,'common/content/register.php')))
@@ -1596,14 +1597,14 @@ class util
       $type->appendChild($dom->createCDATASection(($typeShort))); 
 
       $aperture = $siteChild->appendChild($dom->createElement('aperture')); 
-      $aperture->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getDiameter($value)))); 
+      $aperture->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'diameter')))); 
 
 	  if ($GLOBALS['objInstrument']->getFixedMagnification($value) > 0) {
       	$magnification = $siteChild->appendChild($dom->createElement('magnification'));
         $magnification->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getFixedMagnification($value)))); 
 	  } else {
       	$focalLength = $siteChild->appendChild($dom->createElement('focalLength'));
-        $focalLength->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getFd($value)) * $GLOBALS['objInstrument']->getDiameter($value))); 
+        $focalLength->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getFd($value)) * $GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'diameter'))); 
 	  }
     }
 
@@ -1852,7 +1853,7 @@ class util
 	  	if ($GLOBALS['objLens']->getFactor($lns) > 0) {
 	  		$factor = $GLOBALS['objLens']->getFactor($lns);
 	  	}
-		$magni = sprintf("%.2f", $GLOBALS['objInstrument']->getFd($inst) * $GLOBALS['objInstrument']->getDiameter($inst) 
+		$magni = sprintf("%.2f", $GLOBALS['objInstrument']->getFd($inst) * $GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst,'diameter') 
 		        * $factor / $GLOBALS['objEyepiece']->getEyepiecePropertyFromId($eyep,'focalLength'));
 	  }
 	  

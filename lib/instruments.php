@@ -1,162 +1,46 @@
-<?php
-
-// The instruments class collects all functions needed to enter, retrieve and
-// adapt instrument data from the database.
-//
-// Version 0.2 : 06/04/2005, WDM
-// Version 3.1, DE 20061119
-
-include_once "database.php";
-include_once "setup/language.php";
-
-class Instruments
-{
- // addInstrument adds a new instrument to the database. The name, diameter, 
- // fd and type should be given as parameters. 
- function addInstrument($name, $diameter, $fd, $type, $fixedMagnification, $observer)
- {
-  $db = new database;
-  $db->login();
-
-  if (!$_SESSION['lang'])
-  {
-   $_SESSION['lang'] = "English";
+<?php // The instruments class collects all functions needed to enter, retrieve and adapt instrument data from the database.
+interface iInstruments
+{ public  function addInstrument($name, $diameter, $fd, $type, $fixedMagnification, $observer);    // adds a new instrument to the database. The name, diameter, fd and type should be given as parameters. 
+  public  function getInstrumentId($name, $observer);                                              // returns the id for this instrument
+  public  function getInstrumentPropertyFromId($id,$property,$defaultValue='');
+  public  function getObserverFromInstrument($id);                                                 // returns the observerid for this instrument
+  public  function validateDeleteInstrument();                                                     // validates and deletes the instrument with id = $id 
+ 
+}
+class Instruments implements iInstruments
+{ public  function addInstrument($name, $diameter, $fd, $type, $fixedMagnification, $observer)    // adds a new instrument to the database. The name, diameter, fd and type should be given as parameters. 
+  { global $objDatabase; $objDatabase->execSQL("INSERT INTO instruments (name, diameter, fd, type, fixedMagnification, observer) VALUES (\"$name\", \"$diameter\", \"$fd\", \"$type\", \"$fixedMagnification\", \"$observer\")");
+  }
+  public  function getInstrumentId($name, $observer)                                              // returns the id for this instrument
+  { global $objDatabase; return $objDatabase->selectSingleValue("SELECT id FROM instruments where name=\"".htmlentities($name)."\" and observer=\"".$observer."\"",'id',-1);
+  }
+  public  function getInstrumentUsedFromId($id)                                                   // returns the number of times the instrument is used in observations
+  { global $objDatabase; 
+    return $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM observations WHERE instrumentid=\"".$id."\"",'ObsCnt',0)
+         + $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM cometobservations WHERE instrumentid=\"".$id."\"",'ObsCnt',0);
+	}
+  public  function getObserverFromInstrument($id)                                                 // returns the observerid for this instrument
+  { global $objDatabase; return $objDatabase->selectSingleValue("SELECT observer FROM instruments WHERE id = \"".$id."\"",'observer');
+  }
+  public  function validateDeleteInstrument()                                                     // validates and deletes the instrument with id = $id 
+  { global $objUtil, $objDatabase;
+    if($objUtil->checkGetKey('instrumentid')                                                     
+    && $objUtil->checkAdminOrUserID($this->getObserverFromInstrument($objUtil->checkGetKey('instrumentid')))
+		&& (!($this->getInstrumentUsedFromId($_GET['instrumentid']))))
+      return $objDatabase->execSQL("DELETE FROM instruments WHERE id=\"$id\"");
+  }
+  public  function getInstrumentPropertyFromId($id,$property,$defaultValue='')
+  { global $objDatabase; return $objDatabase->selectSingleValue("SELECT ".$property." FROM instruments WHERE id = \"".$id."\"",$property,$defaultValue);
   }
 
-  $sql = "INSERT INTO instruments (name, diameter, fd, type, fixedMagnification, observer) VALUES (\"$name\", \"$diameter\", \"$fd\", \"$type\", \"$fixedMagnification\", \"$observer\")";
 
-  mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
- }
- function getObserverFromInstrument($id) // getObserver returns the observerid for this instrument
- { return $GLOBALS['objDatabase']->selectSingleValue("SELECT * FROM instruments WHERE id = \"$id\"",'observer');
- }
- // getId returns the id for this instrument
- function getInstrumentId($name, $observer)
- {
-  $db = new database;
-  $db->login();
-  $name=htmlentities($name);
-  $sql = "SELECT * FROM instruments where name=\"$name\" and observer=\"$observer\"";
-  $run = mysql_query($sql) or die(mysql_error());
 
-  $get = mysql_fetch_object($run);
 
-  if ($get)
-  {
-    $id = $get->id;
-  }
-  else
-  {
-    $id = -1;
-  }
 
-  $db->logout();
 
-  return $id;
- }
 
- // deleteInstrument removes the instrument with id = $id 
- function deleteInstrument($id)
- {
-  $db = new database;
-  $db->login();
 
-  $sql = "DELETE FROM instruments WHERE id=\"$id\"";
-  mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // getInstrumentId returns the id of the given name of the instrument
- function getInstrumentsId($name)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM instruments where name=\"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  
-	if ($get)
-	  {
-		$instrumentid = $get->id;
-		}
-	else
-	  {
-		$instrumentid = 0;
-		}
-
-  $db->logout();
-
-  return $instrumentid;
- }
-
- // getInstruments returns an array with all instruments
- function getInstruments()
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM instruments";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $instruments[] = $get->id;
-  }
-
-  $db->logout();
-
-  return $instruments;
- }
-
- // getInstrumentsName returns an array with all instruments and names
- function getInstrumentsName()
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM instruments";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $ins[$get->id] = $get->name;
-  }
-
-  $db->logout();
-
-  return $ins;
- }
-
- // getDiameter returns the diameter of the given instrument
- function getDiameter($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM instruments WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if ($get)
-	  {
-	  $diameter = $get->diameter;
-    }
-	else
-	  {
-		$diameter = '';
-		}
-		
-  $db->logout();
-
-  return $diameter;
- }
  function getFixedMagnification($id) // getFixedMagnification returns the fixed magnification of the given instrument
  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT * FROM instruments WHERE id = \"$id\"",'fixedMagnification');
  }
@@ -372,8 +256,8 @@ class Instruments
  // showInstruments prints a table showing all instruments. For testing 
  // purposes only.
  function showInstruments()
- {
-  $instruments = $this->getInstruments();
+ { global $objDatabase;
+  $instruments = $objDatabase->selectSingleArray("SELECT id FROM instruements",'id');
 
   $count = 0;
 
@@ -399,7 +283,7 @@ class Instruments
    }
 
    $name = $this->getInstrumentName($value);
-   $diameter = $this->getDiameter($value);
+   $diameter = $this->getInstrumentPropertyFromId($value,'diameter');
    $fd = $this->getFd($value);
    $focalLength = $this->getInstrumentFocalLength($value);
    $type = $this->getInstrumentType($value);
@@ -474,39 +358,5 @@ class Instruments
    return "unkown instrument type";
  }
 }
-
 $objInstrument=new Instruments;
-
-//VERSION 3.3 OBSOLETE ?
-// setFocalLength sets the focal length for the given instrument
-/*
- function setFocalLength($id, $focalLength)
- {
-  $diameter = $this->getDiameter($id);
-
-  $db = new database;
-  $db->login();
-
-  $fd = $focalLength / $diameter;
-  $sql = "UPDATE instruments SET fd = \"$fd\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-*/
- 
- /* OBSOLETE in VERSION 3.3 ?
- // setInstrumentObserver sets the observer for the instrument with id = $id
- function setInstrumentObserver($id, $observer)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "UPDATE instruments SET observer = \"$observer\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-*/
-
 ?>

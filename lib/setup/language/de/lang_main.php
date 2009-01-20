@@ -917,6 +917,7 @@ define("LangCSVMessage4", "Gefolgt von den eigentlichen Beobachtungen im selben 
 define("LangCSVMessage5", "Achtung!<p>Das Beobachtungsger&auml;t, der Beobachtungsplatz und die Objekte in der CSV-Datei sollten schon in DeepskyLog bekannt sein, sonst erhalten Sie eine Fehlermeldung und KEINE Beobachtung wird importiert. In diesem Fall geben Sie bitte die fehlenden Daten per Hand ein und starten Sie den Import erneut bis keine Fehlermeldung mehr erscheint. Wenn alles gut geht, erscheinen Ihre Beobachtungen in der  \"Alle Beobachtungen\" &Uuml;bersicht. Bitte seien Sie vorsichtig, wenn Sie die gleiche Datei erneut importieren. Beobachtungen k&ouml;nnen nachher immer nur einzeln gel&ouml;scht werden!");
 define("LangCSVMessage6", "CSV Datei f&uuml;r den Import ");
 define("LangCSVMessage7", "Name;AltnativName;RA;Dekl;Sternbild;Typ;Helligkeit;Oberfl&auml;schen Helligkeit;Durchmesser;Seite;Beobachtet");
+define("LangCSVError0", "The csv observation import has been aborted");
 define("LangCSVError1", "Die CSV Datei konnte nicht importiert werden weil: ");
 define("LangCSVError2", "Folgende Objekte sind nicht in DeepskyLog verf&uuml;gbar:");
 define("LangCSVError3", "Folgende Beobachtungspl&auml;tze sind nicht in DeepskyLog verf&uuml;gbar:");
@@ -924,7 +925,9 @@ define("LangCSVError4", "Folgende Beobachtungsger&auml;te sind nicht in DeepskyL
 define("LangCSVError5", "Die folgenden Filter sind nicht in DeepskyLog verf&uuml;gbar");
 define("LangCSVError6", "Die folgenden Okulare sind nicht in DeepskyLog verf&uuml;gbar");
 define("LangCSVError7", "Die folgenden Linsen sind nicht in DeepskyLog verf&uuml;gbar");
-define("LangCSVError8", "The following date can't be read by DeepskyLog");
+define("LangCSVError8", "The following date(s) can't be read by DeepskyLog");
+define("LangCSVError9", "The following date(s) are in the future");
+define("LangCSVError10", "No observations have been read.<br />First, you have to solve the items mentionned above. Then, you can <a href=\"".$baseURL."index.php?indexAction=add_csv\">reimport</a> the complete csv file.");
 define("LangCSVButton", "Import!");
 define("LangValidateCSVMessage", "Import der CSV Datei erfolgreich!");
 

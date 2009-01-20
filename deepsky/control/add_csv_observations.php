@@ -34,7 +34,7 @@ else
   $lenses = array_values($lenses);
   $dates = array_unique($dates);
   $dates = array_values($dates);
-  $nodates=array();
+  $noDates=array();
   $wrongDates=array();
 	$objectsMissing = array();
 	$locationsMissing = array();
@@ -97,7 +97,7 @@ else
     }
     if(count($wrongDates)>0)
     { $errormessage = $errormessage . "<ul>";
-      $errormessage = $errormessage .  "<li>".LangValidateObservationMessage3." : ";
+      $errormessage = $errormessage .  "<li>".LangCSVError9." : ";
       $errormessage = $errormessage .  "<ul>";
       for ( $i = 0;$i < count($wrongDates);$i++ )
         $errormessage = $errormessage . "<li>".$wrongDates[$i]."</li>";
@@ -165,8 +165,8 @@ else
       $errormessage = $errormessage .  "</li>\n";
       $errormessage = $errormessage .  "</ul>";
     }
-    $entryMessage = $errormessage;
-    $_GET['indexAction']='add_csv';
+    $messageLines[] = "<h2>".LangCSVError7."</h2>"."<p />".$errormessage."<p />".LangCSVError10;
+    $_GET['indexAction']='message';
   }
   else
   { $username=$objObserver->getFirstname($_SESSION['deepskylog_id']). " ".$objObserver->getObserverName($_SESSION['deepskylog_id']);

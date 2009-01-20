@@ -764,7 +764,7 @@ define("LangValidateSearchObjectMessage3", "Zoek opnieuw");
 
 // control/validate_site.php
 
-define("LangValidateSiteMessage1",  "Alle velden moeten worden ingevuld!");
+define("LangValidateSiteMessage1", "Alle velden moeten worden ingevuld!");
 define("LangValidateSiteMessage2", "De locatie is toegevoegd aan de databank");
 define("LangValidateSiteMessage3", "De locatie is toegevoegd aan jouw lijst met waarneemplaatsen");
 define("LangValidateSiteMessage4", "Locatie gewijzigd");
@@ -915,6 +915,7 @@ define("LangCSVMessage4", "Gevolgd door de eigenlijke waarnemingen in hetzelfde 
 define("LangCSVMessage5", "Opgepast!<p>De instrumenten, waarnemingsplaatsen, oculairs, filters en objecten in het CSV bestand moeten reeds vooraf bekend zijn in DeepskyLog. Indien dit niet het geval is, zal er een foutboodschap verschijnen en worden er geen(!) waarnemingen toegevoegd. De ontbrekende informatie moet manueel toegevoegd worden totdat er geen foutboodschappen meer verschijnen. Indien alles goed gaat, worden de ingevoerde waarnemingen getoond in het overzicht van alle waarnemingen. Vergewis u er van dat u geen twee maal hetzelfde bestand importeert, aangezien dubbele waarnemingen achteraf &eacute;&eacute;n voor &eacute;&eacute;n manueel verwijderd moeten worden!");
 define("LangCSVMessage6", "CSV bestand ");
 define("LangCSVMessage7", "Naam;AlternatieveNaam;RA;Decl;Sterrenbeeld;Type;Magnitude;OppervlakteHelderheid;Diameter;Positie vhoek;Pagina;ContrastReserve;OptimaleVergroting;Gezien");
+define("LangCSVError0", "De CSV import van de waarnemingen is gestopt");
 define("LangCSVError1", "Het CSV bestand kon niet ingelezen worden omdat: ");
 define("LangCSVError2", "De onderstaande objecten niet gekend zijn in DeepskyLog");
 define("LangCSVError3", "De onderstaande waarnemingsplaatsen niet gekend zijn in DeepskyLog");
@@ -922,7 +923,9 @@ define("LangCSVError4", "De onderstaande instrumenten niet gekend zijn in Deepsk
 define("LangCSVError5", "De onderstaande filters niet gekend zijn in DeepskyLog");
 define("LangCSVError6", "De onderstaande oculairs niet gekend zijn in DeepskyLog");
 define("LangCSVError7", "De onderstaande lenzen niet gekend zijn in DeepskyLog");
-define("LangCSVError8", "De onderstaande datum kan niet ingezen worden in DeepskyLog");
+define("LangCSVError8", "De onderstaande datum(s) niet geldig zijn");
+define("LangCSVError9", "De onderstaande datum(s) in de toekomst liggen");
+define("LangCSVError10", "Er zijn geen waarnemingen ingelezen.<br />Je dient eerst de bovenstaande zaken op te lossen om dan opnieuw de volledige <a href=\"".$baseURL."index.php?indexAction=add_csv\">import</a> uit te voeren.");
 define("LangCSVButton", "Importeer!");
 define("LangValidateCSVMessage", "Importeren CSV bestand succesvol!");
 

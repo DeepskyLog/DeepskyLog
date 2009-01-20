@@ -199,7 +199,7 @@ if(isset($_GET['objectname']))
 
       $temp = $observations->getInstrumentId($value);
       $instrument = $instruments->getInstrumentName($temp);
-      $instrumentsize = $instruments->getDiameter($temp);
+      $instrumentsize = $instruments->getInstrumentPropertyFromId($temp,'diameter');
       if ($instrument == "Naked eye")
       {
        $instrument = InstrumentsNakedEye;

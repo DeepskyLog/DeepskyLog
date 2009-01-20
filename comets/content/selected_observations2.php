@@ -564,7 +564,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
  
       $temp = $observations->getInstrumentId($value);
       $instrument = $instruments->getInstrumentName($temp);
-      $instrumentsize = $instruments->getDiameter($temp);
+      $instrumentsize = $instruments->getInstrumentPropertyFromId($temp,'diameter');
       if ($instrument == "Naked eye")
       {
        $instrument = InstrumentsNakedEye;

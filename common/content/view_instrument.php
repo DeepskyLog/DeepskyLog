@@ -13,7 +13,7 @@ if($name=="Naked eye")
 $fixedMagnification=$objInstrument->getFixedMagnification($_GET['instrument']);
 $instrumentType=$objInstrument->getInstrumentType($_GET['instrument']);
 $instrumentFD=$objInstrument->getFd($_GET['instrument']);
-$instrumentDiameter=$objInstrument->getDiameter($_GET['instrument']);
+$instrumentDiameter=$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'diameter');
 $instrumentFocalLength=$objInstrument->getInstrumentFocalLength($_GET['instrument']);
 $instrumentEchoType=$objInstrument->getInstrumentEchoType($instrumentType);
 
