@@ -1,177 +1,85 @@
-<?php
-
-// The location class collects all functions needed to enter, retrieve and
-// adapt location data from the database.
-//
-// Version 0.4 : 19/11/2006, WDM
-//
-
-include_once "database.php";
-//include "setup/vars.php";
-
+<?php // The location class collects all functions needed to enter, retrieve and adapt location data from the database.
+interface iLocations
+{ public  function addLocation($name, $longitude, $latitude, $region, $country, $timezone);                            // adds a new location to the database. The name, longitude, latitude, region and country should be given as parameters. 
+  public  function getCountries();                                                                                     // returns all possible countries
+  public  function getDatabaseCountries();                                                                             // returns all countries for which the database of the locations is available
+  public  function getLocationId($name, $observer);                                                                    // returns the id for this location
+  public  function getLocationPropertyFromId($id,$property,$defaultValue='');
+  public  function getLocationUsedFromId($id);                                                                         // returns the number of times the location is used in observations
+  public  function validateDeleteLocation();                                                                           // deletes teh location of the list with locations
+}
 class Locations
-{
- // addLocation adds a new location to the database. The name, longitude, 
- // latitude, region and country should be given as parameters. 
- function addLocation($name, $longitude, $latitude, $region, $country, $timezone)
- {
-  $db = new database;
-  $db->login();
-
-  if (!$_SESSION['lang'])
-  {
-   $_SESSION['lang'] = "English";
+{ public function addLocation($name, $longitude, $latitude, $region, $country, $timezone)                             // addLocation adds a new location to the database. The name, longitude, latitude, region and country should be given as parameters. 
+  { global $objDatabase;
+  	$objDatabase->execSQL("INSERT INTO locations (name, longitude, latitude, region, country, timezone) VALUES (\"$name\", \"$longitude\", \"$latitude\", \"$region\", \"$country\", \"$timezone\")");
+    return $objDatabase->selectSingleValue("SELECT id FROM locations ORDER BY id DESC LIMIT 1",'id');
   }
-
-  $sql = "INSERT INTO locations (name, longitude, latitude, region, country, timezone) VALUES (\"$name\", \"$longitude\", \"$latitude\", \"$region\", \"$country\", \"$timezone\")";
-
-  mysql_query($sql) or die(mysql_error());
-
-  $query = "SELECT id FROM locations ORDER BY id DESC LIMIT 1";
-  $run = mysql_query($query) or die(mysql_error());
-
-  $db->logout();
-  $get = mysql_fetch_object($run);
-  if($get) 
-  {
-   return $get->id; 
-  }
-  else
-  {
-   return '';
-  }
- }
-
- function deleteLocation($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "DELETE FROM locations WHERE id=\"$id\"";
-  mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // getId returns the id for this instrument
- function getLocationId($name, $observer)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM locations where name=\"$name\" and observer=\"$observer\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if ($get)
-  {
-    $id = $get->id;
-  }
-  else
-  {
-    $id = -1;
-  }
-
-  $db->logout();
-
-  return $id;
- }
-
- // getCountries returns all possible countries
- function getCountries()
- {
-   // Reading the file with the country codes.
-   $filename = "lib/setup/locations/countries.txt";
-   $fh = fopen($filename, "r") or die("Could not open countries file" + $filename);
-
-   while (!feof($fh))
-   {
-    $data = fgets($fh);
-    $vars = explode(" - ", $data);
-
-    $a = sscanf($vars[1], "(%c%c)");
-    $countries[$a[0].$a[1]] = ucfirst(strtolower($vars[0]));
-   }
-   fclose($fh);
-
-   return $countries;
- }
-
- // getDatabaseCountries returns all countries for which the database of 
- // the locations is available
- function getDatabaseCountries()
- {
-   // Reading the file with the country codes.
-   //$filename = "lib/setup/locations/_country_code_help.txt";
-   $filename = "lib/setup/locations/countries.txt";
-   $fh = fopen($filename, "r") or die("Could not open countries file");
-
-   while (!feof($fh))
-   {
-    $data = fgets($fh);
-    $vars = explode(" - ", $data);
-
-    $a = sscanf($vars[1], "(%c%c)");
-    $countriesConversion[$a[0].$a[1]] = ucfirst(strtolower($vars[0]));
-   }
-   fclose($fh);
-
-   $maindir = "lib/setup/locations/" ;
-   $mydir = opendir($maindir) ;
-   $exclude = array( "index.php" , ".", "..") ;
-   $countries = array();
-   while($fn = readdir($mydir))
-   {
-    if ($fn == $exclude[0] || $fn == $exclude[1] || $fn == $exclude[2]) continue;
-    $code = explode(".", $fn);
-    
-    if ($code[1] == "ast")
-    {
-     $countries[] = $countriesConversion[strtoupper($code[0])];
+  public  function getCountries() // getCountries returns all possible countries
+  { global $instDir;
+ 	  $filename=$instDir."lib/setup/locations/countries.txt";
+    $fh=fopen($filename,"r") or die("Could not open countries file"+$filename);
+    while(!feof($fh))
+    { $data=fgets($fh);
+      $vars=explode(" - ",$data);
+      $a=sscanf($vars[1],"(%c%c)");
+      $countries[$a[0].$a[1]]=ucfirst(strtolower($vars[0]));
     }
-   }
-   closedir($mydir);
-
-   return $countries;
- }
-
- // getLocationsId returns the id of the given name of the location
- function getLocationsId($name)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM locations WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $locationid = $get->id;
-
-  $db->logout();
-
-  return $locationid;
- }
-
- // getObserver returns the observerid for this location
- function getObserverFromLocation($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM locations WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $observer = $get->observer;
-
-  $db->logout();
-
-  return $observer;
- }
-
+    fclose($fh);
+    return $countries;
+  }
+  public function getDatabaseCountries()                                                                                 // returns all countries for which the database of the locations is available
+  { global $instDir;
+    $filename=$instDir."lib/setup/locations/countries.txt";
+    $fh = fopen($filename,"r") or die("Could not open countries file");
+    while(!feof($fh))
+    { $data=fgets($fh);
+      $vars=explode(" - ",$data);
+      $a=sscanf($vars[1],"(%c%c)");
+      $countriesConversion[$a[0].$a[1]]=ucfirst(strtolower($vars[0]));
+    }
+    fclose($fh);
+    $maindir=$instDir."lib/setup/locations/" ;
+    $mydir=opendir($maindir) ;
+    $exclude=array("index.php",".","..");
+    $countries=array();
+    while($fn=readdir($mydir))
+    { if(in_array($fn,$exclude)) 
+        continue;
+      $code=explode(".",$fn);
+      if($code[1]=="ast")
+        $countries[] = $countriesConversion[strtoupper($code[0])];
+    }
+    closedir($mydir);
+    return $countries;
+  }
+  public  function getLocationId($name, $observer)                                              // returns the id for this location
+  { global $objDatabase; 
+    return $objDatabase->selectSingleValue("SELECT id FROM locations where name=\"".htmlentities($name)."\" and observer=\"".$observer."\"",'id',-1);
+  }
+  public  function getLocationPropertyFromId($id,$property,$defaultValue='')
+  { global $objDatabase; return $objDatabase->selectSingleValue("SELECT ".$property." FROM locations WHERE id = \"".$id."\"",$property,$defaultValue);
+  }
+  public  function getLocationUsedFromId($id)                                                   // returns the number of times the location is used in observations
+  { global $objDatabase; 
+    return $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM observations WHERE locationid=\"".$id."\"",'ObsCnt',0)
+         + $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM cometobservations WHERE locationid=\"".$id."\"",'ObsCnt',0);
+	}
+  public  function validateDeleteLocation()
+  { global $objUtil, $objDatabase;
+    if($objUtil->checkGetKey('locationid')
+    && $objUtil->checkAdminOrUserID($this->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'observer'))
+    &&(!($this->getLocationUsedFromId($id))))
+    { $objDatabase->execSQL("DELETE FROM locations WHERE id=\"".$id."\"");
+      return LangValidateLocationMessage3;
+    }
+  }
+ 
+  
+  
+  
+  
+  
+ 
  // getLocations returns an array with all locations
  function getLocations()
  {

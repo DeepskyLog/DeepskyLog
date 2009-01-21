@@ -56,7 +56,7 @@ while(list ($key, $value) = each($sites))
     else
       $latitude = decToString($objLocation->getLatitude($value));
     $timezone = $objLocation->getTimezone($value);
-    $observer = $objLocation->getObserverFromLocation($value);
+    $observer = $objLocation->getLocationPropertyFromId($value,'observer');
     $limmag = $objLocation->getLocationLimitingMagnitude($value);
     if ($limmag < -900)
       $limmag = "&nbsp;";

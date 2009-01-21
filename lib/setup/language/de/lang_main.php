@@ -805,6 +805,7 @@ define("LangMessageTitle", "Nachricht");
 
 define("LangValidateLocationMessage1", "Sie haben ein Pflichtfeld nicht ausgef&uuml;llt!");
 define("LangValidateLocationMessage2", "Der Beobachtungsplatz wurde aufgenommen");
+define("LangValidateLocationMessage3", "The location is removed from your list");
 
 // control/validate_intrument.php
 
@@ -812,6 +813,7 @@ define("LangValidateInstrumentMessage1", "Sie haben ein Pflichtfeld nicht ausgef
 define("LangValidateInstrumentMessage2", "Bitte geben Sie entweder die Brennweite ODER das &Ouml;ffnungsverh&auml;ltnis an (F/D)!");
 define("LangValidateInstrumentMessage3", "Das Beobachtungsger&auml;t wurde aufgenommen!");
 define("LangValidateInstrumentMessage4", "Das Beobachtungsger&auml;t wurde ge&auml;ndert!");
+define("LangValidateInstrumentMessage5", "The instrument is removed from your equipment list!");
 define("LangValidateInstrumentMessage", "Nachricht");
 
 // content/setup_query_objects.php

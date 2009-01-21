@@ -6,11 +6,13 @@ interface iInstruments
   public  function getInstrumentEchoListType($type);                                               // returns the html code for a list containing the Instrument types, with the $type selected
   public  function getInstrumentId($name, $observer);                                              // returns the id for this instrument
   public  function getInstrumentPropertyFromId($id,$property,$defaultValue='');                    // returns the specified property for instrument id                    
+  public  function getInstrumentUsedFromId($id);                                                   // returns the number of times the instrument is used in observations
   public  function getObserverFromInstrument($id);                                                 // returns the observerid for this instrument
   public  function getSortedInstruments($sort,$observer="");                                       // returns an array with the ids of all instruments, sorted by the column specified in $sort
   public  function getSortedInstrumentsList($sort,$observer="");                                   // returns an array with the ids of all instruments as key, and the name as value, sorted by the column specified in $sort
   public  function setInstrumentProperty($id,$property,$propertyValue);                            // sets the property to the specified value for the given instrument
   public  function validateDeleteInstrument();                                                     // validates and deletes the instrument with id
+  public  function validateSaveInstrument();                                                       // validates and saves the instrument
 }
 class Instruments implements iInstruments
 { public  function addInstrument($name, $diameter, $fd, $type, $fixedMagnification, $observer)    // adds a new instrument to the database. The name, diameter, fd and type should be given as parameters. 
@@ -49,16 +51,16 @@ class Instruments implements iInstruments
   public  function getInstrumentId($name, $observer)                                              // returns the id for this instrument
   { global $objDatabase; return $objDatabase->selectSingleValue("SELECT id FROM instruments where name=\"".htmlentities($name)."\" and observer=\"".$observer."\"",'id',-1);
   }
+  public  function getInstrumentPropertyFromId($id,$property,$defaultValue='')
+  { global $objDatabase; return $objDatabase->selectSingleValue("SELECT ".$property." FROM instruments WHERE id = \"".$id."\"",$property,$defaultValue);
+  }
   public  function getInstrumentUsedFromId($id)                                                   // returns the number of times the instrument is used in observations
   { global $objDatabase; 
     return $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM observations WHERE instrumentid=\"".$id."\"",'ObsCnt',0)
          + $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM cometobservations WHERE instrumentid=\"".$id."\"",'ObsCnt',0);
 	}
-  public  function getObserverFromInstrument($id)                                                 // returns the observerid for this instrument
+	public  function getObserverFromInstrument($id)                                                 // returns the observerid for this instrument
   { global $objDatabase; return $objDatabase->selectSingleValue("SELECT observer FROM instruments WHERE id = \"".$id."\"",'observer');
-  }
-  public  function getInstrumentPropertyFromId($id,$property,$defaultValue='')
-  { global $objDatabase; return $objDatabase->selectSingleValue("SELECT ".$property." FROM instruments WHERE id = \"".$id."\"",$property,$defaultValue);
   }
   public  function getSortedInstruments($sort,$observer="")                                       // returns an array with the ids of all instruments, sorted by the column specified in $sort
   { global $objDatabase; 
@@ -77,14 +79,18 @@ class Instruments implements iInstruments
     if($objUtil->checkGetKey('instrumentid')                                                     
     && $objUtil->checkAdminOrUserID($this->getObserverFromInstrument($objUtil->checkGetKey('instrumentid')))
 		&& (!($this->getInstrumentUsedFromId($_GET['instrumentid']))))
-      return $objDatabase->execSQL("DELETE FROM instruments WHERE id=\"".$_GET['instrumentid']."\"");
+		{ $objDatabase->execSQL("DELETE FROM instruments WHERE id=\"".$_GET['instrumentid']."\"");
+		  return LangValidateInstrumentMessage5;
+		}
   }
   public  function validateSaveInstrument()
 	{ global $objUItil, $objDatabase;
 	  if(($objUtil->checkPostKey('adaption')==1)
     && $objUtil->checkPostKey('stdtelescope')
     && $objUtil->checkUserID($this->getObserverFromInstrument($objUtil->checkPostKey('stdtelescope'))))
-      $objObserver->setStandardTelescope($_SESSION['deepskylog_id'], $_POST['stdtelescope']);
+    { $objObserver->setStandardTelescope($_SESSION['deepskylog_id'], $_POST['stdtelescope']);
+      return LangValidateInstrumentMessage3;
+    }
     if($objUtil->checkPostKey('instrumentname')
     && $objUtil->checkPostKey('diameter')
     && $objUtil->checkPostKey('type'))

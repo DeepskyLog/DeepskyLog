@@ -115,7 +115,7 @@ if ($sites != null)
     { $latitude = decToString($objLocation->getLatitude($value));
     }
     $timezone = $objLocation->getTimezone($value);
-    $observer = $objLocation->getObserverFromLocation($value);
+    $observer = $objLocation->getLocationPropertyFromId($value,'observer');
     $limmag = $objLocation->getLocationLimitingMagnitude($value);
     $sb = $objLocation->getSkyBackground($value);
     if ($limmag < -900 && $sb > 0)

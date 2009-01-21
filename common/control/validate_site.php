@@ -3,7 +3,7 @@
 // checks if the add new location or change location form is correctly filled in
 
 if($objUtil->checkPostKey('adaption')==1
-&& $objUtil->checkUserID($objLocation->getObserverFromLocation($objUtil->checkPostKey('stdlocation'))))
+&& $objUtil->checkUserID($objLocation->getLocationPropertyFromId($objUtil->checkPostKey('stdlocation'),'observer')))
 { $objObserver->setStandardLocation($_SESSION['deepskylog_id'], $_POST['stdlocation']);
 } 
 if($objUtil->checkPostKey('sitename')
@@ -34,7 +34,7 @@ if($objUtil->checkPostKey('sitename')
 	  $_SESSION['title'] = LangValidateSiteMessage3;
   }
   if($objUtil->checkPostKey('change')
-  && $objUtil->checkUserID($objLocation->getObserverFromLocation($objUtil->checkPostKey('id'))))
+  && $objUtil->checkUserID($objLocation->getLocationPropertyFromId($objUtil->checkPostKey('id'),'observer')))
   { $objLocation->setLocationName($_POST['id'], $_POST['sitename']);
     $objLocation->setRegion($_POST['id'], $_POST['region']);
     $objLocation->setCountry($_POST['id'], $_POST['country']);

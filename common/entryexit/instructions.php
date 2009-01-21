@@ -1,76 +1,63 @@
-<?php
-
+<?php  //instruction.php treats all commands for changing data in the database or setting program parameters
 //============================================================================== COMMON INSTRUCTIONS
-while(list($key,$value)=each($modules))
+while(list($key,$value)=each($modules))                                                                            // change module
   if($objUtil->checkGetKey('indexAction')=='module'.$value)
   { $_SESSION['module']=$value;
     setcookie("module",$value,time()+(365*24*60*60),"/");
   }
-  
-if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="change_role"))
-{ if(($_SESSION['admin']=="yes")
-  && ($objUtil->checkGetKey('user')))
-  { $role=$objUtil->checkGetKey('role',2);
-    $objObserver->setRole($_GET['user'],$role);
-    $entryMessage.="Role is successfully updated!";
-  }
-  $_GET['indexAction']="detail_observer";  
-}
-if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="validate_observer"))
-  require_once $instDir."common/control/validate_observer.php";
-if($objUtil->checkGetKey('indexAction')=="validate_delete_eyepiece")
+if($objUtil->checkGetKey('indexAction')=="validate_delete_eyepiece")                                               // delete eyepiece
 { $entryMessage.=$objEyepiece->validateDeleteEyepiece();
   $_GET['indexAction']='add_eyepiece';
   unset($_GET['validate_delete_eyepiece']);
 }
-if($objUtil->checkGetKey('indexAction')=="validate_delete_filter")
+if($objUtil->checkGetKey('indexAction')=="validate_delete_filter")                                                 // delete filter
 { $entryMessage.=$objFilter->validateDeleteFilter();
   $_GET['indexAction']='add_filter';
   unset($_GET['validate_delete_filter']);
 }
-if($objUtil->checkGetKey('indexAction')=="validate_delete_instrument")
+if($objUtil->checkGetKey('indexAction')=="validate_delete_instrument")                                             // delete instrument 
 { $entryMessage.=$objInstrument->validateDeleteInstrument();
   $_GET['indexAction']='add_instrument';
   unset($_GET['validate_delete_instrument']);
 }
-if($objUtil->checkGetKey('indexAction')=="validate_delete_lens")
+if($objUtil->checkGetKey('indexAction')=="validate_delete_lens")                                                   // delete lens
 { $entryMessage.=$objLens->validateDeleteLens();
   $_GET['indexAction']="add_lens";
   unset($_GET['validate_delete_lens']);
 }
-if($objUtil->checkGetKey('indexAction')=="validate_delete_location")
-  require_once $instDir."common/control/validate_delete_location.php";
-
-if($objUtil->checkGetKey('indexAction')=="common_control_validate_account")
+if($objUtil->checkGetKey('indexAction')=="validate_delete_location")                                               // delete location
+{ $entryMessage.=$objLocation->validateDeleteLocation();
+  $_GET['indexAction']='add_site';
+  unset($_GET['validate_delete_location']);
+}  
+if($objUtil->checkGetKey('indexAction')=="common_control_validate_account")                                        // validate account
   require_once $instDir."common/control/validate_account.php";
-if($objUtil->checkGetKey('indexAction')=="validate_eyepiece")
+if($objUtil->checkGetKey('indexAction')=="validate_eyepiece")                                                      // validate eyepiece
 { $entryMessage.=$objEyepiece->validateSaveEyepiece();
   $_GET['indexAction']='add_eyepiece';
 	unset($_GET['validate_eyepiece']);
 }
-if($objUtil->checkGetKey('indexAction')=="validate_filter")
+if($objUtil->checkGetKey('indexAction')=="validate_filter")                                                        // validate filter
 { $entryMessage.=$objFilter->validateSaveFilter();
   $_GET['indexAction']='add_filter';
 	unset($_GET['validate_filter']);
 }
-if($objUtil->checkGetKey('indexAction')=="validate_instrument")
+if($objUtil->checkGetKey('indexAction')=="validate_instrument")                                                    // validate instrument
 {  $entryMessage.=$objInstrument->validateSaveInstrument();
    $_GET['indexAction']='add_instrument';
 	 unset($_GET['validate_instrument']);
 }	
-if($objUtil->checkGetKey('indexAction')=="validate_lens")
+if($objUtil->checkGetKey('indexAction')=="validate_lens")                                                          // validate lens
 { $entryMessage.=$objLens->validateSaveLens();
   $_GET['indexAction']='add_lens';
 	unset($_GET['validate_lens']);
 }
-if($objUtil->checkGetKey('indexAction')=="validate_site")
+if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="validate_observer"))       // validate observer
+  require_once $instDir."common/control/validate_observer.php";
+if($objUtil->checkGetKey('indexAction')=="validate_site")                                                          // validate location
   require_once $instDir."common/control/validate_site.php";
-if($objUtil->checkGetKey('indexAction')=="logout")
+if($objUtil->checkGetKey('indexAction')=="logout")                                                                 // logout
   require_once $instDir."common/control/logout.php";
-
-
-  
-  
 //============================================================================== DEEEPSKY INSTRUCTIONS
 $object=$objUtil->checkPostKey('object',$objUtil->checkGetKey('object'));
 if(($objUtil->checkGetKey('indexAction')=='quickpick') // From quickpick
@@ -289,6 +276,15 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="comets_validate
    
 
 // ============================================================================ ADMIN COMMANDS
+if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="change_role"))
+{ if(($_SESSION['admin']=="yes")
+  && ($objUtil->checkGetKey('user')))
+  { $role=$objUtil->checkGetKey('role',2);
+    $objObserver->setRole($_GET['user'],$role);
+    $entryMessage.="Role is successfully updated!";
+  }
+  $_GET['indexAction']="detail_observer";  
+}
 if(array_key_exists('admin', $_SESSION)&&$_SESSION['admin']=="yes")
 { if(array_key_exists("newaction",$_GET))
 	{ if($_GET['newaction']=="NewName")

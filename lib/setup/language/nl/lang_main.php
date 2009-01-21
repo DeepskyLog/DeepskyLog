@@ -803,6 +803,7 @@ define("LangMessageTitle", "Boodschap");
 
 define("LangValidateLocationMessage1", "Gelieve alle velden in te vullen!");
 define("LangValidateLocationMessage2", "De waarnemingsplaats is toegevoegd aan de database");
+define("LangValidateLocationMessage3", "De waarnemingsplaats werd verwijderd uit je lijst");
 
 // control/validate_intrument.php
 
@@ -810,6 +811,7 @@ define("LangValidateInstrumentMessage1", "Gelieve alle velden in te vullen!");
 define("LangValidateInstrumentMessage2", "Gelieve een van beiden in te vullen: brandpuntsafstand OF f/d!");
 define("LangValidateInstrumentMessage3", "Het instrument is toegevoegd aan je lijst met uitrustingen");
 define("LangValidateInstrumentMessage4", "De instrumentgegevens zijn gewijzigd in je lijst met uitrustingen");
+define("LangValidateInstrumentMessage5", "Het instrument werd verwijderd uit je lijst met uitrustingen");
 define("LangValidateInstrumentMessage", "Boodschap");
 
 // content/setup_query_objects.php

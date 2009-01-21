@@ -801,6 +801,7 @@ define("LangMessageTitle", "Message");
 
 define("LangValidateLocationMessage1", "Veuillez remplir tous les champs!");
 define("LangValidateLocationMessage2", "L'endroit a &eacute;t&eacute; rajout&eacute; &agrave; la base de donn&eacute;es");
+define("LangValidateLocationMessage3", "L'endroit a été enlevé de votre liste");
 
 //control/validate_filter // TO TRANSLATE
 define("LangValidateFilterMessage2", "The filter is added to your equipment list");
@@ -814,6 +815,7 @@ define("LangValidateInstrumentMessage1", "Veuillez remplir tous les champs!");
 define("LangValidateInstrumentMessage2", "Veuillez remplir: soit la distance focale, soit f/d!");
 define("LangValidateInstrumentMessage3", "L'instrument a &eacute;t&eacute; rajout&eacute; dans votre liste d'ï¿½quipement");
 define("LangValidateInstrumentMessage4", "L'instrument a &eacute;t&eacute; adapt&eacute; dans votre liste d'ï¿½quipement");
+define("LangValidateInstrumentMessage5", "L'instrument a été enlevé de votre liste d'équipements");
 define("LangValidateInstrumentMessage", "Message");
 
 // content/setup_query_objects.php

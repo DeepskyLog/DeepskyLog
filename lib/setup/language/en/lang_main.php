@@ -805,6 +805,7 @@ define("LangMessageTitle", "Message");
 
 define("LangValidateLocationMessage1", "Please, fill in all fields!");
 define("LangValidateLocationMessage2", "The location is added to your observation sites!");
+define("LangValidateLocationMessage3", "The location is removed from your list");
 
 // control/validate_intrument.php
 
@@ -812,6 +813,7 @@ define("LangValidateInstrumentMessage1", "Please, fill in all fields!");
 define("LangValidateInstrumentMessage2", "Please, provide one of both: focal length OR f/d!");
 define("LangValidateInstrumentMessage3", "The instrument is added to your equipment list!");
 define("LangValidateInstrumentMessage4", "The instrument details have been changed in your equipment list!");
+define("LangValidateInstrumentMessage5", "The instrument is removed from your equipment list!");
 define("LangValidateInstrumentMessage", "Message");
 
 // content/setup_query_objects.php
