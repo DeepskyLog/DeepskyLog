@@ -697,6 +697,7 @@ define("LangNewObservationTitle",  "New observation");
 define("LangNewObservationSubtitle1a", "Search the object in the database");
 define("LangNewObservationSubtitle1abis", " or ");
 define("LangNewObservationSubtitle1b", "import observations from a CSV file");
+define("LangNewObservationSubtitle1c", "import observations from a comast (XML) file");
 define("LangNewObservationSubtitle2", "Check object details");
 define("LangNewObservationSubtitle3", "Enter observation details ");
 define("LangNewObservationSubtitle3A", "(* required fields)");

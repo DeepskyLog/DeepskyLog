@@ -423,7 +423,7 @@ define("LangExecuteQueryObjectsMessage7", "Download icq-bestand");
 define("LangExecuteQueryObjectsMessage8", "Download Argo Navis-bestand");
 define("LangExecuteQueryObjectsMessage9", "Filter objecten");
 define("LangExecuteQueryObjectsMessage10", "Download comast-bestand");
-define("LangInvalidCSVfile", "U gaf geen geldige CSV bestand!");
+define("LangInvalidCSVfile", "U gaf geen geldig CSV bestand!");
 define("LangSeenDontCare", "Alle objecten, ongeacht of ik ze waarnam of niet");
 define("LangSeenByMe", "Enkel objecten die ik reeds heb waargenomen");
 define("LangSeenSomeoneElse", "Enkel objecten die anderen al waarnamen maar ik nog niet");
@@ -695,6 +695,7 @@ define("LangNewObservationTitle",  "Nieuwe waarneming");
 define("LangNewObservationSubtitle1a", "Zoek het object op in de databank");
 define("LangNewObservationSubtitle1abis", " of ");
 define("LangNewObservationSubtitle1b", "importeer waarnemingen vanuit CSV bestand");
+define("LangNewObservationSubtitle1c", "importeer waarnemingen vanuit Comast XML bestand");
 define("LangNewObservationSubtitle2", "Controleer de gegevens van het object");
 define("LangNewObservationSubtitle3", "Vul de details van de waarneming in ");
 define("LangNewObservationSubtitle3A", "(* verplichte velden)");
@@ -928,6 +929,19 @@ define("LangCSVError9", "De onderstaande datum(s) in de toekomst liggen");
 define("LangCSVError10", "Er zijn geen waarnemingen ingelezen.<br />Je dient eerst de bovenstaande zaken op te lossen om dan opnieuw de volledige <a href=\"".$baseURL."index.php?indexAction=add_csv\">import</a> uit te voeren.");
 define("LangCSVButton", "Importeer!");
 define("LangValidateCSVMessage", "Importeren CSV bestand succesvol!");
+
+// content/new_observationxml.php
+define("LangXMLTitle", "Importeer waarnemingen vanuit XML bestand");
+define("LangXMLMessage1", "Dit formulier geeft u de mogelijkheid om meerdere waarnemingen tegelijkertijd toe te voegen door middel van een openAstronomyLog XML bestand. Op deze manier kan u gemakkelijk en snel waarnemingen waarnemingen uitwisselen tussen verschillende applicaties die het openAstronomyLog XML formaat ondersteunen (zoals <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&Telescope</a>), .... Ter informatie: alleen waarnemingen met uw naam (voornaam + naam voluit) zullen toegevoegd worden. Waarnemingen die al aanwezig zijn in DeepskyLog worden niet nog een tweede keer ingelezen.");
+define("LangXMLError1", "Het CSV bestand kon niet ingelezen worden omdat: ");
+define("LangXMLError2", "De onderstaande objecten niet gekend zijn in DeepskyLog");
+define("LangXMLError3", "De onderstaande waarnemingsplaatsen niet gekend zijn in DeepskyLog");
+define("LangXMLError4", "De onderstaande instrumenten niet gekend zijn in DeepskyLog");
+define("LangXMLError5", "De onderstaande filters niet gekend zijn in DeepskyLog");
+define("LangXMLError6", "De onderstaande oculairs niet gekend zijn in DeepskyLog");
+define("LangXMLError7", "De onderstaande lenzen niet gekend zijn in DeepskyLog");
+define("LangXMLButton", "Importeer!");
+define("LangValidateXMLMessage", "Importeren CSV bestand succesvol!");
 
 //List import
 define("LangCSVListTitle", "Importeer objecten vanuit CSV bestand naar uw lijst");

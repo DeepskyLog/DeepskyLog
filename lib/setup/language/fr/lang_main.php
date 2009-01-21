@@ -699,6 +699,7 @@ define("LangNewObservationTitle",  "Nouvelle observation");
 define("LangNewObservationSubtitle1a", "Recherchez l'objet dans la base de donn&eacute;es");
 define("LangNewObservationSubtitle1abis", " ou ");
 define("LangNewObservationSubtitle1b", "importez les observations &agrave; partir d'un fichier csv");
+define("LangNewObservationSubtitle1c", "importez les observations &agrave; partir d'un fichier comast (xml)");
 define("LangNewObservationSubtitle2", "Contr&ocirc;lez les donn&eacute;es de l'objet");
 define("LangNewObservationSubtitle3", "Remplissez les d&eacute;tails de l'observation ");
 define("LangNewObservationSubtitle3A", "(*= champs obligatoires)");

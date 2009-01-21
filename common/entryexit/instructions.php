@@ -125,6 +125,8 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_csv_observa
   include_once "deepsky/control/add_csv_observations.php";
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_csv_listdata")
   include_once "deepsky/control/add_csv_listdata.php";
+if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_xml_observations")
+  include_once "deepsky/control/add_xml_observations.php";
   
   
 // ============================================================================ LIST COMMANDS

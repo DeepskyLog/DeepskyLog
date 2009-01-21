@@ -697,6 +697,7 @@ define("LangNewObservationTitle",  "Neue Beobachtung anlegen");
 define("LangNewObservationSubtitle1a", "Objekt in Datenbank suchen");
 define("LangNewObservationSubtitle1abis", " oder ");
 define("LangNewObservationSubtitle1b", "Beobachtungen von CSV Datei importieren");
+define("LangNewObservationSubtitle1c", "Beobachtungen von Comast (XML) Datei importieren");
 define("LangNewObservationSubtitle2", "Pr&uuml;fen der Objekt details");
 define("LangNewObservationSubtitle3", "Beobachtungsdetail Eingabe ");
 define("LangNewObservationSubtitle3A", "(* Pflichtfelder)");
