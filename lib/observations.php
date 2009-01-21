@@ -521,10 +521,12 @@ class Observations {
 	}
 
 	function getNumberOfObservationsLastYear() // getNumberOfObservationsThisYear() returns the number of observations this year
-	{ return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.date >= \"" . date('Ymd', strtotime('-1 year')) . "\"", 'Cnt', 0);
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.date >= \"" . date('Ymd', strtotime('-1 year')) . "\"", 'Cnt', 0);
 	}
 	function getNumberOfObjects($id) // getNumberOfObjects($id) return the number of different objects seen by the observer
-	{ return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE observerid=\"".$id."\" AND visibility != 7 ", 'Cnt', 0);
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE observerid=\"".$id."\" AND visibility != 7 ", 'Cnt', 0);
 	}
 	function getPopularObservations() // getPopularObservations() returns the number of observations of the objects
 	{ $run = $GLOBALS['objDatabase']->selectRecordset("SELECT observations.objectname, COUNT(observations.id) As ObservationCount FROM observations GROUP BY observations.objectname ORDER BY ObservationCount DESC");
@@ -533,87 +535,89 @@ class Observations {
 			$numberOfObservations[$get->objectname]=array($i++,$get->objectname);
 		return $numberOfObservations;
 	}
-	function getDsObservationInstrumentId($id) {
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT instrumentid FROM observations WHERE id = \"$id\"", 'instrumentid', '');
+	function getDsObservationInstrumentId($id) 
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT instrumentid FROM observations WHERE id = \"$id\"", 'instrumentid', '');
 	}
 	function getDsObservationEyepieceId($id) // getDsObservationEyepieceId returns the id of the eyepiece of the observation
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT eyepieceid FROM observations WHERE id = \"$id\"", 'eyepieceid', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT eyepieceid FROM observations WHERE id = \"$id\"", 'eyepieceid', '');
 	}
 	function getDsObservationFilterId($id) // getFilterId returns the id of the filter of the observation
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT filterid FROM observations WHERE id = \"$id\"", 'filterid', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT filterid FROM observations WHERE id = \"$id\"", 'filterid', '');
 	}
-	function getDsObservationLensId($id) // getLensId returns the id of the lens of the observation
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT lensid FROM observations WHERE id = \"$id\"", 'lensid', '');
+	function getDsObservationLensId($id) // returns the id of the lens of the observation
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT lensid FROM observations WHERE id = \"$id\"", 'lensid', '');
 	}
 	function getDsSmallDiameter($id) // getDsSmallDiameter returns the small diameter estimation of the observation
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT smallDiameter FROM observations WHERE id = \"$id\"", 'smallDiameter', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT smallDiameter FROM observations WHERE id = \"$id\"", 'smallDiameter', '');
 	}
 	function getDsLargeDiameter($id) // getDsLargeDiameter returns the large diameter estimation of the observation
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT largeDiameter FROM observations WHERE id = \"$id\"", 'largeDiameter', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT largeDiameter FROM observations WHERE id = \"$id\"", 'largeDiameter', '');
 	}
 	function getDsStellar($id) // getDsStellar returns true if the object was seen stellar
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT stellar FROM observations WHERE id = \"$id\"", 'stellar', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT stellar FROM observations WHERE id = \"$id\"", 'stellar', '');
 	}
 	function getDsExtended($id) // getDsExtended returns true if the object was seen stellar
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT extended FROM observations WHERE id = \"$id\"", 'extended', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT extended FROM observations WHERE id = \"$id\"", 'extended', '');
 	}
 	function getDsResolved($id) // getDsResolved returns true if the object was seen resolved
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT resolved FROM observations WHERE id = \"$id\"", 'resolved', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT resolved FROM observations WHERE id = \"$id\"", 'resolved', '');
 	}
 	function getDsMottled($id) // getDsMottled returns true if the object was seen mottled
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT mottled FROM observations WHERE id = \"$id\"", 'mottled', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT mottled FROM observations WHERE id = \"$id\"", 'mottled', '');
 	}
 	function getDsCharacterType($id) // getDsCharacterType returns the character type of the observation
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT characterType FROM observations WHERE id = \"$id\"", 'characterType', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT characterType FROM observations WHERE id = \"$id\"", 'characterType', '');
 	}
 	function getDsUnusualShape($id) // getDsUnusualShape returns true if the object was seen with an unusual shape
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT unusualShape FROM observations WHERE id = \"$id\"", 'unusualShape', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT unusualShape FROM observations WHERE id = \"$id\"", 'unusualShape', '');
 	}
 	function getDsPartlyUnresolved($id) // getDsPartlyUnresolved returns true if the object was seen partly unresolved
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT partlyUnresolved FROM observations WHERE id = \"$id\"", 'partlyUnresolved', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT partlyUnresolved FROM observations WHERE id = \"$id\"", 'partlyUnresolved', '');
 	}
 	function getDsColorContrasts($id) // getDsColorContrasts returns true if the object was seen with color contrasts
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT colorContrasts FROM observations WHERE id = \"$id\"", 'colorContrasts', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT colorContrasts FROM observations WHERE id = \"$id\"", 'colorContrasts', '');
 	}
 	function getDsObservationLanguage($id) // getLanguage returns the idlanguage of the observation
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT language FROM observations WHERE id = \"$id\"", 'language', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT language FROM observations WHERE id = \"$id\"", 'language', '');
 	}
 	function getDsObservationLocationId($id) // getLocationId returns the location of the observation
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT locationid FROM observations WHERE id = \"$id\"", 'locationid', "ERROR ID: " . $id);
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT locationid FROM observations WHERE id = \"$id\"", 'locationid', "ERROR ID: " . $id);
 	}
 	function getDateDsObservation($id) // getDate returns the date of the given observation in UT
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT date FROM observations WHERE id = \"$id\"", 'date', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT date FROM observations WHERE id = \"$id\"", 'date', '');
 	}
 	function getLimitingMagnitude($id) // getLimitingMagnitude returns the limiting magnitude of the observation
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT limmag FROM observations WHERE id = \"$id\"", 'limmag', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT limmag FROM observations WHERE id = \"$id\"", 'limmag', '');
 	}
 	function getSQM($id) // getSQM returns the SQM of the observation
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT SQM FROM observations WHERE id = \"$id\"", 'SQM', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT SQM FROM observations WHERE id = \"$id\"", 'SQM', '');
 	}
 	function getSeeing($id) // getSeeing returns the seeing of the observation
-	{return $GLOBALS['objDatabase']->selectSingleValue("SELECT seeing FROM observations WHERE id = \"$id\"", 'seeing', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT seeing FROM observations WHERE id = \"$id\"", 'seeing', '');
 	}
 	function getTime($id) // getTime returns the time of the given observation in UT
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT time FROM observations WHERE id = \"$id\"", 'time', '');
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT time FROM observations WHERE id = \"$id\"", 'time', '');
 	}
 	function getDsObservationLocalTime($id) // getLocalTime returns the time of the given observation in local time
 	{
@@ -1256,7 +1260,7 @@ class Observations {
 		if ($lens == "" || $lens == 0) {
 			echo ("-");
 		} else {
-			echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_lens&amp;lens=" . urlencode($lens) . "\">" . $GLOBALS['objLens']->getLensName($lens) . "</a>");
+			echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_lens&amp;lens=" . urlencode($lens) . "\">" . $GLOBALS['objLens']->getLensPropertyFromId($lens,'name') . "</a>");
 		}
 		echo ("</td>");
 		echo ("</tr>");

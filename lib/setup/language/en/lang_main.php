@@ -784,6 +784,7 @@ define("LangValidateEyepieceMessage5", "The eyepiece is changed in your equipmen
 //control/validate_filter
 define("LangValidateFilterMessage2", "The filter is added to your equipment list");
 define("LangValidateFilterMessage5", "The filter is changed in your equipment list");
+define("LangValidateFilterMessage6", "The filter is removed from your equipment list");
 
 
 // control/validate_observer.php

@@ -19,21 +19,25 @@ if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAct
 if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="validate_observer"))
   require_once $instDir."common/control/validate_observer.php";
 if($objUtil->checkGetKey('indexAction')=="validate_delete_eyepiece")
-{ $objEyepiece->validateDeleteEyepiece();
+{ $entryMessage.=$objEyepiece->validateDeleteEyepiece();
   $_GET['indexAction']='add_eyepiece';
   unset($_GET['validate_delete_eyepiece']);
 }
 if($objUtil->checkGetKey('indexAction')=="validate_delete_filter")
-{ $objFilter->validateDeleteFilter();
+{ $entryMessage.=$objFilter->validateDeleteFilter();
   $_GET['indexAction']='add_filter';
   unset($_GET['validate_delete_filter']);
 }
 if($objUtil->checkGetKey('indexAction')=="validate_delete_instrument")
-{ $objInstrument->validateDeleteInstrument();
+{ $entryMessage.=$objInstrument->validateDeleteInstrument();
   $_GET['indexAction']='add_instrument';
   unset($_GET['validate_delete_instrument']);
 }
 if($objUtil->checkGetKey('indexAction')=="validate_delete_lens")
+{ $entryMessage.=$objLens->validateDeleteLens();
+  $_GET['indexAction']="add_lens";
+  unset($_GET['validate_delete_lens']);
+}
   require_once $instDir."common/control/validate_delete_lens.php";
 if($objUtil->checkGetKey('indexAction')=="validate_delete_location")
   require_once $instDir."common/control/validate_delete_location.php";
@@ -51,9 +55,15 @@ if($objUtil->checkGetKey('indexAction')=="validate_filter")
 	unset($_GET['validate_filter']);
 }
 if($objUtil->checkGetKey('indexAction')=="validate_instrument")
-  require_once $instDir."common/control/validate_instrument.php";
+{  $entryMessage.=$objInstrument->validateSaveInstrument();
+   $_GET['indexAction']='add_instrument'
+	 unset($_GET['validate_instrument']);
+}	
 if($objUtil->checkGetKey('indexAction')=="validate_lens")
-  require_once $instDir."common/control/validate_lens.php";
+{ $entryMessage.=$objLens->validateSaveLens();
+  $_GET['indexAction']='add_lens';
+	unset($_GET['validate_lens']);
+}
 if($objUtil->checkGetKey('indexAction')=="validate_site")
   require_once $instDir."common/control/validate_site.php";
 if($objUtil->checkGetKey('indexAction')=="logout")

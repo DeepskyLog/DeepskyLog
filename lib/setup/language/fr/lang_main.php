@@ -804,6 +804,7 @@ define("LangValidateLocationMessage2", "L'endroit a &eacute;t&eacute; rajout&eac
 //control/validate_filter // TO TRANSLATE
 define("LangValidateFilterMessage2", "The filter is added to your equipment list");
 define("LangValidateFilterMessage5", "The filter is changed in your equipment list");
+define("LangValidateFilterMessage6", "The filter is removed from your equipment list");
 
 
 // control/validate_intrument.php

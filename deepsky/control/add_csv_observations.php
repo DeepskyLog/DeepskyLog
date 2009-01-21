@@ -72,7 +72,7 @@ else
       $filtersMissing[$j++]=$filters[$i];
   // Check for the existence of the eyepieces
   for($i=0,$j=0;$i<count($lenses);$i++)
-    if($lenses[$i]&&($objLens->getLensId($lenses[$i],$_SESSION['deepskylog_id'])==-1))
+    if($lenses[$i]&&($objLens->getLensObserverPropertyFromName($lenses[$i],$_SESSION['deepskylog_id'],'id')==-1))
       $lensesMissing[$j++] = $lenses[$i];
   // Check for the correctness of dates
   for($i=0,$j=0,$k=0;$i<count($dates);$i++)
@@ -187,7 +187,7 @@ else
 				if ($parts_array[$i][7] != "")
 					$objObservation->setFilterId($obsid, $objFilter->getFilterObserverPropertyFromName($parts_array[$i][7], $_SESSION['deepskylog_id'],'id'));
 				if ($parts_array[$i][8] != "")
-					$objObservation->setLensId($obsid, $objLens->getLensId($parts_array[$i][8], $_SESSION['deepskylog_id']));
+					$objObservation->setLensId($obsid, $objLens->getLensObserverPropertyFromName($parts_array[$i][8], $_SESSION['deepskylog_id'],'id'));
       }
       unset($_SESSION['QobsParams']);
     }

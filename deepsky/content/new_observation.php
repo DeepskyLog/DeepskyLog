@@ -155,9 +155,9 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "</td>";
 	echo "<td> <select name=\"lens\" style=\"width:300px\" class=\"inputfield\">"; //========================================================================= LENS
 	echo "<option value=\"\"></option>";
-	$lns = $GLOBALS['objLens']->getSortedLensesList("name", $_SESSION['deepskylog_id'], false);
+	$lns = $GLOBALS['objLens']->getSortedLenses("name", $_SESSION['deepskylog_id']);
 	while (list ($key, $value) = each($lns))
-		echo "<option value=\"" . $value . "\"" . (($GLOBALS['objUtil']->checkPostKey('lens') == $value) ? " selected=\"selected\" " : '') . ">" . $GLOBALS['objLens']->getLensName($value) . "</option>";
+		echo "<option value=\"" . $value . "\"" . (($GLOBALS['objUtil']->checkPostKey('lens') == $value) ? " selected=\"selected\" " : '') . ">" . $GLOBALS['objLens']->getLensPropertyFromId($value,'name') . "</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "<td class=\"explanation\">";

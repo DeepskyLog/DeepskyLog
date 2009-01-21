@@ -1,259 +1,71 @@
-<?php
-// The lenses class collects all functions needed to enter, retrieve and
-// adapt lenses data from the database.
-
-class Lenses
-{
- // addLens adds a new lens to the database. The name and the factor
- // should be given as parameters. 
- function addLens($name, $factor)
- {
-  $db = new database;
-  $db->login();
-
-  if (!$_SESSION['lang'])
-  {
-   $_SESSION['lang'] = "English";
+<?php  // The lenses class collects all functions needed to enter, retrieve and adapt lenses data from the database.
+interface iLenses
+{ public  function addLens($name, $factor);                                      // adds a new lens to the database. The name and the factor should be given as parameters. 
+  public  function getAllFiltersIds($id);                                        // returns a list with all id's which have the same name as the name of the given id
+  public  function getLensObserverPropertyFromName($name, $observer, $property); // returns the property for the eyepiece of the observer
+  public  function getLensPropertyFromId($id,$property,$defaultValue='');        // returns the property of the given lens
+	public  function getSortedLenses($sort, $observer = "");                       // returns an array with the ids of all lenses, sorted by the column specified in $sort
+  public  function setLensProperty($id,$property,$propertyValue);                // sets the property to the specified value for the given lens
+  public  function validateDeleteLens($id);                                      // validates and removes the lens with id
+}
+class Lenses implements iLenses
+{ public  function addLens($name, $factor)                                      // adds a new lens to the database. The name and the factor should be given as parameters. 
+  { global $objDatabase;
+	  $objDatabase->execSQL("INSERT INTO lenses (name, factor) VALUES (\"".$name."\", \"".$factor."\")");
+    return $objDatabase->selectSingleValue("SELECT id FROM lenses ORDER BY id DESC LIMIT 1",'id');
   }
-
-  $sql = "INSERT INTO lenses (name, factor) VALUES (\"$name\", \"$factor\")";
-
-  mysql_query($sql) or die(mysql_error());
-
-  $query = "SELECT id FROM lenses ORDER BY id DESC LIMIT 1";
-  $run = mysql_query($query) or die(mysql_error());
-
-  $db->logout();
-  $get = mysql_fetch_object($run);
-  if($get) 
-  {
-   return $get->id; 
+  public  function getAllFiltersIds($id)                                        // returns a list with all id's which have the same name as the name of the given id
+  { global $objDatabase;
+    return $objDatabase->selectSinleArray("SELECT id FROM lenses WHERE name = \"".$objDatabase->selectSingleValue("SELECT name FROM lenses WHERE id = \"".$id."\"")."\"");
   }
-  else
-  {
-   return '';
+  public  function getLensObserverPropertyFromName($name, $observer, $property)   // returns the property for the eyepiece of the observer
+  { global $objDatabase; 
+    return $objDatabase->selectSingleValue("SELECT ".$property." FROM lens where name=\"".$name."\" and observer=\"".$observer."\"",$property);
   }
- }
- 
- // getId returns the id for this lens
- function getLensId($name, $observer)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM lenses where name=\"$name\" and observer=\"$observer\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if ($get)
-  {
-    $id = $get->id;
+  public  function getLensPropertyFromId($id,$property,$defaultValue='')          // returns the property of the given lens
+  { global $objDatabase; 
+    return $objDatabase->selectSingleValue("SELECT ".$property." FROM lenses WHERE id = \"".$id."\"",$property,$defaultValue);
   }
-  else
-  {
-    $id = -1;
-  }
-
-  $db->logout();
-
-  return $id;
- }
-
- // deleteLens removes the lens with id = $id 
- function deleteLens($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "DELETE FROM lenses WHERE id=\"$id\"";
-  mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
- }
-
- // getAllIds returns a list with all id's which have the same name as the name of the given id
- function getAllLensesIds($id)
- {
-  $sql = "SELECT name FROM lenses WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $sql = "SELECT id FROM lenses WHERE name = \"$get->name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $ids[] = $get->id;
-  }
-
-  return $ids;
- }
-
- // getLensesId returns the id of the given name of the lens
- function getLensesId($name)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM lenses where name=\"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-
-	if ($get)
-	{
-		$lensid = $get->id;
-	}
-	else
-	{
-		$lensid = 0;
-	}
-
-  $db->logout();
-
-  return $lensid;
- }
-
- // getLenses returns an array with all lenses
- function getLenses()
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM lenses";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $lenses[] = $get->id;
-  }
-
-  $db->logout();
-
-  return $lenses;
- }
-
- // getLensesName returns an array with all lenses and names
- function getLensesName()
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM lenses";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $lenses[$get->id] = $get->name;
-  }
-
-  $db->logout();
-
-  return $lenses;
- }
-
- // getFactor returns the factor of the given lens
- function getFactor($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM lenses WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if ($get)
-	{
-	  $factor = $get->factor;
-  }
-	else
-  {
-		$factor = -1.0;
-	}
-		
-  $db->logout();
-
-  return $factor;
- }
-
- // getLensName returns the name of the given lens
- function getLensName($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM lenses WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-  if ($get)
-	{
-    $name = $get->name;
-	}
-	else
-	{
-		$name = "";
-	}
-
-  $db->logout();
-
-  return $name;
- }
-
- // getSortedLenses returns an array with the ids of all lenses, 
- // sorted by the column specified in $sort
- function getSortedLenses($sort, $observer = "", $unique = false)
- {
-  $fils = array();
-  $db = new database;
-  $db->login();
-  $lns=array();
-  if ($unique == false)
-  {
-   if ($observer == "")
-   {
-    $sql = "SELECT * FROM lenses ORDER BY $sort";
-   } 
-   else
-   {
-    $sql = "SELECT * FROM lenses where observer = \"$observer\" ORDER BY $sort";
-   }
-  }
-  else
-  {
-   if ($observer == "")
-   {
-    $sql = "SELECT id, name FROM lenses GROUP BY name";
-   } 
-   else
-   {
-    $sql = "SELECT id, name FROM lenses where observer = \"$observer\" GROUP BY name ORDER BY $sort";
-   }
+	public  function getSortedLenses($sort, $observer = "")                               // returns an array with the ids of all lenses, sorted by the column specified in $sort
+  { global $objDatabase; 
+    return $objDatabase->selectSingleArray("SELECT id, name FROM lenses ".($observer?"WHERE observer LIKE \"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
   } 
-
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $lns[] = $get->id;
+  public function validateDeleteLens($id)                                         // validates and removes the lens with id
+  { global $objUtil, $objDatabase;
+    if($objUtil->checkGetKey('lensid')
+    && $objUtil->checkAdminOrUserID($this->getLensPropertyFromId($objUtil->checkGetKey('lensid'),'observer'))
+    && (!($this->getFilterUsedFromId($_GET['filterid']))))
+    { $objDatabase->execSQL("DELETE FROM lenses WHERE id=\"".$_GET['lensid']."\"");
+      return LangValidateLensMessage5;
+	  }
   }
-  $db->logout();
+  public  function setLensProperty($id,$property,$propertyValue)                       // sets the property to the specified value for the given lens
+  { global $objDatabase;
+    return $objDatabase->execSQL("UPDATE lenses SET ".$property." = \"".$propertyValue."\" WHERE id = \"".$id."\"");
+  }
 
-  return $lns;
+  public  function validateSaveLens()                                                  // validates and saves a lens and returns a message 
+  { global $objUtil;
+    if($objUtil->checkPostKey('add')
+    && $objUtil->checkPostKey('lensname')
+    && $objUtil->checkPostKey('factor')
+    && $objUtil->checkSessionKey('deepskylog_id'))
+    { $id = $this->addLens($_POST['lensname'], $_POST['factor']);     
+    	$this->setLensProperty($id, 'observer', $_SESSION['deepskylog_id']);
+      return LangValidateLensMessage2.' '.LangValidateLensMessage3;
+    }
+    if($objUtil->checkPostKey('change')
+    && $objUtil->checkAdminOrUserID($this->getObserverFromLens($objUtil->checkPostKey('id')))
+    && $objUtil->checkPostKey('lensname')
+    && $objUtil->checkPostKey('factor'))
+    { $this->setLensProperty($_POST['id'], 'name', $_POST['lensname']);
+      $this->setLensProperty($_POST['id'], 'factor', $_POST['factor']);
+      $this->setLensProperty($_POST['id'], 'observer', $_SESSION['deepskylog_id']);
+      return LangValidateLensMessage5.' '.LangValidateLensMessage4;
+    }
  }
-
- // getSortedLensesList returns an array with the ids of all lenses,
- // sorted by the column specified in $sort.
- function getSortedLensesList($sort, $observer = "")
- {
-   $lenses = $this->getSortedLenses($sort, $observer);
-
-	 return $lenses;
- }
+	
+	
 
 
  // setType sets a new factor for the given lens

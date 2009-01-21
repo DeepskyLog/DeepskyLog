@@ -1,10 +1,8 @@
-<?php
-// overview_lenses.php
-// generates an overview of all lenses (admin only)
+<?php // overview_lenses.php - generates an overview of all lenses (admin only)
 
 $sort=$objUtil->checkGetKey('sort','name');
 if(!$min) $min=$objUtil->checkGetKey('min',0);
-$lns=$objLens->getSortedLenses($sort);
+$lns=$objLens->getSortedLenses($sort,'%');
 if((isset($_GET['sort'])) && $_GET['previous'] == $_GET['sort']) // reverse sort when pushed twice
 { if ($_GET['sort'] == "name")
     $lns = array_reverse($lns, true);
@@ -36,9 +34,9 @@ echo "</tr>";
 $count = 0;
 while(list($key,$value)=each($lns))
 { if(($count>=$min)&&($count<$max))
-  { $name=stripslashes($objLens->getLensName($value));
-    $factor=$objLens->getFactor($value);
-    $observer=$objLens->getObserverFromLens($value);
+  { $name=stripslashes($objLens->getLensPropertyFromId($value,'name'));
+    $factor=$objLens->getLensPropertyFromId($value,'factor');
+    $observer=$objLens->getLensPropertyFromId($value,'observer');
     if($value!="1")
     { echo "<tr class=\"type".(2-($count%2))."\">";
       echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_lens&amp;lens=".urlencode($value)."\">".$name."</a></td>";

@@ -112,10 +112,10 @@ echo "</td>";
 echo "<td>";
 echo "<select name=\"lens\" class=\"inputfield\" style=\"width:300px\">";
 echo "<option value=\"\"></option>";
-$lns = $objLens->getSortedLensesList("name", $_SESSION['deepskylog_id'], false);
+$lns = $objLens->getSortedLenses("name", $_SESSION['deepskylog_id']);
 $theLens = $objObservation->getDsObservationLensId($_GET['observation']);
 while (list ($key, $value) = each($lns))
-	echo "<option value=\"" . $value . "\"" . (($theLens == $value) ? " selected=\"selected\" " : '') . ">" . $GLOBALS['objLens']->getLensName($value) . "</option>";
+	echo "<option value=\"" . $value . "\"" . (($theLens == $value) ? " selected=\"selected\" " : '') . ">" . $GLOBALS['objLens']->getLensPropertyFromId($value,'name') . "</option>";
 echo "</select>";
 echo "</td>";
 echo "</tr>";

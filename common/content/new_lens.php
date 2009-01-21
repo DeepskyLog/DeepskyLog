@@ -1,7 +1,4 @@
-<?php
-// new_filter.php
-// allows the user to add a new filter
-
+<?php // new_filter.php - allows the user to add a new filter
 $sort=$objUtil->checkGetKey('sort','name');
 if(!$min) $min=$objUtil->checkGetKey('min',0);
 // the code below looks very strange but it works
@@ -36,8 +33,8 @@ $count = 0;
 if ($lns != null)
 { while(list ($key, $value) = each($lns))
   { if($count >= $min && $count < $max) // selection
-    { $name = stripslashes($objLens->getLensName($value));
-      $factor = $objLens->getFactor($value);
+    { $name = stripslashes($objLens->getLensPropertyFromId($value,'name'));
+      $factor = $objLens->getLensPropertyFromId($value,'factor');
       echo "<tr class=\"type".(2-($count%2))."\">";
       echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_lens&amp;lens=".urlencode($value)."\">".$name."</a></td>";
       echo "<td>";
@@ -70,9 +67,9 @@ echo "<tr>";
 echo "<td width=\"25%\">";
 echo "<form name=\"overviewform\"> ";		
 echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
-$lns=$objLens->getSortedLenses('name', "", true);
+$lns=$objLens->getSortedLenses('name');
 while(list($key, $value) = each($lns))
-  echo "<option value=\"".$baseURL."index.php?indexAction=add_lens&amp;lensid=".urlencode($value)."\">".$objLens->getLensName($value)."</option>";
+  echo "<option value=\"".$baseURL."index.php?indexAction=add_lens&amp;lensid=".urlencode($value)."\">".$objLens->getLensPropertyFromId($value,'name')."</option>";
 echo "</select>";
 echo "</form>";
 echo "</td>";
@@ -97,7 +94,7 @@ echo "<td><input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64
 if(array_key_exists('lensname',$_GET) && $_GET['lensname'])
   echo stripslashes($_GET['lensname']);
 if(array_key_exists('lensid',$_GET) && $_GET['lensid'])
-  echo stripslashes($objLens->getLensName($_GET['lensid']));
+  echo stripslashes($objLens->getLensPropertyFromId($_GET['lensid'],'name'));
 echo "\" />";
 echo "</td>";
 echo "<td class=\"explanation\"".LangAddLensField1Expl."</td>";
@@ -109,7 +106,7 @@ echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"5\" na
 if(array_key_exists('factor',$_GET) && $_GET['factor'])
   echo stripslashes($_GET['factor']);
 if(array_key_exists('lensid',$_GET) && $_GET['lensid'])
-  echo stripslashes($objLens->getFactor($_GET['lensid']));
+  echo stripslashes($objLens->getLensPropertyFromId($_GET['lensid'],'factor'));
 echo "\" />";
 echo "</td>";
 echo "<td class=\"explanation\">".LangAddLensField2Expl."</td>";

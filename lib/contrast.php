@@ -1,13 +1,10 @@
-<?php
-// The contrast class calculates the contrast and magnification of a certain object, with a certain instrument, under a certain sky
-
+<?php  // The contrast class calculates the contrast and magnification of a certain object, with a certain instrument, under a certain sky
 interface iContrast
 { // private function calcSubroutine($x, $SBObj, $minObjArcmin, $maxObjArcmin, $maxLog, $logObjContrast)// This function should not be used. Only needed for the calculations
      public	 function calculateContrast($objMag, $SBObj, $minObjArcmin, $maxObjArcmin);
      public  function calculateLimitingMagnitudeFromSkyBackground($initBB);
      public  function calculateSkyBackgroundFromLimitingMagnitude($limMag);
 }
-
 class Contrast implements iContrast
 { private function calcSubroutine($x, $SBObj, $minObjArcmin, $maxObjArcmin, $maxLog, $logObjContrast)// This function should not be used. Only needed for the calculations
   { $SBReduc = 5 * log10( $x / (2.833 * $_SESSION['aperIn']));

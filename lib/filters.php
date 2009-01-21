@@ -117,7 +117,9 @@ class Filters implements iFilters
    if($objUtil->checkGetKey('filterid') 
    && $objUtil->checkAdminOrUserID($this->getFilterPropertyFromId($_GET['filterid'],'observer'))
    && (!($this->getFilterUsedFromId($_GET['filterid']))))
-     return $objDatabase->execSQL("DELETE FROM filters WHERE id=\"".$_GET['filterid']."\"");
+   { $objDatabase->execSQL("DELETE FROM filters WHERE id=\"".$_GET['filterid']."\"");
+     return LangValidateFilterMessage5;
+	 }
  }
  public  function validateSaveFilter()                                                  // validates and saves a filter and returns a message 
  { global $objUtil;
@@ -127,20 +129,20 @@ class Filters implements iFilters
    && $objUtil->checkPostKey('type'))
    { $id=$this->addFilter($objUtil->checkPostKey('filtername'), $objUtil->checkPostKey('type'), $objUtil->checkPostKey('color',0), $objUtil->checkPostKey('wratten'), $objUtil->checkPostKey('schott'));
      $this->setFilterProperty($id, 'observer', $_SESSION['deepskylog_id']);
-     $entryMessage=LangValidateFilterMessage2;
+     return LangValidateFilterMessage2;
    }
    if($objUtil->checkPostKey('change')
    && $objUtil->checkPostKey('id')
    && $objUtil->checkPostKey('filtername')
    && $objUtil->checkPostKey('type')
-   && $objUtil->checkAdminOrUserID($objFilter->getFilterPropertyFromId($_POST['id'],'observer')))
+   && $objUtil->checkAdminOrUserID($this->getFilterPropertyFromId($_POST['id'],'observer')))
    { $this->setFilterProperty($_POST['id'], 'name', $objUtil->checkPostKey('filtername'));
      $this->setFilterProperty($_POST['id'], 'type', $objUtil->checkPostKey('type'));
      $this->setFilterProperty($_POST['id'], 'color', $objUtil->checkPostKey('color',0));
      $this->setFilterProperty($_POST['id'], 'wratten', $objUtil->checkPostKey('wratten'));
      $this->setFilterProperty($_POST['id'], 'schott', $objUtil->checkPostKey('schott'));
      $this->setFilterProperty($_POST['id'], 'observer', $_SESSION['deepskylog_id']);
-     $entryMessage=LangValidateFilterMessage5;
+     return LangValidateFilterMessage5;
    }
  }
 }

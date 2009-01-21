@@ -773,7 +773,7 @@ define("LangValidateSiteMessage5", "De locatiegegevens zijn gewijzigd in jouw li
 
 // control/validate_eyepiece.php
 
-define("LangValidateEyepieceMessage1",  "Alle velden moeten worden ingevuld!");
+define("LangValidateEyepieceMessage1", "Alle velden moeten worden ingevuld!");
 define("LangValidateEyepieceMessage2", "Het oculair is aan je lijst met uitrustingen");
 define("LangValidateEyepieceMessage3", "Oculair toegevoegd");
 define("LangValidateEyepieceMessage4", "Oculair aangepast");
@@ -782,6 +782,7 @@ define("LangValidateEyepieceMessage5", "Het oculair is aangepast in je lijst met
 //control/validate_filter
 define("LangValidateFilterMessage2", "De filter is toegevoegd aan je lijst met uitrustingen");
 define("LangValidateFilterMessage5", "De filter is aangepast in je lijst met uitrustingen");
+define("LangValidateFilterMessage6", "De filter is verwijderd uit je lijst met uitrustingen");
 
 
 // control/validate_observer.php

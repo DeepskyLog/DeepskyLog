@@ -1,5 +1,4 @@
 <?php
-
 interface iAtlas
 { // public $atlasCodes;                                                        // $atlasCodes[code]=AtlasName
      public function calculateAtlasPage($atlas, $ra, $decl);                    // calculates the atlas page for the ra,decl in atlas
@@ -13,7 +12,6 @@ interface iAtlas
   // private function calculateTorresCPage($ra, $decl);
   // private function calculateUranometriaPage($ra, $decl)
 }
-
 class Atlasses implements iAtlas
 { public  $atlasCodes=array();
   public  function __construct()                                                // Constructor initialises the public atlasCodes property
@@ -861,7 +859,6 @@ class Atlasses implements iAtlas
 	    $urano = 472;
 	   }
 	  }
-	
 	  return (int)$urano;
  }
 }
