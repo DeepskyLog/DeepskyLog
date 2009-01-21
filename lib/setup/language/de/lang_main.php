@@ -246,6 +246,7 @@ define("LangAddLensField2", "Faktor");
 define("LangAddLensField2Expl", "> 1.0 f&uuml;r Barlow Linsen, < 1.0 f&uuml;r Shapley Linsen.");
 define("LangAddLensButton", "Linse hinzuf&uuml;gen");
 define("LangChangeLensButton", "Linse bearbeiten");
+define("LangValidateLensMessage1", "The lens is removed from your equipment list");
 define("LangValidateLensMessage2", "Die Linse wurde in die Datenbank aufgenommen");
 define("LangValidateLensMessage3", "Linse hinzugef&uuml;gt");
 define("LangValidateLensMessage4", "Linse ge&auml;ndert");

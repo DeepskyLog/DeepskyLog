@@ -47,15 +47,8 @@ while(list($key,$value)=each($lns))
 		  echo $observer;
       echo "</td>";
       echo "<td>";
-      // check if there are no observations made with this lens
-      $queries = array("lens" => $value);
-      $obs=$objObservation->getObservationFromQuery($queries, "D", "1");
-      // No lenses yet for comet observations!!
-      //           $queries = array("eyepiece" => $value);
-      //           $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
-      if(!sizeof($obs) > 0) // no observations with lens yet
-      { echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_lens&amp;lensid=" . urlencode($value) . "\">" . LangRemove . "</a>");
-      }
+      if(!$objLens->getLensUsedFromId($value))
+        echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_lens&amp;lensid=" . urlencode($value) . "\">" . LangRemove . "</a>");
       echo "</td>";
       echo "</tr>";
     }

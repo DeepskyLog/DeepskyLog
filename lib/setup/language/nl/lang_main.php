@@ -246,6 +246,7 @@ define("LangAddLensField2", "Factor");
 define("LangAddLensField2Expl", "> 1.0 voor Barlow lenzen, < 1.0 voor shapley lenzen.");
 define("LangAddLensButton", "Voeg lens toe");
 define("LangChangeLensButton", "Verander lens");
+define("LangValidateLensMessage1", "De lens is verwijderd uit je lijst met uitrustingen");
 define("LangValidateLensMessage2", "De lens in toegevoegd aan je lijst met uitrustingen");
 define("LangValidateLensMessage3", "Lens toegevoegd");
 define("LangValidateLensMessage4", "Lens aangepast");

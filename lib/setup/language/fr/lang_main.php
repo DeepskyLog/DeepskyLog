@@ -249,6 +249,7 @@ define("LangAddLensField2", "Facteur");
 define("LangAddLensField2Expl", "> 1.0 pour lentille Barlow, < 1.0 pour lentille shapley.");
 define("LangAddLensButton", "Rajoutez lentille Barlow");
 define("LangChangeLensButton", "Modifier lentille Barlow");
+define("LangValidateLensMessage1", "Cete lentille barlow a été enlevé de votre liste d'équipements");
 define("LangValidateLensMessage2", "Cette lentille Barlow a &#233;t&#233; ajouter &#224; la banque de donn&#233;es");
 define("LangValidateLensMessage3", "Lentille Barlow ajout&#233;e");
 define("LangValidateLensMessage4", "Letille Barlow modifi&#233;e");
