@@ -56,7 +56,7 @@ if($objUtil->checkGetKey('indexAction')=="validate_filter")
 }
 if($objUtil->checkGetKey('indexAction')=="validate_instrument")
 {  $entryMessage.=$objInstrument->validateSaveInstrument();
-   $_GET['indexAction']='add_instrument'
+   $_GET['indexAction']='add_instrument';
 	 unset($_GET['validate_instrument']);
 }	
 if($objUtil->checkGetKey('indexAction')=="validate_lens")
