@@ -38,7 +38,6 @@ if($objUtil->checkGetKey('indexAction')=="validate_delete_lens")
   $_GET['indexAction']="add_lens";
   unset($_GET['validate_delete_lens']);
 }
-  require_once $instDir."common/control/validate_delete_lens.php";
 if($objUtil->checkGetKey('indexAction')=="validate_delete_location")
   require_once $instDir."common/control/validate_delete_location.php";
 
