@@ -218,10 +218,10 @@ tableFieldnameFieldExplanation(LangAddSiteField5,
                                LangAddSiteField5Expl);
 tableFieldnameFieldExplanation(LangAddSiteField6,$tempTimeZoneList,'');
 tableFieldnameFieldExplanation(LangAddSiteField7,
-                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"".(($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'limitingMagnitude')>-900)?$objLocation->getLocationPropertyFromId($_GET['locationid'],'limitingMagnitude'):"")."\" />",
+                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"".(($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'limitingMagnitude')>-900)?$objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'limitingMagnitude'):"")."\" />",
                                LangAddSiteField7Expl);
 tableFieldnameFieldExplanation(LangAddSiteField8,
-                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"".(($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'skyBackground')>-900)?$objLocation->getLocationPropertyFromId($_GET['locationid'],'skyBackground'):"")."\" />",
+                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"".(($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'skyBackground')>-900)?$objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'skyBackground'):"")."\" />",
                                LangAddSiteField8Expl);
 echo "</table>";
 echo "<hr />";
