@@ -5,7 +5,10 @@ interface iLocations
   public  function getDatabaseCountries();                                                                             // returns all countries for which the database of the locations is available
   public  function getLocationId($name, $observer);                                                                    // returns the id for this location
   public  function getLocationPropertyFromId($id,$property,$defaultValue='');
+  public  function getLocations();                                                                                     // returns an array with all locations
+  public  function getLocationsFromDatabase($name, $country);                                                          // returns an array with all information about the location where the name equals the given name in the given country (given the country string - e.g. Belgium).
   public  function getLocationUsedFromId($id);                                                                         // returns the number of times the location is used in observations
+  public  function getSortedLocations($sort,$observer="");                                                             // returns an array with the ids of all locations, sorted by the column specified in $sort
   public  function validateDeleteLocation();                                                                           // deletes teh location of the list with locations
 }
 class Locations
@@ -59,11 +62,41 @@ class Locations
   public  function getLocationPropertyFromId($id,$property,$defaultValue='')
   { global $objDatabase; return $objDatabase->selectSingleValue("SELECT ".$property." FROM locations WHERE id = \"".$id."\"",$property,$defaultValue);
   }
+  public  function getLocations()                                                               // returns an array with all locations
+  { global $objDatabase;
+    return $objDatabase->selectSingleArray("SELECT id FROM locations",'id');
+  }
+  public  function getLocationsFromDatabase($name, $country)                                    // returns an array with all information about the location where the name equals the given name in the given country (given the country string - e.g. Belgium).
+  { global $objDatabase, $instDir;
+	  $locations=array();
+    $filename=$instDir"lib/setup/locations/countries.txt";
+    $fh=fopen($filename,"r") or die("Could not open countries file");
+    while(!feof($fh))
+    { $data=fgets($fh);
+      $vars=explode(" - ",$data);
+      $a=sscanf($vars[1],"(%c%c)");
+      $countriesConversion[ucfirst(strtolower($vars[0]))]=$a[0].$a[1];
+    }
+    fclose($fh);
+    $filename=$instDir./"lib/setup/locations/".strtolower($countriesConversion[$country]).".ast";
+    $fh=fopen($filename, "r") or die("Could not read file");
+    while(!feof($fh))
+    { $data=fgets($fh);
+      $vars=explode("\t", $data);
+      if (strtolower($vars[0]) == strtolower($name))
+        $locations[] = $data;
+    }
+    return $locations;
+  }
   public  function getLocationUsedFromId($id)                                                   // returns the number of times the location is used in observations
   { global $objDatabase; 
     return $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM observations WHERE locationid=\"".$id."\"",'ObsCnt',0)
          + $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM cometobservations WHERE locationid=\"".$id."\"",'ObsCnt',0);
 	}
+  public  function getSortedLocations($sort,$observer="")                                       // returns an array with the ids of all locations, sorted by the column specified in $sort
+  { global $objDatabase; 
+    return $objDatabase->selectSingleArray("SELECT id, name FROM locations ".($observer?"WHERE observer LIKE \"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
+  } 
   public  function validateDeleteLocation()
   { global $objUtil, $objDatabase;
     if($objUtil->checkGetKey('locationid')
@@ -74,246 +107,13 @@ class Locations
     }
   }
  
-  
-  
-  
-  
-  
  
- // getLocations returns an array with all locations
- function getLocations()
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM locations";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $locs[] = $get->id;
-  }
-
-  $db->logout();
-
-  return $locs;
- }
-
- // getLocations returns an array with all locations and names
- function getLocationsName()
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM locations";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  while($get = mysql_fetch_object($run))
-  {
-   $locs[$get->id] = $get->name;
-  }
-
-  $db->logout();
-
-  return $locs;
- }
-
- // getLocationsFromDatabase returns an array with all information about the 
- // location where the name equals the given name in the given country (given
- // the country string - e.g. Belgium).
- function getLocationsFromDatabase($name, $country)
- {
-  $locations=array();
- 	// Reading the file with the country codes.
-  $filename = "lib/setup/locations/countries.txt";
-
-  $fh = fopen($filename, "r") or die("Could not open countries file");
-
-  while (!feof($fh))
-  {
-   $data = fgets($fh);
-   $vars = explode(" - ", $data);
-
-   $a = sscanf($vars[1], "(%c%c)");
-   $countriesConversion[ucfirst(strtolower($vars[0]))] = $a[0].$a[1];
-  }
-  fclose($fh);
-  
-  $filename = "lib/setup/locations/".strtolower($countriesConversion[$country]).".ast";
-
-  $fh = fopen($filename, "r") or die("Could not read file");
-
-  while (!feof($fh))
-  {
-   $data = fgets($fh);
-   $vars = explode("\t", $data);
-
-   if (strtolower($vars[0]) == strtolower($name))
-   {
-    $locations[] = $data;
-   }
-  }
-  return $locations;
- }
-
- // getCountry returns the country of the given id
- function getCountry($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM locations WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $country = $get->country;
-
-  $db->logout();
-
-  return $country;
- }
-
- // getLatitude returns the latitude of the given id
- function getLatitude($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM locations WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $latitude = $get->latitude;
-
-  $db->logout();
-
-  return $latitude;
- }
-
- // getLongitude returns the longitude of the given id
- function getLongitude($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM locations WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $longitude = $get->longitude;
-
-  $db->logout();
-
-  return $longitude;
- }
-
- // getLocationName returns the name of the given id
- function getLocationName($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM locations WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-  if($get)
-	{
-    $name = $get->name;
-  }
-	else
-	{
-	  $name = "";
-	}
-	
-  $db->logout();
-
-  return $name;
- }
-
- // getLimitingMagnitude returns the typical limiting magnitude of the given id
- function getLocationLimitingMagnitude($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM locations WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if ($get != null)
-  {
-   $limmag = $get->limitingMagnitude;
-  }
-  else 
-  {
-   $limmag = -999;
-  }
-  $db->logout();
-
-  return $limmag;
- }
-
- // getCountry returns the typical sky background for the id
- function getSkyBackground($id)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM locations WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  if ($get != null)
-  {
-   $skyBack = $get->skyBackground;
-  }
-  else
-  {
-   $skyBack = -999;
-  }
-
-
-  $db->logout();
-
-  return $skyBack;
- }
-
  
- function getRegion($id) // getRegion returns the region of the given id
- { return $GLOBALS['objDatabase']->selectSingleValue("SELECT region FROM locations WHERE id=\"".$id."\"",'region');
- }
+ 
+ 
+ 
 
- // getSortedLocations returns an array with the ids of all locations, sorted
- // by the column specified in $sort
- function getSortedLocations($sort, $observer = "", $unique = false)
- {
-  $locs = array();
 
-  $db = new database;
-  $db->login();
-
-  if ($unique == false)
-   if ($observer == "")
-     $sql = "SELECT * FROM locations ORDER BY $sort"; 
-   else
-     $sql = "SELECT * FROM locations where observer = \"$observer\" ORDER BY $sort";
-  else
-   if ($observer == "")
-     $sql = "SELECT id, name FROM locations GROUP BY name";
-   else
-     $sql = "SELECT id, name FROM locations where observer = \"$observer\" GROUP BY name ORDER BY $sort";
-  $run = mysql_query($sql) or die(mysql_error());
-  while($get = mysql_fetch_object($run))
-    $locs[] = $get->id;
-  $db->logout();
-  return $locs;
- }
 
  // getAllIds returns a list with all id's which have the same name as the name of the given id
  function getAllLocationsIds($id)
@@ -360,7 +160,7 @@ class Locations
    if ($adapt[$i])
    {
     $new_sites[$i][0] = $sites[$i];
-    $new_sites[$i][1] = $this->getLocationName($sites[$i])." (".$this->getRegion($sites[$i]).")";
+    $new_sites[$i][1] = $this->getLocationName($sites[$i])." (".$this->getLocationPropertyFromId($sites[$i],'region').")";
    }
    else
    {
@@ -521,11 +321,11 @@ class Locations
     $type = "class=\"type2\"";
    }
 
-   $name = $this->getLocationName($value);
-   $longitude = $this->getLongitude($value);
-   $latitude = $this->getLatitude($value);
-   $region = $this->getRegion($value);
-   $country = $this->getCountry($value);
+   $name = $this->getLocationPropertyFromId($value,'name');
+   $longitude = $this->getLocationPropertyFromId($value,'longitude');
+   $latitude = $this->getLocationPropertyFromId($value,'latitude');
+   $region = $this->getLocationPropertyFromId($value,'region');
+   $country = $this->getLocationPropertyFromId($value,'country');
 
    echo "<tr $type><td> $value </td><td> $name </td><td> $longitude </td><td> $latitude </td><td> $region </td><td> $country </td>";
 

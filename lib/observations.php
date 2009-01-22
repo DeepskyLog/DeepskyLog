@@ -1143,7 +1143,7 @@ class Observations {
 			$instrumentid = $this->getDsObservationInstrumentId($value);
 			$instrument = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($instrumentid,'name');
 			$locationid = $this->getDsObservationLocationId($value);
-			$location = $GLOBALS['objLocation']->getLocationName($locationid);
+			$location = $GLOBALS['objLocation']->getLocationPropertyFromId($locationid,'name');
 			$date = $this->getDateDsObservation($value);
 			$time = $this->getTime($value);
 			$description = $this->getDescriptionDsObservation($value);
@@ -1270,7 +1270,7 @@ class Observations {
 		echo LangViewObservationField4;
 		echo ("</td>");
 		echo ("<td width=\"25%\">");
-		echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_location&amp;location=" . urlencode($this->getDsObservationLocationId($LOid)) . "\">" . $GLOBALS['objLocation']->getLocationName($this->getDsObservationLocationId($LOid)) . "</a>");
+		echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_location&amp;location=" . urlencode($this->getDsObservationLocationId($LOid)) . "\">" . $GLOBALS['objLocation']->getLocationPropertyFromId($this->getDsObservationLocationId($LOid),'name') . "</a>");
 		print ("</td>");
 		print ("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
 		echo LangViewObservationField5;

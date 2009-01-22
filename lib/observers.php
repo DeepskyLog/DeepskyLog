@@ -165,7 +165,7 @@ class Observers
      $firstname = $this->getFirstName($value);
      $email = $this->getEmail($value);
      $loc = $this->getStandardLocation($value);
-     $location = $locations->getLocationName($loc);
+     $location = $locations->getLocationPropertyFromId($loc,'name');
      $inst = $this->getStandardTelescope($value);
      $telescope = $instruments->getInstrumentPropertyFromId($inst,'name');
      $password = $this->getPassword($value);

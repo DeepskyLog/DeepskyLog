@@ -330,10 +330,10 @@ echo LangViewObservationField4;
 echo("</td>\n<td width=\"25%\">\n");
 echo("<select name=\"site\" class=\"inputfield\">\n");
 echo("<option value=\"\"></option>"); // empty field
-$sites = $objLocation->getSortedLocations('name', '', true);
+$sites = $objLocation->getSortedLocations('name');
 while(list($key, $value) = each($sites))
   if($key != 0) // remove empty location in database
-    echo("<option value=\"$value\">".$objLocation->getLocationName($value)."</option>\n");
+    echo("<option value=\"$value\">".$objLocation->getLocationPropertyFromId($value,'name')."</option>\n");
 echo("</select>\n");
 echo("</td>");
 echo("<td width=\"25%\"> &nbsp </td> <td width=\"25%\"> &nbsp</td>"); 

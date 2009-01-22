@@ -30,7 +30,7 @@ $timezone_identifiers = DateTimeZone::listIdentifiers();
 $tempTimeZoneList="<select name=\"timezone\" class=\"inputfield requiredField\">";
 while(list ($key, $value) = each($timezone_identifiers))
 { if (array_key_exists('locationid',$_GET) && $_GET['locationid'])
-	{ if ($value == $objLocation->getTimeZone($_GET['locationid']))
+	{ if ($value == $objLocation->getLocationPropertyFromId($_GET['locationid'],'timezone'))
 	    $tempTimeZoneList.="<option value=\"$value\" selected>$value</option>";
 	  else
 	    $tempTimeZoneList.="<option value=\"$value\">$value</option>";
@@ -48,7 +48,7 @@ $tempCountryList.="<option value=\"\"></option>";
 while(list ($key, $value) = each($countries))
 { if(array_key_exists('country',$_GET) && ($_GET['country'] == $value))
 	  $tempCountryList.="<option selected=\"selected\" value=\"".$value."\">".$value."</option>";
-	elseif(array_key_exists('locationid',$_GET)&&($objLocation->getCountry($_GET['locationid'])==$value))
+	elseif(array_key_exists('locationid',$_GET)&&($objLocation->getLocationPropertyFromId($_GET['locationid'],'country')==$value))
 	  $tempCountryList.="<option selected=\"selected\" value=\"".$value."\">".$value."</option>";
 	else
     $tempCountryList.="<option value=\"".$value."\">".$value."</option>";
@@ -62,7 +62,7 @@ if(array_key_exists('latitude',$_GET) && $_GET['latitude'] || array_key_exists('
 { if (array_key_exists('latitude',$_GET))
     $latitudestr = decToString($_GET['latitude'], 1);
   else
-	$latitudestr = decToString($objLocation->getLatitude($_GET['locationid']), 1);
+	$latitudestr = decToString($objLocation->getLocationPropertyFromId($_GET['locationid'],'latitude'), 1);
   $latarray = explode("&deg;", $latitudestr);
   $latitudedeg = $latarray[0];
   $latitudemin = $latarray[1];
@@ -71,7 +71,7 @@ if(array_key_exists('longitude',$_GET) && $_GET['longitude'] || array_key_exists
 { if (array_key_exists('longitude',$_GET))
       $longitudestr = decToString($_GET['longitude'], 1);
   else
-    $longitudestr = decToString($objLocation->getLongitude($_GET['locationid']), 1);
+    $longitudestr = decToString($objLocation->getLocationPropertyFromId($_GET['locationid'],longitude'), 1);
   $longarray = explode("&deg;", $longitudestr);
   $longitudedeg = $longarray[0];
   $longitudemin = $longarray[1];
@@ -99,25 +99,25 @@ echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 $count = 0;
 if ($sites != null)
 { while(list ($key, $value) = each($sites))
-  { $sitename = stripslashes($objLocation->getLocationName($value));
-    $region = stripslashes($objLocation->getRegion($value));
-    $country = $objLocation->getCountry($value);
-    if($objLocation->getLongitude($value) > 0)
-    { $longitude = "&nbsp;" . decToString($objLocation->getLongitude($value));
+  { $sitename = stripslashes($objLocation->getLocationPropertyFromId($value,'name'));
+    $region = stripslashes($objLocation->getLocationPropertyFromId($value,'region'));
+    $country = $objLocation->getLocationPropertyFromId($value,'country');
+    if($objLocation->getLocationPropertyFromId($value,'longitude') > 0)
+    { $longitude = "&nbsp;" . decToString($objLocation->getLocationPropertyFromId($value,'longitude'));
     }
     else
-    { $longitude = decToString($objLocation->getLongitude($value));
+    { $longitude = decToString($objLocation->getLocationPropertyFromId($value,'longitude'));
     }
-    if($objLocation->getLatitude($value) > 0)
-    { $latitude = "&nbsp;" . decToString($objLocation->getLatitude($value));
+    if($objLocation->getLocationPropertyFromId($value,'latitude') > 0)
+    { $latitude = "&nbsp;" . decToString($objLocation->getLocationPropertyFromId($value,'latitude'));
     }
     else
-    { $latitude = decToString($objLocation->getLatitude($value));
+    { $latitude = decToString($objLocation->getLocationPropertyFromId($value,'latitude'));
     }
-    $timezone = $objLocation->getTimezone($value);
+    $timezone = $objLocation->getLocationPropertyFromId($value,'timezone');
     $observer = $objLocation->getLocationPropertyFromId($value,'observer');
-    $limmag = $objLocation->getLocationLimitingMagnitude($value);
-    $sb = $objLocation->getSkyBackground($value);
+    $limmag = $objLocation->getLocationPropertyFromId($value,'limitingMagnitude');
+    $sb = $objLocation->getLocationPropertyFromId($value,'skyBackground');
     if ($limmag < -900 && $sb > 0)
     { $limmag = sprintf("%.1f", $objContrast->calculateLimitingMagnitudeFromSkyBackground($sb));
     } else if ($limmag < -900 && $sb < -900) {
@@ -166,9 +166,9 @@ echo "<tr>";
 echo "<td width=\"25%\">";
 echo "<form name=\"overviewform\">";
 echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
-$sites = $objLocation->getSortedLocations('name', "", true);
+$sites = $objLocation->getSortedLocations('name');
 while(list($key,$value)=each($sites))
-  echo "<option value=\"".$baseURL."index.php?indexAction=add_site&amp;locationid=".urlencode($value)."\">" . $objLocation->getLocationName($value) . "</option>";
+  echo "<option value=\"".$baseURL."index.php?indexAction=add_site&amp;locationid=".urlencode($value)."\">" . $objLocation->getLocationPropertyFromId($value,'name') . "</option>";
 echo "</select>";
 echo "</form>";
 echo "</td>";
@@ -194,10 +194,10 @@ echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 echo "<table>";
 tableFieldnameFieldExplanation(LangAddSiteField1,
-                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"sitename\" size=\"30\" value=\"".stripslashes($objUtil->checkGetKey('sitename')).stripslashes($objLocation->getLocationName($objUtil->checkGetKey('locationid')))."\" />",
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"sitename\" size=\"30\" value=\"".stripslashes($objUtil->checkGetKey('sitename')).stripslashes($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'name'))."\" />",
                                '');
 tableFieldnameFieldExplanation(LangAddSiteField2,
-                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"region\" size=\"30\" value=\"".stripslashes($objUtil->checkGetKey('region')).stripslashes($objLocation->getRegion($objUtil->checkGetKey('locationid')))."\" />",
+                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"region\" size=\"30\" value=\"".stripslashes($objUtil->checkGetKey('region')).stripslashes($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'region'))."\" />",
                                LangAddSiteField2Expl);
 tableFieldnameFieldExplanation(LangAddSiteField3,$tempCountryList,'');
 tableFieldnameFieldExplanation(LangAddSiteField4,
@@ -218,10 +218,10 @@ tableFieldnameFieldExplanation(LangAddSiteField5,
                                LangAddSiteField5Expl);
 tableFieldnameFieldExplanation(LangAddSiteField6,$tempTimeZoneList,'');
 tableFieldnameFieldExplanation(LangAddSiteField7,
-                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"".(($objLocation->getLocationLimitingMagnitude($objUtil->checkGetKey('locationid'))>-900)?$objLocation->getLocationLimitingMagnitude($_GET['locationid']):"")."\" />",
+                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"".(($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'limitingMagnitude')>-900)?$objLocation->getLocationPropertyFromId($_GET['locationid'],'limitingMagnitude'):"")."\" />",
                                LangAddSiteField7Expl);
 tableFieldnameFieldExplanation(LangAddSiteField8,
-                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"".(($objLocation->getSkyBackground($objUtil->checkGetKey('locationid'))>-900)?$objLocation->getSkyBackground($_GET['locationid']):"")."\" />",
+                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"".(($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'skyBackground')>-900)?$objLocation->getLocationPropertyFromId($_GET['locationid'],'skyBackground'):"")."\" />",
                                LangAddSiteField8Expl);
 echo "</table>";
 echo "<hr />";

@@ -130,7 +130,7 @@ if ($objCometObservation->getLocationId($_GET['observation']) != 0 && $objCometO
 
  echo("</td><td>");
 
- echo("<a href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=" . urlencode($objCometObservation->getLocationId($_GET['observation'])) . "\">" . $objLocation->getLocationName($objCometObservation->getLocationId($_GET['observation'])) . "</a>");
+ echo("<a href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=" . urlencode($objCometObservation->getLocationId($_GET['observation'])) . "\">" . $objLocation->getLocationPropertyFromId($objCometObservation->getLocationId($_GET['observation']),'name') . "</a>");
 
  print("</td>
         </tr>");

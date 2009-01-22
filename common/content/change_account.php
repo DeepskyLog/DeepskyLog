@@ -9,17 +9,17 @@ $sites = $objLocation->getSortedLocations("name", $_SESSION['deepskylog_id']);
 $previous = "fskfskf";
 for($i=0;$i<count($sites);$i++)
 { $adapt[$i] = 0;
-  if($objLocation->getLocationName($sites[$i])==$previous)
+  if($objLocation->getLocationPropertyFromId($sites[$i],'name')==$previous)
   { $adapt[$i]=1;
     $adapt[$i-1]=1;
   }
- $previous=$objLocation->getLocationName($sites[$i]);
+ $previous=$objLocation->getLocationPropertyFromId($sites[$i],'name');
 }
 for ($i = 0;$i < count($sites);$i++)
 { if($adapt[$i])
-    $sitename = $objLocation->getLocationName($sites[$i])." (".$objLocation->getRegion($sites[$i]).")";
+    $sitename = $objLocation->getLocationPropertyFromId($sites[$i],'name')." (".$objLocation->getLocationPropertyFromId($sites[$i],'region').")";
   else
-    $sitename = $objLocation->getLocationName($sites[$i]);
+    $sitename = $objLocation->getLocationPropertyFromId($sites[$i],'name');
   $tempLocationList.="<option ".(($objObserver->getStandardLocation($_SESSION['deepskylog_id'])==$sites[$i])?" selected=\"selected\"":"")." value=\"".$sites[$i]."\">".$sitename."</option>";
 }
 $tempLocationList.="</select>";

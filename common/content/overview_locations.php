@@ -44,23 +44,23 @@ echo "</tr>";
 $count = 0;
 while(list ($key, $value) = each($sites))
 { if($count >= $min && $count < $max) // selection
-  { $sitename = stripslashes($objLocation->getLocationName($value));
-    $region = stripslashes($objLocation->getRegion($value));
-    echo " = $objLocation->getCountry($value);
-    if($objLocation->getLongitude($value) > 0)
-      $longitude = "&nbsp;" . decToString($objLocation->getLongitude($value));
+  { $sitename = stripslashes($objLocation->getLocationPropertyFromId($value,'name'));
+    $region = stripslashes($objLocation->getLocationPropertyFromId($value,'region'));
+    $country = $objLocation->getLocationPropertyFromId($value,'country');
+    if($objLocation->getLocationPropertyFromId($value'longitude') > 0)
+      $longitude = "&nbsp;" . decToString($objLocation->getLocationPropertyFromId($value,'longitude'));
     else
-     $longitude = decToString($objLocation->getLongitude($value));
-    if($objLocation->getLatitude($value) > 0)
-      $latitude = "&nbsp;" . decToString($objLocation->getLatitude($value));
+     $longitude = decToString($objLocation->getLocationPropertyFromId($value,'longitude'));
+    if($objLocation->getLocationPropertyFromId($value,'latitude') > 0)
+      $latitude = "&nbsp;" . decToString($objLocation->getLocationPropertyFromId($value,'latitude'));
     else
-      $latitude = decToString($objLocation->getLatitude($value));
-    $timezone = $objLocation->getTimezone($value);
+      $latitude = decToString($objLocation->getLocationPropertyFromId($value,'latitude'));
+    $timezone = $objLocation->getLocationPropertyFromId($value,'timezone');
     $observer = $objLocation->getLocationPropertyFromId($value,'observer');
-    $limmag = $objLocation->getLocationLimitingMagnitude($value);
+    $limmag = $objLocation->getLocationPropertyFromId($value,'limitingMagnitude');
     if ($limmag < -900)
       $limmag = "&nbsp;";
-    $sb = $objLocation->getSkyBackground($value);
+    $sb = $objLocation->getLocationPropertyFromId($value,'skyBackground');
     if ($sb < -900)
       $sb = "&nbsp;
     if($value!= "1")

@@ -10,7 +10,7 @@ if(!($name=$objObserver->getObserverName($user)))
 
 $firstname=$objObserver->getFirstName($user);
 $location_id = $objObserver->getStandardLocation($user);
-$location_name = $objLocation->getLocationName($location_id);
+$location_name = $objLocation->getLocationPropertyFromId($location_id,'name');
 $instrumentname=$objInstrument->getInstrumentPropertyFromId($objObserver->getStandardTelescope($user),'name');
 
 $userDSobservation=$objObserver->getNumberOfDsObservations($user);

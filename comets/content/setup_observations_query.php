@@ -179,13 +179,13 @@ echo("<select name=\"site\">\n");
 
 echo("<option value=\"\"></option>"); // empty field
 
-$sites = $locations->getSortedLocations("name", "", true);
+$sites = $locations->getSortedLocations("name");
 
 while(list($key, $value) = each($sites))
 {
    if($key != 0) // remove empty location in database
    {
-      echo("<option value=\"$value\">".$locations->getLocationName($value)."</option>\n");
+      echo("<option value=\"$value\">".$locations->getLocationPropertyFromId($value,'name')."</option>\n");
    }
 }
 
