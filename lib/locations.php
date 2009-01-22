@@ -69,7 +69,7 @@ class Locations
   public  function getLocationsFromDatabase($name, $country)                                    // returns an array with all information about the location where the name equals the given name in the given country (given the country string - e.g. Belgium).
   { global $objDatabase, $instDir;
 	  $locations=array();
-    $filename=$instDir"lib/setup/locations/countries.txt";
+    $filename=$instDir."lib/setup/locations/countries.txt";
     $fh=fopen($filename,"r") or die("Could not open countries file");
     while(!feof($fh))
     { $data=fgets($fh);
@@ -78,7 +78,7 @@ class Locations
       $countriesConversion[ucfirst(strtolower($vars[0]))]=$a[0].$a[1];
     }
     fclose($fh);
-    $filename=$instDir./"lib/setup/locations/".strtolower($countriesConversion[$country]).".ast";
+    $filename=$instDir."lib/setup/locations/".strtolower($countriesConversion[$country]).".ast";
     $fh=fopen($filename, "r") or die("Could not read file");
     while(!feof($fh))
     { $data=fgets($fh);

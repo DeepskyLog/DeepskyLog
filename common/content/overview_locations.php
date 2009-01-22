@@ -47,7 +47,7 @@ while(list ($key, $value) = each($sites))
   { $sitename = stripslashes($objLocation->getLocationPropertyFromId($value,'name'));
     $region = stripslashes($objLocation->getLocationPropertyFromId($value,'region'));
     $country = $objLocation->getLocationPropertyFromId($value,'country');
-    if($objLocation->getLocationPropertyFromId($value'longitude') > 0)
+    if($objLocation->getLocationPropertyFromId($value,'longitude') > 0)
       $longitude = "&nbsp;" . decToString($objLocation->getLocationPropertyFromId($value,'longitude'));
     else
      $longitude = decToString($objLocation->getLocationPropertyFromId($value,'longitude'));
@@ -62,7 +62,7 @@ while(list ($key, $value) = each($sites))
       $limmag = "&nbsp;";
     $sb = $objLocation->getLocationPropertyFromId($value,'skyBackground');
     if ($sb < -900)
-      $sb = "&nbsp;
+      $sb = "&nbsp;";
     if($value!= "1")
     { echo "<tr class=\"type".(2-($count%2))."\">";
       echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_site&amp;location=".urlencode($value)."\">$sitename</a></td>";

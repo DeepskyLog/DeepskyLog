@@ -71,7 +71,7 @@ if(array_key_exists('longitude',$_GET) && $_GET['longitude'] || array_key_exists
 { if (array_key_exists('longitude',$_GET))
       $longitudestr = decToString($_GET['longitude'], 1);
   else
-    $longitudestr = decToString($objLocation->getLocationPropertyFromId($_GET['locationid'],longitude'), 1);
+    $longitudestr = decToString($objLocation->getLocationPropertyFromId($_GET['locationid'],'longitude'), 1);
   $longarray = explode("&deg;", $longitudestr);
   $longitudedeg = $longarray[0];
   $longitudemin = $longarray[1];
