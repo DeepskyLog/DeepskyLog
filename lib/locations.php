@@ -147,12 +147,12 @@ class Locations
   {
    $adapt[$i] = 0;
 
-   if ($this->getLocationName($sites[$i]) == $previous)
+   if ($this->getLocationPropertyFromId($sites[$i],'name') == $previous)
    {
     $adapt[$i] = 1;
     $adapt[$i - 1] = 1;
    }
-   $previous = $this->getLocationName($sites[$i]);
+   $previous = $this->getLocationPropertyFromId($sites[$i],'name');
   }
 
   for ($i = 0;$i < count($sites);$i++)
@@ -160,12 +160,12 @@ class Locations
    if ($adapt[$i])
    {
     $new_sites[$i][0] = $sites[$i];
-    $new_sites[$i][1] = $this->getLocationName($sites[$i])." (".$this->getLocationPropertyFromId($sites[$i],'region').")";
+    $new_sites[$i][1] = $this->getLocationPropertyFromId($sites[$i],'name')." (".$this->getLocationPropertyFromId($sites[$i],'region').")";
    }
    else
    {
     $new_sites[$i][0] = $sites[$i];
-    $new_sites[$i][1] = $this->getLocationName($sites[$i]);
+    $new_sites[$i][1] = $this->getLocationPropertyFromId($sites[$i],'name');
    }
   }
   return $new_sites;

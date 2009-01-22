@@ -1,8 +1,8 @@
 <?php
-
-
 // new_observation.php
 // GUI to add a new observation to the database
+
+echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/checkUtils.js\"></script>";
 
 echo "<div id=\"main\">";
 $object=$objUtil->checkPostKey('object', $objUtil->checkGetKey('object'));
@@ -58,7 +58,7 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo LangViewObservationField5 . "&nbsp;*";
 	echo "</td>";
 	echo "<td>";
-	echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" size=\"3\" style=\"text-align:center\" name=\"day\" value=\"" . $GLOBALS['objUtil']->checkPostKey('day') . "\" />";
+	echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" size=\"3\" style=\"text-align:center\" name=\"day\" value=\"" . $GLOBALS['objUtil']->checkPostKey('day') . "\" onkeypress=\"return checkPositiveInteger(event);\" />";
 	echo "&nbsp;&nbsp;";
 	echo "<select name=\"month\" style=\"text-align:center\" class=\"inputfield requiredField\">";
 	echo "<option value=\"\"></option>";
@@ -66,7 +66,7 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 		echo "<option value=\"".$i."\"".(($GLOBALS['objUtil']->checkPostKey('month')==$i)?" selected=\"selected\"" : "").">".$GLOBALS['Month'.$i]."</option>";
 	echo "</select>";
 	echo "&nbsp;&nbsp";
-	echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"4\" size=\"4\" style=\"text-align:center\" name=\"year\" value=\"" . $GLOBALS['objUtil']->checkPostKey('year') . "\" />";
+	echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"4\" size=\"4\" style=\"text-align:center\" name=\"year\" onkeypress=\"return checkPositiveInteger(event);\" value=\"" . $GLOBALS['objUtil']->checkPostKey('year') . "\" />";
 	echo "</td>";
 	echo "<td class=\"explanation\">" . LangViewObservationField10 . "</td>";
 	echo "<td class=\"fieldname\" align=\"right\">";
