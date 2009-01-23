@@ -226,7 +226,7 @@ class CometObservations
 
     if ($location)
     {
-      $timezone = $locations->getTimezone($location);
+      $timezone = $locations->getLocationPropertyFromId($location,'timezone');
 
       $datearray = sscanf($date, "%4d%2d%2d");
 
@@ -319,7 +319,7 @@ class CometObservations
       {
         $date = sscanf($date, "%4d%2d%2d");
 
-        $timezone = $locations->getTimezone($loc);
+        $timezone = $locations->getLocationPropertyFromId($loc,'timezone');
 
         $dateTimeZone = new DateTimeZone($timezone);
 
@@ -419,7 +419,7 @@ class CometObservations
     {
       $date = sscanf($date, "%4d%2d%2d");
 
-      $timezone = $locations->getTimezone($loc);
+      $timezone = $locations->getLocationPropertyFromId($loc,'timezone');
 
       $dateTimeZone = new DateTimeZone($timezone);
 

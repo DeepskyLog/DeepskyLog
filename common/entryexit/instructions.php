@@ -55,7 +55,10 @@ if($objUtil->checkGetKey('indexAction')=="validate_lens")                       
 if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="validate_observer"))       // validate observer
   require_once $instDir."common/control/validate_observer.php";
 if($objUtil->checkGetKey('indexAction')=="validate_site")                                                          // validate location
-  require_once $instDir."common/control/validate_site.php";
+{ $entryMessage.=$objLocation->validateSaveLocation();
+  $_GET['indexAction']="add_site";
+	unset($_GET['validate_site']);
+}
 if($objUtil->checkGetKey('indexAction')=="logout")                                                                 // logout
   require_once $instDir."common/control/logout.php";
 //============================================================================== DEEEPSKY INSTRUCTIONS

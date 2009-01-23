@@ -64,10 +64,10 @@ class Database implements iDatabase
   public function selectSingleArray($sql,$name)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
 	  $run = mysql_query($sql) or die(mysql_error());
-    while($get = mysql_fetch_object($run))
+    $result=array();
+		while($get = mysql_fetch_object($run))
 		  $result[]=$get->$name;
-		if(isset($result)) return $result;
-		else               return array();
+		return $result;
   }
   public function selectSingleValue($sql,$name,$nullvalue='')
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}

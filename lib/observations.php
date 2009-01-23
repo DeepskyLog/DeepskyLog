@@ -40,7 +40,7 @@ class Observations {
 			$loc = $get->locationid;
 			if ($time >= 0) {
 				$date = sscanf($get->date, "%4d%2d%2d");
-				$timezone = $GLOBALS['objLocation']->getTimezone($get->locationid);
+				$timezone = $GLOBALS['objLocation']->getLocationPropertyFromId($get->locationid,'timezone');
 				$dateTimeZone = new DateTimeZone($timezone);
 				$datestr = sprintf("%02d", $date[1]) . "/" . sprintf("%02d", $date[2]) . "/" . $date[0];
 				$dateTime = new DateTime($datestr, $dateTimeZone);
@@ -626,7 +626,7 @@ class Observations {
 			$time = $get->time;
 			$loc = $get->locationid;
 			$date = sscanf($date, "%4d%2d%2d");
-			$timezone = $GLOBALS['objLocation']->getTimezone($loc);
+			$timezone = $GLOBALS['objLocation']->getLocationPropertyFromId($loc,'timezone');
 			$dateTimeZone = new DateTimeZone($timezone);
 			$datestr = sprintf("%02d", $date[1]) . "/" . sprintf("%02d", $date[2]) . "/" . $date[0];
 			$dateTime = new DateTime($datestr, $dateTimeZone);
@@ -852,7 +852,7 @@ class Observations {
 
 			$db->logout();
 
-			$timezone = $GLOBALS['objLocation']->getTimezone($location);
+			$timezone = $GLOBALS['objLocation']->getLocationPropertyFromId($location,'timezone');
 
 			$datearray = sscanf($date, "%4d%2d%2d");
 

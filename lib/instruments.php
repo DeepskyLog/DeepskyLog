@@ -131,7 +131,7 @@ class Instruments implements iInstruments
         return LangValidateInstrumentMessage3;
       }
       if($objUtil->checkPostKey('change')
-      && $objUtil->checkUserID($this->getObserverFromInstrument($objUtil->checkPostKey('id')))) // change instrument of this user
+      && $objUtil->checkAdminOrUserID($this->getObserverFromInstrument($objUtil->checkPostKey('id')))) // change instrument of this user
       { $id = $_POST['id'];
         $this->setInstrumentProperty($_POST['id'], 'type', $type);
         $this->setInstrumentProperty($_POST['id'], 'name', $instrumentname);

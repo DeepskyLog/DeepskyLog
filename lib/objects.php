@@ -1,17 +1,27 @@
-<?php
-// The objects class collects all functions needed to enter, retrieve and
-// adapt object data from the database and functions to display the data.
+<?php // The objects class collects all functions needed to enter, retrieve and adapt object data from the database and functions to display the data.
 interface iObject
-{                                                                               
-  public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec,  // Add a deepsky object in all detail
+{ public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec,  // Add a deepsky object in all detail
           	                   $mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource);
 //private function calculateSize($diam1, $diam2);                               // Construct a string from the sizes
   public  function getAllInfoDsObject($name);                                   // Returns all information of an object
+  public  function getAlternativeNames($name);
+  public  function getCatalogs();                                               // returns a list of all different catalogs
+  public  function getCatalogsAndLists();
+  public  function getConstellations();                                         // returns a list of all different constellations
+//private function getContainsNames($name);
+  public  function getDsObjectName($name);                                      // returns the name when the original or alternative name is given.
+  public  function getDsObjectTypes();                                          // returns a list of all different types
   public  function getDsoProperty($theObject,$theProperty, $default='');        // returns the propperty of the object, or default if not found
   public  function getDSOseen($object);                                         // Returns the getSeen result, encoded to a href that shows the seen observations
-  public  function getObjectProperty($object, $property);                       // Returns the selected property of the object
+  public  function getExactDsObject($value, $cat='', $catindex='');             // returns the exact name of an object
+  public  function getLikeDsObject($value, $cat='', $catindex='');              // returns the exact name of an object
+  public  function getObjectFromQuery($queries,$exact=0,$seen="D",$partof=0);
+  public  function getObjectsFromCatalog($cat);
+  public  function getObjectVisibilities($obs);
+//private function getPartOfNames($name);
   public  function getSeen($object);                                            // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
 //private function getSeenLastseenLink($object,&$seenlink,&$lastseenlink);      // Returns the -/X(nr)/Y(nr) seen link to all observations of object, and the date last seen link, linking to all user observations inversely sorted by date
+  public  function getSeenObjectDetails($obs, $seen="D");
 //private function getSize($name);                                              // Returns the size of the object
   public  function newAltName($name, $cat, $catindex);                          // ADMIN FUNCTION, Add a new Altname in objectnames for this object
   public  function newName($name, $cat, $catindex);                             // ADMIN FUNCTION, Set a new name for a DS object, and adapt all observations, objectnames, partofs and list occurences
@@ -20,18 +30,11 @@ interface iObject
 	public  function removeAltName($name, $cat, $catindex);                       // ADMIN FUNCTION, Remove the alternative name $cat $index from the objectnames of $name
   public  function removeAndReplaceObjectBy($name, $cat, $catindex);            // ADMIN FUNCTION, Remove the object after replacing it in the observations, partofs, lists by the object $cat $index
   public  function removePartOf($name, $cat, $catindex);                        // ADMIN FUNCTION, Remove the partof entry for $name from the partsof table, so that $name is no longer a part of $cat $index
+  public  function setDsoProperty($name,$property,$propertyValue);              // sets the property to the specified value for the given object
   public  function sortObjects($objectList, $sort, $reverse=false);             // Sort the array of objectList on the $sort field, and in second order on the showname field 
-	
-/* OBSOLETE FUNCTIONS 
-* function getDatasource($name)                                                 // returns the datasource of the object
-* function deleteDSObject($name);                                               // Removes the object with name = $name
-* function getSortedObjects($sort)                                              // getSortedObjects returns an array with the names of all objects, sorted by  the column specified in $sort
-*/
 }
-
 class Objects implements iObject
-{ 
-  public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec, $mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource)
+{ public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec, $mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource)
   { // addObject adds a new object to the database. The name, alternative name, 
     // type, constellation, right ascension, declination, magnitude, surface 
     // brightness, diam1, diam2, position angle and info about the catalogs should
@@ -39,35 +42,34 @@ class Objects implements iObject
     // are put in the
     // database. $datasource describes where the data comes from eg : SAC7.2, 
     // DeepskyLogUser or E&T 2.5
-    if (!$_SESSION['lang'])
-     $_SESSION['lang'] = "English";
-    $urano = $GLOBALS['objAtlas']->calculateAtlasPage('urano',$ra, $dec);
-    $uranonew = $GLOBALS['objAtlas']->calculateAtlasPage('urano_new',$ra, $dec);
-    $skyatlas = $GLOBALS['objAtlas']->calculateAtlasPage('sky',$ra, $dec);
-    $millenium = $GLOBALS['objAtlas']->calculateAtlasPage('milleniumbase',$ra, $dec);
-    $taki = $GLOBALS['objAtlas']->calculateAtlasPage('taki',$ra, $dec);
-    $psa = $GLOBALS['objAtlas']->calculateAtlasPage('psa',$ra, $dec);
-    $torresB = $GLOBALS['objAtlas']->calculateAtlasPage('torresB',$ra, $dec);
-    $torresBC = $GLOBALS['objAtlas']->calculateAtlasPage('torresBC',$ra, $dec);
-    $torresC = $GLOBALS['objAtlas']->calculateAtlasPage('torresC', $ra, $dec);
+    global $objAtlas, $objDatabase;
+    $urano     = $objAtlas->calculateAtlasPage('urano'        ,$ra, $dec);
+    $uranonew  = $objAtlas->calculateAtlasPage('urano_new'    ,$ra, $dec);
+    $skyatlas  = $objAtlas->calculateAtlasPage('sky'          ,$ra, $dec);
+    $millenium = $objAtlas->calculateAtlasPage('milleniumbase',$ra, $dec);
+    $taki      = $objAtlas->calculateAtlasPage('taki'         ,$ra, $dec);
+    $psa       = $objAtlas->calculateAtlasPage('psa'          ,$ra, $dec);
+    $torresB   = $objAtlas->calculateAtlasPage('torresB'      ,$ra, $dec);
+    $torresBC  = $objAtlas->calculateAtlasPage('torresBC'     ,$ra, $dec);
+    $torresC   = $objAtlas->calculateAtlasPage('torresC'      , $ra, $dec);
     $array = array("INSERT INTO objects (name, type, con, ra, decl, mag, subr, diam1, diam2, pa, datasource, urano, urano_new, sky, millenium, taki, psa, torresB, torresBC, torresC, milleniumbase) 
 	                  VALUES (\"$name\", \"$type\", \"$con\", \"$ra\", \"$dec\", \"$mag\", \"$subr\", \"$diam1\", \"$diam2\", \"$pa\", \"$datasource\", \"$urano\", \"$uranonew\", \"$skyatlas\", \"$millenium\", \"$taki\", \"$psa\", \"$torresB\", \"$torresBC\", \"$torresC\", \"$millenium\")");
     $sql = implode("", $array);
-    $GLOBALS['objDatabase']->execSQL($sql);
-    $newcatindex = ucwords(trim($catindex));
-    $GLOBALS['objDatabase']->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")))");
+    $objDatabase->execSQL($sql);
+    $newcatindex=ucwords(trim($catindex));
+    $objDatabase->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")))");
 	  if(($mag!=99.9)&&(($diam1!=0)||($diam2!=0)))                                // Calculate and set the SBObj
 	  { if(($diam1!=0)&&($diam2==0))
-		    $diam2 = $diam1;
+		    $diam2=$diam1;
 	    elseif(($diam2!=0)&&($diam1==0))
 		   $diam1=$diam2;
 		  $SBObj=($mag+(2.5*log10(2827.0*($diam1/60)*($diam2/60))));
 	  }
 	  else
 		  $SBObj = -999;
-    $GLOBALS['objDatabase']->execSQL("update objects set SBObj = \"$SBObj\" where name = \"$name\";");
+    $objDatabase->execSQL("UPDATE objects SET SBObj = \"".$SBObj."\" where name = \"".$name."\";");
   }
-  private function calculateSize($diam1, $diam2) // Construct a string from the sizes
+  private function calculateSize($diam1, $diam2)                                // Construct a string from the sizes
   { $size = "";
     if ($diam1!=0.0)
     { if($diam1>=40.0)
@@ -97,19 +99,18 @@ class Objects implements iObject
     }
     return $size;
   }
-  public  function getAllInfoDsObject($name) // getAllInfo returns all information of an object
-  { $get = mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT * FROM objects WHERE name = \"".$name."\""));
-    while(list($key,$value)=each($get))
-		  $object[$key]=$value;
+  public  function getAllInfoDsObject($name)                                    // returns all information of an object
+  { global $objDatabase;
+	  $object=$objDatabase->selectRecordArray("SELECT * FROM objects WHERE name = \"".$name."\"");
     $object["size"]=$this->calculateSize($object['diam1'], $object['diam2']); 
     $object["seen"]="-";
-  	if ($see=$GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(id) As CountId FROM observations WHERE objectname = \"".$name."\"",'CountId',0))
+  	if($see=$objDatabase->selectSingleValue("SELECT COUNT(id) As CountId FROM observations WHERE objectname = \"".$name."\"",'CountId',0))
     { $object["seen"]="X (".$see.")";
       if((array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
-      && ($get=mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT COUNT(observerid) As seenCnt, MAX(date) seenLastDate FROM observations WHERE objectname = \"".$name."\" AND observerid = \"".$_SESSION['deepskylog_id']."\""))))
-        $object["seen"]="Y (".$get->seenCnt." - ".$get->seenLastDate.")";
+      && ($get=$objDatabase->selectRecordArray("SELECT COUNT(observerid) As seenCnt, MAX(date) seenLastDate FROM observations WHERE objectname = \"".$name."\" AND observerid = \"".$_SESSION['deepskylog_id']."\"")))
+        $object["seen"]="Y (".$get['seenCnt']." - ".$get['seenLastDate'].")";
     }
-		$run=$GLOBALS['objDatabase']->selectRecordset("SELECT altname FROM objectnames WHERE objectnames.objectname = \"$name\"");
+		$run=$objDatabase->selectRecordset("SELECT altname FROM objectnames WHERE objectnames.objectname = \"".$name."\"");
     $object["altname"]="";
 	  while($get=mysql_fetch_object($run))
       if($get->altname!=$name)
@@ -119,11 +120,50 @@ class Objects implements iObject
 		      $object["altname"]= $get->altname;
     return $object;
   }
-  public  function getConstellation($name)                                      // returns the constellation of the object
-  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT con FROM objects WHERE name = \"".$name."\"",'con');
+  public  function getAlternativeNames($name)
+  { global $objDatabase;
+	  return $objDatabase->selectSingleArray("SELECT CONCAT(objectnames.catalog, \" \", objectnames.catindex) AS altnames FROM objectnames WHERE objectnames.objectname = \"".$name."\"",'altnames');
+  }
+  public  function getCatalogs()                                                // returns a list of all different catalogs
+  { global $objDatabase;
+    $ret=$objDatabase->selectSingleArray("SELECT DISTINCT objectnames.catalog FROM objectnames",'catalog');
+    natcasesort($ret);
+    reset($ret);
+    array_unshift($ret, "M", "NGC", "Caldwell", "H400", "HII", "IC");
+    return $ret;
+  }
+  public  function getCatalogsAndLists()
+  { global $objDatabase;
+	  $ret=$objDatabase->selectSingleArray("SELECT DISTINCT objectnames.catalog FROM objectnames",'catalog');
+    natcasesort($ret);
+    reset($ret);
+    array_unshift($ret, "M", "NGC", "Caldwell", "H400", "HII", "IC");
+	  if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
+	  { $lsts = $GLOBALS['objList']->getLists();
+	 	  while(list($key,$value)=each($lsts))
+	 	   $ret[]='List:'.$value; 
+	  }
+    return $ret;
+  }
+  private function getContainsNames($name)
+  { global $objDatabase;
+	  return $objDatabase->selectSingleArray("SELECT objectpartof.objectname FROM objectpartof WHERE objectpartof.partofname = \"".$name."\"",'objectname');
+  }
+  public function getDsObjectName($name)                                                // returns the name when the original or alternative name is given.
+  { global $objDatabase;
+	  return $objDatabase->selectSingleValue("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"".$name."\")",'objectname');
+  }
+  public  function getDsObjectTypes()                                                    // returns a list of all different types
+  { global $objDatabase;
+    return $objDatabase->selectSingleArray("SELECT DISTINCT type FROM objects ORDER BY type",'type');
+  }
+  public  function getConstellations()                                          // returns a list of all different constellations
+  { global $objDatabase;
+	  return $objDatabase->selectSingleArray("SELECT DISTINCT con FROM objects ORDER BY con",'con');
   }
   public  function getDsoProperty($theObject,$theProperty, $default='')         // returns the propperty of the object, or default if not found
-  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT objects.".$theProperty." FROM objects WHERE name=\"".$theObject."\"",$theProperty,$default);
+  { global $objDatabase;
+	  return $objDatabase->selectSingleValue("SELECT objects.".$theProperty." FROM objects WHERE name=\"".$theObject."\"",$theProperty,$default);
   }
   public  function getDSOseen($object)                                          // Returns the getSeen result, encoded to a href that shows the seen observations
   { $seenDetails=$this->getSeen($object);
@@ -135,9 +175,245 @@ class Objects implements iObject
         $seen = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\">".$seenDetails."</a>";
     return $seen;
   }
-  public  function getObjectProperty($object, $property)
-  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT ".$property." FROM objects WHERE name=\"".$object."\"",$property);
-  }		 
+  public  function getExactDsObject($value, $cat='', $catindex='')              // returns the exact name of an object
+  { if($value)
+      $sql = "SELECT objectnames.objectname FROM objectnames " .
+		  	   "WHERE UPPER(altname) = \"".strtoupper(trim($value))."\" " .
+					 "OR altname = \"".trim($value)."\"";
+	  else
+	    $sql = "SELECT objectnames.objectname FROM objectnames " .
+		        "WHERE objectnames.catalog=\"".$cat."\" AND objectnames.catindex=\"".ucwords(trim($catindex))."\"";
+	  if((!($object=$GLOBALS['objDatabase']->selectSingleValue($sql,'objectname','')))&&$value)
+	  { $sql="SELECT objectnames.objectname FROM objectnames " .
+	         "WHERE CONCAT(UPPER(objectnames.catalog),UPPER(objectnames.catindex))=\"".strtoupper(str_replace(' ','',$value))."\"";
+	    $object=$GLOBALS['objDatabase']->selectSingleValue($sql,'objectname','');
+	  }    
+    return $object;
+  }
+  public  function getLikeDsObject($value, $cat='', $catindex='')               // returns the exact name of an object
+  { global $objDatabase;
+	  $value2=trim($value);
+	  $value=strtoupper(trim($value));
+    if($value)
+      $sql = "SELECT objectnames.objectname FROM objectnames " .
+	 	         "WHERE UPPER(altname) LIKE \"$value\" " .
+		 	 	 	   "OR altname LIKE \"$value2\"";
+	  else
+	  { $catindex=ucwords($catindex);
+      $sql = "SELECT objectnames.objectname FROM objectnames " .
+		         "WHERE CONCAT(objectnames.catalog, ' ', objectnames.catindex) LIKE \"$cat $catindex\"";
+	  }
+	  return $objDatabase->selectSingleArray($sql,'objectname');
+  }
+  public  function getObjectFromQuery($queries, $exact = 0, $seen="D", $partof = 0)
+  { // getObjectFromQuery returns an array with the names of all objects where
+    // the queries are defined in an array.
+    // An example of an array :  
+    //  $q = array("name" => "NGC", "type" => "GALXY", "constellation" => "AND", 
+    //             "minmag" => "12.0", "maxmag" => "14.0", "minsubr" => "13.0", 
+    //             "maxsubr" => "14.0", "minra" => "0.3", "maxra" => "0.9", 
+    //             "mindecl" => "24.0", "maxdecl" => "30.0", "urano" => "111", 
+    // 		        "uranonew" => "111", "sky" => "11", "msa" => "222",
+    //             "taki" => "11", "psa" => "12", "torresB" => "11", "torresBC" => "13",
+    //             "torresC" => "31", "mindiam1" => "12.2", "maxdiam1" => "13.2", 
+    // 		"mindiam2" => "11.1", "maxdiam2" => "22.2", "inList" => "Public: Edge-ons", "notInList" => "My observed Edge-ons");
+    $obs=array();
+    $sql = "";
+    $sqland = "";
+    $sql1 = "SELECT DISTINCT (objectnames.objectname) AS name, " .
+                            "(objectnames.altname) AS showname " . 
+            "FROM objectnames " . 
+            "JOIN objects ON objects.name = objectnames.objectname ";
+    $sql2 = "SELECT DISTINCT (objectpartof.objectname) AS name, " .
+                     "CONCAT((objectnames.altname), \"-\", (objectpartof.objectname)) As showname  " . 
+            "FROM objectpartof " . 
+            "JOIN objects ON (objects.name = objectpartof.objectname) " .
+            "JOIN objectnames ON (objectnames.objectname = objectpartof.partofname) ";
+    if(array_key_exists('inList',$queries) && $queries['inList'])
+    { if(substr($queries['inList'],0,7)=="Public:")
+	 	  { $sql1 .= "JOIN observerobjectlist AS A " .
+	               "ON A.objectname = objects.name ";
+        $sql2 .= "JOIN observerobjectlist AS A " .
+	               "ON A.objectname = objects.name ";
+		    $sqland .= "AND A.listname = \"" . $queries['inList'] . "\" AND A.objectname <>\"\" ";
+	    }
+		  elseif(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
+		  { $sql1 .= "JOIN observerobjectlist AS A " .
+ 	              "ON A.objectname = objects.name ";
+        $sql2 .= "JOIN observerobjectlist AS A " .
+	               "ON A.objectname = objects.name ";
+	      $sqland .= "AND A.observerid = \"" . $_SESSION['deepskylog_id'] . "\" AND A.listname = \"" . $queries['inList'] . "\" AND A.objectname <>\"\" ";
+		  }
+    }  
+/*
+    if(array_key_exists('notInList',$queries) && $queries['notInList'])
+    {
+	    if(substr($queries['notInList'],0,7)=="Public:")
+      { $sql1 .= "LEFT JOIN observerobjectlist AS B " .
+	               "ON B.objectname = objects.name ";
+        $sql2 .= "LEFT JOIN observerobjectlist AS B " .
+	               "ON B.objectname = objects.name ";
+		    $sqland .= "AND B.listname = \"" . $queries['notInList'] . "\" AND B.objectname IS NULL ";
+	    }
+		  elseif(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
+      { $sql1 .= "LEFT JOIN observerobjectlist AS B " .
+	               "ON B.objectname = objects.name ";
+        $sql2 .= "LEFT JOIN observerobjectlist AS B " .
+	               "ON B.objectname = objects.name ";
+	      $sqland .= "AND B.observerid = \"" . $_SESSION['deepskylog_id'] . "\" AND B.listname = \"" . $queries['notInList'] . "\" AND B.objectname IS NULL ";
+      }
+	  } 
+*/
+	  $sql1 .= "WHERE ";
+	  $sql2 .= "WHERE ";
+    if (array_key_exists('name',$queries) && $queries["name"] != "")
+      if ($exact == 0)
+        $sqland = $sqland . " AND (objectnames.catalog = \"" . $queries["name"] . "\")"; 
+      elseif ($exact == 1)
+        $sqland = $sqland . " AND (UPPER(objectnames.altname) like \"" . strtoupper($queries["name"]) . "\")";
+//       $sqland = $sqland . " AND (CONCAT(UPPER(objectnames.catalog),UPPER(objectnames.catindex)) like \"" . strtoupper(str_replace(' ','',$queries["name"])) . "\") ";
+    $sqland.=(array_key_exists('type',$queries)&&$queries['type'])?" AND (objects.type=\"".$queries['type']."\")":'';
+    $sqland.=(array_key_exists('con',$queries)&&$queries['con'])?" AND (objects.con=\"".$queries['con']."\")":'';
+    $sqland.=(array_key_exists('minmag',$queries)&&$queries['minmag'])?" AND (objects.mag>\"".$queries["minmag"]."\" or objects.mag like \"" . $queries["minmag"] . "\")":'';
+    $sqland.=(array_key_exists('maxmag',$queries)&&$queries['maxmag'])?" AND (objects.mag<\"".$queries["maxmag"]."\" or objects.mag like \"" . $queries["maxmag"] . "\")":'';
+    $sqland.=(array_key_exists('minsubr',$queries)&&$queries['minsubr'])?" AND objects.subr>=\"".$queries["minsubr"]."\"":'';
+    $sqland.=(array_key_exists('maxsubr',$queries)&&$queries['maxsubr'])?" AND objects.subr<=\"".$queries["maxsubr"]."\"":'';
+    $sqland.=(array_key_exists('minra',$queries)&&($queries['minra']!==''))?" AND (objects.ra >= \"" . $queries["minra"] . "\")":"";
+    $sqland.=(array_key_exists('maxra',$queries)&&$queries['maxra'])?" AND (objects.ra <= \"" . $queries["maxra"] . "\")":'';
+    $sqland.=(array_key_exists('mindecl',$queries)&&($queries['mindecl']!==''))?" AND (objects.decl >= \"" . $queries["mindecl"] . "\")":'';
+    $sqland.=(array_key_exists('maxdecl',$queries)&&$queries['maxdecl'])?" AND (objects.decl <= \"" . $queries["maxdecl"] . "\")":'';
+    $sqland.=(array_key_exists('mindiam1',$queries)&&$queries['mindiam1'])?" AND (objects.diam1 > \"" . $queries["mindiam1"] . "\" or objects.diam1 like \"" . $queries["mindiam1"] . "\")":'';
+    $sqland.=(array_key_exists('maxdiam1',$queries)&&$queries['maxdiam1'])?" AND (objects.diam1 <= \"" . $queries["maxdiam1"] . "\" or objects.diam1 like \"" . $queries["maxdiam1"] . "\")":'';
+    $sqland.=(array_key_exists('mindiam2',$queries)&&$queries['mindiam2'])?" AND (objects.diam2 > \"" . $queries["mindiam2"] . "\" or objects.diam2 like \"" . $queries["mindiam2"] . "\")":'';
+    $sqland.=(array_key_exists('maxdiam2',$queries)&&$queries['maxdiam2'])?" AND(objects.diam2 <= \"" . $queries["maxdiam2"] . "\" or objects.diam2 like \"" . $queries["maxdiam2"] . "\")":'';
+    $sqland.=(array_key_exists('atlas',$queries)&&$queries['atlas']&&array_key_exists('atlasPageNumber',$queries)&&$queries["atlasPageNumber"])?" AND (objects.".$queries["atlas"]."=\"".$queries["atlasPageNumber"]."\")":'';
+	  $sqland = substr($sqland, 4);
+    if(trim($sqland)=='') 
+	    $sqland=" (objectnames.altname like \"%\")";
+    if($partof)
+      $sql="(".$sql1.$sqland.") UNION (".$sql2. $sqland.")";
+    else
+      $sql = $sql1 . $sqland;		
+    $sql.=" LIMIT 0,10000";
+//  echo $sql."<p />";
+	  $run=$GLOBALS['objDatabase']->selectRecordset($sql);
+    $i=0;
+    if (array_key_exists('name',$queries)&&$queries["name"])
+	  { while($get = mysql_fetch_object($run))
+        if($get->showname==$get->name)
+        { if(!array_key_exists($get->showname, $obs))
+   	        $obs[$get->showname] = array($i++,$get->name);		
+        }
+  		  else
+  		    if(!array_key_exists($get->showname." (".$get->name.")", $obs))
+   	        $obs[$get->showname." (".$get->name.")"] = array($i++,$get->name);
+    }
+ 	  else
+      while($get = mysql_fetch_object($run))
+        if(!array_key_exists($get->name, $obs))
+   	      $obs[$get->name] = array($i++,$get->name);				
+    $obs = $this->getSeenObjectDetails($obs, $seen);
+    if(array_key_exists('minContrast', $queries)&&$queries["minContrast"])
+      for($new_obs=$obs,$obs=array();list($key,$value)=each($new_obs);)
+        if ($value['objectcontrast']>=$queries["minContrast"])
+			    $obs[]=$value;
+    if(array_key_exists('maxContrast', $queries)&&$queries["maxContrast"])
+      for($new_obs=$obs,$obs=array();list($key,$value)=each($new_obs);)
+        if ($value['objectcontrast']<=$queries["maxContrast"])
+			    $obs[]=$value;
+    return $obs;
+  }
+  public  function getObjectsFromCatalog($cat)
+  { global $objDatabase;
+	  if(substr($cat,0,5)=="List:")
+      if(substr($cat,5,7)=="Public:")
+        $sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As altname, observerobjectlist.objectplace As catindex  FROM observerobjectlist " .
+	  		       "WHERE (observerobjectlist.listname = \"" . substr($cat,5) . "\")";
+	    else
+        $sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As altname, observerobjectlist.objectplace As catindex FROM observerobjectlist " .
+	  	     	   "WHERE (observerobjectlist.listname = \"" . substr($cat,5) . "\") AND (observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\")";
+	  else
+      $sql = "SELECT DISTINCT objectnames.objectname, objectnames.catindex, objectnames.altname " .
+	           "FROM objectnames WHERE objectnames.catalog = \"$cat\"";
+    $run=$objDatabase($sql);
+    $obs=array();
+	  while($get = mysql_fetch_object($run))
+	    if($get->objectname)
+        $obs[$get->catindex] = array($get->objectname, $get->altname);
+	  uksort($obs,"strnatcasecmp");
+    return $obs;
+  }
+  public function getObjectVisibilities($obs)
+  { global $objContrast;
+    $popup='';
+    $popupT = $this->prepareObjectsContrast();
+    $result2=$obs;
+    $obscnt=sizeof($obs);
+    if($obscnt > 0)
+    { $j=0;
+		  reset($obs);
+      while(list($key, $value) = each($obs))
+      { $contrast = "-";
+        $contype = "";
+		    $contrastcalc1="";
+        if($popupT)
+	 	      $popup=$popupT;
+		    else
+        { $magni = $result2[$j]['objectmagnitude'];
+			 	  $subrobj = $result2[$j]['objectsbcalc'];
+          if($magni>90)
+            $popup = LangContrastNoMagnitude;
+          else 
+		      { $diam1 = $result2[$j]['objectdiam1'];
+            $diam1 = $diam1 / 60.0;
+            if($diam1==0)
+              $popup = LangContrastNoDiameter;
+            else
+            { $diam2 = $result2[$j]['objectdiam2'];
+              $diam2 = $diam2 / 60.0;
+              if ($diam2 == 0)
+                $diam2 = $diam1;
+              $contrastCalc = $objContrast->calculateContrast($magni, $subrobj, $diam1,$diam2);
+              if ($contrastCalc[0] < -0.2) 
+					   	  $popup = $result2[$j]['showname'] . LangContrastNotVisible . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
+              else if ($contrastCalc[0] < 0.1)
+						    $popup = LangContrastQuestionable . $result2[$j]['showname'] . LangContrastQuestionableB . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
+              else if ($contrastCalc[0] < 0.35)
+						    $popup = $result2[$j]['showname'] . LangContrastDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
+              else if ($contrastCalc[0] < 0.5)
+						    $popup = $result2[$j]['showname'] . LangContrastQuiteDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
+              else if ($contrastCalc[0] < 1.0)
+						    $popup = $result2[$j]['showname'] . LangContrastEasy . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
+              else
+						    $popup = $result2[$j]['showname'] . LangContrastVeryEasy . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
+              if ($contrastCalc[2] == "")
+	              $contrastcalc1=((int)$contrastCalc[1]) . "x";
+					    else
+						    $contrastcalc1=((int)$contrastCalc[1]) . "x - " . $contrastCalc[2];
+              $contrast = sprintf("%.2f",       $contrastCalc[0]);
+     	        if ($contrastCalc[0] < -0.2)      $contype = "typeNotVisible";
+              else if ($contrastCalc[0] < 0.1)  $contype = "typeQuestionable";
+              else if ($contrastCalc[0] < 0.35) $contype = "typeDifficult";
+              else if ($contrastCalc[0] < 0.5)  $contype = "typeQuiteDifficult";
+              else if ($contrastCalc[0] < 1.0)  $contype = "typeEasy";
+              else                              $contype = "typeVeryEasy";
+            }
+          }
+        }
+        $result2[$j]['objectcontrast'] = $contrast;
+        $result2[$j]['objectcontrasttype'] = $contype;
+        $result2[$j]['objectcontrastpopup'] = $popup;
+        $result2[$j]['objectoptimalmagnification'] = $contrastcalc1;
+        $j++;		
+      }
+    }
+	  $obs = $result2;
+    return $obs; 
+  }
+  private function getPartOfNames($name)
+  { global $objDatabase;
+    $objDatabase->selectSingleArray("SELECT objectpartof.partofname FROM objectpartof WHERE objectpartof.objectname = \"".$name."\"",'partofname');
+  }
   public  function getSeen($object)                                             // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
   { $seen='-';
     if($ObsCnt=$GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 ",'ObsCnt'))
@@ -170,6 +446,75 @@ class Objects implements iObject
 	  }
 		return;
 	}
+  public  function getSeenObjectDetails($obs, $seen="D")
+  { global $objAtlas;
+    $result2=array();
+	  $obscnt=sizeof($obs);
+    if($obscnt > 0)
+    { $j=0;
+		  reset($obs);
+      while(list($key,$value)=each($obs))
+      { $object=$value[1];
+        $seentype = "-";
+        $sql = "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ";
+        $run = mysql_query($sql) or die(mysql_error());
+        $get2 = mysql_fetch_object($run);
+        if ($get2->ObsCnt)
+        { $seentype="X";
+          if(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
+          { $sql = "SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate, MAX(observations.id) As PersObsMaxId " .
+					         "FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"".$_SESSION['deepskylog_id']."\" AND visibility != 7";
+            $run = mysql_query($sql) or die(mysql_error());
+            $get3 = mysql_fetch_object($run);
+            if ($get3->PersObsCnt>0)
+				      $seentype="Y";
+          }
+        }
+			  if(($seen == "D") ||
+			    (strpos(" " . $seen, $seentype)))
+		    { $result2[$j]['objectname'] = $value[1];
+          $sql = "SELECT * FROM objects WHERE name = \"". $value[1] . "\"";
+          $run = mysql_query($sql) or die(mysql_error());
+          $get = mysql_fetch_object($run);
+          if($get)
+			 	  { $type = $get->type;
+            $con = $get->con;
+            $result2[$j]['objecttype'] =  $type;
+            $result2[$j]['objectconstellation'] =  $con;
+            $objectseen='';
+					  $objectseenlink='';
+            $objectlastseen='';
+					  $objectlastseenlink='';
+            $this->getSeenLastseenLink($result2[$j]['objectname'],$objectseen,$objectseenlink,$objectlastseen,$objectlastseenlink); 
+            $result2[$j]['objectseen']=$objectseen;
+            $result2[$j]['objectlastseen']=$objectlastseen;       
+            $result2[$j]['objectseenlink']=$objectseenlink;
+            $result2[$j]['objectlastseenlink']=$objectlastseenlink;       
+            $result2[$j]['showname'] =  $key;
+  	        $result2[$j]['objectmagnitude'] =  $get->mag;
+  	        $result2[$j]['objectsurfacebrightness'] =  $get->subr;
+  	        $result2[$j]['objectra'] =  $get->ra;
+  	        $result2[$j]['objectdecl'] =  $get->decl;
+  	        $result2[$j]['objectdiam1'] = $get->diam1;
+  	        $result2[$j]['objectdiam2'] = $get->diam2;
+  	        $result2[$j]['objectpa'] = $get->pa;
+            $result2[$j]['objectpositioninlist'] = $value[0]; 
+            $result2[$j]['objectsbcalc'] = $get->SBObj; 
+            $result2[$j]['objectdescription'] = $get->description;
+					  if(count($value)==3)
+					    $result2[$j]['objectlistdescription'] = $value[2];
+					  reset($objAtlas->atlasCodes);
+					  while(list($key,$value)=each($objAtlas->atlasCodes))
+					    $result2[$j][$key] =  $get->$key;
+		      }
+          $j++;		
+        }
+      }
+	  }
+	  $obs=$result2;
+    $obs=$this->getObjectVisibilities($obs);
+    return $obs;
+  }
   private function getSize($name)                                               // getSize returns the size of the object
   { $sql = "SELECT diam1, diam2 FROM objects WHERE name = \"$name\"";
     $run = mysql_query($sql) or die(mysql_error());
@@ -177,27 +522,29 @@ class Objects implements iObject
     return $this->calculateSize($get->diam1, $get->diam2);
   }
   public  function newAltName($name, $cat, $catindex)
-  { $GLOBALS['objDatabase']->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"".ucwords(trim($catindex))."\")))");
+  { global $objDatabase;
+	  return $objDatabase->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"".ucwords(trim($catindex))."\")))");
   }
   public  function newName($name, $cat, $catindex)
   { $newname = trim($cat . " " . ucwords(trim($catindex)));
 	  $newcatindex = ucwords(trim($catindex));
-    $GLOBALS['objDatabase']->execSQL("UPDATE objectnames SET catalog=\"$cat\", catindex=\"$newcatindex\", altname=TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")) WHERE objectname = \"$name\" AND altname = \"$name\"");
-    $GLOBALS['objDatabase']->execSQL("UPDATE objectnames SET objectname=\"$newname\" WHERE objectname = \"$name\"");
-    $GLOBALS['objDatabase']->execSQL("UPDATE objects SET name=\"$newname\" WHERE name = \"$name\"");
-    $GLOBALS['objDatabase']->execSQL("UPDATE observerobjectlist SET objectshowname=\"$newname\" WHERE objectname = \"$name\"");
-    $GLOBALS['objDatabase']->execSQL("UPDATE observerobjectlist SET objectname=\"$newname\" WHERE objectname = \"$name\"");
-    $GLOBALS['objDatabase']->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname = \"$name\"");
-    $GLOBALS['objDatabase']->execSQL("UPDATE objectpartof SET objectname=\"$newname\" WHERE objectname = \"$name\"");
-    $GLOBALS['objDatabase']->execSQL("UPDATE objectpartof SET partofname=\"$newname\" WHERE partofname = \"$name\"");
+    global $objDatabase;
+	  $objDatabase->execSQL("UPDATE objectnames SET catalog=\"$cat\", catindex=\"$newcatindex\", altname=TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")) WHERE objectname = \"$name\" AND altname = \"$name\"");
+    $objDatabase->execSQL("UPDATE objectnames SET objectname=\"$newname\" WHERE objectname = \"$name\"");
+    $objDatabase->execSQL("UPDATE objects SET name=\"$newname\" WHERE name = \"$name\"");
+    $objDatabase->execSQL("UPDATE observerobjectlist SET objectshowname=\"$newname\" WHERE objectname = \"$name\"");
+    $objDatabase->execSQL("UPDATE observerobjectlist SET objectname=\"$newname\" WHERE objectname = \"$name\"");
+    $objDatabase->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname = \"$name\"");
+    $objDatabase->execSQL("UPDATE objectpartof SET objectname=\"$newname\" WHERE objectname = \"$name\"");
+    $objDatabase->execSQL("UPDATE objectpartof SET partofname=\"$newname\" WHERE partofname = \"$name\"");
   } 
   public  function newPartOf($name, $cat, $catindex)
-  { $GLOBALS['objDatabase']->execSQL("INSERT INTO objectpartof (objectname, partofname) VALUES (\"$name\", \"".trim($cat . " " . ucwords(trim($catindex)))."\")");
+  { global $objDatabase;
+	  return $objDatabase->execSQL("INSERT INTO objectpartof (objectname, partofname) VALUES (\"$name\", \"".trim($cat . " " . ucwords(trim($catindex)))."\")");
   }
   private function prepareObjectsContrast($doLogin=false)                       // internal procedure to speed up contrast calculations
-  { include_once "contrast.php";
-    $contrastObj = new Contrast;
-    if(!array_key_exists('LTC',$_SESSION)||(!$_SESSION['LTC']))
+  { global $objContrast;
+	  if(!array_key_exists('LTC',$_SESSION)||(!$_SESSION['LTC']))
 		 $_SESSION['LTC'] = array(array(4, -0.3769, -1.8064, -2.3368, -2.4601, -2.5469, -2.5610, -2.5660), 
                               array(5, -0.3315, -1.7747, -2.3337, -2.4608, -2.5465, -2.5607, -2.5658),
                               array(6, -0.2682, -1.7345, -2.3310, -2.4605, -2.5467, -2.5608, -2.5658),
@@ -305,7 +652,7 @@ class Objects implements iObject
       	     $popup = LangContrastNoLimMag;
 					 else
       	   { if($get6->skyBackground < -900)
-          	   $_SESSION['initBB'] = $contrastObj->calculateSkyBackgroundFromLimitingMagnitude($get6->limitingMagnitude);
+          	   $_SESSION['initBB'] = $objContrast->calculateSkyBackgroundFromLimitingMagnitude($get6->limitingMagnitude);
         	   else
           	   $_SESSION['initBB'] = $get6->skyBackground;
   	         $sql7 = "SELECT diameter, name from instruments where id = \"" . $get5->stdtelescope . "\"";
@@ -333,20 +680,27 @@ class Objects implements iObject
   public  function removeAndReplaceObjectBy($name, $cat, $catindex)
   { $newname = trim($cat . " " . ucwords(trim($catindex)));
 	  $newcatindex = ucwords(trim($catindex));
-    $GLOBALS['objDatabase']->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname=\"$name\"");
-    $GLOBALS['objDatabase']->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname=\"$name\"");
-    $GLOBALS['objDatabase']->execSQL("UPDATE observerobjectlist SET objectname=\"$newname\" WHERE objectname=\"$name\"");
-    $GLOBALS['objDatabase']->execSQL("UPDATE observerobjectlist SET objectshowname=\"$newname\" WHERE objectname=\"$name\"");
-    $GLOBALS['objDatabase']->execSQL("DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\"");
-    $GLOBALS['objDatabase']->execSQL("DELETE objectpartof.* FROM objectpartof WHERE objectname=\"$name\" OR partofname = \"$name\"");
-    $GLOBALS['objDatabase']->execSQL("DELETE objects.* FROM objects WHERE name = \"$name\"");
+    global $objDatabase;
+	  $objDatabase->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname=\"$name\"");
+    $objDatabase->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname=\"$name\"");
+    $objDatabase->execSQL("UPDATE observerobjectlist SET objectname=\"$newname\" WHERE objectname=\"$name\"");
+    $objDatabase->execSQL("UPDATE observerobjectlist SET objectshowname=\"$newname\" WHERE objectname=\"$name\"");
+    $objDatabase->execSQL("DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\"");
+    $objDatabase->execSQL("DELETE objectpartof.* FROM objectpartof WHERE objectname=\"$name\" OR partofname = \"$name\"");
+    $objDatabase->execSQL("DELETE objects.* FROM objects WHERE name = \"$name\"");
   } 
 	public  function removeAltName($name, $cat, $catindex)                        
-  { $GLOBALS['objDatabase']->execSQL("DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\" AND catalog = \"$cat\" AND catindex=\"".ucwords(trim($catindex))."\"");
+  { global $objDatabase;
+	  return $objDatabase->execSQL("DELETE objectnames.* FROM objectnames WHERE objectname = \"$name\" AND catalog = \"$cat\" AND catindex=\"".ucwords(trim($catindex))."\"");
   }
   public  function removePartOf($name, $cat, $catindex)
-  { $GLOBALS['objDatabase']->execSQL("DELETE objectpartof.* FROM objectpartof WHERE objectname = \"$name\" AND partofname = \"".trim($cat . " " . ucwords(trim($catindex)))."\"");
+  { global $objDatabase;
+	  return $objDatabase->execSQL("DELETE objectpartof.* FROM objectpartof WHERE objectname = \"$name\" AND partofname = \"".trim($cat . " " . ucwords(trim($catindex)))."\"");
   } 
+  public  function setDsoProperty($name,$property,$propertyValue)                            // sets the property to the specified value for the given object
+  { global $objDatabase;
+    return $objDatabase->execSQL("UPDATE objects SET ".$property." = \"".$propertyValue."\" WHERE name = \"".$name."\"");
+  }
   public  function sortObjects($objectList, $sort, $reverse=false)              // Sort the array of objectList on the $sort field, and in second order on the showname field 
   { if(!$objectList||count($objectList)<2)
 	    return $objectList;
@@ -434,580 +788,63 @@ class Objects implements iObject
 	
 	
 	
-
-
 	
- function getObjectVisibilities($obs)
- { include_once "contrast.php";
-   $contrastObj = new Contrast;
-
-	 
-	 $popup='';
-   $popupT = $this->prepareObjectsContrast();
-   $result2=$obs;
-
-	 $obscnt=sizeof($obs);
-   if($obscnt > 0)
-   { $j=0;
-		 reset($obs);
-     while(list($key, $value) = each($obs))
-     { $contrast = "-";
-       $contype = "";
-		   $contrastcalc1="";
-		
-       if($popupT)
-		     $popup=$popupT;
-		   else
-       { $magni = $result2[$j]['objectmagnitude'];
-				 $subrobj = $result2[$j]['objectsbcalc'];
-         if($magni>90)
-           $popup = LangContrastNoMagnitude;
-         else 
-		     { $diam1 = $result2[$j]['objectdiam1'];
-           $diam1 = $diam1 / 60.0;
-
-           if($diam1==0)
-             $popup = LangContrastNoDiameter;
-           else
-           { $diam2 = $result2[$j]['objectdiam2'];
-             $diam2 = $diam2 / 60.0;
-             if ($diam2 == 0)
-               $diam2 = $diam1;
-             $contrastCalc = $contrastObj->calculateContrast($magni, $subrobj, $diam1,$diam2);
-             if ($contrastCalc[0] < -0.2) 
-						 $popup = $result2[$j]['showname'] . LangContrastNotVisible . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-             else if ($contrastCalc[0] < 0.1)
-						 $popup = LangContrastQuestionable . $result2[$j]['showname'] . LangContrastQuestionableB . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-             else if ($contrastCalc[0] < 0.35)
-						 $popup = $result2[$j]['showname'] . LangContrastDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-             else if ($contrastCalc[0] < 0.5)
-						 $popup = $result2[$j]['showname'] . LangContrastQuiteDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-             else if ($contrastCalc[0] < 1.0)
-						 $popup = $result2[$j]['showname'] . LangContrastEasy . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-             else
-						 $popup = $result2[$j]['showname'] . LangContrastVeryEasy . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-				      
-             if ($contrastCalc[2] == "")
-					     $contrastcalc1=((int)$contrastCalc[1]) . "x";
-					   else
-						   $contrastcalc1=((int)$contrastCalc[1]) . "x - " . $contrastCalc[2];
-
-             $contrast = sprintf("%.2f",       $contrastCalc[0]);
-     	       if ($contrastCalc[0] < -0.2)      $contype = "typeNotVisible";
-             else if ($contrastCalc[0] < 0.1)  $contype = "typeQuestionable";
-             else if ($contrastCalc[0] < 0.35) $contype = "typeDifficult";
-             else if ($contrastCalc[0] < 0.5)  $contype = "typeQuiteDifficult";
-             else if ($contrastCalc[0] < 1.0)  $contype = "typeEasy";
-             else                              $contype = "typeVeryEasy";
-           }
-         }
-       }
-       $result2[$j]['objectcontrast'] = $contrast;
-       $result2[$j]['objectcontrasttype'] = $contype;
-       $result2[$j]['objectcontrastpopup'] = $popup;
-       $result2[$j]['objectoptimalmagnification'] = $contrastcalc1;
-       $j++;		
-     }
-   }
-	 $obs = $result2;
-   return $obs; 
- }
- function getSeenObjectDetails($obs, $seen="D")
- { global $objAtlas;
-   $result2=array();
-	 $obscnt=sizeof($obs);
-   if($obscnt > 0)
-   { $j=0;
-		 reset($obs);
-     while(list($key,$value)=each($obs))
-     { $object=$value[1];
-       $seentype = "-";
-       $sql = "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ";
-       $run = mysql_query($sql) or die(mysql_error());
-       $get2 = mysql_fetch_object($run);
-       if ($get2->ObsCnt)
-       { $seentype="X";
-         if(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
-         { $sql = "SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate, MAX(observations.id) As PersObsMaxId " .
-					        "FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"".$_SESSION['deepskylog_id']."\" AND visibility != 7";
-           $run = mysql_query($sql) or die(mysql_error());
-           $get3 = mysql_fetch_object($run);
-           if ($get3->PersObsCnt>0)
-				     $seentype="Y";
-         }
-       }
-			 if(($seen == "D") ||
-			   (strpos(" " . $seen, $seentype)))
-		   { $result2[$j]['objectname'] = $value[1];
-         $sql = "SELECT * FROM objects WHERE name = \"". $value[1] . "\"";
-         $run = mysql_query($sql) or die(mysql_error());
-         $get = mysql_fetch_object($run);
-         if($get)
-				 { $type = $get->type;
-           $con = $get->con;
-           $result2[$j]['objecttype'] =  $type;
-           $result2[$j]['objectconstellation'] =  $con;
-           $objectseen='';
-					 $objectseenlink='';
-           $objectlastseen='';
-					 $objectlastseenlink='';
-           $this->getSeenLastseenLink($result2[$j]['objectname'],$objectseen,$objectseenlink,$objectlastseen,$objectlastseenlink); 
-           $result2[$j]['objectseen']=$objectseen;
-           $result2[$j]['objectlastseen']=$objectlastseen;       
-           $result2[$j]['objectseenlink']=$objectseenlink;
-           $result2[$j]['objectlastseenlink']=$objectlastseenlink;       
-           $result2[$j]['showname'] =  $key;
-  	       $result2[$j]['objectmagnitude'] =  $get->mag;
-  	       $result2[$j]['objectsurfacebrightness'] =  $get->subr;
-  	       $result2[$j]['objectra'] =  $get->ra;
-  	       $result2[$j]['objectdecl'] =  $get->decl;
-  	       $result2[$j]['objectdiam1'] = $get->diam1;
-  	       $result2[$j]['objectdiam2'] = $get->diam2;
-  	       $result2[$j]['objectpa'] = $get->pa;
-           $result2[$j]['objectpositioninlist'] = $value[0]; 
-           $result2[$j]['objectsbcalc'] = $get->SBObj; 
-           $result2[$j]['objectdescription'] = $get->description;
-					 if(count($value)==3)
-					   $result2[$j]['objectlistdescription'] = $value[2];
-					 reset($objAtlas->atlasCodes);
-					 while(list($key,$value)=each($objAtlas->atlasCodes))
-					   $result2[$j][$key] =  $get->$key;
-		     }
-         $j++;		
-       }
-     }
-	 }
-	 $obs=$result2;
-   $obs=$this->getObjectVisibilities($obs);
-   return $obs;
- }
- function getPartOfObjects($obs)
- { $poobs=array();
-   $i=0;
-	 while(list($key,$value)=each($obs))
-   { $poobs[]=$value;
-		 $run=$GLOBALS['objDatabase']->selectRecordset("SELECT DISTINCT (objectpartof.objectname) AS name, " .
-	                                                                 "CONCAT((\"" . $value['objectname'] . "\"), \"-\", (objectpartof.objectname)) As showname  " . 
-	                                                 "FROM objectpartof " . 
-				                                           "WHERE objectpartof.partofname = \"" . $value['objectname'] . "\";");
-		 $temp=array();
-		 while($get=mysql_fetch_object($run))
-	     $temp[$get->showname]=array($i++,$get->name);
-		 if(count($temp)>0)
-     { $temp=$this->getSeenObjectDetails($temp);
-       $poobs=array_merge($poobs,$temp);
-     }
- 	 }
-   return $poobs;
- }
- // getObjectFromQuery returns an array with the names of all objects where
- // the queries are defined in an array.
- // An example of an array :  
- //  $q = array("name" => "NGC", "type" => "GALXY", "constellation" => "AND", 
- //             "minmag" => "12.0", "maxmag" => "14.0", "minsubr" => "13.0", 
- //             "maxsubr" => "14.0", "minra" => "0.3", "maxra" => "0.9", 
- //             "mindecl" => "24.0", "maxdecl" => "30.0", "urano" => "111", 
- // 		        "uranonew" => "111", "sky" => "11", "msa" => "222",
- //             "taki" => "11", "psa" => "12", "torresB" => "11", "torresBC" => "13",
- //             "torresC" => "31", "mindiam1" => "12.2", "maxdiam1" => "13.2", 
- // 		"mindiam2" => "11.1", "maxdiam2" => "22.2", "inList" => "Public: Edge-ons", "notInList" => "My observed Edge-ons");
- function getObjectFromQuery($queries, $exact = 0, $seen="D", $partof = 0)
- { $obs=array();
-   $sql = "";
-   $sqland = "";
-   $sql1 = "SELECT DISTINCT (objectnames.objectname) AS name, " .
-                           "(objectnames.altname) AS showname " . 
-           "FROM objectnames " . 
-           "JOIN objects ON objects.name = objectnames.objectname ";
-   $sql2 = "SELECT DISTINCT (objectpartof.objectname) AS name, " .
-                    "CONCAT((objectnames.altname), \"-\", (objectpartof.objectname)) As showname  " . 
-           "FROM objectpartof " . 
-           "JOIN objects ON (objects.name = objectpartof.objectname) " .
-           "JOIN objectnames ON (objectnames.objectname = objectpartof.partofname) ";
-   if(array_key_exists('inList',$queries) && $queries['inList'])
-   { if(substr($queries['inList'],0,7)=="Public:")
-		 { $sql1 .= "JOIN observerobjectlist AS A " .
-	              "ON A.objectname = objects.name ";
-       $sql2 .= "JOIN observerobjectlist AS A " .
-	              "ON A.objectname = objects.name ";
-		   $sqland .= "AND A.listname = \"" . $queries['inList'] . "\" AND A.objectname <>\"\" ";
-	   }
-		 elseif(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
-		 { $sql1 .= "JOIN observerobjectlist AS A " .
- 	             "ON A.objectname = objects.name ";
-       $sql2 .= "JOIN observerobjectlist AS A " .
-	              "ON A.objectname = objects.name ";
-	     $sqland .= "AND A.observerid = \"" . $_SESSION['deepskylog_id'] . "\" AND A.listname = \"" . $queries['inList'] . "\" AND A.objectname <>\"\" ";
-		 }
-   }
-
-/*
-  if(array_key_exists('notInList',$queries) && $queries['notInList'])
-  {
-	  if(substr($queries['notInList'],0,7)=="Public:")
-    {
-		  $sql1 .= "LEFT JOIN observerobjectlist AS B " .
-	             "ON B.objectname = objects.name ";
-      $sql2 .= "LEFT JOIN observerobjectlist AS B " .
-	             "ON B.objectname = objects.name ";
-		  $sqland .= "AND B.listname = \"" . $queries['notInList'] . "\" AND B.objectname IS NULL ";
-	  }
-		elseif(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
-    {
-		  $sql1 .= "LEFT JOIN observerobjectlist AS B " .
-	             "ON B.objectname = objects.name ";
-      $sql2 .= "LEFT JOIN observerobjectlist AS B " .
-	             "ON B.objectname = objects.name ";
-	    $sqland .= "AND B.observerid = \"" . $_SESSION['deepskylog_id'] . "\" AND B.listname = \"" . $queries['notInList'] . "\" AND B.objectname IS NULL ";
-    }
-	} 
-*/
 	
-	 $sql1 .= "WHERE ";
-	 $sql2 .= "WHERE ";
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
-   if (array_key_exists('name',$queries) && $queries["name"] != "")
-     if ($exact == 0)
-       $sqland = $sqland . " AND (objectnames.catalog = \"" . $queries["name"] . "\")"; 
-     elseif ($exact == 1)
-       $sqland = $sqland . " AND (UPPER(objectnames.altname) like \"" . strtoupper($queries["name"]) . "\")";
-//       $sqland = $sqland . " AND (CONCAT(UPPER(objectnames.catalog),UPPER(objectnames.catindex)) like \"" . strtoupper(str_replace(' ','',$queries["name"])) . "\") ";
-   $sqland.=(array_key_exists('type',$queries)&&$queries['type'])?" AND (objects.type=\"".$queries['type']."\")":'';
-   $sqland.=(array_key_exists('con',$queries)&&$queries['con'])?" AND (objects.con=\"".$queries['con']."\")":'';
-   $sqland.=(array_key_exists('minmag',$queries)&&$queries['minmag'])?" AND (objects.mag>\"".$queries["minmag"]."\" or objects.mag like \"" . $queries["minmag"] . "\")":'';
-   $sqland.=(array_key_exists('maxmag',$queries)&&$queries['maxmag'])?" AND (objects.mag<\"".$queries["maxmag"]."\" or objects.mag like \"" . $queries["maxmag"] . "\")":'';
-   $sqland.=(array_key_exists('minsubr',$queries)&&$queries['minsubr'])?" AND objects.subr>=\"".$queries["minsubr"]."\"":'';
-   $sqland.=(array_key_exists('maxsubr',$queries)&&$queries['maxsubr'])?" AND objects.subr<=\"".$queries["maxsubr"]."\"":'';
-   $sqland.=(array_key_exists('minra',$queries)&&($queries['minra']!==''))?" AND (objects.ra >= \"" . $queries["minra"] . "\")":"";
-   $sqland.=(array_key_exists('maxra',$queries)&&$queries['maxra'])?" AND (objects.ra <= \"" . $queries["maxra"] . "\")":'';
-   $sqland.=(array_key_exists('mindecl',$queries)&&($queries['mindecl']!==''))?" AND (objects.decl >= \"" . $queries["mindecl"] . "\")":'';
-   $sqland.=(array_key_exists('maxdecl',$queries)&&$queries['maxdecl'])?" AND (objects.decl <= \"" . $queries["maxdecl"] . "\")":'';
-   $sqland.=(array_key_exists('mindiam1',$queries)&&$queries['mindiam1'])?" AND (objects.diam1 > \"" . $queries["mindiam1"] . "\" or objects.diam1 like \"" . $queries["mindiam1"] . "\")":'';
-   $sqland.=(array_key_exists('maxdiam1',$queries)&&$queries['maxdiam1'])?" AND (objects.diam1 <= \"" . $queries["maxdiam1"] . "\" or objects.diam1 like \"" . $queries["maxdiam1"] . "\")":'';
-   $sqland.=(array_key_exists('mindiam2',$queries)&&$queries['mindiam2'])?" AND (objects.diam2 > \"" . $queries["mindiam2"] . "\" or objects.diam2 like \"" . $queries["mindiam2"] . "\")":'';
-   $sqland.=(array_key_exists('maxdiam2',$queries)&&$queries['maxdiam2'])?" AND(objects.diam2 <= \"" . $queries["maxdiam2"] . "\" or objects.diam2 like \"" . $queries["maxdiam2"] . "\")":'';
-   $sqland.=(array_key_exists('atlas',$queries)&&$queries['atlas']&&array_key_exists('atlasPageNumber',$queries)&&$queries["atlasPageNumber"])?" AND (objects.".$queries["atlas"]."=\"".$queries["atlasPageNumber"]."\")":'';
-	 $sqland = substr($sqland, 4);
-   if(trim($sqland)=='') 
-	   $sqland=" (objectnames.altname like \"%\")";
-   if($partof)
-     $sql="(".$sql1.$sqland.") UNION (".$sql2. $sqland.")";
-   else
-     $sql = $sql1 . $sqland;		
-   $sql.=" LIMIT 0,10000";
-//echo $sql."<p />";
-	$run=$GLOBALS['objDatabase']->selectRecordset($sql);
-  $i=0;
-  if (array_key_exists('name',$queries)&&$queries["name"])
-	{ while($get = mysql_fetch_object($run))
-      if($get->showname==$get->name)
-      { if(!array_key_exists($get->showname, $obs))
-   	      $obs[$get->showname] = array($i++,$get->name);		
-      }
-  		else
-  		  if(!array_key_exists($get->showname." (".$get->name.")", $obs))
-   	      $obs[$get->showname." (".$get->name.")"] = array($i++,$get->name);
-  }
-	else
-    while($get = mysql_fetch_object($run))
-      if(!array_key_exists($get->name, $obs))
-   	    $obs[$get->name] = array($i++,$get->name);				
-  $obs = $this->getSeenObjectDetails($obs, $seen);
-  if(array_key_exists('minContrast', $queries)&&$queries["minContrast"])
-    for($new_obs=$obs,$obs=array();list($key,$value)=each($new_obs);)
-      if ($value['objectcontrast']>=$queries["minContrast"])
-			  $obs[]=$value;
-  if(array_key_exists('maxContrast', $queries)&&$queries["maxContrast"])
-    for($new_obs=$obs,$obs=array();list($key,$value)=each($new_obs);)
-      if ($value['objectcontrast']<=$queries["maxContrast"])
-			  $obs[]=$value;
 
-   return $obs;
- }
- // getSelectedObjects returns an array with the names of all objects where the 
- // databasefield has the given value.
- function getSelectedObjects($dbfield, $value)
- {
-  $db = new database;
-  $db->login();
-  if ($dbfield == "name")
-  {
-   $sql = "SELECT * FROM objects INNER JOIN objectnames WHERE objectname.catalog like \"$value%\"";
-  }
-  else
-  {
-   $sql = "SELECT * FROM objects where $dbfield like \"$value%\"";
-  }  
-  $run = mysql_query($sql) or die(mysql_error());
-  while($get = mysql_fetch_object($run))
-  {
-   $obs[] = $get->name;
-  }
-  $db->logout();
-  return $obs;
- }
- function getObjectsFromCatalog($cat)
- {if(substr($cat,0,5)=="List:")
-    if(substr($cat,5,7)=="Public:")
-      $sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As altname, observerobjectlist.objectplace As catindex  FROM observerobjectlist " .
-	  		     "WHERE (observerobjectlist.listname = \"" . substr($cat,5) . "\")";
-	  else
-      $sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As altname, observerobjectlist.objectplace As catindex FROM observerobjectlist " .
-	  	   	   "WHERE (observerobjectlist.listname = \"" . substr($cat,5) . "\") AND (observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\")";
-	else
-    $sql = "SELECT DISTINCT objectnames.objectname, objectnames.catindex, objectnames.altname " .
-	         "FROM objectnames WHERE objectnames.catalog = \"$cat\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  $obs=array();
-	while($get = mysql_fetch_object($run))
-	  if($get->objectname)
-      $obs[$get->catindex] = array($get->objectname, $get->altname);
-	uksort($obs,"strnatcasecmp");
-  return $obs;
- }
-// getExactObject returns the exact name of an object
- function getLikeDsObject($value, $cat='', $catindex='')
- { $result=array();
-	 $value2=trim($value);
-	 $value=strtoupper(trim($value));
-   if($value!='')
-     $sql = "SELECT objectnames.objectname FROM objectnames " .
-		        "WHERE UPPER(altname) LIKE \"$value\" " .
-					  "OR altname LIKE \"$value2\"";
-	 else
-	 { $catindex=ucwords($catindex);
-     $sql = "SELECT objectnames.objectname FROM objectnames " .
-		        "WHERE CONCAT(objectnames.catalog, ' ', objectnames.catindex) LIKE \"$cat $catindex\"";
-	 }
-	 $run = mysql_query($sql) or die(mysql_error());
-	 while($get = mysql_fetch_object($run))
-     $result[] = $get->objectname;
-	 return $result;
- }
- public function getExactDsObject($value, $cat='', $catindex='')        // getExactObject returns the exact name of an object
- { if($value)
-    $sql = "SELECT objectnames.objectname FROM objectnames " .
-		  	   "WHERE UPPER(altname) = \"".strtoupper(trim($value))."\" " .
-					 "OR altname = \"".trim($value)."\"";
-	 else
-	   $sql = "SELECT objectnames.objectname FROM objectnames " .
-		        "WHERE objectnames.catalog=\"".$cat."\" AND objectnames.catindex=\"".ucwords(trim($catindex))."\"";
-	 if((!($object=$GLOBALS['objDatabase']->selectSingleValue($sql,'objectname','')))&&$value)
-	 { $sql="SELECT objectnames.objectname FROM objectnames " .
-		        "WHERE CONCAT(UPPER(objectnames.catalog),UPPER(objectnames.catindex))=\"".strtoupper(str_replace(' ','',$value))."\"";
-	   $object=$GLOBALS['objDatabase']->selectSingleValue($sql,'objectname','');
-	 }    
-   return $object;
- }
- // getSurfaceBrightness returns the surface brightness of the object
- function getSurfaceBrightness($name)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $sb = $get->subr;
-
-  $db->logout();
-
-  return $sb;
- }
- function getDiam1($name) // getDiam1 returns the size of the object
- { return $GLOBALS['objDatabase']->selectSingleValue("SELECT diam1 FROM objects WHERE name = \"".$name."\"",'diam1');
- }
- // getDiam2 returns the size of the object
- function getDiam2($name)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $diam2 = $get->diam2;
-  $db->logout();
-
-  return $diam2;
- }
- function getConstellations()                                                   // getConstellations returns a list of all different constellations
- { return $GLOBALS['objDatabase']->selectSingleArray("SELECT DISTINCT con FROM objects ORDER BY con",'con');
- }
-
- function getCatalogs()                                                       // getCatalogs returns a list of all different catalogs
- { $ret=$GLOBALS['objDatabase']->selectSingleArray("SELECT DISTINCT objectnames.catalog FROM objectnames",'catalog');
-   natcasesort($ret);
-   reset($ret);
-   array_unshift($ret, "M", "NGC", "Caldwell", "H400", "HII", "IC");
-   return $ret;
- }
- function getCatalogsAndLists()
- { $ret=$GLOBALS['objDatabase']->selectSingleArray("SELECT DISTINCT objectnames.catalog FROM objectnames",'catalog');
-   natcasesort($ret);
-   reset($ret);
-   array_unshift($ret, "M", "NGC", "Caldwell", "H400", "HII", "IC");
-	 if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
-	 { $lsts = $GLOBALS['objList']->getLists();
-		 while(list($key,$value)=each($lsts))
-		   $ret[]='List:'.$value; 
-	 }
-   return $ret;
- }
- function getDsObjectTypes()                                                    // getTypes returns a list of all different types
- { return $GLOBALS['objDatabase']->selectSingleArray("SELECT DISTINCT type FROM objects ORDER BY type",'type');
- }
- function my_array_unique($somearray)                                           // my_array_unique returns a unique array, where the keys increment.
- { $tmparr = array_unique($somearray); 
-   $i=0; 
-   foreach ($tmparr as $v) 
-   { $newarr[$i] = $v; 
-     $i++; 
-    } 
-   return $newarr; 
- } 
- function getAlternativeNames($name)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT objectnames.catalog, objectnames.catindex ".
-	       "FROM objectnames WHERE objectnames.objectname = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  $altnames=array();
-  while($get = mysql_fetch_object($run))
-	{
-	  $altnames[]=$get->catalog . " " . $get->catindex;
-	}
-  $db->logout();
-  return $altnames;
- }
- function getContainsNames($name)
- {
-  $db = new database;
-  $db->login();
-  $sql = "SELECT objectpartof.objectname ".
-	       "FROM objectpartof WHERE objectpartof.partofname = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  $containsnames=array();
-  while($get = mysql_fetch_object($run))
-	{
-	  $containsnames[]=$get->objectname;
-	}
-  $db->logout();
-  return $containsnames;
- }
- function getPartOfNames($name)
- {
-  $db = new database;
-  $db->login();
-  $sql = "SELECT objectpartof.partofname ".
-	       "FROM objectpartof WHERE objectpartof.objectname = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  $partofnames=array();
-  while($get = mysql_fetch_object($run))
-	{
-	  $partofnames[]=$get->partofname;
-	}
-  $db->logout();
-  return $partofnames;
- }
- // getPositionAngle returns the position angle of the object
- function getPositionAngle($name)
- {
-  $db = new database;
-  $db->login();
-
-  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $pa = $get->pa;
-
-  $db->logout();
-
-  return $pa;
- }
  
- // getCatalogs returns the catalogs of the object
- // getDsObjectName returns the name when the alternative name is given.
- function getDsObjectName($name)
- { return $GLOBALS['objDatabase']->selectSingleValue("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"".$name."\")",'objectname');
- }
  
-// getDescription returns the Description when the name is given.
- function getDescriptionDsObject($name)
- {
-  $db = new database;
-  $db->login();
-  $sql = "SELECT objects.description FROM objects WHERE (objects.name = \"$name\")";
-  $run = mysql_query($sql) or die(mysql_error());
-  $get = mysql_fetch_object($run);
-  $db->logout();
-  if ($get)
-	  return $get->description;
-	else
-		return "";
- }
- // getNameList returns a list of names when a part of the alternative name is 
- // given.
- function getNameList($catalog)
- {
-  $name = Array();
-  $db = new database;
-  $db->login();
-  $sql = "SELECT objectnames.objectname FROM objectnames WHERE objectnames.catalog = \"$catalog\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  while($get = mysql_fetch_object($run))
-   $name[] = $get->objectname;
-  $db->logout();
-  return $name;
- }
- // getObservedByUser returns +1 if the object is already observed by the 
- // given user, -1 if the object is not yet observed
- function getObservedbyUser($name, $observerid)
- {
-  $observations = new Observations;
-  $query = array("object" => "$name", "observer" => "$observerid", 
-		 "instrument" => "", "location" => "", "mindate" => "", 
-		 "maxdate" => "");
-		
-  $obs = $GLOBALS['objObservation']->getObservationFromQuery($query);
-
-  $return = -1;
-  if ($obs != "")
-  {
-    $return = count($obs);
-  }
-  return $return;
- }
- // getObserved returns +1 if the object is already observed, -1 if the object 
- // is not yet observed
- function getObserved($name)
- {
-  $observations = new Observations;
-  $query = array("object" => "$name", "observer" => "",
-                 "instrument" => "", "location" => "", "mindate" => "",
-                 "maxdate" => "");
-
-  $obs = $GLOBALS['objObservation']->getObservationFromQuery($query);
-
-  $return = -1;
-
-  if ($obs != "")
-  {
-   $return = count($obs);
-  }
-
-  return $return;
- }
  // setType sets a new type for the object
- function setDsObjectType($name, $type)
+ function setDsObjectProperty($name, $type)
  {
   $db = new database;
   $db->login();
@@ -1030,66 +867,53 @@ class Objects implements iObject
  }
  // setRA sets a new right ascension for the object
  function setRA($name, $ra)
- {
-  $db = new database;
-  $db->login();
-
-  $atlas = new Atlasses;
+ { global $objAtlas;
+   $sql = "UPDATE objects SET ra = \"$ra\" WHERE name = \"$name\"";
+   $run = mysql_query($sql) or die(mysql_error());
+   // Calculate the pages for the atlases
+   $sql = "SELECT * FROM objects WHERE name = \"$name\"";
+   $run = mysql_query($sql) or die(mysql_error());
+   $get = mysql_fetch_object($run);
+   $dec = $get->decl;
+   $urano    = $objAtlas->calculateAtlasPage('urano'        ,$ra, $dec);
+   $uranonew = $objAtlas->calculateAtlasPage('urano_new'    ,$ra, $dec);
+   $skyatlas = $objAtlas->calculateAtlasPage('sky'          ,$ra, $dec);
+   $msa      = $objAtlas->calculateAtlasPage('milleniumbase',$ra, $dec);
+   $taki     = $objAtlas->calculateAtlasPage('taki'         ,$ra, $dec);
+   $psa      = $objAtlas->calculateAtlasPage('psa'          ,$ra, $dec);
+   $torresB  = $objAtlas->calculateAtlasPage('torresB'      ,$ra, $dec);
+   $torresBC = $objAtlas->calculateAtlasPage('torresBC'     ,$ra, $dec);
+   $torresC  = $objAtlas->calculateAtlasPage('torresC'      , $ra, $dec);
+   $sql = "UPDATE objects SET urano = \"$urano\" WHERE name = \"$name\"";
+   $run = mysql_query($sql) or die(mysql_error());
   
-  $sql = "UPDATE objects SET ra = \"$ra\" WHERE name = \"$name\"";
-  
-  $run = mysql_query($sql) or die(mysql_error());
+   $sql = "UPDATE objects SET urano_new = \"$uranonew\" WHERE name = \"$name\"";
+   $run = mysql_query($sql) or die(mysql_error());
 
-  // Calculate the pages for the atlases
-  $sql = "SELECT * FROM objects WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
+   $sql = "UPDATE objects SET sky = \"$skyatlas\" WHERE name = \"$name\"";
+   $run = mysql_query($sql) or die(mysql_error());
 
-  $get = mysql_fetch_object($run);
+   $sql = "UPDATE objects SET millenium = \"$msa\" WHERE name = \"$name\"";
+   $run = mysql_query($sql) or die(mysql_error());
 
-  $dec = $get->decl;
+   $sql = "UPDATE objects SET taki = \"$taki\" WHERE name = \"$name\"";
+   $run = mysql_query($sql) or die(mysql_error());
 
-   $urano = $GLOBALS['objAtlas']->calculateAtlasPage('urano',$ra, $dec);
-   $uranonew = $GLOBALS['objAtlas']->calculateAtlasPage('urano_new',$ra, $dec);
-   $skyatlas = $GLOBALS['objAtlas']->calculateAtlasPage('sky',$ra, $dec);
-   $msa = $GLOBALS['objAtlas']->calculateAtlasPage('milleniumbase',$ra, $dec);
-   $taki = $GLOBALS['objAtlas']->calculateAtlasPage('taki',$ra, $dec);
-   $psa = $GLOBALS['objAtlas']->calculateAtlasPage('psa',$ra, $dec);
-   $torresB = $GLOBALS['objAtlas']->calculateAtlasPage('torresB',$ra, $dec);
-   $torresBC = $GLOBALS['objAtlas']->calculateAtlasPage('torresBC',$ra, $dec);
-   $torresC = $GLOBALS['objAtlas']->calculateAtlasPage('torresC', $ra, $dec);
-  
-  $sql = "UPDATE objects SET urano = \"$urano\" WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  
-  $sql = "UPDATE objects SET urano_new = \"$uranonew\" WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
+   $sql = "UPDATE objects SET psa = \"$psa\" WHERE name = \"$name\"";
+   $run = mysql_query($sql) or die(mysql_error());
 
-  $sql = "UPDATE objects SET sky = \"$skyatlas\" WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
+   $sql = "UPDATE objects SET torresB = \"$torresB\" WHERE name = \"$name\"";
+   $run = mysql_query($sql) or die(mysql_error());
 
-  $sql = "UPDATE objects SET millenium = \"$msa\" WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
+   $sql = "UPDATE objects SET torresBC = \"$torresBC\" WHERE name = \"$name\"";
+   $run = mysql_query($sql) or die(mysql_error());
 
-  $sql = "UPDATE objects SET taki = \"$taki\" WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $sql = "UPDATE objects SET psa = \"$psa\" WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $sql = "UPDATE objects SET torresB = \"$torresB\" WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $sql = "UPDATE objects SET torresBC = \"$torresBC\" WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $sql = "UPDATE objects SET torresC = \"$torresC\" WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  
-  $db->logout();
+   $sql = "UPDATE objects SET torresC = \"$torresC\" WHERE name = \"$name\"";
+   $run = mysql_query($sql) or die(mysql_error());
  }
  // setDeclination sets a new declination for the object
  function setDeclination($name, $dec)
- {
+ { global $objDatabase, $objAtlas;
   $db = new database;
   $db->login();
 
@@ -1106,15 +930,15 @@ class Objects implements iObject
 
   $ra = $get->ra;
 
-   $urano = $GLOBALS['objAtlas']->calculateAtlasPage('urano',$ra, $dec);
-   $uranonew = $GLOBALS['objAtlas']->calculateAtlasPage('urano_new',$ra, $dec);
-   $skyatlas = $GLOBALS['objAtlas']->calculateAtlasPage('sky',$ra, $dec);
-   $msa = $GLOBALS['objAtlas']->calculateAtlasPage('milleniumbase',$ra, $dec);
-   $taki = $GLOBALS['objAtlas']->calculateAtlasPage('taki',$ra, $dec);
-   $psa = $GLOBALS['objAtlas']->calculateAtlasPage('psa',$ra, $dec);
-   $torresB = $GLOBALS['objAtlas']->calculateAtlasPage('torresB',$ra, $dec);
-   $torresBC = $GLOBALS['objAtlas']->calculateAtlasPage('torresBC',$ra, $dec);
-   $torresC = $GLOBALS['objAtlas']->calculateAtlasPage('torresC', $ra, $dec);
+   $urano = $objAtlas->calculateAtlasPage('urano',$ra, $dec);
+   $uranonew = $objAtlas->calculateAtlasPage('urano_new',$ra, $dec);
+   $skyatlas = $objAtlas->calculateAtlasPage('sky',$ra, $dec);
+   $msa = $objAtlas->calculateAtlasPage('milleniumbase',$ra, $dec);
+   $taki = $objAtlas->calculateAtlasPage('taki',$ra, $dec);
+   $psa = $objAtlas->calculateAtlasPage('psa',$ra, $dec);
+   $torresB = $objAtlas->calculateAtlasPage('torresB',$ra, $dec);
+   $torresBC = $objAtlas->calculateAtlasPage('torresBC',$ra, $dec);
+   $torresC = $objAtlas->calculateAtlasPage('torresC', $ra, $dec);
    
   $sql = "UPDATE objects SET urano = \"$urano\" WHERE name = \"$name\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -1156,7 +980,7 @@ class Objects implements iObject
   $db->logout();
 
 	$mag = $this->getDsoProperty($name,'mag');
-  $diam2 = $this->getDiam2($name);
+  $diam2 = $this->getDsoProperty($name,'diam2');
 
 	// Calculate and set the SBObj
 	if ($mag != 99.9 && ($diam1 != 0 || $diam2 != 0))
@@ -1191,7 +1015,7 @@ class Objects implements iObject
   $db->logout();
 
 	$mag = $this->getDsoProperty($name,'mag');
-  $diam1 = $this->getDiam1($name);
+  $diam1 = $this->getDsoPrpoerty($name, 'diam1');
 
 	// Calculate and set the SBObj
 	if ($mag != 99.9 && ($diam1 != 0 || $diam2 != 0))
@@ -1227,8 +1051,8 @@ class Objects implements iObject
 
   $db->logout();
 
-	$diam1 = $this->getDiam1($name);
-  $diam2 = $this->getDiam2($name);
+	$diam1 = $this->getDsoProperty($name,'diam1');
+  $diam2 = $this->getDsoProperty($name,'diam2');
 
 	// Calculate and set the SBObj
 	if ($mag != 99.9 && ($diam1 != 0 || $diam2 != 0))
@@ -1332,7 +1156,8 @@ class Objects implements iObject
  function showObjects($link, $min, $max, $ownShow='', $showRank=0)
  { // ownShow => object to show in a different color (type3) in the list
  	 // showRank = 0 for normal operation, 1 for List show, 2 for top objects
- 	 $atlas='';
+ 	 global $objAtlas;
+	 $atlas='';
    echo "<table width=\"100%\">\n";
    echo "<tr class=\"type3\">\n";
    if($showRank)
@@ -1344,7 +1169,7 @@ class Objects implements iObject
 	 tableSortHeader(LangOverviewObjectsHeader4,  $link."&amp;sort=objecttype");
    if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
 	 { $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
-     tableSortHeader($GLOBALS['objAtlas']->atlasCodes[$atlas], $link."&amp;sort=".$atlas);
+     tableSortHeader($objAtlas->atlasCodes[$atlas], $link."&amp;sort=".$atlas);
 	   tableSortInverseHeader(LangViewObjectFieldContrastReserve, $link."&amp;sort=objectcontrast");
 	   tableSortHeader(LangViewObjectFieldMagnification, $link."&amp;sort=objectoptimalmagnification");
 	   tableSortHeader(LangOverviewObjectsHeader7, $link."&amp;sort=objectseen");
@@ -1384,7 +1209,7 @@ class Objects implements iObject
      // Page number in atlas
      if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id']) 
 	   { $page = $_SESSION['Qobj'][$count][$atlas];
-       echo "<td align=\"center\" onmouseover=\"Tip('".$GLOBALS['objAtlas']->atlasCodes[$atlas]."')\">".$page."</td>\n";
+       echo "<td align=\"center\" onmouseover=\"Tip('".$objAtlas->atlasCodes[$atlas]."')\">".$page."</td>\n";
        echo "<td align=\"center\" class=\"".$_SESSION['Qobj'][$count]['objectcontrasttype']."\" onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectcontrastpopup']."')\">".$_SESSION['Qobj'][$count]['objectcontrast']."</td>\n";
        echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectoptimalmagnification']."</td>\n";
        echo "<td align=\"center\" class=\"seen\">".$_SESSION['Qobj'][$count]['objectseenlink']."</td>";
@@ -1406,9 +1231,7 @@ class Objects implements iObject
    echo "</table>\n";
  }
  function showObject($object, $zoom = 30)
- { include_once "contrast.php";
-   $contrastObj = new Contrast;
-   global $deepskylive;	
+ { global $deepskylive, $objAtlas, $objContrast;	
    $object = $this->getDsObjectName($object);
    $_SESSION['object']=$object;
    echo "<table width=\"100%\">";
@@ -1420,9 +1243,9 @@ class Objects implements iObject
    echo("</td>");
 	 if(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id']&&($standardAtlasCode=$GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id'])))
    { echo "<td class=\"fieldname\" align=\"right\" width=\"25%\">"; 
-     echo $GLOBALS['objAtlas']->atlasCodes[$standardAtlasCode].LangViewObjectField10;
+     echo $objAtlas->atlasCodes[$standardAtlasCode].LangViewObjectField10;
      echo "</td><td width=\"25%\">";
-     echo $this->getObjectProperty($object, $standardAtlasCode);
+     echo $this->getDsoProperty($object, $standardAtlasCode);
      echo"</td>" ;
    }	
    else
@@ -1457,16 +1280,11 @@ class Objects implements iObject
   echo "</td><td width=\"25%\">";
 	$containst="";
   while(list($key, $value) = each($contains)) // go through names array
-  { if(trim($value)!=trim($object))
-		{ if($containst)
-			  $containst.="/"."(<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=".urlencode(trim($value))."\">".trim($value)."</a>)";
-			else
-			  $containst="(<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=".urlencode(trim($value))."\">".trim($value)."</a>)";
-    }
-  }
+    if(trim($value)!=trim($object))
+		  $containst.=($containst?"/":"")."(<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=".urlencode(trim($value))."\">".trim($value)."</a>)";
 	if($containst=="") echo "(-)/"; else echo $containst . "/";
 	$partoft = "";
-  while(list($key, $value) = each($partof)) // go through names array
+  while((count($partof))&&(list($key, $value) = each($partof))) // go through names array
   { if(trim($value)!=trim($object))
 		{ if($partoft)
 			  $partoft .= "/" . "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=" . urlencode(trim($value)) . "\">" . trim($value) . "</a>";
@@ -1523,7 +1341,7 @@ class Objects implements iObject
   echo LangViewObjectField8;
   echo("</td>");
 	echo("<td width=\"25%\">");
-	$sb = sprintf("%01.1f", $this->getSurfaceBrightness($object));
+	$sb = sprintf("%01.1f", $this->getDSOProperty($object,'subr'));
   if(($sb==99.9) ||($sb==""))
   {
 	  $sb="-";
@@ -1545,8 +1363,8 @@ class Objects implements iObject
   echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
   echo LangViewObjectField12; 
   echo("</td><td width=\"25%\">");
-  if($this->getPositionAngle($object) != 999)
-    echo($this->getPositionAngle($object) . "&deg;");
+  if($this->getDsoProperty($object,'pa') != 999)
+    echo($this->getDsoProperty($object,'pa') . "&deg;");
 	else
 	  echo "-";
   echo("</td>"); 
@@ -1573,17 +1391,17 @@ class Objects implements iObject
       $popup = LangContrastNoMagnitude;
     else 
     {
-      $diam1 = $this->getDiam1($object);
+      $diam1 = $this->getDsoProperty($object,'diam1');
       $diam1 = $diam1 / 60.0;
       if($diam1==0)
         $popup = LangContrastNoDiameter;
       else
       {
-        $diam2 = $this->getDiam2($object);
+        $diam2 = $this->getDsoProperty($object,'diam2');
         $diam2 = $diam2 / 60.0;
         if ($diam2 == 0)
           $diam2 = $diam1;
-        $contrastCalc = $contrastObj->calculateContrast($magni, $this->getDsoProperty($object,'SBobj'), $diam1, $diam2);
+        $contrastCalc = $objContrast->calculateContrast($magni, $this->getDsoProperty($object,'SBobj'), $diam1, $diam2);
         if ($contrastCalc[0] < -0.2)      $popup = $object . LangContrastNotVisible . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
 				else if ($contrastCalc[0] < 0.1)  $popup = LangContrastQuestionable . $object . LangContrastQuestionableB . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
 			  else if ($contrastCalc[0] < 0.35) $popup = $object . LangContrastDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
@@ -1657,7 +1475,7 @@ class Objects implements iObject
 		echo "</td>";
   	echo "</tr>";
   }
-	elseif($descriptionDsOject=$this->getDescriptionDsObject($object))
+	elseif($descriptionDsOject=$this->getDsoProperty($object,'description'))
 	{ echo "<tr>";
   	echo "<td align=\"right\">";
   	echo LangViewObjectNGCDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
