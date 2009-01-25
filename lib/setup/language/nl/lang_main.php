@@ -997,6 +997,9 @@ define("LangSelectedObservationsTitle3", "Overzicht van de waarnemingen van het 
 define("LangSelectedObservationsSelectedLanguagesIndication", "geselecteerde talen");
 define("LangSelectedObservationsAllLanguagesIndication","alle talen");
  
+// lib/objects
+define("LangNewPlaceInList","Geef de nieuwe positie in de lijst");
+
 // lib/util.php
 
 define("LangPDFTitle", "DeepskyLog lijst met objecten");

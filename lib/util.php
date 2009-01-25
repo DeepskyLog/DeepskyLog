@@ -16,6 +16,28 @@ class util
 { public function __construct()
 	{ $this->checkUserInput();
   }
+  public  function raToStringDSS($ra)
+  { $ra_hours = floor($ra);
+    $subminutes = 60 * ($ra - $ra_hours);
+    $ra_minutes = floor($subminutes);
+    $ra_seconds = round(60 * ($subminutes - $ra_minutes));
+    return("$ra_hours" . "&#43;" . "$ra_minutes" . "&#43;" . "$ra_seconds" . "");
+  }
+  public  function decToStringDSS($decl)
+  { $sign=0;
+    if($decl<0)
+    { $sign=-1;
+      $decl=-$decl;
+    }
+    $decl_degrees=floor($decl);
+    $subminutes=60*($decl-$decl_degrees);
+    $decl_minutes=round($subminutes);
+    if($sign==-1)
+    { $decl_minutes = "-".$decl_minutes;
+      $decl_degrees = "-".$decl_degrees;
+    }
+    return("$decl_degrees"."&#43;".$decl_minutes);
+  }
   private function utilitiesGetIndexActionDefaultAction()
   { if($_SESSION['module']=='deepsky')
 	  { $_GET['catalog']='%';

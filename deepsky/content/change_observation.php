@@ -7,15 +7,15 @@ if (!$_GET['observation'])
 echo "<div id=\"main\">";
 echo "<h2>" . LangChangeObservationTitle . "</h2>";
 echo "<form action=\"" . $baseURL . "index.php?indexAction=validate_change_observation\" method=\"post\" enctype=\"multipart/form-data\">";
-tableNew("width=\"100%\"");
-tableNewRow();
-tableFormatCell("class=\"fieldname\" width=\"100\"", LangViewObservationField1);
-tableCell("<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($objObservation->getObjectId($_GET['observation'])) . "\">" . $objObservation->getObjectId($_GET['observation']) . "</a>");
-tableNextRow();
-tableFormatCell("class=\"fieldname\"", LangViewObservationField2);
-tableFormatCell('', "<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . $objObservation->getObserverId($_GET['observation']) . "\">" . $objObserver->getFirstName($objObservation->getObserverId($_GET['observation'])) . "&nbsp;" . $objObserver->getObserverName($objObservation->getObserverId($_GET['observation'])) . "</a>");
-tableNewRow();
-tableFormatCell("class=\"fieldname\"", LangViewObservationField5);
+echo "<table width=\"100%\">";
+echo "<tr>";
+echo "<td "."class=\"fieldname\" width=\"100\"".">".LangViewObservationField1."</td>";
+echo "<td>"."<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($objObservation->getObjectId($_GET['observation'])) . "\">" . $objObservation->getObjectId($_GET['observation']) . "</a>"."</td>";
+echo "</tr><tr>";
+echo "<td "."class=\"fieldname\"".">".LangViewObservationField2."</td>";
+echo "<td >"."<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . $objObservation->getObserverId($_GET['observation']) . "\">" . $objObserver->getFirstName($objObservation->getObserverId($_GET['observation'])) . "&nbsp;" . $objObserver->getObserverName($objObservation->getObserverId($_GET['observation'])) . "</a>"."</td>";
+echo "<tr>";
+echo "<td "."class=\"fieldname\"".">".LangViewObservationField5."</td>";
 echo "<td>";
 if ($objObserver->getUseLocal($_SESSION['deepskylog_id'])) {
 	$date = sscanf($objObservation->getDsObservationLocalDate($_GET['observation']), "%4d%2d%2d");

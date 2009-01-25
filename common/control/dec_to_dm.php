@@ -93,27 +93,6 @@ function decToString($decl, $web = 1)
   return("$decl_degrees" .$d. "$decl_minutes" . $m);
 }
 
-function decToStringDSS($decl)
-{
-   $sign = 0;
-   if($decl < 0)
-   {   
-    $sign = -1;
-    $decl = -$decl;
-   }
-   $decl_degrees = floor($decl);
-   $subminutes = 60 * ($decl - $decl_degrees);
-   $decl_minutes = round($subminutes);
-
-   if ($sign == -1)
-   {
-    $decl_minutes = "-" . $decl_minutes;
-    $decl_degrees = "-" . $decl_degrees;
-   }
-   return("$decl_degrees" . "&#43;" . "$decl_minutes");
-
-}
-
 function decToTrimmedString($decl)
 {
    $sign = 1;

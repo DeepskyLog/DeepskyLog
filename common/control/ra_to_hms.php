@@ -39,18 +39,6 @@ function raToString($ra)
    return("$ra_hours" . "h" . "$ra_minutes" . "m" . "$ra_seconds" . "s");  
 }
 
-function raToStringDSS($ra)
-{
-
-   $ra_hours = floor($ra);
-   $subminutes = 60 * ($ra - $ra_hours);
-   $ra_minutes = floor($subminutes);
-   $ra_seconds = round(60 * ($subminutes - $ra_minutes));
-
-   return("$ra_hours" . "&#43;" . "$ra_minutes" . "&#43;" . "$ra_seconds" . "");
-
-}
-
 function raToStringDSL($ra)
 {
    $ra_hours = floor($ra);

@@ -307,23 +307,33 @@ if(array_key_exists('admin', $_SESSION)&&$_SESSION['admin']=="yes")
 		  $_GET['object'] = trim($_GET['newcatalog'] . " " . ucwords(trim($_GET['newnumber'])));
 	  }			
   	if($_GET['newaction']=="LangObjectSetRA")
-	    $objObject->setRA($_GET['object'], $_GET['newnumber']);
+  	{ $objObject->setDsoProperty($_GET['object'],'ra', $_GET['newnumber']);
+  	  $objObject->setDsObjectAtlasPages($_GET['object']);
+  	}
   	if($_GET['newaction']=="LangObjectSetDECL")
-	    $objObject->setDeclination($_GET['object'], $_GET['newnumber']);
+  	{ $objObject->setDsoProperty($_GET['object'],'decl', $_GET['newnumber']);
+  	  $objObject->setDsObjectAtlasPages($_GET['object']); 
+  	}
   	if($_GET['newaction']=="LangObjectSetCon")
-	    $objObject->setConstellation($_GET['object'], $_GET['newnumber']);
+	    $objObject->setDsoProperty($_GET['object'],'con', $_GET['newnumber']);
   	if($_GET['newaction']=="LangObjectSetType")
-	    $objObject->setDsObjectType($_GET['object'], $_GET['newnumber']);
+	    $objObject->setDsoProperty($_GET['object'],'tpe', $_GET['newnumber']);
   	if($_GET['newaction']=="LangObjectSetMag")
-	    $objObject->setMagnitude($_GET['object'], $_GET['newnumber']);
+  	{ $objObject->setDsoProperty($_GET['object'],'mag', $_GET['newnumber']);
+  	  $objObject->setDsObjectSBObj($_GET['object']);
+  	}
    	if($_GET['newaction']=="LangObjectSetSUBR")
-	    $objObject->setSurfaceBrightness($_GET['object'], $_GET['newnumber']);
+	    $objObject->setDsoProperty($_GET['object'],'subr', $_GET['newnumber']);
    	if($_GET['newaction']=="LangObjectSetDiam1")
-		  $objObject->setDiam1($_GET['object'], $_GET['newnumber']);
+   	{ $objObject->setDsoProperty($_GET['object'],'diam1', $_GET['newnumber']);
+  	  $objObject->setDsObjectSBObj($_GET['object']);
+   	}
    	if($_GET['newaction']=="LangObjectSetDiam2")
-		  $objObject->setDiam2($_GET['object'], $_GET['newnumber']);
+   	{ $objObject->setDsoProperty($_GET['object'],'diam2', $_GET['newnumber']);
+  	  $objObject->setDsObjectSBObj($_GET['object']);
+   	}
    	if($_GET['newaction']=="LangObjectSetPA")
-		  $objObject->setPositionAngle($_GET['object'], $_GET['newnumber']);
+		  $objObject->setDsoProperty($_GET['object'],'pa', $_GET['newnumber']);
 	}
 }
 ?>

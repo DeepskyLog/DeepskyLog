@@ -987,7 +987,10 @@ define("LangSelectedObservationsTitle2", "Aper&ccedil;u des observations s&eacut
 define("LangSelectedObservationsTitle3", "Aper&ccedil;u des observations de la derniï¿½re annï¿½e");
 define("LangSelectedObservationsSelectedLanguagesIndication", "languages sï¿½lectionï¿½es");
 define("LangSelectedObservationsAllLanguagesIndication","toutes les languages");
-  
+ 
+// lib/objects
+define("LangNewPlaceInList","Prière de rentrer la nouvelle position dans la liste.");
+
 // lib/util.php
 
 define("LangPDFTitle", "Liste  des  objets de DeepskyLog");

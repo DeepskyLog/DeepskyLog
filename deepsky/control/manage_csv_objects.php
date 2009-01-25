@@ -61,23 +61,33 @@ else
   		$_GET['object'] = trim($cat[$i] . " " . ucwords(trim($catindex_data[$i])));
   	}			
   	elseif ($instruction[$i] == "RA")
-  		$objObject->setRA($object[$i], $catindex_data[$i]);
+  	{	$objObject->setDsoProperty($object[$i],'ra', $catindex_data[$i]);
+  	  $objObject->setDsObjectAtlasPages($objects[$i]);
+  	}
   	elseif ($instruction[$i] == "DE")
-  	  $objObject->setDeclination($object[$i], $catindex_data[$i]);
+  	{ $objObject->setDsoProperty($object[$i],'decl', $catindex_data[$i]);
+  	  $objObject->setDsObjectAtlasPages($objects[$i]);
+  	}
   	elseif ($instruction[$i] == "CON")
-  	  $objObject->setConstellation($object[$i], $catindex_data[$i]);
+  	  $objObject->setDsoProperty($object[$i],'con', $catindex_data[$i]);
   	elseif ($instruction[$i] == "TYP")
-  	  $objObject->setDsObjectType($object[$i], $catindex_data[$i]);
+  	  $objObject->setDsoProperty($object[$i],'type', $catindex_data[$i]);
   	elseif ($instruction[$i] == "MG")
-  	  $objObject->setMagnitude($object[$i], $catindex_data[$i]);
+  	{ $objObject->setDsoProperty($object[$i],'mag', $catindex_data[$i]);
+  	  $objObject->setDsObjectSBObj($object[$i]);
+  	}
   	elseif ($instruction[$i] == "SB")
-  	  $objObject->setSurfaceBrightness($object[$i], $catindex_data[$i]);
+  	  $objObject->setDsoProperty($object[$i],'subr', $catindex_data[$i]);
   	elseif ($instruction[$i] == "D1")
-  		$objObject->setDiam1($object[$i], $catindex_data[$i]);
+  	{ $objObject->setDsoProperty($object[$i],'diam1', $catindex_data[$i]);
+  	  $objObject->setDsObjectSBObj($object[$i]);
+  	}
   	elseif ($instruction[$i] == "D2")
-  		$objObject->setDiam2($object[$i], $catindex_data[$i]);
+  	{ $objObject->setDsoProperty($object[$i],'diam2', $catindex_data[$i]);
+  	  $objObject->setDsObjectSBObj($object[$i]);
+  	}
   	elseif ($instruction[$i] == "PA")
-  		$objObject->setPositionAngle($object[$i], $catindex_data[$i]);
+  		$objObject->setDsoProperty($object[$i],'pa', $catindex_data[$i]);
     $_GET['indexAction']="detail_object";
 		$_GET['object']=$object[0];
   }
