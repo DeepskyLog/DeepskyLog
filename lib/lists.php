@@ -293,23 +293,24 @@ class Lists
     unset($_SESSION['QobjParams']);
  }
  
- function getObjectsFromList($listname)
- {$obs=array();
-	$observer = $_SESSION['deepskylog_id'];
-	if(substr($listname,0,7)=="Public:")
-    $sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " .
-	         "JOIN objects ON observerobjectlist.objectname = objects.name " .
-		    	 "WHERE listname = \"$listname\" AND objectname <>\"\"";
-	else
-    $sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " .
-	         "JOIN objects ON observerobjectlist.objectname = objects.name " .
-		    	 "WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectname <>\"\"";
-  $run = mysql_query($sql) or die(mysql_error());
-  while($get = mysql_fetch_object($run))
-   if(!in_array($get->objectname, $obs))
-	   $obs[$get->objectshowname] = array($get->objectplace,$get->objectname,$get->description);
-	return $GLOBALS['objObject']->getSeenObjectDetails($obs, "D");	 
- } 
+  function getObjectsFromList($listname)
+  { global $objObject;
+    $obs=array();
+	  $observer = $_SESSION['deepskylog_id'];
+	  if(substr($listname,0,7)=="Public:")
+      $sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " .
+	           "JOIN objects ON observerobjectlist.objectname = objects.name " .
+	  	    	 "WHERE listname = \"$listname\" AND objectname <>\"\"";
+	  else
+      $sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " .
+	           "JOIN objects ON observerobjectlist.objectname = objects.name " .
+	  	    	 "WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectname <>\"\"";
+    $run = mysql_query($sql) or die(mysql_error());
+    while($get = mysql_fetch_object($run))
+      if(!in_array($get->objectname, $obs))
+	      $obs[$get->objectshowname] = array($get->objectplace,$get->objectname,$get->description);
+	 return $objObject->getSeenObjectDetails($obs, "D");	 
+  }  
  
  function checkObjectInMyActiveList($value)
  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT observerobjectlist.objectplace FROM observerobjectlist WHERE observerid = \"".$GLOBALS['loggedUser']."\" AND objectname=\"".$value."\" AND listname=\"".$GLOBALS['listname']."\"",'objectplace',0);

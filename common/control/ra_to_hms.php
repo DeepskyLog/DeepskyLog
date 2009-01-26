@@ -40,13 +40,11 @@ function raToString($ra)
 }
 
 function raToStringDSL($ra)
-{
-   $ra_hours = floor($ra);
-   $subminutes = 60 * ($ra - $ra_hours);
-   $ra_minutes = floor($subminutes);
-   $ra_seconds = round(60 * ($subminutes - $ra_minutes));
-
-   return(sprintf("%02d", "$ra_hours") . sprintf("%02d", "$ra_minutes") . sprintf("%02d", "$ra_seconds") . "");
+{ $ra_hours = floor($ra);
+  $subminutes = 60 * ($ra - $ra_hours);
+  $ra_minutes = floor($subminutes);
+  $ra_seconds = round(60 * ($subminutes - $ra_minutes));
+  return(sprintf("%02d", "$ra_hours") . sprintf("%02d", "$ra_minutes") . sprintf("%02d", "$ra_seconds") . "");
 }
 
 

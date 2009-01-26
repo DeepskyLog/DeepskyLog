@@ -2,6 +2,7 @@
 interface iObject
 { public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec,  // Add a deepsky object in all detail
           	                   $mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource);
+//private function calcContrastAndVisibility($object,$showname,$magnitude,$SBobj,$diam1,$diam2,&$contrast,&$contype,&$popup,&$prefMag);
 //private function calculateSize($diam1, $diam2);                               // Construct a string from the sizes
   public  function getAllInfoDsObject($name);                                   // Returns all information of an object
   public  function getAlternativeNames($name);
@@ -11,14 +12,14 @@ interface iObject
 //private function getContainsNames($name);
   public  function getDsObjectName($name);                                      // returns the name when the original or alternative name is given.
   public  function getDsObjectTypes();                                          // returns a list of all different types
-  public  function getDsoProperty($theObject,$theProperty, $default='');        // returns the propperty of the object, or default if not found
+  public  function getDsoProperty($theObject,$theProperty, $default='');        // returns the property of the object, or default if not found
   public  function getDSOseen($object);                                         // Returns the getSeen result, encoded to a href that shows the seen observations
   public  function getExactDsObject($value, $cat='', $catindex='');             // returns the exact name of an object
   public  function getLikeDsObject($value, $cat='', $catindex='');              // returns the exact name of an object
   public  function getNumberOfObjectsInCatalog($catalog);                       // returns the number of objects in the catalog given as a parameter
   public  function getObjectFromQuery($queries,$exact=0,$seen="D",$partof=0);
   public  function getObjectsFromCatalog($cat);
-  public  function getObjectVisibilities($obs);                                 // completes an objects array containing already the object characteristics with the visibility and magnifications parameters
+  public  function getObjectVisibilities(&$obs);                                // completes an objects array containing already the object characteristics with the visibility and magnifications parameters
 //private function getPartOfNames($name);
   public  function getSeen($object);                                            // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
 //private function getSeenLastseenLink($object,&$seenlink,&$lastseenlink);      // Returns the -/X(nr)/Y(nr) seen link to all observations of object, and the date last seen link, linking to all user observations inversely sorted by date
@@ -28,7 +29,7 @@ interface iObject
   public  function newName($name, $cat, $catindex);                             // ADMIN FUNCTION, Set a new name for a DS object, and adapt all observations, objectnames, partofs and list occurences
   public  function newPartOf($name, $cat, $catindex);                           // ADMIN FUNCTION, Adds a new partof entry for $name in the partsof table, making it part of $cat $index
 //private function prepareObjectsContrast($doLogin=false);                      // internal procedure to speed up contrast calculations
-	public  function removeAltName($name, $cat, $catindex);                       // ADMIN FUNCTION, Remove the alternative name $cat $index from the objectnames of $name
+  public  function removeAltName($name, $cat, $catindex);                       // ADMIN FUNCTION, Remove the alternative name $cat $index from the objectnames of $name
   public  function removeAndReplaceObjectBy($name, $cat, $catindex);            // ADMIN FUNCTION, Remove the object after replacing it in the observations, partofs, lists by the object $cat $index
   public  function removePartOf($name, $cat, $catindex);                        // ADMIN FUNCTION, Remove the partof entry for $name from the partsof table, so that $name is no longer a part of $cat $index
   public  function setDsObjectAtlasPages($name);                                // sets the different atlas pages for an object (e.g. after changing its coordinates)
@@ -48,6 +49,59 @@ class Objects implements iObject
     $objDatabase->execSQL("INSERT INTO objectnames (objectname, catalog, catindex, altname) VALUES (\"$name\", \"$cat\", \"$catindex\", TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")))");
     $this->setDsObjectAtlasPages($name);
     $this->setDsObjectSBObj(($name));
+  }
+	private function calcContrastAndVisibility($object, $showname, $magnitude,$SBobj,$diam1,$diam2,&$contrast,&$contype,&$popup,&$prefMag)
+	{ global $objContrast;
+	  $contrast = "-";
+    $prefMag = "-"; 
+    $popupT = $this->prepareObjectsContrast();
+    $popup = LangContrastNotLoggedIn;
+	  $contrastCalc = ""; 
+    if($popupT)
+      $popup=$popupT;
+    else
+    { $magni = $magnitude;
+      if(($magnitude==99.9)||($magnitude==""))
+        $popup = LangContrastNoMagnitude;
+      else 
+      { $diam1 = $this->getDsoProperty($object,'diam1');
+        $diam1 = $diam1 / 60.0;
+        if($diam1==0)
+          $popup = LangContrastNoDiameter;
+        else
+        { $diam2 = $this->getDsoProperty($object,'diam2');
+          $diam2 = $diam2 / 60.0;
+          if ($diam2 == 0)
+            $diam2 = $diam1;
+          $contrastCalc = $objContrast->calculateContrast($magni, $SBobj, $diam1, $diam2);
+          if ($contrastCalc[0] < -0.2)      $popup = $showname . LangContrastNotVisible . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
+		 		  else if ($contrastCalc[0] < 0.1)  $popup = LangContrastQuestionable . $showname . LangContrastQuestionableB . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
+		 	    else if ($contrastCalc[0] < 0.35) $popup = $showname . LangContrastDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
+		 	    else if ($contrastCalc[0] < 0.5)  $popup = $showname . LangContrastQuiteDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
+	        else if ($contrastCalc[0] < 1.0)  $popup = $showname . LangContrastEasy . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
+		 	    else                              $popup = $showname . LangContrastVeryEasy . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);  
+		 	    $contrast = $contrastCalc[0];
+        }
+      }
+	  }
+    if      ($contrast == "-") $contype = "";
+    else if ($contrast < -0.2) $contype = "typeNotVisible";
+    else if ($contrast < 0.1)  $contype = "typeQuestionable";
+    else if ($contrast < 0.35) $contype = "typeDifficult";
+    else if ($contrast < 0.5)  $contype = "typeQuiteDifficult";
+    else if ($contrast < 1.0)  $contype = "typeEasy";
+    else                       $contype = "typeVeryEasy";
+	  if($contrastCalc)
+	  { $contrast=sprintf("%.2f", $contrastCalc[0]);
+	  	 if($contrastCalc[2]=="")
+	  	   $prefMag=sprintf("%d", $contrastCalc[1])."x";
+	  	 else
+		     $prefMag=sprintf("%d", $contrastCalc[1])."x - ".$contrastCalc[2];
+    } 
+	  else 
+	  { $contrast = "-";
+      $prefMag = "-";
+    }
   }
   private function calculateSize($diam1, $diam2)                                // Construct a string from the sizes
   { $size = "";
@@ -334,72 +388,15 @@ class Objects implements iObject
 	  uksort($obs,"strnatcasecmp");
     return $obs;
   }
-  public function getObjectVisibilities($obs)
-  { global $objContrast;
-    $popup='';
-    $popupT = $this->prepareObjectsContrast();
-    $result2=$obs;
-    $obscnt=sizeof($obs);
-    if($obscnt > 0)
-    { $j=0;
-		  reset($obs);
-      while(list($key, $value) = each($obs))
-      { $contrast = "-";
-        $contype = "";
-		    $contrastcalc1="";
-        if($popupT)
-	 	      $popup=$popupT;
-		    else
-        { $magni = $result2[$j]['objectmagnitude'];
-			 	  $subrobj = $result2[$j]['objectsbcalc'];
-          if($magni>90)
-            $popup = LangContrastNoMagnitude;
-          else 
-		      { $diam1 = $result2[$j]['objectdiam1'];
-            $diam1 = $diam1 / 60.0;
-            if($diam1==0)
-              $popup = LangContrastNoDiameter;
-            else
-            { $diam2 = $result2[$j]['objectdiam2'];
-              $diam2 = $diam2 / 60.0;
-              if ($diam2 == 0)
-                $diam2 = $diam1;
-              $contrastCalc = $objContrast->calculateContrast($magni, $subrobj, $diam1,$diam2);
-              if ($contrastCalc[0] < -0.2) 
-					   	  $popup = $result2[$j]['showname'] . LangContrastNotVisible . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-              else if ($contrastCalc[0] < 0.1)
-						    $popup = LangContrastQuestionable . $result2[$j]['showname'] . LangContrastQuestionableB . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-              else if ($contrastCalc[0] < 0.35)
-						    $popup = $result2[$j]['showname'] . LangContrastDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-              else if ($contrastCalc[0] < 0.5)
-						    $popup = $result2[$j]['showname'] . LangContrastQuiteDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-              else if ($contrastCalc[0] < 1.0)
-						    $popup = $result2[$j]['showname'] . LangContrastEasy . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-              else
-						    $popup = $result2[$j]['showname'] . LangContrastVeryEasy . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-              if ($contrastCalc[2] == "")
-	              $contrastcalc1=((int)$contrastCalc[1]) . "x";
-					    else
-						    $contrastcalc1=((int)$contrastCalc[1]) . "x - " . $contrastCalc[2];
-              $contrast = sprintf("%.2f",       $contrastCalc[0]);
-     	        if ($contrastCalc[0] < -0.2)      $contype = "typeNotVisible";
-              else if ($contrastCalc[0] < 0.1)  $contype = "typeQuestionable";
-              else if ($contrastCalc[0] < 0.35) $contype = "typeDifficult";
-              else if ($contrastCalc[0] < 0.5)  $contype = "typeQuiteDifficult";
-              else if ($contrastCalc[0] < 1.0)  $contype = "typeEasy";
-              else                              $contype = "typeVeryEasy";
-            }
-          }
-        }
-        $result2[$j]['objectcontrast'] = $contrast;
-        $result2[$j]['objectcontrasttype'] = $contype;
-        $result2[$j]['objectcontrastpopup'] = $popup;
-        $result2[$j]['objectoptimalmagnification'] = $contrastcalc1;
-        $j++;		
-      }
+  public function getObjectVisibilities(&$obs)
+  { $popupT = $this->prepareObjectsContrast();
+    for($j=0;$j<count($obs);$j++)
+    { $this->calcContrastAndVisibility($obs[$j]['objectname'],$obs[$j]['showname'],$obs[$j]['objectmagnitude'],$obs[$j]['objectsbcalc'],$obs[$j]['objectdiam1'],$obs[$j]['objectdiam2'],$contrast,$contype,$popup,$contrastcalc1);
+      $obs[$j]['objectcontrast'] = $contrast;
+      $obs[$j]['objectcontrasttype'] = $contype;
+      $obs[$j]['objectcontrastpopup'] = $popup;
+      $obs[$j]['objectoptimalmagnification'] = $contrastcalc1;
     }
-	  $obs = $result2;
-    return $obs; 
   }
   private function getPartOfNames($name)
   { global $objDatabase;
@@ -503,7 +500,7 @@ class Objects implements iObject
       }
 	  }
 	  $obs=$result2;
-    $obs=$this->getObjectVisibilities($obs);
+    $this->getObjectVisibilities($obs);
     return $obs;
   }
   private function getSize($name)                                               // getSize returns the size of the object
@@ -533,7 +530,7 @@ class Objects implements iObject
   { global $objDatabase;
 	  return $objDatabase->execSQL("INSERT INTO objectpartof (objectname, partofname) VALUES (\"$name\", \"".trim($cat . " " . ucwords(trim($catindex)))."\")");
   }
-  private function prepareObjectsContrast($doLogin=false)                       // internal procedure to speed up contrast calculations
+  private function prepareObjectsContrast()                               // internal procedure to speed up contrast calculations
   { global $objContrast;
 	  if(!array_key_exists('LTC',$_SESSION)||(!$_SESSION['LTC']))
 		 $_SESSION['LTC'] = array(array(4, -0.3769, -1.8064, -2.3368, -2.4601, -2.5469, -2.5610, -2.5660), 
@@ -913,10 +910,9 @@ class Objects implements iObject
 	
 	
 	
-	
 
-  public  function showObject($object, $zoom = 30)
-  { global $deepskylive, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil;	
+  public  function showObject($object,$zoom=30)
+  { global $deepskylive, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL;	
     $object=$this->getDsObjectName($object);
     $_SESSION['object']=$object;
     $altnames=$this->getAlternativeNames($object); $alt="";
@@ -934,7 +930,8 @@ class Objects implements iObject
     $declDSS=$objUtil->decToStringDSS($this->getDsoProperty($object,'decl'));
     $magnitude=sprintf("%01.1f", $this->getDsoProperty($object,'mag'));
 	  $sb=sprintf("%01.1f", $this->getDSOProperty($object,'subr'));
-    echo "<table width=\"100%\">";
+    $this->calcContrastAndVisibility($object,$object,$this->getDsoProperty($object,'mag'),$this->getDsoProperty($object,'SBObj'),$this->getDsoProperty($object,'diam1'),$this->getDsoProperty($object,'diam2'),$contrast,$contype,$popup,$prefMag);
+	  echo "<table width=\"100%\">";
 	  if($loggedUser&&($standardAtlasCode=$GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id'])))
 	    tableFieldnameFieldFieldnameField(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode(stripslashes($object)) . "\">".(stripslashes($object))."</a>",
 	                                      $objAtlas->atlasCodes[$standardAtlasCode].LangViewObjectField10,$this->getDsoProperty($object,$standardAtlasCode)," class=\"type2\"");
@@ -945,173 +942,78 @@ class Objects implements iObject
     tableFieldnameFieldFieldnameField(LangViewObjectField3,raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,decToStringDegMin($this->getDsoProperty($object,'decl')),"class=\"type2\"");  // RIGHT ASCENSION   / DECLINATION
     tableFieldnameFieldFieldnameField(LangViewObjectField5,$GLOBALS[$this->getDsoProperty($object,'con')],LangViewObjectField6,$GLOBALS[$this->getDsoProperty($object,'type')],"class=\"type1\"");            // CONSTELLATION     / TYPE
     tableFieldnameFieldFieldnameField(LangViewObjectField7,((($magnitude==99.9)||($magnitude==""))?$magnitude = "-":$magnitude),LangViewObjectField8,((($sb==99.9)||($sb==""))?"-":$sb),"class=\"type2\"");    // MAGNITUDE / SURFACE BRIGHTNESS
-    tableFieldnameFieldFieldnameField(LangViewObjectField9,(($size=$this->getSize($object))?$size:"-"),LangViewObjectField12,(($this->getDsoProperty($object,'pa')!=999)?($this->getDsoProperty($object,'pa') . "&deg;"):"-"),"class=\"type1\"");   // SIZE / POSITION ANGLE
-
-    
-//    tableFieldnameFieldFieldnameField(LangViewObjectFieldContrastReserve,,,,"class=\"type2\"");
-
-    $result=$this->getObjectVisibilities(array($object));
-    
-   $contrast = "-";
-   $prefMag = "-"; 
-   $popupT = $this->prepareObjectsContrast(true);
-   $popup = LangContrastNotLoggedIn; 
-	 $contrastCalc = ""; 
-   if($popupT)
-     $popup=$popupT;
-   else
-   {
-     $magni = $magnitude;
-     if($magni == "-")
-       $popup = LangContrastNoMagnitude;
-     else 
-     {
-       $diam1 = $this->getDsoProperty($object,'diam1');
-       $diam1 = $diam1 / 60.0;
-       if($diam1==0)
-         $popup = LangContrastNoDiameter;
-       else
-       {
-         $diam2 = $this->getDsoProperty($object,'diam2');
-         $diam2 = $diam2 / 60.0;
-         if ($diam2 == 0)
-           $diam2 = $diam1;
-         $contrastCalc = $objContrast->calculateContrast($magni, $this->getDsoProperty($object,'SBobj'), $diam1, $diam2);
-         if ($contrastCalc[0] < -0.2)      $popup = $object . LangContrastNotVisible . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-		 		else if ($contrastCalc[0] < 0.1)  $popup = LangContrastQuestionable . $object . LangContrastQuestionableB . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-		 	  else if ($contrastCalc[0] < 0.35) $popup = $object . LangContrastDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-		 	  else if ($contrastCalc[0] < 0.5)  $popup = $object . LangContrastQuiteDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-	       else if ($contrastCalc[0] < 1.0)  $popup = $object . LangContrastEasy . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-		 	  else                              $popup = $object . LangContrastVeryEasy . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);  
-
-         $contrast = $contrastCalc[0];
-       }
-     }
-	 }
-  
-   if ($contrast == "-")      $contype = "";
-   else if ($contrast < -0.2) $contype = "typeNotVisible";
-   else if ($contrast < 0.1)  $contype = "typeQuestionable";
-   else if ($contrast < 0.35) $contype = "typeDifficult";
-   else if ($contrast < 0.5)  $contype = "typeQuiteDifficult";
-   else if ($contrast < 1.0)  $contype = "typeEasy";
-   else                       $contype = "typeVeryEasy";
-        
-
-	 if ($contrastCalc != "")
-	 { $contrast = sprintf("%.2f", $contrastCalc[0]);
-	 	 if ($contrastCalc[2] == "")
-	 	 { $prefMag = sprintf("%d", $contrastCalc[1]) . "x";
-		 }
-		 else
-		 { $prefMag = sprintf("%d", $contrastCalc[1]) . "x - " . $contrastCalc[2];
-		 }
-   } 
-	 else 
-	 { $contrast = "-";
-  	 $prefMag = "-";
-   }
-
-   echo ("<td class=\"" . $contype . "\" width=\"25%\"  onmouseover=\"Tip('" . $popup . "')\">");
-   echo $contrast;
-	 echo "</td>";
-	 echo "<td class=\"fieldname\" align=\"right\" width=\"25%\">";
-	 echo LangViewObjectFieldOptimumDetectionMagnification;
-	 echo "</td>";
-   echo "<td width=\"25%\">";
-	 echo $prefMag;
-	 echo "</td>";
-	 echo "</tr>";
-	 if(array_key_exists('listname',$_SESSION) && ($GLOBALS['objList']->checkObjectInMyActiveList($object)))
-	 { if($GLOBALS['objList']->checkList($_SESSION['listname'])==2)
-     { echo("<form action=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object\">");    	
-       echo("<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />");
-       echo("<input type=\"hidden\" name=\"object\" value=\"" . $object . "\" />");
-       echo("<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>");
-		   echo "<td align=\"right\">";
-  	   echo LangViewObjectListDescription.' ('."<a href=\"".LangDreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
-			 echo "<br />";
-       echo("<input type=\"submit\" name=\"Go\" value=\"" . LangEditObjectDescription . "\" />");
-  	   echo "</td>";
-  	   echo "<td colspan=\"3\">";
-       echo("<textarea name=\"description\" class=\"listdescription inputfield\">");
-		   echo $GLOBALS['objList']->getListObjectDescription($object); 
-		   echo("</textarea>");
-       echo("</form>");
+    tableFieldnameFieldFieldnameField(LangViewObjectField9,(($size=$this->getSize($object))?$size:"-"),LangViewObjectField12,(($this->getDsoProperty($object,'pa')!=999)?($this->getDsoProperty($object,'pa') . "&deg;"):"-"),"class=\"type1\"");   // SIZE / POSITION ANGLE    
+    tableFieldnameFieldFieldnameField(LangViewObjectFieldContrastReserve,"<span class=\"" . $contype . "\" width=\"25%\"  onmouseover=\"Tip('" . $popup . "')\">".$contrast."</span>",LangViewObjectFieldOptimumDetectionMagnification,$prefMag,"class=\"type2\"");
+    if($listname&&($objList->checkObjectInMyActiveList($object)))
+	  { if($myList)
+     { echo "<form action=\"".$baseURL."index.php?indexAction=detail_object\">";    	
+       echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
+       echo "<input type=\"hidden\" name=\"object\" value=\"".urlencode($object)."\" />";
+       echo "<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>";
+		   echo "<td align=\"right\">".LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>)<br /><input type=\"submit\" name=\"Go\" value=\"" . LangEditObjectDescription . "\" /></td>";
+  	   echo "<td colspan=\"3\"><textarea name=\"description\" class=\"listdescription inputfield\">".$objList->getListObjectDescription($object)."</textarea></td>";
+       echo "</form>";
 		 }
 		 else
 		 { echo "<tr>";
-  	   echo "<td align=\"right\">";
-  	   echo LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
-  	   echo "</td>";
-  	   echo "<td colspan=\"3\">";
-		   echo $GLOBALS['objList']->getListObjectDescription($object);
-  	 }
-		 echo "</td>";
-  	 echo "</tr>";
-   }
-	 elseif($descriptionDsOject=$this->getDsoProperty($object,'description'))
-	 { echo "<tr>";
-   	 echo "<td align=\"right\">";
-   	 echo LangViewObjectNGCDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
-   	 echo "</td>";
-  	 echo "<td colspan=\"3\">";
-  	 echo $descriptionDsOject;
-  	 echo "</td>";
-  	 echo "</tr>";
-   }
-	 echo "</table>";
-
-	
-   $ra = $this->getDsoProperty($object,'ra');
-   $raDSS = $objUtil->raToStringDSS($ra);
-   $decl = $this->getDsoProperty($object,'decl');
-   $declDSS = $objUtil->decToStringDSS($this->getDsoProperty($object,'decl'));
-
-   echo("<table width=\"100%\"><tr><td width=\"50%\" align=\"center\">");
-   // LINK TO DSS IMAGE
-   echo("<form action=\"".$GLOBALS['baseURL']."index.php?indexAction=view_image\" method=\"post\">");
-   echo("<select name=\"imagesize\">\n");
-   if($zoom<=15) echo("<option selected value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"); else echo("<option value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"); // 15 x 15 arcminutes
-   if(($zoom>15)&& ($zoom<=30)) echo("<option selected value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>"); else echo("<option value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>"); // 30 x 30 arcminutes
-     if($zoom>30) echo("<option selected value=\"60\">60&#39;&nbsp;x&nbsp;60&#39;</option>"); else echo("<option value=\"60\">60&#39;&nbsp;x&nbsp;60&#39;</option>"); // 60 x 60 arcminutes
-   echo("</select>");
-	
-   echo("<input type=\"hidden\" name=\"raDSS\" value=\"" . $raDSS . "\" />");
-   echo("<input type=\"hidden\" name=\"declDSS\" value=\"" . $declDSS . "\" />");
-   echo("<input type=\"hidden\" name=\"name\" value=\"" . $object . "\" />");
-   echo("<input type=\"submit\" name=\"dss\" value=\"" . LangViewObjectDSS . "\" />");
-   echo("</form>");
-   echo("</td><td width=\"50%\" align=\"center\">");
-   // LINK TO DEEPSKYLIVE CHART
-   if ($deepskylive == 1)
-   { $raDSL = raToStringDSL($this->getDsoProperty($object,'ra'));
-     $declDSL = decToStringDSL($this->getDsoProperty($object,'decl'));
-     echo("<form action=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;zoom=" . $zoom . "\" method=\"post\">");
-     echo("<select name=\"dslsize\">\n");
-     if($zoom<=30) echo("<option selected value=\"60\">1&deg;</option>"); else echo("<option value=\"60\">1&deg;</option>");
-     if(($zoom>30) && ($zoom<=60)) echo("<option selected value=\"120\">2&deg;</option>"); else echo("<option value=\"120\">2&deg;</option>");
-     if ($zoom>60) echo("<option selected value=\"180\">3&deg;</option>"); else echo("<option value=\"180\">3&deg;</option>"); 
-     echo("</select>");
-     echo("<input type=\"hidden\" name=\"showDSL\" value=\"1\" />");
-     echo("<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />");
-     echo("<input type=\"submit\" name=\"dsl\" value=\"" . LangViewObjectDSL . "\" />");
-     if (isset($_POST["showDSL"]) && $_POST["showDSL"] == 1)
-     { $fov = $_POST["dslsize"];
-       echo("<applet code=\"Deepskylive.class\" codebase=\"http://users.telenet.be/deepskylive/applet/\" height=\"1\" width=\"1\">
+  	   echo "<td align=\"right\">".LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>)</td>";
+  	   echo "<td colspan=\"3\">".$objList->getListObjectDescription($object)."</td>";
+  	   echo "</tr>";
+		 }
+    }
+	  elseif($descriptionDsOject=$this->getDsoProperty($object,'description'))
+	  { echo "<tr>";
+   	  echo "<td align=\"right\">";
+   	  echo LangViewObjectNGCDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
+   	  echo "</td>";
+  	  echo "<td colspan=\"3\">";
+  	  echo $descriptionDsOject;
+  	  echo "</td>";
+  	  echo "</tr>";
+    }
+	  echo "</table>";
+    echo "<table width=\"100%\"><tr><td width=\"50%\" align=\"center\">";
+    // LINK TO DSS IMAGE
+    echo "<form action=\"".$baseURL."index.php?indexAction=view_image\" method=\"post\">";
+    echo "<select name=\"imagesize\">";
+    if($zoom<=15) echo("<option selected value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"); else echo("<option value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"); // 15 x 15 arcminutes
+    if(($zoom>15)&& ($zoom<=30)) echo("<option selected value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>"); else echo("<option value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>"); // 30 x 30 arcminutes
+    if($zoom>30) echo("<option selected value=\"60\">60&#39;&nbsp;x&nbsp;60&#39;</option>"); else echo("<option value=\"60\">60&#39;&nbsp;x&nbsp;60&#39;</option>"); // 60 x 60 arcminutes
+    echo("</select>");
+    echo("<input type=\"hidden\" name=\"raDSS\" value=\"" . $raDSS . "\" />");
+    echo("<input type=\"hidden\" name=\"declDSS\" value=\"" . $declDSS . "\" />");
+    echo("<input type=\"hidden\" name=\"name\" value=\"" . $object . "\" />");
+    echo("<input type=\"submit\" name=\"dss\" value=\"" . LangViewObjectDSS . "\" />");
+    echo("</form>");
+    echo("</td><td width=\"50%\" align=\"center\">");
+    // LINK TO DEEPSKYLIVE CHART
+    if ($deepskylive == 1)
+    { $raDSL=raToStringDSL($this->getDsoProperty($object,'ra'));
+      $declDSL=decToStringDSL($this->getDsoProperty($object,'decl'));
+      echo "<form action=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;zoom=" . $zoom . "\" method=\"post\">";
+      echo "<select name=\"dslsize\">";
+      if ($zoom<=30) echo "<option selected value=\"60\">1&deg;</option>"; else echo "<option value=\"60\">1&deg;</option>";
+      if(($zoom>30) && ($zoom<=60)) echo "<option selected value=\"120\">2&deg;</option>"; else echo "<option value=\"120\">2&deg;</option>";
+      if ($zoom>60) echo "<option selected value=\"180\">3&deg;</option>"; else echo "<option value=\"180\">3&deg;</option>"; 
+      echo "</select>";
+      echo "<input type=\"hidden\" name=\"showDSL\" value=\"1\" />";
+      echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
+      echo "<input type=\"submit\" name=\"dsl\" value=\"" . LangViewObjectDSL . "\" />";
+      if (isset($_POST["showDSL"]) && $_POST["showDSL"] == 1)
+      { $fov=$_POST["dslsize"];
+        echo "<applet code=\"Deepskylive.class\" codebase=\"http://users.telenet.be/deepskylive/applet/\" height=\"1\" width=\"1\">
               <param name=\"ra\" value=\"".$raDSL."\">
               <param name=\"dec\" value=\"".$declDSL."\">
               <param name=\"fov\" value=\"".$fov."\">
               <param name=\"p\" value=\"1\">
-              </applet>");
-     }
-     echo("\n</form>");
-   }
-   echo("</td></tr></table>");
-	 echo("<table width=\"100%\"><tr><td width=\"50%\" align=\"center\">");
-   echo("</td></tr></table>");
-	
-	 echo"<hr>";
+              </applet>";
+      }
+      echo "</form>";
+    }
+    echo "</td>";
+    echo "</tr>";
+    echo "</table>";
+	  echo"<hr>";
   }
  
   
