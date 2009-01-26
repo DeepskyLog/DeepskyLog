@@ -989,6 +989,9 @@ define("LangSelectedObservationsAllLanguagesIndication","all languages");
 // lib/objects
 define("LangNewPlaceInList","Please enter the new position");
 
+// lib/observations
+define("LangObservationDeleted","The observation has been removed");
+
 // lib/util.php
 
 define("LangPDFTitle", "DeepskyLog Objekt Liste");

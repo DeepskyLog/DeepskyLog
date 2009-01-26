@@ -34,6 +34,7 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "</table>";
 	$GLOBALS['objObject']->showObject($object);
 	echo "<h2>".LangNewObservationSubtitle3."<span class=\"requiredField\">".LangNewObservationSubtitle3A."</span></h2>";
+	$sites = $objLocation->getSortedLocationsList("name", $_SESSION['deepskylog_id']);
 	echo "<p><p/>";
 	echo "<form action=\"" . $baseURL . "index.php\" method=\"post\" enctype=\"multipart/form-data\">";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_observation\">";
@@ -43,7 +44,6 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "<tr>"; //=================================================================================================================== LOCATION
 	echo "<td class=\"fieldname\" align=\"right\" style=\"width:16%\">" . LangViewObservationField4 . "&nbsp;*</td>";
 	echo "<td style=\"width:16%\"><select class=\"inputfield requiredField\" style=\"width:300px\" name=\"site\">";
-	$sites = $GLOBALS['objLocation']->getSortedLocationsList("name", $_SESSION['deepskylog_id']);
 	while (list ($key, $value) = each($sites))
 		echo "<option " . (($GLOBALS['objUtil']->checkPostKey('site', 0) == $value[0]) ? "selected=\"selected\"" : (($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']) == $value[0]) ? "selected=\"selected\"" : '')) . " value=\"" . $value[0] . "\">" . $value[1] . "</option>";
 	echo "</select></td>";

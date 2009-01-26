@@ -1,48 +1,72 @@
-<?php
-// The observations class collects all functions needed to enter, retrieve and
-// adapt observation data from the database.
-
+<?php // The observations class collects all functions needed to enter, retrieve and adapt observation data from the database.
+interface iObservations
+{ 
+	public  function addDSObservation($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language);
+	public  function validateDeleteDSObservation($id);                                                                                                                  // removes the observation with id = $id
+	
+}
 class Observations {
-	// addObservation adds a new observation to the database. The name, observerid,
-	// instrumentid, locationid, date, time, description, seeing and limiting
-	// magnitude should be given as parameters. The id of the latest observation is returned.
-	// If the time and date are given in local time, you should execute setLocalDateAndTime after
-	// inserting the observation!
-	function addDSObservation($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language) {
-		if (!$_SESSION['lang'])
-			$_SESSION['lang'] = "English";
-		if ($seeing == "-1" || $seeing == "")
-			$seeing = "NULL";
-		if ($limmag == "")
-			$limmag = "NULL";
-		else {
-			if (ereg('([0-9]{1})[.,]([0-9]{1})', $limmag, $matches)) // limiting magnitude like X.X or X,X with X a number between 0 and 9
-				$limmag = $matches[1] . "." . $matches[2]; // valid limiting magnitude // save current magnitude limit
-			$limmag = "$limmag";
+	public function addDSObservation($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language) 
+	{ // adds a new observation to the database. The name, observerid, instrumentid, locationid, date, time, description, seeing and limiting magnitude should be given as parameters. The id of the latest observation is returned.
+	  // If the time and date are given in local time, you should execute setLocalDateAndTime after inserting the observation!
+		global $objDatabase;
+		if(($seeing=="-1")||($seeing==""))
+			$seeing="NULL";
+		if($limmag=="")
+			$limmag="NULL";
+		else 
+		{ if (ereg('([0-9]{1})[.,]([0-9]{1})', $limmag, $matches))   // limiting magnitude like X.X or X,X with X a number between 0 and 9
+				$limmag=$matches[1].".".$matches[2];    // valid limiting magnitude // save current magnitude limit
+			$limmag="$limmag";
 		}
 		$description = html_entity_decode($description, ENT_COMPAT, "ISO-8859-15");
 		$description = preg_replace("/(\")/", "", $description);
 		$description = preg_replace("/;/", ",", $description);
-		$GLOBALS['objDatabase']->execSQL("INSERT INTO observations (objectname, observerid, instrumentid, locationid, date, time, description, seeing, limmag, visibility, language) " .
-		"VALUES (\"$objectname\", \"$observerid\", \"$instrumentid\", \"$locationid\", \"$date\", \"$time\", \"$description\", $seeing, $limmag, $visibility, \"$language\")");
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id');
+		$objDatabase->execSQL("INSERT INTO observations (objectname, observerid, instrumentid, locationid, date, time, description, seeing, limmag, visibility, language) " .
+		                      "VALUES (\"$objectname\", \"$observerid\", \"$instrumentid\", \"$locationid\", \"$date\", \"$time\", \"$description\", $seeing, $limmag, $visibility, \"$language\")");
+		return $objDatabase->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id');
 	}
-	function deleteDSObservation($id) // deleteObservation removes the observation with id = $id
-	{
-		$GLOBALS['objDatabase']->execSQL("DELETE FROM observations WHERE id=\"$id\"");
+	public  function validateDeleteDSObservation($id)                                                                       // removes the observation with id = $id
+	{ global $objDatabase,$objUtil;
+	  if(!$_GET['observationid'])
+      throw new Exception("No observation to delete.");                           
+    if(($id=$objUtil->checkGetKey('observationid'))
+    && ($objUtil->checkAdminOrUserID($this->getObserverId($id))))
+    { $objDatabase->execSQL("DELETE FROM observations WHERE id=\"".$id."\"");
+	    $_SESSION['Qobs']=array();
+	    $_SESSION['QobsParams']=array();
+      return LangObservationDeleted;
+    }
 	}
-	function getDsObservationLocalDate($id) // getLocalDate returns the date of the given observation in local time
-	{
-		$run = $GLOBALS['objDatabase']->selectRecordset("SELECT date, time, locationid FROM observations WHERE id = \"" . $id . "\"");
-		if ($get = mysql_fetch_object($run)) {
-			$date = $get->date;
-			$time = $get->time;
-			$loc = $get->locationid;
-			if ($time >= 0) {
-				$date = sscanf($get->date, "%4d%2d%2d");
-				$timezone = $GLOBALS['objLocation']->getLocationPropertyFromId($get->locationid,'timezone');
-				$dateTimeZone = new DateTimeZone($timezone);
-				$datestr = sprintf("%02d", $date[1]) . "/" . sprintf("%02d", $date[2]) . "/" . $date[0];
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	public  function getDsObservationLocalDate($id)                                                                         // returns the date of the given observation in local time
+	{ global $objDatabase, $objLocation;
+		$run = $objDatabase->selectRecordset("SELECT date,time,locationid FROM observations WHERE id=\"".$id."\"");
+		if($get=mysql_fetch_object($run)) 
+		{ $date=$get->date;
+			$time=$get->time;
+			$loc=$get->locationid;
+			if($time>=0)
+			{ $date=sscanf($get->date,"%4d%2d%2d");
+				$timezone=$objLocation->getLocationPropertyFromId($get->locationid,'timezone');
+				$dateTimeZone=new DateTimeZone($timezone);
+				$datestr=sprintf("%02d",$date[1])."/".sprintf("%02d",$date[2])."/".$date[0];
 				$dateTime = new DateTime($datestr, $dateTimeZone);
 				// Geeft tijdsverschil terug in seconden
 				$timedifference = $dateTimeZone->getOffset($dateTime);

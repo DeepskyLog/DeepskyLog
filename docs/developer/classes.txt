@@ -1,3 +1,45 @@
+interface iObject
+{ public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec,$mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource); // Add a deepsky object in all detail
+//private function calcContrastAndVisibility($object,$showname,$magnitude,$SBobj,$diam1,$diam2,&$contrast,&$contype,&$popup,&$prefMag);
+//private function calculateSize($diam1, $diam2);                               // Construct a string from the sizes
+  public  function getAllInfoDsObject($name);                                   // Returns all information of an object
+  public  function getAlternativeNames($name);
+  public  function getCatalogs();                                               // returns a list of all different catalogs
+  public  function getCatalogsAndLists();
+  public  function getConstellations();                                         // returns a list of all different constellations
+//private function getContainsNames($name);
+  public  function getDsObjectName($name);                                      // returns the name when the original or alternative name is given.
+  public  function getDsObjectTypes();                                          // returns a list of all different types
+  public  function getDsoProperty($theObject,$theProperty, $default='');        // returns the property of the object, or default if not found
+  public  function getDSOseen($object);                                         // Returns the getSeen result, encoded to a href that shows the seen observations
+  public  function getExactDsObject($value, $cat='', $catindex='');             // returns the exact name of an object
+  public  function getLikeDsObject($value, $cat='', $catindex='');              // returns the exact name of an object
+  public  function getNearbyObjects($objectname, $dist);                        // returns an array with nearby objects
+  public  function getNumberOfObjectsInCatalog($catalog);                       // returns the number of objects in the catalog given as a parameter
+  public  function getObjectFromQuery($queries,$exact=0,$seen="D",$partof=0);
+  public  function getObjectsFromCatalog($cat);
+  public  function getObjectVisibilities(&$obs);                                // completes an objects array containing already the object characteristics with the visibility and magnifications parameters
+//private function getPartOfNames($name);
+  public  function getPartOfs($objects);
+  public  function getSeen($object);                                            // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
+//private function getSeenLastseenLink($object,&$seenlink,&$lastseenlink);      // Returns the -/X(nr)/Y(nr) seen link to all observations of object, and the date last seen link, linking to all user observations inversely sorted by date
+  public  function getSeenObjectDetails($obs, $seen="D");                       // Fills in all object details and seen characteristics for an array of objects Obj[key]=array(position,name,optional descritpion)
+//private function getSize($name);                                              // Returns the size of the object
+  public  function newAltName($name, $cat, $catindex);                          // ADMIN FUNCTION, Add a new Altname in objectnames for this object
+  public  function newName($name, $cat, $catindex);                             // ADMIN FUNCTION, Set a new name for a DS object, and adapt all observations, objectnames, partofs and list occurences
+  public  function newPartOf($name, $cat, $catindex);                           // ADMIN FUNCTION, Adds a new partof entry for $name in the partsof table, making it part of $cat $index
+//private function prepareObjectsContrast($doLogin=false);                      // internal procedure to speed up contrast calculations
+  public  function removeAltName($name, $cat, $catindex);                       // ADMIN FUNCTION, Remove the alternative name $cat $index from the objectnames of $name
+  public  function removeAndReplaceObjectBy($name, $cat, $catindex);            // ADMIN FUNCTION, Remove the object after replacing it in the observations, partofs, lists by the object $cat $index
+  public  function removePartOf($name, $cat, $catindex);                        // ADMIN FUNCTION, Remove the partof entry for $name from the partsof table, so that $name is no longer a part of $cat $index
+  public  function setDsObjectAtlasPages($name);                                // sets the different atlas pages for an object (e.g. after changing its coordinates)
+  public  function setDsObjectSBObj($name);                                     // sets the SBObj for an object, based on its mag and diam1 & 2, e.g. after changing its diam or mag.
+  public  function setDsoProperty($name,$property,$propertyValue);              // sets the property to the specified value for the given object
+  public  function showObject($object,$zoom=30);                                // shows the characteristics of a single object
+  public  function showObjects($link, $min, $max, $ownShow='', $showRank=0);    // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
+  public  function sortObjects($objectList, $sort, $reverse=false);             // Sort the array of objectList on the $sort field, and in second order on the showname field 
+}
+
 This document is very outdated!!!! Should be updated or removed!
 
 This document list all classes and funtions of these classes.

@@ -58,7 +58,7 @@ elseif($objUtil->checkGetKey('source')=='objects_nearby')
 	  $validQobj=true;
   if(!$validQobj)
 	{ $_SESSION['QobjParams']=array('source'=>'objects_nearby','object'=>$_GET['object'],'zoom'=>$_GET['zoom']);
-	  $_SESSION['Qobj']=$GLOBALS['objObject']->getSeenObjectDetails($GLOBALS['objObject']->getNearbyObjects($_GET['object'],$_GET['zoom']));
+	  $_SESSION['Qobj']=$objObject->getSeenObjectDetails($GLOBALS['objObject']->getNearbyObjects($_GET['object'],$_GET['zoom']));
 	  $_SESSION['QobjSort']='objectname';
 	  $_SESSION['QobjSortDirection']='asc';
 	}

@@ -1,7 +1,6 @@
 <?php // The objects class collects all functions needed to enter, retrieve and adapt object data from the database and functions to display the data.
 interface iObject
-{ public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec,  // Add a deepsky object in all detail
-          	                   $mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource);
+{ public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec,$mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource); // Add a deepsky object in all detail
 //private function calcContrastAndVisibility($object,$showname,$magnitude,$SBobj,$diam1,$diam2,&$contrast,&$contype,&$popup,&$prefMag);
 //private function calculateSize($diam1, $diam2);                               // Construct a string from the sizes
   public  function getAllInfoDsObject($name);                                   // Returns all information of an object
@@ -16,11 +15,13 @@ interface iObject
   public  function getDSOseen($object);                                         // Returns the getSeen result, encoded to a href that shows the seen observations
   public  function getExactDsObject($value, $cat='', $catindex='');             // returns the exact name of an object
   public  function getLikeDsObject($value, $cat='', $catindex='');              // returns the exact name of an object
+  public  function getNearbyObjects($objectname, $dist);                        // returns an array with nearby objects
   public  function getNumberOfObjectsInCatalog($catalog);                       // returns the number of objects in the catalog given as a parameter
   public  function getObjectFromQuery($queries,$exact=0,$seen="D",$partof=0);
   public  function getObjectsFromCatalog($cat);
   public  function getObjectVisibilities(&$obs);                                // completes an objects array containing already the object characteristics with the visibility and magnifications parameters
 //private function getPartOfNames($name);
+  public  function getPartOfs($objects);
   public  function getSeen($object);                                            // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
 //private function getSeenLastseenLink($object,&$seenlink,&$lastseenlink);      // Returns the -/X(nr)/Y(nr) seen link to all observations of object, and the date last seen link, linking to all user observations inversely sorted by date
   public  function getSeenObjectDetails($obs, $seen="D");                       // Fills in all object details and seen characteristics for an array of objects Obj[key]=array(position,name,optional descritpion)
@@ -35,6 +36,7 @@ interface iObject
   public  function setDsObjectAtlasPages($name);                                // sets the different atlas pages for an object (e.g. after changing its coordinates)
   public  function setDsObjectSBObj($name);                                     // sets the SBObj for an object, based on its mag and diam1 & 2, e.g. after changing its diam or mag.
   public  function setDsoProperty($name,$property,$propertyValue);              // sets the property to the specified value for the given object
+  public  function showObject($object,$zoom=30);                                // shows the characteristics of a single object
   public  function showObjects($link, $min, $max, $ownShow='', $showRank=0);    // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
   public  function sortObjects($objectList, $sort, $reverse=false);             // Sort the array of objectList on the $sort field, and in second order on the showname field 
 }
@@ -183,7 +185,7 @@ class Objects implements iObject
   { global $objDatabase;
 	  return $objDatabase->selectSingleArray("SELECT objectpartof.objectname FROM objectpartof WHERE objectpartof.partofname = \"".$name."\"",'objectname');
   }
-  public function getDsObjectName($name)                                                // returns the name when the original or alternative name is given.
+  public  function getDsObjectName($name)                                                // returns the name when the original or alternative name is given.
   { global $objDatabase;
 	  return $objDatabase->selectSingleValue("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"".$name."\")",'objectname');
   }
@@ -239,6 +241,17 @@ class Objects implements iObject
 	  }
 	  return $objDatabase->selectSingleArray($sql,'objectname');
   }
+  public  function getNearbyObjects($objectname, $dist)
+  { global $objDatabase;
+  	$run=$objDatabase->selectRecordset("SELECT objects.ra, objects.decl FROM objects WHERE name = \"$objectname\"");
+    $get = mysql_fetch_object($run);
+	  $ra = $get->ra; $decl = $get->decl;
+	  $dra = 0.0011 * $dist / cos($decl/180*3.1415926535);
+    $run = $objDatabase->selectRecordset("SELECT objects.name FROM objects WHERE ((objects.ra > $ra - $dra) AND (objects.ra < $ra + $dra) AND (objects.decl > $decl - ($dist/60)) AND (objects.decl < $decl + ($dist/60))) ORDER BY objects.name");
+	  for($result=array(),$i=0;($get=mysql_fetch_object($run));$i++)
+      $result[$get->name] = array($i, $get->name);
+	  return $result;
+  } 
   public  function getNumberOfObjectsInCatalog($catalog)  // returns the number of objects in the catalog given as a parameter
   { global $objDatabase;
   	if(substr($catalog,0,5)=="List:")
@@ -388,7 +401,7 @@ class Objects implements iObject
 	  uksort($obs,"strnatcasecmp");
     return $obs;
   }
-  public function getObjectVisibilities(&$obs)
+  public  function getObjectVisibilities(&$obs)
   { $popupT = $this->prepareObjectsContrast();
     for($j=0;$j<count($obs);$j++)
     { $this->calcContrastAndVisibility($obs[$j]['objectname'],$obs[$j]['showname'],$obs[$j]['objectmagnitude'],$obs[$j]['objectsbcalc'],$obs[$j]['objectdiam1'],$obs[$j]['objectdiam2'],$contrast,$contype,$popup,$contrastcalc1);
@@ -414,7 +427,18 @@ class Objects implements iObject
 	  }
 	  return $seen;
   }
-	private  function getSeenLastseenLink($object,&$seen, &$seenlink, &$lastseen, &$lastseenlink)
+  public  function getPartOfs($objects)
+  { global $objDatabase;
+    $i=0; $objectPartOfs=array();
+    while(list($key,$value)=each($objects)) 
+    {  $objectsPartOfs[$key]=$value;
+   	   $partofs=$objDatabase->selectSingleArray("SELECT objectname FROM objectpartof WHERE partofname=\"".$value[1]."\"","objectname");
+       while(list($key2,$value2)=each($partofs))
+ 	       $objectsPartOfs[$value2]=array($i++,$value2);
+    }
+    return $objectsPartOfs;
+  }
+  private function getSeenLastseenLink($object,&$seen, &$seenlink, &$lastseen, &$lastseenlink)
 	{ $seen = "-";
     $seenlink = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_objectamp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
     $lastseenlink = "-";
@@ -716,6 +740,110 @@ class Objects implements iObject
   { global $objDatabase;
     return $objDatabase->execSQL("UPDATE objects SET ".$property." = \"".$propertyValue."\" WHERE name = \"".$name."\"");
   }
+  public  function showObject($object,$zoom=30)
+  { global $deepskylive, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL;	
+    $object=$this->getDsObjectName($object);
+    $_SESSION['object']=$object;
+    $altnames=$this->getAlternativeNames($object); $alt="";
+	  while(list($key,$value)=each($altnames))
+      if(trim($value)!=trim($object))
+	 	    $alt.=($alt?"<br />":"").trim($value);
+    $contains=$this->getContainsNames($object); $partof=$this->getPartOfNames($object); $containst=""; $partoft = "";
+    while(list($key, $value)=each($contains))
+      if(trim($value)!=trim($object))
+	 	    $containst.=($containst?"/":"")."(<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(trim($value))."\">".trim($value)."</a>)";
+    while((count($partof))&&(list($key, $value)=each($partof)))
+      if(trim($value)!=trim($object))
+	  	  $partoft.=($partoft?"/":"")."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(trim($value))."\">".trim($value)."</a>";
+    $raDSS=$objUtil->raToStringDSS($this->getDsoProperty($object,'ra'));
+    $declDSS=$objUtil->decToStringDSS($this->getDsoProperty($object,'decl'));
+    $magnitude=sprintf("%01.1f", $this->getDsoProperty($object,'mag'));
+	  $sb=sprintf("%01.1f", $this->getDSOProperty($object,'subr'));
+    $this->calcContrastAndVisibility($object,$object,$this->getDsoProperty($object,'mag'),$this->getDsoProperty($object,'SBObj'),$this->getDsoProperty($object,'diam1'),$this->getDsoProperty($object,'diam2'),$contrast,$contype,$popup,$prefMag);
+	  echo "<table width=\"100%\">";
+	  if($loggedUser&&($standardAtlasCode=$GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id'])))
+	    tableFieldnameFieldFieldnameField(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode(stripslashes($object)) . "\">".(stripslashes($object))."</a>",
+	                                      $objAtlas->atlasCodes[$standardAtlasCode].LangViewObjectField10,$this->getDsoProperty($object,$standardAtlasCode)," class=\"type2\"");
+	  else                                                                                                                                                                                                      // object name       / atlas page
+	    tableFieldnameFieldFieldnameField(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(stripslashes($object))."\">".(stripslashes($object))."</a>",
+	                                      "&nbsp;","&nbsp;"," class=\"type2\"");
+ 	  tableFieldnameFieldFieldnameField(LangViewObjectField2,($alt?$alt:"-"),LangViewObjectField2b,($containst? $containst . "/":"(-)/").($partoft?$partoft:"-"),'type1');                                      // Alternative names / PART OFs
+    tableFieldnameFieldFieldnameField(LangViewObjectField3,raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,decToStringDegMin($this->getDsoProperty($object,'decl')),"class=\"type2\"");  // RIGHT ASCENSION   / DECLINATION
+    tableFieldnameFieldFieldnameField(LangViewObjectField5,$GLOBALS[$this->getDsoProperty($object,'con')],LangViewObjectField6,$GLOBALS[$this->getDsoProperty($object,'type')],"class=\"type1\"");            // CONSTELLATION     / TYPE
+    tableFieldnameFieldFieldnameField(LangViewObjectField7,((($magnitude==99.9)||($magnitude==""))?$magnitude = "-":$magnitude),LangViewObjectField8,((($sb==99.9)||($sb==""))?"-":$sb),"class=\"type2\"");    // MAGNITUDE / SURFACE BRIGHTNESS
+    tableFieldnameFieldFieldnameField(LangViewObjectField9,(($size=$this->getSize($object))?$size:"-"),LangViewObjectField12,(($this->getDsoProperty($object,'pa')!=999)?($this->getDsoProperty($object,'pa') . "&deg;"):"-"),"class=\"type1\"");   // SIZE / POSITION ANGLE    
+    tableFieldnameFieldFieldnameField(LangViewObjectFieldContrastReserve,"<span class=\"" . $contype . "\" width=\"25%\"  onmouseover=\"Tip('" . $popup . "')\">".$contrast."</span>",LangViewObjectFieldOptimumDetectionMagnification,$prefMag,"class=\"type2\"");
+    if($listname&&($objList->checkObjectInMyActiveList($object)))
+	  { if($myList)
+     { echo "<form action=\"".$baseURL."index.php?indexAction=detail_object\">";    	
+       echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
+       echo "<input type=\"hidden\" name=\"object\" value=\"".urlencode($object)."\" />";
+       echo "<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>";
+		   echo "<td align=\"right\">".LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>)<br /><input type=\"submit\" name=\"Go\" value=\"" . LangEditObjectDescription . "\" /></td>";
+  	   echo "<td colspan=\"3\"><textarea name=\"description\" class=\"listdescription inputfield\">".$objList->getListObjectDescription($object)."</textarea></td>";
+       echo "</form>";
+		 }
+		 else
+		 { echo "<tr>";
+  	   echo "<td align=\"right\">".LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>)</td>";
+  	   echo "<td colspan=\"3\">".$objList->getListObjectDescription($object)."</td>";
+  	   echo "</tr>";
+		 }
+    }
+	  elseif($descriptionDsOject=$this->getDsoProperty($object,'description'))
+	  { echo "<tr>";
+   	  echo "<td align=\"right\">";
+   	  echo LangViewObjectNGCDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
+   	  echo "</td>";
+  	  echo "<td colspan=\"3\">";
+  	  echo $descriptionDsOject;
+  	  echo "</td>";
+  	  echo "</tr>";
+    }
+	  echo "</table>";
+    echo "<table width=\"100%\"><tr><td width=\"50%\" align=\"center\">";
+    // LINK TO DSS IMAGE
+    echo "<form action=\"".$baseURL."index.php?indexAction=view_image\" method=\"post\">";
+    echo "<select name=\"imagesize\">";
+    if($zoom<=15) echo("<option selected value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"); else echo("<option value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"); // 15 x 15 arcminutes
+    if(($zoom>15)&& ($zoom<=30)) echo("<option selected value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>"); else echo("<option value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>"); // 30 x 30 arcminutes
+    if($zoom>30) echo("<option selected value=\"60\">60&#39;&nbsp;x&nbsp;60&#39;</option>"); else echo("<option value=\"60\">60&#39;&nbsp;x&nbsp;60&#39;</option>"); // 60 x 60 arcminutes
+    echo("</select>");
+    echo("<input type=\"hidden\" name=\"raDSS\" value=\"" . $raDSS . "\" />");
+    echo("<input type=\"hidden\" name=\"declDSS\" value=\"" . $declDSS . "\" />");
+    echo("<input type=\"hidden\" name=\"name\" value=\"" . $object . "\" />");
+    echo("<input type=\"submit\" name=\"dss\" value=\"" . LangViewObjectDSS . "\" />");
+    echo("</form>");
+    echo("</td><td width=\"50%\" align=\"center\">");
+    // LINK TO DEEPSKYLIVE CHART
+    if ($deepskylive == 1)
+    { $raDSL=raToStringDSL($this->getDsoProperty($object,'ra'));
+      $declDSL=decToStringDSL($this->getDsoProperty($object,'decl'));
+      echo "<form action=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;zoom=" . $zoom . "\" method=\"post\">";
+      echo "<select name=\"dslsize\">";
+      if ($zoom<=30) echo "<option selected value=\"60\">1&deg;</option>"; else echo "<option value=\"60\">1&deg;</option>";
+      if(($zoom>30) && ($zoom<=60)) echo "<option selected value=\"120\">2&deg;</option>"; else echo "<option value=\"120\">2&deg;</option>";
+      if ($zoom>60) echo "<option selected value=\"180\">3&deg;</option>"; else echo "<option value=\"180\">3&deg;</option>"; 
+      echo "</select>";
+      echo "<input type=\"hidden\" name=\"showDSL\" value=\"1\" />";
+      echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
+      echo "<input type=\"submit\" name=\"dsl\" value=\"" . LangViewObjectDSL . "\" />";
+      if (isset($_POST["showDSL"]) && $_POST["showDSL"] == 1)
+      { $fov=$_POST["dslsize"];
+        echo "<applet code=\"Deepskylive.class\" codebase=\"http://users.telenet.be/deepskylive/applet/\" height=\"1\" width=\"1\">
+              <param name=\"ra\" value=\"".$raDSL."\">
+              <param name=\"dec\" value=\"".$declDSL."\">
+              <param name=\"fov\" value=\"".$fov."\">
+              <param name=\"p\" value=\"1\">
+              </applet>";
+      }
+      echo "</form>";
+    }
+    echo "</td>";
+    echo "</tr>";
+    echo "</table>";
+	  echo"<hr>";
+  }
   public  function showObjects($link, $min, $max, $ownShow='', $showRank=0)        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
   { global $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL;
 	  $atlas='';
@@ -849,235 +977,23 @@ class Objects implements iObject
    }
    return $objectList;
   }
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-  public  function showObject($object,$zoom=30)
-  { global $deepskylive, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL;	
-    $object=$this->getDsObjectName($object);
-    $_SESSION['object']=$object;
-    $altnames=$this->getAlternativeNames($object); $alt="";
-	  while(list($key,$value)=each($altnames))
-      if(trim($value)!=trim($object))
-	 	    $alt.=($alt?"<br />":"").trim($value);
-    $contains=$this->getContainsNames($object); $partof=$this->getPartOfNames($object); $containst=""; $partoft = "";
-    while(list($key, $value)=each($contains))
-      if(trim($value)!=trim($object))
-	 	    $containst.=($containst?"/":"")."(<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(trim($value))."\">".trim($value)."</a>)";
-    while((count($partof))&&(list($key, $value)=each($partof)))
-      if(trim($value)!=trim($object))
-	  	  $partoft.=($partoft?"/":"")."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(trim($value))."\">".trim($value)."</a>";
-    $raDSS=$objUtil->raToStringDSS($this->getDsoProperty($object,'ra'));
-    $declDSS=$objUtil->decToStringDSS($this->getDsoProperty($object,'decl'));
-    $magnitude=sprintf("%01.1f", $this->getDsoProperty($object,'mag'));
-	  $sb=sprintf("%01.1f", $this->getDSOProperty($object,'subr'));
-    $this->calcContrastAndVisibility($object,$object,$this->getDsoProperty($object,'mag'),$this->getDsoProperty($object,'SBObj'),$this->getDsoProperty($object,'diam1'),$this->getDsoProperty($object,'diam2'),$contrast,$contype,$popup,$prefMag);
-	  echo "<table width=\"100%\">";
-	  if($loggedUser&&($standardAtlasCode=$GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id'])))
-	    tableFieldnameFieldFieldnameField(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode(stripslashes($object)) . "\">".(stripslashes($object))."</a>",
-	                                      $objAtlas->atlasCodes[$standardAtlasCode].LangViewObjectField10,$this->getDsoProperty($object,$standardAtlasCode)," class=\"type2\"");
-	  else                                                                                                                                                                                                      // object name       / atlas page
-	    tableFieldnameFieldFieldnameField(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(stripslashes($object))."\">".(stripslashes($object))."</a>",
-	                                      "&nbsp;","&nbsp;"," class=\"type2\"");
- 	  tableFieldnameFieldFieldnameField(LangViewObjectField2,($alt?$alt:"-"),LangViewObjectField2b,($containst? $containst . "/":"(-)/").($partoft?$partoft:"-"),'type1');                                      // Alternative names / PART OFs
-    tableFieldnameFieldFieldnameField(LangViewObjectField3,raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,decToStringDegMin($this->getDsoProperty($object,'decl')),"class=\"type2\"");  // RIGHT ASCENSION   / DECLINATION
-    tableFieldnameFieldFieldnameField(LangViewObjectField5,$GLOBALS[$this->getDsoProperty($object,'con')],LangViewObjectField6,$GLOBALS[$this->getDsoProperty($object,'type')],"class=\"type1\"");            // CONSTELLATION     / TYPE
-    tableFieldnameFieldFieldnameField(LangViewObjectField7,((($magnitude==99.9)||($magnitude==""))?$magnitude = "-":$magnitude),LangViewObjectField8,((($sb==99.9)||($sb==""))?"-":$sb),"class=\"type2\"");    // MAGNITUDE / SURFACE BRIGHTNESS
-    tableFieldnameFieldFieldnameField(LangViewObjectField9,(($size=$this->getSize($object))?$size:"-"),LangViewObjectField12,(($this->getDsoProperty($object,'pa')!=999)?($this->getDsoProperty($object,'pa') . "&deg;"):"-"),"class=\"type1\"");   // SIZE / POSITION ANGLE    
-    tableFieldnameFieldFieldnameField(LangViewObjectFieldContrastReserve,"<span class=\"" . $contype . "\" width=\"25%\"  onmouseover=\"Tip('" . $popup . "')\">".$contrast."</span>",LangViewObjectFieldOptimumDetectionMagnification,$prefMag,"class=\"type2\"");
-    if($listname&&($objList->checkObjectInMyActiveList($object)))
-	  { if($myList)
-     { echo "<form action=\"".$baseURL."index.php?indexAction=detail_object\">";    	
-       echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
-       echo "<input type=\"hidden\" name=\"object\" value=\"".urlencode($object)."\" />";
-       echo "<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>";
-		   echo "<td align=\"right\">".LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>)<br /><input type=\"submit\" name=\"Go\" value=\"" . LangEditObjectDescription . "\" /></td>";
-  	   echo "<td colspan=\"3\"><textarea name=\"description\" class=\"listdescription inputfield\">".$objList->getListObjectDescription($object)."</textarea></td>";
-       echo "</form>";
-		 }
-		 else
-		 { echo "<tr>";
-  	   echo "<td align=\"right\">".LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>)</td>";
-  	   echo "<td colspan=\"3\">".$objList->getListObjectDescription($object)."</td>";
-  	   echo "</tr>";
-		 }
-    }
-	  elseif($descriptionDsOject=$this->getDsoProperty($object,'description'))
-	  { echo "<tr>";
-   	  echo "<td align=\"right\">";
-   	  echo LangViewObjectNGCDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
-   	  echo "</td>";
-  	  echo "<td colspan=\"3\">";
-  	  echo $descriptionDsOject;
-  	  echo "</td>";
-  	  echo "</tr>";
-    }
-	  echo "</table>";
-    echo "<table width=\"100%\"><tr><td width=\"50%\" align=\"center\">";
-    // LINK TO DSS IMAGE
-    echo "<form action=\"".$baseURL."index.php?indexAction=view_image\" method=\"post\">";
-    echo "<select name=\"imagesize\">";
-    if($zoom<=15) echo("<option selected value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"); else echo("<option value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"); // 15 x 15 arcminutes
-    if(($zoom>15)&& ($zoom<=30)) echo("<option selected value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>"); else echo("<option value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>"); // 30 x 30 arcminutes
-    if($zoom>30) echo("<option selected value=\"60\">60&#39;&nbsp;x&nbsp;60&#39;</option>"); else echo("<option value=\"60\">60&#39;&nbsp;x&nbsp;60&#39;</option>"); // 60 x 60 arcminutes
-    echo("</select>");
-    echo("<input type=\"hidden\" name=\"raDSS\" value=\"" . $raDSS . "\" />");
-    echo("<input type=\"hidden\" name=\"declDSS\" value=\"" . $declDSS . "\" />");
-    echo("<input type=\"hidden\" name=\"name\" value=\"" . $object . "\" />");
-    echo("<input type=\"submit\" name=\"dss\" value=\"" . LangViewObjectDSS . "\" />");
-    echo("</form>");
-    echo("</td><td width=\"50%\" align=\"center\">");
-    // LINK TO DEEPSKYLIVE CHART
-    if ($deepskylive == 1)
-    { $raDSL=raToStringDSL($this->getDsoProperty($object,'ra'));
-      $declDSL=decToStringDSL($this->getDsoProperty($object,'decl'));
-      echo "<form action=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;zoom=" . $zoom . "\" method=\"post\">";
-      echo "<select name=\"dslsize\">";
-      if ($zoom<=30) echo "<option selected value=\"60\">1&deg;</option>"; else echo "<option value=\"60\">1&deg;</option>";
-      if(($zoom>30) && ($zoom<=60)) echo "<option selected value=\"120\">2&deg;</option>"; else echo "<option value=\"120\">2&deg;</option>";
-      if ($zoom>60) echo "<option selected value=\"180\">3&deg;</option>"; else echo "<option value=\"180\">3&deg;</option>"; 
-      echo "</select>";
-      echo "<input type=\"hidden\" name=\"showDSL\" value=\"1\" />";
-      echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
-      echo "<input type=\"submit\" name=\"dsl\" value=\"" . LangViewObjectDSL . "\" />";
-      if (isset($_POST["showDSL"]) && $_POST["showDSL"] == 1)
-      { $fov=$_POST["dslsize"];
-        echo "<applet code=\"Deepskylive.class\" codebase=\"http://users.telenet.be/deepskylive/applet/\" height=\"1\" width=\"1\">
-              <param name=\"ra\" value=\"".$raDSL."\">
-              <param name=\"dec\" value=\"".$declDSL."\">
-              <param name=\"fov\" value=\"".$fov."\">
-              <param name=\"p\" value=\"1\">
-              </applet>";
-      }
-      echo "</form>";
-    }
-    echo "</td>";
-    echo "</tr>";
-    echo "</table>";
-	  echo"<hr>";
-  }
- 
-  
-  
- function getNearbyObjects($objectname, $dist)
- { $run=$GLOBALS['objDatabase']->selectRecordset("SELECT objects.ra, objects.decl FROM objects WHERE name = \"$objectname\"");
-   $get = mysql_fetch_object($run);
-	 $ra = $get->ra; $decl = $get->decl;
-	 $dra = 0.0011 * $dist / cos($decl/180*3.1415926535);
-   $run = $GLOBALS['objDatabase']->selectRecordset("SELECT objects.name FROM objects WHERE ((objects.ra > $ra - $dra) AND (objects.ra < $ra + $dra) AND (objects.decl > $decl - ($dist/60)) AND (objects.decl < $decl + ($dist/60))) ORDER BY objects.name");
-	 for($result=array(),$i=0;($get=mysql_fetch_object($run));$i++)
-     $result[$get->name] = array($i, $get->name);
-	 return $result;
- } 
- function getPartOfs($objects)
- { $i=0; $objectPartOfs=array();
-   while(list($key,$value)=each($objects)) 
-   {  $objectsPartOfs[$key]=$value;
-   	  $partofs=$GLOBALS['objDatabase']->selectSingleArray("SELECT objectname FROM objectpartof WHERE partofname=\"".$value[1]."\"","objectname");
-      while(list($key2,$value2)=each($partofs))
- 	      $objectsPartOfs[$value2]=array($i++,$value2);
-   }
-   return $objectsPartOfs;
- }
 }
-
-class contrastcompare {
-     var $_reverse;
-
-     function contrastCompare( $reverse ) {
-      $this->_reverse = $reverse;
-     }
-
-     function compare( $a, $b ) {
-      $a = explode ( '/' , $a);
-      $b = explode ( '/' , $b);
-      $a = $a[0];
-      $b = $b[0];
-
-      if ($a == $b) return 0;
-
-      if ($this->_reverse)
-      {
-       return ($b > $a) ? -1 : 1;
-      }
-      else
-      {
-       return ($a > $b) ? -1 : 1;
-      }
-     }
- }
 $objObject=new Objects;
-/* OBSOLETE FUNCTIONS
-  public  function deleteDSObject($name) // deleteObject removes the object with name = $name
-  { $GLOBALS['objDatabase']->execSQL("DELETE FROM objects WHERE name=\"$name\"");
+class contrastcompare 
+{ var $_reverse;
+  function contrastCompare($reverse) 
+  { $this->_reverse = $reverse;
   }
-  function getDatasource($name)    // getDatasource returns the datasource of the object
-  { return $GLOBALS['objDatabase']->selectSingleValue("SELECT datasource FROM objects WHERE name = \"".$name."\"",'datasource');
+  function compare( $a, $b ) 
+  { $a = explode ( '/' , $a);
+    $b = explode ( '/' , $b);
+    $a = $a[0];
+    $b = $b[0];
+    if ($a == $b) return 0;
+    if ($this->_reverse)
+      return ($b > $a) ? -1 : 1;
+    else
+      return ($a > $b) ? -1 : 1;
   }
-  function getObjects()   // getObjects returns an array with the names of all objects
-  { return $GLOBALS['objDatabase']->selectSingleArray("SELECT objects.name FROM OBJECTS",'name');
-  }
-  function getSortedObjects($sort)                                               // getSortedObjects returns an array with the names of all objects, sorted by  the column specified in $sort
-  { return $GLOBALS['objDatabase']->selectSingleArray("SELECT name FROM objects ORDER BY $name",'name');
-  }
-*/
+}
 ?>

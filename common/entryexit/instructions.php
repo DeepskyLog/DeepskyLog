@@ -117,7 +117,10 @@ if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_change
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_object")
   include_once "deepsky/control/validate_object.php";
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_delete_observation")
-  include_once "deepsky/control/validate_delete_observation.php";
+{ $entryMessage.=$objObservation->validateDeleteDSObservation();
+	$_GET['indexAction']='default_action';
+	unset($_GET['validate_delete_observation']);
+}
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="manage_csv_objects")
   include_once "deepsky/control/manage_csv_objects.php";
 if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_csv_observations")
