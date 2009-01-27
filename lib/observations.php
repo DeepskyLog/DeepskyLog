@@ -6,7 +6,9 @@ interface iObservations
 	public  function getDsObservationLocalDate($id);                                                                                                                    // returns the date of the given observation in local time
 	public  function getDsObservationProperty($id, $property, $defaultvalue='');                                                                                        // returns the property of the observation
 	public  function getDsObservationsCountFromObserver($id);                                                                                                           // returns the number of observations entered by the observer with visibilty != 7                                                                                  
+	public  function getNumberOfDifferentObservedDSObjects();	                                                                                                          // returns the number of different objects observed
 	public  function getNumberOfDsObservations();                                                                                                                       // returns the total number of observations
+	public  function getNumberOfObjects($id);                                                                                                                           // return the number of different objects seen by the observer
 	public  function getObservationFromQuery($queries, $seenpar = "D", $exactinstrumentlocation = "0");                                                                 // returns an array with the names of all observations where the queries are defined in an array. 
 	public  function getObservationsLastYear($id); 
 	public  function getObservationsUserObject($userid, $object); 
@@ -14,13 +16,14 @@ interface iObservations
 	public  function getObservedCountFromCatalogOrList($id, $catalog); 
 	public  function getObservedFromCatalog($id, $catalog); 
   public  function getObservedFromCatalogPartOf($id, $catalog); 
-	public  function getPopularObservers();                                                                                                                             //  returns the number of observations of the observers
+	public  function getPopularObservations();                                                                                                                          // returns the number of observations of the objects
+  public  function getPopularObservers();                                                                                                                             // returns the number of observations of the observers
 	public  function getPopularObserversOverviewCatOrList($sort, $cat = ""); 
 	public  function validateDeleteDSObservation($id);                                                                                                                  // removes the observation with id = $id
 	
 }
 class Observations {
-	public function addDSObservation($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language) 
+	public  function addDSObservation($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language) 
 	{ // adds a new observation to the database. The name, observerid, instrumentid, locationid, date, time, description, seeing and limiting magnitude should be given as parameters. The id of the latest observation is returned.
 	  // If the time and date are given in local time, you should execute setLocalDateAndTime after inserting the observation!
 		global $objDatabase;
@@ -40,7 +43,7 @@ class Observations {
 		                      "VALUES (\"$objectname\", \"$observerid\", \"$instrumentid\", \"$locationid\", \"$date\", \"$time\", \"$description\", $seeing, $limmag, $visibility, \"$language\")");
 		return $objDatabase->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id');
 	}
-  public  function getAllInfoDsObservation($id)                                                                                                            // returns all information of an observation
+  public  function getAllInfoDsObservation($id)                                                                                                                       // returns all information of an observation
 	{ global $objDatabase;
 		$get = mysql_fetch_object($objDatabase->selectRecordset("SELECT * FROM observations WHERE id=\"$id\""));
 		$ob["name"] = $get->objectname;
@@ -72,7 +75,7 @@ class Observations {
 		$ob["colorContrasts"] = $get->colorContrasts;
 		return $ob;
 	}
-	public  function getDsObservationLocalDate($id)                                                                         // returns the date of the given observation in local time
+	public  function getDsObservationLocalDate($id)                                                                                                                     // returns the date of the given observation in local time
 	{ global $objDatabase, $objLocation;
 		$run = $objDatabase->selectRecordset("SELECT date,time,locationid FROM observations WHERE id=\"".$id."\"");
 		if($get=mysql_fetch_object($run)) 
@@ -118,19 +121,27 @@ class Observations {
 			return $date;
 		}
 	}
-	public  function getDsObservationProperty($id, $property, $defaultvalue='') // returns the property of the observation
+	public  function getDsObservationProperty($id, $property, $defaultvalue='')                                                                                         // returns the property of the observation
 	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT ".$property." FROM observations WHERE id=\"".$id."\"",property,$defaultvalue);
+		return $objDatabase->selectSingleValue("SELECT ".$property." FROM observations WHERE id=\"".$id."\"",$property,$defaultvalue);
 	}
 	public  function getDsObservationsCountFromObserver($id)
 	{ global $objDatabase;
 		return $objDatabase->selectSingleValue("SELECT COUNT(*) as Cnt FROM observations WHERE observations.observerid = \"$id\" and visibility != 7 ", "Cnt", 0);
 	}
-	public  function getNumberOfDsObservations() // returns the total number of observations
+	public  function getNumberOfDifferentObservedDSObjects() 	                                                                                                          // Returns the number of different objects observed
+	{ global $objDatabase;
+	  return $objDatabase->selectSingleValue("SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE visibility != 7 ",'Cnt');
+	}
+	public  function getNumberOfDsObservations()                                                                                                                        // returns the total number of observations
 	{ global $objDatabase;
 		return $objDatabase->selectSingleValue("SELECT COUNT(objectname) As Cnt FROM observations WHERE visibility != 7 ",'Cnt',0);
 	} 
-	public  function getObservationFromQuery($queries, $seenpar = "D", $exactinstrumentlocation = "0")                                                                               // returns an array with the names of all observations where the queries are defined in an array. 
+	public  function getNumberOfObjects($id)                                                                                                                            // return the number of different objects seen by the observer
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE observerid=\"".$id."\" AND visibility != 7 ", 'Cnt', 0);
+	}
+	public  function getObservationFromQuery($queries, $seenpar = "D", $exactinstrumentlocation = "0")                                                                  // returns an array with the names of all observations where the queries are defined in an array. 
 	{	// An example of an array :
   	//  $q = array("object" => "NGC 7293", "observer" => "wim",
   	// 		"instrument" => "3", "location" => "24",
@@ -368,7 +379,7 @@ class Observations {
 	public  function getObservationsLastYear($id) 
 	{ global $objDatabase;
 	  $t=getdate();
-		return $objDatabase->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid=\"".$id."\" AND observations.date > \"" . date("Ymd", ($t[0] - 31536000)) . "\" AND observations.visibility != 7 ", 'Cnt', 0);
+		return $objDatabase->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid LIKE \"".$id."\" AND observations.date > \"" . date('Ymd', strtotime('-1 year'))."\""/* AND observations.visibility != 7 */, 'Cnt', 0);
 	}
 	public  function getObservationsUserObject($userid, $object) 
 	{ global $objDatabase;
@@ -460,6 +471,14 @@ class Observations {
 			      " AND (observations.visibility != 7))";
 		return $objDatabase->selectSingleArray($sql, 'objectname');
 	}
+	public  function getPopularObservations()                                                                                                                           // returns the number of observations of the objects
+	{ global $objDatabase;
+		$run = $objDatabase->selectRecordset("SELECT observations.objectname, COUNT(observations.id) As ObservationCount FROM observations GROUP BY observations.objectname ORDER BY ObservationCount DESC");
+		$i=1;
+		while($get=mysql_fetch_object($run))
+			$numberOfObservations[$get->objectname]=array($i++,$get->objectname);
+		return $numberOfObservations;
+	}
 	public  function getPopularObservers()                                    //  returns the number of observations of the observers
 	{ global $objDatabase;
 	  return $objDatabase->selectSingleArray("SELECT observations.observerid, COUNT(observations.id) As Cnt FROM observations GROUP BY observations.observerid ORDER BY Cnt DESC", 'observerid');
@@ -513,7 +532,7 @@ class Observations {
 			$sql .= "ORDER BY Cnt DESC, observers.name ASC ";
 		return $objDatabase->selectKeyValueArray($sql, 'observerid', 'Cnt');
 	}
-	public  function validateDeleteDSObservation($id)                                                                       // removes the observation with id = $id
+	public  function validateDeleteDSObservation($id)                                                                                                                   // removes the observation with id = $id
 	{ global $objDatabase,$objUtil;
 	  if(!$_GET['observationid'])
       throw new Exception("No observation to delete.");                           
@@ -592,58 +611,9 @@ class Observations {
 
 
 	
-	function getNumberOfDifferentObservedDSObjects() 	// Returns the number of different objects observed
-	{ return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE visibility != 7 ",'Cnt');
-	}
 
-	// getNumberOfObservationsThisYear() returns the number of observations this
-	// year
-	function getNumberOfObservationsThisYear() {
-		$date = date("Y") . "0101";
-		$sql = "SELECT COUNT(objectname) FROM observations WHERE date > \"" . date("Y") . "0101" . "\" and visibility != 7 ";
-		$run = mysql_query($sql) or die(mysql_error());
-		return mysql_result($run, 0, 0);
-	}
+	
 
-	function getNumberOfObservationsLastYear() // getNumberOfObservationsThisYear() returns the number of observations this year
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.date >= \"" . date('Ymd', strtotime('-1 year')) . "\"", 'Cnt', 0);
-	}
-	function getNumberOfObjects($id) // getNumberOfObjects($id) return the number of different objects seen by the observer
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE observerid=\"".$id."\" AND visibility != 7 ", 'Cnt', 0);
-	}
-	function getPopularObservations() // getPopularObservations() returns the number of observations of the objects
-	{ $run = $GLOBALS['objDatabase']->selectRecordset("SELECT observations.objectname, COUNT(observations.id) As ObservationCount FROM observations GROUP BY observations.objectname ORDER BY ObservationCount DESC");
-		$i=1;
-		while($get=mysql_fetch_object($run))
-			$numberOfObservations[$get->objectname]=array($i++,$get->objectname);
-		return $numberOfObservations;
-	}
-	function getDsObservationInstrumentId($id) 
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT instrumentid FROM observations WHERE id = \"$id\"", 'instrumentid', '');
-	}
-	function getDsObservationEyepieceId($id) // getDsObservationEyepieceId returns the id of the eyepiece of the observation
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT eyepieceid FROM observations WHERE id = \"$id\"", 'eyepieceid', '');
-	}
-	function getDsObservationFilterId($id) // getFilterId returns the id of the filter of the observation
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT filterid FROM observations WHERE id = \"$id\"", 'filterid', '');
-	}
-	function getDsObservationLensId($id) // returns the id of the lens of the observation
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT lensid FROM observations WHERE id = \"$id\"", 'lensid', '');
-	}
-	function getDsSmallDiameter($id) // getDsSmallDiameter returns the small diameter estimation of the observation
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT smallDiameter FROM observations WHERE id = \"$id\"", 'smallDiameter', '');
-	}
-	function getDsLargeDiameter($id) // getDsLargeDiameter returns the large diameter estimation of the observation
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT largeDiameter FROM observations WHERE id = \"$id\"", 'largeDiameter', '');
-	}
 	function getDsStellar($id) // getDsStellar returns true if the object was seen stellar
 	{ global $objDatabase;
 		return $objDatabase->selectSingleValue("SELECT stellar FROM observations WHERE id = \"$id\"", 'stellar', '');
@@ -1225,7 +1195,7 @@ class Observations {
 
 			$objectname = $this->getDsObservationProperty($value,'objectname');
 			$observername = $this->getDsObservationProperty($value,'observerid');
-			$instrumentid = $this->getDsObservationInstrumentId($value);
+			$instrumentid = $this->getDsObservationProperty($value,'instrumentid');
 			$instrument = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($instrumentid,'name');
 			$locationid = $this->getDsObservationLocationId($value);
 			$location = $GLOBALS['objLocation']->getLocationPropertyFromId($locationid,'name');
@@ -1280,24 +1250,25 @@ class Observations {
 	}
 
 	function showObservation($LOid) {
-		global $dateformat;
+		global $dateformat, $myList, $listname_ss, $baseURL;
 		echo ("<table width=\"100%\">");
 		echo ("<tr class=\"type3\">");
 		echo ("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
 		echo LangViewObservationField2;
 		echo ("</td>");
 		echo ("<td width=\"25%\">");
-		echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_observer&amp;user=" . urlencode($this->getDsObservationProperty($LOid,'observerid')) . "&amp;back=index.php?indexAction=detail_observation\">");
+		echo ("<a href=\"" .$baseURL. "index.php?indexAction=detail_observer&amp;user=" . urlencode($this->getDsObservationProperty($LOid,'observerid')) . "&amp;back=index.php?indexAction=detail_observation\">");
 		echo ($GLOBALS['objObserver']->getFirstName($this->getDsObservationProperty($LOid,'observerid')) . "&nbsp;" . $GLOBALS['objObserver']->getObserverName($this->getDsObservationProperty($LOid,'observerid')));
 		print ("</a>");
 		print ("</td>");
 		echo "<td colspan=\"2\" align=\"right\">";
-		$link=$GLOBALS['baseURL']."index.php?";
+		$link=$baseURL."index.php?";
 		$linkamp="";
 		reset($_GET);
 		while(list($key,$value)=each($_GET))
 		  $linkamp.=$key."=".urlencode($value)."&amp;";
-	  echo "<a href=\"".$link.$linkamp."addObservationToList=".urlencode($LOid)."\">".LangViewObservationField44.$GLOBALS['listname_ss']."</a>";
+	  if($myList)
+	    echo "<a href=\"".$link.$linkamp."addObservationToList=".urlencode($LOid)."\">".LangViewObservationField44.$listname_ss."</a>";
     echo "</td>";
 		print ("</tr>");
 
@@ -1306,17 +1277,17 @@ class Observations {
 		echo LangViewObservationField3;
 		echo ("</td>");
 		echo ("<td width=\"25%\">");
-		$inst = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($this->getDsObservationInstrumentId($LOid),'name');
+		$inst = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($this->getDsObservationProperty($LOid,'instrumentid'),'name');
 		if ($inst == "Naked eye") {
 			$inst = InstrumentsNakedEye;
 		}
-		echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode($this->getDsObservationInstrumentId($LOid)) . "\">" . $inst . "</a>");
+		echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode($this->getDsObservationProperty($LOid,'instrumentid')) . "\">" . $inst . "</a>");
 		print ("</td>");
 		print ("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
 		echo LangViewObservationField31;
 		echo ("</td>");
 		echo ("<td width=\"25%\">");
-		$filter = $this->getDsObservationFilterId($LOid);
+		$filter = $this->getDsObservationProperty($LOid,'filterid');
 		if ($filter == "" || $filter == 0) {
 			echo ("-");
 		} else {
@@ -1330,7 +1301,7 @@ class Observations {
 		echo LangViewObservationField30;
 		echo ("</td>");
 		echo ("<td width=\"25%\">");
-		$eyepiece = $this->getDsObservationEyepieceId($LOid);
+		$eyepiece = $this->getDsObservationProperty($LOid,'eyepieceid');
 		if ($eyepiece == "" || $eyepiece == 0) {
 			echo ("-");
 		} else {
@@ -1341,7 +1312,7 @@ class Observations {
 		echo LangViewObservationField32;
 		echo ("</td>");
 		echo ("<td width=\"25%\">");
-		$lens = $this->getDsObservationLensId($LOid);
+		$lens = $this->getDsObservationProperty($LOid,'lensid');
 		if ($lens == "" || $lens == 0) {
 			echo ("-");
 		} else {
@@ -1471,25 +1442,24 @@ class Observations {
 		echo ("</tr>");
 
 		echo ("<tr class=\"type1\">");
-		if ($this->getDsLargeDiameter($LOid))
+		if ($largeDiameter=$this->getDsObservationProperty($LOid,'largeDiameter'))
 		{
 			echo ("<td class=\"fieldname\" width=\"14%\" align=\"right\">" . LangViewObservationField33 . "</td>");
-			$lDiam = $this->getDsLargeDiameter($LOid);
-			if ($lDiam > 60)
+			if ($largeDiameter> 60)
 			{
-				echo ("<td>" . sprintf("%.1f", $lDiam / 60.0) . "'");
+				echo ("<td>" . sprintf("%.1f", $largeDiameter/ 60.0) . "'");
 				
-				if ($this->getDsSmallDiameter($LOid) != 0) // small diameter is set
+				if ($smallDiameter=$this->getDsObservationProperty($LOid,'smalldiameter') != 0) // small diameter is set
 				{
-					echo (sprintf(" x %.1f", $this->getDsSmallDiameter($LOid) / 60.0) . "'");
+					echo (sprintf(" x %.1f", $smallDiameter/ 60.0) . "'");
 				}
 			}
 			else 
 			{
-				echo ("<td>" . sprintf("%.1f", $lDiam) . "''");			
-				if ($this->getDsSmallDiameter($LOid) != 0) // small diameter is set
+				echo ("<td>" . sprintf("%.1f", $largeDiameter) . "''");			
+				if ($smallDiameter != 0) // small diameter is set
 				{
-					echo (sprintf(" x %.1f", $this->getDsSmallDiameter($LOid)) . "''");
+					echo (sprintf(" x %.1f", $smallDiameter) . "''");
 				}
 			}	
 			echo ("</td>");		
@@ -1641,7 +1611,7 @@ class Observations {
 			$LOdescription = preg_replace($patterns, $replacements, $LOdesc);
 		}
 		if ($LOdescription) {
-			$LOtemp = $this->getDsObservationInstrumentId($LOid);
+			$LOtemp = $this->getDsObservationProperty($LOid,'instrumentid');
 			$LOinstrument = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($LOtemp,'name');
 			$LOinstrumentsize = round($GLOBALS['objInstrument']->getInstrumentPropertyFromId($LOtemp,'diameter'), 0);
 		} else {

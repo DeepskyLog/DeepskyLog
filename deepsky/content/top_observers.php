@@ -43,7 +43,7 @@ echo "<td style=\"text-align:center\"><a href=\"".$baseURL."index.php?indexActio
 echo"</tr>";
  
 $numberOfObservations = $objObservation->getNumberOfDsObservations();
-$numberOfObservationsThisYear = $objObservation->getNumberOfObservationsLastYear();
+$numberOfObservationsThisYear = $objObservation->getObservationsLastYear('%');
 $numberOfDifferentObjects = $objObservation->getNumberOfDifferentObservedDSObjects();
 while(list($key,$value)=each($rank))
 { if(($count>=$min)&&($count<$max))

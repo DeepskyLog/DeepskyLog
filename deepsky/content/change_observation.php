@@ -71,7 +71,7 @@ echo "</td>";
 echo "<td>"; // INSTRUMENTS
 echo "<select name=\"instrument\" class=\"inputfield requiredField\" style=\"width:300px\">";
 $instr = $objInstrument->getSortedInstrumentsList("name", $_SESSION['deepskylog_id']);
-$theInstr = $objObservation->getDsObservationInstrumentId($_GET['observation']);
+$theInstr = $objObservation->getDsObservationProperty($_GET['observation'],'instrumentid');
 while (list ($key, $value) = each($instr))
 	echo "<option " . (($theInstr == $key) ? "selected=\"selected\"" : '') . " value=\"" . $key . "\">" . $value . "</option>";
 echo "</select>";
@@ -85,7 +85,7 @@ echo "<td>";
 echo "<select name=\"eyepiece\" class=\"inputfield\" style=\"width:300px\">";
 echo "<option value=\"\"></option>";
 $eyeps = $objEyepiece->getSortedEyepieces("name", $_SESSION['deepskylog_id']);
-$theEyepiece = $objObservation->getDsObservationEyepieceId($_GET['observation']);
+$theEyepiece = $objObservation->getDsObservationProperty($_GET['observation'],'eyepieceid');
 while (list ($key, $value) = each($eyeps))
 	echo "<option value=\"" . $value . "\"" . (($theEyepiece == $value) ? " selected=\"selected\" " : '') . ">" . $GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value,'name') . "</option>";
 echo "</select>";
@@ -99,7 +99,7 @@ echo "<td>";
 echo "<select name=\"filter\" class=\"inputfield\" style=\"width:300px\">";
 echo "<option value=\"\"></option>";
 $filts = $objFilter->getSortedFilters("name", $_SESSION['deepskylog_id']);
-$theFilter = $objObservation->getDsObservationFilterId($_GET['observation']);
+$theFilter = $objObservation->getDsObservationProperty($_GET['observation'],'filterid');
 while (list ($key, $value) = each($filts)) // go through instrument array
 	echo "<option value=\"" . $value . "\"" . (($theFilter == $value) ? " selected=\"selected\" " : '') . ">" . $GLOBALS['objFilter']->getFilterPropertyFromId($value,'name') . "</option>";
 echo "</select>";
@@ -113,7 +113,7 @@ echo "<td>";
 echo "<select name=\"lens\" class=\"inputfield\" style=\"width:300px\">";
 echo "<option value=\"\"></option>";
 $lns = $objLens->getSortedLenses("name", $_SESSION['deepskylog_id']);
-$theLens = $objObservation->getDsObservationLensId($_GET['observation']);
+$theLens = $objObservation->getDsObservationProperty($_GET['observation'],'lensid');
 while (list ($key, $value) = each($lns))
 	echo "<option value=\"" . $value . "\"" . (($theLens == $value) ? " selected=\"selected\" " : '') . ">" . $GLOBALS['objLens']->getLensPropertyFromId($value,'name') . "</option>";
 echo "</select>";
@@ -164,12 +164,12 @@ echo "</td>";
 echo "<td>";
 echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"largeDiam\" size=\"5\" style=\"text-align:center\" value=\"";
 $min = 0;
-if ($objObservation->getDsLargeDiameter($_GET['observation']) > 0.0) {
-	if ($objObservation->getDsLargeDiameter($_GET['observation']) > 60.0) {
+if ($largeDiameter=$objObservation->getDsObservationProperty($_GET['observation'],'largeDiameter') > 0.0) {
+	if ($largeDiameter > 60.0) {
 		$min = 1;
-		echo sprintf("%.1f", $objObservation->getDsLargeDiameter($_GET['observation']) / 60.0);
+		echo sprintf("%.1f",$largeDiameter / 60.0);
 	} else {
-		echo sprintf("%.1f", $objObservation->getDsLargeDiameter($_GET['observation']));
+		echo sprintf("%.1f", $largeDiameter);
 	}
 } else {
 	echo "";
@@ -177,11 +177,11 @@ if ($objObservation->getDsLargeDiameter($_GET['observation']) > 0.0) {
 echo "\" />";
 echo "&nbsp;x&nbsp;";
 echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"smallDiam\" size=\"5\" style=\"text-align:center\" value=\"";
-if ($objObservation->getDsSmallDiameter($_GET['observation']) > 0.0) {
+if ($mallDiameter=$objObservation->getDsObservationProperty($_GET['observation'],'smallDiameter') > 0.0) {
 	if ($min == 1) {
-		echo sprintf("%.1f", $objObservation->getDsSmallDiameter($_GET['observation']) / 60.0);
+		echo sprintf("%.1f", $smallDiameter/ 60.0);
 	} else {
-		echo sprintf("%.1f", $objObservation->getDsSmallDiameter($_GET['observation']));
+		echo sprintf("%.1f", $smallDiameter);
 	}
 } else {
 	echo "";
