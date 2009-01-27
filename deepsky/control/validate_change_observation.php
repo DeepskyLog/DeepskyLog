@@ -13,7 +13,7 @@ if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']
 	}
 	elseif (array_key_exists('observationid', $_POST) && $_POST['observationid']) // all fields filled in and observationid given
 	{
-		if ($objObservation->getObserverId($_POST['observationid']) == $_SESSION['deepskylog_id']) // only allowed to change your own observations
+		if ($objObservation->getDsObservationProperty($_POST['observationid'],'observerid') == $_SESSION['deepskylog_id']) // only allowed to change your own observations
 			{
 			$date = $_POST['year'] . sprintf("%02d", $_POST['month']) . sprintf("%02d", $_POST['day']);
 

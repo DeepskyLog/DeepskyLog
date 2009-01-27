@@ -86,11 +86,11 @@ echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=region&amp;previous=$previous\">".LangViewLocationProvince."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=country&amp;previous=$previous\">".LangViewLocationCountry."</a></td>";
-echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=longitude&amp;previous=$previous\">".LangViewLocationLongitude."</a></td>";
-echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=latitude&amp;previous=$previous\">".LangViewLocationLatitude."</a></td>";
+echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=longitude&amp;previous=$previous\">".LangViewLocationLongitude."</a></td>";
+echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=latitude&amp;previous=$previous\">".LangViewLocationLatitude."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=timezone&amp;previous=$previous\">".LangAddSiteField6."</a></td>";
-echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=limitingMagnitude&amp;previous=$previous\">".LangViewLocationLimMag."</a></td>";
-echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=skyBackground&amp;previous=$previous\">".LangViewLocationSB."</a></td>";
+echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=limitingMagnitude&amp;previous=$previous\">".LangViewLocationLimMag."</a></td>";
+echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=skyBackground&amp;previous=$previous\">".LangViewLocationSB."</a></td>";
 echo "<td>".LangViewLocationStd."</td>";
 echo "<td></td>";
 echo "</tr>";
@@ -131,20 +131,15 @@ if ($sites != null)
       echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_site&amp;location=".urlencode($value)."\">".$sitename."</a></td>";
       echo "<td>".$region."</td>";
       echo "<td>".$country."</td>";
-      echo "<td>".$longitude."</td>";
-      echo "<td>".$latitude."</td>";
+      echo "<td class=\"centered\">".$longitude."</td>";
+      echo "<td class=\"centered\">".$latitude."</td>";
       echo "<td>".$timezone."</td>";
-      echo "<td>".$limmag."</td>";
-      echo "<td>".$sb."</td>";
+      echo "<td class=\"centered\">".$limmag."</td>";
+      echo "<td class=\"centered\">".$sb."</td>";
       echo "<td><input type=\"radio\" name=\"stdlocation\" value=\"". $value ."\"".(($value==$objObserver->getStandardLocation($_SESSION['deepskylog_id']))?" checked ":"")." />&nbsp;<br></td>";
-      // check if there are no observations made from this location
-      $queries = array("location" => $value, "observer" => $_SESSION['deepskylog_id']);
-      $obs = $objObservation->getObservationFromQuery($queries, "D", "1");
-      $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
 			echo "<td>";
-      if(!sizeof($obs) > 0 && !in_array($value, $locs) && !sizeof($comobs) > 0) // no observations from location yet
-      { echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_location&amp;locationid=" . urlencode($value) . "\">" . LangRemove . "</a>");
-      }
+      if(!($objLocation->getLocationUsedFromId($value))&&(!(in_array($value, $locs)))) // no observations from location yet
+        echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_location&amp;locationid=".urlencode($value)."\">".LangRemove."</a>";
       echo "</td>";
 			echo "</tr>";
       $count++;
@@ -201,27 +196,27 @@ tableFieldnameFieldExplanation(LangAddSiteField2,
                                LangAddSiteField2Expl);
 tableFieldnameFieldExplanation(LangAddSiteField3,$tempCountryList,'');
 tableFieldnameFieldExplanation(LangAddSiteField4,
-                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"3\" name=\"latitude\" size=\"3\" value=\"".
+                               "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"latitude\" size=\"4\" value=\"".
                                 (((array_key_exists('latitude',$_GET) && $_GET['latitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$latitudedeg:"").
                                 "\" />&deg;&nbsp;".
-                                "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" name=\"latitudemin\" size=\"2\"	value=\"".
+                                "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"latitudemin\" size=\"2\"	value=\"".
                                 (((array_key_exists('latitude',$_GET) && $_GET['latitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$latitudemin:"").
                                 "\" />&#39;",
                                 LangAddSiteField4Expl);
 tableFieldnameFieldExplanation(LangAddSiteField5,
-                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"".
+                               "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"".
                                (((array_key_exists('longitude',$_GET) && $_GET['longitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$longitudedeg:"").
                                "\" />&deg;&nbsp;".
-                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\"	name=\"longitudemin\" size=\"2\" value=\"".
+                               "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\"	name=\"longitudemin\" size=\"2\" value=\"".
                                (((array_key_exists('longitude',$_GET) && $_GET['longitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$longitudemin:"").
                                "\" />&#39;</td>",
                                LangAddSiteField5Expl);
 tableFieldnameFieldExplanation(LangAddSiteField6,$tempTimeZoneList,'');
 tableFieldnameFieldExplanation(LangAddSiteField7,
-                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"".(($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'limitingMagnitude')>-900)?$objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'limitingMagnitude'):"")."\" />",
+                               "<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"".(($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'limitingMagnitude')>-900)?$objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'limitingMagnitude'):"")."\" />",
                                LangAddSiteField7Expl);
 tableFieldnameFieldExplanation(LangAddSiteField8,
-                               "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"".(($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'skyBackground')>-900)?$objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'skyBackground'):"")."\" />",
+                               "<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"".(($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'skyBackground')>-900)?$objLocation->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'skyBackground'):"")."\" />",
                                LangAddSiteField8Expl);
 echo "</table>";
 echo "<hr />";

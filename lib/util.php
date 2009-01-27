@@ -982,7 +982,7 @@ class util
 
       $pdf->ezText($objectname, "14");
 
-      $observerid = $observation->getObserverid($value);
+      $observerid = $observation->getDsObservationProperty($value,'observerid');
 
       if ($observer->getUseLocal($_SESSION['deepskylog_id']))
       {

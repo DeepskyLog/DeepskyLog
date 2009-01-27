@@ -73,6 +73,9 @@ hr {
   font-weight      : normal;
 	font-style       : italic;
 }	
+.centered {
+  text-align       : center;
+}
 .fieldname {
   text-align       : right;
 	padding-left     : 1em;

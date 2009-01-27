@@ -23,7 +23,7 @@ class Locations
   }
   public  function getAllLocationsIds($id)                                                   // returns a list with all id's which have the same name as the name of the given id
   { global $objDatabase;
-    return $objDatabase->selectSingleAray("SELECT id FROM locations WHERE name = \"".$objDatabase->selectSingleValue("SELECT name FROM locations WHERE id = \"$id\"",'name'),'id');
+    return $objDatabase->selectSingleArray("SELECT id FROM locations WHERE name = \"".$objDatabase->selectSingleValue("SELECT name FROM locations WHERE id = \"".$id."\"",'name'),'id');
   }
   public  function getCountries() // getCountries returns all possible countries
   { global $instDir;
@@ -107,24 +107,24 @@ class Locations
   } 
   public  function getSortedLocationsList($sort, $observer = "")                             // returns an array with the ids of all locations, sorted by the column specified in $sort. Locations withthe same name are adapted by adding the province.
   { global $objDatabase; 
-    return $sites=$objDatabase->selectSingleArray("SELECT id, name FROM locations ".($observer?"WHERE observer LIKE \"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.",name",'id');  
+    $sites=$objDatabase->selectRecordsetArray("SELECT id, name FROM locations ".($observer?"WHERE observer LIKE \"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.",name",'id');  
     $previous = "fdgsdg";
     for($i=0;$i<count($sites);$i++)
     { $adapt[$i] = 0;
-      if($sites[$i][1] == $previous)
+      if($sites[$i]['name'] == $previous)
       { $adapt[$i]=1;
         $adapt[$i-1]=1;
       }
-      $previous=$sites[$i][1];
+      $previous=$sites[$i]['name'];
     }
     for($i= 0;$i<count($sites);$i++)
     { if($adapt[$i])
-      { $new_sites[$i][0] = $sites[$i][0];
-        $new_sites[$i][1] = $sites[$i][1]." (".$this->getLocationPropertyFromId($sites[$i][0],'region').")";
+      { $new_sites[$i][0] = $sites[$i]['id'];
+        $new_sites[$i][1] = $sites[$i]['name']." (".$this->getLocationPropertyFromId($sites[$i]['id'],'region').")";
       }
       else
-      { $new_sites[$i][0] = $sites[$i];
-        $new_sites[$i][1] = $sites[$i][1];
+      { $new_sites[$i][0] = $sites[$i]['id'];
+        $new_sites[$i][1] = $sites[$i]['name'];
       }
     }
     return $new_sites;
@@ -135,15 +135,15 @@ class Locations
   }
   public  function validateDeleteLocation()
   { global $objUtil, $objDatabase;
-    if($objUtil->checkGetKey('locationid')
-    && $objUtil->checkAdminOrUserID($this->getLocationPropertyFromId($objUtil->checkGetKey('locationid'),'observer'))
-    &&(!($this->getLocationUsedFromId($id))))
+    if(($id=$objUtil->checkGetKey('locationid'))
+    && ($objUtil->checkAdminOrUserID($this->getLocationPropertyFromId($id,'observer')))
+    && (!($this->getLocationUsedFromId($id))))
     { $objDatabase->execSQL("DELETE FROM locations WHERE id=\"".$id."\"");
       return LangValidateLocationMessage3;
     }
   }
   public  function validateSaveLocation()
-	{ global $objUItil, $objDatabase;  
+	{ global $objUtil, $objDatabase;  
     if($objUtil->checkPostKey('adaption')==1
     && $objUtil->checkUserID($this->getLocationPropertyFromId($objUtil->checkPostKey('stdlocation'),'observer')))
     { $objObserver->setStandardLocation($_SESSION['deepskylog_id'], $_POST['stdlocation']);

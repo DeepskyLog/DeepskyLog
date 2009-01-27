@@ -61,6 +61,18 @@ class Database implements iDatabase
 			  $result[$key]=$value;
 		return $result;
   }
+	public function selectRecordsetArray($sql)
+	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
+	  $result=array();
+		$run = mysql_query($sql) or die(mysql_error());
+		while($get=mysql_fetch_object($run))
+		{ $reulstparts=array();
+		  while(list($key,$value)=each($get))
+			  $resultparts[$key]=$value;
+		  $result[]=$resultparts;
+		}
+		return $result;
+  }
   public function selectSingleArray($sql,$name)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
 	  $run = mysql_query($sql) or die(mysql_error());

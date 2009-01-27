@@ -4,7 +4,7 @@
 
 if(!array_key_exists('observation',$_GET)||!$_GET['observation']) //  
    throw new Exception ("No observation defined in view_observation.php");
-if(!($object=$GLOBALS['objObservation']->getObjectId($_GET['observation'])))    // check if observation exists
+if(!($object=$GLOBALS['objObservation']->getDsObservationProperty($_GET['observation'],'objectname')))    // check if observation exists
    throw new Exception ("No observed object found in view_observation.php");
 echo "<table width=\"100%\">";
 echo "<tr>";

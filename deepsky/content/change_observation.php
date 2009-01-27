@@ -10,10 +10,10 @@ echo "<form action=\"" . $baseURL . "index.php?indexAction=validate_change_obser
 echo "<table width=\"100%\">";
 echo "<tr>";
 echo "<td "."class=\"fieldname\" width=\"100\"".">".LangViewObservationField1."</td>";
-echo "<td>"."<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($objObservation->getObjectId($_GET['observation'])) . "\">" . $objObservation->getObjectId($_GET['observation']) . "</a>"."</td>";
+echo "<td>"."<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($objObservation->getDsObservationProperty($_GET['observation'],'objectname')) . "\">" . $objObservation->getDsObservationProperty($_GET['observation'],'objectname') . "</a>"."</td>";
 echo "</tr><tr>";
 echo "<td "."class=\"fieldname\"".">".LangViewObservationField2."</td>";
-echo "<td >"."<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . $objObservation->getObserverId($_GET['observation']) . "\">" . $objObserver->getFirstName($objObservation->getObserverId($_GET['observation'])) . "&nbsp;" . $objObserver->getObserverName($objObservation->getObserverId($_GET['observation'])) . "</a>"."</td>";
+echo "<td >"."<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode($objObservation->getDsObservationProperty($_GET['observation'],'observerid')) . "\">" . $objObserver->getFirstName($objObservation->getDsObservationProperty($_GET['observation'],'observerid')) . "&nbsp;" . $objObserver->getObserverName($objObservation->getDsObservationProperty($_GET['observation'],'observerid')) . "</a>"."</td>";
 echo "<tr>";
 echo "<td "."class=\"fieldname\"".">".LangViewObservationField5."</td>";
 echo "<td>";
@@ -217,7 +217,7 @@ if($GLOBALS['objObject']->getDsoProperty($object,'type')=="GALXY")
   echo "</td>";
   echo "</tr>";
 }
-$object = $objObservation->getObjectId($_GET['observation']);
+$object = $objObservation->getDsObservationProperty($_GET['observation'],'objectname');
 // Some extra fields when we are describing open clusters, or asterisms...
 if(in_array($GLOBALS['objObject']->getDsoProperty($object,'type'),array("ASTER" ,"CLANB","DS","OPNCL","AA1STAR","AA2STAR","AA3STAR","AA4STAR","AA8STAR"))) 
 { echo "<tr>";

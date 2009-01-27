@@ -1,7 +1,21 @@
 <?php // The observations class collects all functions needed to enter, retrieve and adapt observation data from the database.
 interface iObservations
 { 
-	public  function addDSObservation($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language);
+	public  function addDSObservation($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language);      // adds an observation to the db
+  public  function getAllInfoDsObservation($id);                                                                                                                      // returns all information of an observation
+	public  function getDsObservationLocalDate($id);                                                                                                                    // returns the date of the given observation in local time
+	public  function getDsObservationProperty($id, $property, $defaultvalue='');                                                                                        // returns the property of the observation
+	public  function getDsObservationsCountFromObserver($id);                                                                                                           // returns the number of observations entered by the observer with visibilty != 7                                                                                  
+	public  function getNumberOfDsObservations();                                                                                                                       // returns the total number of observations
+	public  function getObservationFromQuery($queries, $seenpar = "D", $exactinstrumentlocation = "0");                                                                 // returns an array with the names of all observations where the queries are defined in an array. 
+	public  function getObservationsLastYear($id); 
+	public  function getObservationsUserObject($userid, $object); 
+	public  function getObservedCountFromCatalog($id, $catalog); 
+	public  function getObservedCountFromCatalogOrList($id, $catalog); 
+	public  function getObservedFromCatalog($id, $catalog); 
+  public  function getObservedFromCatalogPartOf($id, $catalog); 
+	public  function getPopularObservers();                                                                                                                             //  returns the number of observations of the observers
+	public  function getPopularObserversOverviewCatOrList($sort, $cat = ""); 
 	public  function validateDeleteDSObservation($id);                                                                                                                  // removes the observation with id = $id
 	
 }
@@ -26,35 +40,38 @@ class Observations {
 		                      "VALUES (\"$objectname\", \"$observerid\", \"$instrumentid\", \"$locationid\", \"$date\", \"$time\", \"$description\", $seeing, $limmag, $visibility, \"$language\")");
 		return $objDatabase->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id');
 	}
-	public  function validateDeleteDSObservation($id)                                                                       // removes the observation with id = $id
-	{ global $objDatabase,$objUtil;
-	  if(!$_GET['observationid'])
-      throw new Exception("No observation to delete.");                           
-    if(($id=$objUtil->checkGetKey('observationid'))
-    && ($objUtil->checkAdminOrUserID($this->getObserverId($id))))
-    { $objDatabase->execSQL("DELETE FROM observations WHERE id=\"".$id."\"");
-	    $_SESSION['Qobs']=array();
-	    $_SESSION['QobsParams']=array();
-      return LangObservationDeleted;
-    }
+  public  function getAllInfoDsObservation($id)                                                                                                            // returns all information of an observation
+	{ global $objDatabase;
+		$get = mysql_fetch_object($objDatabase->selectRecordset("SELECT * FROM observations WHERE id=\"$id\""));
+		$ob["name"] = $get->objectname;
+		$ob["observer"] = $get->observerid;
+		$ob["instrument"] = $get->instrumentid;
+		$ob["location"] = $get->locationid;
+		$ob["date"] = $get->date;
+		$ob["time"] = $get->time;
+		$ob["description"] = $get->description;
+		$ob["seeing"] = $get->seeing;
+		$ob["limmag"] = $get->limmag;
+		$ob["visibility"] = $get->visibility;
+		$ob["localdate"] = $this->getDsObservationLocalDate($id);
+		$ob["localtime"] = $this->getDsObservationLocalTime($id);
+		$ob["language"] = $this->getDsObservationLanguage($id);
+		$ob["eyepiece"] = $get->eyepieceid;
+		$ob["filter"] = $get->filterid;
+		$ob["lens"] = $get->lensid;
+		$ob["sqm"] = $get->SQM;
+		$ob["largeDiam"] = $get->largeDiameter;
+		$ob["smallDiam"] = $get->smallDiameter;
+		$ob["stellar"] = $get->stellar;
+		$ob["extended"] = $get->extended;
+		$ob["resolved"] = $get->resolved;
+		$ob["mottled"] = $get->mottled;
+		$ob["characterType"] = $get->characterType;
+		$ob["unusualShape"] = $get->unusualShape;
+		$ob["partlyUnresolved"] = $get->partlyUnresolved;
+		$ob["colorContrasts"] = $get->colorContrasts;
+		return $ob;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	public  function getDsObservationLocalDate($id)                                                                         // returns the date of the given observation in local time
 	{ global $objDatabase, $objLocation;
 		$run = $objDatabase->selectRecordset("SELECT date,time,locationid FROM observations WHERE id=\"".$id."\"");
@@ -101,60 +118,37 @@ class Observations {
 			return $date;
 		}
 	}
-	function getAllInfoDsObservation($id) // getAllInfo returns all information of an observation
-	{
-		$get = mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT * FROM observations WHERE id=\"$id\""));
-		$ob["name"] = $get->objectname;
-		$ob["observer"] = $get->observerid;
-		$ob["instrument"] = $get->instrumentid;
-		$ob["location"] = $get->locationid;
-		$ob["date"] = $get->date;
-		$ob["time"] = $get->time;
-		$ob["description"] = $get->description;
-		$ob["seeing"] = $get->seeing;
-		$ob["limmag"] = $get->limmag;
-		$ob["visibility"] = $get->visibility;
-		$ob["localdate"] = $this->getDsObservationLocalDate($id);
-		$ob["localtime"] = $this->getDsObservationLocalTime($id);
-		$ob["language"] = $this->getDsObservationLanguage($id);
-		$ob["eyepiece"] = $get->eyepieceid;
-		$ob["filter"] = $get->filterid;
-		$ob["lens"] = $get->lensid;
-		$ob["sqm"] = $get->SQM;
-		$ob["largeDiam"] = $get->largeDiameter;
-		$ob["smallDiam"] = $get->smallDiameter;
-		$ob["stellar"] = $get->stellar;
-		$ob["extended"] = $get->extended;
-		$ob["resolved"] = $get->resolved;
-		$ob["mottled"] = $get->mottled;
-		$ob["characterType"] = $get->characterType;
-		$ob["unusualShape"] = $get->unusualShape;
-		$ob["partlyUnresolved"] = $get->partlyUnresolved;
-		$ob["colorContrasts"] = $get->colorContrasts;
-		return $ob;
+	public  function getDsObservationProperty($id, $property, $defaultvalue='') // returns the property of the observation
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT ".$property." FROM observations WHERE id=\"".$id."\"",property,$defaultvalue);
 	}
-
-	// getObservationFromQuery returns an array with the names of all observations
-	//  where the queries are defined in an array.
-	// An example of an array :
-	//  $q = array("object" => "NGC 7293", "observer" => "wim",
-	// 		"instrument" => "3", "location" => "24",
-	//		"mindate" => "20040512", "maxdate" => "20040922",
-	//             "mindiameter" => "100", "maxdiameter" => "200", "type" => "GALXY", "con" => "AND",
-	//             "minmag" => "6.0", "maxmag" => "14.0", "minsubr" => "13.0",
-	//             "maxsubr" => "14.0", "minra" => "0.3", "maxra" => "0.9",
-	//             "mindecl" => "24.0", "maxdecl" => "30.0", "urano" => "111",
-	//             "uranonew" => "111", "sky" => "11", "msa" => "222",
-	//             "mindiam1" => "12.2", "maxdiam1" => "13.2", "mindiam2" => "11.1",
-	//             "maxdiam2" => "22.2", "description" => "Doughnut", "minvisibility" => "5",
-	//		          "maxvisibility" => "3", "minseeing" => "2", "maxseeing" => "4",
-	//             "minlimmag" => "5.5", "maxlimmag" => "6.0", $languages =>  Array ( [0] => en )),
-	//             "eyepiece" => "4", "filter" => "2", "lens" => "3", "minSmallDiameter" => "3.4",
-	//             "maxSmallDiameter" => "3.7", "minLargeDiameter" => "5.3", "maxLargeDiameter" => "6.5",
-	//             "stellar" => "1", "extended" => "0", "resolved" => "0", "mottled" => "1",
-	//             "characterType" => "A", "unusualShape" => "0", "partlyUnresolved" => "1", 
-	//             "colorContrasts" => "0", "minSQM" => "18.9", "maxSQM" => "21.2";
-	function getObservationFromQuery($queries, $seenpar = "D", $exactinstrumentlocation = "0") {
+	public  function getDsObservationsCountFromObserver($id)
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT COUNT(*) as Cnt FROM observations WHERE observations.observerid = \"$id\" and visibility != 7 ", "Cnt", 0);
+	}
+	public  function getNumberOfDsObservations() // returns the total number of observations
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT COUNT(objectname) As Cnt FROM observations WHERE visibility != 7 ",'Cnt',0);
+	} 
+	public  function getObservationFromQuery($queries, $seenpar = "D", $exactinstrumentlocation = "0")                                                                               // returns an array with the names of all observations where the queries are defined in an array. 
+	{	// An example of an array :
+  	//  $q = array("object" => "NGC 7293", "observer" => "wim",
+  	// 		"instrument" => "3", "location" => "24",
+  	//		"mindate" => "20040512", "maxdate" => "20040922",
+  	//             "mindiameter" => "100", "maxdiameter" => "200", "type" => "GALXY", "con" => "AND",
+  	//             "minmag" => "6.0", "maxmag" => "14.0", "minsubr" => "13.0",
+  	//             "maxsubr" => "14.0", "minra" => "0.3", "maxra" => "0.9",
+  	//             "mindecl" => "24.0", "maxdecl" => "30.0", "urano" => "111",
+  	//             "uranonew" => "111", "sky" => "11", "msa" => "222",
+  	//             "mindiam1" => "12.2", "maxdiam1" => "13.2", "mindiam2" => "11.1",
+  	//             "maxdiam2" => "22.2", "description" => "Doughnut", "minvisibility" => "5",
+  	//		          "maxvisibility" => "3", "minseeing" => "2", "maxseeing" => "4",
+  	//             "minlimmag" => "5.5", "maxlimmag" => "6.0", $languages =>  Array ( [0] => en )),
+  	//             "eyepiece" => "4", "filter" => "2", "lens" => "3", "minSmallDiameter" => "3.4",
+   	//             "maxSmallDiameter" => "3.7", "minLargeDiameter" => "5.3", "maxLargeDiameter" => "6.5",
+	  //             "stellar" => "1", "extended" => "0", "resolved" => "0", "mottled" => "1",
+  	//             "characterType" => "A", "unusualShape" => "0", "partlyUnresolved" => "1", 
+  	//             "colorContrasts" => "0", "minSQM" => "18.9", "maxSQM" => "21.2";
 		$object = "";
 		$sqland = "";
 		$alternative = "";
@@ -371,27 +365,113 @@ class Observations {
 			return $get->ObsCnt;
 		}
 	}
-	function getObjectId($id) // getObjectId returns the name of the observed object
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT observations.objectname FROM observations WHERE id =\"" . $id . "\"", 'objectname');
+	public  function getObservationsLastYear($id) 
+	{ global $objDatabase;
+	  $t=getdate();
+		return $objDatabase->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid=\"".$id."\" AND observations.date > \"" . date("Ymd", ($t[0] - 31536000)) . "\" AND observations.visibility != 7 ", 'Cnt', 0);
 	}
-	function getObservationsCountFromObserver($id) {
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(*) as Cnt FROM observations WHERE observations.observerid = \"$id\" and visibility != 7 ", "Cnt", 0);
+	public  function getObservationsUserObject($userid, $object) 
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT COUNT(*) As ObsCnt FROM observations WHERE observerid=\"" . $userid . "\" AND observations.objectname=\"" . $object . "\"", "ObsCnt");
 	}
-	function getObserverId($id) // getObserverId returns the name of the observer
-	{
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT observerid FROM observations WHERE id=\"" . $id . "\"", 'observerid', 0);
+	public  function getObservedCountFromCatalog($id, $catalog) 
+	{ global $objDatabase;
+		$sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt FROM objectnames " .
+		       "INNER JOIN observations ON observations.objectname = objectnames.objectname " .
+		       "WHERE objectnames.catalog = \"".$catalog."\" " .
+		       "AND observations.observerid=\"".$id."\" " .
+		       "AND observations.visibility != 7 ";
+		return $objDatabase->selectSingleValue($sql,'CatCnt',0);
 	}
-	function getPopularObservers() // getPopularObservers() returns the number of observations of the observers
-	{ return $GLOBALS['objDatabase']->selectSingleArray("SELECT observations.observerid, COUNT(observations.id) As Cnt FROM observations GROUP BY observations.observerid ORDER BY Cnt DESC", 'observerid');
+	public  function getObservedCountFromCatalogOrList($id, $catalog) 
+	{ global $objDatabase;
+		if (substr($catalog, 0, 5) == 'List:') 
+			if (substr($catalog, 5, 7) == "Public:")
+				$sql = "SELECT COUNT(DISTINCT observations.objectname) AS CatCnt " .
+					     "FROM observations " .
+					     "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " .
+					     "JOIN observers on observations.observerid = observers.id " .
+					     "WHERE observerobjectlist.listname=\"" . substr($catalog, 5) . "\" " .
+			         "AND observations.observerid=\"".$id."\" " .
+				       "AND observations.visibility != 7 ";
+			else
+			  $sql = "SELECT COUNT(DISTINCT observations.objectname) AS CatCnt " .
+					     "FROM observations " .
+					     "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " .
+					     "JOIN observers on observations.observerid = observers.id " .
+					     "WHERE observerobjectlist.listname=\"" . substr($catalog, 5) . "\" " .
+					     "AND observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\" " .
+			         "AND observations.observerid=\"".$id."\" " .
+			         "AND observations.visibility != 7 "; 
+		else 
+	    $sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt FROM objectnames " .
+			       "INNER JOIN observations ON observations.objectname = objectnames.objectname " .
+			       "WHERE objectnames.catalog = \"".$catalog."\" " .
+			       "AND observations.observerid=\"".$id."\" " .
+			       "AND observations.visibility != 7 ";
+		return $objDatabase->selectSingleValue($sql,'CatCnt',0);
 	}
-	function getPopularObserversOverviewCatOrList($sort, $cat = "") {
-		if ($sort == "jaar") {
+	public  function getObservedFromCatalog($id, $catalog) 
+	{ global $objDatabase;
+	  if (substr($catalog, 0, 5) == "List:")
+			if (substr($catalog, 5, 7) == "Public:")
+				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
+				"INNER JOIN observations ON observations.objectname = observerobjectlist.objectname " .
+				"WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") " .
+				"AND (observations.observerid = \"" . $id . "\") " .
+				"AND (observations.visibility != 7))";
+			else
+				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
+				"INNER JOIN observations ON observations.objectname = observerobjectlist.objectname " .
+				"WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") AND (observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\") " .
+				"AND (observations.observerid = \"" . $id . "\") " .
+				"AND (observations.visibility != 7))";
+		else
+			$sql = "SELECT DISTINCT objectnames.objectname FROM objectnames " .
+			"INNER JOIN observations ON observations.objectname = objectnames.objectname " .
+			"WHERE ((objectnames.catalog = \"$catalog\") " .
+			"AND (observations.observerid=\"$id\") " .
+			"AND (observations.visibility != 7))";
+		return $objDatabase->selectSingleArray($sql, 'objectname');
+	}
+	public  function getObservedFromCatalogPartOf($id, $catalog) 
+  { global $objDatabase;
+  	if (substr($catalog, 0, 5) == "List:")
+			if (substr($catalog, 5, 7) == "Public:")
+				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
+				      " JOIN objectpartof ON objectpartof.partofname = observerobjectlist.objectname " .
+				      " JOIN observations ON observations.objectname = objectpartof.objectname " .
+						  " WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") " .
+				      " AND (observations.observerid = \"" . $id . "\") " .
+				      " AND (observations.visibility != 7))";
+			else
+				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
+				      " JOIN objectpartof ON objectpartof.partofname = observerobjectlist.objectname " .
+				      " JOIN observations ON observations.objectname = objectpartof.objectname " .
+				      " WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") AND (observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\") " .
+				      " AND (observations.observerid = \"" . $id . "\") " .
+				      " AND (observations.visibility != 7))";
+		else
+			$sql = "SELECT DISTINCT objectnames.objectname FROM objectnames " .
+			      " JOIN objectpartof ON objectpartof.partofname = objectnames.objectname " .
+			      " JOIN observations ON observations.objectname = objectpartof.objectname " .
+			      " WHERE ((objectnames.catalog = \"$catalog\") " .
+			      " AND (observations.observerid=\"$id\") " .
+			      " AND (observations.visibility != 7))";
+		return $objDatabase->selectSingleArray($sql, 'objectname');
+	}
+	public  function getPopularObservers()                                    //  returns the number of observations of the observers
+	{ global $objDatabase;
+	  return $objDatabase->selectSingleArray("SELECT observations.observerid, COUNT(observations.id) As Cnt FROM observations GROUP BY observations.observerid ORDER BY Cnt DESC", 'observerid');
+	}
+	public  function getPopularObserversOverviewCatOrList($sort, $cat = "") 
+	{ global $objDatabase;
+	  if ($sort == "jaar") {
 			$t = getdate();
 			$sql = "SELECT observations.observerid, COUNT(*) AS Cnt, observers.name " .
-			"FROM observations " .
-			"JOIN observers on observations.observerid = observers.id " .
-			"WHERE observations.date > \"" . date('Ymd', strtotime('-1 year')) . "\" AND observations.visibility != \"7\" ";
+			       "FROM observations " .
+			       "JOIN observers on observations.observerid = observers.id " .
+			       "WHERE observations.date > \"" . date('Ymd', strtotime('-1 year')) . "\" AND observations.visibility != \"7\" ";
 		}
 		elseif ($sort == "catalog") {
 			if (substr($cat, 0, 5) == "List:")
@@ -431,106 +511,87 @@ class Observations {
 			$sql .= "ORDER BY observers.name ASC ";
 		else
 			$sql .= "ORDER BY Cnt DESC, observers.name ASC ";
-		return $GLOBALS['objDatabase']->selectKeyValueArray($sql, 'observerid', 'Cnt');
+		return $objDatabase->selectKeyValueArray($sql, 'observerid', 'Cnt');
 	}
+	public  function validateDeleteDSObservation($id)                                                                       // removes the observation with id = $id
+	{ global $objDatabase,$objUtil;
+	  if(!$_GET['observationid'])
+      throw new Exception("No observation to delete.");                           
+    if(($id=$objUtil->checkGetKey('observationid'))
+    && ($objUtil->checkAdminOrUserID($this->getDsObservationProperty($id,'observerid'))))
+    { $objDatabase->execSQL("DELETE FROM observations WHERE id=\"".$id."\"");
+	    $_SESSION['Qobs']=array();
+	    $_SESSION['QobsParams']=array();
+      return LangObservationDeleted;
+    }
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
-	function getObservationsUserObject($userid, $object) {
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(*) As ObsCnt FROM observations WHERE observerid=\"" . $userid . "\" AND observations.objectname=\"" . $object . "\"", "ObsCnt");
-	}
-	// getObservationsThisYear($id) returns the number of observations of the
-	// observer the last year
-	function getObservationsThisYear($id) {
-		return count($this->getObservationFromQuery(array (
-			"observer" => $id,
-			"mindate" => date("Y") . "0101"
-		)));
-	}
-	function getObservationsLastYear($id) {
-		$t = getdate();
-		return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid=\"$id\" AND observations.date > \"" . date("Ymd", ($t[0] - 31536000)) . "\" AND observations.visibility != 7 ", 'Cnt', 0);
-	}
-	function getObservedFromCatalog($id, $catalog) {
-		if (substr($catalog, 0, 5) == "List:")
-			if (substr($catalog, 5, 7) == "Public:")
-				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
-				"INNER JOIN observations ON observations.objectname = observerobjectlist.objectname " .
-				"WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") " .
-				"AND (observations.observerid = \"" . $id . "\") " .
-				"AND (observations.visibility != 7))";
-			else
-				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
-				"INNER JOIN observations ON observations.objectname = observerobjectlist.objectname " .
-				"WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") AND (observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\") " .
-				"AND (observations.observerid = \"" . $id . "\") " .
-				"AND (observations.visibility != 7))";
-		else
-			$sql = "SELECT DISTINCT objectnames.objectname FROM objectnames " .
-			"INNER JOIN observations ON observations.objectname = objectnames.objectname " .
-			"WHERE ((objectnames.catalog = \"$catalog\") " .
-			"AND (observations.observerid=\"$id\") " .
-			"AND (observations.visibility != 7))";
-		return $GLOBALS['objDatabase']->selectSingleArray($sql, 'objectname');
-	}
-	function getObservedFromCatalogPartOf($id, $catalog) {
-		if (substr($catalog, 0, 5) == "List:")
-			if (substr($catalog, 5, 7) == "Public:")
-				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
-				      " JOIN objectpartof ON objectpartof.partofname = observerobjectlist.objectname " .
-				      " JOIN observations ON observations.objectname = objectpartof.objectname " .
-						  " WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") " .
-				      " AND (observations.observerid = \"" . $id . "\") " .
-				      " AND (observations.visibility != 7))";
-			else
-				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
-				      " JOIN objectpartof ON objectpartof.partofname = observerobjectlist.objectname " .
-				      " JOIN observations ON observations.objectname = objectpartof.objectname " .
-				      " WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") AND (observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\") " .
-				      " AND (observations.observerid = \"" . $id . "\") " .
-				      " AND (observations.visibility != 7))";
-		else
-			$sql = "SELECT DISTINCT objectnames.objectname FROM objectnames " .
-			      " JOIN objectpartof ON objectpartof.partofname = objectnames.objectname " .
-			      " JOIN observations ON observations.objectname = objectpartof.objectname " .
-			      " WHERE ((objectnames.catalog = \"$catalog\") " .
-			      " AND (observations.observerid=\"$id\") " .
-			      " AND (observations.visibility != 7))";
-		return $GLOBALS['objDatabase']->selectSingleArray($sql, 'objectname');
-	}
 
-	function getObservedCountFromCatalog($id, $catalog) {
-		$db = new database;
-		$db->login();
-		$sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt FROM objectnames " .
-		"INNER JOIN observations ON observations.objectname = objectnames.objectname " .
-		"WHERE objectnames.catalog = \"$catalog\" " .
-		"AND observations.observerid=\"$id\" " .
-		"AND observations.visibility != 7 ";
-		$run = mysql_query($sql) or die(mysql_error());
-		return mysql_result($run, 0, 0);
-	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
-	function getObservedCountFromCatalogOrList($id, $catalog) {
-		$db = new database;
-		$db->login();
-		if (substr($catalog, 0, 5) == 'List:') {
-			$ret = 10;
-		} else {
-			$sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt FROM objectnames " .
-			"INNER JOIN observations ON observations.objectname = objectnames.objectname " .
-			"WHERE objectnames.catalog = \"$catalog\" " .
-			"AND observations.observerid=\"$id\" " .
-			"AND observations.visibility != 7 ";
-			$run = mysql_query($sql) or die(mysql_error());
-			$ret = mysql_result($run, 0, 0);
-		}
-		return $ret;
-	}
 
-	// getNumberOfObservations() returns the total number of observations
-	function getNumberOfDsObservations() {
-		$run = $GLOBALS['objDatabase']->selectRecordset("SELECT COUNT(objectname) FROM observations WHERE visibility != 7 ");
-		return mysql_result($run, 0, 0);
-	} 
+
+
+
+	
 	function getNumberOfDifferentObservedDSObjects() 	// Returns the number of different objects observed
 	{ return $GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE visibility != 7 ",'Cnt');
 	}
@@ -1162,8 +1223,8 @@ class Observations {
 				$class = "class=\"type2\"";
 			}
 
-			$objectname = $this->getObjectId($value);
-			$observername = $this->getObserverId($value);
+			$objectname = $this->getDsObservationProperty($value,'objectname');
+			$observername = $this->getDsObservationProperty($value,'observerid');
 			$instrumentid = $this->getDsObservationInstrumentId($value);
 			$instrument = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($instrumentid,'name');
 			$locationid = $this->getDsObservationLocationId($value);
@@ -1226,8 +1287,8 @@ class Observations {
 		echo LangViewObservationField2;
 		echo ("</td>");
 		echo ("<td width=\"25%\">");
-		echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_observer&amp;user=" . urlencode($this->getObserverId($LOid)) . "&amp;back=index.php?indexAction=detail_observation\">");
-		echo ($GLOBALS['objObserver']->getFirstName($this->getObserverId($LOid)) . "&nbsp;" . $GLOBALS['objObserver']->getObserverName($this->getObserverId($LOid)));
+		echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_observer&amp;user=" . urlencode($this->getDsObservationProperty($LOid,'observerid')) . "&amp;back=index.php?indexAction=detail_observation\">");
+		echo ($GLOBALS['objObserver']->getFirstName($this->getDsObservationProperty($LOid,'observerid')) . "&nbsp;" . $GLOBALS['objObserver']->getObserverName($this->getDsObservationProperty($LOid,'observerid')));
 		print ("</a>");
 		print ("</td>");
 		echo "<td colspan=\"2\" align=\"right\">";
@@ -1460,7 +1521,7 @@ class Observations {
 		echo ("</td><td></td>");
 		echo ("</tr>");
 
-		$object = $this->getObjectId($LOid);
+		$object = $this->getDsObservationProperty($LOid,'objectname');
 		if ($GLOBALS['objObject']->getDsoProperty($object,'type') == "ASTER" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "CLANB" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "DS" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "OPNCL" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA1STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA2STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA3STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA4STAR" || $GLOBALS['objObject']->getDsoProperty($object,'type') == "AA8STAR") {
 			echo ("<tr class=\"type2\">");
 			echo ("<td class=\"fieldname\" width=\"12%\" align=\"right\">");
@@ -1533,7 +1594,7 @@ class Observations {
 		}
 		echo "<table width=\"100%\">";
 		echo "<tr>";
-		if (array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']) && ($this->getObserverId($LOid) == $_SESSION['deepskylog_id'])) // own observation
+		if (array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']) && ($this->getDsObservationProperty($LOid,'observerid') == $_SESSION['deepskylog_id'])) // own observation
 			{
 			echo ("<td width=\"33%\"><a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=adapt_observation&amp;observation=" . $LOid . "\">" . LangChangeObservationTitle . "</a><td>");
 			echo ("<td width=\"33%\"><a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=validate_delete_observation&amp;observationid=" . $LOid . "\">" . LangDeleteObservation . "</a></td>");
@@ -1651,7 +1712,7 @@ class Observations {
 		echo ("</a>");
 		echo ("&nbsp;");
 		if($GLOBALS['loggedUser'])
-		{ $objectid = $this->getObjectId($value['observationid']);
+		{ $objectid = $this->getDsObservationProperty($value['observationid'],'objectname');
 			if ($LOdescription) 
 			{ echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&amp;dalm=MO\" title=\"" . LangMO . "\">");
 				echo LangMOText;
@@ -1814,7 +1875,7 @@ class Observations {
 		}
 		echo ("</td>");
 		if($GLOBALS['myList']) 
-		{ $objectid = $this->getObjectId($value['observationid']);
+		{ $objectid = $this->getDsObservationProperty($value['observationid'],'objectname');
 			echo ("<td>");
 			$listname = $_SESSION['listname'];
 			$observer = $_SESSION['deepskylog_id'];
@@ -1944,7 +2005,7 @@ class Observations {
 		}
 		echo ("</td>");
 		if($GLOBALS['myList']) 
-		{ $objectid = $this->getObjectId($value['observationid']);
+		{ $objectid = $this->getDsObservationProperty($value['observationid'],'objectname');
 			echo ("<td>");
 			$listname = $_SESSION['listname'];
 			$observer = $_SESSION['deepskylog_id'];
