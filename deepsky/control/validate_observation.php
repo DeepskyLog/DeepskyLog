@@ -120,11 +120,11 @@ else // all fields filled in
 		else
 			$GLOBALS['objObservation']->setColorContrasts($current_observation, -1);
 		if ($_POST['filter'])
-			$GLOBALS['objObservation']->setFilterId($current_observation, $_POST['filter']);
+			$GLOBALS['objObservation']->setDsObservationProperty($current_observation,'filterid', $_POST['filter']);
 		if ($_POST['lens'])
-			$GLOBALS['objObservation']->setLensId($current_observation, $_POST['lens']);
+			$GLOBALS['objObservation']->setDsObservationProperty($current_observation,'lensid', $_POST['lens']);
 		if ($_POST['eyepiece'])
-			$GLOBALS['objObservation']->setEyepieceId($current_observation, $_POST['eyepiece']);
+			$GLOBALS['objObservation']->setDsObservationProperty($current_observation,'eyepieceid', $_POST['eyepiece']);
 		if ($GLOBALS['objObserver']->getUseLocal($_SESSION['deepskylog_id']))
 			$GLOBALS['objObservation']->setLocalDateAndTime($current_observation, $date, $time);
 		$GLOBALS['objObservation']->setCharacterType($current_observation, $GLOBALS['objUtil']->checkPostKey('characterType'));

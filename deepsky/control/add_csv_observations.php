@@ -183,11 +183,11 @@ else
           $parts_array[$i][11] = "0";
         $obsid=$objObservation->addDSObservation($correctedObjects[$i-1],$_SESSION['deepskylog_id'],$instrum,$locat,$date,$time,htmlentities($parts_array[$i][13]),$parts_array[$i][9],$parts_array[$i][10],$parts_array[$i][11],$parts_array[$i][12]);
 				if ($parts_array[$i][6] != "")
-				  $objObservation->setEyepieceId($obsid, $objEyepiece->getEyepieceObserverPropertyFromName($parts_array[$i][6], $_SESSION['deepskylog_id'],'id'));
+				  $objObservation->setDsObservationProperty($obsid,'eyepieceid', $objEyepiece->getEyepieceObserverPropertyFromName($parts_array[$i][6], $_SESSION['deepskylog_id'],'id'));
 				if ($parts_array[$i][7] != "")
-					$objObservation->setFilterId($obsid, $objFilter->getFilterObserverPropertyFromName($parts_array[$i][7], $_SESSION['deepskylog_id'],'id'));
+					$objObservation->setDsObservationProperty($obsid,'filterid', $objFilter->getFilterObserverPropertyFromName($parts_array[$i][7], $_SESSION['deepskylog_id'],'id'));
 				if ($parts_array[$i][8] != "")
-					$objObservation->setLensId($obsid, $objLens->getLensObserverPropertyFromName($parts_array[$i][8], $_SESSION['deepskylog_id'],'id'));
+					$objObservation->setDsObservationProperty($obsid,'lensid', $objLens->getLensObserverPropertyFromName($parts_array[$i][8], $_SESSION['deepskylog_id'],'id'));
       }
       unset($_SESSION['QobsParams']);
     }

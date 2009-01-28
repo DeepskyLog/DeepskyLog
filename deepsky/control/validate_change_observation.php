@@ -31,31 +31,31 @@ if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']
 			$GLOBALS['objObservation']->setCharacterType($_POST['observationid'], $GLOBALS['objUtil']->checkPostKey('characterType'));
 
 			if ($_POST['filter']) {
-				$objObservation->setFilterId($_POST['observationid'], $_POST['filter']);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'filterid', $_POST['filter']);
 			} else {
-				$objObservation->setFilterId($_POST['observationid'], 0);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'filterid', 0);
 			}
 
 			if ($_POST['lens']) {
-				$objObservation->setLensId($_POST['observationid'], $_POST['lens']);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'lensid', $_POST['lens']);
 			} else {
-				$objObservation->setLensId($_POST['observationid'], 0);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'lensid', 0);
 			}
 
 			if ($_POST['eyepiece']) {
-				$objObservation->setEyepieceId($_POST['observationid'], $_POST['eyepiece']);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'eyepieceid', $_POST['eyepiece']);
 			} else {
-				$objObservation->setEyepieceId($_POST['observationid'], 0);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'eyepieceid', 0);
 			}
 
 			if ($objObserver->getUseLocal($_SESSION['deepskylog_id'])) {
 				$objObservation->setLocalDateAndTime($_POST['observationid'], $date, $time);
 			} else {
 				$objObservation->setTime($_POST['observationid'], $time);
-				$objObservation->setDate($_POST['observationid'], $date);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'date', $date);
 			}
-			$objObservation->setInstrumentId($_POST['observationid'], $_POST['instrument']);
-			$objObservation->setLocationId($_POST['observationid'], $_POST['location']);
+			$objObservation->setDsObservationProperty($_POST['observationid'],'instrumentid', $_POST['instrument']);
+			$objObservation->setDsObservationProperty($_POST['observationid'],'locationid', $_POST['location']);
 
 			$objObservation->setSeeing($_POST['observationid'], $_POST['seeing']);
 
@@ -76,7 +76,7 @@ if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']
 			} else
 				$_SESSION['limit'] = "";
 			$objObservation->setObservationLimitingMagnitude($_POST['observationid'], $_SESSION['limit']);
-			$objObservation->setObservationLanguage($_POST['observationid'], $_POST['description_language']);
+			$objObservation->setDsObservationProperty($_POST['observationid'],'language', $_POST['description_language']);
 			if (array_key_exists('visibility', $_POST) && $_POST['visibility'])
 				$visibility = $_POST['visibility'];
 			else

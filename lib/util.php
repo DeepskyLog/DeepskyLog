@@ -704,8 +704,8 @@ class util
         $visibility = "";
       }
       $name = $GLOBALS['objObserver']->getFirstname($obs["observer"]). " ".$GLOBALS['objObserver']->getObserverName($obs["observer"]);
-      $seeing = $GLOBALS['objObservation']->getSeeing($value['observationid']);
-      $limmag = $GLOBALS['objObservation']->getLimitingMagnitude($value['observationid']);
+      $seeing = $GLOBALS['objObservation']->getDsObservationProperty($value['observationid'],'seeing');
+      $limmag = $GLOBALS['objObservation']->getDsObservationProperty($value['observationid'],'limmag');
       $description = preg_replace("/(\r\n|\n|\r)/", "", $description);
       $description = preg_replace("/(\")/", "", $description);
       echo (html_entity_decode($objectname) . ";" . html_entity_decode($name) . ";" . $date[2] . "-" . $date[1] . "-" . $date[0] . ";" . $time . ";" . html_entity_decode($GLOBALS['objLocation']->getLocationPropertyFromId($loc,'name')) . ";" . html_entity_decode($GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst,'name')) . ";" . html_entity_decode($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($eyep,'name')) . ";" . html_entity_decode($GLOBALS['objFilter']->getFilterPropertyFromId($filt,'name')) . ";" . html_entity_decode($GLOBALS['objLens']->getLensPropertyFromId($lns,'name')) . ";" . $seeing . ";" . $limmag . ";" . $visibility . ";" . $langObs . ";" . $description . "\n");
@@ -992,7 +992,7 @@ class util
       else
       {
         $date = sscanf($observation->getDate($value), "%4d%2d%2d");
-        $time = $observation->getTime($value);
+        $time = $observation->getDsObservationProperty($value,'time');
       }
 
       $hour = (int)($time / 100);

@@ -4,6 +4,7 @@ interface iObservations
 	public  function addDSObservation($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language);      // adds an observation to the db
   public  function getAllInfoDsObservation($id);                                                                                                                      // returns all information of an observation
 	public  function getDsObservationLocalDate($id);                                                                                                                    // returns the date of the given observation in local time
+	public  function getDsObservationLocalTime($id);                                                                                                                    // returns the time of the given observation in local time
 	public  function getDsObservationProperty($id, $property, $defaultvalue='');                                                                                        // returns the property of the observation
 	public  function getDsObservationsCountFromObserver($id);                                                                                                           // returns the number of observations entered by the observer with visibilty != 7                                                                                  
 	public  function getNumberOfDifferentObservedDSObjects();	                                                                                                          // returns the number of different objects observed
@@ -12,13 +13,13 @@ interface iObservations
 	public  function getObservationFromQuery($queries, $seenpar = "D", $exactinstrumentlocation = "0");                                                                 // returns an array with the names of all observations where the queries are defined in an array. 
 	public  function getObservationsLastYear($id); 
 	public  function getObservationsUserObject($userid, $object); 
-	public  function getObservedCountFromCatalog($id, $catalog); 
 	public  function getObservedCountFromCatalogOrList($id, $catalog); 
 	public  function getObservedFromCatalog($id, $catalog); 
   public  function getObservedFromCatalogPartOf($id, $catalog); 
 	public  function getPopularObservations();                                                                                                                          // returns the number of observations of the objects
   public  function getPopularObservers();                                                                                                                             // returns the number of observations of the observers
 	public  function getPopularObserversOverviewCatOrList($sort, $cat = ""); 
+  public  function setDsObservationProperty($id,$property,$propertyValue);                                                                                            // sets the property to the specified value for the given observation
 	public  function validateDeleteDSObservation($id);                                                                                                                  // removes the observation with id = $id
 	
 }
@@ -58,7 +59,7 @@ class Observations {
 		$ob["visibility"] = $get->visibility;
 		$ob["localdate"] = $this->getDsObservationLocalDate($id);
 		$ob["localtime"] = $this->getDsObservationLocalTime($id);
-		$ob["language"] = $this->getDsObservationLanguage($id);
+		$ob["language"] = $this->getDsObservationProperty($id,'language');
 		$ob["eyepiece"] = $get->eyepieceid;
 		$ob["filter"] = $get->filterid;
 		$ob["lens"] = $get->lensid;
@@ -120,6 +121,44 @@ class Observations {
 			}
 			return $date;
 		}
+	}
+	public  function getDsObservationLocalTime($id)                                                                                                 // returns the time of the given observation in local time
+	{ if ($get = mysql_fetch_object($GLOBALS['objDatabase']->selectrecordset("SELECT date, time, locationid FROM observations WHERE id=\"$id\""))) {
+			$date = $get->date;
+			$time = $get->time;
+			$loc = $get->locationid;
+			$date = sscanf($date, "%4d%2d%2d");
+			$timezone = $GLOBALS['objLocation']->getLocationPropertyFromId($loc,'timezone');
+			$dateTimeZone = new DateTimeZone($timezone);
+			$datestr = sprintf("%02d", $date[1]) . "/" . sprintf("%02d", $date[2]) . "/" . $date[0];
+			$dateTime = new DateTime($datestr, $dateTimeZone);
+			// Geeft tijdsverschil terug in seconden
+			$timedifference = $dateTimeZone->getOffset($dateTime);
+			$timedifference = $timedifference / 3600.0;
+			if ($time < 0)
+				return $time;
+			$time = sscanf(sprintf("%04d", $time), "%2d%2d");
+			$hours = $time[0] + (int) $timedifference;
+			$minutes = $time[1];
+			// We are converting from UT to local time -> we should add the time difference!
+			$timedifferenceminutes = ($timedifference - (int) $timedifference) * 60;
+			$minutes = $minutes + $timedifferenceminutes;
+			if ($minutes < 0) {
+				$hours = $hours -1;
+				$minutes = $minutes +60;
+			} else
+				if ($minutes > 60) {
+					$hours = $hours +1;
+					$minutes = $minutes -60;
+				}
+			if ($hours < 0)
+				$hours = $hours +24;
+			if ($hours >= 24)
+				$hours = $hours -24;
+			$time = $hours * 100 + $minutes;
+			return $time;
+		} else
+			throw new Exception("Error in getDsObservationLocalTime of observations.php");
 	}
 	public  function getDsObservationProperty($id, $property, $defaultvalue='')                                                                                         // returns the property of the observation
 	{ global $objDatabase;
@@ -385,15 +424,6 @@ class Observations {
 	{ global $objDatabase;
 		return $objDatabase->selectSingleValue("SELECT COUNT(*) As ObsCnt FROM observations WHERE observerid=\"" . $userid . "\" AND observations.objectname=\"" . $object . "\"", "ObsCnt");
 	}
-	public  function getObservedCountFromCatalog($id, $catalog) 
-	{ global $objDatabase;
-		$sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt FROM objectnames " .
-		       "INNER JOIN observations ON observations.objectname = objectnames.objectname " .
-		       "WHERE objectnames.catalog = \"".$catalog."\" " .
-		       "AND observations.observerid=\"".$id."\" " .
-		       "AND observations.visibility != 7 ";
-		return $objDatabase->selectSingleValue($sql,'CatCnt',0);
-	}
 	public  function getObservedCountFromCatalogOrList($id, $catalog) 
 	{ global $objDatabase;
 		if (substr($catalog, 0, 5) == 'List:') 
@@ -532,6 +562,10 @@ class Observations {
 			$sql .= "ORDER BY Cnt DESC, observers.name ASC ";
 		return $objDatabase->selectKeyValueArray($sql, 'observerid', 'Cnt');
 	}
+  public  function setDsObservationProperty($id,$property,$propertyValue)                            // sets the property to the specified value for the given observation
+  { global $objDatabase;
+    return $objDatabase->execSQL("UPDATE observations SET ".$property." = \"".$propertyValue."\" WHERE id = \"".$id."\"");
+  }
 	public  function validateDeleteDSObservation($id)                                                                                                                   // removes the observation with id = $id
 	{ global $objDatabase,$objUtil;
 	  if(!$_GET['observationid'])
@@ -612,301 +646,26 @@ class Observations {
 
 	
 
-	
 
-	function getDsStellar($id) // getDsStellar returns true if the object was seen stellar
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT stellar FROM observations WHERE id = \"$id\"", 'stellar', '');
-	}
-	function getDsExtended($id) // getDsExtended returns true if the object was seen stellar
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT extended FROM observations WHERE id = \"$id\"", 'extended', '');
-	}
-	function getDsResolved($id) // getDsResolved returns true if the object was seen resolved
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT resolved FROM observations WHERE id = \"$id\"", 'resolved', '');
-	}
-	function getDsMottled($id) // getDsMottled returns true if the object was seen mottled
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT mottled FROM observations WHERE id = \"$id\"", 'mottled', '');
-	}
-	function getDsCharacterType($id) // getDsCharacterType returns the character type of the observation
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT characterType FROM observations WHERE id = \"$id\"", 'characterType', '');
-	}
-	function getDsUnusualShape($id) // getDsUnusualShape returns true if the object was seen with an unusual shape
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT unusualShape FROM observations WHERE id = \"$id\"", 'unusualShape', '');
-	}
-	function getDsPartlyUnresolved($id) // getDsPartlyUnresolved returns true if the object was seen partly unresolved
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT partlyUnresolved FROM observations WHERE id = \"$id\"", 'partlyUnresolved', '');
-	}
-	function getDsColorContrasts($id) // getDsColorContrasts returns true if the object was seen with color contrasts
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT colorContrasts FROM observations WHERE id = \"$id\"", 'colorContrasts', '');
-	}
-	function getDsObservationLanguage($id) // getLanguage returns the idlanguage of the observation
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT language FROM observations WHERE id = \"$id\"", 'language', '');
-	}
-	function getDsObservationLocationId($id) // getLocationId returns the location of the observation
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT locationid FROM observations WHERE id = \"$id\"", 'locationid', "ERROR ID: " . $id);
-	}
-	function getDateDsObservation($id) // getDate returns the date of the given observation in UT
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT date FROM observations WHERE id = \"$id\"", 'date', '');
-	}
-	function getLimitingMagnitude($id) // getLimitingMagnitude returns the limiting magnitude of the observation
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT limmag FROM observations WHERE id = \"$id\"", 'limmag', '');
-	}
-	function getSQM($id) // getSQM returns the SQM of the observation
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT SQM FROM observations WHERE id = \"$id\"", 'SQM', '');
-	}
-	function getSeeing($id) // getSeeing returns the seeing of the observation
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT seeing FROM observations WHERE id = \"$id\"", 'seeing', '');
-	}
-	function getTime($id) // getTime returns the time of the given observation in UT
-	{ global $objDatabase;
-		return $objDatabase->selectSingleValue("SELECT time FROM observations WHERE id = \"$id\"", 'time', '');
-	}
-	function getDsObservationLocalTime($id) // getLocalTime returns the time of the given observation in local time
-	{
-		if ($get = mysql_fetch_object($GLOBALS['objDatabase']->selectrecordset("SELECT date, time, locationid FROM observations WHERE id=\"$id\""))) {
-			$date = $get->date;
-			$time = $get->time;
-			$loc = $get->locationid;
-			$date = sscanf($date, "%4d%2d%2d");
-			$timezone = $GLOBALS['objLocation']->getLocationPropertyFromId($loc,'timezone');
-			$dateTimeZone = new DateTimeZone($timezone);
-			$datestr = sprintf("%02d", $date[1]) . "/" . sprintf("%02d", $date[2]) . "/" . $date[0];
-			$dateTime = new DateTime($datestr, $dateTimeZone);
-			// Geeft tijdsverschil terug in seconden
-			$timedifference = $dateTimeZone->getOffset($dateTime);
-			$timedifference = $timedifference / 3600.0;
-			if ($time < 0)
-				return $time;
-			$time = sscanf(sprintf("%04d", $time), "%2d%2d");
-			$hours = $time[0] + (int) $timedifference;
-			$minutes = $time[1];
-			// We are converting from UT to local time -> we should add the time difference!
-			$timedifferenceminutes = ($timedifference - (int) $timedifference) * 60;
-			$minutes = $minutes + $timedifferenceminutes;
-			if ($minutes < 0) {
-				$hours = $hours -1;
-				$minutes = $minutes +60;
-			} else
-				if ($minutes > 60) {
-					$hours = $hours +1;
-					$minutes = $minutes -60;
-				}
-			if ($hours < 0)
-				$hours = $hours +24;
-			if ($hours >= 24)
-				$hours = $hours -24;
-			$time = $hours * 100 + $minutes;
-			return $time;
-		} else
-			throw new Exception("Error in getDsObservationLocalTime of observations.php");
-	}
-	function getDescriptionDsObservation($id) // getDescription returns the description of the given observation
-	{
-		return preg_replace("/&amp;/", "&", $GLOBALS['objDatabase']->selectSingleValue("SELECT description FROM observations WHERE id = \"$id\"", 'description', ''));
-	}
 
-	// getSortedObservations returns an array with the ids of all observations,
-	// sorted by the column specified in $sort
-	function getSortedObservationsId($sort, $AscDesc) {
-		$extra = $GLOBALS['objObserver']->getObserversFromClub($club);
-		$extra3 = "";
-		$extra4 = "";
-		$sort = "observations." . $sort;
-		if ($sort == "date") {
-			$sort = "date, time";
-		}
-		if ($sort == "observations.instrumentid") {
-			$extra3 = "LEFT JOIN instruments on (observations.instrumentid=instruments.id) ";
-			$sort = " instruments.diameter, instruments.id";
-		}
-		if ($sort == "observations.observerid") {
-			$extra4 = "LEFT JOIN observers on (observations.observerid=observers.id) ";
-			$sort = " observers.name, observers.firstname";
-		}
-		$extra2 = "";
-		if ($_SESSION['deepskylog_id'] != "") {
-			$languages = $GLOBALS['objObserver']->getUsedLanguages($_SESSION['deepskylog_id']);
-			for ($i = 0; $i < count($languages); $i++) {
-				$extra2 = $extra2 . "observations.language = \"" . $languages[$i] . "\"";
 
-				if ($i != count($languages) - 1) {
-					$extra2 = $extra2 . " OR ";
-				}
-			}
-			if ($extra2 != "") {
-				if ($extra != "") {
-					$extra2 = " AND (" . $extra2 . ")";
-				} else {
-					$extra2 = " WHERE (" . $extra2 . ")";
-				}
-			}
-		} else {
-		}
-		$sql = "SELECT observations.id FROM observations " .
-		$extra3 .
-		$extra4 .
-		$extra .
-		$extra2 .
-		" ORDER BY $sort $AscDesc";
-		$db = new database;
-		$db->login();
-		$run = mysql_query($sql) or die(mysql_error());
-		while ($get = mysql_fetch_object($run)) {
-			$observations[] = $get->id;
-		}
-		$db->logout();
-		return $observations;
-	}
 
-	// getVisibility returns the visibility of the observation
-	function getVisibility($id) {
-		$db = new database;
-		$db->login();
 
-		$sql = "SELECT * FROM observations WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
 
-		$get = mysql_fetch_object($run);
-
-		if ($get) {
-			$visibility = $get->visibility;
-		} else {
-			$visibility = '';
-		}
-
-		$db->logout();
-
-		return $visibility;
-	}
-
-	// setObjectId sets a new name of the observed object
-	function setObjectId($id, $name) {
-		$db = new database;
-		$db->login();
-
-		$sql = "UPDATE observations SET objectname = \"$objectname\" WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$db->logout();
-	}
-
-	// setObserverId sets a new observer for the given observation
-	function setObserverId($id, $observer) {
-		$db = new database;
-		$db->login();
-
-		$sql = "UPDATE observations SET observerid = \"$observer\" WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$db->logout();
-	}
-
-	// setInstrumentId sets the id of the instrument for the given observation
-	function setInstrumentId($id, $instrument) {
-		$db = new database;
-		$db->login();
-
-		$sql = "UPDATE observations SET instrumentid = \"$instrument\" WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$db->logout();
-	}
-
-	// setEyepieceId sets the id of the eyepiece for the given observation
-	function setEyepieceId($id, $eyepiece) {
-		$db = new database;
-		$db->login();
-
-		$sql = "UPDATE observations SET eyepieceid = \"$eyepiece\" WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$db->logout();
-	}
-
-	// setFilterId sets the id of the filter for the given observation
-	function setFilterId($id, $filter) {
-		$db = new database;
-		$db->login();
-
-		$sql = "UPDATE observations SET filterid = \"$filter\" WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$db->logout();
-	}
-
-	// setLensId sets the id of the lens for the given observation
-	function setLensId($id, $lens) {
-		$db = new database;
-		$db->login();
-
-		$sql = "UPDATE observations SET lensid = \"$lens\" WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$db->logout();
-	}
-
-	// setObservationLanguage sets the language for the given observation
-	function setObservationLanguage($id, $language) {
-		$db = new database;
-		$db->login();
-
-		$sql = "UPDATE observations SET language = \"$language\" WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$db->logout();
-	}
-
-	// setLocationId sets the location for the given observation
-	function setLocationId($id, $location) {
-		$db = new database;
-		$db->login();
-
-		$sql = "UPDATE observations SET locationid = \"$location\" WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$db->logout();
-	}
-
-	// setDate sets the date for the given observation
-	function setDate($id, $date) {
-		$db = new database;
-		$db->login();
-
-		$sql = "UPDATE observations SET date = \"$date\" WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$db->logout();
-	}
 
 	// setLocalDateAndTime sets the date and time for the given observation
 	// when the time is given in  local time
-	function setLocalDateAndTime($id, $date, $time) {
-		if ($time >= 0) {
-			$db = new database;
-			$db->login();
-
-			$sql = "SELECT * FROM observations WHERE id = \"$id\"";
+	public  function setLocalDateAndTime($id, $date, $time) 
+	{ global $objDatabase;
+		if ($time >= 0) 
+		{ $sql = "SELECT * FROM observations WHERE id = \"$id\"";
 			$run = mysql_query($sql) or die(mysql_error());
 
 			$get = mysql_fetch_object($run);
 
 			$location = $get->locationid;
 
-			$db->logout();
-
+	
 			$timezone = $GLOBALS['objLocation']->getLocationPropertyFromId($location,'timezone');
 
 			$datearray = sscanf($date, "%4d%2d%2d");
@@ -1197,15 +956,15 @@ class Observations {
 			$observername = $this->getDsObservationProperty($value,'observerid');
 			$instrumentid = $this->getDsObservationProperty($value,'instrumentid');
 			$instrument = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($instrumentid,'name');
-			$locationid = $this->getDsObservationLocationId($value);
+			$locationid = $this->getDsObservationProperty($value,'locationid');
 			$location = $GLOBALS['objLocation']->getLocationPropertyFromId($locationid,'name');
-			$date = $this->getDateDsObservation($value);
-			$time = $this->getTime($value);
-			$description = $this->getDescriptionDsObservation($value);
-			$seeing = $this->getSeeing($value);
-			$visibility = $this->getVisibility($value);
-			$limmag = $this->getLimitingMagnitude($value);
-			$sqm = $this->getSQM($value);
+			$date = $this->getDsObservationProperty($value,'date');
+			$time = $this->getDsObservationProperty($value,'time');
+			$description = preg_replace("/&amp;/", "&", $this->getDsObservationProperty($value,'description'));
+			$seeing = $this->getDsObservationProperty($value,'seeing');
+			$visibility = $this->getDsObservationProperty($value,'visibility');
+			$limmag = $this->getDsObservationProperty($value,'limmag');
+			$sqm = $this->getDsObservationProperty($value,'SQM');
 
 			//   echo "<tr $class><td> $value </td><td> $objectname </td><td> $observername </td><td> $instrument </td><td> $location </td><td> $date </td><td> $time </td><td> $seeing </td><td> $limmag </td><td> $visibility </td><td> $description </td>";
 
@@ -1326,24 +1085,24 @@ class Observations {
 		echo LangViewObservationField4;
 		echo ("</td>");
 		echo ("<td width=\"25%\">");
-		echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_location&amp;location=" . urlencode($this->getDsObservationLocationId($LOid)) . "\">" . $GLOBALS['objLocation']->getLocationPropertyFromId($this->getDsObservationLocationId($LOid),'name') . "</a>");
+		echo ("<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_location&amp;location=" . urlencode($this->getDsObservationProperty($LOid,'locationid')) . "\">" . $GLOBALS['objLocation']->getLocationPropertyFromId($this->getDsObservationProperty($LOid,'locationid'),'name') . "</a>");
 		print ("</td>");
 		print ("<td class=\"fieldname\" width=\"25%\" align=\"right\">");
 		echo LangViewObservationField5;
-		$date = sscanf($this->getDateDsObservation($LOid), "%4d%2d%2d");
+		$date = sscanf($this->getDsObservationProperty($LOid,'date'), "%4d%2d%2d");
 		$time = "";
-		if ($this->getTime($LOid) >= 0) {
+		if ($this->getDsObservationProperty($LOid,'time') >= 0) {
 			if (array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']) && ($GLOBALS['objObserver']->getUseLocal($_SESSION['deepskylog_id']))) {
 				$date = sscanf($this->getDsObservationLocalDate($LOid), "%4d%2d%2d");
 			}
 		}
-		if ($this->getTime($LOid) >= 0) {
+		if ($this->getDsObservationProperty($LOid,'time') >= 0) {
 			if (array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']) && $GLOBALS['objObserver']->getUseLocal($_SESSION['deepskylog_id'])) {
 				echo ("&nbsp;" . LangViewObservationField9lt);
 				$time = $this->getDsObservationLocalTime($LOid);
 			} else {
 				echo ("&nbsp;" . LangViewObservationField9);
-				$time = $this->getTime($LOid);
+				$time = $this->getDsObservationProperty($LOid,'time');
 			}
 		}
 		echo ("</td>");
@@ -1364,7 +1123,7 @@ class Observations {
 		echo ("<tr class=\"type2\">");
 		echo ("<td class=\"fieldname\" width=\"12%\" align=\"right\">" . LangViewObservationField6 . "</td>");
 		// SEEING
-		$seeing = $this->getSeeing($LOid);
+		$seeing = $this->getDsObservationProperty($LOid,'seeing');
 		echo ("<td width=\"12%\">");
 		if ($seeing != ("-1" & "")) {
 			if ($seeing == 1) {
@@ -1388,18 +1147,18 @@ class Observations {
 		echo ("</td>");
 		echo ("<td class=\"fieldname\" width=\"14%\" align=\"right\">");
 		// LIMITING MAGNITUDE
-		if ($this->getLimitingMagnitude($LOid) != ("-1" & "")) // limiting magnitude is set
+		if ($this->getDsObservationProperty($LOid,'limmag') != ("-1" & "")) // limiting magnitude is set
 		{
 			echo (LangViewObservationField7);
 			echo ("</td>");
 			echo ("<td width=\"13%\">");
-			echo (sprintf("%1.1f", $this->getLimitingMagnitude($LOid))); // always print 2 digits
-		} else if ($this->getSQM($LOid) != -1.0) // SQM is set
+			echo (sprintf("%1.1f", $this->getDsObservationProperty($LOid,'limmag'))); // always print 2 digits
+		} else if ($this->getDsObservationProperty($LOid,'SQM') != -1.0) // SQM is set
 		{
 			echo (LangViewObservationField34);
 			echo ("</td>");
 			echo ("<td width=\"13%\">");
-			echo (sprintf("%2.1f", $this->getSQM($LOid))); // always print 2.1 digits    		
+			echo (sprintf("%2.1f", $this->getDsObservationProperty($LOid,'SQM'))); // always print 2.1 digits    		
 		} else {
 			echo (LangViewObservationField7);
 			echo ("</td>");
@@ -1410,7 +1169,7 @@ class Observations {
 		echo ("<td class=\"fieldname\" width=\"25%\" align=\"right\">" . LangViewObservationField22 . "</td>");
 		echo ("<td width=\"25%\">");
 		// VISIBILITY
-		$visibility = $this->getVisibility($LOid);
+		$visibility = $this->getDsObservationProperty($LOid,'visibiity');
 		if ($visibility != ("0")) {
 			if ($visibility == 1) {
 				echo (LangVisibility1);
@@ -1472,19 +1231,19 @@ class Observations {
 		echo ("</td");
 		echo ("<td width=\"25%\" colspan = 2>");
 		$delimiter = "";
-		if ($this->getDsStellar($LOid) > 0) {
+		if ($this->getDsObservationProperty($LOid,'stellar') > 0) {
 			echo (LangViewObservationField35);
 			$delimiter = ", ";
 		}
-		if ($this->getDsExtended($LOid) > 0) {
+		if ($this->getDsObservationProperty($LOid,'extended') > 0) {
 			echo ($delimiter . LangViewObservationField36);
 			$delimiter = ", ";
 		}
-		if ($this->getDsResolved($LOid) > 0) {
+		if ($this->getDsObservationProperty($LOid,'resolved') > 0) {
 			echo ($delimiter . LangViewObservationField37);
 			$delimiter = ", ";
 		}
-		if ($this->getDsMottled($LOid) > 0) {
+		if ($this->getDsObservationProperty($LOid,'mottled') > 0) {
 			echo ($delimiter . LangViewObservationField38);
 			$delimiter = ", ";
 		}
@@ -1498,26 +1257,21 @@ class Observations {
 			echo LangViewObservationField40;
 			echo ("</td>");
 			echo ("<td>");
-			if ($this->getDsCharacterType($LOid) != "")
-			{
-				echo $this->getDsCharacterType($LOid);
-			} else {
-				echo "-";
-			}
+			echo (($characterType=$this->getDsObservationProperty($LOid,'characterType'))?$characterType:"-");
 			echo ("</td");
 			echo ("<td>");
 			echo ("</td");
 			echo ("<td width=\"25%\" colspan = 2>");
 			$delimiter = "";
-			if ($this->getDsUnusualShape($LOid) > 0) {
+			if ($this->getDsObservationProperty($LOid,'unusualShape') > 0) {
 				echo (LangViewObservationField41);
 				$delimiter = ", ";
 			}
-			if ($this->getDsPartlyUnresolved($LOid) > 0) {
+			if ($this->getDsObservationProperty($LOid,'partlyUnresolved') > 0) {
 				echo ($delimiter . LangViewObservationField42);
 				$delimiter = ", ";
 			}
-			if ($this->getDsColorContrasts($LOid) > 0) {
+			if ($this->getDsObservationProperty($LOid,'colorContrasts') > 0) {
 				echo ($delimiter . LangViewObservationField43);
 				$delimiter = ", ";
 			}
@@ -1535,7 +1289,7 @@ class Observations {
 		echo ("<tr>");
 		echo ("<td width=\"100%\">");
 
-		$LOdescription = $this->getDescriptionDsObservation($LOid);
+		$LOdescription = preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description'));
 
 		// automatically add links towards Messier, NGC, IC and Arp objects in description
 		$patterns[0] = "/\s+(M)\s*(\d+)\s/";
@@ -1599,7 +1353,7 @@ class Observations {
 		$LOdescription = "";
 		if ($AOid) {
 			$LOid = $AOid;
-			$LOdesc = $this->getDescriptionDsObservation($LOid);
+			$LOdesc = preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description'));
 			$patterns[0] = "/\s+(M)\s*(\d+)/";
 			$replacements[0] = "<a href=\"" . $GLOBALS['baseURL'] . "index.php?indexAction=detail_object&amp;object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
 			$patterns[1] = "/(NGC|Ngc|ngc)\s*(\d+\w+)/";
@@ -1629,12 +1383,12 @@ class Observations {
 		if ($GLOBALS['objObserver']->getUseLocal($_SESSION['deepskylog_id'])) {
 			$date = sscanf($this->getDsObservationLocalDate($value['observationid']), "%4d%2d%2d");
 		} else {
-			$date = sscanf($this->getDateDsObservation($value['observationid']), "%4d%2d%2d");
+			$date = sscanf($this->getDsObservationProperty($value['observationid'],'date'), "%4d%2d%2d");
 		}
 		if ($GLOBALS['objObserver']->getUseLocal($_SESSION['deepskylog_id'])) {
 			$LOdate = sscanf($this->getDsObservationLocalDate($LOid), "%4d%2d%2d");
 		} else {
-			$LOdate = sscanf($this->getDateDsObservation($LOid), "%4d%2d%2d");
+			$LOdate = sscanf($this->getDsObservationProperty($LOid,'date'), "%4d%2d%2d");
 		}
 		// OUTPUT
 		$con = $value['objectconstellation'];
@@ -1812,7 +1566,7 @@ class Observations {
 		if (array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'] && $GLOBALS['objObserver']->getUseLocal($_SESSION['deepskylog_id']))
 			$date = sscanf($this->getDsObservationLocalDate($value['observationid']), "%4d%2d%2d");
 		else
-			$date = sscanf($this->getDateDsObservation($value['observationid']), "%4d%2d%2d");
+			$date = sscanf($this->getDsObservationProperty($value['observationid'],'date'), "%4d%2d%2d");
 		echo date($dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0]));
 		echo ("</td>\n");
 		echo ("<td>");
@@ -1939,7 +1693,7 @@ class Observations {
 		if (array_key_exists('deepskylog_id', $_SESSION) && $GLOBALS['objObserver']->getUseLocal($_SESSION['deepskylog_id'])) {
 			$date = sscanf($this->getDsObservationLocalDate($value['observationid']), "%4d%2d%2d");
 		} else {
-			$date = sscanf($this->getDateDsObservation($value['observationid']), "%4d%2d%2d");
+			$date = sscanf($this->getDsObservationProperty($value['observationid'],'date'), "%4d%2d%2d");
 		}
 		echo date($dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0]));
 		echo ("</td>\n

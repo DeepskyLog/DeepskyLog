@@ -19,10 +19,10 @@ $userDSYearObservations=$objObservation->getObservationsLastYear($user);
 $totalDSYearObservations=$objObservation->getObservationsLastYear('%');
 $userDSObjects=$objObservation->getNumberOfObjects($user);
 $totalDSobjects=$objObservation->getNumberOfDifferentObservedDSObjects();
-$userMobjects=$objObservation->getObservedCountFromCatalog($user,"M");
-$userCaldwellObjects=$objObservation->getObservedCountFromCatalog($user,"Caldwell");
-$userH400objects=$objObservation->getObservedCountFromCatalog($user,"H400");
-$userHIIobjects=$objObservation->getObservedCountFromCatalog($user,"HII");
+$userMobjects=$objObservation->getObservedCountFromCatalogOrList($user,"M");
+$userCaldwellObjects=$objObservation->getObservedCountFromCatalogOrList($user,"Caldwell");
+$userH400objects=$objObservation->getObservedCountFromCatalogOrList($user,"H400");
+$userHIIobjects=$objObservation->getObservedCountFromCatalogOrList($user,"HII");
 $userDSrank=$objObserver->getRank($user);
 if($userDSrank===false)
   $userDSrank = "-";
