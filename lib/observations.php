@@ -20,8 +20,8 @@ interface iObservations
   public  function getPopularObservers();                                                                                                                             // returns the number of observations of the observers
 	public  function getPopularObserversOverviewCatOrList($sort, $cat = ""); 
   public  function setDsObservationProperty($id,$property,$propertyValue);                                                                                            // sets the property to the specified value for the given observation
-	public  function validateDeleteDSObservation($id);                                                                                                                  // removes the observation with id = $id
-	
+	public  function setLocalDateAndTime($id, $date, $time);                                                                                                          	// sets the date and time for the given observation when the time is given in  local time
+  public  function validateDeleteDSObservation($id);                                                                                                                  // removes the observation with id = $id
 }
 class Observations {
 	public  function addDSObservation($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language) 
@@ -562,11 +562,52 @@ class Observations {
 			$sql .= "ORDER BY Cnt DESC, observers.name ASC ";
 		return $objDatabase->selectKeyValueArray($sql, 'observerid', 'Cnt');
 	}
-  public  function setDsObservationProperty($id,$property,$propertyValue)                            // sets the property to the specified value for the given observation
+  public  function setDsObservationProperty($id,$property,$propertyValue)                                                                                                       // sets the property to the specified value for the given observation
   { global $objDatabase;
     return $objDatabase->execSQL("UPDATE observations SET ".$property." = \"".$propertyValue."\" WHERE id = \"".$id."\"");
   }
-	public  function validateDeleteDSObservation($id)                                                                                                                   // removes the observation with id = $id
+	public  function setLocalDateAndTime($id, $date, $time) 	                                                                                                                     // sets the date and time for the given observation when the time is given in  local time
+	{ global $objDatabase,$objLocation;
+		if ($time >= 0) 
+		{ $objDatabase->selectSingleValue("SELECT locationid FROM observations WHERE id = \"$id\"");
+			$timezone = $objLocation->getLocationPropertyFromId($this->getDsObservationProperty($id,'locationid'),'timezone');
+			$datearray = sscanf($date, "%4d%2d%2d");
+			$dateTimeZone = new DateTimeZone($timezone);
+			$date = sprintf("%02d", $datearray[1]) . "/" . sprintf("%02d", $datearray[2]) . "/" . $datearray[0];
+			$dateTime = new DateTime($date, $dateTimeZone);
+			// Returns the timedifference in seconds
+			$timedifference = $dateTimeZone->getOffset($dateTime);
+			$timedifference = $timedifference / 3600.0;
+			$timestr = sscanf(sprintf("%04d", $time), "%2d%2d");
+			$jd = cal_to_jd(CAL_GREGORIAN, $datearray[1], $datearray[2], $datearray[0]);
+			$hours = $timestr[0] - (int) $timedifference;
+			$timedifferenceminutes = ($timedifference - (int) $timedifference) * 60;
+			$minutes = $timestr[1] - $timedifferenceminutes;
+			if ($minutes < 0) {
+				$hours = $hours -1;
+				$minutes = $minutes +60;
+			} else
+				if ($minutes > 60) {
+					$hours = $hours +1;
+					$minutes = $minutes -60;
+				}
+			if ($hours < 0) {
+				$hours = $hours +24;
+				$jd = $jd -1;
+			}
+			if ($hours >= 24) {
+				$hours = $hours -24;
+				$jd = $jd +1;
+			}
+			$time = $hours * 100 + $minutes;
+			$dte = JDToGregorian($jd);
+			sscanf($dte, "%2d/%2d/%4d", $month, $day, $year);
+			$date = $year . sprintf("%02d", $month) . sprintf("%02d", $day);
+		}
+		$objDatabase->execSQL("UPDATE observations SET date = \"".$date."\" WHERE id = \"".$id."\"");
+		$objDatabase->execSQL("UPDATE observations SET time = \"$time\" WHERE id = \"".$id."\"");
+	}
+  public  function validateDeleteDSObservation($id)                                                                                                                   // removes the observation with id = $id
 	{ global $objDatabase,$objUtil;
 	  if(!$_GET['observationid'])
       throw new Exception("No observation to delete.");                           
@@ -653,162 +694,6 @@ class Observations {
 
 
 
-	// setLocalDateAndTime sets the date and time for the given observation
-	// when the time is given in  local time
-	public  function setLocalDateAndTime($id, $date, $time) 
-	{ global $objDatabase;
-		if ($time >= 0) 
-		{ $sql = "SELECT * FROM observations WHERE id = \"$id\"";
-			$run = mysql_query($sql) or die(mysql_error());
-
-			$get = mysql_fetch_object($run);
-
-			$location = $get->locationid;
-
-	
-			$timezone = $GLOBALS['objLocation']->getLocationPropertyFromId($location,'timezone');
-
-			$datearray = sscanf($date, "%4d%2d%2d");
-
-			$dateTimeZone = new DateTimeZone($timezone);
-			$date = sprintf("%02d", $datearray[1]) . "/" . sprintf("%02d", $datearray[2]) . "/" . $datearray[0];
-
-			$dateTime = new DateTime($date, $dateTimeZone);
-			// Returns the timedifference in seconds
-			$timedifference = $dateTimeZone->getOffset($dateTime);
-			$timedifference = $timedifference / 3600.0;
-
-			$timestr = sscanf(sprintf("%04d", $time), "%2d%2d");
-
-			$jd = cal_to_jd(CAL_GREGORIAN, $datearray[1], $datearray[2], $datearray[0]);
-
-			$hours = $timestr[0] - (int) $timedifference;
-
-			$timedifferenceminutes = ($timedifference - (int) $timedifference) * 60;
-
-			$minutes = $timestr[1] - $timedifferenceminutes;
-
-			if ($minutes < 0) {
-				$hours = $hours -1;
-				$minutes = $minutes +60;
-			} else
-				if ($minutes > 60) {
-					$hours = $hours +1;
-					$minutes = $minutes -60;
-				}
-
-			if ($hours < 0) {
-				$hours = $hours +24;
-				$jd = $jd -1;
-			}
-			if ($hours >= 24) {
-				$hours = $hours -24;
-				$jd = $jd +1;
-			}
-
-			$time = $hours * 100 + $minutes;
-
-			$dte = JDToGregorian($jd);
-			sscanf($dte, "%2d/%2d/%4d", $month, $day, $year);
-			$date = $year . sprintf("%02d", $month) . sprintf("%02d", $day);
-		}
-
-		$db = new database;
-		$db->login();
-
-		$sql = "UPDATE observations SET date = \"$date\" WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$sql = "UPDATE observations SET time = \"$time\" WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$db->logout();
-	}
-
-	// setDescription sets the description for the given observation
-	function setDescription($id, $description) {
-		$db = new database;
-
-		$description = html_entity_decode($description, ENT_COMPAT, "ISO-8859-15");
-
-		$db->login();
-
-		$sql = "UPDATE observations SET description = \"$description\" WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$db->logout();
-	}
-
-	// setTime sets the time for the given observation in UT
-	function setTime($id, $time) {
-		$db = new database;
-		$db->login();
-
-		$sql = "UPDATE observations SET time = \"$time\" WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$db->logout();
-	}
-
-	// setSeeing sets the seeing for the given observation
-	function setSeeing($id, $seeing) {
-		$db = new database;
-		$db->login();
-
-		if ($seeing == "-1" || $seeing == "") {
-			$seeing = "NULL";
-		}
-
-		$sql = "UPDATE observations SET seeing = $seeing WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$db->logout();
-	}
-
-	// setLimitingMagnitude sets the limiting magnitude for the given observation
-	function setObservationLimitingMagnitude($id, $limmag) {
-		$db = new database;
-		$db->login();
-
-		if ($limmag == "") {
-			$limmag = "NULL";
-		}
-
-		$limmag = preg_replace("/,/", ".", $limmag);
-
-		$sql = "UPDATE observations SET limmag = $limmag WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$db->logout();
-	}
-
-	// setSQM sets the SQM for the given observation
-	function setSQM($id, $sqm) {
-		$db = new database;
-		$db->login();
-
-		if ($sqm == "") {
-			$sqm = "NULL";
-		}
-
-		$sqm = preg_replace("/,/", ".", $sqm);
-
-		$sql = "UPDATE observations SET SQM = $sqm WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$db->logout();
-	}
-
-	// setVisibility sets a new visibility for the given observation
-	function setVisibility($id, $visibility) {
-		$db = new database;
-		$db->login();
-
-		$sql = "UPDATE observations SET visibility = \"$visibility\" WHERE id = \"$id\"";
-		$run = mysql_query($sql) or die(mysql_error());
-
-		$db->logout();
-	}
 
 	// setSmallDiameter sets the estimated small diameter for the given observation
 	function setSmallDiameter($id, $smallDiameter) {
@@ -1169,7 +1054,7 @@ class Observations {
 		echo ("<td class=\"fieldname\" width=\"25%\" align=\"right\">" . LangViewObservationField22 . "</td>");
 		echo ("<td width=\"25%\">");
 		// VISIBILITY
-		$visibility = $this->getDsObservationProperty($LOid,'visibiity');
+		$visibility = $this->getDsObservationProperty($LOid,'visibility');
 		if ($visibility != ("0")) {
 			if ($visibility == 1) {
 				echo (LangVisibility1);

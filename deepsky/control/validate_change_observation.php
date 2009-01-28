@@ -27,7 +27,7 @@ if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']
 				$time = -9999;
 			}
 
-			$objObservation->setDescription($_POST['observationid'], nl2br($_POST['description']));
+			$objObservation->setDsObservationProperty($_POST['observationid'],'description', html_entity_decode(nl2br($_POST['description']), ENT_COMPAT, "ISO-8859-15") );
 			$GLOBALS['objObservation']->setCharacterType($_POST['observationid'], $GLOBALS['objUtil']->checkPostKey('characterType'));
 
 			if ($_POST['filter']) {
@@ -51,13 +51,13 @@ if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']
 			if ($objObserver->getUseLocal($_SESSION['deepskylog_id'])) {
 				$objObservation->setLocalDateAndTime($_POST['observationid'], $date, $time);
 			} else {
-				$objObservation->setTime($_POST['observationid'], $time);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'time', $time);
 				$objObservation->setDsObservationProperty($_POST['observationid'],'date', $date);
 			}
 			$objObservation->setDsObservationProperty($_POST['observationid'],'instrumentid', $_POST['instrument']);
 			$objObservation->setDsObservationProperty($_POST['observationid'],'locationid', $_POST['location']);
 
-			$objObservation->setSeeing($_POST['observationid'], $_POST['seeing']);
+			$objObservation->setDsObservationProperty($_POST['observationid'],'seeing', ($_POST['seeing']?$_POST['seeing']:"NULL"));
 
 			if (array_key_exists('limit', $_POST) && $_POST['limit']) {
 				if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST['limit'], $matches)) // limiting magnitude like X.X or X,X with X a number between 0 and 9
@@ -75,13 +75,13 @@ if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']
 				}
 			} else
 				$_SESSION['limit'] = "";
-			$objObservation->setObservationLimitingMagnitude($_POST['observationid'], $_SESSION['limit']);
+			$objObservation->setDsObservationProperty($_POST['observationid'],'limitingMagnitude', ($_SESSION['limit']?preg_replace("/,/", ".", $_SESSION['limit']):"NULL"));
 			$objObservation->setDsObservationProperty($_POST['observationid'],'language', $_POST['description_language']);
 			if (array_key_exists('visibility', $_POST) && $_POST['visibility'])
 				$visibility = $_POST['visibility'];
 			else
 				$visibility = 0;
-			$objObservation->setVisibility($_POST['observationid'], $visibility);
+			$objObservation->setDsObservationProperty($_POST['observationid'],'visibility', $visibility);
 
 			if ($GLOBALS['objUtil']->checkPostKey('sqm'))
 				if (ereg('([0-9]{1})([0-9]{0,1})[.,]{0,1}([0-9]{0,1})', $_POST['sqm'], $matches)) // sqm value
@@ -109,7 +109,7 @@ if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']
 				$_POST['largeDiam'] = $_POST['largeDiam'] * 60.0;
 			}
 			if ($_POST['sqm'])
-				$GLOBALS['objObservation']->setSQM($_POST['observationid'], $_POST['sqm']);
+				$GLOBALS['objObservation']->setDsObservationProperty($_POST['observationid'],'SQM',  preg_replace("/,/", ".", $_POST['sqm']));
 			if ($_POST['smallDiam'])
 				$GLOBALS['objObservation']->setSmallDiameter($_POST['observationid'], $_POST['smallDiam']);
 			if ($_POST['largeDiam'])

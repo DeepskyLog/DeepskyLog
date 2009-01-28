@@ -86,7 +86,7 @@ else // all fields filled in
 			$_POST['largeDiam'] = $_POST['largeDiam'] * 60.0;
 		}
 		if ($_POST['sqm'])
-			$GLOBALS['objObservation']->setSQM($current_observation, $_POST['sqm']);
+			$GLOBALS['objObservation']->setDsObservationProperty($current_observation,'SQM', preg_replace("/,/", ".", $_POST['sqm']));
 		if ($_POST['smallDiam'])
 			$GLOBALS['objObservation']->setSmallDiameter($current_observation, $_POST['smallDiam']);
 		if ($_POST['largeDiam'])
