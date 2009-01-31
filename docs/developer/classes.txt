@@ -1,3 +1,111 @@
+<<<<<<< .mine
+interface iAtlas
+{ // public $atlasCodes;                                                        // $atlasCodes[code]=AtlasName
+     public function calculateAtlasPage($atlas, $ra, $decl);                    // calculates the atlas page for the ra,decl in atlas
+  // private function calculateMilleniumPage($ra, $decl);
+	// private function calculateNewUranometriaPage($ra, $decl);
+  // private function calculatePocketSkyAtlasPage($ra, $decl);
+  // private function calculateSkyAtlasPage($ra, $decl);
+  // private function calculateTakiPage($ra, $decl);
+  // private function calculateTorresBPage($ra, $decl);
+  // private function calculateTorresBCPage($ra, $decl);
+  // private function calculateTorresCPage($ra, $decl);
+  // private function calculateUranometriaPage($ra, $decl)
+}
+interface iContrast
+{ // private function calcSubroutine($x, $SBObj, $minObjArcmin, $maxObjArcmin, $maxLog, $logObjContrast)// This function should not be used. Only needed for the calculations
+     public	 function calculateContrast($objMag, $SBObj, $minObjArcmin, $maxObjArcmin);
+     public  function calculateLimitingMagnitudeFromSkyBackground($initBB);
+     public  function calculateSkyBackgroundFromLimitingMagnitude($limMag);
+}
+interface iDatabase
+{ public function __constructor();
+  public function newlogin();                                                   // Should be removed when code cleanup finishes, code should go into the constructor
+	public function login();                                                      // Should be removed when code cleanup finishes
+	public function logout();                                                     // Should be removed when code cleanup finishes
+	public function execSQL($sql);                                                // Executes an SQL statement, returns nothing
+	public function selectKeyValueArray($sql,$key,$value);                        // Executes an SQL statement, inteded to be a select, but it is not checked, it returns an array with the $key field as key and $value field as value of all the records, or an empty array if recordset is empty
+	public function selectRecordset($sql);                                        // Executes an SQL statement, it returns the mysql_query object
+	public function selectSingleArray($sql,$name);                                // Executes an SQL statement, inteded to be a select, but it is not checked, it returns an array with the $name field of all the records, or an empty array if recordset is empty
+	public function selectSingleValue($sql,$name,$nullvalue='');                  // Executes an SQL statement, inteded to be a select, but it is not checked, it returns the $name field of the first record, or $nullvalue if recordset is empty
+}
+interface iEyepiece
+{ public  function addEyepiece($name, $focalLength, $apparentFOV);                   // adds a new eyepiece to the database. The name, focalLength and apparentFOV should be given as parameters. 
+  public  function getAllEyepiecesIds($id);                                          // returns a list with all id's which have the same name as the name of the given id
+  public  function getEyepieceObserverPropertyFromName($name, $observer, $property); // returns the property for the eyepiece of the observer
+  public  function getEyepiecePropertiesFromId($id);                                 // returns the properties of the eyepiece with id in an array(propertyname)=propertyvalue
+  public  function getEyepiecePropertyFromId($id,$property,$defaultValue='');        // returns the property of the given eyepiece
+  public  function getEyepieceUsedFromId($id);                                       // returns the number of times the eyepiece is used in observations
+  public  function getSortedEyepieces($sort,$observer="");                           // returns an array with the ids of all eyepieces, sorted by the column specified in $sort
+  public  function setEyepieceProperty($id,$property,$propertyValue);                // sets the property to the specified value for the given eyepiece
+  public  function validateDeleteEyepiece();                                         // validates and deletes an eyepiece
+  public  function validateSaveEyepiece();                                           // validates and saves an eyepiece and returns a message 
+} 
+interface iFilters
+{public  function addFilter($name, $type, $color, $wratten, $schott);                    // adds a new filter to the database. The name, type, color, wratten and schott should be given as parameters. 
+ public  function getAllFiltersIds($id);                                                 // returns a list with all id's which have the same name as the name of the given id
+ public  function getEchoColor($color);                                                  // returns the color in the activated language
+ public  function getEchoListColor($color);                                              // returns the color in list format for the activated language
+ public  function getEchoListType($type);                                                // returns the type in list format for the activated language 
+ public  function getEchoType($type);                                                    // returns the type in the activated language
+ public  function getFilterObserverPropertyFromName($name, $observer, $property);        // returns the property for the filter of the observer
+ public  function getFilterPropertiesFromId($id);                                        // returns the properties of the filters with id
+ public  function getFilterPropertyFromId($id,$property,$defaultValue='');               // returns the property of the given filter
+ public  function getFilterUsedFromId($id);                                              // returns the number of times the eyepiece is used in observations
+ public  function getSortedFilters($sort, $observer = "");                               // returns an array with the ids of all filters, sorted by the column specified in $sort
+ public  function setFilterProperty($id,$property,$propertyValue);                       // sets the property to the specified value for the given filter
+ public  function validateDeleteFilter();                                                // validates and deletes a filter
+ public  function validateSaveFilter();                                                  // validates and saves a filter and returns a message 
+}
+interface iInstruments
+{ public  function addInstrument($name, $diameter, $fd, $type, $fixedMagnification, $observer);    // adds a new instrument to the database. The name, diameter, fd and type should be given as parameters. 
+  public  function getAllInstrumentsIds($id);                                                      // returns a list with all id's which have the same name as the name of the given id
+  public  function getInstrumentEchoType($instrumentType);                                         // returns the text corresponding to a certain instrument type
+  public  function getInstrumentEchoListType($type);                                               // returns the html code for a list containing the Instrument types, with the $type selected
+  public  function getInstrumentId($name, $observer);                                              // returns the id for this instrument
+  public  function getInstrumentPropertyFromId($id,$property,$defaultValue='');                    // returns the specified property for instrument id                    
+  public  function getInstrumentUsedFromId($id);                                                   // returns the number of times the instrument is used in observations
+  public  function getObserverFromInstrument($id);                                                 // returns the observerid for this instrument
+  public  function getSortedInstruments($sort,$observer="");                                       // returns an array with the ids of all instruments, sorted by the column specified in $sort
+  public  function getSortedInstrumentsList($sort,$observer="");                                   // returns an array with the ids of all instruments as key, and the name as value, sorted by the column specified in $sort
+  public  function setInstrumentProperty($id,$property,$propertyValue);                            // sets the property to the specified value for the given instrument
+  public  function validateDeleteInstrument();                                                     // validates and deletes the instrument with id
+  public  function validateSaveInstrument();                                                       // validates and saves the instrument
+}
+interface iLenses
+{ public  function addLens($name, $factor);                                      // adds a new lens to the database. The name and the factor should be given as parameters. 
+  public  function getAllFiltersIds($id);                                        // returns a list with all id's which have the same name as the name of the given id
+  public  function getLensObserverPropertyFromName($name, $observer, $property); // returns the property for the eyepiece of the observer
+  public  function getLensPropertyFromId($id,$property,$defaultValue='');        // returns the property of the given lens
+	public  function getSortedLenses($sort, $observer = "");                       // returns an array with the ids of all lenses, sorted by the column specified in $sort
+  public  function setLensProperty($id,$property,$propertyValue);                // sets the property to the specified value for the given lens
+  public  function getLensUsedFromId($id);                                       // returns the number of times the lens is used in observations
+  public  function validateDeleteLens();                                         // validates and removes the lens with id
+  public  function validateSaveLens();                                           // validates and saves a lens and returns a message 
+}
+interface iLocations
+{ public  function addLocation($name, $longitude, $latitude, $region, $country, $timezone);                            // adds a new location to the database. The name, longitude, latitude, region and country should be given as parameters. 
+  public  function getAllLocationsIds($id);                                                                            // returns a list with all id's which have the same name as the name of the given id
+  public  function getCountries();                                                                                     // returns all possible countries
+  public  function getDatabaseCountries();                                                                             // returns all countries for which the database of the locations is available
+  public  function getLocationId($name, $observer);                                                                    // returns the id for this location
+  public  function getLocationPropertyFromId($id,$property,$defaultValue='');
+  public  function getLocations();                                                                                     // returns an array with all locations
+  public  function getLocationsFromDatabase($name, $country);                                                          // returns an array with all information about the location where the name equals the given name in the given country (given the country string - e.g. Belgium).
+  public  function getLocationUsedFromId($id);                                                                         // returns the number of times the location is used in observations
+  public  function getSortedLocations($sort,$observer="");                                                             // returns an array with the ids of all locations, sorted by the column specified in $sort
+  public  function getSortedLocationsList($sort, $observer = "");                                                      // returns an array with the ids of all locations, sorted by the column specified in $sort. Locations withthe same name are adapted by adding the province.
+  public  function setLocationProperty($id,$property,$propertyValue);                                                  // sets the property to the specified value for the given location  public  function validateDeleteLocation();                                                                           // deletes teh location of the list with locations
+  public  function validateDeleteLocation();
+  public  function validateSaveLocation();
+}
+
+
+
+
+
+=============================================================================================================================================================================================
+=======
 interface iObject
 { public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec,$mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource); // Add a deepsky object in all detail
 //private function calcContrastAndVisibility($object,$showname,$magnitude,$SBobj,$diam1,$diam2,&$contrast,&$contype,&$popup,&$prefMag);
@@ -40,6 +148,7 @@ interface iObject
   public  function sortObjects($objectList, $sort, $reverse=false);             // Sort the array of objectList on the $sort field, and in second order on the showname field 
 }
 
+>>>>>>> .r1182
 This document is very outdated!!!! Should be updated or removed!
 
 This document list all classes and funtions of these classes.
