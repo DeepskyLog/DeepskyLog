@@ -11,7 +11,7 @@
  while (FALSE !== ($file = readdir($dir))) 
    if((!(("."==$file)OR(".."==$file)OR(".svn"==$file)))
 	 && (strpos($file,'resized')==0))
-		 echo $objObservation->setDsObservationProperty(substr($file,0,strpos($file,'.jpg')),'hasDrawing',1);
+		 $objObservation->setDsObservationProperty(substr($file,0,strpos($file,'.jpg')),'hasDrawing',1);
 
  print "Database update was successful!\n"
 ?>
