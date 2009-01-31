@@ -28,7 +28,7 @@ if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']
 			}
 
 			$objObservation->setDsObservationProperty($_POST['observationid'],'description', html_entity_decode(nl2br($_POST['description']), ENT_COMPAT, "ISO-8859-15") );
-			$GLOBALS['objObservation']->setCharacterType($_POST['observationid'], $GLOBALS['objUtil']->checkPostKey('characterType'));
+			$GLOBALS['objObservation']->setDsObservationProperty($_POST['observationid'],'characterType', $GLOBALS['objUtil']->checkPostKey('characterType'));
 
 			if ($_POST['filter']) {
 				$objObservation->setDsObservationProperty($_POST['observationid'],'filterid', $_POST['filter']);
@@ -109,39 +109,39 @@ if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']
 				$_POST['largeDiam'] = $_POST['largeDiam'] * 60.0;
 			}
 			if ($_POST['sqm'])
-				$GLOBALS['objObservation']->setDsObservationProperty($_POST['observationid'],'SQM',  preg_replace("/,/", ".", $_POST['sqm']));
+				$objObservation->setDsObservationProperty($_POST['observationid'],'SQM',  preg_replace("/,/", ".", $_POST['sqm']));
 			if ($_POST['smallDiam'])
-				$GLOBALS['objObservation']->setSmallDiameter($_POST['observationid'], $_POST['smallDiam']);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'smallDiameter', $_POST['smallDiam']);
 			if ($_POST['largeDiam'])
-				$GLOBALS['objObservation']->setLargeDiameter($_POST['observationid'], $_POST['largeDiam']);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'largeDiameter', $_POST['largeDiam']);
 			if (array_key_exists('stellarextended', $_POST)&&($_POST['stellarextended']=="stellar"))
-				$GLOBALS['objObservation']->setStellar($_POST['observationid'], 1);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'stellar', 1);
 			else
-				$GLOBALS['objObservation']->setStellar($_POST['observationid'], -1);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'stellar', -1);
 			if (array_key_exists('stellarextended', $_POST)&&($_POST['stellarextended']=="extended"))
-				$GLOBALS['objObservation']->setExtended($_POST['observationid'], 1);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'extended', 1);
 			else
-				$GLOBALS['objObservation']->setExtended($_POST['observationid'], -1);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'extended', -1);
 			if (array_key_exists('resolved', $_POST))
-				$GLOBALS['objObservation']->setResolved($_POST['observationid'], 1);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'resolved', 1);
 			else
-				$GLOBALS['objObservation']->setResolved($_POST['observationid'], -1);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'resolved', -1);
 			if (array_key_exists('mottled', $_POST))
-				$GLOBALS['objObservation']->setMottled($_POST['observationid'], 1);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'mottled', 1);
 			else
-				$GLOBALS['objObservation']->setMottled($_POST['observationid'], -1);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'mottled', -1);
 			if (array_key_exists('unusualShape', $_POST))
-				$GLOBALS['objObservation']->setUnusualShape($_POST['observationid'], 1);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'unusualShape', 1);
 			else
-				$GLOBALS['objObservation']->setUnusualShape($_POST['observationid'], -1);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'unusualsShape', -1);
 			if (array_key_exists('partlyUnresolved', $_POST))
-				$GLOBALS['objObservation']->setPartlyUnresolved($_POST['observationid'], 1);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'partlyUnresolved', 1);
 			else
-				$GLOBALS['objObservation']->setPartlyUnresolved($_POST['observationid'], -1);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'partleyUnresolved', -1);
 			if (array_key_exists('colorContrasts', $_POST))
-				$GLOBALS['objObservation']->setColorContrasts($_POST['observationid'], 1);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'colorContrasts', 1);
 			else
-				$GLOBALS['objObservation']->setColorContrasts($_POST['observationid'], -1);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'colorContrasts', -1);
 
 			if ($_FILES['drawing']['tmp_name'] != "") {
 				$upload_dir = $instDir . 'deepsky/drawings';
@@ -160,6 +160,7 @@ if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']
 				$new_image = image_createThumb($original_image, $destination_image, $max_width, $max_height, $resample_quality);
 
 				move_uploaded_file($_FILES['drawing']['tmp_name'], $upload_dir . "/" . $_POST['observationid'] . ".jpg");
+		    $objObservation->setDsObservationProperty($_POST['observationid'],'hasDrawing',1);
 			}
 
 			// save current details for faster submission of multiple observations

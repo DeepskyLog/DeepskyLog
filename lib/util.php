@@ -844,7 +844,7 @@ class util
 
     global $deepskylive, $dateformat;
     
-    global $instDir;
+    global $instDir, $objObservation;
 
     // Create pdf file
     $pdf = new Cezpdf('a4', 'portrait');
@@ -933,15 +933,9 @@ class util
       //                     "showLines" => "0", "shaded" => "0", "fontSize" => "12"));
       $pdf->ezText("");
       $pdf->ezTable($tmp=array(array("description"=>$temp["description"])), array("description" => html_entity_decode(LangPDFMessage1)), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
-      $upload_dir = $instDir.'deepsky/drawings';
-      $dir = opendir($upload_dir);
-      while (FALSE !== ($file = readdir($dir)))
-      { if ("." == $file OR ".." == $file)
-          continue; // skip current directory and directory above
-        if(fnmatch($value['observationid'].".jpg", $file))
-        { $pdf->ezText("");
-          $pdf->ezImage($upload_dir."/".$value['observationid'].".jpg", 0, 500, "none", "left");
-        }
+      if($objObservation->getDsObservationProperty($value['observationid'],'hasDrawing'))
+      { $pdf->ezText("");
+        $pdf->ezImage($upload_dir."/".$value['observationid'].".jpg", 0, 500, "none", "left");
       }
       $pdf->ezText("");
       $pdf->ezNewPage();

@@ -66,6 +66,7 @@ $query = array("object"        => $object,
                "maxlimmag"     => $GLOBALS['objUtil']->checkGetKey('maxlimmag'),
                "minseeing"     => $GLOBALS['objUtil']->checkGetKey('minseeing'),
                "maxseeing"     => $GLOBALS['objUtil']->checkGetKey('maxseeing'),
+							 "hasDrawing"    => $objUtil->checkGetKey('drawings','off'),            
                "languages"     => $selectedLanguages);
 //============================================ CHECK TO SEE IF OBSERVATIONS ALREADY FETCHED BEFORE, OTHERWISE FETCH DATA FROM DB ===============================
 $validQobs=false;
@@ -151,27 +152,4 @@ if($_SESSION['QobsSortDirection']!=$_GET['sortdirection'])
   $_SESSION['QobsSortDirection']=$_GET['sortdirection'];
 	$min=0;
 }	
-	
-	
-     
-// Check if only the observations with a drawing should be shown: THERE SHOULD COME A FIELD IN THE DB SHOWING IF AN OBSERVATION HAS A DRAWING
-if($GLOBALS['objUtil']->checkGetKey('drawings'))
-{ $drawingslist[] = false;
-  if ($handle = opendir($instDir.'deepsky/drawings/'))
-  { while(false!==($file=readdir($handle)))
-    { $file=preg_replace("/.jpg/", "", $file);
-      $file=preg_replace("/_resized/", "", $file);
-      if(($file!=".")&&($file!=".."))
-        $drawingslist[] = $file;
-    }
-    closedir($handle);
-    $drawingslist=array_unique($drawingslist);
-  }
-  $new_obs=array();
-  while(list($key,$value)=each($_SESSION['Qobs']))
-    if(in_array($value['observationid'], $drawingslist))
-        $new_obs[] = $value;
-  $_SESSION['Qobs'] = $new_obs;
-}
-
 ?>

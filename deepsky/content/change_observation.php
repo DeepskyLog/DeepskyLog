@@ -296,16 +296,10 @@ echo "</tr>";
 echo "</table>";
 echo "<input type=\"hidden\" name=\"observationid\" value=\"" . $_GET['observation'] . "\"></input>";
 echo "</form>";
-$upload_dir = 'deepsky/drawings'; //DRAWING
-$dir = opendir($upload_dir);
-while (FALSE !== ($file = readdir($dir))) {
-	if (("." == $file) OR (".." == $file))
-		continue;
-	if (fnmatch($_GET['observation'] . "_resized.gif", $file) || fnmatch($_GET['observation'] . "_resized.jpg", $file) || fnmatch($_GET['observation'] . "_resized.png", $file)) {
-		echo "<p>";
-		echo "<a href=\"" . $baseURL . $upload_dir . "/" . $_GET['observation'] . ".jpg" . "\"><img class=\"account\" src=\"" . $baseURL . "deepsky/$upload_dir" . "/" . "$file\"></img></a>";
-		echo "</p>";
-	}
+if($objObservation->getDsObservationProperty($_GET['observation'],'hasDrawing'))
+{ echo "<p>";
+	echo "<a href=\"".$baseURL.'deepsky/drawings/'.$_GET['observation'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$_GET['observation'].".jpg\"></img></a>";
+	echo "</p>";
 }
 echo "</div>";
 ?>
