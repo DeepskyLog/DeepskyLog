@@ -44,8 +44,11 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "<tr>"; //=================================================================================================================== LOCATION
 	echo "<td class=\"fieldname\" align=\"right\" style=\"width:16%\">" . LangViewObservationField4 . "&nbsp;*</td>";
 	echo "<td style=\"width:16%\"><select class=\"inputfield requiredField\" style=\"width:300px\" name=\"site\">";
+  if(!($theSite=$objUtil->checkPostKey('site',0)))
+    if(!($theSite=$objUtil->checkSessionKey('newObsLocation',0)))
+      $theSite=$objObserver->getStandardLocation($loggedUser);
 	while (list ($key, $value) = each($sites))
-		echo "<option " . (($GLOBALS['objUtil']->checkPostKey('site', 0) == $value[0]) ? "selected=\"selected\"" : (($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']) == $value[0]) ? "selected=\"selected\"" : '')) . " value=\"" . $value[0] . "\">" . $value[1] . "</option>";
+		echo "<option " .(($theSite==$value[0])?"selected=\"selected\"":'')." value=\"".$value[0]."\">" . $value[1]."</option>";
 	echo "</select></td>";
 	echo "<td class=\"explanation\" style=\"width:16%\"><a href=\"" . $baseURL . "index.php?indexAction=add_site\">" . LangChangeAccountField7Expl . "</a>";
 	echo "</td>";
