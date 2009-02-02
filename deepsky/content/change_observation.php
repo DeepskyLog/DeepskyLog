@@ -202,26 +202,23 @@ echo ">" . LangNewObjectSizeUnits2 . "</option>";
 echo "</select>";
 echo "</td>";
 echo "</tr>";
-if($GLOBALS['objObject']->getDsoProperty($object,'type')=="GALXY")
-{ echo "<tr>";
-  echo "<td>";
-  echo "</td>";
-  echo "<td colspan=\"2\">";
-  echo "<input type=\"checkbox\" name=\"stellar\" " . (($objObservation->getDsObservationProperty($_GET['observation'],'stellar') == 1) ? "checked" : '') . "/>" . LangViewObservationField35;
-  echo "&nbsp;&nbsp;&nbsp;";
-  echo "<input type=\"checkbox\" name=\"extended\" " . (($objObservation->getDsObservationProperty($_GET['observation'],'extended') == 1) ? "checked" : '') . "/>" . LangViewObservationField36;
-  echo "&nbsp;&nbsp;&nbsp;";
-  echo "<input type=\"checkbox\" name=\"resolved\" " . (($objObservation->getDsObservationProperty($_GET['observation'],'resolved') == 1) ? "checked" : '') . "/>" . LangViewObservationField37;
-  echo "&nbsp;&nbsp;&nbsp;";
-  echo "<input type=\"checkbox\" name=\"mottled\" " . (($objObservation->getDsObservationProperty($_GET['observation'],'mottled') == 1) ? "checked" : '') . "/>" . LangViewObservationField38;
-  echo "</td>";
-  echo "</tr>";
-}
+echo "<tr>";
+echo "<td>";
+echo "</td>";
+echo "<td colspan=\"2\">";
+echo "<input type=\"radio\" name=\"stellarextended\" value=\"stellar\" ".(($objUtil->checkPostKey("stellarextended")=="stellar")?"checked ":"")."/>" . LangViewObservationField35;
+echo "&nbsp;&nbsp;&nbsp;";
+echo "<input type=\"radio\" name=\"stellarextended\" value=\"extended\" ".(($objUtil->checkPostKey("stellarextended")=="extended")?"checked ":"")." />" . LangViewObservationField36;
+echo "&nbsp;&nbsp;&nbsp;";
+echo "<input type=\"checkbox\" name=\"mottled\" " . (($objObservation->getDsObservationProperty($_GET['observation'],'mottled') == 1) ? "checked" : '') . "/>" . LangViewObservationField38;
+
 $object = $objObservation->getDsObservationProperty($_GET['observation'],'objectname');
 // Some extra fields when we are describing open clusters, or asterisms...
-if(in_array($GLOBALS['objObject']->getDsoProperty($object,'type'),array("ASTER" ,"CLANB","DS","OPNCL","AA1STAR","AA2STAR","AA3STAR","AA4STAR","AA8STAR"))) 
-{ echo "<tr>";
-	echo "<td class=\"fieldname\">";
+if(in_array($GLOBALS['objObject']->getDsoProperty($object,'type'),array("ASTER" ,"CLANB","DS","OPNCL","AA1STAR","AA2STAR","AA3STAR","AA4STAR","AA8STAR","GLOCL"))) 
+{ echo "&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" name=\"resolved\" ".($objUtil->checkPostKey("resolved")?"checked ":"")."/>" . LangViewObservationField37;
+	echo "</td>";
+	echo "</tr> <tr>";
+  echo "<td class=\"fieldname\">";
 	echo LangViewObservationField40;
 	echo "</td>";
 	echo "<td>";
@@ -247,9 +244,9 @@ if(in_array($GLOBALS['objObject']->getDsoProperty($object,'type'),array("ASTER" 
 	echo "<input type=\"checkbox\" name=\"partlyUnresolved\" " . (($objObservation->getDsObservationProperty($_GET['observation'],'partlyUnresolved') == 1) ? "checked" : '') . "/>" . LangViewObservationField42;
 	echo "&nbsp;&nbsp;&nbsp;";
 	echo "<input type=\"checkbox\" name=\"colorContrasts\" " . (($objObservation->getDsObservationProperty($_GET['observation'],'colorContrasts') == 1) ? "checked" : '') . "/>" . LangViewObservationField43;
-	echo "</td>";
-	echo "</tr>";
 }
+echo "</td>";
+echo "</tr>";
 echo "<tr>";
 echo "<td class=\"fieldname\">";
 echo LangViewObservationField22; // Visibility
@@ -269,7 +266,7 @@ echo LangViewObservationField29 . "&nbsp;*"; // Language of observation
 echo "</td>";
 echo "<td>";
 $allLanguages = $objLanguage->getAllLanguages($objObserver->getLanguage($_SESSION['deepskylog_id']));
-$theLang = $objObservation->getDsObservationProperty($_GET['observation'],'lanhuage');
+$theLang = $objObservation->getDsObservationProperty($_GET['observation'],'language');
 echo "<select name=\"description_language\" class=\"inputfield\"  style=\"width:300px\">";
 while (list ($key, $value) = each($allLanguages))
 	echo "<option value=\"" . $key . "\" " . (($theLang == $key) ? "selected=\"selected\"" : '') . ">" . $value . "</option>";

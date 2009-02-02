@@ -6,7 +6,7 @@ echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/checkUti
 
 echo "<div id=\"main\">";
 $object=$objUtil->checkPostKey('object', $objUtil->checkGetKey('object'));
-if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS['objUtil']->checkPostKey('timestamp',-1)))
+if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostKey('timestamp',-1)))
 { $seen = $GLOBALS['objObject']->getDSOSeen($object);
 	echo "<h2>";
 	echo LangNewObservationTitle . "&nbsp;" . $object;
@@ -44,11 +44,8 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "<tr>"; //=================================================================================================================== LOCATION
 	echo "<td class=\"fieldname\" align=\"right\" style=\"width:16%\">" . LangViewObservationField4 . "&nbsp;*</td>";
 	echo "<td style=\"width:16%\"><select class=\"inputfield requiredField\" style=\"width:300px\" name=\"site\">";
-  if(!($theSite=$objUtil->checkPostKey('site',0)))
-    if(!($theSite=$objUtil->checkSessionKey('newObsLocation',0)))
-      $theSite=$objObserver->getStandardLocation($loggedUser);
-	while (list ($key, $value) = each($sites))
-		echo "<option " .(($theSite==$value[0])?"selected=\"selected\"":'')." value=\"".$value[0]."\">" . $value[1]."</option>";
+	while(list($key,$value)=each($sites))
+		echo "<option ".(($value[0]==$objUtil->checkPostKey('site'))?"selected=\"selected\"":'')." value=\"".$value[0]."\">".$value[1]."</option>";
 	echo "</select></td>";
 	echo "<td class=\"explanation\" style=\"width:16%\"><a href=\"" . $baseURL . "index.php?indexAction=add_site\">" . LangChangeAccountField7Expl . "</a>";
 	echo "</td>";
@@ -61,24 +58,24 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo LangViewObservationField5 . "&nbsp;*";
 	echo "</td>";
 	echo "<td>";
-	echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" size=\"3\" style=\"text-align:center\" name=\"day\" value=\"" . $GLOBALS['objUtil']->checkPostKey('day') . "\" onkeypress=\"return checkPositiveInteger(event);\" />";
+	echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" size=\"3\" style=\"text-align:center\" name=\"day\" value=\"" . $objUtil->checkPostKey('day') . "\" onkeypress=\"return checkPositiveInteger(event);\" />";
 	echo "&nbsp;&nbsp;";
 	echo "<select name=\"month\" style=\"text-align:center\" class=\"inputfield requiredField\">";
 	echo "<option value=\"\"></option>";
 	for($i= 1;$i<13;$i++)
-		echo "<option value=\"".$i."\"".(($GLOBALS['objUtil']->checkPostKey('month')==$i)?" selected=\"selected\"" : "").">".$GLOBALS['Month'.$i]."</option>";
+		echo "<option value=\"".$i."\"".(($objUtil->checkPostKey('month')==$i)?" selected=\"selected\"" : "").">".$GLOBALS['Month'.$i]."</option>";
 	echo "</select>";
 	echo "&nbsp;&nbsp";
-	echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"4\" size=\"4\" style=\"text-align:center\" name=\"year\" onkeypress=\"return checkPositiveInteger(event);\" value=\"" . $GLOBALS['objUtil']->checkPostKey('year') . "\" />";
+	echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"4\" size=\"4\" style=\"text-align:center\" name=\"year\" onkeypress=\"return checkPositiveInteger(event);\" value=\"" . $objUtil->checkPostKey('year') . "\" />";
 	echo "</td>";
 	echo "<td class=\"explanation\">" . LangViewObservationField10 . "</td>";
 	echo "<td class=\"fieldname\" align=\"right\">";
 	echo (($objObserver->getUseLocal($_SESSION['deepskylog_id'])) ? LangViewObservationField9lt : LangViewObservationField9);
 	echo "</td>";
 	echo "<td>";
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" style=\"text-align:center\" name=\"hours\" value=\"" . $GLOBALS['objUtil']->checkPostKey('hours') . "\">";
+	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" style=\"text-align:center\" name=\"hours\" value=\"" . $objUtil->checkPostKey('hours') . "\">";
 	echo "&nbsp;&nbsp;";
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" style=\"text-align:center\" name=\"minutes\" value=\"" . $GLOBALS['objUtil']->checkPostKey('minutes') . "\">";
+	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" style=\"text-align:center\" name=\"minutes\" value=\"" . $objUtil->checkPostKey('minutes') . "\">";
 	echo "</td>";
 	echo "<td class=\"explanation\">";
 	echo LangViewObservationField11;
@@ -89,10 +86,10 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo LangViewObservationField7;
 	echo "</td>";
 	echo "<td>";
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"limit\" size=\"3\" style=\"text-align:center\" value=\"" . ($GLOBALS['objUtil']->checkPostKey('limit') ? sprintf("%1.1f", $GLOBALS['objUtil']->checkPostKey('limit')) : '') . "\" />";
+	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"limit\" size=\"3\" style=\"text-align:center\" value=\"" . ($objUtil->checkPostKey('limit') ? sprintf("%1.1f", $objUtil->checkPostKey('limit')) : '') . "\" />";
 	echo "&nbsp;&nbsp;";
 	echo LangViewObservationField34 . "&nbsp;"; // SQM
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"sqm\" size=\"4\" style=\"text-align:center\" value=\"" . ($GLOBALS['objUtil']->checkPostKey('sqm') ? sprintf("%2.1f", $GLOBALS['objUtil']->checkPostKey('sqm')) : '') . "\" />";
+	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"sqm\" size=\"4\" style=\"text-align:center\" value=\"" . ($objUtil->checkPostKey('sqm') ? sprintf("%2.1f", $objUtil->checkPostKey('sqm')) : '') . "\" />";
 	echo "</td>";
 	echo "<td></td>";
 	echo "<td class=\"fieldname\" align=\"right\">";
@@ -102,7 +99,7 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "<select name=\"seeing\" style=\"width:300px\" class=\"inputfield\">";
 	echo "<option value=\"-1\"></option>";
 	for ($i = 1; $i < 6; $i++)
-		echo "<option value=\"" . $i . "\"" . (($GLOBALS['objUtil']->checkPostKey('seeing', 0) == $i) ? " selected=\"selected\"" : '') . ">" . $GLOBALS['Seeing' . $i] . "</option>";
+		echo "<option value=\"" . $i . "\"" . (($objUtil->checkPostKey('seeing', 0) == $i) ? " selected=\"selected\"" : '') . ">" . $GLOBALS['Seeing' . $i] . "</option>";
 	echo "</select>&nbsp;";
 	echo "</td>";
 	echo "<td>";
@@ -112,15 +109,15 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "<td>&nbsp;</td>";
 	echo "</tr>";
 	echo "<tr>";
-	echo "<td class=\"fieldname\" align=\"right\">"; // INSTRUMENT
+	echo "<td class=\"fieldname\" align=\"right\">"; //==================================================================================================== INSTRUMENT
 	echo LangViewObservationField3 . "&nbsp;*";
 	echo "</td>";
 	echo "<td>";
 	echo "<select name=\"instrument\" style=\"width:300px\" class=\"inputfield requiredField\">";
 	echo "<option value=\"\"></option>";
-	$instr = $GLOBALS['objInstrument']->getSortedInstrumentsList("name", $_SESSION['deepskylog_id']);
-	while (list ($key, $value) = each($instr))
-		echo "<option " . (($GLOBALS['objUtil']->checkPostKey('instrument', 0) == $key) ? "selected=\"selected\"" : (($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']) == $key) ? "selected=\"selected\"" : '')) . " value=\"" . $key . "\">" . $value . "</option>";
+	$instr=$objInstrument->getSortedInstrumentsList("name", $loggedUser);
+	while(list($key,$value)=each($instr))
+		echo "<option ".(($objUtil->checkPostKey('instrument',0)==$key)?"selected=\"selected\"":'')." value=\"".$key."\">".$value."</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "<td class=\"explanation\">";
@@ -133,7 +130,7 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "<option value=\"\"></option>";
 	$filts=$GLOBALS['objFilter']->getSortedFilters("name", $_SESSION['deepskylog_id']);
 	while(list($key,$value)=each($filts))
-		echo "<option value=\"".$value."\"".(($GLOBALS['objUtil']->checkPostKey('filter')==$value)?" selected=\"selected\" ":'').">".$GLOBALS['objFilter']->getFilterPropertyFromId($value,'name')."</option>";
+		echo "<option value=\"".$value."\"".(($objUtil->checkPostKey('filter')==$value)?" selected=\"selected\" ":'').">".$GLOBALS['objFilter']->getFilterPropertyFromId($value,'name')."</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "<td class=\"explanation\">";
@@ -148,7 +145,7 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "<option value=\"\"></option>";
 	$eyeps = $GLOBALS['objEyepiece']->getSortedEyepieces("focalLength", $_SESSION['deepskylog_id']);
 	while (list ($key, $value) = each($eyeps))
-		echo "<option value=\"" . $value . "\"" . (($GLOBALS['objUtil']->checkPostKey('eyepiece') == $value) ? " selected=\"selected\" " : '') . ">" . stripslashes($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value,'name')) . "</option>";
+		echo "<option value=\"" . $value . "\"" . (($objUtil->checkPostKey('eyepiece') == $value) ? " selected=\"selected\" " : '') . ">" . stripslashes($GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value,'name')) . "</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "<td class=\"explanation\">";
@@ -160,7 +157,7 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "<option value=\"\"></option>";
 	$lns = $GLOBALS['objLens']->getSortedLenses("name", $_SESSION['deepskylog_id']);
 	while (list ($key, $value) = each($lns))
-		echo "<option value=\"" . $value . "\"" . (($GLOBALS['objUtil']->checkPostKey('lens') == $value) ? " selected=\"selected\" " : '') . ">" . $GLOBALS['objLens']->getLensPropertyFromId($value,'name') . "</option>";
+		echo "<option value=\"" . $value . "\"" . (($objUtil->checkPostKey('lens') == $value) ? " selected=\"selected\" " : '') . ">" . $GLOBALS['objLens']->getLensPropertyFromId($value,'name') . "</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "<td class=\"explanation\">";
@@ -186,7 +183,7 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo LangViewObservationField12; //====================================================================================================DRAWING
 	echo "</td>";
 	echo "<td colspan=\"2\">";
-	echo "<input type=\"file\" name=\"drawing\" file=\"" . $GLOBALS['objUtil']->checkPostKey('drawing') . "\ class=\"inputfield\" style=\"width:300px\"/>";
+	echo "<input type=\"file\" name=\"drawing\" file=\"" . $objUtil->checkPostKey('drawing') . "\ class=\"inputfield\" style=\"width:300px\"/>";
 	echo "</td>";
 	echo "</tr>";
 
@@ -195,9 +192,9 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo LangViewObservationField33; //============================================================================================================== Estimated diameter
 	echo "</td>";
 	echo "<td>";
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"largeDiam\" size=\"5\" style=\"text-align:center\" value=\"" . $GLOBALS['objUtil']->checkPostKey('largeDiam') . "\">";
+	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"largeDiam\" size=\"5\" style=\"text-align:center\" value=\"" . $objUtil->checkPostKey('largeDiam') . "\">";
 	echo "&nbsp;x&nbsp;";
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"smallDiam\" size=\"5\" style=\"text-align:center\" value=\"" . $GLOBALS['objUtil']->checkPostKey('smallDiam') . "\">";
+	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"smallDiam\" size=\"5\" style=\"text-align:center\" value=\"" . $objUtil->checkPostKey('smallDiam') . "\">";
 	echo "&nbsp;";
 	echo "<select name=\"size_units\" class=\"inputfield\">";
 	echo "<option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>";
@@ -215,7 +212,7 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "</td>";
 	// Some extra fields when we are describing open clusters, or asterisms...
 	if(in_array($GLOBALS['objObject']->getDsoProperty($object,'type'),array("ASTER","CLANB","DS","OPNCL","AA1STAR","AA2STAR","AA3STAR","AA4STAR","AA8STAR","GLOCL"))) 
-	{  echo "<td>";
+	{ echo "<td>";
 	  echo "<input type=\"checkbox\" name=\"resolved\" ".($objUtil->checkPostKey("resolved")?"checked ":"")."/>" . LangViewObservationField37;
 	  echo "</td>";
 		echo "</tr> <tr>";
@@ -225,16 +222,16 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 		  echo "</td>";
 			echo "<td>";
 		  echo "<select name=\"characterType\" class=\"inputfield\" style=\"width:300px\"><option value=\"\"></option>";
-		  echo "<option value=\"A\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'A') ? " selected=\"selected\" " : '') . ">A - ".$ClusterTypeA."</option>";
-		  echo "<option value=\"B\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'B') ? " selected=\"selected\" " : '') . ">B - ".$ClusterTypeB."</option>";
-		  echo "<option value=\"C\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'C') ? " selected=\"selected\" " : '') . ">C - ".$ClusterTypeC."</option>";
-		  echo "<option value=\"D\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'D') ? " selected=\"selected\" " : '') . ">D - ".$ClusterTypeD."</option>";
-		  echo "<option value=\"E\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'E') ? " selected=\"selected\" " : '') . ">E - ".$ClusterTypeE."</option>";
-		  echo "<option value=\"F\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'F') ? " selected=\"selected\" " : '') . ">F - ".$ClusterTypeF."</option>";
-		  echo "<option value=\"G\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'G') ? " selected=\"selected\" " : '') . ">G - ".$ClusterTypeG."</option>";
-		  echo "<option value=\"H\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'H') ? " selected=\"selected\" " : '') . ">H - ".$ClusterTypeH."</option>";
-		  echo "<option value=\"I\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'I') ? " selected=\"selected\" " : '') . ">I - ".$ClusterTypeI."</option>";
-		  echo "<option value=\"X\"" . (($GLOBALS['objUtil']->checkPostKey('characterType') == 'X') ? " selected=\"selected\" " : '') . ">J - ".$ClusterTypeX."</option>";
+		  echo "<option value=\"A\"" . (($objUtil->checkPostKey('characterType') == 'A') ? " selected=\"selected\" " : '') . ">A - ".$ClusterTypeA."</option>";
+		  echo "<option value=\"B\"" . (($objUtil->checkPostKey('characterType') == 'B') ? " selected=\"selected\" " : '') . ">B - ".$ClusterTypeB."</option>";
+		  echo "<option value=\"C\"" . (($objUtil->checkPostKey('characterType') == 'C') ? " selected=\"selected\" " : '') . ">C - ".$ClusterTypeC."</option>";
+		  echo "<option value=\"D\"" . (($objUtil->checkPostKey('characterType') == 'D') ? " selected=\"selected\" " : '') . ">D - ".$ClusterTypeD."</option>";
+		  echo "<option value=\"E\"" . (($objUtil->checkPostKey('characterType') == 'E') ? " selected=\"selected\" " : '') . ">E - ".$ClusterTypeE."</option>";
+		  echo "<option value=\"F\"" . (($objUtil->checkPostKey('characterType') == 'F') ? " selected=\"selected\" " : '') . ">F - ".$ClusterTypeF."</option>";
+		  echo "<option value=\"G\"" . (($objUtil->checkPostKey('characterType') == 'G') ? " selected=\"selected\" " : '') . ">G - ".$ClusterTypeG."</option>";
+		  echo "<option value=\"H\"" . (($objUtil->checkPostKey('characterType') == 'H') ? " selected=\"selected\" " : '') . ">H - ".$ClusterTypeH."</option>";
+		  echo "<option value=\"I\"" . (($objUtil->checkPostKey('characterType') == 'I') ? " selected=\"selected\" " : '') . ">I - ".$ClusterTypeI."</option>";
+		  echo "<option value=\"X\"" . (($objUtil->checkPostKey('characterType') == 'X') ? " selected=\"selected\" " : '') . ">J - ".$ClusterTypeX."</option>";
 		  echo "</select>";
 		  echo "</td>";
 		
@@ -263,7 +260,7 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo "</td>";
 	echo "<td width=\"100%\" colspan=\"5\">";
 	echo "<textarea name=\"description\" class=\"description inputfield requiredField\">";
-	echo $GLOBALS['objUtil']->checkPostKey('description');
+	echo $objUtil->checkPostKey('description');
 	echo "</textarea>";
 	echo "</td>";
 	echo "</tr>";
@@ -278,11 +275,11 @@ if($object&&($GLOBALS['objUtil']->checkArrayKey($_SESSION,'addObs',0)==$GLOBALS[
 	echo LangViewObservationField29 . "&nbsp;*"; // Language of observation
 	echo "</td>";
 	echo "<td>";
-	$description_language = $GLOBALS['objUtil']->checkPostKey('visibility', $objObserver->getObservationLanguage($_SESSION['deepskylog_id']));
+	$description_language = $objUtil->checkPostKey('visibility', $objObserver->getObservationLanguage($_SESSION['deepskylog_id']));
 	$allLanguages = $objLanguage->getAllLanguages($objObserver->getLanguage($_SESSION['deepskylog_id']));
 	echo "<select name=\"description_language\"  class=\"inputfield\">";
 	while (list ($key, $value) = each($allLanguages))
-		echo "<option value=\"" . $key . "\"" . (($GLOBALS['objUtil']->checkPostKey('description_language') == $key) ? "selected=\"selected\"" : ($GLOBALS['objObserver']->getObservationLanguage($_SESSION['deepskylog_id']) == $key) ? "selected=\"selected\"" : '') . ">" . $value . "</option>";
+		echo "<option value=\"" . $key . "\"" . (($objUtil->checkPostKey('description_language') == $key) ? "selected=\"selected\"" : ($GLOBALS['objObserver']->getObservationLanguage($_SESSION['deepskylog_id']) == $key) ? "selected=\"selected\"" : '') . ">" . $value . "</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "</tr>";

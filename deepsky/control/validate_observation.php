@@ -98,8 +98,8 @@ else // all fields filled in
 		if (array_key_exists('stellarextended', $_POST)&&($_POST['stellarextended']=="extended"))
 			$GLOBALS['objObservation']->setDsObservationProperty($current_observation,'extended', 1);
 		else
-			$GLOBALS['objObservation']->setDsObservationProperty($current_observation,'extended' -1);
-		if (array_key_exists('resolved', $_POST))
+			$GLOBALS['objObservation']->setDsObservationProperty($current_observation,'extended', -1);
+  	if (array_key_exists('resolved', $_POST))
 			$GLOBALS['objObservation']->setDsObservationProperty($current_observation,'resolved', 1);
 		else
 			$GLOBALS['objObservation']->setDsObservationProperty($current_observation,'resolved', -1);

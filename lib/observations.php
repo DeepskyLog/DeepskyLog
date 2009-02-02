@@ -404,7 +404,7 @@ class Observations {
 			$sqland .= "AND observations.SQM >= \"" . $queries["minSQM"] . "\" ";
 		if (isset ($queries["maxSQM"]) && ($queries["maxSQM"] != ""))
 			$sqland .= "AND observations.SQM <= \"" . $queries["minSQM"] . "\" ";
-		if (isset ($queries["hasDrawing"]) && ($queries["hasDrawing"]='on'))
+		if (isset ($queries["hasDrawing"]) && ($queries["hasDrawing"]=='on'))
 			$sqland .= "AND observations.hasDrawing=TRUE ";
 			if ((!array_key_exists('countquery', $queries))
 		&& (isset($queries["languages"]))) 
@@ -426,7 +426,7 @@ class Observations {
 		if (!array_key_exists('countquery', $queries))
 			$sql .= " ORDER BY observationid DESC";
 		$sql = $sql . ";";
- //echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
+// echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
 		$run = mysql_query($sql) or die(mysql_error());
 		if (!array_key_exists('countquery', $queries)) {
 			$j = 0;
@@ -732,21 +732,20 @@ class Observations {
 
 
 	public  function showObservation($LOid) 
-	{ global $dateformat, $myList, $listname_ss, $baseURL, $objObserver, $loggedUser;
+	{ global $dateformat, $myList, $listname_ss, $baseURL, $objEyepiece, $objObserver, $objInstrument, $loggedUser;
 		$link=$baseURL."index.php?";
 		$linkamp="";
 		reset($_GET);
 		while(list($key,$value)=each($_GET))
 		  $linkamp.=$key."=".urlencode($value)."&amp;";
-		$inst = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($this->getDsObservationProperty($LOid,'instrumentid'),'name');
-		if ($inst == "Naked eye")
-		{	$inst = InstrumentsNakedEye;
-		}
+		$inst=$objInstrument->getInstrumentPropertyFromId($this->getDsObservationProperty($LOid,'instrumentid'),'name');
+		if($inst=="Naked eye")
+		 	$inst=InstrumentsNakedEye;
 		$dateTimeText="";
-		$date = sscanf($this->getDsObservationProperty($LOid,'date'), "%4d%2d%2d");
-		$time = "";
-		if(($this->getDsObservationProperty($LOid,'time')>= 0)
-		&& ($loggedUser&&($objObserver->getUseLocal($loggedUser)))) 
+		$date=sscanf($this->getDsObservationProperty($LOid,'date'),"%4d%2d%2d");
+		$time="";
+		if(($this->getDsObservationProperty($LOid,'time')>=0)
+		&& $loggedUser && $objObserver->getUseLocal($loggedUser)) 
 		{	$date=sscanf($this->getDsObservationLocalDate($LOid),"%4d%2d%2d");
 			$dateTimeLabelText="&nbsp;" . LangViewObservationField9lt;
 			$time=$this->getDsObservationLocalTime($LOid);
@@ -755,13 +754,11 @@ class Observations {
 		{ $dateTimeLabelText="&nbsp;".LangViewObservationField9;
 			$time=$this->getDsObservationProperty($LOid,'time');
 		}
-		if ($date) {
-			$time = sscanf(sprintf("%04d", $time), "%2d%2d");
+		if($date) 
+		{ $time=sscanf(sprintf("%04d",$time),"%2d%2d");
 			$dateTimeText=date($dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0]));
-			if (($time[0] > 0) || ($time[1] > 0)) {
-				$dateTimeText.="&nbsp;".$time[0].":";
-				$dateTimeText=sprintf("%02d", $time[1]);
-			}
+			if(($time[0]>0)||($time[1]>0)) 
+			  $dateTimeText.="&nbsp;".$time[0].":".sprintf("%02d",$time[1]);
 		}
 		echo "<table width=\"100%\">";
 		echo "<tr class=\"type3\">";                                     // Observer name / Listinformation if applicable
@@ -794,25 +791,8 @@ class Observations {
 		// SEEING
 		$seeing = $this->getDsObservationProperty($LOid,'seeing');
 		echo ("<td width=\"12%\">");
-		if ($seeing != ("-1" & "")) {
-			if ($seeing == 1) {
-				echo (SeeingExcellent);
-			}
-			elseif ($seeing == 2) {
-				echo (SeeingGood);
-			}
-			elseif ($seeing == 3) {
-				echo (SeeingModerate);
-			}
-			elseif ($seeing == 4) {
-				echo (SeeingPoor);
-			}
-			elseif ($seeing == 5) {
-				echo (SeeingBad);
-			}
-		} else {
-			echo ("-");
-		}
+		if($seeing) echo $seeing.$seeing;
+    else echo ("-");
 		echo ("</td>");
 		echo ("<td class=\"fieldname\" width=\"14%\" align=\"right\">");
 		// LIMITING MAGNITUDE

@@ -67,35 +67,35 @@ if(($objUtil->checkGetKey('indexAction')=='quickpick') // From quickpick
 &&($objUtil->checkGetKey('object'))
 &&($objObject->getExactDsObject($_GET['object']))
 &&(array_key_exists('newObservation',$_GET)))
-{ $_POST['year']=$GLOBALS['objUtil']->checkPostKey('year',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear')); 
-  $_POST['month']=$GLOBALS['objUtil']->checkPostKey('month',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsMonth')); 
-  $_POST['day']=$GLOBALS['objUtil']->checkPostKey('day',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsDay'));
-  $_POST['instrument']=$GLOBALS['objUtil']->checkPostKey('instrument',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsInstrument')); 
-  $_POST['site']=$GLOBALS['objUtil']->checkPostKey('site',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLocation')); 
-  $_POST['limit']=$GLOBALS['objUtil']->checkPostKey('limit',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLimit')); 
-  $_POST['sqm']=$GLOBALS['objUtil']->checkPostKey('sqm',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsSQM')); 
-  $_POST['seeing']=$GLOBALS['objUtil']->checkPostKey('seeing',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsSeeing')); 
-  $_POST['description_language']=$GLOBALS['objUtil']->checkPostKey('description_language',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLanguage'));
+{ $_POST['year']=$objUtil->checkPostKey('year',$objUtil->checkArrayKey($_SESSION,'newObsYear')); 
+  $_POST['month']=$objUtil->checkPostKey('month',$objUtil->checkArrayKey($_SESSION,'newObsMonth')); 
+  $_POST['day']=$objUtil->checkPostKey('day',$objUtil->checkArrayKey($_SESSION,'newObsDay'));
+  $_POST['instrument']=$objUtil->checkPostKey('instrument',$objUtil->checkArrayKey($_SESSION,'newObsInstrument',$objObserver->getStandardTelescope($loggedUser))); 
+  $_POST['site']=$objUtil->checkPostKey('site',$objUtil->checkArrayKey($_SESSION,'newObsLocation',$objObserver->getStandardLocation($loggedUser))); 
+  $_POST['limit']=$objUtil->checkPostKey('limit',$objUtil->checkArrayKey($_SESSION,'newObsLimit')); 
+  $_POST['sqm']=$objUtil->checkPostKey('sqm',$objUtil->checkArrayKey($_SESSION,'newObsSQM')); 
+  $_POST['seeing']=$objUtil->checkPostKey('seeing',$objUtil->checkArrayKey($_SESSION,'newObsSeeing')); 
+  $_POST['description_language']=$objUtil->checkPostKey('description_language',$objUtil->checkArrayKey($_SESSION,'newObsLanguage'));
 	$_POST['timestamp']=time();
 	$_SESSION['addObs']=$_POST['timestamp'];
 } 
 if($objUtil->checkGetKey('indexAction')=="add_observation")
 { if(array_key_exists('number',$_POST)&&(!$_POST['number']))
     $_GET['indexAction']="query_objects";
-  elseif(array_key_exists('number',$_POST)&&(!($_GET['object']=$GLOBALS['objObject']->getExactDsObject('',$GLOBALS['objUtil']->checkPostKey('catalog'), $GLOBALS['objUtil']->checkPostKey('number')))))
-  { $entryMessage.="No corresponding object found for ".$GLOBALS['objUtil']->checkPostKey('catalog')." ".$GLOBALS['objUtil']->checkPostKey('number');
+  elseif(array_key_exists('number',$_POST)&&(!($_GET['object']=$GLOBALS['objObject']->getExactDsObject('',$objUtil->checkPostKey('catalog'), $objUtil->checkPostKey('number')))))
+  { $entryMessage.="No corresponding object found for ".$objUtil->checkPostKey('catalog')." ".$objUtil->checkPostKey('number');
     $_GET['indexAction']="query_objects";
    }
   else
-	{ $_POST['year']=$GLOBALS['objUtil']->checkPostKey('year',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsYear')); 
-    $_POST['month']=$GLOBALS['objUtil']->checkPostKey('month',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsMonth')); 
-    $_POST['day']=$GLOBALS['objUtil']->checkPostKey('day',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsDay'));
-    $_POST['instrument']=$GLOBALS['objUtil']->checkPostKey('instrument',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsInstrument')); 
-    $_POST['site']=$GLOBALS['objUtil']->checkPostKey('site',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLocation')); 
-    $_POST['limit']=$GLOBALS['objUtil']->checkPostKey('limit',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLimit')); 
-    $_POST['sqm']=$GLOBALS['objUtil']->checkPostKey('sqm',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsSQM')); 
-    $_POST['seeing']=$GLOBALS['objUtil']->checkPostKey('seeing',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsSeeing')); 
-    $_POST['description_language']=$GLOBALS['objUtil']->checkPostKey('description_language',$GLOBALS['objUtil']->checkArrayKey($_SESSION,'newObsLanguage'));
+	{ $_POST['year']=$objUtil->checkPostKey('year',$objUtil->checkArrayKey($_SESSION,'newObsYear')); 
+    $_POST['month']=$objUtil->checkPostKey('month',$objUtil->checkArrayKey($_SESSION,'newObsMonth')); 
+    $_POST['day']=$objUtil->checkPostKey('day',$objUtil->checkArrayKey($_SESSION,'newObsDay'));
+    $_POST['instrument']=$objUtil->checkPostKey('instrument',$objUtil->checkSessionKey('newObsInstrument',$objObserver->getStandardLocation(($loggedUser)))); 
+    $_POST['site']=$objUtil->checkPostKey('site',$objUtil->checkSessionKey('newObsLocation',$objObserver->getStandardLocation($loggedUser))); 
+    $_POST['limit']=$objUtil->checkPostKey('limit',$objUtil->checkSessionKey('newObsLimit',$objLocation->getLocationPropertyFromId('limitingMagnitude',-999))); 
+    $_POST['sqm']=$objUtil->checkPostKey('sqm',$objUtil->checkArrayKey($_SESSION,'newObsSQM')); 
+    $_POST['seeing']=$objUtil->checkPostKey('seeing',$objUtil->checkArrayKey($_SESSION,'newObsSeeing')); 
+    $_POST['description_language']=$objUtil->checkPostKey('description_language',$objUtil->checkArrayKey($_SESSION,'newObsLanguage'));
 		$_POST['timestamp']=time();
 		$_SESSION['addObs']=$_POST['timestamp'];
 	} 
@@ -231,7 +231,7 @@ if($objUtil->checkGetKey('activateList')&&$objUtil->checkGetKey('listname'))
   unset($_GET['activateList']);
 }
 if($objUtil->checkGetKey('addObjectToList')&&$listname&&$myList)
-{ $objList->addObjectToList($_GET['addObjectToList'],$GLOBALS['objUtil']->checkGetKey('showname',$_GET['addObjectToList']));
+{ $objList->addObjectToList($_GET['addObjectToList'],$objUtil->checkGetKey('showname',$_GET['addObjectToList']));
   $entryMessage.=LangListQueryObjectsMessage8."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['addObjectToList']) . "\">".$_GET['showname']."</a>".LangListQueryObjectsMessage6."<a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">".$listname_ss."</a>.";
   unset($_GET['addObjectToList']);
 }
