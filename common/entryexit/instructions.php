@@ -63,7 +63,7 @@ if($objUtil->checkGetKey('indexAction')=="logout")                              
   require_once $instDir."common/control/logout.php";
 //============================================================================== DEEEPSKY INSTRUCTIONS
 $object=$objUtil->checkPostKey('object',$objUtil->checkGetKey('object'));
-if(($objUtil->checkGetKey('indexAction')=='quickpick') // From quickpick
+if(($objUtil->checkGetKey('indexAction')=='quickpick') // ========================================================= New Observation From quickpick
 &&($objUtil->checkGetKey('object'))
 &&($objObject->getExactDsObject($_GET['object']))
 &&(array_key_exists('newObservation',$_GET)))

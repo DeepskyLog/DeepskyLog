@@ -164,7 +164,7 @@ echo "</td>";
 echo "<td>";
 echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"largeDiam\" size=\"5\" style=\"text-align:center\" value=\"";
 $min = 0;
-if ($largeDiameter=$objObservation->getDsObservationProperty($_GET['observation'],'largeDiameter') > 0.0) {
+if (($largeDiameter=$objObservation->getDsObservationProperty($_GET['observation'],'largeDiameter')) > 0.0) {
 	if ($largeDiameter > 60.0) {
 		$min = 1;
 		echo sprintf("%.1f",$largeDiameter / 60.0);
@@ -177,7 +177,7 @@ if ($largeDiameter=$objObservation->getDsObservationProperty($_GET['observation'
 echo "\" />";
 echo "&nbsp;x&nbsp;";
 echo "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"smallDiam\" size=\"5\" style=\"text-align:center\" value=\"";
-if ($mallDiameter=$objObservation->getDsObservationProperty($_GET['observation'],'smallDiameter') > 0.0) {
+if (($smallDiameter=$objObservation->getDsObservationProperty($_GET['observation'],'smallDiameter')) > 0.0) {
 	if ($min == 1) {
 		echo sprintf("%.1f", $smallDiameter/ 60.0);
 	} else {

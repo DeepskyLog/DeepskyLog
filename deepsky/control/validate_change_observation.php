@@ -75,7 +75,7 @@ if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']
 				}
 			} else
 				$_SESSION['limit'] = "";
-			$objObservation->setDsObservationProperty($_POST['observationid'],'limitingMagnitude', ($_SESSION['limit']?preg_replace("/,/", ".", $_SESSION['limit']):"NULL"));
+			$objObservation->setDsObservationProperty($_POST['observationid'],'limmag', ($_SESSION['limit']?preg_replace("/,/", ".", $_SESSION['limit']):"NULL"));
 			$objObservation->setDsObservationProperty($_POST['observationid'],'language', $_POST['description_language']);
 			if (array_key_exists('visibility', $_POST) && $_POST['visibility'])
 				$visibility = $_POST['visibility'];
@@ -133,11 +133,11 @@ if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']
 			if (array_key_exists('unusualShape', $_POST))
 				$objObservation->setDsObservationProperty($_POST['observationid'],'unusualShape', 1);
 			else
-				$objObservation->setDsObservationProperty($_POST['observationid'],'unusualsShape', -1);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'unusualShape', -1);
 			if (array_key_exists('partlyUnresolved', $_POST))
 				$objObservation->setDsObservationProperty($_POST['observationid'],'partlyUnresolved', 1);
 			else
-				$objObservation->setDsObservationProperty($_POST['observationid'],'partleyUnresolved', -1);
+				$objObservation->setDsObservationProperty($_POST['observationid'],'partlyUnresolved', -1);
 			if (array_key_exists('colorContrasts', $_POST))
 				$objObservation->setDsObservationProperty($_POST['observationid'],'colorContrasts', 1);
 			else
