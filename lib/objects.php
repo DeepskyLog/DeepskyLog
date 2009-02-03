@@ -762,17 +762,17 @@ class Objects implements iObject
     $this->calcContrastAndVisibility($object,$object,$this->getDsoProperty($object,'mag'),$this->getDsoProperty($object,'SBObj'),$this->getDsoProperty($object,'diam1'),$this->getDsoProperty($object,'diam2'),$contrast,$contype,$popup,$prefMag);
 	  echo "<table width=\"100%\">";
 	  if($loggedUser&&($standardAtlasCode=$GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id'])))
-	    tableFieldnameFieldFieldnameField(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode(stripslashes($object)) . "\">".(stripslashes($object))."</a>",
+	    tableFieldnameField2(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode(stripslashes($object)) . "\">".(stripslashes($object))."</a>",
 	                                      $objAtlas->atlasCodes[$standardAtlasCode].LangViewObjectField10,$this->getDsoProperty($object,$standardAtlasCode)," class=\"type2\"");
 	  else                                                                                                                                                                                                      // object name       / atlas page
-	    tableFieldnameFieldFieldnameField(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(stripslashes($object))."\">".(stripslashes($object))."</a>",
+	    tableFieldnameField2(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(stripslashes($object))."\">".(stripslashes($object))."</a>",
 	                                      "&nbsp;","&nbsp;"," class=\"type2\"");
- 	  tableFieldnameFieldFieldnameField(LangViewObjectField2,($alt?$alt:"-"),LangViewObjectField2b,($containst? $containst . "/":"(-)/").($partoft?$partoft:"-"),'type1');                                      // Alternative names / PART OFs
-    tableFieldnameFieldFieldnameField(LangViewObjectField3,raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,decToStringDegMin($this->getDsoProperty($object,'decl')),"class=\"type2\"");  // RIGHT ASCENSION   / DECLINATION
-    tableFieldnameFieldFieldnameField(LangViewObjectField5,$GLOBALS[$this->getDsoProperty($object,'con')],LangViewObjectField6,$GLOBALS[$this->getDsoProperty($object,'type')],"class=\"type1\"");            // CONSTELLATION     / TYPE
-    tableFieldnameFieldFieldnameField(LangViewObjectField7,((($magnitude==99.9)||($magnitude==""))?$magnitude = "-":$magnitude),LangViewObjectField8,((($sb==99.9)||($sb==""))?"-":$sb),"class=\"type2\"");    // MAGNITUDE / SURFACE BRIGHTNESS
-    tableFieldnameFieldFieldnameField(LangViewObjectField9,(($size=$this->getSize($object))?$size:"-"),LangViewObjectField12,(($this->getDsoProperty($object,'pa')!=999)?($this->getDsoProperty($object,'pa') . "&deg;"):"-"),"class=\"type1\"");   // SIZE / POSITION ANGLE    
-    tableFieldnameFieldFieldnameField(LangViewObjectFieldContrastReserve,"<span class=\"" . $contype . "\" width=\"25%\"  onmouseover=\"Tip('" . $popup . "')\">".$contrast."</span>",LangViewObjectFieldOptimumDetectionMagnification,$prefMag,"class=\"type2\"");
+ 	  tableFieldnameField2(LangViewObjectField2,($alt?$alt:"-"),LangViewObjectField2b,($containst? $containst . "/":"(-)/").($partoft?$partoft:"-"),'type1');                                      // Alternative names / PART OFs
+    tableFieldnameField2(LangViewObjectField3,raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,decToStringDegMin($this->getDsoProperty($object,'decl')),"class=\"type2\"");  // RIGHT ASCENSION   / DECLINATION
+    tableFieldnameField2(LangViewObjectField5,$GLOBALS[$this->getDsoProperty($object,'con')],LangViewObjectField6,$GLOBALS[$this->getDsoProperty($object,'type')],"class=\"type1\"");            // CONSTELLATION     / TYPE
+    tableFieldnameField2(LangViewObjectField7,((($magnitude==99.9)||($magnitude==""))?$magnitude = "-":$magnitude),LangViewObjectField8,((($sb==99.9)||($sb==""))?"-":$sb),"class=\"type2\"");    // MAGNITUDE / SURFACE BRIGHTNESS
+    tableFieldnameField2(LangViewObjectField9,(($size=$this->getSize($object))?$size:"-"),LangViewObjectField12,(($this->getDsoProperty($object,'pa')!=999)?($this->getDsoProperty($object,'pa') . "&deg;"):"-"),"class=\"type1\"");   // SIZE / POSITION ANGLE    
+    tableFieldnameField2(LangViewObjectFieldContrastReserve,"<span class=\"" . $contype . "\" width=\"25%\"  onmouseover=\"Tip('" . $popup . "')\">".$contrast."</span>",LangViewObjectFieldOptimumDetectionMagnification,$prefMag,"class=\"type2\"");
     if($listname&&($objList->checkObjectInMyActiveList($object)))
 	  { if($myList)
      { echo "<form action=\"".$baseURL."index.php?indexAction=detail_object\">";    	

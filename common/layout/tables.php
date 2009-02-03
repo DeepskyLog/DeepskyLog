@@ -1,7 +1,8 @@
 <?php
 // function tableFieldnameFieldExplanation($name,$field,$explanation)                   // 3-item field line, containing the name of the field, the field value and the explanation
 // function tableFieldnameField($name,$field)                                           // 2-item field line, containing the name of the field and the field value
-// function tableFieldnameFieldFieldnameField($name1,$field1,$name2,$field2)             // 4-item filed line, containing the line type, the 2 names and values of the dields, each 25% wide
+// function tableFieldnameField2($name1,$field1,$name2,$field2)             // 4-item filed line, containing the line type, the 2 names and values of the dields, each 25% wide
+// function tableFieldnameField3($name1,$field1,$name2,$field2,$name3,$field3, $type="")
 // function tableMenuItem($link, $menuItem)                                             // Item for the left colums menus
 // function tablePageTitle($title, $link, &$list, &$min, &$max)                         // TITLE in h2 and List Header 
 // function tableSortHeader($header0, $link0)                                           // sorting header on table
@@ -22,12 +23,22 @@ function tableFieldnameField($name,$field, $type="")
   echo "<td class=\"fieldvalue\">".$field."</td>";
   echo "</tr>";
 }
-function tableFieldnameFieldFieldnameField($name1,$field1,$name2,$field2, $type="")
+function tableFieldnameField2($name1,$field1,$name2,$field2, $type="")
 { echo "<tr ".$type.">";
   echo "<td class=\"fieldname\" align=\"right\" width=\"25%\">".$name1."</td>";                                                                                                         // ALTERNATIVE NAME
   echo "<td width=\"25%\">".$field1."</td>";
   echo "<td class=\"fieldname\" align=\"right\" width=\"25%\">".$name2."</td>";
   echo "<td width=\"25%\">".$field2."</td>";
+  echo "</tr>";
+}
+function tableFieldnameField3($name1,$field1,$name2,$field2,$name3,$field3, $type="")
+{ echo "<tr ".$type.">";
+  echo "<td class=\"fieldname\" align=\"right\" width=\"16%\">".$name1."</td>";                                                                                                         // ALTERNATIVE NAME
+  echo "<td width=\"17%\">".$field1."</td>";
+  echo "<td class=\"fieldname\" align=\"right\" width=\"16%\">".$name2."</td>";
+  echo "<td width=\"17%\">".$field2."</td>";
+  echo "<td class=\"fieldname\" align=\"right\" width=\"17%\">".$name3."</td>";
+  echo "<td width=\"17%\">".$field3."</td>";
   echo "</tr>";
 }
 function tableMenuItem($link, $menuItem)
