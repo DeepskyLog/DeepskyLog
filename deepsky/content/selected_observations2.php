@@ -135,12 +135,7 @@ if (count($_SESSION['Qobs']) == 0) //===========================================
 		echo "</tr>";
 		while (list($key,$value)=each($_SESSION['Qobs']))
 		{ if ($count >= $min && $count < $max) 
-		    if (($_SESSION['lco']=="O") && array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
-					$objObservation->showCompactObservationLO($key, $link . "&amp;min=" . $min);
-				elseif (($_SESSION['lco']=="C")) 
-				  $objObservation->showCompactObservation($key, $link . "&amp;min=" . $min);
-				else
-					$objObservation->showOverviewObservation($key, $count, $link . "&amp;min=" . $min, $myList);
+				$objObservation->showListObservation($key, $link . "&amp;min=" . $min,$_SESSION['lco']);
 			$count++;
 		}
 		echo ("</table>\n");
