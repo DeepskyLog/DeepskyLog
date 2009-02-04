@@ -133,16 +133,15 @@ if (count($_SESSION['Qobs']) == 0) //===========================================
 			"<td width=\"15%\">" . LangOverviewObservationsHeader9 . "</td>" .
 			"<td width=\"15%\">" . LangOverviewObservationsHeader5 . "</td>";
 		echo "</tr>";
-		while (list ($key, $value) = each($_SESSION['Qobs'])) // go through observations array
-			{
-			if ($count >= $min && $count < $max) {
-				if (($_SESSION['lco'] == "O") && array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
-					$objObservation->showCompactObservationLO($key, $link . "&amp;min=" . $min, $myList);
-				elseif (($_SESSION['lco'] == "C")) $objObservation->showCompactObservation($key, $link . "&amp;min=" . $min, $myList);
+		while (list($key,$value)=each($_SESSION['Qobs']))
+		{ if ($count >= $min && $count < $max) 
+		    if (($_SESSION['lco']=="O") && array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
+					$objObservation->showCompactObservationLO($key, $link . "&amp;min=" . $min);
+				elseif (($_SESSION['lco']=="C")) 
+				  $objObservation->showCompactObservation($key, $link . "&amp;min=" . $min);
 				else
 					$objObservation->showOverviewObservation($key, $count, $link . "&amp;min=" . $min, $myList);
-			}
-			$count++; // increase counter
+			$count++;
 		}
 		echo ("</table>\n");
 		list ($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);

@@ -6,6 +6,7 @@
 //	 public function checkGetKey($key,$default='')
 //   public function checkGetDate($year,$month,$day)
 //   public function checkGetTimeOrDegrees($hr,$min,$sec)
+//   public function searchAndLinkCatalogsInText($theText)
 // ..
 // PUBLIC OBJECT
 //  $objUtil  
@@ -2064,6 +2065,18 @@ class util
   }
 	public function checkUserID($toCheck)
   { return array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']&&($_SESSION['deepskylog_id']==$toCheck);
+  }
+  public function searchAndLinkCatalogsInText($theText)
+  { global $baseURL;
+    $patterns[0]="/\s+(M)\s*(\d+)/";
+		$replacements[0]="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
+		$patterns[1]= "/(NGC|Ngc|ngc)\s*(\d+\w+)/";
+		$replacements[1]="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=NGC%20\\2\">NGC&nbsp;\\2</a>";
+		$patterns[2]= "/(IC|Ic|ic)\s*(\d+)/";
+		$replacements[2]="<a 	href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=IC%20\\2\">IC&nbsp;\\2</a>";
+		$patterns[3]= "/(Arp|ARP|arp)\s*(\d+)/";
+		$replacements[3]="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=Arp%20\\2\">Arp&nbsp;\\2</a>";
+		return preg_replace($patterns, $replacements, $theText);
   }
 }
 $objUtil=new Util();
