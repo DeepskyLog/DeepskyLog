@@ -13,7 +13,7 @@ echo "<td "."class=\"fieldname\" width=\"100\"".">".LangViewObservationField1."<
 echo "<td>"."<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($objObservation->getDsObservationProperty($_GET['observation'],'objectname')) . "\">" . $objObservation->getDsObservationProperty($_GET['observation'],'objectname') . "</a>"."</td>";
 echo "</tr><tr>";
 echo "<td "."class=\"fieldname\"".">".LangViewObservationField2."</td>";
-echo "<td >"."<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode($objObservation->getDsObservationProperty($_GET['observation'],'observerid')) . "\">" . $objObserver->getFirstName($objObservation->getDsObservationProperty($_GET['observation'],'observerid')) . "&nbsp;" . $objObserver->getObserverName($objObservation->getDsObservationProperty($_GET['observation'],'observerid')) . "</a>"."</td>";
+echo "<td >"."<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode($objObservation->getDsObservationProperty($_GET['observation'],'observerid')) . "\">" . $objObserver->getObserverProperty($objObservation->getDsObservationProperty($_GET['observation'],'observerid'),'firstname') . "&nbsp;" . $objObserver->getObserverProperty($objObservation->getDsObservationProperty($_GET['observation'],'observerid'),'name') . "</a>"."</td>";
 echo "<tr>";
 echo "<td "."class=\"fieldname\"".">".LangViewObservationField5."</td>";
 echo "<td>";
@@ -265,7 +265,7 @@ echo "<td class=\"fieldname\">";
 echo LangViewObservationField29 . "&nbsp;*"; // Language of observation
 echo "</td>";
 echo "<td>";
-$allLanguages = $objLanguage->getAllLanguages($objObserver->getLanguage($_SESSION['deepskylog_id']));
+$allLanguages = $objLanguage->getAllLanguages($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'language'));
 $theLang = $objObservation->getDsObservationProperty($_GET['observation'],'language');
 echo "<select name=\"description_language\" class=\"inputfield\"  style=\"width:300px\">";
 while (list ($key, $value) = each($allLanguages))

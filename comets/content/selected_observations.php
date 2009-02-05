@@ -152,19 +152,19 @@ if(isset($_GET['objectname']))
 
         echo("<td>");
 
-        echo("<a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($observer) . "\">" . $observers->getFirstName($observer) . "&nbsp;" . $observers->getObserverName($observer) . "</a>");
+        echo("<a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($observer) . "\">" . $observers->getObserverProperty($observer,'firstname') . "&nbsp;" . $observers->getObserverProperty($observer,'name') . "</a>");
 
         echo("</td>");
 
         // DATE
 
-        if ($observers->getUseLocal($_SESSION['deepskylog_id']))
+        if ($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
         {
-          $date = sscanf($observations->getLocalDate($value), "%4d%2d%2d");
+          $date = sscanf($observations->getDate($value), "%4d%2d%2d");
         }
         else
         {
-          $date = sscanf($observations->getDate($value), "%4d%2d%2d");
+          $date = sscanf($observations->getLocalDate($value), "%4d%2d%2d");
         }
 
 
@@ -176,13 +176,13 @@ if(isset($_GET['objectname']))
 
         echo(" (");
 
-        if ($observers->getUseLocal($_SESSION['deepskylog_id']))
+        if ($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
         {
-         $time = sscanf(sprintf("%04d", $observations->getLocalTime($value)), "%2d%2d");
+         $time = sscanf(sprintf("%04d", $observations->getTime($value)), "%2d%2d");
         }
         else
         {
-         $time = sscanf(sprintf("%04d", $observations->getTime($value)), "%2d%2d");
+         $time = sscanf(sprintf("%04d", $observations->getLocalTime($value)), "%2d%2d");
         }
 
          printf("%02d", $time[0]);
@@ -288,7 +288,7 @@ echo "</div></body></html>";
 }
 elseif($_GET['user']) // selection of all observations of one observer 
 {
-echo (LangSelectedObservationsTitle . $observers->getFirstName($_GET['user']) . "&nbsp;" . $observers->getObserverName($_GET['user'])); // page title
+echo (LangSelectedObservationsTitle . $observers->getObserverProperty($_GET['user'],'firstname') . "&nbsp;" . $observers->getObserverProperty($_GET['user'],'name')); // page title
 echo("</h2>\n");
 
 // OBJECT TABLE HEADERS
@@ -401,13 +401,13 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
       // DATE
 
-        if ($observers->getUseLocal($_SESSION['deepskylog_id']))
+        if ($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
         {
-         $date = sscanf($observations->getLocalDate($value), "%4d%2d%2d");
+         $date = sscanf($observations->getDate($value), "%4d%2d%2d");
         }
         else
         {
-         $date = sscanf($observations->getDate($value), "%4d%2d%2d");
+         $date = sscanf($observations->getLocalDate($value), "%4d%2d%2d");
         }
 
       echo date ($dateformat, mktime (0,0,0,$date[1],$date[2],$date[0]));
@@ -416,15 +416,15 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
       echo("&nbsp;(");
 
-        if ($observers->getUseLocal($_SESSION['deepskylog_id']))
-        {
-         $time = sscanf(sprintf("%04d", $observations->getLocalTime($value)), "%2d%2d");
-        }
-        else
+        if ($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
         {
          $time = sscanf(sprintf("%04d", $observations->getTime($value)), "%2d%2d");
         }
-
+        else
+        {
+         $time = sscanf(sprintf("%04d", $observations->getLocalTime($value)), "%2d%2d");
+        }
+       
          printf("%02d", $time[0]);
 
          echo (":");

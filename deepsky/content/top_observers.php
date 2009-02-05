@@ -47,8 +47,8 @@ $numberOfObservationsThisYear = $objObservation->getObservationsLastYear('%');
 $numberOfDifferentObjects = $objObservation->getNumberOfDifferentObservedDSObjects();
 while(list($key,$value)=each($rank))
 { if(($count>=$min)&&($count<$max))
-  { $name = $objObserver->getObserverName($key);
-    $firstname = $objObserver->getFirstName($key);
+  { $name = $objObserver->getObserverProperty($key,'name');
+    $firstname = $objObserver->getObserverProperty($key,'firstname');
     $outputtable .= "<tr class=\"type".(2-($count%2))."\">";
     $outputtable.="<td style=\"text-align:center\">" . ($count + 1) . "</td><td> <a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($key)."\">$firstname&nbsp;$name</a> </td>";
     if($sort=="totaal") $value2 = $value; else $value2 = $objObservation->getDsObservationsCountFromObserver($key);

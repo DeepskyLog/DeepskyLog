@@ -781,7 +781,7 @@ class Observations {
 		  $charTypeText=(($characterType=$this->getDsObservationProperty($LOid,'characterType'))?$characterType.': '.$GLOBALS['ClusterType'.$characterType]:"-");
 		echo "<table width=\"100%\">";
 		tableFieldnameField3(LangViewObservationField2,
-		                     "<a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($this->getDsObservationProperty($LOid,'observerid'))."&amp;back=index.php?indexAction=detail_observation\">".$objObserver->getFirstName($this->getDsObservationProperty($LOid,'observerid'))."&nbsp;".$objObserver->getObserverName($this->getDsObservationProperty($LOid,'observerid'))."</a>",
+		                     "<a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($this->getDsObservationProperty($LOid,'observerid'))."&amp;back=index.php?indexAction=detail_observation\">".$objObserver->getObserverProperty($this->getDsObservationProperty($LOid,'observerid'),'firstname')."&nbsp;".$objObserver->getObserverProperty($this->getDsObservationProperty($LOid,'observerid'),'name')."</a>",
 		                     LangViewObservationField3,
 		                     "<a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($this->getDsObservationProperty($LOid,'instrumentid'))."\">".$inst."</a>",
 		                     LangViewObservationField4,

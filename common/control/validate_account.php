@@ -18,7 +18,7 @@ elseif (!preg_match("/.*@.*..*/", $_POST['email']) | preg_match("/(<|>)/", $_POS
 	else  $_GET['indexAction']='subscribe';
 } 
 elseif(array_key_exists('register',$_POST)&&array_key_exists('deepskylog_id',$_POST)&&$_POST['register']&&$_POST['deepskylog_id']) 
-{ if($objObserver->getObserverName($_POST['deepskylog_id']))               // user doesn't exist yet
+{ if($objObserver->getObserverProperty($_POST['deepskylog_id'],'name'))               // user doesn't exist yet
   { $entryMessage=LangValidateAccountMessage4;                              // check if email address is legal (contains @ symbol)
 	  if($objUtil->checkPostKey('change')) $_GET['indexAction']='common_content_change_account';
 	  else  $_GET['indexAction']='subscribe';
@@ -42,12 +42,12 @@ elseif(array_key_exists('register',$_POST)&&array_key_exists('deepskylog_id',$_P
               . "\n\n" . LangValidateAccountEmailLine4;
     $admins=$objObserver->getAdministrators();                              // message recipient(s)
     while(list ($key, $value) = each($admins))
-      if($objObserver->getEmail($value))
-        $adminMails[]=$objObserver->getEmail($value);
+      if($objObserver->getObserverProperty($value,'email'))
+        $adminMails[]=$objObserver->getObserverProperty($value,'eamil');
     $to = implode(",", $adminMails);
     $subject = LangValidateAccountEmailTitle;
     $administrators = $objObserver->getAdministrators();
-    $fromMail = $objObserver->getEmail($administrators[0]);
+    $fromMail = $objObserver->getObserverProperty($administrators[0],'email');
     $headers = "From:".$fromMail;
     if(!mail($to, $subject, $body, $headers))
   	  throw new Exception('Unable to mail');

@@ -5,10 +5,10 @@
 if(!$objUtil->checkGetKey('user'))
   throw new Exception("User not specified");
 $user=$objUtil->checkGetKey('user');
-if(!($name=$objObserver->getObserverName($user))) 
+if(!($name=$objObserver->getObserverProperty($user,'name'))) 
   throw new Exception($user); 
 
-$firstname=$objObserver->getFirstName($user);
+$firstname=$objObserver->getObserverProperty($user,'firstname');
 $location_id = $objObserver->getStandardLocation($user);
 $location_name = $objLocation->getLocationPropertyFromId($location_id,'name');
 $instrumentname=$objInstrument->getInstrumentPropertyFromId($objObserver->getStandardTelescope($user),'name');
@@ -23,7 +23,7 @@ $userMobjects=$objObservation->getObservedCountFromCatalogOrList($user,"M");
 $userCaldwellObjects=$objObservation->getObservedCountFromCatalogOrList($user,"Caldwell");
 $userH400objects=$objObservation->getObservedCountFromCatalogOrList($user,"H400");
 $userHIIobjects=$objObservation->getObservedCountFromCatalogOrList($user,"HII");
-$userDSrank=$objObserver->getRank($user);
+$userDSrank=$objObserver->getDsRank($user);
 if($userDSrank===false)
   $userDSrank = "-";
 else
@@ -69,9 +69,9 @@ while(FALSE!==($file=readdir($dir)))
 }
 echo "<table>";
 if(array_key_exists('admin',$_SESSION)&&($_SESSION['admin']=="yes"))       // admin logged in
-  tableTypeFieldnameField('type1',LangChangeAccountField2,"<a href=\"mailto:".$objObserver->getEmail($user)."\">".$objObserver->getEmail($user)."</a>");
-tableTypeFieldnameField("type2",LangChangeAccountField3,$objObserver->getFirstName($user));
-tableTypeFieldnameField("type1",LangChangeAccountField4,$objObserver->getObserverName($user));
+  tableTypeFieldnameField('type1',LangChangeAccountField2,"<a href=\"mailto:".$objObserver->getObserverProperty($user,'email')."\">".$objObserver->getEmail($user)."</a>");
+tableTypeFieldnameField("type2",LangChangeAccountField3,$objObserver->getObserverProperty($user,'firstname'));
+tableTypeFieldnameField("type1",LangChangeAccountField4,$objObserver->getObserverProperty($user,'name'));
 tableTypeFieldnameField("type2",LangChangeAccountField7,"<a href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=".urlencode($location_id)."\">".$location_name."</a>");
 tableTypeFieldnameField("type1",LangChangeAccountField8,($instrumentname?"<a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($objObserver->getStandardTelescope($user))."\">".(($instrumentname=="Naked eye")?InstrumentsNakedEye:$instrumentname)."</a>":""));
 if($objUtil->checkSessionKey('admin')=="yes")

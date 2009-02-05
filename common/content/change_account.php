@@ -49,13 +49,13 @@ $tempAtlasList.="</select>";
 $tempLangList="<select name=\"language\" class=\"inputfield\">";
 $languages=$objLanguage->getLanguages(); 
 while(list($key,$value)=each($languages))
-  $tempLangList.="<option value=\"".$key."\"".(($objObserver->getLanguage($_SESSION['deepskylog_id'])==$key)?" selected=\"selected\"":"").">".$value."</option>";
+  $tempLangList.="<option value=\"".$key."\"".(($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'language')==$key)?" selected=\"selected\"":"").">".$value."</option>";
 $tempLangList.="</select>";
 
-$allLanguages=$objLanguage->getAllLanguages($objObserver->getLanguage($_SESSION['deepskylog_id']));
+$allLanguages=$objLanguage->getAllLanguages($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'language'));
 $tempAllLangList="<select name=\"description_language\" class=\"inputfield\">";
 while(list($key,$value)=each($allLanguages))
-  $tempAllLangList.="<option value=\"".$key."\"".(($objObserver->getObservationLanguage($_SESSION['deepskylog_id']) == $key)?" selected=\"selected\"":"").">".$value."</option>";
+  $tempAllLangList.="<option value=\"".$key."\"".(($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'observationlanguage') == $key)?" selected=\"selected\"":"").">".$value."</option>";
 $tempAllLangList.="</select>";
 
 $_SESSION['alllanguages']=$allLanguages; 
@@ -89,13 +89,13 @@ echo "<form class=\"content\" action=\"".$baseURL."index.php\" enctype=\"multipa
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"common_control_validate_account\">";
 echo "<table width=\"100%\">";
 tableFieldnameFieldExplanation(LangChangeAccountField1,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkSessionKey('deepskylog_id')."\" />",LangChangeAccountField1Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField2,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"email\" size=\"30\" value=\"".$objObserver->getEmail($objUtil->checkSessionKey('deepskylog_id'))."\" />",LangChangeAccountField2Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField3,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"firstname\" size=\"30\" value=\"".$objObserver->getFirstName($objUtil->checkSessionKey('deepskylog_id'))."\" />",LangChangeAccountField3Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField4,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objObserver->getObserverName($objUtil->checkSessionKey('deepskylog_id'))."\" />",LangChangeAccountField4Expl);
+tableFieldnameFieldExplanation(LangChangeAccountField2,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"email\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'email')."\" />",LangChangeAccountField2Expl);
+tableFieldnameFieldExplanation(LangChangeAccountField3,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"firstname\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'firstname')."\" />",LangChangeAccountField3Expl);
+tableFieldnameFieldExplanation(LangChangeAccountField4,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'name')."\" />",LangChangeAccountField4Expl);
 tableFieldnameFieldExplanation(LangChangeAccountField5,"<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd\" size=\"30\" value=\"\" />",LangChangeAccountField5Expl);
 tableFieldnameFieldExplanation(LangChangeAccountField6,"<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd_again\" size=\"30\" value=\"\" />",LangChangeAccountField6Expl);
 tableFieldnameFieldExplanation(LangChangeAccountField11."&nbsp;*","<input type=\"checkbox\" class=\"inputfield\" name=\"local_time\"".(($objObserver->getUseLocal($_SESSION['deepskylog_id']))?" checked":"")." />",LangChangeAccountField11Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField10,"<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"icq_name\" size=\"5\" value=\"".$objObserver->getIcqName($_SESSION['deepskylog_id'])."\" />",LangChangeAccountField10Expl);
+tableFieldnameFieldExplanation(LangChangeAccountField10,"<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"icq_name\" size=\"5\" value=\"".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'icqname')."\" />",LangChangeAccountField10Expl);
 echo "<tr>";
 echo "<td>&nbsp;</td>";
 echo "<td>&nbsp;</td>";

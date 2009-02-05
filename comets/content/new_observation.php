@@ -217,13 +217,13 @@ else
 
 // TIME
 
-if ($observers->getUseLocal($_SESSION['deepskylog_id']))
+if ($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
 {
-   echo("<tr><td class=\"fieldname\">" . LangViewObservationField9lt . "&nbsp;*</td>\n");
+   echo("<tr><td class=\"fieldname\">" . LangViewObservationField9 . "&nbsp;*</td>\n");
 }
 else
 {
-   echo("<tr><td class=\"fieldname\">" . LangViewObservationField9 . "&nbsp;*</td>\n");
+   echo("<tr><td class=\"fieldname\">" . LangViewObservationField9lt . "&nbsp;*</td>\n");
 }
 
    echo("<td><input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"hours\" value=\"\" />&nbsp;&nbsp;

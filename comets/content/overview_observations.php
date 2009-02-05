@@ -109,23 +109,23 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
       // DATE
 
-      if ($objObserver->getUseLocal($_SESSION['deepskylog_id']))
-      {
-       $date = sscanf($objCometObservation->getLocalDate($value), "%4d%2d%2d");
-      }
-      else
+      if ($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
       {
        $date = sscanf($objCometObservation->getDate($value), "%4d%2d%2d");
       }
+      else
+      {
+       $date = sscanf($objCometObservation->getLocalDate($value), "%4d%2d%2d");
+      }
 
       // TIME
-      if ($objObserver->getUseLocal($_SESSION['deepskylog_id']))
+      if ($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
       {
-       $time = sscanf(sprintf("%04d", $objCometObservation->getLocalTime($value)), "%2d%2d");
+       $time = sscanf(sprintf("%04d", $objCometObservation->getTime($value)), "%2d%2d");
       }
       else
       {
-       $time = sscanf(sprintf("%04d", $objCometObservation->getTime($value)), "%2d%2d");
+       $time = sscanf(sprintf("%04d", $objCometObservation->getLocalTime($value)), "%2d%2d");
       }
 
       // INSTRUMENT 
@@ -196,7 +196,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
       echo("<tr $typefield>\n
             <td><a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($object) . "\">" . $objCometObject->getName($object) . "</a></td>\n
-            <td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($observer) . "\">" . $objObserver->getFirstName($observer) . "&nbsp;" . $objObserver->getObserverName($observer) . 
+            <td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($observer) . "\">" . $objObserver->getObserverProperty($observer,'firstname') . "&nbsp;" . $objObserver->getObserverProperty($observer,'name') . 
             "</a></td>\n<td>");
 
       echo date ($dateformat, mktime (0,0,0,$date[1],$date[2],$date[0]));

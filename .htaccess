@@ -6,7 +6,7 @@ RewriteBase /
 RewriteRule deepsky/$ /index.php
 RewriteRule deepsky/index.php(.*)$ /index.php$1
 RewriteRule comets/(.*)\.php(.*)$ /index.php?indexAction=comets_$1$2
-RewriteRule comets/ /index.php?indexAction=comets_all_observations
+RewriteRule comets/$ /index.php?indexAction=comets_all_observations
 </IfModule>
 
 AddHandler application/x-httpd-php .pdf

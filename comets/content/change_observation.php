@@ -53,7 +53,7 @@ echo LangViewObservationField2;
 
 echo("</td><td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($cometobservations->getObserverId($_GET['observation'])) . "\">");
 
-echo($observers->getFirstName($cometobservations->getObserverId($_GET['observation'])) . "&nbsp;" . $observers->getObserverName($cometobservations->getObserverId($_GET['observation'])));
+echo($observers->getObserverProperty($cometobservations->getObserverId($_GET['observation']),'firstname') . "&nbsp;" . $observers->getObserverProperty($cometobservations->getObserverId($_GET['observation']),'name'));
 
 print("</a></td></tr>");
 
@@ -67,17 +67,13 @@ echo LangViewObservationField5;
 echo("</td>
    <td>");
 
-if ($observers->getUseLocal($_SESSION['deepskylog_id']))
-{
-  $date = sscanf($cometobservations->getLocalDate($_GET['observation']), "%4d%2d%2d");
-
-  $time = sscanf(sprintf("%04d", $cometobservations->getLocalTime($_GET['observation'])), "%2d%2d");
+if ($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
+{ $date = sscanf($cometobservations->getDate($_GET['observation']), "%4d%2d%2d");
+  $time = sscanf(sprintf("%04d", $cometobservations->getTime($_GET['observation'])), "%2d%2d");
 }
 else
-{
-  $date = sscanf($cometobservations->getDate($_GET['observation']), "%4d%2d%2d");
-
-  $time = sscanf(sprintf("%04d", $cometobservations->getTime($_GET['observation'])), "%2d%2d");
+{ $date = sscanf($cometobservations->getLocalDate($_GET['observation']), "%4d%2d%2d");
+  $time = sscanf(sprintf("%04d", $cometobservations->getLocalTime($_GET['observation'])), "%2d%2d");
 }
 
    echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"day\" value=\"" . $date[2] . "\" />&nbsp;&nbsp;<select name=\"month\">
@@ -179,14 +175,15 @@ else
   
 echo("</select>&nbsp;&nbsp<input type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" name=\"year\" value=\"" . $date[0] . "\" /></td></tr>");
 
-if ($observers->getUseLocal($_SESSION['deepskylog_id']))
-{
-    echo("<tr><td class=\"fieldname\">" . LangViewObservationField9lt . "</td><td><input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"hours\" value=\"");
-}
-else
+if ($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
 {
     echo("<tr><td class=\"fieldname\">" . LangViewObservationField9 . "</td><td><input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"hours\" value=\"");
 }
+else
+{
+    echo("<tr><td class=\"fieldname\">" . LangViewObservationField9lt . "</td><td><input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"hours\" value=\"");
+}
+
 
 if($time[0] > 0)
 {

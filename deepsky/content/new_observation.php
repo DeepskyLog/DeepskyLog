@@ -236,7 +236,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 		  echo "</td>";
 		
 		  echo "<td class=\"explanation\">";
-		  echo "<a href=\"http://www.deepskylog.org/wiki/bin/view/DeepskyLog/CharacterType" . $GLOBALS['objObserver']->getLanguage($_SESSION['deepskylog_id']) . "\" target=\"_blank\">" . LangViewObservationField40Expl . "</a>";
+		  echo "<a href=\"http://www.deepskylog.org/wiki/bin/view/DeepskyLog/CharacterType".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'language') . "\" target=\"_blank\">" . LangViewObservationField40Expl . "</a>";
 		  echo "</td>";
 	  }
 		else
@@ -275,11 +275,11 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	echo LangViewObservationField29 . "&nbsp;*"; // Language of observation
 	echo "</td>";
 	echo "<td>";
-	$description_language = $objUtil->checkPostKey('visibility', $objObserver->getObservationLanguage($_SESSION['deepskylog_id']));
-	$allLanguages = $objLanguage->getAllLanguages($objObserver->getLanguage($_SESSION['deepskylog_id']));
+	$description_language = $objUtil->checkPostKey('visibility', $objObserver->getObserverProperty($_SESSION['deepskylog_id'],'observationlanguage'));
+	$allLanguages = $objLanguage->getAllLanguages($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'language'));
 	echo "<select name=\"description_language\"  class=\"inputfield\">";
 	while (list ($key, $value) = each($allLanguages))
-		echo "<option value=\"" . $key . "\"" . (($objUtil->checkPostKey('description_language') == $key) ? "selected=\"selected\"" : ($GLOBALS['objObserver']->getObservationLanguage($_SESSION['deepskylog_id']) == $key) ? "selected=\"selected\"" : '') . ">" . $value . "</option>";
+		echo "<option value=\"" . $key . "\"" . (($objUtil->checkPostKey('description_language') == $key) ? "selected=\"selected\"" : ($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'observationlanguage') == $key) ? "selected=\"selected\"" : '') . ">" . $value . "</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "</tr>";

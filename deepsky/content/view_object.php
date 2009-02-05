@@ -41,7 +41,6 @@ if(count($_SESSION['Qobj'])>2)
 elseif(count($_SESSION['Qobj'])>1)
  echo ' '.LangViewObjectAndNearbyObjects.' '.(count($_SESSION['Qobj'])-1).' '.LangViewObjectNearbyObject;
 else
-
  echo ' '.LangViewObjectNoNearbyObjects;
 echo "</h2>";
 echo "</td>";

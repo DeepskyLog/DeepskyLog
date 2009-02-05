@@ -1,9 +1,6 @@
-<?php
-// index.php
-// main entrance to DeepskyLog
-
+<?php // index.php - main entrance to DeepskyLog
 try
-{	if(!array_key_exists('indexAction',$_GET)&&array_key_exists('indexAction',$_POST)) 
+{ if(!array_key_exists('indexAction',$_GET)&&array_key_exists('indexAction',$_POST)) 
     $_GET['indexAction']=$_POST['indexAction'];
   include 'common/entryexit/preludes.php';                                          // Includes of all classes and assistance files
   include 'common/entryexit/instructions.php';                                      // Execution of all non-layout related instructions (login, add objects to lists, etc.)

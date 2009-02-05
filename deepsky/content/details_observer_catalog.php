@@ -4,8 +4,8 @@
 
 if(!$objUtil->checkGetKey('user'))
   throw new Exception("No user supplied in GET in details_observer_catalog.");
-$firstname = $GLOBALS['objObserver']->getFirstName($_GET['user']);
-$name = $GLOBALS['objObserver']->getObserverName($_GET['user']);
+$firstname = $GLOBALS['objObserver']->getObserverProperty($_GET['user'],'firstname');
+$name = $GLOBALS['objObserver']->getObserverProperty($_GET['user'],'name');
 $partof = $objUtil->checkGetKey('partof',0);
 
 echo "<div id=\"main\">";

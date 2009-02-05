@@ -101,7 +101,7 @@ $obs = $observations->getPopularObservers();
 
 while(list($key,$value) = each($obs))
 {
- $sortobs[$value] = $observers->getObserverName($value)." ".$observers->getFirstName($value);
+ $sortobs[$value] = $observers->getObserverProperty($value,'name')." ".$observers->getObserverProperty($value,'firstname');
 }
 natcasesort($sortobs);
 

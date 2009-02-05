@@ -63,8 +63,8 @@
      $type = "class=\"type2\"";
     }
  
-    $name = $obs->getObserverName($value);
-    $firstname = $obs->getFirstName($value);
+    $name = $obs->getObserverProperty($value,'name');
+    $firstname = $obs->getObserverProperty($value,'firstname'');
 
     echo "<tr $type><td>" . ($count + 1) . "</td><td> <a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($value) . "\">$firstname&nbsp;$name</a> </td>";
 

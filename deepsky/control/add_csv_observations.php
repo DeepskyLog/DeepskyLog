@@ -169,9 +169,9 @@ else
     $_GET['indexAction']='message';
   }
   else
-  { $username=$objObserver->getFirstname($_SESSION['deepskylog_id']). " ".$objObserver->getObserverName($_SESSION['deepskylog_id']);
+  { $username=$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'firstname'). " ".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'name');
     for($i=1;$i<count($parts_array);$i++)
-    { $observername = $objObserver->getFirstname($parts_array[$i][1]). " ".$objObserver->getObserverName($parts_array[$i][1]);
+    { $observername = $objObserver->getObserverProperty($parts_array[$i][1],'firstname'). " ".$objObserver->getObserverProperty($parts_array[$i][1],'name');
       if($parts_array[$i][1]==$username)
       { $instrum = $objInstrument->getInstrumentId($parts_array[$i][5], $_SESSION['deepskylog_id']);
         $locat = $objLocation->getLocationId($parts_array[$i][4], $_SESSION['deepskylog_id']);

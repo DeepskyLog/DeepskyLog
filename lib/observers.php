@@ -1,67 +1,76 @@
-<?php
-// The observers class collects all functions needed to enter, retrieve and
-// adapt observer data from the database and functions to display the data.
+<?php // The observers class collects all functions needed to enter, retrieve and adapt observer data from the database and functions to display the data.
 
-class Observers
-{
- // addObserver adds a new observer to the database. The id, name, first name,
- // email address and password should be given as parameters. The password 
- // must be encoded using md5(...). The new observer will not be able to
- // log in yet. Before being able to do so, the administrator must validate 
- // the new user.
- function addObserver($id, $name, $firstname, $email, $password)
- { global $objDatabase; $objDatabase->execSQL("INSERT INTO observers (id, name, firstname, email, password, role, language) VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\", \"$password\", \"".RoleWaitlist."\", \"".$_SESSION['lang']."\")");
- }
- function checkPassword($id, $passwd)
- { return($this->getPassword($id) == $passwd);
- }
- function getAdministrators()
- { global $objDatabase; return $objDatabase->selectSingleArray("SELECT id FROM observers WHERE role = \"RoleAdmin\"",'id');
- }
- function getEmail($id)
- { global $objDatabase; return $objDatabase->selectSingleValue("SELECT email FROM observers WHERE id = \"$id\"",'email','');
- }
- function getFirstName($id)
- { global $objDatabase; return $objDatabase->selectSingleValue("SELECT firstname FROM observers WHERE id = \"$id\"",'firstname','');
- }
- function getName($id)
- { global $objDatabase; return $objDatabase->selectSingleValue("SELECT name FROM observers WHERE id = \"$id\"",'name','');
- }
- function getIcqName($id)
- { global $objDatabase; return $objDatabase->selectSingleValue("SELECT icqname FROM observers WHERE id = \"$id\"",'icqname','');
- }
- function getLanguage($id)
- { global $objDatabase; return $objDatabase->selectSingleValue("SELECT language FROM observers WHERE id = \"$id\"",'language','');
- }
- function getUsedLanguages($id)
- { global $objDatabase; return unserialize($objDatabase->selectSingleValue("SELECT usedLanguages FROM observers WHERE id = \"$id\"",'usedLanguages',''));
- }
- function getObservationLanguage($id)
- { global $objDatabase; return $objDatabase->selectSingleValue("SELECT observationlanguage FROM observers WHERE id = \"$id\"",'observationlanguage','');
- }
- function getListOfInstruments()                                                // getListOfInstruments returns a list of all StandardInstruments of all observers
- { global $objDatabase; return $objDatabase->selectSingleArray("SELECT stdtelescope FROM observers GROUP BY stdtelescope",'stdtelescope');
- }
- function getListOfLocations()                                                  // getListOfLocations returns a list of all StandardLocations of all observers
- { global $objDatabase; return $objDatabase->selectSingleArray("SELECT stdlocation FROM observers GROUP BY stdlocation",'stdlocation');
- }
- function getObserverName($id)
- { global $objDatabase; return $objDatabase->selectSingleValue("SELECT name FROM observers WHERE id = \"".$id."\"",'name','');
- }
- function getNumberOfDsObservations($observerid)                                // getNumberOfObservations($name) returns the number of observations of the given observerid
- { global $objDatabase; return $objDatabase->selectSingleValue("SELECT COUNT(observations.id) As Cnt FROM observations ".($observerid?"WHERE observerid = \"".$observerid."\"":""),'Cnt',0);
- }
- function getNumberOfCometObservations($observerid)                             // getNumberOfCometObservations($name) returns the number of comet observations for the given observerid
- { global $objDatabase; return $objDatabase->selectSingleValue("SELECT COUNT(cometobservations.id) As Cnt FROM cometobservations ".($observerid?"WHERE observerid = \"".$observerid."\"":""),'Cnt',0);
- }
- function getRank($observer)                                                    // getRank() returns the number of observations of the given observer
- { return $rank=array_search($observer,$GLOBALS['objObservation']->getPopularObservers());
- }
- function getCometRank($observer)                                               // getCometRank() returns the number of observations of the given observer
- { return $rank=array_search($observer,$GLOBALS['objCometObservation']->getPopularObservers());
- }
+interface iObserver
+{ public  function addObserver($id, $name, $firstname, $email, $password);                       // addObserver adds a new observer to the database. The id, name, first name email address and password should be given as parameters. The password must be encoded using md5(...). The new observer will not be able to log in yet. Before being able to do so, the administrator must validate the new user.
+  public  function getAdministrators();
+  public  function getCometRank($observer);                                               // getCometRank() returns the number of observations of the given observer
+  public  function getDsRank($observer);                                                    // getRank() returns the number of observations of the given observer
+  public  function getListOfInstruments();                                                // getListOfInstruments returns a list of all StandardInstruments of all observers
+  public  function getListOfLocations();                                                  // getListOfLocations returns a list of all StandardLocations of all observers
+  public  function getNumberOfCometObservations($observerid);                             // getNumberOfCometObservations($name) returns the number of comet observations for the given observerid
+  public  function getNumberOfDsObservations($observerid);                                // getNumberOfObservations($name) returns the number of observations of the given observerid
+  public  function getObserverProperty($id,$property,$defaultValue);
+  public  function getUsedLanguages($id);
+  
+	
+}
+
+class Observers implements iObserver
+{ public  function addObserver($id, $name, $firstname, $email, $password)                       // addObserver adds a new observer to the database. The id, name, first name email address and password should be given as parameters. The password must be encoded using md5(...). The new observer will not be able to log in yet. Before being able to do so, the administrator must validate the new user.
+  { global $objDatabase; 
+    return $objDatabase->execSQL("INSERT INTO observers (id, name, firstname, email, password, role, language) VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\", \"$password\", \"".RoleWaitlist."\", \"".$_SESSION['lang']."\")");
+  }
+  public  function getAdministrators()
+  { global $objDatabase; 
+    return $objDatabase->selectSingleArray("SELECT id FROM observers WHERE role = \"RoleAdmin\"",'id');
+  }
+  public  function getCometRank($observer)                                               // getCometRank() returns the number of observations of the given observer
+  { global $objCometObservation;
+    return array_search($observer,$objCometObservation->getPopularObservers());
+  }
+  public  function getDsRank($observer)                                                    // getRank() returns the number of observations of the given observer
+  { global $objObservation;
+    return array_search($observer,$objObservation->getPopularObservers());
+  }
+  public  function getListOfInstruments()                                                // getListOfInstruments returns a list of all StandardInstruments of all observers
+  { global $objDatabase; 
+    return $objDatabase->selectSingleArray("SELECT stdtelescope FROM observers GROUP BY stdtelescope",'stdtelescope');
+  }
+  public  function getListOfLocations()                                                  // getListOfLocations returns a list of all StandardLocations of all observers
+  { global $objDatabase; 
+    return $objDatabase->selectSingleArray("SELECT stdlocation FROM observers GROUP BY stdlocation",'stdlocation');
+  }
+  public  function getNumberOfCometObservations($observerid)                             // getNumberOfCometObservations($name) returns the number of comet observations for the given observerid
+  { global $objDatabase; 
+    return $objDatabase->selectSingleValue("SELECT COUNT(cometobservations.id) As Cnt FROM cometobservations ".($observerid?"WHERE observerid = \"".$observerid."\"":""),'Cnt',0);
+  }
+  public  function getNumberOfDsObservations($observerid)                                // getNumberOfObservations($name) returns the number of observations of the given observerid
+  { global $objDatabase; 
+    return $objDatabase->selectSingleValue("SELECT COUNT(observations.id) As Cnt FROM observations ".($observerid?"WHERE observerid = \"".$observerid."\"":""),'Cnt',0);
+  }
+  public  function getObserverProperty($id,$property,$defaultValue)
+  { global $objDatabase; 
+    return $objDatabase->selectSingleValue("SELECT ".$property." FROM observers WHERE id=\"".$id."\"",$property,$defaultValue);
+  }
+  public  function getUsedLanguages($id)
+  { global $objDatabase; 
+    return unserialize($objDatabase->selectSingleValue("SELECT usedLanguages FROM observers WHERE id = \"$id\"",'usedLanguages',''));
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+
  function getUseLocal($id)                                                      // getUseLocal returns if the user wants to use local time or UTC
- { global $objDatabase; return (!($objDatabase->selectSingleValue("SELECT observers.UT FROM observers WHERE id = \"$id\"",'UT',0)));
+ { global $objDatabase; 
+   return (!($objDatabase->selectSingleValue("SELECT observers.UT FROM observers WHERE id = \"$id\"",'UT',0)));
  }
  function getObservers()                                                        // getObservers returns an array with the ids of all observers
  { global $objDatabase; return $objDatabase->selectSingleArray("SELECT observers.id FROM observers",'id');
@@ -138,9 +147,9 @@ class Observers
    $array = array(LangValidateMail1, $id, LangValidateMail2, $ad, LangValidateMail3);
    $body = implode("", $array);
    $administrators = $this->getAdministrators();
-   $fromMail = $this->getEmail($administrators[0]);
+   $fromMail = $this->getObserverProperty($administrators[0],'email');
    $headers = "From:".$fromMail;
-   mail($this->getEmail($id), $subject, $body, $headers);
+   mail($this->getObserverProperty($id,'email'), $subject, $body, $headers);
  }
  function showObservers()                                                       // showObservers prints a table showing all observers. 
  { $observers = $this->getObservers();
@@ -161,9 +170,9 @@ class Observers
 	 echo "</tr>";
    while(list ($key, $value) = each($observers))
    { $type = "class=\"type\"".(2-($count%2));
-     $name = $this->getObserverName($value);
-     $firstname = $this->getFirstName($value);
-     $email = $this->getEmail($value);
+     $name = $this->getObserverProperty($value,'name');
+     $firstname = $this->getObserverProperty($value,'firstname');
+     $email = $this->getEmail($value,'email');
      $loc = $this->getStandardLocation($value);
      $location = $locations->getLocationPropertyFromId($loc,'name');
      $inst = $this->getStandardTelescope($value);
@@ -187,9 +196,8 @@ class Observers
        echo "comet admin";
      elseif ($role == RoleWaitlist)
        echo "waitlist";
-     $language = $this->getLanguage($value);
      echo "</td>";
-		 echo "<td> $language </td>";
+		 echo "<td>".$this->getObserverProperty($value,'language')."</td>";
 		 echo "</tr>";
      $count++;
   }

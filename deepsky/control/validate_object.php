@@ -115,14 +115,14 @@ if ($_POST['newobject'])
   { $objObject->addDSObject($name, $catalog , ucwords(trim($_POST['number'])), $_POST['type'], $_POST['con'], $ra, $declination, $magnitude, $sb, $diam1, $diam2, $posangle, "", "DeepskyLogUser");
     $admins = $objObserver->getAdministrators();
     while(list($key, $value)=each($admins))
-      if ($objObserver->getEmail($value))
-        $adminMails[] = $objObserver->getEmail($value);
+      if ($objObserver->getObserverProperty($value,'email'))
+        $adminMails[] = $objObserver->getObserverProperty($value,'email');
     $to=implode(",", $adminMails);
     $subject = LangValidateAccountEmailTitleObject . " " . $name;
     reset($admins);
-    $headers="From:".$objObserver->getEmail($admins[0]);
+    $headers="From:".$objObserver->getObserverProperty($admins[0],'email');
     $body=LangValidateAccountEmailTitleObject." ".$name." ". "www.deepskylog.org/index.php?indexAction=detail_object&object=".urlencode($name)." ".
-		      LangValidateAccountEmailTitleObjectObserver." ".$objObserver->getObserverName($_SESSION['deepskylog_id'])." ".$objObserver->getFirstName($_SESSION['deepskylog_id'])." www.deepskylog.org/index.php?indexAction=detail_observer&user=".urlencode($_SESSION['deepskylog_id']);
+		      LangValidateAccountEmailTitleObjectObserver." ".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'name')." ".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'firstname')." www.deepskylog.org/index.php?indexAction=detail_observer&user=".urlencode($_SESSION['deepskylog_id']);
     mail($to, $subject, $body, $headers);
     $_GET['indexAction']='detail_object';
 		$_GET['object']=$name;

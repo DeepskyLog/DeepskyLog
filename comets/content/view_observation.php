@@ -66,7 +66,7 @@ echo LangViewObservationField2;
 
 echo("</td><td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($objCometObservation->getObserverId($_GET['observation'])) . "\">");
 
-echo($objObserver->getFirstName($objCometObservation->getObserverId($_GET['observation'])) . "&nbsp;" . $objObserver->getObserverName($objCometObservation->getObserverId($_GET['observation'])));
+echo($objObserver->getObserverProperty($objCometObservation->getObserverId($_GET['observation']),'firstname') . "&nbsp;" . $objObserver->getObserverProperty($objCometObservation->getObserverId($_GET['observation']),'name'));
 
 print("</a></td></tr>");
 
@@ -323,6 +323,7 @@ while (FALSE !== ($file = readdir($dir)))
    }
    if(fnmatch($_GET['observation'] . "_resized.gif", $file) || fnmatch($_GET['observation'] . "_resized.jpg", $file) || fnmatch($_GET['observation']. "_resized.png", $file))
    {
+   echo $baseURL."comets/" . $upload_dir . "/" . $_GET['observation'] . ".jpg";
    echo("<p><a href=\"".$baseURL."comets/" . $upload_dir . "/" . $_GET['observation'] . ".jpg" . "\"><img class=\"account\" src=\"".$baseURL."comets/$upload_dir" . "/" . "$file\">
          </img></a></p>");
    }

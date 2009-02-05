@@ -31,7 +31,7 @@ echo LangWelcome1;
 echo $baseURL;
 echo ' - ';
 if($objUtil->checkSessionKey('deepskylog_id'))
-  echo LangWelcome2.$objObserver->getFirstName($_SESSION['deepskylog_id'])."&nbsp;".$objObserver->getObserverName($_SESSION['deepskylog_id']);
+  echo LangWelcome2.$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'firstname')."&nbsp;".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'name');
 else
   echo LangWelcome3;
 echo "</span>";

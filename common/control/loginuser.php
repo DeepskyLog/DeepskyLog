@@ -10,7 +10,7 @@ if(array_key_exists('deepskylogsec', $_COOKIE)&&$_COOKIE['deepskylogsec'])
 { if(strlen($_COOKIE['deepskylogsec'])>32)
   { if(substr($_COOKIE['deepskylogsec'],0,32)==$objObserver->getPassword(substr($_COOKIE['deepskylogsec'],32,255)))
     { $_SESSION['deepskylog_id']=substr($_COOKIE['deepskylogsec'],32,255);
-		  $_SESSION['lang']=$objObserver->getLanguage($_SESSION['deepskylog_id']);
+		  $_SESSION['lang']=$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'language');
 			$loggedUser=$_SESSION['deepskylog_id'];
 		  if($objObserver->getRole($_SESSION['deepskylog_id'])=="0")                // administrator logs in 
         $_SESSION['admin']="yes";
@@ -31,7 +31,7 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
 	  $passwd = md5($_POST['passwd']);
     $passwd_db = $GLOBALS['objObserver']->getPassword($login);                  // get password from database 
     if($passwd_db==$passwd)                                                     // check if passwords match
-    { $_SESSION['lang']=$GLOBALS['objObserver']->getLanguage($login);
+    { $_SESSION['lang']=$objObserver->getObserverProperty($login,'language');
 			if($GLOBALS['objObserver']->getRole($login)=="2")                         // user in waitlist already tries to log in
         $loginError="loginuser: user in waitlist";
       elseif($GLOBALS['objObserver']->getRole($login)=="1")                     // validated user
@@ -86,7 +86,7 @@ if(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=="setLanguage"))
 }
 $language=$GLOBALS['objLanguage']->getPath($_SESSION['lang']);
 if($loggedUser)
-{ $allLanguages=$objLanguage->getAllLanguages($objObserver->getLanguage($_SESSION['deepskylog_id']));
+{ $allLanguages=$objLanguage->getAllLanguages($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'language'));
   $_SESSION['alllanguages']=$allLanguages; 
   $usedLanguages=$objObserver->getUsedLanguages($_SESSION['deepskylog_id']);
 }

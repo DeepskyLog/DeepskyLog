@@ -37,9 +37,9 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=ro
 echo "<td></td>";
 echo "</tr>";
 while(list ($key, $value) = each($observers))
-{ $name = $objObserver->getObserverName($value);
-  $firstname = $objObserver->getFirstName($value);
-  $email = $objObserver->getEmail($value);
+{ $name = $objObserver->getObserverProperty($value,'name');
+  $firstname = $objObserver->getObserverProperty($value,'firstname');
+  $email = $objObserver->getObserverProperty($value,'email');
   echo "<tr class=\"type".(2-($count%2))."\">";
   echo "<td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($value)."\">".$value."</a> </td>";
   echo "<td>".$name."</td>";

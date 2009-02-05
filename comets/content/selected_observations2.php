@@ -100,8 +100,8 @@ if($_GET['observer'] || $_GET['instrument'] || $_GET['site'] || $_GET['minyear']
 	 if(array_key_exists('site',$_GET) && $_GET['site'] != "")
 	 {
       $site = $_GET['site'];
-      $name = $locations->getName($site);
-      $site = $locations->getId($name, $_SESSION['deepskylog_id']);
+      $name = $objLocation->getLocationPropertyFromId($site,'name');
+      $site = $objLocation->getLocationId($name, $_SESSION['deepskylog_id']);
 	 }
 	 else
 	 {
@@ -620,7 +620,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
       echo("<tr $typefield>\n
             <td><a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($object) . "\">" . $objects->getName($object) . "</a></td>\n
-            <td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($observer) . "\">" . $observers->getFirstName($observer) . "&nbsp;" . $observers->getObserverName($observer) . "</a></td>\n
+            <td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($observer) . "\">" . $observers->getObserverProperty($observer,'firstname') . "&nbsp;" . $observers->getObserverProperty($observer,'name') . "</a></td>\n
             <td>");
 
       if($instrument != InstrumentsNakedEye && $instrument != "")
