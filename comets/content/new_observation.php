@@ -256,7 +256,7 @@ echo("<tr><td class=\"fieldname\">" . LangViewObservationField4 . "</td><td><sel
          }
          else // first observation of session
          {
-           if($objObserver->getStandardLocation($_SESSION['deepskylog_id']) == $sites[$i][0]) // location equals standard location
+           if($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation') == $sites[$i][0]) // location equals standard location
            {
               print("<option selected=\"selected\" value=\"".$sites[$i][0]."\">$sitename</option>\n");
            }
@@ -298,7 +298,7 @@ echo("<option value=\"\"></option>\n"); // include empty instrument
              print("<option value=\"$val\">");
            }
          }
-         elseif($objObserver->getStandardTelescope($_SESSION['deepskylog_id']) == $val) // not executed when previous observation
+         elseif($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope') == $val) // not executed when previous observation
          {
            print("<option selected=\"selected\" value=\"$val\">");
          }

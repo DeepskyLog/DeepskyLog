@@ -55,7 +55,7 @@ if($_SESSION['deepskylog_id']) // logged in
             $current_observation = $cometobservations->addObservation($cometobjects->getId($_POST['comet']), $_SESSION['deepskylog_id'], $date, $time);
             $cometobservations->setLocationId($current_observation, $_POST['site']);
 
-            if ($observers->getUseLocal($_SESSION['deepskylog_id']))
+            if(!($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
             {
                $cometobservations->setLocalDateAndTime($current_observation, $date, $time);
             }

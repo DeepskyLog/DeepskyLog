@@ -12,7 +12,7 @@ echo "<tr>";
 echo "<td>";
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
 if(isset($_SESSION['deepskylog_id']))
-{ if($objObserver->getRole($_SESSION['deepskylog_id'])!="2")                    // user is not in waitlist
+{ if($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'role',2)!="2")                    // user is not in waitlist
     if(array_key_exists('deepskylog_id',$_SESSION)&&($_SESSION['deepskylog_id']!="admin")) // admin doesn't have own observations
     { echo "<tr align=\"left\"  height=\"25px\">";
       echo "<td>";

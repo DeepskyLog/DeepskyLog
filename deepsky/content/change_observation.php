@@ -17,13 +17,14 @@ echo "<td >"."<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&am
 echo "<tr>";
 echo "<td "."class=\"fieldname\"".">".LangViewObservationField5."</td>";
 echo "<td>";
-if ($objObserver->getUseLocal($_SESSION['deepskylog_id'])) {
-	$date = sscanf($objObservation->getDsObservationLocalDate($_GET['observation']), "%4d%2d%2d");
-	$timestr = $objObservation->getDsObservationLocalTime($_GET['observation']);
-} else {
-	$date = sscanf($objObservation->getDsObservationProperty($_GET['observation'],'date'), "%4d%2d%2d");
+if ($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
+{ $date = sscanf($objObservation->getDsObservationProperty($_GET['observation'],'date'), "%4d%2d%2d");
 	$timestr = $objObservation->getDsObservationProperty($_GET['observation'],'time');
 }
+else
+{ $date = sscanf($objObservation->getDsObservationLocalDate($_GET['observation']), "%4d%2d%2d");
+	$timestr = $objObservation->getDsObservationLocalTime($_GET['observation']);
+} 
 if ($timestr >= 0)
 	$time = sscanf(sprintf("%04d", $timestr), "%2d%2d");
 else {
@@ -42,14 +43,8 @@ echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"4\" si
 echo "</td>";
 echo "</tr>";
 echo "<tr>";
-echo "<td class=\"fieldname\">";
-echo (($objObserver->getUseLocal($_SESSION['deepskylog_id'])) ? LangViewObservationField9lt : LangViewObservationField9);
-echo "</td>";
-echo "<td>";
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"hours\" value=\"" . (($time[0] >= 0) ? $time[0] : '') . "\" />";
-echo "&nbsp;&nbsp";
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"minutes\" value=\"" . (($time[1] >= 0) ? $time[1] : '') . "\" />";
-echo "</td>";
+echo "<td class=\"fieldname\">".(($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT'))?LangViewObservationField9:LangViewObservationField9lt)."</td>";
+echo "<td>"."<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"hours\" value=\"" . (($time[0] >= 0) ? $time[0] : '') . "\" />"."&nbsp;&nbsp"."<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"minutes\" value=\"" . (($time[1] >= 0) ? $time[1] : '') . "\" />"."</td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td class=\"fieldname\">"; // LOCATION

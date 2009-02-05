@@ -151,7 +151,7 @@ else
  $min = 0;
 }
 
-if ($observers->getUseLocal($_SESSION['deepskylog_id']))
+if (!($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
 {
   if ($mindate != "")
   {
@@ -181,7 +181,7 @@ else
 }
 
    // Dates can changes when we use local time!
-   if ($observers->getUseLocal($_SESSION['deepskylog_id']))
+   if(!($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
    {
      if ($mindate != "" || $maxdate != "")
      {
@@ -630,7 +630,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
 
 
-      if ($observers->getUseLocal($_SESSION['deepskylog_id']))
+      if(!($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
       {
         $date = sscanf($observations->getLocalDate($value), "%4d%2d%2d");
       }
@@ -643,7 +643,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
       // TIME
 
-      if ($observers->getUseLocal($_SESSION['deepskylog_id']))
+      if(!($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
       {
         $time = sscanf(sprintf("%04d", $observations->getLocalTime($value)), "%2d%2d");
       }

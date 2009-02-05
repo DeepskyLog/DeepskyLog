@@ -12,7 +12,7 @@ echo (LangChangeMenuTitle);
 echo "</th>\n</tr>\n<tr>\n<td>\n
       <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 
-echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=common_content_change_account\" class=\"mainlevel\">\n";
+echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=change_account\" class=\"mainlevel\">\n";
 
 echo (LangChangeMenuItem1);
 

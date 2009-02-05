@@ -23,7 +23,7 @@ echo "</th>\n</tr>\n<tr>\n<td>\n
 
 if($_SESSION['deepskylog_id']) // logged in
 {
-   if($obs->getRole($_SESSION['deepskylog_id']) != "2") // user is not in waitlist
+   if($obs->getObserverProperty($_SESSION['deepskylog_id'],'role',2) != "2") // user is not in waitlist
    {
       if($_SESSION['deepskylog_id'] != "admin") // admin doesn't have own observations
       {

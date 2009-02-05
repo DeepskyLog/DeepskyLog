@@ -9,9 +9,9 @@ if(!($name=$objObserver->getObserverProperty($user,'name')))
   throw new Exception($user); 
 
 $firstname=$objObserver->getObserverProperty($user,'firstname');
-$location_id = $objObserver->getStandardLocation($user);
+$location_id = $objObserver->getObserverProperty($user,'stdlocation');
 $location_name = $objLocation->getLocationPropertyFromId($location_id,'name');
-$instrumentname=$objInstrument->getInstrumentPropertyFromId($objObserver->getStandardTelescope($user),'name');
+$instrumentname=$objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($user,'stdtelescope'),'name');
 
 $userDSobservation=$objObserver->getNumberOfDsObservations($user);
 $totalDSObservations=$objObservation->getNumberOfDsObservations();
@@ -73,7 +73,7 @@ if(array_key_exists('admin',$_SESSION)&&($_SESSION['admin']=="yes"))       // ad
 tableTypeFieldnameField("type2",LangChangeAccountField3,$objObserver->getObserverProperty($user,'firstname'));
 tableTypeFieldnameField("type1",LangChangeAccountField4,$objObserver->getObserverProperty($user,'name'));
 tableTypeFieldnameField("type2",LangChangeAccountField7,"<a href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=".urlencode($location_id)."\">".$location_name."</a>");
-tableTypeFieldnameField("type1",LangChangeAccountField8,($instrumentname?"<a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($objObserver->getStandardTelescope($user))."\">".(($instrumentname=="Naked eye")?InstrumentsNakedEye:$instrumentname)."</a>":""));
+tableTypeFieldnameField("type1",LangChangeAccountField8,($instrumentname?"<a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($objObserver->getObserverProperty($user,'telescope'))."\">".(($instrumentname=="Naked eye")?InstrumentsNakedEye:$instrumentname)."</a>":""));
 if($objUtil->checkSessionKey('admin')=="yes")
 { echo "<tr class=\"type2\">";
   echo "<td class=\"fieldname\">".LangViewObserverRole."</td>";
@@ -83,14 +83,14 @@ if($objUtil->checkSessionKey('admin')=="yes")
   if($user!="admin")
   { echo "<td>";
     echo "<select name=\"role\" class=\"fieldvalue\">";
-    echo "<option ".(($objObserver->getRole($user)==RoleAdmin)?"selected=\"selected\"":"")." value=\"0\">".LangViewObserverAdmin."</option>";
-    echo "<option ".(($objObserver->getRole($user)==RoleUser)?"selected=\"selected\"":"")." value=\"1\">".LangViewObserverUser."</option>";
-    echo "<option ".(($objObserver->getRole($user)==RoleCometAdmin)?"selected=\"selected\"":"")." value=\"4\">".LangViewObserverCometAdmin."</option>";
-    echo "<option ".(($objObserver->getRole($user)==RoleWaitlist)?"selected=\"selected\"":"")." value=\"2\">".LangViewObserverWaitlist."</option>";
+    echo "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleAdmin)?"selected=\"selected\"":"")." value=\"0\">".LangViewObserverAdmin."</option>";
+    echo "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleUser)?"selected=\"selected\"":"")." value=\"1\">".LangViewObserverUser."</option>";
+    echo "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleCometAdmin)?"selected=\"selected\"":"")." value=\"4\">".LangViewObserverCometAdmin."</option>";
+    echo "<option ".(($objObserver->getObserverProperty($user,'rolz',2)==RoleWaitlist)?"selected=\"selected\"":"")." value=\"2\">".LangViewObserverWaitlist."</option>";
     echo "</select>";
     echo "<input type=\"submit\" name=\"change\" value=\"".LangViewObserverChange."\" />";
   }
-  elseif($objObserver->getRole($user)==RoleWaitlist)
+  elseif($objObserver->getObserverProperty($user,'role',2)==RoleWaitlist)
     echo(LangViewObserverWaitlist."</td>");
   else                                                                          // fixed admin role
   {  echo "<td>".LangViewObserverAdmin."</td>";

@@ -19,7 +19,7 @@ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
 			  $_SESSION['Qobj']=$objObject->getObjectVisibilities($_SESSION['Qobj']);
 	  }
 	$result=$objLocation->getSortedLocations('name',$_SESSION['deepskylog_id']);
-  $loc=$objObserver->getStandardLocation($_SESSION['deepskylog_id']);	
+  $loc=$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation');	
 	echo "<select onchange=\"location=this.options[this.selectedIndex].value;\" name=\"activateLocation\" class=\"inputfield\">";
   while(list($key, $value) = each($result))
 	  echo "<option ".(($value==$loc)?"selected":"")." value=\"".$link."&amp;activeLocationId=$value\">".$objLocation->getLocationPropertyFromId($value,'name')."</option>";

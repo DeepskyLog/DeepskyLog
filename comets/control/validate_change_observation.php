@@ -34,7 +34,7 @@ if($_POST['changeobservation']) // pushed change observation button
    {
       // only admins may change a comet observation
 
-      $role = $objObserver->getRole($_SESSION['deepskylog_id']);
+      $role = $objObserver->getObserverProperty($_SESSION['deepskylog_id'],'role',2);
 
       if ($role == RoleAdmin || $role == RoleCometAdmin)
       {
@@ -46,7 +46,7 @@ if($_POST['changeobservation']) // pushed change observation button
 
         $observations->setLocationId($_POST['observationid'], $_POST['location']);
 
-        if ($observers->getUseLocal($_SESSION['deepskylog_id']))
+        if(!($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
         {
           $observations->setLocalDateAndTime($_POST['observationid'], $date, $time);
         }

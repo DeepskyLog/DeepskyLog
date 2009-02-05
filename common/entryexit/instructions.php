@@ -8,56 +8,51 @@ while(list($key,$value)=each($modules))                                         
 if($objUtil->checkGetKey('indexAction')=="validate_delete_eyepiece")                                               // delete eyepiece
 { $entryMessage.=$objEyepiece->validateDeleteEyepiece();
   $_GET['indexAction']='add_eyepiece';
-  unset($_GET['validate_delete_eyepiece']);
 }
 if($objUtil->checkGetKey('indexAction')=="validate_delete_filter")                                                 // delete filter
 { $entryMessage.=$objFilter->validateDeleteFilter();
   $_GET['indexAction']='add_filter';
-  unset($_GET['validate_delete_filter']);
 }
 if($objUtil->checkGetKey('indexAction')=="validate_delete_instrument")                                             // delete instrument 
 { $entryMessage.=$objInstrument->validateDeleteInstrument();
   $_GET['indexAction']='add_instrument';
-  unset($_GET['validate_delete_instrument']);
 }
 if($objUtil->checkGetKey('indexAction')=="validate_delete_lens")                                                   // delete lens
 { $entryMessage.=$objLens->validateDeleteLens();
   $_GET['indexAction']="add_lens";
-  unset($_GET['validate_delete_lens']);
 }
 if($objUtil->checkGetKey('indexAction')=="validate_delete_location")                                               // delete location
 { $entryMessage.=$objLocation->validateDeleteLocation();
   $_GET['indexAction']='add_site';
-  unset($_GET['validate_delete_location']);
 }  
-if($objUtil->checkGetKey('indexAction')=="common_control_validate_account")                                        // validate account
-  require_once $instDir."common/control/validate_account.php";
+if($objUtil->checkGetKey('indexAction')=="validate_account")                                                       // validate account
+{ $objObserver->valideAccount();
+  //$entryMessage is set in the validateAccount() function;
+  //$_GET['indexAction'] is set in the validateAccount() function
+}
 if($objUtil->checkGetKey('indexAction')=="validate_eyepiece")                                                      // validate eyepiece
 { $entryMessage.=$objEyepiece->validateSaveEyepiece();
   $_GET['indexAction']='add_eyepiece';
-	unset($_GET['validate_eyepiece']);
 }
 if($objUtil->checkGetKey('indexAction')=="validate_filter")                                                        // validate filter
 { $entryMessage.=$objFilter->validateSaveFilter();
   $_GET['indexAction']='add_filter';
-	unset($_GET['validate_filter']);
 }
 if($objUtil->checkGetKey('indexAction')=="validate_instrument")                                                    // validate instrument
 {  $entryMessage.=$objInstrument->validateSaveInstrument();
    $_GET['indexAction']='add_instrument';
-	 unset($_GET['validate_instrument']);
 }	
 if($objUtil->checkGetKey('indexAction')=="validate_lens")                                                          // validate lens
 { $entryMessage.=$objLens->validateSaveLens();
   $_GET['indexAction']='add_lens';
-	unset($_GET['validate_lens']);
 }
 if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="validate_observer"))       // validate observer
-  require_once $instDir."common/control/validate_observer.php";
+{ $entryMessage.=$objObserver->validateObserver();
+  $_GET['indexAction']='view_observers';
+}
 if($objUtil->checkGetKey('indexAction')=="validate_site")                                                          // validate location
 { $entryMessage.=$objLocation->validateSaveLocation();
   $_GET['indexAction']="add_site";
-	unset($_GET['validate_site']);
 }
 if($objUtil->checkGetKey('indexAction')=="logout")                                                                 // logout
   require_once $instDir."common/control/logout.php";
@@ -70,8 +65,8 @@ if(($objUtil->checkGetKey('indexAction')=='quickpick') // ======================
 { $_POST['year']=$objUtil->checkPostKey('year',$objUtil->checkArrayKey($_SESSION,'newObsYear')); 
   $_POST['month']=$objUtil->checkPostKey('month',$objUtil->checkArrayKey($_SESSION,'newObsMonth')); 
   $_POST['day']=$objUtil->checkPostKey('day',$objUtil->checkArrayKey($_SESSION,'newObsDay'));
-  $_POST['instrument']=$objUtil->checkPostKey('instrument',$objUtil->checkArrayKey($_SESSION,'newObsInstrument',$objObserver->getStandardTelescope($loggedUser))); 
-  $_POST['site']=$objUtil->checkPostKey('site',$objUtil->checkArrayKey($_SESSION,'newObsLocation',$objObserver->getStandardLocation($loggedUser))); 
+  $_POST['instrument']=$objUtil->checkPostKey('instrument',$objUtil->checkArrayKey($_SESSION,'newObsInstrument',$objObserver->getObserverProperty($loggedUser,'telescope'))); 
+  $_POST['site']=$objUtil->checkPostKey('site',$objUtil->checkArrayKey($_SESSION,'newObsLocation',$objObserver->getObserverProperty($loggedUser,'stdlocation'))); 
   $_POST['limit']=$objUtil->checkPostKey('limit',$objUtil->checkArrayKey($_SESSION,'newObsLimit')); 
   $_POST['sqm']=$objUtil->checkPostKey('sqm',$objUtil->checkArrayKey($_SESSION,'newObsSQM')); 
   $_POST['seeing']=$objUtil->checkPostKey('seeing',$objUtil->checkArrayKey($_SESSION,'newObsSeeing')); 
@@ -90,8 +85,8 @@ if($objUtil->checkGetKey('indexAction')=="add_observation")
 	{ $_POST['year']=$objUtil->checkPostKey('year',$objUtil->checkArrayKey($_SESSION,'newObsYear')); 
     $_POST['month']=$objUtil->checkPostKey('month',$objUtil->checkArrayKey($_SESSION,'newObsMonth')); 
     $_POST['day']=$objUtil->checkPostKey('day',$objUtil->checkArrayKey($_SESSION,'newObsDay'));
-    $_POST['instrument']=$objUtil->checkPostKey('instrument',$objUtil->checkSessionKey('newObsInstrument',$objObserver->getStandardLocation(($loggedUser)))); 
-    $_POST['site']=$objUtil->checkPostKey('site',$objUtil->checkSessionKey('newObsLocation',$objObserver->getStandardLocation($loggedUser))); 
+    $_POST['instrument']=$objUtil->checkPostKey('instrument',$objUtil->checkSessionKey('newObsInstrument',$objObserver->getObserverProperty($loggedUser,'stdtelescope'))); 
+    $_POST['site']=$objUtil->checkPostKey('site',$objUtil->checkSessionKey('newObsLocation',$objObserver->getObserverProperty($loggedUser,'stdlocation'))); 
     $_POST['limit']=$objUtil->checkPostKey('limit',$objUtil->checkSessionKey('newObsLimit',$objLocation->getLocationPropertyFromId('limitingMagnitude',-999))); 
     $_POST['sqm']=$objUtil->checkPostKey('sqm',$objUtil->checkArrayKey($_SESSION,'newObsSQM')); 
     $_POST['seeing']=$objUtil->checkPostKey('seeing',$objUtil->checkArrayKey($_SESSION,'newObsSeeing')); 

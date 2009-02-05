@@ -658,7 +658,7 @@ class Observations {
 			$LOinstrumentsize=round($objInstrument->getInstrumentPropertyFromId($LOinstrumentId,'diameter'), 0);
 		} 
 		if ($LOinstrument=="Naked eye") $LOinstrument=InstrumentsNakedEye;
-		if($loggedUser&&$objObserver->getUseLocal($loggedUser))
+		if($loggedUser&&(!($objObserver->getObserverProperty($loggedUser,'UT'))))
 		{ $date=sscanf($this->getDsObservationLocalDate($value['observationid']),"%4d%2d%2d");
 			if($lco=="O")
 			  $LOdate=sscanf($this->getDsObservationLocalDate($LOid), "%4d%2d%2d");
@@ -743,7 +743,7 @@ class Observations {
 		$dateTimeLabelText="";
 		$dateTimeText=date($dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0]));
 		if($this->getDsObservationProperty($LOid,'time')>0) 
-			if($loggedUser&&$objObserver->getUseLocal($loggedUser))
+			if($loggedUser&&(!($objObserver->getObserverProperty($loggedUser,'UT'))))
 	  	{ $date=sscanf($this->getDsObservationLocalDate($LOid),"%4d%2d%2d");
 		  	$dateTimeLabelText="&nbsp;" . LangViewObservationField9lt;
 			  $time=$this->getDsObservationLocalTime($LOid);

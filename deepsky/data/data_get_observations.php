@@ -12,7 +12,7 @@ else
 //200811151634B: dit wordt momenteel niet verwerkt, kan er met CONVERT_TZ(dt,from_tz,to_tz) in het sql statement gewerkt worden?
 $mindate=$objUtil->checkGetKey('mindate');
 $maxdate=$objUtil->checkGetKey('maxdate');
-if (array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && $objObserver->getUseLocal($_SESSION['deepskylog_id']))
+if($loggedUser && (!($objObserver->getObserverProperty($loggedUser,'UT'))))
 { if ($mindate != "")
     $mindate = $mindate - 1;
   if ($maxdate != "")
@@ -88,7 +88,7 @@ if(!$validQobs)
   $_SESSION['QobsTotal']=$objObservation->getObservationFromQuery($query, $GLOBALS['objUtil']->checkGetKey('seen')); 
   $_SESSION['QobsMaxCnt']=$MaxCnt;
   $min=0;
-	if(array_key_exists('deepskylog_id',$_SESSION) && ($_SESSION['deepskylog_id']) && $objObserver->getUseLocal($_SESSION['deepskylog_id']))
+	if($loggedUser && (!($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT'))))
   { if(($mindate!="")||($maxdate!=""))
     { if($mindate!="")
         $mindate=$mindate + 1;

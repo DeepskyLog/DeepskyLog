@@ -48,12 +48,12 @@ if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']
 				$objObservation->setDsObservationProperty($_POST['observationid'],'eyepieceid', 0);
 			}
 
-			if ($objObserver->getUseLocal($_SESSION['deepskylog_id'])) {
-				$objObservation->setLocalDateAndTime($_POST['observationid'], $date, $time);
-			} else {
-				$objObservation->setDsObservationProperty($_POST['observationid'],'time', $time);
+			if ($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT')) 
+			{ $objObservation->setDsObservationProperty($_POST['observationid'],'time', $time);
 				$objObservation->setDsObservationProperty($_POST['observationid'],'date', $date);
 			}
+			else
+			  $objObservation->setLocalDateAndTime($_POST['observationid'], $date, $time);
 			$objObservation->setDsObservationProperty($_POST['observationid'],'instrumentid', $_POST['instrument']);
 			$objObservation->setDsObservationProperty($_POST['observationid'],'locationid', $_POST['location']);
 

@@ -257,7 +257,7 @@ class util
 
       $con = $valueA['objectconstellation'];
       $type = $valueA['objecttype'];
-      $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
+      $atlas = $GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode','urano');
       $page = $valueA[$atlas];
       $diam1 = $valueA['objectdiam1'];
       $diam2 = $valueA['objectdiam2'];
@@ -418,13 +418,13 @@ class util
     $theDate=date('d/m/Y');
     $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
 		if($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'name')
-		&& $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']),'name')
-		&& $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name'))
+		&& $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation'),'name')
+		&& $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope'),'name'))
       $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
 		    html_entity_decode(LangPDFMessage19 . $GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'firstname') . ' ' . 
 				                   $GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'name') . ' ' .
-		    LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name') . ' ' . 
-				LangPDFMessage21 . $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']),'name')), 'center' );
+		    LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope'),'name') . ' ' . 
+				LangPDFMessage21 . $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation'),'name')), 'center' );
 		$pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($_GET['pdfTitle']), 'center' );
 		$pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . '1', 'right');
 		while(list($key, $valueA) = each($result))
@@ -435,7 +435,7 @@ class util
 			
       $con = $valueA['objectconstellation'];
       $type = $valueA['objecttype'];
-      $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
+      $atlas = $GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode','urano');
       $page = $valueA[$atlas];
       $diam1 = $valueA['objectdiam1'];
       $diam2 = $valueA['objectdiam2'];
@@ -481,14 +481,14 @@ class util
 					  { $pdf->newPage();
 						  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
 							if($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'name')
-							&& $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']),'name')
-							&& $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name'))
+							&& $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation'),'name')
+							&& $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope'),'name'))
 						    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
 		                   html_entity_decode(
 		                   LangPDFMessage19 . $GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'name') . ' ' . 
 		                                      $GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'firstname') . ' ' .
-                       LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name') . ' ' . 
-				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']),'name')), 'center' );
+                       LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope'),'name') . ' ' . 
+				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation'),'name')), 'center' );
 		          $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($_GET['pdfTitle']), 'center' );
 		          $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
   					}
@@ -512,13 +512,13 @@ class util
 				  { $pdf->newPage();
 					  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
 						if($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'name')
-						&& $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']),'name')
-						&& $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name'))
+						&& $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation'),'name')
+						&& $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope'),'name'))
 					    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
 	                   html_entity_decode(LangPDFMessage19 . $GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'name') . ' ' .
 	                                      $GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'firstname') . ' ' .
-                     LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name') . ' ' . 
-			               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']),'name')), 'center' );
+                     LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope'),'name') . ' ' . 
+			               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation'),'name')), 'center' );
             $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($_GET['pdfTitle']), 'center' );
 	          $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
 					}
@@ -588,13 +588,13 @@ class util
 						  { $pdf->newPage();
 							  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
 								if($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'name')
-								&& $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']),'name')
-								&& $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name'))
+								&& $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation'),'name')
+								&& $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope'),'name'))
 							    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
 		                   html_entity_decode(LangPDFMessage19 . $GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'name') . ' ' . 
 		                                      $GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'firstname') . 
-                       LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name') . ' ' . 
-				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']),'name')), 'center' );
+                       LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope'),'name') . ' ' . 
+				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation'),'name')), 'center' );
 		            $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($_GET['pdfTitle']), 'center' );
 		            $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
           	  }
@@ -633,13 +633,13 @@ class util
 						  { $pdf->newPage();
 							  $pdf->addTextWrap($xleft, $header, 100, 8, $theDate);
 								if($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'name')
-								&& $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']),'name')
-								&& $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name'))
+								&& $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation'),'name')
+								&& $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope'),'name'))
 							    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, 8, 
 		                   html_entity_decode(LangPDFMessage19 . $GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'name') . ' ' . 
 		                                      $GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'firstname') . 
-                       LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getStandardTelescope($_SESSION['deepskylog_id']),'name') . ' ' . 
-				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getStandardLocation($_SESSION['deepskylog_id']),'name')), 'center' );
+                       LangPDFMessage20 . $GLOBALS['objInstrument']->getInstrumentPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope'),'name') . ' ' . 
+				               LangPDFMessage21 . $GLOBALS['objLocation']->getLocationPropertyFromId($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation'),'name')), 'center' );
 		            $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($_GET['pdfTitle']), 'center' );
 		            $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . $pagenr, 'right');
           	  }
@@ -744,7 +744,7 @@ class util
       if($pa==999)
       $pa="";
       $type = $valueA['objecttype'];
-      $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
+      $atlas = $GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode','urano');
       $page = $valueA[$atlas];
       $diam1 = $valueA['objectdiam1'];
       $diam2 = $valueA['objectdiam2'];
@@ -800,7 +800,7 @@ class util
         $sb = $sb.".0";
       $con = $valueA['objectconstellation'];
       $argotype = "argo".$valueA['objecttype'];
-      $atlas = $GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id']);
+      $atlas = $GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode','urano');
       $page = $valueA[$atlas];
       $size = "";
 			
@@ -871,14 +871,11 @@ class util
       $filt = $obs["filter"];
       $eyep = $obs["eyepiece"];
       $lns = $obs["lens"];
-
-      if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($GLOBALS['objObserver']->getUseLocal($_SESSION['deepskylog_id'])))
-        $date = sscanf($obs["localdate"], "%4d%2d%2d");
-
-      else
+      if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
         $date = sscanf($obs["date"], "%4d%2d%2d");
+      else
+        $date = sscanf($obs["localdate"], "%4d%2d%2d");
       $description = $this->br2nl(html_entity_decode($obs["description"]));
-
       $formattedDate = date($dateformat, mktime(0,0,0,$date[1],$date[2],$date[0]));
       $visstr=""; $sstr = ""; $lstr = ""; $filtstr=""; $eyepstr=""; $lnsstr="";
       if     ($seeing == 1) $seeingstr = SeeingExcellent;
@@ -979,17 +976,14 @@ class util
 
       $observerid = $observation->getDsObservationProperty($value,'observerid');
 
-      if ($observer->getUseLocal($_SESSION['deepskylog_id']))
-      {
-        $date = sscanf($observation->getLocalDate($value), "%4d%2d%2d");
-        $time = $observation->getLocalTime($value);
-      }
-      else
-      {
-        $date = sscanf($observation->getDate($value), "%4d%2d%2d");
+      if ($observer->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
+      { $date = sscanf($observation->getDate($value), "%4d%2d%2d");
         $time = $observation->getDsObservationProperty($value,'time');
       }
-
+      else
+      { $date = sscanf($observation->getLocalDate($value), "%4d%2d%2d");
+        $time = $observation->getLocalTime($value);
+      }
       $hour = (int)($time / 100);
       $minute = $time - $hour * 100;
       $formattedDate = date($GLOBALS['dateformat'], mktime(0,0,0,$date[1],$date[2],$date[0]));
@@ -1178,7 +1172,7 @@ class util
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'view_image'                         ,'deepsky/content/show_image.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll(   'view_observer_catalog'              ,'deepsky/content/details_observer_catalog.php')))
     
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('common_content_change_account'      ,'common/content/change_account.php')))          // former account_details
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('change_account'                     ,'common/content/change_account.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_eyepiece'                     ,'common/content/change_eyepiece.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_filter'                       ,'common/content/change_filter.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_instrument'                   ,'common/content/change_instrument.php')))

@@ -70,7 +70,7 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
   if(array_key_exists('catalog',$_GET)) $catalog = $_GET['catalog'];
   if(array_key_exists('catNumber',$_GET)) $catNumber = $_GET['catNumber'];
   if(array_key_exists('atlas',$_GET) && $_GET['atlas']);
-  $atlas=$GLOBALS['objUtil']->checkGetKey('atlas',(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])?$objAtlas->atlasCodes[$objObserver->getStandardAtlasCode($_SESSION['deepskylog_id'])]:'');
+  $atlas=$GLOBALS['objUtil']->checkGetKey('atlas',(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])?$objAtlas->atlasCodes[$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode','urano')]:'');
   $atlasPageNumber=$objUtil->checkGetKey('atlasPageNumber','');
   if(array_key_exists('inList', $_GET)) $inList = $_GET['inList']; else $inList = '';
   if(array_key_exists('notInList', $_GET)) $notInList = $_GET['notInList']; else $notInList = '';

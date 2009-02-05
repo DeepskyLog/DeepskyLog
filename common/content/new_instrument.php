@@ -71,7 +71,7 @@ if(count($insts)>0)
     echo "</td>";
 		echo "<td align=\"center\">";
 		// Radio button for the standard instrument
-    if($value==$objObserver->getStandardTelescope($_SESSION['deepskylog_id']))
+    if($value==$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope'))
 	    echo("<input type=\"radio\" name=\"stdtelescope\" value=\"". $value ."\" checked>&nbsp;<br>");
 	  else
 			echo("<input type=\"radio\" name=\"stdtelescope\" value=\"". $value ."\">&nbsp;<br>");

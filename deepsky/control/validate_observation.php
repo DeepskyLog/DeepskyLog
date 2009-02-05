@@ -125,7 +125,7 @@ else // all fields filled in
 			$GLOBALS['objObservation']->setDsObservationProperty($current_observation,'lensid', $_POST['lens']);
 		if ($_POST['eyepiece'])
 			$GLOBALS['objObservation']->setDsObservationProperty($current_observation,'eyepieceid', $_POST['eyepiece']);
-		if ($GLOBALS['objObserver']->getUseLocal($_SESSION['deepskylog_id']))
+		if(!($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
 			$GLOBALS['objObservation']->setLocalDateAndTime($current_observation, $date, $time);
 		$GLOBALS['objObservation']->setDsObservationProperty($current_observation,'characterType', $GLOBALS['objUtil']->checkPostKey('characterType'));
 		if ($_FILES['drawing']['tmp_name'] != "") // drawing to upload

@@ -761,7 +761,7 @@ class Objects implements iObject
 	  $sb=sprintf("%01.1f", $this->getDSOProperty($object,'subr'));
     $this->calcContrastAndVisibility($object,$object,$this->getDsoProperty($object,'mag'),$this->getDsoProperty($object,'SBObj'),$this->getDsoProperty($object,'diam1'),$this->getDsoProperty($object,'diam2'),$contrast,$contype,$popup,$prefMag);
 	  echo "<table width=\"100%\">";
-	  if($loggedUser&&($standardAtlasCode=$GLOBALS['objObserver']->getStandardAtlasCode($_SESSION['deepskylog_id'])))
+	  if($loggedUser&&($standardAtlasCode=$GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode','urano')))
 	    tableFieldnameField2(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode(stripslashes($object)) . "\">".(stripslashes($object))."</a>",
 	                                      $objAtlas->atlasCodes[$standardAtlasCode].LangViewObjectField10,$this->getDsoProperty($object,$standardAtlasCode)," class=\"type2\"");
 	  else                                                                                                                                                                                                      // object name       / atlas page
@@ -857,7 +857,7 @@ class Objects implements iObject
 	  tableSortHeader(LangOverviewObjectsHeader3b, $link."&amp;sort=objectsurfacebrightness");
 	  tableSortHeader(LangOverviewObjectsHeader4,  $link."&amp;sort=objecttype");
     if($loggedUser)
-	  { $atlas = $objObserver->getStandardAtlasCode($loggedUser);
+	  { $atlas = $objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano');
       tableSortHeader($objAtlas->atlasCodes[$atlas], $link."&amp;sort=".$atlas);
 	    tableSortInverseHeader(LangViewObjectFieldContrastReserve, $link."&amp;sort=objectcontrast");
 	    tableSortHeader(LangViewObjectFieldMagnification, $link."&amp;sort=objectoptimalmagnification");

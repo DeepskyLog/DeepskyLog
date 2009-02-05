@@ -18,7 +18,7 @@ if(isset($_SESSION['deepskylog_id']))
   echo "<option ".(($objUtil->checkGetKey('indexAction')=='add_eyepiece')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=add_eyepiece\">".LangChangeMenuItem6."</option>";
   echo "<option ".(($objUtil->checkGetKey('indexAction')=='add_filter')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=add_filter\">".LangChangeMenuItem7."</option>";
   echo "<option ".(($objUtil->checkGetKey('indexAction')=='add_lens')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=add_lens\">".LangChangeMenuItem8."</option>";                        
-  echo "<option ".(($objUtil->checkGetKey('indexAction')=='common_content_change_account')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=common_content_change_account\">".LangChangeMenuItem1."</option>";
+  echo "<option ".(($objUtil->checkGetKey('indexAction')=='change_account')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=change_account\">".LangChangeMenuItem1."</option>";
 }
 echo("</select>\n");
 echo "</td>";

@@ -84,7 +84,7 @@ $date = sscanf($objCometObservation->getDate($_GET['observation']), "%4d%2d%2d")
 
 if($objCometObservation->getTime($_GET['observation']) >= 0)
 {
-  if ($objObserver->getUseLocal($_SESSION['deepskylog_id']))
+  if(!($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT)')))
   {
     $date = sscanf($objCometObservation->getLocalDate($_GET['observation']), "%4d%2d%2d");
   }
@@ -98,7 +98,7 @@ echo("</td></tr>");
 
 if($objCometObservation->getTime($_GET['observation']) >= 0)
 {
-  if ($objObserver->getUseLocal($_SESSION['deepskylog_id']))
+  if(!($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
   {
     echo("<tr><td class=\"fieldname\">" . LangViewObservationField9lt . "</td><td>");
     $time = $objCometObservation->getLocalTime($_GET['observation']);
@@ -333,7 +333,7 @@ echo("</td></tr>");
 
 echo("</table>");
 
-$role = $objObserver->getRole($_SESSION['deepskylog_id']);
+$role = $objObserver->getObserverProperty($_SESSION['deepskylog_id'],'role',2);
 
 if ($role == RoleAdmin || $role == RoleCometAdmin)
 {

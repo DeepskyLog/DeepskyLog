@@ -24,7 +24,7 @@ $_SESSION['result'] = "";
 if(array_key_exists('atlas',$_GET)&&$_GET['atlas'])
   $atlas=$_GET['atlas'];
 elseif(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
-  $atlas=$objAtlas->atlasCodes[$objObserver->getStandardAtlasCode($_SESSION['deepskylog_id'])];
+  $atlas=$objAtlas->atlasCodes[$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode', 'urano')];
 else
   $atlas="";
 

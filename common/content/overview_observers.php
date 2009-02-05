@@ -46,7 +46,7 @@ while(list ($key, $value) = each($observers))
   echo "<td>".$firstname."</td>";
   echo "<td> <a href=\"mailto:".$email."\"> ".$email." </a> </td>";
   echo "<td> ";
-  $role = $objObserver->getRole($value);
+  $role = $objObserver->getObserverProperty($value,'role',2);
   if ($role == RoleAdmin)
     echo LangViewObserverAdmin."</td><td></td>";
   elseif ($role == RoleUser)

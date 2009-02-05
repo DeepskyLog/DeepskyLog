@@ -8,11 +8,11 @@ $loginErrorCode="";
 $loginErrorText="";
 if(array_key_exists('deepskylogsec', $_COOKIE)&&$_COOKIE['deepskylogsec'])
 { if(strlen($_COOKIE['deepskylogsec'])>32)
-  { if(substr($_COOKIE['deepskylogsec'],0,32)==$objObserver->getPassword(substr($_COOKIE['deepskylogsec'],32,255)))
+  { if(substr($_COOKIE['deepskylogsec'],0,32)==$objObserver->getObserverProperty(substr($_COOKIE['deepskylogsec'],32,255),'password'))
     { $_SESSION['deepskylog_id']=substr($_COOKIE['deepskylogsec'],32,255);
 		  $_SESSION['lang']=$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'language');
 			$loggedUser=$_SESSION['deepskylog_id'];
-		  if($objObserver->getRole($_SESSION['deepskylog_id'])=="0")                // administrator logs in 
+		  if($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'role',2)=="0")                // administrator logs in 
         $_SESSION['admin']="yes";
 	  }
 		else
@@ -29,12 +29,12 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
 { if(array_key_exists('deepskylog_id', $_POST)&&$_POST['deepskylog_id']&&array_key_exists('passwd', $_POST)&&$_POST['passwd'])              // all fields filled in
   { $login  = $_POST['deepskylog_id'];                                          // get password from form and encrypt
 	  $passwd = md5($_POST['passwd']);
-    $passwd_db = $GLOBALS['objObserver']->getPassword($login);                  // get password from database 
+    $passwd_db = $GLOBALS['objObserver']->getObserverProperty($login,'password');                  // get password from database 
     if($passwd_db==$passwd)                                                     // check if passwords match
     { $_SESSION['lang']=$objObserver->getObserverProperty($login,'language');
-			if($GLOBALS['objObserver']->getRole($login)=="2")                         // user in waitlist already tries to log in
+			if($GLOBALS['objObserver']->getObserverProperty($login,'role',2)=="2")                         // user in waitlist already tries to log in
         $loginError="loginuser: user in waitlist";
-      elseif($GLOBALS['objObserver']->getRole($login)=="1")                     // validated user
+      elseif($GLOBALS['objObserver']->getObserverProperty($login,'role',2)=="1")                     // validated user
       { session_regenerate_id(true);
 			  $_SESSION['deepskylog_id']=$login;                                      // set session variable
         $_SESSION['admin']="no";                                                // set session variable

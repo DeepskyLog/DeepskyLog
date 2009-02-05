@@ -18,7 +18,7 @@ $tempList.="</select>";
 echo "<div id=\"main\">";
 echo "<h2>".LangRegisterNewTitle."</h2>";        
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
-echo "<input type=\"hidden\" name=\"indexAction\" value=\"common_control_validate_account\">";
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_account\">";
 echo "<table>";
 tableFieldnameFieldExplanation(LangChangeAccountField1,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkPostKey('deepskylog_id')."\" />",LangChangeAccountField1Expl);
 tableFieldnameFieldExplanation(LangChangeAccountField2,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"email\" size=\"30\" value=\"".$objUtil->checkPostKey('email')."\" />",LangChangeAccountField2Expl);

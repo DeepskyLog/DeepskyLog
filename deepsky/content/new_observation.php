@@ -69,9 +69,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"4\" size=\"4\" style=\"text-align:center\" name=\"year\" onkeypress=\"return checkPositiveInteger(event);\" value=\"" . $objUtil->checkPostKey('year') . "\" />";
 	echo "</td>";
 	echo "<td class=\"explanation\">" . LangViewObservationField10 . "</td>";
-	echo "<td class=\"fieldname\" align=\"right\">";
-	echo (($objObserver->getUseLocal($_SESSION['deepskylog_id'])) ? LangViewObservationField9lt : LangViewObservationField9);
-	echo "</td>";
+	echo "<td class=\"fieldname\" align=\"right\">".(($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT')) ? LangViewObservationField9: LangViewObservationField9lt)."</td>";
 	echo "<td>";
 	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" style=\"text-align:center\" name=\"hours\" value=\"" . $objUtil->checkPostKey('hours') . "\">";
 	echo "&nbsp;&nbsp;";
