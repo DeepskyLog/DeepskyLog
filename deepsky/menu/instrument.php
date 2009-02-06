@@ -14,7 +14,7 @@ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
 	while(list($key,$value)=each($_GET))
 	  $link.=$key.'='.$value.'&amp;';
 	if(array_key_exists('activeTelescopeId',$_GET) && $_GET['activeTelescopeId'])
-  { $objObserver->setStandardTelescope($_SESSION['deepskylog_id'], $_GET['activeTelescopeId']);
+  { $objObserver->setObserverProperty($_SESSION['deepskylog_id'],'stdtelescope', $_GET['activeTelescopeId']);
 	  if(array_key_exists('Qobj',$_SESSION))
 		  $_SESSION['Qobj']=$objObject->getObjectVisibilities($_SESSION['Qobj']);
   }

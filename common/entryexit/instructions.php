@@ -281,7 +281,7 @@ if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAct
 { if(($_SESSION['admin']=="yes")
   && ($objUtil->checkGetKey('user')))
   { $role=$objUtil->checkGetKey('role',2);
-    $objObserver->setRole($_GET['user'],$role);
+    $objObserver->setObserverProperty($_GET['user'],'role', $role);
     $entryMessage.="Role is successfully updated!";
   }
   $_GET['indexAction']="detail_observer";  

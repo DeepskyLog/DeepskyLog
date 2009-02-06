@@ -143,19 +143,17 @@ class Locations
     }
   }
   public  function validateSaveLocation()
-	{ global $objUtil, $objDatabase;  
-    if($objUtil->checkPostKey('adaption')==1
-    && $objUtil->checkUserID($this->getLocationPropertyFromId($objUtil->checkPostKey('stdlocation'),'observer')))
-    { $objObserver->setStandardLocation($_SESSION['deepskylog_id'], $_POST['stdlocation']);
+	{ global $objUtil, $objDatabase, $objObserver;  
+	  if(($objUtil->checkPostKey('adaptStandardLocation')==1)
+    &&  $objUtil->checkUserID($this->getLocationPropertyFromId($objUtil->checkPostKey('stdlocation'),'observer')))
+    { $objObserver->setObserverProperty($_SESSION['deepskylog_id'],'stdlocation', $_POST['stdlocation']);
     } 
     if($objUtil->checkPostKey('sitename')
     && $objUtil->checkPostKey('region')
     && $objUtil->checkPostKey('country')
-    && $objUtil->checkPostKey('longitude')
-    && $objUtil->checkPostKey('latitude')
     && $objUtil->checkPostKey('timezone'))
-    { $latitude  = $_POST['latitude'] + $_POST['latitudemin'] / 60.0;
-      $longitude = $_POST['longitude'] + $_POST['longitudemin'] / 60.0;
+    { $latitude  = $objUtil->checkPostKey('latitude',0) + $objUtil->checkPostKey('latitudemin',0) / 60.0;
+      $longitude = $objUtil->checkPostKey('longitude',0) + $objUtil->checkPostKey('longitudemin',0) / 60.0;
       $timezone  = $_POST['timezone'];
       if($objUtil->checkPostKey('add'))
       { $id = $this->addLocation($_POST['sitename'], $longitude, $latitude, $_POST['region'], $_POST['country'], $timezone);
@@ -165,7 +163,7 @@ class Locations
         } 
         elseif(array_key_exists('sb', $_POST) && $_POST['sb'])
         { $this->setLocationProperty($id, 'skyBackground', $_POST['sb']);
-          $this-setLocationProperty($id, 'limitingMagnitude', -999);
+          $this->setLocationProperty($id, 'limitingMagnitude', -999);
         } 
         else
         { $this->setLocationProperty($id, 'skyBackground', -999);
@@ -175,7 +173,7 @@ class Locations
         return LangValidateSiteMessage2;
       }
       if($objUtil->checkPostKey('change')
-      && $objUtil->checkAdminOrUserID($objLocation->getLocationPropertyFromId($objUtil->checkPostKey('id'),'observer')))
+      && $objUtil->checkAdminOrUserID($this->getLocationPropertyFromId($objUtil->checkPostKey('id'),'observer')))
       { $this->setLocationProperty($_POST['id'], 'name',      $_POST['sitename']);
         $this->setLocationProperty($_POST['id'], 'region',    $_POST['region']);
         $this->setLocationProperty($_POST['id'], 'country',   $_POST['country']);

@@ -147,7 +147,7 @@ if ($sites != null)
   }
 }
 echo "</table>";
-echo "<input type=\"hidden\" name=\"adaption\" value=\"1\">";
+echo "<input type=\"hidden\" name=\"adaptStandardLocation\" value=\"1\">";
 echo "<input type=\"submit\" name=\"adapt\" value=\"" . LangAddSiteStdLocation . "\" />";
 echo "</form>";
 list($min, $max) = $objUtil->printNewListHeader($sites, $link, $min, $step, "");

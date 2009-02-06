@@ -84,11 +84,11 @@ class Instruments implements iInstruments
 		}
   }
   public  function validateSaveInstrument()
-	{ global $objUItil, $objDatabase;
+	{ global $objUtil, $objDatabase, $objObserver;
 	  if(($objUtil->checkPostKey('adaption')==1)
     && $objUtil->checkPostKey('stdtelescope')
     && $objUtil->checkUserID($this->getObserverFromInstrument($objUtil->checkPostKey('stdtelescope'))))
-    { $objObserver->setStandardTelescope($_SESSION['deepskylog_id'], $_POST['stdtelescope']);
+    { $objObserver->setObserverProperty($_SESSION['deepskylog_id'],'stdtelescope', $_POST['stdtelescope']);
       return LangValidateInstrumentMessage3;
     }
     if($objUtil->checkPostKey('instrumentname')

@@ -30,7 +30,7 @@ echo "</tr>";
 echo "<tr>";
 echo "<td class=\"fieldname\">".LangAddInstrumentField5."</td>";
 echo "<td>";
-echo getInstrumentEchoListType($objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'type'));
+echo $objInstrument->getInstrumentEchoListType($objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'type'));
 echo "</td>";
 echo "</tr>";
 echo "<tr>";

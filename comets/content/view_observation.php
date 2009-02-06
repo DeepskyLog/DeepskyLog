@@ -84,7 +84,7 @@ $date = sscanf($objCometObservation->getDate($_GET['observation']), "%4d%2d%2d")
 
 if($objCometObservation->getTime($_GET['observation']) >= 0)
 {
-  if(!($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT)')))
+  if(!($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
   {
     $date = sscanf($objCometObservation->getLocalDate($_GET['observation']), "%4d%2d%2d");
   }
