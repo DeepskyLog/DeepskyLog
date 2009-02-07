@@ -7,7 +7,7 @@
 include_once "lib/cometobjects.php";
 include_once "lib/util.php";
 
-$util = new Util();
+$util = new Utils();
 $util->checkUserInput();
 
 $objects = new CometObjects; 
@@ -23,8 +23,8 @@ echo("</h2>\n");
 
 echo("<table width=\"490\">\n");
 
-echo("<form action=\"".$baseURL."index.php?indexAction=comets_result_query_objects\" method=\"get\">\n");
-
+echo("<form action=\"".$baseURL."index.php\" method=\"get\">\n");
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"comets_result_query_objects\" />";
 // OBJECT NAME 
 
 echo("<tr>\n

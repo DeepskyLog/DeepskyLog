@@ -80,7 +80,7 @@ if(array_key_exists('longitude',$_GET) && $_GET['longitude'] || array_key_exists
 
 echo "<div id=\"main\">\n<h2>".LangOverviewSiteTitle."</h2>";
 $link=$baseURL."index.php?indexAction=add_site&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
-list($min,$max)=$objUtil->printListHeader($sites, $link, $min, $step, "");
+list($min,$max)=$objUtil->printNewListHeader($sites, $link, $min, $step, "");
 echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>";

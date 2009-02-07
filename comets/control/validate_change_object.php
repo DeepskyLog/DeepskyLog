@@ -10,7 +10,7 @@ include_once "../lib/cometobjects.php";
 include_once "../lib/setup/vars.php";
 include_once "../lib/util.php";
 
-$util = new Util();
+$util = new Utils();
 $util->checkUserInput();
 
 $objects = new CometObjects;

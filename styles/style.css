@@ -101,7 +101,12 @@ hr {
   font-weight      : bold;
   text-decoration  : none;
 }
-
+.menuButton {
+	width: 143px;
+}
+.menuField {
+	width: 147px;
+}
 a.mainlevel:link, a.mainlevel:visited {
   color            : #FFFF00;
   font-family      : Verdana, Arial, Helvetica, serif;

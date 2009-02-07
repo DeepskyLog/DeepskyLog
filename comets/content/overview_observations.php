@@ -67,7 +67,7 @@ else
 {
   $min=0;
 } 
-list($min, $max) = $objUtil->printListHeader($obs, $link, $min, 25, "");
+list($min, $max) = $objUtil->printNewListHeader($obs, $link, $min, 25, "");
 
 if(sizeof($obs) > 0)
 {
@@ -245,7 +245,7 @@ while (FALSE !== ($file = readdir($dir)))
 echo ("</table>\n");
 }
 
-list($min, $max) = $objUtil->printListHeader($obs, $link, $min, 25, "");
+list($min, $max) = $objUtil->printNewListHeader($obs, $link, $min, 25, "");
 
 echo("</div>\n</body>\n</html>");
 

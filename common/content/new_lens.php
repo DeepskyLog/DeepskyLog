@@ -56,7 +56,7 @@ if ($lns != null)
   }
 }
 echo "</table>";
-list($min, $max) = $objUtil->printListHeader($lns, $link, $min, $step, "");
+list($min, $max) = $objUtil->printNewListHeader($lns, $link, $min, $step, "");
 echo "</div>";
 echo "<hr>";
 echo("<h2>").LangAddLensTitle."</h2>";

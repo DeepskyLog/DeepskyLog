@@ -1,7 +1,4 @@
-<?php
-// new_instrument.php
-// form which allows the user to add a new instrument 
-
+<?php // new_instrument.php - form which allows the user to add a new instrument 
 
 $type = $objUtil->checkGetKey('type');
 if(array_key_exists('instrumentid',$_GET) && $_GET['instrumentid'])
@@ -26,11 +23,9 @@ if((isset($_GET['sort']))&&($_GET['previous']==$_GET['sort']))                  
 }
 else
   $previous = $sort;
-$step = 25;
 echo "<div id=\"main\">";
 echo "<h2>".LangOverviewInstrumentsTitle."</h2>";
 $link=$baseURL."index.php?indexAction=add_instrument&amp;sort=".$sort."&amp;previous=".$orig_previous;
-list($min, $max) = $objUtil->printListHeader($insts, $link, $min, $step, "");
 echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=name&amp;previous=$previous\">".LangOverviewInstrumentsName."</a></td>";
@@ -92,7 +87,6 @@ echo "</table>";
 echo "<input type=\"hidden\" name=\"adaption\" value=\"1\">";
 echo "<input type=\"submit\" name=\"adapt\" value=\"" . LangAddInstrumentStdTelescope . "\" />";
 echo "</form>";
-list($min,$max)=$objUtil->printNewListHeader($insts,$link,$min,$step,"");
 echo "</div>";
 echo "<hr />";
 echo "<h2>".LangAddInstrumentTitle."</h2>";

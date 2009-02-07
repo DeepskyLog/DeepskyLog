@@ -1,5 +1,5 @@
 <?php
-interface iAtlas
+interface iAtlasses
 { // public $atlasCodes;                                                        // $atlasCodes[code]=AtlasName
      public function calculateAtlasPage($atlas, $ra, $decl);                    // calculates the atlas page for the ra,decl in atlas
   // private function calculateMilleniumPage($ra, $decl);
@@ -12,7 +12,7 @@ interface iAtlas
   // private function calculateTorresCPage($ra, $decl);
   // private function calculateUranometriaPage($ra, $decl)
 }
-class Atlasses implements iAtlas
+class Atlasses implements iAtlasses
 { public  $atlasCodes=array();
   public  function __construct()                                                // Constructor initialises the public atlasCodes property
 	{ $run=$GLOBALS['objDatabase']->selectRecordset('SELECT atlasCode FROM atlasses;'); 

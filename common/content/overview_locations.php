@@ -27,7 +27,7 @@ $step = 25;
 echo "<div id=\"main\">";
 echo "<h2>".LangViewLocationTitle."</h2>";
 $link=$baseURL."index.php?indexAction=view_locations&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
-list($min, $max) = $objUtil->printListHeader($sites, $link, $min, $step, "");
+list($min, $max) = $objUtil->printNewListHeader($sites, $link, $min, $step, "");
 echo "<table>";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>";

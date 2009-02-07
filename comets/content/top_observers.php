@@ -9,7 +9,7 @@
 
   $obs = new Observers;
   $observations = new CometObservations;
-  $util = new Util;
+  $util = new Utils;
   $util->checkUserInput();
 
   $testobservations = $observations->getObservations(); // test array if no observaton yet
@@ -32,7 +32,7 @@
   {
     $mini = '';
   }
-  list($min, $max) = $util->printListHeader($rank, $link, $mini, $step, "");
+  list($min, $max) = $util->printNewListHeader($rank, $link, $mini, $step, "");
 
   $count = 0;
 

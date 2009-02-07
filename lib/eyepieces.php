@@ -1,5 +1,5 @@
 <?php // The eyepieces class collects all functions needed to enter, retrieve and adapt eyepiece data from the database.
-interface iEyepiece
+interface iEyepieces
 { public  function addEyepiece($name, $focalLength, $apparentFOV);                   // adds a new eyepiece to the database. The name, focalLength and apparentFOV should be given as parameters. 
   public  function getAllEyepiecesIds($id);                                          // returns a list with all id's which have the same name as the name of the given id
   public  function getEyepieceObserverPropertyFromName($name, $observer, $property); // returns the property for the eyepiece of the observer
@@ -11,7 +11,7 @@ interface iEyepiece
   public  function validateDeleteEyepiece();                                         // validates and deletes an eyepiece
   public  function validateSaveEyepiece();                                           // validates and saves an eyepiece and returns a message 
 } 
-class Eyepieces implements iEyepiece
+class Eyepieces implements iEyepieces
 {public function addEyepiece($name, $focalLength, $apparentFOV)                      // addEyepiece adds a new eyepiece to the database. The name, focalLength and apparentFOV should be given as parameters. 
  { global $objDatabase;
    $objDatabase->execSQL("INSERT INTO eyepieces (name, focalLength, apparentFOV) VALUES (\"".$name."\", \"".$focalLength."\", \"".$apparentFOV."\")");

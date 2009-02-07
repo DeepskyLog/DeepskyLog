@@ -10,15 +10,15 @@ include_once "lib/observers.php";
 include_once "lib/instruments.php";
 include_once "lib/locations.php";
 include_once "lib/util.php";
-include_once "lib/ICQMETHOD.php";
-include_once "lib/ICQREFERENCEKEY.php";
+include_once "lib/icqmethod.php";
+include_once "lib/icqreferencekey.php";
 
 $objects = new CometObjects; 
 $observations = new CometObservations;
 $observers = new Observers;
 $instruments = new Instruments;
 $locations = new Locations;
-$util = new util;
+$util = $objUtil;
 $util->checkUserInput();
 
 $_SESSION['result'] = "";

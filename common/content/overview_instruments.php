@@ -26,7 +26,7 @@ $step = 25;
 echo "<div id=\"main\">";
 echo "<h2>".LangOverviewInstrumentsTitle."</h2>";
 $link=$baseURL."index.php?indexAction=view_instruments&amp;sort=".$sort."&amp;previous=".$orig_previous;
-list($min,$max)=$objUtil->printListHeader($telescopes,$link,$min,$step,"");
+list($min,$max)=$objUtil->printNewListHeader($telescopes,$link,$min,$step,"");
 echo "<table>";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_instruments&amp;sort=name&amp;previous=$previous\">".LangOverviewInstrumentsName."</a></td>";
@@ -77,6 +77,6 @@ while(list ($key, $value) = each($telescopes))
   $count++;
 }
 echo "</table>";
-list($min, $max) = $objUtil->printListHeader($telescopes, $link, $min, $step, "");
+list($min, $max) = $objUtil->printNewListHeader($telescopes, $link, $min, $step, "");
 echo "</div>";
 ?>

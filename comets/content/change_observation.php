@@ -12,8 +12,8 @@ include_once "lib/locations.php";
 include_once "lib/observers.php";
 include_once "lib/instruments.php";
 include_once "lib/util.php";
-include_once "lib/ICQMETHOD.php";
-include_once "lib/ICQREFERENCEKEY.php";
+include_once "lib/icqmethod.php";
+include_once "lib/icqreferencekey.php";
 
 
 // creation of objects
@@ -23,7 +23,7 @@ $cometobservations = new CometObservations;
 $instruments = new Instruments;
 $locations = new Locations;
 $observers = new Observers;
-$util = new Util;
+$util = new Utils;
 $util->checkUserInput();
 
 if(!$_GET['observation']) // no observation defined 

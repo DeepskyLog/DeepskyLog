@@ -10,7 +10,7 @@ include_once "common/control/dec_to_dm.php";
 include_once "lib/util.php";
 
 $objects = new CometObjects;
-$util = new Util();
+$util = new Utils();
 $util->checkUserInput();
 
 // SORTING
@@ -85,7 +85,7 @@ if(sizeof($obstest) > 0)
   $count = 0; // counter for altering table colors
 
   $link = "".$baseURL."index.php?indexAction=comets_view_objects&amp;sort=".$sort."&amp;previous=".$prev;
-  list($min, $max) = $util->printListHeader($obs, $link, $tempmin, 25, "");
+  list($min, $max) = $util->printNewListHeader($obs, $link, $tempmin, 25, "");
  
   // OBJECT TABLE HEADERS
 

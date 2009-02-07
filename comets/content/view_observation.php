@@ -8,10 +8,10 @@
 
 // include statements and creation of objects
 
-include_once "lib/ICQMETHOD.php";
+include_once "lib/icqmethod.php";
 $ICQMETHODS = new ICQMETHOD();
 
-include_once "lib/ICQREFERENCEKEY.php";
+include_once "lib/icqreferencekey.php";
 $ICQREFERENCEKEYS = new ICQREFERENCEKEY;
 
 if(!$_GET['observation']) // no observation defined 

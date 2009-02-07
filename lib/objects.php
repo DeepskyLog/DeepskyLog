@@ -1,5 +1,5 @@
 <?php // The objects class collects all functions needed to enter, retrieve and adapt object data from the database and functions to display the data.
-interface iObject
+interface iObjects
 { public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec,$mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource); // Add a deepsky object in all detail
 //private function calcContrastAndVisibility($object,$showname,$magnitude,$SBobj,$diam1,$diam2,&$contrast,&$contype,&$popup,&$prefMag);
 //private function calculateSize($diam1, $diam2);                               // Construct a string from the sizes
@@ -40,7 +40,7 @@ interface iObject
   public  function showObjects($link, $min, $max, $ownShow='', $showRank=0);    // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
   public  function sortObjects($objectList, $sort, $reverse=false);             // Sort the array of objectList on the $sort field, and in second order on the showname field 
 }
-class Objects implements iObject
+class Objects implements iObjects
 { public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec, $mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource)               // addObject adds a new object to the database. The name, alternative name, type, constellation, right ascension, declination, magnitude, surface brightness, diam1, diam2, position angle and info about the catalogs should be given as parameters. The chart numbers for different atlasses are put in the database. $datasource describes where the data comes from eg : SAC7.2, DeepskyLogUser or E&T 2.5
   { global $objDatabase;
     $array = array("INSERT INTO objects (name, type, con, ra, decl, mag, subr, diam1, diam2, pa, datasource, urano, urano_new, sky, millenium, taki, psa, torresB, torresBC, torresC, milleniumbase) 

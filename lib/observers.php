@@ -1,5 +1,5 @@
 <?php // The observers class collects all functions needed to enter, retrieve and adapt observer data from the database and functions to display the data.
-interface iObserver
+interface iObservers
 { public  function addObserver($id, $name, $firstname, $email, $password);                // adds a new observer to the database. The id, name, first name email address and password should be given as parameters. The password must be encoded using md5(...). The new observer will not be able to log in yet. Before being able to do so, the administrator must validate the new user.
   public  function getAdministrators();
   public  function getCometRank($observer);                                               // returns the number of observations of the given observer
@@ -17,7 +17,7 @@ interface iObserver
   public  function valideAccount();
   public  function validateObserver();                                                    // validates the user with the given id and gives the user  the given role (which should be $ADMIN or $USER).
 }
-class Observers implements iObserver
+class Observers implements iObservers
 { public  function addObserver($id, $name, $firstname, $email, $password)                       // addObserver adds a new observer to the database. The id, name, first name email address and password should be given as parameters. The password must be encoded using md5(...). The new observer will not be able to log in yet. Before being able to do so, the administrator must validate the new user.
   { global $objDatabase; 
     return $objDatabase->execSQL("INSERT INTO observers (id, name, firstname, email, password, role, language) VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\", \"$password\", \"".RoleWaitlist."\", \"".$_SESSION['lang']."\")");

@@ -20,7 +20,7 @@ $observations = new CometObservations;
 $instruments = new Instruments;
 $observers = new Observers;
 $objects = new CometObjects;
-$util = new util;
+$util = $objUtil;
 $util->checkUserInput();
 
 // selection of all observations of one object
@@ -107,7 +107,7 @@ if(isset($_GET['objectname']))
 
   $link = "".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . $_GET['objectname'] . "&amp;sort=".$sort."&amp;previous=".$prev;
 
-  list($min, $max) = $util->printListHeader($obs, $link, $min, 25, "");
+  list($min, $max) = $util->printNewListHeader($obs, $link, $min, 25, "");
 
   if(sizeof($obs) > 0)
   {
@@ -347,7 +347,7 @@ else
 }
 
  $link = "".$baseURL."index.php?indexAction=comets_result_query_observations&amp;user=" . $_GET['user'] . "&amp;sort=".$sort."&amp;previous=".$previous;
-list($min, $max) = $util->printListHeader($obs, $link, $min, 25, "");
+list($min, $max) = $util->printNewListHeader($obs, $link, $min, 25, "");
 
 if(($sort != '') && $_GET['previous'] == $_GET['sort']) // reverse sort when pushed twice
 {

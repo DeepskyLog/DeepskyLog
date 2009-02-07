@@ -17,7 +17,7 @@ $instruments = new Instruments;
 $observers = new Observers;
 $objects = new CometObjects;
 
-$util = new util;
+$util = $objUtil;
 $util->checkUserInput();
 
 // TITLE
@@ -277,7 +277,7 @@ $link = $baseURL."index.php?indexAction=comets_result_selected_observations".
 
 $step = 25;
 
-list($min, $max) = $util->printListHeader($obs, $link, $min, $step, "");
+list($min, $max) = $util->printNewListHeader($obs, $link, $min, $step, "");
 
 if(($sort != '') && $previous == $_GET['sort']) // reverse sort when pushed twice
 {

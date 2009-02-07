@@ -10,14 +10,14 @@ include_once "lib/cometobjects.php";
 include_once "lib/cometobservations.php";
 include_once "common/control/ra_to_hms.php";
 include_once "common/control/dec_to_dm.php";
-include_once "lib/ICQMETHOD.php";
-include_once "lib/ICQREFERENCEKEY.php";
+include_once "lib/icqmethod.php";
+include_once "lib/icqreferencekey.php";
 include_once "lib/locations.php";
 include_once "lib/observers.php";
 include_once "lib/instruments.php";
 include_once "lib/util.php";
 
-$util = new Util();
+$util = new Utils();
 $util->checkUserInput();
 
 // create comet object

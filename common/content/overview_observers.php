@@ -25,7 +25,7 @@ echo "<div id=\"main\">";
 echo "<h2>".LangViewObserverTitle."</h2>";
 $step=25;
 $link=$baseURL."index.php?indexAction=view_observers&amp;sort=".$sort."&amp;previous=".$orig_previous;
-list($min, $max) = $objUtil->printListHeader($observers, $link, $min, $step, "");
+list($min, $max) = $objUtil->printNewListHeader($observers, $link, $min, $step, "");
 $count = 0;
 echo "<table>";
 echo "<tr class=\"type3\">";
@@ -59,6 +59,6 @@ while(list ($key, $value) = each($observers))
   $count++;
 }
 echo "</table>";
-list($min, $max) = $util->printListHeader($observers, $link, $min, $step, "");
+list($min, $max) = $util->printNewListHeader($observers, $link, $min, $step, "");
 echo "</div>";
 ?>

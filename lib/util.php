@@ -1,28 +1,19 @@
-<?php
-//CLASS util
-// INTERFACE
-//   public function utiltiesDispatchIndexActionDS() -> returns the file to be included to execute the action specified in $_GET['indexAcction']
-//   public function utilitiesSetModuleCookie($module)
-//	 public function checkGetKey($key,$default='')
-//   public function checkGetDate($year,$month,$day)
-//   public function checkGetTimeOrDegrees($hr,$min,$sec)
-//   public function searchAndLinkCatalogsInText($theText)
-// ..
-// PUBLIC OBJECT
-//  $objUtil  
-
+<?php // util
+interface iUtils
+{ public function __construct();
+  public  function decToStringDSS($decl);                                      // returns html DSS decl coordinates eg 6+44 for 6°43'55''
+  public  function printNewListHeader(&$list, $link, $min, $step, $total);     // prints the << < Nr > >> navigations, allowing to enter a page number in the center field
+  public  function raToStringDSS($ra);                                         // returns html DSS ra coordinates eg 6+43+55 for 6h43m55s
+//private function utilitiesCheckIndexActionDSquickPick();                     // returns the includefile if one of the quickpick buttons is pressed
+//private function utilitiesCheckIndexActionAdmin($action, $includefile);      // returns the includefile for the specified indexs action after checking it is an admin who is looged in
+//private function utilitiesCheckIndexActionAll($action, $includefile);        // returns the includefile for the specified indexs action
+//private function utilitiesGetIndexActionDefaultAction();                     // returns the includefile for the specified indexs action
+//private function utilitiesCheckIndexActionMember($action, $includefile);     // returns the includefile for the specified indexs action after checking if it is a logged user
+}
 include_once "class.ezpdf.php";
-
-class util
+class Utils implements iUtils
 { public function __construct()
 	{ $this->checkUserInput();
-  }
-  public  function raToStringDSS($ra)
-  { $ra_hours = floor($ra);
-    $subminutes = 60 * ($ra - $ra_hours);
-    $ra_minutes = floor($subminutes);
-    $ra_seconds = round(60 * ($subminutes - $ra_minutes));
-    return("$ra_hours" . "&#43;" . "$ra_minutes" . "&#43;" . "$ra_seconds" . "");
   }
   public  function decToStringDSS($decl)
   { $sign=0;
@@ -37,7 +28,83 @@ class util
     { $decl_minutes = "-".$decl_minutes;
       $decl_degrees = "-".$decl_degrees;
     }
-    return("$decl_degrees"."&#43;".$decl_minutes);
+    return("$decl_degrees"."&#43;"."$decl_minutes");
+  }
+  public function printNewListHeader(&$list, $link, $min, $step, $total)
+  { global $baseURL;
+	  $pages=ceil(count($list)/$step);           // total number of pages
+    if($min)                                   // minimum value
+    { $min=$min-($min%$step);                  // start display from number of $steps
+      if ($min < 0)                            // minimum value smaller than 0
+        $min=0;
+      if($min>count($list))                    // minimum value bigger than number of elements
+        $min=count($list)-(count($list)%$step);
+    }
+    else                                       // no minimum value defined
+      $min=0;
+    $max=$min+$step;                       // maximum number to be displayed
+    echo "<table>";
+    echo "<tr style=\"vertical-align:top\">";
+    if(count($list)>$step)
+    { $currentpage=ceil($min/$step)+1;
+			echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=0\">"."<img src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\">"."</a>"."</td>";
+		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img src=\"".$baseURL."styles/images/left20.gif\" border=\"0\">"."</a>"."</td>";			
+		  echo "<td align=\"center\">"."<form action=\"".$link."\" method=\"post\">"."<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\"></input>"."</form>"."</td>";	
+		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img src=\"".$baseURL."styles/images/right20.gif\" border=\"0\">"."</a>"."</td>";
+		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\">"."</a>"."</td>";
+	  }
+    echo"<td>"."&nbsp;&nbsp;(".count($list)."&nbsp;".LangNumberOfRecords.(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")")."</td>";
+	  echo "</tr>";
+	  echo "</table>";    
+	  return array($min,$max);
+  }
+  public  function raToStringDSS($ra)
+  { $ra_hours=floor($ra);
+    $subminutes=60*($ra - $ra_hours);
+    $ra_minutes=floor($subminutes);
+    $ra_seconds=round(60*($subminutes-$ra_minutes));
+    return("$ra_hours"."&#43;"."$ra_minutes"."&#43;"."$ra_seconds");
+  }
+  private function utilitiesCheckIndexActionAdmin($action, $includefile)
+  { if(array_key_exists('indexAction',$_REQUEST) && ($_REQUEST['indexAction'] == $action) && array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes"))
+      return $includefile; 
+  }
+  private function utilitiesCheckIndexActionAll($action, $includefile)
+  { if(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']==$action))
+      return $includefile;
+  }
+  private function utilitiesCheckIndexActionDSquickPick()
+  { global $objObjkect;
+    if($this->checkGetKey('indexAction')=='quickpick')
+    { if($this->checkGetKey('object'))
+	    { if($temp=$objObject->getExactDsObject($_GET['object']))
+	      { $_GET['object']=$temp;
+					if(array_key_exists('searchObservationsQuickPick', $_GET))
+	          return 'deepsky/content/selected_observations2.php';  
+	        elseif(array_key_exists('newObservationQuickPick', $_GET))
+	          return 'deepsky/content/new_observation.php';   
+	        else
+	          return 'deepsky/content/view_object.php';  
+	      }
+	      else
+	      { $_GET['object']=ucwords(trim($_GET['object']));
+	        if(array_key_exists('searchObservationsQuickPick', $_GET))
+	          return 'deepsky/content/selected_observations2.php';  
+	        elseif(array_key_exists('newObservationQuickPick', $_GET))
+	          return 'deepsky/content/setup_objects_query.php';   
+	        else
+	          return 'deepsky/content/setup_objects_query.php';  
+	      }
+	    }
+      else
+      {	if(array_key_exists('searchObservationsQuickPick',$_GET))
+	        return 'deepsky/content/setup_observations_query.php';  
+	      elseif(array_key_exists('newObservationQuickPick',$_GET))
+	        return 'deepsky/content/new_observation.php';   
+	      else
+	        return 'deepsky/content/setup_objects_query.php';  
+       }
+    }
   }
   private function utilitiesGetIndexActionDefaultAction()
   { if($_SESSION['module']=='deepsky')
@@ -51,167 +118,18 @@ class util
 		else
 		  return 'comets/content/overview_observations.php';	
   }
-  private function utilitiesCheckIndexActionDSquickPick()
-  { if($this->checkGetKey('indexAction')=='quickpick')
-    { if($this->checkGetKey('object'))
-	    { if($temp=$GLOBALS['objObject']->getExactDsObject($_GET['object']))
-	      { $_GET['object']=$temp;
-					if(array_key_exists('searchObservations', $_GET))
-	          return 'deepsky/content/selected_observations2.php';  
-	        elseif(array_key_exists('newObservation', $_GET))
-	          return 'deepsky/content/new_observation.php';   
-	        else
-	          return 'deepsky/content/view_object.php';  
-	      }
-	      else
-	      { $_GET['object']=ucwords(trim($_GET['object']));
-	        if(array_key_exists('searchObservations', $_GET))
-	          return 'deepsky/content/selected_observations2.php';  
-	        elseif(array_key_exists('newObservation', $_GET))
-	          return 'deepsky/content/setup_objects_query.php';   
-	        else
-	          return 'deepsky/content/setup_objects_query.php';  
-	      }
-	    }
-      else
-      {	if(array_key_exists('searchObservations', $_GET))
-	        return 'deepsky/content/setup_observations_query.php';  
-	      elseif(array_key_exists('newObservation', $_GET))
-	        return 'deepsky/content/new_observation.php';   
-	      else
-	        return 'deepsky/content/setup_objects_query.php';  
-       }
-    }
-  }
-  private function utilitiesCheckIndexActionAll($action, $includefile)
-  { if(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']==$action))
-      return $includefile;
-  }
   private function utilitiesCheckIndexActionMember($action, $includefile)
-  { if(array_key_exists('indexAction',$_GET) && ($_GET['indexAction'] == $action) && 
-       array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
+  { if(array_key_exists('indexAction',$_GET) && ($_GET['indexAction'] == $action) && array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
       return $includefile; 
   }
-  private function utilitiesCheckIndexActionAdmin($action, $includefile)
-  { if(array_key_exists('indexAction',$_REQUEST) && ($_REQUEST['indexAction'] == $action) && 
-       array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes"))
-      return $includefile; 
-  }
-  public function printNewListHeader(&$list, $link, $min, $step, $total)
-  { global $baseURL;
-	  $pages = ceil(count($list) / $step);       // total number of pages
-    if($min)                                   // minimum value
-    { $min = $min - ($min % $step);            // start display from number of $steps
-      if ($min < 0)                            // minimum value smaller than 0
-        $min = 0;
-      if ($min > count($list))                 // minimum value bigger than number of elements
-        $min = count($list) - (count($list) % $step);
-    }
-    else                                       // no minimum value defined
-      $min = 0;
-    $max = $min + $step;                       // maximum number to be displayed
-    echo "<table>";
-    echo "<tr style=\"vertical-align:top\">";
-    if(count($list)>$step)
-    { $currentpage = ceil($min / $step) + 1;
-			echo "<td>";	
-      echo "<a href=\"".$link."&amp;multiplepagenr=0\">";
-      echo "<img src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\">"; // link to last page
-      echo "</a>";
-	    echo "</td>";
-			
-		  echo "<td>";
-	    echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">";
-      echo "<img src=\"".$baseURL."styles/images/left20.gif\" border=\"0\">"; // link to previous page
-      echo "</a>";
-		  echo "</td>";
-		  
-			echo "<td align=\"center\">";
-      echo "<form action=\"".$link."\" method=\"post\">";
-      echo "<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\"></input>";
-	    echo "</form>";
-    	echo "</td>";	
-	
-		  echo "<td>";
-      echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">";
-      echo "<img src=\"".$baseURL."styles/images/right20.gif\" border=\"0\">"; // link to next page
-      echo "</a>";
-		  echo "</td>";
+  
+  
+  
+  
+  
+  
+  
 
-		  echo "<td>";				
-		  echo "<a href=\"".$link."&amp;multiplepagenr=".$pages."\">";
-      echo "<img src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\">"; // link to last page
-      echo "</a>\n";
-	    echo" </td>";
-
-	  }
-    echo"<td>";
-		echo "&nbsp;&nbsp;(".count($list)."&nbsp;".LangNumberOfRecords.(($total&&($total!=count($list)))?" / ".$total:"");
-    if($pages>1)
-      echo " in ".$pages." pages)";
-    else
-      echo ")";
-    echo "</td>";
-	  echo "</tr>";
-	  echo "</table>";    
-	  return array($min, $max);
-  }
-  public function printListHeader($list, $link, $min, $step, $total)	// printListHeader prints the list header of $list if the list has more than
-																														  // $step entries. The first item from the list that should be shown is $min.
-																														  // All numbers use the given link. An array is given back, with the min and
-																														  // max value. Example :
-																														  // list($min, $max) = $util->printListHeader($obs, $link, $_GET['min'], 25, 1221);
-  {
-    $pages = ceil(count($list) / $step); // total number of pages
-    if($min) // minimum value
-    { $min = $min - ($min % $step); // start display from number of $steps
-      if ($min < 0)  // minimum value smaller than 0
-        $min = 0;
-      if ($min > count($list)) // minimum value bigger than number of elements
-        $min = count($list) - (count($list) % $step);
-    }
-    else // no minimum value defined
-      $min = 0;
-    $max = $min + $step; // maximum number to be displayed
-    if(count($list) > $step)
-    {
-      $currentpage = ceil($min / $step) + 1;
-      echo("<p>\n");
-      echo("<a href=\"".$link."&amp;min=0\">");
-      echo LangOverviewObjectsFirstlink; // link to first page
-      echo("</a>&nbsp;&nbsp;&nbsp;\n");
-
-      if ($currentpage <= 7)
-        $start = -$currentpage + 1;
-      else if ($currentpage >= $pages - 7)
-        $start = -14 + ($pages - $currentpage);
-      else
-        $start = -7;
-
-      for ($i = $start; $i <= $start + 14; $i++)
-      {
-        $pagenumber = ($min + ($step * $i));
-        if((($pagenumber/$step) >= 0) && (($pagenumber/$step) < $pages))
-        { if($i != 0) // not current page
-            echo("<a href=\"".$link."&amp;min=" . $pagenumber . "\">" . ($pagenumber/$step + 1) . "</a>&nbsp;"); // link to other page
-          else
-            echo(($pagenumber/$step + 1) . "&nbsp;"); // current page
-        }
-      }
-      echo("&nbsp;&nbsp;");
-			
-			echo("<a href=\"".$link."&amp;min=".(($pages*$step) - 1) . "\">");
-      echo LangOverviewObjectsLastlink; // link to last page
-      echo("</a>\n");
-      
-			if ($total == "")
-        echo("&nbsp;&nbsp;(" . count($list) . "&nbsp;" . LangNumberOfRecords . ")");
-      else
-        echo("&nbsp;&nbsp;(" . count($list) . "&nbsp;" . LangNumberOfRecords . " / " . $total . ")");
-      echo("</p>\n");
-    }
-    return array($min, $max);
-  }
   public function array_slice_key($array, $offset, $len=-1) // Array slice, but uses also keys.
   {
     if (!is_array($array))
@@ -946,8 +864,8 @@ class util
     include_once "instruments.php";
     include_once "locations.php";
     include_once "cometobservations.php";
-    include_once "ICQMETHOD.php";
-    include_once "ICQREFERENCEKEY.php";
+    include_once "icqmethod.php";
+    include_once "icqreferencekey.php";
     include_once "setup/vars.php";
     include_once "setup/databaseInfo.php";
 
@@ -956,7 +874,7 @@ class util
     $instrument = new Instruments;
     $observation = new CometObservations;
     $location = new Locations;
-    $util = new Util;
+    $util = $this;
     $ICQMETHODS = new ICQMETHOD();
     $ICQREFERENCEKEYS = new ICQREFERENCEKEY();
     $_GET['pdfTitle']="CometObservations.pdf";
@@ -1231,8 +1149,8 @@ class util
     include_once "lenses.php";
     include_once "filters.php";
     include_once "cometobservations.php";
-    include_once "ICQMETHOD.php";
-    include_once "ICQREFERENCEKEY.php";
+    include_once "icqmethod.php";
+    include_once "icqreferencekey.php";
     include_once "setup/vars.php";
     include_once "setup/databaseInfo.php";
 
@@ -2073,5 +1991,5 @@ class util
 		return preg_replace($patterns, $replacements, $theText);
   }
 }
-$objUtil=new Util();
+$objUtil=new Utils;
 ?>

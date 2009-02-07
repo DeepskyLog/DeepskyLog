@@ -9,7 +9,7 @@ include_once "lib/observers.php";
 include_once "lib/setup/language.php";
 include_once "lib/util.php";
 
-$util = new Util();
+$util = new Utils();
 $util->checkUserInput();
 
 $objects = new CometObjects;
@@ -34,8 +34,8 @@ if($_GET['name'] || $_GET['icqname']) // at least one search field filled in
     $prev = '';
   }
 
-  $name = $_GET['name'];
-  $icqname = $_GET['icqname'];
+  $name = $objUtil->checkGetKey('name');
+  $icqname = $objUtil->checkGetKey('icqname');
 
   // SEARCH ON OBJECT NAME
 
@@ -75,21 +75,13 @@ if($_GET['name'] || $_GET['icqname']) // at least one search field filled in
 
   // NUMBER OF PAGES
 
-  if (isset($_GET['min']))
-  {
-    $min = $_GET['min'];
-  }
-  else
-  {
-    $min = '';
-  }
 
   if ($result != "")
   {
     $count = 0; // counter for altering table colors
     
     $link = $baseURL."index.php?indexAction=comets_result_query_objects&amp;name=" . urlencode($_GET['name']) . "&amp;sort=$sort&amp;previous=" . $prev;
-    list($min, $max) = $util->printListHeader($result, $link, $min, 25, "");
+    list($min, $max) = $util->printNewListHeader($result, $link, $min, 25, "");
  
     // OUTPUT RESULT
 

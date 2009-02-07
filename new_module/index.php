@@ -8,7 +8,7 @@
 
 include_once "../lib/util.php";
 
-$util = new Util();
+$util = new Utils();
 $util->checkUserInput();
 
 session_start();
