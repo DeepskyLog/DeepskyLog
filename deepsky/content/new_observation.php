@@ -3,11 +3,10 @@
 // GUI to add a new observation to the database
 
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/checkUtils.js\"></script>";
-
 echo "<div id=\"main\">";
 $object=$objUtil->checkPostKey('object', $objUtil->checkGetKey('object'));
 if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostKey('timestamp',-1)))
-{ $seen = $GLOBALS['objObject']->getDSOSeen($object);
+{ $seen = $objObject->getDSOSeen($object);
 	echo "<h2>";
 	echo LangNewObservationTitle . "&nbsp;" . $object;
 	echo "&nbsp;:&nbsp;" . $seen;
@@ -15,7 +14,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	echo "<table width=\"100%\">";
 	echo "<tr>";
 	echo "<td width=\"25%\" align=\"left\">";
-	if (substr($GLOBALS['objObject']->getSeen($object), 0, 1) != "-")
+	if (substr($objObject->getSeen($object), 0, 1) != "-")
 		echo "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "\">" . LangViewObjectObservations . " " . $object;
 	echo "</td>";
 	echo "<td width=\"25%\" align=\"center\">";

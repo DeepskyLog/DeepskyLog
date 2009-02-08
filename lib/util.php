@@ -74,7 +74,7 @@ class Utils implements iUtils
       return $includefile;
   }
   private function utilitiesCheckIndexActionDSquickPick()
-  { global $objObjkect;
+  { global $objObject;
     if($this->checkGetKey('indexAction')=='quickpick')
     { if($this->checkGetKey('object'))
 	    { if($temp=$objObject->getExactDsObject($_GET['object']))

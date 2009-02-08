@@ -61,11 +61,11 @@ $object=$objUtil->checkPostKey('object',$objUtil->checkGetKey('object'));
 if(($objUtil->checkGetKey('indexAction')=='quickpick') // ========================================================= New Observation From quickpick
 &&($objUtil->checkGetKey('object'))
 &&($objObject->getExactDsObject($_GET['object']))
-&&(array_key_exists('newObservation',$_GET)))
+&&(array_key_exists('newObservationQuickPick',$_GET)))
 { $_POST['year']=$objUtil->checkPostKey('year',$objUtil->checkArrayKey($_SESSION,'newObsYear')); 
   $_POST['month']=$objUtil->checkPostKey('month',$objUtil->checkArrayKey($_SESSION,'newObsMonth')); 
   $_POST['day']=$objUtil->checkPostKey('day',$objUtil->checkArrayKey($_SESSION,'newObsDay'));
-  $_POST['instrument']=$objUtil->checkPostKey('instrument',$objUtil->checkArrayKey($_SESSION,'newObsInstrument',$objObserver->getObserverProperty($loggedUser,'telescope'))); 
+  $_POST['instrument']=$objUtil->checkPostKey('instrument',$objUtil->checkArrayKey($_SESSION,'newObsInstrument',$objObserver->getObserverProperty($loggedUser,'stdtelescope'))); 
   $_POST['site']=$objUtil->checkPostKey('site',$objUtil->checkArrayKey($_SESSION,'newObsLocation',$objObserver->getObserverProperty($loggedUser,'stdlocation'))); 
   $_POST['limit']=$objUtil->checkPostKey('limit',$objUtil->checkArrayKey($_SESSION,'newObsLimit')); 
   $_POST['sqm']=$objUtil->checkPostKey('sqm',$objUtil->checkArrayKey($_SESSION,'newObsSQM')); 
