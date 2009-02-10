@@ -6,13 +6,13 @@ if (!function_exists('fnmatch')) {                                              
 }
 $entryMessage="";
 if(!session_id()) session_start();
+require_once "lib/util.php";
 require_once "lib/setup/databaseInfo.php";
 require_once "lib/database.php";
 require_once "lib/setup/language.php";
 $objDatabase->newlogin();                                                       // TO BE MOVED TO CONSTRUCTOR OF CLASS WHEN ALL CODE CLEANUP IS FINISHED - DAVID 11 NOV 2008
 require_once "lib/observers.php";
 require_once "lib/setup/vars.php";
-require_once "lib/util.php";
 require_once "common/control/loginuser.php";
 require_once "lib/atlasses.php";
 require_once "lib/locations.php";

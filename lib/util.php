@@ -13,7 +13,10 @@ interface iUtils
 include_once "class.ezpdf.php";
 class Utils implements iUtils
 { public function __construct()
-	{ $this->checkUserInput();
+	{ foreach($_POST as $foo => $bar)
+      $_POST[$foo]=htmlentities(stripslashes($bar),ENT_COMPAT,"ISO-8859-15",0);
+    foreach($_GET as $foo => $bar)
+      $_GET[$foo] =htmlentities(stripslashes($bar),ENT_COMPAT,"ISO-8859-15",0);
   }
   public  function decToStringDSS($decl)
   { $sign=0;
@@ -130,132 +133,53 @@ class Utils implements iUtils
   
   
 
-  public function array_slice_key($array, $offset, $len=-1) // Array slice, but uses also keys.
-  {
-    if (!is_array($array))
-    return FALSE;
-
-    $length = $len >= 0? $len: count($array);
-    $keys = array_slice(array_keys($array), $offset, $length);
-    foreach($keys as $key)
-    {
-      $return[$key] = $array[$key];
-    }
-    return $return;
+  public function presentationInt1($value, $nullcondition='', $nullvalue='')
+  { return (($value==$nullcondition)?$nullvalue:(($value-((int)$value)==0.0)?$value.'0':$value));
   }
-  public function checkUserInput()  // function to correct data input of users to eliminate XSS exploits
-  {
-    foreach($_POST as $foo => $bar)
-    {
-      $_POST[$foo] = htmlentities(stripslashes($bar), ENT_COMPAT, "ISO-8859-15", 0);
-    }
-    foreach($_GET as $foo => $bar)
-    {
-      $_GET[$foo] = htmlentities(stripslashes($bar), ENT_COMPAT, "ISO-8859-15", 0);
-    }
+  public function presentationInt($value, $nullcontition='', $nullvalue='')
+  { return (($value=$nullcontition)?$nullvalue:$value);
   }
   public function pdfObjects($result)  // Creates a pdf document from an array of objects
-  { global $deepskylive, $dateformat;
-    while(list ($key, $valueA) = each($result))
-    { $mag = $valueA['objectmagnitude'];
-      if ($mag == 99.9)
-      $mag = "";
-      else if ($mag - (int)$mag == 0.0)
-      $mag = $mag.".0";
-
-      $sb = $valueA['objectsurfacebrightness'];
-      if ($sb == 99.9)
-      $sb = "";
-      else if ($sb - (int)$sb == 0.0)
-      $sb = $sb.".0";
-
-      $pa = $valueA['objectpa'];
-      if($pa==999)
-      $pa="-";
-
-      $con = $valueA['objectconstellation'];
-      $type = $valueA['objecttype'];
-      $atlas = $GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode','urano');
-      $page = $valueA[$atlas];
-      $diam1 = $valueA['objectdiam1'];
-      $diam2 = $valueA['objectdiam2'];
-      $size = "";
-      if ($diam1 != 0.0)
-      if ($diam1 >= 40.0)
-      {
-        if (round($diam1 / 60.0) == ($diam1 / 60.0))
-        if ($diam1 / 60.0 > 30.0)
-        $size = sprintf("%.0f'", $diam1 / 60.0);
-        else
-        $size = sprintf("%.1f'", $diam1 / 60.0);
-        else
-        $size = sprintf("%.1f'", $diam1 / 60.0);
-        if ($diam2 != 0.0)
-        if (round($diam2 / 60.0) == ($diam2 / 60.0))
-        if ($diam2 / 60.0 > 30.0)
-        $size = $size.sprintf("x%.0f'", $diam2 / 60.0);
-        else
-        $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
-        else
-        $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
-      }
-      else
-      {
-        $size = sprintf("%.1f''", $diam1);
-        if ($diam2 != 0.0)
-        $size = $size.sprintf("x%.1f''", $diam2);
-      }
-      $contrast = $valueA['objectcontrast'];
-      if ($contrast == "-")
-      {
-        $magnifi = "-";
-      } else {
-        $magnifi = (int)$valueA['objectoptimalmagnification'];
-      }
-
-      $temp = array("Name" => $valueA['showname'],
-                 "ra" => raToString($valueA['objectra']),
-                 "decl" => decToString($valueA['objectdecl'], 0),
-                 "mag" => $mag,
-                 "sb" => $sb,
-                 "con" => $GLOBALS[$con],
-                 "diam" => $size,
-                 "pa" => $pa, 
-                 "type" => $GLOBALS[$type],
-                 "page" => $page,
-                 "contrast" => $contrast,
-                 "magnification" => $magnifi,
-                 "seen" => $valueA['objectseen'],
-								 "seendate" => $valueA['objectlastseen']
-      );
-      $obs1[] = $temp;
-    }
-
-    // Create pdf file
+  { global $instDir, $objAtlas, $objObserver;
+    while(list($key,$valueA)=each($result))
+      $obs1[]=array("Name"          => $valueA['showname'],
+                    "ra"            => raToString($valueA['objectra']),
+                    "decl"          => decToString($valueA['objectdecl'], 0),
+                    "mag"           => $this->presentationInt1($valueA['objectmagnitude'],99.9,''),
+                    "sb"            => $this->presentationInt1($valueA['objectsurfacebrightness'],99.9,''),
+                    "con"           => $GLOBALS[$valueA['objectconstellation']],
+                    "diam"          => $valueA['objectsize'],
+                    "pa"            => $this->presentationInt($valueA['objectpa'],999,"-"), 
+                    "type"          => $GLOBALS[$valueA['objecttype']],
+                    "page"          => $valueA[$objObserver->getObserverProperty($this->checkSessionKey('deepskylog_id',''),'standardAtlasCode','urano')],
+                    "contrast"      => $valueA['objectcontrast'],
+                    "magnification" => $valueA['objectoptimalmagnification'],
+                    "seen"          => $valueA['objectseen'],
+  	                "seendate"      => $valueA['objectlastseen']
+                   );
     $pdf = new Cezpdf('a4', 'landscape');
     $pdf->ezStartPageNumbers(450, 15, 10);
-    $fontdir = $GLOBALS['instDir'].'lib/fonts/Helvetica.afm';
-    $pdf->selectFont($fontdir);
-        
+    $fontdir = $instDir.'lib/fonts/Helvetica.afm';
+    $pdf->selectFont($fontdir); 
     $pdf->ezTable($obs1,
-    array("Name" => html_entity_decode(LangPDFMessage1),
-                      "ra" =>   html_entity_decode(LangPDFMessage3),
-                      "decl" => html_entity_decode(LangPDFMessage4),
-                      "type" => html_entity_decode(LangPDFMessage5),
-                      "con" =>  html_entity_decode(LangPDFMessage6),
-                      "mag" =>  html_entity_decode(LangPDFMessage7),
-                      "sb" =>   html_entity_decode(LangPDFMessage8),
-                      "diam" => html_entity_decode(LangPDFMessage9),
-                      "pa" =>   html_entity_decode(LangPDFMessage16),  
-                      "page" => html_entity_decode($GLOBALS['objAtlas']->atlasCodes[$atlas]),
-                      "contrast" => html_entity_decode(LangPDFMessage17),
-                      "magnification" => html_entity_decode(LangPDFMessage18),
-                      "seen" => html_entity_decode(LangOverviewObjectsHeader7),
-                      "seendate" => html_entity_decode(LangOverviewObjectsHeader8)
-    ),
-    html_entity_decode($_GET['pdfTitle']),
-    array("width" => "750",
-			                "cols" => array("Name" => array('justification'=>'left',  'width'=>100),
+                  array("Name"          => html_entity_decode(LangPDFMessage1),
+                        "ra"            => html_entity_decode(LangPDFMessage3),
+                        "decl"          => html_entity_decode(LangPDFMessage4),
+                        "type"          => html_entity_decode(LangPDFMessage5),
+                        "con"           => html_entity_decode(LangPDFMessage6),
+                        "mag"           => html_entity_decode(LangPDFMessage7),
+                        "sb"            => html_entity_decode(LangPDFMessage8),
+                        "diam"          => html_entity_decode(LangPDFMessage9),
+                        "pa"            => html_entity_decode(LangPDFMessage16),  
+                        "page"          => html_entity_decode($objAtlas->atlasCodes[$atlas]),
+                        "contrast"      => html_entity_decode(LangPDFMessage17),
+                        "magnification" => html_entity_decode(LangPDFMessage18),
+                        "seen"          => html_entity_decode(LangOverviewObjectsHeader7),
+                        "seendate"      => html_entity_decode(LangOverviewObjectsHeader8)
+                       ),
+                  html_entity_decode($_GET['pdfTitle']),
+                  array("width"=>"750",
+			                  "cols"=>array("Name" => array('justification'=>'left',  'width'=>100),
 			                                "ra" =>   array('justification'=>'center','width'=>65),
 		              									  "decl" => array('justification'=>'center','width'=>50),
 									              		  "type" => array('justification'=>'left',  'width'=>110),
@@ -269,10 +193,10 @@ class Utils implements iUtils
           														"magnification" => array('justification'=>'center', 'width'=>35),
 											                "seen" => array('justification'=>'center','width'=>50),
 											                "seendate" => array('justification'=>'center','width'=>50)
-    ),
-											"fontSize" => "7"				         
-											)
-											);
+                                     ),
+									      "fontSize" => "7"				         
+								       )
+								 );
 	$pdf->ezStream();
   }
   public function pdfObjectnames($result)  // Creates a pdf document from an array of objects

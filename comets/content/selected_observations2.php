@@ -18,7 +18,6 @@ $observers = new Observers;
 $objects = new CometObjects;
 
 $util = $objUtil;
-$util->checkUserInput();
 
 // TITLE
 

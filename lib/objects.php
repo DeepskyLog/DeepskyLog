@@ -510,6 +510,7 @@ class Objects implements iObjects
   	        $result2[$j]['objectdecl'] =  $get->decl;
   	        $result2[$j]['objectdiam1'] = $get->diam1;
   	        $result2[$j]['objectdiam2'] = $get->diam2;
+  	        $result2[$j]['objectsize'] = $this->calculateSize($get->diam1,$get->diam2);
   	        $result2[$j]['objectpa'] = $get->pa;
             $result2[$j]['objectpositioninlist'] = $value[0]; 
             $result2[$j]['objectsbcalc'] = $get->SBObj; 

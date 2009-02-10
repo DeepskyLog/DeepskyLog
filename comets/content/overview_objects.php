@@ -11,7 +11,6 @@ include_once "lib/util.php";
 
 $objects = new CometObjects;
 $util = new Utils();
-$util->checkUserInput();
 
 // SORTING
 

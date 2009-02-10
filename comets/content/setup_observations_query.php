@@ -19,7 +19,6 @@ $observers = new Observers;
 $instruments = new Instruments;
 $locations = new Locations;
 $util = $objUtil;
-$util->checkUserInput();
 
 $_SESSION['result'] = "";
 

@@ -10,7 +10,6 @@
   $obs = new Observers;
   $observations = new CometObservations;
   $util = new Utils;
-  $util->checkUserInput();
 
   $testobservations = $observations->getObservations(); // test array if no observaton yet
 

@@ -12,7 +12,6 @@ include_once "../lib/setup/vars.php";
 include_once "../lib/util.php";
 
 $util = new Utils();
-$util->checkUserInput();
 
 $cometobservations = new CometObservations;
 

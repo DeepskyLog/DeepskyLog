@@ -117,7 +117,7 @@ class Observers implements iObservers
 		    $admins=$this->getAdministrators();                              // message recipient(s)
 		    while(list($key,$value)=each($admins))
 		      if($this->getObserverProperty($value,'email'))
-		        $adminMails[]=$this->getObserverProperty($value,'eamil');
+		        $adminMails[]=$this->getObserverProperty($value,'email');
 		    $to=implode(",",$adminMails);
 		    $subject=LangValidateAccountEmailTitle;
 		    $administrators=$this->getAdministrators();
@@ -125,7 +125,8 @@ class Observers implements iObservers
 		    $headers="From:".$fromMail;
 		    if(!mail($to,$subject,$body,$headers))
 		  	  throw new Exception('Unable to mail');
-		    $_GET['user']=$_SESSION['deepskylog_id'];
+        $entryMessage = LangAccountSubscribed1.LangAccountSubscribed2.LangAccountSubscribed3.LangAccountSubscribed4.LangAccountSubscribed5.LangAccountSubscribed6.LangAccountSubscribed7.LangAccountSubscribed8.LangAccountSubscribed9;
+		    $_GET['user']=$_POST['deepskylog_id'];
 		    $_GET['indexAction']='detail_observer';
 		  }
 		}  

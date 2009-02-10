@@ -21,7 +21,6 @@ $instruments = new Instruments;
 $observers = new Observers;
 $objects = new CometObjects;
 $util = $objUtil;
-$util->checkUserInput();
 
 // selection of all observations of one object
 

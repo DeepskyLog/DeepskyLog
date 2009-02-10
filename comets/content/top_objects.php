@@ -11,8 +11,7 @@
   $observations = new CometObservations;
   $object = new CometObjects;
   $util = new Utils;
-  $util->checkUserInput();
-
+ 
   $testobservations = $observations->getObservations(); // test if no observations yet
 
   if(isset($_GET['number']))

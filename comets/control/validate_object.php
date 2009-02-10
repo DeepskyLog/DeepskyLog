@@ -13,7 +13,6 @@ include_once "lib/setup/vars.php";
 include_once "lib/util.php";
 
 $util = new Utils();
-$util->checkUserInput();
 
 if ($_POST['newobject']) // pushed add new object button
 {

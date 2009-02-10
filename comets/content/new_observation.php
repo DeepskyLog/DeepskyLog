@@ -18,7 +18,6 @@ include_once "lib/instruments.php";
 include_once "lib/util.php";
 
 $util = new Utils();
-$util->checkUserInput();
 
 // create comet object
 

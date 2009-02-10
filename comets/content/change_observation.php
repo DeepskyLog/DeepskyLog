@@ -24,7 +24,6 @@ $instruments = new Instruments;
 $locations = new Locations;
 $observers = new Observers;
 $util = new Utils;
-$util->checkUserInput();
 
 if(!$_GET['observation']) // no observation defined 
 {

@@ -11,7 +11,6 @@ include_once "lib/observers.php";
 include_once "lib/util.php";
 
 $util = new Utils();
-$util->checkUserInput();
 
 $objects = new CometObjects; 
 $observers = new Observers;
