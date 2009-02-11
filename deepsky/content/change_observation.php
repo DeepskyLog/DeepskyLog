@@ -276,7 +276,7 @@ echo "</td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td colspan=\"2\">";
-echo "<textarea name=\"description\" class=\"description inputfield requiredField\">" . $objUtil->br2nl(html_entity_decode(preg_replace("/&amp;/", "&",$objObservation->getDsObservationProperty($_GET['observation'],'description')))) . "</textarea>";
+echo "<textarea name=\"description\" class=\"description inputfield requiredField\">" . $objPresentations->br2nl(html_entity_decode(preg_replace("/&amp;/", "&",$objObservation->getDsObservationProperty($_GET['observation'],'description')))) . "</textarea>";
 echo "</td>";
 echo "</tr>";
 // ??? echo("</td></tr>"); error ??

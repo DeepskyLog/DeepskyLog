@@ -459,7 +459,7 @@ echo("</td><td>(" . LangNewComet12 . ")</td></tr>");
 // DESCRIPTION
 
     echo("<tr><td class=\"fieldname\">" . LangViewObservationField8 . "</td><td></td><td></td></tr>");
-    echo("<tr><td colspan=\"3\"><textarea name=\"description\" class=\"description\">" . $util->br2nl(html_entity_decode($cometobservations->getDescription($_GET['observation']))) . "</textarea></td></tr>");
+    echo("<tr><td colspan=\"3\"><textarea name=\"description\" class=\"description\">" . $objPresentations->br2nl(html_entity_decode($cometobservations->getDescription($_GET['observation']))) . "</textarea></td></tr>");
 
 echo("<tr><td colspan=\"2\"><input type=\"submit\" name=\"changeobservation\" value=\"".LangChangeObservationButton."\" /></td></tr>");
 

@@ -1,4 +1,10 @@
 <?php
+interface iPresentation
+{ public  function br2nl($data);                                                       // The opposite of nl2br
+  public  function presentationInt($value, $nullcontition='', $nullvalue='');          // if the null condtion is met, it returns the nullvalue, otherwise returns the value
+  public  function presentationInt1($value, $nullcondition='', $nullvalue='');         // if the null condtion is met, it returns the nullvalue, otherwise returns the value formatted %1.1f
+  
+}
 // function tableFieldnameFieldExplanation($name,$field,$explanation)                   // 3-item field line, containing the name of the field, the field value and the explanation
 // function tableFieldnameField($name,$field)                                           // 2-item field line, containing the name of the field and the field value
 // function tableFieldnameField2($name1,$field1,$name2,$field2)             // 4-item filed line, containing the line type, the 2 names and values of the dields, each 25% wide
@@ -8,8 +14,18 @@
 // function tableSortHeader($header0, $link0)                                           // sorting header on table
 // function tableSortInverseHeader($header0, $link0)                                    // inverse sorting header on table
 // function tableTypeFieldnameField($type,$name,$field)                                 // 2-item type line, containing the name and the field, and formatted to the type
-
-
+class Presentations implements iPresentation
+{ public function br2nl($data)  // The opposite of nl2br
+  { return preg_replace( '!<br.*>!iU', " ", $data );
+  }
+  public  function presentationInt($value, $nullcontition='', $nullvalue='')
+  { return (($value=$nullcontition)?$nullvalue:$value);
+  }
+  public  function presentationInt1($value, $nullcondition='', $nullvalue='')
+  { return (($value==$nullcondition)?$nullvalue:sprintf("%1.1f",$value));
+  }
+}
+$objPresentations=new Presentations;
 function tableFieldnameFieldExplanation($name,$field,$explanation, $type="")
 { echo "<tr ".$type.">";
   echo "<td class=\"fieldname\">".$name."</td>";

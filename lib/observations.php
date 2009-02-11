@@ -430,8 +430,8 @@ class Observations {
 		$sql = $sql . ";";
 // echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
 		$run = mysql_query($sql) or die(mysql_error());
-		if (!array_key_exists('countquery', $queries)) {
-			$j = 0;
+		if (!array_key_exists('countquery', $queries)) 
+		{ $j = 0;
 			$result = array ();
 			while ($get = mysql_fetch_object($run)) {
 				$seentype = "X";
@@ -445,8 +445,9 @@ class Observations {
 				}
 			}
 			return $result;
-		} else {
-			$get = mysql_fetch_object($run);
+		} 
+		else 
+		{ $get = mysql_fetch_object($run);
 			return $get->ObsCnt;
 		}
 	}

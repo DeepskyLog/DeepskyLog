@@ -50,6 +50,7 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
         $cookietime=time()+(365*24*60*60);                                      // 1 year
         setcookie("deepskylogsec",$passwd.$login,$cookietime,"/");
       }
+      unset($_SESSION['QobjParams']);
     }
     else // passwords don't match
     { $loginErrorCode="LangErrorWrongPassword";
