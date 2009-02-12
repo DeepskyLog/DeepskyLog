@@ -8,6 +8,7 @@ interface iLocations
   public  function getLocationPropertyFromId($id,$property,$defaultValue='');
   public  function getLocations();                                                                                     // returns an array with all locations
   public  function getLocationsFromDatabase($name, $country);                                                          // returns an array with all information about the location where the name equals the given name in the given country (given the country string - e.g. Belgium).
+  public  function getLocationTimeDifference($id);
   public  function getLocationUsedFromId($id);                                                                         // returns the number of times the location is used in observations
   public  function getSortedLocations($sort,$observer="");                                                             // returns an array with the ids of all locations, sorted by the column specified in $sort
   public  function getSortedLocationsList($sort, $observer = "");                                                      // returns an array with the ids of all locations, sorted by the column specified in $sort. Locations withthe same name are adapted by adding the province.
@@ -96,6 +97,14 @@ class Locations
     }
     return $locations;
   }
+  public  function getLocationTimeDifference($id)
+  { global $objDatabase;
+		$timezone=$this->getLocationPropertyFromId($id,'timezone');
+		$dateTimeZone = new DateTimeZone($timezone);
+		$timedifference = $dateTimeZone->getOffset();
+		$timedifference = $timedifference / 3600.0;
+		$timedifferenceminutes = ($timedifference - (int) $timedifference) * 60;
+  }  
   public  function getLocationUsedFromId($id)                                                   // returns the number of times the location is used in observations
   { global $objDatabase; 
     return $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM observations WHERE locationid=\"".$id."\"",'ObsCnt',0)

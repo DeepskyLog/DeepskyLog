@@ -52,8 +52,11 @@ class Observations {
 	}
   public  function getAllInfoDsObservation($id)                                                                                                                       // returns all information of an observation
 	{ global $objDatabase;
-		$get = mysql_fetch_object($objDatabase->selectRecordset("SELECT * FROM observations WHERE id=\"$id\""));
-		$ob["name"] = $get->objectname;
+		$obs=$objDatabase->selectRecordArray("SELECT * FROM observations WHERE id=\"$id\"");
+		$obs["localdate"] = $this->getDsObservationLocalDate($id);
+		$obs["localtime"] = $this->getDsObservationLocalTime($id);
+		$obs["language"] = $this->getDsObservationProperty($id,'language');
+/*	$ob["name"] = $get->objectname;
 		$ob["observer"] = $get->observerid;
 		$ob["instrument"] = $get->instrumentid;
 		$ob["location"] = $get->locationid;
@@ -63,9 +66,6 @@ class Observations {
 		$ob["seeing"] = $get->seeing;
 		$ob["limmag"] = $get->limmag;
 		$ob["visibility"] = $get->visibility;
-		$ob["localdate"] = $this->getDsObservationLocalDate($id);
-		$ob["localtime"] = $this->getDsObservationLocalTime($id);
-		$ob["language"] = $this->getDsObservationProperty($id,'language');
 		$ob["eyepiece"] = $get->eyepieceid;
 		$ob["filter"] = $get->filterid;
 		$ob["lens"] = $get->lensid;
@@ -80,7 +80,8 @@ class Observations {
 		$ob["unusualShape"] = $get->unusualShape;
 		$ob["partlyUnresolved"] = $get->partlyUnresolved;
 		$ob["colorContrasts"] = $get->colorContrasts;
-		return $ob;
+*/
+		return $obs;
 	}
 	public  function getAOObservationsId($object, $notobservation) 
   { global $objDatabase; 

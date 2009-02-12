@@ -19,7 +19,7 @@ class Presentations implements iPresentation
   { return preg_replace( '!<br.*>!iU', " ", $data );
   }
   public  function presentationInt($value, $nullcontition='', $nullvalue='')
-  { return (($value=$nullcontition)?$nullvalue:$value);
+  { return (($value==$nullcontition)?$nullvalue:$value);
   }
   public  function presentationInt1($value, $nullcondition='', $nullvalue='')
   { return (($value==$nullcondition)?$nullvalue:sprintf("%1.1f",$value));

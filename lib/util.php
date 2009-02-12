@@ -1,6 +1,8 @@
 <?php // util
 interface iUtils
 { public  function __construct();
+  public  function argoObjects($result);                                       // Creates an argo navis file from an array of objects
+  public  function csvObjects($result);                                        // Creates a csv file from an array of objects
   public  function csvObservations($result);                                   // Creates a csv file from an array of observations
   public  function decToStringDSS($decl);                                      // returns html DSS decl coordinates eg 6+44 for 6°43'55''
   public  function pdfObjectnames($result);                                    // Creates a pdf document from an array of objects
@@ -22,13 +24,53 @@ class Utils implements iUtils
     foreach($_GET as $foo => $bar)
       $_GET[$foo] =htmlentities(stripslashes($bar),ENT_COMPAT,"ISO-8859-15",0);
   }
+  public  function argoObjects($result)  // Creates an argo navis file from an array of objects
+  { global $objObserver,$loggedUser,$objPresentations,$objAtlas;
+    while(list ($key, $valueA) = each($result))
+    { echo "DSL ".$valueA['objectname']."|".
+           raArgoToString($valueA['objectra'])."|".
+           decToArgoString($valueA['objectdecl'], 0)."|".
+           $GLOBALS["argo".$valueA['objecttype']]."|".
+           $objPresentations->presentationInt($valueA['objectmagnitude'],99.9,'') ."|".
+           $valueA['objectsize'].";".$objAtlas->atlasCodes[($atlas=$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'))]." ".$valueA[$atlas].";"."CR ".$valueA['objectcontrast'].";".$valueA['objectseen'].";".$valueA['objectlastseen'].
+           "\n";
+    }
+  }
+  public  function csvObjects($result)  // Creates a csv file from an array of objects
+  { global $objObject,$objPresentations,$objObserver, $loggedUser;
+    echo html_entity_decode(LangCSVMessage7)."\n";
+    while(list($key,$valueA)=each($result))
+    { $alt="";
+      $alts=$objObject->getAlternativeNames($valueA['objectname']);
+      while(list($key,$value)=each($alts))
+        if($value!=$valueA['objectname'])
+          $alt.=" - ".trim($value);
+      $alt=($alt?substr($alt,3):'');
+      echo $valueA['objectname'].";". 
+           $alt.";".
+           raToString($valueA['objectra']).";".
+           decToString($valueA['objectdecl'], 0).";".
+           $GLOBALS[$valueA['objectconstellation']].";".
+           $GLOBALS[$valueA['objecttype']].";".
+           $objPresentations->presentationInt1($valueA['objectmagnitude'],99.9,'').";".
+           $objPresentations->presentationInt1($valueA['objectsurfacebrightness'],99.9,'').";".
+           $valueA['objectsize'].";".
+           $objPresentations->presentationInt($valueA['objectpa'],999,'').";".
+           $valueA[$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano')].";".
+           $valueA['objectcontrast'].";".
+           $valueA['objectoptimalmagnification'].";".
+           $valueA['objectseen'].";".
+           $valueA['objectlastseen'].
+           "\n";
+    }
+  }  
   public  function csvObservations($result)  // Creates a csv file from an array of observations
   { global $objLens, $objFilter, $objEyepiece, $objLocation,$objPresentations,$objObservation,$objObserver, $objInstrument;
     echo LangCSVMessage3."\n";
     while(list($key,$value)=each($result))
-    { $obs =$objObservation->getAllInfoDsObservation($value['observationid']);
-      $date = sscanf($obs["date"], "%4d%2d%2d");
-      $time = $obs["time"];
+    { $obs=$objObservation->getAllInfoDsObservation($value['observationid']);
+      $date=sscanf($obs['date'], "%4d%2d%2d");
+      $time=$obs['time'];
       if($time>="0")
       { $hours=(int)($time/100);
         $minutes=$time-(100*$hours);
@@ -36,20 +78,20 @@ class Utils implements iUtils
       }
       else
         $time = "";
-      echo html_entity_decode($obs["name"]).";". 
-           html_entity_decode($objObserver->getObserverProperty($obs['observer'],'firstname'). " ".$objObserver->getObserverProperty($obs["observer"],'name')).";". 
+      echo html_entity_decode($obs['objectname']).";". 
+           html_entity_decode($objObserver->getObserverProperty($obs['observerid'],'firstname'). " ".$objObserver->getObserverProperty($obs['observerid'],'name')).";". 
            $date[2]."-".$date[1]."-".$date[0].";".
            $time.";". 
-           html_entity_decode($objLocation->getLocationPropertyFromId($obs["location"],'name')).";". 
-           html_entity_decode($objInstrument->getInstrumentPropertyFromId($obs["instrument"],'name')).";". 
-           html_entity_decode($objEyepiece->getEyepiecePropertyFromId($obs["eyepiece"],'name')).";". 
-           html_entity_decode($objFilter->getFilterPropertyFromId($obs["filter"],'name')).";".
-           html_entity_decode($objLens->getLensPropertyFromId($obs["lens"],'name')).";". 
+           html_entity_decode($objLocation->getLocationPropertyFromId($obs['locationid'],'name')).";". 
+           html_entity_decode($objInstrument->getInstrumentPropertyFromId($obs['instrumentid'],'name')).";". 
+           html_entity_decode($objEyepiece->getEyepiecePropertyFromId($obs['eyepieceid'],'name')).";". 
+           html_entity_decode($objFilter->getFilterPropertyFromId($obs['filterid'],'name')).";".
+           html_entity_decode($objLens->getLensPropertyFromId($obs['lensid'],'name')).";". 
            $obs['seeing'].";". 
            $obs['limmag'].";". 
-           $objPresentations->presentationInt($obs["visibility"],"0","").";". 
-           $obs["language"].";". 
-           preg_replace("/(\")/", "", preg_replace("/(\r\n|\n|\r)/", "", preg_replace("/;/", ",",$objPresentations->br2nl(html_entity_decode($obs["description"]))))). 
+           $objPresentations->presentationInt($obs['visibility'],"0","").";". 
+           $obs['language'].";". 
+           preg_replace("/(\")/", "", preg_replace("/(\r\n|\n|\r)/", "", preg_replace("/;/", ",",$objPresentations->br2nl(html_entity_decode($obs['description']))))). 
            "\n";
     }
   }
@@ -606,161 +648,38 @@ class Utils implements iUtils
   
   
   
-  public function csvObjects($result)  // Creates a csv file from an array of objects
-  { global $objObject,$objPresentations;
-    echo html_entity_decode(LangCSVMessage7)."\n";
-    while(list($key,$valueA)=each($result))
-    { $alt="";
-      $alts=$objObject->getAlternativeNames($valueA['objectname']);
-      while(list($key,$value)=each($alts))
-        if($value!=$valueA['objectname'])
-          $alt.=" - ".$value;
-      $alt=($alt?substr($alt,4):'');
-      echo $valueA['objectname'].";". 
-           $alt.";".
-           raToString($valueA['objectra']).";".
-           decToString($valueA['objectdecl'], 0).";".
-           $GLOBALS[$valueA['objectconstellation']].";".
-           $GLOBALS[$valueA['objecttype']].";".
-           $objPresentations->presentationInt1($valueA['objectmagnitude'],99.9,'').";".
-           $objPresentations->presentationInt1($valueA['objectsurfacebrightness'],99.9,'').";".
-           $valueA['objectsize'].";".
-           $objPresentations->presentationInt($valueA['objectpa'],999,'').";".
-           $valueA[$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano')].";".
-           $valueA['objectcontrast'].";".
-           $valueA['objectoptimalmagnification'].";".
-           $valueA['objectseen'].";".
-           $valueA['objectlastseen'].
-           "\n";
-    }
-  }
-  public function argoObjects($result)  // Creates an argo navis file from an array of objects
-  { $counter = 0;
-    while(list ($key, $valueA) = each($result))
-    { $mag = $valueA['objectmagnitude'];
-      if ($mag == 99.9)
-        $mag = "";
-      else if ($mag - (int)$mag == 0.0)
-        $mag = $mag.".0";
-      $sb = $valueA['objectsurfacebrightness'];
-      if ($sb == 99.9)
-        $sb = "";
-      else if ($sb - (int)$sb == 0.0)
-        $sb = $sb.".0";
-      $con = $valueA['objectconstellation'];
-      $argotype = "argo".$valueA['objecttype'];
-      $atlas = $GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode','urano');
-      $page = $valueA[$atlas];
-      $size = "";
-			
-      $diam1 = $valueA['objectdiam1'];
-      $diam2 = $valueA['objectdiam2'];
-      if ($diam1!=0.0)
-        if ($diam1>=40.0)
-        { if (round($diam1 / 60.0) == ($diam1 / 60.0))
-            if ($diam1 / 60.0 > 30.0)
-              $size = sprintf("%.0f'", $diam1 / 60.0);
-            else
-              $size = sprintf("%.1f'", $diam1 / 60.0);
-          else
-            $size = sprintf("%.1f'", $diam1 / 60.0);
-          if ($diam2 != 0.0)
-            if (round($diam2 / 60.0) == ($diam2 / 60.0))
-              if ($diam2 / 60.0 > 30.0)
-                $size = $size.sprintf("x%.0f'", $diam2 / 60.0);
-              else
-                $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
-            else
-              $size = $size.sprintf("x%.1f'", $diam2 / 60.0);
-        }
-        else
-        { $size = sprintf("%.1f''", $diam1);
-          if ($diam2 != 0.0)
-            $size = $size.sprintf("x%.1f''", $diam2);
-        }
-      echo "DSL " /*. sprintf("%03d", $counter). " " */. $valueA['objectname']."|".raArgoToString($valueA['objectra'])."|".decToArgoString($valueA['objectdecl'], 0)."|".$GLOBALS[$argotype]."|".$mag."|".$size.";".$atlas." ".$page.";CR ".$valueA['objectcontrast'].";".$valueA['objectseen'].";".$valueA['objectlastseen']."\n";
-      $counter++;
-    }
-  }
+
   public function pdfObservations($result) // Creates a pdf document from an array of observations
-  { global $AND,$ANT,$APS,$AQR,$AQL,$ARA,$ARI,$AUR,$BOO,$CAE,$CAM,$CNC,$CVN,$CMA,$CMI,$CAP,$CAR,$CAS,$CEN,$CEP,$CET,$CHA,$CIR,$COL,$COM,$CRA,$CRB,$CRV,$CRT,$CRU,
-    $CYG,$DEL,$DOR,$DRA,$EQU,$ERI,$FOR,$GEM,$GRU,$HER,$HOR,$HYA,$HYI,$IND,$LAC,$LEO,$LMI,$LEP,$LIB,$LUP,$LYN,$LYR,$MEN,$MIC,$MON,$MUS,$NOR,$OCT,$OPH,
-    $ORI,$PAV,$PEG,$PER,$PHE,$PIC,$PSC,$PSA,$PUP,$PYX,$RET,$SGE,$SGR,$SCO,$SCL,$SCT,$SER,$SEX,$TAU,$TEL,$TRA,$TRI,$TUC,$UMA,$UMI,$VEL,$VIR,$VOL,$VUL;
-
-    global $ASTER,$BRTNB,$CLANB,$DRKNB,$GALCL,$GALXY,$GLOCL,$GXADN,$GXAGC,$GACAN,$LMCCN,$LMCDN,$LMCGC,$LMCOC,$NONEX,$OPNCL,$PLNNB,
-    $SMCCN,$SMCDN,$SMCGC,$SMCOC,$SNREM,$QUASR,$AA1STAR,$AA2STAR,$AA3STAR,$AA4STAR,$AA8STAR;
-
-    global $EMINB,$REFNB,$ENRNN,$ENSTR,$HII,$RNHII,$STNEB,$WRNEB;
-
-    global $deepskylive, $dateformat;
-    
-    global $instDir, $objObservation, $objPresentations;
-
-    // Create pdf file
+  { global $loggedUser, $deepskylive, $dateformat, $instDir, $objObservation, $objObserver, $objInstrument, $objLocation, $objPresentations, $objObject, $objFilter, $objEyepiece, $objLens;
     $pdf = new Cezpdf('a4', 'portrait');
     $pdf->ezStartPageNumbers(300, 30, 10);
-
-    $fontdir = realpath('lib/fonts/Helvetica.afm');
-    //$pdf->selectFont($fontdir);
-    $pdf->selectFont('lib/fonts/Helvetica.afm');
+    $pdf->selectFont($instDir.'lib/fonts/Helvetica.afm');
     $pdf->ezText(html_entity_decode($_GET['pdfTitle'])."\n");
-
-    while(list ($key, $value) = each($result))
-    { $obs = $GLOBALS['objObservation']->getAllInfoDsObservation($value['observationid']);
-      $objectname = $obs["name"];
-      $object = $GLOBALS['objObject']->getAllInfoDsObject($objectname);
-      $type = $object["type"];
-      $con = $object["con"];
-      $observerid = $obs["observer"];
-      $inst = $obs["instrument"];
-      $loc = $obs["location"];
-      $visibility = $obs["visibility"];
-      $seeing = $obs["seeing"];
-      $limmag = $obs["limmag"];
-      $filt = $obs["filter"];
-      $eyep = $obs["eyepiece"];
-      $lns = $obs["lens"];
-      if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
-        $date = sscanf($obs["date"], "%4d%2d%2d");
+    while(list($key,$value)=each($result))
+    { $obs=$objObservation->getAllInfoDsObservation($value['observationid']);
+      $object=$objObject->getAllInfoDsObject($obs['objectname']);
+      if($loggedUser&&($objObservation->getObserverProperty($loggedUser,'UT')))
+        $date=sscanf($obs["date"], "%4d%2d%2d");
       else
-        $date = sscanf($obs["localdate"], "%4d%2d%2d");
-      $description = $objPresentations->br2nl(html_entity_decode($obs["description"]));
-      $formattedDate = date($dateformat, mktime(0,0,0,$date[1],$date[2],$date[0]));
-      $visstr=""; $sstr = ""; $lstr = ""; $filtstr=""; $eyepstr=""; $lnsstr="";
-      if     ($seeing == 1) $seeingstr = SeeingExcellent;
-      elseif ($seeing == 2) $seeingstr = SeeingGood;
-      elseif ($seeing == 3) $seeingstr = SeeingModerate;
-      elseif ($seeing == 4) $seeingstr = SeeingPoor;
-      elseif ($seeing == 5) $seeingstr = SeeingBad;
-      if     ($visibility == 1) $visstr = LangVisibility1;
-      elseif ($visibility == 2) $visstr = LangVisibility2;
-      elseif ($visibility == 3) $visstr = LangVisibility3;
-      elseif ($visibility == 4) $visstr = LangVisibility4;
-      elseif ($visibility == 5) $visstr = LangVisibility5;
-      elseif ($visibility == 6) $visstr = LangVisibility6;
-      elseif ($visibility == 7) $visstr = LangVisibility7;
-      if($seeing) $sstr = LangViewObservationField6." : ".$seeingstr;
-      if($limmag) $lstr = LangViewObservationField7." : ".$limmag;
-      if($filt)   $filtstr = LangViewObservationField31. " : " . $GLOBALS['objFilter']->getFilterPropertyFromId($filt,'name');
-      if($eyep)   $eyepstr = LangViewObservationField30. " : " .$GLOBALS['objEyepiece']->getEyepiecePropertyFromId($eyep,'name');
-      if($lns)    $lnsstr = LangViewObservationField32 . " : " . $GLOBALS['objLens']->getLensPropertyFromId($lns,'name');
-      $temp = array("Name" => html_entity_decode(LangPDFMessage1)." : ".$objectname,
-                 "altname" => html_entity_decode(LangPDFMessage2)." : ".$object["altname"],
-                 "type" => $$type.html_entity_decode(LangPDFMessage12).$$con,
-                 "visibility" => html_entity_decode(LangViewObservationField22)." : ".$visstr,
-                 "seeing" => $sstr,
-                 "limmag" => $lstr, 
-                 "filter" => $filtstr,
-                 "eyepiece" => $eyepstr,
-								 "lens" => $lnsstr,
-                 "observer" => html_entity_decode(LangPDFMessage13).$GLOBALS['objObserver']->getObserverProperty($observerid,'firstname')." ".$GLOBALS['objObserver']->getObserverProperty($observerid,'name').html_entity_decode(LangPDFMessage14).$formattedDate,
-                 "instrument" => html_entity_decode(LangPDFMessage11)." : ".$GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst,'name'),
-                 "location" => html_entity_decode(LangPDFMessage10)." : ".$GLOBALS['objLocation']->getLocationPropertyFromId($loc,'name'),
-                 "description" => $description,
-                 "desc" => html_entity_decode(LangPDFMessage15)
-      );
+        $date=sscanf($obs["localdate"], "%4d%2d%2d");
+      $formattedDate=date($dateformat,mktime(0,0,0,$date[1],$date[2],$date[0]));
+      $temp = array("Name"        => html_entity_decode(LangPDFMessage1)." : ".$obs['objectname'],
+                    "altname"     => html_entity_decode(LangPDFMessage2)." : ".$object["altname"],
+                    "type"        => $GLOBALS[$object['objecttype']].html_entity_decode(LangPDFMessage12).$GLOBALS[$object['con']],
+                    "visibility"  => html_entity_decode(LangViewObservationField22)." : ".$GLOBALS['Visibility'.$obs['visibility']],
+                    "seeing"      => (($obs['seeing'])?(LangViewObservationField6." : ".$GLOBALS['Seeing'.$obs['seeing']]):''),
+                    "limmag"      => (($obs['limmag'])?(LangViewObservationField7." : ".$obs['limmag']):''), 
+                    "filter"      => (($obs['filterid'])?(LangViewObservationField31. " : " . $objFilter->getFilterPropertyFromId($obs['filterid'],'name')):''),
+                    "eyepiece"    => (($obs['eyepieceid'])?(LangViewObservationField30. " : " .$objEyepiece->getEyepiecePropertyFromId($obs['eyepieceid'],'name')):''),
+								    "lens"        => (($obs['lensid'])?(LangViewObservationField32 . " : " . $objLens->getLensPropertyFromId($obs['lensid'],'name')):''),
+                    "observer"    => html_entity_decode(LangPDFMessage13).$objObserver->getObserverProperty($obs['observerid'],'firstname')." ".$GLOBALS['objObserver']->getObserverProperty($obs['observerid'],'name').html_entity_decode(LangPDFMessage14).$formattedDate,
+                    "instrument"  => html_entity_decode(LangPDFMessage11)." : ".$objInstrument->getInstrumentPropertyFromId($inst,'name'),
+                    "location"    => html_entity_decode(LangPDFMessage10)." : ".$objLocation->getLocationPropertyFromId($loc,'name'),
+                    "description" => $objPresentations->br2nl(html_entity_decode($obs['description'])),
+                    "desc"        => html_entity_decode(LangPDFMessage15)
+                   );
       $obs1[] = $temp;
-      $nm=$objectname;
+      $nm=$obs['objectname'];
       if($object["altname"])
         $nm=$nm." (".$object["altname"].")";
       $pdf->ezText($nm, "14");
@@ -789,6 +708,87 @@ class Utils implements iUtils
     }
     $pdf->ezStream();
   }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   public function pdfCometObservations($result)// Creates a pdf document from an array of comet observations
   { include_once "cometobjects.php";
     include_once "observers.php";
