@@ -3,6 +3,8 @@ interface iPresentation
 { public  function br2nl($data);                                                       // The opposite of nl2br
   public  function presentationInt($value, $nullcontition='', $nullvalue='');          // if the null condtion is met, it returns the nullvalue, otherwise returns the value
   public  function presentationInt1($value, $nullcondition='', $nullvalue='');         // if the null condtion is met, it returns the nullvalue, otherwise returns the value formatted %1.1f
+  public  function promptWithLink($prompt,$promptDefault,$javaLink,$text);             // displays an anchor link with $text as text, showing when clicked an inputbox with the question $prompt and $promptDefault answer, jumping to $javalink (java format) afterwards 
+  public  function searchAndLinkCatalogsInText($theText);                              // hyperlinks M, NGC, .. catalogs in a text
   
 }
 // function tableFieldnameFieldExplanation($name,$field,$explanation)                   // 3-item field line, containing the name of the field, the field value and the explanation
@@ -23,6 +25,21 @@ class Presentations implements iPresentation
   }
   public  function presentationInt1($value, $nullcondition='', $nullvalue='')
   { return (($value==$nullcondition)?$nullvalue:sprintf("%1.1f",$value));
+  }
+  public function promptWithLink($prompt,$promptDefault,$javaLink,$text)
+	{ echo "<a href=\"\" onclick=\"thetitle = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;pdfTitle='+thetitle; return false;\"	target=\"new_window\">".$text."</a>";
+  }
+  public function searchAndLinkCatalogsInText($theText)
+  { global $baseURL;
+    $patterns[0]="/\s+(M)\s*(\d+)/";
+		$replacements[0]="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
+		$patterns[1]= "/(NGC|Ngc|ngc)\s*(\d+\w+)/";
+		$replacements[1]="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=NGC%20\\2\">NGC&nbsp;\\2</a>";
+		$patterns[2]= "/(IC|Ic|ic)\s*(\d+)/";
+		$replacements[2]="<a 	href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=IC%20\\2\">IC&nbsp;\\2</a>";
+		$patterns[3]= "/(Arp|ARP|arp)\s*(\d+)/";
+		$replacements[3]="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=Arp%20\\2\">Arp&nbsp;\\2</a>";
+		return preg_replace($patterns, $replacements, $theText);
   }
 }
 $objPresentations=new Presentations;
@@ -124,4 +141,5 @@ function tableTypeFieldnameField($type,$name,$field)
   echo "<td class=\"fieldvalue\">".$field."</td>";
   echo "</tr>";
 }
+
 ?>

@@ -1,6 +1,7 @@
 <?php // index.php - main entrance to DeepskyLog
 try
-{ if(!array_key_exists('indexAction',$_GET)&&array_key_exists('indexAction',$_POST)) 
+{ $inIndex=true;
+  if(!array_key_exists('indexAction',$_GET)&&array_key_exists('indexAction',$_POST)) 
     $_GET['indexAction']=$_POST['indexAction'];
   include 'common/entryexit/preludes.php';                                          // Includes of all classes and assistance files
   include 'common/entryexit/instructions.php';                                      // Execution of all non-layout related instructions (login, add objects to lists, etc.)
@@ -16,7 +17,7 @@ try
   echo "<td  align=\"left\" valign=\"bottom\" style=\"background:url(".$baseURL."styles/images/lu.gif) no-repeat top left; background-color:#FFFFFF;\">";
   echo "<img src=\"".$baseURL."styles/images/lo.gif\"></td>";                       // Left white bar
   echo "<td height=\"100%\" valign=\"top\" style=\"background-color:#FFFFFF;\">"; 
-  $includeFile=$objUtil->utiltiesDispatchIndexAction();                             // Determine the page to show
+  $includeFile=$objUtil->utilitiesDispatchIndexAction();                             // Determine the page to show
   include 'common/entryexit/data.php';                                              // Get data for the form, object data, observation data, etc.
   if(isset($entryMessage)&&$entryMessage)                                           // Entry Message if any
     echo "<h3 align=\"center\">".$entryMessage.'</h3><hr />';

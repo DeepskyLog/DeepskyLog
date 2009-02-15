@@ -22,7 +22,7 @@ class Lenses implements iLenses
   }
   public  function getLensObserverPropertyFromName($name, $observer, $property) // returns the property for the eyepiece of the observer
   { global $objDatabase; 
-    return $objDatabase->selectSingleValue("SELECT ".$property." FROM lens where name=\"".$name."\" and observer=\"".$observer."\"",$property);
+    return $objDatabase->selectSingleValue("SELECT ".$property." FROM lenses where name=\"".$name."\" and observer=\"".$observer."\"",$property);
   }
   public  function getLensPropertyFromId($id,$property,$defaultValue='')        // returns the property of the given lens
   { global $objDatabase; 

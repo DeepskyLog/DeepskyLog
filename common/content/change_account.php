@@ -1,6 +1,7 @@
-<?php
-// change_account.php
-// allows the user to view and change his account's details
+<?php // change_account.php - allows the user to view and change his account's details
+if((!isset($inIndex))||(!$inIndex))
+  die('You tried to enter DeepskyLog in an unauthorised way.');
+
 
 $tempLocationList="<select name=\"site\" class=\"inputfield\">";
 $sites = $objLocation->getSortedLocations("name", $_SESSION['deepskylog_id']);

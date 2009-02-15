@@ -27,7 +27,7 @@ interface iObservations
 	public  function setLocalDateAndTime($id, $date, $time);                                                                                                          	// sets the date and time for the given observation when the time is given in  local time
 	public  function showListObservation($obsKey, $link, $lco); 
 	public  function showObservation($LOid);                                                                                                                            // shows the details of an observation 
-	public  function validateDeleteDSObservation($id);                                                                                                                  // removes the observation with id = $id
+	public  function validateDeleteDSObservation();                                                                                                                  // removes the observation with id = $id
 }
 class Observations {
 	public  function addDSObservation($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language) 
@@ -645,7 +645,7 @@ class Observations {
 		$objDatabase->execSQL("UPDATE observations SET time = \"$time\" WHERE id = \"".$id."\"");
 	}
 	public  function showListObservation($obsKey, $link, $lco) 
-	{ global $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss; 
+	{ global $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations; 
 		$LOid="";	 $LOinstrumentsize='';  $LOdescription="";  $LOinstrumentId='';  $LOinstrument = '';
 	  $value=$_SESSION['Qobs'][$obsKey];
 		$alt = "";
@@ -654,7 +654,7 @@ class Observations {
 		  if(trim($altvalue)!=trim($value['objectname']))
 				$alt.="<br>".trim($altvalue);
 		if(($LOid=$this->getLOObservationId($value['objectname'], $loggedUser, $value['observationid']))&&($lco=="O"))
-		{ $LOdescription=$objUtil->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
+		{ $LOdescription=$objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
 		  $LOinstrumentId=$this->getDsObservationProperty($LOid,'instrumentid');
 			$LOinstrument=$objInstrument->getInstrumentPropertyFromId($LOinstrumentId,'name');
 			$LOinstrumentsize=round($objInstrument->getInstrumentPropertyFromId($LOinstrumentId,'diameter'), 0);
@@ -710,9 +710,9 @@ class Observations {
 		{ echo "<tr class=\"type1\">";
   		echo "<td valign=\"top\">".substr($alt,4)."</td>";
 	  	if($lco=="C")
-		    echo "<td colspan=\"5\">".$objUtil->searchAndLinkCatalogsInText($value['observationdescription'])."<p>"."</td>";
+		    echo "<td colspan=\"5\">".$objPresentations->searchAndLinkCatalogsInText($value['observationdescription'])."<p>"."</td>";
 		  elseif($lco=="O")
-  		{ echo "<td colspan=\"4\">".$objUtil->searchAndLinkCatalogsInText($value['observationdescription'])."<p>"."</td>";
+  		{ echo "<td colspan=\"4\">".$objPresentations->searchAndLinkCatalogsInText($value['observationdescription'])."<p>"."</td>";
 	  	  echo "<td colspan=\"3\">".$LOdescription."<p>"."</td>";
 		  }
       echo "</tr>";
@@ -730,7 +730,7 @@ class Observations {
 		}
 	}
 	public  function showObservation($LOid) 
-	{ global $objUtil, $dateformat, $myList, $listname_ss, $baseURL, $objEyepiece, $objObserver, $objInstrument, $loggedUser, $objObject, $objLens, $objFilter;
+	{ global $objUtil, $dateformat, $myList, $listname_ss, $baseURL, $objEyepiece, $objObserver, $objInstrument, $loggedUser, $objObject, $objLens, $objFilter, $objPresentations;
 		$link=$baseURL."index.php?";
 		$linkamp="";
 		reset($_GET);
@@ -813,7 +813,7 @@ class Observations {
 		echo "</table>";
 		echo $details1Text." ".$details2Text;
 		echo "<p />";
-		echo $objUtil->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
+		echo $objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
 		if($this->getDsObservationProperty($LOid,'hasDrawing'))
 		  echo "<p>"."<a href=\"".$baseURL."deepsky/drawings/" . $LOid . ".jpg" . "\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . ".jpg\"></img></a>";
 		echo "<p>";
@@ -824,7 +824,7 @@ class Observations {
 		echo "</p>";
 		echo "<hr>";
 	}
-	public  function validateDeleteDSObservation($id)                                                                                                                   // removes the observation with id = $id
+	public  function validateDeleteDSObservation()                                                                                                                   // removes the observation with id = $id
 	{ global $objDatabase,$objUtil;
 	  if(!$_GET['observationid'])
       throw new Exception("No observation to delete.");                           

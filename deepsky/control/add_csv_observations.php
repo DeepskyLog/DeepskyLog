@@ -70,9 +70,9 @@ else
   for($i=0,$j=0;$i<count($filters);$i++)
     if($filters[$i]&&(!($objFilter->getFilterObserverPropertyFromName($filters[$i], $_SESSION['deepskylog_id'],'id'))))
       $filtersMissing[$j++]=$filters[$i];
-  // Check for the existence of the eyepieces
+  // Check for the existence of the lenses
   for($i=0,$j=0;$i<count($lenses);$i++)
-    if($lenses[$i]&&($objLens->getLensObserverPropertyFromName($lenses[$i],$_SESSION['deepskylog_id'],'id')==-1))
+    if($lenses[$i]&&(!($objLens->getLensObserverPropertyFromName($lenses[$i],$_SESSION['deepskylog_id'],'id'))))
       $lensesMissing[$j++] = $lenses[$i];
   // Check for the correctness of dates
   for($i=0,$j=0,$k=0;$i<count($dates);$i++)
