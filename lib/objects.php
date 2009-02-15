@@ -19,7 +19,7 @@ interface iObjects
   public  function getNumberOfObjectsInCatalog($catalog);                       // returns the number of objects in the catalog given as a parameter
   public  function getObjectFromQuery($queries,$exact=0,$seen="D",$partof=0);
   public  function getObjectsFromCatalog($cat);
-  public  function getObjectVisibilities(&$obs);                                // completes an objects array containing already the object characteristics with the visibility and magnifications parameters
+  public  function getObjectVisibilities($obs);                                // completes an objects array containing already the object characteristics with the visibility and magnifications parameters
 //private function getPartOfNames($name);
   public  function getPartOfs($objects);
   public  function getSeen($object);                                            // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
@@ -361,7 +361,7 @@ class Objects implements iObjects
       while($get = mysql_fetch_object($run))
         if(!array_key_exists($get->name, $obs))
    	      $obs[$get->name] = array($i++,$get->name);				
-set_time_limit(round(count($obs)/200));    
+    set_time_limit(round(count($obs)*0.005));    
    	$obs = $this->getSeenObjectDetails($obs, $seen);
     if(array_key_exists('minContrast', $queries)&&$queries["minContrast"])
       for($new_obs=$obs,$obs=array();list($key,$value)=each($new_obs);)
@@ -393,7 +393,7 @@ set_time_limit(round(count($obs)/200));
 	  uksort($obs,"strnatcasecmp");
     return $obs;
   }
-  public  function getObjectVisibilities(&$obs)
+  public  function getObjectVisibilities($obs)
   { $popupT = $this->prepareObjectsContrast();
     if($popupT)
       for($j=0;$j<count($obs);$j++)
@@ -404,14 +404,13 @@ set_time_limit(round(count($obs)/200));
       }
     else
       for($j=0;$j<count($obs);$j++)
-      { if(!($j%100))
-          echo 'object '.$j.time().'<p>';
-      	$this->calcContrastAndVisibility($obs[$j]['objectname'],$obs[$j]['showname'],$obs[$j]['objectmagnitude'],$obs[$j]['objectsbcalc'],$obs[$j]['objectdiam1'],$obs[$j]['objectdiam2'],$contrast,$contype,$popup,$contrastcalc1);
+      { $this->calcContrastAndVisibility($obs[$j]['objectname'],$obs[$j]['showname'],$obs[$j]['objectmagnitude'],$obs[$j]['objectsbcalc'],$obs[$j]['objectdiam1'],$obs[$j]['objectdiam2'],$contrast,$contype,$popup,$contrastcalc1);
         $obs[$j]['objectcontrast'] = $contrast;
         $obs[$j]['objectcontrasttype'] = $contype;
         $obs[$j]['objectcontrastpopup'] = $popup;
         $obs[$j]['objectoptimalmagnification'] = $contrastcalc1;
       }
+    return $obs;
   }
   private function getPartOfNames($name)
   { global $objDatabase;
@@ -441,97 +440,77 @@ set_time_limit(round(count($obs)/200));
     return $objectsPartOfs;
   }
   private function getSeenLastseenLink($object,&$seen, &$seenlink, &$lastseen, &$lastseenlink)
-	{ $seen = "-";
-    $seenlink = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=detail_objectamp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
+	{ global $baseURL, $objDatabase, $loggedUser;
+		$seen = "-";
+    $seenlink = "<a href=\"".$baseURL."index.php?indexAction=detail_objectamp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
     $lastseenlink = "-";
     $lastseenlink = "-";
-		if($ObsCnt=$GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 ",'ObsCnt'))
+		if($ObsCnt=$objDatabase->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 ",'ObsCnt'))
     { $seen = 'X('.$ObsCnt.')';
-      $seenlink = "<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\">".'X('.$ObsCnt.')'."</a>";
-      if(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
-      { $get3=mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$_SESSION['deepskylog_id']."\" AND visibility != 7"));
+      $seenlink = "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\">".'X('.$ObsCnt.')'."</a>";
+      if($loggedUser)
+      { $get3=mysql_fetch_object($objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7"));
   		  if($get3->PersObsCnt>0)
         { $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')';
-          $seenlink="<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\">".'Y('.$ObsCnt.'/'.$get3->PersObsCnt.')'."</a>";
+          $seenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\">".'Y('.$ObsCnt.'/'.$get3->PersObsCnt.')'."</a>";
           $lastseen=$get3->PersObsMaxDate;
-          $lastseenlink="<a href=\"".$GLOBALS['baseURL']."index.php?indexAction=result_selected_observations&amp;observer=".urlencode($_SESSION['deepskylog_id'])."&amp;sort=observationdate&amp;sortdirection=desc&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\">".$get3->PersObsMaxDate."</a>";
+          $lastseenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".urlencode($loggedUser)."&amp;sort=observationdate&amp;sortdirection=desc&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\">".$get3->PersObsMaxDate."</a>";
 				}
 		  }
 	  }
 		return;
 	}
   public  function getSeenObjectDetails($obs, $seen="D")
-  { global $objAtlas;
+  { global $objAtlas, $objDatabase;
     $result2=array();
 	  $obscnt=sizeof($obs);
     if($obscnt > 0)
     { $j=0;
-echo count($obs).'<p>';	  
-echo "WP1 ".time().'<p>';	  
       reset($obs);
       while(list($key,$value)=each($obs))
       { $object=$value[1];
         $seentype = "-";
-        $sql = "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ";
-        $run = mysql_query($sql) or die(mysql_error());
-        $get2 = mysql_fetch_object($run);
-        if ($get2->ObsCnt)
-        { $seentype="X";
-          if(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
-          { $sql = "SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate, MAX(observations.id) As PersObsMaxId " .
-					         "FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"".$_SESSION['deepskylog_id']."\" AND visibility != 7";
-            $run = mysql_query($sql) or die(mysql_error());
-            $get3 = mysql_fetch_object($run);
-            if ($get3->PersObsCnt>0)
-				      $seentype="Y";
-          }
-        }
-			  if(($seen == "D") ||
-			    (strpos(" " . $seen, $seentype)))
+        $objectseen='';
+				$objectseenlink='';
+        $objectlastseen='';
+				$objectlastseenlink='';
+        $this->getSeenLastseenLink($object,$objectseen,$objectseenlink,$objectlastseen,$objectlastseenlink); 
+        if(($seen == "D") ||
+			    (strpos(" " . $seen, substr($objectseen,0,1))))
 		    { $result2[$j]['objectname'] = $value[1];
-          $sql = "SELECT * FROM objects WHERE name = \"". $value[1] . "\"";
-          $run = mysql_query($sql) or die(mysql_error());
-          $get = mysql_fetch_object($run);
-          if($get)
-			 	  { $type = $get->type;
-            $con = $get->con;
-            $result2[$j]['objecttype'] =  $type;
-            $result2[$j]['objectconstellation'] =  $con;
-            $objectseen='';
-					  $objectseenlink='';
-            $objectlastseen='';
-					  $objectlastseenlink='';
-            $this->getSeenLastseenLink($result2[$j]['objectname'],$objectseen,$objectseenlink,$objectlastseen,$objectlastseenlink); 
-            $result2[$j]['objectseen']=$objectseen;
-            $result2[$j]['objectlastseen']=$objectlastseen;       
-            $result2[$j]['objectseenlink']=$objectseenlink;
-            $result2[$j]['objectlastseenlink']=$objectlastseenlink;       
-            $result2[$j]['showname'] =  $key;
-  	        $result2[$j]['objectmagnitude'] =  $get->mag;
-  	        $result2[$j]['objectsurfacebrightness'] =  $get->subr;
-  	        $result2[$j]['objectra'] =  $get->ra;
-  	        $result2[$j]['objectdecl'] =  $get->decl;
-  	        $result2[$j]['objectdiam1'] = $get->diam1;
-  	        $result2[$j]['objectdiam2'] = $get->diam2;
-  	        $result2[$j]['objectsize'] = $this->calculateSize($get->diam1,$get->diam2);
-  	        $result2[$j]['objectpa'] = $get->pa;
-            $result2[$j]['objectpositioninlist'] = $value[0]; 
-            $result2[$j]['objectsbcalc'] = $get->SBObj; 
-            $result2[$j]['objectdescription'] = $get->description;
-					  if(count($value)==3)
-					    $result2[$j]['objectlistdescription'] = $value[2];
-					  reset($objAtlas->atlasCodes);
-					  while(list($key,$value)=each($objAtlas->atlasCodes))
-					    $result2[$j][$key] =  $get->$key;
-		      }
-          $j++;		
+          $get = mysql_fetch_object($objDatabase->selectRecordset("SELECT * FROM objects WHERE name = \"". $value[1] . "\""));
+          $result2[$j]['objecttype'] = $get->type;
+          $result2[$j]['objectconstellation'] = $get->con;
+          $result2[$j]['objectseen']=$objectseen;
+          $result2[$j]['objectlastseen']=$objectlastseen;       
+          $result2[$j]['objectseenlink']=$objectseenlink;
+          $result2[$j]['objectlastseenlink']=$objectlastseenlink;       
+          $result2[$j]['showname'] =  $key;
+          $result2[$j]['objectmagnitude'] =  $get->mag;
+          $result2[$j]['objectsurfacebrightness'] =  $get->subr;
+  	      $result2[$j]['objectra'] =  $get->ra;
+  	      $result2[$j]['objectdecl'] =  $get->decl;
+  	      $result2[$j]['objectdiam1'] = $get->diam1;
+  	      $result2[$j]['objectdiam2'] = $get->diam2;
+  	      $result2[$j]['objectsize'] = $this->calculateSize($get->diam1,$get->diam2);
+  	      $result2[$j]['objectpa'] = $get->pa;
+          $result2[$j]['objectpositioninlist'] = $value[0]; 
+          $result2[$j]['objectsbcalc'] = $get->SBObj; 
+          $result2[$j]['objectdescription'] = $get->description;
+		  	  if(count($value)==3)
+				    $result2[$j]['objectlistdescription'] = $value[2];
+				  reset($objAtlas->atlasCodes);
+				  while(list($key,$value)=each($objAtlas->atlasCodes))
+				    $result2[$j][$key] =  $get->$key;
+          $result2[$j]['objectcontrast'] = '-';
+          $result2[$j]['objectcontrasttype'] = '-';
+          $result2[$j]['objectcontrastpopup'] = '';
+          $result2[$j]['objectoptimalmagnification'] = '-';
+			    $j++;		
         }
       }
 	  }
-	  $obs=$result2;
-echo "WP2 ".time().'<p>';	  
-	  $this->getObjectVisibilities($obs);
-echo "WP3 ".time().'<p>';	  
+	  $obs=$this->getObjectVisibilities($result2);
 	  return $obs;
   }
   private function getSize($name)                                               // getSize returns the size of the object

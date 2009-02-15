@@ -1270,7 +1270,8 @@ class Utils implements iUtils
 		$pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($_GET['pdfTitle']), 'center' );
 		$pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, 8, LangPDFMessage22 . '1', 'right');
 		while(list($key, $valueA) = each($result))
-    { if(!$sort || ($actualsort!=$$sort))
+    { $con = $valueA['objectconstellation'];
+    	if(!$sort || ($actualsort!=$$sort))
 			{ if($y<$bottom) 
   			{ $y=$top;
   			  if($xbase==$xmid)
