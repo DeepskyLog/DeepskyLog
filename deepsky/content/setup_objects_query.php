@@ -284,9 +284,19 @@ if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
     echo("</td>");
   */
     echo("</tr>");
+    echo "<tr>";
+    echo "<td class=\"fieldname\" align=\"right\" width=\"25%\">"."Exclude"."</td>";
+    $j=1;
+    reset($catalogs);
+    while(list($key,$value)=each($catalogs))
+    { if(($nmb=$objObject->getNumberOfObjectsInCatalog($value))>1000)
+      { echo "<td><input type=\"checkbox\" name=\"excl_".$key."\" value=\"".$key."\" />".$value." (".$nmb." objects".")</td>";
+        if(!($j++%3))
+           echo "</tr><tr><td></td>";
+      } 
+    } 
+    echo "</tr>";
   }
   echo("</table>");
-
 echo "</div>";
-
 ?>

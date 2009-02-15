@@ -162,7 +162,7 @@ class Objects implements iObjects
   }
   public  function getCatalogs()                                                // returns a list of all different catalogs
   { global $objDatabase;
-    $ret=$objDatabase->selectSingleArray("SELECT DISTINCT objectnames.catalog FROM objectnames",'catalog');
+    $ret=$objDatabase->selectSingleArray("SELECT DISTINCT objectnames.catalog FROM objectnames WHERE objectnames.catalog NOT IN (\"M\",\"NGC\",\"Caldwell\",\"H400\",\"HII\",\"IC\")",'catalog');
     natcasesort($ret);
     reset($ret);
     array_unshift($ret, "M", "NGC", "Caldwell", "H400", "HII", "IC");
@@ -170,7 +170,7 @@ class Objects implements iObjects
   }
   public  function getCatalogsAndLists()
   { global $objDatabase;
-	  $ret=$objDatabase->selectSingleArray("SELECT DISTINCT objectnames.catalog FROM objectnames",'catalog');
+	  $ret=$objDatabase->selectSingleArray("SELECT DISTINCT objectnames.catalog FROM objectnames WHERE objectnames.catalog NOT IN (\"M\",\"NGC\",\"Caldwell\",\"H400\",\"HII\",\"IC\")",'catalog');
     natcasesort($ret);
     reset($ret);
     array_unshift($ret, "M", "NGC", "Caldwell", "H400", "HII", "IC");
