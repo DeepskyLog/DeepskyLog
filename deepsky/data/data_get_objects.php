@@ -325,8 +325,13 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
     $maxContrastError = True;
   	$minContrastError = True;
   }
-	
-	
+	reset($_GET);
+	$excl='';
+	while(list($key,$value)=each($_GET))
+	  if(substr($key,0,5)=='excl_')
+	    $excl.=",\"".substr($key,5)."\"";
+	if($excl)
+	  $excl=substr($excl,1);
   if(!($pageError || $minDeclDegreesError || $minDeclMinutesError || $minDeclSecondsError || 
          $maxDeclDegreesError || $maxDeclMinutesError || $maxDeclSecondsError || $minRAHoursError || 
          $minRAMinutesError || $minRASecondsError || $maxRAHoursError || $maxRAMinutesError || 
@@ -350,7 +355,8 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
                      "inList"          => $inList,
                      "notInList"       => $notInList,
                      "atlas"           => $atlas,
-										 "atlasPageNumber" => $atlasPageNumber);
+										 "atlasPageNumber" => $atlasPageNumber,
+                     "excl"            => $excl);
       if(array_key_exists('seen',$_GET) && $_GET['seen'])
         $seenPar = $_GET['seen'];
       else

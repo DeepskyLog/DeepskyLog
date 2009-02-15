@@ -56,35 +56,28 @@ class Objects implements iObjects
 	{ global $objContrast;
 	  $contrast = "-";
     $prefMag = "-"; 
-    $popupT = $this->prepareObjectsContrast();
-    $popup = LangContrastNotLoggedIn;
+    $popupT = "";
 	  $contrastCalc = ""; 
-    if($popupT)
-      $popup=$popupT;
-    else
-    { $magni = $magnitude;
-      if(($magnitude==99.9)||($magnitude==""))
-        $popup = LangContrastNoMagnitude;
-      else 
-      { $diam1 = $this->getDsoProperty($object,'diam1');
-        $diam1 = $diam1 / 60.0;
-        if($diam1==0)
-          $popup = LangContrastNoDiameter;
-        else
-        { $diam2 = $this->getDsoProperty($object,'diam2');
-          $diam2 = $diam2 / 60.0;
-          if ($diam2 == 0)
-            $diam2 = $diam1;
-          $contrastCalc = $objContrast->calculateContrast($magni, $SBobj, $diam1, $diam2);
-          if ($contrastCalc[0] < -0.2)      $popup = $showname . LangContrastNotVisible . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-		 		  else if ($contrastCalc[0] < 0.1)  $popup = LangContrastQuestionable . $showname . LangContrastQuestionableB . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-		 	    else if ($contrastCalc[0] < 0.35) $popup = $showname . LangContrastDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-		 	    else if ($contrastCalc[0] < 0.5)  $popup = $showname . LangContrastQuiteDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-	        else if ($contrastCalc[0] < 1.0)  $popup = $showname . LangContrastEasy . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
-		 	    else                              $popup = $showname . LangContrastVeryEasy . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);  
-		 	    $contrast = $contrastCalc[0];
-        }
-      }
+    $magni = $magnitude;
+    if(($magnitude==99.9)||($magnitude==""))
+      $popup = LangContrastNoMagnitude;
+    else 
+    { $diam1 = $diam1 / 60.0;
+      if($diam1==0)
+        $popup = LangContrastNoDiameter;
+      else
+      { $diam2 = $diam2 / 60.0;
+        if ($diam2 == 0)
+          $diam2 = $diam1;
+        $contrastCalc = $objContrast->calculateContrast($magni, $SBobj, $diam1, $diam2);
+        if ($contrastCalc[0] < -0.2)      $popup = $showname . LangContrastNotVisible . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
+		    else if ($contrastCalc[0] < 0.1)  $popup = LangContrastQuestionable . $showname . LangContrastQuestionableB . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
+		 	  else if ($contrastCalc[0] < 0.35) $popup = $showname . LangContrastDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
+		 	  else if ($contrastCalc[0] < 0.5)  $popup = $showname . LangContrastQuiteDifficult . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
+	      else if ($contrastCalc[0] < 1.0)  $popup = $showname . LangContrastEasy . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);
+		 	  else                              $popup = $showname . LangContrastVeryEasy . addslashes($_SESSION['location']) . LangContrastPlace . addslashes($_SESSION['telescope']);  
+		 	  $contrast = $contrastCalc[0];
+      }    
 	  }
     if      ($contrast == "-") $contype = "";
     else if ($contrast < -0.2) $contype = "typeNotVisible";
@@ -100,10 +93,6 @@ class Objects implements iObjects
 	  	 else
 		     $prefMag=sprintf("%d", $contrastCalc[1])."x - ".$contrastCalc[2];
     } 
-	  else 
-	  { $contrast = "-";
-      $prefMag = "-";
-    }
   }
   private function calculateSize($diam1, $diam2)                                // Construct a string from the sizes
   { $size = "";
@@ -346,16 +335,17 @@ class Objects implements iObjects
     $sqland.=(array_key_exists('mindiam2',$queries)&&$queries['mindiam2'])?" AND (objects.diam2 > \"" . $queries["mindiam2"] . "\" or objects.diam2 like \"" . $queries["mindiam2"] . "\")":'';
     $sqland.=(array_key_exists('maxdiam2',$queries)&&$queries['maxdiam2'])?" AND(objects.diam2 <= \"" . $queries["maxdiam2"] . "\" or objects.diam2 like \"" . $queries["maxdiam2"] . "\")":'';
     $sqland.=(array_key_exists('atlas',$queries)&&$queries['atlas']&&array_key_exists('atlasPageNumber',$queries)&&$queries["atlasPageNumber"])?" AND (objects.".$queries["atlas"]."=\"".$queries["atlasPageNumber"]."\")":'';
-	  $sqland = substr($sqland, 4);
+    $sqland.=(array_key_exists('excl',$queries)&&$queries['excl'])?(" AND (objectnames.catalog NOT IN (".$queries['excl']."))"):'';
+    $sqland = substr($sqland, 4);
     if(trim($sqland)=='') 
 	    $sqland=" (objectnames.altname like \"%\")";
     if($partof)
       $sql="(".$sql1.$sqland.") UNION (".$sql2. $sqland.")";
     else
       $sql = $sql1 . $sqland;		
-    $sql.=" LIMIT 0,10000";
+//    $sql.=" LIMIT 0,10000";
 //  echo $sql."<p />";
-	  $run=$GLOBALS['objDatabase']->selectRecordset($sql);
+    $run=$GLOBALS['objDatabase']->selectRecordset($sql);
     $i=0;
     if (array_key_exists('name',$queries)&&$queries["name"])
 	  { while($get = mysql_fetch_object($run))
@@ -371,7 +361,8 @@ class Objects implements iObjects
       while($get = mysql_fetch_object($run))
         if(!array_key_exists($get->name, $obs))
    	      $obs[$get->name] = array($i++,$get->name);				
-    $obs = $this->getSeenObjectDetails($obs, $seen);
+set_time_limit(round(count($obs)/200));    
+   	$obs = $this->getSeenObjectDetails($obs, $seen);
     if(array_key_exists('minContrast', $queries)&&$queries["minContrast"])
       for($new_obs=$obs,$obs=array();list($key,$value)=each($new_obs);)
         if ($value['objectcontrast']>=$queries["minContrast"])
@@ -404,13 +395,23 @@ class Objects implements iObjects
   }
   public  function getObjectVisibilities(&$obs)
   { $popupT = $this->prepareObjectsContrast();
-    for($j=0;$j<count($obs);$j++)
-    { $this->calcContrastAndVisibility($obs[$j]['objectname'],$obs[$j]['showname'],$obs[$j]['objectmagnitude'],$obs[$j]['objectsbcalc'],$obs[$j]['objectdiam1'],$obs[$j]['objectdiam2'],$contrast,$contype,$popup,$contrastcalc1);
-      $obs[$j]['objectcontrast'] = $contrast;
-      $obs[$j]['objectcontrasttype'] = $contype;
-      $obs[$j]['objectcontrastpopup'] = $popup;
-      $obs[$j]['objectoptimalmagnification'] = $contrastcalc1;
-    }
+    if($popupT)
+      for($j=0;$j<count($obs);$j++)
+      { $obs[$j]['objectcontrast'] = '-';
+        $obs[$j]['objectcontrasttype'] = '-';
+        $obs[$j]['objectcontrastpopup'] = $popupT;
+        $obs[$j]['objectoptimalmagnification'] = '-';
+      }
+    else
+      for($j=0;$j<count($obs);$j++)
+      { if(!($j%100))
+          echo 'object '.$j.time().'<p>';
+      	$this->calcContrastAndVisibility($obs[$j]['objectname'],$obs[$j]['showname'],$obs[$j]['objectmagnitude'],$obs[$j]['objectsbcalc'],$obs[$j]['objectdiam1'],$obs[$j]['objectdiam2'],$contrast,$contype,$popup,$contrastcalc1);
+        $obs[$j]['objectcontrast'] = $contrast;
+        $obs[$j]['objectcontrasttype'] = $contype;
+        $obs[$j]['objectcontrastpopup'] = $popup;
+        $obs[$j]['objectoptimalmagnification'] = $contrastcalc1;
+      }
   }
   private function getPartOfNames($name)
   { global $objDatabase;
@@ -465,7 +466,9 @@ class Objects implements iObjects
 	  $obscnt=sizeof($obs);
     if($obscnt > 0)
     { $j=0;
-		  reset($obs);
+echo count($obs).'<p>';	  
+echo "WP1 ".time().'<p>';	  
+      reset($obs);
       while(list($key,$value)=each($obs))
       { $object=$value[1];
         $seentype = "-";
@@ -526,8 +529,10 @@ class Objects implements iObjects
       }
 	  }
 	  $obs=$result2;
-    $this->getObjectVisibilities($obs);
-    return $obs;
+echo "WP2 ".time().'<p>';	  
+	  $this->getObjectVisibilities($obs);
+echo "WP3 ".time().'<p>';	  
+	  return $obs;
   }
   private function getSize($name)                                               // getSize returns the size of the object
   { $sql = "SELECT diam1, diam2 FROM objects WHERE name = \"$name\"";
@@ -558,7 +563,7 @@ class Objects implements iObjects
   }
   private function prepareObjectsContrast()                               // internal procedure to speed up contrast calculations
   { global $objContrast;
-	  if(!array_key_exists('LTC',$_SESSION)||(!$_SESSION['LTC']))
+    if(!array_key_exists('LTC',$_SESSION)||(!$_SESSION['LTC']))
 		 $_SESSION['LTC'] = array(array(4, -0.3769, -1.8064, -2.3368, -2.4601, -2.5469, -2.5610, -2.5660), 
                               array(5, -0.3315, -1.7747, -2.3337, -2.4608, -2.5465, -2.5607, -2.5658),
                               array(6, -0.2682, -1.7345, -2.3310, -2.4605, -2.5467, -2.5608, -2.5658),
@@ -591,27 +596,27 @@ class Objects implements iObjects
      if(!array_key_exists('angle',$_SESSION)||(!$_SESSION['angle']))
        $_SESSION['angle'] = array(-0.2255, 0.5563, 0.9859, 1.260, 1.742, 2.083, 2.556);
      $popup="";
-  		$magnificationsName='';
-	 	$fov='';
+  	 $magnificationsName='';
+	 	 $fov='';
 		 if(!(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id'])))
 		   $popup = LangContrastNotLoggedIn;
      else
-	 	{ $sql5 = "SELECT stdlocation, stdtelescope from observers where id = \"" . $_SESSION['deepskylog_id'] . "\"";
+	 	 { $sql5 = "SELECT stdlocation, stdtelescope from observers where id = \"" . $_SESSION['deepskylog_id'] . "\"";
        $run5 = mysql_query($sql5) or die(mysql_error());
        $get5 = mysql_fetch_object($run5);
        if ($get5->stdlocation==0)
          $popup = LangContrastNoStandardLocation;
        elseif($get5->stdtelescope==0)
-	 			$popup = LangContrastNoStandardInstrument;
-		 	else
+	 			 $popup = LangContrastNoStandardInstrument;
+		 	 else
 			 { // Check for eyepieces or a fixed magnification
          $sql6 = "SELECT fixedMagnification, diameter, fd from instruments where id = \"" . $get5->stdtelescope . "\"";
          $run6 = mysql_query($sql6) or die(mysql_error());
          $get6 = mysql_fetch_object($run6);
          if ($get6->fd == 0 && $get6->fixedMagnification == 0)
          { // We are not setting $magnifications
-		 			$magnifications = array();
-			 	}
+		 			 $magnifications = array();
+			 	 }
          else if ($get6->fixedMagnification == 0)
          { $sql7 = "SELECT focalLength, name, apparentFOV, maxFocalLength from eyepieces where observer = \"" . $_SESSION['deepskylog_id'] . "\"";
   	       $run7 = mysql_query($sql7) or die(mysql_error());

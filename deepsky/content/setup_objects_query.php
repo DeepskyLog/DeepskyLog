@@ -290,7 +290,7 @@ if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
     reset($catalogs);
     while(list($key,$value)=each($catalogs))
     { if(($nmb=$objObject->getNumberOfObjectsInCatalog($value))>1000)
-      { echo "<td><input type=\"checkbox\" name=\"excl_".$key."\" value=\"".$key."\" />".$value." (".$nmb." objects".")</td>";
+      { echo "<td><input type=\"checkbox\" name=\"excl_".$value."\" />".$value." (".$nmb." objects".")</td>";
         if(!($j++%3))
            echo "</tr><tr><td></td>";
       } 
