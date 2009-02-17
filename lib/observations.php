@@ -245,6 +245,8 @@ class Observations {
 																				 CONCAT(observers.firstname , ' ' , observers.name) as observername,
 						  													 CONCAT(observers.name , ' ' , observers.firstname) as observersortname,
 																				 objects.con as objectconstellation, 
+																				 objects.type as objecttype, 
+																				 objects.mag as objectmagnitude, 
 																				 instruments.id as instrumentid,
 																				 instruments.name as instrumentname,
 																				 instruments.diameter as instrumentdiameter,
@@ -678,7 +680,7 @@ class Observations {
 	    echo "<td align=\"center\"><a href=\"".$link."&amp;expand=0\">"."-"."</a></td>";
 	  elseif($lco=='L')
 	    echo "<td align=\"center\"><a href=\"".$link."&amp;expand=".$value['observationid']."\">"."+"."</a></td>";
-    echo "<td><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($value['objectname'])."\">".$value['objectname']."</a></td>";
+	  echo "<td><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($value['objectname'])."\" title=\"".(($value['objectmagnitude']<99.9)?"magnitude ".sprintf("%.0f",$value['objectmagnitude'])." ".$GLOBALS[$value['objecttype']]:$GLOBALS[$value['objecttype']])."\">".$value['objectname']."</a></td>";
     echo "<td>".$GLOBALS[$value['objectconstellation']]."</td>";
 		if($objUtil->checkGetKey('expand')==$value['observationid'])
 		{ echo "</tr>";
