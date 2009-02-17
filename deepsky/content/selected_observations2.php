@@ -121,6 +121,8 @@ if (count($_SESSION['Qobs']) == 0) //===========================================
 		{
 		echo "<table width=\"100%\">\n";
 		echo "<tr width=\"100%\" class=\"type3\">\n"; // LINKS TO SORT ON OBSERVATION TABLE HEADERS
+	  if($_SESSION['lco']=='L')
+	    echo "<td>&nbsp;</td>";
 		tableSortHeader(LangOverviewObservationsHeader1, $link2 . "&amp;sort=objectname");
 		tableSortHeader(LangViewObservationField1b, $link2 . "&amp;sort=objectconstellation");
 		tableSortHeader(LangOverviewObservationsHeader2, $link2 . "&amp;sort=observersortname");
