@@ -19,8 +19,6 @@ class CometObservations
  // observerid, date and time should be given as parameters.
  function addObservation($objectid, $observerid, $date, $time)
  {
-  $db = new database;
-  $db->login();
 
   if (!$_SESSION['lang'])
   {
@@ -36,7 +34,6 @@ class CometObservations
   $get = mysql_fetch_object($run);
   $id = $get->id;
 
-  $db->logout();
 
   return $id;
  }
@@ -44,20 +41,15 @@ class CometObservations
  // deleteObservation($id) deletes the observation with the given id.
  function deleteObservation($id)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "DELETE FROM cometobservations WHERE id=\"$id\"";
   mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
  }
 
  // getObjectId returns the objectid of the given observation
  function getObjectId($id)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -66,7 +58,6 @@ class CometObservations
 
   $objectid = $get->objectid;
 
-  $db->logout();
 
   return $objectid;
  }
@@ -74,20 +65,15 @@ class CometObservations
  // setObjectId sets a new object for the given observation
  function setObjectId($id, $object)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "UPDATE cometobservations SET objectid = \"$object\" WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
  }
 
  // getObserverId returns the observerid of the given observation
  function getObserverId($id)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -96,7 +82,6 @@ class CometObservations
 
   $observerid = $get->observerid;
 
-  $db->logout();
 
   return $observerid;
  }
@@ -104,20 +89,15 @@ class CometObservations
  // setObserverId sets a new observer for the given observation
  function setObserverId($id, $observer)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "UPDATE cometobservations SET observerid = \"$observer\" WHERE id = \"$id\" ";
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
  }
 
  // getInstrumentId returns the instrumentid of the given observation
  function getInstrumentId($id)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -126,7 +106,6 @@ class CometObservations
 
   $instrumentid = $get->instrumentid;
 
-  $db->logout();
 
   return $instrumentid;
  }
@@ -134,20 +113,15 @@ class CometObservations
  // setInstrumentId sets a new instrument for the given observation
  function setInstrumentId($id, $instrument)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "UPDATE cometobservations SET instrumentid = \"$instrument\" WHERE id = \"$id\" ";
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
  }
 
  // getLocationId returns the locationid of the given observation
  function getLocationId($id)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -156,7 +130,6 @@ class CometObservations
 
   $locationid = $get->locationid;
 
-  $db->logout();
 
   return $locationid;
  }
@@ -164,20 +137,15 @@ class CometObservations
  // setLocationId sets a new location for the given observation
  function setLocationId($id, $location)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "UPDATE cometobservations SET locationid = \"$location\" WHERE id = \"$id\" ";
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
  }
 
  // getDate returns the date of the given observation
  function getDate($id)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -186,7 +154,6 @@ class CometObservations
 
   $date = $get->date;
 
-  $db->logout();
 
   return $date;
  }
@@ -194,13 +161,10 @@ class CometObservations
  // setDate sets a new date for the given observation
  function setDate($id, $date)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "UPDATE cometobservations SET date = \"$date\" WHERE id = \"$id\" ";
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
  }
 
  // setLocalDateAndTime sets the date and time for the given observation 
@@ -212,8 +176,6 @@ class CometObservations
 
   if ($time >= 0)
   {
-    $db = new database;
-    $db->login();
 
     $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
     $run = mysql_query($sql) or die(mysql_error());
@@ -222,7 +184,6 @@ class CometObservations
 
     $location = $get->locationid;
 
-    $db->logout();
 
     if ($location)
     {
@@ -278,8 +239,6 @@ class CometObservations
     }
   }
 
-  $db = new database;
-  $db->login();
 
   $sql = "UPDATE cometobservations SET date = \"$date\" WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -287,7 +246,6 @@ class CometObservations
   $sql = "UPDATE cometobservations SET time = \"$time\" WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
  }
 
  // getLocalDate returns the date of the given observation in local time
@@ -296,8 +254,6 @@ class CometObservations
   include_once "locations.php";
   $locations = new Locations();
 
-  $db = new database;
-  $db->login();
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -311,7 +267,7 @@ class CometObservations
     $time = $get->time;
     $loc = $get->locationid;
 
-    $db->logout();
+      
 
     if($loc)
     {
@@ -378,8 +334,6 @@ class CometObservations
  // getTime returns the Time of the given observation
  function getTime($id)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -388,7 +342,6 @@ class CometObservations
 
   $time = $get->time;
 
-  $db->logout();
 
   return $time;
  }
@@ -399,8 +352,6 @@ class CometObservations
   include_once "locations.php";
   $locations = new Locations();
 
-  $db = new database;
-  $db->login();
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -413,7 +364,7 @@ class CometObservations
     $time = $get->time;
     $loc = $get->locationid;
 
-    $db->logout();
+      
 
     if ($loc)
     {
@@ -474,20 +425,15 @@ class CometObservations
  // setTime sets a new time for the given observation
  function setTime($id, $time)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "UPDATE cometobservations SET time = \"$time\" WHERE id = \"$id\" ";
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
  }
 
  // getDescription returns the Description of the given observation
  function getDescription($id)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -496,7 +442,6 @@ class CometObservations
 
   $description = $get->description;
 
-  $db->logout();
 
   return $description;
  }
@@ -504,20 +449,15 @@ class CometObservations
  // setDescription sets a new Description for the given observation
  function setDescription($id, $description)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "UPDATE cometobservations SET description = \"$description\" WHERE id = \"$id\" ";
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
  }
 
  // getMethode returns the Methode of the given observation
  function getMethode($id)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -526,7 +466,6 @@ class CometObservations
 
   $methode = $get->methode;
 
-  $db->logout();
 
   return $methode;
  }
@@ -534,20 +473,14 @@ class CometObservations
  // setMethode sets a new Methode for the given observation
  function setMethode($id, $methode)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "UPDATE cometobservations SET methode = \"$methode\" WHERE id = \"$id\" ";
   $run = mysql_query($sql) or die(mysql_error());
-
-  $db->logout();
  }
 
  // getMagnitude returns the Magnitude of the given observation
  function getMagnitude($id)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -556,7 +489,6 @@ class CometObservations
 
   $magnitude = $get->mag;
 
-  $db->logout();
 
   return $magnitude;
  }
@@ -564,32 +496,28 @@ class CometObservations
  // setMagnitude sets a new Magnitude for the given observation
  function setMagnitude($id, $magnitude)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "UPDATE cometobservations SET mag = \"$magnitude\" WHERE id = \"$id\" ";
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
  }
 
  // setMagnitudeUncertain set the uncertain flag for the given magnitude
  function setMagnitudeUncertain($id, $magnitude)
  {
-  $db = new database;
-  $db->login();
+    
 
   $sql = "UPDATE cometobservations SET maguncertain = \"$magnitude\" WHERE id = \"$id\" ";
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
+    
  }
 
  // getMagnitudeUncertain returns 1 if the magnitude is uncertain
  function getMagnitudeUncertain($id)
  {
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -598,7 +526,7 @@ class CometObservations
 
   $magnitude = $get->maguncertain;
 
-  $db->logout();
+    
 
   return $magnitude;
  }
@@ -606,21 +534,21 @@ class CometObservations
  // setMagnitudeWeakerThan set the weaker than flag for the given magnitude
  function setMagnitudeWeakerThan($id, $magnitude)
  {
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "UPDATE cometobservations SET lessmagnitude = \"$magnitude\" WHERE id =
 \"$id\" ";
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
+    
  }
 
  // getMagnitudeWeakerThan returns 1 if the magnitude is weaker than the given magnitude
  function getMagnitudeWeakerThan($id)
  {
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -629,7 +557,7 @@ class CometObservations
 
   $magnitude = $get->lessmagnitude;
 
-  $db->logout();
+    
 
   return $magnitude;
  }
@@ -637,8 +565,8 @@ class CometObservations
  // getChart returns the Chart of the given observation
  function getChart($id)
  {
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -647,7 +575,7 @@ class CometObservations
 
   $chart = $get->chart;
 
-  $db->logout();
+    
 
   return $chart;
  }
@@ -655,21 +583,21 @@ class CometObservations
  // setChart sets a new Chart for the given observation
  function setChart($id, $chart)
  {
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "UPDATE cometobservations SET chart = \"$chart\" WHERE id = \"$id\" "
 ;
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
+    
  }
 
  // getMagnification returns the Magnification of the given observation
  function getMagnification($id)
  {
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -678,7 +606,7 @@ class CometObservations
 
   $magnification = $get->magnification;
 
-  $db->logout();
+    
 
   return $magnification;
  }
@@ -686,20 +614,20 @@ class CometObservations
  // setMagnification sets a new Magnification for the given observation
  function setMagnification($id, $magnification)
  {
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "UPDATE cometobservations SET magnification = \"$magnification\" WHERE id = \"$id\" " ;
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
+    
  }
 
  // getDc returns the Dc of the given observation
  function getDc($id)
  {
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -708,7 +636,7 @@ class CometObservations
 
   $dc = $get->dc;
 
-  $db->logout();
+    
 
   return $dc;
  }
@@ -716,21 +644,21 @@ class CometObservations
  // setDc sets a new Dc for the given observation
  function setDc($id, $dc)
  {
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "UPDATE cometobservations SET dc = \"$dc\" WHERE id = \"$id\" "
 ;
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
+    
  }
 
  // getComa returns the Coma of the given observation
  function getComa($id)
  {
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -739,7 +667,7 @@ class CometObservations
 
   $coma = $get->coma;
 
-  $db->logout();
+    
 
   return $coma;
  }
@@ -747,21 +675,21 @@ class CometObservations
  // setComa sets a new Coma for the given observation
  function setComa($id, $coma)
  {
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "UPDATE cometobservations SET coma = \"$coma\" WHERE id = \"$id\" "
 ;
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
+    
  }
 
  // getTail returns the Tail of the given observation
  function getTail($id)
  {
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -770,7 +698,7 @@ class CometObservations
 
   $tail = $get->tail;
 
-  $db->logout();
+    
 
   return $tail;
  }
@@ -778,20 +706,20 @@ class CometObservations
  // setTail sets a new Tail for the given observation
  function setTail($id, $tail)
  {
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "UPDATE cometobservations SET tail = \"$tail\" WHERE id = \"$id\" " ;
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
+    
  }
 
  // getPa returns the Pa of the given observation
  function getPa($id)
  {
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -800,7 +728,7 @@ class CometObservations
 
   $pa = $get->pa;
 
-  $db->logout();
+    
 
   return $pa;
  }
@@ -808,13 +736,13 @@ class CometObservations
  // setPa sets a new Pa for the given observation
  function setPa($id, $pa)
  {
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "UPDATE cometobservations SET pa = \"$pa\" WHERE id = \"$id\" " ;
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
+    
  }
 
  // getObservations returns an array with all observations
@@ -823,8 +751,8 @@ class CometObservations
   include "setup/databaseInfo.php";
   $observers = new Observers;
 
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "SELECT * FROM cometobservations";
 
@@ -835,7 +763,7 @@ class CometObservations
    $observations[] = $get->id;
   }
 
-  $db->logout();
+    
 
   if ($observations)
   {
@@ -859,8 +787,8 @@ class CometObservations
   include_once "observers.php";
 
   $observers = new Observers;
-  $db = new database;
-  $db->login();
+    
+ 
   $sql = "SELECT COUNT(DISTINCT objectid) FROM cometobservations";
 
   $run = mysql_query($sql) or die(mysql_error());
@@ -876,8 +804,8 @@ class CometObservations
 
   $observers = new Observers;
 
-  $db = new database;
-  $db->login();
+    
+ 
   $sql = "SELECT COUNT(id) FROM cometobservations";
 
   $run = mysql_query($sql) or die(mysql_error());
@@ -896,8 +824,8 @@ class CometObservations
 
   $date = date("Y")."0101";
 
-  $db = new database;
-  $db->login();
+    
+ 
   $sql = "SELECT COUNT(id) FROM cometobservations WHERE date > \"$date\"";
 
   $run = mysql_query($sql) or die(mysql_error());
@@ -929,8 +857,8 @@ function getObservationsThisObserver($id)
  {
   include "setup/databaseInfo.php";
 
-  $db = new database;
-  $db->login();
+    
+ 
   $sql = "SELECT COUNT(DISTINCT objectid) FROM cometobservations WHERE observerid=\"$id\"";
 
   $run = mysql_query($sql) or die(mysql_error());
@@ -945,8 +873,8 @@ function getObservationsThisObserver($id)
   include "setup/databaseInfo.php";
   $observers = new Observers;
 
-  $db = new database;
-  $db->login();
+    
+ 
 
   $sql = "SELECT * FROM cometobservations";
   $run = mysql_query($sql) or die(mysql_error());
@@ -955,7 +883,7 @@ function getObservationsThisObserver($id)
   {
    $observations[] = $get->objectid;
   }
-  $db->logout();
+    
 
   $numberOfObservations = array_count_values ($observations);
 
@@ -971,8 +899,8 @@ function getObservationsThisObserver($id)
   include "setup/databaseInfo.php";
   $observers = new Observers;
 
-  $db = new database;
-  $db->login();
+    
+ 
 
   if ($sort == "date")
   {
@@ -1005,7 +933,7 @@ function getObservationsThisObserver($id)
    $observations[] = $get->id;
   }
 
-  $db->logout();
+    
 
   return $observations;
  }
@@ -1048,8 +976,8 @@ function getObservationsThisObserver($id)
   }
 
 
-  $db = new database;
-  $db->login();
+    
+   
 
   $sql = "SELECT cometobservations.* FROM cometobservations LEFT JOIN instruments on cometobservations.instrumentid=instruments.id LEFT JOIN cometobjects on cometobservations.objectid=cometobjects.id LEFT JOIN observers on cometobservations.observerid=observers.id where";
  
@@ -1296,7 +1224,7 @@ function getObservationsThisObserver($id)
    $obs[] = $get->id;
   }
 
-  $db->logout();
+    
 
   if(isset($obs))
   {

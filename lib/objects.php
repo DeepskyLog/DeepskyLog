@@ -29,7 +29,7 @@ interface iObjects
   public  function newAltName($name, $cat, $catindex);                          // ADMIN FUNCTION, Add a new Altname in objectnames for this object
   public  function newName($name, $cat, $catindex);                             // ADMIN FUNCTION, Set a new name for a DS object, and adapt all observations, objectnames, partofs and list occurences
   public  function newPartOf($name, $cat, $catindex);                           // ADMIN FUNCTION, Adds a new partof entry for $name in the partsof table, making it part of $cat $index
-//private function prepareObjectsContrast($doLogin=false);                      // internal procedure to speed up contrast calculations
+//private function prepareObjectsContrast();                                    // internal procedure to speed up contrast calculations
   public  function removeAltName($name, $cat, $catindex);                       // ADMIN FUNCTION, Remove the alternative name $cat $index from the objectnames of $name
   public  function removeAndReplaceObjectBy($name, $cat, $catindex);            // ADMIN FUNCTION, Remove the object after replacing it in the observations, partofs, lists by the object $cat $index
   public  function removePartOf($name, $cat, $catindex);                        // ADMIN FUNCTION, Remove the partof entry for $name from the partsof table, so that $name is no longer a part of $cat $index
@@ -727,7 +727,7 @@ class Objects implements iObjects
     return $objDatabase->execSQL("UPDATE objects SET ".$property." = \"".$propertyValue."\" WHERE name = \"".$name."\"");
   }
   public  function showObject($object,$zoom=30)
-  { global $deepskylive, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL;	
+  { global $deepskylive, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL, $objPresentations;	
     $object=$this->getDsObjectName($object);
     $_SESSION['object']=$object;
     $altnames=$this->getAlternativeNames($object); $alt="";
@@ -741,10 +741,11 @@ class Objects implements iObjects
     while((count($partof))&&(list($key, $value)=each($partof)))
       if(trim($value)!=trim($object))
 	  	  $partoft.=($partoft?"/":"")."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(trim($value))."\">".trim($value)."</a>";
-    $raDSS=$objUtil->raToStringDSS($this->getDsoProperty($object,'ra'));
-    $declDSS=$objUtil->decToStringDSS($this->getDsoProperty($object,'decl'));
+    $raDSS=$objPresentations->raToStringDSS($this->getDsoProperty($object,'ra'));
+    $declDSS=$objPresentations->decToStringDSS($this->getDsoProperty($object,'decl'));
     $magnitude=sprintf("%01.1f", $this->getDsoProperty($object,'mag'));
 	  $sb=sprintf("%01.1f", $this->getDSOProperty($object,'subr'));
+	  $this->prepareObjectsContrast();
     $this->calcContrastAndVisibility($object,$object,$this->getDsoProperty($object,'mag'),$this->getDsoProperty($object,'SBObj'),$this->getDsoProperty($object,'diam1'),$this->getDsoProperty($object,'diam2'),$contrast,$contype,$popup,$prefMag);
 	  echo "<table width=\"100%\">";
 	  if($loggedUser&&($standardAtlasCode=$GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode','urano')))

@@ -13,8 +13,6 @@ class ICQREFERENCEKEY
  // getDescription returns the description of an ICQMETHOD
  function getDescription($id)
  {
-  $db = new database;
-  $db->login();
 
   $sql = "SELECT * FROM ICQ_REFERENCE_KEY WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -23,7 +21,6 @@ class ICQREFERENCEKEY
 
   $description = $get->description;
 
-  $db->logout();
 
   return $description;
  }
@@ -31,8 +28,6 @@ class ICQREFERENCEKEY
  // getIds returns an array with the ids of all ICQ METHODS
  function getIds()
  {
-  $db = new database;
-  $db->login();
 
   $sql = "SELECT * FROM ICQ_REFERENCE_KEY";
   $run = mysql_query($sql) or die(mysql_error());
@@ -42,7 +37,6 @@ class ICQREFERENCEKEY
    $ids[] = $get->id;
   }
 
-  $db->logout();
 
   return $ids;
  }

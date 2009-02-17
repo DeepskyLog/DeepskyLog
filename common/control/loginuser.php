@@ -96,11 +96,9 @@ else
   $_SESSION['alllanguages'] = $allLanguages; 
   $usedLanguages = $objLanguage->getLanguageKeys($_SESSION['lang']);
 }
-include "lib/setup/"."$language";
 if($loginErrorCode||$loginErrorText)
 { $_SESSION['deepskylog_id']='';
 	setcookie("deepskylogsec","",time()-3600,"/");
   $entryMessage=constant($loginErrorCode)." ".$loginErrorText;
 }
-
 ?>

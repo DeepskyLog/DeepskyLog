@@ -684,6 +684,10 @@ class Observations {
 		  echo "<td>".((($lco=="O")&&$LOid)?date($dateformat, mktime(0, 0, 0, $LOdate[1], $LOdate[2], $LOdate[0])):"")."</td>";
 		}
 		echo "<td>";
+	  if(($objUtil->checkGetKey('expand')==$value['observationid'])&&($loc='L'))
+	    echo "<a href=\"".$link."&amp;expand=0\">"."-"."</a>"."&nbsp;";
+	  elseif($lco=='L')
+	    echo "<a href=\"".$link."&amp;expand=".$value['observationid']."\">"."+"."</a>"."&nbsp;";
 		echo "<a href=\"".$baseURL."index.php?indexAction=detail_observation&amp;observation=".$value['observationid']."&amp;QobsKey=".$obsKey."&amp;dalm=D\" title=\"".LangDetail."\">".LangDetailText.(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?LangDetailDrawingText:"")."</a>&nbsp;";
 		echo "<a href=\"".$baseURL."index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&amp;dalm=AO\" title=\"" . LangAO . "\">".LangAOText."</a>";
 		if($loggedUser&&$LOid) 
@@ -706,6 +710,13 @@ class Observations {
 			echo "</td>";
 		}
 		echo "</tr>";
+		if($objUtil->checkGetKey('expand')==$value['observationid'])
+		{ echo "<tr>";
+		  echo "<td colspan=\"".($myList?7:6)."\">"; 
+			$this->showObservation($value['observationid']);
+			echo "</td>";
+			echo "</tr>";
+		}
 		if($lco!="L")
 		{ echo "<tr class=\"type1\">";
   		echo "<td valign=\"top\">".substr($alt,4)."</td>";
@@ -818,9 +829,11 @@ class Observations {
 		  echo "<p>"."<a href=\"".$baseURL."deepsky/drawings/" . $LOid . ".jpg" . "\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . ".jpg\"></img></a>";
 		echo "<p>";
 		echo (($myList)?"<a href=\"".$link.$linkamp."addObservationToList=".urlencode($LOid)."\">".LangViewObservationField44.$listname_ss."</a>&nbsp;-&nbsp;":'');
-		echo "<a href=\"".$baseURL."index.php?indexAction=adapt_observation&amp;observation=" . $LOid . "\">" . LangChangeObservationTitle . "</a>";
-		echo "&nbsp;-&nbsp;";
-		echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_observation&amp;observationid=".$LOid."\">".LangDeleteObservation."</a>";
+		if($objUtil->checkAdminOrUserID($this->getDsObservationProperty($LOid,'observerid')))
+		{ echo "<a href=\"".$baseURL."index.php?indexAction=adapt_observation&amp;observation=" . $LOid . "\">" . LangChangeObservationTitle . "</a>";
+		  echo "&nbsp;-&nbsp;";
+		  echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_observation&amp;observationid=".$LOid."\">".LangDeleteObservation."</a>";
+		}
 		echo "</p>";
 		echo "<hr>";
 	}

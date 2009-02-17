@@ -437,7 +437,7 @@ define("LangExecuteQueryObjectsMessage6", "T&eacute;l&eacute;chargez le fichier 
 define("LangExecuteQueryObjectsMessage7", "T&eacute;l&eacute;chargez le fichier icq");
 define("LangExecuteQueryObjectsMessage8", "T&eacute;l&eacute;chargez le fichier Argo Navis");
 define("LangExecuteQueryObjectsMessage9", "Filtrer les objects");
-define("LangExecuteQueryObjectsMessage5", "T&eacute;l&eacute;chargez le fichier comast");
+define("LangExecuteQueryObjectsMessage10", "T&eacute;l&eacute;chargez le fichier comast");
 define("LangInvalidCSVfile", "Vous n'avez pas sp&eacute;cifi&eacute; un fichier csv valable!");
 define("LangSeenDontCare", "Tous les objets, vus ou pas vus");
 define("LangSeenByMe", "Juste les objets que j'ai vus moi-m&ecirc;me");

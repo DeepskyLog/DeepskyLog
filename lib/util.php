@@ -15,14 +15,12 @@ interface iUtils
   public  function comastObservations($result);                                // Creates a xml file from an array of observations
   public  function csvObjects($result);                                        // Creates a csv file from an array of objects
   public  function csvObservations($result);                                   // Creates a csv file from an array of observations
-  public  function decToStringDSS($decl);                                      // returns html DSS decl coordinates eg 6+44 for 6°43'55''
   public  function pdfCometObservations($result);                              // Creates a pdf document from an array of comet observations
   public  function pdfObjectnames($result);                                    // Creates a pdf document from an array of objects
   public  function pdfObjects($result);                                        // Creates a pdf document from an array of objects
   public  function pdfObjectsDetails($result, $sort='');                       // Creates a pdf detail document from an array of objects
   public  function pdfObservations($result);                                   // Creates a pdf document from an array of observations
   public  function printNewListHeader(&$list, $link, $min, $step, $total);     // prints the << < Nr > >> navigations, allowing to enter a page number in the center field
-  public  function raToStringDSS($ra);                                         // returns html DSS ra coordinates eg 6+43+55 for 6h43m55s
 //private function utilitiesCheckIndexActionDSquickPick();                     // returns the includefile if one of the quickpick buttons is pressed
 //private function utilitiesCheckIndexActionAdmin($action, $includefile);      // returns the includefile for the specified indexs action after checking it is an admin who is looged in
 //private function utilitiesCheckIndexActionAll($action, $includefile);        // returns the includefile for the specified indexs action
@@ -103,16 +101,16 @@ class Utils implements iUtils
     include_once "setup/vars.php";
     include_once "setup/databaseInfo.php";
 
-    $observer = $GLOBALS['objObserver'];
+  $observer = $GLOBALS['objObserver'];
 	$location = $GLOBALS['objLocation'];
 	
-  	$dom = new DomDocument('1.0', 'ISO-8859-1');
+  $dom = new DomDocument('1.0', 'ISO-8859-1');
 
 	$observers = array();
 	$sites = array();
 	$objects = array();
 	$scopes = array();
-    $eyepieces = array();
+	$eyepieces = array();
 	$lenses = array();
 	$filters = array();
 
@@ -935,21 +933,6 @@ class Utils implements iUtils
            "\n";
     }
   }
-  public  function decToStringDSS($decl)
-  { $sign=0;
-    if($decl<0)
-    { $sign=-1;
-      $decl=-$decl;
-    }
-    $decl_degrees=floor($decl);
-    $subminutes=60*($decl-$decl_degrees);
-    $decl_minutes=round($subminutes);
-    if($sign==-1)
-    { $decl_minutes = "-".$decl_minutes;
-      $decl_degrees = "-".$decl_degrees;
-    }
-    return("$decl_degrees"."&#43;"."$decl_minutes");
-  }
   public  function pdfCometObservations($result)// Creates a pdf document from an array of comet observations
   { include_once "cometobjects.php";
     include_once "observers.php";
@@ -960,7 +943,7 @@ class Utils implements iUtils
     include_once "icqreferencekey.php";
     include_once "setup/vars.php";
     include_once "setup/databaseInfo.php";
-
+    global $instDir,$objCometObject;
     $objects = new CometObjects;
     $observer = new Observers;
     $instrument = new Instruments;
@@ -974,13 +957,13 @@ class Utils implements iUtils
     $pdf = new Cezpdf('a4', 'portrait');
     $pdf->ezStartPageNumbers(300, 30, 10);
 
-    $fontdir = $GLOBALS['instDir'].'lib/fonts/Helvetica.afm';
+    $fontdir = $instDir.'lib/fonts/Helvetica.afm';
     $pdf->selectFont($fontdir);
     $pdf->ezText(html_entity_decode(LangPDFTitle3)."\n");
 
     while(list ($key, $value) = each($result))
     {
-      $objectname = $GLOBALS['objCometObject']->getName($observation->getObjectId($value));
+      $objectname = $objCometObject->getName($observation->getObjectId($value));
 
       $pdf->ezText($objectname, "14");
 
@@ -1490,7 +1473,7 @@ class Utils implements iUtils
                     "filter"      => (($obs['filterid'])?(LangViewObservationField31. " : " . $objFilter->getFilterPropertyFromId($obs['filterid'],'name')):''),
                     "eyepiece"    => (($obs['eyepieceid'])?(LangViewObservationField30. " : " .$objEyepiece->getEyepiecePropertyFromId($obs['eyepieceid'],'name')):''),
 								    "lens"        => (($obs['lensid'])?(LangViewObservationField32 . " : " . $objLens->getLensPropertyFromId($obs['lensid'],'name')):''),
-                    "observer"    => html_entity_decode(LangPDFMessage13).$objObserver->getObserverProperty($obs['observerid'],'firstname')." ".$GLOBALS['objObserver']->getObserverProperty($obs['observerid'],'name').html_entity_decode(LangPDFMessage14).$formattedDate,
+                    "observer"    => html_entity_decode(LangPDFMessage13).$objObserver->getObserverProperty($obs['observerid'],'firstname')." ".$objObserver->getObserverProperty($obs['observerid'],'name').html_entity_decode(LangPDFMessage14).$formattedDate,
                     "instrument"  => html_entity_decode(LangPDFMessage11)." : ".$objInstrument->getInstrumentPropertyFromId($obs['instrumentid'],'name'),
                     "location"    => html_entity_decode(LangPDFMessage10)." : ".$objLocation->getLocationPropertyFromId($obs['locationid'],'name'),
                     "description" => $objPresentations->br2nl(html_entity_decode($obs['description'])),
@@ -1548,13 +1531,6 @@ class Utils implements iUtils
 	  echo "</tr>";
 	  echo "</table>";    
 	  return array($min,$max);
-  }
-  public  function raToStringDSS($ra)
-  { $ra_hours=floor($ra);
-    $subminutes=60*($ra - $ra_hours);
-    $ra_minutes=floor($subminutes);
-    $ra_seconds=round(60*($subminutes-$ra_minutes));
-    return("$ra_hours"."&#43;"."$ra_minutes"."&#43;"."$ra_seconds");
   }
   private function utilitiesCheckIndexActionAdmin($action, $includefile)
   { if(array_key_exists('indexAction',$_REQUEST) && ($_REQUEST['indexAction'] == $action) && array_key_exists('admin', $_SESSION) && ($_SESSION['admin'] == "yes"))

@@ -1,9 +1,11 @@
 <?php
 interface iPresentation
 { public  function br2nl($data);                                                       // The opposite of nl2br
+  public  function decToStringDSS($decl);                                              // returns html DSS decl coordinates eg 6+44 for 6°43'55''
   public  function presentationInt($value, $nullcontition='', $nullvalue='');          // if the null condtion is met, it returns the nullvalue, otherwise returns the value
   public  function presentationInt1($value, $nullcondition='', $nullvalue='');         // if the null condtion is met, it returns the nullvalue, otherwise returns the value formatted %1.1f
   public  function promptWithLink($prompt,$promptDefault,$javaLink,$text);             // displays an anchor link with $text as text, showing when clicked an inputbox with the question $prompt and $promptDefault answer, jumping to $javalink (java format) afterwards 
+  public  function raToStringDSS($ra);                                         // returns html DSS ra coordinates eg 6+43+55 for 6h43m55s
   public  function searchAndLinkCatalogsInText($theText);                              // hyperlinks M, NGC, .. catalogs in a text
   
 }
@@ -20,6 +22,21 @@ class Presentations implements iPresentation
 { public function br2nl($data)  // The opposite of nl2br
   { return preg_replace( '!<br.*>!iU', " ", $data );
   }
+  public  function decToStringDSS($decl)
+  { $sign=0;
+    if($decl<0)
+    { $sign=-1;
+      $decl=-$decl;
+    }
+    $decl_degrees=floor($decl);
+    $subminutes=60*($decl-$decl_degrees);
+    $decl_minutes=round($subminutes);
+    if($sign==-1)
+    { $decl_minutes = "-".$decl_minutes;
+      $decl_degrees = "-".$decl_degrees;
+    }
+    return("$decl_degrees"."&#43;"."$decl_minutes");
+  }
   public  function presentationInt($value, $nullcontition='', $nullvalue='')
   { return (($value==$nullcontition)?$nullvalue:$value);
   }
@@ -28,6 +45,13 @@ class Presentations implements iPresentation
   }
   public function promptWithLink($prompt,$promptDefault,$javaLink,$text)
 	{ echo "<a href=\"\" onclick=\"thetitle = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;pdfTitle='+thetitle; return false;\"	target=\"new_window\">".$text."</a>";
+  }
+  public  function raToStringDSS($ra)
+  { $ra_hours=floor($ra);
+    $subminutes=60*($ra - $ra_hours);
+    $ra_minutes=floor($subminutes);
+    $ra_seconds=round(60*($subminutes-$ra_minutes));
+    return("$ra_hours"."&#43;"."$ra_minutes"."&#43;"."$ra_seconds");
   }
   public function searchAndLinkCatalogsInText($theText)
   { global $baseURL;

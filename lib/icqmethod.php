@@ -13,9 +13,6 @@ class ICQMETHOD
  // getDescription returns the description of an ICQMETHOD
  function getDescription($id)
  {
-  $db = new database;
-  $db->login();
-
   $sql = "SELECT * FROM ICQ_METHOD WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
 
@@ -23,7 +20,6 @@ class ICQMETHOD
 
   $description = $get->description;
 
-  $db->logout();
 
   return $description;
  }
@@ -31,9 +27,7 @@ class ICQMETHOD
  // getIds returns an array with the ids of all ICQ METHODS
  function getIds()
  {
-  $db = new database;
-  $db->login();
-
+  
   $sql = "SELECT * FROM ICQ_METHOD";
   $run = mysql_query($sql) or die(mysql_error());
 
@@ -42,8 +36,7 @@ class ICQMETHOD
    $ids[] = $get->id;
   }
 
-  $db->logout();
-
+  
   return $ids;
  }
 }

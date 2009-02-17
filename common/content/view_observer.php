@@ -73,7 +73,7 @@ if(array_key_exists('admin',$_SESSION)&&($_SESSION['admin']=="yes"))       // ad
 tableTypeFieldnameField("type2",LangChangeAccountField3,$objObserver->getObserverProperty($user,'firstname'));
 tableTypeFieldnameField("type1",LangChangeAccountField4,$objObserver->getObserverProperty($user,'name'));
 tableTypeFieldnameField("type2",LangChangeAccountField7,"<a href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=".urlencode($location_id)."\">".$location_name."</a>");
-tableTypeFieldnameField("type1",LangChangeAccountField8,($instrumentname?"<a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($objObserver->getObserverProperty($user,'telescope'))."\">".(($instrumentname=="Naked eye")?InstrumentsNakedEye:$instrumentname)."</a>":""));
+tableTypeFieldnameField("type1",LangChangeAccountField8,($instrumentname?"<a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($objObserver->getObserverProperty($user,'stdtelescope'))."\">".(($instrumentname=="Naked eye")?InstrumentsNakedEye:$instrumentname)."</a>":""));
 if($objUtil->checkSessionKey('admin')=="yes")
 { echo "<tr class=\"type2\">";
   echo "<td class=\"fieldname\">".LangViewObserverRole."</td>";

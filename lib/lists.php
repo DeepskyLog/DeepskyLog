@@ -1,61 +1,79 @@
 <?php
-
-include_once "database.php";
-
-class Lists
+interface iLists
 {
- function addList($name)
- { $GLOBALS['objDatabase']->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname) VALUES (\"".$GLOBALS['objUtil']->checkSessionKey('deepskylog_id')."\", \"\", \"".$name."\", '0', \"\")");
-  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
-     unset($_SESSION['QobjParams']);
+  public  function addList($name);                               // add a list with the specified name, after checking loggedUser and listname
+  public  function checkList($name);                             // check a list: 0=non-existant, 1=existant, 2=existant and owner
+  public  function emptyList($listname);                         // empties the list after checking ownership
+  public  function removeList($name);                            // remove a list with the specified name after checking ownership
+  public  function renameList($nameFrom, $nameTo);               // renames a list after checking ownership
+  
+}
+class Lists implements iLists
+{
+ public function addList($name)
+ { global $objDatabase,$objUtil;
+   if($loggedUser&&$name&&(!($this->checkList($name))))
+   { $objDatabase->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname) VALUES (\"".$loggedUser."\", \"\", \"".$name."\", '0', \"\")");
+     if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
+       unset($_SESSION['QobjParams']);
+   }
  }
+ public  function checkList($name)
+ { $retval = 0;
+	 if(substr($name,0,7)=="Public:")
+	 { $sql = "SELECT listname FROM observerobjectlist WHERE listname=\"$name\"";	
+	   $run = mysql_query($sql) or die(mysql_error());
+	   if($get=mysql_fetch_object($run))
+	     $retval = 1;
+	 }
+	 if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
+   { $sql="SELECT listname FROM observerobjectlist WHERE observerid = \"" . $_SESSION['deepskylog_id'] . "\" AND listname = \"$name\"";
+	   $run=mysql_query($sql) or die(mysql_error());
+	   if($get=mysql_fetch_object($run))
+       $retval=2;
+	 }
+   return $retval;
+ }
+ public  function emptyList($listname)
+ { global $objDatabase,$loggedUser,$myList;
+   if($loggedUser&&$myList)
+   { $objDatabase->execSQL("DELETE FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND listname = \"".$listname."\" AND objectplace<>0");
+     if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
+       unset($_SESSION['QobjParams']);
+   }
+ }
+ public function removeList($name)
+ { global $objDatabase,$loggedUser,$myList;
+ 	 if($loggedUser&&$myList)
+ 	 { $objDatabase->execSQL("DELETE FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND listname = \"".$name."\"");
+     if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
+       unset($_SESSION['QobjParams']);
+ 	 }
+ }
+ public  function renameList($nameFrom, $nameTo)
+ { global $loggedUser,$objDatabase,$myList;
+   if($loggedUser&&$myList)
+   { $objDatabase->execSQL("UPDATE observerobjectlist SET listname=\"".$nameTo."\" WHERE observerid=\"".$loggedUser."\" AND listname=\"".$nameFrom."\"");
+     if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
+       unset($_SESSION['QobjParams']);  
+   }
+ } 
  
- function removeList($name)
- {if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'] && ($this->checkList($name)==2))
-  { $observer = $_SESSION['deepskylog_id'];
-    $sql = "DELETE FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$name\"";
-    mysql_query($sql) or die(mysql_error());
-  }
-  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
-   unset($_SESSION['QobjParams']);
- }
- function renameList($nameFrom, $nameTo)
- { if($GLOBALS['loggedUser']&&($this->checkList($nameFrom)==2))
-     $GLOBALS['objDatabase']->execSQL("UPDATE observerobjectlist SET listname=\"".$nameTo."\" WHERE observerid=\"".$GLOBALS['loggedUser']."\" AND listname=\"".$nameFrom."\"");
-  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
-     unset($_SESSION['QobjParams']);
- }
  
- function emptyList($listname)
- { $observer = $_SESSION['deepskylog_id'];
-	 $sql = "DELETE FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$listname\" AND objectplace<>0";
-   mysql_query($sql) or die(mysql_error());
-  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
-     unset($_SESSION['QobjParams']);
- }
  
- function checkList($name)
- {
-  $db = new database;
-  $db->login();
-	$retval = 0;
-	if(substr($name,0,7)=="Public:")
-	{  
-    $sql = "SELECT listname FROM observerobjectlist WHERE listname = \"$name\"";	
-	  $run = mysql_query($sql) or die(mysql_error());
-	  if($get = mysql_fetch_object($run))
-	    $retval = 1;
-	}
-	if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
-  {
-	  $sql = "SELECT listname FROM observerobjectlist WHERE observerid = \"" . $_SESSION['deepskylog_id'] . "\" AND listname = \"$name\"";
-	  $run = mysql_query($sql) or die(mysql_error());
-	  if($get = mysql_fetch_object($run))
-      $retval = 2;
-	}
-  $db->logout();
-  return $retval;
- }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
  
  function getLists()
  {

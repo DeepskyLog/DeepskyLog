@@ -34,7 +34,6 @@ if($myList)
 }	
 echo("</tr>");
 echo("</table>");
-
 $objObject->showObject($object);
 if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])                  // LOGGED IN
 { if($_GET['dalm']!="D")

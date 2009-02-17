@@ -15,8 +15,6 @@ class CometObjects
  // parameters.
  function addObject($name)
  {
-  $db = new database;
-  $db->login();
 
   if (!$_SESSION['lang'])
   {
@@ -33,29 +31,23 @@ class CometObjects
   $run = mysql_query($query) or die(mysql_error());
   $get = mysql_fetch_object($run);
   $id = $get->id;
-
-  $db->logout();
-
   return $id;
  }
 
  // deleteObject removes the object with id = $id 
  function deleteObject($id)
  {
-  $db = new database;
-  $db->login();
-
+ 
   $sql = "DELETE FROM cometobjects WHERE id=\"$id\"";
   mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
- }
+}
 
  // getAllInfo returns all information of an object
  function getAllInfo($id)
  {
-  $db = new database;
-  $db->login();
+  
+ 
 
   $sql = "SELECT * FROM cometobjects WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -65,7 +57,7 @@ class CometObjects
   $object["name"] = $get->name;
   $object["icqname"] = $get->icqname;
 
-  $db->logout();
+  
 
   return $object;
  }
@@ -73,8 +65,8 @@ class CometObjects
  // getId returns the id of an object
  function getId($name)
  {
-  $db = new database;
-  $db->login();
+  
+ 
 
   $sql = "SELECT * FROM cometobjects WHERE name = \"$name\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -83,7 +75,7 @@ class CometObjects
 
   $id = $get->id;
 
-  $db->logout();
+  
 
   return $id;
  }
@@ -91,8 +83,8 @@ class CometObjects
  // getName returns the name of an object
  function getName($id)
  {
-  $db = new database;
-  $db->login();
+  
+ 
 
   $sql = "SELECT * FROM cometobjects WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -108,7 +100,7 @@ class CometObjects
     $name = '';
   }
 
-  $db->logout();
+  
 
   return $name;
  }
@@ -116,8 +108,8 @@ class CometObjects
  // getIcqName returns the name of an object
  function getIcqName($id)
  {
-  $db = new database;
-  $db->login();
+  
+ 
 
   $sql = "SELECT * FROM cometobjects WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
@@ -126,7 +118,7 @@ class CometObjects
 
   $icqname = $get->icqname;
 
-  $db->logout();
+  
 
   return $icqname;
  }
@@ -134,8 +126,8 @@ class CometObjects
  // getObjects returns an array with the names of all objects
  function getObjects()
  {
-  $db = new database;
-  $db->login();
+  
+ 
 
   $sql = "SELECT * FROM cometobjects";
   $run = mysql_query($sql) or die(mysql_error());
@@ -145,7 +137,7 @@ class CometObjects
    $obs[] = $get->name;
   }
 
-  $db->logout();
+  
 
   return $obs;
  }
@@ -156,8 +148,8 @@ class CometObjects
  //  $q = array("name" => "NGC", "icqname" => "C200512");
  function getObjectFromQuery($queries, $sort, $exact = 0)
  {
-  $db = new database;
-  $db->login();
+  
+ 
   $sql = "SELECT * FROM cometobjects where";
 
   if ($queries["name"] != "")
@@ -201,7 +193,7 @@ class CometObjects
    }
   }
 
-  $db->logout();
+  
 
   return $obs;
  }
@@ -210,8 +202,8 @@ class CometObjects
  // databasefield has the given value.
  function getSelectedObjects($dbfield, $value)
  {
-  $db = new database;
-  $db->login();
+  
+ 
 
   if ($dbfield == "name")
   {
@@ -225,7 +217,7 @@ class CometObjects
    $obs[] = $get->name;
   }
 
-  $db->logout();
+  
 
   return $obs;
  }
@@ -234,8 +226,8 @@ class CometObjects
  // databasefield has the given name.
  function getExactObject($value)
  {
-  $db = new database;
-  $db->login();
+  
+ 
 
   $sql = "SELECT * FROM cometobjects where name = \"$value\"";
 
@@ -253,7 +245,7 @@ class CometObjects
     $obs[] = null;
   }
 
-  $db->logout();
+  
 
   return $obs;
  }
@@ -262,8 +254,8 @@ class CometObjects
  // the column specified in $sort
  function getSortedObjects($sort)
  {
-  $db = new database;
-  $db->login();
+  
+ 
 
   if ($sort == "seen")
   {
@@ -296,7 +288,7 @@ class CometObjects
 
     if ($sort == "seen")
     {
-     $db->login();
+    
 
      $result2[$key][1] = "-";
      $sql = "SELECT observerid FROM cometobservations WHERE objectid = \"$id\"";
@@ -407,25 +399,25 @@ class CometObjects
  // setName sets a new name for the object.
  function setName($id, $name)
  {
-  $db = new database;
-  $db->login();
+  
+ 
 
   $sql = "UPDATE cometobjects SET name = \"$name\" WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
+  
  }
 
  // setIcqName sets a new ICQ name for the object.
  function setIcqName($id, $icq)
  {
-  $db = new database;
-  $db->login();
+  
+ 
 
   $sql = "UPDATE cometobjects SET icqname = \"$icq\" WHERE id = \"$id\"";
   $run = mysql_query($sql) or die(mysql_error());
 
-  $db->logout();
+  
  }
 }
 $objCometObject=new CometObjects;
