@@ -662,7 +662,7 @@ class Observations {
 		                   (($value['objectsurfacebrigthness']<99.9)?", ".LangOverviewObservations14." ".sprintf("%.1f",$value['objectsurfacebrigthness']):"").	                  
 		                   (($alt)?(", ".LangOverviewObservations15." ").$objPresentations->br2dash($alt):""). 
 		               ")";				                 		     
-		$explantation1=LangOverviewObservations16." ".$objObject->getseen($value['objectname']);
+		$explantation1=LangOverviewObservations16." ".($seen=$objObject->getseen($value['objectname']));
 		if(($LOid=$this->getLOObservationId($value['objectname'], $loggedUser, $value['observationid']))&&($lco=="O"))
 		{ $LOdescription=$objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
 		  $LOinstrumentId=$this->getDsObservationProperty($LOid,'instrumentid');
