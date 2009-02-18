@@ -3,7 +3,7 @@
 // view all information of one object 
 
 
-$seen=$GLOBALS['objObject']->getDSOseen($_GET['object']);
+$seen=$GLOBALS['objObject']->getDSOseenLink($_GET['object']);
 echo "<div id=\"main\">";
 echo "<h2>";
 echo LangViewObjectTitle."&nbsp;-&nbsp;".stripslashes($_GET['object']);

@@ -683,7 +683,13 @@ define("LangOverviewObservationsHeader5b", "(*) Details(D) met tekening(DT), All
 define("LangOverviewObservationsHeader8", "Mijn&nbsp;LO&nbsp;instrument");
 define("LangOverviewObservationsHeader9", "Mijn&nbsp;LO&nbsp;datum");
 define("LangOverviewObservations10", "Gelieve de titel in te geven");
-define("LangOverviewObservations11", "DeepskyLog waarnemingen");
+define("LangOverviewObservations11", "DeepskyLog observaties");
+define("LangOverviewObservations12", "in");
+define("LangOverviewObservations13", "magn.");
+define("LangOverviewObservations14", "opp. held.");
+define("LangOverviewObservations15", "alt. namen");
+define("LangOverviewObservations16", "Gezien:");
+
 
 // tooltips
 

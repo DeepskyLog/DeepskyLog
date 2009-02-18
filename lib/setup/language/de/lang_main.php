@@ -686,6 +686,11 @@ define("LangOverviewObservationsHeader8", "Mein&nbsp;&nbsp;LO&nbsp;&nbsp;Beobach
 define("LangOverviewObservationsHeader9", "Mein&nbsp;&nbsp;LO&nbsp;&nbsp;Datum");
 define("LangOverviewObservations10", "Please enter a title");
 define("LangOverviewObservations11", "DeepskyLog observations");
+define("LangOverviewObservations12", "in");
+define("LangOverviewObservations13", "mag.");
+define("LangOverviewObservations14", "surf. br.");
+define("LangOverviewObservations15", "alt. names");
+define("LangOverviewObservations16", "Seen:");
 
 // tooltips
 

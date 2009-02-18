@@ -9,7 +9,7 @@ if(!($object=$GLOBALS['objObservation']->getDsObservationProperty($_GET['observa
 echo "<div id=\"main\">";
    echo "<table width=\"100%\">";
 echo "<tr>";
-echo "<td>"."<h2>".LangViewObservationTitle."&nbsp;-&nbsp;".stripslashes($object)."&nbsp;-&nbsp;".LangOverviewObjectsHeader7.":&nbsp;".$objObject->getDSOseen($object)."</h2>"."</td>";
+echo "<td>"."<h2>".LangViewObservationTitle."&nbsp;-&nbsp;".stripslashes($object)."&nbsp;-&nbsp;".LangOverviewObjectsHeader7.":&nbsp;".$objObject->getDSOseenLink($object)."</h2>"."</td>";
 echo "<td align=\"right\">";
 if(array_key_exists('Qobs',$_SESSION)&&count($_SESSION['Qobs'])&&array_key_exists('QobsKey',$_GET))                // array of observations
 { if($_GET['QobsKey']>0)

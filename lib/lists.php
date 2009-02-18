@@ -76,35 +76,28 @@ class Lists implements iLists
  
  
  function getLists()
- {
-	$result=array();
-	if(array_key_exists('deepskylog_id',$_SESSION))
-	{
-    $db = new database;
-    $db->login();
-  	$observer = $_SESSION['deepskylog_id'];
-  	$sql = "SELECT DISTINCT observerobjectlist.listname " .
-  	       "FROM observerobjectlist " .
-  				 "WHERE observerid = \"" . $observer . "\"" . 
-  				 "OR listname LIKE \"Public: %\" " . 
-  				 "ORDER BY observerobjectlist.listname";
-  	$run = mysql_query($sql) or die(mysql_error());
-  	$get = mysql_fetch_object($run);
-  	if ($get)
-  	{
-  	  $result1=array();
-  	  $result2=array();
-  		while($get)
-  		{
-  		  if(substr($get->listname,0,7)=="Public:")
-  			  $result2[]=$get->listname;
-  			else
-  			  $result1[]=$get->listname;
-  			$get = mysql_fetch_object($run);	
-  		}
-  		$result=array_merge($result1,$result2);
-    }
-  	$db->logout();
+ { $result=array();
+	 if(array_key_exists('deepskylog_id',$_SESSION))
+	 { $observer = $_SESSION['deepskylog_id'];
+  	 $sql = "SELECT DISTINCT observerobjectlist.listname " .
+  	        "FROM observerobjectlist " .
+  		 		  "WHERE observerid = \"" . $observer . "\"" . 
+  			 	  "OR listname LIKE \"Public: %\" " . 
+  				  "ORDER BY observerobjectlist.listname";
+  	 $run = mysql_query($sql) or die(mysql_error());
+  	 $get = mysql_fetch_object($run);
+  	 if ($get)
+  	 { $result1=array();
+  	   $result2=array();
+  		 while($get)
+  		 { if(substr($get->listname,0,7)=="Public:")
+  			   $result2[]=$get->listname;
+  			 else
+  			   $result1[]=$get->listname;
+  			 $get = mysql_fetch_object($run);	
+  		 }
+  		 $result=array_merge($result1,$result2);
+     }
 	}
 	return $result;
  }

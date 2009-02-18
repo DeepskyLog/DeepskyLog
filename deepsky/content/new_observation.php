@@ -6,7 +6,7 @@ echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/checkUti
 echo "<div id=\"main\">";
 $object=$objUtil->checkPostKey('object', $objUtil->checkGetKey('object'));
 if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostKey('timestamp',-1)))
-{ $seen = $objObject->getDSOSeen($object);
+{ $seen = $objObject->getDSOseenLink($object);
 	echo "<h2>";
 	echo LangNewObservationTitle . "&nbsp;" . $object;
 	echo "&nbsp;:&nbsp;" . $seen;

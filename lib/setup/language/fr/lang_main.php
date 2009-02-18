@@ -688,6 +688,11 @@ define("LangOverviewObservationsHeader8", "Mon&nbsp;instrument&nbsp;DO");
 define("LangOverviewObservationsHeader9", "Ma&nbsp;date&nbsp&DO");
 define("LangOverviewObservations10", "Pri�re de rentrer un titre");
 define("LangOverviewObservations11", "Observations DeepskyLog");
+define("LangOverviewObservations12", "dans");
+define("LangOverviewObservations13", "magn.");
+define("LangOverviewObservations14", "clar. de surf.");
+define("LangOverviewObservations15", "autres noms");
+define("LangOverviewObservations16", "Vu:");
 
 // tooltips
 

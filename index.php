@@ -33,9 +33,10 @@ try
   echo "<a href=\"http://www.deepskylog.org\">DeepskyLog</a>&nbsp;".$versionInfo;   //defined in databaseInfo.php
 }
 catch (Exception $e)
-{ 
-  echo 'Report problem: ' . $e->getMessage();
-  
+{ echo "<p>DeepskyLog encounterd a problem. Could you please report it to the Developers?</p>";
+  echo "<p>Report problem with error message: " . $e->getMessage()."</p>";
+  echo "<p>You can report the problem by sending an email to developers@deepskylog.be.</p>";
+  echo "<p>Thank you.</p>";
 }
 
 ?>

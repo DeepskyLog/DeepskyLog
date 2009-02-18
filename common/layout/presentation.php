@@ -1,6 +1,7 @@
 <?php
 interface iPresentation
-{ public  function br2nl($data);                                                       // The opposite of nl2br
+{ public  function br2dash($data); 
+  public  function br2nl($data);                                                       // The opposite of nl2br
   public  function decToStringDSS($decl);                                              // returns html DSS decl coordinates eg 6+44 for 6°43'55''
   public  function presentationInt($value, $nullcontition='', $nullvalue='');          // if the null condtion is met, it returns the nullvalue, otherwise returns the value
   public  function presentationInt1($value, $nullcondition='', $nullvalue='');         // if the null condtion is met, it returns the nullvalue, otherwise returns the value formatted %1.1f
@@ -19,8 +20,11 @@ interface iPresentation
 // function tableSortInverseHeader($header0, $link0)                                    // inverse sorting header on table
 // function tableTypeFieldnameField($type,$name,$field)                                 // 2-item type line, containing the name and the field, and formatted to the type
 class Presentations implements iPresentation
-{ public function br2nl($data)  // The opposite of nl2br
-  { return preg_replace( '!<br.*>!iU', " ", $data );
+{ public function br2dash($data) 
+  { return preg_replace('!<br.*>!iU', "-", $data );
+  }
+  public function br2nl($data)  // The opposite of nl2br
+  { return preg_replace('!<br.*>!iU', " ", $data );
   }
   public  function decToStringDSS($decl)
   { $sign=0;

@@ -12,7 +12,7 @@ interface iObjects
   public  function getDsObjectName($name);                                      // returns the name when the original or alternative name is given.
   public  function getDsObjectTypes();                                          // returns a list of all different types
   public  function getDsoProperty($theObject,$theProperty, $default='');        // returns the property of the object, or default if not found
-  public  function getDSOseen($object);                                         // Returns the getSeen result, encoded to a href that shows the seen observations
+  public  function getDSOseenLink($object);                                     // Returns the getSeen result, encoded to a href that shows the seen observations
   public  function getExactDsObject($value, $cat='', $catindex='');             // returns the exact name of an object
   public  function getLikeDsObject($value, $cat='', $catindex='');              // returns the exact name of an object
   public  function getNearbyObjects($objectname, $dist);                        // returns an array with nearby objects
@@ -190,7 +190,7 @@ class Objects implements iObjects
   { global $objDatabase;
 	  return $objDatabase->selectSingleValue("SELECT objects.".$theProperty." FROM objects WHERE name=\"".$theObject."\"",$theProperty,$default);
   }
-  public  function getDSOseen($object)                                          // Returns the getSeen result, encoded to a href that shows the seen observations
+  public  function getDSOseenLink($object)                                          // Returns the getSeen result, encoded to a href that shows the seen observations
   { global $baseURL;
     $seenDetails=$this->getSeen($object);
     $seen = "<a href=\"".$baseURL."index.php?indexAction=detail_objectamp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
