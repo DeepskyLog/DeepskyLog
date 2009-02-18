@@ -661,7 +661,7 @@ class Observations {
 		                   (($value['objectmagnitude']<99.9)?", ".LangOverviewObservations13." ".sprintf("%.1f",$value['objectmagnitude']):"").
 		                   (($value['objectsurfacebrigthness']<99.9)?", ".LangOverviewObservations14." ".sprintf("%.1f",$value['objectsurfacebrigthness']):"").	                  
 		                   (($alt)?(", ".LangOverviewObservations15." ").$objPresentations->br2dash($alt):""). 
-		               ")";				                 		                  
+		               ")";				                 		     
 		$explantation1=LangOverviewObservations16." ".$objObject->getseen($value['objectname']);
 		if(($LOid=$this->getLOObservationId($value['objectname'], $loggedUser, $value['observationid']))&&($lco=="O"))
 		{ $LOdescription=$objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
@@ -687,7 +687,7 @@ class Observations {
 	  if(($objUtil->checkGetKey('expand')==$value['observationid']))
 	    echo "<td align=\"center\"><a href=\"".$link."&amp;expand=0\" title=\"".$explantation1."\">"."-"."</a></td>";
 	  else
-	    echo "<td align=\"center\"><a href=\"".$link."&amp;expand=".$value['observationid']."\" title=\"".$explantation1."\">"."+"."</a></td>";
+	    echo "<td align=\"center\"><a href=\"".$link."&amp;expand=".$value['observationid']."\" title=\"".$explantation1."\">".((substr($seen,0,1)!="Y")?"x":"+")."</a></td>";
 	  echo "<td><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($value['objectname'])."\" title=\"".$explanation."\">".$value['objectname']."</a></td>";
 		if($objUtil->checkGetKey('expand')==$value['observationid'])
 		{ echo "<td colspan=\"".($myList?(($lco=='O')?8:6):(($lco=='O')?7:5))."\">".$explanation."</td>";
