@@ -1358,7 +1358,7 @@ class Utils implements iUtils
       if($sort)
 			  $actualsort = $$sort;
 			if(array_key_exists('objectlistdescription',$valueA) && $valueA['objectlistdescription'])
-      { $theText= $valueA['objectlistdescription'];
+      { $theText= $objPresentations->br2nl($valueA['objectlistdescription']);
 			  $theText= $pdf->addTextWrap($xbase+$descriptionLeadingSpace, $y, $xmid-$xleft-$descriptionLeadingSpace-10 ,$fontSizeText, '<i>'.$theText);
   			$y-=$deltaline;	
         while($theText)
@@ -1403,7 +1403,7 @@ class Utils implements iUtils
 			  $pdf->addText(0,0,10,'</i>');
 			}
 			elseif(array_key_exists('objectdescription',$valueA) && $valueA['objectdescription'])
-      { $theText= $valueA['objectdescription'];
+      { $theText= $objPresentations->br2nl($valueA['objectdescription']);
 			  $theText= $pdf->addTextWrap($xbase+$descriptionLeadingSpace, $y, $xmid-$xleft-$descriptionLeadingSpace-10 ,$fontSizeText, '<i>'.$theText);
   			$y-=$deltaline;	
         while($theText)

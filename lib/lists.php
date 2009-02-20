@@ -36,7 +36,7 @@ class Lists implements iLists
    if(!$showname)
 	   $showname=$name;
    if(!($objDatabase->selectSingleValue("SELECT objectplace AS ObjPl FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND listname = \"".$listname."\" AND objectname=\"".$name."\"",'objectplace',0)))
-	   $objDatabase->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, description) VALUES (\"$observer\", \"$name\", \"$listname\", \"".(($objDatabase->selectSingleValue("SELECT MAX(objectplace) AS ObjPlace FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$listname\"",'ObjPlace',0))+1)."\", \"$showname\", \"".$objDatabase->selectSingleValue("SELECT description FROM objects WHERE name=\"".$name."\"",'description')."\")");
+	   $objDatabase->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, description) VALUES (\"".$loggedUser."\", \"$name\", \"$listname\", \"".(($objDatabase->selectSingleValue("SELECT MAX(objectplace) AS ObjPlace FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$listname\"",'ObjPlace',0))+1)."\", \"$showname\", \"".$objDatabase->selectSingleValue("SELECT description FROM objects WHERE name=\"".$name."\"",'description')."\")");
    if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
      unset($_SESSION['QobjParams']);
  }
