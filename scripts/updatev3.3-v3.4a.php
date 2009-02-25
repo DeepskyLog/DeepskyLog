@@ -3,9 +3,6 @@
  require_once "../lib/database.php";
  require_once "../lib/observations.php";
  
- $db = new database;
- $db->newlogin();
-
  $upload_dir = '../deepsky/drawings';
  $dir = opendir($upload_dir);
  while (FALSE !== ($file = readdir($dir))) 

@@ -386,7 +386,7 @@ class Objects implements iObjects
 	  else
       $sql = "SELECT DISTINCT objectnames.objectname, objectnames.catindex, objectnames.altname " .
 	           "FROM objectnames WHERE objectnames.catalog = \"$cat\"";
-    $run=$objDatabase($sql);
+    $run=$objDatabase->selectRecordset($sql);
     $obs=array();
 	  while($get = mysql_fetch_object($run))
 	    if($get->objectname)
