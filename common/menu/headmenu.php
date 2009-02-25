@@ -7,7 +7,7 @@ echo "<div style=\"background-color:#003366\" align=\"right\">";
 echo "<div style=\"background:url(".$baseURL."styles/images/header_bg.jpg); background-repeat: no-repeat; background-position: 0% 0%;\">";
 echo "<table>";
 echo "<tr>";
-echo "<td heigth=\"64px\">";
+echo "<td height=\"60px\">";
 include $_SESSION['module'].'/menu/list.php';
 echo"</td><td>";
 include $_SESSION['module'].'/menu/instrument.php';

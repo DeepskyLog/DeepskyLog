@@ -220,4 +220,13 @@ img.account {
 	padding          : 2px;
 	color            : #000000;
 }
-
+#ifrm_obs {
+	width: 100%;
+}
+#tbody_obj {
+  overflow: scroll;
+  height: 130px;
+}#tbody_obs {
+  overflow: scroll;
+  height: 130px;
+}

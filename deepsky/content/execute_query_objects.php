@@ -1,7 +1,16 @@
 <?php
 // execute_query_objects.php
 // executes the object query passed by setup_query_objects.php
-//$link="";
+echo "<script type=\"text/javascript\">
+		      function resizeTBody(theBody,delta) {
+		       var height=document.documentElement.clientHeight;
+		       height-=document.getElementById(theBody).offsetTop;
+		       height-=delta;
+		       document.getElementById(theBody).style.height=height+\"px\";
+ 		      };
+		      window.onresize=resizeTBody('tbody_obj',250);
+ 		      </script>
+		      ";
 $link=$baseURL."index.php?indexAction=query_objects";
 reset($_GET);
 while(list($key,$value)=each($_GET))

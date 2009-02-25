@@ -109,8 +109,9 @@ class Lists implements iLists
  { global $objDatabase, $loggedUser;
    $result=array();
 	 if(array_key_exists('deepskylog_id',$_SESSION))
-	 { $get=$objDatabase->selectRecordset("SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE observerid=\"".$loggedUser."\" OR listname LIKE \"Public: %\" ORDER BY observerobjectlist.listname");
-  	 if($get)
+	 { $run=$objDatabase->selectRecordset("SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE observerid=\"".$loggedUser."\" OR listname LIKE \"Public: %\" ORDER BY observerobjectlist.listname");
+  	 $get=mysql_fetch_object($run);	
+	   if($get)
   	 { $result1=array();
   	   $result2=array();
   		 while($get)

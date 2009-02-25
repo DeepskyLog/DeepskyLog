@@ -361,7 +361,8 @@ class Objects implements iObjects
       while($get = mysql_fetch_object($run))
         if(!array_key_exists($get->name, $obs))
    	      $obs[$get->name] = array($i++,$get->name);				
-    set_time_limit(round(count($obs)*0.005));    
+    if(round(count($obs)*0.005)>30)
+      set_time_limit(round(count($obs)*0.005));    
    	$obs = $this->getSeenObjectDetails($obs, $seen);
     if(array_key_exists('minContrast', $queries)&&$queries["minContrast"])
       for($new_obs=$obs,$obs=array();list($key,$value)=each($new_obs);)
@@ -835,6 +836,7 @@ class Objects implements iObjects
   { global $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL;
 	  $atlas='';
     echo "<table width=\"100%\">\n";
+    //echo "<thead>";
     echo "<tr class=\"type3\">\n";
     if($showRank)
 	    tableSortHeader(LangOverviewObjectsHeader9,  $link."&amp;sort=objectpositioninlist");
@@ -853,7 +855,11 @@ class Objects implements iObjects
     }
     if($myList)
       echo("<td align=\"center\"><a href=\"" . $link . "&amp;min=" . $min . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">P</a></td>");
- 	  $count = $min; // counter for altering table colors
+ 	  echo "<td width=\"1px\">&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+    echo "</tr>";
+ 	  echo "</thead>";
+ 	  echo "<tbody name=\"tbody_obj\" id=\"tbody_obj\">";
+    $count = $min; // counter for altering table colors
 	  $countline = 0;
 	  if($max>count($_SESSION['Qobj']))
 	 	  $max=count($_SESSION['Qobj']);
@@ -888,7 +894,9 @@ class Objects implements iObjects
       $countline++; 
       $count++;
     }   
+    echo "</tbody>";
     echo "</table>\n";
+    echo "<script>resizeTBody('tbody_obj',300);</script>";
   }
   public  function sortObjects($objectList, $sort, $reverse=false)              // Sort the array of objectList on the $sort field, and in second order on the showname field 
   { if(!$objectList||count($objectList)<2)

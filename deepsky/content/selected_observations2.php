@@ -2,6 +2,16 @@
 
 // selected_observations2.php
 // generates an overview of selected observations in the database
+echo "<script type=\"text/javascript\">
+		      function resizeTBody(theBody,delta) {
+		       var height=document.documentElement.clientHeight;
+		       height-=document.getElementById(theBody).offsetTop;
+		       height-=delta;
+		       document.getElementById(theBody).style.height=height+\"px\";
+ 		      };
+		      window.onresize=resizeTBody('tbody_obj',250);
+ 		      </script>
+		      ";
 
 $link2 = $baseURL . "index.php?indexAction=result_selected_observations&amp;lco=" . urlencode($_SESSION['lco']);
 reset($_GET);
@@ -116,10 +126,10 @@ if (count($_SESSION['Qobs']) == 0) //===========================================
 	echo "</td>";
 	echo "</tr>";
 	echo "</table>";
-	$count = 0; // counter for altering table colors
 	if (sizeof($_SESSION['Qobs']) > 0) // ONLY WHEN OBSERVATIONS AVAILABLE
 		{
 		echo "<table width=\"100%\">\n";
+    echo "<thead>";
 		echo "<tr width=\"100%\" class=\"type3\">\n"; // LINKS TO SORT ON OBSERVATION TABLE HEADERS
     echo "<td>&nbsp;</td>";
 		tableSortHeader(LangOverviewObservationsHeader1, $link2 . "&amp;sort=objectname");
@@ -133,13 +143,19 @@ if (count($_SESSION['Qobs']) == 0) //===========================================
 			echo "<td width=\"15%\">" . LangOverviewObservationsHeader8 . "</td>" .
 			"<td width=\"15%\">" . LangOverviewObservationsHeader9 . "</td>" .
 			"<td width=\"15%\">" . LangOverviewObservationsHeader5 . "</td>";
+		echo "<td width=\"1px\">&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 		echo "</tr>";
+		echo "</thead>";
+		echo "<tbody name=\"tbody_obs\" id=\"tbody_obs\">";
+	  $count = 0; // counter for altering table colors
 		while (list($key,$value)=each($_SESSION['Qobs']))
 		{ if ($count >= $min && $count < $max) 
 				$objObservation->showListObservation($key, $link . "&amp;min=" . $min,$_SESSION['lco']);
 			$count++;
 		}
-		echo ("</table>\n");
+		echo "</tbody>";
+		echo "</table>";
+    echo "<script>resizeTBody('tbody_obs',260);</script>";
 		list ($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
 		echo "<hr />";
 		$objPresentations->promptWithLink(LangOverviewObservations10, LangOverviewObservations11, $baseURL . "observations.pdf?SID=Qobs", LangExecuteQueryObjectsMessage4);
