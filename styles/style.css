@@ -182,7 +182,6 @@ img.account {
   background-color : #D0D3D6;
 	padding          : 2px;
 	color            : #000000;
-  #font-weight     : bold;
 }
 
 .typeNotVisible { 
@@ -223,10 +222,11 @@ img.account {
 #ifrm_obs {
 	width: 100%;
 }
-#tbody_obj {
+.tbody_obj {
   overflow: scroll;
   height: 130px;
-}#tbody_obs {
+}
+.tbody_obs {
   overflow: scroll;
   height: 130px;
 }

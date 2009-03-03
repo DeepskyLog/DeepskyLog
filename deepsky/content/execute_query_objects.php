@@ -1,16 +1,7 @@
 <?php
 // execute_query_objects.php
 // executes the object query passed by setup_query_objects.php
-echo "<script type=\"text/javascript\">
-		      function resizeTBody(theBody,delta) {
-		       var height=document.documentElement.clientHeight;
-		       height-=document.getElementById(theBody).offsetTop;
-		       height-=delta;
-		       document.getElementById(theBody).style.height=height+\"px\";
- 		      };
-		      window.onresize=resizeTBody('tbody_obj',250);
- 		      </script>
-		      ";
+echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 $link=$baseURL."index.php?indexAction=query_objects";
 reset($_GET);
 while(list($key,$value)=each($_GET))
@@ -33,7 +24,17 @@ if(count($_SESSION['Qobj'])>1) //===============================================
     echo "<a href=\"".$link."&amp;showPartOfs=1\">".LangListQueryObjectsMessage13."</a>";
 	$link.="&amp;showPartOfs=".$showPartOfs;
 	echo "<hr />";
-  $objObject->showObjects($link, $min, $max);
+	$_GET['min']=$min;
+	$_GET['max']=$max;
+	if($FF)
+	  $objObject->showObjects($link, $min, $max);
+  else
+	{ $_SESSION['ifrm']="deepsky/content/ifrm_objects.php";
+		echo "<iframe name=\"obj_list\" id=\"obj_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;min=".$min."&amp;max=".$max."&amp;ownShow=&amp;showRank=0\" frameborder=\"0\" width=\"100%\" style=\"heigth:100px\">";
+	  $objObject->showObjects($link, $min, $max);
+		echo "</iframe>";
+	}	
+	echo "<script>resizeElement('obj_list',350);</script>";
 	echo "<hr />";
   list($min,$max)=$objUtil->printNewListHeader($_SESSION['Qobj'],$link,$min,25,'');	
   $objPresentations->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);

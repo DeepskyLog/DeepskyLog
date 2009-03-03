@@ -48,7 +48,7 @@ class Presentations implements iPresentation
   { return (($value==$nullcondition)?$nullvalue:sprintf("%1.1f",$value));
   }
   public function promptWithLink($prompt,$promptDefault,$javaLink,$text)
-	{ echo "<a href=\"\" onclick=\"thetitle = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;pdfTitle='+thetitle; return false;\"	target=\"new_window\">".$text."</a>";
+	{ echo "<a target=\"_top\" href=\"\" onclick=\"thetitle = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;pdfTitle='+thetitle; return false;\"	target=\"new_window\">".$text."</a>";
   }
   public  function raToStringDSS($ra)
   { $ra_hours=floor($ra);
@@ -60,13 +60,13 @@ class Presentations implements iPresentation
   public function searchAndLinkCatalogsInText($theText)
   { global $baseURL;
     $patterns[0]="/\s+(M)\s*(\d+)/";
-		$replacements[0]="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
+		$replacements[0]="<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
 		$patterns[1]= "/(NGC|Ngc|ngc)\s*(\d+\w+)/";
-		$replacements[1]="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=NGC%20\\2\">NGC&nbsp;\\2</a>";
+		$replacements[1]="<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=NGC%20\\2\">NGC&nbsp;\\2</a>";
 		$patterns[2]= "/(IC|Ic|ic)\s*(\d+)/";
-		$replacements[2]="<a 	href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=IC%20\\2\">IC&nbsp;\\2</a>";
+		$replacements[2]="<a 	target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=IC%20\\2\">IC&nbsp;\\2</a>";
 		$patterns[3]= "/(Arp|ARP|arp)\s*(\d+)/";
-		$replacements[3]="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=Arp%20\\2\">Arp&nbsp;\\2</a>";
+		$replacements[3]="<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=Arp%20\\2\">Arp&nbsp;\\2</a>";
 		return preg_replace($patterns, $replacements, $theText);
   }
 }
@@ -105,7 +105,7 @@ function tableFieldnameField3($name1,$field1,$name2,$field2,$name3,$field3, $typ
 function tableMenuItem($link, $menuItem)
 { echo "<tr align=\"center\" height=\"25px\">";
   echo "<td>";
-  echo "<a href=\"".$link."\" class=\"mainlevel\">".$menuItem."</a>";
+  echo "<a target=\"_top\" href=\"".$link."\" class=\"mainlevel\">".$menuItem."</a>";
   echo "</td>";
   echo "</tr>";
 }
@@ -129,15 +129,15 @@ function tableSortHeader($header0, $link0)
   echo "<table width=\"100%\">";   
   echo "<tr>";          
   echo "<td>";         
-  echo "<a href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc. "\"><img src=\"".$baseURL."styles/images/up10.gif\" border=\"0\"></a>";
+  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc. "\"><img src=\"".$baseURL."styles/images/up10.gif\" border=\"0\"></a>";
   echo "</td>";        
   echo "<td align=\"right\">";         
-  echo "<a href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img src=\"".$baseURL."styles/images/down10.gif\" border=\"0\"></a>";
+  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img src=\"".$baseURL."styles/images/down10.gif\" border=\"0\"></a>";
   echo "</td>";        
   echo "</tr>";        
   echo "<tr>";
 	echo "<td colspan=\"2\" style=\"text-align: center\">";           
-  echo "<a href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc."\">".trim($header0)."</a>";;
+  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc."\">".trim($header0)."</a>";;
   echo "</td>";        
   echo "<tr>";
   echo "</table>";
@@ -149,15 +149,15 @@ function tableSortInverseHeader($header0, $link0)
   echo "<table width=\"100%\">";   
   echo "<tr>";          
   echo "<td>";         
-  echo "<a href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img src=\"".$baseURL."styles/images/up10.gif\" border=\"0\"></a>";
+  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img src=\"".$baseURL."styles/images/up10.gif\" border=\"0\"></a>";
   echo "</td>";        
   echo "<td align=\"right\">";         
-  echo "<a href=\"".$link0."&amp;sortdirection=asc\" title=\"".LangSortOnAsc."\"><img src=\"".$baseURL."styles/images/down10.gif\" border=\"0\"></a>";
+  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=asc\" title=\"".LangSortOnAsc."\"><img src=\"".$baseURL."styles/images/down10.gif\" border=\"0\"></a>";
   echo "</td>";        
   echo "</tr>";        
   echo "<tr >";
   echo "<td colspan=\"2\" style=\"text-align: center\">";           
-  echo "<a href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\">".trim($header0)."</a>";;
+  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\">".trim($header0)."</a>";;
   echo "</td>";        
   echo "</tr>";
   echo "</table>";

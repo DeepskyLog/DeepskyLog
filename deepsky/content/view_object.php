@@ -1,8 +1,7 @@
 <?php
 // view_object.php
 // view all information of one object 
-
-
+echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 $seen=$GLOBALS['objObject']->getDSOseenLink($_GET['object']);
 echo "<div id=\"main\">";
 echo "<h2>";
@@ -12,18 +11,18 @@ echo "</h2>";
 echo "<table width=\"100%\"><tr>";
 echo "<td width=\"25%\" align=\"left\">";
 if(substr($GLOBALS['objObject']->getSeen($_GET['object']),0,1)!='-')
-  echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($_GET['object'])."\">".LangViewObjectObservations."&nbsp;".$_GET['object'];
+  echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($_GET['object'])."\">".LangViewObjectObservations."&nbsp;".$_GET['object'];
 echo "</td>";
 echo "<td width=\"25%\" align=\"center\">";
 if(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id'])
-  echo "<a href=\"".$baseURL."index.php?indexAction=add_observation&amp;object=".urlencode($_GET['object'])."\">".LangViewObjectAddObservation.$_GET['object']."</a>";
+  echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=add_observation&amp;object=".urlencode($_GET['object'])."\">".LangViewObjectAddObservation.$_GET['object']."</a>";
 echo "</td>";
 if($myList)
 { echo "<td width=\"25%\" align=\"center\">";
   if($objList->checkObjectInMyActiveList($_GET['object']))
-    echo "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object'])."&amp;removeObjectFromList=".urlencode($_GET['object'])."\">".$_GET['object'].LangListQueryObjectsMessage3.$listname_ss."</a>";
+    echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object'])."&amp;removeObjectFromList=".urlencode($_GET['object'])."\">".$_GET['object'].LangListQueryObjectsMessage3.$listname_ss."</a>";
   else
-    echo "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object'])."&amp;addObjectToList=".urlencode($_GET['object'])."&amp;showname=".urlencode($_GET['object'])."\">".$_GET['object'].LangListQueryObjectsMessage2.$listname_ss."</a>";
+    echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object'])."&amp;addObjectToList=".urlencode($_GET['object'])."&amp;showname=".urlencode($_GET['object'])."\">".$_GET['object'].LangListQueryObjectsMessage2.$listname_ss."</a>";
   echo "</td>";
 }	
 echo "</tr>";
@@ -69,19 +68,31 @@ list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'],$link ,$min,25
 echo "</td> </tr> </table>";
 if($max>count($_SESSION['Qobj']))
   $max=count($_SESSION['Qobj']);
-$objObject->showObjects($link,$min,$max,$_GET['object']);
+//$objObject->showObjects($link,$min,$max,$_GET['object']);
+echo "<hr />";
+$_GET['min']=$min;
+$_GET['max']=$max;
+if($FF)
+  $objObject->showObjects($link, $min, $max,$_GET['object']);
+else
+{ $_SESSION['ifrm']="deepsky/content/ifrm_objects.php";
+	echo "<iframe name=\"obj_list\" id=\"obj_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;min=".$min."&amp;max=".$max."&amp;ownShow=".$_GET['object']."&amp;showRank=0\" frameborder=\"0\" width=\"100%\" style=\"heigth:100px\">";
+  $objObject->showObjects($link, $min, $max);
+	echo "</iframe>";
+}	
+echo "<script>resizeElement('obj_list',450);</script>";
+echo "<hr />";
 list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'],$link ,$min,25,"");
 echo "<hr />";
 $objPresentations->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
 echo "&nbsp;-&nbsp;";
-echo "<a href=\"".$baseURL."objects.csv?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a> &nbsp;-&nbsp;";
-echo "<a href=\"".$baseURL."objects.argo?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage8."</a>";
+echo "<a target=\"_top\" href=\"".$baseURL."objects.csv?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a> &nbsp;-&nbsp;";
+echo "<a target=\"_top\" href=\"".$baseURL."objects.argo?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage8."</a>";
 echo "</div>";
 
 //============================================================================== Admin section permits to change object settings in DB remotely
 if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
-{
-  echo "<hr>";
+{ echo "<hr>";
   echo("<form action=\"".$baseURL."index.php\" method=\"get\">\n");
   echo("<input type=\"hidden\" name=\"object\" value=\"" . $_GET['object'] . "\">");
   echo("<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\">");
@@ -111,7 +122,7 @@ if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
   echo "</select>";		
   echo "<input type=\"text\" class=\"inputfield\" maxlength=\"255\" name=\"newnumber\" size=\"40\" value=\"\"/>";
   echo "<input type=\"submit\" name=\"gonew\" value=\"Go\"/><br />";
-  echo "<a href=\"".$baseURL."index.php?indexAction=manage_csv_object\">" . LangNewObjectSubtitle1b . "</a><br />";
+  echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=manage_csv_object\">" . LangNewObjectSubtitle1b . "</a><br />";
   echo "</form>";
 }
 ?>

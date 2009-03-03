@@ -28,4 +28,10 @@ require_once "common/control/ra_to_hms.php";
 require_once "common/control/dec_to_dm.php";
 include_once "lib/cometobservations.php";
 include_once "lib/cometobjects.php";
+
+if(strpos($_SERVER['HTTP_USER_AGENT'],'Firefox')===false)
+  $FF=false;
+else
+  $FF=true;
+
 ?>

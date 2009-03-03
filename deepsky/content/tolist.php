@@ -1,6 +1,7 @@
 <?php
 // tolist.php
 // manages and shows lists
+echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 
 echo "<form action=\"".$baseURL."index.php?indexAction=listaction\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
@@ -17,13 +18,12 @@ echo"</tr>";
 echo "</table>"; 
 echo "</form>";
 echo "<hr>";
-
 if($listname)
 { echo "<table>";
 	echo "<tr>";
 	echo "<td>";
   echo("<div id=\"main\">\n<h2>");
-  echo LangSelectedObjectsTitle . " " . $listname_ss; // page title
+  echo LangSelectedObjectsTitle." ".$listname_ss; // page title
   echo("</h2>\n");
   echo "</td>";
 	if($myList)
@@ -47,9 +47,20 @@ if($listname)
   
     // OUTPUT RESULT
     $link = "".$baseURL."index.php?indexAction=listaction";
-    $objObject->showObjects($link,$min,$max, '',1);
-    echo("<hr>");
-  
+	  echo "<hr />";
+	  $_GET['min']=$min;
+	  $_GET['max']=$max;
+	  if($FF)
+	    $objObject->showObjects($link, $min, $max,'',1);
+    else
+	  { $_SESSION['ifrm']="deepsky/content/ifrm_objects.php";
+	  	echo "<iframe name=\"obj_list\" id=\"obj_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;min=".$min."&amp;max=".$max."\&amp;ownShow=&amp;showRank=1\" frameborder=\"0\" width=\"100%\" style=\"heigth:100px\">";
+	    $objObject->showObjects($link, $min, $max,'',1);
+		  echo "</iframe>";
+	  }	
+	  echo "<script>resizeElement('obj_list',330);</script>";
+	  echo "<hr />";
+      
     list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'], $link, $min, 25, "");
     $objPresentations->promptWithLink(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
 	  echo "&nbsp;-&nbsp;";

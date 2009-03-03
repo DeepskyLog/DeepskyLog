@@ -443,19 +443,19 @@ class Objects implements iObjects
   private function getSeenLastseenLink($object,&$seen, &$seenlink, &$lastseen, &$lastseenlink)
 	{ global $baseURL, $objDatabase, $loggedUser;
 		$seen = "-";
-    $seenlink = "<a href=\"".$baseURL."index.php?indexAction=detail_objectamp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
+    $seenlink = "<a href=\"".$baseURL."index.php?indexAction=detail_objectamp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\" target=\"_top\">-</a>";
     $lastseenlink = "-";
     $lastseenlink = "-";
 		if($ObsCnt=$objDatabase->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 ",'ObsCnt'))
     { $seen = 'X('.$ObsCnt.')';
-      $seenlink = "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\">".'X('.$ObsCnt.')'."</a>";
+      $seenlink = "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\" target=\"_top\">".'X('.$ObsCnt.')'."</a>";
       if($loggedUser)
       { $get3=mysql_fetch_object($objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7"));
   		  if($get3->PersObsCnt>0)
         { $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')';
-          $seenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\">".'Y('.$ObsCnt.'/'.$get3->PersObsCnt.')'."</a>";
+          $seenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\" target=\"_top\">".'Y('.$ObsCnt.'/'.$get3->PersObsCnt.')'."</a>";
           $lastseen=$get3->PersObsMaxDate;
-          $lastseenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".urlencode($loggedUser)."&amp;sort=observationdate&amp;sortdirection=desc&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\">".$get3->PersObsMaxDate."</a>";
+          $lastseenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".urlencode($loggedUser)."&amp;sort=observationdate&amp;sortdirection=desc&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\" target=\"_top\">".$get3->PersObsMaxDate."</a>";
 				}
 		  }
 	  }
@@ -833,10 +833,11 @@ class Objects implements iObjects
 	  echo"<hr>";
   }
   public  function showObjects($link, $min, $max, $ownShow='', $showRank=0)        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
-  { global $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL;
+  { global $FF, $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL;
 	  $atlas='';
     echo "<table width=\"100%\">\n";
-    //echo "<thead>";
+    if($FF)
+      echo "<thead>";
     echo "<tr class=\"type3\">\n";
     if($showRank)
 	    tableSortHeader(LangOverviewObjectsHeader9,  $link."&amp;sort=objectpositioninlist");
@@ -855,10 +856,13 @@ class Objects implements iObjects
     }
     if($myList)
       echo("<td align=\"center\"><a href=\"" . $link . "&amp;min=" . $min . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">P</a></td>");
- 	  echo "<td width=\"1px\">&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+ 	  if($FF)
+      echo "<td width=\"1px\">&nbsp;&nbsp;&nbsp;&nbsp;</td>";
     echo "</tr>";
- 	  echo "</thead>";
- 	  echo "<tbody name=\"tbody_obj\" id=\"tbody_obj\">";
+ 	  if($FF)
+ 	    echo "</thead>";
+ 	  if($FF)
+ 	    echo "<tbody name=\"obj_list\" id=\"obj_list\" class=\"tbody_obj\">";
     $count = $min; // counter for altering table colors
 	  $countline = 0;
 	  if($max>count($_SESSION['Qobj']))
@@ -869,7 +873,7 @@ class Objects implements iObjects
         echo "<td align=\"center\"><a href=\"\" onclick=\"theplace = prompt('".LangNewPlaceInList."','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
       elseif($showRank)
 	      echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</td>";
-      echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname']) . "\">".$_SESSION['Qobj'][$count]['showname']."</a></td>\n";
+      echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" target=\"_top\">".$_SESSION['Qobj'][$count]['showname']."</a></td>\n";
       echo "<td align=\"center\">".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."</td>\n";
       echo "<td align=\"center\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>\n";
       echo "<td align=\"center\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>\n";
@@ -894,9 +898,9 @@ class Objects implements iObjects
       $countline++; 
       $count++;
     }   
-    echo "</tbody>";
+    if($FF)
+      echo "</tbody>";
     echo "</table>\n";
-    echo "<script>resizeTBody('tbody_obj',300);</script>";
   }
   public  function sortObjects($objectList, $sort, $reverse=false)              // Sort the array of objectList on the $sort field, and in second order on the showname field 
   { if(!$objectList||count($objectList)<2)

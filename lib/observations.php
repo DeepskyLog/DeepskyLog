@@ -647,116 +647,153 @@ class Observations {
 		$objDatabase->execSQL("UPDATE observations SET date = \"".$date."\" WHERE id = \"".$id."\"");
 		$objDatabase->execSQL("UPDATE observations SET time = \"$time\" WHERE id = \"".$id."\"");
 	}
-	public  function showListObservation($obsKey, $link, $lco) 
-	{ global $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations; 
-		$LOid="";	 $LOinstrumentsize='';  $LOdescription="";  $LOinstrumentId='';  $LOinstrument = '';
-	  $value=$_SESSION['Qobs'][$obsKey];
-		$alt = "";
-		$altnames=$objObject->getAlternativeNames($value['objectname']);
-		while(list($key,$altvalue)=each($altnames))
-		  if(trim($altvalue)!=trim($value['objectname']))
-				$alt.="<br>".trim($altvalue);
-	  $alt=substr($alt,4);
-    $explanation = "(".$GLOBALS[$value['objecttype']]." ".LangOverviewObservations12." " . $GLOBALS[$value['objectconstellation']].
-		                   (($value['objectmagnitude']<99.9)?", ".LangOverviewObservations13." ".sprintf("%.1f",$value['objectmagnitude']):"").
-		                   (($value['objectsurfacebrigthness']<99.9)?", ".LangOverviewObservations14." ".sprintf("%.1f",$value['objectsurfacebrigthness']):"").	                  
-		                   (($alt)?(", ".LangOverviewObservations15." ").$objPresentations->br2dash($alt):""). 
-		               ")";				                 		     
-		$explantation1=LangOverviewObservations16." ".($seen=$objObject->getseen($value['objectname']));
-		if(($LOid=$this->getLOObservationId($value['objectname'], $loggedUser, $value['observationid']))&&($lco=="O"))
-		{ $LOdescription=$objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
-		  $LOinstrumentId=$this->getDsObservationProperty($LOid,'instrumentid');
-			$LOinstrument=$objInstrument->getInstrumentPropertyFromId($LOinstrumentId,'name');
-			$LOinstrumentsize=round($objInstrument->getInstrumentPropertyFromId($LOinstrumentId,'diameter'), 0);
-		} 
-		if ($LOinstrument=="Naked eye") $LOinstrument=InstrumentsNakedEye;
-		if($loggedUser&&(!($objObserver->getObserverProperty($loggedUser,'UT'))))
-		{ $date=sscanf($this->getDsObservationLocalDate($value['observationid']),"%4d%2d%2d");
-			if($lco=="O")
-			  $LOdate=sscanf($this->getDsObservationLocalDate($LOid), "%4d%2d%2d");
-		}
-		else 
-		{	$date=sscanf($this->getDsObservationProperty($value['observationid'],'date'),"%4d%2d%2d");
-			if($lco=="O")
-		    $LOdate=sscanf($this->getDsObservationProperty($LOid,'date'), "%4d%2d%2d");
-		}
-		if($lco=='L')
-		  echo "<tr class=\"type".(2 -($obsKey%2))."\">";
+	public  function showListObservation($link, $link2, $lco) 
+	{ global $FF, $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations; 
+    $min=$_GET['min'];
+    $max=$_GET['max'];
+	  echo "<table width=\"100%\">\n";
+	  if($FF)
+	    echo "<thead>";
+		echo "<tr width=\"100%\" class=\"type3\">";
+    echo "<td>&nbsp;</td>";
+		tableSortHeader(LangOverviewObservationsHeader1, $link2 . "&amp;sort=objectname");
+		tableSortHeader(LangViewObservationField1b, $link2 . "&amp;sort=objectconstellation");
+		tableSortHeader(LangOverviewObservationsHeader2, $link2 . "&amp;sort=observersortname");
+		tableSortInverseHeader(LangOverviewObservationsHeader3, $link2 . "&amp;sort=instrumentsort");
+		tableSortInverseHeader(LangOverviewObservationsHeader4, $link2 . "&amp;sort=observationdate");
+		if ($_SESSION['lco'] != "O")
+			echo "<td>&nbsp;</td>";
 		else
-		  echo "<tr class=\"type2\">";
-	  if(($objUtil->checkGetKey('expand')==$value['observationid']))
-	    echo "<td align=\"center\"><a target=\"_top\" href=\"".$link."&amp;expand=0\" title=\"".$explantation1."\">"."-"."</a></td>";
-	  else
-	    echo "<td align=\"center\"><a target=\"_top\" href=\"".$link."&amp;expand=".$value['observationid']."\" title=\"".$explantation1."\">".((substr($seen,0,1)!="Y")?"x":"+")."</a></td>";
-	  echo "<td><a  target=\"_top\"href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($value['objectname'])."\" title=\"".$explanation."\">".$value['objectname']."</a></td>";
-		if($objUtil->checkGetKey('expand')==$value['observationid'])
-		{ echo "<td colspan=\"".($myList?(($lco=='O')?8:6):(($lco=='O')?7:5))."\">".$explanation."</td>";
-			echo "</tr>";
-		  echo "<tr>";
-		  echo "<td></td>"; 
-			echo "<td colspan=\"".($myList?(($lco=='O')?9:7):(($lco=='O')?8:6))."\">"; 
-			echo "<hr>";
-			$this->showObservation($value['observationid']);
-			echo "</td>";
-		}
-	  else
-		{	echo "<td>".$GLOBALS[$value['objectconstellation']]."</td>";
-		  echo "<td><a  target=\"_top\"href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($value['observerid'])."\">".$value['observername']."</a></td>";
-			echo "<td><a  target=\"_top\"href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($value['instrumentid'])."\">".(($value['instrumentname']=="Naked eye")?InstrumentsNakedEye:$value['instrumentname']." &nbsp;(".round($value['instrumentdiameter'], 0)."&nbsp;mm)")."</a></td>";
-			echo "<td>".date($dateformat,mktime(0, 0, 0, $date[1], $date[2], $date[0]));"</td>";
-			if($lco=="O")
-			{ echo "<td>".(($LOid)?("<a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($LOinstrumentId)."\">".$LOinstrument." &nbsp;").(($LOinstrument!=InstrumentsNakedEye)?("(".$LOinstrumentsize."&nbsp;mm".")"):""):"")."</a>"."</td>";
-			  echo "<td>".((($lco=="O")&&$LOid)?date($dateformat, mktime(0, 0, 0, $LOdate[1], $LOdate[2], $LOdate[0])):"")."</td>";
-			}
-			echo "<td>";
-			echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observation&amp;observation=".$value['observationid']."&amp;QobsKey=".$obsKey."&amp;dalm=D\" title=\"".LangDetail."\">".LangDetailText.(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?LangDetailDrawingText:"")."</a>&nbsp;";
-			echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&amp;dalm=AO\" title=\"" . LangAO . "\">".LangAOText."</a>";
-			if($loggedUser&&$LOid) 
-			{ echo "&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observation&observation=".$value['observationid']."&amp;dalm=MO\" title=\"".LangMO."\">".LangMOText."</a>";
-				echo "&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observation&observation=".$value['observationid']."&amp;dalm=LO\" title=\"".LangLO."\">".LangLOText."</a>";
-			}
-			echo "</td>";
-			if($myList) 
-			{ echo "<td>";
-				if($objDatabase->selectSingleValue("SELECT Count(observerobjectlist.objectname) As ObjCnt FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND objectname=\"".$value['objectname']."\" AND listname=\"".$listname."\"",'ObjCnt',0)>0)
-				{ echo "<a target=\"_top\" href=\"".$link."&amp;addObservationToList=".urlencode($value['observationid'])."\" title=\"".LangViewObservationField44."\">E</a>";
-				  echo "&nbsp;-&nbsp;";
-					echo "<a target=\"_top\" href=\"".$link."&amp;removeObjectFromList=".urlencode($value['objectname'])."\" title=\"".$value['objectname'].LangListQueryObjectsMessage3.$listname_ss."\">R</a>";
-				}
-				else
-	      { echo "<a target=\"_top\" href=\"".$link."&amp;addObjectToList=".urlencode($value['objectname'])."&amp;showname=".urlencode($value['objectname'])."\" title=\"".$value['objectname'].LangListQueryObjectsMessage2.$listname_ss."\">L</a>";
-				  echo "&nbsp;-&nbsp;";
-					echo "<a target=\"_top\" href=\"".$link."&amp;addObservationToList=".urlencode($value['observationid'])."\" title=\"".LangViewObservationField44."\">E</a>";
-				}
-				echo "</td>";
-			}
-		  }
+			echo "<td width=\"15%\">" . LangOverviewObservationsHeader8 . "</td>" .
+			     "<td width=\"15%\">" . LangOverviewObservationsHeader9 . "</td>" .
+			     "<td width=\"15%\">" . LangOverviewObservationsHeader5 . "</td>";
+		if($myList)
+			echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+		if($FF)
+			echo "<td width=\"1px\">&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 		echo "</tr>";
-    if($lco!='L')
-    { if($objUtil->checkGetKey('expand')!=$value['observationid'])
-			{ echo "<tr class=\"type1\">";
-		  	echo "<td>&nbsp;</td>";
-			  echo "<td valign=\"top\">".$alt."</td>";
-				if($lco=="C")
-			    echo "<td colspan=\"5\">".$objPresentations->searchAndLinkCatalogsInText($value['observationdescription'])."<p>"."</td>";
-			  elseif($lco=="O")
-	  		{ echo "<td colspan=\"4\">".$objPresentations->searchAndLinkCatalogsInText($value['observationdescription'])."<p>"."</td>";
-		  	  echo "<td colspan=\"3\">".$LOdescription."<p>"."</td>";
+		if($FF)
+		  echo "</thead>";
+		if($FF)
+		  echo "<tbody name=\"obs_list\" id=\"obs_list\" class=\"tbody_obs\">";
+	  $count = 0; // counter for altering table colors
+		while (list($key,$value)=each($_SESSION['Qobs']))
+		{ if ($count >= $min && $count < $max) 
+		  {	$obsKey=$key;
+		    $LOid="";	 $LOinstrumentsize='';  $LOdescription="";  $LOinstrumentId='';  $LOinstrument = '';
+			  $value=$_SESSION['Qobs'][$obsKey];
+				$alt = "";
+				$altnames=$objObject->getAlternativeNames($value['objectname']);
+				while(list($key,$altvalue)=each($altnames))
+				  if(trim($altvalue)!=trim($value['objectname']))
+						$alt.="<br>".trim($altvalue);
+			  $alt=substr($alt,4);
+		    $explanation = "(".$GLOBALS[$value['objecttype']]." ".LangOverviewObservations12." " . $GLOBALS[$value['objectconstellation']].
+				                   (($value['objectmagnitude']<99.9)?", ".LangOverviewObservations13." ".sprintf("%.1f",$value['objectmagnitude']):"").
+				                   (($value['objectsurfacebrigthness']<99.9)?", ".LangOverviewObservations14." ".sprintf("%.1f",$value['objectsurfacebrigthness']):"").	                  
+				                   (($alt)?(", ".LangOverviewObservations15." ").$objPresentations->br2dash($alt):""). 
+				               ")";				                 		     
+				$explantation1=LangOverviewObservations16." ".($seen=$objObject->getseen($value['objectname']));
+				if(($LOid=$this->getLOObservationId($value['objectname'], $loggedUser, $value['observationid']))&&($lco=="O"))
+				{ $LOdescription=$objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
+				  $LOinstrumentId=$this->getDsObservationProperty($LOid,'instrumentid');
+					$LOinstrument=$objInstrument->getInstrumentPropertyFromId($LOinstrumentId,'name');
+					$LOinstrumentsize=round($objInstrument->getInstrumentPropertyFromId($LOinstrumentId,'diameter'), 0);
+				} 
+				if ($LOinstrument=="Naked eye") $LOinstrument=InstrumentsNakedEye;
+				if($loggedUser&&(!($objObserver->getObserverProperty($loggedUser,'UT'))))
+				{ $date=sscanf($this->getDsObservationLocalDate($value['observationid']),"%4d%2d%2d");
+					if($lco=="O")
+					  $LOdate=sscanf($this->getDsObservationLocalDate($LOid), "%4d%2d%2d");
+				}
+				else 
+				{	$date=sscanf($this->getDsObservationProperty($value['observationid'],'date'),"%4d%2d%2d");
+					if($lco=="O")
+				    $LOdate=sscanf($this->getDsObservationProperty($LOid,'date'), "%4d%2d%2d");
+				}
+				if($lco=='L')
+				  echo "<tr class=\"type".(2 -($obsKey%2))."\">";
+				else
+				  echo "<tr class=\"type2\">";
+			  if(($objUtil->checkGetKey('expand')==$value['observationid']))
+			    echo "<td align=\"center\"><a target=\"_top\" href=\"".$link."&amp;expand=0\" title=\"".$explantation1."\">"."-"."</a></td>";
+			  else
+			    echo "<td align=\"center\"><a target=\"_top\" href=\"".$link."&amp;expand=".$value['observationid']."\" title=\"".$explantation1."\">".((substr($seen,0,1)!="Y")?"x":"+")."</a></td>";
+			  echo "<td><a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($value['objectname'])."\" title=\"".$explanation."\">".$value['objectname']."</a></td>";
+				if($objUtil->checkGetKey('expand')==$value['observationid'])
+				{ echo "<td colspan=\"".($myList?(($lco=='O')?8:6):(($lco=='O')?7:5))."\">".$explanation."</td>";
+					echo "</tr>";
+				  echo "<tr>";
+				  echo "<td>&nbsp;</td>"; 
+					echo "<td style=\"background-color:#FFFFC0\" colspan=\"".($myList?(($lco=='O')?9:7):(($lco=='O')?8:6))."\">"; 
+					echo "<hr>";
+					$this->showObservation($value['observationid']);
+					echo "</td>";
+				}
+			  else
+				{	echo "<td>".$GLOBALS[$value['objectconstellation']]."</td>";
+				  echo "<td><a  target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($value['observerid'])."\">".$value['observername']."</a></td>";
+					echo "<td><a  target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($value['instrumentid'])."\">".(($value['instrumentname']=="Naked eye")?InstrumentsNakedEye:$value['instrumentname']." &nbsp;(".round($value['instrumentdiameter'], 0)."&nbsp;mm)")."</a></td>";
+					echo "<td>".date($dateformat,mktime(0, 0, 0, $date[1], $date[2], $date[0]));"</td>";
+					if($lco=="O")
+					{ echo "<td>".(($LOid)?("<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($LOinstrumentId)."\">".$LOinstrument." &nbsp;").(($LOinstrument!=InstrumentsNakedEye)?("(".$LOinstrumentsize."&nbsp;mm".")"):""):"")."</a>"."</td>";
+					  echo "<td>".((($lco=="O")&&$LOid)?date($dateformat, mktime(0, 0, 0, $LOdate[1], $LOdate[2], $LOdate[0])):"")."</td>";
+					}
+					echo "<td>";
+					echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observation&amp;observation=".$value['observationid']."&amp;QobsKey=".$obsKey."&amp;dalm=D\" title=\"".LangDetail."\">".LangDetailText.(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?LangDetailDrawingText:"")."</a>&nbsp;";
+					echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&amp;dalm=AO\" title=\"" . LangAO . "\">".LangAOText."</a>";
+					if($loggedUser&&$LOid) 
+					{ echo "&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observation&observation=".$value['observationid']."&amp;dalm=MO\" title=\"".LangMO."\">".LangMOText."</a>";
+						echo "&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observation&observation=".$value['observationid']."&amp;dalm=LO\" title=\"".LangLO."\">".LangLOText."</a>";
+					}
+					echo "</td>";
+					if($myList) 
+					{ echo "<td>";
+						if($objDatabase->selectSingleValue("SELECT Count(observerobjectlist.objectname) As ObjCnt FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND objectname=\"".$value['objectname']."\" AND listname=\"".$listname."\"",'ObjCnt',0)>0)
+						{ echo "<a target=\"_top\" href=\"".$link."&amp;addObservationToList=".urlencode($value['observationid'])."\" title=\"".LangViewObservationField44."\">E</a>";
+						  echo "&nbsp;-&nbsp;";
+							echo "<a target=\"_top\" href=\"".$link."&amp;removeObjectFromList=".urlencode($value['objectname'])."\" title=\"".$value['objectname'].LangListQueryObjectsMessage3.$listname_ss."\">R</a>";
+						}
+						else
+			      { echo "<a target=\"_top\" href=\"".$link."&amp;addObjectToList=".urlencode($value['objectname'])."&amp;showname=".urlencode($value['objectname'])."\" title=\"".$value['objectname'].LangListQueryObjectsMessage2.$listname_ss."\">L</a>";
+						  echo "&nbsp;-&nbsp;";
+							echo "<a target=\"_top\" href=\"".$link."&amp;addObservationToList=".urlencode($value['observationid'])."\" title=\"".LangViewObservationField44."\">E</a>";
+						}
+						echo "</td>";
+					}
+				  }
+				echo "</tr>";
+		    if($lco!='L')
+		    { if($objUtil->checkGetKey('expand')!=$value['observationid'])
+					{ echo "<tr class=\"type1\">";
+				  	echo "<td>&nbsp;</td>";
+					  echo "<td valign=\"top\">".$alt."</td>";
+						if($lco=="C")
+					    echo "<td colspan=\"5\">".$objPresentations->searchAndLinkCatalogsInText($value['observationdescription'])."<p>"."</td>";
+					  elseif($lco=="O")
+			  		{ echo "<td colspan=\"4\">".$objPresentations->searchAndLinkCatalogsInText($value['observationdescription'])."<p>"."</td>";
+				  	  echo "<td colspan=\"3\">".$LOdescription."<p>"."</td>";
+					  }
+			      echo "</tr>";
+					}
+					if((($lco=="O")&&$LOid&&($this->getDsObservationProperty($LOid,'hasDrawing')))||($this->getDsObservationProperty($value['observationid'],'hasDrawing')))
+				  { echo "<tr>";
+					  echo "<td> &nbsp; </td>";
+					  if($lco=="C")
+			        echo "<td colspan=5>".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\"></img></a>"."</p>":"")."</td>";
+			  	  elseif($lco=="O")
+				    { echo "<td colspan=4>".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\"></img></a>"."</p>":"")."</td>";
+					    echo "<td colspan=3>".(($LOdescription&&($this->getDsObservationProperty($LOid,'hasDrawing')))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$LOid.".jpg" . "\"> <img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$LOid."_resized.jpg\"></img></a>"."</p>":"")."</td>";
+					   }
+			  	  echo "</tr>";		
+				  }
 			  }
-	      echo "</tr>";
-			}
-			if((($lco=="O")&&$LOid&&($this->getDsObservationProperty($LOid,'hasDrawing')))||($this->getDsObservationProperty($value['observationid'],'hasDrawing')))
-		  { echo "<tr>";
-			  echo "<td> &nbsp; </td>";
-			  if($lco=="C")
-	        echo "<td colspan=5>".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\"></img></a>"."</p>":"")."</td>";
-	  	  elseif($lco=="O")
-		    { echo "<td colspan=4>".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\"></img></a>"."</p>":"")."</td>";
-			    echo "<td colspan=3>".(($LOdescription&&($this->getDsObservationProperty($LOid,'hasDrawing')))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$LOid.".jpg" . "\"> <img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$LOid."_resized.jpg\"></img></a>"."</p>":"")."</td>";
-			   }
-	  	  echo "</tr>";		
 		  }
-	  }
+			$count++;
+		}
+		if($FF)
+		  echo "</tbody>";
+		echo "</table>";
 	}
 	public  function showObservation($LOid) 
 	{ global $objUtil, $dateformat, $myList, $listname_ss, $baseURL, $objEyepiece, $objObserver, $objInstrument, $loggedUser, $objObject, $objLens, $objFilter, $objPresentations;
@@ -812,11 +849,11 @@ class Observations {
 		  $charTypeText=(($characterType=$this->getDsObservationProperty($LOid,'characterType'))?$characterType.': '.$GLOBALS['ClusterType'.$characterType]:"-");
 		echo "<table width=\"100%\">";
 		tableFieldnameField3(LangViewObservationField2,
-		                     "<a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($this->getDsObservationProperty($LOid,'observerid'))."&amp;back=index.php?indexAction=detail_observation\">".$objObserver->getObserverProperty($this->getDsObservationProperty($LOid,'observerid'),'firstname')."&nbsp;".$objObserver->getObserverProperty($this->getDsObservationProperty($LOid,'observerid'),'name')."</a>",
+		                     "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($this->getDsObservationProperty($LOid,'observerid'))."&amp;back=index.php?indexAction=detail_observation\">".$objObserver->getObserverProperty($this->getDsObservationProperty($LOid,'observerid'),'firstname')."&nbsp;".$objObserver->getObserverProperty($this->getDsObservationProperty($LOid,'observerid'),'name')."</a>",
 		                     LangViewObservationField3,
-		                     "<a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($this->getDsObservationProperty($LOid,'instrumentid'))."\">".$inst."</a>",
+		                     "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($this->getDsObservationProperty($LOid,'instrumentid'))."\">".$inst."</a>",
 		                     LangViewObservationField4,
-                         "<a href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=" . urlencode($this->getDsObservationProperty($LOid,'locationid')) . "\">" . $GLOBALS['objLocation']->getLocationPropertyFromId($this->getDsObservationProperty($LOid,'locationid'),'name') . "</a>",
+                         "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=" . urlencode($this->getDsObservationProperty($LOid,'locationid')) . "\">" . $GLOBALS['objLocation']->getLocationPropertyFromId($this->getDsObservationProperty($LOid,'locationid'),'name') . "</a>",
                          "class=\"type3\"");                                     
 		tableFieldnameField3(LangViewObservationField5.$dateTimeLabelText,
                          $dateTimeText,
@@ -826,11 +863,11 @@ class Observations {
 		                     (($limmag=$this->getDsObservationProperty($LOid,'limmag'))?sprintf("%1.1f", $limmag):"-")."/".((($sqm=$this->getDsObservationProperty($LOid,'SQM'))!=-1)?sprintf("%2.1f", $sqm):'-'),
 		                     "class=\"type2\"");             
 		tableFieldnameField3(LangViewObservationField30,
-		                     (((($eyepiece=$this->getDsObservationProperty($LOid,'eyepieceid'))=="")||($eyepiece==0))?"-":"<a href=\"".$baseURL."index.php?indexAction=detail_eyepiece&amp;eyepiece=".urlencode($eyepiece)."\">" .stripslashes($objEyepiece->getEyepiecePropertyFromId($eyepiece,'name')). "</a>"),
+		                     (((($eyepiece=$this->getDsObservationProperty($LOid,'eyepieceid'))=="")||($eyepiece==0))?"-":"<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_eyepiece&amp;eyepiece=".urlencode($eyepiece)."\">" .stripslashes($objEyepiece->getEyepiecePropertyFromId($eyepiece,'name')). "</a>"),
 		                     LangViewObservationField31,		
-		                     (((($filter=$this->getDsObservationProperty($LOid,'filterid'))=="")||($filter==0))?"-":"<a href=\"".$baseURL."index.php?indexAction=detail_filter&amp;filter=".urlencode($filter)."\">".$objFilter->getFilterPropertyFromId($filter,'name')."</a>"),
+		                     (((($filter=$this->getDsObservationProperty($LOid,'filterid'))=="")||($filter==0))?"-":"<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_filter&amp;filter=".urlencode($filter)."\">".$objFilter->getFilterPropertyFromId($filter,'name')."</a>"),
 		                     LangViewObservationField32,
-		                     (((($lens=$this->getDsObservationProperty($LOid,'lensid'))=="")||($lens==0))?"-":"<a href=\"".$baseURL."index.php?indexAction=detail_lens&amp;lens=".urlencode($lens)."\">".$objLens->getLensPropertyFromId($lens,'name')."</a>"),
+		                     (((($lens=$this->getDsObservationProperty($LOid,'lensid'))=="")||($lens==0))?"-":"<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_lens&amp;lens=".urlencode($lens)."\">".$objLens->getLensPropertyFromId($lens,'name')."</a>"),
 		                     "class=\"type1\"");             
 		tableFieldnameField3(LangViewObservationField22,
 		                     (($visibility=$this->getDsObservationProperty($LOid,'visibility'))?$GLOBALS['Visibility'.$visibility]:"-"),
@@ -844,13 +881,13 @@ class Observations {
 		echo "<p />";
 		echo $objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
 		if($this->getDsObservationProperty($LOid,'hasDrawing'))
-		  echo "<p>"."<a href=\"".$baseURL."deepsky/drawings/" . $LOid . ".jpg" . "\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . ".jpg\"></img></a>";
+		  echo "<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/" . $LOid . ".jpg" . "\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . ".jpg\"></img></a>";
 		echo "<p>";
-		echo (($myList)?"<a href=\"".$link.$linkamp."addObservationToList=".urlencode($LOid)."\">".LangViewObservationField44.$listname_ss."</a>&nbsp;-&nbsp;":'');
+		echo (($myList)?"<a target=\"_top\" href=\"".$link.$linkamp."addObservationToList=".urlencode($LOid)."\">".LangViewObservationField44.$listname_ss."</a>&nbsp;-&nbsp;":'');
 		if($objUtil->checkAdminOrUserID($this->getDsObservationProperty($LOid,'observerid')))
-		{ echo "<a href=\"".$baseURL."index.php?indexAction=adapt_observation&amp;observation=" . $LOid . "\">" . LangChangeObservationTitle . "</a>";
+		{ echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=adapt_observation&amp;observation=" . $LOid . "\">" . LangChangeObservationTitle . "</a>";
 		  echo "&nbsp;-&nbsp;";
-		  echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_observation&amp;observationid=".$LOid."\">".LangDeleteObservation."</a>";
+		  echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=validate_delete_observation&amp;observationid=".$LOid."\">".LangDeleteObservation."</a>";
 		}
 		echo "</p>";
 		echo "<hr>";

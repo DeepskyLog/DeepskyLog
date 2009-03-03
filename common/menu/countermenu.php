@@ -1,5 +1,5 @@
 <?php
-
+/*
 echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">";
 
 echo "<tr>";
@@ -28,5 +28,5 @@ echo "</td>";
 echo "</tr>";
 
 echo "</table>";
-
+*/
 ?>
