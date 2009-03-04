@@ -80,7 +80,7 @@ else
   $objObject->showObjects($link, $min, $max);
 	echo "</iframe>";
 }	
-echo "<script>resizeElement('obj_list',450);</script>";
+echo "<script>resizeElement('obj_list',550);</script>";
 echo "<hr />";
 list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'],$link ,$min,25,"");
 echo "<hr />";
