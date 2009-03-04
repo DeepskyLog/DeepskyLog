@@ -1,11 +1,12 @@
 <?php // change_filter.php - form which allows the filter owner to change a filter
-if(!$loggedUser)
-  throw new Exception("No logged user in change_filter.php, please contact the developers with this message.");
-if(!($filterid=$objUtil->checkGetKey('filter')))
-  throw new Exception("No filter specified in change_filter.php, please contact the developers with this message.");
-if(!($objFilter->getFilterPropertyFromId($filterid,'name')))
-  throw new Exception("Filter not found in change_filter.php, please contact the developers with this message:".$filterid);
-$filter=$objFilter->getFilterPropertiesFromId($_GET['filter']);
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!$loggedUser) throw new Exception(LangException002);
+elseif(!($filterid=$objUtil->checkGetKey('filter'))) throw new Exception(LangException005);
+elseif(!($objUtil->checkUserID($objFilter->getFilterPropertyFromId($filterid,'observer','')))) throw new Exception(LangExcpetion006);
+//elseif(!($objFilter->getFilterPropertyFromId($filterid,'name')))  throw new Exception("Filter not found in change_filter.php, please contact the developers with this message:".$filterid);
+else
+{
+$filter=$objFilter->getFilterPropertiesFromId($filterid);
 echo "<div id=\"main\">";
 echo "<h2>".stripslashes($filter['name'])."</h2>";
 echo "<hr>";
@@ -23,4 +24,5 @@ echo "<hr />";
 echo "<p><input type=\"submit\" name=\"change\" value=\"".LangChangeFilterButton."\" /></p>";
 echo "</form>";
 echo "</div>";
+}
 ?>

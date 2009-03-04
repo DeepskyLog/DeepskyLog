@@ -37,6 +37,7 @@ catch (Exception $e)
   echo "<p>Report problem with error message: " . $e->getMessage()."</p>";
   echo "<p>You can report the problem by sending an email to developers@deepskylog.be.</p>";
   echo "<p>Thank you.</p>";
+  // EMAIL developers with error codes
 }
 
 ?>

@@ -1,6 +1,21 @@
 <?php
 // version 3.1, DE 20061119
 
+define("LangException001","U dient ingelogd te zijn om uw account te beheren. Gelieve de developers te contacteren met dit bericht.");
+define("LangException002","U dient ingelogd te zijn om uw oculairen te beheren. Gelieve de developers te contacteren met dit bericht.");
+define("LangException003","U wou een oculair wijzigen, maar er is geen oculair aangeduid. Gelieve de developers te contacteren met dit bericht.");
+define("LangException004","U wou een oculair wijzigen, maar het is niet uw oculair. Gelieve de developers te contacteren met dit bericht.");
+define("LangException005","U wou een filter wijzigen, maar er is geen filter aangeduid. Gelieve de developers te contacteren met dit bericht.");
+define("LangException006","U wou een filter wijzigen, maar het is niet uw filter. Gelieve de developers te contacteren met dit bericht.");
+define("LangException007","U wou een instrument wijzigen, maar er is geen instrument aangeduid. Gelieve de developers te contacteren met dit bericht.");
+define("LangException008","U wou een instrument wijzigen, maar het is niet uw instrument. Gelieve de developers te contacteren met dit bericht.");
+define("LangException009","U wou een lens wijzigen, maar er is geen lens aangeduid. Gelieve de developers te contacteren met dit bericht.");
+define("LangException010","U wou een lens wijzigen, maar het is niet uw lens. Gelieve de developers te contacteren met dit bericht.");
+define("LangException011","U wou een locatie wijzigen, maar er is geen locatie aangeduid. Gelieve de developers te contacteren met dit bericht.");
+define("LangException012","U wou een locatie wijzigen, maar het is niet uw locatie. Gelieve de developers te contacteren met dit bericht.");
+define("LangException013","U wou een locatie opzoeken, maar er is geen locatie aangeduid.");
+define("LangException014","U wou een locatie opzoeken, maar er is geen land aangeduid.");
+
 define("LangCounter","Compteur");
 
 define("DreyerDescriptionLink","http://www.deepskylog.org/wiki/bin/view/DeepskyLog/DreyerDescriptionen");

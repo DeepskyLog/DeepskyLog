@@ -1,6 +1,21 @@
 <?php
 // version 3.1, DE 20061119
 
+define("LangException001","You need to be logged in to change your account. Please contact the developers with this message.");
+define("LangException002","You need to be logged in to change your eyepieces. Please contact the developers with this message.");
+define("LangException003","You wanted to change an eyepiece, but none is specified. Please contact the developers with this message.");
+define("LangException004","You wanted to change an eyepiece, but it is not yours to change. Please contact the developers with this message.");
+define("LangException005","You wanted to change a filter, but none is specified. Please contact the developers with this message.");
+define("LangException006","You wanted to change a filter, but it is not yours to change. Please contact the developers with this message.");
+define("LangException007","You wanted to change an instrument, but none is specified. Please contact the developers with this message.");
+define("LangException008","You wanted to change an instrument, but it is not yours to change. Please contact the developers with this message.");
+define("LangException009","You wanted to change a lens, but none is specified. Please contact the developers with this message.");
+define("LangException010","You wanted to change a lens, but it is not yours to change. Please contact the developers with this message.");
+define("LangException011","You wanted to change a location, but none is specified. Please contact the developers with this message.");
+define("LangException012","You wanted to change a location, but it is not yours to change. Please contact the developers with this message.");
+define("LangException013","You wanted to look up a location, but none is specified.");
+define("LangException014","You wanted to look up a location, but no country is specified.");
+
 define("LangCounter","Counter");
 
 define("DreyerDescriptionLink","http://www.deepskylog.org/wiki/bin/view/DeepskyLog/DreyerDescriptionen");

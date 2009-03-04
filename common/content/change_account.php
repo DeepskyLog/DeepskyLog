@@ -1,12 +1,11 @@
 <?php // change_account.php - allows the user to view and change his account's details
-if((!isset($inIndex))||(!$inIndex))
-  die('You tried to enter DeepskyLog in an unauthorised way.');
-
-
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!($loggedUser)) throw new Exception(LangExcpetion001);
+else
+{
+$sites = $objLocation->getSortedLocations("name", $loggedUser);
 $tempLocationList="<select name=\"site\" class=\"inputfield\">";
-$sites = $objLocation->getSortedLocations("name", $_SESSION['deepskylog_id']);
-// If there are locations with the same name, the province should alse 
-// be shown
+// If there are locations with the same name, the province should also be shown
 $previous = "fskfskf";
 for($i=0;$i<count($sites);$i++)
 { $adapt[$i] = 0;
@@ -21,27 +20,26 @@ for ($i = 0;$i < count($sites);$i++)
     $sitename = $objLocation->getLocationPropertyFromId($sites[$i],'name')." (".$objLocation->getLocationPropertyFromId($sites[$i],'region').")";
   else
     $sitename = $objLocation->getLocationPropertyFromId($sites[$i],'name');
-  $tempLocationList.="<option ".(($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation')==$sites[$i])?" selected=\"selected\"":"")." value=\"".$sites[$i]."\">".$sitename."</option>";
+  $tempLocationList.="<option ".(($objObserver->getObserverProperty($loggedUser,'stdlocation')==$sites[$i])?" selected=\"selected\"":"")." value=\"".$sites[$i]."\">".$sitename."</option>";
 }
 $tempLocationList.="</select>";
-
 $tempInstrumentList="<select name=\"instrument\" class=\"inputfield\">";
-$instr=$objInstrument->getSortedInstruments("name",$_SESSION['deepskylog_id']);
+$instr=$objInstrument->getSortedInstruments("name",$loggedUser);
 $noStd=false;
 while(list($key,$value)=each($instr))
 { $instrumentname=$objInstrument->getInstrumentPropertyFromId($value,'name');
   if($instrumentname=="Naked eye")
     $instrumentname=InstrumentsNakedEye;
-  if($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope')=="0")
+  if($objObserver->getObserverProperty($loggedUser,'stdtelescope')=="0")
     $noStd = 1;
-	if($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope')==$value)
+	if($objObserver->getObserverProperty($loggedUser,'stdtelescope')==$value)
     $tempInstrumentList.="<option selected=\"selected\" value=\"".$value."\">".$instrumentname."</option>";
   else
     $tempInstrumentList.="<option ".(($noStd&&($value=="1"))?" selected=\"selected\"":"")." value=\"".$value."\">".$instrumentname."</option>";
 }
 $tempInstrumentList.="</select>";
 
-$theAtlasKey=$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode','urano');
+$theAtlasKey=$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano');
 $tempAtlasList="<select name=\"atlas\" class=\"inputfield\">";
 while(list($key,$value)=each($objAtlas->atlasCodes))
   $tempAtlasList.="<option ".(($key==$theAtlasKey)?"selected=\"selected\"":"")." value=\"$key\">" . $value . "</option>";
@@ -50,17 +48,16 @@ $tempAtlasList.="</select>";
 $tempLangList="<select name=\"language\" class=\"inputfield\">";
 $languages=$objLanguage->getLanguages(); 
 while(list($key,$value)=each($languages))
-  $tempLangList.="<option value=\"".$key."\"".(($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'language')==$key)?" selected=\"selected\"":"").">".$value."</option>";
+  $tempLangList.="<option value=\"".$key."\"".(($objObserver->getObserverProperty($loggedUser,'language')==$key)?" selected=\"selected\"":"").">".$value."</option>";
 $tempLangList.="</select>";
 
-$allLanguages=$objLanguage->getAllLanguages($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'language'));
+$allLanguages=$objLanguage->getAllLanguages($objObserver->getObserverProperty($loggedUser,'language'));
 $tempAllLangList="<select name=\"description_language\" class=\"inputfield\">";
 while(list($key,$value)=each($allLanguages))
-  $tempAllLangList.="<option value=\"".$key."\"".(($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'observationlanguage') == $key)?" selected=\"selected\"":"").">".$value."</option>";
+  $tempAllLangList.="<option value=\"".$key."\"".(($objObserver->getObserverProperty($loggedUser,'observationlanguage') == $key)?" selected=\"selected\"":"").">".$value."</option>";
 $tempAllLangList.="</select>";
-
 $_SESSION['alllanguages']=$allLanguages; 
-$usedLanguages=$objObserver->getUsedLanguages($_SESSION['deepskylog_id']);
+$usedLanguages=$objObserver->getUsedLanguages($loggedUser);
 reset($allLanguages);
 $tempObsLangList="<table><tr>";
 $j=0;
@@ -80,9 +77,9 @@ $dir = opendir($upload_dir);
 while (FALSE !== ($file = readdir($dir)))
 { if ("." == $file OR ".." == $file)                                            // skip current directory and directory above
     continue; 
-  if(fnmatch($_SESSION['deepskylog_id']. ".gif", $file) || fnmatch($_SESSION['deepskylog_id']. ".jpg",$file) || fnmatch($_SESSION['deepskylog_id']. ".png", $file))
+  if(fnmatch($loggedUser. ".gif", $file) || fnmatch($loggedUser. ".jpg",$file) || fnmatch($loggedUser. ".png", $file))
   { echo "<p align=\"center\">";
-	  echo "<img class=\"account\" src=\"".$baseURL."$upload_dir" . "/" . "$file\" alt=\"" . $_SESSION['deepskylog_id'] . "\"></img>";
+	  echo "<img class=\"account\" src=\"".$baseURL."$upload_dir" . "/" . "$file\" alt=\"" . $loggedUser . "\"></img>";
 		echo "</p>";
 	}
 }
@@ -95,8 +92,8 @@ tableFieldnameFieldExplanation(LangChangeAccountField3,"<input type=\"text\" cla
 tableFieldnameFieldExplanation(LangChangeAccountField4,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'name')."\" />",LangChangeAccountField4Expl);
 tableFieldnameFieldExplanation(LangChangeAccountField5,"<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd\" size=\"30\" value=\"\" />",LangChangeAccountField5Expl);
 tableFieldnameFieldExplanation(LangChangeAccountField6,"<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd_again\" size=\"30\" value=\"\" />",LangChangeAccountField6Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField11."&nbsp;*","<input type=\"checkbox\" class=\"inputfield\" name=\"local_time\"".(($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT'))?"":"checked")." />",LangChangeAccountField11Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField10,"<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"icq_name\" size=\"5\" value=\"".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'icqname')."\" />",LangChangeAccountField10Expl);
+tableFieldnameFieldExplanation(LangChangeAccountField11."&nbsp;*","<input type=\"checkbox\" class=\"inputfield\" name=\"local_time\"".(($objObserver->getObserverProperty($loggedUser,'UT'))?"":"checked")." />",LangChangeAccountField11Expl);
+tableFieldnameFieldExplanation(LangChangeAccountField10,"<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"icq_name\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'icqname')."\" />",LangChangeAccountField10Expl);
 echo "<tr>";
 echo "<td>&nbsp;</td>";
 echo "<td>&nbsp;</td>";
@@ -120,4 +117,5 @@ echo "<hr>";
 echo "<input type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
 echo "</form>";
 echo "</div>";
+}
 ?>

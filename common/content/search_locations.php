@@ -1,5 +1,5 @@
 <?php
-// search_location.php
+// search_locations.php
 // allows the user to search a location in the database 
 
 echo "<div id=\"main\">";
