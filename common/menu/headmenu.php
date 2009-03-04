@@ -3,15 +3,8 @@ echo "<body leftmargin=\"0\" topmargin=\"0\" rightmargin=\"0\" bottommargin=\"0\
 echo "<script type=\"text/javascript\" src=\"".$baseURL."common/menu/wz_tooltip.js\"></script>";
 
 // VVS Header and our 3 dropdown boxes if logged in 
-echo "<div style=\"background:url(".$baseURL."styles/images/header_bg.jpg); 
-                   background-color:#003366; 
-                   background-position: 0% 0%;
-                   background-repeat: no-repeat; 
-                   position:relative;
-                   height:64px;
-                   width:100%;
-                   text-align:right;
-                   >";
+echo "<div style=\"background-color:#003366\" align=\"right\">";
+echo "<div style=\"background:url(".$baseURL."styles/images/header_bg.jpg); background-repeat: no-repeat; background-position: 0% 0%;\">";
 echo "<table>";
 echo "<tr>";
 echo "<td height=\"60px\">";
@@ -24,6 +17,7 @@ echo"</td><td>";
 echo "<img src=\"".$baseURL."styles/images/deepskylog.gif\"/>";
 echo"</td>";
 echo "</table>";
+echo "</div>";
 echo "</div>";
 
 // Welcome line with login name
