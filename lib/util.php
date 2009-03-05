@@ -1459,7 +1459,7 @@ class Utils implements iUtils
     while(list($key,$value)=each($result))
     { $obs=$objObservation->getAllInfoDsObservation($value['observationid']);
       $object=$objObject->getAllInfoDsObject($obs['objectname']);
-      if($loggedUser&&($objObservation->getObserverProperty($loggedUser,'UT')))
+      if($loggedUser&&($objObserver->getObserverProperty($loggedUser,'UT')))
         $date=sscanf($obs["date"], "%4d%2d%2d");
       else
         $date=sscanf($obs["localdate"], "%4d%2d%2d");
