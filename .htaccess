@@ -14,6 +14,9 @@ AddHandler application/x-httpd-php .csv
 AddHandler application/x-httpd-php .argo
 AddHandler application/x-httpd-php .icq
 AddHandler application/x-httpd-php .xml
+AddHandler application/x-httpd-php .rss
+
+AddType application/rss+xml .rss
 
 <Files observations.pdf>
     ForceType application/x-httpd-php
@@ -37,6 +40,9 @@ AddHandler application/x-httpd-php .xml
     ForceType application/x-httpd-php
 </Files>
 <Files observations.xml>
+    ForceType application/x-httpd-php
+</Files>
+<Files observations.rss>
     ForceType application/x-httpd-php
 </Files>
 

@@ -10,6 +10,44 @@ $xmlfile = realpath($xmlfile);
 //Load the xml document in the DOMDocument object
 $dom->Load($xmlfile);
 
+$searchNode = $dom->getElementsByTagName( "fgca:observations" ); 
+print "VERSION : " . $searchNode->getAttribute("version");
+/*
+XML Data:
+<data>
+<Report ID="1">
+    <Date>REVIEW</Date>
+    <AuthorID>1</AuthorID>
+</Report>
+<Report ID="2">
+    <Date>REVIEW</Date>
+    <AuthorID>2</AuthorID>
+</Report>
+</data>
+
+- - - - - - - - - - - - - -
+
+<?php
+$xmlDoc = new DOMDocument();
+$xmlDoc->load( 'data.xml' );
+
+$searchNode = $xmlDoc->getElementsByTagName( "Report" );
+
+foreach( $searchNode as $searchNode )
+{
+    $valueID = $searchNode->getAttribute('ID');
+
+    $xmlDate = $searchNode->getElementsByTagName( "Date" );
+    $valueDate = $xmlDate->item(0)->nodeValue;
+
+    $xmlAuthorID = $searchNode->getElementsByTagName( "AuthorID" );
+    $valueAuthorID = $xmlAuthorID->item(0)->nodeValue;
+   
+    echo "$valueID - $valueDate - $valueAuthorID\n";
+}
+?>
+*/
+
 $s = simplexml_import_dom($dom);
 
 //$schemaVersion = $s->fcga;
