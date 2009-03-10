@@ -1,8 +1,10 @@
 <?php
 // version 3.1, DE 20061119
 
-define("LangException001","You need to be logged in to change your account. Please contact the developers with this message.");
-define("LangException002","You need to be logged in to change your eyepieces. Please contact the developers with this message.");
+define("LangGeneralObservations","observations");
+
+define("LangException001","You need to be logged in as an administrator to execute these operations.");
+define("LangException002","You need to be logged in to change your locations or equipment.");
 define("LangException003","You wanted to change an eyepiece, but none is specified. Please contact the developers with this message.");
 define("LangException004","You wanted to change an eyepiece, but it is not yours to change. Please contact the developers with this message.");
 define("LangException005","You wanted to change a filter, but none is specified. Please contact the developers with this message.");

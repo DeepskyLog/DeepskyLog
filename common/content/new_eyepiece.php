@@ -1,48 +1,43 @@
 <?php  // new_eyepiece.php - allows the user to add a new eyepiece
-
-$mfl = -1;
-if(array_key_exists('maxFocalLength',$_GET) && $_GET['maxFocalLength']) 
-  $mfl = $_GET['maxFocalLength'];
-if(array_key_exists('eyepieceid',$_GET) && $_GET['eyepieceid'])
-  $mfl = stripslashes($objEyepiece->getEyepiecePropertyFromId($_GET['eyepieceid'],'maxFocalLength'));
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!$loggedUser) throw new Exception(LangException002);
+else
+{
+$mfl = $objUtil->checkGetKey('maxFocalLength',-1);
+if($eyepieceid=$objUtil->checkGetKey('eyepieceid'))
+  $mfl=stripslashes($objEyepiece->getEyepiecePropertyFromId($eyepieceid,'maxFocalLength'));
 if($mfl<0)
-  $mfl="";
-
+  $mfl='';
 $sort=$objUtil->checkGetKey('sort','focalLength');
-if(!$min) $min=$objUtil->checkGetKey('min',0);
-// the code below looks very strange but it works
-if((isset($_GET['previous'])))
-  $orig_previous = $_GET['previous'];
-else
-  $orig_previous = "";
 $eyeps = $objEyepiece->getSortedEyepieces($sort, $loggedUser);
-if((isset($_GET['sort'])) && $_GET['previous'] == $_GET['sort']) // reverse sort when pushed twice
-{ if ($_GET['sort'] == "name")
-    $eyeps = array_reverse($eyeps, true);
-  else
-  { krsort($eyeps);
-    reset($eyeps);
+if($eyeps!=null)
+{ if(!$min) $min=$objUtil->checkGetKey('min',0);
+  $orig_previous=$objUtil->checkGetKey('previous','');
+  if((isset($_GET['sort'])) && ($orig_previous==$_GET['sort'])) // reverse sort when pushed twice
+  { if($_GET['sort']=="name")
+      $eyeps = array_reverse($eyeps, true);
+    else
+    { krsort($eyeps);
+      reset($eyeps);
+    }
+    $previous=""; // reset previous field to sort on
   }
-  $previous = ""; // reset previous field to sort on
-}
-else
-  $previous = $sort;
-$step = 25;
-echo "<div id=\"main\">";
-echo "<h2>".LangOverviewEyepieceTitle."</h2>";
-$link = $baseURL."index.php?indexAction=add_eyepiece&amp;sort=".$sort."&amp;previous=".$orig_previous;
-list($min, $max) = $objUtil->printNewListHeader($eyeps, $link, $min, $step, "");
-echo "<table width=\"100%\">";
-echo "<tr class=\"type3\">";
-echo "<td><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=name&amp;previous=$previous\">".LangViewEyepieceName."</a></td>";
-echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=focalLength&amp;previous=$previous\">".LangViewEyepieceFocalLength."</a></td>";
-echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=maxFocalLength&amp;previous=$previous\">".LangViewEyepieceMaxFocalLength."</a></td>";
-echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=apparentFOV&amp;previous=$previous\">".LangViewEyepieceApparentFieldOfView."</a></td>";
-echo "<td></td>";
-echo "</tr>";
-$count = 0;
-if ($eyeps != null)
-{ while(list($key,$value) = each($eyeps))
+  else
+    $previous=$sort;
+//  $step = 25;
+  $link = $baseURL."index.php?indexAction=add_eyepiece&amp;sort=".$sort."&amp;previous=".$orig_previous;
+  echo "<div id=\"main\">";
+  echo "<h2>".LangOverviewEyepieceTitle."</h2>";
+  echo "<table width=\"100%\">";
+  echo "<tr class=\"type3\">";
+  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=name&amp;previous=$previous\">".LangViewEyepieceName."</a></td>";
+  echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=focalLength&amp;previous=$previous\">".LangViewEyepieceFocalLength."</a></td>";
+  echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=maxFocalLength&amp;previous=$previous\">".LangViewEyepieceMaxFocalLength."</a></td>";
+  echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=apparentFOV&amp;previous=$previous\">".LangViewEyepieceApparentFieldOfView."</a></td>";
+  echo "<td></td>";
+  echo "</tr>";
+  $count = 0;
+  while(list($key,$value) = each($eyeps))
   { $eyepiece=$objEyepiece->getEyepiecePropertiesFromId($value);
     echo "<tr class=\"type".(2-($count%2))."\">";
 		echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_eyepiece&amp;eyepiece=".urlencode($value)."\">".stripslashes($eyepiece['name'])."</a></td>";
@@ -50,38 +45,31 @@ if ($eyeps != null)
 		echo "<td align=\"center\">".(($eyepiece['maxFocalLength']!=-1)?$eyepiece['maxFocalLength']:"-")."</td>";
 		echo "<td align=\"center\">".$eyepiece['apparentFOV']."</td>";
 		echo "<td>";
-    if(!($objEyepiece->getEyepieceUsedFromId($value)))
+    if(!($obsCnt=$objEyepiece->getEyepieceUsedFromId($value)))
       echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_eyepiece&amp;eyepieceid=" . urlencode($value) . "\">" . LangRemove . "</a>");
+    else
+      echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".$loggedUser."&amp;eyepiece=".$value."&amp;exactinstrumentlocation=true\">".$obsCnt.' '.LangGeneralObservations."</a>";
     echo "</td></tr>";
     $count++;
   }
+  echo "</table>";
+  echo "</div>";
+  echo "<hr />";
 }
-echo "</table>";
-list($min, $max) = $objUtil->printNewListHeader($eyeps, $link, $min, $step, "");
-echo "</div>";
-echo "<hr />";
-$eyeps = $objEyepiece->getSortedEyepieces('focalLength');
+$eyeps=$objEyepiece->getSortedEyepieces('focalLength');
 echo "<h2>".LangAddEyepieceTitle."</h2>";
 echo "<ol>";
 echo "<li value=\"1\">";
 echo LangAddEyepieceExisting;
-echo "<table width=\"100%\">";
-echo "<tr>";
-echo "<td width=\"25%\">";
 echo "<form name=\"overviewform\">";
 echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 while(list($key, $value)=each($eyeps))
   echo "<option value=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;eyepieceid=".urlencode($value)."\" >".$objEyepiece->getEyepiecePropertyFromId($value,'name')."</option>"; 
 echo "</select>";
 echo "</form>";
-echo "</td>";
-echo "</tr>";
-echo "</table>";
 echo "</li>";
 echo "</ol>";
-echo "<p>";
-echo LangAddSiteFieldOr;
-echo "</p>";
+echo "<p>".LangAddSiteFieldOr."</p>";
 echo "<ol>";
 echo "<li value=\"2\">".LangAddEyepieceManually."</li>";
 echo "</ol>";
@@ -105,4 +93,5 @@ echo "<hr />";
 echo "<input type=\"submit\" name=\"add\" value=\"".LangAddEyepieceButton."\" />";
 echo "</form>";
 echo "</div>";
+}
 ?>

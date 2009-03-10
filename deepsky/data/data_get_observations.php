@@ -65,7 +65,10 @@ $query = array("object"           => $object,
                "maxlimmag"        => $GLOBALS['objUtil']->checkGetKey('maxlimmag'),
                "minseeing"        => $GLOBALS['objUtil']->checkGetKey('minseeing'),
                "maxseeing"        => $GLOBALS['objUtil']->checkGetKey('maxseeing'),
-							 "hasDrawing"       => $objUtil->checkGetKey('drawings','off'),            
+               "lens"             => $objUtil->checkGetKey('lens'),
+               "filter"           => $objUtil->checkGetKey('filter'),
+               "eyepiece"           => $objUtil->checkGetKey('eyepiece'),
+               "hasDrawing"       => $objUtil->checkGetKey('drawings','off'),            
                "languages"        => $selectedLanguages);
 //============================================ CHECK TO SEE IF OBSERVATIONS ALREADY FETCHED BEFORE, OTHERWISE FETCH DATA FROM DB ===============================
 $validQobs=false;
@@ -79,12 +82,12 @@ while($validQobs && (list($key,$value) = each($query)))
    $validQobs=false;
 
 if(!$validQobs)
-{ $_SESSION['Qobs']=$objObservation->getObservationFromQuery($query, $GLOBALS['objUtil']->checkGetKey('seen','D'));
+{ $_SESSION['Qobs']=$objObservation->getObservationFromQuery($query, $GLOBALS['objUtil']->checkGetKey('seen','D'),$objUtil->checkGetKey('exactinstrumentlocation',0));
   $_SESSION['QobsParams']=$query; 
   $_SESSION['QobsSort']='observationid';
   $_SESSION['QobsSortDirection']='desc';
   $query['countquery']='true';
-  $_SESSION['QobsTotal']=$objObservation->getObservationFromQuery($query, $GLOBALS['objUtil']->checkGetKey('seen')); 
+  $_SESSION['QobsTotal']=$objObservation->getObservationFromQuery($query, $GLOBALS['objUtil']->checkGetKey('seen'),$objUtil->checkGetKey('exactinstrumentlocation',0)); 
   $_SESSION['QobsMaxCnt']=$MaxCnt;
   $min=0;
 	if($loggedUser && (!($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT'))))

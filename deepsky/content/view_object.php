@@ -4,10 +4,7 @@
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 $seen=$GLOBALS['objObject']->getDSOseenLink($_GET['object']);
 echo "<div id=\"main\">";
-echo "<h2>";
-echo LangViewObjectTitle."&nbsp;-&nbsp;".stripslashes($_GET['object']);
-echo "&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen;
-echo "</h2>";
+echo "<h7>".LangViewObjectTitle."&nbsp;-&nbsp;".stripslashes($_GET['object'])."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h7>";
 echo "<table width=\"100%\"><tr>";
 echo "<td width=\"25%\" align=\"left\">";
 if(substr($GLOBALS['objObject']->getSeen($_GET['object']),0,1)!='-')
@@ -30,21 +27,22 @@ echo "</table>";
 
 $objObject->showObject($_GET['object'],$objUtil->checkGetKey('zoom',30));
 
+$maxcount=count($_SESSION['Qobj']);
+$max = 9999;
+$link = $baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey('zoom',30).'&amp;SID=Qobj';
 echo("<form name=\"zoomform\" action=\"".$baseURL."index.php\" method=\"get\">");
 echo "<table width=\"100%\">";
 echo "<tr>";
 echo "<td width=\"50%\">";
-echo "<h2>".$_GET['object'];
+echo "<h7>".$_GET['object'];
 if(count($_SESSION['Qobj'])>2)
  echo ' '.LangViewObjectAndNearbyObjects.' '.(count($_SESSION['Qobj'])-1).' '.LangViewObjectNearbyObjects;
 elseif(count($_SESSION['Qobj'])>1)
  echo ' '.LangViewObjectAndNearbyObjects.' '.(count($_SESSION['Qobj'])-1).' '.LangViewObjectNearbyObject;
 else
  echo ' '.LangViewObjectNoNearbyObjects;
-echo "</h2>";
-echo "</td>";
-echo "<td width=\"50%\" align=\"right\">";
-  echo LangViewObjectNearbyObjectsMoreLess  . ":&nbsp;";
+echo "</h7>";
+  echo "&nbsp;".LangViewObjectNearbyObjectsMoreLess  . ":&nbsp;";
   echo("<select name=\"zoom\"  onchange=\"zoomform.submit();\" width=\"50%\">");
     if ($objUtil->checkGetKey('zoom',30)=="180") echo("<option selected value=\"180\">3x3&deg;</option>"); else echo("<option value=\"180\">3x3&deg;</option>"); 
     if ($objUtil->checkGetKey('zoom',30)=="120") echo("<option selected value=\"120\">2x2&deg;</option>"); else echo("<option value=\"120\">2x2&deg;</option>"); 
@@ -55,21 +53,20 @@ echo "<td width=\"50%\" align=\"right\">";
     if ($objUtil->checkGetKey('zoom',30)=="5") echo("<option selected value=\"5\">5x5'</option>"); else echo("<option value=\"5\">5x5'</option>"); 
   echo("</select>");
 echo "</td>";
+echo "<td width=\"50%\" align=\"right\">";
+list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'],$link ,$min,25,"");
+echo "</td>";
 echo "</tr>";
 echo "</table>";
 echo "<input type=\"hidden\" name=\"object\" value=\"".$_GET['object']."\"> ";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\"> ";		
 echo "</form>";
-$maxcount=count($_SESSION['Qobj']);
-$max = 9999;
-$link = $baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey('zoom',30).'&amp;SID=Qobj';
-echo "<table width=\"100%\"> <tr> <td width=\"100%\" align=\"right\">";
-list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'],$link ,$min,25,"");
-echo "</td> </tr> </table>";
+//echo "<table width=\"100%\"> <tr> <td width=\"100%\" align=\"right\">";
+//echo "</td> </tr> </table>";
 if($max>count($_SESSION['Qobj']))
   $max=count($_SESSION['Qobj']);
 //$objObject->showObjects($link,$min,$max,$_GET['object']);
-echo "<hr />";
+//echo "<hr />";
 $_GET['min']=$min;
 $_GET['max']=$max;
 if($FF)
@@ -80,10 +77,10 @@ else
   $objObject->showObjects($link, $min, $max);
 	echo "</iframe>";
 }	
-echo "<script>resizeElement('obj_list',550);</script>";
+echo "<script>resizeElement('obj_list',400);</script>";
 echo "<hr />";
-list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'],$link ,$min,25,"");
-echo "<hr />";
+//list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'],$link ,$min,25,"");
+//echo "<hr />";
 $objPresentations->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
 echo "&nbsp;-&nbsp;";
 echo "<a target=\"_top\" href=\"".$baseURL."objects.csv?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a> &nbsp;-&nbsp;";

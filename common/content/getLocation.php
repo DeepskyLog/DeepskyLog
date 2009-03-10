@@ -10,8 +10,8 @@ $latitudestr = $objLocation->getLocationPropertyFromId($locationid,'latitude');
 echo "<div id=\"main\">";
 echo "<h2>".LangGetLocation1."</h2>";
 $count=0;
-$result=$objLocation->getLocationsFromDatabase($_POST['location_name'],$_POST['country']);
-if($result&&$_POST['location_name'])
+$result=$objLocation->getLocationsFromDatabase($location_name,$countryname);
+if(($result)&&($location_name))
 { echo "<div class=\"results\">".LangGetLocation2."<a href=\"".$baseURL."index.php?indexAction=search_sites\">".LangGetLocation2a."</div>";
   echo "<p>";
 	echo "<table>";

@@ -1,5 +1,9 @@
 <?php  // overview_eyepieces.php - generates an overview of all eyepieces (admin only)
-
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!$loggedUser) throw new Exception(LangException002);
+elseif(!$_SESSION['admin']) throw new Exception(LangException001);
+else
+{
 // sort
 if(isset($_GET['sort']))
  $sort=$_GET['sort'];
@@ -59,4 +63,5 @@ while(list ($key, $value) = each($eyeps))
 echo "</table>";
 list($min,$max)=$objUtil->printNewListHeader($eyeps, $link, $min, $step, "");
 echo "</div>";
+}
 ?>

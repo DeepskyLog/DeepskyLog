@@ -1,7 +1,9 @@
-<?php
-// overview_instruments.php
-// generates an overview of all instruments (admin only)
-
+<?php // overview_instruments.php - generates an overview of all instruments (admin only)
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!$loggedUser) throw new Exception(LangException002);
+elseif(!$_SESSION['admin']) throw new Exception(LangException001);
+else
+{
 $sort=$objUtil->checkGetKey('sort','name');
 if(!$min) $min=$objUtil->checkGetKey('min',0);
 $telescopes=$objInstrument->getSortedInstruments($sort,'%');
@@ -79,4 +81,5 @@ while(list ($key, $value) = each($telescopes))
 echo "</table>";
 list($min, $max) = $objUtil->printNewListHeader($telescopes, $link, $min, $step, "");
 echo "</div>";
+}
 ?>

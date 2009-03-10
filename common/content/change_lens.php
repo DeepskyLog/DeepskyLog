@@ -2,7 +2,7 @@
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!$loggedUser) throw new Exception(LangException002);
 elseif(!($lensid=$objUtil->checkGetKey('lens'))) throw new Exception(LangException009);
-elseif(!($objLens->checkUserID($objLens->getLensPropertyFromId($lensid,'observer','')))) throw new Exception(LangExcpetion010);
+elseif(!($objUtil->checkUserID($objLens->getLensPropertyFromId($lensid,'observer','')))) throw new Exception(LangExcpetion010);
 else
 {
 echo "<div id=\"main\">";

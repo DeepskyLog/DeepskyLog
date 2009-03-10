@@ -1,4 +1,9 @@
 <?php  // overview_filters.php - generates an overview of all filters (admin only)
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!$loggedUser) throw new Exception(LangException002);
+elseif(!$_SESSION['admin']) throw new Exception(LangException001);
+else
+{
 $sort=$objUtil->checkGetKey('sort','name');
 $filts=$objFilter->getSortedFilters($sort,'%');
 if((isset($_GET['sort'])) && $_GET['previous'] == $_GET['sort']) // reverse sort when pushed twice
@@ -55,4 +60,5 @@ while(list($key,$value)=each($filts))
 echo "</table>";
 list($min, $max)=$objUtil->printNewListHeader($filts,$link,$min,$step,"");
 echo "</div>";
+}
 ?>

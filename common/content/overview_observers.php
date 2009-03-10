@@ -1,7 +1,9 @@
-<?php
-// overview_observers.php
-// generates an overview of all observers (admin only)
-
+<?php // overview_observers.php - generates an overview of all observers (admin only)
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!$loggedUser) throw new Exception(LangException002);
+elseif(!$_SESSION['admin']) throw new Exception(LangException001);
+else
+{
 $sort=$objUtil->checkGetKey('sort','name');
 if(!$min) $min=$objUtil->checkGetKey('min',0);
 // the code below is very strange but works
@@ -61,4 +63,5 @@ while(list ($key, $value) = each($observers))
 echo "</table>";
 list($min, $max) = $util->printNewListHeader($observers, $link, $min, $step, "");
 echo "</div>";
+}
 ?>

@@ -2,6 +2,7 @@
 interface iPresentation
 { public  function br2dash($data); 
   public  function br2nl($data);                                                       // The opposite of nl2br
+  public function decToString($decl,$web=1);
   public  function decToStringDSS($decl);                                              // returns html DSS decl coordinates eg 6+44 for 6°43'55''
   public  function presentationInt($value, $nullcontition='', $nullvalue='');          // if the null condtion is met, it returns the nullvalue, otherwise returns the value
   public  function presentationInt1($value, $nullcondition='', $nullvalue='');         // if the null condtion is met, it returns the nullvalue, otherwise returns the value formatted %1.1f
@@ -25,6 +26,45 @@ class Presentations implements iPresentation
   }
   public function br2nl($data)  // The opposite of nl2br
   { return preg_replace('!<br.*>!iU', " ", $data );
+  }
+  public function decToString($decl,$web=1)
+  { $sign =0;
+    if($decl < 0)
+    { $sign = -1;
+      $decl = -$decl;
+    }
+    $decl_degrees = floor($decl);
+    $subminutes = 60 * ($decl - $decl_degrees);
+    $decl_minutes = round($subminutes);
+    if($decl_minutes == 60)
+    { $decl_minutes = 0;
+      $decl_degrees++;
+    }
+    if($decl_degrees >= 0 && $decl_degrees <= 9)
+      $decl_degrees = "0" . $decl_degrees;
+    if ($sign == -1)
+      $decl_degrees = "-" . $decl_degrees;
+    else
+    { if ($web == 1)
+      { //$decl_degrees = "&nbsp;" . $decl_degrees; // add white space for overview locations
+        $decl_degrees = $decl_degrees; // remove white space for object details
+      }
+      else
+      { $decl_degrees = " " . $decl_degrees;
+      }
+    }
+    if($decl_minutes <= 9)
+    { $decl_minutes = "0" . $decl_minutes;
+    } 
+    if ($web == 1)
+    { $d = "&deg;";
+      $m = "&#39;";
+    } 
+    else
+    { $d = "d";
+      $m = "'";
+    }
+    return("$decl_degrees" .$d. "$decl_minutes" . $m);
   }
   public  function decToStringDSS($decl)
   { $sign=0;

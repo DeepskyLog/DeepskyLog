@@ -45,11 +45,12 @@ td.seen {
   text-align       : center;
 }
 
-h2 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; padding-bottom: 10px; #	padding-top: 20px; }
+h2 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; padding-bottom: 10px; #	padding-top: 120px; }
 h3 { color: #333333; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 100%; font-weight: bold; padding-bottom: 10px; #	padding-top: 20px;}
 h4 { color: #FF9900; font-family: Verdana, Trebuchet MS, Arial, Helvetica, sans-serif; font-size: 16px; font-weight: bold; }
 h5 { color: #FF9900; font-family: Verdana, Trebuchet MS, Arial, Helvetica, sans-serif; font-size: 14px; font-weight: bold; }
 h6 { color: #FF9900; font-family: Verdana, Trebuchet MS, Arial, Helvetica, sans-serif; font-size: 12px; font-weight: bold; }
+h7 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; padding-bottom: 10px; #	padding-top: 20px; }
 
 ol{
   color: #000000;
@@ -86,6 +87,12 @@ hr {
 	font-style       : italic;
 	padding-left     : 1em;
   padding-right    : 1em;
+}
+.fieldvaluedropdown {
+	font-weight      : normal;
+	font-style       : italic;
+	padding-left     : 0em;
+  padding-right    : 0em;
 }
 .fieldexplanation {
 	font-style       : italic;

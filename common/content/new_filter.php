@@ -1,42 +1,38 @@
-<?php
-// new_filter.php
-// allows the user to add a new filter
-
+<?php // new_filter.php  allows the user to add a new filter
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!$loggedUser) throw new Exception(LangException002);
+else
+{
 $sort=$objUtil->checkGetKey('sort','name');
-// the code below looks very strange but it works
-if((isset($_GET['previous'])))
-  $orig_previous = $_GET['previous'];
-else
-  $orig_previous = "";
 $filts=$objFilter->getSortedFilters($sort, $loggedUser);
-if((isset($_GET['sort'])) && $_GET['previous'] == $_GET['sort']) // reverse sort when pushed twice
-{ if ($_GET['sort'] == "name")
-    $filts = array_reverse($filts, true);
-  else
-  { krsort($filts);
-    reset($filts);
-  }
-  $previous = ""; // reset previous field to sort on
-}
-else
-  $previous = $sort;
-$step = 25;
-echo "<div id=\"main\">";
-echo "<h2>".LangOverviewFilterTitle."</h2>";
-$link=$baseURL."index.php?indexAction=add_filter&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
-list($min, $max)=$objUtil->printNewListHeader($filts, $link, $min, $step, "");
-echo "<table width=\"100%\">";
-echo "<tr class=\"type3\">";
-echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=name&amp;previous=$previous\">".LangViewFilterName."</a></td>";
-echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=type&amp;previous=$previous\">".LangViewFilterType."</a></td>";
-echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=color&amp;previous=$previous\">".LangViewFilterColor."</a></td>";
-echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=wratten&amp;previous=$previous\">".LangViewFilterWratten."</a></td>";
-echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=schott&amp;previous=$previous\">".LangViewFilterSchott."</a></td>";
-echo "<td></td>";
-echo "</tr>";
-$count = 0;
 if(count($filts)>0)
-{ while(list ($key, $value) = each($filts))
+{ if(!$min) $min=$objUtil->checkGetKey('min',0);
+  $orig_previous=$objUtil->checkGetKey('previous','');
+  if((isset($_GET['sort']))&&($orig_previous==$_GET['sort'])) // reverse sort when pushed twice
+  { if($_GET['sort']=="name")
+      $filts = array_reverse($filts, true);
+    else
+    { krsort($filts);
+      reset($filts);
+    }
+    $previous = ""; // reset previous field to sort on
+  }
+  else
+    $previous = $sort;
+  $link=$baseURL."index.php?indexAction=add_filter&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
+  echo "<div id=\"main\">";
+  echo "<h2>".LangOverviewFilterTitle."</h2>";
+  echo "<table width=\"100%\">";
+  echo "<tr class=\"type3\">";
+  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=name&amp;previous=$previous\">".LangViewFilterName."</a></td>";
+  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=type&amp;previous=$previous\">".LangViewFilterType."</a></td>";
+  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=color&amp;previous=$previous\">".LangViewFilterColor."</a></td>";
+  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=wratten&amp;previous=$previous\">".LangViewFilterWratten."</a></td>";
+  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=schott&amp;previous=$previous\">".LangViewFilterSchott."</a></td>";
+  echo "<td></td>";
+  echo "</tr>";
+  $count = 0;
+  while(list($key, $value)=each($filts))
   { $filterProperties=$objFilter->getFilterPropertiesFromId($value);
     echo "<tr class=\"type".(2-($count%2))."\">";
     echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_filter&amp;filter=".urlencode($value)."\">".stripslashes($filterProperties['name'])."</a></td>";
@@ -45,30 +41,21 @@ if(count($filts)>0)
     echo "<td>".($filterProperties['wratten']?$filterProperties['wratten']:"-")."</td>";
     echo "<td>".($filterProperties['schott']?$filterProperties['schott']:"-")."</td>";
     echo "<td>";
-    $queries=array("filter"=>$value,"observer"=>$_SESSION['deepskylog_id']);  // check if there are no observations made with this filter
-    $obs=$objObservation->getObservationFromQuery($queries,"D","1");
-    //           $queries = array("eyepiece" => $value);                      // No filters yet for comet observations!!
-    //           $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
-    if(!sizeof($obs)>0) // no observations with filter yet
+    if(!($obsCnt=$objFilter->getFilterUsedFromId($value)))
       echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_filter&amp;filterid=" . urlencode($value) . "\">" . LangRemove . "</a>";
+    else
+      echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".$loggedUser."&amp;filter=".$value."&amp;exactinstrumentlocation=true\">".$obsCnt.' '.LangGeneralObservations."</a>";
     echo "</td>";
     echo "</tr>";
     $count++;
 	}
+  echo "</table>";
+  echo "<hr />";
+  echo "</div>";
 }
-echo "</table>";
-list($min,$max)=$objUtil->printNewListHeader($filts,$link,$min,$step,"");
-echo "</div>";
-echo "<hr />";
-echo "<h2>";
-echo LangAddFilterTitle;
-echo "</h2>";
+echo "<h2>".LangAddFilterTitle."</h2>";
 echo "<ol>";
-echo "<li value=\"1\">";
-echo LangAddFilterExisting;
-echo "<table width=\"100%\">";
-echo "<tr>";
-echo "<td width=\"25%\">";
+echo "<li value=\"1\">".LangAddFilterExisting;
 echo "<form name=\"overviewform\">";		
 echo "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 $filts=$objFilter->getSortedFilters('name', "");
@@ -76,14 +63,9 @@ while(list($key, $value) = each($filts))
   echo("<option value=\"".$baseURL."index.php?indexAction=add_filter&amp;filterid=".urlencode($value)."\">" . $objFilter->getFilterPropertyFromId($value,'name') . "</option>\n");
 echo "</select>";
 echo "</form>";
-echo "</td>";
-echo "</tr>";
-echo "</table>";
 echo "</li>";
 echo "</ol>";
-echo "<p>";
-echo LangAddSiteFieldOr;
-echo "</p>";
+echo "<p>".LangAddSiteFieldOr."</p>";
 echo "<ol><li value=\"2\">".LangAddFilterFieldManually."</li></ol>";
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_filter\" />";
@@ -104,4 +86,5 @@ echo "<hr />";
 echo "<input type=\"submit\" name=\"add\" value=\"".LangAddFilterButton."\" />";
 echo "</form>";
 echo "</div>";
+}
 ?>

@@ -1,8 +1,8 @@
-<?php
-// search_locations.php
-// allows the user to search a location in the database 
-
-echo "<div id=\"main\">";
+<?php // search_locations.php - allows the user to search a location in the database 
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else
+{
+echo "<div idc=\"main\">";
 echo "<h2>" . LangSearchLocations0 . "</h2>";
 echo "<form action=\"".$baseURL."index.php?indexAction=site_result\" method=\"post\">";
 echo "<table>";
@@ -17,8 +17,8 @@ echo "<tr>";
 echo "<td class=\"fieldname\">".LangSearchLocations2."</td>";
 echo "<td>";
 echo "<select name=\"country\">";
-$countries = $objLocation->getDatabaseCountries();
-while(list ($key, $value) = each($countries))
+$countries=$objLocation->getDatabaseCountries();
+while(list($key,$value)=each($countries))
   echo "<option>".$value."</option>";
 echo "</select>";
 echo "</td>";
@@ -48,4 +48,5 @@ echo "</tr>";
 echo "</table>";
 echo "</form>";
 echo "</div>";
+}
 ?>

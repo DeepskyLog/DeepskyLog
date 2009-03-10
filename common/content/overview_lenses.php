@@ -1,5 +1,9 @@
 <?php // overview_lenses.php - generates an overview of all lenses (admin only)
-
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!$loggedUser) throw new Exception(LangException002);
+elseif(!$_SESSION['admin']) throw new Exception(LangException001);
+else
+{
 $sort=$objUtil->checkGetKey('sort','name');
 if(!$min) $min=$objUtil->checkGetKey('min',0);
 $lns=$objLens->getSortedLenses($sort,'%');
@@ -58,4 +62,5 @@ while(list($key,$value)=each($lns))
 echo "</table>";
 list($min,$max)=$objUtil->printNewListHeader($lns, $link, $min, $step, "");
 echo "</div>";
+}
 ?>

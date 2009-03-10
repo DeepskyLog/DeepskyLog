@@ -1,8 +1,10 @@
 <?php
 // version 3.1, DE 20061119
 
-define("LangException001","U dient ingelogd te zijn om uw account te beheren. Gelieve de developers te contacteren met dit bericht.");
-define("LangException002","U dient ingelogd te zijn om uw oculairen te beheren. Gelieve de developers te contacteren met dit bericht.");
+define("LangGeneralObservations","observaties");
+
+define("LangException001","U dient ingelogd te zijn als administrator om deze operties uit te voeren. Gelieve de developers te contacteren met dit bericht.");
+define("LangException002","U dient ingelogd te zijn om locaties en apparatuur te beheren. Gelieve de developers te contacteren met dit bericht.");
 define("LangException003","u wou een oculair wijzigen, maar er is geen oculair aangeduid. Gelieve de developers te contacteren met dit bericht.");
 define("LangException004","U wou een oculair wijzigen, maar het is niet uw oculair. Gelieve de developers te contacteren met dit bericht.");
 define("LangException005","U wou een filter wijzigen, maar er is geen filter aangeduid. Gelieve de developers te contacteren met dit bericht.");
