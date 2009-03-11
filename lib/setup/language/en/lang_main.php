@@ -666,7 +666,7 @@ define("LangViewObservationNew", "Add new observation");
 define("LangDeleteObservation", "Delete observation");
 define("LangOverviewObservations", "List");
 define("LangCompactObservations", "Compact"); 
-define("LangCompactObservationsLO", "Compact LO"); 
+define("LangCompactObservationsLO", "Compact&nbsp;LO"); 
 define("LangOverviewObservationTitle", "Overview with the basic information on one line per observation");
 define("LangCompactObservationsTitle", "Overview with an information line and a description per observation");
 define("LangCompactObservationsLOTitle", "Overview with an information line, a description and your last observation");

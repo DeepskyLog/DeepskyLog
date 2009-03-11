@@ -666,7 +666,7 @@ define("LangViewObservationNew", "Neue Beobachtung anlegen");
 define("LangDeleteObservation", "Beobachtung l&ouml;schen");
 define("LangOverviewObservations", "Auflisten");
 define("LangCompactObservations", "Kompakt");
-define("LangCompactObservationsLO", "Kompakt LB");
+define("LangCompactObservationsLO", "Kompakt&nbsp;LB");
 define("LangOverviewObservationTitle", "Einzeilige &Uuml;bersicht mit Grundinformationen pro Beobachtung");
 define("LangCompactObservationsTitle", "&Uuml;bersicht mit Grundinformationen und Beschreibung der Beobachtung");
 define("LangCompactObservationsLOTitle", "&Uuml;bersicht mit Grundinformationen, Beschreibung der Beobachtung und Ihrer letzten Beobachtung");

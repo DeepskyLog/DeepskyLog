@@ -1,7 +1,4 @@
-<?php
-// head.php
-// prints the html headers
-
+<?php // head.php - prints the html headers
 echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
 echo "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
 echo "<head>";
@@ -19,5 +16,4 @@ echo "<link href=\"".$baseURL."styles/style.css\" rel=\"stylesheet\" type=\"text
 echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"DeepskyLog - latest observations\" href=\"observations.rss\" />";
 echo "<title>DeepskyLog ". $GLOBALS['objUtil']->checkGetKey('indexAction','')."</title>";  // 20081209 Here should come a better solution, see bug report 44
 echo "</head>";
-
 ?>

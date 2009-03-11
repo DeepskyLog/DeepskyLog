@@ -1,12 +1,11 @@
 <?php // view_filter.php - view information of a filter 
-if(!$loggedUser)
-  throw new Exception("No logged user in change_filter.php, please contact the developers with this message.");
-if(!($filterid=$objUtil->checkGetKey('filter')))
-  throw new Exception("No filter specified in change_filter.php, please contact the developers with this message.");
-if(!($objFilter->getEyepiecePropertyFromId($filterid,'name')))
-  throw new Exception("Filter not found in change_filter.php, please contact the developers with this message:".$filterid);
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!($filterid=$objUtil->checkGetKey('filter'))) throw new Exception(LangException005);
+//elseif(!($objFilter->getFilterPropertyFromId($filterid,'name')))  throw new Exception("Filter not found in change_filter.php, please contact the developers with this message:".$filterid);
+else
+{
 echo "<div id=\"main\">";
-echo "<h2>".$name."</h2>";
+echo "<h2>".$objFilter->getFilterPropertyFromId($filterid,'name','Unknown filter name')."</h2>";
 echo "<table>";
 tableFieldnameField(LangViewFilterName,$filter['name']);
 tableFieldnameField(LangViewFilterType,$objFilter->getEchoType($type)); 
@@ -17,4 +16,5 @@ if($filter['schott'])
   tableFieldnameField(LangViewFilterSchott,$filter['schott']);
 echo "</table>";
 echo "</div>";
+}
 ?>

@@ -664,7 +664,7 @@ define("LangViewObservationNew", "Voeg nieuwe waarneming toe");
 define("LangDeleteObservation", "Verwijder waarneming");
 define("LangOverviewObservations", "Lijst");
 define("LangCompactObservations", "Compact");
-define("LangCompactObservationsLO", "Compact LO");
+define("LangCompactObservationsLO", "Compact&nbsp;LO");
 define("LangOverviewObservationTitle", "Overzicht met &eacute;&eacute;n enkele lijn van informatie per waarneming");
 define("LangCompactObservationsTitle", "Overzicht met naast de informatielijn eveneens de beschrijving van de waarneming");
 define("LangCompactObservationsLOTitle", "Overzicht met de informatielijn, de beschrijving en uw laatste waarneming");
