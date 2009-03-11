@@ -132,7 +132,7 @@ $max=$min+$step;
 	}
   echo "<script>resizeElement('obs_list',".$offset.");</script>";
 	echo "<hr />";
-	echo "<table>";
+	echo "<table width=\"100%\">";
 	echo "<tr>";
 	echo "<td>";
 	$objPresentations->promptWithLink(LangOverviewObservations10, LangOverviewObservations11, $baseURL . "observations.pdf?SID=Qobs", LangExecuteQueryObjectsMessage4);
@@ -143,7 +143,7 @@ $max=$min+$step;
 	//==================================================================================================== PAGE FOOTER - MAKE NEW QUERY ===================================================================================== 
 	echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=query_observations\">" . LangObservationQueryError2 . "</a>";
   echo "</td>";
-  echo "<td style=\"text-align:right\">";
+  echo "<td align=\"right\">";
   list ($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
   echo "</td>";
   echo "</tr>";

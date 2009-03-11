@@ -1505,7 +1505,8 @@ class Utils implements iUtils
       $pdf->ezNewPage();
     }
     $pdf->ezStream();
-  }  public function printNewListHeader(&$list, $link, $min, $step, $total)
+  }  
+  public function printNewListHeader(&$list, $link, $min, $step, $total)
   { global $baseURL;
 	  $pages=ceil(count($list)/$step);           // total number of pages
     if($min)                                   // minimum value
@@ -1518,7 +1519,7 @@ class Utils implements iUtils
     else                                       // no minimum value defined
       $min=0;
     $max=$min+$step;                       // maximum number to be displayed
-    echo "<table>";
+    echo "<table style=\"text-align:right\" style=\"background-color:#FF0000\">";
     echo "<tr style=\"vertical-align:top\">";
     if(count($list)>$step)
     { $currentpage=ceil($min/$step)+1;
@@ -1528,7 +1529,7 @@ class Utils implements iUtils
 		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img src=\"".$baseURL."styles/images/right20.gif\" border=\"0\">"."</a>"."</td>";
 		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\">"."</a>"."</td>";
 	  }
-    echo"<td>"."&nbsp;&nbsp;(".count($list)."&nbsp;".LangNumberOfRecords.(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")")."</td>";
+    echo"<td style=\"vertical-align:middle\">"."&nbsp;&nbsp;(".count($list)."&nbsp;".LangNumberOfRecords.(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")")."</td>";
 	  echo "</tr>";
 	  echo "</table>";    
 	  return array($min,$max);
@@ -1748,10 +1749,10 @@ class Utils implements iUtils
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_instrument'                     ,'common/content/new_instrument.php'))) 		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_lens'                           ,'common/content/new_lens.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_site'                           ,'common/content/new_site.php'))) 		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_eyepiece'                    ,'common/content/view_eyepiece.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_filter'                      ,'common/content/view_filter.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_eyepiece'                    ,'common/content/view_eyepiece.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_filter'                      ,'common/content/view_filter.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_instrument'                  ,'common/content/view_instrument.php')))		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('detail_lens'                        ,'common/content/view_lens.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_lens'                        ,'common/content/view_lens.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_location'                    ,'common/content/view_location.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_observer'                    ,'common/content/view_observer.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('message'                            ,'common/content/message.php')))		
