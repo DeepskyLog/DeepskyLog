@@ -14,15 +14,18 @@ div#main {
   text-align       : left;
 }
 h2 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; padding-bottom: 10px; padding-top: 10px;}
-h2a{ color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold;}
 h3 { color: #333333; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 100%; font-weight: bold; padding-bottom: 10px; padding-top: 20px}
 h4 { color: #FF9900; font-family: Verdana, Trebuchet MS, Arial, Helvetica, sans-serif; font-size: 16px; font-weight: bold; }
 h5 { color: #FF9900; font-family: Verdana, Trebuchet MS, Arial, Helvetica, sans-serif; font-size: 14px; font-weight: bold; }
-h6 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; padding-bottom: 5px; padding-top: 5px;}
-h7 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; padding-bottom: 10px; # padding-top: 20px;}
+h6 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; padding: 0px; border:0px; margin:0px; }
+.title { padding-top:10px; padding-bottom: 10px; /*background-color:#FFFF00;*/}
 .h2table { height: 40px; border:0px; }
-.h2header { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold;}
+.h2header { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold;padding-top: 10px;}
 hr {
+	border           : none;
+	padding          : none;
+	margin-top       : 5px;
+	margin-bottom    : 5px;
   background       : #C0C0C0;
   height           : 1px;
   width            : 100%;
@@ -35,6 +38,7 @@ a:link, a:visited {
 }
 a:hover {
   color            : #FF9900;
+  background-color : #EEEE00;
   text-decoration  : underline;
 }
 td, tr, p, div {

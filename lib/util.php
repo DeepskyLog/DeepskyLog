@@ -1506,7 +1506,7 @@ class Utils implements iUtils
     }
     $pdf->ezStream();
   }  
-  public function printNewListHeader(&$list, $link, $min, $step, $total)
+  public function printNewListHeader(&$list, $link, $min, $step, $total,$showNumberOfRecords=true,$showArrows=true)
   { global $baseURL;
 	  $pages=ceil(count($list)/$step);           // total number of pages
     if($min)                                   // minimum value
@@ -1519,22 +1519,54 @@ class Utils implements iUtils
     else                                       // no minimum value defined
       $min=0;
     $max=$min+$step;                       // maximum number to be displayed
-    echo "<table style=\"text-align:right\" style=\"background-color:#FF0000\">";
-    echo "<tr style=\"vertical-align:top\">";
-    if(count($list)>$step)
+    echo "<form action=\"".$link."\" method=\"post\" style=\"margin:0px;padding:0px;\">";
+    echo "<table height=\"30px\" style=\"margin:0px;padding:0px;\">";
+    echo "<tr style=\"vertical-align:middle\">";
+    if($showNumberOfRecords)
+      echo "<td style=\"vertical-align:middle\">(".count($list)."&nbsp;".LangNumberOfRecords.(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")")."</td>";
+    if((count($list)>$step)&&($showArrows))
     { $currentpage=ceil($min/$step)+1;
 			echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=0\">"."<img src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\">"."</a>"."</td>";
 		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img src=\"".$baseURL."styles/images/left20.gif\" border=\"0\">"."</a>"."</td>";			
-		  echo "<td align=\"center\">"."<form action=\"".$link."\" method=\"post\">"."<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\"></input>"."</form>"."</td>";	
+		  echo "<td align=\"center\">"."<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\"></input>"."</td>";	
 		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img src=\"".$baseURL."styles/images/right20.gif\" border=\"0\">"."</a>"."</td>";
 		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\">"."</a>"."</td>";
 	  }
-    echo"<td style=\"vertical-align:middle\">"."&nbsp;&nbsp;(".count($list)."&nbsp;".LangNumberOfRecords.(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")")."</td>";
 	  echo "</tr>";
 	  echo "</table>";    
+	  echo "</form>";
 	  return array($min,$max);
   }
-	public function rssObservations()  // Creates an rss feed for DeepskyLog
+  public function printNewListHeader2(&$list, $link, $min, $step, $total,$showNumberOfRecords=true,$showArrows=true)
+  { global $baseURL;
+	  $pages=ceil(count($list)/$step);           // total number of pages
+    if($min)                                   // minimum value
+    { $min=$min-($min%$step);                  // start display from number of $steps
+      if ($min < 0)                            // minimum value smaller than 0
+        $min=0;
+      if($min>count($list))                    // minimum value bigger than number of elements
+        $min=count($list)-(count($list)%$step);
+    }
+    else                                       // no minimum value defined
+      $min=0;
+    $max=$min+$step;                       // maximum number to be displayed
+    echo "<form action=\"".$link."\" method=\"post\" style=\"margin:0px;padding:0px;\">";
+    echo "<span style=\"vertical-align:middle\">";
+    if($showNumberOfRecords)
+      echo "(".count($list)."&nbsp;".LangNumberOfRecords.(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")");
+    if((count($list)>$step)&&($showArrows))
+    { $currentpage=ceil($min/$step)+1;
+			echo "<a href=\"".$link."&amp;multiplepagenr=0\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\">"."</a>";
+		  echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/left20.gif\" border=\"0\">"."</a>";			
+		  echo "<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\"></input>";	
+		  echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/right20.gif\" border=\"0\">"."</a>";
+		  echo "<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\">"."</a>";
+	  }
+	  echo "</span>";
+	  echo "</form>";
+	  return array($min,$max);
+  }
+  public function rssObservations()  // Creates an rss feed for DeepskyLog
 	{
 	  global $objObservation, $objInstrument, $objLocation, $objPresentations, $objObserver, $baseURL;
 	  $dom = new DomDocument('1.0', 'US-ASCII');

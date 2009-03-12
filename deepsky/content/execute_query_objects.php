@@ -8,7 +8,7 @@ while(list($key,$value)=each($_GET))
 	if(($key!='indexAction')&&($key!='multiplepagenr')&&($key!='sort')&&($key!='sortdirection')&&($key!='showPartOfs'))
     $link.='&amp;'.$key.'='.$value;
 if(count($_SESSION['Qobj'])>1) //=============================================== valid result, multiple objects found
-{ echo "<div id=\"main\">";
+{ echo "<div id=\"main\" style=\"background-color:00FFFF;width:100%;\">";
   $title=LangSelectedObjectsTitle;
 	if($showPartOfs)	
 	  $title.=LangListQueryObjectsMessage10;
@@ -17,12 +17,14 @@ if(count($_SESSION['Qobj'])>1) //===============================================
   if(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']&&
 	   array_key_exists('listname',$_SESSION)&&$_SESSION['listname']&&($_SESSION['listname']<>"----------")&&$myList)
     $title.="&nbsp;-&nbsp;<a href=\"".$link."&amp;min=".$min."&amp;addAllObjectsFromQueryToList=true\" title=\"".LangListQueryObjectsMessage5.$listname_ss."\">".LangListQueryObjectsMessage4."</a>";
-  tablePageTitle($title, $link, $_SESSION['Qobj'], $min, $max);
-	if($showPartOfs)
+  divPageTitle($title, $link, $_SESSION['Qobj'], $min, $max);
+	echo "<div style=\"width:100%;background-color:#FFFF00;\">";
+  if($showPartOfs)
     echo "<a href=\"".$link."&amp;showPartOfs=0\">".LangListQueryObjectsMessage12."</a>";
 	else
     echo "<a href=\"".$link."&amp;showPartOfs=1\">".LangListQueryObjectsMessage13."</a>";
-	$link.="&amp;showPartOfs=".$showPartOfs;
+//	echo "<span style=\"text-align:right\">&nbsp;&nbsp;&nbsp;<a href=\"".$baseURL."index.php?indexAction=query_objects\">".LangExecuteQueryObjectsMessage1."</a></span>";  
+  $link.="&amp;showPartOfs=".$showPartOfs;
 	echo "<hr />";
 	$_GET['min']=$min;
 	$_GET['max']=$max;
@@ -34,9 +36,9 @@ if(count($_SESSION['Qobj'])>1) //===============================================
 	  $objObject->showObjects($link, $min, $max);
 		echo "</iframe>";
 	}	
-	echo "<script>resizeElement('obj_list',350);</script>";
+	echo "<script>resizeElement('obj_list',220);</script>";
 	echo "<hr />";
-  list($min,$max)=$objUtil->printNewListHeader($_SESSION['Qobj'],$link,$min,25,'');	
+  //list($min,$max)=$objUtil->printNewListHeader($_SESSION['Qobj'],$link,$min,25,'');	
   $objPresentations->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
 	echo "&nbsp;-&nbsp;";
   $objPresentations->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objectnames.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4b);
@@ -48,8 +50,6 @@ if(count($_SESSION['Qobj'])>1) //===============================================
   if(array_key_exists('listname',$_SESSION)&&$_SESSION['listname']&&$myList)
     echo "<a href=\"".$link."&amp;min=".$min."&amp;addAllObjectsFromQueryToList=true\" title=\"".LangListQueryObjectsMessage5.$_SESSION['listname']."\">".LangListQueryObjectsMessage4."</a>"."&nbsp;-&nbsp;";
   echo "<a href=\"".$baseURL."objects.csv?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a>";
-	echo "<p>";
-	echo "<a href=\"".$baseURL."index.php?indexAction=query_objects\">".LangExecuteQueryObjectsMessage1."</a>";
 	echo "</div>";
 }
 else // ========================================================================no results found
@@ -59,6 +59,7 @@ else // ========================================================================
   echo "<p>";
 	echo "<a href=\"".$baseURL."index.php?indexAction=query_objects\">".LangExecuteQueryObjectsMessage2a."</a>";
 	echo "</div>";
+  echo "</div>";
 }
 
 ?>

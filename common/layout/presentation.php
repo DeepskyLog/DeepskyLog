@@ -154,14 +154,25 @@ function tablePageTitle($title, $link, &$list, &$min, &$max)
   echo "<table width=\"100%\">";
 	echo "<tr>";
 	echo "<td>";
-	echo "<h2>";
+	echo "<h7>";
   echo $title;
-	echo "</h2>";
+	echo "</h7>";
 	echo "</td>";
 	echo "<td align=\"right\">";
   list($min,$max)=$objUtil->printNewListHeader($list,$link,$min,25,'');	
 	echo "</td>";
 	echo "</table>";
+}
+function divPageTitle($title, $link, &$list, &$min, &$max)
+{ global $objUtil;
+  echo "<div class=\"container\">";
+	echo "<div class=\"h2header\" style=\"float: left; width: 60%;height:40px;background-color:#0000FF;\">";
+  echo $title;
+	echo "</div>";
+	echo "<div style=\"float:right;width:38%;text-align:right;height:40px;background-color:#FF0000;\">";
+  list($min,$max)=$objUtil->printNewListHeader($list,$link,$min,25,'');	
+	echo "</div>";
+	echo "</div>";
 }
 function tableSortHeader($header0, $link0)
 { global $baseURL;

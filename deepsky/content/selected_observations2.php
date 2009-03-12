@@ -38,15 +38,13 @@ if ($object && $objObject->getExactDsObject($object))
 			$seen = "<a target=\"_top\" href=\"" .
 			$baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
 	echo "<div id=\"main\">";
-	echo "<h2>";
-	echo LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen;
-	echo "</h2>";
+	echo "<h2>".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h2>";
 	echo "<table width=\"100%\">";
 	echo "<tr>";
 	echo "<td width=\"25%\" align=\"left\">";
 	echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "\">" . LangViewObjectViewNearbyObject . " " . $object_ss;
 	echo "</td><td width=\"25%\" align=\"center\">";
-	if (array_key_exists("deepskylog_id", $_SESSION) && $_SESSION["deepskylog_id"])
+	if($loggedUser)
 		echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=add_observation&object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object_ss . "</a>";
 	echo "</td>";
 	if ($myList) {
@@ -80,8 +78,7 @@ else
 	echo "<div id=\"main\">";
   echo "<table width=\"100%\">";
 	echo "<tr height=\"20px\">";
-	echo "<td>";
-	echo "<p class=\"h2header\">";
+	echo "<td class=\"h2header\">";
 	$theDate = date('Ymd', strtotime('-1 year'));
 	if (array_key_exists('minyear', $_GET) && ($_GET['minyear'] == substr($theDate, 0, 4)) && array_key_exists('minmonth', $_GET) && ($_GET['minmonth'] == substr($theDate, 4, 2)) && array_key_exists('minday', $_GET) && ($_GET['minday'] == substr($theDate, 6, 2)))
 		echo (LangSelectedObservationsTitle3);
@@ -97,27 +94,29 @@ else
 		$link2 .= "&amp;myLanguages=true";
 	} else
 		echo " (" . LangAllLanguagesShown . ")";
-	if (($_SESSION['lco'] != "L"))
-		echo (" - <a target=\"_top\" href=\"" . $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">" . LangOverviewObservations . "</a>");
-	if (($_SESSION['lco'] != "C"))
-		echo (" - <a target=\"_top\" href=\"" . $link . "&amp;lco=C" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>");
-	if ($loggedUser && ($_SESSION['lco'] != "O"))
-		echo (" - <a target=\"_top\" href=\"" . $link . "&amp;lco=O" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>");
-	echo "</p>";
 	echo "</td>";
-	echo "<td align=\"right\">";
-//	list ($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
-$max=$min+$step;
-	if ($objUtil->checkGetKey('myLanguages'))
+	echo "<td style=\"vertical-algin:middle\" align=\"right\">";
+	list ($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
+	echo "</td>";
+	echo "</tr>";
+  echo "<tr>";
+  echo "<td>";
+	if (($_SESSION['lco'] != "L"))
+		echo ("<a target=\"_top\" href=\"" . $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">" . LangOverviewObservations . "</a>");
+	if (($_SESSION['lco'] != "C"))
+		echo (" <a target=\"_top\" href=\"" . $link . "&amp;lco=C" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>");
+	if ($loggedUser && ($_SESSION['lco'] != "O"))
+		echo (" <a target=\"_top\" href=\"" . $link . "&amp;lco=O" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>");
+  echo "</td>";
+  echo "<td align=\"right\">";
+ 	if ($objUtil->checkGetKey('myLanguages'))
 		echo "<a target=\"_top\" href=\"" . $link3 . "\">" . LangShowAllLanguages . "</a>";
 	elseif ($loggedUser) 
 	  echo "<a target=\"_top\" href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowMyLanguages . "</a>";
 	else
 		echo "<a target=\"_top\" href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowInterfaceLanguage . "</a>";
-	if ($_SESSION['lco'] == "O")
-		echo "<p align=\"right\">" . LangOverviewObservationsHeader5a;
-	echo "</td>";
-	echo "</tr>";
+  echo "</td>";
+  echo "</tr>";
 	echo "</table>";
 	echo "<hr />";
 	$_GET['min']=$min;
@@ -132,6 +131,8 @@ $max=$min+$step;
 	}
   echo "<script>resizeElement('obs_list',".$offset.");</script>";
 	echo "<hr />";
+	if ($_SESSION['lco'] == "O")
+		echo "<p align=\"right\">" . LangOverviewObservationsHeader5a;
 	echo "<table width=\"100%\">";
 	echo "<tr>";
 	echo "<td>";
@@ -139,12 +140,12 @@ $max=$min+$step;
 	echo " - ";
 	echo "<a target=\"_top\" href=\"" . $baseURL . "observations.csv\" target=\"new_window\">" . LangExecuteQueryObjectsMessage5 . "</a> - ";
 	echo "<a target=\"_top\" href=\"" . $baseURL . "observations.xml\" target=\"new_window\">" . LangExecuteQueryObjectsMessage10 . "</a> - ";
-	echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a> - ";
+	echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a>";
 	//==================================================================================================== PAGE FOOTER - MAKE NEW QUERY ===================================================================================== 
-	echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=query_observations\">" . LangObservationQueryError2 . "</a>";
+//	echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=query_observations\">" . LangObservationQueryError2 . "</a>";
   echo "</td>";
   echo "<td align=\"right\">";
-  list ($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
+//  list ($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
   echo "</td>";
   echo "</tr>";
   echo "</table>";
