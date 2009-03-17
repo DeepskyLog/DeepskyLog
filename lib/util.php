@@ -1519,12 +1519,12 @@ class Utils implements iUtils
     else                                       // no minimum value defined
       $min=0;
     $max=$min+$step;                       // maximum number to be displayed
-    echo "<form action=\"".$link."\" method=\"post\" style=\"margin:0px;padding:0px;\">";
+    echo "<form action=\"".$link."\" method=\"post\">";
     echo "<table height=\"30px\" style=\"margin:0px;padding:0px;\">";
     echo "<tr style=\"vertical-align:middle\">";
     if($showNumberOfRecords)
-      echo "<td style=\"vertical-align:middle\">(".count($list)."&nbsp;".LangNumberOfRecords.(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")")."</td>";
-    if((count($list)>$step)&&($showArrows))
+      echo "<td style=\"vertical-align:middle\">(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")")."</td>";
+    if(($listcount>$step)&&($showArrows))
     { $currentpage=ceil($min/$step)+1;
 			echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=0\">"."<img src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\">"."</a>"."</td>";
 		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img src=\"".$baseURL."styles/images/left20.gif\" border=\"0\">"."</a>"."</td>";			
@@ -1553,8 +1553,8 @@ class Utils implements iUtils
     echo "<form action=\"".$link."\" method=\"post\" style=\"margin:0px;padding:0px;\">";
     echo "<span style=\"vertical-align:middle\">";
     if($showNumberOfRecords)
-      echo "(".count($list)."&nbsp;".LangNumberOfRecords.(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")");
-    if((count($list)>$step)&&($showArrows))
+      echo "(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")");
+    if(($listcount>$step)&&($showArrows))
     { $currentpage=ceil($min/$step)+1;
 			echo "<a href=\"".$link."&amp;multiplepagenr=0\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\">"."</a>";
 		  echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/left20.gif\" border=\"0\">"."</a>";			

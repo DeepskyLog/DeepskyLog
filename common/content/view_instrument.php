@@ -1,7 +1,8 @@
-<?php
-// view_instrument.php
-// view information of an instrument 
-
+<?php // view_instrument.php - view information of an instrument 
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!($instrumentid=$objUtil->checkGetKey('instrument'))) throw new Exception(LangExcpetion003);
+else
+{
 if(!$objUtil->checkGetKey('instrument')) 
   throw("No instrument specified");  
 if(!($name=$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'name')))
@@ -34,4 +35,5 @@ if ($instrumentType!=InstrumentNakedEye)
   tableFieldnameField(LangViewInstrumentField5,$instrumentEchoType);
 echo "</table>";
 echo "</div>";
+}
 ?>

@@ -5,12 +5,12 @@ body {
 }
 div#main {
   font-family      : Verdana, Arial, Helvetica, sans-serif;
-  #color           : #FFFFFF;
+  color            : #000000;
   line-height      : 130%;
   font-size        : 100%;
   font-weight      : normal;
 	float            : top;
-	#height          : 100%;
+	height          : 100%;
   text-align       : left;
 }
 h2 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; padding-bottom: 10px; padding-top: 10px;}
@@ -37,14 +37,39 @@ a:link, a:visited {
   font-family      : Verdana, Arial, Helvetica, sans-serif;
 }
 a:hover {
-  color            : #FF9900;
-  background-color : #EEEE00;
   text-decoration  : underline;
 }
 td, tr, p, div {
   font-family      : Verdana, Trebuchet MS, Arial, Helvetica, sans-serif;
   font-size        : 11px;
   color            : #000000;
+}
+form {
+	padding:0px;
+	margin:0px;
+}
+.mainlevel {
+  color            : #FFFF00;
+  font-family      : Verdana, Geneva, Arial, Helvetica, serif;
+  font-weight      : bold;
+  text-decoration  : none;
+}
+a.mainlevel:link, a.mainlevel:visited {
+  color            : #FFFF00;
+  font-family      : Verdana, Arial, Helvetica, serif;
+  font-weight      : bold;
+  text-decoration  : none;
+}
+a.mainlevel:hover {
+  color            : #FF9900;
+  background-color : #5C7D9D;
+  text-decoration  : underline;
+}
+.menuButton {
+	width: 143px;
+}
+.menuField {
+	width: 147px;
 }
 ol{
   color: #000000;
@@ -112,7 +137,7 @@ img.account {
 }
 
 .type1 { 
-	background-color : #FFFFFF;
+	background-color : #F0F0F0;
 	padding          : 2px;
 	color            : #000000;
 }
@@ -173,8 +198,14 @@ img.account {
   overflow: scroll;
   height: 130px;
 }
-
-
+table.moduletable { 
+  margin           : 0px 5px 10px 5px; 
+  width            : 143px;
+  border-left      : solid 0px #000000; 
+  border-right     : solid 0px #000000; 
+  border-top       : solid 0px #000000; 
+  border-bottom    : solid 0px #000000; 
+} 
 table.moduletable th {
   font-size        : 11px;
   font-weight      : bold;
@@ -190,36 +221,9 @@ table.moduletable td {
   text-align       : left;
   padding          : 1px;
 }
-
-table.moduletable { 
-  margin           : 0px 5px 10px 5px; 
-  width            : 143px;
-  border-left      : solid 0px #000000; 
-  border-right     : solid 0px #000000; 
-  border-top       : solid 0px #000000; 
-  border-bottom    : solid 0px #000000; 
-} 
 a.moduletable:link, a.moduletable:visited {
-  color            : #FFFF00;
+  color            : #FF0000;
   font-family      : Verdana, Arial, Helvetica, serif;
   font-weight	     : normal;
   text-decoration  : none;
-}
-a.mainlevel:link, a.mainlevel:visited {
-  color            : #FFFF00;
-  font-family      : Verdana, Arial, Helvetica, serif;
-  font-weight      : bold;
-  text-decoration  : none;
-}
-.mainlevel {
-  color            : #FFFF00;
-  font-family      : Verdana, Geneva, Arial, Helvetica, serif;
-  font-weight      : bold;
-  text-decoration  : none;
-}
-.menuButton {
-	width: 143px;
-}
-.menuField {
-	width: 147px;
 }

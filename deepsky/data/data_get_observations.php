@@ -72,7 +72,7 @@ $query = array("object"           => $object,
                "languages"        => $selectedLanguages);
 //============================================ CHECK TO SEE IF OBSERVATIONS ALREADY FETCHED BEFORE, OTHERWISE FETCH DATA FROM DB ===============================
 $validQobs=false;
-if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])>1)&&(count($_SESSION['Qobs'])>0)&&($_SESSION['QobsMaxCnt']==$MaxCnt))
+if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])>1)&&array_key_exists('Qobs',$_SESSION)&&(count($_SESSION['Qobs'])>0)&&array_key_exists('QobsMaxCnt',$_SESSION)&&($_SESSION['QobsMaxCnt']==$MaxCnt))
  $validQobs=true;
 while($validQobs && (list($key,$value) = each($_SESSION['QobsParams'])))
  if(!array_key_exists($key,$query)||($value!=$query[$key]))

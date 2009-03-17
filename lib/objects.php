@@ -29,7 +29,7 @@ interface iObjects
   public  function newAltName($name, $cat, $catindex);                          // ADMIN FUNCTION, Add a new Altname in objectnames for this object
   public  function newName($name, $cat, $catindex);                             // ADMIN FUNCTION, Set a new name for a DS object, and adapt all observations, objectnames, partofs and list occurences
   public  function newPartOf($name, $cat, $catindex);                           // ADMIN FUNCTION, Adds a new partof entry for $name in the partsof table, making it part of $cat $index
-//private function prepareObjectsContrast();                                    // internal procedure to speed up contrast calculations
+  public function prepareObjectsContrast();                                    // internal procedure to speed up contrast calculations
   public  function removeAltName($name, $cat, $catindex);                       // ADMIN FUNCTION, Remove the alternative name $cat $index from the objectnames of $name
   public  function removeAndReplaceObjectBy($name, $cat, $catindex);            // ADMIN FUNCTION, Remove the object after replacing it in the observations, partofs, lists by the object $cat $index
   public  function removePartOf($name, $cat, $catindex);                        // ADMIN FUNCTION, Remove the partof entry for $name from the partsof table, so that $name is no longer a part of $cat $index
@@ -59,6 +59,8 @@ class Objects implements iObjects
     $popupT = "";
 	  $contrastCalc = ""; 
     $magni = $magnitude;
+    if($popup==LangContrastNotLoggedIn)
+      return;
     if(($magnitude==99.9)||($magnitude==""))
       $popup = LangContrastNoMagnitude;
     else 
@@ -541,7 +543,7 @@ class Objects implements iObjects
   { global $objDatabase;
 	  return $objDatabase->execSQL("INSERT INTO objectpartof (objectname, partofname) VALUES (\"$name\", \"".trim($cat . " " . ucwords(trim($catindex)))."\")");
   }
-  private function prepareObjectsContrast()                               // internal procedure to speed up contrast calculations
+  public  function prepareObjectsContrast()                               // internal procedure to speed up contrast calculations
   { global $objContrast;
     if(!array_key_exists('LTC',$_SESSION)||(!$_SESSION['LTC']))
 		 $_SESSION['LTC'] = array(array(4, -0.3769, -1.8064, -2.3368, -2.4601, -2.5469, -2.5610, -2.5660), 
@@ -746,7 +748,7 @@ class Objects implements iObjects
     $declDSS=$objPresentations->decToStringDSS($this->getDsoProperty($object,'decl'));
     $magnitude=sprintf("%01.1f", $this->getDsoProperty($object,'mag'));
 	  $sb=sprintf("%01.1f", $this->getDSOProperty($object,'subr'));
-	  $this->prepareObjectsContrast();
+	  $popup=$this->prepareObjectsContrast();
     $this->calcContrastAndVisibility($object,$object,$this->getDsoProperty($object,'mag'),$this->getDsoProperty($object,'SBObj'),$this->getDsoProperty($object,'diam1'),$this->getDsoProperty($object,'diam2'),$contrast,$contype,$popup,$prefMag);
 	  echo "<table width=\"100%\">";
 	  if($loggedUser&&($standardAtlasCode=$GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode','urano')))
@@ -755,7 +757,7 @@ class Objects implements iObjects
 	  else                                                                                                                                                                                                      // object name       / atlas page
 	    tableFieldnameField2(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(stripslashes($object))."\">".(stripslashes($object))."</a>",
 	                                      "&nbsp;","&nbsp;"," class=\"type2\"");
- 	  tableFieldnameField2(LangViewObjectField2,($alt?$alt:"-"),LangViewObjectField2b,($containst? $containst . "/":"(-)/").($partoft?$partoft:"-"),'type1');                                      // Alternative names / PART OFs
+ 	  tableFieldnameField2(LangViewObjectField2,($alt?$alt:"-"),LangViewObjectField2b,($containst? $containst . "/":"(-)/").($partoft?$partoft:"-"),"class=\"type1\"");                                      // Alternative names / PART OFs
     tableFieldnameField2(LangViewObjectField3,raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,decToStringDegMin($this->getDsoProperty($object,'decl')),"class=\"type2\"");  // RIGHT ASCENSION   / DECLINATION
     tableFieldnameField2(LangViewObjectField5,$GLOBALS[$this->getDsoProperty($object,'con')],LangViewObjectField6,$GLOBALS[$this->getDsoProperty($object,'type')],"class=\"type1\"");            // CONSTELLATION     / TYPE
     tableFieldnameField2(LangViewObjectField7,((($magnitude==99.9)||($magnitude==""))?$magnitude = "-":$magnitude),LangViewObjectField8,((($sb==99.9)||($sb==""))?"-":$sb),"class=\"type2\"");    // MAGNITUDE / SURFACE BRIGHTNESS
@@ -779,7 +781,7 @@ class Objects implements iObjects
 		 }
     }
 	  elseif($descriptionDsOject=$this->getDsoProperty($object,'description'))
-	  { echo "<tr>";
+	  { echo "<tr class=\"type1\">";
    	  echo "<td align=\"right\">";
    	  echo LangViewObjectNGCDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
    	  echo "</td>";
@@ -789,30 +791,34 @@ class Objects implements iObjects
   	  echo "</tr>";
     }
 	  echo "</table>";
-    echo "<table width=\"100%\"><tr><td width=\"50%\" align=\"center\">";
-    // LINK TO DSS IMAGE
+    echo "<div style=\"float:left;width:100%;margin-top:10px;\">";
+    echo "<div style=\"float:left;width:50%;text-align:center\">";
     echo "<form action=\"".$baseURL."index.php?indexAction=view_image\" method=\"post\">";
+    // LINK TO DSS IMAGE
     echo "<select name=\"imagesize\">";
-    if($zoom<=15) echo("<option selected value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"); else echo("<option value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"); // 15 x 15 arcminutes
-    if(($zoom>15)&& ($zoom<=30)) echo("<option selected value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>"); else echo("<option value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>"); // 30 x 30 arcminutes
-    if($zoom>30) echo("<option selected value=\"60\">60&#39;&nbsp;x&nbsp;60&#39;</option>"); else echo("<option value=\"60\">60&#39;&nbsp;x&nbsp;60&#39;</option>"); // 60 x 60 arcminutes
-    echo("</select>");
-    echo("<input type=\"hidden\" name=\"raDSS\" value=\"" . $raDSS . "\" />");
-    echo("<input type=\"hidden\" name=\"declDSS\" value=\"" . $declDSS . "\" />");
-    echo("<input type=\"hidden\" name=\"name\" value=\"" . $object . "\" />");
-    echo("<input type=\"submit\" name=\"dss\" value=\"" . LangViewObjectDSS . "\" />");
-    echo("</form>");
-    echo("</td><td width=\"50%\" align=\"center\">");
-    // LINK TO DEEPSKYLIVE CHART
+    echo "<option".(($zoom<=15)?" selected":"").              " value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"; 
+    echo "<option".((($zoom>15)&&($zoom<=30))?" selected":"")." value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>";
+    echo "<option".(($zoom>30)?" selected":"").               " value=\"60\">60&#39;&nbsp;x&nbsp;60&#39;</option>"; 
+    echo "</select>";    
+    echo "<input type=\"hidden\" name=\"raDSS\"   value=\"" . $raDSS . "\" />";
+    echo "<input type=\"hidden\" name=\"declDSS\" value=\"" . $declDSS . "\" />";
+    echo "<input type=\"hidden\" name=\"name\"    value=\"" . $object . "\" />";
+    echo "<input type=\"submit\" name=\"dss\"     value=\"" . LangViewObjectDSS . "\" />";
+    echo "</form>";
+    echo "</div>";
+    echo "<div style=\"float:right;width:48%;text-align:center;>";
+        // LINK TO DEEPSKYLIVE CHART
     if ($deepskylive == 1)
     { $raDSL=raToStringDSL($this->getDsoProperty($object,'ra'));
       $declDSL=decToStringDSL($this->getDsoProperty($object,'decl'));
       echo "<form action=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;zoom=" . $zoom . "\" method=\"post\">";
+
       echo "<select name=\"dslsize\">";
       if ($zoom<=30) echo "<option selected value=\"60\">1&deg;</option>"; else echo "<option value=\"60\">1&deg;</option>";
       if(($zoom>30) && ($zoom<=60)) echo "<option selected value=\"120\">2&deg;</option>"; else echo "<option value=\"120\">2&deg;</option>";
       if ($zoom>60) echo "<option selected value=\"180\">3&deg;</option>"; else echo "<option value=\"180\">3&deg;</option>"; 
       echo "</select>";
+    
       echo "<input type=\"hidden\" name=\"showDSL\" value=\"1\" />";
       echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
       echo "<input type=\"submit\" name=\"dsl\" value=\"" . LangViewObjectDSL . "\" />";
@@ -827,10 +833,11 @@ class Objects implements iObjects
       }
       echo "</form>";
     }
-    echo "</td>";
-    echo "</tr>";
-    echo "</table>";
-	  echo"<hr>";
+    echo "</div>";
+	  echo "<div style=\"float:left;width:100%;\">";
+	  echo "<hr>";
+    echo "</div>";
+	  echo "</div>";
   }
   public  function showObjects($link, $min, $max, $ownShow='', $showRank=0)        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
   { global $FF, $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL;
@@ -868,7 +875,7 @@ class Objects implements iObjects
 	  if($max>count($_SESSION['Qobj']))
 	 	  $max=count($_SESSION['Qobj']);
     while($count<$max)
-    { echo "<tr ".(($_SESSION['Qobj'][$count]['objectname']==$ownShow)?"class=\"type3\"":"class=\"type".(2-($countline%2)."\"")).">";
+    { echo "<tr style=\"height:5px\" ".(($_SESSION['Qobj'][$count]['objectname']==$ownShow)?"class=\"type3\"":"class=\"type".(2-($countline%2)."\"")).">";
       if(($showRank==1)&&$myList)
         echo "<td align=\"center\"><a href=\"\" onclick=\"theplace = prompt('".LangNewPlaceInList."','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
       elseif($showRank)
@@ -897,9 +904,12 @@ class Objects implements iObjects
       echo("</tr>");
       $countline++; 
       $count++;
-    }   
-    if($FF)
+    }
+    if($FF) 
+    { while($count++<25)
+        echo "<tr><td>&nbsp;</td></tr>";   
       echo "</tbody>";
+    }
     echo "</table>\n";
   }
   public  function sortObjects($objectList, $sort, $reverse=false)              // Sort the array of objectList on the $sort field, and in second order on the showname field 

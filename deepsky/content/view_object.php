@@ -5,30 +5,23 @@ echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presenta
 $seen=$objObject->getDSOseenLink($_GET['object']);
 echo "<div id=\"main\">";
 echo "<h6 class=\"title\">".LangViewObjectTitle."&nbsp;-&nbsp;".stripslashes($_GET['object'])."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h6>";
-//echo "<div style=\"absolute\">";
-//echo "<div style=\"float:0%\">";
+$topline="";
 if(substr($objObject->getSeen($_GET['object']),0,1)!='-')
-  echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($_GET['object'])."\">".LangViewObjectObservations."&nbsp;".$_GET['object'];
-//echo "</div>";
-//echo "<div style=\"float:33%\">";
+  $topline.= "&nbsp;-&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($_GET['object'])."\">".LangViewObjectObservations."&nbsp;".$_GET['object']."</a>";
 if($loggedUser)
-  echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=add_observation&amp;object=".urlencode($_GET['object'])."\">".LangViewObjectAddObservation.$_GET['object']."</a>";
-//echo "</div>";
+  $topline.= "&nbsp;-&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=add_observation&amp;object=".urlencode($_GET['object'])."\">".LangViewObjectAddObservation.$_GET['object']."</a>";
 if($myList)
-{ //echo "<div style=\"float:66%\">";
-  if($objList->checkObjectInMyActiveList($_GET['object']))
-    echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object'])."&amp;removeObjectFromList=".urlencode($_GET['object'])."\">".$_GET['object'].LangListQueryObjectsMessage3.$listname_ss."</a>";
+{ if($objList->checkObjectInMyActiveList($_GET['object']))
+    $topline.= "&nbsp;-&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object'])."&amp;removeObjectFromList=".urlencode($_GET['object'])."\">".$_GET['object'].LangListQueryObjectsMessage3.$listname_ss."</a>";
   else
-    echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object'])."&amp;addObjectToList=".urlencode($_GET['object'])."&amp;showname=".urlencode($_GET['object'])."\">".$_GET['object'].LangListQueryObjectsMessage2.$listname_ss."</a>";
-  //echo "</div>";
+    $topline.= "&nbsp;-&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object'])."&amp;addObjectToList=".urlencode($_GET['object'])."&amp;showname=".urlencode($_GET['object'])."\">".$_GET['object'].LangListQueryObjectsMessage2.$listname_ss."</a>";
 }	
-//echo "</div>";
+echo substr($topline,13);
 $objObject->showObject($_GET['object'],$objUtil->checkGetKey('zoom',30));
 $maxcount=count($_SESSION['Qobj']);
 $max = 9999;
 $link = $baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey('zoom',30).'&amp;SID=Qobj';
-echo "<form name=\"zoomform\" action=\"".$link."\" method=\"get\" style=\"border:0px;margin:0px;padding:0px;\">";
-echo "<div style=\"absolute:left; height:65px;\">";
+echo "<div style=\"float:left; height:65px; width:100%;\">";
 echo "<div style=\"float:left;width:60%;text-align:left;\">";
 echo "<h6 class=\"title\">".$_GET['object'];
 if(count($_SESSION['Qobj'])>2)
@@ -38,48 +31,51 @@ elseif(count($_SESSION['Qobj'])>1)
 else
  echo ' '.LangViewObjectNoNearbyObjects;
 echo "</h6>";
-  echo "&nbsp;".LangViewObjectNearbyObjectsMoreLess  . ":&nbsp;";
-  echo("<select name=\"zoom\"  onchange=\"zoomform.submit();\" width=\"50%\">");
-    if ($objUtil->checkGetKey('zoom',30)=="180") echo("<option selected value=\"180\">3x3&deg;</option>"); else echo("<option value=\"180\">3x3&deg;</option>"); 
-    if ($objUtil->checkGetKey('zoom',30)=="120") echo("<option selected value=\"120\">2x2&deg;</option>"); else echo("<option value=\"120\">2x2&deg;</option>"); 
-    if ($objUtil->checkGetKey('zoom',30)=="60") echo("<option selected value=\"60\">1x1&deg;</option>"); else echo("<option value=\"60\">1x1&deg;</option>"); 
-    if ($objUtil->checkGetKey('zoom',30)=="30") echo("<option selected value=\"30\">30x30'</option>"); else echo("<option value=\"30\">30x30'</option>"); 
-    if ($objUtil->checkGetKey('zoom',30)=="15") echo("<option selected value=\"15\">15x15'</option>"); else echo("<option value=\"15\">15x15'</option>"); 
-    if ($objUtil->checkGetKey('zoom',30)=="10") echo("<option selected value=\"10\">10x10'</option>"); else echo("<option value=\"10\">10x10'</option>"); 
-    if ($objUtil->checkGetKey('zoom',30)=="5") echo("<option selected value=\"5\">5x5'</option>"); else echo("<option value=\"5\">5x5'</option>"); 
-  echo("</select>");
+echo "<form name=\"zoomform\" action=\"".$link."\" method=\"get\">";
+echo LangViewObjectNearbyObjectsMoreLess .":&nbsp;";
+echo "<select name=\"zoom\"  onchange=\"zoomform.submit();\" width=\"50%\">";
+if($objUtil->checkGetKey('zoom',30)=="180") echo("<option selected value=\"180\">3x3&deg;</option>"); else echo("<option value=\"180\">3x3&deg;</option>"); 
+if($objUtil->checkGetKey('zoom',30)=="120") echo("<option selected value=\"120\">2x2&deg;</option>"); else echo("<option value=\"120\">2x2&deg;</option>"); 
+if($objUtil->checkGetKey('zoom',30)=="60")  echo("<option selected value=\"60\">1x1&deg;</option>"); else echo("<option value=\"60\">1x1&deg;</option>"); 
+if($objUtil->checkGetKey('zoom',30)=="30")  echo("<option selected value=\"30\">30x30'</option>"); else echo("<option value=\"30\">30x30'</option>"); 
+if($objUtil->checkGetKey('zoom',30)=="15")  echo("<option selected value=\"15\">15x15'</option>"); else echo("<option value=\"15\">15x15'</option>"); 
+if($objUtil->checkGetKey('zoom',30)=="10")  echo("<option selected value=\"10\">10x10'</option>"); else echo("<option value=\"10\">10x10'</option>"); 
+if($objUtil->checkGetKey('zoom',30)=="5")   echo("<option selected value=\"5\">5x5'</option>"); else echo("<option value=\"5\">5x5'</option>"); 
+echo "</select>";
+echo "<input type=\"hidden\" name=\"object\" value=\"".$_GET['object']."\"> ";
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\"> ";		
+echo "</form>";
 echo "</div>";
+  
 echo "<div class=\"title\" style=\"float:right;width:38%;text-align:right;\">";
 list($min,$max)=$objUtil->printNewListHeader2($_SESSION['Qobj'],$link ,$min,25,"");
 echo "</div>";
 echo "</div>";
-echo "<input type=\"hidden\" name=\"object\" value=\"".$_GET['object']."\"> ";
-echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\"> ";		
-echo "</form>";
-//echo "<table width=\"100%\"> <tr> <td width=\"100%\" align=\"right\">";
-//echo "</td> </tr> </table>";
+
+echo "<div style=\"float:left; width:100%;\">";
 if($max>count($_SESSION['Qobj']))
   $max=count($_SESSION['Qobj']);
-//$objObject->showObjects($link,$min,$max,$_GET['object']);
-//echo "<hr />";
 $_GET['min']=$min;
 $_GET['max']=$max;
 if($FF)
   $objObject->showObjects($link, $min, $max,$_GET['object']);
 else
 { $_SESSION['ifrm']="deepsky/content/ifrm_objects.php";
-	echo "<iframe name=\"obj_list\" id=\"obj_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;min=".$min."&amp;max=".$max."&amp;ownShow=".$_GET['object']."&amp;showRank=0\" frameborder=\"0\" width=\"100%\" style=\"heigth:100px\">";
+	echo "<iframe name=\"obj_list\" id=\"obj_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;link2=".urlencode($link)."&amp;min=".$min."&amp;max=".$max."&amp;ownShow=".$_GET['object']."&amp;showRank=0\" frameborder=\"0\" width=\"100%\" style=\"heigth:100px\">";
   $objObject->showObjects($link, $min, $max);
 	echo "</iframe>";
 }	
 echo "<script>resizeElement('obj_list',400);</script>";
+echo "</div>";
+
+echo "<div style=\"float:left; width:100%;\">";
 echo "<hr />";
-//list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'],$link ,$min,25,"");
-//echo "<hr />";
 $objPresentations->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
 echo "&nbsp;-&nbsp;";
 echo "<a target=\"_top\" href=\"".$baseURL."objects.csv?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a> &nbsp;-&nbsp;";
 echo "<a target=\"_top\" href=\"".$baseURL."objects.argo?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage8."</a>";
+echo "</div>";
+
 echo "</div>";
 
 //============================================================================== Admin section permits to change object settings in DB remotely

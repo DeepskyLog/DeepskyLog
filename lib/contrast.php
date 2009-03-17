@@ -77,7 +77,10 @@ class Contrast implements iContrast
 		 // 0.35 < contrast difference < 0.5 : Mittelschwer - Orange : FF6600
 		 // 0.50 < contrast difference < 1.0 : Leicht Sichtbar - Dark green : 339900
 		 // 1.00 < contrast difference : Leicht Sichtbar - Light green : 66FF00
-  	if( $minObjArcmin > $maxObjArcmin)
+  	
+		global $objObject;
+		
+		if( $minObjArcmin > $maxObjArcmin)
   	{ $temp = $minObjArcmin;
   		$minObjArcmin = $maxObjArcmin;
   		$maxObjArcmin = $temp;

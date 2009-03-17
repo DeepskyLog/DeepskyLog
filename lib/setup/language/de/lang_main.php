@@ -1052,6 +1052,7 @@ define("LangPDFMessage20", "with ");
 define("LangPDFMessage21", "at ");
 define("LangPDFMessage22", "Page ");
 define("LangNumberOfRecords", "Ergebnisse");
+define("LangNumberOfRecords1","Ergebnis");
 define("LangPDFTitle3", "DeepskyLog Kometen Beobachtungen");
 
 // deepsky/content/overview_observations_compact.php

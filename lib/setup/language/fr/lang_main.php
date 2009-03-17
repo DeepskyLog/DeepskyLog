@@ -1054,6 +1054,7 @@ define("LangPDFMessage20", "avec un  ");
 define("LangPDFMessage21", "� ");
 define("LangPDFMessage22", "Pagina ");
 define("LangNumberOfRecords", "r&#233;sultats");
+define("LangNumberOfRecords1","r&#233;sultat");
 define("LangPDFTitle3", "Observations des com&#232;tes de DeepskyLog");
 
 // deepsky/content/overview_observations_compact.php

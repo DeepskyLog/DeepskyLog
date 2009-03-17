@@ -1064,6 +1064,7 @@ define("LangPDFMessage20", "met een  ");
 define("LangPDFMessage21", "te ");
 define("LangPDFMessage22", "Pagina ");
 define("LangNumberOfRecords", "resultaten");
+define("LangNumberOfRecords1","resultaat");
 define("LangPDFTitle3", "DeepskyLog komeet waarnemingen");
 
 // deepsky/content/overview_observations_compact.php

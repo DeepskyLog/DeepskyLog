@@ -1,7 +1,4 @@
-<?php
-// view_observer.php
-// shows information of an observer 
-
+<?php // view_observer.php - shows information of an observer 
 if(!$objUtil->checkGetKey('user'))
   throw new Exception("User not specified");
 $user=$objUtil->checkGetKey('user');

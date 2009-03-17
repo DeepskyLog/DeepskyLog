@@ -712,9 +712,9 @@ class Observations {
 				    $LOdate=sscanf($this->getDsObservationProperty($LOid,'date'), "%4d%2d%2d");
 				}
 				if($lco=='L')
-				  echo "<tr class=\"type".(2 -($obsKey%2))."\">";
+				  echo "<tr style=\"height:5px\" class=\"type".(2 -($obsKey%2))."\">";
 				else
-				  echo "<tr class=\"type2\">";
+				  echo "<tr style=\"height:5px\" class=\"type2\">";
 			  if(($objUtil->checkGetKey('expand')==$value['observationid']))
 			    echo "<td align=\"center\"><a target=\"_top\" href=\"".$link."&amp;expand=0\" title=\"".$explantation1."\">"."-"."</a></td>";
 			  else
@@ -723,7 +723,7 @@ class Observations {
 				if($objUtil->checkGetKey('expand')==$value['observationid'])
 				{ echo "<td colspan=\"".($myList?(($lco=='O')?8:6):(($lco=='O')?7:5))."\">".$explanation."</td>";
 					echo "</tr>";
-				  echo "<tr>";
+				  echo "<tr style=\"height:5px\">";
 				  echo "<td>&nbsp;</td>"; 
 					echo "<td style=\"background-color:#FFFFC0\" colspan=\"".($myList?(($lco=='O')?9:7):(($lco=='O')?8:6))."\">"; 
 					echo "<hr>";
@@ -765,7 +765,7 @@ class Observations {
 				echo "</tr>";
 		    if($lco!='L')
 		    { if($objUtil->checkGetKey('expand')!=$value['observationid'])
-					{ echo "<tr class=\"type1\">";
+					{ echo "<tr style=\"height:5px\" class=\"type1\">";
 				  	echo "<td>&nbsp;</td>";
 					  echo "<td valign=\"top\">".$alt."</td>";
 						if($lco=="C")
@@ -777,7 +777,7 @@ class Observations {
 			      echo "</tr>";
 					}
 					if((($lco=="O")&&$LOid&&($this->getDsObservationProperty($LOid,'hasDrawing')))||($this->getDsObservationProperty($value['observationid'],'hasDrawing')))
-				  { echo "<tr>";
+				  { echo "<tr style=\"height:5px\">";
 					  echo "<td> &nbsp; </td>";
 					  if($lco=="C")
 			        echo "<td colspan=5>".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\"></img></a>"."</p>":"")."</td>";
@@ -791,8 +791,11 @@ class Observations {
 		  }
 			$count++;
 		}
-		if($FF)
-		  echo "</tbody>";
+    if($FF) 
+    { while($count++<25)
+        echo "<tr><td>&nbsp;</td></tr>";   
+      echo "</tbody>";
+    }
 		echo "</table>";
 	}
 	public  function showObservation($LOid) 
