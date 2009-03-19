@@ -1,6 +1,6 @@
 <?php // view_filter.php - view information of a filter 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!($filterid=$objUtil->checkGetKey('filter'))) throw new Exception(LangException005);
+elseif(!($filterid=$objUtil->checkGetKey('filter'))) throw new Exception(LangException005b);
 //elseif(!($objFilter->getFilterPropertyFromId($filterid,'name')))  throw new Exception("Filter not found in change_filter.php, please contact the developers with this message:".$filterid);
 else
 {

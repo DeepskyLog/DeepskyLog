@@ -1,12 +1,14 @@
 <?php // view_lens.php - view information of a lens 
-if(!$objUtil->checkGetKey('lens')) 
-  throw new Exception("No lens specified.");
-if(!($name=$objLens->getLensPropertyFromId($_GET['lens'],'name')))
-  throw new Exception("Lens not found.");
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!($lensid=$objUtil->checkGetKey('lens'))) throw new Exception(LangException009b);
+else
+{
+$name=$objLens->getLensPropertyFromId($_GET['lens'],'name');
 echo "<div id=\"main\">";
 echo "<h2>".$name."</h2>";
 echo "<table>";
-tableFieldnameField(LangViewLensFactor,$objLens->getLensPropertyFromId($_GET['lens'],'factor'));
+tableFieldnameField(LangViewLensFactor,$objLens->getLensPropertyFromId($lensid,'factor'));
 echo "</table>";
 echo "</div>";
+}
 ?>

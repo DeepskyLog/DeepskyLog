@@ -1,9 +1,9 @@
 <?php // view_observer.php - shows information of an observer 
-if(!$objUtil->checkGetKey('user'))
-  throw new Exception("User not specified");
-$user=$objUtil->checkGetKey('user');
-if(!($name=$objObserver->getObserverProperty($user,'name'))) 
-  throw new Exception($user); 
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!($user=$objUtil->checkGetKey('user'))) throw new Exception(LangException015b);
+else
+{
+$name=$objObserver->getObserverProperty($user,'name'); 
 
 $firstname=$objObserver->getObserverProperty($user,'firstname');
 $location_id = $objObserver->getObserverProperty($user,'stdlocation');
@@ -149,4 +149,5 @@ echo "</tr>";
 echo "</table>";
 
 echo "</div>";
+}
 ?>

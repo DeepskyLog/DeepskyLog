@@ -1,12 +1,12 @@
-<?php
-// loginuser.php
-// checks if the user is logged in based on cookie
-
+<?php // loginuser.php - checks if the user is logged in based on cookie
+if((!isset($inIndex))||(!$inIndex)) include "/redirect.php";
+else
+{
 $loggedUser='';
 $_SESSION['admin']="no";
 $loginErrorCode="";
 $loginErrorText="";
-if(array_key_exists('deepskylogsec', $_COOKIE)&&$_COOKIE['deepskylogsec'])
+if(array_key_exists('deepskylogsec',$_COOKIE)&&$_COOKIE['deepskylogsec'])
 { if(strlen($_COOKIE['deepskylogsec'])>32)
   { if(substr($_COOKIE['deepskylogsec'],0,32)==$objObserver->getObserverProperty(substr($_COOKIE['deepskylogsec'],32,255),'password'))
     { $_SESSION['deepskylog_id']=substr($_COOKIE['deepskylogsec'],32,255);
@@ -100,5 +100,6 @@ if($loginErrorCode||$loginErrorText)
 { $_SESSION['deepskylog_id']='';
 	setcookie("deepskylogsec","",time()-3600,"/");
   $entryMessage=constant($loginErrorCode)." ".$loginErrorText;
+}
 }
 ?>

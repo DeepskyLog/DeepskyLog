@@ -1,6 +1,4 @@
-<?php
-// admin.php
-// menu which allows the adminstrator to perform administrator tasks
+<?php // admin.php - menu which allows the adminstrator to perform administrator tasks
 
 echo("<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">");
 

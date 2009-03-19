@@ -1,6 +1,7 @@
-<?php
-// utility functions in resizing
-
+<?php // utility functions in resizing
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else
+{
 function image_createThumb($src,$dest,$maxWidth,$maxHeight,$quality=75) {
    if (file_exists($src)  && isset($dest)) {
        // path info
@@ -69,5 +70,5 @@ function image_createThumb($src,$dest,$maxWidth,$maxHeight,$quality=75) {
        return 'No such File';
    }
 }
-
+}
 ?>

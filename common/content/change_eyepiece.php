@@ -1,7 +1,7 @@
 <?php // change_eyepiece.php - allows the eyepiece owner to change eyepiece details 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($loggedUser)) throw new Exception(LangException002);
-elseif(!($eyepieceid=$objUtil->checkGetKey('eyepiece'))) throw new Exception(LangExcpetion003);
+elseif(!($eyepieceid=$objUtil->checkGetKey('eyepiece'))) throw new Exception(LangException003);
 elseif(!($objUtil->checkUserID($objEyepiece->getEyepiecePropertyFromId($eyepieceid,'observer','')))) throw new Exception(LangException004);
 //elseif(!($objEyepiece->getEyepiecePropertyFromId($eyepieceid,'name'))) throw new Exception("Eyepiece not found in change_eyepiece.php, please contact the developers with this message:".$eyepieceid);
 else

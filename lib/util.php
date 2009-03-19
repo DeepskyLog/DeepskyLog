@@ -42,8 +42,8 @@ class Utils implements iUtils
   { global $objObserver,$loggedUser,$objPresentations,$objAtlas;
     while(list ($key, $valueA) = each($result))
     { echo "DSL ".$valueA['objectname']."|".
-           raArgoToString($valueA['objectra'])."|".
-           decToArgoString($valueA['objectdecl'], 0)."|".
+           $objPresentations->raArgoToString($valueA['objectra'])."|".
+           $objPresentations->decToArgoString($valueA['objectdecl'], 0)."|".
            $GLOBALS["argo".$valueA['objecttype']]."|".
            $objPresentations->presentationInt($valueA['objectmagnitude'],99.9,'') ."|".
            $valueA['objectsize'].";".$objAtlas->atlasCodes[($atlas=$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'))]." ".$valueA[$atlas].";"."CR ".$valueA['objectcontrast'].";".$valueA['objectseen'].";".$valueA['objectlastseen'].
@@ -887,8 +887,8 @@ class Utils implements iUtils
       $alt=($alt?substr($alt,3):'');
       echo $valueA['objectname'].";". 
            $alt.";".
-           raToString($valueA['objectra']).";".
-           decToString($valueA['objectdecl'], 0).";".
+           $objPresentations->raToString($valueA['objectra']).";".
+           $objPresentations->decToString($valueA['objectdecl'], 0).";".
            $GLOBALS[$valueA['objectconstellation']].";".
            $GLOBALS[$valueA['objecttype']].";".
            $objPresentations->presentationInt1($valueA['objectmagnitude'],99.9,'').";".
@@ -1173,11 +1173,11 @@ class Utils implements iUtils
 		$pdf->ezStream();
   }
   public  function pdfObjects($result)  // Creates a pdf document from an array of objects
-  { global $instDir, $objAtlas, $objObserver;
+  { global $instDir, $objAtlas, $objObserver,$objPresentations;
     while(list($key,$valueA)=each($result))
       $obs1[]=array("Name"          => $valueA['showname'],
-                    "ra"            => raToString($valueA['objectra']),
-                    "decl"          => decToString($valueA['objectdecl'], 0),
+                    "ra"            => $objPresentations->raToString($valueA['objectra']),
+                    "decl"          => $objPresentations->decToString($valueA['objectdecl'], 0),
                     "mag"           => $this->presentationInt1($valueA['objectmagnitude'],99.9,''),
                     "sb"            => $this->presentationInt1($valueA['objectsurfacebrightness'],99.9,''),
                     "con"           => $GLOBALS[$valueA['objectconstellation']],
@@ -1332,8 +1332,8 @@ class Utils implements iUtils
 			  $pdf->addTextWrap($xbase+180, $y,  20, $fontSizeText, $valueA['objectconstellation']);			                         // constellation
 			  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectmagnitude'],99.9,''), 'left');  	                 // mag
 			  $pdf->addTextWrap($xbase+217, $y,  18, $fontSizeText, $objPresentations->presentationInt1($valueA['objectsurfacebrightness'],99.9,''), 'left');		                   // sb
-			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, raToStringHM($valueA['objectra']) . ' '.
-				                                                      decToString($valueA['objectdecl'],0));	 // ra - decl
+			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, $objPresentations->raToStringHM($valueA['objectra']) . ' '.
+				                                                      $objPresentations->decToString($valueA['objectdecl'],0));	 // ra - decl
 			  $pdf->addTextWrap($xbase+295, $y,  55, $fontSizeText, $valueA['objectsize'] . '/' . $objPresentations->presentationInt($valueA['objectpa'],999,"-"));			             // size
 	  		$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectcontrast'],'',''), 'left');			             // contrast				
 	  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, (int)$valueA['objectoptimalmagnification'], 'left');			             // magnification				
@@ -1348,8 +1348,8 @@ class Utils implements iUtils
 			  $pdf->addTextWrap($xbase+170, $y,  30, $fontSizeText, '</c:alink></b>'.$valueA['objecttype']);			                 // type
 			  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectmagnitude'],99.9,''), 'left');			                 // mag
 			  $pdf->addTextWrap($xbase+217, $y,  18, $fontSizeText, $objPresentations->presentationInt1($valueA['objectsurfacebrightness'],99.9,''), 'left');			                   // sb
-			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, raToStringHM($valueA['objectra']) . ' '.
-				                                                      decToString($valueA['objectdecl'],0));	 // ra - decl
+			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, $objPresentations->raToStringHM($valueA['objectra']) . ' '.
+				                                                      $objPresentations->decToString($valueA['objectdecl'],0));	 // ra - decl
 			  $pdf->addTextWrap($xbase+295, $y,  55, $fontSizeText, $valueA['objectsize'] . '/' . $objPresentations->presentationInt($valueA['objectpa'],999,"-"));         			   // size
 	  		$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectcontrast'],'',''), 'left');			             // contrast				
 	  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, (int)$valueA['objectoptimalmagnification'], 'left');		               // magnification				

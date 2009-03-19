@@ -1,7 +1,7 @@
-<?php
-// logout.php
-// let the user logout of deepskylog
-
+<?php // logout.php - let the user logout of deepskylog
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else
+{
 setcookie("deepskylogsec","",time()-3600,"/");// delete cookie
 //setcookie("PHPSESSID","",time()-3600,"/");// delete cookie
 /*
@@ -30,5 +30,5 @@ $_SESSION['deepskylog_id']='';															                    // destroy sess
 $_SESSION['lco']='L';
 $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
 setcookie("lco","L",$cookietime, "/");
-
+}
 ?>

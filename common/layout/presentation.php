@@ -2,12 +2,19 @@
 interface iPresentation
 { public  function br2dash($data); 
   public  function br2nl($data);                                                       // The opposite of nl2br
-  public function decToString($decl,$web=1);
+  public  function decToArgoString($decl);
+  public  function decToString($decl,$web=1);
+  public  function decToStringDSL($decl);
   public  function decToStringDSS($decl);                                              // returns html DSS decl coordinates eg 6+44 for 6°43'55''
+  public  function decToTrimmedString($decl);
   public  function presentationInt($value, $nullcontition='', $nullvalue='');          // if the null condtion is met, it returns the nullvalue, otherwise returns the value
   public  function presentationInt1($value, $nullcondition='', $nullvalue='');         // if the null condtion is met, it returns the nullvalue, otherwise returns the value formatted %1.1f
   public  function promptWithLink($prompt,$promptDefault,$javaLink,$text);             // displays an anchor link with $text as text, showing when clicked an inputbox with the question $prompt and $promptDefault answer, jumping to $javalink (java format) afterwards 
+  public  function raArgoToString($ra);
+  public  function raToString($ra);
+  public  function raToStringDSL($ra);
   public  function raToStringDSS($ra);                                         // returns html DSS ra coordinates eg 6+43+55 for 6h43m55s
+  public  function raToStringHM($ra);
   public  function searchAndLinkCatalogsInText($theText);                              // hyperlinks M, NGC, .. catalogs in a text
   
 }
@@ -27,59 +34,104 @@ class Presentations implements iPresentation
   public function br2nl($data)  // The opposite of nl2br
   { return preg_replace('!<br.*>!iU', " ", $data );
   }
-  public function decToString($decl,$web=1)
-  { $sign =0;
-    if($decl < 0)
-    { $sign = -1;
-      $decl = -$decl;
-    }
-    $decl_degrees = floor($decl);
-    $subminutes = 60 * ($decl - $decl_degrees);
-    $decl_minutes = round($subminutes);
-    if($decl_minutes == 60)
-    { $decl_minutes = 0;
-      $decl_degrees++;
-    }
-    if($decl_degrees >= 0 && $decl_degrees <= 9)
-      $decl_degrees = "0" . $decl_degrees;
-    if ($sign == -1)
-      $decl_degrees = "-" . $decl_degrees;
-    else
-    { if ($web == 1)
-      { //$decl_degrees = "&nbsp;" . $decl_degrees; // add white space for overview locations
-        $decl_degrees = $decl_degrees; // remove white space for object details
-      }
-      else
-      { $decl_degrees = " " . $decl_degrees;
-      }
-    }
-    if($decl_minutes <= 9)
-    { $decl_minutes = "0" . $decl_minutes;
-    } 
-    if ($web == 1)
-    { $d = "&deg;";
-      $m = "&#39;";
-    } 
-    else
-    { $d = "d";
-      $m = "'";
-    }
-    return("$decl_degrees" .$d. "$decl_minutes" . $m);
-  }
-  public  function decToStringDSS($decl)
-  { $sign=0;
-    if($decl<0)
-    { $sign=-1;
+  public  function decToArgoString($decl)
+  { $sign="+";
+    if($decl< 0)
+    { $sign="-";
       $decl=-$decl;
     }
     $decl_degrees=floor($decl);
-    $subminutes=60*($decl-$decl_degrees);
-    $decl_minutes=round($subminutes);
-    if($sign==-1)
-    { $decl_minutes = "-".$decl_minutes;
-      $decl_degrees = "-".$decl_degrees;
+    $subminutes  =60*($decl-$decl_degrees);
+    $decl_minutes=floor($subminutes);
+    $subseconds = round(60*($subminutes-$decl_minutes));
+    if($subseconds==60)
+    { $subseconds=0;
+      $decl_minutes++;
     }
-    return("$decl_degrees"."&#43;"."$decl_minutes");
+    if($decl_minutes==60)
+    { $decl_minutes=0;
+      $decl_degrees++;
+    }
+    return($sign.sprintf("%02d",$decl_degrees).":".sprintf("%02d",$decl_minutes).":".sprintf("%02d",$subseconds));
+  }
+  public function decToString($decl,$web=1)
+  { $sign="&nbsp;";
+    if($decl<0)
+    { $sign='-';
+      $decl=-$decl;
+    }
+    else
+      if($web!=1)
+        $sign=' ';
+    $decl_degrees=floor($decl);
+    $subminutes  =60*($decl-$decl_degrees);
+    $decl_minutes=round($subminutes);
+    if($decl_minutes==60)
+    { $decl_minutes=0;
+      $decl_degrees++;
+    }
+    return($sign.$decl_degrees.(($web==1)?"&deg;":"d").sprintf("%02d".$decl_minutes).(($web==1)?"d":"'"));
+  }
+  public  function decToStringDegMin($decl)
+  { $sign="";
+    if($decl<0)
+    { $sign='-';
+      $decl=-$decl;
+    }
+    $decl_degrees=floor($decl);
+    $subminutes  =60*($decl-$decl_degrees);
+    $decl_minutes=round($subminutes);
+    if($decl_minutes==60)
+    { $decl_minutes=0;
+      $decl_degrees++;
+    }
+    return($sign.sprintf("%02d",$decl_degrees)."&deg;".sprintf("%02d",$decl_minutes)."&#39;");
+  }
+  public  function decToStringDSL($decl)
+  { if($decl<0)
+    { $sign="m";
+      $decl=-$decl;
+    }
+    else
+      $sign="p";
+    $decl_degrees=floor($decl);
+    $subminutes  =60*($decl-$decl_degrees);
+    $decl_minutes=round($subminutes);
+    if($decl_minutes==60)
+    { $decl_minutes=0;
+      $decl_degrees++;
+    }
+    return($sign.sprintf("%02d", "$decl_degrees").sprintf("%02d", "$decl_minutes")."00");
+  }
+  public  function decToStringDSS($decl)
+  { $sign="";
+    if($decl<0)
+    { $sign="-";
+      $decl=-$decl;
+    }
+    $decl_degrees=floor($decl);
+    $subminutes  =60*($decl-$decl_degrees);
+    $decl_minutes=round($subminutes);
+    if($decl_minutes==60)
+    { $decl_minutes=0;
+      $decl_degrees++;
+    }
+    return($sign.$decl_degrees."&#43;".$sign.$decl_minutes);
+  }
+  public  function decToTrimmedString($decl)
+  { $sign="";
+	  if($decl<0)
+    { $sign="-";
+      $decl=-$decl;
+    }
+    $decl_degrees=floor($decl);
+    $subminutes  =60*($decl-$decl_degrees);
+    $decl_minutes=round($subminutes);
+    if($decl_minutes==60)
+    { $decl_minutes=0;
+      $decl_degrees++;
+    }
+    return($sign.$decl_degrees."&deg;".sprintf("%02d",$decl_minutes)."&#39;");
   }
   public  function presentationInt($value, $nullcontition='', $nullvalue='')
   { return (($value==$nullcontition)?$nullvalue:$value);
@@ -90,12 +142,85 @@ class Presentations implements iPresentation
   public function promptWithLink($prompt,$promptDefault,$javaLink,$text)
 	{ echo "<a target=\"_top\" href=\"\" onclick=\"thetitle = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;pdfTitle='+thetitle; return false;\"	target=\"new_window\">".$text."</a>";
   }
+  public  function raArgoToString($ra)
+  { $ra_hours  =floor($ra);
+    $subminutes=60*($ra-$ra_hours);
+    $ra_minutes=floor($subminutes);
+    $ra_seconds=round(60*($subminutes-$ra_minutes));
+    if($ra_seconds==60)
+    { $ra_seconds=0;
+      $ra_minutes++;
+    }
+    if($ra_minutes==60)
+    { $ra_minutes=0;
+      $ra_hours++;
+    }
+    if($ra_hours==24)
+     $ra_hours = 0;
+    return(sprintf("%02d",$ra_hours).":".sprintdf("%02d",$ra_minutes).":".sprintf("%02d",$ra_seconds));
+  }
+  public  function raToString($ra)
+  { $ra_hours  =floor($ra);
+    $subminutes=60*($ra-$ra_hours);
+    $ra_minutes=floor($subminutes);
+    $ra_seconds=round(60*($subminutes-$ra_minutes));
+    if($ra_seconds==60)
+    { $ra_seconds=0;
+      $ra_minutes++;
+    }
+    if($ra_minutes==60)
+    { $ra_minutes=0;
+      $ra_hours++;
+    }
+    if($ra_hours == 24)
+      $ra_hours = 0;
+    return(sprintf("%02d",$ra_hours)."h".sprintf("%02d",$ra_minutes)."m".sprintf("%02d",$ra_seconds)."s");  
+  }
+  public  function raToStringDSL($ra)
+  { $ra_hours  =floor($ra);
+    $subminutes=60*($ra-$ra_hours);
+    $ra_minutes=floor($subminutes);
+    $ra_seconds=round(60*($subminutes-$ra_minutes));
+    if($ra_seconds==60)
+    { $ra_seconds=0;
+      $ra_minutes++;
+    }
+    if($ra_minutes==60)
+    { $ra_minutes=0;
+      $ra_hours++;
+    }
+    if($ra_hours == 24)
+      $ra_hours = 0;
+    return(sprintf("%02d",$ra_hours).sprintf("%02d",$ra_minutes).sprintf("%02d",$ra_seconds));
+  }
   public  function raToStringDSS($ra)
   { $ra_hours=floor($ra);
     $subminutes=60*($ra - $ra_hours);
     $ra_minutes=floor($subminutes);
     $ra_seconds=round(60*($subminutes-$ra_minutes));
-    return("$ra_hours"."&#43;"."$ra_minutes"."&#43;"."$ra_seconds");
+    if($ra_seconds==60)
+    { $ra_seconds=0;
+      $ra_minutes++;
+    }
+    if($ra_minutes==60)
+    { $ra_minutes=0;
+      $ra_hours++;
+    }
+    if($ra_hours == 24)
+      $ra_hours = 0;
+    return($ra_hours."&#43;".$ra_minutes."&#43;".$ra_seconds);
+  }
+  public  function raToStringHM($ra)
+  { $ra_hours=floor($ra);
+    $subminutes=60*($ra-$ra_hours);
+    $ra_minutes=round($subminutes);
+    if($ra_minutes==60)
+    { $ra_minutes=0;
+      $ra_hours++;
+    } 
+    if($ra_hours == 24)
+      $ra_hours = 0;
+    return sprintf('%02d',($ra_hours%24)).'h'.sprintf('%02d',$ra_minutes).'m';
   }
   public function searchAndLinkCatalogsInText($theText)
   { global $baseURL;

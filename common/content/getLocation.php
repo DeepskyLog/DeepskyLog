@@ -26,7 +26,7 @@ if(($result)&&($location_name))
   { $vars = explode("\t", $value);
     echo "<tr class=\"type".(2-($count%2))."\">";
     echo "<td>";
-    echo "<a href=\"".$baseURL."index.php?indexAction=add_site&amp;sitename=$vars[0]&amp;longitude=$vars[1]&amp;latitude=$vars[2]&amp;region=$vars[4]&amp;country=$vars[3]\">$vars[0]</a> </td><td>". decToString($vars[1], 1) ."</td><td>". decToString($vars[2], 1) ."</td><td> $vars[4] </td><td> $vars[3]";
+    echo "<a href=\"".$baseURL."index.php?indexAction=add_site&amp;sitename=$vars[0]&amp;longitude=$vars[1]&amp;latitude=$vars[2]&amp;region=$vars[4]&amp;country=$vars[3]\">$vars[0]</a> </td><td>".$objPresentations->decToString($vars[1], 1) ."</td><td>".$objPresentations->decToString($vars[2], 1) ."</td><td> $vars[4] </td><td> $vars[3]";
     echo "</td>";
     echo "</tr>";
     $count++;

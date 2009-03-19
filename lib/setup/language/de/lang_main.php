@@ -6,17 +6,23 @@ define("LangGeneralObservations","observations");
 define("LangException001","You need to be logged in as an administrator to execute these operations.");
 define("LangException002","You need to be logged in to change your locations or equipment.");
 define("LangException003","You wanted to change an eyepiece, but none is specified. Please contact the developers with this message.");
+define("LangException003b","You wanted to watch an eyepiece, but none is specified. Please contact the developers with this message.");
 define("LangException004","You wanted to change an eyepiece, but it is not yours to change. Please contact the developers with this message.");
 define("LangException005","You wanted to change a filter, but none is specified. Please contact the developers with this message.");
+define("LangException005b","You wanted to watch a filter, but none is specified. Please contact the developers with this message.");
 define("LangException006","You wanted to change a filter, but it is not yours to change. Please contact the developers with this message.");
 define("LangException007","You wanted to change an instrument, but none is specified. Please contact the developers with this message.");
+define("LangException007b","You wanted to watch an instrument, but none is specified. Please contact the developers with this message.");
 define("LangException008","You wanted to change an instrument, but it is not yours to change. Please contact the developers with this message.");
 define("LangException009","You wanted to change a lens, but none is specified. Please contact the developers with this message.");
+define("LangException009b","You wanted to watch a lens, but none is specified. Please contact the developers with this message.");
 define("LangException010","You wanted to change a lens, but it is not yours to change. Please contact the developers with this message.");
 define("LangException011","You wanted to change a location, but none is specified. Please contact the developers with this message.");
+define("LangException011b","You wanted to watch a location, but none is specified. Please contact the developers with this message.");
 define("LangException012","You wanted to change a location, but it is not yours to change. Please contact the developers with this message.");
 define("LangException013","You wanted to look up a location, but none is specified.");
 define("LangException014","You wanted to look up a location, but no country is specified.");
+define("LangException015b","You wanted to watch an observer, but none is specified. Please contact the developers with this message.");
 
 define("LangCounter","Counter");
 

@@ -1,24 +1,17 @@
 <?php // view_instrument.php - view information of an instrument 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!($instrumentid=$objUtil->checkGetKey('instrument'))) throw new Exception(LangExcpetion003);
+elseif(!($instrumentid=$objUtil->checkGetKey('instrument'))) throw new Exception(LangException007b);
 else
 {
-if(!$objUtil->checkGetKey('instrument')) 
-  throw("No instrument specified");  
-if(!($name=$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'name')))
-  throw("Instrument not found");
-  
 if($name=="Naked eye")
   $name=InstrumentsNakedEye;
-  
-$fixedMagnification=$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'fixedMagnification');
-$instrumentType=$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'type');
-$instrumentFD=$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'fd');
-$instrumentDiameter=$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'diameter');
-$instrumentFocalLength=$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'diameter')*$objInstrument->getInstrumentPropertyFromId($_GET['instrument'],'fd');
+$fixedMagnification=$objInstrument->getInstrumentPropertyFromId($instrumentid,'fixedMagnification');
+$instrumentType=$objInstrument->getInstrumentPropertyFromId($instrumentid,'type');
+$instrumentFD=$objInstrument->getInstrumentPropertyFromId($instrumentid,'fd');
+$instrumentDiameter=$objInstrument->getInstrumentPropertyFromId($instrumentid,'diameter');
+$instrumentFocalLength=$objInstrument->getInstrumentPropertyFromId($instrumentid,'diameter')*$objInstrument->getInstrumentPropertyFromId($instrumentid,'fd');
 $instrumentEchoType=$objInstrument->getInstrumentEchoType($instrumentType);
-
-echo '<div id=\"main\">';
+echo "<div id=\"main\">";
 echo "<h2>".$name."</h2>";
 echo "<table>";
 if($instrumentType!=InstrumentNakedEye)

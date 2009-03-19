@@ -50,13 +50,13 @@ while(list ($key, $value) = each($sites))
     $region = stripslashes($objLocation->getLocationPropertyFromId($value,'region'));
     $country = $objLocation->getLocationPropertyFromId($value,'country');
     if($objLocation->getLocationPropertyFromId($value,'longitude') > 0)
-      $longitude = "&nbsp;" . decToString($objLocation->getLocationPropertyFromId($value,'longitude'));
+      $longitude = "&nbsp;".$objPresentations->decToString($objLocation->getLocationPropertyFromId($value,'longitude'));
     else
-     $longitude = decToString($objLocation->getLocationPropertyFromId($value,'longitude'));
+     $longitude = $objPresentations->decToString($objLocation->getLocationPropertyFromId($value,'longitude'));
     if($objLocation->getLocationPropertyFromId($value,'latitude') > 0)
-      $latitude = "&nbsp;" . decToString($objLocation->getLocationPropertyFromId($value,'latitude'));
+      $latitude = "&nbsp;" .$objPresentations->decToString($objLocation->getLocationPropertyFromId($value,'latitude'));
     else
-      $latitude = decToString($objLocation->getLocationPropertyFromId($value,'latitude'));
+      $latitude = $objPresentations->decToString($objLocation->getLocationPropertyFromId($value,'latitude'));
     $timezone = $objLocation->getLocationPropertyFromId($value,'timezone');
     $observer = $objLocation->getLocationPropertyFromId($value,'observer');
     $limmag = $objLocation->getLocationPropertyFromId($value,'limitingMagnitude');

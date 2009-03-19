@@ -730,7 +730,7 @@ class Objects implements iObjects
     return $objDatabase->execSQL("UPDATE objects SET ".$property." = \"".$propertyValue."\" WHERE name = \"".$name."\"");
   }
   public  function showObject($object,$zoom=30)
-  { global $deepskylive, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL, $objPresentations;	
+  { global $objPresentations, $deepskylive, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL, $objPresentations;	
     $object=$this->getDsObjectName($object);
     $_SESSION['object']=$object;
     $altnames=$this->getAlternativeNames($object); $alt="";
@@ -758,7 +758,7 @@ class Objects implements iObjects
 	    tableFieldnameField2(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(stripslashes($object))."\">".(stripslashes($object))."</a>",
 	                                      "&nbsp;","&nbsp;"," class=\"type2\"");
  	  tableFieldnameField2(LangViewObjectField2,($alt?$alt:"-"),LangViewObjectField2b,($containst? $containst . "/":"(-)/").($partoft?$partoft:"-"),"class=\"type1\"");                                      // Alternative names / PART OFs
-    tableFieldnameField2(LangViewObjectField3,raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,decToStringDegMin($this->getDsoProperty($object,'decl')),"class=\"type2\"");  // RIGHT ASCENSION   / DECLINATION
+    tableFieldnameField2(LangViewObjectField3,$objPresentations->raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,$objPresentations->decToStringDegMin($this->getDsoProperty($object,'decl')),"class=\"type2\"");  // RIGHT ASCENSION   / DECLINATION
     tableFieldnameField2(LangViewObjectField5,$GLOBALS[$this->getDsoProperty($object,'con')],LangViewObjectField6,$GLOBALS[$this->getDsoProperty($object,'type')],"class=\"type1\"");            // CONSTELLATION     / TYPE
     tableFieldnameField2(LangViewObjectField7,((($magnitude==99.9)||($magnitude==""))?$magnitude = "-":$magnitude),LangViewObjectField8,((($sb==99.9)||($sb==""))?"-":$sb),"class=\"type2\"");    // MAGNITUDE / SURFACE BRIGHTNESS
     tableFieldnameField2(LangViewObjectField9,(($size=$this->getSize($object))?$size:"-"),LangViewObjectField12,(($this->getDsoProperty($object,'pa')!=999)?($this->getDsoProperty($object,'pa') . "&deg;"):"-"),"class=\"type1\"");   // SIZE / POSITION ANGLE    
@@ -809,8 +809,8 @@ class Objects implements iObjects
     echo "<div style=\"float:right;width:48%;text-align:center;>";
         // LINK TO DEEPSKYLIVE CHART
     if ($deepskylive == 1)
-    { $raDSL=raToStringDSL($this->getDsoProperty($object,'ra'));
-      $declDSL=decToStringDSL($this->getDsoProperty($object,'decl'));
+    { $raDSL=$objPresentations->raToStringDSL($this->getDsoProperty($object,'ra'));
+      $declDSL=$objPresentations->decToStringDSL($this->getDsoProperty($object,'decl'));
       echo "<form action=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;zoom=" . $zoom . "\" method=\"post\">";
 
       echo "<select name=\"dslsize\">";

@@ -1,4 +1,5 @@
 <?php
+$inIndex=true;
 include 'common/entryexit/preludes.php';                                          // Includes of all classes and assistance files
 include 'common/layout/presentation.php';
 echo "<head>";

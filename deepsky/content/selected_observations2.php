@@ -1,7 +1,4 @@
-<?php
-
-// selected_observations2.php
-// generates an overview of selected observations in the database
+<?php // selected_observations2.php - generates an overview of selected observations in the database
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 $link2 = $baseURL . "index.php?indexAction=result_selected_observations&amp;lco=" . urlencode($_SESSION['lco']);
 reset($_GET);
@@ -26,7 +23,7 @@ $offset=210;
 //====================== the remainder of the pages formats the page output and calls showObject (if necessary) and showObservations
 //=============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT BEFORE SHOWING ITS OBSERVATIONS =====================================================================================
 if ($object && $objObject->getExactDsObject($object)) 
-{ $offset=520; 
+{ $offset=400; 
 	$object_ss = stripslashes($object);
 	$seen = "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
 	$seenDetails = $objObject->getSeen($object);
@@ -38,7 +35,7 @@ if ($object && $objObject->getExactDsObject($object))
 			$seen = "<a target=\"_top\" href=\"" .
 			$baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
 	echo "<div id=\"main\">";
-	echo "<h2>".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h2>";
+	echo "<h6 class=\"h2header\">".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h6>";
 	echo "<table width=\"100%\">";
 	echo "<tr>";
 	echo "<td width=\"25%\" align=\"left\">";
@@ -47,8 +44,8 @@ if ($object && $objObject->getExactDsObject($object))
 	if($loggedUser)
 		echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=add_observation&object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object_ss . "</a>";
 	echo "</td>";
-	if ($myList) {
-		echo "<td width=\"25%\" align=\"center\">";
+	if ($myList) 
+	{ echo "<td width=\"25%\" align=\"center\">";
 		if ($objList->checkObjectInMyActiveList($object))
 			echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage3 . $listname_ss . "</a>";
 		else
@@ -64,9 +61,9 @@ if (count($_SESSION['Qobs']) == 0) //===========================================
 {	echo "<h2>";
 	echo LangObservationNoResults;
 	if ($objUtil->checkGetKey('myLanguages'))
-		echo " (" . LangSelectedObservationsSelectedLanguagesIndication . ")";
+		echo " (".LangSelectedObservationsSelectedLanguagesIndication.")";
 	else
-		echo " (" . LangSelectedObservationsAllLanguagesIndication . ")";
+		echo " (".LangSelectedObservationsAllLanguagesIndication.")";
 	echo "</h2>";
 	echo "<p>";
 	if ($objUtil->checkGetKey('myLanguages'))
@@ -125,7 +122,7 @@ else
 	  $objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco']);
 	else
 	{ $_SESSION['ifrm']="deepsky/content/ifrm_observations.php";
-		echo "<iframe name=\"obs_list\" id=\"obs_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;link2=".urlencode($link2)."&amp;min=".$min."&amp;max=".$max."&amp;expand=".$objUtil->checkGetKey('expand')."\" frameborder=\"0\" width=\"100%\" style=\"heigth:100px\">";
+		echo "<iframe name=\"obs_list\" id=\"obs_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;link2=".urlencode($link2)."&amp;min=".$min."&amp;max=".$max."&amp;expand=".$objUtil->checkGetKey('expand')."\" frameborder=\"0\" width=\"100%\" style=\"heigth:200px\">";
 	  $objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco']);
 		echo "</iframe>";
 	}
