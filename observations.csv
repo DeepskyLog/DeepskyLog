@@ -1,6 +1,7 @@
 <?php 
 header ("Content-Type: application/vnd.ms-excel");
 header ("Content-Disposition: attachment; filename=\"observations.csv\"");
+$inIndex = true;
 include 'common/entryexit/preludes.php';
 include 'common/layout/presentation.php';
 if(array_key_exists('Qobs',$_SESSION)&&$_SESSION['Qobs'])

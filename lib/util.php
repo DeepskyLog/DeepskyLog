@@ -482,7 +482,7 @@ class Utils implements iUtils
         $magnification->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fixedMagnification')))); 
 	  } else {
       	$focalLength = $siteChild->appendChild($dom->createElement('focalLength'));
-        $focalLength->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fixedMagnification')) * $GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'diameter'))); 
+        $focalLength->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fd')) * $GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'diameter'))); 
 	  }
     }
 
@@ -540,7 +540,7 @@ class Utils implements iUtils
         $model->appendChild($dom->createCDATASection(utf8_encode(html_entity_decode($GLOBALS['objLens']->getLensPropertyFromId($value,'name'))))); 
 
         $factor = $lensChild->appendChild($dom->createElement('factor')); 
-        $factor->appendChild($dom->createTextNode(($GLOBALS['objLens']->getFilterPropertyFromId($value,'factor'))));
+        $factor->appendChild($dom->createTextNode(($GLOBALS['objLens']->getLensPropertyFromId($value,'factor'))));
       }
     }
 
