@@ -968,11 +968,11 @@ class Utils implements iUtils
 
       $pdf->ezText($objectname, "14");
 
-      $observerid = $observation->getDsObservationProperty($value,'observerid');
+      $observerid = $observation->getObserverId($value);
 
       if ($observer->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
       { $date = sscanf($observation->getDate($value), "%4d%2d%2d");
-        $time = $observation->getDsObservationProperty($value,'time');
+        $time = $observation->getTime($value);
       }
       else
       { $date = sscanf($observation->getLocalDate($value), "%4d%2d%2d");
@@ -1608,7 +1608,7 @@ class Utils implements iUtils
 	
 	  //add root - <channel> - <description>
 	  $descDom = $channelDom->appendChild($dom->createElement('description'));
-	  $descDom->appendChild($dom->createTextNode("DeepskyLog - visual deepsky observations"));
+	  $descDom->appendChild($dom->createTextNode("DeepskyLog - visual deepsky and comets observations"));
 	
 	  // add root - <channel> - <atom>
 	  $atomDom = $channelDom->appendChild($dom->createElement('atom:link'));
@@ -1641,7 +1641,7 @@ class Utils implements iUtils
 	  $lbdDom = $channelDom->appendChild($dom->createElement('lastBuildDate'));
 	  $lbdDom->appendChild($dom->createTextNode($theDate));
 	
-	  // Get the new deepsky observations of the last week
+	  // Get the new deepsky observations of the last month
 	  $theDate = date('Ymd', strtotime('-1 month'));
 	
 	  $_GET['minyear'] = substr($theDate,0,4);
@@ -1660,13 +1660,13 @@ class Utils implements iUtils
 	
 	    $titleDom = $itemDom->appendChild($dom->createElement('title'));
 	    $titleDom->appendChild($dom->createTextNode($value['objectname'] . " with "
-	     . $objInstrument->getInstrumentPropertyFromId($value['instrumentid'],'name') . " from "
+	     . htmlspecialchars_decode($objInstrument->getInstrumentPropertyFromId($value['instrumentid'],'name')) . " from "
 	     . $objLocation->getLocationPropertyFromId($objObservation->getDsObservationProperty($value['observationid'],'locationid'), 'name')));
 	    $linkDom = $itemDom->appendChild($dom->createElement('link'));
 	    $linkDom->appendChild($dom->createCDATASection("http://www.deepskylog.be/index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&QobsKey=0&dalm=D"));
 	
 	    $descDom = $itemDom->appendChild($dom->createElement('description'));
-	    $descDom->appendChild($dom->createCDATASection(utf8_encode($value['observationdescription'])));
+	    $descDom->appendChild($dom->createCDATASection($objPresentations->br2nl(utf8_encode($value['observationdescription']))));
 	    
 	    $authorDom = $itemDom->appendChild($dom->createElement('dc:creator'));
 	    $authorDom->appendChild($dom->createCDATASection($value['observername']));
@@ -1686,9 +1686,12 @@ class Utils implements iUtils
 	
 	    $time = -999;
 	    
-	    if ($time < 0) {
-	      $hour = 0;
-	      $minute = 0;
+      $obs=$objObservation->getAllInfoDsObservation($value['observationid']);
+      $time=$obs['time'];
+
+      if($time>="0")
+      { $hour=(int)($time/100);
+        $minute=$time-(100*$hour);
 	    } else {
 	      $hour = 0;
 	      $minute = 0;
@@ -1701,7 +1704,92 @@ class Utils implements iUtils
 	    
 	    $pubDateDom->appendChild($dom->createTextNode(date("r", mktime($hour, $minute, 0, $month, $day, $year))));
 	  }
-	  //generate xml
+
+    include_once "cometobjects.php";
+    include_once "observers.php";
+    include_once "instruments.php";
+    include_once "locations.php";
+    include_once "cometobservations.php";
+    include_once "icqmethod.php";
+    include_once "icqreferencekey.php";
+    global $instDir,$objCometObject;
+    $objects = new CometObjects;
+    $observer = new Observers;
+    $instrument = new Instruments;
+    $observation = new CometObservations;
+    $location = new Locations;
+    $util = $this;
+    $ICQMETHODS = new ICQMETHOD();
+    $ICQREFERENCEKEYS = new ICQREFERENCEKEY();
+
+    $cometsResult = $observation->getObservationFromQuery($query);
+  
+    while(list ($key, $value) = each($cometsResult))
+    {
+      $objectname = $objCometObject->getName($observation->getObjectId($value));
+      
+      //add root - <channel> - <item>
+      $itemDom = $channelDom->appendChild($dom->createElement('item'));
+
+      $title = htmlspecialchars_decode($objectname);
+      
+      // Location and instrument
+      if ($observation->getLocationId($value) != 0 && $observation->getLocationId($value) != 1)
+      {
+        $title = $title . " from " . htmlspecialchars_decode($location->getLocationPropertyFromId($observation->getLocationId($value),'name'));
+      }
+      
+      if ($observation->getInstrumentId($value) != 0)
+      {
+        $title = $title . " with " . htmlspecialchars_decode($instrument->getInstrumentPropertyFromId($observation->getInstrumentId($value),'name'));
+      }
+      
+      $titleDom = $itemDom->appendChild($dom->createElement('title'));
+      $titleDom->appendChild($dom->createTextNode($title));
+      $linkDom = $itemDom->appendChild($dom->createElement('link'));
+      $linkDom->appendChild($dom->createCDATASection("http://localhost/deepskylog/index.php?indexAction=comets_detail_observation&observation=" . $value));
+  
+      // Description
+      $description = $observation->getDescription($value);
+
+      if (strcmp($description, "") != 0)
+      {
+        $descDom = $itemDom->appendChild($dom->createElement('description'));
+        $descDom->appendChild($dom->createCDATASection($objPresentations->br2nl(utf8_encode($description))));
+      } else {
+        $descDom = $itemDom->appendChild($dom->createElement('description'));
+        $descDom->appendChild($dom->createCDATASection(""));
+      }
+
+      $observerid = $observation->getObserverId($value);
+      $observername = $observer->getObserverProperty($observerid,'firstname')." ".$observer->getObserverProperty($observerid,'name');
+
+      $authorDom = $itemDom->appendChild($dom->createElement('dc:creator'));
+      $authorDom->appendChild($dom->createCDATASection($observername));
+  
+      $guidDom = $itemDom->appendChild($dom->createElement('guid'));
+      $guidDom->appendChild($dom->createTextNode("comet".$value));
+      
+      $attr = $dom->createAttribute("isPermaLink");
+      $guidDom->appendChild($attr);
+      
+      $attrText = $dom->createTextNode("false");
+      $attr->appendChild($attrText);
+      
+      $pubDateDom = $itemDom->appendChild($dom->createElement('pubDate'));
+      
+      date_default_timezone_set('UTC');
+  
+      $date = sscanf($observation->getLocalDate($value), "%4d%2d%2d");
+      $time = $observation->getLocalTime($value);
+
+      $hour = (int)($time / 100);
+      $minute = $time - $hour * 100;
+      
+      $pubDateDom->appendChild($dom->createTextNode(date("r", mktime($hour, $minute, 0, $date[1], $date[2], $date[0]))));
+    }   
+
+    //generate xml
 	  $dom->formatOutput = true; // set the formatOutput attribute of
 	  // domDocument to true
 	  // save XML as string or file
