@@ -1,22 +1,15 @@
 <?php 
-  header ("Content-Type: application/pdf");
-  header ("Content-Disposition: attachment; filename=\"observations.pdf\"");
-  $inIndex = true;
-  include 'common/entryexit/preludes.php';
-  $_SESSION['module'] = "comets";
-  $_SESSION['pdfname'] = "observations.pdf"; // necessary for class.pdf.php
+header ("Content-Type: application/pdf");
+header ("Content-Disposition: attachment; filename=\"observations.pdf\"");
+$inIndex = true;
+include 'common/entryexit/preludes.php';
+include 'common/layout/presentation.php';
+$_SESSION['module'] = "comets";
+$_SESSION['pdfname'] = "observations.pdf"; // necessary for class.pdf.php
+$result = $_SESSION['observation_query'];
 
-  include_once "lib/cometobservations.php";
-  include_once "lib/util.php";
-  $util = new util;
-  $util->checkUserInput();
-
-  $result = $_SESSION['observation_query'];
-
-  if ($result != "")
-  {
-   $util = new util();
-
-   $util->pdfCometObservations($result);
-  }
+if ($result != "")
+{
+ $objUtil->pdfCometObservations($result);
+}
 ?>

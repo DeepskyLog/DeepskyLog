@@ -998,7 +998,7 @@ class Utils implements iUtils
       {
         if ($observation->getLocationId($value) != 0 && $observation->getLocationId($value) != 1)
         {
-          $locationname = LangPDFMessage10." : ".$location->getLocationPropertyFromId($observation->getLocationId($value,'name'));
+          $locationname = LangPDFMessage10." : ".$location->getLocationPropertyFromId($observation->getLocationId($value),'name');
           $extra = ", ";
         }
         else
