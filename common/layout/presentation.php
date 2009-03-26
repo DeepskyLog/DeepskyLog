@@ -290,12 +290,12 @@ function tablePageTitle($title, $link, &$list, &$min, &$max)
 }
 function divPageTitle($title, $link, &$list, &$min, &$max)
 { global $objUtil;
-  echo "<div class=\"container\">";
-	echo "<div class=\"h2header\" style=\"float: left; width: 60%;height:40px;background-color:#0000FF;\">";
+  echo "<div class=\"container\" style=\"position:relative; height:40px;\">";
+	echo "<div class=\"h2header\" style=\"position:absolute; left:0Px;width:60%;height:40px;\">";
   echo $title;
 	echo "</div>";
-	echo "<div style=\"float:right;width:38%;text-align:right;height:40px;background-color:#FF0000;\">";
-  list($min,$max)=$objUtil->printNewListHeader($list,$link,$min,25,'');	
+	echo "<div style=\"position:absolute; top:10px;right:0px;width:38%;text-align:right;height:40px;\">";
+  list($min,$max)=$objUtil->printNewListHeader2($list,$link,$min,25,'');	
 	echo "</div>";
 	echo "</div>";
 }

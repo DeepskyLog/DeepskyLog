@@ -18,7 +18,7 @@ if(count($_SESSION['Qobj'])>1) //===============================================
 	   array_key_exists('listname',$_SESSION)&&$_SESSION['listname']&&($_SESSION['listname']<>"----------")&&$myList)
     $title.="&nbsp;-&nbsp;<a href=\"".$link."&amp;min=".$min."&amp;addAllObjectsFromQueryToList=true\" title=\"".LangListQueryObjectsMessage5.$listname_ss."\">".LangListQueryObjectsMessage4."</a>";
   divPageTitle($title, $link, $_SESSION['Qobj'], $min, $max);
-	echo "<div style=\"width:100%;background-color:#FFFF00;\">";
+	echo "<div style=\"width:100%;\">";
   if($showPartOfs)
     echo "<a href=\"".$link."&amp;showPartOfs=0\">".LangListQueryObjectsMessage12."</a>";
 	else

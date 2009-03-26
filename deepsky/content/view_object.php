@@ -4,6 +4,7 @@
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 $seen=$objObject->getDSOseenLink($_GET['object']);
 echo "<div id=\"main\">";
+echo "<div style=\"position:relative; left:0px\">";
 echo "<h6 class=\"title\">".LangViewObjectTitle."&nbsp;-&nbsp;".stripslashes($_GET['object'])."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h6>";
 $topline="";
 if(substr($objObject->getSeen($_GET['object']),0,1)!='-')
@@ -18,11 +19,12 @@ if($myList)
 }	
 echo substr($topline,13);
 $objObject->showObject($_GET['object'],$objUtil->checkGetKey('zoom',30));
+echo"</div>";
 $maxcount=count($_SESSION['Qobj']);
 $max = 9999;
 $link = $baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey('zoom',30).'&amp;SID=Qobj';
-echo "<div style=\"float:left; height:65px; width:100%;\">";
-echo "<div style=\"float:left;width:60%;text-align:left;\">";
+echo "<div style=\"position:relative; left:0px; height:65px; width:100%;\">";
+echo "<div style=\"position:absolute; left:0px; width:60%;text-align:left;\">";
 echo "<h6 class=\"title\">".$_GET['object'];
 if(count($_SESSION['Qobj'])>2)
  echo ' '.LangViewObjectAndNearbyObjects.' '.(count($_SESSION['Qobj'])-1).' '.LangViewObjectNearbyObjects;
@@ -47,12 +49,12 @@ echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\"> ";
 echo "</form>";
 echo "</div>";
   
-echo "<div class=\"title\" style=\"float:right;width:38%;text-align:right;\">";
+echo "<div class=\"title\" style=\"position:absolute; right:0px;width:38%;text-align:right;\">";
 list($min,$max)=$objUtil->printNewListHeader2($_SESSION['Qobj'],$link ,$min,25,"");
 echo "</div>";
 echo "</div>";
 
-echo "<div style=\"float:left; width:100%;\">";
+echo "<div style=\"position:relative; left:0px; width:100%;\">";
 if($max>count($_SESSION['Qobj']))
   $max=count($_SESSION['Qobj']);
 $_GET['min']=$min;
@@ -68,7 +70,7 @@ else
 echo "<script>resizeElement('obj_list',400);</script>";
 echo "</div>";
 
-echo "<div style=\"float:left; width:100%;\">";
+echo "<div style=\"position:relative; left:0px; width:100%;\">";
 echo "<hr />";
 $objPresentations->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
 echo "&nbsp;-&nbsp;";

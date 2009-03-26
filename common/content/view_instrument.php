@@ -3,6 +3,7 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($instrumentid=$objUtil->checkGetKey('instrument'))) throw new Exception(LangException007b);
 else
 {
+$name=$objInstrument->getInstrumentPropertyFromId($instrumentid,'name');
 if($name=="Naked eye")
   $name=InstrumentsNakedEye;
 $fixedMagnification=$objInstrument->getInstrumentPropertyFromId($instrumentid,'fixedMagnification');

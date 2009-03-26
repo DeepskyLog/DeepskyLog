@@ -3,7 +3,7 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($lensid=$objUtil->checkGetKey('lens'))) throw new Exception(LangException009b);
 else
 {
-$name=$objLens->getLensPropertyFromId($_GET['lens'],'name');
+$name=$objLens->getLensPropertyFromId($lensid,'name');
 echo "<div id=\"main\">";
 echo "<h2>".$name."</h2>";
 echo "<table>";

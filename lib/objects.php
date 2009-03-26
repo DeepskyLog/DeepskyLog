@@ -792,8 +792,9 @@ class Objects implements iObjects
   	  echo "</tr>";
     }
 	  echo "</table>";
-    echo "<div style=\"float:left;width:100%;margin-top:10px;\">";
-    echo "<div style=\"float:left;width:50%;text-align:center\">";
+    echo "<div style=\"position:relative; left:0px; height:40px; width:100%;margin-top:10px;\">";
+    echo "<div style=\"position:relative; left:0px; height:30px;width:100%;margin-top:10px;\">";
+    echo "<div style=\"position:absolute; left:0px; width:50%;text-align:center\">";
     echo "<form action=\"".$baseURL."index.php?indexAction=view_image\" method=\"post\">";
     // LINK TO DSS IMAGE
     echo "<select name=\"imagesize\">";
@@ -807,7 +808,7 @@ class Objects implements iObjects
     echo "<input type=\"submit\" name=\"dss\"     value=\"" . LangViewObjectDSS . "\" />";
     echo "</form>";
     echo "</div>";
-    echo "<div style=\"float:right;width:48%;text-align:center;>";
+    echo "<div style=\"position:absolute; right:0px;width:48%;text-align:center;\">";
         // LINK TO DEEPSKYLIVE CHART
     if ($deepskylive == 1)
     { $raDSL=$objPresentations->raToStringDSL($this->getDsoProperty($object,'ra'));
@@ -835,7 +836,8 @@ class Objects implements iObjects
       echo "</form>";
     }
     echo "</div>";
-	  echo "<div style=\"float:left;width:100%;\">";
+    echo"</div>";
+	  echo "<div style=\"position:relative;width:100%;\">";
 	  echo "<hr>";
     echo "</div>";
 	  echo "</div>";

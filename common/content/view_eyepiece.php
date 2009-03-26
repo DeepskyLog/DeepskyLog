@@ -5,7 +5,7 @@ else
 {
 $eyepieceproperties=$objEyepiece->getEyepiecePropertiesFromId($eyepieceid);
 echo "<div id=\"main\">";
-echo "<h2>".$objEyepiece->getEyepiecePropertyFromId($eyepieceid,'name','Unkown name')."</h2>";
+echo "<h2>".$eyepieceproperties['name']."</h2>";
 echo "<table>";
 tableFieldnameField(LangViewEyepieceFocalLength,$eyepieceproperties['focalLength']);
 if($eyepieceproperties['maxFocalLength']>0) 

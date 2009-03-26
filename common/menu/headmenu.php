@@ -1,31 +1,33 @@
 <?php
 echo "<body leftmargin=\"0\" topmargin=\"0\" rightmargin=\"0\" bottommargin=\"0\" marginwidth=\"0\" marginheight=\"0\">";
 echo "<script type=\"text/javascript\" src=\"".$baseURL."common/menu/wz_tooltip.js\"></script>";
-
 // VVS Header and our 3 dropdown boxes if logged in 
-echo "<div style=\"background-color:#003366\" align=\"right\">";
-echo "<div style=\"background:url(".$baseURL."styles/images/header_bg.jpg); background-repeat: no-repeat; background-position: 0% 0%;\">";
-echo "<table>";
-echo "<tr>";
-echo "<td height=\"60px\">";
-include $_SESSION['module'].'/menu/list.php';
-echo"</td><td>";
-include $_SESSION['module'].'/menu/instrument.php';
-echo"</td><td>";
-include $_SESSION['module'].'/menu/location.php';
-echo"</td><td>";
+echo "<div style=\"background-color:#003366;
+                   position:relative;
+                   left:0px; top:0px;
+                   width:100%; heigth:60px;
+                   \">";
+echo "<img src=\"".$baseURL."styles/images/header_bg.jpg\"/>";
+echo "<div style=\"position:absolute;right:2px;top:0px;\">";
 echo "<img src=\"".$baseURL."styles/images/deepskylog.gif\"/>";
-echo"</td>";
-echo "</table>";
+echo "</div>";
+echo "<div style=\"position:absolute;top:7px;right:30px;\">";
+echo "<div style=\"float:right\">";
+include $_SESSION['module'].'/menu/location.php';
+echo "</div>";
+echo "<div style=\"float:right\">";
+include $_SESSION['module'].'/menu/instrument.php';
+echo "</div>";
+echo "<div style=\"float:right\">";
+include $_SESSION['module'].'/menu/list.php';
 echo "</div>";
 echo "</div>";
-
+echo "</div>";
 // Welcome line with login name
-echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
-echo "<tr>";
-echo "<td style=\"line-height:20px\">";
+echo "<div style=\"position:relative;width:100%;height:25px;\">";
+echo "<div style=\"position:absolute;left:5px;top:3px;\">";
 echo "<span class=\"mainlevel\">";
-echo "&nbsp;".LangWelcome;
+echo LangWelcome;
 echo $objUtil->checkSessionKey('module');
 echo LangWelcome1;
 echo $baseURL;
@@ -35,8 +37,8 @@ if($objUtil->checkSessionKey('deepskylog_id'))
 else
   echo LangWelcome3;
 echo "</span>";
-echo "</td>";
-echo "<td align=\"right\">";  
+echo "</div>";
+echo "<div style=\"position:absolute;right:10px;top:3px;\">";  
 echo "<span class=\"mainlevel\">";
 echo LangWelcome4;
 for ($i = 0; $i < count($modules);$i++)
@@ -44,9 +46,7 @@ for ($i = 0; $i < count($modules);$i++)
   if($i>0) echo " - ";
     echo "<a href=\"".$baseURL."index.php?indexAction=module".$mod."\">".$GLOBALS[$mod]."</a>";
 }
-echo "&nbsp;</span>";
-echo "</td>";
-echo"</tr>";
-echo "</table>";
-
+echo "</span>";
+echo "</div>";
+echo "</div>";
 ?>

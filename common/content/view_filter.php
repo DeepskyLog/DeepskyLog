@@ -4,12 +4,13 @@ elseif(!($filterid=$objUtil->checkGetKey('filter'))) throw new Exception(LangExc
 //elseif(!($objFilter->getFilterPropertyFromId($filterid,'name')))  throw new Exception("Filter not found in change_filter.php, please contact the developers with this message:".$filterid);
 else
 {
+$filter=$objFilter->getFilterPropertiesFromId($filterid);
 echo "<div id=\"main\">";
-echo "<h2>".$objFilter->getFilterPropertyFromId($filterid,'name','Unknown filter name')."</h2>";
+echo "<h2>".$filter['name']."</h2>";
 echo "<table>";
 tableFieldnameField(LangViewFilterName,$filter['name']);
-tableFieldnameField(LangViewFilterType,$objFilter->getEchoType($type)); 
-tableFieldnameField(LangViewFilterColor,$objFilter->getEchoColor($color));
+tableFieldnameField(LangViewFilterType,$objFilter->getEchoType($filter['type'])); 
+tableFieldnameField(LangViewFilterColor,$objFilter->getEchoColor($filter['color']));
 if($filter['wratten'])
   tableFieldnameField(LangViewFilterWratten,$filter['wratten']);
 if($filter['schott'])
