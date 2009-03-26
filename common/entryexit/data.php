@@ -5,9 +5,6 @@ else
 	{ $_GET['source']='top_objects';
 	  require_once 'deepsky/data/data_get_objects.php';
 	}
-	if($includeFile=='deepsky/content/selected_observations2.php')
-	{  require_once 'deepsky/data/data_get_observations.php';
-	}
 	if($includeFile=='deepsky/content/setup_objects_query.php')
 	{ $pageError = false;       
 	  $minDeclDegreesError = false;    $minDeclMinutesError = false;    $minDeclSecondsError = false;
@@ -33,7 +30,7 @@ else
 	  $maxSize = '';        $maxSizeC = '';       $size_max_units = ''; 
 	  $minContrast = '';                          $maxContrast = '';    
 	  $inList = '';                               $notInList = '';
-	  
+	  $_GET['source']="setup_objects_query";
 	  require_once 'deepsky/data/data_get_objects.php'; 
 	  if(array_key_exists('Qobj',$_SESSION)&&(count($_SESSION['Qobj'])>1))
 	    $includeFile="deepsky/content/execute_query_objects.php";
@@ -51,13 +48,16 @@ else
 	  require_once 'deepsky/data/data_get_objects.php';
 	}
 	if($includeFile=='deepsky/content/view_object.php')
-	{ if(!$_GET['object']) 
-	    throw new Exception("// no object defined in url, line 6 in view_object.php");
+	{ if(!($objUtil->checkGetKey('object'))) 
+	    throw new Exception(LangException016);
 	  if(!($_GET['object']=$objObject->getDsObjectName($_GET['object'])))
-	    throw new Exception("// no corresponding object found, line 8 in view_object.php");
+	    throw new Exception(LangException016b);
 	  $_GET['source']='objects_nearby';
-	  $_GET['zoom']=$GLOBALS['objUtil']->checkGetKey('zoom',30);	
+	  $_GET['zoom']=$objUtil->checkGetKey('zoom',30);	
 	  include "deepsky/data/data_get_objects.php";	
+	}
+	if($includeFile=='deepsky/content/selected_observations2.php')
+	{  require_once 'deepsky/data/data_get_observations.php';
 	}
 }
 ?>

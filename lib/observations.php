@@ -27,7 +27,9 @@ interface iObservations
 	public  function setLocalDateAndTime($id, $date, $time);                                                                                                          	// sets the date and time for the given observation when the time is given in  local time
 	public  function showListObservation($obsKey, $link, $lco); 
 	public  function showObservation($LOid);                                                                                                                            // shows the details of an observation 
-	public  function validateDeleteDSObservation();                                                                                                                  // removes the observation with id = $id
+	public  function validateChangeObservation();                                                                                                                       // validate_change_observation.php - checks if the change new observation form is correctly filled in
+	public  function validateDeleteDSObservation();                                                                                                                     // removes the observation with id = $id
+	public  function validateObservation();
 }
 class Observations {
 	public  function addDSObservation($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language) 
@@ -134,12 +136,13 @@ class Observations {
 		}
 	}
 	public  function getDsObservationLocalTime($id)                                                                                                 // returns the time of the given observation in local time
-	{ if ($get = mysql_fetch_object($GLOBALS['objDatabase']->selectrecordset("SELECT date, time, locationid FROM observations WHERE id=\"$id\""))) {
+	{ global $objDatabase, $objLocation;
+	  if ($get = mysql_fetch_object($objDatabase->selectrecordset("SELECT date, time, locationid FROM observations WHERE id=\"$id\""))) {
 			$date = $get->date;
 			$time = $get->time;
 			$loc = $get->locationid;
 			$date = sscanf($date, "%4d%2d%2d");
-			$timezone = $GLOBALS['objLocation']->getLocationPropertyFromId($loc,'timezone');
+			$timezone = $objLocation->getLocationPropertyFromId($loc,'timezone');
 			$dateTimeZone = new DateTimeZone($timezone);
 			$datestr = sprintf("%02d", $date[1]) . "/" . sprintf("%02d", $date[2]) . "/" . $date[0];
 			$dateTime = new DateTime($datestr, $dateTimeZone);
@@ -233,6 +236,7 @@ class Observations {
 	  //             "stellar" => "1", "extended" => "0", "resolved" => "0", "mottled" => "1",
   	//             "characterType" => "A", "unusualShape" => "0", "partlyUnresolved" => "1", 
   	//             "colorContrasts" => "0", "minSQM" => "18.9", "maxSQM" => "21.2";
+		global $objInstrument,$objEyepiece,$objFilter,$objLens,$objLocation,$objDatabase;
 		$object = "";
 		$sqland = "";
 		$alternative = "";
@@ -280,7 +284,7 @@ class Observations {
 		if (isset ($queries["instrument"]) && ($queries["instrument"] != "")) {
 			$sqland .= "AND (observations.instrumentid = \"" . $queries["instrument"] . "\" ";
 			if (!$exactinstrumentlocation) {
-				$insts = $GLOBALS['objInstrument']->getAllInstrumentsIds($queries["instrument"]);
+				$insts = $objInstrument->getAllInstrumentsIds($queries["instrument"]);
 				while (list ($key, $value) = each($insts))
 					$sqland .= " || observations.instrumentid = \"" . $value . "\" ";
 			}
@@ -289,7 +293,7 @@ class Observations {
 		if (isset ($queries["eyepiece"]) && ($queries["eyepiece"] != "")) {
 			$sqland .= "AND (observations.eyepieceid = \"" . $queries["eyepiece"] . "\" ";
 			if (!$exactinstrumentlocation) {
-				$eyeps = $GLOBALS['objEyepiece']->getAllEyepiecesIds($queries["eyepiece"]);
+				$eyeps = $objEyepiece->getAllEyepiecesIds($queries["eyepiece"]);
 				while (list ($key, $value) = each($eyeps))
 					$sqland .= " || observations.eyepieceid = \"" . $value . "\" ";
 			}
@@ -298,7 +302,7 @@ class Observations {
 		if (isset ($queries["filter"]) && ($queries["filter"] != "")) {
 			$sqland .= " AND (observations.filterid = \"" . $queries["filter"] . "\" ";
 			if (!$exactinstrumentlocation) {
-				$filts = $GLOBALS['objFilter']->getAllFiltersIds($queries["filter"]);
+				$filts = $objFilter->getAllFiltersIds($queries["filter"]);
 				while (list ($key, $value) = each($filts))
 					$sqland .= " || observations.filterid = \"" . $value . "\" ";
 			}
@@ -307,7 +311,7 @@ class Observations {
 		if (isset ($queries["lens"]) && ($queries["lens"] != "")) {
 			$sqland .= "AND (observations.lensid = \"" . $queries["lens"] . "\" ";
 			if (!$exactinstrumentlocation) {
-				$lns = $GLOBALS['objLens']->getAllLensesIds($queries["lens"]);
+				$lns = $objLens->getAllLensesIds($queries["lens"]);
 				while (list ($key, $value) = each($lns))
 					$sqland .= " || observations.lensid = \"" . $value . "\" ";
 			}
@@ -316,7 +320,7 @@ class Observations {
 		if (isset ($queries["location"]) && ($queries["location"] != "")) {
 			$sqland .= "AND (observations.locationid = \"" . $queries["location"] . "\" ";
 			if (!$exactinstrumentlocation) {
-				$locs = $GLOBALS['objLocation']->getAllLocationsIds($queries["location"]);
+				$locs = $objLocation->getAllLocationsIds($queries["location"]);
 				while (list ($key, $value) = each($locs))
 					if ($value != $queries["location"])
 						$sqland .= " || observations.locationid = \"" . $value . "\" ";
@@ -440,7 +444,7 @@ class Observations {
 			while ($get = mysql_fetch_object($run)) {
 				$seentype = "X";
 				if (array_key_exists('deepskylog_id', $_SESSION) && ($seenpar != "D"))
-					if ($GLOBALS['objDatabase']->SelectSingleValue("SELECT observations.id FROM observations WHERE objectname = \"" . $get->objectname . "\" AND observerid = \"" . $_SESSION['deepskylog_id'] . "\"", 'id')) // object has been seen by the observer logged in
+					if ($objDatabase->SelectSingleValue("SELECT observations.id FROM observations WHERE objectname = \"" . $get->objectname . "\" AND observerid = \"" . $_SESSION['deepskylog_id'] . "\"", 'id')) // object has been seen by the observer logged in
 						$seentype = "Y";
 				if (($seenpar == "D") || ($seenpar == $seentype)) {
 					while (list ($key, $value) = each($get))
@@ -604,7 +608,7 @@ class Observations {
 	}
   public  function setDsObservationProperty($id,$property,$propertyValue)                                                                                                       // sets the property to the specified value for the given observation
   { global $objDatabase;
-    return $objDatabase->execSQL("UPDATE observations SET ".$property." = \"".$propertyValue."\" WHERE id = \"".$id."\"");
+      return $objDatabase->execSQL("UPDATE observations SET ".$property." = ".(($propertyValue=="NULL")?"NULL":"\"".$propertyValue."\"")." WHERE id = \"".$id."\"");
   }
 	public  function setLocalDateAndTime($id, $date, $time) 	                                                                                                                     // sets the date and time for the given observation when the time is given in  local time
 	{ global $objDatabase,$objLocation;
@@ -895,6 +899,174 @@ class Observations {
 		echo "</p>";
 		echo "<hr>";
 	}
+	public function validateChangeObservation() // validate_change_observation.php - checks if the change new observation form is correctly filled in
+	{ global $objUtil,$objObservation,$maxFileSize,$objObserver;
+		if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']) // pushed change observation button
+		{ if (!$_POST['day'] || !$_POST['month'] || !$_POST['year'] || $_POST['location'] == "1" || !$_POST['instrument'] || !$_POST['description'])
+				throw new Exception(LangValidateObservationMessage1);
+			elseif ($_FILES['drawing']['size'] > $maxFileSize) // file size of drawing too big
+			  throw new Exception(LangValidateObservationMessage6);
+			elseif (array_key_exists('observationid', $_POST) && $_POST['observationid']) // all fields filled in and observationid given
+			{ if ($objObservation->getDsObservationProperty($_POST['observationid'],'observerid') == $_SESSION['deepskylog_id']) // only allowed to change your own observations
+				{ $date = $_POST['year'] . sprintf("%02d", $_POST['month']) . sprintf("%02d", $_POST['day']);
+					if (array_key_exists('hours', $_POST) && ($_POST['hours'] != '')) {
+						if (array_key_exists('minutes', $_POST) && $_POST['minutes']) {
+							$time = ($_POST['hours'] * 100) + $_POST['minutes'];
+						} else {
+							$time = ($_POST['hours'] * 100);
+						}
+					} else {
+						$time = -9999;
+					}		
+					$objObservation->setDsObservationProperty($_POST['observationid'],'description', html_entity_decode(nl2br($_POST['description']), ENT_COMPAT, "ISO-8859-15") );
+					$objObservation->setDsObservationProperty($_POST['observationid'],'characterType', $objUtil->checkPostKey('characterType'));
+					if ($_POST['filter']) {
+						$objObservation->setDsObservationProperty($_POST['observationid'],'filterid', $_POST['filter']);
+					} else {
+						$objObservation->setDsObservationProperty($_POST['observationid'],'filterid', 0);
+					}		
+					if ($_POST['lens']) {
+						$objObservation->setDsObservationProperty($_POST['observationid'],'lensid', $_POST['lens']);
+					} else {
+						$objObservation->setDsObservationProperty($_POST['observationid'],'lensid', 0);
+					}
+					if ($_POST['eyepiece']) {
+						$objObservation->setDsObservationProperty($_POST['observationid'],'eyepieceid', $_POST['eyepiece']);
+					} else {
+						$objObservation->setDsObservationProperty($_POST['observationid'],'eyepieceid', 0);
+					}
+					if ($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT')) 
+					{ $objObservation->setDsObservationProperty($_POST['observationid'],'time', $time);
+						$objObservation->setDsObservationProperty($_POST['observationid'],'date', $date);
+					}
+					else
+					  $objObservation->setLocalDateAndTime($_POST['observationid'], $date, $time);
+					$objObservation->setDsObservationProperty($_POST['observationid'],'instrumentid', $_POST['instrument']);
+					$objObservation->setDsObservationProperty($_POST['observationid'],'locationid', $_POST['location']);
+					$objObservation->setDsObservationProperty($_POST['observationid'],'seeing', (($_POST['seeing']==-1)?"NULL":$_POST['seeing']));
+					if (array_key_exists('limit', $_POST) && $_POST['limit']) {
+						if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST['limit'], $matches)) // limiting magnitude like X.X or X,X with X a number between 0 and 9
+						{ // valid limiting magnitude
+							$_SESSION['limit'] = $matches[1] . ".";
+							if ($matches[2] != "") {
+								$_SESSION['limit'] = $_SESSION['limit'] . $matches[2];
+							} else {
+								$_SESSION['limit'] = $_SESSION['limit'] . "0";
+							}
+						} else // invalid limiting magnitude
+							{
+							$_SESSION['limit'] = ""; // clear current magnitude limit
+						}
+					} else
+						$_SESSION['limit'] = "";
+					$objObservation->setDsObservationProperty($_POST['observationid'],'limmag', ($_SESSION['limit']?preg_replace("/,/", ".", $_SESSION['limit']):"NULL"));
+					$objObservation->setDsObservationProperty($_POST['observationid'],'language', $_POST['description_language']);
+					if (array_key_exists('visibility', $_POST) && $_POST['visibility'])
+						$visibility = $_POST['visibility'];
+					else
+						$visibility = 0;
+					$objObservation->setDsObservationProperty($_POST['observationid'],'visibility', $visibility);
+		
+					if ($objUtil->checkPostKey('sqm'))
+						if (ereg('([0-9]{1})([0-9]{0,1})[.,]{0,1}([0-9]{0,1})', $_POST['sqm'], $matches)) // sqm value
+							$_POST['sqm'] = $matches[1] . $matches[2] . "." . (($matches[3]) ? $matches[3] : "0");
+						else
+							$_POST['sqm'] = ""; // clear current magnitude limit
+					if ($objUtil->checkPostKey('largeDiam'))
+						if (ereg('([0-9]+)[.,]{0,1}([0-9]{0,1})', $_POST['largeDiam'], $matches)) // large diameter
+							$_POST['largeDiam'] = (($matches[1]) ? $matches[1] : "0") . "." . (($matches[2]) ? $matches[2] : "0");
+						else // clear current large diameter
+							$_POST['largeDiam'] = "";
+					if ($objUtil->checkPostKey('smallDiam'))
+						if (ereg('([0-9]+)[.,]{0,1}([0-9]{0,1})', $_POST['smallDiam'], $matches)) // large diameter
+							$_POST['smallDiam'] = (($matches[1]) ? $matches[1] : "0") . "." . (($matches[2]) ? $matches[2] : "0");
+						else // clear current large diameter
+							$_POST['smallDiam'] = "";
+		
+					if ($_POST['smallDiam'] > $_POST['largeDiam']) {
+						$tmp = $_POST['largeDiam'];
+						$_POST['largeDiam'] = $_POST['smallDiam'];
+						$_POST['smallDiam'] = $tmp;
+					}
+					if ($objUtil->checkPostKey('size_units') == "min") {
+						$_POST['smallDiam'] = $_POST['smallDiam'] * 60.0;
+						$_POST['largeDiam'] = $_POST['largeDiam'] * 60.0;
+					}
+					if ($_POST['sqm'])
+						$objObservation->setDsObservationProperty($_POST['observationid'],'SQM',  preg_replace("/,/", ".", $_POST['sqm']));
+					if ($_POST['smallDiam'])
+						$objObservation->setDsObservationProperty($_POST['observationid'],'smallDiameter', $_POST['smallDiam']);
+					if ($_POST['largeDiam'])
+						$objObservation->setDsObservationProperty($_POST['observationid'],'largeDiameter', $_POST['largeDiam']);
+					if (array_key_exists('stellarextended', $_POST)&&($_POST['stellarextended']=="stellar"))
+						$objObservation->setDsObservationProperty($_POST['observationid'],'stellar', 1);
+					else
+						$objObservation->setDsObservationProperty($_POST['observationid'],'stellar', -1);
+					if (array_key_exists('stellarextended', $_POST)&&($_POST['stellarextended']=="extended"))
+						$objObservation->setDsObservationProperty($_POST['observationid'],'extended', 1);
+					else
+						$objObservation->setDsObservationProperty($_POST['observationid'],'extended', -1);
+					if (array_key_exists('resolved', $_POST))
+						$objObservation->setDsObservationProperty($_POST['observationid'],'resolved', 1);
+					else
+						$objObservation->setDsObservationProperty($_POST['observationid'],'resolved', -1);
+					if (array_key_exists('mottled', $_POST))
+						$objObservation->setDsObservationProperty($_POST['observationid'],'mottled', 1);
+					else
+						$objObservation->setDsObservationProperty($_POST['observationid'],'mottled', -1);
+					if (array_key_exists('unusualShape', $_POST))
+						$objObservation->setDsObservationProperty($_POST['observationid'],'unusualShape', 1);
+					else
+						$objObservation->setDsObservationProperty($_POST['observationid'],'unusualShape', -1);
+					if (array_key_exists('partlyUnresolved', $_POST))
+						$objObservation->setDsObservationProperty($_POST['observationid'],'partlyUnresolved', 1);
+					else
+						$objObservation->setDsObservationProperty($_POST['observationid'],'partlyUnresolved', -1);
+					if (array_key_exists('colorContrasts', $_POST))
+						$objObservation->setDsObservationProperty($_POST['observationid'],'colorContrasts', 1);
+					else
+						$objObservation->setDsObservationProperty($_POST['observationid'],'colorContrasts', -1);
+		
+					if ($_FILES['drawing']['tmp_name'] != "") {
+						$upload_dir = $instDir . 'deepsky/drawings';
+						$dir = opendir($upload_dir);
+						// resize code		
+						include $instDir . "common/control/resize.php";
+						$original_image = $_FILES['drawing']['tmp_name'];
+						$destination_image = $upload_dir . "/" . $_POST['observationid'] . "_resized.jpg";
+						$max_width = "490";
+						$max_height = "490";
+						$resample_quality = "100";
+						$new_image = image_createThumb($original_image, $destination_image, $max_width, $max_height, $resample_quality);
+						move_uploaded_file($_FILES['drawing']['tmp_name'], $upload_dir . "/" . $_POST['observationid'] . ".jpg");
+				    $objObservation->setDsObservationProperty($_POST['observationid'],'hasDrawing',1);
+					}		
+					// save current details for faster submission of multiple observations
+					$_SESSION['newObsYear'] = $_POST['year']; // save current details for faster submission of multiple observations
+			  	$_SESSION['newObsMonth'] = $_POST['month'];
+  				$_SESSION['newObsDay'] = $_POST['day'];
+	  			$_SESSION['newObsInstrument'] = $_POST['instrument'];
+		  		$_SESSION['newObsLocation'] = $_POST['location'];
+			  	$_SESSION['newObsLimit'] = $_POST['limit'];
+				  $_SESSION['newObsSqm'] = $_POST['sqm'];
+  				$_SESSION['newObsSQM'] = $_POST['sqm'];
+	  			$_SESSION['newObsSeeing'] = $_POST['seeing'];
+		  		$_SESSION['newObsLanguage'] = $_POST['description_language'];
+			  	$_SESSION['newObsSavedata'] = "yes";
+				  $_GET['indexAction'] = "detail_observation";
+				  $_GET['dalm'] = 'D';
+				  $_GET['observation'] = $_POST['observationid'];
+				} // end if own observation.php
+				else // try to change an observation which doesn't belong to the observer logged in
+					{
+					$_GET['indexAction'] = 'default_action';
+				}
+			} else // no observation id given
+				{
+				$_GET['indexAction'] = 'default_action';
+			}
+		}
+	}
 	public  function validateDeleteDSObservation()                                                                                                                   // removes the observation with id = $id
 	{ global $objDatabase,$objUtil;
 	  if(!$_GET['observationid'])
@@ -907,6 +1079,166 @@ class Observations {
       return LangObservationDeleted;
     }
 	}
+	public function validateObservation()
+	{ global $loggedUser, $objUtil, $objObservation, $objObserver, $maxFileSize, $entryMessage;
+		if(!($loggedUser))
+			throw new Exception(LangException002b);
+		elseif($objUtil->checkSessionKey('addObs',0)!=$objUtil->checkPostKey('timestamp', -1)) 
+		{ $_GET['indexAction']="default_action";
+			$_GET['dalm']='D';
+			//$_GET['observation']=$current_observation;
+		}
+		elseif ((!$_POST['day']) || (!$_POST['month']) || (!$_POST['year']) || ($_POST['site'] == "1") || (!$_POST['instrument']) || (!$_POST['description'])) {
+			if ($objUtil->checkPostKey('limit'))
+				if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST['limit'], $matches)) // limiting magnitude like X.X or X,X with X a number between 0 and 9
+					$_POST['limit'] = $matches[1] . "." . (($matches[2]) ? $matches[2] : "0");
+				else
+					$_POST['limit'] = ""; // clear current magnitude limit
+			else
+				if ($objUtil->checkPostKey('sqm'))
+					if (ereg('([0-9]{1})([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST['sqm'], $matches)) // sqm value
+						$_POST['sqm'] = $matches[1] . $matches[2] . "." . (($matches[3]) ? $matches[3] : "0");
+					else
+						$_POST['sqm'] = ""; // clear current magnitude limit
+			else {
+				$_POST['limit'] = "";
+				$_POST['sqm'] = "";
+			}
+			$entryMessage.=LangValidateObservationMessage1;
+			$_GET['indexAction']='add_observation';
+		} 
+		else // all fields filled in
+		{ $time = -9999;
+		  if ($_POST['hours']) 
+		  { if (isset ($_POST['minutes']))
+				  $time = ($_POST['hours'] * 100) + $_POST['minutes'];
+				else
+					$time = ($_POST['hours'] * 100);
+			} 
+		  if ($_FILES['drawing']['size'] > $maxFileSize) // file size of drawing too big
+			{ $entryMessage .= LangValidateObservationMessage6;
+				$_GET['indexAction'] = 'add_observation';
+			} 
+		  elseif((!is_numeric($_POST['month']))||(!is_numeric($_POST['day']))||(!is_numeric($_POST['year']))||(!checkdate($_POST['month'],$_POST['day'],$_POST['year']))) {
+		  	$entryMessage .= LangValidateObservationMessage2;
+				$_GET['indexAction'] = 'add_observation';
+		  }
+		  elseif(($date=$_POST['year'].sprintf("%02d", $_POST['month']).sprintf("%02d", $_POST['day']))>date('Ymd')) {
+		  	$entryMessage .= LangValidateObservationMessage3;
+				$_GET['indexAction'] = 'add_observation';
+		  }
+		  elseif(($time>-9999)&&((!is_numeric($_POST['hours']))||(!is_numeric($_POST['minutes']))||($_POST['hours']<0)||($_POST['hours']>23)||($_POST['minutes']<0)||($_POST['minutes']>59))) {
+		  	$entryMessage .= LangValidateObservationMessage4;
+				$_GET['indexAction'] = 'add_observation';
+		  }
+		  else {
+				if ($objUtil->checkPostKey('limit'))
+					if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST['limit'], $matches)) // limiting magnitude like X.X or X,X with X a number between 0 and 9
+						$_POST['limit'] = $matches[1] . "." . (($matches[2]) ? $matches[2] : "0");
+					else // clear current magnitude limit
+						$_POST['limit'] = "";
+				$current_observation = $objObservation->addDSObservation($_POST['object'], $_SESSION['deepskylog_id'], $_POST['instrument'], $_POST['site'], $date, $time, nl2br($_POST['description']), $_POST['seeing'], $_POST['limit'], $objUtil->checkPostKey('visibility'), $_POST['description_language']);
+				$_SESSION['addObs'] = '';
+				$_SESSION['Qobs'] = array ();
+				$_SESSION['QobsParams'] = array ();
+				if ($objUtil->checkPostKey('sqm'))
+					if (ereg('([0-9]{1})([0-9]{0,1})[.,]{0,1}([0-9]{0,1})', $_POST['sqm'], $matches)) // sqm value
+						$_POST['sqm'] = $matches[1] . $matches[2] . "." . (($matches[3]) ? $matches[3] : "0");
+					else
+						$_POST['sqm'] = ""; // clear current magnitude limit
+				if ($objUtil->checkPostKey('largeDiam'))
+					if (ereg('([0-9]+)[.,]{0,1}([0-9]{0,1})', $_POST['largeDiam'], $matches)) // large diameter
+						$_POST['largeDiam'] = (($matches[1]) ? $matches[1] : "0") . "." . (($matches[2]) ? $matches[2] : "0");
+					else // clear current large diameter
+						$_POST['largeDiam'] = "";
+				if ($objUtil->checkPostKey('smallDiam'))
+					if (ereg('([0-9]+)[.,]{0,1}([0-9]{0,1})', $_POST['smallDiam'], $matches)) // large diameter
+						$_POST['smallDiam'] = (($matches[1]) ? $matches[1] : "0") . "." . (($matches[2]) ? $matches[2] : "0");
+					else // clear current large diameter
+						$_POST['smallDiam'] = "";
+		
+				if ($_POST['smallDiam'] > $_POST['largeDiam']) {
+					$tmp = $_POST['largeDiam'];
+					$_POST['largeDiam'] = $_POST['smallDiam'];
+					$_POST['smallDiam'] = $tmp;
+				}
+				if ($objUtil->checkPostKey('size_units') == "min") {
+					$_POST['smallDiam'] = $_POST['smallDiam'] * 60.0;
+					$_POST['largeDiam'] = $_POST['largeDiam'] * 60.0;
+				}
+				if ($_POST['sqm'])
+					$objObservation->setDsObservationProperty($current_observation,'SQM', preg_replace("/,/", ".", $_POST['sqm']));
+				if ($_POST['smallDiam'])
+					$objObservation->setDsObservationProperty($current_observation,'smallDiameter', $_POST['smallDiam']);
+				if ($_POST['largeDiam'])
+					$objObservation->setDsObservationProperty($current_observation,'largeDiameter', $_POST['largeDiam']);
+				if (array_key_exists('stellarextended', $_POST)&&($_POST['stellarextended']=="stellar"))
+					$objObservation->setDsObservationProperty($current_observation,'stellar', 1);
+				else
+					$objObservation->setDsObservationProperty($current_observation,'stellar', -1);
+				if (array_key_exists('stellarextended', $_POST)&&($_POST['stellarextended']=="extended"))
+					$objObservation->setDsObservationProperty($current_observation,'extended', 1);
+				else
+					$objObservation->setDsObservationProperty($current_observation,'extended', -1);
+		  	if (array_key_exists('resolved', $_POST))
+					$objObservation->setDsObservationProperty($current_observation,'resolved', 1);
+				else
+					$objObservation->setDsObservationProperty($current_observation,'resolved', -1);
+				if (array_key_exists('mottled', $_POST))
+					$objObservation->setDsObservationProperty($current_observation,'mottled', 1);
+				else
+					$objObservation->setDsObservationProperty($current_observation,'mottled', -1);
+				if (array_key_exists('unusualShape', $_POST))
+					$objObservation->setDsObservationProperty($current_observation,'unusualShape', 1);
+				else
+					$objObservation->setDsObservationProperty($current_observation,'unusualShape', -1);
+				if (array_key_exists('partlyUnresolved', $_POST))
+					$objObservation->setDsObservationProperty($current_observation,'partlyUnresolved', 1);
+				else
+					$objObservation->setDsObservationProperty($current_observation,'partlyUnresolved', -1);
+				if (array_key_exists('colorContrasts', $_POST))
+					$objObservation->setDsObservationProperty($current_observation,'colorContrasts', 1);
+				else
+					$objObservation->setDsObservationProperty($current_observation,'colorContrasts', -1);
+				if ($_POST['filter'])
+					$objObservation->setDsObservationProperty($current_observation,'filterid', $_POST['filter']);
+				if ($_POST['lens'])
+					$objObservation->setDsObservationProperty($current_observation,'lensid', $_POST['lens']);
+				if ($_POST['eyepiece'])
+					$objObservation->setDsObservationProperty($current_observation,'eyepieceid', $_POST['eyepiece']);
+				if(!($objObserver->getObserverProperty($loggedUser,'UT')))
+					$objObservation->setLocalDateAndTime($current_observation, $date, $time);
+				$objObservation->setDsObservationProperty($current_observation,'characterType', $objUtil->checkPostKey('characterType'));
+				if ($_FILES['drawing']['tmp_name'] != "") // drawing to upload
+				{ $upload_dir = $instDir . 'deepsky/drawings';
+					$dir = opendir($upload_dir);
+					$original_image = $_FILES['drawing']['tmp_name'];
+					$destination_image = $upload_dir . "/" . $current_observation . "_resized.jpg";
+					$max_width = "490";
+					$max_height = "490";
+					$resample_quality = "100";
+					include $instDir . "common/control/resize.php"; // resize code
+					$new_image = image_createThumb($original_image, $destination_image, $max_width, $max_height, $resample_quality);
+					move_uploaded_file($_FILES['drawing']['tmp_name'], $upload_dir . "/" . $current_observation . ".jpg");
+				  $objObservation->setDsObservationProperty($current_observation,'hasDrawing',1);
+				}
+				$_SESSION['newObsYear'] =       $_POST['year']; // save current details for faster submission of multiple observations
+				$_SESSION['newObsMonth'] =      $_POST['month'];
+				$_SESSION['newObsDay'] =        $_POST['day'];
+				$_SESSION['newObsInstrument'] = $_POST['instrument'];
+				$_SESSION['newObsLocation'] =   $_POST['site'];
+				$_SESSION['newObsLimit'] =      $_POST['limit'];
+				$_SESSION['newObsSqm'] =        $_POST['sqm'];
+				$_SESSION['newObsSQM'] =        $_POST['sqm'];
+				$_SESSION['newObsSeeing'] =     $_POST['seeing'];
+				$_SESSION['newObsLanguage'] =   $_POST['description_language'];
+				$_SESSION['newObsSavedata'] =   "yes";
+				$_GET['indexAction'] =          "detail_observation";
+				$_GET['dalm'] =                 'D';
+				$_GET['observation'] =          $current_observation;
+			}
+		}
+	}  
 }
 $objObservation = new Observations;
 ?>

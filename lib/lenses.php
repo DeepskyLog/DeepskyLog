@@ -42,10 +42,10 @@ class Lenses implements iLenses
   }
   public  function validateDeleteLens()                                         // validates and removes the lens with id
   { global $objUtil, $objDatabase;
-    if($objUtil->checkGetKey('lensid')
-    && $objUtil->checkAdminOrUserID($this->getLensPropertyFromId($objUtil->checkGetKey('lensid'),'observer'))
-    && (!($this->getLensUsedFromId($_GET['lensid']))))
-    { $objDatabase->execSQL("DELETE FROM lenses WHERE id=\"".$_GET['lensid']."\"");
+    if(($lensid=$objUtil->checkGetKey('lensid'))
+    && $objUtil->checkAdminOrUserID($this->getLensPropertyFromId($lensid,'observer'))
+    && (!($this->getLensUsedFromId($lensid))))
+    { $objDatabase->execSQL("DELETE FROM lenses WHERE id=\"".$lensid."\"");
       return LangValidateLensMessage1;
 	  }
   }

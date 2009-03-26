@@ -47,10 +47,10 @@ class Eyepieces implements iEyepieces
  }
  public  function validateDeleteEyepiece()                                          // validates and deletes an eyepiece
  { global $objUtil, $objDatabase;
-   if($objUtil->checkGetKey('eyepieceid') 
-   && $objUtil->checkAdminOrUserID($this->getEyepiecePropertyFromId($_GET['eyepieceid'],'observer'))
-   && (!($this->getEyepieceUsedFromId($_GET['eyepieceid']))))
-     return $objDatabase->execSQL("DELETE FROM eyepieces WHERE id=\"".$_GET['eyepieceid']."\"");
+   if(($eyepieceid=$objUtil->checkGetKey('eyepieceid')) 
+   && $objUtil->checkAdminOrUserID($this->getEyepiecePropertyFromId($eyepieceid,'observer'))
+   && (!($this->getEyepieceUsedFromId($eyepieceid))))
+     return $objDatabase->execSQL("DELETE FROM eyepieces WHERE id=\"".$eyepieceid."\"");
  }
  public  function validateSaveEyepiece()                                             // validates and saves an eyepiece and returns a message 
  { global $objUtil;

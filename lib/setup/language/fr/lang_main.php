@@ -1,28 +1,31 @@
 <?php
-// version 3.1, DE 20061119
 
 define("LangGeneralObservations","observations");
 
-define("LangException001","U dient ingelogd te zijn als administrator om deze operties uit te voeren. Gelieve de developers te contacteren met dit bericht.");
-define("LangException002","U dient ingelogd te zijn om locaties en apparatuur te beheren. Gelieve de developers te contacteren met dit bericht.");
-define("LangException003","U wou een oculair wijzigen, maar er is geen oculair aangeduid. Gelieve de developers te contacteren met dit bericht.");
-define("LangException003b","u wou een oculair bekijken, maar er is geen oculair aangeduid. Gelieve de developers te contacteren met dit bericht.");
-define("LangException004","U wou een oculair wijzigen, maar het is niet uw oculair. Gelieve de developers te contacteren met dit bericht.");
-define("LangException005","U wou een filter wijzigen, maar er is geen filter aangeduid. Gelieve de developers te contacteren met dit bericht.");
+define("LangException001", "U dient ingelogd te zijn als administrator om deze operaties uit te voeren. Gelieve de developers te contacteren met dit bericht.");
+define("LangException002", "U dient ingelogd te zijn om locaties en apparatuur te beheren. Gelieve de developers te contacteren met dit bericht.");
+define("LangException002b","U dient ingelogd te zijn om observaties te beheren. Gelieve de developers te contacteren met dit bericht.");
+define("LangException002c","U dient ingelogd te zijn om objecten te beheren. Gelieve de developers te contacteren met dit bericht.");
+define("LangException003", "U wou een oculair wijzigen, maar er is geen oculair aangeduid. Gelieve de developers te contacteren met dit bericht.");
+define("LangException003b","U wou een oculair bekijken, maar er is geen oculair aangeduid. Gelieve de developers te contacteren met dit bericht.");
+define("LangException004", "U wou een oculair wijzigen, maar het is niet uw oculair. Gelieve de developers te contacteren met dit bericht.");
+define("LangException005", "U wou een filter wijzigen, maar er is geen filter aangeduid. Gelieve de developers te contacteren met dit bericht.");
 define("LangException005b","U wou een filter bekijken, maar er is geen filter aangeduid. Gelieve de developers te contacteren met dit bericht.");
-define("LangException006","U wou een filter wijzigen, maar het is niet uw filter. Gelieve de developers te contacteren met dit bericht.");
-define("LangException007","U wou een instrument wijzigen, maar er is geen instrument aangeduid. Gelieve de developers te contacteren met dit bericht.");
+define("LangException006", "U wou een filter wijzigen, maar het is niet uw filter. Gelieve de developers te contacteren met dit bericht.");
+define("LangException007", "U wou een instrument wijzigen, maar er is geen instrument aangeduid. Gelieve de developers te contacteren met dit bericht.");
 define("LangException007b","U wou een instrument bekijken, maar er is geen instrument aangeduid. Gelieve de developers te contacteren met dit bericht.");
-define("LangException008","U wou een instrument wijzigen, maar het is niet uw instrument. Gelieve de developers te contacteren met dit bericht.");
-define("LangException009","U wou een lens wijzigen, maar er is geen lens aangeduid. Gelieve de developers te contacteren met dit bericht.");
+define("LangException008", "U wou een instrument wijzigen, maar het is niet uw instrument. Gelieve de developers te contacteren met dit bericht.");
+define("LangException009", "U wou een lens wijzigen, maar er is geen lens aangeduid. Gelieve de developers te contacteren met dit bericht.");
 define("LangException009b","U wou een lens bekijken, maar er is geen lens aangeduid. Gelieve de developers te contacteren met dit bericht.");
-define("LangException010","U wou een lens wijzigen, maar het is niet uw lens. Gelieve de developers te contacteren met dit bericht.");
-define("LangException011","U wou een locatie wijzigen, maar er is geen locatie aangeduid. Gelieve de developers te contacteren met dit bericht.");
+define("LangException010", "U wou een lens wijzigen, maar het is niet uw lens. Gelieve de developers te contacteren met dit bericht.");
+define("LangException011", "U wou een locatie wijzigen, maar er is geen locatie aangeduid. Gelieve de developers te contacteren met dit bericht.");
 define("LangException011b","U wou een locatie bekijken, maar er is geen locatie aangeduid. Gelieve de developers te contacteren met dit bericht.");
-define("LangException012","U wou een locatie wijzigen, maar het is niet uw locatie. Gelieve de developers te contacteren met dit bericht.");
-define("LangException013","U wou een locatie opzoeken, maar er is geen locatie aangeduid.");
-define("LangException014","U wou een locatie opzoeken, maar er is geen land aangeduid.");
+define("LangException012", "U wou een locatie wijzigen, maar het is niet uw locatie. Gelieve de developers te contacteren met dit bericht.");
+define("LangException013", "U wou een locatie opzoeken, maar er is geen locatie aangeduid.");
+define("LangException014", "U wou een locatie opzoeken, maar er is geen land aangeduid.");
 define("LangException015b","U wou een waarnemer bekijken, maar er is geen waarnemer aangeduid. Gelieve de developers te contacteren met dit bericht.");
+define("LangException016", "U wou een object bekijken, maar er is geen object aangeduid. Gelieve de developers te contacteren met dit bericht.");
+define("LangException016b","U wou een object bekijken, maar het object is niet gekend. Gelieve de developers te contacteren met dit bericht.");
 
 define("LangCounter","Compteur");
 
@@ -77,6 +80,9 @@ define("LangShowMyLanguages","Ne montrer que les observations dans les languages
 define("LangAllLanguagesShown","toutes les languages");
 define("LangSelectedLanguagesShown","juste les languages s�lection�es");
 
+
+// common/entryexit/instructions
+define("LangInstructionsNoObjectFound","No corresponding object found for ");
 
 // content/result_query_observations.php
 

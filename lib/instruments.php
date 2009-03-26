@@ -76,10 +76,10 @@ class Instruments implements iInstruments
   }
   public  function validateDeleteInstrument()                                                     // validates and deletes the instrument with id = $id 
   { global $objUtil, $objDatabase;
-    if($objUtil->checkGetKey('instrumentid')                                                     
-    && $objUtil->checkAdminOrUserID($this->getObserverFromInstrument($objUtil->checkGetKey('instrumentid')))
-		&& (!($this->getInstrumentUsedFromId($_GET['instrumentid']))))
-		{ $objDatabase->execSQL("DELETE FROM instruments WHERE id=\"".$_GET['instrumentid']."\"");
+    if(($instrumentid=$objUtil->checkGetKey('instrumentid'))                                                     
+    && $objUtil->checkAdminOrUserID($this->getObserverFromInstrument($instrumentid))
+		&& (!($this->getInstrumentUsedFromId($instrumentid))))
+		{ $objDatabase->execSQL("DELETE FROM instruments WHERE id=\"".$instrumentid."\"");
 		  return LangValidateInstrumentMessage5;
 		}
   }

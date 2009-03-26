@@ -114,10 +114,10 @@ class Filters implements iFilters
  }
  public  function validateDeleteFilter()                                                // validates and deletes a filter
  { global $objUtil, $objDatabase;
-   if($objUtil->checkGetKey('filterid') 
-   && $objUtil->checkAdminOrUserID($this->getFilterPropertyFromId($_GET['filterid'],'observer'))
-   && (!($this->getFilterUsedFromId($_GET['filterid']))))
-   { $objDatabase->execSQL("DELETE FROM filters WHERE id=\"".$_GET['filterid']."\"");
+   if(($filterid=$objUtil->checkGetKey('filterid')) 
+   && $objUtil->checkAdminOrUserID($this->getFilterPropertyFromId($filterid,'observer'))
+   && (!($this->getFilterUsedFromId($filterid))))
+   { $objDatabase->execSQL("DELETE FROM filters WHERE id=\"".$filterid."\"");
      return LangValidateFilterMessage5;
 	 }
  }

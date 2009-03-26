@@ -88,7 +88,7 @@ else
 	}
 	if($objUtil->checkGetKey('indexAction')=="logout")                                                                 // logout
 	  require_once $instDir."common/control/logout.php";
-	//============================================================================== DEEEPSKY INSTRUCTIONS
+	//============================================================================== DEEPSKY INSTRUCTIONS
 	$object=$objUtil->checkPostKey('object',$objUtil->checkGetKey('object'));
 	if(($objUtil->checkGetKey('indexAction')=='quickpick') // ========================================================= New Observation From quickpick
 	&&($objUtil->checkGetKey('object'))
@@ -110,7 +110,7 @@ else
 	{ if(array_key_exists('number',$_POST)&&(!$_POST['number']))
 	    $_GET['indexAction']="query_objects";
 	  elseif(array_key_exists('number',$_POST)&&(!($_GET['object']=$GLOBALS['objObject']->getExactDsObject('',$objUtil->checkPostKey('catalog'), $objUtil->checkPostKey('number')))))
-	  { $entryMessage.="No corresponding object found for ".$objUtil->checkPostKey('catalog')." ".$objUtil->checkPostKey('number');
+	  { $entryMessage.=LangInstructionsNoObjectFound.$objUtil->checkPostKey('catalog')." ".$objUtil->checkPostKey('number');
 	    $_GET['indexAction']="query_objects";
 	   }
 	  else
@@ -138,11 +138,11 @@ else
 	  $_GET['indexAction']="add_observation";
 	}
 	if(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="validate_observation")
-	  include_once "deepsky/control/validate_observation.php";
+	  $objObservation->validateObservation();
 	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_change_observation")
-	  include_once "deepsky/control/validate_change_observation.php";
+	  $objObservation->validateChangeObservation();
 	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_object")
-	  include_once "deepsky/control/validate_object.php";
+	  $objObject->validateObject();
 	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_delete_observation")
 	{ $entryMessage.=$objObservation->validateDeleteDSObservation();
 		$_GET['indexAction']='default_action';
