@@ -765,7 +765,7 @@ class Observations {
 						}
 						echo "</td>";
 					}
-				  }
+				}
 				echo "</tr>";
 		    if($lco!='L')
 		    { if($objUtil->checkGetKey('expand')!=$value['observationid'])

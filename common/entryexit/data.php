@@ -30,7 +30,6 @@ else
 	  $maxSize = '';        $maxSizeC = '';       $size_max_units = ''; 
 	  $minContrast = '';                          $maxContrast = '';    
 	  $inList = '';                               $notInList = '';
-	  $_GET['source']="setup_objects_query";
 	  require_once 'deepsky/data/data_get_objects.php'; 
 	  if(array_key_exists('Qobj',$_SESSION)&&(count($_SESSION['Qobj'])>1))
 	    $includeFile="deepsky/content/execute_query_objects.php";

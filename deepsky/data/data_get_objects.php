@@ -362,7 +362,7 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
       else
         $seenPar = "D";
     	$validQobj=false;
-      if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])>1)&&(count($_SESSION['Qobj'])>0))
+      if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])>1)&&array_key_exists('Qobj',$_SESSION)&&(count($_SESSION['Qobj'])>0))
     	  $validQobj=true;
     	while($validQobj&&(list($key,$value)=each($_SESSION['QobjParams'])))
         if((!array_key_exists($key,$query))||($value!=$query[$key]))
