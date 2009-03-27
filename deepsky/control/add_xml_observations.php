@@ -1,85 +1,87 @@
 <?php
-// add_csv_observations.php
-// adds observations from a csv file to the database
-if($_FILES['xml']['tmp_name']!="")
-  $xmlfile=$_FILES['xml']['tmp_name'];
+// add_xml_observations.php
+// adds observations from an OpenAstronomyLog xml file to the database
+  if($_FILES['xml']['tmp_name']!="") {
+    $xmlfile=$_FILES['xml']['tmp_name'];
+  }
 
-$dom = new DomDocument;
-$xmlfile = realpath($xmlfile);
+  // Make a DomDocument from the file.
+  $dom = new DomDocument();
+  $xmlfile = realpath($xmlfile);
 
-//Load the xml document in the DOMDocument object
-$dom->Load($xmlfile);
+  //Load the xml document in the DOMDocument object
+  $dom->Load($xmlfile);
 
-$searchNode = $dom->getElementsByTagName( "fgca:observations" ); 
-print "VERSION : " . $searchNode->getAttribute("version");
-/*
-XML Data:
-<data>
-<Report ID="1">
-    <Date>REVIEW</Date>
-    <AuthorID>1</AuthorID>
-</Report>
-<Report ID="2">
-    <Date>REVIEW</Date>
-    <AuthorID>2</AuthorID>
-</Report>
-</data>
+  $searchNode = $dom->getElementsByTagName( "observations" ); 
+  $version = $searchNode->item(0)->getAttribute("version");
 
-- - - - - - - - - - - - - -
+  if ($version != "1.7") { // && $version != "2.0") {
+    throw new Exception(LangXMLError1);
+  }
 
-<?php
-$xmlDoc = new DOMDocument();
-$xmlDoc->load( 'data.xml' );
+  // Use the correct schema definition to check the xml file. Does not work with 2.0 yet (as 
+  // there is no final scheme for 2.0 yet)
+  $xmlschema = str_replace(' ', '/', $searchNode->item(0)->getAttribute("xsi:schemaLocation")); 
 
-$searchNode = $xmlDoc->getElementsByTagName( "Report" );
+  //Validate the XML file against the schema
+  if ($dom->schemaValidate($xmlschema)) {
+    // The XML file is valid. Let's start reading in the file.
+    // At this moment only 1.7 files!
 
-foreach( $searchNode as $searchNode )
-{
-    $valueID = $searchNode->getAttribute('ID');
+    // Check the observers -> In OpenAstronomyLog 2.0 the deepskylog_id is also added
+    $searchNode = $dom->getElementsByTagName( "observers" ); 
+    $observer = $searchNode->item(0)->getElementsByTagName( "observer" ); 
+    $id = "";
+    foreach( $observer as $observer )
+    {
+      // Get the id and the name of the observers in the comast file
+      $comastid = $observer->getAttribute("id");
+      $name = $observer->getElementsByTagName( "name" )->item(0)->nodeValue;
+      $surname = $observer->getElementsByTagName( "surname" )->item(0)->nodeValue;
 
-    $xmlDate = $searchNode->getElementsByTagName( "Date" );
-    $valueDate = $xmlDate->item(0)->nodeValue;
+      // Get the name of the observer which is logged in in DeepskyLog
+      $deepskylog_username=$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'firstname'). " ".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'name');
+      
+      if ($deepskylog_username == $name . " " . $surname) {
+        $id = $comastid;
+      }
+    }
+    if ($id == "") {
+      $errormessage = LangXMLError2 . $deepskylog_username . LangXMLError2a;
+      throw new Exception($errormessage);
+    }
+    
+    $targets = $dom->getElementsByTagName( "targets" ); 
+//    $observation = $searchNode->item(0)->getElementsByTagName( "observation" ); 
+    
+    // Check if there are observations for the given observer
+    $searchNode = $dom->getElementsByTagName( "observations" ); 
+    $observation = $searchNode->item(0)->getElementsByTagName( "observation" ); 
+    foreach( $observation as $observation )
+    {
+      $observerid = $observation->getElementsByTagName( "observer" )->item(0)->nodeValue;
+      if ($observerid == $id) {
+        // Check if the observation already exists in DeepskyLog (target and begin should tell this)
+        print "Date and time : " . $observation->getElementsByTagName( "begin" )->item(0)->nodeValue . "<br />";
+        print "Target : " . $observation->getElementsByTagName( "target" )->item(0)->nodeValue . "<br />";
+        
+//        print $dom->getElementById($observation->getElementsByTagName( "target" )->item(0)->nodeValue)->getElementsByTagName("name")->item(0)->nodeValue;
 
-    $xmlAuthorID = $searchNode->getElementsByTagName( "AuthorID" );
-    $valueAuthorID = $xmlAuthorID->item(0)->nodeValue;
-   
-    echo "$valueID - $valueDate - $valueAuthorID\n";
-}
-?>
-*/
-
-$s = simplexml_import_dom($dom);
-
-//$schemaVersion = $s->fcga;
-
-print $s->fcga->attributes()->version;
-//observations->attributes()->version;
-
-
-//$xmlschema = "http://observation.sourceforge.net/comast/comast17.xsd";
-$xmlschema = "http://localhost/deepskylog/xml/comast17.xsd";
-
-
-//print "SCHEMA VERSION : " . $schemaVersion;
-
-//Validate the XML file against the schema
-if ($dom->schemaValidate($xmlschema)) {
-  print "XML file is valid.\n";
-} else {
-	$errormessage = "Invalid XML file!!!";
-    throw new Exception($errormessage);
-}
-
-foreach ($s->sites->site as $rating) {
-	print "Name : " . $rating->name . "<br />";
-	print "Longitude : " . $rating->longitude . "<br />";
-	print "Latitude : " . $rating->latitude . "<br />";
-	print "Id : " . $rating->attributes()->id . "<br />";
-}
-
-
+//        print $targets->getElementById("_155092")->nodeValue;
+//        print "ID : " . $observation->getAttribute("id") . "<br />";
+        
+        // TODO : Test what happens if I change an observation in DeepskyLog, export to comast and reload into Eye&Telescope
+        // Should everything be checked????? What if I change the eyepiece? What if I change the coordinates of an object? 
+      }
+    }
+    
+  } else {
+    throw new Exception(LangXMLError3);
+  }
+  
 exit;
 
+// Duplicated code from add_csv_observations
 for($i=0;$i<count($data_array);$i++ ) 
   $parts_array[$i]=explode(";",$data_array[$i]); 
 for ( $i = 1; $i < count($parts_array); $i++)

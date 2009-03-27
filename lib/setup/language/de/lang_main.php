@@ -981,6 +981,20 @@ define("LangCSVError10", "No observations have been read.<br />First, you have t
 define("LangCSVButton", "Import!");
 define("LangValidateCSVMessage", "Import der CSV Datei erfolgreich!");
 
+// content/new_observationxml.php
+define("LangXMLTitle", "Import observations from an XML file");
+define("LangXMLMessage1", "This form gives you the possibility to add different observations at the same time using an OpenAstronomyLog XML file. This way, you can exchange in a fast and easy way observations between different applications which support the OpenAstronomyLog XML format (like <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&Telescope</a>), .... Information: Only observations with your name (name and surname) will be added. Observations which are already available in DeepskyLog will not be imported a second time.");
+define("LangXMLError1", "DeepskyLog only supports openAstronomyLog version 1.7");
+define("LangXMLError2", "No observations for user ");
+define("LangXMLError2a", " in this OpenAstronomyLog file!");
+define("LangXMLError3", "Invalid XML file!");
+define("LangXMLError4", "");
+define("LangXMLError5", "");
+define("LangXMLError6", "");
+define("LangXMLError7", "");
+define("LangXMLButton", "Import!");
+define("LangValidateXMLMessage", "Importeren CSV bestand succesvol!");
+
 //List import
 define("LangCSVListTitle", "Beobachtungen von CSV Datei importieren");
 define("LangCSVListMessage1", "Diese Eingabemaske erlaubt Ihnen mehrere Beobachtungen auf einmal einzugeben, indem Sie eine CSV Datei importieren (comma seperated value Datei). Dies beschleunigt das Hochladen ihrer Beobachtungen, ferner k&ouml;nnen sie alte Beobachtungen aus Drittanwendungen leichter importieren. Zu Ihrer Information: Alle Beobachtungen mit Ihrem (vollen) Namen werden importiert.");

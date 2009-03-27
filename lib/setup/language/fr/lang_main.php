@@ -289,7 +289,7 @@ define("LangAddLensField2", "Facteur");
 define("LangAddLensField2Expl", "> 1.0 pour lentille Barlow, < 1.0 pour lentille shapley.");
 define("LangAddLensButton", "Rajoutez lentille Barlow");
 define("LangChangeLensButton", "Modifier lentille Barlow");
-define("LangValidateLensMessage1", "Cete lentille barlow a été enlevé de votre liste d'équipements");
+define("LangValidateLensMessage1", "Cete lentille barlow a ï¿½tï¿½ enlevï¿½ de votre liste d'ï¿½quipements");
 define("LangValidateLensMessage2", "Cette lentille Barlow a &#233;t&#233; ajouter &#224; la banque de donn&#233;es");
 define("LangValidateLensMessage3", "Lentille Barlow ajout&#233;e");
 define("LangValidateLensMessage4", "Letille Barlow modifi&#233;e");
@@ -846,7 +846,7 @@ define("LangMessageTitle", "Message");
 
 define("LangValidateLocationMessage1", "Veuillez remplir tous les champs!");
 define("LangValidateLocationMessage2", "L'endroit a &eacute;t&eacute; rajout&eacute; &agrave; la base de donn&eacute;es");
-define("LangValidateLocationMessage3", "L'endroit a été enlevé de votre liste");
+define("LangValidateLocationMessage3", "L'endroit a ï¿½tï¿½ enlevï¿½ de votre liste");
 
 //control/validate_filter // TO TRANSLATE
 define("LangValidateFilterMessage2", "The filter is added to your equipment list");
@@ -860,7 +860,7 @@ define("LangValidateInstrumentMessage1", "Veuillez remplir tous les champs!");
 define("LangValidateInstrumentMessage2", "Veuillez remplir: soit la distance focale, soit f/d!");
 define("LangValidateInstrumentMessage3", "L'instrument a &eacute;t&eacute; rajout&eacute; dans votre liste d'ï¿½quipement");
 define("LangValidateInstrumentMessage4", "L'instrument a &eacute;t&eacute; adapt&eacute; dans votre liste d'ï¿½quipement");
-define("LangValidateInstrumentMessage5", "L'instrument a été enlevé de votre liste d'équipements");
+define("LangValidateInstrumentMessage5", "L'instrument a ï¿½tï¿½ enlevï¿½ de votre liste d'ï¿½quipements");
 define("LangValidateInstrumentMessage", "Message");
 
 // content/setup_query_objects.php
@@ -969,7 +969,7 @@ define("LangCSVMessage4", "Suivi des observations dans le m&ecirc;me format, par
 define("LangCSVMessage5", "Attention!<p>Les instruments, les endroits, les oculaires, filters et les objets dans le fichier csv doivent d&eacute;j&agrave; &ecirc;tre connus par DeepskyLog. Si ceci n'est pas le cas, un message d'erreur sera affich&eacute; et aucune(!) observation ne sera enregistr&eacute;e. L'information manquante doit &ecirc;tre remplie &agrave; la main jusqu'au moment o&ugrave; il n'y a plus de messages d'erreur. Si tout se passe bien, les observations rentr&eacute;es seront affich&eacute;es utilisant 'Toutes les observations'. N'importez pas deux fois le m&ecirc;me fichier, vous aurez &agrave; effacer manuellement tous les doublons!");
 define("LangCSVMessage6", "Fichier CSV ");
 define("LangCSVMessage7", "Nom;NomAlternatif;AD;Decl;Constellation;Type;Magnitude;MagnitudeSurface;Diam&egrave;tre;Angle de position;Page;ContrastReserve;OptimalMagnification;Vu;Date vu");
-define("LangCSVError0", "L'import csv des observations a été arrêté");
+define("LangCSVError0", "L'import csv des observations a ï¿½tï¿½ arrï¿½tï¿½");
 define("LangCSVError1", "Le fichier csv n'a pas &eacute;t&eacute; trait&eacute; parce que: ");
 define("LangCSVError2", "Les objets suivants ne sont pas connus par DeepskyLog");
 define("LangCSVError3", "Les endroits suivants ne sont pas connus par DeepskyLog");
@@ -979,9 +979,23 @@ define("LangCSVError6", "Les oculaires suivant ne sont pas connus par DeepskyLog
 define("LangCSVError7", "Les lentilles suivant ne sont pas connus par DeepskyLog");
 define("LangCSVError8", "La ou les dates suivantes ne sont pas valides");
 define("LangCSVError9", "La ou les dates suivantes se trouvent dans le futur");
-define("LangCSVError10", "Les observations n'ont pas été enregistrées.<br />Il faut d'abord résoudre les problèmes mentionnés pour ensuite <a href=\"".$baseURL."index.php?indexAction=add_csv\">réimporter</a> le fichier complèt.");
+define("LangCSVError10", "Les observations n'ont pas ï¿½tï¿½ enregistrï¿½es.<br />Il faut d'abord rï¿½soudre les problï¿½mes mentionnï¿½s pour ensuite <a href=\"".$baseURL."index.php?indexAction=add_csv\">rï¿½importer</a> le fichier complï¿½t.");
 define("LangCSVButton", "Importez!");
 define("LangValidateCSVMessage", "L'importation du fichier CSV est faite!");
+
+// content/new_observationxml.php
+define("LangXMLTitle", "Import observations from an XML file");
+define("LangXMLMessage1", "This form gives you the possibility to add different observations at the same time using an OpenAstronomyLog XML file. This way, you can exchange in a fast and easy way observations between different applications which support the OpenAstronomyLog XML format (like <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&Telescope</a>), .... Information: Only observations with your name (name and surname) will be added. Observations which are already available in DeepskyLog will not be imported a second time.");
+define("LangXMLError1", "DeepskyLog only supports openAstronomyLog version 1.7");
+define("LangXMLError2", "No observations for user ");
+define("LangXMLError2a", " in this OpenAstronomyLog file!");
+define("LangXMLError3", "Invalid XML file!");
+define("LangXMLError4", "");
+define("LangXMLError5", "");
+define("LangXMLError6", "");
+define("LangXMLError7", "");
+define("LangXMLButton", "Import!");
+define("LangValidateXMLMessage", "Importeren CSV bestand succesvol!");
 
 //List import
 define("LangCSVListTitle", "Importez les objets du fichier CSV vers votre liste");
@@ -1034,10 +1048,10 @@ define("LangSelectedObservationsSelectedLanguagesIndication", "languages sï¿½lec
 define("LangSelectedObservationsAllLanguagesIndication","toutes les languages");
  
 // lib/objects
-define("LangNewPlaceInList","Prière de rentrer la nouvelle position dans la liste.");
+define("LangNewPlaceInList","Priï¿½re de rentrer la nouvelle position dans la liste.");
 
 // lib/observations
-define("LangObservationDeleted","L'observation a été effacée");
+define("LangObservationDeleted","L'observation a ï¿½tï¿½ effacï¿½e");
 
 // lib/util.php
 

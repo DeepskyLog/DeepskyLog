@@ -983,13 +983,14 @@ define("LangValidateCSVMessage", "Importeren CSV bestand succesvol!");
 // content/new_observationxml.php
 define("LangXMLTitle", "Importeer waarnemingen vanuit XML bestand");
 define("LangXMLMessage1", "Dit formulier geeft u de mogelijkheid om meerdere waarnemingen tegelijkertijd toe te voegen door middel van een openAstronomyLog XML bestand. Op deze manier kan u gemakkelijk en snel waarnemingen waarnemingen uitwisselen tussen verschillende applicaties die het openAstronomyLog XML formaat ondersteunen (zoals <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&Telescope</a>), .... Ter informatie: alleen waarnemingen met uw naam (voornaam + naam voluit) zullen toegevoegd worden. Waarnemingen die al aanwezig zijn in DeepskyLog worden niet nog een tweede keer ingelezen.");
-define("LangXMLError1", "Het CSV bestand kon niet ingelezen worden omdat: ");
-define("LangXMLError2", "De onderstaande objecten niet gekend zijn in DeepskyLog");
-define("LangXMLError3", "De onderstaande waarnemingsplaatsen niet gekend zijn in DeepskyLog");
-define("LangXMLError4", "De onderstaande instrumenten niet gekend zijn in DeepskyLog");
-define("LangXMLError5", "De onderstaande filters niet gekend zijn in DeepskyLog");
-define("LangXMLError6", "De onderstaande oculairs niet gekend zijn in DeepskyLog");
-define("LangXMLError7", "De onderstaande lenzen niet gekend zijn in DeepskyLog");
+define("LangXMLError1", "DeepskyLog ondersteunt enkel openAstronomyLog versie 1.7");
+define("LangXMLError2", "Geen waarnemingen voor gebruiker ");
+define("LangXMLError2a", " in dit OpenAstronomyLog bestand!");
+define("LangXMLError3", "Ongeldig XML bestand!");
+define("LangXMLError4", "");
+define("LangXMLError5", "");
+define("LangXMLError6", "");
+define("LangXMLError7", "");
 define("LangXMLButton", "Importeer!");
 define("LangValidateXMLMessage", "Importeren CSV bestand succesvol!");
 
