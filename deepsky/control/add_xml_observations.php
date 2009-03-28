@@ -23,6 +23,9 @@
   // there is no final scheme for 2.0 yet)
   $xmlschema = str_replace(' ', '/', $searchNode->item(0)->getAttribute("xsi:schemaLocation")); 
 
+  // TODO : Remove : Only for offline testing
+  $xmlschema = $baseURL . "xml/comast17.xsd"; 
+  
   //Validate the XML file against the schema
   if ($dom->schemaValidate($xmlschema)) {
     // The XML file is valid. Let's start reading in the file.
@@ -52,7 +55,24 @@
     }
     
     $targets = $dom->getElementsByTagName( "targets" ); 
-//    $observation = $searchNode->item(0)->getElementsByTagName( "observation" ); 
+    $target = $targets->item(0)->getElementsByTagName( "target" ); 
+    
+    foreach( $target as $target )
+    {
+      $targetname = $target->getElementsByTagName( "name" )->item(0)->nodeValue;
+      $aliases = $target->getElementsByTagName( "alias" );
+      
+      $aliasesArray = Array();
+      $cnt = 0;
+      foreach ($aliases as $aliases) {
+        //print "Alias " . $cnt . " ";
+        //print $aliases->nodeValue . "<br />";
+        $aliasesArray["alias".$cnt] = $aliases->nodeValue; 
+        $cnt = $cnt + 1;
+      }
+      print_r($aliasesArray);
+//      print "TEST : " . $targetname . "<br />";
+    }
     
     // Check if there are observations for the given observer
     $searchNode = $dom->getElementsByTagName( "observations" ); 
@@ -64,14 +84,12 @@
         // Check if the observation already exists in DeepskyLog (target and begin should tell this)
         print "Date and time : " . $observation->getElementsByTagName( "begin" )->item(0)->nodeValue . "<br />";
         print "Target : " . $observation->getElementsByTagName( "target" )->item(0)->nodeValue . "<br />";
-        
-//        print $dom->getElementById($observation->getElementsByTagName( "target" )->item(0)->nodeValue)->getElementsByTagName("name")->item(0)->nodeValue;
 
+//        print $target->getElementById($observation->getElementsByTagName( "target" )->item(0)->nodeValue); //->getElementsByTagName("name")->item(0)->nodeValue;
 //        print $targets->getElementById("_155092")->nodeValue;
 //        print "ID : " . $observation->getAttribute("id") . "<br />";
         
-        // TODO : Test what happens if I change an observation in DeepskyLog, export to comast and reload into Eye&Telescope
-        // Should everything be checked????? What if I change the eyepiece? What if I change the coordinates of an object? 
+        // TODO : What if I change the eyepiece? What if I change the coordinates of an object? 
       }
     }
     
