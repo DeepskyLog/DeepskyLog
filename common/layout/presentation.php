@@ -70,7 +70,7 @@ class Presentations implements iPresentation
     { $decl_minutes=0;
       $decl_degrees++;
     }
-    return($sign.$decl_degrees.(($web==1)?"&deg;":"d").sprintf("%02d".$decl_minutes).(($web==1)?"d":"'"));
+    return($sign.$decl_degrees.(($web==1)?"&deg;":"d").sprintf("%02d",$decl_minutes).(($web==1)?"d":"'"));
   }
   public  function decToStringDegMin($decl)
   { $sign="";
@@ -157,7 +157,7 @@ class Presentations implements iPresentation
     }
     if($ra_hours==24)
      $ra_hours = 0;
-    return(sprintf("%02d",$ra_hours).":".sprintdf("%02d",$ra_minutes).":".sprintf("%02d",$ra_seconds));
+    return(sprintf("%02d",$ra_hours).":".sprintf("%02d",$ra_minutes).":".sprintf("%02d",$ra_seconds));
   }
   public  function raToString($ra)
   { $ra_hours  =floor($ra);

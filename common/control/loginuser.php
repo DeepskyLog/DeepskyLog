@@ -35,22 +35,27 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
 			if($GLOBALS['objObserver']->getObserverProperty($login,'role',2)=="2")                         // user in waitlist already tries to log in
         $loginError="loginuser: user in waitlist";
       elseif($GLOBALS['objObserver']->getObserverProperty($login,'role',2)=="1")                     // validated user
-      { session_regenerate_id(true);
+      { $tmpifrm=$objUtil->checkSessionKey('ifrm');
+      	session_regenerate_id(true);
 			  $_SESSION['deepskylog_id']=$login;                                      // set session variable
         $_SESSION['admin']="no";                                                // set session variable
+        $_SESSION['ifrm']=$tmpifrm;
         $loggedUser=$_SESSION['deepskylog_id'];
         $cookietime=time()+(365*24*60*60);                                      // 1 year	      
 				setcookie("deepskylogsec",$passwd.$login,$cookietime,"/");
 	    }
       else                                                                      // administrator logs in 
-      { session_regenerate_id(true);
-			  $_SESSION['deepskylog_id']=$login;                              
+      { $tmpifrm=$objUtil->checkSessionKey('ifrm');
+      	session_regenerate_id(true);
+      	$_SESSION['deepskylog_id']=$login;                              
         $_SESSION['admin']="yes";                           
+        $_SESSION['ifrm']=$tmpifrm;
         $loggedUser=true;
         $cookietime=time()+(365*24*60*60);                                      // 1 year
         setcookie("deepskylogsec",$passwd.$login,$cookietime,"/");
       }
       unset($_SESSION['QobjParams']);
+      $_GET['indexAction']='default_action';
     }
     else // passwords don't match
     { $loginErrorCode="LangErrorWrongPassword";

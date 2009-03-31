@@ -36,7 +36,7 @@ if(count($_SESSION['Qobj'])>1) //===============================================
 	  $objObject->showObjects($link, $min, $max);
 		echo "</iframe>";
 	}	
-	echo "<script>resizeElement('obj_list',220);</script>";
+	echo "<script>resizeElement('obj_list',70);</script>";
 	echo "<hr />";
   //list($min,$max)=$objUtil->printNewListHeader($_SESSION['Qobj'],$link,$min,25,'');	
   $objPresentations->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);

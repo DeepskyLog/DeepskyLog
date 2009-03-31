@@ -909,7 +909,7 @@ class Objects implements iObjects
       $count++;
     }
     if($FF) 
-    { while($count++<25)
+    { while($countline++<25)
         echo "<tr><td>&nbsp;</td></tr>";   
       echo "</tbody>";
     }

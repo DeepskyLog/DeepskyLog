@@ -144,6 +144,7 @@ define("LangListImportError1", "Il faut &#234;tre enregistrer pour importer une 
 define("LangListImportError2", "Veuillez selectionner votre propre liste pour importer dans cette liste");
 define("LangCSVListError1","Des erreurs apparaissent lors de l'importation.");
 define("LangCSVListError2","Objets inconnus :");
+define("LangToListListBy","Liste par: ");
 
 // List menu
 define("LangListManage", "Listes");

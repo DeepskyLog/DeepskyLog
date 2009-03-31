@@ -7,6 +7,6 @@ echo "<link href=\"".$baseURL."styles/style.css\" rel=\"stylesheet\" type=\"text
 echo "</head>";
 echo "<body style=\"background-color:#FFFFFF\">";
 echo "<script type=\"text/javascript\" src=\"".$baseURL."common/menu/wz_tooltip.js\"></script>";
-include $instDir.$_SESSION['ifrm'];
+include $instDir.$objUtil->checkSessionKey('ifrm','deepsky/content/ifrm_observations.php');
 echo "</body>";
 ?>

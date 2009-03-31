@@ -3,6 +3,7 @@ header ("Content-Type: application/pdf");
 header ("Content-Disposition: Attachment; filename=objects.pdf");
 $inIndex = true;
 include 'common/entryexit/preludes.php';
+include 'common/layout/presentation.php';
 if(array_key_exists('SID', $_GET)&&$_GET['SID']&&array_key_exists($_GET['SID'],$_SESSION)&&$_SESSION[$_GET['SID']])
   $objUtil->pdfObjects($_SESSION[$_GET['SID']]);
 ?>

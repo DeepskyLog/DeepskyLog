@@ -7,6 +7,7 @@ interface iLists
   public  function checkObjectInMyActiveList($value);              // verifies if the object is in the active list 
   public  function checkObjectMyOrPublicList($value, $list);       // verifies if the object is in the active or the specified list
   public  function emptyList($listname);                           // empties the list after checking ownership
+  public  function getListOwner();
   public  function getLists();                                     // returns an array of lists, first the private ones of the logged user, then the public ones
   public  function getListObjectDescription($object);              // returns a string with the list object description
   public  function getMyLists();                                   // returns an array of logged user lists
@@ -104,6 +105,10 @@ class Lists implements iLists
  public  function getListObjectDescription($object)
  { global $loggedUser,$listname,$objDatabase; 
    return $objDatabase->selectSingleValue("SELECT observerobjectlist.description FROM observerobjectlist WHERE ".((substr($listname,0,7)=='Public:')?"":"observerid = \"".$loggedUser."\" AND ")."objectname=\"".$object."\" AND listname=\"".$listname."\"",'description','');
+ }
+ public  function getListOwner()
+ { global $listname,$objDatabase; 
+   return $objDatabase->selectSingleValue("SELECT observerobjectlist.observerid FROM observerobjectlist WHERE listname=\"".$listname."\" AND objectplace=0",'observerid','');
  }
  public  function getLists()
  { global $objDatabase, $loggedUser;

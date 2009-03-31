@@ -7,13 +7,13 @@ $data_array=file($csvfile);
 for($i=0;$i<count($data_array);$i++ ) 
   $parts_array[$i]=explode(";",$data_array[$i]); 
 for($i=1;$i<count($parts_array);$i++)
-{ $objects[$i] = $parts_array[$i][0];
+{ $objects[$i] = htmlentities($parts_array[$i][0]);
   $dates[$i] = $parts_array[$i][2];
-  $locations[$i] = $parts_array[$i][4];
-  $instruments[$i] = $parts_array[$i][5];
-  $filters[$i] = $parts_array[$i][7];
-  $eyepieces[$i] = $parts_array[$i][6];
-  $lenses[$i] = $parts_array[$i][8];
+  $locations[$i] = htmlentities($parts_array[$i][4]);
+  $instruments[$i] = htmlentities($parts_array[$i][5]);
+  $filters[$i] = htmlentities($parts_array[$i][7]);
+  $eyepieces[$i] = htmlentities($parts_array[$i][6]);
+  $lenses[$i] = htmlentities($parts_array[$i][8]);
 }
 //$objects = array_unique($objects);
 // JV 20060224 add check to see if $objects contains data or not
@@ -171,23 +171,23 @@ else
   else
   { $username=$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'firstname'). " ".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'name');
     for($i=1;$i<count($parts_array);$i++)
-    { $observername = $objObserver->getObserverProperty($parts_array[$i][1],'firstname'). " ".$objObserver->getObserverProperty($parts_array[$i][1],'name');
+    { $observername = $objObserver->getObserverProperty(htmlentities($parts_array[$i][1]),'firstname'). " ".$objObserver->getObserverProperty(htmlentities($parts_array[$i][1]),'name');
       if($parts_array[$i][1]==$username)
-      { $instrum = $objInstrument->getInstrumentId($parts_array[$i][5], $_SESSION['deepskylog_id']);
-        $locat = $objLocation->getLocationId($parts_array[$i][4], $_SESSION['deepskylog_id']);
+      { $instrum = $objInstrument->getInstrumentId(htmlentities($parts_array[$i][5]), $_SESSION['deepskylog_id']);
+        $locat = $objLocation->getLocationId(htmlentities($parts_array[$i][4]), $_SESSION['deepskylog_id']);
         $dates = sscanf($parts_array[$i][2], "%2d%c%2d%c%4d");
         $date = sprintf("%04d%02d%02d", $dates[4], $dates[2], $dates[0]);
         $times = sscanf($parts_array[$i][3], "%2d%c%2d");
         $time = sprintf("%02d%02d", $times[0], $times[2]);
         if ($parts_array[$i][11] == "")
           $parts_array[$i][11] = "0";
-        $obsid=$objObservation->addDSObservation($correctedObjects[$i-1],$_SESSION['deepskylog_id'],$instrum,$locat,$date,$time,htmlentities($parts_array[$i][13]),$parts_array[$i][9],$parts_array[$i][10],$parts_array[$i][11],$parts_array[$i][12]);
+        $obsid=$objObservation->addDSObservation($correctedObjects[$i-1],$_SESSION['deepskylog_id'],$instrum,$locat,$date,$time,htmlentities($parts_array[$i][13]),htmlentities($parts_array[$i][9]),htmlentities($parts_array[$i][10]),htmlentities($parts_array[$i][11]),htmlentities($parts_array[$i][12]));
 				if ($parts_array[$i][6] != "")
-				  $objObservation->setDsObservationProperty($obsid,'eyepieceid', $objEyepiece->getEyepieceObserverPropertyFromName($parts_array[$i][6], $_SESSION['deepskylog_id'],'id'));
+				  $objObservation->setDsObservationProperty($obsid,'eyepieceid', $objEyepiece->getEyepieceObserverPropertyFromName(htmlentities($parts_array[$i][6]), $_SESSION['deepskylog_id'],'id'));
 				if ($parts_array[$i][7] != "")
-					$objObservation->setDsObservationProperty($obsid,'filterid', $objFilter->getFilterObserverPropertyFromName($parts_array[$i][7], $_SESSION['deepskylog_id'],'id'));
+					$objObservation->setDsObservationProperty($obsid,'filterid', $objFilter->getFilterObserverPropertyFromName(htmlentities($parts_array[$i][7]), $_SESSION['deepskylog_id'],'id'));
 				if ($parts_array[$i][8] != "")
-					$objObservation->setDsObservationProperty($obsid,'lensid', $objLens->getLensObserverPropertyFromName($parts_array[$i][8], $_SESSION['deepskylog_id'],'id'));
+					$objObservation->setDsObservationProperty($obsid,'lensid', $objLens->getLensObserverPropertyFromName(htmlentities($parts_array[$i][8]), $_SESSION['deepskylog_id'],'id'));
       }
       unset($_SESSION['QobsParams']);
     }

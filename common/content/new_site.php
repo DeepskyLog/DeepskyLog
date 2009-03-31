@@ -39,7 +39,7 @@ if(($latitude=$objUtil->checkGetKey('latitude'))||$locationid)
 	  $latitudestr=$objPresentations->decToString($objLocation->getLocationPropertyFromId($_GET['locationid'],'latitude'), 1);
   $latarray = explode("&deg;", $latitudestr);
   $latitudedeg = $latarray[0];
-  $latitudemin = $latarray[1];
+  $latitudemin = substr($latarray[1],0,-1);
 }
 if(array_key_exists('longitude',$_GET) && $_GET['longitude'] || array_key_exists('locationid',$_GET) && $_GET['locationid'])
 { if (array_key_exists('longitude',$_GET))
@@ -48,7 +48,7 @@ if(array_key_exists('longitude',$_GET) && $_GET['longitude'] || array_key_exists
     $longitudestr = $objPresentations->decToString($objLocation->getLocationPropertyFromId($_GET['locationid'],'longitude'), 1);
   $longarray = explode("&deg;", $longitudestr);
   $longitudedeg = $longarray[0];
-  $longitudemin = $longarray[1];
+  $longitudemin = substr($longarray[1],0,-1);
 }
 if($sites!=null)
 { $orig_previous=$objUtil->checkGetKey('previous','');
@@ -175,7 +175,7 @@ tableFieldnameFieldExplanation(LangAddSiteField4,
                                "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"latitude\" size=\"4\" value=\"".
                                 (((array_key_exists('latitude',$_GET) && $_GET['latitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$latitudedeg:"").
                                 "\" />&deg;&nbsp;".
-                                "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"latitudemin\" size=\"2\"	value=\"".
+                                "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"latitudemin\" size=\"4\"	value=\"".
                                 (((array_key_exists('latitude',$_GET) && $_GET['latitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$latitudemin:"").
                                 "\" />&#39;",
                                 LangAddSiteField4Expl);
@@ -183,7 +183,7 @@ tableFieldnameFieldExplanation(LangAddSiteField5,
                                "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"".
                                (((array_key_exists('longitude',$_GET) && $_GET['longitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$longitudedeg:"").
                                "\" />&deg;&nbsp;".
-                               "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\"	name=\"longitudemin\" size=\"2\" value=\"".
+                               "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\"	name=\"longitudemin\" size=\"4\" value=\"".
                                (((array_key_exists('longitude',$_GET) && $_GET['longitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$longitudemin:"").
                                "\" />&#39;</td>",
                                LangAddSiteField5Expl);

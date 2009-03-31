@@ -13,7 +13,7 @@ $link=$baseURL."index.php?indexAction=rank_observers&amp;sort=".$sort."&amp;size
 echo "<table class=\"h2table\" width=\"100%\">";
 echo "<tr height=\"40px\" width=\"100%\">";
 echo "<td class=\"h2header\">".LangTopObserversTitle."</td>";
-echo "<td align=\"right\" style=\"background-color:#00FFFF;\">";
+echo "<td align=\"right\">";
 list($min, $max) = $objUtil->printNewListHeader($rank, $link, $min, $step, "");
 //$max=25;
 echo "</td>";

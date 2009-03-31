@@ -67,18 +67,17 @@ else
   $objObject->showObjects($link, $min, $max);
 	echo "</iframe>";
 }	
-echo "<script>resizeElement('obj_list',400);</script>";
 echo "</div>";
 
-echo "<div style=\"position:relative; left:0px; width:100%;\">";
+echo "<div style=\"position:relative; left:0px;height:30px;width:100%;\">";
 echo "<hr />";
 $objPresentations->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
 echo "&nbsp;-&nbsp;";
 echo "<a target=\"_top\" href=\"".$baseURL."objects.csv?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a> &nbsp;-&nbsp;";
 echo "<a target=\"_top\" href=\"".$baseURL."objects.argo?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage8."</a>";
 echo "</div>";
-
 echo "</div>";
+echo "<script>resizeElement('obj_list',80);</script>";
 
 //============================================================================== Admin section permits to change object settings in DB remotely
 if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")

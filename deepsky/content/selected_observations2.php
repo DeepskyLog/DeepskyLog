@@ -19,12 +19,10 @@ while (list ($key, $value) = each($_GET))
 $link = $link2 . '&amp;sort=' . $_GET['sort'] . '&amp;sortdirection=' . $_GET['sortdirection'];
 
 $step = 25;
-$offset=210;
 //====================== the remainder of the pages formats the page output and calls showObject (if necessary) and showObservations
 //=============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT BEFORE SHOWING ITS OBSERVATIONS =====================================================================================
 if ($object && $objObject->getExactDsObject($object)) 
-{ $offset=400; 
-	$object_ss = stripslashes($object);
+{ $object_ss = stripslashes($object);
 	$seen = "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
 	$seenDetails = $objObject->getSeen($object);
 	if (substr($seenDetails, 0, 1) == "X")
@@ -34,15 +32,16 @@ if ($object && $objObject->getExactDsObject($object))
 		if (substr($seenDetails, 0, 1) == "Y")
 			$seen = "<a target=\"_top\" href=\"" .
 			$baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
-	echo "<div id=\"main\">";
+	echo "<div id=\"pageTitle\">";
 	echo "<h6 class=\"h2header\">".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h6>";
 	echo "<table width=\"100%\">";
 	echo "<tr>";
-	echo "<td width=\"25%\" align=\"left\">";
-	echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "\">" . LangViewObjectViewNearbyObject . " " . $object_ss;
-	echo "</td><td width=\"25%\" align=\"center\">";
+	echo "<td width=\"25%\" align=\"left\"><a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\">".LangViewObjectViewNearbyObject." ".$object_ss."</td>";
+	echo "<td width=\"25%\" align=\"center\">";
 	if($loggedUser)
 		echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=add_observation&object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object_ss . "</a>";
+	else
+	  echo "&nbsp;";
 	echo "</td>";
 	if ($myList) 
 	{ echo "<td width=\"25%\" align=\"center\">";
@@ -122,30 +121,21 @@ else
 	  $objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco']);
 	else
 	{ $_SESSION['ifrm']="deepsky/content/ifrm_observations.php";
-		echo "<iframe name=\"obs_list\" id=\"obs_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;link2=".urlencode($link2)."&amp;min=".$min."&amp;max=".$max."&amp;expand=".$objUtil->checkGetKey('expand')."\" frameborder=\"0\" width=\"100%\" style=\"heigth:200px\">";
+	  echo "<iframe name=\"obs_list\" id=\"obs_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;link2=".urlencode($link2)."&amp;min=".$min."&amp;max=".$max."&amp;expand=".$objUtil->checkGetKey('expand')."\" frameborder=\"0\" width=\"100%\" style=\"heigth:200px\">";
 	  $objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco']);
 		echo "</iframe>";
 	}
-  echo "<script>resizeElement('obs_list',".$offset.");</script>";
+  echo "<script>resizeElement('obs_list',70);</script>";
 	echo "<hr />";
 	if ($_SESSION['lco'] == "O")
 		echo "<p align=\"right\">" . LangOverviewObservationsHeader5a;
-	echo "<table width=\"100%\">";
-	echo "<tr>";
-	echo "<td>";
+	echo "<div style=\"width:100%;height:20px;\">";
 	$objPresentations->promptWithLink(LangOverviewObservations10, LangOverviewObservations11, $baseURL . "observations.pdf?SID=Qobs", LangExecuteQueryObjectsMessage4);
 	echo " - ";
 	echo "<a target=\"_top\" href=\"" . $baseURL . "observations.csv\" target=\"new_window\">" . LangExecuteQueryObjectsMessage5 . "</a> - ";
 	echo "<a target=\"_top\" href=\"" . $baseURL . "observations.xml\" target=\"new_window\">" . LangExecuteQueryObjectsMessage10 . "</a> - ";
 	echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a>";
-	//==================================================================================================== PAGE FOOTER - MAKE NEW QUERY ===================================================================================== 
-//	echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=query_observations\">" . LangObservationQueryError2 . "</a>";
-  echo "</td>";
-  echo "<td align=\"right\">";
-//  list ($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
-  echo "</td>";
-  echo "</tr>";
-  echo "</table>";
+  echo "</div>";
   echo "</div>";
 }
 ?>

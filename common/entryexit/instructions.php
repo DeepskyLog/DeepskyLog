@@ -1,7 +1,9 @@
 <?php  //instruction.php treats all commands for changing data in the database or setting program parameters
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else
-{	// pagenumbers
+{	if($objUtil->checkGetKey('indexAction')=="logout")                                                                 // logout
+	  require_once $instDir."common/control/logout.php";
+	// pagenumbers
 	if(array_key_exists('multiplepagenr',$_GET))
 	  $min = ($_GET['multiplepagenr']-1)*25;
 	elseif(array_key_exists('multiplepagenr',$_POST))
@@ -86,8 +88,6 @@ else
 	{ $entryMessage.=$objLocation->validateSaveLocation();
 	  $_GET['indexAction']="add_site";
 	}
-	if($objUtil->checkGetKey('indexAction')=="logout")                                                                 // logout
-	  require_once $instDir."common/control/logout.php";
 	//============================================================================== DEEPSKY INSTRUCTIONS
 	$object=$objUtil->checkPostKey('object',$objUtil->checkGetKey('object'));
 	if(($objUtil->checkGetKey('indexAction')=='quickpick') // ========================================================= New Observation From quickpick

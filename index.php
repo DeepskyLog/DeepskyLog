@@ -19,8 +19,6 @@ try
   echo "<td height=\"100%\" valign=\"top\" style=\"background-color:#FFFFFF;\">"; 
   $includeFile=$objUtil->utilitiesDispatchIndexAction();                             // Determine the page to show
   include 'common/entryexit/data.php';                                              // Get data for the form, object data, observation data, etc.
-  if(isset($entryMessage)&&$entryMessage)                                           // Entry Message if any
-    echo "<h3 align=\"center\">".$entryMessage.'</h3><hr />';
   include $includeFile;                                                             // Center content section	<<<===============================================================
   echo "</td>";
   echo "<td align=\"right\" valign=\"bottom\" style=\"background:url(".$baseURL."styles/images/ru.gif) no-repeat top right; background-color:#FFFFFF;\">";
@@ -28,9 +26,12 @@ try
   echo "<td>&nbsp;&nbsp;</td>";                                                     // Right blue bar
   echo "</tr>";  
   echo "</table>";	
-  echo "<p align=\"center\">Copyright 2004 - 2008&nbsp;";                           // bottom line
+  echo "<p style=\"height:30px;text-align:center;margin:3px;border:0px;padding:0px;\">";
+  echo "Copyright 2004 - 2008&nbsp;";                           // bottom line
   echo "<a href=\"http://www.vvs.be\">Vereniging voor Sterrenkunde</a> - Powered by&nbsp;";
   echo "<a href=\"http://www.deepskylog.org\">DeepskyLog</a>&nbsp;".$versionInfo;   //defined in databaseInfo.php
+  if(isset($entryMessage)&&$entryMessage)                                           // Entry Message if any
+    echo "<script>alert('".addslashes(html_entity_decode($entryMessage))."');</script>";
 }
 catch (Exception $e)
 { echo "<p>DeepskyLog encounterd a problem. Could you please report it to the Developers?</p>";

@@ -143,6 +143,7 @@ define("LangListImportError1", "Je moet ingelogd zijn om lijsten te importeren."
 define("LangListImportError2", "Je moet een eigen lijst selecteren om te kunnen importeren in die lijst.");
 define("LangCSVListError1","Er zijn fouten opgetreden bij het importeren.");
 define("LangCSVListError2","Niet-gekende objecten:");
+define("LangToListListBy","Lijst door: ");
 
 // List menu
 define("LangListManage", "Lijsten");

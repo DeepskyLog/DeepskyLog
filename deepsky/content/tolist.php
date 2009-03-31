@@ -19,33 +19,26 @@ echo "</table>";
 echo "</form>";
 echo "<hr>";
 if($listname)
-{ echo "<table>";
-	echo "<tr>";
-	echo "<td>";
-  echo("<div id=\"main\">\n<h2>");
+{ echo "<div id=\"containerListHeader\" style=\"position:relative;height:30px;\">";
+	echo "<div id=\"title\" style=\"position:absolute;left:0px;width:65%;height:30px;\">";
+  echo "<h6>";
   echo LangSelectedObjectsTitle." ".$listname_ss; // page title
-  echo("</h2>\n");
-  echo "</td>";
+  echo "</h6>";
+  if(!$myList)
+    echo "(".LangToListListBy.$objObserver->getObserverProperty(($listowner=$objList->getListOwner()),'firstname').' '.$objObserver->getObserverProperty($listowner,'name').")";
 	if($myList)
-  { echo "<td width=\"200\" align=\"center\">";
-		echo("<a href=\"".$baseURL."index.php?indexAction=import_csv_list\">" .  LangToListImport . "</a>");
-    echo "</td>";	
-    echo("<form action=\"".$baseURL."index.php?indexAction=listaction\">");
-    echo("<input type=\"hidden\" name=\"indexAction\" value=\"listaction\"></input>");
-    echo "<td width=\"200\" align=\"center\">";
-		echo("<input style=\"width:12em;\" type=\"submit\" name=\"emptyList\" value=\"" . LangToListEmpty . "\" />");
-    echo "</td>";	
-    echo "<td width=\"200\" align=\"center\">";
-		echo("<input style=\"width:12em;\" type=\"submit\" name=\"removeList\" value=\"" . LangToListMyListsRemove . "\" />");
-    echo "</td>";
-		echo("</form>");
-  }
-  echo "</table>";
-	if(count($_SESSION['Qobj'])>0)
-	{ $link = $baseURL."index.php?indexAction=listaction&amp;sort=".$objUtil->checkGetKey('sort','objectpositioninlist');
-    list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'], $link, $min, 25, "");	
-  
-    // OUTPUT RESULT
+    echo "<a href=\"".$baseURL."index.php?indexAction=import_csv_list\">" .  LangToListImport . "</a>";
+  echo "</div>";
+	echo "<div id=\"ListHeader\" style=\"position:absolute; right:0px;width:35%;height:30px;\">";
+  $link = $baseURL."index.php?indexAction=listaction&amp;sort=".$objUtil->checkGetKey('sort','objectpositioninlist');
+  echo "<span style=\"text-align:right\">";
+	list($min, $max)=$objUtil->printNewListHeader2($_SESSION['Qobj'], $link, $min, 25, "");	
+  echo "<span>";
+  echo "</div>";  
+  echo "</div>";
+  echo "<div id=\"container2\" style=\"position:relative;height:100%;\">";
+  if(count($_SESSION['Qobj'])>0)
+	{ // OUTPUT RESULT
     $link = "".$baseURL."index.php?indexAction=listaction";
 	  echo "<hr />";
 	  $_GET['min']=$min;
@@ -58,10 +51,22 @@ if($listname)
 	    $objObject->showObjects($link, $min, $max,'',1);
 		  echo "</iframe>";
 	  }	
-	  echo "<script>resizeElement('obj_list',330);</script>";
+	  echo "<script>resizeElement('obj_list',70);</script>";
 	  echo "<hr />";
-      
-    list($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobj'], $link, $min, 25, "");
+    echo "<div id=\"containerListFooter\" style=\"position:relative;height:30px;\">";
+	  echo "<div id=\"title\" style=\"position:absolute;left:0px;width:50%;height:30px;\">";
+      list($min, $max)=$objUtil->printNewListHeader2($_SESSION['Qobj'], $link, $min, 25, "");
+    echo "</div>";
+	  echo "<div id=\"ListHeader2\" style=\"position:absolute;right:0px;width:50%;height:30px;text-align:right;\">";
+    if($myList)
+    { echo "<form action=\"".$baseURL."index.php?indexAction=listaction\">";
+      echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\"></input>";
+		  echo "<input style=\"width:12em;\" type=\"submit\" name=\"emptyList\" value=\"" . LangToListEmpty . "\" />";
+      echo "<input style=\"width:12em;\" type=\"submit\" name=\"removeList\" value=\"" . LangToListMyListsRemove . "\" />";
+      echo "</form>";
+    }
+    echo "</div>";
+    echo "</div>";
     $objPresentations->promptWithLink(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
 	  echo "&nbsp;-&nbsp;";
     $objPresentations->promptWithLink(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objectnames.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4b);
@@ -74,6 +79,7 @@ if($listname)
 	else
 	{ echo LangToListEmptyList;
 	}
+  echo "</div>";
 }
 
 
