@@ -125,7 +125,7 @@ else
 	  $objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco']);
 		echo "</iframe>";
 	}
-  echo "<script>resizeElement('obs_list',70);</script>";
+  echo "<script>alert(document.getElementById('maintable').offsetTop);resizeElement('obs_list',80);</script>";
 	echo "<hr />";
 	if ($_SESSION['lco'] == "O")
 		echo "<p align=\"right\">" . LangOverviewObservationsHeader5a;
