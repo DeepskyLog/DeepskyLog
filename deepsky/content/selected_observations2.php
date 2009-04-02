@@ -71,7 +71,7 @@ if (count($_SESSION['Qobs']) == 0) //===========================================
 }
 else 
 { //=============================================================================================== START OBSERVATION PAGE OUTPUT =====================================================================================
-	echo "<div id=\"main\">";
+	echo "<div id=\"main\" style=\"position:relative\">";
   echo "<table width=\"100%\">";
 	echo "<tr height=\"20px\">";
 	echo "<td class=\"h2header\">";
@@ -117,15 +117,18 @@ else
 	echo "<hr />";
 	$_GET['min']=$min;
 	$_GET['max']=$max;
-  if($FF)
-	  $objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco']);
-	else
+	$resizeElement='obs_list';
+	if($FF)
+  { $objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco']);
+	  $resizeSize=80;
+  }
+  else
 	{ $_SESSION['ifrm']="deepsky/content/ifrm_observations.php";
 	  echo "<iframe name=\"obs_list\" id=\"obs_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;link2=".urlencode($link2)."&amp;min=".$min."&amp;max=".$max."&amp;expand=".$objUtil->checkGetKey('expand')."\" frameborder=\"0\" width=\"100%\" style=\"heigth:200px\">";
 	  $objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco']);
 		echo "</iframe>";
+	  $resizeSize=130;
 	}
-  echo "<script>alert(document.getElementById('maintable').offsetTop);resizeElement('obs_list',80);</script>";
 	echo "<hr />";
 	if ($_SESSION['lco'] == "O")
 		echo "<p align=\"right\">" . LangOverviewObservationsHeader5a;

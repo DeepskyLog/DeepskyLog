@@ -1,5 +1,4 @@
 <?php
-echo "<body leftmargin=\"0\" topmargin=\"0\" rightmargin=\"0\" bottommargin=\"0\" marginwidth=\"0\" marginheight=\"0\">";
 echo "<script type=\"text/javascript\" src=\"".$baseURL."common/menu/wz_tooltip.js\"></script>";
 // VVS Header and our 3 dropdown boxes if logged in 
 echo "<div style=\"background-color:#003366;

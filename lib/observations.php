@@ -655,7 +655,7 @@ class Observations {
 	{ global $FF, $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations; 
     $min=$_GET['min'];
     $max=$_GET['max'];
-	  echo "<table width=\"100%\">\n";
+	  echo "<table id= \"showListObservationTable\" width=\"100%\">";
 	  if($FF)
 	    echo "<thead>";
 		echo "<tr width=\"100%\" class=\"type3\">";
