@@ -5,6 +5,7 @@ else
 {
 $sort=$objUtil->checkGetKey('sort','name');
 $insts=$objInstrument->getSortedInstruments($sort,$loggedUser);
+echo "<div id=\"main\">";
 if(count($insts)>0)
 { if(!$min) $min=$objUtil->checkGetKey('min',0);
   $orig_previous=$objUtil->checkGetKey('previous','');
@@ -20,7 +21,6 @@ if(count($insts)>0)
   else
     $previous = $sort;
   $link=$baseURL."index.php?indexAction=add_instrument&amp;sort=".$sort."&amp;previous=".$orig_previous;
-  echo "<div id=\"main\">";
   echo "<h2>".LangOverviewInstrumentsTitle."</h2>";
   echo "<table width=\"100%\">";
   echo "<tr class=\"type3\">";
@@ -80,7 +80,6 @@ if(count($insts)>0)
   echo "<input type=\"submit\" name=\"adapt\" value=\"" . LangAddInstrumentStdTelescope . "\" />";
   echo "</form>";
   echo "<hr />";
-  echo "</div>";
 }
 echo "<h2>".LangAddInstrumentTitle."</h2>";
 echo "<ol>";

@@ -7,6 +7,7 @@ $sort=$objUtil->checkGetKey('sort','name');
 $locationid=$objUtil->checkGetKey('locationid');
 $timezone_identifiers = DateTimeZone::listIdentifiers();
 $tempTimeZoneList="<select name=\"timezone\" class=\"inputfield requiredField\">";
+echo "<div id=\"main\">";
 while(list($key,$value)=each($timezone_identifiers))
 { if($locationid)
 	  $tempTimeZoneList.="<option value=\"$value\"".(($value==$objLocation->getLocationPropertyFromId($locationid,'timezone'))?" selected":"").">$value</option>";
@@ -64,7 +65,7 @@ if($sites!=null)
   else
     $previous = $sort;
   $link=$baseURL."index.php?indexAction=add_site&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
-  echo "<div id=\"main\">\n<h2>".LangOverviewSiteTitle."</h2>";
+  echo "<h2>".LangOverviewSiteTitle."</h2>";
   echo "<table width=\"100%\">";
   echo "<tr class=\"type3\">";
   echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>";
@@ -131,7 +132,6 @@ if($sites!=null)
   echo "</form>";
   echo "</table>";
   echo "<hr />";
-  echo "</div>";
 }
 echo "<h2>".LangAddSiteTitle."</h2>";
 echo "<ol>";

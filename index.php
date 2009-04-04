@@ -9,7 +9,7 @@ try
   include 'common/menu/head.php';                                                      // HTML head
   echo    "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
   echo    "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
-  echo    "<body id=\"dslbody\" style=\"position:relative;margin:0px;\"  onresize=\"resizeForm();\">";
+  echo    "<body id=\"dslbody\" onresize=\"resizeForm();\">";
   include 'common/menu/headmenu.php';                                                  // Page Title and welcome line - modules choices
   echo    "<div id=\"div3\">";
   include 'common/entryexit/menu.php';                                                 // Left Menu Section

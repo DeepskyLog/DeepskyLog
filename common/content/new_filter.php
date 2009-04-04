@@ -5,6 +5,7 @@ else
 {
 $sort=$objUtil->checkGetKey('sort','name');
 $filts=$objFilter->getSortedFilters($sort, $loggedUser);
+echo "<div id=\"main\">";
 if(count($filts)>0)
 { if(!$min) $min=$objUtil->checkGetKey('min',0);
   $orig_previous=$objUtil->checkGetKey('previous','');
@@ -20,8 +21,7 @@ if(count($filts)>0)
   else
     $previous = $sort;
   $link=$baseURL."index.php?indexAction=add_filter&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
-  echo "<div id=\"main\">";
-  echo "<h2>".LangOverviewFilterTitle."</h2>";
+   echo "<h2>".LangOverviewFilterTitle."</h2>";
   echo "<table width=\"100%\">";
   echo "<tr class=\"type3\">";
   echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=name&amp;previous=$previous\">".LangViewFilterName."</a></td>";
@@ -51,7 +51,6 @@ if(count($filts)>0)
 	}
   echo "</table>";
   echo "<hr />";
-  echo "</div>";
 }
 echo "<h2>".LangAddFilterTitle."</h2>";
 echo "<ol>";

@@ -72,14 +72,14 @@ $tempObsLangList.="</tr></table>";
 echo "<div id=\"main\">";
 echo "<h2>".LangChangeAccountTitle."</h2>";
 echo "<hr>";
-$upload_dir = $instDir.'common/observer_pics';
-$dir = opendir($upload_dir);
-while (FALSE !== ($file = readdir($dir)))
-{ if ("." == $file OR ".." == $file)                                            // skip current directory and directory above
+$upload_dir = 'common/observer_pics';
+$dir = opendir($instDir.$upload_dir);
+while (FALSE!==($file=readdir($dir)))
+{ if(("."==$file)||(".."==$file))                                            // skip current directory and directory above
     continue; 
-  if(fnmatch($loggedUser. ".gif", $file) || fnmatch($loggedUser. ".jpg",$file) || fnmatch($loggedUser. ".png", $file))
+  if(fnmatch($loggedUser.".gif",$file)||fnmatch($loggedUser.".jpg",$file)||fnmatch($loggedUser.".png",$file))
   { echo "<p align=\"center\">";
-	  echo "<img class=\"account\" src=\"".$baseURL."$upload_dir" . "/" . "$file\" alt=\"" . $loggedUser . "\"></img>";
+	  echo "<img class=\"account\" src=\"".$baseURL.$upload_dir."/".$file."\" alt=\"".$loggedUser."/".$file."\"></img>";
 		echo "</p>";
 	}
 }

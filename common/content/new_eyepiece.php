@@ -10,6 +10,7 @@ if($mfl<0)
   $mfl='';
 $sort=$objUtil->checkGetKey('sort','focalLength');
 $eyeps = $objEyepiece->getSortedEyepieces($sort, $loggedUser);
+echo "<div id=\"main\">";
 if($eyeps!=null)
 { if(!$min) $min=$objUtil->checkGetKey('min',0);
   $orig_previous=$objUtil->checkGetKey('previous','');
@@ -26,7 +27,6 @@ if($eyeps!=null)
     $previous=$sort;
 //  $step = 25;
   $link = $baseURL."index.php?indexAction=add_eyepiece&amp;sort=".$sort."&amp;previous=".$orig_previous;
-  echo "<div id=\"main\">";
   echo "<h2>".LangOverviewEyepieceTitle."</h2>";
   echo "<table width=\"100%\">";
   echo "<tr class=\"type3\">";
@@ -53,7 +53,6 @@ if($eyeps!=null)
     $count++;
   }
   echo "</table>";
-  echo "</div>";
   echo "<hr />";
 }
 $eyeps=$objEyepiece->getSortedEyepieces('focalLength');

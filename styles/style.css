@@ -88,7 +88,6 @@ body {
   margin           : 0px 0px 0px 0px;
   color            : #000000;
 	background-color : #5C7D9D;
-	overflow         : hidden;
 }
 div#main {
   font-family      : Verdana, Arial, Helvetica, sans-serif;
@@ -279,12 +278,12 @@ img.account {
 }
 
 .tbody_obj {
-  overflow: scroll;
-  height: 130px;
+  overflow         : scroll;
+  height           : 130px;
 }
 .tbody_obs {
-  overflow: scroll;
-  height: 130px;
+  overflow         : scroll;
+  height           : 130px;
 }
 table.moduletable { 
   margin           : 0px 5px 10px 5px; 

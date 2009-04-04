@@ -5,6 +5,7 @@ else
 {
 $sort=$objUtil->checkGetKey('sort','name');
 $lns =$objLens->getSortedLenses($sort, $loggedUser);
+echo "<div id=\"main\">";
 if ($lns!=null)
 { $orig_previous=$objUtil->checkGetKey('previous','');
   if((isset($_GET['sort']))&&($orig_previous==$_GET['sort'])) // reverse sort when pushed twice
@@ -19,7 +20,6 @@ if ($lns!=null)
   else
     $previous = $sort;
   $link=$baseURL."index.php?indexAction=add_lens&amp;sort=".$sort."&amp;previous=".$orig_previous;
-  echo "<div id=\"main\">";
   echo "<h2>".LangOverviewLensTitle."</h2>";
   echo "<table width=\"100%\">";
   echo "<tr class=\"type3\">";
@@ -45,7 +45,6 @@ if ($lns!=null)
   }
   echo "</table>";
   echo "<hr>";
-  echo "</div>";
 }
 echo "<h2>".LangAddLensTitle."</h2>";
 echo "<ol>";
