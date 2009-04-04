@@ -8,7 +8,7 @@ while(list($key,$value)=each($_GET))
 	if(($key!='indexAction')&&($key!='multiplepagenr')&&($key!='sort')&&($key!='sortdirection')&&($key!='showPartOfs'))
     $link.='&amp;'.$key.'='.$value;
 if(count($_SESSION['Qobj'])>1) //=============================================== valid result, multiple objects found
-{ echo "<div id=\"main\" style=\"background-color:00FFFF;width:100%;\">";
+{ echo "<div id=\"main\">";
   $title=LangSelectedObjectsTitle;
 	if($showPartOfs)	
 	  $title.=LangListQueryObjectsMessage10;
@@ -18,7 +18,6 @@ if(count($_SESSION['Qobj'])>1) //===============================================
 	   array_key_exists('listname',$_SESSION)&&$_SESSION['listname']&&($_SESSION['listname']<>"----------")&&$myList)
     $title.="&nbsp;-&nbsp;<a href=\"".$link."&amp;min=".$min."&amp;addAllObjectsFromQueryToList=true\" title=\"".LangListQueryObjectsMessage5.$listname_ss."\">".LangListQueryObjectsMessage4."</a>";
   divPageTitle($title, $link, $_SESSION['Qobj'], $min, $max);
-	echo "<div style=\"width:100%;\">";
   if($showPartOfs)
     echo "<a href=\"".$link."&amp;showPartOfs=0\">".LangListQueryObjectsMessage12."</a>";
 	else
@@ -36,7 +35,8 @@ if(count($_SESSION['Qobj'])>1) //===============================================
 	  $objObject->showObjects($link, $min, $max);
 		echo "</iframe>";
 	}	
-	echo "<script>resizeElement('obj_list',70);</script>";
+	$resizeElement='obj_list';
+	$resizeSize=70;
 	echo "<hr />";
   //list($min,$max)=$objUtil->printNewListHeader($_SESSION['Qobj'],$link,$min,25,'');	
   $objPresentations->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);

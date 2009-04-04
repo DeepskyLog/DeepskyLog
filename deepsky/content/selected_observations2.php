@@ -124,10 +124,10 @@ else
   }
   else
 	{ $_SESSION['ifrm']="deepsky/content/ifrm_observations.php";
-	  echo "<iframe name=\"obs_list\" id=\"obs_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;link2=".urlencode($link2)."&amp;min=".$min."&amp;max=".$max."&amp;expand=".$objUtil->checkGetKey('expand')."\" frameborder=\"0\" width=\"100%\" style=\"heigth:200px\">";
+	  echo "<iframe name=\"obs_list\" id=\"obs_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;link2=".urlencode($link2)."&amp;min=".$min."&amp;max=".$max."&amp;expand=".$objUtil->checkGetKey('expand')."\" frameborder=\"0\" width=\"100%\" style=\"height:350px\">";
 	  $objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco']);
 		echo "</iframe>";
-	  $resizeSize=130;
+	  $resizeSize=80;
 	}
 	echo "<hr />";
 	if ($_SESSION['lco'] == "O")

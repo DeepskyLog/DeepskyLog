@@ -62,7 +62,7 @@ while(FALSE!==($file=readdir($dir)))
 { if(("." == $file)OR(".."== $file))
     continue;                                                                   // skip current directory and directory above
   if(fnmatch($user. ".gif", $file) || fnmatch($user. ".jpg",$file) || fnmatch($user. ".png", $file))
-    echo "<p><img class=\"viewobserver\" src=\"".$baseURL."common/observer_pics/".$file."\" alt=\"".$firstname."&nbsp;".$name."\"></img></p>";
+    echo "<div style=\"position:absolute;top:10px;right:10px;text-align:right;\"><img class=\"viewobserver\" src=\"".$baseURL."common/observer_pics/".$file."\" alt=\"".$firstname."&nbsp;".$name."\"></img></div>";
 }
 echo "<table>";
 if(array_key_exists('admin',$_SESSION)&&($_SESSION['admin']=="yes"))       // admin logged in
@@ -96,7 +96,7 @@ if($objUtil->checkSessionKey('admin')=="yes")
   echo "</tr>";
 }
 echo "</table>";
-echo "<hr />";
+echo "<p>";
 
 echo "<table>";
 echo "<tr class=\"type3\">";
@@ -147,7 +147,6 @@ for($i=0;$i<count($modules);$i++)
   echo "<td class=\"fieldvalue\">".$information[$i][4]."</td>";
 echo "</tr>";
 echo "</table>";
-
 echo "</div>";
 }
 ?>
