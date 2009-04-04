@@ -55,6 +55,7 @@
 	width            : 800px;       height : 475px;       
   border           : 0px;         margin : 0px;           padding : 0px;
 	background-color : #FFFFFF;
+	overflow         : auto;
 }
 #div6 {
 	position         : absolute;
