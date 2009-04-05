@@ -22,4 +22,5 @@ if($objList->checkList($_SESSION['listname'])==2)
 }
 else 
   throw new Exception("List is not yours to edit");
+echo "</div>";
 ?>

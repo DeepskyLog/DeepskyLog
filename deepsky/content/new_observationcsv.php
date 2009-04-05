@@ -18,4 +18,5 @@ echo "<form action=\"".$baseURL."index.php?indexAction=add_csv_observations\" en
 echo "<input type=\"file\" name=\"csv\"><br />"; 
 echo "<input type=\"submit\" name=\"change\" value=\"".LangCSVButton."\" />";
 echo "</form>";
+echo "</div>";
 ?>

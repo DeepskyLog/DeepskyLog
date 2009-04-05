@@ -103,6 +103,7 @@ echo "<tr class=\"type3\">";
 echo "<td>&nbsp;</td>";
 for($i=0;$i<count($modules);$i++)
   echo"<td style=\"text-align:center\">".$GLOBALS[$modules[$i]]."</td>";
+echo "</tr>";
 echo "<tr class=\"type1\">";
 echo "<td class=\"fieldname\">".LangViewObserverNumberOfObservations."</td>";
 for($i=0;$i<count($modules);$i++)

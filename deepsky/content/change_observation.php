@@ -1,7 +1,6 @@
 <?php
 // change_observation.php
 // allows a user to change his observation 
-
 if (!$_GET['observation'])
 	throw new Exception("No observation selected");
 echo "<div id=\"main\">";
@@ -11,9 +10,11 @@ echo "<table width=\"100%\">";
 echo "<tr>";
 echo "<td "."class=\"fieldname\" width=\"100\"".">".LangViewObservationField1."</td>";
 echo "<td>"."<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($objObservation->getDsObservationProperty($_GET['observation'],'objectname')) . "\">" . $objObservation->getDsObservationProperty($_GET['observation'],'objectname') . "</a>"."</td>";
-echo "</tr><tr>";
+echo "</tr>";
+echo "<tr>";
 echo "<td "."class=\"fieldname\"".">".LangViewObservationField2."</td>";
 echo "<td >"."<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode($objObservation->getDsObservationProperty($_GET['observation'],'observerid')) . "\">" . $objObserver->getObserverProperty($objObservation->getDsObservationProperty($_GET['observation'],'observerid'),'firstname') . "&nbsp;" . $objObserver->getObserverProperty($objObservation->getDsObservationProperty($_GET['observation'],'observerid'),'name') . "</a>"."</td>";
+echo "</tr>";
 echo "<tr>";
 echo "<td "."class=\"fieldname\"".">".LangViewObservationField5."</td>";
 echo "<td>";
@@ -72,6 +73,7 @@ while (list ($key, $value) = each($instr))
 echo "</select>";
 echo "</td>";
 echo "</tr>";
+echo "<tr>";
 echo "<td class=\"fieldname\">"; // EYEPIECE
 echo LangViewObservationField30;
 echo "&nbsp;";
@@ -86,6 +88,7 @@ while (list ($key, $value) = each($eyeps))
 echo "</select>";
 echo "</td>";
 echo "</tr>";
+echo "<tr>";
 echo "<td class=\"fieldname\">";
 echo LangViewObservationField31; // FILTER
 echo "&nbsp;";
@@ -100,6 +103,7 @@ while (list ($key, $value) = each($filts)) // go through instrument array
 echo "</select>";
 echo "</td>";
 echo "</tr>";
+echo "<tr>";
 echo "<td class=\"fieldname\">";
 echo LangViewObservationField32; // LENS
 echo "&nbsp;";
@@ -153,7 +157,8 @@ if ($sqm=$objObservation->getDsObservationProperty($_GET['observation'],'SQM') >
 echo "\" />";
 echo "</td>";
 echo "</tr>";
-echo "<td>";
+echo "<tr>";
+echo "<td class=\"fieldname\">";
 echo LangViewObservationField33; // Estimated diameter
 echo "</td>";
 echo "<td>";
@@ -212,7 +217,8 @@ $object = $objObservation->getDsObservationProperty($_GET['observation'],'object
 if(in_array($GLOBALS['objObject']->getDsoProperty($object,'type'),array("ASTER" ,"CLANB","DS","OPNCL","AA1STAR","AA2STAR","AA3STAR","AA4STAR","AA8STAR","GLOCL"))) 
 { echo "&nbsp;&nbsp;&nbsp;<input type=\"checkbox\" name=\"resolved\" ".($objUtil->checkPostKey("resolved")?"checked ":"")."/>" . LangViewObservationField37;
 	echo "</td>";
-	echo "</tr> <tr>";
+	echo "</tr>";
+	echo "<tr>";
   echo "<td class=\"fieldname\">";
 	echo LangViewObservationField40;
 	echo "</td>";
@@ -256,6 +262,7 @@ echo "</select>";
 echo "</td>";
 echo "<td></td>";
 echo "</tr>";
+echo "<tr>";
 echo "<td class=\"fieldname\">";
 echo LangViewObservationField29 . "&nbsp;*"; // Language of observation
 echo "</td>";
@@ -279,7 +286,6 @@ echo "<td colspan=\"2\">";
 echo "<textarea name=\"description\" class=\"description inputfield requiredField\">" . $objPresentations->br2nl(html_entity_decode(preg_replace("/&amp;/", "&",$objObservation->getDsObservationProperty($_GET['observation'],'description')))) . "</textarea>";
 echo "</td>";
 echo "</tr>";
-// ??? echo("</td></tr>"); error ??
 echo "<tr>";
 echo "<td colspan=\"2\">";
 echo "<input type=\"submit\" name=\"changeobservation\" value=\"" . LangChangeObservationButton . "\" />";

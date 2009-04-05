@@ -52,6 +52,8 @@ echo "<td colspan=\"2\">";
 echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" name=\"RAhours\" size=\"2\" value=\"\" />&nbsp;h&nbsp;";
 echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" name=\"RAminutes\" size=\"2\" value=\"\" />&nbsp;m&nbsp;"; 
 echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" name=\"RAseconds\" size=\"2\" value=\"\" />&nbsp;s&nbsp;";
+echo "</td>";
+echo "</tr>";
 // DECLINATION
 echo "<tr>";
 echo "<td class=\"fieldname\">".LangViewObjectField4."&nbsp;*"."</td>";

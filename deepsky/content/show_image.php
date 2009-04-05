@@ -23,7 +23,8 @@ if($objObject->getDsoProperty($objObject->getDsObjectName($_GET['object']),'ra')
       $seen = "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=" . urlencode($_GET['object']) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
   }
 
-  echo("<div id=\"main\"><h2>");
+  echo "<div id=\"main\">";
+  echo "<h2>";
   echo (LangViewObjectTitle . "&nbsp;-&nbsp;" . stripslashes($_GET['object']));
   echo "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen;
   echo("</h2>");
@@ -49,13 +50,10 @@ if($objObject->getDsoProperty($objObject->getDsObjectName($_GET['object']),'ra')
 	if(array_key_exists('zoom',$_GET) && $_GET['zoom']) $zoom=$_GET['zoom'];
   else $zoom=30;
 	$objObject->showObject($_GET['object'], $zoom);
-  echo("<div id=\"main\">\n<h2>");
-  echo LangViewDSSImageTitle . $_POST['name'];
-  echo "&nbsp;(" . $_POST['imagesize'] . "&#39;&nbsp;x&nbsp;" . $_POST['imagesize'] . "&#39;)</h2>";
+  echo "<h2>".LangViewDSSImageTitle.$_POST['name']."&nbsp;(".$_POST['imagesize']."&#39;&nbsp;x&nbsp;".$_POST['imagesize']."&#39;)</h2>";
   $_SESSION['imagelink'] = ("http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&amp;r=" . $_POST['raDSS'] . ".0&amp;d=" . $_POST['declDSS'] . "&amp;e=J2000&amp;h=" . $_POST['imagesize'] . ".0&amp;w=" . $_POST['imagesize'] . "&amp;f=gif&amp;c=none&amp;fov=NONE&amp;v3=");
   echo "<p style=\"text-align:center\"> <img src=\"".$_SESSION['imagelink']."\" alt=\"".$_POST['name']."\" width=\"495\" height=\"495\"></img> </p>";
   echo "<p>&copy;&nbsp;<a href=\"http://archive.stsci.edu/dss/index.html\">STScI Digitized Sky Survey</a></p>";
+  echo "</div>";
 }
-echo "</div>";
-
 ?>

@@ -286,6 +286,7 @@ function tablePageTitle($title, $link, &$list, &$min, &$max)
 	echo "<td align=\"right\">";
   list($min,$max)=$objUtil->printNewListHeader($list,$link,$min,25,'');	
 	echo "</td>";
+  echo "</tr>";
 	echo "</table>";
 }
 function divPageTitle($title, $link, &$list, &$min, &$max)
@@ -315,7 +316,7 @@ function tableSortHeader($header0, $link0)
 	echo "<td colspan=\"2\" style=\"text-align: center\">";           
   echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc."\">".trim($header0)."</a>";;
   echo "</td>";        
-  echo "<tr>";
+  echo "</tr>";
   echo "</table>";
   echo "</td>";        
 }

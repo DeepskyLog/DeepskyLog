@@ -7,7 +7,7 @@ if(!array_key_exists('observation',$_GET)||!$_GET['observation']) //
 if(!($object=$GLOBALS['objObservation']->getDsObservationProperty($_GET['observation'],'objectname')))    // check if observation exists
    throw new Exception ("No observed object found in view_observation.php");
 echo "<div id=\"main\">";
-   echo "<table width=\"100%\">";
+echo "<table width=\"100%\">";
 echo "<tr>";
 echo "<td>"."<h2>".LangViewObservationTitle."&nbsp;-&nbsp;".stripslashes($object)."&nbsp;-&nbsp;".LangOverviewObjectsHeader7.":&nbsp;".$objObject->getDSOseenLink($object)."</h2>"."</td>";
 echo "<td align=\"right\">";
@@ -73,5 +73,6 @@ elseif($_GET['dalm']=="MO") $AOid = $GLOBALS['objObservation']->getMOObservation
 elseif($_GET['dalm']=="LO") $AOid = array($GLOBALS['objObservation']->getLOObservationId($object, $_SESSION['deepskylog_id'], $_GET['observation']));
 else $AOid=array();
 while(list($key, $LOid) = each($AOid)) 
- $objObservation->showObservation($LOid);
+  $objObservation->showObservation($LOid);
+echo "</div>";
 ?>

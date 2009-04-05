@@ -17,4 +17,5 @@ echo "<form action=\"".$baseURL."index.php?indexAction=manage_csv_objects\" enct
 echo "<input type=\"file\" name=\"csv\"><br />"; 
 echo "<input type=\"submit\" name=\"change\" value=\"".LangCSVObjectButton."\" />";
 echo "</form>";
+echo "</div>";
 ?>

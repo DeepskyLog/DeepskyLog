@@ -262,13 +262,14 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	echo "</td>";
 	echo "</tr>";
 	echo "<tr>";
-	echo "<td></td>";
+	echo "<td>&nbsp;</td>";
 	echo "<td>";
 	echo "<input type=\"submit\" name=\"addobservation\" value=\"" . LangViewObservationButton1 . "\" />&nbsp;";
 	echo "<input type=\"submit\" name=\"clear_observation\" value=\"" . LangViewObservationButton2 . "\" />";
 	echo "</td>";
-	echo "<td align=\"right\">";
-	echo "<td class=\"fieldname\" align=\"right\">";
+	echo "<td>&nbsp;</td>";
+	echo "<td>&nbsp;</td>";
+	echo "<td align=\"right\" class=\"fieldname\" align=\"right\">";
 	echo LangViewObservationField29 . "&nbsp;*"; // Language of observation
 	echo "</td>";
 	echo "<td>";
@@ -317,4 +318,5 @@ else // no object found or not pushed on search button yet
 	echo "</table>";
 	echo "</form>";
 }
+echo "</div>";
 ?>

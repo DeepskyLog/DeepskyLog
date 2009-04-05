@@ -28,37 +28,37 @@ elseif(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'
 else
   $atlas="";
 
-echo("<div id=\"main\">\n");
-echo("<h2>");
+echo "<div id=\"main\">";
+echo "<h2>";
 echo LangQueryObservationsTitle;
-echo("</h2>\n");
+echo "</h2>";
 
-echo("<table width=\"100%\">\n");
-echo("<tr>");
+echo "<table width=\"100%\">";
+echo "<tr>";
 echo "<td>";
 echo "<form action=\"".$baseURL."index.php\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"query_observations\">";
 echo "<input type=\"submit\" name=\"clear\" value=\"" . LangQueryObservationsButton2 . "\" />";
-echo("</form>");
-echo("</td><td>");
-echo("<form action=\"".$baseURL."index.php\" method=\"get\" name=\"ObservationsQueryForm\">\n");
-echo("<input type=\"hidden\" name=\"indexAction\"   value=\"result_selected_observations\">");
+echo "</form>";
+echo "</td>";
+echo "<form action=\"".$baseURL."index.php\" method=\"get\" name=\"ObservationsQueryForm\">";
+echo "<input type=\"hidden\" name=\"indexAction\"   value=\"result_selected_observations\">";
 echo "<input type=\"hidden\" name=\"sort\"          value=\"objectname\">";
 echo "<input type=\"hidden\" name=\"sortdirection\" value=\"asc\">";
 echo "<input type=\"hidden\" name=\"myLanguages\"   value=\"true\">";
-echo("<td align=\"right\">" . LangSeen . "</td><td>");
-echo("<select name=\"seen\">");
-echo("<option selected value=\"D\">" . LangSeenDontCare . "</option>");
+echo "<td align=\"right\">".LangSeen."</td>";
+echo "<td>";
+echo "<select name=\"seen\">";
+echo "<option selected value=\"D\">" . LangSeenDontCare . "</option>";
 if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
 {
   echo("<option value=\"X\">" . LangSeenSomeoneElse . "</option>".
 		   "<option value=\"Y\">" . LangSeenByMe . "</option>");
 }
-echo("</select>");
-echo("</td>");
-echo("<td align=\"centre\" width=\"25%\"><input type=\"submit\" name=\"query\" value=\"" . LangQueryObservationsButton1 . "\" />\n</td>");
-echo("<td>");
-echo("</tr>");
+echo "</select>";
+echo "</td>";
+echo "<td align=\"centre\" width=\"25%\"><input type=\"submit\" name=\"query\" value=\"" . LangQueryObservationsButton1 . "\" /></td>";
+echo "</tr>";
 
 echo("</table>");
 echo("<hr>");
@@ -68,19 +68,21 @@ echo("<tr>");
 // OBJECT NAME 
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangViewObservationField1;
-echo("</td>\n<td width=\"25%\">\n");
-echo("<select name=\"catalog\" class=\"inputfield\">\n");
-echo("<option value=\"\"></option>"); // empty field
-$catalogs = $objObject->getCatalogs(); // should be sorted
+echo "</td>";
+echo "<td width=\"25%\">";
+echo "<select name=\"catalog\" class=\"inputfield\">";
+echo "<option value=\"\"></option>"; 
+$catalogs = $objObject->getCatalogs();
 while(list($key, $value) = each($catalogs))
-  echo("<option value=\"$value\">$value</option>\n");
-echo("</select>\n");
-echo("<input type=\"text\" class=\"inputfield\" maxlength=\"255\" name=\"number\" size=\"40\" value=\"\" />");
-echo("</td>\n");
+  echo "<option value=\"$value\">$value</option>";
+echo "</select>";
+echo "<input type=\"text\" class=\"inputfield\" maxlength=\"255\" name=\"number\" size=\"40\" value=\"\" />";
+echo "</td>";
 // ATLAS PAGE NUMBER
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField12;
-echo("</td>\n<td>\n");
+echo "</td>";
+echo "<td>";
 echo("<select name=\"atlas\" class=\"inputfield\">\n");
   while(list($key,$value)=each($objAtlas->atlasCodes))
 	  if($key==$atlas) echo("<option selected value=\"" . $key . "\">".$value."</option>\n"); 
@@ -88,13 +90,14 @@ echo("<select name=\"atlas\" class=\"inputfield\">\n");
 echo("</select>\n");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"atlasPageNumber\" size=\"4\" value=\"\" />");
 echo("</td>");
-echo("</tr>\n");
+echo("</tr>");
 
 echo("<tr>");
 // OBJECT CONSTELLATION
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField2;
-echo("</td>\n<td>\n");
+echo "</td>";
+echo "<td>";
 echo("<select name=\"con\" class=\"inputfield\">");
 echo("<option value=\"\"></option>"); // empty field
 $constellations = $objObject->getConstellations(); // should be sorted
@@ -109,7 +112,8 @@ echo("</td>");
 // MINIMUM DECLINATION
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField9;
-echo("</td>\n<td>\n");
+echo "</td>";
+echo "<td>";
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"minDeclDegrees\" size=\"3\" value=\"\" />&nbsp;&deg;&nbsp;");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"minDeclMinutes\" size=\"2\" value=\"\" />&nbsp;&#39;&nbsp;");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"minDeclSeconds\" size=\"2\" value=\"\" />&nbsp;&quot;&nbsp;");
@@ -120,7 +124,8 @@ echo("<tr>");
 // OBJECT TYPE
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField11;
-echo("</td>\n<td>\n");
+echo "</td>";
+echo "<td>";
 echo("<select name=\"type\" class=\"inputfield\">\n");
 echo("<option value=\"\"></option>"); // empty field
 $types = $objObject->getDsObjectTypes();
@@ -134,7 +139,8 @@ echo("</td>");
 // MAXIMUM DECLINATION
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField10;
-echo("</td>\n<td>\n");
+echo "</td>";
+echo "<td>";
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"maxDeclDegrees\" size=\"3\" value=\"\" />&nbsp;&deg;&nbsp;");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"maxDeclMinutes\" size=\"2\" value=\"\" />&nbsp;&#39;&nbsp;");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"maxDeclSeconds\" size=\"2\" value=\"\" />&nbsp;&quot;&nbsp;");
@@ -146,13 +152,15 @@ echo("<tr>");
 // MAXIMUM MAGNITUDE
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField4;
-echo("</td>\n<td width=\"25%\">\n");
+echo "</td>";
+echo "<td width=\"25%\">";
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"maxmag\" size=\"4\" value=\"\" />");
 echo("</td>");
 // MINIMUM RIGHT ASCENSION
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField7;
-echo("</td>\n<td>\n");
+echo "</td>";
+echo "<td>";
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"minRAhours\" size=\"2\" value=\"\" />&nbsp;h&nbsp;");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"minRAminutes\" size=\"2\" value=\"\" />&nbsp;m&nbsp;");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"minRAseconds\" size=\"2\" value=\"\" />&nbsp;s&nbsp;");
@@ -163,7 +171,8 @@ echo("<tr>");
 // MINIMUM MAGNITUDE
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField3;
-echo("</td>\n<td width=\"25%\">\n");
+echo "</td>";
+echo "<td width=\"25%\">";
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"minmag\" size=\"4\" value=\"\" />");
 echo("</td>");
 // MAXIMUM RIGHT ASCENSION
@@ -411,7 +420,7 @@ echo("</tr>");
 echo("</table>");
 echo("<hr>");
 echo("<table width=\"100%\">");
-
+echo "<tr>";
 // DRAWINGS
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">". LangQueryObservationsMessage1 . "</td>");
 echo("<td width=\"25%\"><input type=\"checkbox\" class=\"inputfield\" name=\"drawings\" /></input></td>");

@@ -47,16 +47,15 @@ while(list ($key, $value) = each($observers))
   echo "<td>".$name."</td>";
   echo "<td>".$firstname."</td>";
   echo "<td> <a href=\"mailto:".$email."\"> ".$email." </a> </td>";
-  echo "<td> ";
   $role = $objObserver->getObserverProperty($value,'role',2);
   if ($role == RoleAdmin)
-    echo LangViewObserverAdmin."</td><td></td>";
+    echo "<td> ".LangViewObserverAdmin."</td><td></td>";
   elseif ($role == RoleUser)
-    echo LangViewObserverUser."</td><td></td>";
+    echo "<td> ".LangViewObserverUser."</td><td></td>";
   elseif ($role == RoleCometAdmin)
-    echo LangViewObserverCometAdmin."</td><td></td>";
+    echo "<td> ".LangViewObserverCometAdmin."</td><td></td>";
   elseif ($role == RoleWaitlist)
-    echo LangViewObserverWaitlist."</td><td><a href=\"".$baseURL."index.php?indexAction=validate_observer&amp;validate=".urlencode($value)."\">".LangViewObserverValidate."</a></td>";
+    echo "<td> ".LangViewObserverWaitlist."</td><td><a href=\"".$baseURL."index.php?indexAction=validate_observer&amp;validate=".urlencode($value)."\">".LangViewObserverValidate."</a></td>";
   echo "</tr>";
   $count++;
 }

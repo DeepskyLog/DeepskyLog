@@ -13,7 +13,7 @@ echo "<td>";
 echo "<table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">";
 if(isset($_SESSION['deepskylog_id']))
 { if($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'role',2)!="2")                    // user is not in waitlist
-    if(array_key_exists('deepskylog_id',$_SESSION)&&($_SESSION['deepskylog_id']!="admin")) // admin doesn't have own observations
+    if(array_key_exists('deepskylog_id',$_SESSION)&&($_SESSION['deepskylog_id']!="admin"))           // admin doesn't have own observations
     { echo "<tr align=\"left\"  height=\"25px\">";
       echo "<td>";
       echo "<a class=\"mainlevel\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".urlencode($_SESSION['deepskylog_id'])."\">".LangSearchMenuItem1."</a>";
@@ -38,6 +38,8 @@ echo "</tr>";
 echo "<tr align=\"left\" height=\"25px\">";
 echo "<td>";
 echo "<a href=\"".$baseURL."index.php?indexAction=rank_objects\" class=\"mainlevel\">".LangSearchMenuItem7."</a>";
+echo "</td>";
+echo "</tr>";
 echo "<tr align=\"left\" height=\"25px\">";
 echo "<td>";
 echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;catalog=%\" class=\"mainlevel\">".LangSearchMenuItem2."</a>";

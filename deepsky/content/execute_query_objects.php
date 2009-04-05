@@ -59,7 +59,6 @@ else // ========================================================================
   echo "<p>";
 	echo "<a href=\"".$baseURL."index.php?indexAction=query_objects\">".LangExecuteQueryObjectsMessage2a."</a>";
 	echo "</div>";
-  echo "</div>";
 }
 
 ?>

@@ -185,7 +185,7 @@ tableFieldnameFieldExplanation(LangAddSiteField5,
                                "\" />&deg;&nbsp;".
                                "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\"	name=\"longitudemin\" size=\"4\" value=\"".
                                (((array_key_exists('longitude',$_GET) && $_GET['longitude']) || (array_key_exists('locationid',$_GET) && $_GET['locationid']))?$longitudemin:"").
-                               "\" />&#39;</td>",
+                               "\" />&#39;",
                                LangAddSiteField5Expl);
 tableFieldnameFieldExplanation(LangAddSiteField6,$tempTimeZoneList,'');
 tableFieldnameFieldExplanation(LangAddSiteField7,
@@ -196,7 +196,7 @@ tableFieldnameFieldExplanation(LangAddSiteField8,
                                LangAddSiteField8Expl);
 echo "</table>";
 echo "<hr />";
-echo "<input type=\"submit\" name=\"add\" value=\"".LangAddSiteButton."\" /></td>";
+echo "<input type=\"submit\" name=\"add\" value=\"".LangAddSiteButton."\" />";
 echo "</form>";
 echo "</div>";
 }

@@ -9,12 +9,10 @@ if($languageMenu==1)
   echo LangLanguageMenuTitle;
   echo "</th>";
 	echo "</tr>";
-	echo "<tr>";
-	echo "<td>";
   echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"setLanguage\">";
-  echo "<tr align=\"left\">";
-	echo "<td>";
+	echo "<tr>";
+	echo "<td style=\"padding-top:5px\">";
 	echo "<select name=\"language\" style=\"width: 147px\" onchange=\"this.form.submit()\">";
   $previous_language=$_SESSION['lang'];
   $languages = $objLanguage->getLanguages();

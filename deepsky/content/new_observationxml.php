@@ -12,4 +12,5 @@ echo "<form action=\"".$baseURL."index.php?indexAction=add_xml_observations\" en
 echo "<input type=\"file\" name=\"xml\"><br />"; 
 echo "<input type=\"submit\" name=\"change\" value=\"".LangXMLButton."\" />";
 echo "</form>";
+echo "</div>";
 ?>
