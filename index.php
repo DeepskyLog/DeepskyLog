@@ -22,15 +22,9 @@ try
   $includeFile=$objUtil->utilitiesDispatchIndexAction();                               // Determine the page to show
   include 'common/entryexit/data.php';                                                 // Get data for the form, object data, observation data, etc.
   include $includeFile;                                                                // Center content section	<<<===============================================================
-//  $_SESSION['ifrm']=$includeFile;
-//  echo "<iframe name=\"ifrm_cont\" id=\"ifrm_cont\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;link2=".urlencode($link2)."&amp;min=".$min."&amp;max=".$max."&amp;expand=".$objUtil->checkGetKey('expand')."\" frameborder=\"0\" width=\"100%\" style=\"height:400px\">";
-//	include $includeFile;   
-//	echo "</iframe>";
-//	$resizeElement="ifrm_cont";
-//	$resizeSize=80;
   echo    "</div>";
   echo    "<div id=\"div6\">";
-  echo    "<img id=\"div6a\" src=\"".$baseURL."styles/images/rU.gif\">";                       // Right white bar
+  echo    "<img id=\"div6a\" src=\"".$baseURL."styles/images/ru.gif\">";                       // Right white bar
   echo    "<img id=\"div6b\" src=\"".$baseURL."styles/images/ro.gif\">";                       // Right white bar
   echo    "</div>";
   echo    "<div id=\"div7\">";	
@@ -52,13 +46,18 @@ echo "</body>";
 echo "<script>";
 echo "function resizeForm()";
 echo "{";
-echo "document.getElementById('div5').style.width=(document.getElementById('dslbody').clientWidth-185)+'px';";
-echo "document.getElementById('div6').style.left=(document.getElementById('dslbody').clientWidth-16)+'px';";
-echo "document.getElementById('div7').style.width=(document.getElementById('dslbody').clientWidth-169)+'px';";
+echo "document.getElementById('div5').style.width= (document.getElementById('dslbody').clientWidth-185)+'px';";
+echo "document.getElementById('div6').style.left=  (document.getElementById('dslbody').clientWidth-16)+'px';";
+echo "document.getElementById('div7').style.width= (document.getElementById('dslbody').clientWidth-169)+'px';";
 echo "document.getElementById('div4').style.height=(document.getElementById('dslbody').clientHeight-111)+'px';";
 echo "document.getElementById('div5').style.height=(document.getElementById('dslbody').clientHeight-111)+'px';";
 echo "document.getElementById('div6').style.height=(document.getElementById('dslbody').clientHeight-111)+'px';";
-echo "document.getElementById('div7').style.top=(document.getElementById('dslbody').clientHeight-26)+'px';";
+echo "document.getElementById('div7').style.top=   (document.getElementById('dslbody').clientHeight-26)+'px';";
+if(strpos($browser,'MSIE')>0)
+  echo "document.getElementById('div4b').style.bottom='-1px';".
+       "document.getElementById('div6a').style.right ='-1px';".
+       "document.getElementById('div6b').style.right ='-1px';".
+       "document.getElementById('div6b').style.bottom='-1px';";
 if($resizeElement)
   echo "resizeElement('".$resizeElement."',".$resizeSize.");";
 echo "}";

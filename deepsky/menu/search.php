@@ -30,16 +30,6 @@ echo "<td>";
 echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;myLanguages=true&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay\" class=\"mainlevel\">".LangSearchMenuItem8."</a>";
 echo "</td>";
 echo "</tr>";
-/*echo "<tr align=\"left\" height=\"25px\">";
-echo "<td>";
-echo "<a href=\"".$baseURL."index.php?indexAction=query_observations\" class=\"mainlevel\">".LangSearchMenuItem3."</a>";
-echo "</td>";
-echo "</tr>";
-echo "<tr align=\"left\" height=\"25px\">";
-echo "<td>";
-echo "<a href=\"".$baseURL."index.php?indexAction=query_objects\" class=\"mainlevel\">".LangSearchMenuItem5."</a>";
-echo "</td>";
-echo "</tr>";*/
 echo "<tr align=\"left\" height=\"25px\">";
 echo "<td>";
 echo "<a href=\"".$baseURL."index.php?indexAction=rank_observers\" class=\"mainlevel\">".LangSearchMenuItem6."</a>";

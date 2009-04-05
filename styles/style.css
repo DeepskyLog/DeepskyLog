@@ -60,18 +60,18 @@
 #div6 {
 	position         : absolute;
 	left             : 969px;       top    : 85px;
-	width            : 10px;        height : 475px;
+	width            : 11px;        height : 475px;
   border           : 0px;         margin : 0px;           padding : 0px;
 	background-color : #FFFFFF;
 }
 #div6a {
   position         : absolute;
-  width            : 10px;
-  right            : 0px;         top    : 0px;	
+  width            : 11px;
+  right            : 0px;         top    : 0px;		text-align       : right;
 }
 #div6b {
   position         : absolute;
-  width            : 10px;
+  width            : 11px;
   border           : 0px;         margin : 0px;           padding : 0px;
   right            : 0px;         bottom : 0px;	
 }
@@ -82,13 +82,11 @@
 	text-align       : center;      padding: 3px;
   background-color : #5C7D9D;
 }
-
-
-
 body {
   margin           : 0px 0px 0px 0px;
   color            : #000000;
 	background-color : #5C7D9D;
+	overflow         : hidden;
 }
 div#main {
   font-family      : Verdana, Arial, Helvetica, sans-serif;
@@ -154,7 +152,7 @@ a.mainlevel:hover {
   text-decoration  : underline;
 }
 .menuButton {
-	width: 143px;
+	width: 145px;
 }
 .menuField {
 	width: 147px;

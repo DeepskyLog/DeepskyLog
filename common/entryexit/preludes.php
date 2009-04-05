@@ -31,7 +31,7 @@ else
 	include_once "lib/cometobservations.php";
 	include_once "lib/cometobjects.php";
 	
-	if(strpos($objUtil->checkArrayKey($_SERVER,'HTTP_USER_AGENT',''),'Firefox')===false)
+	if(strpos(($browser=$objUtil->checkArrayKey($_SERVER,'HTTP_USER_AGENT','')),'Firefox')===false)
 	  $FF=false;
 	else
 	  $FF=true;

@@ -11,7 +11,7 @@ echo "</th>";
 echo "</tr>";
 echo "<tr>";
 echo "<td>";
-echo "<select style=\"width: 147px\" onchange=\"{location = this.options[this.selectedIndex].value;}\" name=\"search\" class=\"inputfield\">";
+echo "<select style=\"width:145px\" onchange=\"{location = this.options[this.selectedIndex].value;}\" name=\"search\" class=\"inputfield\">";
 if(isset($_SESSION['deepskylog_id']))
 { echo "<option ".(($objUtil->checkGetKey('indexAction')=='default_action')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=default_action\">"."&nbsp;"."</option>";
   echo "<option ".(($objUtil->checkGetKey('indexAction')=='add_object')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=add_object\">".LangChangeMenuItem5."</option>";
