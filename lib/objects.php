@@ -865,9 +865,9 @@ class Objects implements iObjects
 	    tableSortHeader(LangOverviewObjectsHeader8, $link."&amp;sort=objectlastseen");
     }
     if($myList)
-      echo("<td align=\"center\"><a href=\"" . $link . "&amp;min=" . $min . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">P</a></td>");
+      echo("<td align=\"center\"><a href=\"" . $link . "&amp;min=" . $min . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">&nbsp;P&nbsp;</a></td>");
  	  if($FF)
-      echo "<td width=\"1px\">&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+      echo "<td width=\"1px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
     echo "</tr>";
  	  if($FF)
  	    echo "</thead>";

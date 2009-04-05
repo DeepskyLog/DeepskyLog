@@ -36,7 +36,7 @@ if($listname)
   echo "<span>";
   echo "</div>";  
   echo "</div>";
-  echo "<div id=\"container2\" style=\"position:relative;height:100%;\">";
+  echo "<div id=\"container2\" style=\"position:relative;\">";
   if(count($_SESSION['Qobj'])>0)
 	{ // OUTPUT RESULT
     $link = "".$baseURL."index.php?indexAction=listaction";
@@ -51,13 +51,9 @@ if($listname)
 	    $objObject->showObjects($link, $min, $max,'',1);
 		  echo "</iframe>";
 	  }	
-	  echo "<script>resizeElement('obj_list',70);</script>";
+	  $resizeElement='obj_list';
+	  $resizeSize=90;
 	  echo "<hr />";
-    echo "<div id=\"containerListFooter\" style=\"position:relative;height:30px;\">";
-	  echo "<div id=\"title\" style=\"position:absolute;left:0px;width:50%;height:30px;\">";
-      list($min, $max)=$objUtil->printNewListHeader2($_SESSION['Qobj'], $link, $min, 25, "");
-    echo "</div>";
-	  echo "<div id=\"ListHeader2\" style=\"position:absolute;right:0px;width:50%;height:30px;text-align:right;\">";
     if($myList)
     { echo "<form action=\"".$baseURL."index.php?indexAction=listaction\">";
       echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\"></input>";
@@ -65,8 +61,6 @@ if($listname)
       echo "<input style=\"width:12em;\" type=\"submit\" name=\"removeList\" value=\"" . LangToListMyListsRemove . "\" />";
       echo "</form>";
     }
-    echo "</div>";
-    echo "</div>";
     $objPresentations->promptWithLink(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
 	  echo "&nbsp;-&nbsp;";
     $objPresentations->promptWithLink(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objectnames.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4b);

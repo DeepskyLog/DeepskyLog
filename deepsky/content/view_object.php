@@ -4,7 +4,7 @@
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 $seen=$objObject->getDSOseenLink($_GET['object']);
 echo "<div id=\"main\">";
-echo "<div style=\"position:relative; left:0px\">";
+echo "<div style=\"position:relative;\">";
 echo "<h6 class=\"title\">".LangViewObjectTitle."&nbsp;-&nbsp;".stripslashes($_GET['object'])."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h6>";
 $topline="";
 if(substr($objObject->getSeen($_GET['object']),0,1)!='-')
@@ -77,7 +77,8 @@ echo "<a target=\"_top\" href=\"".$baseURL."objects.csv?SID=Qobj\" target=\"new_
 echo "<a target=\"_top\" href=\"".$baseURL."objects.argo?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage8."</a>";
 echo "</div>";
 echo "</div>";
-echo "<script>resizeElement('obj_list',80);</script>";
+$resizeElement='obj_list';
+$resizeSize=80;
 
 //============================================================================== Admin section permits to change object settings in DB remotely
 if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")

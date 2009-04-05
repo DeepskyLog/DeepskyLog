@@ -59,7 +59,7 @@ if(strpos($browser,'MSIE')>0)
        "document.getElementById('div6b').style.right ='-1px';".
        "document.getElementById('div6b').style.bottom='-1px';";
 if($resizeElement)
-  echo "resizeElement('".$resizeElement."',".$resizeSize.");";
+  echo "resizeElements('".$resizeElement."',".$resizeSize.");";
 echo "}";
 echo "resizeForm();";
 echo "</script>";
