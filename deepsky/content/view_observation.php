@@ -65,7 +65,7 @@ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])  
     }
  }
  echo(LangOverviewObservationsHeader5a);
- echo "<hr>";
+ echo "<hr />";
 }
 $objObservation->showObservation($_GET['observation']);
 if($_GET['dalm']=="AO") $AOid = $GLOBALS['objObservation']->getAOObservationsId($object, $_GET['observation']);

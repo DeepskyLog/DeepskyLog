@@ -1,16 +1,8 @@
-<?php
-// help.php
-
-echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">";
-if ($_SESSION['lang'] == "nl")
-{ echo"<tr>";
-	echo "<th valign=\"top\">Help</th>";
-	echo "</tr><tr>";
-	echo "<td valign=\"top\">";
+<?php // help.php
+echo "<div class=\"menuDiv\">";
+if($_SESSION['lang']=="nl")
+{ echo"<p class=\"menuHead\">Help</p>";
 	echo "<a href=\"http://www.deepskylog.org/wiki/bin/view/Main/DeepskyLogManualNL\" target=\"_blank\">Handleiding</a>";
-	echo "</td>";
-	echo "</tr>";
 }
-
-echo "</table>";
+echo "</div>";
 ?>

@@ -159,7 +159,7 @@ define("LangQuickPickNewObservation", "New&nbsp;Observation");
 define("LangListsTitle", "List");
 define("LangListsAnnouncement", "In the next version, registered observers will be able to compose their own observing lists, as well as edit, save and print them, all of this based on the position of the object in the skies, the type of object, whether they already saw it or not, etc. When they see an observation of antoher user, they will be able to add the object of concern to their own lists.");
 define("LangMailtoTitle", "Tell us!");
-define("LangMailtoLink", "Use this <a href=\"mailto:&#100;&#101;v&#101lop&#101rs&#64&#100;&#101;&#101;pskylog.&#98;&#101;\">link </a> to ask questions or to make remarks.");
+define("LangMailtoLink", "Use this <a href=\"mailto:&#100;&#101;v&#101;lop&#101;rs&#64;&#100;&#101;&#101;pskylog.&#98;&#101;\">link </a> to ask questions or to make remarks.");
 
 // deepsky/content/view_object
 define("LangObjectNewName", "New name");

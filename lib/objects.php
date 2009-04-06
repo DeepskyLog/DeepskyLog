@@ -838,7 +838,7 @@ class Objects implements iObjects
     echo "</div>";
     echo"</div>";
 	  echo "<div style=\"position:relative;width:100%;\">";
-	  echo "<hr>";
+	  echo "<hr />";
     echo "</div>";
 	  echo "</div>";
   }

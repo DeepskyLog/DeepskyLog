@@ -1,12 +1,10 @@
-<?php
-echo "<script type=\"text/javascript\" src=\"".$baseURL."common/menu/wz_tooltip.js\"></script>";
-// VVS Header and our 3 dropdown boxes if logged in 
+<?php // VVS Header and our 3 dropdown boxes if logged in 
 
 echo "<div id=\"div1\">";
-echo "<img src=\"".$baseURL."styles/images/header_bg.jpg\"/>";
+echo "<img src=\"".$baseURL."styles/images/header_bg.jpg\" alt=\"Vereniging voor Sterrenkunde - DeepskyLog\"/>";
 
 echo "<div id=\"div1a\">";
-echo "<img src=\"".$baseURL."styles/images/deepskylog.gif\"/>";
+echo "<img src=\"".$baseURL."styles/images/deepskylog.gif\" alt=\"DSL\" />";
 echo "</div>";
 
 echo "<div id=\"div1b\">";

@@ -17,7 +17,7 @@ echo "</td>";
 echo"</tr>";
 echo "</table>"; 
 echo "</form>";
-echo "<hr>";
+echo "<hr />";
 if($listname)
 { echo "<div id=\"containerListHeader\" style=\"position:relative;height:30px;\">";
 	echo "<div id=\"title\" style=\"position:absolute;left:0px;width:65%;height:30px;\">";

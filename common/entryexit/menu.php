@@ -13,8 +13,10 @@ else
 	else
 	{ include 'common/menu/languagemenu.php';                                         // LANGUAGE MENU 
 	}
-	include 'common/menu/help.php';                                                   // HELP MENU 
-	include 'common/menu/tellus.php';
+	if(array_key_exists('admin', $_SESSION)&&($_SESSION['admin']!='yes'))
+	{ include 'common/menu/help.php';                                                   // HELP MENU 
+	  include 'common/menu/tellus.php';
+	}
 	include 'common/menu/countermenu.php';
 }
 ?>

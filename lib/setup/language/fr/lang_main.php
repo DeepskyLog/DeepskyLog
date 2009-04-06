@@ -161,7 +161,7 @@ define("LangListsTitle", "Liste
 ");
 define("LangListsAnnouncement", "Dans la version suivante, les observateurs enregistr&eacute;s peuvent composer leurs propres listes d'observations,  ils peuvent les adapter, sauvegarder et imprimer, sur base des objets d&eacute;j&agrave; vus ou pas encore, les coordonn&eacute;es de l'object, le type d'objet etc. En parcourant les observations des autres, ils auront aussi la possibilit&eacute; de rajouter l'object en question &agrave; leurs listes.");
 define("LangMailtoTitle", "Informez-nous!");
-define("LangMailtoLink", "Utilisez ce <a href=\"mailto:&#100;&#101;v&#101lop&#101rs&#64&#100;&#101;&#101;pskylog.&#98;&#101;\">lien </a> pour nous poser des questions ou pour nous passer des remarques.");
+define("LangMailtoLink", "Utilisez ce <a href=\"mailto:&#100;&#101;v&#101;lop&#101;rs&#64;&#100;&#101;&#101;pskylog.&#98;&#101;\">lien </a> pour nous poser des questions ou pour nous passer des remarques.");
 
 // deepsky/content/view_object
 define("LangObjectNewName", "Nouveau nom");

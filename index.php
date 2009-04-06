@@ -6,17 +6,17 @@ try
   include 'common/entryexit/preludes.php';                                             // Includes of all classes and assistance files
   include 'common/entryexit/instructions.php';                                         // Execution of all non-layout related instructions (login, add objects to lists, etc.)
   include 'common/layout/presentation.php';
-  include 'common/menu/head.php';                                                      // HTML head
-  echo    "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
+  //echo    "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
   echo    "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
+  include 'common/menu/head.php';                                                      // HTML head
   echo    "<body id=\"dslbody\" onresize=\"resizeForm();\">";
   include 'common/menu/headmenu.php';                                                  // Page Title and welcome line - modules choices
   echo    "<div id=\"div3\">";
   include 'common/entryexit/menu.php';                                                 // Left Menu Section
   echo    "</div>";
   echo    "<div id=\"div4\">";
-  echo    "<img id=\"div4a\" src=\"".$baseURL."styles/images/lu.gif\">";
-  echo    "<img id=\"div4b\" src=\"".$baseURL."styles/images/lo.gif\">";
+  echo    "<img id=\"div4a\" src=\"".$baseURL."styles/images/lu.gif\" alt=\"\"/>";
+  echo    "<img id=\"div4b\" src=\"".$baseURL."styles/images/lo.gif\" alt=\"\" />";
   echo    "</div>";
   echo    "<div id=\"div5\">"; 
   $includeFile=$objUtil->utilitiesDispatchIndexAction();                               // Determine the page to show
@@ -24,8 +24,8 @@ try
   include $includeFile;                                                                // Center content section	<<<===============================================================
   echo    "</div>";
   echo    "<div id=\"div6\">";
-  echo    "<img id=\"div6a\" src=\"".$baseURL."styles/images/ru.gif\">";                       // Right white bar
-  echo    "<img id=\"div6b\" src=\"".$baseURL."styles/images/ro.gif\">";                       // Right white bar
+  echo    "<img id=\"div6a\" src=\"".$baseURL."styles/images/ru.gif\" alt=\"\" />";                       // Right white bar
+  echo    "<img id=\"div6b\" src=\"".$baseURL."styles/images/ro.gif\" alt=\"\" />";                       // Right white bar
   echo    "</div>";
   echo    "<div id=\"div7\">";	
   echo    "Copyright 2004 - 2008&nbsp;";                                               // bottom line
@@ -42,7 +42,6 @@ catch (Exception $e)
   echo    "<p>Thank you.</p>";
   // EMAIL developers with error codes
 }
-echo "</body>";
 echo "<script>";
 echo "function resizeForm()";
 echo "{";
@@ -63,5 +62,9 @@ if($resizeElement)
 echo "}";
 echo "resizeForm();";
 echo "</script>";
+
+echo "</body>";
+
 echo "</html>";
+
 ?>

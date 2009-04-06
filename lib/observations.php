@@ -730,7 +730,7 @@ class Observations {
 				  echo "<tr style=\"height:5px\">";
 				  echo "<td>&nbsp;</td>"; 
 					echo "<td style=\"background-color:#FFFFC0\" colspan=\"".($myList?(($lco=='O')?9:7):(($lco=='O')?8:6))."\">"; 
-					echo "<hr>";
+					echo "<hr />";
 					$this->showObservation($value['observationid']);
 					echo "</td>";
 				}
@@ -745,10 +745,10 @@ class Observations {
 					}
 					echo "<td>";
 					echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observation&amp;observation=".$value['observationid']."&amp;QobsKey=".$obsKey."&amp;dalm=D\" title=\"".LangDetail."\">".LangDetailText.(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?LangDetailDrawingText:"")."</a>&nbsp;";
-					echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&amp;dalm=AO\" title=\"" . LangAO . "\">".LangAOText."</a>";
+					echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&amp;dalm=AO\" title=\"" . LangAO . "\">".LangAOText."</a>";
 					if($loggedUser&&$LOid) 
-					{ echo "&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observation&observation=".$value['observationid']."&amp;dalm=MO\" title=\"".LangMO."\">".LangMOText."</a>";
-						echo "&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observation&observation=".$value['observationid']."&amp;dalm=LO\" title=\"".LangLO."\">".LangLOText."</a>";
+					{ echo "&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observation&amp;observation=".$value['observationid']."&amp;dalm=MO\" title=\"".LangMO."\">".LangMOText."</a>";
+						echo "&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observation&amp;observation=".$value['observationid']."&amp;dalm=LO\" title=\"".LangLO."\">".LangLOText."</a>";
 					}
 					echo "</td>";
 					if($myList) 
@@ -897,7 +897,7 @@ class Observations {
 		  echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=validate_delete_observation&amp;observationid=".$LOid."\">".LangDeleteObservation."</a>";
 		}
 		echo "</p>";
-		echo "<hr>";
+		echo "<hr />";
 	}
 	public function validateChangeObservation() // validate_change_observation.php - checks if the change new observation form is correctly filled in
 	{ global $objUtil,$objObservation,$maxFileSize,$objObserver;

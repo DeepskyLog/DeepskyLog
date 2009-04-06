@@ -106,6 +106,29 @@ h6 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-si
 .title    { padding-top:10px; padding-bottom: 10px; /*background-color:#FFFF00;*/}
 .h2table  { height: 40px; border:0px; }
 .h2header { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold;padding-top: 10px;padding-bottom: 5px;}
+.container {
+	position:relative;              width            : 100%;       
+}
+.containerLeft {
+	position         : absolute;
+	left             : 0px;        width            : 50%;
+}
+.containerRight {
+	position         : absolute;
+	right            : 0px;         width            : 50%;
+	text-align       : right;
+}
+.pageTitle {
+	position         : absolute;
+	left             : 0px;        width            : 55%;
+	padding-top      : 5px;
+}
+.pageListHeader {
+	position         : absolute;
+	right            : 0px;         width            : 45%;
+	vertical-align   : middle;      text-align       : right;
+	padding-top      : 5px;
+}
 hr {
 	border           : none;
 	padding          : none;
@@ -130,8 +153,9 @@ td, tr, p, div {
   color            : #000000;
 }
 form {
-	padding:0px;
-	margin:0px;
+	border           : 0px;
+	padding          : 0px;
+	margin           : 0px;
 }
 .mainlevel {
   color            : #FFFF00;
@@ -150,11 +174,56 @@ a.mainlevel:hover {
   background-color : #5C7D9D;
   text-decoration  : underline;
 }
+.menuDiv { 
+  margin           : 0px 5px 10px 5px; 
+  width            : 143px;
+} 
+.menuHead {
+  font-size        : 11px;
+  font-weight      : bold;
+  color            : #FFFFFF;
+  text-align       : left;
+  padding          : 1px;
+  border-bottom    : 1px #B8C6D4 solid;
+  margin           : 0px;
+}
+.menuInputTitle {
+  font-size        : 11px;
+  font-weight      : bold;
+  line-height      : 20px;
+  color            : #FFFFFF;
+}
+.menuLine {
+  color            : #FFFF00;
+  font-family      : Verdana, Geneva, Arial, Helvetica, serif;
+  font-weight      : bold;
+  text-decoration  : none;
+}
+.menuDropdown {
+  margin-top       : 5px;
+}
+.menuText {
+  color            : #FFFFFF;
+}
+a.menuLine:link, a.menuLine:visited {
+  color            : #FFFF00;
+  font-family      : Verdana, Arial, Helvetica, serif;
+  font-weight      : bold;
+  text-decoration  : none;
+}
+a.menuLine:hover {
+  color            : #FF9900;
+  background-color : #5C7D9D;
+  text-decoration  : underline;
+}
 .menuButton {
 	width: 145px;
 }
 .menuField {
 	width: 147px;
+}
+.menuInput {
+	width: 143px;
 }
 ol{
   color: #000000;
@@ -299,7 +368,6 @@ table.moduletable th {
   padding          : 1px;
   border-bottom    : 1px #B8C6D4 solid;
 }
-
 table.moduletable td {
   font-size        : 11px;
   color            : #FFFFFF;

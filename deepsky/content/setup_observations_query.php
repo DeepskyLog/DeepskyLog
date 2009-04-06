@@ -61,7 +61,7 @@ echo "<td align=\"centre\" width=\"25%\"><input type=\"submit\" name=\"query\" v
 echo "</tr>";
 
 echo("</table>");
-echo("<hr>");
+echo("<hr />");
 echo("<table width=\"100%\">");
 
 echo("<tr>");

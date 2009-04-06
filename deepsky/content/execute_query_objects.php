@@ -1,7 +1,6 @@
 <?php
 // execute_query_objects.php
 // executes the object query passed by setup_query_objects.php
-echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 $link=$baseURL."index.php?indexAction=query_objects";
 reset($_GET);
 while(list($key,$value)=each($_GET))

@@ -72,10 +72,10 @@ if (count($_SESSION['Qobs']) == 0) //===========================================
 else 
 { //=============================================================================================== START OBSERVATION PAGE OUTPUT =====================================================================================
 	echo "<div id=\"main\" style=\"position:relative\">";
-  echo "<table width=\"100%\">";
-	echo "<tr height=\"20px\">";
-	echo "<td class=\"h2header\">";
+  echo "<div class=\"container\" style=\"height:40px;\">";
+	echo "<div class=\"pageTitle\">";
 	$theDate = date('Ymd', strtotime('-1 year'));
+	echo "<h6>";
 	if (array_key_exists('minyear', $_GET) && ($_GET['minyear'] == substr($theDate, 0, 4)) && array_key_exists('minmonth', $_GET) && ($_GET['minmonth'] == substr($theDate, 4, 2)) && array_key_exists('minday', $_GET) && ($_GET['minday'] == substr($theDate, 6, 2)))
 		echo (LangSelectedObservationsTitle3);
 	//elseif ($catalog=="*")
@@ -83,6 +83,7 @@ else
 	elseif ($object) echo LangSelectedObservationsTitle . $object;
 	else
 		echo LangSelectedObservationsTitle2;
+	echo "<br />";
 	$link3 = $link;
 	if ($objUtil->checkGetKey('myLanguages')) {
 		echo " (" . LangSelectedLanguagesShown . ")";
@@ -90,31 +91,33 @@ else
 		$link2 .= "&amp;myLanguages=true";
 	} else
 		echo " (" . LangAllLanguagesShown . ")";
-	echo "</td>";
-	echo "<td style=\"vertical-algin:middle\" align=\"right\">";
-	list ($min, $max) = $objUtil->printNewListHeader($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
-	echo "</td>";
-	echo "</tr>";
-  echo "<tr>";
-  echo "<td>";
+	echo "</h6>";
+	echo "</div>";
+	echo "<div class=\"pageListHeader\">";
+	list ($min, $max) = $objUtil->printNewListHeader2($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
+	echo "</div>";
+	echo "</div>";
+	
+  echo "<div class=\"container\" style=\"height:15px;\">";
+  echo "<div class=\"containerLeft\">";
 	if (($_SESSION['lco'] != "L"))
 		echo ("<a target=\"_top\" href=\"" . $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">" . LangOverviewObservations . "</a>");
 	if (($_SESSION['lco'] != "C"))
 		echo (" <a target=\"_top\" href=\"" . $link . "&amp;lco=C" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>");
 	if ($loggedUser && ($_SESSION['lco'] != "O"))
 		echo (" <a target=\"_top\" href=\"" . $link . "&amp;lco=O" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>");
-  echo "</td>";
-  echo "<td align=\"right\">";
+  echo "</div>";
+  echo "<div class=\"containerRight\">";
  	if ($objUtil->checkGetKey('myLanguages'))
 		echo "<a target=\"_top\" href=\"" . $link3 . "\">" . LangShowAllLanguages . "</a>";
 	elseif ($loggedUser) 
 	  echo "<a target=\"_top\" href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowMyLanguages . "</a>";
 	else
 		echo "<a target=\"_top\" href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowInterfaceLanguage . "</a>";
-  echo "</td>";
-  echo "</tr>";
-	echo "</table>";
-	echo "<hr />";
+  echo "</div>";
+  echo "</div>";
+  echo "<hr />";
+  
 	$_GET['min']=$min;
 	$_GET['max']=$max;
 	if($FF)
@@ -133,9 +136,9 @@ else
 	echo "<div style=\"width:100%;height:20px;\">";
 	$objPresentations->promptWithLink(LangOverviewObservations10, LangOverviewObservations11, $baseURL . "observations.pdf?SID=Qobs", LangExecuteQueryObjectsMessage4);
 	echo " - ";
-	echo "<a target=\"_top\" href=\"" . $baseURL . "observations.csv\" target=\"new_window\">" . LangExecuteQueryObjectsMessage5 . "</a> - ";
-	echo "<a target=\"_top\" href=\"" . $baseURL . "observations.xml\" target=\"new_window\">" . LangExecuteQueryObjectsMessage10 . "</a> - ";
-	echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a>";
+	echo "<a href=\"" . $baseURL . "observations.csv\" target=\"new_window\">" . LangExecuteQueryObjectsMessage5 . "</a> - ";
+	echo "<a href=\"" . $baseURL . "observations.xml\" target=\"new_window\">" . LangExecuteQueryObjectsMessage10 . "</a> - ";
+	echo "<a href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a>";
   echo "</div>";
   echo "</div>";
 }

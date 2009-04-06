@@ -44,8 +44,8 @@ if($objUtil->checkGetKey('zoom',30)=="15")  echo("<option selected value=\"15\">
 if($objUtil->checkGetKey('zoom',30)=="10")  echo("<option selected value=\"10\">10x10'</option>"); else echo("<option value=\"10\">10x10'</option>"); 
 if($objUtil->checkGetKey('zoom',30)=="5")   echo("<option selected value=\"5\">5x5'</option>"); else echo("<option value=\"5\">5x5'</option>"); 
 echo "</select>";
-echo "<input type=\"hidden\" name=\"object\" value=\"".$_GET['object']."\"> ";
-echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\"> ";		
+echo "<input type=\"hidden\" name=\"object\" value=\"".$_GET['object']."\" /> ";
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" /> ";		
 echo "</form>";
 echo "</div>";
   
@@ -82,7 +82,7 @@ $resizeSize=80;
 
 //============================================================================== Admin section permits to change object settings in DB remotely
 if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
-{ echo "<hr>";
+{ echo "<hr />";
   echo("<form action=\"".$baseURL."index.php\" method=\"get\">\n");
   echo("<input type=\"hidden\" name=\"object\" value=\"" . $_GET['object'] . "\">");
   echo("<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\">");

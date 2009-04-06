@@ -1526,11 +1526,11 @@ class Utils implements iUtils
       echo "<td style=\"vertical-align:middle\">(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")")."</td>";
     if(($listcount>$step)&&($showArrows))
     { $currentpage=ceil($min/$step)+1;
-			echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=0\">"."<img src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\">"."</a>"."</td>";
-		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img src=\"".$baseURL."styles/images/left20.gif\" border=\"0\">"."</a>"."</td>";			
+			echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=0\">"."<img src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\" />"."</a>"."</td>";
+		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img src=\"".$baseURL."styles/images/left20.gif\" border=\"0\" />"."</a>"."</td>";			
 		  echo "<td align=\"center\">"."<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\"></input>"."</td>";	
-		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img src=\"".$baseURL."styles/images/right20.gif\" border=\"0\">"."</a>"."</td>";
-		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\">"."</a>"."</td>";
+		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img src=\"".$baseURL."styles/images/right20.gif\" border=\"0\" />"."</a>"."</td>";
+		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\" />"."</a>"."</td>";
 	  }
 	  echo "</tr>";
 	  echo "</table>";    
@@ -1663,7 +1663,7 @@ class Utils implements iUtils
 	     . htmlspecialchars_decode($objInstrument->getInstrumentPropertyFromId($value['instrumentid'],'name')) . " from "
 	     . $objLocation->getLocationPropertyFromId($objObservation->getDsObservationProperty($value['observationid'],'locationid'), 'name')));
 	    $linkDom = $itemDom->appendChild($dom->createElement('link'));
-	    $linkDom->appendChild($dom->createCDATASection($baseURL . "index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&QobsKey=0&dalm=D"));
+	    $linkDom->appendChild($dom->createCDATASection($baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&QobsKey=0&dalm=D"));
 	
 	    $descDom = $itemDom->appendChild($dom->createElement('description'));
 	    $descDom->appendChild($dom->createCDATASection($objPresentations->br2nl(utf8_encode($value['observationdescription']))));
@@ -1747,7 +1747,7 @@ class Utils implements iUtils
       $titleDom = $itemDom->appendChild($dom->createElement('title'));
       $titleDom->appendChild($dom->createTextNode($title));
       $linkDom = $itemDom->appendChild($dom->createElement('link'));
-      $linkDom->appendChild($dom->createCDATASection($baseURL . "index.php?indexAction=comets_detail_observation&observation=" . $value));
+      $linkDom->appendChild($dom->createCDATASection($baseURL . "index.php?indexAction=comets_detail_observation&amp;observation=" . $value));
   
       // Description
       $description = $observation->getDescription($value);

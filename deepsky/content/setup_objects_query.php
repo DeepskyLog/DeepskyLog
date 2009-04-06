@@ -42,7 +42,7 @@ echo("<td><input type=\"submit\" name=\"query\" value=\"" . LangQueryObjectsButt
 echo("</tr>");
 
 echo("</table>");
-echo("<hr>");
+echo("<hr />");
 
 echo("<table>");
 echo("<tr>");

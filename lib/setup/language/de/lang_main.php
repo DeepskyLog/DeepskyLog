@@ -158,7 +158,7 @@ define("LangQuickPickNewObservation", "Neue&nbsp;Beobachtung");
 define("LangListsTitle", "Beobachtungslist");
 define("LangListsAnnouncement", "In der n&auml;chsten Version von DeekskyLog wird es m&ouml;glich sein, da&szlig; Beobachter ihre eigene Beobachtungsliste zusammenstellen, editieren, speichern und ausdrucken. Beobachtungslisten k&ouml;nnen erstellt werden &uuml;ber die Position des Objektes am Himmel, den Typ des Objektes, ob das Objekt bereits beobachtet wurde, usw.");
 define("LangMailtoTitle", "Feedback!");
-define("LangMailtoLink", "Nutzen Sie diesen <a href=\"mailto:&#100;&#101;v&#101lop&#101rs&#64&#100;&#101;&#101;pskylog.&#98;&#101;\">Link </a> um uns Fragen zu stellen oder Anmerkungen zu geben.");
+define("LangMailtoLink", "Nutzen Sie diesen <a href=\"mailto:&#100;&#101;v&#101;lop&#101;rs&#64;&#100;&#101;&#101;pskylog.&#98;&#101;\">Link </a> um uns Fragen zu stellen oder Anmerkungen zu geben.");
 
 // deepsky/content/view_object
 define("LangObjectNewName", "Neuer Name");
