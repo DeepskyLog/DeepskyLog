@@ -6,7 +6,12 @@ $loggedUser='';
 $_SESSION['admin']="no";
 $loginErrorCode="";
 $loginErrorText="";
-if(array_key_exists('deepskylogsec',$_COOKIE)&&$_COOKIE['deepskylogsec'])
+if($objUtil->checkGetKey('indexAction')=='logout')
+{ $_SESSION['deepskylog_id']='';
+	setcookie("deepskylogsec","",time()-3600,"/");
+	$loggedUser="";
+}
+elseif(array_key_exists('deepskylogsec',$_COOKIE)&&$_COOKIE['deepskylogsec'])
 { if(strlen($_COOKIE['deepskylogsec'])>32)
   { if(substr($_COOKIE['deepskylogsec'],0,32)==$objObserver->getObserverProperty(substr($_COOKIE['deepskylogsec'],32,255),'password'))
     { $_SESSION['deepskylog_id']=substr($_COOKIE['deepskylogsec'],32,255);
@@ -33,7 +38,9 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
     if($passwd_db==$passwd)                                                     // check if passwords match
     { $_SESSION['lang']=$objObserver->getObserverProperty($login,'language');
 			if($GLOBALS['objObserver']->getObserverProperty($login,'role',2)=="2")                         // user in waitlist already tries to log in
-        $loginError="loginuser: user in waitlist";
+			{ $loginError="loginuser: user in waitlist";
+			  $loggedUser="";
+			} 
       elseif($GLOBALS['objObserver']->getObserverProperty($login,'role',2)=="1")                     // validated user
       { $tmpifrm=$objUtil->checkSessionKey('ifrm');
       	session_regenerate_id(true);
@@ -50,7 +57,7 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
       	$_SESSION['deepskylog_id']=$login;                              
         $_SESSION['admin']="yes";                           
         $_SESSION['ifrm']=$tmpifrm;
-        $loggedUser=true;
+        $loggedUser=$login;
         $cookietime=time()+(365*24*60*60);                                      // 1 year
         setcookie("deepskylogsec",$passwd.$login,$cookietime,"/");
       }
@@ -60,6 +67,7 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
     else // passwords don't match
     { $loginErrorCode="LangErrorWrongPassword";
 		  $_GET['indexAction']='error_action';
+		  $loggedUser="";
 		}
   }
   else // not all fields are filled in
@@ -70,6 +78,7 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
 else
 {	$_SESSION['deepskylog_id']='';
 	setcookie("deepskylogsec","",time()-3600,"/");
+	$loggedUser="";
 }
 if(((!array_key_exists('module',$_SESSION))||(!$_SESSION['module']))&&isset($_COOKIE['module']))
 {	$_SESSION['module']=$_COOKIE['module'];

@@ -1,5 +1,5 @@
 <?php // login.php -  menu which allows the user to log in  
-if(!($loggedUser))
+if((!($loggedUser))||($objUtil->checkGetKey('indexAction')=='logout'))
 { echo "<div  class=\"menuDiv\">";
 	echo "<p class=\"menuHead\">".LangLoginMenuTitle;
   if($register == "yes")                                                        // include register link
