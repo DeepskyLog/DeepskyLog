@@ -290,9 +290,9 @@ else // no object found or not pushed on search button yet
 	echo "</h2>";
 	
 	echo "<ol>";
-	echo "<li value=\"1\">" . LangNewObservationSubtitle1a . ", ";
-	echo "<a href=\"" . $baseURL . "index.php?indexAction=add_csv\">" . LangNewObservationSubtitle1b . "</a>" . LangNewObservationSubtitle1abis;
-	echo "<a href=\"" . $baseURL . "index.php?indexAction=add_xml\">" . LangNewObservationSubtitle1c . "</a>";
+	echo "<li value=\"1\">" . LangNewObservationSubtitle1a . LangNewObservationSubtitle1abis;
+	echo "<a href=\"" . $baseURL . "index.php?indexAction=add_csv\">" . LangNewObservationSubtitle1b . "</a>";
+//	echo "<a href=\"" . $baseURL . "index.php?indexAction=add_xml\">" . LangNewObservationSubtitle1c . "</a>";
 	echo "</li>";
 	echo "</ol>";
 	echo "<form action=\"" . $baseURL . "index.php?indexAction=add_observation\" method=\"post\">";
