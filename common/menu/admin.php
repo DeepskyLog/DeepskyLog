@@ -1,61 +1,16 @@
 <?php // admin.php - menu which allows the adminstrator to perform administrator tasks
-
-echo("<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">");
-
-echo("<tr>");
-echo("<th valign=\"top\">");
-echo(LangAdminMenuTitle);
-echo("</th>");
-echo("</tr>");
-
-echo("<tr>");
-echo("<td height=\"25px\">");
-echo("<a href=\"".$baseURL."index.php?indexAction=view_observers\" class=\"mainlevel\">\n");
-echo(LangAdminMenuItem1);
-echo("</a>");
-echo("</td>");
-echo("</tr>");
-
-echo("<tr align=\"left\">");
-echo("<td height=\"25px\">");
-echo("<a href=\"".$baseURL."index.php?indexAction=view_locations\" class=\"mainlevel\">");
-echo(LangAdminMenuItem2);
-echo("</a>");
-echo("</td>");
-echo("</tr>");
-
-echo("<tr align=\"left\">");
-echo("<td height=\"25px\">");
-echo("<a href=\"".$baseURL."index.php?indexAction=view_instruments\" class=\"mainlevel\">");
-echo(LangAdminMenuItem3);
-echo("</a>");
-echo("</td>");
-echo("</tr>");
-
-echo("<tr align=\"left\">");
-echo("<td height=\"25px\">");
-echo("<a href=\"".$baseURL."index.php?indexAction=view_eyepieces\" class=\"mainlevel\">");
-echo(LangAdminMenuItem4);
-echo("</a>");
-echo("</td>");
-echo("</tr>");;
-
-echo("<tr align=\"left\">");
-echo("<td height=\"25px\">");
-echo("<a href=\"".$baseURL."index.php?indexAction=view_filters\" class=\"mainlevel\">");
-echo(LangAdminMenuItem5);
-echo("</a>");
-echo("</td>");
-echo("</tr>");
-
-echo("<tr align=\"left\">");
-echo("<td height=\"25px\">");
-echo("<a href=\"".$baseURL."index.php?indexAction=view_lenses\" class=\"mainlevel\">");
-echo(LangAdminMenuItem6);
-echo("</a>");
-echo("</td>");
-echo("</tr>");
-
-echo("</table>");
-			
+echo "<div class=\"menuDiv\">";
+echo "<p class=\"menuHead\">".LangAdminMenuTitle."</p>";
+echo "<select name=\"search\" class=\"menuField menuDropdown\" onchange=\"{location = this.options[this.selectedIndex].value;}\">";
+if(isset($_SESSION['deepskylog_id']))
+{ echo "<option ".(($objUtil->checkGetKey('indexAction')=='default_action')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=default_action\">"."&nbsp;"."</option>";
+  echo "<option ".(($objUtil->checkGetKey('indexAction')=='view_observers')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=view_observers\">".LangAdminMenuItem1."</option>";
+  echo "<option ".(($objUtil->checkGetKey('indexAction')=='view_locations')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=view_locations\">".LangAdminMenuItem2."</option>";
+  echo "<option ".(($objUtil->checkGetKey('indexAction')=='view_instruments')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=view_instruments\">".LangAdminMenuItem3."</option>";
+  echo "<option ".(($objUtil->checkGetKey('indexAction')=='view_eyepieces')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=view_eyepieces\">".LangAdminMenuItem4."</option>";                        
+  echo "<option ".(($objUtil->checkGetKey('indexAction')=='view_filters')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=view_filters\">".LangAdminMenuItem5."</option>";
+  echo "<option ".(($objUtil->checkGetKey('indexAction')=='view_lenses')?"selected ":"")."value=\"".$baseURL."index.php?indexAction=view_lenses\">".LangAdminMenuItem6."</option>";
+}
+echo "</select>";
+echo "</div>";
 ?>

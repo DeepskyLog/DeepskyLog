@@ -121,7 +121,7 @@ h6 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-si
 .pageTitle {
 	position         : absolute;
 	left             : 0px;        width            : 55%;
-	padding-top      : 5px;
+	top              : 10px;
 }
 .pageListHeader {
 	position         : absolute;
@@ -217,16 +217,16 @@ a.menuLine:hover {
   text-decoration  : underline;
 }
 .menuButton {
-	width: 145px;
+	width            : 145px;
 }
 .menuField {
-	width: 147px;
+	width            : 147px;
 }
 .menuInput {
-	width: 143px;
+	width            : 143px;
 }
 ol{
-  color: #000000;
+  color            : #000000;
 }
 ul{
   color            : #000000;

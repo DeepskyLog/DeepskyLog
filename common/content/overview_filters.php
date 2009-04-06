@@ -4,6 +4,7 @@ elseif(!$loggedUser) throw new Exception(LangException002);
 elseif(!$_SESSION['admin']) throw new Exception(LangException001);
 else
 {
+set_time_limit(60);
 $sort=$objUtil->checkGetKey('sort','name');
 $filts=$objFilter->getSortedFilters($sort,'%');
 if((isset($_GET['sort'])) && $_GET['previous'] == $_GET['sort']) // reverse sort when pushed twice
@@ -18,15 +19,21 @@ if((isset($_GET['sort'])) && $_GET['previous'] == $_GET['sort']) // reverse sort
 else
   $previous = $sort;
 $step = 25;
-echo "<div id=\"main\">";
-echo "<h2>".LangOverviewFilterTitle."</h2>";
 // the code below is very strange but works
 if((isset($_GET['previous'])))
   $orig_previous = $_GET['previous'];
 else
   $orig_previous = "";
 $link=$baseURL."index.php?indexAction=view_filters&amp;sort=".$sort."&amp;previous=".$orig_previous;
-list($min,$max)=$objUtil->printNewListHeader($filts,$link,$min,$step,"");
+echo "<div id=\"main\" style=\"position:relative\">";
+echo "<div class=\"container\" style=\"height:40px;\">";
+echo "<div class=\"pageTitle\">";
+echo "<h6>".LangOverviewFilterTitle."</h6>";
+echo "</div>";
+echo "<div class=\"pageListHeader\">";
+list ($min, $max) = $objUtil->printNewListHeader2($filts, $link, $min, $step);
+echo "</div>";
+echo "</div>";
 echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_filters&amp;sort=name&amp;previous=$previous\">".LangViewFilterName."</a></td>";
@@ -58,7 +65,6 @@ while(list($key,$value)=each($filts))
   $count++;
 }
 echo "</table>";
-list($min, $max)=$objUtil->printNewListHeader($filts,$link,$min,$step,"");
 echo "</div>";
 }
 ?>

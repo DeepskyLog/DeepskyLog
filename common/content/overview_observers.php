@@ -4,6 +4,7 @@ elseif(!$loggedUser) throw new Exception(LangException002);
 elseif(!$_SESSION['admin']) throw new Exception(LangException001);
 else
 {
+set_time_limit(60);
 $sort=$objUtil->checkGetKey('sort','name');
 if(!$min) $min=$objUtil->checkGetKey('min',0);
 // the code below is very strange but works
@@ -24,12 +25,18 @@ if((isset($_GET['sort'])) && (isset($_GET['previous'])) && $_GET['previous'] == 
 else
   $previous = $sort;
 echo "<div id=\"main\">";
-echo "<h2>".LangViewObserverTitle."</h2>";
 $step=25;
 $link=$baseURL."index.php?indexAction=view_observers&amp;sort=".$sort."&amp;previous=".$orig_previous;
-list($min, $max) = $objUtil->printNewListHeader($observers, $link, $min, $step, "");
 $count = 0;
-echo "<table>";
+echo "<div class=\"container\" style=\"height:40px;\">";
+echo "<div class=\"pageTitle\">";
+echo "<h6>".LangViewObserverTitle."</h6>";
+echo "</div>";
+echo "<div class=\"pageListHeader\">";
+list ($min, $max) = $objUtil->printNewListHeader2($observers, $link, $min, $step);
+echo "</div>";
+echo "</div>";
+echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=id&amp;previous=$previous\">id</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=name&amp;previous=$previous\">".LangViewObserverName."</a></td>";
@@ -60,7 +67,6 @@ while(list ($key, $value) = each($observers))
   $count++;
 }
 echo "</table>";
-list($min, $max) = $util->printNewListHeader($observers, $link, $min, $step, "");
 echo "</div>";
 }
 ?>

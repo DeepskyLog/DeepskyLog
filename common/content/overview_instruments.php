@@ -4,6 +4,7 @@ elseif(!$loggedUser) throw new Exception(LangException002);
 elseif(!$_SESSION['admin']) throw new Exception(LangException001);
 else
 {
+set_time_limit(180);
 $sort=$objUtil->checkGetKey('sort','name');
 if(!$min) $min=$objUtil->checkGetKey('min',0);
 $telescopes=$objInstrument->getSortedInstruments($sort,'%');
@@ -25,11 +26,17 @@ if((isset($_GET['sort'])) && (isset($_GET['previous'])) && $_GET['previous'] == 
 else
   $previous = $sort;
 $step = 25;
-echo "<div id=\"main\">";
-echo "<h2>".LangOverviewInstrumentsTitle."</h2>";
 $link=$baseURL."index.php?indexAction=view_instruments&amp;sort=".$sort."&amp;previous=".$orig_previous;
-list($min,$max)=$objUtil->printNewListHeader($telescopes,$link,$min,$step,"");
-echo "<table>";
+echo "<div id=\"main\" style=\"position:relative\">";
+echo "<div class=\"container\" style=\"height:40px;\">";
+echo "<div class=\"pageTitle\">";
+echo "<h6>".LangOverviewInstrumentsTitle."</h6>";
+echo "</div>";
+echo "<div class=\"pageListHeader\">";
+list ($min, $max) = $objUtil->printNewListHeader2($telescopes, $link, $min, $step);
+echo "</div>";
+echo "</div>";
+echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_instruments&amp;sort=name&amp;previous=$previous\">".LangOverviewInstrumentsName."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_instruments&amp;sort=diameter&amp;previous=$previous\">".LangOverviewInstrumentsDiameter."</a></td>";
@@ -41,45 +48,46 @@ echo "<td></td>";
 echo "</tr>";
 $count = 0;
 while(list ($key, $value) = each($telescopes))
-{ $name = $objInstrument->getInstrumentPropertyFromId($value,'name');
-  $diameter = round($objInstrument->getInstrumentPropertyFromId($value,'diameter'), 0);
-  $fd = round($objInstrument->getInstrumentPropertyFromId($value,'fixedMagnification'), 1);
-  if ($fd == "0")
-    $fd = "-";
-  $type = $objInstrument->getInstrumentPropertyFromId($value,'type');
-  $fixedMagnification = $objInstrument->getInstrumentPropertyFromId($value,'fixedMagnification');
-  if ($fixedMagnification == "0")
-    $fixedMagnification = "-";
-  $observer = $objInstrument->getObserverFromInstrument($value);
-  echo "<tr class=\"type".(2-($count%2))."\">";
-  echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_instrument&amp;instrument=".urlencode($value)."\">".$name."</a></td>";
-  echo "<td>$diameter</td>";
-  echo "<td>$fd</td>";
-  echo "<td>$fixedMagnification</td>";
-  echo "<td>";
-  if($type == InstrumentReflector) {echo(InstrumentsReflector);}
-  if($type == InstrumentFinderscope) {echo(InstrumentsFinderscope);}
-  if($type == InstrumentRefractor) {echo(InstrumentsRefractor);}
-  if($type == InstrumentRest) {echo(InstrumentsOther);}
-  if($type == InstrumentBinoculars) {echo(InstrumentsBinoculars);}
-  if($type == InstrumentCassegrain) {echo(InstrumentsCassegrain);}
-  if($type == InstrumentSchmidtCassegrain) {echo(InstrumentsSchmidtCassegrain);}
-  if($type == InstrumentKutter) {echo(InstrumentsKutter);}
-  if($type == InstrumentMaksutov) {echo(InstrumentsMaksutov);}
-  echo "</td>";
-  echo "<td>".$observer."</td>";
-  echo "<td>";
-  $queries = array("instrument" => $value);
-  $obs = $objObservation->getObservationFromQuery($queries, "", "1", "False");
-  $obscom = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
-  if(!sizeof($obs) > 0 && !sizeof($obscom) > 0 && !in_array($value, $insts) && $value != "1") // no observations with instrument yet
-    echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_instrument&amp;instrumentid=" . urlencode($value) . "\">" . LangRemove . "</a>");
-  echo "</td>";
-  echo "</tr>";
+{ if(($count>=$min)&&($count<$max))
+  { $name = $objInstrument->getInstrumentPropertyFromId($value,'name');
+	  $diameter = round($objInstrument->getInstrumentPropertyFromId($value,'diameter'), 0);
+	  $fd = round($objInstrument->getInstrumentPropertyFromId($value,'fixedMagnification'), 1);
+	  if ($fd == "0")
+	    $fd = "-";
+	  $type = $objInstrument->getInstrumentPropertyFromId($value,'type');
+	  $fixedMagnification = $objInstrument->getInstrumentPropertyFromId($value,'fixedMagnification');
+	  if ($fixedMagnification == "0")
+	    $fixedMagnification = "-";
+	  $observer = $objInstrument->getObserverFromInstrument($value);
+	  echo "<tr class=\"type".(2-($count%2))."\">";
+	  echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_instrument&amp;instrument=".urlencode($value)."\">".$name."</a></td>";
+	  echo "<td>$diameter</td>";
+	  echo "<td>$fd</td>";
+	  echo "<td>$fixedMagnification</td>";
+	  echo "<td>";
+	  if($type == InstrumentReflector) {echo(InstrumentsReflector);}
+	  if($type == InstrumentFinderscope) {echo(InstrumentsFinderscope);}
+	  if($type == InstrumentRefractor) {echo(InstrumentsRefractor);}
+	  if($type == InstrumentRest) {echo(InstrumentsOther);}
+	  if($type == InstrumentBinoculars) {echo(InstrumentsBinoculars);}
+	  if($type == InstrumentCassegrain) {echo(InstrumentsCassegrain);}
+	  if($type == InstrumentSchmidtCassegrain) {echo(InstrumentsSchmidtCassegrain);}
+	  if($type == InstrumentKutter) {echo(InstrumentsKutter);}
+	  if($type == InstrumentMaksutov) {echo(InstrumentsMaksutov);}
+	  echo "</td>";
+	  echo "<td>".$observer."</td>";
+	  echo "<td>";
+	  //$queries = array("instrument" => $value);
+	  //$obs = $objObservation->getObservationFromQuery($queries, "", "1", "False");
+	  //$obscom = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
+	  if(!($objInstrument->getInstrumentUsedFromId($value))) // no observations with instrument yet
+	    echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_instrument&amp;instrumentid=".urlencode($value)."\">".LangRemove."</a>";
+	  echo "</td>";
+	  echo "</tr>";
+  }
   $count++;
 }
 echo "</table>";
-list($min, $max) = $objUtil->printNewListHeader($telescopes, $link, $min, $step, "");
 echo "</div>";
 }
 ?>

@@ -4,6 +4,7 @@ elseif(!$loggedUser) throw new Exception(LangException002);
 elseif(!$_SESSION['admin']) throw new Exception(LangException001);
 else
 {
+set_time_limit(60);
 // sort
 if(isset($_GET['sort']))
  $sort=$_GET['sort'];
@@ -27,11 +28,17 @@ if((isset($_GET['sort'])) && $_GET['previous'] == $_GET['sort']) // reverse sort
 else
   $previous = $sort;
 $step = 25;
-echo "<div id=\"main\">";
-echo "<h2>".LangViewEyepieceTitle."</h2>";
 $link = $baseURL."index.php?indexAction=view_eyepieces&amp;sort=".$sort."&amp;previous=".$orig_previous;
-list($min,$max)=$objUtil->printNewListHeader($eyeps, $link, $min, $step, "");
-echo "<table>";
+echo "<div id=\"main\" style=\"position:relative\">";
+echo "<div class=\"container\" style=\"height:40px;\">";
+echo "<div class=\"pageTitle\">";
+echo "<h6>".LangViewEyepieceTitle."</h6>";
+echo "</div>";
+echo "<div class=\"pageListHeader\">";
+list ($min, $max) = $objUtil->printNewListHeader2($eyeps, $link, $min, $step);
+echo "</div>";
+echo "</div>";
+echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_eyepieces&amp;sort=name&amp;previous=$previous\">".LangViewEyepieceName."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_eyepieces&amp;sort=focalLength&amp;previous=$previous\">".LangViewEyepieceFocalLength."</a></td>";
@@ -61,7 +68,6 @@ while(list ($key, $value) = each($eyeps))
  $count++;
 }
 echo "</table>";
-list($min,$max)=$objUtil->printNewListHeader($eyeps, $link, $min, $step, "");
 echo "</div>";
 }
 ?>

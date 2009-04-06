@@ -4,6 +4,7 @@ elseif(!$loggedUser) throw new Exception(LangException002);
 elseif(!$_SESSION['admin']) throw new Exception(LangException001);
 else
 {
+set_time_limit(60);
 $sort=$objUtil->checkGetKey('sort','name');
 if(!$min) $min=$objUtil->checkGetKey('min',0);
 $sites = $objLocation->getSortedLocations($sort);
@@ -27,10 +28,16 @@ else
 
 $step = 25;
 echo "<div id=\"main\">";
-echo "<h2>".LangViewLocationTitle."</h2>";
 $link=$baseURL."index.php?indexAction=view_locations&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
-list($min, $max) = $objUtil->printNewListHeader($sites, $link, $min, $step, "");
-echo "<table>";
+echo "<div class=\"container\" style=\"height:40px;\">";
+echo "<div class=\"pageTitle\">";
+echo "<h6>".LangViewLocationTitle."</h6>";
+echo "</div>";
+echo "<div class=\"pageListHeader\">";
+list ($min, $max) = $objUtil->printNewListHeader2($sites, $link, $min, $step);
+echo "</div>";
+echo "</div>";
+echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=region&amp;previous=$previous\">".LangViewLocationProvince."</a></td>";
@@ -90,7 +97,6 @@ while(list ($key, $value) = each($sites))
   $count++;
 }
 echo "</table>";
-list($min, $max) = $objUtil->printNewListHeader($sites, $link, $min, $step, "");
 echo "</div>";
 }
 ?>

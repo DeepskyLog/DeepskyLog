@@ -1537,7 +1537,7 @@ class Utils implements iUtils
 	  echo "</form>";
 	  return array($min,$max);
   }
-  public function printNewListHeader2(&$list, $link, $min, $step, $total,$showNumberOfRecords=true,$showArrows=true)
+  public function printNewListHeader2(&$list, $link, $min, $step, $total=0,$showNumberOfRecords=true,$showArrows=true)
   { global $baseURL;
 	  $pages=ceil(count($list)/$step);           // total number of pages
     if($min)                                   // minimum value

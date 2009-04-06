@@ -18,11 +18,6 @@ try
   echo    "<img id=\"div4a\" src=\"".$baseURL."styles/images/lu.gif\" alt=\"\"/>";
   echo    "<img id=\"div4b\" src=\"".$baseURL."styles/images/lo.gif\" alt=\"\" />";
   echo    "</div>";
-  echo    "<div id=\"div5\">"; 
-  $includeFile=$objUtil->utilitiesDispatchIndexAction();                               // Determine the page to show
-  include 'common/entryexit/data.php';                                                 // Get data for the form, object data, observation data, etc.
-  include $includeFile;                                                                // Center content section	<<<===============================================================
-  echo    "</div>";
   echo    "<div id=\"div6\">";
   echo    "<img id=\"div6a\" src=\"".$baseURL."styles/images/ru.gif\" alt=\"\" />";                       // Right white bar
   echo    "<img id=\"div6b\" src=\"".$baseURL."styles/images/ro.gif\" alt=\"\" />";                       // Right white bar
@@ -34,6 +29,11 @@ try
   echo    "</div>";
   if(isset($entryMessage)&&$entryMessage)                                              // Entry Message if any
     echo  "<script>alert('".addslashes(html_entity_decode($entryMessage))."');</script>";
+  echo    "<div id=\"div5\">"; 
+  $includeFile=$objUtil->utilitiesDispatchIndexAction();                               // Determine the page to show
+  include 'common/entryexit/data.php';                                                 // Get data for the form, object data, observation data, etc.
+  include $includeFile;                                                                // Center content section	<<<===============================================================
+  echo    "</div>";
 }
 catch (Exception $e)
 { echo    "<p>DeepskyLog encounterd a problem. Could you please report it to the Developers?</p>";
