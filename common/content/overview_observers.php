@@ -62,7 +62,7 @@ while(list ($key, $value) = each($observers))
   elseif ($role == RoleCometAdmin)
     echo "<td> ".LangViewObserverCometAdmin."</td><td></td>";
   elseif ($role == RoleWaitlist)
-    echo "<td> ".LangViewObserverWaitlist."</td><td><a href=\"".$baseURL."index.php?indexAction=validate_observer&amp;validate=".urlencode($value)."\">".LangViewObserverValidate."</a>/<a href=\"".$baseURL."index.php?indexAction=validateDeleteobserver&amp;validate=".urlencode($value)."\">"."To implement: Verwijder"."</a></td>";
+    echo "<td> ".LangViewObserverWaitlist."</td><td><a href=\"".$baseURL."index.php?indexAction=validate_observer&amp;validate=".urlencode($value)."\">".LangViewObserverValidate."</a> / <a href=\"".$baseURL."index.php?indexAction=validateDeleteobserver&amp;validate=".urlencode($value)."\">"."To implement: Verwijder"."</a></td>";
   echo "</tr>";
   $count++;
 }

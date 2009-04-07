@@ -41,7 +41,7 @@ try
   include $includeFile;                                                                                   // Center content section	
   echo    "</div>";
   if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
-    echo  "<script>alert('".addslashes(html_entity_decode($entryMessage))."');</script>";
+    echo  "<script>alert('".addslashes(strip_tags(html_entity_decode($objPresentations->br2nl($entryMessage))))."');</script>";
 }
 catch (Exception $e)
 { echo    "<p>DeepskyLog encounterd a problem. Could you please report it to the Developers?</p>";
