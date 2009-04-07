@@ -172,7 +172,7 @@ class Observers implements iObservers
 		}
 	}
 	public  function validateObserver()                                          // validateObserver validates the user with the given id and gives the user the given role
-  { global $objDatabase; 
+  { global $objDatabase,$objUtil; 
     if(!($objUtil->checkSessionKey('admin')=='yes'))
       throw new Exception(LangException001);
     $objDatabase->execSQL("UPDATE observers SET role = \"".RoleUser."\" WHERE id=\"".$objUtil->checkGetKey('validate')."\"");
