@@ -1663,7 +1663,7 @@ class Utils implements iUtils
 	     . htmlspecialchars_decode($objInstrument->getInstrumentPropertyFromId($value['instrumentid'],'name')) . " from "
 	     . $objLocation->getLocationPropertyFromId($objObservation->getDsObservationProperty($value['observationid'],'locationid'), 'name')));
 	    $linkDom = $itemDom->appendChild($dom->createElement('link'));
-	    $linkDom->appendChild($dom->createCDATASection($baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $value['observationid'] . "&QobsKey=0&dalm=D"));
+	    $linkDom->appendChild($dom->createCDATASection($baseURL . "index.php?indexAction=detail_observation&observation=" . $value['observationid'] . "&QobsKey=0&dalm=D"));
 	
 	    $descDom = $itemDom->appendChild($dom->createElement('description'));
 	    $descDom->appendChild($dom->createCDATASection($objPresentations->br2nl(utf8_encode($value['observationdescription']))));
@@ -1747,7 +1747,7 @@ class Utils implements iUtils
       $titleDom = $itemDom->appendChild($dom->createElement('title'));
       $titleDom->appendChild($dom->createTextNode($title));
       $linkDom = $itemDom->appendChild($dom->createElement('link'));
-      $linkDom->appendChild($dom->createCDATASection($baseURL . "index.php?indexAction=comets_detail_observation&amp;observation=" . $value));
+      $linkDom->appendChild($dom->createCDATASection($baseURL . "index.php?indexAction=comets_detail_observation&observation=" . $value));
   
       // Description
       $description = $observation->getDescription($value);
