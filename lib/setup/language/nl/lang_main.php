@@ -47,14 +47,14 @@ define("LangWelcome4","Modules: ");
 define("LangManage","Beheer");
 define("LangManageDots","Beheer...");
 
-define("LangAccountSubscribed1","Je DeepskyLog account is aangemaakt.<p>");
-define("LangAccountSubscribed2","Een van de developers zal je account zo spoedig mogelijk valideren.<p>");
-define("LangAccountSubscribed3","Je zal hiervan een bevestiging per email krijgen.<p>");
-define("LangAccountSubscribed4","Gelieve er rekening mee te houden dat DeepskyLog het werk is van een kleine groep vrijwilligers,<p>");
-define("LangAccountSubscribed5","en dat het een dag of zo kan duren voor je gevalideerd wordt.<p>");
-define("LangAccountSubscribed6","Occasioneel zijn alle developers samen op waarneemreis voor een week.<p>");
-define("LangAccountSubscribed7","Normaal gezien is er een backup persoon die valideert in deze periodes.<p>");
-define("LangAccountSubscribed8","Als je account niet gevalideerd wordt binnen de 24 uur kan je een email zenden naar<p>");
+define("LangAccountSubscribed1","Je DeepskyLog account is aangemaakt. ");
+define("LangAccountSubscribed2","Een van de developers zal je account zo spoedig mogelijk valideren. ");
+define("LangAccountSubscribed3","Je zal hiervan een bevestiging per email krijgen. ");
+define("LangAccountSubscribed4","Gelieve er rekening mee te houden dat DeepskyLog het werk is van een kleine groep vrijwilligers, ");
+define("LangAccountSubscribed5","en dat het een dag of zo kan duren voor je gevalideerd wordt. ");
+define("LangAccountSubscribed6","Occasioneel zijn alle developers samen op waarneemreis voor een week. ");
+define("LangAccountSubscribed7","Normaal gezien is er een backup persoon die valideert in deze periodes. ");
+define("LangAccountSubscribed8","Als je account niet gevalideerd wordt binnen de 24 uur kan je een email zenden naar ");
 define("LangAccountSubscribed9","developers at deepskylog.be om zeker te zijn.");
 
 

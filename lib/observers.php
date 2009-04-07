@@ -123,8 +123,8 @@ class Observers implements iObservers
 		    $administrators=$this->getAdministrators();
 		    $fromMail=$this->getObserverProperty($administrators[0],'email');
 		    $headers="From:".$fromMail;
-		    if(!mail($to,$subject,$body,$headers))
-		  	  throw new Exception('Unable to mail');
+		    //if(!mail($to,$subject,$body,$headers))
+		  	//  throw new Exception('Unable to mail');
         $entryMessage = LangAccountSubscribed1.LangAccountSubscribed2.LangAccountSubscribed3.LangAccountSubscribed4.LangAccountSubscribed5.LangAccountSubscribed6.LangAccountSubscribed7.LangAccountSubscribed8.LangAccountSubscribed9;
 		    $_GET['user']=$_POST['deepskylog_id'];
 		    $_GET['indexAction']='detail_observer';
