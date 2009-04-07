@@ -5,7 +5,7 @@
     <description>DeepskyLog - visual deepsky and comets observations</description>
     <atom:link href="http://www.deepskylog.org/test/observations.rss" rel="self" type="application/rss+xml"/>
     <link>http://www.deepskylog.org/</link>
-    <lastBuildDate>Mon, 06 Apr 2009 12:05:01 +0200</lastBuildDate>
+    <lastBuildDate>Tue, 07 Apr 2009 15:40:01 +0200</lastBuildDate>
     <item>
       <title>NGC 3521 with Orion Optics OD350S from Liezele</title>
       <link><![CDATA[http://www.deepskylog.org/test/index.php?indexAction=detail_observation&observation=31624&QobsKey=0&dalm=D]]></link>
@@ -7059,14 +7059,6 @@ Met 53x zie je inderdaad heel veel rag fijne sterren, heel mooi.Met 80x zie ik n
       <dc:creator><![CDATA[Jef De Wit]]></dc:creator>
       <guid isPermaLink="false">deepsky30756</guid>
       <pubDate>Sun, 15 Mar 2009 22:40:00 +0000</pubDate>
-    </item>
-    <item>
-      <title>C/2007 N3 LULIN from Varsenare with Orion Optics 300 F/4</title>
-      <link><![CDATA[http://www.deepskylog.org/test/index.php?indexAction=comets_detail_observation&observation=1607]]></link>
-      <description><![CDATA[Maan dichtbij.]]></description>
-      <dc:creator><![CDATA[David Vansteelant]]></dc:creator>
-      <guid isPermaLink="false">comet1607</guid>
-      <pubDate>Fri, 06 Mar 2009 21:15:00 +0000</pubDate>
     </item>
     <item>
       <title>C/2007 N3 LULIN from Varsenare with 15 cm reflector (F/8)</title>

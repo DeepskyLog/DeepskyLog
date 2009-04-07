@@ -23,7 +23,7 @@ try
   echo    "<img id=\"div6b\" src=\"".$baseURL."styles/images/ro.gif\" alt=\"\" />";                       // Right white bar
   echo    "</div>";
   echo    "<div id=\"div7\">";	
-  echo    "Copyright 2004 - 2008&nbsp;";                                               // bottom line
+  echo    "Copyright 2004 - 2009&nbsp;";                                               // bottom line
   echo    "<a href=\"http://www.vvs.be\">Vereniging voor Sterrenkunde</a> - Powered by&nbsp;";
   echo    "<a href=\"http://www.deepskylog.org\">DeepskyLog</a>&nbsp;".$versionInfo;   //defined in databaseInfo.php
   echo    "</div>";
