@@ -66,7 +66,7 @@ while(FALSE!==($file=readdir($dir)))
 }
 echo "<table>";
 if(array_key_exists('admin',$_SESSION)&&($_SESSION['admin']=="yes"))       // admin logged in
-  tableTypeFieldnameField('type1',LangChangeAccountField2,"<a href=\"mailto:".$objObserver->getObserverProperty($user,'email')."\">".$objObserver->getEmail($user)."</a>");
+  tableTypeFieldnameField('type1',LangChangeAccountField2,"<a href=\"mailto:".$objObserver->getObserverProperty($user,'email')."\">".$objObserver->getObserverProperty($user,'email')."</a>");
 tableTypeFieldnameField("type2",LangChangeAccountField3,$objObserver->getObserverProperty($user,'firstname'));
 tableTypeFieldnameField("type1",LangChangeAccountField4,$objObserver->getObserverProperty($user,'name'));
 tableTypeFieldnameField("type2",LangChangeAccountField7,"<a href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=".urlencode($location_id)."\">".$location_name."</a>");
@@ -83,12 +83,13 @@ if($objUtil->checkSessionKey('admin')=="yes")
     echo "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleAdmin)?"selected=\"selected\"":"")." value=\"0\">".LangViewObserverAdmin."</option>";
     echo "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleUser)?"selected=\"selected\"":"")." value=\"1\">".LangViewObserverUser."</option>";
     echo "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleCometAdmin)?"selected=\"selected\"":"")." value=\"4\">".LangViewObserverCometAdmin."</option>";
-    echo "<option ".(($objObserver->getObserverProperty($user,'rolz',2)==RoleWaitlist)?"selected=\"selected\"":"")." value=\"2\">".LangViewObserverWaitlist."</option>";
+    echo "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleWaitlist)?"selected=\"selected\"":"")." value=\"2\">".LangViewObserverWaitlist."</option>";
     echo "</select>";
     echo "<input type=\"submit\" name=\"change\" value=\"".LangViewObserverChange."\" />";
+    echo "</td>";
   }
   elseif($objObserver->getObserverProperty($user,'role',2)==RoleWaitlist)
-    echo(LangViewObserverWaitlist."</td>");
+    echo("<td>".LangViewObserverWaitlist."</td>");
   else                                                                          // fixed admin role
   {  echo "<td>".LangViewObserverAdmin."</td>";
   }
@@ -97,7 +98,6 @@ if($objUtil->checkSessionKey('admin')=="yes")
 }
 echo "</table>";
 echo "<p>";
-
 echo "<table>";
 echo "<tr class=\"type3\">";
 echo "<td>&nbsp;</td>";

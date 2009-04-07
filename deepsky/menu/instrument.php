@@ -1,14 +1,7 @@
-<?php
-// instrument.php
-// menu which allows the user to change its standard instrument
-
-if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id']) 
-{ echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">";
-	echo "<tr>";
-	echo "<th valign=\"top\">".LangInstrumentMenuTitle."&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangManage."</a>"."</th>";
-	echo "</tr>";
-	echo "<tr>";
-	echo "<td>";
+<?php // instrument.php - menu which allows the user to change its standard instrument
+if($loggedUser) 
+{ echo "<div class=\"menuDiv\">";
+	echo "<p   class=\"menuHead\">".LangInstrumentMenuTitle."&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangManage."</a>"."</p>";
   $link=$baseURL."index.php?";
 	reset($_GET);
 	while(list($key,$value)=each($_GET))
@@ -20,13 +13,11 @@ if(array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
   }
 	$result=$objInstrument->getSortedInstruments('name',$_SESSION['deepskylog_id']);
   $instr=$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope');	
-	echo("<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"activateTelescope\" class=\"inputfield\">");
+	echo "<select name=\"activateTelescope\" class=\"menuField menuDropdown\" onchange=\"location=this.options[this.selectedIndex].value;\">";
   while(list($key, $value) = each($result))
 		echo("<option ".(($value==$instr)?"selected":"")." value=\""  . $link . "&amp;activeTelescopeId=$value\">" . $objInstrument->getInstrumentPropertyFromId($value,'name') . "</option>\n");
-	echo("</select>\n");
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
+	echo "</select>";
+	echo "</div>";
 	$link="";
 }
 ?>

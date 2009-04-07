@@ -2,6 +2,8 @@
 
 define("LangGeneralObservations","observaties");
 
+define("LangIndexPleaseWait","Gelieve een moment te wachten terwijl de gegevens opgehaald worden...");
+
 define("LangException001", "U dient ingelogd te zijn als administrator om deze operaties uit te voeren. Gelieve de developers te contacteren met dit bericht.");
 define("LangException002", "U dient ingelogd te zijn om locaties en apparatuur te beheren. Gelieve de developers te contacteren met dit bericht.");
 define("LangException002b","U dient ingelogd te zijn om observaties te beheren. Gelieve de developers te contacteren met dit bericht.");
@@ -677,7 +679,7 @@ define("LangViewObservationNew", "Voeg nieuwe waarneming toe");
 define("LangDeleteObservation", "Verwijder waarneming");
 define("LangOverviewObservations", "Lijst");
 define("LangCompactObservations", "Compact");
-define("LangCompactObservationsLO", "Compact&nbsp;LO");
+define("LangCompactObservationsLO", "Vergelijk");
 define("LangOverviewObservationTitle", "Overzicht met &eacute;&eacute;n enkele lijn van informatie per waarneming");
 define("LangCompactObservationsTitle", "Overzicht met naast de informatielijn eveneens de beschrijving van de waarneming");
 define("LangCompactObservationsLOTitle", "Overzicht met de informatielijn, de beschrijving en uw laatste waarneming");

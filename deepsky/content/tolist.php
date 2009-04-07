@@ -44,15 +44,12 @@ if($listname)
 	  $_GET['min']=$min;
 	  $_GET['max']=$max;
 	  if($FF)
-	    $objObject->showObjects($link, $min, $max,'',1);
-    else
-	  { $_SESSION['ifrm']="deepsky/content/ifrm_objects.php";
-	  	echo "<iframe name=\"obj_list\" id=\"obj_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;min=".$min."&amp;max=".$max."\&amp;ownShow=&amp;showRank=1\" frameborder=\"0\" width=\"100%\" style=\"heigth:100px\">";
-	    $objObject->showObjects($link, $min, $max,'',1);
-		  echo "</iframe>";
-	  }	
-	  $resizeElement='obj_list';
-	  $resizeSize=90;
+	  { echo "<script type=\"text/javascript\">";
+      echo "theResizeElement='obj_list';";
+      echo "theResizeSize=90;";
+      echo "</script>";
+  	}
+	  $objObject->showObjects($link, $min, $max,'',1);
 	  echo "<hr />";
     if($myList)
     { echo "<form action=\"".$baseURL."index.php?indexAction=listaction\">";

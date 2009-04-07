@@ -1,6 +1,7 @@
 <?php
 interface iPresentation
-{ public  function br2dash($data); 
+{ public  function alert($theMessage);
+  public  function br2dash($data); 
   public  function br2nl($data);                                                       // The opposite of nl2br
   public  function decToArgoString($decl);
   public  function decToString($decl,$web=1);
@@ -28,7 +29,10 @@ interface iPresentation
 // function tableSortInverseHeader($header0, $link0)                                    // inverse sorting header on table
 // function tableTypeFieldnameField($type,$name,$field)                                 // 2-item type line, containing the name and the field, and formatted to the type
 class Presentations implements iPresentation
-{ public function br2dash($data) 
+{ public  function alert($theMessage)
+  { echo "<script  type=\"text/javascript\">alert('".addslashes($theMessage)."');</script>";
+  }
+  public function br2dash($data) 
   { return preg_replace('!<br.*>!iU', "-", $data );
   }
   public function br2nl($data)  // The opposite of nl2br
@@ -306,10 +310,10 @@ function tableSortHeader($header0, $link0)
   echo "<table width=\"100%\">";   
   echo "<tr>";          
   echo "<td>";         
-  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc. "\"><img src=\"".$baseURL."styles/images/up10.gif\" border=\"0\" /></a>";
+  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc. "\"><img src=\"".$baseURL."styles/images/up10.gif\" border=\"0\" alt=\"^\"/></a>";
   echo "</td>";        
   echo "<td align=\"right\">";         
-  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img src=\"".$baseURL."styles/images/down10.gif\" border=\"0\" /></a>";
+  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img src=\"".$baseURL."styles/images/down10.gif\" border=\"0\" alt=\"v\"/></a>";
   echo "</td>";        
   echo "</tr>";        
   echo "<tr>";
@@ -326,10 +330,10 @@ function tableSortInverseHeader($header0, $link0)
   echo "<table width=\"100%\">";   
   echo "<tr>";          
   echo "<td>";         
-  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img src=\"".$baseURL."styles/images/up10.gif\" border=\"0\" /></a>";
+  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img src=\"".$baseURL."styles/images/up10.gif\" border=\"0\" alt=\"^\" /></a>";
   echo "</td>";        
   echo "<td align=\"right\">";         
-  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=asc\" title=\"".LangSortOnAsc."\"><img src=\"".$baseURL."styles/images/down10.gif\" border=\"0\" /></a>";
+  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=asc\" title=\"".LangSortOnAsc."\"><img src=\"".$baseURL."styles/images/down10.gif\" border=\"0\" alt=\"v\" /></a>";
   echo "</td>";        
   echo "</tr>";        
   echo "<tr >";

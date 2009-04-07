@@ -1,13 +1,6 @@
-<?php
-/*
-echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">";
-
-echo "<tr>";
-echo "<th valign=\"top\">".LangCounter."</th>";
-echo "</tr>";
-
-echo "<tr>";
-echo "<td style=\"text-align:right\" >";
+<?php // countermenu.php - dispalys a site counter
+echo "<div class=\"menuDiv\">";
+echo "<p class=\"menuHead\">".LangCounter."</p>";
 //    <!-- Start of StatCounter Code -->
 echo "<a href=\"http://my6.statcounter.com/project/standard/stats.php?project_id=1347986&guest=1\">";
 echo "<script type=\"text/javascript\" language=\"javascript\">";
@@ -24,9 +17,5 @@ echo "<img  src=\"http://c13.statcounter.com/counter.php?sc_project=1347986&amp;
 echo "</noscript>";
 echo "</a>";
 //    <!-- End of StatCounter Code -->
-echo "</td>";
-echo "</tr>";
-
-echo "</table>";
-*/
+echo "</div>";
 ?>

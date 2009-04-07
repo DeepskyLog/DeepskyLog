@@ -655,10 +655,10 @@ class Observations {
 	{ global $FF, $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations; 
     $min=$_GET['min'];
     $max=$_GET['max'];
-	  echo "<table id= \"showListObservationTable\" width=\"100%\">";
+	  echo "<table id=\"showListObservationTable\" width=\"100%\">";
 	  if($FF)
 	    echo "<thead>";
-		echo "<tr width=\"100%\" class=\"type3\">";
+		echo "<tr class=\"type3\">";
     echo "<td>&nbsp;</td>";
 		tableSortHeader(LangOverviewObservationsHeader1, $link2 . "&amp;sort=objectname");
 		tableSortHeader(LangViewObservationField1b, $link2 . "&amp;sort=objectconstellation");

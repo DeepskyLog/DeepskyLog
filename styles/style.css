@@ -51,11 +51,27 @@
 }
 #div5 {
 	position         : absolute;
-	left             : 169px;       top    : 85px;      
-	width            : 800px;       height : 475px;       
-  border           : 0px;         margin : 0px;           padding : 0px;
+	left             : 169px;       top    : 90px;      
+	width            : 800px;       height : 465px;       
+  margin           : 0px;         border : 0px;
+  padding-left     : 0px;         padding-right : 2px; 
+  paddin-top       : 0px;         padding-bottom: 0px;
 	background-color : #FFFFFF;
 	overflow         : auto;
+}
+#div5a {
+	position         : absolute;
+	left             : 169px;       top    : 85px;      
+	width            : 800px;       height : 5px;       
+  margin           : 0px;         border : 0px;
+	background-color : #FFFFFF;
+}
+#div5b {
+	position         : absolute;
+	left             : 169px;       top    : 545px;      
+	width            : 800px;       height : 15px;       
+  margin           : 0px;         border : 0px; padding:0px;
+	background-color : #FFFFFF;
 }
 #div6 {
 	position         : absolute;
@@ -67,13 +83,13 @@
 #div6a {
   position         : absolute;
   width            : 11px;
-  right            : 0px;         top    : 0px;		text-align       : right;
+  left             : 0px;         top    : 0px;		text-align       : right;
 }
 #div6b {
   position         : absolute;
   width            : 11px;
   border           : 0px;         margin : 0px;           padding : 0px;
-  right            : 0px;         bottom : 0px;	
+  left             : 0px;         bottom : 0px;	
 }
 #div7 {
 	position         : absolute;
@@ -81,6 +97,14 @@
 	width            : 820px;       height : 20px;
 	text-align       : center;      padding: 3px;
   background-color : #5C7D9D;
+}
+#div8 {
+	position         : absolute;
+	left             : 169px;       top    : 90px;      
+	width            : 800px;       height : 465px;       
+  margin           : 0px;         border : 0px;
+  padding-left     : 0px;         padding-right : 2px;  
+	background-color : #FFFFFF;
 }
 body {
   margin           : 0px 0px 0px 0px;
@@ -178,6 +202,10 @@ a.mainlevel:hover {
   margin           : 0px 5px 10px 5px; 
   width            : 143px;
 } 
+.menuDivExtended { 
+  margin           : 0px 5px 10px 5px; 
+  min-width        : 143px;
+} 
 .menuHead {
   font-size        : 11px;
   font-weight      : bold;
@@ -210,6 +238,7 @@ a.menuLine:link, a.menuLine:visited {
   font-family      : Verdana, Arial, Helvetica, serif;
   font-weight      : bold;
   text-decoration  : none;
+  line-height      : 15pt;
 }
 a.menuLine:hover {
   color            : #FF9900;
@@ -220,10 +249,13 @@ a.menuLine:hover {
 	width            : 145px;
 }
 .menuField {
-	width            : 147px;
+	width            : 145px;
+}
+.menuFieldExtended {
+	min-width        : 145px;
 }
 .menuInput {
-	width            : 143px;
+	width            : 145px;
 }
 ol{
   color            : #000000;

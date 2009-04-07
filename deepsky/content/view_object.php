@@ -60,13 +60,13 @@ if($max>count($_SESSION['Qobj']))
 $_GET['min']=$min;
 $_GET['max']=$max;
 if($FF)
-  $objObject->showObjects($link, $min, $max,$_GET['object']);
-else
-{ $_SESSION['ifrm']="deepsky/content/ifrm_objects.php";
-	echo "<iframe name=\"obj_list\" id=\"obj_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;link2=".urlencode($link)."&amp;min=".$min."&amp;max=".$max."&amp;ownShow=".$_GET['object']."&amp;showRank=0\" frameborder=\"0\" width=\"100%\" style=\"heigth:100px\">";
-  $objObject->showObjects($link, $min, $max);
-	echo "</iframe>";
-}	
+{ echo "<script type=\"text/javascript\">";
+  echo "theResizeElement='obj_list';";
+  echo "theResizeSize=80;";
+  echo "</script>";
+}
+$objObject->showObjects($link, $min, $max,$_GET['object']);
+	
 echo "</div>";
 
 echo "<div style=\"position:relative; left:0px;height:30px;width:100%;\">";
@@ -77,8 +77,6 @@ echo "<a target=\"_top\" href=\"".$baseURL."objects.csv?SID=Qobj\" target=\"new_
 echo "<a target=\"_top\" href=\"".$baseURL."objects.argo?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage8."</a>";
 echo "</div>";
 echo "</div>";
-$resizeElement='obj_list';
-$resizeSize=80;
 
 //============================================================================== Admin section permits to change object settings in DB remotely
 if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")

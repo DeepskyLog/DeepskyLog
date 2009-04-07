@@ -100,13 +100,15 @@ else
 	
   echo "<div class=\"container\" style=\"height:15px;\">";
   echo "<div class=\"containerLeft\">";
+	$tempecho="";
 	if (($_SESSION['lco'] != "L"))
-		echo ("<a target=\"_top\" href=\"" . $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">" . LangOverviewObservations . "</a>");
+		$tempecho.="&nbsp;-&nbsp;<a target=\"_top\" href=\"" . $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">" . LangOverviewObservations . "</a>";
 	if (($_SESSION['lco'] != "C"))
-		echo (" <a target=\"_top\" href=\"" . $link . "&amp;lco=C" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>");
+		$tempecho.="&nbsp;-&nbsp;<a target=\"_top\" href=\"" . $link . "&amp;lco=C" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>";
 	if ($loggedUser && ($_SESSION['lco'] != "O"))
-		echo (" <a target=\"_top\" href=\"" . $link . "&amp;lco=O" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>");
-  echo "</div>";
+		$tempecho.="&nbsp;-&nbsp;<a target=\"_top\" href=\"" . $link . "&amp;lco=O" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>";
+  echo substr($tempecho,13);
+	echo "</div>";
   echo "<div class=\"containerRight\">";
  	if ($objUtil->checkGetKey('myLanguages'))
 		echo "<a target=\"_top\" href=\"" . $link3 . "\">" . LangShowAllLanguages . "</a>";
@@ -121,15 +123,12 @@ else
 	$_GET['min']=$min;
 	$_GET['max']=$max;
 	if($FF)
-    $objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco']);
-  else
-	{ $_SESSION['ifrm']="deepsky/content/ifrm_observations.php";
-	  echo "<iframe name=\"obs_list\" id=\"obs_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;link2=".urlencode($link2)."&amp;min=".$min."&amp;max=".$max."&amp;expand=".$objUtil->checkGetKey('expand')."\" frameborder=\"0\" width=\"100%\" style=\"height:350px\">";
-	  $objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco']);
-		echo "</iframe>";
+	{ echo "<script type=\"text/javascript\">";
+    echo "theResizeElement='obs_list';";
+    echo "theResizeSize=65;";
+    echo "</script>";
 	}
-	$resizeElement='obs_list';
-	$resizeSize=80;
+	$objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco']);
 	echo "<hr />";
 	if ($_SESSION['lco'] == "O")
 		echo "<p align=\"right\">" . LangOverviewObservationsHeader5a;

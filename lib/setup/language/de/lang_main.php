@@ -2,6 +2,8 @@
 
 define("LangGeneralObservations","observations");
 
+define("LangIndexPleaseWait","Please wait a moment while loading data...");
+
 define("LangException001", "You need to be logged in as an administrator to execute these operations.");
 define("LangException002", "You need to be logged in to change your locations or equipment.");
 define("LangException002b","You need to be logged in to validate an observation.");
@@ -678,7 +680,7 @@ define("LangViewObservationNew", "Neue Beobachtung anlegen");
 define("LangDeleteObservation", "Beobachtung l&ouml;schen");
 define("LangOverviewObservations", "Auflisten");
 define("LangCompactObservations", "Kompakt");
-define("LangCompactObservationsLO", "Kompakt&nbsp;LB");
+define("LangCompactObservationsLO", "Compare");
 define("LangOverviewObservationTitle", "Einzeilige &Uuml;bersicht mit Grundinformationen pro Beobachtung");
 define("LangCompactObservationsTitle", "&Uuml;bersicht mit Grundinformationen und Beschreibung der Beobachtung");
 define("LangCompactObservationsLOTitle", "&Uuml;bersicht mit Grundinformationen, Beschreibung der Beobachtung und Ihrer letzten Beobachtung");

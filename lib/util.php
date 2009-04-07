@@ -21,6 +21,7 @@ interface iUtils
   public  function pdfObjectsDetails($result, $sort='');                       // Creates a pdf detail document from an array of objects
   public  function pdfObservations($result);                                   // Creates a pdf document from an array of observations
   public  function printNewListHeader(&$list, $link, $min, $step, $total);     // prints the << < Nr > >> navigations, allowing to enter a page number in the center field
+  public  function printNewListHeader2(&$list, $link, $min, $step, $total=0,$showNumberOfRecords=true,$showArrows=true);
   public  function rssObservations();                                          // Creates an rss feed
   //private function utilitiesCheckIndexActionDSquickPick();                     // returns the includefile if one of the quickpick buttons is pressed
 //private function utilitiesCheckIndexActionAdmin($action, $includefile);      // returns the includefile for the specified indexs action after checking it is an admin who is looged in
@@ -1556,11 +1557,11 @@ class Utils implements iUtils
       echo "(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")");
     if(($listcount>$step)&&($showArrows))
     { $currentpage=ceil($min/$step)+1;
-			echo "<a href=\"".$link."&amp;multiplepagenr=0\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\">"."</a>";
-		  echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/left20.gif\" border=\"0\">"."</a>";			
+			echo "<a href=\"".$link."&amp;multiplepagenr=0\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\" alt =\"<<\" />"."</a>";
+		  echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/left20.gif\" border=\"0\" alt=\"<\" />"."</a>";			
 		  echo "<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\"></input>";	
-		  echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/right20.gif\" border=\"0\">"."</a>";
-		  echo "<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\">"."</a>";
+		  echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/right20.gif\" border=\"0\" alt=\">\" />"."</a>";
+		  echo "<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\" alt=\">>\" />"."</a>";
 	  }
 	  echo "</span>";
 	  echo "</form>";

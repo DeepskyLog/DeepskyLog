@@ -27,15 +27,13 @@ if(count($_SESSION['Qobj'])>1) //===============================================
 	$_GET['min']=$min;
 	$_GET['max']=$max;
 	if($FF)
-	  $objObject->showObjects($link, $min, $max);
-  else
-	{ $_SESSION['ifrm']="deepsky/content/ifrm_objects.php";
-		echo "<iframe name=\"obj_list\" id=\"obj_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;min=".$min."&amp;max=".$max."&amp;ownShow=&amp;showRank=0\" frameborder=\"0\" width=\"100%\" style=\"heigth:100px\">";
-	  $objObject->showObjects($link, $min, $max);
-		echo "</iframe>";
-	}	
-	$resizeElement='obj_list';
-	$resizeSize=70;
+	if($FF)
+	{ echo "<script type=\"text/javascript\">";
+    echo "theResizeElement='obj_list';";
+    echo "theResizeSize=70;";
+    echo "</script>";
+	}
+	$objObject->showObjects($link, $min, $max);
 	echo "<hr />";
   //list($min,$max)=$objUtil->printNewListHeader($_SESSION['Qobj'],$link,$min,25,'');	
   $objPresentations->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);

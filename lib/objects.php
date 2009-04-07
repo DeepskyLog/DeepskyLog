@@ -545,7 +545,7 @@ class Objects implements iObjects
 	  return $objDatabase->execSQL("INSERT INTO objectpartof (objectname, partofname) VALUES (\"$name\", \"".trim($cat . " " . ucwords(trim($catindex)))."\")");
   }
   public  function prepareObjectsContrast()                               // internal procedure to speed up contrast calculations
-  { global $objContrast;
+  { global $objContrast, $loggedUser;
     if(!array_key_exists('LTC',$_SESSION)||(!$_SESSION['LTC']))
 		 $_SESSION['LTC'] = array(array(4, -0.3769, -1.8064, -2.3368, -2.4601, -2.5469, -2.5610, -2.5660), 
                               array(5, -0.3315, -1.7747, -2.3337, -2.4608, -2.5465, -2.5607, -2.5658),
@@ -581,7 +581,7 @@ class Objects implements iObjects
      $popup="";
   	 $magnificationsName='';
 	 	 $fov='';
-		 if(!(array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id'])))
+		 if(!($loggedUser))
 		   $popup = LangContrastNotLoggedIn;
      else
 	 	 { $sql5 = "SELECT stdlocation, stdtelescope from observers where id = \"" . $_SESSION['deepskylog_id'] . "\"";
@@ -750,8 +750,14 @@ class Objects implements iObjects
     $magnitude=sprintf("%01.1f", $this->getDsoProperty($object,'mag'));
 	  $sb=sprintf("%01.1f", $this->getDSOProperty($object,'subr'));
 	  $popup=$this->prepareObjectsContrast();
-    $this->calcContrastAndVisibility($object,$object,$this->getDsoProperty($object,'mag'),$this->getDsoProperty($object,'SBObj'),$this->getDsoProperty($object,'diam1'),$this->getDsoProperty($object,'diam2'),$contrast,$contype,$popup,$prefMag);
-	  echo "<table width=\"100%\">";
+    if($popup)
+    { $prefMag = '-';
+        $contype = '-';
+        $contrast = '-';
+    }
+    else
+      $this->calcContrastAndVisibility($object,$object,$this->getDsoProperty($object,'mag'),$this->getDsoProperty($object,'SBObj'),$this->getDsoProperty($object,'diam1'),$this->getDsoProperty($object,'diam2'),$contrast,$contype,$popup,$prefMag);
+    echo "<table width=\"100%\">";
 	  if($loggedUser&&($standardAtlasCode=$GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode','urano')))
 	    tableFieldnameField2(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode(stripslashes($object)) . "\">".(stripslashes($object))."</a>",
 	                                      $objAtlas->atlasCodes[$standardAtlasCode].LangViewObjectField10,$this->getDsoProperty($object,$standardAtlasCode)," class=\"type2\"");

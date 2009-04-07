@@ -1,14 +1,7 @@
-<?php
-
-if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
-{ echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">";
-
-  echo "<tr>";
-  echo "<th valign=\"top\">".LangListsTitle."&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=listaction\">".LangManage."</a>"."</th>";
-  echo "</tr>";
-
-  echo "<tr>";
-  echo "<td>";
+<?php //list.php - shows the lists available to the user
+if($loggedUser)
+{ echo "<div class=\"menuDivExtended\">";
+  echo "<p   class=\"menuHead\">".LangListsTitle."&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=listaction\">".LangManage."</a>"."</p>";
   $result1=array();
 	$result2=array();
 	$sql = "SELECT DISTINCT observerobjectlist.listname " .
@@ -33,7 +26,7 @@ if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
 	$result1[]='----------';
 	$result=array_merge($result1,$result2);
   if(count($result)>0)
-	{ echo("<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"activatelist\" class=\"inputfield\">\n");
+	{ echo "<select name=\"activatelist\" class=\"menuFieldExtended menuDropdown\" onchange=\"location=this.options[this.selectedIndex].value;\">";
 		if((!array_key_exists('listname',$_SESSION)) || (!$_SESSION['listname']))
 			$_SESSION['listname']="----------";
     while(list($key, $value) = each($result))
@@ -42,10 +35,8 @@ if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
        elseif (!(array_key_exists('removeList',$_GET) && ($_SESSION['listname']==$value)))
 				 echo("<option value=\"".$baseURL."index.php?indexAction=listaction&amp;activateList=true&amp;listname=".$value."\">".$value."</option>");
     }
-    echo("</select>\n");
+    echo "</select>";
 	}
-  echo "</td>";
-  echo "</tr>";
-  echo "</table>";
+  echo "</div>";
 }
 ?>

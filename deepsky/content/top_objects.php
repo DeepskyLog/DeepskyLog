@@ -14,14 +14,11 @@ echo "</div>";
 $_GET['min']=$min;
 $_GET['max']=$max;
 if($FF)
-	$objObject->showObjects($link, $min, $max,'',2);
-else
-{ $_SESSION['ifrm']="deepsky/content/ifrm_objects.php";
-	echo "<iframe name=\"obj_list\" id=\"obj_list\" src=\"".$baseURL."ifrm_holder.php?link=".urlencode($link)."&amp;min=".$min."&amp;max=".$max."&amp;ownShow=&amp;showRank=0\" frameborder=\"0\" width=\"100%\" style=\"heigth:100px\">";
-	$objObject->showObjects($link, $min, $max,'',2);
-  echo "</iframe>";
-}	
-$resizeElement='obj_list';
-$resizeSize=40;
+{ echo "<script type=\"text/javascript\">";
+  echo "theResizeElement='obj_list';";
+  echo "theResizeSize=40;";
+  echo "</script>";
+}
+$objObject->showObjects($link, $min, $max,'',2);
 echo "</div>";
 ?>
