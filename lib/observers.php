@@ -175,7 +175,7 @@ class Observers implements iObservers
   { global $objDatabase,$objUtil; 
     if(!($objUtil->checkSessionKey('admin')=='yes'))
       throw new Exception(LangException001);
-    $objDatabase->execSQL("UPDATE observers SET role = \"".RoleUser."\" WHERE id=\"".$objUtil->checkGetKey('validate')."\"");
+    $objDatabase->execSQL("UPDATE observers SET role = \"".RoleUser."\" WHERE id=\"".($id=$objUtil->checkGetKey('validate'))."\"");
     $subject = LangValidateSubject;
     if ($role == RoleAdmin) $ad = LangValidateAdmin;
 	  else                    $ad = "";
