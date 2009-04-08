@@ -30,8 +30,6 @@ try
   include 'common/entryexit/data.php';                                                                    // Get data for the form, object data, observation data, etc.
   include $includeFile;                                                                                   // Center content section	
   echo    "</div>";
-  if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
-    $objPresentations->alertMessage($entryMessage);
 }
 catch (Exception $e)
 { echo    "<p>DeepskyLog encounterd a problem. Could you please report it to the Developers?</p>";
@@ -42,6 +40,8 @@ catch (Exception $e)
 }
 echo "<script type=\"text/javascript\">";
 echo "resizeForm();";
+if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
+  $objPresentations->alertMessage($entryMessage);
 echo "</script>";
 echo "</body>";
 echo "</html>";

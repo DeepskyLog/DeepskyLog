@@ -1174,7 +1174,7 @@ class Utils implements iUtils
 		$pdf->ezStream();
   }
   public  function pdfObjects($result)  // Creates a pdf document from an array of objects
-  { global $instDir, $objAtlas, $objObserver,$objPresentations;
+  { global $instDir, $objAtlas, $objObserver,$objPresentations, $loggedUser;
     while(list($key,$valueA)=each($result))
       $obs1[]=array("Name"          => $valueA['showname'],
                     "ra"            => $objPresentations->raToString($valueA['objectra']),
@@ -1205,7 +1205,7 @@ class Utils implements iUtils
                         "sb"            => html_entity_decode(LangPDFMessage8),
                         "diam"          => html_entity_decode(LangPDFMessage9),
                         "pa"            => html_entity_decode(LangPDFMessage16),  
-                        "page"          => html_entity_decode($objAtlas->atlasCodes[$atlas]),
+                        "page"          => html_entity_decode($objAtlas->atlasCodes[$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano')]),
                         "contrast"      => html_entity_decode(LangPDFMessage17),
                         "magnification" => html_entity_decode(LangPDFMessage18),
                         "seen"          => html_entity_decode(LangOverviewObjectsHeader7),
