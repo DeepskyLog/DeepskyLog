@@ -1,6 +1,6 @@
 <?php
 interface iPresentation
-{ public  function alert($theMessage);
+{ public  function alertMessage($theMessage);
   public  function br2dash($data); 
   public  function br2nl($data);                                                       // The opposite of nl2br
   public  function decToArgoString($decl);
@@ -29,8 +29,8 @@ interface iPresentation
 // function tableSortInverseHeader($header0, $link0)                                    // inverse sorting header on table
 // function tableTypeFieldnameField($type,$name,$field)                                 // 2-item type line, containing the name and the field, and formatted to the type
 class Presentations implements iPresentation
-{ public  function alert($theMessage)
-  { echo "<script  type=\"text/javascript\">alert('".addslashes($theMessage)."');</script>";
+{ public  function alertMessage($theMessage)
+  { echo "<script  type=\"text/javascript\">alert('".addslashes(strip_tags(html_entity_decode($this->br2nl($theMessage))))."');</script>";
   }
   public function br2dash($data) 
   { return preg_replace('!<br.*>!iU', "-", $data );

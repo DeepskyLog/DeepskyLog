@@ -1,23 +1,23 @@
 <?php
   // Change the following to make deepskylog work with your database
-  $host = "localhost";
-  $user = "wim";
-  $pass = "";
-  $dbname = "deepskylog";
-
-  // Installation directory (has to end on a slash!)
-  $instDir = "/software/www/htdocs/deepskylog/";
-
-  $baseURL = "http://localhost/deepskylog/";
-
+  $host        = "localhost";
+  $user        = "wim";
+  $pass        = "";
+  $dbname      = "deepskylog";
+  
+  // Installation directory and url (each one has to end on a slash!)
+  $instDir      = "/software/www/htdocs/deepskylog/";
+  $baseURL      = "http://localhost/deepskylog/";
+  
   // General settings
   // The title to appear above all pages
-  $title = "<a href=\"http://www.deepskylog.org\">DeepskyLog</a>";
-
+  $title         = "<a href=\"http://www.deepskylog.org\">DeepskyLog</a>";
   // The first part of the title that has to appear on each browser window
-  $browsertitle = "DeepskyLog";
-
-  $versionInfo = "3.4-Trunk";
+  $browsertitle  = "DeepskyLog";
+  $copyrightInfo = "Copyright 2004 - 2009&nbsp;-&nbsp;"
+  $vvsInfo       = "<a href=\"http://www.vvs.be\">Vereniging voor Sterrenkunde</a> - Powered by&nbsp;";
+  $dslInfo       = "<a href=\"http://www.deepskylog.org\">DeepskyLog</a>&nbsp;";
+  $versionInfo   = "3.4-Trunk";
   
   // Allow users to register from within the DeepskyLog application directly
   // If you want to use a already existing database with users and passwords
