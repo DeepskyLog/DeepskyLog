@@ -774,7 +774,7 @@ class Objects implements iObjects
 	  { if($myList)
      { echo "<form action=\"".$baseURL."index.php?indexAction=detail_object\">";    	
        echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
-       echo "<input type=\"hidden\" name=\"object\" value=\"".urlencode($object)."\" />";
+       echo "<input type=\"hidden\" name=\"object\" value=\"".$object."\" />";
        echo "<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>";
 		   echo "<td align=\"right\">".LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>)<br /><input type=\"submit\" name=\"Go\" value=\"" . LangEditObjectDescription . "\" /></td>";
   	   echo "<td colspan=\"3\"><textarea name=\"description\" class=\"listdescription inputfield\">".$objList->getListObjectDescription($object)."</textarea></td>";
