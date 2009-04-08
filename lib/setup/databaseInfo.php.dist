@@ -14,9 +14,9 @@
   $title         = "<a href=\"http://www.deepskylog.org\">DeepskyLog</a>";
   // The first part of the title that has to appear on each browser window
   $browsertitle  = "DeepskyLog";
-  $copyrightInfo = "Copyright 2004 - 2009&nbsp;-&nbsp;";
-  $vvsInfo       = "<a href=\"http://www.vvs.be\">Vereniging voor Sterrenkunde</a> - Powered by&nbsp;";
-  $dslInfo       = "<a href=\"http://www.deepskylog.org\">DeepskyLog</a>&nbsp;";
+  $copyrightInfo = "Copyright&nbps;2004&nbsp;-&nbsp;2009&nbsp;-&nbsp;";
+  $vvsInfo       = "<a href=\"http://www.vvs.be\">Vereniging voor Sterrenkunde</a>&nbsp;-&nbsp;";
+  $dslInfo       = "Powered by&nbsp;<a href=\"http://www.deepskylog.org\">DeepskyLog</a>&nbsp;";
   $versionInfo   = "3.4-Trunk";
   
   // Allow users to register from within the DeepskyLog application directly
