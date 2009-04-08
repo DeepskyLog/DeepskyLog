@@ -88,8 +88,9 @@ class Instruments implements iInstruments
 	  if(($objUtil->checkPostKey('adaption')==1)
     && $objUtil->checkPostKey('stdtelescope')
     && $objUtil->checkUserID($this->getObserverFromInstrument($objUtil->checkPostKey('stdtelescope'))))
-    { $objObserver->setObserverProperty($_SESSION['deepskylog_id'],'stdtelescope', $_POST['stdtelescope']);
-      return LangValidateInstrumentMessage3;
+    { echo "hello";
+    	$objObserver->setObserverProperty($_SESSION['deepskylog_id'],'stdtelescope', $_POST['stdtelescope']);
+      return;
     }
     if($objUtil->checkPostKey('instrumentname')
     && $objUtil->checkPostKey('diameter')
