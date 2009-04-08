@@ -40,9 +40,9 @@ catch (Exception $e)
 }
 echo "<script type=\"text/javascript\">";
 echo "resizeForm();";
+echo "</script>";
 if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
   $objPresentations->alertMessage($entryMessage);
-echo "</script>";
 echo "</body>";
 echo "</html>";
 ?>
