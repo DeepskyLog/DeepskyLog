@@ -1,60 +1,58 @@
 <?php
 
-define("LangGeneralObservations","observations");
+define("LangGeneralObservations","Beobachtungen");
 
-define("LangIndexPleaseWait","Please wait a moment while loading data...");
+define("LangException001", "Sie m&uuml;ssen als Administrator angemeldet sein um diese Funktion auszuf&uuml;hren.");
+define("LangException002", "Sie m&uuml;ssen sich anmelden um Ihre Beobachtungspl&auml;tze oder Zubeh&ouml;r zu &auml;ndern.");
+define("LangException002b","Sie m&uuml;ssen sich anmelden um eine Beobachtung zu best&auml;tigen.");
+define("LangException002c","Sie m&uuml;ssen sich anmelden um eine Beobachtung anzulegen.");
+define("LangException003", "Sie m&ouml;chten ein nicht spezifiziertes Okular &auml;ndern. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException003b","Sie m&ouml;chten ein nicht spezifiziertes Okular anzeigen. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException004", "Sie m&ouml;chten ein Okular &auml;ndern, welches Ihnen nicht zugeordnet ist. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException005", "Sie m&ouml;chten einen nicht spezifizierten Filter &auml;ndern. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException005b","Sie m&ouml;chten einen nicht spezifizierten Filter anzeigen. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException006", "Sie m&ouml;chten einen Filter &auml;ndern, welcher Ihnen nicht zugeordnet ist. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException007", "Sie m&ouml;chten ein nicht spezifiziertes Beobachtungsger&auml;t &auml;ndern. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException007b","Sie m&ouml;chten ein nicht spezifiziertes Beobachtungsger&auml;t anzeigen. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException008", "Sie m&ouml;chten ein Beobachtungsger&auml;t &auml;ndern, welches Ihnen nicht zugeordnet ist. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException009", "Sie m&ouml;chten eine nicht spezifizierte Linse &auml;ndern. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException009b","Sie m&ouml;chten eine nicht spezifizierte Linse anzeigen. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException010", "Sie m&ouml;chten eine Linse &auml;ndern, welche Ihnen nicht zugeordnet ist. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException011", "Sie m&ouml;chten einen nicht spezifizierten Beobachtungsplatz &auml;ndern. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException011b","Sie m&ouml;chten einen nicht spezifizierten Beobachtungsplatz anzeigen. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException012", "Sie m&ouml;chten einen Beobachtungsplatz &auml;ndern, welcher Ihnen nicht zugeordnet ist. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException013", "Sie m&ouml;chten einen Beobachtungsplatz suchen. Leider ist keiner definiert.");
+define("LangException014", "Sie m&ouml;chten einen Beobachtungsplatz suchen. Leider ist kein Land hierzu definiert.");
+define("LangException015b","Sie m&ouml;chten einen nicht spezifizierten Beobachter anzeigen. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException016", "Sie m&ouml;chten ein nicht spezifiziertes Objekt anzeigen. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
+define("LangException016b","Sie m&ouml;chten ein Objekt anzeigen, welches unbekannt ist. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
 
-define("LangException001", "You need to be logged in as an administrator to execute these operations.");
-define("LangException002", "You need to be logged in to change your locations or equipment.");
-define("LangException002b","You need to be logged in to validate an observation.");
-define("LangException002c","You need to be logged in to add an observation.");
-define("LangException003", "You wanted to change an eyepiece, but none is specified. Please contact the developers with this message.");
-define("LangException003b","You wanted to watch an eyepiece, but none is specified. Please contact the developers with this message.");
-define("LangException004", "You wanted to change an eyepiece, but it is not yours to change. Please contact the developers with this message.");
-define("LangException005", "You wanted to change a filter, but none is specified. Please contact the developers with this message.");
-define("LangException005b","You wanted to watch a filter, but none is specified. Please contact the developers with this message.");
-define("LangException006", "You wanted to change a filter, but it is not yours to change. Please contact the developers with this message.");
-define("LangException007", "You wanted to change an instrument, but none is specified. Please contact the developers with this message.");
-define("LangException007b","You wanted to watch an instrument, but none is specified. Please contact the developers with this message.");
-define("LangException008", "You wanted to change an instrument, but it is not yours to change. Please contact the developers with this message.");
-define("LangException009", "You wanted to change a lens, but none is specified. Please contact the developers with this message.");
-define("LangException009b","You wanted to watch a lens, but none is specified. Please contact the developers with this message.");
-define("LangException010", "You wanted to change a lens, but it is not yours to change. Please contact the developers with this message.");
-define("LangException011", "You wanted to change a location, but none is specified. Please contact the developers with this message.");
-define("LangException011b","You wanted to watch a location, but none is specified. Please contact the developers with this message.");
-define("LangException012", "You wanted to change a location, but it is not yours to change. Please contact the developers with this message.");
-define("LangException013", "You wanted to look up a location, but none is specified.");
-define("LangException014", "You wanted to look up a location, but no country is specified.");
-define("LangException015b","You wanted to watch an observer, but none is specified. Please contact the developers with this message.");
-define("LangException016", "You wanted to watch an object, but none is specified. Please contact the developers with this message.");
-define("LangException016b","You wanted to watch an object, but the object is not known. Please contact the developers with this message.");
-
-define("LangCounter","Counter");
+define("LangCounter","Z&auml;hler");
 
 define("DreyerDescriptionLink","http://www.deepskylog.org/wiki/bin/view/DeepskyLog/DreyerDescriptionen");
 
 define("LangYouAreHere", "Sie sind hier:");
-define("LangHome","Home");
-define("LangBecomeMember", "Become member");
-define("LangSearch","Search");
-define("LangContact","Contact");
-define("LangDeepskyLogModules","Deepskylog Modules");
-define("LangWelcome","Welcome&nbsp;in&nbsp;the&nbsp;");
-define("LangWelcome1","&nbsp;module&nbsp;of&nbsp;");
-define("LangWelcome2","You&nbsp;are&nbsp;logged&nbsp;in&nbsp;as&nbsp;");
-define("LangWelcome3","You&nbsp;are&nbsp;not&nbsp;logged&nbsp;in");
-define("LangWelcome4","Modules: ");
-define("LangManageDots","Manage...");
+define("LangHome","Startseite");
+define("LangBecomeMember", "Mitglied werden");
+define("LangSearch","Suche");
+define("LangContact","Kontakt");
+define("LangDeepskyLogModules","Deepskylog Module");
+define("LangWelcome","Willkommen&nbsp;in&nbsp;dem&nbsp;");
+define("LangWelcome1","&nbsp;Modul&nbsp;");
+define("LangWelcome2","Sie&nbsp;sind&nbsp;angemeldet&nbsp;als&nbsp;");
+define("LangWelcome3","Sie&nbsp;sind&nbsp;nicht&nbsp;angemeldet&nbsp;");
+define("LangWelcome4","Module: ");
+define("LangManageDots","Verwalten...");
 
-define("LangAccountSubscribed1","Your DeepskyLog account has been created. ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed2","One of our developers will validate your account as soon as possible. ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed3","You will receive an email confirmation when this happens. ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed4","Please remember that DeepskyLog is the work of only a very small group of volonteers, ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed5","and that it can take up to a day or so to get validated. ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed6","On very rare occasions, all developers are on an astronomical observing ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed7","session for a week. Normally, there is a backup person in those periods. ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed8","If your account is not validated within 24 hours, you can send an email to ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed9","developers at deepskylog.be to be sure.");  // javascript strings, please no html encoding
+define("LangAccountSubscribed1","Ihr DeepskyLog Benutzer wurde angelegt.<p>");
+define("LangAccountSubscribed2","Einer unserer Administratoren wird Ihre Anmeldung bald pr&uuml;fen.<p>");
+define("LangAccountSubscribed3","Sie werden eine eMail Best&auml;tigung erhalten sobald dies geschehen ist.<p>");
+define("LangAccountSubscribed4","Bitte bedenken Sie, da&szlig; DeepskyLog die Arbeit einiger weniger Freiwilliger ist,<p>");
+define("LangAccountSubscribed5","und das es bis zu einem Tag dauern kann bis Ihre Anmeldung gepr&uuml;ft wurde.<p>");
+define("LangAccountSubscribed6","Sehr selten kommt es vor, da&szlig; alle Administratoren mit astronomischen Beobachtungen besch&auml;ftigt sind f&uuml;r eine Woche.<p>");
+define("LangAccountSubscribed7","Normalerweise gibt es dann aber eine Backup Person in diesen F&auml;llen.<p>");
+define("LangAccountSubscribed8","Wenn ihre Anmeldung nicht gepr&uuml;ft wurde nach 24 Stunden, bitte senden Sie eine eMail an<p>");
+define("LangAccountSubscribed9","developers at deepskylog.be um sicherzugehen.");
 
 
 define("LangValidateSubject", "DeepskyLog - Registration erfolgreich");
@@ -69,20 +67,20 @@ define("LangObjectXSeen", "Objekt bereits von Anderen beobachtet (aber nicht bei
 define("LangObjectNSeen", "Objekt hat noch keine Beobachtung in DeepskyLog");
 define("LangBack", "Zur&uuml;ck");
 
-define("LangNoPartOfsBrackets"," (no part-of objects)");
-define("LangOrPartOfs"," or part-of objects ");
+define("LangNoPartOfsBrackets"," (kein Teil von Objekten)");
+define("LangOrPartOfs"," Teil von Objekten ");
 
-define("LangShowWithoutPartOfs","Show without part-of objects");
-define("LangShowWithPartOfs","Show with part-of objects");
+define("LangShowWithoutPartOfs","Zeige ohne Teile von Objekten");
+define("LangShowWithPartOfs","Zeige mit Teilen von Objekten");
 
-define("LangShowAllLanguages","Show all languages");
-define("LangShowInterfaceLanguage", "Only show observation in English");
-define("LangShowMyLanguages","Only show the observations from my profile languages");
-define("LangAllLanguagesShown","all languages");
-define("LangSelectedLanguagesShown","selected languages only");
+define("LangShowAllLanguages","Zeige alle Sprachen");
+define("LangShowInterfaceLanguage", "Nur Beobachtungen in Englisch");
+define("LangShowMyLanguages","Nur Beobachtungen in meiner (Profil) Sprache");
+define("LangAllLanguagesShown","Alle Sprachen");
+define("LangSelectedLanguagesShown","Nur ausgew&auml;hlte Sprachen");
 
 // common/entryexit/instructions
-define("LangInstructionsNoObjectFound","No corresponding object found for ");
+define("LangInstructionsNoObjectFound","Kein entsprechendes Objekt gefunden f&uuml;r ");
 
 // content/result_query_observations.php
 
@@ -104,8 +102,8 @@ define("LangGooglemaps", "Klicken sie auf die Karte um den Ort auf Google Maps z
 // Tooltips
 
 define("LangSortOn", "Sortieren &uuml;ber ");
-define("LangSortOnAsc", "Sort ascending ");
-define("LangSortOnDesc", "Sort descending");
+define("LangSortOnAsc", "Sortiere aufsteigend ");
+define("LangSortOnDesc", "Sortiere absteigend");
 
 //ToList
 define("LangToListList", "Die Liste \"");
@@ -116,7 +114,7 @@ define("LangToListNotExists", "\" existiert nicht.");
 define("LangToListAdded", "\" wurde hinzugef&uuml;gt.");
 define("LangToListAddNew", "Neue Liste: ");
 define("LangToListAdd", "Hinzuf&uuml;gen");
-define("LangToListRename", "Rename");
+define("LangToListRename", "Umbenennen");
 define("LangToListPublic", "&Ouml;ffentliche Liste");
 define("LangToListEmpty", "Liste l&Ouml;schen");
 define("LangToListMyLists", "Meine Listen: ");
@@ -129,7 +127,7 @@ define("LangToListRemoved", "Liste entfernt: ");
 define("LangToListEmptied", "Liste geleert: ");
 define("LangToListMoved1", "Das Objekt ");
 define("LangToListMoved2", " wurde in der Liste nach unten verschoben ");
-define("LangToListMoved3", " wurde in der L�ste nach oben verschoben ");
+define("LangToListMoved3", " wurde in der Liste nach oben verschoben ");
 define("LangToListMoved4", "Objekt eine Position nach vorne verschieben.");
 define("LangToListMoved5", "Objekt eine Position nach hinten verschieben.");
 define("LangToListMoved6", "Objekt an einen bestimmten Platz in der Liste verschieben.");
@@ -144,7 +142,7 @@ define("LangListImportError1", "Sie m&uuml;ssen angemeldet sein um eine Liste zu
 define("LangListImportError2", "Sie m&uuml;ssen eine eigene Liste selektieren um in diese zu importieren.");
 define("LangCSVListError1","Fehler w&auml;hrend des Imports.");
 define("LangCSVListError2","Unbekannte Objekte:");
-define("LangToListListBy","List by: ");
+define("LangToListListBy","Liste von: ");
 
 // List menu
 define("LangListManage", "Listen");
@@ -164,8 +162,8 @@ define("LangMailtoLink", "Nutzen Sie diesen <a href=\"mailto:&#100;&#101;v&#101;
 
 // deepsky/content/view_object
 define("LangObjectNewName", "Neuer Name");
-define("LangObjectNewAltName", "Neuer alternativer name");
-define("LangObjectRemoveAltNameName", "Entferne den alternativen name");
+define("LangObjectNewAltName", "Neuer alternativer Name");
+define("LangObjectRemoveAltNameName", "Entferne den alternativen Name");
 define("LangObjectNewPartOf", "Neuer Teil von");
 define("LangObjectRemovePartOf", "Entferne Teil von");
 define("LangObjectRemoveAndReplaceObjectBy", "Entferne das Objekt und l&ouml;sche Beobachtungen des Objektes");
@@ -178,14 +176,14 @@ define("LangObjectSetSUBR", "Setze Fl&auml;chenhelligkeit");
 define("LangObjectSetDiam1", "Setze Durchmesser 1 (Sekunden!)");
 define("LangObjectSetDiam2", "Setze Duchmesser 2 (Sekunden!)");
 define("LangObjectSetPA", "Setze Positionswinkel");
-define("LangEditObjectDescription","Edit Description");
+define("LangEditObjectDescription","Beschreibung bearbeiten");
 
 
 // content/change_account.php
 
 define("LangChangeAccountTitle", "Benutzer Data");
 define("LangChangeAccountField1", "Name");
-define("LangChangeAccountField1Expl", "So werden Sie von anderen Usern gesehen");
+define("LangChangeAccountField1Expl", "So werden Sie von anderen Benutzern gesehen");
 define("LangChangeAccountField2", "Email adresse");
 define("LangChangeAccountField2Expl", "Ihre eMail Adresse bleibt geheim und wird vertraulich behandelt");
 define("LangChangeAccountField3", "Vorname");
@@ -214,10 +212,10 @@ define("LangChangeAccountField10Expl", "<a href=\"http://cfa-www.harvard.edu/icq
 define("LangChangeAccountField11", "Benutze Ortszeit");
 define("LangChangeAccountField11Expl", "Ihre Ortszeit zur Eingabe und Abfrage von Beobachtungen");
 
-define("LangLoginMenuTitle", "Login or ");
+define("LangLoginMenuTitle", "Anmelden oder ");
 define("LangLoginMenuItem1", "Benutzername");
 define("LangLoginMenuItem2", "Passwort");
-define("LangLoginMenuButton", "Login");
+define("LangLoginMenuButton", "Anmelden");
 define("LangLoginMenuRegister", "Registrierung");
 
 define("LangSearchMenuTitle", "Zeige");
@@ -229,8 +227,8 @@ define("LangSearchMenuItem5", "Objekte abfragen");
 define("LangSearchMenuItem6", "Beobachter");
 define("LangSearchMenuItem7", "Beliebteste Objekte");
 define("LangSearchMenuItem8", "Jahres Beobachtungen");
-define("LangSearchAllLanguages","Look again, using all languages.");
-define("LangSearchDetailPage","Set up a detailed search.");
+define("LangSearchAllLanguages","Suche nochmal in allen Sprachen.");
+define("LangSearchDetailPage","Detailierte Suche.");
 
 define("LangChangeMenuTitle", "Neu / &Auml;ndern");
 define("LangChangeMenuItem1", "Benutzer Details");
@@ -438,7 +436,7 @@ define("LangOverviewObjectsFirstlink", "ANFANG");
 define("LangOverviewObjectsLastlink", "ENDE");
 define("LangOverviewObjectsHeader0", "Nr");
 define("LangOverviewObjectsHeader1", "Name");
-define("LangOverviewObjectsHeader1bis", "Alternativer name");
+define("LangOverviewObjectsHeader1bis", "Alternativer Name");
 define("LangOverviewObjectsHeader2", "Sternbild");
 define("LangOverviewObjectsHeader3", "Mag");
 define("LangOverviewObjectsHeader3b", "SB");
@@ -446,7 +444,7 @@ define("LangOverviewObjectsHeader4", "Typ");
 define("LangOverviewObjectsHeader5", "RA");
 define("LangOverviewObjectsHeader6", "Dekl");
 define("LangOverviewObjectsHeader7", "Beobachtet?");
-define("LangOverviewObjectsHeader8", "Last Seen");
+define("LangOverviewObjectsHeader8", "Zuletzt gesehen");
 define("LangOverviewObjectsHeader9", "Position");
 
 // content/execute_query_objects.php
@@ -459,11 +457,11 @@ define("LangExecuteQueryObjectsMessage2b", " oder ");
 define("LangExecuteQueryObjectsMessage2c", "Anzeige aller Objekte");
 define("LangExecuteQueryObjectsMessage3", "Sie haben die Suchmaske nicht ausgef&uuml;llt");
 define("LangExecuteQueryObjectsMessage4", "Download pdf-Datei");
-define("LangExecuteQueryObjectsMessage4b", "Download names pdf-file");
-define("LangExecuteQueryObjectsMessage4c", "Download details pdf-file");
+define("LangExecuteQueryObjectsMessage4b", "Download Namen pdf-Datei");
+define("LangExecuteQueryObjectsMessage4c", "Download Detail pdf-Datei");
 define("LangExecuteQueryObjectsMessage5", "Exportiere die Beobachtungen in eine CSV Datei");
 define("LangExecuteQueryObjectsMessage6", "Exportiere die Objekte in eine CSV Datei");
-define("LangExecuteQueryObjectsMessage7", "Download icq-Datei");
+define("LangExecuteQueryObjectsMessage7", "Download ICQ-Datei");
 define("LangExecuteQueryObjectsMessage8", "Exportiere Objekte in das Argo Navis Format");
 define("LangExecuteQueryObjectsMessage9", "Filter objects");
 define("LangExecuteQueryObjectsMessage10", "Exportiere die Beobachtungen in eine Comast Datei");
@@ -490,7 +488,7 @@ define("LangListQueryObjectsMessage12", "Zeige keine assoziierten Objekte");
 define("LangListQueryObjectsMessage13", "Zeige assoziierte Objekte");
 define("LangListQueryObjectsMessage14", "Bitte geben Sie den Titel an");
 define("LangListQueryObjectsMessage15", "DeepskyLog Objekte");
-define("LangListQueryObjectsMessage16", "&nbsp;The observation&nbsp;");
+define("LangListQueryObjectsMessage16", "&nbsp;Die Beobachtung&nbsp;");
 
 // content/register.php
 
@@ -525,19 +523,19 @@ define("LangViewObjectFieldOptimumDetectionMagnification", "Beste Vergr&Ouml;&sz
 define("LangViewObjectDSS", "Download DSS Bild");
 define("LangViewObjectDSL", "DeepskyLive Karte");
 define("LangViewObjectObservations", "Zeige alle Beobachtungen von ");
-define("LangViewObjectViewNearbyObject", "Show nearby objects of ");
+define("LangViewObjectViewNearbyObject", "Zeige nahe Objekte von ");
 define("LangViewObjectAddObservation", "Neue Beobachtungen von ");
 define("LangViewObjectInexistant", "Dieses Objekt existiert nicht!");
 define("LangViewObjectNearbyObjects", "Nahe Objekte: ");
-define("LangViewObjectNearbyObject", "nearby object");
-define("LangViewObjectAndNearbyObjects", " and ");
-define("LangViewObjectNoNearbyObjects", " - there are no other objects within the specified distance");
+define("LangViewObjectNearbyObject", "Nahe Objekte");
+define("LangViewObjectAndNearbyObjects", " und ");
+define("LangViewObjectNoNearbyObjects", " - es gibt keine anderen Objekte in der angegebenen Distanz");
 define("LangViewObjectNearbyObjectsMore", "Mehr Objekte");
 define("LangViewObjectNearbyObjectsLess", "Weniger Objekte");
 define("LangViewObjectNearbyObjectsMoreLess", "bis zu ");
-define("LangViewObjectNGCDescription", "NGC description");
-define("LangViewObjectListDescription", "List description");
-define("LangViewObjectDreyerDescription", "Dreyer codes");
+define("LangViewObjectNGCDescription", "NGC Beschreibung");
+define("LangViewObjectListDescription", "Listen Beschreibung");
+define("LangViewObjectDreyerDescription", "Dreyer Codes");
 
 // content/view_observers.php
 
@@ -655,19 +653,19 @@ define("LangViewObservationField31Expl", "Filter hinzuf&uuml;gen");
 define("LangViewObservationField32", "Linse");
 define("LangViewObservationField32Expl", "Linse hinzuf&uuml;gen");
 //Translate
-define("LangViewObservationField33", "Estimated diameter");
+define("LangViewObservationField33", "Gesch&auml;tzter Durchmesser");
 define("LangViewObservationField34", "SQM");
-define("LangViewObservationField35", "Stellar");
-define("LangViewObservationField36", "Extended");
-define("LangViewObservationField37", "Resolved");
-define("LangViewObservationField38", "Mottled");
-define("LangViewObservationField39", "Magnification used");
-define("LangViewObservationField40", "Cluster type");
-define("LangViewObservationField40Expl", "More information");
-define("LangViewObservationField41", "Unusual Shape");
-define("LangViewObservationField42", "Partly unresolved");
-define("LangViewObservationField43", "Color contrasts");
-define("LangViewObservationField44", "Add the observation to the list ");
+define("LangViewObservationField35", "Sternf&ouml;rmig");
+define("LangViewObservationField36", "Fl&auml;chig");
+define("LangViewObservationField37", "Aufgel&ouml;st");
+define("LangViewObservationField38", "Strukturiert");
+define("LangViewObservationField39", "Benutzte Vergr&ouml;&szlig;erung");
+define("LangViewObservationField40", "Cluster Typ");
+define("LangViewObservationField40Expl", "Mehr Informationen");
+define("LangViewObservationField41", "Ungew&ouml;hnliche Form");
+define("LangViewObservationField42", "Teilweise nicht aufgel&ouml;st");
+define("LangViewObservationField43", "Sterne zeigen auff&auml;lligen Kontrast z.B. in der Farbe");
+define("LangViewObservationField44", "F&uuml;ge die Beobachtung der Liste hinzu ");
 
 define("LangViewObservationButton1", "Beobachtung anlegen");
 define("LangViewObservationButton2", "Felder l&ouml;schen");
@@ -680,7 +678,7 @@ define("LangViewObservationNew", "Neue Beobachtung anlegen");
 define("LangDeleteObservation", "Beobachtung l&ouml;schen");
 define("LangOverviewObservations", "Auflisten");
 define("LangCompactObservations", "Kompakt");
-define("LangCompactObservationsLO", "Compare");
+define("LangCompactObservationsLO", "Kompakt&nbsp;LB");
 define("LangOverviewObservationTitle", "Einzeilige &Uuml;bersicht mit Grundinformationen pro Beobachtung");
 define("LangCompactObservationsTitle", "&Uuml;bersicht mit Grundinformationen und Beschreibung der Beobachtung");
 define("LangCompactObservationsLOTitle", "&Uuml;bersicht mit Grundinformationen, Beschreibung der Beobachtung und Ihrer letzten Beobachtung");
@@ -715,13 +713,13 @@ define("LangOverviewObservationsHeader5a", "(*) Alle Beobachtungen(AO), Meine Be
 define("LangOverviewObservationsHeader5b", "(*) Details(D) mit Zeichnung(DZ), Alle Beobachtungen(AO), Meine Beobachtungen(MO), Meine aktuellsten Beobachtungen(LO) dieses Objektes&nbsp;");
 define("LangOverviewObservationsHeader8", "Mein&nbsp;&nbsp;LO&nbsp;&nbsp;Beobachtungsger&auml;t");
 define("LangOverviewObservationsHeader9", "Mein&nbsp;&nbsp;LO&nbsp;&nbsp;Datum");
-define("LangOverviewObservations10", "Please enter a title");
-define("LangOverviewObservations11", "DeepskyLog observations");
+define("LangOverviewObservations10", "Bitte geben Sie einen Namen an");
+define("LangOverviewObservations11", "DeepskyLog Beobachtungen");
 define("LangOverviewObservations12", "in");
 define("LangOverviewObservations13", "mag.");
-define("LangOverviewObservations14", "surf. br.");
-define("LangOverviewObservations15", "alt. names");
-define("LangOverviewObservations16", "Seen:");
+define("LangOverviewObservations14", "oberfl. Hellig.");
+define("LangOverviewObservations15", "alt. Namen");
+define("LangOverviewObservations16", "Gesehen:");
 
 // tooltips
 
@@ -796,14 +794,14 @@ define("LangValidateAccountEmailTitleObject", "DeepskyLog - Objekt - ");
 define("LangValidateAccountEmailTitleObjectObserver", "durch Benutzer ");
 define("LangValidateAccountMessage4", "Es existiert bereits ein Benutzer mit diesem Namen. Bitte w&auml;hlen Sie einen anderen Namen!");
 define("LangValidateAccountMessage5", "Ihr Benutzer wurde erfolgreich ge&auml;ndert!");
-define("LangValidateAccountMessage", "Message");
+define("LangValidateAccountMessage", "Nachricht");
 
 // control/validate_observation.php
 
 define("LangValidateObservationMessage1", "Sie haben ein Pflichtfeld nicht ausgef&uuml;llt!");
-define("LangValidateObservationMessage2", "You filled in an invalid date!");
-define("LangValidateObservationMessage3", "You filled in a future date!");
-define("LangValidateObservationMessage4", "Tou filled in an invalid time!");
+define("LangValidateObservationMessage2", "Sie haben ein ung&uuml;ltiges Datum angegeben!");
+define("LangValidateObservationMessage3", "Sie haben ein Datum in der Zukunft angegeben!");
+define("LangValidateObservationMessage4", "Sie haben eine ung&uuml;ltige Zeit angegeben!");
 define("LangValidateObservationMessage6", "Bitte laden Sie nur Bilder die kleiner als 100kB sind hoch!");
 
 // control/validate_search_object.php
@@ -830,9 +828,9 @@ define("LangValidateEyepieceMessage4", "Okular ge&auml;ndert");
 define("LangValidateEyepieceMessage5", "Okular in der Datenbank ge&auml;ndert");
 
 //control/validate_filter
-define("LangValidateFilterMessage2", "The filter is added to your equipment list");
-define("LangValidateFilterMessage5", "The filter is changed in your equipment list");
-define("LangValidateFilterMessage6", "The filter is removed from your equipment list");
+define("LangValidateFilterMessage2", "Der Filter wurde in Ihr Zubeh&ouml;r aufgenommen");
+define("LangValidateFilterMessage5", "Der Filter wurde erfolgreich bearbeitet");
+define("LangValidateFilterMessage6", "Der Filter wurde aus Ihrem Zubeh&ouml;r entfernt");
 
 
 // control/validate_observer.php
@@ -852,7 +850,7 @@ define("LangMessageTitle", "Nachricht");
 
 define("LangValidateLocationMessage1", "Sie haben ein Pflichtfeld nicht ausgef&uuml;llt!");
 define("LangValidateLocationMessage2", "Der Beobachtungsplatz wurde aufgenommen");
-define("LangValidateLocationMessage3", "The location is removed from your list");
+define("LangValidateLocationMessage3", "Der Beobachtungsplatz wurde entfernt");
 
 // control/validate_intrument.php
 
@@ -860,7 +858,7 @@ define("LangValidateInstrumentMessage1", "Sie haben ein Pflichtfeld nicht ausgef
 define("LangValidateInstrumentMessage2", "Bitte geben Sie entweder die Brennweite ODER das &Ouml;ffnungsverh&auml;ltnis an (F/D)!");
 define("LangValidateInstrumentMessage3", "Das Beobachtungsger&auml;t wurde aufgenommen!");
 define("LangValidateInstrumentMessage4", "Das Beobachtungsger&auml;t wurde ge&auml;ndert!");
-define("LangValidateInstrumentMessage5", "The instrument is removed from your equipment list!");
+define("LangValidateInstrumentMessage5", "Das Beobachtungsger&auml;t wurde entfernt!");
 define("LangValidateInstrumentMessage", "Nachricht");
 
 // content/setup_query_objects.php
@@ -969,7 +967,7 @@ define("LangCSVMessage4", "Gefolgt von den eigentlichen Beobachtungen im selben 
 define("LangCSVMessage5", "Achtung!<p>Das Beobachtungsger&auml;t, der Beobachtungsplatz und die Objekte in der CSV-Datei sollten schon in DeepskyLog bekannt sein, sonst erhalten Sie eine Fehlermeldung und KEINE Beobachtung wird importiert. In diesem Fall geben Sie bitte die fehlenden Daten per Hand ein und starten Sie den Import erneut bis keine Fehlermeldung mehr erscheint. Wenn alles gut geht, erscheinen Ihre Beobachtungen in der  \"Alle Beobachtungen\" &Uuml;bersicht. Bitte seien Sie vorsichtig, wenn Sie die gleiche Datei erneut importieren. Beobachtungen k&ouml;nnen nachher immer nur einzeln gel&ouml;scht werden!");
 define("LangCSVMessage6", "CSV Datei f&uuml;r den Import ");
 define("LangCSVMessage7", "Name;AltnativName;RA;Dekl;Sternbild;Typ;Helligkeit;Oberfl&auml;schen Helligkeit;Durchmesser;Seite;Beobachtet;Last Seen");
-define("LangCSVError0", "The csv observation import has been aborted");
+define("LangCSVError0", "Der Beobachtungs Import (CSV-Datei) wurde abgebrochen");
 define("LangCSVError1", "Die CSV Datei konnte nicht importiert werden weil: ");
 define("LangCSVError2", "Folgende Objekte sind nicht in DeepskyLog verf&uuml;gbar:");
 define("LangCSVError3", "Folgende Beobachtungspl&auml;tze sind nicht in DeepskyLog verf&uuml;gbar:");
@@ -977,25 +975,25 @@ define("LangCSVError4", "Folgende Beobachtungsger&auml;te sind nicht in DeepskyL
 define("LangCSVError5", "Die folgenden Filter sind nicht in DeepskyLog verf&uuml;gbar");
 define("LangCSVError6", "Die folgenden Okulare sind nicht in DeepskyLog verf&uuml;gbar");
 define("LangCSVError7", "Die folgenden Linsen sind nicht in DeepskyLog verf&uuml;gbar");
-define("LangCSVError8", "The following date(s) can't be read by DeepskyLog");
-define("LangCSVError9", "The following date(s) are in the future");
-define("LangCSVError10", "No observations have been read.<br />First, you have to solve the items mentionned above. Then, you can <a href=\"".$baseURL."index.php?indexAction=add_csv\">reimport</a> the complete csv file.");
-define("LangCSVButton", "Import!");
+define("LangCSVError8", "Folgende Daten konnten von DeepskyLog nicht korrekt erfasst werden");
+define("LangCSVError9", "Folgende Daten liegen in der Zukunft");
+define("LangCSVError10", "Es wurden keine Beobachtungen eingelesen.<br />Bitte reparieren Sie die Eintr&auml;ge aus der o.g. Liste. Starten Sie dann den kompletten <a href=\"".$baseURL."index.php?indexAction=add_csv\">reimport</a> der CSV-Datei noch einmal an.");
+define("LangCSVButton", "Importieren!");
 define("LangValidateCSVMessage", "Import der CSV Datei erfolgreich!");
 
 // content/new_observationxml.php
-define("LangXMLTitle", "Import observations from an XML file");
-define("LangXMLMessage1", "This form gives you the possibility to add different observations at the same time using an OpenAstronomyLog XML file. This way, you can exchange in a fast and easy way observations between different applications which support the OpenAstronomyLog XML format (like <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&Telescope</a>), .... Information: Only observations with your name (name and surname) will be added. Observations which are already available in DeepskyLog will not be imported a second time.");
-define("LangXMLError1", "DeepskyLog only supports openAstronomyLog version 1.7");
-define("LangXMLError2", "No observations for user ");
-define("LangXMLError2a", " in this OpenAstronomyLog file!");
-define("LangXMLError3", "Invalid XML file!");
+define("LangXMLTitle", "Importiere Beobachtungen aus XML Datei");
+define("LangXMLMessage1", "Diese Eingabemaske erlaubt Ihnen mehrere Beobachtungen auf einmal einzugeben, indem Sie eine OpenAstronomyLog XML Datei importieren. Dies beschleunigt das Hochladen ihrer Beobachtungen. Ferner k&ouml;nnen Sie Beobachtungen zwischen verschiedenen Anwendungen, die den OpenAstronomyLog XML Standard unterst&uuml;tzen (wie z.B.: <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&Telescope</a>), austauschen. Bitte beachten Sie: Es werden nur Beobachtungen mit Ihrem Namen (Vor- und Nachname) hinzugef&uuml;gt. Beobachtungen die DeepskyLog bereits bekannt sind, werden ebenfalls nicht importiert.");
+define("LangXMLError1", "DeepskyLog unterst&uuml;tzt z. Zt. nur OpenAstronomyLog Version 1.7");
+define("LangXMLError2", "Keine Beobachtungen f&uuml;r Benutzer ");
+define("LangXMLError2a", " in dieser OpenAstronomyLog Datei gefunden!");
+define("LangXMLError3", "Invalide XML Datei!");
 define("LangXMLError4", "");
 define("LangXMLError5", "");
 define("LangXMLError6", "");
 define("LangXMLError7", "");
-define("LangXMLButton", "Import!");
-define("LangValidateXMLMessage", "Importeren CSV bestand succesvol!");
+define("LangXMLButton", "Importieren!");
+define("LangValidateXMLMessage", "Import der XML Daten erfolgreich!");
 
 //List import
 define("LangCSVListTitle", "Beobachtungen von CSV Datei importieren");
@@ -1006,7 +1004,7 @@ define("LangCSVListMessage4", "");
 define("LangCSVListMessage5", "Achtung!<p>Die Objekte in der CSV Datei sollten bereits in der DeepskyLog Datenbank bekannt sein. Wenn dies nicht der Fall ist, erscheint eine Fehlermeldung und keines der Objekte wird imporiert! Die unbekannten Objekte sollten vorher manuell hinzugef&uuml;gt werden, sollange bis keine Fehler mehr beim Import erscheinen. Wenn der Import erfolgreich ist, erscheinen die neuen Objekte in Ihrer Liste. Dublikate werden eliminiert beim Import!");
 define("LangCSVListMessage6", "CSV Datei ");
 define("LangCSVListMessage7", "NGC 7000;NA Nebula;...");
-define("LangCSVListButton", "Import!");
+define("LangCSVListButton", "Importieren!");
 
 // content/manage_csv.php
 define("LangNewObjectSubtitle1b", "Bearbeite Objekte der CSV Datei");
@@ -1022,7 +1020,7 @@ define("LangCSVObjectError1", "Die CSV Datei konnte nicht importiert werden weil
 define("LangCSVObjectError2", "Folgende Objekte sind nicht in DeepskyLog verf&uuml;gbar:");
 define("LangCSVObjectError3", "Folgende Instruktionen sind nicht in DeepskyLog verf&uuml;gbar:");
 define("LangCSVObjectError4", "Folgende Daten sind nicht konform:");
-define("LangCSVObjectButton", "Import!");
+define("LangCSVObjectButton", "Importieren!");
 define("LangValidateCSVObjectMessage", "Import der CSV Datei erfolgreich!");
 
 // control/check_login.php
@@ -1043,15 +1041,15 @@ define("LangVisibility7", "Objekt sicher nicht zu sehen");
 // content/selected_observations.php
 
 define("LangSelectedObservationsTitle2", "&Uuml;bersicht der ausgew&auml;hlten Beobachtungen");
-define("LangSelectedObservationsTitle3", "Overview of last year's observations");
-define("LangSelectedObservationsSelectedLanguagesIndication", "selected languages");
-define("LangSelectedObservationsAllLanguagesIndication","all languages");
- 
+define("LangSelectedObservationsTitle3", "&Uuml;bersicht der Beobachtungen aus dem letzten Jahr");
+define("LangSelectedObservationsSelectedLanguagesIndication", "Ausgew&auml;hlte Sprachen");
+define("LangSelectedObservationsAllLanguagesIndication","Alle Sprachen");
+
 // lib/objects
-define("LangNewPlaceInList","Please enter the new position");
+define("LangNewPlaceInList","Bitte geben Sie die neue Position ein");
 
 // lib/observations
-define("LangObservationDeleted","The observation has been removed");
+define("LangObservationDeleted","Die Beobachtung wurde entfernt");
 
 // lib/util.php
 
@@ -1075,10 +1073,10 @@ define("LangPDFMessage15", "Beschreibung");
 define("LangPDFMessage16", "Positionswinkel");
 define("LangPDFMessage17", "Kontr. Res.");
 define("LangPDFMessage18", "Opt. Mag.");
-define("LangPDFMessage19", "Prepared for ");
-define("LangPDFMessage20", "with ");
-define("LangPDFMessage21", "at ");
-define("LangPDFMessage22", "Page ");
+define("LangPDFMessage19", "Vorbereitet f&uuml;r ");
+define("LangPDFMessage20", "mit ");
+define("LangPDFMessage21", "auf ");
+define("LangPDFMessage22", "Seite ");
 define("LangNumberOfRecords", "Ergebnisse");
 define("LangNumberOfRecords1","Ergebnis");
 define("LangPDFTitle3", "DeepskyLog Kometen Beobachtungen");
@@ -1103,16 +1101,16 @@ define("LangContrastVeryEasy", " ist sehr einfach zu sehen von  ");
 define("LangContrastPlace", " mit Ihrer ");
 
 //Cluster types
-$ClusterTypeA="Rich, poorly conc., diff. magnit., loose";
-$ClusterTypeB="poorly conc., diff. magnit., loose";
-$ClusterTypeC="Poor, poorly conc., diff. magnit., loose";
-$ClusterTypeD="Rich, concentrated, loose";
-$ClusterTypeE="Rich, poorly conc., same magnit., loose";
-$ClusterTypeF="Only same color or magnit., not loose";
-$ClusterTypeG="High magnif. compact cl., rich, weak";
-$ClusterTypeH="Very poor, not loose at all";
-$ClusterTypeI="High magnif. compact cl., poor, weak";
-$ClusterTypeX="No classification possible";
+$ClusterTypeA="Sternreich, verschiedene Helligkeiten, leicht konzentriert, Sterndichte h&ouml;her im Vergleich zur Umgebung";
+$ClusterTypeB="Verschiedene Helligkeiten, leicht konzentriert, Sterndichte h&ouml;her im Vergleich zur Umgebung";
+$ClusterTypeC="Sternarm, verschiedene Helligkeiten, leicht konzentriert, Sterndichte h&ouml;her im Vergleich zur Umgebung";
+$ClusterTypeD="Sternreich, deutliche Konzentration zur Mitte hin, sehr hohe Sterndichte";
+$ClusterTypeE="Sternreich, kaum konzentriert, Sterndichte h&ouml;her im Vergleich zur Umgebung, Sterne sind ann&auml;hernd gleichhell";
+$ClusterTypeF="Haufencharakter ergibt sich nur durch die gleiche Helligkeit oder gleiche Farbe der Sterne. Dichte entspricht etwa der Umgebungsdichte";
+$ClusterTypeG="Auch bei hoher Vergr&ouml;&szlig;erung sehr kompakter Haufen, viele schwache Sterne, Sterne stehen sehr dicht";
+$ClusterTypeH="Extrem wenig Sterne sind zu sehen. Dichte nur geringf&uuml;gig h&ouml;her. Zuordnung der Sterne zum Haufen kaum m&ouml;glich";
+$ClusterTypeI="Auch bei hoher Vergr&ouml;&szlig;erung sehr kompakter Haufen, nur sehr wenige, schwache Sterne sind zu sehen";
+$ClusterTypeX="Keine Bewertung m&ouml;glich";
 
 //Visibility
 $Visibility1="Sehr einfaches, auff&auml;lliges Objekt im Okular";
