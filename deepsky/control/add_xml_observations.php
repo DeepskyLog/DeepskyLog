@@ -80,7 +80,6 @@
       }
       
       // Get the type
-      //$targetInfoArray["type"] = 
       $type =  $target->getAttribute("xsi:type");
       
       if ($type == "fgca:deepSkyAS" || $type == "fgca:deepSkyDS") {
@@ -375,6 +374,57 @@
       $targetArray[$targetid] = $targetInfoArray;  
     }
 
+    $sites = $dom->getElementsByTagName( "sites" ); 
+    $site = $sites->item(0)->getElementsByTagName( "site" ); 
+    
+    $siteArray = Array();
+    
+    foreach( $site as $site )
+    {
+      $siteInfoArray = Array();
+      $siteid = $site->getAttribute("id");
+
+      $siteInfoArray["name"] = $site->getElementsByTagName( "name" )->item(0)->nodeValue;
+
+      // Get longitude and convert it to degrees
+      $unit = $site->getElementsByTagName( "longitude" )->item(0)->getAttribute("unit");
+      if ($unit == "deg") {
+        $longitude = $site->getElementsByTagName( "longitude" )->item(0)->nodeValue;
+      } else if ($unit == "rad") {
+        $longitude = Rad2Deg($site->getElementsByTagName( "longitude" )->item(0)->nodeValue);
+      } else if ($unit == "arcmin") {
+        $longitude = $site->getElementsByTagName( "longitude" )->item(0)->nodeValue / 60.0;
+      } else if ($unit == "arcsec") {
+        $longitude = $site->getElementsByTagName( "longitude" )->item(0)->nodeValue / 3600.0;
+      }
+      $siteInfoArray["longitude"] = $longitude;
+      
+      // Get latitude and convert it to degrees
+      $unit = $site->getElementsByTagName( "latitude" )->item(0)->getAttribute("unit");
+      if ($unit == "deg") {
+        $latitude = $site->getElementsByTagName( "latitude" )->item(0)->nodeValue;
+      } else if ($unit == "rad") {
+        $latitude = Rad2Deg($site->getElementsByTagName( "latitude" )->item(0)->nodeValue);
+      } else if ($unit == "arcmin") {
+        $latitude = $site->getElementsByTagName( "latitude" )->item(0)->nodeValue / 60.0;
+      } else if ($unit == "arcsec") {
+        $latitude = $site->getElementsByTagName( "latitude" )->item(0)->nodeValue / 3600.0;
+      }
+      $siteInfoArray["latitude"] = $latitude;
+
+      // Get the timezone
+      $timezone = $site->getElementsByTagName( "timezone" )->item(0)->nodeValue;
+      
+      if ($timezone == 0) {
+        $siteInfoArray["timezone"] = "UTC";
+      } else if ($timezone > 0) {
+        $siteInfoArray["timezone"] = "Etc/GMT+" . ($timezone / 60);
+      } else if ($timezone < 0) {
+        $siteInfoArray["timezone"] = "Etc/GMT" . ($timezone / 60);
+      }
+      
+      $siteArray[$siteid] = $siteInfoArray;  
+    }
     
     // Check if there are observations for the given observer
     $searchNode = $dom->getElementsByTagName( "observations" ); 
@@ -384,9 +434,10 @@
       $observerid = $observation->getElementsByTagName( "observer" )->item(0)->nodeValue;
       if ($observerid == $id) {
         // Check if the observation already exists in DeepskyLog (target and begin should tell this)
-        print "Date and time : " . $observation->getElementsByTagName( "begin" )->item(0)->nodeValue . "<br />";
-        print "Target : " . $targetArray[$observation->getElementsByTagName( "target" )->item(0)->nodeValue]["name"] . "<br />";
-        print "Site : " . $observation->getElementsByTagName( "site" )->item(0)->nodeValue . "<br />";
+        print "Date and time : " . $observation->getElementsByTagName( "begin" )->item(0)->nodeValue . ", ";
+        print "Target : " . $targetArray[$observation->getElementsByTagName( "target" )->item(0)->nodeValue]["name"] . ", ";
+        print "Site : " . $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue]["name"] . ", ";
+        print "Scope : " . $observation->getElementsByTagName( "scope" )->item(0)->nodeValue . "<br />";
       }
     }
     
