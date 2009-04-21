@@ -516,6 +516,27 @@
       $eyepieceArray[$eyepieceid] = $eyepieceInfoArray;  
     }
     
+    // LENSES
+    $lenses = $dom->getElementsByTagName( "lenses" ); 
+    $lens = $lenses->item(0)->getElementsByTagName( "lens" ); 
+    
+    $lensArray = Array();
+    
+    foreach( $lens as $lens )
+    {
+      $lensInfoArray = Array();
+      $lensid = $lens->getAttribute("id");
+
+      
+      $lensInfoArray["name"] = $lens->getElementsByTagName( "model" )->item(0)->nodeValue;
+      $lensInfoArray["factor"] = $lens->getElementsByTagName( "factor" )->item(0)->nodeValue;
+      
+      $lensArray[$lensid] = $lensInfoArray;  
+    }
+    
+    // FILTERS
+    
+    
     // Check if there are observations for the given observer
     $searchNode = $dom->getElementsByTagName( "observations" ); 
     $observation = $searchNode->item(0)->getElementsByTagName( "observation" ); 
@@ -529,7 +550,14 @@
         print "Site : " . $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue]["name"] . ", ";
         print "Scope : " . $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue]["name"] . ", ";
         // Eyepiece is not mandatory
-        print "Eyepiece : " . $eyepieceArray[$observation->getElementsByTagName( "eyepiece" )->item(0)->nodeValue]["name"] . "<br />";
+        if ($observation->getElementsByTagName( "eyepiece" )->item(0)) {
+          print "Eyepiece : " . $eyepieceArray[$observation->getElementsByTagName( "eyepiece" )->item(0)->nodeValue]["name"] . ", ";
+        }
+        // Lens is not mandatory
+        if ($observation->getElementsByTagName( "lens" )->item(0)) {
+          print "Lens : " . $lensArray[$observation->getElementsByTagName( "lens" )->item(0)->nodeValue]["name"] . ", ";
+        }
+        print "<br />";
       }
     }
     
