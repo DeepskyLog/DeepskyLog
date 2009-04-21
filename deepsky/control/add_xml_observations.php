@@ -467,7 +467,6 @@
 
       // Check if the focal length exists. If so, we are using a telescope, else a binocular
       if ($scope->getElementsByTagName( "focalLength" )->item(0)) {
-        // Get Dec and convert it to arcseconds
         $fl = $scope->getElementsByTagName( "focalLength" )->item(0)->nodeValue;
         $scopeInfoArray["fd"] = $fl / $scopeInfoArray["diameter"];
         $scopeInfoArray["fixedMagnification"] = 0;
@@ -477,6 +476,44 @@
       }  
       
       $scopeArray[$scopeid] = $scopeInfoArray;  
+    }
+
+    // EYEPIECES
+    $eyepieces = $dom->getElementsByTagName( "eyepieces" ); 
+    $eyepiece = $eyepieces->item(0)->getElementsByTagName( "eyepiece" ); 
+    
+    $eyepieceArray = Array();
+    
+    foreach( $eyepiece as $eyepiece )
+    {
+      $eyepieceInfoArray = Array();
+      $eyepieceid = $eyepiece->getAttribute("id");
+
+      
+      $eyepieceInfoArray["name"] = $eyepiece->getElementsByTagName( "model" )->item(0)->nodeValue;
+      $eyepieceInfoArray["focalLength"] = $eyepiece->getElementsByTagName( "focalLength" )->item(0)->nodeValue;
+      
+      // Check if the maximal focal length exists. If so, we are using a zoom eyepiece
+      if ($eyepiece->getElementsByTagName( "maxFocalLength" )->item(0)) {
+        $eyepieceInfoArray["maxFocalLength"] = $scope->getElementsByTagName( "maxFocalLength" )->item(0)->nodeValue;
+      } else {
+        $eyepieceInfoArray["maxFocalLength"] = -1;
+      }  
+      
+      // Get focal length and convert it to degrees
+      $unit = $eyepiece->getElementsByTagName( "apparentFOV" )->item(0)->getAttribute("unit");
+      if ($unit == "deg") {
+        $fov = $eyepiece->getElementsByTagName( "apparentFOV" )->item(0)->nodeValue;
+      } else if ($unit == "rad") {
+        $fov = Rad2Deg($eyepiece->getElementsByTagName( "apparentFOV" )->item(0)->nodeValue);
+      } else if ($unit == "arcmin") {
+        $fov = $eyepiece->getElementsByTagName( "apparentFOV" )->item(0)->nodeValue / 60.0;
+      } else if ($unit == "arcsec") {
+        $fov = $eyepiece->getElementsByTagName( "apparentFOV" )->item(0)->nodeValue / 3600.0;
+      }
+      $eyepieceInfoArray["apparentFOV"] = $fov;
+      
+      $eyepieceArray[$eyepieceid] = $eyepieceInfoArray;  
     }
     
     // Check if there are observations for the given observer
@@ -490,7 +527,9 @@
         print "Date and time : " . $observation->getElementsByTagName( "begin" )->item(0)->nodeValue . ", ";
         print "Target : " . $targetArray[$observation->getElementsByTagName( "target" )->item(0)->nodeValue]["name"] . ", ";
         print "Site : " . $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue]["name"] . ", ";
-        print "Scope : " . $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue]["name"] . "<br />";
+        print "Scope : " . $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue]["name"] . ", ";
+        // Eyepiece is not mandatory
+        print "Eyepiece : " . $eyepieceArray[$observation->getElementsByTagName( "eyepiece" )->item(0)->nodeValue]["name"] . "<br />";
       }
     }
     
