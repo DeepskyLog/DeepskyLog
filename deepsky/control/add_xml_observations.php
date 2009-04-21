@@ -374,6 +374,7 @@
       $targetArray[$targetid] = $targetInfoArray;  
     }
 
+    // SITES
     $sites = $dom->getElementsByTagName( "sites" ); 
     $site = $sites->item(0)->getElementsByTagName( "site" ); 
     
@@ -426,6 +427,58 @@
       $siteArray[$siteid] = $siteInfoArray;  
     }
     
+    // SCOPES
+    $scopes = $dom->getElementsByTagName( "scopes" ); 
+    $scope = $scopes->item(0)->getElementsByTagName( "scope" ); 
+    
+    $scopeArray = Array();
+    
+    foreach( $scope as $scope )
+    {
+      $scopeInfoArray = Array();
+      $scopeid = $scope->getAttribute("id");
+
+      $scopeInfoArray["name"] = $scope->getElementsByTagName( "model" )->item(0)->nodeValue;
+      $scopeInfoArray["diameter"] = $scope->getElementsByTagName( "aperture" )->item(0)->nodeValue;
+      
+      $tp =  $scope->getAttribute("xsi:type");
+      
+      $type = $scope->getElementsByTagName( "type" )->item(0)->nodeValue;
+      if ($type == "A" || $type == "Naked Eye") {
+        $typeToSave = InstrumentNakedEye;
+      } else if ($type == "B" || $type == "Binoculars") {
+        $typeToSave = InstrumentBinoculars;
+      } else if ($type == "R" || $type == "Refractor") {
+        $typeToSave = InstrumentRefractor;
+      } else if ($type == "N" || $type == "Newton") {
+        $typeToSave = InstrumentReflector;
+      } else if ($type == "C" || $type == "Cassegrain") {
+        $typeToSave = InstrumentCassegrain;
+      } else if ($type == "K" || $type == "Kutter") {
+        $typeToSave = InstrumentKutter;
+      } else if ($type == "M" || $type == "Maksutov") {
+        $typeToSave = InstrumentMaksutov;
+      } else if ($type == "S" || $type == "Schmidt-Cassegrain") {
+        $typeToSave = InstrumentSchmidtCassegrain;
+      } else {
+        $typeToSave = InstrumentOther;
+      }
+      $scopeInfoArray["type"] = $typeToSave;
+
+      // Check if the focal length exists. If so, we are using a telescope, else a binocular
+      if ($scope->getElementsByTagName( "focalLength" )->item(0)) {
+        // Get Dec and convert it to arcseconds
+        $fl = $scope->getElementsByTagName( "focalLength" )->item(0)->nodeValue;
+        $scopeInfoArray["fd"] = $fl / $scopeInfoArray["diameter"];
+        $scopeInfoArray["fixedMagnification"] = 0;
+      } else {
+        $scopeInfoArray["fd"] = 0;
+        $scopeInfoArray["fixedMagnification"] = $scope->getElementsByTagName( "magnification" )->item(0)->nodeValue;
+      }  
+      
+      $scopeArray[$scopeid] = $scopeInfoArray;  
+    }
+    
     // Check if there are observations for the given observer
     $searchNode = $dom->getElementsByTagName( "observations" ); 
     $observation = $searchNode->item(0)->getElementsByTagName( "observation" ); 
@@ -437,7 +490,7 @@
         print "Date and time : " . $observation->getElementsByTagName( "begin" )->item(0)->nodeValue . ", ";
         print "Target : " . $targetArray[$observation->getElementsByTagName( "target" )->item(0)->nodeValue]["name"] . ", ";
         print "Site : " . $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue]["name"] . ", ";
-        print "Scope : " . $observation->getElementsByTagName( "scope" )->item(0)->nodeValue . "<br />";
+        print "Scope : " . $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue]["name"] . "<br />";
       }
     }
     
