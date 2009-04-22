@@ -42,6 +42,7 @@ define("LangWelcome1","&nbsp;Modul&nbsp;");
 define("LangWelcome2","Sie&nbsp;sind&nbsp;angemeldet&nbsp;als&nbsp;");
 define("LangWelcome3","Sie&nbsp;sind&nbsp;nicht&nbsp;angemeldet&nbsp;");
 define("LangWelcome4","Module: ");
+define("LangManage","Verwalten...");
 define("LangManageDots","Verwalten...");
 
 define("LangAccountSubscribed1","Ihr DeepskyLog Benutzer wurde angelegt.<p>");
