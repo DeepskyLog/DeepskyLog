@@ -182,7 +182,7 @@ else
       $errormessage = $errormessage .  "</ul>";
     }
     
-    set SESSION variable with error observations
+    // set SESSION variable with error observations
     
     $messageLines[] = "<h2>".LangCSVError0."</h2>"."<p />".LangCSVError0."<p />".$errormessage."<p />".LangCSVError10."href to error list of observations"."<p />".LangCSVMessage4;
     $_GET['indexAction']='message';

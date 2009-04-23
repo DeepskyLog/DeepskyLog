@@ -649,6 +649,153 @@
         if ($observation->getElementsByTagName( "filter" )->item(0)) {
           print "Filter : " . $filterArray[$observation->getElementsByTagName( "filter" )->item(0)->nodeValue]["name"] . ", ";
         }
+        // Limiting magnitude is not mandatory
+        if ($observation->getElementsByTagName( "faintestStar" )->item(0)) {
+          print "Limiting magnitude : " . $observation->getElementsByTagName( "faintestStar" )->item(0)->nodeValue . ", ";
+        }
+        // Seeing is not mandatory
+        if ($observation->getElementsByTagName( "seeing" )->item(0)) {
+          print "Seeing : " . $observation->getElementsByTagName( "seeing" )->item(0)->nodeValue . ", ";
+        }
+        // Magnification is not mandatory
+        if ($observation->getElementsByTagName( "magnification" )->item(0)) {
+          print "Magnification : " . $observation->getElementsByTagName( "magnification" )->item(0)->nodeValue . ", ";
+        }
+        // Sqm is not mandatory
+        if ($observation->getElementsByTagName( "sqm" )->item(0)) {
+          print "SQM : " . $observation->getElementsByTagName( "sqm" )->item(0)->nodeValue . ", ";
+        }
+        
+        // The result of the observation!
+        $resultNode = $observation->getElementsByTagName( "result" )->item(0);
+        // Language is not mandatory
+        if ($resultNode->hasAttribute("lang")) {
+          print "Language : " . $resultNode->getAttribute("lang") . ", ";
+        }
+        // colorContrasts is not mandatory
+        if ($resultNode->hasAttribute("colorContrasts")) {
+          if ($resultNode->getAttribute("colorContrasts") == "true") {
+            $colorContrast = 1;
+          } else {
+            $colorContrast = 0;
+          }
+        } else {
+          $colorContrast = -1;
+        }
+        print "Color Contrasts : " . $colorContrast . ", ";
+
+        // extended is not mandatory
+        if ($resultNode->hasAttribute("extended")) {
+          if ($resultNode->getAttribute("extended") == "true") {
+            $extended = 1;
+          } else {
+            $extended = 0;
+          }
+        } else {
+          $extended = -1;
+        }
+        print "Extended : " . $extended . ", ";
+        
+        // mottled is not mandatory
+        if ($resultNode->hasAttribute("mottled")) {
+          if ($resultNode->getAttribute("mottled") == "true") {
+            $mottled = 1;
+          } else {
+            $mottled = 0;
+          }
+        } else {
+          $mottled = -1;
+        }
+        print "Mottled : " . $mottled . ", ";
+        
+        // resolved is not mandatory
+        if ($resultNode->hasAttribute("resolved")) {
+          if ($resultNode->getAttribute("resolved") == "true") {
+            $resolved = 1;
+          } else {
+            $resolved = 0;
+          }
+        } else {
+          $resolved = -1;
+        }
+        print "Resolved : " . $resolved . ", ";
+        
+        // stellar is not mandatory
+        if ($resultNode->hasAttribute("stellar")) {
+          if ($resultNode->getAttribute("stellar") == "true") {
+            $stellar = 1;
+          } else {
+            $stellar = 0;
+          }
+        } else {
+          $stellar = -1;
+        }
+        print "Stellar : " . $stellar . ", ";
+
+        // unusualShape is not mandatory
+        if ($resultNode->hasAttribute("unusualShape")) {
+          if ($resultNode->getAttribute("unusualShape") == "true") {
+            $unusualShape = 1;
+          } else {
+            $unusualShape = 0;
+          }
+        } else {
+          $unusualShape = -1;
+        }
+        print "Unusual Shape : " . $unusualShape . ", ";
+
+        // partlyUnresolved is not mandatory
+        if ($resultNode->hasAttribute("partlyUnresolved")) {
+          if ($resultNode->getAttribute("partlyUnresolved") == "true") {
+            $partlyUnresolved = 1;
+          } else {
+            $partlyUnresolved = 0;
+          }
+        } else {
+          $partlyUnresolved = -1;
+        }
+        print "Partly Unresolved : " . $partlyUnresolved . ", ";
+
+        // Character is not mandatory
+        if ($resultNode->getElementsByTagName( "character" )->item(0)) {
+          print  "Character : " . $resultNode->getElementsByTagName( "character" )->item(0)->nodeValue . ", ";
+        }
+        // Rating is not mandatory
+        if ($resultNode->getElementsByTagName( "rating" )->item(0)) {
+          print  "Rating : " . $resultNode->getElementsByTagName( "rating" )->item(0)->nodeValue . ", ";
+        }
+        // smallDiameter is not mandatory
+        if ($resultNode->getElementsByTagName( "smallDiameter" )->item(0)) {
+          $unit = $resultNode->getElementsByTagName( "smallDiameter" )->item(0)->getAttribute("unit");
+          if ($unit == "deg") {
+            $smallDiameter = $resultNode->getElementsByTagName( "smallDiameter" )->item(0)->nodeValue * 3600.0;
+          } else if ($unit == "rad") {
+            $smallDiameter = Rad2Deg($resultNode->getElementsByTagName( "smallDiameter" )->item(0)->nodeValue) * 3600.0;
+          } else if ($unit == "arcmin") {
+            $smallDiameter = $resultNode->getElementsByTagName( "smallDiameter" )->item(0)->nodeValue * 60.0;
+          } else if ($unit == "arcsec") {
+            $smallDiameter = $resultNode->getElementsByTagName( "smallDiameter" )->item(0)->nodeValue;
+          }
+          print  "Small Diameter : " . $smallDiameter . ", ";
+        }
+        // largeDiameter is not mandatory
+        if ($resultNode->getElementsByTagName( "largeDiameter" )->item(0)) {
+          $unit = $resultNode->getElementsByTagName( "largeDiameter" )->item(0)->getAttribute("unit");
+          if ($unit == "deg") {
+            $largeDiameter = $resultNode->getElementsByTagName( "largeDiameter" )->item(0)->nodeValue * 3600.0;
+          } else if ($unit == "rad") {
+            $largeDiameter = Rad2Deg($resultNode->getElementsByTagName( "largeDiameter" )->item(0)->nodeValue) * 3600.0;
+          } else if ($unit == "arcmin") {
+            $largeDiameter = $resultNode->getElementsByTagName( "largeDiameter" )->item(0)->nodeValue * 60.0;
+          } else if ($unit == "arcsec") {
+            $largeDiameter = $resultNode->getElementsByTagName( "largeDiameter" )->item(0)->nodeValue;
+          }
+          print  "Large Diameter : " . $largeDiameter . ", ";
+        }
+        // Description is not mandatory
+        if ($resultNode->getElementsByTagName( "description" )->item(0)) {
+          print  "Description : " . $resultNode->getElementsByTagName( "description" )->item(0)->nodeValue;
+        } 
         print "<br />";
       }
     }
@@ -658,163 +805,4 @@
   }
   
 exit;
-
-// Duplicated code from add_csv_observations
-for($i=0;$i<count($data_array);$i++ ) 
-  $parts_array[$i]=explode(";",$data_array[$i]); 
-for ( $i = 1; $i < count($parts_array); $i++)
-{ $objects[$i] = $parts_array[$i][0];
-  $locations[$i] = $parts_array[$i][4];
-  $instruments[$i] = $parts_array[$i][5];
-  $filters[$i] = $parts_array[$i][7];
-  $eyepieces[$i] = $parts_array[$i][6];
-  $lenses[$i] = $parts_array[$i][8];
-}
-//$objects = array_unique($objects);
-// JV 20060224 add check to see if $objects contains data or not
-// -> show error page
-if(!is_array($objects))
- throw new Exception(LangInvalidCSVfile);
-else
-{ $objects = array_values($objects);
-  $locations = array_unique($locations);
-  $locations = array_values($locations);
-  $instruments = array_unique($instruments);
-  $instruments = array_values($instruments);
-  $filters = array_unique($filters);
-  $filters = array_values($filters);
-  $eyepieces = array_unique($eyepieces);
-  $eyepieces = array_values($eyepieces);
-  $lenses = array_unique($lenses);
-  $lenses = array_values($lenses);
-	$objectsMissing = array();
-	$locationsMissing = array();
-	$instrumentsMissing = array();
-	$filtersMissing = array();
-  $eyepiecesMissing = array();
-  $lensesMissing = array();
-  // Test if the objects, locations and instruments are available in the database
-  for($i=0,$j=0;$i<count($objects);$i++)
-  { $objectsquery=$objObject->getExactDSObject($objects[$i]);
-    if(!$objectsquery)
-      $objectsMissing[$j++]=$objects[$i];
-    else
-      $correctedObjects[]=$objectsquery;
-  }
-	// Check for existence of locations
-  for($i= 0,$j=0,$temploc='';$i<count($locations);$i++)
-    if((!$locations[$i])||($temploc!=$locations[$i])&&($objLocation->getLocationId($locations[$i],$_SESSION['deepskylog_id'])==-1))
-	    $locationsMissing[$j++]=$locations[$i];
-		else
-		  $temploc=$locations[$i];
-  // Check for existence of instruments
-  for($i=0,$j=0,$tempinst='';$i<count($instruments);$i++)
-    if((!$instruments[$i])||($objInstrument->getInstrumentId($instruments[$i],$_SESSION['deepskylog_id'])==-1))
-      $instrumentsMissing[$j++]=$instruments[$i];
-		else
-		  $tempinst=$instruments[$i];
-  // Check for the existence of the eyepieces
-  for($i=0,$j=0;$i<count($eyepieces);$i++)
-    if($eyepieces[$i]&&(!($objEyepiece->getEyepieceObserverPropertyFromName($eyepieces[$i],$loggedUser,'id'))))
-      $eyepiecesMissing[$j++]=$eyepieces[$i];
-  // Check for the existence of the filters
-  for($i=0,$j=0;$i<count($filters);$i++)
-    if($filters[$i]&&(!($objFilter->getFilterObserverPropertyFromName($filters[$i], $_SESSION['deepskylog_id'],'id'))))
-      $filtersMissing[$j++]=$filters[$i];
-  // Check for the existence of the eyepieces
-  for($i=0,$j=0;$i<count($lenses);$i++)
-    if($lenses[$i]&&($objLens->getLensId($lenses[$i],$_SESSION['deepskylog_id'])==-1))
-      $lensesMissing[$j++] = $lenses[$i];
-// error catching
-  if((count($objectsMissing)>0)||(count($locationsMissing)>0)||(count($instrumentsMissing)>0)||(count($eyepiecesMissing)>0)||(count($filtersMissing)>0)||(count($lensesMissing)>0))
-  { $errormessage=LangCSVError1 . "<br />\n";
-    if(count($objectsMissing)>0)
-    { $errormessage = $errormessage . "<ul>";
-      $errormessage = $errormessage .  "<li>".LangCSVError2." : ";
-      $errormessage = $errormessage .  "<ul>";
-      for ( $i = 0;$i < count($objectsMissing);$i++ )
-        $errormessage = $errormessage . "<li>".$objectsMissing[$i]."</li>";
-      $errormessage = $errormessage .  "</ul>";
-      $errormessage = $errormessage .  "</li>\n";
-      $errormessage = $errormessage .  "</ul>";
-    }
-    if(count($locationsMissing)>0)
-    { $errormessage = $errormessage . "<ul>";
-      $errormessage = $errormessage .  "<li>".LangCSVError3." : ";
-      $errormessage = $errormessage . "<ul>";
-      for ( $i = 0;$i < count($locationsMissing);$i++ )
-        $errormessage = $errormessage . "<li>".$locationsMissing[$i]."</li>";
-      $errormessage = $errormessage . "</ul>";
-      $errormessage = $errormessage .  "</li>\n";
-      $errormessage = $errormessage .  "</ul>";
-    }
-    if(count($instrumentsMissing)>0)
-    { $errormessage = $errormessage . "<ul>";
-      $errormessage = $errormessage . "<li>".LangCSVError4." : ";
-      $errormessage = $errormessage . "<ul>";
-      for ( $i = 0;$i < count($instrumentsMissing);$i++ )
-        $errormessage = $errormessage . "<li>".$instrumentsMissing[$i]."</li>";
-      $errormessage = $errormessage . "</ul>";
-      $errormessage = $errormessage . "</li>\n";
-      $errormessage = $errormessage . "</ul>";
-    }
-    if(count($filtersMissing)>0)
-    { $errormessage = $errormessage . "<ul>";
-      $errormessage = $errormessage .  "<li>".LangCSVError5." : ";
-      $errormessage = $errormessage . "<ul>";
-      for ( $i = 0;$i < count($filtersMissing);$i++ )
-        $errormessage = $errormessage . "<li>".$filtersMissing[$i]."</li>";
-      $errormessage = $errormessage . "</ul>";
-      $errormessage = $errormessage .  "</li>\n";
-      $errormessage = $errormessage .  "</ul>";
-    }
-    if (count($eyepiecesMissing) > 0)
-    { $errormessage = $errormessage . "<ul>";
-      $errormessage = $errormessage .  "<li>".LangCSVError6." : ";
-      $errormessage = $errormessage . "<ul>";
-      for ( $i = 0;$i < count($eyepiecesMissing);$i++ )
-        $errormessage = $errormessage . "<li>".$eyepiecesMissing[$i]."</li>";
-      $errormessage = $errormessage . "</ul>";
-      $errormessage = $errormessage .  "</li>\n";
-      $errormessage = $errormessage .  "</ul>";
-    }
-    if (count($lensesMissing) > 0)
-    { $errormessage = $errormessage . "<ul>";
-      $errormessage = $errormessage .  "<li>".LangCSVError7." : ";
-      $errormessage = $errormessage . "<ul>";
-      for ( $i = 0;$i < count($lensesMissing);$i++ )
-        $errormessage = $errormessage . "<li>".$lensesMissing[$i]."</li>";
-      $errormessage = $errormessage . "</ul>";
-      $errormessage = $errormessage .  "</li>\n";
-      $errormessage = $errormessage .  "</ul>";
-    }
-    throw new Exception($errormessage);
-  }
-  else
-  { $username=$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'firstname'). " ".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'name');
-    for($i=1;$i<count($parts_array);$i++)
-    { $observername = $objObserver->getObserverProperty($parts_array[$i][1],'firstname'). " ".$objObserver->getObserverProperty($parts_array[$i][1],'name');
-      if($parts_array[$i][1]==$username)
-      { $instrum = $objInstrument->getInstrumentId($parts_array[$i][5], $_SESSION['deepskylog_id']);
-        $locat = $objLocation->getLocationId($parts_array[$i][4], $_SESSION['deepskylog_id']);
-        $dates = sscanf($parts_array[$i][2], "%2d%c%2d%c%4d");
-        $date = sprintf("%04d%02d%02d", $dates[4], $dates[2], $dates[0]);
-        $times = sscanf($parts_array[$i][3], "%2d%c%2d");
-        $time = sprintf("%02d%02d", $times[0], $times[2]);
-        if ($parts_array[$i][11] == "")
-          $parts_array[$i][11] = "0";
-        $obsid=$objObservation->addDSObservation($correctedObjects[$i-1],$_SESSION['deepskylog_id'],$instrum,$locat,$date,$time,htmlentities($parts_array[$i][13]),$parts_array[$i][9],$parts_array[$i][10],$parts_array[$i][11],$parts_array[$i][12]);
-				if ($parts_array[$i][6] != "")
-				  $objObservation->setDsObservationProperty($obsid,'eyepieceid', $objEyepiece->getEyepieceObserverPropertyFromName($parts_array[$i][6], $_SESSION['deepskylog_id'],'id'));
-				if ($parts_array[$i][7] != "")
-					$objObservation->setDsObservationProperty($obsid,'filterid', $objFilter->getFilterObserverPropertyFromName($parts_array[$i][7], $_SESSION['deepskylog_id'],'id'));
-				if ($parts_array[$i][8] != "")
-					$objObservation->setDsObservationProperty($obsid,'lensid', $objLens->getLensId($parts_array[$i][8], $_SESSION['deepskylog_id']));
-      }
-      unset($_SESSION['QobsParams']);
-    }
-    // upload successful
-    $_GET['indexAction']='default_action';
-  }
-}
 ?>
