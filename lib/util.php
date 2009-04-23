@@ -906,7 +906,6 @@ class Utils implements iUtils
   }  
   public  function csvObservations($result)  // Creates a csv file from an array of observations
   { global $objLens, $objFilter, $objEyepiece, $objLocation,$objPresentations,$objObservation,$objObserver, $objInstrument;
-    echo LangCSVMessage3."\n";
     while(list($key,$value)=each($result))
     { $obs=$objObservation->getAllInfoDsObservation($value['observationid']);
       $date=sscanf($obs['date'], "%4d%2d%2d");

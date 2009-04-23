@@ -1,12 +1,11 @@
-<?php
-// add_csv_observations.php
-// adds observations from a csv file to the database
+<?php // add_csv_observations.php - adds observations from a csv file to the database
+$_GET['indexAction']='default_action';
 if($_FILES['csv']['tmp_name']!="")
   $csvfile=$_FILES['csv']['tmp_name'];
 $data_array=file($csvfile); 
 for($i=0;$i<count($data_array);$i++ ) 
   $parts_array[$i]=explode(";",$data_array[$i]); 
-for($i=1;$i<count($parts_array);$i++)
+for($i=0;$i<count($parts_array);$i++)
 { $objects[$i] = htmlentities($parts_array[$i][0]);
   $dates[$i] = $parts_array[$i][2];
   $locations[$i] = htmlentities($parts_array[$i][4]);
@@ -36,54 +35,71 @@ else
   $dates = array_values($dates);
   $noDates=array();
   $wrongDates=array();
-	$objectsMissing = array();
+  $objectsMissing = array();
 	$locationsMissing = array();
 	$instrumentsMissing = array();
 	$filtersMissing = array();
   $eyepiecesMissing = array();
   $lensesMissing = array();
+  $errorlist=array();
   // Test if the objects, locations and instruments are available in the database
   for($i=0,$j=0;$i<count($objects);$i++)
   { $objectsquery=$objObject->getExactDSObject($objects[$i]);
     if(!$objectsquery)
-      $objectsMissing[$j++]=$objects[$i];
+    { $objectsMissing[$j++]=$objects[$i];
+      $errorlist[]=$i;
+    }
     else
       $correctedObjects[]=$objectsquery;
   }
 	// Check for existence of locations
   for($i= 0,$j=0,$temploc='';$i<count($locations);$i++)
-    if((!$locations[$i])||($temploc!=$locations[$i])&&($objLocation->getLocationId($locations[$i],$_SESSION['deepskylog_id'])==-1))
-	    $locationsMissing[$j++]=$locations[$i];
-		else
+    if((!$locations[$i])||($temploc!=$locations[$i])&&($objLocation->getLocationId($locations[$i],$loggedUser)==-1))
+    { $locationsMissing[$j++]=$locations[$i];
+      $errorlist[]=$i;
+    }
+	  else
 		  $temploc=$locations[$i];
   // Check for existence of instruments
   for($i=0,$j=0,$tempinst='';$i<count($instruments);$i++)
-    if((!$instruments[$i])||($objInstrument->getInstrumentId($instruments[$i],$_SESSION['deepskylog_id'])==-1))
-      $instrumentsMissing[$j++]=$instruments[$i];
-		else
+    if((!$instruments[$i])||($objInstrument->getInstrumentId($instruments[$i],$loggedUser)==-1))
+    { $instrumentsMissing[$j++]=$instruments[$i];
+		  $errorlist[]=$i;
+    }
+    else
 		  $tempinst=$instruments[$i];
   // Check for the existence of the eyepieces
   for($i=0,$j=0;$i<count($eyepieces);$i++)
     if($eyepieces[$i]&&(!($objEyepiece->getEyepieceObserverPropertyFromName($eyepieces[$i],$loggedUser,'id'))))
-      $eyepiecesMissing[$j++]=$eyepieces[$i];
-  // Check for the existence of the filters
+    { $eyepiecesMissing[$j++]=$eyepieces[$i];
+      $errorlist[]=$i;
+    }
+      // Check for the existence of the filters
   for($i=0,$j=0;$i<count($filters);$i++)
-    if($filters[$i]&&(!($objFilter->getFilterObserverPropertyFromName($filters[$i], $_SESSION['deepskylog_id'],'id'))))
-      $filtersMissing[$j++]=$filters[$i];
-  // Check for the existence of the lenses
+    if($filters[$i]&&(!($objFilter->getFilterObserverPropertyFromName($filters[$i], $loggedUser,'id'))))
+    { $filtersMissing[$j++]=$filters[$i];
+      $errorlist[]=$i;
+    }
+      // Check for the existence of the lenses
   for($i=0,$j=0;$i<count($lenses);$i++)
-    if($lenses[$i]&&(!($objLens->getLensObserverPropertyFromName($lenses[$i],$_SESSION['deepskylog_id'],'id'))))
-      $lensesMissing[$j++] = $lenses[$i];
-  // Check for the correctness of dates
+    if($lenses[$i]&&(!($objLens->getLensObserverPropertyFromName($lenses[$i],$loggedUser,'id'))))
+    { $lensesMissing[$j++] = $lenses[$i];
+      $errorlist[]=$i;
+    }
+      // Check for the correctness of dates
   for($i=0,$j=0,$k=0;$i<count($dates);$i++)
   { $datepart=sscanf($dates[$i],"%2d%c%2d%c%4d");
     if((!is_numeric($datepart[0]))||(!is_numeric($datepart[2]))||(!is_numeric($datepart[4]))||(!checkdate($datepart[2],$datepart[0],$datepart[4])))
-      $noDates[$j++]=$dates[$i]; 
+    { $noDates[$j++]=$dates[$i]; 
+      $errorlist[]=$i;
+    }
     elseif((sprintf("%04d",$datepart[4]).sprintf("%02d",$datepart[2]).sprintf("%02d",$datepart[0]))>date('Ymd')) 
-  	  $wrongDates[$k++]=$dates[$i];
+    { $wrongDates[$k++]=$dates[$i];
+      $errorlist[]=$i;
+    }
   }
   // error catching
-  if((count($objectsMissing)>0)||(count($locationsMissing)>0)||(count($instrumentsMissing)>0)||(count($eyepiecesMissing)>0)||(count($filtersMissing)>0)||(count($lensesMissing)>0)||(count($wrongDates)>0)||(count($noDates)>0))
+  if(count($errorlist)>0)
   { $errormessage=LangCSVError1 . "<br />\n";
     if(count($noDates)>0)
     { $errormessage = $errormessage . "<ul>";
@@ -165,12 +181,15 @@ else
       $errormessage = $errormessage .  "</li>\n";
       $errormessage = $errormessage .  "</ul>";
     }
-    $messageLines[] = "<h2>".LangCSVError7."</h2>"."<p />".$errormessage."<p />".LangCSVError10;
+    
+    set SESSION variable with error observations
+    
+    $messageLines[] = "<h2>".LangCSVError0."</h2>"."<p />".LangCSVError0."<p />".$errormessage."<p />".LangCSVError10."href to error list of observations"."<p />".LangCSVMessage4;
     $_GET['indexAction']='message';
   }
-  else
-  { $username=$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'firstname'). " ".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'name');
-    for($i=1;$i<count($parts_array);$i++)
+  $username=$objObserver->getObserverProperty($loggedUser,'firstname'). " ".$objObserver->getObserverProperty($loggedUser,'name');
+  for($i=0;$i<count($parts_array);$i++)
+  { if(!(in_array($i,$errorlist)))
     { $observername = $objObserver->getObserverProperty(htmlentities($parts_array[$i][1]),'firstname'). " ".$objObserver->getObserverProperty(htmlentities($parts_array[$i][1]),'name');
       if($parts_array[$i][1]==$username)
       { $instrum = $objInstrument->getInstrumentId(htmlentities($parts_array[$i][5]), $_SESSION['deepskylog_id']);
@@ -191,8 +210,6 @@ else
       }
       unset($_SESSION['QobsParams']);
     }
-    // upload successful
-    $_GET['indexAction']='default_action';
   }
 }
 ?>
