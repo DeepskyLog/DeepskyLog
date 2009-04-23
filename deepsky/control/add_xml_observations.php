@@ -535,7 +535,95 @@
     }
     
     // FILTERS
+    $filters = $dom->getElementsByTagName( "filters" ); 
+    $filter = $filters->item(0)->getElementsByTagName( "filter" ); 
     
+    $filterArray = Array();
+    
+    foreach( $filter as $filter )
+    {
+      $filterInfoArray = Array();
+      $filterid = $filter->getAttribute("id");
+
+      $filterInfoArray["name"] = $filter->getElementsByTagName( "model" )->item(0)->nodeValue;
+      $type = $filter->getElementsByTagName( "type" )->item(0)->nodeValue;
+      
+      if ($type == "other") {
+        $typeInfo = 0;
+      } else if ($type == "broad band") {
+        $typeInfo = 1;
+      } else if ($type == "narrow band") {
+        $typeInfo = 2;
+      } else if ($type == "O-III") {
+        $typeInfo = 3;
+      } else if ($type == "H-beta") {
+        $typeInfo = 4;
+      } else if ($type == "H-alpha") {
+        $typeInfo = 5;
+      } else if ($type == "color") {
+        $typeInfo = 6;
+      } else if ($type == "neutral") {
+        $typeInfo = 7;
+      } else if ($type == "corrective") {
+        $typeInfo = 8;
+      }
+
+      $filterInfoArray["type"] = $typeInfo;
+      
+      if ($filter->getElementsByTagName( "wratten" )->item(0)) {
+        $filterInfoArray["wratten"] = $filter->getElementsByTagName( "wratten" )->item(0)->nodeValue;
+      } else {
+        $filterInfoArray["wratten"] = "";
+      }
+      
+      if ($filter->getElementsByTagName( "schott" )->item(0)) {
+        $filterInfoArray["schott"] = $filter->getElementsByTagName( "schott" )->item(0)->nodeValue;
+      } else {
+        $filterInfoArray["schott"] = "";
+      }
+
+      if ($filter->getElementsByTagName( "color" )->item(0)) {
+        $color = $filter->getElementsByTagName( "color" )->item(0)->nodeValue;
+        
+        if ($color == "light red") {
+          $filterInfoArray["color"] = 1;
+        } else if ($color == "red") {
+          $filterInfoArray["color"] = 2;
+        } else if ($color == "deep red") {
+          $filterInfoArray["color"] = 3;
+        } else if ($color == "orange") {
+          $filterInfoArray["color"] = 4;
+        } else if ($color == "light yellow") {
+          $filterInfoArray["color"] = 5;
+        } else if ($color == "deep yellow") {
+          $filterInfoArray["color"] = 6;
+        } else if ($color == "yellow") {
+          $filterInfoArray["color"] = 7;
+        } else if ($color == "yellow-green") {
+          $filterInfoArray["color"] = 8;
+        } else if ($color == "light green") {
+          $filterInfoArray["color"] = 9;
+        } else if ($color == "green") {
+          $filterInfoArray["color"] = 10;
+        } else if ($color == "medium blue") {
+          $filterInfoArray["color"] = 11;
+        } else if ($color == "pale blue") {
+          $filterInfoArray["color"] = 12;
+        } else if ($color == "blue") {
+          $filterInfoArray["color"] = 13;
+        } else if ($color == "deep blue") {
+          $filterInfoArray["color"] = 14;
+        } else if ($color == "voilet") {
+          $filterInfoArray["color"] = 15;
+        } else {
+          $filterInfoArray["color"] = 0;
+        }
+      } else {
+        $filterInfoArray["color"] = 0;
+      }
+      
+      $filterArray[$filterid] = $filterInfoArray;  
+    }
     
     // Check if there are observations for the given observer
     $searchNode = $dom->getElementsByTagName( "observations" ); 
@@ -556,6 +644,10 @@
         // Lens is not mandatory
         if ($observation->getElementsByTagName( "lens" )->item(0)) {
           print "Lens : " . $lensArray[$observation->getElementsByTagName( "lens" )->item(0)->nodeValue]["name"] . ", ";
+        }
+        // Filter is not mandatory
+        if ($observation->getElementsByTagName( "filter" )->item(0)) {
+          print "Filter : " . $filterArray[$observation->getElementsByTagName( "filter" )->item(0)->nodeValue]["name"] . ", ";
         }
         print "<br />";
       }
