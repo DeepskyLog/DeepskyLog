@@ -49,7 +49,7 @@ class Instruments implements iInstruments
     return    $tempTypeList;
   }
   public  function getInstrumentId($name, $observer)                                              // returns the id for this instrument
-  { global $objDatabase; return $objDatabase->selectSingleValue("SELECT id FROM instruments where name=\"".htmlentities($name)."\" and observer=\"".$observer."\"",'id',-1);
+  { global $objDatabase; return $objDatabase->selectSingleValue("SELECT id FROM instruments where name=\"".htmlentities($name,ENT_COMPAT,"ISO-8859-15",0)."\" and observer=\"".$observer."\"",'id',-1);
   }
   public  function getInstrumentPropertyFromId($id,$property,$defaultValue='')
   { global $objDatabase; return $objDatabase->selectSingleValue("SELECT ".$property." FROM instruments WHERE id = \"".$id."\"",$property,$defaultValue);

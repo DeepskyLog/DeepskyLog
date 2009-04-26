@@ -23,7 +23,7 @@ try
   include 'common/entryexit/menu.php';
   echo    "</div>";
   echo    "<div id=\"div6\">";	
-  echo    $copyrightInfo.$vvsInfo.$dslInfo.$versionInfo.$objectInfo;                      // defined in databaseInfo.php
+  echo    $copyrightInfo.$vvsInfo.$dslInfo.$versionInfo.$objectInfo;                                      // defined in databaseInfo.php
   echo    "</div>";
   echo    "<div id=\"div5\">";                                                                            // div 5 = page contents
   $includeFile=$objUtil->utilitiesDispatchIndexAction();                                                  // Determine the page to show

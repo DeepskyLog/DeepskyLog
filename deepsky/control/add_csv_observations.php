@@ -14,9 +14,6 @@ for($i=0;$i<count($parts_array);$i++)
   $eyepieces[$i] = htmlentities($parts_array[$i][6]);
   $lenses[$i] = htmlentities($parts_array[$i][8]);
 }
-//$objects = array_unique($objects);
-// JV 20060224 add check to see if $objects contains data or not
-// -> show error page
 if(!is_array($objects))
  throw new Exception(LangInvalidCSVfile);
 else
@@ -44,58 +41,58 @@ else
   $errorlist=array();
   // Test if the objects, locations and instruments are available in the database
   for($i=0,$j=0;$i<count($objects);$i++)
-  { $objectsquery=$objObject->getExactDSObject($objects[$i]);
+  { $objectsquery=$objObject->getExactDSObject(trim($objects[$i]));
     if(!$objectsquery)
-    { $objectsMissing[$j++]=$objects[$i];
-      $errorlist[]=$i;
+    { $objectsMissing[$j++]=trim($objects[$i]);
+      $errorlist[]=$i+1;
     }
     else
-      $correctedObjects[]=$objectsquery;
+      $correctedObjects[$i]=$objectsquery;
   }
 	// Check for existence of locations
   for($i= 0,$j=0,$temploc='';$i<count($locations);$i++)
-    if((!$locations[$i])||($temploc!=$locations[$i])&&($objLocation->getLocationId($locations[$i],$loggedUser)==-1))
-    { $locationsMissing[$j++]=$locations[$i];
-      $errorlist[]=$i;
+    if((!trim($locations[$i]))||($temploc!=trim($locations[$i]))&&($objLocation->getLocationId(trim($locations[$i]),$loggedUser)==-1))
+    { $locationsMissing[$j++]=trim($locations[$i]);
+      $errorlist[]=$i+1;
     }
 	  else
-		  $temploc=$locations[$i];
+		  $temploc=trim($locations[$i]);
   // Check for existence of instruments
   for($i=0,$j=0,$tempinst='';$i<count($instruments);$i++)
-    if((!$instruments[$i])||($objInstrument->getInstrumentId($instruments[$i],$loggedUser)==-1))
-    { $instrumentsMissing[$j++]=$instruments[$i];
-		  $errorlist[]=$i;
+    if((!trim($instruments[$i]))||($objInstrument->getInstrumentId(trim($instruments[$i]),$loggedUser)==-1))
+    { $instrumentsMissing[$j++]=trim($instruments[$i]);
+		  $errorlist[]=$i+1;
     }
     else
 		  $tempinst=$instruments[$i];
   // Check for the existence of the eyepieces
   for($i=0,$j=0;$i<count($eyepieces);$i++)
-    if($eyepieces[$i]&&(!($objEyepiece->getEyepieceObserverPropertyFromName($eyepieces[$i],$loggedUser,'id'))))
-    { $eyepiecesMissing[$j++]=$eyepieces[$i];
-      $errorlist[]=$i;
+    if(trim($eyepieces[$i])&&(!($objEyepiece->getEyepieceObserverPropertyFromName(trim($eyepieces[$i]),$loggedUser,'id'))))
+    { $eyepiecesMissing[$j++]=trim($eyepieces[$i]);
+      $errorlist[]=$i+1;
     }
       // Check for the existence of the filters
   for($i=0,$j=0;$i<count($filters);$i++)
-    if($filters[$i]&&(!($objFilter->getFilterObserverPropertyFromName($filters[$i], $loggedUser,'id'))))
-    { $filtersMissing[$j++]=$filters[$i];
-      $errorlist[]=$i;
+    if(trim($filters[$i])&&(!($objFilter->getFilterObserverPropertyFromName(trim($filters[$i]), $loggedUser,'id'))))
+    { $filtersMissing[$j++]=trim($filters[$i]);
+      $errorlist[]=$i+1;
     }
       // Check for the existence of the lenses
   for($i=0,$j=0;$i<count($lenses);$i++)
-    if($lenses[$i]&&(!($objLens->getLensObserverPropertyFromName($lenses[$i],$loggedUser,'id'))))
-    { $lensesMissing[$j++] = $lenses[$i];
-      $errorlist[]=$i;
+    if(trim($lenses[$i])&&(!($objLens->getLensObserverPropertyFromName(trim($lenses[$i]),$loggedUser,'id'))))
+    { $lensesMissing[$j++]=trim($lenses[$i]);
+      $errorlist[]=$i+1;
     }
       // Check for the correctness of dates
   for($i=0,$j=0,$k=0;$i<count($dates);$i++)
-  { $datepart=sscanf($dates[$i],"%2d%c%2d%c%4d");
+  { $datepart=sscanf(trim($dates[$i]),"%2d%c%2d%c%4d");
     if((!is_numeric($datepart[0]))||(!is_numeric($datepart[2]))||(!is_numeric($datepart[4]))||(!checkdate($datepart[2],$datepart[0],$datepart[4])))
     { $noDates[$j++]=$dates[$i]; 
-      $errorlist[]=$i;
+      $errorlist[]=$i+1;
     }
     elseif((sprintf("%04d",$datepart[4]).sprintf("%02d",$datepart[2]).sprintf("%02d",$datepart[0]))>date('Ymd')) 
-    { $wrongDates[$k++]=$dates[$i];
-      $errorlist[]=$i;
+    { $wrongDates[$k++]=trim($dates[$i]);
+      $errorlist[]=$i+1;
     }
   }
   // error catching
@@ -182,31 +179,39 @@ else
       $errormessage = $errormessage .  "</ul>";
     }
     
-    // set SESSION variable with error observations
+    while(list($key,$j)=each($errorlist))
+    { $_SESSION['csvImportErrorData']=$parts_array[$j];
+    }
     
-    $messageLines[] = "<h2>".LangCSVError0."</h2>"."<p />".LangCSVError0."<p />".$errormessage."<p />".LangCSVError10."href to error list of observations"."<p />".LangCSVMessage4;
+    $messageLines[] = "<h2>".LangCSVError0."</h2>"."<p />".LangCSVError0."<p />".$errormessage."<p />".LangCSVError10."<a href=\"".$baseURL."index.php?indexAction=add_csv\">".LangCSVError10a."</a>".LangCSVError10b."<a href=\"".$baseURL."errorobjects.csv\">".LangCSVError10c."</a>".LangCSVError10d."<p />".LangCSVMessage4;
     $_GET['indexAction']='message';
   }
   $username=$objObserver->getObserverProperty($loggedUser,'firstname'). " ".$objObserver->getObserverProperty($loggedUser,'name');
   for($i=0;$i<count($parts_array);$i++)
-  { if(!(in_array($i,$errorlist)))
-    { $observername = $objObserver->getObserverProperty(htmlentities($parts_array[$i][1]),'firstname'). " ".$objObserver->getObserverProperty(htmlentities($parts_array[$i][1]),'name');
-      if($parts_array[$i][1]==$username)
-      { $instrum = $objInstrument->getInstrumentId(htmlentities($parts_array[$i][5]), $_SESSION['deepskylog_id']);
-        $locat = $objLocation->getLocationId(htmlentities($parts_array[$i][4]), $_SESSION['deepskylog_id']);
-        $dates = sscanf($parts_array[$i][2], "%2d%c%2d%c%4d");
-        $date = sprintf("%04d%02d%02d", $dates[4], $dates[2], $dates[0]);
-        $times = sscanf($parts_array[$i][3], "%2d%c%2d");
-        $time = sprintf("%02d%02d", $times[0], $times[2]);
-        if ($parts_array[$i][11] == "")
-          $parts_array[$i][11] = "0";
-        $obsid=$objObservation->addDSObservation($correctedObjects[$i-1],$_SESSION['deepskylog_id'],$instrum,$locat,$date,$time,htmlentities($parts_array[$i][13]),htmlentities($parts_array[$i][9]),htmlentities($parts_array[$i][10]),htmlentities($parts_array[$i][11]),htmlentities($parts_array[$i][12]));
-				if ($parts_array[$i][6] != "")
-				  $objObservation->setDsObservationProperty($obsid,'eyepieceid', $objEyepiece->getEyepieceObserverPropertyFromName(htmlentities($parts_array[$i][6]), $_SESSION['deepskylog_id'],'id'));
-				if ($parts_array[$i][7] != "")
-					$objObservation->setDsObservationProperty($obsid,'filterid', $objFilter->getFilterObserverPropertyFromName(htmlentities($parts_array[$i][7]), $_SESSION['deepskylog_id'],'id'));
-				if ($parts_array[$i][8] != "")
-					$objObservation->setDsObservationProperty($obsid,'lensid', $objLens->getLensObserverPropertyFromName(htmlentities($parts_array[$i][8]), $_SESSION['deepskylog_id'],'id'));
+  { if(!in_array($i+1,$errorlist))
+    { $observername=$objObserver->getObserverProperty(htmlentities(trim($parts_array[$i][1])),'firstname'). " ".$objObserver->getObserverProperty(htmlentities(trim($parts_array[$i][1])),'name');
+      if(trim($parts_array[$i][1])==$username)
+      { $instrum=$objInstrument->getInstrumentId(htmlentities(trim($parts_array[$i][5])), $loggedUser);
+        $locat  =$objLocation->getLocationId(htmlentities(trim($parts_array[$i][4])), $loggedUser);
+        $dates  =sscanf(trim($parts_array[$i][2]), "%2d%c%2d%c%4d");
+        $date   =sprintf("%04d%02d%02d", $dates[4], $dates[2], $dates[0]);
+        $times  =sscanf(trim($parts_array[$i][3]), "%2d%c%2d");
+        $time   =sprintf("%02d%02d", $times[0], $times[2]);
+        $obsid=$objObservation->addDSObservation2($correctedObjects[$i],
+                                                  $loggedUser,
+                                                  $instrum,
+                                                  $locat,
+                                                  $date,
+                                                  $time,
+                                                  htmlentities(trim($parts_array[$i][13])),
+                                                  htmlentities(trim($parts_array[$i][9])),
+                                                  htmlentities(trim($parts_array[$i][10])),
+                                                  htmlentities(((trim($parts_array[$i][11])=="")?"0":trim($parts_array[$i][11]))),
+                                                  htmlentities(trim($parts_array[$i][12])),
+                                                  ((trim($parts_array[$i][6])!="")?$objEyepiece->getEyepieceObserverPropertyFromName(htmlentities(trim($parts_array[$i][6])), $loggedUser,'id'):0),
+				                                          ((trim($parts_array[$i][7])!="")?$objFilter->getFilterObserverPropertyFromName(htmlentities(trim($parts_array[$i][7])), $loggedUser,'id'):0),
+				                                          ((trim($parts_array[$i][8])!="")?$objLens->getLensObserverPropertyFromName(htmlentities(trim($parts_array[$i][8])), $loggedUser,'id'):0)
+				                                          );
       }
       unset($_SESSION['QobsParams']);
     }

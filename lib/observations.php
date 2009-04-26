@@ -52,7 +52,80 @@ class Observations {
 		                      "VALUES (\"$objectname\", \"$observerid\", \"$instrumentid\", \"$locationid\", \"$date\", \"$time\", \"$description\", $seeing, $limmag, $visibility, \"$language\")");
 		return $objDatabase->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id');
 	}
-  public  function getAllInfoDsObservation($id)                                                                                                                       // returns all information of an observation
+	public  function addDSObservation2($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language, $eyepieceid, $lensid, $filterid) 
+	{ global $objDatabase;
+		if(($seeing=="-1")||($seeing==""))
+			$seeing="NULL";
+		if($limmag=="")
+			$limmag="NULL";
+		else 
+		{ if (ereg('([0-9]{1})[.,]([0-9]{1})', $limmag, $matches))   // limiting magnitude like X.X or X,X with X a number between 0 and 9
+				$limmag=$matches[1].".".$matches[2];    // valid limiting magnitude // save current magnitude limit
+			$limmag="$limmag";
+		}
+		$description = html_entity_decode($description, ENT_COMPAT, "ISO-8859-15");
+		$description = preg_replace("/(\")/", "", $description);
+		$description = preg_replace("/;/", ",", $description);
+		if($id=$objDatabase->selectSingleValue("SELECT id FROM observations WHERE objectname=\"$objectname\" AND 
+		                                                                          observerid=\"$observerid\" AND 
+    	          	                                                            instrumentid=\"$instrumentid\" AND 
+		                                                                          locationid=\"$locationid\" AND 
+		                                                                          date=\"$date\" AND 
+		                                                                          time=\"$time\" AND 
+		                                                                          description=\"$description\" AND 
+		                                                                          seeing=$seeing AND 
+		                                                                          limmag=$limmag AND 
+          		                                                                visibility=$visibility AND 
+		                                                                          language=\"$language\" AND 
+		                                                                          eyepieceid=$eyepieceid AND 
+		                                                                          filterid=$filterid AND 
+		                                                                          lensid=$lensid"
+		                                       ,'id',0)) 
+		  echo $id;                                                          
+		$objDatabase->execSQL("INSERT INTO observations (objectname, 
+		                                                 observerid, 
+		                                                 instrumentid, 
+		                                                 locationid, 
+		                                                 date, 
+		                                                 time, 
+		                                                 description, 
+		                                                 seeing, 
+		                                                 limmag, 
+		                                                 visibility, 
+		                                                 language, 
+		                                                 eyepieceid, 
+		                                                 filterid, 
+		                                                 lensid)
+		                                       VALUES (  \"$objectname\", 
+		                                                 \"$observerid\", 
+		                                                 \"$instrumentid\", 
+		                                                 \"$locationid\", 
+		                                                 \"$date\", 
+		                                                 \"$time\", 
+		                                                 \"$description\",
+		                                                 $seeing, 
+		                                                 $limmag, 
+		                                                 $visibility, 
+		                                                 \"$language\", 
+		                                                 $eyepieceid, 
+		                                                 $filterid, 
+		                                                 $lensid)");
+		return $objDatabase->selectSingleValue("SELECT id FROM observations WHERE objectname=\"$objectname\" AND 
+		                                                                          observerid=\"$observerid\" AND 
+    	          	                                                            instrumentid=\"$instrumentid\" AND 
+		                                                                          locationid=\"$locationid\" AND 
+		                                                                          date=\"$date\" AND 
+		                                                                          time=\"$time\" AND 
+		                                                                          description=\"$description\" AND 
+		                                                                          seeing=$seeing AND 
+		                                                                          limmag=$limmag AND 
+          		                                                                visibility=$visibility AND 
+		                                                                          language=\"$language\" AND 
+		                                                                          eyepieceid=$eyepieceid AND 
+		                                                                          filterid=$filterid AND 
+		                                                                          lensid=$lensid",'id',0);
+	}
+	public  function getAllInfoDsObservation($id)                                                                                                                       // returns all information of an observation
 	{ global $objDatabase;
 		$obs=$objDatabase->selectRecordArray("SELECT * FROM observations WHERE id=\"$id\"");
 		$obs["localdate"] = $this->getDsObservationLocalDate($id);
