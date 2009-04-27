@@ -187,6 +187,8 @@ else
     $_GET['indexAction']='message';
   }
   $username=$objObserver->getObserverProperty($loggedUser,'firstname'). " ".$objObserver->getObserverProperty($loggedUser,'name');
+  $added=0;
+  $double=0;
   for($i=0;$i<count($parts_array);$i++)
   { if(!in_array($i+1,$errorlist))
     { $observername=$objObserver->getObserverProperty(htmlentities(trim($parts_array[$i][1])),'firstname'). " ".$objObserver->getObserverProperty(htmlentities(trim($parts_array[$i][1])),'name');
@@ -195,9 +197,13 @@ else
         $locat  =$objLocation->getLocationId(htmlentities(trim($parts_array[$i][4])), $loggedUser);
         $dates  =sscanf(trim($parts_array[$i][2]), "%2d%c%2d%c%4d");
         $date   =sprintf("%04d%02d%02d", $dates[4], $dates[2], $dates[0]);
-        $times  =sscanf(trim($parts_array[$i][3]), "%2d%c%2d");
-        $time   =sprintf("%02d%02d", $times[0], $times[2]);
-        $obsid=$objObservation->addDSObservation2($correctedObjects[$i],
+        if($parts_array[$i][3])
+        { $times  =sscanf(trim($parts_array[$i][3]), "%2d%c%2d");
+          $time   =sprintf("%02d%02d", $times[0], $times[2]);
+        }
+        else
+          $time="-9999";
+        $obsid  =$objObservation->addDSObservation2($correctedObjects[$i],
                                                   $loggedUser,
                                                   $instrum,
                                                   $locat,
@@ -212,9 +218,14 @@ else
 				                                          ((trim($parts_array[$i][7])!="")?$objFilter->getFilterObserverPropertyFromName(htmlentities(trim($parts_array[$i][7])), $loggedUser,'id'):0),
 				                                          ((trim($parts_array[$i][8])!="")?$objLens->getLensObserverPropertyFromName(htmlentities(trim($parts_array[$i][8])), $loggedUser,'id'):0)
 				                                          );
+      if($obsid)
+        $added++;
+      else
+        $double++;
       }
       unset($_SESSION['QobsParams']);
     }
   }
+  $objPresentations->alertMessage($added.LangCSVMessage8.count($errorlist).LangCSVMessage9.$double.LangCSVMessage10);
 }
 ?>

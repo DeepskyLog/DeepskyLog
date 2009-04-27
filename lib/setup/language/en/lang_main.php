@@ -969,6 +969,9 @@ define("LangCSVMessage4", "<b>Attention!</b> In contrast with version 3.3 and pr
 define("LangCSVMessage5", "Caution!<p>The instruments, the locations, eyepieces, filters and the objects in the CSV file should already be known by DeepskyLog otherwise an error message will be shown and those observations will be added.<br />Insert or adapt the missing or wrong data manually until there are no error messages left.<p />If everything went well, your observations will be shown in the \"All observations\" overview.");
 define("LangCSVMessage6", "CSV file to import ");
 define("LangCSVMessage7", "Name;Altname;RA;Decl;Constellation;Type;Magnitude;SurfaceBrightness;Diameter;Position Angle;Page;ContrastReserve;OptimalMagnification;Seen;Last Seen");
+define("LangCSVMessage8", " observations added, ");
+define("LangCSVMessage9", " observations rejected with problems, ");
+define("LangCSVMessage10", " observations were dropped because already present.");
 define("LangCSVError0", "The csv observation import is completed with problems.");
 define("LangCSVError1", "The CSV file is not completely imported because: ");
 define("LangCSVError2", "The following objects are not available in DeepskyLog");

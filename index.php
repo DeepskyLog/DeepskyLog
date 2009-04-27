@@ -4,8 +4,8 @@ try
   if(!array_key_exists('indexAction',$_GET)&&array_key_exists('indexAction',$_POST)) 
     $_GET['indexAction']=$_POST['indexAction'];
   include 'common/entryexit/preludes.php';                                                                // Includes of all classes and assistance files
-  include 'common/entryexit/instructions.php';                                                            // Execution of all non-layout related instructions (login, add objects to lists, etc.)
   include 'common/layout/presentation.php';                                                               // functions etc. concerning layout
+  include 'common/entryexit/instructions.php';                                                            // Execution of all non-layout related instructions (login, add objects to lists, etc.)
   //echo    "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">";
   echo    "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
   include 'common/menu/head.php';                                                                         // HTML head

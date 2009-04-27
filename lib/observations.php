@@ -53,11 +53,11 @@ class Observations {
 		return $objDatabase->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id');
 	}
 	public  function addDSObservation2($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language, $eyepieceid, $lensid, $filterid) 
-	{ global $objDatabase;
+	{ global $objDatabase, $objPresentations;
 		if(($seeing=="-1")||($seeing==""))
-			$seeing="NULL";
+			$seeing="-1";
 		if($limmag=="")
-			$limmag="NULL";
+			$limmag="0";
 		else 
 		{ if (ereg('([0-9]{1})[.,]([0-9]{1})', $limmag, $matches))   // limiting magnitude like X.X or X,X with X a number between 0 and 9
 				$limmag=$matches[1].".".$matches[2];    // valid limiting magnitude // save current magnitude limit
@@ -81,8 +81,9 @@ class Observations {
 		                                                                          filterid=$filterid AND 
 		                                                                          lensid=$lensid"
 		                                       ,'id',0)) 
-		  echo $id;                                                          
-		$objDatabase->execSQL("INSERT INTO observations (objectname, 
+      return 0;
+    else
+      $objDatabase->execSQL("INSERT INTO observations (objectname, 
 		                                                 observerid, 
 		                                                 instrumentid, 
 		                                                 locationid, 
@@ -110,20 +111,7 @@ class Observations {
 		                                                 $eyepieceid, 
 		                                                 $filterid, 
 		                                                 $lensid)");
-		return $objDatabase->selectSingleValue("SELECT id FROM observations WHERE objectname=\"$objectname\" AND 
-		                                                                          observerid=\"$observerid\" AND 
-    	          	                                                            instrumentid=\"$instrumentid\" AND 
-		                                                                          locationid=\"$locationid\" AND 
-		                                                                          date=\"$date\" AND 
-		                                                                          time=\"$time\" AND 
-		                                                                          description=\"$description\" AND 
-		                                                                          seeing=$seeing AND 
-		                                                                          limmag=$limmag AND 
-          		                                                                visibility=$visibility AND 
-		                                                                          language=\"$language\" AND 
-		                                                                          eyepieceid=$eyepieceid AND 
-		                                                                          filterid=$filterid AND 
-		                                                                          lensid=$lensid",'id',0);
+		return 1;
 	}
 	public  function getAllInfoDsObservation($id)                                                                                                                       // returns all information of an observation
 	{ global $objDatabase;
