@@ -151,7 +151,7 @@ else
 	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="manage_csv_objects")
 	  include_once "deepsky/control/manage_csv_objects.php";
 	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_csv_observations")
-	  include_once "deepsky/control/add_csv_observations.php";
+	  $entryMessage.=$objObservation->addCSVobservations();
 	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_csv_listdata")
 	  include_once "deepsky/control/add_csv_listdata.php";
 	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_xml_observations")

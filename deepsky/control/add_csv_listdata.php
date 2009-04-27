@@ -1,5 +1,5 @@
 <?php
-// add_csv_observations.php
+// add_csv_olistdata.php
 // adds observations from a csv file to the database
 
 if($_FILES['csv']['tmp_name'])

@@ -90,7 +90,7 @@ class Filters implements iFilters
  }
  public  function getFilterObserverPropertyFromName($name, $observer, $property)        // returns the property for the filter of the observer
  { global $objDatabase; 
-   return $objDatabase->returnSingleValue("SELECT ".$property." FROM filters where name=\"".$name."\" and observer=\"".$observer."\"",$property);
+   return $objDatabase->selectSingleValue("SELECT ".$property." FROM filters where name=\"".$name."\" and observer=\"".$observer."\"",$property);
  }
  public  function getFilterPropertiesFromId($id)                                        // returns the properties of the filters with id
  { global $objDatabase;
