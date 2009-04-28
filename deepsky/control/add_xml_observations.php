@@ -1,6 +1,8 @@
 <?php
 // add_xml_observations.php
 // adds observations from an OpenAstronomyLog xml file to the database
+  global $objDatabase;
+
   if($_FILES['xml']['tmp_name']!="") {
     $xmlfile=$_FILES['xml']['tmp_name'];
   }
@@ -633,44 +635,64 @@
       $observerid = $observation->getElementsByTagName( "observer" )->item(0)->nodeValue;
       if ($observerid == $id) {
         // Check if the observation already exists in DeepskyLog (target and begin should tell this)
-        print "Date and time : " . $observation->getElementsByTagName( "begin" )->item(0)->nodeValue . ", ";
+/*        print "Date and time : " . $observation->getElementsByTagName( "begin" )->item(0)->nodeValue . ", ";
         print "Target : " . $targetArray[$observation->getElementsByTagName( "target" )->item(0)->nodeValue]["name"] . ", ";
-        print "Site : " . $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue]["name"] . ", ";
-        print "Scope : " . $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue]["name"] . ", ";
+*/        
+        // Check if the site already exists in DeepskyLog
+        $site = $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue]["name"];
+        
+        $sa = $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue];
+        if (count($objDatabase->selectRecordArray("SELECT * from locations where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $site . "\";")) > 0) {
+          // Update the coordinates 
+          $locId = $objLocation->getLocationId($sa["name"], $_SESSION['deepskylog_id']);
+          $objLocation->setLocationProperty($locId, "longitude", $sa["longitude"]);
+          $objLocation->setLocationProperty($locId, "latitude", $sa["latitude"]);
+          $objLocation->setLocationProperty($locId, "timezone", $sa["timezone"]);
+        } else {
+          // Add the new site!
+          $locId = $objLocation->addLocation($sa["name"], $sa["longitude"], $sa["latitude"], "", "", $sa["timezone"]);
+          $objDatabase->execSQL("update locations set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $locId . "\";");
+        }
+
+        
+        
+//        print "Scope : " . $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue]["name"] . ", ";
+        
+        
         // Eyepiece is not mandatory
         if ($observation->getElementsByTagName( "eyepiece" )->item(0)) {
-          print "Eyepiece : " . $eyepieceArray[$observation->getElementsByTagName( "eyepiece" )->item(0)->nodeValue]["name"] . ", ";
+//          print "Eyepiece : " . $eyepieceArray[$observation->getElementsByTagName( "eyepiece" )->item(0)->nodeValue]["name"] . ", ";
         }
         // Lens is not mandatory
         if ($observation->getElementsByTagName( "lens" )->item(0)) {
-          print "Lens : " . $lensArray[$observation->getElementsByTagName( "lens" )->item(0)->nodeValue]["name"] . ", ";
+//          print "Lens : " . $lensArray[$observation->getElementsByTagName( "lens" )->item(0)->nodeValue]["name"] . ", ";
         }
         // Filter is not mandatory
         if ($observation->getElementsByTagName( "filter" )->item(0)) {
-          print "Filter : " . $filterArray[$observation->getElementsByTagName( "filter" )->item(0)->nodeValue]["name"] . ", ";
+//          print "Filter : " . $filterArray[$observation->getElementsByTagName( "filter" )->item(0)->nodeValue]["name"] . ", ";
         }
         // Limiting magnitude is not mandatory
         if ($observation->getElementsByTagName( "faintestStar" )->item(0)) {
-          print "Limiting magnitude : " . $observation->getElementsByTagName( "faintestStar" )->item(0)->nodeValue . ", ";
+//          print "Limiting magnitude : " . $observation->getElementsByTagName( "faintestStar" )->item(0)->nodeValue . ", ";
         }
         // Seeing is not mandatory
         if ($observation->getElementsByTagName( "seeing" )->item(0)) {
-          print "Seeing : " . $observation->getElementsByTagName( "seeing" )->item(0)->nodeValue . ", ";
+//          print "Seeing : " . $observation->getElementsByTagName( "seeing" )->item(0)->nodeValue . ", ";
         }
         // Magnification is not mandatory
         if ($observation->getElementsByTagName( "magnification" )->item(0)) {
-          print "Magnification : " . $observation->getElementsByTagName( "magnification" )->item(0)->nodeValue . ", ";
+//          print "Magnification : " . $observation->getElementsByTagName( "magnification" )->item(0)->nodeValue . ", ";
         }
         // Sqm is not mandatory
         if ($observation->getElementsByTagName( "sqm" )->item(0)) {
-          print "SQM : " . $observation->getElementsByTagName( "sqm" )->item(0)->nodeValue . ", ";
+//          print "SQM : " . $observation->getElementsByTagName( "sqm" )->item(0)->nodeValue . ", ";
         }
         
         // The result of the observation!
         $resultNode = $observation->getElementsByTagName( "result" )->item(0);
         // Language is not mandatory
         if ($resultNode->hasAttribute("lang")) {
-          print "Language : " . $resultNode->getAttribute("lang") . ", ";
+//          print "Language : " . $resultNode->getAttribute("lang") . ", ";
         }
         // colorContrasts is not mandatory
         if ($resultNode->hasAttribute("colorContrasts")) {
@@ -682,7 +704,7 @@
         } else {
           $colorContrast = -1;
         }
-        print "Color Contrasts : " . $colorContrast . ", ";
+//        print "Color Contrasts : " . $colorContrast . ", ";
 
         // extended is not mandatory
         if ($resultNode->hasAttribute("extended")) {
@@ -694,7 +716,7 @@
         } else {
           $extended = -1;
         }
-        print "Extended : " . $extended . ", ";
+//        print "Extended : " . $extended . ", ";
         
         // mottled is not mandatory
         if ($resultNode->hasAttribute("mottled")) {
@@ -706,7 +728,7 @@
         } else {
           $mottled = -1;
         }
-        print "Mottled : " . $mottled . ", ";
+//        print "Mottled : " . $mottled . ", ";
         
         // resolved is not mandatory
         if ($resultNode->hasAttribute("resolved")) {
@@ -718,7 +740,7 @@
         } else {
           $resolved = -1;
         }
-        print "Resolved : " . $resolved . ", ";
+//        print "Resolved : " . $resolved . ", ";
         
         // stellar is not mandatory
         if ($resultNode->hasAttribute("stellar")) {
@@ -730,7 +752,7 @@
         } else {
           $stellar = -1;
         }
-        print "Stellar : " . $stellar . ", ";
+//        print "Stellar : " . $stellar . ", ";
 
         // unusualShape is not mandatory
         if ($resultNode->hasAttribute("unusualShape")) {
@@ -742,7 +764,7 @@
         } else {
           $unusualShape = -1;
         }
-        print "Unusual Shape : " . $unusualShape . ", ";
+//        print "Unusual Shape : " . $unusualShape . ", ";
 
         // partlyUnresolved is not mandatory
         if ($resultNode->hasAttribute("partlyUnresolved")) {
@@ -754,15 +776,15 @@
         } else {
           $partlyUnresolved = -1;
         }
-        print "Partly Unresolved : " . $partlyUnresolved . ", ";
+//        print "Partly Unresolved : " . $partlyUnresolved . ", ";
 
         // Character is not mandatory
         if ($resultNode->getElementsByTagName( "character" )->item(0)) {
-          print  "Character : " . $resultNode->getElementsByTagName( "character" )->item(0)->nodeValue . ", ";
+//          print  "Character : " . $resultNode->getElementsByTagName( "character" )->item(0)->nodeValue . ", ";
         }
         // Rating is not mandatory
         if ($resultNode->getElementsByTagName( "rating" )->item(0)) {
-          print  "Rating : " . $resultNode->getElementsByTagName( "rating" )->item(0)->nodeValue . ", ";
+//          print  "Rating : " . $resultNode->getElementsByTagName( "rating" )->item(0)->nodeValue . ", ";
         }
         // smallDiameter is not mandatory
         if ($resultNode->getElementsByTagName( "smallDiameter" )->item(0)) {
@@ -776,7 +798,7 @@
           } else if ($unit == "arcsec") {
             $smallDiameter = $resultNode->getElementsByTagName( "smallDiameter" )->item(0)->nodeValue;
           }
-          print  "Small Diameter : " . $smallDiameter . ", ";
+//          print  "Small Diameter : " . $smallDiameter . ", ";
         }
         // largeDiameter is not mandatory
         if ($resultNode->getElementsByTagName( "largeDiameter" )->item(0)) {
@@ -790,11 +812,11 @@
           } else if ($unit == "arcsec") {
             $largeDiameter = $resultNode->getElementsByTagName( "largeDiameter" )->item(0)->nodeValue;
           }
-          print  "Large Diameter : " . $largeDiameter . ", ";
+//          print  "Large Diameter : " . $largeDiameter . ", ";
         }
         // Description is not mandatory
         if ($resultNode->getElementsByTagName( "description" )->item(0)) {
-          print  "Description : " . $resultNode->getElementsByTagName( "description" )->item(0)->nodeValue;
+//          print  "Description : " . $resultNode->getElementsByTagName( "description" )->item(0)->nodeValue;
         } 
         print "<br />";
       }
