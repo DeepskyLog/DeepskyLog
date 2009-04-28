@@ -218,17 +218,17 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 		  echo LangViewObservationField40;
 		  echo "</td>";
 			echo "<td>";
-		  echo "<select name=\"characterType\" class=\"inputfield\" style=\"width:300px\"><option value=\"\"></option>";
-		  echo "<option value=\"A\"" . (($objUtil->checkPostKey('characterType') == 'A') ? " selected=\"selected\" " : '') . ">A - ".$ClusterTypeA."</option>";
-		  echo "<option value=\"B\"" . (($objUtil->checkPostKey('characterType') == 'B') ? " selected=\"selected\" " : '') . ">B - ".$ClusterTypeB."</option>";
-		  echo "<option value=\"C\"" . (($objUtil->checkPostKey('characterType') == 'C') ? " selected=\"selected\" " : '') . ">C - ".$ClusterTypeC."</option>";
-		  echo "<option value=\"D\"" . (($objUtil->checkPostKey('characterType') == 'D') ? " selected=\"selected\" " : '') . ">D - ".$ClusterTypeD."</option>";
-		  echo "<option value=\"E\"" . (($objUtil->checkPostKey('characterType') == 'E') ? " selected=\"selected\" " : '') . ">E - ".$ClusterTypeE."</option>";
-		  echo "<option value=\"F\"" . (($objUtil->checkPostKey('characterType') == 'F') ? " selected=\"selected\" " : '') . ">F - ".$ClusterTypeF."</option>";
-		  echo "<option value=\"G\"" . (($objUtil->checkPostKey('characterType') == 'G') ? " selected=\"selected\" " : '') . ">G - ".$ClusterTypeG."</option>";
-		  echo "<option value=\"H\"" . (($objUtil->checkPostKey('characterType') == 'H') ? " selected=\"selected\" " : '') . ">H - ".$ClusterTypeH."</option>";
-		  echo "<option value=\"I\"" . (($objUtil->checkPostKey('characterType') == 'I') ? " selected=\"selected\" " : '') . ">I - ".$ClusterTypeI."</option>";
-		  echo "<option value=\"X\"" . (($objUtil->checkPostKey('characterType') == 'X') ? " selected=\"selected\" " : '') . ">J - ".$ClusterTypeX."</option>";
+		  echo "<select name=\"clusterType\" class=\"inputfield\" style=\"width:300px\"><option value=\"\"></option>";
+		  echo "<option value=\"A\"" . (($objUtil->checkPostKey('clusterType') == 'A') ? " selected=\"selected\" " : '') . ">A - ".$ClusterTypeA."</option>";
+		  echo "<option value=\"B\"" . (($objUtil->checkPostKey('clusterType') == 'B') ? " selected=\"selected\" " : '') . ">B - ".$ClusterTypeB."</option>";
+		  echo "<option value=\"C\"" . (($objUtil->checkPostKey('clusterType') == 'C') ? " selected=\"selected\" " : '') . ">C - ".$ClusterTypeC."</option>";
+		  echo "<option value=\"D\"" . (($objUtil->checkPostKey('clusterType') == 'D') ? " selected=\"selected\" " : '') . ">D - ".$ClusterTypeD."</option>";
+		  echo "<option value=\"E\"" . (($objUtil->checkPostKey('clusterType') == 'E') ? " selected=\"selected\" " : '') . ">E - ".$ClusterTypeE."</option>";
+		  echo "<option value=\"F\"" . (($objUtil->checkPostKey('clusterType') == 'F') ? " selected=\"selected\" " : '') . ">F - ".$ClusterTypeF."</option>";
+		  echo "<option value=\"G\"" . (($objUtil->checkPostKey('clusterType') == 'G') ? " selected=\"selected\" " : '') . ">G - ".$ClusterTypeG."</option>";
+		  echo "<option value=\"H\"" . (($objUtil->checkPostKey('clusterType') == 'H') ? " selected=\"selected\" " : '') . ">H - ".$ClusterTypeH."</option>";
+		  echo "<option value=\"I\"" . (($objUtil->checkPostKey('clusterType') == 'I') ? " selected=\"selected\" " : '') . ">I - ".$ClusterTypeI."</option>";
+		  echo "<option value=\"X\"" . (($objUtil->checkPostKey('clusterType') == 'X') ? " selected=\"selected\" " : '') . ">J - ".$ClusterTypeX."</option>";
 		  echo "</select>";
 		  echo "</td>";
 		

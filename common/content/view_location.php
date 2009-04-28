@@ -24,7 +24,7 @@ if(($lm>-900)||($sb>-900))
   tableFieldnameField(LangAddSiteField8,sprintf("%.2f", $sb));
 }
 echo "<tr>";
-echo "<td colspan=\"2\"><br></br>";
+echo "<td colspan=\"2\"><br />";
 echo "<a href=\"http://maps.google.com/maps?ll=" . $objLocation->getLocationPropertyFromId($locationid,'latitude') . "," . $objLocation->getLocationPropertyFromId($locationid,'longitude') . "&spn=4.884785,11.585083&t=h&hl=en\"><img class=\"account\" src=\"".$baseURL."common/content/map.php?lat=" . $objLocation->getLocationPropertyFromId($locationid,'latitude') . "&long=" . $objLocation->getLocationPropertyFromId($locationid,'longitude') . "\" width=\"490\" height=\"245\" title=\"".LangGooglemaps."\"></a>";
 echo "</td>";
 echo "</tr>";

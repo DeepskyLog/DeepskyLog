@@ -15,6 +15,7 @@ interface iUtils
   public  function comastObservations($result);                                // Creates a xml file from an array of observations
   public  function csvObjects($result);                                        // Creates a csv file from an array of objects
   public  function csvObservations($result);                                   // Creates a csv file from an array of observations
+  public  function csvObservationsImportErrors($result);                       // Creates a csv file from an array of error csv import observations
   public  function pdfCometObservations($result);                              // Creates a pdf document from an array of comet observations
   public  function pdfObjectnames($result);                                    // Creates a pdf document from an array of objects
   public  function pdfObjects($result);                                        // Creates a pdf document from an array of objects
@@ -862,9 +863,9 @@ class Utils implements iUtils
 	    $attr->appendChild($attrText);
 */	  }
 
-	  if ($obs["characterType"] != "" && $obs["characterType"] != 0) {
+	  if ($obs["clusterType"] != "" && $obs["clusterType"] != 0) {
         $character = $result->appendChild($dom->createElement('character')); 
-        $character->appendChild($dom->createCDATASection($obs["characterType"]));
+        $character->appendChild($dom->createCDATASection($obs["clusterType"]));
   	  }
     }
 
@@ -932,6 +933,15 @@ class Utils implements iUtils
            $obs['language'].";". 
            preg_replace("/(\")/", "", preg_replace("/(\r\n|\n|\r)/", "", preg_replace("/;/", ",",$objPresentations->br2nl(html_entity_decode($obs['description']))))). 
            "\n";
+    }
+  }  
+  public  function csvObservationsImportErrors($result)  // Creates a csv file from an array of error csv import observations
+  { global $objLens, $objFilter, $objEyepiece, $objLocation,$objPresentations,$objObservation,$objObserver, $objInstrument;
+    for($i=0;$i<count($_SESSION['csvImportErrorData']);$i++)
+    { for($j=0;$j<13;$j++) 
+        echo $_SESSION['csvImportErrorData'][$i][$j].";";
+      echo preg_replace("/(\")/", "", preg_replace("/(\r\n|\n|\r)/", "", preg_replace("/;/", ",",$objPresentations->br2nl(html_entity_decode($_SESSION['csvImportErrorData'][$i][13])))));
+      echo "\n";
     }
   }
   public  function pdfCometObservations($result)// Creates a pdf document from an array of comet observations

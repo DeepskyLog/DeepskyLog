@@ -80,7 +80,7 @@ class Observations {
 		  { $objectsquery=$objObject->getExactDSObject(trim($objects[$i]));
 		    if(!$objectsquery)
 		    { $objectsMissing[$j++]=trim($objects[$i]);
-		      $errorlist[]=$i+1;
+		      $errorlist[]=$i;
 		    }
 		    else
 		      $correctedObjects[$i]=$objectsquery;
@@ -89,8 +89,8 @@ class Observations {
 		  for($i= 0,$j=0,$temploc='';$i<count($locations);$i++)
 		    if((!trim($locations[$i]))||($temploc!=trim($locations[$i]))&&($objLocation->getLocationId(trim($locations[$i]),$loggedUser)==-1))
 		    { $locationsMissing[$j++]=trim($locations[$i]);
-		      if(!in_array($i+1,$errorlist))
-		        $errorlist[]=$i+1;
+		      if(!in_array($i,$errorlist))
+		        $errorlist[]=$i;
 		    }
 			  else
 				  $temploc=trim($locations[$i]);
@@ -98,8 +98,8 @@ class Observations {
 		  for($i=0,$j=0,$tempinst='';$i<count($instruments);$i++)
 		    if((!trim($instruments[$i]))||($objInstrument->getInstrumentId(trim($instruments[$i]),$loggedUser)==-1))
 		    { $instrumentsMissing[$j++]=trim($instruments[$i]);
-				  if(!in_array($i+1,$errorlist))
-		        $errorlist[]=$i+1;
+				  if(!in_array($i,$errorlist))
+		        $errorlist[]=$i;
 		    }
 		    else
 				  $tempinst=$instruments[$i];
@@ -107,35 +107,35 @@ class Observations {
 		  for($i=0,$j=0;$i<count($eyepieces);$i++)
 		    if(trim($eyepieces[$i])&&(!($objEyepiece->getEyepieceObserverPropertyFromName(trim($eyepieces[$i]),$loggedUser,'id'))))
 		    { $eyepiecesMissing[$j++]=trim($eyepieces[$i]);
-		      if(!in_array($i+1,$errorlist))
-		        $errorlist[]=$i+1;
+		      if(!in_array($i,$errorlist))
+		        $errorlist[]=$i;
 		    }
 		      // Check for the existence of the filters
 		  for($i=0,$j=0;$i<count($filters);$i++)
 		    if(trim($filters[$i])&&(!($objFilter->getFilterObserverPropertyFromName(trim($filters[$i]), $loggedUser,'id'))))
 		    { $filtersMissing[$j++]=trim($filters[$i]);
-		      if(!in_array($i+1,$errorlist))
-		        $errorlist[]=$i+1;
+		      if(!in_array($i,$errorlist))
+		        $errorlist[]=$i;
 		    }
 		      // Check for the existence of the lenses
 		  for($i=0,$j=0;$i<count($lenses);$i++)
 		    if(trim($lenses[$i])&&(!($objLens->getLensObserverPropertyFromName(trim($lenses[$i]),$loggedUser,'id'))))
 		    { $lensesMissing[$j++]=trim($lenses[$i]);
-		      if(!in_array($i+1,$errorlist))
-		        $errorlist[]=$i+1;
+		      if(!in_array($i,$errorlist))
+		        $errorlist[]=$i;
 		    }
 		      // Check for the correctness of dates
 		  for($i=0,$j=0,$k=0;$i<count($dates);$i++)
 		  { $datepart=sscanf(trim($dates[$i]),"%2d%c%2d%c%4d");
 		    if((!is_numeric($datepart[0]))||(!is_numeric($datepart[2]))||(!is_numeric($datepart[4]))||(!checkdate($datepart[2],$datepart[0],$datepart[4])))
 		    { $noDates[$j++]=$dates[$i]; 
-		      if(!in_array($i+1,$errorlist))
-		        $errorlist[]=$i+1;
+		      if(!in_array($i,$errorlist))
+		        $errorlist[]=$i;
 		    }
 		    elseif((sprintf("%04d",$datepart[4]).sprintf("%02d",$datepart[2]).sprintf("%02d",$datepart[0]))>date('Ymd')) 
 		    { $wrongDates[$k++]=trim($dates[$i]);
-		      if(!in_array($i+1,$errorlist))
-		        $errorlist[]=$i+1;
+		      if(!in_array($i,$errorlist))
+		        $errorlist[]=$i;
 		    }
 		  }
 		  // error catching
@@ -189,16 +189,17 @@ class Observations {
 		        $errormessage.="<li>".$lensesMissing[$i]."</li>";
 		      $errormessage.="</ul></li></ul>";
 		    }
+		    unset($_SESSION['csvImportErrorData']);
 		    while(list($key,$j)=each($errorlist))
-		      $_SESSION['csvImportErrorData']=$parts_array[$j];
-		    $messageLines[] = "<h2>".LangCSVError0."</h2>"."<p />".LangCSVError0."<p />".$errormessage."<p />".LangCSVError10."<a href=\"".$baseURL."index.php?indexAction=add_csv\">".LangCSVError10a."</a>".LangCSVError10b."<a href=\"".$baseURL."errorobjects.csv\">".LangCSVError10c."</a>".LangCSVError10d."<p />".LangCSVMessage4;
+		      $_SESSION['csvImportErrorData'][$key]=$parts_array[$j];
+		    $messageLines[] = "<h2>".LangCSVError0."</h2>"."<p />".LangCSVError0."<p />".$errormessage."<p />".LangCSVError10."<a href=\"".$baseURL."index.php?indexAction=add_csv\">".LangCSVError10a."</a>".LangCSVError10b."<hr />".LangCSVError10e."<a href=\"".$baseURL."observationserrors.csv\">".LangCSVError10c."</a>".LangCSVError10d."<p /><hr />".LangCSVMessage4;
 		    $_GET['indexAction']='message';
 		  }
 		  $username=$objObserver->getObserverProperty($loggedUser,'firstname'). " ".$objObserver->getObserverProperty($loggedUser,'name');
 		  $added=0;
 		  $double=0;
 		  for($i=0;$i<count($parts_array);$i++)
-		  { if(!in_array($i+1,$errorlist))
+		  { if(!in_array($i,$errorlist))
 		    { $observername=$objObserver->getObserverProperty(htmlentities(trim($parts_array[$i][1])),'firstname'). " ".$objObserver->getObserverProperty(htmlentities(trim($parts_array[$i][1])),'name');
 		      if(trim($parts_array[$i][1])==$username)
 		      { $instrum=$objInstrument->getInstrumentId(htmlentities(trim($parts_array[$i][5])), $loggedUser);
@@ -344,7 +345,7 @@ class Observations {
 		$ob["extended"] = $get->extended;
 		$ob["resolved"] = $get->resolved;
 		$ob["mottled"] = $get->mottled;
-		$ob["characterType"] = $get->characterType;
+		$ob["clusterType"] = $get->clusterType;
 		$ob["unusualShape"] = $get->unusualShape;
 		$ob["partlyUnresolved"] = $get->partlyUnresolved;
 		$ob["colorContrasts"] = $get->colorContrasts;
@@ -500,7 +501,7 @@ class Observations {
   	//             "eyepiece" => "4", "filter" => "2", "lens" => "3", "minSmallDiameter" => "3.4",
    	//             "maxSmallDiameter" => "3.7", "minLargeDiameter" => "5.3", "maxLargeDiameter" => "6.5",
 	  //             "stellar" => "1", "extended" => "0", "resolved" => "0", "mottled" => "1",
-  	//             "characterType" => "A", "unusualShape" => "0", "partlyUnresolved" => "1", 
+  	//             "clusterType" => "A", "unusualShape" => "0", "partlyUnresolved" => "1", 
   	//             "colorContrasts" => "0", "minSQM" => "18.9", "maxSQM" => "21.2";
 		global $objInstrument,$objEyepiece,$objFilter,$objLens,$objLocation,$objDatabase;
 		$object = "";
@@ -668,8 +669,8 @@ class Observations {
 			$sqland .= "AND observations.resolved = \"" . $queries["resolved"] . "\" ";
 		if (isset ($queries["mottled"]) && ($queries["mottled"] != ""))
 			$sqland .= "AND observations.mottled = \"" . $queries["mottled"] . "\" ";
-		if (isset ($queries["characterType"]) && ($queries["characterType"] != ""))
-			$sqland .= "AND observations.characterType = \"" . $queries["characterType"] . "\" ";
+		if (isset ($queries["clusterType"]) && ($queries["clusterType"] != ""))
+			$sqland .= "AND observations.clusterType = \"" . $queries["clusterType"] . "\" ";
 		if (isset ($queries["unusualShape"]) && ($queries["unusualShape"] != ""))
 			$sqland .= "AND observations.unusualShape = \"" . $queries["unusualShape"] . "\" ";
 		if (isset ($queries["partlyUnresolved"]) && ($queries["partlyUnresolved"] != ""))
@@ -956,8 +957,8 @@ class Observations {
 				$altnames=$objObject->getAlternativeNames($value['objectname']);
 				while(list($key,$altvalue)=each($altnames))
 				  if(trim($altvalue)!=trim($value['objectname']))
-						$alt.="<br>".trim($altvalue);
-			  $alt=substr($alt,4);
+						$alt.="<br />".trim($altvalue);
+			  $alt=substr($alt,6);
 		    $explanation = "(".$GLOBALS[$value['objecttype']]." ".LangOverviewObservations12." " . $GLOBALS[$value['objectconstellation']].
 				                   (($value['objectmagnitude']<99.9)?", ".LangOverviewObservations13." ".sprintf("%.1f",$value['objectmagnitude']):"").
 				                   (($value['objectsurfacebrigthness']<99.9)?", ".LangOverviewObservations14." ".sprintf("%.1f",$value['objectsurfacebrigthness']):"").	                  
@@ -1119,7 +1120,7 @@ class Observations {
 		$details2Text=substr($details2Text,2);
 		$charTypeText="-";
 		if(in_array($objObject->getDsoProperty($this->getDsObservationProperty($LOid,'objectname'),'type'),array("ASTER","CLANB","DS","OPNCL","AA1STAR","AA2STAR","AA3STAR","AA4STAR","AA8STAR","GLOCL")))
-		  $charTypeText=(($characterType=$this->getDsObservationProperty($LOid,'characterType'))?$characterType.': '.$GLOBALS['ClusterType'.$characterType]:"-");
+		  $charTypeText=(($clusterType=$this->getDsObservationProperty($LOid,'clusterType'))?clusterType.': '.$GLOBALS['ClusterType'.$clusterType]:"-");
 		echo "<table width=\"100%\">";
 		tableFieldnameField3(LangViewObservationField2,
 		                     "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($this->getDsObservationProperty($LOid,'observerid'))."&amp;back=index.php?indexAction=detail_observation\">".$objObserver->getObserverProperty($this->getDsObservationProperty($LOid,'observerid'),'firstname')."&nbsp;".$objObserver->getObserverProperty($this->getDsObservationProperty($LOid,'observerid'),'name')."</a>",
@@ -1185,7 +1186,7 @@ class Observations {
 						$time = -9999;
 					}		
 					$objObservation->setDsObservationProperty($_POST['observationid'],'description', html_entity_decode(nl2br($_POST['description']), ENT_COMPAT, "ISO-8859-15") );
-					$objObservation->setDsObservationProperty($_POST['observationid'],'characterType', $objUtil->checkPostKey('characterType'));
+					$objObservation->setDsObservationProperty($_POST['observationid'],'clusterType', $objUtil->checkPostKey('clusterType'));
 					if ($_POST['filter']) {
 						$objObservation->setDsObservationProperty($_POST['observationid'],'filterid', $_POST['filter']);
 					} else {
@@ -1474,7 +1475,7 @@ class Observations {
 					$objObservation->setDsObservationProperty($current_observation,'eyepieceid', $_POST['eyepiece']);
 				if(!($objObserver->getObserverProperty($loggedUser,'UT')))
 					$objObservation->setLocalDateAndTime($current_observation, $date, $time);
-				$objObservation->setDsObservationProperty($current_observation,'characterType', $objUtil->checkPostKey('characterType'));
+				$objObservation->setDsObservationProperty($current_observation,'clusterType', $objUtil->checkPostKey('clusterType'));
 				if ($_FILES['drawing']['tmp_name'] != "") // drawing to upload
 				{ $upload_dir = $instDir . 'deepsky/drawings';
 					$dir = opendir($upload_dir);

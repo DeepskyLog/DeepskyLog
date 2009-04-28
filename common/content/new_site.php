@@ -116,7 +116,7 @@ if($sites!=null)
       echo "<td>".$timezone."</td>";
       echo "<td class=\"centered\">".$limmag."</td>";
       echo "<td class=\"centered\">".$sb."</td>";
-      echo "<td><input type=\"radio\" name=\"stdlocation\" value=\"". $value ."\"".(($value==$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation'))?" checked ":"")." />&nbsp;<br></td>";
+      echo "<td><input type=\"radio\" name=\"stdlocation\" value=\"". $value ."\"".(($value==$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation'))?" checked ":"")." />&nbsp;<br /></td>";
 			echo "<td>";
       if(!($obsCnt=$objLocation->getLocationUsedFromId($value)))
         echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_location&amp;locationid=".urlencode($value)."\">".LangRemove."</a>";

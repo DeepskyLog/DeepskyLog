@@ -2,7 +2,7 @@
 echo "<div class=\"menuDiv\">";
 echo "<p class=\"menuHead\">".LangCounter."</p>";
 //    <!-- Start of StatCounter Code -->
-echo "<a href=\"http://my6.statcounter.com/project/standard/stats.php?project_id=1347986&guest=1\">";
+echo "<a href=\"http://my6.statcounter.com/project/standard/stats.php?project_id=1347986&amp;guest=1\">";
 echo "<script type=\"text/javascript\" language=\"javascript\">";
 echo "var sc_project=1347986;";
 echo "var sc_invisible=0;";

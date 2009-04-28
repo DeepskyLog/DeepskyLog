@@ -1,0 +1,9 @@
+<?php 
+header ("Content-Type: application/vnd.ms-excel");
+header ("Content-Disposition: attachment; filename=\"observationserrors.csv\"");
+$inIndex = true;
+include 'common/entryexit/preludes.php';
+include 'common/layout/presentation.php';
+if(array_key_exists('csvImportErrorData',$_SESSION)&&$_SESSION['csvImportErrorData'])
+  $objUtil->csvObservationsImportErrors($_SESSION['csvImportErrorData']);
+?>

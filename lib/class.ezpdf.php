@@ -206,9 +206,8 @@ function ezNewPage(){
   if (isset($this->ez['columns']) && $this->ez['columns']['on']==1){
     // check if this is just going to a new column
     // increment the column number
-//echo 'HERE<br>';
     $this->ez['columns']['colNum']++;
-//echo $this->ez['columns']['colNum'].'<br>';
+//echo $this->ez['columns']['colNum'].'<br />';
     if ($this->ez['columns']['colNum'] <= $this->ez['columns']['options']['num']){
       // then just reset to the top of the next column
       $pageRequired=0;
@@ -221,7 +220,7 @@ function ezNewPage(){
     $this->ez['leftMargin']=$this->ez['columns']['margins'][0]+($this->ez['columns']['colNum']-1)*($this->ez['columns']['options']['gap']+$width);
     $this->ez['rightMargin']=$this->ez['pageWidth']-$this->ez['leftMargin']-$width;
   }
-//echo 'left='.$this->ez['leftMargin'].'   right='.$this->ez['rightMargin'].'<br>';
+//echo 'left='.$this->ez['leftMargin'].'   right='.$this->ez['rightMargin'].'<br />';
 
   if ($pageRequired){
     // make a new page, setting the writing point back to the top
