@@ -497,7 +497,7 @@
       
       // Check if the maximal focal length exists. If so, we are using a zoom eyepiece
       if ($eyepiece->getElementsByTagName( "maxFocalLength" )->item(0)) {
-        $eyepieceInfoArray["maxFocalLength"] = $scope->getElementsByTagName( "maxFocalLength" )->item(0)->nodeValue;
+        $eyepieceInfoArray["maxFocalLength"] = $eyepiece->getElementsByTagName( "maxFocalLength" )->item(0)->nodeValue;
       } else {
         $eyepieceInfoArray["maxFocalLength"] = -1;
       }  
@@ -673,7 +673,7 @@
 
         // Filter is not mandatory
         if ($observation->getElementsByTagName( "filter" )->item(0)) {
-          // Check if the instrument already exists in DeepskyLog
+          // Check if the filter already exists in DeepskyLog
           $filter = $filterArray[$observation->getElementsByTagName( "filter" )->item(0)->nodeValue]["name"];
         
           $fa = $filterArray[$observation->getElementsByTagName( "filter" )->item(0)->nodeValue];
@@ -692,10 +692,26 @@
           }
         }
 
-        
         // Eyepiece is not mandatory
         if ($observation->getElementsByTagName( "eyepiece" )->item(0)) {
-//          print "Eyepiece : " . $eyepieceArray[$observation->getElementsByTagName( "eyepiece" )->item(0)->nodeValue]["name"] . ", ";
+          // Check if the eyepiece already exists in DeepskyLog
+          $eyepiece = $eyepieceArray[$observation->getElementsByTagName( "eyepiece" )->item(0)->nodeValue]["name"];
+        
+          $ea = $eyepieceArray[$observation->getElementsByTagName( "eyepiece" )->item(0)->nodeValue];
+          if (count($objDatabase->selectRecordArray("SELECT * from eyepieces where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . utf8_encode(htmlentities($eyepiece)) . "\";")) > 0) {
+            // Update the eyepiece 
+            $eyepId = $objEyepiece->getEyepieceId($ea["name"], $_SESSION['deepskylog_id']);
+            $objEyepiece->setEyepieceProperty($eyepId, "name", $ea["name"]);
+            $objEyepiece->setEyepieceProperty($eyepId, "focalLength", $ea["focalLength"]);
+            $objEyepiece->setEyepieceProperty($eyepId, "apparentFOV", $ea["apparentFOV"]);
+            $objEyepiece->setEyepieceProperty($eyepId, "maxFocalLength", $ea["maxFocalLength"]);
+          } else {
+            // Add the new eyepiece!
+            $eyepId = $objEyepiece->addEyepiece($ea["name"], $ea["focalLength"], $ea["apparentFOV"]);
+            $objDatabase->execSQL("update eyepieces set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $eyepId . "\";");
+            $objEyepiece->setEyepieceProperty($eyepId, "maxFocalLength", $ea["maxFocalLength"]);
+          }
+          //          print "Eyepiece : " . $eyepieceArray[$observation->getElementsByTagName( "eyepiece" )->item(0)->nodeValue]["name"] . ", ";
         }
         // Lens is not mandatory
         if ($observation->getElementsByTagName( "lens" )->item(0)) {

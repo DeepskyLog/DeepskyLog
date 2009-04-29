@@ -2,6 +2,7 @@
 interface iEyepieces
 { public  function addEyepiece($name, $focalLength, $apparentFOV);                   // adds a new eyepiece to the database. The name, focalLength and apparentFOV should be given as parameters. 
   public  function getAllEyepiecesIds($id);                                          // returns a list with all id's which have the same name as the name of the given id
+  public  function getEyepieceId($name, $observer);                                  // returns the id for this eyepiece
   public  function getEyepieceObserverPropertyFromName($name, $observer, $property); // returns the property for the eyepiece of the observer
   public  function getEyepiecePropertiesFromId($id);                                 // returns the properties of the eyepiece with id in an array(propertyname)=propertyvalue
   public  function getEyepiecePropertyFromId($id,$property,$defaultValue='');        // returns the property of the given eyepiece
@@ -20,6 +21,9 @@ class Eyepieces implements iEyepieces
  public  function getAllEyepiecesIds($id)                                            // getAllIds returns a list with all id's which have the same name as the name of the given id
  { global $objDatabase;
    return $objDatabase->selectSingleArray("SELECT id FROM eyepieces WHERE name=".$objDatabase->selectSingleValue("SELECT name FROM eyepieces WHERE id = \"".$id."\"",'name'),'id');
+ }
+ public  function getEyepieceId($name, $observer)                                    // returns the id for this eyepiece
+ { global $objDatabase; return $objDatabase->selectSingleValue("SELECT id FROM eyepieces where name=\"".htmlentities($name,ENT_COMPAT,"ISO-8859-15",0)."\" and observer=\"".$observer."\"",'id',-1);
  }
  public  function getEyepieceObserverPropertyFromName($name, $observer, $property)   // returns the property for the eyepiece of the observer
  { global $objDatabase; 
