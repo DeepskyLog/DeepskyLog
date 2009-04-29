@@ -654,10 +654,25 @@
           $objDatabase->execSQL("update locations set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $locId . "\";");
         }
 
+        // Check if the instrument already exists in DeepskyLog
+        $instrument = $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue]["name"];
+        
+        $ia = $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue];
+        if (count($objDatabase->selectRecordArray("SELECT * from instruments where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . utf8_encode(htmlentities($instrument)) . "\";")) > 0) {
+          // Update the coordinates 
+          $instId = $objInstrument->getInstrumentId($ia["name"], $_SESSION['deepskylog_id']);
+          $objInstrument->setInstrumentProperty($instId, "name", $ia["name"]);
+          $objInstrument->setInstrumentProperty($instId, "diameter", $ia["diameter"]);
+          $objInstrument->setInstrumentProperty($instId, "fd", $ia["fd"]);
+          $objInstrument->setInstrumentProperty($instId, "type", $ia["type"]);
+          $objInstrument->setInstrumentProperty($instId, "fixedMagnification", $ia["fixedMagnification"]);
+        } else {
+          // Add the new site!
+          $objInstrument->addInstrument($ia["name"], $ia["diameter"], $ia["fd"], $ia["type"], $ia["fixedMagnification"], $_SESSION['deepskylog_id']);
+        }
         
         
-//        print "Scope : " . $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue]["name"] . ", ";
-        
+
         
         // Eyepiece is not mandatory
         if ($observation->getElementsByTagName( "eyepiece" )->item(0)) {
@@ -671,6 +686,10 @@
         if ($observation->getElementsByTagName( "filter" )->item(0)) {
 //          print "Filter : " . $filterArray[$observation->getElementsByTagName( "filter" )->item(0)->nodeValue]["name"] . ", ";
         }
+        
+        // Object!!!
+
+
         // Limiting magnitude is not mandatory
         if ($observation->getElementsByTagName( "faintestStar" )->item(0)) {
 //          print "Limiting magnitude : " . $observation->getElementsByTagName( "faintestStar" )->item(0)->nodeValue . ", ";
