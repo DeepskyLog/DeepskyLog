@@ -711,13 +711,27 @@
             $objDatabase->execSQL("update eyepieces set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $eyepId . "\";");
             $objEyepiece->setEyepieceProperty($eyepId, "maxFocalLength", $ea["maxFocalLength"]);
           }
-          //          print "Eyepiece : " . $eyepieceArray[$observation->getElementsByTagName( "eyepiece" )->item(0)->nodeValue]["name"] . ", ";
         }
+
         // Lens is not mandatory
         if ($observation->getElementsByTagName( "lens" )->item(0)) {
-//          print "Lens : " . $lensArray[$observation->getElementsByTagName( "lens" )->item(0)->nodeValue]["name"] . ", ";
-        }
+          // Check if the eyepiece already exists in DeepskyLog
+          $lens = $lensArray[$observation->getElementsByTagName( "lens" )->item(0)->nodeValue]["name"];
         
+          $la = $lensArray[$observation->getElementsByTagName( "lens" )->item(0)->nodeValue];
+          if (count($objDatabase->selectRecordArray("SELECT * from lenses where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . utf8_encode(htmlentities($lens)) . "\";")) > 0) {
+            // Update the lens 
+            $lensId = $objLens->getLensId($la["name"], $_SESSION['deepskylog_id']);
+            $objLens->setLensProperty($lensId, "name", $la["name"]);
+            $objLens->setLensProperty($lensId, "factor", $la["factor"]);
+          } else {
+            // Add the new lens!
+            $lensId = $objLens->addLens($la["name"], $la["factor"]);
+            $objDatabase->execSQL("update lenses set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $lensId . "\";");
+          }
+        }
+
+
         // Object!!!
 
 

@@ -2,6 +2,7 @@
 interface iLenses
 { public  function addLens($name, $factor);                                      // adds a new lens to the database. The name and the factor should be given as parameters. 
   public  function getAllFiltersIds($id);                                        // returns a list with all id's which have the same name as the name of the given id
+  public  function getLensId($name, $observer);                                  // returns the id for this lens
   public  function getLensObserverPropertyFromName($name, $observer, $property); // returns the property for the eyepiece of the observer
   public  function getLensPropertyFromId($id,$property,$defaultValue='');        // returns the property of the given lens
 	public  function getSortedLenses($sort, $observer = "");                       // returns an array with the ids of all lenses, sorted by the column specified in $sort
@@ -19,6 +20,9 @@ class Lenses implements iLenses
   public  function getAllFiltersIds($id)                                        // returns a list with all id's which have the same name as the name of the given id
   { global $objDatabase;
     return $objDatabase->selectSinleArray("SELECT id FROM lenses WHERE name = \"".$objDatabase->selectSingleValue("SELECT name FROM lenses WHERE id = \"".$id."\"")."\"");
+  }
+  public  function getLensId($name, $observer)                                    // returns the id for this lens
+  { global $objDatabase; return $objDatabase->selectSingleValue("SELECT id FROM lenses where name=\"".htmlentities($name,ENT_COMPAT,"ISO-8859-15",0)."\" and observer=\"".$observer."\"",'id',-1);
   }
   public  function getLensObserverPropertyFromName($name, $observer, $property) // returns the property for the eyepiece of the observer
   { global $objDatabase; 
