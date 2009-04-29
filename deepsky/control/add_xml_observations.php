@@ -659,7 +659,7 @@
         
         $ia = $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue];
         if (count($objDatabase->selectRecordArray("SELECT * from instruments where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . utf8_encode(htmlentities($instrument)) . "\";")) > 0) {
-          // Update the coordinates 
+          // Update 
           $instId = $objInstrument->getInstrumentId($ia["name"], $_SESSION['deepskylog_id']);
           $objInstrument->setInstrumentProperty($instId, "name", $ia["name"]);
           $objInstrument->setInstrumentProperty($instId, "diameter", $ia["diameter"]);
@@ -667,11 +667,30 @@
           $objInstrument->setInstrumentProperty($instId, "type", $ia["type"]);
           $objInstrument->setInstrumentProperty($instId, "fixedMagnification", $ia["fixedMagnification"]);
         } else {
-          // Add the new site!
-          $objInstrument->addInstrument($ia["name"], $ia["diameter"], $ia["fd"], $ia["type"], $ia["fixedMagnification"], $_SESSION['deepskylog_id']);
+          // Add the new instrument!
+          $instId = $objInstrument->addInstrument($ia["name"], $ia["diameter"], $ia["fd"], $ia["type"], $ia["fixedMagnification"], $_SESSION['deepskylog_id']);
         }
+
+        // Filter is not mandatory
+        if ($observation->getElementsByTagName( "filter" )->item(0)) {
+          // Check if the instrument already exists in DeepskyLog
+          $filter = $filterArray[$observation->getElementsByTagName( "filter" )->item(0)->nodeValue]["name"];
         
-        
+          $fa = $filterArray[$observation->getElementsByTagName( "filter" )->item(0)->nodeValue];
+          if (count($objDatabase->selectRecordArray("SELECT * from filters where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . utf8_encode(htmlentities($filter)) . "\";")) > 0) {
+            // Update the filter 
+            $filtId = $objFilter->getFilterId($fa["name"], $_SESSION['deepskylog_id']);
+            $objFilter->setFilterProperty($filtId, "name", $fa["name"]);
+            $objFilter->setFilterProperty($filtId, "type", $fa["type"]);
+            $objFilter->setFilterProperty($filtId, "color", $fa["color"]);
+            $objFilter->setFilterProperty($filtId, "wratten", $fa["wratten"]);
+            $objFilter->setFilterProperty($filtId, "schott", $fa["schott"]);
+          } else {
+            // Add the new filter!
+            $filtId = $objFilter->addFilter($fa["name"], $fa["type"], $fa["color"], $fa["wratten"], $fa["schott"]);
+            $objDatabase->execSQL("update filters set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $filtId . "\";");
+          }
+        }
 
         
         // Eyepiece is not mandatory
@@ -681,10 +700,6 @@
         // Lens is not mandatory
         if ($observation->getElementsByTagName( "lens" )->item(0)) {
 //          print "Lens : " . $lensArray[$observation->getElementsByTagName( "lens" )->item(0)->nodeValue]["name"] . ", ";
-        }
-        // Filter is not mandatory
-        if ($observation->getElementsByTagName( "filter" )->item(0)) {
-//          print "Filter : " . $filterArray[$observation->getElementsByTagName( "filter" )->item(0)->nodeValue]["name"] . ", ";
         }
         
         // Object!!!

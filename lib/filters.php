@@ -6,6 +6,7 @@ interface iFilters
  public  function getEchoListColor($color);                                              // returns the color in list format for the activated language
  public  function getEchoListType($type);                                                // returns the type in list format for the activated language 
  public  function getEchoType($type);                                                    // returns the type in the activated language
+ public  function getFilterId($name, $observer);                                         // returns the id for this filter
  public  function getFilterObserverPropertyFromName($name, $observer, $property);        // returns the property for the filter of the observer
  public  function getFilterPropertiesFromId($id);                                        // returns the properties of the filters with id
  public  function getFilterPropertyFromId($id,$property,$defaultValue='');               // returns the property of the given filter
@@ -87,6 +88,9 @@ class Filters implements iFilters
 	 if($type == FilterNeutral)    return FiltersNeutral;
 	 if($type == FilterCorrective) return FiltersCorrective;
 	 return "-";
+ }
+ public  function getFilterId($name, $observer)                                         // returns the id for this instrument
+ { global $objDatabase; return $objDatabase->selectSingleValue("SELECT id FROM filters where name=\"".htmlentities($name,ENT_COMPAT,"ISO-8859-15",0)."\" and observer=\"".$observer."\"",'id',-1);
  }
  public  function getFilterObserverPropertyFromName($name, $observer, $property)        // returns the property for the filter of the observer
  { global $objDatabase; 
