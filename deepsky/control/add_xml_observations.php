@@ -636,7 +636,6 @@
       if ($observerid == $id) {
         // Check if the observation already exists in DeepskyLog (target and begin should tell this)
 /*        print "Date and time : " . $observation->getElementsByTagName( "begin" )->item(0)->nodeValue . ", ";
-        print "Target : " . $targetArray[$observation->getElementsByTagName( "target" )->item(0)->nodeValue]["name"] . ", ";
 */        
         // Check if the site already exists in DeepskyLog
         $site = $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue]["name"];
@@ -733,8 +732,31 @@
 
 
         // Object!!!
+        $target = $targetArray[$observation->getElementsByTagName( "target" )->item(0)->nodeValue]["name"];
+        $ta = $targetArray[$observation->getElementsByTagName( "target" )->item(0)->nodeValue];
+        
+        $pattern = '/([A-Za-z]+)([\d\D\w]+)/';
+        $targetName = preg_replace($pattern, '${1} ${2}', $target);
 
+        $objeId = -1;
+        // Check if the object with the given name exists. If this is the case, set the objeId, else check the alternative names
+        if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\")")) > 0) {
+          $objeId = $objObject->getDsObjectName($targetName);
+        } else {
+          for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
+            $targetName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
+            if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\")")) > 0) {
+              $objeId = $objObject->getDsObjectName($targetName);
+            }
+          }
+          if ($objeId == -1) {
+            print "New object to add to the database : " . $ta["name"];
+          }
+        }
 
+        
+        
+        
         // Limiting magnitude is not mandatory
         if ($observation->getElementsByTagName( "faintestStar" )->item(0)) {
 //          print "Limiting magnitude : " . $observation->getElementsByTagName( "faintestStar" )->item(0)->nodeValue . ", ";
