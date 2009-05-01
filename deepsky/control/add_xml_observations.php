@@ -634,9 +634,6 @@
     {
       $observerid = $observation->getElementsByTagName( "observer" )->item(0)->nodeValue;
       if ($observerid == $id) {
-        // Check if the observation already exists in DeepskyLog (target and begin should tell this)
-/*        print "Date and time : " . $observation->getElementsByTagName( "begin" )->item(0)->nodeValue . ", ";
-*/        
         // Check if the site already exists in DeepskyLog
         $site = $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue]["name"];
         
@@ -740,7 +737,8 @@
 
         $objeId = -1;
         // Check if the object with the given name exists. If this is the case, set the objeId, else check the alternative names
-        if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\")")) > 0) {
+print_r($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\")"));
+        if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\");")) > 0) {
           $objeId = $objObject->getDsObjectName($targetName);
         } else {
           for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
@@ -750,12 +748,24 @@
             }
           }
           if ($objeId == -1) {
-            print "New object to add to the database : " . $ta["name"];
+            $targetName = preg_replace($pattern, '${1} ${2}', $target);
+            $names = explode(" ", $targetName);
+
+            $objeId = $objObject->addDSObject($names[0]." ".$names[2], $names[0], $names[2], $ta["type"], $ta["constellation"], $ta["ra"], $ta["dec"], $ta["mag"], $ta["subr"], $ta["diam1"], $ta["diam2"], $ta["pa"], "", $ta["datasource"]);
+            for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
+              $aliasName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
+              $aliasNames = explode(" ", $aliasName);
+              $objObject->newAltName($names[0]." ".$names[2], $aliasNames[0], $aliasNames[2]);
+            }
           }
         }
 
+        // Check if the observation already exists!
+        print $objeId . " - " . $observation->getElementsByTagName( "begin" )->item(0)->nodeValue;
         
-        
+        // Check if the observation already exists in DeepskyLog (target and begin should tell this)
+/*        print "Date and time : " . $observation->getElementsByTagName( "begin" )->item(0)->nodeValue . ", ";
+*/        
         
         // Limiting magnitude is not mandatory
         if ($observation->getElementsByTagName( "faintestStar" )->item(0)) {
