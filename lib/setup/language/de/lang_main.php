@@ -2,6 +2,8 @@
 
 define("LangGeneralObservations","Beobachtungen");
 
+define("LangIndexPleaseWait","Please wait a moment while loading data...");
+
 define("LangException001", "Sie m&uuml;ssen als Administrator angemeldet sein um diese Funktion auszuf&uuml;hren.");
 define("LangException002", "Sie m&uuml;ssen sich anmelden um Ihre Beobachtungspl&auml;tze oder Zubeh&ouml;r zu &auml;ndern.");
 define("LangException002b","Sie m&uuml;ssen sich anmelden um eine Beobachtung zu best&auml;tigen.");

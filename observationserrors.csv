@@ -1,5 +1,5 @@
 <?php 
-header ("Content-Type: application/vnd.ms-excel");
+header ("Content-Type: text/csv");
 header ("Content-Disposition: attachment; filename=\"observationserrors.csv\"");
 $inIndex = true;
 include 'common/entryexit/preludes.php';

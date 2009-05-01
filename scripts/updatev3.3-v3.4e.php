@@ -20,7 +20,7 @@
  $sql = " ALTER TABLE observations MODIFY COLUMN limmag FLOAT DEFAULT '0';";
  $run = mysql_query($sql) or die(mysql_error());
  
- $sql = "ALTER TABLE observations CHANGE COLUMN characterType clusterType VARCHAR(1) NOT NULL;";
+ $sql = "ALTER TABLE observations CHANGE COLUMN characterType clusterType VARCHAR(1) NOT NULL DEFAULT '';";
  $run = mysql_query($sql) or die(mysql_error());
  
  print "Database update was successful!\n"

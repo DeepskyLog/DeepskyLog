@@ -1168,7 +1168,9 @@ class Observations {
 	}
 	public function validateChangeObservation() // validate_change_observation.php - checks if the change new observation form is correctly filled in
 	{ global $objUtil,$objObservation,$maxFileSize,$objObserver;
-		if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']) // pushed change observation button
+				if(!($loggedUser))
+			throw new Exception(LangException002b);
+	  if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']) // pushed change observation button
 		{ if (!$_POST['day'] || !$_POST['month'] || !$_POST['year'] || $_POST['location'] == "1" || !$_POST['instrument'] || !$_POST['description'])
 				throw new Exception(LangValidateObservationMessage1);
 			elseif ($_FILES['drawing']['size'] > $maxFileSize) // file size of drawing too big
@@ -1347,7 +1349,7 @@ class Observations {
     }
 	}
 	public function validateObservation()
-	{ global $loggedUser, $objUtil, $objObservation, $objObserver, $maxFileSize, $entryMessage;
+	{ global $loggedUser, $objUtil, $objObservation, $objObserver, $maxFileSize, $entryMessage, $objPresentations;
 		if(!($loggedUser))
 			throw new Exception(LangException002b);
 		elseif($objUtil->checkSessionKey('addObs',0)!=$objUtil->checkPostKey('timestamp', -1)) 
@@ -1386,8 +1388,13 @@ class Observations {
 			{ $entryMessage .= LangValidateObservationMessage6;
 				$_GET['indexAction'] = 'add_observation';
 			} 
-		  elseif((!is_numeric($_POST['month']))||(!is_numeric($_POST['day']))||(!is_numeric($_POST['year']))||(!checkdate($_POST['month'],$_POST['day'],$_POST['year']))) {
-		  	$entryMessage .= LangValidateObservationMessage2;
+		  elseif((!is_numeric($_POST['month']))||
+		         (!is_numeric($_POST['day']))||
+		         (!is_numeric($_POST['year']))||
+		         (!checkdate($_POST['month'],$_POST['day'],$_POST['year']))||
+		         ((sprintf("%04d",$_POST['year']).sprintf("%02d",$_POST['month']).sprintf("%02d",$_POST['day']))<'19500000')||
+		         ((sprintf("%04d",$_POST['year']).sprintf("%02d",$_POST['month']).sprintf("%02d",$_POST['day']))>date('Ymd',strtotime('+1 day')))) 
+		 {	$entryMessage .= LangValidateObservationMessage2;
 				$_GET['indexAction'] = 'add_observation';
 		  }
 		  elseif(($date=$_POST['year'].sprintf("%02d", $_POST['month']).sprintf("%02d", $_POST['day']))>date('Ymd')) {

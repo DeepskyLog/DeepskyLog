@@ -53,6 +53,12 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	echo "<td  style=\"width:20%\">&nbsp</td>";
 	echo "</tr>";
 	echo "<tr>"; //=================================================================================================================== DATE  / TIME
+  if(!($objUtil->checkPostKey('month')))
+  { $yesterday=date('Ymd',strtotime('-1 day'));
+    $_POST['year']=substr($yesterday,0,4);
+    $_POST['month']=substr($yesterday,4,2);
+    $_POST['day']=substr($yesterday,6,2);
+  }
 	echo "<td class=\"fieldname\" align=\"right\">";
 	echo LangViewObservationField5 . "&nbsp;*";
 	echo "</td>";
@@ -111,7 +117,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	echo "</td>";
 	echo "<td>";
 	echo "<select name=\"instrument\" style=\"width:300px\" class=\"inputfield requiredField\">";
-	echo "<option value=\"\"></option>";
+//	echo "<option value=\"\"></option>";
 	$instr=$objInstrument->getSortedInstrumentsList("name", $loggedUser);
 	while(list($key,$value)=each($instr))
 		echo "<option ".(($objUtil->checkPostKey('instrument',0)==$key)?"selected=\"selected\"":'')." value=\"".$key."\">".$value."</option>";
@@ -162,10 +168,17 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	echo "</td>";
 	echo "</tr>";
 	echo "<tr>";
+	echo "<td class=\"fieldname\" align=\"right\">";
+	echo "Magnification";
+	echo "</td>";
+	echo "<td>";
+echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"magnification\" size=\"4\" style=\"text-align:center\" value=\"" . ($objUtil->checkPostKey('magnification') ? sprintf("%2d", $objUtil->checkPostKey('magnification')) : '') . "\" /> x";
+	echo "</td>";
+	echo "</tr>";
+	echo "<tr>";
 	echo "<td>&nbsp;</td>";
 	echo "</tr>";
 	echo "<tr>";
-
 	echo "<td class=\"fieldname\" align=\"right\">";
 	echo LangViewObservationField22;
 	echo "</td>";
@@ -183,7 +196,6 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	echo "<input type=\"file\" name=\"drawing\" file=\"" . $objUtil->checkPostKey('drawing') . "\ class=\"inputfield\" style=\"width:300px\"/>";
 	echo "</td>";
 	echo "</tr>";
-
 	echo "<tr>";
 	echo "<td class=\"fieldname\" align=\"right\">";
 	echo LangViewObservationField33; //============================================================================================================== Estimated diameter

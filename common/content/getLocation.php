@@ -1,17 +1,15 @@
 <?php // getLocation.php - prints the locations looked up into the database 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!$loggedUser) throw new Exception(LangException002);
-elseif(!($locationname=$objUtil->checkPostKey('location'))) throw new Exception(LangException013);
+elseif(!($locationname=$objUtil->checkPostKey('location_name'))) throw new Exception(LangException013);
 elseif(!($countryname=$objUtil->checkPostKey('country'))) throw new Exception(LangException014);
-elseif(!($objUtil->checkUserID($objLocation->getLocationPropertyFromId($locationid,'observer','')))) throw new Exception(LangExcpetion012);
 else
 {
-$latitudestr = $objLocation->getLocationPropertyFromId($locationid,'latitude');
 echo "<div id=\"main\">";
 echo "<h2>".LangGetLocation1."</h2>";
 $count=0;
-$result=$objLocation->getLocationsFromDatabase($location_name,$countryname);
-if(($result)&&($location_name))
+$result=$objLocation->getLocationsFromDatabase($locationname,$countryname);
+if(($result)&&($locationname))
 { echo "<div class=\"results\">".LangGetLocation2."<a href=\"".$baseURL."index.php?indexAction=search_sites\">".LangGetLocation2a."</div>";
   echo "<p>";
 	echo "<table>";

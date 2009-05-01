@@ -713,7 +713,7 @@ class Objects implements iObjects
     $objDatabase->execSQL("UPDATE objects SET torresC       = \"".$objAtlas->calculateAtlasPage('torresC'      ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
   }
   public  function setDsObjectSBObj($name)
-  { global $objDatabase;
+  { global $objDatabase,$objUtil;
     $result=$objDatabase->selectRecordArray("SELECT diam1, diam2, mag FROM objects WHERE name=\"".$name."\"");
  	  if(($result['mag']!=99.9)&&(($result['diam1']!= 0)||($result['diam2']!=0)))
 	  { if(($result['diam1']!=0)&&($result['diam2']==0))
@@ -804,9 +804,14 @@ class Objects implements iObjects
     echo "<form action=\"".$baseURL."index.php?indexAction=view_image\" method=\"post\">";
     // LINK TO DSS IMAGE
     echo "<select name=\"imagesize\">";
-    echo "<option".(($zoom<=15)?" selected":"").              " value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"; 
-    echo "<option".((($zoom>15)&&($zoom<=30))?" selected":"")." value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>";
-    echo "<option".(($zoom>30)?" selected":"").               " value=\"60\">60&#39;&nbsp;x&nbsp;60&#39;</option>"; 
+    if($size=$objUtil->checkPostKey('imagesize'))
+      for($i=15;$i<120;$i*=2) 
+        echo "<option".(($size==$i)?" selected":"")." value=\"".$i."\">".$i."&#39;&nbsp;x&nbsp;".$i."&#39;</option>"; 
+    else
+    { echo "<option".(($zoom<=15)?" selected":"").              " value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"; 
+      echo "<option".((($zoom>15)&&($zoom<=30))?" selected":"")." value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>";
+      echo "<option".(($zoom>30)?" selected":"").               " value=\"60\">60&#39;&nbsp;x&nbsp;60&#39;</option>"; 
+    }
     echo "</select>";    
     echo "<input type=\"hidden\" name=\"raDSS\"   value=\"" . $raDSS . "\" />";
     echo "<input type=\"hidden\" name=\"declDSS\" value=\"" . $declDSS . "\" />";

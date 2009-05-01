@@ -17,7 +17,7 @@ interface iPresentation
   public  function raToStringDSS($ra);                                         // returns html DSS ra coordinates eg 6+43+55 for 6h43m55s
   public  function raToStringHM($ra);
   public  function searchAndLinkCatalogsInText($theText);                              // hyperlinks M, NGC, .. catalogs in a text
-  
+  public  function show3Fields($field1,$field2,$field3);
 }
 // function tableFieldnameFieldExplanation($name,$field,$explanation)                   // 3-item field line, containing the name of the field, the field value and the explanation
 // function tableFieldnameField($name,$field)                                           // 2-item field line, containing the name of the field and the field value
@@ -237,6 +237,14 @@ class Presentations implements iPresentation
 		$patterns[3]= "/(Arp|ARP|arp)\s*(\d+)/";
 		$replacements[3]="<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=Arp%20\\2\">Arp&nbsp;\\2</a>";
 		return preg_replace($patterns, $replacements, $theText);
+  }
+  public  function show3Fields($field1,$field2,$field3)
+  { echo "<div style=\"position:relative;width:100%;height:40;\">";
+    echo "<div style=\"height:40;width:33%;vertical-align:middle;text-align:right;position:absolute;left:0%;top:0px;padding-right:5px;\">".$field1."</div>";
+    echo "<div style=\"height:auto;width:33%;text-align:left;position:absolute;left:33%;top:0px;padding-left:5px;\">".$field2."</div>";
+    echo "<div style=\"height:auto;width:34%;text-align:left;position:absolute;left:66%;top:0px;padding-left:5px;\">".$field3."</div>";
+    echo "</div>";
+  	
   }
 }
 $objPresentations=new Presentations;
