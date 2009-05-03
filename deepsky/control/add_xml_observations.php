@@ -734,15 +734,16 @@
         
         $pattern = '/([A-Za-z]+)([\d\D\w]+)/';
         $targetName = preg_replace($pattern, '${1} ${2}', $target);
-
+        $targetName = str_replace("  ", " ", $targetName);
+        
         $objeId = -1;
         // Check if the object with the given name exists. If this is the case, set the objeId, else check the alternative names
-print_r($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\")"));
         if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\");")) > 0) {
           $objeId = $objObject->getDsObjectName($targetName);
         } else {
           for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
             $targetName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
+            $targetName = str_replace("  ", " ", $targetName);
             if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\")")) > 0) {
               $objeId = $objObject->getDsObjectName($targetName);
             }
@@ -750,18 +751,20 @@ print_r($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM obje
           if ($objeId == -1) {
             $targetName = preg_replace($pattern, '${1} ${2}', $target);
             $names = explode(" ", $targetName);
-
-            $objeId = $objObject->addDSObject($names[0]." ".$names[2], $names[0], $names[2], $ta["type"], $ta["constellation"], $ta["ra"], $ta["dec"], $ta["mag"], $ta["subr"], $ta["diam1"], $ta["diam2"], $ta["pa"], "", $ta["datasource"]);
+            $targetName = str_replace("  ", " ", $targetName);
+            
+            $objObject->addDSObject($names[0]." ".$names[2], $names[0], $names[2], $ta["type"], $ta["constellation"], $ta["ra"], $ta["dec"], $ta["mag"], $ta["subr"], $ta["diam1"], $ta["diam2"], $ta["pa"], "", $ta["datasource"]);
             for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
               $aliasName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
               $aliasNames = explode(" ", $aliasName);
               $objObject->newAltName($names[0]." ".$names[2], $aliasNames[0], $aliasNames[2]);
             }
+            $objeId = $objObject->getDsObjectName($targetName);            
           }
         }
 
         // Check if the observation already exists!
-        print $objeId . " - " . $observation->getElementsByTagName( "begin" )->item(0)->nodeValue;
+//        print $objeId . " - " . $observation->getElementsByTagName( "begin" )->item(0)->nodeValue;
         
         // Check if the observation already exists in DeepskyLog (target and begin should tell this)
 /*        print "Date and time : " . $observation->getElementsByTagName( "begin" )->item(0)->nodeValue . ", ";
