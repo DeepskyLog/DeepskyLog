@@ -84,6 +84,10 @@ else
 	{ $entryMessage.=$objObserver->validateObserver();
 	  $_GET['indexAction']='view_observers';
 	}
+	if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="validate_delete_observer"))       // validate observer
+	{ $entryMessage.=$objObserver->validateDeleteObserver();
+	  $_GET['indexAction']='view_observers';
+	}
 	if($objUtil->checkGetKey('indexAction')=="validate_site")                                                          // validate location
 	{ $entryMessage.=$objLocation->validateSaveLocation();
 	  $_GET['indexAction']="add_site";

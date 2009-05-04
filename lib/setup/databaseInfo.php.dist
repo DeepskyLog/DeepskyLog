@@ -1,14 +1,14 @@
 <?php
   // Change the following to make deepskylog work with your database
-  $host        = "localhost";
-  $user        = "wim";
-  $pass        = "";
-  $dbname      = "deepskylog";
+  $host           = "localhost";
+  $user           = "wim";
+  $pass           = "";
+  $dbname         = "deepskylog";
+  $developversion = true;
   
   // Installation directory and url (each one has to end on a slash!)
   $instDir      = "/software/www/htdocs/deepskylog/";
   $baseURL      = "http://localhost/deepskylog/";
-  $developPlatform = true;
   
   // General settings
   // The title to appear above all pages

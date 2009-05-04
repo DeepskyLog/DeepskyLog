@@ -5,7 +5,12 @@ elseif(!$_SESSION['admin']) throw new Exception(LangException001);
 else
 {
 set_time_limit(60);
-$sort=$objUtil->checkGetKey('sort','name');
+$sort=$objUtil->checkGetKey('sort','');
+if(!($sort))
+{ $sort='registrationDate';
+  $_GET['sort']='registrationDate';
+  $_GET['previous']='registrationDate';
+}
 if(!$min) $min=$objUtil->checkGetKey('min',0);
 // the code below is very strange but works
 if((isset($_GET['previous'])))
@@ -42,28 +47,33 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=id
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=name&amp;previous=$previous\">".LangViewObserverName."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=firstname&amp;previous=$previous\">".LangViewObserverFirstName."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=email&amp;previous=$previous\">Email</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=registrationDate&amp;previous=$previous\">Reg. Date</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=role&amp;previous=$previous\">".LangViewObserverRole."</a></td>";
 echo "<td></td>";
 echo "</tr>";
 while(list ($key, $value) = each($observers))
-{ $name = $objObserver->getObserverProperty($value,'name');
-  $firstname = $objObserver->getObserverProperty($value,'firstname');
-  $email = $objObserver->getObserverProperty($value,'email');
-  echo "<tr class=\"type".(2-($count%2))."\">";
-  echo "<td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($value)."\">".$value."</a> </td>";
-  echo "<td>".$name."</td>";
-  echo "<td>".$firstname."</td>";
-  echo "<td> <a href=\"mailto:".$email."\"> ".$email." </a> </td>";
-  $role = $objObserver->getObserverProperty($value,'role',2);
-  if ($role == RoleAdmin)
-    echo "<td> ".LangViewObserverAdmin."</td><td></td>";
-  elseif ($role == RoleUser)
-    echo "<td> ".LangViewObserverUser."</td><td></td>";
-  elseif ($role == RoleCometAdmin)
-    echo "<td> ".LangViewObserverCometAdmin."</td><td></td>";
-  elseif ($role == RoleWaitlist)
-    echo "<td> ".LangViewObserverWaitlist."</td><td><a href=\"".$baseURL."index.php?indexAction=validate_observer&amp;validate=".urlencode($value)."\">".LangViewObserverValidate."</a> / <a href=\"".$baseURL."index.php?indexAction=validateDeleteobserver&amp;validate=".urlencode($value)."\">"."To implement: Verwijder"."</a></td>";
-  echo "</tr>";
+{ if($count >= $min && $count < $max) // selection
+  { $name = $objObserver->getObserverProperty($value,'name');
+	  $firstname = $objObserver->getObserverProperty($value,'firstname');
+	  $email = $objObserver->getObserverProperty($value,'email');
+	  $regDate = $objObserver->getObserverProperty($value,'registrationDate');
+	  echo "<tr class=\"type".(2-($count%2))."\">";
+	  echo "<td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($value)."\">".$value."</a> </td>";
+	  echo "<td>".$name."</td>";
+	  echo "<td>".$firstname."</td>";
+	  echo "<td> <a href=\"mailto:".$email."\"> ".$email." </a> </td>";
+	  echo "<td>".$regDate." </td>";
+	  $role = $objObserver->getObserverProperty($value,'role',2);
+	  if ($role == RoleAdmin)
+	    echo "<td> ".LangViewObserverAdmin."</td><td></td>";
+	  elseif ($role == RoleUser)
+	    echo "<td> ".LangViewObserverUser."</td><td></td>";
+	  elseif ($role == RoleCometAdmin)
+	    echo "<td> ".LangViewObserverCometAdmin."</td><td></td>";
+	  elseif ($role == RoleWaitlist)
+	    echo "<td> ".LangViewObserverWaitlist."</td><td><a href=\"".$baseURL."index.php?indexAction=validate_observer&amp;validate=".urlencode($value)."\">".LangViewObserverValidate."</a> / <a href=\"".$baseURL."index.php?indexAction=validate_delete_observer&amp;validateDelete=".urlencode($value)."\">"."Verwijder"."</a></td>";
+	  echo "</tr>";
+  }
   $count++;
 }
 echo "</table>";

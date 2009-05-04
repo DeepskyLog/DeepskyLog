@@ -34,7 +34,7 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
 { if(array_key_exists('deepskylog_id', $_POST)&&$_POST['deepskylog_id']&&array_key_exists('passwd', $_POST)&&$_POST['passwd'])              // all fields filled in
   { $login  = $_POST['deepskylog_id'];                                          // get password from form and encrypt
 	  $passwd = md5($_POST['passwd']);
-    $passwd_db = $GLOBALS['objObserver']->getObserverProperty($login,'password');                  // get password from database 
+	  $passwd_db = $GLOBALS['objObserver']->getObserverProperty($login,'password');                  // get password from database 
     if($passwd_db==$passwd)                                                     // check if passwords match
     { $_SESSION['lang']=$objObserver->getObserverProperty($login,'language');
 			if($GLOBALS['objObserver']->getObserverProperty($login,'role',2)=="2")                         // user in waitlist already tries to log in
@@ -110,6 +110,7 @@ else
   $_SESSION['alllanguages'] = $allLanguages; 
   $usedLanguages = $objLanguage->getLanguageKeys($_SESSION['lang']);
 }
+require_once "lib/setup/"."$language";
 if($loginErrorCode||$loginErrorText)
 { $_SESSION['deepskylog_id']='';
 	setcookie("deepskylogsec","",time()-3600,"/");

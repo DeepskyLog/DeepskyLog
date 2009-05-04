@@ -106,6 +106,7 @@ class Observers implements iObservers
 		    $this->setUsedLanguages($_POST['deepskylog_id'], $usedLanguages);
 		    $this->setObserverProperty($_POST['deepskylog_id'],'observationlanguage', $_POST['description_language']);
 		    $this->setObserverProperty($_POST['deepskylog_id'],'language', $_POST['language']);
+		    $this->setObserverProperty($_POST['deepskylog_id'],'registrationDate', date("Ymd H:m"));
 		    $body = LangValidateAccountEmailLine1 . "\n"                            // send mail to administrator
 		              . "\n" . LangValidateAccountEmailLine1bis
 		              . $_POST['deepskylog_id']
@@ -171,8 +172,24 @@ class Observers implements iObservers
 		  }
 		}
 	}
-	public  function validateObserver()                                          // validateObserver validates the user with the given id and gives the user the given role
-  { global $objDatabase,$objUtil; 
+	public  function validateDeleteObserver()                                          // validateObserver validates the user with the given id and gives the user the given role
+  { global $objDatabase,$objUtil, $entryMessage,$loggedUser; 
+    if(!($objUtil->checkSessionKey('admin')=='yes'))
+      throw new Exception(LangException001);
+    $objDatabase->execSQL("DELETE FROM observers WHERE id=\"".($id=$objUtil->checkGetKey('validateDelete'))."\"");
+    $subject = "Deepskylog account deleted";
+    $body = "The account for ".$id." was deleted by ".$loggedUser;
+    $administrators = $this->getAdministrators();
+    $fromMail = $this->getObserverProperty($administrators[0],'email');
+    $headers = "From:".$fromMail;
+    if(isset($developversion)&&($developversion==true))
+      mail($fromMail, $subject, $body, $headers);
+    else
+      $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".";
+    return "The user has been erased.";
+  }	
+  public  function validateObserver()                                          // validateObserver validates the user with the given id and gives the user the given role
+  { global $objDatabase,$objUtil, $entryMessage; 
     if(!($objUtil->checkSessionKey('admin')=='yes'))
       throw new Exception(LangException001);
     $objDatabase->execSQL("UPDATE observers SET role = \"".($role=RoleUser)."\" WHERE id=\"".($id=$objUtil->checkGetKey('validate'))."\"");
@@ -184,7 +201,10 @@ class Observers implements iObservers
     $administrators = $this->getAdministrators();
     $fromMail = $this->getObserverProperty($administrators[0],'email');
     $headers = "From:".$fromMail;
-    mail($this->getObserverProperty($id,'email'), $subject, $body, $headers);
+    if(isset($developversion)&&($developversion==true))
+      mail($this->getObserverProperty($id,'email'), $subject, $body, $headers);
+    else
+      $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".";
     return LangValidateObserverMessage1.' '.LangValidateObserverMessage2;
   }
 }

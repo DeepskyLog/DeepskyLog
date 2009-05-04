@@ -123,7 +123,7 @@ if ($_POST['newobject'])
     $headers="From:".$objObserver->getObserverProperty($admins[0],'email');
     $body=LangValidateAccountEmailTitleObject." ".$name." ". "www.deepskylog.org/index.php?indexAction=detail_object&object=".urlencode($name)." ".
 		      LangValidateAccountEmailTitleObjectObserver." ".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'name')." ".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'firstname')." www.deepskylog.org/index.php?indexAction=detail_observer&user=".urlencode($_SESSION['deepskylog_id']);
-    mail($to, $subject, $body, $headers);
+		mail($to, $subject, $body, $headers);
     $_GET['indexAction']='detail_object';
 		$_GET['object']=$name;
   }
