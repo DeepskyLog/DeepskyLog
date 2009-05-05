@@ -3,8 +3,9 @@
  require_once "../lib/database.php";
 
  print "Database update will erase users whithout observations, instruments... or so.\n";
- print "Database update may take some minutes...\n";
+ print "Not executed for now, will be implemented later...\n";
  
+ /*
  $sql = "DELETE FROM observers
          WHERE (id NOT IN (SELECT DISTINCT observerid FROM observations))       AND
                (id NOT IN (SELECT DISTINCT observerid FROM cometobservations))  AND
@@ -18,5 +19,5 @@
  $run = mysql_query($sql) or die(mysql_error());
 
  print "Database update was successful!\n";
-
+*/
 ?>
