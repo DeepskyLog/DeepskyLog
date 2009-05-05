@@ -1,9 +1,28 @@
 <?php
 
+//  Still to Translate: 
+
+//  LangIndexPleaseWait
+//  LangException000
+//  LangValidateLensMessage1
+//  LangCSVMessage2
+//  LangCSVMessage4
+//  LangCSVMessage8
+//  LangCSVMessage9
+//  LangCSVMessage10
+//  LangCSVError10
+//  LangCSVError10a
+//  LangCSVError10b
+//  LangCSVError10e
+//  LangCSVError10c
+
 define("LangGeneralObservations","Beobachtungen");
 
 define("LangIndexPleaseWait","Please wait a moment while loading data...");
 
+define("LangMessageDeepskyLog","DeepskyLog");
+
+define("LangException000", "An unknown error occured. Please do contact the developers with this messsage.");
 define("LangException001", "Sie m&uuml;ssen als Administrator angemeldet sein um diese Funktion auszuf&uuml;hren.");
 define("LangException002", "Sie m&uuml;ssen sich anmelden um Ihre Beobachtungspl&auml;tze oder Zubeh&ouml;r zu &auml;ndern.");
 define("LangException002b","Sie m&uuml;ssen sich anmelden um eine Beobachtung zu best&auml;tigen.");
@@ -839,7 +858,7 @@ define("LangValidateFilterMessage6", "Der Filter wurde aus Ihrem Zubeh&ouml;r en
 // control/validate_observer.php
 
 define("LangValidateObserverMessage1", "Der Benutzer wurde erfolgreich hochgeladen!");
-define("LangValidateObserverMessage2", "Benutzer ge&auml;ndert");
+define("LangValidateObserverMessage2", "<br />Benutzer ge&auml;ndert.");
 
 // error.php
 

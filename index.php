@@ -28,6 +28,8 @@ try
   echo    "<div id=\"div5\">";                                                                            // div 5 = page contents
   $includeFile=$objUtil->utilitiesDispatchIndexAction();                                                  // Determine the page to show
   include 'common/entryexit/data.php';                                                                    // Get data for the form, object data, observation data, etc.
+  if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
+    echo "<center>".$entryMessage."</center><hr />";
   include $includeFile;                                                                                   // Center content section	
   echo    "</div>";
 }

@@ -49,18 +49,18 @@ echo "</tr>";
 echo "<tr>";
 echo "<td class=\"fieldname\">".LangViewObjectField3."&nbsp;*"."</td>";
 echo "<td colspan=\"2\">";
-echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" name=\"RAhours\" size=\"2\" value=\"\" />&nbsp;h&nbsp;";
-echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" name=\"RAminutes\" size=\"2\" value=\"\" />&nbsp;m&nbsp;"; 
-echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" name=\"RAseconds\" size=\"2\" value=\"\" />&nbsp;s&nbsp;";
+echo "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAhours\" size=\"3\" value=\"\" />&nbsp;h&nbsp;";
+echo "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAminutes\" size=\"3\" value=\"\" />&nbsp;m&nbsp;"; 
+echo "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAseconds\" size=\"3\" value=\"\" />&nbsp;s&nbsp;";
 echo "</td>";
 echo "</tr>";
 // DECLINATION
 echo "<tr>";
 echo "<td class=\"fieldname\">".LangViewObjectField4."&nbsp;*"."</td>";
 echo "<td colspan=\"2\">";
-echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"3\" name=\"DeclDegrees\" size=\"3\" value=\"\" />&nbsp;&deg;&nbsp;";
-echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" name=\"DeclMinutes\" size=\"2\" value=\"\" />&nbsp;&#39;&nbsp;";
-echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" name=\"DeclSeconds\" size=\"2\" value=\"\" />&nbsp;&quot;&nbsp;";
+echo "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"DeclDegrees\" size=\"3\" value=\"\" />&nbsp;d&nbsp;";
+echo "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"DeclMinutes\" size=\"3\" value=\"\" />&nbsp;m&nbsp;";
+echo "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"DeclSeconds\" size=\"3\" value=\"\" />&nbsp;s&nbsp;";
 echo "</td>";
 echo "</tr>";
 // MAGNITUDE

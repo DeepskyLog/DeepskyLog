@@ -1,9 +1,46 @@
 <?php
 
+//  Still to Translate or check on correct translation: 
+
+//  LangIndexPleaseWait
+//  LangException000->016b
+//  LangAccountSubscribed1->9
+//  LangNoPartOfsBrackets
+//  LangOrPartOfs
+//  LangShowWithoutPartOfs
+//  LangShowWithPartOfs
+//  LangInstructionsNoObjectFound
+//  LangSortOnAsc
+//  LangSortOnDesc
+//  LangAddSiteField8
+//  LangViewObservationField33->43
+//  LangValidateLensMessage1
+//  LangCSVMessage2
+//  LangCSVMessage4
+//  LangCSVMessage8
+//  LangCSVMessage9
+//  LangCSVMessage10
+//  LangCSVError10
+//  LangCSVError10a
+//  LangCSVError10b
+//  LangCSVError10e
+//  LangCSVError10c
+//  LangXMLTitle
+//  LangXMLMessage1
+//  LangXMLError1->7
+//  LangXMLButton
+//  LangValidateXMLMessage
+//  $ClusterTypeA->X
+
+
+
 define("LangGeneralObservations","observations");
 
 define("LangIndexPleaseWait","Prière d'attendre un moment pendant le recherche des données...");
 
+define("LangMessageDeepskyLog","DeepskyLog");
+
+define("LangException000", "Er is een ongekende fout opgetreden. Gelieve de developers te contacteren met dit bericht.");
 define("LangException001", "U dient ingelogd te zijn als administrator om deze operaties uit te voeren. Gelieve de developers te contacteren met dit bericht.");
 define("LangException002", "U dient ingelogd te zijn om locaties en apparatuur te beheren. Gelieve de developers te contacteren met dit bericht.");
 define("LangException002b","U dient ingelogd te zijn om observaties te beheren. Gelieve de developers te contacteren met dit bericht.");
@@ -835,7 +872,7 @@ define("LangValidateEyepieceMessage5", "L'oculaire est modifi&#233; dans la banq
 // control/validate_observer.php
 
 define("LangValidateObserverMessage1", "L'adaptation de l'utilisateur a &eacute;t&eacute; fait!");
-define("LangValidateObserverMessage2", "L'utilisateur a &eacute;t&eacute; adapt&eacute;");
+define("LangValidateObserverMessage2", "<br />L'utilisateur a &eacute;t&eacute; adapt&eacute;.");
 
 // error.php
 

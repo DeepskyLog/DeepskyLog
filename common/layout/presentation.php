@@ -30,7 +30,10 @@ interface iPresentation
 // function tableTypeFieldnameField($type,$name,$field)                                 // 2-item type line, containing the name and the field, and formatted to the type
 class Presentations implements iPresentation
 { public  function alertMessage($theMessage)
-  { echo "<script  type=\"text/javascript\">alert('".addslashes(strip_tags(html_entity_decode($this->br2nl($theMessage))))."');</script>";
+  { global $baseURL;
+    //echo "<script  type=\"text/javascript\">alert('".addslashes(strip_tags(html_entity_decode($this->br2nl($theMessage))))."');</script>";
+  $_SESSION['message']=$theMessage;  
+  echo "<script  type=\"text/javascript\">window.open('".$baseURL."message.php'".",'".LangMessageDeepskyLog."','location=no,navigation=no,status=no,left=300,top=280,height=200,width=400,scrollbars=no');</script>";
   }
   public function br2dash($data) 
   { return preg_replace('!<br.*>!iU', "-", $data );

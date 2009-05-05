@@ -4,6 +4,9 @@ define("LangGeneralObservations","observations");
 
 define("LangIndexPleaseWait","Please wait a moment while loading data...");
 
+define("LangMessageDeepskyLog","DeepskyLog");
+
+define("LangException000", "An unknown error occured. Please do contact the developers with this messsage.");
 define("LangException001", "You need to be logged in as an administrator to execute these operations.");
 define("LangException002", "You need to be logged in to change your locations or equipment.");
 define("LangException002b","You need to be logged in to validate an observation.");
@@ -838,7 +841,7 @@ define("LangValidateFilterMessage6", "The filter is removed from your equipment 
 // control/validate_observer.php
 
 define("LangValidateObserverMessage1", "The user has successfully been updated!");
-define("LangValidateObserverMessage2", "User updated");
+define("LangValidateObserverMessage2", "<br />User updated.");
 
 // error.php
 

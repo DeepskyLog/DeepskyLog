@@ -1001,10 +1001,10 @@ class Objects implements iObjects
    return $objectList;
   }
 	public  function validateObject()                                                 // checks if the add new object form is correctly filled in and eventually adds the object to the database
-	{ global $objUtil,$objObject, $objObserver, $entryMessage, $loggedUser;
+	{ global $objUtil,$objObject, $objObserver, $entryMessage, $loggedUser, $developversion;
 	  if(!($loggedUser))
 	    throw new Exception(LangException002c);
-	  if($_POST['newobject'])
+	  if($objUtil->checkPostKey('newobject'))
 		{ $check = true;
 		  $ra=$objUtil->checkPostKey('RAhours',0)+($objUtil->checkPostKey('RAminutes',0)/60)+($objUtil->checkPostKey('RAseconds',0)/3600);
 		  if(array_key_exists('DeclDegrees',$_POST)&&(($_POST['DeclDegrees']<0)||(strcmp($_POST['DeclDegrees'],'-0')==0)))
@@ -1125,13 +1125,18 @@ class Objects implements iObjects
 		    $headers="From:".$objObserver->getObserverProperty($admins[0],'email');
 		    $body=LangValidateAccountEmailTitleObject." ".$name." ". "www.deepskylog.org/index.php?indexAction=detail_object&object=".urlencode($name)." ".
 				      LangValidateAccountEmailTitleObjectObserver." ".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'name')." ".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'firstname')." www.deepskylog.org/index.php?indexAction=detail_observer&user=".urlencode($_SESSION['deepskylog_id']);
-		    mail($to, $subject, $body, $headers);
-		    $_GET['indexAction']='detail_object';
+        if(isset($developversion)&&($developversion==1))
+          $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<p>";
+        else
+          mail($to, $subject, $body, $headers);
+			  $_GET['indexAction']='detail_object';
 				$_GET['object']=$name;
 		  }
 		}
-		elseif ($_POST['clearfields'])                                                  // pushed clear fields button
+		elseif($objUtil->checkPostKey('clearfields'))                                                 // pushed clear fields button
 		  $_GET['indexAction']="add_object";	
+		else
+		  throw new Exception(LangException000);
 	}
 }
 $objObject=new Objects;

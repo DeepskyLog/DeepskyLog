@@ -4,7 +4,7 @@
   $user           = "wim";
   $pass           = "";
   $dbname         = "deepskylog";
-  $developversion = true;
+  $developversion = 1;             // $developversion should be removed or set to 0 on the live server
   
   // Installation directory and url (each one has to end on a slash!)
   $instDir      = "/software/www/htdocs/deepskylog/";

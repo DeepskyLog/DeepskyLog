@@ -75,7 +75,7 @@ class Observers implements iObservers
    $objDatabase->execSQL("UPDATE observers SET usedLanguages = '".serialize($language)."' WHERE id=\"$id\"");
   }
   public  function valideAccount()
-	{	global $entryMessage, $objUtil, $objLanguage;
+	{	global $entryMessage, $objUtil, $objLanguage, $developversion;
 		if(!$_POST['email']||!$_POST['firstname']||!$_POST['name']||!$_POST['passwd']||!$_POST['passwd_again'])
 		{ $entryMessage.=LangValidateAccountMessage1;
 			if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
@@ -124,8 +124,10 @@ class Observers implements iObservers
 		    $administrators=$this->getAdministrators();
 		    $fromMail=$this->getObserverProperty($administrators[0],'email');
 		    $headers="From:".$fromMail;
-		    //if(!mail($to,$subject,$body,$headers))
-		  	//  throw new Exception('Unable to mail');
+        if(isset($developversion)&&($developversion==true))
+          $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<p>";
+        else
+          mail($to, $subject, $body, $headers);
         $entryMessage = LangAccountSubscribed1.LangAccountSubscribed2.LangAccountSubscribed3.LangAccountSubscribed4.LangAccountSubscribed5.LangAccountSubscribed6.LangAccountSubscribed7.LangAccountSubscribed8.LangAccountSubscribed9;
 		    $_GET['user']=$_POST['deepskylog_id'];
 		    $_GET['indexAction']='detail_observer';
@@ -173,7 +175,7 @@ class Observers implements iObservers
 		}
 	}
 	public  function validateDeleteObserver()                                          // validateObserver validates the user with the given id and gives the user the given role
-  { global $objDatabase,$objUtil, $entryMessage,$loggedUser; 
+  { global $objDatabase,$objUtil, $entryMessage,$loggedUser, $developversion;
     if(!($objUtil->checkSessionKey('admin')=='yes'))
       throw new Exception(LangException001);
     $objDatabase->execSQL("DELETE FROM observers WHERE id=\"".($id=$objUtil->checkGetKey('validateDelete'))."\"");
@@ -182,14 +184,14 @@ class Observers implements iObservers
     $administrators = $this->getAdministrators();
     $fromMail = $this->getObserverProperty($administrators[0],'email');
     $headers = "From:".$fromMail;
-    if(isset($developversion)&&($developversion==true))
-      mail($fromMail, $subject, $body, $headers);
+    if(isset($developversion)&&($developversion==1))
+      $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<p>";
     else
-      $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".";
+      mail($fromMail, $subject, $body, $headers);
     return "The user has been erased.";
   }	
   public  function validateObserver()                                          // validateObserver validates the user with the given id and gives the user the given role
-  { global $objDatabase,$objUtil, $entryMessage; 
+  { global $objDatabase,$objUtil, $entryMessage, $developversion;
     if(!($objUtil->checkSessionKey('admin')=='yes'))
       throw new Exception(LangException001);
     $objDatabase->execSQL("UPDATE observers SET role = \"".($role=RoleUser)."\" WHERE id=\"".($id=$objUtil->checkGetKey('validate'))."\"");
@@ -201,10 +203,10 @@ class Observers implements iObservers
     $administrators = $this->getAdministrators();
     $fromMail = $this->getObserverProperty($administrators[0],'email');
     $headers = "From:".$fromMail;
-    if(isset($developversion)&&($developversion==true))
-      mail($this->getObserverProperty($id,'email'), $subject, $body, $headers);
+    if(isset($developversion)&&($developversion==1))
+      $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<p>";
     else
-      $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".";
+      mail($this->getObserverProperty($id,'email'), $subject, $body, $headers);
     return LangValidateObserverMessage1.' '.LangValidateObserverMessage2;
   }
 }

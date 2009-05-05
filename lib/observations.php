@@ -1137,7 +1137,8 @@ class Observations {
 		                     (($limmag=$this->getDsObservationProperty($LOid,'limmag'))?sprintf("%1.1f", $limmag):"-")."/".((($sqm=$this->getDsObservationProperty($LOid,'SQM'))!=-1)?sprintf("%2.1f", $sqm):'-'),
 		                     "class=\"type2\"");             
 		tableFieldnameField3(LangViewObservationField30,
-		                     (((($eyepiece=$this->getDsObservationProperty($LOid,'eyepieceid'))=="")||($eyepiece==0))?"-":"<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_eyepiece&amp;eyepiece=".urlencode($eyepiece)."\">" .stripslashes($objEyepiece->getEyepiecePropertyFromId($eyepiece,'name')). "</a>"),
+		                     (((($eyepiece=$this->getDsObservationProperty($LOid,'eyepieceid'))=="")||($eyepiece==0))?"-":"<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_eyepiece&amp;eyepiece=".urlencode($eyepiece)."\">" .stripslashes($objEyepiece->getEyepiecePropertyFromId($eyepiece,'name')). "</a>").
+		                     (((($mag=$this->getDsObservationProperty($LOid,'magnification'))==""))?"-":$mag),
 		                     LangViewObservationField31,		
 		                     (((($filter=$this->getDsObservationProperty($LOid,'filterid'))=="")||($filter==0))?"-":"<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_filter&amp;filter=".urlencode($filter)."\">".$objFilter->getFilterPropertyFromId($filter,'name')."</a>"),
 		                     LangViewObservationField32,

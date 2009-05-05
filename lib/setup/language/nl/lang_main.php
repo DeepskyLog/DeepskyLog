@@ -4,6 +4,9 @@ define("LangGeneralObservations","observaties");
 
 define("LangIndexPleaseWait","Gelieve een moment te wachten terwijl de gegevens opgehaald worden...");
 
+define("LangMessageDeepskyLog","DeepskyLog");
+
+define("LangException000", "Er is een ongekende fout opgetreden. Gelieve de developers te contacteren met dit bericht.");
 define("LangException001", "U dient ingelogd te zijn als administrator om deze operaties uit te voeren. Gelieve de developers te contacteren met dit bericht.");
 define("LangException002", "U dient ingelogd te zijn om locaties en apparatuur te beheren. Gelieve de developers te contacteren met dit bericht.");
 define("LangException002b","U dient ingelogd te zijn om observaties te beheren. Gelieve de developers te contacteren met dit bericht.");
@@ -838,7 +841,7 @@ define("LangValidateFilterMessage6", "De filter is verwijderd uit je lijst met u
 // control/validate_observer.php
 
 define("LangValidateObserverMessage1", "De update van de gebruiker was succesvol!");
-define("LangValidateObserverMessage2", "Gebruiker geupdated");
+define("LangValidateObserverMessage2", "<br />Gebruiker geupdated.");
 
 // error.php
 
