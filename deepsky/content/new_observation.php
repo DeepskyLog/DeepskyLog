@@ -169,10 +169,10 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	echo "</tr>";
 	echo "<tr>";
 	echo "<td class=\"fieldname\" align=\"right\">";
-	echo "Magnification";
+	echo LangViewObservationField39;
 	echo "</td>";
 	echo "<td>";
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"magnification\" size=\"4\" style=\"text-align:center\" value=\"" . ($objUtil->checkPostKey('magnification') ? sprintf("%2d", $objUtil->checkPostKey('magnification')) : '') . "\" /> x";
+  echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"magnification\" size=\"4\" style=\"text-align:center\" value=\"" . ($objUtil->checkPostKey('magnification') ? sprintf("%2d", $objUtil->checkPostKey('magnification')) : '') . "\" /> x";
 	echo "</td>";
 	echo "</tr>";
 	echo "<tr>";

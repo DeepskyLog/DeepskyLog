@@ -1138,7 +1138,7 @@ class Observations {
 		                     "class=\"type2\"");             
 		tableFieldnameField3(LangViewObservationField30,
 		                     (((($eyepiece=$this->getDsObservationProperty($LOid,'eyepieceid'))=="")||($eyepiece==0))?"-":"<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_eyepiece&amp;eyepiece=".urlencode($eyepiece)."\">" .stripslashes($objEyepiece->getEyepiecePropertyFromId($eyepiece,'name')). "</a>").
-		                     (((($mag=$this->getDsObservationProperty($LOid,'magnification'))==""))?"-":$mag),
+		                     (((($mag=$this->getDsObservationProperty($LOid,'magnification'))==""))?"":" (".$mag."x)"),
 		                     LangViewObservationField31,		
 		                     (((($filter=$this->getDsObservationProperty($LOid,'filterid'))=="")||($filter==0))?"-":"<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_filter&amp;filter=".urlencode($filter)."\">".$objFilter->getFilterPropertyFromId($filter,'name')."</a>"),
 		                     LangViewObservationField32,
@@ -1168,7 +1168,7 @@ class Observations {
 		echo "<hr />";
 	}
 	public function validateChangeObservation() // validate_change_observation.php - checks if the change new observation form is correctly filled in
-	{ global $objUtil,$objObservation,$maxFileSize,$objObserver;
+	{ global $objUtil,$objObservation,$maxFileSize,$objObserver,$loggedUser;
 				if(!($loggedUser))
 			throw new Exception(LangException002b);
 	  if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']) // pushed change observation button
@@ -1204,6 +1204,11 @@ class Observations {
 						$objObservation->setDsObservationProperty($_POST['observationid'],'eyepieceid', $_POST['eyepiece']);
 					} else {
 						$objObservation->setDsObservationProperty($_POST['observationid'],'eyepieceid', 0);
+					}
+					if ($_POST['magnification']) {
+						$objObservation->setDsObservationProperty($_POST['observationid'],'magnification', $_POST['magnification']);
+					} else {
+						$objObservation->setDsObservationProperty($_POST['observationid'],'magnification', '');
 					}
 					if ($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT')) 
 					{ $objObservation->setDsObservationProperty($_POST['observationid'],'time', $time);
@@ -1481,6 +1486,8 @@ class Observations {
 					$objObservation->setDsObservationProperty($current_observation,'lensid', $_POST['lens']);
 				if ($_POST['eyepiece'])
 					$objObservation->setDsObservationProperty($current_observation,'eyepieceid', $_POST['eyepiece']);
+				if ($_POST['magnification'])
+					$objObservation->setDsObservationProperty($current_observation,'magnification', $_POST['magnification']);
 				if(!($objObserver->getObserverProperty($loggedUser,'UT')))
 					$objObservation->setLocalDateAndTime($current_observation, $date, $time);
 				$objObservation->setDsObservationProperty($current_observation,'clusterType', $objUtil->checkPostKey('clusterType'));

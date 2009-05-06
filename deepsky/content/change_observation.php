@@ -32,20 +32,20 @@ else {
 	$time[0] = -9;
 	$time[1] = -9;
 }
-echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" size=\"2\" name=\"day\" value=\"" . $date[2] . "\" />";
+echo "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"2\" name=\"day\" value=\"" . $date[2] . "\" />";
 echo "&nbsp;&nbsp;";
-echo "<select name=\"month\" class=\"inputfield requiredField\">";
+echo "<select name=\"month\" class=\"inputfield requiredField centered\">";
 echo "<option value=\"\"></option>";
 for ($i = 1; $i < 13; $i++)
 	echo "<option value=\"" . $i . "\"" . (($date[1] == $i) ? " selected=\"selected\"" : "") . ">" . $GLOBALS['Month' . $i] . "</option>";
 echo "</select>";
 echo "&nbsp;&nbsp";
-echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"4\" size=\"4\" name=\"year\" value=\"" . $date[0] . "\" />";
+echo "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"4\" size=\"4\" name=\"year\" value=\"" . $date[0] . "\" />";
 echo "</td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td class=\"fieldname\">".(($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT'))?LangViewObservationField9:LangViewObservationField9lt)."</td>";
-echo "<td>"."<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"hours\" value=\"" . (($time[0] >= 0) ? $time[0] : '') . "\" />"."&nbsp;&nbsp"."<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"minutes\" value=\"" . (($time[1] >= 0) ? $time[1] : '') . "\" />"."</td>";
+echo "<td>"."<input type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" name=\"hours\" value=\"" . (($time[0] >= 0) ? $time[0] : '') . "\" />"."&nbsp;&nbsp"."<input type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" name=\"minutes\" value=\"" . (($time[1] >= 0) ? $time[1] : '') . "\" />"."</td>";
 echo "</tr>";
 echo "<tr>";
 echo "<td class=\"fieldname\">"; // LOCATION
@@ -86,6 +86,16 @@ $theEyepiece = $objObservation->getDsObservationProperty($_GET['observation'],'e
 while (list ($key, $value) = each($eyeps))
 	echo "<option value=\"" . $value . "\"" . (($theEyepiece == $value) ? " selected=\"selected\" " : '') . ">" . $GLOBALS['objEyepiece']->getEyepiecePropertyFromId($value,'name') . "</option>";
 echo "</select>";
+echo "</td>";
+echo "</tr>";
+echo "<tr>";
+echo "<td class=\"fieldname\">"; // MAGNIFICATION
+echo LangViewObservationField39;
+echo "&nbsp;";
+echo "</td>";
+echo "<td>";
+$theMagnification = $objObservation->getDsObservationProperty($_GET['observation'],'magnification');
+echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"magnification\" size=\"4\" style=\"text-align:center\" value=\"" . (($theMagnification=$objObservation->getDsObservationProperty($_GET['observation'],'magnification')) ? sprintf("%2d", $theMagnification) : '') . "\" /> x";
 echo "</td>";
 echo "</tr>";
 echo "<tr>";
@@ -146,9 +156,9 @@ echo "<td class=\"fieldname\">";
 echo LangViewObservationField7;
 echo "</td>";
 echo "<td>";
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"limit\" size=\"3\" value=\"" . (($limmag=$objObservation->getDsObservationProperty($_GET['observation'],'limmag')) ? $limmag : '') . "\" />";
+echo "<input type=\"text\" class=\"inputfield centered\" maxlength=\"3\" name=\"limit\" size=\"3\" value=\"" . (($limmag=$objObservation->getDsObservationProperty($_GET['observation'],'limmag')) ? $limmag : '') . "\" />";
 echo "&nbsp;".LangViewObservationField34 . "&nbsp;"; // SQM
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"sqm\" size=\"4\" style=\"text-align:center\" value=\"";
+echo "<input type=\"text\" class=\"inputfield centered\" maxlength=\"4\" name=\"sqm\" size=\"4\" style=\"text-align:center\" value=\"";
 if ($sqm=$objObservation->getDsObservationProperty($_GET['observation'],'SQM') > 0.0) {
 	echo sprintf($sqm);
 } else {
