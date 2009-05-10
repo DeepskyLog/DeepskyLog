@@ -25,9 +25,6 @@
   // there is no final scheme for 2.0 yet)
   $xmlschema = str_replace(' ', '/', $searchNode->item(0)->getAttribute("xsi:schemaLocation")); 
 
-  // TODO : Remove : Only for offline testing
-  $xmlschema = $baseURL . "xml/comast17.xsd"; 
-  
   //Validate the XML file against the schema
   if ($dom->schemaValidate($xmlschema)) {
     // The XML file is valid. Let's start reading in the file.
@@ -657,7 +654,7 @@
         if (count($objDatabase->selectRecordArray("SELECT * from instruments where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . utf8_encode(htmlentities($instrument)) . "\";")) > 0) {
           // Update 
           $instId = $objInstrument->getInstrumentId($ia["name"], $_SESSION['deepskylog_id']);
-          $objInstrument->setInstrumentProperty($instId, "name", $ia["name"]);
+          $objInstrument->setInstrumentProperty($instId, "name", utf8_encode(htmlentities($ia["name"])));
           $objInstrument->setInstrumentProperty($instId, "diameter", $ia["diameter"]);
           $objInstrument->setInstrumentProperty($instId, "fd", $ia["fd"]);
           $objInstrument->setInstrumentProperty($instId, "type", $ia["type"]);
@@ -780,11 +777,7 @@
         $obsId = $objDatabase->selectRecordArray("SELECT id from observations WHERE objectname = \"" . $objeId . "\" and date = \"" . $dateStr . "\" and instrumentid = \"" . $instId . "\" and locationId = \"" . $locId . "\" and observerid = \"" . $_SESSION['deepskylog_id'] . "\";");
         
         if (count($obsId) > 0) {
-          // TODO : The observation exists... Maybe... Check time. 
-          if ($objObservation->getDsObservationLocalTime($obsId["id"]) == 2200) {
-            print "TEST";
-          }
-          print $obsId["id"];
+          // TODO : Adapt observation 
         } else {
           // New observation
           $resultNode = $observation->getElementsByTagName("result")->item(0);
@@ -962,14 +955,9 @@
             $objObservation->setDsObservationProperty($obsId, "lensid", $lensId);
           }
         }
-        
-        print "<br />";
       }
     }
-    
   } else {
     throw new Exception(LangXMLError3);
   }
-  
-exit;
 ?>
