@@ -1120,7 +1120,7 @@ class Observations {
 		$details2Text=substr($details2Text,2);
 		$charTypeText="-";
 		if(in_array($objObject->getDsoProperty($this->getDsObservationProperty($LOid,'objectname'),'type'),array("ASTER","CLANB","DS","OPNCL","AA1STAR","AA2STAR","AA3STAR","AA4STAR","AA8STAR","GLOCL")))
-		  $charTypeText=(($clusterType=$this->getDsObservationProperty($LOid,'clusterType'))?clusterType.': '.$GLOBALS['ClusterType'.$clusterType]:"-");
+		  $charTypeText=(($clusterType=$this->getDsObservationProperty($LOid,'clusterType'))?$clusterType.': '.$GLOBALS['ClusterType'.$clusterType]:"-");
 		echo "<table width=\"100%\">";
 		tableFieldnameField3(LangViewObservationField2,
 		                     "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($this->getDsObservationProperty($LOid,'observerid'))."&amp;back=index.php?indexAction=detail_observation\">".$objObserver->getObserverProperty($this->getDsObservationProperty($LOid,'observerid'),'firstname')."&nbsp;".$objObserver->getObserverProperty($this->getDsObservationProperty($LOid,'observerid'),'name')."</a>",
