@@ -673,7 +673,7 @@
           if (count($objDatabase->selectRecordArray("SELECT * from filters where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . utf8_encode(htmlentities($filter)) . "\";")) > 0) {
             // Update the filter 
             $filtId = $objFilter->getFilterId($fa["name"], $_SESSION['deepskylog_id']);
-            $objFilter->setFilterProperty($filtId, "name", $fa["name"]);
+            $objFilter->setFilterProperty($filtId, "name", utf8_encode(htmlentities($fa["name"])));
             $objFilter->setFilterProperty($filtId, "type", $fa["type"]);
             $objFilter->setFilterProperty($filtId, "color", $fa["color"]);
             $objFilter->setFilterProperty($filtId, "wratten", $fa["wratten"]);
@@ -694,7 +694,7 @@
           if (count($objDatabase->selectRecordArray("SELECT * from eyepieces where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . utf8_encode(htmlentities($eyepiece)) . "\";")) > 0) {
             // Update the eyepiece 
             $eyepId = $objEyepiece->getEyepieceId($ea["name"], $_SESSION['deepskylog_id']);
-            $objEyepiece->setEyepieceProperty($eyepId, "name", $ea["name"]);
+            $objEyepiece->setEyepieceProperty($eyepId, "name", utf8_encode(htmlentities($ea["name"])));
             $objEyepiece->setEyepieceProperty($eyepId, "focalLength", $ea["focalLength"]);
             $objEyepiece->setEyepieceProperty($eyepId, "apparentFOV", $ea["apparentFOV"]);
             $objEyepiece->setEyepieceProperty($eyepId, "maxFocalLength", $ea["maxFocalLength"]);
@@ -715,7 +715,7 @@
           if (count($objDatabase->selectRecordArray("SELECT * from lenses where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . utf8_encode(htmlentities($lens)) . "\";")) > 0) {
             // Update the lens 
             $lensId = $objLens->getLensId($la["name"], $_SESSION['deepskylog_id']);
-            $objLens->setLensProperty($lensId, "name", $la["name"]);
+            $objLens->setLensProperty($lensId, "name", utf8_encode(htmlentities($la["name"])));
             $objLens->setLensProperty($lensId, "factor", $la["factor"]);
           } else {
             // Add the new lens!
