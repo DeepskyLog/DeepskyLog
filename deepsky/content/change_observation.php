@@ -159,8 +159,8 @@ echo "<td>";
 echo "<input type=\"text\" class=\"inputfield centered\" maxlength=\"3\" name=\"limit\" size=\"3\" value=\"" . (($limmag=$objObservation->getDsObservationProperty($_GET['observation'],'limmag')) ? $limmag : '') . "\" />";
 echo "&nbsp;".LangViewObservationField34 . "&nbsp;"; // SQM
 echo "<input type=\"text\" class=\"inputfield centered\" maxlength=\"4\" name=\"sqm\" size=\"4\" style=\"text-align:center\" value=\"";
-if ($sqm=$objObservation->getDsObservationProperty($_GET['observation'],'SQM') > 0.0) {
-	echo sprintf($sqm);
+if (($sqm=$objObservation->getDsObservationProperty($_GET['observation'],'SQM')) > 0.0) {
+	echo sprintf("%2.1f",$sqm);
 } else {
 	echo "";
 }
