@@ -178,22 +178,21 @@ class Utils implements iUtils
     }
 
 	// add root fcga -> The header
-	$fcgaInfo = $dom->createElement('fgca:observations');
+	$fcgaInfo = $dom->createElement('oal:observations');
 	$fcgaDom = $dom->appendChild($fcgaInfo);
+
+    $attr = $dom->createAttribute("xmlns:oal");
+    $fcgaInfo->appendChild($attr);
+
+    $attrText = $dom->createTextNode("http://observation.sourceforge.net/openastronomylog");
+    $attr->appendChild($attrText);
 
     $attr = $dom->createAttribute("version");
     $fcgaInfo->appendChild($attr);
 
-//    $attrText = $dom->createTextNode("2.0");
-    $attrText = $dom->createTextNode("1.7");
+    $attrText = $dom->createTextNode("2.0");
     $attr->appendChild($attrText);
-
-    $attr = $dom->createAttribute("xmlns:fgca");
-    $fcgaInfo->appendChild($attr);
-
-    $attrText = $dom->createTextNode("http://observation.sourceforge.net/comast");
-    $attr->appendChild($attrText);
-
+    
     $attr = $dom->createAttribute("xmlns:xsi");
     $fcgaInfo->appendChild($attr);
 
@@ -203,8 +202,7 @@ class Utils implements iUtils
     $attr = $dom->createAttribute("xsi:schemaLocation");
     $fcgaInfo->appendChild($attr);
 
-//    $attrText = $dom->createTextNode("http://observation.sourceforge.net/comast comast20.xsd");
-    $attrText = $dom->createTextNode("http://observation.sourceforge.net/comast comast17.xsd");
+    $attrText = $dom->createTextNode("http://observation.sourceforge.net/openastronomylog oal20.xsd");
     $attr->appendChild($attrText);
 
     //add root - <observers> 
@@ -227,14 +225,14 @@ class Utils implements iUtils
       $surname = $observerChild->appendChild($dom->createElement('surname')); 
       $surname->appendChild($dom->createCDataSection(($observer->getObserverProperty($value,'name')))); 
 
-//      $account = $observerChild->appendChild($dom->createElement('account'));
-//      $account->appendChild($dom->createCDataSection(utf8_encode(html_entity_decode($value))));
+      $account = $observerChild->appendChild($dom->createElement('account'));
+      $account->appendChild($dom->createCDataSection(utf8_encode(html_entity_decode($value))));
 
-//      $attr = $dom->createAttribute("name");
-//      $account->appendChild($attr);
+      $attr = $dom->createAttribute("name");
+      $account->appendChild($attr);
 
-//      $attrText = $dom->createTextNode("www.deepskylog.org");
-//      $attr->appendChild($attrText);
+      $attrText = $dom->createTextNode("www.deepskylog.org");
+      $attr->appendChild($attrText);
     }
     
     //add root - <sites> 
@@ -312,31 +310,33 @@ class Utils implements iUtils
 	  $type = $object["type"];
 	  if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC")
 	  {
-	  	$type = "fgca:deepSkyOC";
-	  } else if ($type == "GALXY" || $type == "GALCL") {
-	  	$type = "fgca:deepSkyGX";
+	  	$type = "oal:deepSkyOC";
+	  } else if ($type == "GALXY") {
+	  	$type = "oal:deepSkyGX";
+    } else if ($type == "GALCL") {
+      $type = "oal:deepSkyCG";
 	  } else if ($type == "PLNNB") {
-	  	$type = "fgca:deepSkyPN";
+	  	$type = "oal:deepSkyPN";
 	  } else if ($type == "ASTER" || $type == "AA1STAR" || $type == "AA2STAR" 
 	      || $type == "AA3STAR" || $type == "AA4STAR" || $type == "AA8STAR"
 	      || $type == "DS") {
-	  	$type = "fgca:deepSkyAS";
+	  	$type = "oal:deepSkyAS";
 	  } else if ($type == "GLOCL" || $type == "GXAGC" || $type == "LMCGC" 
 	      || $type == "SMCGC") {
-	  	$type = "fgca:deepSkyGC";
+	  	$type = "oal:deepSkyGC";
 	  } else if ($type == "BRTNB" || $type == "CLANB" || $type == "EMINB"
 	      || $type == "ENRNN" || $type == "ENSTR" || $type == "GXADN"
 	      || $type == "GACAN" || $type == "HII" || $type == "LMCCN"
 	      || $type == "LMCDN" || $type == "REFNB" || $type == "RNHII"
 	      || $type == "SMCCN" || $type == "SMCDN" || $type == "SNREM"
 	      || $type == "STNEB" || $type == "WRNEB") {
-	  	$type = "fgca:deepSkyGN";
+	  	$type = "oal:deepSkyGN";
 	  } else if ($type == "QUASR") {
-	  	$type = "fgca:deepSkyQS";
+	  	$type = "oal:deepSkyQS";
 	  } else if ($type == "DRKNB") {
-	  	$type = "fgca:deepSkyDN";
+	  	$type = "oal:deepSkyDN";
 	  } else if ($type == "NONEX") {
-	  	$type = "fgca:deepSkyNA";
+	  	$type = "oal:deepSkyNA";
 	  }
 	  $attrText = $dom->createTextNode($type);
 	  $attr->appendChild($attrText);
@@ -418,6 +418,12 @@ class Utils implements iUtils
 	  if ($object["subr"] < 99.0) {
 	  	$mag = $objectChild->appendChild($dom->createElement('surfBr')); 
       	$mag->appendChild($dom->createTextNode(($object["subr"])));
+
+      	$attr = $dom->createAttribute("unit");
+        $mag->appendChild($attr);
+
+    $attrText = $dom->createTextNode("mags-per-squarearcmin");
+    $attr->appendChild($attrText);
 	  }
 
 	  if ($object["pa"] < 999.0) {
@@ -442,9 +448,9 @@ class Utils implements iUtils
       $scope2->appendChild($attr);
 
 	  if ($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fixedMagnification') > 0) {
-	  	$typeLong = "fgca:fixedMagnificationOpticsType";
+	  	$typeLong = "oal:fixedMagnificationOpticsType";
 	  } else {
-	  	$typeLong = "fgca:scopeType";	  	
+	  	$typeLong = "oal:scopeType";	  	
 	  }
 	  $tp = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'type');
 	  if ($tp == InstrumentOther || $tp == InstrumentRest) {
@@ -697,8 +703,14 @@ class Utils implements iUtils
         $faintestStar = $observation->appendChild($dom->createElement('faintestStar')); 
         $faintestStar->appendChild($dom->createTextNode($obs["limmag"]));
 	  } else if ($obs["SQM"] > 0) {
-//        $magPerSquareArcsecond = $observation->appendChild($dom->createElement('magPerSquareArcsecond')); 
-//        $magPerSquareArcsecond->appendChild($dom->createTextNode($obs["sqm"]));
+        $magPerSquareArcsecond = $observation->appendChild($dom->createElement('sky-quality')); 
+        $magPerSquareArcsecond->appendChild($dom->createTextNode($obs["SQM"]));
+
+        $attr = $dom->createAttribute("unit");
+        $magPerSquareArcsecond->appendChild($attr);
+
+    $attrText = $dom->createTextNode("mags-per-squarearcseconds");
+    $attr->appendChild($attrText);
 	  }
 
 	  if ($obs["seeing"] > 0) {
@@ -728,7 +740,9 @@ class Utils implements iUtils
 	  if ($GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst,'fixedMagnification') > 0)
 	  {
 	  	$magni = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst,'fixedMagnification');
-	  } else if ($eyep > 0 && $GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst,'fixedMagnification') > 0) {
+	  } else if ($obs["magnification"] > 0) {
+	    $magni = $obs["magnification"];
+    } else if ($eyep > 0 && $GLOBALS['objInstrument']->getInstrumentPropertyFromId($inst,'fixedMagnification') > 0) {
 	  	$factor = 1.0;
 	  	if ($GLOBALS['objLens']->getFilterPropertyFromId($lns,'factor') > 0) {
 	  		$factor = $GLOBALS['objLens']->getFilterPropertyFromId($lns,'factor');
@@ -822,9 +836,9 @@ class Utils implements iUtils
 	  $type = $object["type"];
 	  if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC")
 	  {
-	  	$type = "fgca:findingsDeepSkyOCType";
+	  	$type = "oal:findingsDeepSkyOCType";
 	  } else {
-	  	$type = "fgca:findingsDeepSkyType";	  	
+	  	$type = "oal:findingsDeepSkyType";	  	
 	  }
 	  $attrText = $dom->createTextNode($type);
 	  $attr->appendChild($attrText);
@@ -832,36 +846,35 @@ class Utils implements iUtils
       $description = $result->appendChild($dom->createElement('description')); 
       $description->appendChild($dom->createCDATASection(utf8_encode($objPresentations->br2nl(html_entity_decode($obs["description"])))));
 
-	  // TODO : Why is the rating mandatory? Set to 99 if not defined... Will be so in the upcoming version of comast. Should the visibility be made mandatory in DeepskyLog -> I guess so ;-)
       $rat = $obs["visibility"];
       if ($rat == 0) {
-      	$rat = 3;
+      	$rat = 99;
       }
 
       $rating = $result->appendChild($dom->createElement('rating')); 
       $rating->appendChild($dom->createTextNode($rat));
 
 	  if ($obs["smallDiameter"] > 0) {
-/*        $smallDiameter = $result->appendChild($dom->createElement('smallDiameter')); 
+        $smallDiameter = $result->appendChild($dom->createElement('smallDiameter')); 
         $smallDiameter->appendChild($dom->createTextNode($obs["smallDiameter"]));
 
         $attr = $dom->createAttribute("unit");
         $smallDiameter->appendChild($attr);
 
         $attrText = $dom->createTextNode("arcsec");
-	    $attr->appendChild($attrText);
-*/	  }
+        $attr->appendChild($attrText);
+	  }
 
   	  if ($obs["largeDiameter"] > 0) {
-/*        $largeDiameter = $result->appendChild($dom->createElement('largeDiameter')); 
+        $largeDiameter = $result->appendChild($dom->createElement('largeDiameter')); 
         $largeDiameter->appendChild($dom->createTextNode($obs["largeDiameter"]));
 
         $attr = $dom->createAttribute("unit");
         $largeDiameter->appendChild($attr);
 
         $attrText = $dom->createTextNode("arcsec");
-	    $attr->appendChild($attrText);
-*/	  }
+        $attr->appendChild($attrText);
+	  }
 
 	  if ($obs["clusterType"] != "" && $obs["clusterType"] != 0) {
         $character = $result->appendChild($dom->createElement('character')); 
