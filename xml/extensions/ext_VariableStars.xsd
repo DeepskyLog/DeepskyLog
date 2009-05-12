@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<xsd:schema targetNamespace="http://observation.sourceforge.net/comast" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:fgca="http://observation.sourceforge.net/comast" version="2.0">
+<xsd:schema targetNamespace="http://observation.sourceforge.net/openastronomylog" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:oal="http://observation.sourceforge.net/openastronomylog" version="2.0">
 	<!-- 
 	    Schema for documentation and exchange of observations of astronomical objects. 
 		 Author: Thomas Pfleger 
 		         Dirk Lehmann
-			 Phyllis Lang
-		 Revision date: 2009/01/16
+			      Phyllis Lang
+		 Revision date: 2009/04/26
 	     (c) 2005 - 2009 by Fachgruppe Computerastronomie of the Vereinigung der Sternfreunde e.V. (VdS) 
 	-->
 
 	<!--
 		Include the base elements
 	-->
-	<xsd:include schemaLocation="../base/comastBase.xsd"/>
+	<xsd:include schemaLocation="../base/oal_Base.xsd"/>
 
 	<!-- New in V2.0: type definition for a variable star -->
 	<xsd:complexType name="variableStarTargetType">
 	<!-- For compatibility reasons please use AAVSO Designation, the AAVSO Name, or the AAVSO Unique Identifier -->
 	<!-- in name element (derived from fcga:observationTargetType). Otherwise a possible upload to the AAVSO might have problems -->
 		<xsd:complexContent>
-			<xsd:extension base="fgca:starTargetType">
+			<xsd:extension base="oal:starTargetType">
 				<xsd:sequence>
 					<!-- variable star type or subtype like Delta Cepheid, Mira, Eruptive, Semiregular, Supernovae, ... -->
 					<xsd:element name="type" type="xsd:string" minOccurs="0"/>									
-					<!-- maximal apparent magnitude. The derived apparentMag element from fgca:starTargetType will be -->
+					<!-- maximal apparent magnitude. The derived apparentMag element from oal:starTargetType will be -->
 					<!-- used for minimal apparent magnitude -->
 					<xsd:element name="maxApparentMag" type="xsd:double" minOccurs="0"/>														
 					<!-- period of variable star (if any) in days -->
@@ -59,14 +59,14 @@
 	<!-- Definition aligned and compatible with AAVSO visual format (see: http://www.aavso.org/observing/submit/visual.shtml) -->
 	<xsd:complexType name="findingsVariableStarType">
 		<xsd:complexContent>
-			<xsd:extension base="fgca:findingsType">
+			<xsd:extension base="oal:findingsType">
 				<xsd:sequence>				
 				    <!-- the observed visual magnitude of the variable star -->
-					<xsd:element name="visMag" type="fgca:variableStarVisMagType"/>
+					<xsd:element name="visMag" type="oal:variableStarVisMagType"/>
 					<!-- the labels of the comparison stars used. Could be the magnitude label on the chart, or something else -->
 					<xsd:element name="comparisonStar" type="xsd:string" maxOccurs="unbounded"/>
 					<!-- some ID for chart identification. For AAVSO charts this is the latest date you see anywhere on the chart, entered as YYMMDD -->
-					<xsd:element name="chartID" type="fgca:variableStarChartIDType"/>				
+					<xsd:element name="chartID" type="oal:variableStarChartIDType"/>				
 				</xsd:sequence>
 				<!-- optional attribute if sky was bright due to moon, twilight, light pollution, etc. during observation -->
 				<xsd:attribute name="brightSky" type="xsd:boolean" use="optional"/>

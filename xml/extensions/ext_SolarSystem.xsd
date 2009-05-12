@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<xsd:schema targetNamespace="http://observation.sourceforge.net/comast" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:fgca="http://observation.sourceforge.net/comast" version="2.0">
+<xsd:schema targetNamespace="http://observation.sourceforge.net/openastronomylog" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:oal="http://observation.sourceforge.net/openastronomylog" version="2.0">
 	<!-- 
 	    Schema for documentation and exchange of observations of astronomical objects. 
 		 Author: Thomas Pfleger 
 		         Dirk Lehmann
-			 Phyllis Lang
-		 Revision date: 2009/01/16
+			      Phyllis Lang
+		 Revision date: 2009/04/26
 	     (c) 2005 - 2009 by Fachgruppe Computerastronomie of the Vereinigung der Sternfreunde e.V. (VdS) 
 	-->
 
 	<!--
 		Include the base elements
 	-->
-	<xsd:include schemaLocation="../base/comastBase.xsd"/>
+	<xsd:include schemaLocation="../base/oal_Base.xsd"/>
 
 	<!-- type hierarchy for objects of the solar system (sun, moon, planets, minor planets, comets) -->
 	<xsd:complexType name="SolarSystemTargetType" abstract="true">
 		<xsd:complexContent>
-			<xsd:extension base="fgca:observationTargetType"/>
+			<xsd:extension base="oal:observationTargetType"/>
 		</xsd:complexContent>
 	</xsd:complexType>
 	<xsd:complexType name="SunTargetType">
 		<xsd:complexContent>
-			<xsd:extension base="fgca:SolarSystemTargetType"/>
+			<xsd:extension base="oal:SolarSystemTargetType"/>
 		</xsd:complexContent>
 	</xsd:complexType>
 	<xsd:complexType name="MoonTargetType">
 		<xsd:complexContent>
-			<xsd:extension base="fgca:SolarSystemTargetType"/>
+			<xsd:extension base="oal:SolarSystemTargetType"/>
 		</xsd:complexContent>
 	</xsd:complexType>
 	<xsd:complexType name="PlanetTargetType">
 		<xsd:complexContent>
-			<xsd:extension base="fgca:SolarSystemTargetType"/>
+			<xsd:extension base="oal:SolarSystemTargetType"/>
 		</xsd:complexContent>
 	</xsd:complexType>
 	<xsd:complexType name="MinorPlanetTargetType">
 		<xsd:complexContent>
-			<xsd:extension base="fgca:SolarSystemTargetType"/>
+			<xsd:extension base="oal:SolarSystemTargetType"/>
 		</xsd:complexContent>
 	</xsd:complexType>
 	<xsd:complexType name="CometTargetType">
 		<xsd:complexContent>
-			<xsd:extension base="fgca:SolarSystemTargetType"/>
+			<xsd:extension base="oal:SolarSystemTargetType"/>
 		</xsd:complexContent>
 	</xsd:complexType>
 

@@ -1,13 +1,30 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<xsd:schema targetNamespace="http://observation.sourceforge.net/comast" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:fgca="http://observation.sourceforge.net/comast" version="2.0">
+<xsd:schema targetNamespace="http://observation.sourceforge.net/openastronomylog" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:oal="http://observation.sourceforge.net/openastronomylog" version="2.0">
 	<!-- 
 	    Schema for documentation and exchange of observations of astronomical objects. 
 		 Author: Thomas Pfleger 
 		         Dirk Lehmann
 		         Phyllis Lang
-		 Revision date: 2009/01/16
+		 Revision date: 2009/04/26
 	     (c) 2005 - 2009 by Fachgruppe Computerastronomie of the Vereinigung der Sternfreunde e.V. (VdS) 
 	-->
+
+	<!-- surface brightness units used in this schema -->
+	<xsd:simpleType name="surfaceBrightnessUnit">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="mags-per-squarearcsec"/>
+			<xsd:enumeration value="mags-per-squarearcmin"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name="surfaceBrightnessType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:double">
+				<xsd:attribute name="unit" type="oal:surfaceBrightnessUnit" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+
 
 	<!-- angle units used in this schema -->
 	<xsd:simpleType name="angleUnit">
@@ -22,14 +39,14 @@
 	<xsd:complexType name="angleType">
 		<xsd:simpleContent>
 			<xsd:extension base="xsd:double">
-				<xsd:attribute name="unit" type="fgca:angleUnit" use="required"/>
+				<xsd:attribute name="unit" type="oal:angleUnit" use="required"/>
 			</xsd:extension>
 		</xsd:simpleContent>
 	</xsd:complexType>
 
 	<xsd:complexType name="nonNegativeAngleType">
 		<xsd:simpleContent>
-			<xsd:restriction base="fgca:angleType">
+			<xsd:restriction base="oal:angleType">
 				<xsd:minInclusive value="0"/>
 			</xsd:restriction>
 		</xsd:simpleContent>
@@ -93,11 +110,11 @@
 	<xsd:complexType name="equPosType">
 		<xsd:sequence>
 			<!-- right ascension -->
-			<xsd:element name="ra" type="fgca:nonNegativeAngleType"/>
+			<xsd:element name="ra" type="oal:nonNegativeAngleType"/>
 			<!-- declination -->
-			<xsd:element name="dec" type="fgca:angleType"/>
+			<xsd:element name="dec" type="oal:angleType"/>
 			<!-- optional: reference frame (not necessary for deep sky objects) -->
-			<xsd:element name="frame" type="fgca:referenceFrameType" minOccurs="0"/>
+			<xsd:element name="frame" type="oal:referenceFrameType" minOccurs="0"/>
 		</xsd:sequence>
 	</xsd:complexType>
 
@@ -114,7 +131,7 @@
 			<xsd:element name="name" type="xsd:string"/>
 			<!-- alternative names -->
 			<xsd:element name="alias" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
-			<xsd:element name="position" type="fgca:equPosType" minOccurs="0"/>
+			<xsd:element name="position" type="oal:equPosType" minOccurs="0"/>
 			<!-- constellation is optional because it can be derived from position -->
 			<xsd:element name="constellation" type="xsd:string" minOccurs="0"/>
 		</xsd:sequence>
@@ -124,7 +141,7 @@
 	<!-- New in V2.0: type definition for a single star -->
 	<xsd:complexType name="starTargetType">
 		<xsd:complexContent>
-			<xsd:extension base="fgca:observationTargetType">
+			<xsd:extension base="oal:observationTargetType">
 				<xsd:sequence>
 					<!-- apparent magnitude of star in [mag] -->
 					<xsd:element name="apparentMag" type="xsd:double" minOccurs="0"/>
@@ -170,6 +187,7 @@
 					</xsd:restriction>
 				</xsd:simpleType>
 			</xsd:element>
+			
 			<!-- New in V2.0: Deprecated element. Please use accout element instead. -->
 			<!-- Example: <account name="dsl">myDSLname<account> -->
 			<!-- abbreviation/code of the observer for the Deep Sky Liste (DSL) of the Fachgruppe -->
@@ -180,17 +198,23 @@
 					</xsd:restriction>
 				</xsd:simpleType>
 			</xsd:element>						
+			
 			<!-- New in V2.0: General element for external user accounts -->
 			<!-- As an observer might use serveral online (or offsite) services where he/she has -->
 			<!-- an unique username or account name, this element represents the service name -->
 			<!-- and the observers ID/username on that service -->
 			<!-- Example: AAVSO observer code which was assigned to the observer by AAVSO -->
 			<!--          <account name="aavso">DOE</account> -->
-			<xsd:element name="account" type="fgca:observerAccountType" minOccurs="0" maxOccurs="unbounded"/>	
-			<!-- New in V2.0: Personal offset to the faintest star value. -->
-			<!-- May be interpreted (beside other parameters) as a personal snellen value to judge the -->
-			<!-- visual acuity of an observer, or just as a generic offset to the faintest star -->
-			<!-- magPerSquareArcsecond/SQM relation to measure the sky quality -->
+			<xsd:element name="account" type="oal:observerAccountType" minOccurs="0" maxOccurs="unbounded"/>	
+			
+			<!-- New in V2.0: Personal offset to the "refernce" correlation between the sky quality -->
+			<!-- as it can be measured with an SQM and the estimated naked eye limiting magnitude (fst) -->
+			<!-- The individual observer's offset depends mainly on the visual acuity of the observer. -->
+			<!-- If the fstOffset is known, the sky quality may be derived from faintestStar estimates -->
+			<!-- by this observer. -->
+			<!-- The "reference" correlation used to convert between sky quality and fst was given by -->
+			<!-- Bradley Schaefer: fst = 5*(1.586-log(10^((21.568-BSB)/5)+1)) where BSB is the sky quality -->
+			<!-- (or background surface brightness) given in magnitudes per square arcsecond -->
 			<xsd:element name="fstOffset" type="xsd:double" minOccurs="0"/>
 		</xsd:sequence>
 		<xsd:attribute name="id" type="xsd:ID" use="required"/>
@@ -201,9 +225,9 @@
 		<xsd:sequence>
 			<xsd:element name="name" type="xsd:string"/>
 			<!-- geographical longitude; eastwards positive -->
-			<xsd:element name="longitude" type="fgca:angleType"/>
+			<xsd:element name="longitude" type="oal:angleType"/>
 			<!-- geographical latitude -->
-			<xsd:element name="latitude" type="fgca:angleType"/>
+			<xsd:element name="latitude" type="oal:angleType"/>
 			<!-- elevation in meters -->
 			<xsd:element name="elevation" type="xsd:double" minOccurs="0"/>
 			<!-- offset from UT in [min] not including daylight savings time -->
@@ -263,7 +287,7 @@
 	<!-- type definition for telescopes using eyepieces -->
 	<xsd:complexType name="scopeType">
 		<xsd:complexContent>
-			<xsd:extension base="fgca:opticsType">
+			<xsd:extension base="oal:opticsType">
 				<xsd:sequence>
 					<!--  focal length in [mm] -->
 					<xsd:element name="focalLength">
@@ -281,7 +305,7 @@
 	<!-- type definition for optical devices with fixed magnification -->
 	<xsd:complexType name="fixedMagnificationOpticsType">
 		<xsd:complexContent>
-			<xsd:extension base="fgca:opticsType">
+			<xsd:extension base="oal:opticsType">
 				<xsd:sequence>
 					<xsd:element name="magnification">
 						<xsd:simpleType>
@@ -290,7 +314,7 @@
 							</xsd:restriction>
 						</xsd:simpleType>
 					</xsd:element>
-					<xsd:element name="trueField" type="fgca:nonNegativeAngleType" minOccurs="0"/>
+					<xsd:element name="trueField" type="oal:nonNegativeAngleType" minOccurs="0"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
@@ -319,7 +343,7 @@
 				</xsd:simpleType>
 			</xsd:element>
 			<!-- apparent field of view -->
-			<xsd:element name="apparentFOV" type="fgca:nonNegativeAngleType" minOccurs="0"/>
+			<xsd:element name="apparentFOV" type="oal:nonNegativeAngleType" minOccurs="0"/>
 		</xsd:sequence>
 		<xsd:attribute name="id" type="xsd:ID" use="required"/>
 	</xsd:complexType>
@@ -384,9 +408,9 @@
 	<xsd:complexType name="filterType">
 		<xsd:sequence>
 			<xsd:element name="model" type="xsd:string"/>
-			<xsd:element name="type" type="fgca:filterKind"/>
+			<xsd:element name="type" type="oal:filterKind"/>
 			<!-- the following elements are relevant for color filters only -->
-			<xsd:element name="color" type="fgca:filterColorType" minOccurs="0"/>
+			<xsd:element name="color" type="oal:filterColorType" minOccurs="0"/>
 			<xsd:element name="wratten" type="xsd:string" minOccurs="0"/>
 			<xsd:element name="schott" type="xsd:string" minOccurs="0"/>
 		</xsd:sequence>
@@ -426,13 +450,13 @@
 	<!--An extension of the imagerType to describe CCD cameras-->
 	<xsd:complexType name="ccdCameraType">
 		<xsd:complexContent>
-			<xsd:extension base="fgca:imagerType">
+			<xsd:extension base="oal:imagerType">
 				<xsd:sequence>
 					<xsd:element name="pixelsX" type="xsd:positiveInteger"/>
 					<xsd:element name="pixelsY" type="xsd:positiveInteger"/>
 					<!-- New in V2.0: Pixel size in microns -->
-					<xsd:element name="pixelXSize" type="fgca:positiveDecimal" minOccurs="0"/>
-                    			<xsd:element name="pixelYSize" type="fgca:positiveDecimal" minOccurs="0"/>
+					<xsd:element name="pixelXSize" type="oal:positiveDecimal" minOccurs="0"/>
+                    			<xsd:element name="pixelYSize" type="oal:positiveDecimal" minOccurs="0"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
@@ -446,6 +470,10 @@
 			<!-- descriptive text about visual impact or perception -->
 			<xsd:element name="description" type="xsd:string"/>
 		</xsd:sequence>
+		<!-- The "lang" attribute carries an ISO two letter language identifier. -->
+		<!-- It can be used ro indicate the language of the description -->
+		<!-- By the help of this attribute, applications may filter observations -->
+		<!-- based on user preferences -->
 		<xsd:attribute name="lang" type="xsd:string" use="optional"/>
 	</xsd:complexType>
 
@@ -483,13 +511,12 @@
 			<!-- Estimated limiting magnitude for naked eye. It's optional but should occur always! -->
 			<xsd:element name="faintestStar" type="xsd:double" minOccurs="0"/>
 
-			<!-- New in V2.0: Renamed element from sqm to magPerSquareArcsecond -->
 			<!-- New in V1.7: Sky quality meter (SQM) reading -->
-			<!-- Value is given in magnitudes per square arcsecond -->
-		        <xsd:element name="magPerSquareArcsecond" type="xsd:double" minOccurs="0"/>
+			<!-- New in V2.0: Renamed element from sqm to sky-quality -->
+	        <xsd:element name="sky-quality" type="oal:surfaceBrightnessType" minOccurs="0"/>
 
 			<!-- Seeing rated according to the Antoniadi scale (1=excellent, 5=very poor). -->
-			<xsd:element name="seeing" type="fgca:seeingType" minOccurs="0"/>
+			<xsd:element name="seeing" type="oal:seeingType" minOccurs="0"/>
 
 			<!-- scope used for the observation -->
 			<xsd:element name="scope" type="xsd:IDREF" minOccurs="0"/>
@@ -520,7 +547,7 @@
 			<xsd:element name="imager" type="xsd:IDREF" minOccurs="0"/>
 
 			<!-- Descripting of the results of the observations. Future extensions are likely! -->
-			<xsd:element name="result" type="fgca:findingsType" maxOccurs="unbounded"/>
+			<xsd:element name="result" type="oal:findingsType" maxOccurs="unbounded"/>
 
 			<!-- refereneces image files obtained in the observation -->
 			<xsd:element name="image" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
@@ -537,7 +564,7 @@
 				<xsd:element name="observers">
 					<xsd:complexType>
 						<xsd:sequence>
-							<xsd:element name="observer" type="fgca:observerType" minOccurs="0" maxOccurs="unbounded"/>
+							<xsd:element name="observer" type="oal:observerType" minOccurs="0" maxOccurs="unbounded"/>
 						</xsd:sequence>
 					</xsd:complexType>
 				</xsd:element>
@@ -546,7 +573,7 @@
 				<xsd:element name="sites">
 					<xsd:complexType>
 						<xsd:sequence>
-							<xsd:element name="site" type="fgca:siteType" minOccurs="0" maxOccurs="unbounded"/>
+							<xsd:element name="site" type="oal:siteType" minOccurs="0" maxOccurs="unbounded"/>
 						</xsd:sequence>
 					</xsd:complexType>
 				</xsd:element>
@@ -555,7 +582,7 @@
 				<xsd:element name="sessions">
 					<xsd:complexType>
 						<xsd:sequence>
-							<xsd:element name="session" type="fgca:sessionType" minOccurs="0" maxOccurs="unbounded"/>
+							<xsd:element name="session" type="oal:sessionType" minOccurs="0" maxOccurs="unbounded"/>
 						</xsd:sequence>
 					</xsd:complexType>
 				</xsd:element>
@@ -564,7 +591,7 @@
 				<xsd:element name="targets">
 					<xsd:complexType>
 						<xsd:sequence>
-							<xsd:element name="target" type="fgca:observationTargetType" minOccurs="0" maxOccurs="unbounded"/>
+							<xsd:element name="target" type="oal:observationTargetType" minOccurs="0" maxOccurs="unbounded"/>
 						</xsd:sequence>
 					</xsd:complexType>
 				</xsd:element>
@@ -573,7 +600,7 @@
 				<xsd:element name="scopes">
 					<xsd:complexType>
 						<xsd:sequence>
-							<xsd:element name="scope" type="fgca:opticsType" minOccurs="0" maxOccurs="unbounded"/>
+							<xsd:element name="scope" type="oal:opticsType" minOccurs="0" maxOccurs="unbounded"/>
 						</xsd:sequence>
 					</xsd:complexType>
 				</xsd:element>
@@ -582,7 +609,7 @@
 				<xsd:element name="eyepieces">
 					<xsd:complexType>
 						<xsd:sequence>
-							<xsd:element name="eyepiece" type="fgca:eyepieceType" minOccurs="0" maxOccurs="unbounded"/>
+							<xsd:element name="eyepiece" type="oal:eyepieceType" minOccurs="0" maxOccurs="unbounded"/>
 						</xsd:sequence>
 					</xsd:complexType>
 				</xsd:element>
@@ -591,7 +618,7 @@
 				<xsd:element name="lenses">
 					<xsd:complexType>
 						<xsd:sequence>
-							<xsd:element name="lens" type="fgca:lensType" minOccurs="0" maxOccurs="unbounded"/>
+							<xsd:element name="lens" type="oal:lensType" minOccurs="0" maxOccurs="unbounded"/>
 						</xsd:sequence>
 					</xsd:complexType>
 				</xsd:element>
@@ -600,7 +627,7 @@
 				<xsd:element name="filters">
 					<xsd:complexType>
 						<xsd:sequence>
-							<xsd:element name="filter" type="fgca:filterType" minOccurs="0" maxOccurs="unbounded"/>
+							<xsd:element name="filter" type="oal:filterType" minOccurs="0" maxOccurs="unbounded"/>
 						</xsd:sequence>
 					</xsd:complexType>
 				</xsd:element>
@@ -609,12 +636,12 @@
 				<xsd:element name="imagers">
 					<xsd:complexType>
 						<xsd:sequence>
-							<xsd:element name="imager" type="fgca:imagerType" minOccurs="0" maxOccurs="unbounded"/>
+							<xsd:element name="imager" type="oal:imagerType" minOccurs="0" maxOccurs="unbounded"/>
 						</xsd:sequence>
 					</xsd:complexType>
 				</xsd:element>
 
-				<xsd:element name="observation" type="fgca:observationType" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:element name="observation" type="oal:observationType" minOccurs="0" maxOccurs="unbounded"/>
 			</xsd:sequence>
 			<xsd:attribute name="version" type="xsd:string" use="required"/>
 		</xsd:complexType>
@@ -658,43 +685,43 @@
 
 		<!-- references to linked entities of observation -->
 		<!-- NOTE: for the sake of the keyrefs the "container elements" (e.g. <scopes>) must exist even if they are empty -->
-		<xsd:keyref name="siteRef" refer="fgca:siteKey">
+		<xsd:keyref name="siteRef" refer="oal:siteKey">
 			<xsd:selector xpath="./observation"/>
 			<xsd:field xpath="site"/>
 		</xsd:keyref>
-		<xsd:keyref name="sessionRef" refer="fgca:sessionKey">
+		<xsd:keyref name="sessionRef" refer="oal:sessionKey">
 			<xsd:selector xpath="./session"/>
 			<xsd:field xpath="session"/>
 		</xsd:keyref>
-		<xsd:keyref name="targetRef" refer="fgca:targetKey">
+		<xsd:keyref name="targetRef" refer="oal:targetKey">
 			<xsd:selector xpath="./observation"/>
 			<xsd:field xpath="target"/>
 		</xsd:keyref>
-		<xsd:keyref name="observerRef" refer="fgca:observerKey">
+		<xsd:keyref name="observerRef" refer="oal:observerKey">
 			<xsd:selector xpath="./observation"/>
 			<xsd:field xpath="observer"/>
 		</xsd:keyref>
-		<xsd:keyref name="opticsRef" refer="fgca:opticsKey">
+		<xsd:keyref name="opticsRef" refer="oal:opticsKey">
 			<xsd:selector xpath="./observation"/>
 			<xsd:field xpath="scope"/>
 		</xsd:keyref>
-		<xsd:keyref name="eyepiecesRef" refer="fgca:eyepieceKey">
+		<xsd:keyref name="eyepiecesRef" refer="oal:eyepieceKey">
 			<xsd:selector xpath="./observation"/>
 			<xsd:field xpath="eyepiece"/>
 		</xsd:keyref>
-		<xsd:keyref name="lensesRef" refer="fgca:lensKey">
+		<xsd:keyref name="lensesRef" refer="oal:lensKey">
 			<xsd:selector xpath="./observation"/>
 			<xsd:field xpath="lens"/>
 		</xsd:keyref>
-                <xsd:keyref name="filterRef" refer="fgca:filterKey">
+                <xsd:keyref name="filterRef" refer="oal:filterKey">
 			<xsd:selector xpath="./observation"/>
 			<xsd:field xpath="filter"/>
 		</xsd:keyref>
-		<xsd:keyref name="imagersRef" refer="fgca:imagerKey">
+		<xsd:keyref name="imagersRef" refer="oal:imagerKey">
 			<xsd:selector xpath="./observation"/>
 			<xsd:field xpath="imager"/>
 		</xsd:keyref>
-		<xsd:keyref name="datasourceRef" refer="fgca:observerKey">
+		<xsd:keyref name="datasourceRef" refer="oal:observerKey">
 			<xsd:selector xpath="./observation/target"/>
 			<xsd:field xpath="observer"/>
 		</xsd:keyref>
