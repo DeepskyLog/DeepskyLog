@@ -2,29 +2,18 @@
 <xsd:schema targetNamespace="http://observation.sourceforge.net/openastronomylog" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:oal="http://observation.sourceforge.net/openastronomylog" version="2.0">
 	<!-- 
 	    Schema for documentation and exchange of observations of astronomical objects. 
-		 Author: Thomas Pfleger 
-		         Dirk Lehmann
-		         Phyllis Lang
-		 Revision date: 2009/04/26
+		 Authors: Thomas Pfleger 
+		          Dirk Lehmann
+		          Phyllis Lang
+		 Revision date: 2009/5/13
 	     (c) 2005 - 2009 by Fachgruppe Computerastronomie of the Vereinigung der Sternfreunde e.V. (VdS) 
 	-->
 
-	<!-- surface brightness units used in this schema -->
-	<xsd:simpleType name="surfaceBrightnessUnit">
-		<xsd:restriction base="xsd:string">
-			<xsd:enumeration value="mags-per-squarearcsec"/>
-			<xsd:enumeration value="mags-per-squarearcmin"/>
-		</xsd:restriction>
+	<xsd:simpleType name="positiveDecimal">
+	    <xsd:restriction base="xsd:decimal">
+		<xsd:minExclusive value="0"/>
+	    </xsd:restriction>
 	</xsd:simpleType>
-
-	<xsd:complexType name="surfaceBrightnessType">
-		<xsd:simpleContent>
-			<xsd:extension base="xsd:double">
-				<xsd:attribute name="unit" type="oal:surfaceBrightnessUnit" use="required"/>
-			</xsd:extension>
-		</xsd:simpleContent>
-	</xsd:complexType>
-
 
 	<!-- angle units used in this schema -->
 	<xsd:simpleType name="angleUnit">
@@ -59,6 +48,113 @@
 		</xsd:restriction>
 	</xsd:simpleType>
 
+	<!-- surface brightness units used in this schema -->
+	<xsd:simpleType name="surfaceBrightnessUnit">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="mags-per-squarearcsec"/>
+			<xsd:enumeration value="mags-per-squarearcmin"/>
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name="surfaceBrightnessType">
+		<xsd:simpleContent>
+			<xsd:extension base="xsd:double">
+				<xsd:attribute name="unit" type="oal:surfaceBrightnessUnit" use="required"/>
+			</xsd:extension>
+		</xsd:simpleContent>
+	</xsd:complexType>
+
+
+	<!-- New in V2.0: type for all kinds of accounts/userIDs an observer has -->
+	<xsd:complexType name="observerAccountType">
+	 	<xsd:simpleContent>
+			<xsd:extension base='xsd:string'>
+				<!-- name of the organisation, webpage, ... where this account is valid -->					
+				<xsd:attribute name="name" type="xsd:string"/>	
+			</xsd:extension>
+		</xsd:simpleContent>				
+	</xsd:complexType>
+
+	<!-- author or contributor of observation -->
+	<xsd:complexType name="observerType">
+		<xsd:sequence>
+			<xsd:element name="name">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:whiteSpace value="preserve"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<xsd:element name="surname">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:whiteSpace value="preserve"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			<!-- info for contacting the observer (f.e. phone, mail, postal address) -->
+			<xsd:element name="contact" minOccurs="0" maxOccurs="unbounded">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:whiteSpace value="preserve"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>
+			
+			<!-- New in V2.0: Deprecated element. Please use accout element instead. -->
+			<!-- Example: <account name="dsl">myDSLname<account> -->
+			<!-- abbreviation/code of the observer for the Deep Sky Liste (DSL) of the Fachgruppe -->
+			<xsd:element name="DSL" minOccurs="0">
+				<xsd:simpleType>
+					<xsd:restriction base="xsd:string">
+						<xsd:whiteSpace value="preserve"/>
+					</xsd:restriction>
+				</xsd:simpleType>
+			</xsd:element>						
+			
+			<!-- New in V2.0: General element for external user accounts -->
+			<!-- As an observer might use serveral online (or offsite) services where he/she has -->
+			<!-- an unique username or account name, this element represents the service name -->
+			<!-- and the observers ID/username on that service -->
+			<!-- Example: AAVSO observer code which was assigned to the observer by AAVSO -->
+			<!--          <account name="aavso">DOE</account> -->
+			<xsd:element name="account" type="oal:observerAccountType" minOccurs="0" maxOccurs="unbounded"/>	
+			
+			<!-- New in V2.0: Personal offset to the "refernce" correlation between the sky quality -->
+			<!-- as it can be measured with an SQM and the estimated naked eye limiting magnitude (fst) -->
+			<!-- The individual observer's offset depends mainly on the visual acuity of the observer. -->
+			<!-- If the fstOffset is known, the sky quality may be derived from faintestStar estimates -->
+			<!-- by this observer. -->
+			<!-- The "reference" correlation used to convert between sky quality and fst was given by -->
+			<!-- Bradley Schaefer: fst = 5*(1.586-log(10^((21.568-BSB)/5)+1)) where BSB is the sky quality -->
+			<!-- (or background surface brightness) given in magnitudes per square arcsecond -->
+			<xsd:element name="fstOffset" type="xsd:double" minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="id" type="xsd:ID" use="required"/>
+	</xsd:complexType>
+	
+	
+	<!-- observation site -->
+	<xsd:complexType name="siteType">
+		<xsd:sequence>
+			<xsd:element name="name" type="xsd:string"/>
+			<!-- geographical longitude; eastwards positive -->
+			<xsd:element name="longitude" type="oal:angleType"/>
+			<!-- geographical latitude -->
+			<xsd:element name="latitude" type="oal:angleType"/>
+			<!-- elevation in meters -->
+			<xsd:element name="elevation" type="xsd:double" minOccurs="0"/>
+			<!-- offset from UT in [min] not including daylight savings time -->
+			<!-- PLEASE NOTE: West of Greenwich is negative and east is positive -->
+			<xsd:element name="timezone" type="xsd:integer" default="0"/>
+			<!-- IAU Code for site -->
+			<xsd:element name="code" type="xsd:integer" minOccurs="0"/>
+			<!-- IAU Code for site -->
+		</xsd:sequence>
+		<xsd:attribute name="id" type="xsd:ID" use="required"/>
+	</xsd:complexType>
+	
+	
 	<!-- common remarks or conditions of observations conducted during one night/session -->
 	<xsd:complexType name="sessionType">
 		<xsd:sequence>
@@ -134,6 +230,8 @@
 			<xsd:element name="position" type="oal:equPosType" minOccurs="0"/>
 			<!-- constellation is optional because it can be derived from position -->
 			<xsd:element name="constellation" type="xsd:string" minOccurs="0"/>
+			<!-- New in V 2.0: notes on targets -->
+			<xsd:element name="notes" type="xsd:string" minOccurs="0"/>
 		</xsd:sequence>
 		<xsd:attribute name="id" type="xsd:ID" use="required"/>
 	</xsd:complexType>
@@ -151,94 +249,19 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
+	
+	<!-- Further observation target types are defined in OAL extensions. -->
+	<!-- Currently there are extensions for deep sky objects, solar system objects and variable stars -->
+	
+	
+	<!-- description of seeing conditions (1: best, 5: worst) -->
+	<xsd:simpleType name="seeingType">
+		<xsd:restriction base="xsd:nonNegativeInteger">
+			<xsd:minInclusive value="1"/>
+			<xsd:maxInclusive value="5"/>
+		</xsd:restriction>
+	</xsd:simpleType>
 
-	<!-- New in V2.0: type for all kinds of accounts/userIDs an observer has -->
-	<xsd:complexType name="observerAccountType">
-	 	<xsd:simpleContent>
-			<xsd:extension base='xsd:string'>
-					<!-- name of the organisation, webpage, ... where this account is valid -->					
-					<xsd:attribute name="name" type="xsd:string"/>	
-			</xsd:extension>
-		</xsd:simpleContent>				
-	</xsd:complexType>
-
-	<!-- author or contributor of observation -->
-	<xsd:complexType name="observerType">
-		<xsd:sequence>
-			<xsd:element name="name">
-				<xsd:simpleType>
-					<xsd:restriction base="xsd:string">
-						<xsd:whiteSpace value="preserve"/>
-					</xsd:restriction>
-				</xsd:simpleType>
-			</xsd:element>
-			<xsd:element name="surname">
-				<xsd:simpleType>
-					<xsd:restriction base="xsd:string">
-						<xsd:whiteSpace value="preserve"/>
-					</xsd:restriction>
-				</xsd:simpleType>
-			</xsd:element>
-			<!-- info for contacting the observer (f.e. phone, mail, postal address) -->
-			<xsd:element name="contact" minOccurs="0" maxOccurs="unbounded">
-				<xsd:simpleType>
-					<xsd:restriction base="xsd:string">
-						<xsd:whiteSpace value="preserve"/>
-					</xsd:restriction>
-				</xsd:simpleType>
-			</xsd:element>
-			
-			<!-- New in V2.0: Deprecated element. Please use accout element instead. -->
-			<!-- Example: <account name="dsl">myDSLname<account> -->
-			<!-- abbreviation/code of the observer for the Deep Sky Liste (DSL) of the Fachgruppe -->
-			<xsd:element name="DSL" minOccurs="0">
-				<xsd:simpleType>
-					<xsd:restriction base="xsd:string">
-						<xsd:whiteSpace value="preserve"/>
-					</xsd:restriction>
-				</xsd:simpleType>
-			</xsd:element>						
-			
-			<!-- New in V2.0: General element for external user accounts -->
-			<!-- As an observer might use serveral online (or offsite) services where he/she has -->
-			<!-- an unique username or account name, this element represents the service name -->
-			<!-- and the observers ID/username on that service -->
-			<!-- Example: AAVSO observer code which was assigned to the observer by AAVSO -->
-			<!--          <account name="aavso">DOE</account> -->
-			<xsd:element name="account" type="oal:observerAccountType" minOccurs="0" maxOccurs="unbounded"/>	
-			
-			<!-- New in V2.0: Personal offset to the "refernce" correlation between the sky quality -->
-			<!-- as it can be measured with an SQM and the estimated naked eye limiting magnitude (fst) -->
-			<!-- The individual observer's offset depends mainly on the visual acuity of the observer. -->
-			<!-- If the fstOffset is known, the sky quality may be derived from faintestStar estimates -->
-			<!-- by this observer. -->
-			<!-- The "reference" correlation used to convert between sky quality and fst was given by -->
-			<!-- Bradley Schaefer: fst = 5*(1.586-log(10^((21.568-BSB)/5)+1)) where BSB is the sky quality -->
-			<!-- (or background surface brightness) given in magnitudes per square arcsecond -->
-			<xsd:element name="fstOffset" type="xsd:double" minOccurs="0"/>
-		</xsd:sequence>
-		<xsd:attribute name="id" type="xsd:ID" use="required"/>
-	</xsd:complexType>
-
-	<!-- observation site -->
-	<xsd:complexType name="siteType">
-		<xsd:sequence>
-			<xsd:element name="name" type="xsd:string"/>
-			<!-- geographical longitude; eastwards positive -->
-			<xsd:element name="longitude" type="oal:angleType"/>
-			<!-- geographical latitude -->
-			<xsd:element name="latitude" type="oal:angleType"/>
-			<!-- elevation in meters -->
-			<xsd:element name="elevation" type="xsd:double" minOccurs="0"/>
-			<!-- offset from UT in [min] not including daylight savings time -->
-			<!-- PLEASE NOTE: West of Greenwich is negative and east is positive -->
-			<xsd:element name="timezone" type="xsd:integer" default="0"/>
-			<!-- IAU Code for site -->
-			<xsd:element name="code" type="xsd:integer" minOccurs="0"/>
-			<!-- IAU Code for site -->
-		</xsd:sequence>
-		<xsd:attribute name="id" type="xsd:ID" use="required"/>
-	</xsd:complexType>
 
 	<!-- optics used for the observation -->
 	<xsd:complexType name="opticsType" abstract="true">
@@ -320,6 +343,7 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
+
 	<!-- description of eyepiece used -->
 	<xsd:complexType name="eyepieceType">
 		<xsd:sequence>
@@ -366,6 +390,7 @@
 		<xsd:attribute name="id" type="xsd:ID" use="required"/>
 	</xsd:complexType>
 	
+   
    <!-- supported optical filter types -->
 	<xsd:simpleType name="filterKind">
 		<xsd:restriction base="xsd:string">
@@ -418,49 +443,19 @@
 	</xsd:complexType>
 
 	
-   <!--Describes the imaging device used in this observation. This type may be extended to capture information on different sensor technologies.-->
-	<xsd:complexType name="imagerType">
+   <!--Describes the imaging device used in an observation. This type may be extended to capture information on different sensor technologies.-->
+   <!-- New in V2.0: this type is now abstract. Concrete imagers are extending the definition, using the ext_imaging schema file. -->
+	<xsd:complexType name="imagerType" abstract="true">
 		<xsd:sequence>
 			<!-- model or designation -->
 			<xsd:element name="model" type="xsd:string"/>
-			<xsd:element name="type" minOccurs="0">
-				<xsd:simpleType>
-					<xsd:restriction base="xsd:string">
-						<xsd:enumeration value="ccd"/>
-						<xsd:enumeration value="film"/>
-					</xsd:restriction>
-				</xsd:simpleType>
-			</xsd:element>
-			<xsd:element name="vendor" minOccurs="0">
-				<xsd:simpleType>
-					<xsd:restriction base="xsd:string"/>
-				</xsd:simpleType>
-			</xsd:element>
+			<!-- New in V2.0: 'type' element removed: concrete imagers are extending this type definition in the ext_imaging extension -->
+			<xsd:element name="vendor" type="xsd:string" minOccurs="0"/>
 			<xsd:element name="remarks" type="xsd:string" minOccurs="0"/>
 		</xsd:sequence>
 		<xsd:attribute name="id" type="xsd:ID" use="required"/>
 	</xsd:complexType>
-
-	<xsd:simpleType name="positiveDecimal">
-	    <xsd:restriction base="xsd:decimal">
-		<xsd:minExclusive value="0"/>
-	    </xsd:restriction>
-	</xsd:simpleType>
-
-	<!--An extension of the imagerType to describe CCD cameras-->
-	<xsd:complexType name="ccdCameraType">
-		<xsd:complexContent>
-			<xsd:extension base="oal:imagerType">
-				<xsd:sequence>
-					<xsd:element name="pixelsX" type="xsd:positiveInteger"/>
-					<xsd:element name="pixelsY" type="xsd:positiveInteger"/>
-					<!-- New in V2.0: Pixel size in microns -->
-					<xsd:element name="pixelXSize" type="oal:positiveDecimal" minOccurs="0"/>
-                    			<xsd:element name="pixelYSize" type="oal:positiveDecimal" minOccurs="0"/>
-				</xsd:sequence>
-			</xsd:extension>
-		</xsd:complexContent>
-	</xsd:complexType>
+	
 
 	<!-- As the results of the observation there are a couple of findings. 
 	     They may contain textual descriptions of the visual impression or 
@@ -477,13 +472,6 @@
 		<xsd:attribute name="lang" type="xsd:string" use="optional"/>
 	</xsd:complexType>
 
-	<!-- description of seeing conditions (1: best, 5: worst) -->
-	<xsd:simpleType name="seeingType">
-		<xsd:restriction base="xsd:nonNegativeInteger">
-			<xsd:minInclusive value="1"/>
-			<xsd:maxInclusive value="5"/>
-		</xsd:restriction>
-	</xsd:simpleType>
 
 	<!-- this describes an observation-->
 	<xsd:complexType name="observationType">
@@ -554,8 +542,11 @@
 		</xsd:sequence>
 		<xsd:attribute name="id" type="xsd:ID" use="optional"/>
 	</xsd:complexType>
+	
 
-	<!-- container for the observations and topmost node of XML documents -->
+	<!-- Container for the observations and topmost node of XML documents -->
+	<!-- This defines the master data 'containers' holding the entities that are -->
+	<!-- referenced by observations using IDREFs -->
 	<xsd:element name="observations">
 		<xsd:complexType>
 			<xsd:sequence>
@@ -641,10 +632,12 @@
 					</xsd:complexType>
 				</xsd:element>
 
+				<!-- Finally here is the beef, the *observations* -->
 				<xsd:element name="observation" type="oal:observationType" minOccurs="0" maxOccurs="unbounded"/>
 			</xsd:sequence>
 			<xsd:attribute name="version" type="xsd:string" use="required"/>
 		</xsd:complexType>
+		
 
 		<xsd:key name="observerKey">
 			<xsd:selector xpath="./observers/observer"/>

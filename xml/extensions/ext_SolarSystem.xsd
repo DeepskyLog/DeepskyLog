@@ -2,16 +2,14 @@
 <xsd:schema targetNamespace="http://observation.sourceforge.net/openastronomylog" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:oal="http://observation.sourceforge.net/openastronomylog" version="2.0">
 	<!-- 
 	    Schema for documentation and exchange of observations of astronomical objects. 
-		 Author: Thomas Pfleger 
-		         Dirk Lehmann
-			      Phyllis Lang
-		 Revision date: 2009/04/26
+		 Authors: Thomas Pfleger 
+		          Dirk Lehmann
+			  Phyllis Lang
+		 Revision date: 2009/5/13
 	     (c) 2005 - 2009 by Fachgruppe Computerastronomie of the Vereinigung der Sternfreunde e.V. (VdS) 
 	-->
 
-	<!--
-		Include the base elements
-	-->
+	<!-- Include the base elements -->
 	<xsd:include schemaLocation="../base/oal_Base.xsd"/>
 
 	<!-- type hierarchy for objects of the solar system (sun, moon, planets, minor planets, comets) -->
@@ -20,27 +18,32 @@
 			<xsd:extension base="oal:observationTargetType"/>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="SunTargetType">
+	
+	<xsd:complexType name="CometTargetType">
 		<xsd:complexContent>
 			<xsd:extension base="oal:SolarSystemTargetType"/>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="MoonTargetType">
-		<xsd:complexContent>
-			<xsd:extension base="oal:SolarSystemTargetType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
-	<xsd:complexType name="PlanetTargetType">
-		<xsd:complexContent>
-			<xsd:extension base="oal:SolarSystemTargetType"/>
-		</xsd:complexContent>
-	</xsd:complexType>
+
 	<xsd:complexType name="MinorPlanetTargetType">
 		<xsd:complexContent>
 			<xsd:extension base="oal:SolarSystemTargetType"/>
 		</xsd:complexContent>
 	</xsd:complexType>
-	<xsd:complexType name="CometTargetType">
+
+	<xsd:complexType name="MoonTargetType">
+		<xsd:complexContent>
+			<xsd:extension base="oal:SolarSystemTargetType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="PlanetTargetType">
+		<xsd:complexContent>
+			<xsd:extension base="oal:SolarSystemTargetType"/>
+		</xsd:complexContent>
+	</xsd:complexType>
+	
+	<xsd:complexType name="SunTargetType">
 		<xsd:complexContent>
 			<xsd:extension base="oal:SolarSystemTargetType"/>
 		</xsd:complexContent>
