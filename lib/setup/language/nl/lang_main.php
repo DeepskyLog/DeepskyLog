@@ -167,22 +167,22 @@ define("LangMailtoTitle", "Vertel het ons!");
 define("LangMailtoLink", "Gebruik deze <a href=\"mailto:&#100;&#101;v&#101;lop&#101;rs&#64;&#100;&#101;&#101;pskylog.&#98;&#101;\">link </a> om vragen of opmerkingen over te maken.");
 
 // deepsky/content/view_object
-define("LangObjectNewName", "Nieuwe naam");
-define("LangObjectNewAltName", "Nieuwe alternatieve naam");
-define("LangObjectRemoveAltNameName", "Verwijder de alternatieve naam");
-define("LangObjectNewPartOf", "Nieuw deel van");
-define("LangObjectRemovePartOf", "Verwijder deel van");
-define("LangObjectRemoveAndReplaceObjectBy", "Verwijder het object en vervang de observaties ervan door object");
-define("LangObjectSetRA", "Zet RA (uurformaat: 1.50 voor 1h30m !)");
-define("LangObjectSetDECL", "Zet Decl (gradenformaat: 25.50 voor 25&deg;30')");
-define("LangObjectSetCon", "Zet sterrenbeeld (afkorting in drie hoofdletters !)");
-define("LangObjectSetType", "Zet type (afkorting in vijf hoofdletters !)");
-define("LangObjectSetMag", "Zet magnitude");
-define("LangObjectSetSUBR", "Zet oppervlaktehelderheid");
-define("LangObjectSetDiam1", "Zet diameter 1 (seconden !)");
-define("LangObjectSetDiam2", "Zet diameter 2 (seconden !)");
-define("LangObjectSetPA", "Zet positiehoek");
-define("LangEditObjectDescription","Beschrijving aanpassen");
+define("LangObjectNewName", "NN-Nieuwe naam");
+define("LangObjectNewAltName", "AN-Nieuwe alternatieve naam");
+define("LangObjectRemoveAltNameName", "RAN-Verwijder de alternatieve naam");
+define("LangObjectNewPartOf", "PO-Nieuw deel van");
+define("LangObjectRemovePartOf", "RPO-Verwijder deel van");
+define("LangObjectRemoveAndReplaceObjectBy", "RRO-Verwijder het object en vervang de observaties ervan door object");
+define("LangObjectSetRA", "RA-Zet RA (uurformaat: 1.50 voor 1h30m !)");
+define("LangObjectSetDECL", "DE-Zet Decl (gradenformaat: 25.50 voor 25&deg;30')");
+define("LangObjectSetCon", "CON-Zet sterrenbeeld (afkorting in drie hoofdletters !)");
+define("LangObjectSetType", "TYP-Zet type (afkorting in vijf hoofdletters !)");
+define("LangObjectSetMag", "MG-Zet magnitude");
+define("LangObjectSetSUBR", "SB-Zet oppervlaktehelderheid");
+define("LangObjectSetDiam1", "D1-Zet diameter 1 (seconden !)");
+define("LangObjectSetDiam2", "D2-Zet diameter 2 (seconden !)");
+define("LangObjectSetPA", "PA-Zet positiehoek");
+define("LangEditObjectDescription","DESC-Beschrijving aanpassen");
 
 // content/change_account.php
 

@@ -10,6 +10,7 @@ if($objUtil->checkGetKey('indexAction')=='logout')
 { $_SESSION['deepskylog_id']='';
 	setcookie("deepskylogsec","",time()-3600,"/");
 	$loggedUser="";
+  $_GET['indexAction']='default_action';
 }
 elseif(array_key_exists('deepskylogsec',$_COOKIE)&&$_COOKIE['deepskylogsec'])
 { if(strlen($_COOKIE['deepskylogsec'])>32)
@@ -42,21 +43,17 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
 			  $loggedUser="";
 			} 
       elseif($GLOBALS['objObserver']->getObserverProperty($login,'role',2)=="1")                     // validated user
-      { $tmpifrm=$objUtil->checkSessionKey('ifrm');
-      	session_regenerate_id(true);
+      { session_regenerate_id(true);
 			  $_SESSION['deepskylog_id']=$login;                                      // set session variable
         $_SESSION['admin']="no";                                                // set session variable
-        $_SESSION['ifrm']=$tmpifrm;
         $loggedUser=$_SESSION['deepskylog_id'];
         $cookietime=time()+(365*24*60*60);                                      // 1 year	      
 				setcookie("deepskylogsec",$passwd.$login,$cookietime,"/");
 	    }
       else                                                                      // administrator logs in 
-      { $tmpifrm=$objUtil->checkSessionKey('ifrm');
-      	session_regenerate_id(true);
+      { session_regenerate_id(true);
       	$_SESSION['deepskylog_id']=$login;                              
         $_SESSION['admin']="yes";                           
-        $_SESSION['ifrm']=$tmpifrm;
         $loggedUser=$login;
         $cookietime=time()+(365*24*60*60);                                      // 1 year
         setcookie("deepskylogsec",$passwd.$login,$cookietime,"/");

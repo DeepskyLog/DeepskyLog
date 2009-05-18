@@ -88,6 +88,8 @@ else
   	}
   	elseif ($instruction[$i] == "PA")
   		$objObject->setDsoProperty($object[$i],'pa', $catindex_data[$i]);
+  	elseif ($instruction[$i] == "DESC")
+  		$objObject->setDsoProperty($object[$i],'description', $catindex_data[$i]);
     $_GET['indexAction']="detail_object";
 		$_GET['object']=$object[0];
   }

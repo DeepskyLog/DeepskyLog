@@ -167,22 +167,22 @@ define("LangMailtoTitle", "Tell us!");
 define("LangMailtoLink", "Use this <a href=\"mailto:&#100;&#101;v&#101;lop&#101;rs&#64;&#100;&#101;&#101;pskylog.&#98;&#101;\">link </a> to ask questions or to make remarks.");
 
 // deepsky/content/view_object
-define("LangObjectNewName", "New name");
-define("LangObjectNewAltName", "New Alt Name");
-define("LangObjectRemoveAltNameName", "Remove Alt name");
-define("LangObjectNewPartOf", "New Part Of");
-define("LangObjectRemovePartOf", "Remove Part Of");
-define("LangObjectRemoveAndReplaceObjectBy", "Remove the object and replace observations of it by object");
-define("LangObjectSetRA", "Set RA (Hour Format: 1.50 for 1h30m)");
-define("LangObjectSetDECL", "Set Decl (Degree Format: 25.50 for 25�30')");
-define("LangObjectSetCon", "Set Constellation (Three letter capital abbrevation !)");
-define("LangObjectSetType", "Set Type (Three five capital abbrevation !)");
-define("LangObjectSetMag", "Set Magnitude");
-define("LangObjectSetSUBR", "Set Surface Brightness");
-define("LangObjectSetDiam1", "Set Diameter 1 (seconds !)");
-define("LangObjectSetDiam2", "Set Diameter 2 (seconds !)");
-define("LangObjectSetPA", "Set Position Angle");
-define("LangEditObjectDescription","Edit Description");
+define("LangObjectNewName", "NN-New name");
+define("LangObjectNewAltName", "AN-New Alt Name");
+define("LangObjectRemoveAltNameName", "RAN-Remove Alt name");
+define("LangObjectNewPartOf", "PO-New Part Of");
+define("LangObjectRemovePartOf", "RPO-Remove Part Of");
+define("LangObjectRemoveAndReplaceObjectBy", "RRO-Remove the object and replace observations of it by object");
+define("LangObjectSetRA", "RA-Set RA (Hour Format: 1.50 for 1h30m)");
+define("LangObjectSetDECL", "DE-Set Decl (Degree Format: 25.50 for 25�30')");
+define("LangObjectSetCon", "CON-Set Constellation (Three letter capital abbrevation !)");
+define("LangObjectSetType", "TYP-Set Type (Three five capital abbrevation !)");
+define("LangObjectSetMag", "MA-Set Magnitude");
+define("LangObjectSetSUBR", "SB-Set Surface Brightness");
+define("LangObjectSetDiam1", "D1-Set Diameter 1 (seconds !)");
+define("LangObjectSetDiam2", "D2-Set Diameter 2 (seconds !)");
+define("LangObjectSetPA", "PA-Set Position Angle");
+define("LangEditObjectDescription","DESC-Edit Description");
 
 
 // content/change_account.php

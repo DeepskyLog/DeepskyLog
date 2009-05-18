@@ -1168,7 +1168,7 @@ class Observations {
 		echo "<hr />";
 	}
 	public function validateChangeObservation() // validate_change_observation.php - checks if the change new observation form is correctly filled in
-	{ global $objUtil,$objObservation,$maxFileSize,$objObserver,$loggedUser,$instDir;
+	{ global $objUtil,$objObservation,$maxFileSize,$objObserver,$loggedUser, $inIndex;
 				if(!($loggedUser))
 			throw new Exception(LangException002b);
 	  if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']) // pushed change observation button
@@ -1302,8 +1302,7 @@ class Observations {
 					else
 						$objObservation->setDsObservationProperty($_POST['observationid'],'colorContrasts', -1);
 		
-
-				    if ($_FILES['drawing']['tmp_name'] != "") {
+					if ($_FILES['drawing']['tmp_name'] != "") {
 						$upload_dir = $instDir . 'deepsky/drawings';
 						$dir = opendir($upload_dir);
 						// resize code		
@@ -1317,7 +1316,6 @@ class Observations {
 						move_uploaded_file($_FILES['drawing']['tmp_name'], $upload_dir . "/" . $_POST['observationid'] . ".jpg");
 				    $objObservation->setDsObservationProperty($_POST['observationid'],'hasDrawing',1);
 					}		
-
 					// save current details for faster submission of multiple observations
 					$_SESSION['newObsYear'] = $_POST['year']; // save current details for faster submission of multiple observations
 			  	$_SESSION['newObsMonth'] = $_POST['month'];
@@ -1357,7 +1355,7 @@ class Observations {
     }
 	}
 	public function validateObservation()
-	{ global $loggedUser, $objUtil, $objObservation, $objObserver, $maxFileSize, $entryMessage, $objPresentations, $instDir;
+	{ global $loggedUser, $objUtil, $objObservation, $objObserver, $maxFileSize, $entryMessage, $objPresentations, $inIndex;
 		if(!($loggedUser))
 			throw new Exception(LangException002b);
 		elseif($objUtil->checkSessionKey('addObs',0)!=$objUtil->checkPostKey('timestamp', -1)) 
