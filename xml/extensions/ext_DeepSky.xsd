@@ -70,11 +70,12 @@
 	<!-- type definition for clusters of galaxies -->
 	<xsd:complexType name="deepSkyCG">
 		<xsd:complexContent>
-			<xsd:extension base="oal:deepSkyTargetType"/>
+			<xsd:extension base="oal:deepSkyTargetType">
 				<xsd:sequence>
 					<!-- magnitude of the 10th brightest member in [mag] -->
 					<xsd:element name="mag10" type="xsd:double" minOccurs="0"/>
 				</xsd:sequence>
+			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 	
