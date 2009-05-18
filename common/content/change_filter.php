@@ -8,20 +8,19 @@ else
 {
 $filter=$objFilter->getFilterPropertiesFromId($filterid);
 echo "<div id=\"main\">";
-echo "<h2>".stripslashes($filter['name'])."</h2>";
-echo "<hr>";
 echo "<form action=\"".$baseURL."index.php\" method=\"post\" />";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_filter\">";
 echo "<input type=\"hidden\" name=\"id\"          value=\"".$filterid."\" />";
-echo "<table>";
-tableFieldnameFieldExplanation(LangAddFilterField1,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"filtername\" size=\"30\" value=\"".stripslashes($filter['name'])."\" />",LangAddFilterField1Expl);
-tableFieldnameField(LangAddFilterField2,$objFilter->getEchoListType($filter['type']));
-tableFieldnameField(LangAddFilterField3,$objFilter->getEchoListColor($filter['color']));
-tableFieldnameField(LangAddFilterField4,"<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"wratten\" size=\"5\" value=\"".stripslashes($filter['wratten'])."\" />");
-tableFieldnameField(LangAddFilterField5,"<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"schott\" size=\"5\" value=\"".stripslashes($filter['schott'])."\" />");
-echo "</table>";
+$objPresentations->line(array("<h5>".stripslashes($filter['name'])."</h5>","<input type=\"submit\" name=\"change\" value=\"".LangChangeFilterButton."\" />&nbsp;"),"LR",array(80,20),50);
+echo "<hr>";
+$line[]=array("<span class=\"fieldname\">".LangAddFilterField1."</span>","<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"filtername\" size=\"30\" value=\"".stripslashes($filter['name'])."\" />",LangAddFilterField1Expl);
+$line[]=array("<span class=\"fieldname\">".LangAddFilterField2."</span>",$objFilter->getEchoListType($filter['type']));
+$line[]=array("<span class=\"fieldname\">".LangAddFilterField3."</span>",$objFilter->getEchoListColor($filter['color']));
+$line[]=array("<span class=\"fieldname\">".LangAddFilterField4."</span>","<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"wratten\" size=\"5\" value=\"".stripslashes($filter['wratten'])."\" />");
+$line[]=array("<span class=\"fieldname\">".LangAddFilterField5."</span>","<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"schott\" size=\"5\" value=\"".stripslashes($filter['schott'])."\" />");
+for($i=0;$i<count($line);$i++)
+  $objPresentations->line($line[$i],"RLL",array(20,40,40));
 echo "<hr />";
-echo "<p><input type=\"submit\" name=\"change\" value=\"".LangChangeFilterButton."\" /></p>";
 echo "</form>";
 echo "</div>";
 }

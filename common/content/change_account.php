@@ -65,39 +65,39 @@ echo "<form class=\"content\" action=\"".$baseURL."index.php\" enctype=\"multipa
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_account\">";
 $objPresentations->line(array("<h5>".LangChangeAccountTitle."</h5>","<input type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />&nbsp;"),"LR",array(80,20),50);
 echo "<hr>";
-$line[]=array(LangChangeAccountField1,
-               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkSessionKey('deepskylog_id')."\" />",
-               LangChangeAccountField1Expl);
-$line[]=array(LangChangeAccountField2,
-             "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"email\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'email')."\" />",
-             LangChangeAccountField2Expl);
-$line[]=array(LangChangeAccountField3,
-             "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"firstname\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'firstname')."\" />",
-             LangChangeAccountField3Expl);
-$line[]=array(LangChangeAccountField4,
-             "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'name')."\" />",
-             LangChangeAccountField4Expl);
-$line[]=array(LangChangeAccountField5,
-             "<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd\" size=\"30\" value=\"\" />",
-             LangChangeAccountField5Expl);
-$line[]=array(LangChangeAccountField6,
-             "<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd_again\" size=\"30\" value=\"\" />",
-             LangChangeAccountField6Expl);
-$line[]=array(LangChangeAccountField11."&nbsp;*",
-             "<input type=\"checkbox\" class=\"inputfield\" name=\"local_time\"".(($objObserver->getObserverProperty($loggedUser,'UT'))?"":"checked")." />",
-             LangChangeAccountField11Expl);
-$line[]=array(LangChangeAccountField10,
-             "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"icq_name\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'icqname')."\" />",
-             LangChangeAccountField10Expl);
+$line[]=array("<span class=\"fieldname\">".LangChangeAccountField1."</span>",
+              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkSessionKey('deepskylog_id')."\" />",
+              LangChangeAccountField1Expl);
+$line[]=array("<span class=\"fieldname\">".LangChangeAccountField2."</span>",
+              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"email\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'email')."\" />",
+              LangChangeAccountField2Expl);
+$line[]=array("<span class=\"fieldname\">".LangChangeAccountField3."</span>",
+              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"firstname\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'firstname')."\" />",
+              LangChangeAccountField3Expl);
+$line[]=array("<span class=\"fieldname\">".LangChangeAccountField4."</span>",
+              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'name')."\" />",
+              LangChangeAccountField4Expl);
+$line[]=array("<span class=\"fieldname\">".LangChangeAccountField5."</span>",
+              "<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd\" size=\"30\" value=\"\" />",
+              LangChangeAccountField5Expl);
+$line[]=array("<span class=\"fieldname\">".LangChangeAccountField6."</span>",
+              "<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd_again\" size=\"30\" value=\"\" />",
+              LangChangeAccountField6Expl);
+$line[]=array("<span class=\"fieldname\">".LangChangeAccountField11."&nbsp;*"."</span>",
+              "<input type=\"checkbox\" class=\"inputfield\" name=\"local_time\"".(($objObserver->getObserverProperty($loggedUser,'UT'))?"":"checked")." />",
+              LangChangeAccountField11Expl);
+$line[]=array("<span class=\"fieldname\">".LangChangeAccountField10."</span>",
+              "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"icq_name\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'icqname')."\" />",
+              LangChangeAccountField10Expl);
 $line[]=array("");
-$line[]=array(LangChangeAccountField7,$tempLocationList,"<a href=\"".$baseURL."index.php?indexAction=add_site\">".LangChangeAccountField7Expl."</a>");
-$line[]=array(LangChangeAccountField8,$tempInstrumentList,"<a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeAccountField8Expl."</a>");
-$line[]=array(LangChangeAccountField9,$tempAtlasList,"");
-$line[]=array(LangChangeAccountPicture,"<input type=\"file\" name=\"picture\" class=\"inputfield\"/>","");
+$line[]=array("<span class=\"fieldname\">".LangChangeAccountField7."</span>",$tempLocationList,"<a href=\"".$baseURL."index.php?indexAction=add_site\">".LangChangeAccountField7Expl."</a>");
+$line[]=array("<span class=\"fieldname\">".LangChangeAccountField8."</span>",$tempInstrumentList,"<a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeAccountField8Expl."</a>");
+$line[]=array("<span class=\"fieldname\">".LangChangeAccountField9."</span>",$tempAtlasList,"");
+$line[]=array("<span class=\"fieldname\">".LangChangeAccountPicture."</span>","<input type=\"file\" name=\"picture\" class=\"inputfield\"/>","");
 $line[]=array("");        
 if($languageMenu==1)
-  $line[]=array(LangChangeAccountLanguage,$tempLangList,LangChangeAccountLanguageExpl);
-$line[]=array(LangChangeAccountObservationLanguage,$tempAllLangList,LangChangeAccountObservationLanguageExpl);
+  $line[]=array("<span class=\"fieldname\">".LangChangeAccountLanguage."</span>",$tempLangList,LangChangeAccountLanguageExpl);
+$line[]=array("<span class=\"fieldname\">".LangChangeAccountObservationLanguage."</span>",$tempAllLangList,LangChangeAccountObservationLanguageExpl);
 for($i=0;$i<count($line);$i++)
   $objPresentations->line($line[$i],"RLL",array(20,40,40));
 reset($allLanguages);
