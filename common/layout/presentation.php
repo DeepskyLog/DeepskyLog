@@ -8,6 +8,7 @@ interface iPresentation
   public  function decToStringDSL($decl);
   public  function decToStringDSS($decl);                                              // returns html DSS decl coordinates eg 6+44 for 6°43'55''
   public  function decToTrimmedString($decl);
+  public  function line($content,$alignment='',$widths=array(),$lineheight='');
   public  function presentationInt($value, $nullcontition='', $nullvalue='');          // if the null condtion is met, it returns the nullvalue, otherwise returns the value
   public  function presentationInt1($value, $nullcondition='', $nullvalue='');         // if the null condtion is met, it returns the nullvalue, otherwise returns the value formatted %1.1f
   public  function promptWithLink($prompt,$promptDefault,$javaLink,$text);             // displays an anchor link with $text as text, showing when clicked an inputbox with the question $prompt and $promptDefault answer, jumping to $javalink (java format) afterwards 
@@ -139,6 +140,18 @@ class Presentations implements iPresentation
       $decl_degrees++;
     }
     return($sign.$decl_degrees."&deg;".sprintf("%02d",$decl_minutes)."&#39;");
+  }
+  public  function line($content,$alignment='',$widths=array(),$lineheight='')
+  { echo "<div class=\"containerLine\" ".($lineheight?"style=\"height:".$lineheight."px;\"":'').">";
+  	for($m=0,$l=0,$a="L",$w=floor(100/count($content));$m<count($content);$m++,$l+=$w)
+  	{ if(isset($widths)&&array_key_exists($m,$widths))
+  	    $w=$widths[$m];
+  	  if(isset($alignment))
+  	    $a=substr($alignment,$m,1);
+  	  echo "<div class=\"containerLinePart".$a."\" style=\"left:".$l."%;width:".$w."%;".($lineheight?"line-height:".$lineheight."px;height:".$lineheight."px;":'')."\">".$content[$m]."</div>";
+  	  
+  	}
+  	echo "</div>";
   }
   public  function presentationInt($value, $nullcontition='', $nullvalue='')
   { return (($value==$nullcontition)?$nullvalue:$value);

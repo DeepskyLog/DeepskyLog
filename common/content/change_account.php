@@ -58,20 +58,70 @@ while(list($key,$value)=each($allLanguages))
 $tempAllLangList.="</select>";
 $_SESSION['alllanguages']=$allLanguages; 
 $usedLanguages=$objObserver->getUsedLanguages($loggedUser);
-reset($allLanguages);
-$tempObsLangList="<table><tr>";
-$j=0;
-while(list($key,$value)=each($allLanguages))
-{ if(!($j++%3))
-    $tempObsLangList.= "</tr><tr>";
-	$tempObsLangList.="<td><input type=\"checkbox\" ".(in_array($key,$usedLanguages)?"checked=\"true\"":"")." name=\"".$key."\" value=\"".$key."\" />".$value."</td>";
-}
-$tempObsLangList.="</tr></table>";
 
 // =================================================================================================PAGE OUTPUT
 echo "<div id=\"main\">";
-echo "<h2>".LangChangeAccountTitle."</h2>";
+echo "<form class=\"content\" action=\"".$baseURL."index.php\" enctype=\"multipart/form-data\" method=\"post\">";
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_account\">";
+$objPresentations->line(array("<h5>".LangChangeAccountTitle."</h5>","<input type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />&nbsp;"),"LR",array(80,20),50);
 echo "<hr>";
+$line[]=array(LangChangeAccountField1,
+               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkSessionKey('deepskylog_id')."\" />",
+               LangChangeAccountField1Expl);
+$line[]=array(LangChangeAccountField2,
+             "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"email\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'email')."\" />",
+             LangChangeAccountField2Expl);
+$line[]=array(LangChangeAccountField3,
+             "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"firstname\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'firstname')."\" />",
+             LangChangeAccountField3Expl);
+$line[]=array(LangChangeAccountField4,
+             "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'name')."\" />",
+             LangChangeAccountField4Expl);
+$line[]=array(LangChangeAccountField5,
+             "<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd\" size=\"30\" value=\"\" />",
+             LangChangeAccountField5Expl);
+$line[]=array(LangChangeAccountField6,
+             "<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd_again\" size=\"30\" value=\"\" />",
+             LangChangeAccountField6Expl);
+$line[]=array(LangChangeAccountField11."&nbsp;*",
+             "<input type=\"checkbox\" class=\"inputfield\" name=\"local_time\"".(($objObserver->getObserverProperty($loggedUser,'UT'))?"":"checked")." />",
+             LangChangeAccountField11Expl);
+$line[]=array(LangChangeAccountField10,
+             "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"icq_name\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'icqname')."\" />",
+             LangChangeAccountField10Expl);
+$line[]=array("");
+$line[]=array(LangChangeAccountField7,$tempLocationList,"<a href=\"".$baseURL."index.php?indexAction=add_site\">".LangChangeAccountField7Expl."</a>");
+$line[]=array(LangChangeAccountField8,$tempInstrumentList,"<a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeAccountField8Expl."</a>");
+$line[]=array(LangChangeAccountField9,$tempAtlasList,"");
+$line[]=array(LangChangeAccountPicture,"<input type=\"file\" name=\"picture\" class=\"inputfield\"/>","");
+$line[]=array("");        
+if($languageMenu==1)
+  $line[]=array(LangChangeAccountLanguage,$tempLangList,LangChangeAccountLanguageExpl);
+$line[]=array(LangChangeAccountObservationLanguage,$tempAllLangList,LangChangeAccountObservationLanguageExpl);
+for($i=0;$i<count($line);$i++)
+  $objPresentations->line($line[$i],"RLL",array(20,40,40));
+reset($allLanguages);
+$j=0;
+$tempObsLangList[]="";
+while((list($key,$value)=each($allLanguages))&&($j<3))
+{ $tempObsLangList[]="<input type=\"checkbox\" ".(in_array($key,$usedLanguages)?"checked=\"true\"":"")." name=\"".$key."\" value=\"".$key."\" />".$value;
+  $j++;
+}
+$tempObsLangList[]=LangChangeVisibleLanguagesExpl;
+$objPresentations->line($tempObsLangList,"RLLLL",array(20,13,13,14,40));
+unset($tempObsLangList);
+$tempObsLangList[]="";
+while((list($key,$value)=each($allLanguages)))
+{ $tempObsLangList[]="<input type=\"checkbox\" ".(in_array($key,$usedLanguages)?"checked=\"true\"":"")." name=\"".$key."\" value=\"".$key."\" />".$value;
+  $j++;
+  if(($j%3)==0)
+  { $tempObsLangList[]="";
+    $objPresentations->line($tempObsLangList,"RLLLL",array(20,13,13,14,40));
+    unset($tempObsLangList);
+    $tempObsLangList[]="";
+  }
+}
+echo "</form>";
 $upload_dir = 'common/observer_pics';
 $dir = opendir($instDir.$upload_dir);
 while (FALSE!==($file=readdir($dir)))
@@ -83,39 +133,7 @@ while (FALSE!==($file=readdir($dir)))
 		echo "</p>";
 	}
 }
-echo "<form class=\"content\" action=\"".$baseURL."index.php\" enctype=\"multipart/form-data\" method=\"post\">";
-echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_account\">";
-echo "<table width=\"100%\">";
-tableFieldnameFieldExplanation(LangChangeAccountField1,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkSessionKey('deepskylog_id')."\" />",LangChangeAccountField1Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField2,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"email\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'email')."\" />",LangChangeAccountField2Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField3,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"firstname\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'firstname')."\" />",LangChangeAccountField3Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField4,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'name')."\" />",LangChangeAccountField4Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField5,"<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd\" size=\"30\" value=\"\" />",LangChangeAccountField5Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField6,"<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd_again\" size=\"30\" value=\"\" />",LangChangeAccountField6Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField11."&nbsp;*","<input type=\"checkbox\" class=\"inputfield\" name=\"local_time\"".(($objObserver->getObserverProperty($loggedUser,'UT'))?"":"checked")." />",LangChangeAccountField11Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField10,"<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"icq_name\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'icqname')."\" />",LangChangeAccountField10Expl);
-echo "<tr>";
-echo "<td>&nbsp;</td>";
-echo "<td>&nbsp;</td>";
-echo "<td>&nbsp;</td>";
-echo "</tr>";
-tableFieldnameFieldExplanation(LangChangeAccountField7,$tempLocationList,"<a href=\"".$baseURL."index.php?indexAction=add_site\">".LangChangeAccountField7Expl."</a>");
-tableFieldnameFieldExplanation(LangChangeAccountField8,$tempInstrumentList,"<a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeAccountField8Expl."</a>");
-tableFieldnameFieldExplanation(LangChangeAccountField9,$tempAtlasList,"");
-tableFieldnameFieldExplanation(LangChangeAccountPicture,"<input type=\"file\" name=\"picture\" class=\"inputfield\"/>","");
-echo "<tr>";
-echo "<td>&nbsp;</td>"; 
-echo "<td>&nbsp;</td>";
-echo "<td>&nbsp;</td>";
-echo "</tr>";
-if($languageMenu==1)
-  tableFieldnameFieldExplanation(LangChangeAccountLanguage,$tempLangList,LangChangeAccountLanguageExpl);
-tableFieldnameFieldExplanation(LangChangeAccountObservationLanguage,$tempAllLangList,LangChangeAccountObservationLanguageExpl);
-tableFieldnameFieldExplanation(LangChangeAccountObservationLanguage,$tempObsLangList,LangChangeVisibleLanguagesExpl);
-echo "</table>";
-echo "<hr>";
-echo "<input type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />";
-echo "</form>";
+echo "<p>&nbsp;</p>";
 echo "</div>";
 }
 ?>

@@ -101,7 +101,7 @@ div#main {
 h2 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; padding-bottom: 10px; padding-top: 10px;}
 h3 { color: #333333; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 100%; font-weight: bold; padding-bottom: 10px; padding-top: 20px}
 h4 { color: #FF9900; font-family: Verdana, Trebuchet MS, Arial, Helvetica, sans-serif; font-size: 16px; font-weight: bold; }
-h5 { color: #FF9900; font-family: Verdana, Trebuchet MS, Arial, Helvetica, sans-serif; font-size: 14px; font-weight: bold; }
+h5 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; line-height:50px; margin: 0px;}
 h6 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; padding: 0px; border:0px; margin:0px; }
 .title    { padding-top:10px; padding-bottom: 10px; /*background-color:#FFFF00;*/}
 .h2table  { height: 40px; border:0px; }
@@ -388,3 +388,27 @@ a.moduletable:link, a.moduletable:visited {
   font-weight	     : normal;
   text-decoration  : none;
 }
+.containerLine {
+	position         : relative;    
+  text-align       : left;
+  height           : 30px;
+}
+.containerLinePartL {
+  position         : absolute;
+  top              : 0px;
+  text-align       : left;
+  padding-left     : 10px;
+}
+.containerLinePartR {
+  position         : absolute;
+  top              : 0px;
+  text-align       : right;
+  padding-right    : 10px;
+  vertical-align   : middle;
+}
+.containerLinePartC {
+  position         : absolute;
+  top              : 0px;
+  text-align       : center;
+}
+
