@@ -53,7 +53,7 @@ if($listname)
 	  echo "<hr />";
     if($myList)
     { echo "<form action=\"".$baseURL."index.php?indexAction=listaction\">";
-      echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\"></input>";
+      echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
 		  echo "<input style=\"width:12em;\" type=\"submit\" name=\"emptyList\" value=\"" . LangToListEmpty . "\" />";
       echo "<input style=\"width:12em;\" type=\"submit\" name=\"removeList\" value=\"" . LangToListMyListsRemove . "\" />";
       echo "</form>";

@@ -463,7 +463,7 @@ echo("</td><td>(" . LangNewComet12 . ")</td></tr>");
 
 echo("<tr><td colspan=\"2\"><input type=\"submit\" name=\"changeobservation\" value=\"".LangChangeObservationButton."\" /></td></tr>");
 
-echo("</table><input type=\"hidden\" name=\"observationid\" value=\"" . $_GET['observation'] . "\"></input></form>");
+echo("</table><input type=\"hidden\" name=\"observationid\" value=\"" . $_GET['observation'] . "\" /></form>");
 
 $upload_dir = 'cometdrawings';
 $dir = opendir($upload_dir);

@@ -399,7 +399,7 @@ define("LangAddSiteField8", "Typische Himmelsaufhellung");
 define("LangAddSiteField8Expl", "(Wert der von einem Sky Quality Meter ermittelt wurde)");
 define("LangAddSiteFieldSearchDatabase", "Suchen nach einem Beobachtungsplatz in der Datenbank");
 define("LangAddSiteFieldOr", "oder");
-define("LangAddSiteFieldManually", "Legen Sie einen neuen Beobachtungsplatz an");
+define("LangAddSiteFieldManually", "legen Sie einen neuen Beobachtungsplatz an");
 define("LangAddSiteButton", "Beobachtungsplatz anlegen");
 define("LangAddSiteButton2", "Beobachtungsplatz &auml;ndern");
 define("LangAddSiteStdLocation", "Als Standard Beobachtungsplatz w&auml;hlen");
@@ -1038,7 +1038,7 @@ define("LangValidateCSVMessage", "Import der CSV Datei erfolgreich!");
 
 // content/new_observationxml.php
 define("LangXMLTitle", "Importiere Beobachtungen aus XML Datei");
-define("LangXMLMessage1", "Diese Eingabemaske erlaubt Ihnen mehrere Beobachtungen auf einmal einzugeben, indem Sie eine OpenAstronomyLog XML Datei importieren. Dies beschleunigt das Hochladen ihrer Beobachtungen. Ferner k&ouml;nnen Sie Beobachtungen zwischen verschiedenen Anwendungen, die den OpenAstronomyLog XML Standard unterst&uuml;tzen (wie z.B.: <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&Telescope</a>), austauschen. Bitte beachten Sie: Es werden nur Beobachtungen mit Ihrem Namen (Vor- und Nachname) hinzugef&uuml;gt. Beobachtungen die DeepskyLog bereits bekannt sind, werden ebenfalls nicht importiert.");
+define("LangXMLMessage1", "Diese Eingabemaske erlaubt Ihnen mehrere Beobachtungen auf einmal einzugeben, indem Sie eine OpenAstronomyLog XML Datei importieren. Dies beschleunigt das Hochladen ihrer Beobachtungen. Ferner k&ouml;nnen Sie Beobachtungen zwischen verschiedenen Anwendungen, die den OpenAstronomyLog XML Standard unterst&uuml;tzen (wie z.B.: <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), austauschen. Bitte beachten Sie: Es werden nur Beobachtungen mit Ihrem Namen (Vor- und Nachname) hinzugef&uuml;gt. Beobachtungen die DeepskyLog bereits bekannt sind, werden ebenfalls nicht importiert.");
 define("LangXMLError1", "DeepskyLog unterst&uuml;tzt z. Zt. nur OpenAstronomyLog Version 1.7");
 define("LangXMLError2", "Keine Beobachtungen f&uuml;r Benutzer ");
 define("LangXMLError2a", " in dieser OpenAstronomyLog Datei gefunden!");

@@ -313,6 +313,21 @@ img.account {
 	color            : #000000;
 }
 
+.type10 { 
+	background-color : #F0F0F0;
+	color            : #000000;
+}
+
+.type20 { 
+	background-color : #E0E6EC;
+	color            : #000000;
+}
+
+.type30 { 
+  background-color : #D0D3D6;
+	color            : #000000;
+}
+
 .typeNotVisible { 
   background-color : #777777;
 	padding          : 2px;

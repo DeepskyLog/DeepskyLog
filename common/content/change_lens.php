@@ -19,7 +19,7 @@ $line[]=array(LangAddLensField2,
               LangAddLensField2Expl);
 for($i=0;$i<count($line);$i++)
   $objPresentations->line($line[$i],"RLL",array(20,40,40),'',array("fieldname","fieldvalue","fieldexplanation"));
-                               echo "<hr />";
+echo "<hr />";
 echo "</form>";
 echo "</div>";
 }

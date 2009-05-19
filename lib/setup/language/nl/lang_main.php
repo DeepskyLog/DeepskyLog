@@ -398,7 +398,7 @@ define("LangAddSiteField8", "Typische hemelachtergrond");
 define("LangAddSiteField8Expl", "(Typisch getal van de Sky Quality Meter)");
 define("LangAddSiteFieldSearchDatabase", "Zoek een locatie uit de database");
 define("LangAddSiteFieldOr", "of");
-define("LangAddSiteFieldManually", "Voeg de gegevens manueel in");
+define("LangAddSiteFieldManually", "voeg de gegevens manueel in");
 define("LangAddSiteButton", "Voeg locatie toe");
 define("LangAddSiteButton2", "Wijzig locatie");
 define("LangAddSiteStdLocation", "Wijzig standaard locatie");
@@ -1038,7 +1038,7 @@ define("LangValidateCSVMessage", "Importeren CSV bestand succesvol!");
 
 // content/new_observationxml.php
 define("LangXMLTitle", "Importeer waarnemingen vanuit XML bestand");
-define("LangXMLMessage1", "Dit formulier geeft u de mogelijkheid om meerdere waarnemingen tegelijkertijd toe te voegen door middel van een openAstronomyLog XML bestand. Op deze manier kan u gemakkelijk en snel waarnemingen waarnemingen uitwisselen tussen verschillende applicaties die het openAstronomyLog XML formaat ondersteunen (zoals <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&Telescope</a>), .... Ter informatie: alleen waarnemingen met uw naam (voornaam + naam voluit) zullen toegevoegd worden. Waarnemingen die al aanwezig zijn in DeepskyLog worden niet nog een tweede keer ingelezen.");
+define("LangXMLMessage1", "Dit formulier geeft u de mogelijkheid om meerdere waarnemingen tegelijkertijd toe te voegen door middel van een openAstronomyLog XML bestand. Op deze manier kan u gemakkelijk en snel waarnemingen waarnemingen uitwisselen tussen verschillende applicaties die het openAstronomyLog XML formaat ondersteunen (zoals <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), .... Ter informatie: alleen waarnemingen met uw naam (voornaam + naam voluit) zullen toegevoegd worden. Waarnemingen die al aanwezig zijn in DeepskyLog worden niet nog een tweede keer ingelezen.");
 define("LangXMLError1", "DeepskyLog ondersteunt enkel openAstronomyLog versie 1.7");
 define("LangXMLError2", "Geen waarnemingen voor gebruiker ");
 define("LangXMLError2a", " in dit OpenAstronomyLog bestand!");

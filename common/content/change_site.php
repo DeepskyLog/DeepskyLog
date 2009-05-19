@@ -21,25 +21,22 @@ $lm = $objLocation->getLocationPropertyFromId($locationid,'limitingMagnitude');
 $sb = $objLocation->getLocationPropertyFromId($locationid,'skyBackground');
 
 echo "<div id=\"main\">";
-echo "<h2>".stripslashes($objLocation->getLocationPropertyFromId($locationid,'name'))."</h2>";
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
-echo "<table>";
-tableFieldnameField(LangAddSiteField1,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"sitename\" size=\"30\" value=\"".stripslashes($objLocation->getLocationPropertyFromId($locationid,'name'))."\" />");
-tableFieldnameFieldExplanation(LangAddSiteField2,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"region\" size=\"30\" value=\"".stripslashes($objLocation->getLocationPropertyFromId($locationid,'region'))."\" />",LangAddSiteField2Expl);
-tableFieldnameFieldExplanation(LangAddSiteField3,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"country\" size=\"30\" value=\"".$objLocation->getLocationPropertyFromId($locationid,'country')."\" />",LangAddSiteField3Expl);
-tableFieldnameFieldExplanation(LangAddSiteField4,"<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"latitude\" size=\"4\" value=\"".$latitudedeg."\" />&deg;<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"latitudemin\" size=\"2\" value=\"".$latitudemin . "\" />&#39;",LangAddSiteField4Expl);
-tableFieldnameFieldExplanation(LangAddSiteField5,"<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"".$longitudedeg."\" />&deg;<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"longitudemin\" size=\"2\" value=\"".$longitudemin."\" />&#39;",LangAddSiteField5Expl);
-tableFieldnameField(LangAddSiteField6,$tempTimeZoneList);
-tableFieldnameFieldExplanation(LangAddSiteField7,"<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"".(($lm > -900)?$lm:"")."\">",LangAddSiteField7Expl);
-tableFieldnameFieldExplanation(LangAddSiteField8,"<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"".(($sb > -900)?$sb:"")."\">",LangAddSiteField8Expl);
-echo "<tr>";
-echo "<td><input type=\"submit\" name=\"change\" value=\"".LangAddSiteButton2."\" /><input type=\"hidden\" name=\"id\" value=\"".$locationid."\"></input></td>";
-echo "<td></td>";
-echo "<td></td>";
-echo "</tr>";
-echo "</table>";
-echo "</form>";
+$objPresentations->line(array("<h5>".stripslashes($objLocation->getLocationPropertyFromId($locationid,'name'))."</h5>","<input type=\"submit\" name=\"change\" value=\"".LangAddSiteButton2."\" /><input type=\"hidden\" name=\"id\" value=\"".$locationid."\" />&nbsp;"),"LR",array(80,20),50); 
+echo "<hr />";
+$line[]=array(LangAddSiteField1,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"sitename\" size=\"30\" value=\"".stripslashes($objLocation->getLocationPropertyFromId($locationid,'name'))."\" />");
+$line[]=array(LangAddSiteField2,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"region\" size=\"30\" value=\"".stripslashes($objLocation->getLocationPropertyFromId($locationid,'region'))."\" />",LangAddSiteField2Expl);
+$line[]=array(LangAddSiteField3,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"country\" size=\"30\" value=\"".$objLocation->getLocationPropertyFromId($locationid,'country')."\" />",LangAddSiteField3Expl);
+$line[]=array(LangAddSiteField4,"<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"latitude\" size=\"4\" value=\"".$latitudedeg."\" />&deg;<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"latitudemin\" size=\"2\" value=\"".$latitudemin . "\" />&#39;",LangAddSiteField4Expl);
+$line[]=array(LangAddSiteField5,"<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"".$longitudedeg."\" />&deg;<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"longitudemin\" size=\"2\" value=\"".$longitudemin."\" />&#39;",LangAddSiteField5Expl);
+$line[]=array(LangAddSiteField6,$tempTimeZoneList);
+$line[]=array(LangAddSiteField7,"<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"".(($lm > -900)?$lm:"")."\">",LangAddSiteField7Expl);
+$line[]=array(LangAddSiteField8,"<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"".(($sb > -900)?$sb:"")."\">",LangAddSiteField8Expl);
+for($i=0;$i<count($line);$i++)
+  $objPresentations->line($line[$i],"RLL",array(20,40,40),'',array("fieldname","fieldvalue","fieldexplanation"));
+echo "<hr />";
+  echo "</form>";
 echo "</div>";
 }
 ?>

@@ -1,9 +1,9 @@
 <?php // quickpick.php - allows the user to quiclky enter the name of an object and search it, its observations or make a new observation
 echo "<div   class=\"menuDiv\">";
 echo "<form  action=\"".$baseURL."index.php\" method=\"get\">";
-echo "<input type=\"hidden\" name=\"indexAction\" value=\"quickpick\"></input>";
-echo "<input type=\"hidden\" name=\"source\"      value=\"quickpick\"></input>";
-echo "<input type=\"hidden\" name=\"myLanguages\" value=\"true\"></input>";
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"quickpick\" />";
+echo "<input type=\"hidden\" name=\"source\"      value=\"quickpick\" />";
+echo "<input type=\"hidden\" name=\"myLanguages\" value=\"true\" />";
 echo "<input type=\"text\"   
              name=\"object\"
              class=\"inputfield menuInput\"

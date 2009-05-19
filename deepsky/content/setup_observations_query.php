@@ -423,7 +423,7 @@ echo("<table width=\"100%\">");
 echo "<tr>";
 // DRAWINGS
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">". LangQueryObservationsMessage1 . "</td>");
-echo("<td width=\"25%\"><input type=\"checkbox\" class=\"inputfield\" name=\"drawings\" /></input></td>");
+echo("<td width=\"25%\"><input type=\"checkbox\" class=\"inputfield\" name=\"drawings\" /></td>");
 // MINIMUM VISIBILITY
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangViewObservationField23;

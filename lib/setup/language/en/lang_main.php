@@ -399,7 +399,7 @@ define("LangAddSiteField8", "Typical sky brightness");
 define("LangAddSiteField8Expl", "(Number returned from Sky Quality Meter)");
 define("LangAddSiteFieldSearchDatabase", "Search a location from the database");
 define("LangAddSiteFieldOr", "or");
-define("LangAddSiteFieldManually", "Specify your location details manually");
+define("LangAddSiteFieldManually", "specify your location details manually");
 define("LangAddSiteButton", "Add site");
 define("LangAddSiteButton2", "Change site");
 define("LangAddSiteStdLocation", "Adapt standard location");
@@ -1038,7 +1038,7 @@ define("LangValidateCSVMessage", "Import of CSV file successfull!");
 
 // content/new_observationxml.php
 define("LangXMLTitle", "Import observations from an XML file");
-define("LangXMLMessage1", "This form gives you the possibility to add different observations at the same time using an OpenAstronomyLog XML file. This way, you can exchange in a fast and easy way observations between different applications which support the OpenAstronomyLog XML format (like <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&Telescope</a>), .... Information: Only observations with your name (name and surname) will be added. Observations which are already available in DeepskyLog will not be imported a second time.");
+define("LangXMLMessage1", "This form gives you the possibility to add different observations at the same time using an OpenAstronomyLog XML file. This way, you can exchange in a fast and easy way observations between different applications which support the OpenAstronomyLog XML format (like <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), .... Information: Only observations with your name (name and surname) will be added. Observations which are already available in DeepskyLog will not be imported a second time.");
 define("LangXMLError1", "DeepskyLog only supports openAstronomyLog version 1.7");
 define("LangXMLError2", "No observations for user ");
 define("LangXMLError2a", " in this OpenAstronomyLog file!");

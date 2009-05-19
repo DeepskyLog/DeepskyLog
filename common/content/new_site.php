@@ -61,10 +61,11 @@ while(list($key,$value)=each($sites))
 $content1b.= "</select>";
 $objPresentations->line(array("<h5>".LangAddSiteTitle."</h5>"),"L",array(),50);
 echo "<hr />";
-$objPresentations->line(array("","<a href=\"".$baseURL."index.php?indexAction=search_sites\">".LangAddSiteFieldSearchDatabase."</a>"),"RL",array(25,75),'',array("fieldname"));
+$objPresentations->line(array("","<a href=\"".$baseURL."index.php?indexAction=search_sites\">".LangAddSiteFieldSearchDatabase."</a>",
+                              "<input type=\"submit\" name=\"add\" value=\"".LangAddSiteButton."\" />&nbsp;"),
+                        "RLR",array(25,40,35),'',array("fieldname"));
 $objPresentations->line(array(LangAddSiteExisting,
-                              $content1b,
-                              "<input type=\"submit\" name=\"add\" value=\"".LangAddEyepieceButton."\" />&nbsp;"),
+                              $content1b),
                         "RLR",array(25,40,35),'',array("fieldname"));                              
 $objPresentations->line(array(LangAddSiteFieldOr." ".LangAddSiteFieldManually),"R",array(25),'',array("fieldname"));
 $objPresentations->line(array(LangAddSiteField1,

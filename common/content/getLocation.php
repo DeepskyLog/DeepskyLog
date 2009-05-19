@@ -6,13 +6,13 @@ elseif(!($countryname=$objUtil->checkPostKey('country'))) throw new Exception(La
 else
 {
 echo "<div id=\"main\">";
-echo "<h2>".LangGetLocation1."</h2>";
+$objPresentations->line(array("<h5>".LangGetLocation1."</h5>"),"L",array(),50);
+echo "<hr />";
 $count=0;
 $result=$objLocation->getLocationsFromDatabase($locationname,$countryname);
 if(($result)&&($locationname))
-{ echo "<div class=\"results\">".LangGetLocation2."<a href=\"".$baseURL."index.php?indexAction=search_sites\">".LangGetLocation2a."</div>";
-  echo "<p>";
-	echo "<table>";
+{ echo "<div class=\"results\">".LangGetLocation2."<a href=\"".$baseURL."index.php?indexAction=search_sites\">".LangGetLocation2a."</div><br />";
+  echo "<table style=\"width:100%\">";
   echo "<tr class=\"type3\">";
   echo "<td>".LangGetLocation3."</td>";
   echo "<td>".LangGetLocation4."</td>";
@@ -30,13 +30,14 @@ if(($result)&&($locationname))
     $count++;
   }
   echo "</table>";
-	echo "</p>";
+	echo "<hr />";
 }
 else
 { echo "<p>".LangGetLocation8."</p>";
   echo "<p><a href=\"".$baseURL."index.php?indexAction=search_sites\">".LangGetLocation9."</a>";
   echo LangGetLocation10;
   echo "<a href=\"".$baseURL."index.php?indexAction=add_site\">".LangGetLocation11."</a>";
+  echo "<hr />";
 }
 echo "</div>";
 }

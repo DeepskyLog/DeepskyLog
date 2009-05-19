@@ -302,7 +302,7 @@ echo "<input type=\"submit\" name=\"changeobservation\" value=\"" . LangChangeOb
 echo "</td>";
 echo "</tr>";
 echo "</table>";
-echo "<input type=\"hidden\" name=\"observationid\" value=\"" . $_GET['observation'] . "\"></input>";
+echo "<input type=\"hidden\" name=\"observationid\" value=\"" . $_GET['observation'] . "\" />";
 echo "</form>";
 if($objObservation->getDsObservationProperty($_GET['observation'],'hasDrawing'))
 { echo "<p>";

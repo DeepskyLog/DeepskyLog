@@ -4,12 +4,10 @@ elseif(!($user=$objUtil->checkGetKey('user'))) throw new Exception(LangException
 else
 {
 $name=$objObserver->getObserverProperty($user,'name'); 
-
 $firstname=$objObserver->getObserverProperty($user,'firstname');
 $location_id = $objObserver->getObserverProperty($user,'stdlocation');
 $location_name = $objLocation->getLocationPropertyFromId($location_id,'name');
 $instrumentname=$objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($user,'stdtelescope'),'name');
-
 $userDSobservation=$objObserver->getNumberOfDsObservations($user);
 $totalDSObservations=$objObservation->getNumberOfDsObservations();
 $userDSYearObservations=$objObservation->getObservationsLastYear($user);
@@ -25,7 +23,6 @@ if($userDSrank===false)
   $userDSrank = "-";
 else
   $userDSrank++;
-  
 $userCometobservation=$objObserver->getNumberOfCometObservations($user);
 $totalCometObservations=$objCometObservation->getNumberOfObservations();
 $userCometYearObservations=$objCometObservation->getObservationsThisYear($user);
@@ -52,102 +49,162 @@ for($i =0;$i<count($modules);$i++)
     $information[$i][4]=$cometrank;
   }
 }  
-  
-  
-  
 echo "<div id=\"main\">";
-echo "<h2>".$firstname.' '. $name."</h2>";
+$objPresentations->line(array("<h5>".$firstname.' '. $name."</h5>"),"L",array(),50);
+echo "<hr />";
+
+if(array_key_exists('admin',$_SESSION)&&($_SESSION['admin']=="yes"))       // admin logged in
+  $objPresentations->line(array(LangChangeAccountField2.":","<a href=\"mailto:".$objObserver->getObserverProperty($user,'email')."\">".$objObserver->getObserverProperty($user,'email')."</a>"),"RL",array(20,80),'',array('type10','type10'));
+$objPresentations->line(array(LangChangeAccountField3.":",$objObserver->getObserverProperty($user,'firstname')),"RL",array(20,80),'',array('type20','type20'));
+$objPresentations->line(array(LangChangeAccountField4.":",$objObserver->getObserverProperty($user,'name')),"RL",array(20,80),'',array('type10','type10'));
+$objPresentations->line(array(LangChangeAccountField7.":","<a href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=".urlencode($location_id)."\">".$location_name."</a>"),"RL",array(20,80),'',array('type20','type20'));
+$objPresentations->line(array(LangChangeAccountField8.":",($instrumentname?"<a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($objObserver->getObserverProperty($user,'stdtelescope'))."\">".(($instrumentname=="Naked eye")?InstrumentsNakedEye:$instrumentname)."</a>":"")),"RL",array(20,80),'',array('type10','type10'));
+if($objUtil->checkSessionKey('admin')=="yes")
+{ echo "<form action=\"".$baseURL."index.php\" >";
+  echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_role\" />";
+  echo "<input type=\"hidden\" name=\"user\" value=\"".$user."\" />";
+  $content='';
+  if($user!="admin")
+  { $content = "<select name=\"role\" class=\"\">";
+    $content.= "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleAdmin)?"selected=\"selected\"":"")." value=\"0\">".LangViewObserverAdmin."</option>";
+    $content.= "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleUser)?"selected=\"selected\"":"")." value=\"1\">".LangViewObserverUser."</option>";
+    $content.= "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleCometAdmin)?"selected=\"selected\"":"")." value=\"4\">".LangViewObserverCometAdmin."</option>";
+    $content.= "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleWaitlist)?"selected=\"selected\"":"")." value=\"2\">".LangViewObserverWaitlist."</option>";
+    $content.= "</select>&nbsp;";
+    $content.= "<input type=\"submit\" name=\"change\" value=\"".LangViewObserverChange."\" />";
+  }
+  elseif($objObserver->getObserverProperty($user,'role',2)==RoleWaitlist)
+    $content = LangViewObserverWaitlist;
+  else                                                                          // fixed admin role
+  { $content = LangViewObserverAdmin;
+  }
+  $objPresentations->line(array(LangViewObserverRole.":",$content),"RL",array(20,80),'40',array('fieldname type20','type20'));
+  echo "</form>";
+  echo "<hr />";
+}
+
+echo "<p>";
+
+
+$content=array();
+$classes=array();
+$content[]="";
+$alignment="R";
+$classes[]="";
+for($i=0;$i<count($modules);$i++)
+{ $content[]=$GLOBALS[$modules[$i]];
+  $classes[]="type30";
+  $alignment.="C";
+}
+$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+
+$content=array();
+$classes=array();
+$content[]=LangViewObserverNumberOfObservations.":";
+$alignment="R";
+$classes[]="fieldname type10";
+for($i=0;$i<count($modules);$i++)
+{ $content[]=$information[$i][0];
+  $classes[]="fieldvalue type10";
+  $alignment.="C";
+}
+$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+
+$content=array();
+$classes=array();
+$content[]=LangTopObserversHeader4.":";
+$alignment="R";
+$classes[]="fieldname type20";
+for($i=0;$i<count($modules);$i++)
+{ $content[]=$information[$i][1];
+  $classes[]="fieldvalue type20";
+  $alignment.="C";
+}
+$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+
+$content=array();
+$classes=array();
+$content[]=LangTopObserversHeader6.":";
+$alignment="R";
+$classes[]="fieldname type10";
+for($i=0;$i<count($modules);$i++)
+{ $content[]=$information[$i][2];
+  $classes[]="fieldvalue type10";
+  $alignment.="C";
+}
+$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+
+$content=array();
+$classes=array();
+$content[]=LangTopObserversHeader5.":";
+$alignment="R";
+$classes[]="fieldname type20";
+for($i=0;$i<count($modules);$i++)
+{ $content[]=(($key==$i)?$userMobjects." / 110":"-");
+  $classes[]="fieldvalue type20";
+  $alignment.="C";
+}
+$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+
+$content=array();
+$classes=array();
+$content[]=LangTopObserversHeader5b.":";
+$alignment="R";
+$classes[]="fieldname type10";
+for($i=0;$i<count($modules);$i++)
+{ $content[]=(($key==$i)?$userCaldwellObjects." / 110":"-");
+  $classes[]="fieldvalue type10";
+  $alignment.="C";
+}
+$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+
+$content=array();
+$classes=array();
+$content[]=LangTopObserversHeader5c.":";
+$alignment="R";
+$classes[]="fieldname type20";
+for($i=0;$i<count($modules);$i++)
+{ $content[]=(($key==$i)?$userH400objects." / 400":"-");
+  $classes[]="fieldvalue type20";
+  $alignment.="C";
+}
+$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+
+$content=array();
+$classes=array();
+$content[]=LangTopObserversHeader5d.":";
+$alignment="R";
+$classes[]="fieldname type10";
+for($i=0;$i<count($modules);$i++)
+{ $content[]=(($key==$i)?$userHIIobjects." / 400":"-");
+  $classes[]="fieldvalue type10";
+  $alignment.="C";
+}
+$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+
+$content=array();
+$classes=array();
+$content[]=LangViewObserverRank.":";
+$alignment="R";
+$classes[]="fieldname type20";
+for($i=0;$i<count($modules);$i++)
+{ $content[]=$information[$i][4];
+  $classes[]="fieldvalue type20";
+  $alignment.="C";
+}
+$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+
+echo "<hr />";
 $dir = opendir($instDir.'common/observer_pics');
 while(FALSE!==($file=readdir($dir)))
 { if(("." == $file)OR(".."== $file))
     continue;                                                                   // skip current directory and directory above
   if(fnmatch($user. ".gif", $file) || fnmatch($user. ".jpg",$file) || fnmatch($user. ".png", $file))
-    echo "<div style=\"position:absolute;top:10px;right:10px;text-align:right;\"><img class=\"viewobserver\" src=\"".$baseURL."common/observer_pics/".$file."\" alt=\"".$firstname."&nbsp;".$name."\"></img></div>";
-}
-echo "<table>";
-if(array_key_exists('admin',$_SESSION)&&($_SESSION['admin']=="yes"))       // admin logged in
-  tableTypeFieldnameField('type1',LangChangeAccountField2,"<a href=\"mailto:".$objObserver->getObserverProperty($user,'email')."\">".$objObserver->getObserverProperty($user,'email')."</a>");
-tableTypeFieldnameField("type2",LangChangeAccountField3,$objObserver->getObserverProperty($user,'firstname'));
-tableTypeFieldnameField("type1",LangChangeAccountField4,$objObserver->getObserverProperty($user,'name'));
-tableTypeFieldnameField("type2",LangChangeAccountField7,"<a href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=".urlencode($location_id)."\">".$location_name."</a>");
-tableTypeFieldnameField("type1",LangChangeAccountField8,($instrumentname?"<a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($objObserver->getObserverProperty($user,'stdtelescope'))."\">".(($instrumentname=="Naked eye")?InstrumentsNakedEye:$instrumentname)."</a>":""));
-if($objUtil->checkSessionKey('admin')=="yes")
-{ echo "<tr class=\"type2\">";
-  echo "<td class=\"fieldname\">".LangViewObserverRole."</td>";
-  echo "<form action=\"".$baseURL."index.php\" >";
-  echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_role\" />";
-  echo "<input type=\"hidden\" name=\"user\" value=\"".$user."\" />";
-  if($user!="admin")
-  { echo "<td>";
-    echo "<select name=\"role\" class=\"fieldvalue\">";
-    echo "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleAdmin)?"selected=\"selected\"":"")." value=\"0\">".LangViewObserverAdmin."</option>";
-    echo "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleUser)?"selected=\"selected\"":"")." value=\"1\">".LangViewObserverUser."</option>";
-    echo "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleCometAdmin)?"selected=\"selected\"":"")." value=\"4\">".LangViewObserverCometAdmin."</option>";
-    echo "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleWaitlist)?"selected=\"selected\"":"")." value=\"2\">".LangViewObserverWaitlist."</option>";
-    echo "</select>";
-    echo "<input type=\"submit\" name=\"change\" value=\"".LangViewObserverChange."\" />";
-    echo "</td>";
+  { echo "<div style=\"position:relative;text-align:right;\"><img class=\"viewobserver\" src=\"".$baseURL."common/observer_pics/".$file."\" alt=\"".$firstname."&nbsp;".$name."\"></img></div>";
+    echo "<hr />";
   }
-  elseif($objObserver->getObserverProperty($user,'role',2)==RoleWaitlist)
-    echo("<td>".LangViewObserverWaitlist."</td>");
-  else                                                                          // fixed admin role
-  {  echo "<td>".LangViewObserverAdmin."</td>";
-  }
-  echo "</form>";
-  echo "</tr>";
 }
-echo "</table>";
-echo "<p>";
-echo "<table>";
-echo "<tr class=\"type3\">";
-echo "<td>&nbsp;</td>";
-for($i=0;$i<count($modules);$i++)
-  echo"<td style=\"text-align:center\">".$GLOBALS[$modules[$i]]."</td>";
-echo "</tr>";
-echo "<tr class=\"type1\">";
-echo "<td class=\"fieldname\">".LangViewObserverNumberOfObservations."</td>";
-for($i=0;$i<count($modules);$i++)
-  echo "<td class=\"fieldvalue\">".$information[$i][0]."</td>";
-echo "</tr>";
-echo "<tr class=\"type2\">";
-echo "<td class=\"fieldname\">".LangTopObserversHeader4."</td>";
-for($i=0;$i<count($modules);$i++)
-  echo "<td class=\"fieldvalue\">".$information[$i][1]."</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangTopObserversHeader6."</td>";
-for ($i = 0;$i < count($modules);$i++)
-  echo "<td class=\"fieldvalue\">" . $information[$i][2] . "</td>";
-echo "</tr>";
-$key=array_search("deepsky", $modules);
-if(!is_null($key))
-{ echo "<tr  class=\"type2\">";
-  echo "<td style=\"text-align:right\">".LangTopObserversHeader5."</td>";
-  for($i=0;$i<count($modules);$i++)
-    echo "<td class=\"fieldvalue\">".(($key==$i)?$userMobjects." / 110":"-")."</td>";
-  echo "</tr>";
-  echo "<tr class=\"type1\">";
-  echo "<td class=\"fieldname\">".LangTopObserversHeader5b."</td>";
-  for($i=0;$i<count($modules);$i++)
-    echo "<td class=\"fieldvalue\">".(($key==$i)?$userCaldwellObjects." / 110":"-")."</td>";
-  echo "</tr>";
-  echo "<tr class=\"type2\">";
-  echo "<td class=\"fieldname\">".LangTopObserversHeader5c."</td>";
-  for($i=0;$i<count($modules);$i++)
-    echo "<td class=\"fieldvalue\">".(($key==$i)?$userH400objects." / 400":"-")."</td>";
-  echo "</tr>";
-  echo "<tr class=\"type1\">";
-  echo "<td class=\"fieldname\">".LangTopObserversHeader5d."</td>";
-  for($i=0;$i<count($modules);$i++)
-    echo "<td class=\"fieldvalue\">".(($key==$i)?$userHIIobjects." / 400":"-")."</td>";
-  echo "</tr>";
-}
-echo "<tr class=\"type2\">";
-echo "<td class=\"fieldname\">".LangViewObserverRank."</td>";
-for($i=0;$i<count($modules);$i++)
-  echo "<td class=\"fieldvalue\">".$information[$i][4]."</td>";
-echo "</tr>";
-echo "</table>";
+
 echo "</div>";
 }
 ?>

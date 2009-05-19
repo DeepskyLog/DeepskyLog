@@ -1551,7 +1551,7 @@ class Utils implements iUtils
     { $currentpage=ceil($min/$step)+1;
 			echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=0\">"."<img src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\" />"."</a>"."</td>";
 		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img src=\"".$baseURL."styles/images/left20.gif\" border=\"0\" />"."</a>"."</td>";			
-		  echo "<td align=\"center\">"."<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\"></input>"."</td>";	
+		  echo "<td align=\"center\">"."<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\" />"."</td>";	
 		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img src=\"".$baseURL."styles/images/right20.gif\" border=\"0\" />"."</a>"."</td>";
 		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\" />"."</a>"."</td>";
 	  }
@@ -1581,7 +1581,7 @@ class Utils implements iUtils
     { $currentpage=ceil($min/$step)+1;
 			echo "<a href=\"".$link."&amp;multiplepagenr=0\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\" alt =\"<<\" />"."</a>";
 		  echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/left20.gif\" border=\"0\" alt=\"<\" />"."</a>";			
-		  echo "<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\"></input>";	
+		  echo "<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\" />";	
 		  echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/right20.gif\" border=\"0\" alt=\">\" />"."</a>";
 		  echo "<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\" alt=\">>\" />"."</a>";
 	  }
