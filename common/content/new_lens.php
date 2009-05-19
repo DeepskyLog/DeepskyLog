@@ -44,7 +44,7 @@ if ($lns!=null)
     $count++;
   }
   echo "</table>";
-  echo "<hr>";
+  echo "<hr />";
 }
 echo "<h2>".LangAddLensTitle."</h2>";
 echo "<ol>";

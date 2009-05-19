@@ -217,7 +217,7 @@ echo("&nbsp;&nbsp;<select name=\"size_max_units\" class=\"inputfield\"><option><
 echo("</tr>\n");
 
 echo("</table>");
-echo("<hr>");
+echo("<hr />");
 echo("<table width=\"100%\">");
 
 echo("<tr>");
@@ -328,7 +328,7 @@ echo("</td>\n
 echo("</tr>");
 
 echo("</table>");
-echo("<hr>");
+echo("<hr />");
 echo("<table width=\"100%\">");
 
 
@@ -418,7 +418,7 @@ echo("</select></td>");
 echo("</tr>");
 
 echo("</table>");
-echo("<hr>");
+echo("<hr />");
 echo("<table width=\"100%\">");
 echo "<tr>";
 // DRAWINGS

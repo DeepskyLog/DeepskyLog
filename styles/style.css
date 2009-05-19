@@ -252,14 +252,12 @@ li {
 }
 .fieldname {
   text-align       : right;
-	padding-left     : 1em;
-  padding-right    : 1em;
+  text-indent      : 1em;
 }
 .fieldvalue {
 	font-weight      : normal;
 	font-style       : italic;
-	padding-left     : 1em;
-  padding-right    : 1em;
+	text-indent      : 1em;
 }
 .fieldvaluedropdown {
 	font-weight      : normal;
@@ -269,8 +267,7 @@ li {
 }
 .fieldexplanation {
 	font-style       : italic;
-	padding-left     : 1em;
-  padding-right    : 1em;
+	text-indent      : 1em;
 }
 .requiredField {
 	background-color : #FFFFCC;
