@@ -8,6 +8,7 @@ interface iLenses
 	public  function getSortedLenses($sort, $observer = "");                       // returns an array with the ids of all lenses, sorted by the column specified in $sort
   public  function setLensProperty($id,$property,$propertyValue);                // sets the property to the specified value for the given lens
   public  function getLensUsedFromId($id);                                       // returns the number of times the lens is used in observations
+  public  function showLensesObserver();
   public  function validateDeleteLens();                                         // validates and removes the lens with id
   public  function validateSaveLens();                                           // validates and saves a lens and returns a message 
 }
@@ -43,6 +44,51 @@ class Lenses implements iLenses
   public  function getLensUsedFromId($id)                                       // returns the number of times the lens is used in observations
   { global $objDatabase; 
     return $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM observations WHERE lensid=\"".$id."\"",'ObsCnt',0);
+  }
+  public  function showLensesObserver()
+  { global $baseURL,$loggedUser,$objUtil,$objLens,$objPresentations,$loggedUserName;
+    $sort=$objUtil->checkGetKey('sort','name');
+		$lns =$objLens->getSortedLenses($sort, $loggedUser);
+		if ($lns!=null)
+		{ $orig_previous=$objUtil->checkGetKey('previous','');
+		  if((isset($_GET['sort']))&&($orig_previous==$_GET['sort'])) // reverse sort when pushed twice
+		  { if ($_GET['sort'] == "name")
+		      $lns = array_reverse($lns, true);
+		    else
+		    { krsort($lns);
+		      reset($lns);
+		    }
+		    $previous = "";
+		  }
+		  else
+		    $previous = $sort;
+		  $objPresentations->line(array("<h5>".LangOverviewLensTitle." ".$loggedUserName."</h5>"),"L",array(),50);
+      echo "<hr />"; 
+		  echo "<table width=\"100%\">";
+		  echo "<tr class=\"type3\">";
+		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_lens&amp;sort=name&amp;previous=$previous\">".LangViewLensName."</a></td>";
+		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_lens&amp;sort=factor&amp;previous=$previous\" class=\"centered\">".LangViewLensFactor."</a></td>";
+		  echo "<td width=\"50%\"></td>";
+		  echo "</tr>";
+		  $count = 0;
+		  while(list($key,$value)=each($lns))
+		  { $name = stripslashes($objLens->getLensPropertyFromId($value,'name'));
+		    $factor = $objLens->getLensPropertyFromId($value,'factor');
+		    echo "<tr class=\"type".(2-($count%2))."\">";
+		    echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_lens&amp;lens=".urlencode($value)."\">".$name."</a></td>";
+		    echo "<td class=\"centered\">".$factor."</td>";
+		    echo "<td>";
+		    if(!($obsCnt=$objLens->getLensUsedFromId($value)))
+		      echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_lens&amp;lensid=".urlencode($value)."\">".LangRemove."</a>";
+		    else
+		      echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".$loggedUser."&amp;lens=".$value."&amp;exactinstrumentlocation=true\">".$obsCnt.' '.LangGeneralObservations."</a>";
+		    echo "</td>";
+		    echo "</tr>";
+		    $count++;
+		  }
+		  echo "</table>";
+		  echo "<hr />";
+		} 	
   }
   public  function validateDeleteLens()                                         // validates and removes the lens with id
   { global $objUtil, $objDatabase;

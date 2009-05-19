@@ -12,7 +12,8 @@ interface iLocations
   public  function getLocationUsedFromId($id);                                                                         // returns the number of times the location is used in observations
   public  function getSortedLocations($sort,$observer="");                                                             // returns an array with the ids of all locations, sorted by the column specified in $sort
   public  function getSortedLocationsList($sort, $observer = "");                                                      // returns an array with the ids of all locations, sorted by the column specified in $sort. Locations withthe same name are adapted by adding the province.
-  public  function setLocationProperty($id,$property,$propertyValue);                                                  // sets the property to the specified value for the given location  public  function validateDeleteLocation();                                                                           // deletes teh location of the list with locations
+  public  function setLocationProperty($id,$property,$propertyValue); 
+  public  function showLocationsObserver();                                                 // sets the property to the specified value for the given location  public  function validateDeleteLocation();                                                                           // deletes teh location of the list with locations
   public  function validateDeleteLocation();
   public  function validateSaveLocation();
 }
@@ -141,6 +142,93 @@ class Locations
   public  function setLocationProperty($id,$property,$propertyValue)                            // sets the property to the specified value for the given location
   { global $objDatabase;
     return $objDatabase->execSQL("UPDATE locations SET ".$property." = \"".$propertyValue."\" WHERE id = \"".$id."\"");
+  }
+  public  function showLocationsObserver()
+  { global $baseURL,$loggedUser,$objObserver,$objUtil,$objLocation,$objPresentations,$loggedUserName,$objContrast,$locationid,$sites;
+    $sort=$objUtil->checkGetKey('sort','name');
+		if($sites!=null)
+		{ $orig_previous=$objUtil->checkGetKey('previous','');
+		  if((isset($_GET['sort']))&&($orig_previous==$_GET['sort']))                   // reverse sort when pushed twice
+		  { if ($_GET['sort'] == "name")
+		      $insts = array_reverse($insts, true);
+		    else
+		    { krsort($insts);
+		      reset($insts);
+		    }
+		    $previous = "";
+		  }
+		  else
+		    $previous = $sort;
+		  echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+		  echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
+		  echo "<input type=\"hidden\" name=\"adaptStandardLocation\" value=\"1\">";
+	    $objPresentations->line(array("<h5>".LangOverviewSiteTitle." ".$loggedUserName."</h5>",
+	                                  "<input type=\"submit\" name=\"adapt\" value=\"" . LangAddSiteStdLocation . "\" />&nbsp;"),
+	                            "LR",array(80,20),50);
+      echo "<hr />"; 
+		  echo "<table width=\"100%\">";
+		  echo "<tr class=\"type3\">";
+		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>";
+		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=region&amp;previous=$previous\">".LangViewLocationProvince."</a></td>";
+		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=country&amp;previous=$previous\">".LangViewLocationCountry."</a></td>";
+		  echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=longitude&amp;previous=$previous\">".LangViewLocationLongitude."</a></td>";
+		  echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=latitude&amp;previous=$previous\">".LangViewLocationLatitude."</a></td>";
+		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=timezone&amp;previous=$previous\">".LangAddSiteField6."</a></td>";
+		  echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=limitingMagnitude&amp;previous=$previous\">".LangViewLocationLimMag."</a></td>";
+		  echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=skyBackground&amp;previous=$previous\">".LangViewLocationSB."</a></td>";
+		  echo "<td class=\"centered\">".LangViewLocationStd."</td>";
+		  echo "<td></td>";
+		  echo "</tr>";
+		  $count = 0;
+		  while(list($key,$value)=each($sites))
+		  { $sitename=stripslashes($objLocation->getLocationPropertyFromId($value,'name'));
+		    $region=stripslashes($objLocation->getLocationPropertyFromId($value,'region'));
+		    $country=$objLocation->getLocationPropertyFromId($value,'country');
+		    if($objLocation->getLocationPropertyFromId($value,'longitude')>0)
+		      $longitude = "&nbsp;" . $objPresentations->decToString($objLocation->getLocationPropertyFromId($value,'longitude'));
+		    else
+		      $longitude = $objPresentations->decToString($objLocation->getLocationPropertyFromId($value,'longitude'));
+		    if($objLocation->getLocationPropertyFromId($value,'latitude')>0)
+		      $latitude = "&nbsp;" . $objPresentations->decToString($objLocation->getLocationPropertyFromId($value,'latitude'));
+		    else
+		      $latitude = $objPresentations->decToString($objLocation->getLocationPropertyFromId($value,'latitude'));
+		    $timezone = $objLocation->getLocationPropertyFromId($value,'timezone');
+		    $observer = $objLocation->getLocationPropertyFromId($value,'observer');
+		    $limmag = $objLocation->getLocationPropertyFromId($value,'limitingMagnitude');
+		    $sb = $objLocation->getLocationPropertyFromId($value,'skyBackground');
+		    if(($limmag<-900)&&($sb>0))
+		      $limmag = sprintf("%.1f", $objContrast->calculateLimitingMagnitudeFromSkyBackground($sb));
+		    elseif(($limmag<-900)&&($sb<-900)) 
+		    { $limmag="&nbsp;";
+		      $sb="&nbsp;";
+		    } 
+		    else
+		      $sb=sprintf("%.1f", $objContrast->calculateSkyBackgroundFromLimitingMagnitude($limmag));
+		    if($value!="1")
+		    { echo "<tr class=\"type".(2-($count%2))."\">";
+		      echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_site&amp;location=".urlencode($value)."\">".$sitename."</a></td>";
+		      echo "<td>".$region."</td>";
+		      echo "<td>".$country."</td>";
+		      echo "<td class=\"centered\">".$longitude."</td>";
+		      echo "<td class=\"centered\">".$latitude."</td>";
+		      echo "<td>".$timezone."</td>";
+		      echo "<td class=\"centered\">".$limmag."</td>";
+		      echo "<td class=\"centered\">".$sb."</td>";
+		      echo "<td class=\"centered\"><input type=\"radio\" name=\"stdlocation\" value=\"". $value ."\"".(($value==$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation'))?" checked ":"")." />&nbsp;<br /></td>";
+					echo "<td>";
+		      if(!($obsCnt=$objLocation->getLocationUsedFromId($value)))
+		        echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_location&amp;locationid=".urlencode($value)."\">".LangRemove."</a>";
+		      else
+		        echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".$loggedUser."&amp;site=".$value."&amp;exactinstrumentlocation=true\">".$obsCnt.' '.LangGeneralObservations."</a>";
+		      echo "</td>";
+					echo "</tr>";
+		      $count++;
+		    }
+		  }
+		  echo "</form>";
+		  echo "</table>";
+		  echo "<hr />";
+		}  	
   }
   public  function validateDeleteLocation()
   { global $objUtil, $objDatabase;

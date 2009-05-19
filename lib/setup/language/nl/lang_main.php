@@ -1,5 +1,42 @@
 <?php
 
+  // Te vertalen of controleren
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 define("LangGeneralObservations","observaties");
 
 define("LangIndexPleaseWait","Gelieve een moment te wachten terwijl de gegevens opgehaald worden...");
@@ -266,8 +303,8 @@ define("LangOverviewSiteTitle", "Overzicht waarnemingsplaatsen");
 define("LangAddSiteExisting", "Voeg bestaande waarneemplaats toe");
 
 define("LangOverviewEyepieceTitle", "Overzicht oculairs");
-define("LangAddEyepieceExisting", "Voeg bestaand oculair toe");
-define("LangAddEyepieceManually", "Voeg de oculairgegevens manueel in");
+define("LangAddEyepieceExisting", "Selecteer de oculairgegevens uit de lijst");
+define("LangAddEyepieceManually", "voeg de oculairgegevens manueel in");
 define("LangAddEyepieceTitle", "Voeg een nieuw oculair toe");
 define("LangAddEyepieceField1", "Naam");
 define("LangAddEyepieceField1Expl", "(bijv. Televue 31mm Nagler)"); 
@@ -285,7 +322,7 @@ define("LangViewLensName", "Naam");
 define("LangViewLensFactor", "Factor");
 define("LangAddLensTitle", "Nieuwe lens");
 define("LangAddLensExisting", "Voeg bestaande lens toe");
-define("LangAddLensFieldManually", "Voeg de gegevens manueel in");
+define("LangAddLensFieldManually", "voeg de gegevens manueel in");
 define("LangAddLensField1", "Naam");
 define("LangAddLensField1Expl", "Bijv. Televue 2x Barlow");
 define("LangAddLensField2", "Factor");
@@ -306,7 +343,7 @@ define("LangViewFilterWratten", "Wratten nummer");
 define("LangViewFilterSchott", "Schott nummer");
 define("LangAddFilterTitle", "Nieuwe filter");
 define("LangAddFilterExisting", "Voeg bestaande filter toe");
-define("LangAddFilterFieldManually", "Voeg de gegevens manueel in");
+define("LangAddFilterFieldManually", "voeg de gegevens manueel in");
 define("LangAddFilterField1", "Naam");
 define("LangAddFilterField1Expl", "(bv Lumicon O-III)"); 
 define("LangAddFilterField2", "Type");
@@ -405,7 +442,7 @@ define("LangAddInstrumentOr", "OF");
 define("LangAddInstrumentAdd", "Voeg instrument toe");
 define("LangAddInstrumentStdTelescope", "Pas standaard instrument aan");
 define("LangAddInstrumentExisting", "Voeg een bestaand instrument toe");
-define("LangAddInstrumentManually", "Voeg de gegevens manueel in");
+define("LangAddInstrumentManually", "voeg de gegevens manueel in");
 
 // content/change_instrument.php
 
@@ -827,15 +864,15 @@ define("LangValidateSiteMessage5", "De locatiegegevens zijn gewijzigd in jouw li
 // control/validate_eyepiece.php
 
 define("LangValidateEyepieceMessage1", "Alle velden moeten worden ingevuld!");
-define("LangValidateEyepieceMessage2", "Het oculair is aan je lijst met uitrustingen");
-define("LangValidateEyepieceMessage3", "Oculair toegevoegd");
-define("LangValidateEyepieceMessage4", "Oculair aangepast");
-define("LangValidateEyepieceMessage5", "Het oculair is aangepast in je lijst met uitrustingen");
+define("LangValidateEyepieceMessage2", "Het oculair is toegevoegd aan je lijst met uitrustingen.");
+define("LangValidateEyepieceMessage3", "Oculair toegevoegd.");
+define("LangValidateEyepieceMessage4", "Oculair aangepast.");
+define("LangValidateEyepieceMessage5", "Het oculair is aangepast in je lijst met uitrustingen.");
 
 //control/validate_filter
-define("LangValidateFilterMessage2", "De filter is toegevoegd aan je lijst met uitrustingen");
-define("LangValidateFilterMessage5", "De filter is aangepast in je lijst met uitrustingen");
-define("LangValidateFilterMessage6", "De filter is verwijderd uit je lijst met uitrustingen");
+define("LangValidateFilterMessage2", "De filter is toegevoegd aan je lijst met uitrustingen.");
+define("LangValidateFilterMessage5", "De filter is aangepast in je lijst met uitrustingen.");
+define("LangValidateFilterMessage6", "De filter is verwijderd uit je lijst met uitrustingen.");
 
 
 // control/validate_observer.php

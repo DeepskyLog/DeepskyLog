@@ -5,10 +5,10 @@ else
 {
 $name=$objLens->getLensPropertyFromId($lensid,'name');
 echo "<div id=\"main\">";
-echo "<h2>".$name."</h2>";
-echo "<table>";
-tableFieldnameField(LangViewLensFactor,$objLens->getLensPropertyFromId($lensid,'factor'));
-echo "</table>";
+$objPresentations->line(array("<h5>".$name."</h5>"),"L",array(100),50);
+echo "<hr />";
+$objPresentations->line(array(LangViewLensFactor,$objLens->getLensPropertyFromId($lensid,'factor')),"RL",array(20,80),'',array('fieldname','fieldvalue'));
+echo "<hr />";
 echo "</div>";
 }
 ?>

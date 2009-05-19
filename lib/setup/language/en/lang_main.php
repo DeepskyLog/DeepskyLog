@@ -1,5 +1,42 @@
 <?php
 
+  // TO TRANSLATE OR CHECK:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 define("LangGeneralObservations","observations");
 
 define("LangIndexPleaseWait","Please wait a moment while loading data...");
@@ -267,8 +304,8 @@ define("LangOverviewSiteTitle", "Overview observing sites");
 define("LangAddSiteExisting", "Add existing location");
 
 define("LangOverviewEyepieceTitle", "Overview eyepieces");
-define("LangAddEyepieceExisting", "Add existing eyepiece");
-define("LangAddEyepieceManually", "Specify your eyepiece details manually");
+define("LangAddEyepieceExisting", "Select the eyeiece details from the list");
+define("LangAddEyepieceManually", "specify your eyepiece details manually");
 define("LangAddEyepieceTitle", "Add a new eyepiece");
 define("LangAddEyepieceField1", "Name");
 define("LangAddEyepieceField1Expl", "(eg Televue 31mm Nagler)"); 
@@ -286,7 +323,7 @@ define("LangViewLensName", "Name");
 define("LangViewLensFactor", "Factor");
 define("LangAddLensTitle", "Add a new lens");
 define("LangAddLensExisting", "Add an existing lens");
-define("LangAddLensFieldManually", "Specify your lens details manually");
+define("LangAddLensFieldManually", "specify your lens details manually");
 define("LangAddLensField1", "Name");
 define("LangAddLensField1Expl", "eg. Televue 2x Barlow");
 define("LangAddLensField2", "Factor");
@@ -307,7 +344,7 @@ define("LangViewFilterWratten", "Wratten number");
 define("LangViewFilterSchott", "Schott number");
 define("LangAddFilterTitle", "Add new filter");
 define("LangAddFilterExisting", "Add an existing filter");
-define("LangAddFilterFieldManually", "Specify your filter details manually");
+define("LangAddFilterFieldManually", "specify your filter details manually");
 define("LangAddFilterField1", "Name");
 define("LangAddFilterField1Expl", "(ex Lumicon O-III)"); 
 define("LangAddFilterField2", "Type");
@@ -406,7 +443,7 @@ define("LangAddInstrumentOr", "OR");
 define("LangAddInstrumentAdd", "Add instrument");
 define("LangAddInstrumentStdTelescope", "Adapt standard telescope");
 define("LangAddInstrumentExisting", "Add an existing instrument");
-define("LangAddInstrumentManually", "Add instrument manually");
+define("LangAddInstrumentManually", "add instrument manually");
 
 // content/change_instrument.php
  

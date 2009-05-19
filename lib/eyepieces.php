@@ -9,6 +9,7 @@ interface iEyepieces
   public  function getEyepieceUsedFromId($id);                                       // returns the number of times the eyepiece is used in observations
   public  function getSortedEyepieces($sort,$observer="");                           // returns an array with the ids of all eyepieces, sorted by the column specified in $sort
   public  function setEyepieceProperty($id,$property,$propertyValue);                // sets the property to the specified value for the given eyepiece
+  public  function showEyepiecesObserver();
   public  function validateDeleteEyepiece();                                         // validates and deletes an eyepiece
   public  function validateSaveEyepiece();                                           // validates and saves an eyepiece and returns a message 
 } 
@@ -48,6 +49,53 @@ class Eyepieces implements iEyepieces
  public  function setEyepieceProperty($id,$property,$propertyValue)                  // sets the property to the specified value for the given eyepiece
  { global $objDatabase;
    return $objDatabase->execSQL("UPDATE eyepieces SET ".$property." = \"".$propertyValue."\" WHERE id = \"".$id."\"");
+ }
+ public  function showEyepiecesObserver()
+ { global $baseURL,$loggedUser,$objUtil,$objEyepiece,$objPresentations,$loggedUserName;
+   $sort=$objUtil->checkGetKey('sort','focalLength');
+   $eyeps = $objEyepiece->getSortedEyepieces($sort, $loggedUser);
+   if($eyeps!=null)
+   { $orig_previous=$objUtil->checkGetKey('previous','');
+     if((isset($_GET['sort'])) && ($orig_previous==$_GET['sort'])) // reverse sort when pushed twice
+     { if($_GET['sort']=="name")
+         $eyeps = array_reverse($eyeps, true);
+       else
+       { krsort($eyeps);
+         reset($eyeps);
+       }
+       $previous=""; // reset previous field to sort on
+     }
+     else
+       $previous=$sort;
+     $objPresentations->line(array("<h5>".LangOverviewEyepieceTitle." ".$loggedUserName."</h5>"),"L",array(),50);
+     echo "<hr />"; 
+     echo "<table width=\"100%\">";
+     echo "<tr class=\"type3\">";
+     echo "<td><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=name&amp;previous=$previous\">".LangViewEyepieceName."</a></td>";
+     echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=focalLength&amp;previous=$previous\">".LangViewEyepieceFocalLength."</a></td>";
+     echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=maxFocalLength&amp;previous=$previous\">".LangViewEyepieceMaxFocalLength."</a></td>";
+     echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=apparentFOV&amp;previous=$previous\">".LangViewEyepieceApparentFieldOfView."</a></td>";
+     echo "<td></td>";
+     echo "</tr>";
+     $count = 0;
+     while(list($key,$value) = each($eyeps))
+     { $eyepiece=$objEyepiece->getEyepiecePropertiesFromId($value);
+       echo "<tr class=\"type".(2-($count%2))."\">";
+		   echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_eyepiece&amp;eyepiece=".urlencode($value)."\">".stripslashes($eyepiece['name'])."</a></td>";
+		   echo "<td align=\"center\">".$eyepiece['focalLength']."</td>";
+		   echo "<td align=\"center\">".(($eyepiece['maxFocalLength']!=-1)?$eyepiece['maxFocalLength']:"-")."</td>";
+		   echo "<td align=\"center\">".$eyepiece['apparentFOV']."</td>";
+		   echo "<td>";
+       if(!($obsCnt=$objEyepiece->getEyepieceUsedFromId($value)))
+         echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_eyepiece&amp;eyepieceid=" . urlencode($value) . "\">" . LangRemove . "</a>");
+       else
+         echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".$loggedUser."&amp;eyepiece=".$value."&amp;exactinstrumentlocation=true\">".$obsCnt.' '.LangGeneralObservations."</a>";
+       echo "</td></tr>";
+       $count++;
+     }
+     echo "</table>";
+     echo "<hr />";
+   }
  }
  public  function validateDeleteEyepiece()                                          // validates and deletes an eyepiece
  { global $objUtil, $objDatabase;

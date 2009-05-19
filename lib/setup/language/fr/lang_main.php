@@ -34,6 +34,9 @@
 
 
 
+
+
+
 define("LangGeneralObservations","observations");
 
 define("LangIndexPleaseWait","Prière d'attendre un moment pendant le recherche des données...");
@@ -303,8 +306,8 @@ define("LangOverviewSiteTitle", "Aper&#231;u des endroits d'observation");
 define("LangAddSiteExisting", "Rajoutez un endroit existant");
 
 define("LangOverviewEyepieceTitle", "aper&#231;u oculaires");
-define("LangAddEyepieceExisting", "Rajoutez un oculaire existant");
-define("LangAddEyepieceManually", "Specifiez manuellement les dï¿½tails de l'oculaire");
+define("LangAddEyepieceExisting", "Sélectionnez les données de l'oculaire de la liste");
+define("LangAddEyepieceManually", "specifiez manuellement les dï¿½tails de l'oculaire");
 define("LangAddEyepieceTitle", "Rajoutez un novel oculaire");
 define("LangAddEyepieceField1", "Nom");
 define("LangAddEyepieceField1Expl", "(ex Televue 31mm Nagler)"); 
@@ -321,7 +324,7 @@ define("LangOverviewLensTitle", "Aper&#231;u lentilles Barlow");
 define("LangViewLensName", "Nom");
 define("LangViewLensFactor", "Facteur");
 define("LangAddLensTitle", "Rajoutez une nouvelle lentille Barlow");
-define("LangAddLensExisting", "Rajoutez une lentille Barlow existante");
+define("LangAddLensExisting", "rajoutez les données manuellement");
 define("LangAddLensFieldManually", "Specifiez manuellement les dï¿½tails de la lentille Barlow");
 define("LangAddLensField1", "Nom");
 define("LangAddLensField1Expl", "ex. Televue 2x Barlow");
@@ -342,7 +345,7 @@ define("LangViewFilterColor", "Couleur");
 define("LangViewFilterWratten", "Num&#233;ro Wratten");
 define("LangViewFilterSchott", "Num&#233;ro Schott");
 define("LangAddFilterTitle", "Rajoutez un nouveau filtre");
-define("LangAddFilterExisting", "Rajoutez un filtre existant");
+define("LangAddFilterExisting", "rajoutez un filtre existant");
 define("LangAddFilterFieldManually", "Specifiez manuellement les dï¿½tails du filtre");
 define("LangAddFilterField1", "Nom");
 define("LangAddFilterField1Expl", "(ex Lumicon O-III)"); 
@@ -442,7 +445,7 @@ define("LangAddInstrumentOr", "ou");
 define("LangAddInstrumentAdd", "Rajoutez un instrument");
 define("LangAddInstrumentStdTelescope", "Modifier l'instrument standard");
 define("LangAddInstrumentExisting", "Rajouter un instrument existant");
-define("LangAddInstrumentManually", "Rajouter un nouvel instrument ï¿½ la main");
+define("LangAddInstrumentManually", "rajouter un nouvel instrument ï¿½ la main");
 
 // content/change_instrument.php
 

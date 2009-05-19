@@ -15,6 +15,27 @@
 //  LangCSVError10b
 //  LangCSVError10e
 //  LangCSVError10c
+// LangAddEyepieceExisting
+// LangAddInstrumentManually
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 define("LangGeneralObservations","Beobachtungen");
 
@@ -283,8 +304,8 @@ define("LangOverviewSiteTitle", "&uuml;bersicht Beobachtungspl&auml;tze");
 define("LangAddSiteExisting", "Beobachtungsplatz hinzuf&uuml;gen");
 
 define("LangOverviewEyepieceTitle", "&uuml;bersicht Okulare");
-define("LangAddEyepieceExisting", "Okular hinzuf&uuml;gen");
-define("LangAddEyepieceManually", "Geben Sie das Okulare Details an");
+define("LangAddEyepieceExisting", "Select the eyeiece details from the list");
+define("LangAddEyepieceManually", "geben Sie das Okulare Details an");
 define("LangAddEyepieceTitle", "Neues Okular");
 define("LangAddEyepieceField1", "Name");
 define("LangAddEyepieceField1Expl", "(z.B. Televue 31mm Nagler)");
@@ -302,7 +323,7 @@ define("LangViewLensName", "Name");
 define("LangViewLensFactor", "Brennweitenfaktor");
 define("LangAddLensTitle", "Linse hinzuf&uuml;gen");
 define("LangAddLensExisting", "Linse hinzuf&uuml;gen");
-define("LangAddLensFieldManually", "Geben Sie die Linsen Details an");
+define("LangAddLensFieldManually", "geben Sie die Linsen Details an");
 define("LangAddLensField1", "Name");
 define("LangAddLensField1Expl", "z.B. Televue 2x Barlow");
 define("LangAddLensField2", "Faktor");
@@ -323,7 +344,7 @@ define("LangViewFilterWratten", "Wratten Nummer");
 define("LangViewFilterSchott", "Schott Nummer");
 define("LangAddFilterTitle", "Filter hinzuf&uuml;gen");
 define("LangAddFilterExisting", "Filter hinzuf&uuml;gen");
-define("LangAddFilterFieldManually", "Geben Sie die Filter Details an");
+define("LangAddFilterFieldManually", "geben Sie die Filter Details an");
 define("LangAddFilterField1", "Name");
 define("LangAddFilterField1Expl", "(z.B. Lumicon O-III)");
 define("LangAddFilterField2", "Typ");

@@ -3,6 +3,7 @@ if((!isset($inIndex))||(!$inIndex)) include "/redirect.php";
 else
 {
 $loggedUser='';
+$loggedUserName='';
 $_SESSION['admin']="no";
 $loginErrorCode="";
 $loginErrorText="";
@@ -113,5 +114,7 @@ if($loginErrorCode||$loginErrorText)
 	setcookie("deepskylogsec","",time()-3600,"/");
   $entryMessage=constant($loginErrorCode)." ".$loginErrorText;
 }
+if($loggedUser)
+  $loggedUserName=$objObserver->getObserverProperty($loggedUser,'firstname')."&nbsp;".$objObserver->getObserverProperty($loggedUser,'name');
 }
 ?>

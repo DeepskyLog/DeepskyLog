@@ -6,16 +6,16 @@ else
 {
 $filter=$objFilter->getFilterPropertiesFromId($filterid);
 echo "<div id=\"main\">";
-echo "<h2>".$filter['name']."</h2>";
-echo "<table>";
-tableFieldnameField(LangViewFilterName,$filter['name']);
-tableFieldnameField(LangViewFilterType,$objFilter->getEchoType($filter['type'])); 
-tableFieldnameField(LangViewFilterColor,$objFilter->getEchoColor($filter['color']));
+$objPresentations->line(array("<h2>".$filter['name']."</h2>"),"L",array(100),50);
+echo "<hr />";
+$objPresentations->line(array(LangViewFilterName,$filter['name']),"RL",array(20,80),'',array('fieldname','fieldvalue'));
+$objPresentations->line(array(LangViewFilterType,$objFilter->getEchoType($filter['type'])),"RL",array(20,80),'',array('fieldname','fieldvalue')); 
+$objPresentations->line(array(LangViewFilterColor,$objFilter->getEchoColor($filter['color'])),"RL",array(20,80),'',array('fieldname','fieldvalue'));
 if($filter['wratten'])
-  tableFieldnameField(LangViewFilterWratten,$filter['wratten']);
+  $objPresentations->line(array(LangViewFilterWratten,$filter['wratten']),"RL",array(20,80),'',array('fieldname','fieldvalue'));
 if($filter['schott'])
-  tableFieldnameField(LangViewFilterSchott,$filter['schott']);
-echo "</table>";
+  $objPresentations->line(array(LangViewFilterSchott,$filter['schott']),"RL",array(20,80),'',array('fieldname','fieldvalue'));
+echo "<hr />";
 echo "</div>";
 }
 ?>

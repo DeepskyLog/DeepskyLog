@@ -13,21 +13,21 @@ $instrumentDiameter=$objInstrument->getInstrumentPropertyFromId($instrumentid,'d
 $instrumentFocalLength=$objInstrument->getInstrumentPropertyFromId($instrumentid,'diameter')*$objInstrument->getInstrumentPropertyFromId($instrumentid,'fd');
 $instrumentEchoType=$objInstrument->getInstrumentEchoType($instrumentType);
 echo "<div id=\"main\">";
-echo "<h2>".$name."</h2>";
-echo "<table>";
+$objPresentations->line(array("<h5>".$name."</h5>"),"L",array(100),50);
+echo "<hr />";
 if($instrumentType!=InstrumentNakedEye)
-  tableFieldnameField(LangViewInstrumentField2,round($instrumentDiameter, 0)."&nbsp;mm");
+  $objPresentations->line(array(LangViewInstrumentField2,round($instrumentDiameter, 0)."&nbsp;mm"),"RL",array(20,80),'',array('fieldname','fieldvalue'));
 if(($instrumentType!=InstrumentBinoculars)
 && ($instrumentType!=InstrumentFinderscope)
 && ($instrumentType!=InstrumentNakedEye))
-{ tableFieldnameField(LangViewInstrumentField3,sprintf("%.1f",round($instrumentFD, 1)));
-  tableFieldnameField(LangViewInstrumentField4,round($instrumentFocalLength, 0)."&nbsp;mm");
+{ $objPresentations->line(array(LangViewInstrumentField3,sprintf("%.1f",round($instrumentFD, 1))),"RL",array(20,80),'',array('fieldname','fieldvalue'));
+  $objPresentations->line(array(LangViewInstrumentField4,round($instrumentFocalLength, 0)."&nbsp;mm"),"RL",array(20,80),'',array('fieldname','fieldvalue'));
 }
 if($fixedMagnification > 0)
-  tableFieldnameField(LangAddInstrumentField6,$fixedMagnification);
+  $objPresentations->line(array(LangAddInstrumentField6,$fixedMagnification),"RL",array(20,80),'',array('fieldname','fieldvalue'));
 if ($instrumentType!=InstrumentNakedEye)
-  tableFieldnameField(LangViewInstrumentField5,$instrumentEchoType);
-echo "</table>";
+  $objPresentations->line(array(LangViewInstrumentField5,$instrumentEchoType),"RL",array(20,80),'',array('fieldname','fieldvalue'));
+echo "<hr />";
 echo "</div>";
 }
 ?>

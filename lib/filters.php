@@ -13,6 +13,7 @@ interface iFilters
  public  function getFilterUsedFromId($id);                                              // returns the number of times the eyepiece is used in observations
  public  function getSortedFilters($sort, $observer = "");                               // returns an array with the ids of all filters, sorted by the column specified in $sort
  public  function setFilterProperty($id,$property,$propertyValue);                       // sets the property to the specified value for the given filter
+ public  function showFiltersObserver();
  public  function validateDeleteFilter();                                                // validates and deletes a filter
  public  function validateSaveFilter();                                                  // validates and saves a filter and returns a message 
 }
@@ -116,6 +117,55 @@ class Filters implements iFilters
  { global $objDatabase;
    return $objDatabase->execSQL("UPDATE filters SET ".$property." = \"".$propertyValue."\" WHERE id = \"".$id."\"");
  }
+ public  function showFiltersObserver()
+ { global $baseURL,$loggedUser,$objUtil,$objFilter,$objPresentations,$loggedUserName;
+   $sort=$objUtil->checkGetKey('sort','name');
+   $filts=$objFilter->getSortedFilters($sort, $loggedUser);
+   if(count($filts)>0)
+   { $orig_previous=$objUtil->checkGetKey('previous','');
+     if((isset($_GET['sort']))&&($orig_previous==$_GET['sort'])) // reverse sort when pushed twice
+     { if($_GET['sort']=="name")
+         $filts = array_reverse($filts, true);
+       else
+       { krsort($filts);
+         reset($filts);
+       }
+       $previous = ""; // reset previous field to sort on
+     }
+     else
+       $previous = $sort;
+     $objPresentations->line(array("<h5>".LangOverviewFilterTitle." ".$loggedUserName."</h5>"),"L",array(),50);
+     echo "<table width=\"100%\">";
+     echo "<tr class=\"type3\">";
+     echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=name&amp;previous=$previous\">".LangViewFilterName."</a></td>";
+     echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=type&amp;previous=$previous\">".LangViewFilterType."</a></td>";
+     echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=color&amp;previous=$previous\">".LangViewFilterColor."</a></td>";
+     echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=wratten&amp;previous=$previous\">".LangViewFilterWratten."</a></td>";
+     echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=schott&amp;previous=$previous\">".LangViewFilterSchott."</a></td>";
+     echo "<td></td>";
+     echo "</tr>";
+     $count = 0;
+     while(list($key, $value)=each($filts))
+     { $filterProperties=$objFilter->getFilterPropertiesFromId($value);
+       echo "<tr class=\"type".(2-($count%2))."\">";
+       echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_filter&amp;filter=".urlencode($value)."\">".stripslashes($filterProperties['name'])."</a></td>";
+       echo "<td>".$objFilter->getEchoType($filterProperties['type'])."</td>";
+       echo "<td>".$objFilter->getEchoColor($filterProperties['color'])."</td>";
+       echo "<td>".($filterProperties['wratten']?$filterProperties['wratten']:"-")."</td>";
+       echo "<td>".($filterProperties['schott']?$filterProperties['schott']:"-")."</td>";
+       echo "<td>";
+       if(!($obsCnt=$objFilter->getFilterUsedFromId($value)))
+         echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_filter&amp;filterid=" . urlencode($value) . "\">" . LangRemove . "</a>";
+       else
+         echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".$loggedUser."&amp;filter=".$value."&amp;exactinstrumentlocation=true\">".$obsCnt.' '.LangGeneralObservations."</a>";
+       echo "</td>";
+       echo "</tr>";
+       $count++;
+	   }
+     echo "</table>";
+     echo "<hr />";
+   }
+ } 
  public  function validateDeleteFilter()                                                // validates and deletes a filter
  { global $objUtil, $objDatabase;
    if(($filterid=$objUtil->checkGetKey('filterid')) 
