@@ -878,12 +878,12 @@ class Objects implements iObjects
     if($myList)
       echo("<td align=\"center\"><a href=\"" . $link . "&amp;min=" . $min . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">&nbsp;P&nbsp;</a></td>");
  	  if($FF)
-      echo "<td width=\"1px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+      echo "<td style=\"width:10px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
     echo "</tr>";
  	  if($FF)
  	    echo "</thead>";
  	  if($FF)
- 	    echo "<tbody name=\"obj_list\" id=\"obj_list\" class=\"tbody_obj\">";
+ 	    echo "<tbody id=\"obj_list\" class=\"tbody_obj\">";
     $count = $min; // counter for altering table colors
 	  $countline = 0;
 	  if($max>count($_SESSION['Qobj']))

@@ -160,7 +160,7 @@ class Presentations implements iPresentation
   { return (($value==$nullcondition)?$nullvalue:sprintf("%1.1f",$value));
   }
   public function promptWithLink($prompt,$promptDefault,$javaLink,$text)
-	{ echo "<a href=\"\" onclick=\"thetitle = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;pdfTitle='+thetitle; return false;\"	target=\"new_window\">".$text."</a>";
+	{ echo "<a href=\"#\" onclick=\"thetitle = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;pdfTitle='+thetitle; return false;\"	target=\"new_window\">".$text."</a>";
   }
   public  function raArgoToString($ra)
   { $ra_hours  =floor($ra);

@@ -125,7 +125,7 @@ class Eyepieces implements iEyepieces
    { $this->setEyepieceProperty($_POST['id'],'name', $_POST['eyepiecename']);
      $this->setEyepieceProperty($_POST['id'],'focalLength', $_POST['focalLength']);
      $this->setEyepieceProperty($_POST['id'],'apparentFOV', $_POST['apparentFOV']);
-     $this->setEyepieceProperty($_POST['id'],'observer', $_SESSION['deepskylog_id']);
+     //$this->setEyepieceProperty($_POST['id'],'observer', $_SESSION['deepskylog_id']);
      $this->setEyepieceProperty($_POST['id'],'maxFocalLength', $objUtil->checkPostKey('maxFocalLength',-1));
  	   return LangValidateEyepieceMessage5.' '.LangValidateEyepieceMessage4;
    }

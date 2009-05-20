@@ -29,15 +29,10 @@ else
   $previous = $sort;
 $step = 25;
 $link = $baseURL."index.php?indexAction=view_eyepieces&amp;sort=".$sort."&amp;previous=".$orig_previous;
+list ($min, $max,$content) = $objUtil->printNewListHeader3($eyeps, $link, $min, $step);
 echo "<div id=\"main\" style=\"position:relative\">";
-echo "<div class=\"container\" style=\"height:40px;\">";
-echo "<div class=\"pageTitle\">";
-echo "<h6>".LangViewEyepieceTitle."</h6>";
-echo "</div>";
-echo "<div class=\"pageListHeader\">";
-list ($min, $max) = $objUtil->printNewListHeader2($eyeps, $link, $min, $step);
-echo "</div>";
-echo "</div>";
+$objPresentations->line(array("<h5>".LangViewEyepieceTitle."</h5>",$content),"LR",array(70,30),50);
+echo "<hr />";
 echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_eyepieces&amp;sort=name&amp;previous=$previous\">".LangViewEyepieceName."</a></td>";
@@ -68,6 +63,7 @@ while(list ($key, $value) = each($eyeps))
  $count++;
 }
 echo "</table>";
+echo "<hr />";
 echo "</div>";
 }
 ?>

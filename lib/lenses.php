@@ -115,7 +115,7 @@ class Lenses implements iLenses
     && $objUtil->checkPostKey('factor'))
     { $this->setLensProperty($_POST['id'], 'name', $_POST['lensname']);
       $this->setLensProperty($_POST['id'], 'factor', $_POST['factor']);
-      $this->setLensProperty($_POST['id'], 'observer', $_SESSION['deepskylog_id']);
+      //$this->setLensProperty($_POST['id'], 'observer', $_SESSION['deepskylog_id']);
       return LangValidateLensMessage5;
     }
  }

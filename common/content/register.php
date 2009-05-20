@@ -15,43 +15,45 @@ while(list($key,$value)=each($languages))
   $tempList.="<option value=\"".$key."\"".(($theKey=$key)?" selected=\"selected\"":"").">".$value."</option>";
 $tempList.="</select>";
 echo "<div id=\"main\">";
-echo "<h2>".LangRegisterNewTitle."</h2>";        
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_account\">";
-echo "<table width=\"100%\">";
-tableFieldnameFieldExplanation(LangChangeAccountField1,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkPostKey('deepskylog_id')."\" />",LangChangeAccountField1Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField2,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"email\" size=\"30\" value=\"".$objUtil->checkPostKey('email')."\" />",LangChangeAccountField2Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField3,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"firstname\" size=\"30\" value=\"".$objUtil->checkPostKey('firstname')."\" />",LangChangeAccountField3Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField4,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objUtil->checkPostKey('name')."\" />",LangChangeAccountField4Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField5,"<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd\" size=\"30\" value=\"".$objUtil->checkPostKey('passwd')."\" />",LangChangeAccountField5Expl);
-tableFieldnameFieldExplanation(LangChangeAccountField6,"<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd_again\" size=\"30\" value=\"".$objUtil->checkPostKey('passwd_again')."\" />",LangChangeAccountField6Expl);
-tableFieldnameFieldExplanation(LangChangeAccountObservationLanguage,$tempAllList,LangChangeAccountObservationLanguageExpl);
-tableFieldnameFieldExplanation(LangChangeAccountLanguage,$tempList,LangChangeAccountLanguageExpl);
-echo "<tr>";
-echo "<td class=\"fieldname\" align=\"right\">".LangChangeVisibleLanguages."</td>";
-echo "<td class=\"fieldvalue\">";
-$allLanguages=$objLanguage->getAllLanguages($objUtil->checkArrayKey($_SESSION,'lang',$defaultLanguage));
-$_SESSION['alllanguages']=$allLanguages; 
+$objPresentations->line(array("<h5>".LangRegisterNewTitle."</h5>","<input type=\"submit\" name=\"register\" value=\"" . LangRegisterNewTitle . "\" />&nbsp"),"LR",array(80,20),50);
+echo "<hr />";
+$objPresentations->line(array(LangChangeAccountField1,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkPostKey('deepskylog_id')."\" />",LangChangeAccountField1Expl),"RLL",array(20,40,40),'',array('fieldname','fieldvalue','fieldexplanation'));
+$objPresentations->line(array(LangChangeAccountField2,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"email\" size=\"30\" value=\"".$objUtil->checkPostKey('email')."\" />",LangChangeAccountField2Expl),"RLL",array(20,40,40),'',array('fieldname','fieldvalue','fieldexplanation'));
+$objPresentations->line(array(LangChangeAccountField3,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"firstname\" size=\"30\" value=\"".$objUtil->checkPostKey('firstname')."\" />",LangChangeAccountField3Expl),"RLL",array(20,40,40),'',array('fieldname','fieldvalue','fieldexplanation'));
+$objPresentations->line(array(LangChangeAccountField4,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objUtil->checkPostKey('name')."\" />",LangChangeAccountField4Expl),"RLL",array(20,40,40),'',array('fieldname','fieldvalue','fieldexplanation'));
+$objPresentations->line(array(LangChangeAccountField5,"<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd\" size=\"30\" value=\"".$objUtil->checkPostKey('passwd')."\" />",LangChangeAccountField5Expl),"RLL",array(20,40,40),'',array('fieldname','fieldvalue','fieldexplanation'));
+$objPresentations->line(array(LangChangeAccountField6,"<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd_again\" size=\"30\" value=\"".$objUtil->checkPostKey('passwd_again')."\" />",LangChangeAccountField6Expl),"RLL",array(20,40,40),'',array('fieldname','fieldvalue','fieldexplanation'));
+$objPresentations->line(array(LangChangeAccountObservationLanguage,$tempAllList,LangChangeAccountObservationLanguageExpl),"RLL",array(20,40,40),'',array('fieldname','fieldvalue','fieldexplanation'));
+$objPresentations->line(array(LangChangeAccountLanguage,$tempList,LangChangeAccountLanguageExpl),"RLL",array(20,40,40),'',array('fieldname','fieldvalue','fieldexplanation'));
+
+
+reset($allLanguages);
 $usedLanguages=$languagesDuringRegistration;
-echo "<table><tr>";
 $j=0;
-while(list($key,$value)=each($allLanguages))
-{ if(!($j++%3))
-    echo "</tr><tr>";
-	echo "<td><input type=\"checkbox\" ".(($objUtil->checkPostKey($key)||in_array($key,$usedLanguages))?"checked ":"")." name=\"".$key."\" value=\"".$key."\" />".$value."</td>";
+$tempObsLangList[]=LangChangeVisibleLanguages;
+while((list($key,$value)=each($allLanguages))&&($j<3))
+{ $tempObsLangList[]="<input type=\"checkbox\" ".(($objUtil->checkPostKey($key)||in_array($key,$usedLanguages))?"checked ":"")." name=\"".$key."\" value=\"".$key."\" />".$value;
+  $j++;
 }
-echo "</tr></table>";
-echo "</td>";
-echo "<td class=\"fieldexplanation\">".LangChangeVisibleLanguagesExpl."</td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td style=\"text-align: right\">";
-echo "<input type=\"submit\" name=\"register\" value=\"" . LangRegisterNewTitle . "\" />";
-echo "</td>";
-echo "<td></td>";
-echo "<td></td>";
-echo "</tr>";
-echo "</table>";
+$tempObsLangList[]=LangChangeVisibleLanguagesExpl;
+$objPresentations->line($tempObsLangList,"RLLLL",array(20,13,13,14,40),'',array("fieldname","fieldvalue","","","fieldexplanation"));
+unset($tempObsLangList);
+$tempObsLangList[]="";
+while((list($key,$value)=each($allLanguages)))
+{ $tempObsLangList[]="<input type=\"checkbox\" ".(($objUtil->checkPostKey($key)||in_array($key,$usedLanguages))?"checked ":"")." name=\"".$key."\" value=\"".$key."\" />".$value;
+  $j++;
+  if(($j%3)==0)
+  { $tempObsLangList[]="";
+    $objPresentations->line($tempObsLangList,"RLLLL",array(20,13,13,14,40),'',array("fieldname","fieldvalue","","","fieldexplanation"));
+    unset($tempObsLangList);
+    $tempObsLangList[]="";
+  }
+}
+
+
+echo "<hr />";
 echo "</form>";
 echo "</div>";
 }

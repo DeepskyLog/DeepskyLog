@@ -23,6 +23,7 @@ interface iUtils
   public  function pdfObservations($result);                                   // Creates a pdf document from an array of observations
   public  function printNewListHeader(&$list, $link, $min, $step, $total);     // prints the << < Nr > >> navigations, allowing to enter a page number in the center field
   public  function printNewListHeader2(&$list, $link, $min, $step, $total=0,$showNumberOfRecords=true,$showArrows=true);
+  public  function printNewListHeader3(&$list, $link, $min, $step, $total=0,$showNumberOfRecords=true,$showArrows=true);
   public  function rssObservations();                                          // Creates an rss feed
   //private function utilitiesCheckIndexActionDSquickPick();                     // returns the includefile if one of the quickpick buttons is pressed
 //private function utilitiesCheckIndexActionAdmin($action, $includefile);      // returns the includefile for the specified indexs action after checking it is an admin who is looged in
@@ -1588,6 +1589,33 @@ class Utils implements iUtils
 	  echo "</span>";
 	  echo "</form>";
 	  return array($min,$max);
+  }
+  public function printNewListHeader3(&$list, $link, $min, $step, $total=0,$showNumberOfRecords=true,$showArrows=true)
+  { global $baseURL;
+	  $pages=ceil(count($list)/$step);           // total number of pages
+    if($min)                                   // minimum value
+    { $min=$min-($min%$step);                  // start display from number of $steps
+      if ($min < 0)                            // minimum value smaller than 0
+        $min=0;
+      if($min>count($list))                    // minimum value bigger than number of elements
+        $min=count($list)-(count($list)%$step);
+    }
+    else                                       // no minimum value defined
+      $min=0;
+    $max=$min+$step;                       // maximum number to be displayed
+    $content="<form action=\"".$link."\" method=\"post\" style=\"margin:0px;padding:0px;\">";
+    if($showNumberOfRecords)
+      $content.= "(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")")."&nbsp;";
+    if(($listcount>$step)&&($showArrows))
+    { $currentpage=ceil($min/$step)+1;
+			$content.= "<a href=\"".$link."&amp;multiplepagenr=0\">"."<img style=\"vertical-align:middle\" src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\" alt =\"<<\" />"."</a>";
+		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img style=\"vertical-align:middle\" src=\"".$baseURL."styles/images/left20.gif\" border=\"0\" alt=\"<\" />"."</a>";			
+		  $content.= "<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\" />";	
+		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img style=\"vertical-align:middle\" src=\"".$baseURL."styles/images/right20.gif\" border=\"0\" alt=\">\" />"."</a>";
+		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img style=\"vertical-align:middle\" src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\" alt=\">>\" />"."</a>";
+	  }
+	  $content.= "</form>";
+	  return array($min,$max,$content);
   }
   public function rssObservations()  // Creates an rss feed for DeepskyLog
 	{

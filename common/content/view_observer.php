@@ -83,9 +83,6 @@ if($objUtil->checkSessionKey('admin')=="yes")
   echo "<hr />";
 }
 
-echo "<p>";
-
-
 $content=array();
 $classes=array();
 $content[]="";

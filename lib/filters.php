@@ -195,7 +195,7 @@ class Filters implements iFilters
      $this->setFilterProperty($_POST['id'], 'color', $objUtil->checkPostKey('color',0));
      $this->setFilterProperty($_POST['id'], 'wratten', $objUtil->checkPostKey('wratten'));
      $this->setFilterProperty($_POST['id'], 'schott', $objUtil->checkPostKey('schott'));
-     $this->setFilterProperty($_POST['id'], 'observer', $_SESSION['deepskylog_id']);
+     //$this->setFilterProperty($_POST['id'], 'observer', $_SESSION['deepskylog_id']);
      return LangValidateFilterMessage5;
    }
  }

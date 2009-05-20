@@ -1,6 +1,7 @@
 <?php // change_account.php - allows the user to view and change his account's details
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($loggedUser)) throw new Exception(LangExcpetion001);
+elseif(!($objUtil->checkAdminOrUserID($loggedUser))) throw new Exception(LangExcpetion012);
 else
 {
 $sites = $objLocation->getSortedLocations("name", $loggedUser);

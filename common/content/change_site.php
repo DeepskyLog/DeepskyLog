@@ -2,7 +2,7 @@
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!$loggedUser) throw new Exception(LangException002);
 elseif(!($locationid=$objUtil->checkGetKey('location'))) throw new Exception(LangException011);
-elseif(!($objUtil->checkUserID($objLocation->getLocationPropertyFromId($locationid,'observer','')))) throw new Exception(LangExcpetion012);
+elseif(!($objUtil->checkAdminOrUserID($objLocation->getLocationPropertyFromId($locationid,'observer','')))) throw new Exception(LangExcpetion012);
 else
 {
 $latitudestr = $objLocation->getLocationPropertyFromId($locationid,'latitude');
@@ -31,12 +31,12 @@ $line[]=array(LangAddSiteField3,"<input type=\"text\" class=\"inputfield require
 $line[]=array(LangAddSiteField4,"<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"latitude\" size=\"4\" value=\"".$latitudedeg."\" />&deg;<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"latitudemin\" size=\"2\" value=\"".$latitudemin . "\" />&#39;",LangAddSiteField4Expl);
 $line[]=array(LangAddSiteField5,"<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"".$longitudedeg."\" />&deg;<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"longitudemin\" size=\"2\" value=\"".$longitudemin."\" />&#39;",LangAddSiteField5Expl);
 $line[]=array(LangAddSiteField6,$tempTimeZoneList);
-$line[]=array(LangAddSiteField7,"<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"".(($lm > -900)?$lm:"")."\">",LangAddSiteField7Expl);
-$line[]=array(LangAddSiteField8,"<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"".(($sb > -900)?$sb:"")."\">",LangAddSiteField8Expl);
+$line[]=array(LangAddSiteField7,"<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"".(($lm > -900)?$lm:"")."\" />",LangAddSiteField7Expl);
+$line[]=array(LangAddSiteField8,"<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"".(($sb > -900)?$sb:"")."\" />",LangAddSiteField8Expl);
 for($i=0;$i<count($line);$i++)
   $objPresentations->line($line[$i],"RLL",array(20,40,40),'',array("fieldname","fieldvalue","fieldexplanation"));
 echo "<hr />";
-  echo "</form>";
+echo "</form>";
 echo "</div>";
 }
 ?>

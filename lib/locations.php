@@ -235,7 +235,8 @@ class Locations
     if(($locationid=$objUtil->checkGetKey('locationid'))
     && ($objUtil->checkAdminOrUserID($this->getLocationPropertyFromId($locationid,'observer')))
     && (!($this->getLocationUsedFromId($locationid))))
-    { $objDatabase->execSQL("DELETE FROM locations WHERE id=\"".$locationid."\"");
+    { //echo "WP";
+    $objDatabase->execSQL("DELETE FROM locations WHERE id=\"".$locationid."\"");
       return LangValidateLocationMessage3;
     }
   }
@@ -277,7 +278,7 @@ class Locations
         $this->setLocationProperty($_POST['id'], 'longitude', $longitude);
         $this->setLocationProperty($_POST['id'], 'latitude',  $latitude);
         $this->setLocationProperty($_POST['id'], 'timezone',  $timezone);
-        $this->setLocationProperty($_POST['id'], 'observer',  $_SESSION['deepskylog_id']);
+        //$this->setLocationProperty($_POST['id'], 'observer',  $_SESSION['deepskylog_id']);
         if($objUtil->checkPostKey('lm'))
         { $this->setLocationProperty($_POST['id'], 'limitingMagnitude', $_POST['lm']);
           $this->setLocationProperty($_POST['id'], 'skyBackground', -999);

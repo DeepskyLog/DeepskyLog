@@ -941,12 +941,12 @@ class Observations {
 		if($myList)
 			echo "<td>&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 		if($FF)
-			echo "<td width=\"1px\">&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+			echo "<td style=\"width:10px\">&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 		echo "</tr>";
 		if($FF)
 		  echo "</thead>";
 		if($FF)
-		  echo "<tbody name=\"obs_list\" id=\"obs_list\" class=\"tbody_obs\">";
+		  echo "<tbody id=\"obs_list\" class=\"tbody_obs\">";
 	  $count = 0; // counter for altering table colors
 		while (list($key,$value)=each($_SESSION['Qobs']))
 		{ if ($count >= $min && $count < $max) 
