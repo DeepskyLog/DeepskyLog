@@ -2,7 +2,7 @@
   background-color : #003366;
   position         : absolute;
   left             : 0px;        top     : 0px;
-  width            : 100%;       heigth  : 60px;
+  width            : 100%;       height  : 60px;
 }
 #div1a {
   position         : absolute;
@@ -69,7 +69,7 @@
 	width            : 800px;       height : 465px;       
   margin           : 0px;         border : 0px;
   padding-left     : 0px;         padding-right : 2px; 
-  paddin-top       : 0px;         padding-bottom: 0px;
+  padding-top       : 0px;         padding-bottom: 0px;
 	background-color : #FFFFFF;
 	overflow         : auto;
 }
@@ -94,7 +94,6 @@ div#main {
   line-height      : 130%;
   font-size        : 100%;
   font-weight      : normal;
-	float            : top;
   text-align       : left;
   width            : 100%;
 }
@@ -131,7 +130,7 @@ h6 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-si
 }
 hr {
 	border           : none;
-	padding          : none;
+	padding          : 0px;
 	margin-top       : 5px;
 	margin-bottom    : 5px;
   background       : #C0C0C0;

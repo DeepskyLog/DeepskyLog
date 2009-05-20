@@ -35,7 +35,7 @@ else
 echo "</h6>";
 echo "<form name=\"zoomform\" action=\"".$link."\" method=\"get\">";
 echo LangViewObjectNearbyObjectsMoreLess .":&nbsp;";
-echo "<select name=\"zoom\"  onchange=\"zoomform.submit();\" width=\"50%\">";
+echo "<select name=\"zoom\"  onchange=\"zoomform.submit();\">";
 if($objUtil->checkGetKey('zoom',30)=="180") echo("<option selected value=\"180\">3x3&deg;</option>"); else echo("<option value=\"180\">3x3&deg;</option>"); 
 if($objUtil->checkGetKey('zoom',30)=="120") echo("<option selected value=\"120\">2x2&deg;</option>"); else echo("<option value=\"120\">2x2&deg;</option>"); 
 if($objUtil->checkGetKey('zoom',30)=="60")  echo("<option selected value=\"60\">1x1&deg;</option>"); else echo("<option value=\"60\">1x1&deg;</option>"); 

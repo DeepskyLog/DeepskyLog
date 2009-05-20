@@ -4,12 +4,16 @@ $outputtable = "";   $count=0;   $step = 25;
 
 $sort=$objUtil->checkGetKey('sort','totaal');
 $catalog=$objUtil->checkGetKey('catalog','M');
+$catalogs=$objObject->getCatalogsAndLists();
+if(!(in_array(stripslashes($catalog),$catalogs)))
+  $catalog="M";
 $objectsInCatalog=$objObject->getNumberOfObjectsInCatalog($catalog);
+
 $rank=$objObservation->getPopularObserversOverviewCatOrList($sort, $catalog);
 $link=$baseURL."index.php?indexAction=rank_observers&amp;sort=".$sort."&amp;size=25&amp;catalog=".urlencode($catalog);
 echo "<div id=\"main\">";
-echo "<table class=\"h2table\" width=\"100%\">";
-echo "<tr height=\"40px\" width=\"100%\">";
+echo "<table class=\"h2table\">";
+echo "<tr>";
 echo "<td class=\"h2header\">".LangTopObserversTitle."</td>";
 echo "<td align=\"right\">";
 list($min, $max) = $objUtil->printNewListHeader($rank, $link, $min, $step, "");
@@ -23,18 +27,17 @@ echo "<td style=\"text-align:center\">".LangTopObserversHeader1."</td>";
 echo "<td style=\"text-align:center\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=observer&amp;catalog=".urlencode($catalog)."\">".LangTopObserversHeader2."</a></td>";
 echo "<td style=\"text-align:center\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=totaal&amp;catalog="  .urlencode($catalog)."\">".LangTopObserversHeader3."</a></td>";
 echo "<td style=\"text-align:center\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=jaar&amp;catalog="    .urlencode($catalog)."\">".LangTopObserversHeader4."</a></td>";
-echo "<td width=\"125px\" align=\"center\">";
-echo "<form name=\"overviewform\"> ";		
-echo "<select style=\"width:125px\" onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\" class=\"inputfield\">";
-$catalogs=$objObject->getCatalogsAndLists();
+echo "<td style=\"width:125px;\" align=\"center\">";
+echo "<select style=\"width:125px;\" onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\" class=\"inputfield\">";
 while(list($key,$value)=each($catalogs))
-{ if($value==stripslashes($catalog))
+{ if(!($value))
+    $value="-----------";
+  if($value==stripslashes($catalog))
     echo("<option selected value=\"".$baseURL."index.php?sort=catalog&amp;indexAction=rank_observers&amp;catalog=".urlencode($value)."\">".$value."</option>\n");
   else
 	  echo("<option value=\"".$baseURL."index.php?sort=catalog&amp;indexAction=rank_observers&amp;catalog=".urlencode($value)."\">".$value."</option>\n");
 }
 echo "</select>";
-echo "</form>";			
 echo "</td>";
 echo "<td style=\"text-align:center\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=objecten&amp;catalog=".urlencode($catalog)."\">".LangTopObserversHeader6."</a></td>";
 echo"</tr>";

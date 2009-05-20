@@ -769,7 +769,7 @@ class Objects implements iObjects
     tableFieldnameField2(LangViewObjectField5,$GLOBALS[$this->getDsoProperty($object,'con')],LangViewObjectField6,$GLOBALS[$this->getDsoProperty($object,'type')],"class=\"type1\"");            // CONSTELLATION     / TYPE
     tableFieldnameField2(LangViewObjectField7,((($magnitude==99.9)||($magnitude==""))?$magnitude = "-":$magnitude),LangViewObjectField8,((($sb==99.9)||($sb==""))?"-":$sb),"class=\"type2\"");    // MAGNITUDE / SURFACE BRIGHTNESS
     tableFieldnameField2(LangViewObjectField9,(($size=$this->getSize($object))?$size:"-"),LangViewObjectField12,(($this->getDsoProperty($object,'pa')!=999)?($this->getDsoProperty($object,'pa') . "&deg;"):"-"),"class=\"type1\"");   // SIZE / POSITION ANGLE    
-    tableFieldnameField2(LangViewObjectFieldContrastReserve,"<span class=\"" . $contype . "\" width=\"25%\"  onmouseover=\"Tip('" . $popup . "')\">".$contrast."</span>",LangViewObjectFieldOptimumDetectionMagnification,$prefMag,"class=\"type2\"");
+    tableFieldnameField2(LangViewObjectFieldContrastReserve,"<span class=\"" . $contype . "\"  onmouseover=\"Tip('" . $popup . "')\">".$contrast."</span>",LangViewObjectFieldOptimumDetectionMagnification,$prefMag,"class=\"type2\"");
     if($listname&&($objList->checkObjectInMyActiveList($object)))
 	  { if($myList)
      { echo "<form action=\"".$baseURL."index.php?indexAction=detail_object\">";    	

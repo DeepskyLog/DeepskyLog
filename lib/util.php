@@ -1544,7 +1544,7 @@ class Utils implements iUtils
       $min=0;
     $max=$min+$step;                       // maximum number to be displayed
     echo "<form action=\"".$link."\" method=\"post\">";
-    echo "<table height=\"30px\" style=\"margin:0px;padding:0px;\">";
+    echo "<table style=\"margin:0px;padding:0px;\">";
     echo "<tr style=\"vertical-align:middle\">";
     if($showNumberOfRecords)
       echo "<td style=\"vertical-align:middle\">(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")")."</td>";
