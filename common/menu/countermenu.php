@@ -12,9 +12,9 @@ echo "var sc_remove_link=1;";
 echo "</script>";
 echo "<script type=\"text/javascript\" language=\"javascript\" src=\"http://www.statcounter.com/counter/counter.js\">";
 echo "</script>";
-echo "<noscript>";
-echo "<img  src=\"http://c13.statcounter.com/counter.php?sc_project=1347986&amp;java=0&amp;security=155f4e3f&amp;invisible=0\" alt=\"free webpage counters\" border=\"0\" />";
-echo "</noscript>";
+//echo "<noscript>";   // XHTML error : Why ???
+//echo "<img  src=\"http://c13.statcounter.com/counter.php?sc_project=1347986&amp;java=0&amp;security=155f4e3f&amp;invisible=0\" alt=\"free webpage counters\" border=\"0\" />";
+//echo "</noscript>";
 echo "</a>";
 //    <!-- End of StatCounter Code -->
 echo "</div>";

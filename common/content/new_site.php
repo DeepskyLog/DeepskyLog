@@ -9,7 +9,7 @@ $timezone_identifiers = DateTimeZone::listIdentifiers();
 $tempTimeZoneList="<select name=\"timezone\" class=\"inputfield requiredField\">";
 while(list($key,$value)=each($timezone_identifiers))
 { if($locationid)
-	  $tempTimeZoneList.="<option value=\"$value\"".(($value==$objLocation->getLocationPropertyFromId($locationid,'timezone'))?" selected":"").">$value</option>";
+	  $tempTimeZoneList.="<option value=\"$value\"".(($value==$objLocation->getLocationPropertyFromId($locationid,'timezone'))?" selected=\"selected\"":"").">$value</option>";
 	else
 	  $tempTimeZoneList.="<option value=\"".$value."\"".(($value=="UTC")?" selected":"").">".$value."</option>";
 }
@@ -57,7 +57,7 @@ echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 $content1b= "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 while(list($key,$value)=each($sites))
-  $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_site&amp;locationid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('locationid'))?' selected ':'').">" . $objLocation->getLocationPropertyFromId($value,'name') . "</option>";
+  $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_site&amp;locationid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('locationid'))?' selected=\"selected\" ':'').">" . $objLocation->getLocationPropertyFromId($value,'name') . "</option>";
 $content1b.= "</select>";
 $objPresentations->line(array("<h5>".LangAddSiteTitle."</h5>"),"L",array(),50);
 echo "<hr />";

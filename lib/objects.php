@@ -806,11 +806,11 @@ class Objects implements iObjects
     echo "<select name=\"imagesize\">";
     if($size=$objUtil->checkPostKey('imagesize'))
       for($i=15;$i<120;$i*=2) 
-        echo "<option".(($size==$i)?" selected":"")." value=\"".$i."\">".$i."&#39;&nbsp;x&nbsp;".$i."&#39;</option>"; 
+        echo "<option".(($size==$i)?" selected=\"selected\"":"")." value=\"".$i."\">".$i."&#39;&nbsp;x&nbsp;".$i."&#39;</option>"; 
     else
-    { echo "<option".(($zoom<=15)?" selected":"").              " value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"; 
-      echo "<option".((($zoom>15)&&($zoom<=30))?" selected":"")." value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>";
-      echo "<option".(($zoom>30)?" selected":"").               " value=\"60\">60&#39;&nbsp;x&nbsp;60&#39;</option>"; 
+    { echo "<option".(($zoom<=15)?" selected=\"selected\"":"").              " value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"; 
+      echo "<option".((($zoom>15)&&($zoom<=30))?" selected=\"selected\"":"")." value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>";
+      echo "<option".(($zoom>30)?" selected=\"selected\"":"").               " value=\"60\">60&#39;&nbsp;x&nbsp;60&#39;</option>"; 
     }
     echo "</select>";    
     echo "<input type=\"hidden\" name=\"raDSS\"   value=\"" . $raDSS . "\" />";
@@ -827,9 +827,9 @@ class Objects implements iObjects
       echo "<form action=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;zoom=" . $zoom . "\" method=\"post\">";
 
       echo "<select name=\"dslsize\">";
-      if ($zoom<=30) echo "<option selected value=\"60\">1&deg;</option>"; else echo "<option value=\"60\">1&deg;</option>";
-      if(($zoom>30) && ($zoom<=60)) echo "<option selected value=\"120\">2&deg;</option>"; else echo "<option value=\"120\">2&deg;</option>";
-      if ($zoom>60) echo "<option selected value=\"180\">3&deg;</option>"; else echo "<option value=\"180\">3&deg;</option>"; 
+      if ($zoom<=30) echo "<option selected=\"selected\" value=\"60\">1&deg;</option>"; else echo "<option value=\"60\">1&deg;</option>";
+      if(($zoom>30) && ($zoom<=60)) echo "<option selected=\"selected\" value=\"120\">2&deg;</option>"; else echo "<option value=\"120\">2&deg;</option>";
+      if ($zoom>60) echo "<option selected=\"selected\" value=\"180\">3&deg;</option>"; else echo "<option value=\"180\">3&deg;</option>"; 
       echo "</select>";
     
       echo "<input type=\"hidden\" name=\"showDSL\" value=\"1\" />";

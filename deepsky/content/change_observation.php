@@ -201,12 +201,12 @@ echo "&nbsp;";
 echo "<select name=\"size_units\" class=\"inputfield\">";
 echo "<option value=\"min\"";
 if ($min == 1) {
-	echo " selected";
+	echo " selected=\"selected\"";
 }
 echo ">" . LangNewObjectSizeUnits1 . "</option>";
 echo "<option value=\"sec\"";
 if ($min == 0) {
-	echo " selected";
+	echo " selected=\"\"";
 }
 echo ">" . LangNewObjectSizeUnits2 . "</option>";
 echo "</select>";

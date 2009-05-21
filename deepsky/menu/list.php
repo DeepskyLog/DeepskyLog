@@ -31,7 +31,7 @@ if($loggedUser)
 			$_SESSION['listname']="----------";
     while(list($key, $value) = each($result))
 		{ if($value==$_SESSION['listname'])
-				echo("<option selected value=\"".$baseURL."index.php?indexAction=listaction&amp;activateList=true&amp;listname=".$value."\">".$value."</option>");
+				echo("<option selected=\"selected\" value=\"".$baseURL."index.php?indexAction=listaction&amp;activateList=true&amp;listname=".$value."\">".$value."</option>");
        elseif (!(array_key_exists('removeList',$_GET) && ($_SESSION['listname']==$value)))
 				 echo("<option value=\"".$baseURL."index.php?indexAction=listaction&amp;activateList=true&amp;listname=".$value."\">".$value."</option>");
     }

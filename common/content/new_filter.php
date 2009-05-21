@@ -11,7 +11,7 @@ echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_filter\" />";
 $content1b="<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 while(list($key, $value) = each($filts))
-  $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_filter&amp;filterid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('filterid'))?' selected ':'').">" . $objFilter->getFilterPropertyFromId($value,'name') . "</option>";
+  $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_filter&amp;filterid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('filterid'))?' selected=\"selected\" ':'').">" . $objFilter->getFilterPropertyFromId($value,'name') . "</option>";
 $content1b.= "</select>";
 $objPresentations->line(array("<h5>".LangAddFilterTitle."</h5>"),"L",array(),50);
 echo "<hr />";

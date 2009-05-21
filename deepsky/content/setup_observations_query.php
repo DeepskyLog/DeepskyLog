@@ -49,7 +49,7 @@ echo "<input type=\"hidden\" name=\"myLanguages\"   value=\"true\">";
 echo "<td align=\"right\">".LangSeen."</td>";
 echo "<td>";
 echo "<select name=\"seen\">";
-echo "<option selected value=\"D\">" . LangSeenDontCare . "</option>";
+echo "<option selected=\"selected\" value=\"D\">" . LangSeenDontCare . "</option>";
 if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
 {
   echo("<option value=\"X\">" . LangSeenSomeoneElse . "</option>".

@@ -80,9 +80,8 @@ if($objUtil->checkSessionKey('admin')=="yes")
   }
   $objPresentations->line(array(LangViewObserverRole.":",$content),"RL",array(20,80),'40',array('fieldname type20','type20'));
   echo "</form>";
-  echo "<hr />";
 }
-
+echo "<hr />";
 $content=array();
 $classes=array();
 $content[]="";

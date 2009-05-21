@@ -15,7 +15,7 @@ $timezone_identifiers = DateTimeZone::listIdentifiers();
 $theTimeZone=$objLocation->getLocationPropertyFromId($locationid,'timezone');
 $tempTimeZoneList="<select name=\"timezone\" class=\"inputfield requiredField\">";
 while(list ($key, $value) = each($timezone_identifiers))
-  $tempTimeZoneList.="<option value=\"".$value."\"".(($value==$theTimeZone)?" selected":"")."> ".$value."</option>";
+  $tempTimeZoneList.="<option value=\"".$value."\"".(($value==$theTimeZone)?" selected=\"selected\"":"")."> ".$value."</option>";
 $tempTimeZoneList.="</select>";
 $lm = $objLocation->getLocationPropertyFromId($locationid,'limitingMagnitude');
 $sb = $objLocation->getLocationPropertyFromId($locationid,'skyBackground');

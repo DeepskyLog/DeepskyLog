@@ -15,7 +15,7 @@ if($loggedUser)
   $loc=$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation');	
 	echo "<select name=\"activateLocation\" class=\"menuField menuDropdown\" onchange=\"location=this.options[this.selectedIndex].value;\">";
   while(list($key, $value) = each($result))
-	  echo "<option ".(($value==$loc)?"selected":"")." value=\"".$link."&amp;activeLocationId=$value\">".$objLocation->getLocationPropertyFromId($value,'name')."</option>";
+	  echo "<option ".(($value==$loc)?"selected=\"selected\"":"")." value=\"".$link."&amp;activeLocationId=$value\">".$objLocation->getLocationPropertyFromId($value,'name')."</option>";
 	echo "</select>";
 	echo "</div>";
 	$link="";

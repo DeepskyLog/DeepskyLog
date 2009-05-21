@@ -185,7 +185,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	echo "<td>"; //====================================================================================================================== Visibility of observations
 	echo "<select name=\"visibility\" style=\"width:300px\" class=\"inputfield\"><option value=\"0\"></option>";
 	for($i=1;$i<8;$i++)
-		echo "<option value=\"".$i."\" ".(($objUtil->checkPostKey('visibility')==$i)?"selected ":"").">".$GLOBALS['Visibility'.$i]."</option>";
+		echo "<option value=\"".$i."\" ".(($objUtil->checkPostKey('visibility')==$i)?"selected=\"selected\" ":"").">".$GLOBALS['Visibility'.$i]."</option>";
 	echo "</select>";
 	echo "</td>";
 	echo "<td> </td>";

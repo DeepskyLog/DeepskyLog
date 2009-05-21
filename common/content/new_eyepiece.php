@@ -15,7 +15,7 @@ echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_eyepiece\" />";
 $content1b= "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 while(list($key, $value)=each($eyeps))
-  $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;eyepieceid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('eyepieceid'))?' selected ':'').">".trim($objEyepiece->getEyepiecePropertyFromId($value,'name'))."</option>"; 
+  $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;eyepieceid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('eyepieceid'))?' selected=\"selected\" ':'').">".trim($objEyepiece->getEyepiecePropertyFromId($value,'name'))."</option>"; 
 $content1b.= "</select>&nbsp;";
 $objPresentations->line(array("<h5>".LangAddEyepieceTitle."</h5>"),"L",array(),50);
 echo "<hr />";

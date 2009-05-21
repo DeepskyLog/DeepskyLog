@@ -10,7 +10,7 @@ echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_lens\" />";
 $content1b= "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 while(list($key, $value) = each($lns))
-  $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_lens&amp;lensid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('lensid'))?' selected ':'').">".$objLens->getLensPropertyFromId($value,'name')."</option>";
+  $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_lens&amp;lensid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('lensid'))?' selected=\"selected\" ':'').">".$objLens->getLensPropertyFromId($value,'name')."</option>";
 $content1b.= "</select>&nbsp;";
 $objPresentations->line(array("<h5>".LangAddLensTitle."</h5>"),"L",array(),50);
 echo "<hr />";

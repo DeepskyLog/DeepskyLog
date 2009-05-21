@@ -922,7 +922,7 @@ class Observations {
 	{ global $FF, $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations; 
     $min=$_GET['min'];
     $max=$_GET['max'];
-	  echo "<table id=\"showListObservationTable\" width=\"100%\">";
+    echo "<table id=\"showListObservationTable\" width=\"100%\">";
 	  if($FF)
 	    echo "<thead>";
 		echo "<tr class=\"type3\">";
@@ -1005,7 +1005,7 @@ class Observations {
 				{	echo "<td>".$GLOBALS[$value['objectconstellation']]."</td>";
 				  echo "<td><a  target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($value['observerid'])."\">".$value['observername']."</a></td>";
 					echo "<td><a  target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($value['instrumentid'])."\">".(($value['instrumentname']=="Naked eye")?InstrumentsNakedEye:$value['instrumentname']." &nbsp;(".round($value['instrumentdiameter'], 0)."&nbsp;mm)")."</a></td>";
-					echo "<td>".date($dateformat,mktime(0, 0, 0, $date[1], $date[2], $date[0]));"</td>";
+					echo "<td>".date($dateformat,mktime(0, 0, 0, $date[1], $date[2], $date[0]))."</td>";
 					if($lco=="O")
 					{ echo "<td>".(($LOid)?("<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($LOinstrumentId)."\">".$LOinstrument." &nbsp;").(($LOinstrument!=InstrumentsNakedEye)?("(".$LOinstrumentsize."&nbsp;mm".")"):""):"")."</a>"."</td>";
 					  echo "<td>".((($lco=="O")&&$LOid)?date($dateformat, mktime(0, 0, 0, $LOdate[1], $LOdate[2], $LOdate[0])):"")."</td>";

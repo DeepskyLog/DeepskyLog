@@ -28,7 +28,7 @@ echo("<input type=\"hidden\" name=\"sort\" value=\"showname\" />");
 echo("<input type=\"hidden\" name=\"sortdirection\" value=\"asc\" />");
 echo("<input type=\"hidden\" name=\"showPartOfs\" value=\"0\" />");
 echo("<select name=\"seen\" class=\"inputfield\">");
-echo("<option selected value=\"D\">" . LangSeenDontCare . "</option>".
+echo("<option selected=\"selected\" value=\"D\">" . LangSeenDontCare . "</option>".
      "<option value=\"-\">" . LangNotSeen . "</option>");
 if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
 { echo("<option value=\"X\">" . LangSeenSomeoneElse . "</option>".

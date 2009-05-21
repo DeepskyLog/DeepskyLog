@@ -9,9 +9,9 @@ $insts=$objInstrument->getSortedInstruments('name',"",true);
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_instrument\" />";
 $content1b = "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
-$content1b.= "<option selected value=\"".$baseURL."index.php?indexAction=add_instrument\"> &nbsp; </option>";
+$content1b.= "<option selected=\"selected\" value=\"".$baseURL."index.php?indexAction=add_instrument\"> &nbsp; </option>";
 while(list($key,$value)=each($insts))
-  $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_instrument&amp;instrumentid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('instrumentid'))?' selected ':'').">" . $objInstrument->getInstrumentPropertyFromId($value,'name') . "</option>";
+  $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_instrument&amp;instrumentid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('instrumentid'))?' selected=\"selected\" ':'').">" . $objInstrument->getInstrumentPropertyFromId($value,'name') . "</option>";
 $content1b.= "</select>";
 $objPresentations->line(array("<h5>".LangAddInstrumentTitle."</h5>"),"L",array(),50);
 echo "<hr />";

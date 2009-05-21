@@ -1613,6 +1613,7 @@ class Utils implements iUtils
 		  $content.= "<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\" />";	
 		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img style=\"vertical-align:middle\" src=\"".$baseURL."styles/images/right20.gif\" border=\"0\" alt=\">\" />"."</a>";
 		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img style=\"vertical-align:middle\" src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\" alt=\">>\" />"."</a>";
+		  $content.= "&nbsp;";
 	  }
 	  $content.= "</form>";
 	  return array($min,$max,$content);
