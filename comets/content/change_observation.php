@@ -477,7 +477,7 @@ while (FALSE !== ($file = readdir($dir)))
    if(fnmatch($_GET['observation'] . "_resized.gif", $file) || fnmatch($_GET['observation'] . "_resized.jpg",
 $file) || fnmatch($_GET['observation']. "_resized.png", $file))
    {
-   echo("<p><a href=\"comets/" . $upload_dir . "/" . $_GET['observation'] . ".jpg" . "\"><img class=\"account\" src=\"comets/$upload_dir" . "/" . "$file\">
+   echo("<p><a href=\"comets/" . $upload_dir . "/" . $_GET['observation'] . ".jpg" . "\"><img class=\"account\" src=\"comets/$upload_dir" . "/" . "$file\" alt=\"\">
          </img></a></p>");
    }
 }

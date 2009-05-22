@@ -36,10 +36,10 @@ if ($object && $objObject->getExactDsObject($object))
 	echo "<h6 class=\"h2header\">".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h6>";
 	echo "<table width=\"100%\">";
 	echo "<tr>";
-	echo "<td width=\"25%\" align=\"left\"><a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\">".LangViewObjectViewNearbyObject." ".$object_ss."</td>";
+	echo "<td width=\"25%\" align=\"left\"><a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\">".LangViewObjectViewNearbyObject." ".$object_ss."</a></td>";
 	echo "<td width=\"25%\" align=\"center\">";
 	if($loggedUser)
-		echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=add_observation&object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object_ss . "</a>";
+		echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object_ss . "</a>";
 	else
 	  echo "&nbsp;";
 	echo "</td>";

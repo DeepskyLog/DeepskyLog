@@ -306,7 +306,7 @@ echo "<input type=\"hidden\" name=\"observationid\" value=\"" . $_GET['observati
 echo "</form>";
 if($objObservation->getDsObservationProperty($_GET['observation'],'hasDrawing'))
 { echo "<p>";
-	echo "<a href=\"".$baseURL.'deepsky/drawings/'.$_GET['observation'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$_GET['observation'].".jpg\"></img></a>";
+	echo "<a href=\"".$baseURL.'deepsky/drawings/'.$_GET['observation'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$_GET['observation'].".jpg\" alt=\"\"></img></a>";
 	echo "</p>";
 }
 echo "</div>";

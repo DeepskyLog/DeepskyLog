@@ -1040,10 +1040,10 @@ class Observations {
 				  	echo "<td>&nbsp;</td>";
 					  echo "<td valign=\"top\">".$alt."</td>";
 						if($lco=="C")
-					    echo "<td colspan=\"5\">".$objPresentations->searchAndLinkCatalogsInText($value['observationdescription'])."<p>"."</td>";
+					    echo "<td colspan=\"5\">".$objPresentations->searchAndLinkCatalogsInText($value['observationdescription'])."<br />"."</td>";
 					  elseif($lco=="O")
-			  		{ echo "<td colspan=\"4\">".$objPresentations->searchAndLinkCatalogsInText($value['observationdescription'])."<p>"."</td>";
-				  	  echo "<td colspan=\"3\">".$LOdescription."<p>"."</td>";
+			  		{ echo "<td colspan=\"4\">".$objPresentations->searchAndLinkCatalogsInText($value['observationdescription'])."<br />"."</td>";
+				  	  echo "<td colspan=\"3\">".$LOdescription."<br />"."</td>";
 					  }
 			      echo "</tr>";
 					}
@@ -1051,10 +1051,10 @@ class Observations {
 				  { echo "<tr style=\"height:5px\">";
 					  echo "<td> &nbsp; </td>";
 					  if($lco=="C")
-			        echo "<td colspan=5>".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\"></img></a>"."</p>":"")."</td>";
+			        echo "<td colspan=\"5\">".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\" alt=\"\"></img></a>"."</p>":"")."</td>";
 			  	  elseif($lco=="O")
-				    { echo "<td colspan=4>".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\"></img></a>"."</p>":"")."</td>";
-					    echo "<td colspan=3>".(($LOdescription&&($this->getDsObservationProperty($LOid,'hasDrawing')))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$LOid.".jpg" . "\"> <img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$LOid."_resized.jpg\"></img></a>"."</p>":"")."</td>";
+				    { echo "<td colspan=\"4>\"".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\" alt=\"\"></img></a>"."</p>":"")."</td>";
+					    echo "<td colspan=\"3\">".(($LOdescription&&($this->getDsObservationProperty($LOid,'hasDrawing')))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$LOid.".jpg" . "\"> <img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$LOid."_resized.jpg\" alt=\"\"></img></a>"."</p>":"")."</td>";
 					   }
 			  	  echo "</tr>";		
 				  }
@@ -1153,11 +1153,11 @@ class Observations {
 		                     "class=\"type2\"");                     
 		echo "</table>";
 		echo $details1Text." ".$details2Text;
-		echo "<p />";
+		echo "<br />";
 		echo $objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
 		if($this->getDsObservationProperty($LOid,'hasDrawing'))
-		  echo "<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/" . $LOid . ".jpg" . "\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . ".jpg\"></img></a>";
-		echo "<p>";
+		  echo "<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/" . $LOid . ".jpg" . "\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . ".jpg\" alt=\"\"></img></a>";
+		echo "<br />";
 		echo (($myList)?"<a target=\"_top\" href=\"".$link.$linkamp."addObservationToList=".urlencode($LOid)."\">".LangViewObservationField44.$listname_ss."</a>&nbsp;-&nbsp;":'');
 		if($objUtil->checkAdminOrUserID($this->getDsObservationProperty($LOid,'observerid')))
 		{ echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=adapt_observation&amp;observation=" . $LOid . "\">" . LangChangeObservationTitle . "</a>";

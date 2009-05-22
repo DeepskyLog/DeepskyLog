@@ -130,7 +130,7 @@ while (FALSE!==($file=readdir($dir)))
     continue; 
   if(fnmatch($loggedUser.".gif",$file)||fnmatch($loggedUser.".jpg",$file)||fnmatch($loggedUser.".png",$file))
   { echo "<p align=\"center\">";
-	  echo "<img class=\"account\" src=\"".$baseURL.$upload_dir."/".$file."\" alt=\"".$loggedUser."/".$file."\"></img>";
+	  echo "<img class=\"account\" src=\"".$baseURL.$upload_dir."/".$file."\" alt=\"".$loggedUser."/".$file."\" alt=\"\"></img>";
 		echo "</p>";
 	}
 }
