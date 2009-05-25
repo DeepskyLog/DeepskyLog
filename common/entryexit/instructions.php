@@ -41,23 +41,38 @@ else
 	  }
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_eyepiece")                                               // delete eyepiece
 	{ $entryMessage.=$objEyepiece->validateDeleteEyepiece();
-	  $_GET['indexAction']='add_eyepiece';
+	  if($_SESSION['admin']=='yes')
+	    $_GET['indexAction']='view_eyepieces';
+	  else
+	    $_GET['indexAction']='add_eyepiece';
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_filter")                                                 // delete filter
 	{ $entryMessage.=$objFilter->validateDeleteFilter();
-	  $_GET['indexAction']='add_filter';
+	  if($_SESSION['admin']=='yes')
+	    $_GET['indexAction']='view_filters';
+	  else
+	    $_GET['indexAction']='add_filter';
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_instrument")                                             // delete instrument 
 	{ $entryMessage.=$objInstrument->validateDeleteInstrument();
-	  $_GET['indexAction']='add_instrument';
+	  if($_SESSION['admin']=='yes')
+	    $_GET['indexAction']='view_instruments';
+	  else
+	    $_GET['indexAction']='add_instrument';
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_lens")                                                   // delete lens
 	{ $entryMessage.=$objLens->validateDeleteLens();
-	  $_GET['indexAction']="add_lens";
+	  if($_SESSION['admin']=='yes')
+	    $_GET['indexAction']='view_lenses';
+	  else
+	    $_GET['indexAction']="add_lens";
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_location")                                               // delete location
 	{ $entryMessage.=$objLocation->validateDeleteLocation();
-	  $_GET['indexAction']='add_site';
+	  if($_SESSION['admin']=='yes')
+	    $_GET['indexAction']='view_locations';
+	  else
+	    $_GET['indexAction']='add_site';
 	}  
 	if($objUtil->checkGetKey('indexAction')=="validate_account")                                                       // validate account
 	{ $objObserver->valideAccount();

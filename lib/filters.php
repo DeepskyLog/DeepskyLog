@@ -172,7 +172,7 @@ class Filters implements iFilters
    && $objUtil->checkAdminOrUserID($this->getFilterPropertyFromId($filterid,'observer'))
    && (!($this->getFilterUsedFromId($filterid))))
    { $objDatabase->execSQL("DELETE FROM filters WHERE id=\"".$filterid."\"");
-     return LangValidateFilterMessage5;
+     return LangValidateFilterMessage6;
 	 }
  }
  public  function validateSaveFilter()                                                  // validates and saves a filter and returns a message 

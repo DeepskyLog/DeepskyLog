@@ -219,7 +219,7 @@ define("LangObjectSetSUBR", "SB-Set Surface Brightness");
 define("LangObjectSetDiam1", "D1-Set Diameter 1 (seconds !)");
 define("LangObjectSetDiam2", "D2-Set Diameter 2 (seconds !)");
 define("LangObjectSetPA", "PA-Set Position Angle");
-define("LangEditObjectDescription","DESC-Edit Description");
+define("LangEditObjectDescription","Edit Description");
 
 
 // content/change_account.php
@@ -868,6 +868,7 @@ define("LangValidateEyepieceMessage2", "The eyepiece is added to your equipment 
 define("LangValidateEyepieceMessage3", "Eyepiece added");
 define("LangValidateEyepieceMessage4", "Eyepiece changed");
 define("LangValidateEyepieceMessage5", "The eyepiece is changed in your equipment list");
+define("LangValidateEyepieceMessage6", "The eyepiece is removed from your equipment list.");
 
 //control/validate_filter
 define("LangValidateFilterMessage2", "The filter is added to your equipment list");

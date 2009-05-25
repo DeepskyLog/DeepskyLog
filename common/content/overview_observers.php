@@ -29,18 +29,13 @@ if((isset($_GET['sort'])) && (isset($_GET['previous'])) && $_GET['previous'] == 
 }
 else
   $previous = $sort;
-echo "<div id=\"main\">";
 $step=25;
 $link=$baseURL."index.php?indexAction=view_observers&amp;sort=".$sort."&amp;previous=".$orig_previous;
 $count = 0;
-echo "<div class=\"container\" style=\"height:40px;\">";
-echo "<div class=\"pageTitle\">";
-echo "<h6>".LangViewObserverTitle."</h6>";
-echo "</div>";
-echo "<div class=\"pageListHeader\">";
-list ($min, $max) = $objUtil->printNewListHeader2($observers, $link, $min, $step);
-echo "</div>";
-echo "</div>";
+list ($min,$max,$content) = $objUtil->printNewListHeader3($observers, $link, $min, $step);
+echo "<div id=\"main\" style=\"position:relative\">";
+$objPresentations->line(array("<h5>".LangViewObserverTitle."</h5>",$content),"LR",array(70,30),50);
+echo "<hr />";
 echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=id&amp;previous=$previous\">id</a></td>";

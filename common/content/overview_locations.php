@@ -27,16 +27,11 @@ else
   $previous = $sort;
 
 $step = 25;
-echo "<div id=\"main\">";
 $link=$baseURL."index.php?indexAction=view_locations&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
-echo "<div class=\"container\" style=\"height:40px;\">";
-echo "<div class=\"pageTitle\">";
-echo "<h6>".LangViewLocationTitle."</h6>";
-echo "</div>";
-echo "<div class=\"pageListHeader\">";
-list ($min, $max) = $objUtil->printNewListHeader2($sites, $link, $min, $step);
-echo "</div>";
-echo "</div>";
+list ($min,$max,$content) = $objUtil->printNewListHeader3($sites, $link, $min, $step);
+echo "<div id=\"main\" style=\"position:relative\">";
+$objPresentations->line(array("<h5>".LangViewLocationTitle."</h5>",$content),"LR",array(70,30),50);
+echo "<hr />";
 echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>";
@@ -88,8 +83,10 @@ while(list ($key, $value) = each($sites))
       $obs = $objObservation->getObservationFromQuery($queries, "", "1", "False");
       // $comobs = $objCometObservation->getObservationFromQuery($queries, "", "1", "False");
       echo "<td>";
-      if(!sizeof($obs) > 0 && !in_array($value, $locs)) // && !sizeof($comobs) > 0) // no observations from location yet
-        echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_location&amp;locationid=" . urlencode($value) . "\">" . LangRemove . "</a>");
+      //if(!sizeof($obs) > 0 && !in_array($value, $locs)) // && !sizeof($comobs) > 0) // no observations from location yet
+      //  echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_location&amp;locationid=" . urlencode($value) . "\">" . LangRemove . "</a>");
+      if(!($objLocation->getLocationUsedFromId($value)))
+        echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_location&amp;locationid=".urlencode($value)."\">".LangRemove."</a>";
       echo "</td>";
 			echo "</tr>";
     }

@@ -868,6 +868,7 @@ define("LangValidateEyepieceMessage2", "Het oculair is toegevoegd aan je lijst m
 define("LangValidateEyepieceMessage3", "Oculair toegevoegd.");
 define("LangValidateEyepieceMessage4", "Oculair aangepast.");
 define("LangValidateEyepieceMessage5", "Het oculair is aangepast in je lijst met uitrustingen.");
+define("LangValidateEyepieceMessage6", "Het oculair is verwijderd uit je lijst met uitrustingen.");
 
 //control/validate_filter
 define("LangValidateFilterMessage2", "De filter is toegevoegd aan je lijst met uitrustingen.");

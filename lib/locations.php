@@ -235,8 +235,7 @@ class Locations
     if(($locationid=$objUtil->checkGetKey('locationid'))
     && ($objUtil->checkAdminOrUserID($this->getLocationPropertyFromId($locationid,'observer')))
     && (!($this->getLocationUsedFromId($locationid))))
-    { //echo "WP";
-    $objDatabase->execSQL("DELETE FROM locations WHERE id=\"".$locationid."\"");
+    { $objDatabase->execSQL("DELETE FROM locations WHERE id=\"".$locationid."\"");
       return LangValidateLocationMessage3;
     }
   }

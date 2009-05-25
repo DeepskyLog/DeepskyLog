@@ -34,10 +34,10 @@ try
   echo    "</div>";
 }
 catch (Exception $e)
-{ echo    "<p>DeepskyLog encounterd a problem. Could you please report it to the Developers?</p>";
-  echo    "<p>Report problem with error message: " . $e->getMessage()."</p>";
-  echo    "<p>You can report the problem by sending an email to developers@deepskylog.be.</p>";
-  echo    "<p>Thank you.</p>";
+{ $entryMessage.="<p>DeepskyLog encounterd a problem. Could you please report it to the Developers?</p>";
+  $entryMessage.="<p>Report problem with error message: " . $e->getMessage()."</p>";
+  $entryMessage.="<p>You can report the problem by sending an email to developers@deepskylog.be.</p>";
+  $entryMessage.="<p>Thank you.</p>";
   // EMAIL developers with error codes
 }
 echo "<script type=\"text/javascript\">";

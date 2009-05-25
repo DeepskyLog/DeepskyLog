@@ -891,7 +891,7 @@ class Objects implements iObjects
     while($count<$max)
     { echo "<tr style=\"height:5px\" ".(($_SESSION['Qobj'][$count]['objectname']==$ownShow)?"class=\"type3\"":"class=\"type".(2-($countline%2)."\"")).">";
       if(($showRank==1)&&$myList)
-        echo "<td align=\"center\"><a href=\"\" onclick=\"theplace = prompt('".LangNewPlaceInList."','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
+        echo "<td align=\"center\"><a href=\"#\" onclick=\"theplace = prompt('".LangNewPlaceInList."','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
       elseif($showRank)
 	      echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</td>";
       echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" target=\"_top\">".$_SESSION['Qobj'][$count]['showname']."</a></td>\n";

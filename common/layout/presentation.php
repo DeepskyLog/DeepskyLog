@@ -31,10 +31,20 @@ interface iPresentation
 // function tableTypeFieldnameField($type,$name,$field)                                 // 2-item type line, containing the name and the field, and formatted to the type
 class Presentations implements iPresentation
 { public  function alertMessage($theMessage)
-  { global $baseURL;
-    //echo "<script  type=\"text/javascript\">alert('".addslashes(strip_tags(html_entity_decode($this->br2nl($theMessage))))."');</script>";
-  $_SESSION['message']=$theMessage;  
-  echo "<script  type=\"text/javascript\">window.open('".$baseURL."message.php'".",'".LangMessageDeepskyLog."','location=no,navigation=no,status=no,left=300,top=280,height=200,width=400,scrollbars=no');</script>";
+  { global $baseURL,$indexAction;
+    echo "<div id=\"veil\" style=\"position:absolute;left:0px;top:0px;width:0px;height:0px;opacity:0.10;filter:alpha(opacity=10);background-color:#000000;\">";
+	  echo "</div>"; 
+	  echo "<div id=\"dialogback\" style=\"position:absolute;left:0px;top:0px;width:0px;height:0px;opacity:0.30;filter:alpha(opacity=30);background-color:#000000;\">";
+	  echo "</div>";
+	  echo "<div id=\"dialog\" style=\"text-align:center;position:absolute;left:0px;top:0px;width:0px;height:0px;background-color:#FFFFFF;\">";
+	  echo "<div id=\"dialogdiv1\" style=\"padding:10px;overflow:auto;position:absolute;left:0px;top:0px;width:0px;height:0px;background-color:#FFFFFF;border-width:thin;border-style:solid;border-color:#000000;\">";
+	  echo $theMessage;
+	  echo "</div>";
+	  echo "<div id=\"dialogdiv2\" style=\"text-align:center;vertical-align:middle;position:absolute;left:0px;top:0px;width:0px;height:0px;background-color:#FFFFFF;border-width:thin;border-style:solid;border-color:#000000;\">";
+	  echo "<p><a href=\"".$baseURL."index.php?indexAction=".$_GET['indexAction']."\">Ok</a></p>";
+    echo "</div>";
+	  echo "</div>";
+	  echo "<script type=\"text/javascript\">messageBox();</script>";	
   }
   public function br2dash($data) 
   { return preg_replace('!<br.*>!iU', "-", $data );

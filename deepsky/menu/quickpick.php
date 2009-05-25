@@ -4,7 +4,7 @@ echo "<form  action=\"".$baseURL."index.php\" method=\"get\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"quickpick\" />";
 echo "<input type=\"hidden\" name=\"source\"      value=\"quickpick\" />";
 echo "<input type=\"hidden\" name=\"myLanguages\" value=\"true\" />";
-echo "<input type=\"text\"   
+echo "<input type=\"text\"
              name=\"object\"
              class=\"inputfield menuInput\"
              title=\"".LangQuickPickHelp."\"

@@ -31,7 +31,7 @@
 //  LangXMLButton
 //  LangValidateXMLMessage
 //  $ClusterTypeA->X
-
+//  LangValidateEyepieceMessage6
 
 
 
@@ -871,6 +871,7 @@ define("LangValidateEyepieceMessage2", "Cet oculaire est rajout&#233; dans la ba
 define("LangValidateEyepieceMessage3", "Oculaire rajout&#233;");
 define("LangValidateEyepieceMessage4", "Oculaire modifi&#233;");
 define("LangValidateEyepieceMessage5", "L'oculaire est modifi&#233; dans la banque de donn&#233;es");
+define("LangValidateEyepieceMessage6", "Het oculair is verwijderd uit je lijst met uitrustingen.");
 
 // control/validate_observer.php
 

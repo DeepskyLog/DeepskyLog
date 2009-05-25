@@ -29,7 +29,7 @@ else
   $previous = $sort;
 $step = 25;
 $link = $baseURL."index.php?indexAction=view_eyepieces&amp;sort=".$sort."&amp;previous=".$orig_previous;
-list ($min, $max,$content) = $objUtil->printNewListHeader3($eyeps, $link, $min, $step);
+list ($min,$max,$content) = $objUtil->printNewListHeader3($eyeps, $link, $min, $step);
 echo "<div id=\"main\" style=\"position:relative\">";
 $objPresentations->line(array("<h5>".LangViewEyepieceTitle."</h5>",$content),"LR",array(70,30),50);
 echo "<hr />";

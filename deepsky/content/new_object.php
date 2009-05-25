@@ -25,7 +25,7 @@ while(list($key,$value)=each($types))
   $stypes[$value] = $$value;
 asort($stypes);
 while(list($key, $value) = each($stypes))
-  echo("<option value=\"$key\">".$value."</option>\n");
+  echo("<option value=\"$key\">".$value."</option>");
 echo "</select>";
 echo "</td>";
 echo "<td>";

@@ -15,9 +15,9 @@
 //  LangCSVError10b
 //  LangCSVError10e
 //  LangCSVError10c
-// LangAddEyepieceExisting
-// LangAddInstrumentManually
-
+//  LangAddEyepieceExisting
+//  LangAddInstrumentManually
+//  LangValidateEyepieceMessage6
 
 
 
@@ -869,6 +869,7 @@ define("LangValidateEyepieceMessage2", "Das Okular wurde aufgenommen");
 define("LangValidateEyepieceMessage3", "Okular hinzugef&uuml;gt");
 define("LangValidateEyepieceMessage4", "Okular ge&auml;ndert");
 define("LangValidateEyepieceMessage5", "Okular in der Datenbank ge&auml;ndert");
+define("LangValidateEyepieceMessage6", "The eyepiece is removed from your equipment list.");
 
 //control/validate_filter
 define("LangValidateFilterMessage2", "Der Filter wurde in Ihr Zubeh&ouml;r aufgenommen");

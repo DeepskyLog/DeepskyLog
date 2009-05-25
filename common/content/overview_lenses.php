@@ -26,15 +26,10 @@ else
   $orig_previous = "";
 $step = 25;
 $link = "".$baseURL."index.php?indexAction=view_lenses&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
+list ($min,$max,$content) = $objUtil->printNewListHeader3($lns, $link, $min, $step);
 echo "<div id=\"main\" style=\"position:relative\">";
-echo "<div class=\"container\" style=\"height:40px;\">";
-echo "<div class=\"pageTitle\">";
-echo "<h6>".LangOverviewLensTitle."</h6>";
-echo "</div>";
-echo "<div class=\"pageListHeader\">";
-list ($min, $max) = $objUtil->printNewListHeader2($lns, $link, $min, $step);
-echo "</div>";
-echo "</div>";
+$objPresentations->line(array("<h5>".LangOverviewLensTitle."</h5>",$content),"LR",array(70,30),50);
+echo "<hr />";
 echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_lenses&amp;sort=name&amp;previous=$previous\">".LangViewLensName."</a></td>";

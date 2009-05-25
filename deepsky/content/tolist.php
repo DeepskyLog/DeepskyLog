@@ -21,12 +21,13 @@ echo "<hr />";
 if($listname)
 { $link = $baseURL."index.php?indexAction=listaction&amp;sort=".$objUtil->checkGetKey('sort','objectpositioninlist');
   list($min, $max,$content)=$objUtil->printNewListHeader3($_SESSION['Qobj'], $link, $min, 25, "");	
-  $objPresentations->line(array("<h5>".LangSelectedObjectsTitle." ".$listname_ss. "</h5>".
-                                ((!$myList)?
+  $objPresentations->line(array("<h5>".LangSelectedObjectsTitle." ".$listname_ss. "</h5>",
+                                $content),
+                          "LR", array(60,40),40);
+  $objPresentations->line(array((!$myList)?
                                 "(".LangToListListBy.$objObserver->getObserverProperty(($listowner=$objList->getListOwner()),'firstname').' '.$objObserver->getObserverProperty($listowner,'name').")":
                                 "<a href=\"".$baseURL."index.php?indexAction=import_csv_list\">" .  LangToListImport . "</a>"),
-                                $content),
-                          "LR", array(60,40),50);
+                          "L",array(),20);
   echo "<div id=\"container2\" style=\"position:relative;\">";
   if(count($_SESSION['Qobj'])>0)
 	{ // OUTPUT RESULT

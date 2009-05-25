@@ -141,11 +141,11 @@ class Lists implements iLists
 	 if(substr($theListname,0,7)=="Public:")
      $sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " .
 	          "JOIN objects ON observerobjectlist.objectname = objects.name " .
-	 	    	 "WHERE listname=\"".$theListname."\" AND objectname <>\"\"";
+	 	    	  "WHERE listname=\"".$theListname."\" AND objectname <>\"\"";
 	 else
      $sql = "SELECT observerobjectlist.objectname, observerobjectlist.objectplace, observerobjectlist.objectshowname, observerobjectlist.description FROM observerobjectlist " .
 	          "JOIN objects ON observerobjectlist.objectname = objects.name " .
-	 	    	 "WHERE observerid = \"".$loggedUser."\" AND listname = \"".$theListname."\" AND objectname <>\"\"";
+	 	    	  "WHERE observerid = \"".$loggedUser."\" AND listname = \"".$theListname."\" AND objectname <>\"\"";
    $run=$objDatabase->selectRecordset($sql);
    while($get=mysql_fetch_object($run))
      if(!in_array($get->objectname, $obs))

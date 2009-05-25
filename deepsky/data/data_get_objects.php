@@ -32,8 +32,10 @@ elseif($objUtil->checkGetKey('source')=='tolist')
 	if(!$validQobj)
 	{ $_SESSION['QobjParams']=array('source'=>'tolist','list'=>$listname);
 	  $_SESSION['Qobj']=$objList->getObjectsFromList($_SESSION['listname']);
-	  $_SESSION['QobjSort']='objectpositioninlist';
-	  $_SESSION['QobjSortDirection']='asc';
+	  $_GET['sort']='objectpositioninlist';
+	  $_GET['sortdirection']='asc';
+	  $_SESSION['QobjSort']='';
+	  $_SESSION['QobjSortDirection']='';
 	}
 }
 // ========================================= get top objects

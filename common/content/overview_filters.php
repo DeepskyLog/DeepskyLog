@@ -25,15 +25,10 @@ if((isset($_GET['previous'])))
 else
   $orig_previous = "";
 $link=$baseURL."index.php?indexAction=view_filters&amp;sort=".$sort."&amp;previous=".$orig_previous;
+list ($min,$max,$content) = $objUtil->printNewListHeader3($filts, $link, $min, $step);
 echo "<div id=\"main\" style=\"position:relative\">";
-echo "<div class=\"container\" style=\"height:40px;\">";
-echo "<div class=\"pageTitle\">";
-echo "<h6>".LangOverviewFilterTitle."</h6>";
-echo "</div>";
-echo "<div class=\"pageListHeader\">";
-list ($min, $max) = $objUtil->printNewListHeader2($filts, $link, $min, $step);
-echo "</div>";
-echo "</div>";
+$objPresentations->line(array("<h5>".LangOverviewFilterTitle."</h5>",$content),"LR",array(70,30),50);
+echo "<hr />";
 echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_filters&amp;sort=name&amp;previous=$previous\">".LangViewFilterName."</a></td>";
@@ -56,8 +51,8 @@ while(list($key,$value)=each($filts))
       echo "<td>".(($schott=$objFilter->getFilterPropertyFromId($value,'schott'))?$schott:"-")."</td>";
       echo "<td>".$objFilter->getFilterPropertyFromId($value,'observer')."</td>";
       echo "<td>";
-      if(!count($objFilter->getFilterUsedFromId($value)))
-        echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_filter&amp;filterid=" . urlencode($value) . "\">" . LangRemove . "</a>");
+      if(!($objFilter->getFilterUsedFromId($value)))
+        echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_filter&amp;filterid=".urlencode($value)."\">".LangRemove."</a>";
       echo "</td>";
       echo "</tr>";
     }
