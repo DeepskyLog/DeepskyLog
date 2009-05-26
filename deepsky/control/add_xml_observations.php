@@ -17,7 +17,7 @@
   $searchNode = $dom->getElementsByTagName( "observations" ); 
   $version = $searchNode->item(0)->getAttribute("version");
 
-  if ($version != "1.7") { // && $version != "2.0") {
+  if ($version != "2.0") {
     throw new Exception(LangXMLError1);
   }
 
@@ -25,14 +25,18 @@
   // there is no final scheme for 2.0 yet)
   $xmlschema = str_replace(' ', '/', $searchNode->item(0)->getAttribute("xsi:schemaLocation")); 
 
+  // TODO : Use the schema definition from the site!
+  $xmlschema = "http://localhost/deepskylog/xml/oal20.xsd";
+  
   //Validate the XML file against the schema
   if ($dom->schemaValidate($xmlschema)) {
     // The XML file is valid. Let's start reading in the file.
-    // At this moment only 1.7 files!
+    // Only 2.0 files!
 
     // Check the observers -> In OpenAstronomyLog 2.0 the deepskylog_id is also added
     $searchNode = $dom->getElementsByTagName( "observers" ); 
     $observer = $searchNode->item(0)->getElementsByTagName( "observer" ); 
+
     $id = "";
     foreach( $observer as $observer )
     {
@@ -41,10 +45,22 @@
       $name = $observer->getElementsByTagName( "name" )->item(0)->nodeValue;
       $surname = $observer->getElementsByTagName( "surname" )->item(0)->nodeValue;
 
+      $observerid = $observer->getElementsByTagName ( "account" );
+      $obsid = "";
+      foreach ($observerid as $observerid) {
+       if ($observerid->getAttribute("name") == "www.deepskylog.org") {
+         $obsid = $observerid->nodeValue; 
+       }
+      }
+
       // Get the name of the observer which is logged in in DeepskyLog
       $deepskylog_username=$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'firstname'). " ".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'name');
       
-      if ($deepskylog_username == $name . " " . $surname) {
+      if ($obsid != "") {
+        if ($obsid == $_SESSION['deepskylog_id']) {
+          $id = $comastid;
+        }
+      } else if ($deepskylog_username == $name . " " . $surname) {
         $id = $comastid;
       }
     }
@@ -52,7 +68,7 @@
       $errormessage = LangXMLError2 . $deepskylog_username . LangXMLError2a;
       throw new Exception($errormessage);
     }
-    
+
     $targets = $dom->getElementsByTagName( "targets" ); 
     $target = $targets->item(0)->getElementsByTagName( "target" ); 
     
@@ -81,25 +97,27 @@
       // Get the type
       $type =  $target->getAttribute("xsi:type");
       
-      if ($type == "fgca:deepSkyAS" || $type == "fgca:deepSkyDS") {
+      if ($type == "oal:deepSkyAS" || $type == "oal:deepSkyDS") {
         $targetInfoArray["type"] = "ASTER";
-      } else if ($type == "fgca:deepSkySC" || $type == "fgca:deepSkyOC") {
+      } else if ($type == "oal:deepSkySC" || $type == "oal:deepSkyOC") {
         $targetInfoArray["type"] = "OPNCL";
-      } else if ($type == "fgca:deepSkyGC") {
+      } else if ($type == "oal:deepSkyGC") {
         $targetInfoArray["type"] = "GLOCL";
-      } else if ($type == "fgca:deepSkyGX") {
+      } else if ($type == "oal:deepSkyGX") {
         $targetInfoArray["type"] = "GALXY";
-      } else if ($type == "fgca:deepSkyGN") {
+      } else if ($type == "oal:deepSkyCG") {
+        $targetInfoArray["type"] = "GALCL";
+      } else if ($type == "oal:deepSkyGN") {
         $targetInfoArray["type"] = "BRTNB";
-      } else if ($type == "fgca:deepSkyGN") {
+      } else if ($type == "oal:deepSkyGN") {
         $targetInfoArray["type"] = "BRTNB";
-      } else if ($type == "fgca:deepSkyPN") {
+      } else if ($type == "oal:deepSkyPN") {
         $targetInfoArray["type"] = "PLNNB";
-      } else if ($type == "fgca:deepSkyQS") {
+      } else if ($type == "oal:deepSkyQS") {
         $targetInfoArray["type"] = "QUASR";
-      } else if ($type == "fgca:deepSkyDN") {
+      } else if ($type == "oal:deepSkyDN") {
         $targetInfoArray["type"] = "DRKNB";
-      } else if ($type == "fgca:deepSkyNA") {
+      } else if ($type == "oal:deepSkyNA") {
         $targetInfoArray["type"] = "NONEX";
       }
 
@@ -319,7 +337,16 @@
       
       // Check if the surface brightness is defined. If this is the case, get it. Otherwise, set to 99.9
       if ($target->getElementsByTagName( "surfBr" )->item(0)) {
-        $targetInfoArray["subr"] = $target->getElementsByTagName( "surfBr" )->item(0)->nodeValue;
+        // Get surface brightness and convert it
+        $unit = $target->getElementsByTagName( "surfBr" )->item(0)->getAttribute("unit");
+        
+        if ($unit == "mags-per-squarearcmin") {
+          $subr = $target->getElementsByTagName( "surfBr" )->item(0)->nodeValue;
+        } else {
+          $subr = $target->getElementsByTagName( "surfBr" )->item(0)->nodeValue - 8.89;
+        }
+        
+        $targetInfoArray["subr"] = $subr;
       } else {
         $targetInfoArray["subr"] = "99.9";
       }
@@ -819,10 +846,19 @@
             $objObservation->setDsObservationProperty($obsId, "magnification", $observation->getElementsByTagName( "magnification" )->item(0)->nodeValue);
           }
           // Sqm is not mandatory
-          if ($observation->getElementsByTagName( "sqm" )->item(0)) {
-            $objObservation->setDsObservationProperty($obsId, "SQM", $observation->getElementsByTagName( "sqm" )->item(0)->nodeValue);
-          }
+          if ($observation->getElementsByTagName( "sky-quality" )->item(0)) {
+            // Get sqm value and convert it
+            $unit = $observation->getElementsByTagName( "sky-quality" )->item(0)->getAttribute("unit");
         
+            if ($unit == "mags-per-squarearcmin") {
+              $sqm = $observation->getElementsByTagName( "sky-quality" )->item(0)->nodeValue + 8.89;
+            } else {
+              $sqm = $observation->getElementsByTagName( "sky-quality" )->item(0)->nodeValue;
+            }
+        
+            $objObservation->setDsObservationProperty($obsId, "SQM", $sqm);
+          }
+
           // The result of the observation!
           $resultNode = $observation->getElementsByTagName( "result" )->item(0);
           // colorContrasts is not mandatory
@@ -953,6 +989,9 @@
           
           if ($observation->getElementsByTagName( "lens" )->item(0)) {
             $objObservation->setDsObservationProperty($obsId, "lensid", $lensId);
+          }
+          if ($observation->getElementsByTagName( "magnification" )->item(0)) {
+            $objObservation->setDsObservationProperty($obsId, "magnification", $observation->getElementsByTagName( "magnification" )->item(0)->nodeValue);
           }
         }
       }

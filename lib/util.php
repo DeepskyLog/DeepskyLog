@@ -710,7 +710,7 @@ class Utils implements iUtils
         $attr = $dom->createAttribute("unit");
         $magPerSquareArcsecond->appendChild($attr);
 
-    $attrText = $dom->createTextNode("mags-per-squarearcseconds");
+    $attrText = $dom->createTextNode("mags-per-squarearcsec");
     $attr->appendChild($attrText);
 	  }
 
