@@ -76,7 +76,7 @@ class Observers implements iObservers
    $objDatabase->execSQL("UPDATE observers SET usedLanguages = '".serialize($language)."' WHERE id=\"$id\"");
   }
   public  function showTopObservers($catalog,$rank,$sort,$min,$max)
-  { global $baseURL,$objObservation,$objUtil,$objObserver,$objObject;
+  { global $baseURL,$objObservation,$objUtil,$objObserver,$objObject,$catalogs;
   	$outputtable = "";   $count=0;
 		$objectsInCatalog=$objObject->getNumberOfObjectsInCatalog($catalog);
     echo "<table width=\"100%\">";
@@ -91,9 +91,9 @@ class Observers implements iObservers
 		{ if(!($value))
 		    $value="-----------";
 		  if($value==stripslashes($catalog))
-		    echo("<option selected=\"selected\" value=\"".$baseURL."index.php?sort=catalog&amp;indexAction=rank_observers&amp;catalog=".urlencode($value)."\">".$value."</option>\n");
+		    echo "<option selected=\"selected\" value=\"".$baseURL."index.php?sort=catalog&amp;indexAction=rank_observers&amp;catalog=".urlencode($value)."\">".$value."</option>";
 		  else
-			  echo("<option value=\"".$baseURL."index.php?sort=catalog&amp;indexAction=rank_observers&amp;catalog=".urlencode($value)."\">".$value."</option>\n");
+			  echo "<option value=\"".$baseURL."index.php?sort=catalog&amp;indexAction=rank_observers&amp;catalog=".urlencode($value)."\">".$value."</option>";
 		}
 		echo "</select>";
 		echo "</td>";

@@ -3,15 +3,6 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else
 {	if($objUtil->checkGetKey('indexAction')=="logout")                                                                 // logout
 	  require_once $instDir."common/control/logout.php";
-	// pagenumbers
-	if(array_key_exists('multiplepagenr',$_GET))
-	  $min = ($_GET['multiplepagenr']-1)*25;
-	elseif(array_key_exists('multiplepagenr',$_POST))
-	  $min = ($_POST['multiplepagenr']-1)*25;
-	elseif(array_key_exists('min',$_GET))
-	  $min=$_GET['min'];
-	else
-	  $min = 0;
 	//listnames
 	$myList=False;
 	$listname='';
@@ -32,6 +23,40 @@ else
 	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
 		setcookie("lco","L",$cookietime, "/");
 	  $_SESSION['lco']="L";
+	}
+	// pagenumbers
+	if(!array_key_exists('steps',$_SESSION))
+	{ if(array_key_exists('steps',$_COOKIE))
+	  { $stepsbase=explode(";",$_COOKIE['steps']);
+	    while(list($key,$value)=each($stepsbase))
+	    { if($value)
+	      { $stepsbaseitems=explode(":",$value);
+	        $_SESSION['steps'][$stepsbaseitems[0]]=$stepsbaseitems[1];
+	      }
+	    }
+	  }
+	}
+  if(($objUtil->checkGetKey('indexAction')=="result_selected_observations")&&(array_key_exists('steps',$_SESSION))&&(array_key_exists("selObs".$_SESSION['lco'],$_SESSION['steps'])))
+    $step=$_SESSION['steps']["selObs".$_SESSION['lco']];
+  else
+    $step = 25;
+	if(array_key_exists('multiplepagenr',$_GET))
+	  $min = ($_GET['multiplepagenr']-1)*$step;
+	elseif(array_key_exists('multiplepagenr',$_POST))
+	  $min = ($_POST['multiplepagenr']-1)*$step;
+	elseif(array_key_exists('min',$_GET))
+	  $min=$_GET['min'];
+	else
+	  $min = 0;
+  if($stepsType=$objUtil->checkGetKey('stepsCommand'))
+	{ $_SESSION['steps'][$stepsType]=$objUtil->checkGetKey('stepsValue',25);
+		reset($_SESSION['steps']);
+		$stepscookie="";
+		while(list($key,$value)=each($_SESSION['steps']))
+		  $stepscookie.=$key.":".$value.";";
+		$cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("steps",$stepscookie,$cookietime, "/");
+		reset($_SESSION['steps']);
 	}
 	//============================================================================== COMMON INSTRUCTIONS
 	while(list($key,$value)=each($modules))                                                                            // change module
@@ -146,20 +171,8 @@ else
 			$_SESSION['addObs']=$_POST['timestamp'];
 		} 
 	}
-	if((array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="validate_observation")
-	&& ($objUtil->checkPostKey('clear_observation')==LangViewObservationButton2))
-	{ $temp=$_POST['object'];
-	  foreach($_POST as $foo=>$bar)
-	    $_POST[$foo]="";
-	  $_POST['object']=$temp;
-		$_POST['timestamp']=time();
-		$_SESSION['addObs']=$_POST['timestamp'];
-	  $_GET['indexAction']="add_observation";
-	}
 	if(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="validate_observation")
 	  $objObservation->validateObservation();
-	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_change_observation")
-	  $objObservation->validateChangeObservation();
 	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_object")
 	  $objObject->validateObject();
 	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_delete_observation")

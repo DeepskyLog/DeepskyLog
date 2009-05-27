@@ -687,7 +687,7 @@ define("LangViewObservationField25", "Minimale grensmagnitude");
 define("LangViewObservationField26", "Maximale grensmagnitude");
 define("LangViewObservationField27", "Minimale seeing");
 define("LangViewObservationField28", "Maximale seeing");
-define("LangViewObservationField29", "Taal voor beschrijving");
+define("LangViewObservationField29", "Taal");
 define("LangViewObservationField30", "Oculair");
 define("LangViewObservationField30Expl", "Nieuw oculair");
 define("LangViewObservationField31", "Filter");
@@ -788,6 +788,7 @@ define("LangNewObservationSubtitle1b", "importeer waarnemingen vanuit CSV bestan
 define("LangNewObservationSubtitle1c", "importeer waarnemingen vanuit OAL bestand");
 define("LangNewObservationSubtitle2", "Controleer de gegevens van het object");
 define("LangNewObservationSubtitle3", "Vul de details van de waarneming in ");
+define("LangNewObservationSubtitle3B", "Wijzig de details van de waarneming ");
 define("LangNewObservationSubtitle3A", "(* verplichte velden)");
 define("LangNewObservationButton1", "Zoek object");
 define("LangNewObservationField1", "Datum *");
@@ -1179,6 +1180,7 @@ $Visibility6="Zichtbaarheid van object is twijfelachtig";
 $Visibility7="Object niet zichtbaar";
 
 //Seeing definitions
+$Seeing0="-----";
 $Seeing1="Uitstekend";
 $Seeing2="Goed";
 $Seeing3="Middelmatig";

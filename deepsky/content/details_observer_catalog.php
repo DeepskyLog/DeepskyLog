@@ -1,38 +1,36 @@
-<?php
-// details_observer_catalog.php
-// shows information of number of catalog objects seen by user
+<?php // details_observer_catalog.php - shows information of number of catalog objects seen by user
 
 if(!$objUtil->checkGetKey('user'))
   throw new Exception("No user supplied in GET in details_observer_catalog.");
-$firstname = $GLOBALS['objObserver']->getObserverProperty($_GET['user'],'firstname');
-$name = $GLOBALS['objObserver']->getObserverProperty($_GET['user'],'name');
-$partof = $objUtil->checkGetKey('partof',0);
+$firstname = $objObserver->getObserverProperty($_GET['user'],'firstname');
+$name = $objObserver->getObserverProperty($_GET['user'],'name');
+$partof=$objUtil->checkGetKey('partof',0);
 
 echo "<div id=\"main\">";
-echo "<h2>".$firstname."&nbsp;".$name."</h2>";
+$objPresentations->line(array("<h5>".$firstname."&nbsp;".$name."</h5>"),"L",array(100),50);
+echo "<hr />";
 $upload_dir='common/observer_pics';
-$dir=opendir($GLOBALS['instDir'].$upload_dir);
+$dir=opendir($instDir.$upload_dir);
 while(FALSE!==($file=readdir($dir)))
-{ if ("." == $file OR ".." == $file)
+{ if(("."==$file)OR(".."==$file))
    continue; // skip current directory and directory above
-  if(fnmatch(html_entity_decode($_GET['user']). ".gif", $file) || fnmatch(html_entity_decode($_GET['user']). ".jpg", $file) || fnmatch(html_entity_decode($_GET['user']). ".png", $file))
+  if(fnmatch(html_entity_decode($_GET['user']). ".gif", $file)||fnmatch(html_entity_decode($_GET['user']). ".jpg", $file)||fnmatch(html_entity_decode($_GET['user']).".png", $file))
     echo "<p><img class=\"viewobserver\" src=\"".$baseURL.$upload_dir."/".$file."\" alt=\"".$firstname."&nbsp;".$name."\"></img></p>";
 }
 $cat=$objUtil->checkGetKey('catalog','M');
-$observedObjectsFromCatalog = $GLOBALS['objObservation']->getObservedFromCatalog($_GET['user'], $cat); // number of objects observed by this observer
+$observedObjectsFromCatalog = $objObservation->getObservedFromCatalog($_GET['user'], $cat); // number of objects observed by this observer
 if($partof)
-  $observedObjectsFromCatalogPartOf = $GLOBALS['objObservation']->getObservedFromCatalogPartOf(html_entity_decode($_GET['user']), $cat); // number of objects observed by this observer	
-$numberOfObjects = $GLOBALS['objObject']->getNumberOfObjectsInCatalog($cat); // number of objects in catalog
-echo LangTopObserversMessierHeader2." ".$cat ." ".LangTopObserversMessierHeader3.(($partof)?LangOrPartOfs:LangNoPartOfsBrackets).":&nbsp;".count($observedObjectsFromCatalog) . " / " . $numberOfObjects;
-echo "</div>";
-echo "<p />";
+  $observedObjectsFromCatalogPartOf=$objObservation->getObservedFromCatalogPartOf(html_entity_decode($_GET['user']), $cat); // number of objects observed by this observer	
+$numberOfObjects=$objObject->getNumberOfObjectsInCatalog($cat); // number of objects in catalog
+$objPresentations->line(array(LangTopObserversMessierHeader2." ".$cat ." ".LangTopObserversMessierHeader3.(($partof)?LangOrPartOfs:LangNoPartOfsBrackets).":&nbsp;".count($observedObjectsFromCatalog) . " / " . $numberOfObjects),
+                        "L",array(100),50);
 if($partof)
-  echo "<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&amp;partof=0\">".LangShowWithoutPartOfs."</a>"; 			
+  $content="<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&amp;partof=0\">".LangShowWithoutPartOfs."</a>"; 			
 else
-  echo "<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&partof=1\">".LangShowWithPartOfs."</a>";			
-echo "<p />";
-$resultarray=$GLOBALS['objObject']->getObjectsFromCatalog($cat);
-echo "<table>";
+  $content="<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&amp;partof=1\">".LangShowWithPartOfs."</a>";			
+$objPresentations->line(array($content),"L",array(100),50);
+$resultarray=$objObject->getObjectsFromCatalog($cat);
+echo "<table style=\"width:100%\">";
 for ($i = 1; $i <= $numberOfObjects; $i++) 
 { if((($i - 1) % 100) == 0)
   { echo  "<tr>";
@@ -92,6 +90,6 @@ for ($i = 1; $i <= $numberOfObjects; $i++)
 	next($resultarray);
 }
 echo "</table>";
-echo "<P>";
+echo "</div>";
 
 ?>

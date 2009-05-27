@@ -25,7 +25,7 @@ class Locations
   }
   public  function getAllLocationsIds($id)                                                   // returns a list with all id's which have the same name as the name of the given id
   { global $objDatabase;
-    return $objDatabase->selectSingleArray("SELECT id FROM locations WHERE name = \"".$objDatabase->selectSingleValue("SELECT name FROM locations WHERE id = \"".$id."\"",'name'),'id');
+    return $objDatabase->selectSingleArray("SELECT id FROM locations WHERE name = \"".$objDatabase->selectSingleValue("SELECT name FROM locations WHERE id = \"".$id."\"",'name')."\"",'id');
   }
   public  function getCountries() // getCountries returns all possible countries
   { global $instDir;

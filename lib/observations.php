@@ -28,7 +28,6 @@ interface iObservations
 	public  function setLocalDateAndTime($id, $date, $time);                                                                                                          	// sets the date and time for the given observation when the time is given in  local time
 	public  function showListObservation($obsKey, $link, $lco); 
 	public  function showObservation($LOid);                                                                                                                            // shows the details of an observation 
-	public  function validateChangeObservation();                                                                                                                       // validate_change_observation.php - checks if the change new observation form is correctly filled in
 	public  function validateDeleteDSObservation();                                                                                                                     // removes the observation with id = $id
 	public  function validateObservation();
 }
@@ -503,7 +502,7 @@ class Observations {
 	  //             "stellar" => "1", "extended" => "0", "resolved" => "0", "mottled" => "1",
   	//             "clusterType" => "A", "unusualShape" => "0", "partlyUnresolved" => "1", 
   	//             "colorContrasts" => "0", "minSQM" => "18.9", "maxSQM" => "21.2";
-		global $objInstrument,$objEyepiece,$objFilter,$objLens,$objLocation,$objDatabase;
+		global $objInstrument,$objEyepiece,$objFilter,$objLens,$objLocation,$objDatabase,$loggedUser;
 		$object = "";
 		$sqland = "";
 		$alternative = "";
@@ -585,12 +584,12 @@ class Observations {
 			$sqland .= ") ";
 		}
 		if (isset ($queries["location"]) && ($queries["location"] != "")) {
-			$sqland .= "AND (observations.locationid = \"" . $queries["location"] . "\" ";
+			$sqland .= "AND (observations.locationid=".$queries["location"]." ";
 			if (!$exactinstrumentlocation) {
-				$locs = $objLocation->getAllLocationsIds($queries["location"]);
-				while (list ($key, $value) = each($locs))
-					if ($value != $queries["location"])
-						$sqland .= " || observations.locationid = \"" . $value . "\" ";
+				$locs=$objLocation->getAllLocationsIds($queries["location"]);
+				while (list ($key,$value)=each($locs))
+					if($value!=$queries["location"])
+						$sqland.=" || observations.locationid = ".$key." ";
 			}
 			$sqland .= ") ";
 		}
@@ -703,7 +702,7 @@ class Observations {
 		if (!array_key_exists('countquery', $queries))
 			$sql .= " ORDER BY observationid DESC";
 		$sql = $sql . ";";
-// echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
+ //echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
 		$run = mysql_query($sql) or die(mysql_error());
 		if (!array_key_exists('countquery', $queries)) 
 		{ $j = 0;
@@ -1007,7 +1006,7 @@ class Observations {
 					echo "<td><a  target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($value['instrumentid'])."\">".(($value['instrumentname']=="Naked eye")?InstrumentsNakedEye:$value['instrumentname']." &nbsp;(".round($value['instrumentdiameter'], 0)."&nbsp;mm)")."</a></td>";
 					echo "<td>".date($dateformat,mktime(0, 0, 0, $date[1], $date[2], $date[0]))."</td>";
 					if($lco=="O")
-					{ echo "<td>".(($LOid)?("<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($LOinstrumentId)."\">".$LOinstrument." &nbsp;").(($LOinstrument!=InstrumentsNakedEye)?("(".$LOinstrumentsize."&nbsp;mm".")"):""):"")."</a>"."</td>";
+					{ echo "<td>".(($LOid)?"<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($LOinstrumentId)."\">".$LOinstrument." &nbsp;".(($LOinstrument!=InstrumentsNakedEye)?("(".$LOinstrumentsize."&nbsp;mm".")"):"")."</a>":"")."</td>";
 					  echo "<td>".((($lco=="O")&&$LOid)?date($dateformat, mktime(0, 0, 0, $LOdate[1], $LOdate[2], $LOdate[0])):"")."</td>";
 					}
 					echo "<td>";
@@ -1053,7 +1052,7 @@ class Observations {
 					  if($lco=="C")
 			        echo "<td colspan=\"5\">".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\" alt=\"\"></img></a>"."</p>":"")."</td>";
 			  	  elseif($lco=="O")
-				    { echo "<td colspan=\"4>\"".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\" alt=\"\"></img></a>"."</p>":"")."</td>";
+				    { echo "<td colspan=\"4\">".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\" alt=\"\"></img></a>"."</p>":"")."</td>";
 					    echo "<td colspan=\"3\">".(($LOdescription&&($this->getDsObservationProperty($LOid,'hasDrawing')))?"<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/".$LOid.".jpg" . "\"> <img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$LOid."_resized.jpg\" alt=\"\"></img></a>"."</p>":"")."</td>";
 					   }
 			  	  echo "</tr>";		
@@ -1127,14 +1126,14 @@ class Observations {
 		                     "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($this->getDsObservationProperty($LOid,'instrumentid'))."\">".$inst."</a>",
 		                     LangViewObservationField4,
                          "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=" . urlencode($this->getDsObservationProperty($LOid,'locationid')) . "\">" . $GLOBALS['objLocation']->getLocationPropertyFromId($this->getDsObservationProperty($LOid,'locationid'),'name') . "</a>"),
-                         "RLRLRL",array(10,23,13,20,15,19),25,array("type30","type30","type30","type30","type30","type30"));                                     
+                         "RLRLRL",array(15,22,15,19,15,14),25,array("type30","type30","type30","type30","type30","type30"));                                     
 		$objPresentations->line(array(LangViewObservationField5.$dateTimeLabelText,
                          $dateTimeText,
   	                     LangViewObservationField6,
 		                     (($seeing)?$GLOBALS['Seeing'.$seeing]:"-"),
 		                     LangViewObservationField7."/".LangViewObservationField34,
 		                     (($limmag=$this->getDsObservationProperty($LOid,'limmag'))?sprintf("%1.1f", $limmag):"-")."/".((($sqm=$this->getDsObservationProperty($LOid,'SQM'))!=-1)?sprintf("%2.1f", $sqm):'-')),
-                         "RLRLRL",array(10,23,13,20,15,19),25,array("type20","type20","type20","type20","type20","type20"));                                     
+                         "RLRLRL",array(15,22,15,19,15,14),25,array("type20","type20","type20","type20","type20","type20"));                                     
 		$objPresentations->line(array(LangViewObservationField30,
 		                     (((($eyepiece=$this->getDsObservationProperty($LOid,'eyepieceid'))=="")||($eyepiece==0))?"-":"<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_eyepiece&amp;eyepiece=".urlencode($eyepiece)."\">" .stripslashes($objEyepiece->getEyepiecePropertyFromId($eyepiece,'name')). "</a>").
 		                     (((($mag=$this->getDsObservationProperty($LOid,'magnification'))==""))?"":" (".$mag."x)"),
@@ -1142,14 +1141,14 @@ class Observations {
 		                     (((($filter=$this->getDsObservationProperty($LOid,'filterid'))=="")||($filter==0))?"-":"<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_filter&amp;filter=".urlencode($filter)."\">".$objFilter->getFilterPropertyFromId($filter,'name')."</a>"),
 		                     LangViewObservationField32,
 		                     (((($lens=$this->getDsObservationProperty($LOid,'lensid'))=="")||($lens==0))?"-":"<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_lens&amp;lens=".urlencode($lens)."\">".$objLens->getLensPropertyFromId($lens,'name')."</a>")),
-                         "RLRLRL",array(10,23,13,20,15,19),25,array("type30","type30","type30","type30","type30","type30"));                                     
+                         "RLRLRL",array(15,22,15,19,15,14),25,array("type30","type30","type30","type30","type30","type30"));                                     
 		$objPresentations->line(array(LangViewObservationField22,
 		                     (($visibility=$this->getDsObservationProperty($LOid,'visibility'))?$GLOBALS['Visibility'.$visibility]:"-"),
 		                     LangViewObservationField33,
 		                     $diameterText,
 		                     LangViewObservationField40,
 		                     $charTypeText),
-                         "RLRLRL",array(10,23,13,20,15,19),25,array("type20","type20","type20","type20","type20","type20"));                                     
+                         "RLRLRL",array(15,22,15,19,15,14),25,array("type20","type20","type20","type20","type20","type20"));                                     
 		echo $details1Text." ".$details2Text;
 		echo "<br />";
 		echo $objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
@@ -1158,188 +1157,11 @@ class Observations {
 		echo "<br /><br />";
 		echo (($myList)?"<a target=\"_top\" href=\"".$link.$linkamp."addObservationToList=".urlencode($LOid)."\">".LangViewObservationField44.$listname_ss."</a>&nbsp;-&nbsp;":'');
 		if($objUtil->checkAdminOrUserID($this->getDsObservationProperty($LOid,'observerid')))
-		{ //echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=adapt_observation&amp;observation=" . $LOid . "\">" . LangChangeObservationTitle . "</a>";
-		  echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=add_observation&amp;observation=" . $LOid . "\">" . LangChangeObservationTitle . "</a>";
+		{ echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=add_observation&amp;observation=" . $LOid . "\">" . LangChangeObservationTitle . "</a>";
 		  echo "&nbsp;-&nbsp;";
 		  echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=validate_delete_observation&amp;observationid=".$LOid."\">".LangDeleteObservation."</a>";
 		}
-		echo "</p>";
 		echo "<hr />";
-	}
-	public function validateChangeObservation() // validate_change_observation.php - checks if the change new observation form is correctly filled in
-	{ global $objUtil,$objObservation,$maxFileSize,$objObserver,$loggedUser, $inIndex;
-				if(!($loggedUser))
-			throw new Exception(LangException002b);
-	  if (array_key_exists('changeobservation', $_POST) && $_POST['changeobservation']) // pushed change observation button
-		{ if (!$_POST['day'] || !$_POST['month'] || !$_POST['year'] || $_POST['location'] == "1" || !$_POST['instrument'] || !$_POST['description'])
-				throw new Exception(LangValidateObservationMessage1);
-			elseif ($_FILES['drawing']['size'] > $maxFileSize) // file size of drawing too big
-			  throw new Exception(LangValidateObservationMessage6);
-			elseif (array_key_exists('observationid', $_POST) && $_POST['observationid']) // all fields filled in and observationid given
-			{ if ($objObservation->getDsObservationProperty($_POST['observationid'],'observerid') == $_SESSION['deepskylog_id']) // only allowed to change your own observations
-				{ $date = $_POST['year'] . sprintf("%02d", $_POST['month']) . sprintf("%02d", $_POST['day']);
-					if (array_key_exists('hours', $_POST) && ($_POST['hours'] != '')) {
-						if (array_key_exists('minutes', $_POST) && $_POST['minutes']) {
-							$time = ($_POST['hours'] * 100) + $_POST['minutes'];
-						} else {
-							$time = ($_POST['hours'] * 100);
-						}
-					} else {
-						$time = -9999;
-					}		
-					$objObservation->setDsObservationProperty($_POST['observationid'],'description', html_entity_decode(nl2br($_POST['description']), ENT_COMPAT, "ISO-8859-15") );
-					$objObservation->setDsObservationProperty($_POST['observationid'],'clusterType', $objUtil->checkPostKey('clusterType'));
-					if ($_POST['filter']) {
-						$objObservation->setDsObservationProperty($_POST['observationid'],'filterid', $_POST['filter']);
-					} else {
-						$objObservation->setDsObservationProperty($_POST['observationid'],'filterid', 0);
-					}		
-					if ($_POST['lens']) {
-						$objObservation->setDsObservationProperty($_POST['observationid'],'lensid', $_POST['lens']);
-					} else {
-						$objObservation->setDsObservationProperty($_POST['observationid'],'lensid', 0);
-					}
-					if ($_POST['eyepiece']) {
-						$objObservation->setDsObservationProperty($_POST['observationid'],'eyepieceid', $_POST['eyepiece']);
-					} else {
-						$objObservation->setDsObservationProperty($_POST['observationid'],'eyepieceid', 0);
-					}
-					if ($_POST['magnification']) {
-						$objObservation->setDsObservationProperty($_POST['observationid'],'magnification', $_POST['magnification']);
-					} else {
-						$objObservation->setDsObservationProperty($_POST['observationid'],'magnification', '');
-					}
-					if ($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT')) 
-					{ $objObservation->setDsObservationProperty($_POST['observationid'],'time', $time);
-						$objObservation->setDsObservationProperty($_POST['observationid'],'date', $date);
-					}
-					else
-					  $objObservation->setLocalDateAndTime($_POST['observationid'], $date, $time);
-					$objObservation->setDsObservationProperty($_POST['observationid'],'instrumentid', $_POST['instrument']);
-					$objObservation->setDsObservationProperty($_POST['observationid'],'locationid', $_POST['location']);
-					$objObservation->setDsObservationProperty($_POST['observationid'],'seeing', (($_POST['seeing']==-1)?"NULL":$_POST['seeing']));
-					if (array_key_exists('limit', $_POST) && $_POST['limit']) {
-						if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST['limit'], $matches)) // limiting magnitude like X.X or X,X with X a number between 0 and 9
-						{ // valid limiting magnitude
-							$_SESSION['limit'] = $matches[1] . ".";
-							if ($matches[2] != "") {
-								$_SESSION['limit'] = $_SESSION['limit'] . $matches[2];
-							} else {
-								$_SESSION['limit'] = $_SESSION['limit'] . "0";
-							}
-						} else // invalid limiting magnitude
-							{
-							$_SESSION['limit'] = ""; // clear current magnitude limit
-						}
-					} else
-						$_SESSION['limit'] = "";
-					$objObservation->setDsObservationProperty($_POST['observationid'],'limmag', ($_SESSION['limit']?preg_replace("/,/", ".", $_SESSION['limit']):"NULL"));
-					$objObservation->setDsObservationProperty($_POST['observationid'],'language', $_POST['description_language']);
-					if (array_key_exists('visibility', $_POST) && $_POST['visibility'])
-						$visibility = $_POST['visibility'];
-					else
-						$visibility = 0;
-					$objObservation->setDsObservationProperty($_POST['observationid'],'visibility', $visibility);
-		
-					if ($objUtil->checkPostKey('sqm'))
-						if (ereg('([0-9]{1})([0-9]{0,1})[.,]{0,1}([0-9]{0,1})', $_POST['sqm'], $matches)) // sqm value
-							$_POST['sqm'] = $matches[1] . $matches[2] . "." . (($matches[3]) ? $matches[3] : "0");
-						else
-							$_POST['sqm'] = ""; // clear current magnitude limit
-					if ($objUtil->checkPostKey('largeDiam'))
-						if (ereg('([0-9]+)[.,]{0,1}([0-9]{0,1})', $_POST['largeDiam'], $matches)) // large diameter
-							$_POST['largeDiam'] = (($matches[1]) ? $matches[1] : "0") . "." . (($matches[2]) ? $matches[2] : "0");
-						else // clear current large diameter
-							$_POST['largeDiam'] = "";
-					if ($objUtil->checkPostKey('smallDiam'))
-						if (ereg('([0-9]+)[.,]{0,1}([0-9]{0,1})', $_POST['smallDiam'], $matches)) // large diameter
-							$_POST['smallDiam'] = (($matches[1]) ? $matches[1] : "0") . "." . (($matches[2]) ? $matches[2] : "0");
-						else // clear current large diameter
-							$_POST['smallDiam'] = "";
-		
-					if ($_POST['smallDiam'] > $_POST['largeDiam']) {
-						$tmp = $_POST['largeDiam'];
-						$_POST['largeDiam'] = $_POST['smallDiam'];
-						$_POST['smallDiam'] = $tmp;
-					}
-					if ($objUtil->checkPostKey('size_units') == "min") {
-						$_POST['smallDiam'] = $_POST['smallDiam'] * 60.0;
-						$_POST['largeDiam'] = $_POST['largeDiam'] * 60.0;
-					}
-					if ($_POST['sqm'])
-						$objObservation->setDsObservationProperty($_POST['observationid'],'SQM',  preg_replace("/,/", ".", $_POST['sqm']));
-					if ($_POST['smallDiam'])
-						$objObservation->setDsObservationProperty($_POST['observationid'],'smallDiameter', $_POST['smallDiam']);
-					if ($_POST['largeDiam'])
-						$objObservation->setDsObservationProperty($_POST['observationid'],'largeDiameter', $_POST['largeDiam']);
-					if (array_key_exists('stellarextended', $_POST)&&($_POST['stellarextended']=="stellar"))
-						$objObservation->setDsObservationProperty($_POST['observationid'],'stellar', 1);
-					else
-						$objObservation->setDsObservationProperty($_POST['observationid'],'stellar', -1);
-					if (array_key_exists('stellarextended', $_POST)&&($_POST['stellarextended']=="extended"))
-						$objObservation->setDsObservationProperty($_POST['observationid'],'extended', 1);
-					else
-						$objObservation->setDsObservationProperty($_POST['observationid'],'extended', -1);
-					if (array_key_exists('resolved', $_POST))
-						$objObservation->setDsObservationProperty($_POST['observationid'],'resolved', 1);
-					else
-						$objObservation->setDsObservationProperty($_POST['observationid'],'resolved', -1);
-					if (array_key_exists('mottled', $_POST))
-						$objObservation->setDsObservationProperty($_POST['observationid'],'mottled', 1);
-					else
-						$objObservation->setDsObservationProperty($_POST['observationid'],'mottled', -1);
-					if (array_key_exists('unusualShape', $_POST))
-						$objObservation->setDsObservationProperty($_POST['observationid'],'unusualShape', 1);
-					else
-						$objObservation->setDsObservationProperty($_POST['observationid'],'unusualShape', -1);
-					if (array_key_exists('partlyUnresolved', $_POST))
-						$objObservation->setDsObservationProperty($_POST['observationid'],'partlyUnresolved', 1);
-					else
-						$objObservation->setDsObservationProperty($_POST['observationid'],'partlyUnresolved', -1);
-					if (array_key_exists('colorContrasts', $_POST))
-						$objObservation->setDsObservationProperty($_POST['observationid'],'colorContrasts', 1);
-					else
-						$objObservation->setDsObservationProperty($_POST['observationid'],'colorContrasts', -1);
-		
-					if ($_FILES['drawing']['tmp_name'] != "") {
-						$upload_dir = $instDir . 'deepsky/drawings';
-						$dir = opendir($upload_dir);
-						// resize code		
-						include $instDir . "common/control/resize.php";
-						$original_image = $_FILES['drawing']['tmp_name'];
-						$destination_image = $upload_dir . "/" . $_POST['observationid'] . "_resized.jpg";
-						$max_width = "490";
-						$max_height = "490";
-						$resample_quality = "100";
-						$new_image = image_createThumb($original_image, $destination_image, $max_width, $max_height, $resample_quality);
-						move_uploaded_file($_FILES['drawing']['tmp_name'], $upload_dir . "/" . $_POST['observationid'] . ".jpg");
-				    $objObservation->setDsObservationProperty($_POST['observationid'],'hasDrawing',1);
-					}		
-					// save current details for faster submission of multiple observations
-					$_SESSION['newObsYear'] = $_POST['year']; // save current details for faster submission of multiple observations
-			  	$_SESSION['newObsMonth'] = $_POST['month'];
-  				$_SESSION['newObsDay'] = $_POST['day'];
-	  			$_SESSION['newObsInstrument'] = $_POST['instrument'];
-		  		$_SESSION['newObsLocation'] = $_POST['location'];
-			  	$_SESSION['newObsLimit'] = $_POST['limit'];
-				  $_SESSION['newObsSqm'] = $_POST['sqm'];
-  				$_SESSION['newObsSQM'] = $_POST['sqm'];
-	  			$_SESSION['newObsSeeing'] = $_POST['seeing'];
-		  		$_SESSION['newObsLanguage'] = $_POST['description_language'];
-			  	$_SESSION['newObsSavedata'] = "yes";
-				  $_GET['indexAction'] = "detail_observation";
-				  $_GET['dalm'] = 'D';
-				  $_GET['observation'] = $_POST['observationid'];
-				} // end if own observation.php
-				else // try to change an observation which doesn't belong to the observer logged in
-					{
-					$_GET['indexAction'] = 'default_action';
-				}
-			} else // no observation id given
-				{
-				$_GET['indexAction'] = 'default_action';
-			}
-		}
 	}
 	public  function validateDeleteDSObservation()                                                                                                                   // removes the observation with id = $id
 	{ global $objDatabase,$objUtil;
@@ -1362,8 +1184,8 @@ class Observations {
 			$_GET['dalm']='D';
 			//$_GET['observation']=$current_observation;
 		}
-		elseif ((!$_POST['day']) || (!$_POST['month']) || (!$_POST['year']) || ($_POST['site'] == "1") || (!$_POST['instrument']) || (!$_POST['description'])) {
-			if ($objUtil->checkPostKey('limit'))
+		elseif((!$_POST['day'])||(!$_POST['month'])||(!$_POST['year'])||($_POST['site'] == "1")||(!$_POST['instrument'])||(!$_POST['description']))
+		{if ($objUtil->checkPostKey('limit'))
 				if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST['limit'], $matches)) // limiting magnitude like X.X or X,X with X a number between 0 and 9
 					$_POST['limit'] = $matches[1] . "." . (($matches[2]) ? $matches[2] : "0");
 				else
@@ -1416,7 +1238,26 @@ class Observations {
 						$_POST['limit'] = $matches[1] . "." . (($matches[2]) ? $matches[2] : "0");
 					else // clear current magnitude limit
 						$_POST['limit'] = "";
-				$current_observation = $objObservation->addDSObservation($_POST['object'], $_SESSION['deepskylog_id'], $_POST['instrument'], $_POST['site'], $date, $time, nl2br($_POST['description']), $_POST['seeing'], $_POST['limit'], $objUtil->checkPostKey('visibility'), $_POST['description_language']);
+				if($_POST['observationid'])
+				{ $current_observation = $_POST['observationid'];
+				  if(!($objUtil->checkAdminOrUserID($objObservation->getDsObservationProperty($current_observation,'observerid'))))
+				  { $indexAction='';
+				  	return;
+				  }
+				  else
+				  { $objObservation->setDsObservationProperty($current_observation,'instrumentid',$_POST['instrument']);
+				  	$objObservation->setDsObservationProperty($current_observation,'locationid',$_POST['site']);
+				  	$objObservation->setDsObservationProperty($current_observation,'date',$date);
+				  	$objObservation->setDsObservationProperty($current_observation,'time',$time);
+				  	$objObservation->setDsObservationProperty($current_observation,'description',nl2br($_POST['description']));
+				  	$objObservation->setDsObservationProperty($current_observation,'seeing',$_POST['seeing']);
+				  	$objObservation->setDsObservationProperty($current_observation,'limmag',$_POST['limit']);
+				  	$objObservation->setDsObservationProperty($current_observation,'visibility',$objUtil->checkPostKey('visibility'));
+				  	$objObservation->setDsObservationProperty($current_observation,'language',$_POST['description_language']);
+				  }
+				}
+				else	
+				  $current_observation = $objObservation->addDSObservation($_POST['object'], $_SESSION['deepskylog_id'], $_POST['instrument'], $_POST['site'], $date, $time, nl2br($_POST['description']), $_POST['seeing'], $_POST['limit'], $objUtil->checkPostKey('visibility'), $_POST['description_language']);
 				$_SESSION['addObs'] = '';
 				$_SESSION['Qobs'] = array ();
 				$_SESSION['QobsParams'] = array ();

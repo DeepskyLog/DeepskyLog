@@ -242,6 +242,9 @@ ul{
 li {
   list-style-image : url('images/arrow.gif');list-style-position:inside
 }
+.inputDiv {
+	background-color : #DDDDDD;
+}
 .inputfield {
   font-weight      : normal;
 	font-style       : italic;
@@ -276,7 +279,7 @@ li {
 
 textarea.description {
    height          : 120px;
-   width           : 100%;
+   width           : 98%;
 }
 textarea.listdescription {
    height          : 120px;

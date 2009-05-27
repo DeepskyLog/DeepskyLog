@@ -17,8 +17,6 @@ while (list ($key, $value) = each($_GET))
 //  while(list($key,$value)=each($usedLanguages))
 //	  $link2=$link2.'&amp;'.$value.'='.$value; 
 $link = $link2 . '&amp;sort=' . $_GET['sort'] . '&amp;sortdirection=' . $_GET['sortdirection'];
-
-$step = 25;
 //====================== the remainder of the pages formats the page output and calls showObject (if necessary) and showObservations
 //=============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT BEFORE SHOWING ITS OBSERVATIONS =====================================================================================
 if ($object && $objObject->getExactDsObject($object)) 
@@ -122,23 +120,29 @@ else
   
 	$_GET['min']=$min;
 	$_GET['max']=$max;
-	if($FF)
+	if(($FF)&&($_SESSION['lco'] == "O"))
 	{ echo "<script type=\"text/javascript\">";
     echo "theResizeElement='obs_list';";
-    echo "theResizeSize=65;";
+    echo "theResizeSize=100;";
+    echo "</script>";
+	}
+	elseif(($FF))
+	{ echo "<script type=\"text/javascript\">";
+    echo "theResizeElement='obs_list';";
+    echo "theResizeSize=75;";
     echo "</script>";
 	}
 	$objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco']);
 	echo "<hr />";
 	if ($_SESSION['lco'] == "O")
-		echo "<p align=\"right\">" . LangOverviewObservationsHeader5a;
-	echo "<div style=\"width:100%;height:20px;\">";
-	$objPresentations->promptWithLink(LangOverviewObservations10, LangOverviewObservations11, $baseURL . "observations.pdf?SID=Qobs", LangExecuteQueryObjectsMessage4);
-	echo " - ";
-	echo "<a href=\"" . $baseURL . "observations.csv\" target=\"new_window\">" . LangExecuteQueryObjectsMessage5 . "</a> - ";
-	echo "<a href=\"" . $baseURL . "observations.xml\" target=\"new_window\">" . LangExecuteQueryObjectsMessage10 . "</a> - ";
-	echo "<a href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a>";
-  echo "</div>";
+		echo "<p align=\"right\">" . LangOverviewObservationsHeader5a."</p>";
+	$content1 =$objPresentations->promptWithLinkText(LangOverviewObservations10, LangOverviewObservations11, $baseURL . "observations.pdf?SID=Qobs", LangExecuteQueryObjectsMessage4);
+	$content1.=" - ";
+	$content1.="<a href=\"" . $baseURL . "observations.csv\" target=\"new_window\">" . LangExecuteQueryObjectsMessage5 . "</a> - ";
+	$content1.="<a href=\"" . $baseURL . "observations.xml\" target=\"new_window\">" . LangExecuteQueryObjectsMessage10 . "</a> - ";
+	$content1.="<a href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a>";
+  $content2=$objUtil->printStepsPerPage3($link,"selObs".$_SESSION['lco'],$step);
+	$objPresentations->line(array($content1,$content2),"LR",array(70,30),25);
   echo "</div>";
 }
 ?>

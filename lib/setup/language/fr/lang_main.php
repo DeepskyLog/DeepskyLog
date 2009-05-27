@@ -690,7 +690,7 @@ define("LangViewObservationField25", "Magnitude limite minimale");
 define("LangViewObservationField26", "Magnitude limite  maximale");
 define("LangViewObservationField27", "Seeing minimale");
 define("LangViewObservationField28", "seeing maximale");
-define("LangViewObservationField29", "Langue de la description");
+define("LangViewObservationField29", "Langue");
 define("LangViewObservationField30", "Oculaire");
 define("LangViewObservationField30Expl", "Rajoutez un nouvel oculaire");
 define("LangViewObservationField31", "Filtre");
@@ -791,6 +791,7 @@ define("LangNewObservationSubtitle1b", "importez les observations &agrave; parti
 define("LangNewObservationSubtitle1c", "importez les observations &agrave; partir d'un fichier comast (xml)");
 define("LangNewObservationSubtitle2", "Contr&ocirc;lez les donn&eacute;es de l'objet");
 define("LangNewObservationSubtitle3", "Remplissez les d&eacute;tails de l'observation ");
+define("LangNewObservationSubtitle3B", "Changez les d&eacute;tails de l'observation ");
 define("LangNewObservationSubtitle3A", "(*= champs obligatoires)");
 define("LangNewObservationButton1", "Recherchez l'objet");
 define("LangNewObservationField1", "Date *");
@@ -1181,6 +1182,7 @@ $Visibility6="Visibilit&eacute; de l'objet est douteuse";
 $Visibility7="L'objet n'est pas visible";
 
 //Seeing definitions
+$Seeing0="-----";
 $Seeing1="Excellent";
 $Seeing2="Bien";
 $Seeing3="M&eacute;diocre";

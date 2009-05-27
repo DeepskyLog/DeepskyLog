@@ -99,9 +99,9 @@ if(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=="setLanguage"))
 }
 $language=$objLanguage->getPath($_SESSION['lang']);
 if($loggedUser)
-{ $allLanguages=$objLanguage->getAllLanguages($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'language'));
+{ $allLanguages=$objLanguage->getAllLanguages($objObserver->getObserverProperty($loggedUser,'language'));
   $_SESSION['alllanguages']=$allLanguages; 
-  $usedLanguages=$objObserver->getUsedLanguages($_SESSION['deepskylog_id']);
+  $usedLanguages=$objObserver->getUsedLanguages($loggedUser);
 }
 else
 { $allLanguages=$objLanguage->getAllLanguages($_SESSION['lang']);

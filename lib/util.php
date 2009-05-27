@@ -24,6 +24,7 @@ interface iUtils
   public  function printNewListHeader(&$list, $link, $min, $step, $total);     // prints the << < Nr > >> navigations, allowing to enter a page number in the center field
   public  function printNewListHeader2(&$list, $link, $min, $step, $total=0,$showNumberOfRecords=true,$showArrows=true);
   public  function printNewListHeader3(&$list, $link, $min, $step, $total=0,$showNumberOfRecords=true,$showArrows=true);
+  public  function printStepsPerPage3($link,$detaillink,$steps=25);
   public  function rssObservations();                                          // Creates an rss feed
   //private function utilitiesCheckIndexActionDSquickPick();                     // returns the includefile if one of the quickpick buttons is pressed
 //private function utilitiesCheckIndexActionAdmin($action, $includefile);      // returns the includefile for the specified indexs action after checking it is an admin who is looged in
@@ -1618,6 +1619,12 @@ class Utils implements iUtils
 	  $content.= "</form>";
 	  return array($min,$max,$content);
   }
+  public function printStepsPerPage3($link,$detaillink,$steps=25)
+  { global $baseURL;
+    $content ="Items per page: ";
+    $content.="<input name=\"stepsPerPage".$detaillink."\" id=\"stepsPerPage".$detaillink."\" class=\"centered\" value=\"".$steps."\" size=\"3\" onchange=\"location='".$link."&amp;stepsCommand=".$detaillink."&amp;stepsValue='+this.value;\" />";
+    return $content;
+  }
   public function rssObservations()  // Creates an rss feed for DeepskyLog
 	{
 	  global $objObservation, $objInstrument, $objLocation, $objPresentations, $objObserver, $baseURL;
@@ -1891,8 +1898,7 @@ class Utils implements iUtils
     }
   }
   public  function utilitiesDispatchIndexAction()
-  { if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_observation'                  ,'deepsky/content/change_observation.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_csv'                            ,'deepsky/content/new_observationcsv.php')))
+  { if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_csv'                            ,'deepsky/content/new_observationcsv.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_xml'                            ,'deepsky/content/new_observationxml.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_object'                         ,'deepsky/content/new_object.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_observation'                    ,'deepsky/content/new_observation.php'))) 

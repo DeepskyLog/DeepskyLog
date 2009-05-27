@@ -18,7 +18,7 @@
 //  LangAddEyepieceExisting
 //  LangAddInstrumentManually
 //  LangValidateEyepieceMessage6
-
+//  define("LangNewObservationSubtitle3B", "Change the observation details ");
 
 
 
@@ -688,7 +688,7 @@ define("LangViewObservationField25", "Minimum schw&auml;chster Stern");
 define("LangViewObservationField26", "Maximum schw&auml;chster Stern");
 define("LangViewObservationField27", "Minimum Seeing");
 define("LangViewObservationField28", "Maximum Seeing");
-define("LangViewObservationField29", "Sprache f&uuml;r die Beschreibung");
+define("LangViewObservationField29", "Sprache");
 define("LangViewObservationField30", "Okular");
 define("LangViewObservationField30Expl", "Okular hinzuf&uuml;gen");
 define("LangViewObservationField31", "Filter");
@@ -789,6 +789,7 @@ define("LangNewObservationSubtitle1b", "Beobachtungen von CSV Datei importieren"
 define("LangNewObservationSubtitle1c", "Beobachtungen von OAL (XML) Datei importieren");
 define("LangNewObservationSubtitle2", "Pr&uuml;fen der Objekt details");
 define("LangNewObservationSubtitle3", "Beobachtungsdetail Eingabe ");
+define("LangNewObservationSubtitle3B", "Change the observation details ");
 define("LangNewObservationSubtitle3A", "(* Pflichtfelder)");
 define("LangNewObservationButton1", "Objekt suche");
 define("LangNewObservationField1", "Datum *");
@@ -1178,6 +1179,7 @@ $Visibility6="Sichtung des Objektes sehr fraglich";
 $Visibility7="Objekt sicher nicht zu sehen";
 
 //Seeing definitions
+$Seeing0="-----";
 $Seeing1="Exzellent";
 $Seeing2="Gut";
 $Seeing3="Moderat";

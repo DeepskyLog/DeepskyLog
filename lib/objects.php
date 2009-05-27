@@ -793,7 +793,7 @@ class Objects implements iObjects
    	  echo LangViewObjectNGCDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
    	  echo "</td>";
   	  echo "<td colspan=\"3\">";
-  	  echo $descriptionDsOject;
+  	  echo htmlentities($descriptionDsOject);
   	  echo "</td>";
   	  echo "</tr>";
     }

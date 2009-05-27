@@ -688,7 +688,7 @@ define("LangViewObservationField25", "Minimum limiting magnitude");
 define("LangViewObservationField26", "Maximum limiting magnitude");
 define("LangViewObservationField27", "Minimum seeing");
 define("LangViewObservationField28", "Maximum seeing");
-define("LangViewObservationField29", "Language for description");
+define("LangViewObservationField29", "Language");
 define("LangViewObservationField30", "Eyepiece");
 define("LangViewObservationField30Expl", "Add a new eyepiece");
 define("LangViewObservationField31", "Filter");
@@ -788,6 +788,7 @@ define("LangNewObservationSubtitle1b", "import observations from a CSV file");
 define("LangNewObservationSubtitle1c", "import observations from an OAL (XML) file");
 define("LangNewObservationSubtitle2", "Check object details");
 define("LangNewObservationSubtitle3", "Enter observation details ");
+define("LangNewObservationSubtitle3B", "Change the observation details ");
 define("LangNewObservationSubtitle3A", "(* required fields)");
 define("LangNewObservationButton1", "Search object");
 define("LangNewObservationField1", "Date *");
@@ -1179,6 +1180,7 @@ $Visibility6="Perception of object is very questionable";
 $Visibility7="Object definitely not seen";
 
 //Seeing definitions
+$Seeing0="-----";
 $Seeing1="Excellent";
 $Seeing2="Good";
 $Seeing3="Moderate";

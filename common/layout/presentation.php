@@ -12,6 +12,7 @@ interface iPresentation
   public  function presentationInt($value, $nullcontition='', $nullvalue='');          // if the null condtion is met, it returns the nullvalue, otherwise returns the value
   public  function presentationInt1($value, $nullcondition='', $nullvalue='');         // if the null condtion is met, it returns the nullvalue, otherwise returns the value formatted %1.1f
   public  function promptWithLink($prompt,$promptDefault,$javaLink,$text);             // displays an anchor link with $text as text, showing when clicked an inputbox with the question $prompt and $promptDefault answer, jumping to $javalink (java format) afterwards 
+  public  function promptWithLinkText($prompt,$promptDefault,$javaLink,$text);         // returns an anchor link with $text as text, showing when clicked an inputbox with the question $prompt and $promptDefault answer, jumping to $javalink (java format) afterwards 
   public  function raArgoToString($ra);
   public  function raToString($ra);
   public  function raToStringDSL($ra);
@@ -171,6 +172,9 @@ class Presentations implements iPresentation
   }
   public function promptWithLink($prompt,$promptDefault,$javaLink,$text)
 	{ echo "<a href=\"#\" onclick=\"thetitle = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;pdfTitle='+thetitle; return false;\"	target=\"new_window\">".$text."</a>";
+  }
+  public function promptWithLinkText($prompt,$promptDefault,$javaLink,$text)
+	{ return "<a href=\"#\" onclick=\"thetitle = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;pdfTitle='+thetitle; return false;\"	target=\"new_window\">".$text."</a>";
   }
   public  function raArgoToString($ra)
   { $ra_hours  =floor($ra);
