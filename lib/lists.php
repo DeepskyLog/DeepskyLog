@@ -167,22 +167,25 @@ class Lists implements iLists
  public  function ObjectFromToInList($from, $to)
  { global $loggedUser,$listname,$objDatabase,$myList;
    if(!($myList))
-     return;
-   $max=$objDatabase->selectSingleValue("SELECT MAX(objectplace) AS ObjPl FROM observerobjectlist WHERE observerid = \"$observer\" AND listname = \"$listname\"",'ObjPl');
+     return '';
+   $max=$objDatabase->selectSingleValue("SELECT MAX(objectplace) AS ObjPl FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND listname = \"".$listname."\"",'ObjPl');
 	 if(($from>0)&&($from<=$max)&&($to>0)&&($to<=$max)&&($from!=$to))
 	 { if($from<$to)
 		 { $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=-1 WHERE ((observerid=\"".$loggedUser."\") AND (listname=\"".$listname."\") AND (objectplace=".$from."))");
        $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=objectplace-1 WHERE ((observerid=\"".$loggedUser."\") AND (listname=\"".$listname."\") AND (objectplace>".$from.") AND (objectplace<=".$to."))");
        $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=".$to." WHERE ((observerid=\"".$loggedUser."\") AND (listname=\"".$listname."\") AND (objectplace=-1))");
-		}
-		else
-		{ $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=-1 WHERE ((observerid=\"".$loggedUser."\") AND (listname=\"".$listname."\") AND (objectplace=".$from."))");
-      $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=objectplace+1 WHERE ((observerid=\"".$loggedUser."\") AND (listname=\"".$listname."\") AND (objectplace>=".$to.") AND (objectplace<".$from."))");
-      $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=".$to." WHERE ((observerid=\"".$loggedUser."\") AND (listname=\"".$listname."\") AND (objectplace=-1))");
-	  }
-	}
-  if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
-    unset($_SESSION['QobjParams']);
+		 }
+		 else
+		 { $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=-1 WHERE ((observerid=\"".$loggedUser."\") AND (listname=\"".$listname."\") AND (objectplace=".$from."))");
+       $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=objectplace+1 WHERE ((observerid=\"".$loggedUser."\") AND (listname=\"".$listname."\") AND (objectplace>=".$to.") AND (objectplace<".$from."))");
+       $objDatabase->execSQL("UPDATE observerobjectlist SET objectplace=".$to." WHERE ((observerid=\"".$loggedUser."\") AND (listname=\"".$listname."\") AND (objectplace=-1))");
+	   }
+     if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
+       unset($_SESSION['QobjParams']);
+	   return LangToListMoved7.$_GET['ObjectToPlaceInList'].".";
+	 }
+	 else
+	   return '';
  }
  public  function ObjectUpInList($place)
  { global $loggedUser,$listname,$objDatabase, $myList;

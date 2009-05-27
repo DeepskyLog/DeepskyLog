@@ -41,7 +41,7 @@ class Presentations implements iPresentation
 	  echo $theMessage;
 	  echo "</div>";
 	  echo "<div id=\"dialogdiv2\" style=\"text-align:center;vertical-align:middle;position:absolute;left:0px;top:0px;width:0px;height:0px;background-color:#FFFFFF;border-width:thin;border-style:solid;border-color:#000000;\">";
-	  echo "<p><a href=\"".$baseURL."index.php?indexAction=".$_GET['indexAction']."\">Ok</a></p>";
+	  echo "<input type=\"submit\" onclick=\"confirmAlertMessage();\" value=\"Ok\" />";
     echo "</div>";
 	  echo "</div>";
 	  echo "<script type=\"text/javascript\">messageBox();</script>";	
@@ -158,7 +158,7 @@ class Presentations implements iPresentation
   	    $w=$widths[$m];
   	  if(isset($alignment))
   	    $a=substr($alignment,$m,1);
-  	  echo "<div class=\"containerLinePart".$a.((array_key_exists($m,$classes))?" ".$classes[$m]:'')."\" style=\"left:".$l."%;width:".$w."%;".($lineheight?"line-height:".$lineheight."px;height:".$lineheight."px;":'')."\">".$content[$m]."</div>";
+  	  echo "<div class=\"containerLinePart".$a.((array_key_exists($m,$classes))?" ".$classes[$m]:'')."\" style=\"left:".$l."%;width:".$w."%;".($lineheight?"line-height:".$lineheight."px;height:".$lineheight."px;":'')."\">".$content[$m].(($a=="R")?"&nbsp;&nbsp;&nbsp;":"")."</div>";
   	  
   	}
   	echo "</div>";

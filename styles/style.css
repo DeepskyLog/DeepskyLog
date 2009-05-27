@@ -315,16 +315,19 @@ img.account {
 .type10 { 
 	background-color : #F0F0F0;
 	color            : #000000;
+	border           : thin solid;
 }
 
 .type20 { 
 	background-color : #E0E6EC;
 	color            : #000000;
+	border           : thin solid;
 }
 
 .type30 { 
   background-color : #D0D3D6;
 	color            : #000000;
+	border           : thin solid;
 }
 
 .typeNotVisible { 
@@ -403,23 +406,37 @@ a.moduletable:link, a.moduletable:visited {
 	position         : relative;    
   text-align       : left;
   height           : 30px;
+  margin           : none;
+  border           : none;
+  padding          : none;
 }
 .containerLinePartL {
   position         : absolute;
   top              : 0px;
   text-align       : left;
   text-indent      : 10px;
+  margin           : none;
+  padding          : none;
+  border-color     : #FFFFFF;
+  overflow         : hidden;
 }
 .containerLinePartR {
   position         : absolute;
   top              : 0px;
   text-align       : right;
   text-indent      : 10px;
-  vertical-align   : middle;
+  margin           : none;
+  padding          : none;
+  border-color     : #FFFFFF;
+  overflow         : hidden;
 }
 .containerLinePartC {
   position         : absolute;
   top              : 0px;
   text-align       : center;
+  margin           : none;
+  padding          : none;
+  border-color     : #FFFFFF;
+  overflow         : hidden;
 }
 

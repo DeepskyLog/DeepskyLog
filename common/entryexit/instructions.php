@@ -198,9 +198,8 @@ else
 	}
 	
 	if($objUtil->checkGetKey('ObjectToPlaceInList')&&$myList)
-	{ $objList->ObjectFromToInList($_GET['ObjectFromPlaceInList'],$_GET['ObjectToPlaceInList']);
+	{ $entryMessage.=$objList->ObjectFromToInList($_GET['ObjectFromPlaceInList'],$_GET['ObjectToPlaceInList']);
 		unset($_SESSION['QobjParams']);
-	  $entryMessage.=LangToListMoved7.$_GET['ObjectToPlaceInList'].".";
 	  unset($_GET['ObjectToPlaceInList']);
 	}
 	if($objUtil->checkGetKey('removePageObjectsFromList')&&$myList)

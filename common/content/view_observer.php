@@ -92,7 +92,7 @@ for($i=0;$i<count($modules);$i++)
   $classes[]="type30";
   $alignment.="C";
 }
-$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+$objPresentations->line($content,$alignment,array(33,33,34),25,$classes);
 
 $content=array();
 $classes=array();
@@ -104,7 +104,7 @@ for($i=0;$i<count($modules);$i++)
   $classes[]="fieldvalue type10";
   $alignment.="C";
 }
-$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+$objPresentations->line($content,$alignment,array(33,33,34),25,$classes);
 
 $content=array();
 $classes=array();
@@ -116,7 +116,7 @@ for($i=0;$i<count($modules);$i++)
   $classes[]="fieldvalue type20";
   $alignment.="C";
 }
-$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+$objPresentations->line($content,$alignment,array(33,33,34),25,$classes);
 
 $content=array();
 $classes=array();
@@ -128,7 +128,7 @@ for($i=0;$i<count($modules);$i++)
   $classes[]="fieldvalue type10";
   $alignment.="C";
 }
-$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+$objPresentations->line($content,$alignment,array(33,33,34),25,$classes);
 
 $content=array();
 $classes=array();
@@ -140,7 +140,7 @@ for($i=0;$i<count($modules);$i++)
   $classes[]="fieldvalue type20";
   $alignment.="C";
 }
-$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+$objPresentations->line($content,$alignment,array(33,33,34),25,$classes);
 
 $content=array();
 $classes=array();
@@ -152,7 +152,7 @@ for($i=0;$i<count($modules);$i++)
   $classes[]="fieldvalue type10";
   $alignment.="C";
 }
-$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+$objPresentations->line($content,$alignment,array(33,33,34),25,$classes);
 
 $content=array();
 $classes=array();
@@ -164,7 +164,7 @@ for($i=0;$i<count($modules);$i++)
   $classes[]="fieldvalue type20";
   $alignment.="C";
 }
-$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+$objPresentations->line($content,$alignment,array(33,33,34),25,$classes);
 
 $content=array();
 $classes=array();
@@ -176,7 +176,7 @@ for($i=0;$i<count($modules);$i++)
   $classes[]="fieldvalue type10";
   $alignment.="C";
 }
-$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+$objPresentations->line($content,$alignment,array(33,33,34),25,$classes);
 
 $content=array();
 $classes=array();
@@ -188,7 +188,7 @@ for($i=0;$i<count($modules);$i++)
   $classes[]="fieldvalue type20";
   $alignment.="C";
 }
-$objPresentations->line($content,$alignment,array(33,33,34),'20',$classes);
+$objPresentations->line($content,$alignment,array(33,33,34),25,$classes);
 
 echo "<hr />";
 $dir = opendir($instDir.'common/observer_pics');

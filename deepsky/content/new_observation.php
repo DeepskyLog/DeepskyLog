@@ -1,16 +1,13 @@
-<?php
-// new_observation.php
-// GUI to add a new observation to the database
+<?php // new_observation.php - GUI to add a new observation to the database
 
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/checkUtils.js\"></script>";
 echo "<div id=\"main\">";
 $object=$objUtil->checkPostKey('object', $objUtil->checkGetKey('object'));
+$observationid=$objUtil->checkGetKey('observation');
 if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostKey('timestamp',-1)))
 { $seen = $objObject->getDSOseenLink($object);
-	echo "<h2>";
-	echo LangNewObservationTitle . "&nbsp;" . $object;
-	echo "&nbsp;:&nbsp;" . $seen;
-	echo "</h2>";
+	$objPresentations->line(array("<h5>".LangNewObservationTitle."&nbsp;".$object."&nbsp;:&nbsp;".$seen."</h2>"));
+	echo "<hr />";
 	echo "<table width=\"100%\">";
 	echo "<tr>";
 	echo "<td width=\"25%\" align=\"left\">";
