@@ -97,7 +97,10 @@ else
 	elseif(($FF))
 	{ echo "<script type=\"text/javascript\">";
     echo "theResizeElement='obs_list';";
-    echo "theResizeSize=325;";
+    if($object)
+      echo "theResizeSize=325;";
+    else
+      echo "theResizeSize=90;";
     echo "</script>";
 	}
 	$objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco']);
