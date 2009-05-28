@@ -11,7 +11,7 @@ try
   include 'common/menu/head.php';                                                                         // HTML head
   echo    "<body>";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/wz_tooltip.js\"></script>";
-  echo    "<div id=\"div4\">";                                                                            // div3 = left menu section
+  echo    "<div id=\"div4\">";                                                                            
   echo    "<p style=\"position:absolute;left:20px;top:20px;\">".LangIndexPleaseWait."</p>";
   echo    "<img id=\"div4a\" src=\"".$baseURL."styles/images/lu.gif\" alt=\"\"/>";
   echo    "<img id=\"div4b\" src=\"".$baseURL."styles/images/lo.gif\" alt=\"\" />";

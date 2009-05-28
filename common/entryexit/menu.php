@@ -17,7 +17,7 @@ else
 	{ include $instDir.'common/menu/help.php';                                                   // HELP MENU 
 	  include $instDir.'common/menu/tellus.php';
 	}
-	include $instDir.'common/menu/countermenu.php';
 	include $instDir.'common/menu/oalmenu.php';
+	include $instDir.'common/menu/countermenu.php';
 }
 ?>
