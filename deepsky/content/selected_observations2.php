@@ -1,6 +1,14 @@
 <?php // selected_observations2.php - generates an overview of selected observations in the database
 if((array_key_exists('steps',$_SESSION))&&(array_key_exists("selObs".$_SESSION['lco'],$_SESSION['steps'])))
   $step=$_SESSION['steps']["selObs".$_SESSION['lco']];
+if(array_key_exists('multiplepagenr',$_GET))
+  $min = ($_GET['multiplepagenr']-1)*$step;
+elseif(array_key_exists('multiplepagenr',$_POST))
+  $min = ($_POST['multiplepagenr']-1)*$step;
+elseif(array_key_exists('min',$_GET))
+  $min=$_GET['min'];
+else
+  $min = 0;
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 $link2 = $baseURL . "index.php?indexAction=result_selected_observations&amp;lco=" . urlencode($_SESSION['lco']);
 reset($_GET);
@@ -20,8 +28,6 @@ while (list ($key, $value) = each($_GET))
 //	  $link2=$link2.'&amp;'.$value.'='.$value; 
 $link = $link2 . '&amp;sort=' . $_GET['sort'] . '&amp;sortdirection=' . $_GET['sortdirection'];
 //====================== the remainder of the pages formats the page output and calls showObject (if necessary) and showObservations
-//=============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT BEFORE SHOWING ITS OBSERVATIONS =====================================================================================
-
 if (count($_SESSION['Qobs']) == 0) //================================================================================================== no reult present =======================================================================================
 {	echo "<h2>";
 	echo LangObservationNoResults;
@@ -116,6 +122,7 @@ else
 	$objPresentations->line(array($content1,$content2),"LR",array(70,30),25);
   echo "</div>";
 }
+//=============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT BEFORE SHOWING ITS OBSERVATIONS =====================================================================================
 if ($object && $objObject->getExactDsObject($object)) 
 { $object_ss = stripslashes($object);
 	$seen = "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
