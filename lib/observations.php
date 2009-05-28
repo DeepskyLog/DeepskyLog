@@ -1176,7 +1176,7 @@ class Observations {
     }
 	}
 	public function validateObservation()
-	{ global $loggedUser, $objUtil, $objObservation, $objObserver, $maxFileSize, $entryMessage, $objPresentations, $inIndex;
+	{ global $loggedUser, $objUtil, $objObservation, $objObserver, $maxFileSize, $entryMessage, $objPresentations, $inIndex,$instDir;
 		if(!($loggedUser))
 			throw new Exception(LangException002b);
 		elseif($objUtil->checkSessionKey('addObs',0)!=$objUtil->checkPostKey('timestamp', -1)) 
