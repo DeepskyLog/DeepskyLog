@@ -1567,7 +1567,7 @@ class Utils implements iUtils
   }
   public function printNewListHeader2(&$list, $link, $min, $step, $total=0,$showNumberOfRecords=true,$showArrows=true)
   { global $baseURL;
-	  $pages=ceil(count($list)/$step);           // total number of pages
+    $pages=ceil(count($list)/$step);           // total number of pages
     if($min)                                   // minimum value
     { $min=$min-($min%$step);                  // start display from number of $steps
       if ($min < 0)                            // minimum value smaller than 0

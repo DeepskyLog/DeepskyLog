@@ -5,7 +5,7 @@ $link=$baseURL."index.php?indexAction=query_objects";
 reset($_GET);
 while(list($key,$value)=each($_GET))
 	if(($key!='indexAction')&&($key!='multiplepagenr')&&($key!='sort')&&($key!='sortdirection')&&($key!='showPartOfs'))
-    $link.='&amp;'.$key.'='.$value;
+    $link.='&amp;'.urlencode($key).'='.urlencode($value);
 if(count($_SESSION['Qobj'])>1) //=============================================== valid result, multiple objects found
 { echo "<div id=\"main\">";
   $title=LangSelectedObjectsTitle;
@@ -41,7 +41,7 @@ if(count($_SESSION['Qobj'])>1) //===============================================
   $objPresentations->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objectnames.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4b);
 	echo " &nbsp;-&nbsp;";
   $objPresentations->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objectsDetails.pdf?SID=Qobj&amp;sort=".$_SESSION['QobjSort'],LangExecuteQueryObjectsMessage4c);
-  echo "&nbsp;-&nbsp";									 
+  echo "&nbsp;-&nbsp;";									 
   echo "<a href=\"".$baseURL."objects.argo?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage8."</a>";
 	echo "&nbsp;-&nbsp;";
   if(array_key_exists('listname',$_SESSION)&&$_SESSION['listname']&&$myList)
