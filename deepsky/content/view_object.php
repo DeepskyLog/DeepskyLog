@@ -1,5 +1,5 @@
 <?php  // view_object.php - view all information of one object 
-if(!($object=$objUtil->checkRequestKey('object')))
+if(!($object=$objUtil->checkGetKey('object')))
   throw new Exception('To implement');
 else
 {
