@@ -86,7 +86,10 @@ class Utils implements iUtils
   public  function checkPostKey($key,$default='')
   { return (array_key_exists($key,$_POST)&&($_POST[$key]!=''))?$_POST[$key]:$default;
   }
-	public  function checkSessionKey($key,$default='')
+  public  function checkRequestKey($key,$default='')
+  { return (array_key_exists($key,$_REQUEST)&&($_REQUEST[$key]!=''))?$_REQUEST[$key]:$default;
+  }
+  public  function checkSessionKey($key,$default='')
   { return (array_key_exists($key,$_SESSION)&&($_SESSION[$key]!=''))?$_SESSION[$key]:$default;
   }
 	public  function checkUserID($toCheck)

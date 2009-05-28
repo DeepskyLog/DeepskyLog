@@ -1189,16 +1189,16 @@ class Observations {
 				if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST['limit'], $matches)) // limiting magnitude like X.X or X,X with X a number between 0 and 9
 					$_POST['limit'] = $matches[1] . "." . (($matches[2]) ? $matches[2] : "0");
 				else
-					$_POST['limit'] = ""; // clear current magnitude limit
+					$_POST['limit'] = 0; // clear current magnitude limit
 			else
 				if ($objUtil->checkPostKey('sqm'))
 					if (ereg('([0-9]{1})([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST['sqm'], $matches)) // sqm value
 						$_POST['sqm'] = $matches[1] . $matches[2] . "." . (($matches[3]) ? $matches[3] : "0");
 					else
-						$_POST['sqm'] = ""; // clear current magnitude limit
+						$_POST['sqm'] = -1; // clear current magnitude limit
 			else {
-				$_POST['limit'] = "";
-				$_POST['sqm'] = "";
+				$_POST['limit'] = 0;
+				$_POST['sqm'] = -1;
 			}
 			$entryMessage.=LangValidateObservationMessage1;
 			$_GET['indexAction']='add_observation';
@@ -1251,7 +1251,7 @@ class Observations {
 				  	$objObservation->setDsObservationProperty($current_observation,'time',$time);
 				  	$objObservation->setDsObservationProperty($current_observation,'description',nl2br($_POST['description']));
 				  	$objObservation->setDsObservationProperty($current_observation,'seeing',$_POST['seeing']);
-				  	$objObservation->setDsObservationProperty($current_observation,'limmag',$_POST['limit']);
+				  	$objObservation->setDsObservationProperty($current_observation,'limmag',$objUtil->checkPostKey('limit',0));
 				  	$objObservation->setDsObservationProperty($current_observation,'visibility',$objUtil->checkPostKey('visibility'));
 				  	$objObservation->setDsObservationProperty($current_observation,'language',$_POST['description_language']);
 				  }
@@ -1287,7 +1287,7 @@ class Observations {
 					$_POST['largeDiam'] = $_POST['largeDiam'] * 60.0;
 				}
 				if ($_POST['sqm'])
-					$objObservation->setDsObservationProperty($current_observation,'SQM', preg_replace("/,/", ".", $_POST['sqm']));
+					$objObservation->setDsObservationProperty($current_observation,'SQM', preg_replace("/,/", ".", $objUtil->checkPostKey('sqm',-1)));
 				if ($_POST['smallDiam'])
 					$objObservation->setDsObservationProperty($current_observation,'smallDiameter', $_POST['smallDiam']);
 				if ($_POST['largeDiam'])

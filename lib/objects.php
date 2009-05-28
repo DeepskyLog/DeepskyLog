@@ -800,24 +800,16 @@ class Objects implements iObjects
 	  echo "</table>";
     echo "<div style=\"position:relative; left:0px; height:40px; width:100%;margin-top:10px;\">";
     echo "<div style=\"position:relative; left:0px; height:30px;width:100%;margin-top:10px;\">";
-    echo "<div style=\"position:absolute; left:0px; width:50%;text-align:center\">";
-    echo "<form action=\"".$baseURL."index.php?indexAction=view_image\" method=\"post\">";
-    // LINK TO DSS IMAGE
-    echo "<select name=\"imagesize\">";
-    if($size=$objUtil->checkPostKey('imagesize'))
-      for($i=15;$i<120;$i*=2) 
-        echo "<option".(($size==$i)?" selected=\"selected\"":"")." value=\"".$i."\">".$i."&#39;&nbsp;x&nbsp;".$i."&#39;</option>"; 
-    else
-    { echo "<option".(($zoom<=15)?" selected=\"selected\"":"").              " value=\"15\">15&#39;&nbsp;x&nbsp;15&#39;</option>"; 
-      echo "<option".((($zoom>15)&&($zoom<=30))?" selected=\"selected\"":"")." value=\"30\">30&#39;&nbsp;x&nbsp;30&#39;</option>";
-      echo "<option".(($zoom>30)?" selected=\"selected\"":"").               " value=\"60\">60&#39;&nbsp;x&nbsp;60&#39;</option>"; 
-    }
-    echo "</select>";    
-    echo "<input type=\"hidden\" name=\"raDSS\"   value=\"" . $raDSS . "\" />";
-    echo "<input type=\"hidden\" name=\"declDSS\" value=\"" . $declDSS . "\" />";
-    echo "<input type=\"hidden\" name=\"name\"    value=\"" . $object . "\" />";
-    echo "<input type=\"submit\" name=\"dss\"     value=\"" . LangViewObjectDSS . "\" />";
-    echo "</form>";
+    echo "<div style=\"position:absolute; left:0px; width:25%;text-align:right\">";
+    echo LangViewObjectDSS."&nbsp;:&nbsp;";
+    echo "</div>";
+    echo "<div style=\"position:absolute; left:25%; width:25%;text-align:left\">";
+    echo "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;raDSS=".$raDSS."&amp;declDSS=".$declDSS."&amp;object=".urlencode($object)."&amp;imagesize=60\" >"."60"."</a>";
+    echo "&nbsp;";
+    echo "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;raDSS=".$raDSS."&amp;declDSS=".$declDSS."&amp;object=".urlencode($object)."&amp;imagesize=30\" >"."30"."</a>";
+    echo "&nbsp;";
+    echo "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;raDSS=".$raDSS."&amp;declDSS=".$declDSS."&amp;object=".urlencode($object)."&amp;imagesize=15\" >"."15"."</a>";
+    echo "&nbsp; arcmin";
     echo "</div>";
     echo "<div style=\"position:absolute; right:0px;width:48%;text-align:center;\">";
         // LINK TO DEEPSKYLIVE CHART
