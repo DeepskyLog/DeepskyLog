@@ -1153,7 +1153,7 @@ class Observations {
 		echo "<br />";
 		echo $objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
 		if($this->getDsObservationProperty($LOid,'hasDrawing'))
-		  echo "<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/" . $LOid . ".jpg" . "\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . ".jpg\" alt=\"\"></img></a></p>";
+		  echo "<p>"."<a target=\"_top\" href=\"".$baseURL."deepsky/drawings/" . $LOid . ".jpg" . "\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . "_resized.jpg\" alt=\"\"></img></a></p>";
 		echo "<br /><br />";
 		echo (($myList)?"<a target=\"_top\" href=\"".$link.$linkamp."addObservationToList=".urlencode($LOid)."\">".LangViewObservationField44.$listname_ss."</a>&nbsp;-&nbsp;":'');
 		if($objUtil->checkAdminOrUserID($this->getDsObservationProperty($LOid,'observerid')))
