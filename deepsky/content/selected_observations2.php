@@ -21,41 +21,7 @@ while (list ($key, $value) = each($_GET))
 $link = $link2 . '&amp;sort=' . $_GET['sort'] . '&amp;sortdirection=' . $_GET['sortdirection'];
 //====================== the remainder of the pages formats the page output and calls showObject (if necessary) and showObservations
 //=============================================== IF IT CONCERNS THE OBSERVATIONS OF 1 SPECIFIC OBJECT, SHOW THE OBJECT BEFORE SHOWING ITS OBSERVATIONS =====================================================================================
-if ($object && $objObject->getExactDsObject($object)) 
-{ $object_ss = stripslashes($object);
-	$seen = "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
-	$seenDetails = $objObject->getSeen($object);
-	if (substr($seenDetails, 0, 1) == "X")
-		$seen = "<a target=\"_top\" href=\"" .
-		$baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectXSeen . "\">" . $seenDetails . "</a>";
-	if (array_key_exists("deepskylog_id", $_SESSION) && $_SESSION["deepskylog_id"])
-		if (substr($seenDetails, 0, 1) == "Y")
-			$seen = "<a target=\"_top\" href=\"" .
-			$baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
-	echo "<div id=\"pageTitle\">";
-	echo "<h6 class=\"h2header\">".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h6>";
-	echo "<table width=\"100%\">";
-	echo "<tr>";
-	echo "<td width=\"25%\" align=\"left\"><a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\">".LangViewObjectViewNearbyObject." ".$object_ss."</a></td>";
-	echo "<td width=\"25%\" align=\"center\">";
-	if($loggedUser)
-		echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object_ss . "</a>";
-	else
-	  echo "&nbsp;";
-	echo "</td>";
-	if ($myList) 
-	{ echo "<td width=\"25%\" align=\"center\">";
-		if ($objList->checkObjectInMyActiveList($object))
-			echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage3 . $listname_ss . "</a>";
-		else
-			echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a>";
-		echo "</td>";
-	}
-	echo "</tr>";
-	echo "</table>";
-	echo "</div>";
-	$objObject->showObject($object);
-}
+
 if (count($_SESSION['Qobs']) == 0) //================================================================================================== no reult present =======================================================================================
 {	echo "<h2>";
 	echo LangObservationNoResults;
@@ -131,7 +97,7 @@ else
 	elseif(($FF))
 	{ echo "<script type=\"text/javascript\">";
     echo "theResizeElement='obs_list';";
-    echo "theResizeSize=75;";
+    echo "theResizeSize=325;";
     echo "</script>";
 	}
 	$objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco']);
@@ -146,5 +112,40 @@ else
   $content2=$objUtil->printStepsPerPage3($link,"selObs".$_SESSION['lco'],$step);
 	$objPresentations->line(array($content1,$content2),"LR",array(70,30),25);
   echo "</div>";
+}
+if ($object && $objObject->getExactDsObject($object)) 
+{ $object_ss = stripslashes($object);
+	$seen = "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
+	$seenDetails = $objObject->getSeen($object);
+	if (substr($seenDetails, 0, 1) == "X")
+		$seen = "<a target=\"_top\" href=\"" .
+		$baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectXSeen . "\">" . $seenDetails . "</a>";
+	if (array_key_exists("deepskylog_id", $_SESSION) && $_SESSION["deepskylog_id"])
+		if (substr($seenDetails, 0, 1) == "Y")
+			$seen = "<a target=\"_top\" href=\"" .
+			$baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
+	echo "<div id=\"pageTitle\">";
+	echo "<h6 class=\"h2header\">".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h6>";
+	echo "<table width=\"100%\">";
+	echo "<tr>";
+	echo "<td width=\"25%\" align=\"left\"><a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\">".LangViewObjectViewNearbyObject." ".$object_ss."</a></td>";
+	echo "<td width=\"25%\" align=\"center\">";
+	if($loggedUser)
+		echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object_ss . "</a>";
+	else
+	  echo "&nbsp;";
+	echo "</td>";
+	if ($myList) 
+	{ echo "<td width=\"25%\" align=\"center\">";
+		if ($objList->checkObjectInMyActiveList($object))
+			echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage3 . $listname_ss . "</a>";
+		else
+			echo "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a>";
+		echo "</td>";
+	}
+	echo "</tr>";
+	echo "</table>";
+	echo "</div>";
+	$objObject->showObject($object);
 }
 ?>
