@@ -122,6 +122,9 @@ define("LangShowMyLanguages","Toon enkel de observaties in mijn geselecteerde ta
 define("LangAllLanguagesShown","alle talen");
 define("LangSelectedLanguagesShown","enkel geselecteerde talen");
 
+define("LangItemsPerPage","Items per pagina");
+
+
 // common/entryexit/instructions
 define("LangInstructionsNoObjectFound","Geen overeenkomstig object gevonden voor ");
 

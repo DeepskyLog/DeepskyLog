@@ -32,7 +32,7 @@
 //  LangValidateXMLMessage
 //  $ClusterTypeA->X
 //  LangValidateEyepieceMessage6
-
+//  LangItemsPerPage
 
 
 
@@ -122,6 +122,7 @@ define("LangShowMyLanguages","Ne montrer que les observations dans les languages
 define("LangAllLanguagesShown","toutes les languages");
 define("LangSelectedLanguagesShown","juste les languages s�lection�es");
 
+define("LangItemsPerPage","Items par page");
 
 // common/entryexit/instructions
 define("LangInstructionsNoObjectFound","No corresponding object found for ");

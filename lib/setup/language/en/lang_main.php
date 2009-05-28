@@ -122,6 +122,8 @@ define("LangShowMyLanguages","Only show the observations from my profile languag
 define("LangAllLanguagesShown","all languages");
 define("LangSelectedLanguagesShown","selected languages only");
 
+define("LangItemsPerPage","Items per page");
+
 // common/entryexit/instructions
 define("LangInstructionsNoObjectFound","No corresponding object found for ");
 

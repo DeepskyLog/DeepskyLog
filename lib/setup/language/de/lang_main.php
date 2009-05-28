@@ -19,7 +19,7 @@
 //  LangAddInstrumentManually
 //  LangValidateEyepieceMessage6
 //  define("LangNewObservationSubtitle3B", "Change the observation details ");
-
+//  LangItemsPerPage
 
 
 
@@ -121,6 +121,8 @@ define("LangShowInterfaceLanguage", "Nur Beobachtungen in Englisch");
 define("LangShowMyLanguages","Nur Beobachtungen in meiner (Profil) Sprache");
 define("LangAllLanguagesShown","Alle Sprachen");
 define("LangSelectedLanguagesShown","Nur ausgew&auml;hlte Sprachen");
+
+define("LangItemsPerPage","Items per page");
 
 // common/entryexit/instructions
 define("LangInstructionsNoObjectFound","Kein entsprechendes Objekt gefunden f&uuml;r ");

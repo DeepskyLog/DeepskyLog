@@ -1,4 +1,6 @@
 <?php // selected_observations2.php - generates an overview of selected observations in the database
+if((array_key_exists('steps',$_SESSION))&&(array_key_exists("selObs".$_SESSION['lco'],$_SESSION['steps'])))
+  $step=$_SESSION['steps']["selObs".$_SESSION['lco']];
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 $link2 = $baseURL . "index.php?indexAction=result_selected_observations&amp;lco=" . urlencode($_SESSION['lco']);
 reset($_GET);

@@ -36,10 +36,7 @@ else
 	    }
 	  }
 	}
-  if(($objUtil->checkGetKey('indexAction')=="result_selected_observations")&&(array_key_exists('steps',$_SESSION))&&(array_key_exists("selObs".$_SESSION['lco'],$_SESSION['steps'])))
-    $step=$_SESSION['steps']["selObs".$_SESSION['lco']];
-  else
-    $step = 25;
+  $step = 25;
 	if(array_key_exists('multiplepagenr',$_GET))
 	  $min = ($_GET['multiplepagenr']-1)*$step;
 	elseif(array_key_exists('multiplepagenr',$_POST))
