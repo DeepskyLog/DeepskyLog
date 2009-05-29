@@ -57,7 +57,7 @@ if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
 }
 echo "</select>";
 echo "</td>";
-echo "<td align=\"centre\" width=\"25%\"><input type=\"submit\" name=\"query\" value=\"" . LangQueryObservationsButton1 . "\" /></td>";
+echo "<td align=\"center\" width=\"25%\"><input type=\"submit\" name=\"query\" value=\"" . LangQueryObservationsButton1 . "\" /></td>";
 echo "</tr>";
 
 echo("</table>");
