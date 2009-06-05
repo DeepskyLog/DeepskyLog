@@ -44,21 +44,22 @@ if($listname)
 	  $objObject->showObjects($link, $min, $max,'',1);
 	  echo "<hr />";
     if($myList)
-    { echo "<form action=\"".$baseURL."index.php?indexAction=listaction\">";
-      echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
-		  echo "<input style=\"width:12em;\" type=\"submit\" name=\"emptyList\" value=\"" . LangToListEmpty . "\" />";
-      echo "<input style=\"width:12em;\" type=\"submit\" name=\"removeList\" value=\"" . LangToListMyListsRemove . "\" />";
-      echo "</form>";
+    { $content2 =" <form action=\"".$baseURL."index.php?indexAction=listaction\">";
+      $content2.="<input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
+		  $content2.="<input style=\"width:12em;\" type=\"submit\" name=\"emptyList\" value=\"" . LangToListEmpty . "\" />";
+      $content2.="<input style=\"width:12em;\" type=\"submit\" name=\"removeList\" value=\"" . LangToListMyListsRemove . "\" />";
+      $content2.="</form>";
     }
-    $objPresentations->promptWithLink(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
-	  echo "&nbsp;-&nbsp;";
-    $objPresentations->promptWithLink(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objectnames.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4b);
-	  echo "&nbsp;-&nbsp;";
-    $objPresentations->promptWithLink(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objectsDetails.pdf?SID=Qobj&amp;sort=" . $_SESSION['QobjSort'],LangExecuteQueryObjectsMessage4c);
-	  echo "&nbsp;-&nbsp;";
-    echo "<a href=\"objects.argo?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage8."</a> &nbsp;-&nbsp;";
-    echo "<a href=\"objects.csv?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a>";
-  }
+    $content =$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
+	  $content.="&nbsp;-&nbsp;";
+    $content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objectnames.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4b);
+	  $content.="&nbsp;-&nbsp;";
+    $content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objectsDetails.pdf?SID=Qobj&amp;sort=" . $_SESSION['QobjSort'],LangExecuteQueryObjectsMessage4c);
+	  $content.="&nbsp;-&nbsp;";
+    $content.="<a href=\"objects.argo?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage8."</a> &nbsp;-&nbsp;";
+    $content.="<a href=\"objects.csv?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a>";
+    $objPresentations->line(array($content,$content2),"LR",array(75,25));
+	}
 	else
 	{ echo LangToListEmptyList;
 	}
