@@ -11,7 +11,7 @@ echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_filter\" />";
 $content1b="<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 while(list($key, $value) = each($filts))
-  $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_filter&amp;filterid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('filterid'))?' selected=\"selected\" ':'').">" . $objFilter->getFilterPropertyFromId($value,'name') . "</option>";
+  $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_filter&amp;filterid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('filterid'))?" selected=\"selected\" ":'').">" . $objFilter->getFilterPropertyFromId($value,'name') . "</option>";
 $content1b.= "</select>";
 $objPresentations->line(array("<h5>".LangAddFilterTitle."</h5>"),"L",array(),50);
 echo "<hr />";
@@ -21,7 +21,7 @@ $objPresentations->line(array(LangAddFilterExisting,
                               "RLR",array(25,40,35),'',array("fieldname"));
 $objPresentations->line(array(LangAddSiteFieldOr." ".LangAddFilterFieldManually),"R",array(25),'',array("fieldname"));
 $objPresentations->line(array(LangAddFilterField1,
-                              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"filtername\" size=\"30\" value=\"".stripslashes($objUtil->checkGetKey('filtername','')).stripslashes($objFilter->getFilterPropertyFromId($objUtil->checkGetKey('filterid'),'name'))."\">",
+                              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"filtername\" size=\"30\" value=\"".stripslashes($objUtil->checkGetKey('filtername','')).stripslashes($objFilter->getFilterPropertyFromId($objUtil->checkGetKey('filterid'),'name'))."\" />",
                               LangAddFilterField1Expl),
                         "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 $objPresentations->line(array(LangAddFilterField2,

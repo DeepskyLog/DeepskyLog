@@ -68,13 +68,13 @@ class Filters implements iFilters
  }
  public  function getEchoListType($type)
  { $tempTypeList="<select name=\"type\" class=\"inputfield\">";
-   $tempTypeList.= "<option ".(($type==FilterOther)?     " option selected=\"selected\" ":"")." value=\"".FilterOther.     "\">".FiltersOther."</option>";
-   $tempTypeList.= "<option ".(($type==FilterBroadBand)? " option selected=\"selected\" ":"")." value=\"".FilterBroadBand. "\">".FiltersBroadBand."</option>";
-   $tempTypeList.= "<option ".(($type==FilterNarrowBand)?" option selected=\"selected\" ":"")." value=\"".FilterNarrowBand."\">".FiltersNarrowBand."</option>";
-   $tempTypeList.= "<option ".(($type==FilterOIII)?      " option selected=\"selected\" ":"")." value=\"".FilterOIII.      "\">".FiltersOIII."</option>";
-   $tempTypeList.= "<option ".(($type==FilterHAlpha)?    " option selected=\"selected\" ":"")." value=\"".FilterHAlpha.    "\">".FiltersHAlpha."</option>";
-   $tempTypeList.= "<option ".(($type==FilterColor)?     " option selected=\"selected\" ":"")." value=\"".FilterColor.     "\">".FiltersColor."</option>";
-   $tempTypeList.= "<option ".(($type==FilterCorrective)?" option selected=\"selected\" ":"")." value=\"".FilterCorrective."\">".FiltersCorrective."</option>";
+   $tempTypeList.= "<option ".(($type==FilterOther)?     " selected=\"selected\" ":"")." value=\"".FilterOther.     "\">".FiltersOther."</option>";
+   $tempTypeList.= "<option ".(($type==FilterBroadBand)? " selected=\"selected\" ":"")." value=\"".FilterBroadBand. "\">".FiltersBroadBand."</option>";
+   $tempTypeList.= "<option ".(($type==FilterNarrowBand)?" selected=\"selected\" ":"")." value=\"".FilterNarrowBand."\">".FiltersNarrowBand."</option>";
+   $tempTypeList.= "<option ".(($type==FilterOIII)?      " selected=\"selected\" ":"")." value=\"".FilterOIII.      "\">".FiltersOIII."</option>";
+   $tempTypeList.= "<option ".(($type==FilterHAlpha)?    " selected=\"selected\" ":"")." value=\"".FilterHAlpha.    "\">".FiltersHAlpha."</option>";
+   $tempTypeList.= "<option ".(($type==FilterColor)?     " selected=\"selected\" ":"")." value=\"".FilterColor.     "\">".FiltersColor."</option>";
+   $tempTypeList.= "<option ".(($type==FilterCorrective)?" selected=\"selected\" ":"")." value=\"".FilterCorrective."\">".FiltersCorrective."</option>";
    $tempTypeList.= "</select>";
    return $tempTypeList;
  }

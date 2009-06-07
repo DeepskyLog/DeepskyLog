@@ -16,7 +16,7 @@ while(list($key,$value)=each($timezone_identifiers))
 $tempTimeZoneList.="</select>";
 $tempCountryList="<select name=\"country\" class=\"inputfield requiredField\">";
 $countries = $objLocation->getCountries();
-$tempCountryList.="<option value=\"\"></option>";
+$tempCountryList.="<option value=\"\">-----</option>";
 while(list($key,$value)=each($countries))
 { $sites=$objLocation->getSortedLocations($sort, $_SESSION['deepskylog_id']);
   $locs =$objObserver->getListOfLocations();

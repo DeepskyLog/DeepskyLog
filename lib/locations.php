@@ -161,7 +161,7 @@ class Locations
 		    $previous = $sort;
 		  echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 		  echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
-		  echo "<input type=\"hidden\" name=\"adaptStandardLocation\" value=\"1\">";
+		  echo "<input type=\"hidden\" name=\"adaptStandardLocation\" value=\"1\" />";
 	    $objPresentations->line(array("<h5>".LangOverviewSiteTitle." ".$loggedUserName."</h5>",
 	                                  "<input type=\"submit\" name=\"adapt\" value=\"" . LangAddSiteStdLocation . "\" />&nbsp;"),
 	                            "LR",array(80,20),50);
@@ -225,8 +225,8 @@ class Locations
 		      $count++;
 		    }
 		  }
-		  echo "</form>";
 		  echo "</table>";
+		  echo "</form>";
 		  echo "<hr />";
 		}  	
   }
