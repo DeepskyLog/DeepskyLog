@@ -1379,8 +1379,8 @@ class Utils implements iUtils
 			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, $objPresentations->raToStringHM($valueA['objectra']) . ' '.
 				                                                      $objPresentations->decToString($valueA['objectdecl'],0));	 // ra - decl
 			  $pdf->addTextWrap($xbase+295, $y,  55, $fontSizeText, $valueA['objectsize'] . '/' . $objPresentations->presentationInt($valueA['objectpa'],999,"-"));         			   // size
-	  		$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectcontrast'],'',''), 'left');			             // contrast				
-	  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, (int)$valueA['objectoptimalmagnification'], 'left');		               // magnification				
+	  		$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectcontrast'],0,''), 'left');			             // contrast				
+	  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, $objPresentations->presentationInt((int)$valueA['objectoptimalmagnification'],0,''), 'left');		               // magnification				
 			  $pdf->addTextWrap($xbase+380, $y,  20, $fontSizeText, '<b>'.$valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')].'</b>', 'right');			   // atlas page
       }
 			$y-=$deltaline;
