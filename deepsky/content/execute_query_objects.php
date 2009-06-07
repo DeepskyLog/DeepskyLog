@@ -8,7 +8,7 @@ while(list($key,$value)=each($_GET))
     $link.='&amp;'.urlencode($key).'='.urlencode($value);
 if(count($_SESSION['Qobj'])>1) //=============================================== valid result, multiple objects found
 { echo "<div id=\"main\">";
-  $title=LangSelectedObjectsTitle;
+  $title="<h5>".LangSelectedObjectsTitle;
 	if($showPartOfs)	
 	  $title.=LangListQueryObjectsMessage10;
 	else
@@ -16,11 +16,13 @@ if(count($_SESSION['Qobj'])>1) //===============================================
   if(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']&&
 	   array_key_exists('listname',$_SESSION)&&$_SESSION['listname']&&($_SESSION['listname']<>"----------")&&$myList)
     $title.="&nbsp;-&nbsp;<a href=\"".$link."&amp;min=".$min."&amp;addAllObjectsFromQueryToList=true\" title=\"".LangListQueryObjectsMessage5.$listname_ss."\">".LangListQueryObjectsMessage4."</a>";
-  divPageTitle($title, $link, $_SESSION['Qobj'], $min, $max);
+  $title.="</h5>";
+  list ($min,$max,$content) = $objUtil->printNewListHeader3($_SESSION['Qobj'],$link,$min,$step);
+  $objPresentations->line(array($title,$content),"LR",array(70,30),40);
   if($showPartOfs)
-    echo "<a href=\"".$link."&amp;showPartOfs=0\">".LangListQueryObjectsMessage12."</a>";
+    $objPresentations->line(array("<a href=\"".$link."&amp;showPartOfs=0\">".LangListQueryObjectsMessage12."</a>"),"L",array(),20);
 	else
-    echo "<a href=\"".$link."&amp;showPartOfs=1\">".LangListQueryObjectsMessage13."</a>";
+    $objPresentations->line(array("<a href=\"".$link."&amp;showPartOfs=1\">".LangListQueryObjectsMessage13."</a>"),"L",array(),20);
 //	echo "<span style=\"text-align:right\">&nbsp;&nbsp;&nbsp;<a href=\"".$baseURL."index.php?indexAction=query_objects\">".LangExecuteQueryObjectsMessage1."</a></span>";  
   $link.="&amp;showPartOfs=".$showPartOfs;
 	echo "<hr />";
