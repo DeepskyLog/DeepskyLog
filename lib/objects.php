@@ -757,7 +757,11 @@ class Objects implements iObjects
     }
     else
       $this->calcContrastAndVisibility($object,$object,$this->getDsoProperty($object,'mag'),$this->getDsoProperty($object,'SBObj'),$this->getDsoProperty($object,'diam1'),$this->getDsoProperty($object,'diam2'),$contrast,$contype,$popup,$prefMag);
-    echo "<table width=\"100%\">";
+    echo "<form action=\"".$baseURL."index.php?indexAction=detail_object\">";    	
+    echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
+    echo "<input type=\"hidden\" name=\"object\" value=\"".$object."\" />";
+    echo "<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>";
+		echo "<table width=\"100%\">";
 	  if($loggedUser&&($standardAtlasCode=$GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode','urano')))
 	    tableFieldnameField2(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode(stripslashes($object)) . "\">".(stripslashes($object))."</a>",
 	                                      $objAtlas->atlasCodes[$standardAtlasCode].LangViewObjectField10,$this->getDsoProperty($object,$standardAtlasCode)," class=\"type2\"");
@@ -772,13 +776,10 @@ class Objects implements iObjects
     tableFieldnameField2(LangViewObjectFieldContrastReserve,"<span class=\"" . $contype . "\"  onmouseover=\"Tip('" . $popup . "')\">".$contrast."</span>",LangViewObjectFieldOptimumDetectionMagnification,$prefMag,"class=\"type2\"");
     if($listname&&($objList->checkObjectInMyActiveList($object)))
 	  { if($myList)
-     { echo "<form action=\"".$baseURL."index.php?indexAction=detail_object\">";    	
-       echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
-       echo "<input type=\"hidden\" name=\"object\" value=\"".$object."\" />";
-       echo "<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>";
-		   echo "<td align=\"right\">".LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>)<br /><input type=\"submit\" name=\"Go\" value=\"" . LangEditObjectDescription . "\" /></td>";
+     { echo "<tr>";
+     	 echo "<td align=\"right\">".LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>)<br /><input type=\"submit\" name=\"Go\" value=\"" . LangEditObjectDescription . "\" /></td>";
   	   echo "<td colspan=\"3\"><textarea name=\"description\" class=\"listdescription inputfield\">".$objList->getListObjectDescription($object)."</textarea></td>";
-       echo "</form>";
+  	   echo "</tr>";
 		 }
 		 else
 		 { echo "<tr>";
@@ -798,7 +799,8 @@ class Objects implements iObjects
   	  echo "</tr>";
     }
 	  echo "</table>";
-    echo "<div style=\"position:relative; left:0px; height:40px; width:100%;margin-top:10px;\">";
+    echo "</form>";
+	  echo "<div style=\"position:relative; left:0px; height:40px; width:100%;margin-top:10px;\">";
     echo "<div style=\"position:relative; left:0px; height:30px;width:100%;margin-top:10px;\">";
     echo "<div style=\"position:absolute; left:0px; width:25%;text-align:right\">";
     echo LangViewObjectDSS."&nbsp;:&nbsp;";

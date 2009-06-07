@@ -982,7 +982,10 @@ class Observations {
 				    $LOdate=sscanf($this->getDsObservationProperty($LOid,'date'), "%4d%2d%2d");
 				}
 				if($lco=='L')
-				  echo "<tr style=\"height:5px\" class=\"type".(2 -($obsKey%2))."\">";
+				  if($value['observerid']==$loggedUser)
+				    echo "<tr style=\"height:5px\" class=\"type3\">";
+				  else
+				    echo "<tr style=\"height:5px\" class=\"type".(2 -($obsKey%2))."\">";
 				else
 				  echo "<tr style=\"height:5px\" class=\"type20\">";
 			  if(($objUtil->checkGetKey('expand')==$value['observationid']))
