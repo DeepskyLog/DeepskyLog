@@ -983,7 +983,7 @@ class Observations {
 				}
 				if($lco=='L')
 				  if($value['observerid']==$loggedUser)
-				    echo "<tr style=\"height:5px\" class=\"type3\">";
+				    echo "<tr style=\"height:5px\" class=\"type".(2 -($obsKey%2))."5\">";
 				  else
 				    echo "<tr style=\"height:5px\" class=\"type".(2 -($obsKey%2))."\">";
 				else

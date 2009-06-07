@@ -308,6 +308,15 @@ img.account {
 	padding          : 2px;
 	color            : #000000;
 }
+.type15 { 
+	background-color : #E0E0E0;
+	color            : #000000;
+}
+
+.type25 { 
+  background-color : #D0D6DC;
+	color            : #000000;
+}
 
 .type3 { 
   background-color : #D0D3D6;
