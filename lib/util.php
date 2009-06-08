@@ -186,18 +186,18 @@ class Utils implements iUtils
 	$fcgaInfo = $dom->createElement('oal:observations');
 	$fcgaDom = $dom->appendChild($fcgaInfo);
 
-    $attr = $dom->createAttribute("xmlns:oal");
-    $fcgaInfo->appendChild($attr);
-
-    $attrText = $dom->createTextNode("http://observation.sourceforge.net/openastronomylog");
-    $attr->appendChild($attrText);
-
     $attr = $dom->createAttribute("version");
     $fcgaInfo->appendChild($attr);
 
     $attrText = $dom->createTextNode("2.0");
     $attr->appendChild($attrText);
     
+	  $attr = $dom->createAttribute("xmlns:oal");
+    $fcgaInfo->appendChild($attr);
+
+    $attrText = $dom->createTextNode("http://observation.sourceforge.net/openastronomylog");
+    $attr->appendChild($attrText);
+
     $attr = $dom->createAttribute("xmlns:xsi");
     $fcgaInfo->appendChild($attr);
 

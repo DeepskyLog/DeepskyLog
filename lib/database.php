@@ -28,7 +28,8 @@ class Database implements iDatabase
 		return $run;
   }
 	public function selectRecordArray($sql)
-	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
+	{ print $sql . "<br />\n";
+	  if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
 	  $result=array();
 		$run = mysql_query($sql) or die(mysql_error());
 		if($get = mysql_fetch_object($run))

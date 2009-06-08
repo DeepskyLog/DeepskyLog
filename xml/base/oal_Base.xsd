@@ -5,7 +5,7 @@
 		 Authors: Thomas Pfleger 
 		          Dirk Lehmann
 		          Phyllis Lang
-		 Revision date: 2009/5/13
+		 Revision date: 2009/6/7
 	     (c) 2005 - 2009 by Fachgruppe Computerastronomie of the Vereinigung der Sternfreunde e.V. (VdS) 
 	-->
 
@@ -433,6 +433,8 @@
 	<xsd:complexType name="filterType">
 		<xsd:sequence>
 			<xsd:element name="model" type="xsd:string"/>
+			<!-- New in OAL 2.0 - was forgotten in earlier versions -->
+			<xsd:element name="vendor" type="xsd:string" minOccurs="0"/>
 			<xsd:element name="type" type="oal:filterKind"/>
 			<!-- the following elements are relevant for color filters only -->
 			<xsd:element name="color" type="oal:filterColorType" minOccurs="0"/>
