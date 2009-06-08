@@ -26,7 +26,7 @@ interface iObservations
 	public  function getPopularObserversOverviewCatOrList($sort, $cat = ""); 
   public  function setDsObservationProperty($id,$property,$propertyValue);                                                                                            // sets the property to the specified value for the given observation
 	public  function setLocalDateAndTime($id, $date, $time);                                                                                                          	// sets the date and time for the given observation when the time is given in  local time
-	public  function showListObservation($obsKey, $link, $lco); 
+	public  function showListObservation($obsKey, $link, $lco, $step=25); 
 	public  function showObservation($LOid);                                                                                                                            // shows the details of an observation 
 	public  function validateDeleteDSObservation();                                                                                                                     // removes the observation with id = $id
 	public  function validateObservation();
@@ -917,7 +917,7 @@ class Observations {
 		$objDatabase->execSQL("UPDATE observations SET date = \"".$date."\" WHERE id = \"".$id."\"");
 		$objDatabase->execSQL("UPDATE observations SET time = \"$time\" WHERE id = \"".$id."\"");
 	}
-	public  function showListObservation($link, $link2, $lco) 
+	public  function showListObservation($link, $link2, $lco,$step) 
 	{ global $FF, $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations; 
     $min=$_GET['min'];
     $max=$_GET['max'];
@@ -947,9 +947,11 @@ class Observations {
 		if($FF)
 		  echo "<tbody id=\"obs_list\" class=\"tbody_obs\">";
 	  $count = 0; // counter for altering table colors
-		while (list($key,$value)=each($_SESSION['Qobs']))
+		$countline=0;
+	  while (list($key,$value)=each($_SESSION['Qobs']))
 		{ if ($count >= $min && $count < $max) 
-		  {	$obsKey=$key;
+		  {	$countline++;
+		  	$obsKey=$key;
 		    $LOid="";	 $LOinstrumentsize='';  $LOdescription="";  $LOinstrumentId='';  $LOinstrument = '';
 			  $value=$_SESSION['Qobs'][$obsKey];
 				$alt = "";
@@ -1065,7 +1067,7 @@ class Observations {
 			$count++;
 		}
     if($FF) 
-    { while($count++<25)
+    { while($countline++<$step)
         echo "<tr><td>&nbsp;</td></tr>";   
       echo "</tbody>";
     }

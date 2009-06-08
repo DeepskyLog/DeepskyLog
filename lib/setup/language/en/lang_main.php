@@ -306,7 +306,7 @@ define("LangOverviewSiteTitle", "Overview observing sites");
 define("LangAddSiteExisting", "Add existing location");
 
 define("LangOverviewEyepieceTitle", "Overview eyepieces");
-define("LangAddEyepieceExisting", "Select the eyeiece details from the list");
+define("LangAddEyepieceExisting", "Select the eyepiece details from the list");
 define("LangAddEyepieceManually", "specify your eyepiece details manually");
 define("LangAddEyepieceTitle", "Add a new eyepiece");
 define("LangAddEyepieceField1", "Name");

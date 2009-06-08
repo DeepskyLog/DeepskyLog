@@ -36,8 +36,8 @@ interface iObjects
   public  function setDsObjectAtlasPages($name);                                // sets the different atlas pages for an object (e.g. after changing its coordinates)
   public  function setDsObjectSBObj($name);                                     // sets the SBObj for an object, based on its mag and diam1 & 2, e.g. after changing its diam or mag.
   public  function setDsoProperty($name,$property,$propertyValue);              // sets the property to the specified value for the given object
-  public  function showObject($object,$zoom=30);                                // shows the characteristics of a single object
-  public  function showObjects($link, $min, $max, $ownShow='', $showRank=0);    // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
+  public  function showObject($object);                                         // shows the characteristics of a single object
+  public  function showObjects($link, $min, $max, $ownShow='', $showRank=0, $step=25);    // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
   public  function sortObjects($objectList, $sort, $reverse=false);             // Sort the array of objectList on the $sort field, and in second order on the showname field 
 	public  function validateObject();                                            // checks if the add new object form is correctly filled in and eventually adds the object to the database
 }
@@ -196,7 +196,7 @@ class Objects implements iObjects
   public  function getDSOseenLink($object)                                          // Returns the getSeen result, encoded to a href that shows the seen observations
   { global $baseURL;
     $seenDetails=$this->getSeen($object);
-    $seen = "<a href=\"".$baseURL."index.php?indexAction=detail_objectamp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
+    $seen = "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
     if(substr($seenDetails,0,1)=="X")                                            // object has been seen already
       $seen = "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\">".$seenDetails."</a>";
     if(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id'])
@@ -730,7 +730,7 @@ class Objects implements iObjects
   { global $objDatabase;
     return $objDatabase->execSQL("UPDATE objects SET ".$property." = \"".$propertyValue."\" WHERE name = \"".$name."\"");
   }
-  public  function showObject($object,$zoom=30)
+  public  function showObject($object)
   { global $objPresentations, $deepskylive, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL, $objPresentations;	
     $object=$this->getDsObjectName($object);
     $_SESSION['object']=$object;
@@ -752,8 +752,8 @@ class Objects implements iObjects
 	  $popup=$this->prepareObjectsContrast();
     if($popup)
     { $prefMag = '-';
-        $contype = '-';
-        $contrast = '-';
+      $contype = '-';
+      $contrast = '-';
     }
     else
       $this->calcContrastAndVisibility($object,$object,$this->getDsoProperty($object,'mag'),$this->getDsoProperty($object,'SBObj'),$this->getDsoProperty($object,'diam1'),$this->getDsoProperty($object,'diam2'),$contrast,$contype,$popup,$prefMag);
@@ -800,54 +800,9 @@ class Objects implements iObjects
     }
 	  echo "</table>";
     echo "</form>";
-	  echo "<div style=\"position:relative; left:0px; height:40px; width:100%;margin-top:10px;\">";
-    echo "<div style=\"position:relative; left:0px; height:30px;width:100%;margin-top:10px;\">";
-    echo "<div style=\"position:absolute; left:0px; width:25%;text-align:right\">";
-    echo LangViewObjectDSS."&nbsp;:&nbsp;";
-    echo "</div>";
-    echo "<div style=\"position:absolute; left:25%; width:25%;text-align:left\">";
-    echo "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;raDSS=".$raDSS."&amp;declDSS=".$declDSS."&amp;object=".urlencode($object)."&amp;imagesize=60\" >"."60"."</a>";
-    echo "&nbsp;";
-    echo "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;raDSS=".$raDSS."&amp;declDSS=".$declDSS."&amp;object=".urlencode($object)."&amp;imagesize=30\" >"."30"."</a>";
-    echo "&nbsp;";
-    echo "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;raDSS=".$raDSS."&amp;declDSS=".$declDSS."&amp;object=".urlencode($object)."&amp;imagesize=15\" >"."15"."</a>";
-    echo "&nbsp; arcmin";
-    echo "</div>";
-    echo "<div style=\"position:absolute; right:0px;width:48%;text-align:center;\">";
-        // LINK TO DEEPSKYLIVE CHART
-    if ($deepskylive == 1)
-    { $raDSL=$objPresentations->raToStringDSL($this->getDsoProperty($object,'ra'));
-      $declDSL=$objPresentations->decToStringDSL($this->getDsoProperty($object,'decl'));
-      echo "<form action=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;zoom=" . $zoom . "\" method=\"post\">";
-
-      echo "<select name=\"dslsize\">";
-      if ($zoom<=30) echo "<option selected=\"selected\" value=\"60\">1&deg;</option>"; else echo "<option value=\"60\">1&deg;</option>";
-      if(($zoom>30) && ($zoom<=60)) echo "<option selected=\"selected\" value=\"120\">2&deg;</option>"; else echo "<option value=\"120\">2&deg;</option>";
-      if ($zoom>60) echo "<option selected=\"selected\" value=\"180\">3&deg;</option>"; else echo "<option value=\"180\">3&deg;</option>"; 
-      echo "</select>";
-    
-      echo "<input type=\"hidden\" name=\"showDSL\" value=\"1\" />";
-      echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
-      echo "<input type=\"submit\" name=\"dsl\" value=\"" . LangViewObjectDSL . "\" />";
-      if (isset($_POST["showDSL"]) && $_POST["showDSL"] == 1)
-      { $fov=$_POST["dslsize"];
-        echo "<applet code=\"Deepskylive.class\" codebase=\"http://users.telenet.be/deepskylive/applet/\" height=\"1\" width=\"1\">
-              <param name=\"ra\" value=\"".$raDSL."\">
-              <param name=\"dec\" value=\"".$declDSL."\">
-              <param name=\"fov\" value=\"".$fov."\">
-              <param name=\"p\" value=\"1\">
-              </applet>";
-      }
-      echo "</form>";
-    }
-    echo "</div>";
-    echo"</div>";
-	  echo "<div style=\"position:relative;width:100%;\">";
 	  echo "<hr />";
-    echo "</div>";
-	  echo "</div>";
   }
-  public  function showObjects($link, $min, $max, $ownShow='', $showRank=0)        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
+  public  function showObjects($link, $min, $max, $ownShow='', $showRank=0, $step=25)        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
   { global $FF, $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil;
 	  $atlas='';
     echo "<table width=\"100%\">\n";
@@ -914,7 +869,7 @@ class Objects implements iObjects
       $count++;
     }
     if($FF) 
-    { while($countline++<25)
+    { while($countline++<$step)
         echo "<tr><td>&nbsp;</td></tr>";   
       echo "</tbody>";
     }

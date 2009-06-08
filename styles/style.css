@@ -99,7 +99,7 @@ div#main {
 }
 h2 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; padding-bottom: 10px; padding-top: 10px;}
 h3 { color: #333333; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 100%; font-weight: bold; padding-bottom: 10px; padding-top: 20px}
-h4 { color: #FF9900; font-family: Verdana, Trebuchet MS, Arial, Helvetica, sans-serif; font-size: 16px; font-weight: bold; }
+h4 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; line-height:30px; margin: 0px;}
 h5 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; line-height:50px; margin: 0px;}
 h6 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; padding: 0px; border:0px; margin:0px; }
 .title    { padding-top:10px; padding-bottom: 10px; /*background-color:#FFFF00;*/}
@@ -309,12 +309,12 @@ img.account {
 	color            : #000000;
 }
 .type15 { 
-	background-color : #E0E0E0;
+	background-color : #EFE0E0;
 	color            : #000000;
 }
 
 .type25 { 
-  background-color : #D0D6DC;
+  background-color : #DFD6DC;
 	color            : #000000;
 }
 

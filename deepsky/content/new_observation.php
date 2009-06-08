@@ -220,7 +220,9 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	
 	echo "<hr />";
 	$seen = $objObject->getDSOseenLink($object);
-	$objPresentations->line(array("<h5>".LangViewObjectTitle."&nbsp;".$object."&nbsp;:&nbsp;".$seen."</h5>"));
+	
+	$objPresentations->line(array("<h5>".LangViewObjectTitle."&nbsp;".$object."&nbsp;:&nbsp;".$seen."</h5>",$objPresentations->getDSSDeepskyLiveLinks($object)),
+	                        "LR",array(50,50),40);
 	echo "<hr />";
 	$content1="";$content2="";$content3="";
 	if(substr($objObject->getSeen($object),0,1)!="-")
@@ -233,7 +235,6 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 		else
 			$content3="<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>";
 	$objObject->showObject($object);
-	
 } 
 else // no object found or not pushed on search button yet
 { echo "<h2>";

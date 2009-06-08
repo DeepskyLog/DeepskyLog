@@ -306,7 +306,7 @@ define("LangOverviewSiteTitle", "&uuml;bersicht Beobachtungspl&auml;tze");
 define("LangAddSiteExisting", "Beobachtungsplatz hinzuf&uuml;gen");
 
 define("LangOverviewEyepieceTitle", "&uuml;bersicht Okulare");
-define("LangAddEyepieceExisting", "Select the eyeiece details from the list");
+define("LangAddEyepieceExisting", "Select the eyepiece details from the list");
 define("LangAddEyepieceManually", "geben Sie das Okulare Details an");
 define("LangAddEyepieceTitle", "Neues Okular");
 define("LangAddEyepieceField1", "Name");

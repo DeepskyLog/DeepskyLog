@@ -14,6 +14,6 @@ if($FF)
   echo "theResizeSize=40;";
   echo "</script>";
 }
-$objObject->showObjects($link, $min, $max,'',2);
+$objObject->showObjects($link, $min, $max,'',2,$step);
 echo "</div>";
 ?>

@@ -6,56 +6,79 @@ else
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 $seen=$objObject->getDSOseenLink($object);
 echo "<div id=\"main\">";
-echo "<div style=\"position:relative;\">";
-echo "<h6 class=\"title\">".LangViewObjectTitle."&nbsp;-&nbsp;".stripslashes($object)."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h6>";
-$topline="";
+$object_ss = stripslashes($object);
+$seen = "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
+$seenDetails = $objObject->getSeen($object);
+if (substr($seenDetails, 0, 1) == "X")
+	$seen = "<a target=\"_top\" href=\"" .
+	$baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectXSeen . "\">" . $seenDetails . "</a>";
+if (array_key_exists("deepskylog_id", $_SESSION) && $_SESSION["deepskylog_id"])
+	if (substr($seenDetails, 0, 1) == "Y")
+		$seen = "<a target=\"_top\" href=\"" .
+		$baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
+$objPresentations->line(array("<h4>".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h4>"),
+                        "L",array(100),30);
+  $topline="";
 if(substr($objObject->getSeen($object),0,1)!='-')
-  $topline.= "&nbsp;-&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($_GET['object'])."\">".LangViewObjectObservations."&nbsp;".$_GET['object']."</a>";
+  $topline.= "&nbsp;-&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\">".LangViewObjectObservations."&nbsp;".$object_ss."</a>";
 if($loggedUser)
-  $topline.= "&nbsp;-&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=add_observation&amp;object=".urlencode($_GET['object'])."\">".LangViewObjectAddObservation.$_GET['object']."</a>";
-if($myList)
-{ if($objList->checkObjectInMyActiveList($_GET['object']))
-    $topline.= "&nbsp;-&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object'])."&amp;removeObjectFromList=".urlencode($_GET['object'])."\">".$_GET['object'].LangListQueryObjectsMessage3.$listname_ss."</a>";
-  else
-    $topline.= "&nbsp;-&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object'])."&amp;addObjectToList=".urlencode($_GET['object'])."&amp;showname=".urlencode($_GET['object'])."\">".$_GET['object'].LangListQueryObjectsMessage2.$listname_ss."</a>";
-}	
-echo substr($topline,13);
-$objObject->showObject($object,$objUtil->checkGetKey('zoom',30));
-echo"</div>";
+	$topline.="&nbsp;-&nbsp;"."<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object_ss . "</a>";
+if ($myList) 
+{ if ($objList->checkObjectInMyActiveList($object))
+		$topline.="&nbsp;-&nbsp;"."<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage3 . $listname_ss . "</a>";
+	else
+		$topline.="&nbsp;-&nbsp;"."<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a>";
+}
+$topline.="&nbsp;-&nbsp;".$objPresentations->getDSSDeepskyLiveLinks($object);
+$objPresentations->line(array(substr($topline,13)),"L",array(100),20);
+echo "<hr />";
+$objObject->showObject($object);
+
 if(!($imagesize=$objUtil->checkRequestKey('imagesize')))
 { $maxcount=count($_SESSION['Qobj']);
 	$max = 9999;
-	$link = $baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey('zoom',30).'&amp;SID=Qobj';
-	echo "<div style=\"position:relative; left:0px; height:65px; width:100%;\">";
-	echo "<div style=\"position:absolute; left:0px; width:60%;text-align:left;\">";
-	echo "<h6 class=\"title\">".$_GET['object'];
-	if(count($_SESSION['Qobj'])>2)
-	 echo ' '.LangViewObjectAndNearbyObjects.' '.(count($_SESSION['Qobj'])-1).' '.LangViewObjectNearbyObjects;
-	elseif(count($_SESSION['Qobj'])>1)
-	 echo ' '.LangViewObjectAndNearbyObjects.' '.(count($_SESSION['Qobj'])-1).' '.LangViewObjectNearbyObject;
+	
+	if((array_key_exists('steps',$_SESSION))&&(array_key_exists("nearbyObjects",$_SESSION['steps'])))
+	  $step=$_SESSION['steps']["nearbyObjects"];
+	if(array_key_exists('multiplepagenr',$_GET))
+	  $min = ($_GET['multiplepagenr']-1)*$step;
+	elseif(array_key_exists('multiplepagenr',$_POST))
+	  $min = ($_POST['multiplepagenr']-1)*$step;
+	elseif(array_key_exists('min',$_GET))
+	  $min=$_GET['min'];
 	else
-	 echo ' '.LangViewObjectNoNearbyObjects;
-	echo "</h6>";
-	echo "<form name=\"zoomform\" action=\"".$link."\" method=\"get\">";
-	echo LangViewObjectNearbyObjectsMoreLess .":&nbsp;";
-	echo "<select name=\"zoom\"  onchange=\"zoomform.submit();\">";
-	if($objUtil->checkGetKey('zoom',30)=="180") echo("<option selected=\"selected\" value=\"180\">3x3&deg;</option>"); else echo("<option value=\"180\">3x3&deg;</option>"); 
-	if($objUtil->checkGetKey('zoom',30)=="120") echo("<option selected=\"selected\" value=\"120\">2x2&deg;</option>"); else echo("<option value=\"120\">2x2&deg;</option>"); 
-	if($objUtil->checkGetKey('zoom',30)=="60")  echo("<option selected=\"selected\" value=\"60\">1x1&deg;</option>"); else echo("<option value=\"60\">1x1&deg;</option>"); 
-	if($objUtil->checkGetKey('zoom',30)=="30")  echo("<option selected=\"selected\" value=\"30\">30x30'</option>"); else echo("<option value=\"30\">30x30'</option>"); 
-	if($objUtil->checkGetKey('zoom',30)=="15")  echo("<option selected=\"selected\" value=\"15\">15x15'</option>"); else echo("<option value=\"15\">15x15'</option>"); 
-	if($objUtil->checkGetKey('zoom',30)=="10")  echo("<option selected=\"selected\" value=\"10\">10x10'</option>"); else echo("<option value=\"10\">10x10'</option>"); 
-	if($objUtil->checkGetKey('zoom',30)=="5")   echo("<option selected=\"selected\" value=\"5\">5x5'</option>"); else echo("<option value=\"5\">5x5'</option>"); 
-	echo "</select>";
-	echo "<input type=\"hidden\" name=\"object\" value=\"".$_GET['object']."\" /> ";
-	echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" /> ";		
-	echo "</form>";
-	echo "</div>";
-	  
-	echo "<div class=\"title\" style=\"position:absolute; right:0px;width:38%;text-align:right;\">";
-	list($min,$max)=$objUtil->printNewListHeader2($_SESSION['Qobj'],$link ,$min,25,"");
-	echo "</div>";
-	echo "</div>";
+	  $min = 0;
+	
+	$link = $baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey('zoom',30).'&amp;SID=Qobj';
+	
+	$content1 ="<h4>".$_GET['object'];
+	if(count($_SESSION['Qobj'])>2)
+	 $content1.=' '.LangViewObjectAndNearbyObjects.' '.(count($_SESSION['Qobj'])-1).' '.LangViewObjectNearbyObjects;
+	elseif(count($_SESSION['Qobj'])>1)
+	 $content1.=' '.LangViewObjectAndNearbyObjects.' '.(count($_SESSION['Qobj'])-1).' '.LangViewObjectNearbyObject;
+	else
+	 $content1.=' '.LangViewObjectNoNearbyObjects;
+	$content1.="</h4>";
+	list($min,$max,$content2)=$objUtil->printNewListHeader3($_SESSION['Qobj'],$link ,$min,$step);
+	$objPresentations->line(array($content1,$content2),"LR",array(75,25),30);
+  $content1 ="<form name=\"zoomform\" action=\"".$link."\" method=\"get\">";
+	$content1.=LangViewObjectNearbyObjectsMoreLess .":&nbsp;";
+  $content1.="<select name=\"zoom\"  onchange=\"zoomform.submit();\">";
+	if($objUtil->checkGetKey('zoom',30)=="180") $content1.=("<option selected=\"selected\" value=\"180\">3x3&deg;</option>"); else $content1.=("<option value=\"180\">3x3&deg;</option>"); 
+	if($objUtil->checkGetKey('zoom',30)=="120") $content1.=("<option selected=\"selected\" value=\"120\">2x2&deg;</option>"); else $content1.=("<option value=\"120\">2x2&deg;</option>"); 
+	if($objUtil->checkGetKey('zoom',30)=="60")  $content1.=("<option selected=\"selected\" value=\"60\">1x1&deg;</option>"); else $content1.=("<option value=\"60\">1x1&deg;</option>"); 
+	if($objUtil->checkGetKey('zoom',30)=="30")  $content1.=("<option selected=\"selected\" value=\"30\">30x30'</option>"); else $content1.=("<option value=\"30\">30x30'</option>"); 
+	if($objUtil->checkGetKey('zoom',30)=="15")  $content1.=("<option selected=\"selected\" value=\"15\">15x15'</option>"); else $content1.=("<option value=\"15\">15x15'</option>"); 
+	if($objUtil->checkGetKey('zoom',30)=="10")  $content1.=("<option selected=\"selected\" value=\"10\">10x10'</option>"); else $content1.=("<option value=\"10\">10x10'</option>"); 
+	if($objUtil->checkGetKey('zoom',30)=="5")   $content1.=("<option selected=\"selected\" value=\"5\">5x5'</option>"); else $content1.=("<option value=\"5\">5x5'</option>"); 
+	$content1.="</select>";
+	$content1.="<input type=\"hidden\" name=\"object\" value=\"".$_GET['object']."\" /> ";
+	$content1.="<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" /> ";		
+	$content1.="</form>";
+	$content2="";
+	$content2=$objUtil->printStepsPerPage3($link,"nearbyObjects",$step);
+	$objPresentations->line(array($content1,$content2),"LR",array(70,30),25);
+	echo "<hr />";
 	
 	echo "<div style=\"position:relative; left:0px; width:100%;\">";
 	if($max>count($_SESSION['Qobj']))
@@ -65,10 +88,10 @@ if(!($imagesize=$objUtil->checkRequestKey('imagesize')))
 	if($FF)
 	{ echo "<script type=\"text/javascript\">";
 	  echo "theResizeElement='obj_list';";
-	  echo "theResizeSize=80;";
+	  echo "theResizeSize=68;";
 	  echo "</script>";
 	}
-	$objObject->showObjects($link, $min, $max,$_GET['object']);
+	$objObject->showObjects($link, $min, $max,$_GET['object'],0,$step);
 		
 	echo "</div>";
 	
@@ -125,3 +148,4 @@ if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
 }
 }
 ?>
+	

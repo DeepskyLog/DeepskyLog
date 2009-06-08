@@ -57,7 +57,7 @@ echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 $content1b= "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 while(list($key,$value)=each($sites))
-  $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_site&amp;locationid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('locationid'))?' selected=\"selected\" ':'').">" . $objLocation->getLocationPropertyFromId($value,'name') . "</option>";
+  $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_site&amp;locationid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('locationid'))?" selected=\"selected\" ":'').">" . $objLocation->getLocationPropertyFromId($value,'name') . "</option>";
 $content1b.= "</select>";
 $objPresentations->line(array("<h5>".LangAddSiteTitle."</h5>"),"L",array(),50);
 echo "<hr />";
