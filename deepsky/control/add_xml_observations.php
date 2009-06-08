@@ -476,23 +476,27 @@ if ($dom->schemaValidate($xmlschema)) {
 
     $tp =  $scope->getAttribute("xsi:type");
 
-    $type = $scope->getElementsByTagName( "type" )->item(0)->nodeValue;
-    if ($type == "A" || $type == "Naked Eye") {
-      $typeToSave = InstrumentNakedEye;
-    } else if ($type == "B" || $type == "Binoculars") {
-      $typeToSave = InstrumentBinoculars;
-    } else if ($type == "R" || $type == "Refractor") {
-      $typeToSave = InstrumentRefractor;
-    } else if ($type == "N" || $type == "Newton") {
-      $typeToSave = InstrumentReflector;
-    } else if ($type == "C" || $type == "Cassegrain") {
-      $typeToSave = InstrumentCassegrain;
-    } else if ($type == "K" || $type == "Kutter") {
-      $typeToSave = InstrumentKutter;
-    } else if ($type == "M" || $type == "Maksutov") {
-      $typeToSave = InstrumentMaksutov;
-    } else if ($type == "S" || $type == "Schmidt-Cassegrain") {
-      $typeToSave = InstrumentSchmidtCassegrain;
+    if ($scope->getElementsByTagName( "focalLength" )->item(0)) {
+      $type = $scope->getElementsByTagName( "type" )->item(0)->nodeValue;
+      if ($type == "A" || $type == "Naked Eye") {
+        $typeToSave = InstrumentNakedEye;
+      } else if ($type == "B" || $type == "Binoculars") {
+        $typeToSave = InstrumentBinoculars;
+      } else if ($type == "R" || $type == "Refractor") {
+        $typeToSave = InstrumentRefractor;
+      } else if ($type == "N" || $type == "Newton") {
+        $typeToSave = InstrumentReflector;
+      } else if ($type == "C" || $type == "Cassegrain") {
+        $typeToSave = InstrumentCassegrain;
+      } else if ($type == "K" || $type == "Kutter") {
+        $typeToSave = InstrumentKutter;
+      } else if ($type == "M" || $type == "Maksutov") {
+        $typeToSave = InstrumentMaksutov;
+      } else if ($type == "S" || $type == "Schmidt-Cassegrain") {
+        $typeToSave = InstrumentSchmidtCassegrain;
+      } else {
+        $typeToSave = InstrumentOther;
+      }
     } else {
       $typeToSave = InstrumentOther;
     }
@@ -695,7 +699,7 @@ if ($dom->schemaValidate($xmlschema)) {
         $objInstrument->setInstrumentProperty($instId, "fixedMagnification", $ia["fixedMagnification"]);
       } else {
         // Add the new instrument!
-        $instId = $objInstrument->addInstrument($ia["name"], $ia["diameter"], $ia["fd"], $ia["type"], $ia["fixedMagnification"], $_SESSION['deepskylog_id']);
+        $instId = $objInstrument->addInstrument(utf8_encode(htmlentities($ia["name"])), $ia["diameter"], $ia["fd"], $ia["type"], $ia["fixedMagnification"], $_SESSION['deepskylog_id']);
       }
 
       // Filter is not mandatory
