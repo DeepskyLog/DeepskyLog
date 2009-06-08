@@ -1619,7 +1619,7 @@ class Utils implements iUtils
     { $currentpage=ceil($min/$step)+1;
 			$content.= "<a href=\"".$link."&amp;multiplepagenr=0\">"."<img style=\"vertical-align:middle\" src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\" alt =\"<<\" />"."</a>";
 		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img style=\"vertical-align:middle\" src=\"".$baseURL."styles/images/left20.gif\" border=\"0\" alt=\"<\" />"."</a>";			
-		  $content.= "<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\" />";	
+		  $content.= "<input type=\"text\" name=\"multiplepagenr\" size=\"3\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\" />";	
 		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img style=\"vertical-align:middle\" src=\"".$baseURL."styles/images/right20.gif\" border=\"0\" alt=\">\" />"."</a>";
 		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img style=\"vertical-align:middle\" src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\" alt=\">>\" />"."</a>";
 		  $content.= "&nbsp;";

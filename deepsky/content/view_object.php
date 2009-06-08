@@ -7,18 +7,11 @@ echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presenta
 $seen=$objObject->getDSOseenLink($object);
 echo "<div id=\"main\">";
 $object_ss = stripslashes($object);
-$seen = "<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
-$seenDetails = $objObject->getSeen($object);
-if (substr($seenDetails, 0, 1) == "X")
-	$seen = "<a target=\"_top\" href=\"" .
-	$baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectXSeen . "\">" . $seenDetails . "</a>";
-if (array_key_exists("deepskylog_id", $_SESSION) && $_SESSION["deepskylog_id"])
-	if (substr($seenDetails, 0, 1) == "Y")
-		$seen = "<a target=\"_top\" href=\"" .
-		$baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
-$objPresentations->line(array("<h4>".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h4>"),
-                        "L",array(100),30);
-  $topline="";
+$objPresentations->line(array("<h4>".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h4>",$objPresentations->getDSSDeepskyLiveLinks1($object)),
+                        "LR",array(60,40),30);
+$topline="";
+if($imagesize=$objUtil->checkRequestKey('imagesize'))
+  $topline="&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\">".LangViewObjectViewNearbyObject." ".$object_ss."</a>";
 if(substr($objObject->getSeen($object),0,1)!='-')
   $topline.= "&nbsp;-&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\">".LangViewObjectObservations."&nbsp;".$object_ss."</a>";
 if($loggedUser)
@@ -29,12 +22,11 @@ if ($myList)
 	else
 		$topline.="&nbsp;-&nbsp;"."<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a>";
 }
-$topline.="&nbsp;-&nbsp;".$objPresentations->getDSSDeepskyLiveLinks($object);
-$objPresentations->line(array(substr($topline,13)),"L",array(100),20);
+$objPresentations->line(array(substr($topline,13),$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(60,40),20);
 echo "<hr />";
 $objObject->showObject($object);
 
-if(!($imagesize=$objUtil->checkRequestKey('imagesize')))
+if(!($imagesize))
 { $maxcount=count($_SESSION['Qobj']);
 	$max = 9999;
 	
@@ -60,7 +52,7 @@ if(!($imagesize=$objUtil->checkRequestKey('imagesize')))
 	 $content1.=' '.LangViewObjectNoNearbyObjects;
 	$content1.="</h4>";
 	list($min,$max,$content2)=$objUtil->printNewListHeader3($_SESSION['Qobj'],$link ,$min,$step);
-	$objPresentations->line(array($content1,$content2),"LR",array(75,25),30);
+	$objPresentations->line(array($content1,$content2),"LR",array(50,50),30);
   $content1 ="<form name=\"zoomform\" action=\"".$link."\" method=\"get\">";
 	$content1.=LangViewObjectNearbyObjectsMoreLess .":&nbsp;";
   $content1.="<select name=\"zoom\"  onchange=\"zoomform.submit();\">";
@@ -77,7 +69,7 @@ if(!($imagesize=$objUtil->checkRequestKey('imagesize')))
 	$content1.="</form>";
 	$content2="";
 	$content2=$objUtil->printStepsPerPage3($link,"nearbyObjects",$step);
-	$objPresentations->line(array($content1,$content2),"LR",array(70,30),25);
+	$objPresentations->line(array($content1,$content2),"LR",array(50,50),25);
 	echo "<hr />";
 	
 	echo "<div style=\"position:relative; left:0px; width:100%;\">";

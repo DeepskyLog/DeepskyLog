@@ -194,14 +194,14 @@ class Objects implements iObjects
 	  return $objDatabase->selectSingleValue("SELECT objects.".$theProperty." FROM objects WHERE name=\"".$theObject."\"",$theProperty,$default);
   }
   public  function getDSOseenLink($object)                                          // Returns the getSeen result, encoded to a href that shows the seen observations
-  { global $baseURL;
+  { global $baseURL,$loggedUser;
     $seenDetails=$this->getSeen($object);
     $seen = "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
     if(substr($seenDetails,0,1)=="X")                                            // object has been seen already
       $seen = "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\">".$seenDetails."</a>";
     if(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id'])
       if (substr($seenDetails,0,1)=="Y")                                         // object has been seen by the observer logged in
-        $seen = "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\">".$seenDetails."</a>";
+        $seen = "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."&amp;observer=".urlencode($loggedUser)."\" title=\"".LangObjectYSeen."\">".$seenDetails."</a>";
     return $seen;
   }
   public  function getExactDsObject($value, $cat='', $catindex='')              // returns the exact name of an object
