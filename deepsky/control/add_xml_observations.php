@@ -675,31 +675,33 @@ if ($dom->schemaValidate($xmlschema)) {
       $sa = $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue];
       if (count($objDatabase->selectRecordArray("SELECT * from locations where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $site . "\";")) > 0) {
         // Update the coordinates
-        $locId = $objLocation->getLocationId($sa["name"], $_SESSION['deepskylog_id']);
+        $locId = $objLocation->getLocationId(utf8_encode(htmlentities($sa["name"])), $_SESSION['deepskylog_id']);
         $objLocation->setLocationProperty($locId, "longitude", $sa["longitude"]);
         $objLocation->setLocationProperty($locId, "latitude", $sa["latitude"]);
         $objLocation->setLocationProperty($locId, "timezone", $sa["timezone"]);
       } else {
         // Add the new site!
-        $locId = $objLocation->addLocation($sa["name"], $sa["longitude"], $sa["latitude"], "", "", $sa["timezone"]);
+        $locId = $objLocation->addLocation(utf8_encode(htmlentities($sa["name"])), $sa["longitude"], $sa["latitude"], "", "", $sa["timezone"]);
         $objDatabase->execSQL("update locations set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $locId . "\";");
       }
 
+      $instId = -1;
       // Check if the instrument already exists in DeepskyLog
-      $instrument = $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue]["name"];
-
-      $ia = $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue];
-      if (count($objDatabase->selectRecordArray("SELECT * from instruments where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . utf8_encode(htmlentities($instrument)) . "\";")) > 0) {
-        // Update
-        $instId = $objInstrument->getInstrumentId($ia["name"], $_SESSION['deepskylog_id']);
-        $objInstrument->setInstrumentProperty($instId, "name", utf8_encode(htmlentities($ia["name"])));
-        $objInstrument->setInstrumentProperty($instId, "diameter", $ia["diameter"]);
-        $objInstrument->setInstrumentProperty($instId, "fd", $ia["fd"]);
-        $objInstrument->setInstrumentProperty($instId, "type", $ia["type"]);
-        $objInstrument->setInstrumentProperty($instId, "fixedMagnification", $ia["fixedMagnification"]);
-      } else {
-        // Add the new instrument!
-        $instId = $objInstrument->addInstrument(utf8_encode(htmlentities($ia["name"])), $ia["diameter"], $ia["fd"], $ia["type"], $ia["fixedMagnification"], $_SESSION['deepskylog_id']);
+      if ($observation->getElementsByTagName( "scope" )->item(0)) {
+        $instrument = $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue]["name"];
+        $ia = $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue];
+        if (count($objDatabase->selectRecordArray("SELECT * from instruments where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . utf8_encode(htmlentities($instrument)) . "\";")) > 0) {
+          // Update
+          $instId = $objInstrument->getInstrumentId($ia["name"], $_SESSION['deepskylog_id']);
+          $objInstrument->setInstrumentProperty($instId, "name", utf8_encode(htmlentities($ia["name"])));
+          $objInstrument->setInstrumentProperty($instId, "diameter", $ia["diameter"]);
+          $objInstrument->setInstrumentProperty($instId, "fd", $ia["fd"]);
+          $objInstrument->setInstrumentProperty($instId, "type", $ia["type"]);
+          $objInstrument->setInstrumentProperty($instId, "fixedMagnification", $ia["fixedMagnification"]);
+        } else {
+          // Add the new instrument!
+          $instId = $objInstrument->addInstrument(utf8_encode(htmlentities($ia["name"])), $ia["diameter"], $ia["fd"], $ia["type"], $ia["fixedMagnification"], $_SESSION['deepskylog_id']);
+        }
       }
 
       // Filter is not mandatory
@@ -718,7 +720,7 @@ if ($dom->schemaValidate($xmlschema)) {
           $objFilter->setFilterProperty($filtId, "schott", $fa["schott"]);
         } else {
           // Add the new filter!
-          $filtId = $objFilter->addFilter($fa["name"], $fa["type"], $fa["color"], $fa["wratten"], $fa["schott"]);
+          $filtId = $objFilter->addFilter(utf8_encode(htmlentities($fa["name"])), $fa["type"], $fa["color"], $fa["wratten"], $fa["schott"]);
           $objDatabase->execSQL("update filters set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $filtId . "\";");
         }
       }
@@ -738,7 +740,7 @@ if ($dom->schemaValidate($xmlschema)) {
           $objEyepiece->setEyepieceProperty($eyepId, "maxFocalLength", $ea["maxFocalLength"]);
         } else {
           // Add the new eyepiece!
-          $eyepId = $objEyepiece->addEyepiece($ea["name"], $ea["focalLength"], $ea["apparentFOV"]);
+          $eyepId = $objEyepiece->addEyepiece(utf8_encode(htmlentities($ea["name"])), $ea["focalLength"], $ea["apparentFOV"]);
           $objDatabase->execSQL("update eyepieces set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $eyepId . "\";");
           $objEyepiece->setEyepieceProperty($eyepId, "maxFocalLength", $ea["maxFocalLength"]);
         }
@@ -752,12 +754,12 @@ if ($dom->schemaValidate($xmlschema)) {
         $la = $lensArray[$observation->getElementsByTagName( "lens" )->item(0)->nodeValue];
         if (count($objDatabase->selectRecordArray("SELECT * from lenses where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . utf8_encode(htmlentities($lens)) . "\";")) > 0) {
           // Update the lens
-          $lensId = $objLens->getLensId($la["name"], $_SESSION['deepskylog_id']);
+          $lensId = $objLens->getLensId(utf8_encode(htmlentities($la["name"])), $_SESSION['deepskylog_id']);
           $objLens->setLensProperty($lensId, "name", utf8_encode(htmlentities($la["name"])));
           $objLens->setLensProperty($lensId, "factor", $la["factor"]);
         } else {
           // Add the new lens!
-          $lensId = $objLens->addLens($la["name"], $la["factor"]);
+          $lensId = $objLens->addLens(utf8_encode(htmlentities($la["name"])), $la["factor"]);
           $objDatabase->execSQL("update lenses set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $lensId . "\";");
         }
       }
@@ -788,16 +790,15 @@ if ($dom->schemaValidate($xmlschema)) {
             $names = explode(" ", $targetName);
             $targetName = str_replace("  ", " ", $targetName);
 
-            $objObject->addDSObject($names[0]." ".$names[2], $names[0], $names[2], $ta["type"], $ta["constellation"], $ta["ra"], $ta["dec"], $ta["mag"], $ta["subr"], $ta["diam1"], $ta["diam2"], $ta["pa"], "", $ta["datasource"]);
+            $objObject->addDSObject($names[0]." ".$names[1], $names[0], $names[1], $ta["type"], $ta["constellation"], $ta["ra"], $ta["dec"], $ta["mag"], $ta["subr"], $ta["diam1"], $ta["diam2"], $ta["pa"], "", $ta["datasource"]);
             for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
               $aliasName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
               $aliasNames = explode(" ", $aliasName);
-              $objObject->newAltName($names[0]." ".$names[2], $aliasNames[0], $aliasNames[2]);
+              $objObject->newAltName($names[0]." ".$names[1], $aliasNames[0], $aliasNames[1]);
             }
             $objeId = $objObject->getDsObjectName($targetName);
           }
         }
-
         // Check if the observation already exists!
         $dateArray = sscanf($observation->getElementsByTagName( "begin" )->item(0)->nodeValue, "%4d-%2d-%2dT%2d:%2d:%2d%c%02d:%02d");
         $date = mktime($dateArray[3], $dateArray[4], 0, $dateArray[1], $dateArray[2], $dateArray[0]);
@@ -812,198 +813,201 @@ if ($dom->schemaValidate($xmlschema)) {
         $dateStr = date("Ymd", $date);
         $timeStr = date("Hi", $date);
 
-        // Check if the observation does already exist
-        $obsId = $objDatabase->selectRecordArray("SELECT id from observations WHERE objectname = \"" . $objeId . "\" and date = \"" . $dateStr . "\" and instrumentid = \"" . $instId . "\" and locationId = \"" . $locId . "\" and observerid = \"" . $_SESSION['deepskylog_id'] . "\";");
+        if ($instId > 1) {
+          // Check if the observation does already exist
+          $obsId = $objDatabase->selectRecordArray("SELECT id from observations WHERE objectname = \"" . $objeId . "\" and date = \"" . $dateStr . "\" and instrumentid = \"" . $instId . "\" and locationId = \"" . $locId . "\" and observerid = \"" . $_SESSION['deepskylog_id'] . "\";");
 
-        if (count($obsId) > 0) {
-          // TODO : Adapt observation
-        } else {
-          // New observation
-          $resultNode = $observation->getElementsByTagName("result")->item(0);
-          if ($resultNode->getElementsByTagName( "description" )->item(0)) {
-            $description = $resultNode->getElementsByTagName( "description" )->item(0)->nodeValue;
+          if (count($obsId) > 0) {
+            // TODO : Adapt observation
           } else {
-            $description = "";
-          }
-
-          // Seeing is not mandatory
-          if ($observation->getElementsByTagName( "seeing" )->item(0)) {
-            $seeing = $observation->getElementsByTagName( "seeing" )->item(0)->nodeValue;
-          } else {
-            $seeing ="-1";
-          }
-
-          // Limiting magnitude is not mandatory
-          if ($observation->getElementsByTagName( "faintestStar" )->item(0)) {
-            $limmag = $observation->getElementsByTagName( "faintestStar" )->item(0)->nodeValue;
-          } else {
-            $limmag = "";
-          }
-
-          if ($resultNode->hasAttribute("lang")) {
-            $language = $resultNode->getAttribute("lang");
-          } else {
-            $language = "en";
-          }
-
-          // Rating is not mandatory
-          if ($resultNode->getElementsByTagName( "rating" )->item(0)) {
-            $visibility = $resultNode->getElementsByTagName( "rating" )->item(0)->nodeValue;
-          }
-
-          $obsId = $objObservation->addDSObservation($objeId, $_SESSION['deepskylog_id'], $instId, $locId, $dateStr, $timeStr, $description, $seeing, $limmag, $visibility, $language);
-
-          // Magnification is not mandatory
-          if ($observation->getElementsByTagName( "magnification" )->item(0)) {
-            $objObservation->setDsObservationProperty($obsId, "magnification", $observation->getElementsByTagName( "magnification" )->item(0)->nodeValue);
-          }
-          // Sqm is not mandatory
-          if ($observation->getElementsByTagName( "sky-quality" )->item(0)) {
-            // Get sqm value and convert it
-            $unit = $observation->getElementsByTagName( "sky-quality" )->item(0)->getAttribute("unit");
-
-            if ($unit == "mags-per-squarearcmin") {
-              $sqm = $observation->getElementsByTagName( "sky-quality" )->item(0)->nodeValue + 8.89;
+            // New observation
+            $resultNode = $observation->getElementsByTagName("result")->item(0);
+            if ($resultNode->getElementsByTagName( "description" )->item(0)) {
+              $description = $resultNode->getElementsByTagName( "description" )->item(0)->nodeValue;
+              $description = htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $description));
             } else {
-              $sqm = $observation->getElementsByTagName( "sky-quality" )->item(0)->nodeValue;
+              $description = "";
             }
 
-            $objObservation->setDsObservationProperty($obsId, "SQM", $sqm);
-          }
-
-          // The result of the observation!
-          $resultNode = $observation->getElementsByTagName( "result" )->item(0);
-          // colorContrasts is not mandatory
-          if ($resultNode->hasAttribute("colorContrasts")) {
-            if ($resultNode->getAttribute("colorContrasts") == "true") {
-              $colorContrast = 1;
+            // Seeing is not mandatory
+            if ($observation->getElementsByTagName( "seeing" )->item(0)) {
+              $seeing = $observation->getElementsByTagName( "seeing" )->item(0)->nodeValue;
             } else {
-              $colorContrast = 0;
+              $seeing ="-1";
             }
-          } else {
-            $colorContrast = -1;
-          }
-          $objObservation->setDsObservationProperty($obsId, "colorContrasts", $colorContrast);
 
-          // extended is not mandatory
-          if ($resultNode->hasAttribute("extended")) {
-            if ($resultNode->getAttribute("extended") == "true") {
-              $extended = 1;
+            // Limiting magnitude is not mandatory
+            if ($observation->getElementsByTagName( "faintestStar" )->item(0)) {
+              $limmag = $observation->getElementsByTagName( "faintestStar" )->item(0)->nodeValue;
             } else {
-              $extended = 0;
+              $limmag = "";
             }
-          } else {
-            $extended = -1;
-          }
-          $objObservation->setDsObservationProperty($obsId, "extended", $extended);
 
-          // mottled is not mandatory
-          if ($resultNode->hasAttribute("mottled")) {
-            if ($resultNode->getAttribute("mottled") == "true") {
-              $mottled = 1;
+            if ($resultNode->hasAttribute("lang")) {
+              $language = $resultNode->getAttribute("lang");
             } else {
-              $mottled = 0;
+              $language = "en";
             }
-          } else {
-            $mottled = -1;
-          }
-          $objObservation->setDsObservationProperty($obsId, "mottled", $mottled);
 
-          // resolved is not mandatory
-          if ($resultNode->hasAttribute("resolved")) {
-            if ($resultNode->getAttribute("resolved") == "true") {
-              $resolved = 1;
+            // Rating is not mandatory
+            if ($resultNode->getElementsByTagName( "rating" )->item(0)) {
+              $visibility = $resultNode->getElementsByTagName( "rating" )->item(0)->nodeValue;
+            }
+
+            $obsId = $objObservation->addDSObservation($objeId, $_SESSION['deepskylog_id'], $instId, $locId, $dateStr, $timeStr, $description, $seeing, $limmag, $visibility, $language);
+
+            // Magnification is not mandatory
+            if ($observation->getElementsByTagName( "magnification" )->item(0)) {
+              $objObservation->setDsObservationProperty($obsId, "magnification", $observation->getElementsByTagName( "magnification" )->item(0)->nodeValue);
+            }
+            // Sqm is not mandatory
+            if ($observation->getElementsByTagName( "sky-quality" )->item(0)) {
+              // Get sqm value and convert it
+              $unit = $observation->getElementsByTagName( "sky-quality" )->item(0)->getAttribute("unit");
+
+              if ($unit == "mags-per-squarearcmin") {
+                $sqm = $observation->getElementsByTagName( "sky-quality" )->item(0)->nodeValue + 8.89;
+              } else {
+                $sqm = $observation->getElementsByTagName( "sky-quality" )->item(0)->nodeValue;
+              }
+
+              $objObservation->setDsObservationProperty($obsId, "SQM", $sqm);
+            }
+
+            // The result of the observation!
+            $resultNode = $observation->getElementsByTagName( "result" )->item(0);
+            // colorContrasts is not mandatory
+            if ($resultNode->hasAttribute("colorContrasts")) {
+              if ($resultNode->getAttribute("colorContrasts") == "true") {
+                $colorContrast = 1;
+              } else {
+                $colorContrast = 0;
+              }
             } else {
-              $resolved = 0;
+              $colorContrast = -1;
             }
-          } else {
-            $resolved = -1;
-          }
-          $objObservation->setDsObservationProperty($obsId, "resolved", $resolved);
+            $objObservation->setDsObservationProperty($obsId, "colorContrasts", $colorContrast);
 
-          // stellar is not mandatory
-          if ($resultNode->hasAttribute("stellar")) {
-            if ($resultNode->getAttribute("stellar") == "true") {
-              $stellar = 1;
+            // extended is not mandatory
+            if ($resultNode->hasAttribute("extended")) {
+              if ($resultNode->getAttribute("extended") == "true") {
+                $extended = 1;
+              } else {
+                $extended = 0;
+              }
             } else {
-              $stellar = 0;
+              $extended = -1;
             }
-          } else {
-            $stellar = -1;
-          }
-          $objObservation->setDsObservationProperty($obsId, "stellar", $stellar);
+            $objObservation->setDsObservationProperty($obsId, "extended", $extended);
 
-          // unusualShape is not mandatory
-          if ($resultNode->hasAttribute("unusualShape")) {
-            if ($resultNode->getAttribute("unusualShape") == "true") {
-              $unusualShape = 1;
+            // mottled is not mandatory
+            if ($resultNode->hasAttribute("mottled")) {
+              if ($resultNode->getAttribute("mottled") == "true") {
+                $mottled = 1;
+              } else {
+                $mottled = 0;
+              }
             } else {
-              $unusualShape = 0;
+              $mottled = -1;
             }
-          } else {
-            $unusualShape = -1;
-          }
-          $objObservation->setDsObservationProperty($obsId, "unusualShape", $unusualShape);
+            $objObservation->setDsObservationProperty($obsId, "mottled", $mottled);
 
-          // partlyUnresolved is not mandatory
-          if ($resultNode->hasAttribute("partlyUnresolved")) {
-            if ($resultNode->getAttribute("partlyUnresolved") == "true") {
-              $partlyUnresolved = 1;
+            // resolved is not mandatory
+            if ($resultNode->hasAttribute("resolved")) {
+              if ($resultNode->getAttribute("resolved") == "true") {
+                $resolved = 1;
+              } else {
+                $resolved = 0;
+              }
             } else {
-              $partlyUnresolved = 0;
+              $resolved = -1;
             }
-          } else {
-            $partlyUnresolved = -1;
-          }
-          $objObservation->setDsObservationProperty($obsId, "partlyUnresolved", $partlyUnresolved);
+            $objObservation->setDsObservationProperty($obsId, "resolved", $resolved);
 
-          // Character is not mandatory
-          if ($resultNode->getElementsByTagName( "character" )->item(0)) {
-            $objObservation->setDsObservationProperty($obsId, "clusterType", $resultNode->getElementsByTagName( "character" )->item(0)->nodeValue);
-          }
-
-          // smallDiameter is not mandatory
-          if ($resultNode->getElementsByTagName( "smallDiameter" )->item(0)) {
-            $unit = $resultNode->getElementsByTagName( "smallDiameter" )->item(0)->getAttribute("unit");
-            if ($unit == "deg") {
-              $smallDiameter = $resultNode->getElementsByTagName( "smallDiameter" )->item(0)->nodeValue * 3600.0;
-            } else if ($unit == "rad") {
-              $smallDiameter = Rad2Deg($resultNode->getElementsByTagName( "smallDiameter" )->item(0)->nodeValue) * 3600.0;
-            } else if ($unit == "arcmin") {
-              $smallDiameter = $resultNode->getElementsByTagName( "smallDiameter" )->item(0)->nodeValue * 60.0;
-            } else if ($unit == "arcsec") {
-              $smallDiameter = $resultNode->getElementsByTagName( "smallDiameter" )->item(0)->nodeValue;
+            // stellar is not mandatory
+            if ($resultNode->hasAttribute("stellar")) {
+              if ($resultNode->getAttribute("stellar") == "true") {
+                $stellar = 1;
+              } else {
+                $stellar = 0;
+              }
+            } else {
+              $stellar = -1;
             }
-            $objObservation->setDsObservationProperty($obsId, "smallDiameter", $smallDiameter);
-          }
-          // largeDiameter is not mandatory
-          if ($resultNode->getElementsByTagName( "largeDiameter" )->item(0)) {
-            $unit = $resultNode->getElementsByTagName( "largeDiameter" )->item(0)->getAttribute("unit");
-            if ($unit == "deg") {
-              $largeDiameter = $resultNode->getElementsByTagName( "largeDiameter" )->item(0)->nodeValue * 3600.0;
-            } else if ($unit == "rad") {
-              $largeDiameter = Rad2Deg($resultNode->getElementsByTagName( "largeDiameter" )->item(0)->nodeValue) * 3600.0;
-            } else if ($unit == "arcmin") {
-              $largeDiameter = $resultNode->getElementsByTagName( "largeDiameter" )->item(0)->nodeValue * 60.0;
-            } else if ($unit == "arcsec") {
-              $largeDiameter = $resultNode->getElementsByTagName( "largeDiameter" )->item(0)->nodeValue;
+            $objObservation->setDsObservationProperty($obsId, "stellar", $stellar);
+
+            // unusualShape is not mandatory
+            if ($resultNode->hasAttribute("unusualShape")) {
+              if ($resultNode->getAttribute("unusualShape") == "true") {
+                $unusualShape = 1;
+              } else {
+                $unusualShape = 0;
+              }
+            } else {
+              $unusualShape = -1;
             }
-            $objObservation->setDsObservationProperty($obsId, "largeDiameter", $largeDiameter);
-          }
+            $objObservation->setDsObservationProperty($obsId, "unusualShape", $unusualShape);
 
-          if ($observation->getElementsByTagName( "eyepiece" )->item(0)) {
-            $objObservation->setDsObservationProperty($obsId, "eyepieceid", $eyepId);
-          }
+            // partlyUnresolved is not mandatory
+            if ($resultNode->hasAttribute("partlyUnresolved")) {
+              if ($resultNode->getAttribute("partlyUnresolved") == "true") {
+                $partlyUnresolved = 1;
+              } else {
+                $partlyUnresolved = 0;
+              }
+            } else {
+              $partlyUnresolved = -1;
+            }
+            $objObservation->setDsObservationProperty($obsId, "partlyUnresolved", $partlyUnresolved);
 
-          if ($observation->getElementsByTagName( "filter" )->item(0)) {
-            $objObservation->setDsObservationProperty($obsId, "filterid", $filtId);
-          }
+            // Character is not mandatory
+            if ($resultNode->getElementsByTagName( "character" )->item(0)) {
+              $objObservation->setDsObservationProperty($obsId, "clusterType", $resultNode->getElementsByTagName( "character" )->item(0)->nodeValue);
+            }
 
-          if ($observation->getElementsByTagName( "lens" )->item(0)) {
-            $objObservation->setDsObservationProperty($obsId, "lensid", $lensId);
-          }
-          if ($observation->getElementsByTagName( "magnification" )->item(0)) {
-            $objObservation->setDsObservationProperty($obsId, "magnification", $observation->getElementsByTagName( "magnification" )->item(0)->nodeValue);
+            // smallDiameter is not mandatory
+            if ($resultNode->getElementsByTagName( "smallDiameter" )->item(0)) {
+              $unit = $resultNode->getElementsByTagName( "smallDiameter" )->item(0)->getAttribute("unit");
+              if ($unit == "deg") {
+                $smallDiameter = $resultNode->getElementsByTagName( "smallDiameter" )->item(0)->nodeValue * 3600.0;
+              } else if ($unit == "rad") {
+                $smallDiameter = Rad2Deg($resultNode->getElementsByTagName( "smallDiameter" )->item(0)->nodeValue) * 3600.0;
+              } else if ($unit == "arcmin") {
+                $smallDiameter = $resultNode->getElementsByTagName( "smallDiameter" )->item(0)->nodeValue * 60.0;
+              } else if ($unit == "arcsec") {
+                $smallDiameter = $resultNode->getElementsByTagName( "smallDiameter" )->item(0)->nodeValue;
+              }
+              $objObservation->setDsObservationProperty($obsId, "smallDiameter", $smallDiameter);
+            }
+            // largeDiameter is not mandatory
+            if ($resultNode->getElementsByTagName( "largeDiameter" )->item(0)) {
+              $unit = $resultNode->getElementsByTagName( "largeDiameter" )->item(0)->getAttribute("unit");
+              if ($unit == "deg") {
+                $largeDiameter = $resultNode->getElementsByTagName( "largeDiameter" )->item(0)->nodeValue * 3600.0;
+              } else if ($unit == "rad") {
+                $largeDiameter = Rad2Deg($resultNode->getElementsByTagName( "largeDiameter" )->item(0)->nodeValue) * 3600.0;
+              } else if ($unit == "arcmin") {
+                $largeDiameter = $resultNode->getElementsByTagName( "largeDiameter" )->item(0)->nodeValue * 60.0;
+              } else if ($unit == "arcsec") {
+                $largeDiameter = $resultNode->getElementsByTagName( "largeDiameter" )->item(0)->nodeValue;
+              }
+              $objObservation->setDsObservationProperty($obsId, "largeDiameter", $largeDiameter);
+            }
+
+            if ($observation->getElementsByTagName( "eyepiece" )->item(0)) {
+              $objObservation->setDsObservationProperty($obsId, "eyepieceid", $eyepId);
+            }
+
+            if ($observation->getElementsByTagName( "filter" )->item(0)) {
+              $objObservation->setDsObservationProperty($obsId, "filterid", $filtId);
+            }
+
+            if ($observation->getElementsByTagName( "lens" )->item(0)) {
+              $objObservation->setDsObservationProperty($obsId, "lensid", $lensId);
+            }
+            if ($observation->getElementsByTagName( "magnification" )->item(0)) {
+              $objObservation->setDsObservationProperty($obsId, "magnification", $observation->getElementsByTagName( "magnification" )->item(0)->nodeValue);
+            }
           }
         }
       }

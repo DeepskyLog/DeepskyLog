@@ -509,7 +509,7 @@ define("LangExecuteQueryObjectsMessage6", "Exportiere die Objekte in eine CSV Da
 define("LangExecuteQueryObjectsMessage7", "Download ICQ-Datei");
 define("LangExecuteQueryObjectsMessage8", "Exportiere Objekte in das Argo Navis Format");
 define("LangExecuteQueryObjectsMessage9", "Filter objects");
-define("LangExecuteQueryObjectsMessage10", "Exportiere die Beobachtungen in eine OAL Datei");
+define("LangExecuteQueryObjectsMessage10", "Exportiere die Beobachtungen in eine &lt;OAL&gt; Datei");
 define("LangInvalidCSVfile", "Sie haben keine g&uuml;ltige CSV Datei angegeben!");
 define("LangSeenDontCare", "Egal");
 define("LangSeenByMe", "Bereits von mir beobachtet");
@@ -788,7 +788,7 @@ define("LangNewObservationTitle",  "Neue Beobachtung anlegen");
 define("LangNewObservationSubtitle1a", "Objekt in Datenbank suchen");
 define("LangNewObservationSubtitle1abis", " oder ");
 define("LangNewObservationSubtitle1b", "Beobachtungen von CSV Datei importieren");
-define("LangNewObservationSubtitle1c", "Beobachtungen von OAL (XML) Datei importieren");
+define("LangNewObservationSubtitle1c", "Beobachtungen von &lt;OAL&gt; (XML) Datei importieren");
 define("LangNewObservationSubtitle2", "Pr&uuml;fen der Objekt details");
 define("LangNewObservationSubtitle3", "Beobachtungsdetail Eingabe ");
 define("LangNewObservationSubtitle3B", "Change the observation details ");

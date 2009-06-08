@@ -39,7 +39,7 @@
 
 define("LangGeneralObservations","observations");
 
-define("LangIndexPleaseWait","Prière d'attendre un moment pendant le recherche des données...");
+define("LangIndexPleaseWait","Priï¿½re d'attendre un moment pendant le recherche des donnï¿½es...");
 
 define("LangMessageDeepskyLog","DeepskyLog");
 
@@ -307,7 +307,7 @@ define("LangOverviewSiteTitle", "Aper&#231;u des endroits d'observation");
 define("LangAddSiteExisting", "Rajoutez un endroit existant");
 
 define("LangOverviewEyepieceTitle", "aper&#231;u oculaires");
-define("LangAddEyepieceExisting", "Sélectionnez les données de l'oculaire de la liste");
+define("LangAddEyepieceExisting", "Sï¿½lectionnez les donnï¿½es de l'oculaire de la liste");
 define("LangAddEyepieceManually", "specifiez manuellement les dï¿½tails de l'oculaire");
 define("LangAddEyepieceTitle", "Rajoutez un novel oculaire");
 define("LangAddEyepieceField1", "Nom");
@@ -325,7 +325,7 @@ define("LangOverviewLensTitle", "Aper&#231;u lentilles Barlow");
 define("LangViewLensName", "Nom");
 define("LangViewLensFactor", "Facteur");
 define("LangAddLensTitle", "Rajoutez une nouvelle lentille Barlow");
-define("LangAddLensExisting", "rajoutez les données manuellement");
+define("LangAddLensExisting", "rajoutez les donnï¿½es manuellement");
 define("LangAddLensFieldManually", "Specifiez manuellement les dï¿½tails de la lentille Barlow");
 define("LangAddLensField1", "Nom");
 define("LangAddLensField1Expl", "ex. Televue 2x Barlow");
@@ -510,7 +510,7 @@ define("LangExecuteQueryObjectsMessage6", "T&eacute;l&eacute;chargez le fichier 
 define("LangExecuteQueryObjectsMessage7", "T&eacute;l&eacute;chargez le fichier icq");
 define("LangExecuteQueryObjectsMessage8", "T&eacute;l&eacute;chargez le fichier Argo Navis");
 define("LangExecuteQueryObjectsMessage9", "Filtrer les objects");
-define("LangExecuteQueryObjectsMessage10", "T&eacute;l&eacute;chargez le fichier comast");
+define("LangExecuteQueryObjectsMessage10", "T&eacute;l&eacute;chargez le fichier &lt;OAL&gt;");
 define("LangInvalidCSVfile", "Vous n'avez pas sp&eacute;cifi&eacute; un fichier csv valable!");
 define("LangSeenDontCare", "Tous les objets, vus ou pas vus");
 define("LangSeenByMe", "Juste les objets que j'ai vus moi-m&ecirc;me");
@@ -789,7 +789,7 @@ define("LangNewObservationTitle",  "Nouvelle observation");
 define("LangNewObservationSubtitle1a", "Recherchez l'objet dans la base de donn&eacute;es");
 define("LangNewObservationSubtitle1abis", " ou ");
 define("LangNewObservationSubtitle1b", "importez les observations &agrave; partir d'un fichier csv");
-define("LangNewObservationSubtitle1c", "importez les observations &agrave; partir d'un fichier comast (xml)");
+define("LangNewObservationSubtitle1c", "importez les observations &agrave; partir d'un fichier &lt;OAL&gt;");
 define("LangNewObservationSubtitle2", "Contr&ocirc;lez les donn&eacute;es de l'objet");
 define("LangNewObservationSubtitle3", "Remplissez les d&eacute;tails de l'observation ");
 define("LangNewObservationSubtitle3B", "Changez les d&eacute;tails de l'observation ");
@@ -1011,18 +1011,18 @@ define("LangCSVTitle", "Importez les observations a partir d'un fichier csv");
 define("LangCSVMessage1", "Ce formulaire vous donne la possibilit&eacute; de rentrer plusieures observations &agrave; la fois &agrave; l'aide d'un fichier csv (comma seperated value). Cette fa&ccedil;on facile et rapide vous permet de rentrer plusieures observations &agrave; la fois. Le formulaire vous permet &eacute;galement de copier facilement vos observations que vous auriez stock&eacute;es dans une autre base de donn&eacute;es et de les enregistrer dans DeepskyLog. A titre d'information: juste les observations avec votre nom et pr&eacute;nom seront rajout&eacute;es.");
 define("LangCSVMessage2", "Le fichier csv utilse le format suivant: <b>(NOUVEAU FORMAT!!!)</b>");
 define("LangCSVMessage3", "<b><i> 1-Objet; 2-Observateur; 3-Date; 4-TU; 5-Endroit; 6-Instrument; 7-Oculaire; 8-Filtre; 9-Lentille; 10-Seeing; 11-LimMag; 12-Visibilit&eacute;; 13-Langue; 14-Description</i></b>");
-define("LangCSVMessage4", "<b>Attention!</b> Conctrairement à la version 3.3 et précédentes, le fichier <b>ne peut plus</b> contenir <u>une ligne de tête</u>, 
-                           la première ligne contient directement des observations dans le format mentionné, par exemple: <br /><br />
+define("LangCSVMessage4", "<b>Attention!</b> Conctrairement ï¿½ la version 3.3 et prï¿½cï¿½dentes, le fichier <b>ne peut plus</b> contenir <u>une ligne de tï¿½te</u>, 
+                           la premiï¿½re ligne contient directement des observations dans le format mentionnï¿½, par exemple: <br /><br />
                            NGC 2392;Jean Leduc;21-01-2005;20:45;Mons;Obsession 15\";31mm Nagler;Lumicon O-III filter;2;4.0;3;nl;Une belle n&eacute;bulosit&eacute; plan&eacute;taire avec &eacute;toile centrale visible!<br />M 35;Jean Leduc;21-01-2005;20:53;Mons;Obsession 15\";;;2;4.0;1;nl;Plus ou moins trente membres dans des lignes courb&eacute;es.<br />...<br /><br />Le seeing est indiqu&eacute; avec un num&eacute;ro entre 1 et 5 (1=excellent, 2=bien, 3=m&eacute;diocre, 4=faible, 5=mauvais).<br />La visibilit&eacute; est indiqu&eacute;e avec un num&eacute;ro entre 1 et 7 (1=Objet tr&egrave;s facile et clair, 2=Objet facilement visible &agrave; vision direct, 3=Objet visible &agrave; vision direct, 4=Vision p&eacute;riph&eacute;rique n&eacute;cessaire pour voir  l'objet, 5=Objet difficilement visible en vision p&eacute;riph&eacute;rique, 6=Visibilit&eacute; de l'objet est douteuse, 7=L'objet n'est pas visible).<br />Une observation &agrave; l'oeil nu doit &ecirc;tre enregistr&eacute;e avec l'instrument 'Naked Eye' (en anglais!).<br />Indiquez 'fr' dans le champs 'langue'");
 define("LangCSVMessage5", "Attention!<p>Les instruments, les endroits, les oculaires, filters et les objets dans le fichier csv doivent d&eacute;j&agrave; &ecirc;tre connus par DeepskyLog. 
                            Si ceci n'est pas le cas, un message d'erreur sera affich&eacute; et ces observation ne seront pas enregistr&eacute;es.<br />
-                           L'information manquante ou erroneuse doit &ecirc;tre remplie &agrave; la main ou adaptée jusqu'au moment o&ugrave; il n'y a plus de messages d'erreur.<p />
+                           L'information manquante ou erroneuse doit &ecirc;tre remplie &agrave; la main ou adaptï¿½e jusqu'au moment o&ugrave; il n'y a plus de messages d'erreur.<p />
                            Si tout se passe bien, les observations rentr&eacute;es seront affich&eacute;es utilisant 'Toutes les observations'.");
 define("LangCSVMessage6", "Fichier CSV ");
 define("LangCSVMessage7", "Nom;NomAlternatif;AD;Decl;Constellation;Type;Magnitude;MagnitudeSurface;Diam&egrave;tre;Angle de position;Page;ContrastReserve;OptimalMagnification;Vu;Date vu");
-define("LangCSVMessage8", "Observations rajoutées");
-define("LangCSVMessage9", "; observations avec des problèmes (rejetées)");
-define("LangCSVMessage10", "; observations déjà présentes (ne sont pas reprises)");
+define("LangCSVMessage8", "Observations rajoutï¿½es");
+define("LangCSVMessage9", "; observations avec des problï¿½mes (rejetï¿½es)");
+define("LangCSVMessage10", "; observations dï¿½jï¿½ prï¿½sentes (ne sont pas reprises)");
 define("LangCSVError0", "L'import csv des observations a ï¿½tï¿½ arrï¿½tï¿½");
 define("LangCSVError1", "Le fichier csv n'a pas &eacute;t&eacute; trait&eacute; parce que: ");
 define("LangCSVError2", "Les objets suivants ne sont pas connus par DeepskyLog");
@@ -1033,9 +1033,9 @@ define("LangCSVError6", "Les oculaires suivant ne sont pas connus par DeepskyLog
 define("LangCSVError7", "Les lentilles suivant ne sont pas connus par DeepskyLog");
 define("LangCSVError8", "La ou les dates suivantes ne sont pas valides");
 define("LangCSVError9", "La ou les dates suivantes se trouvent dans le futur");
-define("LangCSVError10", "Les observations n'ont pas été enregistrées.<br />Il faut d'abord résoudre les problèmes mentionnés pour ensuite ");
-define("LangCSVError10a", "réimporter");
-define("LangCSVError10b", " le fichier. Vous pouvez limiter le réimport aux observations fausses, ou vous pouvez les réimporter tous. Les observations correctes seront reconnues et ne seront pas réimportées une deuxième fois.");
+define("LangCSVError10", "Les observations n'ont pas ï¿½tï¿½ enregistrï¿½es.<br />Il faut d'abord rï¿½soudre les problï¿½mes mentionnï¿½s pour ensuite ");
+define("LangCSVError10a", "rï¿½importer");
+define("LangCSVError10b", " le fichier. Vous pouvez limiter le rï¿½import aux observations fausses, ou vous pouvez les rï¿½importer tous. Les observations correctes seront reconnues et ne seront pas rï¿½importï¿½es une deuxiï¿½me fois.");
 define("LangCSVError10e", "Vous pouvez consulter la liste erroneuse en cliquant ");
 define("LangCSVError10c", "ici");
 define("LangCSVError10d", ".");

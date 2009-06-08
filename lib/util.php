@@ -431,9 +431,11 @@ class Utils implements iUtils
     $attr->appendChild($attrText);
 	  }
 
-	  if ($object["pa"] < 999.0) {
-	  	$pa = $objectChild->appendChild($dom->createElement('pa')); 
-      	$pa->appendChild($dom->createTextNode(($object["pa"])));
+	  if ($type != "oal:deepSkyCG") {
+	    if ($object["pa"] < 999.0) {
+	  	  $pa = $objectChild->appendChild($dom->createElement('pa')); 
+      	  $pa->appendChild($dom->createTextNode(($object["pa"])));
+	    }
 	  }
 	}
     //add root - <scopes> 
@@ -441,63 +443,66 @@ class Utils implements iUtils
 
 	while(list($key, $value) = each($scopes)) 
 	{
-      $scope2 = $dom->createElement('scope');
-      $siteChild = $observersDom->appendChild($scope2);
-      $attr = $dom->createAttribute("id");
-      $scope2->appendChild($attr);
+      if ($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'name') != "") {
+        $scope2 = $dom->createElement('scope');
+        $siteChild = $observersDom->appendChild($scope2);
+        $attr = $dom->createAttribute("id");
+        $scope2->appendChild($attr);
+      
 
-	  $attrText = $dom->createTextNode("opt_" . $value);
-	  $attr->appendChild($attrText);
+	    $attrText = $dom->createTextNode("opt_" . $value);
+	    $attr->appendChild($attrText);
 
-      $attr = $dom->createAttribute("xsi:type");
-      $scope2->appendChild($attr);
+        $attr = $dom->createAttribute("xsi:type");
+        $scope2->appendChild($attr);
 
-	  if ($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fixedMagnification') > 0) {
-	  	$typeLong = "oal:fixedMagnificationOpticsType";
-	  } else {
-	  	$typeLong = "oal:scopeType";	  	
+	    if ($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fixedMagnification') > 0) {
+	  	  $typeLong = "oal:fixedMagnificationOpticsType";
+	    } else {
+	  	  $typeLong = "oal:scopeType";	  	
+	    }
+	    $tp = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'type');
+	    if ($tp == InstrumentOther || $tp == InstrumentRest) {
+	  	  $typeShort = "";
+	    } else if ($tp == InstrumentNakedEye) {
+	  	  $typeShort = "A";
+	    } else if ($tp == InstrumentBinoculars || $tp == InstrumentFinderscope) {
+	  	  $typeShort = "B";
+	    } else if ($tp == InstrumentRefractor) {
+	  	  $typeShort = "R";
+	    } else if ($tp == InstrumentReflector) {
+	  	  $typeShort = "N";
+	    } else if ($tp == InstrumentCassegrain) {
+	  	  $typeShort = "C";
+	    } else if ($tp == InstrumentKutter) {
+	  	  $typeShort = "K";
+	    } else if ($tp == InstrumentMaksutov) {
+	  	  $typeShort = "M";
+	    } else if ($tp == InstrumentSchmidtCassegrain) {
+	  	  $typeShort = "S";
+	    }
+
+	    $attrText = $dom->createTextNode($typeLong);
+	    $attr->appendChild($attrText);
+
+        $name = $siteChild->appendChild($dom->createElement('model')); 
+        $name->appendChild($dom->createCDATASection(utf8_encode(html_entity_decode($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'name'))))); 
+
+        $type = $siteChild->appendChild($dom->createElement('type')); 
+        $type->appendChild($dom->createCDATASection(($typeShort))); 
+
+        $aperture = $siteChild->appendChild($dom->createElement('aperture')); 
+        $aperture->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'diameter')))); 
+
+	    if ($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fixedMagnification') > 0) {
+      	  $magnification = $siteChild->appendChild($dom->createElement('magnification'));
+          $magnification->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fixedMagnification')))); 
+	    } else {
+      	  $focalLength = $siteChild->appendChild($dom->createElement('focalLength'));
+          $focalLength->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fd')) * $GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'diameter'))); 
+	    }
+      }
 	  }
-	  $tp = $GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'type');
-	  if ($tp == InstrumentOther || $tp == InstrumentRest) {
-	  	$typeShort = "";
-	  } else if ($tp == InstrumentNakedEye) {
-	  	$typeShort = "A";
-	  } else if ($tp == InstrumentBinoculars || $tp == InstrumentFinderscope) {
-	  	$typeShort = "B";
-	  } else if ($tp == InstrumentRefractor) {
-	  	$typeShort = "R";
-	  } else if ($tp == InstrumentReflector) {
-	  	$typeShort = "N";
-	  } else if ($tp == InstrumentCassegrain) {
-	  	$typeShort = "C";
-	  } else if ($tp == InstrumentKutter) {
-	  	$typeShort = "K";
-	  } else if ($tp == InstrumentMaksutov) {
-	  	$typeShort = "M";
-	  } else if ($tp == InstrumentSchmidtCassegrain) {
-	  	$typeShort = "S";
-	  }
-
-	  $attrText = $dom->createTextNode($typeLong);
-	  $attr->appendChild($attrText);
-
-      $name = $siteChild->appendChild($dom->createElement('model')); 
-      $name->appendChild($dom->createCDATASection(utf8_encode(html_entity_decode($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'name'))))); 
-
-      $type = $siteChild->appendChild($dom->createElement('type')); 
-      $type->appendChild($dom->createCDATASection(($typeShort))); 
-
-      $aperture = $siteChild->appendChild($dom->createElement('aperture')); 
-      $aperture->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'diameter')))); 
-
-	  if ($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fixedMagnification') > 0) {
-      	$magnification = $siteChild->appendChild($dom->createElement('magnification'));
-        $magnification->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fixedMagnification')))); 
-	  } else {
-      	$focalLength = $siteChild->appendChild($dom->createElement('focalLength'));
-        $focalLength->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fd')) * $GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'diameter'))); 
-	  }
-    }
 
     //add root - <eyepieces> 
     $observersDom = $fcgaDom->appendChild($dom->createElement('eyepieces')); 
@@ -856,9 +861,6 @@ class Utils implements iUtils
       	$rat = 99;
       }
 
-      $rating = $result->appendChild($dom->createElement('rating')); 
-      $rating->appendChild($dom->createTextNode($rat));
-
 	  if ($obs["smallDiameter"] > 0) {
         $smallDiameter = $result->appendChild($dom->createElement('smallDiameter')); 
         $smallDiameter->appendChild($dom->createTextNode($obs["smallDiameter"]));
@@ -880,6 +882,9 @@ class Utils implements iUtils
         $attrText = $dom->createTextNode("arcsec");
         $attr->appendChild($attrText);
 	  }
+
+      $rating = $result->appendChild($dom->createElement('rating')); 
+      $rating->appendChild($dom->createTextNode($rat));
 
 	  if ($obs["clusterType"] != "" && $obs["clusterType"] != 0) {
         $character = $result->appendChild($dom->createElement('character')); 
