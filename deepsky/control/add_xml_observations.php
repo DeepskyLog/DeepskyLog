@@ -26,7 +26,7 @@ if ($version != "2.0") {
 $xmlschema = str_replace(' ', '/', $searchNode->item(0)->getAttribute("xsi:schemaLocation"));
 
 // TODO : Use the schema definition from the site!
-$xmlschema = "http://localhost/deepskylog/xml/oal20.xsd";
+$xmlschema = $baseURL . "/xml/oal20.xsd";
 
 //Validate the XML file against the schema
 if ($dom->schemaValidate($xmlschema)) {
