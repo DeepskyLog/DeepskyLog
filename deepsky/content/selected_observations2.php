@@ -72,7 +72,7 @@ if (count($_SESSION['Qobs']) == 0) //===========================================
 }
 else 
 { //=============================================================================================== START OBSERVATION PAGE OUTPUT =====================================================================================
-	echo "<div id=\"main\" style=\"position:relative\">";
+	echo "<div id=\"main\">";
 	$theDate = date('Ymd', strtotime('-1 year'));
 	$content1 ="<h4>";
 	if (array_key_exists('minyear', $_GET) && ($_GET['minyear'] == substr($theDate, 0, 4)) && array_key_exists('minmonth', $_GET) && ($_GET['minmonth'] == substr($theDate, 4, 2)) && array_key_exists('minday', $_GET) && ($_GET['minday'] == substr($theDate, 6, 2)))

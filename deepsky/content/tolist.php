@@ -2,7 +2,7 @@
 // tolist.php
 // manages and shows lists
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
-
+echo "<div id=\"main\" style=\"position:relative\">";
 echo "<form action=\"".$baseURL."index.php?indexAction=listaction\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
 echo "<table>";
@@ -20,15 +20,26 @@ echo "</form>";
 echo "<hr />";
 if($listname)
 { $link = $baseURL."index.php?indexAction=listaction&amp;sort=".$objUtil->checkGetKey('sort','objectpositioninlist');
-  list($min, $max,$content)=$objUtil->printNewListHeader3($_SESSION['Qobj'], $link, $min, 25, "");	
+  if((array_key_exists('steps',$_SESSION))&&(array_key_exists("listObj",$_SESSION['steps'])))
+	  $step=$_SESSION['steps']["listObj"];
+	if(array_key_exists('multiplepagenr',$_GET))
+	  $min = ($_GET['multiplepagenr']-1)*$step;
+	elseif(array_key_exists('multiplepagenr',$_POST))
+	  $min = ($_POST['multiplepagenr']-1)*$step;
+	elseif(array_key_exists('min',$_GET))
+	  $min=$_GET['min'];
+	else
+	  $min = 0;
+  list($min, $max,$content)=$objUtil->printNewListHeader3($_SESSION['Qobj'], $link, $min, $step, "");	
   $objPresentations->line(array("<h5>".LangSelectedObjectsTitle." ".$listname_ss. "</h5>",
                                 $content),
                           "LR", array(60,40),40);
+	  
+  $content2=$objUtil->printStepsPerPage3($link,"listObj",$step);
   $objPresentations->line(array((!$myList)?
                                 "(".LangToListListBy.$objObserver->getObserverProperty(($listowner=$objList->getListOwner()),'firstname').' '.$objObserver->getObserverProperty($listowner,'name').")":
-                                "<a href=\"".$baseURL."index.php?indexAction=import_csv_list\">" .  LangToListImport . "</a>"),
-                          "L",array(),20);
-  echo "<div id=\"container2\" style=\"position:relative;\">";
+                                "<a href=\"".$baseURL."index.php?indexAction=import_csv_list\">" .  LangToListImport . "</a>",$content2),
+                          "LR",array(80,20),25);
   if(count($_SESSION['Qobj'])>0)
 	{ // OUTPUT RESULT
     $link = "".$baseURL."index.php?indexAction=listaction";
@@ -63,8 +74,8 @@ if($listname)
 	else
 	{ echo LangToListEmptyList;
 	}
-  echo "</div>";
 }
+echo "</div>";
 
 
 ?>
