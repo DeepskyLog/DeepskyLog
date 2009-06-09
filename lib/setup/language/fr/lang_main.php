@@ -254,7 +254,7 @@ define("LangChangeVisibleLanguagesExpl", "Choissisez les langues des observation
 define("LangChangeAccountPicture", "Photo");
 define("LangChangeAccountButton", "Modifiez");
 define("LangChangeAccountField10", "Code ICQ de l'observateur");
-define("LangChangeAccountField10Expl", "<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" target=\"_blank\">ICQ</a> code pour les observations de com&egrave;tes");
+define("LangChangeAccountField10Expl", "<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a> code pour les observations de com&egrave;tes");
 define("LangChangeAccountField11", "Utilisez le temps local");
 define("LangChangeAccountField11Expl", "Utilisez le temps locale pour remplir et lire les observations");
 
@@ -711,7 +711,7 @@ define("LangViewObservationField40Expl", "More information");
 define("LangViewObservationField41", "Unusual Shape");
 define("LangViewObservationField42", "Partly unresolved");
 define("LangViewObservationField43", "Color contrasts");
-define("LangViewObservationField44", "Rajouter l'observation ï¿½ la liste ");
+define("LangViewObservationField44", "Rajouter l'observation à la liste ");
 
 define("LangViewObservationButton1", "Rajoutez");
 define("LangViewObservationButton2", "Videz les champs");

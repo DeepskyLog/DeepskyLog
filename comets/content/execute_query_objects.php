@@ -150,8 +150,8 @@ if($_GET['name'] || $_GET['icqname']) // at least one search field filled in
          }   
          $_SESSION['object_query'] = $result;
          echo "</table>\n";
-//         echo "<p><a href=\"comets/objects.pdf\" target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a></p>\n";
-//         echo "<p><a href=\"comets/objects.csv\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a></p><p>".LangExecuteQueryObjectsMessage1."</p>\n";
+//         echo "<p><a href=\"comets/objects.pdf\" rel=\"external\">".LangExecuteQueryObjectsMessage4."</a></p>\n";
+//         echo "<p><a href=\"comets/objects.csv\" rel=\"external\">".LangExecuteQueryObjectsMessage6."</a></p><p>".LangExecuteQueryObjectsMessage1."</p>\n";
 //         echo "</div>\n</body>\n</html>";
        }
        else // no results found

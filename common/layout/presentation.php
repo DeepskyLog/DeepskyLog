@@ -170,9 +170,9 @@ class Presentations implements iPresentation
 	  { $raDSL=$objPresentations->raToStringDSL($objObject->getDsoProperty($object,'ra'));
 	    $declDSL=$objPresentations->decToStringDSL($objObject->getDsoProperty($object,'decl'));
 	    $topline.=LangViewObjectDSL."&nbsp;:&nbsp;";
-	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=1&amp;showDSL=1\">1x1°</a>-";
-	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=2&amp;showDSL=1\">2x2°</a>-";
-	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=3&amp;showDSL=1\">3x3°</a>";
+	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=1&amp;showDSL=1\">1x1&deg;</a>-";
+	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=2&amp;showDSL=1\">2x2&deg;</a>-";
+	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=3&amp;showDSL=1\">3x3&deg;</a>";
 	    if($objUtil->checkGetKey("showDSL",0)==1)
 	    { $fov=$objUtil->checkGetKey("dslsize",30);
 	      echo "<applet code=\"Deepskylive.class\" codebase=\"http://users.telenet.be/deepskylive/applet/\" height=\"1\" width=\"1\">
@@ -204,9 +204,9 @@ class Presentations implements iPresentation
 	  { $raDSL=$objPresentations->raToStringDSL($objObject->getDsoProperty($object,'ra'));
 	    $declDSL=$objPresentations->decToStringDSL($objObject->getDsoProperty($object,'decl'));
 	    $topline.=LangViewObjectDSL."&nbsp;:&nbsp;";
-	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=1&amp;showDSL=1\">1x1°</a>-";
-	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=2&amp;showDSL=1\">2x2°</a>-";
-	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=3&amp;showDSL=1\">3x3°</a>";
+	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=1&amp;showDSL=1\">1x1&deg;</a>-";
+	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=2&amp;showDSL=1\">2x2&deg;</a>-";
+	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=3&amp;showDSL=1\">3x3&deg;</a>";
 	    if($objUtil->checkGetKey("showDSL",0)==1)
 	    { $fov=$objUtil->checkGetKey("dslsize",30);
 	      echo "<applet code=\"Deepskylive.class\" codebase=\"http://users.telenet.be/deepskylive/applet/\" height=\"1\" width=\"1\">
@@ -238,10 +238,10 @@ class Presentations implements iPresentation
   { return (($value==$nullcondition)?$nullvalue:sprintf("%1.1f",$value));
   }
   public function promptWithLink($prompt,$promptDefault,$javaLink,$text)
-	{ echo "<a href=\"#\" onclick=\"thetitle = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;pdfTitle='+thetitle; return false;\"	target=\"new_window\">".$text."</a>";
+	{ echo "<a href=\"#\" onclick=\"thetitle = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;pdfTitle='+thetitle; return false;\"	rel=\"external\">".$text."</a>";
   }
   public function promptWithLinkText($prompt,$promptDefault,$javaLink,$text)
-	{ return "<a href=\"#\" onclick=\"thetitle = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;pdfTitle='+thetitle; return false;\"	target=\"new_window\">".$text."</a>";
+	{ return "<a href=\"#\" onclick=\"thetitle = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;pdfTitle='+thetitle; return false;\"	rel=\"external\">".$text."</a>";
   }
   public  function raArgoToString($ra)
   { $ra_hours  =floor($ra);
@@ -326,13 +326,13 @@ class Presentations implements iPresentation
   public function searchAndLinkCatalogsInText($theText)
   { global $baseURL;
     $patterns[0]="/\s+(M)\s*(\d+)/";
-		$replacements[0]="<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
+		$replacements[0]="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
 		$patterns[1]= "/(NGC|Ngc|ngc)\s*(\d+\w+)/";
-		$replacements[1]="<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=NGC%20\\2\">NGC&nbsp;\\2</a>";
+		$replacements[1]="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=NGC%20\\2\">NGC&nbsp;\\2</a>";
 		$patterns[2]= "/(IC|Ic|ic)\s*(\d+)/";
-		$replacements[2]="<a 	target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=IC%20\\2\">IC&nbsp;\\2</a>";
+		$replacements[2]="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=IC%20\\2\">IC&nbsp;\\2</a>";
 		$patterns[3]= "/(Arp|ARP|arp)\s*(\d+)/";
-		$replacements[3]="<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=Arp%20\\2\">Arp&nbsp;\\2</a>";
+		$replacements[3]="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=Arp%20\\2\">Arp&nbsp;\\2</a>";
 		return preg_replace($patterns, $replacements, $theText);
   }
   public  function show3Fields($field1,$field2,$field3)
@@ -379,35 +379,9 @@ function tableFieldnameField3($name1,$field1,$name2,$field2,$name3,$field3, $typ
 function tableMenuItem($link, $menuItem)
 { echo "<tr align=\"center\" height=\"25px\">";
   echo "<td>";
-  echo "<a target=\"_top\" href=\"".$link."\" class=\"mainlevel\">".$menuItem."</a>";
+  echo "<a href=\"".$link."\" class=\"mainlevel\">".$menuItem."</a>";
   echo "</td>";
   echo "</tr>";
-}
-function tablePageTitle($title, $link, &$list, &$min, &$max)
-{ global $objUtil;
-  echo "<table width=\"100%\">";
-	echo "<tr>";
-	echo "<td>";
-	echo "<h7>";
-  echo $title;
-	echo "</h7>";
-	echo "</td>";
-	echo "<td align=\"right\">";
-  list($min,$max)=$objUtil->printNewListHeader($list,$link,$min,25,'');	
-	echo "</td>";
-  echo "</tr>";
-	echo "</table>";
-}
-function divPageTitle($title, $link, &$list, &$min, &$max)
-{ global $objUtil;
-  echo "<div class=\"container\" style=\"position:relative; height:40px;\">";
-	echo "<div class=\"h2header\" style=\"position:absolute; left:0Px;width:60%;height:40px;\">";
-  echo $title;
-	echo "</div>";
-	echo "<div style=\"position:absolute; top:10px;right:0px;width:38%;text-align:right;height:40px;\">";
-  list($min,$max)=$objUtil->printNewListHeader2($list,$link,$min,25,'');	
-	echo "</div>";
-	echo "</div>";
 }
 function tableSortHeader($header0, $link0)
 { global $baseURL;
@@ -415,15 +389,15 @@ function tableSortHeader($header0, $link0)
   echo "<table width=\"100%\">";   
   echo "<tr>";          
   echo "<td>";         
-  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc. "\"><img src=\"".$baseURL."styles/images/up10.gif\" border=\"0\" alt=\"^\"/></a>";
+  echo "<a href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc. "\"><img class=\"sortButton\" src=\"".$baseURL."styles/images/up10.gif\" alt=\"^\"/></a>";
   echo "</td>";        
   echo "<td align=\"right\">";         
-  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img src=\"".$baseURL."styles/images/down10.gif\" border=\"0\" alt=\"v\"/></a>";
+  echo "<a href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img class=\"sortButton\" src=\"".$baseURL."styles/images/down10.gif\" alt=\"v\"/></a>";
   echo "</td>";        
   echo "</tr>";        
   echo "<tr>";
 	echo "<td colspan=\"2\" style=\"text-align: center\">";           
-  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc."\">".trim($header0)."</a>";;
+  echo "<a href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc."\">".trim($header0)."</a>";;
   echo "</td>";        
   echo "</tr>";
   echo "</table>";
@@ -435,15 +409,15 @@ function tableSortInverseHeader($header0, $link0)
   echo "<table width=\"100%\">";   
   echo "<tr>";          
   echo "<td>";         
-  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img src=\"".$baseURL."styles/images/up10.gif\" border=\"0\" alt=\"^\" /></a>";
+  echo "<a href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img class=\"sortButton\" src=\"".$baseURL."styles/images/up10.gif\" alt=\"^\" /></a>";
   echo "</td>";        
   echo "<td align=\"right\">";         
-  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=asc\" title=\"".LangSortOnAsc."\"><img src=\"".$baseURL."styles/images/down10.gif\" border=\"0\" alt=\"v\" /></a>";
+  echo "<a href=\"".$link0."&amp;sortdirection=asc\" title=\"".LangSortOnAsc."\"><img class=\"sortButton\" src=\"".$baseURL."styles/images/down10.gif\" alt=\"v\" /></a>";
   echo "</td>";        
   echo "</tr>";        
   echo "<tr >";
   echo "<td colspan=\"2\" style=\"text-align: center\">";           
-  echo "<a target=\"_top\" href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\">".trim($header0)."</a>";;
+  echo "<a href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\">".trim($header0)."</a>";;
   echo "</td>";        
   echo "</tr>";
   echo "</table>";

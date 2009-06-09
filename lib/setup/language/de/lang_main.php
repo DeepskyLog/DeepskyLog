@@ -20,7 +20,7 @@
 //  LangValidateEyepieceMessage6
 //  define("LangNewObservationSubtitle3B", "Change the observation details ");
 //  LangItemsPerPage
-
+// 
 
 
 
@@ -253,7 +253,7 @@ define("LangChangeVisibleLanguagesExpl", "Definieren Sie, welche Sprache Sie in 
 define("LangChangeAccountPicture", "Icon");
 define("LangChangeAccountButton", "&Auml;ndern");
 define("LangChangeAccountField10", "ICQ Beobachtercode");
-define("LangChangeAccountField10Expl", "<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" target=\"_blank\">ICQ</a> Code f&uuml;r Kometen Beobachtungen");
+define("LangChangeAccountField10Expl", "<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a> Code f&uuml;r Kometen Beobachtungen");
 define("LangChangeAccountField11", "Benutze Ortszeit");
 define("LangChangeAccountField11Expl", "Ihre Ortszeit zur Eingabe und Abfrage von Beobachtungen");
 

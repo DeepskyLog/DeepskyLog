@@ -165,7 +165,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 		$contentMisc2.="<input type=\"checkbox\" name=\"partlyUnresolved\" />" . LangViewObservationField42."&nbsp;";
 		$contentMisc2.="<input type=\"checkbox\" name=\"colorContrasts\" />" . LangViewObservationField43;
 		if($objObject->getDsoProperty($object,'type')!="GLOCL")
-		{ $contentMisc3.="<a href=\"http://www.deepskylog.org/wiki/bin/view/DeepskyLog/CharacterType".$objObserver->getObserverProperty($loggedUser,'language')."\" target=\"_blank\" title=\"".LangViewObservationField40Expl."\" >".LangViewObservationField40."</a>";
+		{ $contentMisc3.="<a href=\"http://www.deepskylog.org/wiki/bin/view/DeepskyLog/CharacterType".$objObserver->getObserverProperty($loggedUser,'language')."\" rel=\"external\" title=\"".LangViewObservationField40Expl."\" >".LangViewObservationField40."</a>";
 		  $theClustertype=($observationid?$objObservation->getDsObservationProperty($observationid,'clusterType'):$objUtil->checkPostKey('clusterType'));
 		  $contentMisc4 ="<select name=\"clusterType\" class=\"inputfield\">";
 		  $contentMisc4.="<option value=\"\">-----</option>";
@@ -192,7 +192,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	                        "RL",array(11,89),130,array("fieldname",""));
 	$objPresentations->line(array("",LangViewObservationField29 . "&nbsp;*&nbsp;".$contentLanguage,
 	                              LangViewObservationField12,"<input type=\"file\" name=\"drawing\" class=\"inputfield\" />",
-	                              "<a href=\"http://www.deepsky.be/beschrijfobjecten.php\" target=\"new_window\">" . LangViewObservationFieldHelpDescription . "</a>"),
+	                              "<a href=\"http://www.deepsky.be/beschrijfobjecten.php\" rel=\"external\">" . LangViewObservationFieldHelpDescription . "</a>"),
 	                        "LLRLR",array(11,25,19,30,15));                              
 	$objPresentations->line(array("","<hr />"),"LL",array(12,87),10);
 	$objPresentations->line(array((($objObserver->getObserverProperty($loggedUser,'UT')) ? LangViewObservationField9: LangViewObservationField9lt),$contentTime.LangViewObservationField11,
@@ -256,7 +256,7 @@ else // no object found or not pushed on search button yet
 	echo "</td>";
 	echo "<td colspan=\"2\">";
 	echo "<select name=\"catalog\" class=\"inputfield\">";
-	echo "<option value=\"\"></option>";
+	echo "<option value=\"\">&nbsp;</option>";
 	$catalogs = $GLOBALS['objObject']->getCatalogs();
 	while (list ($key, $value) = each($catalogs))
 		echo "<option value=\"$value\">$value</option>";

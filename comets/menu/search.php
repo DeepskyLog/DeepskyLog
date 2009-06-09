@@ -64,7 +64,7 @@ echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=com
 
 echo (LangSearchMenuItem7);
 
-echo "</table>\n</td>\n
+echo "</a></td></tr></table>\n</td>\n
       </tr>\n
       </table>\n";
 

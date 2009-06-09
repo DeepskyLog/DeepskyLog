@@ -36,14 +36,14 @@ if ($object && $objObject->getExactDsObject($object))
 	                        "LR",array(50,50),30);
   $topline="&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\">".LangViewObjectViewNearbyObject." ".$object_ss."</a>";
   if(substr($objObject->getSeen($object),0,1)!='-')
-    $topline.= "&nbsp;-&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\">".LangViewObjectObservations."&nbsp;".$object_ss."</a>";
+    $topline.= "&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\">".LangViewObjectObservations."&nbsp;".$object_ss."</a>";
   if($loggedUser)
-		$topline.="&nbsp;-&nbsp;"."<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object_ss . "</a>";
+		$topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object_ss . "</a>";
 	if ($myList) 
 	{ if ($objList->checkObjectInMyActiveList($object))
-			$topline.="&nbsp;-&nbsp;"."<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage3 . $listname_ss . "</a>";
+			$topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage3 . $listname_ss . "</a>";
 		else
-			$topline.="&nbsp;-&nbsp;"."<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a>";
+			$topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a>";
 	}
 	$objPresentations->line(array(substr($topline,13),$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(70,30),20);
 	echo "<hr />";
@@ -67,8 +67,8 @@ if (count($_SESSION['Qobs']) == 0) //===========================================
 {	$objPresentations->line(array("<h5>".LangObservationNoResults.(($objUtil->checkGetKey('myLanguages'))?(" (".LangSelectedObservationsSelectedLanguagesIndication.")"):(" (".LangSelectedObservationsAllLanguagesIndication.")"))."</h5>"),
                           "L",array(100),50);
 	if ($objUtil->checkGetKey('myLanguages'))
-		echo "<p>"."<a target=\"_top\" href=\"" . $link2 . "\">" . LangSearchAllLanguages . "</a><p />";
-	echo "<p>"."<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=query_observations\">" . LangSearchDetailPage . "</a>"."</p>";
+		echo "<p>"."<a href=\"" . $link2 . "\">" . LangSearchAllLanguages . "</a><p />";
+	echo "<p>"."<a href=\"" . $baseURL . "index.php?indexAction=query_observations\">" . LangSearchDetailPage . "</a>"."</p>";
 }
 else 
 { //=============================================================================================== START OBSERVATION PAGE OUTPUT =====================================================================================
@@ -101,18 +101,18 @@ else
 	$objPresentations->line(array($content3,$content4),"LR",array(50,50),25);
  	$content5="";
 	if (($_SESSION['lco'] != "L"))
-		$content5.="&nbsp;-&nbsp;<a target=\"_top\" href=\"" . $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">" . LangOverviewObservations . "</a>";
+		$content5.="&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">" . LangOverviewObservations . "</a>";
 	if (($_SESSION['lco'] != "C"))
-		$content5.="&nbsp;-&nbsp;<a target=\"_top\" href=\"" . $link . "&amp;lco=C" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>";
+		$content5.="&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=C" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>";
 	if ($loggedUser && ($_SESSION['lco'] != "O"))
-		$content5.="&nbsp;-&nbsp;<a target=\"_top\" href=\"" . $link . "&amp;lco=O" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>";
+		$content5.="&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=O" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>";
   $content5=substr($content5,13);
  	if ($objUtil->checkGetKey('myLanguages'))
-		$content6="<a target=\"_top\" href=\"" . $link3 . "\">" . LangShowAllLanguages . "</a>";
+		$content6="<a href=\"" . $link3 . "\">" . LangShowAllLanguages . "</a>";
 	elseif ($loggedUser) 
-	  $content6="<a target=\"_top\" href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowMyLanguages . "</a>";
+	  $content6="<a href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowMyLanguages . "</a>";
 	else
-		$content6= "<a target=\"_top\" href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowInterfaceLanguage . "</a>";
+		$content6= "<a href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowInterfaceLanguage . "</a>";
   $objPresentations->line(array($content5,$content6),"LR",array(50,50),20);
   echo "<hr />";
   
@@ -139,8 +139,8 @@ else
 		echo "<p align=\"right\">" . LangOverviewObservationsHeader5a."</p>";
 	$content1 =$objPresentations->promptWithLinkText(LangOverviewObservations10, LangOverviewObservations11, $baseURL . "observations.pdf?SID=Qobs", LangExecuteQueryObjectsMessage4);
 	$content1.=" - ";
-	$content1.="<a href=\"" . $baseURL . "observations.csv\" target=\"new_window\">" . LangExecuteQueryObjectsMessage5 . "</a> - ";
-	$content1.="<a href=\"" . $baseURL . "observations.xml\" target=\"new_window\">" . LangExecuteQueryObjectsMessage10 . "</a> - ";
+	$content1.="<a href=\"" . $baseURL . "observations.csv\" rel=\"external\">" . LangExecuteQueryObjectsMessage5 . "</a> - ";
+	$content1.="<a href=\"" . $baseURL . "observations.xml\" rel=\"external\">" . LangExecuteQueryObjectsMessage10 . "</a> - ";
 	$content1.="<a href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a>";
 	$objPresentations->line(array($content1),"L",array(100),25);
   echo "</div>";

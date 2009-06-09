@@ -253,7 +253,7 @@ define("LangChangeVisibleLanguagesExpl", "Define which languages you want to see
 define("LangChangeAccountPicture", "Picture");
 define("LangChangeAccountButton", "Change");
 define("LangChangeAccountField10", "ICQ observercode");
-define("LangChangeAccountField10Expl", "<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" target=\"_blank\">ICQ</a> code for comet observations");
+define("LangChangeAccountField10Expl", "<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a> code for comet observations");
 define("LangChangeAccountField11", "Use local time");
 define("LangChangeAccountField11Expl", "Use local time to enter and query observations");
 
@@ -275,7 +275,7 @@ define("LangSearchMenuItem8", "Year of observations");
 define("LangSearchAllLanguages","Look again, using all languages.");
 define("LangSearchDetailPage","Set up a detailed search.");
 
-define("LangChangeMenuTitle", "Add / Change");
+define("LangChangeMenuTitle", "Add or Change");
 define("LangChangeMenuItem1", "Account details");
 define("LangChangeMenuItem2", "New observation");
 define("LangChangeMenuItem3", "Instruments");

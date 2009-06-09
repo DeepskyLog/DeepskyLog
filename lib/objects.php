@@ -446,19 +446,19 @@ class Objects implements iObjects
   private function getSeenLastseenLink($object,&$seen, &$seenlink, &$lastseen, &$lastseenlink)
 	{ global $baseURL, $objDatabase, $loggedUser;
 		$seen = "-";
-    $seenlink = "<a href=\"".$baseURL."index.php?indexAction=detail_objectamp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\" target=\"_top\">-</a>";
+    $seenlink = "<a href=\"".$baseURL."index.php?indexAction=detail_objectamp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\" >-</a>";
     $lastseenlink = "-";
     $lastseenlink = "-";
 		if($ObsCnt=$objDatabase->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 ",'ObsCnt'))
     { $seen = 'X('.$ObsCnt.')';
-      $seenlink = "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\" target=\"_top\">".'X('.$ObsCnt.')'."</a>";
+      $seenlink = "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\" >".'X('.$ObsCnt.')'."</a>";
       if($loggedUser)
       { $get3=mysql_fetch_object($objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7"));
   		  if($get3->PersObsCnt>0)
         { $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')';
-          $seenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\" target=\"_top\">".'Y('.$ObsCnt.'/'.$get3->PersObsCnt.')'."</a>";
+          $seenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\" >".'Y('.$ObsCnt.'/'.$get3->PersObsCnt.')'."</a>";
           $lastseen=$get3->PersObsMaxDate;
-          $lastseenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".urlencode($loggedUser)."&amp;sort=observationdate&amp;sortdirection=desc&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\" target=\"_top\">".$get3->PersObsMaxDate."</a>";
+          $lastseenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".urlencode($loggedUser)."&amp;sort=observationdate&amp;sortdirection=desc&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\" >".$get3->PersObsMaxDate."</a>";
 				}
 		  }
 	  }
@@ -777,13 +777,13 @@ class Objects implements iObjects
     if($listname&&($objList->checkObjectInMyActiveList($object)))
 	  { if($myList)
      { echo "<tr>";
-     	 echo "<td align=\"right\">".LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>)<br /><input type=\"submit\" name=\"Go\" value=\"" . LangEditObjectDescription . "\" /></td>";
+     	 echo "<td align=\"right\">".LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" rel=\"external\">".LangViewObjectDreyerDescription."</a>)<br /><input type=\"submit\" name=\"Go\" value=\"" . LangEditObjectDescription . "\" /></td>";
   	   echo "<td colspan=\"3\"><textarea name=\"description\" class=\"listdescription inputfield\">".$objList->getListObjectDescription($object)."</textarea></td>";
   	   echo "</tr>";
 		 }
 		 else
 		 { echo "<tr>";
-  	   echo "<td align=\"right\">".LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>)</td>";
+  	   echo "<td align=\"right\">".LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" rel=\"external\">".LangViewObjectDreyerDescription."</a>)</td>";
   	   echo "<td colspan=\"3\">".$objList->getListObjectDescription($object)."</td>";
   	   echo "</tr>";
 		 }
@@ -791,7 +791,7 @@ class Objects implements iObjects
 	  elseif($descriptionDsOject=$this->getDsoProperty($object,'description'))
 	  { echo "<tr class=\"type1\">";
    	  echo "<td align=\"right\">";
-   	  echo LangViewObjectNGCDescription.' ('."<a href=\"".DreyerDescriptionLink."\" target=\"_blank\">".LangViewObjectDreyerDescription."</a>".')';
+   	  echo LangViewObjectNGCDescription.' ('."<a href=\"".DreyerDescriptionLink."\" rel=\"external\">".LangViewObjectDreyerDescription."</a>".')';
    	  echo "</td>";
   	  echo "<td colspan=\"3\">";
   	  echo htmlentities($descriptionDsOject);
@@ -843,7 +843,7 @@ class Objects implements iObjects
         echo "<td align=\"center\"><a href=\"#\" onclick=\"theplace = prompt('".LangNewPlaceInList."','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
       elseif($showRank)
 	      echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</td>";
-      echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" target=\"_top\">".$_SESSION['Qobj'][$count]['showname']."</a></td>\n";
+      echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" >".$_SESSION['Qobj'][$count]['showname']."</a></td>\n";
       echo "<td align=\"center\">".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."</td>\n";
       echo "<td align=\"center\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>\n";
       echo "<td align=\"center\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>\n";

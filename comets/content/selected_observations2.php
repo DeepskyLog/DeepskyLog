@@ -701,8 +701,8 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
 $_SESSION['observation_query'] = $obs;
 
-echo "<p><a href=\"".$baseURL."cometobservations.pdf\" target=\"new_window\">".LangExecuteQueryObjectsMessage4."</a></p>";
-//echo "<p><a href=\"".$baseURL."cometobservations.icq\" target=\"new_window\">".LangExecuteQueryObjectsMessage7."</a></p>";
+echo "<p><a href=\"".$baseURL."cometobservations.pdf\" rel=\"external\">".LangExecuteQueryObjectsMessage4."</a></p>";
+//echo "<p><a href=\"".$baseURL."cometobservations.icq\" rel=\"external\">".LangExecuteQueryObjectsMessage7."</a></p>";
 
 }
 else // NO OBSERVATIONS FOUND 

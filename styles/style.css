@@ -418,17 +418,12 @@ a.moduletable:link, a.moduletable:visited {
 	position         : relative;    
   text-align       : left;
   height           : 30px;
-  margin           : none;
-  border           : none;
-  padding          : none;
 }
 .containerLinePartL {
   position         : absolute;
   top              : 0px;
   text-align       : left;
   text-indent      : 10px;
-  margin           : none;
-  padding          : none;
   border-color     : #FFFFFF;
   overflow         : hidden;
 }
@@ -437,8 +432,6 @@ a.moduletable:link, a.moduletable:visited {
   top              : 0px;
   text-align       : right;
   text-indent      : 10px;
-  margin           : none;
-  padding          : none;
   border-color     : #FFFFFF;
   overflow         : hidden;
 }
@@ -446,9 +439,13 @@ a.moduletable:link, a.moduletable:visited {
   position         : absolute;
   top              : 0px;
   text-align       : center;
-  margin           : none;
-  padding          : none;
   border-color     : #FFFFFF;
   overflow         : hidden;
 }
-
+.navigationButton {
+	border           : 0;
+	vertical-align   : middle;
+}
+.sortButton {
+	border           : 0;
+}

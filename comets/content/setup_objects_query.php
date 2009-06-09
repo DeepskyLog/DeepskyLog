@@ -20,9 +20,9 @@ echo LangQueryObjectsTitle;
 
 echo("</h2>\n");
 
+echo("<form action=\"".$baseURL."index.php\" method=\"get\">\n");
 echo("<table width=\"490\">\n");
 
-echo("<form action=\"".$baseURL."index.php\" method=\"get\">\n");
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"comets_result_query_objects\" />";
 // OBJECT NAME 
 
@@ -48,7 +48,7 @@ echo("<input type=\"text\" class=\"inputfield\" maxlength=\"40\" name=\"icqname\
 
 echo("</td>\n</tr>\n");
 
-echo("<tr>\n<td>\n</td><td><input type=\"submit\" name=\"query\" value=\"" . LangQueryObjectsButton1 . "\" />\n</td>\n<td></td></tr></form><tr><td></td><td><form action=\"".$baseURL."index.php?indexAction=comets_query_objects\"><input type=\"submit\" name=\"clear\" value=\"" . LangQueryObjectsButton2 . "\" />\n</form>\n</td><td></td></tr></table>");
+echo("<tr>\n<td>\n</td><td><input type=\"submit\" name=\"query\" value=\"" . LangQueryObjectsButton1 . "\" />\n</td>\n<td></td></tr><tr><td></td><td>\n</td><td></td></tr></table></form>");
 
 echo("</div>\n</div>\n</body>\n</html>");
 ?>

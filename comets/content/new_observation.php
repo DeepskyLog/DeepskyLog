@@ -343,7 +343,7 @@ while(list($key, $value) = each($methods))
 }
 echo("</select>\n");
 
-echo("</td><td><a href=\"http://cfa-www.harvard.edu/icq/ICQKeys.html\" target=\"external\">" . LangNewComet7 . "</a></td></tr>");
+echo("</td><td><a href=\"http://cfa-www.harvard.edu/icq/ICQKeys.html\" rel=\"external\">" . LangNewComet7 . "</a></td></tr>");
 
 // MAGNITUDE REFERENCE KEY
 
@@ -364,7 +364,7 @@ while(list($key, $value) = each($methods))
 }
 echo("</select>\n");
 
-echo("</td><td><a href=\"http://cfa-www.harvard.edu/icq/ICQRec.html\" target=\"external\">" . LangNewComet7 . "</a></td></tr>");
+echo("</td><td><a href=\"http://cfa-www.harvard.edu/icq/ICQRec.html\" rel=\"external\">" . LangNewComet7 . "</a></td></tr>");
 
 // MAGNITUDE
 

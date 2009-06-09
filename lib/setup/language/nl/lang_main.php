@@ -253,7 +253,7 @@ define("LangChangeVisibleLanguagesExpl", "Kies uit deze lijst welke waarnemingen
 define("LangChangeAccountPicture", "Foto");
 define("LangChangeAccountButton", "Pas aan");
 define("LangChangeAccountField10", "ICQ waarnemercode");
-define("LangChangeAccountField10Expl", "<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" target=\"_blank\">ICQ</a> code voor komeetwaarnemingen");
+define("LangChangeAccountField10Expl", "<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a> code voor komeetwaarnemingen");
 define("LangChangeAccountField11", "Gebruik lokale tijd");
 define("LangChangeAccountField11Expl", "Gebruik lokale tijd voor ingeven en opvragen van waarnemingen");
 

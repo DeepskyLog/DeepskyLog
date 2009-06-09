@@ -46,7 +46,10 @@ else
 	else
 	  $min = 0;
   if($stepsType=$objUtil->checkGetKey('stepsCommand'))
-	{ $_SESSION['steps'][$stepsType]=$objUtil->checkGetKey('stepsValue',25);
+	{ $steps=(int) $objUtil->checkGetKey('stepsValue',25);
+	  if((!($steps))||($steps<1))
+	    $steps=25;
+		$_SESSION['steps'][$stepsType]=$steps;
 		reset($_SESSION['steps']);
 		$stepscookie="";
 		while(list($key,$value)=each($_SESSION['steps']))
@@ -283,6 +286,8 @@ else
 	    $myList=True;
 	  if($_GET['listname']<>"----------")
 	    $entryMessage.=LangToListList.$listname_ss.LangToListActivation1;
+    else    
+	    $_GET['indexAction']="defaultAction";
 	  unset($_GET['activateList']);
 	}
 	if($objUtil->checkGetKey('addObjectToList')&&$listname&&$myList)

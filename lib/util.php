@@ -1559,11 +1559,11 @@ class Utils implements iUtils
       echo "<td style=\"vertical-align:middle\">(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")")."</td>";
     if(($listcount>$step)&&($showArrows))
     { $currentpage=ceil($min/$step)+1;
-			echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=0\">"."<img src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\" />"."</a>"."</td>";
-		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img src=\"".$baseURL."styles/images/left20.gif\" border=\"0\" />"."</a>"."</td>";			
+			echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=0\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allleft20.gif\" alt=\"&lt;&lt;\" />"."</a>"."</td>";
+		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/left20.gif\" alt=\"&lt;\" />"."</a>"."</td>";			
 		  echo "<td align=\"center\">"."<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\" />"."</td>";	
-		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img src=\"".$baseURL."styles/images/right20.gif\" border=\"0\" />"."</a>"."</td>";
-		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\" />"."</a>"."</td>";
+		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/right20.gif\" alt=\"&gt;\" />"."</a>"."</td>";
+		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allright20.gif\" alt=\"&gt;&gt;\" />"."</a>"."</td>";
 	  }
 	  echo "</tr>";
 	  echo "</table>";    
@@ -1584,18 +1584,20 @@ class Utils implements iUtils
       $min=0;
     $max=$min+$step;                       // maximum number to be displayed
     echo "<form action=\"".$link."\" method=\"post\" style=\"margin:0px;padding:0px;\">";
+    echo "<div>";
     echo "<span style=\"vertical-align:middle\">";
     if($showNumberOfRecords)
       echo "(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")");
     if(($listcount>$step)&&($showArrows))
     { $currentpage=ceil($min/$step)+1;
-			echo "<a href=\"".$link."&amp;multiplepagenr=0\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\" alt =\"<<\" />"."</a>";
-		  echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/left20.gif\" border=\"0\" alt=\"<\" />"."</a>";			
+			echo "<a href=\"".$link."&amp;multiplepagenr=0\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allleft20.gif\" alt=\"&lt;&lt;\" />"."</a>";
+		  echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/left20.gif\" alt=\"&lt;\" />"."</a>";			
 		  echo "<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\" />";	
-		  echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/right20.gif\" border=\"0\" alt=\">\" />"."</a>";
-		  echo "<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img style=\"vertical-align:bottom\" src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\" alt=\">>\" />"."</a>";
+		  echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/right20.gif\" alt=\"&gt;\" />"."</a>";
+		  echo "<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allright20.gif\" alt=\"&gt;&gt;\" />"."</a>";
 	  }
 	  echo "</span>";
+	  echo "</div>";
 	  echo "</form>";
 	  return array($min,$max);
   }
@@ -1613,17 +1615,19 @@ class Utils implements iUtils
       $min=0;
     $max=$min+$step;                       // maximum number to be displayed
     $content="<form action=\"".$link."\" method=\"post\" style=\"margin:0px;padding:0px;\">";
+    $content.="<div>";
     if($showNumberOfRecords)
       $content.= "(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")")."&nbsp;";
     if(($listcount>$step)&&($showArrows))
     { $currentpage=ceil($min/$step)+1;
-			$content.= "<a href=\"".$link."&amp;multiplepagenr=0\">"."<img style=\"vertical-align:middle\" src=\"".$baseURL."styles/images/allleft20.gif\" border=\"0\" alt =\"<<\" />"."</a>";
-		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img style=\"vertical-align:middle\" src=\"".$baseURL."styles/images/left20.gif\" border=\"0\" alt=\"<\" />"."</a>";			
+			$content.= "<a href=\"".$link."&amp;multiplepagenr=0\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allleft20.gif\" alt=\"&lt;&lt;0\" />"."</a>";
+		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/left20.gif\" alt=\"&lt;\" />"."</a>";			
 		  $content.= "<input type=\"text\" name=\"multiplepagenr\" size=\"3\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\" />";	
-		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img style=\"vertical-align:middle\" src=\"".$baseURL."styles/images/right20.gif\" border=\"0\" alt=\">\" />"."</a>";
-		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img style=\"vertical-align:middle\" src=\"".$baseURL."styles/images/allright20.gif\" border=\"0\" alt=\">>\" />"."</a>";
+		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/right20.gif\" alt=\"&gt;\" />"."</a>";
+		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allright20.gif\" alt=\"&gt;&gt;\" />"."</a>";
 		  $content.= "&nbsp;";
 	  }
+	  $content.="</div>";
 	  $content.= "</form>";
 	  return array($min,$max,$content);
   }

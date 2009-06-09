@@ -4,8 +4,8 @@
 
 echo "<div id=\"main\">";
 echo "<h2>".LangNewObjectTitle."</h2>";
-echo "<table width=\"100%\">";
 echo "<form action=\"".$baseURL."index.php?indexAction=validate_object\" method=\"post\">";
+echo "<table width=\"100%\">";
 // NAME
 echo "<tr>";
 echo "<td class=\"fieldname\">".LangViewObjectField1 . "&nbsp;*"."</td>";
@@ -19,7 +19,7 @@ echo "<tr>";
 echo "<td class=\"fieldname\">".LangViewObjectField6."&nbsp;*"."</td>";
 echo "<td>";
 echo "<select name=\"type\" class=\"requiredField\">";
-echo "<option value=\"\"></option>";
+echo "<option value=\"\">&nbsp;</option>";
 $types=$objObject->getDsObjectTypes();
 while(list($key,$value)=each($types))
   $stypes[$value] = $$value;
@@ -36,7 +36,7 @@ echo "<tr>";
 echo "<td class=\"fieldname\">".LangViewObjectField5."&nbsp;*"."</td>";
 echo "<td>";
 echo "<select name=\"con\" class=\"requiredField\">";
-echo "<option value=\"\"></option>";
+echo "<option value=\"\">&nbsp;</option>";
 $constellations = $objObject->getConstellations();
 while(list($key, $value)=each($constellations))
   echo "<option value=\"$value\">".$GLOBALS[$value]."</option>";
@@ -113,8 +113,8 @@ echo "<td></td>";
 echo "<td><input type=\"submit\" name=\"clearfields\" value=\"".LangQueryObjectsButton2."\" /></td>";
 echo "<td></td>";
 echo "</tr>";
-echo "</form>";
 echo "</table>";
+echo "</form>";
 echo "</div>";
 
 ?>

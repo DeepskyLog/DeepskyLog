@@ -29,9 +29,9 @@ echo LangQueryObservationsTitle;
 
 echo("</h2>\n");
 
+echo("<form action=\"".$baseURL."index.php\" method=\"get\">\n");
 echo("<table width=\"490\">\n");
 
-echo("<form action=\"".$baseURL."index.php\" method=\"get\">\n");
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"comets_result_selected_observations\" />";
 $id = $objUtil->checkSessionKey('observedobject',$objUtil->checkGetKey('observedobject'));
 
@@ -491,7 +491,7 @@ echo("&nbsp;&nbsp;<td class=\"explanation\"></td></tr>\n");
 
 */
 
-echo("<tr>\n<td>\n</td><td><input type=\"submit\" name=\"query\" value=\"" . LangQueryObservationsTitle . "\" />\n</td>\n<td></td></tr></form><form action=\"".$baseURL."index.php?indexAction=comets_query_observations\"><tr><td></td><td><input type=\"submit\" name=\"clear\" value=\"" . LangQueryObjectsButton2 . "\" /></td><td></td></tr></table>");
+echo("<tr>\n<td>\n</td><td><input type=\"submit\" name=\"query\" value=\"" . LangQueryObservationsTitle . "\" />\n</td>\n<td></td></tr></table></form>");
 
 echo("\n</div>\n</body>\n</html>");
 ?>

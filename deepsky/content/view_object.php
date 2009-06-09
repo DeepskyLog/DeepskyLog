@@ -13,14 +13,14 @@ $topline="";
 if($imagesize=$objUtil->checkRequestKey('imagesize'))
   $topline="&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\">".LangViewObjectViewNearbyObject." ".$object_ss."</a>";
 if(substr($objObject->getSeen($object),0,1)!='-')
-  $topline.= "&nbsp;-&nbsp;<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\">".LangViewObjectObservations."&nbsp;".$object_ss."</a>";
+  $topline.= "&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\">".LangViewObjectObservations."&nbsp;".$object_ss."</a>";
 if($loggedUser)
-	$topline.="&nbsp;-&nbsp;"."<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object_ss . "</a>";
+	$topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object_ss . "</a>";
 if ($myList) 
 { if ($objList->checkObjectInMyActiveList($object))
-		$topline.="&nbsp;-&nbsp;"."<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage3 . $listname_ss . "</a>";
+		$topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage3 . $listname_ss . "</a>";
 	else
-		$topline.="&nbsp;-&nbsp;"."<a target=\"_top\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a>";
+		$topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a>";
 }
 $objPresentations->line(array(substr($topline,13),$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(60,40),20);
 echo "<hr />";
@@ -91,8 +91,8 @@ if(!($imagesize))
 	echo "<hr />";
 	$objPresentations->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
 	echo "&nbsp;-&nbsp;";
-	echo "<a href=\"".$baseURL."objects.csv?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage6."</a> &nbsp;-&nbsp;";
-	echo "<a href=\"".$baseURL."objects.argo?SID=Qobj\" target=\"new_window\">".LangExecuteQueryObjectsMessage8."</a>";
+	echo "<a href=\"".$baseURL."objects.csv?SID=Qobj\" >".LangExecuteQueryObjectsMessage6."</a> &nbsp;-&nbsp;";
+	echo "<a href=\"".$baseURL."objects.argo?SID=Qobj\">".LangExecuteQueryObjectsMessage8."</a>";
 	echo "</div>";
 }
 else
@@ -110,7 +110,7 @@ if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
   echo("<input type=\"hidden\" name=\"object\" value=\"" . $_GET['object'] . "\">");
   echo("<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\">");
   echo("<select name=\"newaction\">\n");
-  echo("<option value=\"\"></option>"); // empty field
+  echo("<option value=\"\">&nbsp;</option>"); // empty field
   echo("<option value=\"NewName\">" . LangObjectNewName . "</option>\n");
   echo("<option value=\"NewAltName\">" . LangObjectNewAltName . "</option>\n");
   echo("<option value=\"RemoveAltNameName\">" . LangObjectRemoveAltNameName . "</option>\n");
@@ -128,14 +128,14 @@ if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
   echo("<option value=\"LangObjectSetPA\">" . LangObjectSetPA . "</option>\n");
   echo("</select>\n");		
   echo "<select name=\"newcatalog\">";
-  echo "<option value=\"\"></option>"; // empty field
+  echo "<option value=\"\">&nbsp;</option>"; // empty field
   $catalogs = $objObject->getCatalogs(); // should be sorted
   while(list($key, $value) = each($catalogs))
     echo "<option value=\"$value\">".$value."</option>";
   echo "</select>";		
   echo "<input type=\"text\" class=\"inputfield\" maxlength=\"255\" name=\"newnumber\" size=\"40\" value=\"\"/>";
   echo "<input type=\"submit\" name=\"gonew\" value=\"Go\"/><br />";
-  echo "<a target=\"_top\" href=\"".$baseURL."index.php?indexAction=manage_csv_object\">" . LangNewObjectSubtitle1b . "</a><br />";
+  echo "<a href=\"".$baseURL."index.php?indexAction=manage_csv_object\">" . LangNewObjectSubtitle1b . "</a><br />";
   echo "</form>";
 }
 }
