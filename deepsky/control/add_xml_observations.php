@@ -66,7 +66,7 @@ if ($dom->schemaValidate($xmlschema)) {
   }
   if ($id == "") {
     $errormessage = LangXMLError2 . $deepskylog_username . LangXMLError2a;
-    throw new Exception($errormessage);
+//    throw new Exception($errormessage);
   }
 
   $targets = $dom->getElementsByTagName( "targets" );
