@@ -20,8 +20,9 @@
 //  LangValidateEyepieceMessage6
 //  define("LangNewObservationSubtitle3B", "Change the observation details ");
 //  LangItemsPerPage
-// 
-
+//  LangNumberOfRecordsIn
+//  LangNumberOfRecords1Pages
+//  LangNumberOfRecordsPerPages
 
 
 
@@ -1138,6 +1139,9 @@ define("LangPDFMessage21", "auf ");
 define("LangPDFMessage22", "Seite ");
 define("LangNumberOfRecords", "Ergebnisse");
 define("LangNumberOfRecords1","Ergebnis");
+define("LangNumberOfRecordsIn","in");
+define("LangNumberOfRecords1Pages","pages");
+define("LangNumberOfRecordsPerPages","Items/page");
 define("LangPDFTitle3", "DeepskyLog Kometen Beobachtungen");
 
 // deepsky/content/overview_observations_compact.php

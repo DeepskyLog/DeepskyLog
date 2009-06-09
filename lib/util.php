@@ -1560,7 +1560,7 @@ class Utils implements iUtils
     echo "<table style=\"margin:0px;padding:0px;\">";
     echo "<tr style=\"vertical-align:middle\">";
     if($showNumberOfRecords)
-      echo "<td style=\"vertical-align:middle\">(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")")."</td>";
+      echo "<td style=\"vertical-align:middle\">(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" ".LangNumberOfRecordsIn." ".$pages." ".LangNumberOfRecords1Pages.")"):")")."</td>";
     if(($listcount>$step)&&($showArrows))
     { $currentpage=ceil($min/$step)+1;
 			echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=0\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allleft20.gif\" alt=\"&lt;&lt;\" />"."</a>"."</td>";
@@ -1591,7 +1591,7 @@ class Utils implements iUtils
     echo "<div>";
     echo "<span style=\"vertical-align:middle\">";
     if($showNumberOfRecords)
-      echo "(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")");
+      echo "(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" ".LangNumberOfRecordsIn." ".$pages." ".LangNumberOfRecords1Pages.")"):")");
     if(($listcount>$step)&&($showArrows))
     { $currentpage=ceil($min/$step)+1;
 			echo "<a href=\"".$link."&amp;multiplepagenr=0\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allleft20.gif\" alt=\"&lt;&lt;\" />"."</a>";
@@ -1621,7 +1621,7 @@ class Utils implements iUtils
     $content="<form action=\"".$link."\" method=\"post\" style=\"margin:0px;padding:0px;\">";
     $content.="<div>";
     if($showNumberOfRecords)
-      $content.= "(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" in ".$pages." pages)"):")")."&nbsp;";
+      $content.= "(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" ".LangNumberOfRecordsIn." ".$pages." ".LangNumberOfRecords1Pages.")"):")")."&nbsp;";
     if(($listcount>$step)&&($showArrows))
     { $currentpage=ceil($min/$step)+1;
 			$content.= "<a href=\"".$link."&amp;multiplepagenr=0\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allleft20.gif\" alt=\"&lt;&lt;0\" />"."</a>";
@@ -1637,7 +1637,7 @@ class Utils implements iUtils
   }
   public function printStepsPerPage3($link,$detaillink,$steps=25)
   { global $baseURL;
-    $content ="Items per page: ";
+    $content =LangNumberOfRecordsPerPages.": ";
     $content.="<input name=\"stepsPerPage".$detaillink."\" id=\"stepsPerPage".$detaillink."\" class=\"centered\" value=\"".$steps."\" size=\"3\" onchange=\"location='".$link."&amp;stepsCommand=".$detaillink."&amp;stepsValue='+this.value;\" />";
     return $content;
   }

@@ -1138,6 +1138,9 @@ define("LangPDFMessage21", "at ");
 define("LangPDFMessage22", "Page ");
 define("LangNumberOfRecords", "results");
 define("LangNumberOfRecords1","result");
+define("LangNumberOfRecordsIn","in");
+define("LangNumberOfRecords1Pages","pages");
+define("LangNumberOfRecordsPerPages","Items/page");
 define("LangPDFTitle3", "DeepskyLog Comet Observations");
 
 // deepsky/content/overview_observations_compact.php
