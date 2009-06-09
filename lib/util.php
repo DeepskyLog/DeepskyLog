@@ -431,7 +431,8 @@ class Utils implements iUtils
     $attr->appendChild($attrText);
 	  }
 
-	  if ($type != "oal:deepSkyCG") {
+	  if ($type != "oal:deepSkyCG" && $type != "oal:deepSkyGC" && $type != "oal:deepSkyNA" &&
+	       $type != "oal:deepSkyOC" && $type != "oal:deepSkyPN" && $type != "oal:deepSkyQS") {
 	    if ($object["pa"] < 999.0) {
 	  	  $pa = $objectChild->appendChild($dom->createElement('pa')); 
       	  $pa->appendChild($dom->createTextNode(($object["pa"])));
@@ -768,15 +769,6 @@ class Utils implements iUtils
 
       $result = $observation->appendChild($dom->createElement('result'));
 
-	  if ($obs["colorContrasts"] > 0)
-	  {
-	    $attr = $dom->createAttribute("colorContrasts");
-        $result->appendChild($attr);
-
-	    $attrText = $dom->createTextNode("true");
-	    $attr->appendChild($attrText);
-	  }
-       
 	  if ($obs["extended"] > 0)
 	  {
 	    $attr = $dom->createAttribute("extended");
@@ -801,14 +793,35 @@ class Utils implements iUtils
 	    $attr->appendChild($attrText);
 	  }
 
-	  if ($obs["partlyUnresolved"] > 0)
-	  {
-	    $attr = $dom->createAttribute("partlyUnresolved");
+    if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC")
+    {
+	    if ($obs["partlyUnresolved"] > 0)
+	    {
+	      $attr = $dom->createAttribute("partlyUnresolved");
         $result->appendChild($attr);
 
-	    $attrText = $dom->createTextNode("true");
-	    $attr->appendChild($attrText);
-	  }
+	      $attrText = $dom->createTextNode("true");
+	      $attr->appendChild($attrText);
+	    }
+
+      if ($obs["unusualShape"] > 0)
+      {
+        $attr = $dom->createAttribute("unusualShape");
+        $result->appendChild($attr);
+
+        $attrText = $dom->createTextNode("true");
+        $attr->appendChild($attrText);
+      }
+
+      if ($obs["colorContrasts"] > 0)
+      {
+        $attr = $dom->createAttribute("colorContrasts");
+          $result->appendChild($attr);
+
+        $attrText = $dom->createTextNode("true");
+        $attr->appendChild($attrText);
+      }   
+    }
 
 	  if ($obs["resolved"] > 0)
 	  {
@@ -822,15 +835,6 @@ class Utils implements iUtils
 	  if ($obs["stellar"] > 0)
 	  {
 	    $attr = $dom->createAttribute("stellar");
-        $result->appendChild($attr);
-
-	    $attrText = $dom->createTextNode("true");
-	    $attr->appendChild($attrText);
-	  }
-
-	  if ($obs["unusualShape"] > 0)
-	  {
-	    $attr = $dom->createAttribute("unusualShape");
         $result->appendChild($attr);
 
 	    $attrText = $dom->createTextNode("true");
