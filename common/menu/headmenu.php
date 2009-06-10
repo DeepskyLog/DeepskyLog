@@ -34,6 +34,8 @@ if($objUtil->checkSessionKey('deepskylog_id'))
   echo LangWelcome2.$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'firstname')."&nbsp;".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'name');
 else
   echo LangWelcome3;
+echo " - ";
+echo "<a href=\"".$baseURL."index.php\">"."Home"."</a>";
 echo "</span>";
 echo "</div>";
 echo "<div id=\"div2b\">";  

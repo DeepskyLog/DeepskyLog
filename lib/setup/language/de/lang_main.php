@@ -23,6 +23,9 @@
 //  LangNumberOfRecordsIn
 //  LangNumberOfRecords1Pages
 //  LangNumberOfRecordsPerPages
+//  LangAskForDesiredNumberOfItemsPerPage
+//  LangCaptionAskForDesiredNumberOfItemsPerPage
+
 
 
 
@@ -1142,6 +1145,9 @@ define("LangNumberOfRecords1","Ergebnis");
 define("LangNumberOfRecordsIn","in");
 define("LangNumberOfRecords1Pages","pages");
 define("LangNumberOfRecordsPerPages","Items/page");
+define("LangAskForDesiredNumberOfItemsPerPage","Give the desired number of items per page");
+define("LangCaptionAskForDesiredNumberOfItemsPerPage","Clik to change the number of items per page.");
+
 define("LangPDFTitle3", "DeepskyLog Kometen Beobachtungen");
 
 // deepsky/content/overview_observations_compact.php

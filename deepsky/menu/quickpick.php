@@ -2,6 +2,7 @@
 echo "<div   class=\"menuDiv\">";
 echo "<form  action=\"".$baseURL."index.php\" method=\"get\">";
 echo "<div>";
+echo "<p class=\"menuHead\">".LangSearch."</p>";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"quickpick\" />";
 echo "<input type=\"hidden\" name=\"source\"      value=\"quickpick\" />";
 echo "<input type=\"hidden\" name=\"myLanguages\" value=\"true\" />";

@@ -1141,6 +1141,9 @@ define("LangNumberOfRecords1","result");
 define("LangNumberOfRecordsIn","in");
 define("LangNumberOfRecords1Pages","pages");
 define("LangNumberOfRecordsPerPages","Items/page");
+define("LangAskForDesiredNumberOfItemsPerPage","Give the desired number of items per page");
+define("LangCaptionAskForDesiredNumberOfItemsPerPage","Clik to change the number of items per page.");
+
 define("LangPDFTitle3", "DeepskyLog Comet Observations");
 
 // deepsky/content/overview_observations_compact.php

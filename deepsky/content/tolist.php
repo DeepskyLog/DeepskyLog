@@ -69,7 +69,7 @@ if($listname)
 	  $content.="&nbsp;-&nbsp;";
     $content.="<a href=\"objects.argo?SID=Qobj\" rel=\"external\">".LangExecuteQueryObjectsMessage8."</a> &nbsp;-&nbsp;";
     $content.="<a href=\"objects.csv?SID=Qobj\" rel=\"external\">".LangExecuteQueryObjectsMessage6."</a>";
-    $objPresentations->line(array($content,$content2),"LR",array(75,25));
+    $objPresentations->line(array($content),"L",array(100));
 	}
 	else
 	{ echo LangToListEmptyList;

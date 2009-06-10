@@ -569,9 +569,9 @@ define("LangViewObjectFieldOptimumDetectionMagnification", "Agrandissement de d&
 define("LangViewObjectDSS", "Voir l'image DSS");
 define("LangViewObjectDSL", "Voir la carte Deepskylive");
 define("LangViewObjectObservations", "Toutes les observations de ");
-define("LangViewObjectViewNearbyObject", " ses objects proches");
+define("LangViewObjectViewNearbyObject", "Montrez les objets proches");
 define("LangViewObjectAndNearbyObjects", " et ");
-define("LangViewObjectNoNearbyObjects", " - pas d'autres objects proches");
+define("LangViewObjectNoNearbyObjects", " - pas d'autres objets proches");
 define("LangViewObjectAddObservation", "Nouvelle observation de ");
 define("LangViewObjectInexistant", "Cet objet n'existe pas!");
 define("LangViewObjectNearbyObjects", "objets proches: ");
@@ -1143,6 +1143,9 @@ define("LangNumberOfRecords1","r&#233;sultat");
 define("LangNumberOfRecordsIn","en");
 define("LangNumberOfRecords1Pages","pages");
 define("LangNumberOfRecordsPerPages","Nombre de résultats par page");
+define("LangAskForDesiredNumberOfItemsPerPage","Donnez le nombre voulu de résultats par page");
+define("LangCaptionAskForDesiredNumberOfItemsPerPage","Cliquez pour changer le nombre de résultats par page.");
+
 define("LangPDFTitle3", "Observations des com&#232;tes de DeepskyLog");
 
 // deepsky/content/overview_observations_compact.php

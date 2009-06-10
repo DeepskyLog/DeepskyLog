@@ -1638,7 +1638,8 @@ class Utils implements iUtils
   public function printStepsPerPage3($link,$detaillink,$steps=25)
   { global $baseURL;
     $content =LangNumberOfRecordsPerPages.": ";
-    $content.="<input name=\"stepsPerPage".$detaillink."\" id=\"stepsPerPage".$detaillink."\" class=\"centered\" value=\"".$steps."\" size=\"3\" onchange=\"location='".$link."&amp;stepsCommand=".$detaillink."&amp;stepsValue='+this.value;\" />";
+    $content.="<a href=\"#\" onclick=\"theanswer=prompt('".addslashes(LangAskForDesiredNumberOfItemsPerPage)."','".addslashes($steps)."'); location.href='".$link."&amp;stepsCommand=".$detaillink."&amp;stepsValue='+theanswer; return false;\"	title=\"".LangCaptionAskForDesiredNumberOfItemsPerPage."\" rel=\"external\">".$steps."</a>";    
+    //$content.="<input name=\"stepsPerPage".$detaillink."\" id=\"stepsPerPage".$detaillink."\" class=\"centered\" value=\"".$steps."\" size=\"3\" onchange=\"location='".$link."&amp;stepsCommand=".$detaillink."&amp;stepsValue='+this.value;\" />";
     return $content;
   }
   public function rssObservations()  // Creates an rss feed for DeepskyLog

@@ -1142,6 +1142,9 @@ define("LangNumberOfRecords1","resultaat");
 define("LangNumberOfRecordsIn","in");
 define("LangNumberOfRecords1Pages","paginas");
 define("LangNumberOfRecordsPerPages","Items per pagina");
+define("LangAskForDesiredNumberOfItemsPerPage","Geef het gewenste aantal items per pagina");
+define("LangCaptionAskForDesiredNumberOfItemsPerPage","Klik om het aantal items per pagina te wijzigen.");
+
 define("LangPDFTitle3", "DeepskyLog komeet waarnemingen");
 
 // deepsky/content/overview_observations_compact.php

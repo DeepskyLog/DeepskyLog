@@ -230,6 +230,7 @@ a.menuLine:hover {
 	min-width        : 145px;
 }
 .menuInput {
+  margin-top       : 5px;
 	width            : 140px;
 }
 ol{

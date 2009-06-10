@@ -15,5 +15,5 @@ if((!($loggedUser))||($objUtil->checkGetKey('indexAction')=='logout'))
   echo "</div>";
 	echo "</form>";
 	echo "</div>";
-}
+	}
 ?>
