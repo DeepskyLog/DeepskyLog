@@ -70,6 +70,8 @@ define("LangException016", "You wanted to watch an object, but none is specified
 define("LangException016b","You wanted to watch an object, but the object is not known. Please contact the developers with this message.");
 
 define("LangCounter","Counter");
+define("LangMenuExpand","Expand menu");
+define("LangMenuCollapse","Collapse menu");
 
 define("DreyerDescriptionLink","http://www.deepskylog.org/wiki/bin/view/DeepskyLog/DreyerDescriptionen");
 

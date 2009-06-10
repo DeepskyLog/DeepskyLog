@@ -10,9 +10,9 @@ while(list($key,$value)=each($_GET))
 reset($_GET);
 echo "<p  class=\"menuHead\">";
 if($menuAddChange=="collapsed")
-  echo "<a href=\"".$baseURL."index.php?menuAddChange=expanded".$link."\">+</a> ";
+  echo "<a href=\"".$baseURL."index.php?menuAddChange=expanded".$link."\" title=\"".LangMenuExpand."\">+</a> ";
 else
-  echo "<a href=\"".$baseURL."index.php?menuAddChange=collapsed".$link."\">-</a> ";
+  echo "<a href=\"".$baseURL."index.php?menuAddChange=collapsed".$link."\" title=\"".LangMenuCollapse."\">-</a> ";
 echo LangChangeMenuTitle."</p>";
 if($menuAddChange=="collapsed")
 { echo "<select name=\"search\" class=\"menuField menuDropdown\" onchange=\"{location=this.options[this.selectedIndex].value;}\">";

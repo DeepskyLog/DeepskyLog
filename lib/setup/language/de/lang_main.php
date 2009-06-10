@@ -25,8 +25,8 @@
 //  LangNumberOfRecordsPerPages
 //  LangAskForDesiredNumberOfItemsPerPage
 //  LangCaptionAskForDesiredNumberOfItemsPerPage
-
-
+//  LangMenuExpand
+//  LangMenuCollapse
 
 
 
@@ -74,6 +74,8 @@ define("LangException016", "Sie m&ouml;chten ein nicht spezifiziertes Objekt anz
 define("LangException016b","Sie m&ouml;chten ein Objekt anzeigen, welches unbekannt ist. Bitte kontaktieren Sie die Entwickler mit dieser Fehlermeldung.");
 
 define("LangCounter","Z&auml;hler");
+define("LangMenuExpand","Expand menu");
+define("LangMenuCollapse","Collapse menu");
 
 define("DreyerDescriptionLink","http://www.deepskylog.org/wiki/bin/view/DeepskyLog/DreyerDescriptionen");
 

@@ -59,7 +59,7 @@ else
 		reset($_SESSION['steps']);
 	}
 	// collapsed menus ================================================================================================================================================================
-  $menuView="collaped";
+  $menuView="collapsed";
   $menuAddChange="collapsed";
 	if(array_key_exists('menuView',$_GET))
 	{ $menuView=$_GET['menuView'];
@@ -81,8 +81,18 @@ else
 		setcookie("menus",$menuscookie,$cookietime, "/");
 	}
 	elseif(array_key_exists('menus',$_SESSION)&&array_key_exists('menuView',$_SESSION['menus']))
-	{ $menuView=$_SESSION['menus']['menuView'];
-	}	
+	  $menuView=$_SESSION['menus']['menuView'];
+	elseif(array_key_exists('menus',$_COOKIE))
+	{ $menubase=explode(";",$_COOKIE['menus']);
+	    while(list($key,$value)=each($menubase))
+	    { if($value)
+	      { $menubaseitems=explode(":",$value);
+	        $_SESSION['menus'][$menubaseitems[0]]=$menubaseitems[1];
+	      }
+	    }
+	  if(array_key_exists('menus',$_SESSION)&&array_key_exists('menuView',$_SESSION['menus']))
+	    $menuView=$_SESSION['menus']['menuView'];
+	}
 	if(array_key_exists('menuAddChange',$_GET))
 	{ $menuAddChange=$_GET['menuAddChange'];
 	  $_SESSION['menus']['menuAddChange']=$menuAddChange;
@@ -104,6 +114,17 @@ else
 	}
 	elseif(array_key_exists('menus',$_SESSION)&&array_key_exists('menuAddChange',$_SESSION['menus']))
 	{ $menuAddChange=$_SESSION['menus']['menuAddChange'];
+	}
+	elseif(array_key_exists('menus',$_COOKIE))
+	{ $menubase=explode(";",$_COOKIE['menus']);
+	  while(list($key,$value)=each($menubase))
+	  { if($value)
+	    { $menubaseitems=explode(":",$value);
+	      $_SESSION['menus'][$menubaseitems[0]]=$menubaseitems[1];
+	    }
+	  }
+	  if(array_key_exists('menus',$_SESSION)&&array_key_exists('menuAddChange',$_SESSION['menus']))
+	    $menuAddChange=$_SESSION['menus']['menuAddChange'];
 	}
 	//============================================================================== COMMON INSTRUCTIONS
 	while(list($key,$value)=each($modules))                                                                            // change module

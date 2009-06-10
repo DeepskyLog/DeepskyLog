@@ -33,8 +33,8 @@
 //  $ClusterTypeA->X
 //  LangValidateEyepieceMessage6
 //  LangItemsPerPage
-
-
+//  LangMenuExpand
+//  LangMenuCollapse
 
 
 define("LangGeneralObservations","observations");
@@ -70,6 +70,8 @@ define("LangException016", "U wou een object bekijken, maar er is geen object aa
 define("LangException016b","U wou een object bekijken, maar het object is niet gekend. Gelieve de developers te contacteren met dit bericht.");
 
 define("LangCounter","Compteur");
+define("LangMenuExpand","Menu uitplooien");
+define("LangMenuCollapse","Menu samenplooien");
 
 define("DreyerDescriptionLink","http://www.deepskylog.org/wiki/bin/view/DeepskyLog/DreyerDescriptionen");
 

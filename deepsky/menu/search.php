@@ -11,9 +11,9 @@ while(list($key,$value)=each($_GET))
 echo "<div class=\"menuDiv\">";
 echo "<p   class=\"menuHead\">";
 if($menuView=="collapsed")
-  echo "<a href=\"".$baseURL."index.php?menuView=expanded".$link."\">+</a> ";
+  echo "<a href=\"".$baseURL."index.php?menuView=expanded".$link."\" title=\"".LangMenuExpand."\">+</a> ";
 else
-  echo "<a href=\"".$baseURL."index.php?menuView=collapsed".$link."\">-</a> ";
+  echo "<a href=\"".$baseURL."index.php?menuView=collapsed".$link."\" title=\"".LangMenuCollapse."\">-</a> ";
 echo LangSearchMenuTitle."</p>";
 if($menuView=="collapsed")
 { echo "<select name=\"view\" class=\"menuField menuDropdown\" onchange=\"{location=this.options[this.selectedIndex].value;}\">";
