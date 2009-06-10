@@ -24,7 +24,7 @@ else
 		setcookie("lco","L",$cookietime, "/");
 	  $_SESSION['lco']="L";
 	}
-	// pagenumbers
+	// pagenumbers ================================================================================================================================================================
 	if(!array_key_exists('steps',$_SESSION))
 	{ if(array_key_exists('steps',$_COOKIE))
 	  { $stepsbase=explode(";",$_COOKIE['steps']);
@@ -57,6 +57,53 @@ else
 		$cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
 		setcookie("steps",$stepscookie,$cookietime, "/");
 		reset($_SESSION['steps']);
+	}
+	// collapsed menus ================================================================================================================================================================
+  $menuView="collaped";
+  $menuAddChange="collapsed";
+	if(array_key_exists('menuView',$_GET))
+	{ $menuView=$_GET['menuView'];
+	  $_SESSION['menus']['menuView']=$menuView;
+		$menuscookie="";
+		while(list($key,$value)=each($_SESSION['menus']))
+		  $menuscookie.=$key.":".$value.";";
+		$cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("menus",$menuscookie,$cookietime, "/");
+	  
+	}
+	elseif(array_key_exists('menuView',$_POST))
+	{ $menuView=$_POST['menuView'];
+    $_SESSION['menus']['menuView']=$menuView;
+		$menuscookie="";
+    while(list($key,$value)=each($_SESSION['menus']))
+		  $menuscookie.=$key.":".$value.";";
+		$cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("menus",$menuscookie,$cookietime, "/");
+	}
+	elseif(array_key_exists('menus',$_SESSION)&&array_key_exists('menuView',$_SESSION['menus']))
+	{ $menuView=$_SESSION['menus']['menuView'];
+	}	
+	if(array_key_exists('menuAddChange',$_GET))
+	{ $menuAddChange=$_GET['menuAddChange'];
+	  $_SESSION['menus']['menuAddChange']=$menuAddChange;
+		$menuscookie="";
+	  while(list($key,$value)=each($_SESSION['menus']))
+		  $menuscookie.=$key.":".$value.";";
+		$cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("menus",$menuscookie,$cookietime, "/");
+	  
+	}
+	elseif(array_key_exists('menuAddChange',$_POST))
+	{ $menuAddChange=$_POST['menuAddChange'];
+    $_SESSION['menus']['menuAddChange']=$menuAddChange;
+		$menuscookie="";
+    while(list($key,$value)=each($_SESSION['menus']))
+		  $menuscookie.=$key.":".$value.";";
+		$cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("menus",$menuscookie,$cookietime, "/");
+	}
+	elseif(array_key_exists('menus',$_SESSION)&&array_key_exists('menuAddChange',$_SESSION['menus']))
+	{ $menuAddChange=$_SESSION['menus']['menuAddChange'];
 	}
 	//============================================================================== COMMON INSTRUCTIONS
 	while(list($key,$value)=each($modules))                                                                            // change module

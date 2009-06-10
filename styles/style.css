@@ -450,3 +450,6 @@ a.moduletable:link, a.moduletable:visited {
 .sortButton {
 	border           : 0;
 }
+.bold {
+  font-weight      : bolder;
+}
