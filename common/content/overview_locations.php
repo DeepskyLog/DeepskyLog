@@ -1,7 +1,7 @@
 <?php // overview_locations.php - generates an overview of all locations (admin only)
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!$loggedUser) throw new Exception(LangException002);
-elseif(!$_SESSION['admin']) throw new Exception(LangException001);
+elseif($_SESSION['admin']!="yes") throw new Exception(LangException001);
 else
 {
 set_time_limit(60);
@@ -25,12 +25,22 @@ if((isset($_GET['sort'])) && $_GET['previous'] == $_GET['sort']) // reverse sort
 }
 else
   $previous = $sort;
-
-$step = 25;
 $link=$baseURL."index.php?indexAction=view_locations&amp;sort=" . $sort . "&amp;previous=" . $orig_previous;
+if((array_key_exists('steps',$_SESSION))&&(array_key_exists("allSites",$_SESSION['steps'])))
+  $step=$_SESSION['steps']["allSites"];
+if(array_key_exists('multiplepagenr',$_GET))
+  $min = ($_GET['multiplepagenr']-1)*$step;
+elseif(array_key_exists('multiplepagenr',$_POST))
+  $min = ($_POST['multiplepagenr']-1)*$step;
+elseif(array_key_exists('min',$_GET))
+  $min=$_GET['min'];
+else
+  $min = 0;
+$contentSteps=$objUtil->printStepsPerPage3($link,"allSites",$step);
 list ($min,$max,$content) = $objUtil->printNewListHeader3($sites, $link, $min, $step);
-echo "<div id=\"main\" style=\"position:relative\">";
-$objPresentations->line(array("<h5>".LangViewLocationTitle."</h5>",$content),"LR",array(70,30),50);
+echo "<div id=\"main\">";
+$objPresentations->line(array("<h5>".LangViewLocationTitle."</h5>",$content),"LR",array(70,30),30);
+$objPresentations->line(array($contentSteps),"R",array(100),20);
 echo "<hr />";
 echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";

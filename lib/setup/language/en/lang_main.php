@@ -197,7 +197,7 @@ define("LangListActivate", "Activate");
 define("LangListOnlyMembers", "Lists are only available to the registered users.");
 
 // Quickpick menu
-define("LangQuickPickHelp", "Give the name of an object, with first the catalog, followed by a SPACE and the catalog number (eg: 'NGC&nbsp;7000', 'Mel 20' or also 'Ring&nbsp;Nebula').");
+define("LangQuickPickHelp", "Give the name of an object (eg: 'NGC&nbsp;7000', 'Mel 20' or also 'Ring&nbsp;Nebula'), or use the wildcard character % (e.g. M&nbsp;%).");
 define("LangQuickPickTitle", "Quick&nbsp;Pick");
 define("LangQuickPickSearchObject", "Search&nbsp;Object");
 define("LangQuickPickSearchObservations", "Search&nbsp;Observations");

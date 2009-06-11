@@ -1,7 +1,7 @@
 <?php  // overview_filters.php - generates an overview of all filters (admin only)
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!$loggedUser) throw new Exception(LangException002);
-elseif(!$_SESSION['admin']) throw new Exception(LangException001);
+elseif($_SESSION['admin']!="yes") throw new Exception(LangException001);
 else
 {
 set_time_limit(60);
@@ -18,16 +18,27 @@ if((isset($_GET['sort'])) && $_GET['previous'] == $_GET['sort']) // reverse sort
 }
 else
   $previous = $sort;
-$step = 25;
 // the code below is very strange but works
 if((isset($_GET['previous'])))
   $orig_previous = $_GET['previous'];
 else
   $orig_previous = "";
 $link=$baseURL."index.php?indexAction=view_filters&amp;sort=".$sort."&amp;previous=".$orig_previous;
+if((array_key_exists('steps',$_SESSION))&&(array_key_exists("allFilts",$_SESSION['steps'])))
+  $step=$_SESSION['steps']["allFilts"];
+if(array_key_exists('multiplepagenr',$_GET))
+  $min = ($_GET['multiplepagenr']-1)*$step;
+elseif(array_key_exists('multiplepagenr',$_POST))
+  $min = ($_POST['multiplepagenr']-1)*$step;
+elseif(array_key_exists('min',$_GET))
+  $min=$_GET['min'];
+else
+  $min = 0;
+$contentSteps=$objUtil->printStepsPerPage3($link,"allFilts",$step);
 list ($min,$max,$content) = $objUtil->printNewListHeader3($filts, $link, $min, $step);
 echo "<div id=\"main\" style=\"position:relative\">";
-$objPresentations->line(array("<h5>".LangOverviewFilterTitle."</h5>",$content),"LR",array(70,30),50);
+$objPresentations->line(array("<h5>".LangOverviewFilterTitle."</h5>",$content),"LR",array(70,30),30);
+$objPresentations->line(array($contentSteps),"R",array(100),20);
 echo "<hr />";
 echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";

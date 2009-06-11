@@ -1,7 +1,7 @@
 <?php // overview_observers.php - generates an overview of all observers (admin only)
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!$loggedUser) throw new Exception(LangException002);
-elseif(!$_SESSION['admin']) throw new Exception(LangException001);
+elseif($_SESSION['admin']!="yes") throw new Exception(LangException001);
 else
 {
 set_time_limit(60);
@@ -29,12 +29,23 @@ if((isset($_GET['sort'])) && (isset($_GET['previous'])) && $_GET['previous'] == 
 }
 else
   $previous = $sort;
-$step=25;
-$link=$baseURL."index.php?indexAction=view_observers&amp;sort=".$sort."&amp;previous=".$orig_previous;
 $count = 0;
+$link=$baseURL."index.php?indexAction=view_observers&amp;sort=".$sort."&amp;previous=".$orig_previous;
+if((array_key_exists('steps',$_SESSION))&&(array_key_exists("allObs",$_SESSION['steps'])))
+  $step=$_SESSION['steps']["allObs"];
+if(array_key_exists('multiplepagenr',$_GET))
+  $min = ($_GET['multiplepagenr']-1)*$step;
+elseif(array_key_exists('multiplepagenr',$_POST))
+  $min = ($_POST['multiplepagenr']-1)*$step;
+elseif(array_key_exists('min',$_GET))
+  $min=$_GET['min'];
+else
+  $min = 0;
 list ($min,$max,$content) = $objUtil->printNewListHeader3($observers, $link, $min, $step);
 echo "<div id=\"main\" style=\"position:relative\">";
-$objPresentations->line(array("<h5>".LangViewObserverTitle."</h5>",$content),"LR",array(70,30),50);
+$objPresentations->line(array("<h5>".LangViewObserverTitle."</h5>",$content),"LR",array(70,30),30);
+$content=$objUtil->printStepsPerPage3($link,"allObs",$step);
+$objPresentations->line(array($content),"R",array(100),20);
 echo "<hr />";
 echo "<table width=\"100%\">";
 echo "<tr class=\"type3\">";

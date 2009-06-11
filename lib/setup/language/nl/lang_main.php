@@ -198,7 +198,7 @@ define("LangListActivate", "Activeer");
 define("LangListOnlyMembers", "Lijsten zijn enkel beschikbaar voor de geregistreerde gebruikers.");
 
 // Quickpick menu
-define("LangQuickPickHelp", "Geef de naam van een object, met de catalogus, gevolgd door een SPATIE en het catalogusnummer (bv: 'NGC&nbsp;7000', 'Mel 20', of ook 'Ring&nbsp;Nebula').");
+define("LangQuickPickHelp", "Geef de naam van een object (bv: 'NGC&nbsp;7000', 'Mel 20', of ook 'Ring&nbsp;Nebula'), of gebruik de % wildcard (bv. M&nbsp;%).");
 define("LangQuickPickTitle", "Quick&nbsp;Pick");
 define("LangQuickPickSearchObject", "Zoek&nbsp;object");
 define("LangQuickPickSearchObservations", "Zoek&nbsp;waarnemingen");

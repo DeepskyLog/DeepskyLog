@@ -27,7 +27,7 @@
 //  LangCaptionAskForDesiredNumberOfItemsPerPage
 //  LangMenuExpand
 //  LangMenuCollapse
-
+//  LangQuickPickHelp
 
 
 
@@ -201,7 +201,7 @@ define("LangListActivate", "Aktivieren");
 define("LangListOnlyMembers", "Listen sind nur f&uuml;r registrierte Benutzer verf&uuml;gbar.");
 
 // Quickpick menu
-define("LangQuickPickHelp", "Geben Sie den Namen des Objektes an. Zuerst der Katalogname, gefolgt von einem Leerzeichen und der Katalognummer (z.B.: 'NGC&nbsp;7000', 'Mel 20' oder auch 'Ring&nbsp;Nebel').");
+define("LangQuickPickHelp", "Geben Sie den Namen des Objektes an (z.B.: 'NGC&nbsp;7000', 'Mel 20' oder auch 'Ring&nbsp;Nebel'), oder brauchen Sie die % wildcard karakter (z.b. M&nbsp;%).");
 define("LangQuickPickTitle", "Schnellauswahl");
 define("LangQuickPickSearchObject", "Objektsuche");
 define("LangQuickPickSearchObservations", "Beobachtungssuche");

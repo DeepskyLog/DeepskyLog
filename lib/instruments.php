@@ -24,7 +24,8 @@ class Instruments implements iInstruments
    return $objDatabase->selectSingleAray("SELECT id FROM instruments WHERE name = \"".$objDatabase->selectSingleValue("SELECT name FROM instruments WHERE id = \"$id\"",'name'),'id');
   }
   public  function getInstrumentEchoType($instrumentType)
-  { if($instrumentType== InstrumentBinoculars)        return InstrumentsBinoculars;
+  { if($instrumentType== InstrumentNakedEye)          return InstrumentsNakedEye;
+    if($instrumentType== InstrumentBinoculars)        return InstrumentsBinoculars;
     if($instrumentType== InstrumentFinderscope)       return InstrumentsFinderscope;
     if($instrumentType== InstrumentReflector)         return InstrumentsReflector;
     if($instrumentType== InstrumentRefractor)         return InstrumentsRefractor;
