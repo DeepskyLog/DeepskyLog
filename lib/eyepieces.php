@@ -67,8 +67,6 @@ class Eyepieces implements iEyepieces
      }
      else
        $previous=$sort;
-     $objPresentations->line(array("<h5>".LangOverviewEyepieceTitle." ".$loggedUserName."</h5>"),"L",array(),50);
-     echo "<hr />"; 
      echo "<table width=\"100%\">";
      echo "<tr class=\"type3\">";
      echo "<td><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=name&amp;previous=$previous\">".LangViewEyepieceName."</a></td>";

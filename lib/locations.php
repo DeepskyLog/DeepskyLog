@@ -94,7 +94,7 @@ class Locations
     { $data=fgets($fh);
       $vars=explode("\t", $data);
       if (strtolower($vars[0]) == strtolower($name))
-        $locations[] = $data;
+        $locations[] = str_replace("\n","",$data);
     }
     return $locations;
   }
@@ -162,10 +162,6 @@ class Locations
 		  echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 		  echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 		  echo "<input type=\"hidden\" name=\"adaptStandardLocation\" value=\"1\" />";
-	    $objPresentations->line(array("<h5>".LangOverviewSiteTitle." ".$loggedUserName."</h5>",
-	                                  "<input type=\"submit\" name=\"adapt\" value=\"" . LangAddSiteStdLocation . "\" />&nbsp;"),
-	                            "LR",array(80,20),50);
-      echo "<hr />"; 
 		  echo "<table width=\"100%\">";
 		  echo "<tr class=\"type3\">";
 		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>";
@@ -214,7 +210,7 @@ class Locations
 		      echo "<td>".$timezone."</td>";
 		      echo "<td class=\"centered\">".$limmag."</td>";
 		      echo "<td class=\"centered\">".$sb."</td>";
-		      echo "<td class=\"centered\"><input type=\"radio\" name=\"stdlocation\" value=\"". $value ."\"".(($value==$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation'))?" checked ":"")." />&nbsp;<br /></td>";
+		      echo "<td class=\"centered\"><input type=\"radio\" name=\"stdlocation\" value=\"". $value ."\"".(($value==$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation'))?" checked ":"")." onclick=\"submit();\" />&nbsp;<br /></td>";
 					echo "<td>";
 		      if(!($obsCnt=$objLocation->getLocationUsedFromId($value)))
 		        echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_location&amp;locationid=".urlencode($value)."\">".LangRemove."</a>";

@@ -38,7 +38,7 @@ else
   $min = 0;
 $contentSteps=$objUtil->printStepsPerPage3($link,"allLens",$step);
 echo "<div id=\"main\">";
-$objPresentations->line(array("<h5>".LangOverviewLensTitle."</h5>",$content),"LR",array(70,30),30);
+$objPresentations->line(array("<h4>".LangOverviewLensTitle."</h4>",$content),"LR",array(70,30),30);
 $objPresentations->line(array($contentSteps),"R",array(100),20);
 echo "<hr />";
 echo "<table width=\"100%\">";
@@ -73,6 +73,7 @@ while(list($key,$value)=each($lns))
   $count++;
 }
 echo "</table>";
+echo "<hr />";
 echo "</div>";
 }
 ?>

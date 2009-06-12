@@ -29,42 +29,24 @@ else
   $atlas="";
 
 echo "<div id=\"main\">";
-echo "<h2>";
-echo LangQueryObservationsTitle;
-echo "</h2>";
-
 echo "<form action=\"".$baseURL."index.php\" method=\"get\" name=\"ObservationsQueryForm\">";
 echo "<input type=\"hidden\" name=\"indexAction\"   value=\"result_selected_observations\" />";
 echo "<input type=\"hidden\" name=\"sort\"          value=\"objectname\" />";
 echo "<input type=\"hidden\" name=\"sortdirection\" value=\"asc\" />";
 echo "<input type=\"hidden\" name=\"myLanguages\"   value=\"true\" />";
-echo "<table width=\"100%\">";
-echo "<tr>";
-echo "<td>";
-echo "&nbsp;";
-/*
-echo "<form action=\"".$baseURL."index.php\">";
-echo "<input type=\"hidden\" name=\"indexAction\" value=\"query_observations\" />";
-echo "<input type=\"submit\" name=\"clear\" value=\"" . LangQueryObservationsButton2 . "\" />";
-echo "</form>";
-*/
-echo "</td>";
-echo "<td align=\"right\">".LangSeen."</td>";
-echo "<td>";
-echo "<select name=\"seen\">";
-echo "<option selected=\"selected\" value=\"D\">" . LangSeenDontCare . "</option>";
-if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
-{
-  echo("<option value=\"X\">" . LangSeenSomeoneElse . "</option>".
-		   "<option value=\"Y\">" . LangSeenByMe . "</option>");
+$content="";
+$content1="";
+if($loggedUser)
+{ $content=LangSeen;
+  $content1 ="<select name=\"seen\">";
+  $content1.="<option selected=\"selected\" value=\"D\">" . LangSeenDontCare . "</option>";
+  $content1.="<option value=\"X\">" . LangSeenSomeoneElse . "</option>"."<option value=\"Y\">" . LangSeenByMe . "</option>";
+  $content1.="</select>";
 }
-echo "</select>";
-echo "</td>";
-echo "<td align=\"center\" width=\"25%\"><input type=\"submit\" name=\"query\" value=\"" . LangQueryObservationsButton1 . "\" /></td>";
-echo "</tr>";
+$content2="<input type=\"submit\" name=\"query\" value=\"" . LangQueryObservationsButton1 . "\" /></td>";
+$objPresentations->line(array("<h4>".LangQueryObservationsTitle."</h4>",$content,$content1,$content2),"LRLL",array(20,20,40,20),30);
+echo "<hr />";
 
-echo("</table>");
-echo("<hr />");
 echo("<table width=\"100%\">");
 
 echo("<tr>");

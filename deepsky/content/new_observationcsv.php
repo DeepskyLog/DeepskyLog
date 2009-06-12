@@ -4,10 +4,8 @@
 // Version 0.3: 2005/04/05, JV
 
 echo "<div id=\"main\">";
-echo "<h2>";
-echo LangCSVTitle;
-echo "</h2>";
-echo "<p>";
+$objPresentations->line(array("<h4>".LangCSVTitle."</h4>"),"L",array(),30);
+echo "<hr />";
 echo LangCSVMessage1;
 echo "<br /><br />" . LangCSVMessage2;
 echo "<br /><br />" . LangCSVMessage3;

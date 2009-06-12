@@ -43,7 +43,7 @@ else
   $min = 0;
 list ($min,$max,$content) = $objUtil->printNewListHeader3($observers, $link, $min, $step);
 echo "<div id=\"main\" style=\"position:relative\">";
-$objPresentations->line(array("<h5>".LangViewObserverTitle."</h5>",$content),"LR",array(70,30),30);
+$objPresentations->line(array("<h4>".LangViewObserverTitle."</h4>",$content),"LR",array(70,30),30);
 $content=$objUtil->printStepsPerPage3($link,"allObs",$step);
 $objPresentations->line(array($content),"R",array(100),20);
 echo "<hr />";
@@ -83,6 +83,7 @@ while(list ($key, $value) = each($observers))
   $count++;
 }
 echo "</table>";
+echo "<hr />";
 echo "</div>";
 }
 ?>

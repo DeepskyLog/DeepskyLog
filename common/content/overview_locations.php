@@ -39,7 +39,7 @@ else
 $contentSteps=$objUtil->printStepsPerPage3($link,"allSites",$step);
 list ($min,$max,$content) = $objUtil->printNewListHeader3($sites, $link, $min, $step);
 echo "<div id=\"main\">";
-$objPresentations->line(array("<h5>".LangViewLocationTitle."</h5>",$content),"LR",array(70,30),30);
+$objPresentations->line(array("<h4>".LangViewLocationTitle."</h4>",$content),"LR",array(70,30),30);
 $objPresentations->line(array($contentSteps),"R",array(100),20);
 echo "<hr />";
 echo "<table width=\"100%\">";
@@ -104,6 +104,7 @@ while(list ($key, $value) = each($sites))
   $count++;
 }
 echo "</table>";
+echo "<hr />";
 echo "</div>";
 }
 ?>

@@ -6,7 +6,7 @@ else
 $name=stripslashes($objLocation->getLocationPropertyFromId($locationid,'name'));
 $timezone = $objLocation->getLocationPropertyFromId($locationid,'timezone');
 echo "<div id=\"main\">";
-$objPresentations->line(array("<h5>".$name."</h5>"),"L",array(100),50);
+$objPresentations->line(array("<h4>".$name."</h4>"),"L",array(100),30);
 echo "<hr />";
 $objPresentations->line(array(LangViewLocationProvince,stripslashes($objLocation->getLocationPropertyFromId($locationid,'region'))),"RL",array(20,80),'',array('fieldname','fieldvalue'));
 $objPresentations->line(array(LangViewLocationCountry,$objLocation->getLocationPropertyFromId($locationid,'country')),"RL",array(20,80),'',array('fieldname','fieldvalue'));

@@ -4,6 +4,8 @@ elseif(!$loggedUser) throw new Exception(LangException002);
 else
 {
 echo "<div id=\"main\">";
+$objPresentations->line(array("<h4>".LangOverviewLensTitle." ".$loggedUserName."</h4>"),"L",array(),30);
+echo "<hr />"; 
 $objLens->showLensesObserver();
 $lns=$objLens->getSortedLenses('name');
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
@@ -12,7 +14,7 @@ $content1b= "<select onchange=\"location = this.options[this.selectedIndex].valu
 while(list($key, $value) = each($lns))
   $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_lens&amp;lensid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('lensid'))?" selected=\"selected\" ":'').">".$objLens->getLensPropertyFromId($value,'name')."</option>";
 $content1b.= "</select>&nbsp;";
-$objPresentations->line(array("<h5>".LangAddLensTitle."</h5>"),"L",array(),50);
+$objPresentations->line(array("<h4>".LangAddLensTitle."</h4>"),"L",array(),30);
 echo "<hr />";
 $objPresentations->line(array(LangAddLensExisting,
                               $content1b,

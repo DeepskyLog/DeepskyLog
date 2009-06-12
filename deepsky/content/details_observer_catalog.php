@@ -7,7 +7,7 @@ $name = $objObserver->getObserverProperty($_GET['user'],'name');
 $partof=$objUtil->checkGetKey('partof',0);
 
 echo "<div id=\"main\">";
-$objPresentations->line(array("<h5>".$firstname."&nbsp;".$name."</h5>"),"L",array(100),50);
+$objPresentations->line(array("<h4>".$firstname."&nbsp;".$name."</h4>"),"L",array(100),30);
 echo "<hr />";
 $upload_dir='common/observer_pics';
 $dir=opendir($instDir.$upload_dir);

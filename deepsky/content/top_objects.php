@@ -12,7 +12,7 @@ else
 echo"<div id=\"main\">";
 $link=$baseURL."index.php?indexAction=rank_objects";
 list($min,$max,$content)=$objUtil->printNewListHeader3($_SESSION['Qobj'], $baseURL."index.php?indexAction=rank_objects", $min, $step, "");
-$objPresentations->line(array("<h5>".LangTopObjectsTitle."</h5>",$content),"LR",array(70,30),40);
+$objPresentations->line(array("<h4>".LangTopObjectsTitle."</h4>",$content),"LR",array(70,30),30);
 $content=$objUtil->printStepsPerPage3($link,"topObj",$step);
 $objPresentations->line(array($content),"R",array(100),20);
 echo "<hr />";
@@ -25,5 +25,6 @@ if($FF)
   echo "</script>";
 }
 $objObject->showObjects($link, $min, $max,'',2,$step);
+echo "<hr />";
 echo "</div>";
 ?>

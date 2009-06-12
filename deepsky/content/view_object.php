@@ -69,10 +69,8 @@ if(!($imagesize))
 	$content1.="</form>";
 	$content2="";
 	$content2=$objUtil->printStepsPerPage3($link,"nearbyObjects",$step);
-	$objPresentations->line(array($content1,$content2),"LR",array(50,50),25);
+	$objPresentations->line(array($content1,$content2),"LR",array(50,50),20);
 	echo "<hr />";
-	
-	echo "<div style=\"position:relative; left:0px; width:100%;\">";
 	if($max>count($_SESSION['Qobj']))
 	  $max=count($_SESSION['Qobj']);
 	$_GET['min']=$min;
@@ -80,29 +78,24 @@ if(!($imagesize))
 	if($FF)
 	{ echo "<script type=\"text/javascript\">";
 	  echo "theResizeElement='obj_list';";
-	  echo "theResizeSize=68;";
+	  echo "theResizeSize=65;";
 	  echo "</script>";
 	}
 	$objObject->showObjects($link, $min, $max,$_GET['object'],0,$step);
-		
-	echo "</div>";
-	
-	echo "<div style=\"position:relative; left:0px;height:30px;width:100%;\">";
 	echo "<hr />";
-	$objPresentations->promptWithLink(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
-	echo "&nbsp;-&nbsp;";
-	echo "<a href=\"".$baseURL."objects.csv?SID=Qobj\" >".LangExecuteQueryObjectsMessage6."</a> &nbsp;-&nbsp;";
-	echo "<a href=\"".$baseURL."objects.argo?SID=Qobj\">".LangExecuteQueryObjectsMessage8."</a>";
-	echo "</div>";
+	$content =$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
+	$content.="&nbsp;-&nbsp;";
+	$content.="<a href=\"".$baseURL."objects.csv?SID=Qobj\" >".LangExecuteQueryObjectsMessage6."</a> &nbsp;-&nbsp;";
+	$content.="<a href=\"".$baseURL."objects.argo?SID=Qobj\">".LangExecuteQueryObjectsMessage8."</a>";
+	$objPresentations->line(array($content),"L",array(),20);
 }
 else
-{ $objPresentations->line(array("<h5>".LangViewDSSImageTitle.$object."&nbsp;(".$imagesize."&#39;&nbsp;x&nbsp;".$imagesize."&#39;)</h5>"),"L");
+{ $objPresentations->line(array("<h4>".LangViewDSSImageTitle.$object."&nbsp;(".$imagesize."&#39;&nbsp;x&nbsp;".$imagesize."&#39;)</h4>"),"L");
   $imagelink = ("http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&amp;r=".$objUtil->checkRequestKey('raDSS').".0&amp;d=".$objUtil->checkRequestKey('declDSS')."&amp;e=J2000&amp;h=".$imagesize.".0&amp;w=".$imagesize."&amp;f=gif&amp;c=none&amp;fov=NONE&amp;v3=");
   echo "<p style=\"text-align:center\"> <img src=\"".$imagelink."\" alt=\"".$object."\" width=\"495\" height=\"495\"></img> </p>";
   echo "<p>&copy;&nbsp;<a href=\"http://archive.stsci.edu/dss/index.html\">STScI Digitized Sky Survey</a></p>";
 }
 echo "</div>";
-
 //============================================================================== Admin section permits to change object settings in DB remotely
 if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
 { echo "<hr />";

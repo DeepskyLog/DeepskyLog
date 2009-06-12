@@ -11,7 +11,7 @@ echo "<div id=\"main\">";
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_eyepiece\" />";
 echo "<input type=\"hidden\" name=\"id\"          value=\"".$eyepieceid."\" />";
-$objPresentations->line(array("<h5>".stripslashes($eyepiece['name'])."</h5>","<input type=\"submit\" name=\"change\" value=\"".LangAddEyepieceButton2."\" />&nbsp;"),"LR",array(80,20),50);
+$objPresentations->line(array("<h4>".stripslashes($eyepiece['name'])."</h4>","<input type=\"submit\" name=\"change\" value=\"".LangAddEyepieceButton2."\" />&nbsp;"),"LR",array(80,20),30);
 echo "<hr />";
 $line[]=array(LangAddEyepieceField1,
               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"eyepiecename\" size=\"30\" value=\"".stripslashes($eyepiece['name'])."\" />",

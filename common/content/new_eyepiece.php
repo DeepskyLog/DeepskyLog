@@ -9,6 +9,8 @@ if($eyepieceid=$objUtil->checkGetKey('eyepieceid'))
 if($mfl<0)
   $mfl='';
 echo "<div id=\"main\">";  
+$objPresentations->line(array("<h4>".LangOverviewEyepieceTitle." ".$loggedUserName."</h4>"),"L",array(),30);
+echo "<hr />"; 
 $objEyepiece->showEyepiecesObserver();
 $eyeps=$objEyepiece->getSortedEyepieces('focalLength');
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
@@ -17,7 +19,7 @@ $content1b= "<select onchange=\"location = this.options[this.selectedIndex].valu
 while(list($key, $value)=each($eyeps))
   $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;eyepieceid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('eyepieceid'))?" selected=\"selected\" ":'').">".trim($objEyepiece->getEyepiecePropertyFromId($value,'name'))."</option>"; 
 $content1b.= "</select>&nbsp;";
-$objPresentations->line(array("<h5>".LangAddEyepieceTitle."</h5>"),"L",array(),50);
+$objPresentations->line(array("<h4>".LangAddEyepieceTitle."</h4>"),"L",array(),30);
 echo "<hr />";
 $objPresentations->line(array(LangAddEyepieceExisting,
                               $content1b,

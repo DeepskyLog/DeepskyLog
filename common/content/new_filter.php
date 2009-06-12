@@ -4,7 +4,8 @@ elseif(!$loggedUser) throw new Exception(LangException002);
 else
 {
 echo "<div id=\"main\">";
-
+$objPresentations->line(array("<h4>".LangOverviewFilterTitle." ".$loggedUserName."</h4>"),"L",array(),30);
+echo "<hr />";
 $objFilter->showFiltersObserver();
 $filts=$objFilter->getSortedFilters('name', "");
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
@@ -13,7 +14,7 @@ $content1b="<select onchange=\"location = this.options[this.selectedIndex].value
 while(list($key, $value) = each($filts))
   $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_filter&amp;filterid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('filterid'))?" selected=\"selected\" ":'').">" . $objFilter->getFilterPropertyFromId($value,'name') . "</option>";
 $content1b.= "</select>";
-$objPresentations->line(array("<h5>".LangAddFilterTitle."</h5>"),"L",array(),50);
+$objPresentations->line(array("<h4>".LangAddFilterTitle."</h4>"),"L",array(),30);
 echo "<hr />";
 $objPresentations->line(array(LangAddFilterExisting,
                               $content1b,

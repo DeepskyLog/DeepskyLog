@@ -20,8 +20,14 @@ echo "<div id=\"main\">";
 list($min, $max,$content)=$objUtil->printNewListHeader3($rank, $link, $min, $step, "");
 $objPresentations->line(array("<h4>".LangTopObserversTitle."</h4>",$content),"LR",array(50,50),30);
 $content=$objUtil->printStepsPerPage3($link,"topObs",$step);
-$objPresentations->line(array($content),"R",array(100),25);
+$objPresentations->line(array($content),"R",array(100),20);
 echo "<hr />";
-$objObserver->showTopObservers($catalog,$rank,$sort,$min,$max);
+$objObserver->showTopObservers($catalog,$rank,$sort,$min,$max,$step);
+if(($FF))
+{ echo "<script type=\"text/javascript\">";
+  echo "theResizeElement='topobs_list';";
+  echo "theResizeSize=65;";
+  echo "</script>";
+}
 echo "</div>";
 ?>

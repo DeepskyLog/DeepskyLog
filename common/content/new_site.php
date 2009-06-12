@@ -51,6 +51,9 @@ if(array_key_exists('longitude',$_GET) && $_GET['longitude'] || array_key_exists
   $longitudemin = substr($longarray[1],0,-1);
 }
 echo "<div id=\"main\">";
+$objPresentations->line(array("<h4>".LangOverviewSiteTitle." ".$loggedUserName."</h4>"),
+                        "L",array(100),30);
+echo "<hr />"; 
 $objLocation->showLocationsObserver();
 $sites = $objLocation->getSortedLocations('name');
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
@@ -59,7 +62,7 @@ $content1b= "<select onchange=\"location = this.options[this.selectedIndex].valu
 while(list($key,$value)=each($sites))
   $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_site&amp;locationid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('locationid'))?" selected=\"selected\" ":'').">" . $objLocation->getLocationPropertyFromId($value,'name') . "</option>";
 $content1b.= "</select>";
-$objPresentations->line(array("<h5>".LangAddSiteTitle."</h5>"),"L",array(),50);
+$objPresentations->line(array("<h4>".LangAddSiteTitle."</h4>"),"L",array(),30);
 echo "<hr />";
 $objPresentations->line(array("","<a href=\"".$baseURL."index.php?indexAction=search_sites\">".LangAddSiteFieldSearchDatabase."</a>",
                               "<input type=\"submit\" name=\"add\" value=\"".LangAddSiteButton."\" />&nbsp;"),

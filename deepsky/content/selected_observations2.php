@@ -64,10 +64,10 @@ else
 	
 }
 if (count($_SESSION['Qobs']) == 0) //================================================================================================== no reult present =======================================================================================
-{	$objPresentations->line(array("<h5>".LangObservationNoResults.(($objUtil->checkGetKey('myLanguages'))?(" (".LangSelectedObservationsSelectedLanguagesIndication.")"):(" (".LangSelectedObservationsAllLanguagesIndication.")"))."</h5>"),
-                          "L",array(100),50);
+{	$objPresentations->line(array("<h4>".LangObservationNoResults.(($objUtil->checkGetKey('myLanguages'))?(" (".LangSelectedObservationsSelectedLanguagesIndication.")"):(" (".LangSelectedObservationsAllLanguagesIndication.")"))."</h4>"),
+                          "L",array(100),30);
 	if ($objUtil->checkGetKey('myLanguages'))
-		echo "<p>"."<a href=\"" . $link2 . "\">" . LangSearchAllLanguages . "</a><p />";
+		echo "<p>"."<a href=\"" . $link2 . "\">" . LangSearchAllLanguages . "</a><p>&nbsp;</p>";
 	echo "<p>"."<a href=\"" . $baseURL . "index.php?indexAction=query_observations\">" . LangSearchDetailPage . "</a>"."</p>";
 }
 else 
@@ -128,9 +128,9 @@ else
 	{ echo "<script type=\"text/javascript\">";
     echo "theResizeElement='obs_list';";
     if($object)
-      echo "theResizeSize=80;";
+      echo "theResizeSize=70;";
     else
-      echo "theResizeSize=90;";
+      echo "theResizeSize=70;";
     echo "</script>";
 	}
 	$objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco'],$step);

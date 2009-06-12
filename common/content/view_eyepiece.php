@@ -5,7 +5,7 @@ else
 {
 $eyepieceproperties=$objEyepiece->getEyepiecePropertiesFromId($eyepieceid);
 echo "<div id=\"main\">";
-$objPresentations->line(array("<h5>".stripslashes($eyepieceproperties['name'])."</h5>"),"L",array(100),50);
+$objPresentations->line(array("<h4>".stripslashes($eyepieceproperties['name'])."</h4>"),"L",array(100),30);
 echo "<hr />";
 $objPresentations->line(array(LangViewEyepieceFocalLength,$eyepieceproperties['focalLength']),"RL",array(20,80),'',array('fieldname','fieldvalue'));
 if($eyepieceproperties['maxFocalLength']>0) 

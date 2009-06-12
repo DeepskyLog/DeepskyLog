@@ -16,11 +16,11 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	echo "<input type=\"hidden\" name=\"object\" value=\"" . $object . "\" />";
 	if($observationid)
 	{ $content="<input type=\"submit\" name=\"changeobservation\" value=\"" . LangChangeObservationButton . "\" />&nbsp;";
-	  $objPresentations->line(array("<h5>".LangNewObservationSubtitle3B."<span class=\"requiredField\">".LangNewObservationSubtitle3A."</span></h5>",$content),"LR",array(80,20),50);
+	  $objPresentations->line(array("<h4>".LangNewObservationSubtitle3B."<span class=\"requiredField\">".LangNewObservationSubtitle3A."</span></h4>",$content),"LR",array(80,20),30);
   }
 	else
 	{ $content="<input type=\"submit\" name=\"addobservation\" value=\"" . LangViewObservationButton1 . "\" />&nbsp;";
-	  $objPresentations->line(array("<h5>".LangNewObservationSubtitle3."<span class=\"requiredField\">".LangNewObservationSubtitle3A."</span></h5>",$content),"LR",array(80,20),50);
+	  $objPresentations->line(array("<h4>".LangNewObservationSubtitle3."<span class=\"requiredField\">".LangNewObservationSubtitle3A."</span></h4>",$content),"LR",array(80,20),30);
   }
   echo "<hr />";
 	echo "<div class=\"inputDiv\">";
@@ -221,8 +221,8 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	echo "<hr />";
 	$seen = $objObject->getDSOseenLink($object);
 	
-	$objPresentations->line(array("<h5>".LangViewObjectTitle."&nbsp;".$object."&nbsp;:&nbsp;".$seen."</h5>",$objPresentations->getDSSDeepskyLiveLinks($object)),
-	                        "LR",array(50,50),40);
+	$objPresentations->line(array("<h4>".LangViewObjectTitle."&nbsp;".$object."&nbsp;:&nbsp;".$seen."</h4>",$objPresentations->getDSSDeepskyLiveLinks($object)),
+	                        "LR",array(50,50),30);
 	echo "<hr />";
 	$content1="";$content2="";$content3="";
 	if(substr($objObject->getSeen($object),0,1)!="-")
@@ -237,37 +237,24 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$objObject->showObject($object);
 } 
 else // no object found or not pushed on search button yet
-{ echo "<h2>";
-	echo (LangNewObservationTitle);
-	echo "</h2>";
-	
-	echo "<ol>";
-	echo "<li value=\"1\">" . LangNewObservationSubtitle1a . ", ";
-	echo "<a href=\"" . $baseURL . "index.php?indexAction=add_csv\">" . LangNewObservationSubtitle1b . "</a>" . LangNewObservationSubtitle1abis;
-	echo "<a href=\"" . $baseURL . "index.php?indexAction=add_xml\">" . LangNewObservationSubtitle1c . "</a>";
-	echo "</li>";
-	echo "</ol>";
+{ $objPresentations->line(array("<h4>".LangNewObservationTitle."</h4>"),"L",array(),30);
+  echo "<hr />";
+  $content =LangNewObservationSubtitle1a . ", ";
+	$content.="<a href=\"" . $baseURL . "index.php?indexAction=add_csv\">" . LangNewObservationSubtitle1b . "</a>" . LangNewObservationSubtitle1abis;
+	$content.="<a href=\"" . $baseURL . "index.php?indexAction=add_xml\">" . LangNewObservationSubtitle1c . "</a>";
+	$objPresentations->line(array($content),"L",array(),50);
 	echo "<form action=\"" . $baseURL . "index.php?indexAction=add_observation\" method=\"post\">";
-	echo "<table width=\"100%\" id=\"content\">";
-	// OBJECT NAME
-	echo "<tr>";
-	echo "<td class=\"fieldname\">";
-	echo LangQueryObjectsField1;
-	echo "</td>";
-	echo "<td colspan=\"2\">";
-	echo "<select name=\"catalog\" class=\"inputfield\">";
-	echo "<option value=\"\">&nbsp;</option>";
+	$content ="<select name=\"catalog\" class=\"inputfield\">";
+	$content.="<option value=\"\">&nbsp;</option>";
 	$catalogs = $GLOBALS['objObject']->getCatalogs();
 	while (list ($key, $value) = each($catalogs))
-		echo "<option value=\"$value\">$value</option>";
-	echo "</select>";
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"255\" name=\"number\" size=\"50\" value=\"\" />";
-	echo "</td>";
-	echo "<td>";
-	echo "<input type=\"submit\" name=\"objectsearch\" value=\"" . LangNewObservationButton1 . "\" />";
-	echo "</td>";
-	echo "</tr>";
-	echo "</table>";
+		$content.="<option value=\"$value\">$value</option>";
+	$content.="</select>";
+	$content.="&nbsp;";
+	$content.="<input type=\"text\" class=\"inputfield\" maxlength=\"255\" name=\"number\" size=\"50\" value=\"\" />";
+	$content3="<input type=\"submit\" name=\"objectsearch\" value=\"" . LangNewObservationButton1 . "\" />";
+	$objPresentations->line(array(LangQueryObjectsField1,$content,$content3),"RLR",array(20,60,20),30,array('fieldname'));
+  echo "<hr />";
 	echo "</form>";
 }
 echo "</div>";

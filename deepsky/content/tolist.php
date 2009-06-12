@@ -31,15 +31,14 @@ if($listname)
 	else
 	  $min = 0;
   list($min, $max,$content)=$objUtil->printNewListHeader3($_SESSION['Qobj'], $link, $min, $step, "");	
-  $objPresentations->line(array("<h5>".LangSelectedObjectsTitle." ".$listname_ss. "</h5>",
+  $objPresentations->line(array("<h4>".LangSelectedObjectsTitle." ".$listname_ss. "</h4>",
                                 $content),
-                          "LR", array(60,40),40);
-	  
+                          "LR", array(60,40),30);  
   $content2=$objUtil->printStepsPerPage3($link,"listObj",$step);
   $objPresentations->line(array((!$myList)?
                                 "(".LangToListListBy.$objObserver->getObserverProperty(($listowner=$objList->getListOwner()),'firstname').' '.$objObserver->getObserverProperty($listowner,'name').")":
                                 "<a href=\"".$baseURL."index.php?indexAction=import_csv_list\">" .  LangToListImport . "</a>",$content2),
-                          "LR",array(80,20),25);
+                          "LR",array(80,20),20);
   if(count($_SESSION['Qobj'])>0)
 	{ // OUTPUT RESULT
     $link = "".$baseURL."index.php?indexAction=listaction";
@@ -49,7 +48,7 @@ if($listname)
 	  if($FF)
 	  { echo "<script type=\"text/javascript\">";
       echo "theResizeElement='obj_list';";
-      echo "theResizeSize=90;";
+      echo "theResizeSize=65;";
       echo "</script>";
   	}
 	  $objObject->showObjects($link, $min, $max,'',1, $step);
@@ -69,7 +68,7 @@ if($listname)
 	  $content.="&nbsp;-&nbsp;";
     $content.="<a href=\"objects.argo?SID=Qobj\" rel=\"external\">".LangExecuteQueryObjectsMessage8."</a> &nbsp;-&nbsp;";
     $content.="<a href=\"objects.csv?SID=Qobj\" rel=\"external\">".LangExecuteQueryObjectsMessage6."</a>";
-    $objPresentations->line(array($content),"L",array(100));
+    $objPresentations->line(array($content),"L",array(100),20);
 	}
 	else
 	{ echo LangToListEmptyList;

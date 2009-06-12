@@ -8,10 +8,10 @@ else
 {
 $filter=$objFilter->getFilterPropertiesFromId($filterid);
 echo "<div id=\"main\">";
-echo "<form action=\"".$baseURL."index.php\" method=\"post\" />";
-echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_filter\">";
+echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_filter\" />";
 echo "<input type=\"hidden\" name=\"id\"          value=\"".$filterid."\" />";
-$objPresentations->line(array("<h5>".stripslashes($filter['name'])."</h5>","<input type=\"submit\" name=\"change\" value=\"".LangChangeFilterButton."\" />&nbsp;"),"LR",array(80,20),50);
+$objPresentations->line(array("<h4>".stripslashes($filter['name'])."</h4>","<input type=\"submit\" name=\"change\" value=\"".LangChangeFilterButton."\" />&nbsp;"),"LR",array(80,20),30);
 echo "<hr />";
 $line[]=array(LangAddFilterField1,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"filtername\" size=\"30\" value=\"".stripslashes($filter['name'])."\" />",LangAddFilterField1Expl);
 $line[]=array(LangAddFilterField2,$objFilter->getEchoListType($filter['type']));

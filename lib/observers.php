@@ -14,7 +14,7 @@ interface iObservers
   public  function getUsedLanguages($id);
   public  function setObserverProperty($id, $property, $propertyValue);                   // sets a new value for the property of the observer
 //private function setUsedLanguages($id, $language);                                      // setUsedLanguages sets all the used languages for the observer with id = $id
-  public  function showTopObservers($catalog,$rank,$sort,$min,$max); 
+  public  function showTopObservers($catalog,$rank,$sort,$min,$max,$step); 
   public  function valideAccount();
   public  function validateObserver();                                                    // validates the user with the given id and gives the user  the given role (which should be $ADMIN or $USER).
 }
@@ -75,12 +75,14 @@ class Observers implements iObservers
   { global $objDatabase; 
    $objDatabase->execSQL("UPDATE observers SET usedLanguages = '".serialize($language)."' WHERE id=\"$id\"");
   }
-  public  function showTopObservers($catalog,$rank,$sort,$min,$max)
-  { global $baseURL,$objObservation,$objUtil,$objObserver,$objObject,$catalogs;
+  public  function showTopObservers($catalog,$rank,$sort,$min,$max,$step)
+  { global $baseURL,$objObservation,$objUtil,$objObserver,$objObject,$catalogs,$FF;
   	$outputtable = "";   $count=0;
 		$objectsInCatalog=$objObject->getNumberOfObjectsInCatalog($catalog);
     echo "<table width=\"100%\">";
-		echo "<tr class=\"type3\">";
+	  if($FF)
+	    echo "<thead>";
+    echo "<tr class=\"type3\">";
 		echo "<td style=\"text-align:center\">".LangTopObserversHeader1."</td>";
 		echo "<td style=\"text-align:center\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=observer&amp;catalog=".urlencode($catalog)."\">".LangTopObserversHeader2."</a></td>";
 		echo "<td style=\"text-align:center\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=totaal&amp;catalog="  .urlencode($catalog)."\">".LangTopObserversHeader3."</a></td>";
@@ -98,10 +100,17 @@ class Observers implements iObservers
 		echo "</select>";
 		echo "</td>";
 		echo "<td style=\"text-align:center\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=objecten&amp;catalog=".urlencode($catalog)."\">".LangTopObserversHeader6."</a></td>";
+		if($FF)
+		  echo "<td>&nbsp;&nbsp;</td>";
 		echo"</tr>";
+		if($FF)
+		{ echo "</thead>";
+		  echo "<tbody id=\"topobs_list\" class=\"tbody_obs\">";
+		}
 		$numberOfObservations = $objObservation->getNumberOfDsObservations();
 		$numberOfObservationsThisYear = $objObservation->getObservationsLastYear('%');
 		$numberOfDifferentObjects = $objObservation->getNumberOfDifferentObservedDSObjects();
+		$countline=0;
 		while(list($key,$value)=each($rank))
 		{ if(($count>=$min)&&($count<$max))
 		  { $name = $objObserver->getObserverProperty($key,'name');
@@ -118,15 +127,23 @@ class Observers implements iObservers
 		    if($sort=="objecten") $numberOfObjects = $value; else $numberOfObjects = $objObservation->getNumberOfObjects($key);
 		    $outputtable .= "<td style=\"text-align:center\">". $numberOfObjects . "&nbsp;&nbsp;&nbsp;&nbsp;(".sprintf("%.2f", (($numberOfObjects / $numberOfDifferentObjects) * 100))."%)</td>";
 		    $outputtable .= "</tr>";
+		    $countline++;
 		  }
 		  $count++;
 		}
-		
+    if($FF) 
+    { while($countline++<$step)
+        $outputtable .= "<tr><td>&nbsp;</td></tr>";   
+      $outputtable .= "</tbody>";
+      $outputtable .= "<tfoot>";
+    }
 		$outputtable .= "<tr class=\"type3\" style=\"text-align:center\"><td>".LangTopObservers1."</td><td></td>".
 		                "<td style=\"text-align:center\">$numberOfObservations</td>" .
 			              "<td style=\"text-align:center\">$numberOfObservationsThisYear</td>" .
 		 							  "<td style=\"text-align:center\">".$objectsInCatalog."</td>" .
 									  "<td style=\"text-align:center\">".$numberOfDifferentObjects."</td></tr>";
+    if($FF)
+      $outputtable .= "</tfoot>";
 		$outputtable .= "</table>";
 		$outputtable .= "<hr />";
 		echo $outputtable;

@@ -96,10 +96,6 @@ class Instruments implements iInstruments
 		  echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 		  echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_instrument\" />";
 		  echo "<input type=\"hidden\" name=\"adaption\" value=\"1\" />";
-		  $objPresentations->line(array("<h5>".LangOverviewInstrumentsTitle." ".$loggedUserName."</h5>",
-		                                "<input type=\"submit\" name=\"adapt\" value=\"" . LangAddInstrumentStdTelescope . "\" />&nbsp;"),
-		                          "LR",array(80,20),50);
-      echo "<hr />"; 
 		  echo "<table width=\"100%\">";
 		  echo "<tr class=\"type3\">";
 		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=name&amp;previous=$previous\">".LangOverviewInstrumentsName."</a></td>";
@@ -136,11 +132,13 @@ class Instruments implements iInstruments
 		    echo $objInstrument->getInstrumentEchoType($type);
 		    echo "</td>";
 				echo "<td align=\"center\">";
+				
+				
 				// Radio button for the standard instrument
-		    if($value==$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope'))
-			    echo("<input type=\"radio\" name=\"stdtelescope\" value=\"". $value ."\" checked=\"checked\" />&nbsp;<br />");
+		    if($value==$objObserver->getObserverProperty($loggedUser,'stdtelescope'))
+			    echo("<input type=\"radio\" name=\"stdtelescope\" value=\"". $value ."\" checked=\"checked\" onclick=\"submit();\" />&nbsp;<br />");
 			  else
-					echo("<input type=\"radio\" name=\"stdtelescope\" value=\"". $value ."\" />&nbsp;<br />");
+					echo("<input type=\"radio\" name=\"stdtelescope\" value=\"". $value ."\" onclick=\"submit();\"/>&nbsp;<br />");
 		    echo "</td>";
 				echo "<td>";
 		    if(!($obsCnt=$objInstrument->getInstrumentUsedFromId($value)))

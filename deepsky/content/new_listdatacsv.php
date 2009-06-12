@@ -1,23 +1,21 @@
-<?php
-// new_listdatacsv.php
-// add new list data viacsv file
-
+<?php // new_listdatacsv.php - add new list data viacsv file
 echo "<div id=\"main\">";
-echo "<h2>";
-echo LangCSVListTitle;
-echo "</h2>";
-echo "<p>";
-
+$objPresentations->line(array("<h4>".LangCSVListTitle."</h4>"),"L",array(),30);
+echo "<hr />";
 if($objList->checkList($_SESSION['listname'])==2)
-{ echo LangCSVListMessage1;
-  echo "<br /><br />" . LangCSVListMessage2;
-  echo "<br /><br />" . LangCSVListMessage3;
-  echo "<br /><br />" . LangCSVListMessage7;
-  echo "<br /><br />" . LangCSVListMessage5;
-  echo "<br /><br />" . LangCSVListMessage6;
+{ $objPresentations->line(array(LangCSVListMessage1),"L");
+  $objPresentations->line(array( LangCSVListMessage2),"L");
+  $objPresentations->line(array(LangCSVListMessage3),"L");
+  $objPresentations->line(array(LangCSVListMessage7),"L");
+  $objPresentations->line(array(LangCSVListMessage5),"L");
+  $objPresentations->line(array(LangCSVListMessage5a),"L");
+  $objPresentations->line(array(LangCSVListMessage5b),"L");
+  $objPresentations->line(array(LangCSVListMessage5c),"L");
+  $objPresentations->line(array(LangCSVListMessage6),"L");
+  echo "<hr />";
   echo "<form action=\"".$baseURL."index.php?indexAction=add_csv_listdata\" enctype=\"multipart/form-data\" method=\"post\">";
-  echo "<input type=\"file\" name=\"csv\"><br />"; 
-  echo "<input type=\"submit\" name=\"change\" value=\"".LangCSVListButton."\" />";
+  $objPresentations->line(array("<input type=\"file\" name=\"csv\" />"),"L"); 
+  $objPresentations->line(array("<input type=\"submit\" name=\"change\" value=\"".LangCSVListButton."\" />"),"L");
 	echo "</form>";
 }
 else 

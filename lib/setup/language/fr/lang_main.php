@@ -760,7 +760,7 @@ define("LangOverviewObservationsHeader7", "");
 define("LangOverviewObservationsHeader5a", "(*) Toutes les observations(TO) , Mes observations(MO), Ma derni&egrave;re observation(DO)&nbsp;de cet objet");
 define("LangOverviewObservationsHeader5b", "(*) D&eacute;tails(D)avec dessin(DD), Toutes les observations(TO) , Mes observations(MO), Ma derni&egrave;re observation(DO)&nbsp;de l'objet");
 define("LangOverviewObservationsHeader8", "Mon&nbsp;instrument&nbsp;DO");
-define("LangOverviewObservationsHeader9", "Ma&nbsp;date&nbsp&DO");
+define("LangOverviewObservationsHeader9", "Ma&nbsp;date&nbsp;DO");
 define("LangOverviewObservations10", "Prière de rentrer un titre");
 define("LangOverviewObservations11", "Observations DeepskyLog");
 define("LangOverviewObservations12", "dans");
@@ -1018,7 +1018,7 @@ define("LangCSVMessage4", "<b>Attention!</b> Conctrairement à la version 3.3 et 
                            NGC 2392;Jean Leduc;21-01-2005;20:45;Mons;Obsession 15\";31mm Nagler;Lumicon O-III filter;2;4.0;3;nl;Une belle n&eacute;bulosit&eacute; plan&eacute;taire avec &eacute;toile centrale visible!<br />M 35;Jean Leduc;21-01-2005;20:53;Mons;Obsession 15\";;;2;4.0;1;nl;Plus ou moins trente membres dans des lignes courb&eacute;es.<br />...<br /><br />Le seeing est indiqu&eacute; avec un num&eacute;ro entre 1 et 5 (1=excellent, 2=bien, 3=m&eacute;diocre, 4=faible, 5=mauvais).<br />La visibilit&eacute; est indiqu&eacute;e avec un num&eacute;ro entre 1 et 7 (1=Objet tr&egrave;s facile et clair, 2=Objet facilement visible &agrave; vision direct, 3=Objet visible &agrave; vision direct, 4=Vision p&eacute;riph&eacute;rique n&eacute;cessaire pour voir  l'objet, 5=Objet difficilement visible en vision p&eacute;riph&eacute;rique, 6=Visibilit&eacute; de l'objet est douteuse, 7=L'objet n'est pas visible).<br />Une observation &agrave; l'oeil nu doit &ecirc;tre enregistr&eacute;e avec l'instrument 'Naked Eye' (en anglais!).<br />Indiquez 'fr' dans le champs 'langue'");
 define("LangCSVMessage5", "Attention!<p>Les instruments, les endroits, les oculaires, filters et les objets dans le fichier csv doivent d&eacute;j&agrave; &ecirc;tre connus par DeepskyLog. 
                            Si ceci n'est pas le cas, un message d'erreur sera affich&eacute; et ces observation ne seront pas enregistr&eacute;es.<br />
-                           L'information manquante ou erroneuse doit &ecirc;tre remplie &agrave; la main ou adaptée jusqu'au moment o&ugrave; il n'y a plus de messages d'erreur.<p />
+                           L'information manquante ou erroneuse doit &ecirc;tre remplie &agrave; la main ou adaptée jusqu'au moment o&ugrave; il n'y a plus de messages d'erreur.<p>&nbsp;</p>
                            Si tout se passe bien, les observations rentr&eacute;es seront affich&eacute;es utilisant 'Toutes les observations'.");
 define("LangCSVMessage6", "Fichier CSV ");
 define("LangCSVMessage7", "Nom;NomAlternatif;AD;Decl;Constellation;Type;Magnitude;MagnitudeSurface;Diam&egrave;tre;Angle de position;Page;ContrastReserve;OptimalMagnification;Vu;Date vu");
@@ -1046,7 +1046,9 @@ define("LangValidateCSVMessage", "L'importation du fichier CSV est faite!");
 
 // content/new_observationxml.php
 define("LangXMLTitle", "Import observations from an XML file");
-define("LangXMLMessage1", "This form gives you the possibility to add different observations at the same time using an OpenAstronomyLog XML file. This way, you can exchange in a fast and easy way observations between different applications which support the OpenAstronomyLog XML format (like <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), .... Information: Only observations with your name (name and surname) will be added. Observations which are already available in DeepskyLog will not be imported a second time.");
+define("LangXMLMessage1", "This form gives you the possibility to add different observations at the same time using an OpenAstronomyLog XML file.");
+define("LangXMLMessage2", "This way, you can exchange in a fast and easy way observations between different applications which support the OpenAstronomyLog XML format (like <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), ...");
+define("LangXMLMessage3", "Information: Only observations with your name (name and surname) will be added. Observations which are already available in DeepskyLog will not be imported a second time.");
 define("LangXMLError1", "DeepskyLog only supports openAstronomyLog version 1.7");
 define("LangXMLError2", "No observations for user ");
 define("LangXMLError2a", " in this OpenAstronomyLog file!");
@@ -1064,7 +1066,10 @@ define("LangCSVListMessage1", "Ce formulaire vous donne la possibilit&#233; de r
 define("LangCSVListMessage2", "Le ficier CSV doit commencer avec la d&#233;fintion suivante dans la premi&egrave;re ligne, les lignes suivantes contiennent les donn&eacute;es:");
 define("LangCSVListMessage3", "Nom de l'objet;Nom &agrave; montrer (optionel);champs libres;ils ne sont pas pris en consid&#233;ration ...");
 define("LangCSVListMessage4", "");
-define("LangCSVListMessage5", "Attention!<p>Les objets du fichier CSV doivent &#234;tre connu dans DeepskyLog. Si ce n&#8217;est pas le cas, un message d&#8217;erreur appara&#238;tra et les objets ne seront pas rajout&#233;s. Les donn&#233;es erron&#233;es doivent &#234;tre modifi&#233;es manuellement jusqu'&#224; ce qu&#8217;il n&#8217;y ai plus de messages d&#8217;erreurs. Si tout se passe bien les objets rajout&#233;s appara&#238;tront dans l&#8217;aper&#231;u de la liste. Les doublons ne seront pas r&#233;p&#233;t&#233;s dans la liste");
+define("LangCSVListMessage5", "Attention!");
+define("LangCSVListMessage5a","Les objets du fichier CSV doivent &#234;tre connu dans DeepskyLog. Si ce n&#8217;est pas le cas, un message d&#8217;erreur appara&#238;tra et les objets ne seront pas rajout&#233;s.");
+define("LangCSVListMessage5b","Les donn&#233;es erron&#233;es doivent &#234;tre modifi&#233;es manuellement jusqu'&#224; ce qu&#8217;il n&#8217;y ai plus de messages d&#8217;erreurs. Si tout se passe bien les objets rajout&#233;s appara&#238;tront dans l&#8217;aper&#231;u de la liste.");
+define("LangCSVListMessage5c","Les doublons ne seront pas r&#233;p&#233;t&#233;s dans la liste!");
 define("LangCSVListMessage6", "Fichier CSV");
 define("LangCSVListMessage7", "NGC 7000;Nebulos. N.A.;...");
 define("LangCSVListButton", "Importez!");
@@ -1072,8 +1077,9 @@ define("LangCSVListButton", "Importez!");
 // content/manage_csv.php
 define("LangNewObjectSubtitle1b", "G&#233;rez les objets &#224; partir d'un fichier CSV");
 define("LangCSVObjectTitle", "Gestion des objets &#224; partir d'un fichier CSV");
-define("LangCSVObjectMessage1", " Ce formulaire vous donne la possibilit&#233; de rajouter plusieurs objets &#224; la fois &#224; partir d&#8217;un fichier CSV (comma seperated value). De cette fa&#231;on vous pouvez rajouter facilement et tr&#232;s vite des objets, des noms alternatifs, etc.");
-define("LangCSVObjectMessage2", "Le fichier csv file doit suivra la syntax suivante si les instructions concernent un object du type: </b>");
+define("LangCSVObjectMessage1", " Ce formulaire vous donne la possibilit&#233; de rajouter plusieurs objets &#224; la fois &#224; partir d&#8217;un fichier CSV (comma seperated value).");
+define("LangCSVObjectMessage1b","De cette fa&#231;on vous pouvez rajouter facilement et tr&#232;s vite des objets, des noms alternatifs, etc.");
+define("LangCSVObjectMessage2", "Le fichier csv file doit suivra la syntax suivante si les instructions concernent un object du type:");
 define("LangCSVObjectMessage3", "Instruction;Objet;Catalog;Catalogindex;");
 define("LangCSVObjectMessage4", "ou s'il s'agit de donn&#233;es");
 define("LangCSVObjectMessage5", "Instruction;Objet;;Donn&#233;es");

@@ -9,7 +9,7 @@ echo "<div id=\"main\">";
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_lens\" />";
 echo "<input type=\"hidden\" name=\"id\"          value=\"".$lensid."\" />";
-$objPresentations->line(array("<h5>".stripslashes($objLens->getLensPropertyFromId($lensid,'name'))."</h5>","<input type=\"submit\" name=\"change\" value=\"".LangChangeLensButton."\" />&nbsp;"),"LR",array(80,20),50); 
+$objPresentations->line(array("<h4>".stripslashes($objLens->getLensPropertyFromId($lensid,'name'))."</h4>","<input type=\"submit\" name=\"change\" value=\"".LangChangeLensButton."\" />&nbsp;"),"LR",array(80,20),30); 
 echo "<hr />";
 $line[]=array(LangAddLensField1,
               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"lensname\" size=\"30\" value=\"".stripslashes($objLens->getLensPropertyFromId($lensid,'name'))."\" />",

@@ -50,7 +50,7 @@ for($i =0;$i<count($modules);$i++)
   }
 }  
 echo "<div id=\"main\">";
-$objPresentations->line(array("<h5>".$firstname.' '. $name."</h5>"),"L",array(),50);
+$objPresentations->line(array("<h4>".$firstname.' '. $name."</h4>"),"L",array(),30);
 echo "<hr />";
 
 if(array_key_exists('admin',$_SESSION)&&($_SESSION['admin']=="yes"))       // admin logged in

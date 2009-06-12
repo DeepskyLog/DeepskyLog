@@ -16,8 +16,8 @@ while(list($key,$value)=each($languages))
 $tempList.="</select>";
 echo "<div id=\"main\">";
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
-echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_account\">";
-$objPresentations->line(array("<h5>".LangRegisterNewTitle."</h5>","<input type=\"submit\" name=\"register\" value=\"" . LangRegisterNewTitle . "\" />&nbsp"),"LR",array(80,20),50);
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_account\" />";
+$objPresentations->line(array("<h4>".LangRegisterNewTitle."</h4>","<input type=\"submit\" name=\"register\" value=\"" . LangRegisterNewTitle . "\" />&nbsp;"),"LR",array(80,20),30);
 echo "<hr />";
 $objPresentations->line(array(LangChangeAccountField1,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkPostKey('deepskylog_id')."\" />",LangChangeAccountField1Expl),"RLL",array(20,40,40),'',array('fieldname','fieldvalue','fieldexplanation'));
 $objPresentations->line(array(LangChangeAccountField2,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"email\" size=\"30\" value=\"".$objUtil->checkPostKey('email')."\" />",LangChangeAccountField2Expl),"RLL",array(20,40,40),'',array('fieldname','fieldvalue','fieldexplanation'));

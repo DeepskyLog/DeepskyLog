@@ -191,7 +191,7 @@ class Observations {
 		    unset($_SESSION['csvImportErrorData']);
 		    while(list($key,$j)=each($errorlist))
 		      $_SESSION['csvImportErrorData'][$key]=$parts_array[$j];
-		    $messageLines[] = "<h2>".LangCSVError0."</h2>"."<p />".LangCSVError0."<p />".$errormessage."<p />".LangCSVError10."<a href=\"".$baseURL."index.php?indexAction=add_csv\">".LangCSVError10a."</a>".LangCSVError10b."<hr />".LangCSVError10e."<a href=\"".$baseURL."observationserrors.csv\">".LangCSVError10c."</a>".LangCSVError10d."<p /><hr />".LangCSVMessage4;
+		    $messageLines[] = "<h4>".LangCSVError0."</h4>"."<p>".LangCSVError0."</p><p>".$errormessage."</p><p>".LangCSVError10."<a href=\"".$baseURL."index.php?indexAction=add_csv\">".LangCSVError10a."</a>".LangCSVError10b."<hr />".LangCSVError10e."<a href=\"".$baseURL."observationserrors.csv\">".LangCSVError10c."</a>".LangCSVError10d."</p><hr /><p>".LangCSVMessage4."</p>";
 		    $_GET['indexAction']='message';
 		  }
 		  $username=$objObserver->getObserverProperty($loggedUser,'firstname'). " ".$objObserver->getObserverProperty($loggedUser,'name');
@@ -943,10 +943,10 @@ class Observations {
 			echo "<td style=\"width:10px\">&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 		echo "</tr>";
 		if($FF)
-		  echo "</thead>";
-		if($FF)
+		{ echo "</thead>";
 		  echo "<tbody id=\"obs_list\" class=\"tbody_obs\">";
-	  $count = 0; // counter for altering table colors
+		}
+		$count = 0; // counter for altering table colors
 		$countline=0;
 	  while (list($key,$value)=each($_SESSION['Qobs']))
 		{ if ($count >= $min && $count < $max) 

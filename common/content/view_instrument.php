@@ -13,7 +13,7 @@ $instrumentDiameter=$objInstrument->getInstrumentPropertyFromId($instrumentid,'d
 $instrumentFocalLength=$objInstrument->getInstrumentPropertyFromId($instrumentid,'diameter')*$objInstrument->getInstrumentPropertyFromId($instrumentid,'fd');
 $instrumentEchoType=$objInstrument->getInstrumentEchoType($instrumentType);
 echo "<div id=\"main\">";
-$objPresentations->line(array("<h5>".$name."</h5>"),"L",array(100),50);
+$objPresentations->line(array("<h4>".$name."</h4>"),"L",array(100),30);
 echo "<hr />";
 if($instrumentType!=InstrumentNakedEye)
   $objPresentations->line(array(LangViewInstrumentField2,round($instrumentDiameter, 0)."&nbsp;mm"),"RL",array(20,80),'',array('fieldname','fieldvalue'));

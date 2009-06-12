@@ -443,6 +443,29 @@ a.moduletable:link, a.moduletable:visited {
   border-color     : #FFFFFF;
   overflow         : hidden;
 }
+.containerLinePartLOverflow {
+  position         : absolute;
+  top              : 0px;
+  text-align       : left;
+  text-indent      : 10px;
+  border-color     : #FFFFFF;
+  overflow         : visible;
+}
+.containerLinePartROverflow {
+  position         : absolute;
+  top              : 0px;
+  text-align       : right;
+  text-indent      : 10px;
+  border-color     : #FFFFFF;
+  overflow         : visible;
+}
+.containerLinePartCOverflow {
+  position         : absolute;
+  top              : 0px;
+  text-align       : center;
+  border-color     : #FFFFFF;
+  overflow         : visible;
+}
 .navigationButton {
 	border           : 0;
 	vertical-align   : middle;

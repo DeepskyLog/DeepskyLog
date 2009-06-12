@@ -134,7 +134,6 @@ class Filters implements iFilters
      }
      else
        $previous = $sort;
-     $objPresentations->line(array("<h5>".LangOverviewFilterTitle." ".$loggedUserName."</h5>"),"L",array(),50);
      echo "<table width=\"100%\">";
      echo "<tr class=\"type3\">";
      echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=name&amp;previous=$previous\">".LangViewFilterName."</a></td>";

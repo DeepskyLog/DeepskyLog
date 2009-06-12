@@ -1013,10 +1013,10 @@ define("LangCSVMessage2", "The CSV file uses the following format: <b>(NEW FORMA
 define("LangCSVMessage3", "<b><i>1-Object; 2-Observer; 3-Date; 4-UT; 5-Location; 6-Instrument; 7-Eyepiece; 8-Filter; 9-Lens; 10-Seeing; 11-LimMag; 12-Visibility; 13-Language; 14-Description</i></b>");
 define("LangCSVMessage4", "<b>Attention!</b> In contrast with version 3.3 and preceding ones, the file may <b>no longer</b> contain <u>a header line</u>, 
                            the first line immediately contains the actual observations in the format mentioned above, e.g.: <br /><br />
-                           NGC 2392;John Smith;21-01-2005;20:45;Aalst;Obsession 15\";31mm Nagler;Lumicon O-III filter;Televue 2x Barlow;2;4.0;3;en;Nice planetary nebula with a very bright central star!<br />M 35;John Smith;21-01-2005;20:53;Aalst;Obsession 15\";;;;2;4.0;1;en;About thirty members with several curved chains of stars.<br />...<br /><br />Seeing should be given as a number between 1 and 5<br />(1=excellent, 2=good, 3=moderate, 4=poor, 5=bad).<p />Visibility should be given as a number between 1 and 7<br />(1=Very simple, prominent object, 2=Object easily percepted with direct vision, 3=Object perceptable with direct vision, 4=Averted vision required to percept object, 5=Object barely perceptable with averted vision, 6=Perception of object is very questionable, 7=Object definitely not seen).<p />If an observation has been done by naked eye, 'Naked Eye' should be given as instrument.<br />Language should be the short name for the language the description is in  (en for English)");
+                           NGC 2392;John Smith;21-01-2005;20:45;Aalst;Obsession 15\";31mm Nagler;Lumicon O-III filter;Televue 2x Barlow;2;4.0;3;en;Nice planetary nebula with a very bright central star!<br />M 35;John Smith;21-01-2005;20:53;Aalst;Obsession 15\";;;;2;4.0;1;en;About thirty members with several curved chains of stars.<br />...<br /><br />Seeing should be given as a number between 1 and 5<br />(1=excellent, 2=good, 3=moderate, 4=poor, 5=bad).<p>&nbsp;</p>Visibility should be given as a number between 1 and 7<br />(1=Very simple, prominent object, 2=Object easily percepted with direct vision, 3=Object perceptable with direct vision, 4=Averted vision required to percept object, 5=Object barely perceptable with averted vision, 6=Perception of object is very questionable, 7=Object definitely not seen).<p>&nbsp;</p>If an observation has been done by naked eye, 'Naked Eye' should be given as instrument.<br />Language should be the short name for the language the description is in  (en for English)");
 define("LangCSVMessage5", "Caution!<p>The instruments, the locations, eyepieces, filters and the objects in the CSV file should already be known by DeepskyLog 
                            otherwise an error message will be shown and those observations will not be added.<br />
-                           Insert or adapt the missing or wrong data manually until there are no error messages left.<p />
+                           Insert or adapt the missing or wrong data manually until there are no error messages left.<p>&nbsp;</p>
                            If everything went well, your observations will be shown in the \"All observations\" overview.");
 define("LangCSVMessage6", "CSV file to import ");
 define("LangCSVMessage7", "Name;Altname;RA;Decl;Constellation;Type;Magnitude;SurfaceBrightness;Diameter;Position Angle;Page;ContrastReserve;OptimalMagnification;Seen;Last Seen");
@@ -1033,7 +1033,7 @@ define("LangCSVError6", "The following eyepieces are not available in DeepskyLog
 define("LangCSVError7", "The following lenses are not available in DeepskyLog");
 define("LangCSVError8", "The following date(s) can't be read by DeepskyLog");
 define("LangCSVError9", "The following date(s) are in the future");
-define("LangCSVError10", "Only the correct observations have been read.<p />You first have to solve the problems mentionned above and then ");
+define("LangCSVError10", "Only the correct observations have been read.<p>&nbsp;</p>You first have to solve the problems mentionned above and then ");
 define("LangCSVError10a", "reimport");
 define("LangCSVError10b", " the observations.<br />You may limit the reimport to the faulty observations, or you may again use all of them.<br />Correct observations which have been imported will not be registered for a second time.");
 define("LangCSVError10e", "For a list with the error observations, click ");
@@ -1044,7 +1044,9 @@ define("LangValidateCSVMessage", "Import of CSV file successfull!");
 
 // content/new_observationxml.php
 define("LangXMLTitle", "Import observations from an XML file");
-define("LangXMLMessage1", "This form gives you the possibility to add different observations at the same time using an OpenAstronomyLog XML file. This way, you can exchange in a fast and easy way observations between different applications which support the OpenAstronomyLog XML format (like <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), .... Information: Only observations with your name (name and surname) will be added. Observations which are already available in DeepskyLog will not be imported a second time.");
+define("LangXMLMessage1", "This form gives you the possibility to add different observations at the same time using an OpenAstronomyLog XML file.");
+define("LangXMLMessage2", "This way, you can exchange in a fast and easy way observations between different applications which support the OpenAstronomyLog XML format (like <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), ...");
+define("LangXMLMessage3", "Information: Only observations with your name (name and surname) will be added. Observations which are already available in DeepskyLog will not be imported a second time.");
 define("LangXMLError1", "DeepskyLog only supports openAstronomyLog version 1.7");
 define("LangXMLError2", "No observations for user ");
 define("LangXMLError2a", " in this OpenAstronomyLog file!");
@@ -1062,7 +1064,10 @@ define("LangCSVListMessage1", "This form gives you the possibility to add differ
 define("LangCSVListMessage2", "The CSV file has to start with the following definition on the first line, the next lines contain the data:");
 define("LangCSVListMessage3", "Objectname;free fields;These fields will not be taken into account...");
 define("LangCSVListMessage4", "");
-define("LangCSVListMessage5", "Watch out!<p>The objects in the CSV file should be know already by DeepskyLog. When this is not the case, a error message will appear and no object will be added at all! The non existing objects should be added manually till no error messages are shown. When everything goes fine, the added objects will be shown in your list. Double objects will not be duplicated in the list.!");
+define("LangCSVListMessage5", "Watch out!");
+define("LangCSVListMessage5a","The objects in the CSV file should be know already by DeepskyLog. When this is not the case, a error message will appear and no object will be added at all!");
+define("LangCSVListMessage5b","The non existing objects should be added manually till no error messages are shown. When everything goes fine, the added objects will be shown in your list.");
+define("LangCSVListMessage5c","Double objects will not be duplicated in the list!");
 define("LangCSVListMessage6", "CSV file ");
 define("LangCSVListMessage7", "NGC 7000;NA Nebula;...");
 define("LangCSVListButton", "Import!");
@@ -1070,8 +1075,9 @@ define("LangCSVListButton", "Import!");
 // content/manage_csv.php
 define("LangNewObjectSubtitle1b", "Manage objects from CSV file");
 define("LangCSVObjectTitle", "Managing of objects from CSV file");
-define("LangCSVObjectMessage1", "This form gives you the possibility to manage several objects using one single csv file (comma seperated value). This way you can easily and quickly introduce several objects, alternative names, etc.");
-define("LangCSVObjectMessage2", "The csv file must adhere following syntax if the instructions concern object naming: </b>");
+define("LangCSVObjectMessage1", "This form gives you the possibility to manage several objects using one single csv file (comma seperated value).");
+define("LangCSVObjectMessage1b","This way you can easily and quickly introduce several objects, alternative names, etc.");
+define("LangCSVObjectMessage2", "The csv file must adhere following syntax if the instructions concern object naming:");
 define("LangCSVObjectMessage3", "Instruction;Object;Catalog;Catalogindex;");
 define("LangCSVObjectMessage4", "or if it concerns data");
 define("LangCSVObjectMessage5", "Instruction;Object;;Data");

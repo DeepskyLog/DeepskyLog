@@ -33,17 +33,16 @@ if(count($_SESSION['Qobj'])>1) //===============================================
   if($showPartOfs)
     $objPresentations->line(array("<a href=\"".$link."&amp;showPartOfs=0\">".LangListQueryObjectsMessage12."</a>",$content2),"LR",array(70,30),20);
 	else
-    $objPresentations->line(array("<a href=\"".$link."&amp;showPartOfs=1\">".LangListQueryObjectsMessage13."</a>",$content2),"LR",array(70,30),25);
+    $objPresentations->line(array("<a href=\"".$link."&amp;showPartOfs=1\">".LangListQueryObjectsMessage13."</a>",$content2),"LR",array(70,30),20);
 //	echo "<span style=\"text-align:right\">&nbsp;&nbsp;&nbsp;<a href=\"".$baseURL."index.php?indexAction=query_objects\">".LangExecuteQueryObjectsMessage1."</a></span>";  
   $link.="&amp;showPartOfs=".$showPartOfs;
 	echo "<hr />";
 	$_GET['min']=$min;
 	$_GET['max']=$max;
 	if($FF)
-	if($FF)
 	{ echo "<script type=\"text/javascript\">";
     echo "theResizeElement='obj_list';";
-    echo "theResizeSize=70;";
+    echo "theResizeSize=65;";
     echo "</script>";
 	}
 	$objObject->showObjects($link, $min, $max,'',0, $step);
@@ -59,15 +58,14 @@ if(count($_SESSION['Qobj'])>1) //===============================================
   if(array_key_exists('listname',$_SESSION)&&$_SESSION['listname']&&$myList)
 	  $content1.="<a href=\"".$link."&amp;min=".$min."&amp;addAllObjectsFromQueryToList=true\" title=\"".LangListQueryObjectsMessage5.$_SESSION['listname']."\">".LangListQueryObjectsMessage4."</a>"."&nbsp;-&nbsp;";
 	$content1.="<a href=\"".$baseURL."objects.csv?SID=Qobj\" rel=\"external\">".LangExecuteQueryObjectsMessage6."</a>";
-	$objPresentations->line(array($content1),"L",array(100),25);
+	$objPresentations->line(array($content1),"L",array(100),20);
   echo "</div>";
 }
 else // ========================================================================no results found
 { echo "<div id=\"main\">";
-  echo "<h2>".LangSelectedObjectsTitle."</h2>";
-  echo LangExecuteQueryObjectsMessage2;
-  echo "<p>";
-	echo "<a href=\"".$baseURL."index.php?indexAction=query_objects\">".LangExecuteQueryObjectsMessage2a."</a>";
+  $objPresentations->line("<h4>".LangSelectedObjectsTitle."</h4>","L",array(),30);
+  $objPresentations->line(array(LangExecuteQueryObjectsMessage2),"L");
+  $objPresentations->line(array("<a href=\"".$baseURL."index.php?indexAction=query_objects\">".LangExecuteQueryObjectsMessage2a."</a>"),"L");
 	echo "</div>";
 }
 

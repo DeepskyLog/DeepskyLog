@@ -347,7 +347,7 @@ class Objects implements iObjects
     else
       $sql = $sql1 . $sqland;		
 //    $sql.=" LIMIT 0,10000";
-//  echo $sql."<p />";
+//  echo $sql."<p>&nbsp;</p>";
     $run=$GLOBALS['objDatabase']->selectRecordset($sql);
     $i=0;
     if (array_key_exists('name',$queries)&&$queries["name"])

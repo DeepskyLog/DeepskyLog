@@ -4,6 +4,9 @@ elseif(!$loggedUser) throw new Exception(LangException002);
 else
 {
 echo "<div id=\"main\">";
+$objPresentations->line(array("<h4>".LangOverviewInstrumentsTitle." ".$loggedUserName."</h4>"),
+                        "L",array(100),30);
+echo "<hr />"; 
 $objInstrument->showInstrumentsObserver();
 $insts=$objInstrument->getSortedInstruments('name',"",true);
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
@@ -13,7 +16,7 @@ $content1b.= "<option selected=\"selected\" value=\"".$baseURL."index.php?indexA
 while(list($key,$value)=each($insts))
   $content1b.= "<option value=\"".$baseURL."index.php?indexAction=add_instrument&amp;instrumentid=".urlencode($value)."\" ".(($value==$objUtil->checkGetKey('instrumentid'))?" selected=\"selected\" ":'').">" . $objInstrument->getInstrumentPropertyFromId($value,'name') . "</option>";
 $content1b.= "</select>";
-$objPresentations->line(array("<h5>".LangAddInstrumentTitle."</h5>"),"L",array(),50);
+$objPresentations->line(array("<h4>".LangAddInstrumentTitle."</h4>"),"L",array(),30);
 echo "<hr />";
 $objPresentations->line(array(LangAddInstrumentExisting,
                               $content1b,

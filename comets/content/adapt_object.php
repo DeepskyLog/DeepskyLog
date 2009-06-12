@@ -13,7 +13,7 @@ $util = new Utils();
 
 $objects = new CometObjects; 
 
-echo("<div id=\"main\">\n<h2>");
+echo("<div id=\"main\"><h2>");
 
 echo (LangChangeObject . " " . $objects->getName($_GET['object'])); 
 

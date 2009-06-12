@@ -23,7 +23,7 @@ $sb = $objLocation->getLocationPropertyFromId($locationid,'skyBackground');
 echo "<div id=\"main\">";
 echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
-$objPresentations->line(array("<h5>".stripslashes($objLocation->getLocationPropertyFromId($locationid,'name'))."</h5>","<input type=\"submit\" name=\"change\" value=\"".LangAddSiteButton2."\" /><input type=\"hidden\" name=\"id\" value=\"".$locationid."\" />&nbsp;"),"LR",array(80,20),50); 
+$objPresentations->line(array("<h4>".stripslashes($objLocation->getLocationPropertyFromId($locationid,'name'))."</h4>","<input type=\"submit\" name=\"change\" value=\"".LangAddSiteButton2."\" /><input type=\"hidden\" name=\"id\" value=\"".$locationid."\" />&nbsp;"),"LR",array(80,20),30); 
 echo "<hr />";
 $line[]=array(LangAddSiteField1,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"sitename\" size=\"30\" value=\"".stripslashes($objLocation->getLocationPropertyFromId($locationid,'name'))."\" />");
 $line[]=array(LangAddSiteField2,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"region\" size=\"30\" value=\"".stripslashes($objLocation->getLocationPropertyFromId($locationid,'region'))."\" />",LangAddSiteField2Expl);

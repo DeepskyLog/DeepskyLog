@@ -6,7 +6,7 @@ else
 {
 $filter=$objFilter->getFilterPropertiesFromId($filterid);
 echo "<div id=\"main\">";
-$objPresentations->line(array("<h2>".$filter['name']."</h2>"),"L",array(100),50);
+$objPresentations->line(array("<h4>".$filter['name']."</h4>"),"L",array(100),30);
 echo "<hr />";
 $objPresentations->line(array(LangViewFilterName,$filter['name']),"RL",array(20,80),'',array('fieldname','fieldvalue'));
 $objPresentations->line(array(LangViewFilterType,$objFilter->getEchoType($filter['type'])),"RL",array(20,80),'',array('fieldname','fieldvalue')); 

@@ -3,118 +3,81 @@
 // allows the user to add an object to the database 
 
 echo "<div id=\"main\">";
-echo "<h2>".LangNewObjectTitle."</h2>";
 echo "<form action=\"".$baseURL."index.php?indexAction=validate_object\" method=\"post\">";
-echo "<table width=\"100%\">";
-// NAME
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangViewObjectField1 . "&nbsp;*"."</td>";
-echo "<td><input type=\"text\" class=\"inputfield requiredField\" maxlength=\"20\" name=\"catalog\" size=\"20\" value=\"\" />";
-echo "&nbsp;&nbsp;";
-echo "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"20\" name=\"number\" size=\"20\" value=\"\" />";
-echo "</td>";
-echo "</tr>";
+$objPresentations->line(array("<h4>".LangNewObjectTitle."</h4>","<input type=\"submit\" name=\"newobject\" value=\"".LangNewObjectButton1."\" />&nbsp;"),"LR",array(80,20),30);
+echo "<hr />";
+//NAME
+$objPresentations->line(array(LangViewObjectField1 . "&nbsp;*",
+                              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"20\" name=\"catalog\" size=\"20\" value=\"\" />".
+                              "&nbsp;&nbsp;".
+                              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"20\" name=\"number\" size=\"20\" value=\"\" />"),
+                        "RL",array(20,80),35,array("fieldname"));
 // TYPE
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangViewObjectField6."&nbsp;*"."</td>";
-echo "<td>";
-echo "<select name=\"type\" class=\"requiredField\">";
-echo "<option value=\"\">&nbsp;</option>";
+$content ="<select name=\"type\" class=\"requiredField\">";
+$content.="<option value=\"\">&nbsp;</option>";
 $types=$objObject->getDsObjectTypes();
 while(list($key,$value)=each($types))
   $stypes[$value] = $$value;
 asort($stypes);
 while(list($key, $value) = each($stypes))
-  echo("<option value=\"$key\">".$value."</option>");
-echo "</select>";
-echo "</td>";
-echo "<td>";
-echo "</td>";
-echo "</tr>";
+  $content.="<option value=\"$key\">".$value."</option>";
+$content.="</select>";
+$objPresentations->line(array(LangViewObjectField6 . "&nbsp;*",
+                              $content),                              
+                        "RL",array(20,80),35,array("fieldname"));
 // CONSTELLATION 
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangViewObjectField5."&nbsp;*"."</td>";
-echo "<td>";
-echo "<select name=\"con\" class=\"requiredField\">";
-echo "<option value=\"\">&nbsp;</option>";
+$content ="<select name=\"con\" class=\"requiredField\">";
+$content.="<option value=\"\">&nbsp;</option>";
 $constellations = $objObject->getConstellations();
 while(list($key, $value)=each($constellations))
-  echo "<option value=\"$value\">".$GLOBALS[$value]."</option>";
-echo "</select>";
-echo "</td>";
-echo "<td>";
-echo "</td>";
-echo "</tr>";
+  $content.="<option value=\"$value\">".$GLOBALS[$value]."</option>";
+$content.="</select>";
+$objPresentations->line(array(LangViewObjectField5 . "&nbsp;*",
+                              $content),                              
+                        "RL",array(20,80),35,array("fieldname"));
 // RIGHT ASCENSION
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangViewObjectField3."&nbsp;*"."</td>";
-echo "<td colspan=\"2\">";
-echo "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAhours\" size=\"3\" value=\"\" />&nbsp;h&nbsp;";
-echo "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAminutes\" size=\"3\" value=\"\" />&nbsp;m&nbsp;"; 
-echo "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAseconds\" size=\"3\" value=\"\" />&nbsp;s&nbsp;";
-echo "</td>";
-echo "</tr>";
+$content ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAhours\" size=\"3\" value=\"\" />&nbsp;h&nbsp;";
+$content.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAminutes\" size=\"3\" value=\"\" />&nbsp;m&nbsp;"; 
+$content.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAseconds\" size=\"3\" value=\"\" />&nbsp;s&nbsp;";
+$objPresentations->line(array(LangViewObjectField3 . "&nbsp;*",
+                              $content),                              
+                        "RL",array(20,80),35,array("fieldname"));
 // DECLINATION
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangViewObjectField4."&nbsp;*"."</td>";
-echo "<td colspan=\"2\">";
-echo "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"DeclDegrees\" size=\"3\" value=\"\" />&nbsp;d&nbsp;";
-echo "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"DeclMinutes\" size=\"3\" value=\"\" />&nbsp;m&nbsp;";
-echo "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"DeclSeconds\" size=\"3\" value=\"\" />&nbsp;s&nbsp;";
-echo "</td>";
-echo "</tr>";
+$content ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"DeclDegrees\" size=\"3\" value=\"\" />&nbsp;d&nbsp;";
+$content.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"DeclMinutes\" size=\"3\" value=\"\" />&nbsp;m&nbsp;";
+$content.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"DeclSeconds\" size=\"3\" value=\"\" />&nbsp;s&nbsp;";
+$objPresentations->line(array(LangViewObjectField4."&nbsp;*",
+                              $content),                              
+                        "RL",array(20,80),35,array("fieldname"));
 // MAGNITUDE
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangViewObjectField7."</td>";
-echo "<td>";
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"magnitude\" size=\"4\" value=\"\" />";
-echo "</td>";
-echo "<td></td>";
-echo "</tr>";
+$content ="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"magnitude\" size=\"4\" value=\"\" />";
+$objPresentations->line(array(LangViewObjectField7,
+                              $content),                              
+                        "RL",array(20,80),35,array("fieldname"));
 // SURFACE BRIGHTNESS
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangViewObjectField8."</td>";
-echo "<td>";
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"sb\" size=\"4\" value=\"\" />";
-echo "</td>";
-echo "<td></td>";
-echo "</tr>";
+$content ="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"sb\" size=\"4\" value=\"\" />";
+$objPresentations->line(array(LangViewObjectField8,
+                              $content),                              
+                        "RL",array(20,80),35,array("fieldname"));
 // SIZE
-echo "<tr>";
-echo "<td class=\"fieldname\">".LangViewObjectField9."</td>";
-echo "<td>";
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"size_x\" size=\"4\" value=\"\"/>&nbsp;&nbsp;";
-echo "<select name=\"size_x_units\"> <option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>
+$content ="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"size_x\" size=\"4\" value=\"\"/>&nbsp;&nbsp;";
+$content.="<select name=\"size_x_units\"> <option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>
 			                               <option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>";
-echo "</select>";
-echo "&nbsp;&nbsp;X&nbsp;&nbsp;";
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"size_y\" size=\"4\" value=\"\"/>&nbsp;&nbsp;";
-echo "<select name=\"size_y_units\"> <option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>
+$content.="</select>";
+$content.="&nbsp;&nbsp;X&nbsp;&nbsp;";
+$content.="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"size_y\" size=\"4\" value=\"\"/>&nbsp;&nbsp;";
+$content.="<select name=\"size_y_units\"> <option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>
 			                               <option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>";
-echo "</select>";
-echo "</td>";
-echo "<td></td>";
-echo "</tr>";
+$content.="</select>";
+$objPresentations->line(array(LangViewObjectField9,
+                              $content),                              
+                        "RL",array(20,80),35,array("fieldname"));
 // POSITION ANGLE 
-echo "<tr>";
-echo "<td class=\"fieldname\">";LangViewObjectField12;"</td>";
-echo "<td>";
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"posangle\" size=\"3\" value=\"\" />&deg;";
-echo "</td>";
-echo "<td></td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td></td>";
-echo "<td><input type=\"submit\" name=\"newobject\" value=\"".LangNewObjectButton1."\" /></td>";
-echo "<td></td>";
-echo "</tr>";
-echo "<tr>";
-echo "<td></td>";
-echo "<td><input type=\"submit\" name=\"clearfields\" value=\"".LangQueryObjectsButton2."\" /></td>";
-echo "<td></td>";
-echo "</tr>";
-echo "</table>";
+$content ="<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"posangle\" size=\"3\" value=\"\" />&deg;";
+$objPresentations->line(array(LangViewObjectField12,
+                              $content),                              
+                        "RL",array(20,80),35,array("fieldname"));
 echo "</form>";
+echo "<hr />";
 echo "</div>";
-
 ?>

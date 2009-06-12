@@ -64,7 +64,7 @@ $usedLanguages=$objObserver->getUsedLanguages($loggedUser);
 echo "<div id=\"main\">";
 echo "<form class=\"content\" action=\"".$baseURL."index.php\" enctype=\"multipart/form-data\" method=\"post\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_account\" />";
-$objPresentations->line(array("<h5>".LangChangeAccountTitle."</h5>","<input type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />&nbsp;"),"LR",array(80,20),50);
+$objPresentations->line(array("<h4>".LangChangeAccountTitle."</h4>","<input type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />&nbsp;"),"LR",array(80,20),30);
 echo "<hr />";
 $line[]=array(LangChangeAccountField1,
               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkSessionKey('deepskylog_id')."\" />",

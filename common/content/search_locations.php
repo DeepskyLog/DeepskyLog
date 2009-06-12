@@ -4,7 +4,7 @@ else
 {
 echo "<div id=\"main\">";
 echo "<form action=\"".$baseURL."index.php?indexAction=site_result\" method=\"post\">";
-$objPresentations->line(array("<h5>".LangSearchLocations0."</h5>","<input type=\"submit\" name=\"search\" value=\"" . LangSearchLocations7 . "\" />&nbsp;"),"LR",array(80,20),50);
+$objPresentations->line(array("<h4>".LangSearchLocations0."</h4>","<input type=\"submit\" name=\"search\" value=\"" . LangSearchLocations7 . "\" />&nbsp;"),"LR",array(80,20),30);
 echo "<hr />";
 echo "<ol>";
 echo "<li value=\"1\">".LangSearchLocations1."</li>";

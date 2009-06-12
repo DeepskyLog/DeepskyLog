@@ -1,16 +1,10 @@
-<?php
-// setup_objects_query.php
-// interface to query objects
-
+<?php // setup_objects_query.php - interface to query objects
 $link=$baseURL."index.php?indexAction=query_objects";
 reset($_GET);
 while(list($key,$value)=each($_GET))
 	if(($key!='indexAction')&&($key!='multiplepagenr')&&($key!='sort')&&($key!='sortdirection')&&($key!='showPartOfs'))
     $link.='&amp;'.$key.'='.$value;
-echo("<div id=\"main\">\n");
-echo("<h2>");
-echo LangQueryObjectsTitle;
-echo("</h2>\n");
+echo "<div id=\"main\">";
 echo("<form action=\"".$baseURL."index.php\" method=\"get\">");
 echo "<div>";
 echo("<input type=\"hidden\" name=\"indexAction\" value=\"query_objects\" />");
@@ -18,32 +12,20 @@ echo("<input type=\"hidden\" name=\"source\" value=\"setup_objects_query\" />");
 echo("<input type=\"hidden\" name=\"sort\" value=\"showname\" />");
 echo("<input type=\"hidden\" name=\"sortdirection\" value=\"asc\" />");
 echo("<input type=\"hidden\" name=\"showPartOfs\" value=\"0\" />");
-echo("<table width=\"100%\">\n");
-echo("<tr><td align=\"center\">");
-//echo("<form action=\"".$baseURL."index.php\">");
-//echo("<input type=\"hidden\" name=\"indexAction\" value=\"query_objects\" />");
-//echo("<input type=\"submit\" name=\"clear\" value=\"" . LangQueryObjectsButton2 . "\" />");
-//echo("</form>");
-echo("</td>");
-echo("<td align=\"right\">" . LangSeen);
-echo("</td>");
-echo("<td>");
-echo("<select name=\"seen\" class=\"inputfield\">");
-echo("<option selected=\"selected\" value=\"D\">" . LangSeenDontCare . "</option>".
-     "<option value=\"-\">" . LangNotSeen . "</option>");
-if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
-{ echo("<option value=\"X\">" . LangSeenSomeoneElse . "</option>".
-  	   "<option value=\"-X\">" . LangNotSeenByMeOrNotSeenAtAll . "</option>".
-  	   "<option value=\"XY\">" . LangSeenByMeOrSomeoneElse . "</option>".
-  	   "<option value=\"Y\">" . LangSeenByMe . "</option>");
+$content1=LangSeen.":";
+$content2="<select name=\"seen\" class=\"inputfield\">";
+$content2.="<option selected=\"selected\" value=\"D\">".LangSeenDontCare."</option>";
+$content2.="<option value=\"-\">".LangNotSeen."</option>";
+if($loggedUser)
+{ $content2.="<option value=\"X\">".LangSeenSomeoneElse."</option>";
+  $content2.="<option value=\"-X\">".LangNotSeenByMeOrNotSeenAtAll."</option>";
+  $content2.="<option value=\"XY\">".LangSeenByMeOrSomeoneElse."</option>";
+  $content2.="<option value=\"Y\">".LangSeenByMe."</option>";
 }
-echo("</select>");
-echo("</td>");
-echo("<td><input type=\"submit\" name=\"query\" value=\"" . LangQueryObjectsButton1 . "\" />\n</td>");
-echo("</tr>");
-
-echo("</table>");
-echo("<hr />");
+$content2.="</select>";
+$content3="<input type=\"submit\" name=\"query\" value=\"" . LangQueryObjectsButton1 . "\" />";
+$objPresentations->line(array("<h4>".LangQueryObjectsTitle."</h4>",$content1,$content2,$content3),"LRLR",array(20,20,40,20),30);
+echo "<hr />";
 
 echo("<table>");
 echo("<tr>");
