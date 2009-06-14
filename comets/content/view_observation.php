@@ -122,20 +122,22 @@ if($objCometObservation->getObjectId($_GET['observation'])) // check if observat
 	  $content2=$description;
 		$objPresentations->line(array($content1,$content2),"RL",array(30,70),20,array('fieldname'));
   }
-	$upload_dir = 'cometdrawings';
+  echo "<hr />";
+  $upload_dir = 'cometdrawings';
 	$dir = opendir($instDir.'comets/'.$upload_dir);
 	while (FALSE !== ($file = readdir($dir)))
 	{ if ("." == $file OR ".." == $file)
 	  { continue; // skip current directory and directory above
 	  }
 	  if(fnmatch($_GET['observation'] . "_resized.gif", $file) || fnmatch($_GET['observation'] . "_resized.jpg", $file) || fnmatch($_GET['observation']. "_resized.png", $file))
-	  {$content1=$baseURL."comets/" . $upload_dir . "/" . $_GET['observation'] . ".jpg";
-	   $content2="<a href=\"".$baseURL."comets/" . $upload_dir . "/" . $_GET['observation'] . ".jpg" . "\"><img class=\"account\" src=\"".$baseURL."comets/$upload_dir" . "/" . "$file\" alt=\"\"></img></a>";
-	   $objPresentations->line(array($content1,$content2),"RL",array(30,70),20,array('fieldname'));
+	  { $content1=$baseURL."comets/" . $upload_dir . "/" . $_GET['observation'] . ".jpg";
+	    $content2="<a href=\"".$baseURL."comets/" . $upload_dir . "/" . $_GET['observation'] . ".jpg" . "\"><img class=\"account\" src=\"".$baseURL."comets/$upload_dir" . "/" . "$file\" alt=\"\"></img></a>";
+	    echo $content2;
 	  }
 	}
-  $role = $objObserver->getObserverProperty($_SESSION['deepskylog_id'],'role',2);
-	if(($role == RoleAdmin) || ($role == RoleCometAdmin))
+  echo "<hr />";
+	$role = $objObserver->getObserverProperty($loggedUser,'role',2);
+  if(($role == RoleAdmin) || ($role == RoleCometAdmin))
 	  echo "<p><a href=\"".$baseURL."index.php?indexAction=comets_adapt_observation&amp;observation=" . $_GET['observation'] . "\">" . LangChangeObservationTitle . "</a></p>";
 }
 echo("</div></body></html>");
