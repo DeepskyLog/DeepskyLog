@@ -133,13 +133,13 @@ if($objCometObservation->getObjectId($_GET['observation'])) // check if observat
 	  { $content1=$baseURL."comets/" . $upload_dir . "/" . $_GET['observation'] . ".jpg";
 	    $content2="<a href=\"".$baseURL."comets/" . $upload_dir . "/" . $_GET['observation'] . ".jpg" . "\"><img class=\"account\" src=\"".$baseURL."comets/$upload_dir" . "/" . "$file\" alt=\"\"></img></a>";
 	    echo $content2;
+	    echo "<hr />";
 	  }
 	}
-  echo "<hr />";
 	$role = $objObserver->getObserverProperty($loggedUser,'role',2);
   if(($role == RoleAdmin) || ($role == RoleCometAdmin))
 	  echo "<p><a href=\"".$baseURL."index.php?indexAction=comets_adapt_observation&amp;observation=" . $_GET['observation'] . "\">" . LangChangeObservationTitle . "</a></p>";
 }
-echo("</div></body></html>");
+echo("</div>");
 
 ?>
