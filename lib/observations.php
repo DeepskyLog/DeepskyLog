@@ -1090,7 +1090,7 @@ class Observations {
 		echo "</table>";
 	}
 	public  function showObservation($LOid) 
-	{ global $objUtil, $dateformat, $myList, $listname_ss, $baseURL, $objEyepiece, $objObserver, $objInstrument, $loggedUser, $objObject, $objLens, $objFilter, $objPresentations;
+	{ global $objUtil, $dateformat, $myList, $listname, $listname_ss, $baseURL, $objEyepiece, $objObserver, $objInstrument, $loggedUser, $objObject, $objLens, $objFilter, $objPresentations,$objDatabase;
 		$link=$baseURL."index.php?";
 		$linkamp="";
 		reset($_GET);
@@ -1181,7 +1181,10 @@ class Observations {
 		$bottomline="";
 		if($myList)
 		{ $bottomline.="&nbsp;-&nbsp;<a  href=\"".$link.$linkamp."addObservationToList=".urlencode($LOid)."\">".LangViewObservationField44.$listname_ss."</a>";
-		  $bottomline.="&nbsp;-&nbsp;<a  href=\"".$link.$linkamp."addObjectToList=".urlencode($object)."&amp;showname=".urlencode($object)."\">".$object_ss.LangListQueryObjectsMessage2.$listname_ss."</a>";
+		  if($objDatabase->selectSingleValue("SELECT Count(observerobjectlist.objectname) As ObjCnt FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND objectname=\"".$value['objectname']."\" AND listname=\"".$listname."\"",'ObjCnt',0)>0)
+			  $bottomline.="&nbsp;-&nbsp;<a  href=\"".$link.$linkamp."removeObjectFromList=".urlencode($object)."&amp;showname=".urlencode($object)."\">".$object_ss.LangListQueryObjectsMessage3.$listname_ss."</a>";
+			else
+		    $bottomline.="&nbsp;-&nbsp;<a  href=\"".$link.$linkamp."addObjectToList=".urlencode($object)."&amp;showname=".urlencode($object)."\">".$object_ss.LangListQueryObjectsMessage2.$listname_ss."</a>";
 		}
 		if($objUtil->checkAdminOrUserID($this->getDsObservationProperty($LOid,'observerid')))
 		{ $bottomline.="&nbsp;-&nbsp;<a  href=\"".$baseURL."index.php?indexAction=add_observation&amp;observation=" . $LOid . "\">" . LangChangeObservationTitle . "</a>";

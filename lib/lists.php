@@ -42,7 +42,7 @@ class Lists implements iLists
      unset($_SESSION['QobjParams']);
  }
  public  function addObservationToList($id)
- { global $objDatabase, $loggedUser, $listname, $myList;
+ { global $objDatabase, $loggedUser, $listname, $myList,$objPresentations;
    if(!$myList)
      return; 
    $sql = "SELECT observations.objectname, observations.description, observers.name, observers.firstname, locations.name as location, instruments.name AS instrument " .
@@ -57,7 +57,7 @@ class Lists implements iLists
      $description = '(' .$get['firstname'].' '.$get['name'];
 	   $description .='/' .$get['instrument'];
 	   $description .='/' .$get['location'];
-	   $description .=') '.$get['description'];
+	   $description .=') '.$objPresentations->br2nl($get['description']);
      $get=$objDatabase->selectRecordArray("SELECT objectplace AS ObjPl, description FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND listname = \"".$listname."\" AND objectname=\"".$name."\"");
      if(!$get)
        $objDatabase->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname, description) ".

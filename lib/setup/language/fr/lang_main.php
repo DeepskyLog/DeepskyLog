@@ -570,11 +570,11 @@ define("LangViewObjectFieldMagnification", "Agrandissement pr&#233;f&#233;r&#233
 define("LangViewObjectFieldOptimumDetectionMagnification", "Agrandissement de d&#233;tection optimale");
 define("LangViewObjectDSS", "Voir l'image DSS");
 define("LangViewObjectDSL", "Voir la carte Deepskylive");
-define("LangViewObjectObservations", "Toutes les observations de ");
-define("LangViewObjectViewNearbyObject", "Montrez les objets proches");
+define("LangViewObjectObservations", "Toutes les observations");
+define("LangViewObjectViewNearbyObject", "Les objets proches");
 define("LangViewObjectAndNearbyObjects", " et ");
 define("LangViewObjectNoNearbyObjects", " - pas d'autres objets proches");
-define("LangViewObjectAddObservation", "Nouvelle observation de ");
+define("LangViewObjectAddObservation", "Nouvelle observation");
 define("LangViewObjectInexistant", "Cet objet n'existe pas!");
 define("LangViewObjectNearbyObjects", "objets proches: ");
 define("LangViewObjectNearbyObject", "objet proche: ");

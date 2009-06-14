@@ -463,7 +463,7 @@ else
 	  $entryMessage.=LangListQueryObjectsMessage8."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['addObjectToList']) . "\">".$_GET['showname']."</a>".LangListQueryObjectsMessage6."<a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">".$listname_ss."</a>.";
 	  unset($_GET['addObjectToList']);
 	}
-	if(array_key_exists('addObservationToList',$_GET) && $_GET['addObservationToList'] && $myList)
+	if($objUtil->checkGetKey('addObservationToList') && $myList)
 	{ $objList->addObservationToList($_GET['addObservationToList']);
 	  $entryMessage.=LangListQueryObjectsMessage16.LangListQueryObjectsMessage6."<a href=\"".$baseURL."index.php?indexAction=listaction&amp;manage=manage\">".$listname_ss."</a>.";
 	  unset($_GET['addObservationToList']);

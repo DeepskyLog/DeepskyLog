@@ -573,9 +573,9 @@ define("LangViewObjectFieldMagnification", "Bevorzugte Vergr&Ouml;&szlig;erung")
 define("LangViewObjectFieldOptimumDetectionMagnification", "Beste Vergr&Ouml;&szlig;erung");
 define("LangViewObjectDSS", "Download DSS Bild");
 define("LangViewObjectDSL", "DeepskyLive Karte");
-define("LangViewObjectObservations", "Zeige alle Beobachtungen von ");
-define("LangViewObjectViewNearbyObject", "Zeige nahe Objekte von ");
-define("LangViewObjectAddObservation", "Neue Beobachtungen von ");
+define("LangViewObjectObservations", "Alle Beobachtungen");
+define("LangViewObjectViewNearbyObject", "Nahe Objekte");
+define("LangViewObjectAddObservation", "Neue Beobachtungen");
 define("LangViewObjectInexistant", "Dieses Objekt existiert nicht!");
 define("LangViewObjectNearbyObjects", "Nahe Objekte: ");
 define("LangViewObjectNearbyObject", "Nahe Objekte");
