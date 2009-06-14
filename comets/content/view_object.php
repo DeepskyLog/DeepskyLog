@@ -92,17 +92,5 @@ if($_SESSION['deepskylog_id'])
    echo("<p><a href=\"".$baseURL."index.php?indexAction=comets_add_observation&amp;observedobject=" . urlencode($_GET['object']) . "\">" . LangViewObjectAddObservation . $objects->getName($_GET['object']) . "</a></p>");
 }
 
-# extra link for administrators to change comet details
-
-$role = $objObserver->getObserverProperty($_SESSION['deepskylog_id'],'role',2);
-
-if ($role == RoleAdmin || $role == RoleCometAdmin)
-{
-   echo("<p><a href=\"".$baseURL."index.php?indexAction=comets_change_object&amp;object=" . urlencode($_GET['object']) . "\">" . LangChangeObject . " " .$objects->getName($_GET['object']) . "</a></p>");
-}
-
-echo("\n</div>\n");
-
-echo("</body>\n</html>");
-
+echo("</div>");
 ?>

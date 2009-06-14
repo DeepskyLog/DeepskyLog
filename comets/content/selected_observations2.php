@@ -21,9 +21,8 @@ $util = $objUtil;
 
 // TITLE
 
-echo("<div id=\"main\">\n<h2>");
-echo(LangSelectedObservationsTitle2);
-echo("</h2>\n");
+echo "<div id=\"main\">";
+
 $mindate='';
 $maxdate='';
 if($_GET['observer'] || $_GET['instrument'] || $_GET['site'] || $_GET['minyear'] || $_GET['maxyear'] || ($_GET['mindiameter'] && $_GET['mindiameterunits']) || ($_GET['maxdiameter'] && $_GET['maxdiameterunits']) || $_GET['minmag'] || $_GET['maxmag'] || $_GET['description'] || $_GET['mindc'] || $_GET['maxdc'] || $_GET['mincoma'] || $_GET['maxcoma'] || $_GET['mintail'] || $_GET['maxtail'] || $_GET['object']) // at least 1 field to search on 
@@ -106,27 +105,6 @@ if($_GET['observer'] || $_GET['instrument'] || $_GET['site'] || $_GET['minyear']
 	 {
 	    $site = '';
 	 }
-
-// QUERY
-
-$query = array("object" => $object,
-               "observer" => $observer,
-               "instrument" => $instrument,
-	             "location" => $site,
-               "mindate" => $mindate,
-               "maxdate" => $maxdate, 
-               "maxdiameter" => $maxdiam,
-               "mindiameter" => $mindiam,
-               "maxmag" => $maxmag,
-               "minmag" => $minmag,
-               "description" => $description,
-               "mintail" => $mintail,
-               "maxtail" => $maxtail,
-               "mincoma" => $mincoma,
-               "maxcoma" => $maxcoma,
-               "mindc" => $mindc,
-               "maxdc" => $maxdc);
-
 // SORTING
 
 if (isset($_GET['sort']))
@@ -149,6 +127,28 @@ else
 {
  $min = 0;
 }
+
+	 
+// QUERY
+
+$query = array("object" => $object,
+               "observer" => $observer,
+               "instrument" => $instrument,
+	             "location" => $site,
+               "mindate" => $mindate,
+               "maxdate" => $maxdate, 
+               "maxdiameter" => $maxdiam,
+               "mindiameter" => $mindiam,
+               "maxmag" => $maxmag,
+               "minmag" => $minmag,
+               "description" => $description,
+               "mintail" => $mintail,
+               "maxtail" => $maxtail,
+               "mincoma" => $mincoma,
+               "maxcoma" => $maxcoma,
+               "mindc" => $mindc,
+               "maxdc" => $maxdc);
+
 
 if (!($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
 {
@@ -230,22 +230,19 @@ else
      }
    }
 
+// the code below is very strange but works
+
 
 if(sizeof($obs) > 0)
 {
-  krsort($obs);
-}
-
-// the code below is very strange but works
-
-if(isset($_GET['previous']))
+$count = 0; // counter for altering table colors
+ 
+if(sizeof($obs) > 0) // ONLY WHEN OBSERVATIONS AVAILABLE
 {
- $previous = $_GET['previous'];
-}
-else
-{
- $previous = '';
-}
+
+// LINKS TO SORT ON OBSERVATION TABLE HEADERS
+
+
 
 $link = $baseURL."index.php?indexAction=comets_result_selected_observations".
                                          "&amp;object=" . $_GET['object'] . 
@@ -271,42 +268,25 @@ $link = $baseURL."index.php?indexAction=comets_result_selected_observations".
                                          "&amp;mincoma=" . $_GET['mincoma'] .
                                          "&amp;maxcoma=" . $_GET['maxcoma'] .
                                          "&amp;mintail=" . $_GET['mintail'] .
-                                         "&amp;maxtail=" . $_GET['maxtail'] .
-                                         "&amp;previous=" . $previous;
+                                         "&amp;maxtail=" . $_GET['maxtail'];
 
-$step = 25;
-
-list($min, $max) = $util->printNewListHeader($obs, $link, $min, $step, "");
-
-if(($sort != '') && $previous == $_GET['sort']) // reverse sort when pushed twice
-{
-   if(sizeof($obs) > 0)
-   {
-    $obs = array_reverse($obs, true);
-   }
-   else
-   {
-     krsort($obs);
-     reset($obs);
-   }
-   $previous = ""; // reset previous field to sort on
-}
+if((array_key_exists('steps',$_SESSION))&&(array_key_exists("selComObs2",$_SESSION['steps'])))
+	$step=$_SESSION['steps']["selComObs2"];
+if(array_key_exists('multiplepagenr',$_GET))
+  $min = ($_GET['multiplepagenr']-1)*$step;
+elseif(array_key_exists('multiplepagenr',$_POST))
+  $min = ($_POST['multiplepagenr']-1)*$step;
+elseif(array_key_exists('min',$_GET))
+  $min=$_GET['min'];
 else
-{
-   $previous = $sort;
-}
-
-
-if(sizeof($obs) > 0)
-{
-$count = 0; // counter for altering table colors
- 
-if(sizeof($obs) > 0) // ONLY WHEN OBSERVATIONS AVAILABLE
-{
-
-// LINKS TO SORT ON OBSERVATION TABLE HEADERS
-
-echo "<table>\n";
+  $min = 0;
+list($min, $max, $content) = $util->printNewListHeader3($obs, $link, $min, $step, "");
+$objPresentations->line(array("<h4>".LangSelectedObservationsTitle2."</h4>",$content),"LR",array(75,25),30);
+$content=$objUtil->printStepsPerPage3($link,"selComObs2",$step);
+$objPresentations->line(array($content),"R",array(100),20);
+  
+echo "<hr />";
+echo "<table style=\"width:100%\">\n";
 
 echo "<tr class=\"type3\">\n";
 
@@ -336,7 +316,7 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_obs
                                                     "&amp;maxcoma=" . $_GET['maxcoma'] .
                                                     "&amp;mintail=" . $_GET['mintail'] .
                                                     "&amp;maxtail=" . $_GET['maxtail'] .
-                                                    "&amp;sort=objectid&amp;previous=$previous\">" . 
+                                                    "&amp;sort=objectid\">" . 
                                                     LangOverviewObservationsHeader1 . "</a></td>\n";
 
 // OBSERVER
@@ -365,7 +345,7 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_obs
                                                     "&amp;maxcoma=" . $_GET['maxcoma'] .
                                                     "&amp;mintail=" . $_GET['mintail'] .
                                                     "&amp;maxtail=" . $_GET['maxtail'] .
-                                                    "&amp;sort=observerid&amp;previous=$previous\">" .
+                                                    "&amp;sort=observerid&amp;\">" .
                                                     LangOverviewObservationsHeader2 . "</a></td>\n";
 
 // DATE
@@ -394,7 +374,7 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_obs
                                                     "&amp;maxcoma=" . $_GET['maxcoma'] .
                                                     "&amp;mintail=" . $_GET['mintail'] .
                                                     "&amp;maxtail=" . $_GET['maxtail'] .
-                                                    "&amp;sort=date&amp;previous=$previous\">" .
+                                                    "&amp;sort=date&amp;\">" .
                                                     LangOverviewObservationsHeader4 . "</a></td>\n";
 
 // MAGNITUDE
@@ -422,7 +402,7 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_obs
                                                     "&amp;maxcoma=" . $_GET['maxcoma'] .
                                                     "&amp;mintail=" . $_GET['mintail'] .
                                                     "&amp;maxtail=" . $_GET['maxtail'] .
-                                                    "&amp;sort=mag&amp;previous=$previous\">" .
+                                                    "&amp;sort=mag&amp;\">" .
                                                     LangNewComet1 . "</a></td>\n";
 
 // INSTRUMENT
@@ -450,7 +430,7 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_obs
                                                     "&amp;maxcoma=" . $_GET['maxcoma'] .
                                                     "&amp;mintail=" . $_GET['mintail'] .
                                                     "&amp;maxtail=" . $_GET['maxtail'] .
-                                                    "&amp;sort=inst&amp;previous=$previous\">" .
+                                                    "&amp;sort=inst&amp;\">" .
                                                     LangViewObservationField3 . "</a></td>\n";
 
 // COMA
@@ -478,7 +458,7 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_obs
                                                     "&amp;maxcoma=" . $_GET['maxcoma'] .
                                                     "&amp;mintail=" . $_GET['mintail'] .
                                                     "&amp;maxtail=" . $_GET['maxtail'] .
-                                                    "&amp;sort=coma&amp;previous=$previous\">" .
+                                                    "&amp;sort=coma&amp;\">" .
                                                     LangViewObservationField19 . "</a></td>\n";
 
 // DC
@@ -506,7 +486,7 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_obs
                                                     "&amp;maxcoma=" . $_GET['maxcoma'] .
                                                     "&amp;mintail=" . $_GET['mintail'] .
                                                     "&amp;maxtail=" . $_GET['maxtail'] .
-                                                    "&amp;sort=dc&amp;previous=$previous\">" .
+                                                    "&amp;sort=dc&amp;\">" .
                                                     LangViewObservationField18b . "</a></td>\n";
 
 // TAIL
@@ -534,7 +514,7 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_obs
                                                     "&amp;maxcoma=" . $_GET['maxcoma'] .
                                                     "&amp;mintail=" . $_GET['mintail'] .
                                                     "&amp;maxtail=" . $_GET['maxtail'] .
-                                                    "&amp;sort=tail&amp;previous=$previous\">" .
+                                                    "&amp;sort=tail&amp;\">" .
                                                     LangViewObservationField20b . "</a></td>\n<td></td>\n</tr>\n";
 
 
@@ -697,6 +677,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
   }
 
   echo ("</table>\n");
+  echo "<hr />";
   }
 
 $_SESSION['observation_query'] = $obs;
@@ -718,5 +699,5 @@ else // no search fields filled in
    echo " " . LangObservationOR . " ";
    echo "<a href=\"".$baseURL."index.php?indexAction=comets_all_observations\">" . LangObservationQueryError3 . "</a></p>";
 }
-echo("</div>\n</div>\n</body>\n</html>");
+echo("</div>");
 ?>

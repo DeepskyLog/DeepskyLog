@@ -2,101 +2,78 @@
 // overview_observations.php
 // generates an overview of all observations in the database
 
-
-
 $objects = new CometObjects;
 $instruments = new Instruments;
 $observers = new Observers;
 
 if(isset($_GET['sort'])) // field to sort on given as a parameter in the url
-{
-  $sort = $_GET['sort'];
+{ $sort = $_GET['sort'];
   $obs = $objCometObservation->getSortedObservations($sort);
 }
 else
-{
-   $sort = "date"; // standard sort on date
-   $obs = $objCometObservation->getSortedObservations($sort);
-   if(sizeof($obs) > 0)
-   {
+{ $sort = "date"; // standard sort on date
+  $obs = $objCometObservation->getSortedObservations($sort);
+  if(sizeof($obs) > 0)
     krsort($obs);
-   }
 }
-
 // save $obs as a session variable
-
 $_SESSION['obs'] = $obs;
 $_SESSION['observation_query'] = $obs;
 
-echo("<div id=\"main\">\n<h2>");
-
-echo (LangOverviewObservationsTitle); // page title
-
-echo("</h2>\n");
-
+echo "<div id=\"main\">";
 if(isset($_GET['previous']))
-{
- $previous = $_GET['previous'];
-}
+  $previous = $_GET['previous'];
 else
-{
- $previous = 'date';
-}
-
+  $previous = 'date';
 $count = 0; // counter for altering table colors
 $link = $baseURL."index.php?indexAction=comets_all_observations&amp;sort=".$sort."&amp;previous=".$previous;
-
-
 if(isset($_GET['sort']) && isset($_GET['previous']) && ($_GET['previous'] == $_GET['sort'])) // reverse sort when pushed twice
-{
-   if(sizeof($obs) > 0)
-   {
+{ if(sizeof($obs) > 0)
     krsort($obs);
-   }
-   $previous = ""; // reset previous field to sort on
+  $previous = ""; // reset previous field to sort on
 }
 else
-{
-   $previous = $sort;
-}
-if (isset($_GET['min']))
-{
+  $previous = $sort;
+if((array_key_exists('steps',$_SESSION))&&(array_key_exists("selComObs",$_SESSION['steps'])))
+	$step=$_SESSION['steps']["selComObs"];
+if(array_key_exists('multiplepagenr',$_GET))
+  $min = ($_GET['multiplepagenr']-1)*$step;
+elseif(array_key_exists('multiplepagenr',$_POST))
+  $min = ($_POST['multiplepagenr']-1)*$step;
+elseif(array_key_exists('min',$_GET))
   $min=$_GET['min'];
-}
 else
-{
-  $min=0;
-} 
-list($min, $max) = $objUtil->printNewListHeader($obs, $link, $min, 25, "");
+  $min = 0;
+list($min,$max,$content)=$objUtil->printNewListHeader3($obs, $link, $min, $step);
+$objPresentations->line(array("<h4>".LangOverviewObservationsTitle."</h4>",$content),"LR",array(50,50),30);
+$content=$objUtil->printStepsPerPage3($link,"selComObs",$step);
+$objPresentations->line(array($content),"R",array(100),20);
+echo "<hr />";
+
 
 if(sizeof($obs) > 0)
 {
 // OBJECT TABLE HEADERS
 
-echo "<table>\n
-      <tr class=\"type3\">\n
-      <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=objectname&amp;previous=$previous\">" . LangOverviewObservationsHeader1 . "</a></td>\n
-      <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=observerid&amp;previous=$previous\">" . LangOverviewObservationsHeader2 . "</a></td>\n
-      <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=date&amp;previous=$previous\">" . LangOverviewObservationsHeader4 . "</a></td>\n
-      <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=mag&amp;previous=$previous\">" . LangNewComet1 . "</a></td>\n
-      <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=inst&amp;previous=$previous\">" . LangViewObservationField3 . "</a></td>\n
-      <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=coma&amp;previous=$previous\">" . LangViewObservationField19 . "</a></td>\n
-      <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=dc&amp;previous=$previous\">" . LangViewObservationField18b . "</a></td>\n
-      <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=tail&amp;previous=$previous\">" . LangViewObservationField20b . "</a></td>\n
-      <td></td>\n
-      </tr>\n";
-
+echo "<table style=\"width:100%\">
+      <tr class=\"type3\">
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=objectname&amp;previous=$previous\">" . LangOverviewObservationsHeader1 . "</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=observerid&amp;previous=$previous\">" . LangOverviewObservationsHeader2 . "</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=date&amp;previous=$previous\">" . LangOverviewObservationsHeader4 . "</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=mag&amp;previous=$previous\">" . LangNewComet1 . "</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=inst&amp;previous=$previous\">" . LangViewObservationField3 . "</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=coma&amp;previous=$previous\">" . LangViewObservationField19 . "</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=dc&amp;previous=$previous\">" . LangViewObservationField18b . "</a></td>
+      <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=tail&amp;previous=$previous\">" . LangViewObservationField20b . "</a></td>
+      <td></td>
+      </tr>";
 while(list ($key, $value) = each($obs)) // go through observations array
-{
-   if($count >= $min && $count < $max)
-   { 
-      if ($count % 2)
-      {
-         $typefield = "class=\"type1\"";
+{ if($count >= $min && $count < $max)
+   { if ($count % 2)
+      { $typefield = "class=\"type1\"";
       }
       else
-      {
-         $typefield = "class=\"type2\"";
+      { $typefield = "class=\"type2\"";
       }
 
       // OBJECT 
@@ -242,11 +219,9 @@ while (FALSE !== ($file = readdir($dir)))
    $count++; // increase counter
 }
 
-echo ("</table>\n");
+echo "</table>";
 }
-
-list($min, $max) = $objUtil->printNewListHeader($obs, $link, $min, 25, "");
-
-echo("</div>\n</body>\n</html>");
+echo "<hr />";
+echo "</div>";
 
 ?>

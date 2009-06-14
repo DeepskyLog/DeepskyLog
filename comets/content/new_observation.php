@@ -8,7 +8,6 @@
 
 include_once "lib/cometobjects.php";
 include_once "lib/cometobservations.php";
-include_once "common/control/ra_to_hms.php";
 include_once "lib/icqmethod.php";
 include_once "lib/icqreferencekey.php";
 include_once "lib/locations.php";
