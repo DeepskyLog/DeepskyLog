@@ -25,7 +25,7 @@ class CometObservations
    $_SESSION['lang'] = "English";
   }
 
-  $sql = "INSERT INTO cometobservations (objectid, observerid, date, time) VALUES (\"$objectid\", \"$observerid\", \"$date\", \"$time\")";
+  $sql = "INSERT INTO cometobservations (objectid, observerid, date, time, description) VALUES (\"$objectid\", \"$observerid\", \"$date\", \"$time\", \"\")";
   mysql_query($sql) or die(mysql_error());
 
 
