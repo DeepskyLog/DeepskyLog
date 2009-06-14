@@ -25,11 +25,11 @@ if($menuAddChange=="collapsed")
   echo "</select>";
 }
 else
-{ echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_object\">".LangSearchMenuItem5."</a><br />";
-  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_eyepiece\">".LangSearchMenuItem6."</a><br />";
-  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_filter\">".LangSearchMenuItem7."</a><br />";
-  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_lens\">".LangSearchMenuItem8."</a><br />";
-  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=change_account\">".LangSearchMenuItem1."</a><br />";
+{ echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_object\">".LangChangeMenuItem5."</a><br />";
+  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_eyepiece\">".LangChangeMenuItem6."</a><br />";
+  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_filter\">".LangChangeMenuItem7."</a><br />";
+  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_lens\">".LangChangeMenuItem8."</a><br />";
+  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=change_account\">".LangChangeMenuItem1."</a><br />";
 }
 echo "</div>";
 }
