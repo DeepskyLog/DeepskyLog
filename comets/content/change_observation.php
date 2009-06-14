@@ -1,38 +1,17 @@
-<?php
-
-// change_observation.php
-// allows a user to change his observation 
-// Version 1.0 20051206, JV
-
-// include statements
-
-include_once "lib/cometobjects.php";
-include_once "lib/cometobservations.php";
-include_once "lib/locations.php";
-include_once "lib/observers.php";
-include_once "lib/instruments.php";
-include_once "lib/util.php";
+<?php // change_observation.php - allows a user to change his observation - Version 1.0 20051206, JV
 include_once "lib/icqmethod.php";
 include_once "lib/icqreferencekey.php";
-
-
-// creation of objects
-
-$cometobjects = new cometObjects;
-$cometobservations = new CometObservations;
-$instruments = new Instruments;
-$locations = new Locations;
-$observers = new Observers;
-$util = new Utils;
-
 if(!$_GET['observation']) // no observation defined 
-{
-   header("Location: ../index.php");
+{ header("Location: ../index.php");
 }  
+echo "<div id=\"main\">";
+echo "<form action=\"comets/control/validate_change_observation.php\" method=\"post\" enctype=\"multipart/form-data\">";
+echo "<form action=\"".$baseURL."index.php\" method=\"post\" enctype=\"multipart/form-data\">";
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"comets_validate_observation\" />";
+$objPresentations->line(array("<h4>".LangChangeObservationTitle."</h4>","<input type=\"submit\" name=\"addobservation\" value=\"".LangViewObservationButton1."\" />&nbsp;"),"LR",array(50,50),30);
 
 echo("<div id=\"main\">\n<h2>" . LangChangeObservationTitle . "</h2>");
 
-echo("<form action=\"comets/control/validate_change_observation.php\" method=\"post\" enctype=\"multipart/form-data\">");
 
 echo("<table width=\"490\">\n
 <tr>\n
@@ -40,9 +19,9 @@ echo("<table width=\"490\">\n
 
 echo LangQueryObjectsField1;
 
-echo("</td>\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($cometobservations->getObjectId($_GET['observation'])) . "\">");
+echo("</td>\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($objCometObservation->getObjectId($_GET['observation'])) . "\">");
 
-echo($cometobjects->getName($cometobservations->getObjectId($_GET['observation'])));
+echo($objCometObject->getName($objCometObservation->getObjectId($_GET['observation'])));
 
 echo("</a></td></tr>");
 
@@ -50,9 +29,9 @@ echo("<tr><td class=\"fieldname\">");
 
 echo LangViewObservationField2;
 
-echo("</td><td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($cometobservations->getObserverId($_GET['observation'])) . "\">");
+echo("</td><td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($objCometObservation->getObserverId($_GET['observation'])) . "\">");
 
-echo($observers->getObserverProperty($cometobservations->getObserverId($_GET['observation']),'firstname') . "&nbsp;" . $observers->getObserverProperty($cometobservations->getObserverId($_GET['observation']),'name'));
+echo($objObserver->getObserverProperty($objCometObservation->getObserverId($_GET['observation']),'firstname') . "&nbsp;" . $objObserver->getObserverProperty($objCometObservation->getObserverId($_GET['observation']),'name'));
 
 print("</a></td></tr>");
 
@@ -66,13 +45,13 @@ echo LangViewObservationField5;
 echo("</td>
    <td>");
 
-if ($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
-{ $date = sscanf($cometobservations->getDate($_GET['observation']), "%4d%2d%2d");
-  $time = sscanf(sprintf("%04d", $cometobservations->getTime($_GET['observation'])), "%2d%2d");
+if ($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
+{ $date = sscanf($objCometObservation->getDate($_GET['observation']), "%4d%2d%2d");
+  $time = sscanf(sprintf("%04d", $objCometObservation->getTime($_GET['observation'])), "%2d%2d");
 }
 else
-{ $date = sscanf($cometobservations->getLocalDate($_GET['observation']), "%4d%2d%2d");
-  $time = sscanf(sprintf("%04d", $cometobservations->getLocalTime($_GET['observation'])), "%2d%2d");
+{ $date = sscanf($objCometObservation->getLocalDate($_GET['observation']), "%4d%2d%2d");
+  $time = sscanf(sprintf("%04d", $objCometObservation->getLocalTime($_GET['observation'])), "%2d%2d");
 }
 
    echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"day\" value=\"" . $date[2] . "\" />&nbsp;&nbsp;<select name=\"month\">
@@ -174,7 +153,7 @@ else
   
 echo("</select>&nbsp;&nbsp<input type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" name=\"year\" value=\"" . $date[0] . "\" /></td></tr>");
 
-if ($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
+if ($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
 {
     echo("<tr><td class=\"fieldname\">" . LangViewObservationField9 . "</td><td><input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"hours\" value=\"");
 }
@@ -219,13 +198,13 @@ echo("<option value=\"0\">&nbsp;</option>\n");
 
 echo("<option value=\"1\"");
 
-if($cometobservations->getMagnitudeWeakerThan($_GET['observation']) == "1")
+if($objCometObservation->getMagnitudeWeakerThan($_GET['observation']) == "1")
 {
    echo(" selected=\"selected\"");
 }
 
 echo(">". LangNewComet3 . "</option>\n</select>");
-$magnitude = $cometobservations->getMagnitude($_GET['observation']);
+$magnitude = $objCometObservation->getMagnitude($_GET['observation']);
 if ($magnitude < -90)
 {
   $magnitude = "";
@@ -238,7 +217,7 @@ else
 
 echo("<input type=\"checkbox\" name=\"uncertain\" ");
 
-if($cometobservations->getMagnitudeUncertain($_GET['observation']) == "1")
+if($objCometObservation->getMagnitudeUncertain($_GET['observation']) == "1")
 {
   echo("checked=\"yes\" ");
 }
@@ -257,13 +236,13 @@ echo("</td><td>
 
    <select name=\"location\">");
 
-      $locs = $locations->getSortedLocationsList("name");
+      $locs = $objLocation->getSortedLocationsList("name");
 
       while(list ($key, $value) = each($locs))
       {
          $locationname = $value[1];
 
-         if($cometobservations->getLocationId($_GET['observation']) == $value[0])
+         if($objCometObservation->getLocationId($_GET['observation']) == $value[0])
          {
             print("<option selected=\"selected\" value=\"".$value[0]."\">$locationname</option>\n");
          }
@@ -295,7 +274,7 @@ echo LangViewObservationField3;
 echo("</td><td>
    <select name=\"instrument\">");
 
-      $instr = $instruments->getSortedInstrumentsList("name");
+      $instr = $objInstrument->getSortedInstrumentsList("name");
 
       echo("<option value=\"\"></option>\n"); // include empty instrument
 
@@ -309,7 +288,7 @@ echo("</td><td>
           $instrumentname = InstrumentsNakedEye;
          }
 
-         if($cometobservations->getInstrumentId($_GET['observation']) == $val)
+         if($objCometObservation->getInstrumentId($_GET['observation']) == $val)
          {
             print("<option selected=\"selected\" value=\"$val\">$instrumentname</option>\n");
          }
@@ -329,7 +308,7 @@ echo("<tr><td>" . LangNewComet4 . "</td>");
 
 echo("<td>");
 
-echo("<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"magnification\" size=\"3\" value=\"" . $cometobservations->getMagnification($_GET['observation']) . "\" />");
+echo("<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"magnification\" size=\"3\" value=\"" . $objCometObservation->getMagnification($_GET['observation']) . "\" />");
 
 echo("</td><td></td></tr>");
 
@@ -350,7 +329,7 @@ while(list($key, $value) = each($methods))
 {
    echo("<option value=\"$value\"");
 
-   if($cometobservations->getMethode($_GET['observation']) == $value)
+   if($objCometObservation->getMethode($_GET['observation']) == $value)
    {
       print(" selected=\"selected\"");
    }
@@ -378,7 +357,7 @@ while(list($key, $value) = each($methods))
 {
    echo("<option value=\"$value\"");
 
-   if($cometobservations->getChart($_GET['observation']) == $value)
+   if($objCometObservation->getChart($_GET['observation']) == $value)
    {
       print(" selected=\"selected\"");
    }
@@ -401,7 +380,7 @@ echo("<option value=\"\"></option>");
 
 for ($i = 0; $i <= 9; $i++) {
    echo("<option value=\"" . $i . "\"");
-   if(strcmp($cometobservations->getDc($_GET['observation']), $i) == 0)
+   if(strcmp($objCometObservation->getDc($_GET['observation']), $i) == 0)
    { echo " selected=\"selected\""; }
    echo(">" . $i . "</option>\n");
 }
@@ -415,7 +394,7 @@ echo("</td><td></td></tr>");
 echo("<tr><td>" . LangNewComet9 . "</td>");
 
 echo("<td>");
-$coma = $cometobservations->getComa($_GET['observation']);
+$coma = $objCometObservation->getComa($_GET['observation']);
 if ($coma < -90)
 {
  $coma = '';
@@ -429,7 +408,7 @@ echo("</td><td>(" . LangNewComet13 . ")</td></tr>");
 echo("<tr><td>" . LangNewComet10 . "</td>");
 
 echo("<td>");
-$tail = $cometobservations->getTail($_GET['observation']);
+$tail = $objCometObservation->getTail($_GET['observation']);
 if ($tail < -90)
 {
  $tail = '';
@@ -443,7 +422,7 @@ echo("</td><td>(" . LangNewComet13 . ")</td></tr>");
 echo("<tr><td>" . LangNewComet11 . "</td>");
 
 echo("<td>");
-$pa = $cometobservations->getPa($_GET['observation']);
+$pa = $objCometObservation->getPa($_GET['observation']);
 if ($pa < -90)
 {
  $pa = '';
@@ -459,7 +438,7 @@ echo("</td><td>(" . LangNewComet12 . ")</td></tr>");
 // DESCRIPTION
 
     echo("<tr><td class=\"fieldname\">" . LangViewObservationField8 . "</td><td></td><td></td></tr>");
-    echo("<tr><td colspan=\"3\"><textarea name=\"description\" class=\"description\">" . $objPresentations->br2nl(html_entity_decode($cometobservations->getDescription($_GET['observation']))) . "</textarea></td></tr>");
+    echo("<tr><td colspan=\"3\"><textarea name=\"description\" class=\"description\">" . $objPresentations->br2nl(html_entity_decode($objCometObservation->getDescription($_GET['observation']))) . "</textarea></td></tr>");
 
 echo("<tr><td colspan=\"2\"><input type=\"submit\" name=\"changeobservation\" value=\"".LangChangeObservationButton."\" /></td></tr>");
 
