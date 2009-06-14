@@ -928,11 +928,11 @@ class Observations {
     echo "<td>&nbsp;</td>";
 		if($myList)
 			echo "<td>&nbsp;</td>";
-    tableSortHeader(LangOverviewObservationsHeader1, $link2 . "&amp;sort=objectname");
-		tableSortHeader(LangViewObservationField1b, $link2 . "&amp;sort=objectconstellation");
-		tableSortHeader(LangOverviewObservationsHeader2, $link2 . "&amp;sort=observersortname");
-		tableSortInverseHeader(LangOverviewObservationsHeader3, $link2 . "&amp;sort=instrumentsort");
-		tableSortInverseHeader(LangOverviewObservationsHeader4, $link2 . "&amp;sort=observationdate");
+    $objPresentations->tableSortHeader(LangOverviewObservationsHeader1, $link2 . "&amp;sort=objectname");
+		$objPresentations->tableSortHeader(LangViewObservationField1b, $link2 . "&amp;sort=objectconstellation");
+		$objPresentations->tableSortHeader(LangOverviewObservationsHeader2, $link2 . "&amp;sort=observersortname");
+		$objPresentations->tableSortInverseHeader(LangOverviewObservationsHeader3, $link2 . "&amp;sort=instrumentsort");
+		$objPresentations->tableSortInverseHeader(LangOverviewObservationsHeader4, $link2 . "&amp;sort=observationdate");
 		if ($_SESSION['lco'] != "O")
 			echo "<td>&nbsp;</td>";
 		else

@@ -53,7 +53,7 @@ if(!($imagesize))
 	$content1.="</h4>";
 	list($min,$max,$content2)=$objUtil->printNewListHeader3($_SESSION['Qobj'],$link ,$min,$step);
 	$objPresentations->line(array($content1,$content2),"LR",array(50,50),30);
-  $content1 ="<form name=\"zoomform\" action=\"".$link."\" method=\"get\">";
+  $content1 ="<form action=\"".$link."\" method=\"get\"><div>";
 	$content1.=LangViewObjectNearbyObjectsMoreLess .":&nbsp;";
   $content1.="<select name=\"zoom\"  onchange=\"zoomform.submit();\">";
 	if($objUtil->checkGetKey('zoom',30)=="180") $content1.=("<option selected=\"selected\" value=\"180\">3x3&deg;</option>"); else $content1.=("<option value=\"180\">3x3&deg;</option>"); 
@@ -66,7 +66,7 @@ if(!($imagesize))
 	$content1.="</select>";
 	$content1.="<input type=\"hidden\" name=\"object\" value=\"".$_GET['object']."\" /> ";
 	$content1.="<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" /> ";		
-	$content1.="</form>";
+	$content1.="</div></form>";
 	$content2="";
 	$content2=$objUtil->printStepsPerPage3($link,"nearbyObjects",$step);
 	$objPresentations->line(array($content1,$content2),"LR",array(50,50),20);

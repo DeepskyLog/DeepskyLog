@@ -757,72 +757,71 @@ class Objects implements iObjects
     }
     else
       $this->calcContrastAndVisibility($object,$object,$this->getDsoProperty($object,'mag'),$this->getDsoProperty($object,'SBObj'),$this->getDsoProperty($object,'diam1'),$this->getDsoProperty($object,'diam2'),$contrast,$contype,$popup,$prefMag);
-    echo "<form action=\"".$baseURL."index.php?indexAction=detail_object\">";    	
+    echo "<form action=\"".$baseURL."index.php?indexAction=detail_object\"><div>";    	
     echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
     echo "<input type=\"hidden\" name=\"object\" value=\"".$object."\" />";
     echo "<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>";
-		echo "<table width=\"100%\">";
 	  if($loggedUser&&($standardAtlasCode=$GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode','urano')))
-	    tableFieldnameField2(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode(stripslashes($object)) . "\">".(stripslashes($object))."</a>",
-	                                      $objAtlas->atlasCodes[$standardAtlasCode].LangViewObjectField10,$this->getDsoProperty($object,$standardAtlasCode)," class=\"type2\"");
+	    $objPresentations->line(array(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode(stripslashes($object)) . "\">".(stripslashes($object))."</a>",
+	                                  $objAtlas->atlasCodes[$standardAtlasCode].LangViewObjectField10,$this->getDsoProperty($object,$standardAtlasCode)),
+	                            "RLRL",array(),20,array("type20","type20","type20","type20"));
 	  else                                                                                                                                                                                                      // object name       / atlas page
-	    tableFieldnameField2(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(stripslashes($object))."\">".(stripslashes($object))."</a>",
-	                                      "&nbsp;","&nbsp;"," class=\"type2\"");
- 	  tableFieldnameField2(LangViewObjectField2,($alt?$alt:"-"),LangViewObjectField2b,($containst? $containst . "/":"(-)/").($partoft?$partoft:"-"),"class=\"type1\"");                                      // Alternative names / PART OFs
-    tableFieldnameField2(LangViewObjectField3,$objPresentations->raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,$objPresentations->decToStringDegMin($this->getDsoProperty($object,'decl')),"class=\"type2\"");  // RIGHT ASCENSION   / DECLINATION
-    tableFieldnameField2(LangViewObjectField5,$GLOBALS[$this->getDsoProperty($object,'con')],LangViewObjectField6,$GLOBALS[$this->getDsoProperty($object,'type')],"class=\"type1\"");            // CONSTELLATION     / TYPE
-    tableFieldnameField2(LangViewObjectField7,((($magnitude==99.9)||($magnitude==""))?$magnitude = "-":$magnitude),LangViewObjectField8,((($sb==99.9)||($sb==""))?"-":$sb),"class=\"type2\"");    // MAGNITUDE / SURFACE BRIGHTNESS
-    tableFieldnameField2(LangViewObjectField9,(($size=$this->getSize($object))?$size:"-"),LangViewObjectField12,(($this->getDsoProperty($object,'pa')!=999)?($this->getDsoProperty($object,'pa') . "&deg;"):"-"),"class=\"type1\"");   // SIZE / POSITION ANGLE    
-    tableFieldnameField2(LangViewObjectFieldContrastReserve,"<span class=\"" . $contype . "\"  onmouseover=\"Tip('" . $popup . "')\">".$contrast."</span>",LangViewObjectFieldOptimumDetectionMagnification,$prefMag,"class=\"type2\"");
+	   $objPresentations-Line(array(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(stripslashes($object))."\">".(stripslashes($object))."</a>",
+	                                "&nbsp;","&nbsp;"),
+	                          "RLRL",array(),20,array("type20","type20","type20","type20"));
+ 	  $objPresentations->line(array(LangViewObjectField2,($alt?$alt:"-"),LangViewObjectField2b,($containst? $containst . "/":"(-)/").($partoft?$partoft:"-")),
+ 	                          "RLRL",array(),20,array("type10","type10","type10","type10"));
+    $objPresentations->line(array(LangViewObjectField3,$objPresentations->raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,$objPresentations->decToStringDegMin($this->getDsoProperty($object,'decl'))),
+                            "RLRL",array(),20,array("type20","type20","type20","type20"));
+    $objPresentations->line(array(LangViewObjectField5,$GLOBALS[$this->getDsoProperty($object,'con')],LangViewObjectField6,$GLOBALS[$this->getDsoProperty($object,'type')]),
+ 	                          "RLRL",array(),20,array("type10","type10","type10","type10"));
+    $objPresentations->line(array(LangViewObjectField7,((($magnitude==99.9)||($magnitude==""))?$magnitude = "-":$magnitude),LangViewObjectField8,((($sb==99.9)||($sb==""))?"-":$sb)),
+                            "RLRL",array(),20,array("type20","type20","type20","type20"));
+    $objPresentations->line(array(LangViewObjectField9,(($size=$this->getSize($object))?$size:"-"),LangViewObjectField12,(($this->getDsoProperty($object,'pa')!=999)?($this->getDsoProperty($object,'pa') . "&deg;"):"-")),
+ 	                          "RLRL",array(),20,array("type10","type10","type10","type10"));
+    $objPresentations->line(array(LangViewObjectFieldContrastReserve,"<span class=\"" . $contype . "\"  onmouseover=\"Tip('" . $popup . "')\">".$contrast."</span>",LangViewObjectFieldOptimumDetectionMagnification,$prefMag),
+                            "RLRL",array(),20,array("type20","type20","type20","type20"));
     if($listname&&($objList->checkObjectInMyActiveList($object)))
 	  { if($myList)
-     { echo "<tr>";
-     	 echo "<td align=\"right\">".LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" rel=\"external\">".LangViewObjectDreyerDescription."</a>)<br /><input type=\"submit\" name=\"Go\" value=\"" . LangEditObjectDescription . "\" /></td>";
-  	   echo "<td colspan=\"3\"><textarea name=\"description\" class=\"listdescription inputfield\">".$objList->getListObjectDescription($object)."</textarea></td>";
-  	   echo "</tr>";
-		 }
-		 else
-		 { echo "<tr>";
-  	   echo "<td align=\"right\">".LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" rel=\"external\">".LangViewObjectDreyerDescription."</a>)</td>";
-  	   echo "<td colspan=\"3\">".$objList->getListObjectDescription($object)."</td>";
-  	   echo "</tr>";
-		 }
+      { $objPresentations->line(array(LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" rel=\"external\">".LangViewObjectDreyerDescription."</a>)",
+  	                                  "<textarea name=\"description\" class=\"listdescription inputfield\" cols=\"1\" rows=\"1\" onchange=\"submit()\">".$objList->getListObjectDescription($object)."</textarea>"),
+ 	                             "RL",array(25,75),130,array("type10","type10"));
+  	  }
+		  else
+		  { $objPresentations->line(array(LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" rel=\"external\">".LangViewObjectDreyerDescription."</a>)",
+  	                                  $objList->getListObjectDescription($object)),
+ 	                             "RL",array(25,75),20,array("type10","type10"));
+  	  }
     }
 	  elseif($descriptionDsOject=$this->getDsoProperty($object,'description'))
-	  { echo "<tr class=\"type1\">";
-   	  echo "<td align=\"right\">";
-   	  echo LangViewObjectNGCDescription.' ('."<a href=\"".DreyerDescriptionLink."\" rel=\"external\">".LangViewObjectDreyerDescription."</a>".')';
-   	  echo "</td>";
-  	  echo "<td colspan=\"3\">";
-  	  echo htmlentities($descriptionDsOject);
-  	  echo "</td>";
-  	  echo "</tr>";
-    }
-	  echo "</table>";
-    echo "</form>";
+	  { $objPresentations->line(array(LangViewObjectNGCDescription.' ('."<a href=\"".DreyerDescriptionLink."\" rel=\"external\">".LangViewObjectDreyerDescription."</a>".')',
+   	                                htmlentities($descriptionDsOject)),
+ 	                             "RL",array(25,75),20,array("type10","type10"));
+   	}
+    echo "</div></form>";
 	  echo "<hr />";
   }
   public  function showObjects($link, $min, $max, $ownShow='', $showRank=0, $step=25)        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
-  { global $FF, $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil;
+  { global $FF, $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil,$objPresentations;
 	  $atlas='';
     echo "<table width=\"100%\">\n";
     if($FF)
       echo "<thead>";
     echo "<tr class=\"type3\">\n";
     if($showRank)
-	    tableSortHeader(LangOverviewObjectsHeader9,  $link."&amp;sort=objectpositioninlist");
-    tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=showname");
-	  tableSortHeader(LangOverviewObjectsHeader2,  $link."&amp;sort=objectconstellation");
-	  tableSortHeader(LangOverviewObjectsHeader3,  $link."&amp;sort=objectmagnitude");
-	  tableSortHeader(LangOverviewObjectsHeader3b, $link."&amp;sort=objectsurfacebrightness");
-	  tableSortHeader(LangOverviewObjectsHeader4,  $link."&amp;sort=objecttype");
+	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader9,  $link."&amp;sort=objectpositioninlist");
+    $objPresentations->tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=showname");
+	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader2,  $link."&amp;sort=objectconstellation");
+	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader3,  $link."&amp;sort=objectmagnitude");
+	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader3b, $link."&amp;sort=objectsurfacebrightness");
+	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader4,  $link."&amp;sort=objecttype");
     if($loggedUser)
 	  { $atlas = $objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano');
-      tableSortHeader($objAtlas->atlasCodes[$atlas], $link."&amp;sort=".$atlas);
-	    tableSortInverseHeader(LangViewObjectFieldContrastReserve, $link."&amp;sort=objectcontrast");
-	    tableSortHeader(LangViewObjectFieldMagnification, $link."&amp;sort=objectoptimalmagnification");
-	    tableSortHeader(LangOverviewObjectsHeader7, $link."&amp;sort=objectseen");
-	    tableSortHeader(LangOverviewObjectsHeader8, $link."&amp;sort=objectlastseen");
+      $objPresentations->tableSortHeader($objAtlas->atlasCodes[$atlas], $link."&amp;sort=".$atlas);
+	    $objPresentations->tableSortInverseHeader(LangViewObjectFieldContrastReserve, $link."&amp;sort=objectcontrast");
+	    $objPresentations->tableSortHeader(LangViewObjectFieldMagnification, $link."&amp;sort=objectoptimalmagnification");
+	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader7, $link."&amp;sort=objectseen");
+	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader8, $link."&amp;sort=objectlastseen");
     }
     if($myList)
       echo("<td align=\"center\"><a href=\"" . $link . "&amp;min=" . $min . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">&nbsp;P&nbsp;</a></td>");

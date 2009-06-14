@@ -280,11 +280,11 @@ li {
 
 textarea.description {
    height          : 120px;
-   width           : 98%;
+   width           : 97%;
 }
 textarea.listdescription {
    height          : 120px;
-   width           : 100%;
+   width           : 98%;
 }
 
 .message {
