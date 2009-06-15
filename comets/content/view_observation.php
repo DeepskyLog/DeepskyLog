@@ -138,7 +138,7 @@ if($objCometObservation->getObjectId($_GET['observation'])) // check if observat
 	}
 	$role = $objObserver->getObserverProperty($loggedUser,'role',2);
   if(($role == RoleAdmin) || ($role == RoleCometAdmin))
-	  echo "<p><a href=\"".$baseURL."index.php?indexAction=comets_adapt_observation&amp;observation=" . $_GET['observation'] . "\">" . LangChangeObservationTitle . "</a></p>";
+	  echo "<p><a href=\"".$baseURL."index.php?indexAction=comets_adapt_observation&amp;observation=".$_GET['observation']."\">".LangChangeObservationTitle."</a></p>";
 }
 echo("</div>");
 

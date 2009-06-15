@@ -86,7 +86,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
       // DATE
 
-      if ($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
+      if ($objObserver->getObserverProperty($loggedUser,'UT'))
       {
        $date = sscanf($objCometObservation->getDate($value), "%4d%2d%2d");
       }
@@ -96,7 +96,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
       }
 
       // TIME
-      if ($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
+      if ($objObserver->getObserverProperty($loggedUser,'UT'))
       {
        $time = sscanf(sprintf("%04d", $objCometObservation->getTime($value)), "%2d%2d");
       }

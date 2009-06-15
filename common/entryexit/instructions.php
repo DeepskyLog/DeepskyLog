@@ -500,6 +500,8 @@ else
 	
 	
 	// =========================================================================== COMET COMMANDS
+	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="comets_validate_change_observation")
+	  include_once 'comets/control/validate_change_observation.php';
 	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="comets_validate_observation")
 	  include_once 'comets/control/validate_observation.php';
 	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="comets_validate_object")
