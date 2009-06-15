@@ -1,71 +1,13 @@
-<?php
-
-// search.php
-// menu which allows the user to search the observation database 
-
-
-$obs = new Observers;
-
-echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">\n
-      <tr>\n
-      <th valign=\"top\">\n";
-
-echo (LangSearchMenuTitle);
-
-echo "</th>\n</tr>\n<tr>\n<td>\n
-      <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-
-if($_SESSION['deepskylog_id']) // logged in
-{
-   if($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'role',2) != "2") // user is not in waitlist
-   {
-      if($_SESSION['deepskylog_id'] != "admin") // admin doesn't have own observations
-      {
-      echo "<tr align=\"left\">\n<td>\n<a class=\"mainlevel\" href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;user=" . urlencode($_SESSION['deepskylog_id']) . "\">";
-      echo (LangSearchMenuItem1);
-      echo "</a>\n</td>\n</tr>\n";
-      }
-   } 
-}
-
-
-echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_all_observations\" class=\"mainlevel\">";
-
-echo (LangSearchMenuItem2);
-
-echo "</a>\n</td>\n</tr>\n";
-
-echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_query_observations\" class=\"mainlevel\">";
-
-echo (LangSearchMenuItem3);
-
-echo "</a>\n</td>\n</tr>\n";
-
-echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_view_objects\" class=\"mainlevel\">";
-
-echo (LangSearchMenuItem4);
-
-echo "</a>\n</td>\n</tr>\n";
-
-echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_query_objects\" class=\"mainlevel\">";
-
-echo (LangSearchMenuItem5);
-
-echo "</a>\n</td>\n</tr>\n";
-
-echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_rank_observers\" class=\"mainlevel\">";
-
-echo (LangSearchMenuItem6);
-
-echo "</a>\n</td>\n</tr>\n";
-
-
-echo "<tr align=\"left\">\n<td>\n<a href=\"".$baseURL."index.php?indexAction=comets_rank_objects\" class=\"mainlevel\">";
-
-echo (LangSearchMenuItem7);
-
-echo "</a></td></tr></table>\n</td>\n
-      </tr>\n
-      </table>\n";
-
+<?php // search.php - menu which allows the user to search the observation database 
+echo "<div class=\"menuDiv\">";
+echo "<p  class=\"menuHead\">".LangSearchMenuTitle."</p>";
+if($loggedUser)
+  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;user=".urlencode($loggedUser)."\">".LangSearchMenuItem1."</a><br />";
+echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=comets_all_observations\" >".LangSearchMenuItem2."</a>\<br />";
+echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=comets_query_observations\" >".LangSearchMenuItem3."</a><br />";
+echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=comets_view_objects\" >".LangSearchMenuItem4."</a><br />";
+echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=comets_query_objects\" >".LangSearchMenuItem5."</a><br />";
+echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=comets_rank_observers\" >".LangSearchMenuItem6."</a><br />";
+echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=comets_rank_objects\" >".LangSearchMenuItem7."</a><br />";
+echo "</div>";
 ?>
