@@ -2,9 +2,13 @@
 // add_xml_observations.php
 // adds observations from an OpenAstronomyLog xml file to the database
 global $objDatabase;
+global $message;
 
 if($_FILES['xml']['tmp_name']!="") {
   $xmlfile=$_FILES['xml']['tmp_name'];
+} else {
+  $message = "TEST";
+  return;
 }
 
 // Make a DomDocument from the file.
@@ -18,7 +22,8 @@ $searchNode = $dom->getElementsByTagName( "observations" );
 $version = $searchNode->item(0)->getAttribute("version");
 
 if ($version != "2.0") {
-  throw new Exception(LangXMLError1);
+  $message = LangXMLError1;
+  return;
 }
 
 // Use the correct schema definition to check the xml file. Does not work with 2.0 yet (as
