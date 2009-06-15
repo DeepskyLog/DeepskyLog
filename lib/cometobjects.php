@@ -64,20 +64,12 @@ class CometObjects
 
  // getId returns the id of an object
  function getId($name)
- {
-  
- 
-
-  $sql = "SELECT * FROM cometobjects WHERE name = \"$name\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  $get = mysql_fetch_object($run);
-
-  $id = $get->id;
-
-  
-
-  return $id;
+ { $id="";
+   $sql = "SELECT * FROM cometobjects WHERE name = \"$name\"";
+   $run = mysql_query($sql) or die(mysql_error());
+   if($get = mysql_fetch_object($run))
+     $id = $get->id;
+   return $id;
  }
 
  // getName returns the name of an object

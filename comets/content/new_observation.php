@@ -7,32 +7,32 @@ echo "<input type=\"hidden\" name=\"indexAction\" value=\"comets_validate_observ
 $objPresentations->line(array("<h4>".LangNewObservationTitle."</h4>","<input type=\"submit\" name=\"addobservation\" value=\"".LangViewObservationButton1."\" />&nbsp;"),"LR",array(50,50),30);
 echo "<hr />";
 $id = $objUtil->checkSessionKey('observedobject',$objUtil->checkGetKey('observedobject'));
-$content="<select name=\"comet\">";
+$content="<select name=\"comet\" class=\"inputfield requiredField\">";
 $content.="<option value=\"\">&nbsp;</option>";
 $catalogs=$objCometObject->getSortedObjects("name");
 while(list($key, $value) = each($catalogs))
   $content.="<option value=\"".$value[0]."\"".(($id && ($id == $objCometObject->getId($value[0])))?" selected=\"selected\" ":"").">".$value[0]."</option>";
 $content.="</select>";
 $objPresentations->line(array(LangQueryObjectsField1."&nbsp;*",$content),"RL",array(20,80),30);
-$content="<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"day\"  value=\"".$objUtil->checkSessionKey('day')."\" />";
+$content="<input type=\"text\"  class=\"inputfield requiredField\" maxlength=\"2\" size=\"2\" name=\"day\"  value=\"".$objUtil->checkSessionKey('day')."\" />";
 $content.="&nbsp;&nbsp;";
-$content.="<select name=\"month\">";
+$content.="<select name=\"month\" class=\"inputfield requiredField\">";
 for($i= 1;$i<13;$i++)
 	$content.="<option value=\"".$i."\"".(($objUtil->checkSessionKey('month')==$i)?" selected=\"selected\"" : "").">".$GLOBALS['Month'.$i]."</option>";
 $content.="</select>";
 $content.="&nbsp;&nbsp;";
-$content.="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" name=\"year\" value=\"".$objUtil->checkSessionKey('year')."\" />";
+$content.="<input type=\"text\"  class=\"inputfield requiredField\" maxlength=\"4\" size=\"4\" name=\"year\" value=\"".$objUtil->checkSessionKey('year')."\" />";
 $objPresentations->line(array(LangViewObservationField5."&nbsp;*",$content,LangViewObservationField10),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 if ($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
   $content1=LangViewObservationField9."&nbsp;*";
 else
   $content1=LangViewObservationField9lt . "&nbsp;*";
-$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"hours\" value=\"\" />&nbsp;&nbsp;".
-          "<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"minutes\" value=\"\" />";
+$content2="<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" size=\"2\" name=\"hours\" value=\"\" />&nbsp;&nbsp;".
+          "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" size=\"2\" name=\"minutes\" value=\"\" />";
 $content3=LangViewObservationField11;
 $objPresentations->line(array($content1,$content2,$content3),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 $content1=LangViewObservationField4;
-$content2="<select name=\"site\">";
+$content2="<select name=\"site\" class=\"inputField\">";
 $sites = $objLocation->getSortedLocationsList("name",$loggedUser);
 if(!($theLocation=$objUtil->checkSessionKey('location')))
   $theLocation=$objObserver->getObserverProperty($loggedUser,'stdlocation',0);
@@ -43,7 +43,7 @@ $content2.="</select>";
 $content3="<a href=\"".$baseURL."index.php?indexAction=add_site\">" . LangChangeAccountField7Expl ."</a>";
 $objPresentations->line(array($content1,$content2,$content3),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 $content1=LangViewObservationField3;
-$content2="<select name=\"instrument\">";
+$content2="<select name=\"instrument\" class=\"inputField\">";
 $instr = $objInstrument->getSortedInstrumentsList("name",$loggedUser);
 $content2.="<option value=\"\">&nbsp;</option>";
 while(list($key,$value)=each($instr)) // go through instrument array
@@ -59,7 +59,7 @@ $objPresentations->line(array(LangNewComet4,"<input type=\"text\" class=\"inputf
 $ICQMETHODS = new ICQMETHOD();
 $methods = $ICQMETHODS->getIds();
 $content1=LangNewComet5;
-$content2="<select name=\"icq_method\">";
+$content2="<select name=\"icq_method\" class=\"inputField\">";
 $content2.="<option value=\"\">&nbsp;</option>";
 while(list($key, $value) = each($methods))
   $content2.="<option value=\"".$value."\">".$value." - ".$ICQMETHODS->getDescription($value)."</option>";
@@ -69,7 +69,7 @@ $objPresentations->line(array($content1,$content2,$content3),"RLL",array(20,50,3
 $ICQREFERENCEKEYS = new ICQREFERENCEKEY();
 $methods = $ICQREFERENCEKEYS->getIds();
 $content1=LangNewComet6;
-$content2="<select name=\"icq_reference_key\">";
+$content2="<select name=\"icq_reference_key\" class=\"inputField\">";
 $content2.="<option value=\"\">&nbsp;</option>"; 
 while(list($key, $value) = each($methods))
   $content2.="<option value=\"$value\">".$value." - ".$ICQREFERENCEKEYS->getDescription($value)."</option>";
@@ -77,16 +77,16 @@ $content2.="</select>";
 $content3="<a href=\"http://cfa-www.harvard.edu/icq/ICQRec.html\" rel=\"external\">".LangNewComet7."</a>";
 $objPresentations->line(array($content1,$content2,$content3),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 $content1=LangNewComet1;
-$content2="<select name=\"smaller\">";
+$content2="<select name=\"smaller\" class=\"inputField\">";
 $content2.="<option selected=\"selected\" value=\"0\">&nbsp;</option>";
 $content2.="<option value=\"1\">". LangNewComet3 . "</option>";
 $content2.="</select>";
 $content2.="&nbsp;";
 $content2.="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"mag\" size=\"4\" />";
-$content2.="<input type=\"checkbox\" name=\"uncertain\" />" . LangNewComet2;
+$content2.="<input type=\"checkbox\" name=\"uncertain\" class=\"inputField\" />" . LangNewComet2;
 $objPresentations->line(array($content1,$content2,""),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 $content1=LangNewComet8;
-$content2="<select name=\"condensation\">";
+$content2="<select name=\"condensation\" class=\"inputField\">";
 $content2.="<option value=\"\">&nbsp;</option>";
 for($i=0;$i<=9;$i++)
   $content2.="<option value=\"".$i."\">".$i."</option>";
@@ -105,7 +105,7 @@ $content2="<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"posi
 $content3=LangNewComet12;
 $objPresentations->line(array($content1,$content2,$content3),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 $content1=LangViewObservationField12;
-$content2="<input type=\"file\" name=\"drawing\" />";
+$content2="<input type=\"file\" name=\"drawing\" class=\"inputField\" />";
 $content3="";
 $objPresentations->line(array($content1,$content2,$content3),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 $content1=LangViewObservationField8;

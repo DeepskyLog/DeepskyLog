@@ -21,7 +21,7 @@ if($loggedUser)
   //$_SESSION['observedobject'] = $_SESSION['result'][0]; // use name in database
   $_SESSION['found'] = "yes";
   $_SESSION['backlink'] = "validate_search_object.php";
-  $content.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=comets_add_observation&amp;observedobject=" . urlencode($_GET['object']) . "\">" . LangViewObjectAddObservation . $objCometObject->getName($_GET['object']) . "</a>";
+  $content.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=comets_add_observation&amp;observedobject=" . urlencode($_GET['object']) . "\">" . LangViewObjectAddObservation ."&nbsp;". $objCometObject->getName($_GET['object']) . "</a>";
 }
 $objPresentations->line(array(substr($content,13)),"L",array(),20);
 echo("</div>");

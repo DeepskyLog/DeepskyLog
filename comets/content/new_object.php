@@ -1,55 +1,14 @@
-<?php
-
-// new_object.php
-// allows the user to add a comet to the database 
-// Version 0.1: 2005/09/21, WDM
-
-include_once "lib/cometobjects.php";
-include_once "lib/setup/language.php";
-include_once "lib/util.php";
-
-$util = new Utils();
-
-$objects = new CometObjects; 
-
-echo("<div id=\"main\">\n<h2>");
-
-echo (LangNewObjectTitle); 
-
-echo("</h2>\n<table width=\"490\">\n");
-
-echo("<form action=\"".$baseURL."index.php?indexAction=comets_validate_object\" method=\"post\">");
-
-// NAME
-
-echo("<tr>\n
-      <td class=\"fieldname\">");
-
-echo LangViewObjectField1 . "&nbsp;*";
-
-echo("</td>\n<td>");
-
-echo("<input type=\"text\" class=\"inputfield\" maxlength=\"40\" name=\"name\" size=\"40\" value=\"\" />");
-
-
-echo("</td>\n</tr>\n");
-
-// ICQNAME
-
-echo("<tr>\n
-      <td class=\"fieldname\">");
-
-echo LangNewObjectIcqname . "&nbsp;";
-
-echo("</td>\n<td>");
-
-echo("<input type=\"text\" class=\"inputfield\" maxlength=\"40\" name=\"icqname\" size=\"40\" value=\"\" />");
-
-
-echo("</td>\n</tr>\n");
-
-echo("<tr>\n<td>\n</td><td><input type=\"submit\" name=\"newobject\" value=\"" . LangNewObjectButton1 . "\" />\n</td><td></td></tr><tr><td></td><td><input type=\"submit\" name=\"clearfields\" value=\"" . LangQueryObjectsButton2 . "\" />\n</td><td></td></tr></form></table>");
-
-echo("</div>\n</div>\n</body>\n</html>");
-
+<?php // new_object.php - allows the user to add a comet to the database 
+echo "<div id=\"main\">";
+echo "<form action=\"".$baseURL."index.php?indexAction=comets_validate_object\" method=\"post\">";
+$content="<input type=\"submit\" name=\"newobject\" value=\"" . LangNewObjectButton1 . "\" />";
+$objPresentations->line(array("<h4>".LangNewObjectTitle."</h4>",$content),"LR",array(60,40),30);
+echo "<hr />";
+$content="<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"40\" name=\"name\" size=\"40\" value=\"\" />";
+$objPresentations->line(array(LangViewObjectField1."&nbsp;*",$content),"RL",array(20,80),30,array("fieldname"));
+$content="<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"40\" name=\"icqname\" size=\"40\" value=\"\" />";
+$objPresentations->line(array(LangNewObjectIcqname."&nbsp;*",$content),"RL",array(20,80),30,array("fieldname"));
+echo "<hr />";
+echo "</form>";
+echo "</div>";
 ?>
