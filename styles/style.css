@@ -97,11 +97,7 @@ div#main {
   text-align       : left;
   width            : 100%;
 }
-h2 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; padding-bottom: 10px; padding-top: 10px;}
-h3 { color: #333333; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 100%; font-weight: bold; padding-bottom: 10px; padding-top: 20px}
 h4 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; line-height:30px; margin: 0px;}
-h5 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; line-height:50px; margin: 0px;}
-h6 { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold; padding: 0px; border:0px; margin:0px; }
 .title    { padding-top:10px; padding-bottom: 10px; /*background-color:#FFFF00;*/}
 .h2table  { height: 40px; border:0px; }
 .h2header { color: #777777; font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 120%; font-weight: bold;padding-top: 10px;padding-bottom: 5px;}
@@ -145,6 +141,17 @@ a:link, a:visited {
 }
 a:hover {
   text-decoration  : underline;
+}
+a.oal {
+  text-decoration  : none;	
+}
+a.w3c {
+  text-decoration  : none;	
+}
+img.w3c {
+	border           : 0;
+	width            : 88px;
+	height           : 31px
 }
 td, tr, p, div {
   font-family      : Verdana, Trebuchet MS, Arial, Helvetica, sans-serif;

@@ -10,6 +10,5 @@ header ("Content-Type: application/rss+xml");
 header ("Content-Disposition: attachment; filename=\"observations.rss\"");
 $inIndex = true;
 include 'common/entryexit/preludes.php';
-include 'common/layout/presentation.php';
 $objUtil->rssObservations();
 ?>

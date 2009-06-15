@@ -29,6 +29,7 @@ else
 	require_once "lib/objects.php";
 	include_once "lib/cometobservations.php";
 	include_once "lib/cometobjects.php";
+  include_once 'lib/presentation.php';                                                               // functions etc. concerning layout
 	
 	if(strpos(($browser=$objUtil->checkArrayKey($_SERVER,'HTTP_USER_AGENT','')),'Firefox')===false)
 	  $FF=false;
