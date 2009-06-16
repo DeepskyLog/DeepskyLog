@@ -137,7 +137,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$contentMagnification="<input type=\"text\" class=\"inputfield centered\" maxlength=\"4\" name=\"magnification\" size=\"4\"  value=\"".$theMagnification."\" /> x";
 	// Visibility =====================================================================================================================================================================
 	$theVisibility=($observationid?$objObservation->getDsObservationProperty($observationid,'visibility'):$objUtil->checkPostKey('visibility'));
-	$contentVisibility ="<select name=\"visibility\" class=\"width300px\" class=\"inputfield\">";
+	$contentVisibility ="<select name=\"visibility\" class=\"width300px inputfield\">";
 	$contentVisibility.="<option value=\"0\">-----</option>";
 	for($i=1;$i<8;$i++)
 		$contentVisibility.="<option value=\"".$i."\" ".(($objUtil->checkPostKey('visibility')==$i)?"selected=\"selected\" ":"").">".$GLOBALS['Visibility'.$i]."</option>";

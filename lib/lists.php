@@ -79,7 +79,7 @@ class Lists implements iLists
 	   if($get=mysql_fetch_object($run))
 	     $retval =1;
 	 }
-	 if($loggesUser)
+	 if($loggedUser)
    { $sql="SELECT listname FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND listname = \"".$name."\"";
 	   $run=mysql_query($sql) or die(mysql_error());
 	   if($get=mysql_fetch_object($run))

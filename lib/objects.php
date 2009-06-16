@@ -425,12 +425,12 @@ class Objects implements iObjects
     $objDatabase->selectSingleArray("SELECT objectpartof.partofname FROM objectpartof WHERE objectpartof.objectname = \"".$name."\"",'partofname');
   }
   public  function getSeen($object)                                             // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
-  { global $loggedUser,$objdatabase;
+  { global $loggedUser,$objDatabase;
     $seen='-';
     if($ObsCnt=$objDatabase->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 ",'ObsCnt'))
     { $seen='X('.$ObsCnt.')';
       if($loggedUser)
-      { $get3=mysql_fetch_object($objdatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7"));
+      { $get3=mysql_fetch_object($objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7"));
   		  if($get3->PersObsCnt>0)
           $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')&nbsp;'.$get3->PersObsMaxDate;
 		  }
