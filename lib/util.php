@@ -980,7 +980,7 @@ class Utils implements iUtils
     include_once "icqreferencekey.php";
     include_once "setup/vars.php";
     include_once "setup/databaseInfo.php";
-    global $instDir,$objCometObject,$loggedUser;
+    global $instDir,$objCometObject,$loggedUser,$dateformat;
     $objects = new CometObjects;
     $observer = new Observers;
     $instrument = new Instruments;
@@ -1016,7 +1016,7 @@ class Utils implements iUtils
       }
       $hour = (int)($time / 100);
       $minute = $time - $hour * 100;
-      $formattedDate = date($GLOBALS['dateformat'], mktime(0,0,0,$date[1],$date[2],$date[0]));
+      $formattedDate = date($dateformat, mktime(0,0,0,$date[1],$date[2],$date[0]));
 
       if ($minute < 10)
       {
@@ -1160,7 +1160,7 @@ class Utils implements iUtils
       }
 
 
-      $upload_dir = $GLOBALS['instDir'].'comets/'.'cometdrawings';
+      $upload_dir = $instDir.'comets/'.'cometdrawings';
       $dir = opendir($upload_dir);
 
       while (FALSE !== ($file = readdir($dir)))
@@ -1581,7 +1581,7 @@ class Utils implements iUtils
   }
   public function rssObservations()  // Creates an rss feed for DeepskyLog
 	{
-	  global $objObservation, $objInstrument, $objLocation, $objPresentations, $objObserver, $baseURL;
+	  global $objObservation, $objInstrument, $objLocation, $objPresentations, $objObserver, $baseURL,$objUtil;
 	  $dom = new DomDocument('1.0', 'US-ASCII');
 	
 	  // add root fcga -> The header
@@ -1663,7 +1663,7 @@ class Utils implements iUtils
 	
 	  $_GET['minday'] = substr($theDate,6,2);
 	  
-	  $query = array("catalog"=>'%',"mindate"=>$GLOBALS['objUtil']->checkGetDate('minyear', 'minmonth','minday'));
+	  $query = array("catalog"=>'%',"mindate"=>$objUtil->checkGetDate('minyear', 'minmonth','minday'));
 	
 	  $result = $objObservation->getObservationFromQuery($query, 'D');
 	

@@ -7,7 +7,7 @@ if(array_key_exists('number',$_GET) && $_GET['number'])
 	  $object=$objectarray[0];
 }
 else 
-  $object=$GLOBALS['objUtil']->checkGetKey('object');
+  $object=$objUtil->checkGetKey('object');
 
 //200811151634B: dit wordt momenteel niet verwerkt, kan er met CONVERT_TZ(dt,from_tz,to_tz) in het sql statement gewerkt worden?
 $mindate=$objUtil->checkGetKey('mindate');
@@ -33,38 +33,38 @@ if((!count($selectedLanguages))&&$objUtil->checkGetKey('myLanguages'))
       $selectedLanguages[]=$key;
 }
 $query = array("object"           => $object,
-               "catalog"          => $GLOBALS['objUtil']->checkGetKey('catalog'),
-               "number"           => $GLOBALS['objUtil']->checkGetKey('number'),
-               "observer"         => $GLOBALS['objUtil']->checkGetKey('observer'),
-               "instrument"       => $GLOBALS['objUtil']->checkGetKey('instrument'),
-               "location"         => $GLOBALS['objUtil']->checkGetKey('site'),
-               "mindate"          => $GLOBALS['objUtil']->checkGetDate('minyear','minmonth','minday'),
-               "maxdate"          => $GLOBALS['objUtil']->checkGetDate('maxyear','maxmonth','maxday'), 
-               "maxdiameter"      => ($GLOBALS['objUtil']->checkGetKey('maxdiameter')?($GLOBALS['objUtil']->checkGetKey('maxdiameterunits')=="inch"?$_GET['maxdiameter']*25.4:$_GET['maxdiameter']):''),
-               "mindiameter"      => ($GLOBALS['objUtil']->checkGetKey('mindiameter')?($GLOBALS['objUtil']->checkGetKey('mindiameterunits')=="inch"?$_GET['mindiameter']*25.4:$_GET['mindiameter']):''),
-               "type"             => $GLOBALS['objUtil']->checkGetKey('type'),
-               "con"              => $GLOBALS['objUtil']->checkGetKey('con'),
-               "maxmag"           => $GLOBALS['objUtil']->checkGetKey('maxmag'),
-               "minmag"           => $GLOBALS['objUtil']->checkGetKey('minmag'),
-               "maxsb"            => $GLOBALS['objUtil']->checkGetKey('maxsb'),
-               "minsb"            => $GLOBALS['objUtil']->checkGetKey('minsb'),
-               "maxdecl"          => $GLOBALS['objUtil']->checkGetTimeOrDegrees('maxDeclDegrees','maxDeclMinutes','maxDeclSeconds'),
-               "mindecl"          => $GLOBALS['objUtil']->checkGetTimeOrDegrees('minDeclDegrees','minDeclMinutes','minDeclSeconds'),
-						   "minLat"           => $GLOBALS['objUtil']->checkGetTimeOrDegrees('minLatDegrees','minLatMinutes','minLatSeconds'),
-						   "maxLat"           => $GLOBALS['objUtil']->checkGetTimeOrDegrees('maxLatDegrees','maxLatMinutes','maxLatSeconds'),
-               "atlas"            => $GLOBALS['objUtil']->checkGetKey('atlas'),
-							 "atlasPageNumber"  => $GLOBALS['objUtil']->checkGetKey('atlasPageNumber'),
-               "minra"            => $GLOBALS['objUtil']->checkGetTimeOrDegrees('minRAhours','minRAminutes','minRAseconds'),
-               "maxra"            => $GLOBALS['objUtil']->checkGetTimeOrDegrees('maxRAhours','maxRAminutes','maxRAseconds'),
-               "mindiam1"         => ($GLOBALS['objUtil']->checkGetKey('minsize')?($GLOBALS['objUtil']->checkGetKey('size_min_units')=="min"?$_GET['minsize']*60:$_GET['minsize']):''),
-               "maxdiam1"         => ($GLOBALS['objUtil']->checkGetKey('maxsize')?($GLOBALS['objUtil']->checkGetKey('size_max_units')=="min"?$_GET['maxsize']*60:$_GET['maxsize']):''),
-               "description"      => $GLOBALS['objUtil']->checkGetKey('description'),
-               "minvisibility"    => $GLOBALS['objUtil']->checkGetKey('minvisibility'),
-               "maxvisibility"    => $GLOBALS['objUtil']->checkGetKey('maxvisibility'),
-               "minlimmag"        => $GLOBALS['objUtil']->checkGetKey('minlimmag'),
-               "maxlimmag"        => $GLOBALS['objUtil']->checkGetKey('maxlimmag'),
-               "minseeing"        => $GLOBALS['objUtil']->checkGetKey('minseeing'),
-               "maxseeing"        => $GLOBALS['objUtil']->checkGetKey('maxseeing'),
+               "catalog"          => $objUtil->checkGetKey('catalog'),
+               "number"           => $objUtil->checkGetKey('number'),
+               "observer"         => $objUtil->checkGetKey('observer'),
+               "instrument"       => $objUtil->checkGetKey('instrument'),
+               "location"         => $objUtil->checkGetKey('site'),
+               "mindate"          => $objUtil->checkGetDate('minyear','minmonth','minday'),
+               "maxdate"          => $objUtil->checkGetDate('maxyear','maxmonth','maxday'), 
+               "maxdiameter"      => ($objUtil->checkGetKey('maxdiameter')?($objUtil->checkGetKey('maxdiameterunits')=="inch"?$_GET['maxdiameter']*25.4:$_GET['maxdiameter']):''),
+               "mindiameter"      => ($objUtil->checkGetKey('mindiameter')?($objUtil->checkGetKey('mindiameterunits')=="inch"?$_GET['mindiameter']*25.4:$_GET['mindiameter']):''),
+               "type"             => $objUtil->checkGetKey('type'),
+               "con"              => $objUtil->checkGetKey('con'),
+               "maxmag"           => $objUtil->checkGetKey('maxmag'),
+               "minmag"           => $objUtil->checkGetKey('minmag'),
+               "maxsb"            => $objUtil->checkGetKey('maxsb'),
+               "minsb"            => $objUtil->checkGetKey('minsb'),
+               "maxdecl"          => $objUtil->checkGetTimeOrDegrees('maxDeclDegrees','maxDeclMinutes','maxDeclSeconds'),
+               "mindecl"          => $objUtil->checkGetTimeOrDegrees('minDeclDegrees','minDeclMinutes','minDeclSeconds'),
+						   "minLat"           => $objUtil->checkGetTimeOrDegrees('minLatDegrees','minLatMinutes','minLatSeconds'),
+						   "maxLat"           => $objUtil->checkGetTimeOrDegrees('maxLatDegrees','maxLatMinutes','maxLatSeconds'),
+               "atlas"            => $objUtil->checkGetKey('atlas'),
+							 "atlasPageNumber"  => $objUtil->checkGetKey('atlasPageNumber'),
+               "minra"            => $objUtil->checkGetTimeOrDegrees('minRAhours','minRAminutes','minRAseconds'),
+               "maxra"            => $objUtil->checkGetTimeOrDegrees('maxRAhours','maxRAminutes','maxRAseconds'),
+               "mindiam1"         => ($objUtil->checkGetKey('minsize')?($objUtil->checkGetKey('size_min_units')=="min"?$_GET['minsize']*60:$_GET['minsize']):''),
+               "maxdiam1"         => ($objUtil->checkGetKey('maxsize')?($objUtil->checkGetKey('size_max_units')=="min"?$_GET['maxsize']*60:$_GET['maxsize']):''),
+               "description"      => $objUtil->checkGetKey('description'),
+               "minvisibility"    => $objUtil->checkGetKey('minvisibility'),
+               "maxvisibility"    => $objUtil->checkGetKey('maxvisibility'),
+               "minlimmag"        => $objUtil->checkGetKey('minlimmag'),
+               "maxlimmag"        => $objUtil->checkGetKey('maxlimmag'),
+               "minseeing"        => $objUtil->checkGetKey('minseeing'),
+               "maxseeing"        => $objUtil->checkGetKey('maxseeing'),
                "lens"             => $objUtil->checkGetKey('lens'),
                "filter"           => $objUtil->checkGetKey('filter'),
                "eyepiece"           => $objUtil->checkGetKey('eyepiece'),
@@ -82,12 +82,12 @@ while($validQobs && (list($key,$value) = each($query)))
    $validQobs=false;
 
 if(!$validQobs)
-{ $_SESSION['Qobs']=$objObservation->getObservationFromQuery($query, $GLOBALS['objUtil']->checkGetKey('seen','D'),$objUtil->checkGetKey('exactinstrumentlocation',0));
+{ $_SESSION['Qobs']=$objObservation->getObservationFromQuery($query, $objUtil->checkGetKey('seen','D'),$objUtil->checkGetKey('exactinstrumentlocation',0));
   $_SESSION['QobsParams']=$query; 
   $_SESSION['QobsSort']='observationid';
   $_SESSION['QobsSortDirection']='desc';
   $query['countquery']='true';
-  $_SESSION['QobsTotal']=$objObservation->getObservationFromQuery($query, $GLOBALS['objUtil']->checkGetKey('seen'),$objUtil->checkGetKey('exactinstrumentlocation',0)); 
+  $_SESSION['QobsTotal']=$objObservation->getObservationFromQuery($query, $objUtil->checkGetKey('seen'),$objUtil->checkGetKey('exactinstrumentlocation',0)); 
   $_SESSION['QobsMaxCnt']=$MaxCnt;
   $min=0;
 	if($loggedUser && (!($objObserver->getObserverProperty($loggedUser,'UT'))))

@@ -246,7 +246,7 @@ else // no object found or not pushed on search button yet
 	echo "<form action=\"" . $baseURL . "index.php?indexAction=add_observation\" method=\"post\">";
 	$content ="<select name=\"catalog\" class=\"inputfield\">";
 	$content.="<option value=\"\">&nbsp;</option>";
-	$catalogs = $GLOBALS['objObject']->getCatalogs();
+	$catalogs = $objObject->getCatalogs();
 	while (list ($key, $value) = each($catalogs))
 		$content.="<option value=\"$value\">$value</option>";
 	$content.="</select>";

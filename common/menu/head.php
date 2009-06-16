@@ -12,7 +12,7 @@ echo "<base href=\"".$baseURL."\" />";
 echo "<link rel=\"shortcut icon\" href=\"".$baseURL."styles/images/favicon.ico\" />";
 echo "<link href=\"".$baseURL."styles/style.css\" rel=\"stylesheet\" type=\"text/css\" />";
 echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"DeepskyLog - latest observations\" href=\"observations.rss\" />";
-echo "<title>DeepskyLog ". $GLOBALS['objUtil']->checkGetKey('indexAction','')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+echo "<title>DeepskyLog ". $objUtil->checkGetKey('indexAction','')."</title>";  // 20081209 Here should come a better solution, see bug report 44
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 echo "<script type=\"text/javascript\">window.onresize=resizeForm;</script>";
 echo "</head>";

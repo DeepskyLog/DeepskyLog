@@ -31,7 +31,8 @@ class Language
    return $countrylist;
  }
  function getAllLanguages($cur_language)                                        // getAllLanguages returns all the available languages, in the given language
- { $xml=simplexml_load_file($GLOBALS['instDir']."lib/setup/language/languages.xml");
+ { global $instDir;
+   $xml=simplexml_load_file($instDir."lib/setup/language/languages.xml");
    $lang=$xml->lang;
    $countrylist=array();
    $country="name_".$cur_language;

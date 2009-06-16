@@ -320,7 +320,7 @@ else
 	if($objUtil->checkGetKey('indexAction')=="add_observation")
 	{ if(array_key_exists('number',$_POST)&&(!$_POST['number']))
 	    $_GET['indexAction']="query_objects";
-	  elseif(array_key_exists('number',$_POST)&&(!($_GET['object']=$GLOBALS['objObject']->getExactDsObject('',$objUtil->checkPostKey('catalog'), $objUtil->checkPostKey('number')))))
+	  elseif(array_key_exists('number',$_POST)&&(!($_GET['object']=$objObject->getExactDsObject('',$objUtil->checkPostKey('catalog'), $objUtil->checkPostKey('number')))))
 	  { $entryMessage.=LangInstructionsNoObjectFound.$objUtil->checkPostKey('catalog')." ".$objUtil->checkPostKey('number');
 	    $_GET['indexAction']="query_objects";
 	   }

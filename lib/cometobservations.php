@@ -776,7 +776,8 @@ class CometObservations
  // getPopularObservers() returns the number of observations of the
  // observers
  function getPopularObservers()
- { return $GLOBALS['objDatabase']->selectSingleArray("SELECT cometobservations.observerid, COUNT(cometobservations.id) As Cnt FROM cometobservations GROUP BY cometobservations.observerid ORDER BY Cnt DESC", 'observerid');
+ { global $objdatabase;
+   return $objDatabase->selectSingleArray("SELECT cometobservations.observerid, COUNT(cometobservations.id) As Cnt FROM cometobservations GROUP BY cometobservations.observerid ORDER BY Cnt DESC", 'observerid');
  }
 
  // getNumberOfDifferentObjects() returns the number of different objects

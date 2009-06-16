@@ -1090,7 +1090,7 @@ class Observations {
 		echo "</table>";
 	}
 	public  function showObservation($LOid) 
-	{ global $objUtil, $dateformat, $myList, $listname, $listname_ss, $baseURL, $objEyepiece, $objObserver, $objInstrument, $loggedUser, $objObject, $objLens, $objFilter, $objPresentations,$objDatabase;
+	{ global $objUtil, $dateformat, $myList, $listname, $listname_ss, $baseURL, $objEyepiece, $objObserver, $objInstrument, $loggedUser, $objObject, $objLens, $objFilter, $objPresentations,$objDatabase,$objLocation;
 		$link=$baseURL."index.php?";
 		$linkamp="";
 		reset($_GET);
@@ -1150,7 +1150,7 @@ class Observations {
 		                     LangViewObservationField3,
 		                     "<a  href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($this->getDsObservationProperty($LOid,'instrumentid'))."\">".$inst."</a>",
 		                     LangViewObservationField4,
-                         "<a  href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=" . urlencode($this->getDsObservationProperty($LOid,'locationid')) . "\">" . $GLOBALS['objLocation']->getLocationPropertyFromId($this->getDsObservationProperty($LOid,'locationid'),'name') . "</a>"),
+                         "<a  href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=" . urlencode($this->getDsObservationProperty($LOid,'locationid')) . "\">" . $objLocation->getLocationPropertyFromId($this->getDsObservationProperty($LOid,'locationid'),'name') . "</a>"),
                          "RLRLRL",array(15,22,15,19,15,14),25,array("type30","type30","type30","type30","type30","type30"));                                     
 		$objPresentations->line(array(LangViewObservationField5.$dateTimeLabelText,
                          $dateTimeText,

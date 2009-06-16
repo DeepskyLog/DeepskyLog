@@ -161,13 +161,13 @@ class Objects implements iObjects
     return $ret;
   }
   public  function getCatalogsAndLists()
-  { global $objDatabase,$loggedUser;
+  { global $objDatabase,$loggedUser,$objList;
 	  $ret=$objDatabase->selectSingleArray("SELECT DISTINCT objectnames.catalog FROM objectnames WHERE objectnames.catalog NOT IN (\"M\",\"NGC\",\"Caldwell\",\"H400\",\"HII\",\"IC\")",'catalog');
     natcasesort($ret);
     reset($ret);
     array_unshift($ret, "M", "NGC", "Caldwell", "H400", "HII", "IC");
 	  if(array_key_exists('deepskylog_id',$_SESSION) && $loggedUser)
-	  { $lsts = $GLOBALS['objList']->getLists();
+	  { $lsts = $objList->getLists();
 	 	  while(list($key,$value)=each($lsts))
 	 	   $ret[]='List:'.$value; 
 	  }
@@ -205,17 +205,18 @@ class Objects implements iObjects
     return $seen;
   }
   public  function getExactDsObject($value, $cat='', $catindex='')              // returns the exact name of an object
-  { if($value)
+  { global $objDatabase;
+    if($value)
       $sql = "SELECT objectnames.objectname FROM objectnames " .
 		  	   "WHERE UPPER(altname) = \"".strtoupper(trim($value))."\" " .
 					 "OR altname = \"".trim($value)."\"";
 	  else
 	    $sql = "SELECT objectnames.objectname FROM objectnames " .
 		        "WHERE objectnames.catalog=\"".$cat."\" AND objectnames.catindex=\"".ucwords(trim($catindex))."\"";
-	  if((!($object=$GLOBALS['objDatabase']->selectSingleValue($sql,'objectname','')))&&$value)
+	  if((!($object=$objDatabase->selectSingleValue($sql,'objectname','')))&&$value)
 	  { $sql="SELECT objectnames.objectname FROM objectnames " .
 	         "WHERE CONCAT(UPPER(objectnames.catalog),UPPER(objectnames.catindex))=\"".strtoupper(str_replace(' ','',$value))."\"";
-	    $object=$GLOBALS['objDatabase']->selectSingleValue($sql,'objectname','');
+	    $object=$objDatabase->selectSingleValue($sql,'objectname','');
 	  }    
     return $object;
   }
@@ -268,7 +269,7 @@ class Objects implements iObjects
     //             "taki" => "11", "psa" => "12", "torresB" => "11", "torresBC" => "13",
     //             "torresC" => "31", "mindiam1" => "12.2", "maxdiam1" => "13.2", 
     // 		"mindiam2" => "11.1", "maxdiam2" => "22.2", "inList" => "Public: Edge-ons", "notInList" => "My observed Edge-ons");
-    global $loggedUser;
+    global $loggedUser,$objDatabase;
     $obs=array();
     $sql = "";
     $sqland = "";
@@ -349,7 +350,7 @@ class Objects implements iObjects
       $sql = $sql1 . $sqland;		
 //    $sql.=" LIMIT 0,10000";
 //  echo $sql."<p>&nbsp;</p>";
-    $run=$GLOBALS['objDatabase']->selectRecordset($sql);
+    $run=$objDatabase->selectRecordset($sql);
     $i=0;
     if (array_key_exists('name',$queries)&&$queries["name"])
 	  { while($get = mysql_fetch_object($run))
@@ -424,12 +425,12 @@ class Objects implements iObjects
     $objDatabase->selectSingleArray("SELECT objectpartof.partofname FROM objectpartof WHERE objectpartof.objectname = \"".$name."\"",'partofname');
   }
   public  function getSeen($object)                                             // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
-  { global $loggedUser;
+  { global $loggedUser,$objdatabase;
     $seen='-';
-    if($ObsCnt=$GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 ",'ObsCnt'))
+    if($ObsCnt=$objDatabase->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 ",'ObsCnt'))
     { $seen='X('.$ObsCnt.')';
       if($loggedUser)
-      { $get3=mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7"));
+      { $get3=mysql_fetch_object($objdatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7"));
   		  if($get3->PersObsCnt>0)
           $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')&nbsp;'.$get3->PersObsMaxDate;
 		  }
@@ -735,7 +736,7 @@ class Objects implements iObjects
     return $objDatabase->execSQL("UPDATE objects SET ".$property." = \"".$propertyValue."\" WHERE name = \"".$name."\"");
   }
   public  function showObject($object)
-  { global $objPresentations, $deepskylive, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL, $objPresentations;	
+  { global $objPresentations, $deepskylive, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL, $objPresentations,$objObserver;	
     $object=$this->getDsObjectName($object);
     $_SESSION['object']=$object;
     $altnames=$this->getAlternativeNames($object); $alt="";
@@ -768,7 +769,7 @@ class Objects implements iObjects
     echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
     echo "<input type=\"hidden\" name=\"object\" value=\"".$object."\" />";
     echo "<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>";
-	  if($loggedUser&&($standardAtlasCode=$GLOBALS['objObserver']->getObserverProperty($loggedUser,'standardAtlasCode','urano')))
+	  if($loggedUser&&($standardAtlasCode=$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano')))
 	    $objPresentations->line(array(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode(stripslashes($object)) . "\">".(stripslashes($object))."</a>",
 	                                  $objAtlas->atlasCodes[$standardAtlasCode].LangViewObjectField10,$this->getDsoProperty($object,$standardAtlasCode)),
 	                            "RLRL",array(),20,array("type20","type20","type20","type20"));
@@ -809,7 +810,7 @@ class Objects implements iObjects
 	  echo "<hr />";
   }
   public  function showObjects($link, $min, $max, $ownShow='', $showRank=0, $step=25)        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
-  { global $FF, $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil,$objPresentations;
+  { global $FF, $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil,$objPresentations,$objList;
 	  $atlas='';
     echo "<table width=\"100%\">";
     if($FF)
@@ -864,7 +865,7 @@ class Objects implements iObjects
 	    }
   	  if($myList)
   	  { echo("<td align=\"center\">");
-        if($GLOBALS['objList']->checkObjectInMyActiveList($_SESSION['Qobj'][$count]['objectname']))
+        if($objList->checkObjectInMyActiveList($_SESSION['Qobj'][$count]['objectname']))
           echo("<a href=\"".$link."&amp;min=".$min."&amp;removeObjectFromList=".urlencode($_SESSION['Qobj'][$count]['objectname'])."&amp;sort=".$objUtil->checkGetKey('sort')."&amp;previous=".$objUtil->checkGetKey('previous')."\" title=\"".$_SESSION['Qobj'][$count]['objectname'].LangListQueryObjectsMessage3.$listname_ss."\">R</a>");
         else
           echo("<a href=\"".$link."&amp;min=".$min."&amp;addObjectToList=".urlencode($_SESSION['Qobj'][$count]['objectname'])."&amp;showname=".urlencode($_SESSION['Qobj'][$count]['showname'])."&amp;sort=".$objUtil->checkGetKey('sort')."&amp;previous=".$objUtil->checkGetKey('previous')."\" title=\"".$_SESSION['Qobj'][$count]['objectname'].LangListQueryObjectsMessage2.$listname_ss."\">L</a>");

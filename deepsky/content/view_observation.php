@@ -1,7 +1,7 @@
 <?php // view_observation.php - view information of observation 
 if(!($observationid=$objUtil->checkGetKey('observation')))   
    throw new Exception ("No observation defined in view_observation.php");
-else if(!($object=$GLOBALS['objObservation']->getDsObservationProperty($observationid,'objectname')))    // check if observation exists
+else if(!($object=$objObservation->getDsObservationProperty($observationid,'objectname')))    // check if observation exists
    throw new Exception ("No observed object found in view_observation.php");
 else
 {
@@ -47,9 +47,9 @@ if($loggedUser)                  // LOGGED IN
   echo "<hr />";
 }
 $objObservation->showObservation($_GET['observation']);
-if($_GET['dalm']=="AO") $AOid = $GLOBALS['objObservation']->getAOObservationsId($object, $_GET['observation']);
-elseif($_GET['dalm']=="MO") $AOid = $GLOBALS['objObservation']->getMOObservationsId($object, $loggedUser, $_GET['observation']);
-elseif($_GET['dalm']=="LO") $AOid = array($GLOBALS['objObservation']->getLOObservationId($object, $loggedUser, $_GET['observation']));
+if($_GET['dalm']=="AO") $AOid = $objObservation->getAOObservationsId($object, $_GET['observation']);
+elseif($_GET['dalm']=="MO") $AOid = $objObservation->getMOObservationsId($object, $loggedUser, $_GET['observation']);
+elseif($_GET['dalm']=="LO") $AOid = array($objObservation->getLOObservationId($object, $loggedUser, $_GET['observation']));
 else $AOid=array();
 while(list($key, $LOid) = each($AOid)) 
   $objObservation->showObservation($LOid);

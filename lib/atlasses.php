@@ -15,7 +15,8 @@ interface iAtlasses
 class Atlasses implements iAtlasses
 { public  $atlasCodes=array();
   public  function __construct()                                                // Constructor initialises the public atlasCodes property
-	{ $run=$GLOBALS['objDatabase']->selectRecordset('SELECT atlasCode FROM atlasses;'); 
+	{ global $objDatabase;
+	  $run=$objDatabase->selectRecordset('SELECT atlasCode FROM atlasses;'); 
 	  while($get=mysql_fetch_object($run))
 	    $this->atlasCodes[$get->atlasCode]=$GLOBALS['AtlasName'.$get->atlasCode];
     asort($this->atlasCodes);

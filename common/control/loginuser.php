@@ -36,14 +36,14 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
 { if(array_key_exists('deepskylog_id', $_POST)&&$_POST['deepskylog_id']&&array_key_exists('passwd', $_POST)&&$_POST['passwd'])              // all fields filled in
   { $login  = $_POST['deepskylog_id'];                                          // get password from form and encrypt
 	  $passwd = md5($_POST['passwd']);
-	  $passwd_db = $GLOBALS['objObserver']->getObserverProperty($login,'password');                  // get password from database 
+	  $passwd_db = $objObserver->getObserverProperty($login,'password');                  // get password from database 
     if($passwd_db==$passwd)                                                     // check if passwords match
     { $_SESSION['lang']=$objObserver->getObserverProperty($login,'language');
-			if($GLOBALS['objObserver']->getObserverProperty($login,'role',2)=="2")                         // user in waitlist already tries to log in
+			if($objObserver->getObserverProperty($login,'role',2)=="2")                         // user in waitlist already tries to log in
 			{ $loginErrorCode="LangWelcome5";
 			  $loggedUser="";
 			} 
-      elseif($GLOBALS['objObserver']->getObserverProperty($login,'role',2)=="1")                     // validated user
+      elseif($objObserver->getObserverProperty($login,'role',2)=="1")                     // validated user
       { session_regenerate_id(true);
 			  $_SESSION['deepskylog_id']=$login;                                      // set session variable
         $_SESSION['admin']="no";                                                // set session variable

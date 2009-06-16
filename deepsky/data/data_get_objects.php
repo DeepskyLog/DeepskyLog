@@ -62,7 +62,7 @@ elseif($objUtil->checkGetKey('source')=='objects_nearby')
 	  $validQobj=true;
   if(!$validQobj)
 	{ $_SESSION['QobjParams']=array('source'=>'objects_nearby','object'=>$_GET['object'],'zoom'=>$_GET['zoom']);
-	  $_SESSION['Qobj']=$objObject->getSeenObjectDetails($GLOBALS['objObject']->getNearbyObjects($_GET['object'],$_GET['zoom']));
+	  $_SESSION['Qobj']=$objObject->getSeenObjectDetails($objObject->getNearbyObjects($_GET['object'],$_GET['zoom']));
 	  $_SESSION['QobjSort']='objectname';
 	  $_SESSION['QobjSortDirection']='asc';
 	}
@@ -74,7 +74,7 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
   if(array_key_exists('catalog',$_GET)) $catalog = $_GET['catalog'];
   if(array_key_exists('catNumber',$_GET)) $catNumber = $_GET['catNumber'];
   if(array_key_exists('atlas',$_GET) && $_GET['atlas']);
-  $atlas=$GLOBALS['objUtil']->checkGetKey('atlas',(($loggedUser)?$objAtlas->atlasCodes[$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano')]:''));
+  $atlas=$objUtil->checkGetKey('atlas',(($loggedUser)?$objAtlas->atlasCodes[$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano')]:''));
   $atlasPageNumber=$objUtil->checkGetKey('atlasPageNumber','');
   if(array_key_exists('inList', $_GET)) $inList = $_GET['inList']; else $inList = '';
   if(array_key_exists('notInList', $_GET)) $notInList = $_GET['notInList']; else $notInList = '';
