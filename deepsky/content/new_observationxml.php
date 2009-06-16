@@ -6,10 +6,10 @@ $objPresentations->line(array(LangXMLMessage1),"L",array(),30);
 $objPresentations->line(array(LangXMLMessage2),"L",array(),30);
 $objPresentations->line(array(LangXMLMessage3),"L",array(),30);
 echo "<hr />";
-echo "<form action=\"".$baseURL."index.php?indexAction=add_xml_observations\" enctype=\"multipart/form-data\" method=\"post\">";
+echo "<form action=\"".$baseURL."index.php?indexAction=add_xml_observations\" enctype=\"multipart/form-data\" method=\"post\"><div>";
 echo "<input type=\"file\" name=\"xml\" /><br />"; 
 echo "<input type=\"submit\" name=\"change\" value=\"".LangXMLButton."\" />";
-echo "</form>";
+echo "</div></form>";
 echo "<hr />";
 echo "</div>";
 ?>
