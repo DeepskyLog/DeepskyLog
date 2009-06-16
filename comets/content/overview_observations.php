@@ -55,7 +55,7 @@ if(sizeof($obs) > 0)
 {
 // OBJECT TABLE HEADERS
 
-echo "<table style=\"width:100%\">
+echo "<table>
       <tr class=\"type3\">
       <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=objectname&amp;previous=$previous\">" . LangOverviewObservationsHeader1 . "</a></td>
       <td><a href=\"".$baseURL."index.php?indexAction=comets_all_observations&amp;sort=observerid&amp;previous=$previous\">" . LangOverviewObservationsHeader2 . "</a></td>
@@ -171,10 +171,10 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
       // OUTPUT
 
-      echo("<tr $typefield>\n
-            <td><a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($object) . "\">" . $objCometObject->getName($object) . "</a></td>\n
+      echo("<tr $typefield>
+            <td><a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($object) . "\">" . $objCometObject->getName($object) . "</a></td>
             <td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($observer) . "\">" . $objObserver->getObserverProperty($observer,'firstname') . "&nbsp;" . $objObserver->getObserverProperty($observer,'name') . 
-            "</a></td>\n<td>");
+            "</a></td><td>");
 
       echo date ($dateformat, mktime (0,0,0,$date[1],$date[2],$date[0]));
 
@@ -191,7 +191,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
          $instrument = $instrument. "(" . $instrumentsize . "&nbsp;mm" . ")";
       }
 
-      echo(")</td>\n
+      echo(")</td>
             <td>$mag</td>
             <td>$instrument</td>
             <td>$coma</td>
@@ -212,7 +212,7 @@ while (FALSE !== ($file = readdir($dir)))
   }
 }
  
-   echo("</a></td>\n</tr>\n");
+   echo("</a></td></tr>");
 
    }
 

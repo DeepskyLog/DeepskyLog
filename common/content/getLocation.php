@@ -12,7 +12,7 @@ $count=0;
 $result=$objLocation->getLocationsFromDatabase($locationname,$countryname);
 if(($result)&&($locationname))
 { echo "<div class=\"results\">".LangGetLocation2."<a href=\"".$baseURL."index.php?indexAction=search_sites\">".LangGetLocation2a."</a></div><br />";
-  echo "<table style=\"width:100%\">";
+  echo "<table>";
   echo "<tr class=\"type3\">";
   echo "<td>".LangGetLocation3."</td>";
   echo "<td>".LangGetLocation4."</td>";

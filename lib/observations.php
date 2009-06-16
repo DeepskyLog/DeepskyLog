@@ -940,7 +940,7 @@ class Observations {
 			     "<td width=\"15%\">" . LangOverviewObservationsHeader9 . "</td>" .
 			     "<td width=\"15%\">" . LangOverviewObservationsHeader5 . "</td>";
 		if($FF)
-			echo "<td style=\"width:10px\">&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+			echo "<td class=\"width10px\">&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 		echo "</tr>";
 		if($FF)
 		{ echo "</thead>";
@@ -985,11 +985,11 @@ class Observations {
 				}
 				if($lco=='L')
 				  if($value['observerid']==$loggedUser)
-				    echo "<tr style=\"height:5px\" class=\"type".(2 -($obsKey%2))."5\">";
+				    echo "<tr class=\"height5px type".(2 -($obsKey%2))."5\">";
 				  else
-				    echo "<tr style=\"height:5px\" class=\"type".(2 -($obsKey%2))."\">";
+				    echo "<tr class=\"height5px type".(2 -($obsKey%2))."\">";
 				else
-				  echo "<tr style=\"height:5px\" class=\"type20\">";
+				  echo "<tr class=\"height5px type20\">";
 			  if(($objUtil->checkGetKey('expand')==$value['observationid']))
 			    echo "<td align=\"center\"><a  href=\"".$link."&amp;expand=0\" title=\"".$explantation1."\">"."-"."</a></td>";
 			  else
@@ -1020,9 +1020,9 @@ class Observations {
 					}
 					echo "</td>";
 				  echo "</tr>";
-				  echo "<tr style=\"height:5px\">";
+				  echo "<tr class=\"height5px\">";
 				  echo "<td>&nbsp;</td>"; 
-					echo "<td style=\"background-color:#FFFFC0\" colspan=\"".($myList?(($lco=='O')?9:7):(($lco=='O')?8:6))."\">"; 
+					echo "<td class=\"expandedObservation\" colspan=\"".($myList?(($lco=='O')?9:7):(($lco=='O')?8:6))."\">"; 
 					echo "<hr />";
 					$this->showObservation($value['observationid']);
 					echo "</td>";
@@ -1048,7 +1048,7 @@ class Observations {
 				echo "</tr>";
 		    if($lco!='L')
 		    { if($objUtil->checkGetKey('expand')!=$value['observationid'])
-					{ echo "<tr style=\"height:5px\" class=\"type1\">";
+					{ echo "<tr class=\"height5px type1\">";
 				  	echo "<td>&nbsp;</td>";
 					  if($myList)
 				  	  echo "<td>&nbsp;</td>";
@@ -1062,7 +1062,7 @@ class Observations {
 			      echo "</tr>";
 					}
 					if((($lco=="O")&&$LOid&&($this->getDsObservationProperty($LOid,'hasDrawing')))||($this->getDsObservationProperty($value['observationid'],'hasDrawing')))
-				  { echo "<tr style=\"height:5px\">";
+				  { echo "<tr class=\"height5px\">";
 					  echo "<td> &nbsp; </td>";
 					  if($lco=="C")
 					  { if($myList)
@@ -1119,6 +1119,8 @@ class Observations {
 			$dateTimeText.="&nbsp;".$time[0].":".sprintf("%02d",$time[1]);
 		}
 		$seeing = $this->getDsObservationProperty($LOid,'seeing');
+		if(($seeing<0)||($seeing>5)) 
+		  $seeing=0; 
 		$diameterText='';
 		if($largeDiameter=$this->getDsObservationProperty($LOid,'largeDiameter'))
 		  if($largeDiameter>60)
@@ -1181,7 +1183,7 @@ class Observations {
 		$bottomline="";
 		if($myList)
 		{ $bottomline.="&nbsp;-&nbsp;<a  href=\"".$link.$linkamp."addObservationToList=".urlencode($LOid)."\">".LangViewObservationField44.$listname_ss."</a>";
-		  if($objDatabase->selectSingleValue("SELECT Count(observerobjectlist.objectname) As ObjCnt FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND objectname=\"".$value['objectname']."\" AND listname=\"".$listname."\"",'ObjCnt',0)>0)
+		  if($objDatabase->selectSingleValue("SELECT Count(observerobjectlist.objectname) As ObjCnt FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND objectname=\"".$object."\" AND listname=\"".$listname."\"",'ObjCnt',0)>0)
 			  $bottomline.="&nbsp;-&nbsp;<a  href=\"".$link.$linkamp."removeObjectFromList=".urlencode($object)."&amp;showname=".urlencode($object)."\">".$object_ss.LangListQueryObjectsMessage3.$listname_ss."</a>";
 			else
 		    $bottomline.="&nbsp;-&nbsp;<a  href=\"".$link.$linkamp."addObjectToList=".urlencode($object)."&amp;showname=".urlencode($object)."\">".$object_ss.LangListQueryObjectsMessage2.$listname_ss."</a>";
@@ -1366,11 +1368,8 @@ class Observations {
 					$dir = opendir($upload_dir);
 					$original_image = $_FILES['drawing']['tmp_name'];
 					$destination_image = $upload_dir . "/" . $current_observation . "_resized.jpg";
-					$max_width = "490";
-					$max_height = "490";
-					$resample_quality = "100";
 					include $instDir . "common/control/resize.php"; // resize code
-					$new_image = image_createThumb($original_image, $destination_image, $max_width, $max_height, $resample_quality);
+					$new_image = image_createThumb($original_image, $destination_image,490,490,100);
 					move_uploaded_file($_FILES['drawing']['tmp_name'], $upload_dir . "/" . $current_observation . ".jpg");
 				  $objObservation->setDsObservationProperty($current_observation,'hasDrawing',1);
 				}

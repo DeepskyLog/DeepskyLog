@@ -8,13 +8,13 @@ echo "<img src=\"".$baseURL."styles/images/deepskylog.gif\" alt=\"DSL\" />";
 echo "</div>";
 
 echo "<div id=\"div1b\">";
-echo "<div style=\"float:right\">";
+echo "<div class=\"floatright\">";
 include $_SESSION['module'].'/menu/location.php';
 echo "</div>";
-echo "<div style=\"float:right\">";
+echo "<div class=\"floatright\">";
 include $_SESSION['module'].'/menu/instrument.php';
 echo "</div>";
-echo "<div style=\"float:right\">";
+echo "<div class=\"floatright\">";
 include $_SESSION['module'].'/menu/list.php';
 echo "</div>";
 echo "</div>";
@@ -24,7 +24,7 @@ echo "</div>";
 // Welcome line with login name
 echo "<div id=\"div2\">";
 echo "<div id=\"div2a\">";
-echo "<span class=\"mainlevel\">";
+echo "<span class=\"menuLine\" >";
 echo LangWelcome;
 echo $objUtil->checkSessionKey('module');
 echo LangWelcome1;
@@ -39,7 +39,7 @@ echo "<a href=\"".$baseURL."index.php\">"."Home"."</a>";
 echo "</span>";
 echo "</div>";
 echo "<div id=\"div2b\">";  
-echo "<span class=\"mainlevel\">";
+echo "<span class=\"menuLine\">";
 echo LangWelcome4;
 for ($i = 0; $i < count($modules);$i++)
 { $mod = $modules[$i];

@@ -1,21 +1,16 @@
-<?php
-// tolist.php
-// manages and shows lists
+<?php // tolist.php - manages and shows lists
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
-echo "<div id=\"main\" style=\"position:relative\">";
+echo "<div id=\"main\">";
 echo "<form action=\"".$baseURL."index.php?indexAction=listaction\">";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
-echo "<table>";
-echo "<tr>";
-echo "<td align=\"right\">".LangToListAddNew."</td>";
-echo "<td>"."<input style=\"width:20em;\" type=\"text\" class=\"inputfield\" name=\"addlistname\" size=\"40\" value=\"\" />"."</td>";
-echo "<td><input type=\"checkbox\" name=\"PublicList\" value=\"" . LangToListPublic . "\" />".LangToListPublic . '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-echo "<input style=\"width:10em;\"  type=\"submit\" name=\"addList\" value=\"" . LangToListAdd . "\" />";
+$content1 =LangToListAddNew;
+$content1.="<input type=\"text\" class=\"inputfield\" name=\"addlistname\" size=\"40\" value=\"\" />";
+$content2="<input type=\"checkbox\" name=\"PublicList\" value=\"" . LangToListPublic . "\" />".LangToListPublic;
+$content3="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+$content3.="<input class=\"width125px\" type=\"submit\" name=\"addList\" value=\"" . LangToListAdd . "\" />";
 if($myList)
-  echo "<input style=\"width:10em;\" type=\"submit\" name=\"renameList\" value=\"" . LangToListRename . "\" />";
-echo "</td>";
-echo"</tr>";
-echo "</table>"; 
+  $content3.="<input class=\"width125px\" type=\"submit\" name=\"renameList\" value=\"" . LangToListRename . "\" />";
+$objPresentations->line(array($content1,$content2,$content3),"LLL",array(40,30,30),30);
 echo "</form>";
 echo "<hr />";
 if($listname)
@@ -56,8 +51,8 @@ if($listname)
     if($myList)
     { $content2 =" <form action=\"".$baseURL."index.php?indexAction=listaction\">";
       $content2.="<input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
-		  $content2.="<input style=\"width:12em;\" type=\"submit\" name=\"emptyList\" value=\"" . LangToListEmpty . "\" />";
-      $content2.="<input style=\"width:12em;\" type=\"submit\" name=\"removeList\" value=\"" . LangToListMyListsRemove . "\" />";
+		  $content2.="<input class=\"width200px\" type=\"submit\" name=\"emptyList\" value=\"" . LangToListEmpty . "\" />";
+      $content2.="<input class=\"width200px\" type=\"submit\" name=\"removeList\" value=\"" . LangToListMyListsRemove . "\" />";
       $content2.="</form>";
     }
     $content =$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);

@@ -21,8 +21,6 @@ interface iUtils
   public  function pdfObjects($result);                                        // Creates a pdf document from an array of objects
   public  function pdfObjectsDetails($result, $sort='');                       // Creates a pdf detail document from an array of objects
   public  function pdfObservations($result);                                   // Creates a pdf document from an array of observations
-  public  function printNewListHeader(&$list, $link, $min, $step, $total);     // prints the << < Nr > >> navigations, allowing to enter a page number in the center field
-  public  function printNewListHeader2(&$list, $link, $min, $step, $total=0,$showNumberOfRecords=true,$showArrows=true);
   public  function printNewListHeader3(&$list, $link, $min, $step, $total=0,$showNumberOfRecords=true,$showArrows=true);
   public  function printStepsPerPage3($link,$detaillink,$steps=25);
   public  function rssObservations();                                          // Creates an rss feed
@@ -1223,7 +1221,7 @@ class Utils implements iUtils
                     "type"          => $GLOBALS[$valueA['objecttype']],
                     "page"          => $valueA[$objObserver->getObserverProperty($this->checkSessionKey('deepskylog_id',''),'standardAtlasCode','urano')],
                     "contrast"      => $valueA['objectcontrast'],
-                    "magnification" => $valueA['objectoptimalmagnification'],
+                    "magnification" => $valueA['objectoptimalmagnificationvalue'],
                     "seen"          => $valueA['objectseen'],
   	                "seendate"      => $valueA['objectlastseen']
                    );
@@ -1543,68 +1541,6 @@ class Utils implements iUtils
     }
     $pdf->ezStream();
   }  
-  public function printNewListHeader(&$list, $link, $min, $step, $total,$showNumberOfRecords=true,$showArrows=true)
-  { global $baseURL;
-	  $pages=ceil(count($list)/$step);           // total number of pages
-    if($min)                                   // minimum value
-    { $min=$min-($min%$step);                  // start display from number of $steps
-      if ($min < 0)                            // minimum value smaller than 0
-        $min=0;
-      if($min>count($list))                    // minimum value bigger than number of elements
-        $min=count($list)-(count($list)%$step);
-    }
-    else                                       // no minimum value defined
-      $min=0;
-    $max=$min+$step;                       // maximum number to be displayed
-    echo "<form action=\"".$link."\" method=\"post\">";
-    echo "<table style=\"margin:0px;padding:0px;\">";
-    echo "<tr style=\"vertical-align:middle\">";
-    if($showNumberOfRecords)
-      echo "<td style=\"vertical-align:middle\">(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" ".LangNumberOfRecordsIn." ".$pages." ".LangNumberOfRecords1Pages.")"):")")."</td>";
-    if(($listcount>$step)&&($showArrows))
-    { $currentpage=ceil($min/$step)+1;
-			echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=0\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allleft20.gif\" alt=\"&lt;&lt;\" />"."</a>"."</td>";
-		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/left20.gif\" alt=\"&lt;\" />"."</a>"."</td>";			
-		  echo "<td align=\"center\">"."<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\" />"."</td>";	
-		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/right20.gif\" alt=\"&gt;\" />"."</a>"."</td>";
-		  echo "<td>"."<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allright20.gif\" alt=\"&gt;&gt;\" />"."</a>"."</td>";
-	  }
-	  echo "</tr>";
-	  echo "</table>";    
-	  echo "</form>";
-	  return array($min,$max);
-  }
-  public function printNewListHeader2(&$list, $link, $min, $step, $total=0,$showNumberOfRecords=true,$showArrows=true)
-  { global $baseURL;
-    $pages=ceil(count($list)/$step);           // total number of pages
-    if($min)                                   // minimum value
-    { $min=$min-($min%$step);                  // start display from number of $steps
-      if ($min < 0)                            // minimum value smaller than 0
-        $min=0;
-      if($min>count($list))                    // minimum value bigger than number of elements
-        $min=count($list)-(count($list)%$step);
-    }
-    else                                       // no minimum value defined
-      $min=0;
-    $max=$min+$step;                       // maximum number to be displayed
-    echo "<form action=\"".$link."\" method=\"post\" style=\"margin:0px;padding:0px;\">";
-    echo "<div>";
-    echo "<span style=\"vertical-align:middle\">";
-    if($showNumberOfRecords)
-      echo "(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" ".LangNumberOfRecordsIn." ".$pages." ".LangNumberOfRecords1Pages.")"):")");
-    if(($listcount>$step)&&($showArrows))
-    { $currentpage=ceil($min/$step)+1;
-			echo "<a href=\"".$link."&amp;multiplepagenr=0\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allleft20.gif\" alt=\"&lt;&lt;\" />"."</a>";
-		  echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/left20.gif\" alt=\"&lt;\" />"."</a>";			
-		  echo "<input type=\"text\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\" />";	
-		  echo "<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/right20.gif\" alt=\"&gt;\" />"."</a>";
-		  echo "<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allright20.gif\" alt=\"&gt;&gt;\" />"."</a>";
-	  }
-	  echo "</span>";
-	  echo "</div>";
-	  echo "</form>";
-	  return array($min,$max);
-  }
   public function printNewListHeader3(&$list, $link, $min, $step, $total=0,$showNumberOfRecords=true,$showArrows=true)
   { global $baseURL;
 	  $pages=ceil(count($list)/$step);           // total number of pages
@@ -1618,7 +1554,7 @@ class Utils implements iUtils
     else                                       // no minimum value defined
       $min=0;
     $max=$min+$step;                       // maximum number to be displayed
-    $content="<form action=\"".$link."\" method=\"post\" style=\"margin:0px;padding:0px;\">";
+    $content="<form action=\"".$link."\" method=\"post\">";
     $content.="<div>";
     if($showNumberOfRecords)
       $content.= "(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" ".LangNumberOfRecordsIn." ".$pages." ".LangNumberOfRecords1Pages.")"):")")."&nbsp;";
@@ -1626,7 +1562,7 @@ class Utils implements iUtils
     { $currentpage=ceil($min/$step)+1;
 			$content.= "<a href=\"".$link."&amp;multiplepagenr=0\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allleft20.gif\" alt=\"&lt;&lt;0\" />"."</a>";
 		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".($currentpage>0?($currentpage-1):$currentpage)."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/left20.gif\" alt=\"&lt;\" />"."</a>";			
-		  $content.= "<input type=\"text\" name=\"multiplepagenr\" size=\"3\" class=\"inputfield\" style=\"text-align:center\" value=\"".$currentpage."\" />";	
+		  $content.= "<input type=\"text\" name=\"multiplepagenr\" size=\"3\" class=\"inputfield centered\" value=\"".$currentpage."\" />";	
 		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".($currentpage<$pages?($currentpage+1):$currentpage)."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/right20.gif\" alt=\"&gt;\" />"."</a>";
 		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allright20.gif\" alt=\"&gt;&gt;\" />"."</a>";
 		  $content.= "&nbsp;";
@@ -1944,11 +1880,11 @@ class Utils implements iUtils
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_instrument'                     ,'common/content/new_instrument.php'))) 		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_lens'                           ,'common/content/new_lens.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_site'                           ,'common/content/new_site.php'))) 		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_eyepiece'                    ,'common/content/view_eyepiece.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_filter'                      ,'common/content/view_filter.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_instrument'                  ,'common/content/view_instrument.php')))		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_lens'                        ,'common/content/view_lens.php')))		
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_location'                    ,'common/content/view_location.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_eyepiece'                    ,'common/content/change_eyepiece.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_filter'                      ,'common/content/change_filter.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_instrument'                  ,'common/content/change_instrument.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_lens'                        ,'common/content/change_lens.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_location'                    ,'common/content/change_site.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_observer'                    ,'common/content/view_observer.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('message'                            ,'common/content/message.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('search_sites'                       ,'common/content/search_locations.php')))

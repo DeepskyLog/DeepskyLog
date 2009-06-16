@@ -39,7 +39,7 @@ $objPresentations->line(array(LangAddInstrumentField5,$objInstrument->getInstrum
 $objPresentations->line(array(LangAddInstrumentField4,
                                "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"64\" name=\"focallength\" size=\"10\"  value=\"".stripslashes($objUtil->checkGetKey('focallength')).stripslashes($objInstrument->getInstrumentPropertyFromId($objUtil->checkGetKey('instrumentid'),'diameter')*$objInstrument->getInstrumentPropertyFromId($objUtil->checkGetKey('instrumentid'),'fd'))."\" />".
                                "<select name=\"focallengthunits\"> <option>inch</option> <option selected=\"selected\">mm</option> </select>".
-                               "&nbsp;<span style=\"font-style:normal\">".LangAddInstrumentOr."&nbsp;".
+                               "&nbsp;<span class=\"normal\">".LangAddInstrumentOr."&nbsp;".
                                LangAddInstrumentField3."</span>&nbsp;".
                                "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"64\" name=\"fd\" size=\"10\" value=\"".stripslashes($objUtil->checkGetKey('fd')).stripslashes($objInstrument->getInstrumentPropertyFromId($objUtil->checkGetKey('instrumentid'),'fd'))."\" />",
                                ""),

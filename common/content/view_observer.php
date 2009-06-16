@@ -55,10 +55,10 @@ echo "<hr />";
 
 if(array_key_exists('admin',$_SESSION)&&($_SESSION['admin']=="yes"))       // admin logged in
   $objPresentations->line(array(LangChangeAccountField2.":","<a href=\"mailto:".$objObserver->getObserverProperty($user,'email')."\">".$objObserver->getObserverProperty($user,'email')."</a>"),"RL",array(20,80),'',array('type10','type10'));
-$objPresentations->line(array(LangChangeAccountField3.":",$objObserver->getObserverProperty($user,'firstname')),"RL",array(20,80),'',array('type20','type20'));
-$objPresentations->line(array(LangChangeAccountField4.":",$objObserver->getObserverProperty($user,'name')),"RL",array(20,80),'',array('type10','type10'));
-$objPresentations->line(array(LangChangeAccountField7.":","<a href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=".urlencode($location_id)."\">".$location_name."</a>"),"RL",array(20,80),'',array('type20','type20'));
-$objPresentations->line(array(LangChangeAccountField8.":",($instrumentname?"<a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($objObserver->getObserverProperty($user,'stdtelescope'))."\">".(($instrumentname=="Naked eye")?InstrumentsNakedEye:$instrumentname)."</a>":"")),"RL",array(20,80),'',array('type10','type10'));
+$objPresentations->line(array(LangChangeAccountField3.":",$objObserver->getObserverProperty($user,'firstname')),"RL",array(20,80),20,array('type20','type20'));
+$objPresentations->line(array(LangChangeAccountField4.":",$objObserver->getObserverProperty($user,'name')),"RL",array(20,80),20,array('type10','type10'));
+$objPresentations->line(array(LangChangeAccountField7.":","<a href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=".urlencode($location_id)."\">".$location_name."</a>"),"RL",array(20,80),20,array('type20','type20'));
+$objPresentations->line(array(LangChangeAccountField8.":",($instrumentname?"<a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($objObserver->getObserverProperty($user,'stdtelescope'))."\">".(($instrumentname=="Naked eye")?InstrumentsNakedEye:$instrumentname)."</a>":"")),"RL",array(20,80),20,array('type10','type10'));
 if($objUtil->checkSessionKey('admin')=="yes")
 { echo "<form action=\"".$baseURL."index.php\" >";
   echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_role\" />";
@@ -196,7 +196,7 @@ while(FALSE!==($file=readdir($dir)))
 { if(("." == $file)OR(".."== $file))
     continue;                                                                   // skip current directory and directory above
   if(fnmatch($user. ".gif", $file) || fnmatch($user. ".jpg",$file) || fnmatch($user. ".png", $file))
-  { echo "<div style=\"position:relative;text-align:right;\"><img class=\"viewobserver\" src=\"".$baseURL."common/observer_pics/".$file."\" alt=\"".$firstname."&nbsp;".$name."\"></img></div>";
+  { echo "<div><img class=\"viewobserver\" src=\"".$baseURL."common/observer_pics/".$file."\" alt=\"".$firstname."&nbsp;".$name."\"></img></div>";
     echo "<hr />";
   }
 }

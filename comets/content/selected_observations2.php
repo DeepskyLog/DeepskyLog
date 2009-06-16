@@ -286,9 +286,9 @@ $content=$objUtil->printStepsPerPage3($link,"selComObs2",$step);
 $objPresentations->line(array($content),"R",array(100),20);
   
 echo "<hr />";
-echo "<table style=\"width:100%\">\n";
+echo "<table>";
 
-echo "<tr class=\"type3\">\n";
+echo "<tr class=\"type3\">";
 
 // OBJECT NAME
 
@@ -317,7 +317,7 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_obs
                                                     "&amp;mintail=" . $_GET['mintail'] .
                                                     "&amp;maxtail=" . $_GET['maxtail'] .
                                                     "&amp;sort=objectid\">" . 
-                                                    LangOverviewObservationsHeader1 . "</a></td>\n";
+                                                    LangOverviewObservationsHeader1 . "</a></td>";
 
 // OBSERVER
 
@@ -346,7 +346,7 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_obs
                                                     "&amp;mintail=" . $_GET['mintail'] .
                                                     "&amp;maxtail=" . $_GET['maxtail'] .
                                                     "&amp;sort=observerid&amp;\">" .
-                                                    LangOverviewObservationsHeader2 . "</a></td>\n";
+                                                    LangOverviewObservationsHeader2 . "</a></td>";
 
 // DATE
 
@@ -375,7 +375,7 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_obs
                                                     "&amp;mintail=" . $_GET['mintail'] .
                                                     "&amp;maxtail=" . $_GET['maxtail'] .
                                                     "&amp;sort=date&amp;\">" .
-                                                    LangOverviewObservationsHeader4 . "</a></td>\n";
+                                                    LangOverviewObservationsHeader4 . "</a></td>";
 
 // MAGNITUDE
 echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_observations".
@@ -403,7 +403,7 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_obs
                                                     "&amp;mintail=" . $_GET['mintail'] .
                                                     "&amp;maxtail=" . $_GET['maxtail'] .
                                                     "&amp;sort=mag&amp;\">" .
-                                                    LangNewComet1 . "</a></td>\n";
+                                                    LangNewComet1 . "</a></td>";
 
 // INSTRUMENT
 echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_observations".
@@ -431,7 +431,7 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_obs
                                                     "&amp;mintail=" . $_GET['mintail'] .
                                                     "&amp;maxtail=" . $_GET['maxtail'] .
                                                     "&amp;sort=inst&amp;\">" .
-                                                    LangViewObservationField3 . "</a></td>\n";
+                                                    LangViewObservationField3 . "</a></td>";
 
 // COMA
 echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_observations".
@@ -459,7 +459,7 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_obs
                                                     "&amp;mintail=" . $_GET['mintail'] .
                                                     "&amp;maxtail=" . $_GET['maxtail'] .
                                                     "&amp;sort=coma&amp;\">" .
-                                                    LangViewObservationField19 . "</a></td>\n";
+                                                    LangViewObservationField19 . "</a></td>";
 
 // DC
 echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_observations".
@@ -487,7 +487,7 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_obs
                                                     "&amp;mintail=" . $_GET['mintail'] .
                                                     "&amp;maxtail=" . $_GET['maxtail'] .
                                                     "&amp;sort=dc&amp;\">" .
-                                                    LangViewObservationField18b . "</a></td>\n";
+                                                    LangViewObservationField18b . "</a></td>";
 
 // TAIL
 echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_observations".
@@ -515,7 +515,7 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_selected_obs
                                                     "&amp;mintail=" . $_GET['mintail'] .
                                                     "&amp;maxtail=" . $_GET['maxtail'] .
                                                     "&amp;sort=tail&amp;\">" .
-                                                    LangViewObservationField20b . "</a></td>\n<td></td>\n</tr>\n";
+                                                    LangViewObservationField20b . "</a></td><td></td></tr>";
 
 
 while(list ($key, $value) = each($obs)) // go through observations array
@@ -597,9 +597,9 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
       // OUTPUT
 
-      echo("<tr $typefield>\n
-            <td><a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($object) . "\">" . $objects->getName($object) . "</a></td>\n
-            <td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($observer) . "\">" . $observers->getObserverProperty($observer,'firstname') . "&nbsp;" . $observers->getObserverProperty($observer,'name') . "</a></td>\n
+      echo("<tr $typefield>
+            <td><a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($object) . "\">" . $objects->getName($object) . "</a></td>
+            <td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=" . urlencode($observer) . "\">" . $observers->getObserverProperty($observer,'firstname') . "&nbsp;" . $observers->getObserverProperty($observer,'name') . "</a></td>
             <td>");
 
       if($instrument != InstrumentsNakedEye && $instrument != "")
@@ -643,7 +643,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
       echo(")");
 
-      echo("</td>\n
+      echo("</td>
             <td>$mag</td>
             <td>$instrument</td>
             <td>$coma</td>
@@ -669,14 +669,14 @@ while(list ($key, $value) = each($obs)) // go through observations array
         }
       }
 
-     echo("</a></td>\n</tr>\n");
+     echo("</a></td></tr>");
 
      }
 
     $count++; // increase counter
   }
 
-  echo ("</table>\n");
+  echo ("</table>");
   echo "<hr />";
   }
 

@@ -68,11 +68,11 @@ echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField12;
 echo "</td>";
 echo "<td>";
-echo("<select name=\"atlas\" class=\"inputfield\">\n");
+echo("<select name=\"atlas\" class=\"inputfield\">");
   while(list($key,$value)=each($objAtlas->atlasCodes))
-	  if($key==$atlas) echo("<option selected value=\"" . $key . "\">".$value."</option>\n"); 
-		else echo("<option value=\"" . $key . "\">".$value."</option>\n");
-echo("</select>\n");
+	  if($key==$atlas) echo("<option selected value=\"" . $key . "\">".$value."</option>"); 
+		else echo("<option value=\"" . $key . "\">".$value."</option>");
+echo("</select>");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"atlasPageNumber\" size=\"4\" value=\"\" />");
 echo("</td>");
 echo("</tr>");
@@ -91,8 +91,8 @@ while(list($key, $value) = each($constellations))
 asort($cons);
 reset($cons);
 while(list($key, $value) = each($cons))
-  echo("<option value=\"$key\">".$value."</option>\n");
-echo("</select>\n");
+  echo("<option value=\"$key\">".$value."</option>");
+echo("</select>");
 echo("</td>");
 // MINIMUM DECLINATION
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
@@ -111,15 +111,15 @@ echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField11;
 echo "</td>";
 echo "<td>";
-echo("<select name=\"type\" class=\"inputfield\">\n");
+echo("<select name=\"type\" class=\"inputfield\">");
 echo("<option value=\"\">&nbsp;</option>"); // empty field
 $types = $objObject->getDsObjectTypes();
 while(list($key, $value) = each($types))
   $stypes[$value] = $$value;
 asort($stypes);
 while(list($key, $value) = each($stypes))
-  echo("<option value=\"$key\">".$value."</option>\n");
-echo("</select>\n");
+  echo("<option value=\"$key\">".$value."</option>");
+echo("</select>");
 echo("</td>");
 // MAXIMUM DECLINATION
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
@@ -163,7 +163,7 @@ echo("</td>");
 // MAXIMUM RIGHT ASCENSION
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField8;
-echo("</td>\n<td>\n");
+echo("</td><td>");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"maxRAhours\" size=\"2\" value=\"\" />&nbsp;h&nbsp;");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"maxRAminutes\" size=\"2\" value=\"\" />&nbsp;m&nbsp;");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"maxRAseconds\" size=\"2\" value=\"\" />&nbsp;s&nbsp;");
@@ -174,32 +174,32 @@ echo("<tr>");
 // MINIMIM SURFACE BRIGHTNESS
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField5;
-echo("</td>\n<td>\n");
+echo("</td><td>");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"minsb\" size=\"4\" value=\"\" />");
 echo("</td>");
 
 // MINIMIM SIZE
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField13;
-echo("</td>\n<td>\n");
+echo("</td><td>");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"minsize\" size=\"4\" value=\"\" />");
-echo("&nbsp;&nbsp;<select name=\"size_min_units\" class=\"inputfield\"><option>&nbsp;</option><option value=\"min\">" . LangNewObjectSizeUnits1 . "</option><option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option></select>\n</td>");
-echo("</tr>\n");
+echo("&nbsp;&nbsp;<select name=\"size_min_units\" class=\"inputfield\"><option>&nbsp;</option><option value=\"min\">" . LangNewObjectSizeUnits1 . "</option><option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option></select></td>");
+echo("</tr>");
 
 echo("<tr>");
 // MAXIMUM SURFACE BRIGHTNESS
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField6;
-echo("</td>\n<td>\n");
+echo("</td><td>");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"maxsb\" size=\"4\" value=\"\" />");
 echo("</td>");
 // MAXIMUM SIZE
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField14;
-echo("</td>\n<td>\n");
+echo("</td><td>");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"maxsize\" size=\"4\" value=\"\" />");
-echo("&nbsp;&nbsp;<select name=\"size_max_units\" class=\"inputfield\"><option>&nbsp;</option><option value=\"min\">" . LangNewObjectSizeUnits1 . "</option><option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option></select>\n</td>");
-echo("</tr>\n");
+echo("&nbsp;&nbsp;<select name=\"size_max_units\" class=\"inputfield\"><option>&nbsp;</option><option value=\"min\">" . LangNewObjectSizeUnits1 . "</option><option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option></select></td>");
+echo("</tr>");
 
 echo("</table>");
 echo("<hr />");
@@ -209,24 +209,24 @@ echo("<tr>");
 // OBSERVER 
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangViewObservationField2;
-echo("</td>\n<td width=\"25%\">\n");
-echo("<select name=\"observer\" class=\"inputfield\">\n");
+echo("</td><td width=\"25%\">");
+echo("<select name=\"observer\" class=\"inputfield\">");
 echo("<option value=\"\">&nbsp;</option>"); // empty field
 $obs = $objObserver->getPopularObserversByName();
 while(list($key, $value) = each($obs))
-   echo("<option value=\"$key\">".$value."</option>\n");
-echo("</select>\n");
+   echo("<option value=\"$key\">".$value."</option>");
+echo("</select>");
 echo("</td>");
 // INSTRUMENT 
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangViewObservationField3;
-echo("</td>\n<td>\n");
-echo("<select name=\"instrument\" class=\"inputfield\">\n");
+echo("</td><td>");
+echo("<select name=\"instrument\" class=\"inputfield\">");
 echo("<option value=\"\">&nbsp;</option>"); // empty field
 $inst = $objInstrument->getSortedInstrumentsList('name');
 while(list($key, $value) = each($inst))
-  echo("<option value=\"".$key."\">".$value."</option>\n");
-echo("</select>\n");
+  echo("<option value=\"".$key."\">".$value."</option>");
+echo("</select>");
 echo("</td>");
 echo("</tr>");
 
@@ -264,8 +264,8 @@ echo("</td>");
 // MINIMUM DIAMETER
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangViewObservationField13;
-echo("</td>\n
-      <td>\n
+echo("</td>
+      <td>
       <input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"mindiameter\" size=\"10\" />
       <select name=\"mindiameterunits\" class=\"inputfield\"><option selected=\"selected\">&nbsp;</option><option>inch</option><option>mm</option></select>
       </td>");
@@ -305,8 +305,8 @@ echo("</td>");
 // MAXIMUM DIAMETER
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangViewObservationField14;
-echo("</td>\n
-      <td>\n
+echo("</td>
+      <td>
       <input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"maxdiameter\" size=\"10\" />
       <select name=\"maxdiameterunits\" class=\"inputfield\"><option selected=\"selected\">&nbsp;</option><option>inch</option><option>mm</option></select>
       </td>");
@@ -321,14 +321,14 @@ echo("<tr>");
 // SITE 
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangViewObservationField4;
-echo("</td>\n<td width=\"25%\">\n");
-echo("<select name=\"site\" class=\"inputfield\">\n");
+echo("</td><td width=\"25%\">");
+echo("<select name=\"site\" class=\"inputfield\">");
 echo("<option value=\"\">&nbsp;</option>"); // empty field
 $sites = $objLocation->getSortedLocations('name');
 while(list($key, $value) = each($sites))
   if($key != 0) // remove empty location in database
-    echo("<option value=\"$value\">".$objLocation->getLocationPropertyFromId($value,'name')."</option>\n");
-echo("</select>\n");
+    echo("<option value=\"$value\">".$objLocation->getLocationPropertyFromId($value,'name')."</option>");
+echo("</select>");
 echo("</td>");
 echo("<td width=\"25%\"> &nbsp; </td> <td width=\"25%\"> &nbsp;</td>"); 
 echo("</tr>");
@@ -337,7 +337,7 @@ echo("<tr>");
 // MINIMUM Latitude
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField15;
-echo("</td>\n<td width=\"25%\">\n");
+echo("</td><td width=\"25%\">");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"minLatDegrees\" size=\"3\" value=\"\" />&nbsp;&deg;&nbsp;");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"minLatMinutes\" size=\"2\" value=\"\" />&nbsp;&#39;&nbsp;");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"minLatSeconds\" size=\"2\" value=\"\" />&nbsp;&quot;&nbsp;");
@@ -345,7 +345,7 @@ echo("</td>");
 // MINIMUM LIMITING MAGNITUDE
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangViewObservationField25;
-echo("</td>\n<td width=\"25%\">\n");
+echo("</td><td width=\"25%\">");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"minlimmag\" size=\"4\" value=\"\" />");
 echo("</td>");
 echo("</tr>");
@@ -354,7 +354,7 @@ echo("<tr>");
 // MAXIMUM latitude
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangQueryObjectsField16;
-echo("</td>\n<td width=\"25%\">\n");
+echo("</td><td width=\"25%\">");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"maxLatDegrees\" size=\"3\" value=\"\" />&nbsp;&deg;&nbsp;");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"maxLatMinutes\" size=\"2\" value=\"\" />&nbsp;&#39;&nbsp;");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"maxLatSeconds\" size=\"2\" value=\"\" />&nbsp;&quot;&nbsp;");
@@ -362,7 +362,7 @@ echo("</td>");
 // MAXIMUM LIMITING MAGNITUDE
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangViewObservationField26;
-echo("</td>\n<td width=\"25%\">\n");
+echo("</td><td width=\"25%\">");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"maxlimmag\" size=\"4\" value=\"\" />");
 echo("</td>");
 echo("</tr>");
@@ -371,7 +371,7 @@ echo("<tr>");
 // MINIMUM SEEING
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangViewObservationField27;
-echo("</td>\n<td width=\"25%\">\n");
+echo("</td><td width=\"25%\">");
 echo("<select name=\"minseeing\" class=\"inputfield\"><option value=\"\">&nbsp;</option>");
 // EXCELLENT
 echo("<option value=\"1\">".SeeingExcellent."</option>");
@@ -387,7 +387,7 @@ echo("</select></td>");
 // MAXIMUM SEEING
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangViewObservationField28;
-echo("</td>\n<td width=\"25%\">\n");
+echo("</td><td width=\"25%\">");
 echo("<select name=\"maxseeing\" class=\"inputfield\"><option value=\"\">&nbsp;</option>");
 // EXCELLENT
 echo("<option value=\"1\">".SeeingExcellent."</option>");
@@ -412,8 +412,8 @@ echo("<td width=\"25%\"><input type=\"checkbox\" class=\"inputfield\" name=\"dra
 // MINIMUM VISIBILITY
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangViewObservationField23;
-echo("</td>\n
-      <td>\n
+echo("</td>
+      <td>
       <select name=\"minvisibility\" class=\"inputfield\"><option value=\"\">&nbsp;</option>");
 // Very simple, prominent object
 echo("<option value=\"1\">".LangVisibility1."</option>");
@@ -440,8 +440,8 @@ echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">". LangQueryObservat
 // MAXIMUM VISIBILITY
 echo("<td class=\"fieldname\" align=\"right\" width=\"25%\">");
 echo LangViewObservationField24;
-echo("</td>\n
-      <td>\n
+echo("</td>
+      <td>
       <select name=\"maxvisibility\" class=\"inputfield\"><option value=\"\">&nbsp;</option>");
 // Very simple, prominent object
 echo("<option value=\"1\">".LangVisibility1."</option>");

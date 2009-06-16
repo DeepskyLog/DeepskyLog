@@ -45,8 +45,8 @@ class Filters implements iFilters
    if($color == FilterColorDeepViolet)  return FiltersColorDeepViolet;
    return "-";
  }
- public  function getEchoListColor($color)
- { $tempColorList="<select name=\"color\" class=\"inputfield\">";
+ public  function getEchoListColor($color,$disabled="")
+ { $tempColorList="<select name=\"color\" class=\"inputfield\" ".$disabled." >";
    $tempColorList.="<option value=\"\">&nbsp;</option>";
  	 $tempColorList.="<option ".(($color==FilterColorLightRed)?   "selected=\"selected\" ":"")."value=\"".FilterColorLightRed.   "\">".FiltersColorLightRed."</option>";
 	 $tempColorList.="<option ".(($color==FilterColorRed)?        "selected=\"selected\" ":"")."value=\"".FilterColorRed.        "\">".FiltersColorRed."</option>";
@@ -66,8 +66,8 @@ class Filters implements iFilters
 	 $tempColorList.="</select>";
  	 return $tempColorList;
  }
- public  function getEchoListType($type)
- { $tempTypeList="<select name=\"type\" class=\"inputfield\">";
+ public  function getEchoListType($type,$disabled="")
+ { $tempTypeList="<select name=\"type\" class=\"inputfield\" ".$disabled." >";
    $tempTypeList.= "<option ".(($type==FilterOther)?     " selected=\"selected\" ":"")." value=\"".FilterOther.     "\">".FiltersOther."</option>";
    $tempTypeList.= "<option ".(($type==FilterBroadBand)? " selected=\"selected\" ":"")." value=\"".FilterBroadBand. "\">".FiltersBroadBand."</option>";
    $tempTypeList.= "<option ".(($type==FilterNarrowBand)?" selected=\"selected\" ":"")." value=\"".FilterNarrowBand."\">".FiltersNarrowBand."</option>";

@@ -54,17 +54,17 @@ if($_GET['name'] || $_GET['icqname']) // at least one search field filled in
     $objPresentations->line(array("<h4>".LangSelectedObjectsTitle."</h4>",$content),"LR",array(60,40),30);
  		$objPresentations->line(array($content2),"R",array(100),20);
     echo "<hr />";
-    echo "<table style=\"width:100%\">";
+    echo "<table>";
     echo "<tr class=\"type3\">";
-    echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_objects&amp;name=" . urlencode($_GET['name']) . "&amp;sort=name&amp;previous=$previous\">".LangOverviewObjectsHeader1."</a></td>\n";
-    echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_objects&amp;name=" . urlencode($_GET['name']) . "&amp;sort=icqname&amp;previous=$previous\">".LangNewObjectIcqname."</a></td>\n";
+    echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_objects&amp;name=" . urlencode($_GET['name']) . "&amp;sort=name&amp;previous=$previous\">".LangOverviewObjectsHeader1."</a></td>";
+    echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_objects&amp;name=" . urlencode($_GET['name']) . "&amp;sort=icqname&amp;previous=$previous\">".LangNewObjectIcqname."</a></td>";
     // Check the number of objects. If there are less than 500 objects, we 
     // enable the sorting on seen. 
     if (count($result) <= 500)
-    { echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_objects&amp;name=" . urlencode($_GET['name']) . "&amp;sort=seen&amp;previous=$previous\">".LangOverviewObjectsHeader7."</a></td>\n";
+    { echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_result_query_objects&amp;name=" . urlencode($_GET['name']) . "&amp;sort=seen&amp;previous=$previous\">".LangOverviewObjectsHeader7."</a></td>";
     }
     else
-    { echo "<td>".LangOverviewObjectsHeader7."</a></td>\n";
+    { echo "<td>".LangOverviewObjectsHeader7."</a></td>";
     }
     while(list($key,$value)=each($result))
     { if(($count>=$min)&&($count<$max))
@@ -89,19 +89,17 @@ if($_GET['name'] || $_GET['icqname']) // at least one search field filled in
           { $seen = "<a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . urlencode($objCometObject->getId($value)) . "\">Y</a>";
           }
         }
-        echo "<tr $typefield>\n";
-        echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($objCometObject->getId($value)) . "\">$value</a></td>\n";
-        echo "<td>$icqname</td>\n";
-        echo "<td class=\"seen\">$seen</td>\n</tr>\n";
+        echo "<tr $typefield>";
+        echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_detail_object&amp;object=" . urlencode($objCometObject->getId($value)) . "\">$value</a></td>";
+        echo "<td>$icqname</td>";
+        echo "<td class=\"seen\">$seen</td>";
+        echo "</tr>";
       }
       $count++; // increase line counter
     }   
     $_SESSION['object_query'] = $result;
-    echo "</table>\n";
+    echo "</table>";
     echo "<hr />";
-//         echo "<p><a href=\"comets/objects.pdf\" rel=\"external\">".LangExecuteQueryObjectsMessage4."</a></p>\n";
-//         echo "<p><a href=\"comets/objects.csv\" rel=\"external\">".LangExecuteQueryObjectsMessage6."</a></p><p>".LangExecuteQueryObjectsMessage1."</p>\n";
-//         echo "</div>\n</body>\n</html>";
   }
   else // no results found
   { $objPresentations->line(array("<h4>".LangSelectedObjectsTitle."</h4>"),"L",array(),30);

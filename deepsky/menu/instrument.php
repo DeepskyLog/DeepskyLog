@@ -15,7 +15,7 @@ if($loggedUser)
   $instr=$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdtelescope');	
 	echo "<select name=\"activateTelescope\" class=\"menuField menuDropdown\" onchange=\"location=this.options[this.selectedIndex].value;\">";
   while(list($key, $value) = each($result))
-		echo("<option ".(($value==$instr)?"selected=\"selected\"":"")." value=\""  . $link . "&amp;activeTelescopeId=$value\">" . $objInstrument->getInstrumentPropertyFromId($value,'name') . "</option>\n");
+		echo("<option ".(($value==$instr)?"selected=\"selected\"":"")." value=\""  . $link . "&amp;activeTelescopeId=$value\">" . $objInstrument->getInstrumentPropertyFromId($value,'name') . "</option>");
 	echo "</select>";
 	echo "</div>";
 	$link="";

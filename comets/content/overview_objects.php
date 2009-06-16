@@ -57,11 +57,11 @@ echo "<hr />";
 if(sizeof($obstest) > 0)
 { $count = 0; // counter for altering table colors
   // OBJECT TABLE HEADERS
-  echo "<table style=\"width:100%\">";
+  echo "<table>";
   echo "<tr class=\"type3\">";
-  echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_view_objects&amp;name&amp;previous=$previous\">" . LangOverviewObjectsHeader1 . "</a></td>\n";
-  echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_view_objects&amp;icqname&amp;previous=$previous\">" . LangNewObjectIcqname . "</a></td>\n";
-  echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_view_objects&amp;sort=seen&amp;previous=$previous\">".LangOverviewObjectsHeader7."</a></td>\n";
+  echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_view_objects&amp;name&amp;previous=$previous\">" . LangOverviewObjectsHeader1 . "</a></td>";
+  echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_view_objects&amp;icqname&amp;previous=$previous\">" . LangNewObjectIcqname . "</a></td>";
+  echo "<td><a href=\"".$baseURL."index.php?indexAction=comets_view_objects&amp;sort=seen&amp;previous=$previous\">".LangOverviewObjectsHeader7."</a></td>";
 
   while(list ($key, $value) = each($obs)) // go through object array
   { if($count >= $min && $count < $max)

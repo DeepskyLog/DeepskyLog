@@ -38,11 +38,11 @@ else
   $min = 0;
 $contentSteps=$objUtil->printStepsPerPage3($link,"allInsts",$step);
 list ($min,$max,$content) = $objUtil->printNewListHeader3($telescopes, $link, $min, $step);
-echo "<div id=\"main\" style=\"position:relative\">";
+echo "<div id=\"main\">";
 $objPresentations->line(array("<h4>".LangOverviewInstrumentsTitle."</h4>",$content),"LR",array(70,30),30);
 $objPresentations->line(array($contentSteps),"R",array(100),20);
 echo "<hr />";
-echo "<table width=\"100%\">";
+echo "<table>";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_instruments&amp;sort=name&amp;previous=$previous\">".LangOverviewInstrumentsName."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_instruments&amp;sort=diameter&amp;previous=$previous\">".LangOverviewInstrumentsDiameter."</a></td>";

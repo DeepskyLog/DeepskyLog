@@ -86,6 +86,7 @@ define("LangWelcome1","&nbsp;module&nbsp;of&nbsp;");
 define("LangWelcome2","You&nbsp;are&nbsp;logged&nbsp;in&nbsp;as&nbsp;");
 define("LangWelcome3","You&nbsp;are&nbsp;not&nbsp;logged&nbsp;in");
 define("LangWelcome4","Modules: ");
+define("LangWelcome5", "Your account is on the waitlist to be validated.");
 define("LangManage","Manage");
 define("LangManageDots","Manage...");
 
@@ -443,7 +444,7 @@ define("LangAddInstrumentField5", "Type");
 define("LangAddInstrumentField5Expl", "");
 define("LangAddInstrumentField6", "Fixed magnification");
 define("LangAddInstrumentField6Expl", "Only for binoculars, finder scopes, ...");
-define("LangAddInstrumentOr", "OR");
+define("LangAddInstrumentOr", "or");
 define("LangAddInstrumentAdd", "Add instrument");
 define("LangAddInstrumentStdTelescope", "Adapt standard telescope");
 define("LangAddInstrumentExisting", "Add an existing instrument");

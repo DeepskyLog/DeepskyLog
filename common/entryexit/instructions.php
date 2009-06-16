@@ -38,8 +38,7 @@ else
 	}
   $step = 25;
 	if(array_key_exists('multiplepagenr',$_GET))
-	  $min = ($_GET['multiplepagenr']-1)*$step;
-	elseif(array_key_exists('multiplepagenr',$_POST))
+	  $min = ($_GET['multiplepagenr']-1)*$step;	elseif(array_key_exists('multiplepagenr',$_POST))
 	  $min = ($_POST['multiplepagenr']-1)*$step;
 	elseif(array_key_exists('min',$_GET))
 	  $min=$_GET['min'];
@@ -196,7 +195,7 @@ else
 	}
 	if(array_key_exists('menuSearch',$_GET))
 	{ $menuSearch=$_GET['menuSearch'];
-	  $_SESSION['menus']['menuSearch']=$menuLogin;
+	  $_SESSION['menus']['menuSearch']=$menuSearch;
 		$menuscookie="";
 	  while(list($key,$value)=each($_SESSION['menus']))
 		  $menuscookie.=$key.":".$value.";";

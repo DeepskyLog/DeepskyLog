@@ -24,7 +24,7 @@ $objPresentations->line(array("<h4>".LangTopObserversTitle."</h4>",$content),"LR
 $objPresentations->line(array($content2),"R",array(100),20);
 echo "<hr />";
 $count = 0;
-echo "<table style=\"width:100%\">";
+echo "<table>";
 echo "<tr class=\"type3\">";
 echo "<td>" . LangTopObserversHeader1 . "</td>";
 echo "<td>" . LangTopObserversHeader2 . "</td>";

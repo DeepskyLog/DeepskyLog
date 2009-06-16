@@ -41,7 +41,7 @@ echo "<div id=\"main\">";
 $objPresentations->line(array("<h4>".LangOverviewLensTitle."</h4>",$content),"LR",array(70,30),30);
 $objPresentations->line(array($contentSteps),"R",array(100),20);
 echo "<hr />";
-echo "<table width=\"100%\">";
+echo "<table>";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_lenses&amp;sort=name&amp;previous=$previous\">".LangViewLensName."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_lenses&amp;sort=type&amp;previous=$previous\">".LangViewLensFactor."</a></td>";

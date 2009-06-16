@@ -40,7 +40,7 @@ elseif(array_key_exists('indexAction',$_GET)&&($_GET['indexAction']=='check_logi
     if($passwd_db==$passwd)                                                     // check if passwords match
     { $_SESSION['lang']=$objObserver->getObserverProperty($login,'language');
 			if($GLOBALS['objObserver']->getObserverProperty($login,'role',2)=="2")                         // user in waitlist already tries to log in
-			{ $loginError="loginuser: user in waitlist";
+			{ $loginErrorCode="LangWelcome5";
 			  $loggedUser="";
 			} 
       elseif($GLOBALS['objObserver']->getObserverProperty($login,'role',2)=="1")                     // validated user

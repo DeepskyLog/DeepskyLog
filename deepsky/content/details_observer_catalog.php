@@ -30,7 +30,7 @@ else
   $content="<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&amp;partof=1\">".LangShowWithPartOfs."</a>";			
 $objPresentations->line(array($content),"L",array(100),50);
 $resultarray=$objObject->getObjectsFromCatalog($cat);
-echo "<table style=\"width:100%\">";
+echo "<table>";
 for ($i = 1; $i <= $numberOfObjects; $i++) 
 { if((($i - 1) % 100) == 0)
   { echo  "<tr>";
@@ -54,7 +54,7 @@ for ($i = 1; $i <= $numberOfObjects; $i++)
   } 
   if((($i - 1) % 10) == 0)
   { echo  "<tr>";
-    echo  "<td style=\"background: #FFFFFF; padding: 5px 5px 5px 5px; text-align: right;\">";
+    echo  "<td class=\"observercatalogbackground\">";
 	  echo  $i;
 		echo  '-';
 		echo  $i+9;
@@ -70,19 +70,19 @@ for ($i = 1; $i <= $numberOfObjects; $i++)
 	else
 	  $ref = $object; 
 	if (in_array($object, $observedObjectsFromCatalog)) 
-  { echo "<td style=\"background: #33FF00; padding: 5px 5px 5px 5px; text-align: center;\">";
-		echo "<a title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."&amp;observer=".urlencode($_GET['user'])."\" style=\"color: #000000;\">".$object."</a>";
+  { echo "<td class=\"observercataloggreen\">";
+		echo "<a class=\"observercatalog\" title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."&amp;observer=".urlencode($_GET['user'])."\" >".$object."</a>";
 		echo "</td>";
   }
 	else
 	  if ($partof && in_array($object, $observedObjectsFromCatalogPartOf)) 
-  	{	echo "<td style=\"background: #FFFF00; padding: 5px 5px 5px 5px; text-align: center;\">";
-		  echo "<a title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" style=\"color: #000000;\">".$object."</a>";
+  	{	echo "<td class=\"observercatalogyellow\">";
+		  echo "<a class=\"observercatalog\" title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" >".$object."</a>";
 			echo "</td>"; 
 		}
 		else
-  	{	echo "<td style=\"background: #FF0000; padding: 5px 5px 5px 5px; text-align: center;\">";
-		  echo "<a title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" style=\"color: #000000;\">".$object."</a>";
+  	{	echo "<td class=\"observercatalogred\">";
+		  echo "<a class=\"observercatalog\" title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" >".$object."</a>";
 			echo "</td>";
 		}
   if(($i % 10) == 0)

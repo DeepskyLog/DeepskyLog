@@ -83,12 +83,12 @@ class Observers implements iObservers
 	  if($FF)
 	    echo "<thead>";
     echo "<tr class=\"type3\">";
-		echo "<td style=\"text-align:center\">".LangTopObserversHeader1."</td>";
-		echo "<td style=\"text-align:center\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=observer&amp;catalog=".urlencode($catalog)."\">".LangTopObserversHeader2."</a></td>";
-		echo "<td style=\"text-align:center\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=totaal&amp;catalog="  .urlencode($catalog)."\">".LangTopObserversHeader3."</a></td>";
-		echo "<td style=\"text-align:center\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=jaar&amp;catalog="    .urlencode($catalog)."\">".LangTopObserversHeader4."</a></td>";
-		echo "<td style=\"width:125px;\" align=\"center\">";
-		echo "<select style=\"width:125px;\" onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\" class=\"inputfield\">";
+		echo "<td class=\"centered\">".LangTopObserversHeader1."</td>";
+		echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=observer&amp;catalog=".urlencode($catalog)."\">".LangTopObserversHeader2."</a></td>";
+		echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=totaal&amp;catalog="  .urlencode($catalog)."\">".LangTopObserversHeader3."</a></td>";
+		echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=jaar&amp;catalog="    .urlencode($catalog)."\">".LangTopObserversHeader4."</a></td>";
+		echo "<td class=\"width125px centered\">";
+		echo "<select class=\"width125px inputfield\" onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 		while(list($key,$value)=each($catalogs))
 		{ if(!($value))
 		    $value="-----------";
@@ -99,7 +99,7 @@ class Observers implements iObservers
 		}
 		echo "</select>";
 		echo "</td>";
-		echo "<td style=\"text-align:center\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=objecten&amp;catalog=".urlencode($catalog)."\">".LangTopObserversHeader6."</a></td>";
+		echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=objecten&amp;catalog=".urlencode($catalog)."\">".LangTopObserversHeader6."</a></td>";
 		if($FF)
 		  echo "<td>&nbsp;&nbsp;</td>";
 		echo"</tr>";
@@ -116,16 +116,16 @@ class Observers implements iObservers
 		  { $name = $objObserver->getObserverProperty($key,'name');
 		    $firstname = $objObserver->getObserverProperty($key,'firstname');
 		    $outputtable .= "<tr class=\"type".(2-($count%2))."\">";
-		    $outputtable.="<td style=\"text-align:center\">" . ($count + 1) . "</td><td> <a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($key)."\">$firstname&nbsp;$name</a> </td>";
+		    $outputtable.="<td class=\"centered\">" . ($count + 1) . "</td><td> <a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($key)."\">$firstname&nbsp;$name</a> </td>";
 		    if($sort=="totaal") $value2 = $value; else $value2 = $objObservation->getDsObservationsCountFromObserver($key);
-		    $outputtable .= "<td style=\"text-align:center\"> $value2 &nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf("%.2f", (($value2 / $numberOfObservations) * 100)). "%)</td>";
+		    $outputtable .= "<td class=\"centered\"> $value2 &nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf("%.2f", (($value2 / $numberOfObservations) * 100)). "%)</td>";
 		    if($sort=="jaar") $observationsThisYear = $value; else $observationsThisYear = $objObservation->getObservationsLastYear($key);
 		    if ($numberOfObservationsThisYear != 0) $percentObservations = ($observationsThisYear / $numberOfObservationsThisYear) * 100; else $percentObservations = 0;
-		    $outputtable .= "<td style=\"text-align:center\">". $observationsThisYear . "&nbsp;&nbsp;&nbsp;&nbsp;(".sprintf("%.2f", $percentObservations)."%)</td>";
+		    $outputtable .= "<td class=\"centered\">". $observationsThisYear . "&nbsp;&nbsp;&nbsp;&nbsp;(".sprintf("%.2f", $percentObservations)."%)</td>";
 		    if($sort=="catalog") $objectsCount = $value; else $objectsCount = $objObservation->getObservedCountFromCatalogOrList($key,$catalog);
-				$outputtable .= "<td  style=\"text-align:center\"> <a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($catalog)."&amp;user=".urlencode($key)."\">". $objectsCount . "</a> (" . sprintf("%.2f",(($objectsCount / $objectsInCatalog)*100)) . "%)</td>";
+				$outputtable .= "<td class=\"centered\"> <a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($catalog)."&amp;user=".urlencode($key)."\">". $objectsCount . "</a> (" . sprintf("%.2f",(($objectsCount / $objectsInCatalog)*100)) . "%)</td>";
 		    if($sort=="objecten") $numberOfObjects = $value; else $numberOfObjects = $objObservation->getNumberOfObjects($key);
-		    $outputtable .= "<td style=\"text-align:center\">". $numberOfObjects . "&nbsp;&nbsp;&nbsp;&nbsp;(".sprintf("%.2f", (($numberOfObjects / $numberOfDifferentObjects) * 100))."%)</td>";
+		    $outputtable .= "<td class=\"centered\">". $numberOfObjects . "&nbsp;&nbsp;&nbsp;&nbsp;(".sprintf("%.2f", (($numberOfObjects / $numberOfDifferentObjects) * 100))."%)</td>";
 		    $outputtable .= "</tr>";
 		    $countline++;
 		  }
@@ -137,11 +137,11 @@ class Observers implements iObservers
       $outputtable .= "</tbody>";
       $outputtable .= "<tfoot>";
     }
-		$outputtable .= "<tr class=\"type3\" style=\"text-align:center\"><td>".LangTopObservers1."</td><td></td>".
-		                "<td style=\"text-align:center\">$numberOfObservations</td>" .
-			              "<td style=\"text-align:center\">$numberOfObservationsThisYear</td>" .
-		 							  "<td style=\"text-align:center\">".$objectsInCatalog."</td>" .
-									  "<td style=\"text-align:center\">".$numberOfDifferentObjects."</td></tr>";
+		$outputtable .= "<tr class=\"type3 centered\"><td>".LangTopObservers1."</td><td></td>".
+		                "<td class=\"centered\">$numberOfObservations</td>" .
+			              "<td class=\"centered\">$numberOfObservationsThisYear</td>" .
+		 							  "<td class=\"centered\">".$objectsInCatalog."</td>" .
+									  "<td class=\"centered\">".$numberOfDifferentObjects."</td></tr>";
     if($FF)
       $outputtable .= "</tfoot>";
 		$outputtable .= "</table>";
@@ -237,10 +237,7 @@ class Observers implements iObservers
 		      include $instDir."common/control/resize.php";                                             // resize code
 		      $original_image = $_FILES['picture']['tmp_name'];
 		      $destination_image = $upload_dir . "/" . $_SESSION['deepskylog_id'] . ".jpg"; 
-		      $max_width = "300";
-		      $max_height = "300";
-		      $resample_quality = "75";
-		      $new_image = image_createThumb($original_image, $destination_image, $max_width, $max_height, $resample_quality);
+		      $new_image = image_createThumb($original_image,$destination_image,300,300,75);
 		    }
 		    $entryMessage.=LangValidateAccountMessage5;
 		    $_GET['user']=$_SESSION['deepskylog_id'];

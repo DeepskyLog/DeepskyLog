@@ -34,7 +34,6 @@ if(count($_SESSION['Qobj'])>1) //===============================================
     $objPresentations->line(array("<a href=\"".$link."&amp;showPartOfs=0\">".LangListQueryObjectsMessage12."</a>",$content2),"LR",array(70,30),20);
 	else
     $objPresentations->line(array("<a href=\"".$link."&amp;showPartOfs=1\">".LangListQueryObjectsMessage13."</a>",$content2),"LR",array(70,30),20);
-//	echo "<span style=\"text-align:right\">&nbsp;&nbsp;&nbsp;<a href=\"".$baseURL."index.php?indexAction=query_objects\">".LangExecuteQueryObjectsMessage1."</a></span>";  
   $link.="&amp;showPartOfs=".$showPartOfs;
 	echo "<hr />";
 	$_GET['min']=$min;

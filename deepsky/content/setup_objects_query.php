@@ -33,15 +33,15 @@ echo("<tr>");
 echo("<td class=\"fieldname\" align=\"right\">");
 echo LangQueryObjectsField1;
 echo("</td><td>");
-echo("<select name=\"catalog\" class=\"inputfield\">\n");
+echo("<select name=\"catalog\" class=\"inputfield\">");
 echo("<option value=\"\">-----</option>"); // empty field
 $catalogs = $objObject->getCatalogs(); // should be sorted
 while(list($key, $value) = each($catalogs))
   if($value==$catalog)
-    echo("<option selected=\"selected\" value=\"$value\">$value</option>\n");
+    echo("<option selected=\"selected\" value=\"$value\">$value</option>");
   else
-    echo("<option value=\"$value\">$value</option>\n");
-echo("</select>\n");
+    echo("<option value=\"$value\">$value</option>");
+echo("</select>");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"255\" name=\"catNumber\" size=\"30\" value=\"" . $catNumber .  "\" />");
 echo("</td>");
 // ATLAS PAGE NUMBER
@@ -51,12 +51,12 @@ if($pageError)
 echo(" class=\"fieldname\" align=\"right\">");
   echo LangQueryObjectsField12; 
   echo("</td><td>");
-  echo("<select name=\"atlas\" class=\"inputfield\">\n");
+  echo("<select name=\"atlas\" class=\"inputfield\">");
   echo("<option value=\"\">-----</option>"); // empty field
   while(list($key,$value)=each($objAtlas->atlasCodes))
-    if($key==$atlas) echo("<option selected value=\"" . $key . "\">".$value."</option>\n"); 
-	  else echo("<option value=\"" . $key . "\">".$value."</option>\n");
-  echo("</select>\n");
+    if($key==$atlas) echo("<option selected value=\"" . $key . "\">".$value."</option>"); 
+	  else echo("<option value=\"" . $key . "\">".$value."</option>");
+  echo("</select>");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"atlasPageNumber\" size=\"4\" value=\"" . $atlasPageNumber .  "\" />"); 
   echo("</td>");
   echo("</tr>");
@@ -66,7 +66,7 @@ echo(" class=\"fieldname\" align=\"right\">");
   echo("<td class=\"fieldname\" align=\"right\">");
   echo LangQueryObjectsField2;
   echo("</td><td>");
-  echo("<select name=\"con\" class=\"inputfield\">\n");
+  echo("<select name=\"con\" class=\"inputfield\">");
   echo("<option value=\"\">-----</option>"); // empty field
   $constellations = $objObject->getConstellations(); // should be sorted
   while(list($key, $value) = each($constellations))
@@ -76,10 +76,10 @@ echo(" class=\"fieldname\" align=\"right\">");
   if(array_key_exists('con',$_GET)) $con=$_GET['con']; else $con='';
   while(list($key, $value) = each($cons))
     if($value==$con)
-      echo("<option selected value=\"$key\">".$value."</option>\n");
+      echo("<option selected value=\"$key\">".$value."</option>");
 	else
-      echo("<option value=\"$key\">".$value."</option>\n");
-  echo("</select>\n"); 
+      echo("<option value=\"$key\">".$value."</option>");
+  echo("</select>"); 
   echo("</td>");
   // TYPE
   echo("<td class=\"fieldname\" align=\"right\">");
@@ -94,10 +94,10 @@ echo(" class=\"fieldname\" align=\"right\">");
   if(array_key_exists('type',$_GET)) $type=$_GET['type']; else $type='';
   while(list($key, $value) = each($stypes))
     if($value==$type)
-	  echo("<option selected value=\"$key\">".$value."</option>\n");
+	  echo("<option selected value=\"$key\">".$value."</option>");
 	else
-	  echo("<option value=\"$key\">".$value."</option>\n");
-  echo("</select>\n");
+	  echo("<option value=\"$key\">".$value."</option>");
+  echo("</select>");
   echo("</td>"); 
   echo("</tr>");
   
@@ -191,12 +191,12 @@ echo(" class=\"fieldname\" align=\"right\">");
   if($minSizeError) echo(" style=\"color:red\"");
   echo(" class=\"fieldname\" align=\"right\">");
   echo LangQueryObjectsField13;
-  echo("</td>\n<td>\n");
+  echo("</td><td>");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"minSize\" size=\"4\" value=\"" . $minSize . "\" />");
   echo("&nbsp;&nbsp;<select name=\"size_min_units\" class=\"inputfield\">");
   if($size_min_units=="min") echo("<option selected value=\"min\">" . LangNewObjectSizeUnits1 . "</option>"); else echo("<option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>");
   if($size_min_units=="sec") echo("<option selected value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>"); else echo("<option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>");
-  echo("</select>\n</td>");
+  echo("</select></td>");
   // MAXIMUM SIZE
   echo("<td"); 
   if($maxSizeError) echo(" style=\"color:red\"");
@@ -207,7 +207,7 @@ echo(" class=\"fieldname\" align=\"right\">");
   echo("&nbsp;&nbsp;<select name=\"size_max_units\" class=\"inputfield\">");
   if($size_max_units=="min") echo("<option selected value=\"min\">" . LangNewObjectSizeUnits1 . "</option>"); else echo("<option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>");
   if($size_max_units=="sec") echo("<option selected value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>"); else echo("<option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>");
-  echo("</select>\n</td>");
+  echo("</select></td>");
   echo("</tr>");
 
 if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
@@ -218,7 +218,7 @@ if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
     if($minContrastError) echo(" style=\"color:red\"");
     echo(" class=\"fieldname\" align=\"right\">");
     echo LangQueryObjectsField18;
-    echo("</td>\n");
+    echo("</td>");
     echo("<td>");
     echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"minContrast\" size=\"4\" value=\"" . $minContrast .  "\" />");
     echo("</td>");
@@ -227,7 +227,7 @@ if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
     if($maxContrastError) echo(" style=\"color:red\"");
     echo(" class=\"fieldname\" align=\"right\">");
     echo LangQueryObjectsField17;
-    echo("</td>\n<td>\n");
+    echo("</td><td>");
     echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"maxContrast\" size=\"4\" value=\"" . $maxContrast .  "\" />");
     echo("</td>");
     echo("</tr>");
@@ -239,15 +239,15 @@ if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
     echo(" class=\"fieldname\" align=\"right\">");
     echo LangQueryObjectsField19;
     echo("</td><td>");
-    echo("<select name=\"inList\" class=\"inputfield\">\n");
+    echo("<select name=\"inList\" class=\"inputfield\">");
     echo("<option value=\"\">-----</option>"); // empty field
     $lists = $objList->getLists(); 
     while(list($key, $value) = each($lists))
       if($value==$inList)
-        echo("<option selected value=\"$value\">$value</option>\n");
+        echo("<option selected value=\"$value\">$value</option>");
     else
-        echo("<option value=\"$value\">$value</option>\n");
-    echo("</select>\n");
+        echo("<option value=\"$value\">$value</option>");
+    echo("</select>");
     echo("</td>");
     // NOT IN LIST
   /*
@@ -255,16 +255,16 @@ if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
     if($listError) echo(" style=\"color:red\"");
     echo(" class=\"fieldname\" align=\"right\">");
     echo LangQueryObjectsField20;
-    echo("</td><td>\n");
-    echo("<select name=\"notInList\">\n");
+    echo("</td><td>");
+    echo("<select name=\"notInList\">");
     echo("<option value=\"\">&nbsp;</option>"); // empty field
     $lists = $objList->getLists(); 
     while(list($key, $value) = each($lists))
       if($value==$notInList)
-        echo("<option selected value=\"$value\">$value</option>\n");
+        echo("<option selected value=\"$value\">$value</option>");
     else
-        echo("<option value=\"$value\">$value</option>\n");
-    echo("</select>\n");
+        echo("<option value=\"$value\">$value</option>");
+    echo("</select>");
     echo("</td>");
   */
     echo("</tr>");

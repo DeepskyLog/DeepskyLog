@@ -86,6 +86,7 @@ define("LangWelcome1","&nbsp;module&nbsp;van&nbsp;");
 define("LangWelcome2","Je&nbsp;bent&nbsp;ingelogd&nbsp;als&nbsp;");
 define("LangWelcome3","Je&nbsp;bent&nbsp;niet&nbsp;ingelogd");
 define("LangWelcome4","Modules: ");
+define("LangWelcome5", "Jouw account zit in de wachtlijst om gevalideerd te worden.");
 define("LangManage","Beheer");
 define("LangManageDots","Beheer...");
 
@@ -443,7 +444,7 @@ define("LangAddInstrumentField5", "Type");
 define("LangAddInstrumentField5Expl", "");
 define("LangAddInstrumentField6", "Vaste vergroting");
 define("LangAddInstrumentField6Expl", "Enkel voor verrekijkers, zoekers, ...");
-define("LangAddInstrumentOr", "OF");
+define("LangAddInstrumentOr", "of");
 define("LangAddInstrumentAdd", "Voeg instrument toe");
 define("LangAddInstrumentStdTelescope", "Pas standaard instrument aan");
 define("LangAddInstrumentExisting", "Voeg een bestaand instrument toe");

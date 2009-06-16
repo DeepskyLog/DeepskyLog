@@ -42,12 +42,12 @@ elseif(array_key_exists('min',$_GET))
 else
   $min = 0;
 list ($min,$max,$content) = $objUtil->printNewListHeader3($observers, $link, $min, $step);
-echo "<div id=\"main\" style=\"position:relative\">";
+echo "<div id=\"main\">";
 $objPresentations->line(array("<h4>".LangViewObserverTitle."</h4>",$content),"LR",array(70,30),30);
 $content=$objUtil->printStepsPerPage3($link,"allObs",$step);
 $objPresentations->line(array($content),"R",array(100),20);
 echo "<hr />";
-echo "<table width=\"100%\">";
+echo "<table>";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=id&amp;previous=$previous\">id</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=name&amp;previous=$previous\">".LangViewObserverName."</a></td>";

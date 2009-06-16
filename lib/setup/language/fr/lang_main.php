@@ -36,7 +36,7 @@
 //  LangMenuExpand
 //  LangMenuCollapse
 //  LangQuickPickHelp
-
+//  LangWelcome5
 define("LangGeneralObservations","observations");
 
 define("LangIndexPleaseWait","Prière d'attendre un moment pendant le recherche des donné¿½es...");
@@ -86,6 +86,7 @@ define("LangWelcome1","&nbsp;de&nbsp;");
 define("LangWelcome2","Vous&nbsp;êtes&nbsp;rentré&nbsp;comme&nbsp;");
 define("LangWelcome3","Vous&nbsp;n'êtes&nbsp;pas&nbsp;rentré");
 define("LangWelcome4","Les modules: ");
+define("LangWelcome5", "Your account is on the waitlist to be validated.");
 define("LangManage","Gestion");
 define("LangManageDots","Gestion...");
 

@@ -11,7 +11,7 @@ interface iPresentation
   public  function getDSSDeepskyLiveLinks($object);
   public  function getDSSDeepskyLiveLinks1($object);
   public  function getDSSDeepskyLiveLinks2($object);
-  public  function line($content,$alignment='',$widths=array(),$lineheight='');
+  public  function line($content,$alignment='',$widths=array(),$lineheight='',$classes=array());
   public  function presentationInt($value, $nullcontition='', $nullvalue='');          // if the null condtion is met, it returns the nullvalue, otherwise returns the value
   public  function presentationInt1($value, $nullcondition='', $nullvalue='');         // if the null condtion is met, it returns the nullvalue, otherwise returns the value formatted %1.1f
   public  function promptWithLink($prompt,$promptDefault,$javaLink,$text);             // displays an anchor link with $text as text, showing when clicked an inputbox with the question $prompt and $promptDefault answer, jumping to $javalink (java format) afterwards 
@@ -28,15 +28,15 @@ interface iPresentation
 class Presentations implements iPresentation
 { public  function alertMessage($theMessage)
   { global $baseURL,$indexAction;
-    echo "<div id=\"veil\" style=\"position:absolute;left:0px;top:0px;width:0px;height:0px;opacity:0.10;filter:alpha(opacity=10);background-color:#000000;\">";
+    echo "<div id=\"veil\">";
 	  echo "</div>"; 
-	  echo "<div id=\"dialogback\" style=\"position:absolute;left:0px;top:0px;width:0px;height:0px;opacity:0.30;filter:alpha(opacity=30);background-color:#000000;\">";
+	  echo "<div id=\"dialogback\">";
 	  echo "</div>";
-	  echo "<div id=\"dialog\" style=\"text-align:center;position:absolute;left:0px;top:0px;width:0px;height:0px;background-color:#FFFFFF;\">";
-	  echo "<div id=\"dialogdiv1\" style=\"padding:10px;overflow:auto;position:absolute;left:0px;top:0px;width:0px;height:0px;background-color:#FFFFFF;border-width:thin;border-style:solid;border-color:#000000;\">";
+	  echo "<div id=\"dialog\">";
+	  echo "<div id=\"dialogdiv1\">";
 	  echo $theMessage;
 	  echo "</div>";
-	  echo "<div id=\"dialogdiv2\" style=\"text-align:center;vertical-align:middle;position:absolute;left:0px;top:0px;width:0px;height:0px;background-color:#FFFFFF;border-width:thin;border-style:solid;border-color:#000000;\">";
+	  echo "<div id=\"dialogdiv2\">";
 	  echo "<input type=\"submit\" onclick=\"confirmAlertMessage();\" value=\"Ok\" />";
     echo "</div>";
 	  echo "</div>";
@@ -211,15 +211,14 @@ class Presentations implements iPresentation
 	  }
   	return $topline;
   }
-  public  function line($content,$alignment='',$widths=array(),$lineheight='',$classes=array(),$Overflow='')
+  public  function line($content,$alignment='',$widths=array(),$lineheight='',$classes=array())
   { echo "<div class=\"containerLine\" ".($lineheight?"style=\"height:".$lineheight."px;\"":'').">";
   	for($m=0,$l=0,$a="L",$w=floor(100/count($content));$m<count($content);$m++,$l+=$w)
   	{ if(isset($widths)&&array_key_exists($m,$widths))
   	    $w=$widths[$m];
   	  if(isset($alignment))
   	    $a=substr($alignment,$m,1);
-  	  echo "<div class=\"containerLinePart".$a.$Overflow.((array_key_exists($m,$classes))?" ".$classes[$m]:'')."\" style=\"left:".$l."%;width:".$w."%;".($lineheight?"line-height:".$lineheight."px;height:".$lineheight."px;":'')."\">".$content[$m].(($a=="R")?"&nbsp;&nbsp;&nbsp;":"")."</div>";
-  	  
+  	  echo "<div class=\"containerLinePart".$a.((array_key_exists($m,$classes))?" ".$classes[$m]:'')."\" style=\"left:".$l."%;width:".$w."%;".($lineheight?"line-height:".$lineheight."px;height:".$lineheight."px;":'')."\">".$content[$m].(($a=="R")?"&nbsp;&nbsp;&nbsp;":"")."</div>";
   	}
   	echo "</div>";
   }
@@ -340,7 +339,7 @@ class Presentations implements iPresentation
 	  echo "</td>";        
 	  echo "</tr>";        
 	  echo "<tr>";
-		echo "<td colspan=\"2\" style=\"text-align: center\">";           
+		echo "<td colspan=\"2\" class=\"centered\">";           
 	  echo "<a href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc."\">".trim($header0)."</a>";;
 	  echo "</td>";        
 	  echo "</tr>";
@@ -360,7 +359,7 @@ class Presentations implements iPresentation
 	  echo "</td>";        
 	  echo "</tr>";        
 	  echo "<tr >";
-	  echo "<td colspan=\"2\" style=\"text-align: center\">";           
+	  echo "<td colspan=\"2\" class=\"centered\">";           
 	  echo "<a href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\">".trim($header0)."</a>";;
 	  echo "</td>";        
 	  echo "</tr>";

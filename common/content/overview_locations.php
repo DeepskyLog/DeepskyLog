@@ -42,7 +42,7 @@ echo "<div id=\"main\">";
 $objPresentations->line(array("<h4>".LangViewLocationTitle."</h4>",$content),"LR",array(70,30),30);
 $objPresentations->line(array($contentSteps),"R",array(100),20);
 echo "<hr />";
-echo "<table width=\"100%\">";
+echo "<table>";
 echo "<tr class=\"type3\">";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_locations&amp;sort=region&amp;previous=$previous\">".LangViewLocationProvince."</a></td>";

@@ -3,7 +3,7 @@ interface iInstruments
 { public  function addInstrument($name, $diameter, $fd, $type, $fixedMagnification, $observer);    // adds a new instrument to the database. The name, diameter, fd and type should be given as parameters. 
   public  function getAllInstrumentsIds($id);                                                      // returns a list with all id's which have the same name as the name of the given id
   public  function getInstrumentEchoType($instrumentType);                                         // returns the text corresponding to a certain instrument type
-  public  function getInstrumentEchoListType($type);                                               // returns the html code for a list containing the Instrument types, with the $type selected
+  public  function getInstrumentEchoListType($type, $disabled="");                                    // returns the html code for a list containing the Instrument types, with the $type selected
   public  function getInstrumentId($name, $observer);                                              // returns the id for this instrument
   public  function getInstrumentPropertyFromId($id,$property,$defaultValue='');                    // returns the specified property for instrument id                    
   public  function getInstrumentUsedFromId($id);                                                   // returns the number of times the instrument is used in observations
@@ -36,8 +36,8 @@ class Instruments implements iInstruments
     if($instrumentType== InstrumentMaksutov)          return InstrumentsMaksutov;
     return "unkown instrument type";
   }
-  public  function getInstrumentEchoListType($type)
-  { $tempTypeList ="<select name=\"type\" class=\"inputfield\">";
+  public  function getInstrumentEchoListType($type, $disabled="")
+  { $tempTypeList ="<select name=\"type\" class=\"inputfield\" ".$disabled." >";
     $tempTypeList.="<option ".(($type==InstrumentReflector)?"selected=\"selected\" ":"")."value=\"".InstrumentReflector."\">".InstrumentsReflector."</option>";
     $tempTypeList.="<option ".(($type==InstrumentRefractor)?"selected=\"selected\" ":"")."value=\"".InstrumentRefractor."\">".InstrumentsRefractor."</option>";
     $tempTypeList.="<option ".(($type==InstrumentCassegrain)?"selected=\"selected\" ":"")."value=\"".InstrumentCassegrain."\">".InstrumentsCassegrain."</option>";
@@ -120,7 +120,7 @@ class Instruments implements iInstruments
 		      echo "<td><a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($value)."\">".InstrumentsNakedEye."</a></td>";
 		    else
 		      echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_instrument&amp;instrument=".urlencode($value)."\">".$name."</a></td>";
-		    echo "<td align=\"center\">$diameter</td>\n";
+		    echo "<td align=\"center\">$diameter</td>";
 		    echo "<td align=\"center\">$fd</td>";
 				echo "<td align=\"center\">";
 		    if($fixedMagnification>0)

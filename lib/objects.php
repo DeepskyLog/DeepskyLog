@@ -56,7 +56,7 @@ class Objects implements iObjects
 	private function calcContrastAndVisibility($object, $showname, $magnitude,$SBobj,$diam1,$diam2,&$contrast,&$contype,&$popup,&$prefMag)
 	{ global $objContrast;
 	  $contrast = "-";
-    $prefMag = "-"; 
+    $prefMag = array("-","");; 
     $popupT = "";
 	  $contrastCalc = ""; 
     $magni = $magnitude;
@@ -92,9 +92,9 @@ class Objects implements iObjects
 	  if($contrastCalc)
 	  { $contrast=sprintf("%.2f", $contrastCalc[0]);
 	  	 if($contrastCalc[2]=="")
-	  	   $prefMag=sprintf("%d", $contrastCalc[1])."x";
+	  	   $prefMag=array(sprintf("%d", $contrastCalc[1])."x","");
 	  	 else
-		     $prefMag=sprintf("%d", $contrastCalc[1])."x - ".$contrastCalc[2];
+		     $prefMag=array(sprintf("%d", $contrastCalc[1])."x"," - ".$contrastCalc[2]);
     } 
   }
   private function calculateSize($diam1, $diam2)                                // Construct a string from the sizes
@@ -405,6 +405,7 @@ class Objects implements iObjects
         $obs[$j]['objectcontrasttype'] = '-';
         $obs[$j]['objectcontrastpopup'] = $popupT;
         $obs[$j]['objectoptimalmagnification'] = '-';
+        $obs[$j]['objectoptimalmagnificationvalue'] = '-';
       }
     else
       for($j=0;$j<count($obs);$j++)
@@ -412,7 +413,8 @@ class Objects implements iObjects
         $obs[$j]['objectcontrast'] = $contrast;
         $obs[$j]['objectcontrasttype'] = $contype;
         $obs[$j]['objectcontrastpopup'] = $popup;
-        $obs[$j]['objectoptimalmagnification'] = $contrastcalc1;
+        $obs[$j]['objectoptimalmagnification'] = $contrastcalc1[0].$contrastcalc1[1];
+        $obs[$j]['objectoptimalmagnificationvalue'] = $contrastcalc1[0];
       }
     return $obs;
   }
@@ -751,12 +753,15 @@ class Objects implements iObjects
 	  $sb=sprintf("%01.1f", $this->getDSOProperty($object,'subr'));
 	  $popup=$this->prepareObjectsContrast();
     if($popup)
-    { $prefMag = '-';
+    { $prefMagDetails=array("-","");
       $contype = '-';
       $contrast = '-';
     }
     else
-      $this->calcContrastAndVisibility($object,$object,$this->getDsoProperty($object,'mag'),$this->getDsoProperty($object,'SBObj'),$this->getDsoProperty($object,'diam1'),$this->getDsoProperty($object,'diam2'),$contrast,$contype,$popup,$prefMag);
+    { $prefMagDetails=array("-","");
+      $this->calcContrastAndVisibility($object,$object,$this->getDsoProperty($object,'mag'),$this->getDsoProperty($object,'SBObj'),$this->getDsoProperty($object,'diam1'),$this->getDsoProperty($object,'diam2'),$contrast,$contype,$popup,$prefMagDetails);
+    }
+    $prefMag=$prefMagDetails[0].$prefMagDetails[1];  
     echo "<form action=\"".$baseURL."index.php?indexAction=detail_object\"><div>";    	
     echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
     echo "<input type=\"hidden\" name=\"object\" value=\"".$object."\" />";
@@ -766,7 +771,7 @@ class Objects implements iObjects
 	                                  $objAtlas->atlasCodes[$standardAtlasCode].LangViewObjectField10,$this->getDsoProperty($object,$standardAtlasCode)),
 	                            "RLRL",array(),20,array("type20","type20","type20","type20"));
 	  else                                                                                                                                                                                                      // object name       / atlas page
-	   $objPresentations-Line(array(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(stripslashes($object))."\">".(stripslashes($object))."</a>",
+	   $objPresentations->line(array(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(stripslashes($object))."\">".(stripslashes($object))."</a>",
 	                                "&nbsp;","&nbsp;"),
 	                          "RLRL",array(),20,array("type20","type20","type20","type20"));
  	  $objPresentations->line(array(LangViewObjectField2,($alt?$alt:"-"),LangViewObjectField2b,($containst? $containst . "/":"(-)/").($partoft?$partoft:"-")),
@@ -804,10 +809,10 @@ class Objects implements iObjects
   public  function showObjects($link, $min, $max, $ownShow='', $showRank=0, $step=25)        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
   { global $FF, $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil,$objPresentations;
 	  $atlas='';
-    echo "<table width=\"100%\">\n";
+    echo "<table width=\"100%\">";
     if($FF)
       echo "<thead>";
-    echo "<tr class=\"type3\">\n";
+    echo "<tr class=\"type3\">";
     if($showRank)
 	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader9,  $link."&amp;sort=objectpositioninlist");
     $objPresentations->tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=showname");
@@ -826,7 +831,7 @@ class Objects implements iObjects
     if($myList)
       echo("<td align=\"center\"><a href=\"" . $link . "&amp;min=" . $min . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">&nbsp;P&nbsp;</a></td>");
  	  if($FF)
-      echo "<td style=\"width:10px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+      echo "<td class=\"width10px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
     echo "</tr>";
  	  if($FF)
  	    echo "</thead>";
@@ -837,21 +842,21 @@ class Objects implements iObjects
 	  if($max>count($_SESSION['Qobj']))
 	 	  $max=count($_SESSION['Qobj']);
     while($count<$max)
-    { echo "<tr style=\"height:5px\" ".(($_SESSION['Qobj'][$count]['objectname']==$ownShow)?"class=\"type3\"":"class=\"type".(2-($countline%2)."\"")).">";
+    { echo "<tr ".(($_SESSION['Qobj'][$count]['objectname']==$ownShow)?"class=\"type3 height5px\"":"class=\"height5px type".(2-($countline%2)."\"")).">";
       if(($showRank==1)&&$myList)
         echo "<td align=\"center\"><a href=\"#\" onclick=\"theplace = prompt('".LangNewPlaceInList."','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
       elseif($showRank)
 	      echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</td>";
-      echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" >".$_SESSION['Qobj'][$count]['showname']."</a></td>\n";
-      echo "<td align=\"center\">".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."</td>\n";
-      echo "<td align=\"center\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>\n";
-      echo "<td align=\"center\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>\n";
-      echo "<td align=\"center\">".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."</td>\n";
+      echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" >".$_SESSION['Qobj'][$count]['showname']."</a></td>";
+      echo "<td align=\"center\">".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."</td>";
+      echo "<td align=\"center\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>";
+      echo "<td align=\"center\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>";
+      echo "<td align=\"center\">".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."</td>";
       if($loggedUser) 
 	    { $page = $_SESSION['Qobj'][$count][$atlas];
-        echo "<td align=\"center\" onmouseover=\"Tip('".$objAtlas->atlasCodes[$atlas]."')\">".$page."</td>\n";
-        echo "<td align=\"center\" class=\"".$_SESSION['Qobj'][$count]['objectcontrasttype']."\" onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectcontrastpopup']."')\">".$_SESSION['Qobj'][$count]['objectcontrast']."</td>\n";
-        echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectoptimalmagnification']."</td>\n";
+        echo "<td align=\"center\" onmouseover=\"Tip('".$objAtlas->atlasCodes[$atlas]."')\">".$page."</td>";
+        echo "<td align=\"center\" class=\"".$_SESSION['Qobj'][$count]['objectcontrasttype']."\" onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectcontrastpopup']."')\">".$_SESSION['Qobj'][$count]['objectcontrast']."</td>";
+        echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectoptimalmagnification']."</td>";
         echo "<td align=\"center\" class=\"seen\">".$_SESSION['Qobj'][$count]['objectseenlink']."</td>";
         echo "<td align=\"center\" class=\"seen\">".$_SESSION['Qobj'][$count]['objectlastseenlink']."</td>";
 	    }
@@ -872,7 +877,7 @@ class Objects implements iObjects
         echo "<tr><td>&nbsp;</td></tr>";   
       echo "</tbody>";
     }
-    echo "</table>\n";
+    echo "</table>";
   }
   public  function sortObjects($objectList, $sort, $reverse=false)              // Sort the array of objectList on the $sort field, and in second order on the showname field 
   { if(!$objectList||count($objectList)<2)
@@ -951,7 +956,7 @@ class Objects implements iObjects
 	public  function validateObject()                                                 // checks if the add new object form is correctly filled in and eventually adds the object to the database
 	{ global $objUtil,$objObject, $objObserver, $entryMessage, $loggedUser, $developversion;
 	  if(!($loggedUser))
-	    throw new Exception(LangException002c);
+	     new Exception(LangException002c);
 	  if($objUtil->checkPostKey('newobject'))
 		{ $check = true;
 		  $ra=$objUtil->checkPostKey('RAhours',0)+($objUtil->checkPostKey('RAminutes',0)/60)+($objUtil->checkPostKey('RAseconds',0)/3600);
