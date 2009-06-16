@@ -28,7 +28,7 @@ try
   $includeFile=$objUtil->utilitiesDispatchIndexAction();                                                  // Determine the page to show
   include 'common/entryexit/data.php';                                                                    // Get data for the form, object data, observation data, etc.
   if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
-    echo "<p style=\"centered\">".$entryMessage."</p><hr />";
+    echo "<p class=\"centered\">".$entryMessage."</p><hr />";
   include $includeFile;                                                                                   // Center content section	
   echo    "</div>";
 }
