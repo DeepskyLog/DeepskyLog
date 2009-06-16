@@ -1,13 +1,30 @@
 <?php
 // add_xml_observations.php
 // adds observations from an OpenAstronomyLog xml file to the database
-global $objDatabase;
-global $message;
+// global $objDatabase;
+// global $message;
 
 if($_FILES['xml']['tmp_name']!="") {
   $xmlfile=$_FILES['xml']['tmp_name'];
 } else {
-  $message = LangXMLError3;
+
+	// Beste Wim, mijn excuses, de parameter is $entryMessage, en niet $message, mea culpa.
+	// Bovendien doe ik steeds $entryMessage.=iets, want het kan zijn dat code hiervoor ook al iets wou zeggen van een andere error.
+	
+  $entryMessage.= LangXMLError3;
+// Wim, naast het geven van een error messge, moet je ook zeggen welke pagina getoond moet worden.
+// Ik neem als voorbeeld en waarschijnlijk meest logische pagina terug de add_xml pagina
+// Dat doe je via de indexAction parameter, en die kan en mag je rechtstreeks wijzigen in de code. 
+// Het is dan net of je de url aanvraag voor die pagina doorkreeg.
+
+// Dus:
+
+  $_GET['indexAction']="add_xml";
+  
+// Bovendien zijn de global declaraties hier niet nodig want je zit niet binnen een functie, dus je bent al in de global scope. 
+
+// Ik heb ze dan ook verwijderd uit het script bovenaan. Ze mogen volledig weg, ik heb ze gewoon in comment gezet zodat je't nog even zag... 
+
   return;
 }
 
@@ -22,7 +39,9 @@ $searchNode = $dom->getElementsByTagName( "observations" );
 $version = $searchNode->item(0)->getAttribute("version");
 
 if ($version != "2.0") {
-  $message = LangXMLError1;
+  $entryMessage.= LangXMLError1;
+  $_GET['indexAction']="add_xml";
+  
   return;
 }
 
@@ -70,7 +89,9 @@ if ($dom->schemaValidate($xmlschema)) {
     }
   }
   if ($id == "") {
-    $message = LangXMLError2 . $deepskylog_username . LangXMLError2a;
+    $entryMessage.= LangXMLError2 . $deepskylog_username . LangXMLError2a;
+    $_GET['indexAction']="add_xml";
+    
     return;
   }
 
@@ -1020,7 +1041,8 @@ if ($dom->schemaValidate($xmlschema)) {
     }
   }
 } else {
-  $message = LangXMLError3;
+  $entryMessage.= LangXMLError3;
+  $_GET['indexAction']="add_xml";
   return;
 }
 ?>
