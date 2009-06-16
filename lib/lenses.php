@@ -98,13 +98,13 @@ class Lenses implements iLenses
 	  }
   }
   public  function validateSaveLens()                                           // validates and saves a lens and returns a message 
-  { global $objUtil;
+  { global $objUtil,$loggedUser;
     if($objUtil->checkPostKey('add')
     && $objUtil->checkPostKey('lensname')
     && $objUtil->checkPostKey('factor')
-    && $objUtil->checkSessionKey('deepskylog_id'))
+    && $loggedUser)
     { $id = $this->addLens($_POST['lensname'], $_POST['factor']);     
-    	$this->setLensProperty($id, 'observer', $_SESSION['deepskylog_id']);
+    	$this->setLensProperty($id, 'observer', $loggedUser);
       return LangValidateLensMessage2;
     }
     if($objUtil->checkPostKey('change')
@@ -113,7 +113,7 @@ class Lenses implements iLenses
     && $objUtil->checkPostKey('factor'))
     { $this->setLensProperty($_POST['id'], 'name', $_POST['lensname']);
       $this->setLensProperty($_POST['id'], 'factor', $_POST['factor']);
-      //$this->setLensProperty($_POST['id'], 'observer', $_SESSION['deepskylog_id']);
+      //$this->setLensProperty($_POST['id'], 'observer', $loggedUser);
       return LangValidateLensMessage5;
     }
  }

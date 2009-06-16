@@ -81,7 +81,7 @@ if(sizeof($obstest) > 0)
       {$seen = "<a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . urlencode($objCometObject->getId($value[0])) . "\">X</a>";
       }
       if ($loggedUser)
-      { $see = $objCometObject->getObservedbyUser($name, $_SESSION['deepskylog_id']);
+      { $see = $objCometObject->getObservedbyUser($name, $loggedUser);
         if ($see == 1)
         { $seen = "<a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . urlencode($objCometObject->getId($value[0])) . "\">Y</a>";
         }

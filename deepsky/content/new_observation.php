@@ -25,7 +25,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
   echo "<hr />";
 	echo "<div class=\"inputDiv\">";
   // Location =====================================================================================================================================================================
-  $sites = $objLocation->getSortedLocationsList("name", $_SESSION['deepskylog_id']);
+  $sites = $objLocation->getSortedLocationsList("name", $loggedUser);
 	$theLoc=(($observationid)?$objObservation->getDsObservationProperty($_GET['observation'],'locationid'):$objUtil->checkPostKey('site'));
 	$contentLoc="<select class=\"inputfield requiredField\" name=\"site\">";
 	while(list($key,$value)=each($sites))
@@ -92,7 +92,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$contentDescription="<textarea name=\"description\" class=\"description inputfield requiredField\" cols=\"1\" rows=\"1\">".$theDescription."</textarea>";
 	// Language =====================================================================================================================================================================
 	$theLanguage=(($observationid)?$objObservation->getDsObservationProperty($observationid,'language'):(($tempLang=$objUtil->checkPostKey('description_language'))?$tempLang:$objObserver->getObserverProperty($loggedUser,'observationlanguage')));
-	$allLanguages = $objLanguage->getAllLanguages($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'language'));
+	$allLanguages = $objLanguage->getAllLanguages($objObserver->getObserverProperty($loggedUser,'language'));
 	$contentLanguage="<select name=\"description_language\"  class=\"inputfield requiredField\">";
 	while (list ($key, $value) = each($allLanguages))
 		$contentLanguage.= "<option value=\"".$key."\"".(($theLanguage==$key)?"selected=\"selected\"":'').">".$value."</option>";
@@ -227,7 +227,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$content1="";$content2="";$content3="";
 	if(substr($objObject->getSeen($object),0,1)!="-")
 	  $content1="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\">".LangViewObjectObservations." ".$object."</a>";
-	if (array_key_exists('deepskylog_id', $_SESSION) && $_SESSION['deepskylog_id'])
+	if ($loggedUser)
 		$content2="<a href=\"".$baseURL."index.php?indexAction=add_observation&amp;object=".urlencode($object)."\">".LangViewObjectAddObservation.$object."</a>";
 	if($myList)
 		if($objList->checkObjectInMyActiveList($object))

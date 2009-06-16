@@ -34,17 +34,13 @@ else
     throw new Exception($errormessage);
   }
   else
-  { if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
-		{ if(array_key_exists('listname',$_SESSION) && $_SESSION['listname'] && ($objList->checkList($_SESSION['listname'])==2))
-			{ for ($i=0;$i<count($objects);$i++)
-  			  $objList->addObjectToList($objects[$i][0],$objects[$i][1]);
-				$_GET['indexAction']='listaction';
-			}
-			else
-	  		throw new Exception(LangListImportError2);
-    }
+  { if($myList)
+		{ for ($i=0;$i<count($objects);$i++)
+  	    $objList->addObjectToList($objects[$i][0],$objects[$i][1]);
+			$_GET['indexAction']='listaction';
+		}
 		else
-		  throw new Exception(LangListImportError1);
+	 		throw new Exception(LangListImportError2);
   }
 }
 ?>

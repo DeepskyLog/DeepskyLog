@@ -84,7 +84,7 @@ if($_GET['name'] || $_GET['icqname']) // at least one search field filled in
         { $seen = "<a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . urlencode($objCometObject->getId($value)) . "\">X</a>";
         }
         if($loggedUser)
-        { $see = $objCometObject->getObservedbyUser($name, $_SESSION['deepskylog_id']);
+        { $see = $objCometObject->getObservedbyUser($name, $loggedUser);
           if ($see == 1) // object has been seen by the observer logged in
           { $seen = "<a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=" . urlencode($objCometObject->getId($value)) . "\">Y</a>";
           }

@@ -164,12 +164,12 @@ class Instruments implements iInstruments
 		}
   }
   public  function validateSaveInstrument()
-	{ global $objUtil, $objDatabase, $objObserver;
+	{ global $objUtil, $objDatabase, $objObserver,$loggedUser;
 	  if(($objUtil->checkPostKey('adaption')==1)
     && $objUtil->checkPostKey('stdtelescope')
     && $objUtil->checkUserID($this->getObserverFromInstrument($objUtil->checkPostKey('stdtelescope'))))
     { echo "hello";
-    	$objObserver->setObserverProperty($_SESSION['deepskylog_id'],'stdtelescope', $_POST['stdtelescope']);
+    	$objObserver->setObserverProperty($loggedUser,'stdtelescope', $_POST['stdtelescope']);
       return;
     }
     if($objUtil->checkPostKey('instrumentname')
@@ -208,7 +208,7 @@ class Instruments implements iInstruments
   		  { $fixedMag = $objUtil->checkPostKey('fixedMagnification',0);
   		    $fd = 0.0;
   	    }
-  	    $this->addInstrument($instrumentname, $diameter, $fd, $type, $fixedMag, $_SESSION['deepskylog_id']);
+  	    $this->addInstrument($instrumentname, $diameter, $fd, $type, $fixedMag, $loggedUser);
         return LangValidateInstrumentMessage3;
       }
       if($objUtil->checkPostKey('change')

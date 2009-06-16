@@ -21,13 +21,13 @@ echo (LangSearchMenuTitle);
 echo "</th>\n</tr>\n<tr>\n<td>\n
       <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
 
-if($_SESSION['deepskylog_id']) // logged in
+if($loggedUser) // logged in
 {
-   if($obs->getObserverProperty($_SESSION['deepskylog_id'],'role',2) != "2") // user is not in waitlist
+   if($obs->getObserverProperty($loggedUser,'role',2) != "2") // user is not in waitlist
    {
-      if($_SESSION['deepskylog_id'] != "admin") // admin doesn't have own observations
+      if($loggedUser != "admin") // admin doesn't have own observations
       {
-//      echo "<tr align=\"left\">\n<td>\n<a class=\"mainlevel\" href=\"deepsky/result_query_observations.php?user=" . $_SESSION['deepskylog_id'] . "\">";
+//      echo "<tr align=\"left\">\n<td>\n<a class=\"mainlevel\" href=\"deepsky/result_query_observations.php?user=" . $loggedUser . "\">";
 //      echo (LangSearchMenuItem1);
 //      echo "</a>\n</td>\n</tr>\n";
       }

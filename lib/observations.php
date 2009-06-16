@@ -710,7 +710,7 @@ class Observations {
 			while ($get = mysql_fetch_object($run)) {
 				$seentype = "X";
 				if (array_key_exists('deepskylog_id', $_SESSION) && ($seenpar != "D"))
-					if ($objDatabase->SelectSingleValue("SELECT observations.id FROM observations WHERE objectname = \"" . $get->objectname . "\" AND observerid = \"" . $_SESSION['deepskylog_id'] . "\"", 'id')) // object has been seen by the observer logged in
+					if ($objDatabase->SelectSingleValue("SELECT observations.id FROM observations WHERE objectname = \"" . $get->objectname . "\" AND observerid = \"".$loggedUser."\"", 'id')) // object has been seen by the observer logged in
 						$seentype = "Y";
 				if (($seenpar == "D") || ($seenpar == $seentype)) {
 					while (list ($key, $value) = each($get))
@@ -735,7 +735,7 @@ class Observations {
 		return $objDatabase->selectSingleValue("SELECT COUNT(*) As ObsCnt FROM observations WHERE observerid=\"" . $userid . "\" AND observations.objectname=\"" . $object . "\"", "ObsCnt");
 	}
 	public  function getObservedCountFromCatalogOrList($id, $catalog) 
-	{ global $objDatabase;
+	{ global $objDatabase,$loggedUser;
 		if (substr($catalog, 0, 5) == 'List:') 
 			if (substr($catalog, 5, 7) == "Public:")
 				$sql = "SELECT COUNT(DISTINCT observations.objectname) AS CatCnt " .
@@ -751,7 +751,7 @@ class Observations {
 					     "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " .
 					     "JOIN observers on observations.observerid = observers.id " .
 					     "WHERE observerobjectlist.listname=\"" . substr($catalog, 5) . "\" " .
-					     "AND observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\" " .
+					     "AND observerobjectlist.observerid = \"" . $loggedUser . "\" " .
 			         "AND observations.observerid=\"".$id."\" " .
 			         "AND observations.visibility != 7 "; 
 		else 
@@ -763,7 +763,7 @@ class Observations {
 		return $objDatabase->selectSingleValue($sql,'CatCnt',0);
 	}
 	public  function getObservedFromCatalog($id, $catalog) 
-	{ global $objDatabase;
+	{ global $objDatabase,$loggedUser;
 	  if (substr($catalog, 0, 5) == "List:")
 			if (substr($catalog, 5, 7) == "Public:")
 				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
@@ -774,7 +774,7 @@ class Observations {
 			else
 				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
 				"INNER JOIN observations ON observations.objectname = observerobjectlist.objectname " .
-				"WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") AND (observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\") " .
+				"WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") AND (observerobjectlist.observerid = \"" . $loggedUser . "\") " .
 				"AND (observations.observerid = \"" . $id . "\") " .
 				"AND (observations.visibility != 7))";
 		else
@@ -786,7 +786,7 @@ class Observations {
 		return $objDatabase->selectSingleArray($sql, 'objectname');
 	}
 	public  function getObservedFromCatalogPartOf($id, $catalog) 
-  { global $objDatabase;
+  { global $objDatabase,$loggedUser;
   	if (substr($catalog, 0, 5) == "List:")
 			if (substr($catalog, 5, 7) == "Public:")
 				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
@@ -799,7 +799,7 @@ class Observations {
 				$sql = "SELECT DISTINCT observerobjectlist.objectname FROM observerobjectlist " .
 				      " JOIN objectpartof ON objectpartof.partofname = observerobjectlist.objectname " .
 				      " JOIN observations ON observations.objectname = objectpartof.objectname " .
-				      " WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") AND (observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\") " .
+				      " WHERE ((observerobjectlist.listname = \"" . substr($catalog, 5) . "\") AND (observerobjectlist.observerid = \"" . $loggedUser . "\") " .
 				      " AND (observations.observerid = \"" . $id . "\") " .
 				      " AND (observations.visibility != 7))";
 		else
@@ -824,7 +824,7 @@ class Observations {
 	  return $objDatabase->selectSingleArray("SELECT observations.observerid, COUNT(observations.id) As Cnt FROM observations GROUP BY observations.observerid ORDER BY Cnt DESC", 'observerid');
 	}
 	public  function getPopularObserversOverviewCatOrList($sort, $cat = "") 
-	{ global $objDatabase;
+	{ global $objDatabase,$loggedUser;
 	  if ($sort == "jaar") {
 			$t = getdate();
 			$sql = "SELECT observations.observerid, COUNT(*) AS Cnt, observers.name " .
@@ -847,7 +847,7 @@ class Observations {
 					"JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " .
 					"JOIN observers on observations.observerid = observers.id " .
 					"WHERE observerobjectlist.listname=\"" . substr($cat, 5) . "\" " .
-					"AND observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\" " .
+					"AND observerobjectlist.observerid = \"" . $loggedUser . "\" " .
 					"AND observations.visibility != 7 ";
 			else
 				$sql = "SELECT observations.observerid, COUNT(DISTINCT objectnames.catindex) AS Cnt, observers.name " .
@@ -1289,7 +1289,7 @@ class Observations {
 				  }
 				}
 				else	
-				  $current_observation = $objObservation->addDSObservation($_POST['object'], $_SESSION['deepskylog_id'], $_POST['instrument'], $_POST['site'], $date, $time, nl2br($_POST['description']), $_POST['seeing'], $_POST['limit'], $objUtil->checkPostKey('visibility'), $_POST['description_language']);
+				  $current_observation = $objObservation->addDSObservation($_POST['object'], $loggedUser, $_POST['instrument'], $_POST['site'], $date, $time, nl2br($_POST['description']), $_POST['seeing'], $_POST['limit'], $objUtil->checkPostKey('visibility'), $_POST['description_language']);
 				$_SESSION['addObs'] = '';
 				$_SESSION['Qobs'] = array ();
 				$_SESSION['QobsParams'] = array ();

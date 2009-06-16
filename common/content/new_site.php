@@ -18,7 +18,7 @@ $tempCountryList="<select name=\"country\" class=\"inputfield requiredField\">";
 $countries = $objLocation->getCountries();
 $tempCountryList.="<option value=\"\">-----</option>";
 while(list($key,$value)=each($countries))
-{ $sites=$objLocation->getSortedLocations($sort, $_SESSION['deepskylog_id']);
+{ $sites=$objLocation->getSortedLocations($sort, $loggedUser);
   $locs =$objObserver->getListOfLocations();
   if($objUtil->checkGetKey('country')==$value)
 	  $tempCountryList.="<option selected=\"selected\" value=\"".$value."\">".$value."</option>";

@@ -90,7 +90,7 @@ if(!$validQobs)
   $_SESSION['QobsTotal']=$objObservation->getObservationFromQuery($query, $GLOBALS['objUtil']->checkGetKey('seen'),$objUtil->checkGetKey('exactinstrumentlocation',0)); 
   $_SESSION['QobsMaxCnt']=$MaxCnt;
   $min=0;
-	if($loggedUser && (!($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT'))))
+	if($loggedUser && (!($objObserver->getObserverProperty($loggedUser,'UT'))))
   { if(($mindate!="")||($maxdate!=""))
     { if($mindate!="")
         $mindate=$mindate + 1;

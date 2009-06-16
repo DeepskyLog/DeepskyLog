@@ -42,12 +42,12 @@ if($objCometObservation->getObjectId($_GET['observation'])) // check if observat
                           "RL",array(30,70),20,array('fieldname'));
   $date = sscanf($objCometObservation->getDate($_GET['observation']),"%4d%2d%2d");
   if($objCometObservation->getTime($_GET['observation']) >= 0)
-    if(!($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
+    if(!($objObserver->getObserverProperty($loggedUser,'UT')))
       $date = sscanf($objCometObservation->getLocalDate($_GET['observation']), "%4d%2d%2d");
   $objPresentations->line(array(LangViewObservationField5,date($dateformat,mktime(0,0,0,$date[1],$date[2],$date[0]))),
                           "RL",array(30,70),20,array('fieldname'));
 	if($objCometObservation->getTime($_GET['observation']) >= 0)
-	{ if(!($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
+	{ if(!($objObserver->getObserverProperty($loggedUser,'UT')))
 	  { $content1=LangViewObservationField9lt;
 	    $time=$objCometObservation->getLocalTime($_GET['observation']);
 	  }

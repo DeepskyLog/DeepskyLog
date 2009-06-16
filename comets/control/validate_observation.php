@@ -19,9 +19,9 @@ if($loggedUser) // logged in
           else
             $time = ($_POST['hours'] * 100);
         // add observation to database
-        $current_observation = $objCometObservation->addObservation($objCometObject->getId($_POST['comet']), $_SESSION['deepskylog_id'], $date, $time);
+        $current_observation = $objCometObservation->addObservation($objCometObject->getId($_POST['comet']), $loggedUser, $date, $time);
         $objCometObservation->setLocationId($current_observation, $_POST['site']);
-        if(!($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
+        if(!($objObserver->getObserverProperty($loggedUser,'UT')))
           $objCometObservation->setLocalDateAndTime($current_observation, $date, $time);
   	    $objCometObservation->setDescription($current_observation, nl2br(htmlentities($_POST['description'])));
         $objCometObservation->setInstrumentId($current_observation, $_POST['instrument']);

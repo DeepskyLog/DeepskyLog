@@ -175,13 +175,13 @@ class Filters implements iFilters
 	 }
  }
  public  function validateSaveFilter()                                                  // validates and saves a filter and returns a message 
- { global $objUtil;
+ { global $objUtil,$loggedUser;
    if($objUtil->checkPostKey('add')
    && $objUtil->checkSessionKey('deepskylog_id')
    && $objUtil->checkPostKey('filtername')
    && $objUtil->checkPostKey('type'))
    { $id=$this->addFilter($objUtil->checkPostKey('filtername'), $objUtil->checkPostKey('type'), $objUtil->checkPostKey('color',0), $objUtil->checkPostKey('wratten'), $objUtil->checkPostKey('schott'));
-     $this->setFilterProperty($id, 'observer', $_SESSION['deepskylog_id']);
+     $this->setFilterProperty($id, 'observer', $loggedUser);
      return LangValidateFilterMessage2;
    }
    if($objUtil->checkPostKey('change')
@@ -194,7 +194,7 @@ class Filters implements iFilters
      $this->setFilterProperty($_POST['id'], 'color', $objUtil->checkPostKey('color',0));
      $this->setFilterProperty($_POST['id'], 'wratten', $objUtil->checkPostKey('wratten'));
      $this->setFilterProperty($_POST['id'], 'schott', $objUtil->checkPostKey('schott'));
-     //$this->setFilterProperty($_POST['id'], 'observer', $_SESSION['deepskylog_id']);
+     //$this->setFilterProperty($_POST['id'], 'observer', $loggedUser);
      return LangValidateFilterMessage5;
    }
  }

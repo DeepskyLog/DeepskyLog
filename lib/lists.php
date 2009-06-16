@@ -71,15 +71,16 @@ class Lists implements iLists
     unset($_SESSION['QobjParams']);
  }
  public  function checkList($name)
- { $retval = 0;
+ { global $loggedUser;
+   $retval=0;
 	 if(substr($name,0,7)=="Public:")
-	 { $sql = "SELECT listname FROM observerobjectlist WHERE listname=\"$name\"";	
-	   $run = mysql_query($sql) or die(mysql_error());
+	 { $sql="SELECT listname FROM observerobjectlist WHERE listname=\"".$name."\"";	
+	   $run=mysql_query($sql) or die(mysql_error());
 	   if($get=mysql_fetch_object($run))
-	     $retval = 1;
+	     $retval =1;
 	 }
-	 if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
-   { $sql="SELECT listname FROM observerobjectlist WHERE observerid = \"" . $_SESSION['deepskylog_id'] . "\" AND listname = \"$name\"";
+	 if($loggesUser)
+   { $sql="SELECT listname FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND listname = \"".$name."\"";
 	   $run=mysql_query($sql) or die(mysql_error());
 	   if($get=mysql_fetch_object($run))
        $retval=2;

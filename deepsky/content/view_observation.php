@@ -48,8 +48,8 @@ if($loggedUser)                  // LOGGED IN
 }
 $objObservation->showObservation($_GET['observation']);
 if($_GET['dalm']=="AO") $AOid = $GLOBALS['objObservation']->getAOObservationsId($object, $_GET['observation']);
-elseif($_GET['dalm']=="MO") $AOid = $GLOBALS['objObservation']->getMOObservationsId($object, $_SESSION['deepskylog_id'], $_GET['observation']);
-elseif($_GET['dalm']=="LO") $AOid = array($GLOBALS['objObservation']->getLOObservationId($object, $_SESSION['deepskylog_id'], $_GET['observation']));
+elseif($_GET['dalm']=="MO") $AOid = $GLOBALS['objObservation']->getMOObservationsId($object, $loggedUser, $_GET['observation']);
+elseif($_GET['dalm']=="LO") $AOid = array($GLOBALS['objObservation']->getLOObservationId($object, $loggedUser, $_GET['observation']));
 else $AOid=array();
 while(list($key, $LOid) = each($AOid)) 
   $objObservation->showObservation($LOid);

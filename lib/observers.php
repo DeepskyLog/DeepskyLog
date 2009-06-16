@@ -149,7 +149,7 @@ class Observers implements iObservers
 		echo $outputtable;
   }
   public  function valideAccount()
-	{	global $entryMessage, $objUtil, $objLanguage, $developversion;
+	{	global $entryMessage, $objUtil, $objLanguage, $developversion,$loggedUser;
 		if(!$_POST['email']||!$_POST['firstname']||!$_POST['name']||!$_POST['passwd']||!$_POST['passwd_again'])
 		{ $entryMessage.=LangValidateAccountMessage1;
 			if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
@@ -208,7 +208,7 @@ class Observers implements iObservers
 		  }
 		}  
 		elseif($objUtil->checkPostKey('change'))                // pressed change button
-		{ if(!$_SESSION['deepskylog_id'])                                           // extra control on login
+		{ if(!$loggedUser)                                           // extra control on login
 		  { $entryMessage.=LangValidateAccountMessage1;                              
 			  $_GET['indexAction']='change_account';
 		  }
@@ -217,30 +217,30 @@ class Observers implements iObservers
 			  while(list($key,$value)=each($allLanguages))
 		      if(array_key_exists($key,$_POST))
 		        $usedLanguages[]=$key;
-		    $this->setUsedLanguages($_SESSION['deepskylog_id'], $usedLanguages);
-		    $this->setObserverProperty($_SESSION['deepskylog_id'],'name', $_POST['name']);  
-		    $this->setObserverProperty($_SESSION['deepskylog_id'],'firstname', $_POST['firstname']);
-		    $this->setObserverProperty($_SESSION['deepskylog_id'],'email', $_POST['email']);
-		    $this->setObserverProperty($_SESSION['deepskylog_id'],'password', md5($_POST['passwd'])); 
-		    $this->setObserverProperty($_SESSION['deepskylog_id'],'language', $_POST['language']);
-		    $this->setObserverProperty($_SESSION['deepskylog_id'],'observationlanguage', $_POST['description_language']);
-		    $this->setObserverProperty($_SESSION['deepskylog_id'],'stdlocation', $_POST['site']);
-		    $this->setObserverProperty($_SESSION['deepskylog_id'],'stdtelescope', $_POST['instrument']);
-		    $this->setObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode', $_POST['atlas']);
-		    $this->setObserverProperty($_SESSION['deepskylog_id'],'UT', ((array_key_exists('local_time', $_POST)&&($_POST['local_time']=="on"))?"0":"1"));
+		    $this->setUsedLanguages($loggedUser, $usedLanguages);
+		    $this->setObserverProperty($loggedUser,'name', $_POST['name']);  
+		    $this->setObserverProperty($loggedUser,'firstname', $_POST['firstname']);
+		    $this->setObserverProperty($loggedUser,'email', $_POST['email']);
+		    $this->setObserverProperty($loggedUser,'password', md5($_POST['passwd'])); 
+		    $this->setObserverProperty($loggedUser,'language', $_POST['language']);
+		    $this->setObserverProperty($loggedUser,'observationlanguage', $_POST['description_language']);
+		    $this->setObserverProperty($loggedUser,'stdlocation', $_POST['site']);
+		    $this->setObserverProperty($loggedUser,'stdtelescope', $_POST['instrument']);
+		    $this->setObserverProperty($loggedUser,'standardAtlasCode', $_POST['atlas']);
+		    $this->setObserverProperty($loggedUser,'UT', ((array_key_exists('local_time', $_POST)&&($_POST['local_time']=="on"))?"0":"1"));
 		    if ($_POST['icq_name'] != "")
-		      $this->setObserverProperty($_SESSION['deepskylog_id'],'icqname', $_POST['icq_name']);
+		      $this->setObserverProperty($loggedUser,'icqname', $_POST['icq_name']);
 		    $_SESSION['lang']=$_POST['language'];
 		    if($_FILES['picture']['tmp_name'] != "")
 		    { $upload_dir = 'common/observer_pics';
 		      $dir = opendir($upload_dir);
 		      include $instDir."common/control/resize.php";                                             // resize code
 		      $original_image = $_FILES['picture']['tmp_name'];
-		      $destination_image = $upload_dir . "/" . $_SESSION['deepskylog_id'] . ".jpg"; 
+		      $destination_image = $upload_dir . "/" . $loggedUser . ".jpg"; 
 		      $new_image = image_createThumb($original_image,$destination_image,300,300,75);
 		    }
 		    $entryMessage.=LangValidateAccountMessage5;
-		    $_GET['user']=$_SESSION['deepskylog_id'];
+		    $_GET['user']=$loggedUser;
 		    $_GET['indexAction']='detail_observer';
 		  }
 		}

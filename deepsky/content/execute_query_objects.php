@@ -23,8 +23,7 @@ if(count($_SESSION['Qobj'])>1) //===============================================
 	  $title.=LangListQueryObjectsMessage10;
 	else
     $title.=LangListQueryObjectsMessage11;
-  if(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']&&
-	   array_key_exists('listname',$_SESSION)&&$_SESSION['listname']&&($_SESSION['listname']<>"----------")&&$myList)
+  if($myList)
     $title.="&nbsp;-&nbsp;<a href=\"".$link."&amp;min=".$min."&amp;addAllObjectsFromQueryToList=true\" title=\"".LangListQueryObjectsMessage5.$listname_ss."\">".LangListQueryObjectsMessage4."</a>";
   $title.="</h4>";
   list ($min,$max,$content) = $objUtil->printNewListHeader3($_SESSION['Qobj'],$link,$min,$step);

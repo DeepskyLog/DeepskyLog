@@ -53,7 +53,8 @@ class Utils implements iUtils
     }
   }
   public  function checkAdminOrUserID($toCheck)
-  { return array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']&&((array_key_exists('admin', $_SESSION)&&($_SESSION['admin']=="yes"))||($_SESSION['deepskylog_id']==$toCheck));
+  { global $loggedUser;
+    return ((array_key_exists('admin', $_SESSION)&&($_SESSION['admin']=="yes"))||($loggedUser==$toCheck));
   }
   public  function checkArrayKey($theArray,$key,$default='')
   { return (array_key_exists($key,$theArray)&&($theArray[$key]!=''))?$theArray[$key]:$default;
@@ -91,7 +92,7 @@ class Utils implements iUtils
   { return (array_key_exists($key,$_SESSION)&&($_SESSION[$key]!=''))?$_SESSION[$key]:$default;
   }
 	public  function checkUserID($toCheck)
-  { return array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id']&&($_SESSION['deepskylog_id']==$toCheck);
+  { return ($loggedUser==$toCheck);
   }
   public  function comastObservations($result)  // Creates a csv file from an array of observations
   { global $objPresentations, $objObservation;
@@ -979,7 +980,7 @@ class Utils implements iUtils
     include_once "icqreferencekey.php";
     include_once "setup/vars.php";
     include_once "setup/databaseInfo.php";
-    global $instDir,$objCometObject;
+    global $instDir,$objCometObject,$loggedUser;
     $objects = new CometObjects;
     $observer = new Observers;
     $instrument = new Instruments;
@@ -1005,7 +1006,7 @@ class Utils implements iUtils
 
       $observerid = $observation->getObserverId($value);
 
-      if ($observer->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
+      if ($observer->getObserverProperty($loggedUser,'UT'))
       { $date = sscanf($observation->getDate($value), "%4d%2d%2d");
         $time = $observation->getTime($value);
       }
@@ -1932,7 +1933,8 @@ class Utils implements iUtils
 		  return 'comets/content/overview_observations.php';	
   }
   private function utilitiesCheckIndexActionMember($action, $includefile)
-  { if(array_key_exists('indexAction',$_GET) && ($_GET['indexAction'] == $action) && array_key_exists('deepskylog_id', $_SESSION) && ($_SESSION['deepskylog_id']!=""))
+  { global $loggedUser;
+    if(array_key_exists('indexAction',$_GET) && ($_GET['indexAction'] == $action) && $loggedUser)
       return $includefile; 
   }
   public  function utilitiesSetModuleCookie($module)

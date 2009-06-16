@@ -210,46 +210,44 @@ echo(" class=\"fieldname\" align=\"right\">");
   echo("</select></td>");
   echo("</tr>");
 
-if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
-{  
-    echo("<tr>");
-    // MINIMUM CONTRAST RESERVE
-    echo("<td"); 
-    if($minContrastError) echo(" style=\"color:red\"");
-    echo(" class=\"fieldname\" align=\"right\">");
-    echo LangQueryObjectsField18;
-    echo("</td>");
-    echo("<td>");
-    echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"minContrast\" size=\"4\" value=\"" . $minContrast .  "\" />");
-    echo("</td>");
-    // MAXIMUM CONTRAST RESERVE
-    echo("<td"); 
-    if($maxContrastError) echo(" style=\"color:red\"");
-    echo(" class=\"fieldname\" align=\"right\">");
-    echo LangQueryObjectsField17;
-    echo("</td><td>");
-    echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"maxContrast\" size=\"4\" value=\"" . $maxContrast .  "\" />");
-    echo("</td>");
-    echo("</tr>");
-
-    echo("<tr>");
-    // IN LIST
-    echo("<td"); 
-    if($listError) echo(" style=\"color:red\"");
-    echo(" class=\"fieldname\" align=\"right\">");
-    echo LangQueryObjectsField19;
-    echo("</td><td>");
-    echo("<select name=\"inList\" class=\"inputfield\">");
-    echo("<option value=\"\">-----</option>"); // empty field
-    $lists = $objList->getLists(); 
-    while(list($key, $value) = each($lists))
-      if($value==$inList)
-        echo("<option selected value=\"$value\">$value</option>");
+if($loggedUser)
+{ echo("<tr>");
+  // MINIMUM CONTRAST RESERVE
+  echo("<td"); 
+  if($minContrastError) echo(" style=\"color:red\"");
+  echo(" class=\"fieldname\" align=\"right\">");
+  echo LangQueryObjectsField18;
+  echo("</td>");
+  echo("<td>");
+  echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"minContrast\" size=\"4\" value=\"" . $minContrast .  "\" />");
+  echo("</td>");
+  // MAXIMUM CONTRAST RESERVE
+  echo("<td"); 
+  if($maxContrastError) echo(" style=\"color:red\"");
+  echo(" class=\"fieldname\" align=\"right\">");
+  echo LangQueryObjectsField17;
+  echo("</td><td>");
+  echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"maxContrast\" size=\"4\" value=\"" . $maxContrast .  "\" />");
+  echo("</td>");
+  echo("</tr>");
+  echo("<tr>");
+  // IN LIST
+  echo("<td"); 
+  if($listError) echo(" style=\"color:red\"");
+  echo(" class=\"fieldname\" align=\"right\">");
+  echo LangQueryObjectsField19;
+  echo("</td><td>");
+  echo("<select name=\"inList\" class=\"inputfield\">");
+  echo("<option value=\"\">-----</option>"); // empty field
+  $lists = $objList->getLists(); 
+  while(list($key, $value) = each($lists))
+    if($value==$inList)
+      echo("<option selected value=\"$value\">$value</option>");
     else
-        echo("<option value=\"$value\">$value</option>");
-    echo("</select>");
-    echo("</td>");
-    // NOT IN LIST
+      echo("<option value=\"$value\">$value</option>");
+  echo("</select>");
+  echo("</td>");
+  // NOT IN LIST
   /*
     echo("<td"); 
     if($listError) echo(" style=\"color:red\"");
@@ -267,21 +265,21 @@ if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
     echo("</select>");
     echo("</td>");
   */
-    echo("</tr>");
-  }
-  echo "<tr>";
-  echo "<td class=\"fieldname\" align=\"right\">"."Exclude"."</td>";
-  $j=1;
-  reset($catalogs);
-  while(list($key,$value)=each($catalogs))
-  { if(($nmb=$objObject->getNumberOfObjectsInCatalog($value))>1000)
-    { echo "<td><input type=\"checkbox\" name=\"excl_".$value."\" />".$value." (".$nmb." objects".")</td>";
-      if(!($j++%3))
-         echo "</tr><tr><td></td>";
-    } 
+  echo("</tr>");
+}
+echo "<tr>";
+echo "<td class=\"fieldname\" align=\"right\">"."Exclude"."</td>";
+$j=1;
+reset($catalogs);
+while(list($key,$value)=each($catalogs))
+{ if(($nmb=$objObject->getNumberOfObjectsInCatalog($value))>1000)
+  { echo "<td><input type=\"checkbox\" name=\"excl_".$value."\" />".$value." (".$nmb." objects".")</td>";
+    if(!($j++%3))
+      echo "</tr><tr><td></td>";
   } 
-  echo "</tr>";
-  echo("</table>");
+} 
+echo "</tr>";
+echo("</table>");
 echo "</div>";
 echo "</form>";
 echo "</div>";

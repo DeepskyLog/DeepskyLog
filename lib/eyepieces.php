@@ -105,14 +105,14 @@ class Eyepieces implements iEyepieces
    }
  }
  public  function validateSaveEyepiece()                                             // validates and saves an eyepiece and returns a message 
- { global $objUtil;
+ { global $objUtil,$loggedUser;
    if($objUtil->checkPostKey('eyepiecename')
    && $objUtil->checkSessionKey('deepskylog_id')
    && $objUtil->checkPostKey('focalLength')
    && $objUtil->checkPostKey('apparentFOV')
    && $objUtil->checkPostKey('add'))
    { $id=$this->addEyepiece($_POST['eyepiecename'],$_POST['focalLength'],$_POST['apparentFOV']);
-     $this->setEyepieceProperty($id,'observer', $_SESSION['deepskylog_id']);
+     $this->setEyepieceProperty($id,'observer', $loggedUser);
 	   $this->setEyepieceProperty($id,'maxFocalLength', $objUtil->checkPostKey('maxFocalLength',-1));
      return LangValidateEyepieceMessage2; 
    }
@@ -125,7 +125,7 @@ class Eyepieces implements iEyepieces
    { $this->setEyepieceProperty($_POST['id'],'name', $_POST['eyepiecename']);
      $this->setEyepieceProperty($_POST['id'],'focalLength', $_POST['focalLength']);
      $this->setEyepieceProperty($_POST['id'],'apparentFOV', $_POST['apparentFOV']);
-     //$this->setEyepieceProperty($_POST['id'],'observer', $_SESSION['deepskylog_id']);
+     //$this->setEyepieceProperty($_POST['id'],'observer', $loggedUser);
      $this->setEyepieceProperty($_POST['id'],'maxFocalLength', $objUtil->checkPostKey('maxFocalLength',-1));
  	   return LangValidateEyepieceMessage5.' '.LangValidateEyepieceMessage4;
    }

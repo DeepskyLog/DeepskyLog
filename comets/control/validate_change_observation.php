@@ -13,7 +13,7 @@ elseif($_FILES['drawing']['size']>$maxFileSize) // file size of drawing too big
 }
 elseif($_POST['observation']) // all fields filled in and observationid given
 { // only admins may change a comet observation
-  $role = $objObserver->getObserverProperty($_SESSION['deepskylog_id'],'role',2);
+  $role = $objObserver->getObserverProperty($loggedUser,'role',2);
   if(($role==RoleAdmin)||($role==RoleCometAdmin))
   { $date = $_POST['year'] . sprintf("%02d", $_POST['month']) . sprintf("%02d", $_POST['day']);
     $time = ($_POST['hours'] * 100) + $_POST['minutes'];

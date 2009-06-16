@@ -292,11 +292,9 @@ class CometObjects
      {
       $result2[$key][1] = "X";
      }
-     if ($_SESSION['deepskylog_id'] != "")
-     {
-      $user = $_SESSION['deepskylog_id'];
-      $sql = "SELECT observerid FROM cometobservations WHERE objectid = \"$id\" AND observerid = \"$user\"";
-      $run = mysql_query($sql) or die(mysql_error());
+     if ($loggedUser)
+     { $sql = "SELECT observerid FROM cometobservations WHERE objectid = \"$id\" AND observerid = \"".$loggedUser."\"";
+       $run = mysql_query($sql) or die(mysql_error());
 
       $get = mysql_fetch_object($run);
 

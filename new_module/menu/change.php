@@ -24,7 +24,7 @@ echo (LangChangeMenuItem1);
 
 echo "</a>\n</td>\n</tr>\n";
 
-//if($_SESSION['deepskylog_id'] != "admin") // admin doesn't have to add a new observation
+//if($loggedUser != "admin") // admin doesn't have to add a new observation
 //{
 //   echo "<tr align=\"left\">\n<td>\n<a href=\"deepsky/add_observation.php\" class=\"mainlevel\">";
 //

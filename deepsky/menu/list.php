@@ -6,7 +6,7 @@ if($loggedUser)
 	$result2=array();
 	$sql = "SELECT DISTINCT observerobjectlist.listname " .
 				 "FROM observerobjectlist " .
-				 "WHERE observerid = \"" . $_SESSION['deepskylog_id'] . "\" ORDER BY observerobjectlist.listname";
+				 "WHERE observerid = \"" . $loggedUser . "\" ORDER BY observerobjectlist.listname";
 	$run = mysql_query($sql) or die(mysql_error());
 	$get = mysql_fetch_object($run);
 	while($get)
@@ -15,7 +15,7 @@ if($loggedUser)
 	}
 	$sql = "SELECT DISTINCT observerobjectlist.listname " .
 				 "FROM observerobjectlist " .
-	       "WHERE observerid <> \"" . $_SESSION['deepskylog_id'] . "\"" . 
+	       "WHERE observerid <> \"" . $loggedUser . "\"" . 
 				 "AND listname LIKE \"Public: %\" ORDER BY observerobjectlist.listname";
 	$run = mysql_query($sql) or die(mysql_error());
 	$get = mysql_fetch_object($run);

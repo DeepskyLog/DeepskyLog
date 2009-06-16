@@ -210,7 +210,7 @@ class Locations
 		      echo "<td>".$timezone."</td>";
 		      echo "<td class=\"centered\">".$limmag."</td>";
 		      echo "<td class=\"centered\">".$sb."</td>";
-		      echo "<td class=\"centered\"><input type=\"radio\" name=\"stdlocation\" value=\"". $value ."\"".(($value==$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'stdlocation'))?" checked ":"")." onclick=\"submit();\" />&nbsp;<br /></td>";
+		      echo "<td class=\"centered\"><input type=\"radio\" name=\"stdlocation\" value=\"". $value ."\"".(($value==$objObserver->getObserverProperty($loggedUser,'stdlocation'))?" checked ":"")." onclick=\"submit();\" />&nbsp;<br /></td>";
 					echo "<td>";
 		      if(!($obsCnt=$objLocation->getLocationUsedFromId($value)))
 		        echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_location&amp;locationid=".urlencode($value)."\">".LangRemove."</a>";
@@ -236,10 +236,10 @@ class Locations
     }
   }
   public  function validateSaveLocation()
-	{ global $objUtil, $objDatabase, $objObserver;  
+	{ global $objUtil, $objDatabase, $objObserver,$loggedUser;  
 	  if(($objUtil->checkPostKey('adaptStandardLocation')==1)
     &&  $objUtil->checkUserID($this->getLocationPropertyFromId($objUtil->checkPostKey('stdlocation'),'observer')))
-    { $objObserver->setObserverProperty($_SESSION['deepskylog_id'],'stdlocation', $_POST['stdlocation']);
+    { $objObserver->setObserverProperty($loggedUser,'stdlocation', $_POST['stdlocation']);
     } 
     if($objUtil->checkPostKey('sitename')
     && $objUtil->checkPostKey('region')
@@ -262,7 +262,7 @@ class Locations
         { $this->setLocationProperty($id, 'skyBackground', -999);
           $this->setLocationProperty($id, 'limitingMagnitude', -999);
     		}
-    		$this->setLocationProperty($id, 'observer', $_SESSION['deepskylog_id']);
+    		$this->setLocationProperty($id, 'observer', $loggedUser);
         return LangValidateSiteMessage2;
       }
       if($objUtil->checkPostKey('change')
@@ -273,7 +273,7 @@ class Locations
         $this->setLocationProperty($_POST['id'], 'longitude', $longitude);
         $this->setLocationProperty($_POST['id'], 'latitude',  $latitude);
         $this->setLocationProperty($_POST['id'], 'timezone',  $timezone);
-        //$this->setLocationProperty($_POST['id'], 'observer',  $_SESSION['deepskylog_id']);
+        //$this->setLocationProperty($_POST['id'], 'observer',  $loggedUser);
         if($objUtil->checkPostKey('lm'))
         { $this->setLocationProperty($_POST['id'], 'limitingMagnitude', $_POST['lm']);
           $this->setLocationProperty($_POST['id'], 'skyBackground', -999);

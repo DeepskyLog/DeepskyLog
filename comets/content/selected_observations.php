@@ -145,7 +145,7 @@ if(isset($_GET['objectname']))
 
         // DATE
 
-        if ($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
+        if ($observers->getObserverProperty($loggedUser,'UT'))
         {
           $date = sscanf($observations->getDate($value), "%4d%2d%2d");
         }
@@ -163,7 +163,7 @@ if(isset($_GET['objectname']))
 
         echo(" (");
 
-        if ($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
+        if ($observers->getObserverProperty($loggedUser,'UT'))
         {
          $time = sscanf(sprintf("%04d", $observations->getTime($value)), "%2d%2d");
         }
@@ -366,7 +366,7 @@ elseif($_GET['user']) // selection of all observations of one observer
 		
 		      // DATE
 		
-		        if ($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
+		        if ($observers->getObserverProperty($loggedUser,'UT'))
 		        {
 		         $date = sscanf($observations->getDate($value), "%4d%2d%2d");
 		        }
@@ -381,7 +381,7 @@ elseif($_GET['user']) // selection of all observations of one observer
 		
 		      echo("&nbsp;(");
 		
-		        if ($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT'))
+		        if ($observers->getObserverProperty($loggedUser,'UT'))
 		        {
 		         $time = sscanf(sprintf("%04d", $observations->getTime($value)), "%2d%2d");
 		        }

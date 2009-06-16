@@ -88,7 +88,7 @@ if($_GET['observer'] || $_GET['instrument'] || $_GET['site'] || $_GET['minyear']
 	 {
       $instrument = $_GET['instrument'];
       $name = $instruments->getInstrumentPropertyFromId($instrument,'name');
-      $instrument = $instruments->getId($name, $_SESSION['deepskylog_id']);
+      $instrument = $instruments->getId($name, $loggedUser);
 	 }
 	 else
 	 {
@@ -99,7 +99,7 @@ if($_GET['observer'] || $_GET['instrument'] || $_GET['site'] || $_GET['minyear']
 	 {
       $site = $_GET['site'];
       $name = $objLocation->getLocationPropertyFromId($site,'name');
-      $site = $objLocation->getLocationId($name, $_SESSION['deepskylog_id']);
+      $site = $objLocation->getLocationId($name, $loggedUser);
 	 }
 	 else
 	 {
@@ -150,7 +150,7 @@ $query = array("object" => $object,
                "maxdc" => $maxdc);
 
 
-if (!($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
+if (!($observers->getObserverProperty($loggedUser,'UT')))
 {
   if ($mindate != "")
   {
@@ -180,7 +180,7 @@ else
 }
 
    // Dates can changes when we use local time!
-   if(!($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
+   if(!($observers->getObserverProperty($loggedUser,'UT')))
    {
      if ($mindate != "" || $maxdate != "")
      {
@@ -609,7 +609,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
 
 
-      if(!($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
+      if(!($observers->getObserverProperty($loggedUser,'UT')))
       {
         $date = sscanf($observations->getLocalDate($value), "%4d%2d%2d");
       }
@@ -622,7 +622,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
       // TIME
 
-      if(!($observers->getObserverProperty($_SESSION['deepskylog_id'],'UT')))
+      if(!($observers->getObserverProperty($loggedUser,'UT')))
       {
         $time = sscanf(sprintf("%04d", $observations->getLocalTime($value)), "%2d%2d");
       }

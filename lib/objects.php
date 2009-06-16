@@ -128,14 +128,14 @@ class Objects implements iObjects
     return $size;
   }
   public  function getAllInfoDsObject($name)                                    // returns all information of an object
-  { global $objDatabase;
+  { global $objDatabase,$loggedUser;
 	  $object=$objDatabase->selectRecordArray("SELECT * FROM objects WHERE name = \"".$name."\"");
     $object["size"]=$this->calculateSize($object['diam1'], $object['diam2']); 
     $object["seen"]="-";
   	if($see=$objDatabase->selectSingleValue("SELECT COUNT(id) As CountId FROM observations WHERE objectname = \"".$name."\"",'CountId',0))
     { $object["seen"]="X (".$see.")";
-      if((array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
-      && ($get=$objDatabase->selectRecordArray("SELECT COUNT(observerid) As seenCnt, MAX(date) seenLastDate FROM observations WHERE objectname = \"".$name."\" AND observerid = \"".$_SESSION['deepskylog_id']."\"")))
+      if($loggedUser
+      && ($get=$objDatabase->selectRecordArray("SELECT COUNT(observerid) As seenCnt, MAX(date) seenLastDate FROM observations WHERE objectname = \"".$name."\" AND observerid = \"".$loggedUser."\"")))
         $object["seen"]="Y (".$get['seenCnt']." - ".$get['seenLastDate'].")";
     }
 		$run=$objDatabase->selectRecordset("SELECT altname FROM objectnames WHERE objectnames.objectname = \"".$name."\"");
@@ -161,12 +161,12 @@ class Objects implements iObjects
     return $ret;
   }
   public  function getCatalogsAndLists()
-  { global $objDatabase;
+  { global $objDatabase,$loggedUser;
 	  $ret=$objDatabase->selectSingleArray("SELECT DISTINCT objectnames.catalog FROM objectnames WHERE objectnames.catalog NOT IN (\"M\",\"NGC\",\"Caldwell\",\"H400\",\"HII\",\"IC\")",'catalog');
     natcasesort($ret);
     reset($ret);
     array_unshift($ret, "M", "NGC", "Caldwell", "H400", "HII", "IC");
-	  if(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
+	  if(array_key_exists('deepskylog_id',$_SESSION) && $loggedUser)
 	  { $lsts = $GLOBALS['objList']->getLists();
 	 	  while(list($key,$value)=each($lsts))
 	 	   $ret[]='List:'.$value; 
@@ -199,7 +199,7 @@ class Objects implements iObjects
     $seen = "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
     if(substr($seenDetails,0,1)=="X")                                            // object has been seen already
       $seen = "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\">".$seenDetails."</a>";
-    if(array_key_exists('deepskylog_id', $_SESSION)&&$_SESSION['deepskylog_id'])
+    if($loggedUser)
       if (substr($seenDetails,0,1)=="Y")                                         // object has been seen by the observer logged in
         $seen = "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."&amp;observer=".urlencode($loggedUser)."\" title=\"".LangObjectYSeen."\">".$seenDetails."</a>";
     return $seen;
@@ -246,12 +246,12 @@ class Objects implements iObjects
 	  return $result;
   } 
   public  function getNumberOfObjectsInCatalog($catalog)  // returns the number of objects in the catalog given as a parameter
-  { global $objDatabase;
+  { global $objDatabase,$loggedUser;
   	if(substr($catalog,0,5)=="List:")
       if(substr($catalog,5,7)=="Public:")
         $sql = "SELECT COUNT(DISTINCT observerobjectlist.objectname)-1 AS number FROM observerobjectlist WHERE observerobjectlist.listname = \"" . substr($catalog,5) . "\"";
 	    else
-        $sql = "SELECT COUNT(DISTINCT observerobjectlist.objectname)-1 AS number FROM observerobjectlist WHERE observerobjectlist.listname = \"" . substr($catalog,5) . "\" AND observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\"";		
+        $sql = "SELECT COUNT(DISTINCT observerobjectlist.objectname)-1 AS number FROM observerobjectlist WHERE observerobjectlist.listname = \"" . substr($catalog,5) . "\" AND observerobjectlist.observerid = \"" . $loggedUser . "\"";		
 	  else
       $sql = "SELECT COUNT(DISTINCT catindex) AS number FROM objectnames WHERE catalog = \"$catalog\"";
     return $objDatabase->selectSingleValue($sql,'number',0);
@@ -268,6 +268,7 @@ class Objects implements iObjects
     //             "taki" => "11", "psa" => "12", "torresB" => "11", "torresBC" => "13",
     //             "torresC" => "31", "mindiam1" => "12.2", "maxdiam1" => "13.2", 
     // 		"mindiam2" => "11.1", "maxdiam2" => "22.2", "inList" => "Public: Edge-ons", "notInList" => "My observed Edge-ons");
+    global $loggedUser;
     $obs=array();
     $sql = "";
     $sqland = "";
@@ -288,12 +289,12 @@ class Objects implements iObjects
 	               "ON A.objectname = objects.name ";
 		    $sqland .= "AND A.listname = \"" . $queries['inList'] . "\" AND A.objectname <>\"\" ";
 	    }
-		  elseif(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
+		  elseif($loggedUser)
 		  { $sql1 .= "JOIN observerobjectlist AS A " .
  	              "ON A.objectname = objects.name ";
         $sql2 .= "JOIN observerobjectlist AS A " .
 	               "ON A.objectname = objects.name ";
-	      $sqland .= "AND A.observerid = \"" . $_SESSION['deepskylog_id'] . "\" AND A.listname = \"" . $queries['inList'] . "\" AND A.objectname <>\"\" ";
+	      $sqland .= "AND A.observerid = \"" .$loggedUser. "\" AND A.listname = \"" . $queries['inList'] . "\" AND A.objectname <>\"\" ";
 		  }
     }  
 /*
@@ -306,12 +307,12 @@ class Objects implements iObjects
 	               "ON B.objectname = objects.name ";
 		    $sqland .= "AND B.listname = \"" . $queries['notInList'] . "\" AND B.objectname IS NULL ";
 	    }
-		  elseif(array_key_exists('deepskylog_id',$_SESSION) && $_SESSION['deepskylog_id'])
+		  elseif(array_key_exists('deepskylog_id',$_SESSION) && $loggedUser)
       { $sql1 .= "LEFT JOIN observerobjectlist AS B " .
 	               "ON B.objectname = objects.name ";
         $sql2 .= "LEFT JOIN observerobjectlist AS B " .
 	               "ON B.objectname = objects.name ";
-	      $sqland .= "AND B.observerid = \"" . $_SESSION['deepskylog_id'] . "\" AND B.listname = \"" . $queries['notInList'] . "\" AND B.objectname IS NULL ";
+	      $sqland .= "AND B.observerid = \"" . $loggedUser . "\" AND B.listname = \"" . $queries['notInList'] . "\" AND B.objectname IS NULL ";
       }
 	  } 
 */
@@ -378,14 +379,14 @@ class Objects implements iObjects
     return $obs;
   }
   public  function getObjectsFromCatalog($cat)
-  { global $objDatabase;
+  { global $objDatabase,$loggedUser;
 	  if(substr($cat,0,5)=="List:")
       if(substr($cat,5,7)=="Public:")
         $sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As altname, observerobjectlist.objectplace As catindex  FROM observerobjectlist " .
 	  		       "WHERE (observerobjectlist.listname = \"" . substr($cat,5) . "\")";
 	    else
         $sql = "SELECT DISTINCT observerobjectlist.objectname, observerobjectlist.objectname As altname, observerobjectlist.objectplace As catindex FROM observerobjectlist " .
-	  	     	   "WHERE (observerobjectlist.listname = \"" . substr($cat,5) . "\") AND (observerobjectlist.observerid = \"" . $_SESSION['deepskylog_id'] . "\")";
+	  	     	   "WHERE (observerobjectlist.listname = \"" . substr($cat,5) . "\") AND (observerobjectlist.observerid = \"" . $loggedUser . "\")";
 	  else
       $sql = "SELECT DISTINCT objectnames.objectname, objectnames.catindex, objectnames.altname " .
 	           "FROM objectnames WHERE objectnames.catalog = \"$cat\"";
@@ -423,11 +424,12 @@ class Objects implements iObjects
     $objDatabase->selectSingleArray("SELECT objectpartof.partofname FROM objectpartof WHERE objectpartof.objectname = \"".$name."\"",'partofname');
   }
   public  function getSeen($object)                                             // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
-  { $seen='-';
+  { global $loggedUser;
+    $seen='-';
     if($ObsCnt=$GLOBALS['objDatabase']->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 ",'ObsCnt'))
     { $seen='X('.$ObsCnt.')';
-      if(array_key_exists('deepskylog_id',$_SESSION)&&$_SESSION['deepskylog_id'])
-      { $get3=mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$_SESSION['deepskylog_id']."\" AND visibility != 7"));
+      if($loggedUser)
+      { $get3=mysql_fetch_object($GLOBALS['objDatabase']->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7"));
   		  if($get3->PersObsCnt>0)
           $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')&nbsp;'.$get3->PersObsMaxDate;
 		  }
@@ -586,7 +588,7 @@ class Objects implements iObjects
 		 if(!($loggedUser))
 		   $popup = LangContrastNotLoggedIn;
      else
-	 	 { $sql5 = "SELECT stdlocation, stdtelescope from observers where id = \"" . $_SESSION['deepskylog_id'] . "\"";
+	 	 { $sql5 = "SELECT stdlocation, stdtelescope from observers where id = \"" . $loggedUser . "\"";
        $run5 = mysql_query($sql5) or die(mysql_error());
        $get5 = mysql_fetch_object($run5);
        if ($get5->stdlocation==0)
@@ -603,7 +605,7 @@ class Objects implements iObjects
 		 			 $magnifications = array();
 			 	 }
          else if ($get6->fixedMagnification == 0)
-         { $sql7 = "SELECT focalLength, name, apparentFOV, maxFocalLength from eyepieces where observer = \"" . $_SESSION['deepskylog_id'] . "\"";
+         { $sql7 = "SELECT focalLength, name, apparentFOV, maxFocalLength from eyepieces where observer = \"" . $loggedUser . "\"";
   	       $run7 = mysql_query($sql7) or die(mysql_error());
 				   while($get7 = mysql_fetch_object($run7))
            { if ($get7->maxFocalLength > 0.0)
@@ -622,7 +624,7 @@ class Objects implements iObjects
 							 $fov[] = 1.0 / ($get6->diameter * $get6->fd / $get7->focalLength) * 60.0 * $get7->apparentFOV;
 						 }
   				 }
-	         $sql8 = "SELECT name, factor from lenses where observer = \"" . $_SESSION['deepskylog_id'] . "\"";
+	         $sql8 = "SELECT name, factor from lenses where observer = \"" . $loggedUser . "\"";
   	       $run8 = mysql_query($sql8) or die(mysql_error());
  					 $origmagnifications = $magnifications;
 					 $origmagnificationsName = $magnificationsName;
@@ -766,7 +768,7 @@ class Objects implements iObjects
     echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
     echo "<input type=\"hidden\" name=\"object\" value=\"".$object."\" />";
     echo "<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>";
-	  if($loggedUser&&($standardAtlasCode=$GLOBALS['objObserver']->getObserverProperty($_SESSION['deepskylog_id'],'standardAtlasCode','urano')))
+	  if($loggedUser&&($standardAtlasCode=$GLOBALS['objObserver']->getObserverProperty($loggedUser,'standardAtlasCode','urano')))
 	    $objPresentations->line(array(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode(stripslashes($object)) . "\">".(stripslashes($object))."</a>",
 	                                  $objAtlas->atlasCodes[$standardAtlasCode].LangViewObjectField10,$this->getDsoProperty($object,$standardAtlasCode)),
 	                            "RLRL",array(),20,array("type20","type20","type20","type20"));
@@ -1077,7 +1079,7 @@ class Objects implements iObjects
 		    reset($admins);
 		    $headers="From:".$objObserver->getObserverProperty($admins[0],'email');
 		    $body=LangValidateAccountEmailTitleObject." ".$name." ". "www.deepskylog.org/index.php?indexAction=detail_object&object=".urlencode($name)." ".
-				      LangValidateAccountEmailTitleObjectObserver." ".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'name')." ".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'firstname')." www.deepskylog.org/index.php?indexAction=detail_observer&user=".urlencode($_SESSION['deepskylog_id']);
+				      LangValidateAccountEmailTitleObjectObserver." ".$objObserver->getObserverProperty($loggedUser,'name')." ".$objObserver->getObserverProperty($loggedUser,'firstname')." www.deepskylog.org/index.php?indexAction=detail_observer&user=".urlencode($loggedUser);
         if(isset($developversion)&&($developversion==1))
           $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<p>";
         else
