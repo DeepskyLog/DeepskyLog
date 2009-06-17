@@ -15,7 +15,7 @@ interface iObjects
   public  function getDSOseenLink($object);                                     // Returns the getSeen result, encoded to a href that shows the seen observations
   public  function getExactDsObject($value, $cat='', $catindex='');             // returns the exact name of an object
   public  function getLikeDsObject($value, $cat='', $catindex='');              // returns the exact name of an object
-  public  function getNearbyObjects($objectname, $dist);                        // returns an array with nearby objects
+  public  function getNearbyObjects($objectname, $dist, $ra=0, $decl=0);        // returns an array with nearby objects
   public  function getNumberOfObjectsInCatalog($catalog);                       // returns the number of objects in the catalog given as a parameter
   public  function getObjectFromQuery($queries,$exact=0,$seen="D",$partof=0);
   public  function getObjectsFromCatalog($cat);
@@ -235,11 +235,13 @@ class Objects implements iObjects
 	  }
 	  return $objDatabase->selectSingleArray($sql,'objectname');
   }
-  public  function getNearbyObjects($objectname, $dist)
+  public  function getNearbyObjects($objectname, $dist, $ra=0, $decl=0)
   { global $objDatabase;
-  	$run=$objDatabase->selectRecordset("SELECT objects.ra, objects.decl FROM objects WHERE name = \"$objectname\"");
-    $get = mysql_fetch_object($run);
-	  $ra = $get->ra; $decl = $get->decl;
+  	if($objectname)
+  	{ $run=$objDatabase->selectRecordset("SELECT objects.ra, objects.decl FROM objects WHERE name = \"$objectname\"");
+      $get = mysql_fetch_object($run);
+	    $ra = $get->ra; $decl = $get->decl;
+  	}
 	  $dra = 0.0011 * $dist / cos($decl/180*3.1415926535);
     $run = $objDatabase->selectRecordset("SELECT objects.name FROM objects WHERE ((objects.ra > $ra - $dra) AND (objects.ra < $ra + $dra) AND (objects.decl > $decl - ($dist/60)) AND (objects.decl < $decl + ($dist/60))) ORDER BY objects.name");
 	  for($result=array(),$i=0;($get=mysql_fetch_object($run));$i++)

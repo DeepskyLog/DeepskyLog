@@ -467,6 +467,7 @@ define("LangNewObjectSizeUnits1", "boogminuten");
 define("LangNewObjectSizeUnits2", "boogseconden");
 define("LangNewObjectIcqname", "ICQ naam");
 define("LangCheckName","Controleer de naam");
+define("LangCheckRA","Controleer de coördinaten");
 define("LangPossibleCandidateObjects","Mogelijke candidaten");
 define("LangPossibleCandidateObjectsExplanation","Gelieve te bevestigen of het object hier niet tussen zit");
 define("LangObjectNotFound","Bevestiging");

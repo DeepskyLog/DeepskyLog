@@ -59,6 +59,10 @@ else
 	{ $_GET['source']="add_object10";
 	  require_once 'deepsky/data/data_get_objects.php'; 
 	}   
+	if(($includeFile=='deepsky/content/new_object.php')&&($objUtil->checkRequestKey('phase20')))
+	{ $_GET['source']="add_object20";
+	  require_once 'deepsky/data/data_get_objects.php'; 
+	}   
 	if($includeFile=='deepsky/content/tolist.php')
 	{ $_GET['source']='tolist';
 	  require_once 'deepsky/data/data_get_objects.php';

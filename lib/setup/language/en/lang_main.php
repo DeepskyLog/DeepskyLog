@@ -467,6 +467,7 @@ define("LangNewObjectSizeUnits1", "arcminutes");
 define("LangNewObjectSizeUnits2", "arcseconds");
 define("LangNewObjectIcqname", "ICQ name");
 define("LangCheckName","Check the name");
+define("LangCheckRA","Check the coordinates");
 define("LangPossibleCandidateObjects","Possible candidates");
 define("LangPossibleCandidateObjectsExplanation","Please confirm that the object is not listed below");
 define("LangObjectNotFound","Confirm");

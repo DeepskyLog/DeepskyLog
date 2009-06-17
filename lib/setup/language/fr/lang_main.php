@@ -468,6 +468,7 @@ define("LangNewObjectSizeUnits1", "minutes d'arc");
 define("LangNewObjectSizeUnits2", "secondes d'arc");
 define("LangNewObjectIcqname", "Nom ICQ");
 define("LangCheckName","Vérifiez le nom");
+define("LangCheckRA","Vérifiez les coordonnées");
 define("LangPossibleCandidateObjects","Candidats possibles");
 define("LangPossibleCandidateObjectsExplanation","Prière de confirmer que l'objet n'est pas présent");
 define("LangObjectNotFound","Confirmation");

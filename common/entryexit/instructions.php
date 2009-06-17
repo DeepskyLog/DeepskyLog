@@ -340,7 +340,11 @@ else
 	}
 	if(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="validate_observation")
 	  $objObservation->validateObservation();
-	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_object")
+  if($objUtil->checkRequestKey(('phase1')))
+    $_REQUEST['phase']=1;
+  if($objUtil->checkRequestKey(('phase2')))
+    $_REQUEST['phase']=2;
+    if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_object")
 	  $objObject->validateObject();
 	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_delete_observation")
 	{ $entryMessage.=$objObservation->validateDeleteDSObservation();
