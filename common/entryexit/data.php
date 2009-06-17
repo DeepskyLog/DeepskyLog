@@ -55,6 +55,23 @@ else
 	  $_GET['zoom']=$objUtil->checkGetKey('zoom',30);	
 	  include "deepsky/data/data_get_objects.php";	
 	}
+	if(($includeFile=='deepsky/content/new_object.php')&&($objUtil->checkRequestKey('phase10')))
+	{ $_GET['source']="add_object10";
+	  require_once 'deepsky/data/data_get_objects.php'; 
+	}   
+	if($includeFile=='deepsky/content/tolist.php')
+	{ $_GET['source']='tolist';
+	  require_once 'deepsky/data/data_get_objects.php';
+	}
+	if($includeFile=='deepsky/content/view_object.php')
+	{ if(!($objUtil->checkGetKey('object'))) 
+	    throw new Exception(LangException016);
+	  if(!($_GET['object']=$objObject->getDsObjectName($_GET['object'])))
+	    throw new Exception(LangException016b);
+	  $_GET['source']='objects_nearby';
+	  $_GET['zoom']=$objUtil->checkGetKey('zoom',30);	
+	  include "deepsky/data/data_get_objects.php";	
+	}
 	if($includeFile=='deepsky/content/selected_observations2.php')
 	{  require_once 'deepsky/data/data_get_observations.php';
 	}

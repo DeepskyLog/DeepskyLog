@@ -43,7 +43,7 @@ if($loggedUser)
   $content1.="<option value=\"X\">" . LangSeenSomeoneElse . "</option>"."<option value=\"Y\">" . LangSeenByMe . "</option>";
   $content1.="</select>";
 }
-$content2="<input type=\"submit\" name=\"query\" value=\"" . LangQueryObservationsButton1 . "\" /></td>";
+$content2="<input type=\"submit\" name=\"query\" value=\"" . LangQueryObservationsButton1 . "\" />";
 $objPresentations->line(array("<h4>".LangQueryObservationsTitle."</h4>",$content,$content1,$content2),"LRLL",array(20,20,40,20),30);
 echo "<hr />";
 

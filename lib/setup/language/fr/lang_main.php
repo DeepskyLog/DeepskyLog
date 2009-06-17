@@ -463,9 +463,15 @@ define("LangWelcomeTitle", "DeepskyLog");
 
 define("LangNewObjectTitle", "Rajoutez un nouvel objet (*= champs obligatoires)");
 define("LangNewObjectButton1", "Rajoutez l'objet");
+define("LangCancelNewObjectButton1", "Annulez le rajout");
 define("LangNewObjectSizeUnits1", "minutes d'arc");
 define("LangNewObjectSizeUnits2", "secondes d'arc");
 define("LangNewObjectIcqname", "Nom ICQ");
+define("LangCheckName","Vérifiez le nom");
+define("LangPossibleCandidateObjects","Candidats possibles");
+define("LangPossibleCandidateObjectsExplanation","Prière de confirmer que l'objet n'est pas présent");
+define("LangObjectNotFound","Confirmation");
+
 
 // control/validate_object.php
 

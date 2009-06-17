@@ -417,6 +417,32 @@ elseif($objUtil->checkGetKey('source')=='quickpick')   //=======================
 		}
 	} 
 }
+elseif($objUtil->checkGetKey('source')=='add_object10')   //========================== from quickpick page
+{ $validQobj=false;
+  $_GET['object']="%".$objUtil->checkRequestKey('catalog')."%".$objUtil->checkRequestKey('number')."%";
+  if(array_key_exists('QobjParams',$_SESSION)
+  && array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='add_object')
+  && array_key_exists('object',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['object']==$objUtil->checkGetKey('object')))
+	  $validQobj=true;
+  if($showPartOfs!=$objUtil->checkSessionKey('QobjPO',0))
+    $validQobj=false;
+	if(!$validQobj)
+	{ if(!$objUtil->checkGetKey('object'))
+		{ $_SESSION['QobjParams']=array();
+    	$_SESSION['QobjPO']=$showPartOfs;
+		  $_SESSION['Qobj']=array();
+		  $_SESSION['QobjSort']='';
+		  $_SESSION['QobjSortDirection']='';
+		}
+		else
+		{	$_SESSION['QobjParams']=array('source'=>'add_object','object'=>$objUtil->checkGetKey('object'));
+    	$_SESSION['QobjPO']=$showPartOfs;
+		  $_SESSION['Qobj']=$objObject->getObjectFromQuery(array('name'=>$objUtil->checkGetKey('object')),1,"D",$showPartOfs);
+	    $_SESSION['QobjSort']='';
+	    $_SESSION['QobjSortDirection']='asc';
+		}
+	} 
+}
 // ========================================= no search specified
 else
 { $_SESSION['QobjParams']=array();

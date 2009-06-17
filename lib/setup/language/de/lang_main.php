@@ -29,8 +29,11 @@
 //  LangMenuCollapse
 //  LangQuickPickHelp
 //  LangWelcome5
-
-
+// LangCancelNewObjectButton1
+// LangCheckName
+//  LangPossibleCandidateObjects
+//  LangPossibleCandidateObjectsExplanation
+// LangObjectNotFound
 
 
 
@@ -466,9 +469,15 @@ define("LangWelcomeTitle", "DeepskyLog");
 
 define("LangNewObjectTitle", "Neues Objekt anlegen (* Pflichtfelder)");
 define("LangNewObjectButton1", "Objekt anlegen");
+define("LangCancelNewObjectButton1", "Cancel adding");
 define("LangNewObjectSizeUnits1", "Bogenminuten");
 define("LangNewObjectSizeUnits2", "Bogensekunden");
 define("LangNewObjectIcqname", "ICQ name");
+define("LangCheckName","Check the name");
+define("LangPossibleCandidateObjects","Possible candidates");
+define("LangPossibleCandidateObjectsExplanation","Please confirm that the object is not listed below");
+define("LangObjectNotFound","Confirm");
+
 
 // control/validate_object.php
 
