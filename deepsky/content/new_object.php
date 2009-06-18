@@ -10,6 +10,7 @@ $content5="";
 if($phase==2)
 { $content="<input type=\"submit\" name=\"newobject\" value=\"".LangNewObjectButton1."\" />&nbsp;";
   echo "<input type=\"hidden\" name=\"indexAction\" id=\"indexAction\" value=\"validate_object\" />";
+  $entryMessage.=LangNewObjectPhase2;
 }
 elseif($phase==1)
 { $content="<a href=\"".$baseURL."index.php?indexAction=defaultAction\">"."<input type=\"button\" name=\"cancelnewobject\" value=\"".LangCancelNewObjectButton1."\" />&nbsp;"."</a>";
@@ -17,6 +18,10 @@ elseif($phase==1)
   $content3="<input type=\"submit\" name=\"phase2\" id=\"phase2\" value=\"".LangObjectNotFound."\" />";
   echo "<input type=\"hidden\" name=\"phase\" id=\"phase\" value=\"1\" />";
   echo "<input type=\"hidden\" name=\"indexAction\" id=\"indexAction\" value=\"add_object\" />";
+  if($objUtil->checkRequestKey(('phase20')))
+    $entryMessage.=LangNewObjectPhase20;
+  else
+    $entryMessage.=LangNewObjectPhase1;
 }
 else
 { $content="<a href=\"".$baseURL."index.php?indexAction=defaultAction\">"."<input type=\"button\" name=\"cancelnewobject\" value=\"".LangCancelNewObjectButton1."\" />&nbsp;"."</a>";
@@ -24,6 +29,10 @@ else
   $content3="<input type=\"submit\" name=\"phase1\" id=\"phase1\" value=\"".LangObjectNotFound."\" />";
   echo "<input type=\"hidden\" name=\"phase\" id=\"phase\" value=\"0\" />";
   echo "<input type=\"hidden\" name=\"indexAction\" id=\"indexAction\" value=\"add_object\" />";
+  if($objUtil->checkRequestKey(('phase10')))
+    $entryMessage.=LangNewObjectPhase10;
+  else
+    $entryMessage.=LangNewObjectPhase0;
 }
 $objPresentations->line(array("<h4>".LangNewObjectTitle."</h4>",$content),"LR",array(80,20),30);
 echo "<hr />";

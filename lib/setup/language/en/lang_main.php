@@ -37,6 +37,16 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
 define("LangGeneralObservations","observations");
 
 define("LangIndexPleaseWait","Please wait a moment while loading data...");
@@ -471,6 +481,18 @@ define("LangCheckRA","Check the coordinates");
 define("LangPossibleCandidateObjects","Possible candidates");
 define("LangPossibleCandidateObjectsExplanation","Please confirm that the object is not listed below");
 define("LangObjectNotFound","Confirm");
+define("LangNewObjectPhase0","Only enter new objects that are not in the system yet. First, you have to enter the name of the object. ".
+                             "In the first box, you enter the catalog name, in the second box, you enter the number of the object within the catalog (e.g. M in the first box, 1 in the second box). ");
+define("LangNewObjectPhase10","Now you have to check if the name doesn't already exist in the list below, based on its name. Take your time to carefully check the entries. ".
+                              "If the object is in the list, you can leave this section by e.g. clicking the object to verify it's the right one. ".
+                              "If the object is not in the list, you can continue entering it by clicking the 'Confirm' button. Attention: it's possible you have to scroll to see the whole list.");
+define("LangNewObjectPhase1" ,"Now you give the coordinates of the object: right ascension and declination. ".
+                              "Our coordinates are in the epoch 2000 reference system (J2000).");
+define("LangNewObjectPhase20","Now you have to check if the name doesn't already exist in the list below, based on its coordinates. Take your time to carefully check the entries. ".
+                              "If the object is in the list, you can leave this section by e.g. clicking the object to verify it's the right one. ".
+                              "If the object is not in the list, you can continue entering it by clicking the 'Confirm' button. Attention: it's possible you have to scroll to see the whole list.");
+define("LangNewObjectPhase2" ,"Now continue entering the object details.".
+                              "When all is ready, confirm using the button above, named 'Add object'.");
 
 
 // control/validate_object.php

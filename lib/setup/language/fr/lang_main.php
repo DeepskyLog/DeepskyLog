@@ -37,6 +37,17 @@
 //  LangMenuCollapse
 //  LangQuickPickHelp
 //  LangWelcome5
+//  LangNewObjectPhase0 en volgende
+
+
+
+
+
+
+
+
+
+
 define("LangGeneralObservations","observations");
 
 define("LangIndexPleaseWait","Prière d'attendre un moment pendant le recherche des donné¿½es...");
@@ -472,6 +483,18 @@ define("LangCheckRA","Vérifiez les coordonnées");
 define("LangPossibleCandidateObjects","Candidats possibles");
 define("LangPossibleCandidateObjectsExplanation","Prière de confirmer que l'objet n'est pas présent");
 define("LangObjectNotFound","Confirmation");
+define("LangNewObjectPhase0","Geef enkel objecten in die nog niet in het systeem zitten. Geef eerst de naam van het object in. ".
+                             "In het eerste vak geef je de cataloog in, in het tweede vak het nummer binnen de cataloog (bv. M in het eerste vak, 1 in het tweede vak). ");
+define("LangNewObjectPhase10","Now you have to check if the name doesn't already exist in the list below, based on its name. Take your time to carefully check the entries. ".
+                              "If the object is in the list, you can leave this section by e.g. clicking the object to verify it's the right one. ".
+                              "If the object is not in the list, you can continue entering it by clicking the 'Confirm' button. Attention: it's possible you have to scroll to see the whole list.");
+define("LangNewObjectPhase1" ,"Geef nu de coördinaten van het object in: rechte klimming en declinatie. ".
+                              "Onze coördinaten worden uitgedrukt in de epoch 2000 (J2000).");
+define("LangNewObjectPhase20","Now you have to check if the name doesn't already exist in the list below, based on its coordinates. Take your time to carefully check the entries. ".
+                              "If the object is in the list, you can leave this section by e.g. clicking the object to verify it's the right one. ".
+                              "If the object is not in the list, you can continue entering it by clicking the 'Confirm' button. Attention: it's possible you have to scroll to see the whole list.");
+define("LangNewObjectPhase2" ,"Ga nu verder met het ingeven van de details van het object. ".
+                              "Als alles klaar is, bevestig je bovenaan met de knop 'Voeg object toe'.");
 
 
 // control/validate_object.php
