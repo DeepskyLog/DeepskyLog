@@ -529,6 +529,7 @@ define("LangNotSeenByMeOrNotSeenAtAll", "Not seen by me or not seen at all");
 define("LangNotSeen", "Not seen at all");
 define("LangSeen", "Seen");
 define("LangListQueryObjectsMessage1", "Add&nbsp;all&nbsp;results&nbsp;of&nbsp;the&nbsp;page&nbsp;to&nbsp;list&nbsp;");
+define("LangListQueryObjectsMessage1b", "Remove&nbsp;all&nbsp;results&nbsp;of&nbsp;the&nbsp;page&nbsp;to&nbsp;list&nbsp;");
 define("LangListQueryObjectsMessage2", "&nbsp;to&nbsp;add&nbsp;to&nbsp;the&nbsp;list&nbsp;");
 define("LangListQueryObjectsMessage3", "&nbsp;to&nbsp;remove&nbsp;from&nbsp;the&nbsp;list&nbsp;");
 define("LangListQueryObjectsMessage4", "Add&nbsp;all&nbsp;resultats&nbsp;to&nbsp;the&nbsp;list&nbsp;");

@@ -344,7 +344,7 @@ else
     $_REQUEST['phase']=1;
   if($objUtil->checkRequestKey(('phase2')))
     $_REQUEST['phase']=2;
-    if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_object")
+  if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_object")
 	  $objObject->validateObject();
 	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="validate_delete_observation")
 	{ $entryMessage.=$objObservation->validateDeleteDSObservation();
@@ -388,12 +388,8 @@ else
 	}
 	if($objUtil->checkGetKey('removePageObjectsFromList')&&$myList)
 	{ if(count($_SESSION['Qobj'])>0)
-		{ if(array_key_exists('min',$_GET) && $_GET['min'])
-	     $min=$_GET['min'];
-	    else
-	     $min=0;
-			$count=$min;
-		  while(($count<($min+25))&&($count<count($_SESSION['Qobj'])))
+		{ $count=$objUtil->checkRequestKey('min');
+		  while(($count<($objUtil->checkRequestKey('max')))&&($count<count($_SESSION['Qobj'])))
 		  {$objList->removeObjectFromList($_SESSION['Qobj'][$count]['objectname'],$_SESSION['Qobj'][$count]['showname']);
 			  $count++;
 	    }
@@ -478,8 +474,8 @@ else
 	}
 	
 	if(array_key_exists('addAllObjectsFromPageToList',$_GET) && $_GET['addAllObjectsFromPageToList'] && $myList)
-	{ $count=$min;
-		while(($count<($min+25))&&($count<count($_SESSION['Qobj'])))
+	{ $count=$objUtil->checkRequestKey('min');
+		while(($count<$objUtil->checkRequestKey('max'))&&($count<count($_SESSION['Qobj'])))
 		{ $objList->addObjectToList($_SESSION['Qobj'][$count]['objectname'],$_SESSION['Qobj'][$count]['showname']);
 			$count++;
 	  }

@@ -46,7 +46,7 @@ if($listname)
       echo "theResizeSize=65;";
       echo "</script>";
   	}
-	  $objObject->showObjects($link, $min, $max,'',1, $step);
+	  $objObject->showObjects($link, $min, $max,'',1, $step,"removePageObjectsFromList");
 	  echo "<hr />";
     if($myList)
     { $content2 =" <form action=\"".$baseURL."index.php?indexAction=listaction\">";

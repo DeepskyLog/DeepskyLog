@@ -536,6 +536,7 @@ define("LangNotSeenByMeOrNotSeenAtAll", "Nicht von mir, oder noch &uuml;berhaupt
 define("LangNotSeen", "Noch nicht beobachtet");
 define("LangSeen", "Beobachtet");
 define("LangListQueryObjectsMessage1", "Alle Ergebnisse der Seite zur Liste hinzuf&uuml;gen");
+define("LangListQueryObjectsMessage1b", "Alle Ergebnisse der Seite zur Liste entfernen");
 define("LangListQueryObjectsMessage2", "&nbsp;hinzuf&uuml;gen&nbsp;zur&nbsp;Liste&nbsp;");
 define("LangListQueryObjectsMessage3", "&nbsp;entfernen&nbsp;von&nbsp;der&nbsp;Liste&nbsp;");
 define("LangListQueryObjectsMessage4", "Alle Ergebnisse zur Liste hinzuf&uuml;gen");

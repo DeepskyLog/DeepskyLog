@@ -37,7 +37,7 @@ interface iObjects
   public  function setDsObjectSBObj($name);                                     // sets the SBObj for an object, based on its mag and diam1 & 2, e.g. after changing its diam or mag.
   public  function setDsoProperty($name,$property,$propertyValue);              // sets the property to the specified value for the given object
   public  function showObject($object);                                         // shows the characteristics of a single object
-  public  function showObjects($link, $min, $max, $ownShow='', $showRank=0, $step=25);    // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
+  public  function showObjects($link, $min, $max, $ownShow='', $showRank=0, $step=25, $pageListAction="addAllObjectsFromPageToList");    // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
   public  function sortObjects($objectList, $sort, $reverse=false);             // Sort the array of objectList on the $sort field, and in second order on the showname field 
 	public  function validateObject();                                            // checks if the add new object form is correctly filled in and eventually adds the object to the database
 }
@@ -811,7 +811,7 @@ class Objects implements iObjects
     echo "</div></form>";
 	  echo "<hr />";
   }
-  public  function showObjects($link, $min, $max, $ownShow='', $showRank=0, $step=25)        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
+  public  function showObjects($link, $min, $max, $ownShow='', $showRank=0, $step=25, $pageListAction="addAllObjectsFromPageToList")        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
   { global $FF, $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil,$objPresentations,$objList;
 	  $atlas='';
     echo "<table width=\"100%\">";
@@ -833,9 +833,11 @@ class Objects implements iObjects
 	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader7, $link."&amp;sort=objectseen");
 	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader8, $link."&amp;sort=objectlastseen");
     }
-    if($myList)
-      echo("<td align=\"center\"><a href=\"" . $link . "&amp;min=" . $min . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">&nbsp;P&nbsp;</a></td>");
- 	  if($FF)
+    if(($myList) && ($pageListAction=="addAllObjectsFromPageToList"))
+      echo("<td align=\"center\"><a href=\"".$link."&amp;min=".$min."&amp;max=".($min+$step)."&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">&nbsp;P&nbsp;</a></td>");
+    if(($myList) && ($pageListAction=="removePageObjectsFromList"))
+      echo("<td align=\"center\"><a href=\"".$link."&amp;min=".$min."&amp;max=".($min+$step)."&amp;removePageObjectsFromList=true\" title=\"" . LangListQueryObjectsMessage1b. $listname_ss . "\">&nbsp;R&nbsp;</a></td>");
+    if($FF)
       echo "<td class=\"width10px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
     echo "</tr>";
  	  if($FF)

@@ -530,6 +530,7 @@ define("LangNotSeenByMeOrNotSeenAtAll", "Uniquement les objets que je n'ai pas v
 define("LangNotSeen", "Uniquement les objets qui n'ont pas encore &eacute;t&eacute; observ&eacute;s par personne");
 define("LangSeen", "D&eacute;j&agrave; vu");
 define("LangListQueryObjectsMessage1", "Rajouter&nbsp;les&nbsp;rsultats&nbsp;de&nbsp;la&nbsp;page&nbsp;&nbsp;la&nbsp;liste&nbsp;");
+define("LangListQueryObjectsMessage1b", "Enlever&nbsp;les&nbsp;rsultats&nbsp;de&nbsp;la&nbsp;page&nbsp;&nbsp;la&nbsp;liste&nbsp;");
 define("LangListQueryObjectsMessage2", "&nbsp;&nbsp;rajoutez&nbsp;&nbsp;la&nbsp;liste&nbsp;");
 define("LangListQueryObjectsMessage3", "&nbsp;enlever&nbsp;de&nbsp;la&nbsp;liste&nbsp;");
 define("LangListQueryObjectsMessage4", "Rajoutez&nbsp;tous&nbsp;les&nbsp;résultats&nbsp;de&nbsp;la&nbsp;liste&nbsp;");

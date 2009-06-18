@@ -100,8 +100,8 @@ else
 	if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
 	{ echo "<hr />";
 	  echo("<form action=\"".$baseURL."index.php\" method=\"get\">");
-	  echo("<input type=\"hidden\" name=\"object\" value=\"" . $_GET['object'] . "\">");
-	  echo("<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\">");
+	  echo("<input type=\"hidden\" name=\"object\" value=\"" . $_GET['object'] . "\" />");
+	  echo("<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />");
 	  echo("<select name=\"newaction\">");
 	  echo("<option value=\"\">&nbsp;</option>"); // empty field
 	  echo("<option value=\"NewName\">" . LangObjectNewName . "</option>");

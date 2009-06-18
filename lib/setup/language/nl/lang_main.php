@@ -528,6 +528,7 @@ define("LangNotSeenByMeOrNotSeenAtAll", "Enkel objecten die ik nog niet waargeno
 define("LangNotSeen", "Enkel objecten die nog niemand waarnam");
 define("LangSeen", "Waargenomen");
 define("LangListQueryObjectsMessage1", "Resultaten&nbsp;van&nbsp;de&nbsp;hele&nbsp;pagina&nbsp;toevoegen&nbsp;aan&nbsp;lijst&nbsp;");
+define("LangListQueryObjectsMessage1b", "Resultaten&nbsp;van&nbsp;de&nbsp;hele&nbsp;pagina&nbsp;verwijderen&nbsp;aan&nbsp;lijst&nbsp;");
 define("LangListQueryObjectsMessage2", "&nbsp;toevoegen&nbsp;aan&nbsp;lijst&nbsp;");
 define("LangListQueryObjectsMessage3", "&nbsp;verwijderen&nbsp;uit&nbsp;lijst&nbsp;");
 define("LangListQueryObjectsMessage4", "Alle&nbsp;resultaten&nbsp;toevoegen&nbsp;aan&nbsp;lijst&nbsp;");
