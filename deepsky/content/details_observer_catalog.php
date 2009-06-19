@@ -89,6 +89,8 @@ for ($i = 1; $i <= $numberOfObjects; $i++)
     echo  "</tr>";
 	next($resultarray);
 }
+if(((--$i)%10)!=0)
+  echo "</tr>";
 echo "</table>";
 echo "</div>";
 

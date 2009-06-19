@@ -53,6 +53,9 @@ define("LangIndexPleaseWait","Please wait a moment while loading data...");
 
 define("LangMessageDeepskyLog","DeepskyLog");
 
+define("LangTitleview_observer_catalog"  ,"Overview catalog");
+define("LangTitlerank_observers"         ,"Overview pbservers");
+
 define("LangException000", "An unknown error occured. Please do contact the developers with this messsage.");
 define("LangException001", "You need to be logged in as an administrator to execute these operations.");
 define("LangException002", "You need to be logged in to change your locations or equipment.");

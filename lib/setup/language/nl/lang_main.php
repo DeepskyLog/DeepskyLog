@@ -55,6 +55,28 @@ define("LangIndexPleaseWait","Gelieve een moment te wachten terwijl de gegevens 
 
 define("LangMessageDeepskyLog","DeepskyLog");
 
+define("LangTitlecomets_result_query_objects"       ,"Resultaten opzoeken komeet");
+define("LangTitlecomets_result_query_observations"  ,"Resultaten opzoeken waarnemingen komeet");
+define("LangTitle","");
+define("LangTitle","");
+define("LangTitle","");
+define("LangTitle","");
+define("LangTitle","");
+define("LangTitle","");
+define("LangTitle","");
+define("LangTitle","");
+define("LangTitle","");
+define("LangTitle","");
+define("LangTitle","");
+define("LangTitle","");
+define("LangTitle","");
+define("LangTitle","");
+define("LangTitle","");
+define("LangTitle","");
+define("LangTitle","");
+define("LangTitleview_observer_catalog"  ,"Overzicht cataloog ");
+define("LangTitlerank_observers"         ,"Overzicht waarnemers");
+
 define("LangException000", "Er is een ongekende fout opgetreden. Gelieve de developers te contacteren met dit bericht.");
 define("LangException001", "U dient ingelogd te zijn als administrator om deze operaties uit te voeren. Gelieve de developers te contacteren met dit bericht.");
 define("LangException002", "U dient ingelogd te zijn om locaties en apparatuur te beheren. Gelieve de developers te contacteren met dit bericht.");
