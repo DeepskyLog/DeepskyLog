@@ -53,6 +53,9 @@ define("LangIndexPleaseWait","Please wait a moment while loading data...");
 
 define("LangMessageDeepskyLog","DeepskyLog");
 
+define("LangTitleview_observer_catalog"  ,"Overview catalog");
+define("LangTitlerank_observers"         ,"Overview pbservers");
+
 define("LangException000", "An unknown error occured. Please do contact the developers with this messsage.");
 define("LangException001", "Sie m&uuml;ssen als Administrator angemeldet sein um diese Funktion auszuf&uuml;hren.");
 define("LangException002", "Sie m&uuml;ssen sich anmelden um Ihre Beobachtungspl&auml;tze oder Zubeh&ouml;r zu &auml;ndern.");
