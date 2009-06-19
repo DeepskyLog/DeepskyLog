@@ -1,7 +1,7 @@
 <?php // tolist.php - manages and shows lists
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 echo "<div id=\"main\">";
-echo "<form action=\"".$baseURL."index.php?indexAction=listaction\">";
+echo "<form action=\"".$baseURL."index.php?indexAction=listaction\"><div>";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
 $content1 =LangToListAddNew;
 $content1.="<input type=\"text\" class=\"inputfield\" name=\"addlistname\" size=\"40\" value=\"\" />";
@@ -11,7 +11,7 @@ $content3.="<input class=\"width125px\" type=\"submit\" name=\"addList\" value=\
 if($myList)
   $content3.="<input class=\"width125px\" type=\"submit\" name=\"renameList\" value=\"" . LangToListRename . "\" />";
 $objPresentations->line(array($content1,$content2,$content3),"LLL",array(40,30,30),30);
-echo "</form>";
+echo "</div></form>";
 echo "<hr />";
 if($listname)
 { $link = $baseURL."index.php?indexAction=listaction&amp;sort=".$objUtil->checkGetKey('sort','objectpositioninlist');

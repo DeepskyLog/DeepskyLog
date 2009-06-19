@@ -79,7 +79,7 @@ class Observers implements iObservers
   { global $baseURL,$objObservation,$objUtil,$objObserver,$objObject,$catalogs,$FF;
   	$outputtable = "";   $count=0;
 		$objectsInCatalog=$objObject->getNumberOfObjectsInCatalog($catalog);
-    echo "<table width=\"100%\">";
+    echo "<div><table width=\"100%\">";
 	  if($FF)
 	    echo "<thead>";
     echo "<tr class=\"type3\">";
@@ -103,13 +103,20 @@ class Observers implements iObservers
 		if($FF)
 		  echo "<td>&nbsp;&nbsp;</td>";
 		echo"</tr>";
-		if($FF)
-		{ echo "</thead>";
-		  echo "<tbody id=\"topobs_list\" class=\"tbody_obs\">";
-		}
 		$numberOfObservations = $objObservation->getNumberOfDsObservations();
 		$numberOfObservationsThisYear = $objObservation->getObservationsLastYear('%');
 		$numberOfDifferentObjects = $objObservation->getNumberOfDifferentObservedDSObjects();
+		if($FF)
+		{ echo "</thead>";
+		  echo "<tfoot>";
+		  echo "<tr class=\"type3 centered\"><td>".LangTopObservers1."</td><td></td>".
+		                "<td class=\"centered\">$numberOfObservations</td>" .
+			              "<td class=\"centered\">$numberOfObservationsThisYear</td>" .
+		 							  "<td class=\"centered\">".$objectsInCatalog."</td>" .
+									  "<td class=\"centered\">".$numberOfDifferentObjects."</td></tr>";
+      echo "</tfoot>";
+		  echo "<tbody id=\"topobs_list\" class=\"tbody_obs\">";
+		}
 		$countline=0;
 		while(list($key,$value)=each($rank))
 		{ if(($count>=$min)&&($count<$max))
@@ -133,18 +140,16 @@ class Observers implements iObservers
 		}
     if($FF) 
     { while($countline++<$step)
-        $outputtable .= "<tr><td>&nbsp;</td></tr>";   
-      $outputtable .= "</tbody>";
-      $outputtable .= "<tfoot>";
+        $outputtable .= "<tr><td>&nbsp;</td></tr>";  
+      $outputtable .= "</tbody>"; 
     }
-		$outputtable .= "<tr class=\"type3 centered\"><td>".LangTopObservers1."</td><td></td>".
-		                "<td class=\"centered\">$numberOfObservations</td>" .
-			              "<td class=\"centered\">$numberOfObservationsThisYear</td>" .
-		 							  "<td class=\"centered\">".$objectsInCatalog."</td>" .
-									  "<td class=\"centered\">".$numberOfDifferentObjects."</td></tr>";
-    if($FF)
-      $outputtable .= "</tfoot>";
-		$outputtable .= "</table>";
+		else
+		  $outputtable .= "<tr class=\"type3 centered\"><td>".LangTopObservers1."</td><td></td>".
+		                  "<td class=\"centered\">$numberOfObservations</td>" .
+			                "<td class=\"centered\">$numberOfObservationsThisYear</td>" .
+		 			  				  "<td class=\"centered\">".$objectsInCatalog."</td>" .
+						   			  "<td class=\"centered\">".$numberOfDifferentObjects."</td></tr>";
+		$outputtable .= "</table></div>";
 		$outputtable .= "<hr />";
 		echo $outputtable;
   }
