@@ -39,6 +39,10 @@ a.moduletable:link, a.moduletable:visited {
 a.observercatalog {
 	color            : #000000;
 }
+.alertMsgOk {
+	position         : relative;
+	top              : 3px;
+}
 body {
   margin           : 0px 0px 0px 0px;
   color            : #000000;

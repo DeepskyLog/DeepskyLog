@@ -37,7 +37,7 @@ class Presentations implements iPresentation
 	  echo $theMessage;
 	  echo "</div>";
 	  echo "<div id=\"dialogdiv2\">";
-	  echo "<input type=\"submit\" onclick=\"confirmAlertMessage();\" value=\"Ok\" />";
+	  echo "<input class=\"alertMsgOk\" type=\"submit\" onclick=\"confirmAlertMessage();\" value=\"Ok\" />";
     echo "</div>";
 	  echo "</div>";
 	  echo "<script type=\"text/javascript\">messageBox();</script>";	
