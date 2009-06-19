@@ -1,18 +1,20 @@
 <?php // tolist.php - manages and shows lists
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 echo "<div id=\"main\">";
-echo "<form action=\"".$baseURL."index.php?indexAction=listaction\"><div>";
-echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
-$content1 =LangToListAddNew;
-$content1.="<input type=\"text\" class=\"inputfield\" name=\"addlistname\" size=\"40\" value=\"\" />";
-$content2="<input type=\"checkbox\" name=\"PublicList\" value=\"" . LangToListPublic . "\" />".LangToListPublic;
-$content3="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-$content3.="<input class=\"width125px\" type=\"submit\" name=\"addList\" value=\"" . LangToListAdd . "\" />";
-if($myList)
-  $content3.="<input class=\"width125px\" type=\"submit\" name=\"renameList\" value=\"" . LangToListRename . "\" />";
-$objPresentations->line(array($content1,$content2,$content3),"LLL",array(40,30,30),30);
-echo "</div></form>";
-echo "<hr />";
+if($loggedUser)
+{ echo "<form action=\"".$baseURL."index.php?indexAction=listaction\"><div>";
+	echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
+	$content1 =LangToListAddNew;
+	$content1.="<input type=\"text\" class=\"inputfield\" name=\"addlistname\" size=\"40\" value=\"\" />";
+	$content2="<input type=\"checkbox\" name=\"PublicList\" value=\"" . LangToListPublic . "\" />".LangToListPublic;
+	$content3="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+	$content3.="<input class=\"width125px\" type=\"submit\" name=\"addList\" value=\"" . LangToListAdd . "\" />";
+	if($myList)
+	  $content3.="<input class=\"width125px\" type=\"submit\" name=\"renameList\" value=\"" . LangToListRename . "\" />";
+	$objPresentations->line(array($content1,$content2,$content3),"LLL",array(40,30,30),30);
+	echo "</div></form>";
+	echo "<hr />";
+}
 if($listname)
 { $link = $baseURL."index.php?indexAction=listaction&amp;sort=".$objUtil->checkGetKey('sort','objectpositioninlist');
   if((array_key_exists('steps',$_SESSION))&&(array_key_exists("listObj",$_SESSION['steps'])))
