@@ -1819,7 +1819,7 @@ class Utils implements iUtils
       return $includefile;
   }
   private function utilitiesCheckIndexActionDSquickPick()
-  { global $objObject;
+  { global $objObject,$entryMessage;
     if($this->checkGetKey('indexAction')=='quickpick')
     { if($this->checkGetKey('object'))
 	    { if($temp=$objObject->getExactDsObject($_GET['object']))
@@ -1832,9 +1832,10 @@ class Utils implements iUtils
 	          return 'deepsky/content/view_object.php';  
 	      }
 	      else
-	      { $_GET['object']=ucwords(trim($_GET['object']));
+	      { $entryMessage=LangInstructionsNoObjectFound.$_GET['object'];
+	        $_GET['object']=ucwords(trim($_GET['object']));
 	        if(array_key_exists('searchObservationsQuickPick', $_GET))
-	          return 'deepsky/content/selected_observations2.php';  
+	          return 'deepsky/content/setup_observations_query.php';  
 	        elseif(array_key_exists('newObservationQuickPick', $_GET))
 	          return 'deepsky/content/setup_objects_query.php';   
 	        else
