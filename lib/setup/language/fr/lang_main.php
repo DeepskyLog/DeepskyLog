@@ -54,6 +54,9 @@ define("LangIndexPleaseWait","Prière d'attendre un moment pendant le recherche d
 
 define("LangMessageDeepskyLog","DeepskyLog");
 
+define("LangTitleview_observer_catalog"  ,"Overview catalog");
+define("LangTitlerank_observers"         ,"Overview pbservers");
+
 define("LangException000", "Er is een ongekende fout opgetreden. Gelieve de developers te contacteren met dit bericht.");
 define("LangException001", "U dient ingelogd te zijn als administrator om deze operaties uit te voeren. Gelieve de developers te contacteren met dit bericht.");
 define("LangException002", "U dient ingelogd te zijn om locaties en apparatuur te beheren. Gelieve de developers te contacteren met dit bericht.");
