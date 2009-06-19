@@ -20,6 +20,13 @@
   $dslInfo       = "Powered by&nbsp;<a href=\"http://www.deepskylog.org\">DeepskyLog</a>&nbsp;";
   $versionInfo   = "3.4-Trunk";
   $objectInfo       = " - Object Database by <a href=\"http://www.eyeandtelescope.com/\" >Eye&amp;Telescope</a>";
+  $w3cInfo = "<a class=\"w3c\" href=\"http://validator.w3.org/check?uri=referer\">".
+             "<img class=\"w3c\" src=\"".$baseURL."styles/images/valid-xhtml10S.png\" alt=\"Valid XHTML 1.0 Strict\" />".
+             "</a>".
+             "&nbsp;".
+             "<a class=\"w3c\" href=\"http://jigsaw.w3.org/css-validator/check/referer\">".
+             "<img class=\"w3c\" src=\"".$baseURL."styles/images/vcssS.gif\" alt=\"Valid CSS\" />".
+             "</a>";
   
   // Allow users to register from within the DeepskyLog application directly
   // If you want to use a already existing database with users and passwords
