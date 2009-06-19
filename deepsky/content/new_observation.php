@@ -9,7 +9,7 @@ else
   $object=$objUtil->checkPostKey('object', $objUtil->checkGetKey('object'));
 }
 if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostKey('timestamp',-1)))
-{ echo "<form action=\"".$baseURL."index.php\" method=\"post\" enctype=\"multipart/form-data\">";
+{ echo "<form action=\"".$baseURL."index.php\" method=\"post\" enctype=\"multipart/form-data\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_observation\" />";
 	echo "<input type=\"hidden\" name=\"observationid\" value=\"".$observationid."\" />";
 	echo "<input type=\"hidden\" name=\"timestamp\" value=\"" . $_POST['timestamp'] . "\" />";
@@ -216,13 +216,15 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$objPresentations->line(array("",$contentMisc1.$contentMisc2,$contentMisc3,$contentMisc4),
 	                        "LLRL",array(11,52,11,25),30);
 	echo "</div>";
-	echo "</form>";
+	echo "</div></form>";
 	
 	echo "<hr />";
 	$seen = $objObject->getDSOseenLink($object);
 	
-	$objPresentations->line(array("<h4>".LangViewObjectTitle."&nbsp;".$object."&nbsp;:&nbsp;".$seen."</h4>",$objPresentations->getDSSDeepskyLiveLinks($object)),
+	$objPresentations->line(array("<h4>".LangViewObjectTitle."&nbsp;".$object."&nbsp;:&nbsp;".$seen."</h4>",$objPresentations->getDSSDeepskyLiveLinks1($object)),
 	                        "LR",array(50,50),30);
+	$objPresentations->line(array($objPresentations->getDSSDeepskyLiveLinks2($object)),
+	                        "R",array(100),20);
 	echo "<hr />";
 	$content1="";$content2="";$content3="";
 	if(substr($objObject->getSeen($object),0,1)!="-")
