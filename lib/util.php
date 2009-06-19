@@ -1832,10 +1832,9 @@ class Utils implements iUtils
 	          return 'deepsky/content/view_object.php';  
 	      }
 	      else
-	      { $entryMessage=LangInstructionsNoObjectFound.$_GET['object'];
-	        $_GET['object']=ucwords(trim($_GET['object']));
+	      { $_GET['object']=ucwords(trim($_GET['object']));
 	        if(array_key_exists('searchObservationsQuickPick', $_GET))
-	          return 'deepsky/content/setup_observations_query.php';  
+	          return 'deepsky/content/selected_observations2.php';  
 	        elseif(array_key_exists('newObservationQuickPick', $_GET))
 	          return 'deepsky/content/setup_objects_query.php';   
 	        else

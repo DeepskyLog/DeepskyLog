@@ -1,4 +1,6 @@
 <?php // setup_objects_query.php - interface to query objects
+if($objUtil->checkGetKey('object'))
+  $entryMessage.=LangInstructionsNoObjectFound.$_GET['object'];
 $link=$baseURL."index.php?indexAction=query_objects";
 reset($_GET);
 while(list($key,$value)=each($_GET))

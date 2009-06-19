@@ -19,7 +19,8 @@ echo "    document.forms['ObservationsQueryForm'].maxyear.value = y;";
 echo "	}";
 echo "	</script>";
 
-
+if($objUtil->checkGetKey('object'))
+  $entryMessage.=LangInstructionsNoObjectFound.$_GET['object'];
 $_SESSION['result'] = "";
 if(array_key_exists('atlas',$_GET)&&$_GET['atlas'])
   $atlas=$_GET['atlas'];
