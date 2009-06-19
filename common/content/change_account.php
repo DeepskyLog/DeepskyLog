@@ -62,7 +62,7 @@ $usedLanguages=$objObserver->getUsedLanguages($loggedUser);
 
 // =================================================================================================PAGE OUTPUT
 echo "<div id=\"main\">";
-echo "<form class=\"content\" action=\"".$baseURL."index.php\" enctype=\"multipart/form-data\" method=\"post\">";
+echo "<form class=\"content\" action=\"".$baseURL."index.php\" enctype=\"multipart/form-data\" method=\"post\"><div>";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_account\" />";
 $objPresentations->line(array("<h4>".LangChangeAccountTitle."</h4>","<input type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />&nbsp;"),"LR",array(80,20),30);
 echo "<hr />";
@@ -105,7 +105,7 @@ reset($allLanguages);
 $j=0;
 $tempObsLangList[]="";
 while((list($key,$value)=each($allLanguages))&&($j<3))
-{ $tempObsLangList[]="<input type=\"checkbox\" ".(in_array($key,$usedLanguages)?"checked=\"true\"":"")." name=\"".$key."\" value=\"".$key."\" />".$value;
+{ $tempObsLangList[]="<input type=\"checkbox\" ".(in_array($key,$usedLanguages)?"checked=\"checked\"":"")." name=\"".$key."\" value=\"".$key."\" />".$value;
   $j++;
 }
 $tempObsLangList[]=LangChangeVisibleLanguagesExpl;
@@ -113,7 +113,7 @@ $objPresentations->line($tempObsLangList,"RLLLL",array(20,13,13,14,40),'',array(
 unset($tempObsLangList);
 $tempObsLangList[]="";
 while((list($key,$value)=each($allLanguages)))
-{ $tempObsLangList[]="<input type=\"checkbox\" ".(in_array($key,$usedLanguages)?"checked=\"true\"":"")." name=\"".$key."\" value=\"".$key."\" />".$value;
+{ $tempObsLangList[]="<input type=\"checkbox\" ".(in_array($key,$usedLanguages)?"checked=\"checked\"":"")." name=\"".$key."\" value=\"".$key."\" />".$value;
   $j++;
   if(($j%3)==0)
   { $tempObsLangList[]="";
@@ -122,14 +122,14 @@ while((list($key,$value)=each($allLanguages)))
     $tempObsLangList[]="";
   }
 }
-echo "</form>";
+echo "</div></form>";
 $upload_dir = 'common/observer_pics';
 $dir = opendir($instDir.$upload_dir);
 while (FALSE!==($file=readdir($dir)))
 { if(("."==$file)||(".."==$file))                                            // skip current directory and directory above
     continue; 
   if(fnmatch($loggedUser.".gif",$file)||fnmatch($loggedUser.".jpg",$file)||fnmatch($loggedUser.".png",$file))
-  { echo "<p align=\"center\">";
+  { echo "<p class=\"centered\">";
 	  echo "<img class=\"account\" src=\"".$baseURL.$upload_dir."/".$file."\" alt=\"".$loggedUser."/".$file."\"></img>";
 		echo "</p>";
 	}
