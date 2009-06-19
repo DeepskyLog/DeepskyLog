@@ -57,23 +57,7 @@ define("LangMessageDeepskyLog","DeepskyLog");
 
 define("LangTitlecomets_result_query_objects"       ,"Resultaten opzoeken komeet");
 define("LangTitlecomets_result_query_observations"  ,"Resultaten opzoeken waarnemingen komeet");
-define("LangTitle","");
-define("LangTitle","");
-define("LangTitle","");
-define("LangTitle","");
-define("LangTitle","");
-define("LangTitle","");
-define("LangTitle","");
-define("LangTitle","");
-define("LangTitle","");
-define("LangTitle","");
-define("LangTitle","");
-define("LangTitle","");
-define("LangTitle","");
-define("LangTitle","");
-define("LangTitle","");
-define("LangTitle","");
-define("LangTitle","");
+
 define("LangTitleview_observer_catalog"  ,"Overzicht cataloog ");
 define("LangTitlerank_observers"         ,"Overzicht waarnemers");
 
