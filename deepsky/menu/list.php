@@ -30,10 +30,10 @@ $result1[]='----------';
 $result=array_merge($result1,$result2);
 if(count($result)>0)
 { echo "<select name=\"activatelist\" class=\"menuFieldExtended menuDropdown\" onchange=\"location=this.options[this.selectedIndex].value;\">";
-	if((!array_key_exists('listname',$_SESSION)) || (!$_SESSION['listname']))
+  if((!array_key_exists('listname',$_SESSION)) || (!$_SESSION['listname']))
 		$_SESSION['listname']="----------";
   while(list($key, $value) = each($result))
-	{ if(($value==$_SESSION['listname'])&&$myList)
+	{ if((($value==$_SESSION['listname'])&&$myList)||((!$myList)&&($value=="----------")))
 			echo("<option selected=\"selected\" value=\"".$baseURL."index.php?indexAction=listaction&amp;activateList=true&amp;listname=".$value."\">".$value."</option>");
     elseif (!(array_key_exists('removeList',$_GET) && ($_SESSION['listname']==$value)))
 			echo("<option value=\"".$baseURL."index.php?indexAction=listaction&amp;activateList=true&amp;listname=".$value."\">".$value."</option>");
