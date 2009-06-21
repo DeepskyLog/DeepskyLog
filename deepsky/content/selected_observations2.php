@@ -67,7 +67,7 @@ if (count($_SESSION['Qobs']) == 0) //===========================================
 {	$objPresentations->line(array("<h4>".LangObservationNoResults.(($objUtil->checkGetKey('myLanguages'))?(" (".LangSelectedObservationsSelectedLanguagesIndication.")"):(" (".LangSelectedObservationsAllLanguagesIndication.")"))."</h4>"),
                           "L",array(100),30);
 	if ($objUtil->checkGetKey('myLanguages'))
-		echo "<p>"."<a href=\"" . $link2 . "\">" . LangSearchAllLanguages . "</a><p>&nbsp;</p>";
+		echo "<p>"."<a href=\"" . $link2 . "\">" . LangSearchAllLanguages . "</a>&nbsp;</p>";
 	echo "<p>"."<a href=\"" . $baseURL . "index.php?indexAction=query_observations\">" . LangSearchDetailPage . "</a>"."</p>";
 }
 else 

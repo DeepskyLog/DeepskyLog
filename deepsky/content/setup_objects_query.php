@@ -56,7 +56,7 @@ echo(" class=\"fieldname\" align=\"right\">");
   echo("<select name=\"atlas\" class=\"inputfield\">");
   echo("<option value=\"\">-----</option>"); // empty field
   while(list($key,$value)=each($objAtlas->atlasCodes))
-    if($key==$atlas) echo("<option selected value=\"" . $key . "\">".$value."</option>"); 
+    if($key==$atlas) echo("<option selected=\"selected\" value=\"" . $key . "\">".$value."</option>"); 
 	  else echo("<option value=\"" . $key . "\">".$value."</option>");
   echo("</select>");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"atlasPageNumber\" size=\"4\" value=\"" . $atlasPageNumber .  "\" />"); 
@@ -78,7 +78,7 @@ echo(" class=\"fieldname\" align=\"right\">");
   if(array_key_exists('con',$_GET)) $con=$_GET['con']; else $con='';
   while(list($key, $value) = each($cons))
     if($value==$con)
-      echo("<option selected value=\"$key\">".$value."</option>");
+      echo("<option selected=\"selected\" value=\"$key\">".$value."</option>");
 	else
       echo("<option value=\"$key\">".$value."</option>");
   echo("</select>"); 
@@ -96,7 +96,7 @@ echo(" class=\"fieldname\" align=\"right\">");
   if(array_key_exists('type',$_GET)) $type=$_GET['type']; else $type='';
   while(list($key, $value) = each($stypes))
     if($value==$type)
-	  echo("<option selected value=\"$key\">".$value."</option>");
+	  echo("<option selected=\"selected\" value=\"$key\">".$value."</option>");
 	else
 	  echo("<option value=\"$key\">".$value."</option>");
   echo("</select>");
@@ -196,8 +196,8 @@ echo(" class=\"fieldname\" align=\"right\">");
   echo("</td><td>");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"minSize\" size=\"4\" value=\"" . $minSize . "\" />");
   echo("&nbsp;&nbsp;<select name=\"size_min_units\" class=\"inputfield\">");
-  if($size_min_units=="min") echo("<option selected value=\"min\">" . LangNewObjectSizeUnits1 . "</option>"); else echo("<option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>");
-  if($size_min_units=="sec") echo("<option selected value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>"); else echo("<option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>");
+  if($size_min_units=="min") echo("<option selected=\"selected\" value=\"min\">" . LangNewObjectSizeUnits1 . "</option>"); else echo("<option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>");
+  if($size_min_units=="sec") echo("<option selected=\"selected\" value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>"); else echo("<option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>");
   echo("</select></td>");
   // MAXIMUM SIZE
   echo("<td"); 
@@ -207,8 +207,8 @@ echo(" class=\"fieldname\" align=\"right\">");
   echo("</td><td>");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"maxSize\" size=\"4\" value=\"" . $maxSize . "\" />");
   echo("&nbsp;&nbsp;<select name=\"size_max_units\" class=\"inputfield\">");
-  if($size_max_units=="min") echo("<option selected value=\"min\">" . LangNewObjectSizeUnits1 . "</option>"); else echo("<option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>");
-  if($size_max_units=="sec") echo("<option selected value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>"); else echo("<option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>");
+  if($size_max_units=="min") echo("<option selected=\"selected\" value=\"min\">" . LangNewObjectSizeUnits1 . "</option>"); else echo("<option value=\"min\">" . LangNewObjectSizeUnits1 . "</option>");
+  if($size_max_units=="sec") echo("<option selected=\"selected\" value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>"); else echo("<option value=\"sec\">" . LangNewObjectSizeUnits2 . "</option>");
   echo("</select></td>");
   echo("</tr>");
 
@@ -244,7 +244,7 @@ if($loggedUser)
   $lists = $objList->getLists(); 
   while(list($key, $value) = each($lists))
     if($value==$inList)
-      echo("<option selected value=\"$value\">$value</option>");
+      echo("<option selected=\"selected\" value=\"$value\">$value</option>");
     else
       echo("<option value=\"$value\">$value</option>");
   echo("</select>");
@@ -261,7 +261,7 @@ if($loggedUser)
     $lists = $objList->getLists(); 
     while(list($key, $value) = each($lists))
       if($value==$notInList)
-        echo("<option selected value=\"$value\">$value</option>");
+        echo("<option selected=\"selected\" value=\"$value\">$value</option>");
     else
         echo("<option value=\"$value\">$value</option>");
     echo("</select>");

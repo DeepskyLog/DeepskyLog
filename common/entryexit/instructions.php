@@ -444,7 +444,7 @@ else
 	  $myList=False;
 	  unset($_GET['removeList']);
 	}
-	if($objUtil->checkGetKey('activateList')&&$objUtil->checkGetKey('listname'))
+	if($objUtil->checkGetKey('activateList')&&$objUtil->checkGetKey('listname')&&($objUtil->checkGetKey('listname')!=$_SESSION['listname']))
 	{ $_SESSION['listname']=$_GET['listname'];
 	  $listname=$_SESSION['listname'];
 	  $listname_ss=stripslashes($listname);

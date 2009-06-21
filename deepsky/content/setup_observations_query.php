@@ -71,7 +71,7 @@ echo "</td>";
 echo "<td>";
 echo("<select name=\"atlas\" class=\"inputfield\">");
   while(list($key,$value)=each($objAtlas->atlasCodes))
-	  if($key==$atlas) echo("<option selected value=\"" . $key . "\">".$value."</option>"); 
+	  if($key==$atlas) echo("<option selected=\"selected\" value=\"" . $key . "\">".$value."</option>"); 
 		else echo("<option value=\"" . $key . "\">".$value."</option>");
 echo("</select>");
 echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"atlasPageNumber\" size=\"4\" value=\"\" />");

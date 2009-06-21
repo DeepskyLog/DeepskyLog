@@ -210,7 +210,7 @@ class Locations
 		      echo "<td>".$timezone."</td>";
 		      echo "<td class=\"centered\">".$limmag."</td>";
 		      echo "<td class=\"centered\">".$sb."</td>";
-		      echo "<td class=\"centered\"><input type=\"radio\" name=\"stdlocation\" value=\"". $value ."\"".(($value==$objObserver->getObserverProperty($loggedUser,'stdlocation'))?" checked ":"")." onclick=\"submit();\" />&nbsp;<br /></td>";
+		      echo "<td class=\"centered\"><input type=\"radio\" name=\"stdlocation\" value=\"". $value ."\"".(($value==$objObserver->getObserverProperty($loggedUser,'stdlocation'))?" checked=\"checked\" ":"")." onclick=\"submit();\" />&nbsp;<br /></td>";
 					echo "<td>";
 		      if(!($obsCnt=$objLocation->getLocationUsedFromId($value)))
 		        echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_location&amp;locationid=".urlencode($value)."\">".LangRemove."</a>";

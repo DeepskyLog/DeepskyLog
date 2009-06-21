@@ -155,7 +155,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$contentDiameter.="<option value=\"sec\"".($theDiameterUnit=='sec'?" selected=\"selected\"":"").">" . LangNewObjectSizeUnits2 . "</option>";
 	$contentDiameter.="</select>&nbsp;";
 	// Misc =====================================================================================================================================================================
-  $contentMisc1 ="<input type=\"radio\" name=\"stellarextended\" value=\"stellar\" ".(($objUtil->checkPostKey("stellarextended")=="stellar")?"checked ":"")."/>" . LangViewObservationField35."&nbsp;";
+  $contentMisc1 ="<input type=\"radio\" name=\"stellarextended\" value=\"stellar\" ".(($objUtil->checkPostKey("stellarextended")=="stellar")?"checked=\"checked\" ":"")."/>" . LangViewObservationField35."&nbsp;";
 	$contentMisc1.="<input type=\"radio\" name=\"stellarextended\" value=\"extended\" ".(($objUtil->checkPostKey("stellarextended")=="extended")?"checked ":"")." />" . LangViewObservationField36."&nbsp;";
 	$contentMisc1.="<input type=\"checkbox\" name=\"mottled\" ".($objUtil->checkPostKey("mottled")?"checked ":"")."/>" . LangViewObservationField38."&nbsp;";
   $contentMisc2="";$contentMisc3="";$contentMisc4="";
