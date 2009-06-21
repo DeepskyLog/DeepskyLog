@@ -9,7 +9,7 @@ else
 	  $disabled="";
 	$eyepiece=$objEyepiece->getEyepiecePropertiesFromId($eyepieceid);
 	echo "<div id=\"main\">";
-	echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+	echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_eyepiece\" />";
 	echo "<input type=\"hidden\" name=\"id\"          value=\"".$eyepieceid."\" />";
 	$content=($disabled?"":"<input type=\"submit\" name=\"change\" value=\"".LangAddEyepieceButton2."\" />&nbsp;");
@@ -30,7 +30,7 @@ else
 	for($i=0;$i<count($line);$i++)
 	  $objPresentations->line($line[$i],"RLL",array(20,40,40),'',array("fieldname","fieldvalue","fieldexplanation"));
 	echo "<hr />";
-	echo "</form>";
+	echo "</div></form>";
 	echo "</div>";
 }
 ?>

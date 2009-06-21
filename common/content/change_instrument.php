@@ -9,7 +9,7 @@ else
 	$content=($disabled?"":"<input type=\"submit\" name=\"change\" value=\"".LangChangeInstrumentButton."\" />&nbsp;");
 	$name=$objInstrument->getInstrumentPropertyFromId($instrumentid,'name');
 	echo "<div id=\"main\">";
-	echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+	echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_instrument\" />";
 	echo "<input type=\"hidden\" name=\"id\" value=\"".$instrumentid."\" />";
 	$objPresentations->line(array("<h4>".(($name=="Naked eye")?InstrumentsNakedEye:$name)."</h4>",$content),"LR",array(80,20),30);
@@ -36,7 +36,7 @@ else
 	for($i=0;$i<count($line);$i++)
 	  $objPresentations->line($line[$i],"RLL",array(20,40,40));
 	echo "<hr />";
-	echo "</form>";
+	echo "</div></form>";
 	echo "</div>";
 }
 ?>

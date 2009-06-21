@@ -23,7 +23,7 @@ else
 	$sb = $objLocation->getLocationPropertyFromId($locationid,'skyBackground');
 	
 	echo "<div id=\"main\">";
-	echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+	echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 	echo "<input type=\"hidden\" name=\"id\" value=\"".$locationid."\" />&nbsp;";
 	$objPresentations->line(array("<h4>".stripslashes($objLocation->getLocationPropertyFromId($locationid,'name'))."</h4>",$content),"LR",array(80,20),30); 
@@ -39,7 +39,7 @@ else
 	for($i=0;$i<count($line);$i++)
 	  $objPresentations->line($line[$i],"RLL",array(20,40,40),'',array("fieldname","fieldvalue","fieldexplanation"));
 	echo "<hr />";
-	echo "</form>";
+	echo "</div></form>";
 	echo "</div>";
 }
 ?>

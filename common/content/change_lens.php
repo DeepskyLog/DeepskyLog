@@ -8,7 +8,7 @@ else
 	  $disabled="";
 	$content=($disabled?"":"<input type=\"submit\" name=\"change\" value=\"".LangChangeLensButton."\" />&nbsp;");
 	echo "<div id=\"main\">";
-	echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+	echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_lens\" />";
 	echo "<input type=\"hidden\" name=\"id\"          value=\"".$lensid."\" />";
 	$objPresentations->line(array("<h4>".stripslashes($objLens->getLensPropertyFromId($lensid,'name'))."</h4>",$content),"LR",array(80,20),30); 
@@ -22,7 +22,7 @@ else
 	for($i=0;$i<count($line);$i++)
 	  $objPresentations->line($line[$i],"RLL",array(20,40,40),'',array("fieldname","fieldvalue","fieldexplanation"));
 	echo "<hr />";
-	echo "</form>";
+	echo "</div></form>";
 	echo "</div>";
 }
 ?>
