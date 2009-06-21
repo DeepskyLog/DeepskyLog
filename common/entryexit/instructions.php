@@ -452,8 +452,10 @@ else
 	  if(array_key_exists('listname',$_SESSION)&&$objList->checkList($_SESSION['listname'])==2)
 	    $myList=True;
 	  if($_GET['listname']<>"----------")
-	    $entryMessage.=LangToListList.$listname_ss.LangToListActivation1;
-    else    
+	  { if($myList)
+	      $entryMessage.=LangToListList.$listname_ss.LangToListActivation1;
+	  }
+	  else    
 	    $_GET['indexAction']="defaultAction";
 	  unset($_GET['activateList']);
 	}

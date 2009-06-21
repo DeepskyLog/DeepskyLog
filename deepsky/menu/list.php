@@ -33,7 +33,7 @@ if(count($result)>0)
 	if((!array_key_exists('listname',$_SESSION)) || (!$_SESSION['listname']))
 		$_SESSION['listname']="----------";
   while(list($key, $value) = each($result))
-	{ if($value==$_SESSION['listname'])
+	{ if(($value==$_SESSION['listname'])&&$myList)
 			echo("<option selected=\"selected\" value=\"".$baseURL."index.php?indexAction=listaction&amp;activateList=true&amp;listname=".$value."\">".$value."</option>");
     elseif (!(array_key_exists('removeList',$_GET) && ($_SESSION['listname']==$value)))
 			echo("<option value=\"".$baseURL."index.php?indexAction=listaction&amp;activateList=true&amp;listname=".$value."\">".$value."</option>");
