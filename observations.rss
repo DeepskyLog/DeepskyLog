@@ -5,6 +5,30 @@
     <description>DeepskyLog - visual deepsky and comets observations</description>
     <atom:link href="http://localhost/deepskylog/observations.rss" rel="self" type="application/rss+xml"/>
     <link>http://www.deepskylog.org/</link>
-    <lastBuildDate>Mon, 08 Jun 2009 11:30:01 +0200</lastBuildDate>
+    <lastBuildDate>Mon, 22 Jun 2009 13:40:01 +0200</lastBuildDate>
+    <item>
+      <title>M 11 with ICS 14,5" f/5.5 from Hennef</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=32155&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Sample observation for a resolved OC with special attributes]]></description>
+      <dc:creator><![CDATA[Wim De Meester]]></dc:creator>
+      <guid isPermaLink="false">deepsky32155</guid>
+      <pubDate>Sun, 31 May 2009 22:40:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 57 with ICS 14,5" f/5.5 from Hennef</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=32154&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Sample observation using a zoom eyepiece, a filter and a Barlow]]></description>
+      <dc:creator><![CDATA[Wim De Meester]]></dc:creator>
+      <guid isPermaLink="false">deepsky32154</guid>
+      <pubDate>Sun, 31 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>29 CY with ICS 14,5" f/5.5 from Hennef</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=32153&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Sample observation with special attributes for a double star]]></description>
+      <dc:creator><![CDATA[Wim De Meester]]></dc:creator>
+      <guid isPermaLink="false">deepsky32153</guid>
+      <pubDate>Sun, 31 May 2009 22:35:00 +0000</pubDate>
+    </item>
   </channel>
 </rss>
