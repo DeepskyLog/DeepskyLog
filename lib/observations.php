@@ -33,7 +33,7 @@ interface iObservations
 }
 class Observations {
 	public function addCSVobservations()
-	{ global $objPresentations,$messageLines,$objObject,$objLocation,$loggedUser,$objInstrument,$objEyepiece,$objLens,$objFilter,$baseURL,$objObserver;
+	{ global $objPresentations,$messageLines,$objObject,$objLocation,$loggedUser,$objInstrument,$objEyepiece,$objLens,$objFilter,$baseURL,$objObserver,$objUtil;
 	  $_GET['indexAction']='default_action';
 		if($_FILES['csv']['tmp_name']!="")
 		  $csvfile=$_FILES['csv']['tmp_name'];
@@ -41,13 +41,13 @@ class Observations {
 		for($i=0;$i<count($data_array);$i++ ) 
 		  $parts_array[$i]=explode(";",$data_array[$i]); 
 		for($i=0;$i<count($parts_array);$i++)
-		{ $objects[$i]     = htmlentities($parts_array[$i][0]);
-		  $dates[$i]       = $parts_array[$i][2];
-		  $locations[$i]   = htmlentities($parts_array[$i][4]);
-		  $instruments[$i] = htmlentities($parts_array[$i][5]);
-		  $filters[$i]     = htmlentities($parts_array[$i][7]);
-		  $eyepieces[$i]   = htmlentities($parts_array[$i][6]);
-		  $lenses[$i]      = htmlentities($parts_array[$i][8]);
+		{ $objects[$i]     = htmlentities($objUtil->checkArrayKey($parts_array[$i],0,''));
+		  $dates[$i]       = htmlentities($objUtil->checkArrayKey($parts_array[$i],2,''));
+		  $locations[$i]   = htmlentities($objUtil->checkArrayKey($parts_array[$i],4,''));
+		  $instruments[$i] = htmlentities($objUtil->checkArrayKey($parts_array[$i],5,''));
+		  $filters[$i]     = htmlentities($objUtil->checkArrayKey($parts_array[$i],7,''));
+		  $eyepieces[$i]   = htmlentities($objUtil->checkArrayKey($parts_array[$i],6,''));
+		  $lenses[$i]      = htmlentities($objUtil->checkArrayKey($parts_array[$i],8,''));
 		}
 		if(!is_array($objects))
 		 throw new Exception(LangInvalidCSVfile);
@@ -143,55 +143,55 @@ class Observations {
 		    if(count($noDates)>0)
 		    { $errormessage.="<ul><li>".LangCSVError8." : <ul>";
 		      for($i=0;$i<count($noDates);$i++)
-		        $errormessage.="<li>".$noDates[$i]."</li>";
+		        $errormessage.="<li>".($noDates[$i]?$noDates[$i]:"&nbsp;")."</li>";
 		      $errormessage.="</ul></li></ul>";
 		    }
 		    if(count($wrongDates)>0)
 		    { $errormessage.="<ul><li>".LangCSVError9." : <ul>";
 		      for($i=0;$i<count($wrongDates);$i++)
-		        $errormessage.="<li>".$wrongDates[$i]."</li>";
+		        $errormessage.="<li>".($wrongDates[$i]?$wrongDates[$i]:"&nbsp;")."</li>";
 		      $errormessage.="</ul></li></ul>";
 		    }
 		    if(count($objectsMissing)>0)
 		    { $errormessage.="<ul><li>".LangCSVError2." : <ul>";
 		      for($i=0;$i<count($objectsMissing);$i++)
-		        $errormessage.="<li>".$objectsMissing[$i]."</li>";
+		        $errormessage.="<li>".($objectsMissing[$i]?$objectsMissing[$i]:"&nbsp;")."</li>";
 		      $errormessage.="</ul></li></ul>";
 		    }
 		    if(count($locationsMissing)>0)
 		    { $errormessage.="<ul><li>".LangCSVError3." : <ul>";
 		      for($i=0;$i<count($locationsMissing);$i++)
-		        $errormessage.="<li>".$locationsMissing[$i]."</li>";
+		        $errormessage.="<li>".($locationsMissing[$i]?$locationsMissing[$i]:"&nbsp;")."</li>";
 		      $errormessage.="</ul></li></ul>";
 		    }
 		    if(count($instrumentsMissing)>0)
 		    { $errormessage.="<ul><li>".LangCSVError4." : <ul>";
 		      for($i=0;$i<count($instrumentsMissing);$i++)
-		        $errormessage.="<li>".$instrumentsMissing[$i]."</li>";
+		        $errormessage.="<li>".($instrumentsMissing[$i]?$instrumentsMissing[$i]:"&nbsp;")."</li>";
 		      $errormessage.="</ul></li></ul>";
 		    }
 		    if(count($filtersMissing)>0)
 		    { $errormessage.="<ul><li>".LangCSVError5." : <ul>";
 		      for($i=0;$i<count($filtersMissing);$i++)
-		        $errormessage.="<li>".$filtersMissing[$i]."</li>";
+		        $errormessage.="<li>".($filtersMissing[$i]?$filtersMissing[$i]:"&nbsp;")."</li>";
 		      $errormessage.="</ul></li></ul>";
 		    }
 		    if (count($eyepiecesMissing)>0)
 		    { $errormessage.="<ul><li>".LangCSVError6." : <ul>";
 		      for($i=0;$i<count($eyepiecesMissing);$i++)
-		        $errormessage.="<li>".$eyepiecesMissing[$i]."</li>";
+		        $errormessage.="<li>".($eyepiecesMissing[$i]?$eyepiecesMissing[$i]:"&nbsp;")."</li>";
 		      $errormessage.="</ul></li></ul>";
 		    }
 		    if (count($lensesMissing)>0)
 		    { $errormessage.="<ul><li>".LangCSVError7." : <ul>";
 		      for($i=0;$i<count($lensesMissing);$i++)
-		        $errormessage.="<li>".$lensesMissing[$i]."</li>";
+		        $errormessage.="<li>".($lensesMissing[$i]?$lensesMissing[$i]:"&nbsp;")."</li>";
 		      $errormessage.="</ul></li></ul>";
 		    }
 		    unset($_SESSION['csvImportErrorData']);
 		    while(list($key,$j)=each($errorlist))
 		      $_SESSION['csvImportErrorData'][$key]=$parts_array[$j];
-		    $messageLines[] = "<h4>".LangCSVError0."</h4>"."<p>".LangCSVError0."</p><p>".$errormessage."</p><p>".LangCSVError10."<a href=\"".$baseURL."index.php?indexAction=add_csv\">".LangCSVError10a."</a>".LangCSVError10b."<hr />".LangCSVError10e."<a href=\"".$baseURL."observationserrors.csv\">".LangCSVError10c."</a>".LangCSVError10d."</p><hr /><p>".LangCSVMessage4."</p>";
+		    $messageLines[] = "<h4>".LangCSVError0."</h4>"."<p>".LangCSVError0."</p>".$errormessage."<p>".LangCSVError10."<a href=\"".$baseURL."index.php?indexAction=add_csv\">".LangCSVError10a."</a>".LangCSVError10b."</p><hr /><p>".LangCSVError10e."<a href=\"".$baseURL."observationserrors.csv\">".LangCSVError10c."</a>".LangCSVError10d."</p><hr /><p>".LangCSVMessage4."</p>";
 		    $_GET['indexAction']='message';
 		  }
 		  $username=$objObserver->getObserverProperty($loggedUser,'firstname'). " ".$objObserver->getObserverProperty($loggedUser,'name');

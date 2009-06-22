@@ -92,7 +92,8 @@ class Utils implements iUtils
   { return (array_key_exists($key,$_SESSION)&&($_SESSION[$key]!=''))?$_SESSION[$key]:$default;
   }
 	public  function checkUserID($toCheck)
-  { return ($loggedUser==$toCheck);
+  { global $loggedUser;
+    return ($loggedUser==$toCheck);
   }
   public  function comastObservations($result)  // Creates a csv file from an array of observations
   { global $objPresentations, $objObservation;
@@ -965,8 +966,8 @@ class Utils implements iUtils
   { global $objLens, $objFilter, $objEyepiece, $objLocation,$objPresentations,$objObservation,$objObserver, $objInstrument;
     for($i=0;$i<count($_SESSION['csvImportErrorData']);$i++)
     { for($j=0;$j<13;$j++) 
-        echo $_SESSION['csvImportErrorData'][$i][$j].";";
-      echo preg_replace("/(\")/", "", preg_replace("/(\r\n|\n|\r)/", "", preg_replace("/;/", ",",$objPresentations->br2nl(html_entity_decode($_SESSION['csvImportErrorData'][$i][13])))));
+        echo $this->checkArrayKey($_SESSION['csvImportErrorData'][$i],$j,'').";";
+      echo preg_replace("/(\")/", "", preg_replace("/(\r\n|\n|\r)/", "", preg_replace("/;/", ",",$objPresentations->br2nl(html_entity_decode($this->checkArrayKey($_SESSION['csvImportErrorData'][$i],13,''))))));
       echo "\n";
     }
   }

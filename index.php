@@ -12,7 +12,7 @@ try
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/wz_tooltip.js\"></script>";
   echo    "<div id=\"div4\">";                                                                            
   echo    "<p class=\"waitMessage\">".LangIndexPleaseWait."</p>";
-  echo    "<img id=\"div4a\" src=\"".$baseURL."styles/images/lu.gif\" alt=\"\"/>";
+  echo    "<img id=\"div4a\" src=\"".$baseURL."styles/images/lu.gif\" alt=\"\" />";
   echo    "<img id=\"div4b\" src=\"".$baseURL."styles/images/lo.gif\" alt=\"\" />";
   echo    "<img id=\"div4c\" src=\"".$baseURL."styles/images/ru.gif\" alt=\"\" />";                       
   echo    "<img id=\"div4d\" src=\"".$baseURL."styles/images/ro.gif\" alt=\"\" />";                       

@@ -168,8 +168,7 @@ class Instruments implements iInstruments
 	  if(($objUtil->checkPostKey('adaption')==1)
     && $objUtil->checkPostKey('stdtelescope')
     && $objUtil->checkUserID($this->getObserverFromInstrument($objUtil->checkPostKey('stdtelescope'))))
-    { echo "hello";
-    	$objObserver->setObserverProperty($loggedUser,'stdtelescope', $_POST['stdtelescope']);
+    { $objObserver->setObserverProperty($loggedUser,'stdtelescope', $_POST['stdtelescope']);
       return;
     }
     if($objUtil->checkPostKey('instrumentname')
