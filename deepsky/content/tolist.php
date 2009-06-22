@@ -45,7 +45,7 @@ if($listname)
 	  if($FF)
 	  { echo "<script type=\"text/javascript\">";
       echo "theResizeElement='obj_list';";
-      echo "theResizeSize=65;";
+      echo "theResizeSize=75;";
       echo "</script>";
   	}
 	  $objObject->showObjects($link, $min, $max,'',1, $step,"removePageObjectsFromList");
@@ -65,7 +65,7 @@ if($listname)
 	  $content.="&nbsp;-&nbsp;";
     $content.="<a href=\"objects.argo?SID=Qobj\" rel=\"external\">".LangExecuteQueryObjectsMessage8."</a> &nbsp;-&nbsp;";
     $content.="<a href=\"objects.csv?SID=Qobj\" rel=\"external\">".LangExecuteQueryObjectsMessage6."</a>";
-    $objPresentations->line(array($content),"L",array(100),20);
+    $objPresentations->line(array($content,$content2),"LR",array(70,30),30);
 	}
 	else
 	{ echo LangToListEmptyList;
