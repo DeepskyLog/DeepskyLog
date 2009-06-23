@@ -5,7 +5,7 @@
     <description>DeepskyLog - visual deepsky and comets observations</description>
     <atom:link href="http://localhost/deepskylog/observations.rss" rel="self" type="application/rss+xml"/>
     <link>http://www.deepskylog.org/</link>
-    <lastBuildDate>Mon, 22 Jun 2009 13:40:01 +0200</lastBuildDate>
+    <lastBuildDate>Tue, 23 Jun 2009 11:00:01 +0200</lastBuildDate>
     <item>
       <title>M 11 with ICS 14,5" f/5.5 from Hennef</title>
       <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=32155&QobsKey=0&dalm=D]]></link>

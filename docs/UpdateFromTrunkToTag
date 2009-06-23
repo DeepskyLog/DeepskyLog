@@ -1,0 +1,2 @@
+svn info .         (kijk naar Last Changed Rev -> gebruik in plaats van 1429)
+svn merge -r 1429:HEAD http://subversion.deepskylog.org/repos/deepskylog/trunk .
