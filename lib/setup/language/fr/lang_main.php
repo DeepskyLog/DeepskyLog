@@ -1,55 +1,7 @@
 <?php
-
-//  Still to Translate or check on correct translation: 
-
-//  LangIndexPleaseWait
-//  LangException000->016b
-//  LangAccountSubscribed1->9
-//  LangNoPartOfsBrackets
-//  LangOrPartOfs
-//  LangShowWithoutPartOfs
-//  LangShowWithPartOfs
-//  LangInstructionsNoObjectFound
-//  LangSortOnAsc
-//  LangSortOnDesc
-//  LangAddSiteField8
-//  LangViewObservationField33->43
-//  LangValidateLensMessage1
-//  LangCSVMessage2
-//  LangCSVMessage4
-//  LangCSVMessage8
-//  LangCSVMessage9
-//  LangCSVMessage10
-//  LangCSVError10
-//  LangCSVError10a
-//  LangCSVError10b
-//  LangCSVError10e
-//  LangCSVError10c
-//  LangXMLTitle
-//  LangXMLMessage1
-//  LangXMLError1->7
-//  LangXMLButton
-//  LangValidateXMLMessage
-//  $ClusterTypeA->X
-//  LangValidateEyepieceMessage6
-//  LangItemsPerPage
-//  LangMenuExpand
-//  LangMenuCollapse
-//  LangQuickPickHelp
-//  LangWelcome5
-//  LangNewObjectPhase0 en volgende
-
-
-
-
-
-
-
-
-
 define("LangGeneralObservations"													,"observations");
 
-define("LangIndexPleaseWait"															,"Prière d'attendre un moment pendant le recherche des donné¿½es...");
+define("LangIndexPleaseWait"															,"Prière d'attendre un moment pendant le recherche des données...");
 
 define("LangTitlecomets_result_query_objects"        			,"Resultaten opzoeken komeet");
 define("LangTitlecomets_result_query_observations"  			,"Resultaten opzoeken waarnemingen komeet");
