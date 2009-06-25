@@ -18,7 +18,7 @@
   $copyrightInfo = "Copyright&nbps;2004&nbsp;-&nbsp;2009&nbsp;-&nbsp;";
   $vvsInfo       = "<a href=\"http://www.vvs.be\">Vereniging voor Sterrenkunde</a>&nbsp;-&nbsp;";
   $dslInfo       = "Powered by&nbsp;<a href=\"http://www.deepskylog.org\">DeepskyLog</a>&nbsp;";
-  $versionInfo   = "3.4-Trunk";
+  $versionInfo   = "3.5-Trunk";
   $objectInfo       = " - Object Database by <a href=\"http://www.eyeandtelescope.com/\" >Eye&amp;Telescope</a>";
   $w3cInfo = "<a class=\"w3c\" href=\"http://validator.w3.org/check?uri=referer\">".
              "<img class=\"w3c\" src=\"".$baseURL."styles/images/valid-xhtml10S.png\" alt=\"Valid XHTML 1.0 Strict\" />".
