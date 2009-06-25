@@ -97,7 +97,6 @@ body {
   top              : 0px;
   width            : 0px;
   height           : 0px;
-  opacity          : 0.30;
   background-color : #000000;
 }
 #dialogdiv1 {
@@ -496,7 +495,6 @@ ul{
   top              : 0px;
   width            : 0px;
   height           : 0px;
-  opacity          : 0.20;
   background-color : #000000;
 } 
 .waitMessage {
