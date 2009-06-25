@@ -226,16 +226,6 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$objPresentations->line(array($objPresentations->getDSSDeepskyLiveLinks2($object)),
 	                        "R",array(100),20);
 	echo "<hr />";
-	$content1="";$content2="";$content3="";
-	if(substr($objObject->getSeen($object),0,1)!="-")
-	  $content1="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\">".LangViewObjectObservations." ".$object."</a>";
-	if ($loggedUser)
-		$content2="<a href=\"".$baseURL."index.php?indexAction=add_observation&amp;object=".urlencode($object)."\">".LangViewObjectAddObservation.$object."</a>";
-	if($myList)
-		if($objList->checkObjectInMyActiveList($object))
-			$content3="<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object . LangListQueryObjectsMessage3 . $_SESSION['listname'] . "</a>";
-		else
-			$content3="<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object . LangListQueryObjectsMessage2 . $_SESSION['listname'] . "</a>";
 	$objObject->showObject($object);
 } 
 else // no object found or not pushed on search button yet

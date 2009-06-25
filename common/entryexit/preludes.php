@@ -35,5 +35,10 @@ else
 	  $FF=false;
 	else
 	  $FF=true;
+  if(strpos(($browser=$objUtil->checkArrayKey($_SERVER,'HTTP_USER_AGENT','')),'MSIE')===false)
+	  $MSIE=false;
+	else
+	  $MSIE=true;
+	  
 }
 ?>

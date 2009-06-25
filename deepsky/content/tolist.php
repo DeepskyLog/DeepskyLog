@@ -53,8 +53,8 @@ if($listname)
     if($myList)
     { $content2 =" <form action=\"".$baseURL."index.php?indexAction=listaction\">";
       $content2.="<input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
-		  $content2.="<input class=\"width200px\" type=\"submit\" name=\"emptyList\" value=\"" . LangToListEmpty . "\" />";
-      $content2.="<input class=\"width200px\" type=\"submit\" name=\"removeList\" value=\"" . LangToListMyListsRemove . "\" />";
+		  $content2.="<input class=\"width150px\" type=\"submit\" name=\"emptyList\" value=\"" . LangToListEmpty . "\" />";
+      $content2.="<input class=\"width150px\" type=\"submit\" name=\"removeList\" value=\"" . LangToListMyListsRemove . "\" />";
       $content2.="</form>";
     }
     $content =$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);

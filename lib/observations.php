@@ -918,7 +918,7 @@ class Observations {
 		$objDatabase->execSQL("UPDATE observations SET time = \"$time\" WHERE id = \"".$id."\"");
 	}
 	public  function showListObservation($link, $link2, $lco, $step) 
-	{ global $FF, $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations; 
+	{ global $FF,$MSIE, $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations; 
     $min=$_GET['min'];
     $max=$_GET['max'];
     echo "<table id=\"showListObservationTable\" width=\"100%\">";
@@ -941,6 +941,8 @@ class Observations {
 			     "<td width=\"15%\">" . LangOverviewObservationsHeader5 . "</td>";
 		if($FF)
 			echo "<td class=\"width10px\">&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+		if($MSIE)
+			echo "<td class=\"width10px\">&nbsp;&nbsp;&nbsp;</td>";
 		echo "</tr>";
 		if($FF)
 		{ echo "</thead>";
@@ -1045,6 +1047,8 @@ class Observations {
 					}
 					echo "</td>";
 				}
+		    if($MSIE)
+			    echo "<td class=\"width10px\">&nbsp;&nbsp;&nbsp;</td>";
 				echo "</tr>";
 		    if($lco!='L')
 		    { if($objUtil->checkGetKey('expand')!=$value['observationid'])
@@ -1059,7 +1063,9 @@ class Observations {
 			  		{ echo "<td colspan=\"4\">".$objPresentations->searchAndLinkCatalogsInText($value['observationdescription'])."<br />"."</td>";
 				  	  echo "<td colspan=\"3\">".$LOdescription."<br />"."</td>";
 					  }
-			      echo "</tr>";
+		        if($MSIE)
+	          	echo "<td class=\"width10px\">&nbsp;&nbsp;&nbsp;</td>";
+					  echo "</tr>";
 					}
 					if((($lco=="O")&&$LOid&&($this->getDsObservationProperty($LOid,'hasDrawing')))||($this->getDsObservationProperty($value['observationid'],'hasDrawing')))
 				  { echo "<tr class=\"height5px\">";
@@ -1076,7 +1082,9 @@ class Observations {
 				        echo "<td colspan=\"5\">".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a  href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\" alt=\"\"></img></a>"."</p>":"")."</td>";
 					    echo "<td colspan=\"3\">".(($LOdescription&&($this->getDsObservationProperty($LOid,'hasDrawing')))?"<p>"."<a  href=\"".$baseURL."deepsky/drawings/".$LOid.".jpg" . "\"> <img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$LOid."_resized.jpg\" alt=\"\"></img></a>"."</p>":"")."</td>";
 					   }
-			  	  echo "</tr>";		
+		         if($MSIE)
+		         	 echo "<td class=\"width10px\">&nbsp;&nbsp;&nbsp;</td>";
+					   echo "</tr>";		
 				  }
 			  }
 		  }
