@@ -5,30 +5,1516 @@
     <description>DeepskyLog - visual deepsky and comets observations</description>
     <atom:link href="http://localhost/deepskylog/observations.rss" rel="self" type="application/rss+xml"/>
     <link>http://www.deepskylog.org/</link>
-    <lastBuildDate>Thu, 25 Jun 2009 11:30:01 +0200</lastBuildDate>
+    <lastBuildDate>Fri, 26 Jun 2009 16:10:01 +0200</lastBuildDate>
     <item>
-      <title>M 11 with ICS 14,5" f/5.5 from Hennef</title>
-      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=32155&QobsKey=0&dalm=D]]></link>
-      <description><![CDATA[Sample observation for a resolved OC with special attributes]]></description>
-      <dc:creator><![CDATA[Wim De Meester]]></dc:creator>
-      <guid isPermaLink="false">deepsky32155</guid>
-      <pubDate>Sun, 31 May 2009 22:40:00 +0000</pubDate>
+      <title>M 57 with GSO 25cm F/5 dobson from Wommersom</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33903&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Tamelijk scherp afgelijnd rond tot ovaal ringetje. Doet wat denken aan een rookkringetje. Centrum dus donkerder.Vrij klein object.]]></description>
+      <dc:creator><![CDATA[Stef Vanschoubroek]]></dc:creator>
+      <guid isPermaLink="false">deepsky33903</guid>
+      <pubDate>Thu, 25 Jun 2009 00:00:00 +0000</pubDate>
     </item>
     <item>
-      <title>M 57 with ICS 14,5" f/5.5 from Hennef</title>
-      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=32154&QobsKey=0&dalm=D]]></link>
-      <description><![CDATA[Sample observation using a zoom eyepiece, a filter and a Barlow]]></description>
-      <dc:creator><![CDATA[Wim De Meester]]></dc:creator>
-      <guid isPermaLink="false">deepsky32154</guid>
+      <title>M 56 with GSO 25cm F/5 dobson from Wommersom</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33902&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Wazig grijs, niet afgelijnd vlekje. Bij langer kijken hier en daar zwak sterretje zichtbaar alsook een paar uitlopers]]></description>
+      <dc:creator><![CDATA[Stef Vanschoubroek]]></dc:creator>
+      <guid isPermaLink="false">deepsky33902</guid>
+      <pubDate>Thu, 25 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>IC 4954 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33901&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[A faint nebula of 2&#146; is what you see at 211x. On my finder charts there are 2 parts indicated. I can see only the SE part.  Looked long for the other one, but could not find it.]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33901</guid>
+      <pubDate>Sun, 21 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6813 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33900&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[At 124x I see a small nebula of 1&#146; large, the shape is undefined.  Increasing the power is what needs to be done this object: with 211x I see a nebula surrounding at least one, maybe 2 stars (this star lies in fact outside, see power of 316x). The nebula reacts well on an OIII filter.  At 316x I see a star less than 1 minute from the NE edge and another one closer to the SW edge. ]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33900</guid>
+      <pubDate>Sun, 21 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6823 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33899&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[The idea was to look for the nebula NGC 6820. I&#146;ve been looking quite some time but  I have to conclude I have not seen it. NGC 6823 is an open cluster of 20&#146; with 30 stars, so moderate concentration. In its centre there is a small group of 4 bright stars surrounded by fainter stars. ]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33899</guid>
+      <pubDate>Sun, 21 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>PK 80-6.1 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33898&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Interesting object. At 124x the shape is  an oval disc of 30&#148; with the shape of an egg. It contains a bright central star. Edges are diffuse. At 211x the 2 parts becomes visible. The northern one is larger and brighter, and is elongated in the direction North-South (2:1). The other part is smaller, fainter and contains a bright centre. It is a little bit elongated direction East-West. The 2 parts are separated from each other. It does not react well on an UHC filter. ]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33898</guid>
+      <pubDate>Sun, 21 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Sh 2-101 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33897&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[I could see only glare around the brighter stars. This glare was also there around stars similar in brightness but a bit further away from the nebula, which make me to conclude I saw nothing of the nebula]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33897</guid>
+      <pubDate>Sun, 21 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6309 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33896&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Planetary SE of a faint star. At 211x it is made out of 2 lobes. The northern one is larger and brighter, the SE lobe is smaller and fainter one.  This must be a terrific object in a very dark location. ]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33896</guid>
+      <pubDate>Sun, 21 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6572 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33895&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[This is a nice planetary nebula of which the colors are very obvious. At 124x the blue-green disc of 30&#148; is easy to spot. The centre is brighter, which must be the central star.  It does not look like a star as the object is low and the seeing is not very good, At 211 + UHC it looks like the disc is surrounded by an faint & larger halo.]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33895</guid>
+      <pubDate>Sun, 21 Jun 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 57 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33894&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[at 563x I can see a star of mag 15.6 less than a minute south west of the ring. For 75% sure I&#8217;ve seen the central star. I&#8217;m still not confident if this is not my imagination.]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33894</guid>
+      <pubDate>Fri, 19 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>PK 59-18.1 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33893&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[not visible]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33893</guid>
+      <pubDate>Fri, 19 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>PK 85+4.1 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33892&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[not visible]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33892</guid>
+      <pubDate>Fri, 19 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 7026 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33891&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[At 311x the 2 lobes are well separated. The western one is larger and brighter. Both are elongated. With an UHC filter the separation between the 2 lobes disappears, but an elongated halo around the 2 lobes becomes now visible.]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33891</guid>
+      <pubDate>Fri, 19 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Pal 5 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33890&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[not visible]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33890</guid>
+      <pubDate>Fri, 19 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6842 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33889&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[At 124x this is a round spot of 1&#8217, in a rich star field. At 211x with UHC it looks slightly oval and there is a somewhat brighter area in the NW direction of the disc. The edges are quite sharp. No central star to see, even at 316x.]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33889</guid>
+      <pubDate>Fri, 19 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6742 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33888&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[At 124x I can see a round disc. It&#8217,s easy to see even at this low power. A pretty sight at 211x with UHC. The disc is 30&#8221, with sharp edges. Brightness is not uniform across the surface. Also the shape does not seem to be completely round. This planetary reacts very well on a UHC.]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33888</guid>
+      <pubDate>Fri, 12 Jun 2009 23:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>PK 10+18.2 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33887&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[It&#8217,s not completely dark yet, and this object is quite low on the horizon. At 211x I can see this object lying as a faint smudge. With an UHC filter the shape becomes elongated (3:1) but remains difficult to see. Increasing the power to 316x without filter helps to see it somewhat better. It looks like the centre is slightly brighter. This is probably the central star.  The object disappears with an OIII filter]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33887</guid>
+      <pubDate>Fri, 19 Jun 2009 23:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 7 with Celestron 102/500 from Lochem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33886&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Zou M7 dan misschien ook mogelijk zijn op max. 3 (!!!!) graden hoogte? Nee toch? Da's meer iets voor Zuid-Frankrijk. Toch maar proberen: met een vergroting van 23x speurde ik de horizon af. Letterlijk. Ik hield de horizon zelf aan de rand van het beeld en aan de andere rand zocht ik naar de sterrenhoop. 
+Toen zag ik iets wat ik niet snel meer zal vergeten: kilometers verderop staan een paar elektriciteitsmasten. Door de telescoop zijn ze, heel klein, net boven de horizon te zien. Net boven de kabels zag ik een paar sterren. En nog een paar! Dat moest M7 zijn!!! Een kwartier lang heb ik staan kijken naar de opkomst van een gigantische sterrenhoop! Door de elektriciteitsmasten en de horizon in hetzelfde beeldveld leek de sterrenhoop zo groot als een sterrenbeeld met het blote oog. Heel langzaam gleed hij schuin naar rechtsboven, totdat hij zo hoog stond dat ik hem in zijn geheel kon zien. Wat ontzettend mooi om te zien (en wat zegt het veel over de waarneemstek!)]]></description>
+      <dc:creator><![CDATA[Roel Weijenberg]]></dc:creator>
+      <guid isPermaLink="false">deepsky33886</guid>
+      <pubDate>Mon, 22 Jun 2009 01:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 6 with Celestron 102/500 from Lochem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33885&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Door Delta Scorpio via Antares een paar keer naar achteren te verlengen kwam ik in het gebied terecht waar M6 zouden moeten staan. Met de 22mm erin rondjes draaiend zag ik opeens wat spikkeligs door het beeld schuiven! Ja hoor, het was M6: The Butterfly Cluster. Ondanks de idioot lage stand van 6 graden boven de horizon kon ik hem prima zien. Drie paar sterren vormde de vlindervorm. Het middelste paar iets meer naar het noordwesten was het lichaam van de vlinder, de vier sterren aan weerszijden hiervan de vleugels. Gaaf!]]></description>
+      <dc:creator><![CDATA[Roel Weijenberg]]></dc:creator>
+      <guid isPermaLink="false">deepsky33885</guid>
+      <pubDate>Mon, 22 Jun 2009 01:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 62 with Celestron 102/500 from Lochem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33884&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Op 8 graden hoogte vond ik M62. Superlaag, maar ook weer prima zichtbaar. Ten noorden van het pluizeballetje stonden twee sterren van gelijke helderheid, net twee oogjes. De bolhoop zelf was een klein plukje met een heel klein helder vlekje als kern.]]></description>
+      <dc:creator><![CDATA[Roel Weijenberg]]></dc:creator>
+      <guid isPermaLink="false">deepsky33884</guid>
+      <pubDate>Mon, 22 Jun 2009 00:45:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 19 with Celestron 102/500 from Lochem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33883&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[De laagste Messier in Ophiuchus. Op 12 graden hoogte geen spektakel door mijn 10cm kijker, maar wel snel gevonden. Meteen maar een schetsje gemaakt]]></description>
+      <dc:creator><![CDATA[Roel Weijenberg]]></dc:creator>
+      <guid isPermaLink="false">deepsky33883</guid>
+      <pubDate>Mon, 22 Jun 2009 00:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 73 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33870&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Niet erg interessant asterisme. 3 sterren in een driehoek met aan 1 punt van de driehoek een extra ster. Vreemd dat het een apart Messier object is. Het best zichtbaar op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33870</guid>
+      <pubDate>Sun, 21 Jun 2009 01:47:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 72 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33869&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Erg kleine en zwakke bolvormige sterrenhoop. Lost niet op. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33869</guid>
+      <pubDate>Sun, 21 Jun 2009 01:37:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 55 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33868&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Prachtige rijke en wijd verspreide bolvormige sterrenhoop met sterren die van relatief dezelfde helderheid zijn. Spinnepoten goed zichtbaar. Het best op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33868</guid>
+      <pubDate>Sun, 21 Jun 2009 01:27:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 75 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33867&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Ontzettend kleine bolvormige sterrenhoop met relatief groot helder centrum. Lost niet op. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33867</guid>
+      <pubDate>Sun, 21 Jun 2009 01:17:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 70 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33866&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Erg kleine bolvormige sterrenhoop met klein helder centrum. Door perifeer te kijken lost de sterrenhoop op. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33866</guid>
+      <pubDate>Sun, 21 Jun 2009 01:07:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 69 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33865&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Kleine bolvormige sterrenhoop. Lost door perifeer te kijken op. Helder centrum. Het best zichtbaar op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33865</guid>
+      <pubDate>Sun, 21 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 54 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33864&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Erg kleine bolvormige sterrenhoop met helder centrum. Lost door serieus perifeer te kijken aan de randen iets op. Het best zichtbaar op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33864</guid>
+      <pubDate>Sun, 21 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 7009 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33863&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Vaag neveltje, saturnusvorm moeilijk herkenbaar. Scherpstellen moeilijk op deze nevel. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33863</guid>
+      <pubDate>Sun, 21 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 23 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33862&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Groot en rijk open cluster. Sterren spreiden zich ver uit. Sterren hebben ongeveer dezelfde helderheid. Het best op 30x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33862</guid>
+      <pubDate>Sun, 21 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 17 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33861&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Mooie nevel. Zwaanvorm is met wat bevooroordeeld voorstelllingsvermogen zichtbaar. Het best op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33861</guid>
+      <pubDate>Sun, 21 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 8 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33860&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Prachtige nevel. Duidelijk direct zichtbaar. Vorm is scherp afgetekend. Het mooist op 47x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33860</guid>
+      <pubDate>Sun, 21 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 20 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33859&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Trifid nebula zwak maar duidelijk zichtbaar. Nevel is gelijk van helderheid met scherp afgetekende gaten. Het best zichtbaar op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33859</guid>
+      <pubDate>Sun, 21 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 57 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33858&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Prachtige heldere planetaire nevel. Ringvorm vrij duidelijk zichtbaar. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33858</guid>
+      <pubDate>Sat, 20 Jun 2009 23:59:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 27 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33857&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Prachtige heldere grote planetaire nevel, haltervorm duidelijk zichtbaar. UHC-S bracht geen verbetering, eerder verslechtering in contrast/helderheid. Het best zichtbaar op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33857</guid>
+      <pubDate>Sat, 20 Jun 2009 23:55:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6304 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33856&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Kleine bolvormige sterrenhoop. Door perifeer te kijken lost de sterrenhoop een stukje op, maar niet geheel. Helder centrum. Het best zichtbaar op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33856</guid>
+      <pubDate>Sat, 20 Jun 2009 23:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 4 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33855&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Wijd verspreid cluster. Groepen met dezelfde helderheden. Een helder stuk (combinatie van helderder sterren) zit iets uit het midden en lijkt wel een banaanvorm. Het best zichtbaar op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33855</guid>
+      <pubDate>Sat, 20 Jun 2009 23:22:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 5460 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33854&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Open cluster hangt samen in 2 kleinere groepjes. Niet symmetrisch van vorm. Zelfde helderheden. Het best zichtbaar op 30x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33854</guid>
+      <pubDate>Sat, 20 Jun 2009 23:10:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 5128 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33853&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Sterrenstelsel zichtbaar als een heldere nevel. Nevel heeft een kidney vorm (lijkt wel 2 delen). Het best zichtbaar op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33853</guid>
+      <pubDate>Sat, 20 Jun 2009 22:50:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 5139 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33852&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Geweldig grote bolvormige sterrenhoop. Veel groter zelfs dan M13, ik schat een factor 4 groter. Op 47x past hij mooi in het beeldveld. Sterrenhoop lost volledig op, is zeer rijk. Er is geen echt helder centrum zichtbaar.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33852</guid>
+      <pubDate>Sat, 20 Jun 2009 23:10:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 13 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33851&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Bolvormig cluster prachtig en duidelijk zichtbaar op 125x. Spinnepoten zichtbaar. Zeer rijk cluster.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33851</guid>
+      <pubDate>Sat, 20 Jun 2009 23:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 82 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33850&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Sterrenstelsel is zichtbaar als een langgerekte sigaarvorm, deze is duidelijk zichtbaar en zeer helder. Op 1/3 lengte van deze sigaarvorm is een iets helderder plek zichtbaar. Na serieus perifeer kijken worden ook hints van details om de rand van de sigaarvorm zichtbaar. Het best zichtbaar op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33850</guid>
+      <pubDate>Sat, 20 Jun 2009 00:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 81 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33849&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Sterrenstelsel is zichtbaar met een vrij groot helder centrum met daaromheen een heldere nevel. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33849</guid>
+      <pubDate>Sat, 20 Jun 2009 00:25:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 51 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33848&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Zichtbaar als 2 heldere stippen met nevel eromheen. Na serieus perifeer kijken is de helderste buitenarm net/twijfelachtig zichtbaar. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33848</guid>
+      <pubDate>Sat, 20 Jun 2009 00:20:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 57 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33847&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Erg mooie planetaire nevel. Ringvorm bij perifeer kijken vrij scherp afgetekend. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33847</guid>
+      <pubDate>Sat, 20 Jun 2009 00:15:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 4605 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33846&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Edge-on galaxy perifeer zichtbaar als een langgerekte veeg zonder helderheidsverschillen. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33846</guid>
+      <pubDate>Sat, 20 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 4361 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33845&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Vrij kleine planetaire nevel. Helder centrum met heldere nevel eromheen. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33845</guid>
+      <pubDate>Sat, 20 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 9 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33844&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Klein bolvormig cluster, lost perifeer maar net op, geen helder centrum. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33844</guid>
+      <pubDate>Fri, 19 Jun 2009 23:55:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 6 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33843&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Butterfly open cluster zeer mooi zichtbaar. Vlindervorm is goed herkenbaar. Past in beeldveld op 30x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33843</guid>
+      <pubDate>Fri, 19 Jun 2009 23:40:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 107 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33842&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Klein globular cluster. Lost perifeer net op. Vrijwel ronde vorm. Niet veel afzonderlijke sterren zichtbaar. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33842</guid>
+      <pubDate>Fri, 19 Jun 2009 23:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 83 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33841&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Sterrenstelsel met grote nevel eromheen. Helder. Zeer helder puntvormig centrum op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33841</guid>
+      <pubDate>Fri, 19 Jun 2009 23:25:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 80 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33840&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Kleine symmetrische bolhoop met helder centrum. Onopgelost.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33840</guid>
+      <pubDate>Fri, 19 Jun 2009 23:20:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 68 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33839&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Vrij kleine bolhoop, weinig sterren. Geen helder centrum en vrij verspreid. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33839</guid>
+      <pubDate>Fri, 19 Jun 2009 23:15:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 19 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33838&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Zichtbaar als een vage vlek op 200x. Niet opgelost.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33838</guid>
+      <pubDate>Fri, 19 Jun 2009 23:10:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 4 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33837&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Zeer wijd verspreid cluster op 125x. Niet symmetrisch van vorm. Sterren van ongeveer dezelfde helderheden.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33837</guid>
+      <pubDate>Fri, 19 Jun 2009 23:05:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 13 with 10" Meade LXD-55 Schmidt Newton from Tijarafe</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33836&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[M'n eerste object bekeken op La Palma in de 10 Meade SN. Werkelijk prachtige bolvormige sterrenhoop op 125x. Echte grote spinnepoten die zich ver uitstrekken. Zeer groot en zeer rijk.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33836</guid>
+      <pubDate>Fri, 19 Jun 2009 23:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 57 with GSO 8" Dobson from Genemuiden</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33835&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Sessie met Jan Jaap. We stonden om 23.00 uur klaar. Maar we moesten toch nog een half uur wachten voordat we sterrenbeelden konden zien. Wat blijft het toch lang licht in juni... 
+M57: Ring duidelijk zichtbaar tegen een blauwe achtergrond. Al bij 48x. Ring wordt duidelijker op 100x.]]></description>
+      <dc:creator><![CDATA[Martin Bakker]]></dc:creator>
+      <guid isPermaLink="false">deepsky33835</guid>
+      <pubDate>Fri, 12 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 13 with GSO 8" Dobson from Genemuiden</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33834&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Sessie met Jan Jaap. We stonden om 23.00 uur klaar. Maar we moesten toch nog een half uur wachten voordat we sterrenbeelden konden zien. Wat blijft het toch lang licht in juni... 
+M13: Mooie bolhoop tegen een blauwe achtergrond. Wel sterren kunnen oplossen. Niet zo spectaculair als anders.]]></description>
+      <dc:creator><![CDATA[Martin Bakker]]></dc:creator>
+      <guid isPermaLink="false">deepsky33834</guid>
+      <pubDate>Fri, 12 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6646 with Obsession 18'' from Wetteren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33813&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[NGC6646 is visible in the 7mm. It is positioned between two rows of stars. The gx is dim, showing a core with a small nucleus, but otherwise no details are seen. It is 1arcmin in diameter. The sketch is made with the 7mm.]]></description>
+      <dc:creator><![CDATA[David Erzeel]]></dc:creator>
+      <guid isPermaLink="false">deepsky33813</guid>
+      <pubDate>Sat, 30 May 2009 23:37:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>PK 64+15.1 with Obsession 18'' from Wetteren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33812&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[PK64+15.1 is pn visible in the 12mm and is confirmed using UHC which makes it come out better. OIII also has a good effect. It is in a very rich field of stars, between some brighter ones. There is a small star at its NW edge. The sketch is made with the 5mm.]]></description>
+      <dc:creator><![CDATA[David Erzeel]]></dc:creator>
+      <guid isPermaLink="false">deepsky33812</guid>
+      <pubDate>Sat, 30 May 2009 23:48:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6675 with Obsession 18'' from Wetteren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33811&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[NGC6675 shows up in the 7mm. The gx is round, .9 arcmin in diameter. The core is just a little brighter and there might be a small nucleus. In the 12mm, the gx becomes difficult to see. Otherwise, it shows no details. Some stars are aligned NW of it, another 3 are aligned on the SW. The sketch is made with the 5mm.]]></description>
+      <dc:creator><![CDATA[David Erzeel]]></dc:creator>
+      <guid isPermaLink="false">deepsky33811</guid>
+      <pubDate>Sat, 30 May 2009 23:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6745 with Obsession 18'' from Wetteren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33810&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[NGC6745 is visible in the 12mm with averted vision. It is between 2 small groups of stars. The gx is elongated, 1.5x0.6armin, pa about 20deg. No further details show, no core either. The sketch is made with the 7mm in which it shows with direct vision.]]></description>
+      <dc:creator><![CDATA[David Erzeel]]></dc:creator>
+      <guid isPermaLink="false">deepsky33810</guid>
+      <pubDate>Sat, 30 May 2009 23:22:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Steph 1 with Obsession 18'' from Wetteren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33809&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Steph1 is a beautiful oc, visible in the 31mm, showing stars of different colors and of different magnitude. Delta1 Lyr is NW, very bright and blue (mag 5.5, class B), Delta2 Lyr is even brighter and very orange (mag 4.2, class K). Other stars also shows blue and orange colors. It makes me think of a little copy of the constellation Cyg. The sketch of the oc is made with the 31mm, but it only represents the brightest stars. More stars are visible inside the cluster and around it.]]></description>
+      <dc:creator><![CDATA[David Erzeel]]></dc:creator>
+      <guid isPermaLink="false">deepsky33809</guid>
+      <pubDate>Sat, 30 May 2009 23:13:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6842 with Obsession 18'' from Wetteren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33808&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[NGC6842 is visible in the 12mm using an OIII filter or an UHC filter. Without filter, it might be very difficult to notice under these conditions. The seems round without details or central star. It is about 1.5 arcmin in diameter on my sketch, which is probably to big. It is bright up to its sharp edge. The sketch is made with the 7mm and also using an OIII.]]></description>
+      <dc:creator><![CDATA[David Erzeel]]></dc:creator>
+      <guid isPermaLink="false">deepsky33808</guid>
+      <pubDate>Sat, 30 May 2009 22:50:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 5958 with Obsession 18'' from Wetteren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33807&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[NGC5958 is visible in the 12mm with direct vision. One bright star is N, one is E following. The gx shows no details, no core brightening, and it is round, diameter of 1.5 arcmin. The sketch is made with the 7mm.]]></description>
+      <dc:creator><![CDATA[David Erzeel]]></dc:creator>
+      <guid isPermaLink="false">deepsky33807</guid>
+      <pubDate>Sat, 30 May 2009 21:46:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 13 with 10x50 bino from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33806&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Grote bolvormige sterrenhoop zichtbaar als een helder rond neveltje.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33806</guid>
+      <pubDate>Wed, 03 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 27 with Skywatcher Newton 200mmF5 from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33805&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Planetaire nevel is zichtbaar als een haltervorm. In nevel verder geen details op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33805</guid>
+      <pubDate>Mon, 01 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 57 with Skywatcher Newton 200mmF5 from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33804&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Planetaire nevel ringvorm is duidelijk zichtbaar. Verder geen details. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33804</guid>
+      <pubDate>Mon, 01 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 11 with Skywatcher Newton 200mmF5 from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33803&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Prachtige open sterrenhoop. Veel sterren met dezelfde helderheid in kleine groepjes. Zeer rijk. Past in beeldveld op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33803</guid>
+      <pubDate>Mon, 01 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 71 with Skywatcher Newton 200mmF5 from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33802&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Bolvormige sterrenhoop lost op dmv. perifeer kijken. Vorm is niet rond. Past in beeldveld op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33802</guid>
+      <pubDate>Mon, 01 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 29 with Skywatcher Newton 200mmF5 from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33801&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Open sterrenhoop met weinig sterren. Verspreid. Niet echt speciaal. Past in beeldveld op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33801</guid>
+      <pubDate>Mon, 01 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 7063 with Skywatcher Newton 200mmF5 from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33800&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Open sterrenhoop met weinig sterren. Verspreid. Niet echt los. Past in beeldveld op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33800</guid>
+      <pubDate>Mon, 01 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 39 with Skywatcher Newton 200mmF5 from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33799&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Mooi open cluster. Sterren zijn vrij verspreid. Sterren met diverse helderheden. Past in beeldveld op 30x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33799</guid>
+      <pubDate>Mon, 01 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 13 with Skywatcher Newton 200mmF5 from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33798&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Prachtige grote bolvormige sterrenhoop. Spinnepoten zijn zichtbaar op 200x. Zeer mooi en veel sterren van verschillende helderheden.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33798</guid>
+      <pubDate>Mon, 01 Jun 2009 23:55:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 5 with Skywatcher Newton 200mmF5 from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33797&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Prachtige en heldere bolvormige sterrenhoop. Spinnepoten zijn zichtbaar op 200x. Ovale vorm. Veel sterren zichtbaar.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33797</guid>
+      <pubDate>Mon, 01 Jun 2009 23:53:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 12 with Skywatcher Newton 200mmF5 from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33796&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Bolvormige sterrenhoop lost net niet op met 200x. Los van achtergrond.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33796</guid>
+      <pubDate>Mon, 01 Jun 2009 23:50:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 10 with Skywatcher Newton 200mmF5 from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33795&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Bolvormige sterrenhoop lost dmv. perifeer te kijken op. Sterrenhoop is niet rond. Komt los van achtergrond. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33795</guid>
+      <pubDate>Mon, 01 Jun 2009 23:48:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 14 with Skywatcher Newton 200mmF5 from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33794&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Bolvormige sterrenhoop zichtbaar als een zeer zwakke nevel die niet oplost, ook niet door perifeer te kijken. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33794</guid>
+      <pubDate>Mon, 01 Jun 2009 23:44:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 7510 with Skywatcher Newton 200mmF5 from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33793&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Klein open cluster. Komt net los op 200x. Niet echt bijzonder.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33793</guid>
+      <pubDate>Mon, 01 Jun 2009 23:35:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 7160 with Skywatcher Newton 200mmF5 from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33792&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Kleine open sterrenhoop. Komt net lost op 125x. Niet echt bijzonder.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33792</guid>
+      <pubDate>Mon, 01 Jun 2009 23:28:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 92 with Skywatcher Newton 200mmF5 from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33791&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Wijd verspreide bolvormige sterrenhoop. Niet geheel ronde vorm. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33791</guid>
+      <pubDate>Mon, 01 Jun 2009 23:23:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 15 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33790&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Bolvormige sterrenhoop is zichtbaar als een zwakke nevel. Lost niet op. Het best op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33790</guid>
+      <pubDate>Mon, 01 Jun 2009 01:40:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6819 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33789&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Arm en zeer verpreid open cluster. Niet echt los. Past in beeldveld op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33789</guid>
+      <pubDate>Mon, 01 Jun 2009 01:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6866 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33788&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Niet echt speciaal en niet los open cluster. Arm met sterren van dezelfde helderheid. Past in beeldveld op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33788</guid>
+      <pubDate>Mon, 01 Jun 2009 01:15:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6811 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33787&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Niet echt los en verspreid open cluster met sterren van dezelfde helderheid. Past in beeldveld op 47x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33787</guid>
+      <pubDate>Mon, 01 Jun 2009 01:10:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 92 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33786&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Zichtbaar als een kleine niet ronde bolvormige sterrenhoop. Wijd verspreid. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33786</guid>
+      <pubDate>Mon, 01 Jun 2009 01:08:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 56 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33785&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Kleine bolvormige sterrenhoop, lost pas op door perifeer te kijken. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33785</guid>
+      <pubDate>Mon, 01 Jun 2009 01:03:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 52 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33784&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Klein open cluster, komt niet echt los van de achtergrond. Slechts enkele sterren met dezelfde helderheid zichtbaar op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33784</guid>
+      <pubDate>Mon, 01 Jun 2009 01:01:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 39 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33783&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Open cluster komt niet echt los van de achtergrond. Past in beeldveld op 30x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33783</guid>
+      <pubDate>Mon, 01 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 71 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33782&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Bolvormige sterrenhoop is zichtbaar als een zwak, erg verspreid cluster. Niet echt los. Door perifeer te kijken worden wel meer sterren zichtbaar. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33782</guid>
+      <pubDate>Mon, 01 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 27 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33781&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Planetaire nevel is zichtbaar als een heldere grote nevel. Haltervorm is goed te onderscheiden op 30x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33781</guid>
+      <pubDate>Mon, 01 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 57 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33780&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Planetaire nevel goed zichtbaar. Nevel echter niet scherp. Centrale ster niet zichtbaar. Het best op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33780</guid>
+      <pubDate>Mon, 01 Jun 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 13 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33779&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Prachtige beeldvullende bolvormige sterrenhoop. Spinnenpoten zijn duidelijk zichtbaar. Verschillende helderheden. Het best op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33779</guid>
+      <pubDate>Mon, 01 Jun 2009 01:05:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6940 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33778&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Open cluster is zeer verspreid. Komt niet echt los van de achtergrond. Past in beeldveld op 30x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33778</guid>
+      <pubDate>Sat, 30 May 2009 01:20:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 56 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33777&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Bolvormige sterrenhoop komt net los van de achtergrond. Verder niet opgelost. Het best zichtbaar op 200x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33777</guid>
+      <pubDate>Sat, 30 May 2009 01:10:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 29 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33776&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Niet echt speciaal open cluster. Slechts een paar sterren in een groep. Past in beeldveld op 47x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33776</guid>
+      <pubDate>Sat, 30 May 2009 01:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 71 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33775&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Bolvormige sterrenhoop bij direct kijken zichtbaar als een zwakke nevel. Door perifeer te kijken lost deze op in separate sterren op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33775</guid>
+      <pubDate>Sat, 30 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 27 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33774&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Planetaire nevel zichtbaar als een zwakke uitgestrekte nevel. Haltervorm is goed te onderscheiden. Het best op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33774</guid>
+      <pubDate>Sat, 30 May 2009 01:24:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 92 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33773&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Grote bolvormige sterrenhoop. Centrum lost op op 250x (8mm met 2x barlow).]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33773</guid>
+      <pubDate>Sat, 30 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 82 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33772&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Sterrenstelsel is zichtbaar als een langgerekte sigaarvorm. In het centrum helderder. Het best op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33772</guid>
+      <pubDate>Fri, 29 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 81 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33771&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Sterrenstelsel zichtbaar als een heldere nevel met een helder centrum op 125x. Na lang perifeer kijken is een hint van de 2 dunne buitenste armen zichtbaar, dit is echter twijfelachtig.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33771</guid>
+      <pubDate>Fri, 29 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 51 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33770&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Sterrenstelsel (en zijn begeleider) zijn zichtbaar als heldere centrums met daaromheen een heldere nevel. Verbinding niet zichtbaar. Het best op 125x.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33770</guid>
+      <pubDate>Fri, 29 May 2009 23:45:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 57 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33769&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Mooie planetaire nevel. Ringvorm is goed zichtbaar op 200x. Ringvorm tekent zich echter een klein beetje vaag af, daarom is scherpstellen op de ringnevel niet mogelijk. Nevel blijft een beetje vaag. Centrale ster niet zichtbaar.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33769</guid>
+      <pubDate>Fri, 29 May 2009 23:36:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 13 with Skywatcher Newton 200mmF5 from America</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33768&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Mooie en grote bolvormige sterrenhoop. Op 200x lost het centrum op en worden de spinnepoten goed zichtbaar.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33768</guid>
+      <pubDate>Fri, 29 May 2009 23:21:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>PK 71-2.1 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33758&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Also this planetary, which is 4&#148; small and mag 14.5 faint is not visible at 124x.  It is a stellar object at 211x, which reacts well on an UHC filter.
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33758</guid>
       <pubDate>Sun, 31 May 2009 22:30:00 +0000</pubDate>
     </item>
     <item>
-      <title>29 CY with ICS 14,5" f/5.5 from Hennef</title>
-      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=32153&QobsKey=0&dalm=D]]></link>
-      <description><![CDATA[Sample observation with special attributes for a double star]]></description>
-      <dc:creator><![CDATA[Wim De Meester]]></dc:creator>
-      <guid isPermaLink="false">deepsky32153</guid>
-      <pubDate>Sun, 31 May 2009 22:35:00 +0000</pubDate>
+      <title>PK 97-2.1 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33757&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[This 4&#148; planetary of mag 14.4 is not visible at 124X. At 211x I can see it 50% as a stellar object. With an UHC filter it is almost continuously visible. I did not notice a disc.
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33757</guid>
+      <pubDate>Sun, 31 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>PK 43+11.1 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33756&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[This 1&#148; planetary of mag 14.0 &#148; is just visible at 124x as a stellar object. React will on UHC. Remains stellar at 211x. 
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33756</guid>
+      <pubDate>Sun, 31 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 5957 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33755&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[NGC 5970 is an oval of 3&#146; x 2&#146; at 124x. It contains a faint core. A triangle ith 3 bright stars is located north of the galaxy. IC 1131 has been seen a few times at 211x . It&#146;s located east of triangle with faint stars. NGC 5957 is visible as a round (?) spot of 3&#146; without core.
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33755</guid>
+      <pubDate>Sun, 31 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>IC 1131 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33754&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[NGC 5970 is an oval of 3&#146; x 2&#146; at 124x. It contains a faint core. A triangle ith 3 bright stars is located north of the galaxy. IC 1131 has been seen a few times at 211x . It&#146;s located east of triangle with faint stars. NGC 5957 is visible as a round (?) spot of 3&#146; without core.
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33754</guid>
+      <pubDate>Sun, 31 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 5970 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33753&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[NGC 5970 is an oval of 3&#146; x 2&#146; at 124x. It contains a faint core. A triangle ith 3 bright stars is located north of the galaxy. IC 1131 has been seen a few times at 211x . It&#146;s located east of triangle with faint stars. NGC 5957 is visible as a round (?) spot of 3&#146; without core.
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33753</guid>
+      <pubDate>Sun, 31 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6070 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33752&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[This is an oval spot of 3&#146; x 2&#146; at 124. Difficult to see due to disturbing moon. The galaxy is located in the middle of a triangle compose dout of a bright yellow star and 2 fainter stars. A faint star is located 2&#146; from the northen edge of the galaxy.
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33752</guid>
+      <pubDate>Sun, 31 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 7065 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33751&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Nothing special to see at 124x and even at 325x. A few faint stars north of 3 bright stars appears as 525x. This could be the cluster. The observation is made difficult by the moon.
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33751</guid>
+      <pubDate>Sun, 31 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 7031 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33750&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[I can see at 124x a bright orange star as well as 10 faint stars in an area of 7&#146;. The cluster includes a small triangle of stars.
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33750</guid>
+      <pubDate>Sun, 31 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 7082 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33749&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Yesterday I mentioned I saw some colored stars in this cluster, while this was not mentioned on the observations logged in dslog. I wanted to get some certainty and relooked at this open cluster. Without any doubt I saw 3 bright yellow stars as well as a faint red one. Colors confirmed!
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33749</guid>
+      <pubDate>Sun, 31 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 27 with Meade Lxd 75 6" from Stadskanaal</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33748&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Dit object eerst door een 8 lxd van Erico bekeken.]]></description>
+      <dc:creator><![CDATA[Ronn Franken]]></dc:creator>
+      <guid isPermaLink="false">deepsky33748</guid>
+      <pubDate>Mon, 01 Jun 2009 01:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 82 with Meade Lxd 75 6" from Stadskanaal</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33747&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[zie omschrijving M81]]></description>
+      <dc:creator><![CDATA[Ronn Franken]]></dc:creator>
+      <guid isPermaLink="false">deepsky33747</guid>
+      <pubDate>Mon, 01 Jun 2009 00:35:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 81 with Meade Lxd 75 6" from Stadskanaal</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33746&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[M81 en M82 waren redelijk goed te zien , ondanks dat het niet echt donker was.]]></description>
+      <dc:creator><![CDATA[Ronn Franken]]></dc:creator>
+      <guid isPermaLink="false">deepsky33746</guid>
+      <pubDate>Mon, 01 Jun 2009 00:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 5 with Tento 20x60 from Amsterdam</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33745&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Het is hier midden in de stad en er komen af en toe (sluier)wolken overdrijven. Eigenlijk was ik alleen de aanvliegroute vanaf Spica aan het oefenen om de volgende keer in het veld deze ontbrekende Messier gemakkelijk te kunnen vinden. Maar hier is hij gewoon als een klein wattenbolletje zonder verdere structuur.]]></description>
+      <dc:creator><![CDATA[Eric Barnard]]></dc:creator>
+      <guid isPermaLink="false">deepsky33745</guid>
+      <pubDate>Sun, 31 May 2009 21:36:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6800 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33728&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Observed at 124x. This cluster does not stand out well from its surroundings. There is a light concentration of stars in an area of 15&#146;. A ring of 10 bright stars and 20 faint stars are forming the edge of his cluster. An obvious &#147;void&#148; at the centre of this object. 
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33728</guid>
+      <pubDate>Fri, 29 May 2009 23:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6793 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33727&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Observed at 124x and 211x. NGC 6793 is a loose cluster of 10 bright stars in an area of 10&#146;. 2 distinct groups are visible with each a triangle made up of 3 bright stars. The most northern star of the northern triangle is a double star.
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33727</guid>
+      <pubDate>Fri, 29 May 2009 23:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 7082 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33726&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Observed when clouds are appearing. This is a group of 50 stars (probably more if there were no clouds). The edges of the group is not easy to define because this group is just a little be more concentrated than its surrounding field. The 2 brightest stars are yellow. North, perhaps already out of the group, is another bright yellow star. I think I&#146;ve seen a faint red star too, but this is not sure as the group is fading away behind the clouds. These colors are not mentioned in the 11 observation in dslog, so is this just imagination or is it a side effect due to the clouds?
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33726</guid>
+      <pubDate>Sat, 30 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 7067 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33725&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Is this an open cluster? At 211x I can see 10 stars west from a bright triple star (SAO 50808, the primary is of magn 9,41). But this does not look like a concentration of stars. The area contains a bright double star. After checking the DSS picture I conclude I&#146;ve probably not been looking at the right location. I will log it as not seen.
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33725</guid>
+      <pubDate>Sat, 30 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6997 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33724&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[NGC 6997 is an open cluster of the HII list. Here also there is some confusion on its precise locations. Some catalogues are inverting NGC 6997 with NGC 6996. So here again I observed the 2 spots: The most northern one (+45&#176;28&#146;) is a very small group of 10 stars in an area of 5&#146; (84x). The other one (at +44&#176;37&#146;) is a group of 20&#146; with 20 stars. Most of them are of the same brightness. 
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33724</guid>
+      <pubDate>Sat, 30 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6996 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33723&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[NGC 6997 is an open cluster of the HII list. Here also there is some confusion on its precise locations. Some catalogues are inverting NGC 6997 with NGC 6996. So here again I observed the 2 spots: The most northern one (+45&#176;28&#146;) is a very small group of 10 stars in an area of 5&#146; (84x). The other one (at +44&#176;37&#146;) is a group of 20&#146; with 20 stars. Most of them are of the same brightness. 
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33723</guid>
+      <pubDate>Sat, 30 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6991 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33722&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[NGC 6991 is one of those objects in the Dreyer catalogue of which the location is not well defined. On the NGCIC project 2 locations, close to each other are mentioned. So I&#146;ve been looking at both of them. The first location is a few minutes west of mag 5.6 star (HR 8020). Strange enough there is almost nothing to see there, even at high power. It&#146;s just an area with a few stars, not even concentrated. The 2nd location is South West of this bright star. Here indeed a loose group of 20 stars, in an area of 15&#146; is visible. This group contains 2 short chains of 3 stars.
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33722</guid>
+      <pubDate>Sat, 30 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>PK 53+24.1 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33721&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[This planetary is of magn 12.3 and is 4&#148;6 small. It easily visible as a bright star at 124x. Did not look at 211x.
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33721</guid>
+      <pubDate>Sat, 30 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>PK 51+9.1 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33720&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Hu 2-1 is a mag 12.2 object with a size of 2&#148;. In other words, it&#146;s tiny. It&#146;s easily visible at 124x as a stellar object. It reacts positively with an UHC filter. At 211x it&#146;s bright, white and a very faint disc is visible. The centre looks brighter, could this be the central star? ]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33720</guid>
+      <pubDate>Sat, 30 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 5921 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33719&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[At 211x NGC 5921 is an oval of 2&#146; with a bright core. Could not see the bar.
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33719</guid>
+      <pubDate>Sat, 30 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6027 with Obsession 18'' from Boutersem</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33718&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Really difficult. Also because the moon is still disturbing a bit. At 124x I can see with a lot of effort an oval spot of 2&#146;. At 316x the B component of the group is clearly visible. Maybe I have seen the A component too, but this is not sure. The group is located in between two 14th magnitude stars. 
+]]></description>
+      <dc:creator><![CDATA[Olivier Van Aelst]]></dc:creator>
+      <guid isPermaLink="false">deepsky33718</guid>
+      <pubDate>Sat, 30 May 2009 22:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6304 with 22 inch Dobson from Lokeren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33717&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Mooi en vrij duidelijk bolhoopje, maar diffuus en geen opgeloste sterren.]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33717</guid>
+      <pubDate>Fri, 29 May 2009 22:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6356 with 22 inch Dobson from Lokeren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33716&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Mooi en vrij duidelijk zichtbaar bolhoopje. Diffuus en zonder oplossing.]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33716</guid>
+      <pubDate>Fri, 29 May 2009 22:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6517 with 22 inch Dobson from Lokeren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33715&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Mooi maar zwakker bolhoopje, diffuus. ]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33715</guid>
+      <pubDate>Fri, 29 May 2009 22:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6294 with 22 inch Dobson from Lokeren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33714&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Dubbelsterretje. Ligt vlakbij NGC 6293, een mooie maar opopvallende bolhoop.]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33714</guid>
+      <pubDate>Fri, 29 May 2009 22:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6293 with 22 inch Dobson from Lokeren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33713&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Mooi bolhoopje. Diffuus en vrij begrensde randen. Geen oplossing. Ligt vlakbij NGC 6294 (dubbelsterretje).]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33713</guid>
+      <pubDate>Fri, 29 May 2009 22:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6342 with 22 inch Dobson from Lokeren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33712&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Opvallend mooi bolhoopje in de reeks van waargenomen NGC bolhopen. Geen oplossing, maar helder kerngebied en mooie uitlopende periferie.]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33712</guid>
+      <pubDate>Fri, 29 May 2009 22:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6316 with 22 inch Dobson from Lokeren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33711&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Kleine maar duidelijke bolhoop. Echter geen sterren opgelost. Helder kerngebied.]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33711</guid>
+      <pubDate>Fri, 29 May 2009 22:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6401 with 22 inch Dobson from Lokeren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33710&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Kleine bolhoop zonder enige opgeloste ster. Vrij zwak en egaal verdeeld.]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33710</guid>
+      <pubDate>Fri, 29 May 2009 22:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 62 with 22 inch Dobson from Lokeren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33709&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Heel mooie en grote bohoop. De rand is opgelost in fijne sterretjes, de kern is granulair. Moet een kanjer zijn in zuidelijker locaties.]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33709</guid>
+      <pubDate>Fri, 29 May 2009 23:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 69 with 22 inch Dobson from Lokeren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33708&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Erg laag gelegen bolhoop in de kan van de theepot, dus vrij laag aan de horizon vanop deze locatie. Heel wat helderder dan M70 en daardoor ook in de periferie opgeloste sterren. ]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33708</guid>
+      <pubDate>Sat, 30 May 2009 01:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 70 with 22 inch Dobson from Lokeren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33707&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Erg laag gelegen bolhoop in de kan van de theepot, dus vrij laag aan de horizon vanop deze locatie. Vrij zwakke bolhoop in deze omstandigheden. Een duidelijke cirkelvormige bolhoop, maar zonder opgeloste sterren. ]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33707</guid>
+      <pubDate>Sat, 30 May 2009 01:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 54 with 22 inch Dobson from Lokeren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33706&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Erg laag gelegen bolhoop in de kan van de theepot, dus vrij laag aan de horizon vanop deze locatie. Toch steelt deze bolhoop ook de show in deze omstandigheden. Een duidelijke cirkelvormige bolhoop met opgeloste sterretjes in de periferie. Schoontje!]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33706</guid>
+      <pubDate>Sat, 30 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 22 with 22 inch Dobson from Lokeren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33705&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[SCHITTERENDE bolhoop, erg groot en helder, zelfs bij geringe hoogte boven de horizon. Duizenden sterren fonkelen in een compacte bol, het centrum is granulair, maar lijkt opgelost door de ragfijne sterrentjes op de voorgrond. Chique!]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33705</guid>
+      <pubDate>Sat, 30 May 2009 00:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 17 with 22 inch Dobson from Lokeren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33704&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Prachtige zwaanvorm is te zien, schitterend gedetailleerd in het 'lijf' van het beest, met talloze inhammen, verdonkeringen en structuren. Deed ons denken aan waarnemingen in het hart van de grote Orionnevel. Zelf op deze noorderbreedte van 51NB zeker een echt showpiece!]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33704</guid>
+      <pubDate>Sat, 30 May 2009 00:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 16 with 22 inch Dobson from Lokeren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33703&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Mooie OC, maar de nevel is moeilijk zichtbaar in de 35mm Panoptic. We vermoeden dat de grijze hemelachtergrond daar veel van afbreekt. De locatie op Kijkuit is ideaal voor kortbij waarnemingen, maar wordt spijtig genoeg ook gestoord door een aantal lichtkoepels. Ook de grijze nachten zijn niet ideaal voor dit soort waarnemingen. Gebruik van O3 filter aangewezen...]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33703</guid>
+      <pubDate>Sat, 30 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 14 with 22 inch Dobson from Lokeren</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33702&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Prachtige bolhoop, compleet opgelost in duizenden miniscule speldepuntjes. Ook diverse uitlopers zichtbaar. Schitterend zicht!]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33702</guid>
+      <pubDate>Sat, 30 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 12 with 22 inch Dobson from Kijkuit</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33701&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Prachtige bolhoop, compleet opgelost in duizenden miniscule speldepuntjes. Diverse uitlopers zijn zichtbaar als spinnepoten. Schitterend zicht!]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33701</guid>
+      <pubDate>Sat, 30 May 2009 02:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 10 with 22 inch Dobson from Kijkuit</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33700&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Prachtige bolhoop, periferie mooi opgelost een een diffuse kern. Schitterend zicht!]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33700</guid>
+      <pubDate>Sat, 30 May 2009 02:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 9 with 22 inch Dobson from Kijkuit</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33699&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Prachtige bolhoop, periferie mooi opgelost een een diffuse kern met duizenden miniscule speldepuntjes centraal. Schitterend zicht!]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33699</guid>
+      <pubDate>Sat, 30 May 2009 02:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 7 with 22 inch Dobson from Kijkuit</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33698&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Het laagste Messier object, bij culminatie slecht een 5 tal graden boven de horizon. Even gewacht om 'em dus op dit moment te pakken. Heel mooie open cluster met heldere leden, duidelijk afgescheiden van de omgeving.]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33698</guid>
+      <pubDate>Sat, 30 May 2009 02:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 6 with 22 inch Dobson from Kijkuit</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33697&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Eerste maal waargenomen. Belachelijk laag boven de horizon toont deze open cluster zich nog behoorlijk fraai, met tientallen heldere sterren. Erg scherp is het beeld niet te krijgen op deze hoogte, maar vast en zeker is M6 een wauw-object in lagere breedtegraden. Met deze waarneming kan ik zeggen dat ik alle 110 Messiers waargenomen heb. Een vreugdedans met Hendrik De Rijcke is dan ook niet misplaatst.]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33697</guid>
+      <pubDate>Sat, 30 May 2009 02:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 4 with 22 inch Dobson from Kijkuit</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33695&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Opvallend grote losse bolhoop. Kan gerust meedoen met de grote bolhopen zoals M5 of M13, maar door z'n geringe hoogte uit de zeelandse polder is het geheel wat minder spectaculair. Mooi object.]]></description>
+      <dc:creator><![CDATA[Peter Henderickx]]></dc:creator>
+      <guid isPermaLink="false">deepsky33695</guid>
+      <pubDate>Sat, 30 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 14 with 60 mm refractortje from Deventer</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33689&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[M14 staat iets oostelijker en is ook niet veel meer dan een pluizebolletje, maar wel beduidend zwakker dan M10 en M12. ]]></description>
+      <dc:creator><![CDATA[Roel Weijenberg]]></dc:creator>
+      <guid isPermaLink="false">deepsky33689</guid>
+      <pubDate>Sat, 30 May 2009 01:15:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 12 with 60 mm refractortje from Deventer</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33688&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[M10 en M12 staan ongeveer 3 graden van elkaar, net genoeg om ze in de 6cm refractor bij 19x (LVW22) in &#233;&#233;n beeldveld te zien. Maar wel helemaal aan de rand. Voor de schets heb ik dus 2 beeldvelden van 3,4 graden aan elkaar geplakt. M10 en M12 waren in mijn kleine kijker tweelingbroertjes. Ze schijnen in grote telescopen nogal van elkaar te verschillen, maar voor mij waren het twee kleine wattenbolletjes van gelijke helderheid. Een erg mooi gezicht om ze allebei in een redelijk sterrijk gebied te zien zweven.]]></description>
+      <dc:creator><![CDATA[Roel Weijenberg]]></dc:creator>
+      <guid isPermaLink="false">deepsky33688</guid>
+      <pubDate>Sat, 30 May 2009 01:45:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 10 with 60 mm refractortje from Deventer</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33687&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[M10 en M12 staan ongeveer 3 graden van elkaar, net genoeg om ze in de 6cm refractor bij 19x (LVW22) in &#233;&#233;n beeldveld te zien. Maar wel helemaal aan de rand. Voor de schets heb ik dus 2 beeldvelden van 3,4 graden aan elkaar geplakt. M10 en M12 waren in mijn kleine kijker tweelingbroertjes. Ze schijnen in grote telescopen nogal van elkaar te verschillen, maar voor mij waren het twee kleine wattenbolletjes van gelijke helderheid. Een erg mooi gezicht om ze allebei in een redelijk sterrijk gebied te zien zweven.]]></description>
+      <dc:creator><![CDATA[Roel Weijenberg]]></dc:creator>
+      <guid isPermaLink="false">deepsky33687</guid>
+      <pubDate>Sat, 30 May 2009 01:45:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 94 with 22cm dobson from Muizen</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33686&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Zeer heldere, compacte ronde nevel. Komeetachtig uitzicht met bijzonder frappant helder kerngebied, omgeven door een mooie uitgestrekte fijne waas. Net zichtbaar in 50mm zoeker.]]></description>
+      <dc:creator><![CDATA[Koen Van der Auwera]]></dc:creator>
+      <guid isPermaLink="false">deepsky33686</guid>
+      <pubDate>Fri, 29 May 2009 23:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 102 with 22cm dobson from Muizen</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33685&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Mooi helder galaxie, edge-on uitzicht. Lange, smalle ovaal (sigaar)vorm met heldere kern en fijne subtiele uitlopers. Heldere sterretjes zichtbaar op de rand van de nevel. Blijkbaar nooit opgenomen in de echte cataloog maar zeker een echt Messier object waardig.]]></description>
+      <dc:creator><![CDATA[Koen Van der Auwera]]></dc:creator>
+      <guid isPermaLink="false">deepsky33685</guid>
+      <pubDate>Fri, 29 May 2009 22:45:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 3 with Bresser Mesier N-203/2 from Nothomb</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33684&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Mooie sterrenhoop, duidelijk als vlek herkenbaar in de 25plossl en sterren gedeeltelijk opgelost bij 15 plossl of lager. Helaas lichtvervuilig door de maan waardoor de drie fellere sterren niet herkenbaar zijn. Ook de galaxies in de randen zie ik niet. Desalnietemin mooi obkect.]]></description>
+      <dc:creator><![CDATA[Raoul Alblas]]></dc:creator>
+      <guid isPermaLink="false">deepsky33684</guid>
+      <pubDate>Sat, 30 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 6 with Orion Optics OD300 L from Wechelderzande</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33683&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Bij eerste zicht toen ik meende de cluster in beeld te hebben en wou vergelijken met de kaart, dacht ik wat vlinderachtig bij het uitzicht. Blijkt dat deze cluster de Butterfly Cluster heet ! Beetje een W-vorm. 
+De cluster staat echter veel te laag, de seeing was heel slecht, zo laag aan de horizon. Scherpstelling van de sterren was helemaal niet mogelijk. (Later wou ik naar M7 afzakken, maar die zat helaas in de bomen). 
+Vrij open cluster zonder concentratie naar het centrum. Past volledig in het beeldveld(0.81&#176;). Makkelijk af te scheiden van de omgeving die sterarm is. 
+Redelijk groot magnitudeverschil. Het kleurverschil van de verschillende sterren is moeilijk waar te nemen door de slechte seeing. Niet heel veel sterren, maar geen poging tot tellen gedaan. Tusssen 50 en 100 is een ruwe schatting.]]></description>
+      <dc:creator><![CDATA[Hans Jonkers]]></dc:creator>
+      <guid isPermaLink="false">deepsky33683</guid>
+      <pubDate>Sat, 30 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 19 with Orion Optics OD300 L from Wechelderzande</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33682&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Een wat kleinere, troebele bolhoop met weinig vlekkerige korreligheid, maar amper oplosbaarheid. Wel een tweetal sterren die er soms duidelijk uit lijken te springen. 
+Mooie ronde bolhoop met geen puntige concentratie, helderheid neemt geleidelijk af naar de rand.]]></description>
+      <dc:creator><![CDATA[Hans Jonkers]]></dc:creator>
+      <guid isPermaLink="false">deepsky33682</guid>
+      <pubDate>Fri, 29 May 2009 23:15:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 4 with Orion Optics OD300 L from Wechelderzande</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33681&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Heel flauw zichtbare bolhoop: bevindt zich laag aan de horizon, in de lichtvervuiling en bij nacht met maan. Toch een vermoeden dat dit een prachtig object moet zijn wanneer waargenomen wordt bij betere omstandigheden. 
+In het centrum eerder een langerekte meer heldere balk, centrum is zelfs wat galaxy-achtig. Daarrond ook niet echt bolvormig, eerder driehoekig van vorm. 
+De bolhoop is oplosbaar voor enkele sterren, daarnaast eerder wazig maar wel min of meer korrelig. 
+Ondanks zwak karakter, toch heel mooi object. 
+]]></description>
+      <dc:creator><![CDATA[Hans Jonkers]]></dc:creator>
+      <guid isPermaLink="false">deepsky33681</guid>
+      <pubDate>Fri, 29 May 2009 22:45:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 13 with Bresser Mesier N-203/2 from Nothomb</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33680&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Mooie sterrenhoop, sterren laten zich bij 200x goed oplossen. Het is wel vroeg, net na bs en daarom nog te veel lichtvervuilig van de maan. ]]></description>
+      <dc:creator><![CDATA[Raoul Alblas]]></dc:creator>
+      <guid isPermaLink="false">deepsky33680</guid>
+      <pubDate>Fri, 29 May 2009 23:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 5195 with Bresser Mesier N-203/2 from Nothomb</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33679&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Geen details zichtbaar door lichtvervuiling maan]]></description>
+      <dc:creator><![CDATA[Raoul Alblas]]></dc:creator>
+      <guid isPermaLink="false">deepsky33679</guid>
+      <pubDate>Fri, 29 May 2009 23:15:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 51 with Bresser Mesier N-203/2 from Nothomb</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33678&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Door de halve maan veel lichtvervuiling. Lichtere kern te zien maar verder weinig details zichtbaar. Ook de tweede vlek (NGC5195) is goed zichtbaar maar geen details te herkennen.]]></description>
+      <dc:creator><![CDATA[Raoul Alblas]]></dc:creator>
+      <guid isPermaLink="false">deepsky33678</guid>
+      <pubDate>Fri, 29 May 2009 23:15:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 57 with Skywatcher 8" Dobson from Landgraaf</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33677&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Waarneemsessie gestart met dit object na een minuutje of 10 buiten. 
+Donker adaptatie nog niet optimaal. 
+Donutvorm in de 17mm perifeer alleen te zien. 
+Blijft een mooi object, een nagenoeg perfecte ring.]]></description>
+      <dc:creator><![CDATA[Kai Gerards]]></dc:creator>
+      <guid isPermaLink="false">deepsky33677</guid>
+      <pubDate>Sat, 30 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 27 with Skywatcher 8" Dobson from Landgraaf</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33676&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Kwam vannacht redelijk hoog aan de hemel. 
+Eerste keer voor 2009. Bl.ijft een prachtig object.]]></description>
+      <dc:creator><![CDATA[Kai Gerards]]></dc:creator>
+      <guid isPermaLink="false">deepsky33676</guid>
+      <pubDate>Sat, 30 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 71 with Skywatcher 8" Dobson from Landgraaf</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33675&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Klein bolhoopje tussen de talloze en prachtige speldenprikjes van de melweg achtergrond. 
+Lijkt redelijk op te lossen.]]></description>
+      <dc:creator><![CDATA[Kai Gerards]]></dc:creator>
+      <guid isPermaLink="false">deepsky33675</guid>
+      <pubDate>Sat, 30 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 107 with Skywatcher 8" Dobson from Landgraaf</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33674&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Net boven de dakrand van het huis van de buren laat dit bolhoopje zich zien. 
+Niets op te lossen, mini vlekje.]]></description>
+      <dc:creator><![CDATA[Kai Gerards]]></dc:creator>
+      <guid isPermaLink="false">deepsky33674</guid>
+      <pubDate>Sat, 30 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 12 with Skywatcher 8" Dobson from Landgraaf</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33673&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Kleine geconcentreerde bolhoop. Lijkt wat groter en uitgesmeerder dan buurman M10. 
+4 Heldere sterretjes lijken een vierkant te vormen om de bolhoop zelf. 
+Redelijk op te lossen.]]></description>
+      <dc:creator><![CDATA[Kai Gerards]]></dc:creator>
+      <guid isPermaLink="false">deepsky33673</guid>
+      <pubDate>Sat, 30 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 10 with Skywatcher 8" Dobson from Landgraaf</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33672&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Kleine geconcentreerde bolhoop. 
+Lijkt redelijk op te lossen.]]></description>
+      <dc:creator><![CDATA[Kai Gerards]]></dc:creator>
+      <guid isPermaLink="false">deepsky33672</guid>
+      <pubDate>Sat, 30 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 57 with Meade Lightbridge 12" from Assen</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33671&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Natuurlijk prachtig  object. De ring was te zien als een ovaal met slierten En voor het eerst heb ik de centrale ster kunnen waarnemen. Heel vaag alleen bij perifeer kijken maar bij herhaling bevestigd. Een UHCS-filter haalde de ring wel op maar liet de centrale ster verdwijnen.]]></description>
+      <dc:creator><![CDATA[Jan Willem van der Kouwe]]></dc:creator>
+      <guid isPermaLink="false">deepsky33671</guid>
+      <pubDate>Fri, 29 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6118 with Meade Lightbridge 12" from Assen</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33670&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Zwakke veeg van licht. Wel tamelijk breed. In de ZW-hoek lijkt hij wat helderder.]]></description>
+      <dc:creator><![CDATA[Jan Willem van der Kouwe]]></dc:creator>
+      <guid isPermaLink="false">deepsky33670</guid>
+      <pubDate>Thu, 28 May 2009 22:45:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>NGC 6426 with Meade Lightbridge 12" from Assen</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33669&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Erg zwakke bolhoop, niet veel details te zien. Wel lijkt deze onregelmatig van vorm rondom een kern van enkele sterkere sterren. Niet oplosbaar.]]></description>
+      <dc:creator><![CDATA[Jan Willem van der Kouwe]]></dc:creator>
+      <guid isPermaLink="false">deepsky33669</guid>
+      <pubDate>Thu, 28 May 2009 23:30:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 56 with GSO 200/1000 F5 from Nibbixwoud</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33642&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[M 56 is een kleine bolvormige sterrenhoop, geel sterren in de kern op te lossen. Kern nauwelijks zichtbaar, of deze moet erg groot zijn. Meer te zien als een klein sponzig vlekje met weinig details. Springt wel mooi uit de omgeving.]]></description>
+      <dc:creator><![CDATA[Jeffrey Berkhout]]></dc:creator>
+      <guid isPermaLink="false">deepsky33642</guid>
+      <pubDate>Wed, 27 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 71 with GSO 200/1000 F5 from Nibbixwoud</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33641&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[M 71 is te zien als een sponzig, rechthoekigvlekje dat goed loskomt van het achtergrond. Er zijn geen sterren op te lossen. 
+De sterrenhoop is vrij helder en gemakkelijk te vinden. Een mooie voor een publieksavond.]]></description>
+      <dc:creator><![CDATA[Jeffrey Berkhout]]></dc:creator>
+      <guid isPermaLink="false">deepsky33641</guid>
+      <pubDate>Wed, 27 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 11 with GSO 200/1000 F5 from Nibbixwoud</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33640&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[M 11 is te zien als een bolvormige sterrenhoop met een vorm. Komt los van het achtergrond. Sterren zijn eenvoudig  
+te onderscheiden. Voor het beste zicht, niet te veel zoomen.]]></description>
+      <dc:creator><![CDATA[Jeffrey Berkhout]]></dc:creator>
+      <guid isPermaLink="false">deepsky33640</guid>
+      <pubDate>Wed, 27 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 14 with GSO 200/1000 F5 from Nibbixwoud</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33639&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Enigszins is M 14 wazig om te zien. Om M 14 staan weinig sterren. De bolvormige sterrenhoop is te zien als een wazig bolletje, 
+de kern is bij perifeer kijken lichtelijk te zien. Geen sterren op te lossen.]]></description>
+      <dc:creator><![CDATA[Jeffrey Berkhout]]></dc:creator>
+      <guid isPermaLink="false">deepsky33639</guid>
+      <pubDate>Wed, 27 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 10 with GSO 200/1000 F5 from Nibbixwoud</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33638&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[M 10 is de onderste bolvormige sterrenhoop in het sterrenbeeld Ophiuchus. Wederom veel makkelijker zichtbaar dan M 12. 
+De grote kern is goed te zien en bij een vergroting van 125x zijn de sterren goed op te lossen. 
+Weinig spreiding van sterren aan de buitenkant van de sterrenhoop.]]></description>
+      <dc:creator><![CDATA[Jeffrey Berkhout]]></dc:creator>
+      <guid isPermaLink="false">deepsky33638</guid>
+      <pubDate>Wed, 27 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 12 with GSO 200/1000 F5 from Nibbixwoud</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33637&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Perifeer is M12 het beste te zien als een wazig, rond vlekje. In geen enkele vergroting is een kern te onderscheiden. 
+Veel sterren in haar omgeving, weinig details in de sterrenhoop.]]></description>
+      <dc:creator><![CDATA[Jeffrey Berkhout]]></dc:creator>
+      <guid isPermaLink="false">deepsky33637</guid>
+      <pubDate>Wed, 27 May 2009 00:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 57 with 10x50 bino from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33636&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[M57 is zichtbaar als een zeer klein puntje, niet te onderscheiden van een ster.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33636</guid>
+      <pubDate>Tue, 26 May 2009 23:55:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Cr 399 with 10x50 bino from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33635&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Zeer groot open cluster. Komt los van de achtergrond.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33635</guid>
+      <pubDate>Tue, 26 May 2009 23:48:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Steph 1 with 10x50 bino from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33634&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Zeer verspreid cluster, het komt eigenlijk niet los van de achtergrond. Erg arm.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33634</guid>
+      <pubDate>Tue, 26 May 2009 23:34:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 92 with 10x50 bino from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33633&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Zichtbaar als een klein vlekje, je kan net zien dat het geen ster is door de neveligheid die eromheen hangt.]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33633</guid>
+      <pubDate>Tue, 26 May 2009 23:34:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>M 13 with 10x50 bino from Hooge Mierde</title>
+      <link><![CDATA[http://localhost/deepskylog/index.php?indexAction=detail_observation&observation=33632&QobsKey=0&dalm=D]]></link>
+      <description><![CDATA[Zichtbaar als een vrij gote vage vlek]]></description>
+      <dc:creator><![CDATA[Patrick Duis]]></dc:creator>
+      <guid isPermaLink="false">deepsky33632</guid>
+      <pubDate>Tue, 26 May 2009 23:21:00 +0000</pubDate>
     </item>
   </channel>
 </rss>
