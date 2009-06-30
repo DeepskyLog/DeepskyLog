@@ -728,7 +728,7 @@ class Observations {
 	public  function getObservationsLastYear($id) 
 	{ global $objDatabase;
 	  $t=getdate();
-		return $objDatabase->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid LIKE \"".$id."\" AND observations.date > \"" . date('Ymd', strtotime('-1 year'))."\""/* AND observations.visibility != 7 */, 'Cnt', 0);
+		return $objDatabase->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid LIKE \"".$id."\" AND observations.date > \"" . date('Ymd', strtotime('-1 year'))."\" AND observations.visibility != 7 ", 'Cnt', 0);
 	}
 	public  function getObservationsUserObject($userid, $object) 
 	{ global $objDatabase;
