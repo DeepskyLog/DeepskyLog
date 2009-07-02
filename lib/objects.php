@@ -744,7 +744,7 @@ class Objects implements iObjects
     $altnames=$this->getAlternativeNames($object); $alt="";
 	  while(list($key,$value)=each($altnames))
       if(trim($value)!=trim($object))
-	 	    $alt.=($alt?"<br />":"").trim($value);
+	 	    $alt.=($alt?"/":"").trim($value);
     $contains=$this->getContainsNames($object); $partof=$this->getPartOfNames($object); $containst=""; $partoft = "";
     while(list($key, $value)=each($contains))
       if(trim($value)!=trim($object))

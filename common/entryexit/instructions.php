@@ -548,7 +548,7 @@ else
 	  	if($_GET['newaction']=="LangObjectSetCon")
 		    $objObject->setDsoProperty($_GET['object'],'con', $_GET['newnumber']);
 	  	if($_GET['newaction']=="LangObjectSetType")
-		    $objObject->setDsoProperty($_GET['object'],'tpe', $_GET['newnumber']);
+		    $objObject->setDsoProperty($_GET['object'],'type', $_GET['newnumber']);
 	  	if($_GET['newaction']=="LangObjectSetMag")
 	  	{ $objObject->setDsoProperty($_GET['object'],'mag', $_GET['newnumber']);
 	  	  $objObject->setDsObjectSBObj($_GET['object']);
