@@ -13,10 +13,12 @@ if($loggedUser)
 	  }
 	$result=$objLocation->getSortedLocations('name',$loggedUser);
   $loc=$objObserver->getObserverProperty($loggedUser,'stdlocation');	
-	echo "<select name=\"activateLocation\" class=\"menuField menuDropdown\" onchange=\"location=this.options[this.selectedIndex].value;\">";
-  while(list($key, $value) = each($result))
-	  echo "<option ".(($value==$loc)?"selected=\"selected\"":"")." value=\"".$link."&amp;activeLocationId=$value\">".$objLocation->getLocationPropertyFromId($value,'name')."</option>";
-	echo "</select>";
+	if($result)
+	{ echo "<select name=\"activateLocation\" class=\"menuField menuDropdown\" onchange=\"location=this.options[this.selectedIndex].value;\">";
+    while(list($key, $value) = each($result))
+	    echo "<option ".(($value==$loc)?"selected=\"selected\"":"")." value=\"".$link."&amp;activeLocationId=$value\">".$objLocation->getLocationPropertyFromId($value,'name')."</option>";
+	  echo "</select>";
+	}
 	echo "</div>";
 	$link="";
 }
