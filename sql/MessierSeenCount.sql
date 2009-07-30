@@ -1,0 +1,1 @@
+SELECT count(distinct observations.objectname) AS Cnt, CONCAT(observers.name,' ',observers.firstname) As Name FROM observations JOIN observers ON observations.observerid=observers.id WHERE objectname LIKE 'M %' GROUP BY observerid ORDER BY Cnt DESC, Name ASC;
