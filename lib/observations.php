@@ -52,20 +52,7 @@ class Observations {
 		if(!is_array($objects))
 		 throw new Exception(LangInvalidCSVfile);
 		else
-		{ $objects            = array_values($objects);
-		  $locations          = array_unique($locations);
-		  $locations          = array_values($locations);
-		  $instruments        = array_unique($instruments);
-		  $instruments        = array_values($instruments);
-		  $filters            = array_unique($filters);
-		  $filters            = array_values($filters);
-		  $eyepieces          = array_unique($eyepieces);
-		  $eyepieces          = array_values($eyepieces);
-		  $lenses             = array_unique($lenses);
-		  $lenses             = array_values($lenses);
-		  $dates              = array_unique($dates);
-		  $dates              = array_values($dates);
-		  $noDates            = array();
+		{ $noDates            = array();
 		  $wrongDates         = array();
 		  $objectsMissing     = array();
 			$locationsMissing   = array();
@@ -78,8 +65,10 @@ class Observations {
 		  for($i=0,$j=0;$i<count($objects);$i++)
 		  { $objectsquery=$objObject->getExactDSObject(trim($objects[$i]));
 		    if(!$objectsquery)
-		    { $objectsMissing[$j++]=trim($objects[$i]);
-		      $errorlist[]=$i;
+		    { if(!in_array(trim($objects[$i]),$objectsMissing))
+		        $objectsMissing[$j++]=trim($objects[$i]);
+		      if(!in_array($i,$errorlist))
+		        $errorlist[]=$i;
 		    }
 		    else
 		      $correctedObjects[$i]=$objectsquery;
@@ -87,7 +76,8 @@ class Observations {
 			// Check for existence of locations
 		  for($i= 0,$j=0,$temploc='';$i<count($locations);$i++)
 		    if((!trim($locations[$i]))||($temploc!=trim($locations[$i]))&&($objLocation->getLocationId(trim($locations[$i]),$loggedUser)==-1))
-		    { $locationsMissing[$j++]=trim($locations[$i]);
+		    { if(!in_array($locations[$i],$locationsMissing))
+		        $locationsMissing[$j++]=trim($locations[$i]);
 		      if(!in_array($i,$errorlist))
 		        $errorlist[]=$i;
 		    }
@@ -96,7 +86,8 @@ class Observations {
 		  // Check for existence of instruments
 		  for($i=0,$j=0,$tempinst='';$i<count($instruments);$i++)
 		    if((!trim($instruments[$i]))||($objInstrument->getInstrumentId(trim($instruments[$i]),$loggedUser)==-1))
-		    { $instrumentsMissing[$j++]=trim($instruments[$i]);
+		    { if(!in_array(trim($instruments[$i]),$instrumentsMissing))
+		        $instrumentsMissing[$j++]=trim($instruments[$i]);
 				  if(!in_array($i,$errorlist))
 		        $errorlist[]=$i;
 		    }
@@ -105,21 +96,24 @@ class Observations {
 		  // Check for the existence of the eyepieces
 		  for($i=0,$j=0;$i<count($eyepieces);$i++)
 		    if(trim($eyepieces[$i])&&(!($objEyepiece->getEyepieceObserverPropertyFromName(trim($eyepieces[$i]),$loggedUser,'id'))))
-		    { $eyepiecesMissing[$j++]=trim($eyepieces[$i]);
+		    { if(!in_array(trim($eyepieces[$i]),$eyepiecesMissing))
+		        $eyepiecesMissing[$j++]=trim($eyepieces[$i]);
 		      if(!in_array($i,$errorlist))
 		        $errorlist[]=$i;
 		    }
 		      // Check for the existence of the filters
 		  for($i=0,$j=0;$i<count($filters);$i++)
 		    if(trim($filters[$i])&&(!($objFilter->getFilterObserverPropertyFromName(trim($filters[$i]), $loggedUser,'id'))))
-		    { $filtersMissing[$j++]=trim($filters[$i]);
+		    { if(!in_array(trim($filters[$i]),$filtersMissing))
+		        $filtersMissing[$j++]=trim($filters[$i]);
 		      if(!in_array($i,$errorlist))
 		        $errorlist[]=$i;
 		    }
 		      // Check for the existence of the lenses
 		  for($i=0,$j=0;$i<count($lenses);$i++)
 		    if(trim($lenses[$i])&&(!($objLens->getLensObserverPropertyFromName(trim($lenses[$i]),$loggedUser,'id'))))
-		    { $lensesMissing[$j++]=trim($lenses[$i]);
+		    { if(!in_array(trim($lenses[$i]),$lensesMissing))
+		        $lensesMissing[$j++]=trim($lenses[$i]);
 		      if(!in_array($i,$errorlist))
 		        $errorlist[]=$i;
 		    }
@@ -127,12 +121,14 @@ class Observations {
 		  for($i=0,$j=0,$k=0;$i<count($dates);$i++)
 		  { $datepart=sscanf(trim($dates[$i]),"%2d%c%2d%c%4d");
 		    if((!is_numeric($datepart[0]))||(!is_numeric($datepart[2]))||(!is_numeric($datepart[4]))||(!checkdate($datepart[2],$datepart[0],$datepart[4])))
-		    { $noDates[$j++]=$dates[$i]; 
+		    { if(!in_array($dates[$i],$noDates))
+		        $noDates[$j++]=$dates[$i]; 
 		      if(!in_array($i,$errorlist))
 		        $errorlist[]=$i;
 		    }
 		    elseif((sprintf("%04d",$datepart[4]).sprintf("%02d",$datepart[2]).sprintf("%02d",$datepart[0]))>date('Ymd')) 
-		    { $wrongDates[$k++]=trim($dates[$i]);
+		    { if(!in_array(trim($dates[$i]),$wrongDates))
+		        $wrongDates[$k++]=trim($dates[$i]);
 		      if(!in_array($i,$errorlist))
 		        $errorlist[]=$i;
 		    }
@@ -222,9 +218,9 @@ class Observations {
 		                                        htmlentities(trim($parts_array[$i][10])),
 		                                        htmlentities(((trim($parts_array[$i][11])=="")?"0":trim($parts_array[$i][11]))),
 		                                        htmlentities(trim($parts_array[$i][12])),
-		                                        ((trim($parts_array[$i][6])!="")?$objEyepiece->getEyepieceObserverPropertyFromName(htmlentities(trim($parts_array[$i][6])), $loggedUser,'id'):0),
-						                                ((trim($parts_array[$i][7])!="")?$objFilter->getFilterObserverPropertyFromName(htmlentities(trim($parts_array[$i][7])), $loggedUser,'id'):0),            
-						                                ((trim($parts_array[$i][8])!="")?$objLens->getLensObserverPropertyFromName(htmlentities(trim($parts_array[$i][8])), $loggedUser,'id'):0)
+		                                        ((trim($parts_array[$i][6])!="")?Nz0($objEyepiece->getEyepieceObserverPropertyFromName(htmlentities(trim($parts_array[$i][6])), $loggedUser,'id')):0),
+						                                ((trim($parts_array[$i][7])!="")?Nz0($objFilter->getFilterObserverPropertyFromName(htmlentities(trim($parts_array[$i][7])), $loggedUser,'id')):0),            
+						                                ((trim($parts_array[$i][8])!="")?Nz0($objLens->getLensObserverPropertyFromName(htmlentities(trim($parts_array[$i][8])), $loggedUser,'id')):0)
 						                                );
 		      if($obsid)
 		        $added++;

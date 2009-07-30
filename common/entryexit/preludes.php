@@ -41,4 +41,12 @@ else
 	  $MSIE=true;
 	  
 }
+function Nz($arg)
+{ if($arg) return $arg;
+  else     return ""; 
+}
+function Nz0($arg)
+{ if($arg) return $arg;
+  else     return 0; 
+}
 ?>
