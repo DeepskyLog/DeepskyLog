@@ -1104,7 +1104,11 @@ class Observations {
 		if($inst=="Naked eye")
 		 	$inst=InstrumentsNakedEye;
 		$dateTimeText="";
-		$date=sscanf($this->getDsObservationProperty($LOid,'date'),"%4d%2d%2d");
+		//$date=sscanf($this->getDsObservationProperty($LOid,'date'),"%4d%2d%2d");
+		if($loggedUser&&(!($objObserver->getObserverProperty($loggedUser,'UT'))))
+		  $date=sscanf($this->getDsObservationLocalDate($LOid),"%4d%2d%2d");
+		else 
+		  $date=sscanf($this->getDsObservationProperty($LOid,'date'),"%4d%2d%2d");
 		$time="";
 		$dateTimeLabelText="";
 		$dateTimeText=date($dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0]));
