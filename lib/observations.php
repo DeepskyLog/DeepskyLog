@@ -911,7 +911,7 @@ class Observations {
 			$date = $year . sprintf("%02d", $month) . sprintf("%02d", $day);
 		}
 		$objDatabase->execSQL("UPDATE observations SET date = \"".$date."\" WHERE id = \"".$id."\"");
-		$objDatabase->execSQL("UPDATE observations SET time = \"$time\" WHERE id = \"".$id."\"");
+		$objDatabase->execSQL("UPDATE observations SET time = \"".$time."\" WHERE id = \"".$id."\"");
 	}
 	public  function showListObservation($link, $link2, $lco, $step) 
 	{ global $FF,$MSIE, $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations; 
@@ -1221,7 +1221,7 @@ class Observations {
 			//$_GET['observation']=$current_observation;
 		}
 		elseif((!$_POST['day'])||(!$_POST['month'])||(!$_POST['year'])||($_POST['site'] == "1")||(!$_POST['instrument'])||(!$_POST['description']))
-		{if ($objUtil->checkPostKey('limit'))
+		{ if($objUtil->checkPostKey('limit'))
 				if (ereg('([0-9]{1})[.,]{0,1}([0-9]{0,1})', $_POST['limit'], $matches)) // limiting magnitude like X.X or X,X with X a number between 0 and 9
 					$_POST['limit'] = $matches[1] . "." . (($matches[2]) ? $matches[2] : "0");
 				else
@@ -1232,16 +1232,16 @@ class Observations {
 						$_POST['sqm'] = $matches[1] . $matches[2] . "." . (($matches[3]) ? $matches[3] : "0");
 					else
 						$_POST['sqm'] = -1; // clear current magnitude limit
-			else {
-				$_POST['limit'] = 0;
-				$_POST['sqm'] = -1;
-			}
+			  else 
+			  { $_POST['limit'] = 0;
+				  $_POST['sqm'] = -1;
+			  }
 			$entryMessage.=LangValidateObservationMessage1;
 			$_GET['indexAction']='add_observation';
 		} 
 		else // all fields filled in
 		{ $time = -9999;
-		  if ($_POST['hours']) 
+		  if(strlen($_POST['hours']))
 		  { if (isset ($_POST['minutes']))
 				  $time = ($_POST['hours'] * 100) + $_POST['minutes'];
 				else
