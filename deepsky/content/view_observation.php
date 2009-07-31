@@ -20,7 +20,7 @@ $topline="&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=detail_obj
 if(substr($objObject->getSeen($object),0,1)!='-')
   $topline.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\">".LangViewObjectObservations."&nbsp;".$object_ss."</a>";
 if($loggedUser)
-	$topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;object=" . urlencode($object) . "\">" . LangViewObjectAddObservation . $object_ss . "</a>";
+	$topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;object=" . urlencode($object) . "\">" . LangViewObjectAddObservation."&nbsp;".$object_ss . "</a>";
 if($myList) 
 { if ($objList->checkObjectInMyActiveList($object))
 		$topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage3 . $listname_ss . "</a>";

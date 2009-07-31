@@ -874,9 +874,9 @@ class Observations {
   }
 	public  function setLocalDateAndTime($id, $date, $time) 	                                                                                                                     // sets the date and time for the given observation when the time is given in  local time
 	{ global $objDatabase,$objLocation;
-		if ($time >= 0) 
-		{ $objDatabase->selectSingleValue("SELECT locationid FROM observations WHERE id = \"$id\"");
-			$timezone = $objLocation->getLocationPropertyFromId($this->getDsObservationProperty($id,'locationid'),'timezone');
+		echo "Time: ".$time."<p>";
+	  if ($time >= 0) 
+		{ $timezone = $objLocation->getLocationPropertyFromId($this->getDsObservationProperty($id,'locationid'),'timezone');
 			$datearray = sscanf($date, "%4d%2d%2d");
 			$dateTimeZone = new DateTimeZone($timezone);
 			$date = sprintf("%02d", $datearray[1]) . "/" . sprintf("%02d", $datearray[2]) . "/" . $datearray[0];
@@ -889,20 +889,20 @@ class Observations {
 			$hours = $timestr[0] - (int) $timedifference;
 			$timedifferenceminutes = ($timedifference - (int) $timedifference) * 60;
 			$minutes = $timestr[1] - $timedifferenceminutes;
-			if ($minutes < 0) {
-				$hours = $hours -1;
+			if ($minutes < 0) 
+			{$hours = $hours -1;
 				$minutes = $minutes +60;
-			} else
-				if ($minutes > 60) {
-					$hours = $hours +1;
-					$minutes = $minutes -60;
-				}
-			if ($hours < 0) {
-				$hours = $hours +24;
+			} 
+			if ($minutes > 60) 
+			{ $hours = $hours +1;
+				$minutes = $minutes -60;
+			}
+			if ($hours < 0) 
+			{ $hours = $hours +24;
 				$jd = $jd -1;
 			}
-			if ($hours >= 24) {
-				$hours = $hours -24;
+			if ($hours >= 24) 
+			{ $hours = $hours -24;
 				$jd = $jd +1;
 			}
 			$time = $hours * 100 + $minutes;
