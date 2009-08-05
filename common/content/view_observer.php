@@ -37,9 +37,9 @@ else
  
 for($i =0;$i<count($modules);$i++)
 { if(strcmp($$modules[$i], $deepsky)==0)
-  { $information[$i][0]=$userDSobservation." / ".$totalDSObservations." (".sprintf("%.2f",($userDSobservation / $totalDSObservations) * 100)."%)";
-    $information[$i][1]=$userDSYearObservations." / ".$totalDSYearObservations."&nbsp;&nbsp;&nbsp;&nbsp;(".sprintf("%.2f",$userDSYearObservations/$totalDSYearObservations*100)."%)";
-    $information[$i][2]=$userDSObjects." / ".$totalDSobjects." (" . sprintf("%.2f",$userDSObjects/$totalDSobjects*100)."%)";
+  { $information[$i][0]=$userDSobservation." / ".$totalDSObservations."&nbsp;(".sprintf("%.2f",($userDSobservation / $totalDSObservations) * 100)."%)";
+    $information[$i][1]=$userDSYearObservations." / ".$totalDSYearObservations."&nbsp;(".sprintf("%.2f",$userDSYearObservations/$totalDSYearObservations*100)."%)";
+    $information[$i][2]=$userDSObjects." / ".$totalDSobjects."&nbsp;(" . sprintf("%.2f",$userDSObjects/$totalDSobjects*100)."%)";
     $information[$i][4]=$userDSrank;
   }
   if(strcmp($$modules[$i], $comets) == 0)
