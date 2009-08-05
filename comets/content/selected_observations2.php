@@ -682,7 +682,7 @@ while(list ($key, $value) = each($obs)) // go through observations array
 
 $_SESSION['observation_query'] = $obs;
 
-echo "<p><a href=\"".$baseURL."cometobservations.pdf\" rel=\"external\">".LangExecuteQueryObjectsMessage4."</a></p>";
+echo "<p>".LangExecuteQueryObjectsMessage4." <a href=\"".$baseURL."cometobservations.pdf\" rel=\"external\">".LangExecuteQueryObjectsMessage4a."</a></p>";
 //echo "<p><a href=\"".$baseURL."cometobservations.icq\" rel=\"external\">".LangExecuteQueryObjectsMessage7."</a></p>";
 
 }

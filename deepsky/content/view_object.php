@@ -82,7 +82,8 @@ else
 		}
 		$objObject->showObjects($link, $min, $max,$_GET['object'],0,$step);
 		echo "<hr />";
-		$content =$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4)."&nbsp;-&nbsp;";
+		$content =LangExecuteQueryObjectsMessage4."&nbsp;";
+		$content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4a)."&nbsp;-&nbsp;";
 		$content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objectnames.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4b)."&nbsp;-&nbsp;";
 		$content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objectsDetails.pdf?SID=Qobj&amp;sort=".$_SESSION['QobjSort'],LangExecuteQueryObjectsMessage4c)."&nbsp;-&nbsp;";
 		$content.="<a href=\"".$baseURL."objects.argo?SID=Qobj\">".LangExecuteQueryObjectsMessage8."</a>&nbsp;-&nbsp;";

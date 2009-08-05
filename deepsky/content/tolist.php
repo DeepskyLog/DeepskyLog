@@ -5,13 +5,13 @@ if($loggedUser)
 { echo "<form action=\"".$baseURL."index.php?indexAction=listaction\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
 	$content1 =LangToListAddNew;
-	$content1.="<input type=\"text\" class=\"inputfield\" name=\"addlistname\" size=\"40\" value=\"\" />";
-	$content2="<input type=\"checkbox\" name=\"PublicList\" value=\"" . LangToListPublic . "\" />".LangToListPublic;
-	$content3="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-	$content3.="<input class=\"width125px\" type=\"submit\" name=\"addList\" value=\"" . LangToListAdd . "\" />";
+	$content1.="<input type=\"text\" class=\"inputfield\" name=\"addlistname\" size=\"35\" value=\"\" />";
+	$content1.="<input type=\"checkbox\" name=\"PublicList\" value=\"" . LangToListPublic . "\" />".LangToListPublic;
+	$content1.="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+	$content1.="<input class=\"width125px\" type=\"submit\" name=\"addList\" value=\"" . LangToListAdd . "\" />";
 	if($myList)
-	  $content3.="<input class=\"width125px\" type=\"submit\" name=\"renameList\" value=\"" . LangToListRename . "\" />";
-	$objPresentations->line(array($content1,$content2,$content3),"LLL",array(40,30,30),30);
+	  $content1.="<input class=\"width125px\" type=\"submit\" name=\"renameList\" value=\"" . LangToListRename . "\" />";
+	$objPresentations->line(array($content1),"L",array(100));
 	echo "</div></form>";
 	echo "<hr />";
 }
@@ -32,10 +32,15 @@ if($listname)
                                 $content),
                           "LR", array(60,40),30);  
   $content2=$objUtil->printStepsPerPage3($link,"listObj",$step);
-  $objPresentations->line(array((!$myList)?
-                                "(".LangToListListBy.$objObserver->getObserverProperty(($listowner=$objList->getListOwner()),'firstname').' '.$objObserver->getObserverProperty($listowner,'name').")":
-                                "<a href=\"".$baseURL."index.php?indexAction=import_csv_list\">" .  LangToListImport . "</a>",$content2),
-                          "LR",array(80,20),20);
+  $content1="";
+  if($myList)
+  { $content1 ="<a href=\"".$baseURL."index.php?indexAction=import_csv_list\">" .  LangToListImport . "</a> - ";
+  	$content1.="<a href=\"".$baseURL."index.php?indexAction=listaction&amp;emptyList=emptyList\">".LangToListEmpty."</a> - ";
+    $content1.="<a href=\"".$baseURL."index.php?indexAction=listaction&amp;removeList=removeList\">".LangToListMyListsRemove."</a>";
+  }
+  else
+    $content1="(".LangToListListBy.$objObserver->getObserverProperty(($listowner=$objList->getListOwner()),'firstname').' '.$objObserver->getObserverProperty($listowner,'name').")";
+  $objPresentations->line(array($content1,$content2),"LR",array(80,20),20);
   if(count($_SESSION['Qobj'])>0)
 	{ // OUTPUT RESULT
     $link = "".$baseURL."index.php?indexAction=listaction";
@@ -50,14 +55,8 @@ if($listname)
   	}
 	  $objObject->showObjects($link, $min, $max,'',1, $step,"removePageObjectsFromList");
 	  echo "<hr />";
-    if($myList)
-    { $content2 =" <form action=\"".$baseURL."index.php?indexAction=listaction\">";
-      $content2.="<input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
-		  $content2.="<input class=\"width150px\" type=\"submit\" name=\"emptyList\" value=\"" . LangToListEmpty . "\" />";
-      $content2.="<input class=\"width150px\" type=\"submit\" name=\"removeList\" value=\"" . LangToListMyListsRemove . "\" />";
-      $content2.="</form>";
-    }
-    $content =$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
+	  $content=LangExecuteQueryObjectsMessage4."&nbsp;";
+    $content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4a);
 	  $content.="&nbsp;-&nbsp;";
     $content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objectnames.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4b);
 	  $content.="&nbsp;-&nbsp;";
@@ -65,7 +64,7 @@ if($listname)
 	  $content.="&nbsp;-&nbsp;";
     $content.="<a href=\"objects.argo?SID=Qobj\" rel=\"external\">".LangExecuteQueryObjectsMessage8."</a> &nbsp;-&nbsp;";
     $content.="<a href=\"objects.csv?SID=Qobj\" rel=\"external\">".LangExecuteQueryObjectsMessage6."</a>";
-    $objPresentations->line(array($content,$content2),"LR",array(70,30),30);
+    $objPresentations->line(array($content),"L",array(),30);
 	}
 	else
 	{ echo LangToListEmptyList;

@@ -263,7 +263,7 @@ if(isset($_GET['objectname']))
 
 		echo ("</table>");
 		echo "<hr />";
-		$objPresentations->line(array("<a href=\"".$baseURL."cometobservations.pdf\" rel=\"external\">".LangExecuteQueryObjectsMessage4."</a>"),"L",array(),20);
+		$objPresentations->line(array(LangExecuteQueryObjectsMessage4." <a href=\"".$baseURL."cometobservations.pdf\" rel=\"external\">".LangExecuteQueryObjectsMessage4a."</a>"),"L",array(),20);
 	}
   else // no observations of object
   {
@@ -483,7 +483,7 @@ elseif($_GET['user']) // selection of all observations of one observer
 		echo ("</table>");
 		echo "<hr />";
 		$_SESSION['observation_query'] = $obs;
-		$objPresentations->line(array("<a href=\"".$baseURL."cometobservations.pdf\" rel=\"external\">".LangExecuteQueryObjectsMessage4."</a>"),"L",array(),20);
+		$objPresentations->line(array(LangExecuteQueryObjectsMessage4." <a href=\"".$baseURL."cometobservations.pdf\" rel=\"external\">".LangExecuteQueryObjectsMessage4a."</a>"),"L",array(),20);
 	}
 	echo "</div>";
 }

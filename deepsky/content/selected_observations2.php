@@ -137,11 +137,12 @@ else
 	echo "<hr />";
 	if ($_SESSION['lco'] == "O")
 		echo "<p align=\"right\">" . LangOverviewObservationsHeader5a."</p>";
-	$content1 =$objPresentations->promptWithLinkText(LangOverviewObservations10, LangOverviewObservations11, $baseURL . "observations.pdf?SID=Qobs", LangExecuteQueryObjectsMessage4);
+	$content1 ="<a href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a> - ";
+	$content1.=LangExecuteQueryObjectsMessage4."&nbsp;";
+	$content1.=$objPresentations->promptWithLinkText(LangOverviewObservations10, LangOverviewObservations11, $baseURL . "observations.pdf?SID=Qobs", LangExecuteQueryObjectsMessage4a);
 	$content1.=" - ";
 	$content1.="<a href=\"" . $baseURL . "observations.csv\" rel=\"external\">" . LangExecuteQueryObjectsMessage5 . "</a> - ";
-	$content1.="<a href=\"" . $baseURL . "observations.xml\" rel=\"external\">" . LangExecuteQueryObjectsMessage10 . "</a> - ";
-	$content1.="<a href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a>";
+	$content1.="<a href=\"" . $baseURL . "observations.xml\" rel=\"external\">" . LangExecuteQueryObjectsMessage10 . "</a>";
 	$objPresentations->line(array($content1),"L",array(100),25);
   echo "</div>";
 }

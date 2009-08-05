@@ -45,7 +45,8 @@ if(count($_SESSION['Qobj'])>1) //===============================================
 	}
 	$objObject->showObjects($link, $min, $max,'',0, $step);
 	echo "<hr />";
-	$content1 =$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4);
+	$content1 =LangExecuteQueryObjectsMessage4."&nbsp;";
+	$content1.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4a);
 	$content1.="&nbsp;-&nbsp;";
 	$content1.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objectnames.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4b);
 	$content1.="&nbsp;-&nbsp;";

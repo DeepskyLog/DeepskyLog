@@ -779,9 +779,9 @@ class Objects implements iObjects
 	   $objPresentations->line(array(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(stripslashes($object))."\">".(stripslashes($object))."</a>",
 	                                "&nbsp;","&nbsp;"),
 	                          "RLRL",array(),20,array("type20","type20","type20","type20"));
- 	  $objPresentations->line(array(LangViewObjectField2,($alt?$alt:"-"),LangViewObjectField2b,($containst? $containst . "/":"(-)/").($partoft?$partoft:"-")),
+ 	  $objPresentations->line(array(LangViewObjectField2,($alt?"<span onmouseover=\"Tip('".$alt."')\">".$alt."</span>":"-"),LangViewObjectField2b,($containst? $containst . "/":"(-)/").($partoft?"<span onmouseover=\"Tip('".$partoft."')\">".$partof."</span>":"-")),
  	                          "RLRL",array(),20,array("type10","type10","type10","type10"));
-    $objPresentations->line(array(LangViewObjectField3,$objPresentations->raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,$objPresentations->decToStringDegMin($this->getDsoProperty($object,'decl'))),
+	  $objPresentations->line(array(LangViewObjectField3,$objPresentations->raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,$objPresentations->decToStringDegMin($this->getDsoProperty($object,'decl'))),
                             "RLRL",array(),20,array("type20","type20","type20","type20"));
     $objPresentations->line(array(LangViewObjectField5,$GLOBALS[$this->getDsoProperty($object,'con')],LangViewObjectField6,$GLOBALS[$this->getDsoProperty($object,'type')]),
  	                          "RLRL",array(),20,array("type10","type10","type10","type10"));
