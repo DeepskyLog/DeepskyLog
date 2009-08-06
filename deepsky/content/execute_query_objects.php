@@ -28,11 +28,12 @@ if(count($_SESSION['Qobj'])>1) //===============================================
   $title.="</h4>";
   list ($min,$max,$content) = $objUtil->printNewListHeader3($_SESSION['Qobj'],$link,$min,$step);
   $objPresentations->line(array($title,$content),"LR",array(70,30),30);
-	$content2=$objUtil->printStepsPerPage3($link,"selObj",$step);
+  $content1=" - <a href=\"".$link."&amp;noShowName=noShowName\">".LangListQueryObjectsMessage17."</a>";
+  $content2=$objUtil->printStepsPerPage3($link,"selObj",$step);
   if($showPartOfs)
-    $objPresentations->line(array("<a href=\"".$link."&amp;showPartOfs=0\">".LangListQueryObjectsMessage12."</a>",$content2),"LR",array(70,30),20);
+    $objPresentations->line(array("<a href=\"".$link."&amp;showPartOfs=0\">".LangListQueryObjectsMessage12."</a>".$content1,$content2),"LR",array(70,30),20);
 	else
-    $objPresentations->line(array("<a href=\"".$link."&amp;showPartOfs=1\">".LangListQueryObjectsMessage13."</a>",$content2),"LR",array(70,30),20);
+    $objPresentations->line(array("<a href=\"".$link."&amp;showPartOfs=1\">".LangListQueryObjectsMessage13."</a>".$content1,$content2),"LR",array(70,30),20);
   $link.="&amp;showPartOfs=".$showPartOfs;
 	echo "<hr />";
 	$_GET['min']=$min;

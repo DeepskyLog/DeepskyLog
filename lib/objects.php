@@ -424,7 +424,7 @@ class Objects implements iObjects
   }
   private function getPartOfNames($name)
   { global $objDatabase;
-    $objDatabase->selectSingleArray("SELECT objectpartof.partofname FROM objectpartof WHERE objectpartof.objectname = \"".$name."\"",'partofname');
+    return $objDatabase->selectSingleArray("SELECT objectpartof.partofname FROM objectpartof WHERE objectpartof.objectname = \"".$name."\"",'partofname');
   }
   public  function getSeen($object)                                             // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
   { global $loggedUser,$objDatabase;
@@ -744,14 +744,18 @@ class Objects implements iObjects
     $altnames=$this->getAlternativeNames($object); $alt="";
 	  while(list($key,$value)=each($altnames))
       if(trim($value)!=trim($object))
-	 	    $alt.=($alt?"/":"").trim($value);
-    $contains=$this->getContainsNames($object); $partof=$this->getPartOfNames($object); $containst=""; $partoft = "";
+	 	    $alt.=($alt?"/":"").addslashes(trim($value));
+    $contains=$this->getContainsNames($object); $partof=$this->getPartOfNames($object); $containst=""; $partoft = "";$containstip="";$partoftip="";
     while(list($key, $value)=each($contains))
       if(trim($value)!=trim($object))
-	 	    $containst.=($containst?"/":"")."(<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(trim($value))."\">".trim($value)."</a>)";
+      { $containst.=($containst?"/":"")."(<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(trim($value))."\">".trim($value)."</a>)";
+        $containstip.=($containstip?"/":"").addslashes(trim($value));
+      }
     while((count($partof))&&(list($key, $value)=each($partof)))
       if(trim($value)!=trim($object))
-	  	  $partoft.=($partoft?"/":"")."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(trim($value))."\">".trim($value)."</a>";
+      { $partoft.=($partoft?"/":"")."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(trim($value))."\">".trim($value)."</a>";
+        $partoftip.=($partoftip?"/":"").trim($value); 
+      }
     $raDSS=$objPresentations->raToStringDSS($this->getDsoProperty($object,'ra'));
     $declDSS=$objPresentations->decToStringDSS($this->getDsoProperty($object,'decl'));
     $magnitude=sprintf("%01.1f", $this->getDsoProperty($object,'mag'));
@@ -779,7 +783,7 @@ class Objects implements iObjects
 	   $objPresentations->line(array(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(stripslashes($object))."\">".(stripslashes($object))."</a>",
 	                                "&nbsp;","&nbsp;"),
 	                          "RLRL",array(),20,array("type20","type20","type20","type20"));
- 	  $objPresentations->line(array(LangViewObjectField2,($alt?"<span onmouseover=\"Tip('".$alt."')\">".$alt."</span>":"-"),LangViewObjectField2b,($containst? $containst . "/":"(-)/").($partoft?"<span onmouseover=\"Tip('".$partoft."')\">".$partof."</span>":"-")),
+ 	  $objPresentations->line(array(LangViewObjectField2,($alt?"<span onmouseover=\"Tip('".$alt."')\">".$alt."</span>":"-"),LangViewObjectField2b,"<span onmouseover=\"Tip('(".($containstip?$containstip:"-").")/".($partoftip?$partoftip:"-")."')\">".($containst?$containst."/":"(-)/").($partoft?$partoft:"-")."</span>"),
  	                          "RLRL",array(),20,array("type10","type10","type10","type10"));
 	  $objPresentations->line(array(LangViewObjectField3,$objPresentations->raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,$objPresentations->decToStringDegMin($this->getDsoProperty($object,'decl'))),
                             "RLRL",array(),20,array("type20","type20","type20","type20"));

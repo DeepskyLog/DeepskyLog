@@ -1,4 +1,12 @@
 <?php
+
+// TO DO:
+// LangListQueryObjectsMessage17
+
+
+
+
+
 define("LangGeneralObservations"													,"Beobachtungen");
 
 define("LangIndexPleaseWait"															,"Please wait a moment while loading data...");
@@ -524,6 +532,7 @@ define("LangListQueryObjectsMessage13"										,"Zeige assoziierte Objekte");
 define("LangListQueryObjectsMessage14"										,"Bitte geben Sie den Titel an");
 define("LangListQueryObjectsMessage15"										,"DeepskyLog Objekte");
 define("LangListQueryObjectsMessage16"										,"&nbsp;Die Beobachtung&nbsp;");
+define("LangListQueryObjectsMessage17"										,"Show main names");
 
 // content/register.php
 

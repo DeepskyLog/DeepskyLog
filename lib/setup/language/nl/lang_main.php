@@ -1,4 +1,12 @@
 <?php
+
+
+
+
+
+
+
+
 define("LangGeneralObservations"													,"observaties");
 
 define("LangIndexPleaseWait"															,"Gelieve een moment te wachten terwijl de gegevens opgehaald worden...");
@@ -524,6 +532,7 @@ define("LangListQueryObjectsMessage13"										,"Toon geassocieerde objecten");
 define("LangListQueryObjectsMessage14"										,"Gelieve de titel in te geven");
 define("LangListQueryObjectsMessage15"										,"DeepskyLog Objecten");
 define("LangListQueryObjectsMessage16"										,"&nbsp;De observatie&nbsp;");
+define("LangListQueryObjectsMessage17"										,"Toon hoofdnamen");
 
 // content/register.php
 

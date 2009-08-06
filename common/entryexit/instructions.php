@@ -359,6 +359,9 @@ else
 	  include_once "deepsky/control/add_csv_listdata.php";
 	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_xml_observations")
 	  include_once "deepsky/control/add_xml_observations.php";
+	if(array_key_exists('noShowName',$_GET)&&(array_key_exists("Qobj",$_SESSION)))
+	  while(list($key,$value)=each($_SESSION["Qobj"]))
+	    $_SESSION["Qobj"][$key]["showname"]=$_SESSION["Qobj"][$key]["objectname"];
 	  
 	  
 	// ============================================================================ LIST COMMANDS

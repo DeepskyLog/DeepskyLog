@@ -1,4 +1,12 @@
 <?php
+
+
+
+
+
+
+
+
 define("LangGeneralObservations"													,"observations");
 
 define("LangIndexPleaseWait"															,"Please wait a moment while loading data...");
@@ -524,6 +532,7 @@ define("LangListQueryObjectsMessage13"										,"Show associated objects");
 define("LangListQueryObjectsMessage14"										,"Please enter the title");
 define("LangListQueryObjectsMessage15"										,"DeepskyLog Objects");
 define("LangListQueryObjectsMessage16"										,"&nbsp;The observation&nbsp;");
+define("LangListQueryObjectsMessage17"										,"Show main names");
 
 // content/register.php
 

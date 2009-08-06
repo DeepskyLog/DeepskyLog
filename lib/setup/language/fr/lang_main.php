@@ -1,4 +1,12 @@
 <?php
+
+// TO DO
+
+// LangListQueryObjectsMessage17
+
+
+
+
 define("LangGeneralObservations"													,"observations");
 
 define("LangIndexPleaseWait"															,"Prière d'attendre un moment pendant le recherche des données...");
@@ -524,7 +532,8 @@ define("LangListQueryObjectsMessage13"										,"Montrer les objets associ&#233
 define("LangListQueryObjectsMessage14"										,"Veuillez rentrer le titre");
 define("LangListQueryObjectsMessage15"										,"Objets DeepskyLog");
 define("LangListQueryObjectsMessage16"										,"&nbsp;L'observation&nbsp;");
- 
+define("LangListQueryObjectsMessage17"										,"Montrer les noms principales");
+
 // content/register.php
 
 define("LangRegisterNewTitle"															,"Enregistrer");
