@@ -40,7 +40,7 @@ catch (Exception $e)
   // EMAIL developers with error codes
 }
 echo "<script type=\"text/javascript\">";
-echo "alert('WP1');";
+//echo "alert('WP1');";
 echo "resizeForm();";
 //echo "externalLinks();";
 //echo "fillAtlasPage();";
