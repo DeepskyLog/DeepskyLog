@@ -681,7 +681,7 @@ if ($dom->schemaValidate($xmlschema)) {
       $site = $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue]["name"];
 
       $sa = $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue];
-      if (count($objDatabase->selectRecordArray("SELECT * from locations where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $site . "\";")) > 0) {
+      if (count($objDatabase->selectRecordArray("SELECT * from locations where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $site)) . "\";")) > 0) {
         // Update the coordinates
         $locId = $objLocation->getLocationId(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $sa["name"])), $_SESSION['deepskylog_id']);
         $objLocation->setLocationProperty($locId, "longitude", $sa["longitude"]);
@@ -698,9 +698,11 @@ if ($dom->schemaValidate($xmlschema)) {
       if ($observation->getElementsByTagName( "scope" )->item(0)) {
         $instrument = $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue]["name"];
         $ia = $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue];
+
         if (count($objDatabase->selectRecordArray("SELECT * from instruments where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $instrument)) . "\";")) > 0) {
           // Update
-          $instId = $objInstrument->getInstrumentId($ia["name"], $_SESSION['deepskylog_id']);
+          $instId = $objInstrument->getInstrumentId(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $ia["name"])), $_SESSION['deepskylog_id']);
+     
           $objInstrument->setInstrumentProperty($instId, "name", htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $ia["name"])));
           $objInstrument->setInstrumentProperty($instId, "diameter", $ia["diameter"]);
           $objInstrument->setInstrumentProperty($instId, "fd", $ia["fd"]);
@@ -711,16 +713,16 @@ if ($dom->schemaValidate($xmlschema)) {
           $instId = $objInstrument->addInstrument(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $ia["name"])), $ia["diameter"], $ia["fd"], $ia["type"], $ia["fixedMagnification"], $_SESSION['deepskylog_id']);
         }
       }
-
+      
       // Filter is not mandatory
       if ($observation->getElementsByTagName( "filter" )->item(0)) {
         // Check if the filter already exists in DeepskyLog
         $filter = $filterArray[$observation->getElementsByTagName( "filter" )->item(0)->nodeValue]["name"];
 
         $fa = $filterArray[$observation->getElementsByTagName( "filter" )->item(0)->nodeValue];
-        if (count($objDatabase->selectRecordArray("SELECT * from filters where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . utf8_encode(htmlentities($filter)) . "\";")) > 0) {
+        if (count($objDatabase->selectRecordArray("SELECT * from filters where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $filter)) . "\";")) > 0) {
           // Update the filter
-          $filtId = $objFilter->getFilterId($fa["name"], $_SESSION['deepskylog_id']);
+          $filtId = $objFilter->getFilterId(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $fa["name"])), $_SESSION['deepskylog_id']);
           $objFilter->setFilterProperty($filtId, "name", htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $fa["name"])));
           $objFilter->setFilterProperty($filtId, "type", $fa["type"]);
           $objFilter->setFilterProperty($filtId, "color", $fa["color"]);
@@ -733,15 +735,17 @@ if ($dom->schemaValidate($xmlschema)) {
         }
       }
 
+      
       // Eyepiece is not mandatory
       if ($observation->getElementsByTagName( "eyepiece" )->item(0)) {
         // Check if the eyepiece already exists in DeepskyLog
         $eyepiece = $eyepieceArray[$observation->getElementsByTagName( "eyepiece" )->item(0)->nodeValue]["name"];
 
         $ea = $eyepieceArray[$observation->getElementsByTagName( "eyepiece" )->item(0)->nodeValue];
-        if (count($objDatabase->selectRecordArray("SELECT * from eyepieces where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $eyepiece)) . "\";")) > 0) {
+
+        if (count($objDatabase->selectRecordArray("SELECT * from eyepieces where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $ea["name"])) . "\";")) > 0) {
           // Update the eyepiece
-          $eyepId = $objEyepiece->getEyepieceId($ea["name"], $_SESSION['deepskylog_id']);
+          $eyepId = $objEyepiece->getEyepieceId(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $ea["name"])), $_SESSION['deepskylog_id']);
           $objEyepiece->setEyepieceProperty($eyepId, "name", htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $ea["name"])));
           $objEyepiece->setEyepieceProperty($eyepId, "focalLength", $ea["focalLength"]);
           $objEyepiece->setEyepieceProperty($eyepId, "apparentFOV", $ea["apparentFOV"]);
@@ -781,11 +785,10 @@ if ($dom->schemaValidate($xmlschema)) {
         $pattern = '/([A-Za-z]+)([\d\D\w]+)/';
         $targetName = preg_replace($pattern, '${1} ${2}', $target);
         $targetName = str_replace("  ", " ", $targetName);
-
         $objeId = -1;
         // Check if the object with the given name exists. If this is the case, set the objeId, else check the alternative names
-        if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\");")) > 0) {
-          $objeId = $objObject->getDsObjectName($targetName);
+        if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $targetName)) . "\");")) > 0) {
+          $objeId = $objObject->getDsObjectName(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $targetName)));
         } else {
           for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
             $targetName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
@@ -805,9 +808,13 @@ if ($dom->schemaValidate($xmlschema)) {
               $aliasNames = explode(" ", $aliasName);
               $objObject->newAltName($names[0]." ".$names[1], $aliasNames[0], $aliasNames[1]);
             }
-            $objeId = $objObject->getDsObjectName($targetName);
+            $objeId = $objObject->getDsObjectName(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $targetName)));
           }
         }
+        // TODO : objects which are already in the database... MEL 20 = MELOTTE 20, PK127-05.2 = PK 127-5.2, ...
+        // TODO : objects with naked eye = geen <scope> in de waarneming...
+        // TODO : When a new object is added, the observation is not added -> MELOTTE 20
+        
         // Check if the observation already exists!
         $dateArray = sscanf($observation->getElementsByTagName( "begin" )->item(0)->nodeValue, "%4d-%2d-%2dT%2d:%2d:%2d%c%02d:%02d");
         $date = mktime($dateArray[3], $dateArray[4], 0, $dateArray[1], $dateArray[2], $dateArray[0]);
