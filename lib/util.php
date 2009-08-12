@@ -1859,6 +1859,7 @@ class Utils implements iUtils
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_observation'                    ,'deepsky/content/new_observation.php'))) 
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_object'                      ,'deepsky/content/view_object.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_observation'                 ,'deepsky/content/view_observation.php'))) 
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('atlaspage'                            ,'deepsky/content/dsatlas.php'))) 
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('import_csv_list'                    ,'deepsky/content/new_listdatacsv.php')))  
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('listaction'                         ,'deepsky/content/tolist.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAdmin ('manage_csv_object'                  ,'deepsky/content/manage_objects_csv.php')))

@@ -29,7 +29,7 @@ try
   include 'common/entryexit/data.php';                                                                    // Get data for the form, object data, observation data, etc.
   if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
     echo "<p class=\"centered\">".$entryMessage."</p><hr />";
-  include $includeFile;                                                                                   // Center content section	
+  include $includeFile;     
   echo    "</div>";
 }
 catch (Exception $e)
@@ -40,8 +40,10 @@ catch (Exception $e)
   // EMAIL developers with error codes
 }
 echo "<script type=\"text/javascript\">";
+echo "alert('WP1');";
 echo "resizeForm();";
 //echo "externalLinks();";
+//echo "fillAtlasPage();";
 echo "</script>";
 if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
   $objPresentations->alertMessage($entryMessage);
