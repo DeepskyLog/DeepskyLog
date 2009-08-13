@@ -1,5 +1,6 @@
 <?php
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/wz_jsgraphics.js\"></script>";
+echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/atlaspage.js\"></script>";
 $ra=0;
 $decl=0;
 $object=$objUtil->checkRequestKey('object');
