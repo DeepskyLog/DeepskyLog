@@ -9,6 +9,7 @@ try
   echo    "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
   include 'common/menu/head.php';                                                                         // HTML head
   echo    "<body>";
+  echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/jsenvironment.js\"></script>";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/wz_tooltip.js\"></script>";
   echo    "<div id=\"div4\">";                                                                            
   echo    "<p class=\"waitMessage\">".LangIndexPleaseWait."</p>";
@@ -40,10 +41,9 @@ catch (Exception $e)
   // EMAIL developers with error codes
 }
 echo "<script type=\"text/javascript\">";
-//echo "alert('WP1');";
 echo "resizeForm();";
 //echo "externalLinks();";
-//echo "fillAtlasPage();";
+echo "fillAtlasPage();";
 echo "</script>";
 if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
   $objPresentations->alertMessage($entryMessage);
