@@ -813,8 +813,7 @@ if ($dom->schemaValidate($xmlschema)) {
         }
         // TODO : objects which are already in the database... MEL 20 = MELOTTE 20, PK127-05.2 = PK 127-5.2, ...
         // TODO : objects with naked eye = geen <scope> in de waarneming...
-        // TODO : When a new object is added, the observation is not added -> MELOTTE 20
-        
+
         // Check if the observation already exists!
         $dateArray = sscanf($observation->getElementsByTagName( "begin" )->item(0)->nodeValue, "%4d-%2d-%2dT%2d:%2d:%2d%c%02d:%02d");
         $date = mktime($dateArray[3], $dateArray[4], 0, $dateArray[1], $dateArray[2], $dateArray[0]);
@@ -828,7 +827,7 @@ if ($dom->schemaValidate($xmlschema)) {
 
         $dateStr = date("Ymd", $date);
         $timeStr = date("Hi", $date);
-
+        
         if ($instId > 1) {
           // Check if the observation does already exist
           $obsId = $objDatabase->selectRecordArray("SELECT id from observations WHERE objectname = \"" . $objeId . "\" and date = \"" . $dateStr . "\" and instrumentid = \"" . $instId . "\" and locationId = \"" . $locId . "\" and observerid = \"" . $_SESSION['deepskylog_id'] . "\";");
@@ -1029,6 +1028,7 @@ if ($dom->schemaValidate($xmlschema)) {
       }
     }
   }
+  exit;
 } else {
   $entryMessage.= LangXMLError3;
   $_GET['indexAction']="add_xml";

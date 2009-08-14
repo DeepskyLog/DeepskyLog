@@ -18,6 +18,7 @@ interface iInstruments
 class Instruments implements iInstruments
 { public  function addInstrument($name, $diameter, $fd, $type, $fixedMagnification, $observer)    // adds a new instrument to the database. The name, diameter, fd and type should be given as parameters. 
   { global $objDatabase; $objDatabase->execSQL("INSERT INTO instruments (name, diameter, fd, type, fixedMagnification, observer) VALUES (\"$name\", \"$diameter\", \"$fd\", \"$type\", \"$fixedMagnification\", \"$observer\")");
+    return $objDatabase->selectSingleValue("SELECT id FROM instruments ORDER BY id DESC LIMIT 1",'id');
   }
   public  function getAllInstrumentsIds($id)                                                      // returns a list with all id's which have the same name as the name of the given id
   { global $objDatabase;
