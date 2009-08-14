@@ -1028,7 +1028,6 @@ if ($dom->schemaValidate($xmlschema)) {
       }
     }
   }
-  exit;
 } else {
   $entryMessage.= LangXMLError3;
   $_GET['indexAction']="add_xml";
