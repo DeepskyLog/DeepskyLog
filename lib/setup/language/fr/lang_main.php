@@ -9,7 +9,7 @@
 
 define("LangGeneralObservations"													,"observations");
 
-define("LangIndexPleaseWait"															,"Prière d'attendre un moment pendant le recherche des données...");
+define("LangIndexPleaseWait"															,"Prière d'attendre un moment pendant la recherche des données...");
 
 define("LangTitlecomets_result_query_objects"        			,"Resultaten opzoeken komeet");
 define("LangTitlecomets_result_query_observations"  			,"Resultaten opzoeken waarnemingen komeet");
@@ -176,7 +176,7 @@ define("LangQuickPickHelp"																,"Donnez le nom de l'objet (par exempl
 define("LangQuickPickTitle"																,"Recherche&nbsp;rapide");
 define("LangQuickPickSearchObject"												,"Chercher&nbsp;l'object");
 define("LangQuickPickSearchObservations"									,"Les&nbsp;observations");
-define("LangQuickPickNewObservation"											,"Nouvel&nbsp;observation");
+define("LangQuickPickNewObservation"											,"Nouvelle&nbsp;observation");
 define("LangListsTitle"																		,"Liste");
 define("LangListsAnnouncement"														,"Dans la version suivante, les observateurs enregistr&eacute;s peuvent composer leurs propres listes d'observations,  ils peuvent les adapter, sauvegarder et imprimer, sur base des objets d&eacute;j&agrave; vus ou pas encore, les coordonn&eacute;es de l'object, le type d'objet etc. En parcourant les observations des autres, ils auront aussi la possibilit&eacute; de rajouter l'object en question &agrave; leurs listes.");
 define("LangMailtoTitle"																	,"Informez-nous!");
@@ -422,7 +422,7 @@ define("LangAddInstrumentOr"															,"ou");
 define("LangAddInstrumentAdd"															,"Rajoutez un instrument");
 define("LangAddInstrumentStdTelescope"										,"Modifier l'instrument standard");
 define("LangAddInstrumentExisting"												,"Rajouter un instrument existant");
-define("LangAddInstrumentManually"												,"rajouter un nouvel instrument à la main");
+define("LangAddInstrumentManually"												,"rajouter manuellement un nouvel instrument");
 
 // content/change_instrument.php
 
@@ -1009,7 +1009,7 @@ define("LangCSVTitle"																			,"Importez les observations a partir d'u
 define("LangCSVMessage1"																	,"Ce formulaire vous donne la possibilit&eacute; de rentrer plusieures observations &agrave; la fois &agrave; l'aide d'un fichier csv (comma seperated value). Cette fa&ccedil;on facile et rapide vous permet de rentrer plusieures observations &agrave; la fois. Le formulaire vous permet &eacute;galement de copier facilement vos observations que vous auriez stock&eacute;es dans une autre base de donn&eacute;es et de les enregistrer dans DeepskyLog. A titre d'information: juste les observations avec votre nom et pr&eacute;nom seront rajout&eacute;es.");
 define("LangCSVMessage2"																	,"Le fichier csv utilse le format suivant: <b>(NOUVEAU FORMAT!!!)</b>");
 define("LangCSVMessage3"																	,"<b><i> 1-Objet; 2-Observateur; 3-Date; 4-TU; 5-Endroit; 6-Instrument; 7-Oculaire; 8-Filtre; 9-Lentille; 10-Seeing; 11-LimMag; 12-Visibilit&eacute;; 13-Langue; 14-Description</i></b>");
-define("LangCSVMessage4"																	,"<b>Attention!</b> Conctrairement à la version 3.3 et précédentes, le fichier <b>ne peut plus</b> contenir <u>une ligne de tête</u>, 
+define("LangCSVMessage4"																	,"<b>Attention!</b> Contrairement à la version 3.3 et précédentes, le fichier <b>ne peut plus</b> contenir <u>une ligne de tête</u>, 
                            																	la première ligne contient directement des observations dans le format mentionné, par exemple: <br /><br />
                            																	NGC 2392;Jean Leduc;21-01-2005;20:45;Mons;Obsession 15\";31mm Nagler;Lumicon O-III filter;2;4.0;3;nl;Une belle n&eacute;bulosit&eacute; plan&eacute;taire avec &eacute;toile centrale visible!<br />M 35;Jean Leduc;21-01-2005;20:53;Mons;Obsession 15\";;;2;4.0;1;nl;Plus ou moins trente membres dans des lignes courb&eacute;es.<br />...<br /><br />Le seeing est indiqu&eacute; avec un num&eacute;ro entre 1 et 5 (1=excellent, 2=bien, 3=m&eacute;diocre, 4=faible, 5=mauvais).<br />La visibilit&eacute; est indiqu&eacute;e avec un num&eacute;ro entre 1 et 7 (1=Objet tr&egrave;s facile et clair, 2=Objet facilement visible &agrave; vision direct, 3=Objet visible &agrave; vision direct, 4=Vision p&eacute;riph&eacute;rique n&eacute;cessaire pour voir  l'objet, 5=Objet difficilement visible en vision p&eacute;riph&eacute;rique, 6=Visibilit&eacute; de l'objet est douteuse, 7=L'objet n'est pas visible).<br />Une observation &agrave; l'oeil nu doit &ecirc;tre enregistr&eacute;e avec l'instrument 'Naked Eye' (en anglais!).<br />Indiquez 'fr' dans le champs 'langue'");
 define("LangCSVMessage5"																	,"Attention!<p>Les instruments, les endroits, les oculaires, filters et les objets dans le fichier csv doivent d&eacute;j&agrave; &ecirc;tre connus par DeepskyLog. 
