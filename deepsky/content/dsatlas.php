@@ -9,14 +9,14 @@ if($object)
   $decl=$objObject->getDsoProperty($object,'decl',0);
 }
 echo "<script type=\"text/javascript\">";
-echo "atlaspagera=".$ra.";atlaspagedecl=".$decl.";";
+echo "atlaspagerahr=".$ra.";atlaspagedecldeg=".$decl.";";
 while(list($name,$value)=each($atlasPageText))
   echo $name."Txt='".$value."';";
 echo "</script>";
 
 
 
-echo "<div id=\"myDiv\" style=\"position:absolute;top:0px;left:0px;height:100%;width:100%;margin:0%;background-color:#555555;border-style:none;border-color:#FF0000;\" onmousemove=\"canvasOnMouseMove(event);\">";
+echo "<div id=\"myDiv\" style=\"position:absolute;top:0px;left:0px;height:100%;width:100%;margin:0%;background-color:#555555;border-style:none;border-color:#FF0000;cursor:crosshair;\" onmousemove=\"canvasOnMouseMove(event);\" onclick=\"canvasOnClick(event);\">";
 echo "</div>"; 
 
 

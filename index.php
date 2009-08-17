@@ -43,7 +43,7 @@ catch (Exception $e)
 echo "<script type=\"text/javascript\">";
 echo "resizeForm();";
 //echo "externalLinks();";
-echo "fillAtlasPage();";
+echo "atlasFillPage();";
 echo "</script>";
 if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
   $objPresentations->alertMessage($entryMessage);
