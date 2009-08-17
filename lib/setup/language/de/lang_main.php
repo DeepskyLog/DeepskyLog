@@ -1,6 +1,18 @@
 <?php
 
 // TO DO:
+$atlasPageText=array(
+       'atlasPageUpBtn'                               =>"Pagina Noord",
+       'atlasPageSmallUpBtn'                          =>"Sectie Noord",  
+       'atlasPageDownBtn'                             =>"Pagina Zuid",
+       'atlasPageSmallDownBtn'                        =>"Sectie Zuid",
+       'atlasPageLeftBtn'                             =>"Pagina Oost",
+       'atlasPageSmallLeftBtn'                        =>'Sectie Oost',
+       'atlasPageRightBtn'                            =>'Pagina West',
+       'atlasPageSmallRightBtn'                       =>'Sectie West',
+       'atlasPageZoomInBtn'                           =>'Zoom In',
+       'atlasPageZoomOutBtn'                          =>'Zoom out'
+);
 // LangListQueryObjectsMessage17
 
 

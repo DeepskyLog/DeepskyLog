@@ -8,7 +8,11 @@ if($object)
 { $ra=$objObject->getDsoProperty($object,'ra',0);
   $decl=$objObject->getDsoProperty($object,'decl',0);
 }
-echo "<script type=\"text/javascript\">atlaspagera=".$ra.";atlaspagedecl=".$decl.";</script>";
+echo "<script type=\"text/javascript\">";
+echo "atlaspagera=".$ra.";atlaspagedecl=".$decl.";";
+while(list($name,$value)=each($atlasPageText))
+  echo $name."Txt='".$value."';";
+echo "</script>";
 
 
 
