@@ -11,6 +11,8 @@ $atlasPageText=array(
        'atlasPageRightBtn'                            =>'Pagina West',
        'atlasPageSmallRightBtn'                       =>'Sectie West',
        'atlasPageZoomInBtn'                           =>'Zoom In',
+       'atlasPageZoom1Btn'                            =>'Zoom to 1°',
+       'atlasPageZoom2Btn'                            =>'Zoom to 2°',
        'atlasPageZoomOutBtn'                          =>'Zoom out'
 );
 
