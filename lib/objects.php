@@ -741,10 +741,12 @@ class Objects implements iObjects
   { global $objPresentations, $deepskylive, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL, $objPresentations,$objObserver;	
     $object=$this->getDsObjectName($object);
     $_SESSION['object']=$object;
-    $altnames=$this->getAlternativeNames($object); $alt="";
+    $altnames=$this->getAlternativeNames($object); $alt=""; $alttip="";
 	  while(list($key,$value)=each($altnames))
       if(trim($value)!=trim($object))
-	 	    $alt.=($alt?"/":"").addslashes(trim($value));
+      { $alt.=($alt?"/":"").(trim($value));
+        $alttip.=($alt?"/":"").addslashes(trim($value));
+      }
     $contains=$this->getContainsNames($object); $partof=$this->getPartOfNames($object); $containst=""; $partoft = "";$containstip="";$partoftip="";
     while(list($key, $value)=each($contains))
       if(trim($value)!=trim($object))
@@ -783,7 +785,7 @@ class Objects implements iObjects
 	   $objPresentations->line(array(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(stripslashes($object))."\">".(stripslashes($object))."</a>",
 	                                "&nbsp;","&nbsp;"),
 	                          "RLRL",array(),20,array("type20","type20","type20","type20"));
- 	  $objPresentations->line(array(LangViewObjectField2,($alt?"<span onmouseover=\"Tip('".$alt."')\">".$alt."</span>":"-"),LangViewObjectField2b,"<span onmouseover=\"Tip('(".($containstip?$containstip:"-").")/".($partoftip?$partoftip:"-")."')\">".($containst?$containst."/":"(-)/").($partoft?$partoft:"-")."</span>"),
+ 	  $objPresentations->line(array(LangViewObjectField2,($alt?"<span onmouseover=\"Tip('".$alttip."')\">".$alt."</span>":"-"),LangViewObjectField2b,"<span onmouseover=\"Tip('(".($containstip?$containstip:"-").")/".($partoftip?$partoftip:"-")."')\">".($containst?$containst."/":"(-)/").($partoft?$partoft:"-")."</span>"),
  	                          "RLRL",array(),20,array("type10","type10","type10","type10"));
 	  $objPresentations->line(array(LangViewObjectField3,$objPresentations->raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,$objPresentations->decToStringDegMin($this->getDsoProperty($object,'decl'))),
                             "RLRL",array(),20,array("type20","type20","type20","type20"));
