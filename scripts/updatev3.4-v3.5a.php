@@ -9,6 +9,7 @@
  $run = mysql_query($sql) or die(mysql_error());
  
  $sql = "CREATE TABLE stars (
+  type        varchar(7)                     DEFAULT 'AA1STAR',
   starPK      INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
   nameHR      VARCHAR(4)                     DEFAULT '',
   nameCon     VARCHAR(3)                     DEFAULT '',
