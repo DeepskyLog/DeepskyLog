@@ -484,29 +484,33 @@ if ($dom->schemaValidate($xmlschema)) {
 
     $tp =  $scope->getAttribute("xsi:type");
 
-    if ($scope->getElementsByTagName( "focalLength" )->item(0)) {
-      $type = $scope->getElementsByTagName( "type" )->item(0)->nodeValue;
-      if ($type == "A" || $type == "Naked Eye") {
-        $typeToSave = InstrumentNakedEye;
-      } else if ($type == "B" || $type == "Binoculars") {
-        $typeToSave = InstrumentBinoculars;
-      } else if ($type == "R" || $type == "Refractor") {
-        $typeToSave = InstrumentRefractor;
-      } else if ($type == "N" || $type == "Newton") {
-        $typeToSave = InstrumentReflector;
-      } else if ($type == "C" || $type == "Cassegrain") {
-        $typeToSave = InstrumentCassegrain;
-      } else if ($type == "K" || $type == "Kutter") {
-        $typeToSave = InstrumentKutter;
-      } else if ($type == "M" || $type == "Maksutov") {
-        $typeToSave = InstrumentMaksutov;
-      } else if ($type == "S" || $type == "Schmidt-Cassegrain") {
-        $typeToSave = InstrumentSchmidtCassegrain;
+    if ($tp == "oal:scopeType") {
+      if ($scope->getElementsByTagName( "focalLength" )->item(0)) {
+        $type = $scope->getElementsByTagName( "type" )->item(0)->nodeValue;
+        if ($type == "A" || $type == "Naked Eye") {
+          $typeToSave = InstrumentNakedEye;
+        } else if ($type == "B" || $type == "Binoculars") {
+          $typeToSave = InstrumentBinoculars;
+        } else if ($type == "R" || $type == "Refractor") {
+          $typeToSave = InstrumentRefractor;
+        } else if ($type == "N" || $type == "Newton") {
+          $typeToSave = InstrumentReflector;
+        } else if ($type == "C" || $type == "Cassegrain") {
+          $typeToSave = InstrumentCassegrain;
+        } else if ($type == "K" || $type == "Kutter") {
+          $typeToSave = InstrumentKutter;
+        } else if ($type == "M" || $type == "Maksutov") {
+          $typeToSave = InstrumentMaksutov;
+        } else if ($type == "S" || $type == "Schmidt-Cassegrain") {
+          $typeToSave = InstrumentSchmidtCassegrain;
+        } else {
+          $typeToSave = InstrumentOther;
+        }
       } else {
         $typeToSave = InstrumentOther;
       }
     } else {
-      $typeToSave = InstrumentOther;
+        $typeToSave = InstrumentBinoculars;
     }
     $scopeInfoArray["type"] = $typeToSave;
 
@@ -712,8 +716,18 @@ if ($dom->schemaValidate($xmlschema)) {
           // Add the new instrument!
           $instId = $objInstrument->addInstrument(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $ia["name"])), $ia["diameter"], $ia["fd"], $ia["type"], $ia["fixedMagnification"], $_SESSION['deepskylog_id']);
         }
+      } else {
+        // No scope defined, so this is a naked eye observation
+        $instrument = InstrumentsNakedEye;
+
+        if (count($objDatabase->selectRecordArray("SELECT * from instruments where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $instrument)) . "\";")) > 0) {
+          $instId = $objInstrument->getInstrumentId(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $instrument)), $_SESSION['deepskylog_id']);
+        } else {
+          // Add the new instrument!
+          $instId = $objInstrument->addInstrument(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $instrument)), 7, 1, 0, 1, $_SESSION['deepskylog_id']);
+        } 
       }
-      
+
       // Filter is not mandatory
       if ($observation->getElementsByTagName( "filter" )->item(0)) {
         // Check if the filter already exists in DeepskyLog
@@ -812,7 +826,6 @@ if ($dom->schemaValidate($xmlschema)) {
           }
         }
         // TODO : objects which are already in the database... MEL 20 = MELOTTE 20, PK127-05.2 = PK 127-5.2, ...
-        // TODO : objects with naked eye = geen <scope> in de waarneming...
 
         // Check if the observation already exists!
         $dateArray = sscanf($observation->getElementsByTagName( "begin" )->item(0)->nodeValue, "%4d-%2d-%2dT%2d:%2d:%2d%c%02d:%02d");
