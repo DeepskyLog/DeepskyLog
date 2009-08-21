@@ -18,6 +18,7 @@ interface iObjects
   public  function getNearbyObjects($objectname, $dist, $ra=0, $decl=0);        // returns an array with nearby objects
   public  function getNumberOfObjectsInCatalog($catalog);                       // returns the number of objects in the catalog given as a parameter
   public  function getObjectFromQuery($queries,$exact=0,$seen="D",$partof=0);
+  public  function getObjects($lLhr,$rLhr,$dDdeg,$uDdeg,$mag);                 // returns an array containing all objects data between the specified coordinates
   public  function getObjectsFromCatalog($cat);
   public  function getObjectVisibilities($obs);                                // completes an objects array containing already the object characteristics with the visibility and magnifications parameters
 //private function getPartOfNames($name);
@@ -400,6 +401,23 @@ class Objects implements iObjects
         $obs[$get->catindex] = array($get->objectname, $get->altname);
 	  uksort($obs,"strnatcasecmp");
     return $obs;
+  }
+  public  function getObjects($lLhr,$rLhr,$dDdeg,$uDdeg,$mag)                 // returns an array containing all objects data between the specified coordinates
+  { global $objDatabase;
+    $objects=array();
+  	if($lLhr<$rLhr)
+    { $sql="SELECT * FROM objects WHERE (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
+      $objects=$objDatabase->selectRecordsetArray($sql);  
+      $sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
+      $objects=array_merge($objects,$objDatabase->selectRecordsetArray($sql));  
+    }
+    else
+    { $sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
+      $objects=$objDatabase->selectRecordsetArray($sql);  
+    }
+    for($i=0;$i<count($objects);$i++)
+     $objects[$i]['seen']=$this->getSeen($objects[$i]['name']);       
+  	return $objects;
   }
   public  function getObjectVisibilities($obs)
   { $popupT = $this->prepareObjectsContrast();

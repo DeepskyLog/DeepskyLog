@@ -28,6 +28,7 @@ else
 	require_once "lib/observations.php";
 	require_once "lib/lists.php";
 	require_once "lib/objects.php";
+	require_once "lib/stars.php";
 	include_once "lib/cometobservations.php";
 	include_once "lib/cometobjects.php";
   include_once 'lib/presentation.php';                                                               // functions etc. concerning layout
