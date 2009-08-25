@@ -1,10 +1,8 @@
 <?php
-
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/wz_jsgraphics.js\"></script>";
-//echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/degraphics.js\"></script>";
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/atlaspage.js\"></script>";
-$loadAtlasPage=1;
+$loadAtlasPage=1; // ---> to load the atlas js in index.php
 $ra=0;
 $decl=0;
 $object=$objUtil->checkRequestKey('object');
@@ -20,7 +18,7 @@ echo "</script>";
 
 
 
-echo "<div id=\"myDiv\" style=\"position:absolute;top:0px;left:0px;height:100%;width:100%;margin:0%;background-color:#000000;border-style:none;border-color:#FF0000;cursor:wait;\" onmousemove=\"canvasOnMouseMove(event);\" onclick=\"canvasOnClick(event);\">";
+echo "<div id=\"myDiv\" style=\"position:absolute;top:0px;left:0px;height:100%;width:100%;margin:0%;background-color:#000000;border-style:none;border-color:#FF0000;cursor:wait;\" onmousemove=\"canvasOnMouseMove(event);\" onclick=\"canvasOnClick(event);\" onkeydown=\"canvasOnKeyDown(event);\">";
 echo "</div>"; 
 echo "<div id=\"myDiv1\" style=\"position:absolute;top:0px;left:0px;height:0px;width:0px;margin:0%;background-color:#555555;background:transparant;border-style:none;border-color:#880000;cursor:none;font-size:8pt;\"\">";
 echo "</div>"; 
