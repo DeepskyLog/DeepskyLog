@@ -804,6 +804,7 @@ if ($dom->schemaValidate($xmlschema)) {
         if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $targetName)) . "\");")) > 0) {
           $objeId = $objObject->getDsObjectName(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $targetName)));
         } else {
+          // Object with the given name does not exist... Check if the name is an alternative name
           for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
             $targetName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
             $targetName = str_replace("  ", " ", $targetName);
@@ -812,21 +813,52 @@ if ($dom->schemaValidate($xmlschema)) {
             }
           }
           if ($objeId == -1) {
-            $targetName = preg_replace($pattern, '${1} ${2}', $target);
-            $names = explode(" ", $targetName);
-            $targetName = str_replace("  ", " ", $targetName);
+            // Object does not exist (name or alternative name)
+            // Check for the type and coordinates. If there is already an object at the same coordinates with the same type, add the alternative name
+            if ((count($objDatabase->selectRecordArray("SELECT name FROM objects WHERE ra > " . ($ta["ra"] - 0.0001) . " and ra < " . ($ta["ra"] + 0.0001) . " and decl > " . ($ta["dec"] - 0.0001) . " and decl < " . ($ta["dec"] + 0.0001) . " and type = \"" . $ta["type"] . "\""))) > 0) {
+              $run = $objDatabase->selectRecordset("SELECT name FROM objects WHERE ra > " . ($ta["ra"] - 0.0001) . " and ra < " . ($ta["ra"] + 0.0001) . " and decl > " . ($ta["dec"] - 0.0001) . " and decl < " . ($ta["dec"] + 0.0001) . " and type = \"" . $ta["type"] . "\"");
+              $get=mysql_fetch_object($run);
+              
+              $objeId = $get->name;
+              
+              // Also add alternative name to the existing object.
+              $names = explode(" ", $objeId);
+              $aliasNames = explode(" ", $targetName);
 
-            $objObject->addDSObject($names[0]." ".$names[1], $names[0], $names[1], $ta["type"], $ta["constellation"], $ta["ra"], $ta["dec"], $ta["mag"], $ta["subr"], $ta["diam1"], $ta["diam2"], $ta["pa"], "", $ta["datasource"]);
-            for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
-              $aliasName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
-              $aliasNames = explode(" ", $aliasName);
               $objObject->newAltName($names[0]." ".$names[1], $aliasNames[0], $aliasNames[1]);
+            } else {
+              // else, add new object
+              $targetName = preg_replace($pattern, '${1} ${2}', $target);
+              $targetName = str_replace("  ", " ", $targetName);
+              $names = explode(" ", $targetName);
+
+              $objObject->addDSObject($names[0]." ".$names[1], $names[0], $names[1], $ta["type"], $ta["constellation"], $ta["ra"], $ta["dec"], $ta["mag"], $ta["subr"], $ta["diam1"], $ta["diam2"], $ta["pa"], "", $ta["datasource"]);
+              for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
+                $aliasName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
+                $aliasNames = explode(" ", $aliasName);
+                $objObject->newAltName($names[0]." ".$names[1], $aliasNames[0], $aliasNames[1]);
+              }
+              $objeId = $objObject->getDsObjectName(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $targetName)));
+
+              // Also sent mail with new object to the deepskylog administrators.
+              $admins = $objObserver->getAdministrators();
+              while(list($key, $value)=each($admins))
+              if ($objObserver->getObserverProperty($value,'email'))
+                $adminMails[] = $objObserver->getObserverProperty($value,'email');
+              $to=implode(",", $adminMails);
+              $subject = LangValidateAccountEmailTitleObject . " " . $targetName;
+              reset($admins);
+              $headers="From:".$objObserver->getObserverProperty($admins[0],'email');
+              $body="<OAL>" . LangValidateAccountEmailTitleObject." ".$targetName." ". "www.deepskylog.org/index.php?indexAction=detail_object&object=".urlencode($targetName)." ".
+                    LangValidateAccountEmailTitleObjectObserver." ".$objObserver->getObserverProperty($loggedUser,'name')." ".$objObserver->getObserverProperty($loggedUser,'firstname')." www.deepskylog.org/index.php?indexAction=detail_observer&user=".urlencode($loggedUser);
+              if(isset($developversion)&&($developversion==1))
+                $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<p>";
+              else
+                mail($to, $subject, $body, $headers);
             }
-            $objeId = $objObject->getDsObjectName(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $targetName)));
           }
         }
-        // TODO : objects which are already in the database... MEL 20 = MELOTTE 20, PK127-05.2 = PK 127-5.2, ...
-
+        
         // Check if the observation already exists!
         $dateArray = sscanf($observation->getElementsByTagName( "begin" )->item(0)->nodeValue, "%4d-%2d-%2dT%2d:%2d:%2d%c%02d:%02d");
         $date = mktime($dateArray[3], $dateArray[4], 0, $dateArray[1], $dateArray[2], $dateArray[0]);
