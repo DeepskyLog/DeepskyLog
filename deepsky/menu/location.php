@@ -1,6 +1,6 @@
 <?php // location.php - menu which allows the user to change its standard location
 if($loggedUser) 
-{ echo "<div class=\"menuDiv\">";
+{ echo "<div class=\"menuDivExtended\">";
 	echo "<p   class=\"menuHead\">".LangLocationMenuTitle."&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=add_site\">".LangManage."</a>"."</p>";
   $link=$baseURL."index.php?";
 	reset($_GET);

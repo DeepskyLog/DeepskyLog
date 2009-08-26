@@ -1,6 +1,6 @@
 <?php // instrument.php - menu which allows the user to change its standard instrument
 if($loggedUser) 
-{ echo "<div class=\"menuDiv\">";
+{ echo "<div class=\"menuDivExtended\">";
 	echo "<p   class=\"menuHead\">".LangInstrumentMenuTitle."&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangManage."</a>"."</p>";
   $link=$baseURL."index.php?";
 	reset($_GET);
