@@ -587,7 +587,7 @@ class Observations {
 				$locs=$objLocation->getAllLocationsIds($queries["location"]);
 				while (list ($key,$value)=each($locs))
 					if($value!=$queries["location"])
-						$sqland.=" || observations.locationid = ".$key." ";
+						$sqland.=" || observations.locationid = ".$value." ";
 			}
 			$sqland .= ") ";
 		}

@@ -22,7 +22,7 @@ class Instruments implements iInstruments
   }
   public  function getAllInstrumentsIds($id)                                                      // returns a list with all id's which have the same name as the name of the given id
   { global $objDatabase;
-   return $objDatabase->selectSingleAray("SELECT id FROM instruments WHERE name = \"".$objDatabase->selectSingleValue("SELECT name FROM instruments WHERE id = \"$id\"",'name'),'id');
+    return $objDatabase->selectSingleArray("SELECT id FROM instruments WHERE name = \"".($objDatabase->selectSingleValue("SELECT name FROM instruments WHERE id = \"".addslashes($id)."\"",'name'))."\"",'id');
   }
   public  function getInstrumentEchoType($instrumentType)
   { if($instrumentType== InstrumentNakedEye)          return InstrumentsNakedEye;
