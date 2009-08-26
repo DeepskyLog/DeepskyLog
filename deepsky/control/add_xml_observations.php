@@ -687,7 +687,11 @@ if ($dom->schemaValidate($xmlschema)) {
       $sa = $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue];
       if (count($objDatabase->selectRecordArray("SELECT * from locations where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $site)) . "\";")) > 0) {
         // Update the coordinates
-        $locId = $objLocation->getLocationId(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $sa["name"])), $_SESSION['deepskylog_id']);
+        $run = $objDatabase->selectRecordset("SELECT id FROM locations WHERE observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $site)) . "\";");
+        $get=mysql_fetch_object($run);
+
+        $locId = $get->id;
+
         $objLocation->setLocationProperty($locId, "longitude", $sa["longitude"]);
         $objLocation->setLocationProperty($locId, "latitude", $sa["latitude"]);
         $objLocation->setLocationProperty($locId, "timezone", $sa["timezone"]);
@@ -718,8 +722,9 @@ if ($dom->schemaValidate($xmlschema)) {
         }
       } else {
         // No scope defined, so this is a naked eye observation
-        $instrument = InstrumentsNakedEye;
-
+        $instrument = "Naked eye";
+        $instrument = html_entity_decode($instrument, ENT_COMPAT, "ISO-8859-15");
+        
         if (count($objDatabase->selectRecordArray("SELECT * from instruments where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $instrument)) . "\";")) > 0) {
           $instId = $objInstrument->getInstrumentId(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $instrument)), $_SESSION['deepskylog_id']);
         } else {
@@ -884,7 +889,7 @@ if ($dom->schemaValidate($xmlschema)) {
             $resultNode = $observation->getElementsByTagName("result")->item(0);
             if ($resultNode->getElementsByTagName( "description" )->item(0)) {
               $description = $resultNode->getElementsByTagName( "description" )->item(0)->nodeValue;
-              $description = htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $description));
+              $description = htmlentities(iconv("UTF-8", "ISO-8859-15//TRANSLIT", $description));
             } else {
               $description = "";
             }
@@ -914,8 +919,27 @@ if ($dom->schemaValidate($xmlschema)) {
               $visibility = $resultNode->getElementsByTagName( "rating" )->item(0)->nodeValue;
             }
 
-            $obsId = $objObservation->addDSObservation($objeId, $_SESSION['deepskylog_id'], $instId, $locId, $dateStr, $timeStr, $description, $seeing, $limmag, $visibility, $language);
+            if ($observation->getElementsByTagName( "eyepiece" )->item(0)) {
+              $ei = $eyepId;
+            } else {
+              $ei = 0;
+            }
 
+            if ($observation->getElementsByTagName( "filter" )->item(0)) {
+              $fi = $filtId;
+            } else {
+              $fi = 0;
+            }
+
+            if ($observation->getElementsByTagName( "lens" )->item(0)) {
+              $li = $lensId;
+            } else {
+              $li = 0;
+            }
+            
+            $obsId = $objObservation->addDSObservation2($objeId, $_SESSION['deepskylog_id'], $instId, $locId, $dateStr, $timeStr, $description, $seeing, $limmag, $visibility, $language, $ei, $fi, $li);
+            $obsId = $objDatabase->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1",'id');
+            
             // Magnification is not mandatory
             if ($observation->getElementsByTagName( "magnification" )->item(0)) {
               $objObservation->setDsObservationProperty($obsId, "magnification", $observation->getElementsByTagName( "magnification" )->item(0)->nodeValue);
@@ -1054,17 +1078,6 @@ if ($dom->schemaValidate($xmlschema)) {
               $objObservation->setDsObservationProperty($obsId, "largeDiameter", $largeDiameter);
             }
 
-            if ($observation->getElementsByTagName( "eyepiece" )->item(0)) {
-              $objObservation->setDsObservationProperty($obsId, "eyepieceid", $eyepId);
-            }
-
-            if ($observation->getElementsByTagName( "filter" )->item(0)) {
-              $objObservation->setDsObservationProperty($obsId, "filterid", $filtId);
-            }
-
-            if ($observation->getElementsByTagName( "lens" )->item(0)) {
-              $objObservation->setDsObservationProperty($obsId, "lensid", $lensId);
-            }
             if ($observation->getElementsByTagName( "magnification" )->item(0)) {
               $objObservation->setDsObservationProperty($obsId, "magnification", $observation->getElementsByTagName( "magnification" )->item(0)->nodeValue);
             }

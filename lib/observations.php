@@ -249,6 +249,7 @@ class Observations {
 		$description = html_entity_decode($description, ENT_COMPAT, "ISO-8859-15");
 		$description = preg_replace("/(\")/", "", $description);
 		$description = preg_replace("/;/", ",", $description);
+
 		$objDatabase->execSQL("INSERT INTO observations (objectname, observerid, instrumentid, locationid, date, time, description, seeing, limmag, visibility, language) " .
 		                      "VALUES (\"$objectname\", \"$observerid\", \"$instrumentid\", \"$locationid\", \"$date\", \"$time\", \"$description\", $seeing, $limmag, $visibility, \"$language\")");
 		return $objDatabase->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id');
@@ -267,6 +268,7 @@ class Observations {
 		$description = html_entity_decode($description, ENT_COMPAT, "ISO-8859-15");
 		$description = preg_replace("/(\")/", "", $description);
 		$description = preg_replace("/;/", ",", $description);
+    
 		if($id=$objDatabase->selectSingleValue("SELECT id FROM observations WHERE objectname=\"$objectname\" AND 
 		                                                                          observerid=\"$observerid\" AND 
     	          	                                                            instrumentid=\"$instrumentid\" AND 
