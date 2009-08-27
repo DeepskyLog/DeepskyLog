@@ -917,6 +917,8 @@ if ($dom->schemaValidate($xmlschema)) {
             // Rating is not mandatory
             if ($resultNode->getElementsByTagName( "rating" )->item(0)) {
               $visibility = $resultNode->getElementsByTagName( "rating" )->item(0)->nodeValue;
+            } else {
+              $visibility = 0;
             }
 
             if ($observation->getElementsByTagName( "eyepiece" )->item(0)) {
@@ -939,7 +941,7 @@ if ($dom->schemaValidate($xmlschema)) {
             
             $obsId = $objObservation->addDSObservation2($objeId, $_SESSION['deepskylog_id'], $instId, $locId, $dateStr, $timeStr, $description, $seeing, $limmag, $visibility, $language, $ei, $fi, $li);
             $obsId = $objDatabase->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1",'id');
-            
+
             // Magnification is not mandatory
             if ($observation->getElementsByTagName( "magnification" )->item(0)) {
               $objObservation->setDsObservationProperty($obsId, "magnification", $observation->getElementsByTagName( "magnification" )->item(0)->nodeValue);
