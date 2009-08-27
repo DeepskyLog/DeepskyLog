@@ -805,6 +805,7 @@ define("LangNewObservationSubtitle2"											,"Contr&ocirc;lez les donn&eacute
 define("LangNewObservationSubtitle3"											,"Remplissez les d&eacute;tails de l'observation ");
 define("LangNewObservationSubtitle3B"											,"Changer les détails de l'observation ");
 define("LangNewObservationSubtitle3A"											,"(*= champs obligatoires)");
+define("LangNewObservationSubtitle3C"											," - ");
 define("LangNewObservationButton1"												,"Recherchez l'objet");
 define("LangNewObservationField1"													,"Date *");
 define("LangNewObservationField2"													,"Temps (TU)");

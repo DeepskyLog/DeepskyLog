@@ -16,11 +16,11 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	echo "<input type=\"hidden\" name=\"object\" value=\"" . $object . "\" />";
 	if($observationid)
 	{ $content="<input type=\"submit\" name=\"changeobservation\" value=\"" . LangChangeObservationButton . "\" />&nbsp;";
-	  $objPresentations->line(array("<h4>".LangNewObservationSubtitle3B."<span class=\"requiredField\">".LangNewObservationSubtitle3A."</span></h4>",$content),"LR",array(80,20),30);
+	  $objPresentations->line(array("<h4>".LangNewObservationSubtitle3B."<span class=\"requiredField\">".LangNewObservationSubtitle3A."</span>".LangNewObservationSubtitle3C.$object."</h4>",$content),"LR",array(80,20),30);
   }
 	else
 	{ $content="<input type=\"submit\" name=\"addobservation\" value=\"" . LangViewObservationButton1 . "\" />&nbsp;";
-	  $objPresentations->line(array("<h4>".LangNewObservationSubtitle3."<span class=\"requiredField\">".LangNewObservationSubtitle3A."</span></h4>",$content),"LR",array(80,20),30);
+	  $objPresentations->line(array("<h4>".LangNewObservationSubtitle3."<span class=\"requiredField\">".LangNewObservationSubtitle3A."</span>".LangNewObservationSubtitle3C.$object."</h4>",$content),"LR",array(80,20),30);
   }
   echo "<hr />";
 	echo "<div class=\"inputDiv\">";

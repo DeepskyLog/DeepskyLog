@@ -804,6 +804,7 @@ define("LangNewObservationSubtitle2"											,"Controleer de gegevens van het 
 define("LangNewObservationSubtitle3"											,"Vul de details van de waarneming in ");
 define("LangNewObservationSubtitle3B"											,"Wijzig de details van de waarneming ");
 define("LangNewObservationSubtitle3A"											,"(* verplichte velden)");
+define("LangNewObservationSubtitle3C"											," - ");
 define("LangNewObservationButton1"												,"Zoek object");
 define("LangNewObservationField1"													,"Datum *");
 define("LangNewObservationField2"													,"Tijd (UT)");
