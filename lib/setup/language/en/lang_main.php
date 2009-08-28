@@ -2,18 +2,25 @@
 
 
 $atlasPageText=array(
-       'atlasPageUpBtn'                               =>"Pagina Noord",
-       'atlasPageSmallUpBtn'                          =>"Sectie Noord",  
-       'atlasPageDownBtn'                             =>"Pagina Zuid",
-       'atlasPageSmallDownBtn'                        =>"Sectie Zuid",
-       'atlasPageLeftBtn'                             =>"Pagina Oost",
-       'atlasPageSmallLeftBtn'                        =>'Sectie Oost',
-       'atlasPageRightBtn'                            =>'Pagina West',
-       'atlasPageSmallRightBtn'                       =>'Sectie West',
-       'atlasPageZoomInBtn'                           =>'Zoom In',
-       'atlasPageZoom1Btn'                            =>'Zoom to 1°',
-       'atlasPageZoom2Btn'                            =>'Zoom to 2°',
-       'atlasPageZoomOutBtn'                          =>'Zoom out'
+       'atlasPageUpBtnTxt'                               =>"Pagina Noord",
+       'atlasPageSmallUpBtnTxt'                          =>"Sectie Noord",  
+       'atlasPageDownBtnTxt'                             =>"Pagina Zuid",
+       'atlasPageSmallDownBtnTxt'                        =>"Sectie Zuid",
+       'atlasPageLeftBtnTxt'                             =>"Pagina Oost",
+       'atlasPageSmallLeftBtnTxt'                        =>'Sectie Oost',
+       'atlasPageRightBtnTxt'                            =>'Pagina West',
+       'atlasPageSmallRightBtnTxt'                       =>'Sectie West',
+       'atlasPageZoomInBtnTxt'                           =>'Zoom In',
+       'atlasPageZoom1BtnTxt'                            =>'Zoom to 1°',
+       'atlasPageZoom2BtnTxt'                            =>'Zoom to 2°',
+       'atlasPageZoomOutBtnTxt'                          =>'Zoom out',
+       'atlasPageObjectTxt'                              =>'Object',
+       'atlasPageTypeTxt'                                =>'Type',
+       'atlasPageConsTxt'                                =>'Constellation',
+       'atlasPageSeenTxt'                                =>'Seen',
+       'atlasPageMagnTxt'                                =>'Magn.',
+       'atlasPageSubrTxt'                                =>'Surf.Br.',
+       'atlasPageDiamTxt'                                =>'Dimensions'
 );
 
 

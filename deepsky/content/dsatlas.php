@@ -13,14 +13,18 @@ if($object)
 echo "<script type=\"text/javascript\">";
 echo "atlaspagerahr=".$ra.";atlaspagedecldeg=".$decl.";";
 while(list($name,$value)=each($atlasPageText))
-  echo $name."Txt='".$value."';";
+  echo $name."='".$value."';";
 echo "</script>";
 
 
 
 echo "<div id=\"atlasPageDiv\" class=\"atlasPageDiv\" onmousemove=\"canvasOnMouseMove(event);\" onclick=\"canvasOnClick(event);\" onkeydown=\"canvasOnKeyDown(event);\">";
 echo "</div>"; 
-echo "<div id=\"atlasPageDiv1\" class=\"atlasPageDiv1\" >";
+echo "<div id=\"atlasPageDiv1\" class=\"atlasPageDiv1\"  onkeydown=\"canvasOnKeyDown(event);\" >";
+echo "</div>";
+echo "<div id=\"atlasPageDiv2\" class=\"atlasPageDiv2\"  onkeydown=\"canvasOnKeyDown(event);\" >";
+echo "Help Page";
+echo "<hr />";
 echo "</div>"; 
 
 

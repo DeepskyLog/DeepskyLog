@@ -69,6 +69,22 @@ a.observercatalog {
 	font-size        : 8pt;
 	padding          : 1px;
 }
+.atlasPageDiv2 {
+	position         : absolute;
+	top              : 0px;
+	left             : 0px;
+	height           : 0px;
+	width            : 0px;
+	margin           : 0%;
+	color            : #FFFF00;
+	background-color : #555555;
+	border-style     : none;
+	border-width     : 1px;
+	border-color     : #FFFF00;
+	cursor           : none;
+	font-size        : 8pt;
+	padding          : 2px;
+}
 body {
   margin           : 0px 0px 0px 0px;
   color            : #000000;
