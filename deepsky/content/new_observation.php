@@ -197,8 +197,8 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$objPresentations->line(array("","<hr />"),"LL",array(12,87),10);
 	$objPresentations->line(array((($objObserver->getObserverProperty($loggedUser,'UT')) ? LangViewObservationField9: LangViewObservationField9lt),$contentTime.LangViewObservationField11,
 	                              LangViewObservationField6,$contentSeeing,
-	                              LangViewObservationField7."/".LangViewObservationField34,$contentLM."&nbsp;".$contentSQM),
-	                        "RLRLRL",array(11,25,8,13,20,22),30,array("fieldname","","fieldname","","fieldname",""));
+	                              LangViewObservationField7,$contentLM,LangViewObservationField34,$contentSQM),
+	                        "RLRLRLRL",array(11,25,8,13,17,10,6,10),30,array("fieldname","","fieldname","","fieldname","","fieldname",""));
 	$objPresentations->line(array("","<hr />"),"LL",array(12,87),10);
 	$objPresentations->line(array("<a href=\"" . $baseURL . "index.php?indexAction=add_eyepiece\" title=\"".LangViewObservationField30Expl."\">".LangViewObservationField30."</a>",$contentEyepiece,
 	                              "<a href=\"" . $baseURL . "index.php?indexAction=add_lens\" title=\"".LangViewObservationField32Expl."\" >".LangViewObservationField32."</a>",$contentLens,
