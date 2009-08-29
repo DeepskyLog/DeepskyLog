@@ -119,9 +119,9 @@ if($objCometObservation->getObjectId($_GET['observation'])) // check if observat
 	$description = $objCometObservation->getDescription($_GET['observation']);
 	if ($description != "")
 	{ $content1=LangViewObservationField8;
-	  $content2=$description;
-		$objPresentations->line(array($content1,$content2),"RL",array(30,70),20,array('fieldname'));
-  }
+	  $content2="<textarea name=\"description\" class=\"description\" cols=\"1\" rows=\"1\" >".$objPresentations->br2nl($description)."</textarea>";
+		$objPresentations->line(array($content1,$content2),"RL",array(30,70),130,array('fieldname'));
+	}
   echo "<hr />";
   $upload_dir = 'cometdrawings';
 	$dir = opendir($instDir.'comets/'.$upload_dir);
