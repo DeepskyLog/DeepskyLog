@@ -104,6 +104,7 @@ define("LangValidateMail3"																,"\nGreetings,\n\nThe deepskylog admin
 
 
 define("LangObjectYSeen"																	,"Object alreay observed by me");
+define("LangObjectYDSeen"																	,"Object alreayd observed and sketched by me");
 define("LangObjectXSeen"																	,"Object already observed by others, but not by me");
 define("LangObjectNSeen"																	,"Object not logged in Deepskylog");
 define("LangBack"																					,"Back");

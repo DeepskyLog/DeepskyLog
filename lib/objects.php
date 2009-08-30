@@ -464,8 +464,12 @@ class Objects implements iObjects
       if($loggedUser)
       { $get3=mysql_fetch_object($objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7"));
   		  if($get3->PersObsCnt>0)
-          $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')&nbsp;'.$get3->PersObsMaxDate;
-		  }
+  		  { if(mysql_fetch_object($objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7 AND hasDrawing=1"))->PersObsCnt>0)
+            $seen='YD('.$ObsCnt.'/'.$get3->PersObsCnt.')&nbsp;'.$get3->PersObsMaxDate;
+  		    else
+            $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')&nbsp;'.$get3->PersObsMaxDate;
+  		  }
+  		  		  }
 	  }
 	  return $seen;
   }
@@ -492,8 +496,14 @@ class Objects implements iObjects
       if($loggedUser)
       { $get3=mysql_fetch_object($objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7"));
   		  if($get3->PersObsCnt>0)
-        { $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')';
-          $seenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\" >".'Y('.$ObsCnt.'/'.$get3->PersObsCnt.')'."</a>";
+        { if(mysql_fetch_object($objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7 AND hasDrawing=1"))->PersObsCnt>0)
+          { $seen='YD('.$ObsCnt.'/'.$get3->PersObsCnt.')';
+            $seenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYDSeen."\" >".'YD('.$ObsCnt.'/'.$get3->PersObsCnt.')'."</a>";
+          }
+          else
+          { $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')';
+            $seenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\" >".'Y('.$ObsCnt.'/'.$get3->PersObsCnt.')'."</a>";
+          }
           $lastseen=$get3->PersObsMaxDate;
           $lastseenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".urlencode($loggedUser)."&amp;sort=observationdate&amp;sortdirection=desc&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\" >".$get3->PersObsMaxDate."</a>";
 				}

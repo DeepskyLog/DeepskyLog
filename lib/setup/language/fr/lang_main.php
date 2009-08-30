@@ -105,6 +105,7 @@ define("LangValidateMail3"																,"\Bienvenu,\n\nLes administrateurs de
 
 
 define("LangObjectYSeen"																	,"J'ai d&eacute;j&agrave; observ&eacute; cet objet");
+define("LangObjectYDSeen"																	,"J'ai d&eacute;j&agrave; observ&eacute; et dessin&eacute; cet objet");
 define("LangObjectXSeen"																	,"L'objet a d&eacute;j&agrave; &eacute;t&eacute; observ&eacute; par d'autres, mais pas par moi");
 define("LangObjectNSeen"																	,"L'objet n'a pas encore &eacute;t&eacute; observe en Deepskylog");
 define("LangBack"																					,"Retour");

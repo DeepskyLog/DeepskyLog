@@ -104,6 +104,7 @@ define("LangValidateMail3"																,"\nGroeten,\n\nDe deepskylog administ
 
 
 define("LangObjectYSeen"																	,"Object reeds zelf waargenomen");
+define("LangObjectYDSeen"																	,"Object reeds zelf waargenomen en geschetst");
 define("LangObjectXSeen"																	,"Object reeds waargenomen door anderen maar niet door mezelf");
 define("LangObjectNSeen"																	,"Object nog niet waargenomen in Deepskylog");
 define("LangBack"																					,"Terug");

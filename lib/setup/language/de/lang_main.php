@@ -1,6 +1,8 @@
 <?php
 
 // TO DO:
+//LangObjectYDSeen
+
 $atlasPageText=array(
        'atlasPageUpBtnTxt'                               =>"Pagina Noord",
        'atlasPageSmallUpBtnTxt'                          =>"Sectie Noord",  
@@ -104,6 +106,7 @@ define("LangValidateMail3"																,"\nViele Gr&uuml;&szlig;e,\n\nDie Dee
 
 
 define("LangObjectYSeen"																	,"Objekt bereits von mir beobachtet");
+define("LangObjectYDSeen"																	,"Objekt bereits von mir beobachtet and sketched");
 define("LangObjectXSeen"																	,"Objekt bereits von Anderen beobachtet (aber nicht bei mir)");
 define("LangObjectNSeen"																	,"Objekt hat noch keine Beobachtung in DeepskyLog");
 define("LangBack"																					,"Zur&uuml;ck");
