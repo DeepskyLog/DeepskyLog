@@ -4,7 +4,7 @@ include 'common/entryexit/preludes.php';                                        
 $ajaxInstruction=$objUtil->checkGetKey('instruction');
 if($ajaxInstruction=="getObjects")
 { $objects=array();
-  $objects=$objStar->getStars($objUtil->checkGetKey('lLhr',0),$objUtil->checkGetKey('rLhr',0),$objUtil->checkGetKey('dDdeg',0),$objUtil->checkGetKey('uDdeg',0),$objUtil->checkGetKey('mag',0));
+  $objects=$objStar->getStars($objUtil->checkGetKey('lLhr',0),$objUtil->checkGetKey('rLhr',0),$objUtil->checkGetKey('dDdeg',0),$objUtil->checkGetKey('uDdeg',0),$objUtil->checkGetKey(('mag'),0));
   $objects=array_merge($objects,$objObject->getObjects($objUtil->checkGetKey('lLhr',0),$objUtil->checkGetKey('rLhr',0),$objUtil->checkGetKey('dDdeg',0),$objUtil->checkGetKey('uDdeg',0),$objUtil->checkGetKey('mag',0)));
   header("Content-Type:text/xml");
   echo "<?xml version='1.0' encoding=\"ISO-8859-1\"?>";

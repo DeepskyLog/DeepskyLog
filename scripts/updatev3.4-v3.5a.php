@@ -27,7 +27,7 @@
   DE2000I     INTEGER      UNSIGNED NOT NULL           ,
   RA2000S     VARCHAR(8)            NOT NULL           ,
   DE2000S     VARCHAR(8)            NOT NULL           ,
-  vMag        INTEGER(3)   SIGNED                      ,
+  vMag        INTEGER(4)   SIGNED                      ,
   spType      VARCHAR(25)                    DEFAULT '',
   PRIMARY KEY   (starPK)                               ,
   INDEX       DE(DE2000)                               ,
