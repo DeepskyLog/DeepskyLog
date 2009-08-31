@@ -1,6 +1,36 @@
 <?php // new_observation.php - GUI to add a new observation to the database
 
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/checkUtils.js\"></script>";
+// Script to change the visibility when we are observing a resolved open cluster
+echo "<script language=\"javascript\">
+      function setOptions(opn, oc1, oc2, oc3, oc4, oc5, oc6, oc7, vis1, vis2, vis3, vis4, vis5, vis6, vis7)
+      {
+        var selbox = document.obsform.visibility;
+        if(opn == true) {
+        selbox.options.length = 0;
+          if (document.obsform.resolved.checked == true) {
+            selbox.options[selbox.options.length] = new Option('-----','0');
+            selbox.options[selbox.options.length] = new Option(oc1,'1');
+            selbox.options[selbox.options.length] = new Option(oc2,'2');
+            selbox.options[selbox.options.length] = new Option(oc3,'3');
+            selbox.options[selbox.options.length] = new Option(oc4,'4');
+            selbox.options[selbox.options.length] = new Option(oc5,'5');
+            selbox.options[selbox.options.length] = new Option(oc6,'6');
+            selbox.options[selbox.options.length] = new Option(oc7,'7');
+          } else {
+            selbox.options[selbox.options.length] = new Option('-----','0');
+            selbox.options[selbox.options.length] = new Option(vis1,'1');
+            selbox.options[selbox.options.length] = new Option(vis2,'2');
+            selbox.options[selbox.options.length] = new Option(vis3,'3');
+            selbox.options[selbox.options.length] = new Option(vis4,'4');
+            selbox.options[selbox.options.length] = new Option(vis5,'5');
+            selbox.options[selbox.options.length] = new Option(vis6,'6');
+            selbox.options[selbox.options.length] = new Option(vis7,'7');
+          }
+        }
+      }
+      </script>";
+
 echo "<div id=\"main\">";
 if(($observationid=$objUtil->checkGetKey('observation'))&&($objUtil->checkAdminOrUserID($objObservation->getDsObservationProperty($_GET['observation'],'observerid'))))
   $object=$objObservation->getDsObservationProperty($observationid,'objectname');
@@ -9,7 +39,7 @@ else
   $object=$objUtil->checkPostKey('object', $objUtil->checkGetKey('object'));
 }
 if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostKey('timestamp',-1)))
-{ echo "<form action=\"".$baseURL."index.php\" method=\"post\" enctype=\"multipart/form-data\"><div>";
+{ echo "<form name=\"obsform\" action=\"".$baseURL."index.php\" method=\"post\" enctype=\"multipart/form-data\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_observation\" />";
 	echo "<input type=\"hidden\" name=\"observationid\" value=\"".$observationid."\" />";
 	echo "<input type=\"hidden\" name=\"timestamp\" value=\"" . $_POST['timestamp'] . "\" />";
@@ -140,9 +170,25 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$contentVisibility ="<select name=\"visibility\" class=\"width300px inputfield\">";
 	$contentVisibility.="<option value=\"0\">-----</option>";
 	for($i=1;$i<8;$i++)
-		$contentVisibility.="<option value=\"".$i."\" ".(($objUtil->checkPostKey('visibility')==$i)?"selected=\"selected\" ":"").">".$GLOBALS['Visibility'.$i]."</option>";
+	{	$contentVisibility.="<option value=\"".$i."\" ".(($objUtil->checkPostKey('visibility')==$i)?"selected=\"selected\" ":"").">".$GLOBALS['Visibility'.$i]."</option>";
+	  $vis[$i] = $GLOBALS['Visibility'.$i];
+	}
 	$contentVisibility.="</select>&nbsp;";
-	// Diameter =====================================================================================================================================================================
+  // Visibility for resolved open clusters ========================================================================================================================================
+  $contentVisibilityOc ="<select name=\"visibility\" class=\"width300px inputfield\">";
+  $contentVisibilityOc.="<option value=\"0\">-----</option>";
+  for($i=1;$i<8;$i++)
+  { $contentVisibilityOc.="<option value=\"".$i."\" ".(($objUtil->checkPostKey('visibility')==$i)?"selected=\"selected\" ":"").">".$GLOBALS['VisibilityOC'.$i]."</option>";
+    $visOc[$i] = $GLOBALS['VisibilityOC'.$i];
+  }
+  $contentVisibilityOc.="</select>&nbsp;";
+  // Visibility for double stars ==================================================================================================================================================
+  $contentVisibilityDs ="<select name=\"visibility\" class=\"width300px inputfield\">";
+  $contentVisibilityDs.="<option value=\"0\">-----</option>";
+  for($i=1;$i<4;$i++)
+    $contentVisibilityDs.="<option value=\"".$i."\" ".(($objUtil->checkPostKey('visibility')==$i)?"selected=\"selected\" ":"").">".$GLOBALS['VisibilityDS'.$i]."</option>";
+  $contentVisibilityDs.="</select>&nbsp;";
+  // Diameter =====================================================================================================================================================================
 	$theDiameter1=($observationid?(($tempD1=$objObservation->getDsObservationProperty($observationid,'largeDiameter'))?$tempD1:''):$objUtil->checkPostKey('largeDiam'));
 	$theDiameter2=($observationid?(($tempD2=$objObservation->getDsObservationProperty($observationid,'smallDiameter'))?$tempD2:''):$objUtil->checkPostKey('smallDiam'));
 	$theDiameterUnit=($observationid?'sec':$objUtil->checkPostKey('size_units'));
@@ -160,8 +206,13 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$contentMisc1.="<input type=\"checkbox\" name=\"mottled\" ".($objUtil->checkPostKey("mottled")?"checked ":"")."/>" . LangViewObservationField38."&nbsp;";
   $contentMisc2="";$contentMisc3="";$contentMisc4="";
 	if(in_array($objObject->getDsoProperty($object,'type'),array("ASTER","CLANB","DS","OPNCL","AA1STAR","AA2STAR","AA3STAR","AA4STAR","AA8STAR","GLOCL"))) 
-	{ $contentMisc2.="<input type=\"checkbox\" name=\"resolved\" ".($objUtil->checkPostKey("resolved")?"checked ":"")."/>" . LangViewObservationField37."&nbsp;";
-	  $contentMisc2.="<input type=\"checkbox\" name=\"unusualShape\" />" . LangViewObservationField41."&nbsp;";
+	{ if(in_array($objObject->getDsoProperty($object,'type'), array("OPNCL"))) 
+	  { $opn = true;
+	  }	else 
+	  { $opn = false;
+	  }
+	  $contentMisc2.="<input type=\"checkbox\" name=\"resolved\" onClick=\"setOptions($opn, '$visOc[1]', '$visOc[2]', '$visOc[3]', '$visOc[4]', '$visOc[5]', '$visOc[6]', '$visOc[7]', '$vis[1]', '$vis[2]', '$vis[3]', '$vis[4]', '$vis[5]', '$vis[6]', '$vis[7]')\"".($objUtil->checkPostKey("resolved")?"checked ":"")."/>" . LangViewObservationField37."&nbsp;";
+    $contentMisc2.="<input type=\"checkbox\" name=\"unusualShape\" />" . LangViewObservationField41."&nbsp;";
 		$contentMisc2.="<input type=\"checkbox\" name=\"partlyUnresolved\" />" . LangViewObservationField42."&nbsp;";
 		$contentMisc2.="<input type=\"checkbox\" name=\"colorContrasts\" />" . LangViewObservationField43;
 		if($objObject->getDsoProperty($object,'type')!="GLOCL")
@@ -209,10 +260,16 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	                        "RL",array(11,89),30,array("fieldname",""));
 	$objPresentations->line(array("","<hr />"),"LL",array(12,87),10);
 	
-	
-	$objPresentations->line(array(LangViewObservationField22,$contentVisibility,
-	                              LangViewObservationField33,$contentDiameter),
-	                        "RLRL",array(11,33,22,33),30,array("fieldname",""));
+	// Check if we are observing a double star. If it is the case, us VisibilityDs
+  if(in_array($objObject->getDsoProperty($object,'type'),array("DS","AA2STAR"))) 
+  { $objPresentations->line(array(LangViewObservationField22,$contentVisibilityDs,
+	                                LangViewObservationField33,$contentDiameter),
+	                          "RLRL",array(11,33,22,33),30,array("fieldname",""));
+  } else {
+    $objPresentations->line(array(LangViewObservationField22,$contentVisibility,
+                                  LangViewObservationField33,$contentDiameter),
+                            "RLRL",array(11,33,22,33),30,array("fieldname",""));
+  }
 	$objPresentations->line(array("",$contentMisc1.$contentMisc2,$contentMisc3,$contentMisc4),
 	                        "LLRL",array(11,52,11,25),30);
 	echo "</div>";

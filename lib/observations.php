@@ -1177,15 +1177,33 @@ class Observations {
 		                     LangViewObservationField32,
 		                     (((($lens=$this->getDsObservationProperty($LOid,'lensid'))=="")||($lens==0))?"-":"<a  href=\"".$baseURL."index.php?indexAction=detail_lens&amp;lens=".urlencode($lens)."\">".$objLens->getLensPropertyFromId($lens,'name')."</a>")),
                          "RLRLRL",array(15,22,15,19,15,14),25,array("type30","type30","type30","type30","type30","type30"));                                     
-		$objPresentations->line(array(LangViewObservationField22,
-		                     (($visibility=$this->getDsObservationProperty($LOid,'visibility'))?$GLOBALS['Visibility'.$visibility]:"-"),
+    if(in_array($objObject->getDsoProperty($object,'type'),array("DS","AA2STAR"))) {
+      $objPresentations->line(array(LangViewObservationField22,
+		                     (($visibility=$this->getDsObservationProperty($LOid,'visibility'))?$GLOBALS['VisibilityDS'.$visibility]:"-"),
 		                     LangViewObservationField33,
 		                     $diameterText,
 		                     LangViewObservationField40,
 		                     $charTypeText),
+                         "RLRLRL",array(15,22,15,19,15,14),25,array("type20","type20","type20","type20","type20","type20"));
+    } else if (in_array($objObject->getDsoProperty($object,'type'),array("OPNCL")) && $this->getDsObservationProperty($LOid,'resolved') > 0) {                                     
+      $objPresentations->line(array(LangViewObservationField22,
+                         (($visibility=$this->getDsObservationProperty($LOid,'visibility'))?$GLOBALS['VisibilityOC'.$visibility]:"-"),
+                         LangViewObservationField33,
+                         $diameterText,
+                         LangViewObservationField40,
+                         $charTypeText),
                          "RLRLRL",array(15,22,15,19,15,14),25,array("type20","type20","type20","type20","type20","type20"));                                     
-		echo $details1Text." ".$details2Text;
-		echo "<br />";
+		                     echo $details1Text." ".$details2Text;
+    } else {
+      $objPresentations->line(array(LangViewObservationField22,
+                         (($visibility=$this->getDsObservationProperty($LOid,'visibility'))?$GLOBALS['Visibility'.$visibility]:"-"),
+                         LangViewObservationField33,
+                         $diameterText,
+                         LangViewObservationField40,
+                         $charTypeText),
+                         "RLRLRL",array(15,22,15,19,15,14),25,array("type20","type20","type20","type20","type20","type20"));                                     
+		                     echo "<br />";
+    }
 		echo $objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
 		if($this->getDsObservationProperty($LOid,'hasDrawing'))
 		  echo "<p>"."<a  href=\"".$baseURL."deepsky/drawings/" . $LOid . ".jpg" . "\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . "_resized.jpg\" alt=\"\"></img></a></p>";

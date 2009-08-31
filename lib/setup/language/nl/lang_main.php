@@ -1,5 +1,29 @@
 <?php
 
+// TO DO:
+
+// Visibility for resolved open clusters
+define("LangVisibilityOC1"                                ,"Zeer opvallende, zeer mooie sterrenhoop");
+define("LangVisibilityOC2"                                ,"Opvallende, mooie sterrenhoop");
+define("LangVisibilityOC3"                                ,"Duidelijk zichtbare sterrenhoop");
+define("LangVisibilityOC4"                                ,"Sterrenhoop valt amper op");
+define("LangVisibilityOC5"                                ,"Zeer onopvallend");
+define("LangVisibilityOC6"                                ,"Twijfelgeval; Sterrendichtheid zoals in de omgeving");
+define("LangVisibilityOC7"                                ,"Praktisch geen sterren op de cataloogpositie");
+
+// Visibility for double stars
+define("LangVisibilityDS1"                                ,"Dubbelster is opgelost");
+define("LangVisibilityDS2"                                ,"Dubbelster verschijnt als 8");
+define("LangVisibilityDS3"                                ,"Dubbelster is niet opgelost");
+
+define("LangDetailDS1"                                    ,"Zelfde helderheid");
+define("LangDetailDS2"                                    ,"in mooi beeldveld");
+define("LangDetailDSColor1"                               ,"wit");
+define("LangDetailDSColor2"                               ,"rood");
+define("LangDetailDSColor3"                               ,"oranje");
+define("LangDetailDSColor4"                               ,"geel");
+define("LangDetailDSColor5"                               ,"groen");
+define("LangDetailDSColor6"                               ,"blauw");
 
 $atlasPageText=array(
        'atlasPageUpBtnTxt'                               =>"Pagina Noord",
@@ -11,8 +35,8 @@ $atlasPageText=array(
        'atlasPageRightBtnTxt'                            =>'Pagina West',
        'atlasPageSmallRightBtnTxt'                       =>'Sectie West',
        'atlasPageZoomInBtnTxt'                           =>'Zoom In',
-       'atlasPageZoom1BtnTxt'                            =>'Zoom to 1°',
-       'atlasPageZoom2BtnTxt'                            =>'Zoom to 2°',
+       'atlasPageZoom1BtnTxt'                            =>'Zoom to 1ï¿½',
+       'atlasPageZoom2BtnTxt'                            =>'Zoom to 2ï¿½',
        'atlasPageZoomOutBtnTxt'                          =>'Zoom out',
        'atlasPageObjectTxt'                              =>'Object',
        'atlasPageTypeTxt'                                =>'Type',
@@ -463,7 +487,7 @@ define("LangNewObjectSizeUnits1"													,"boogminuten");
 define("LangNewObjectSizeUnits2"													,"boogseconden");
 define("LangNewObjectIcqname"															,"ICQ naam");
 define("LangCheckName"																		,"Controleer de naam");
-define("LangCheckRA"																			,"Controleer de coördinaten");
+define("LangCheckRA"																			,"Controleer de coï¿½rdinaten");
 define("LangPossibleCandidateObjects"											,"Mogelijke candidaten");
 define("LangPossibleCandidateObjectsExplanation"					,"Gelieve te bevestigen of het object hier niet tussen zit");
 define("LangObjectNotFound"																,"Bevestiging");
@@ -472,8 +496,8 @@ define("LangNewObjectPhase0" 															,"Geef enkel objecten in die nog nie
 define("LangNewObjectPhase10"															,"Nu dien je na te gaan of de naam nog niet voorkomt in de onderstaande lijst, geabseerd op zijn naam. Neem de tijd om de objecten nauwkeurig na te kijken. ".
                              															 "Als jouw object in de lijst zit, verlaat dan deze sectie door bv. op het object te klikken en het na te kijken. ".
                              															 "Staat je object niet in de lijst, ga dan verder door op de 'Bevestiging' knop te drukken. Let op: het kan zijn dat je moet scrollen om de hele lijst te zien.");
-define("LangNewObjectPhase1" 															,"Geef nu de coördinaten van het object in: rechte klimming en declinatie. ".
-                             															 "Onze coördinaten worden uitgedrukt in de epoch 2000 (J2000).");
+define("LangNewObjectPhase1" 															,"Geef nu de coï¿½rdinaten van het object in: rechte klimming en declinatie. ".
+                             															 "Onze coï¿½rdinaten worden uitgedrukt in de epoch 2000 (J2000).");
 define("LangNewObjectPhase20"															,"Nu dien je opnieuw na te gaan of de naam nog niet voorkomt in de onderstaande lijst, gebaseerds op zijn ligging. Neem de tijd om de objecten nauwkeurig na te kijken. ".
                              															 "Als jouw object in de lijst zit, verlaat dan deze sectie door bv. op het object te klikken en het na te kijken. ".
                              															 "Staat je object niet in de lijst, ga dan verder door op de 'Bevestiging' knop te drukken. Let op: het kan zijn dat je moet scrollen om de hele lijst te zien.");
@@ -813,7 +837,7 @@ define("LangNewObservationSubtitle2"											,"Controleer de gegevens van het 
 define("LangNewObservationSubtitle3"											,"Vul de details van de waarneming in ");
 define("LangNewObservationSubtitle3B"											,"Wijzig de details van de waarneming ");
 define("LangNewObservationSubtitle3A"											,"(* verplichte velden)");
-define("LangNewObservationSubtitle3C"											," - ");
+define("LangNewObservationSubtitle3C"                     ," - ");
 define("LangNewObservationButton1"												,"Zoek object");
 define("LangNewObservationField1"													,"Datum *");
 define("LangNewObservationField2"													,"Tijd (UT)");
@@ -1216,6 +1240,20 @@ $Visibility4						="Perifeer kijken nodig om object te zien";
 $Visibility5						="Object amper zichtbaar bij perifeer kijken";
 $Visibility6						="Zichtbaarheid van object is twijfelachtig";
 $Visibility7						="Object niet zichtbaar";
+
+// Visibility for resolved open clusters
+$VisibilityOC1          ="Zeer opvallende, zeer mooie sterrenhoop";
+$VisibilityOC2          ="Opvallende, mooie sterrenhoop";
+$VisibilityOC3          ="Duidelijk zichtbare sterrenhoop";
+$VisibilityOC4          ="Sterrenhoop valt amper op";
+$VisibilityOC5          ="Zeer onopvallend";
+$VisibilityOC6          ="Twijfelgeval; Sterrendichtheid zoals in de omgeving";
+$VisibilityOC7          ="Praktisch geen sterren op de cataloogpositie";
+
+// Visibility for double stars
+$VisibilityDS1          ="Dubbelster is opgelost";
+$VisibilityDS2          ="Dubbelster verschijnt als 8";
+$VisibilityDS3          ="Dubbelster is niet opgelost";
 
 //Seeing definitions
 $Seeing0								="-----";

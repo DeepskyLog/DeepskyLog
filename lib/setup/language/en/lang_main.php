@@ -1,5 +1,29 @@
 <?php
 
+// TO DO:
+
+// Visibility for resolved open clusters
+define("LangVisibilityOC1"                                ,"Very prominent and very beautiful cluster");
+define("LangVisibilityOC2"                                ,"Prominent and beautiful cluster");
+define("LangVisibilityOC3"                                ,"Conspicuously seen cluster");
+define("LangVisibilityOC4"                                ,"Cluster hardly attracts attention");
+define("LangVisibilityOC5"                                ,"Very unconspicuously, easily overlooked when slewing");
+define("LangVisibilityOC6"                                ,"Questionable sighting; star density similar to neighborhood");
+define("LangVisibilityOC7"                                ,"Virtually no stars at catalog position");
+
+// Visibility for double stars
+define("LangVisibilityDS1"                                ,"Binary can be resolved");
+define("LangVisibilityDS2"                                ,"Binary appears as 8");
+define("LangVisibilityDS3"                                ,"Binary cannot be resolved");
+
+define("LangDetailDS1"                                    ,"Equal Brightness");
+define("LangDetailDS2"                                    ,"in nice field");
+define("LangDetailDSColor1"                               ,"white");
+define("LangDetailDSColor2"                               ,"red");
+define("LangDetailDSColor3"                               ,"orange");
+define("LangDetailDSColor4"                               ,"yellow");
+define("LangDetailDSColor5"                               ,"green");
+define("LangDetailDSColor6"                               ,"blue");
 
 $atlasPageText=array(
        'atlasPageUpBtnTxt'                               =>"Pagina Noord",
@@ -11,8 +35,8 @@ $atlasPageText=array(
        'atlasPageRightBtnTxt'                            =>'Pagina West',
        'atlasPageSmallRightBtnTxt'                       =>'Sectie West',
        'atlasPageZoomInBtnTxt'                           =>'Zoom In',
-       'atlasPageZoom1BtnTxt'                            =>'Zoom to 1°',
-       'atlasPageZoom2BtnTxt'                            =>'Zoom to 2°',
+       'atlasPageZoom1BtnTxt'                            =>'Zoom to 1ï¿½',
+       'atlasPageZoom2BtnTxt'                            =>'Zoom to 2ï¿½',
        'atlasPageZoomOutBtnTxt'                          =>'Zoom out',
        'atlasPageObjectTxt'                              =>'Object',
        'atlasPageTypeTxt'                                =>'Type',
@@ -103,8 +127,8 @@ define("LangValidateMail2"																,"\n\nYour application for the account
 define("LangValidateMail3"																,"\nGreetings,\n\nThe deepskylog administrators");
 
 
-define("LangObjectYSeen"																	,"Object alreay observed by me");
-define("LangObjectYDSeen"																	,"Object alreayd observed and sketched by me");
+define("LangObjectYSeen"																	,"Object already observed by me");
+define("LangObjectYDSeen"																	,"Object already observed and sketched by me");
 define("LangObjectXSeen"																	,"Object already observed by others, but not by me");
 define("LangObjectNSeen"																	,"Object not logged in Deepskylog");
 define("LangBack"																					,"Back");
@@ -813,7 +837,7 @@ define("LangNewObservationSubtitle2"											,"Check object details");
 define("LangNewObservationSubtitle3"											,"Enter observation details ");
 define("LangNewObservationSubtitle3B"											,"Change the observation details ");
 define("LangNewObservationSubtitle3A"											,"(* required fields)");
-define("LangNewObservationSubtitle3C"											," - ");
+define("LangNewObservationSubtitle3C"                     ," - ");
 define("LangNewObservationButton1"												,"Search object");
 define("LangNewObservationField1"													,"Date *");
 define("LangNewObservationField2"													,"Time (UT)");
@@ -1216,6 +1240,20 @@ $Visibility4						="Averted vision required to percept object";
 $Visibility5						="Object barely perceptable with averted vision";
 $Visibility6						="Perception of object is very questionable";
 $Visibility7						="Object definitely not seen";
+
+// Visibility for resolved open clusters
+$VisibilityOC1          ="Very prominent and very beautiful cluster";
+$VisibilityOC2          ="Prominent and beautiful cluster";
+$VisibilityOC3          ="Conspicuously seen cluster";
+$VisibilityOC4          ="Cluster hardly attracts attention";
+$VisibilityOC5          ="Very unconspicuously, easily overlooked when slewing";
+$VisibilityOC6          ="Questionable sighting; star density similar to neighborhood";
+$VisibilityOC7          ="Virtually no stars at catalog position";
+
+// Visibility for double stars
+$VisibilityDS1          ="Binary can be resolved";
+$VisibilityDS2          ="Binary appears as 8";
+$VisibilityDS3          ="Binary cannot be resolved";
 
 //Seeing definitions
 $Seeing0								="-----";

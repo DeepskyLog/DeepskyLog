@@ -1,7 +1,29 @@
 <?php
 
 // TO DO:
-//LangObjectYDSeen
+
+// Visibility for resolved open clusters
+define("LangVisibilityOC1"                                ,"Sehr auff&auml;lliger, besonders sch&ouml;ner Sternhaufen");
+define("LangVisibilityOC2"                                ,"Auff&auml;lliger, sch&ouml;ner Sternhaufen");
+define("LangVisibilityOC3"                                ,"Deutlich sichtbarer Sternhaufen");
+define("LangVisibilityOC4"                                ,"Sternhaufen f&auml;llt kaum auf");
+define("LangVisibilityOC5"                                ,"Sehr unauff&auml;llig; beim Schwenken leicht zu &uuml;bersehen");
+define("LangVisibilityOC6"                                ,"Sichting fraglich; Sterndichte wie in der Umgebung");
+define("LangVisibilityOC7"                                ,"Praktisch keine Sterne an der Katalogposition");
+
+// Visibility for double stars
+define("LangVisibilityDS1"                                ,"Doppelstern kann getrennt werden");
+define("LangVisibilityDS2"                                ,"Doppelstern erscheint als 8");
+define("LangVisibilityDS3"                                ,"Doppelstern kann nicht getrennt werden");
+
+define("LangDetailDS1"                                    ,"Gleiche Helligkeit");
+define("LangDetailDS2"                                    ,"Sch&ouml;nes Umfeld");
+define("LangDetailDSColor1"                               ,"weiss");
+define("LangDetailDSColor2"                               ,"rot");
+define("LangDetailDSColor3"                               ,"orange");
+define("LangDetailDSColor4"                               ,"gelb");
+define("LangDetailDSColor5"                               ,"gr&uuml;n");
+define("LangDetailDSColor6"                               ,"blau");
 
 $atlasPageText=array(
        'atlasPageUpBtnTxt'                               =>"Pagina Noord",
@@ -13,8 +35,8 @@ $atlasPageText=array(
        'atlasPageRightBtnTxt'                            =>'Pagina West',
        'atlasPageSmallRightBtnTxt'                       =>'Sectie West',
        'atlasPageZoomInBtnTxt'                           =>'Zoom In',
-       'atlasPageZoom1BtnTxt'                            =>'Zoom to 1°',
-       'atlasPageZoom2BtnTxt'                            =>'Zoom to 2°',
+       'atlasPageZoom1BtnTxt'                            =>'Zoom to 1ï¿½',
+       'atlasPageZoom2BtnTxt'                            =>'Zoom to 2ï¿½',
        'atlasPageZoomOutBtnTxt'                          =>'Zoom out',
        'atlasPageObjectTxt'                              =>'Object',
        'atlasPageTypeTxt'                                =>'Type',
@@ -706,7 +728,7 @@ define("LangViewObservationField19"												,"Koma");
 define("LangViewObservationField20"												,"Schweif");
 define("LangViewObservationField20b"											,"Schweif");
 define("LangViewObservationField21"												,"Positionswinkel");
-define("LangViewObservationField22"												,"Sichtbarkeit (1-7)");
+define("LangViewObservationField22"												,"Sichtbarkeit");
 define("LangViewObservationField23"												,"schlechteste Bewertung");
 define("LangViewObservationField24"												,"beste Bewertung");
 define("LangViewObservationField25"												,"Minimum schw&auml;chster Stern");
@@ -815,7 +837,7 @@ define("LangNewObservationSubtitle2"											,"Pr&uuml;fen der Objekt details"
 define("LangNewObservationSubtitle3"											,"Beobachtungsdetail Eingabe ");
 define("LangNewObservationSubtitle3B"											,"Change the observation details ");
 define("LangNewObservationSubtitle3A"											,"(* Pflichtfelder)");
-define("LangNewObservationSubtitle3C"											," - ");
+define("LangNewObservationSubtitle3C"                     ," - ");
 define("LangNewObservationButton1"												,"Objekt suche");
 define("LangNewObservationField1"													,"Datum *");
 define("LangNewObservationField2"													,"Zeit (UT)");
@@ -1217,6 +1239,20 @@ $Visibility4						="Indirektes Beobachten ist n&ouml;tig, um das Objekt zu sehen
 $Visibility5						="Objekt bei indirektem Beobachten gerade noch wahrnehmbar";
 $Visibility6						="Sichtung des Objektes sehr fraglich";
 $Visibility7						="Objekt sicher nicht zu sehen";
+
+// Visibility for resolved open clusters
+$VisibilityOC1          ="Sehr auff&auml;lliger, besonders sch&ouml;ner Sternhaufen";
+$VisibilityOC2          ="Auff&auml;lliger, sch&ouml;ner Sternhaufen";
+$VisibilityOC3          ="Deutlich sichtbarer Sternhaufen";
+$VisibilityOC4          ="Sternhaufen f&auml;llt kaum auf";
+$VisibilityOC5          ="Sehr unauff&auml;llig; beim Schwenken leicht zu &uuml;bersehen";
+$VisibilityOC6          ="Sichting fraglich; Sterndichte wie in der Umgebung";
+$VisibilityOC7          ="Praktisch keine Sterne an der Katalogposition";
+
+// Visibility for double stars
+$VisibilityDS1          ="Doppelstern kann getrennt werden";
+$VisibilityDS2          ="Doppelstern erscheint als 8";
+$VisibilityDS3          ="Doppelstern kann nicht getrennt werden";
 
 //Seeing definitions
 $Seeing0								="-----";
