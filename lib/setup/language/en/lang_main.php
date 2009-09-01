@@ -35,8 +35,8 @@ $atlasPageText=array(
        'atlasPageRightBtnTxt'                            =>'Pagina West',
        'atlasPageSmallRightBtnTxt'                       =>'Sectie West',
        'atlasPageZoomInBtnTxt'                           =>'Zoom In',
-       'atlasPageZoom1BtnTxt'                            =>'Zoom to 1�',
-       'atlasPageZoom2BtnTxt'                            =>'Zoom to 2�',
+       'atlasPageZoom1BtnTxt'                            =>'Zoom to 1&deg;',
+       'atlasPageZoom2BtnTxt'                            =>'Zoom to 2&deg;',
        'atlasPageZoomOutBtnTxt'                          =>'Zoom out',
        'atlasPageObjectTxt'                              =>'Object',
        'atlasPageTypeTxt'                                =>'Type',
@@ -236,7 +236,7 @@ define("LangObjectNewPartOf"															,"PO-New Part Of");
 define("LangObjectRemovePartOf"														,"RPO-Remove Part Of");
 define("LangObjectRemoveAndReplaceObjectBy"								,"RRO-Remove the object and replace observations of it by object");
 define("LangObjectSetRA"																	,"RA-Set RA (Hour Format: 1.50 for 1h30m)");
-define("LangObjectSetDECL"																,"DE-Set Decl (Degree Format: 25.50 for 25�30')");
+define("LangObjectSetDECL"																,"DE-Set Decl (Degree Format: 25.50 for 25&deg;30')");
 define("LangObjectSetCon"																	,"CON-Set Constellation (Three letter capital abbrevation !)");
 define("LangObjectSetType"																,"TYP-Set Type (Three five capital abbrevation !)");
 define("LangObjectSetMag"																	,"MA-Set Magnitude");
