@@ -1,6 +1,7 @@
 <?php
 
 // TO DO:
+//LangCSVMessage3 (SQM) en nog enkele andere lijnen daarrond
 
 // Visibility for resolved open clusters
 define("LangVisibilityOC1"                                ,"Sehr auff&auml;lliger, besonders sch&ouml;ner Sternhaufen");
@@ -1055,7 +1056,7 @@ define("LangRemove"																				,"L&ouml;schen");
 define("LangCSVTitle"																			,"Beobachtungen von CSV Datei importieren");
 define("LangCSVMessage1"																	,"Diese Eingabemaske erlaubt Ihnen mehrere Beobachtungen auf einmal einzugeben, indem Sie eine CSV Datei importieren (comma seperated value Datei). Dies beschleunigt das Hochladen ihrer Beobachtungen, ferner k&ouml;nnen sie alte Beobachtungen aus Drittanwendungen leichter importieren. Zu Ihrer Information: Alle Beobachtungen mit Ihrem (vollen) Namen werden importiert.");
 define("LangCSVMessage2"																	,"The CSV file uses the following format: <b>(NEW FORMAT!!!)</b>");
-define("LangCSVMessage3"																	,"<b><i>1-Objekt; 2-Beobachter; 3-Datum; 4-UT; 5-Beobachtungsplatz; 6-Beobachtungsger&auml;t; 7-Okular; 8-Filter; 9-Linse; 10-Seeing; 11-Schw&auml;chsterStern; 12-Sichtbarkeit; 13-Sprache; 14-Beschreibung</i></b>");
+define("LangCSVMessage3"																	,"<b><i>1-Objekt; 2-Beobachter; 3-Datum; 4-UT; 5-Beobachtungsplatz; 6-Beobachtungsger&auml;t; 7-Okular; 8-Filter; 9-Linse; 10-Seeing; 11-Schw&auml;chsterStern oder SQM as you wish; 12-Sichtbarkeit; 13-Sprache; 14-Beschreibung</i></b>");
 define("LangCSVMessage4"																	,"<b>Attention!</b> In contrast with version 3.3 and preceding ones, the file may <b>no longer</b> contain a header line, the first line immediately contains the actual observations in the format mentioned above, e.g.: <br /><br />NGC 2392;John Smith;21-01-2005;20:45;Aalst;Obsession 15\";31mm Nagler;Lumicon O-III filter;Televue 2x Barlow;2;4.0;3;en;Nice planetary nebula with a very bright central star!<br />M 35;John Smith;21-01-2005;20:53;Aalst;Obsession 15\";;;;2;4.0;1;en;About thirty members with several curved chains of stars.<br />...<br /><br />Seeing should be given as a number between 1 and 5 (1=excellent, 2=good, 3=moderate, 4=poor, 5=bad).<br />Visibility should be given as a number between 1 and 7 (1=Very simple, prominent object, 2=Object easily percepted with direct vision, 3=Object perceptable with direct vision, 4=Averted vision required to percept object, 5=Object barely perceptable with averted vision, 6=Perception of object is very questionable, 7=Object definitely not seen).<br />If an observation has been done by naked eye, 'Naked Eye' should be given as instrument.<br />Language should be the short name for the language the description is in  (de for German)");
 
 

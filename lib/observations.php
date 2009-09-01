@@ -260,11 +260,20 @@ class Observations {
 			$seeing="-1";
 		if($limmag=="")
 			$limmag="0";
-		else 
+		/*else
 		{ if (ereg('([0-9]{1})[.,]([0-9]{1})', $limmag, $matches))   // limiting magnitude like X.X or X,X with X a number between 0 and 9
 				$limmag=$matches[1].".".$matches[2];    // valid limiting magnitude // save current magnitude limit
 			$limmag="$limmag";
+		}*/
+		$sqm="-1";
+		if(($limmag>15)&&($limmag<25))
+		{ $sqm=$limmag;
+			$limmag="0";
 		}
+		elseif(($limmag>0)&&($limmag<10))
+		  $limmag=$limmag;
+		else
+		  $limmag="0";
 		$description = html_entity_decode($description, ENT_COMPAT, "ISO-8859-15");
 		$description = preg_replace("/(\")/", "", $description);
 		$description = preg_replace("/;/", ",", $description);
@@ -278,6 +287,7 @@ class Observations {
 		                                                                          description=\"$description\" AND 
 		                                                                          seeing=$seeing AND 
 		                                                                          limmag=$limmag AND 
+          		                                                                SQM=$sqm AND  
           		                                                                visibility=$visibility AND 
 		                                                                          language=\"$language\" AND 
 		                                                                          eyepieceid=$eyepieceid AND 
@@ -299,7 +309,8 @@ class Observations {
 		                                                 language, 
 		                                                 eyepieceid, 
 		                                                 filterid, 
-		                                                 lensid)
+		                                                 lensid,
+		                                                 SQM)
 		                                       VALUES (  \"$objectname\", 
 		                                                 \"$observerid\", 
 		                                                 \"$instrumentid\", 
@@ -313,7 +324,8 @@ class Observations {
 		                                                 \"$language\", 
 		                                                 $eyepieceid, 
 		                                                 $filterid, 
-		                                                 $lensid)");
+		                                                 $lensid,
+		                                                 $sqm)");
 		return 1;
 	}
 	public  function getAllInfoDsObservation($id)                                                                                                                       // returns all information of an observation

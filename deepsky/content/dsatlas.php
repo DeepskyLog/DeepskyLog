@@ -18,7 +18,7 @@ echo "</script>";
 
 
 
-echo "<div id=\"atlasPageDiv\" class=\"atlasPageDiv\" onmousemove=\"canvasOnMouseMove(event);\" onclick=\"canvasOnClick(event);\" onkeydown=\"canvasOnKeyDown(event);\">";
+echo "<div id=\"atlasPageDiv\" class=\"atlasPageDiv\" onmousemove=\"canvasOnMouseMove(event);\" onclick=\"canvasOnClick(event);\" onkeydown=\"canvasOnKeyDown(event);\" >";
 echo "</div>"; 
 echo "<div id=\"atlasPageDiv1\" class=\"atlasPageDiv1\"  onkeydown=\"canvasOnKeyDown(event);\" >";
 echo "</div>";
