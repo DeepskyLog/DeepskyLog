@@ -60,8 +60,6 @@ else
 	  $min=$_GET['min'];
 	else
 	  $min = 0;
-	
-	
 }
 if (count($_SESSION['Qobs']) == 0) //================================================================================================== no reult present =======================================================================================
 {	$objPresentations->line(array("<h4>".LangObservationNoResults.(($objUtil->checkGetKey('myLanguages'))?(" (".LangSelectedObservationsSelectedLanguagesIndication.")"):(" (".LangSelectedObservationsAllLanguagesIndication.")"))."</h4>"),
@@ -83,8 +81,8 @@ else
 		$content1.=LangSelectedObservationsTitle2;
 	$content1.="</h4>";
 	$link3 = $link;
-	list($min, $max,$content2)=$objUtil->printNewListHeader3($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
-  $objPresentations->line(array($content1,$content2),"LR",array(50,50),30);
+	list($min, $max,$content2,$pageleft,$pageright,$pagemax)=$objUtil->printNewListHeader4($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
+	$objPresentations->line(array($content1,$content2),"LR",array(50,50),30);
 	$content3 ="<h4>";
 	if ($objUtil->checkGetKey('myLanguages')) 
 	{ $content3.=" (".LangSelectedLanguagesShown.")";
@@ -146,4 +144,22 @@ else
 	$objPresentations->line(array($content1),"L",array(100),25);
   echo "</div>";
 }
+echo "<script type=\"text/javascript\">";
+echo "
+function pageOnKeyDown(event)
+{ if(event.keyCode==37)
+    if(event.shiftKey)
+      location='".html_entity_decode($link."&amp;multiplepagenr=0")."';    
+    else
+      location='".html_entity_decode($link."&amp;multiplepagenr=".$pageleft)."';
+  if(event.keyCode==39)
+    if(event.shiftKey) 
+      location='".html_entity_decode($link."&amp;multiplepagenr=".$pagemax)."';
+    else  
+      location='".html_entity_decode($link."&amp;multiplepagenr=".$pageright)."';
+}
+this.bodyOnKeyDown = function(event)
+{ pageOnKeyDown(event);
+};";
+echo "</script>";
 ?>
