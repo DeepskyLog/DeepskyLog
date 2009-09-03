@@ -17,7 +17,7 @@ echo LangSearch."</p>";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"quickpick\" />";
 echo "<input type=\"hidden\" name=\"source\"      value=\"quickpick\" />";
 echo "<input type=\"hidden\" name=\"myLanguages\" value=\"true\" />";
-echo "<input type=\"text\" name=\"object\" class=\"inputfield menuInput\" title=\"".LangQuickPickHelp."\" value=\"".((array_key_exists('object',$_GET)&&($_GET['object']!='* '))?$_GET['object']:"")."\" />";
+echo "<input type=\"text\" id=\"quickpickobject\" name=\"object\" class=\"inputfield menuInput\" title=\"".LangQuickPickHelp."\" value=\"".((array_key_exists('object',$_GET)&&($_GET['object']!='* '))?$_GET['object']:"")."\" />";
 if($menuSearch=="expanded")
 {	echo "<input type=\"submit\" name=\"searchObjectQuickPickQuickPick\" class=\"menuButton\" value=\"".LangQuickPickSearchObject."\" />";
 	echo "<input type=\"submit\" name=\"searchObservationsQuickPick\" class=\"menuButton\" value=\"".LangQuickPickSearchObservations."\" />";
