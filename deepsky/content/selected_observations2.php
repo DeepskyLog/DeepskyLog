@@ -158,8 +158,7 @@ function pageOnKeyDown(event)
     else  
       location='".html_entity_decode($link."&amp;multiplepagenr=".$pageright)."';
 }
-this.bodyOnKeyDown = function(event)
-{ pageOnKeyDown(event);
-};";
+this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDown;
+";
 echo "</script>";
 ?>
