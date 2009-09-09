@@ -18,6 +18,8 @@ define("LangVisibilityDS3"                                ,"Dubbelster is niet o
 
 define("LangDetailDS1"                                    ,"Zelfde helderheid");
 define("LangDetailDS2"                                    ,"in mooi beeldveld");
+define("LangDetailDS3"                                    ,"component 1");
+define("LangDetailDS4"                                    ,"component 2");
 define("LangDetailDSColor1"                               ,"wit");
 define("LangDetailDSColor2"                               ,"rood");
 define("LangDetailDSColor3"                               ,"oranje");
@@ -487,7 +489,7 @@ define("LangNewObjectSizeUnits1"													,"boogminuten");
 define("LangNewObjectSizeUnits2"													,"boogseconden");
 define("LangNewObjectIcqname"															,"ICQ naam");
 define("LangCheckName"																		,"Controleer de naam");
-define("LangCheckRA"																			,"Controleer de coördinaten");
+define("LangCheckRA"																			,"Controleer de coï¿½rdinaten");
 define("LangPossibleCandidateObjects"											,"Mogelijke candidaten");
 define("LangPossibleCandidateObjectsExplanation"					,"Gelieve te bevestigen of het object hier niet tussen zit");
 define("LangObjectNotFound"																,"Bevestiging");
@@ -496,8 +498,8 @@ define("LangNewObjectPhase0" 															,"Geef enkel objecten in die nog nie
 define("LangNewObjectPhase10"															,"Nu dien je na te gaan of de naam nog niet voorkomt in de onderstaande lijst, geabseerd op zijn naam. Neem de tijd om de objecten nauwkeurig na te kijken. ".
                              															 "Als jouw object in de lijst zit, verlaat dan deze sectie door bv. op het object te klikken en het na te kijken. ".
                              															 "Staat je object niet in de lijst, ga dan verder door op de 'Bevestiging' knop te drukken. Let op: het kan zijn dat je moet scrollen om de hele lijst te zien.");
-define("LangNewObjectPhase1" 															,"Geef nu de coördinaten van het object in: rechte klimming en declinatie. ".
-                             															 "Onze cördinaten worden uitgedrukt in de epoch 2000 (J2000).");
+define("LangNewObjectPhase1" 															,"Geef nu de coï¿½rdinaten van het object in: rechte klimming en declinatie. ".
+                             															 "Onze cï¿½rdinaten worden uitgedrukt in de epoch 2000 (J2000).");
 define("LangNewObjectPhase20"															,"Nu dien je opnieuw na te gaan of de naam nog niet voorkomt in de onderstaande lijst, gebaseerds op zijn ligging. Neem de tijd om de objecten nauwkeurig na te kijken. ".
                              															 "Als jouw object in de lijst zit, verlaat dan deze sectie door bv. op het object te klikken en het na te kijken. ".
                              															 "Staat je object niet in de lijst, ga dan verder door op de 'Bevestiging' knop te drukken. Let op: het kan zijn dat je moet scrollen om de hele lijst te zien.");
@@ -837,7 +839,7 @@ define("LangNewObservationSubtitle2"											,"Controleer de gegevens van het 
 define("LangNewObservationSubtitle3"											,"Vul de details van de waarneming in ");
 define("LangNewObservationSubtitle3B"											,"Wijzig de details van de waarneming ");
 define("LangNewObservationSubtitle3A"											,"(* verplichte velden)");
-define("LangNewObservationSubtitle3C"                     ," - ");
+define("LangNewObservationSubtitle3C"											," - ");
 define("LangNewObservationButton1"												,"Zoek object");
 define("LangNewObservationField1"													,"Datum *");
 define("LangNewObservationField2"													,"Tijd (UT)");

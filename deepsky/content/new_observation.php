@@ -205,7 +205,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$contentMisc1.="<input type=\"radio\" name=\"stellarextended\" value=\"extended\" ".(($objUtil->checkPostKey("stellarextended")=="extended")?"checked ":"")." />" . LangViewObservationField36."&nbsp;";
 	$contentMisc1.="<input type=\"checkbox\" name=\"mottled\" ".($objUtil->checkPostKey("mottled")?"checked ":"")."/>" . LangViewObservationField38."&nbsp;";
   $contentMisc2="";$contentMisc3="";$contentMisc4="";
-	if(in_array($objObject->getDsoProperty($object,'type'),array("ASTER","CLANB","DS","OPNCL","AA1STAR","AA2STAR","AA3STAR","AA4STAR","AA8STAR","GLOCL"))) 
+	if(in_array($objObject->getDsoProperty($object,'type'),array("ASTER","CLANB","OPNCL","AA1STAR","AA3STAR","AA4STAR","AA8STAR","GLOCL"))) 
 	{ if(in_array($objObject->getDsoProperty($object,'type'), array("OPNCL"))) 
 	  { $opn = true;
 	  }	else 
@@ -232,6 +232,35 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 		  $contentMisc4.="<option value=\"X\"" . (($objUtil->checkPostKey('clusterType') == 'X') ? " selected=\"selected\" " : '') . ">J - ".$ClusterTypeX."</option>";
 		  $contentMisc4.="</select>&nbsp;";
 	  }
+	} else if(in_array($objObject->getDsoProperty($object,'type'),array("DS","AA2STAR"))) 
+	{
+    $contentMisc2.="<input type=\"checkbox\" name=\"equalBrightness\" />" . LangDetailDS1."&nbsp;";
+    $contentMisc2.="<input type=\"checkbox\" name=\"niceField\" />" . LangDetailDS2;
+    if($objObject->getDsoProperty($object,'type')!="GLOCL")
+    { $contentMisc4 =LangDetailDS3 . "&nbsp;";
+      $theComponent1Color=($observationid?$objObservation->getDsObservationProperty($observationid,'component1'):$objUtil->checkPostKey('component1'));
+      $contentMisc4.="<select name=\"component1\" class=\"inputfield\">";
+      $contentMisc4.="<option value=\"\">-----</option>";
+      $contentMisc4.="<option value=\"1\"" . (($theComponent1Color == '1') ? " selected=\"selected\" " : '').">".LangDetailDSColor1."</option>";
+      $contentMisc4.="<option value=\"2\"" . (($objUtil->checkPostKey('component1') == '2') ? " selected=\"selected\" " : '').">".LangDetailDSColor2."</option>";
+      $contentMisc4.="<option value=\"3\"" . (($objUtil->checkPostKey('component1') == '3') ? " selected=\"selected\" " : '').">".LangDetailDSColor3."</option>";
+      $contentMisc4.="<option value=\"4\"" . (($objUtil->checkPostKey('component1') == '4') ? " selected=\"selected\" " : '').">".LangDetailDSColor4."</option>";
+      $contentMisc4.="<option value=\"5\"" . (($objUtil->checkPostKey('component1') == '5') ? " selected=\"selected\" " : '').">".LangDetailDSColor5."</option>";
+      $contentMisc4.="<option value=\"6\"" . (($objUtil->checkPostKey('component1') == '6') ? " selected=\"selected\" " : '').">".LangDetailDSColor6."</option>";
+      $contentMisc4.="</select>&nbsp;";
+      
+      $contentMisc4.="&nbsp;" . LangDetailDS4 . "&nbsp;";
+      $theComponent2Color=($observationid?$objObservation->getDsObservationProperty($observationid,'component2'):$objUtil->checkPostKey('component2'));
+      $contentMisc4.="<select name=\"component2\" class=\"inputfield\">";
+      $contentMisc4.="<option value=\"\">-----</option>";
+      $contentMisc4.="<option value=\"1\"" . (($theComponent2Color == '1') ? " selected=\"selected\" " : '').">".LangDetailDSColor1."</option>";
+      $contentMisc4.="<option value=\"2\"" . (($objUtil->checkPostKey('component2') == '2') ? " selected=\"selected\" " : '').">".LangDetailDSColor2."</option>";
+      $contentMisc4.="<option value=\"3\"" . (($objUtil->checkPostKey('component2') == '3') ? " selected=\"selected\" " : '').">".LangDetailDSColor3."</option>";
+      $contentMisc4.="<option value=\"4\"" . (($objUtil->checkPostKey('component2') == '4') ? " selected=\"selected\" " : '').">".LangDetailDSColor4."</option>";
+      $contentMisc4.="<option value=\"5\"" . (($objUtil->checkPostKey('component2') == '5') ? " selected=\"selected\" " : '').">".LangDetailDSColor5."</option>";
+      $contentMisc4.="<option value=\"6\"" . (($objUtil->checkPostKey('component2') == '6') ? " selected=\"selected\" " : '').">".LangDetailDSColor6."</option>";
+      $contentMisc4.="</select>&nbsp;";
+    }
 	}
 	// Presentation =====================================================================================================================================================================
 	$objPresentations->line(array("<a href=\"".$baseURL."index.php?indexAction=add_site\" title=\"".LangChangeAccountField7Expl."\" >".LangViewObservationField4."&nbsp;*"."</a>",$contentLoc,

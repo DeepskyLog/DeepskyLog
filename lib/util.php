@@ -322,10 +322,11 @@ class Utils implements iUtils
       $type = "oal:deepSkyCG";
 	  } else if ($type == "PLNNB") {
 	  	$type = "oal:deepSkyPN";
-	  } else if ($type == "ASTER" || $type == "AA1STAR" || $type == "AA2STAR" 
-	      || $type == "AA3STAR" || $type == "AA4STAR" || $type == "AA8STAR"
-	      || $type == "DS") {
+	  } else if ($type == "ASTER" || $type == "AA1STAR" || $type == "AA3STAR" 
+	      || $type == "AA4STAR" || $type == "AA8STAR") {
 	  	$type = "oal:deepSkyAS";
+    } else if ($type == "AA2STAR" || $type == "DS") {
+      $type = "oal:deepSkyDS";
 	  } else if ($type == "GLOCL" || $type == "GXAGC" || $type == "LMCGC" 
 	      || $type == "SMCGC") {
 	  	$type = "oal:deepSkyGC";
@@ -793,6 +794,10 @@ class Utils implements iUtils
 	    $attr->appendChild($attrText);
 	  }
 
+	  $object = $GLOBALS['objObject']->getAllInfoDsObject($objectname);
+
+    $type = $object["type"];
+	  
     if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC")
     {
 	    if ($obs["partlyUnresolved"] > 0)
@@ -823,7 +828,84 @@ class Utils implements iUtils
       }   
     }
 
-	  if ($obs["resolved"] > 0)
+    if ($type == "AA2STAR" || $type == "DS")
+    {
+      if ($obs["equalBrightness"] >= 0)
+      {
+        $attr = $dom->createAttribute("equalBrightness");
+        $result->appendChild($attr);
+
+        if ($obs["equalBrightness"] == 0) {
+          $attrText = $dom->createTextNode("false");
+        } else {
+          $attrText = $dom->createTextNode("true");
+        }
+        $attr->appendChild($attrText);
+      }
+
+      if ($obs["niceField"] >= 0)
+      {
+        $attr = $dom->createAttribute("niceSurrounding");
+        $result->appendChild($attr);
+
+        if ($obs["equalBrightness"] == 0) {
+          $attrText = $dom->createTextNode("false");
+        } else {
+          $attrText = $dom->createTextNode("true");
+        }
+        $attr->appendChild($attrText);
+      }
+
+      if ($obs["component1"] > 0)
+      {
+        if ($obs["component1"] == 1) {
+          $col1 = "white";
+        } 
+        if ($obs["component1"] == 2) {
+          $col1 = "red";
+        } 
+        if ($obs["component1"] == 3) {
+          $col1 = "orange";
+        } 
+        if ($obs["component1"] == 4) {
+          $col1 = "yellow";
+        } 
+        if ($obs["component1"] == 5) {
+          $col1 = "green";
+        } 
+        if ($obs["component1"] == 6) {
+          $col1 = "blue";
+        } 
+        $colorMain = $result->appendChild($dom->createElement('colorMain')); 
+        $colorMain->appendChild($dom->createTextNode($col1));
+      }
+
+      if ($obs["component2"] > 0)
+      {
+        if ($obs["component2"] == 1) {
+          $col2 = "white";
+        } 
+        if ($obs["component2"] == 2) {
+          $col2 = "red";
+        } 
+        if ($obs["component2"] == 3) {
+          $col2 = "orange";
+        } 
+        if ($obs["component2"] == 4) {
+          $col2 = "yellow";
+        } 
+        if ($obs["component2"] == 5) {
+          $col2 = "green";
+        } 
+        if ($obs["component2"] == 6) {
+          $col2 = "blue";
+        } 
+        $colorCompanion = $result->appendChild($dom->createElement('colorCompanion')); 
+        $colorCompanion->appendChild($dom->createTextNode($col2));
+      }
+    }
+    
+    if ($obs["resolved"] > 0)
 	  {
 	    $attr = $dom->createAttribute("resolved");
         $result->appendChild($attr);
@@ -851,6 +933,8 @@ class Utils implements iUtils
 	  if ($type == "OPNCL" || $type == "SMCOC" || $type == "LMCOC")
 	  {
 	  	$type = "oal:findingsDeepSkyOCType";
+	  } else if ($type == "AA2STAR" || $type == "DS") {
+      $type = "oal:findingsDeepSkyDSType";
 	  } else {
 	  	$type = "oal:findingsDeepSkyType";	  	
 	  }

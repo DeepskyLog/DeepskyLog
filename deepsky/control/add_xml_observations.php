@@ -58,10 +58,9 @@ if ($dom->schemaValidate($xmlschema)) {
         $obsid = $observerid->nodeValue;
       }
     }
-
+    
     // Get the name of the observer which is logged in in DeepskyLog
     $deepskylog_username=$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'firstname'). " ".$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'name');
-
     if ($obsid != "") {
       if ($obsid == $_SESSION['deepskylog_id']) {
         $id = $comastid;
@@ -70,13 +69,13 @@ if ($dom->schemaValidate($xmlschema)) {
       $id = $comastid;
     }
   }
+
   if ($id == "") {
     $entryMessage.= LangXMLError2 . $deepskylog_username . LangXMLError2a;
     $_GET['indexAction']="add_xml";
     
     return;
   }
-
   $targets = $dom->getElementsByTagName( "targets" );
   $target = $targets->item(0)->getElementsByTagName( "target" );
 
@@ -107,8 +106,10 @@ if ($dom->schemaValidate($xmlschema)) {
 
     $next = 1;
 
-    if ($type == "oal:deepSkyAS" || $type == "oal:deepSkyDS") {
+    if ($type == "oal:deepSkyAS") {
       $targetInfoArray["type"] = "ASTER";
+    } else if ($type == "oal:deepSkyDS") {
+      $targetInfoArray["type"] = "DS";
     } else if ($type == "oal:deepSkySC" || $type == "oal:deepSkyOC") {
       $targetInfoArray["type"] = "OPNCL";
     } else if ($type == "oal:deepSkyGC") {
@@ -801,7 +802,7 @@ if ($dom->schemaValidate($xmlschema)) {
       $ta = $targetArray[$observation->getElementsByTagName( "target" )->item(0)->nodeValue];
 
       if ($ta["known"] == 1) {
-        $pattern = '/([A-Za-z]+)([\d\D\w]+)/';
+        $pattern = '/([A-Za-z]+)([\d\D\w]*)/';
         $targetName = preg_replace($pattern, '${1} ${2}', $target);
         $targetName = str_replace("  ", " ", $targetName);
         $objeId = -1;
@@ -844,7 +845,6 @@ if ($dom->schemaValidate($xmlschema)) {
                 $objObject->newAltName($names[0]." ".$names[1], $aliasNames[0], $aliasNames[1]);
               }
               $objeId = $objObject->getDsObjectName(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $targetName)));
-
               // Also sent mail with new object to the deepskylog administrators.
               $admins = $objObserver->getAdministrators();
               while(list($key, $value)=each($admins))
@@ -1046,6 +1046,80 @@ if ($dom->schemaValidate($xmlschema)) {
             }
             $objObservation->setDsObservationProperty($obsId, "partlyUnresolved", $partlyUnresolved);
 
+            // equalBrightness is not mandatory
+            if ($resultNode->hasAttribute("equalBrightness")) {
+              if ($resultNode->getAttribute("equalBrightness") == "true") {
+                $equalBrightness = 1;
+              } else {
+                $equalBrightness = 0;
+              }
+            } else {
+              $equalBrightness = -1;
+            }
+            $objObservation->setDsObservationProperty($obsId, "equalBrightness", $equalBrightness);
+            
+            // niceSurrounding is not mandatory
+            if ($resultNode->hasAttribute("niceSurrounding")) {
+              if ($resultNode->getAttribute("niceSurrounding") == "true") {
+                $niceSurrounding = 1;
+              } else {
+                $niceSurrounding = 0;
+              }
+            } else {
+              $niceSurrounding = -1;
+            }
+            $objObservation->setDsObservationProperty($obsId, "nicefield", $niceSurrounding);
+            
+            // colorMain is not mandatory
+            if ($resultNode->getElementsByTagName( "colorMain" )->item(0)) {
+              $color1 = $resultNode->getElementsByTagName( "colorMain" )->item(0)->nodeValue;
+
+              if ($color1 == "White" || $color1 == "white") {
+                $col1 = 1;
+              } 
+              if ($color1 == "Red" || $color1 == "red") {
+                $col1 = 2;
+              } 
+              if ($color1 == "Orange" || $color1 == "orange") {
+                $col1 = 3;
+              } 
+              if ($color1 == "Yellow" || $color1 == "yellow") {
+                $col1 = 4;
+              } 
+              if ($color1 == "Green" || $color1 == "green") {
+                $col1 = 5;
+              } 
+              if ($color1 == "Blue" || $color1 == "blue") {
+                $col1 = 6;
+              } 
+              $objObservation->setDsObservationProperty($obsId, "component1", $col1);
+            }
+            
+            // colorCompanion is not mandatory
+            if ($resultNode->getElementsByTagName("colorCompanion")->item(0)) {
+              $color2 = $resultNode->getElementsByTagName( "colorCompanion" )->item(0)->nodeValue;
+
+              if ($color2 == "White" || $color2 == "white") {
+                $col2 = 1;
+              } 
+              if ($color2 == "Red" || $color2 == "red") {
+                $col2 = 2;
+              } 
+              if ($color2 == "Orange" || $color2 == "orange") {
+                $col2 = 3;
+              } 
+              if ($color2 == "Yellow" || $color2 == "yellow") {
+                $col2 = 4;
+              } 
+              if ($color2 == "Green" || $color2 == "green") {
+                $col2 = 5;
+              } 
+              if ($color2 == "Blue" || $color2 == "blue") {
+                $col2 = 6;
+              } 
+              $objObservation->setDsObservationProperty($obsId, "component2", $col2);
+            }
+
             // Character is not mandatory
             if ($resultNode->getElementsByTagName( "character" )->item(0)) {
               $objObservation->setDsObservationProperty($obsId, "clusterType", $resultNode->getElementsByTagName( "character" )->item(0)->nodeValue);
@@ -1086,7 +1160,7 @@ if ($dom->schemaValidate($xmlschema)) {
           }
         }
       }
-    }
+    } 
   }
 } else {
   $entryMessage.= LangXMLError3;

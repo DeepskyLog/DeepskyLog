@@ -1156,11 +1156,25 @@ class Observations {
     if($this->getDsObservationProperty($LOid,'extended')>0) $details1Text.=", ".LangViewObservationField36;
     if($this->getDsObservationProperty($LOid,'resolved')>0) $details1Text.=", ".LangViewObservationField37;
     if($this->getDsObservationProperty($LOid,'mottled')>0)  $details1Text.=", ".LangViewObservationField38;
+    if($this->getDsObservationProperty($LOid,'component1')==1)  $details1Text.=", ".LangDetailDSColor1;
+    if($this->getDsObservationProperty($LOid,'component1')==2)  $details1Text.=", ".LangDetailDSColor2;
+    if($this->getDsObservationProperty($LOid,'component1')==3)  $details1Text.=", ".LangDetailDSColor3;
+    if($this->getDsObservationProperty($LOid,'component1')==4)  $details1Text.=", ".LangDetailDSColor4;
+    if($this->getDsObservationProperty($LOid,'component1')==5)  $details1Text.=", ".LangDetailDSColor5;
+    if($this->getDsObservationProperty($LOid,'component1')==6)  $details1Text.=", ".LangDetailDSColor6;
+    if($this->getDsObservationProperty($LOid,'component2')==1)  $details1Text.="-".LangDetailDSColor1;
+    if($this->getDsObservationProperty($LOid,'component2')==2)  $details1Text.="-".LangDetailDSColor2;
+    if($this->getDsObservationProperty($LOid,'component2')==3)  $details1Text.="-".LangDetailDSColor3;
+    if($this->getDsObservationProperty($LOid,'component2')==4)  $details1Text.="-".LangDetailDSColor4;
+    if($this->getDsObservationProperty($LOid,'component2')==5)  $details1Text.="-".LangDetailDSColor5;
+    if($this->getDsObservationProperty($LOid,'component2')==6)  $details1Text.="-".LangDetailDSColor6;
     $details1Text=substr($details1Text,2);
 		$details2Text="";
 		if($this->getDsObservationProperty($LOid,'unusualShape')>0) $details2Text.=", ".LangViewObservationField41;
 		if($this->getDsObservationProperty($LOid,'partlyUnresolved')>0) $details2Text.=", ".LangViewObservationField42;
 		if($this->getDsObservationProperty($LOid,'colorContrasts')>0) $details2Text.=", ".LangViewObservationField43;
+    if($this->getDsObservationProperty($LOid,'equalBrightness')>0) $details2Text.=", ".LangDetailDS1;
+		if($this->getDsObservationProperty($LOid,'niceField')>0) $details2Text.=", ".LangDetailDS2;
 		$details2Text=substr($details2Text,2);
 		$charTypeText="-";
 		$object=$this->getDsObservationProperty($LOid,'objectname');
@@ -1197,7 +1211,9 @@ class Observations {
 		                     LangViewObservationField40,
 		                     $charTypeText),
                          "RLRLRL",array(15,22,15,19,15,14),25,array("type20","type20","type20","type20","type20","type20"));
-    } else if (in_array($objObject->getDsoProperty($object,'type'),array("OPNCL")) && $this->getDsObservationProperty($LOid,'resolved') > 0) {                                     
+		                     echo $details1Text." ".$details2Text;
+		                     echo "<br />";
+    } else if (in_array($objObject->getDsoProperty($object,'type'),array("OPNCL")) && $this->getDsObservationProperty($LOid,'resolved') > 0) {
       $objPresentations->line(array(LangViewObservationField22,
                          (($visibility=$this->getDsObservationProperty($LOid,'visibility'))?$GLOBALS['VisibilityOC'.$visibility]:"-"),
                          LangViewObservationField33,
@@ -1392,7 +1408,15 @@ class Observations {
 					$objObservation->setDsObservationProperty($current_observation,'colorContrasts', 1);
 				else
 					$objObservation->setDsObservationProperty($current_observation,'colorContrasts', -1);
-				if ($_POST['filter'])
+        if (array_key_exists('equalBrightness', $_POST))
+          $objObservation->setDsObservationProperty($current_observation,'equalBrightness', 1);
+        else
+          $objObservation->setDsObservationProperty($current_observation,'equalBrightness', -1);
+        if (array_key_exists('niceField', $_POST))
+          $objObservation->setDsObservationProperty($current_observation,'niceField', 1);
+        else
+          $objObservation->setDsObservationProperty($current_observation,'niceField', -1);
+        if ($_POST['filter'])
 					$objObservation->setDsObservationProperty($current_observation,'filterid', $_POST['filter']);
 				if ($_POST['lens'])
 					$objObservation->setDsObservationProperty($current_observation,'lensid', $_POST['lens']);
@@ -1403,7 +1427,9 @@ class Observations {
 				if(!($objObserver->getObserverProperty($loggedUser,'UT')))
 					$objObservation->setLocalDateAndTime($current_observation, $date, $time);
 				$objObservation->setDsObservationProperty($current_observation,'clusterType', $objUtil->checkPostKey('clusterType'));
-				if ($_FILES['drawing']['tmp_name'] != "") // drawing to upload
+        $objObservation->setDsObservationProperty($current_observation,'component1', $objUtil->checkPostKey('component1'));
+        $objObservation->setDsObservationProperty($current_observation,'component2', $objUtil->checkPostKey('component2'));
+        if ($_FILES['drawing']['tmp_name'] != "") // drawing to upload
 				{ $upload_dir = $instDir . 'deepsky/drawings';
 					$dir = opendir($upload_dir);
 					$original_image = $_FILES['drawing']['tmp_name'];

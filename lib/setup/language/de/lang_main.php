@@ -19,6 +19,8 @@ define("LangVisibilityDS3"                                ,"Doppelstern kann nic
 
 define("LangDetailDS1"                                    ,"Gleiche Helligkeit");
 define("LangDetailDS2"                                    ,"Sch&ouml;nes Umfeld");
+define("LangDetailDS3"                                    ,"component 1");
+define("LangDetailDS4"                                    ,"component 2");
 define("LangDetailDSColor1"                               ,"weiss");
 define("LangDetailDSColor2"                               ,"rot");
 define("LangDetailDSColor3"                               ,"orange");
@@ -550,7 +552,7 @@ define("LangExecuteQueryObjectsMessage4b"									,"Namen pdf");
 define("LangExecuteQueryObjectsMessage4c"									,"Detail pdf");
 define("LangExecuteQueryObjectsMessage5"									,"CSV");
 define("LangExecuteQueryObjectsMessage6"									,"CSV");
-define("LangExecuteQueryObjectsMessage7"									,"Download ICQ-Datei");
+define("LangExecuteQueryObjectsMessage7"									,"ICQ");
 define("LangExecuteQueryObjectsMessage8"									,"Argo Navis");
 define("LangExecuteQueryObjectsMessage9"									,"Filter objects");
 define("LangExecuteQueryObjectsMessage10"									,"&lt;OAL&gt;");
@@ -838,7 +840,7 @@ define("LangNewObservationSubtitle2"											,"Pr&uuml;fen der Objekt details"
 define("LangNewObservationSubtitle3"											,"Beobachtungsdetail Eingabe ");
 define("LangNewObservationSubtitle3B"											,"Change the observation details ");
 define("LangNewObservationSubtitle3A"											,"(* Pflichtfelder)");
-define("LangNewObservationSubtitle3C"                     ," - ");
+define("LangNewObservationSubtitle3C"											," - ");
 define("LangNewObservationButton1"												,"Objekt suche");
 define("LangNewObservationField1"													,"Datum *");
 define("LangNewObservationField2"													,"Zeit (UT)");
