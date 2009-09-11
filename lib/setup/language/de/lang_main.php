@@ -3,6 +3,10 @@
 // TO DO:
 //LangCSVMessage3 (SQM) en nog enkele andere lijnen daarrond
 
+// text for fstOffset
+define("LangChangeAccountField12"                         ,"fstOffset");
+define("LangChangeAccountField12Expl"                     ,"Offset between measured SQM value and the faintest visible star");
+
 // Visibility for resolved open clusters
 define("LangVisibilityOC1"                                ,"Sehr auff&auml;lliger, besonders sch&ouml;ner Sternhaufen");
 define("LangVisibilityOC2"                                ,"Auff&auml;lliger, sch&ouml;ner Sternhaufen");

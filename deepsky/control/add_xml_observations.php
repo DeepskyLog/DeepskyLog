@@ -51,6 +51,11 @@ if ($dom->schemaValidate($xmlschema)) {
     $name = $observer->getElementsByTagName( "name" )->item(0)->nodeValue;
     $surname = $observer->getElementsByTagName( "surname" )->item(0)->nodeValue;
 
+    if ($observer->getElementsByTagName( "fstOffset" )->item(0)) {
+      $fstOffset[$comastid] = $observer->getElementsByTagName( "fstOffset" )->item(0)->nodeValue;
+    } else {
+      $fstOffset[$comastid] = 0.0;
+    }
     $observerid = $observer->getElementsByTagName ( "account" );
     $obsid = "";
     foreach ($observerid as $observerid) {
@@ -75,6 +80,8 @@ if ($dom->schemaValidate($xmlschema)) {
     $_GET['indexAction']="add_xml";
     
     return;
+  } else {
+    $objObserver->setObserverProperty($_SESSION['deepskylog_id'],'fstOffset', $fstOffset[$id]);
   }
   $targets = $dom->getElementsByTagName( "targets" );
   $target = $targets->item(0)->getElementsByTagName( "target" );

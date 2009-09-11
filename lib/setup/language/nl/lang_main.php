@@ -2,6 +2,10 @@
 
 // TO DO:
 
+// text for fstOffset
+define("LangChangeAccountField12"                         ,"fstOffset");
+define("LangChangeAccountField12Expl"                     ,"Offset tussen gemeten SQM waarde en zwakste zichtbare ster");
+
 // Visibility for resolved open clusters
 define("LangVisibilityOC1"                                ,"Zeer opvallende, zeer mooie sterrenhoop");
 define("LangVisibilityOC2"                                ,"Opvallende, mooie sterrenhoop");

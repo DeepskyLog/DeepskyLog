@@ -230,6 +230,11 @@ class Utils implements iUtils
       $surname = $observerChild->appendChild($dom->createElement('surname')); 
       $surname->appendChild($dom->createCDataSection(($observer->getObserverProperty($value,'name')))); 
 
+      if ($observer->getObserverProperty($value,'fstOffset') != 0.0) {
+        $fst = $observerChild->appendChild($dom->createElement('fstOffset')); 
+        $fst->appendChild($dom->createTextNode(($observer->getObserverProperty($value,'fstOffset')))); 
+      }
+      
       $account = $observerChild->appendChild($dom->createElement('account'));
       $account->appendChild($dom->createCDataSection(utf8_encode(html_entity_decode($value))));
 

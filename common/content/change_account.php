@@ -94,6 +94,9 @@ $line[]=array("");
 $line[]=array(LangChangeAccountField7,$tempLocationList,"<a href=\"".$baseURL."index.php?indexAction=add_site\">".LangChangeAccountField7Expl."</a>");
 $line[]=array(LangChangeAccountField8,$tempInstrumentList,"<a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeAccountField8Expl."</a>");
 $line[]=array(LangChangeAccountField9,$tempAtlasList,"");
+$line[]=array(LangChangeAccountField12,
+              "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"fstOffset\" size=\"4\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'fstOffset')."\" />",
+              LangChangeAccountField12Expl);
 $line[]=array(LangChangeAccountPicture,"<input type=\"file\" name=\"picture\" class=\"inputfield\"/>","");
 $line[]=array("");        
 if($languageMenu==1)

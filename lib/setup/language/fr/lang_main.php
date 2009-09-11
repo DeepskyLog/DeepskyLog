@@ -2,6 +2,10 @@
 
 // TO DO
 
+// text for fstOffset
+define("LangChangeAccountField12"                         ,"fstOffset");
+define("LangChangeAccountField12Expl"                     ,"Offset between measured SQM value and the faintest visible star");
+
 // Visibility for resolved open clusters
 define("LangVisibilityOC1"                                ,"Very prominent and very beautiful cluster");
 define("LangVisibilityOC2"                                ,"Prominent and beautiful cluster");
