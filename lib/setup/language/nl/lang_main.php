@@ -493,7 +493,7 @@ define("LangNewObjectSizeUnits1"													,"boogminuten");
 define("LangNewObjectSizeUnits2"													,"boogseconden");
 define("LangNewObjectIcqname"															,"ICQ naam");
 define("LangCheckName"																		,"Controleer de naam");
-define("LangCheckRA"																			,"Controleer de coï¿½rdinaten");
+define("LangCheckRA"																			,"Controleer de coördinaten");
 define("LangPossibleCandidateObjects"											,"Mogelijke candidaten");
 define("LangPossibleCandidateObjectsExplanation"					,"Gelieve te bevestigen of het object hier niet tussen zit");
 define("LangObjectNotFound"																,"Bevestiging");
@@ -502,8 +502,8 @@ define("LangNewObjectPhase0" 															,"Geef enkel objecten in die nog nie
 define("LangNewObjectPhase10"															,"Nu dien je na te gaan of de naam nog niet voorkomt in de onderstaande lijst, geabseerd op zijn naam. Neem de tijd om de objecten nauwkeurig na te kijken. ".
                              															 "Als jouw object in de lijst zit, verlaat dan deze sectie door bv. op het object te klikken en het na te kijken. ".
                              															 "Staat je object niet in de lijst, ga dan verder door op de 'Bevestiging' knop te drukken. Let op: het kan zijn dat je moet scrollen om de hele lijst te zien.");
-define("LangNewObjectPhase1" 															,"Geef nu de coï¿½rdinaten van het object in: rechte klimming en declinatie. ".
-                             															 "Onze cï¿½rdinaten worden uitgedrukt in de epoch 2000 (J2000).");
+define("LangNewObjectPhase1" 															,"Geef nu de coördinaten van het object in: rechte klimming en declinatie. ".
+                             															 "Onze cördinaten worden uitgedrukt in de epoch 2000 (J2000).");
 define("LangNewObjectPhase20"															,"Nu dien je opnieuw na te gaan of de naam nog niet voorkomt in de onderstaande lijst, gebaseerds op zijn ligging. Neem de tijd om de objecten nauwkeurig na te kijken. ".
                              															 "Als jouw object in de lijst zit, verlaat dan deze sectie door bv. op het object te klikken en het na te kijken. ".
                              															 "Staat je object niet in de lijst, ga dan verder door op de 'Bevestiging' knop te drukken. Let op: het kan zijn dat je moet scrollen om de hele lijst te zien.");
