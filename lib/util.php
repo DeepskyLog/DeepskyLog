@@ -183,31 +183,31 @@ class Utils implements iUtils
     }
 
 	// add root fcga -> The header
-	$fcgaInfo = $dom->createElement('oal:observations');
+	$fcgaInfo = $dom->createElement('xsd:schema');
 	$fcgaDom = $dom->appendChild($fcgaInfo);
 
+    $attr = $dom->createAttribute("targetNamespace");
+    $fcgaInfo->appendChild($attr);
+
+    $attrText = $dom->createTextNode("http://groups.google.com/group/openastronomylog");
+    $attr->appendChild($attrText);
+	
+    $attr = $dom->createAttribute("xmlns:xsd");
+    $fcgaInfo->appendChild($attr);
+
+    $attrText = $dom->createTextNode("http://www.w3.org/2001/XMLSchema");
+    $attr->appendChild($attrText);
+
+    $attr = $dom->createAttribute("xmlns:oal");
+    $fcgaInfo->appendChild($attr);
+
+    $attrText = $dom->createTextNode("http://groups.google.com/openastronomylog");
+    $attr->appendChild($attrText);
+    
     $attr = $dom->createAttribute("version");
     $fcgaInfo->appendChild($attr);
 
     $attrText = $dom->createTextNode("2.0");
-    $attr->appendChild($attrText);
-    
-	  $attr = $dom->createAttribute("xmlns:oal");
-    $fcgaInfo->appendChild($attr);
-
-    $attrText = $dom->createTextNode("http://observation.sourceforge.net/openastronomylog");
-    $attr->appendChild($attrText);
-
-    $attr = $dom->createAttribute("xmlns:xsi");
-    $fcgaInfo->appendChild($attr);
-
-    $attrText = $dom->createTextNode("http://www.w3.org/2001/XMLSchema-instance");
-    $attr->appendChild($attrText);
-
-    $attr = $dom->createAttribute("xsi:schemaLocation");
-    $fcgaInfo->appendChild($attr);
-
-    $attrText = $dom->createTextNode("http://observation.sourceforge.net/openastronomylog oal20.xsd");
     $attr->appendChild($attrText);
 
     //add root - <observers> 
