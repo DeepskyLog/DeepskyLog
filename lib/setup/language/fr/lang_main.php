@@ -4,9 +4,9 @@
 
 // text for fstOffset
 define("LangChangeAccountField12"                         ,"fstOffset");
-define("LangChangeAccountField12Expl"                     ,"Offset between measured SQM value and the faintest visible star");
+define("LangChangeAccountField12Expl"                     ,"Offset between measured SQM value and the faintest visible star. When fstOffset is 0.2, the limiting magnitude is 0.2 better than the value calculated using the SQM.");
 
-
+// Visibility for resolved open clusters
 define("LangVisibilityOC1"                                ,"Very prominent and very beautiful cluster");
 define("LangVisibilityOC2"                                ,"Prominent and beautiful cluster");
 define("LangVisibilityOC3"                                ,"Conspicuously seen cluster");
@@ -79,25 +79,25 @@ define("LangException003"																	,"Vous voulez modifier un oculaire, bi
 define("LangException003b"																,"Vous voulez visualiser un oculaire, bien que vous n'en avez pas s&eacute;lectionn&eacute;. Veuillez contacter les d&eacute;veloppeurs avec ce message.");
 define("LangException004"																	,"Vous voulez modifier un oculaire, mais celui-ci ne vous appartient pas. Veuillez contacter les d&eacute;veloppeurs avec ce message.");
 define("LangException005"																	,"Vous voulez modifier un filtre bien que vous n'en avez pas s&eacute;lectionn&eacute;. Veuillez contacter les d&eacute;veloppeurs avec ce message.");
-define("LangException005b"																,"Vous voulez visualiser un filtre bien que vous n'en avez pas s&eacute;lectionn&eacute;. Veuillez contacter les développeurs avec ce message.");
-define("LangException006"																	,"Vous voulez modifier un filtre mais celui-ci n'est pas le votre. Veuillez contacter les développeurs avec ce message.");
-define("LangException007"																	,"Vous voulez modifier un instrument bien que vous n'en avez pas sélectionné. Veuillez contacter les développeurs avec ce message.");
-define("LangException007b"																,"Vous voulez voir un instrument bien que vous n'en avez pas sélectionné. Veuillez contacter les développeurs avec ce message.");
-define("LangException008"																	,"Vous voulez modifier un instrument mais celui-ci n'est pas le votre. Veuillez contacter les développeurs avec ce message.");
-define("LangException009"																	,"Vous voulez modifier une lentille Barlow bien que vous n'en avez pas sélectionnée. Veuillez contacter les développeurs avec ce message.");
-define("LangException009b"																,"Vous voulez visualiser une lentille Barlow bien que vous n'en avez pas sélectionnée. Veuillez contacter les développeurs avec ce message.");
-define("LangException010"																	,"Vous voulez modifier une lentille Barlow mais celle ci n'est pas la votre. Veuillez contacter les développeurs avec ce message.");
-define("LangException011"																	,"Vous voulez modifier un endroit bien que vous n'en avez pas sélectionné. Veuillez contacter les développeurs avec ce message.");
-define("LangException011b"																,"Vous voulez visualiser un endroit bien que vous n'en avez pas sélectionné. Veuillez contacter les développeurs avec ce message.");
-define("LangException012"																	,"Vous voulez modifier un endroit mais celui-ci n'est pas le votre. Veuillez contacter les développeurs avec ce message.");
-define("LangException013"																	,"Vous voulez chercher un endroit bien que vous n'en avez pas sélectionné.");
-define("LangException014"																	,"Vous voulez chercher un endroit bien que vous n'avez pas sélectionné de pays.");
-define("LangException015b"																,"Vous voulez modifier un observateur bien que vous n'en avez pas sélectionné. Veuillez contacter les développeurs avec ce message.");
-define("LangException016"																	,"Vous voulez visualiser un objet bien que vous n'en avez pas sélectionné. Veuillez contacter les développeurs avec ce message.");
-define("LangException016b"																,"Vous voulez modifier un objet mais celui-ci est inconnu. Veuillez contacter les développeurs avec ce message.");
+define("LangException005b"																,"Vous voulez visualiser un filtre bien que vous n'en avez pas s&eacute;lectionn&eacute;. Veuillez contacter les dï¿½veloppeurs avec ce message.");
+define("LangException006"																	,"Vous voulez modifier un filtre mais celui-ci n'est pas le votre. Veuillez contacter les dï¿½veloppeurs avec ce message.");
+define("LangException007"																	,"Vous voulez modifier un instrument bien que vous n'en avez pas sï¿½lectionnï¿½. Veuillez contacter les dï¿½veloppeurs avec ce message.");
+define("LangException007b"																,"Vous voulez voir un instrument bien que vous n'en avez pas sï¿½lectionnï¿½. Veuillez contacter les dï¿½veloppeurs avec ce message.");
+define("LangException008"																	,"Vous voulez modifier un instrument mais celui-ci n'est pas le votre. Veuillez contacter les dï¿½veloppeurs avec ce message.");
+define("LangException009"																	,"Vous voulez modifier une lentille Barlow bien que vous n'en avez pas sï¿½lectionnï¿½e. Veuillez contacter les dï¿½veloppeurs avec ce message.");
+define("LangException009b"																,"Vous voulez visualiser une lentille Barlow bien que vous n'en avez pas sï¿½lectionnï¿½e. Veuillez contacter les dï¿½veloppeurs avec ce message.");
+define("LangException010"																	,"Vous voulez modifier une lentille Barlow mais celle ci n'est pas la votre. Veuillez contacter les dï¿½veloppeurs avec ce message.");
+define("LangException011"																	,"Vous voulez modifier un endroit bien que vous n'en avez pas sï¿½lectionnï¿½. Veuillez contacter les dï¿½veloppeurs avec ce message.");
+define("LangException011b"																,"Vous voulez visualiser un endroit bien que vous n'en avez pas sï¿½lectionnï¿½. Veuillez contacter les dï¿½veloppeurs avec ce message.");
+define("LangException012"																	,"Vous voulez modifier un endroit mais celui-ci n'est pas le votre. Veuillez contacter les dï¿½veloppeurs avec ce message.");
+define("LangException013"																	,"Vous voulez chercher un endroit bien que vous n'en avez pas sï¿½lectionnï¿½.");
+define("LangException014"																	,"Vous voulez chercher un endroit bien que vous n'avez pas sï¿½lectionnï¿½ de pays.");
+define("LangException015b"																,"Vous voulez modifier un observateur bien que vous n'en avez pas sï¿½lectionnï¿½. Veuillez contacter les dï¿½veloppeurs avec ce message.");
+define("LangException016"																	,"Vous voulez visualiser un objet bien que vous n'en avez pas sï¿½lectionnï¿½. Veuillez contacter les dï¿½veloppeurs avec ce message.");
+define("LangException016b"																,"Vous voulez modifier un objet mais celui-ci est inconnu. Veuillez contacter les dï¿½veloppeurs avec ce message.");
 
 define("LangCounter"																			,"Compteur");
-define("LangMenuExpand"																		,"Dérouler le menu");
+define("LangMenuExpand"																		,"D&eacute;rouler le menu");
 define("LangMenuCollapse"																	,"Plier le menu");
 
 define("DreyerDescriptionLink"														,"http://www.deepskylog.org/wiki/bin/view/DeepskyLog/DreyerDescriptionen");
@@ -148,7 +148,7 @@ define("LangShowWithoutPartOfs"														,"Voir sans objets fait-partie-de")
 define("LangShowWithPartOfs"															,"Voir avec objets fait-partie-de");
 
 define("LangShowAllLanguages"															,"Montrer toutes les languages");
-define("LangShowInterfaceLanguage"												,"Ne montrer que les observations en Français");
+define("LangShowInterfaceLanguage"												,"Ne montrer que les observations en Franï¿½ais");
 define("LangShowMyLanguages"															,"Ne montrer que les observations dans les languages de mon profil");
 define("LangAllLanguagesShown"														,"toutes les languages");
 define("LangSelectedLanguagesShown"												,"juste les languages s&eacute;lection&eacute;es");
@@ -499,7 +499,7 @@ define("LangCheckRA"																			,"V&eacute;rifiez les coordonn&eacute;es"
 define("LangPossibleCandidateObjects"											,"Candidats possibles");
 define("LangPossibleCandidateObjectsExplanation"					,"Pri&egrave;re de confirmer que l'objet n'est pas pr&eacute;sent");
 define("LangObjectNotFound"																,"Confirmation");
-define("LangNewObjectPhase0"															,"Entrez uniquement un objet qui ne se trouve pas encore dans le syst&egrave;me. Veuillez d’abord entrer le nom de l'objet. ".
+define("LangNewObjectPhase0"															,"Entrez uniquement un objet qui ne se trouve pas encore dans le syst&egrave;me. Veuillez dï¿½abord entrer le nom de l'objet. ".
                             															 "Entrez le catalogue dans la premi&egrave;re cellule , le num&eacute;ro dans le catalogue dans la deuxi&egrave;me cellule (p.ex. M dans la premi&egrave;re cellule, 1 dans la deuxi&egrave;me cellule). ");
 define("LangNewObjectPhase10"															,"V&eacute;rifier si le nom n'existe pas d&eacute;j&agrave; dans la liste ci-dessous. Prenez tout votre temps pour v&eacute;rifier vos donn&eacute;es. ".
                              															 "Vous pouvez abandonner cette section au cas ou l'objet se trouve dans la liste en cliquant par ex. sur l'objet pour v&eacute;rifier si c'est le bon. ".
@@ -1098,7 +1098,7 @@ define("LangValidateCSVMessage"														,"L'importation du fichier CSV est 
 // content/new_observationxml.php
 define("LangXMLTitle"																			,"Importez les observations &agrave; partir d'un fichier XML");
 define("LangXMLMessage1"																	,"Ce formulaire vous donne la possibilit&eacute; d'ajouter diff&eacute;rentes observations en utilisant un fichier OpenAstonomyLog XML.");
-define("LangXMLMessage2"																	,"De cette façon, vous pouvez &eacute;changer facilement et rapidement des observations entre diff&eacute;rentes applications qui supportent le format OpenAstonomyLog XML (comme <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), ...");
+define("LangXMLMessage2"																	,"De cette faï¿½on, vous pouvez &eacute;changer facilement et rapidement des observations entre diff&eacute;rentes applications qui supportent le format OpenAstonomyLog XML (comme <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), ...");
 define("LangXMLMessage3"																	,"Informations: uniquement les observations avec votre nom (pr&eacute;nom et nom) seront ajout&eacute;es. Les observations qui sont d&eacute;j&agrave; disponibles dans deepskylog ne seront pas import&eacute;es une seconde fois.");
 define("LangXMLError1"																		,"DeepskyLog ne supporte que openAstronomyLog version 1.7");
 define("LangXMLError2"																		,"Pas d'observations pour cet utilisateur ");

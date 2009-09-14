@@ -4,7 +4,7 @@
 
 // text for fstOffset
 define("LangChangeAccountField12"                         ,"fstOffset");
-define("LangChangeAccountField12Expl"                     ,"Offset tussen gemeten SQM waarde en zwakste zichtbare ster");
+define("LangChangeAccountField12Expl"                     ,"Offset tussen gemeten SQM waarde en zwakste zichtbare ster. Als fstOffset 0.2 is, dan is de grensmagnitude 0.2 beter dan de waarde van de SQM.");
 
 // Visibility for resolved open clusters
 define("LangVisibilityOC1"                                ,"Zeer opvallende, zeer mooie sterrenhoop");
