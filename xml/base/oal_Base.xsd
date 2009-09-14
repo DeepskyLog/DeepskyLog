@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<xsd:schema targetNamespace="http://observation.sourceforge.net/openastronomylog" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:oal="http://observation.sourceforge.net/openastronomylog" version="2.0">
+<xsd:schema targetNamespace="http://groups.google.com/group/openastronomylog" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:oal="http://groups.google.com/group/openastronomylog" version="2.0">
 	<!-- 
 	    Schema for documentation and exchange of observations of astronomical objects. 
 		 Authors: Thomas Pfleger 
 		          Dirk Lehmann
 		          Phyllis Lang
-		 Revision date: 2009/6/7
+		 Revision date: 2009/09/14
 	     (c) 2005 - 2009 by Fachgruppe Computerastronomie of the Vereinigung der Sternfreunde e.V. (VdS) 
 	-->
 
@@ -101,7 +101,7 @@
 				</xsd:simpleType>
 			</xsd:element>
 			
-			<!-- New in V2.0: Deprecated element. Please use accout element instead. -->
+			<!-- New in V2.0: Deprecated element. Please use account element instead. -->
 			<!-- Example: <account name="dsl">myDSLname<account> -->
 			<!-- abbreviation/code of the observer for the Deep Sky Liste (DSL) of the Fachgruppe -->
 			<xsd:element name="DSL" minOccurs="0">
@@ -113,21 +113,21 @@
 			</xsd:element>						
 			
 			<!-- New in V2.0: General element for external user accounts -->
-			<!-- As an observer might use serveral online (or offsite) services where he/she has -->
+			<!-- As an observer might use several online (or offsite) services where he/she has -->
 			<!-- an unique username or account name, this element represents the service name -->
 			<!-- and the observers ID/username on that service -->
 			<!-- Example: AAVSO observer code which was assigned to the observer by AAVSO -->
 			<!--          <account name="aavso">DOE</account> -->
 			<xsd:element name="account" type="oal:observerAccountType" minOccurs="0" maxOccurs="unbounded"/>	
 			
-			<!-- New in V2.0: Personal offset to the "refernce" correlation between the sky quality -->
-			<!-- as it can be measured with an SQM and the estimated naked eye limiting magnitude (fst) -->
-			<!-- The individual observer's offset depends mainly on the visual acuity of the observer. -->
-			<!-- If the fstOffset is known, the sky quality may be derived from faintestStar estimates -->
-			<!-- by this observer. -->
-			<!-- The "reference" correlation used to convert between sky quality and fst was given by -->
-			<!-- Bradley Schaefer: fst = 5*(1.586-log(10^((21.568-BSB)/5)+1)) where BSB is the sky quality -->
-			<!-- (or background surface brightness) given in magnitudes per square arcsecond -->
+            <!-- New in V2.0: Personal offset to the "reference" correlation between the sky quality --> 
+            <!-- as it can be measured with an SQM and the estimated naked eye limiting magnitude (fst) --> 
+            <!-- The individual observer's offset depends mainly on the visual acuity of the observer. --> 
+            <!-- If the fstOffset is known, the sky quality may be derived from faintestStar estimates --> 
+            <!-- by this observer. --> 
+            <!-- The "reference" correlation used to convert between sky quality and fst was given by --> 
+            <!-- Bradley Schaefer: fst = 5*(1.586-log(10^((21.568-BSB)/5)+1)) where BSB is the sky quality --> 
+            <!-- (or background surface brightness) given in magnitudes per square arcsecond --> 
 			<xsd:element name="fstOffset" type="xsd:double" minOccurs="0"/>
 		</xsd:sequence>
 		<xsd:attribute name="id" type="xsd:ID" use="required"/>
@@ -189,7 +189,7 @@
 					</xsd:restriction>
 				</xsd:simpleType>
 			</xsd:element>
-			<!-- equinox used to specifiy coordinates -->
+			<!-- equinox used to specify coordinates -->
 			<xsd:element name="equinox" default="J2000">
 				<xsd:simpleType>
 					<xsd:restriction base="xsd:string">
@@ -468,7 +468,7 @@
 			<xsd:element name="description" type="xsd:string"/>
 		</xsd:sequence>
 		<!-- The "lang" attribute carries an ISO two letter language identifier. -->
-		<!-- It can be used ro indicate the language of the description -->
+		<!-- It can be used to indicate the language of the description -->
 		<!-- By the help of this attribute, applications may filter observations -->
 		<!-- based on user preferences -->
 		<xsd:attribute name="lang" type="xsd:string" use="optional"/>
@@ -482,7 +482,7 @@
 			<xsd:element name="observer" type="xsd:IDREF"/>
 
 			<!-- WHERE was observed ? Optional, because unknown in many existing observation records -->
-			<!-- PLEASE NOTE: In case a site could also be obtained via the below refered -->
+			<!-- PLEASE NOTE: In case a site could also be obtained via the below referred -->
 			<!--              session element, this site element must be dominant -->
 			<xsd:element name="site" type="xsd:IDREF" minOccurs="0"/>
 
@@ -539,7 +539,7 @@
 			<!-- Descripting of the results of the observations. Future extensions are likely! -->
 			<xsd:element name="result" type="oal:findingsType" maxOccurs="unbounded"/>
 
-			<!-- refereneces image files obtained in the observation -->
+			<!-- references image files obtained in the observation -->
 			<xsd:element name="image" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
 		</xsd:sequence>
 		<xsd:attribute name="id" type="xsd:ID" use="optional"/>

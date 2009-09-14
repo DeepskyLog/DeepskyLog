@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<xsd:schema targetNamespace="http://observation.sourceforge.net/openastronomylog" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:oal="http://observation.sourceforge.net/openastronomylog" version="2.0">
+<xsd:schema targetNamespace="http://groups.google.com/group/openastronomylog" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:oal="http://groups.google.com/group/openastronomylog" version="2.0">
 	<!-- 
 	    Schema for documentation and exchange of observations of astronomical objects. 
 		 Authors: Dirk Lehmann
 			  Phyllis Lang
-		 Revision date: 2009/04/26
+		 Revision date: 2009/09/14
 	     (c) 2005 - 2009 by Fachgruppe Computerastronomie of the Vereinigung der Sternfreunde e.V. (VdS) 
 	-->
 
@@ -14,7 +14,7 @@
 	<!-- New in V2.0: type definition for a variable star -->
 	<xsd:complexType name="variableStarTargetType">
 	<!-- For compatibility reasons please use AAVSO Designation, the AAVSO Name, or the AAVSO Unique Identifier -->
-	<!-- in name element (derived from fcga:observationTargetType). Otherwise a possible upload to the AAVSO might have problems -->
+	<!-- in name element (derived from oal:observationTargetType). Otherwise a possible upload to the AAVSO might have problems -->
 		<xsd:complexContent>
 			<xsd:extension base="oal:starTargetType">
 				<xsd:sequence>
