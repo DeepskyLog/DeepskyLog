@@ -183,7 +183,7 @@ class Utils implements iUtils
     }
 
 	// add root fcga -> The header
-	$fcgaInfo = $dom->createElement('xsd:schema');
+	$fcgaInfo = $dom->createElement('oal:observations');
 	$fcgaDom = $dom->appendChild($fcgaInfo);
 
     $attr = $dom->createAttribute("targetNamespace");
