@@ -1,9 +1,9 @@
 Installing Eclipse for DeepskyLog development
 ---------------------------------------------
 
-- Download and install java 6 from http://java.sun.com/javase/downloads/index.jsp (Select Java Runtime Environment (JRE) 6 Update 10)
+- Download and install java 6 from http://java.sun.com/javase/downloads/index.jsp (Select Java Runtime Environment (JRE) 6 Update xx)
 
-- Download eclipse inclusive all packages for php development from http://downloads.zend.com/pdt/all-in-one/
+- Download eclipse inclusive all packages for php development from http://www.eclipse.org/downloads/
 
 - Unzip the file and start eclipse (choose a new directory for the workspace)
 
@@ -62,7 +62,7 @@ a) Trunk
       DeespkyLog trunk
   Finish
 
-b) Version 3.2
+b) Version 3.4
 --------------
 - File -> New -> Other...
    Select SVN -> Projects From SVN
@@ -70,16 +70,16 @@ b) Version 3.2
    Use existing repository location:
      Next >
 
-   Select tags -> 3.2
+   Select tags -> 3.4
   Finish
 
     Check out as a project configured using the New Project Wizard
     Select 'PHP Project'
-      DeespkyLog trunk
+      DeepskyLog 3.4
   Finish
 
 
-- the repositories are checked out now. You can always check for updates after a right mouse click on DeepskyLog 3.2 or DeepskyLog trunk and selecting Team -> Synchronize Repository, or Team -> Update
+- the repositories are checked out now. You can always check for updates after a right mouse click on DeepskyLog 3.4 or DeepskyLog trunk and selecting Team -> Synchronize Repository, or Team -> Update
 
 
 Set up Bugzilla integration
