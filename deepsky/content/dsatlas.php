@@ -27,7 +27,5 @@ echo "Help Page";
 echo "<hr />";
 echo "</div>"; 
 
-
-
 //echo "<div id=\"gridDiv\"  style=\"position:absolute;top:120px;left:170px;height:400px;width:400px;cursor:crosshair;background-color:#ffFF00;\">&nbsp;</div>";
 ?>

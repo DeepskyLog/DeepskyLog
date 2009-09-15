@@ -31,7 +31,8 @@
   spType      VARCHAR(25)                    DEFAULT '',
   PRIMARY KEY   (starPK)                               ,
   INDEX       DE(DE2000)                               ,
-  INDEX       RA(RA2000)
+  INDEX       RA(RA2000)                               ,
+  INDEX       SearchIndex(vMag,RA2000,DE2000)
   )";
  
  $run = mysql_query($sql) or die(mysql_error());
