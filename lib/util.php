@@ -186,30 +186,30 @@ class Utils implements iUtils
 	$fcgaInfo = $dom->createElement('oal:observations');
 	$fcgaDom = $dom->appendChild($fcgaInfo);
 
-    $attr = $dom->createAttribute("targetNamespace");
+    $attr = $dom->createAttribute("version");
     $fcgaInfo->appendChild($attr);
 
-    $attrText = $dom->createTextNode("http://groups.google.com/group/openastronomylog");
+    $attrText = $dom->createTextNode("2.0");
     $attr->appendChild($attrText);
 	
-    $attr = $dom->createAttribute("xmlns:xsd");
-    $fcgaInfo->appendChild($attr);
-
-    $attrText = $dom->createTextNode("http://www.w3.org/2001/XMLSchema");
-    $attr->appendChild($attrText);
-
     $attr = $dom->createAttribute("xmlns:oal");
     $fcgaInfo->appendChild($attr);
 
     $attrText = $dom->createTextNode("http://groups.google.com/openastronomylog");
     $attr->appendChild($attrText);
     
-    $attr = $dom->createAttribute("version");
+    $attr = $dom->createAttribute("xmlns:xsi");
     $fcgaInfo->appendChild($attr);
 
-    $attrText = $dom->createTextNode("2.0");
+    $attrText = $dom->createTextNode("http://www.w3.org/2001/XMLSchema-instance");
     $attr->appendChild($attrText);
+    
+    $attr = $dom->createAttribute("xsi:schemaLocation");
+    $fcgaInfo->appendChild($attr);
 
+    $attrText = $dom->createTextNode("http://groups.google.com/openastronomylog oal20.xsd");
+    $attr->appendChild($attrText);
+    
     //add root - <observers> 
     $observersDom = $fcgaDom->appendChild($dom->createElement('observers')); 
 
@@ -230,11 +230,6 @@ class Utils implements iUtils
       $surname = $observerChild->appendChild($dom->createElement('surname')); 
       $surname->appendChild($dom->createCDataSection(($observer->getObserverProperty($value,'name')))); 
 
-      if ($observer->getObserverProperty($value,'fstOffset') != 0.0) {
-        $fst = $observerChild->appendChild($dom->createElement('fstOffset')); 
-        $fst->appendChild($dom->createTextNode(($observer->getObserverProperty($value,'fstOffset')))); 
-      }
-      
       $account = $observerChild->appendChild($dom->createElement('account'));
       $account->appendChild($dom->createCDataSection(utf8_encode(html_entity_decode($value))));
 
@@ -243,6 +238,11 @@ class Utils implements iUtils
 
       $attrText = $dom->createTextNode("www.deepskylog.org");
       $attr->appendChild($attrText);
+      
+      if ($observer->getObserverProperty($value,'fstOffset') != 0.0) {
+        $fst = $observerChild->appendChild($dom->createElement('fstOffset')); 
+        $fst->appendChild($dom->createTextNode(($observer->getObserverProperty($value,'fstOffset')))); 
+      }
     }
     
     //add root - <sites> 
@@ -287,7 +287,7 @@ class Utils implements iUtils
 	  $dateTime = new DateTime($datestr, $dateTimeZone);
 	  // Geeft tijdsverschil terug in seconden
 	  $timedifference = $dateTimeZone->getOffset($dateTime);
-	  $timedifference = $timedifference / 60.0; 
+	  $timedifference = -$timedifference / 60.0; 
       $timezone->appendChild($dom->createTextNode($timedifference)); 
     }
 
@@ -308,7 +308,9 @@ class Utils implements iUtils
 	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\+/", "_", $correctedValue )));
 	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\//", "_", $correctedValue )));
 	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\,/", "_", $correctedValue )));
-
+    $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\(/", "_", $correctedValue )));
+    $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\)/", "_", $correctedValue )));
+    
 	  $attrText = $dom->createTextNode("_" . $correctedValue);
 	  $attr->appendChild($attrText);
 
