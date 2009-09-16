@@ -31,7 +31,6 @@ if ($version != "2.0") {
 // there is no final scheme for 2.0 yet)
 $xmlschema = str_replace(' ', '/', $searchNode->item(0)->getAttribute("xsi:schemaLocation"));
 
-// TODO : Use the schema definition from the site!
 $xmlschema = $baseURL . "/xml/oal20.xsd";
 
 //Validate the XML file against the schema
@@ -463,7 +462,7 @@ if ($dom->schemaValidate($xmlschema)) {
     $siteInfoArray["latitude"] = $latitude;
 
     // Get the timezone
-    $timezone = $site->getElementsByTagName( "timezone" )->item(0)->nodeValue;
+    $timezone = -$site->getElementsByTagName( "timezone" )->item(0)->nodeValue;
 
     if ($timezone == 0) {
       $siteInfoArray["timezone"] = "UTC";

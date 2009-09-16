@@ -195,7 +195,7 @@ class Utils implements iUtils
     $attr = $dom->createAttribute("xmlns:oal");
     $fcgaInfo->appendChild($attr);
 
-    $attrText = $dom->createTextNode("http://groups.google.com/openastronomylog");
+    $attrText = $dom->createTextNode("http://groups.google.com/group/openastronomylog");
     $attr->appendChild($attrText);
     
     $attr = $dom->createAttribute("xmlns:xsi");
@@ -705,7 +705,7 @@ class Utils implements iUtils
       
       $target->appendChild($dom->createTextNode("_" . $correctedValue));
 
-	  if ($obs["time"] > 0)
+	  if ($obs["time"] >= 0)
 	  {
 	  	$time = sprintf("T%02d:%02d:00+00:00", (int)($obs["time"] / 100), $obs["time"] - (int)($obs["time"] / 100) * 100);
 	  } else {

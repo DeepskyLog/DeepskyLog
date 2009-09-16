@@ -1126,7 +1126,7 @@ class Observations {
 		$time="";
 		$dateTimeLabelText="";
 		$dateTimeText=date($dateformat, mktime(0, 0, 0, $date[1], $date[2], $date[0]));
-		if($this->getDsObservationProperty($LOid,'time')>0) 
+		if($this->getDsObservationProperty($LOid,'time')>=0) 
 			if($loggedUser&&(!($objObserver->getObserverProperty($loggedUser,'UT'))))
 	  	{ $date=sscanf($this->getDsObservationLocalDate($LOid),"%4d%2d%2d");
 		  	$dateTimeLabelText="&nbsp;" . LangViewObservationField9lt;
@@ -1140,6 +1140,12 @@ class Observations {
 		{ $time=sscanf(sprintf("%04d",$time),"%2d%2d");
 			$dateTimeText.="&nbsp;".$time[0].":".sprintf("%02d",$time[1]);
 		}
+    if($this->getDsObservationProperty($LOid,'time')>=0) {
+      if($time == 0) 
+      { $time=sscanf(sprintf("%04d",$time),"%2d%2d");
+        $dateTimeText.="&nbsp;00:00";
+      }
+    }
 		$seeing = $this->getDsObservationProperty($LOid,'seeing');
 		if(($seeing<0)||($seeing>5)) 
 		  $seeing=0; 
