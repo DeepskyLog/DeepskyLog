@@ -9,30 +9,19 @@
  $run = mysql_query($sql) or die(mysql_error());
  
  $sql = "CREATE TABLE stars (
-  type        varchar(7)                     DEFAULT 'AA1STAR',
-  starPK      INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
-  nameHR      VARCHAR(4)                     DEFAULT '',
-  nameCon     VARCHAR(3)                     DEFAULT '',
-  nameBayer   VARCHAR(3)                     DEFAULT '',
-  nameBayer2  VARCHAR(2)                     DEFAULT '',
-  nameDM      VARCHAR(12)                    DEFAULT '',
-  nameHD      VARCHAR(6)                     DEFAULT '',
-  nameSOA     VARCHAR(6)                     DEFAULT '',
-  nameFK5     VARCHAR(4)                     DEFAULT '',
-  nameADS     VARCHAR(6)                     DEFAULT '',
-  nameADSComp VARCHAR(2)                     DEFAULT '',
-  RA2000      FLOAT                 NOT NULL           ,
-  DE2000      FLOAT                 NOT NULL           ,
-  RA2000I     INTEGER      UNSIGNED NOT NULL           ,
-  DE2000I     INTEGER      UNSIGNED NOT NULL           ,
-  RA2000S     VARCHAR(8)            NOT NULL           ,
-  DE2000S     VARCHAR(8)            NOT NULL           ,
-  vMag        INTEGER(4)   SIGNED                      ,
-  spType      VARCHAR(25)                    DEFAULT '',
-  PRIMARY KEY   (starPK)                               ,
-  INDEX       DE(DE2000)                               ,
-  INDEX       RA(RA2000)                               ,
-  INDEX       SearchIndex(vMag,RA2000,DE2000)
+  type          varchar(7)                     DEFAULT 'AA1STAR',
+  nameCon       VARCHAR(3)                     DEFAULT '',
+  nameBayer     VARCHAR(3)                     DEFAULT '',
+  nameBayer2    VARCHAR(2)                     DEFAULT '',
+  nameFlamSteed VARCHAR(3)                     DEFAULT '',
+  name          VARCHAR(25)                    DEFAULT '',
+  RA2000mas     INTEGER                        NOT NULL,
+  DE2000mas     INTEGER                        NOT NULL,
+  RA2000        FLOAT                          NOT NULL,
+  DE2000        FLOAT                          NOT NULL,
+  vMag          INTEGER                        SIGNED,
+  spType        VARCHAR(25)                    DEFAULT '',
+  INDEX         SearchIndex(vMag,RA2000mas,DE2000mas)
   )";
  
  $run = mysql_query($sql) or die(mysql_error());
