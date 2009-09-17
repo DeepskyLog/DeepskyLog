@@ -462,10 +462,36 @@ if ($dom->schemaValidate($xmlschema)) {
     $siteInfoArray["latitude"] = $latitude;
 
     // Get the timezone
-    $timezone = -$site->getElementsByTagName( "timezone" )->item(0)->nodeValue;
+    $timezone = $site->getElementsByTagName( "timezone" )->item(0)->nodeValue;
 
     if ($timezone == 0) {
       $siteInfoArray["timezone"] = "UTC";
+    } else if ($timezone == -570) {
+      $siteInfoArray["timezone"] = "Pacific/Marquesas";
+    } else if ($timezone == -270) {
+      $siteInfoArray["timezone"] = "America/Caracas";
+    } else if ($timezone == -210) {
+      $siteInfoArray["timezone"] = "America/St_Johns";
+    } else if ($timezone == 210) {
+      $siteInfoArray["timezone"] = "Asia/Tehran";
+    } else if ($timezone == 270) {
+      $siteInfoArray["timezone"] = "Asia/Kabul";
+    } else if ($timezone == 330) {
+      $siteInfoArray["timezone"] = "Asia/Colombo";
+    } else if ($timezone == 345) {
+      $siteInfoArray["timezone"] = "Asia/Katmandu";
+    } else if ($timezone == 390) {
+      $siteInfoArray["timezone"] = "Asia/Rangoon";
+    } else if ($timezone == 525) {
+      $siteInfoArray["timezone"] = "Australia/Eucla";
+    } else if ($timezone == 570) {
+      $siteInfoArray["timezone"] = "Australia/Broken_Hill";
+    } else if ($timezone == 630) {
+      $siteInfoArray["timezone"] = "Australia/Lord_Howe";
+    } else if ($timezone == 690) {
+      $siteInfoArray["timezone"] = "Pacific/Norfolk";
+    } else if ($timezone == 765) {
+      $siteInfoArray["timezone"] = "Pacific/Chatham";
     } else if ($timezone > 0) {
       $siteInfoArray["timezone"] = "Etc/GMT+" . ($timezone / 60);
     } else if ($timezone < 0) {

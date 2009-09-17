@@ -283,11 +283,16 @@ class Utils implements iUtils
 
       $timezone = $siteChild->appendChild($dom->createElement('timezone'));
       $dateTimeZone = new DateTimeZone($location->getLocationPropertyFromId($value,'timezone'));
-	  $datestr = "01/01/2008";
+      $datestr = "01/01/2008";
 	  $dateTime = new DateTime($datestr, $dateTimeZone);
 	  // Geeft tijdsverschil terug in seconden
 	  $timedifference = $dateTimeZone->getOffset($dateTime);
-	  $timedifference = -$timedifference / 60.0; 
+	  $timedifference = $timedifference / 60.0;
+
+	  if (strncmp($location->getLocationPropertyFromId($value,'timezone'), "Etc/GMT", 7) == 0) {
+      $timedifference = -$timedifference;
+    }
+	  
       $timezone->appendChild($dom->createTextNode($timedifference)); 
     }
 

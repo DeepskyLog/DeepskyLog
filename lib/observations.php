@@ -381,6 +381,9 @@ class Observations {
 				// Geeft tijdsverschil terug in seconden
 				$timedifference = $dateTimeZone->getOffset($dateTime);
 				$timedifference = $timedifference / 3600.0;
+				if (strncmp($timezone, "Etc/GMT", 7) == 0) {
+				  $timedifference = -$timedifference;
+				}
 				$jd = cal_to_jd(CAL_GREGORIAN, $date[1], $date[2], $date[0]);
 				$time = sscanf(sprintf("%04d", $time), "%2d%2d");
 				$hours = $time[0] + (int) $timedifference;
@@ -392,7 +395,7 @@ class Observations {
 					$hours = $hours -1;
 					$minutes = $minutes +60;
 				} else
-					if ($minutes > 60) {
+					if ($minutes >= 60) {
 						$hours = $hours +1;
 						$minutes = $minutes -60;
 					}
@@ -425,6 +428,9 @@ class Observations {
 			// Geeft tijdsverschil terug in seconden
 			$timedifference = $dateTimeZone->getOffset($dateTime);
 			$timedifference = $timedifference / 3600.0;
+      if (strncmp($timezone, "Etc/GMT", 7) == 0) {
+        $timedifference = -$timedifference;
+      }
 			if ($time < 0)
 				return $time;
 			$time = sscanf(sprintf("%04d", $time), "%2d%2d");
@@ -437,7 +443,7 @@ class Observations {
 				$hours = $hours -1;
 				$minutes = $minutes +60;
 			} else
-				if ($minutes > 60) {
+				if ($minutes >= 60) {
 					$hours = $hours +1;
 					$minutes = $minutes -60;
 				}
