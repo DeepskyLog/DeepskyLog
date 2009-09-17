@@ -207,7 +207,7 @@ class Utils implements iUtils
     $attr = $dom->createAttribute("xsi:schemaLocation");
     $fcgaInfo->appendChild($attr);
 
-    $attrText = $dom->createTextNode("http://groups.google.com/openastronomylog oal20.xsd");
+    $attrText = $dom->createTextNode("http://groups.google.com/group/openastronomylog oal20.xsd");
     $attr->appendChild($attrText);
     
     //add root - <observers> 
@@ -702,7 +702,9 @@ class Utils implements iUtils
 	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\+/", "_", $correctedValue )));
 	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\//", "_", $correctedValue )));
 	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\,/", "_", $correctedValue )));
-      
+    $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\(/", "_", $correctedValue )));
+    $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\)/", "_", $correctedValue )));
+    
       $target->appendChild($dom->createTextNode("_" . $correctedValue));
 
 	  if ($obs["time"] >= 0)
@@ -720,10 +722,7 @@ class Utils implements iUtils
       $begin = $observation->appendChild($dom->createElement('begin')); 
       $begin->appendChild($dom->createTextNode($date . $time));
 
-	  if ($obs["limmag"] > 0) {
-        $faintestStar = $observation->appendChild($dom->createElement('faintestStar')); 
-        $faintestStar->appendChild($dom->createTextNode($obs["limmag"]));
-	  } else if ($obs["SQM"] > 0) {
+    if ($obs["SQM"] > 0) {
         $magPerSquareArcsecond = $observation->appendChild($dom->createElement('sky-quality')); 
         $magPerSquareArcsecond->appendChild($dom->createTextNode($obs["SQM"]));
 
@@ -732,6 +731,9 @@ class Utils implements iUtils
 
     $attrText = $dom->createTextNode("mags-per-squarearcsec");
     $attr->appendChild($attrText);
+    } else if ($obs["limmag"] > 0) {
+        $faintestStar = $observation->appendChild($dom->createElement('faintestStar')); 
+        $faintestStar->appendChild($dom->createTextNode($obs["limmag"]));
 	  }
 
 	  if ($obs["seeing"] > 0) {
