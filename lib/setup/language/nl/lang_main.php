@@ -2,6 +2,42 @@
 
 // TO DO:
 
+
+// text for Atlas page help
+define("LangAtlasPage"                                    ,"Atlas");
+define("LangAtlasHelp"                                    ,"Help pagina - gebruik H om aan of uit te zetten");
+define("LangAtlasNavigation"                              ,"Navigatie:&nbsp;&nbsp;Gebruik een muisklik om de pagina te centreren,");
+define("LangAtlasNavigation1"                             ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of gebruik de pijltjes van het toetsenbord. " .
+                                                           "Extra toetsen: Ctrl (minimale) - Shift (maximale verplaatsing).");
+define("LangAtlasZoom"                                    ,"Zoom:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Het beeldveld staat onderaan de pagina vermeld (FoV) in booggraden of boogminuten.");
+define("LangAtlasZoom1"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gebruik het muiswieltje om in of uit te zoomen,");
+define("LangAtlasZoom2"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of gebruik de pijltjes van het toetsenbord: " .
+                                                           "Ctrl + Shift + op of neer pijltje,");
+define("LangAtlasZoom3"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of gebruik de cijfertoetsen 0 tot 9 om tussen 1 en 40 graden.");
+define("LangAtlasZoom4"                                   ,"OPGEPAST:&nbsp;&nbsp;&nbsp;Sommige browsers gebruiken bepaalde van deze combinaties voor andere zaken, of hebben andere toetsenindelingen,");
+define("LangAtlasZoom5"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;en ondersteunen deze operatie niet. Gebruik de muis in deze gevallen.");
+
+define("LangAtlasGrid"                                    ,"Grid:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gebruik G om het grid aan of uit te zetten.");
+define("LangAtlasLabels"                                  ,"Labels:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gebruik L om de objectlabels aan of uit te zetten.");
+define("LangAtlasMagnitude"                               ,"Magnitude:&nbsp;&nbsp;De maximale magnitude van de objecten die getoond worden staat onderaan de pagina vermeld.");
+define("LangAtlasMagnitude1"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gebruik M om meer en zwakkere objecten te tonen, gebruik m om minder en enkel helderder objecten te tonen.");
+define("LangAtlasMagnitude2"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;De maximale magnitude van de sterren die getoond worden staat onderaan de pagina vermeld.");
+define("LangAtlasMagnitude3"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gebruik S om meer en zwakkere sterren te tonen, gebruik m om minder en enkel helderder sterreb te tonen.");
+define("LangAtlasMagnitude4"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;De stermagnitudes worden bovenaan de pagina getoond.");
+
+define("LangAtlasObjects"                                 ,"Objecten:&nbsp;&nbsp;&nbsp;De labels naast het object geven zijn meest gekende naam weer.");
+define("LangAtlasObjects1"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Je kan er op klikken om naar de DeepskyLog pagina van het object te gaan.");
+define("LangAtlasObjects2"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;De kleur geeft aan of ze gezien zijn: rood = niet gezien, geel = door anderen gezien, groen = door jou gezien.");
+define("LangAtlasObjects3"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;De lijntjes geven gelijkaardige informatie: geen lijn = niet gezien, stippellijn = door anderen gezien,");
+define("LangAtlasObjects4"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;onderlijnd = door jou gezien, lijn erboven = door jou gezien en geschetst.");
+define("LangAtlasObjects5"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Hou de muis over het label voor bijkomende informatie over het object.");
+
+define("LangAtlasCursor"                                  ,"Cursor:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;De cursor co&ouml;rdinaten worden onderaan het scherm getoond.");
+
+define("LangAtlasPrint"                                  ,"Afdrukken:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In de volgende release wordt een pdf-afdruk van deze pagina voorzien.");
+
+define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ster data beschikbaar gesteld door Tycho2+ en USNO - 3UCAC - Zacharia of zoiets");
+
 // text for fstOffset
 define("LangChangeAccountField12"                         ,"fstOffset");
 define("LangChangeAccountField12Expl"                     ,"Offset tussen gemeten SQM waarde en zwakste zichtbare ster. Als fstOffset 0.2 is, dan is de grensmagnitude 0.2 beter dan de waarde van de SQM.");
@@ -50,8 +86,12 @@ $atlasPageText=array(
        'atlasPageSeenTxt'                                =>'Gezien',
        'atlasPageMagnTxt'                                =>'Magn.',
        'atlasPageSubrTxt'                                =>'Opp.Held.',
-       'atlasPageDiamTxt'                                =>'Grootte'
-       
+       'atlasPageDiamTxt'                                =>'Grootte',
+       'atlasPageDone'                                   =>'Klaar - druk H voor help',
+       'atlasPageFetching'                               =>'Ophalen gegevens ...',
+       'atlasPageFoV'                                    =>'FoV:',
+       'atlasPageDSLM'                                   =>'Objecten tot mag:',
+       'atlasPageStarLM'                                 =>'Sterren tot mag:'         
 );
 
 
@@ -169,7 +209,7 @@ define("LangDrawing"																			, "tekening");
 define("LangRegisterTitle"																, "Bevestiging registratie");
 define("LangRegisterNotify"																, "Dank u, uw gegevens werden doorgestuurd naar de administrator.<br />U zal een email ontvangen indien uw aanvraag werd bevestigd.");
 
-// Google Maps 
+// Google Maps
 
 define("LangGooglemaps"																		, "Klik op de kaart om de locatie in Google Maps te bekijken");
 
@@ -259,15 +299,15 @@ define("LangChangeAccountTitle"														,"Persoonlijke data");
 define("LangChangeAccountField1"													,"Gebruikersnaam");
 define("LangChangeAccountField1Expl"											,"Onder deze naam ben je bekend bij de andere gebruikers");
 define("LangChangeAccountField2"													,"Emailadres");
-define("LangChangeAccountField2Expl"											,"Uw emailadres wordt niet verder verspreid"); 
+define("LangChangeAccountField2Expl"											,"Uw emailadres wordt niet verder verspreid");
 define("LangChangeAccountField3"													,"Voornaam");
-define("LangChangeAccountField3Expl"											,""); 
+define("LangChangeAccountField3Expl"											,"");
 define("LangChangeAccountField4"													,"Familienaam");
 define("LangChangeAccountField4Expl"											,"");
 define("LangChangeAccountField5"													,"Paswoord");
 define("LangChangeAccountField5Expl"											,"Dit is <em>niet</em> het paswoord van je provider");
 define("LangChangeAccountField6"													,"Bevestig paswoord");
-define("LangChangeAccountField6Expl"											,"");                                      
+define("LangChangeAccountField6Expl"											,"");
 define("LangChangeAccountField7"													,"Standaard waarnemingsplaats");
 define("LangChangeAccountField7Expl"											,"Nieuwe plaats");
 define("LangChangeAccountField8"													,"Standaard instrument");
@@ -339,15 +379,15 @@ define("LangAddEyepieceExisting"													,"Selecteer de oculairgegevens uit 
 define("LangAddEyepieceManually"													,"voeg de oculairgegevens manueel in");
 define("LangAddEyepieceTitle"															,"Voeg een nieuw oculair toe");
 define("LangAddEyepieceField1"														,"Naam");
-define("LangAddEyepieceField1Expl"												,"(bijv. Televue 31mm Nagler)"); 
+define("LangAddEyepieceField1Expl"												,"(bijv. Televue 31mm Nagler)");
 define("LangAddEyepieceField2"														,"Brandpunt (in mm)");
-define("LangAddEyepieceField2Expl"												,"bijv. 31"); 
+define("LangAddEyepieceField2Expl"												,"bijv. 31");
 define("LangAddEyepieceField3"														,"Schijnbaar beeldveld (in &deg;)");
-define("LangAddEyepieceField3Expl"												,"eg 82"); 
+define("LangAddEyepieceField3Expl"												,"eg 82");
 define("LangAddEyepieceField4"														,"Maximaal brandpunt (in mm)");
-define("LangAddEyepieceField4Expl"												,"enkel van toepassing met zoom oculairen"); 
-define("LangAddEyepieceButton"														,"Voeg oculair toe"); 
-define("LangAddEyepieceButton2"														,"Wijzig oculair"); 
+define("LangAddEyepieceField4Expl"												,"enkel van toepassing met zoom oculairen");
+define("LangAddEyepieceButton"														,"Voeg oculair toe");
+define("LangAddEyepieceButton2"														,"Wijzig oculair");
 
 define("LangOverviewLensTitle"														,"Overzicht lenzen");
 define("LangViewLensName"																	,"Naam");
@@ -377,7 +417,7 @@ define("LangAddFilterTitle"																,"Nieuwe filter");
 define("LangAddFilterExisting"														,"Voeg bestaande filter toe");
 define("LangAddFilterFieldManually"												,"voeg de gegevens manueel in");
 define("LangAddFilterField1"															,"Naam");
-define("LangAddFilterField1Expl"													,"(bv Lumicon O-III)"); 
+define("LangAddFilterField1Expl"													,"(bv Lumicon O-III)");
 define("LangAddFilterField2"															,"Type");
 define("LangAddFilterField3"															,"Kleur");
 define("LangAddFilterField4"															,"Wratten nummer");
@@ -413,7 +453,7 @@ define("FiltersCorrective"																,"Correctieve filter");
 
 define("LangAddSiteTitle"																	,"Voeg nieuwe waarnemingsplaats toe");
 define("LangAddSiteField1"																,"Plaatsnaam");
-define("LangAddSiteField1Expl"														,"(bv Aalst)"); 
+define("LangAddSiteField1Expl"														,"(bv Aalst)");
 define("LangAddSiteField2"																,"Provincie / Staat");
 define("LangAddSiteField2Expl"														,"(bv Oost-Vlaanderen)");
 define("LangAddSiteField3"																,"Land");
@@ -459,11 +499,11 @@ define("LangGetLocation11"																,"voeg de gegevens manueel in");
 
 define("LangAddInstrumentTitle"														,"Voeg nieuw instrument toe");
 define("LangAddInstrumentField1"													,"Instrumentnaam");
-define("LangAddInstrumentField1Expl"											,""); 
+define("LangAddInstrumentField1Expl"											,"");
 define("LangAddInstrumentField2"													,"Diameter");
 define("LangAddInstrumentField2Expl"											,"(bv 1500mm of 6 inch)");
 define("LangAddInstrumentField3"													,"F/D");
-define("LangAddInstrumentField3Expl"											,""); 
+define("LangAddInstrumentField3Expl"											,"");
 define("LangAddInstrumentField4"													,"Brandpuntsafstand (in mm)");
 define("LangAddInstrumentField4Expl"											,"(bv 1200mm)");
 define("LangAddInstrumentField5"													,"Type");
@@ -523,7 +563,7 @@ define("LangValidateObjectMessage7"												,"Gelieve de eenheden van de groo
 define("LangValidateObjectMessage8"												,"Verkeerde magnitude!");
 
 // content/overview_objects.php
- 
+
 define("LangOverviewObjectsTitle"													,"Overzicht alle objecten");
 define("LangOverviewObjectsFirstlink"											,"BEGIN");
 define("LangOverviewObjectsLastlink"											,"EINDE");
@@ -591,7 +631,7 @@ define("LangListQueryObjectsMessage17"										,"Toon hoofdnamen");
 define("LangRegisterNewTitle"															,"Registreer");
 
 // content/view_object.php
- 
+
 define("LangViewObjectTitle"															,"Object details");
 define("LangViewObjectField1"															,"Naam");
 define("LangViewObjectField2"															,"Alternatieve naam");
@@ -777,7 +817,7 @@ define("LangCompactObservationsLO"												,"Vergelijk");
 define("LangOverviewObservationTitle"											,"Overzicht met &eacute;&eacute;n enkele lijn van informatie per waarneming");
 define("LangCompactObservationsTitle"											,"Overzicht met naast de informatielijn eveneens de beschrijving van de waarneming");
 define("LangCompactObservationsLOTitle"										,"Overzicht met de informatielijn, de beschrijving en uw laatste waarneming");
- 
+
 // content/change_observation.php
 
 define("LangChangeObservationTitle"												,"Wijzig waarneming");
@@ -792,7 +832,7 @@ define("LangViewDSSImageTitle"														,"DSS beeld - ");
 // content/selected_observations.php
 
 define("LangSelectedObservationsTitle"										,"Overzicht alle waarnemingen van ");
-define("LangNoObservations"																,"Geen waarnemingen beschikbaar"); 
+define("LangNoObservations"																,"Geen waarnemingen beschikbaar");
 
 // content/overview_observations.php
 
@@ -961,7 +1001,7 @@ define("LangValidateInstrumentMessage5"										,"Het instrument werd verwijder
 define("LangValidateInstrumentMessage"										,"Boodschap");
 
 // content/setup_query_objects.php
- 
+
 define("LangQueryObjectsTitle"														,"Zoek objecten");
 define("LangQueryObjectsField1"														,"Objectnaam");
 define("LangQueryObjectsField2"														,"Sterrenbeeld");
@@ -973,9 +1013,9 @@ define("LangQueryObjectsField6"														,"Oppervlaktehelderheid helderder d
 define("LangQueryObjectsField6Explanation"								,"");
 define("LangQueryObjectsField7"														,"Minimum rechte klimming");
 define("LangQueryObjectsField8"														,"Maximum rechte klimming");
-define("LangQueryObjectsField9"														,"Minimum declinatie"); 
+define("LangQueryObjectsField9"														,"Minimum declinatie");
 define("LangQueryObjectsField10"													,"Maximum declinatie");
-define("LangQueryObjectsField11"													,"Type"); 
+define("LangQueryObjectsField11"													,"Type");
 define("LangQueryObjectsField12"													,"Atlaspagina");
 define("LangQueryObjectsField13"													,"Minimum grootte");
 define("LangQueryObjectsField14"													,"Maximum grootte");
@@ -1037,9 +1077,9 @@ define("LangTopObjectsHeader4"														,"Sterrenbeeld");
 define("LangTopObjectsHeader5"														,"Aantal waarnemingen");
 
 // new variables defined from version 1.1 onwards
- 
+
 // content/setup_observations_query.php
- 
+
 define("LangQueryObservationsTitle"												,"Zoek waarnemingen");
 define("LangQueryObservationsMessage1"										,"Enkel waarnemingen met tekening");
 define("LangQueryObservationsMessage2"										,"Beschrijving bevat");
@@ -1062,10 +1102,10 @@ define("LangCSVTitle"																			,"Importeer waarnemingen vanuit CSV best
 define("LangCSVMessage1"																	,"Dit formulier geeft u de mogelijkheid om meerdere waarnemingen tegelijkertijd toe te voegen door middel van een CSV bestand (comma seperated value). Op deze manier kan u gemakkelijk en snel meerdere waarnemingen ineens invoeren. Het formulier laat u ook toe om vroegere waarnemingen, reeds bijgehouden in een of andere databank, op een gemakkelijke manier toe te voegen aan DeepskyLog. Ter informatie: alleen waarnemingen met uw naam (voornaam + naam voluit) zullen toegevoegd worden.");
 define("LangCSVMessage2"																	,"Het CSV bestand gebruikt het volgende formaat: <b>(NIEUW FORMAAT!!!)</b>");
 define("LangCSVMessage3"																	,"<b><i> 1-Object; 2-Waarnemer; 3-Datum; 4-UT; 5-Locatie; 6-Instrument; 7-Oculair; 8-Filter; 9-Lens; 10-Seeing; 11-LimMag of SQM naar keuze; 12-Zichtbaarheid; 13-Taal; 14-Beschrijving</i></b>");
-define("LangCSVMessage4"																	,"<b>Opgepast!</b> In tegenstelling tot versie 3.3 en daarvoor, is er <b>geen header lijn meer toegelaten</b> in de csv import file. 
+define("LangCSVMessage4"																	,"<b>Opgepast!</b> In tegenstelling tot versie 3.3 en daarvoor, is er <b>geen header lijn meer toegelaten</b> in de csv import file.
                            																	De eerste lijn bevat onmiddellijk de eigenlijke waarnemingen in het bovenstaande formaat, bv: <br /><br />
                            																	NGC 2392;Piet Janssens;21-01-2005;20:45;Aalst;Obsession 15\";31mm Nagler;Lumicon O-III filter;Televue 2x Barlow;2;4.0;3;nl;Mooie planetaire nevel met een zeer heldere centrale ster!<br />M 35;Piet Janssens;21-01-2005;20:53;Aalst;Obsession 15\";;;;2;4.0;1;nl;Ongeveer dertig leden tellend in gebogen lijnen.<br />...<br /><br />Seeing wordt aangegeven door een nummer tussen 1 en 5 (1=uitstekend, 2=goed, 3=middelmatig, 4=zwak, 5=slecht).<br />Zichtbaarheid wordt aangegeven door een nummer tussen 1 en 7 (1=Zeer eenvoudig, helder object, 2=Object eenvoudig te zien bij direct kijken, 3=Object zichtbaar bij direct kijken, 4=Perifeer kijken nodig om object te zien, 5=Object amper zichtbaar bij perifeer kijken, 6=Zichtbaarheid van object is twijfelachtig, 7=Object niet zichtbaar).<br />Een waarneming met het blote oog moet 'Naked Eye' als instrument bevatten.<br />Taal moet de korte naam van de taal zijn (nl voor Nederlands)");
-define("LangCSVMessage5"																	,"Opgepast!<p>De instrumenten, waarnemingsplaatsen, oculairs, filters en objecten in het CSV bestand moeten reeds vooraf bekend zijn in DeepskyLog. 
+define("LangCSVMessage5"																	,"Opgepast!<p>De instrumenten, waarnemingsplaatsen, oculairs, filters en objecten in het CSV bestand moeten reeds vooraf bekend zijn in DeepskyLog.
                            																	Indien dit niet het geval is, zal er een foutboodschap verschijnen en worden deze waarnemingen niet toegevoegd.<br />
                           																	Voeg de ontbrekende informatie toe, of pas de foute aan, totdat er geen foutboodschappen meer verschijnen.<p>&nbsp;</p>
                            																	Indien alles goed gaat, worden de ingevoerde waarnemingen getoond in het overzicht van alle waarnemingen.");
@@ -1157,13 +1197,13 @@ define("LangVisibility6"																	,"Zichtbaarheid van object is twijfelac
 define("LangVisibility7"																	,"Object niet zichtbaar");
 
 // content/selected_observations.php
- 
+
 define("LangSelectedObservationsTitle2"										,"Overzicht geselecteerde waarnemingen");
 define("LangSelectedObservationsTitle3"										,"Overzicht van de waarnemingen van het laatste jaar");
 define("LangSelectedObservationsSelectedLanguagesIndication"
-																													,"geselecteerde talen");
+,"geselecteerde talen");
 define("LangSelectedObservationsAllLanguagesIndication"		,"alle talen");
- 
+
 // lib/objects
 define("LangNewPlaceInList"																,"Geef de nieuwe positie in de lijst");
 
@@ -1460,7 +1500,7 @@ $VEL									  ="Vela";
 $VIR									  ="Virgo";
 $VOL									  ="Volans";
 $VUL									  ="Vulpecula";
- 
+
 $ICQ_METHOD_a					  ="a";
 $ICQ_METHOD_B					  ="B";
 $ICQ_METHOD_b					  ="b";

@@ -2,6 +2,42 @@
 
 // TO DO
 
+// text for Atlas page help
+define("LangAtlasPage"                                    ,"Atlas");
+define("LangAtlasHelp"                                    ,"Help page - use H to turn it on or off");
+define("LangAtlasNavigation"                              ,"Navigation: use mouseclick to center page on a specific place.");
+define("LangAtlasNavigation1"                             ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or use the arrows of the keyboard. " .
+                                                           "Extra keys: Ctrl (minimal) - Shift (maximal displacement).");
+define("LangAtlasZoom"                                    ,"Zoom:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The field of view is mentioned at the bottom of the page (FoV) in arc degrees or arc minutes.");
+define("LangAtlasZoom1"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use the mouse wheel to zoom in or out.");
+define("LangAtlasZoom2"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or use the arrows on the keyboard: " .
+                                                           "Ctrl + Shift + up or down arrow.");
+define("LangAtlasZoom3"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or use the number keys 0 to 9 to zoom between 1 and 40 degrees.");
+define("LangAtlasZoom4"                                   ,"NOTICE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;some browsers us some of these combinations for other purposes, or have different key mappings,");
+define("LangAtlasZoom5"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and do not support this operation. Use the mouse instead.");
+
+define("LangAtlasGrid"                                    ,"Grid:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use G to turn the grid on or off.");
+define("LangAtlasLabels"                                  ,"Labels:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use L to turn the object labels on or off.");
+define("LangAtlasMagnitude"                               ,"Magnitude:&nbsp;&nbsp;The maximal magnitude of the shown objects is mentioned at the bottom of the page.");
+define("LangAtlasMagnitude1"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Use M to show more and dimmer objects, use m to show less and only brighter objects.");
+define("LangAtlasMagnitude2"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The maximal magnitude of the shown stars is mentioned at the bottom of the page.");
+define("LangAtlasMagnitude3"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Use S to show more and dimmer stars, use s to show less and only brighter stars.");
+define("LangAtlasMagnitude4"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The star magnitudes are mentioned at the top of the page.");
+
+define("LangAtlasObjects"                                 ,"Objects:&nbsp;&nbsp;&nbsp;&nbsp;The labels next to the objects reflect their most common name.");
+define("LangAtlasObjects1"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You can click on it to go that object's page in DeepskyLog.");
+define("LangAtlasObjects2"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Their color shows you if they have been obseved: red = not seen, yellow = seen by others, green = seen by you.");
+define("LangAtlasObjects3"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The lines give you comparable information: no line = not seen, dotted line = seen by others,");
+define("LangAtlasObjects4"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;line below = seen by you, line above = seen and sketched by you.");
+define("LangAtlasObjects5"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Just keeping the mouse over the label shows you additional information on the object.");
+
+define("LangAtlasCursor"                                  ,"Cursor:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The cursor coordinates are mentioned at the bottom of the page.");
+
+define("LangAtlasPrint"                                   ,"Print:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In the next release, a pdf-printout of the atlas page will be made available.");
+
+define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Star data made available by Tycho2+ and USNO - 3UCAC - Zacharia of zoiets");
+
+
 // text for fstOffset
 define("LangChangeAccountField12"                         ,"fstOffset");
 define("LangChangeAccountField12Expl"                     ,"Offset between measured SQM value and the faintest visible star. When fstOffset is 0.2, the limiting magnitude is 0.2 better than the value calculated using the SQM.");
@@ -31,7 +67,6 @@ define("LangDetailDSColor4"                               ,"yellow");
 define("LangDetailDSColor5"                               ,"green");
 define("LangDetailDSColor6"                               ,"blue");
 
-
 $atlasPageText=array(
        'atlasPageUpBtnTxt'                               =>"Pagina Noord",
        'atlasPageSmallUpBtnTxt'                          =>"Sectie Noord",  
@@ -51,7 +86,13 @@ $atlasPageText=array(
        'atlasPageSeenTxt'                                =>'Gezien',
        'atlasPageMagnTxt'                                =>'Magn.',
        'atlasPageSubrTxt'                                =>'Opp.Held.',
-       'atlasPageDiamTxt'                                =>'Grootte'
+       'atlasPageDiamTxt'                                =>'Grootte',
+       'atlasPageDone'                                   =>'Klaar - druk H voor help',
+       'atlasPageFetching'                               =>'Ophalen gegevens ...',
+       'atlasPageFoV'                                    =>'FoV:',
+       'atlasPageDSLM'                                   =>'Objecten tot mag:',
+       'atlasPageStarLM'                                 =>'Sterren tot mag:'             
+
 
 );
 

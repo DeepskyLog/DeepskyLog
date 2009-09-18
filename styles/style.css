@@ -82,9 +82,11 @@ a.observercatalog {
 	border-width     : 1px;
 	border-color     : #FFFF00;
 	cursor           : none;
+	font-family      : Lucida Console,sans-serif;
 	font-size        : 8pt;
 	padding          : 2px;
 	visiblity        : hidden;
+	overflow         : hidden;
 }
 body {
   margin           : 0px 0px 0px 0px;
