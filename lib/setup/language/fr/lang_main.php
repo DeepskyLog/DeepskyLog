@@ -1,6 +1,7 @@
 <?php
 
 // TO DO
+define("LangNoOwnColor"                                   , "Eigen waarnemingen niet oplichten");
 
 // Text for moon menu
 define("LangMoonMenuTitle"                                ,"Lune");

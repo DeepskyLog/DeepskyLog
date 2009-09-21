@@ -3,6 +3,8 @@
 // TO DO:
 //LangCSVMessage3 (SQM) en nog enkele andere lijnen daarrond
 
+define("LangNoOwnColor"                                   , "No highlighting of own observations");
+
 // Text for moon menu
 define("LangMoonMenuTitle"                                ,"Mond");
 define("LangMoonMenuNewMoon"                              ,"N&auml;chste Neumond");

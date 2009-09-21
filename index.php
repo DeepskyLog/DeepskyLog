@@ -44,7 +44,8 @@ echo "<script type=\"text/javascript\">";
 echo "resizeForm();";
 //echo "externalLinks();";
 if($loadAtlasPage)
-  echo "atlasFillPage();";
+{ echo "atlasFillPage();";
+}
 echo "</script>";
 if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
   $objPresentations->alertMessage($entryMessage);

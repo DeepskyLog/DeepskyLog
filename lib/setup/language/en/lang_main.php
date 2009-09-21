@@ -1,6 +1,7 @@
 <?php
 
 // TO DO:
+define("LangNoOwnColor"                                   , "No highlighting of own observations");
 
 // Text for moon menu
 define("LangMoonMenuTitle"                                ,"Moon");

@@ -1002,7 +1002,7 @@ class Observations {
 				    $LOdate=sscanf($this->getDsObservationProperty($LOid,'date'), "%4d%2d%2d");
 				}
 				if($lco=='L')
-				  if($value['observerid']==$loggedUser)
+				  if(($value['observerid']==$loggedUser)&&(!($objUtil->checkGetKey('noOwnColor'))))
 				    echo "<tr class=\"height5px type".(2 -($obsKey%2))."5\">";
 				  else
 				    echo "<tr class=\"height5px type".(2 -($obsKey%2))."\">";

@@ -104,6 +104,8 @@ else
 		$content5.="&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=C" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>";
 	if ($loggedUser && ($_SESSION['lco'] != "O"))
 		$content5.="&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=O" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>";
+	if($loggedUser&&(!($objUtil->checkGetKey('noOwnColor'))))
+	  $content5.="&nbsp;-&nbsp;"."<a href=\"".$link."&amp;noOwnColor=yes\">"."Eigen waarnemingen niet oplichten"."</a>";
   $content5=substr($content5,13);
  	if ($objUtil->checkGetKey('myLanguages'))
 		$content6="<a href=\"" . $link3 . "\">" . LangShowAllLanguages . "</a>";
