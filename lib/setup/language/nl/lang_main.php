@@ -2,6 +2,10 @@
 
 // TO DO:
 
+// Text for moon menu
+define("LangMoonMenuTitle"                                ,"Maan");
+define("LangMoonMenuNewMoon"                              ,"Volgende nieuwe maan");
+
 
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Atlas");

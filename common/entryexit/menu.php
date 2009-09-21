@@ -13,6 +13,7 @@ else
 	else
 	{ include $instDir.'common/menu/languagemenu.php';                                         // LANGUAGE MENU 
 	}
+	include $instDir.'common/menu/moon.php';                                                   // MOON MENU
   include $instDir.'common/menu/help.php';                                                   // HELP MENU 
 	include $instDir.'common/menu/countermenu.php';
 	include $instDir.'common/menu/tellus.php';

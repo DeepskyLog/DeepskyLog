@@ -63,7 +63,8 @@ else
   $menuAdmin="collapsed";
   $menuLogin="expanded";
   $menuSearch="expanded";
-	if(array_key_exists('menuView',$_GET))
+  $menuMoon="collapsed";
+  if(array_key_exists('menuView',$_GET))
 	{ $menuView=$_GET['menuView'];
 	  $_SESSION['menus']['menuView']=$menuView;
 		$menuscookie="";
@@ -128,7 +129,7 @@ else
 	  if(array_key_exists('menus',$_SESSION)&&array_key_exists('menuAddChange',$_SESSION['menus']))
 	    $menuAddChange=$_SESSION['menus']['menuAddChange'];
 	}
-	if(array_key_exists('menuAdmin',$_GET))
+  if(array_key_exists('menuAdmin',$_GET))
 	{ $menuAdmin=$_GET['menuAdmin'];
 	  $_SESSION['menus']['menuAdmin']=$menuAdmin;
 		$menuscookie="";

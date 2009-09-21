@@ -3,6 +3,10 @@
 // TO DO:
 //LangCSVMessage3 (SQM) en nog enkele andere lijnen daarrond
 
+// Text for moon menu
+define("LangMoonMenuTitle"                                ,"Mond");
+define("LangMoonMenuNewMoon"                              ,"N&auml;chste Neumond");
+
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Atlas");
 define("LangAtlasHelp"                                    ,"Help page - use H to turn it on or off");

@@ -2,6 +2,10 @@
 
 // TO DO
 
+// Text for moon menu
+define("LangMoonMenuTitle"                                ,"Lune");
+define("LangMoonMenuNewMoon"                              ,"Next new moon");
+
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Atlas");
 define("LangAtlasHelp"                                    ,"Help page - use H to turn it on or off");
