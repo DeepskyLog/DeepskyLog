@@ -25,10 +25,11 @@ define("LangAtlasZoom5"                                   ,"&nbsp;&nbsp;&nbsp;&n
 define("LangAtlasGrid"                                    ,"Grid:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gebruik G om het grid aan of uit te zetten.");
 define("LangAtlasLabels"                                  ,"Labels:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gebruik L om de objectlabels aan of uit te zetten.");
 define("LangAtlasMagnitude"                               ,"Magnitude:&nbsp;&nbsp;De maximale magnitude van de objecten die getoond worden staat onderaan de pagina vermeld.");
-define("LangAtlasMagnitude1"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gebruik M om meer en zwakkere objecten te tonen, gebruik m om minder en enkel helderder objecten te tonen.");
-define("LangAtlasMagnitude2"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;De maximale magnitude van de sterren die getoond worden staat onderaan de pagina vermeld.");
-define("LangAtlasMagnitude3"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gebruik S om meer en zwakkere sterren te tonen, gebruik m om minder en enkel helderder sterreb te tonen.");
-define("LangAtlasMagnitude4"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;De stermagnitudes worden bovenaan de pagina getoond.");
+define("LangAtlasMagnitude1"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gebruik Shift + M om meer en zwakkere objecten te tonen, gebruik m om minder en enkel helderder objecten te tonen.");
+define("LangAtlasMagnitude2"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gebruik CTRL + M voor maximale magnitude.");
+define("LangAtlasMagnitude3"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;De maximale magnitude van de sterren die getoond worden staat onderaan de pagina vermeld.");
+define("LangAtlasMagnitude4"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gebruik Shift + S om meer en zwakkere sterren te tonen, gebruik m om minder en enkel helderder sterreb te tonen.");
+define("LangAtlasMagnitude5"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;De stermagnitudes worden bovenaan de pagina getoond.");
 
 define("LangAtlasObjects"                                 ,"Objecten:&nbsp;&nbsp;&nbsp;De labels naast het object geven zijn meest gekende naam weer.");
 define("LangAtlasObjects1"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Je kan er op klikken om naar de DeepskyLog pagina van het object te gaan.");

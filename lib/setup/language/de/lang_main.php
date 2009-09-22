@@ -26,10 +26,11 @@ define("LangAtlasZoom5"                                   ,"&nbsp;&nbsp;&nbsp;&n
 define("LangAtlasGrid"                                    ,"Grid:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use G to turn the grid on or off.");
 define("LangAtlasLabels"                                  ,"Labels:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use L to turn the object labels on or off.");
 define("LangAtlasMagnitude"                               ,"Magnitude:&nbsp;&nbsp;The maximal magnitude of the shown objects is mentioned at the bottom of the page.");
-define("LangAtlasMagnitude1"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Use M to show more and dimmer objects, use m to show less and only brighter objects.");
-define("LangAtlasMagnitude2"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The maximal magnitude of the shown stars is mentioned at the bottom of the page.");
-define("LangAtlasMagnitude3"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Use S to show more and dimmer stars, use s to show less and only brighter stars.");
-define("LangAtlasMagnitude4"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The star magnitudes are mentioned at the top of the page.");
+define("LangAtlasMagnitude1"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Use Shift + M to show more and dimmer objects, use m to show less and only brighter objects.");
+define("LangAtlasMagnitude2"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Use Ctrl + M for maximal magnitude.");
+define("LangAtlasMagnitude3"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The maximal magnitude of the shown stars is mentioned at the bottom of the page.");
+define("LangAtlasMagnitude4"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Use Shift + S to show more and dimmer stars, use s to show less and only brighter stars.");
+define("LangAtlasMagnitude5"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The star magnitudes are mentioned at the top of the page.");
 
 define("LangAtlasObjects"                                 ,"Objects:&nbsp;&nbsp;&nbsp;&nbsp;The labels next to the objects reflect their most common name.");
 define("LangAtlasObjects1"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You can click on it to go that object's page in DeepskyLog.");
