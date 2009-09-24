@@ -405,7 +405,7 @@ class Objects implements iObjects
   public  function getObjects($lLhr,$rLhr,$dDdeg,$uDdeg,$mag)                 // returns an array containing all objects data between the specified coordinates
   { global $objDatabase;
     $objects=array();
-  	if($lLhr<$rLhr)
+    if($lLhr<$rLhr)
     { //$sql="SELECT * FROM objects WHERE (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
       //$objects=$objDatabase->selectRecordsetArray($sql);  
       //$sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
@@ -429,7 +429,36 @@ class Objects implements iObjects
     }
     for($i=0;$i<count($objects);$i++)
      $objects[$i]['seen']=$this->getSeen($objects[$i]['name']);       
-  	return $objects;
+    return $objects;
+  }
+  public  function getObjectsMag($lLhr,$rLhr,$dDdeg,$uDdeg,$frommag,$tomag)                 // returns an array containing all objects data between the specified coordinates
+  { global $objDatabase;
+    $objects=array();
+    if($lLhr<$rLhr)
+    { //$sql="SELECT * FROM objects WHERE (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
+      //$objects=$objDatabase->selectRecordsetArray($sql);  
+      //$sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
+      //$objects=array_merge($objects,$objDatabase->selectRecordsetArray($sql));  
+      $sql="SELECT * FROM objects WHERE (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND (mag>".$frommag.") AND (mag<=".$tomag.") ORDER BY mag;";
+      $objects=$objDatabase->selectRecordsetArray($sql);  
+      $sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND (mag>".$frommag.") AND (mag<=".$tomag.") ORDER BY mag;";
+      $objects=array_merge($objects,array_merge($objects,$objDatabase->selectRecordsetArray($sql)));  
+      $sql="SELECT * FROM objects WHERE (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag>99) AND (diam1>".(60*(15-$frommag)).") AND (diam1>".(60*(15-$tomag)).") AND (diam1<".(60*(15-$frommag)).")) ORDER BY mag;";
+      $objects=array_merge($objects,$objDatabase->selectRecordsetArray($sql));  
+      $sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag>99) AND (diam1>".(60*(15-$frommag)).") AND (diam1<".(60*(15-$tomag)).")) ORDER BY mag;";
+      $objects=array_merge($objects,$objDatabase->selectRecordsetArray($sql));  
+    }
+    else
+    { //$sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
+      //$objects=$objDatabase->selectRecordsetArray($sql);  
+      $sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND (mag<=".$tomag.") AND (mag>".$frommag.") ORDER BY mag;";
+      $objects=$objDatabase->selectRecordsetArray($sql);  
+      $sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag>90) AND (diam1>".(60*(15-$tomag)).") AND (diam1<".(60*(15-$frommag)).")) ORDER BY mag;";
+      $objects=array_merge($objects,$objDatabase->selectRecordsetArray($sql));  
+    }
+    for($i=0;$i<count($objects);$i++)
+     $objects[$i]['seen']=$this->getSeen($objects[$i]['name']);       
+    return $objects;
   }
   public  function getObjectVisibilities($obs)
   { $popupT = $this->prepareObjectsContrast();

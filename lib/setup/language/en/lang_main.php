@@ -6,6 +6,7 @@ define("LangNoOwnColor"                                   , "No highlighting of 
 // Text for moon menu
 define("LangMoonMenuTitle"                                ,"Moon");
 define("LangMoonMenuNewMoon"                              ,"Next new moon");
+define("LangMoonMenuActualMoon"                           ,"Actual maan:");
 
 
 // text for Atlas page help
@@ -94,8 +95,9 @@ $atlasPageText=array(
        'atlasPageMagnTxt'                                =>'Magn.',
        'atlasPageSubrTxt'                                =>'Surf.Br.',
        'atlasPageDiamTxt'                                =>'Dimensions',
-       'atlasPageDone'                                   =>'Klaar - druk H voor help',
-       'atlasPageFetching'                               =>'Ophalen gegevens ...',
+       'atlasPageDone'                                   =>'Ready - Press H for help',
+       'atlasPageObjectsFetching'                        =>'Fetching object data to magnitude ...',
+       'atlasPageStarsFetching'                          =>'Fetching star data to magnitude ...',
        'atlasPageFoV'                                    =>'FoV:',
        'atlasPageDSLM'                                   =>'Objects to mag:',
        'atlasPageStarLM'                                 =>'Stars to mag:'             

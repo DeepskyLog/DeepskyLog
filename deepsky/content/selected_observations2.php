@@ -98,14 +98,14 @@ else
     $content4=$objUtil->printStepsPerPage3($link,"selObs".$_SESSION['lco'],$step);
 	$objPresentations->line(array($content3,$content4),"LR",array(50,50),25);
  	$content5="";
-	if (($_SESSION['lco'] != "L"))
+	if(($objUtil->checkSessionKey('lco','')!="L"))
 		$content5.="&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">" . LangOverviewObservations . "</a>";
-	if (($_SESSION['lco'] != "C"))
+	if(($objUtil->checkSessionKey('lco','')!="C"))
 		$content5.="&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=C" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>";
-	if ($loggedUser && ($_SESSION['lco'] != "O"))
+	if(($objUtil->checkSessionKey('lco','')!= "O"))
 		$content5.="&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=O" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>";
-	if($loggedUser&&(!($objUtil->checkGetKey('noOwnColor'))))
-	  $content5.="&nbsp;-&nbsp;"."<a href=\"".$link."&amp;noOwnColor=yes\">"."Eigen waarnemingen niet oplichten"."</a>";
+	if($loggedUser&&(!($objUtil->checkGetKey('noOwnColor')))&&(($objUtil->checkSessionKey('lco','')=="L")))
+	  $content5.="&nbsp;-&nbsp;"."<a href=\"".$link."&amp;noOwnColor=yes\">".LangNoOwnColor."</a>";
   $content5=substr($content5,13);
  	if ($objUtil->checkGetKey('myLanguages'))
 		$content6="<a href=\"" . $link3 . "\">" . LangShowAllLanguages . "</a>";

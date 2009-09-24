@@ -8,6 +8,7 @@ define("LangNoOwnColor"                                   , "No highlighting of 
 // Text for moon menu
 define("LangMoonMenuTitle"                                ,"Mond");
 define("LangMoonMenuNewMoon"                              ,"N&auml;chste Neumond");
+define("LangMoonMenuActualMoon"                           ,"Huidige maan:");
 
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Atlas");
@@ -96,7 +97,8 @@ $atlasPageText=array(
        'atlasPageSubrTxt'                                =>'Surf.Br.',
        'atlasPageDiamTxt'                                =>'Dimensions',
        'atlasPageDone'                                   =>'Klaar - druk H voor help',
-       'atlasPageFetching'                               =>'Ophalen gegevens ...',
+       'atlasPageObjectsFetching'                        =>'Ophalen objectgegevens tot magnitude ...',
+       'atlasPageStarsFetching'                          =>'Ophalen stargegevens tot magnitude ...',
        'atlasPageFoV'                                    =>'FoV:',
        'atlasPageDSLM'                                   =>'Objecten tot mag:',
        'atlasPageStarLM'                                 =>'Sterren tot mag:'             

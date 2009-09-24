@@ -18,9 +18,9 @@ if($ajaxInstruction=="getObjects")
   }
   echo "</xmlresponse>";
 }
-if($ajaxInstruction=="getStars6")
+if($ajaxInstruction=="getObjectsMagnitude")
 { $objects=array();
-  $objects=$objStar->getStars6($objUtil->checkGetKey('lLhr',0),$objUtil->checkGetKey('rLhr',0),$objUtil->checkGetKey('dDdeg',0),$objUtil->checkGetKey('uDdeg',0),$objUtil->checkGetKey(('6'),0));
+  $objects=$objObject->getObjectsMag($objUtil->checkGetKey('lLhr',0),$objUtil->checkGetKey('rLhr',0),$objUtil->checkGetKey('dDdeg',0),$objUtil->checkGetKey('uDdeg',0),$objUtil->checkGetKey('frommag',0),$objUtil->checkGetKey('tomag',10));
   header("Content-Type:text/xml");
   echo "<?xml version='1.0' encoding=\"ISO-8859-1\"?>";
   echo "<xmlresponse>";
@@ -32,9 +32,9 @@ if($ajaxInstruction=="getStars6")
   }
   echo "</xmlresponse>";
 }
-if($ajaxInstruction=="getStars")
+if($ajaxInstruction=="getStarsMagnitude")
 { $objects=array();
-  $objects=$objStar->getStars($objUtil->checkGetKey('lLhr',0),$objUtil->checkGetKey('rLhr',0),$objUtil->checkGetKey('dDdeg',0),$objUtil->checkGetKey('uDdeg',0),$objUtil->checkGetKey(('vMag'),0));
+  $objects=$objStar->getStarsMagnitude($objUtil->checkGetKey('lLhr',0),$objUtil->checkGetKey('rLhr',0),$objUtil->checkGetKey('dDdeg',0),$objUtil->checkGetKey('uDdeg',0),$objUtil->checkGetKey(('frommag'),0),$objUtil->checkGetKey(('tomag'),0));
   header("Content-Type:text/xml");
   echo "<?xml version='1.0' encoding=\"ISO-8859-1\"?>";
   echo "<xmlresponse>";

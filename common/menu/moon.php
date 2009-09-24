@@ -20,19 +20,19 @@ if($menuMoon=="collapsed") {
 
   $MoonIllum  = $moondata[1];
   $MoonAge    = $moondata[2];
-
+  $nextNewMoonText=LangMoonMenuNewMoon." : ";
+  $phases = array();
+  $phases = phasehunt();
+  $nextNewMoonText.=date("j M", $phases[4]);
+  
   // Convert $MoonIllum to percent and round to whole percent.
   $MoonIllum = round( $MoonIllum, 2 );
   $MoonIllum *= 100;
 
   $file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
-  print "<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" title = " . $MoonIllum . "% />";
-
-  print "&nbsp;" . LangMoonMenuNewMoon . " : ";
-
-  $phases = array();
-  $phases = phasehunt();
-  print date("j M Y", $phases[4]) . "\n";
+  echo "<span class=\"menuText\">".$nextNewMoonText."</span><br /><br />";
+  print "<span class=\"menuText\">".LangMoonMenuActualMoon."</span>"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" style=\"vertical-align:top;\" title = " . $MoonIllum . "% /><br />";
+  
 }
 echo "</div>";
 ?>
