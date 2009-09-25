@@ -6,7 +6,7 @@ define("LangNoOwnColor"                                   , "No highlighting of 
 // Text for moon menu
 define("LangMoonMenuTitle"                                ,"Moon");
 define("LangMoonMenuNewMoon"                              ,"Next new moon");
-define("LangMoonMenuActualMoon"                           ,"Actual maan:");
+define("LangMoonMenuActualMoon"                           ,"Actual moon:");
 
 
 // text for Atlas page help
