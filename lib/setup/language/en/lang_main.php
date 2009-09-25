@@ -12,6 +12,11 @@ define("LangMoonMenuActualMoon"                           ,"Actual maan:");
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Atlas");
 define("LangAtlasHelp"                                    ,"Help page - use H to turn it on or off");
+
+define("LangAtlasAbbrev"                                  ,"Abbreviations page - use A to turn it on or off");
+
+
+
 define("LangAtlasNavigation"                              ,"Navigation: use mouseclick to center page on a specific place.");
 define("LangAtlasNavigation1"                             ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or use the arrows of the keyboard. " .
                                                            "Extra keys: Ctrl (minimal) - Shift (maximal displacement).");
@@ -95,7 +100,7 @@ $atlasPageText=array(
        'atlasPageMagnTxt'                                =>'Magn.',
        'atlasPageSubrTxt'                                =>'Surf.Br.',
        'atlasPageDiamTxt'                                =>'Dimensions',
-       'atlasPageDone'                                   =>'Ready - Press H for help',
+       'atlasPageDone'                                   =>'Ready - Press H for help - A for abbreviations',
        'atlasPageObjectsFetching'                        =>'Fetching object data to magnitude ...',
        'atlasPageStarsFetching'                          =>'Fetching star data to magnitude ...',
        'atlasPageFoV'                                    =>'FoV:',

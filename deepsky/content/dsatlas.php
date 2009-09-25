@@ -52,6 +52,48 @@ echo LangAtlasPrint."<br /><br />";
 echo LangAtlasCredit."<br /><br />";
 
 echo "</div>"; 
+echo "<div id=\"atlasPageDiv3\" class=\"atlasPageDiv3\" >";
+echo LangAtlasAbbrev;
+echo "<hr /><br />";
+
+
+$types = $objObject->getDsObjectTypes();
+while(list($key, $value) = each($types))
+  $stypes[$value] = $$value;
+asort($stypes);
+
+$i=0;
+echo "<table class=\"abbrevTable\">";
+while(list($key, $value) = each($stypes))
+{ if(!($i++%3))
+    echo "<tr class=\"abbrevTable\">";
+  echo "<td class=\"abbrevTable\">".$key . "</td><td class=\"abbrevTable\">" .$value."</td>"; 
+  if(!($i%3))
+    echo "</tr>";
+}
+echo "</table><br /><br />";
+
+
+
+$constellations = $objObject->getConstellations(); 
+while(list($key, $value) = each($constellations))
+  $cons[$value] = $$value;
+//$cons=asort($cons);
+$i=0;
+echo "<table class=\"abbrevTable\">";
+while(list($key, $value) = each($cons))
+{ if(!($i++%4))
+    echo "<tr class=\"abbrevTable\">";
+  echo "<td class=\"abbrevTable\">".$key . "&nbsp;".$value."</td>"; 
+  if(!($i%4))
+    echo "</tr>";
+}
+echo "</table><br /><br />";
+
+echo LangAtlasPrint."<br /><br />";
+echo LangAtlasCredit."<br /><br />";
+
+echo "</div>"; 
 
 //echo "<div id=\"gridDiv\"  style=\"position:absolute;top:120px;left:170px;height:400px;width:400px;cursor:crosshair;background-color:#ffFF00;\">&nbsp;</div>";
 ?>

@@ -11,6 +11,11 @@ define("LangMoonMenuActualMoon"                           ,"Huidige maan:");
 
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Atlas");
+
+define("LangAtlasAbbrev"                                  ,"Afkortingen pagina - gebruik A om aan of uit te zetten");
+
+
+
 define("LangAtlasHelp"                                    ,"Help pagina - gebruik H om aan of uit te zetten");
 define("LangAtlasNavigation"                              ,"Navigatie:&nbsp;&nbsp;Gebruik een muisklik om de pagina te centreren,");
 define("LangAtlasNavigation1"                             ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;of gebruik de pijltjes van het toetsenbord. " .
@@ -94,7 +99,7 @@ $atlasPageText=array(
        'atlasPageMagnTxt'                                =>'Magn.',
        'atlasPageSubrTxt'                                =>'Opp.Held.',
        'atlasPageDiamTxt'                                =>'Grootte',
-       'atlasPageDone'                                   =>'Klaar - druk H voor help',
+       'atlasPageDone'                                   =>'Klaar - druk H voor help - A voor afkortingen',
        'atlasPageObjectsFetching'                        =>'Ophalen objectgegevens tot magnitude ...',
        'atlasPageStarsFetching'                          =>'Ophalen stargegevens tot magnitude ...',
        'atlasPageFoV'                                    =>'FoV:',

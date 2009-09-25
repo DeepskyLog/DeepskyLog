@@ -39,6 +39,18 @@ a.moduletable:link, a.moduletable:visited {
 a.observercatalog {
 	color            : #000000;
 }
+.abbrevTable {
+  border-style     : none;
+  border-width     : 1px;
+  border-color     : #FFFF00;
+}
+td.abbrevTable {
+	font-family      : Lucida Console,sans-serif;
+  font-size        : 8pt;
+  padding          : 2px;
+  color            : #FFFF00;
+  background-color : #555555;
+}
 .alertMsgOk {
 	position         : relative;
 	top              : 3px;
@@ -70,23 +82,42 @@ a.observercatalog {
 	padding          : 1px;
 }
 .atlasPageDiv2 {
-	position         : absolute;
-	top              : 0px;
-	left             : 0px;
-	height           : 0px;
-	width            : 0px;
-	margin           : 0%;
-	color            : #FFFF00;
-	background-color : #555555;
-	border-style     : none;
-	border-width     : 1px;
-	border-color     : #FFFF00;
-	cursor           : none;
-	font-family      : Lucida Console,sans-serif;
-	font-size        : 8pt;
-	padding          : 2px;
-	visiblity        : hidden;
-	overflow         : hidden;
+  position         : absolute;
+  top              : 0px;
+  left             : 0px;
+  height           : 0px;
+  width            : 0px;
+  margin           : 0%;
+  color            : #FFFF00;
+  background-color : #555555;
+  border-style     : none;
+  border-width     : 1px;
+  border-color     : #FFFF00;
+  cursor           : none;
+  font-family      : Lucida Console,sans-serif;
+  font-size        : 8pt;
+  padding          : 2px;
+  visiblity        : hidden;
+  overflow         : auto;
+}
+.atlasPageDiv3 {
+  position         : absolute;
+  top              : 0px;
+  left             : 0px;
+  height           : 0px;
+  width            : 0px;
+  margin           : 0%;
+  color            : #FFFF00;
+  background-color : #555555;
+  border-style     : none;
+  border-width     : 1px;
+  border-color     : #FFFF00;
+  cursor           : none;
+  font-family      : Lucida Console,sans-serif;
+  font-size        : 8pt;
+  padding          : 2px;
+  visiblity        : hidden;
+  overflow         : auto;
 }
 body {
   margin           : 0px 0px 0px 0px;
