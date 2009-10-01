@@ -236,7 +236,7 @@ class Locations
     }
   }
   public  function validateSaveLocation()
-	{ global $objUtil, $objDatabase, $objObserver,$loggedUser;  
+	{ global $objPresentations, $objUtil, $objDatabase, $objObserver,$loggedUser;  
 	  if(($objUtil->checkPostKey('adaptStandardLocation')==1)
     &&  $objUtil->checkUserID($this->getLocationPropertyFromId($objUtil->checkPostKey('stdlocation'),'observer')))
     { $objObserver->setObserverProperty($loggedUser,'stdlocation', $_POST['stdlocation']);

@@ -696,6 +696,8 @@ define("LangViewObserverTitle"														,"Aper&ccedil;u des observateurs");
 define("LangViewObserverName"															,"Nom");
 define("LangViewObserverFirstName"												,"Pr&eacute;nom");
 define("LangViewObserverRole"															,"R&ocirc;le");
+define("LangViewObserverLastLogin"                        ,"Dernier login");
+define("LangViewObserverinstrumentCount"                  ,"Nombre d'instruments");
 define("LangViewObserverAdmin"														,"Administrateur");
 define("LangViewObserverWaitlist"													,"Liste d'attente");
 define("LangViewObserverUser"															,"Utilisateur");

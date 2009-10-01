@@ -10,13 +10,22 @@ interface iDatabase
 }
 class Database implements iDatabase
 { private $databaseId;
+  private function mysql_query_encaps($sql)
+  { global $loggedUser, $developversion;
+    if($developversion)
+      mysql_query("INSERT INTO logging(loginid, logdate, logtime, logurl, navigator, screenresolution, language, sqlstatement) 
+                       VALUES(\"".($loggedUser?$loggedUser:"anonymous")."\", ".
+                                date('Ymd').", ".date('His').", '', '', '', '', '".$sql."');");
+    $run = mysql_query($sql) or die(mysql_error());
+    return $run;
+  }
   public function execSQL($sql)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
-		$run = mysql_query($sql) or die(mysql_error());
+		$run = $this->mysql_query_encaps($sql) or die(mysql_error());
   }
 	public function selectKeyValueArray($sql,$key,$value)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
-	  $run = mysql_query($sql) or die(mysql_error());
+	  $run = $this->mysql_query_encaps($sql) or die(mysql_error());
     while($get = mysql_fetch_object($run))
 		  $result[$get->$key]=$get->$value;
 		if(isset($result)) return $result;
@@ -24,13 +33,13 @@ class Database implements iDatabase
   }
 	public function selectRecordset($sql)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
-	  $run = mysql_query($sql) or die(mysql_error());
+	  $run = $this->mysql_query_encaps($sql) or die(mysql_error());
 		return $run;
   }
 	public function selectRecordArray($sql)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
 	  $result=array();
-		$run = mysql_query($sql) or die(mysql_error());
+		$run = $this->mysql_query_encaps($sql) or die(mysql_error());
 		if($get = mysql_fetch_object($run))
 		  while(list($key,$value)=each($get))
 			  $result[$key]=$value;
@@ -39,7 +48,7 @@ class Database implements iDatabase
 	public function selectRecordsetArray($sql)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
 	  $result=array();
-		$run = mysql_query($sql) or die(mysql_error());
+		$run = $this->mysql_query_encaps($sql) or die(mysql_error());
 		while($get=mysql_fetch_object($run))
 		{ $reulstparts=array();
 		  while(list($key,$value)=each($get))
@@ -50,7 +59,7 @@ class Database implements iDatabase
   }
   public function selectSingleArray($sql,$name)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
-	  $run = mysql_query($sql) or die(mysql_error());
+	  $run = $this->mysql_query_encaps($sql) or die(mysql_error());
     $result=array();
 		while($get = mysql_fetch_object($run))
 		  $result[]=$get->$name;

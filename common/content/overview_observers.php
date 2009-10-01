@@ -17,13 +17,13 @@ if((isset($_GET['previous'])))
   $orig_previous = $_GET['previous'];
 else
   $orig_previous = "";
-$observers = $objObserver->getSortedObservers($sort);
+$observersArr = $objObserver->getSortedObserversAdmin($sort);
 if((isset($_GET['sort'])) && (isset($_GET['previous'])) && $_GET['previous'] == $_GET['sort']) // reverse sort when pushed twice
 { if ($_GET['sort'] != "")
-    $observers = array_reverse($observers, true);
+    $observersArr = array_reverse($observersArr, true);
   else
-  { krsort($observers);
-    reset($observers);
+  { krsort($observersArr);
+    reset($observersArr);
   }
   $previous = ""; // reset previous field to sort on
 }
@@ -41,7 +41,7 @@ elseif(array_key_exists('min',$_GET))
   $min=$_GET['min'];
 else
   $min = 0;
-list ($min,$max,$content) = $objUtil->printNewListHeader3($observers, $link, $min, $step);
+list ($min,$max,$content) = $objUtil->printNewListHeader3($observersArr, $link, $min, $step);
 echo "<div id=\"main\">";
 $objPresentations->line(array("<h4>".LangViewObserverTitle."</h4>",$content),"LR",array(70,30),30);
 $content=$objUtil->printStepsPerPage3($link,"allObs",$step);
@@ -56,29 +56,38 @@ echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=em
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=registrationDate&amp;previous=$previous\">Reg. Date</a></td>";
 echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=role&amp;previous=$previous\">".LangViewObserverRole."</a></td>";
 echo "<td></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=maxLogDate&amp;previous=$previous\">".LangViewObserverLastLogin."</a></td>";
+echo "<td><a href=\"".$baseURL."index.php?indexAction=view_observers&amp;sort=instrumentCount&amp;previous=$previous\">".LangViewObserverinstrumentCount."</a></td>";
 echo "</tr>";
-while(list ($key, $value) = each($observers))
+while(list ($key, $value) = each($observersArr))
 { if($count >= $min && $count < $max) // selection
-  { $name = $objObserver->getObserverProperty($value,'name');
-	  $firstname = $objObserver->getObserverProperty($value,'firstname');
-	  $email = $objObserver->getObserverProperty($value,'email');
-	  $regDate = $objObserver->getObserverProperty($value,'registrationDate');
-	  echo "<tr class=\"type".(2-($count%2))."\">";
-	  echo "<td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($value)."\">".$value."</a> </td>";
+  { $name = $objObserver->getObserverProperty($value['id'],'name');
+	  $firstname = $objObserver->getObserverProperty($value['id'],'firstname');
+	  $email = $objObserver->getObserverProperty($value['id'],'email');
+    $regDate = $objObserver->getObserverProperty($value['id'],'registrationDate');
+    echo "<tr class=\"type".(2-($count%2))."\">";
+	  echo "<td><a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($value['id'])."\">".$value['id']."</a> </td>";
 	  echo "<td>".$name."</td>";
 	  echo "<td>".$firstname."</td>";
 	  echo "<td> <a href=\"mailto:".$email."\"> ".$email." </a> </td>";
 	  echo "<td>".$regDate." </td>";
-	  $role = $objObserver->getObserverProperty($value,'role',2);
+	  $role = $objObserver->getObserverProperty($value['id'],'role',2);
 	  if ($role == RoleAdmin)
 	    echo "<td> ".LangViewObserverAdmin."</td><td></td>";
 	  elseif ($role == RoleUser)
-	    echo "<td> ".LangViewObserverUser."</td><td></td>";
+	  { echo "<td> ".LangViewObserverUser."</td>";
+	    if($value['instrumentCount'])
+        echo "<td></td>";
+	    else
+	      echo "<td><a href=\"".$baseURL."index.php?indexAction=validate_delete_observer&amp;validateDelete=".urlencode($value['id'])."\">"."Verwijder"."</a></td>";
+	  }
 	  elseif ($role == RoleCometAdmin)
 	    echo "<td> ".LangViewObserverCometAdmin."</td><td></td>";
 	  elseif ($role == RoleWaitlist)
-	    echo "<td> ".LangViewObserverWaitlist."</td><td><a href=\"".$baseURL."index.php?indexAction=validate_observer&amp;validate=".urlencode($value)."\">".LangViewObserverValidate."</a> / <a href=\"".$baseURL."index.php?indexAction=validate_delete_observer&amp;validateDelete=".urlencode($value)."\">"."Verwijder"."</a></td>";
-	  echo "</tr>";
+	    echo "<td> ".LangViewObserverWaitlist."</td><td><a href=\"".$baseURL."index.php?indexAction=validate_observer&amp;validate=".urlencode($value['id'])."\">".LangViewObserverValidate."</a> / <a href=\"".$baseURL."index.php?indexAction=validate_delete_observer&amp;validateDelete=".urlencode($value['id'])."\">"."Verwijder"."</a></td>";
+    echo "<td>".$value['maxLogDate']." </td>";
+    echo "<td>".$value['instrumentCount']." </td>";
+    echo "</tr>";
   }
   $count++;
 }

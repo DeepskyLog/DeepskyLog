@@ -63,6 +63,10 @@ class Observers implements iObservers
   { global $objDatabase; 
     return $objDatabase->selectSingleArray("SELECT observers.id FROM observers ORDER BY $sort",'id');
   }
+  public  function getSortedObserversAdmin($sort)                                             // getSortedObservers returns an array with the ids of all observers, sorted by the column specified in $sort
+  { global $objDatabase; 
+    return $objDatabase->selectRecordsetArray("SELECT DISTINCT observers.id, MAX(DISTINCT logging.logdate) AS maxLogDate, COUNT(DISTINCT instruments.id) AS instrumentCount FROM observers LEFT JOIN logging ON observers.id=logging.loginid LEFT JOIN instruments ON observers.id=instruments.observer GROUP BY observers.id ORDER BY ".$sort);
+  }
   public  function getUsedLanguages($id)
   { global $objDatabase; 
     return unserialize($objDatabase->selectSingleValue("SELECT usedLanguages FROM observers WHERE id = \"$id\"",'usedLanguages',''));
@@ -185,7 +189,7 @@ class Observers implements iObservers
 		    $this->setUsedLanguages($_POST['deepskylog_id'], $usedLanguages);
 		    $this->setObserverProperty($_POST['deepskylog_id'],'observationlanguage', $_POST['description_language']);
 		    $this->setObserverProperty($_POST['deepskylog_id'],'language', $_POST['language']);
-		    $this->setObserverProperty($_POST['deepskylog_id'],'registrationDate', date("Ymd H:m"));
+		    $this->setObserverProperty($_POST['deepskylog_id'],'registrationDate', date("Ymd H:i"));
 		    $body = LangValidateAccountEmailLine1 . "\n"                            // send mail to administrator
 		              . "\n" . LangValidateAccountEmailLine1bis
 		              . $_POST['deepskylog_id']

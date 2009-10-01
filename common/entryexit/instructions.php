@@ -296,7 +296,7 @@ else
 	{ $entryMessage.=$objObserver->validateDeleteObserver();
 	  $_GET['indexAction']='view_observers';
 	}
-	if($objUtil->checkGetKey('indexAction')=="validate_site")                                                          // validate location
+  if($objUtil->checkPostKey('indexAction')=="validate_site")                                                          // validate location
 	{ $entryMessage.=$objLocation->validateSaveLocation();
 	  $_GET['indexAction']="add_site";
 	}

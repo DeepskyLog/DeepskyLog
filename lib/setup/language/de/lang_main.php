@@ -2,6 +2,7 @@
 
 // TO DO:
 //LangCSVMessage3 (SQM) en nog enkele andere lijnen daarrond
+//define("LangViewObserverinstrumentCount"                  ,"Aantal instrumenten");
 
 define("LangNoOwnColor"                                   , "No highlighting of own observations");
 
@@ -697,6 +698,8 @@ define("LangViewObserverTitle"														,"Beobachter Details");
 define("LangViewObserverName"															,"Name");
 define("LangViewObserverFirstName"												,"Vorname");
 define("LangViewObserverRole"															,"Rolle");
+define("LangViewObserverLastLogin"                        ,"Lestes login");
+define("LangViewObserverinstrumentCount"                  ,"Aantal instrumenten");
 define("LangViewObserverAdmin"														,"Admin");
 define("LangViewObserverWaitlist"													,"Warteliste");
 define("LangViewObserverUser"															,"Beobachter");
