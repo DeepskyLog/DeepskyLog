@@ -289,6 +289,8 @@ class Locations
         return LangValidateSiteMessage5;
       }
     }
+    else
+      return LangValidateMessage1;
   }	
 }
 $objLocation=new Locations;

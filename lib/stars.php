@@ -50,6 +50,7 @@ class Stars implements iStars
    $uDmas=round($uDdeg*3600000);
    $lLmas=round($lLhr*54000000);
    $rLmas=round($rLhr*54000000);
+   //echo('l:'+$lLmas+' r:'+$rLmas);
    if($lLhr<$rLhr)
    { $sql="SELECT * FROM stars".$tomag." WHERE (RA2000mas<".$lLmas.") AND (DE2000mas>".$dDmas.") AND (DE2000mas<".$uDmas.");";
      $stars=$objDatabase->selectRecordsetArray($sql);  

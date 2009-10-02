@@ -3,7 +3,10 @@
 // TO DO:
 //LangCSVMessage3 (SQM) en nog enkele andere lijnen daarrond
 //define("LangViewObserverinstrumentCount"                  ,"Aantal instrumenten");
+// define("LangViewObserverChangeNameFirstname"              ,"Verander voornaam/naam");
 
+define("LangValidateMessage1"                             ,"Alle Pflichtfelder m&uuml;ssen ausgef&uuml;llt sein!");
+define("LangRequiredFields"                               ,"(* Pflichtfelder)");
 define("LangNoOwnColor"                                   , "No highlighting of own observations");
 
 // Text for moon menu
@@ -51,7 +54,7 @@ define("LangAtlasCursor"                                  ,"Cursor:&nbsp;&nbsp;&
 
 define("LangAtlasPrint"                                   ,"Print:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In the next release, a pdf-printout of the atlas page will be made available.");
 
-define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Star data made available by Tycho2+ and USNO - 3UCAC - Zacharia of zoiets");
+define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Star data made available by Tycho2+ and USNO - 3UCAC - Zacharias");
 
 
 // text for fstOffset
@@ -545,7 +548,7 @@ define("LangWelcomeTitle"															    ,"DeepskyLog");
 
 // content/new_object.php
 
-define("LangNewObjectTitle"															  ,"Neues Objekt anlegen (* Pflichtfelder)");
+define("LangNewObjectTitle"															  ,"Neues Objekt anlegen");
 define("LangNewObjectButton1"															,"Objekt anlegen");
 define("LangCancelNewObjectButton1"												,"Cancel adding");
 define("LangNewObjectSizeUnits1"													,"Bogenminuten");
@@ -706,6 +709,7 @@ define("LangViewObserverUser"															,"Beobachter");
 define("LangViewObserverCometAdmin"												,"Komet admin");
 define("LangViewObserverValidate"													,"&Uuml;berpr&uuml;fen");
 define("LangViewObserverChange"														,"&Auml;ndere Rolle");
+define("LangViewObserverChangeNameFirstname"              ,"Verander email / voornaam / naam");
 define("LangViewObserverNumberOfObservations"							,"Anzahl der Beobachtungen");
 define("LangViewObserverRank"															,"Rang");
 define("LangViewObserverInexistant"												,"Dieser Beobachter existiert nicht!");

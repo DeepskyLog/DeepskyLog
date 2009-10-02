@@ -107,7 +107,7 @@ class Lenses implements iLenses
     	$this->setLensProperty($id, 'observer', $loggedUser);
       return LangValidateLensMessage2;
     }
-    if($objUtil->checkPostKey('change')
+    elseif($objUtil->checkPostKey('change')
     && $objUtil->checkAdminOrUserID($this->getLensPropertyFromId($objUtil->checkPostKey('id'),'observer'))
     && $objUtil->checkPostKey('lensname')
     && $objUtil->checkPostKey('factor'))
@@ -116,6 +116,8 @@ class Lenses implements iLenses
       //$this->setLensProperty($_POST['id'], 'observer', $loggedUser);
       return LangValidateLensMessage5;
     }
+    else
+      return LangValidateMessage1;
  }
 }
 $objLens=new Lenses;

@@ -225,9 +225,11 @@ class Instruments implements iInstruments
 				{ $this->setInstrumentProperty($_POST['id'], 'fd', 0);
           $this->setInstrumentProperty($_POST['id'], 'fixedMagnification', $objUtil->checkPostKey('fixedMagnification'));
         }
+        return LangValidateInstrumentMessage4;
       }
     }
-    return LangValidateInstrumentMessage4;
+    else
+      return LangValidateMessage1;
 	}
 }
 $objInstrument=new Instruments;

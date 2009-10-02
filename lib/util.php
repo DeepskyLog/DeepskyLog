@@ -23,6 +23,7 @@ interface iUtils
   public  function pdfObservations($result);                                   // Creates a pdf document from an array of observations
   public  function printNewListHeader3(&$list, $link, $min, $step, $total=0,$showNumberOfRecords=true,$showArrows=true);
   public  function printStepsPerPage3($link,$detaillink,$steps=25);
+  public  function recordsetSort(array $data /*$name, $order, $mode*/); 
   public  function rssObservations();                                          // Creates an rss feed
   //private function utilitiesCheckIndexActionDSquickPick();                     // returns the includefile if one of the quickpick buttons is pressed
 //private function utilitiesCheckIndexActionAdmin($action, $includefile);      // returns the includefile for the specified indexs action after checking it is an admin who is looged in
@@ -1714,6 +1715,56 @@ class Utils implements iUtils
     //$content.="<input name=\"stepsPerPage".$detaillink."\" id=\"stepsPerPage".$detaillink."\" class=\"centered\" value=\"".$steps."\" size=\"3\" onchange=\"location='".$link."&amp;stepsCommand=".$detaillink."&amp;stepsValue='+this.value;\" />";
     return $content;
   }
+  public  function recordsetSort(array $data /*$name, $order, $mode*/) 
+  { $_argList = func_get_args();
+    $_data = array_shift($_argList);
+    if (empty($_data))
+      return $_data;
+    $_max = count($_argList);
+    $_params = array();
+    $_cols = array();
+    $_rules = array();
+    for($_i=0;$_i<$_max;$_i+=3)
+    { $_name=(string) $_argList[$_i];
+      if(!in_array($_name, array_keys(current($_data)))) 
+        continue;
+      if (!isset($_argList[($_i + 1)]) || is_string($_argList[($_i + 1)])) 
+      { $_order = SORT_ASC;
+        $_mode = SORT_REGULAR;
+        $_i -= 2;
+      } 
+      else if(3 > $_argList[($_i + 1)]) 
+      { $_order = SORT_ASC;
+        $_mode = $_argList[($_i + 1)];
+        $_i--;
+      } 
+      else 
+      { $_order = $_argList[($_i + 1)] == SORT_ASC ? SORT_ASC : SORT_DESC;
+        if (!isset($_argList[($_i + 2)]) || is_string($_argList[($_i + 2)])) 
+        { $_mode = SORT_REGULAR;
+          $_i--;
+        } 
+        else 
+          $_mode = $_argList[($_i + 2)];
+      }
+      $_mode=(($_mode!=SORT_NUMERIC)?(($_argList[($_i+2)]!=SORT_STRING)?SORT_REGULAR:SORT_STRING):SORT_NUMERIC);
+      $_rules[] = array('name' => $_name, 'order' => $_order, 'mode' => $_mode);
+    }
+    foreach ($_data as $_k => $_row) {
+      foreach ($_rules as $_rule) 
+      { if (!isset($_cols[$_rule['name']])) 
+        { $_cols[$_rule['name']] = array();
+          $_params[] = &$_cols[$_rule['name']];
+          $_params[] = $_rule['order'];
+          $_params[] = $_rule['mode'];
+        }
+        $_cols[$_rule['name']][$_k] = strtolower($_row[$_rule['name']]);
+      }
+    }
+    $_params[] = &$_data;
+    call_user_func_array('array_multisort', $_params);
+    return $_data;
+  } 
   public function rssObservations()  // Creates an rss feed for DeepskyLog
 	{
 	  global $objObservation, $objInstrument, $objLocation, $objPresentations, $objObserver, $baseURL,$objUtil;

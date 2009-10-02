@@ -31,7 +31,7 @@ if($menuMoon=="collapsed") {
 
   $file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
   echo "<span class=\"menuText\">".$nextNewMoonText."</span><br /><br />";
-  print "<span class=\"menuText\">".LangMoonMenuActualMoon."</span>"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" style=\"vertical-align:top;\" title = " . $MoonIllum . "% /><br />";
+  echo "<span class=\"menuText\">".LangMoonMenuActualMoon."</span>&nbsp;"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" style=\"vertical-align:top;\" title = " . $MoonIllum . "% /><br />";
   
 }
 echo "</div>";

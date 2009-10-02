@@ -116,7 +116,7 @@ class Eyepieces implements iEyepieces
 	   $this->setEyepieceProperty($id,'maxFocalLength', $objUtil->checkPostKey('maxFocalLength',-1));
      return LangValidateEyepieceMessage2; 
    }
-   if($objUtil->checkPostKey('id')
+   elseif($objUtil->checkPostKey('id')
    && $objUtil->checkPostKey('eyepiecename')
    && $objUtil->checkPostKey('focalLength')
    && $objUtil->checkPostKey('apparentFOV')
@@ -129,6 +129,8 @@ class Eyepieces implements iEyepieces
      $this->setEyepieceProperty($_POST['id'],'maxFocalLength', $objUtil->checkPostKey('maxFocalLength',-1));
  	   return LangValidateEyepieceMessage5.' '.LangValidateEyepieceMessage4;
    }
+   else
+     return LangValidateMessage1;
  }
 }
 $objEyepiece=new Eyepieces;

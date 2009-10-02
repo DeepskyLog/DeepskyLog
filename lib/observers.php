@@ -65,7 +65,14 @@ class Observers implements iObservers
   }
   public  function getSortedObserversAdmin($sort)                                             // getSortedObservers returns an array with the ids of all observers, sorted by the column specified in $sort
   { global $objDatabase; 
-    return $objDatabase->selectRecordsetArray("SELECT DISTINCT observers.id, MAX(DISTINCT logging.logdate) AS maxLogDate, COUNT(DISTINCT instruments.id) AS instrumentCount FROM observers LEFT JOIN logging ON observers.id=logging.loginid LEFT JOIN instruments ON observers.id=instruments.observer GROUP BY observers.id ORDER BY ".$sort);
+    return $objDatabase->selectRecordsetArray(
+    "SELECT observers.*, A.maxLogDate, B.instrumentCount, C.listCount, D.obsCount, E.cometobsCount, (IFNULL(B.instrumentCount,0) + IFNULL(C.listCount,0) + IFNULL(D.obsCount,0) + IFNULL(E.cometobsCount,0)) AS maxMax FROM observers 
+     LEFT JOIN (SELECT logging.loginid, MAX(logging.logdate) as maxLogDate FROM logging GROUP BY logging.loginid) AS A ON observers.id=A.loginid 
+     LEFT JOIN (SELECT instruments.observer, COUNT(instruments.id) AS instrumentCount FROM instruments GROUP BY instruments.observer) AS B ON observers.id=B.observer 
+     LEFT JOIN (SELECT observerobjectlist.observerid, COUNT(DISTINCT observerobjectlist.listname) AS listCount FROM observerobjectlist GROUP BY observerobjectlist.observerid) AS C on observers.id=C.observerid
+     LEFT JOIN (SELECT observations.observerid, COUNT(observations.id) AS obsCount FROM observations GROUP BY observations.observerid) AS D on observers.id=D.observerid
+     LEFT JOIN (SELECT cometobservations.observerid, COUNT(cometobservations.id) AS cometobsCount FROM cometobservations GROUP BY cometobservations.observerid) AS E on observers.id=E.observerid
+     GROUP BY observers.id ORDER BY ".$sort);
   }
   public  function getUsedLanguages($id)
   { global $objDatabase; 

@@ -34,7 +34,7 @@ else
   else
     $entryMessage.=LangNewObjectPhase0;
 }
-$objPresentations->line(array("<h4>".LangNewObjectTitle."</h4>",$content),"LR",array(80,20),30);
+$objPresentations->line(array("<h4>".LangNewObjectTitle."&nbsp;<span class=\"requiredField\">".LangRequiredFields."</span>"."</h4>",$content),"LR",array(80,20),30);
 echo "<hr />";
 $disabled=" disabled=\"disabled\" ";
 

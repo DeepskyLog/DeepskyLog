@@ -288,14 +288,6 @@ else
 	{ $entryMessage.=$objLens->validateSaveLens();
 	  $_GET['indexAction']='add_lens';
 	}
-	if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="validate_observer"))       // validate observer
-	{ $entryMessage.=$objObserver->validateObserver();
-	  $_GET['indexAction']='view_observers';
-	}
-	if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="validate_delete_observer"))       // validate observer
-	{ $entryMessage.=$objObserver->validateDeleteObserver();
-	  $_GET['indexAction']='view_observers';
-	}
   if($objUtil->checkPostKey('indexAction')=="validate_site")                                                          // validate location
 	{ $entryMessage.=$objLocation->validateSaveLocation();
 	  $_GET['indexAction']="add_site";
@@ -514,16 +506,40 @@ else
 	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="comets_validate_change_object")
 	  include_once 'comets/control/validate_change_object.php';
 	// ============================================================================ ADMIN COMMANDS
+  if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="validate_observer"))       // validate observer
+  { $entryMessage.=$objObserver->validateObserver();
+    $_GET['indexAction']='view_observers';
+  }
+  if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="validate_delete_observer"))       // validate observer
+  { $entryMessage.=$objObserver->validateDeleteObserver();
+    unset($_SESSION['observersArr']);
+    $_GET['indexAction']='view_observers';
+  }
 	if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="change_role"))
-	{ if(($_SESSION['admin']=="yes")
-	  && ($objUtil->checkGetKey('user')))
-	  { $role=$objUtil->checkGetKey('role',2);
-	    $objObserver->setObserverProperty($_GET['user'],'role', $role);
-	    $entryMessage.="Role is successfully updated!";
-	  }
-	  $_GET['indexAction']="detail_observer";  
-	}
-	if(array_key_exists('admin', $_SESSION)&&$_SESSION['admin']=="yes")
+  { if(($_SESSION['admin']=="yes")
+    && ($objUtil->checkGetKey('user')))
+    { $role=$objUtil->checkGetKey('role',2);
+      $objObserver->setObserverProperty($_GET['user'],'role', $role);
+      $entryMessage.="Role is successfully updated!";
+      unset($_SESSION['observersArr']);
+    }
+    $_GET['indexAction']="detail_observer";  
+  }
+ if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="change_emailNameFirstname"))
+  { if(($_SESSION['admin']=="yes")
+    && ($theuser=$objUtil->checkGetKey('user')))
+    { $email=$objUtil->checkGetKey('email',2);
+      $objObserver->setObserverProperty($theuser,'email', $email);
+      $name=$objUtil->checkGetKey('name',2);
+      $objObserver->setObserverProperty($theuser,'name', $name);
+      $firstname=$objUtil->checkGetKey('firstname',2);
+      $objObserver->setObserverProperty($theuser,'firstname', $firstname);
+      $entryMessage.="Email, name and firstname are successfully updated!";
+      unset($_SESSION['observersArr']);
+    }
+    $_GET['indexAction']="detail_observer";  
+  }
+  if(array_key_exists('admin', $_SESSION)&&$_SESSION['admin']=="yes")
 	{ if(array_key_exists("newaction",$_GET))
 		{ if($_GET['newaction']=="NewName")
 		  { $objObject->newName($_GET['object'], $_GET['newcatalog'],$_GET['newnumber']);
@@ -571,4 +587,5 @@ else
 			  $objObject->setDsoProperty($_GET['object'],'pa', $_GET['newnumber']);
 		}
 	}
-}?>
+}
+?>

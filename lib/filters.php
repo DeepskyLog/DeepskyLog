@@ -184,7 +184,7 @@ class Filters implements iFilters
      $this->setFilterProperty($id, 'observer', $loggedUser);
      return LangValidateFilterMessage2;
    }
-   if($objUtil->checkPostKey('change')
+   elseif($objUtil->checkPostKey('change')
    && $objUtil->checkPostKey('id')
    && $objUtil->checkPostKey('filtername')
    && $objUtil->checkPostKey('type')
@@ -197,6 +197,8 @@ class Filters implements iFilters
      //$this->setFilterProperty($_POST['id'], 'observer', $loggedUser);
      return LangValidateFilterMessage5;
    }
+   else
+     return LangValidateMessage1;
  }
 }
 $objFilter=new Filters;

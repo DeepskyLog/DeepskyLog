@@ -1,6 +1,8 @@
 <?php
 
 // TO DO:
+define("LangValidateMessage1"                             ,"Alle verplichte velden moeten worden ingevuld!");
+define("LangRequiredFields"                               ,"(* verplichte velden)");
 
 define("LangNoOwnColor"                                   , "Eigen waarnemingen niet oplichten");
 
@@ -48,7 +50,7 @@ define("LangAtlasCursor"                                  ,"Cursor:&nbsp;&nbsp;&
 
 define("LangAtlasPrint"                                  ,"Afdrukken:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In de volgende release wordt een pdf-afdruk van deze pagina voorzien.");
 
-define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ster data beschikbaar gesteld door Tycho2+ en USNO - 3UCAC - Zacharia of zoiets");
+define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ster data beschikbaar gesteld door Tycho2+ en USNO - 3UCAC - Zacharias");
 
 // text for fstOffset
 define("LangChangeAccountField12"                         ,"fstOffset");
@@ -539,7 +541,7 @@ define("LangWelcomeTitle"																	,"DeepskyLog");
 
 // content/new_object.php
 
-define("LangNewObjectTitle"																,"Voeg nieuw object toe (*=verplichte velden)");
+define("LangNewObjectTitle"																,"Voeg nieuw object toe");
 define("LangNewObjectButton1"															,"Voeg object toe");
 define("LangCancelNewObjectButton1"												,"Annuleer toevoegen");
 define("LangNewObjectSizeUnits1"													,"boogminuten");
@@ -699,7 +701,8 @@ define("LangViewObserverWaitlist"													,"Wachtlijst");
 define("LangViewObserverUser"															,"Gebruiker");
 define("LangViewObserverCometAdmin"												,"Komeet admin");
 define("LangViewObserverValidate"													,"Valideer");
-define("LangViewObserverChange"														,"Verander rol");
+define("LangViewObserverChange"                           ,"Verander rol");
+define("LangViewObserverChangeNameFirstname"              ,"Verander email / voornaam / naam");
 define("LangViewObserverNumberOfObservations"							,"Aantal waarnemingen");
 define("LangViewObserverRank"															,"Rang");
 define("LangViewObserverInexistant"												,"Deze waarnemer bestaat niet!");
@@ -973,7 +976,7 @@ define("LangValidateSiteMessage5"													,"De locatiegegevens zijn gewijzig
 
 // control/validate_eyepiece.php
 
-define("LangValidateEyepieceMessage1"											,"Alle velden moeten worden ingevuld!");
+define("LangValidateEyepieceMessage1"											,"Alle verplichte velden moeten worden ingevuld!");
 define("LangValidateEyepieceMessage2"											,"Het oculair is toegevoegd aan je lijst met uitrustingen.");
 define("LangValidateEyepieceMessage3"											,"Oculair toegevoegd.");
 define("LangValidateEyepieceMessage4"											,"Oculair aangepast.");

@@ -1,6 +1,8 @@
 <?php
 
 // TO DO:
+define("LangValidateMessage1"                             ,"All required fields must be filled in!");
+define("LangRequiredFields"                               ,"(* required fields)");
 define("LangNoOwnColor"                                   , "No highlighting of own observations");
 
 // Text for moon menu
@@ -48,7 +50,7 @@ define("LangAtlasCursor"                                  ,"Cursor:&nbsp;&nbsp;&
 
 define("LangAtlasPrint"                                   ,"Print:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In the next release, a pdf-printout of the atlas page will be made available.");
 
-define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Star data made available by Tycho2+ and USNO - 3UCAC - Zacharia of zoiets");
+define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Star data made available by Tycho2+ and USNO - 3UCAC - Zacharias");
 
 
 // text for fstOffset
@@ -541,7 +543,7 @@ define("LangWelcomeTitle"																	,"DeepskyLog");
 
 // content/new_object.php
 
-define("LangNewObjectTitle"																,"Add new object (*= required fields)");
+define("LangNewObjectTitle"																,"Add new object");
 define("LangNewObjectButton1"															,"Add object");
 define("LangCancelNewObjectButton1"												,"Cancel adding");
 define("LangNewObjectSizeUnits1"													,"arcminutes");
@@ -702,6 +704,7 @@ define("LangViewObserverUser"															,"User");
 define("LangViewObserverCometAdmin"												,"Comet admin");
 define("LangViewObserverValidate"													,"Validate");
 define("LangViewObserverChange"														,"Change role");
+define("LangViewObserverChangeNameFirstname"              ,"Change email / firstname / name");
 define("LangViewObserverNumberOfObservations"							,"Number of observations");
 define("LangViewObserverRank"															,"Rank");
 define("LangViewObserverInexistant"												,"This observer doesn't exist!");
@@ -975,7 +978,7 @@ define("LangValidateSiteMessage5"													,"The location is changed in the d
 
 // control/validate_eyepiece.php
 
-define("LangValidateEyepieceMessage1"											,"All fields must be filled in!");
+define("LangValidateEyepieceMessage1"											,"All required fields must be filled in!");
 define("LangValidateEyepieceMessage2"											,"The eyepiece is added to your equipment list");
 define("LangValidateEyepieceMessage3"											,"Eyepiece added");
 define("LangValidateEyepieceMessage4"											,"Eyepiece changed");

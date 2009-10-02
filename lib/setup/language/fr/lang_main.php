@@ -1,6 +1,8 @@
 <?php
 
 // TO DO
+define("LangValidateMessage1"                             ,"Tous les champs obligatoires doivent &#234;tre remplis!");
+define("LangRequiredFields"                               ,"(*= champs obligatoires)");
 define("LangNoOwnColor"                                   , "Eigen waarnemingen niet oplichten");
 
 // Text for moon menu
@@ -48,7 +50,7 @@ define("LangAtlasCursor"                                  ,"Cursor:&nbsp;&nbsp;&
 
 define("LangAtlasPrint"                                   ,"Print:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In the next release, a pdf-printout of the atlas page will be made available.");
 
-define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Star data made available by Tycho2+ and USNO - 3UCAC - Zacharia of zoiets");
+define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Star data made available by Tycho2+ and USNO - 3UCAC - Zacharias");
 
 
 // text for fstOffset
@@ -543,7 +545,7 @@ define("LangWelcomeTitle"																	,"DeepskyLog");
 
 // content/new_object.php
 
-define("LangNewObjectTitle"																,"Rajoutez un nouvel objet (*= champs obligatoires)");
+define("LangNewObjectTitle"																,"Rajoutez un nouvel objet");
 define("LangNewObjectButton1"															,"Rajoutez l'objet");
 define("LangCancelNewObjectButton1"												,"Annulez le rajout");
 define("LangNewObjectSizeUnits1"													,"minutes d'arc");
@@ -704,6 +706,7 @@ define("LangViewObserverUser"															,"Utilisateur");
 define("LangViewObserverCometAdmin"												,"Administrateur com&egrave;tes");
 define("LangViewObserverValidate"													,"Validez");
 define("LangViewObserverChange"														,"Changez le r&ocirc;le");
+define("LangViewObserverChangeNameFirstname"              ,"Changez l'adresse &eegu; / pr&eegu;;nom / nom");
 define("LangViewObserverNumberOfObservations"							,"Nombre d'observations");
 define("LangViewObserverRank"															,"Position");
 define("LangViewObserverInexistant"												,"Cet observateur n'existe pas!");
@@ -977,7 +980,7 @@ define("LangValidateSiteMessage5"													,"Les donn&eacute;es de l'endroit 
 
 // control/validate_eyepiece.php
 
-define("LangValidateEyepieceMessage1"											,"Tous les champs doivent &#234;tre remplis!");
+define("LangValidateEyepieceMessage1"											,"Tous les champs obligatoires doivent &#234;tre remplis!");
 define("LangValidateEyepieceMessage2"											,"Cet oculaire est rajout&#233; dans la banque de donn&#233;es");
 define("LangValidateEyepieceMessage3"											,"Oculaire rajout&#233;");
 define("LangValidateEyepieceMessage4"											,"Oculaire modifi&#233;");
