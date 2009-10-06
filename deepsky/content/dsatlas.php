@@ -30,7 +30,7 @@ echo LangAtlasNavigation1."<br /><br />";
 echo LangAtlasZoom."<br />";
 echo LangAtlasZoom1."<br />";
 echo LangAtlasZoom2."<br />";
-echo LangAtlasZoom3."<br />";
+echo LangAtlasZoom3."<br /><br />";
 echo LangAtlasZoom4."<br />";
 echo LangAtlasZoom5."<br /><br />";
 echo LangAtlasGrid."<br /><br />";
@@ -50,6 +50,7 @@ echo LangAtlasObjects5."<br /><br />";
 echo LangAtlasCursor."<br /><br />";
 echo LangAtlasPrint."<br /><br />";
 echo LangAtlasCredit."<br /><br />";
+echo LangAtlasWhatsnext;
 
 echo "</div>"; 
 echo "<div id=\"atlasPageDiv3\" class=\"atlasPageDiv3\" >";

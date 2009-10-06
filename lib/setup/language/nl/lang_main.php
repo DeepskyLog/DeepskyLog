@@ -48,9 +48,10 @@ define("LangAtlasObjects5"                                ,"&nbsp;&nbsp;&nbsp;&n
 
 define("LangAtlasCursor"                                  ,"Cursor:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;De cursor co&ouml;rdinaten worden onderaan het scherm getoond.");
 
-define("LangAtlasPrint"                                  ,"Afdrukken:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In de volgende release wordt een pdf-afdruk van deze pagina voorzien.");
+define("LangAtlasPrint"                                  ,"Afdrukken:&nbsp;&nbsp;In de volgende release wordt een pdf-afdruk van deze pagina voorzien.");
 
-define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ster data beschikbaar gesteld door Tycho2+ en USNO - 3UCAC - Zacharias");
+define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ster data beschikbaar gesteld door Tycho2+");
+define("LangAtlasWhatsnext"                               ,"Versie:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Verdere ontwikkeling op deze atlaspagina is in voorbereiding zodat bv. ook sterrenbeelden getoond kunnen worden.");
 
 // text for fstOffset
 define("LangChangeAccountField12"                         ,"fstOffset");

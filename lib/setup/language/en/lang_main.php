@@ -50,7 +50,8 @@ define("LangAtlasCursor"                                  ,"Cursor:&nbsp;&nbsp;&
 
 define("LangAtlasPrint"                                   ,"Print:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In the next release, a pdf-printout of the atlas page will be made available.");
 
-define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Star data made available by Tycho2+ and USNO - 3UCAC - Zacharias");
+define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Star data made available by Tycho2+");
+define("LangAtlasWhatsnext"                               ,"Version:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Further development on this atlas page is in preparation so that e.g. constellations etc. can be shown.");
 
 
 // text for fstOffset
