@@ -50,7 +50,7 @@ class Database implements iDatabase
 	  $result=array();
 		$run = $this->mysql_query_encaps($sql) or die(mysql_error());
 		while($get=mysql_fetch_object($run))
-		{ $reulstparts=array();
+		{ $resultparts=array();
 		  while(list($key,$value)=each($get))
 			  $resultparts[$key]=$value;
 		  $result[]=$resultparts;
