@@ -498,6 +498,9 @@ class Utils implements iUtils
 	  	    $typeShort = "S";
 	      }
 
+	      if ($typeShort == "B") {
+          $typeLong = "oal:fixedMagnificationOpticsType";
+	      }
 	      $attrText = $dom->createTextNode($typeLong);
 	      $attr->appendChild($attrText);
 
@@ -514,8 +517,13 @@ class Utils implements iUtils
       	  $magnification = $siteChild->appendChild($dom->createElement('magnification'));
           $magnification->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fixedMagnification')))); 
 	      } else {
-      	  $focalLength = $siteChild->appendChild($dom->createElement('focalLength'));
-          $focalLength->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fd')) * $GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'diameter'))); 
+	        if ($typeShort == "B") {
+            $magnification = $siteChild->appendChild($dom->createElement('magnification'));
+            $magnification->appendChild($dom->createTextNode("1")); 
+          } else {
+      	    $focalLength = $siteChild->appendChild($dom->createElement('focalLength'));
+            $focalLength->appendChild($dom->createTextNode(($GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'fd')) * $GLOBALS['objInstrument']->getInstrumentPropertyFromId($value,'diameter')));
+          } 
 	      }
       }
     }
