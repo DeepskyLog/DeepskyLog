@@ -72,6 +72,8 @@ while(list($key, $value) = each($stypes))
   if(!($i%3))
     echo "</tr>";
 }
+if($i%3)
+  echo "</tr>";
 echo "</table><br /><br />";
 
 
@@ -89,6 +91,8 @@ while(list($key, $value) = each($cons))
   if(!($i%4))
     echo "</tr>";
 }
+if($i%4)
+  echo "</tr>";
 echo "</table><br /><br />";
 
 echo LangAtlasPrint."<br /><br />";
