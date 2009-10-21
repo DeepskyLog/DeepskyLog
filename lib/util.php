@@ -731,6 +731,11 @@ class Utils implements iUtils
 	  $year = (int)($obs["date"] / 10000);
 	  $month = (int)(($obs["date"] - $year * 10000) / 100);
 	  $day = (int)(($obs["date"] - $year * 10000 - $month * 100));
+	  if ($day == 0) {
+	    $day = 1;
+	  } else if ($day > 31) {
+	    $day = 31;
+	  }
 	  $date = sprintf("%4d-%02d-%02d", $year, $month, $day);
 
       $begin = $observation->appendChild($dom->createElement('begin')); 
