@@ -790,6 +790,9 @@ class Utils implements iUtils
 		        * $factor / $GLOBALS['objEyepiece']->getEyepiecePropertyFromId($eyep,'focalLength'));
 	  }
 	  
+	  // Replace , with .
+	  $magni = str_replace(",", ".", $magni);
+	  
 	  if ($magni > 0) {
         $magnification = $observation->appendChild($dom->createElement('magnification')); 
         $magnification->appendChild($dom->createTextNode($magni));
