@@ -723,7 +723,7 @@ class Utils implements iUtils
 
 	  if ($obs["time"] >= 0)
 	  {
-	  	$time = sprintf("T%02d:%02d:00+00:00", (int)($obs["time"] / 100), $obs["time"] - (int)($obs["time"] / 100) * 100);
+  	  $time = sprintf("T%02d:%02d:00+00:00", (int)($obs["time"] % 2400 / 100), $obs["time"] - (int)($obs["time"] % 2400 / 100) * 100);
 	  } else {
 	  	$time = "T22:00:00+00:00";
 	  }
