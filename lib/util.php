@@ -795,7 +795,7 @@ class Utils implements iUtils
 	  
 	  if ($magni > 0) {
         $magnification = $observation->appendChild($dom->createElement('magnification')); 
-        $magnification->appendChild($dom->createTextNode($magni));
+        $magnification->appendChild($dom->createTextNode((int)$magni));
 	  }
 
       $result = $observation->appendChild($dom->createElement('result'));
