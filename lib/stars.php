@@ -52,10 +52,13 @@ class Stars implements iStars
    $rLmas=round($rLhr*54000000);
    //echo('l:'+$lLmas+' r:'+$rLmas);
    if($lLhr<$rLhr)
-   { $sql="SELECT * FROM stars".$tomag." WHERE (RA2000mas<".$lLmas.") AND (DE2000mas>".$dDmas.") AND (DE2000mas<".$uDmas.");";
+   { /*$sql="SELECT * FROM stars".$tomag." WHERE (RA2000mas<".$lLmas.") AND (DE2000mas>".$dDmas.") AND (DE2000mas<".$uDmas.");";
      $stars=$objDatabase->selectRecordsetArray($sql);  
      $sql="SELECT * FROM stars".$tomag." WHERE (RA2000mas>".$rLmas.") AND (DE2000mas>".$dDmas.") AND (DE2000mas<".$uDmas.");";
+     $stars=array_merge($stars,$objDatabase->selectRecordsetArray($sql));*/
+     $sql="SELECT * FROM stars".$tomag." WHERE ((RA2000mas<".$lLmas.") OR (RA2000mas>".$rLmas.")) AND (DE2000mas>".$dDmas.") AND (DE2000mas<".$uDmas.");";
      $stars=array_merge($stars,$objDatabase->selectRecordsetArray($sql));  
+     
    }
    else
    { $sql="SELECT * FROM stars".$tomag." WHERE (RA2000mas<".$lLmas.") AND (RA2000mas>".$rLmas.") AND (DE2000mas>".$dDmas.") AND (DE2000mas<".$uDmas.");";

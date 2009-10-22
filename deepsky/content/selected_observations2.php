@@ -146,22 +146,22 @@ else
 	$content1.="<a href=\"" . $baseURL . "observations.xml\" rel=\"external\">" . LangExecuteQueryObjectsMessage10 . "</a>";
 	$objPresentations->line(array($content1),"L",array(100),25);
   echo "</div>";
+  echo "<script type=\"text/javascript\">";
+  echo "
+  function pageOnKeyDown(event)
+  { if(event.keyCode==37)
+      if(event.shiftKey)
+        location=html_entity_decode('".$link."&amp;multiplepagenr=0"."');    
+      else
+        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageleft."');
+    if(event.keyCode==39)
+      if(event.shiftKey) 
+        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pagemax."');
+      else  
+        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageright."');
+  }
+  this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDown;
+  ";
+  echo "</script>";
 }
-echo "<script type=\"text/javascript\">";
-echo "
-function pageOnKeyDown(event)
-{ if(event.keyCode==37)
-    if(event.shiftKey)
-      location=html_entity_decode('".$link."&amp;multiplepagenr=0"."');    
-    else
-      location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageleft."');
-  if(event.keyCode==39)
-    if(event.shiftKey) 
-      location=html_entity_decode('".$link."&amp;multiplepagenr=".$pagemax."');
-    else  
-      location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageright."');
-}
-this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDown;
-";
-echo "</script>";
 ?>

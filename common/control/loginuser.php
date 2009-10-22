@@ -16,8 +16,8 @@ else
   { if(strlen($_COOKIE['deepskylogsec'])>32)
     { if(substr($_COOKIE['deepskylogsec'],0,32)==$objObserver->getObserverProperty(substr($_COOKIE['deepskylogsec'],32,255),'password'))
       { $_SESSION['deepskylog_id']=substr($_COOKIE['deepskylogsec'],32,255);
-  		  $_SESSION['lang']=$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'language');
-  			$loggedUser=$_SESSION['deepskylog_id'];
+  		  $_SESSION['lang']=$objUtil->checkPostKey('language',$objObserver->getObserverProperty($_SESSION['deepskylog_id'],'language'));
+        $loggedUser=$_SESSION['deepskylog_id'];
   		  if($objObserver->getObserverProperty($_SESSION['deepskylog_id'],'role',2)=="0")                // administrator logs in 
           $_SESSION['admin']="yes";
   	  }
@@ -37,8 +37,8 @@ else
   	  $passwd = md5($_POST['passwd']);
   	  $passwd_db = $objObserver->getObserverProperty($login,'password');                  // get password from database 
       if($passwd_db==$passwd)                                                     // check if passwords match
-      { $_SESSION['lang']=$objObserver->getObserverProperty($login,'language');
-  			if($objObserver->getObserverProperty($login,'role',2)=="2")                         // user in waitlist already tries to log in
+      { $_SESSION['lang']=$objUtil->checkPostKey('language',$objObserver->getObserverProperty($login,'language'));
+        if($objObserver->getObserverProperty($login,'role',2)=="2")                         // user in waitlist already tries to log in
   			{ $loginErrorCode="LangWelcome5";
   			  $loggedUser="";
   			} 

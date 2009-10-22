@@ -165,7 +165,7 @@ class Observers implements iObservers
 		echo $outputtable;
   }
   public  function valideAccount()
-	{	global $entryMessage, $objUtil, $objLanguage, $developversion,$loggedUser;
+	{	global $entryMessage, $objUtil, $objLanguage, $developversion,$loggedUser,$allLanguages;
 		if(!$_POST['email']||!$_POST['firstname']||!$_POST['name']||!$_POST['passwd']||!$_POST['passwd_again'])
 		{ $entryMessage.=LangValidateAccountMessage1;
 			if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
