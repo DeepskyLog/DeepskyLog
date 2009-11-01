@@ -31,6 +31,17 @@ echo "<script type=\"text/javascript\">
       }
       </script>";
 
+echo "	<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/CalendarPopupCC.js\"></script>";
+echo "	<script type=\"text/javascript\" >";
+echo "	var cal = new CalendarPopup();";
+echo "  function SetObsDate(y,m,d)";
+echo "  {";
+echo "    document.getElementById('day').value = d;";
+echo "    document.getElementById('month').value = m;";
+echo "    document.getElementById('year').value = y;";													 
+echo "	}";
+echo "	</script>";
+
 echo "<div id=\"main\">";
 if(($observationid=$objUtil->checkGetKey('observation'))&&($objUtil->checkAdminOrUserID($objObservation->getDsObservationProperty($_GET['observation'],'observerid'))))
   $object=$objObservation->getDsObservationProperty($observationid,'objectname');
@@ -99,14 +110,14 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
     $theHour="";
 	  $theMinute="";
   }
-  $contentDate ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"3\"  name=\"day\" value=\"".$theDay."\" onkeypress=\"return checkPositiveInteger(event);\" />";
+  $contentDate ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"3\"  name=\"day\" id=\"day\" value=\"".$theDay."\" onkeypress=\"return checkPositiveInteger(event);\" />";
 	$contentDate.="&nbsp;&nbsp;";
-	$contentDate.="<select name=\"month\" class=\"inputfield requiredField centered\">";
+	$contentDate.="<select name=\"month\" id=\"month\" class=\"inputfield requiredField centered\">";
 	for($i= 1;$i<13;$i++)
 		$contentDate.="<option value=\"".$i."\"".(($theMonth==$i)?" selected=\"selected\"" : "").">".$GLOBALS['Month'.$i]."</option>";
 	$contentDate.="</select>";
 	$contentDate.="&nbsp;&nbsp;";
-	$contentDate.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"4\" size=\"4\"  name=\"year\" onkeypress=\"return checkPositiveInteger(event);\" value=\"".$theYear."\" />";
+	$contentDate.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"4\" size=\"4\"  name=\"year\" id=\"year\" onkeypress=\"return checkPositiveInteger(event);\" value=\"".$theYear."\" />";
 	$contentTime ="<input type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\"name=\"hours\" value=\"".$theHour."\" />";
 	$contentTime.="&nbsp;&nbsp;";
 	$contentTime.="<input type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" name=\"minutes\" value=\"".$theMinute."\" />&nbsp;&nbsp;";
@@ -263,8 +274,15 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
     }
 	}
 	// Presentation =====================================================================================================================================================================
+	$contentDateText = "<a href=\"#\" onclick=\"cal.showNavigationDropdowns();
+                             cal.setReturnFunction('SetObsDate');
+														 cal.showCalendar('DateAnchor');
+                             return false;\" 
+									 name=\"DateAnchor\" 
+									 id=\"DateAnchor\">" . LangViewObservationField5 . "</a>"; 
+	
 	$objPresentations->line(array("<a href=\"".$baseURL."index.php?indexAction=add_site\" title=\"".LangChangeAccountField7Expl."\" >".LangViewObservationField4."&nbsp;*"."</a>",$contentLoc,
-	                              LangViewObservationField5."&nbsp;*",$contentDate,
+	                              $contentDateText."&nbsp;*",$contentDate,
 	                              "<a href=\"".$baseURL."index.php?indexAction=add_instrument\" title=\"".LangChangeAccountField8Expl."\" >".LangViewObservationField3."&nbsp;*"."</a>",$contentInstrument),
 	                        "RLRLRL",array(11,15,7,27,11,28),35,array("fieldname",""));
 	$objPresentations->line(array(LangViewObservationField8 . "&nbsp;*",

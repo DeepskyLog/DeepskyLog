@@ -7,15 +7,15 @@ echo "	<script type=\"text/javascript\" >";
 echo "	var cal = new CalendarPopup();";
 echo "  function SetMultipleValuesFromDate(y,m,d)";
 echo "  {";
-echo "    document.forms['ObservationsQueryForm'].minday.value = d;";
-echo "    document.forms['ObservationsQueryForm'].minmonth.value = m;";
-echo "    document.forms['ObservationsQueryForm'].minyear.value = y;";													 
+echo "    document.getElementById('minday').value = d;";
+echo "    document.getElementById('minmonth').value = m;";
+echo "    document.getElementById('minyear').value = y;";													 
 echo "	}";
 echo "  function SetMultipleValuesTillDate(y,m,d)";
 echo "  {";
-echo "    document.forms['ObservationsQueryForm'].maxday.value = d;";
-echo "    document.forms['ObservationsQueryForm'].maxmonth.value = m;";
-echo "    document.forms['ObservationsQueryForm'].maxyear.value = y;";													 
+echo "    document.getElementById('maxday').value = d;";
+echo "    document.getElementById('maxmonth').value = m;";
+echo "    document.getElementById('maxyear').value = y;";													 
 echo "	}";
 echo "	</script>";
 
@@ -242,9 +242,9 @@ echo("<a href=\"#\" onclick=\"cal.showNavigationDropdowns();
 									 id=\"FromDateAnchor\">" . LangFromDate . "</a>"); 
 echo("</td>");
 echo("<td>");
-echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"minday\" value=\"\" />");
+echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"minday\" id=\"minday\" value=\"\" />");
 echo("&nbsp;");
-echo("<select name=\"minmonth\" class=\"inputfield\">
+echo("<select name=\"minmonth\" id=\"minmonth\" class=\"inputfield\">
              <option value=\"\">&nbsp;</option>
              <option value=\"1\">" . LangNewObservationMonth1 . "</option>
              <option value=\"2\">" . LangNewObservationMonth2 . "</option>
@@ -260,7 +260,7 @@ echo("<select name=\"minmonth\" class=\"inputfield\">
              <option value=\"12\">" . LangNewObservationMonth12 . "</option>
              </select>");
 echo("&nbsp;");
-echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" name=\"minyear\" value=\"\" />");
+echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" name=\"minyear\" id=\"minyear\" value=\"\" />");
 echo("</td>");
 // MINIMUM DIAMETER
 echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
@@ -276,16 +276,16 @@ echo("<tr>");
 // MAXIMUM DATE
 echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
 echo("<a href=\"#\" onclick=\"cal.showNavigationDropdowns();
-                             cal.setReturnFunction('SetMultipleValuesTillDate');
-														 cal.showCalendar('TillDateAnchor');
-                             return false;\" 
+                              cal.setReturnFunction('SetMultipleValuesTillDate');
+														  cal.showCalendar('TillDateAnchor');
+                              return false;\" 
 									 name=\"TillDateAnchor\" 
 									 id=\"TillDateAnchor\">" . LangTillDate . "</a>"); 
 echo("</td>");
 echo("<td>");
-echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"maxday\" value=\"\" />");
+echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"maxday\" id=\"maxday\" value=\"\" />");
 echo("&nbsp;");
-echo("<select name=\"maxmonth\" class=\"inputfield\">
+echo("<select name=\"maxmonth\" id=\"maxmonth\" class=\"inputfield\">
              <option value=\"\">&nbsp;</option>
              <option value=\"1\">" . LangNewObservationMonth1 . "</option>
              <option value=\"2\">" . LangNewObservationMonth2 . "</option>
@@ -301,7 +301,7 @@ echo("<select name=\"maxmonth\" class=\"inputfield\">
              <option value=\"12\">" . LangNewObservationMonth12 . "</option>
              </select>");
 echo("&nbsp;");
-echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" name=\"maxyear\" value=\"\" />");
+echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" name=\"maxyear\" id=\"maxyear\" value=\"\" />");
 echo("</td>");
 // MAXIMUM DIAMETER
 echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
