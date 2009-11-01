@@ -2,13 +2,13 @@
 
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/checkUtils.js\"></script>";
 // Script to change the visibility when we are observing a resolved open cluster
-echo "<script language=\"javascript\">
+echo "<script type=\"text/javascript\">
       function setOptions(opn, oc1, oc2, oc3, oc4, oc5, oc6, oc7, vis1, vis2, vis3, vis4, vis5, vis6, vis7)
       {
-        var selbox = document.obsform.visibility;
+        var selbox = document.getElementById('visibility');
         if(opn == true) {
         selbox.options.length = 0;
-          if (document.obsform.resolved.checked == true) {
+          if (document.getElementById('resolved').checked == true) {
             selbox.options[selbox.options.length] = new Option('-----','0');
             selbox.options[selbox.options.length] = new Option(oc1,'1');
             selbox.options[selbox.options.length] = new Option(oc2,'2');
@@ -39,7 +39,7 @@ else
   $object=$objUtil->checkPostKey('object', $objUtil->checkGetKey('object'));
 }
 if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostKey('timestamp',-1)))
-{ echo "<form name=\"obsform\" action=\"".$baseURL."index.php\" method=\"post\" enctype=\"multipart/form-data\"><div>";
+{ echo "<form action=\"".$baseURL."index.php\" method=\"post\" enctype=\"multipart/form-data\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_observation\" />";
 	echo "<input type=\"hidden\" name=\"observationid\" value=\"".$observationid."\" />";
 	echo "<input type=\"hidden\" name=\"timestamp\" value=\"" . $_POST['timestamp'] . "\" />";
@@ -167,7 +167,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$contentMagnification="<input type=\"text\" class=\"inputfield centered\" maxlength=\"4\" name=\"magnification\" size=\"4\"  value=\"".$theMagnification."\" /> x";
 	// Visibility =====================================================================================================================================================================
 	$theVisibility=($observationid?$objObservation->getDsObservationProperty($observationid,'visibility'):$objUtil->checkPostKey('visibility'));
-	$contentVisibility ="<select name=\"visibility\" class=\"width300px inputfield\">";
+	$contentVisibility ="<select name=\"visibility\" id=\"visibility\" class=\"width300px inputfield\">";
 	$contentVisibility.="<option value=\"0\">-----</option>";
 	for($i=1;$i<8;$i++)
 	{	$contentVisibility.="<option value=\"".$i."\" ".(($objUtil->checkPostKey('visibility')==$i)?"selected=\"selected\" ":"").">".$GLOBALS['Visibility'.$i]."</option>";
@@ -175,7 +175,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	}
 	$contentVisibility.="</select>&nbsp;";
   // Visibility for resolved open clusters ========================================================================================================================================
-  $contentVisibilityOc ="<select name=\"visibility\" class=\"width300px inputfield\">";
+  $contentVisibilityOc ="<select name=\"visibility\" id=\"visibility\" class=\"width300px inputfield\">";
   $contentVisibilityOc.="<option value=\"0\">-----</option>";
   for($i=1;$i<8;$i++)
   { $contentVisibilityOc.="<option value=\"".$i."\" ".(($objUtil->checkPostKey('visibility')==$i)?"selected=\"selected\" ":"").">".$GLOBALS['VisibilityOC'.$i]."</option>";
@@ -183,7 +183,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
   }
   $contentVisibilityOc.="</select>&nbsp;";
   // Visibility for double stars ==================================================================================================================================================
-  $contentVisibilityDs ="<select name=\"visibility\" class=\"width300px inputfield\">";
+  $contentVisibilityDs ="<select name=\"visibility\" iv=\"visibility\" class=\"width300px inputfield\">";
   $contentVisibilityDs.="<option value=\"0\">-----</option>";
   for($i=1;$i<4;$i++)
     $contentVisibilityDs.="<option value=\"".$i."\" ".(($objUtil->checkPostKey('visibility')==$i)?"selected=\"selected\" ":"").">".$GLOBALS['VisibilityDS'.$i]."</option>";
@@ -211,7 +211,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	  }	else 
 	  { $opn = false;
 	  }
-	  $contentMisc2.="<input type=\"checkbox\" name=\"resolved\" onClick=\"setOptions($opn, '$visOc[1]', '$visOc[2]', '$visOc[3]', '$visOc[4]', '$visOc[5]', '$visOc[6]', '$visOc[7]', '$vis[1]', '$vis[2]', '$vis[3]', '$vis[4]', '$vis[5]', '$vis[6]', '$vis[7]')\"".($objUtil->checkPostKey("resolved")?"checked ":"")."/>" . LangViewObservationField37."&nbsp;";
+	  $contentMisc2.="<input type=\"checkbox\" name=\"resolved\" id=\"resolved\" onclick=\"setOptions($opn, '$visOc[1]', '$visOc[2]', '$visOc[3]', '$visOc[4]', '$visOc[5]', '$visOc[6]', '$visOc[7]', '$vis[1]', '$vis[2]', '$vis[3]', '$vis[4]', '$vis[5]', '$vis[6]', '$vis[7]')\"".($objUtil->checkPostKey("resolved")?"checked ":"")."/>" . LangViewObservationField37."&nbsp;";
     $contentMisc2.="<input type=\"checkbox\" name=\"unusualShape\" />" . LangViewObservationField41."&nbsp;";
 		$contentMisc2.="<input type=\"checkbox\" name=\"partlyUnresolved\" />" . LangViewObservationField42."&nbsp;";
 		$contentMisc2.="<input type=\"checkbox\" name=\"colorContrasts\" />" . LangViewObservationField43;
