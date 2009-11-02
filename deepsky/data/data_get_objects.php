@@ -445,8 +445,8 @@ elseif($objUtil->checkGetKey('source')=='add_object10')   //====================
 }
 elseif($objUtil->checkGetKey('source')=='add_object20')   //========================== from quickpick page
 { $_SESSION['QobjParams']=array('source'=>'add_object20');
-  $ra=((substr(trim($objUtil->checkRequestKey('RAhours')),1)=='-')?-1:1)*(abs($objUtil->checkRequestKey('RAhours'))+($objUtil->checkRequestKey('RAminutes')/60)+($objUtil->checkRequestKey('RAseconds')/3600));
-  $decl=(abs($objUtil->checkRequestKey('DeclDegrees'))+($objUtil->checkRequestKey('DeclMinutes')/60)+($objUtil->checkRequestKey('DeclSeconds')/3600));
+  $ra=(abs($objUtil->checkRequestKey('RAhours'))+($objUtil->checkRequestKey('RAminutes')/60)+($objUtil->checkRequestKey('RAseconds')/3600));
+  $decl=((substr(trim($objUtil->checkRequestKey('DeclDegrees')),0,1)=='-')?-1:1)*(abs($objUtil->checkRequestKey('DeclDegrees'))+($objUtil->checkRequestKey('DeclMinutes')/60)+($objUtil->checkRequestKey('DeclSeconds')/3600));
   $_SESSION['Qobj']=$objObject->getSeenObjectDetails($objObject->getNearbyObjects("",60,$ra,$decl));
 	$_SESSION['QobjSort']='objectname';
 	$_SESSION['QobjSortDirection']='asc';
