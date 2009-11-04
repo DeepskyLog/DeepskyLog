@@ -13,7 +13,7 @@ $objPresentations->line(array("<h4>".LangOverviewEyepieceTitle." ".$loggedUserNa
 echo "<hr />"; 
 $objEyepiece->showEyepiecesObserver();
 $eyeps=$objEyepiece->getSortedEyepieces('focalLength');
-echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_eyepiece\" />";
 $content1b= "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 while(list($key, $value)=each($eyeps))
@@ -44,7 +44,7 @@ $objPresentations->line(array(LangAddEyepieceField3,
                         "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 
 echo "<hr />";
-echo "</form>";
+echo "</div></form>";
 echo "</div>";
 }
 ?>

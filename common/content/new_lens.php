@@ -8,7 +8,7 @@ $objPresentations->line(array("<h4>".LangOverviewLensTitle." ".$loggedUserName."
 echo "<hr />"; 
 $objLens->showLensesObserver();
 $lns=$objLens->getSortedLenses('name');
-echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_lens\" />";
 $content1b= "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 while(list($key, $value) = each($lns))
@@ -31,7 +31,7 @@ $objPresentations->line(array(LangAddLensField2,
                                LangAddLensField2Expl),
                         "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 echo "<hr />";
-echo "</form>";
+echo "</div></form>";
 echo "</div>";
 }
 ?>

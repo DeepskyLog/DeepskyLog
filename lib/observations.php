@@ -952,9 +952,9 @@ class Observations {
 		if ($_SESSION['lco'] != "O")
 			echo "<td>&nbsp;</td>";
 		else
-			echo "<td width=\"15%\">" . LangOverviewObservationsHeader8 . "</td>" .
-			     "<td width=\"15%\">" . LangOverviewObservationsHeader9 . "</td>" .
-			     "<td width=\"15%\">" . LangOverviewObservationsHeader5 . "</td>";
+			echo "<td>" . LangOverviewObservationsHeader8 . "</td>" .
+			     "<td>" . LangOverviewObservationsHeader9 . "</td>" .
+			     "<td>" . LangOverviewObservationsHeader5 . "</td>";
 		if($FF)
 			echo "<td class=\"width10px\">&nbsp;&nbsp;&nbsp;&nbsp;</td>";
 		if($MSIE)

@@ -94,7 +94,7 @@ class Instruments implements iInstruments
 		  }
 		  else
 		    $previous = $sort;
-		  echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+		  echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 		  echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_instrument\" />";
 		  echo "<input type=\"hidden\" name=\"adaption\" value=\"1\" />";
 		  echo "<table width=\"100%\">";
@@ -151,7 +151,7 @@ class Instruments implements iInstruments
 		    $count++;    
 		  }
 		  echo "</table>";
-		  echo "</form>";
+		  echo "</div></form>";
 		  echo "<hr />";
 		}  	
   }

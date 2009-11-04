@@ -159,7 +159,7 @@ class Locations
 		  }
 		  else
 		    $previous = $sort;
-		  echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+		  echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 		  echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 		  echo "<input type=\"hidden\" name=\"adaptStandardLocation\" value=\"1\" />";
 		  echo "<table width=\"100%\">";
@@ -222,7 +222,7 @@ class Locations
 		    }
 		  }
 		  echo "</table>";
-		  echo "</form>";
+		  echo "</div></form>";
 		  echo "<hr />";
 		}  	
   }
@@ -241,7 +241,7 @@ class Locations
     &&  $objUtil->checkUserID($this->getLocationPropertyFromId($objUtil->checkPostKey('stdlocation'),'observer')))
     { $objObserver->setObserverProperty($loggedUser,'stdlocation', $_POST['stdlocation']);
     } 
-    if($objUtil->checkPostKey('sitename')
+    elseif($objUtil->checkPostKey('sitename')
     && $objUtil->checkPostKey('region')
     && $objUtil->checkPostKey('country')
     && $objUtil->checkPostKey('timezone'))

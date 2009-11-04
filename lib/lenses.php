@@ -66,7 +66,7 @@ class Lenses implements iLenses
 		  echo "<tr class=\"type3\">";
 		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_lens&amp;sort=name&amp;previous=$previous\">".LangViewLensName."</a></td>";
 		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_lens&amp;sort=factor&amp;previous=$previous\" class=\"centered\">".LangViewLensFactor."</a></td>";
-		  echo "<td width=\"50%\"></td>";
+		  echo "<td></td>";
 		  echo "</tr>";
 		  $count = 0;
 		  while(list($key,$value)=each($lns))

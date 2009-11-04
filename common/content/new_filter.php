@@ -8,7 +8,7 @@ $objPresentations->line(array("<h4>".LangOverviewFilterTitle." ".$loggedUserName
 echo "<hr />";
 $objFilter->showFiltersObserver();
 $filts=$objFilter->getSortedFilters('name', "");
-echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_filter\" />";
 $content1b="<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 while(list($key, $value) = each($filts))
@@ -42,7 +42,7 @@ $objPresentations->line(array(LangAddFilterField5,
                               LangAddFilterField5),
                         "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 echo "<hr />";
-echo "</form>";
+echo "</div></form>";
 echo "</div>";
 }
 ?>

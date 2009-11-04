@@ -9,7 +9,7 @@ $objPresentations->line(array("<h4>".LangOverviewInstrumentsTitle." ".$loggedUse
 echo "<hr />"; 
 $objInstrument->showInstrumentsObserver();
 $insts=$objInstrument->getSortedInstruments('name',"",true);
-echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_instrument\" />";
 $content1b = "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 $content1b.= "<option selected=\"selected\" value=\"".$baseURL."index.php?indexAction=add_instrument\"> &nbsp; </option>";
@@ -49,7 +49,7 @@ $objPresentations->line(array(LangAddInstrumentField6,
                                LangAddInstrumentField6Expl),
                         "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 echo "<hr />";
-echo "</form>";
+echo "</div></form>";
 echo "</div>";
 }
 ?>

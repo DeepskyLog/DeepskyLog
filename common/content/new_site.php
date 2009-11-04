@@ -3,6 +3,7 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!$loggedUser) throw new Exception(LangException002);
 else
 {
+  echo "hello";
 $sort=$objUtil->checkRequestKey('sort','name');
 $locationid=$objUtil->checkRequestKey('locationid');
 $timezone_identifiers = DateTimeZone::listIdentifiers();
@@ -11,7 +12,7 @@ while(list($key,$value)=each($timezone_identifiers))
 { if($locationid)
 	  $tempTimeZoneList.="<option value=\"$value\"".(($value==$objLocation->getLocationPropertyFromId($locationid,'timezone'))?" selected=\"selected\"":"").">$value</option>";
 	else
-	  $tempTimeZoneList.="<option value=\"".$value."\"".(($value=="UTC")?" selected":"").">".$value."</option>";
+	  $tempTimeZoneList.="<option value=\"".$value."\"".(($value=="UTC")?" selected=\"selected\"":"").">".$value."</option>";
 }
 $tempTimeZoneList.="</select>";
 $tempCountryList="<select name=\"country\" class=\"inputfield requiredField\">";
@@ -56,7 +57,7 @@ $objPresentations->line(array("<h4>".LangOverviewSiteTitle." ".$loggedUserName."
 echo "<hr />"; 
 $objLocation->showLocationsObserver();
 $sites = $objLocation->getSortedLocations('name');
-echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 $content1b= "<select onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 while(list($key,$value)=each($sites))
@@ -110,7 +111,7 @@ $objPresentations->line(array(LangAddSiteField8,
                                LangAddSiteField8Expl),
                         "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 echo "<hr />";
-echo "</form>";
+echo "</div></form>";
 echo "</div>";
 }
 ?>
