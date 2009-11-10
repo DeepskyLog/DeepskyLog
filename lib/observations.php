@@ -937,7 +937,7 @@ class Observations {
 	{ global $FF,$MSIE, $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations; 
     $min=$_GET['min'];
     $max=$_GET['max'];
-    echo "<table id=\"showListObservationTable\" width=\"100%\">";
+    echo "<table id=\"showListObservationTable\">";
 	  if($FF)
 	    echo "<thead>";
 		echo "<tr class=\"type30\">";

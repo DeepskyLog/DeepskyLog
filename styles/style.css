@@ -296,6 +296,9 @@ div#main {
 	width            : 495px;
 	height           : 495px;
 }
+.errorclass {
+	color            :  red;
+}
 .expandedObservation {
   background-color : #FFFFC0;
 }
@@ -426,6 +429,9 @@ li {
 	font-size        : 10pt;
 	color            : #ff6600;
 	text-align       : center;
+}
+.moonpic {
+  vertical-align   : top;	
 }
 .navigationButton {
 	border           : 0;

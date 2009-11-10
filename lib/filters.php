@@ -134,7 +134,7 @@ class Filters implements iFilters
      }
      else
        $previous = $sort;
-     echo "<table width=\"100%\">";
+     echo "<table>";
      echo "<tr class=\"type3\">";
      echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=name&amp;previous=$previous\">".LangViewFilterName."</a></td>";
      echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=type&amp;previous=$previous\">".LangViewFilterType."</a></td>";

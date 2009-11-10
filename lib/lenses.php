@@ -62,7 +62,7 @@ class Lenses implements iLenses
 		  }
 		  else
 		    $previous = $sort;
-		  echo "<table width=\"100%\">";
+		  echo "<table>";
 		  echo "<tr class=\"type3\">";
 		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_lens&amp;sort=name&amp;previous=$previous\">".LangViewLensName."</a></td>";
 		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_lens&amp;sort=factor&amp;previous=$previous\" class=\"centered\">".LangViewLensFactor."</a></td>";

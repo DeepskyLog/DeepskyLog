@@ -90,7 +90,7 @@ class Observers implements iObservers
   { global $baseURL,$objObservation,$objUtil,$objObserver,$objObject,$catalogs,$FF;
   	$outputtable = "";   $count=0;
 		$objectsInCatalog=$objObject->getNumberOfObjectsInCatalog($catalog);
-    echo "<div><table width=\"100%\">";
+    echo "<div><table>";
 	  if($FF)
 	    echo "<thead>";
     echo "<tr class=\"type3\">";

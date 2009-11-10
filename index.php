@@ -42,7 +42,6 @@ catch (Exception $e)
 }
 echo "<script type=\"text/javascript\">";
 echo "resizeForm();";
-//echo "externalLinks();";
 if($loadAtlasPage)
 { echo "atlasFillPage();";
 }

@@ -37,7 +37,7 @@ class Presentations implements iPresentation
 	  echo $theMessage;
 	  echo "</div>";
 	  echo "<div id=\"dialogdiv2\">";
-	  echo "<input class=\"alertMsgOk\" type=\"submit\" onclick=\"confirmAlertMessage();\" value=\"Ok\" />";
+	  echo "<input id=\"alertMsgOk\" class=\"alertMsgOk\" type=\"submit\" onclick=\"confirmAlertMessage();\" value=\"Ok\" />";
     echo "</div>";
 	  echo "</div>";
 	  echo "<script type=\"text/javascript\">messageBox();</script>";	
@@ -329,7 +329,7 @@ class Presentations implements iPresentation
 	public  function tableSortHeader($header0, $link0)
 	{ global $baseURL;
 	  echo "<td style=\"vertical-align:top;\">";         
-	  echo "<table width=\"100%\">";   
+	  echo "<table>";   
 	  echo "<tr>";          
 	  echo "<td>";         
 	  echo "<a href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc. "\"><img class=\"sortButton\" src=\"".$baseURL."styles/images/up10.gif\" alt=\"^\"/></a>";
@@ -349,7 +349,7 @@ class Presentations implements iPresentation
 	public  function tableSortInverseHeader($header0, $link0)
 	{ global $baseURL;
 	  echo "<td style=\"vertical-align:top;\">";         
-	  echo "<table width=\"100%\">";   
+	  echo "<table>";   
 	  echo "<tr>";          
 	  echo "<td>";         
 	  echo "<a href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img class=\"sortButton\" src=\"".$baseURL."styles/images/up10.gif\" alt=\"^\" /></a>";

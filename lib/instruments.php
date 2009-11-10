@@ -97,7 +97,7 @@ class Instruments implements iInstruments
 		  echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 		  echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_instrument\" />";
 		  echo "<input type=\"hidden\" name=\"adaption\" value=\"1\" />";
-		  echo "<table width=\"100%\">";
+		  echo "<table>";
 		  echo "<tr class=\"type3\">";
 		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=name&amp;previous=$previous\">".LangOverviewInstrumentsName."</a></td>";
 		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=diameter&amp;previous=$previous\">".LangOverviewInstrumentsDiameter."</a></td>";

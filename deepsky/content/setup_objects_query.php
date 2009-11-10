@@ -48,9 +48,8 @@ echo("<input type=\"text\" class=\"inputfield\" maxlength=\"255\" name=\"catNumb
 echo("</td>");
 // ATLAS PAGE NUMBER
 echo("<td"); 
-if($pageError) 
-  echo(" style=\"color:red\"");
-echo(" class=\"fieldname\" align=\"right\">");
+
+echo(" class=\"fieldname".(($pageError)?" errorclass":"")."\">");
   echo LangQueryObjectsField12; 
   echo("</td><td>");
   echo("<select name=\"atlas\" class=\"inputfield\">");
@@ -106,8 +105,7 @@ echo(" class=\"fieldname\" align=\"right\">");
   echo("<tr>");
   // MINIMUM DECLINATION
   echo("<td"); 
-if($minDeclDegreesError || $minDeclMinutesError || $minDeclSecondsError) echo(" style=\"color:red\"");
-echo(" class=\"fieldname\" align=\"right\">");
+echo(" class=\"fieldname".(($minDeclDegreesError || $minDeclMinutesError || $minDeclSecondsError)?" errorclass":"")."\">");
   echo LangQueryObjectsField9;
   echo("</td><td>");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"minDeclDegrees\" size=\"3\" value=\"" . $minDeclDegrees .  "\" />&nbsp;&deg;&nbsp;");
@@ -116,8 +114,8 @@ echo(" class=\"fieldname\" align=\"right\">");
   echo("</td>");
   // MAXIMUM DECLINATION
   echo("<td"); 
-if($maxDeclDegreesError || $maxDeclMinutesError || $maxDeclSecondsError) echo(" style=\"color:red\"");
-echo(" class=\"fieldname\" align=\"right\">");
+
+echo(" class=\"fieldname".(($maxDeclDegreesError || $maxDeclMinutesError || $maxDeclSecondsError)?" errorclass":"")."\">");
   echo LangQueryObjectsField10;
   echo("</td><td>");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"maxDeclDegrees\" size=\"3\" value=\"" . $maxDeclDegrees .  "\" />&nbsp;&deg;&nbsp;");
@@ -129,8 +127,8 @@ echo(" class=\"fieldname\" align=\"right\">");
   echo("<tr>");
   // MINIMUM RIGHT ASCENSION
   echo("<td"); 
-if($minRAHoursError || $minRAMinutesError || $minRASecondsError) echo(" style=\"color:red\"");
-echo(" class=\"fieldname\" align=\"right\">");
+
+echo(" class=\"fieldname".(($minRAHoursError || $minRAMinutesError || $minRASecondsError)?" errorclass":"")."\">");
   echo LangQueryObjectsField7;
   echo("</td><td>");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"minRAHours\" size=\"2\" value=\"" . $minRAHours .  "\" />&nbsp;h&nbsp;");
@@ -139,8 +137,8 @@ echo(" class=\"fieldname\" align=\"right\">");
   echo("</td>");
     // MAXIMUM RIGHT ASCENSION
   echo("<td"); 
-if($maxRAHoursError || $maxRAMinutesError || $maxRASecondsError) echo(" style=\"color:red\"");
-echo(" class=\"fieldname\" align=\"right\">");
+
+echo(" class=\"fieldname".(($maxRAHoursError || $maxRAMinutesError || $maxRASecondsError)?" errorclass":"")."\">");
   echo LangQueryObjectsField8;  
   echo("</td><td>");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"maxRAHours\" size=\"2\" value=\"" . $maxRAHours .  "\" />&nbsp;h&nbsp;");
@@ -152,16 +150,14 @@ echo(" class=\"fieldname\" align=\"right\">");
 echo("<tr>");
   // MAGNITUDE BRIGHTER THAN
   echo("<td"); 
-if($maxMagError) echo(" style=\"color:red\"");
-echo(" class=\"fieldname\" align=\"right\">");
+echo(" class=\"fieldname".(($maxMagError)?" errorclass":"")."\">");
   echo LangQueryObjectsField4;
   echo("</td><td>");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"maxMag\" size=\"4\" value=\"" . $maxMag .  "\" />"); 
   echo("</td>");
   // MAGNITUDE LESSER THAN
   echo("<td"); 
-if($minMagError) echo(" style=\"color:red\"");
-echo(" class=\"fieldname\" align=\"right\">");
+echo(" class=\"fieldname".(($minMagError)?" errorclass":"")."\" >");
   echo LangQueryObjectsField3;
   echo("</td><td>");
   echo("<input type=\"text\" class=\"inputfield centered\" maxlength=\"4\" name=\"minMag\" size=\"4\" value=\"" . $minMag .  "\" />");
@@ -171,16 +167,14 @@ echo(" class=\"fieldname\" align=\"right\">");
   echo("<tr>");
   // SURFACE BRIGHTNESS BRIGHTER THAN
   echo("<td"); 
-if($maxSBError) echo(" style=\"color:red\"");
-echo(" class=\"fieldname\" align=\"right\">");
+echo(" class=\"fieldname".(($maxSBError)?" errorclass":"")."\">");
   echo LangQueryObjectsField6;
   echo("</td><td>");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"maxSB\" size=\"4\" value=\"" . $maxSB .  "\" />");
   echo("</td>");
   // SURFACE BRIGHTNESS LESSER THAN
   echo("<td"); 
-if($minSBError) echo(" style=\"color:red\"");
-echo(" class=\"fieldname\" align=\"right\">");
+echo(" class=\"fieldname".(($minSBError)?" errorclass":"")."\">");
   echo LangQueryObjectsField5;
   echo("</td><td>");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"minSB\" size=\"4\" value=\"" . $minSB .  "\" />");
@@ -190,8 +184,7 @@ echo(" class=\"fieldname\" align=\"right\">");
   echo("<tr>");
   // MINIMIM SIZE
   echo("<td"); 
-  if($minSizeError) echo(" style=\"color:red\"");
-  echo(" class=\"fieldname\" align=\"right\">");
+  echo(" class=\"fieldname".(($minSizeError)?" errorclass":"")."\">");
   echo LangQueryObjectsField13;
   echo("</td><td>");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"minSize\" size=\"4\" value=\"" . $minSize . "\" />");
@@ -201,8 +194,7 @@ echo(" class=\"fieldname\" align=\"right\">");
   echo("</select></td>");
   // MAXIMUM SIZE
   echo("<td"); 
-  if($maxSizeError) echo(" style=\"color:red\"");
-  echo(" class=\"fieldname\" align=\"right\">");
+  echo(" class=\"fieldname".(($maxSizeError)?" errorclass":"")."\">");
   echo LangQueryObjectsField14;
   echo("</td><td>");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"maxSize\" size=\"4\" value=\"" . $maxSize . "\" />");
@@ -216,8 +208,7 @@ if($loggedUser)
 { echo("<tr>");
   // MINIMUM CONTRAST RESERVE
   echo("<td"); 
-  if($minContrastError) echo(" style=\"color:red\"");
-  echo(" class=\"fieldname\" align=\"right\">");
+  echo(" class=\"fieldname".(($minContrastError)?" errorclass":"")."\">");
   echo LangQueryObjectsField18;
   echo("</td>");
   echo("<td>");
@@ -225,8 +216,7 @@ if($loggedUser)
   echo("</td>");
   // MAXIMUM CONTRAST RESERVE
   echo("<td"); 
-  if($maxContrastError) echo(" style=\"color:red\"");
-  echo(" class=\"fieldname\" align=\"right\">");
+  echo(" class=\"fieldname".(($maxContrastError)?" errorclass":"")."\">");
   echo LangQueryObjectsField17;
   echo("</td><td>");
   echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"maxContrast\" size=\"4\" value=\"" . $maxContrast .  "\" />");
@@ -235,8 +225,7 @@ if($loggedUser)
   echo("<tr>");
   // IN LIST
   echo("<td"); 
-  if($listError) echo(" style=\"color:red\"");
-  echo(" class=\"fieldname\" align=\"right\">");
+  echo(" class=\"fieldname".(($listError)?" errorclass":"")."\">");
   echo LangQueryObjectsField19;
   echo("</td><td>");
   echo("<select name=\"inList\" class=\"inputfield\">");
@@ -252,8 +241,7 @@ if($loggedUser)
   // NOT IN LIST
   /*
     echo("<td"); 
-    if($listError) echo(" style=\"color:red\"");
-    echo(" class=\"fieldname\" align=\"right\">");
+    echo(" class=\"fieldname".(($listError)?" errorclass":"")."\">");
     echo LangQueryObjectsField20;
     echo("</td><td>");
     echo("<select name=\"notInList\">");

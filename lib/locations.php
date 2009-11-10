@@ -162,7 +162,7 @@ class Locations
 		  echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 		  echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 		  echo "<input type=\"hidden\" name=\"adaptStandardLocation\" value=\"1\" />";
-		  echo "<table width=\"100%\">";
+		  echo "<table>";
 		  echo "<tr class=\"type3\">";
 		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>";
 		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=region&amp;previous=$previous\">".LangViewLocationProvince."</a></td>";

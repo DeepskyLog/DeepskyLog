@@ -889,7 +889,7 @@ class Objects implements iObjects
   public  function showObjects($link, $min, $max, $ownShow='', $showRank=0, $step=25, $pageListAction="addAllObjectsFromPageToList")        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
   { global $FF, $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil,$objPresentations,$objList;
 	  $atlas='';
-    echo "<table width=\"100%\">";
+    echo "<table>";
     if($FF)
       echo "<thead>";
     echo "<tr class=\"type3\">";

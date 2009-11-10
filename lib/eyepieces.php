@@ -67,7 +67,7 @@ class Eyepieces implements iEyepieces
      }
      else
        $previous=$sort;
-     echo "<table width=\"100%\">";
+     echo "<table>";
      echo "<tr class=\"type3\">";
      echo "<td><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=name&amp;previous=$previous\">".LangViewEyepieceName."</a></td>";
      echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=focalLength&amp;previous=$previous\">".LangViewEyepieceFocalLength."</a></td>";

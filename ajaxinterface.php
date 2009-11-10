@@ -46,4 +46,18 @@ if($ajaxInstruction=="getStarsMagnitude")
   }
   echo "</xmlresponse>";
 }
+if($ajaxInstruction=="getConstellationBoundries")
+{ $boundries=array();
+  $boundries=$objConstellation->getAllBoundries();
+  header("Content-Type:text/xml");
+  echo "<?xml version='1.0' encoding=\"ISO-8859-1\"?>";
+  echo "<xmlresponse>";
+  while(list($key,$value)=each($boundries))
+  { echo "<boundry>";
+    while(list($boundryproperty,$boundrypropertyvalue)=each($value))
+      echo   "<".$boundryproperty.">".htmlspecialchars($boundrypropertyvalue)."</".$boundryproperty.">";
+    echo "</boundry>";
+  }
+  echo "</xmlresponse>";
+}
 ?>
