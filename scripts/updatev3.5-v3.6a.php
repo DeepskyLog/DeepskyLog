@@ -1,5 +1,5 @@
 <?php
-echo "Database update: inserting constallation boundries data...\n"
+echo "Database update: inserting constallation boundries data...\n";
 
 require_once "../lib/setup/databaseInfo.php";
 require_once "../lib/database.php";
