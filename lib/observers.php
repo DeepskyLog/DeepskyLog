@@ -292,7 +292,7 @@ class Observers implements iObservers
     $fromMail = $this->getObserverProperty($administrators[0],'email');
     $headers = "From:".$fromMail;
     if(isset($developversion)&&($developversion==1))
-      $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<p>";
+      $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<br />";
     else
       mail($this->getObserverProperty($id,'email'), $subject, $body, $headers);
     return LangValidateObserverMessage1.' '.LangValidateObserverMessage2;

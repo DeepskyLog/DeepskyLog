@@ -38,6 +38,7 @@ class Observations {
 		if($_FILES['csv']['tmp_name']!="")
 		  $csvfile=$_FILES['csv']['tmp_name'];
 		$data_array=file($csvfile); 
+	  set_time_limit('line count '.count($data_array));
 		for($i=0;$i<count($data_array);$i++ ) 
 		  $parts_array[$i]=explode(";",$data_array[$i]); 
 		for($i=0;$i<count($parts_array);$i++)

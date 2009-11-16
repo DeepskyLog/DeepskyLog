@@ -15,7 +15,7 @@ while(list($key,$value)=each($languages))
   $tempList.="<option value=\"".$key."\"".(($theKey=$key)?" selected=\"selected\"":"").">".$value."</option>";
 $tempList.="</select>";
 echo "<div id=\"main\">";
-echo "<form action=\"".$baseURL."index.php\" method=\"post\">";
+echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_account\" />";
 $objPresentations->line(array("<h4>".LangRegisterNewTitle."</h4>","<input type=\"submit\" name=\"register\" value=\"" . LangRegisterNewTitle . "\" />&nbsp;"),"LR",array(80,20),30);
 echo "<hr />";
@@ -42,7 +42,7 @@ $objPresentations->line($tempObsLangList,"RLLLL",array(20,13,13,14,40),'',array(
 unset($tempObsLangList);
 $tempObsLangList[]="";
 while((list($key,$value)=each($allLanguages)))
-{ $tempObsLangList[]="<input type=\"checkbox\" ".(($objUtil->checkPostKey($key)||in_array($key,$usedLanguages))?"checked ":"")." name=\"".$key."\" value=\"".$key."\" />".$value;
+{ $tempObsLangList[]="<input type=\"checkbox\" ".(($objUtil->checkPostKey($key)||in_array($key,$usedLanguages))?"checked=\"checked\" ":"")." name=\"".$key."\" value=\"".$key."\" />".$value;
   $j++;
   if(($j%3)==0)
   { $tempObsLangList[]="";
@@ -54,7 +54,7 @@ while((list($key,$value)=each($allLanguages)))
 
 
 echo "<hr />";
-echo "</form>";
+echo "</div></form>";
 echo "</div>";
 }
 ?>
