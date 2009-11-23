@@ -1440,8 +1440,8 @@ class Observations {
 				if(!($objObserver->getObserverProperty($loggedUser,'UT')))
 					$objObservation->setLocalDateAndTime($current_observation, $date, $time);
 				$objObservation->setDsObservationProperty($current_observation,'clusterType', $objUtil->checkPostKey('clusterType'));
-        $objObservation->setDsObservationProperty($current_observation,'component1', $objUtil->checkPostKey('component1'));
-        $objObservation->setDsObservationProperty($current_observation,'component2', $objUtil->checkPostKey('component2'));
+        $objObservation->setDsObservationProperty($current_observation,'component1', $objUtil->checkPostKey('component1',-1));
+        $objObservation->setDsObservationProperty($current_observation,'component2', $objUtil->checkPostKey('component2',-1));
         if ($_FILES['drawing']['tmp_name'] != "") // drawing to upload
 				{ $upload_dir = $instDir . 'deepsky/drawings';
 					$dir = opendir($upload_dir);
@@ -1450,7 +1450,7 @@ class Observations {
 					include $instDir . "common/control/resize.php"; // resize code
 					$new_image = image_createThumb($original_image, $destination_image,490,490,100);
 					move_uploaded_file($_FILES['drawing']['tmp_name'], $upload_dir . "/" . $current_observation . ".jpg");
-				  $objObservation->setDsObservationProperty($current_observation,'hasDrawing',1);
+				  $objObservation->setDsObservationProperty($current_observation,'hasDrawing',1);  
 				}
 				$_SESSION['newObsYear'] =       $_POST['year']; // save current details for faster submission of multiple observations
 				$_SESSION['newObsMonth'] =      $_POST['month'];
