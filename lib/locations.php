@@ -245,7 +245,7 @@ class Locations
     && $objUtil->checkPostKey('region')
     && $objUtil->checkPostKey('country')
     && $objUtil->checkPostKey('timezone'))
-    { $latitude  = $objUtil->checkPostKey('latitude',0) + $objUtil->checkPostKey('latitudemin',0) / 60.0;
+    { $latitude  = $objUtil->checkPostKey('latitude',0)  + $objUtil->checkPostKey('latitudemin',0) / 60.0;
       $longitude = $objUtil->checkPostKey('longitude',0) + $objUtil->checkPostKey('longitudemin',0) / 60.0;
       $timezone  = $_POST['timezone'];
       if($objUtil->checkPostKey('add'))
