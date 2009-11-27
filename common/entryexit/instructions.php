@@ -445,6 +445,7 @@ else
 	  $listname=$_SESSION['listname'];
 	  $listname_ss=stripslashes($listname);
 	  $myList=False;
+	  echo $listname;
 	  if(array_key_exists('listname',$_SESSION)&&$objList->checkList($_SESSION['listname'])==2)
 	    $myList=True;
 	  if($_GET['listname']<>"----------")

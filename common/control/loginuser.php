@@ -118,5 +118,5 @@ else
 }
 $objDatabase->execSQL("INSERT INTO logging(loginid, logdate, logtime, logurl, navigator, screenresolution, language) 
                        VALUES(\"".($loggedUser?$loggedUser:"anonymous")."\", ".
-                                date('Ymd').", ".date('His').", '".substr($objUtil->checkArrayKey($_SERVER,'REQUEST_URI',''),0,255)."', '".substr($objUtil->checkArrayKey($_SERVER,'HTTP_USER_AGENT',''),0,255)."', 'screenres', '".$_SESSION['lang']."');");
+                                date('Ymd').", ".date('His').", '".addslashes(substr($objUtil->checkArrayKey($_SERVER,'REQUEST_URI',''),0,255))."', '".addslashes(substr($objUtil->checkArrayKey($_SERVER,'HTTP_USER_AGENT','')),0,255)."', 'screenres', '".$_SESSION['lang']."');");
 ?>
