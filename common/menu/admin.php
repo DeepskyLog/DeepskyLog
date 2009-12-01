@@ -26,6 +26,7 @@ if($menuAdmin=="collapsed")
   echo "<option ".(($objUtil->checkGetKey('indexAction')=='view_eyepieces')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=view_eyepieces\">".LangAdminMenuItem4."</option>";                        
   echo "<option ".(($objUtil->checkGetKey('indexAction')=='view_filters')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=view_filters\">".LangAdminMenuItem5."</option>";
   echo "<option ".(($objUtil->checkGetKey('indexAction')=='view_lenses')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=view_lenses\">".LangAdminMenuItem6."</option>";
+  echo "<option ".(($objUtil->checkGetKey('indexAction')=='admin_check_objects')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=admin_check_objects\">"."Check Objects"."</option>";
   echo "</select>";
 }
 else

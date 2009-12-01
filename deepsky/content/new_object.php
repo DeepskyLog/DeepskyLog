@@ -1,4 +1,5 @@
 <?php // new_object.php  allows the user to add an object to the database 
+//include "lib/constellations.php";
 $phase=$objUtil->checkRequestKey('phase',0);
 echo "<div id=\"main\">";
 echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
@@ -109,11 +110,15 @@ $objPresentations->line(array(LangViewObjectField6 . "&nbsp;*",
                               $content),                              
                         "RL",array(20,80),35,array("fieldname"));
 // CONSTELLATION 
-$content ="<select name=\"con\" class=\"requiredField\"".(($phase==2)?"":$disabled).">";
-$constellations = $objObject->getConstellations();
-while(list($key, $value)=each($constellations))
-  $content.="<option value=\"".$value."\"".(($value==$objUtil->checkRequestKey('con'))?" selected=\"selected\" ":"").">".$GLOBALS[$value]."</option>";
-$content.="</select>";
+$thecon='';
+if($phase==2)
+  $thecon=$objConstellation->getConstellationFromCoordinates($objUtil->checkRequestKey('RAhours',0)+($objUtil->checkRequestKey('RAminutes',0)/60)+($objUtil->checkRequestKey('RAhours',0)/3600),$objUtil->checkRequestKey('DeclDegrees',0)+($objUtil->checkRequestKey('DeclMinutes',0)/60)+($objUtil->checkRequestKey('DeclSeconds',0)/3600));                            
+$content ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"con\" size=\"3\" value=\"".$thecon."\" ".(($phase==2)?"":$disabled)."/>";
+//$content ="<select name=\"con\" class=\"requiredField\"".(($phase==2)?"":$disabled).">";
+//$constellations = $objObject->getConstellations();
+//while(list($key, $value)=each($constellations))
+//  $content.="<option value=\"".$value."\"".(($value==$objUtil->checkRequestKey('con'))?" selected=\"selected\" ":"").">".$GLOBALS[$value]."</option>";
+//$content.="</select>";
 $objPresentations->line(array(LangViewObjectField5 . "&nbsp;*",
                               $content),                              
                         "RL",array(20,80),35,array("fieldname"));
