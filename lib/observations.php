@@ -194,6 +194,7 @@ class Observations {
 		  $username=$objObserver->getObserverProperty($loggedUser,'firstname'). " ".$objObserver->getObserverProperty($loggedUser,'name');
 		  $added=0;
 		  $double=0;
+		  $retstr="";
 		  for($i=0;$i<count($parts_array);$i++)
 		  { if(!in_array($i,$errorlist))
 		    { $observername=$objObserver->getObserverProperty(htmlentities(trim($parts_array[$i][1])),'firstname'). " ".$objObserver->getObserverProperty(htmlentities(trim($parts_array[$i][1])),'name');
@@ -231,7 +232,7 @@ class Observations {
 		      unset($_SESSION['QobsParams']);
 		    }
 		  }
-		  return LangCSVMessage8.": ".$added.LangCSVMessage9.": ".count($errorlist).LangCSVMessage10.": ".$double.".";
+		  return $retstr.LangCSVMessage8.": ".$added.LangCSVMessage9.": ".count($errorlist).LangCSVMessage10.": ".$double.".";
 		}
 	}
 	public  function addDSObservation($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language) 
