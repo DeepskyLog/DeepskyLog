@@ -26,15 +26,15 @@ class Constellation implements iConstellation
       $thedecl1=$this->conBoundries[$i]['decl1'];
       if(abs($this->conBoundries[$i]['ra0']-$this->conBoundries[$i]['ra1'])>12)
       { if(abs($thera-$this->conBoundries[$i]['ra0'])>12)
-           $thera0+=(($this->conBoundries[$i]['ra0']<12)?24.0:-24.0); 
-         else
-           $thera1+=(($this->conBoundries[$i]['ra1']<12)?24.0:-24.0); 
+          $thera0+=(($this->conBoundries[$i]['ra0']<12)?24.0:-24.0); 
+        else
+          $thera1+=(($this->conBoundries[$i]['ra1']<12)?24.0:-24.0); 
       }
-      if(($thera1-$thera0)>0)
+      if(abs($thera1-$thera0)>0)
         $thedecl01=$thedecl0+(($thera-$thera0)/($thera1-$thera0)*($thedecl1-$thedecl0));
       else
         $thedecl01=($thedecl0+$thedecl1)/2;
-      if((($thera0<$thera)&&($thera1>$thera)||($thera1<$thera)&&($thera0>$thera))&&
+      if((($thera0<=$thera)&&($thera1>=$thera)||($thera1<=$thera)&&($thera0>=$thera))&&
          ($thedecl01<$thedecl)&&($thedecl01>$tempdecl))
       { $tempdecl=$thedecl01;
         if($this->conBoundries[$i]['con0pos']=="A")

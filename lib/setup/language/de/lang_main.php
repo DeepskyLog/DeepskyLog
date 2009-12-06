@@ -179,14 +179,14 @@ define("LangWelcome5"																			,"Your account is on the waitlist to be 
 define("LangManage"																				,"Verwalten...");
 define("LangManageDots"																		,"Verwalten...");
 
-define("LangAccountSubscribed1"														,"Ihr DeepskyLog Benutzer wurde angelegt.<p>");
-define("LangAccountSubscribed2"														,"Einer unserer Administratoren wird Ihre Anmeldung bald pr&uuml;fen.<p>");
-define("LangAccountSubscribed3"														,"Sie werden eine eMail Best&auml;tigung erhalten sobald dies geschehen ist.<p>");
-define("LangAccountSubscribed4"														,"Bitte bedenken Sie, da&szlig; DeepskyLog die Arbeit einiger weniger Freiwilliger ist,<p>");
-define("LangAccountSubscribed5"														,"und das es bis zu einem Tag dauern kann bis Ihre Anmeldung gepr&uuml;ft wurde.<p>");
-define("LangAccountSubscribed6"														,"Sehr selten kommt es vor, da&szlig; alle Administratoren mit astronomischen Beobachtungen besch&auml;ftigt sind f&uuml;r eine Woche.<p>");
-define("LangAccountSubscribed7"														,"Normalerweise gibt es dann aber eine Backup Person in diesen F&auml;llen.<p>");
-define("LangAccountSubscribed8"														,"Wenn ihre Anmeldung nicht gepr&uuml;ft wurde nach 24 Stunden, bitte senden Sie eine eMail an<p>");
+define("LangAccountSubscribed1"														,"Ihr DeepskyLog Benutzer wurde angelegt.<br />");
+define("LangAccountSubscribed2"														,"Einer unserer Administratoren wird Ihre Anmeldung bald pr&uuml;fen.<br />");
+define("LangAccountSubscribed3"														,"Sie werden eine eMail Best&auml;tigung erhalten sobald dies geschehen ist.<br />");
+define("LangAccountSubscribed4"														,"Bitte bedenken Sie, da&szlig; DeepskyLog die Arbeit einiger weniger Freiwilliger ist,<br />");
+define("LangAccountSubscribed5"														,"und das es bis zu einem Tag dauern kann bis Ihre Anmeldung gepr&uuml;ft wurde.<br />");
+define("LangAccountSubscribed6"														,"Sehr selten kommt es vor, da&szlig; alle Administratoren mit astronomischen Beobachtungen besch&auml;ftigt sind f&uuml;r eine Woche.<br />");
+define("LangAccountSubscribed7"														,"Normalerweise gibt es dann aber eine Backup Person in diesen F&auml;llen.<br />");
+define("LangAccountSubscribed8"														,"Wenn ihre Anmeldung nicht gepr&uuml;ft wurde nach 24 Stunden, bitte senden Sie eine eMail an<br />");
 define("LangAccountSubscribed9"														,"developers at deepskylog.be um sicherzugehen.");
 
 
@@ -1127,14 +1127,14 @@ define("LangRemove"																				,"L&ouml;schen");
 // content/new_observationcsv.php
 define("LangCSVTitle"																			,"Beobachtungen von CSV Datei importieren");
 define("LangCSVMessage1"																	,"Diese Eingabemaske erlaubt Ihnen mehrere Beobachtungen auf einmal einzugeben, indem Sie eine CSV Datei importieren (comma seperated value Datei). Dies beschleunigt das Hochladen ihrer Beobachtungen, ferner k&ouml;nnen sie alte Beobachtungen aus Drittanwendungen leichter importieren. Zu Ihrer Information: Alle Beobachtungen mit Ihrem (vollen) Namen werden importiert.");
-define("LangCSVMessage2"																	,"The CSV file uses the following format: <b>(NEW FORMAT!!!)</b>");
-define("LangCSVMessage3"																	,"<b><i>1-Objekt; 2-Beobachter; 3-Datum; 4-UT; 5-Beobachtungsplatz; 6-Beobachtungsger&auml;t; 7-Okular; 8-Filter; 9-Linse; 10-Seeing; 11-Schw&auml;chsterStern oder SQM as you wish; 12-Sichtbarkeit; 13-Sprache; 14-Beschreibung</i></b>");
-define("LangCSVMessage4"																	,"<b>Attention!</b> In contrast with version 3.3 and preceding ones, the file may <b>no longer</b> contain a header line, the first line immediately contains the actual observations in the format mentioned above, e.g.: <br /><br />NGC 2392;John Smith;21-01-2005;20:45;Aalst;Obsession 15\";31mm Nagler;Lumicon O-III filter;Televue 2x Barlow;2;4.0;3;en;Nice planetary nebula with a very bright central star!<br />M 35;John Smith;21-01-2005;20:53;Aalst;Obsession 15\";;;;2;4.0;1;en;About thirty members with several curved chains of stars.<br />...<br /><br />Seeing should be given as a number between 1 and 5 (1=excellent, 2=good, 3=moderate, 4=poor, 5=bad).<br />Visibility should be given as a number between 1 and 7 (1=Very simple, prominent object, 2=Object easily percepted with direct vision, 3=Object perceptable with direct vision, 4=Averted vision required to percept object, 5=Object barely perceptable with averted vision, 6=Perception of object is very questionable, 7=Object definitely not seen).<br />If an observation has been done by naked eye, 'Naked Eye' should be given as instrument.<br />Language should be the short name for the language the description is in  (de for German)");
+define("LangCSVMessage2"																	,"The CSV file uses the following format: <span class=\"bold\">(NEW FORMAT!!!)</span>");
+define("LangCSVMessage3"																	,"<span class=\"bold\"><i>1-Objekt; 2-Beobachter; 3-Datum; 4-UT; 5-Beobachtungsplatz; 6-Beobachtungsger&auml;t; 7-Okular; 8-Filter; 9-Linse; 10-Seeing; 11-Schw&auml;chsterStern oder SQM as you wish; 12-Sichtbarkeit; 13-Sprache; 14-Beschreibung</i></span>");
+define("LangCSVMessage4"																	,"<span class=\"bold\">Attention!</span> In contrast with version 3.3 and preceding ones, the file may <span class=\"bold\">no longer</span> contain a <span class=\"underline\">header line</span>, the first line immediately contains the actual observations in the format mentioned above, e.g.: <br /><br />NGC 2392;John Smith;21-01-2005;20:45;Aalst;Obsession 15\";31mm Nagler;Lumicon O-III filter;Televue 2x Barlow;2;4.0;3;en;Nice planetary nebula with a very bright central star!<br />M 35;John Smith;21-01-2005;20:53;Aalst;Obsession 15\";;;;2;4.0;1;en;About thirty members with several curved chains of stars.<br />...<br /><br />Seeing should be given as a number between 1 and 5 (1=excellent, 2=good, 3=moderate, 4=poor, 5=bad).<br />Visibility should be given as a number between 1 and 7 (1=Very simple, prominent object, 2=Object easily percepted with direct vision, 3=Object perceptable with direct vision, 4=Averted vision required to percept object, 5=Object barely perceptable with averted vision, 6=Perception of object is very questionable, 7=Object definitely not seen).<br />If an observation has been done by naked eye, 'Naked Eye' should be given as instrument.<br />Language should be the short name for the language the description is in  (de for German)");
 
 
-define("LangCSVMessage5"																	,"Achtung!<p>Das Beobachtungsger&auml;t, der Beobachtungsplatz und die Objekte in der CSV-Datei sollten schon in DeepskyLog bekannt sein, 
+define("LangCSVMessage5"																	,"Achtung!<br />Das Beobachtungsger&auml;t, der Beobachtungsplatz und die Objekte in der CSV-Datei sollten schon in DeepskyLog bekannt sein, 
                           																 sonst erhalten Sie eine Fehlermeldung und diesen Beobachtungen wirden nicht importiert.<br />
-                           																 In diesem Fall geben Sie bitte die fehlenden Daten per Hand ein und starten Sie den Import erneut bis keine Fehlermeldung mehr erscheint.<p>&nbsp;</p>
+                           																 In diesem Fall geben Sie bitte die fehlenden Daten per Hand ein und starten Sie den Import erneut bis keine Fehlermeldung mehr erscheint.<br />&nbsp;<br />
                         																   Wenn alles gut geht, erscheinen Ihre Beobachtungen in der  \"Alle Beobachtungen\" &Uuml;bersicht.");
 define("LangCSVMessage6"																	,"CSV Datei f&uuml;r den Import ");
 define("LangCSVMessage7"																	,"Name;AltnativName;RA;Dekl;Sternbild;Typ;Helligkeit;Oberfl&auml;schen Helligkeit;Durchmesser;Seite;Beobachtet;Last Seen");

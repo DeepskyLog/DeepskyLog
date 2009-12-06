@@ -1481,10 +1481,10 @@ class Utils implements iUtils
 			if(!$sort)
 			{ $pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA['objectseen']);			                   // seen
 			  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA['objectlastseen']);		                     // last seen	
-			  $pdf->addTextWrap($xbase+ 70, $y,  85, $fontSizeText, '<b>'.
+			  $pdf->addTextWrap($xbase+ 70, $y,  85, $fontSizeText, '<span class=\"bold\">'.
 				  '<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.
 					urlencode($valueA['objectname']).'>'.$valueA['showname']);		               //	object
-			  $pdf->addTextWrap($xbase+150, $y,  30, $fontSizeText, '</c:alink></b>'.$valueA['objecttype']);			                 // type
+			  $pdf->addTextWrap($xbase+150, $y,  30, $fontSizeText, '</c:alink></span>'.$valueA['objecttype']);			                 // type
 			  $pdf->addTextWrap($xbase+180, $y,  20, $fontSizeText, $valueA['objectconstellation']);			                         // constellation
 			  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectmagnitude'],99.9,''), 'left');  	                 // mag
 			  $pdf->addTextWrap($xbase+217, $y,  18, $fontSizeText, $objPresentations->presentationInt1($valueA['objectsurfacebrightness'],99.9,''), 'left');		                   // sb
@@ -1493,15 +1493,15 @@ class Utils implements iUtils
 			  $pdf->addTextWrap($xbase+295, $y,  55, $fontSizeText, $valueA['objectsize'] . '/' . $objPresentations->presentationInt($valueA['objectpa'],999,"-"));			             // size
 	  		$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectcontrast'],'',''), 'left');			             // contrast				
 	  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, (int)$valueA['objectoptimalmagnification'], 'left');			             // magnification				
-			  $pdf->addTextWrap($xbase+380, $y,  20, $fontSizeText, '<b>'.$valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')].'</b>', 'right');			   // atlas page
+			  $pdf->addTextWrap($xbase+380, $y,  20, $fontSizeText, '<span class=\"bold\">'.$valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')].'</span>', 'right');			   // atlas page
       }
       else
 			{ $pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA['objectseen']);			                   // seen
 			  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA['objectlastseen']);		                     // last seen	
-			  $pdf->addTextWrap($xbase+ 70, $y, 100, $fontSizeText, '<b>'.
+			  $pdf->addTextWrap($xbase+ 70, $y, 100, $fontSizeText, '<span class=\"bold\">'.
 				  '<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.
 					urlencode($valueA['objectname']).'>'.$valueA['showname']);		                                       //	object
-			  $pdf->addTextWrap($xbase+170, $y,  30, $fontSizeText, '</c:alink></b>'.$valueA['objecttype']);			                 // type
+			  $pdf->addTextWrap($xbase+170, $y,  30, $fontSizeText, '</c:alink></span>'.$valueA['objecttype']);			                 // type
 			  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectmagnitude'],99.9,''), 'left');			                 // mag
 			  $pdf->addTextWrap($xbase+217, $y,  18, $fontSizeText, $objPresentations->presentationInt1($valueA['objectsurfacebrightness'],99.9,''), 'left');			                   // sb
 			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, $objPresentations->raToStringHM($valueA['objectra']) . ' '.
@@ -1509,7 +1509,7 @@ class Utils implements iUtils
 			  $pdf->addTextWrap($xbase+295, $y,  55, $fontSizeText, $valueA['objectsize'] . '/' . $objPresentations->presentationInt($valueA['objectpa'],999,"-"));         			   // size
 	  		$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectcontrast'],0,''), 'left');			             // contrast				
 	  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, $objPresentations->presentationInt((int)$valueA['objectoptimalmagnification'],0,''), 'left');		               // magnification				
-			  $pdf->addTextWrap($xbase+380, $y,  20, $fontSizeText, '<b>'.$valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')].'</b>', 'right');			   // atlas page
+			  $pdf->addTextWrap($xbase+380, $y,  20, $fontSizeText, '<span class=\"bold\">'.$valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')].'</span>', 'right');			   // atlas page
       }
 			$y-=$deltaline;
       if($sort)

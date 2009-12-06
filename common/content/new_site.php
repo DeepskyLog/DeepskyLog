@@ -32,14 +32,12 @@ else
   $longitudedeg=$objUtil->checkRequestKey('longitude');
   $longitudemin=$objUtil->checkRequestKey('longitudemin');
   if($locationid=$objUtil->checkRequestKey('locationid'))
-  { $latitudestr=$objPresentations->decToString($objLocation->getLocationPropertyFromId($locationid,'latitude'), 1);
-    $latarray = explode("&deg;", $latitudestr);
-    $latitudedeg = substr($latarray[0],6);
-    $latitudemin = substr($latarray[1],0,-1);
-    $longitudestr = $objPresentations->decToString($objLocation->getLocationPropertyFromId($locationid,'longitude'), 1);
-    $longarray = explode("&deg;", $longitudestr);
-    $longitudedeg = substr($longarray[0],6);
-    $longitudemin = substr($longarray[1],0,-1);
+  { $latitudestr = $objLocation->getLocationPropertyFromId($locationid,'latitude');
+    $latitudedeg = (int)($latitudestr);
+    $latitudemin = round(((float)($latitudestr) - (int)($latitudestr)) * 60);
+    $longitudestr = $objLocation->getLocationPropertyFromId($locationid,'longitude');
+    $longitudedeg = (int)($longitudestr);
+    $longitudemin = round(((float)($longitudestr) - (int)($longitudestr)) * 60);
   }
   echo "<div id=\"main\">";
   $objPresentations->line(array("<h4>".LangOverviewSiteTitle." ".$loggedUserName."</h4>"),
@@ -75,14 +73,14 @@ else
   $objPresentations->line(array(LangAddSiteField4,
                                  "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"latitude\" size=\"4\" value=\"".$latitudedeg.
                                   "\" />&deg;&nbsp;".
-                                  "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"latitudemin\" size=\"4\"	value=\"".$latitudemin.
+                                  "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"latitudemin\" size=\"4\"	value=\"".abs($latitudemin).
                                   "\" />&#39;",
                                   LangAddSiteField4Expl),
                           "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
   $objPresentations->line(array(LangAddSiteField5,
                                  "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"".$longitudedeg.
                                  "\" />&deg;&nbsp;".
-                                 "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\"	name=\"longitudemin\" size=\"4\" value=\"".$longitudemin.
+                                 "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\"	name=\"longitudemin\" size=\"4\" value=\"".abs($longitudemin).
                                  "\" />&#39;",
                                  LangAddSiteField5Expl),
                           "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));

@@ -127,6 +127,9 @@ body {
 	height           : 100%;
 	vertical-align   : bottom;
 }
+.bold {
+	font-weight      : bold;
+}
 .centered {
   text-align       : center;
 }
@@ -570,6 +573,9 @@ ul{
   background-color : #66FF00;
 	padding          : 2px;
 	color            : #000000;
+}
+.underline {
+	text-decoration  : underline;
 }
 #veil {
   position         : absolute;

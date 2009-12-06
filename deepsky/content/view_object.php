@@ -101,7 +101,7 @@ else
 	//============================================================================== Admin section permits to change object settings in DB remotely
 	if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
 	{ echo "<hr />";
-	  echo("<form action=\"".$baseURL."index.php\" method=\"get\">");
+	  echo("<form action=\"".$baseURL."index.php\" method=\"get\"><div>");
 	  echo("<input type=\"hidden\" name=\"object\" value=\"" . $_GET['object'] . "\" />");
 	  echo("<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />");
 	  echo("<select name=\"newaction\">");
@@ -131,7 +131,7 @@ else
 	  echo "<input type=\"text\" class=\"inputfield\" maxlength=\"255\" name=\"newnumber\" size=\"40\" value=\"\"/>";
 	  echo "<input type=\"submit\" name=\"gonew\" value=\"Go\"/><br />";
 	  echo "<a href=\"".$baseURL."index.php?indexAction=manage_csv_object\">" . LangNewObjectSubtitle1b . "</a><br />";
-	  echo "</form>";
+	  echo "</div></form>";
 	}
 }
 ?>
