@@ -3,7 +3,7 @@ echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presenta
 $link2 = $baseURL . "index.php?indexAction=result_selected_observations&amp;lco=" . urlencode($_SESSION['lco']);
 reset($_GET);
 while (list ($key, $value) = each($_GET))
-	if (!in_array($key, array (
+  if (!in_array($key, array (
 			'indexAction',
 			'lco',
 			'sortdirection',
@@ -11,9 +11,9 @@ while (list ($key, $value) = each($_GET))
 			'multiplepagenr',
 			'min',
 			'myLanguages'
-		)))
-		$link2 .= "&amp;" .
-		$key . "=" . urlencode($value);
+	  )))
+$link2 .= "&amp;" .
+$key . "=" . urlencode($value);
 //  while(list($key,$value)=each($usedLanguages))
 //	  $link2=$link2.'&amp;'.$value.'='.$value; 
 $link = $link2 . '&amp;sort=' . $_GET['sort'] . '&amp;sortdirection=' . $_GET['sortdirection'];
@@ -82,17 +82,17 @@ else
 		$content1.=LangSelectedObservationsTitle2;
 	$content1.="</h4>";
 	$link3 = $link;
-	list($min, $max,$content2,$pageleft,$pageright,$pagemax)=$objUtil->printNewListHeader4($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
-	$objPresentations->line(array($content1,$content2),"LR",array(50,50),30);
 	$content3 ="<h4>";
 	if ($objUtil->checkGetKey('myLanguages')) 
 	{ $content3.=" (".LangSelectedLanguagesShown.")";
-		$link .= "&amp;myLanguages=true";
-		$link2 .= "&amp;myLanguages=true";
+	  $link .= "&amp;myLanguages=true";
+	  $link2 .= "&amp;myLanguages=true";
 	} 
 	else
-		$content3.=" (".LangAllLanguagesShown.")";
+	  $content3.=" (".LangAllLanguagesShown.")";
 	$content3.="</h4>";
+	list($min, $max,$content2,$pageleft,$pageright,$pagemax)=$objUtil->printNewListHeader4($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
+	$objPresentations->line(array($content1,$content2),"LR",array(50,50),30);
 	if($object)
     $content4=$objUtil->printStepsPerPage3($link,"selObjObs".$_SESSION['lco'],$step);
 	else
