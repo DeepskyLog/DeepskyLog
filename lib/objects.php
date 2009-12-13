@@ -936,11 +936,19 @@ class Objects implements iObjects
       echo "<td align=\"center\">".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."</td>";
       if($loggedUser) 
 	    { $page = $_SESSION['Qobj'][$count][$atlas];
+        if(substr($_SESSION['Qobj'][$count]['objectseen'],0,2)=="YD")
+          $seenclass="seenYD";
+        elseif(substr($_SESSION['Qobj'][$count]['objectseen'],0,1)=="Y")
+          $seenclass="seenY";
+        elseif(substr($_SESSION['Qobj'][$count]['objectseen'],0,1)=="X")
+          $seenclass="seenX";
+        else
+          $seenclass="seenN";
         echo "<td align=\"center\" onmouseover=\"Tip('".$objAtlas->atlasCodes[$atlas]."')\">".$page."</td>";
         echo "<td align=\"center\" class=\"".$_SESSION['Qobj'][$count]['objectcontrasttype']."\" onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectcontrastpopup']."')\">".$_SESSION['Qobj'][$count]['objectcontrast']."</td>";
         echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectoptimalmagnification']."</td>";
-        echo "<td align=\"center\" class=\"seen\">".$_SESSION['Qobj'][$count]['objectseenlink']."</td>";
-        echo "<td align=\"center\" class=\"seen\">".$_SESSION['Qobj'][$count]['objectlastseenlink']."</td>";
+        echo "<td align=\"center\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectseenlink']."</td>";
+        echo "<td align=\"center\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectlastseenlink']."</td>";
 	    }
   	  if($myList)
   	  { echo("<td align=\"center\">");

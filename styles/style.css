@@ -477,7 +477,21 @@ p, td, tr, div {
 }
 .requiredField {
 	background-color : #FFFFCC;
-}   
+}
+.seenN {
+  background-color : #CC2222;
+	padding          : 2px;
+}
+.seenX {
+  background-color : #E5E500;
+	padding          : 2px;
+}
+.seenY {
+  background-color : #228822;
+	padding          : 2px;
+}
+.seenYD {
+}
 .sortButton {
 	border           : 0px;
 }
