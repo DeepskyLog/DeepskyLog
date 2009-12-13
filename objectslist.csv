@@ -1,0 +1,8 @@
+<?php 
+header ("Content-Type: application/vnd.ms-excel");
+header ("Content-Disposition: attachment; filename=\"objects.csv\"");
+$inIndex = true;
+include 'common/entryexit/preludes.php';
+if(array_key_exists('SID', $_GET)&&$_GET['SID']&&array_key_exists($_GET['SID'],$_SESSION)&&$_SESSION[$_GET['SID']])
+  $objUtil->csvObjectslist($_SESSION[$_GET['SID']]);
+?>

@@ -1023,7 +1023,7 @@ class Utils implements iUtils
  
   	print $test1;
   }
-  public  function csvObjects($result)  // Creates a csv file from an array of objects
+ public  function csvObjects($result)  // Creates a csv file from an array of objects
   { global $objObject,$objPresentations,$objObserver, $loggedUser;
     echo html_entity_decode(LangCSVMessage7)."\n";
     while(list($key,$valueA)=each($result))
@@ -1034,6 +1034,35 @@ class Utils implements iUtils
           $alt.=" - ".trim($value);
       $alt=($alt?substr($alt,3):'');
       echo $valueA['objectname'].";". 
+           $alt.";".
+           $objPresentations->raToString($valueA['objectra']).";".
+           $objPresentations->decToString($valueA['objectdecl'], 0).";".
+           $GLOBALS[$valueA['objectconstellation']].";".
+           $GLOBALS[$valueA['objecttype']].";".
+           $objPresentations->presentationInt1($valueA['objectmagnitude'],99.9,'').";".
+           $objPresentations->presentationInt1($valueA['objectsurfacebrightness'],99.9,'').";".
+           $valueA['objectsize'].";".
+           $objPresentations->presentationInt($valueA['objectpa'],999,'').";".
+           $valueA[$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano')].";".
+           $valueA['objectcontrast'].";".
+           $valueA['objectoptimalmagnification'].";".
+           $valueA['objectseen'].";".
+           $valueA['objectlastseen'].
+           "\n";
+    }
+  }  
+   public  function csvObjectsList($result)  // Creates a csv file from an array of objects
+  { global $objObject,$objPresentations,$objObserver, $loggedUser;
+    echo html_entity_decode("showname;".LangCSVMessage7)."\n";
+    while(list($key,$valueA)=each($result))
+    { $alt="";
+      $alts=$objObject->getAlternativeNames($valueA['objectname']);
+      while(list($key1,$value)=each($alts))
+        if($value!=$valueA['objectname'])
+          $alt.=" - ".trim($value);
+      $alt=($alt?substr($alt,3):'');
+      echo $valueA['showname'].";". 
+           $valueA['objectname'].";". 
            $alt.";".
            $objPresentations->raToString($valueA['objectra']).";".
            $objPresentations->decToString($valueA['objectdecl'], 0).";".

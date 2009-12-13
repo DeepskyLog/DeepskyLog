@@ -1131,6 +1131,7 @@ define("LangCSVMessage5"																	,"Opgepast!<br />De instrumenten, waarn
                            																	Indien alles goed gaat, worden de ingevoerde waarnemingen getoond in het overzicht van alle waarnemingen.");
 define("LangCSVMessage6"																	,"CSV bestand ");
 define("LangCSVMessage7"																	,"Naam;AlternatieveNaam;RA;Decl;Sterrenbeeld;Type;Magnitude;OppervlakteHelderheid;Diameter;Positie vhoek;Pagina;ContrastReserve;OptimaleVergroting;Gezien;Laatst gezien");
+define("LangCSVMessage7List"																	,"Naam;AlternatieveNaam;RA;Decl;Sterrenbeeld;Type;Magnitude;OppervlakteHelderheid;Diameter;Positie vhoek;Pagina;ContrastReserve;OptimaleVergroting;Gezien;Laatst gezien");
 define("LangCSVMessage8"																	,"Waarnemingen toegevoegd");
 define("LangCSVMessage9"																	,"; waarnemingen verworpen wegens problemen");
 define("LangCSVMessage10"																	,"; waarnemingen reeds aanwezig en niet hernomen");

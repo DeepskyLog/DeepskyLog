@@ -63,7 +63,7 @@ if($listname)
     $content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objectsDetails.pdf?SID=Qobj&amp;sort=" . $_SESSION['QobjSort'],LangExecuteQueryObjectsMessage4c);
 	  $content.="&nbsp;-&nbsp;";
     $content.="<a href=\"objects.argo?SID=Qobj\" rel=\"external\">".LangExecuteQueryObjectsMessage8."</a> &nbsp;-&nbsp;";
-    $content.="<a href=\"objects.csv?SID=Qobj\" rel=\"external\">".LangExecuteQueryObjectsMessage6."</a>";
+    $content.="<a href=\"objectslist.csv?SID=Qobj\" rel=\"external\">".LangExecuteQueryObjectsMessage6."</a>";
     $objPresentations->line(array($content),"L",array(),30);
 	}
 	else
