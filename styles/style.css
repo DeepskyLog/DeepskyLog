@@ -97,7 +97,7 @@ td.abbrevTable {
   font-family      : Lucida Console,sans-serif;
   font-size        : 8pt;
   padding          : 2px;
-  visiblity        : hidden;
+  visibility       : hidden;
   overflow         : auto;
 }
 .atlasPageDiv3 {
@@ -116,7 +116,7 @@ td.abbrevTable {
   font-family      : Lucida Console,sans-serif;
   font-size        : 8pt;
   padding          : 2px;
-  visiblity        : hidden;
+  visibility       : hidden;
   overflow         : auto;
 }
 body {
