@@ -1133,6 +1133,7 @@ define("LangCSVMessage5"																	,"Caution!<br />The instruments, the lo
                            																	If everything went well, your observations will be shown in the \"All observations\" overview.");
 define("LangCSVMessage6"																	,"CSV file to import ");
 define("LangCSVMessage7"																	,"Name;Altname;RA;Decl;Constellation;Type;Magnitude;SurfaceBrightness;Diameter;Position Angle;Page;ContrastReserve;OptimalMagnification;Seen;Last Seen");
+define("LangCSVMessage7List"															,"Name(List);Name;Altname;RA;Decl;Constellation;Type;Magnitude;SurfaceBrightness;Diameter;Position Angle;Page;ContrastReserve;OptimalMagnification;Seen;Last Seen");
 define("LangCSVMessage8"																	,"Observations added");
 define("LangCSVMessage9"																	,"; observations rejected with problems");
 define("LangCSVMessage10"																	,"; observations dropped because already present");

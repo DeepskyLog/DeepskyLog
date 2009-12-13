@@ -14,6 +14,7 @@ interface iUtils
   public  function checkUserID($toCheck);                                      // returns true if logged user equals toCheck
   public  function comastObservations($result);                                // Creates a xml file from an array of observations
   public  function csvObjects($result);                                        // Creates a csv file from an array of objects
+  public  function csvObjectsList($result);                                    // Creates a csv file from an array of list objects
   public  function csvObservations($result);                                   // Creates a csv file from an array of observations
   public  function csvObservationsImportErrors($result);                       // Creates a csv file from an array of error csv import observations
   public  function pdfCometObservations($result);                              // Creates a pdf document from an array of comet observations
@@ -1051,9 +1052,9 @@ class Utils implements iUtils
            "\n";
     }
   }  
-   public  function csvObjectsList($result)  // Creates a csv file from an array of objects
+  public  function csvObjectsList($result)  // Creates a csv file from an array of list objects
   { global $objObject,$objPresentations,$objObserver, $loggedUser;
-    echo html_entity_decode("showname;".LangCSVMessage7)."\n";
+    echo html_entity_decode(LangCSVMessage7List)."\n";
     while(list($key,$valueA)=each($result))
     { $alt="";
       $alts=$objObject->getAlternativeNames($valueA['objectname']);

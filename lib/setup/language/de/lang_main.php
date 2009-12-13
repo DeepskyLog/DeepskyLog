@@ -1138,6 +1138,7 @@ define("LangCSVMessage5"																	,"Achtung!<br />Das Beobachtungsger&aum
                         																   Wenn alles gut geht, erscheinen Ihre Beobachtungen in der  \"Alle Beobachtungen\" &Uuml;bersicht.");
 define("LangCSVMessage6"																	,"CSV Datei f&uuml;r den Import ");
 define("LangCSVMessage7"																	,"Name;AltnativName;RA;Dekl;Sternbild;Typ;Helligkeit;Oberfl&auml;schen Helligkeit;Durchmesser;Seite;Beobachtet;Last Seen");
+define("LangCSVMessage7List"															,"Name(list);Name;AltnativName;RA;Dekl;Sternbild;Typ;Helligkeit;Oberfl&auml;schen Helligkeit;Durchmesser;Seite;Beobachtet;Last Seen");
 define("LangCSVMessage8"																	,"Observations added");
 define("LangCSVMessage9"																	,"; observations rejected with problems");
 define("LangCSVMessage10"																	,"; observations dropped because already present");

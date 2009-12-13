@@ -1136,6 +1136,7 @@ define("LangCSVMessage5"																	,"Attention!<br />Les instruments, les 
                            																	Si tout se passe bien, les observations rentr&eacute;es seront affich&eacute;es utilisant 'Toutes les observations'.");
 define("LangCSVMessage6"																	,"Fichier CSV ");
 define("LangCSVMessage7"																	,"Nom;NomAlternatif;AD;Decl;Constellation;Type;Magnitude;MagnitudeSurface;Diam&egrave;tre;Angle de position;Page;ContrastReserve;OptimalMagnification;Vu;Date vu");
+define("LangCSVMessage7List"															,"Nom(liste);Nom;NomAlternatif;AD;Decl;Constellation;Type;Magnitude;MagnitudeSurface;Diam&egrave;tre;Angle de position;Page;ContrastReserve;OptimalMagnification;Vu;Date vu");
 define("LangCSVMessage8"																	,"Observations rajout&eacute;es");
 define("LangCSVMessage9"																	,"; observations avec des probl&egrave;mes (rejet&eacute;es)");
 define("LangCSVMessage10"																	,"; observations d&eacute;j&agrave; pr&eacute;sentes (ne sont pas reprises)");
