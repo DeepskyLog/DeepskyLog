@@ -1,6 +1,6 @@
 <?php
 echo "Checking ".($objCnt=count($_SESSION['Qobj']))." objects.<br />";
-echo "<br />";
+echo "<hr />";
 echo "Checking objects constellation:<br />";
 echo "<br />";
 $correct=0;
@@ -12,4 +12,5 @@ for($i=0;$i<$objCnt;$i++)
 }
 echo "<br />";
 echo "Correct ".$correct.".<br />";
+echo "<hr />";
 ?>
