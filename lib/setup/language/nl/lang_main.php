@@ -596,6 +596,7 @@ define("LangOverviewObjectsHeader6"												,"Decl");
 define("LangOverviewObjectsHeader7"												,"Gezien");
 define("LangOverviewObjectsHeader8"												,"Laatst gezien");
 define("LangOverviewObjectsHeader9"												,"Positie");
+define("LangOverviewObjectsHeader10"											,"Grootte");
 
 // content/execute_query_objects.php
 

@@ -603,6 +603,7 @@ define("LangOverviewObjectsHeader6"												,"Dekl");
 define("LangOverviewObjectsHeader7"												,"Beobachtet");
 define("LangOverviewObjectsHeader8"												,"Zuletzt gesehen");
 define("LangOverviewObjectsHeader9"												,"Position");
+define("LangOverviewObjectsHeader10"											,"Gr&ouml;&szlig;e");
 
 // content/execute_query_objects.php
 

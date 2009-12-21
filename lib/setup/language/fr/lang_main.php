@@ -601,6 +601,7 @@ define("LangOverviewObjectsHeader6"												,"Decl");
 define("LangOverviewObjectsHeader7"												,"Vu");
 define("LangOverviewObjectsHeader8"												,"Vu r&eacute;cemment");
 define("LangOverviewObjectsHeader9"												,"Position");
+define("LangOverviewObjectsHeader10"		  								,"Dimensions");
 
 // content/execute_query_objects.php
 

@@ -39,6 +39,7 @@ interface iObjects
   public  function setDsoProperty($name,$property,$propertyValue);              // sets the property to the specified value for the given object
   public  function showObject($object);                                         // shows the characteristics of a single object
   public  function showObjects($link, $min, $max, $ownShow='', $showRank=0, $step=25, $pageListAction="addAllObjectsFromPageToList");    // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
+  public  function showObjectsFields($link, $min, $max, $ownShow='', $showRank=0, $step=25, $fields=array("showname","objectconstellation","objectmagnitude"), $pageListAction="addAllObjectsFromPageToList");        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
   public  function sortObjects($objectList, $sort, $reverse=false);             // Sort the array of objectList on the $sort field, and in second order on the showname field 
 	public  function validateObject();                                            // checks if the add new object form is correctly filled in and eventually adds the object to the database
 }
@@ -950,6 +951,128 @@ class Objects implements iObjects
         echo "<td align=\"center\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectseenlink']."</td>";
         echo "<td align=\"center\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectlastseenlink']."</td>";
 	    }
+  	  if($myList)
+  	  { echo("<td align=\"center\">");
+        if($objList->checkObjectInMyActiveList($_SESSION['Qobj'][$count]['objectname']))
+          echo("<a href=\"".$link."&amp;min=".$min."&amp;removeObjectFromList=".urlencode($_SESSION['Qobj'][$count]['objectname'])."&amp;sort=".$objUtil->checkGetKey('sort')."&amp;previous=".$objUtil->checkGetKey('previous')."\" title=\"".$_SESSION['Qobj'][$count]['objectname'].LangListQueryObjectsMessage3.$listname_ss."\">R</a>");
+        else
+          echo("<a href=\"".$link."&amp;min=".$min."&amp;addObjectToList=".urlencode($_SESSION['Qobj'][$count]['objectname'])."&amp;showname=".urlencode($_SESSION['Qobj'][$count]['showname'])."&amp;sort=".$objUtil->checkGetKey('sort')."&amp;previous=".$objUtil->checkGetKey('previous')."\" title=\"".$_SESSION['Qobj'][$count]['objectname'].LangListQueryObjectsMessage2.$listname_ss."\">L</a>");
+        echo("</td>");
+  	  }
+      echo("</tr>");
+      $countline++; 
+      $count++;
+    }
+    if($FF) 
+    { while($countline++<$step)
+        echo "<tr><td>&nbsp;</td></tr>";   
+      echo "</tbody>";
+    }
+    echo "</table>";
+  }
+  public  function showObjectsFields($link, $min, $max, $ownShow='', $showRank=0, $step=25, $fields=array("showname","objectconstellation","objectmagnitude"), $pageListAction="addAllObjectsFromPageToList")        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
+  { global $FF, $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil,$objPresentations,$objList;
+	  $atlas='';
+    echo "<table>";
+    if($FF)
+      echo "<thead>";
+    echo "<tr class=\"type3\">";
+    while(list($key,$value)=each($fields))
+    { if($value=="showrank")
+		    $objPresentations->tableSortHeader(LangOverviewObjectsHeader9,  $link."&amp;sort=objectpositioninlist");
+	    if($value=="showownrank")
+		    $objPresentations->tableSortHeader(LangOverviewObjectsHeader9,  $link."&amp;sort=objectpositioninlist");
+	    if($value=="showname")
+	      $objPresentations->tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=showname");
+	    if($value=="objectconstellation")
+	      $objPresentations->tableSortHeader(LangOverviewObjectsHeader2,  $link."&amp;sort=objectconstellation");
+	    if($value=="objectmagnitude")
+	      $objPresentations->tableSortHeader(LangOverviewObjectsHeader3,  $link."&amp;sort=objectmagnitude");
+	    if($value=="objectsurfacebrightness")
+	      $objPresentations->tableSortHeader(LangOverviewObjectsHeader3b, $link."&amp;sort=objectsurfacebrightness");
+	    if($value=="objectra")
+	      $objPresentations->tableSortHeader(LangOverviewObjectsHeader5,  $link."&amp;sort=objectra");
+	    if($value=="objectdecl")
+	      $objPresentations->tableSortHeader(LangOverviewObjectsHeader6,  $link."&amp;sort=objectdecl");
+	    if($value=="objectdiam")
+	      $objPresentations->tableSortHeader(LangOverviewObjectsHeader10,  $link."&amp;sort=objectdiam1");
+	    if($value=="objecttype")
+	      $objPresentations->tableSortHeader(LangOverviewObjectsHeader4,  $link."&amp;sort=objecttype");
+	    if($loggedUser)
+		  { $atlas = $objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano');
+	      if($value=="atlas")
+		      $objPresentations->tableSortHeader($objAtlas->atlasCodes[$atlas], $link."&amp;sort=".$atlas);
+	      if($value=="objectcontrast")
+		      $objPresentations->tableSortInverseHeader(LangViewObjectFieldContrastReserve, $link."&amp;sort=objectcontrast");
+	      if($value=="objectoptimalmagnification")
+		      $objPresentations->tableSortHeader(LangViewObjectFieldMagnification, $link."&amp;sort=objectoptimalmagnification");
+	      if($value=="objectseen")
+		      $objPresentations->tableSortHeader(LangOverviewObjectsHeader7, $link."&amp;sort=objectseen");
+	      if($value=="objectlastseen")
+		      $objPresentations->tableSortHeader(LangOverviewObjectsHeader8, $link."&amp;sort=objectlastseen");
+	    }
+    }
+    if(($myList) && ($pageListAction=="addAllObjectsFromPageToList"))
+      echo("<td align=\"center\"><a href=\"".$link."&amp;min=".$min."&amp;max=".($min+$step)."&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">&nbsp;P&nbsp;</a></td>");
+    if(($myList) && ($pageListAction=="removePageObjectsFromList"))
+      echo("<td align=\"center\"><a href=\"".$link."&amp;min=".$min."&amp;max=".($min+$step)."&amp;removePageObjectsFromList=true\" title=\"" . LangListQueryObjectsMessage1b. $listname_ss . "\">&nbsp;R&nbsp;</a></td>");
+    if($FF)
+      echo "<td class=\"width10px\">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
+    echo "</tr>";
+ 	  if($FF)
+ 	    echo "</thead>";
+ 	  if($FF)
+ 	    echo "<tbody id=\"obj_list\" class=\"tbody_obj\">";
+    $count = $min; // counter for altering table colors
+	  $countline = 0;
+	  if($max>count($_SESSION['Qobj']))
+	 	  $max=count($_SESSION['Qobj']);
+    while($max && ($count<$max))
+    { echo "<tr ".(($_SESSION['Qobj'][$count]['objectname']==$ownShow)?"class=\"type3 height5px\"":"class=\"height5px type".(2-($countline%2)."\"")).">";
+      reset($fields);
+      while(list($key,$value)=each($fields))
+      { if(($value=="showownrank")&&$myList)
+	        echo "<td align=\"center\"><a href=\"#\" onclick=\"theplace = prompt('".LangNewPlaceInList."','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
+	      if($value=="showrank")
+		      echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</td>";
+	      if($value=="showname")
+		      echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" >".$_SESSION['Qobj'][$count]['showname']."</a></td>";
+	      if($value=="objectconstellation")
+		      echo "<td align=\"center\">".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."</td>";
+	      if($value=="objectmagnitude")
+		      echo "<td align=\"center\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>";
+	      if($value=="objectsurfacebrightness")
+		      echo "<td align=\"center\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>";
+	      if($value=="objecttype")
+		      echo "<td align=\"center\">".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."</td>";
+	      if($value=="objectra")
+		      echo "<td align=\"center\">".$objPresentations->raToString($_SESSION['Qobj'][$count]['objectra'])."</td>";
+		    if($value=="objectdecl")
+		      echo "<td align=\"center\">".$objPresentations->decToStringDegMin($_SESSION['Qobj'][$count]['objectdecl'])."</td>";
+		    if($value=="objectdiam")
+		      echo "<td align=\"center\">".$this->getSize($_SESSION['Qobj'][$count]['objectname'])."</td>";
+		    if($loggedUser) 
+		    { $page = $_SESSION['Qobj'][$count][$atlas];
+	        if(substr($_SESSION['Qobj'][$count]['objectseen'],0,2)=="YD")
+	          $seenclass="seenYD";
+	        elseif(substr($_SESSION['Qobj'][$count]['objectseen'],0,1)=="Y")
+	          $seenclass="seenY";
+	        elseif(substr($_SESSION['Qobj'][$count]['objectseen'],0,1)=="X")
+	          $seenclass="seenX";
+	        else
+	          $seenclass="seenN";
+	        if($value=="atlas")
+	          echo "<td align=\"center\" onmouseover=\"Tip('".$objAtlas->atlasCodes[$atlas]."')\">".$page."</td>";
+	        if($value=="objectcontrast")
+	          echo "<td align=\"center\" class=\"".$_SESSION['Qobj'][$count]['objectcontrasttype']."\" onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectcontrastpopup']."')\">".$_SESSION['Qobj'][$count]['objectcontrast']."</td>";
+	        if($value=="objectoptimalmagnification")
+	          echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectoptimalmagnification']."</td>";
+	        if($value=="objectseenlink")
+	          echo "<td align=\"center\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectseenlink']."</td>";
+	        if($value=="objectlastseenlink")
+	          echo "<td align=\"center\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectlastseenlink']."</td>";
+		    }
+      }
   	  if($myList)
   	  { echo("<td align=\"center\">");
         if($objList->checkObjectInMyActiveList($_SESSION['Qobj'][$count]['objectname']))

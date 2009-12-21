@@ -598,6 +598,7 @@ define("LangOverviewObjectsHeader6"					  						,"Decl");
 define("LangOverviewObjectsHeader7"												,"Seen");
 define("LangOverviewObjectsHeader8"												,"Last Seen");
 define("LangOverviewObjectsHeader9"												,"Position");
+define("LangOverviewObjectsHeader10"											,"Size");
 
 // content/execute_query_objects.php
 
