@@ -93,7 +93,7 @@ else
 	}
 	else
 	{ $objPresentations->line(array("<h4>".LangViewDSSImageTitle.$object."&nbsp;(".$imagesize."&#39;&nbsp;x&nbsp;".$imagesize."&#39;)</h4>"),"L");
-	  $imagelink = ("http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&amp;r=".$objUtil->checkRequestKey('raDSS').".0&amp;d=".$objUtil->checkRequestKey('declDSS')."&amp;e=J2000&amp;h=".$imagesize.".0&amp;w=".$imagesize."&amp;f=gif&amp;c=none&amp;fov=NONE&amp;v3=");
+	  $imagelink = "http://archive.stsci.edu/cgi-bin/dss_search?"."v=poss2ukstu_red&amp;r=".urlencode($objUtil->checkRequestKey('raDSS')).".0&amp;d=".urlencode($objUtil->checkRequestKey('declDSS'))."&amp;e=J2000&amp;h=".$imagesize.".0&amp;w=".$imagesize."&amp;f=gif&amp;c=none&amp;fov=NONE&amp;v3=";
 	  echo "<p class=\"centered DSSImage\"> <img class=\"centered DSSImage\" src=\"".$imagelink."\" alt=\"".$object."\" ></img> </p>";
 	  echo "<p>&copy;&nbsp;<a href=\"http://archive.stsci.edu/dss/index.html\">STScI Digitized Sky Survey</a></p>";
 	}
