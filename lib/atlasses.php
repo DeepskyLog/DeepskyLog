@@ -90,6 +90,8 @@ class Atlasses implements iAtlasses
     for ($Tier = 0; $decl < $data[$Tier][0]; $Tier++);                          // find proper tier
       $HoursPerChart = 24.0 / $data[$Tier][2];
     $ra = $ra - ($HoursPerChart / 2);
+    if($ra<0)
+      $ra+=24;
     $MapOffset = (int)($ra / $HoursPerChart);                                   // Offset; middle of 1st map is in the middle of 0 hours RA
     return (int)($data[$Tier][1] - $MapOffset);
   }  
