@@ -42,6 +42,8 @@ else
 	  $MSIE=false;
 	else
 	  $MSIE=true;
+
+	  
 	  
 }
 function Nz($arg)

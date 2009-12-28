@@ -4,6 +4,7 @@ interface iObservers
   public  function getAdministrators();
   public  function getCometRank($observer);                                               // returns the number of observations of the given observer
   public  function getDsRank($observer);                                                  // returns the number of observations of the given observer
+  public  function getLastReadObservation($observerid);
   public  function getListOfInstruments();                                                // returns a list of all StandardInstruments of all observers
   public  function getListOfLocations();                                                  // returns a list of all StandardLocations of all observers
   public  function getNumberOfCometObservations($observerid);                             // returns the number of comet observations for the given observerid
@@ -34,6 +35,10 @@ class Observers implements iObservers
   public  function getDsRank($observer)                                                    // getRank() returns the number of observations of the given observer
   { global $objObservation;
     return array_search($observer,$objObservation->getPopularObservers());
+  }
+  public  function getLastReadObservation($observerid)
+  { global $objDatabase; 
+    return $objDatabase->selectSingleValue("SELECT lastReadObservationId FROM observers WHERE observerid=\"".$observerid."\"",'lastReadObservationId',0);
   }
   public  function getListOfInstruments()                                                // getListOfInstruments returns a list of all StandardInstruments of all observers
   { global $objDatabase; 
