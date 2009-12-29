@@ -1,6 +1,10 @@
 <?php
 
 // TO DO
+
+define("LangMarkAllAsRead"                                ,"Allen markeren als gelezen.");
+define("LangMarkUpToHereAsRead"                           ,"Tot hier als gelezen markeren.");
+
 define("LangValidateMessage1"                             ,"Tous les champs obligatoires doivent &#234;tre remplis!");
 define("LangRequiredFields"                               ,"(*= champs obligatoires)");
 define("LangNoOwnColor"                                   , "Eigen waarnemingen niet oplichten");

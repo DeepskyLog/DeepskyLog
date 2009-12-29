@@ -945,7 +945,7 @@ class Observations {
     echo "<td class=\"centered\">";
     echo "&nbsp;";
     if(($loggedUser)&&($lastReadObservation>=0))
-      echo "<a href=\"".$link."&amp;markAsRead=All\" title=\"Mark all as read\">!</a>";
+      echo "<a href=\"".$link."&amp;markAsRead=All\" title=\"".LangMarkAllAsRead."\">!</a>";
     echo "</td>";
 		if($myList)
 			echo "<td>&nbsp;</td>";
@@ -1012,21 +1012,15 @@ class Observations {
 				  else
 				    echo "<tr class=\"height5px type".(2 -($obsKey%2))."\">";
 				else
-				  echo "<tr class=\"height5px type20\">";
+				echo "<tr class=\"height5px type20\">";
+			  echo "<td class=\"centered\">";
 			  if(($objUtil->checkGetKey('expand')==$value['observationid']))
-			  { echo "<td class=\"centered\">";
 			    echo "<a  href=\"".$link."&amp;expand=0\" title=\"".$explantation1."\">"."-"."</a>";
-			    if(($value['observationid']>$lastReadObservation)&&($lastReadObservation>=0))
-			      echo "&nbsp;<a href=\"".$link."&amp;markAsRead=".$value['observationid']."\" title=\"Mark up to here as read\">!</a>";
-			    echo "</td>";
-			  }
 			  else
-			  { echo "<td class=\"centered\">";
 			    echo "<a  href=\"".$link."&amp;expand=".$value['observationid']."\" title=\"".$explantation1."\">".((substr($seen,0,1)!="Y")?"x":"+")."</a>";
-			    if(($value['observationid']>$lastReadObservation)&&($lastReadObservation>=0))
-			      echo "&nbsp;<a href=\"".$link."&amp;markAsRead=".$value['observationid']."\" title=\"Mark up to here as read\">!</a>";
-			    echo "</td>";
-			  }
+			  if(($value['observationid']>$lastReadObservation)&&($lastReadObservation>=0))
+			    echo "&nbsp;<a href=\"".$link."&amp;markAsRead=".$value['observationid']."\" title=\"".LangMarkUpToHereAsRead."\">!</a>";
+			  echo "</td>";
 			  if($myList) 
 				{ echo "<td class=\"centered\">";
 					if($objDatabase->selectSingleValue("SELECT Count(observerobjectlist.objectname) As ObjCnt FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND objectname=\"".$value['objectname']."\" AND listname=\"".$listname."\"",'ObjCnt',0)>0)

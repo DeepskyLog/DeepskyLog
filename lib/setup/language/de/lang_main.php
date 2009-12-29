@@ -1,6 +1,11 @@
 <?php
 
 // TO DO:
+
+define("LangMarkAllAsRead"                                ,"Mark all as read.");
+define("LangMarkUpToHereAsRead"                           ,"Mark up to here as read.");
+
+
 //LangCSVMessage3 (SQM) en nog enkele andere lijnen daarrond
 //define("LangViewObserverinstrumentCount"                  ,"Aantal instrumenten");
 // define("LangViewObserverChangeNameFirstname"              ,"Verander voornaam/naam");

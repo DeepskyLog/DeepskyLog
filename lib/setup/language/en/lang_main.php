@@ -1,6 +1,10 @@
 <?php
 
 // TO DO:
+
+define("LangMarkAllAsRead"                                ,"Mark all as read.");
+define("LangMarkUpToHereAsRead"                           ,"Mark up to here as read.");
+
 define("LangValidateMessage1"                             ,"All required fields must be filled in!");
 define("LangRequiredFields"                               ,"(* required fields)");
 define("LangNoOwnColor"                                   , "No highlighting of own observations");

@@ -5,6 +5,19 @@ else
     $objObserver->markAllAsRead();
   elseif($markAsRead)
     $objObserver->markAsRead($markAsRead);
+  $theDate = date('Ymd', strtotime('-1 year'));
+  if(($objUtil->checkGetKey('indexAction','x')=='x')||
+   (($objUtil->checkGetKey('catalog','x')=='%')&&
+    ($objUtil->checkGetKey('minyear','x')==substr($theDate,0,4))&&
+    ($objUtil->checkGetKey('minmonth','x')==substr($theDate,4,2))&&
+    ($objUtil->checkGetKey('minday','x')==substr($theDate,6,2))&&
+    (($objUtil->checkGetKey('sort','x')=='x')||
+     (($objUtil->checkGetKey('sort','x')=='observationid')&&
+      ($objUtil->checkGetKey('sortdirection','x')=='desc')))))                                
+    $lastReadObservation=($loggedUser?$objObserver->getLastReadObservation($loggedUser):-1);
+  else
+    $lastReadObservation=-1;
+    
   if($objUtil->checkGetKey('indexAction')=="logout")                                                                 // logout
 	  require_once $instDir."common/control/logout.php";
 	//listnames

@@ -1,6 +1,10 @@
 <?php
 
 // TO DO:
+
+define("LangMarkAllAsRead"                                ,"Allen markeren als gelezen.");
+define("LangMarkUpToHereAsRead"                           ,"Tot hier als gelezen markeren.");
+
 define("LangValidateMessage1"                             ,"Alle verplichte velden moeten worden ingevuld!");
 define("LangRequiredFields"                               ,"(* verplichte velden)");
 
