@@ -13,6 +13,8 @@ interface iObservers
   public  function getPopularObserversByName();                                           // returns an array with the ids(key) and names(value) of all active observers, sorted by name
   public  function getSortedObservers($sort);                                             // returns an array with the ids of all observers, sorted by the column specified in $sort
   public  function getUsedLanguages($id);
+  public  function markAllAsRead();
+  public  function markAsRead($themark);
   public  function setObserverProperty($id, $property, $propertyValue);                   // sets a new value for the property of the observer
 //private function setUsedLanguages($id, $language);                                      // setUsedLanguages sets all the used languages for the observer with id = $id
   public  function showTopObservers($catalog,$rank,$sort,$min,$max,$step); 
@@ -38,7 +40,7 @@ class Observers implements iObservers
   }
   public  function getLastReadObservation($observerid)
   { global $objDatabase; 
-    return $objDatabase->selectSingleValue("SELECT lastReadObservationId FROM observers WHERE observerid=\"".$observerid."\"",'lastReadObservationId',0);
+    return $objDatabase->selectSingleValue("SELECT lastReadObservationId FROM observers WHERE id=\"".$observerid."\"",'lastReadObservationId',0);
   }
   public  function getListOfInstruments()                                                // getListOfInstruments returns a list of all StandardInstruments of all observers
   { global $objDatabase; 
@@ -82,6 +84,16 @@ class Observers implements iObservers
   public  function getUsedLanguages($id)
   { global $objDatabase; 
     return unserialize($objDatabase->selectSingleValue("SELECT usedLanguages FROM observers WHERE id = \"$id\"",'usedLanguages',''));
+  }
+  public  function markAllAsRead()
+  { global $objDatabase, $loggedUser;
+  	if($loggedUser)
+  	  $objDatabase->execSQL("UPDATE observers SET lastReadObservationId=".$objDatabase->selectSingleValue("SELECT MAX(id) AS MaxID FROM observations",'MaxID',0)." WHERE id=\"".$loggedUser."\"");
+  }
+  public  function markAsRead($themark)
+  { global $objDatabase, $loggedUser;
+  	if($loggedUser)
+  	  $objDatabase->execSQL("UPDATE observers SET lastReadObservationId=".$themark." WHERE id=\"".$loggedUser."\"");
   }
   public  function setObserverProperty($id, $property, $propertyValue)                                                 // sets a new value for the property of the observer
   { global $objDatabase; 

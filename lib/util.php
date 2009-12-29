@@ -2157,12 +2157,14 @@ class Utils implements iUtils
     return $indexActionInclude;
   }
   private function utilitiesGetIndexActionDefaultAction()
-  { if($_SESSION['module']=='deepsky')
+  { global $lastReadObservation,$loggedUser,$objObserver;
+    if($_SESSION['module']=='deepsky')
 	  { $_GET['catalog']='%';
   	  $theDate = date('Ymd', strtotime('-1 year'));
       $_GET['minyear'] = substr($theDate,0,4);
       $_GET['minmonth'] = substr($theDate,4,2);
-      $_GET['minday'] = substr($theDate,6,2);  
+      $_GET['minday'] = substr($theDate,6,2);
+      $lastReadObservation=($loggedUser?$objObserver->getLastReadObservation($loggedUser):-1);
   	  return 'deepsky/content/selected_observations2.php';
 		}
 		else

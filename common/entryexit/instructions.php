@@ -1,7 +1,11 @@
 <?php  //instruction.php treats all commands for changing data in the database or setting program parameters
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else
-{	if($objUtil->checkGetKey('indexAction')=="logout")                                                                 // logout
+{	if(($markAsRead=$objUtil->checkGetKey('markAsRead',0))==="All")
+    $objObserver->markAllAsRead();
+  elseif($markAsRead)
+    $objObserver->markAsRead($markAsRead);
+  if($objUtil->checkGetKey('indexAction')=="logout")                                                                 // logout
 	  require_once $instDir."common/control/logout.php";
 	//listnames
 	$myList=False;
