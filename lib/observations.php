@@ -1015,9 +1015,9 @@ class Observations {
 				echo "<tr class=\"height5px type20\">";
 			  echo "<td class=\"centered\">";
 			  if(($objUtil->checkGetKey('expand')==$value['observationid']))
-			    echo "<a  href=\"".$link."&amp;expand=0\" title=\"".$explantation1."\">"."-"."</a>";
+			    echo "<a name=\"name".$value['observationid']."\" id=\"name".$value['observationid']."\" href=\"".$link."&amp;expand=0#name".$value['observationid']."\" title=\"".$explantation1."\">"."-"."</a>";
 			  else
-			    echo "<a  href=\"".$link."&amp;expand=".$value['observationid']."\" title=\"".$explantation1."\">".((substr($seen,0,1)!="Y")?"x":"+")."</a>";
+			    echo "<a name=\"name".$value['observationid']."\" id=\"name".$value['observationid']."\" href=\"".$link."&amp;expand=".$value['observationid']."#name".$value['observationid']."\" title=\"".$explantation1."\">".((substr($seen,0,1)!="Y")?"x":"+")."</a>";
 			  if(($value['observationid']>$lastReadObservation)&&($lastReadObservation>=0))
 			    echo "&nbsp;<a href=\"".$link."&amp;markAsRead=".$value['observationid']."\" title=\"".LangMarkUpToHereAsRead."\">!</a>";
 			  echo "</td>";
