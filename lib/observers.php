@@ -94,6 +94,7 @@ class Observers implements iObservers
   { global $objDatabase, $loggedUser;
   	if($loggedUser)
   	  $objDatabase->execSQL("UPDATE observers SET lastReadObservationId=".$themark." WHERE id=\"".$loggedUser."\"");
+    unset($_SESSION['Qobs']);
   }
   public  function setObserverProperty($id, $property, $propertyValue)                                                 // sets a new value for the property of the observer
   { global $objDatabase; 

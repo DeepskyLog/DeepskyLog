@@ -1,7 +1,7 @@
 <?php // instrument.php - menu which allows the user to change its standard instrument
 if($loggedUser) 
 { echo "<div class=\"menuDivExtended\">";
-	echo "<p   class=\"menuHead\">".LangInstrumentMenuTitle."&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangManage."</a>"."</p>";
+	echo "<p   class=\"menuHead\">".LangInstrumentMenuTitle."&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;title=".urlencode(LangManage." ".LangInstrumentMenuTitle)."\">".LangManage."</a>"."</p>";
   $link=$baseURL."index.php?";
 	reset($_GET);
 	while(list($key,$value)=each($_GET))
@@ -16,7 +16,7 @@ if($loggedUser)
 	if($result)
 	{ echo "<select name=\"activateTelescope\" class=\"menuField menuDropdown\" onchange=\"location=this.options[this.selectedIndex].value;\">";
     while(list($key, $value) = each($result))
-		  echo("<option ".(($value==$instr)?"selected=\"selected\"":"")." value=\""  . $link . "&amp;activeTelescopeId=$value\">" . $objInstrument->getInstrumentPropertyFromId($value,'name') . "</option>");
+		  echo("<option ".(($value==$instr)?"selected=\"selected\"":"")." value=\""  . $link . "&amp;activeTelescopeId=$value&amp;title=".stripslashes(LangInstrumentMenuTitle." ".$objInstrument->getInstrumentPropertyFromId($value,'name'))."\">" . $objInstrument->getInstrumentPropertyFromId($value,'name') . "</option>");
 	  echo "</select>";
 	}
 	echo "</div>";

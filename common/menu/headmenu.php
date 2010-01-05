@@ -35,7 +35,7 @@ if($loggedUser)
 else
   echo LangWelcome3;
 echo " - ";
-echo "<a href=\"".$baseURL."index.php\">"."Home"."</a>";
+echo "<a href=\"".$baseURL."index.php?title=Home\">"."Home"."</a>";
 echo "</span>";
 echo "</div>";
 echo "<div id=\"div2b\">";  

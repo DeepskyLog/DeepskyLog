@@ -1,7 +1,7 @@
 <?php // location.php - menu which allows the user to change its standard location
 if($loggedUser) 
 { echo "<div class=\"menuDivExtended\">";
-	echo "<p   class=\"menuHead\">".LangLocationMenuTitle."&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=add_site\">".LangManage."</a>"."</p>";
+	echo "<p   class=\"menuHead\">".LangLocationMenuTitle."&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=add_site&amp;title=".urlencode(LangManage." ".LangLocationMenuTitle)."\">".LangManage."</a>"."</p>";
   $link=$baseURL."index.php?";
 	reset($_GET);
 	while(list($key,$value)=each($_GET))
@@ -16,7 +16,7 @@ if($loggedUser)
 	if($result)
 	{ echo "<select name=\"activateLocation\" class=\"menuField menuDropdown\" onchange=\"location=this.options[this.selectedIndex].value;\">";
     while(list($key, $value) = each($result))
-	    echo "<option ".(($value==$loc)?"selected=\"selected\"":"")." value=\"".$link."&amp;activeLocationId=$value\">".$objLocation->getLocationPropertyFromId($value,'name')."</option>";
+	    echo "<option ".(($value==$loc)?"selected=\"selected\"":"")." value=\"".$link."&amp;activeLocationId=$value&amp;title=".urlencode(LangLocationMenuTitle." ".$objLocation->getLocationPropertyFromId($value,'name'))."\">".$objLocation->getLocationPropertyFromId($value,'name')."</option>";
 	  echo "</select>";
 	}
 	echo "</div>";

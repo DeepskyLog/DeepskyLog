@@ -15,6 +15,7 @@ else
   echo "<a href=\"".$baseURL."index.php?menuSearch=collapsed".$link."\" title=\"".LangMenuCollapse."\">-</a> ";
 echo LangSearch."</p>";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"quickpick\" />";
+echo "<input type=\"hidden\" name=\"titleobjectaction\" value=\"".LangSearch."\" />";
 echo "<input type=\"hidden\" name=\"source\"      value=\"quickpick\" />";
 echo "<input type=\"hidden\" name=\"myLanguages\" value=\"true\" />";
 echo "<input type=\"text\" id=\"quickpickobject\" name=\"object\" class=\"inputfield menuInput\" title=\"".LangQuickPickHelp."\" value=\"".((array_key_exists('object',$_GET)&&($_GET['object']!='* '))?$_GET['object']:"")."\" />";

@@ -41,6 +41,8 @@ else
 		setcookie("lco","L",$cookietime, "/");
 	  $_SESSION['lco']="L";
 	}
+	if(($_SESSION['lco']=="O")&&(!$loggedUser))
+	  $_SESSION['lco']="L";
 	// pagenumbers ================================================================================================================================================================
 	if(!array_key_exists('steps',$_SESSION))
 	{ if(array_key_exists('steps',$_COOKIE))

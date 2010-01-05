@@ -13,11 +13,21 @@ echo "<link rel=\"shortcut icon\" href=\"".$baseURL."styles/images/favicon.ico\"
 echo "<link href=\"".$baseURL."styles/style.css\" rel=\"stylesheet\" type=\"text/css\" />";
 echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"DeepskyLog - latest observations\" href=\"observations.rss\" />";
 if($objUtil->checkRequestKey(('title')))
-  echo "<title>DeepskyLog ".$objUtil->checkRequestKey('title','')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+  echo "<title>DSL: ".$objUtil->checkRequestKey('title','')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+elseif($objUtil->checkRequestKey(('titleobject')))
+  echo "<title>DSL: ".$objUtil->checkRequestKey('titleobject','')." ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+elseif($objUtil->checkRequestKey(('titleobjectaction')))
+{ if($objUtil->checkRequestKey('searchObjectQuickPickQuickPick',''))
+    echo "<title>DSL: ".LangQuickPickSearchObject." ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+  elseif($objUtil->checkRequestKey('searchObservationsQuickPick',''))
+    echo "<title>DSL: ".LangQuickPickSearchObservations." ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+  elseif($objUtil->checkRequestKey('newObservationQuickPick',''))
+    echo "<title>DSL: ".LangQuickPickNewObservation." ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+}
 elseif(defined("LangTitle".$objUtil->checkGetKey('indexAction','')))
-  echo "<title>DeepskyLog ". constant("LangTitle".$objUtil->checkGetKey('indexAction',''))." ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+  echo "<title>DSL ". constant("LangTitle".$objUtil->checkGetKey('indexAction',''))." ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
 else
-  echo "<title>DeepskyLog ". $objUtil->checkGetKey('indexAction','')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+  echo "<title>DSL ". $objUtil->checkGetKey('indexAction','')."</title>";  // 20081209 Here should come a better solution, see bug report 44
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 echo "<script type=\"text/javascript\">window.onresize=resizeForm;</script>";
 echo "</head>";

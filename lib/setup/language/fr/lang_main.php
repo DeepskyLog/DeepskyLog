@@ -366,7 +366,8 @@ define("LangSearchMenuItem4"															,"Tous les objets");
 define("LangSearchMenuItem5"															,"Recherche d'objets");
 define("LangSearchMenuItem6"															,"Les observateurs");
 define("LangSearchMenuItem7"															,"Les objets fr&eacute;quents");
-define("LangSearchMenuItem8"															,"Les observations de l'ann&eacute;e");
+define("LangSearchMenuItem8"                              ,"Les observations de l'ann&eacute;e");
+define("LangSearchMenuItem9"                              ,"Nouvelles observations");
 define("LangSearchAllLanguages"														,"Une nouvelle rechrerche dans toutes les languages.");
 define("LangSearchDetailPage"															,"Faire une recherche d&eacute;taill&eacute;e.");
 

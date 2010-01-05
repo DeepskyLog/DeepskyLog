@@ -103,7 +103,7 @@ else
 		$content5.="&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">" . LangOverviewObservations . "</a>";
 	if(($objUtil->checkSessionKey('lco','')!="C"))
 		$content5.="&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=C" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>";
-	if(($objUtil->checkSessionKey('lco','')!= "O"))
+	if($loggedUser&&($objUtil->checkSessionKey('lco','')!= "O"))
 		$content5.="&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=O" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>";
 	if($loggedUser&&(!($objUtil->checkGetKey('noOwnColor')))&&(($objUtil->checkSessionKey('lco','')=="L")))
 	  $content5.="&nbsp;-&nbsp;"."<a href=\"".$link."&amp;noOwnColor=yes\">".LangNoOwnColor."</a>";

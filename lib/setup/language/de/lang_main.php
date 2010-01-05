@@ -369,7 +369,8 @@ define("LangSearchMenuItem4"															,"Alle Objekte");
 define("LangSearchMenuItem5"															,"Objekte abfragen");
 define("LangSearchMenuItem6"															,"Beobachter");
 define("LangSearchMenuItem7"															,"Beliebteste Objekte");
-define("LangSearchMenuItem8"															,"Jahres Beobachtungen");
+define("LangSearchMenuItem8"                              ,"Jahres Beobachtungen");
+define("LangSearchMenuItem9"                              ,"Neues Beobachtungen");
 define("LangSearchAllLanguages"														,"Suche nochmal in allen Sprachen.");
 define("LangSearchDetailPage"															,"Detailierte Suche.");
 

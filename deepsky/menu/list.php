@@ -2,7 +2,7 @@
 echo "<div class=\"menuDivExtended\">";
   echo "<p   class=\"menuHead\">".LangListsTitle;
 if($loggedUser)
-  echo "&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=listaction\">".LangManage."</a>"."</p>";
+  echo "&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=listaction&amp;title=".urlencode(LangManage." ".LangListsTitle)."\">".LangManage."</a>"."</p>";
 else
   echo "</p>";
 $result1=array();
@@ -34,9 +34,9 @@ if(count($result)>0)
 		$_SESSION['listname']="----------";
   while(list($key, $value) = each($result))
 	{ if((($value==$_SESSION['listname'])&&$myList)||((!$myList)&&($value=="----------")))
-			echo("<option selected=\"selected\" value=\"".$baseURL."index.php?indexAction=listaction&amp;activateList=true&amp;listname=".$value."\">".$value."</option>");
+			echo("<option selected=\"selected\" value=\"".$baseURL."index.php?indexAction=listaction&amp;activateList=true&amp;listname=".$value."&amp;title=".urlencode(LangListsTitle." ".$value)."\">".$value."</option>");
     elseif (!(array_key_exists('removeList',$_GET) && ($_SESSION['listname']==$value)))
-			echo("<option value=\"".$baseURL."index.php?indexAction=listaction&amp;activateList=true&amp;listname=".$value."\">".$value."</option>");
+			echo("<option value=\"".$baseURL."index.php?indexAction=listaction&amp;activateList=true&amp;listname=".$value."&amp;title=".urlencode(LangListsTitle." ".$value)."\">".$value."</option>");
   }
   echo "</select>";
 }

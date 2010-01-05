@@ -361,7 +361,8 @@ define("LangSearchMenuItem4"															,"Alle objecten");
 define("LangSearchMenuItem5"															,"Zoek objecten");
 define("LangSearchMenuItem6"															,"Waarnemers");
 define("LangSearchMenuItem7"															,"Populaire&nbsp;objecten");
-define("LangSearchMenuItem8"															,"Jaarwaarnemingen");
+define("LangSearchMenuItem8"                              ,"Jaarwaarnemingen");
+define("LangSearchMenuItem9"                              ,"Nieuwe waarnemingen");
 define("LangSearchAllLanguages"														,"Opnieuw zoeken, in alle talen.");
 define("LangSearchDetailPage"															,"Een gedetailleerde zoekopdracht maken.");
 

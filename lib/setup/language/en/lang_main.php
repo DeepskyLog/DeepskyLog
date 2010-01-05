@@ -363,7 +363,8 @@ define("LangSearchMenuItem4"															,"All objects");
 define("LangSearchMenuItem5"															,"Query objects");
 define("LangSearchMenuItem6"															,"Observers");
 define("LangSearchMenuItem7"															,"Popular objects");
-define("LangSearchMenuItem8"															,"Year of observations");
+define("LangSearchMenuItem8"                              ,"Year of observations");
+define("LangSearchMenuItem9"                              ,"New observations");
 define("LangSearchAllLanguages"														,"Look again, using all languages.");
 define("LangSearchDetailPage"															,"Set up a detailed search.");
 
