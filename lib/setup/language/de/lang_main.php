@@ -355,7 +355,8 @@ define("LangChangeAccountField10Expl"											,"<a href=\"http://cfa-www.harva
 define("LangChangeAccountField11"													,"Benutze Ortszeit");
 define("LangChangeAccountField11Expl"											,"Ihre Ortszeit zur Eingabe und Abfrage von Beobachtungen");
 
-define("LangLoginMenuTitle"																,"Anmelden oder ");
+define("LangLoginMenuTitle"																,"Anmelden");
+define("LangLoginMenuTitle1"															," oder ");
 define("LangLoginMenuItem1"																,"Benutzername");
 define("LangLoginMenuItem2"																,"Passwort");
 define("LangLoginMenuButton"															,"Anmelden");

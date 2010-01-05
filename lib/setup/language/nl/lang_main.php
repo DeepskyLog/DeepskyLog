@@ -347,7 +347,8 @@ define("LangChangeAccountField10Expl"											,"<a href=\"http://cfa-www.harva
 define("LangChangeAccountField11"													,"Gebruik lokale tijd");
 define("LangChangeAccountField11Expl"											,"Gebruik lokale tijd voor ingeven en opvragen van waarnemingen");
 
-define("LangLoginMenuTitle"																,"Log in of ");
+define("LangLoginMenuTitle"																,"Log in");
+define("LangLoginMenuTitle1"															," of ");
 define("LangLoginMenuItem1"																,"Gebruikersnaam");
 define("LangLoginMenuItem2"																,"Paswoord");
 define("LangLoginMenuButton"															,"Log in");

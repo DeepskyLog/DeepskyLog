@@ -51,10 +51,11 @@ else
 }
 if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostKey('timestamp',-1)))
 { echo "<form action=\"".$baseURL."index.php\" method=\"post\" enctype=\"multipart/form-data\"><div>";
-	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_observation\" />";
+	echo "<input type=\"hidden\" name=\"indexAction\"   value=\"validate_observation\" />";
+	echo "<input type=\"hidden\" name=\"titleobject\"   value=\"".LangQuickPickNewObservation."\" />";
 	echo "<input type=\"hidden\" name=\"observationid\" value=\"".$observationid."\" />";
-	echo "<input type=\"hidden\" name=\"timestamp\" value=\"" . $_POST['timestamp'] . "\" />";
-	echo "<input type=\"hidden\" name=\"object\" value=\"" . $object . "\" />";
+	echo "<input type=\"hidden\" name=\"timestamp\"     value=\"" . $_POST['timestamp'] . "\" />";
+	echo "<input type=\"hidden\" name=\"object\"        value=\"" . $object . "\" />";
 	if($observationid)
 	{ $content="<input type=\"submit\" name=\"changeobservation\" value=\"" . LangChangeObservationButton . "\" />&nbsp;";
 	  $objPresentations->line(array("<h4>".LangNewObservationSubtitle3B."<span class=\"requiredField\">".LangNewObservationSubtitle3A."</span>".LangNewObservationSubtitle3C.$object."</h4>",$content),"LR",array(80,20),30);
@@ -336,10 +337,12 @@ else // no object found or not pushed on search button yet
 { $objPresentations->line(array("<h4>".LangNewObservationTitle."</h4>"),"L",array(),30);
   echo "<hr />";
   $content =LangNewObservationSubtitle1a . ", ";
-	$content.="<a href=\"" . $baseURL . "index.php?indexAction=add_csv\">" . LangNewObservationSubtitle1b . "</a>" . LangNewObservationSubtitle1abis;
-	$content.="<a href=\"" . $baseURL . "index.php?indexAction=add_xml\">" . LangNewObservationSubtitle1c . "</a>";
+	$content.="<a href=\"" . $baseURL . "index.php?indexAction=add_csv&amp;title=".urlencode(LangNewObservationSubtitle1b)."\">" . LangNewObservationSubtitle1b . "</a>" . LangNewObservationSubtitle1abis;
+	$content.="<a href=\"" . $baseURL . "index.php?indexAction=add_xml&amp;title=".urlencode(LangNewObservationSubtitle1c)."\">" . LangNewObservationSubtitle1c . "</a>";
 	$objPresentations->line(array($content),"L",array(),50);
-	echo "<form action=\"" . $baseURL . "index.php?indexAction=add_observation\" method=\"post\">";
+	echo "<form action=\"" . $baseURL . "index.php\" method=\"post\">";
+	echo "<input type=\"hidden\" name=\"indexAction\"   value=\"add_observation\" />";
+	echo "<input type=\"hidden\" name=\"titleobject\"   value=\"".LangQuickPickNewObservation."\" />";
 	$content ="<select name=\"catalog\" class=\"inputfield\">";
 	$content.="<option value=\"\">&nbsp;</option>";
 	$catalogs = $objObject->getCatalogs();

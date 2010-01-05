@@ -17,6 +17,7 @@ $tempList.="</select>";
 echo "<div id=\"main\">";
 echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_account\" />";
+echo "<input type=\"hidden\" name=\"title\" value=\"".LangRegisterNewTitle."\" />";
 $objPresentations->line(array("<h4>".LangRegisterNewTitle."</h4>","<input type=\"submit\" name=\"register\" value=\"" . LangRegisterNewTitle . "\" />&nbsp;"),"LR",array(80,20),30);
 echo "<hr />";
 $objPresentations->line(array(LangChangeAccountField1,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkPostKey('deepskylog_id')."\" />",LangChangeAccountField1Expl),"RLL",array(20,40,40),'',array('fieldname','fieldvalue','fieldexplanation'));

@@ -7,13 +7,14 @@ while(list($key,$value)=each($_GET))
 	if(($key!='indexAction')&&($key!='multiplepagenr')&&($key!='sort')&&($key!='sortdirection')&&($key!='showPartOfs'))
     $link.='&amp;'.$key.'='.$value;
 echo "<div id=\"main\">";
-echo("<form action=\"".$baseURL."index.php\" method=\"get\">");
+echo "<form action=\"".$baseURL."index.php\" method=\"get\">";
 echo "<div>";
-echo("<input type=\"hidden\" name=\"indexAction\" value=\"query_objects\" />");
-echo("<input type=\"hidden\" name=\"source\" value=\"setup_objects_query\" />");
-echo("<input type=\"hidden\" name=\"sort\" value=\"showname\" />");
-echo("<input type=\"hidden\" name=\"sortdirection\" value=\"asc\" />");
-echo("<input type=\"hidden\" name=\"showPartOfs\" value=\"0\" />");
+echo "<input type=\"hidden\" name=\"indexAction\" value=\"query_objects\" />";
+echo "<input type=\"hidden\" name=\"title\" value=\"".LangSelectedObjectsTitle."\" />";
+echo "<input type=\"hidden\" name=\"source\" value=\"setup_objects_query\" />";
+echo "<input type=\"hidden\" name=\"sort\" value=\"showname\" />";
+echo "<input type=\"hidden\" name=\"sortdirection\" value=\"asc\" />";
+echo "<input type=\"hidden\" name=\"showPartOfs\" value=\"0\" />";
 $content1=LangSeen.":";
 $content2="<select name=\"seen\" class=\"inputfield\">";
 $content2.="<option selected=\"selected\" value=\"D\">".LangSeenDontCare."</option>";

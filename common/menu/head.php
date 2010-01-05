@@ -12,17 +12,17 @@ echo "<base href=\"".$baseURL."\" />";
 echo "<link rel=\"shortcut icon\" href=\"".$baseURL."styles/images/favicon.ico\" />";
 echo "<link href=\"".$baseURL."styles/style.css\" rel=\"stylesheet\" type=\"text/css\" />";
 echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"DeepskyLog - latest observations\" href=\"observations.rss\" />";
-if($objUtil->checkRequestKey(('title')))
+if($objUtil->checkRequestKey('title'))
   echo "<title>DSL: ".$objUtil->checkRequestKey('title','')."</title>";  // 20081209 Here should come a better solution, see bug report 44
 elseif($objUtil->checkRequestKey(('titleobject')))
-  echo "<title>DSL: ".$objUtil->checkRequestKey('titleobject','')." ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+  echo "<title>DSL: ".$objUtil->checkRequestKey('titleobject','')." - ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
 elseif($objUtil->checkRequestKey(('titleobjectaction')))
 { if($objUtil->checkRequestKey('searchObjectQuickPickQuickPick',''))
-    echo "<title>DSL: ".LangQuickPickSearchObject." ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+    echo "<title>DSL: ".LangSelectedObjectsTitle." - ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
   elseif($objUtil->checkRequestKey('searchObservationsQuickPick',''))
-    echo "<title>DSL: ".LangQuickPickSearchObservations." ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+    echo "<title>DSL: ".LangSelectedObservationsTitle2." - ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
   elseif($objUtil->checkRequestKey('newObservationQuickPick',''))
-    echo "<title>DSL: ".LangQuickPickNewObservation." ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+    echo "<title>DSL: ".LangQuickPickNewObservation." - ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
 }
 elseif(defined("LangTitle".$objUtil->checkGetKey('indexAction','')))
   echo "<title>DSL ". constant("LangTitle".$objUtil->checkGetKey('indexAction',''))." ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
