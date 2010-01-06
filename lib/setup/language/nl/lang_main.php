@@ -241,6 +241,7 @@ define("LangSortOnAsc"																		, "Sorteer oplopend ");
 define("LangSortOnDesc"																		, "Sorteer omgekeerd");
 
 //ToList
+define("LangList"                                         , "Lijst");
 define("LangToListList"																		, "De lijst \"");
 define("LangToListActivation1"														, "\" geactiveerd");
 define("LangToListActivation2"														, ".");

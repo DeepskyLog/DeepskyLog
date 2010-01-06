@@ -246,6 +246,7 @@ define("LangSortOnAsc"																		,"Tri ascendant ");
 define("LangSortOnDesc"																		,"Tri descendant");
 
 //ToList Page
+define("LangList"                                         ,"La liste");
 define("LangToListList"																		,"La liste \"");
 define("LangToListActivation1"														,"\" est activ&eacute;e");
 define("LangToListActivation2"														,".");

@@ -249,6 +249,7 @@ define("LangSortOnAsc"																		,"Sortiere aufsteigend ");
 define("LangSortOnDesc"																		,"Sortiere absteigend");
 
 //ToList
+define("LangList"                                         ,"Die Liste");
 define("LangToListList"																		,"Die Liste \"");
 define("LangToListActivation1"														,"\" ist aktiviert.");
 define("LangToListActivation2"														,"");
