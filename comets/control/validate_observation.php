@@ -26,8 +26,8 @@ if($loggedUser) // logged in
   	    $objCometObservation->setDescription($current_observation, nl2br(htmlentities($_POST['description'])));
         $objCometObservation->setInstrumentId($current_observation, $_POST['instrument']);
         $objCometObservation->setComa($current_observation, $objUtil->checkRequestKey('coma',-99));
-        $objCometObservation->setComa($current_observation, $objUtil->checkRequestKey('tail_length',-99));
-        $objCometObservation->setComa($current_observation, $objUtil->checkRequestKey('position_angle',-99));
+        $objCometObservation->setTail($current_observation, $objUtil->checkRequestKey('tail_length',-99));
+        $objCometObservation->setPa($current_observation, $objUtil->checkRequestKey('position_angle',-99));
         // MAGNITUDE AND RELATED FIELDS
         if($_POST['mag']) // magnitude given
         { if(ereg('^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$', $_POST['mag'], $matches)) // correct magnitude

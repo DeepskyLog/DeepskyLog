@@ -414,6 +414,7 @@ define("LangAddEyepieceField4"														,"Maximum focal length (in mm)");
 define("LangAddEyepieceField4Expl"												,"only needed for zoom eyepieces"); 
 define("LangAddEyepieceButton"														,"Add eyepiece"); 
 define("LangAddEyepieceButton2"														,"Adapt eyepiece"); 
+define("LangDetailEyepiece"                               ,"Details eyepiece");
 
 define("LangOverviewLensTitle"														,"Overview lenses");
 define("LangViewLensName"																	,"Name");
@@ -432,6 +433,7 @@ define("LangValidateLensMessage2"													,"The lens is added to your equipm
 define("LangValidateLensMessage3"													,"Lens added");
 define("LangValidateLensMessage4"													,"Lens changed");
 define("LangValidateLensMessage5"													,"The lens is changed in your equipment list");
+define("LangDetailLens"                                   ,"Details lens");
 
 define("LangOverviewFilterTitle"													,"Overview filters");
 define("LangViewFilterName"																,"Name");
@@ -450,6 +452,7 @@ define("LangAddFilterField4"															,"Wratten number");
 define("LangAddFilterField5"															,"Schott number");
 define("LangAddFilterButton"															,"Add filter");
 define("LangChangeFilterButton"														,"Change filter");
+define("LangDetailFilter"                                 ,"Details filter");
 
 define("FiltersColorLightRed"															,"Light red");
 define("FiltersColorRed"																	,"Red");
@@ -500,6 +503,7 @@ define("LangAddSiteFieldManually"													,"specify your location details ma
 define("LangAddSiteButton"																,"Add site");
 define("LangAddSiteButton2"																,"Change site");
 define("LangAddSiteStdLocation"														,"Adapt standard location");
+define("LangDetailSite"                                   ,"Details location");
 
 define("LangSearchLocations0"															,"Search location");
 define("LangSearchLocations1"															,"Select your country");
@@ -541,6 +545,7 @@ define("LangAddInstrumentAdd"															,"Add instrument");
 define("LangAddInstrumentStdTelescope"										,"Adapt standard telescope");
 define("LangAddInstrumentExisting"											  ,"Add an existing instrument");
 define("LangAddInstrumentManually"												,"add instrument manually");
+define("LangDetailInstrument"                             ,"Details instrument");
 
 // content/change_instrument.php
  
@@ -718,6 +723,7 @@ define("LangViewObserverChangeNameFirstname"              ,"Change email / first
 define("LangViewObserverNumberOfObservations"							,"Number of observations");
 define("LangViewObserverRank"															,"Rank");
 define("LangViewObserverInexistant"												,"This observer doesn't exist!");
+define("LangDetailObserver"                               ,"Details observer");
 
 // comets/content/change_object.php
 

@@ -796,7 +796,7 @@ class Observations {
 				"AND (observations.observerid = \"" . $id . "\") " .
 				"AND (observations.visibility != 7))";
 		else
-			$sql = "SELECT DISTINCT objectnames.objectname FROM objectnames " .
+			$sql = "SELECT DISTINCT CONCAT(objectnames.catindex,' ',objectnames.objectname) AS Temp, objectnames.objectname FROM objectnames " .
 			"INNER JOIN observations ON observations.objectname = objectnames.objectname " .
 			"WHERE ((objectnames.catalog = \"$catalog\") " .
 			"AND (observations.observerid=\"$id\") " .

@@ -107,7 +107,7 @@ if($objCometObservation->getObjectId($_GET['observation'])) // check if observat
 		$objPresentations->line(array($content1,$content2),"RL",array(30,70),20,array('fieldname'));
   }
 	if ($objCometObservation->getTail($_GET['observation']) > -90)
-	{ $content1LangViewObservationField20;
+	{ $content1=LangViewObservationField20;
 	  $content2=$objCometObservation->getTail($_GET['observation'])."'";
 		$objPresentations->line(array($content1,$content2),"RL",array(30,70),20,array('fieldname'));
   }

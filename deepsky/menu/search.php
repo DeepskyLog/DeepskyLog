@@ -19,7 +19,7 @@ if($menuView=="collapsed")
 { echo "<select name=\"view\" class=\"menuField menuDropdown\" onchange=\"{location=this.options[this.selectedIndex].value;}\">";
   echo "<option value=\"".$baseURL."index.php\">"."&nbsp;"."</option>";
   if($loggedUser)
-    echo "<option value=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;myLanguages=true&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay&amp;newobservations=true&amp;title=".urlencode(LangSearchMenuItem9)."\">".LangSearchMenuItem9."</option>";
+    echo "<option value=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;myLanguages=true&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay&amp;newobservations=true\">".LangSearchMenuItem9."</option>";
   if($loggedUser
   &&($loggedUser!="admin"))                                                            // admin doesn't have own observations
     echo "<option value=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".urlencode($loggedUser)."\">".LangSearchMenuItem1."</option>";
@@ -31,7 +31,7 @@ if($menuView=="collapsed")
 }
 else
 { if($loggedUser)
-    echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;myLanguages=true&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay&amp;newobservations=true&amp;title=".urlencode(LangSearchMenuItem9)."\">".LangSearchMenuItem9."</a><br />";
+    echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;myLanguages=true&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay&amp;newobservations=true\">".LangSearchMenuItem9."</a><br />";
   if(($loggedUser)
   && ($loggedUser!="admin"))           // admin doesn't have own observations
     echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".urlencode($loggedUser)."\">".LangSearchMenuItem1."</a><br />";

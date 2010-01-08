@@ -88,7 +88,9 @@ class Utils implements iUtils
   { return (array_key_exists($key,$_POST)&&($_POST[$key]!=''))?$_POST[$key]:$default;
   }
   public  function checkRequestKey($key,$default='')
-  { return (array_key_exists($key,$_REQUEST)&&($_REQUEST[$key]!=''))?$_REQUEST[$key]:$default;
+  { return ((array_key_exists($key,$_REQUEST)&&($_REQUEST[$key]!=''))?$_REQUEST[$key]:
+            ((array_key_exists($key,$_POST)&&($_POST[$key]!=''))?$_POST[$key]:
+            ((array_key_exists($key,$_GET)&&($_GET[$key]!=''))?$_GET[$key]:$default)));
   }
   public  function checkSessionKey($key,$default='')
   { return (array_key_exists($key,$_SESSION)&&($_SESSION[$key]!=''))?$_SESSION[$key]:$default;
@@ -2100,7 +2102,6 @@ class Utils implements iUtils
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('rank_observers'                     ,'deepsky/content/top_observers.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('result_query_objects'               ,'deepsky/content/execute_query_objects.php'))) 
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('result_selected_observations'       ,'deepsky/content/selected_observations2.php')))  
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('view_image'                         ,'deepsky/content/show_image.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('view_observer_catalog'              ,'deepsky/content/details_observer_catalog.php')))
     
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('change_account'                     ,'common/content/change_account.php')))

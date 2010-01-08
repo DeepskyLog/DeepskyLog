@@ -337,8 +337,8 @@ else // no object found or not pushed on search button yet
 { $objPresentations->line(array("<h4>".LangNewObservationTitle."</h4>"),"L",array(),30);
   echo "<hr />";
   $content =LangNewObservationSubtitle1a . ", ";
-	$content.="<a href=\"" . $baseURL . "index.php?indexAction=add_csv&amp;title=".urlencode(LangNewObservationSubtitle1b)."\">" . LangNewObservationSubtitle1b . "</a>" . LangNewObservationSubtitle1abis;
-	$content.="<a href=\"" . $baseURL . "index.php?indexAction=add_xml&amp;title=".urlencode(LangNewObservationSubtitle1c)."\">" . LangNewObservationSubtitle1c . "</a>";
+	$content.="<a href=\"" . $baseURL . "index.php?indexAction=add_csv\">" . LangNewObservationSubtitle1b . "</a>" . LangNewObservationSubtitle1abis;
+	$content.="<a href=\"" . $baseURL . "index.php?indexAction=add_xml\">" . LangNewObservationSubtitle1c . "</a>";
 	$objPresentations->line(array($content),"L",array(),50);
 	echo "<form action=\"" . $baseURL . "index.php\" method=\"post\">";
 	echo "<input type=\"hidden\" name=\"indexAction\"   value=\"add_observation\" />";

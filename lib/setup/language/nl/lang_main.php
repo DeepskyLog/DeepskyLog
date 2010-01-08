@@ -411,7 +411,7 @@ define("LangAddEyepieceField3Expl"												,"eg 82");
 define("LangAddEyepieceField4"														,"Maximaal brandpunt (in mm)");
 define("LangAddEyepieceField4Expl"												,"enkel van toepassing met zoom oculairen");
 define("LangAddEyepieceButton"														,"Voeg oculair toe");
-define("LangAddEyepieceButton2"														,"Wijzig oculair");
+define("LangDetailEyepiece"                               ,"Details oculair");
 
 define("LangOverviewLensTitle"														,"Overzicht lenzen");
 define("LangViewLensName"																	,"Naam");
@@ -430,6 +430,7 @@ define("LangValidateLensMessage2"													,"De lens in toegevoegd aan je lij
 define("LangValidateLensMessage3"													,"Lens toegevoegd");
 define("LangValidateLensMessage4"													,"Lens aangepast");
 define("LangValidateLensMessage5"													,"De lens is aangepast in je lijst met uitrustingen");
+define("LangDetailLens"                                   ,"Details lens");
 
 define("LangOverviewFilterTitle"													,"Overzicht filters");
 define("LangViewFilterName"																,"Naam");
@@ -448,6 +449,7 @@ define("LangAddFilterField4"															,"Wratten nummer");
 define("LangAddFilterField5"															,"Schott nummer");
 define("LangAddFilterButton"															,"Voeg filter toe");
 define("LangChangeFilterButton"														,"Verander filter");
+define("LangDetailFilter"                                 ,"Details filter");
 
 define("FiltersColorLightRed"															,"Licht rood");
 define("FiltersColorRed"																	,"Rood");
@@ -498,6 +500,7 @@ define("LangAddSiteFieldManually"													,"voeg de gegevens manueel in");
 define("LangAddSiteButton"																,"Voeg locatie toe");
 define("LangAddSiteButton2"																,"Wijzig locatie");
 define("LangAddSiteStdLocation"														,"Wijzig standaard locatie");
+define("LangDetailSite"                                   ,"Details locatie");
 
 define("LangSearchLocations0"															,"Zoek locatie");
 define("LangSearchLocations1"															,"Kies je land");
@@ -539,6 +542,7 @@ define("LangAddInstrumentAdd"															,"Voeg instrument toe");
 define("LangAddInstrumentStdTelescope"										,"Pas standaard instrument aan");
 define("LangAddInstrumentExisting"												,"Voeg een bestaand instrument toe");
 define("LangAddInstrumentManually"												,"voeg de gegevens manueel in");
+define("LangDetailInstrument"                             ,"Details instrument");
 
 // content/change_instrument.php
 
@@ -716,6 +720,7 @@ define("LangViewObserverChangeNameFirstname"              ,"Verander email / voo
 define("LangViewObserverNumberOfObservations"							,"Aantal waarnemingen");
 define("LangViewObserverRank"															,"Rang");
 define("LangViewObserverInexistant"												,"Deze waarnemer bestaat niet!");
+define("LangDetailObserver"                               ,"Details waarnemer");
 
 // comets/content/change_object.php
 

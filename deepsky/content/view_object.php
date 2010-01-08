@@ -10,7 +10,7 @@ else
 	                        "LR",array(60,40),30);
 	$topline="";
 	if($imagesize=$objUtil->checkRequestKey('imagesize'))
-	  $topline="&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;titleobject=".urlencode(LangViewObjectViewNearbyObject)."\">".LangViewObjectViewNearbyObject."</a>";
+	  $topline="&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\">".LangViewObjectViewNearbyObject."</a>";
 	if ($myList) 
 	{ if ($objList->checkObjectInMyActiveList($object))
 			$topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage3 . $listname_ss . "</a>";

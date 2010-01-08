@@ -417,6 +417,7 @@ define("LangAddEyepieceField4"														,"Longeur focal maximum (en mm)");
 define("LangAddEyepieceField4Expl"												,"Uniquement pour oculaires zoom"); 
 define("LangAddEyepieceButton"														,"Rajoutez oculaire"); 
 define("LangAddEyepieceButton2"														,"Modifiez oculaire"); 
+define("LangDetailEyepiece"                               ,"D&#233;tails de l'oculaire");
 
 define("LangOverviewLensTitle"														,"Aper&#231;u lentilles Barlow");
 define("LangViewLensName"																	,"Nom");
@@ -435,6 +436,7 @@ define("LangValidateLensMessage2"													,"Cette lentille Barlow a &#233;t&
 define("LangValidateLensMessage3"													,"Lentille Barlow ajout&#233;e");
 define("LangValidateLensMessage4"													,"Letille Barlow modifi&#233;e");
 define("LangValidateLensMessage5"													,"Cette lentille Barlow est modifi&#233;e dans la banque de donn&#233;es");
+define("LangDetailLens"                                   ,"D&#233;tails de la lentille");
 
 define("LangOverviewFilterTitle"													,"Aper&#231;u filtres");
 define("LangViewFilterName"																,"Nom");
@@ -452,7 +454,8 @@ define("LangAddFilterField3"															,"Couleur");
 define("LangAddFilterField4"															,"Num&#233;ro Wratten");
 define("LangAddFilterField5"															,"Num&#233;ro Schott");
 define("LangAddFilterButton"															,"Rajoutez filtre");
-define("LangChangeFilterButton"														,"Modifiez filter");
+define("LangChangeFilterButton"														,"Modifiez filtre");
+define("LangDetailFilter"                                 ,"D&#233;tails du filtre");
 
 define("FiltersColorLightRed"															,"Rouge clair");
 define("FiltersColorRed"																	,"Rouge");
@@ -503,6 +506,7 @@ define("LangAddSiteFieldManually"													,"rentrez les donn&eacute;es vous 
 define("LangAddSiteButton"																,"Rajoutez un endroit");
 define("LangAddSiteButton2"																,"Changez d'entroit");
 define("LangAddSiteStdLocation"														,"Modifiez l'endroit standard");
+define("LangDetailSite"                                   ,"D&#233;tails de l'endroit");
 
 define("LangSearchLocations0"															,"Cherchez votre endroit");
 define("LangSearchLocations1"															,"Choissisez votre pays");
@@ -544,6 +548,7 @@ define("LangAddInstrumentAdd"															,"Rajoutez un instrument");
 define("LangAddInstrumentStdTelescope"										,"Modifier l'instrument standard");
 define("LangAddInstrumentExisting"												,"Rajouter un instrument existant");
 define("LangAddInstrumentManually"												,"rajouter manuellement un nouvel instrument");
+define("LangDetailInstrument"                             ,"D&#233;tails de l'instrument");
 
 // content/change_instrument.php
 
@@ -721,6 +726,7 @@ define("LangViewObserverChangeNameFirstname"              ,"Changez l'adresse &e
 define("LangViewObserverNumberOfObservations"							,"Nombre d'observations");
 define("LangViewObserverRank"															,"Position");
 define("LangViewObserverInexistant"												,"Cet observateur n'existe pas!");
+define("LangDetailObserver"                               ,"D&#233;tails de l'observateur");
 
 // comets/content/change_object.php
 

@@ -117,6 +117,7 @@ class Locations
   } 
   public  function getSortedLocationsList($sort, $observer = "")                             // returns an array with the ids of all locations, sorted by the column specified in $sort. Locations withthe same name are adapted by adding the province.
   { global $objDatabase; 
+    $new_sites=array();
     $sites=$objDatabase->selectRecordsetArray("SELECT id, name FROM locations ".($observer?"WHERE observer LIKE \"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.",name",'id');  
     $previous = "fdgsdg";
     for($i=0;$i<count($sites);$i++)

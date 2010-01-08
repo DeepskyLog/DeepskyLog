@@ -420,6 +420,7 @@ define("LangAddEyepieceField4"														,"Maximale Brennweite (in mm)");
 define("LangAddEyepieceField4Expl"												,"nur f&uuml;r Zoom Okulare");
 define("LangAddEyepieceButton"														,"Okular hinzuf&uuml;gen");
 define("LangAddEyepieceButton2"														,"Okluar bearbeiten");
+define("LangDetailEyepiece"                               ,"Okular");
 
 define("LangOverviewLensTitle"														,"Linsen &uuml;bersicht");
 define("LangViewLensName"																	,"Name");
@@ -438,6 +439,7 @@ define("LangValidateLensMessage2"													,"Die Linse wurde in die Datenbank
 define("LangValidateLensMessage3"													,"Linse hinzugef&uuml;gt");
 define("LangValidateLensMessage4"													,"Linse ge&auml;ndert");
 define("LangValidateLensMessage5"													,"Die Linse wurde in der Datenbank ge&auml;ndert");
+define("LangDetailLens"                                   ,"Linse");
 
 define("LangOverviewFilterTitle"													,"Filter &uuml;bersicht");
 define("LangViewFilterName"																,"Name");
@@ -456,6 +458,7 @@ define("LangAddFilterField4"															,"Wratten Nummer");
 define("LangAddFilterField5"															,"Schott Nummer");
 define("LangAddFilterButton"															,"Filter hinzuf&uuml;gen");
 define("LangChangeFilterButton"														,"Filter bearbeiten");
+define("LangDetailFilter"                                 ,"Filter");
 
 define("FiltersColorLightRed"															,"Hellrot");
 define("FiltersColorRed"																	,"Rot");
@@ -506,6 +509,7 @@ define("LangAddSiteFieldManually"													,"legen Sie einen neuen Beobachtun
 define("LangAddSiteButton"																,"Beobachtungsplatz anlegen");
 define("LangAddSiteButton2"																,"Beobachtungsplatz &auml;ndern");
 define("LangAddSiteStdLocation"														,"Als Standard Beobachtungsplatz w&auml;hlen");
+define("LangDetailSite"                                   ,"Beobachtungsplatz");
 
 define("LangSearchLocations0"															,"Suche Beobachtungsplatz");
 define("LangSearchLocations1"															,"W&auml;hlen Sie ihr Land aus");
@@ -547,6 +551,7 @@ define("LangAddInstrumentAdd"															,"Beobachtungsger&auml;t anlegen");
 define("LangAddInstrumentStdTelescope"										,"Als Standard Teleskop w&auml;hlen");
 define("LangAddInstrumentExisting"												,"Beobachtungsger&auml;t anlegen");
 define("LangAddInstrumentManually"												,"Beobachtungsger&auml;t anlegen");
+define("LangDetailInstrument"                             ,"Beobachtungsger&auml;t");
 
 // content/change_instrument.php
 
@@ -724,6 +729,7 @@ define("LangViewObserverChangeNameFirstname"              ,"Verander email / voo
 define("LangViewObserverNumberOfObservations"							,"Anzahl der Beobachtungen");
 define("LangViewObserverRank"															,"Rang");
 define("LangViewObserverInexistant"												,"Dieser Beobachter existiert nicht!");
+define("LangDetailObserver"                               ,"Beobachter");
 
 // comets/content/change_object.php
 

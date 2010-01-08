@@ -25,9 +25,9 @@ $numberOfObjects=$objObject->getNumberOfObjectsInCatalog($cat); // number of obj
 $objPresentations->line(array(LangTopObserversMessierHeader2." ".$cat ." ".LangTopObserversMessierHeader3.(($partof)?LangOrPartOfs:LangNoPartOfsBrackets).":&nbsp;".count($observedObjectsFromCatalog) . " / " . $numberOfObjects),
                         "L",array(100),50);
 if($partof)
-  $content="<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&amp;partof=0&amp;title=".urlencode($objUtil->checkRequestKey('title'))."\">".LangShowWithoutPartOfs."</a>"; 			
+  $content="<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&amp;partof=0\">".LangShowWithoutPartOfs."</a>"; 			
 else
-  $content="<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&amp;partof=1&amp;title=".urlencode($objUtil->checkRequestKey('title'))."\">".LangShowWithPartOfs."</a>";			
+  $content="<a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($cat)."&amp;user=".urlencode($_GET['user'])."&amp;partof=1\">".LangShowWithPartOfs."</a>";			
 $objPresentations->line(array($content),"L",array(100),50);
 $resultarray=$objObject->getObjectsFromCatalog($cat);
 echo "<table>";
@@ -71,18 +71,18 @@ for ($i = 1; $i <= $numberOfObjects; $i++)
 	  $ref = $object; 
 	if (in_array($object, $observedObjectsFromCatalog)) 
   { echo "<td class=\"observercataloggreen\">";
-		echo "<a class=\"observercatalog\" title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."&amp;observer=".urlencode($_GET['user'])."&amp;titleobject=".urlencode(LangSelectedObservationsTitle2)."\" >".$object."</a>";
+		echo "<a class=\"observercatalog\" title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."&amp;observer=".urlencode($_GET['user'])."\" >".$object."</a>";
 		echo "</td>";
   }
 	else
 	  if ($partof && in_array($object, $observedObjectsFromCatalogPartOf)) 
   	{	echo "<td class=\"observercatalogyellow\">";
-		  echo "<a class=\"observercatalog\" title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;titleobject=".urlencode(LangSelectedObservationsTitle2)."\" >".$object."</a>";
+		  echo "<a class=\"observercatalog\" title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" >".$object."</a>";
 			echo "</td>"; 
 		}
 		else
   	{	echo "<td class=\"observercatalogred\">";
-		  echo "<a class=\"observercatalog\" title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;titleobject=".urlencode(LangSelectedObservationsTitle2)."\" >".$object."</a>";
+		  echo "<a class=\"observercatalog\" title=\"".$ref."\" href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" >".$object."</a>";
 			echo "</td>";
 		}
   if(($i % 10) == 0)
