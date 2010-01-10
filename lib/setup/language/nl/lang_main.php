@@ -411,6 +411,7 @@ define("LangAddEyepieceField3Expl"												,"eg 82");
 define("LangAddEyepieceField4"														,"Maximaal brandpunt (in mm)");
 define("LangAddEyepieceField4Expl"												,"enkel van toepassing met zoom oculairen");
 define("LangAddEyepieceButton"														,"Voeg oculair toe");
+define("LangAddEyepieceButton2"														,"Verander oculair"); 
 define("LangDetailEyepiece"                               ,"Details oculair");
 
 define("LangOverviewLensTitle"														,"Overzicht lenzen");
