@@ -28,6 +28,7 @@ $objPresentations->line(array(LangChangeAccountField5,"<input type=\"password\" 
 $objPresentations->line(array(LangChangeAccountField6,"<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd_again\" size=\"30\" value=\"".$objUtil->checkPostKey('passwd_again')."\" />",LangChangeAccountField6Expl),"RLL",array(20,40,40),'',array('fieldname','fieldvalue','fieldexplanation'));
 $objPresentations->line(array(LangChangeAccountObservationLanguage,$tempAllList,LangChangeAccountObservationLanguageExpl),"RLL",array(20,40,40),'',array('fieldname','fieldvalue','fieldexplanation'));
 $objPresentations->line(array(LangChangeAccountLanguage,$tempList,LangChangeAccountLanguageExpl),"RLL",array(20,40,40),'',array('fieldname','fieldvalue','fieldexplanation'));
+$objPresentations->line(array(LangChangeAccountCopyright,"<input type=\"text\" class=\"inputfield\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'copyright')."\" />",LangChangeAccountCopyrightExpl),"RLL",array(20,40,40),'',array('fieldname','fieldvalue','fieldexplanation'));
 
 
 reset($allLanguages);

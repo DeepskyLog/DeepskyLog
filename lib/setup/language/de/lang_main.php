@@ -5,6 +5,9 @@
 define("LangMarkAllAsRead"                                ,"Mark all as read.");
 define("LangMarkUpToHereAsRead"                           ,"Mark up to here as read.");
 
+define("LangChangeAccountCopyright"                       ,"Copyright notice");
+define("LangChangeAccountCopyrightExpl"                   ,"You can specify a copyright notice that will appear under your observations and drawings.");
+
 
 //LangCSVMessage3 (SQM) en nog enkele andere lijnen daarrond
 //define("LangViewObserverinstrumentCount"                  ,"Aantal instrumenten");

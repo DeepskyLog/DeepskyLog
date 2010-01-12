@@ -1015,7 +1015,7 @@ class Observations {
 				else
 				echo "<tr class=\"height5px type20\">";
 			  echo "<td class=\"centered\">";
-			  if(($objUtil->checkGetKey('expand')==$value['observationid']))
+			  if($objUtil->checkGetKey('expand')==$value['observationid'])
 			    echo "<a name=\"name".$value['observationid']."\" id=\"name".$value['observationid']."\" href=\"".$link."&amp;expand=0#name".$value['observationid']."\" title=\"".$explantation1."\">"."-"."</a>";
 			  else
 			    echo "<a name=\"name".$value['observationid']."\" id=\"name".$value['observationid']."\" href=\"".$link."&amp;expand=".$value['observationid']."#name".$value['observationid']."\" title=\"".$explantation1."\">".((substr($seen,0,1)!="Y")?"x":"+")."</a>";
@@ -1113,6 +1113,8 @@ class Observations {
 					   echo "</tr>";		
 				  }
 			  }
+        if((($lco=="C")||($lco=="O"))&&($objUtil->checkGetKey('expand')!=$value['observationid'])&&($copyright=$objObserver->getObserverProperty($value['observerid'],'copyright')))
+          echo "<tr><td>&nbsp;</td>".($myList?"<td>&nbsp;</td>":"")."<td class=\"copyright\" colspan=\"".(($lco=="O")?8:6)."\">".$copyright."</td></tr>";
 		  }
 			$count++;
 		}
@@ -1258,6 +1260,8 @@ class Observations {
 		echo $objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
 		if($this->getDsObservationProperty($LOid,'hasDrawing'))
 		  echo "<p>"."<a  href=\"".$baseURL."deepsky/drawings/" . $LOid . ".jpg" . "\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . "_resized.jpg\" alt=\"\"></img></a></p>";
+    if($copyright=$objObserver->getObserverProperty($this->getDsObservationProperty($LOid,'observerid'),'copyright'))
+      echo "<p class=\"copyright\">".$copyright."</p>";
 		echo "<br /><br />";
 		$bottomline="";
 		if($myList)

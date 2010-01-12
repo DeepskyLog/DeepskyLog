@@ -212,8 +212,9 @@ class Observers implements iObservers
 		      if(array_key_exists($key,$_POST))
 		        $usedLanguages[]=$key;
 		    $this->setUsedLanguages($_POST['deepskylog_id'], $usedLanguages);
-		    $this->setObserverProperty($_POST['deepskylog_id'],'observationlanguage', $_POST['description_language']);
-		    $this->setObserverProperty($_POST['deepskylog_id'],'language', $_POST['language']);
+        $this->setObserverProperty($_POST['deepskylog_id'],'copyright', $_POST['copyright']);
+        $this->setObserverProperty($_POST['deepskylog_id'],'observationlanguage', $_POST['description_language']);
+        $this->setObserverProperty($_POST['deepskylog_id'],'language', $_POST['language']);
 		    $this->setObserverProperty($_POST['deepskylog_id'],'registrationDate', date("Ymd H:i"));
 		    $body = LangValidateAccountEmailLine1 . "\n"                            // send mail to administrator
 		              . "\n" . LangValidateAccountEmailLine1bis
@@ -262,6 +263,7 @@ class Observers implements iObservers
 		    $this->setObserverProperty($loggedUser,'stdtelescope', $_POST['instrument']);
 		    $this->setObserverProperty($loggedUser,'standardAtlasCode', $_POST['atlas']);
         $this->setObserverProperty($loggedUser,'fstOffset', $_POST['fstOffset']);
+	      $this->setObserverProperty($loggedUser,'copyright', $_POST['copyright']);
 		    $this->setObserverProperty($loggedUser,'UT', ((array_key_exists('local_time', $_POST)&&($_POST['local_time']=="on"))?"0":"1"));
 		    if ($_POST['icq_name'] != "")
 		      $this->setObserverProperty($loggedUser,'icqname', $_POST['icq_name']);

@@ -341,6 +341,8 @@ define("LangChangeAccountLanguage"												,"Default language");
 define("LangChangeAccountLanguageExpl"										,"The language for DeepskyLog");
 define("LangChangeAccountObservationLanguage"							,"Standard language for observations");
 define("LangChangeAccountObservationLanguageExpl"					,"The standard language to enter the languages");
+define("LangChangeAccountCopyright"                       ,"Copyright notice");
+define("LangChangeAccountCopyrightExpl"                   ,"You can specify a copyright notice that will appear under your observations and drawings.");
 define("LangChangeVisibleLanguages"												,"Languages for observations");
 define("LangChangeVisibleLanguagesExpl"										,"Define which languages you want to see in the descriptions");
 define("LangChangeAccountPicture"													,"Picture");

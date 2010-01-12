@@ -99,6 +99,9 @@ $line[]=array(LangChangeAccountField12,
               LangChangeAccountField12Expl);
 $line[]=array(LangChangeAccountPicture,"<input type=\"file\" name=\"picture\" class=\"inputfield\"/>","");
 $line[]=array("");        
+$line[]=array(LangChangeAccountCopyright,
+              "<input type=\"text\" class=\"inputfield\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'copyright')."\" />",
+              LangChangeAccountCopyrightExpl);
 if($languageMenu==1)
   $line[]=array("<span class=\"fieldname\">".LangChangeAccountLanguage."</span>",$tempLangList,LangChangeAccountLanguageExpl);
 $line[]=array("<span class=\"fieldname\">".LangChangeAccountObservationLanguage."</span>",$tempAllLangList,LangChangeAccountObservationLanguageExpl);
