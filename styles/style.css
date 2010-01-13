@@ -499,6 +499,9 @@ p, td, tr, div {
 .sortButton {
 	border           : 0px;
 }
+.strikethrough {
+	text-decoration  : line-through;
+}
 table {
 	width            : 100%;
 }

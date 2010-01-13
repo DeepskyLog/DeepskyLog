@@ -2,6 +2,12 @@
 
 // TO DO:
 
+define("LangObjectsFilter"                                ,"Filter");
+define("LangObjectsFilterLocation"                        ,"Location");
+define("LangObjectsFilterLocationExpl"                    ,"Mark the objects that are not visible from the selected observation location.");
+
+
+
 define("LangMarkAllAsRead"                                ,"Mark all as read.");
 define("LangMarkUpToHereAsRead"                           ,"Mark up to here as read.");
 

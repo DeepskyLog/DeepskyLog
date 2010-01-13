@@ -888,7 +888,7 @@ class Objects implements iObjects
 	  echo "<hr />";
   }
   public  function showObjects($link, $min, $max, $ownShow='', $showRank=0, $step=25, $pageListAction="addAllObjectsFromPageToList")        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
-  { global $FF, $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil,$objPresentations,$objList;
+  { global $FF, $objAtlas, $objObserver, $objLocation, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil,$objPresentations,$objList;
 	  $atlas='';
     echo "<table>";
     if($FF)
@@ -924,13 +924,25 @@ class Objects implements iObjects
 	  $countline = 0;
 	  if($max>count($_SESSION['Qobj']))
 	 	  $max=count($_SESSION['Qobj']);
+	 	$filteron="";
+	 	$locationdecl=0;
+	 	if($objUtil->checkRequestKey('filteron')=='location')
+	 	{ $filteron='location';
+	 	  if($loggedUser&&($location=$objObserver->getObserverProperty($loggedUser,'stdlocation')))
+	 	    $locationdecl=$objLocation->getLocationPropertyFromId($location,'latitude',0);
+	 	}
     while($count<$max)
-    { echo "<tr ".(($_SESSION['Qobj'][$count]['objectname']==$ownShow)?"class=\"type3 height5px\"":"class=\"height5px type".(2-($countline%2)."\"")).">";
+    { $specialclass="";
+      if(($filteron=='location')&&
+         ((($_SESSION['Qobj'][$count]['objectdecl']+90.0)<$locationdecl) ||
+          (($_SESSION['Qobj'][$count]['objectdecl']-90.0)>$locationdecl)))
+       $specialclass="strikethrough"; 
+      echo "<tr ".(($_SESSION['Qobj'][$count]['objectname']==$ownShow)?"class=\"type3 height5px\"":"class=\"height5px type".(2-($countline%2)."\"")).">";
       if(($showRank==1)&&$myList)
         echo "<td align=\"center\"><a href=\"#\" onclick=\"theplace = prompt('".LangNewPlaceInList."','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
       elseif($showRank)
 	      echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</td>";
-      echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" >".$_SESSION['Qobj'][$count]['showname']."</a></td>";
+      echo "<td align=\"center\" class=\"".$specialclass."\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" >".$_SESSION['Qobj'][$count]['showname']."</a></td>";
       echo "<td align=\"center\">".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."</td>";
       echo "<td align=\"center\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>";
       echo "<td align=\"center\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>";
@@ -961,6 +973,7 @@ class Objects implements iObjects
   	  }
       echo("</tr>");
       $countline++; 
+
       $count++;
     }
     if($FF) 
@@ -969,6 +982,7 @@ class Objects implements iObjects
       echo "</tbody>";
     }
     echo "</table>";
+    echo LangObjectsFilter.": <a href=\"".$link."&amp;filteron=location\" title=\"".LangObjectsFilterLocationExpl."\">".LangObjectsFilterLocation."</a>";  //&nbsp;-&nbsp;<a href=\"".$link."&amp;filteron=time\">time</a>";
   }
   public  function showObjectsFields($link, $min, $max, $ownShow='', $showRank=0, $step=25, $fields=array("showname","objectconstellation","objectmagnitude"), $pageListAction="addAllObjectsFromPageToList")        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
   { global $FF, $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil,$objPresentations,$objList;

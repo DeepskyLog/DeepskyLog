@@ -2,6 +2,11 @@
 
 // TO DO
 
+define("LangObjectsFilter"                                ,"Filtre");
+define("LangObjectsFilterLocation"                        ,"Endroit d'observation");
+define("LangObjectsFilterLocationExpl"                    ,"Indiquez les objets qui ne sont pas visibles &agrave; partir du lieu d'observation s&#227;lectionn&#227;.");
+
+
 define("LangMarkAllAsRead"                                ,"Allen markeren als gelezen.");
 define("LangMarkUpToHereAsRead"                           ,"Tot hier als gelezen markeren.");
 

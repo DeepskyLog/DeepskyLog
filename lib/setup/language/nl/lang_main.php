@@ -2,6 +2,10 @@
 
 // TO DO:
 
+define("LangObjectsFilter"                                ,"Filter");
+define("LangObjectsFilterLocation"                        ,"Waarneemplaats");
+define("LangObjectsFilterLocationExpl"                    ,"Duid de objecten aan die niet zichtbaarzijn vanop de geselecteerde waarneemplaats.");
+
 define("LangMarkAllAsRead"                                ,"Allen markeren als gelezen.");
 define("LangMarkUpToHereAsRead"                           ,"Tot hier als gelezen markeren.");
 

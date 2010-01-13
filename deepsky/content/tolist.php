@@ -16,7 +16,11 @@ if($loggedUser)
 	echo "<hr />";
 }
 if($listname)
-{ $link = $baseURL."index.php?indexAction=listaction&amp;sort=".$objUtil->checkGetKey('sort','objectpositioninlist');
+{ $link = $baseURL."index.php?indexAction=listaction";
+  reset($_GET);
+  while(list($key,$value)=each($_GET))
+    if(($key!='indexAction')&&($key!='multiplepagenr')&&($key!='sort')&&($key!='sortdirection')&&($key!='showPartOfs'))
+      $link.='&amp;'.urlencode($key).'='.urlencode($value);
   if((array_key_exists('steps',$_SESSION))&&(array_key_exists("listObj",$_SESSION['steps'])))
 	  $step=$_SESSION['steps']["listObj"];
 	if(array_key_exists('multiplepagenr',$_GET))
@@ -43,8 +47,7 @@ if($listname)
   $objPresentations->line(array($content1,$content2),"LR",array(80,20),20);
   if(count($_SESSION['Qobj'])>0)
 	{ // OUTPUT RESULT
-    $link = "".$baseURL."index.php?indexAction=listaction";
-	  echo "<hr />";
+    echo "<hr />";
 	  $_GET['min']=$min;
 	  $_GET['max']=$max;
 	  if($FF)
