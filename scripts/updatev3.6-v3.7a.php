@@ -9,7 +9,7 @@
   $run=mysql_query($sql) or die(mysql_error());
 
   print "Database update will add field for the copyright notice under observations / sketches.\n";
-  $sql="ALTER TABLE dsltrunk.observers ADD COLUMN copyright VARCHAR(128) NOT NULL DEFAULT '' AFTER lastReadObservationId;";
+  $sql="ALTER TABLE observers ADD COLUMN copyright VARCHAR(128) NOT NULL DEFAULT '' AFTER lastReadObservationId;";
   $run=mysql_query($sql) or die(mysql_error());
   
   
