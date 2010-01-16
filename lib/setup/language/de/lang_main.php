@@ -2,6 +2,9 @@
 
 // TO DO:
 
+define("LangShowObjectDetails"                            ,"Show object details");
+define("LangHideObjectDetails"                            ,"Hide object details");
+
 define("LangObjectsFilter"                                ,"Filter");
 define("LangObjectsFilterLocation"                        ,"Location");
 define("LangObjectsFilterLocationExpl"                    ,"Mark the objects that are not visible from the selected observation location.");

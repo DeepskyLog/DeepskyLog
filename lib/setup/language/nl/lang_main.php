@@ -2,6 +2,9 @@
 
 // TO DO:
 
+define("LangShowObjectDetails"                            ,"Toon object details");
+define("LangHideObjectDetails"                            ,"Verberg object details");
+
 define("LangObjectsFilter"                                ,"Filter");
 define("LangObjectsFilterLocation"                        ,"Waarneemplaats");
 define("LangObjectsFilterLocationExpl"                    ,"Duid de objecten aan die niet zichtbaarzijn vanop de geselecteerde waarneemplaats.");

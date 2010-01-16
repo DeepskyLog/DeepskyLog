@@ -2,6 +2,11 @@
 
 // TO DO
 
+define("LangShowObjectDetails"                            ,"Montrer del d&#227;tails de l'objet");
+define("LangHideObjectDetails"                            ,"Cacher les d#227;tails de l'objet");
+
+
+
 define("LangObjectsFilter"                                ,"Filtre");
 define("LangObjectsFilterLocation"                        ,"Endroit d'observation");
 define("LangObjectsFilterLocationExpl"                    ,"Indiquez les objets qui ne sont pas visibles &agrave; partir du lieu d'observation s&#227;lectionn&#227;.");
