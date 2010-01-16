@@ -53,7 +53,7 @@ if($listname)
 	  if($FF)
 	  { echo "<script type=\"text/javascript\">";
       echo "theResizeElement='obj_list';";
-      echo "theResizeSize=75;";
+      echo "theResizeSize=90;";
       echo "</script>";
   	}
 	  $objObject->showObjects($link, $min, $max,'',1, $step,"removePageObjectsFromList");

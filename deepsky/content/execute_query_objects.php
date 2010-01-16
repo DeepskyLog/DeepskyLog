@@ -41,7 +41,7 @@ if(count($_SESSION['Qobj'])>1) //===============================================
 	if($FF)
 	{ echo "<script type=\"text/javascript\">";
     echo "theResizeElement='obj_list';";
-    echo "theResizeSize=65;";
+    echo "theResizeSize=80;";
     echo "</script>";
 	}
 	$objObject->showObjects($link, $min, $max,'',0, $step);
