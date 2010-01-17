@@ -50,12 +50,30 @@ $disabled=" disabled=\"disabled\" ";
 
 //NAME
 if($phase==0)
-  $objPresentations->line(array("&gt;&gt;&gt;&gt;&nbsp;".LangViewObjectField1 . "&nbsp;*",
+  if($_SESSION['admin']=="yes")
+  { $objPresentations->line(array("&gt;&gt;&gt;&gt;&nbsp;".LangViewObjectField1 . "&nbsp;*",
                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"20\" name=\"catalog\" size=\"20\" value=\"".$objUtil->checkRequestKey('catalog')."\" ".(($phase==0)?"":$disabled)."/>".
                               "&nbsp;&nbsp;".
                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"20\" name=\"number\" size=\"20\" value=\"".$objUtil->checkRequestKey('number')."\" ".(($phase==0)?"":$disabled)."/>",
                               $content2),
                         "RLL",array(20,40,40),35,array("fieldname"));
+  	
+  }
+  else
+  { $tempcat=("<select name=\"catalog\" class=\"inputfield requiredField\"".(($phase==0)?"":$disabled).">");
+    $tempcat.=("<option value=\"\">-----</option>"); // empty field
+    $catalogs = $objObject->getCatalogs(); // should be sorted
+    while(list($key, $value) = each($catalogs))
+      $tempcat.=("<option value=\"".$value."\" ".($objUtil->checkRequestKey('catalog')==$value?"selected=\"selected\"":"")." >".$value."</option>");
+    $tempcat.=("</select>");
+    $objPresentations->line(array("&gt;&gt;&gt;&gt;&nbsp;".LangViewObjectField1 . "&nbsp;*",
+                              $tempcat.
+                              "&nbsp;&nbsp;".
+                              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"20\" name=\"number\" size=\"20\" value=\"".$objUtil->checkRequestKey('number')."\" ".(($phase==0)?"":$disabled)."/>",
+                              $content2),
+                        "RLL",array(20,40,40),35,array("fieldname"));
+
+  }
 else
 { $objPresentations->line(array(LangViewObjectField1 . "&nbsp;*",
                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"20\" name=\"catalog0\" size=\"20\" value=\"".$objUtil->checkRequestKey('catalog')."\" ".$disabled."/>".
@@ -105,14 +123,16 @@ if(($phase==10)||($phase==1)||($phase==20)||($phase==2))
 	  echo "<input type=\"hidden\" name=\"DeclMinutes\" size=\"3\" value=\"".$objUtil->checkRequestKey('DeclMinutes')."\"/>";
 	  echo "<input type=\"hidden\" name=\"DeclSeconds\" size=\"3\" value=\"".$objUtil->checkRequestKey('DeclSeconds')."\"/>";
 	}
-	// CONSTELLATION 
-	$thecon='';
-	if(($phase==2)||($phase==1))
-	  $thecon=$objConstellation->getConstellationFromCoordinates($objUtil->checkRequestKey('RAhours',0)+($objUtil->checkRequestKey('RAminutes',0)/60)+($objUtil->checkRequestKey('RAhours',0)/3600),$objUtil->checkRequestKey('DeclDegrees',0)+($objUtil->checkRequestKey('DeclMinutes',0)/60)+($objUtil->checkRequestKey('DeclSeconds',0)/3600));                            
-	$content ="<input type=\"text\" class=\"inputfield requiredField centered\" disabled=\"disabled\" maxlength=\"3\" name=\"con\" size=\"3\" value=\"".$thecon."\" />";
-	$objPresentations->line(array(LangViewObjectField5 . "&nbsp;*",
-	                              $content),                              
-	                        "RL",array(20,80),35,array("fieldname"));
+  if(($phase==2)||($phase==20))
+  { // CONSTELLATION 
+	  $thecon='';
+    $thecon=$objConstellation->getConstellationFromCoordinates($objUtil->checkRequestKey('RAhours',0)+($objUtil->checkRequestKey('RAminutes',0)/60)+($objUtil->checkRequestKey('RAhours',0)/3600),$objUtil->checkRequestKey('DeclDegrees',0)+($objUtil->checkRequestKey('DeclMinutes',0)/60)+($objUtil->checkRequestKey('DeclSeconds',0)/3600));                            
+	  $content ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"3\" disabled=\"disabled\" name=\"showcon\" size=\"3\" value=\"".$thecon."\" />";
+	  $objPresentations->line(array(LangViewObjectField5 . "&nbsp;*",
+	                                $content),                              
+	                          "RL",array(20,80),35,array("fieldname"));
+    echo "<input type=\"hidden\" name=\"con\" value=\"".$thecon."\" />";
+  }
 }
 if($phase==2)
 { // TYPE
