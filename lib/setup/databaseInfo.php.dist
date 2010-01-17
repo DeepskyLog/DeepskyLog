@@ -5,6 +5,8 @@
   $pass           = "";
   $dbname         = "deepskylog";
   $developversion = 1;             // $developversion should be removed or set to 0 on the live server
+  $mailFrom       = "developers@deepskylog.be";
+  $mailTo         = "developers@deepskylog.be";
   
   // Installation directory and url (each one has to end on a slash!)
   $instDir      = "/software/www/htdocs/deepskylog/";

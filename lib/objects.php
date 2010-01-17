@@ -1181,7 +1181,7 @@ class Objects implements iObjects
    return $objectList;
   }
 	public  function validateObject()                                                 // checks if the add new object form is correctly filled in and eventually adds the object to the database
-	{ global $objUtil,$objObject, $objObserver, $entryMessage, $loggedUser, $developversion;
+	{ global $objUtil,$objObject, $objObserver, $entryMessage, $loggedUser, $developversion,$mailTo,$mailFrom;
 	  echo "Con: ".$_POST['con'];
 	  if(!($loggedUser))
 	     new Exception(LangException002c);
@@ -1296,20 +1296,12 @@ class Objects implements iObjects
 		  }
 		  if($check)                                                                    // fill database
 		  { $objObject->addDSObject($name, $catalog , ucwords(trim($_POST['number'])), $_POST['type'], $_POST['con'], $ra, $declination, $magnitude, $sb, $diam1, $diam2, $posangle, "", "DeepskyLogUser ".$loggedUser." ".date('Ymd'));
-		    $admins = $objObserver->getAdministrators();
-		    while(list($key, $value)=each($admins))
-		      if ($objObserver->getObserverProperty($value,'email'))
-		        $adminMails[] = $objObserver->getObserverProperty($value,'email');
-		    $to=implode(",", $adminMails);
-		    $subject = LangValidateAccountEmailTitleObject . " " . $name;
-		    reset($admins);
-		    $headers="From:".$objObserver->getObserverProperty($admins[0],'email');
 		    $body=LangValidateAccountEmailTitleObject." ".$name." ". "www.deepskylog.org/index.php?indexAction=detail_object&object=".urlencode($name)." ".
 				      LangValidateAccountEmailTitleObjectObserver." ".$objObserver->getObserverProperty($loggedUser,'name')." ".$objObserver->getObserverProperty($loggedUser,'firstname')." www.deepskylog.org/index.php?indexAction=detail_observer&user=".urlencode($loggedUser);
         if(isset($developversion)&&($developversion==1))
           $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<p>";
         else
-          mail($to, $subject, $body, $headers);
+          mail($mailTo, LangValidateAccountEmailTitleObject . " " . $name, $body, "From:".$mailFrom);
 			  $_GET['indexAction']='detail_object';
 				$_GET['object']=$name;
 		  }

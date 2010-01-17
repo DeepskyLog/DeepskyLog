@@ -869,7 +869,6 @@ if ($dom->schemaValidate($xmlschema)) {
               $targetName = preg_replace($pattern, '${1} ${2}', $target);
               $targetName = str_replace("  ", " ", $targetName);
               $names = explode(" ", $targetName);
-
               $objObject->addDSObject($names[0]." ".$names[1], $names[0], $names[1], $ta["type"], $ta["constellation"], $ta["ra"], $ta["dec"], $ta["mag"], $ta["subr"], $ta["diam1"], $ta["diam2"], $ta["pa"], "", $ta["datasource"]);
               for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
                 $aliasName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
@@ -877,21 +876,12 @@ if ($dom->schemaValidate($xmlschema)) {
                 $objObject->newAltName($names[0]." ".$names[1], $aliasNames[0], $aliasNames[1]);
               }
               $objeId = $objObject->getDsObjectName(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $targetName)));
-              // Also sent mail with new object to the deepskylog administrators.
-              $admins = $objObserver->getAdministrators();
-              while(list($key, $value)=each($admins))
-              if ($objObserver->getObserverProperty($value,'email'))
-                $adminMails[] = $objObserver->getObserverProperty($value,'email');
-              $to=implode(",", $adminMails);
-              $subject = LangValidateAccountEmailTitleObject . " " . $targetName;
-              reset($admins);
-              $headers="From:".$objObserver->getObserverProperty($admins[0],'email');
               $body="<OAL>" . LangValidateAccountEmailTitleObject." ".$targetName." ". "www.deepskylog.org/index.php?indexAction=detail_object&object=".urlencode($targetName)." ".
                     LangValidateAccountEmailTitleObjectObserver." ".$objObserver->getObserverProperty($loggedUser,'name')." ".$objObserver->getObserverProperty($loggedUser,'firstname')." www.deepskylog.org/index.php?indexAction=detail_observer&user=".urlencode($loggedUser);
               if(isset($developversion)&&($developversion==1))
                 $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<p>";
               else
-                mail($to, $subject, $body, $headers);
+                mail($mailTo, LangValidateAccountEmailTitleObject . " " . $targetName, $body, "From:".$mailFrom);
             }
           }
         }

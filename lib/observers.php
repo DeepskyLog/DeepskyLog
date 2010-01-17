@@ -183,7 +183,7 @@ class Observers implements iObservers
 		echo $outputtable;
   }
   public  function valideAccount()
-	{	global $entryMessage, $objUtil, $objLanguage, $developversion,$loggedUser,$allLanguages;
+	{	global $entryMessage, $objUtil, $objLanguage, $developversion,$loggedUser,$allLanguages,$mailTo,$mailFrom;
 		if(!$_POST['email']||!$_POST['firstname']||!$_POST['name']||!$_POST['passwd']||!$_POST['passwd_again'])
 		{ $entryMessage.=LangValidateAccountMessage1;
 			if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
@@ -224,19 +224,10 @@ class Observers implements iObservers
 		              . "\n" . LangValidateAccountEmailLine3
 		              . $_POST['firstname'] . " " . $_POST['name']
 		              . "\n\n" . LangValidateAccountEmailLine4;
-		    $admins=$this->getAdministrators();                              // message recipient(s)
-		    while(list($key,$value)=each($admins))
-		      if($this->getObserverProperty($value,'email'))
-		        $adminMails[]=$this->getObserverProperty($value,'email');
-		    $to=implode(",",$adminMails);
-		    $subject=LangValidateAccountEmailTitle;
-		    $administrators=$this->getAdministrators();
-		    $fromMail=$this->getObserverProperty($administrators[0],'email');
-		    $headers="From:".$fromMail;
         if(isset($developversion)&&($developversion==true))
           $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<p>";
         else
-          mail($to, $subject, $body, $headers);
+          mail($mailTo, LangValidateAccountEmailTitle, $body, "From:".$mailFrom);
         $entryMessage = LangAccountSubscribed1.LangAccountSubscribed2.LangAccountSubscribed3.LangAccountSubscribed4.LangAccountSubscribed5.LangAccountSubscribed6.LangAccountSubscribed7.LangAccountSubscribed8.LangAccountSubscribed9;
 		    $_GET['user']=$_POST['deepskylog_id'];
 		    $_GET['indexAction']='detail_observer';
@@ -283,38 +274,29 @@ class Observers implements iObservers
 		}
 	}
 	public  function validateDeleteObserver()                                          // validateObserver validates the user with the given id and gives the user the given role
-  { global $objDatabase,$objUtil, $entryMessage,$loggedUser, $developversion;
+  { global $objDatabase,$objUtil, $entryMessage,$loggedUser, $developversion,$mailTo,$mailFrom;
     if(!($objUtil->checkSessionKey('admin')=='yes'))
       throw new Exception(LangException001);
     $objDatabase->execSQL("DELETE FROM observers WHERE id=\"".($id=$objUtil->checkGetKey('validateDelete'))."\"");
-    $subject = "Deepskylog account deleted";
-    $body = "The account for ".$id." was deleted by ".$loggedUser;
-    $administrators = $this->getAdministrators();
-    $fromMail = $this->getObserverProperty($administrators[0],'email');
-    $headers = "From:".$fromMail;
     if(isset($developversion)&&($developversion==1))
-      $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<p>";
+      $entryMessage.="On the live server, a mail would be sent with the subject: Deepskylog account deleted<p>";
     else
-      mail($fromMail, $subject, $body, $headers);
+      mail($mailTo, "Deepskylog account deleted", "The account for ".$id." was deleted by ".$loggedUser, "From:".$mailFrom);
     return "The user has been erased.";
   }	
   public  function validateObserver()                                          // validateObserver validates the user with the given id and gives the user the given role
-  { global $objDatabase,$objUtil, $entryMessage, $developversion;
+  { global $objDatabase,$objUtil, $entryMessage, $developversion,$mailTo,$mailFrom;
     if(!($objUtil->checkSessionKey('admin')=='yes'))
       throw new Exception(LangException001);
     $objDatabase->execSQL("UPDATE observers SET role = \"".($role=RoleUser)."\" WHERE id=\"".($id=$objUtil->checkGetKey('validate'))."\"");
-    $subject = LangValidateSubject;
     if ($role == RoleAdmin) $ad = LangValidateAdmin;
 	  else                    $ad = "";
     $array = array(LangValidateMail1, $id, LangValidateMail2, $ad, LangValidateMail3);
     $body = implode("", $array);
-    $administrators = $this->getAdministrators();
-    $fromMail = $this->getObserverProperty($administrators[0],'email');
-    $headers = "From:".$fromMail;
     if(isset($developversion)&&($developversion==1))
-      $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<br />";
+      $entryMessage.="On the live server, a mail would be sent with the subject: ".LangValidateSubject.".<br />";
     else
-      mail($this->getObserverProperty($id,'email'), $subject, $body, $headers);
+      mail($this->getObserverProperty($id,'email').";".$mailTo, LangValidateSubject, $body, $mailFrom);
     return LangValidateObserverMessage1.' '.LangValidateObserverMessage2;
   }
 }
