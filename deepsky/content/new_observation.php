@@ -145,10 +145,11 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$theSQM=(($observationid)?((($tempSQM=$objObservation->getDsObservationProperty($_GET['observation'],'SQM'))!=-1)?$tempSQM:''):$objUtil->checkPostKey('sqm'));
 	$contentSQM="<input type=\"text\" class=\"inputfield centered\" maxlength=\"4\" name=\"sqm\" size=\"4\"  value=\"".($theSQM?sprintf("%2.1f",$theSQM):'')."\" />";
 	// Seeing =====================================================================================================================================================================
+	$theSeeing=(($observationid)?$objObservation->getDsObservationProperty($observationid,'seeing'):$objUtil->checkPostKey('seeing',0));
 	$contentSeeing ="<select name=\"seeing\" class=\"inputfield\">";
 	$contentSeeing.="<option value=\"0\">-----</option>";
 	for ($i = 1; $i < 6; $i++)
-		$contentSeeing.="<option value=\"" . $i . "\"" . (($objUtil->checkPostKey('seeing', 0) == $i) ? " selected=\"selected\"" : '') . ">" . $GLOBALS['Seeing' . $i] . "</option>";
+		$contentSeeing.="<option value=\"" . $i . "\"" . (($theSeeing == $i) ? " selected=\"selected\"" : '') . ">" . $GLOBALS['Seeing' . $i] . "</option>";
 	$contentSeeing.="</select>&nbsp;";
 	// Eyepiece =====================================================================================================================================================================
 	$theEyepiece=(($observationid)?$objObservation->getDsObservationProperty($observationid,'eyepieceid'):$objUtil->checkPostKey('eyepiece'));
@@ -182,7 +183,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$contentVisibility ="<select name=\"visibility\" id=\"visibility\" class=\"width300px inputfield\">";
 	$contentVisibility.="<option value=\"0\">-----</option>";
 	for($i=1;$i<8;$i++)
-	{	$contentVisibility.="<option value=\"".$i."\" ".(($objUtil->checkPostKey('visibility')==$i)?"selected=\"selected\" ":"").">".$GLOBALS['Visibility'.$i]."</option>";
+	{	$contentVisibility.="<option value=\"".$i."\" ".(($theVisibility==$i)?"selected=\"selected\" ":"").">".$GLOBALS['Visibility'.$i]."</option>";
 	  $vis[$i] = $GLOBALS['Visibility'.$i];
 	}
 	$contentVisibility.="</select>&nbsp;";
@@ -190,15 +191,15 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
   $contentVisibilityOc ="<select name=\"visibility\" id=\"visibility\" class=\"width300px inputfield\">";
   $contentVisibilityOc.="<option value=\"0\">-----</option>";
   for($i=1;$i<8;$i++)
-  { $contentVisibilityOc.="<option value=\"".$i."\" ".(($objUtil->checkPostKey('visibility')==$i)?"selected=\"selected\" ":"").">".$GLOBALS['VisibilityOC'.$i]."</option>";
+  { $contentVisibilityOc.="<option value=\"".$i."\" ".(($theVisibility==$i)?"selected=\"selected\" ":"").">".$GLOBALS['VisibilityOC'.$i]."</option>";
     $visOc[$i] = $GLOBALS['VisibilityOC'.$i];
   }
   $contentVisibilityOc.="</select>&nbsp;";
   // Visibility for double stars ==================================================================================================================================================
-  $contentVisibilityDs ="<select name=\"visibility\" iv=\"visibility\" class=\"width300px inputfield\">";
+  $contentVisibilityDs ="<select name=\"visibility\" id=\"visibility\" class=\"width300px inputfield\">";
   $contentVisibilityDs.="<option value=\"0\">-----</option>";
   for($i=1;$i<4;$i++)
-    $contentVisibilityDs.="<option value=\"".$i."\" ".(($objUtil->checkPostKey('visibility')==$i)?"selected=\"selected\" ":"").">".$GLOBALS['VisibilityDS'.$i]."</option>";
+    $contentVisibilityDs.="<option value=\"".$i."\" ".(($theVisibility==$i)?"selected=\"selected\" ":"").">".$GLOBALS['VisibilityDS'.$i]."</option>";
   $contentVisibilityDs.="</select>&nbsp;";
   // Diameter =====================================================================================================================================================================
 	$theDiameter1=($observationid?(($tempD1=$objObservation->getDsObservationProperty($observationid,'largeDiameter'))?$tempD1:''):$objUtil->checkPostKey('largeDiam'));
