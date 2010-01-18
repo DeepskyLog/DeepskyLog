@@ -517,7 +517,7 @@ class Objects implements iObjects
   private function getSeenLastseenLink($object,&$seen, &$seenlink, &$lastseen, &$lastseenlink)
 	{ global $baseURL, $objDatabase, $loggedUser;
 		$seen = "-";
-    $seenlink = "<a href=\"".$baseURL."index.php?indexAction=detail_objectamp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\" >-</a>";
+    $seenlink = "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\" >-</a>";
     $lastseenlink = "-";
     $lastseenlink = "-";
 		if($ObsCnt=$objDatabase->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 ",'ObsCnt'))
