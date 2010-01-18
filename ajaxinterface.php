@@ -18,46 +18,10 @@ if($ajaxInstruction=="getObjects")
   }
   echo "</xmlresponse>";
 }
-if($ajaxInstruction=="getObjectsMagnitude")
-{ $objects=array();
-  $objects=$objObject->getObjectsMag($objUtil->checkGetKey('lLhr',0),$objUtil->checkGetKey('rLhr',0),$objUtil->checkGetKey('dDdeg',0),$objUtil->checkGetKey('uDdeg',0),$objUtil->checkGetKey('frommag',0),$objUtil->checkGetKey('tomag',10));
-  header("Content-Type:text/xml");
-  echo "<?xml version='1.0' encoding=\"ISO-8859-1\"?>";
-  echo "<xmlresponse>";
-  while(list($key,$value)=each($objects))
-  { echo "<object>";
-    while(list($objectproperty,$objectpropertyvalue)=each($value))
-      echo   "<".$objectproperty.">".htmlspecialchars($objectpropertyvalue)."</".$objectproperty.">";
-    echo "</object>";
-  }
-  echo "</xmlresponse>";
-}
-if($ajaxInstruction=="getStarsMagnitude")
-{ $objects=array();
-  $objects=$objStar->getStarsMagnitude($objUtil->checkGetKey('lLhr',0),$objUtil->checkGetKey('rLhr',0),$objUtil->checkGetKey('dDdeg',0),$objUtil->checkGetKey('uDdeg',0),$objUtil->checkGetKey(('frommag'),0),$objUtil->checkGetKey(('tomag'),0));
-  header("Content-Type:text/xml");
-  echo "<?xml version='1.0' encoding=\"ISO-8859-1\"?>";
-  echo "<xmlresponse>";
-  while(list($key,$value)=each($objects))
-  { echo "<object>";
-    while(list($objectproperty,$objectpropertyvalue)=each($value))
-      echo   "<".$objectproperty.">".htmlspecialchars($objectpropertyvalue)."</".$objectproperty.">";
-    echo "</object>";
-  }
-  echo "</xmlresponse>";
-}
-if($ajaxInstruction=="getConstellationBoundries")
-{ $boundries=array();
-  $boundries=$objConstellation->getAllBoundries();
-  header("Content-Type:text/xml");
-  echo "<?xml version='1.0' encoding=\"ISO-8859-1\"?>";
-  echo "<xmlresponse>";
-  while(list($key,$value)=each($boundries))
-  { echo "<boundry>";
-    while(list($boundryproperty,$boundrypropertyvalue)=each($value))
-      echo   "<".$boundryproperty.">".htmlspecialchars($boundrypropertyvalue)."</".$boundryproperty.">";
-    echo "</boundry>";
-  }
-  echo "</xmlresponse>";
-}
+elseif($ajaxInstruction=="getObjectsMagnitudeJSON")
+  echo(json_encode($objObject->getObjectsMag($objUtil->checkGetKey('lLhr',0),$objUtil->checkGetKey('rLhr',0),$objUtil->checkGetKey('dDdeg',0),$objUtil->checkGetKey('uDdeg',0),$objUtil->checkGetKey('frommag',0),$objUtil->checkGetKey('tomag',10))));
+elseif($ajaxInstruction=="getStarsMagnitudeJSON")
+  echo(json_encode($objStar->getStarsMagnitude($objUtil->checkGetKey('lLhr',0),$objUtil->checkGetKey('rLhr',0),$objUtil->checkGetKey('dDdeg',0),$objUtil->checkGetKey('uDdeg',0),$objUtil->checkGetKey(('frommag'),0),$objUtil->checkGetKey(('tomag'),0))));
+elseif($ajaxInstruction=="getConstellationBoundriesJSON")
+  echo(json_encode($objConstellation->getAllBoundries()));
 ?>
