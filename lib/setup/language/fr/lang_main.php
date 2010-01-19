@@ -23,6 +23,8 @@ define("LangNoOwnColor"                                   , "Eigen waarnemingen 
 define("LangMoonMenuTitle"                                ,"Lune");
 define("LangMoonMenuNewMoon"                              ,"Next new moon");
 define("LangMoonMenuActualMoon"                           ,"Huidige maan:");
+define("LangMoonRise"                                     ,"Op");
+define("LangMoonSet"                                      ,"Onder");
 
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Atlas");

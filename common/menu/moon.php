@@ -5,7 +5,8 @@ echo LangMoonMenuTitle."</p>";
 if($menuMoon=="collapsed") {
   // Only show the current moon phase
   include_once "lib/moonphase.inc.php";
-
+  include_once "lib/astrocalc.php";
+  
   $today=date('Ymd',strtotime('today'));
   $theYear=substr($today,0,4);
   $theMonth=substr($today,4,2);
@@ -32,6 +33,26 @@ if($menuMoon=="collapsed") {
   $file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
   echo "<span class=\"menuText\">".$nextNewMoonText."</span><br /><br />";
   echo "<span class=\"menuText\">".LangMoonMenuActualMoon."</span>&nbsp;"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" /><br />";
+  
+  // 1) Check if logged in
+  if($loggedUser) {
+    // 2) Get the julian day of today...
+    $jd = date('jd',strtotime('today'));
+    $jd = 2455215.18264;
+    
+    // 3) Get the standard location of the observer
+    $longitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'longitude');
+    $latitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'latitude');
+
+    // Calculate the rise and set time of the moon
+    $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime($jd, $longitude, $latitude);
+
+    echo "<span class=\"menuText\">".LangMoonRise." : " . floor($moon[0]) . ":" . 
+                  floor(($moon[0] - floor($moon[0])) * 60) . ", ";
+    echo LangMoonSet." : " . floor($moon[2]) . ":" . 
+                  floor(($moon[2] - floor($moon[2])) * 60) . "</span><br />";
+  }
+  
   
 }
 echo "</div>";

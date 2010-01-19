@@ -30,6 +30,8 @@ define("LangNoOwnColor"                                   , "No highlighting of 
 define("LangMoonMenuTitle"                                ,"Mond");
 define("LangMoonMenuNewMoon"                              ,"N&auml;chste Neumond");
 define("LangMoonMenuActualMoon"                           ,"Huidige maan:");
+define("LangMoonRise"                                     ,"Op");
+define("LangMoonSet"                                      ,"Onder");
 
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Atlas");

@@ -22,6 +22,8 @@ define("LangNoOwnColor"                                   , "No highlighting of 
 define("LangMoonMenuTitle"                                ,"Moon");
 define("LangMoonMenuNewMoon"                              ,"Next new moon");
 define("LangMoonMenuActualMoon"                           ,"Actual moon:");
+define("LangMoonRise"                                     ,"Rise");
+define("LangMoonSet"                                      ,"Set");
 
 
 // text for Atlas page help
