@@ -1900,6 +1900,7 @@ function newPage($insert=0,$id=0,$pos='after'){
 * the relevant headers are set so that hopefully the browser will recognise it
 */
 function stream($options=''){
+	global $objUtil;
   // setting the options allows the adjustment of the headers
   // values at the moment are:
   // 'Content-Disposition'=>'filename'  - sets the filename, though not too sure how well this will 
@@ -1922,7 +1923,7 @@ function stream($options=''){
 
   // JV, 20050528 dynamic naming of exported pdf file
 
-  $fileName = (isset($options['Content-Disposition'])?$options['Content-Disposition']:$_GET['pdfTitle']);
+  $fileName = (isset($options['Content-Disposition'])?$options['Content-Disposition']:$objUtil->checkRequestKey('pdfTitle'));
   header("Content-Disposition: inline; filename=".$fileName);
   if (isset($options['Accept-Ranges']) && $options['Accept-Ranges']==1){
     header("Accept-Ranges: ".strlen(ltrim($tmp))); 

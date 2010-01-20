@@ -9,9 +9,16 @@ class PrintAtlas
       $canvasDimensionXpx, 
       $canvasDimensionYpx,
       $canvasX2px,
+      $canvasY2px,
       $coordGridsH,
       $diam1SecToPxCt = 1,
       $diam2SecToPxCt = 1,
+      $dsl_amn,
+      $dsl_asc,
+      $dsl_deg,                                                   // fn coordDeclDecToDegMin results
+      $dsl_hr,     
+      $dsl_min,         
+      $dsl_sec,                                       // fn coordHrDecToHrMin    results
       $f12OverPi  = 3.8197186342054880584532103209403,
       $f180OverPi = 57.295779513082320876798154814105,
       $fPiOver2   = 1.5707963267948966192313216916398,
@@ -83,18 +90,64 @@ class PrintAtlas
     Array(0.15 ,0.20,0.012,16),
     Array(0.1 ,0.20,0.012,16)
   );
-
-  function canvasDrawLabel($bkGrdColor,$textColor,$theLabel,$a,$b,$w,$h,$align)
+/*
+  function canvasDrawLabel($x,$y,$w,$s,$theLabel,$align)
   { //jg.setColor(bkGrdColor);
     //canvasFillRect(a,b,w,h);
     //jg.setColor(textColor);
     //canvasDrawStringRect(theLabel,a,b,w,h,align);
-    $this->pdf->addTextWrap($a,$b,$w,$this->fontSize1a,$theLabel);
+    $this->pdf->addTextWrap($x,$y,$w,$s,$theLabel,$align);
   }  
-  
+	  
+	function coordDeclDecToDegMin($theDeg)
+	{ if($theDeg>90) $theDeg=90;
+	  if($theDeg<-90) $theDeg=-90;
+	  $sign='';
+	  if($theDeg<0) {$theDeg=-$theDeg; $sign='-';}
+	  $this->dsl_deg=floor($theDeg);
+	  $this->dsl_amn=round(($theDeg-$this->dsl_deg)*60);
+	  if($this->dsl_amn==60)
+	  { $this->dsl_amn=0;
+	    ++$this->dsl_deg;
+	  }
+	  $this->dsl_deg=$sign+$this->dsl_deg;
+	  if($this->dsl_amn>0)
+	    return $this->dsl_deg+'°'+$this->dsl_amn+'\'';
+	  return $this->dsl_deg+'°';
+	}  
+	  
+	function coordHrDecToHrMinSec($theHr)
+	{ while(($theHr)>24) $theHr-=24;
+		while(($theHr)<0)  $theHr+=24;
+		$this->dsl_hr=floor($theHr);
+		$this->dsl_min=floor(($theHr-$this->dsl_hr)*60);
+		$this->dsl_sec=$this->roundPrecision(($theHr-$this->dsl_hr-($this->dsl_min/60))*3600,10);
+		if($this->dsl_sec==60)
+		{ ++$this->dsl_min;
+		  $this->dsl_sec=0;
+		}
+		if($this->dsl_min==60)
+		{ $this->dsl_min=0;
+		  ++$this->dsl_hr;
+		}
+		if($this->dsl_hr==24)
+		 $this->dsl_hr=0;
+		if($this->dsl_sec>0)
+		 return $this->dsl_hr+'h'+$this->dsl_min+'m'+$this->dsl_sec+'s';
+		else if($this->dsl_min>0)
+		 return $this->dsl_hr+'h'+$this->dsl_min+'m';
+		return $this->dsl_hr+'h';
+	}
+	
+	function coordGridLxDyToString()
+	{ $this->coordHrDecToHrMinSec($this->gridLxRad*$this->f12OverPi);
+	  $this->coordDeclDecToDegMin($this->gridDyRad*$this->f180OverPi);
+	  return sprintf('%02d',$this->dsl_hr)+'h'+sprintf('%02d',$this->dsl_min)+'m'+sprintf('%02d',$this->dsl_sec)+'s,'+sprintf('%02d',$this->dsl_deg)+'°'+sprintf('%02d',$this->dsl_amn)+'\'';
+	}
   
   function gridDrawCoordLines()
   { //jg.setFont("Lucida Console", fontSize1a+"px", Font.PLAIN);
+    /*
     $this->gridLDinvRad($this->gridOffsetXpx,$this->gridOffsetYpx);
     $luLrad=$this->gridLxRad;
     $this->gridluLhr=$luLrad*$this->f12OverPi;
@@ -175,50 +228,50 @@ class PrintAtlas
       //jg.setColor(coordLineColor);
       for($l=$Lhr;$l>$RhrNeg;$l-=$LStep/$Lsteps)
         $this->gridDrawLineLD($l,$d,($l-($LStep/$Lsteps)),$d);
-      if($canvasX2px&&($canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx))
-        canvasDrawLabel(coordLblBkGroundColor,coordLblColor,coordDeclDecToDegMin(d),gridOffsetXpx+gridWidthXpx+2,canvasY2px-8,60,15,'left');
-      else if(canvasX2px&&(canvasY2px>=gridOffsetYpx+gridHeightYpx))
-        canvasDrawLabel(coordLblBkGroundColor,coordLblColor,coordDeclDecToDegMin(d),canvasX2px-30,gridOffsetYpx+gridHeightYpx+2,60,15,'center');
-      else if(canvasX2px&&(canvasY2px<=gridOffsetYpx))
-        canvasDrawLabel(coordLblBkGroundColor,coordLblColor,coordDeclDecToDegMin(d),canvasX2px-30,gridOffsetYpx-8,60,15,'center');
-      else if(canvasX2px)
-        canvasDrawLabel(coordLblBkGroundColor,coordLblColor,coordDeclDecToDegMin(d),canvasX2px-30,canvasY2px-17,60,15,'center');
+      if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx))
+        $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-8,60,15,$this->coordDeclDecToDegMin($d),'left');
+      else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
+        $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+2,60,15,$this->coordDeclDecToDegMin($d),'center');
+      else if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
+        $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx-8,60,15,$this->coordDeclDecToDegMin($d),'center');
+      else if($this->canvasX2px)
+        $this->canvasDrawLabel($this->canvasX2px-30,$this->canvasY2px-17,60,15,$this->coordDeclDecToDegMin($d),'center');
     }
-    /*
-    if(gridD0rad<0)
-    {  for(l=LhrStart;l>RhrNeg;l-=LStep)
-      { l=Math.round(l*60)/60;
-        canvasX2px=0;
-        jg.setColor(coordLineColor);
-        for(d=Ddeg;d<Udeg;d+=DStep/Dsteps)
-          gridDrawLineLD(l,d,l,(d+(DStep/Dsteps)));
-        if(canvasX2px&&(canvasY2px<=gridOffsetYpx))
-          canvasDrawLabel(coordLblBkGroundColor,coordLblColor,coordHrDecToHrMin(l),canvasX2px-30,gridOffsetYpx-fontSize1a-2,60,15,'center');
-        else if(canvasX2px&&(canvasX2px<=gridOffsetXpx)&&(canvasY2px<gridOffsetYpx+gridHeightYpx))
-          canvasDrawLabel(coordLblBkGroundColor,coordLblColor,coordHrDecToHrMin(l),gridOffsetXpx-62,canvasY2px-8,60,15,'right');
-        else if(canvasX2px&&(canvasX2px>=gridOffsetXpx+gridWidthXpx)&&(canvasY2px<gridOffsetYpx+gridHeightYpx))
-          canvasDrawLabel(coordLblBkGroundColor,coordLblColor,coordHrDecToHrMin(l),gridOffsetXpx+gridWidthXpx+2,canvasY2px-8,60,15,'left');
-        else if(canvasX2px&&(canvasY2px>=gridOffsetYpx+gridHeightYpx))
-          canvasDrawLabel(coordLblBkGroundColor,coordLblColor,coordHrDecToHrMin(l),canvasX2px-30,gridOffsetYpx+gridHeightYpx,60,15,'center');
+    if($this->gridD0rad<0)
+    { for($l=$LrStart;$l>$RhrNeg;$l-=$LStep)
+      { $l=round($l*60)/60;
+        $this->canvasX2px=0;
+        //jg.setColor(coordLineColor);
+        for($d=$Ddeg;$d<$Udeg;$d+=$DStep/$Dsteps)
+          $this->gridDrawLineLD($l,$d,$l,($d+($DStep/$Dsteps)));
+        if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
+          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx-$this->fontSize1a-2,60,15,$this->coordHrDecToHrMin($l),'center');
+        else if($this->canvasX2px&&($this->canvasX2px<=$this->gridOffsetXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
+          $this->canvasDrawLabel($this->gridOffsetXpx-62,$this->canvasY2px-8,60,15,$this->coordHrDecToHrMin($l),'right');
+        else if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
+          $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-8,60,15,$this->coordHrDecToHrMin($l),'left');
+        else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
+          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx,60,15,$this->coordHrDecToHrMin($l),'center');
       }
     }
     else
-    { for(l=LhrStart;l>RhrNeg;l-=LStep)
-      {  l=Math.round(l*60)/60;
-        canvasX2px=0;
-        jg.setColor(coordLineColor);
-        for(d=Udeg;d>Ddeg;d-=DStep/Dsteps)
-          gridDrawLineLD(l,d,l,(d-(DStep/Dsteps)));
-        if(canvasX2px&&(canvasY2px<=gridOffsetYpx))
-          canvasDrawLabel(coordLblBkGroundColor,coordLblColor,coordHrDecToHrMin(l),canvasX2px-30,gridOffsetYpx-10-fontSize1a,60,15,'center');
-        else if(canvasX2px&&(canvasX2px<=gridOffsetXpx)&&(canvasY2px<gridOffsetYpx+gridHeightYpx))
-          canvasDrawLabel(coordLblBkGroundColor,coordLblColor,coordHrDecToHrMin(l),gridOffsetXpx-62,canvasY2px-8,60,15,'right');
-        else if(canvasX2px&&(canvasX2px>=gridOffsetXpx+gridWidthXpx)&&(canvasY2px<gridOffsetYpx+gridHeightYpx))
-          canvasDrawLabel(coordLblBkGroundColor,coordLblColor,coordHrDecToHrMin(l),gridOffsetXpx+gridWidthXpx+2,canvasY2px-8,60,15,'left');
-        else if(canvasX2px&&(canvasY2px>=gridOffsetYpx+gridHeightYpx))
-          canvasDrawLabel(coordLblBkGroundColor,coordLblColor,coordHrDecToHrMin(l),canvasX2px-30,gridOffsetYpx+gridHeightYpx+2,60,15,'center');
+    { for($l=$LhrStart;$l>$RhrNeg;$l-=$LStep)
+      { $l=round($l*60)/60;
+        $this->canvasX2px=0;
+        //jg.setColor(coordLineColor);
+        for($d=$Udeg;$d>$Ddeg;$d-=$DStep/$Dsteps)
+          $this->gridDrawLineLD($l,$d,$l,($d-($DStep/$Dsteps)));
+        if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
+          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx-10-$this->fontSize1a,60,15,$this->coordHrDecToHrMin($l),'center');
+        else if($this->canvasX2px&&($this->canvasX2px<=$this->gridOffsetXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
+          $this->canvasDrawLabel($this->gridOffsetXpx-62,$this->canvasY2px-8,60,15,$this->coordHrDecToHrMin($l),'right');
+        else if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
+          $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-8,60,15,$this->coordHrDecToHrMin($l),'left');
+        else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
+          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+2,60,15,$this->coordHrDecToHrMin($l),'center');
       }
     }*/
+  	/*
   }
   
 
@@ -248,7 +301,7 @@ function gridDrawLineLD($Lhr1,$Ddeg1,$Lhr2,$Ddeg2)
   gridLx1rad=x1;gridDy1rad=y1;gridLx2rad=x2;gridDy2rad=y2;
   canvasDrawLine(canvasX1px,canvasY1px,canvasX2px,canvasY2px);
   return 1;*/
-
+/*
 }
   
   private function gridInit()
@@ -316,10 +369,11 @@ function gridDrawLineLD($Lhr1,$Ddeg1,$Lhr2,$Ddeg2)
       gridLxRad=gridLxRad+(f2Pi);
     if((gridLxRad)>=(f2Pi))
       gridLxRad=gridLxRad-(f2Pi);*/
-  }  
-  
+/*  
+}  
+  */
   public  function pdfAtlas($rarad, $declrad, $raspanrad, $declspanrad, $dsomag, $starmag)  // Creates a pdf atlas page
-  { global $objUtil;
+  { global $objUtil,$instDir;
   
     $this->atlaspagerahr=$objUtil->checkRequestKey('atlaspagerahr',0);
     $this->atlaspagedecldeg=$objUtil->checkRequestKey('atlaspagedecldeg',0);
@@ -329,16 +383,21 @@ function gridDrawLineLD($Lhr1,$Ddeg1,$Lhr2,$Ddeg2)
     
     $this->pdf = new Cezpdf('a4', 'landscape');
     $this->pdf->selectFont($instDir.'lib/fonts/Helvetica.afm');
-    $this->gridInit();
+    /*$this->gridInit();
     $this->gridInitScale($this->atlaspagerahr,$this->atlaspagedecldeg,$this->atlaspagezoomdeg);
 
     $this->pdf->rectangle($this->gridOffsetXpx,$this->gridOffsetYpx,
                          ($this->canvasDimensionXpx-($this->gridOffsetXpx<<1)),($this->canvasDimensionYpx-($this->gridOffsetYpx<<1)));
     $this->pdf->addText(50,$this->gridHeightYpx-10,10,"DeepskyLog Atlas Page for location ".$this->atlaspagerahr.' '.$this->atlaspagedecldeg.' to magnitude '.$this->atlasmagnitude);
-    
+    */
+    $this->pdf->addText(50,20,10,"DeepskyLog Atlas Page for location");
     
     $this->pdf->Stream(); 
   }
+  
+	function roundPrecision($theValue,$thePrecision)
+	{ return(round($theValue/$thePrecision)*$thePrecision);
+	}
 
 }
 $objPrintAtlas = new PrintAtlas;
