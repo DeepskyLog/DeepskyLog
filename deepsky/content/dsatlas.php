@@ -11,7 +11,7 @@ if($object)
   $decl=$objObject->getDsoProperty($object,'decl',0);
 }
 echo "<script type=\"text/javascript\">";
-echo "atlaspagerahr=".$ra.";atlaspagedecldeg=".$decl.";";
+echo "this.atlaspagerahr=".$ra.";this.atlaspagedecldeg=".$decl.";";
 while(list($name,$value)=each($atlasPageText))
   echo $name."='".$value."';";
 echo "</script>";

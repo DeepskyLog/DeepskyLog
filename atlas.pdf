@@ -1,0 +1,13 @@
+<?php 
+header ("Content-Type: application/pdf");
+header ("Content-Disposition: Attachment; filename=atlas.pdf");
+$inIndex = true;
+include 'common/entryexit/preludes.php';
+include 'lib/printatlas.php';
+$objPrintAtlas->pdfAtlas($objUtil->checkRequestKey('ra',0.0),
+                         $objUtil->checkRequestKey('decl',0.0),
+                         $objUtil->checkRequestKey('raspan',1.0),
+                         $objUtil->checkRequestKey('declspan',1.0),
+                         $objUtil->checkRequestKey('dsomag',10),
+                         $objUtil->checkRequestKey('starmag',10));
+?>
