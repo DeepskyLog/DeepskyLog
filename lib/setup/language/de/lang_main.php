@@ -2,6 +2,11 @@
 
 // TO DO:
 
+define('atlasPageFoV'                                    ,'FoV:');
+define('atlasPageDSLM'                                   ,'Objecten tot mag:');
+define('atlasPageStarLM'                                 ,'Sterren tot mag:');             
+
+
 define("LangShowObjectDetails"                            ,"Show object details");
 define("LangHideObjectDetails"                            ,"Hide object details");
 

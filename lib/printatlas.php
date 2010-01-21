@@ -254,7 +254,7 @@ class PrintAtlas
       for($l=$Lhr;$l>$RhrNeg;$l-=$LStep/$this->Lsteps)
         $this->gridDrawLineLD($l,$d,($l-($LStep/$this->Lsteps)),$d);
       if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx))
-        $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-8,60,8,$this->coordDeclDecToDegMin($d),'left');
+        $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-($this->fontSize1a>>1),60,8,$this->coordDeclDecToDegMin($d),'left');
       else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
         $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+2,60,8,$this->coordDeclDecToDegMin($d),'center');
       else if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
@@ -270,13 +270,13 @@ class PrintAtlas
         for($d=$Ddeg;$d<$Udeg;$d+=$DStep/$this->Dsteps)
           $this->gridDrawLineLD($l,$d,$l,($d+($DStep/$this->Dsteps)));
         if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
-          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx-$this->fontSize1a-2,60,8,$this->coordHrDecToHrMin($l),'center');
+          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx-$this->fontSize1a,60,8,$this->coordHrDecToHrMin($l),'center');
         else if($this->canvasX2px&&($this->canvasX2px<=$this->gridOffsetXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->gridOffsetXpx-62,$this->canvasY2px-8,60,8,$this->coordHrDecToHrMin($l),'right');
+          $this->canvasDrawLabel($this->gridOffsetXpx-62,$this->canvasY2px-($this->fontSize1a>>2),60,8,$this->coordHrDecToHrMin($l),'right');
         else if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-8,60,8,$this->coordHrDecToHrMin($l),'left');
+          $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-($this->fontSize1a>>2),60,8,$this->coordHrDecToHrMin($l),'left');
         else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx,60,8,$this->coordHrDecToHrMin($l),'center');
+          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+3,60,8,$this->coordHrDecToHrMin($l),'center');
       }
     }
     else
@@ -287,11 +287,11 @@ class PrintAtlas
         for($d=$Udeg;$d>$Ddeg;$d-=$DStep/$this->Dsteps)
           $this->gridDrawLineLD($l,$d,$l,($d-($DStep/$this->Dsteps)));
         if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
-          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx-10-$this->fontSize1a,60,8,$this->coordHrDecToHrMin($l),'center');
+          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx-($this->fontSize1a),60,8,$this->coordHrDecToHrMin($l),'center');
         else if($this->canvasX2px&&($this->canvasX2px<=$this->gridOffsetXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->gridOffsetXpx-62,$this->canvasY2px-8,60,8,$this->coordHrDecToHrMin($l),'right');
+          $this->canvasDrawLabel($this->gridOffsetXpx-62,$this->canvasY2px-($this->fontSize1a>>2),60,8,$this->coordHrDecToHrMin($l),'right');
         else if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-8,60,8,$this->coordHrDecToHrMin($l),'left');
+          $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-($this->fontSize1a>>2),60,8,$this->coordHrDecToHrMin($l),'left');
         else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
           $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+2,60,8,$this->coordHrDecToHrMin($l),'center');
       }
@@ -409,6 +409,12 @@ class PrintAtlas
     }
   }
 
+  function gridShowInfo()
+  { $t1 =atlasPageFoV.' '.(round($this->gridSpanL*20)/10)." x ".(round($this->gridSpanD*20)/10)."° - ";
+	  $t1.=atlasPageDSLM.' '.$this->atlasmagnitude." - ";
+	  $t1.=atlasPageStarLM.' '.$this->starsmagnitude;
+	  $this->pdf->addText(10,10,8,$t1);
+	}
   
   function gridXpx($Lrad) 
   { return round(($this->gridWidthXpx2*$Lrad/$this->gridSpanLrad));
@@ -432,12 +438,16 @@ class PrintAtlas
     $this->gridInit();
     $this->gridInitScale($this->atlaspagerahr,$this->atlaspagedecldeg,$this->atlaspagezoomdeg);
     $this->gridDrawCoordLines();
+    $this->gridShowInfo();
+    
     $this->pdf->rectangle($this->gridOffsetXpx,$this->gridOffsetYpx,
                          ($this->canvasDimensionXpx-($this->gridOffsetXpx<<1)),($this->canvasDimensionYpx-($this->gridOffsetYpx<<1)));
+        
+    /*
     $this->pdf->addText(50,$this->gridHeightYpx-10,10,"DeepskyLog Atlas Page for location ".$this->atlaspagerahr.' '.$this->atlaspagedecldeg.' to magnitude '.$this->atlasmagnitude);
     
     $this->pdf->addText(50,20,10,"DeepskyLog Atlas Page for location");
-    
+    */
     $this->pdf->Stream(); 
   }
   

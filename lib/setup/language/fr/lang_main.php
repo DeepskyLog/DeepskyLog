@@ -1,6 +1,10 @@
 <?php
 
 // TO DO
+define('atlasPageFoV'                                    ,'FoV:');
+define('atlasPageDSLM'                                   ,'Objecten tot mag:');
+define('atlasPageStarLM'                                 ,'Sterren tot mag:');
+            
 
 define("LangShowObjectDetails"                            ,"Montrer del d&#227;tails de l'objet");
 define("LangHideObjectDetails"                            ,"Cacher les d#227;tails de l'objet");
