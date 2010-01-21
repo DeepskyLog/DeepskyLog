@@ -8,7 +8,9 @@ class PrintAtlas
       $by=0,
       $canvasDimensionXpx, 
       $canvasDimensionYpx,
+      $canvasX1px, 
       $canvasX2px,
+      $canvasY1px,
       $canvasY2px,
       $coordGridsH,
       $diam1SecToPxCt = 1,
@@ -19,8 +21,10 @@ class PrintAtlas
       $dsl_hr,     
       $dsl_min,         
       $dsl_sec,                                       // fn coordHrDecToHrMin    results
+      $Dsteps=10,                                                     // Number of steps for drawing coordinate lines between major steps
       $f12OverPi  = 3.8197186342054880584532103209403,
       $f180OverPi = 57.295779513082320876798154814105,
+      $fPi        = 3.1415926535,
       $fPiOver2   = 1.5707963267948966192313216916398,
       $fPiOver12  = 0.26179938779914943653855361527329,
       $fPiOver180 = 0.017453292519943295769236907684886,
@@ -33,6 +37,8 @@ class PrintAtlas
       $gridD0rad,
       $griddDdeg,
       $gridDyRad,
+      $gridDy1rad,      
+      $gridDy2rad,
       $gridL0rad,
       $gridldDdeg,
       $gridldLhr,
@@ -40,12 +46,15 @@ class PrintAtlas
       $gridluDdeg,
       $gridluLhr,
       $gridLxRad,
+      $gridLx1rad, 
+      $gridLx2rad,     
       $gridMaxDimension=23,
       $gridMinDimension=0,
       $gridOffsetXpx=50, 
       $gridOffsetYpx=50,
       $gridrdDdeg,
       $gridrdLhr,
+      $gridrLhr,
       $gridruDdeg,
       $gridruLhr,
       $gridSpanD,
@@ -57,6 +66,7 @@ class PrintAtlas
       $gridWidthXpx2=0, 
       $gridHeightYpx, 
       $gridHeightYpx2=0,
+      $Lsteps=10,
       $lx=0,
       $rx=0,
       $starsmagnitude,
@@ -90,7 +100,7 @@ class PrintAtlas
     Array(0.15 ,0.20,0.012,16),
     Array(0.1 ,0.20,0.012,16)
   );
-/*
+
   function canvasDrawLabel($x,$y,$w,$s,$theLabel,$align)
   { //jg.setColor(bkGrdColor);
     //canvasFillRect(a,b,w,h);
@@ -110,11 +120,27 @@ class PrintAtlas
 	  { $this->dsl_amn=0;
 	    ++$this->dsl_deg;
 	  }
-	  $this->dsl_deg=$sign+$this->dsl_deg;
+	  $this->dsl_deg=$sign.$this->dsl_deg;
 	  if($this->dsl_amn>0)
-	    return $this->dsl_deg+'°'+$this->dsl_amn+'\'';
-	  return $this->dsl_deg+'°';
+	    return $this->dsl_deg.'°'.$this->dsl_amn.'\'';
+	  return $this->dsl_deg.'°';
 	}  
+	
+  function coordHrDecToHrMin($theHr)
+  { while(($theHr)>24) $theHr-=24;
+    while(($theHr)<0)  $theHr+=24;
+    $dsl_hr=floor($theHr);
+    $dsl_min=round(($theHr-$dsl_hr)*60);
+    if($dsl_min==60)
+    { $dsl_min=0;
+      ++$dsl_hr;
+      if($dsl_hr==24)
+        $dsl_hr=0;
+    }
+    if($dsl_min>0)
+     return $dsl_hr.'h'.$dsl_min.'m';
+    return $dsl_hr.'h';
+  }
 	  
 	function coordHrDecToHrMinSec($theHr)
 	{ while(($theHr)>24) $theHr-=24;
@@ -133,21 +159,20 @@ class PrintAtlas
 		if($this->dsl_hr==24)
 		 $this->dsl_hr=0;
 		if($this->dsl_sec>0)
-		 return $this->dsl_hr+'h'+$this->dsl_min+'m'+$this->dsl_sec+'s';
+		 return $this->dsl_hr.'h'.$this->dsl_min.'m'.$this->dsl_sec.'s';
 		else if($this->dsl_min>0)
-		 return $this->dsl_hr+'h'+$this->dsl_min+'m';
-		return $this->dsl_hr+'h';
+		 return $this->dsl_hr.'h'.$this->dsl_min.'m';
+		return $this->dsl_hr.'h';
 	}
 	
 	function coordGridLxDyToString()
 	{ $this->coordHrDecToHrMinSec($this->gridLxRad*$this->f12OverPi);
 	  $this->coordDeclDecToDegMin($this->gridDyRad*$this->f180OverPi);
-	  return sprintf('%02d',$this->dsl_hr)+'h'+sprintf('%02d',$this->dsl_min)+'m'+sprintf('%02d',$this->dsl_sec)+'s,'+sprintf('%02d',$this->dsl_deg)+'°'+sprintf('%02d',$this->dsl_amn)+'\'';
+	  return sprintf('%02d',$this->dsl_hr).'h'.sprintf('%02d',$this->dsl_min).'m'.sprintf('%02d',$this->dsl_sec).'s,'.sprintf('%02d',$this->dsl_deg).'°'.sprintf('%02d',$this->dsl_amn).'\'';
 	}
   
   function gridDrawCoordLines()
-  { //jg.setFont("Lucida Console", fontSize1a+"px", Font.PLAIN);
-    /*
+  { //jg.setFont("Lucida Console", fontSize1a."px", Font.PLAIN);
     $this->gridLDinvRad($this->gridOffsetXpx,$this->gridOffsetYpx);
     $luLrad=$this->gridLxRad;
     $this->gridluLhr=$luLrad*$this->f12OverPi;
@@ -158,20 +183,20 @@ class PrintAtlas
     $this->gridruLhr=$ruLrad*$this->f12OverPi;
     $ruDrad=$this->gridDyRad;
     $this->gridruDdeg=$ruDrad*$this->f180OverPi;
-    gridLDinvRad($this->gridOffsetXpx,$this->gridOffsetYpx+$this->gridHeightYpx);
+    $this->gridLDinvRad($this->gridOffsetXpx,$this->gridOffsetYpx+$this->gridHeightYpx);
     $ldLrad=$this->gridLxRad;
     $this->gridldLhr=$ldLrad*$this->f12OverPi;
     $ldDrad=$this->gridDyRad;
     $this->gridldDdeg=$ldDrad*$this->f180OverPi;
-    gridLDinvRad($this->gridOffsetXpx+$this->gridWidthXpx,$this->gridOffsetYpx+$this->gridHeightYpx);
+    $this->gridLDinvRad($this->gridOffsetXpx+$this->gridWidthXpx,$this->gridOffsetYpx+$this->gridHeightYpx);
     $rdLrad=$this->gridLxRad;
     $this->gridrdLhr=$rdLrad*$this->f12OverPi;
     $rdDrad=$this->gridDyRad;
     $this->gridrdDdeg=$rdDrad*$this->f180OverPi;
     
-    gridLDinvRad($this->gridOffsetXpx+(($this->gridWidthXpx+1)>>1),$this->gridOffsetYpx);
+    $this->gridLDinvRad($this->gridOffsetXpx+(($this->gridWidthXpx+1)>>1),$this->gridOffsetYpx);
     $this->griduDdeg=$this->gridDyRad*$this->f180OverPi;
-    gridLDinvRad($this->gridOffsetXpx+$this->gridWidthXpx,$this->gridOffsetYpx+$this->gridHeightYpx);
+    $this->gridLDinvRad($this->gridOffsetXpx+$this->gridWidthXpx,$this->gridOffsetYpx+$this->gridHeightYpx);
     $this->griddDdeg=$this->gridDyRad*$this->f180OverPi;
   
     if((($this->gridD0rad+$this->gridSpanDrad)<($this->fPiOver2))&&(($this->gridD0rad-$this->gridSpanDrad)>-($this->fPiOver2)))
@@ -185,8 +210,8 @@ class PrintAtlas
       }
       if($Lrad<$Rrad)
         $Rrad-=($this->f2Pi);
-      $Urad=Max($this->gridD0rad+$this->gridSpanDrad,Max($luDrad,$ruDrad));
-      $Drad=Min($this->gridD0rad-$this->gridSpanDrad,Min($ldDrad,$rdDrad));
+      $Urad=max($this->gridD0rad+$this->gridSpanDrad,max($luDrad,$ruDrad));
+      $Drad=min($this->gridD0rad-$this->gridSpanDrad,min($ldDrad,$rdDrad));
       $Lhr=$Lrad*$this->f12OverPi;
       $RhrNeg=$Rrad*$this->f12OverPi;
       $Udeg=$Urad*$this->f180OverPi;
@@ -196,13 +221,13 @@ class PrintAtlas
     { $Lhr=24;
       $RhrNeg=0;
       $Udeg=90;
-      $Ddeg=Min($this->gridD0rad-$this->gridSpanDrad,Min($ldDrad,$rdDrad))*$this->f180OverPi;
+      $Ddeg=min($this->gridD0rad-$this->gridSpanDrad,min($ldDrad,$rdDrad))*$this->f180OverPi;
       $griduDdeg=90;
     }
     else if(($this->gridD0rad-$this->gridSpanDrad)<=-($this->fPiOver2))
     { $Lhr=24;
       $RhrNeg=0;
-      $Udeg=Max($this->gridD0rad+$this->gridSpanDrad,Max($luDrad,$ruDrad))*$this->f180OverPi;
+      $Udeg=max($this->gridD0rad+$this->gridSpanDrad,max($luDrad,$ruDrad))*$this->f180OverPi;
       $Ddeg=-90;
       $griddDdeg=-90;
     }
@@ -212,7 +237,7 @@ class PrintAtlas
     $griddDdeg=$Ddeg;
     
     $DLhr=($Lhr-$RhrNeg);
-    $LStep=Min(round((($this->gridDimensions[$this->gridActualDimension][2]/cos($this->gridD0rad))*60)/60),2);
+    $LStep=min(round((($this->gridDimensions[$this->gridActualDimension][2])/cos($this->gridD0rad))*60)/60,2);
     $DDdeg=($Udeg-$Ddeg);
     $DStep=$this->gridDimensions[$this->gridActualDimension][1];
     
@@ -223,35 +248,35 @@ class PrintAtlas
     $gridrLhr=($RhrNeg<0?($RhrNeg+24):$RhrNeg);
   
     for($d=$DdegStart;$d<=$Udeg;$d+=$DStep)
-    { $d=round(d*60)/60;
+    { $d=round($d*60)/60;
       $this->canvasX2px=0;
       //jg.setColor(coordLineColor);
-      for($l=$Lhr;$l>$RhrNeg;$l-=$LStep/$Lsteps)
-        $this->gridDrawLineLD($l,$d,($l-($LStep/$Lsteps)),$d);
+      for($l=$Lhr;$l>$RhrNeg;$l-=$LStep/$this->Lsteps)
+        $this->gridDrawLineLD($l,$d,($l-($LStep/$this->Lsteps)),$d);
       if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx))
-        $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-8,60,15,$this->coordDeclDecToDegMin($d),'left');
+        $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-8,60,8,$this->coordDeclDecToDegMin($d),'left');
       else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
-        $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+2,60,15,$this->coordDeclDecToDegMin($d),'center');
+        $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+2,60,8,$this->coordDeclDecToDegMin($d),'center');
       else if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
-        $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx-8,60,15,$this->coordDeclDecToDegMin($d),'center');
+        $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx-8,60,8,$this->coordDeclDecToDegMin($d),'center');
       else if($this->canvasX2px)
-        $this->canvasDrawLabel($this->canvasX2px-30,$this->canvasY2px-17,60,15,$this->coordDeclDecToDegMin($d),'center');
+        $this->canvasDrawLabel($this->canvasX2px-30,$this->canvasY2px-17,60,8,$this->coordDeclDecToDegMin($d),'center');
     }
     if($this->gridD0rad<0)
-    { for($l=$LrStart;$l>$RhrNeg;$l-=$LStep)
+    { for($l=$LhrStart;$l>$RhrNeg;$l-=$LStep)
       { $l=round($l*60)/60;
         $this->canvasX2px=0;
         //jg.setColor(coordLineColor);
-        for($d=$Ddeg;$d<$Udeg;$d+=$DStep/$Dsteps)
-          $this->gridDrawLineLD($l,$d,$l,($d+($DStep/$Dsteps)));
+        for($d=$Ddeg;$d<$Udeg;$d+=$DStep/$this->Dsteps)
+          $this->gridDrawLineLD($l,$d,$l,($d+($DStep/$this->Dsteps)));
         if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
-          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx-$this->fontSize1a-2,60,15,$this->coordHrDecToHrMin($l),'center');
+          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx-$this->fontSize1a-2,60,8,$this->coordHrDecToHrMin($l),'center');
         else if($this->canvasX2px&&($this->canvasX2px<=$this->gridOffsetXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->gridOffsetXpx-62,$this->canvasY2px-8,60,15,$this->coordHrDecToHrMin($l),'right');
+          $this->canvasDrawLabel($this->gridOffsetXpx-62,$this->canvasY2px-8,60,8,$this->coordHrDecToHrMin($l),'right');
         else if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-8,60,15,$this->coordHrDecToHrMin($l),'left');
+          $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-8,60,8,$this->coordHrDecToHrMin($l),'left');
         else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx,60,15,$this->coordHrDecToHrMin($l),'center');
+          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx,60,8,$this->coordHrDecToHrMin($l),'center');
       }
     }
     else
@@ -259,50 +284,48 @@ class PrintAtlas
       { $l=round($l*60)/60;
         $this->canvasX2px=0;
         //jg.setColor(coordLineColor);
-        for($d=$Udeg;$d>$Ddeg;$d-=$DStep/$Dsteps)
-          $this->gridDrawLineLD($l,$d,$l,($d-($DStep/$Dsteps)));
+        for($d=$Udeg;$d>$Ddeg;$d-=$DStep/$this->Dsteps)
+          $this->gridDrawLineLD($l,$d,$l,($d-($DStep/$this->Dsteps)));
         if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
-          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx-10-$this->fontSize1a,60,15,$this->coordHrDecToHrMin($l),'center');
+          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx-10-$this->fontSize1a,60,8,$this->coordHrDecToHrMin($l),'center');
         else if($this->canvasX2px&&($this->canvasX2px<=$this->gridOffsetXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->gridOffsetXpx-62,$this->canvasY2px-8,60,15,$this->coordHrDecToHrMin($l),'right');
+          $this->canvasDrawLabel($this->gridOffsetXpx-62,$this->canvasY2px-8,60,8,$this->coordHrDecToHrMin($l),'right');
         else if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-8,60,15,$this->coordHrDecToHrMin($l),'left');
+          $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-8,60,8,$this->coordHrDecToHrMin($l),'left');
         else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+2,60,15,$this->coordHrDecToHrMin($l),'center');
+          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+2,60,8,$this->coordHrDecToHrMin($l),'center');
       }
-    }*/
-  	/*
+    }
   }
   
 
   
-function gridDrawLineLD($Lhr1,$Ddeg1,$Lhr2,$Ddeg2)
-{ /* gridLDrad(Lhr1,Ddeg1); x1=gridLxRad; y1=gridDyRad;
-  gridLDrad(Lhr2,Ddeg2); x2=gridLxRad; y2=gridDyRad;
-  if((x1<-gridSpanLrad)&&(x2<-gridSpanLrad)) return 0;
-  if((x1>gridSpanLrad)&&(x2>gridSpanLrad))   return 0;
-  if((y1<-gridSpanDrad)&&(y2<-gridSpanDrad)) return 0;
-  if((y1>gridSpanDrad)&&(y2>gridSpanDrad))   return 0;
-  if(x1<-gridSpanLrad) if(x2==x1) return 0; else {y1=(((-gridSpanLrad-x1)/(x2-x1))*(y2-y1))+y1; x1=-gridSpanLrad;}
-  if(x1>gridSpanLrad)  if(x2==x1) return 0; else  {y1=(((gridSpanLrad-x1)/(x2-x1))*(y2-y1))+y1;  x1=gridSpanLrad; }
-  if(y1>gridSpanDrad)  if(y2==y1) return 0; else  {x1=(((gridSpanDrad-y1)/(y2-y1))*(x2-x1))+x1;  y1=gridSpanDrad; }
-  if(y1<-gridSpanDrad) if(y2==y1) return 0; else {x1=(((-gridSpanDrad-y1)/(y2-y1))*(x2-x1))+x1; y1=-gridSpanDrad;}
-  if((y1<-gridSpanDrad)||(y1>gridSpanDrad)||(x1<-gridSpanLrad)||(x1>gridSpanLrad)) return 0;  
-  if(x2<-gridSpanLrad) if(x2==x1) return 0; else {y2=(((-gridSpanLrad-x1)/(x2-x1))*(y2-y1))+y1; x2=-gridSpanLrad;}
-  if(x2>gridSpanLrad)  if(x2==x1) return 0; else  {y2=(((gridSpanLrad-x1)/(x2-x1))*(y2-y1))+y1;  x2=gridSpanLrad;  }
-  if(y2>gridSpanDrad)  if(y2==y1) return 0; else  {x2=(((gridSpanDrad-y1)/(y2-y1))*(x2-x1))+x1;  y2=gridSpanDrad;  }
-  if(y2<-gridSpanDrad) if(y2==y1) return 0; else  {x2=(((-gridSpanDrad-y1)/(y2-y1))*(x2-x1))+x1; y2=-gridSpanDrad;}
-  if((y2<-gridSpanDrad)||(y2>gridSpanDrad)||(x2<-gridSpanLrad)||(x2>gridSpanLrad)) return 0;
-  
-  canvasX1px=gridCenterOffsetXpx+gridXpx(x1);
-  canvasY1px=gridCenterOffsetYpx+gridYpx(y1);
-  canvasX2px=gridCenterOffsetXpx+gridXpx(x2);
-  canvasY2px=gridCenterOffsetYpx+gridYpx(y2);
-  gridLx1rad=x1;gridDy1rad=y1;gridLx2rad=x2;gridDy2rad=y2;
-  canvasDrawLine(canvasX1px,canvasY1px,canvasX2px,canvasY2px);
-  return 1;*/
-/*
-}
+  function gridDrawLineLD($Lhr1,$Ddeg1,$Lhr2,$Ddeg2)
+  { $this->gridLDrad($Lhr1,$Ddeg1); $x1=$this->gridLxRad; $y1=$this->gridDyRad;
+    $this->gridLDrad($Lhr2,$Ddeg2); $x2=$this->gridLxRad; $y2=$this->gridDyRad;
+    if(($x1<-($this->gridSpanLrad))&&($x2<-($this->gridSpanLrad))) return 0;
+    if(($x1>$this->gridSpanLrad)&&($x2>$this->gridSpanLrad))       return 0;
+    if(($y1<-($this->gridSpanDrad))&&($y2<-($this->gridSpanDrad))) return 0;
+    if(($y1>$this->gridSpanDrad)&&($y2>$this->gridSpanDrad))       return 0;
+    if($x1<-($this->gridSpanLrad)) if($x2==$x1) return 0; else {$y1=(((-($this->gridSpanLrad)-$x1)/($x2-$x1))*($y2-$y1))+$y1; $x1=-($this->gridSpanLrad);}
+    if($x1>($this->gridSpanLrad))  if($x2==$x1) return 0; else  {$y1=(((($this->gridSpanLrad)-$x1)/($x2-$x1))*($y2-$y1))+$y1;  $x1=($this->gridSpanLrad); }
+    if($y1>($this->gridSpanDrad))  if($y2==$y1) return 0; else  {$x1=(((($this->gridSpanDrad)-$y1)/($y2-$y1))*($x2-$x1))+$x1;  $y1=($this->gridSpanDrad); }
+    if($y1<-($this->gridSpanDrad)) if($y2==$y1) return 0; else {$x1=(((-($this->gridSpanDrad)-$y1)/($y2-$y1))*($x2-$x1))+$x1; $y1=-($this->gridSpanDrad);}
+    if(($y1<-($this->gridSpanDrad))||($y1>($this->gridSpanDrad))||($x1<-($this->gridSpanLrad))||($x1>($this->gridSpanLrad))) return 0;  
+    if($x2<-($this->gridSpanLrad)) if($x2==$x1) return 0; else {$y2=(((-($this->gridSpanLrad)-$x1)/($x2-$x1))*($y2-$y1))+$y1; $x2=-($this->gridSpanLrad);}
+    if($x2>($this->gridSpanLrad))  if($x2==$x1) return 0; else  {$y2=(((($this->gridSpanLrad)-$x1)/($x2-$x1))*($y2-$y1))+$y1;  $x2=($this->gridSpanLrad);  }
+    if($y2>($this->gridSpanDrad))  if($y2==$y1) return 0; else  {$x2=(((($this->gridSpanDrad)-$y1)/($y2-$y1))*($x2-$x1))+$x1;  $y2=($this->gridSpanDrad);  }
+    if($y2<-($this->gridSpanDrad)) if($y2==$y1) return 0; else  {$x2=(((-($this->gridSpanDrad)-$y1)/($y2-$y1))*($x2-$x1))+$x1; $y2=-($this->gridSpanDrad);}
+    if(($y2<-($this->gridSpanDrad))||($y2>($this->gridSpanDrad))||($x2<-($this->gridSpanLrad))||($x2>($this->gridSpanLrad))) return 0;
+    
+    $this->canvasX1px=$this->gridCenterOffsetXpx+$this->gridXpx($x1);
+    $this->canvasY1px=$this->gridCenterOffsetYpx+$this->gridYpx($y1);
+    $this->canvasX2px=$this->gridCenterOffsetXpx+$this->gridXpx($x2);
+    $this->canvasY2px=$this->gridCenterOffsetYpx+$this->gridYpx($y2);
+    $this->gridLx1rad=$x1;$this->gridDy1rad=$y1;$this->gridLx2rad=$x2;$this->gridDy2rad=$y2;
+    $this->pdf->line($this->canvasX1px,$this->canvasY1px,$this->canvasX2px,$this->canvasY2px);
+    return 1;
+  }
   
   private function gridInit()
   { $this->canvasDimensionXpx=$this->pdf->ez['pageWidth']; 
@@ -343,35 +366,58 @@ function gridDrawLineLD($Lhr1,$Ddeg1,$Lhr2,$Ddeg2)
   }
   
   function gridLDinvRad($XpxAbsScr,$YpxAbsScr)
-  { /*var $xRad=-(($XpxAbsScr-$this->gridCenterOffsetXpx)/gridWidthXpx2*gridSpanLrad);
-    var $yRad=((gridCenterOffsetYpx+canvasOffsetYpx+divOffsetYpx+div5Top-YpxAbsScr)/gridHeightYpx2*gridSpanDrad);
-    drad=Math.sqrt((xRad*xRad)+(yRad*yRad));
-    if(drad>0)
-    { var sinalpha=xRad/drad;
-      var cosalpha=yRad/drad;
-      var Dacc=Math.acos((Math.cos(drad)*Math.sin(gridD0rad))+(Math.sin(drad)*Math.cos(gridD0rad)*cosalpha));
-      var cosLacc=(Math.cos(drad)-(Math.sin(gridD0rad)*Math.cos(Dacc)))/(Math.cos(gridD0rad)*Math.sin(Dacc));
-      if(cosLacc>=0)
-        gridLxRad=gridL0rad+(Math.asin(Math.sin(drad)*sinalpha/Math.sin(Dacc)));
+  { $xRad=-(($XpxAbsScr-$this->gridCenterOffsetXpx)/$this->gridWidthXpx2*$this->gridSpanLrad);
+    $yRad=(($this->gridCenterOffsetYpx-$YpxAbsScr)/$this->gridHeightYpx2*$this->gridSpanDrad);
+    $drad=sqrt(($xRad*$xRad)+($yRad*$yRad));
+    if($drad>0)
+    { $sinalpha=$xRad/$drad;
+      $cosalpha=$yRad/$drad;
+      $Dacc=acos((cos($drad)*sin($this->gridD0rad))+(sin($drad)*cos($this->gridD0rad)*$cosalpha));
+      $cosLacc=(cos($drad)-(sin($this->gridD0rad)*cos($Dacc)))/(cos($this->gridD0rad)*sin($Dacc));
+      if($cosLacc>=0)
+        $this->gridLxRad=$this->gridL0rad+(asin(sin($drad)*$sinalpha/sin($Dacc)));
       else
-        gridLxRad=gridL0rad+Math.PI-(Math.asin(Math.sin(drad)*sinalpha/Math.sin(Dacc)));    
-      gridDyRad=((fPiOver2)-Dacc);
+        $this->gridLxRad=$this->gridL0rad+$this->fPi-(asin(sin($drad)*$sinalpha/sin($Dacc)));    
+      $this->gridDyRad=(($this->fPiOver2)-$Dacc);
     }
     else
-    { gridLxRad=gridL0rad;
-      gridDyRad=gridD0rad;
+    { $this->gridLxRad=$this->gridL0rad;
+      $this->gridDyRad=$this->gridD0rad;
     }
-    if((gridDyRad)>(fPiOver2))
-      gridDyRad=(fPiOver2);
-    if((gridDyRad)<(-fPiOver2))
-      gridDyRad=(-fPiOver2);
-    if((gridLxRad)<0)
-      gridLxRad=gridLxRad+(f2Pi);
-    if((gridLxRad)>=(f2Pi))
-      gridLxRad=gridLxRad-(f2Pi);*/
-/*  
-}  
-  */
+    if(($this->gridDyRad)>($this->fPiOver2))
+      $this->gridDyRad=($this->fPiOver2);
+    if(($this->gridDyRad)<(-($this->fPiOver2)))
+      $this->gridDyRad=(-($this->fPiOver2));
+    if(($this->gridLxRad)<0)
+      $this->gridLxRad=$this->gridLxRad+($this->f2Pi);
+    if(($this->gridLxRad)>=($this->f2Pi))
+      $this->gridLxRad=$this->gridLxRad-($this->f2Pi);
+  }  
+
+  function gridLDrad($Lhr,$Ddeg)
+  { $Lrad=$Lhr*$this->fPiOver12; $Drad=$Ddeg*$this->fPiOver180;
+    if($Lrad>$this->gridL0rad+$this->fPi) $Lrad=$Lrad-($this->f2Pi);
+    if($Lrad<$this->gridL0rad-$this->fPi) $Lrad=$Lrad+($this->f2Pi);
+    $drad=acos((sin($this->gridD0rad)*sin($Drad))+(cos($this->gridD0rad)*cos($Drad)*cos($Lrad-$this->gridL0rad)));
+    if($drad>0)
+    { $this->gridLxRad=-($drad*(sin($Lrad-$this->gridL0rad)*cos($Drad)/sin($drad)));
+      $this->gridDyRad=($drad*(sin($Drad)-(sin($this->gridD0rad)*cos($drad)))/(cos($this->gridD0rad)*sin($drad)));
+    }
+    else
+    { $this->gridLxRad=0;
+      $this->gridDyRad=0;
+    }
+  }
+
+  
+  function gridXpx($Lrad) 
+  { return round(($this->gridWidthXpx2*$Lrad/$this->gridSpanLrad));
+  }
+  
+  function gridYpx($Drad)
+  { return round(($this->gridHeightYpx2*$Drad/$this->gridSpanDrad));
+  }
+
   public  function pdfAtlas($rarad, $declrad, $raspanrad, $declspanrad, $dsomag, $starmag)  // Creates a pdf atlas page
   { global $objUtil,$instDir;
   
@@ -383,13 +429,13 @@ function gridDrawLineLD($Lhr1,$Ddeg1,$Lhr2,$Ddeg2)
     
     $this->pdf = new Cezpdf('a4', 'landscape');
     $this->pdf->selectFont($instDir.'lib/fonts/Helvetica.afm');
-    /*$this->gridInit();
+    $this->gridInit();
     $this->gridInitScale($this->atlaspagerahr,$this->atlaspagedecldeg,$this->atlaspagezoomdeg);
-
+    $this->gridDrawCoordLines();
     $this->pdf->rectangle($this->gridOffsetXpx,$this->gridOffsetYpx,
                          ($this->canvasDimensionXpx-($this->gridOffsetXpx<<1)),($this->canvasDimensionYpx-($this->gridOffsetYpx<<1)));
     $this->pdf->addText(50,$this->gridHeightYpx-10,10,"DeepskyLog Atlas Page for location ".$this->atlaspagerahr.' '.$this->atlaspagedecldeg.' to magnitude '.$this->atlasmagnitude);
-    */
+    
     $this->pdf->addText(50,20,10,"DeepskyLog Atlas Page for location");
     
     $this->pdf->Stream(); 
