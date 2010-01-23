@@ -173,8 +173,7 @@ class PrintAtlas
     }     
 	}
 	function astroDrawStarxObject($i)
-	{ /*
-	  $d=floor(2*(($this->gridDimensions[$this->gridActualDimension][3])-($this->astroObjectsArr[$i]["mag"]/100))+1);
+	{ $d=floor(2*(($this->gridDimensions[$this->gridActualDimension][3])-($this->astroObjectsArr[$i]["mag"]/100))+1);
     $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
     $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
     $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
@@ -182,25 +181,22 @@ class PrintAtlas
        (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
     { $this->pdf->filledEllipse($cx,$cy,(.5*$d),(.5*$d),0,$this->nsegmente);
       $d=(($d+1)>>2);
-      $this->astroDrawObjectLabel($cx,$cy,$d,$this->astroObjectsArr[$i]["name"]);
-	    $this->pdf->line($cx-$d-1,$cy,$cx+$d+1,$cy);
-    }
-    */     
+      $this->astroDrawObjectLabel($cx,$cy,$d+2,$this->astroObjectsArr[$i]["name"]);
+	    $this->pdf->line($cx-$d-10,$cy,$cx+$d+10,$cy);
+    }     
 	}
 	
   
 	function astroDrawObjects()
 	{ global $objObject;
-		$this->astroObjectsArr=$objObject->getObjectsMag($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,-999999,$this->atlasmagnitude);
-/*
-		$z=count($this->astroObjectsArr);
+	  $this->astroObjectsArr=$objObject->getObjectsMag($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,-999999,$this->atlasmagnitude);
+	  $z=count($this->astroObjectsArr);
     for($i=0;$i<$z;$i++)
 	  { if($this->astroObjectsArr[$i]["type"]!='AASTAR1')
   	  { if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
 	        $this->astroDrawStarObject($i);
 	      else if($this->astroObjectsArr[$i]["type"]=='AA2STAR')
 	        $this->astroDrawStarxObject($i);
-*/
 /*
 	        else if(astroObjectsArr[i]["type"]=='AA3STAR')
 	        astroDrawStarxObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["mag"],astroObjectsArr[i]["name"],i);
@@ -278,8 +274,8 @@ class PrintAtlas
 	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
 	      else
 	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
-	     *//* }   
-	  }*/
+	     */}   
+	  }
 	}
 	  
   
@@ -576,8 +572,8 @@ class PrintAtlas
     $DdegStart=(floor($Ddeg/$DStep)+1)*$DStep;
   
     $this->gridlLhr=$Lhr;
-    $gridrLhr=($RhrNeg<0?($RhrNeg+24):$RhrNeg);
-  
+    $this->gridrLhr=($RhrNeg<0?($RhrNeg+24):$RhrNeg);
+	      
     for($d=$DdegStart;$d<=$Udeg;$d+=$DStep)
     { $d=round($d*60)/60;
       $this->canvasX2px=0;
