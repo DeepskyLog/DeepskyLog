@@ -155,7 +155,134 @@ class PrintAtlas
     }
     $this->pdf->setLineStyle(0.5,'round');
   }
-     
+  
+  function astroDrawObjectLabel($cx, $cy, $d, $name)
+  { if((($cx+4+$d)>$this->lx)&&(($cx+4+$d+(strlen($name)*$this->fontSize1b))<$this->rx)&&(($cy-($this->fontSize1a>>1))<$this->ty)&&(($cy+($this->fontSize1a>>1))>$this->by))
+      $this->pdf->addText(($cx+4+$d), $cy-($this->fontSize1a>>1), 6, $name);
+  }
+  
+  function astroDrawStarObject($i)
+	{ $d=floor(2*(($this->gridDimensions[$this->gridActualDimension][3])-($this->astroObjectsArr[$i]["mag"]/100))+1);
+    $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
+    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+    if((!((($cx-$d<$this->lx)||($cx+$d>$this->rx))))&&
+       (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
+    { $this->pdf->filledEllipse($cx,$cy,(.5*$d),(.5*$d),0,$this->nsegmente);
+      $this->astroDrawObjectLabel($cx,$cy,(($d+1)>>1),$this->astroObjectsArr[$i]["name"]);
+    }     
+	}
+	function astroDrawStarxObject($i)
+	{ /*
+	  $d=floor(2*(($this->gridDimensions[$this->gridActualDimension][3])-($this->astroObjectsArr[$i]["mag"]/100))+1);
+    $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
+    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+    if((!((($cx-$d-2<$this->lx)||($cx+$d+2>$this->rx))))&&
+       (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
+    { $this->pdf->filledEllipse($cx,$cy,(.5*$d),(.5*$d),0,$this->nsegmente);
+      $d=(($d+1)>>2);
+      $this->astroDrawObjectLabel($cx,$cy,$d,$this->astroObjectsArr[$i]["name"]);
+	    $this->pdf->line($cx-$d-1,$cy,$cx+$d+1,$cy);
+    }
+    */     
+	}
+	
+  
+	function astroDrawObjects()
+	{ global $objObject;
+		$this->astroObjectsArr=$objObject->getObjectsMag($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,-999999,$this->atlasmagnitude);
+/*
+		$z=count($this->astroObjectsArr);
+    for($i=0;$i<$z;$i++)
+	  { if($this->astroObjectsArr[$i]["type"]!='AASTAR1')
+  	  { if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
+	        $this->astroDrawStarObject($i);
+	      else if($this->astroObjectsArr[$i]["type"]=='AA2STAR')
+	        $this->astroDrawStarxObject($i);
+*/
+/*
+	        else if(astroObjectsArr[i]["type"]=='AA3STAR')
+	        astroDrawStarxObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["mag"],astroObjectsArr[i]["name"],i);
+	      else if(astroObjectsArr[i]["type"]=='AA4STAR')
+	        astroDrawStarxObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["mag"],astroObjectsArr[i]["name"],i);
+	      else if(astroObjectsArr[i]["type"]=='AA5STAR')
+	        astroDrawStarxObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["mag"],astroObjectsArr[i]["name"],i);
+	      else if(astroObjectsArr[i]["type"]=='AA6STAR')
+	        astroDrawStarxObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["mag"],astroObjectsArr[i]["name"],i);
+	      else if(astroObjectsArr[i]["type"]=='AA7STAR')
+	        astroDrawStarxObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["mag"],astroObjectsArr[i]["name"],i);
+	      else if(astroObjectsArr[i]["type"]=='AA8STAR')
+	        astroDrawStarxObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["mag"],astroObjectsArr[i]["name"],i);
+	      else if(astroObjectsArr[i]["type"]=='ASTER')
+	        astroDrawOCObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='BRTNB')
+	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='CLANB')
+	        astroDrawCLANBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='DRKNB')
+	        astroDrawDRKNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i,10);
+	      else if(astroObjectsArr[i]["type"]=='DS')
+	        astroDrawStarxObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["mag"],astroObjectsArr[i]["name"],i);
+	      else if(astroObjectsArr[i]["type"]=='EMINB')
+	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='ENRNN')
+	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='ENSTR')
+	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='GALCL')
+	        astroDrawGXCLObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='GALXY')
+	        astroDrawGXObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='GLOCL')
+	        astroDrawGCObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='GXADN')
+	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='GXAGC')
+	        astroDrawGCObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='GACAN')
+	        astroDrawCLANBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='HII')
+	        astroDrawHIIObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='LMCCN')
+	        astroDrawCLANBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='LMCDN')
+	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='LMCGC')
+	        astroDrawGCObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='LMCOC')
+	        astroDrawOCObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='OPNCL')
+	        astroDrawOCObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='PLNNB')
+	        astroDrawPNObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='REFNB')
+	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='RNHII')
+	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='SMCCN')
+	        astroDrawCLANBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='SMCDN')
+	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='SMCGC')
+	        astroDrawGCObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='SMCOC')
+	        astroDrawOCObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='SNREM')
+	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='STNEB')
+	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='QUASR')
+	        astroDrawQSRObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else if(astroObjectsArr[i]["type"]=='WRNEB')
+	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	      else
+	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	     *//* }   
+	  }*/
+	}
+	  
+  
   function astroDrawStarsArr()
   { global $objStar;
     for($m=8;$m<=$this->starsmagnitude;$m++)
@@ -704,6 +831,7 @@ class PrintAtlas
     $this->atlasDrawLegend();
     $this->astroDrawConstellations();
     $this->astroDrawStarsArr();
+    $this->astroDrawObjects();
     
     $this->pdf->setLineStyle(2,'round');
     $this->pdf->rectangle($this->gridOffsetXpx,$this->gridOffsetYpx,
