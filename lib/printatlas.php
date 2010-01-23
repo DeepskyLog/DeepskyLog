@@ -74,6 +74,7 @@ class PrintAtlas
       $Legend2y=10,
       $Lsteps=10,
       $lx=0,
+      $minObjectSize=5,
       $nsegmente=8,
       $rx=0,
       $starsmagnitude,
@@ -156,9 +157,29 @@ class PrintAtlas
     $this->pdf->setLineStyle(0.5,'round');
   }
   
-  function astroDrawObjectLabel($cx, $cy, $d, $name)
+  function astroDrawObjectLabel($cx, $cy, $d, $name, $seen)
   { if((($cx+4+$d)>$this->lx)&&(($cx+4+$d+(strlen($name)*$this->fontSize1b))<$this->rx)&&(($cy-($this->fontSize1a>>1))<$this->ty)&&(($cy+($this->fontSize1a>>1))>$this->by))
-      $this->pdf->addText(($cx+4+$d), $cy-($this->fontSize1a>>1), 6, $name);
+      $this->pdf->addText(($cx+4+$d), $cy-3, 6, $name);
+    if(substr($seen,0,2)=='YD')
+  	  $this->pdf->line($cx+$d+3, $cy+3, $cx+$d+5+(strlen($name)*3), $cy+3);
+    if(substr($seen,0,1)=='Y')
+	    $this->pdf->line($cx+$d+3, $cy-5, $cx+$d+5+(strlen($name)*3), $cy-5);
+    if(substr($seen,0,1)=='X')
+    { $this->pdf->setLineStyle(0.5,'','',array(3));
+	    $this->pdf->line($cx+$d+3, $cy-5, $cx+$d+5+(strlen($name)*3), $cy-5);
+      $this->pdf->setLineStyle(0.5,'','',array());
+    }
+  }
+  
+  
+  function astroDrawOCObject($i)
+  { $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
+    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+    $this->pdf->setLineStyle(0.5,'','',array(3));
+    $this->pdf->ellipse($cx,$cy,$d=($this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"])*0.5),($this->gridDiam2SecToPxMin($this->astroObjectsArr[$i]["diam1"])*0.5),0,$this->nsegmente);
+    $this->pdf->setLineStyle(0.5,'','',array());
+    $this->astroDrawObjectLabel($cx,$cy,$d,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
   }
   
   function astroDrawStarObject($i)
@@ -169,7 +190,7 @@ class PrintAtlas
     if((!((($cx-$d<$this->lx)||($cx+$d>$this->rx))))&&
        (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
     { $this->pdf->filledEllipse($cx,$cy,(.5*$d),(.5*$d),0,$this->nsegmente);
-      $this->astroDrawObjectLabel($cx,$cy,(($d+1)>>1),$this->astroObjectsArr[$i]["name"]);
+      $this->astroDrawObjectLabel($cx,$cy,(($d+1)>>1),$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
     }     
 	}
 	function astroDrawStarxObject($i)
@@ -180,9 +201,9 @@ class PrintAtlas
     if((!((($cx-$d-2<$this->lx)||($cx+$d+2>$this->rx))))&&
        (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
     { $this->pdf->filledEllipse($cx,$cy,(.5*$d),(.5*$d),0,$this->nsegmente);
-      $d=(($d+1)>>2);
-      $this->astroDrawObjectLabel($cx,$cy,$d+2,$this->astroObjectsArr[$i]["name"]);
-	    $this->pdf->line($cx-$d-10,$cy,$cx+$d+10,$cy);
+      $d=round($d*0.75);
+      $this->astroDrawObjectLabel($cx,$cy,$d,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
+	    $this->pdf->line($cx-$d,$cy,$cx+$d,$cy);
     }     
 	}
 	
@@ -197,21 +218,22 @@ class PrintAtlas
 	        $this->astroDrawStarObject($i);
 	      else if($this->astroObjectsArr[$i]["type"]=='AA2STAR')
 	        $this->astroDrawStarxObject($i);
+	      else if($this->astroObjectsArr[$i]["type"]=='AA3STAR')
+	        $this->astroDrawStarxObject($i);
+	      else if($this->astroObjectsArr[$i]["type"]=='AA4STAR')
+	        $this->astroDrawStarxObject($i);
+	      else if($this->astroObjectsArr[$i]["type"]=='AA5STAR')
+	        $this->astroDrawStarxObject($i);
+	      else if($this->astroObjectsArr[$i]["type"]=='AA6STAR')
+	        $this->astroDrawStarxObject($i);
+	      else if($this->astroObjectsArr[$i]["type"]=='AA7STAR')
+	        $this->astroDrawStarxObject($i);
+	      else if($this->astroObjectsArr[$i]["type"]=='AA8STAR')
+	        $this->astroDrawStarxObject($i);
+	      else if($this->astroObjectsArr[$i]["type"]=='OPNCL')
+	        $this->astroDrawOCObject($i);
 /*
-	        else if(astroObjectsArr[i]["type"]=='AA3STAR')
-	        astroDrawStarxObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["mag"],astroObjectsArr[i]["name"],i);
-	      else if(astroObjectsArr[i]["type"]=='AA4STAR')
-	        astroDrawStarxObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["mag"],astroObjectsArr[i]["name"],i);
-	      else if(astroObjectsArr[i]["type"]=='AA5STAR')
-	        astroDrawStarxObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["mag"],astroObjectsArr[i]["name"],i);
-	      else if(astroObjectsArr[i]["type"]=='AA6STAR')
-	        astroDrawStarxObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["mag"],astroObjectsArr[i]["name"],i);
-	      else if(astroObjectsArr[i]["type"]=='AA7STAR')
-	        astroDrawStarxObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["mag"],astroObjectsArr[i]["name"],i);
-	      else if(astroObjectsArr[i]["type"]=='AA8STAR')
-	        astroDrawStarxObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["mag"],astroObjectsArr[i]["name"],i);
-	      else if(astroObjectsArr[i]["type"]=='ASTER')
-	        astroDrawOCObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	        
 	      else if(astroObjectsArr[i]["type"]=='BRTNB')
 	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
 	      else if(astroObjectsArr[i]["type"]=='CLANB')
@@ -496,6 +518,13 @@ class PrintAtlas
 	  return sprintf('%02d',$this->dsl_hr).'h'.sprintf('%02d',$this->dsl_min).'m'.sprintf('%02d',$this->dsl_sec).'s,'.sprintf('%02d',$this->dsl_deg).'°'.sprintf('%02d',$this->dsl_amn).'\'';
 	}
   
+	function gridDiam1SecToPxMin($Diam1Sec)
+  { return max(round($this->diam1SecToPxCt*$Diam1Sec),$this->minObjectSize);
+  }
+
+  function gridDiam2SecToPxMin($Diam2Sec)
+  { return max(round($this->diam2SecToPxCt*$Diam2Sec),$this->minObjectSize);
+  }
 	
 	
   function gridDrawCoordLines()
