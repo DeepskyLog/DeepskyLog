@@ -1,7 +1,8 @@
 <?php
 include_once "class.ezpdf.php";
 class PrintAtlas
-{ var $atlasmagnitude=0,
+{ var $astroObjectsArr,
+      $atlasmagnitude=0,
       $atlaspagedecldeg=0,
       $atlaspagerahr=0,
       $atlaspagezoomdeg=2,
@@ -12,6 +13,7 @@ class PrintAtlas
       $canvasX2px,
       $canvasY1px,
       $canvasY2px,
+      $conBoundries = Array(),
       $coordGridsH,
       $diam1SecToPxCt = 1,
       $diam2SecToPxCt = 1,
@@ -66,8 +68,13 @@ class PrintAtlas
       $gridWidthXpx2=0, 
       $gridHeightYpx, 
       $gridHeightYpx2=0,
+      $Legend1x=10,
+      $Legend1y=10, 
+      $Legend2x=300,
+      $Legend2y=10,
       $Lsteps=10,
       $lx=0,
+      $nsegmente=8,
       $rx=0,
       $starsmagnitude,
       $ty=0; 
@@ -100,16 +107,211 @@ class PrintAtlas
     Array(0.15 ,0.20,0.012,16),
     Array(0.1 ,0.20,0.012,16)
   );
+  
+  
+   
+  function astroDrawConstellations()
+  { global $objConstellation;
+    $this->pdf->setLineStyle(2,'round');
+    $this->conBoundries=$objConstellation->getAllBoundries();
+    $cons = Array();
+    for($i=0;$i<count($this->conBoundries);$i++)
+    { if($this->gridDrawLongLineLD($this->conBoundries[$i]['ra0'], $this->conBoundries[$i]['decl0'], $this->conBoundries[$i]['ra1'], $this->conBoundries[$i]['decl1']))
+      { if(!in_array($this->conBoundries[$i]['con0'],$cons))
+        { $cons[count($cons)]=($this->conBoundries[$i]['con0']);
+          if($this->conBoundries[$i]['con0pos']=="L")
+            $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3)-5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),8,$this->conBoundries[$i]['con0']);
+          if($this->conBoundries[$i]['con0pos']=="R")
+            $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)+5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),8,$this->conBoundries[$i]['con0']);
+            //canvasDrawLabel(((canvasX1px+canvasX2px)/2)+5, (canvasY1px+canvasY2px)/2-(fontSize1a>>1), (fontSize1b*3), fontSize1a, 'left');
+          if($this->conBoundries[$i]['con0pos']=="A")
+            $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3),($this->canvasY1px+$this->canvasY2px)/2+2,8,$this->conBoundries[$i]['con0']);
+            //canvasDrawLabel(((canvasX1px+canvasX2px)/2)-(fontSize1b*2), (canvasY1px+canvasY2px)/2 + 2, (fontSize1b*3), fontSize1a, 'left');
+          if($this->conBoundries[$i]['con0pos']=="B")
+            $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3),($this->canvasY1px+$this->canvasY2px)/2- $this->fontSize1a - 2,8,$this->conBoundries[$i]['con0']);
+            //canvasDrawLabel(((canvasX1px+canvasX2px)/2)-(fontSize1b*2), (canvasY1px+canvasY2px)/2 - fontSize1a - 2, (fontSize1b*3), fontSize1a, 'left');
+        }
+        if(($this->conBoundries[$i]['con1']) && (!in_array($this->conBoundries[$i]['con1'],$cons)))
+        { $cons[count($cons)]=($this->conBoundries[$i]['con1']);
+          if($this->conBoundries[$i]['con1pos']=="L")
+            $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3)-5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),8,$this->conBoundries[$i]['con1']);
+            //canvasDrawLabel(((canvasX1px+canvasX2px)/2)-(fontSize1b*3)-5, (canvasY1px+canvasY2px)/2-(fontSize1a>>1), (fontSize1b*3), fontSize1a, 'left');
+          if($this->conBoundries[$i]['con1pos']=="R")
+            $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)+5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),8,$this->conBoundries[$i]['con1']);
+           //canvasDrawLabel(((canvasX1px+canvasX2px)/2)+5, (canvasY1px+canvasY2px)/2-(fontSize1a>>1), (fontSize1b*3), fontSize1a, 'left');
+          if($this->conBoundries[$i]['con1pos']=="A")
+            $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*2),($this->canvasY1px+$this->canvasY2px)/2+2,8,$this->conBoundries[$i]['con1']);
+          //canvasDrawLabel(((canvasX1px+canvasX2px)/2)-(fontSize1b*2), (canvasY1px+canvasY2px)/2 + 2, (fontSize1b*3), fontSize1a, 'left');
+          if($this->conBoundries[$i]['con1pos']=="B")
+            $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*2),($this->canvasY1px+$this->canvasY2px)/2 - $this->fontSize1a-2,8,$this->conBoundries[$i]['con1']);
+          //canvasDrawLabel(((canvasX1px+canvasX2px)/2)-(fontSize1b*2), (canvasY1px+canvasY2px)/2 - fontSize1a-2, (fontSize1b*3), fontSize1a, 'left');
+        }
+      }
+    }
+    if(count($cons==0))
+    { $this->gridLxRad=$this->gridL0rad;
+      $this->gridDyRad=$this->gridD0rad;
+      $this->pdf->addText($this->canvasDimensionXpx-$this->gridOffsetXpx-(3*$this->fontSize1b), $this->gridOffsetYpx-$this->fontSize1a, 8, $this->astroGetConstellationFromCoordinates($this->gridL0rad*$this->f12OverPi,$this->gridD0rad*$this->f180OverPi));
+    }
+    $this->pdf->setLineStyle(0.5,'round');
+  }
+     
+  function astroDrawStarsArr()
+  { global $objStar;
+    for($m=8;$m<=$this->starsmagnitude;$m++)
+    { $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,$m,$m);
+      $z=count($this->astroObjectsArr); 
+      for($i=0;$i<$z;$i++)
+        $this->canvasDrawStar($i);
+    }
+  }
+    
+  function astroGetConstellationFromCoordinates($thera,$thedecl)
+  { $tempdecl=-90;
+    $tempcon="";
+    $thera0=0.0;
+    $thera1=0.0;
+    $thedecl0=0.0;
+    $thedecl1=0.0;
+    for($i=0;$i<count($this->conBoundries);$i++)
+    { $thera0=$this->conBoundries[$i]['ra0'];
+      $thera1=$this->conBoundries[$i]['ra1'];
+      $thedecl0=$this->conBoundries[$i]['decl0'];
+      $thedecl1=$this->conBoundries[$i]['decl1'];
+      if(abs($this->conBoundries[$i]['ra0']-$this->conBoundries[$i]['ra1'])>12)
+      { if(abs($thera-$this->conBoundries[$i]['ra0'])>12)
+          $thera0+=(($this->conBoundries[$i]['ra0']<12)?24.0:-24.0); 
+        else
+          $thera1+=(($this->conBoundries[$i]['ra1']<12)?24.0:-24.0); 
+      }
+      //$thedecl01=$thedecl0+(($thera-$thera0)/($thera1-$thera0)*($thedecl1-$thedecl0));
+      if(abs($thera1-$thera0)>0)
+        $thedecl01=$thedecl0+(($thera-$thera0)/($thera1-$thera0)*($thedecl1-$thedecl0));
+      else
+        $thedecl01=($thedecl0+$thedecl1)/2;
+    if((($thera0<=$thera)&&($thera<=$thera1)||($thera1<=$thera)&&($thera<=$thera0))&&
+       ($thedecl01<$thedecl)&&($thedecl01>$tempdecl))
+      { $tempdecl=$thedecl01;
+        if($this->conBoundries[$i]['con0pos']=="A")
+          $tempcon=$this->conBoundries[$i]['con0'];
+        if($this->conBoundries[$i]['con0pos']=="B")
+          $tempcon=$this->conBoundries[$i]['con1'];
+        if($this->conBoundries[$i]['con0pos']=="L")
+          if((($thedecl1-$thedecl0)/($thera1-$thera0))>0)
+            $tempcon=$this->conBoundries[$i]['con1'];
+          else
+            $tempcon=$this->conBoundries[$i]['con0'];
+        if($this->conBoundries[$i]['con0pos']=="R")
+          if((($thedecl1-$thedecl0)/($thera1-$thera0))>0)
+            $tempcon=$this->conBoundries[$i]['con0'];
+          else
+            $tempcon=$this->conBoundries[$i]['con1'];
+      }
+    }
+    return $tempcon;
+  }
 
-  function canvasDrawLabel($x,$y,$w,$s,$theLabel,$align)
-  { //jg.setColor(bkGrdColor);
-    //canvasFillRect(a,b,w,h);
-    //jg.setColor(textColor);
-    //canvasDrawStringRect(theLabel,a,b,w,h,align);
-    $this->pdf->addTextWrap($x,$y,$w,$s,$theLabel,$align);
-  }  
-	  
-	function coordDeclDecToDegMin($theDeg)
+  function atlasDrawLegend()
+  { for($i=1;$i<12;$i++)
+    { $this->pdf->filledEllipse($this->Legend1x+600-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-7,(.5*$i),(.5*$i),0,$this->nsegmente);
+      $this->pdf->addTextWrap($this->Legend1x+560-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-10, 30, 8, ((($this->gridDimensions[$this->gridActualDimension][3]))-(.5*$i)),  'center');
+    }
+    
+    $this->pdf->ellipse($this->Legend2x+0, $this->Legend2y+3, 5, 2.5, -45);
+    $this->pdf->addTextWrap($this->Legend2x+10, $this->Legend2y, 30, 6, 'GALXY', 'left');
+    
+    $this->pdf->ellipse($this->Legend2x+50, $this->Legend2y+3, 2.5, 2.5, 0);
+    $this->pdf->line($this->Legend2x+55, $this->Legend2y+3, $this->Legend2x+52.5, $this->Legend2y+3);
+    $this->pdf->line($this->Legend2x+45, $this->Legend2y+3, $this->Legend2x+47.5, $this->Legend2y+3);
+    $this->pdf->line($this->Legend2x+50, $this->Legend2y+5.5, $this->Legend2x+50, $this->Legend2y+8);
+    $this->pdf->line($this->Legend2x+50, $this->Legend2y+0.5, $this->Legend2x+50, $this->Legend2y-2);
+    $this->pdf->addTextWrap($this->Legend2x+60, $this->Legend2y, 30, 6, 'PLANB', 'left');
+
+    $this->pdf->ellipse($this->Legend2x+100, $this->Legend2y+3, 5, 5, 0);
+    $this->pdf->line($this->Legend2x+95, $this->Legend2y+3, $this->Legend2x+105, $this->Legend2y+3);
+    $this->pdf->line($this->Legend2x+100, $this->Legend2y+8, $this->Legend2x+100, $this->Legend2y-2);
+    $this->pdf->addTextWrap($this->Legend2x+110, $this->Legend2y, 30, 6, 'GLOCL', 'left');
+   
+    $this->pdf->setLineStyle(0.5,'','',array(3));
+    $this->pdf->ellipse($this->Legend2x+150, $this->Legend2y+3, 5, 5, 0);
+    $this->pdf->addTextWrap($this->Legend2x+160, $this->Legend2y, 30, 6, 'OPNCL', 'left');
+    
+    $this->pdf->rectangle($this->Legend2x+195, $this->Legend2y-2, 10, 10);
+    $this->pdf->addTextWrap($this->Legend2x+210, $this->Legend2y, 30, 6, 'DRKNB', 'left');
+
+    $this->pdf->setLineStyle(0.5,'','',array());
+
+    $this->pdf->rectangle($this->Legend2x+245, $this->Legend2y-2, 10, 10);
+    $this->pdf->addTextWrap($this->Legend2x+260, $this->Legend2y, 30, 6, 'NEB', 'left');
+
+    $this->pdf->rectangle($this->Legend2x+295.5, $this->Legend2y-1.5, 9, 9);
+    $this->pdf->setLineStyle(0.5,'','',array(3));
+    $this->pdf->rectangle($this->Legend2x+294.5, $this->Legend2y-2.5, 11, 11);
+    $this->pdf->addTextWrap($this->Legend2x+310, $this->Legend2y, 30, 6, 'CLANB', 'left');
+    $this->pdf->setLineStyle(0.5,'','',array());
+  
+    $x=$this->Legend2x+350;
+    $y=$this->Legend2y+3;
+    $d1=12;
+    $d2=12;
+    $x1=0;
+    $x2=0;
+    $y1=0;
+    $y2=0;
+    $x1=$x;
+    $y1=$y+(($d2+1)>>1);
+    $x2=$x+(($d1+1)>>1);
+    $y2=$y+(($d2+1)>>3);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $x1=$x+(($d1+1)>>1);
+    $y1=$y+(($d2+1)>>3);
+    $x2=$x+(3*(($d1+1)>>3));
+    $y2=$y-(($d2+1)>>1);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $x1=$x+(3*(($d1+1)>>3));
+    $y1=$y-(($d2+1)>>1);
+    $x2=$x-(3*(($d1+1)>>3));
+    $y2=$y-(($d2+1)>>1);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $x1=$x-(3*(($d1+1)>>3));
+    $y1=$y-(($d2+1)>>1);
+    $x2=$x-(($d1+1)>>1);
+    $y2=$y+(($d2+1)>>3);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $x1=$x-(($d1+1)>>1);
+    $y1=$y+(($d2+1)>>3);
+    $x2=$x;
+    $y2=$y+(($d2+1)>>1);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $this->pdf->addTextWrap($this->Legend2x+360, $this->Legend2y, 30, 6, 'GALCL', 'left');
+ 
+    $x=$this->Legend2x+400;
+    $y=$this->Legend2y+3;
+    $d1=3;
+    $d2=3;
+    $this->pdf->line($x-2, $y, $x-$d1-2, $y);
+    $this->pdf->line($x, $y-2-$d2, $x, $y-2);
+    $this->pdf->line($x, $y+2+$d2, $x, $y+2);
+    $this->pdf->line($x+2, $y, $x+2+$d1, $y);
+    $this->pdf->addTextWrap($this->Legend2x+410, $this->Legend2y, 30, 6, 'QUASR', 'left');
+  }
+    
+  function canvasDrawStar($i)
+  { $name=$this->astroObjectsArr[$i]["nameBayer"].' '.$this->astroObjectsArr[$i]["nameBayer2"].' '; 
+    if($name!="  ") $name.=$this->astroObjectsArr[$i]["nameCon"];
+    $d=floor(2*(($this->gridDimensions[$this->gridActualDimension][3])-($this->astroObjectsArr[$i]["vMag"]/100.0))+1);
+    $this->gridLDrad($this->astroObjectsArr[$i]["RA2000"],$this->astroObjectsArr[$i]["DE2000"]); 
+    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+    if((!((($cx-$d<$this->lx)||($cx+$d>$this->rx))))&&
+       (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
+    { $this->pdf->filledEllipse($cx,$cy,(.5*$d),(.5*$d),0,$this->nsegmente);
+      if((($cx+4+(($d+1)>>1))>$this->lx)&&(($cx+4+(($d+1)>>1)+(strlen($name)*$this->fontSize1b))<$this->rx)&&(($cy-($this->fontSize1a>>1))<$this->ty)&&(($cy+($this->fontSize1a>>1))>$this->by))
+        $this->pdf->addText(($cx+4+(($d+1)>>1)), $cy-($this->fontSize1a>>1), 6, $name);
+    }     
+  }
+  
+  function coordDeclDecToDegMin($theDeg)
 	{ if($theDeg>90) $theDeg=90;
 	  if($theDeg<-90) $theDeg=-90;
 	  $sign='';
@@ -171,6 +373,8 @@ class PrintAtlas
 	  return sprintf('%02d',$this->dsl_hr).'h'.sprintf('%02d',$this->dsl_min).'m'.sprintf('%02d',$this->dsl_sec).'s,'.sprintf('%02d',$this->dsl_deg).'°'.sprintf('%02d',$this->dsl_amn).'\'';
 	}
   
+	
+	
   function gridDrawCoordLines()
   { //jg.setFont("Lucida Console", fontSize1a."px", Font.PLAIN);
     $this->gridLDinvRad($this->gridOffsetXpx,$this->gridOffsetYpx);
@@ -254,13 +458,13 @@ class PrintAtlas
       for($l=$Lhr;$l>$RhrNeg;$l-=$LStep/$this->Lsteps)
         $this->gridDrawLineLD($l,$d,($l-($LStep/$this->Lsteps)),$d);
       if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx))
-        $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-($this->fontSize1a>>1),60,8,$this->coordDeclDecToDegMin($d),'left');
+        $this->pdf->addTextWrap($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-($this->fontSize1a>>1),60,8,$this->coordDeclDecToDegMin($d),'left');
       else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
-        $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+2,60,8,$this->coordDeclDecToDegMin($d),'center');
+        $this->pdf->addTextWrap($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+2,60,8,$this->coordDeclDecToDegMin($d),'center');
       else if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
-        $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx-8,60,8,$this->coordDeclDecToDegMin($d),'center');
+        $this->pdf->addTextWrap($this->canvasX2px-30,$this->gridOffsetYpx-8,60,8,$this->coordDeclDecToDegMin($d),'center');
       else if($this->canvasX2px)
-        $this->canvasDrawLabel($this->canvasX2px-30,$this->canvasY2px-17,60,8,$this->coordDeclDecToDegMin($d),'center');
+        $this->pdf->addTextWrap($this->cpdf->addTextWraphis->canvasY2px-17,60,8,$this->coordDeclDecToDegMin($d),'center');
     }
     if($this->gridD0rad<0)
     { for($l=$LhrStart;$l>$RhrNeg;$l-=$LStep)
@@ -270,13 +474,13 @@ class PrintAtlas
         for($d=$Ddeg;$d<$Udeg;$d+=$DStep/$this->Dsteps)
           $this->gridDrawLineLD($l,$d,$l,($d+($DStep/$this->Dsteps)));
         if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
-          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx-$this->fontSize1a,60,8,$this->coordHrDecToHrMin($l),'center');
+          $this->pdf->addTextWrap($this->canvasX2px-30,$this->gridOffsetYpx-$this->fontSize1a,60,8,$this->coordHrDecToHrMin($l),'center');
         else if($this->canvasX2px&&($this->canvasX2px<=$this->gridOffsetXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->gridOffsetXpx-62,$this->canvasY2px-($this->fontSize1a>>2),60,8,$this->coordHrDecToHrMin($l),'right');
+          $this->pdf->addTextWrap($this->gridOffsetXpx-62,$this->canvasY2px-($this->fontSize1a>>2),60,8,$this->coordHrDecToHrMin($l),'right');
         else if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-($this->fontSize1a>>2),60,8,$this->coordHrDecToHrMin($l),'left');
+          $this->pdf->addTextWrap($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-($this->fontSize1a>>2),60,8,$this->coordHrDecToHrMin($l),'left');
         else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+3,60,8,$this->coordHrDecToHrMin($l),'center');
+          $this->pdf->addTextWrap($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+3,60,8,$this->coordHrDecToHrMin($l),'center');
       }
     }
     else
@@ -287,13 +491,13 @@ class PrintAtlas
         for($d=$Udeg;$d>$Ddeg;$d-=$DStep/$this->Dsteps)
           $this->gridDrawLineLD($l,$d,$l,($d-($DStep/$this->Dsteps)));
         if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
-          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx-($this->fontSize1a),60,8,$this->coordHrDecToHrMin($l),'center');
+          $this->pdf->addTextWrap($this->canvasX2px-30,$this->gridOffsetYpx-($this->fontSize1a),60,8,$this->coordHrDecToHrMin($l),'center');
         else if($this->canvasX2px&&($this->canvasX2px<=$this->gridOffsetXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->gridOffsetXpx-62,$this->canvasY2px-($this->fontSize1a>>2),60,8,$this->coordHrDecToHrMin($l),'right');
+          $this->pdf->addTextWrap($this->gridOffsetXpx-62,$this->canvasY2px-($this->fontSize1a>>2),60,8,$this->coordHrDecToHrMin($l),'right');
         else if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-($this->fontSize1a>>2),60,8,$this->coordHrDecToHrMin($l),'left');
+          $this->pdf->addTextWrap($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-($this->fontSize1a>>2),60,8,$this->coordHrDecToHrMin($l),'left');
         else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->canvasDrawLabel($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+2,60,8,$this->coordHrDecToHrMin($l),'center');
+          $this->pdf->addTextWrap($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+2,60,8,$this->coordHrDecToHrMin($l),'center');
       }
     }
   }
@@ -326,6 +530,61 @@ class PrintAtlas
     $this->pdf->line($this->canvasX1px,$this->canvasY1px,$this->canvasX2px,$this->canvasY2px);
     return 1;
   }
+  
+  function gridDrawLongLineLD($Lhr1,$Ddeg1,$Lhr2,$Ddeg2)
+  { $this->gridLDrad($Lhr1,$Ddeg1); $x1=$this->gridLxRad; $y1=$this->gridDyRad;
+    $this->gridLDrad($Lhr2,$Ddeg2); $x2=$this->gridLxRad; $y2=$this->gridDyRad;
+    if((abs($x1)>$this->fPiOver2)||(abs($y1)>$this->fPiOver2)||(abs($y1)>$this->fPiOver2)||(abs($y2)>$this->fPiOver2)) return 0;
+    if(($x1<-$this->gridSpanLrad)&&($x2<-$this->gridSpanLrad)) return 0;
+    if(($x1>$this->gridSpanLrad)&&($x2>$this->gridSpanLrad))   return 0;
+    if(($y1<-$this->gridSpanDrad)&&($y2<-$this->gridSpanDrad)) return 0;
+    if(($y1>$this->gridSpanDrad)&&($y2>$this->gridSpanDrad))   return 0;
+  /*  if(x1<-gridSpanLrad) if(x2==x1) return 0; else {y1=(((-gridSpanLrad-x1)/(x2-x1))*(y2-y1))+y1; x1=-gridSpanLrad;}
+    if(x1>gridSpanLrad)  if(x2==x1) return 0; else {y1=(((gridSpanLrad-x1)/(x2-x1))*(y2-y1))+y1;  x1=gridSpanLrad; }
+    if(y1>gridSpanDrad)  if(y2==y1) return 0; else {x1=(((gridSpanDrad-y1)/(y2-y1))*(x2-x1))+x1;  y1=gridSpanDrad; }
+    if(y1<-gridSpanDrad) if(y2==y1) return 0; else {x1=(((-gridSpanDrad-y1)/(y2-y1))*(x2-x1))+x1; y1=-gridSpanDrad;}
+    if(x2<-gridSpanLrad) if(x2==x1) return 0; else {y2=(((-gridSpanLrad-x1)/(x2-x1))*(y2-y1))+y1; x2=-gridSpanLrad;}
+    if(x2>gridSpanLrad)  if(x2==x1) return 0; else {y2=(((gridSpanLrad-x1)/(x2-x1))*(y2-y1))+y1;  x2=gridSpanLrad;  }
+    if(y2>gridSpanDrad)  if(y2==y1) return 0; else {x2=(((gridSpanDrad-y1)/(y2-y1))*(x2-x1))+x1;  y2=gridSpanDrad;  }
+    if(y2<-gridSpanDrad) if(y2==y1) return 0; else {x2=(((-gridSpanDrad-y1)/(y2-y1))*(x2-x1))+x1; y2=-gridSpanDrad;}
+  */
+    if(abs($Lhr1-$Lhr2)>12)
+    { if($Lhr1>$Lhr2)
+        return max($this->gridDrawLongLineLD($Lhr1,$Ddeg1,24,($Ddeg1+(($Ddeg2-$Ddeg1)*(24-$Lhr1)/($Lhr2+24-$Lhr1)))),$this->gridDrawLongLineLD($Lhr2,$Ddeg2,0,($Ddeg2-(($Ddeg2-$Ddeg1)*($Lhr2)/($Lhr2+24-$Lhr1)))));
+      else
+        return max($this->gridDrawLongLineLD($Lhr2,$Ddeg2,24,($Ddeg2+(($Ddeg1-$Ddeg2)*(24-$Lhr2)/($Lhr1+24-$Lhr2)))),$this->gridDrawLongLineLD($Lhr1,$Ddeg1,0,($Ddeg1-(($Ddeg1-$Ddeg2)*($Lhr1)/($Lhr1+24-$Lhr2)))));
+    }
+    //alert(y1+' '+y2+' '+(-gridSpanDrad)+' '+(gridSpanDrad)+' '+x1+' '+x2+' '+(-gridSpanLrad)+' '+(gridSpanLrad));
+    $retval = 0;
+    $ds = 10.0+max(ceil(1000*abs($x1-$x2) / $this->gridSpanLrad * $this->fPiOver12),ceil(1000*abs($y1-$y2) / $this->gridSpanDrad * $this->fPiOver180));
+    for($i=0.0;$i<$ds;)
+    { $this->gridLDrad($Lhr1+(($Lhr2-$Lhr1)*$i/$ds),$Ddeg1+(($Ddeg2-$Ddeg1)*$i/$ds)); $x1=$this->gridLxRad; $y1=$this->gridDyRad;
+      $i++;
+      $this->gridLDrad($Lhr1+(($Lhr2-$Lhr1)*$i/$ds),$Ddeg1+(($Ddeg2-$Ddeg1)*$i/$ds)); $x2=$this->gridLxRad; $y2=$this->gridDyRad;
+      if(($x1<-($this->gridSpanLrad))&&($x2<-$this->gridSpanLrad)) continue;
+      if(($x1>($this->gridSpanLrad))&&($x2>($this->gridSpanLrad)))   continue;
+      if(($y1<-($this->gridSpanDrad))&&($y2<-($this->gridSpanDrad))) continue;
+      if(($y1>($this->gridSpanDrad))&&($y2>($this->gridSpanDrad)))   continue;
+      if($x1<-($this->gridSpanLrad)) if($x2==$x1) continue; else {$y1=(((-($this->gridSpanLrad)-$x1)/($x2-$x1))*($y2-$y1))+$y1; $x1=-($this->gridSpanLrad);}
+      if($x1>($this->gridSpanLrad))  if($x2==$x1) continue; else  {$y1=(((($this->gridSpanLrad)-$x1)/($x2-$x1))*($y2-$y1))+$y1;  $x1=($this->gridSpanLrad); }
+      if($y1>($this->gridSpanDrad))  if($y2==$y1) continue; else  {$x1=(((($this->gridSpanDrad)-$y1)/($y2-$y1))*($x2-$x1))+$x1;  $y1=($this->gridSpanDrad); }
+      if($y1<-($this->gridSpanDrad)) if($y2==$y1) continue; else {$x1=(((-($this->gridSpanDrad)-$y1)/($y2-$y1))*($x2-$x1))+$x1; $y1=-($this->gridSpanDrad);}
+      if(($y1<-($this->gridSpanDrad))||($y1>($this->gridSpanDrad))||($x1<-($this->gridSpanLrad))||($x1>($this->gridSpanLrad))) continue;  
+      if($x2<-($this->gridSpanLrad)) if($x2==$x1) continue; else {$y2=(((-($this->gridSpanLrad)-$x1)/($x2-$x1))*($y2-$y1))+$y1; $x2=-($this->gridSpanLrad);}
+      if($x2>($this->gridSpanLrad))  if($x2==$x1) continue; else  {$y2=(((($this->gridSpanLrad)-$x1)/($x2-$x1))*($y2-$y1))+$y1;  $x2=($this->gridSpanLrad);  }
+      if($y2>($this->gridSpanDrad))  if($y2==$y1) continue; else  {$x2=(((($this->gridSpanDrad)-$y1)/($y2-$y1))*($x2-$x1))+$x1;  $y2=($this->gridSpanDrad);  }
+      if($y2<-($this->gridSpanDrad)) if($y2==$y1) continue; else  {$x2=(((-($this->gridSpanDrad)-$y1)/($y2-$y1))*($x2-$x1))+$x1; $y2=-($this->gridSpanDrad);}
+      if(($y2<-($this->gridSpanDrad))||($y2>($this->gridSpanDrad))||($x2<-($this->gridSpanLrad))||($x2>($this->gridSpanLrad))) continue;
+      $this->canvasX1px=$this->gridCenterOffsetXpx+$this->gridXpx($x1);
+      $this->canvasY1px=$this->gridCenterOffsetYpx+$this->gridYpx($y1);
+      $this->canvasX2px=$this->gridCenterOffsetXpx+$this->gridXpx($x2);
+      $this->canvasY2px=$this->gridCenterOffsetYpx+$this->gridYpx($y2);
+      $this->gridLx1rad=$x1;$this->gridDy1rad=$y1;$this->gridLx2rad=$x2;$this->gridDy2rad=$y2;
+      $this->pdf->line($this->canvasX1px,$this->canvasY1px,$this->canvasX2px,$this->canvasY2px);
+      $retval = 1;
+    } 
+    return $retval;
+  }  
   
   private function gridInit()
   { $this->canvasDimensionXpx=$this->pdf->ez['pageWidth']; 
@@ -424,6 +683,8 @@ class PrintAtlas
   { return round(($this->gridHeightYpx2*$Drad/$this->gridSpanDrad));
   }
 
+  
+  
   public  function pdfAtlas($rarad, $declrad, $raspanrad, $declspanrad, $dsomag, $starmag)  // Creates a pdf atlas page
   { global $objUtil,$instDir;
   
@@ -435,11 +696,16 @@ class PrintAtlas
     
     $this->pdf = new Cezpdf('a4', 'landscape');
     $this->pdf->selectFont($instDir.'lib/fonts/Helvetica.afm');
+    $this->pdf->setLineStyle(0.5);
     $this->gridInit();
     $this->gridInitScale($this->atlaspagerahr,$this->atlaspagedecldeg,$this->atlaspagezoomdeg);
     $this->gridDrawCoordLines();
     $this->gridShowInfo();
+    $this->atlasDrawLegend();
+    $this->astroDrawConstellations();
+    $this->astroDrawStarsArr();
     
+    $this->pdf->setLineStyle(2,'round');
     $this->pdf->rectangle($this->gridOffsetXpx,$this->gridOffsetYpx,
                          ($this->canvasDimensionXpx-($this->gridOffsetXpx<<1)),($this->canvasDimensionYpx-($this->gridOffsetYpx<<1)));
         
