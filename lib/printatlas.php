@@ -894,11 +894,11 @@ class PrintAtlas
 	}
   
   function gridXpx($Lrad) 
-  { return round(($this->gridWidthXpx2*$Lrad/$this->gridSpanLrad));
+  { return (($this->gridWidthXpx2*$Lrad/$this->gridSpanLrad));
   }
   
   function gridYpx($Drad)
-  { return round(($this->gridHeightYpx2*$Drad/$this->gridSpanDrad));
+  { return (($this->gridHeightYpx2*$Drad/$this->gridSpanDrad));
   }
 
   
