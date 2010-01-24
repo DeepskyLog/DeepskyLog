@@ -413,17 +413,8 @@ class PrintAtlas
 	      else if(in_array($this->astroObjectsArr[$i]["type"],array('QUASR')))
 	        $this->astroDrawQSRObject($i);
 	      else 
-	        $this->pdf->addText(10,10,6,"else ".$this->astroObjectsArr[$i]["name"].": ".$this->astroObjectsArr[$i]["type"]);
-		
-		   
-	        
-//	        $this->astroDrawOCObject($i);
-	        
-/*
-	        
-	      else
-	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
-	     */}   
+	        $this->astroDrawBRTNBObject($i); 
+	    }   
 	  }
 	}
 	  
