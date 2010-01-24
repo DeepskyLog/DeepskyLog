@@ -433,7 +433,7 @@ class PrintAtlas
     $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
     $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
     $d=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
-    $this->pdf->ellipse($cx,$cy,$d,($this->gridDiam2SecToPxMin($this->astroObjectsArr[$i]["diam1"])*0.5),0,$this->nsegmente);
+    $this->pdf->ellipse($cx,$cy,$d,$d,0,$this->nsegmente);
     $this->pdf->line($cx-$d, $cy, $cx-($d<<1), $cy);
     $this->pdf->line($cx+$d, $cy, $cx+($d<<1), $cy);
     $this->pdf->line($cx, $cy-$d, $cx, $cy-($d<<1));
@@ -482,7 +482,6 @@ class PrintAtlas
         else
           $thera1+=(($this->conBoundries[$i]['ra1']<12)?24.0:-24.0); 
       }
-      //$thedecl01=$thedecl0+(($thera-$thera0)/($thera1-$thera0)*($thedecl1-$thedecl0));
       if(abs($thera1-$thera0)>0)
         $thedecl01=$thedecl0+(($thera-$thera0)/($thera1-$thera0)*($thedecl1-$thedecl0));
       else
