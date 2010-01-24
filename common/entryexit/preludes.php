@@ -54,4 +54,8 @@ function Nz0($arg)
 { if($arg) return $arg;
   else     return 0; 
 }
+function Nzx($arg,$default="")
+{ if($arg) return $arg;
+  else     return $default; 
+}
 ?>

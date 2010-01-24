@@ -118,8 +118,20 @@ class PrintAtlas
     $this->pdf->rectangle($cx-$d1,$cy-$d1,$d1*2,$d1*2);
     $this->astroDrawObjectLabel($cx,$cy,$d1,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
   }
+
+  function astroDrawCLANBObject($i)
+	{ $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
+    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+    $d1=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
+    $d2=$this->gridDiam2SecToPxMin($this->astroObjectsArr[$i]["diam2"]*.5);
+    $this->pdf->rectangle($cx-$d1+1,$cy-$d1+1,$d1*2-2,$d1*2-2);
+    $this->pdf->setLineStyle(0.5,'','',array(3));
+    $this->pdf->rectangle($cx-$d1-1,$cy-$d1-1,$d1*2+2,$d1*2+2);
+    $this->pdf->setLineStyle(0.5,'','',array());
+    $this->astroDrawObjectLabel($cx,$cy,$d1+1,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);	
+	}
   
-   
   function astroDrawConstellations()
   { global $objConstellation;
     $this->pdf->setLineStyle(2,'round');
@@ -133,28 +145,21 @@ class PrintAtlas
             $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3)-5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),8,$this->conBoundries[$i]['con0']);
           if($this->conBoundries[$i]['con0pos']=="R")
             $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)+5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),8,$this->conBoundries[$i]['con0']);
-            //canvasDrawLabel(((canvasX1px+canvasX2px)/2)+5, (canvasY1px+canvasY2px)/2-(fontSize1a>>1), (fontSize1b*3), fontSize1a, 'left');
           if($this->conBoundries[$i]['con0pos']=="A")
             $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3),($this->canvasY1px+$this->canvasY2px)/2+2,8,$this->conBoundries[$i]['con0']);
-            //canvasDrawLabel(((canvasX1px+canvasX2px)/2)-(fontSize1b*2), (canvasY1px+canvasY2px)/2 + 2, (fontSize1b*3), fontSize1a, 'left');
           if($this->conBoundries[$i]['con0pos']=="B")
             $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3),($this->canvasY1px+$this->canvasY2px)/2- $this->fontSize1a - 2,8,$this->conBoundries[$i]['con0']);
-            //canvasDrawLabel(((canvasX1px+canvasX2px)/2)-(fontSize1b*2), (canvasY1px+canvasY2px)/2 - fontSize1a - 2, (fontSize1b*3), fontSize1a, 'left');
         }
         if(($this->conBoundries[$i]['con1']) && (!in_array($this->conBoundries[$i]['con1'],$cons)))
         { $cons[count($cons)]=($this->conBoundries[$i]['con1']);
           if($this->conBoundries[$i]['con1pos']=="L")
             $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3)-5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),8,$this->conBoundries[$i]['con1']);
-            //canvasDrawLabel(((canvasX1px+canvasX2px)/2)-(fontSize1b*3)-5, (canvasY1px+canvasY2px)/2-(fontSize1a>>1), (fontSize1b*3), fontSize1a, 'left');
           if($this->conBoundries[$i]['con1pos']=="R")
             $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)+5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),8,$this->conBoundries[$i]['con1']);
-           //canvasDrawLabel(((canvasX1px+canvasX2px)/2)+5, (canvasY1px+canvasY2px)/2-(fontSize1a>>1), (fontSize1b*3), fontSize1a, 'left');
           if($this->conBoundries[$i]['con1pos']=="A")
             $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*2),($this->canvasY1px+$this->canvasY2px)/2+2,8,$this->conBoundries[$i]['con1']);
-          //canvasDrawLabel(((canvasX1px+canvasX2px)/2)-(fontSize1b*2), (canvasY1px+canvasY2px)/2 + 2, (fontSize1b*3), fontSize1a, 'left');
           if($this->conBoundries[$i]['con1pos']=="B")
             $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*2),($this->canvasY1px+$this->canvasY2px)/2 - $this->fontSize1a-2,8,$this->conBoundries[$i]['con1']);
-          //canvasDrawLabel(((canvasX1px+canvasX2px)/2)-(fontSize1b*2), (canvasY1px+canvasY2px)/2 - fontSize1a-2, (fontSize1b*3), fontSize1a, 'left');
         }
       }
     }
@@ -166,136 +171,84 @@ class PrintAtlas
     $this->pdf->setLineStyle(0.5,'round');
   }
   
-  function astroDrawObjectLabel($cx, $cy, $d, $name, $seen)
-  { if((($cx+4+$d)>$this->lx)&&(($cx+4+$d+(strlen($name)*$this->fontSize1b))<$this->rx)&&(($cy-($this->fontSize1a>>1))<$this->ty)&&(($cy+($this->fontSize1a>>1))>$this->by))
-    { $this->pdf->addText(($cx+4+$d), $cy-3, 6, $name);
-	    if(substr($seen,0,2)=='YD')
-	  	  $this->pdf->line($cx+$d+3, $cy+3, $cx+4+$d+(strlen($name)*3), $cy+3);
-	    if(substr($seen,0,1)=='Y')
-		    $this->pdf->line($cx+$d+3, $cy-5, $cx+4+$d+(strlen($name)*3), $cy-5);
-	    if(substr($seen,0,1)=='X')
-	    { $this->pdf->setLineStyle(0.5,'','',array(3));
-		    $this->pdf->line($cx+$d+3, $cy-5, $cx+4+$d+(strlen($name)*3), $cy-5);
-	      $this->pdf->setLineStyle(0.5,'','',array());
-	    }
-    }
-  }
-  
-  
-  function astroDrawOCObject($i)
+  function astroDrawDRKNBObject($i)
   { $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
     $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
     $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+    $d1=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
     $this->pdf->setLineStyle(0.5,'','',array(3));
-    $this->pdf->ellipse($cx,$cy,$d=($this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"])*0.5),($this->gridDiam2SecToPxMin($this->astroObjectsArr[$i]["diam1"])*0.5),0,$this->nsegmente);
-    $this->pdf->setLineStyle(0.5,'','',array());
-    $this->astroDrawObjectLabel($cx,$cy,$d,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
+		$this->pdf->rectangle($cx-$d1,$cy-$d1,$d1*2,$d1*2);
+    $this->astroDrawObjectLabel($cx,$cy,$d1,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
+	  $this->pdf->setLineStyle(0.5,'','',array());
   }
-  
-  function astroDrawStarObject($i)
-	{ $d=floor(2*(($this->gridDimensions[$this->gridActualDimension][3])-($this->astroObjectsArr[$i]["mag"]/100))+1);
-    $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
-    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
-    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
-    if((!((($cx-$d<$this->lx)||($cx+$d>$this->rx))))&&
-       (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
-    { $this->pdf->filledEllipse($cx,$cy,(.5*$d),(.5*$d),0,$this->nsegmente);
-      $this->astroDrawObjectLabel($cx,$cy,(($d+1)>>1),$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
-    }     
-	}
-	function astroDrawStarxObject($i)
-	{ $d=floor(2*(($this->gridDimensions[$this->gridActualDimension][3])-($this->astroObjectsArr[$i]["mag"]/100))+1);
-    $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
-    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
-    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
-    if((!((($cx-$d-2<$this->lx)||($cx+$d+2>$this->rx))))&&
-       (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
-    { $this->pdf->filledEllipse($cx,$cy,(.5*$d),(.5*$d),0,$this->nsegmente);
-      $d=round($d*0.75);
-      $this->astroDrawObjectLabel($cx,$cy,$d,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
-	    $this->pdf->line($cx-$d,$cy,$cx+$d,$cy);
-    }     
-	}
-	
-  
-	function astroDrawObjects()
-	{ global $objObject;
-	  $this->astroObjectsArr=$objObject->getObjectsMag($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,-999999,$this->atlasmagnitude);
-	  $z=count($this->astroObjectsArr);
-    for($i=0;$i<$z;$i++)
-	  { if($this->astroObjectsArr[$i]["type"]!='AASTAR1')
-  	  { if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
-	        $this->astroDrawStarObject($i);
-	      else if($this->astroObjectsArr[$i]["type"]=='AA2STAR')
-	        $this->astroDrawStarxObject($i);
-	      else if($this->astroObjectsArr[$i]["type"]=='AA3STAR')
-	        $this->astroDrawStarxObject($i);
-	      else if($this->astroObjectsArr[$i]["type"]=='AA4STAR')
-	        $this->astroDrawStarxObject($i);
-	      else if($this->astroObjectsArr[$i]["type"]=='AA5STAR')
-	        $this->astroDrawStarxObject($i);
-	      else if($this->astroObjectsArr[$i]["type"]=='AA6STAR')
-	        $this->astroDrawStarxObject($i);
-	      else if($this->astroObjectsArr[$i]["type"]=='AA7STAR')
-	        $this->astroDrawStarxObject($i);
-	      else if($this->astroObjectsArr[$i]["type"]=='AA8STAR')
-	        $this->astroDrawStarxObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('ASTER','LMCOC','OPNCL','SMCOC')))
-	        $this->astroDrawOCObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('BRTNB','EMINB','ENRNN','ENSTR','GXADN','LMCDN','REFNB','RNHII','SMCDN','SNREM','STNEB','WRNEB')))
-	        $this->astroDrawBRTNBObject($i);
-	      	        
-//	        $this->astroDrawOCObject($i);
-	        
-/*
-	        
-	      else if(astroObjectsArr[i]["type"]=='CLANB')
-	        astroDrawCLANBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
-	      else if(astroObjectsArr[i]["type"]=='DRKNB')
-	        astroDrawDRKNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i,10);
-	      else if(astroObjectsArr[i]["type"]=='DS')
-	        astroDrawStarxObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["mag"],astroObjectsArr[i]["name"],i);
-	      else if(astroObjectsArr[i]["type"]=='GALCL')
-	        astroDrawGXCLObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
-	      else if(astroObjectsArr[i]["type"]=='GALXY')
-	        astroDrawGXObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
-	      else if(astroObjectsArr[i]["type"]=='GLOCL')
-	        astroDrawGCObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
-	      else if(astroObjectsArr[i]["type"]=='GXAGC')
-	        astroDrawGCObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
-	      else if(astroObjectsArr[i]["type"]=='GACAN')
-	        astroDrawCLANBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
-	      else if(astroObjectsArr[i]["type"]=='HII')
-	        astroDrawHIIObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
-	      else if(astroObjectsArr[i]["type"]=='LMCCN')
-	        astroDrawCLANBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
-	      else if(astroObjectsArr[i]["type"]=='LMCGC')
-	        astroDrawGCObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
-	      else if(astroObjectsArr[i]["type"]=='PLNNB')
-	        astroDrawPNObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
-	      else if(astroObjectsArr[i]["type"]=='SMCCN')
-	        astroDrawCLANBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
-	      else if(astroObjectsArr[i]["type"]=='SMCGC')
-	        astroDrawGCObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
-	      else if(astroObjectsArr[i]["type"]=='QUASR')
-	        astroDrawQSRObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
-	      else
-	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
-	     */}   
-	  }
-	}
 	  
+	function astroDrawGCObject($i)
+	{ $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
+    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+    $d1=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
+    $this->pdf->ellipse($cx,$cy,$d=($this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"])*0.5),($this->gridDiam2SecToPxMin($this->astroObjectsArr[$i]["diam1"])*0.5),0,$this->nsegmente);
+    $this->pdf->line($cx-$d, $cy, $cx+$d, $cy);
+    $this->pdf->line($cx, $cy-$d, $cx, $cy+$d);
+    $this->astroDrawObjectLabel($cx,$cy,$d,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
+	}
   
-  function astroDrawStarsArr()
-  { global $objStar;
-    for($m=8;$m<=$this->starsmagnitude;$m++)
-    { $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,$m,$m);
-      $z=count($this->astroObjectsArr); 
-      for($i=0;$i<$z;$i++)
-        $this->canvasDrawStar($i);
+  function astroDrawGXCLObject($i)
+	{ $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
+    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+    $d1=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
+    $x=$cx;
+    $y=$cy;
+    $d1=max($d1,12);
+    $d2=max($d1,12);
+    $x1=0;
+    $x2=0;
+    $y1=0;
+    $y2=0;
+    $x1=$x;
+    $y1=$y+(($d2+1)>>1);
+    $x2=$x+(($d1+1)>>1);
+    $y2=$y+(($d2+1)>>3);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $x1=$x+(($d1+1)>>1);
+    $y1=$y+(($d2+1)>>3);
+    $x2=$x+(3*(($d1+1)>>3));
+    $y2=$y-(($d2+1)>>1);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $x1=$x+(3*(($d1+1)>>3));
+    $y1=$y-(($d2+1)>>1);
+    $x2=$x-(3*(($d1+1)>>3));
+    $y2=$y-(($d2+1)>>1);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $x1=$x-(3*(($d1+1)>>3));
+    $y1=$y-(($d2+1)>>1);
+    $x2=$x-(($d1+1)>>1);
+    $y2=$y+(($d2+1)>>3);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $x1=$x-(($d1+1)>>1);
+    $y1=$y+(($d2+1)>>3);
+    $x2=$x;
+    $y2=$y+(($d2+1)>>1);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $this->astroDrawObjectLabel($cx,$cy,($d1>>1),$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
+	}
+  
+  function astroDrawGXObject($i)
+  { $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
+    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+    $d1=nzx($this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5),5);
+    if(($pa=$this->astroObjectsArr[$i]["pa"])==999)
+    { $d2=$d1;
+      $pa=0;
     }
+    else
+      $d2=$this->gridDiam2SecToPxMin($this->astroObjectsArr[$i]["diam2"]*0.5);
+		$this->pdf->ellipse($cx,$cy,$d1,$d2,($pa=Nzx($this->astroObjectsArr[$i]["pa"],0))-90);
+    $this->astroDrawObjectLabel($cx,$cy-(cos($pa*$this->fPiOver180)*$d1),(5*abs(cos($pa*$this->fPiOver180)))+abs($d1*sin($pa*$this->fPiOver180)),$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
   }
-    
+  
   function atlasDrawLegend()
   { for($i=1;$i<12;$i++)
     { $this->pdf->filledEllipse($this->Legend1x+600-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-7,(.5*$i),(.5*$i),0,$this->nsegmente);
@@ -380,7 +333,139 @@ class PrintAtlas
     $this->pdf->line($x+2, $y, $x+2+$d1, $y);
     $this->pdf->addTextWrap($this->Legend2x+410, $this->Legend2y, 30, 6, 'QUASR', 'left');
   }
+    	
+  function astroDrawObjectLabel($cx, $cy, $d, $name, $seen)
+  { if((($cx+4+$d)>$this->lx)&&(($cx+4+$d+(strlen($name)*$this->fontSize1b))<$this->rx)&&(($cy-($this->fontSize1a>>1))<$this->ty)&&(($cy+($this->fontSize1a>>1))>$this->by))
+    { $this->pdf->addText(($cx+4+$d), $cy-2, 6, $name);
+	    if(substr($seen,0,2)=='YD')
+	  	  $this->pdf->line($cx+$d+3, $cy+4, $cx+4+$d+(strlen($name)*3.6), $cy+4);
+	    if(substr($seen,0,1)=='Y')
+		    $this->pdf->line($cx+$d+3, $cy-4, $cx+4+$d+(strlen($name)*3.6), $cy-4);
+	    if(substr($seen,0,1)=='X')
+	    { $this->pdf->setLineStyle(0.5,'','',array(3));
+		    $this->pdf->line($cx+$d+3, $cy-4, $cx+4+$d+(strlen($name)*3.6), $cy-4);
+	      $this->pdf->setLineStyle(0.5,'','',array());
+	    }
+    }
+  }
   
+  
+  function astroDrawOCObject($i)
+  { $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
+    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+    $this->pdf->setLineStyle(0.5,'','',array(3));
+    $this->pdf->ellipse($cx,$cy,$d=($this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"])*0.5),($this->gridDiam2SecToPxMin($this->astroObjectsArr[$i]["diam1"])*0.5),0,$this->nsegmente);
+    $this->pdf->setLineStyle(0.5,'','',array());
+    $this->astroDrawObjectLabel($cx,$cy,$d,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
+  }
+  
+  function astroDrawStarObject($i)
+	{ $d=floor(2*(($this->gridDimensions[$this->gridActualDimension][3])-($this->astroObjectsArr[$i]["mag"]/100))+1);
+    $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
+    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+    if((!((($cx-$d<$this->lx)||($cx+$d>$this->rx))))&&
+       (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
+    { $this->pdf->filledEllipse($cx,$cy,(.5*$d),(.5*$d),0,$this->nsegmente);
+      $this->astroDrawObjectLabel($cx,$cy,(($d+1)>>1),$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
+    }     
+	}
+	function astroDrawStarxObject($i)
+	{ $d=floor(2*(($this->gridDimensions[$this->gridActualDimension][3])-($this->astroObjectsArr[$i]["mag"]/100))+1);
+    $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
+    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+    if((!((($cx-$d-2<$this->lx)||($cx+$d+2>$this->rx))))&&
+       (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
+    { $this->pdf->filledEllipse($cx,$cy,(.5*$d),(.5*$d),0,$this->nsegmente);
+      $d=round($d*0.75);
+      $this->astroDrawObjectLabel($cx,$cy,$d,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
+	    $this->pdf->line($cx-$d,$cy,$cx+$d,$cy);
+    }     
+	}
+	
+  
+	function astroDrawObjects()
+	{ global $objObject;
+	  $this->astroObjectsArr=$objObject->getObjectsMag($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,-999999,$this->atlasmagnitude);
+	  $z=count($this->astroObjectsArr);
+	  for($i=0;$i<$z;$i++)
+	  { if($this->astroObjectsArr[$i]["type"]!='AASTAR1')
+  	  { if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
+	        $this->astroDrawStarObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('AA2STAR','AA3STAR','AA4STAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
+	        $this->astroDrawStarxObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('ASTER','LMCOC','OPNCL','SMCOC')))
+	        $this->astroDrawOCObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('BRTNB','EMINB','ENRNN','ENSTR','GXADN','LMCDN','REFNB','RNHII','SMCDN','SNREM','STNEB','WRNEB')))
+	        $this->astroDrawBRTNBObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('CLANB','GACAN','LMCCN','SMCCN','GXADN','LMCDN','HII')))
+	        $this->astroDrawCLANBObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('DRKNB')))
+	        $this->astroDrawDRKNBObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('GALCL')))
+	        $this->astroDrawGXCLObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('GALXY')))
+	        $this->astroDrawGXObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('GLOCL','GXAGC','LMCGC','SMCGC')))
+	        $this->astroDrawGCObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('PLNNB')))
+	        $this->astroDrawPNObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('QUASR')))
+	        $this->astroDrawQSRObject($i);
+	      else 
+	        $this->pdf->addText(10,10,6,"else ".$this->astroObjectsArr[$i]["name"].": ".$this->astroObjectsArr[$i]["type"]);
+		
+		   
+	        
+//	        $this->astroDrawOCObject($i);
+	        
+/*
+	        
+	      else
+	        astroDrawBRTNBObject(astroObjectsArr[i]["ra"],astroObjectsArr[i]["decl"],astroObjectsArr[i]["diam1"],astroObjectsArr[i]["diam2"],astroObjectsArr[i]["pa"],(astroObjectsArr[i]["name"]),astroObjectsArr[i]["seen"],i);
+	     */}   
+	  }
+	}
+	  
+	function astroDrawPNObject($i)
+	{ $this->pdf->addText(10,10,6,"PN");
+		$this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
+    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+    $d=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
+    $this->pdf->ellipse($cx,$cy,$d,($this->gridDiam2SecToPxMin($this->astroObjectsArr[$i]["diam1"])*0.5),0,$this->nsegmente);
+    $this->pdf->line($cx-$d, $cy, $cx-($d<<1), $cy);
+    $this->pdf->line($cx+$d, $cy, $cx+($d<<1), $cy);
+    $this->pdf->line($cx, $cy-$d, $cx, $cy-($d<<1));
+    $this->pdf->line($cx, $cy+$d, $cx, $cy+($d<<1));
+    $this->astroDrawObjectLabel($cx,$cy,$d<<1,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
+	}
+	
+	function astroDrawQSRObject($i)
+	{ $this->pdf->addText(10,10,6,"PN");
+		$this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
+    $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+    $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+    $d=$this->gridDiam1SecToPxMin($this->astroObjectsArr[$i]["diam1"]*.5);
+    $this->pdf->line($cx-$d, $cy, $cx-($d>>1), $cy);
+    $this->pdf->line($cx+$d, $cy, $cx+($d>>1), $cy);
+    $this->pdf->line($cx, $cy-$d, $cx, $cy-($d>>1));
+    $this->pdf->line($cx, $cy+$d, $cx, $cy+($d>>1));
+    $this->astroDrawObjectLabel($cx,$cy,$d<<1,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
+			}
+
+  function astroDrawStarsArr()
+  { global $objStar;
+    for($m=8;$m<=$this->starsmagnitude;$m++)
+    { $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,$m,$m);
+      $z=count($this->astroObjectsArr); 
+      for($i=0;$i<$z;$i++)
+        $this->canvasDrawStar($i);
+    }
+  }
+    
   function astroGetConstellationFromCoordinates($thera,$thedecl)
   { $tempdecl=-90;
     $tempcon="";
@@ -595,11 +680,11 @@ class PrintAtlas
       for($l=$Lhr;$l>$RhrNeg;$l-=$LStep/$this->Lsteps)
         $this->gridDrawLineLD($l,$d,($l-($LStep/$this->Lsteps)),$d);
       if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx))
-        $this->labelsArr[]=array($this->gridOffsetXpx+$this->gridWidthXpx+4,$this->canvasY2px-($this->fontSize1a>>1),60,8,$this->coordDeclDecToDegMin($d),'left');
+        $this->labelsArr[]=array($this->gridOffsetXpx+$this->gridWidthXpx+4,$this->canvasY2px-($this->fontSize1a>>2),60,8,$this->coordDeclDecToDegMin($d),'left');
       else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
         $this->labelsArr[]=array($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+4,60,8,$this->coordDeclDecToDegMin($d),'center');
       else if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
-        $this->labelsArr[]=array($this->canvasX2px-30,$this->gridOffsetYpx-8,60,8,$this->coordDeclDecToDegMin($d),'center');
+        $this->labelsArr[]=array($this->canvasX2px-30,$this->gridOffsetYpx-($this->fontSize1a),60,8,$this->coordDeclDecToDegMin($d),'center');
       else if($this->canvasX2px)
         $this->labelsArr[]=array($this->gridOffsetXpx-62,$this->canvasY2px-17,60,8,$this->coordDeclDecToDegMin($d),'center');
     }
@@ -617,7 +702,7 @@ class PrintAtlas
         else if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
           $this->labelsArr[]=array($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-($this->fontSize1a>>2),60,8,$this->coordHrDecToHrMin($l),'left');
         else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->labelsArr[]=array($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+3,60,8,$this->coordHrDecToHrMin($l),'center');
+          $this->labelsArr[]=array($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+4,60,8,$this->coordHrDecToHrMin($l),'center');
       }
     }
     else
@@ -824,7 +909,7 @@ class PrintAtlas
   
   
   public  function pdfAtlas($rarad, $declrad, $raspanrad, $declspanrad, $dsomag, $starmag)  // Creates a pdf atlas page
-  { global $objUtil,$instDir;
+  { global $objUtil,$instDir,$loggedUser,$objObserver;
   
     $this->atlaspagerahr=$objUtil->checkRequestKey('atlaspagerahr',0);
     $this->atlaspagedecldeg=$objUtil->checkRequestKey('atlaspagedecldeg',0);
@@ -840,6 +925,7 @@ class PrintAtlas
     $this->pdf->setStrokeColor(0.9,0.9,0.9);
     $this->pdf->setLineStyle(0.5,'','',array(1));
     $this->gridDrawCoordLines();
+    $this->pdf->setLineStyle(0.5,'','',array());
     $this->pdf->setStrokeColor(0,0,0);
     $this->astroDrawConstellations();
     $this->astroDrawStarsArr();
@@ -853,7 +939,8 @@ class PrintAtlas
     $this->pdf->setColor(0,0,0);
     $this->gridShowInfo();
     $this->atlasDrawLegend();
-    
+    $temp=$objObserver->getObserverProperty($loggedUser,'firstname')." ".$objObserver->getObserverProperty($loggedUser,'name')." - ".date('d M Y');
+   $this->pdf->addText($this->canvasDimensionXpx-$this->gridOffsetXpx-(strlen($temp)*5),$this->canvasDimensionYpx-$this->Legend1y-10,8,$temp);
     $this->pdf->setLineStyle(2,'round');
     $this->pdf->rectangle($this->gridOffsetXpx-1,$this->gridOffsetYpx-1,
                          ($this->canvasDimensionXpx-($this->gridOffsetXpx<<1))+2,($this->canvasDimensionYpx-($this->gridOffsetYpx<<1))+2);
