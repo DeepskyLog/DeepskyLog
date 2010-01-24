@@ -142,31 +142,31 @@ class PrintAtlas
       { if(!in_array($this->conBoundries[$i]['con0'],$cons))
         { $cons[count($cons)]=($this->conBoundries[$i]['con0']);
           if($this->conBoundries[$i]['con0pos']=="L")
-            $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3)-5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),8,$this->conBoundries[$i]['con0']);
+            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3)-5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),20,8,$this->conBoundries[$i]['con0'],'left');
           if($this->conBoundries[$i]['con0pos']=="R")
-            $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)+5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),8,$this->conBoundries[$i]['con0']);
+            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)+5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),20,8,$this->conBoundries[$i]['con0'],'left');
           if($this->conBoundries[$i]['con0pos']=="A")
-            $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3),($this->canvasY1px+$this->canvasY2px)/2+2,8,$this->conBoundries[$i]['con0']);
+            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3),($this->canvasY1px+$this->canvasY2px)/2+2,20,8,$this->conBoundries[$i]['con0'],'left');
           if($this->conBoundries[$i]['con0pos']=="B")
-            $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3),($this->canvasY1px+$this->canvasY2px)/2- $this->fontSize1a - 2,8,$this->conBoundries[$i]['con0']);
+            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3),($this->canvasY1px+$this->canvasY2px)/2- $this->fontSize1a - 2,20,8,$this->conBoundries[$i]['con0'],'left');
         }
         if(($this->conBoundries[$i]['con1']) && (!in_array($this->conBoundries[$i]['con1'],$cons)))
         { $cons[count($cons)]=($this->conBoundries[$i]['con1']);
           if($this->conBoundries[$i]['con1pos']=="L")
-            $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3)-5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),8,$this->conBoundries[$i]['con1']);
+            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3)-5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),20,8,$this->conBoundries[$i]['con1'],'left');
           if($this->conBoundries[$i]['con1pos']=="R")
-            $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)+5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),8,$this->conBoundries[$i]['con1']);
+            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)+5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),20,8,$this->conBoundries[$i]['con1'],'left');
           if($this->conBoundries[$i]['con1pos']=="A")
-            $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*2),($this->canvasY1px+$this->canvasY2px)/2+2,8,$this->conBoundries[$i]['con1']);
+            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*2),($this->canvasY1px+$this->canvasY2px)/2+2,20,8,$this->conBoundries[$i]['con1'],'left');
           if($this->conBoundries[$i]['con1pos']=="B")
-            $this->pdf->addText((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*2),($this->canvasY1px+$this->canvasY2px)/2 - $this->fontSize1a-2,8,$this->conBoundries[$i]['con1']);
+            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*2),($this->canvasY1px+$this->canvasY2px)/2 - $this->fontSize1a-2,20,8,$this->conBoundries[$i]['con1'],'left');
         }
       }
     }
     if(count($cons==0))
     { $this->gridLxRad=$this->gridL0rad;
       $this->gridDyRad=$this->gridD0rad;
-      $this->pdf->addText($this->canvasDimensionXpx-$this->gridOffsetXpx-(3*$this->fontSize1b), $this->gridOffsetYpx-$this->fontSize1a, 8, $this->astroGetConstellationFromCoordinates($this->gridL0rad*$this->f12OverPi,$this->gridD0rad*$this->f180OverPi));
+      $this->labelsArr[]=array($this->canvasDimensionXpx-$this->gridOffsetXpx-(3*$this->fontSize1b), $this->gridOffsetYpx-$this->fontSize1a,20, 8, $this->astroGetConstellationFromCoordinates($this->gridL0rad*$this->f12OverPi,$this->gridD0rad*$this->f180OverPi),'left');
     }
     $this->pdf->setLineStyle(0.5,'round');
   }
