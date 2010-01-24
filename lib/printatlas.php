@@ -102,7 +102,7 @@ class PrintAtlas
     Array(  4, 1.50,0.100,9),
     Array(  3, 1.00,0.066,9),
     Array(  2, 0.80,0.050,10),
-    Array(  1, 0.40,0.026,10),
+    Array(  1, 0.40,0.026,11),
     Array(0.5, 0.20,0.012,12),
     Array(0.25,0.20,0.012,14),
     Array(0.2 ,0.20,0.012,16),
@@ -335,17 +335,15 @@ class PrintAtlas
   }
     	
   function astroDrawObjectLabel($cx, $cy, $d, $name, $seen)
-  { if((($cx+4+$d)>$this->lx)&&(($cx+4+$d+(strlen($name)*$this->fontSize1b))<$this->rx)&&(($cy-($this->fontSize1a>>1))<$this->ty)&&(($cy+($this->fontSize1a>>1))>$this->by))
-    { $this->pdf->addText(($cx+4+$d), $cy-2, 6, $name);
-	    if(substr($seen,0,2)=='YD')
-	  	  $this->pdf->line($cx+$d+3, $cy+4, $cx+4+$d+(strlen($name)*3.6), $cy+4);
-	    if(substr($seen,0,1)=='Y')
-		    $this->pdf->line($cx+$d+3, $cy-4, $cx+4+$d+(strlen($name)*3.6), $cy-4);
-	    if(substr($seen,0,1)=='X')
-	    { $this->pdf->setLineStyle(0.5,'','',array(3));
-		    $this->pdf->line($cx+$d+3, $cy-4, $cx+4+$d+(strlen($name)*3.6), $cy-4);
-	      $this->pdf->setLineStyle(0.5,'','',array());
-	    }
+  { $this->pdf->addText(($cx+4+$d), $cy-2, 6, $name);
+    if(substr($seen,0,2)=='YD')
+  	  $this->pdf->line($cx+$d+3, $cy+4, $cx+4+$d+(strlen($name)*3.6), $cy+4);
+    if(substr($seen,0,1)=='Y')
+	    $this->pdf->line($cx+$d+3, $cy-4, $cx+4+$d+(strlen($name)*3.6), $cy-4);
+    if(substr($seen,0,1)=='X')
+    { $this->pdf->setLineStyle(0.5,'','',array(3));
+	    $this->pdf->line($cx+$d+3, $cy-4, $cx+4+$d+(strlen($name)*3.6), $cy-4);
+      $this->pdf->setLineStyle(0.5,'','',array());
     }
   }
   
@@ -514,7 +512,7 @@ class PrintAtlas
   function canvasDrawStar($i)
   { $name=$this->astroObjectsArr[$i]["nameBayer"].' '.$this->astroObjectsArr[$i]["nameBayer2"].' '; 
     if($name!="  ") $name.=$this->astroObjectsArr[$i]["nameCon"];
-    $d=floor(2*(($this->gridDimensions[$this->gridActualDimension][3])-($this->astroObjectsArr[$i]["vMag"]/100.0))+1);
+    $d=floor(2*max(($this->gridDimensions[$this->gridActualDimension][3])-($this->astroObjectsArr[$i]["vMag"]/100.0),0)+1);
     $this->gridLDrad($this->astroObjectsArr[$i]["RA2000"],$this->astroObjectsArr[$i]["DE2000"]); 
     $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
     $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
@@ -825,11 +823,8 @@ class PrintAtlas
     $this->by = $this->gridOffsetYpx;
   }
   
-  function gridInitScale($gridLHr,$gridDdeg,$desiredScale)
-  { $this->gridActualDimension=$this->gridMaxDimension;
-    while(($this->gridActualDimension>$this->gridMinDimension)&&($this->gridDimensions[$this->gridActualDimension][0]<$desiredScale))
-      $this->gridActualDimension=$this->gridActualDimension-1;
-    $this->gridL0rad=$gridLHr*$this->fPiOver12;
+  function gridInitScale($gridLHr,$gridDdeg)
+  { $this->gridL0rad=$gridLHr*$this->fPiOver12;
     $this->gridD0rad=$gridDdeg*$this->fPiOver180;
     if($this->gridWidthXpx<$this->gridHeightYpx)
     { $this->gridSpanD=$this->gridDimensions[$this->gridActualDimension][0]*($this->gridHeightYpx/$this->gridWidthXpx);
@@ -909,13 +904,20 @@ class PrintAtlas
   
   
   public  function pdfAtlas($rarad, $declrad, $raspanrad, $declspanrad, $dsomag, $starmag)  // Creates a pdf atlas page
-  { global $objUtil,$instDir,$loggedUser,$objObserver;
+  { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
   
-    $this->atlaspagerahr=$objUtil->checkRequestKey('atlaspagerahr',0);
-    $this->atlaspagedecldeg=$objUtil->checkRequestKey('atlaspagedecldeg',0);
-    $this->atlaspagezoomdeg=$objUtil->checkRequestKey('atlaspagezoomdeg',1);
-    $this->atlasmagnitude=$objUtil->checkRequestKey('atlasmagnitude',10);
-    $this->starsmagnitude=$objUtil->checkRequestKey('starsmagnitude',10);
+    if($object=$objObject->getExactDsObject($objUtil->checkRequestKey('object'),''))
+    { $this->atlaspagerahr=$objObject->getDsoProperty($object,'ra',0);
+      $this->atlaspagedecldeg=$objObject->getDsoProperty($object,'decl',0);
+    }
+    else
+    { $this->atlaspagerahr=$objUtil->checkRequestKey('ra',0);
+      $this->atlaspagedecldeg=$objUtil->checkRequestKey('decl',0);
+    }
+  
+    $this->gridActualDimension=max(min($objUtil->checkRequestKey('zoom',18),$this->gridMaxDimension),14);
+    $this->atlasmagnitude=max(min((int)($objUtil->checkRequestKey('dsos',$this->gridDimensions[$this->gridActualDimension][3])),99),8);
+    $this->starsmagnitude=max(min((int)($objUtil->checkRequestKey('stars',$this->gridDimensions[$this->gridActualDimension][3])),16),8);
     
     $this->pdf = new Cezpdf('a4', 'landscape');
     $this->pdf->selectFont($instDir.'lib/fonts/Courier.afm');
@@ -940,7 +942,7 @@ class PrintAtlas
     $this->gridShowInfo();
     $this->atlasDrawLegend();
     $temp=$objObserver->getObserverProperty($loggedUser,'firstname')." ".$objObserver->getObserverProperty($loggedUser,'name')." - ".date('d M Y');
-   $this->pdf->addText($this->canvasDimensionXpx-$this->gridOffsetXpx-(strlen($temp)*5),$this->canvasDimensionYpx-$this->Legend1y-10,8,$temp);
+    $this->pdf->addText($this->canvasDimensionXpx-$this->gridOffsetXpx-(strlen($temp)*5),$this->canvasDimensionYpx-$this->Legend1y-10,8,$temp);
     $this->pdf->setLineStyle(2,'round');
     $this->pdf->rectangle($this->gridOffsetXpx-1,$this->gridOffsetYpx-1,
                          ($this->canvasDimensionXpx-($this->gridOffsetXpx<<1))+2,($this->canvasDimensionYpx-($this->gridOffsetYpx<<1))+2);
