@@ -41,9 +41,9 @@ else
   $j=0;                                                                         // Test if the objects, locations and instruments are available in the database
   for($i=0;$i<count($parts_array);$i++)
   { if ($instruction[$i] == "NO")
-  	  $objObject->addDSObject($object[$i], $cat[$i], $catindex_data[$i], "", "", 0, 0, "99.9", "99.9", "0", "0", "999", "", "ADMIN");
+  	  $objObject->addDSObject($object[$i], $cat[$i], $catindex_data[$i], "", "", 0, 0, "99.9", "99.9", "0", "0", "999", "", $loggedUser);
     elseif ($instruction[$i] == "NOC")
-  	  $objObject->addDSObject($object[$i], $cat[$i], $catindex_data[$i], $data4[$i], $data5[$i], $data6[$i], $data7[$i], $data8[$i], $data9[$i], $data10[$i], $data11[$i], $data12[$i], $data13[$i], "ADMIN");
+  	  $objObject->addDSObject($object[$i], $cat[$i], $catindex_data[$i], $data4[$i], $data5[$i], $data6[$i], $data7[$i], $data8[$i], $data9[$i], $data10[$i], $data11[$i], $data12[$i], $data13[$i], $loggedUser);
   	elseif ($instruction[$i] == "AN")
   		$objObject->newAltName($object[$i], $cat[$i], $catindex_data[$i]);
   	elseif ($instruction[$i] == "NN")
@@ -62,11 +62,11 @@ else
   	}			
   	elseif ($instruction[$i] == "RA")
   	{	$objObject->setDsoProperty($object[$i],'ra', $catindex_data[$i]);
-  	  $objObject->setDsObjectAtlasPages($objects[$i]);
+  	  $objObject->setDsObjectAtlasPages($object[$i]);
   	}
   	elseif ($instruction[$i] == "DE")
   	{ $objObject->setDsoProperty($object[$i],'decl', $catindex_data[$i]);
-  	  $objObject->setDsObjectAtlasPages($objects[$i]);
+  	  $objObject->setDsObjectAtlasPages($object[$i]);
   	}
   	elseif ($instruction[$i] == "CON")
   	  $objObject->setDsoProperty($object[$i],'con', $catindex_data[$i]);
