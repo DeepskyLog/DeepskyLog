@@ -448,11 +448,14 @@ class PrintAtlas
   function astroDrawStarsArr()
   { global $objStar;
     for($m=8;$m<=$this->starsmagnitude;$m++)
-    { $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,$m,$m);
+    { if($m>$this->gridDimensions[$this->gridActualDimension][3])
+        $this->pdf->setColor(0.7,0.7,0.7);
+    	$this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,$m,$m);
       $z=count($this->astroObjectsArr); 
       for($i=0;$i<$z;$i++)
         $this->canvasDrawStar($i);
     }
+    $this->pdf->setColor(0,0,0);
   }
     
   function astroGetConstellationFromCoordinates($thera,$thedecl)
