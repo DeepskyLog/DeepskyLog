@@ -918,8 +918,9 @@ class PrintAtlas
     $this->pdf->setLineStyle(0.5,'','',array(1));
     $this->gridDrawCoordLines();
     $this->pdf->setLineStyle(0.5,'','',array());
-    $this->pdf->setStrokeColor(0,0,0);
+    $this->pdf->setStrokeColor(0.7,0.7,0.7);
     $this->astroDrawConstellations();
+    $this->pdf->setStrokeColor(0,0,0);
     $this->astroDrawStarsArr();
     $this->astroDrawObjects();
     
