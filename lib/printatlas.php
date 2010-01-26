@@ -146,9 +146,9 @@ class PrintAtlas
           if($this->conBoundries[$i]['con0pos']=="R")
             $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)+5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),20,8,$this->conBoundries[$i]['con0'],'left');
           if($this->conBoundries[$i]['con0pos']=="A")
-            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3),($this->canvasY1px+$this->canvasY2px)/2+2,20,8,$this->conBoundries[$i]['con0'],'left');
+            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*1),($this->canvasY1px+$this->canvasY2px)/2+2,20,8,$this->conBoundries[$i]['con0'],'left');
           if($this->conBoundries[$i]['con0pos']=="B")
-            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3),($this->canvasY1px+$this->canvasY2px)/2- $this->fontSize1a - 2,20,8,$this->conBoundries[$i]['con0'],'left');
+            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*1),($this->canvasY1px+$this->canvasY2px)/2- $this->fontSize1a - 2,20,8,$this->conBoundries[$i]['con0'],'left');
         }
         if(($this->conBoundries[$i]['con1']) && (!in_array($this->conBoundries[$i]['con1'],$cons)))
         { $cons[count($cons)]=($this->conBoundries[$i]['con1']);
@@ -157,9 +157,9 @@ class PrintAtlas
           if($this->conBoundries[$i]['con1pos']=="R")
             $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)+5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),20,8,$this->conBoundries[$i]['con1'],'left');
           if($this->conBoundries[$i]['con1pos']=="A")
-            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*2),($this->canvasY1px+$this->canvasY2px)/2+2,20,8,$this->conBoundries[$i]['con1'],'left');
+            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*1),($this->canvasY1px+$this->canvasY2px)/2+2,20,8,$this->conBoundries[$i]['con1'],'left');
           if($this->conBoundries[$i]['con1pos']=="B")
-            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*2),($this->canvasY1px+$this->canvasY2px)/2 - $this->fontSize1a-2,20,8,$this->conBoundries[$i]['con1'],'left');
+            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*1),($this->canvasY1px+$this->canvasY2px)/2 - $this->fontSize1a-2,20,8,$this->conBoundries[$i]['con1'],'left');
         }
       }
     }
