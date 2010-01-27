@@ -37,23 +37,50 @@ if($menuMoon=="collapsed") {
   // 1) Check if logged in
   if($loggedUser) {
     // 2) Get the julian day of today...
-    $jd = date('jd',strtotime('today'));
-    $jd = 2455215.18264;
+    $jd = gregoriantojd($theMonth, $theDay, $theYear);
     
     // 3) Get the standard location of the observer
     $longitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'longitude');
     $latitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'latitude');
-
+    $timezone=$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'),'timezone');
+    
+    $dateTimeZone=new DateTimeZone($timezone);
+    $datestr=sprintf("%02d",$date[1])."/".sprintf("%02d",$date[2])."/".$date[0];
+    $dateTime = new DateTime($datestr, $dateTimeZone);
+    // Geeft tijdsverschil terug in seconden
+    $timedifference = $dateTimeZone->getOffset($dateTime);
+    $timedifference = $timedifference / 3600.0;
+    if (strncmp($timezone, "Etc/GMT", 7) == 0) {
+      $timedifference = -$timedifference;
+    }
+    
     // Calculate the rise and set time of the moon
     $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime($jd, $longitude, $latitude);
 
-    echo "<span class=\"menuText\">".LangMoonRise." : " . floor($moon[0]) . ":" . 
-                  floor(($moon[0] - floor($moon[0])) * 60) . ", ";
-    echo LangMoonSet." : " . floor($moon[2]) . ":" . 
-                  floor(($moon[2] - floor($moon[2])) * 60) . "</span><br />";
+    echo "<span class=\"menuText\">".LangMoonRise." : ";
+    $moon[0] = $moon[0] + $timedifference;
+    if ($moon[0] > 24.0) {
+      echo "-";
+    } else {
+      $minutes = round(($moon[0] - floor($moon[0])) * 60);
+      if ($minutes < 10) {
+        $minutes = "0" . $minutes;
+      }
+      echo floor($moon[0]) . ":" . $minutes . ", ";
+    }
+    echo LangMoonSet." : " ;
+    $moon[2] = $moon[2] + $timedifference;
+    if ($moon[2] > 24.0) {
+      echo "-";
+    } else {
+      $minutes = round(($moon[0] - floor($moon[0])) * 60);
+      if ($minutes < 10) {
+        $minutes = "0" . $minutes;
+      }
+      echo floor($moon[2]) . ":" . $minutes;
+    }
+    echo "</span><br />";
   }
-  
-  
 }
 echo "</div>";
 ?>
