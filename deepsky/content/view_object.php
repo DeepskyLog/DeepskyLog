@@ -77,7 +77,7 @@ else
 		if($FF)
 		{ echo "<script type=\"text/javascript\">";
 		  echo "theResizeElement='obj_list';";
-		  echo "theResizeSize=65;";
+		  echo "theResizeSize=75;";
 		  echo "</script>";
 		}
 		$objObject->showObjects($link, $min, $max,$_GET['object'],0,$step);
