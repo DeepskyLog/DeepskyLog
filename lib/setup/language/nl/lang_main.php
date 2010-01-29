@@ -54,7 +54,7 @@ define("LangAtlasMagnitude"                               ,"Magnitude:&nbsp;&nbs
 define("LangAtlasMagnitude1"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gebruik Shift + M om meer en zwakkere objecten te tonen, gebruik m om minder en enkel helderder objecten te tonen.");
 define("LangAtlasMagnitude2"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gebruik CTRL + M voor maximale magnitude.");
 define("LangAtlasMagnitude3"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;De maximale magnitude van de sterren die getoond worden staat onderaan de pagina vermeld.");
-define("LangAtlasMagnitude4"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gebruik Shift + S om meer en zwakkere sterren te tonen, gebruik m om minder en enkel helderder sterreb te tonen.");
+define("LangAtlasMagnitude4"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;gebruik Shift + S om meer en zwakkere sterren te tonen, gebruik s om minder en enkel helderder sterreb te tonen.");
 define("LangAtlasMagnitude5"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;De stermagnitudes worden bovenaan de pagina getoond.");
 
 define("LangAtlasObjects"                                 ,"Objecten:&nbsp;&nbsp;&nbsp;De labels naast het object geven zijn meest gekende naam weer.");
@@ -66,7 +66,7 @@ define("LangAtlasObjects5"                                ,"&nbsp;&nbsp;&nbsp;&n
 
 define("LangAtlasCursor"                                  ,"Cursor:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;De cursor co&ouml;rdinaten worden onderaan het scherm getoond.");
 
-define("LangAtlasPrint"                                  ,"Afdrukken:&nbsp;&nbsp;In de volgende release wordt een pdf-afdruk van deze pagina voorzien.");
+define("LangAtlasPrint"                                  ,"Afdrukken:&nbsp;&nbsp;Door op p te drukken kan je de pagina onder pdf formaat krijgen.");
 
 define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ster data beschikbaar gesteld door Tycho2+");
 define("LangAtlasWhatsnext"                               ,"Versie:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Verdere ontwikkeling op deze atlaspagina is in voorbereiding zodat bv. ook sterrenbeelden getoond kunnen worden.");
