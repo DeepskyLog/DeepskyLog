@@ -1645,8 +1645,11 @@ class Utils implements iUtils
     $pdf->ezStartPageNumbers(300, 30, 10);
     $pdf->selectFont($instDir.'lib/fonts/Helvetica.afm');
     $pdf->ezText(html_entity_decode($_GET['pdfTitle'])."\n");
+    $i=0;
     while(list($key,$value)=each($result))
-    { $obs=$objObservation->getAllInfoDsObservation($value['observationid']);
+    { if($i++>0)
+        $pdf->ezNewPage();
+    	$obs=$objObservation->getAllInfoDsObservation($value['observationid']);
       $object=$objObject->getAllInfoDsObject($obs['objectname']);
       if($loggedUser&&($objObserver->getObserverProperty($loggedUser,'UT')))
         $date=sscanf($obs["date"], "%4d%2d%2d");
@@ -1690,7 +1693,6 @@ class Utils implements iUtils
         $pdf->ezImage($instDir."deepsky/drawings/".$value['observationid'].".jpg", 0, 500, "none", "left");
       }
       $pdf->ezText("");
-      $pdf->ezNewPage();
     }
     $pdf->ezStream();
   }  
