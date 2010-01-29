@@ -75,7 +75,8 @@ class PrintAtlas
       $Legend2y=20,
       $Lsteps=10,
       $lx=0,
-      $minObjectSize=2.5,
+      $maxshowndsomag=0,
+      $minObjectSize=5,
       $nsegmente=8,
       $rx=0,
       $starsmagnitude,
@@ -139,18 +140,28 @@ class PrintAtlas
     $cons = Array();
     for($i=0;$i<count($this->conBoundries);$i++)
     { if($this->gridDrawLongLineLD($this->conBoundries[$i]['ra0'], $this->conBoundries[$i]['decl0'], $this->conBoundries[$i]['ra1'], $this->conBoundries[$i]['decl1']))
-      { if(!in_array($this->conBoundries[$i]['con0'],$cons))
+      { if((!in_array($this->conBoundries[$i]['con0'],$cons))||
+           (!in_array($this->conBoundries[$i]['con1'],$cons)))
         { $cons[count($cons)]=($this->conBoundries[$i]['con0']);
+          $cons[count($cons)]=($this->conBoundries[$i]['con1']);
+          $tempx=max(min((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*2.75),$this->gridOffsetXpx+$this->gridWidthXpx-($this->fontSize1b*3)),$this->gridOffsetXpx+1);
+          $tempx2=max(min((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*1.5),$this->gridOffsetXpx+$this->gridWidthXpx-($this->fontSize1b*3)),$this->gridOffsetXpx+1);
+          $tempy=min(max(($this->canvasY1px+$this->canvasY2px)/2,$this->gridOffsetYpx+1),$this->gridOffsetYpx+$this->gridHeightYpx-($this->fontSize1b>>1)-2);
+          $tempy2=min(max(($this->canvasY1px+$this->canvasY2px)/2,$this->gridOffsetYpx-($this->fontSize1a>>1)-2),$this->gridOffsetYpx+$this->gridHeightYpx);
           if($this->conBoundries[$i]['con0pos']=="L")
-            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3)-5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),20,8,$this->conBoundries[$i]['con0'],'left');
+            $this->labelsArr[]=array($tempx,$tempy,50,8,$this->conBoundries[$i]['con0'].' '.$this->conBoundries[$i]['con1'],'left');
           if($this->conBoundries[$i]['con0pos']=="R")
-            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)+5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),20,8,$this->conBoundries[$i]['con0'],'left');
+            $this->labelsArr[]=array($tempx,$tempy,50,8,$this->conBoundries[$i]['con1'].' '.$this->conBoundries[$i]['con0'],'left');
           if($this->conBoundries[$i]['con0pos']=="A")
-            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*1),($this->canvasY1px+$this->canvasY2px)/2+2,20,8,$this->conBoundries[$i]['con0'],'left');
+          { $this->labelsArr[]=array($tempx2,$tempy2+2,20,8,$this->conBoundries[$i]['con0'],'left');
+            $this->labelsArr[]=array($tempx2,$tempy2-($this->fontSize1a>>1)-2,20,8,$this->conBoundries[$i]['con1'],'left');
+          }
           if($this->conBoundries[$i]['con0pos']=="B")
-            $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*1),($this->canvasY1px+$this->canvasY2px)/2- $this->fontSize1a - 2,20,8,$this->conBoundries[$i]['con0'],'left');
+          { $this->labelsArr[]=array($tempx2,$tempy2+2,20,8,$this->conBoundries[$i]['con1'],'left');
+            $this->labelsArr[]=array($tempx2,$tempy2-($this->fontSize1a>>1)-2,20,8,$this->conBoundries[$i]['con0'],'left');
+          }
         }
-        if(($this->conBoundries[$i]['con1']) && (!in_array($this->conBoundries[$i]['con1'],$cons)))
+        /*if(($this->conBoundries[$i]['con1']) && (!in_array($this->conBoundries[$i]['con1'],$cons)))
         { $cons[count($cons)]=($this->conBoundries[$i]['con1']);
           if($this->conBoundries[$i]['con1pos']=="L")
             $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*3)-5,($this->canvasY1px+$this->canvasY2px)/2-($this->fontSize1a>>1),20,8,$this->conBoundries[$i]['con1'],'left');
@@ -160,13 +171,13 @@ class PrintAtlas
             $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*1),($this->canvasY1px+$this->canvasY2px)/2+2,20,8,$this->conBoundries[$i]['con1'],'left');
           if($this->conBoundries[$i]['con1pos']=="B")
             $this->labelsArr[]=array((($this->canvasX1px+$this->canvasX2px)/2)-($this->fontSize1b*1),($this->canvasY1px+$this->canvasY2px)/2 - $this->fontSize1a-2,20,8,$this->conBoundries[$i]['con1'],'left');
-        }
+        }*/
       }
     }
-    if(count($cons==0))
+    if(count($cons)==0)
     { $this->gridLxRad=$this->gridL0rad;
       $this->gridDyRad=$this->gridD0rad;
-      $this->labelsArr[]=array($this->canvasDimensionXpx-$this->gridOffsetXpx-(3*$this->fontSize1b), $this->gridOffsetYpx-$this->fontSize1a,20, 8, $this->astroGetConstellationFromCoordinates($this->gridL0rad*$this->f12OverPi,$this->gridD0rad*$this->f180OverPi),'left');
+      $this->labelsArr[]=array($this->canvasDimensionXpx-$this->gridOffsetXpx-(3*$this->fontSize1b), $this->gridOffsetYpx+3,20, 8, $this->astroGetConstellationFromCoordinates($this->gridL0rad*$this->f12OverPi,$this->gridD0rad*$this->f180OverPi),'left');
     }
     $this->pdf->setLineStyle(0.5,'round');
   }
@@ -401,7 +412,9 @@ class PrintAtlas
 	  $z=count($this->astroObjectsArr);
 	  for($i=0;$i<$z;$i++)
 	  { if($this->astroObjectsArr[$i]["type"]!='AASTAR1')
-  	  { if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
+  	  { if(($this->astroObjectsArr[$i]["mag"]>$this->maxshowndsomag)&&($this->astroObjectsArr[$i]["mag"]<99))
+  	      $this->maxshowndsomag=$this->astroObjectsArr[$i]["mag"];
+  	    if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
 	        $this->astroDrawStar1Object($i);
 	      else if(in_array($this->astroObjectsArr[$i]["type"],array('AA2STAR','AA3STAR','AA4STAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
 	        $this->astroDrawStarxObject($i);
@@ -892,7 +905,7 @@ class PrintAtlas
 
   function gridShowInfo()
   { $t1 =atlasPageFoV.' '.(round($this->gridSpanL*20)/10)." x ".(round($this->gridSpanD*20)/10)."° - ";
-	  $t1.=atlasPageDSLM.' '.$this->atlasmagnitude." - ";
+	  $t1.=atlasPageDSLM.' '.$this->maxshowndsomag." - ";
 	  $t1.=atlasPageStarLM.' '.$this->starsmagnitude;
 	  $this->pdf->addText($this->gridOffsetXpx,$this->Legend2y,8,$t1);
 	}
