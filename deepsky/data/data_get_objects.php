@@ -330,12 +330,10 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
   	$minContrastError = True;
   }
 	reset($_GET);
-	$excl='';
+	$excl=array();
 	while(list($key,$value)=each($_GET))
 	  if(substr($key,0,5)=='excl_')
-	    $excl.=",\"".substr($key,5)."\"";
-	if($excl)
-	  $excl=substr($excl,1);
+	    $excl[]=substr($key,5);
   if(!($pageError || $minDeclDegreesError || $minDeclMinutesError || $minDeclSecondsError || 
          $maxDeclDegreesError || $maxDeclMinutesError || $maxDeclSecondsError || $minRAHoursError || 
          $minRAMinutesError || $minRASecondsError || $maxRAHoursError || $maxRAMinutesError || 
