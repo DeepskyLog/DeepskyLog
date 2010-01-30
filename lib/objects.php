@@ -966,12 +966,12 @@ class Objects implements iObjects
   	  if($myList)
   	  { echo("<td align=\"center\">");
         if($objList->checkObjectInMyActiveList($_SESSION['Qobj'][$count]['objectname']))
-          echo("<a href=\"".$link."&amp;min=".$min."&amp;removeObjectFromList=".urlencode($_SESSION['Qobj'][$count]['objectname'])."&amp;sort=".$objUtil->checkGetKey('sort')."&amp;previous=".$objUtil->checkGetKey('previous')."\" title=\"".$_SESSION['Qobj'][$count]['objectname'].LangListQueryObjectsMessage3.$listname_ss."\">R</a>");
+          echo "<a href=\"".$link."&amp;min=".$min."&amp;removeObjectFromList=".urlencode($_SESSION['Qobj'][$count]['objectname'])."&amp;sort=".$objUtil->checkGetKey('sort')."&amp;previous=".$objUtil->checkGetKey('previous')."\" title=\"".$_SESSION['Qobj'][$count]['objectname'].LangListQueryObjectsMessage3.$listname_ss."\">R</a>";
         else
-          echo("<a href=\"".$link."&amp;min=".$min."&amp;addObjectToList=".urlencode($_SESSION['Qobj'][$count]['objectname'])."&amp;showname=".urlencode($_SESSION['Qobj'][$count]['showname'])."&amp;sort=".$objUtil->checkGetKey('sort')."&amp;previous=".$objUtil->checkGetKey('previous')."\" title=\"".$_SESSION['Qobj'][$count]['objectname'].LangListQueryObjectsMessage2.$listname_ss."\">L</a>");
-        echo("</td>");
+          echo "<a href=\"".$link."&amp;min=".$min."&amp;addObjectToList=".urlencode($_SESSION['Qobj'][$count]['objectname'])."&amp;showname=".urlencode($_SESSION['Qobj'][$count]['showname'])."&amp;sort=".$objUtil->checkGetKey('sort')."&amp;previous=".$objUtil->checkGetKey('previous')."\" title=\"".$_SESSION['Qobj'][$count]['objectname'].LangListQueryObjectsMessage2.$listname_ss."\">L</a>";
+        echo "</td>";
   	  }
-      echo("</tr>");
+      echo "</tr>";
       $countline++; 
 
       $count++;
@@ -982,7 +982,11 @@ class Objects implements iObjects
       echo "</tbody>";
     }
     echo "</table>";
-    echo LangObjectsFilter.": <a href=\"".$link."&amp;filteron=location\" title=\"".LangObjectsFilterLocationExpl."\">".LangObjectsFilterLocation."</a>";  //&nbsp;-&nbsp;<a href=\"".$link."&amp;filteron=time\">time</a>";
+    if($loggedUser)
+      if($objUtil->checkRequestKey('filteron')=='location')
+      	echo LangObjectsFilter.": <a href=\"".$objUtil->removeFromLink($link,'filteron=location')."\" title=\"".LangObjectsFilterLocationOffExpl."\">".LangObjectsFilterLocation."</a>";  //&nbsp;-&nbsp;<a href=\"".$link."&amp;filteron=time\">time</a>";
+      else
+        echo LangObjectsFilter.": <a href=\"".$link."&amp;filteron=location\" title=\"".LangObjectsFilterLocationExpl."\">".LangObjectsFilterLocation."</a>";  //&nbsp;-&nbsp;<a href=\"".$link."&amp;filteron=time\">time</a>";
   }
   public  function showObjectsFields($link, $min, $max, $ownShow='', $showRank=0, $step=25, $fields=array("showname","objectconstellation","objectmagnitude"), $pageListAction="addAllObjectsFromPageToList")        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
   { global $FF, $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil,$objPresentations,$objList;

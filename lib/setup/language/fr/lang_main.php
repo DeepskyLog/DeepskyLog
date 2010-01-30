@@ -11,9 +11,10 @@ define("LangHideObjectDetails"                            ,"Cacher les d#227;tai
 
 
 
-define("LangObjectsFilter"                                ,"Filtre");
+define("LangObjectsFilter"                                ,"Marquer");
 define("LangObjectsFilterLocation"                        ,"Endroit d'observation");
-define("LangObjectsFilterLocationExpl"                    ,"Indiquez les objets qui ne sont pas visibles &agrave; partir du lieu d'observation s&#227;lectionn&#227;.");
+define("LangObjectsFilterLocationExpl"                    ,"Marquez les objets qui ne sont pas visibles &agrave; partir du lieu d'observation s&#227;lectionn&#227;.");
+define("LangObjectsFilterLocationOffExpl"                 ,"D&#227;marquez les objets qui ne sont pas visibles &agrave; partir du lieu d'observation s&#227;lectionn&#227;.");
 
 
 define("LangMarkAllAsRead"                                ,"Allen markeren als gelezen.");

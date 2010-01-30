@@ -1815,6 +1815,9 @@ class Utils implements iUtils
     call_user_func_array('array_multisort', $_params);
     return $_data;
   } 
+  public function removeFromLink($link,$value)
+  { return (($a=strpos($link,$value))?(($b=strpos($link,'&',$a+1))?substr($link,0,$a).substr($link,$b):substr($link,0,$a-5)):$link);
+  }
   public function rssObservations()  // Creates an rss feed for DeepskyLog
 	{
 	  global $objObservation, $objInstrument, $objLocation, $objPresentations, $objObserver, $baseURL,$objUtil;

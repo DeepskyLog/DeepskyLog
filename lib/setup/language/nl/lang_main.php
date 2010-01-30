@@ -10,9 +10,10 @@ define('atlasPageStarLM'                                 ,'Sterren tot mag:');
 define("LangShowObjectDetails"                            ,"Toon object details");
 define("LangHideObjectDetails"                            ,"Verberg object details");
 
-define("LangObjectsFilter"                                ,"Filter");
+define("LangObjectsFilter"                                ,"Markeer");
 define("LangObjectsFilterLocation"                        ,"Waarneemplaats");
-define("LangObjectsFilterLocationExpl"                    ,"Duid de objecten aan die niet zichtbaarzijn vanop de geselecteerde waarneemplaats.");
+define("LangObjectsFilterLocationExpl"                    ,"Markeer de objecten aan die niet zichtbaarzijn vanop de geselecteerde waarneemplaats.");
+define("LangObjectsFilterLocationOffExpl"                 ,"On-markeer de objecten aan die niet zichtbaarzijn vanop de geselecteerde waarneemplaats.");
 
 define("LangMarkAllAsRead"                                ,"Allen markeren als gelezen.");
 define("LangMarkUpToHereAsRead"                           ,"Tot hier als gelezen markeren.");

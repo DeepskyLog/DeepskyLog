@@ -10,9 +10,10 @@ define('atlasPageStarLM'                                 ,'Sterren tot mag:');
 define("LangShowObjectDetails"                            ,"Show object details");
 define("LangHideObjectDetails"                            ,"Hide object details");
 
-define("LangObjectsFilter"                                ,"Filter");
+define("LangObjectsFilter"                                ,"Mark");
 define("LangObjectsFilterLocation"                        ,"Location");
 define("LangObjectsFilterLocationExpl"                    ,"Mark the objects that are not visible from the selected observation location.");
+define("LangObjectsFilterLocationOffExpl"                 ,"Unmark the objects that are not visible from the selected observation location.");
 
 
 
