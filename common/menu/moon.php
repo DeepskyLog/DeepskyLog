@@ -35,7 +35,7 @@ if($menuMoon=="collapsed") {
   echo "<span class=\"menuText\">".LangMoonMenuActualMoon."</span>&nbsp;"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" /><br />";
   
   // 1) Check if logged in
-  if($loggedUser) {
+  if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) {
     // 2) Get the julian day of today...
     $jd = gregoriantojd($theMonth, $theDay, $theYear);
     
