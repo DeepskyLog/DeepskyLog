@@ -25,11 +25,15 @@ define("LangRequiredFields"                               ,"(*= champs obligatoi
 define("LangNoOwnColor"                                   , "Eigen waarnemingen niet oplichten");
 
 // Text for moon menu
-define("LangMoonMenuTitle"                                ,"Lune");
+define("LangMoonMenuTitle"                                ,"Lune / Soleil");
 define("LangMoonMenuNewMoon"                              ,"Next new moon");
 define("LangMoonMenuActualMoon"                           ,"Huidige maan:");
 define("LangMoonRise"                                     ,"Op");
 define("LangMoonSet"                                      ,"Onder");
+define("LangMoonSun"                                      ,"Soleil");
+define("LangMoonTwilight"                                 ,"Twilight");
+define("LangMoonNaut"                                     ,"Naut.");
+define("LangMoonAstro"                                    ,"Astro.");
 
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Atlas");

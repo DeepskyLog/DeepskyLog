@@ -148,6 +148,40 @@ else
 	  if(array_key_exists('menus',$_SESSION)&&array_key_exists('menuAddChange',$_SESSION['menus']))
 	    $menuAddChange=$_SESSION['menus']['menuAddChange'];
 	}
+  if(array_key_exists('menuMoon',$_GET))
+  { $menuMoon=$_GET['menuMoon'];
+    $_SESSION['menus']['menuMoon']=$menuMoon;
+    $menuscookie="";
+    while(list($key,$value)=each($_SESSION['menus']))
+      $menuscookie.=$key.":".$value.";";
+    $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+    setcookie("menus",$menuscookie,$cookietime, "/");
+    
+  }
+  elseif(array_key_exists('menuMoon',$_POST))
+  { $menuMoon=$_POST['menuMoon'];
+    $_SESSION['menus']['menuMoon']=$menuMoon;
+    $menuscookie="";
+    while(list($key,$value)=each($_SESSION['menus']))
+      $menuscookie.=$key.":".$value.";";
+    $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+    setcookie("menus",$menuscookie,$cookietime, "/");
+  }
+  elseif(array_key_exists('menus',$_SESSION)&&array_key_exists('menuMoon',$_SESSION['menus']))
+  { $menuMoon=$_SESSION['menus']['menuMoon'];
+  }
+  elseif(array_key_exists('menus',$_COOKIE))
+  { $menubase=explode(";",$_COOKIE['menus']);
+    while(list($key,$value)=each($menubase))
+    { if($value)
+      { $menubaseitems=explode(":",$value);
+        $_SESSION['menus'][$menubaseitems[0]]=$menubaseitems[1];
+      }
+    }
+    if(array_key_exists('menus',$_SESSION)&&array_key_exists('menuMoon',$_SESSION['menus']))
+      $menuMoon=$_SESSION['menus']['menuMoon'];
+  }
+	
   if(array_key_exists('menuAdmin',$_GET))
 	{ $menuAdmin=$_GET['menuAdmin'];
 	  $_SESSION['menus']['menuAdmin']=$menuAdmin;

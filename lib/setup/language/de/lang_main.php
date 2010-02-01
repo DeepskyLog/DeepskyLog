@@ -33,11 +33,15 @@ define("LangRequiredFields"                               ,"(* Pflichtfelder)");
 define("LangNoOwnColor"                                   , "No highlighting of own observations");
 
 // Text for moon menu
-define("LangMoonMenuTitle"                                ,"Mond");
+define("LangMoonMenuTitle"                                ,"Mond / Sonne");
 define("LangMoonMenuNewMoon"                              ,"N&auml;chste Neumond");
-define("LangMoonMenuActualMoon"                           ,"Huidige maan:");
-define("LangMoonRise"                                     ,"Op");
-define("LangMoonSet"                                      ,"Onder");
+define("LangMoonMenuActualMoon"                           ,"Actual moon:");
+define("LangMoonRise"                                     ,"Rise");
+define("LangMoonSet"                                      ,"Set");
+define("LangMoonSun"                                      ,"Sonne");
+define("LangMoonTwilight"                                 ,"Twilight");
+define("LangMoonNaut"                                     ,"Naut.");
+define("LangMoonAstro"                                    ,"Astro.");
 
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Atlas");
@@ -56,7 +60,7 @@ define("LangAtlasZoom1"                                   ,"&nbsp;&nbsp;&nbsp;&n
 define("LangAtlasZoom2"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or use the arrows on the keyboard: " .
                                                            "Ctrl + Shift + up or down arrow.");
 define("LangAtlasZoom3"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;or use the number keys 0 to 9 to zoom between 1 and 40 degrees.");
-define("LangAtlasZoom4"                                   ,"NOTICE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;some browsers us some of these combinations for other purposes, or have different key mappings,");
+define("LangAtlasZoom4"                                   ,"NOTICE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;some browsers use some of these combinations for other purposes, or have different key mappings,");
 define("LangAtlasZoom5"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;and do not support this operation. Use the mouse instead.");
 
 define("LangAtlasGrid"                                    ,"Grid:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use G to turn the grid on or off.");
