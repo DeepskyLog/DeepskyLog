@@ -1421,7 +1421,7 @@ class Utils implements iUtils
 	$pdf->ezStream();
   }
   public  function pdfObjectsDetails($result, $sort='')  // Creates a pdf document from an array of objects
-  { global $deepskylive,$dateformat,$baseURL,$instDir,$objObserver,$loggedUser,$objLocation,$objInstrument,$objPresentations;
+  { global $dateformat,$baseURL,$instDir,$objObserver,$loggedUser,$objLocation,$objInstrument,$objPresentations;
     if($sort=='objectconstellation') $sort='con'; else $sort='';
 	  $pdf = new Cezpdf('a4', 'landscape');
     $pdf->selectFont($instDir.'lib/fonts/Helvetica.afm');
@@ -1640,7 +1640,7 @@ class Utils implements iUtils
     $pdf->Stream(); 
   }
   public  function pdfObservations($result) // Creates a pdf document from an array of observations
-  { global $loggedUser, $deepskylive, $dateformat, $instDir, $objObservation, $objObserver, $objInstrument, $objLocation, $objPresentations, $objObject, $objFilter, $objEyepiece, $objLens;
+  { global $loggedUser, $dateformat, $instDir, $objObservation, $objObserver, $objInstrument, $objLocation, $objPresentations, $objObject, $objFilter, $objEyepiece, $objLens;
     $pdf = new Cezpdf('a4', 'portrait');
     $pdf->ezStartPageNumbers(300, 30, 10);
     $pdf->selectFont($instDir.'lib/fonts/Helvetica.afm');

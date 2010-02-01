@@ -8,7 +8,6 @@ interface iPresentation
   public  function decToStringDSL($decl);
   public  function decToStringDSS($decl);                                              // returns html DSS decl coordinates eg 6+44 for 6°43'55''
   public  function decToTrimmedString($decl);
-  public  function getDSSDeepskyLiveLinks($object);
   public  function getDSSDeepskyLiveLinks1($object);
   public  function getDSSDeepskyLiveLinks2($object);
   public  function line($content,$alignment='',$widths=array(),$lineheight='',$classes=array());
@@ -147,38 +146,8 @@ class Presentations implements iPresentation
     }
     return($sign.$decl_degrees."&deg;".sprintf("%02d",$decl_minutes)."&#39;");
   }
-  public  function getDSSDeepskyLiveLinks($object)
-  { global $objPresentations,$objObject,$baseURL,$deepskylive,$objUtil;
-  	$raDSS=$objPresentations->raToStringDSS($objObject->getDsoProperty($object,'ra'));
-    $declDSS=$objPresentations->decToStringDSS($objObject->getDsoProperty($object,'decl'));
-  	$topline =LangViewObjectDSS."&nbsp;:&nbsp;";
-	  $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;raDSS=".$raDSS."&amp;declDSS=".$declDSS."&amp;object=".urlencode($object)."&amp;imagesize=15\" >"."15x15'"."</a>-";
-	  $topline.="&nbsp;";
-	  $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;raDSS=".$raDSS."&amp;declDSS=".$declDSS."&amp;object=".urlencode($object)."&amp;imagesize=30\" >"."30x30'"."</a>-";
-	  $topline.="&nbsp;";
-	  $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;raDSS=".$raDSS."&amp;declDSS=".$declDSS."&amp;object=".urlencode($object)."&amp;imagesize=60\" >"."60x60'"."</a>";
-	  $topline.="&nbsp;-&nbsp;";
-	  if ($deepskylive == 1)
-	  { $raDSL=$objPresentations->raToStringDSL($objObject->getDsoProperty($object,'ra'));
-	    $declDSL=$objPresentations->decToStringDSL($objObject->getDsoProperty($object,'decl'));
-	    $topline.=LangViewObjectDSL."&nbsp;:&nbsp;";
-	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=1&amp;showDSL=1\">1x1&deg;</a>-";
-	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=2&amp;showDSL=1\">2x2&deg;</a>-";
-	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=3&amp;showDSL=1\">3x3&deg;</a>";
-	    if($objUtil->checkGetKey("showDSL",0)==1)
-	    { $fov=$objUtil->checkGetKey("dslsize",30);
-	      echo "<applet code=\"Deepskylive.class\" codebase=\"http://users.telenet.be/deepskylive/applet/\" height=\"1\" width=\"1\">
-	            <param name=\"ra\" value=\"".$raDSL."\">
-	            <param name=\"dec\" value=\"".$declDSL."\">
-	            <param name=\"fov\" value=\"".$fov."\">
-	            <param name=\"p\" value=\"1\">
-	            </applet>";
-	    }
-	  }
-  	return $topline;
-  }
   public  function getDSSDeepskyLiveLinks1($object)
-  { global $objPresentations,$objObject,$baseURL,$deepskylive,$objUtil;
+  { global $objPresentations,$objObject,$baseURL,$objUtil;
   	$raDSS=$objPresentations->raToStringDSS($objObject->getDsoProperty($object,'ra'));
     $declDSS=$objPresentations->decToStringDSS($objObject->getDsoProperty($object,'decl'));
   	$topline =LangViewObjectDSS."&nbsp;:&nbsp;";
@@ -190,26 +159,12 @@ class Presentations implements iPresentation
   	return $topline;
   }
   public  function getDSSDeepskyLiveLinks2($object)
-  { global $objPresentations,$objObject,$baseURL,$deepskylive,$objUtil;
-    $topline='';
-	  if ($deepskylive == 1)
-	  { $raDSL=$objPresentations->raToStringDSL($objObject->getDsoProperty($object,'ra'));
-	    $declDSL=$objPresentations->decToStringDSL($objObject->getDsoProperty($object,'decl'));
-	    $topline.=LangViewObjectDSL."&nbsp;:&nbsp;";
-	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=1&amp;showDSL=1\">1x1&deg;</a>-";
-	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=2&amp;showDSL=1\">2x2&deg;</a>-";
-	    $topline.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."&amp;dslsize=3&amp;showDSL=1\">3x3&deg;</a>";
-	    if($objUtil->checkGetKey("showDSL",0)==1)
-	    { $fov=$objUtil->checkGetKey("dslsize",30);
-	      echo "<applet code=\"Deepskylive.class\" codebase=\"http://users.telenet.be/deepskylive/applet/\" height=\"1\" width=\"1\">
-	            <param name=\"ra\" value=\"".$raDSL."\">
-	            <param name=\"dec\" value=\"".$declDSL."\">
-	            <param name=\"fov\" value=\"".$fov."\">
-	            <param name=\"p\" value=\"1\">
-	            </applet>";
-	    }
-	  }
-  	return $topline;
+  { global $objPresentations,$objObject,$baseURL,$objUtil;
+    $topline=LangViewObjectDSL." (pdf):&nbsp;";
+	  $topline.="<a href=\"" . $baseURL . "atlas.pdf?zoom=17&amp;dsos=99&amp;object=" . urlencode($object) . "\">" . 'Overzichtskaart' . "</a>";
+	  $topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "atlas.pdf?zoom=18&amp;dsos=99&amp;object=" . urlencode($object) . "\">" . 'Zoekkaart' . "</a>";
+	  $topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "atlas.pdf?zoom=20&amp;dsos=99&amp;object=" . urlencode($object) . "\">" . 'Detailkaart' . "</a>";
+    return $topline;
   }
   public  function line($content,$alignment='',$widths=array(),$lineheight='',$classes=array())
   { echo "<div class=\"containerLine\" ".($lineheight?"style=\"height:".$lineheight."px;\"":'').">";

@@ -36,9 +36,10 @@
   // eg ppb you should set this variable to "no" 
   $register = "yes";
 
+  // OBSOLETE since version 3.7 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   // Charts of Deepskylive (http://users.telenet.be/deepskylive) can be enabled
   // or disabled. Set to 1 to enable the charts of deepskylive.
-  $deepskylive = 1;
+  // $deepskylive = 1; Commented since version 3.7 ///////////////////////////
 
   // Configure the output format of observation dates  
   // Some examples of formatting december 28th 2004:

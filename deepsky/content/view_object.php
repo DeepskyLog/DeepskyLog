@@ -17,11 +17,7 @@ else
 		else
 			$topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a>";
 	}
-  $topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode($object) . "\">" . LangAtlasPage . "</a>";
-  $topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "atlas.pdf?zoom=17&amp;dsos=99&amp;object=" . urlencode($object) . "\">" . 'Overzichtskaart' . "</a>";
-  $topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "atlas.pdf?zoom=18&amp;dsos=99&amp;object=" . urlencode($object) . "\">" . 'Zoekkaart' . "</a>";
-  $topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "atlas.pdf?zoom=20&amp;dsos=99&amp;object=" . urlencode($object) . "\">" . 'Detailkaart' . "</a>";
-  $objPresentations->line(array(substr($topline,13),$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(60,40),20);
+  $objPresentations->line(array(	  "<a href=\"" . $baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode($object) . "\">" . LangAtlasPage . "</a>",$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(40,60),20);
 	echo "<hr />";
 	$objObject->showObject($object);
 	

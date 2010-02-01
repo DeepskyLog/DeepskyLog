@@ -811,7 +811,7 @@ class Objects implements iObjects
     return $objDatabase->execSQL("UPDATE objects SET ".$property." = \"".$propertyValue."\" WHERE name = \"".$name."\"");
   }
   public  function showObject($object)
-  { global $objPresentations, $deepskylive, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL, $objPresentations,$objObserver;	
+  { global $objPresentations, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL, $objPresentations,$objObserver;	
     $object=$this->getDsObjectName($object);
     $_SESSION['object']=$object;
     $altnames=$this->getAlternativeNames($object); $alt=""; $alttip="";

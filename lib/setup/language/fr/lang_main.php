@@ -36,7 +36,7 @@ define("LangMoonNaut"                                     ,"Naut.");
 define("LangMoonAstro"                                    ,"Astro.");
 
 // text for Atlas page help
-define("LangAtlasPage"                                    ,"Atlas");
+define("LangAtlasPage"                                    ,"Atlas interactif");
 
 define("LangAtlasAbbrev"                                  ,"Afkortingen pagina - gebruik A om aan of uit te zetten");
 
@@ -714,7 +714,7 @@ define("LangViewObjectFieldContrastReserve"								,"Contrast reserve");
 define("LangViewObjectFieldMagnification"									,"Agrandissement pr&#233;f&#233;r&#233;");
 define("LangViewObjectFieldOptimumDetectionMagnification"	,"Agrandissement de d&#233;tection optimale");
 define("LangViewObjectDSS"																,"Voir l'image DSS");
-define("LangViewObjectDSL"																,"Voir la carte Deepskylive");
+define("LangViewObjectDSL"																,"Voir la carte Deepskylog");
 define("LangViewObjectObservations"												,"Toutes les observations");
 define("LangViewObjectViewNearbyObject"										,"Les objets proches");
 define("LangViewObjectAndNearbyObjects"										," et ");
