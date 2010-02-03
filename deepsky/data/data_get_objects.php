@@ -504,12 +504,11 @@ if($_SESSION['QobjSort']!=$_GET['sort'])
 	  $min=0;
   }
 }
-	if($_SESSION['QobjSortDirection']!=$_GET['sortdirection'])
+if($_SESSION['QobjSortDirection']!=$_GET['sortdirection'])
 { if(count($_SESSION['Qobj'])>1)
  	  $_SESSION['Qobj']=array_reverse($_SESSION['Qobj'],false);
   $_SESSION['QobjSortDirection']=$_GET['sortdirection'];
 	$min=0;
 }	
-
 
 ?>

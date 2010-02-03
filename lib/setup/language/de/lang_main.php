@@ -2,6 +2,10 @@
 
 // TO DO:
 
+define('OverviewChart'                                   ,'Overview');
+define('LookupChart'                                     ,'Lookup');
+define('DetailChart'                                     ,'Detail');
+
 define('atlasPageFoV'                                    ,'FoV:');
 define('atlasPageDSLM'                                   ,'Objecten tot mag:');
 define('atlasPageStarLM'                                 ,'Sterren tot mag:');             
@@ -136,7 +140,7 @@ $atlasPageText=array(
        'atlasPageMagnTxt'                                =>'Magn.',
        'atlasPageSubrTxt'                                =>'Surf.Br.',
        'atlasPageDiamTxt'                                =>'Dimensions',
-       'atlasPageDone'                                   =>'Klaar - druk H voor help - A voor afkortingen - P for printing',
+       'atlasPageDone'                                   =>'Druk H voor help - A voor afkortingen - P for printing - O for Overview chart - Z for Lookup chart - D for Detail chart',
        'atlasPageObjectsFetching'                        =>'Ophalen objectgegevens tot magnitude ...',
        'atlasPageStarsFetching'                          =>'Ophalen stargegevens tot magnitude ...',
        'atlasPageFoV'                                    =>'FoV:',
@@ -685,7 +689,7 @@ define("LangListQueryObjectsMessage13"										,"Zeige assoziierte Objekte");
 define("LangListQueryObjectsMessage14"										,"Bitte geben Sie den Titel an");
 define("LangListQueryObjectsMessage15"										,"DeepskyLog Objekte");
 define("LangListQueryObjectsMessage16"										,"&nbsp;Die Beobachtung&nbsp;");
-define("LangListQueryObjectsMessage17"										,"Show main names");
+define("LangListQueryObjectsMessage17"										,"Switch names");
 
 // content/register.php
 

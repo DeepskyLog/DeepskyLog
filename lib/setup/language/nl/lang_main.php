@@ -2,6 +2,10 @@
 
 // TO DO:
 
+define('OverviewChart'                                   ,'Overzicht');
+define('LookupChart'                                     ,'Zoeken');
+define('DetailChart'                                     ,'Detail');
+
 define('atlasPageFoV'                                    ,'FoV:');
 define('atlasPageDSLM'                                   ,'Objecten tot mag:');
 define('atlasPageStarLM'                                 ,'Sterren tot mag:');         
@@ -71,7 +75,7 @@ define("LangAtlasObjects5"                                ,"&nbsp;&nbsp;&nbsp;&n
 
 define("LangAtlasCursor"                                  ,"Cursor:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;De cursor co&ouml;rdinaten worden onderaan het scherm getoond.");
 
-define("LangAtlasPrint"                                  ,"Afdrukken:&nbsp;&nbsp;Door op p te drukken kan je de pagina onder pdf formaat krijgen.");
+define("LangAtlasPrint"                                   ,"Afdrukken:&nbsp;&nbsp;Door op p te drukken kan je de pagina onder pdf formaat krijgen.");
 
 define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ster data beschikbaar gesteld door Tycho2+");
 define("LangAtlasWhatsnext"                               ,"Versie:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Verdere ontwikkeling op deze atlaspagina is in voorbereiding zodat bv. ook sterrenbeelden getoond kunnen worden.");
@@ -125,7 +129,7 @@ $atlasPageText=array(
        'atlasPageMagnTxt'                                =>'Magn.',
        'atlasPageSubrTxt'                                =>'Opp.Held.',
        'atlasPageDiamTxt'                                =>'Grootte',
-       'atlasPageDone'                                   =>'Klaar - druk H voor help - A voor afkortingen - P voor afdrukken',
+       'atlasPageDone'                                   =>'Druk H voor help - A voor afkortingen - P voor afdrukken - O voor overzichtskaart - Z voor zoekkaart - D voor detailkaart',
        'atlasPageObjectsFetching'                        =>'Ophalen objectgegevens tot magnitude ...',
        'atlasPageStarsFetching'                          =>'Ophalen stargegevens tot magnitude ...',
        'atlasPageFoV'                                    =>'FoV:',
@@ -674,7 +678,7 @@ define("LangListQueryObjectsMessage13"										,"Toon geassocieerde objecten");
 define("LangListQueryObjectsMessage14"										,"Gelieve de titel in te geven");
 define("LangListQueryObjectsMessage15"										,"DeepskyLog Objecten");
 define("LangListQueryObjectsMessage16"										,"&nbsp;De observatie&nbsp;");
-define("LangListQueryObjectsMessage17"										,"Toon hoofdnamen");
+define("LangListQueryObjectsMessage17"										,"Wissel namen");
 
 // content/register.php
 

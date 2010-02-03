@@ -19,7 +19,7 @@ if($listname)
 { $link = $baseURL."index.php?indexAction=listaction";
   reset($_GET);
   while(list($key,$value)=each($_GET))
-    if(($key!='indexAction')&&($key!='multiplepagenr')&&($key!='sort')&&($key!='sortdirection')&&($key!='showPartOfs'))
+    if(!in_array($key,array('indexAction','multiplepagenr','sort','sortdirection','showPartOfs','noShowName')))
       $link.='&amp;'.urlencode($key).'='.urlencode($value);
   if((array_key_exists('steps',$_SESSION))&&(array_key_exists("listObj",$_SESSION['steps'])))
 	  $step=$_SESSION['steps']["listObj"];
@@ -44,6 +44,7 @@ if($listname)
   }
   else
     $content1="(".LangToListListBy.$objObserver->getObserverProperty(($listowner=$objList->getListOwner()),'firstname').' '.$objObserver->getObserverProperty($listowner,'name').")";
+  $content1.=" - <a href=\"".$link."&amp;noShowName=noShowName\">".LangListQueryObjectsMessage17."</a>";
   $objPresentations->line(array($content1,$content2),"LR",array(80,20),20);
   if(count($_SESSION['Qobj'])>0)
 	{ // OUTPUT RESULT

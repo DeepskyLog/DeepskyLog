@@ -406,9 +406,13 @@ else
 	if(array_key_exists('indexAction',$_GET)&&$_GET['indexAction']=="add_xml_observations")
 	  include_once "deepsky/control/add_xml_observations.php";
 	if(array_key_exists('noShowName',$_GET)&&(array_key_exists("Qobj",$_SESSION)))
-	  while(list($key,$value)=each($_SESSION["Qobj"]))
-	    $_SESSION["Qobj"][$key]["showname"]=$_SESSION["Qobj"][$key]["objectname"];
-	  
+	{ while(list($key,$value)=each($_SESSION["Qobj"]))
+	    if(strpos($_SESSION["Qobj"][$key]["showname"],"("))
+	      $_SESSION["Qobj"][$key]["showname"]=substr($_SESSION["Qobj"][$key]["showname"],strpos($_SESSION["Qobj"][$key]["showname"],"(")+1,strpos($_SESSION["Qobj"][$key]["showname"],")")-strpos($_SESSION["Qobj"][$key]["showname"],"(")-1)." (".substr($_SESSION["Qobj"][$key]["showname"],0,strpos($_SESSION["Qobj"][$key]["showname"],"(")-1).")";
+	  reset($_SESSION["Qobj"]);
+	  if($_SESSION['QobjSort']=='showname')
+	    $_SESSION['QobjSort']='oldshowname';
+	}  
 	  
 	// ============================================================================ LIST COMMANDS
 	if($objUtil->checkGetKey('emptyList')&&$myList)

@@ -75,7 +75,7 @@ class PrintAtlas
       $Legend2y=20,
       $Lsteps=10,
       $lx=0,
-      $maxshowndsomag=0,
+      $maxshowndsomag=-99,
       $minObjectSize=5,
       $nsegmente=8,
       $rx=0,
@@ -527,8 +527,12 @@ class PrintAtlas
   }
   
   function canvasDrawStar($i)
-  { $name=$this->astroObjectsArr[$i]["nameBayer"].' '.$this->astroObjectsArr[$i]["nameBayer2"].' '; 
-    if($name!="  ") $name.=$this->astroObjectsArr[$i]["nameCon"];
+  { $name='';
+    if($this->astroObjectsArr[$i]["vMag"]<1200)
+    { $name=$this->astroObjectsArr[$i]["nameBayer"].' '.$this->astroObjectsArr[$i]["nameBayer2"].' '; 
+      if($name!="  ") 
+        $name.=$this->astroObjectsArr[$i]["nameCon"];
+    }
     $d=floor(2*max(($this->gridDimensions[$this->gridActualDimension][3])-($this->astroObjectsArr[$i]["vMag"]/100.0),0)+1);
     $this->gridLDrad($this->astroObjectsArr[$i]["RA2000"],$this->astroObjectsArr[$i]["DE2000"]); 
     $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
@@ -905,7 +909,7 @@ class PrintAtlas
 
   function gridShowInfo()
   { $t1 =atlasPageFoV.' '.(round($this->gridSpanL*20)/10)." x ".(round($this->gridSpanD*20)/10)."° - ";
-	  $t1.=atlasPageDSLM.' '.$this->maxshowndsomag." - ";
+	  $t1.=atlasPageDSLM.' '.($this->maxshowndsomag==-99?'-':$this->maxshowndsomag)." - ";
 	  $t1.=atlasPageStarLM.' '.$this->starsmagnitude;
 	  $this->pdf->addText($this->gridOffsetXpx,$this->Legend2y,8,$t1);
 	}

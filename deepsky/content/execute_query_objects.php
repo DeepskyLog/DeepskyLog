@@ -14,7 +14,6 @@ else
 $link=$baseURL."index.php?indexAction=query_objects";
 reset($_GET);
 while(list($key,$value)=each($_GET))
-	if(($key!='indexAction')&&($key!='multiplepagenr')&&($key!='sort')&&($key!='sortdirection')&&($key!='showPartOfs'))
     $link.='&amp;'.urlencode($key).'='.urlencode($value);
 if(count($_SESSION['Qobj'])>1) //=============================================== valid result, multiple objects found
 { echo "<div id=\"main\">";

@@ -1,20 +1,25 @@
 <?php
 
 // TO DO
+
+define('OverviewChart'                                   ,'Aper&ccedil;u');
+define('LookupChart'                                     ,'Recherche');
+define('DetailChart'                                     ,'D&eacute;tail');
+
 define('atlasPageFoV'                                    ,'FoV:');
 define('atlasPageDSLM'                                   ,'Objecten tot mag:');
 define('atlasPageStarLM'                                 ,'Sterren tot mag:');
             
 
-define("LangShowObjectDetails"                            ,"Montrer del d&#227;tails de l'objet");
-define("LangHideObjectDetails"                            ,"Cacher les d#227;tails de l'objet");
+define("LangShowObjectDetails"                            ,"Montrer del d&eacute;tails de l'objet");
+define("LangHideObjectDetails"                            ,"Cacher les d&eacute;tails de l'objet");
 
 
 
 define("LangObjectsFilter"                                ,"Marquer");
 define("LangObjectsFilterLocation"                        ,"Endroit d'observation");
-define("LangObjectsFilterLocationExpl"                    ,"Marquez les objets qui ne sont pas visibles &agrave; partir du lieu d'observation s&#227;lectionn&#227;.");
-define("LangObjectsFilterLocationOffExpl"                 ,"D&#227;marquez les objets qui ne sont pas visibles &agrave; partir du lieu d'observation s&#227;lectionn&#227;.");
+define("LangObjectsFilterLocationExpl"                    ,"Marquez les objets qui ne sont pas visibles &agrave; partir du lieu d'observation s&eacute;lectionn&eacute;.");
+define("LangObjectsFilterLocationOffExpl"                 ,"D&eacute;marquez les objets qui ne sont pas visibles &agrave; partir du lieu d'observation s&eacute;lectionn&eacute;.");
 
 
 define("LangMarkAllAsRead"                                ,"Allen markeren als gelezen.");
@@ -129,7 +134,7 @@ $atlasPageText=array(
        'atlasPageMagnTxt'                                =>'Magn.',
        'atlasPageSubrTxt'                                =>'Opp.Held.',
        'atlasPageDiamTxt'                                =>'Grootte',
-       'atlasPageDone'                                   =>'Klaar - druk H voor help - A voor afkortingen - P voor afdrukken',
+       'atlasPageDone'                                   =>'Druk H voor help - A voor afkortingen - P voor afdrukken  - Z voor overzichtskaart - L voor zoekkaart - D voor detailkaart',
        'atlasPageObjectsFetching'                        =>'Ophalen objectgegevens tot magnitude ...',
        'atlasPageStarsFetching'                          =>'Ophalen stargegevens tot magnitude ...',
        'atlasPageFoV'                                    =>'FoV:',
@@ -681,7 +686,7 @@ define("LangListQueryObjectsMessage13"										,"Montrer les objets associ&#233
 define("LangListQueryObjectsMessage14"										,"Veuillez rentrer le titre");
 define("LangListQueryObjectsMessage15"										,"Objets DeepskyLog");
 define("LangListQueryObjectsMessage16"										,"&nbsp;L'observation&nbsp;");
-define("LangListQueryObjectsMessage17"										,"Montrer les noms principales");
+define("LangListQueryObjectsMessage17"										,"Changer les noms");
 
 // content/register.php
 

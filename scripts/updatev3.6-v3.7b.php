@@ -3,8 +3,67 @@
  require_once "../lib/setup/databaseInfo.php";
  require_once "../lib/database.php";
  
- print "Database update will add a stars table.\n";
+ print "Database update will rearrange stars tables.\n";
 
+ /*
+ $sql="ALTER TABLE stars8 DROP INDEX SearchIndex;";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql="ALTER TABLE stars9 DROP INDEX SearchIndex;";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql="ALTER TABLE stars10 DROP INDEX SearchIndex;";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql="ALTER TABLE stars11 DROP INDEX SearchIndex;";
+ $run = mysql_query($sql) or die(mysql_error());
+ */
+ 
+ $sql= "DROP TABLE IF EXISTS stars12";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars13";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars14";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars140";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars145";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars15";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars1500";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars1525";
+ $run = mysql_query($sql) or die(mysql_error());
+  $sql= "DROP TABLE IF EXISTS stars1550";
+ $run = mysql_query($sql) or die(mysql_error());
+  $sql= "DROP TABLE IF EXISTS stars1575";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars16";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars1600";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars1625";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars1650";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars1675";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars17";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars1700";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars1725";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars1750";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars1775";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars18";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars19";
+ $run = mysql_query($sql) or die(mysql_error());
+ $sql= "DROP TABLE IF EXISTS stars20";
+ $run = mysql_query($sql) or die(mysql_error());
+ 
+ 
  $sql= "DROP TABLE IF EXISTS stars145";
  $run = mysql_query($sql) or die(mysql_error());
  $sql= "DROP TABLE IF EXISTS stars1525";
@@ -24,245 +83,128 @@
  $sql= "DROP TABLE IF EXISTS stars1775";
  $run = mysql_query($sql) or die(mysql_error());
  
- $sql = "CREATE TABLE stars140 (
-  type          varchar(7)                     DEFAULT 'AA1STAR',
-  nameCon       VARCHAR(3)                     DEFAULT '',
-  nameBayer     VARCHAR(3)                     DEFAULT '',
-  nameBayer2    VARCHAR(2)                     DEFAULT '',
-  nameFlamSteed VARCHAR(3)                     DEFAULT '',
-  name          VARCHAR(25)                    DEFAULT '',
-  RA2000mas     INTEGER                        NOT NULL,
-  DE2000mas     INTEGER                        NOT NULL,
+  $sql = "CREATE TABLE stars12 (
   RA2000        FLOAT                          NOT NULL,
   DE2000        FLOAT                          NOT NULL,
-  vMag          INTEGER                        SIGNED,
-  spType        VARCHAR(25)                    DEFAULT '',
-  INDEX         SearchIndex(RA2000mas,DE2000mas)
+  vMag          INTEGER                        SIGNED
   )";
   $run = mysql_query($sql) or die(mysql_error());
  
-  $sql = "CREATE TABLE stars145 (
-  type          varchar(7)                     DEFAULT 'AA1STAR',
-  nameCon       VARCHAR(3)                     DEFAULT '',
-  nameBayer     VARCHAR(3)                     DEFAULT '',
-  nameBayer2    VARCHAR(2)                     DEFAULT '',
-  nameFlamSteed VARCHAR(3)                     DEFAULT '',
-  name          VARCHAR(25)                    DEFAULT '',
-  RA2000mas     INTEGER                        NOT NULL,
-  DE2000mas     INTEGER                        NOT NULL,
+  $sql = "CREATE TABLE stars13 (
   RA2000        FLOAT                          NOT NULL,
   DE2000        FLOAT                          NOT NULL,
-  vMag          INTEGER                        SIGNED,
-  spType        VARCHAR(25)                    DEFAULT '',
-  INDEX         SearchIndex(RA2000mas,DE2000mas)
+  vMag          INTEGER                        SIGNED
   )";
   $run = mysql_query($sql) or die(mysql_error());
- 
-  $sql = "CREATE TABLE stars1500 (
-  type          varchar(7)                     DEFAULT 'AA1STAR',
-  nameCon       VARCHAR(3)                     DEFAULT '',
-  nameBayer     VARCHAR(3)                     DEFAULT '',
-  nameBayer2    VARCHAR(2)                     DEFAULT '',
-  nameFlamSteed VARCHAR(3)                     DEFAULT '',
-  name          VARCHAR(25)                    DEFAULT '',
-  RA2000mas     INTEGER                        NOT NULL,
-  DE2000mas     INTEGER                        NOT NULL,
-  RA2000        FLOAT                          NOT NULL,
-  DE2000        FLOAT                          NOT NULL,
-  vMag          INTEGER                        SIGNED,
-  spType        VARCHAR(25)                    DEFAULT '',
-  INDEX         SearchIndex(RA2000mas,DE2000mas)
-  )";
-  $run = mysql_query($sql) or die(mysql_error());
-  
-  $sql = "CREATE TABLE stars1525 (
-  type          varchar(7)                     DEFAULT 'AA1STAR',
-  nameCon       VARCHAR(3)                     DEFAULT '',
-  nameBayer     VARCHAR(3)                     DEFAULT '',
-  nameBayer2    VARCHAR(2)                     DEFAULT '',
-  nameFlamSteed VARCHAR(3)                     DEFAULT '',
-  name          VARCHAR(25)                    DEFAULT '',
-  RA2000mas     INTEGER                        NOT NULL,
-  DE2000mas     INTEGER                        NOT NULL,
-  RA2000        FLOAT                          NOT NULL,
-  DE2000        FLOAT                          NOT NULL,
-  vMag          INTEGER                        SIGNED,
-  spType        VARCHAR(25)                    DEFAULT '',
-  INDEX         SearchIndex(RA2000mas,DE2000mas)
-  )";
-  $run = mysql_query($sql) or die(mysql_error());
-  
- $sql = "CREATE TABLE stars1550 (
-  type          varchar(7)                     DEFAULT 'AA1STAR',
-  nameCon       VARCHAR(3)                     DEFAULT '',
-  nameBayer     VARCHAR(3)                     DEFAULT '',
-  nameBayer2    VARCHAR(2)                     DEFAULT '',
-  nameFlamSteed VARCHAR(3)                     DEFAULT '',
-  name          VARCHAR(25)                    DEFAULT '',
-  RA2000mas     INTEGER                        NOT NULL,
-  DE2000mas     INTEGER                        NOT NULL,
-  RA2000        FLOAT                          NOT NULL,
-  DE2000        FLOAT                          NOT NULL,
-  vMag          INTEGER                        SIGNED,
-  spType        VARCHAR(25)                    DEFAULT '',
-  INDEX         SearchIndex(RA2000mas,DE2000mas)
-  )";
- $run = mysql_query($sql) or die(mysql_error());
- 
- $sql = "CREATE TABLE stars1575 (
-  type          varchar(7)                     DEFAULT 'AA1STAR',
-  nameCon       VARCHAR(3)                     DEFAULT '',
-  nameBayer     VARCHAR(3)                     DEFAULT '',
-  nameBayer2    VARCHAR(2)                     DEFAULT '',
-  nameFlamSteed VARCHAR(3)                     DEFAULT '',
-  name          VARCHAR(25)                    DEFAULT '',
-  RA2000mas     INTEGER                        NOT NULL,
-  DE2000mas     INTEGER                        NOT NULL,
-  RA2000        FLOAT                          NOT NULL,
-  DE2000        FLOAT                          NOT NULL,
-  vMag          INTEGER                        SIGNED,
-  spType        VARCHAR(25)                    DEFAULT '',
-  INDEX         SearchIndex(RA2000mas,DE2000mas)
-  )";
- $run = mysql_query($sql) or die(mysql_error());
- 
- $sql = "CREATE TABLE stars1600 (
-  type          varchar(7)                     DEFAULT 'AA1STAR',
-  nameCon       VARCHAR(3)                     DEFAULT '',
-  nameBayer     VARCHAR(3)                     DEFAULT '',
-  nameBayer2    VARCHAR(2)                     DEFAULT '',
-  nameFlamSteed VARCHAR(3)                     DEFAULT '',
-  name          VARCHAR(25)                    DEFAULT '',
-  RA2000mas     INTEGER                        NOT NULL,
-  DE2000mas     INTEGER                        NOT NULL,
-  RA2000        FLOAT                          NOT NULL,
-  DE2000        FLOAT                          NOT NULL,
-  vMag          INTEGER                        SIGNED,
-  spType        VARCHAR(25)                    DEFAULT '',
-  INDEX         SearchIndex(RA2000mas,DE2000mas)
-  )";
- $run = mysql_query($sql) or die(mysql_error());
- 
- $sql = "CREATE TABLE stars1625 (
-  type          varchar(7)                     DEFAULT 'AA1STAR',
-  nameCon       VARCHAR(3)                     DEFAULT '',
-  nameBayer     VARCHAR(3)                     DEFAULT '',
-  nameBayer2    VARCHAR(2)                     DEFAULT '',
-  nameFlamSteed VARCHAR(3)                     DEFAULT '',
-  name          VARCHAR(25)                    DEFAULT '',
-  RA2000mas     INTEGER                        NOT NULL,
-  DE2000mas     INTEGER                        NOT NULL,
-  RA2000        FLOAT                          NOT NULL,
-  DE2000        FLOAT                          NOT NULL,
-  vMag          INTEGER                        SIGNED,
-  spType        VARCHAR(25)                    DEFAULT '',
-  INDEX         SearchIndex(RA2000mas,DE2000mas)
-  )";
- $run = mysql_query($sql) or die(mysql_error());
- 
- $sql = "CREATE TABLE stars1650 (
-  type          varchar(7)                     DEFAULT 'AA1STAR',
-  nameCon       VARCHAR(3)                     DEFAULT '',
-  nameBayer     VARCHAR(3)                     DEFAULT '',
-  nameBayer2    VARCHAR(2)                     DEFAULT '',
-  nameFlamSteed VARCHAR(3)                     DEFAULT '',
-  name          VARCHAR(25)                    DEFAULT '',
-  RA2000mas     INTEGER                        NOT NULL,
-  DE2000mas     INTEGER                        NOT NULL,
-  RA2000        FLOAT                          NOT NULL,
-  DE2000        FLOAT                          NOT NULL,
-  vMag          INTEGER                        SIGNED,
-  spType        VARCHAR(25)                    DEFAULT '',
-  INDEX         SearchIndex(RA2000mas,DE2000mas)
-  )";
- $run = mysql_query($sql) or die(mysql_error());
- 
- $sql = "CREATE TABLE stars1675 (
-  type          varchar(7)                     DEFAULT 'AA1STAR',
-  nameCon       VARCHAR(3)                     DEFAULT '',
-  nameBayer     VARCHAR(3)                     DEFAULT '',
-  nameBayer2    VARCHAR(2)                     DEFAULT '',
-  nameFlamSteed VARCHAR(3)                     DEFAULT '',
-  name          VARCHAR(25)                    DEFAULT '',
-  RA2000mas     INTEGER                        NOT NULL,
-  DE2000mas     INTEGER                        NOT NULL,
-  RA2000        FLOAT                          NOT NULL,
-  DE2000        FLOAT                          NOT NULL,
-  vMag          INTEGER                        SIGNED,
-  spType        VARCHAR(25)                    DEFAULT '',
-  INDEX         SearchIndex(RA2000mas,DE2000mas)
-  )";
- $run = mysql_query($sql) or die(mysql_error());
- 
- $sql = "CREATE TABLE stars1700 (
-  type          varchar(7)                     DEFAULT 'AA1STAR',
-  nameCon       VARCHAR(3)                     DEFAULT '',
-  nameBayer     VARCHAR(3)                     DEFAULT '',
-  nameBayer2    VARCHAR(2)                     DEFAULT '',
-  nameFlamSteed VARCHAR(3)                     DEFAULT '',
-  name          VARCHAR(25)                    DEFAULT '',
-  RA2000mas     INTEGER                        NOT NULL,
-  DE2000mas     INTEGER                        NOT NULL,
-  RA2000        FLOAT                          NOT NULL,
-  DE2000        FLOAT                          NOT NULL,
-  vMag          INTEGER                        SIGNED,
-  spType        VARCHAR(25)                    DEFAULT '',
-  INDEX         SearchIndex(RA2000mas,DE2000mas)
-  )";
- $run = mysql_query($sql) or die(mysql_error());
- 
- $sql = "CREATE TABLE stars1725 (
-  type          varchar(7)                     DEFAULT 'AA1STAR',
-  nameCon       VARCHAR(3)                     DEFAULT '',
-  nameBayer     VARCHAR(3)                     DEFAULT '',
-  nameBayer2    VARCHAR(2)                     DEFAULT '',
-  nameFlamSteed VARCHAR(3)                     DEFAULT '',
-  name          VARCHAR(25)                    DEFAULT '',
-  RA2000mas     INTEGER                        NOT NULL,
-  DE2000mas     INTEGER                        NOT NULL,
-  RA2000        FLOAT                          NOT NULL,
-  DE2000        FLOAT                          NOT NULL,
-  vMag          INTEGER                        SIGNED,
-  spType        VARCHAR(25)                    DEFAULT '',
-  INDEX         SearchIndex(RA2000mas,DE2000mas)
-  )";
- $run = mysql_query($sql) or die(mysql_error());
 
- $sql = "CREATE TABLE stars1750 (
-  type          varchar(7)                     DEFAULT 'AA1STAR',
-  nameCon       VARCHAR(3)                     DEFAULT '',
-  nameBayer     VARCHAR(3)                     DEFAULT '',
-  nameBayer2    VARCHAR(2)                     DEFAULT '',
-  nameFlamSteed VARCHAR(3)                     DEFAULT '',
-  name          VARCHAR(25)                    DEFAULT '',
-  RA2000mas     INTEGER                        NOT NULL,
-  DE2000mas     INTEGER                        NOT NULL,
+  $sql = "CREATE TABLE stars140 (
   RA2000        FLOAT                          NOT NULL,
   DE2000        FLOAT                          NOT NULL,
-  vMag          INTEGER                        SIGNED,
-  spType        VARCHAR(25)                    DEFAULT '',
-  INDEX         SearchIndex(RA2000mas,DE2000mas)
+  vMag          INTEGER                        SIGNED
   )";
- $run = mysql_query($sql) or die(mysql_error());
- 
- $sql = "CREATE TABLE stars1775 (
-  type          varchar(7)                     DEFAULT 'AA1STAR',
-  nameCon       VARCHAR(3)                     DEFAULT '',
-  nameBayer     VARCHAR(3)                     DEFAULT '',
-  nameBayer2    VARCHAR(2)                     DEFAULT '',
-  nameFlamSteed VARCHAR(3)                     DEFAULT '',
-  name          VARCHAR(25)                    DEFAULT '',
-  RA2000mas     INTEGER                        NOT NULL,
-  DE2000mas     INTEGER                        NOT NULL,
+  $run = mysql_query($sql) or die(mysql_error());
+  
+  $sql = "CREATE TABLE stars145 (
   RA2000        FLOAT                          NOT NULL,
   DE2000        FLOAT                          NOT NULL,
-  vMag          INTEGER                        SIGNED,
-  spType        VARCHAR(25)                    DEFAULT '',
-  INDEX         SearchIndex(RA2000mas,DE2000mas)
+  vMag          INTEGER                        SIGNED
   )";
- 
- $run = mysql_query($sql) or die(mysql_error());
+  $run = mysql_query($sql) or die(mysql_error());
+  
+
+  $sql = "CREATE TABLE stars1500 (
+  RA2000        FLOAT                          NOT NULL,
+  DE2000        FLOAT                          NOT NULL,
+  vMag          INTEGER                        SIGNED
+  )";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $sql = "CREATE TABLE stars1525 (
+  RA2000        FLOAT                          NOT NULL,
+  DE2000        FLOAT                          NOT NULL,
+  vMag          INTEGER                        SIGNED
+  )";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $sql = "CREATE TABLE stars1550 (
+  RA2000        FLOAT                          NOT NULL,
+  DE2000        FLOAT                          NOT NULL,
+  vMag          INTEGER                        SIGNED
+  )";
+  $run = mysql_query($sql) or die(mysql_error());
+
+  $sql = "CREATE TABLE stars1575 (
+  RA2000        FLOAT                          NOT NULL,
+  DE2000        FLOAT                          NOT NULL,
+  vMag          INTEGER                        SIGNED
+  )";
+  $run = mysql_query($sql) or die(mysql_error());
+  
+  $sql = "CREATE TABLE stars1600 (
+  RA2000        FLOAT                          NOT NULL,
+  DE2000        FLOAT                          NOT NULL,
+  vMag          INTEGER                        SIGNED
+  )";
+  $run = mysql_query($sql) or die(mysql_error());
+  
+  $sql = "CREATE TABLE stars1625 (
+  RA2000        FLOAT                          NOT NULL,
+  DE2000        FLOAT                          NOT NULL,
+  vMag          INTEGER                        SIGNED
+  )";
+  $run = mysql_query($sql) or die(mysql_error());
+  
+  $sql = "CREATE TABLE stars1650 (
+  RA2000        FLOAT                          NOT NULL,
+  DE2000        FLOAT                          NOT NULL,
+  vMag          INTEGER                        SIGNED
+  )";
+  $run = mysql_query($sql) or die(mysql_error());
+  
+  $sql = "CREATE TABLE stars1675 (
+  RA2000        FLOAT                          NOT NULL,
+  DE2000        FLOAT                          NOT NULL,
+  vMag          INTEGER                        SIGNED
+  )";
+  $run = mysql_query($sql) or die(mysql_error());
+  
+  $sql = "CREATE TABLE stars1700 (
+  RA2000        FLOAT                          NOT NULL,
+  DE2000        FLOAT                          NOT NULL,
+  vMag          INTEGER                        SIGNED
+  )";
+  $run = mysql_query($sql) or die(mysql_error());
+  
+  $sql = "CREATE TABLE stars1725 (
+  RA2000        FLOAT                          NOT NULL,
+  DE2000        FLOAT                          NOT NULL,
+  vMag          INTEGER                        SIGNED
+  )";
+  $run = mysql_query($sql) or die(mysql_error());
+  
+  $sql = "CREATE TABLE stars1750 (
+  RA2000        FLOAT                          NOT NULL,
+  DE2000        FLOAT                          NOT NULL,
+  vMag          INTEGER                        SIGNED
+  )";
+  $run = mysql_query($sql) or die(mysql_error());
+  
+  $sql = "CREATE TABLE stars1775 (
+  RA2000        FLOAT                          NOT NULL,
+  DE2000        FLOAT                          NOT NULL,
+  vMag          INTEGER                        SIGNED
+  )";
+  $run = mysql_query($sql) or die(mysql_error());
+  
+  $sql = "CREATE TABLE stars18 (
+  RA2000        FLOAT                          NOT NULL,
+  DE2000        FLOAT                          NOT NULL,
+  vMag          INTEGER                        SIGNED
+  )";
+  $run = mysql_query($sql) or die(mysql_error());
+  
 
  print "Database update succesful.\n";
+//  INDEX         SearchIndex(RA2000mas,DE2000mas)
  
 ?>
