@@ -161,9 +161,9 @@ class Presentations implements iPresentation
   public  function getDSSDeepskyLiveLinks2($object)
   { global $objPresentations,$objObject,$baseURL,$objUtil;
     $topline=LangViewObjectDSL." (pdf):&nbsp;";
-	  $topline.="<a href=\"" . $baseURL . "atlas.pdf?zoom=17&amp;dsos=99&amp;object=" . urlencode($object) . "\">" . OverviewChart . "</a>";
-	  $topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "atlas.pdf?zoom=18&amp;dsos=99&amp;object=" . urlencode($object) . "\">" . LookupChart . "</a>";
-	  $topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "atlas.pdf?zoom=20&amp;dsos=99&amp;object=" . urlencode($object) . "\">" . DetailChart . "</a>";
+	  $topline.="<a href=\"" . $baseURL . "atlas.pdf?zoom=17&amp;object=" . urlencode($object) . "\">" . OverviewChart . "</a>";
+	  $topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "atlas.pdf?zoom=18&amp;object=" . urlencode($object) . "\">" . LookupChart . "</a>";
+	  $topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "atlas.pdf?zoom=20&amp;object=" . urlencode($object) . "\">" . DetailChart . "</a>";
     return $topline;
   }
   public  function line($content,$alignment='',$widths=array(),$lineheight='',$classes=array())
