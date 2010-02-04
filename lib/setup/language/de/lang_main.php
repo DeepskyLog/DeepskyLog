@@ -283,6 +283,7 @@ define("LangToListActivation2"														,"");
 define("LangToListExists"																	,"\" existiert bereits.");
 define("LangToListNotExists"															,"\" existiert nicht.");
 define("LangToListAdded"																	,"\" wurde hinzugef&uuml;gt.");
+define("LangToListRenamed"																,"The list is renamed in \"");
 define("LangToListAddNew"																	,"Neue Liste: ");
 define("LangToListAdd"																		,"Hinzuf&uuml;gen");
 define("LangToListRename"																	,"Umbenennen");

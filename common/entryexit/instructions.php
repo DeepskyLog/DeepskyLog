@@ -482,7 +482,7 @@ else
 	    $listname=$_SESSION['listname'];
 	    $listname_ss=stripslashes($listname);
 	    $myList=true;
-	    $entryMessage.=LangToListList.$listname_ss.LangToListAdded; 
+	    $entryMessage.=LangToListRenamed.$listname_ss."\"."; 
 	  }
 	  unset($_GET['renameList']);
 	}

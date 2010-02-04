@@ -277,6 +277,7 @@ define("LangToListActivation1"														,"\" est activ&eacute;e");
 define("LangToListActivation2"														,".");
 define("LangToListExists"																	,"\" existe d&eacute;j&agrave;.");
 define("LangToListAdded"																	,"\" est ajout&eacute;e.");
+define("LangToListRenamed"																, "La liste s'appelle maintenant  \"");
 define("LangToListNotExists"															,"\" n'existe pas.");
 define("LangToListAddNew"																	,"Nouvelle liste: ");
 define("LangToListAdd"																		,"Rajoutez");
