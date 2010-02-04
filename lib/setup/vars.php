@@ -1,5 +1,9 @@
 <?php
 
+define("AtlasOverviewZoom", 17);
+define("AtlasLookupZoom",   18);
+define("AtlasDetailZoom",   20);
+
 define("RoleAdmin", 0);
 define("RoleUser", 1);
 define("RoleWaitlist", 2);

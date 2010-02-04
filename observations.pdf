@@ -1,8 +1,7 @@
 <?php 
-header ("Content-Type: application/pdf");
-header ("Content-Disposition: attachment; filename=\"observations.pdf\"");
 $inIndex = true;
 include 'common/entryexit/preludes.php';
+$filename=str_replace(' ','_',html_entity_decode($objUtil->checkRequestKey('pdfTitle','Deepskylog_Observations')));
 if(array_key_exists('Qobs',$_SESSION)&&$_SESSION['Qobs'])
   $objUtil->pdfObservations($_SESSION['Qobs']);
 ?>

@@ -1900,7 +1900,7 @@ function newPage($insert=0,$id=0,$pos='after'){
 * the relevant headers are set so that hopefully the browser will recognise it
 */
 function stream($options=''){
-	global $objUtil;
+	global $objUtil, $filename;
   // setting the options allows the adjustment of the headers
   // values at the moment are:
   // 'Content-Disposition'=>'filename'  - sets the filename, though not too sure how well this will 
@@ -1919,12 +1919,13 @@ function stream($options=''){
   }
   header("Content-type: application/pdf");
   header("Content-Length: ".strlen(ltrim($tmp)));
-  //$fileName = (isset($options['Content-Disposition'])?$options['Content-Disposition']:'wim.pdf');
+  header("Content-Disposition: attachment; filename=".$filename.".pdf");
+    //$fileName = (isset($options['Content-Disposition'])?$options['Content-Disposition']:'wim.pdf');
 
   // JV, 20050528 dynamic naming of exported pdf file
 
-  $fileName = (isset($options['Content-Disposition'])?$options['Content-Disposition']:$objUtil->checkRequestKey('pdfTitle'));
-  header("Content-Disposition: inline; filename=".$fileName);
+//  $fileName = (isset($options['Content-Disposition'])?$options['Content-Disposition']:$objUtil->checkRequestKey('pdfTitle'));
+//  header("Content-Disposition: inline; filename=".$fileName);
   if (isset($options['Accept-Ranges']) && $options['Accept-Ranges']==1){
     header("Accept-Ranges: ".strlen(ltrim($tmp))); 
   }

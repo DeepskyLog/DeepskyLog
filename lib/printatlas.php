@@ -72,11 +72,11 @@ class PrintAtlas
       $Legend1x=25,
       $Legend1y=20, 
       $Legend2x=365,
-      $Legend2y=20,
+      $Legend2y=25,
       $Lsteps=10,
       $lx=0,
       $maxshowndsomag=-99,
-      $minObjectSize=5,
+      $minObjectSize=2.5,
       $nsegmente=8,
       $rx=0,
       $starsmagnitude,
@@ -926,15 +926,12 @@ class PrintAtlas
   
   public  function pdfAtlas()  // Creates a pdf atlas page
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
-  
-    if($object=$objObject->getExactDsObject($objUtil->checkRequestKey('object'),''))
-    { $this->atlaspagerahr=$objObject->getDsoProperty($object,'ra',0);
-      $this->atlaspagedecldeg=$objObject->getDsoProperty($object,'decl',0);
-    }
-    else
-    { $this->atlaspagerahr=$objUtil->checkRequestKey('ra',0);
-      $this->atlaspagedecldeg=$objUtil->checkRequestKey('decl',0);
-    }
+    if(!(($this->atlaspagerahr=$objUtil->checkRequestKey('ra',0))&&
+         ($this->atlaspagedecldeg=$objUtil->checkRequestKey('decl',0))))
+      if($object=$objObject->getExactDsObject($objUtil->checkRequestKey('object'),''))
+      { $this->atlaspagerahr=$objObject->getDsoProperty($object,'ra',0);
+        $this->atlaspagedecldeg=$objObject->getDsoProperty($object,'decl',0);
+      }
   
     $this->gridActualDimension=max(min($objUtil->checkRequestKey('zoom',18),$this->gridMaxDimension),14);
     $this->atlasmagnitude=max(min((int)($objUtil->checkRequestKey('dsos',$this->gridDimensions[$this->gridActualDimension][3])),99),8);
@@ -971,6 +968,8 @@ class PrintAtlas
         
     for($i=0,$z=count($this->labelsArr);$i<$z;$i++)   
       $this->pdf->addTextWrap($this->labelsArr[$i][0],$this->labelsArr[$i][1],$this->labelsArr[$i][2],$this->labelsArr[$i][3],$this->labelsArr[$i][4],$this->labelsArr[$i][5]);                  
+    $temp='(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).';
+    $this->pdf->addText($this->gridOffsetXpx,13,6,$temp);
     $this->pdf->Stream(); 
   }
   

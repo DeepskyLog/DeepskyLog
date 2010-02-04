@@ -13,6 +13,9 @@ if($object)
 echo "<script type=\"text/javascript\">";
 echo "this.theobject='".$object."';";
 echo "this.atlaspagerahr=".$ra.";this.atlaspagedecldeg=".$decl.";";
+echo "this.AtlasOverviewZoom=".AtlasOverviewZoom.";";
+echo "this.AtlasLookupZoom=".AtlasLookupZoom.";";
+echo "this.AtlasDetailZoom=".AtlasDetailZoom.";";
 while(list($name,$value)=each($atlasPageText))
   echo $name."='".$value."';";
 echo "</script>";

@@ -1,8 +1,28 @@
 <?php 
-header ("Content-Type: application/pdf");
-header ("Content-Disposition: Attachment; filename=atlas.pdf");
+
 $inIndex = true;
 include 'common/entryexit/preludes.php';
 include 'lib/printatlas.php';
+require_once "lib/setup/vars.php";
+
+if(($zoom=$objUtil->checkRequestKey('zoom'))==AtlasOverviewZoom)
+  $filename=OverviewChart;
+elseif($zoom==AtlasLookupZoom)
+  $filename=LookupChart;
+elseif($zoom==AtlasDetailZoom)
+  $filename=DetailChart;
+else
+  $filename="Zoom_".$zoom;
+$filename.="_".str_replace(' ','_',$objUtil->checkRequestKey('object','Deepskylog_Atlas'));
+
+/*
+header ("Content-Type: application/pdf");
+header ("Content-Disposition: attachment; filename=".$filename.".pdf");
+
+echo "<head>";
+echo "<title>".$objUtil->checkRequestKey('object','Deepskylog Atlas page')."</title>";
+echo "</head>";
+*/
+
 $objPrintAtlas->pdfAtlas();
 ?>

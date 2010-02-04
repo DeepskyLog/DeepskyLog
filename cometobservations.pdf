@@ -1,6 +1,5 @@
 <?php 
-header ("Content-Type: application/pdf");
-header ("Content-Disposition: attachment; filename=\"observations.pdf\"");
+$filename='cometobservations.pdf';
 $inIndex = true;
 include 'common/entryexit/preludes.php';
 $_SESSION['module'] = "comets";
