@@ -5,7 +5,13 @@
  
  print "Database update will rearrange stars tables.\n";
 
- /*
+ 
+ 
+ // GELIEVE NA TE KIJKEN OF DEZE INDEXEN BESTAAN IN DE DATABANK
+ // ANDERS LOOP HET SCRIPT HIEROP VAST
+ 
+ // ALS ZE ER NIET ZIJN, MAG DIT STUK IN COMMENTAAR 
+ 
  $sql="ALTER TABLE stars8 DROP INDEX SearchIndex;";
  $run = mysql_query($sql) or die(mysql_error());
  $sql="ALTER TABLE stars9 DROP INDEX SearchIndex;";
@@ -14,7 +20,9 @@
  $run = mysql_query($sql) or die(mysql_error());
  $sql="ALTER TABLE stars11 DROP INDEX SearchIndex;";
  $run = mysql_query($sql) or die(mysql_error());
- */
+ 
+ 
+ // TOT HIER.
  
  $sql= "DROP TABLE IF EXISTS stars12";
  $run = mysql_query($sql) or die(mysql_error());
@@ -205,6 +213,5 @@
   
 
  print "Database update succesful.\n";
-//  INDEX         SearchIndex(RA2000mas,DE2000mas)
  
 ?>
