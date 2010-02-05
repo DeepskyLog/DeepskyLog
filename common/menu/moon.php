@@ -7,10 +7,12 @@ while(list($key,$value)=each($_GET))
     $link.="&amp;".$key."=".urlencode($value);
 reset($_GET);
 echo "<p  class=\"menuHead\">";
-if($menuMoon=="collapsed")
-  echo "<a href=\"".$baseURL."index.php?menuMoon=expanded".$link."\" title=\"".LangMenuExpand."\">+</a> ";
-else
-  echo "<a href=\"".$baseURL."index.php?menuMoon=collapsed".$link."\" title=\"".LangMenuCollapse."\">-</a> ";
+if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) {
+  if($menuMoon=="collapsed")
+    echo "<a href=\"".$baseURL."index.php?menuMoon=expanded".$link."\" title=\"".LangMenuExpand."\">+</a> ";
+  else
+    echo "<a href=\"".$baseURL."index.php?menuMoon=collapsed".$link."\" title=\"".LangMenuCollapse."\">-</a> ";
+}
 echo LangMoonMenuTitle."</p>";
 
 // Only show the current moon phase
@@ -43,7 +45,7 @@ $MoonIllum *= 100;
 $file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
 echo "<span class=\"menuText\">".$nextNewMoonText."</span><br />";
 echo "<span class=\"menuText\">".LangMoonMenuActualMoon."</span>&nbsp;"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" /><br />";
-  
+
 if($menuMoon!="collapsed") {
   // 1) Check if logged in
   if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) {
@@ -69,10 +71,13 @@ if($menuMoon!="collapsed") {
 
       // Calculate the rise and set time of the moon
       $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime($jd, $longitude, $latitude);
-
       echo "<span class=\"menuText\">".LangMoonRise." : ";
       if ($moon[0] > 24.0) {
-        echo "-";
+        $moonNew = ($objAstroCalc->calculateMoonRiseTransitSettingTime($jd + 1, $longitude, $latitude));
+        $moon[0] = $moonNew[0];
+      }
+      if ($moon[0] > 24.0) {
+        echo "-<br />";
       } else {
         $moon[0] = $moon[0] + $timedifference;
         if ($moon[0] < 0) {
@@ -89,7 +94,11 @@ if($menuMoon!="collapsed") {
       }
       echo LangMoonSet." : " ;
       if ($moon[2] > 24.0) {
-        echo "-";
+        $moonNew = ($objAstroCalc->calculateMoonRiseTransitSettingTime($jd + 1, $longitude, $latitude));
+        $moon[2] = $moonNew[2];
+      }
+      if ($moon[2] > 24.0) {
+        echo "-<br />";
       } else {
         $moon[2] = $moon[2] + $timedifference;
 
