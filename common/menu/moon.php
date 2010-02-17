@@ -26,7 +26,7 @@ $theDay=substr($today,6,2);
 $theHour="";
 $theMinute="";
 $date = $theYear . "-". $theMonth . "-" . $theDay;
-$time = "12:19:00";
+$time = "23:59:59";
 $tzone = "GMT";
   
 $moondata = phase(strtotime($date . ' ' . $time . ' ' . $tzone));
@@ -72,34 +72,43 @@ if($menuMoon!="collapsed") {
       // Calculate the rise and set time of the moon
       $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime($jd, $longitude, $latitude);
       echo "<span class=\"menuText\">".LangMoonRise." : ";
-      $moon[0] = $moon[0] + $timedifference;
-      if ($moon[0] < 0) {
-        $moon[0] = $moon[0] + 24;
+      if ($moon[0] > 24 || $moon[0] < 0) {
+        $moon[0] = "-";
+        echo "-<br />";
+      } else {
+        $moon[0] = $moon[0] + $timedifference;
+        if ($moon[0] < 0) {
+          $moon[0] = $moon[0] + 24;
+        }
+        if ($moon[0] > 24) {
+          $moon[0] = $moon[0] - 24;
+        }
+        $minutes = round(($moon[0] - floor($moon[0])) * 60);
+        if ($minutes < 10) {
+          $minutes = "0" . $minutes;
+        }
+        echo floor($moon[0]) . ":" . $minutes . "<br />";
       }
-      if ($moon[0] > 24) {
-        $moon[0] = $moon[0] - 24;
-      }
-      $minutes = round(($moon[0] - floor($moon[0])) * 60);
-      if ($minutes < 10) {
-        $minutes = "0" . $minutes;
-      }
-      echo floor($moon[0]) . ":" . $minutes . "<br />";
 
+      // Setting of the moon
       echo LangMoonSet." : " ;
-      $moon[2] = $moon[2] + $timedifference;
-      if ($moon[2] < 0) {
-        $moon[2] = $moon[2] + 24;
-      }
-      if ($moon[2] > 24) {
-        $moon[2] = $moon[2] - 24;
-      }
-      
-      $minutes = round(($moon[2] - floor($moon[2])) * 60);
-      if ($minutes < 10) {
-        $minutes = "0" . $minutes;
-      }
-      echo floor($moon[2]) . ":" . $minutes;
-    
+      if ($moon[2] > 24 || $moon[2] < 0) {
+        $moon[2] = "-";
+        echo "-<br />";
+      } else {
+        $moon[2] = $moon[2] + $timedifference;
+        if ($moon[2] < 0) {
+          $moon[2] = $moon[2] + 24;
+        }
+        if ($moon[2] > 24) {
+          $moon[2] = $moon[2] - 24;
+        }
+        $minutes = round(($moon[2] - floor($moon[2])) * 60);
+        if ($minutes < 10) {
+          $minutes = "0" . $minutes;
+        }
+        echo floor($moon[2]) . ":" . $minutes . "<br />";
+      }    
       // SUNRISE and SET, TWILIGHT...
       date_default_timezone_set ("UTC");
       $timestr = $theYear . "-" . $theMonth . "-" . $theDay;
@@ -148,7 +157,7 @@ if($menuMoon!="collapsed") {
         $astroe = "-";
       }
 
-      print("<br />" . LangMoonSun . " : " . $srise . " - " . $sset);
+      print(LangMoonSun . " : " . $srise . " - " . $sset);
       print("<br />" . LangMoonTwilight . " : ");
       print("<br />&nbsp;&nbsp;" . LangMoonNaut . " : " . $nautb . " - " . $naute);
       print("<br />&nbsp;&nbsp;" . LangMoonAstro . " : " . $astrob . " - " . $astroe);
