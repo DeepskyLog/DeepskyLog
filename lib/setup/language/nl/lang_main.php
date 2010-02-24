@@ -27,6 +27,10 @@ define("LangRequiredFields"                               ,"(* verplichte velden
 
 define("LangNoOwnColor"                                   , "Eigen waarnemingen niet oplichten");
 
+// Text for transit
+define("LangTransit"                                      ,"Doorgang");
+define("LangMaxAltitude"                                  ,"Max hoogte");
+
 // Text for moon menu
 define("LangMoonMenuTitle"                                ,"Maan / Zon");
 define("LangMoonMenuNewMoon"                              ,"Volgende nieuwe maan");

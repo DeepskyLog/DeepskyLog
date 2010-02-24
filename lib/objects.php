@@ -811,7 +811,7 @@ class Objects implements iObjects
     return $objDatabase->execSQL("UPDATE objects SET ".$property." = \"".$propertyValue."\" WHERE name = \"".$name."\"");
   }
   public  function showObject($object)
-  { global $objPresentations, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL, $objPresentations,$objObserver;	
+  { global $objPresentations, $objLocation, $objAstroCalc, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL, $objPresentations,$objObserver;	
     $object=$this->getDsObjectName($object);
     $_SESSION['object']=$object;
     $altnames=$this->getAlternativeNames($object); $alt=""; $alttip="";
@@ -887,6 +887,37 @@ class Objects implements iObjects
    	                                htmlentities($descriptionDsOject)),
  	                             "RL",array(25,75),20,array("type10","type10"));
    	}
+    if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) {
+      $today=date('Ymd',strtotime('today'));
+      $theYear=substr($today,0,4);
+      $theMonth=substr($today,4,2);
+      $theDay=substr($today,6,2);
+      
+      // 2) Get the julian day of today...
+      $jd = gregoriantojd($theMonth, $theDay, $theYear);
+      
+      // 3) Get the standard location of the observer
+      $longitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'longitude');
+      $latitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'latitude');
+      
+      $timezone=$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'),'timezone');
+
+      $dateTimeZone=new DateTimeZone($timezone);
+      $datestr=sprintf("%02d",$theMonth)."/".sprintf("%02d",$theDay)."/".$theYear;
+      $dateTime = new DateTime($datestr, $dateTimeZone);
+      // Geeft tijdsverschil terug in seconden
+      $timedifference = $dateTimeZone->getOffset($dateTime);
+      $timedifference = $timedifference / 3600.0;
+      if (strncmp($timezone, "Etc/GMT", 7) == 0) {
+        $timedifference = -$timedifference;
+      }
+      
+      $ra = $this->getDsoProperty($object,'ra');
+      $dec = $this->getDsoProperty($object,'decl');
+      $ristraset = $objAstroCalc->calculateRiseTransitSettingTime($longitude, $latitude, $ra, $dec, $jd, $timedifference);
+
+      $objPresentations->line(array(LangMoonRise, $ristraset[0], LangTransit, $ristraset[1], LangMoonSet, $ristraset[2], LangMaxAltitude, $ristraset[3]), "RLRLRLRL", array(12.5,12.5,12.5,12.5,12.5,12.5,12.5,12.5), 20, array("type20", "type20", "type20", "type20", "type20", "type20", "type20", "type20"));
+    }
     echo "</div></form>";
 	  echo "<hr />";
   }

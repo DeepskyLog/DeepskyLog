@@ -1,7 +1,7 @@
 <?php
 interface iAstroCalc
-{    public function calculateRiseTransitSettingTime($longitude, $latitude, $ra, $dec, $jd);  // Rising, transit and setting time of an object
-     public function calculateMoonRiseTransitSettingTime($jd, $longitude, $latitude);         // Rising,transit and setting of the moon
+{    public function calculateRiseTransitSettingTime($longitude, $latitude, $ra, $dec, $jd, $timedifference);  // Rising, transit and setting time of an object
+     public function calculateMoonRiseTransitSettingTime($jd, $longitude, $latitude, $timedifference);         // Rising,transit and setting of the moon
 }
 class AstroCalc implements iAstroCalc
 {
@@ -20,12 +20,13 @@ class AstroCalc implements iAstroCalc
   // The rising, transit and setting time are given in UT. They should be corrected with the offset in hours of the
   // observing place.
   // An array is returned where [0] is the rising time, [1] the transit time and [2] the setting time.
-  public  function calculateRiseTransitSettingTime($longitude, $latitude, $ra, $dec, $jd) {
-    return $this->calculateRiseTransitSettingTimeCommon($jd, $longitude, $latitude, $ra, $ra, $ra, $dec, $dec, $dec, -99.99);
+  public  function calculateRiseTransitSettingTime($longitude, $latitude, $ra, $dec, $jd, $timedifference) {
+    return $this->calculateRiseTransitSettingTimeCommon($jd, $longitude, $latitude, $ra, $ra, $ra, $dec, $dec, $dec, -99.99, $timedifference);
   }
 
   // This function does the calculations for the rise and setting of moon and stars
-  private function calculateRiseTransitSettingTimeCommon($jd, $longitude, $latitude, $ra1, $ra2, $ra3, $dec1, $dec2, $dec3, $moonHorParallax)
+  // Returns Rise time, transit time, setting time and transit altitude
+  private function calculateRiseTransitSettingTimeCommon($jd, $longitude, $latitude, $ra1, $ra2, $ra3, $dec1, $dec2, $dec3, $moonHorParallax, $timedifference)
   { 
     // Step 1 : Calculate the apparent siderial time at Greenwich at 0h UT.
     $jd = floor($jd) - 0.5;
@@ -159,13 +160,89 @@ class AstroCalc implements iAstroCalc
     $ris_tra_set[1] = $m0;
     $ris_tra_set[2] = $m2;
 
+    if ($ris_tra_set[0] > 24 || $ris_tra_set[0] < 0) {
+      $ris_tra_set[0] = "-";
+    } else {
+      $ris_tra_set[0] = $ris_tra_set[0] + $timedifference;
+      if ($ris_tra_set[0] < 0) {
+        $ris_tra_set[0] = $ris_tra_set[0] + 24;
+      }
+      if ($ris_tra_set[0] > 24) {
+        $ris_tra_set[0] = $ris_tra_set[0] - 24;
+      }
+      $minutes = round(($ris_tra_set[0] - floor($ris_tra_set[0])) * 60);
+      if ($minutes < 10) {
+        $minutes = "0" . $minutes;
+      }
+      $ris_tra_set[0] = floor($ris_tra_set[0]) . ":" . $minutes;
+    }
+
+    $transit = $ris_tra_set[1];
+    if ($ris_tra_set[1] > 24 || $ris_tra_set[1] < 0) {
+      $ris_tra_set[1] = "-";
+    } else {
+      $ris_tra_set[1] = $ris_tra_set[1] + $timedifference;
+      if ($ris_tra_set[1] < 0) {
+        $ris_tra_set[1] = $ris_tra_set[1] + 24;
+      }
+      if ($ris_tra_set[1] > 24) {
+        $ris_tra_set[1] = $ris_tra_set[1] - 24;
+      }
+      $minutes = round(($ris_tra_set[1] - floor($ris_tra_set[1])) * 60);
+      if ($minutes < 10) {
+        $minutes = "0" . $minutes;
+      }
+      $ris_tra_set[1] = floor($ris_tra_set[1]) . ":" . $minutes . "<br />";
+    }    
+
+    if ($ris_tra_set[2] > 24 || $ris_tra_set[2] < 0) {
+      $ris_tra_set[2] = "-";
+    } else {
+      $ris_tra_set[2] = $ris_tra_set[2] + $timedifference;
+      if ($ris_tra_set[2] < 0) {
+        $ris_tra_set[2] = $ris_tra_set[2] + 24;
+      }
+      if ($ris_tra_set[2] > 24) {
+        $ris_tra_set[2] = $ris_tra_set[2] - 24;
+      }
+      $minutes = round(($ris_tra_set[2] - floor($ris_tra_set[2])) * 60);
+      if ($minutes < 10) {
+        $minutes = "0" . $minutes;
+      }
+      $ris_tra_set[2] = floor($ris_tra_set[2]) . ":" . $minutes . "<br />";
+    }    
+
+    $ra2 = $ra2 / 15;
+
+    $theta0 = $theta0 + ($transit * 1.00273790935);
+    if ($theta0 > 0) {
+      $theta0 = $theta0 % 24.0 + ($theta0 - floor($theta0)); 
+    } else {
+      $toAdd = floor(-$theta / 24.0) + 1;
+      $theta0 = $theta0 + 24.0 * $toAdd;
+    }
+    $H = ($theta0 - $longitude / 15 - $ra2) * 15.0;
+    if ($H > 0) {
+      $H = $H % 360.0 + ($H - floor($H));
+    } else {
+      $toAdd = floor(-$H / 360.0) + 1;
+      $H = $H + 360.0 * $toAdd;
+    }
+     
+    $ris_tra_set[3] = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($dec2)) + cos(deg2rad($latitude)) * cos(deg2rad($dec2)) * cos(deg2rad($H))));
+    $minutes = round(($ris_tra_set[3] - floor($ris_tra_set[3])) * 60);
+    if ($minutes < 10) {
+      $minutes = "0" . $minutes;
+    }
+    $ris_tra_set[3] = floor($ris_tra_set[3]) . "&deg;" . $minutes . "<br />";
+    
     return $ris_tra_set;
   }
 
   // Calculates the Rise, transit and setting time of the moon for a given location.
   // $longitude is the longitude of the location where you observe... East is positive, west is negative.
   // $latitude is the latitude of the location where you observe... North is positive
-  public function calculateMoonRiseTransitSettingTime($jd, $longitude, $latitude)
+  public function calculateMoonRiseTransitSettingTime($jd, $longitude, $latitude, $timedifference)
   {
     // Step one : calculate the ra and dec for the moon for today, yesterday and tomorrow
     $jd = floor($jd) - 0.5;
@@ -173,7 +250,7 @@ class AstroCalc implements iAstroCalc
     $radec1 = $this->calculateMoonCoordinates($jd - 1, $longitude, $latitude);
     $radec2 = $this->calculateMoonCoordinates($jd, $longitude, $latitude);
     $radec3 = $this->calculateMoonCoordinates($jd + 1, $longitude, $latitude);
-    return $this->calculateRiseTransitSettingTimeCommon($jd, $longitude, $latitude, $radec1[0], $radec2[0], $radec3[0], $radec1[1], $radec2[1], $radec3[1], $radec2[2]);
+    return $this->calculateRiseTransitSettingTimeCommon($jd, $longitude, $latitude, $radec1[0], $radec2[0], $radec3[0], $radec1[1], $radec2[1], $radec3[1], $radec2[2], $timedifference);
   }
   
   private function calculateMoonCoordinates($jd, $longitude, $latitude) {

@@ -36,6 +36,10 @@ define("LangValidateMessage1"                             ,"Alle Pflichtfelder m
 define("LangRequiredFields"                               ,"(* Pflichtfelder)");
 define("LangNoOwnColor"                                   , "No highlighting of own observations");
 
+// Text for transit
+define("LangTransit"                                      ,"Transit");
+define("LangMaxAltitude"                                  ,"Max altitude");
+
 // Text for moon menu
 define("LangMoonMenuTitle"                                ,"Mond / Sonne");
 define("LangMoonMenuNewMoon"                              ,"N&auml;chste Neumond");

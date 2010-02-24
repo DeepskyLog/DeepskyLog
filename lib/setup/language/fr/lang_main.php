@@ -29,6 +29,10 @@ define("LangValidateMessage1"                             ,"Tous les champs obli
 define("LangRequiredFields"                               ,"(*= champs obligatoires)");
 define("LangNoOwnColor"                                   , "Eigen waarnemingen niet oplichten");
 
+// Text for transit
+define("LangTransit"                                      ,"Transit");
+define("LangMaxAltitude"                                  ,"Max altitude");
+
 // Text for moon menu
 define("LangMoonMenuTitle"                                ,"Lune / Soleil");
 define("LangMoonMenuNewMoon"                              ,"Next new moon");
