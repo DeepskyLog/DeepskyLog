@@ -57,15 +57,15 @@ class AstroCalc implements iAstroCalc
     $ra3 = $ra3 * 15.0;
 
     // Tests when the object passes ra 24 and goes back to 0
-    if ($ra3 - $ra2 < -10.0) {
+    if ($ra3 - $ra2 < -50.0) {
       $ra3 = $ra3 + 360.0;
-    } else if ($ra2 - $ra1 < -10.0) {
+    } else if ($ra2 - $ra1 < -50.0) {
       $ra3 = $ra3 + 360.0;
       $ra2 = $ra2 + 360.0;
-    } else if ($ra2 - $ra3 < -10.0) {
+    } else if ($ra2 - $ra3 < -50.0) {
       $ra1 = $ra1 + 360.0;
       $ra2 = $ra2 + 360.0;
-    } else if ($ra1 - $ra2 < -10.0) {
+    } else if ($ra1 - $ra2 < -50.0) {
       $ra1 = $ra1 + 360.0;
     }
     $longitude = -$longitude;
