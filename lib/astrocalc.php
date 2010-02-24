@@ -55,7 +55,19 @@ class AstroCalc implements iAstroCalc
     $ra1 = $ra1 * 15.0;
     $ra2 = $ra2 * 15.0;
     $ra3 = $ra3 * 15.0;
-    
+
+    // Tests when the object passes ra 24 and goes back to 0
+    if ($ra3 - $ra2 < -10.0) {
+      $ra3 = $ra3 + 360.0;
+    } else if ($ra2 - $ra1 < -10.0) {
+      $ra3 = $ra3 + 360.0;
+      $ra2 = $ra2 + 360.0;
+    } else if ($ra2 - $ra3 < -10.0) {
+      $ra1 = $ra1 + 360.0;
+      $ra2 = $ra2 + 360.0;
+    } else if ($ra1 - $ra2 < -10.0) {
+      $ra1 = $ra1 + 360.0;
+    }
     $longitude = -$longitude;
     
     if ($moonHorParallax == -99.99) {
@@ -161,7 +173,6 @@ class AstroCalc implements iAstroCalc
     $radec1 = $this->calculateMoonCoordinates($jd - 1, $longitude, $latitude);
     $radec2 = $this->calculateMoonCoordinates($jd, $longitude, $latitude);
     $radec3 = $this->calculateMoonCoordinates($jd + 1, $longitude, $latitude);
-    
     return $this->calculateRiseTransitSettingTimeCommon($jd, $longitude, $latitude, $radec1[0], $radec2[0], $radec3[0], $radec1[1], $radec2[1], $radec3[1], $radec2[2]);
   }
   
