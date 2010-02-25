@@ -1229,6 +1229,24 @@ class Observations {
 		                     LangViewObservationField32,
 		                     (((($lens=$this->getDsObservationProperty($LOid,'lensid'))=="")||($lens==0))?"-":"<a  href=\"".$baseURL."index.php?indexAction=detail_lens&amp;lens=".urlencode($lens)."\">".$objLens->getLensPropertyFromId($lens,'name')."</a>")),
                          "RLRLRL",array(15,22,15,19,15,14),25,array("type30","type30","type30","type30","type30","type30"));                                     
+    // Show the moon during the observation
+    $date = $date[0] . "-". $date[1] . "-" . $date[2];
+    $time = "23:59:59";
+    $tzone = "GMT";
+  
+    $moondata = phase(strtotime($date . ' ' . $time . ' ' . $tzone));
+
+    $MoonIllum  = $moondata[1];
+    $MoonAge    = $moondata[2];
+
+    // Convert $MoonIllum to percent and round to whole percent.
+    $MoonIllum = round( $MoonIllum, 2 );
+    $MoonIllum *= 100;
+
+    $file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
+    $moon = "<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" />";
+    $objPresentations->line(array($moon), "RL", array(100), 50, array("type20"));
+		                     
     if(in_array($objObject->getDsoProperty($object,'type'),array("DS","AA2STAR"))) {
       $objPresentations->line(array(LangViewObservationField22,
 		                     (($visibility=$this->getDsObservationProperty($LOid,'visibility'))?$GLOBALS['VisibilityDS'.$visibility]:"-"),
@@ -1236,7 +1254,7 @@ class Observations {
 		                     $diameterText,
 		                     LangViewObservationField40,
 		                     $charTypeText),
-                         "RLRLRL",array(15,22,15,19,15,14),25,array("type20","type20","type20","type20","type20","type20"));
+                         "RLRLRL",array(15,22,15,19,15,14),25,array("type30","type30","type30","type30","type30","type30"));
 		                     echo $details1Text." ".$details2Text;
 		                     echo "<br />";
     } else if (in_array($objObject->getDsoProperty($object,'type'),array("OPNCL")) && $this->getDsObservationProperty($LOid,'resolved') > 0) {
@@ -1246,7 +1264,7 @@ class Observations {
                          $diameterText,
                          LangViewObservationField40,
                          $charTypeText),
-                         "RLRLRL",array(15,22,15,19,15,14),25,array("type20","type20","type20","type20","type20","type20"));                                     
+                         "RLRLRL",array(15,22,15,19,15,14),25,array("type30","type30","type30","type30","type30","type30"));                                     
 		                     echo $details1Text." ".$details2Text;
     } else {
       $objPresentations->line(array(LangViewObservationField22,
@@ -1255,15 +1273,15 @@ class Observations {
                          $diameterText,
                          LangViewObservationField40,
                          $charTypeText),
-                         "RLRLRL",array(15,22,15,19,15,14),25,array("type20","type20","type20","type20","type20","type20"));                                     
+                         "RLRLRL",array(15,22,15,19,15,14),25,array("type30","type30","type30","type30","type30","type30"));                                     
 		                     echo "<br />";
     }
-		echo $objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
+    echo $objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
 		if($this->getDsObservationProperty($LOid,'hasDrawing'))
 		  echo "<p>"."<a  href=\"".$baseURL."deepsky/drawings/" . $LOid . ".jpg" . "\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . "_resized.jpg\" alt=\"\"></img></a></p>";
     if($copyright=$objObserver->getObserverProperty($this->getDsObservationProperty($LOid,'observerid'),'copyright'))
       echo "<p class=\"copyright\">".$copyright."</p>";
-		echo "<br /><br />";
+    echo "<br /><br />";
 		$bottomline="";
 		if($myList)
 		{ $bottomline.="&nbsp;-&nbsp;<a  href=\"".$link.$linkamp."addObservationToList=".urlencode($LOid)."\">".LangViewObservationField44.$listname_ss."</a>";
