@@ -2,8 +2,9 @@
 
 // TO DO:
 
-define('LangCircumpolar'                                 , ' is circumpolair');
-define('LangDoesntrise'                                  , ' komt niet boven de horizon');
+define('LangDate'                                        ,'Datum');
+define('LangCircumpolar'                                 ,' is circumpolair');
+define('LangDoesntrise'                                  ,' komt niet boven de horizon');
 define('LangRise'                                        ,' komt op om ');
 define('LangTransitPopup'                                ,' heeft een doorgang om ');
 define('LangSet'                                         ,' gaat onder om ');

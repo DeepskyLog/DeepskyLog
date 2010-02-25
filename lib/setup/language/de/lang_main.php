@@ -2,6 +2,7 @@
 
 // TO DO:
 
+define('LangDate'                                        ,'Date');
 define('LangCircumpolar'                                 , ' is circumpolar');
 define('LangDoesntrise'                                  , ' does not rise above horizon');
 define('LangRise'                                        ,' rises at ');

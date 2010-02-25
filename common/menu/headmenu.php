@@ -9,6 +9,9 @@ echo "</div>";
 
 echo "<div id=\"div1b\">";
 echo "<div class=\"floatright\">";
+include $_SESSION['module'].'/menu/date.php';
+echo "</div>";
+echo "<div class=\"floatright\">";
 include $_SESSION['module'].'/menu/location.php';
 echo "</div>";
 echo "<div class=\"floatright\">";
