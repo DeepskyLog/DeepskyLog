@@ -488,7 +488,7 @@ class Objects implements iObjects
     return $obs;
   }
   public  function getObjectRisSetTrans($obs)
-  { global $loggedUser, $objObserver, $objLocation ,$objAstroCalc;
+  { global $loggedUser, $objObserver, $objLocation ,$objAstroCalc, $dateformat;
     if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) {
       $today=date('Ymd',strtotime('today'));
       $theYear=substr($today,0,4);
@@ -510,6 +510,8 @@ class Objects implements iObjects
       // Geeft tijdsverschil terug in seconden
       $timedifference = $dateTimeZone->getOffset($dateTime);
       $timedifference = $timedifference / 3600.0;
+      $dateTimeText=date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear));
+      $location = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'),'name');
       if (strncmp($timezone, "Etc/GMT", 7) == 0) {
         $timedifference = -$timedifference;
       }
@@ -518,10 +520,30 @@ class Objects implements iObjects
         $ra = $obs[$j]["objectra"];
         $dec = $obs[$j]["objectdecl"];
         $ristraset = $objAstroCalc->calculateRiseTransitSettingTime($longitude, $latitude, $ra, $dec, $jd, $timedifference);
+        if ($ristraset[0] == "-" && strncmp($ristraset[3], "-", 1) == 0) {
+          $popup1 = $obs[$j]["objectname"] . LangDoesntrise;
+        } else if ($ristraset[0] == "-") {
+          $popup1 = $obs[$j]["objectname"] . LangCircumpolar;
+        } else {
+          $popup1 = $obs[$j]["objectname"] . LangRise . $ristraset[0] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes($location);
+        }
+        $popup2 = $obs[$j]["objectname"] . LangTransitPopup . $ristraset[1] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes($location);
+        if ($ristraset[2] == "-" && strncmp($ristraset[3], "-", 1) == 0) {
+          $popup3 = $obs[$j]["objectname"] . LangDoesntrise;
+        } else if ($ristraset[2] == "-") {
+          $popup3 = $obs[$j]["objectname"] . LangCircumpolar;
+        } else {
+          $popup3 = $obs[$j]["objectname"] . LangSet . $ristraset[2] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes($location);
+        }
+        $popup4 = $obs[$j]["objectname"] . LangAltitude . $ristraset[3] . LangRistrasetIn . addslashes($location);
         $obs[$j]['objectrise'] = $ristraset[0];
         $obs[$j]['objecttransit'] = $ristraset[1];
         $obs[$j]['objectset'] = $ristraset[2];
         $obs[$j]['objectmaxaltitude'] = $ristraset[3];
+        $obs[$j]['objectrisepopup'] = $popup1;
+        $obs[$j]['objecttransitpopup'] = $popup2;
+        $obs[$j]['objectsetpopup'] = $popup3;
+        $obs[$j]['objectmaxaltitudepopup'] = $popup4;
       }
     } else {
       for($j=0;$j<count($obs);$j++)
@@ -529,6 +551,10 @@ class Objects implements iObjects
         $obs[$j]['objecttransit'] = "-";
         $obs[$j]['objectset'] = "-";
         $obs[$j]['objectmaxaltitude'] = "-";
+        $obs[$j]['objectrisepopup'] = "-";
+        $obs[$j]['objecttransitpopup'] = "-";
+        $obs[$j]['objectsetpopup'] = "-";
+        $obs[$j]['objectmaxaltitudepopup'] = "-";
       }
     }
       
@@ -860,7 +886,7 @@ class Objects implements iObjects
     return $objDatabase->execSQL("UPDATE objects SET ".$property." = \"".$propertyValue."\" WHERE name = \"".$name."\"");
   }
   public  function showObject($object)
-  { global $objPresentations, $objLocation, $objAstroCalc, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL, $objPresentations,$objObserver;	
+  { global $objPresentations, $objLocation, $objAstroCalc, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL, $objPresentations,$objObserver,$dateformat;	
     $object=$this->getDsObjectName($object);
     $_SESSION['object']=$object;
     $altnames=$this->getAlternativeNames($object); $alt=""; $alttip="";
@@ -965,7 +991,28 @@ class Objects implements iObjects
       $dec = $this->getDsoProperty($object,'decl');
       $ristraset = $objAstroCalc->calculateRiseTransitSettingTime($longitude, $latitude, $ra, $dec, $jd, $timedifference);
 
-      $objPresentations->line(array(LangMoonRise, $ristraset[0], LangTransit, $ristraset[1], LangMoonSet, $ristraset[2], LangMaxAltitude, $ristraset[3]), "RLRLRLRL", array(12.5,12.5,12.5,12.5,12.5,12.5,12.5,12.5), 20, array("type20", "type20", "type20", "type20", "type20", "type20", "type20", "type20"));
+      $dateTimeText=date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear));
+      
+      $location = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'),'name');
+      
+      if ($ristraset[0] == "-" && strncmp($ristraset[3], "-", 1) == 0) {
+        $popup1 = $object . LangDoesntrise;
+      } else if ($ristraset[0] == "-") {
+        $popup1 = $object . LangCircumpolar;
+      } else {
+        $popup1 = $object . LangRise . $ristraset[0] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes($location);
+      }
+      $popup2 = $object . LangTransitPopup . $ristraset[1] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes($location);
+      if ($ristraset[2] == "-" && strncmp($ristraset[3], "-", 1) == 0) {
+        $popup3 = $object . LangDoesntrise;
+      } else if ($ristraset[2] == "-") {
+        $popup3 = $object . LangCircumpolar;
+      } else {
+        $popup3 = $object . LangSet . $ristraset[2] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes($location);
+      }
+      $popup4 = $object . LangAltitude . $ristraset[3] . LangRistrasetIn . addslashes($location);
+      
+      $objPresentations->line(array(LangMoonRise, "<span onmouseover=\"Tip('" . $popup1 . "')\">".$ristraset[0]."</span>", LangTransit, "<span onmouseover=\"Tip('" . $popup2 . "')\">".$ristraset[1]."</span>", LangMoonSet, "<span onmouseover=\"Tip('" . $popup3 . "')\">".$ristraset[2]."</span>", LangMaxAltitude, "<span class=\"" . "\"  onmouseover=\"Tip('" . $popup4 . "')\">".$ristraset[3]."</span>"), "RLRLRLRL", array(12.5,12.5,12.5,12.5,12.5,12.5,12.5,12.5), 20, array("type20", "type20", "type20", "type20", "type20", "type20", "type20", "type20"));
     }
     echo "</div></form>";
 	  echo "<hr />";
@@ -1047,10 +1094,10 @@ class Objects implements iObjects
         echo "<td align=\"center\" onmouseover=\"Tip('".$objAtlas->atlasCodes[$atlas]."')\">".$page."</td>";
         echo "<td align=\"center\" class=\"".$_SESSION['Qobj'][$count]['objectcontrasttype']."\" onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectcontrastpopup']."')\">".$_SESSION['Qobj'][$count]['objectcontrast']."</td>";
         echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectoptimalmagnification']."</td>";
-        echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectrise']."</td>";
-        echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objecttransit']."</td>";
-        echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectset']."</td>";
-        echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectmaxaltitude']."</td>";
+        echo "<td align=\"center\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objectrisepopup'] . "')\">".$_SESSION['Qobj'][$count]['objectrise']."</td>";
+        echo "<td align=\"center\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objecttransitpopup'] . "')\">".$_SESSION['Qobj'][$count]['objecttransit']."</td>";
+        echo "<td align=\"center\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objectsetpopup'] . "')\">".$_SESSION['Qobj'][$count]['objectset']."</td>";
+        echo "<td align=\"center\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objectmaxaltitudepopup'] . "')\">".$_SESSION['Qobj'][$count]['objectmaxaltitude']."</td>";
         echo "<td align=\"center\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectseenlink']."</td>";
         echo "<td align=\"center\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectlastseenlink']."</td>";
 	    }

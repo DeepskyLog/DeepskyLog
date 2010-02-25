@@ -2,6 +2,15 @@
 
 // TO DO:
 
+define('LangCircumpolar'                                 , ' is circumpolair');
+define('LangDoesntrise'                                  , ' komt niet boven de horizon');
+define('LangRise'                                        ,' komt op om ');
+define('LangTransitPopup'                                ,' heeft een doorgang om ');
+define('LangSet'                                         ,' gaat onder om ');
+define('LangAltitude'                                    ,' bereikt een hoogte van ');
+define('LangRistrasetOn'                                 ,' op ');
+define('LangRistrasetIn'                                 ,' in ');
+
 define('OverviewChart'                                   ,'Overzicht');
 define('LookupChart'                                     ,'Zoeken');
 define('DetailChart'                                     ,'Detail');
