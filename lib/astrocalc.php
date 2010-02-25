@@ -214,6 +214,12 @@ class AstroCalc implements iAstroCalc
 
     $ra2 = $ra2 / 15;
 
+    if ($transit > 0) {
+      $transit = $transit % 24.0 + ($transit - floor($transit));
+    } else {
+      $toAdd = floor(-$transit / 24.0) + 1;
+      $transit = $transit + 24.0 * $toAdd;
+    }
     $theta0 = $theta0 + ($transit * 1.00273790935);
     if ($theta0 > 0) {
       $theta0 = $theta0 % 24.0 + ($theta0 - floor($theta0)); 
@@ -230,6 +236,7 @@ class AstroCalc implements iAstroCalc
     }
      
     $ris_tra_set[3] = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($dec2)) + cos(deg2rad($latitude)) * cos(deg2rad($dec2)) * cos(deg2rad($H))));
+
     $minutes = round(($ris_tra_set[3] - floor($ris_tra_set[3])) * 60);
     if ($minutes < 10) {
       $minutes = "0" . $minutes;

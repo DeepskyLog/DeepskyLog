@@ -483,6 +483,55 @@ class Objects implements iObjects
         $obs[$j]['objectoptimalmagnification'] = $contrastcalc1[0].$contrastcalc1[1];
         $obs[$j]['objectoptimalmagnificationvalue'] = $contrastcalc1[0];
       }
+    $obs=$this->getObjectRisSetTrans($obs);
+      
+    return $obs;
+  }
+  public  function getObjectRisSetTrans($obs)
+  { global $loggedUser, $objObserver, $objLocation ,$objAstroCalc;
+    if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) {
+      $today=date('Ymd',strtotime('today'));
+      $theYear=substr($today,0,4);
+      $theMonth=substr($today,4,2);
+      $theDay=substr($today,6,2);
+      
+      // 2) Get the julian day of today...
+      $jd = gregoriantojd($theMonth, $theDay, $theYear);
+      
+      // 3) Get the standard location of the observer
+      $longitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'longitude');
+      $latitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'latitude');
+      
+      $timezone=$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'),'timezone');
+
+      $dateTimeZone=new DateTimeZone($timezone);
+      $datestr=sprintf("%02d",$theMonth)."/".sprintf("%02d",$theDay)."/".$theYear;
+      $dateTime = new DateTime($datestr, $dateTimeZone);
+      // Geeft tijdsverschil terug in seconden
+      $timedifference = $dateTimeZone->getOffset($dateTime);
+      $timedifference = $timedifference / 3600.0;
+      if (strncmp($timezone, "Etc/GMT", 7) == 0) {
+        $timedifference = -$timedifference;
+      }
+      for($j=0;$j<count($obs);$j++)
+      {
+        $ra = $obs[$j]["objectra"];
+        $dec = $obs[$j]["objectdecl"];
+        $ristraset = $objAstroCalc->calculateRiseTransitSettingTime($longitude, $latitude, $ra, $dec, $jd, $timedifference);
+        $obs[$j]['objectrise'] = $ristraset[0];
+        $obs[$j]['objecttransit'] = $ristraset[1];
+        $obs[$j]['objectset'] = $ristraset[2];
+        $obs[$j]['objectmaxaltitude'] = $ristraset[3];
+      }
+    } else {
+      for($j=0;$j<count($obs);$j++)
+      { $obs[$j]['objectrise'] = "-";
+        $obs[$j]['objecttransit'] = "-";
+        $obs[$j]['objectset'] = "-";
+        $obs[$j]['objectmaxaltitude'] = "-";
+      }
+    }
+      
     return $obs;
   }
   private function getPartOfNames($name)
@@ -940,6 +989,10 @@ class Objects implements iObjects
       $objPresentations->tableSortHeader($objAtlas->atlasCodes[$atlas], $link."&amp;sort=".$atlas);
 	    $objPresentations->tableSortInverseHeader(LangViewObjectFieldContrastReserve, $link."&amp;sort=objectcontrast");
 	    $objPresentations->tableSortHeader(LangViewObjectFieldMagnification, $link."&amp;sort=objectoptimalmagnification");
+      $objPresentations->tableSortHeader(LangMoonRise, $link."&amp;sort=objectrise");
+      $objPresentations->tableSortHeader(LangTransit, $link."&amp;sort=objecttransit");
+      $objPresentations->tableSortHeader(LangMoonSet, $link."&amp;sort=objectset");
+      $objPresentations->tableSortHeader(LangMaxAltitude, $link."&amp;sort=objectmaxaltitude");
 	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader7, $link."&amp;sort=objectseen");
 	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader8, $link."&amp;sort=objectlastseen");
     }
@@ -994,6 +1047,10 @@ class Objects implements iObjects
         echo "<td align=\"center\" onmouseover=\"Tip('".$objAtlas->atlasCodes[$atlas]."')\">".$page."</td>";
         echo "<td align=\"center\" class=\"".$_SESSION['Qobj'][$count]['objectcontrasttype']."\" onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectcontrastpopup']."')\">".$_SESSION['Qobj'][$count]['objectcontrast']."</td>";
         echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectoptimalmagnification']."</td>";
+        echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectrise']."</td>";
+        echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objecttransit']."</td>";
+        echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectset']."</td>";
+        echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectmaxaltitude']."</td>";
         echo "<td align=\"center\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectseenlink']."</td>";
         echo "<td align=\"center\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectlastseenlink']."</td>";
 	    }
