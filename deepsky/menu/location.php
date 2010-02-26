@@ -6,11 +6,11 @@ if($loggedUser)
 	reset($_GET);
 	while(list($key,$value)=each($_GET))
 	  $link.=$key.'='.$value.'&amp;';
-		if(array_key_exists('activeLocationId',$_GET) && $_GET['activeLocationId'])
-	  { $objObserver->setObserverProperty($loggedUser,'stdlocation', $_GET['activeLocationId']);
-		  if(array_key_exists('Qobj',$_SESSION))
-			  $_SESSION['Qobj']=$objObject->getObjectVisibilities($_SESSION['Qobj']);
-	  }
+	if(array_key_exists('activeLocationId',$_GET) && $_GET['activeLocationId'])
+  { $objObserver->setObserverProperty($loggedUser,'stdlocation', $_GET['activeLocationId']);
+	  if(array_key_exists('Qobj',$_SESSION))
+		  $_SESSION['Qobj']=$objObject->getObjectVisibilities($_SESSION['Qobj']);
+  }
 	$result=$objLocation->getSortedLocations('name',$loggedUser);
   $loc=$objObserver->getObserverProperty($loggedUser,'stdlocation');	
 	if($result)

@@ -488,12 +488,11 @@ class Objects implements iObjects
     return $obs;
   }
   public  function getObjectRisSetTrans($obs)
-  { global $loggedUser, $objObserver, $objLocation ,$objAstroCalc, $dateformat;
+  { global $loggedUser, $objObserver, $objLocation ,$objAstroCalc, $dateformat, $globalMonth;
     if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) {
-      $today=date('Ymd',strtotime('today'));
-      $theYear=substr($today,0,4);
-      $theMonth=substr($today,4,2);
-      $theDay=substr($today,6,2);
+      $theYear=$_SESSION['globalYear'];
+      $theMonth=$_SESSION['globalMonth'];
+      $theDay=$_SESSION['globalDay'];
       
       // 2) Get the julian day of today...
       $jd = gregoriantojd($theMonth, $theDay, $theYear);
@@ -963,10 +962,9 @@ class Objects implements iObjects
  	                             "RL",array(25,75),20,array("type10","type10"));
    	}
     if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) {
-      $today=date('Ymd',strtotime('today'));
-      $theYear=substr($today,0,4);
-      $theMonth=substr($today,4,2);
-      $theDay=substr($today,6,2);
+      $theYear=$_SESSION['globalYear'];
+      $theMonth=$_SESSION['globalMonth'];
+      $theDay=$_SESSION['globalDay'];
       
       // 2) Get the julian day of today...
       $jd = gregoriantojd($theMonth, $theDay, $theYear);

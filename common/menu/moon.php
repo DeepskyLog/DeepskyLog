@@ -19,23 +19,23 @@ echo LangMoonMenuTitle."</p>";
 include_once "lib/moonphase.inc.php";
 include_once "lib/astrocalc.php";
   
-$today=date('Ymd',strtotime('today'));
-$theYear=substr($today,0,4);
-$theMonth=substr($today,4,2);
-$theDay=substr($today,6,2);
+$theYear=$_SESSION['globalYear'];
+$theMonth=$_SESSION['globalMonth'];
+$theDay=$_SESSION['globalDay'];
 $theHour="";
 $theMinute="";
 $date = $theYear . "-". $theMonth . "-" . $theDay;
 $time = "23:59:59";
 $tzone = "GMT";
-  
+$dateTimeText=date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear));
+
 $moondata = phase(strtotime($date . ' ' . $time . ' ' . $tzone));
 
 $MoonIllum  = $moondata[1];
 $MoonAge    = $moondata[2];
 $nextNewMoonText=LangMoonMenuNewMoon." : ";
 $phases = array();
-$phases = phasehunt();
+$phases = phasehunt(strtotime($date));
 $nextNewMoonText.=date("j M", $phases[4]);
   
 // Convert $MoonIllum to percent and round to whole percent.
@@ -44,7 +44,8 @@ $MoonIllum *= 100;
 
 $file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
 echo "<span class=\"menuText\">".$nextNewMoonText."</span><br />";
-echo "<span class=\"menuText\">".LangMoonMenuActualMoon."</span>&nbsp;"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" /><br />";
+
+echo "<span class=\"menuText\">".$dateTimeText."</span>&nbsp;"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" /><br />";
 
 if($menuMoon!="collapsed") {
   // 1) Check if logged in

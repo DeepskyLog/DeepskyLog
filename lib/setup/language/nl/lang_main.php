@@ -2,6 +2,7 @@
 
 // TO DO:
 
+define('LangToday'                                       ,'Vandaag');
 define('LangDate'                                        ,'Datum');
 define('LangCircumpolar'                                 ,' is circumpolair');
 define('LangDoesntrise'                                  ,' komt niet boven de horizon');

@@ -2,9 +2,10 @@
 
 // TO DO
 
+define('LangToday'                                       ,'Today');
 define('LangDate'                                        ,'Date');
-define('LangCircumpolar'                                 , ' is circumpolar');
-define('LangDoesntrise'                                  , ' does not rise above horizon');
+define('LangCircumpolar'                                 ,' is circumpolar');
+define('LangDoesntrise'                                  ,' does not rise above horizon');
 define('LangRise'                                        ,' rises at ');
 define('LangTransitPopup'                                ,' transits at ');
 define('LangSet'                                         ,' sets at ');
