@@ -320,9 +320,13 @@ class AstroCalc implements iAstroCalc
       if ($minutes < 10) {
         $minutes = "0" . $minutes;
       }
-      $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes . "<br />";
+      if ($ris_tra_set[3] < 0) {
+        $ris_tra_set[3] = "-";
+      } else {
+        $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes . "<br />";
+      }
 
-      if ($ris_tra_set[4] > 24 || $ris_tra_set[4] < 0) {
+      if ($ris_tra_set[4] > 24 || $ris_tra_set[4] < 0 || $ris_tra_set[3] == "-") {
         $ris_tra_set[4] = "-";
       } else {
         $ris_tra_set[4] = $ris_tra_set[4] + $timedifference;
