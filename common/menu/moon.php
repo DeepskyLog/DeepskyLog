@@ -61,7 +61,7 @@ if($menuMoon!="collapsed") {
       $timezone=$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'),'timezone');
 
       $dateTimeZone=new DateTimeZone($timezone);
-      $datestr=sprintf("%02d",$date[1])."/".sprintf("%02d",$date[2])."/".$date[0];
+      $datestr=sprintf("%02d",$_SESSION['globalMonth'])."/".sprintf("%02d",$_SESSION['globalDay'])."/".$_SESSION['globalYear'];
       $dateTime = new DateTime($datestr, $dateTimeZone);
       // Geeft tijdsverschil terug in seconden
       $timedifference = $dateTimeZone->getOffset($dateTime);

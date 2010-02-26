@@ -160,6 +160,7 @@ class AstroCalc implements iAstroCalc
     $ris_tra_set[1] = $m0;
     $ris_tra_set[2] = $m2;
 
+    $rise = $ris_tra_set[0];
     if ($ris_tra_set[0] > 24 || $ris_tra_set[0] < 0) {
       $ris_tra_set[0] = "-";
     } else {
@@ -207,6 +208,7 @@ class AstroCalc implements iAstroCalc
       $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd . ":" . $minutes . "<br />";
     }    
 
+    $set = $ris_tra_set[2];
     if ($ris_tra_set[2] > 24 || $ris_tra_set[2] < 0) {
       $ris_tra_set[2] = "-";
     } else {
@@ -229,8 +231,20 @@ class AstroCalc implements iAstroCalc
       }
       $ris_tra_set[2] = floor($ris_tra_set[2]) + $toAdd . ":" . $minutes . "<br />";
     }    
-
+    $ris_tra_set[4] = 0;
     $ra2 = $ra2 / 15;
+
+    date_default_timezone_set ("UTC");
+    $timestr = $_SESSION['globalYear'] . "-" . $_SESSION['globalMonth'] . "-" . $_SESSION['globalDay'];
+
+    $sun_info = date_sun_info(strtotime($timestr), $latitude, -$longitude);
+    $astrobegin = date("H:i", $sun_info["astronomical_twilight_begin"]);
+    sscanf($astrobegin, "%d:%d", $hour, $minute);
+    $astrobegin = ($hour + $minute / 60.0);
+
+    $astroend = date("H:i", $sun_info["astronomical_twilight_end"]);
+    sscanf($astroend, "%d:%d", $hour, $minute);
+    $astroend = ($hour + $minute / 60.0);
 
     if ($transit > 0) {
       $transit = $transit % 24.0 + ($transit - floor($transit));
@@ -238,11 +252,36 @@ class AstroCalc implements iAstroCalc
       $toAdd = floor(-$transit / 24.0) + 1;
       $transit = $transit + 24.0 * $toAdd;
     }
+    
+    $tocompare = -999;
+    if (($transit + 24 < $astroend + 24) && ($transit + 24 > $astrobegin + 24)) {
+      // The transit is during the day
+      // Check the rise time for $astroend and for $astrobegin
+      $theta0w = $theta0 + ($astrobegin * 1.00273790935);
+      if ($theta0w > 0) {
+        $theta0w = $theta0w % 24.0 + ($theta0w - floor($theta0w)); 
+      } else {
+        $toAdd = floor(-$theta0w / 24.0) + 1;
+        $theta0w = $theta0w + 24.0 * $toAdd;
+      }
+      $H = ($theta0w - $longitude / 15 - $ra2) * 15.0;
+      if ($H > 0) {
+        $H = $H % 360.0 + ($H - floor($H));
+      } else {
+        $toAdd = floor(-$H / 360.0) + 1;
+        $H = $H + 360.0 * $toAdd;
+      }
+
+      $tocompare = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($dec2)) + cos(deg2rad($latitude)) * cos(deg2rad($dec2)) * cos(deg2rad($H))));
+
+      $transit = $astroend;
+    }
+
     $theta0 = $theta0 + ($transit * 1.00273790935);
     if ($theta0 > 0) {
       $theta0 = $theta0 % 24.0 + ($theta0 - floor($theta0)); 
     } else {
-      $toAdd = floor(-$theta / 24.0) + 1;
+      $toAdd = floor(-$theta0 / 24.0) + 1;
       $theta0 = $theta0 + 24.0 * $toAdd;
     }
     $H = ($theta0 - $longitude / 15 - $ra2) * 15.0;
@@ -252,8 +291,19 @@ class AstroCalc implements iAstroCalc
       $toAdd = floor(-$H / 360.0) + 1;
       $H = $H + 360.0 * $toAdd;
     }
-     
+
     $ris_tra_set[3] = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($dec2)) + cos(deg2rad($latitude)) * cos(deg2rad($dec2)) * cos(deg2rad($H))));
+
+    if ($tocompare != -999) {
+      if ($tocompare > $ris_tra_set[3]) {
+        $ris_tra_set[3] = $tocompare;
+        $ris_tra_set[4] = $astrobegin;
+      } else {
+        $ris_tra_set[4] = $astroend;
+      }
+    } else {
+      $ris_tra_set[4] = $transit;
+    }
 
     $minutes = round(($ris_tra_set[3] - floor($ris_tra_set[3])) * 60);
     if ($minutes == 60) {
@@ -266,7 +316,30 @@ class AstroCalc implements iAstroCalc
       $minutes = "0" . $minutes;
     }
     $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes . "<br />";
-    
+
+    if ($ris_tra_set[4] > 24 || $ris_tra_set[4] < 0) {
+      $ris_tra_set[4] = "-";
+    } else {
+      $ris_tra_set[4] = $ris_tra_set[4] + $timedifference;
+      if ($ris_tra_set[4] < 0) {
+        $ris_tra_set[4] = $ris_tra_set[4] + 24;
+      }
+      if ($ris_tra_set[4] > 24) {
+        $ris_tra_set[4] = $ris_tra_set[4] - 24;
+      }
+      $minutes = round(($ris_tra_set[4] - floor($ris_tra_set[4])) * 60);
+      if ($minutes == 60) {
+        $minutes = 0;
+        $toAdd = 1;
+      } else {
+        $toAdd = 0;
+      }
+      if ($minutes < 10) {
+        $minutes = "0" . $minutes;
+      }
+      $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd . ":" . $minutes . "<br />";
+    }    
+
     return $ris_tra_set;
   }
 

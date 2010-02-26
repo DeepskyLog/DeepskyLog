@@ -538,6 +538,7 @@ class Objects implements iObjects
         $obs[$j]['objectrise'] = $ristraset[0];
         $obs[$j]['objecttransit'] = $ristraset[1];
         $obs[$j]['objectset'] = $ristraset[2];
+        $obs[$j]['objectbest'] = $ristraset[4];
         $obs[$j]['objectmaxaltitude'] = $ristraset[3];
         $obs[$j]['objectrisepopup'] = $popup1;
         $obs[$j]['objecttransitpopup'] = $popup2;
@@ -549,6 +550,7 @@ class Objects implements iObjects
       { $obs[$j]['objectrise'] = "-";
         $obs[$j]['objecttransit'] = "-";
         $obs[$j]['objectset'] = "-";
+        $obs[$j]['objectbest'] = "-";
         $obs[$j]['objectmaxaltitude'] = "-";
         $obs[$j]['objectrisepopup'] = "-";
         $obs[$j]['objecttransitpopup'] = "-";
@@ -1010,7 +1012,7 @@ class Objects implements iObjects
       }
       $popup4 = $object . LangAltitude . $ristraset[3] . LangRistrasetIn . addslashes($location);
       
-      $objPresentations->line(array(LangMoonRise, "<span onmouseover=\"Tip('" . $popup1 . "')\">".$ristraset[0]."</span>", LangTransit, "<span onmouseover=\"Tip('" . $popup2 . "')\">".$ristraset[1]."</span>", LangMoonSet, "<span onmouseover=\"Tip('" . $popup3 . "')\">".$ristraset[2]."</span>", LangMaxAltitude, "<span class=\"" . "\"  onmouseover=\"Tip('" . $popup4 . "')\">".$ristraset[3]."</span>"), "RLRLRLRL", array(12.5,12.5,12.5,12.5,12.5,12.5,12.5,12.5), 20, array("type20", "type20", "type20", "type20", "type20", "type20", "type20", "type20"));
+      $objPresentations->line(array(LangMoonRise, "<span onmouseover=\"Tip('" . $popup1 . "')\">".$ristraset[0]."</span>", LangTransit, "<span onmouseover=\"Tip('" . $popup2 . "')\">".$ristraset[1]."</span>", LangMoonSet, "<span onmouseover=\"Tip('" . $popup3 . "')\">".$ristraset[2]."</span>", LangBest, $ristraset[4], LangMaxAltitude, "<span class=\"" . "\"  onmouseover=\"Tip('" . $popup4 . "')\">".$ristraset[3]."</span>"), "RLRLRLRLRL", array(10,10,10,10,10,10,10,10,10,10), 20, array("type20", "type20", "type20", "type20", "type20", "type20", "type20", "type20", "type20", "type20"));
     }
     echo "</div></form>";
 	  echo "<hr />";
@@ -1037,6 +1039,7 @@ class Objects implements iObjects
       $objPresentations->tableSortHeader(LangMoonRise, $link."&amp;sort=objectrise");
       $objPresentations->tableSortHeader(LangTransit, $link."&amp;sort=objecttransit");
       $objPresentations->tableSortHeader(LangMoonSet, $link."&amp;sort=objectset");
+      $objPresentations->tableSortHeader(LangBest, $link."&amp;sort=objectbest");
       $objPresentations->tableSortHeader(LangMaxAltitude, $link."&amp;sort=objectmaxaltitude");
 	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader7, $link."&amp;sort=objectseen");
 	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader8, $link."&amp;sort=objectlastseen");
@@ -1095,6 +1098,7 @@ class Objects implements iObjects
         echo "<td align=\"center\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objectrisepopup'] . "')\">".$_SESSION['Qobj'][$count]['objectrise']."</td>";
         echo "<td align=\"center\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objecttransitpopup'] . "')\">".$_SESSION['Qobj'][$count]['objecttransit']."</td>";
         echo "<td align=\"center\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objectsetpopup'] . "')\">".$_SESSION['Qobj'][$count]['objectset']."</td>";
+        echo "<td align=\"center\">".$_SESSION['Qobj'][$count]['objectbest']."</td>";
         echo "<td align=\"center\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objectmaxaltitudepopup'] . "')\">".$_SESSION['Qobj'][$count]['objectmaxaltitude']."</td>";
         echo "<td align=\"center\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectseenlink']."</td>";
         echo "<td align=\"center\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectlastseenlink']."</td>";

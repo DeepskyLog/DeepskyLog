@@ -2,6 +2,7 @@
 
 // TO DO:
 
+define('LangBest'                                        ,'Best');
 define('LangToday'                                       ,'Today');
 define('LangDate'                                        ,'Date');
 define('LangCircumpolar'                                 ,' is circumpolar');
