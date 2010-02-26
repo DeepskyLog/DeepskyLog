@@ -83,44 +83,44 @@ if($menuMoon!="collapsed") {
 
       $sun_info = date_sun_info(strtotime($timestr), $latitude, $longitude);
     
-      $srise = $sun_info["sunrise"] + $timedifference * 60 * 60;
+      $srise = $sun_info["sunrise"];
       if ($srise > 1) {
-        $srise = date("H:i", $srise);
+        $srise = date("H:i", $srise + $timedifference * 60 * 60);
       } else {
         $srise = "-";
       }
       
-      $sset = $sun_info["sunset"] + $timedifference * 60 * 60;
+      $sset = $sun_info["sunset"];
       if ($sset > 1) {
-        $sset = date("H:i", $sset);
+        $sset = date("H:i", $sset + $timedifference * 60 * 60);
       } else {
         $sset = "-";
       }
 
-      $nautb = $sun_info["nautical_twilight_begin"] + $timedifference * 60 * 60;
+      $nautb = $sun_info["nautical_twilight_begin"];
       if ($nautb > 1) {
-        $nautb = date("H:i", $nautb);
+        $nautb = date("H:i", $nautb + $timedifference * 60 * 60);
       } else {
         $nautb = "-";
       }
 
-      $naute = $sun_info["nautical_twilight_end"] + $timedifference * 60 * 60;
+      $naute = $sun_info["nautical_twilight_end"];
       if ($naute > 1) {
-        $naute = date("H:i", $naute);
+        $naute = date("H:i", $naute + $timedifference * 60 * 60);
       } else {
         $naute = "-";
       }
       
-      $astrob = $sun_info["astronomical_twilight_begin"] + $timedifference * 60 * 60;
+      $astrob = $sun_info["astronomical_twilight_begin"];
       if ($astrob > 1) {
-        $astrob = date("H:i", $astrob);
+        $astrob = date("H:i", $astrob + $timedifference * 60 * 60);
       } else {
         $astrob = "-";
       }
 
-      $astroe = $sun_info["astronomical_twilight_end"] + $timedifference * 60 * 60;
+      $astroe = $sun_info["astronomical_twilight_end"];
       if ($astroe > 1) {
-        $astroe = date("H:i", $astroe);
+        $astroe = date("H:i", $astroe + $timedifference * 60 * 60);
       } else {
         $astroe = "-";
       }

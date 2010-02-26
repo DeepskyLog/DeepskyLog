@@ -534,7 +534,11 @@ class Objects implements iObjects
         } else {
           $popup3 = $obs[$j]["objectname"] . LangSet . $ristraset[2] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes($location);
         }
-        $popup4 = $obs[$j]["objectname"] . LangAltitude . $ristraset[3] . LangRistrasetIn . addslashes($location);
+        if ($ristraset[3] == "-") {
+          $popup4 = $obs[$j]["objectname"] . LangDoesntrise;
+        } else {
+          $popup4 = $obs[$j]["objectname"] . LangAltitude . $ristraset[3] . LangRistrasetIn . addslashes($location);
+        }
         $obs[$j]['objectrise'] = $ristraset[0];
         $obs[$j]['objecttransit'] = $ristraset[1];
         $obs[$j]['objectset'] = $ristraset[2];
@@ -1010,7 +1014,11 @@ class Objects implements iObjects
       } else {
         $popup3 = $object . LangSet . $ristraset[2] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes($location);
       }
-      $popup4 = $object . LangAltitude . $ristraset[3] . LangRistrasetIn . addslashes($location);
+      if ($ristraset[3] == "-") {
+        $popup4 = $object . LangDoesntrise;
+      } else {
+        $popup4 = $object . LangAltitude . $ristraset[3] . LangRistrasetIn . addslashes($location);
+      }
       
       $objPresentations->line(array(LangMoonRise, "<span onmouseover=\"Tip('" . $popup1 . "')\">".$ristraset[0]."</span>", LangTransit, "<span onmouseover=\"Tip('" . $popup2 . "')\">".$ristraset[1]."</span>", LangMoonSet, "<span onmouseover=\"Tip('" . $popup3 . "')\">".$ristraset[2]."</span>", LangBest, $ristraset[4], LangMaxAltitude, "<span class=\"" . "\"  onmouseover=\"Tip('" . $popup4 . "')\">".$ristraset[3]."</span>"), "RLRLRLRLRL", array(10,10,10,10,10,10,10,10,10,10), 20, array("type20", "type20", "type20", "type20", "type20", "type20", "type20", "type20", "type20", "type20"));
     }

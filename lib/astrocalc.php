@@ -253,18 +253,39 @@ class AstroCalc implements iAstroCalc
       $transit = $transit + 24.0 * $toAdd;
     }
     
-    $tocompare = -999;
-    if (($transit + 24 < $astroend + 24) && ($transit + 24 > $astrobegin + 24)) {
-      // The transit is during the day
-      // Check the rise time for $astroend and for $astrobegin
-      $theta0w = $theta0 + ($astrobegin * 1.00273790935);
-      if ($theta0w > 0) {
-        $theta0w = $theta0w % 24.0 + ($theta0w - floor($theta0w)); 
-      } else {
-        $toAdd = floor(-$theta0w / 24.0) + 1;
-        $theta0w = $theta0w + 24.0 * $toAdd;
+    if ($astroend > 1 && $astrobegin > 1) {
+      $tocompare = -999;
+      if (($transit + 24 < $astroend + 24) && ($transit + 24 > $astrobegin + 24)) {
+        // The transit is during the day
+        // Check the rise time for $astroend and for $astrobegin
+        $theta0w = $theta0 + ($astrobegin * 1.00273790935);
+        if ($theta0w > 0) {
+          $theta0w = $theta0w % 24.0 + ($theta0w - floor($theta0w)); 
+        } else {
+          $toAdd = floor(-$theta0w / 24.0) + 1;
+          $theta0w = $theta0w + 24.0 * $toAdd;
+        }
+        $H = ($theta0w - $longitude / 15 - $ra2) * 15.0;
+        if ($H > 0) {
+          $H = $H % 360.0 + ($H - floor($H));
+        } else {
+          $toAdd = floor(-$H / 360.0) + 1;
+          $H = $H + 360.0 * $toAdd;
+        }
+
+        $tocompare = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($dec2)) + cos(deg2rad($latitude)) * cos(deg2rad($dec2)) * cos(deg2rad($H))));
+
+        $transit = $astroend;
       }
-      $H = ($theta0w - $longitude / 15 - $ra2) * 15.0;
+
+      $theta0 = $theta0 + ($transit * 1.00273790935);
+      if ($theta0 > 0) {
+        $theta0 = $theta0 % 24.0 + ($theta0 - floor($theta0)); 
+      } else {
+        $toAdd = floor(-$theta0 / 24.0) + 1;
+        $theta0 = $theta0 + 24.0 * $toAdd;
+      }
+      $H = ($theta0 - $longitude / 15 - $ra2) * 15.0;
       if ($H > 0) {
         $H = $H % 360.0 + ($H - floor($H));
       } else {
@@ -272,62 +293,20 @@ class AstroCalc implements iAstroCalc
         $H = $H + 360.0 * $toAdd;
       }
 
-      $tocompare = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($dec2)) + cos(deg2rad($latitude)) * cos(deg2rad($dec2)) * cos(deg2rad($H))));
+      $ris_tra_set[3] = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($dec2)) + cos(deg2rad($latitude)) * cos(deg2rad($dec2)) * cos(deg2rad($H))));
 
-      $transit = $astroend;
-    }
-
-    $theta0 = $theta0 + ($transit * 1.00273790935);
-    if ($theta0 > 0) {
-      $theta0 = $theta0 % 24.0 + ($theta0 - floor($theta0)); 
-    } else {
-      $toAdd = floor(-$theta0 / 24.0) + 1;
-      $theta0 = $theta0 + 24.0 * $toAdd;
-    }
-    $H = ($theta0 - $longitude / 15 - $ra2) * 15.0;
-    if ($H > 0) {
-      $H = $H % 360.0 + ($H - floor($H));
-    } else {
-      $toAdd = floor(-$H / 360.0) + 1;
-      $H = $H + 360.0 * $toAdd;
-    }
-
-    $ris_tra_set[3] = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($dec2)) + cos(deg2rad($latitude)) * cos(deg2rad($dec2)) * cos(deg2rad($H))));
-
-    if ($tocompare != -999) {
-      if ($tocompare > $ris_tra_set[3]) {
-        $ris_tra_set[3] = $tocompare;
-        $ris_tra_set[4] = $astrobegin;
+      if ($tocompare != -999) {
+        if ($tocompare > $ris_tra_set[3]) {
+          $ris_tra_set[3] = $tocompare;
+          $ris_tra_set[4] = $astrobegin;
+        } else {
+          $ris_tra_set[4] = $astroend;
+        }
       } else {
-        $ris_tra_set[4] = $astroend;
+        $ris_tra_set[4] = $transit;
       }
-    } else {
-      $ris_tra_set[4] = $transit;
-    }
 
-    $minutes = round(($ris_tra_set[3] - floor($ris_tra_set[3])) * 60);
-    if ($minutes == 60) {
-      $minutes = 0;
-      $toAdd = 1;
-    } else {
-      $toAdd = 0;
-    }
-    if ($minutes < 10) {
-      $minutes = "0" . $minutes;
-    }
-    $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes . "<br />";
-
-    if ($ris_tra_set[4] > 24 || $ris_tra_set[4] < 0) {
-      $ris_tra_set[4] = "-";
-    } else {
-      $ris_tra_set[4] = $ris_tra_set[4] + $timedifference;
-      if ($ris_tra_set[4] < 0) {
-        $ris_tra_set[4] = $ris_tra_set[4] + 24;
-      }
-      if ($ris_tra_set[4] > 24) {
-        $ris_tra_set[4] = $ris_tra_set[4] - 24;
-      }
-      $minutes = round(($ris_tra_set[4] - floor($ris_tra_set[4])) * 60);
+      $minutes = round(($ris_tra_set[3] - floor($ris_tra_set[3])) * 60);
       if ($minutes == 60) {
         $minutes = 0;
         $toAdd = 1;
@@ -337,8 +316,34 @@ class AstroCalc implements iAstroCalc
       if ($minutes < 10) {
         $minutes = "0" . $minutes;
       }
-      $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd . ":" . $minutes . "<br />";
-    }    
+      $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes . "<br />";
+
+      if ($ris_tra_set[4] > 24 || $ris_tra_set[4] < 0) {
+        $ris_tra_set[4] = "-";
+      } else {
+        $ris_tra_set[4] = $ris_tra_set[4] + $timedifference;
+        if ($ris_tra_set[4] < 0) {
+          $ris_tra_set[4] = $ris_tra_set[4] + 24;
+        }
+        if ($ris_tra_set[4] > 24) {
+          $ris_tra_set[4] = $ris_tra_set[4] - 24;
+        }
+        $minutes = round(($ris_tra_set[4] - floor($ris_tra_set[4])) * 60);
+        if ($minutes == 60) {
+          $minutes = 0;
+          $toAdd = 1;
+        } else {
+          $toAdd = 0;
+        }
+        if ($minutes < 10) {
+          $minutes = "0" . $minutes;
+        }
+        $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd . ":" . $minutes . "<br />";
+      }
+    } else {
+      $ris_tra_set[3] = "-";
+      $ris_tra_set[4] = "-";
+    }  
 
     return $ris_tra_set;
   }
