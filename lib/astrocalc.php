@@ -252,10 +252,14 @@ class AstroCalc implements iAstroCalc
       $toAdd = floor(-$transit / 24.0) + 1;
       $transit = $transit + 24.0 * $toAdd;
     }
-    
-    if ($astroend > 1 && $astrobegin > 1) {
+    if ($astroend > 0 && $astrobegin > 0) {
       $tocompare = -999;
-      if (($transit + 24 < $astroend + 24) && ($transit + 24 > $astrobegin + 24)) {
+      if ($astrobegin > 12) {
+        $toCheck = $astrobegin;
+      } else {
+        $toCheck = $astrobegin + 24;
+      }
+      if (($transit + 24 < $astroend + 24) && ($transit + 24 > $toCheck)) {
         // The transit is during the day
         // Check the rise time for $astroend and for $astrobegin
         $theta0w = $theta0 + ($astrobegin * 1.00273790935);
