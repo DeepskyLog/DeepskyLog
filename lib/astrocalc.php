@@ -171,10 +171,16 @@ class AstroCalc implements iAstroCalc
         $ris_tra_set[0] = $ris_tra_set[0] - 24;
       }
       $minutes = round(($ris_tra_set[0] - floor($ris_tra_set[0])) * 60);
+      if ($minutes == 60) {
+        $minutes = 0;
+        $toAdd = 1;
+      } else {
+        $toAdd = 0;
+      }
       if ($minutes < 10) {
         $minutes = "0" . $minutes;
       }
-      $ris_tra_set[0] = floor($ris_tra_set[0]) . ":" . $minutes;
+      $ris_tra_set[0] = floor($ris_tra_set[0]) + $toAdd . ":" . $minutes;
     }
 
     $transit = $ris_tra_set[1];
@@ -189,10 +195,16 @@ class AstroCalc implements iAstroCalc
         $ris_tra_set[1] = $ris_tra_set[1] - 24;
       }
       $minutes = round(($ris_tra_set[1] - floor($ris_tra_set[1])) * 60);
+      if ($minutes == 60) {
+        $minutes = 0;
+        $toAdd = 1;
+      } else {
+        $toAdd = 0;
+      }
       if ($minutes < 10) {
         $minutes = "0" . $minutes;
       }
-      $ris_tra_set[1] = floor($ris_tra_set[1]) . ":" . $minutes . "<br />";
+      $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd . ":" . $minutes . "<br />";
     }    
 
     if ($ris_tra_set[2] > 24 || $ris_tra_set[2] < 0) {
@@ -206,10 +218,16 @@ class AstroCalc implements iAstroCalc
         $ris_tra_set[2] = $ris_tra_set[2] - 24;
       }
       $minutes = round(($ris_tra_set[2] - floor($ris_tra_set[2])) * 60);
+      if ($minutes == 60) {
+        $minutes = 0;
+        $toAdd = 1;
+      } else {
+        $toAdd = 0;
+      }
       if ($minutes < 10) {
         $minutes = "0" . $minutes;
       }
-      $ris_tra_set[2] = floor($ris_tra_set[2]) . ":" . $minutes . "<br />";
+      $ris_tra_set[2] = floor($ris_tra_set[2]) + $toAdd . ":" . $minutes . "<br />";
     }    
 
     $ra2 = $ra2 / 15;
@@ -238,10 +256,16 @@ class AstroCalc implements iAstroCalc
     $ris_tra_set[3] = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($dec2)) + cos(deg2rad($latitude)) * cos(deg2rad($dec2)) * cos(deg2rad($H))));
 
     $minutes = round(($ris_tra_set[3] - floor($ris_tra_set[3])) * 60);
+    if ($minutes == 60) {
+      $minutes = 0;
+      $toAdd = 1;
+    } else {
+      $toAdd = 0;
+    }
     if ($minutes < 10) {
       $minutes = "0" . $minutes;
     }
-    $ris_tra_set[3] = floor($ris_tra_set[3]) . "&deg;" . $minutes . "<br />";
+    $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes . "<br />";
     
     return $ris_tra_set;
   }
