@@ -19,11 +19,19 @@ echo LangMoonMenuTitle."</p>";
 include_once "lib/moonphase.inc.php";
 include_once "lib/astrocalc.php";
   
-$theYear=$_SESSION['globalYear'];
+/*$theYear=$_SESSION['globalYear'];
 $theMonth=$_SESSION['globalMonth'];
 $theDay=$_SESSION['globalDay'];
 $theHour="";
 $theMinute="";
+*/
+//temp suggestion to allow trunk to work for some testing by david
+$theYear=$objUtil->checkSessionKey('globalYear',date("Y"));
+$theMonth=$objUtil->checkSessionKey('globalMonth',date("n"));
+$theDay=$objUtil->checkSessionKey('globalDay',date('j'));
+$theHour="";
+$theMinute="";
+
 $date = $theYear . "-". $theMonth . "-" . $theDay;
 $time = "23:59:59";
 $tzone = "GMT";

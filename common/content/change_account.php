@@ -98,6 +98,18 @@ $line[]=array(LangChangeAccountField12,
               "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"fstOffset\" size=\"4\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'fstOffset')."\" />",
               LangChangeAccountField12Expl);
 $line[]=array(LangChangeAccountPicture,"<input type=\"file\" name=\"picture\" class=\"inputfield\"/>","");
+$line[]=array(profiledsosmagnitude,"","");
+$line[]=array(profiledsosmagnitudeselect,
+              " <input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"overviewdsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewdsos')."\" />".
+              " / <input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"lookupdsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupdsos')."\" />".
+              " / <input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"detaildsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detaildsos')."\" />",
+              "");
+$line[]=array(profilestarsmagnitude,"","");
+$line[]=array(profilestarsmagnitudeselect,
+              "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"overviewstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewstars')."\" />".
+              " / <input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"lookupstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupstars')."\" />".
+              " / <input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"detailstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detailstars')."\" />",
+              "");
 $line[]=array("");        
 $line[]=array(LangChangeAccountCopyright,
               "<input type=\"text\" class=\"inputfield\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'copyright')."\" />",

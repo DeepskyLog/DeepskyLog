@@ -254,7 +254,13 @@ class Observers implements iObservers
 		    $this->setObserverProperty($loggedUser,'stdtelescope', $_POST['instrument']);
 		    $this->setObserverProperty($loggedUser,'standardAtlasCode', $_POST['atlas']);
         $this->setObserverProperty($loggedUser,'fstOffset', $_POST['fstOffset']);
-	      $this->setObserverProperty($loggedUser,'copyright', $_POST['copyright']);
+        $this->setObserverProperty($loggedUser,'overviewdsos', $_POST['overviewdsos']);
+        $this->setObserverProperty($loggedUser,'lookupdsos', $_POST['lookupdsos']);
+        $this->setObserverProperty($loggedUser,'detaildsos', $_POST['detaildsos']);
+        $this->setObserverProperty($loggedUser,'overviewstars', $_POST['overviewstars']);
+        $this->setObserverProperty($loggedUser,'lookupstars', $_POST['lookupstars']);
+        $this->setObserverProperty($loggedUser,'detailstars', $_POST['detailstars']);
+        $this->setObserverProperty($loggedUser,'copyright', $_POST['copyright']);
 		    $this->setObserverProperty($loggedUser,'UT', ((array_key_exists('local_time', $_POST)&&($_POST['local_time']=="on"))?"0":"1"));
 		    if ($_POST['icq_name'] != "")
 		      $this->setObserverProperty($loggedUser,'icqname', $_POST['icq_name']);

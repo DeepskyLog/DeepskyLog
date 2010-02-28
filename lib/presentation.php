@@ -159,11 +159,11 @@ class Presentations implements iPresentation
   	return $topline;
   }
   public  function getDSSDeepskyLiveLinks2($object)
-  { global $objPresentations,$objObject,$baseURL,$objUtil;
+  { global $loggedUser,$objPresentations,$objObject,$baseURL,$objUtil,$objObserver;
     $topline=LangViewObjectDSL." (pdf):&nbsp;";
-	  $topline.="<a href=\"" . $baseURL . "atlas.pdf?zoom=".AtlasOverviewZoom."&amp;object=" . urlencode($object) . "\">" . OverviewChart . "</a>";
-	  $topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "atlas.pdf?zoom=".AtlasLookupZoom."&amp;object=" . urlencode($object) . "\">" . LookupChart . "</a>";
-	  $topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "atlas.pdf?zoom=".AtlasDetailZoom."&amp;dsos=90&amp;object=" . urlencode($object) . "\">" . DetailChart . "</a>";
+	  $topline.=                "<a href=\"" . $baseURL . "atlas.pdf?zoom=".AtlasOverviewZoom."&amp;object=" . urlencode($object) . ($loggedUser?(is_numeric($tempa=$objObserver->getObserverProperty($loggedUser,'overviewdsos',''))?"&amp;dsos=".urlencode($tempa):''):'').                        ($loggedUser?(is_numeric($tempb=$objObserver->getObserverProperty($loggedUser,'overviewstars',''))?"&amp;stars=".urlencode($tempb):''):''). "\">" . OverviewChart . "</a>";
+	  $topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "atlas.pdf?zoom=".AtlasLookupZoom.  "&amp;object=" . urlencode($object) . ($loggedUser?(is_numeric($tempa=$objObserver->getObserverProperty($loggedUser,'lookupdsos',''))?  "&amp;dsos=".urlencode($tempa):''):'').                        ($loggedUser?(is_numeric($tempb=$objObserver->getObserverProperty($loggedUser,'lookupstars',''))?  "&amp;stars=".urlencode($tempb):''):''). "\">" . LookupChart . "</a>";
+	  $topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "atlas.pdf?zoom=".AtlasDetailZoom.  "&amp;object=" . urlencode($object) . ($loggedUser?(is_numeric($tempa=$objObserver->getObserverProperty($loggedUser,'detaildsos',''))?  "&amp;dsos=".urlencode($tempa):"&amp;dsos=90"):"&amp;dsos=90").($loggedUser?(is_numeric($tempb=$objObserver->getObserverProperty($loggedUser,'detailstars',''))?  "&amp;stars=".urlencode($tempb):''):''). "\">" . DetailChart . "</a>";
     return $topline;
   }
   public  function line($content,$alignment='',$widths=array(),$lineheight='',$classes=array())

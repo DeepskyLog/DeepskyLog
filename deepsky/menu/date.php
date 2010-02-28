@@ -27,18 +27,25 @@ if($loggedUser)
     $link.=$key.'='.$value.'&';
 
   $today=date('Ymd',strtotime('today'));
+  /*
   $thisYear=substr($today,0,4);
   $thisMonth=substr($today,4,2);
   $thisDay=substr($today,6,2);
+  */
+  //temp suggestion by David to allow some testing to continue on trunk
+  $thisYear=date("Y");
+  $thisMonth=date("n");
+  $thisDay=date("j");
+  
   
   $today = "<a href=\"" . $link . "&amp;changeDay=". $thisDay . "&amp;changeMonth=" . $thisMonth . "&amp;changeYear=" . $thisYear ."\">" . LangToday . "</a>";
   echo "<p   class=\"menuHead\">" . LangDate . " - " . $today . "</p>";
 
   if (array_key_exists('globalMonth',$_SESSION) && $_SESSION['globalMonth']) {
   } else {
-    $_SESSION['globalYear']=thisYear;
-    $_SESSION['globalMonth']=thisMonth;
-    $_SESSION['globalDay']=thisDay;
+    $_SESSION['globalYear']=$thisYear;
+    $_SESSION['globalMonth']=$thisMonth;
+    $_SESSION['globalDay']=$thisDay;
   }
   if(array_key_exists('changeMonth',$_GET) && $_GET['changeMonth'])
   { $_SESSION['globalMonth'] = $_GET['changeMonth'];

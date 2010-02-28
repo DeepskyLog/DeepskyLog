@@ -17,7 +17,7 @@ else
 		else
 			$topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a>";
 	}
-  $objPresentations->line(array(	  "<a href=\"" . $baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode($object) . "\">" . LangAtlasPage . "</a>",$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(40,60),20);
+  $objPresentations->line(array("<a href=\"" . $baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode($object) . "\">" . LangAtlasPage . "</a>",$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(40,60),20);
 	echo "<hr />";
 	$objObject->showObject($object);
 	

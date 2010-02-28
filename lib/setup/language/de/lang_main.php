@@ -2,6 +2,13 @@
 
 // TO DO:
 
+
+define("profiledsosmagnitude"                            ,"Atlas standaard objectmagnitudes:");
+define("profiledsosmagnitudeselect"                      ,"overzicht / opzoeken / detail");
+define("profilestarsmagnitude"                           ,"Atlas standaard stermagnitudes:");
+define("profilestarsmagnitudeselect"                     ,"overzicht / opzoeken / detail");
+
+
 define('LangBest'                                        ,'Best');
 define('LangToday'                                       ,'Today');
 define('LangDate'                                        ,'Date');
@@ -13,6 +20,7 @@ define('LangSet'                                         ,' sets at ');
 define('LangAltitude'                                    ,' reaches an altitude of ');
 define('LangRistrasetOn'                                 ,' on ');
 define('LangRistrasetIn'                                 ,' in ');
+
 
 define('OverviewChart'                                   ,'Overview');
 define('LookupChart'                                     ,'Lookup');
