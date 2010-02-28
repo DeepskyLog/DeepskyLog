@@ -6,7 +6,7 @@
 define("profiledsosmagnitude"                            ,"Atlas standard object magnitudes:");
 define("profiledsosmagnitudeselect"                      ,"Overview / Lookup / Detail");
 define("profilestarsmagnitude"                           ,"Atlas standard star magnitudes:");
-define("profiledsosmagnitudeselect"                      ,"Overview / Lookup / Detail");
+define("profilestarsmagnitudeselect"                     ,"Overview / Lookup / Detail");
 
 
 

@@ -2,30 +2,24 @@
 
 if($loggedUser) 
 { echo "  <script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/CalendarPopupCC.js\"></script>";
+  echo "<div class=\"menuDivExtended\">";
+  $link=$baseURL."index.php?";
+  $link2="index.php?";
+  reset($_GET);
+  while(list($key,$value)=each($_GET))
+    if(!(in_array($key,array('changeDay','changeMonth','changeYear'))))
+      $link.=$key.'='.$value.'&';
   echo "  <script type=\"text/javascript\" >";
   echo "  var cal = new CalendarPopup();";
   echo "  function SetDate(y,m,d)";
-  echo "  {";
-  echo "    document.getElementById('riseday').value = d;";
-  echo "    document.getElementById('risemonth').value = m;";
-  echo "    document.getElementById('riseyear').value = y;";                           
+  echo "  { thelocation=\"".($link2)."\";
+            thelocation=thelocation+'changeDay='+d;
+            thelocation=thelocation+'&changeMonth='+m;
+            thelocation=thelocation+'&changeYear='+y;
+            window.location=thelocation;";                   
   echo "  }";
   echo "  </script>";
-
-  echo "<div class=\"menuDivExtended\">";
-  // Do not enable menu to change date...
-  /*echo "<p   class=\"menuHead\"><a href=\"#\" onclick=\"cal.showNavigationDropdowns();
-                             cal.setReturnFunction('SetDate');
-                             cal.showCalendar('DateAnchor');
-                             return false;\" 
-                    name=\"DateAnchor\" 
-                    id=\"DateAnchor\">" . LangDate . "</a></p>";
-  */
-  $link=$baseURL."index.php?";
-  reset($_GET);
-  while(list($key,$value)=each($_GET))
-    $link.=$key.'='.$value.'&';
-
+      
   $today=date('Ymd',strtotime('today'));
   /*
   $thisYear=substr($today,0,4);
@@ -36,10 +30,17 @@ if($loggedUser)
   $thisYear=date("Y");
   $thisMonth=date("n");
   $thisDay=date("j");
-  
-  
+
+  $DateCalender =  "<a href=\"#\" 
+                       onclick=\"cal.showNavigationDropdowns();
+                                 cal.setReturnFunction('SetDate');
+                                 cal.showCalendar('DateAnchor');
+                                 return false;\" 
+                       name=\"DateAnchor\" 
+                       id=\"DateAnchor\">" . LangDate . "</a>";
+
   $today = "<a href=\"" . $link . "&amp;changeDay=". $thisDay . "&amp;changeMonth=" . $thisMonth . "&amp;changeYear=" . $thisYear ."\">" . LangToday . "</a>";
-  echo "<p   class=\"menuHead\">" . LangDate . " - " . $today . "</p>";
+  echo "<p class=\"menuHead\">" . $DateCalender . " - " . $today . "</p>";
 
   if (array_key_exists('globalMonth',$_SESSION) && $_SESSION['globalMonth']) {
   } else {
