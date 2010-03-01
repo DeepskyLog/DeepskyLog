@@ -8,15 +8,15 @@ if($loggedUser)
   reset($_GET);
   while(list($key,$value)=each($_GET))
     if(!(in_array($key,array('changeDay','changeMonth','changeYear'))))
-      $link.=$key.'='.$value.'&amp;';
+      $link.=$key.'='.urlencode($value).'&amp;';
   $link=substr($link,0,strlen($link)-5);
   echo "  <script type=\"text/javascript\" >";
   echo "  var cal = new CalendarPopup();";
   echo "  function SetDate(y,m,d)";
   echo "  { thelocation=\"".($link2)."\";
             thelocation=thelocation+'changeDay='+d;
-            thelocation=thelocation+'&changeMonth='+m;
-            thelocation=thelocation+'&changeYear='+y;
+            thelocation=thelocation+'&amp;'+'changeMonth='+m;
+            thelocation=thelocation+'&amp;'+'changeYear='+y;
             window.location=thelocation;";                   
   echo "  }";
   echo "  </script>";
