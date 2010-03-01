@@ -7,7 +7,7 @@
  
  print "Database update will star and dso magnitudes for atlas pages in user profile.\n";
 
- $sql="ALTER TABLE `dsltrunk`.`observers`
+ $sql="ALTER TABLE `observers`
             ADD COLUMN `overviewdsos`  VARCHAR(5) NOT NULL DEFAULT '' AFTER `copyright`,
             ADD COLUMN `lookupdsos`    VARCHAR(5) NOT NULL DEFAULT '' AFTER `overviewdsos`,
             ADD COLUMN `detaildsos`    VARCHAR(5) NOT NULL DEFAULT '' AFTER `lookupdsos`,
