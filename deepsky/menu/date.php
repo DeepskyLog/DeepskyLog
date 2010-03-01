@@ -8,7 +8,8 @@ if($loggedUser)
   reset($_GET);
   while(list($key,$value)=each($_GET))
     if(!(in_array($key,array('changeDay','changeMonth','changeYear'))))
-      $link.=$key.'='.$value.'&';
+      $link.=$key.'='.$value.'&amp;';
+  $link=substr($link,0,strlen($link)-5);
   echo "  <script type=\"text/javascript\" >";
   echo "  var cal = new CalendarPopup();";
   echo "  function SetDate(y,m,d)";
@@ -19,7 +20,7 @@ if($loggedUser)
             window.location=thelocation;";                   
   echo "  }";
   echo "  </script>";
-      
+     
   $today=date('Ymd',strtotime('today'));
   /*
   $thisYear=substr($today,0,4);
@@ -63,6 +64,7 @@ if($loggedUser)
     if(array_key_exists('Qobj',$_SESSION))
       $_SESSION['Qobj']=$objObject->getObjectRisSetTrans($_SESSION['Qobj']);
   }
+  
   echo "<select name=\"riseday\" style=\"width:50px;\" id=\"riseday\" class=\"inputfield menuField menuDropdown\" onchange=\"location=this.options[this.selectedIndex].value;\">";
   $numberOfDays = 31;
   if ($_SESSION['globalMonth'] == 2 && $_SESSION['globalYear'] % 4 != 0) {
@@ -83,6 +85,7 @@ if($loggedUser)
   for($i= $thisYear;$i<$thisYear + 10;$i++)
     echo "<option ".(($i==$_SESSION['globalYear'])?"selected=\"selected\"":"")." value=\"".$link."&amp;changeYear=$i\">".$i."</option>";
   echo "</select>";
+  
   echo "</div>";
   $link="";
 }
