@@ -558,8 +558,8 @@ class PrintAtlas
 	  }
 	  $this->dsl_deg=$sign.$this->dsl_deg;
 	  if($this->dsl_amn>0)
-	    return $this->dsl_deg.'°'.$this->dsl_amn.'\'';
-	  return $this->dsl_deg.'°';
+	    return $this->dsl_deg.'ï¿½'.$this->dsl_amn.'\'';
+	  return $this->dsl_deg.'ï¿½';
 	}  
 	
   function coordHrDecToHrMin($theHr)
@@ -604,7 +604,7 @@ class PrintAtlas
 	function coordGridLxDyToString()
 	{ $this->coordHrDecToHrMinSec($this->gridLxRad*$this->f12OverPi);
 	  $this->coordDeclDecToDegMin($this->gridDyRad*$this->f180OverPi);
-	  return sprintf('%02d',$this->dsl_hr).'h'.sprintf('%02d',$this->dsl_min).'m'.sprintf('%02d',$this->dsl_sec).'s,'.sprintf('%02d',$this->dsl_deg).'°'.sprintf('%02d',$this->dsl_amn).'\'';
+	  return sprintf('%02d',$this->dsl_hr).'h'.sprintf('%02d',$this->dsl_min).'m'.sprintf('%02d',$this->dsl_sec).'s,'.sprintf('%02d',$this->dsl_deg).'ï¿½'.sprintf('%02d',$this->dsl_amn).'\'';
 	}
   
 	function gridDiam1SecToPxMin($Diam1Sec)
@@ -895,7 +895,14 @@ class PrintAtlas
   { $Lrad=$Lhr*$this->fPiOver12; $Drad=$Ddeg*$this->fPiOver180;
     if($Lrad>$this->gridL0rad+$this->fPi) $Lrad=$Lrad-($this->f2Pi);
     if($Lrad<$this->gridL0rad-$this->fPi) $Lrad=$Lrad+($this->f2Pi);
-    $drad=acos((sin($this->gridD0rad)*sin($Drad))+(cos($this->gridD0rad)*cos($Drad)*cos($Lrad-$this->gridL0rad)));
+    $drad=((sin($this->gridD0rad)*sin($Drad))+(cos($this->gridD0rad)*cos($Drad)*cos($Lrad-$this->gridL0rad)));
+    if($drad>1) {
+      $drad = 1;
+    }
+    if($drad<-1) {
+      $drad = -1;
+    }
+    $drad = acos($drad);
     if($drad>0)
     { $this->gridLxRad=-($drad*(sin($Lrad-$this->gridL0rad)*cos($Drad)/sin($drad)));
       $this->gridDyRad=($drad*(sin($Drad)-(sin($this->gridD0rad)*cos($drad)))/(cos($this->gridD0rad)*sin($drad)));
@@ -908,7 +915,7 @@ class PrintAtlas
   
 
   function gridShowInfo()
-  { $t1 =atlasPageFoV.' '.(round($this->gridSpanL*20)/10)." x ".(round($this->gridSpanD*20)/10)."° - ";
+  { $t1 =atlasPageFoV.' '.(round($this->gridSpanL*20)/10)." x ".(round($this->gridSpanD*20)/10)."ï¿½ - ";
 	  $t1.=atlasPageDSLM.' '.($this->maxshowndsomag==-99?'-':$this->maxshowndsomag)." - ";
 	  $t1.=atlasPageStarLM.' '.$this->starsmagnitude;
 	  $this->pdf->addText($this->gridOffsetXpx,$this->Legend2y,8,$t1);
