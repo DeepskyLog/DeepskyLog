@@ -299,9 +299,19 @@ class Presentations implements iPresentation
 	  echo "</td>";        
 	  echo "</tr>";        
 	  echo "<tr>";
-		echo "<td colspan=\"2\" class=\"centered\">";           
+	  if($id)
+	  { echo "<td align=\"left\">";         
+	    echo "<a href=\"#\" onclick=\"moveColumnLeft('".$columnSource."','".$id."');return false;\">&lt;</a>";
+	    echo "</td>";        
+	  }
+	  echo "<td colspan=\"2\" class=\"centered\" width=\"100%\">";           
 	  echo "<a href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc."\">".trim($header0)."</a>";;
 	  echo "</td>";        
+	  if($id)
+	  { echo "<td align=\"left\">";         
+	    echo "<a href=\"#\" onclick=\"moveColumnRight('".$columnSource."','".$id."');return false;\">&gt;</a>";
+	    echo "</td>";        
+	  }
 	  echo "</tr>";
 	  echo "</table>";
 	  echo "</td>";        

@@ -488,11 +488,11 @@ class Objects implements iObjects
     return $obs;
   }
   public  function getObjectRisSetTrans($obs)
-  { global $loggedUser, $objObserver, $objLocation ,$objAstroCalc, $dateformat, $globalMonth;
+  { global $loggedUser, $objObserver, $objLocation ,$objAstroCalc, $dateformat, $globalMonth,$objUtil;
     if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) {
-      $theYear=$_SESSION['globalYear'];
-      $theMonth=$_SESSION['globalMonth'];
-      $theDay=$_SESSION['globalDay'];
+      $theYear=$objUtil->checkSessionKey('globalYear',date('Y'));
+      $theMonth=$objUtil->checkSessionKey('globalMonth',date('n'));
+      $theDay=$objUtil->checkSessionKey('globalDay','j');
       
       // 2) Get the julian day of today...
       $jd = gregoriantojd($theMonth, $theDay, $theYear);
@@ -1082,14 +1082,14 @@ class Objects implements iObjects
        $specialclass="strikethrough"; 
       echo "<tr ".(($_SESSION['Qobj'][$count]['objectname']==$ownShow)?"class=\"type3 height5px\"":"class=\"height5px type".(2-($countline%2)."\"")).">";
       if(($showRank==1)&&$myList)
-        echo "<td align=\"center\" id=\"C0D".$countline."\" ><a href=\"#\" onclick=\"theplace = prompt('".LangNewPlaceInList."','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
+        echo "<td align=\"center\" id=\"C0D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader9.": ".$_SESSION['Qobj'][$count]['objectpositioninlist']."')\"><a href=\"#\" onclick=\"theplace = prompt('".LangNewPlaceInList."','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
       elseif($showRank)
-	      echo "<td align=\"center\" id=\"C0D".$countline."\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</td>";
-      echo "<td align=\"center\" id=\"C1D".$countline."\" class=\"".$specialclass."\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" >".$_SESSION['Qobj'][$count]['showname']."</a></td>";
-      echo "<td align=\"center\" id=\"C2D".$countline."\">".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."</td>";
-      echo "<td align=\"center\" id=\"C3D".$countline."\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>";
-      echo "<td align=\"center\" id=\"C4D".$countline."\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>";
-      echo "<td align=\"center\" id=\"C5D".$countline."\">".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."</td>";
+	      echo "<td align=\"center\" id=\"C0D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader9.": ".$_SESSION['Qobj'][$count]['objectpositioninlist']."')\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</td>";
+      echo "<td align=\"center\"   id=\"C1D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader1.": ".$_SESSION['Qobj'][$count]['objectname']."')\" class=\"".$specialclass."\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" >".$_SESSION['Qobj'][$count]['showname']."</a></td>";
+      echo "<td align=\"center\"   id=\"C2D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader2.": ".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."')\">".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."</td>";
+      echo "<td align=\"center\"   id=\"C3D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3.": ".$_SESSION['Qobj'][$count]['objectmagnitude']."')\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>";
+      echo "<td align=\"center\"   id=\"C4D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3b.": ".$_SESSION['Qobj'][$count]['objectsurfacebrightness']."')\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>";
+      echo "<td align=\"center\"   id=\"C5D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader4.": ".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."')\">".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."</td>";
       if($loggedUser) 
 	    { $page = $_SESSION['Qobj'][$count][$atlas];
         if(substr($_SESSION['Qobj'][$count]['objectseen'],0,2)=="YD")
@@ -1100,16 +1100,16 @@ class Objects implements iObjects
           $seenclass="seenX";
         else
           $seenclass="seenN";
-        echo "<td align=\"center\" id=\"C6D".$countline."\" onmouseover=\"Tip('".$objAtlas->atlasCodes[$atlas]."')\">".$page."</td>";
-        echo "<td align=\"center\" id=\"C7D".$countline."\" class=\"".$_SESSION['Qobj'][$count]['objectcontrasttype']."\" onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectcontrastpopup']."')\">".$_SESSION['Qobj'][$count]['objectcontrast']."</td>";
-        echo "<td align=\"center\" id=\"C8D".$countline."\">".$_SESSION['Qobj'][$count]['objectoptimalmagnification']."</td>";
-        echo "<td align=\"center\" id=\"C9D".$countline."\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objectrisepopup'] . "')\">".$_SESSION['Qobj'][$count]['objectrise']."</td>";
+        echo "<td align=\"center\" id=\"C6D".$countline."\"  onmouseover=\"Tip('".$objAtlas->atlasCodes[$atlas].": ".$page."')\">".$page."</td>";
+        echo "<td align=\"center\" id=\"C7D".$countline."\"  onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectcontrastpopup']."')\" class=\"".$_SESSION['Qobj'][$count]['objectcontrasttype']."\" >".$_SESSION['Qobj'][$count]['objectcontrast']."</td>";
+        echo "<td align=\"center\" id=\"C8D".$countline."\"  onmouseover=\"Tip('". LangViewObjectFieldMagnification . ": ". $_SESSION['Qobj'][$count]['objectoptimalmagnification']."')\" >".$_SESSION['Qobj'][$count]['objectoptimalmagnification']."</td>";
+        echo "<td align=\"center\" id=\"C9D".$countline."\"  onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objectrisepopup'] . "')\">".$_SESSION['Qobj'][$count]['objectrise']."</td>";
         echo "<td align=\"center\" id=\"C10D".$countline."\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objecttransitpopup'] . "')\">".$_SESSION['Qobj'][$count]['objecttransit']."</td>";
         echo "<td align=\"center\" id=\"C11D".$countline."\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objectsetpopup'] . "')\">".$_SESSION['Qobj'][$count]['objectset']."</td>";
-        echo "<td align=\"center\" id=\"C12D".$countline."\">".$_SESSION['Qobj'][$count]['objectbest']."</td>";
+        echo "<td align=\"center\" id=\"C12D".$countline."\" onmouseover=\"Tip('". LangBest . ": ". substr($_SESSION['Qobj'][$count]['objectbest'],0,-6)."')\" >".$_SESSION['Qobj'][$count]['objectbest']."</td>";
         echo "<td align=\"center\" id=\"C13D".$countline."\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objectmaxaltitudepopup'] . "')\">".$_SESSION['Qobj'][$count]['objectmaxaltitude']."</td>";
-        echo "<td align=\"center\" id=\"C14D".$countline."\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectseenlink']."</td>";
-        echo "<td align=\"center\" id=\"C15D".$countline."\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectlastseenlink']."</td>";
+        echo "<td align=\"center\" id=\"C14D".$countline."\" onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectseen']."')\" class=\"".$seenclass."\" >".$_SESSION['Qobj'][$count]['objectseenlink']."</td>";
+        echo "<td align=\"center\" id=\"C15D".$countline."\" onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectlastseen']."')\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectlastseenlink']."</td>";
 	    }
   	  if($myList)
   	  { echo("<td align=\"center\">");
@@ -1138,6 +1138,7 @@ class Objects implements iObjects
     if($columnSource)
     { echo "<script type=\"text/javascript\">";
       echo "checkColumns('".$columnSource."');";
+      echo "writeColumnsOrder('".$columnSource."');";
       echo "</script>";
     }
   }
