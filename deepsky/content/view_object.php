@@ -76,7 +76,7 @@ else
 		  echo "theResizeSize=75;";
 		  echo "</script>";
 		}
-		$objObject->showObjects($link, $min, $max,$_GET['object'],0,$step);
+		$objObject->showObjects($link, $min, $max,$_GET['object'],0,$step,'','view_object');
 		echo "<hr />";
 		$content =LangExecuteQueryObjectsMessage4."&nbsp;";
 		$content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4a)."&nbsp;-&nbsp;";

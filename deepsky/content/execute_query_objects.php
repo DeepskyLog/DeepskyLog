@@ -43,7 +43,7 @@ if(count($_SESSION['Qobj'])>1) //===============================================
     echo "theResizeSize=80;";
     echo "</script>";
 	}
-	$objObject->showObjects($link, $min, $max,'',0, $step);
+	$objObject->showObjects($link, $min, $max,'',0, $step,'',"execute_query_objects");
 	echo "<hr />";
 	$content1 =LangExecuteQueryObjectsMessage4."&nbsp;";
 	$content1.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4a);

@@ -21,8 +21,8 @@ interface iPresentation
   public  function raToStringDSS($ra);                                         // returns html DSS ra coordinates eg 6+43+55 for 6h43m55s
   public  function raToStringHM($ra);
   public  function searchAndLinkCatalogsInText($theText);                              // hyperlinks M, NGC, .. catalogs in a text
-  public  function tableSortHeader($header0, $link0);                                           // sorting header on table
-  public  function tableSortInverseHeader($header0, $link0);                                    // inverse sorting header on table
+  public  function tableSortHeader($header0, $link0, $id="", $columnSource="");                                           // sorting header on table
+  public  function tableSortInverseHeader($header0, $link0, $id="", $columnSource="");                                    // inverse sorting header on table
 }
 class Presentations implements iPresentation
 { public  function alertMessage($theMessage)
@@ -281,14 +281,19 @@ class Presentations implements iPresentation
 		$replacements[3]="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=Arp%20\\2\">Arp&nbsp;\\2</a>";
 		return preg_replace($patterns, $replacements, $theText);
   }
-	public  function tableSortHeader($header0, $link0)
+	public  function tableSortHeader($header0, $link0, $id="", $columnSource="")
 	{ global $baseURL;
-	  echo "<td style=\"vertical-align:top;\">";         
+	  echo "<td style=\"vertical-align:top;\" ".($id?"id=\"".$id."\" ":"").">";         
 	  echo "<table>";   
 	  echo "<tr>";          
 	  echo "<td>";         
 	  echo "<a href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc. "\"><img class=\"sortButton\" src=\"".$baseURL."styles/images/up10.gif\" alt=\"^\"/></a>";
 	  echo "</td>";        
+	  if($id)
+	  { echo "<td align=\"center\" width=\"100%\">";         
+	    echo "<a href=\"#\" onclick=\"removeColumn('".$columnSource."','".$id."','".$header0."');return false;\">x</a>";
+	    echo "</td>";        
+	  }
 	  echo "<td align=\"right\">";         
 	  echo "<a href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img class=\"sortButton\" src=\"".$baseURL."styles/images/down10.gif\" alt=\"v\"/></a>";
 	  echo "</td>";        
@@ -301,14 +306,19 @@ class Presentations implements iPresentation
 	  echo "</table>";
 	  echo "</td>";        
 	}
-	public  function tableSortInverseHeader($header0, $link0)
+	public  function tableSortInverseHeader($header0, $link0, $id="", $columnSource="")
 	{ global $baseURL;
-	  echo "<td style=\"vertical-align:top;\">";         
+	  echo "<td style=\"vertical-align:top;\" ".($id?"id=\"".$id."\" ":"").">";         
 	  echo "<table>";   
 	  echo "<tr>";          
 	  echo "<td>";         
 	  echo "<a href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img class=\"sortButton\" src=\"".$baseURL."styles/images/up10.gif\" alt=\"^\" /></a>";
 	  echo "</td>";        
+	  if($id)
+	  { echo "<td align=\"center\" width=\"100%\">";         
+	    echo "<a href=\"#\" onclick=\"removeColumn('".$columnSource."','".$id."','".$header0."');return false;\">x</a>";
+	    echo "</td>";        
+	  }
 	  echo "<td align=\"right\">";         
 	  echo "<a href=\"".$link0."&amp;sortdirection=asc\" title=\"".LangSortOnAsc."\"><img class=\"sortButton\" src=\"".$baseURL."styles/images/down10.gif\" alt=\"v\" /></a>";
 	  echo "</td>";        

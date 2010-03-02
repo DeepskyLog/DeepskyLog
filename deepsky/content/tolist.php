@@ -57,7 +57,7 @@ if($listname)
       echo "theResizeSize=90;";
       echo "</script>";
   	}
-	  $objObject->showObjects($link, $min, $max,'',1, $step,"removePageObjectsFromList");
+	  $objObject->showObjects($link, $min, $max,'',1, $step,"removePageObjectsFromList","tolist");
 	  echo "<hr />";
 	  $content=LangExecuteQueryObjectsMessage4."&nbsp;";
     $content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4a);
