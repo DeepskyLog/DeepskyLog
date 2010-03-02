@@ -76,19 +76,25 @@ class AstroCalc implements iAstroCalc
     } else {
       $h0 = 0.7275 * $moonHorParallax - 0.566667;
     }
+
     
     $Hcap0 = rad2deg(acos((sin(deg2rad($h0)) - sin(deg2rad($latitude)) * sin(deg2rad($dec2)))
               / (cos(deg2rad($latitude)) * cos(deg2rad($dec2)))));
-    
+                  
     $m0 = ($ra2 + $longitude - $theta0 * 15.0) / 360.0;
     $m0 = $m0 - floor($m0);
-
-    $m1 = $m0 - $Hcap0 / 360.0;
-    $m1 = $m1 - floor($m1);
-
-    $m2 = $m0 + $Hcap0 / 360.0;
-    $m2 = $m2 - floor($m2);
-
+    
+    if(is_nan($Hcap0))
+    { $m1=99;
+      $m2=99;
+    }
+    else
+    { $m1 = $m0 - $Hcap0 / 360.0;
+      $m1 = $m1 - floor($m1);    
+      $m2 = $m0 + $Hcap0 / 360.0;
+      $m2 = $m2 - floor($m2);
+    }
+    
     // STEP 3 : Extra calculation to work for moving bodies...
     // 3.1 : transit time
     $theta = $theta0 * 15.0 + 360.985647 * $m0;
@@ -108,60 +114,65 @@ class AstroCalc implements iAstroCalc
     
     $m0 = ($deltaM + $m0) * 24.0;
     
-    // 3.2 : rise time
-    $theta = $theta0 * 15.0 + 360.985647 * $m1;
-    $theta = $theta / 360.0;
-    $theta = $theta - floor($theta);
-    $theta = $theta * 360.0;
-    
-    $n = $m1 + 56 / 86400;
-    
-    $a = $ra2 - $ra1;
-    $b = $ra3 - $ra2;
-    $c = $b - $a;
-    $alphaInterpol = $ra2 + $n / 2.0 * ($a + $b + $n * $c);
-
-    $a = $dec2 - $dec1;
-    $b = $dec3 - $dec2;
-    $c = $b - $a;
-    $deltaInterpol = $dec2 + $n / 2.0 * ($a + $b + $n * $c);
-
-    $H = $theta - $longitude - $alphaInterpol;
-    $h = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($deltaInterpol)) + cos(deg2rad($latitude)) * cos(deg2rad($deltaInterpol)) * cos(deg2rad($H)))); 
-    $deltaM = ($h - $h0) / (360.0 * cos(deg2rad($deltaInterpol)) * cos(deg2rad($latitude)) * sin(deg2rad($H)));
-    
-    $m1 = ($deltaM + $m1) * 24.0;
-    
-    // 3.3 : set time
-    $theta = $theta0 * 15.0 + 360.985647 * $m2;
-    $theta = $theta / 360.0;
-    $theta = $theta - floor($theta);
-    $theta = $theta * 360.0;
-    
-    $n = $m2 + 56 / 86400;
-    
-    $a = $ra2 - $ra1;
-    $b = $ra3 - $ra2;
-    $c = $b - $a;
-    $alphaInterpol = $ra2 + $n / 2.0 * ($a + $b + $n * $c);
-
-    $a = $dec2 - $dec1;
-    $b = $dec3 - $dec2;
-    $c = $b - $a;
-    $deltaInterpol = $dec2 + $n / 2.0 * ($a + $b + $n * $c);
-
-    $H = $theta - $longitude - $alphaInterpol;
-    $h = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($deltaInterpol)) + cos(deg2rad($latitude)) * cos(deg2rad($deltaInterpol)) * cos(deg2rad($H)))); 
-    $deltaM = ($h - $h0) / (360.0 * cos(deg2rad($deltaInterpol)) * cos(deg2rad($latitude)) * sin(deg2rad($H)));
-    
-    $m2 = ($deltaM + $m2) * 24.0;
-    
+    if(is_nan($Hcap0))
+    { 
+    }
+    else
+    { // 3.2 : rise time
+	    $theta = $theta0 * 15.0 + 360.985647 * $m1;
+	    $theta = $theta / 360.0;
+	    $theta = $theta - floor($theta);
+	    $theta = $theta * 360.0;
+	 
+	       
+	    $n = $m1 + 56 / 86400;
+	    
+	    $a = $ra2 - $ra1;
+	    $b = $ra3 - $ra2;
+	    $c = $b - $a;
+	    $alphaInterpol = $ra2 + $n / 2.0 * ($a + $b + $n * $c);
+	
+	    $a = $dec2 - $dec1;
+	    $b = $dec3 - $dec2;
+	    $c = $b - $a;
+	    $deltaInterpol = $dec2 + $n / 2.0 * ($a + $b + $n * $c);
+	
+	    $H = $theta - $longitude - $alphaInterpol;
+	    $h = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($deltaInterpol)) + cos(deg2rad($latitude)) * cos(deg2rad($deltaInterpol)) * cos(deg2rad($H)))); 
+	    $deltaM = ($h - $h0) / (360.0 * cos(deg2rad($deltaInterpol)) * cos(deg2rad($latitude)) * sin(deg2rad($H)));
+	    
+	    $m1 = ($deltaM + $m1) * 24.0;
+	    
+	    // 3.3 : set time
+	    $theta = $theta0 * 15.0 + 360.985647 * $m2;
+	    $theta = $theta / 360.0;
+	    $theta = $theta - floor($theta);
+	    $theta = $theta * 360.0;
+	    
+	    $n = $m2 + 56 / 86400;
+	    
+	    $a = $ra2 - $ra1;
+	    $b = $ra3 - $ra2;
+	    $c = $b - $a;
+	    $alphaInterpol = $ra2 + $n / 2.0 * ($a + $b + $n * $c);
+	
+	    $a = $dec2 - $dec1;
+	    $b = $dec3 - $dec2;
+	    $c = $b - $a;
+	    $deltaInterpol = $dec2 + $n / 2.0 * ($a + $b + $n * $c);
+	
+	    $H = $theta - $longitude - $alphaInterpol;
+	    $h = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($deltaInterpol)) + cos(deg2rad($latitude)) * cos(deg2rad($deltaInterpol)) * cos(deg2rad($H)))); 
+	    $deltaM = ($h - $h0) / (360.0 * cos(deg2rad($deltaInterpol)) * cos(deg2rad($latitude)) * sin(deg2rad($H)));
+	    
+	    $m2 = ($deltaM + $m2) * 24.0;
+    }    
     $ris_tra_set[0] = $m1;
     $ris_tra_set[1] = $m0;
     $ris_tra_set[2] = $m2;
 
     $rise = $ris_tra_set[0];
-    if ($ris_tra_set[0] > 24 || $ris_tra_set[0] < 0) {
+    if($ris_tra_set[0] > 24 || $ris_tra_set[0] < 0) {
       $ris_tra_set[0] = "-";
     } else {
       $ris_tra_set[0] = $ris_tra_set[0] + $timedifference;
@@ -185,7 +196,7 @@ class AstroCalc implements iAstroCalc
     }
 
     $transit = $ris_tra_set[1];
-    if ($ris_tra_set[1] > 24 || $ris_tra_set[1] < 0) {
+    if($ris_tra_set[1] > 24 || $ris_tra_set[1] < 0) {
       $ris_tra_set[1] = "-";
     } else {
       $ris_tra_set[1] = $ris_tra_set[1] + $timedifference;
