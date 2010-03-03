@@ -291,7 +291,7 @@ class Presentations implements iPresentation
 	  echo "</td>";        
 	  if($id)
 	  { echo "<td align=\"center\" width=\"100%\">";         
-	    echo "<a href=\"#\" onclick=\"removeColumn('".$columnSource."','".$id."','".$header0."');return false;\">x</a>";
+	    echo "<a href=\"#\" onclick=\"removeColumn('".$id."','".$header0."');return false;\">x</a>";
 	    echo "</td>";        
 	  }
 	  echo "<td align=\"right\">";         
@@ -301,7 +301,7 @@ class Presentations implements iPresentation
 	  echo "<tr>";
 	  if($id)
 	  { echo "<td align=\"left\">";         
-	    echo "<a href=\"#\" onclick=\"moveColumnLeft('".$columnSource."','".$id."');return false;\">&lt;</a>";
+	    echo "<a href=\"#\" onclick=\"moveColumnLeft('".$id."');return false;\">&lt;</a>";
 	    echo "</td>";        
 	  }
 	  echo "<td colspan=\"2\" class=\"centered\" width=\"100%\">";           
@@ -309,7 +309,7 @@ class Presentations implements iPresentation
 	  echo "</td>";        
 	  if($id)
 	  { echo "<td align=\"left\">";         
-	    echo "<a href=\"#\" onclick=\"moveColumnRight('".$columnSource."','".$id."');return false;\">&gt;</a>";
+	    echo "<a href=\"#\" onclick=\"moveColumnRight('".$id."');return false;\">&gt;</a>";
 	    echo "</td>";        
 	  }
 	  echo "</tr>";
@@ -326,7 +326,7 @@ class Presentations implements iPresentation
 	  echo "</td>";        
 	  if($id)
 	  { echo "<td align=\"center\" width=\"100%\">";         
-	    echo "<a href=\"#\" onclick=\"removeColumn('".$columnSource."','".$id."','".$header0."');return false;\">x</a>";
+	    echo "<a href=\"#\" onclick=\"removeColumn('".$id."','".$header0."');return false;\">x</a>";
 	    echo "</td>";        
 	  }
 	  echo "<td align=\"right\">";         
@@ -334,9 +334,19 @@ class Presentations implements iPresentation
 	  echo "</td>";        
 	  echo "</tr>";        
 	  echo "<tr >";
+	  if($id)
+	  { echo "<td align=\"left\">";         
+	    echo "<a href=\"#\" onclick=\"moveColumnLeft('".$id."');return false;\">&lt;</a>";
+	    echo "</td>";        
+	  }
 	  echo "<td colspan=\"2\" class=\"centered\">";           
 	  echo "<a href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\">".trim($header0)."</a>";;
 	  echo "</td>";        
+	  if($id)
+	  { echo "<td align=\"left\">";         
+	    echo "<a href=\"#\" onclick=\"moveColumnRight('".$id."');return false;\">&gt;</a>";
+	    echo "</td>";        
+	  }
 	  echo "</tr>";
 	  echo "</table>";
 	  echo "</td>";        

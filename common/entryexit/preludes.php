@@ -43,7 +43,7 @@ else
 	  $MSIE=false;
 	else
 	  $MSIE=true;
-
+$MSIE=false;
 	  
 	  
 }

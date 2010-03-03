@@ -1026,31 +1026,32 @@ class Objects implements iObjects
 	  echo "<hr />";
   }
   public  function showObjects($link, $min, $max, $ownShow='', $showRank=0, $step=25, $pageListAction="addAllObjectsFromPageToList",$columnSource="")        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
-  { global $FF, $objAtlas, $objObserver, $objLocation, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil,$objPresentations,$objList;
+  { global $MSIE, $FF, $objAtlas, $objObserver, $objLocation, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil,$objPresentations,$objList;
 	  $atlas='';
+	  $c=0;
     echo "<table>";
     if($FF)
       echo "<thead>";
     echo "<tr class=\"type3\">";
     if($showRank)
-	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader9,  $link."&amp;sort=objectpositioninlist", "C0", $columnSource);
-    $objPresentations->tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=showname", "C1", $columnSource);
-	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader2,  $link."&amp;sort=objectconstellation", "C2", $columnSource);
-	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader3,  $link."&amp;sort=objectmagnitude", "C3", $columnSource);
-	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader3b, $link."&amp;sort=objectsurfacebrightness", "C4", $columnSource);
-	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader4,  $link."&amp;sort=objecttype", "C5", $columnSource);
+      $objPresentations->tableSortHeader(LangOverviewObjectsHeader9,$link."&amp;sort=objectpositioninlist",    "C".$c++, $columnSource);
+    $objPresentations->tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=showname",                "C".$c++, $columnSource);
+	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader2,  $link."&amp;sort=objectconstellation",     "C".$c++, $columnSource);
+	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader3,  $link."&amp;sort=objectmagnitude",         "C".$c++, $columnSource);
+	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader3b, $link."&amp;sort=objectsurfacebrightness", "C".$c++, $columnSource);
+	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader4,  $link."&amp;sort=objecttype",              "C".$c++, $columnSource);
     if($loggedUser)
 	  { $atlas = $objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano');
-      $objPresentations->tableSortHeader($objAtlas->atlasCodes[$atlas], $link."&amp;sort=".$atlas, "C6", $columnSource);
-	    $objPresentations->tableSortInverseHeader(LangViewObjectFieldContrastReserve, $link."&amp;sort=objectcontrast", "C7", $columnSource);
-	    $objPresentations->tableSortHeader(LangViewObjectFieldMagnification, $link."&amp;sort=objectoptimalmagnification", "C8", $columnSource);
-      $objPresentations->tableSortHeader(LangMoonRise, $link."&amp;sort=objectrise", "C9", $columnSource);
-      $objPresentations->tableSortHeader(LangTransit, $link."&amp;sort=objecttransit", "C10", $columnSource);
-      $objPresentations->tableSortHeader(LangMoonSet, $link."&amp;sort=objectset", "C11", $columnSource);
-      $objPresentations->tableSortHeader(LangBest, $link."&amp;sort=objectbest", "C12", $columnSource);
-      $objPresentations->tableSortHeader(LangMaxAltitude, $link."&amp;sort=objectmaxaltitude", "C13", $columnSource);
-	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader7, $link."&amp;sort=objectseen", "C14", $columnSource);
-	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader8, $link."&amp;sort=objectlastseen", "C15", $columnSource);
+      $objPresentations->tableSortHeader($objAtlas->atlasCodes[$atlas], $link."&amp;sort=".$atlas,             "C".$c++, $columnSource);
+	    $objPresentations->tableSortInverseHeader(LangViewObjectFieldContrastReserve, $link."&amp;sort=objectcontrast", "C".$c++, $columnSource);
+	    $objPresentations->tableSortHeader(LangViewObjectFieldMagnification, $link."&amp;sort=objectoptimalmagnification", "C".$c++, $columnSource);
+      $objPresentations->tableSortHeader(LangMoonRise, $link."&amp;sort=objectrise",                           "C".$c++, $columnSource);
+      $objPresentations->tableSortHeader(LangTransit, $link."&amp;sort=objecttransit",                         "C".$c++, $columnSource);
+      $objPresentations->tableSortHeader(LangMoonSet, $link."&amp;sort=objectset",                             "C".$c++, $columnSource);
+      $objPresentations->tableSortHeader(LangBest, $link."&amp;sort=objectbest",                               "C".$c++, $columnSource);
+      $objPresentations->tableSortHeader(LangMaxAltitude, $link."&amp;sort=objectmaxaltitude",                 "C".$c++, $columnSource);
+	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader7, $link."&amp;sort=objectseen",             "C".$c++, $columnSource);
+	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader8, $link."&amp;sort=objectlastseen",         "C".$c++, $columnSource);
     }
     if(($myList) && ($pageListAction=="addAllObjectsFromPageToList"))
       echo("<td align=\"center\"><a href=\"".$link."&amp;min=".$min."&amp;max=".($min+$step)."&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">&nbsp;P&nbsp;</a></td>");
@@ -1075,21 +1076,22 @@ class Objects implements iObjects
 	 	    $locationdecl=$objLocation->getLocationPropertyFromId($location,'latitude',0);
 	 	}
     while($count<$max)
-    { $specialclass="";
+    { $c=0;
+      $specialclass="";
       if(($filteron=='location')&&
          ((($_SESSION['Qobj'][$count]['objectdecl']+90.0)<$locationdecl) ||
           (($_SESSION['Qobj'][$count]['objectdecl']-90.0)>$locationdecl)))
        $specialclass="strikethrough"; 
       echo "<tr ".(($_SESSION['Qobj'][$count]['objectname']==$ownShow)?"class=\"type3 height5px\"":"class=\"height5px type".(2-($countline%2)."\"")).">";
       if(($showRank==1)&&$myList)
-        echo "<td align=\"center\" id=\"C0D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader9.": ".$_SESSION['Qobj'][$count]['objectpositioninlist']."')\"><a href=\"#\" onclick=\"theplace = prompt('".LangNewPlaceInList."','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
+        echo "<td align=\"center\" id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader9.": ".$_SESSION['Qobj'][$count]['objectpositioninlist']."')\"><a href=\"#\" onclick=\"theplace = prompt('".LangNewPlaceInList."','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
       elseif($showRank)
-	      echo "<td align=\"center\" id=\"C0D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader9.": ".$_SESSION['Qobj'][$count]['objectpositioninlist']."')\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</td>";
-      echo "<td align=\"center\"   id=\"C1D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader1.": ".$_SESSION['Qobj'][$count]['objectname']."')\" class=\"".$specialclass."\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" >".$_SESSION['Qobj'][$count]['showname']."</a></td>";
-      echo "<td align=\"center\"   id=\"C2D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader2.": ".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."')\">".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."</td>";
-      echo "<td align=\"center\"   id=\"C3D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3.": ".$_SESSION['Qobj'][$count]['objectmagnitude']."')\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>";
-      echo "<td align=\"center\"   id=\"C4D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3b.": ".$_SESSION['Qobj'][$count]['objectsurfacebrightness']."')\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>";
-      echo "<td align=\"center\"   id=\"C5D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader4.": ".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."')\">".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."</td>";
+	      echo "<td align=\"center\" id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader9.": ".$_SESSION['Qobj'][$count]['objectpositioninlist']."')\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</td>";
+      echo "<td align=\"center\"   id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader1.": ".$_SESSION['Qobj'][$count]['objectname']."')\" class=\"".$specialclass."\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" >".$_SESSION['Qobj'][$count]['showname']."</a></td>";
+      echo "<td align=\"center\"   id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader2.": ".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."')\">".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."</td>";
+      echo "<td align=\"center\"   id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3.": ".$_SESSION['Qobj'][$count]['objectmagnitude']."')\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>";
+      echo "<td align=\"center\"   id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3b.": ".$_SESSION['Qobj'][$count]['objectsurfacebrightness']."')\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>";
+      echo "<td align=\"center\"   id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader4.": ".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."')\">".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."</td>";
       if($loggedUser) 
 	    { $page = $_SESSION['Qobj'][$count][$atlas];
         if(substr($_SESSION['Qobj'][$count]['objectseen'],0,2)=="YD")
@@ -1100,16 +1102,16 @@ class Objects implements iObjects
           $seenclass="seenX";
         else
           $seenclass="seenN";
-        echo "<td align=\"center\" id=\"C6D".$countline."\"  onmouseover=\"Tip('".$objAtlas->atlasCodes[$atlas].": ".$page."')\">".$page."</td>";
-        echo "<td align=\"center\" id=\"C7D".$countline."\"  onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectcontrastpopup']."')\" class=\"".$_SESSION['Qobj'][$count]['objectcontrasttype']."\" >".$_SESSION['Qobj'][$count]['objectcontrast']."</td>";
-        echo "<td align=\"center\" id=\"C8D".$countline."\"  onmouseover=\"Tip('". LangViewObjectFieldMagnification . ": ". $_SESSION['Qobj'][$count]['objectoptimalmagnification']."')\" >".$_SESSION['Qobj'][$count]['objectoptimalmagnification']."</td>";
-        echo "<td align=\"center\" id=\"C9D".$countline."\"  onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objectrisepopup'] . "')\">".$_SESSION['Qobj'][$count]['objectrise']."</td>";
-        echo "<td align=\"center\" id=\"C10D".$countline."\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objecttransitpopup'] . "')\">".$_SESSION['Qobj'][$count]['objecttransit']."</td>";
-        echo "<td align=\"center\" id=\"C11D".$countline."\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objectsetpopup'] . "')\">".$_SESSION['Qobj'][$count]['objectset']."</td>";
-        echo "<td align=\"center\" id=\"C12D".$countline."\" onmouseover=\"Tip('". LangBest . ": ". substr($_SESSION['Qobj'][$count]['objectbest'],0,-6)."')\" >".$_SESSION['Qobj'][$count]['objectbest']."</td>";
-        echo "<td align=\"center\" id=\"C13D".$countline."\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objectmaxaltitudepopup'] . "')\">".$_SESSION['Qobj'][$count]['objectmaxaltitude']."</td>";
-        echo "<td align=\"center\" id=\"C14D".$countline."\" onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectseen']."')\" class=\"".$seenclass."\" >".$_SESSION['Qobj'][$count]['objectseenlink']."</td>";
-        echo "<td align=\"center\" id=\"C15D".$countline."\" onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectlastseen']."')\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectlastseenlink']."</td>";
+        echo "<td align=\"center\" id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".$objAtlas->atlasCodes[$atlas].": ".$page."')\">".$page."</td>";
+        echo "<td align=\"center\" id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectcontrastpopup']."')\" class=\"".$_SESSION['Qobj'][$count]['objectcontrasttype']."\" >".$_SESSION['Qobj'][$count]['objectcontrast']."</td>";
+        echo "<td align=\"center\" id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('". LangViewObjectFieldMagnification . ": ". $_SESSION['Qobj'][$count]['objectoptimalmagnification']."')\" >".$_SESSION['Qobj'][$count]['objectoptimalmagnification']."</td>";
+        echo "<td align=\"center\" id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objectrisepopup'] . "')\">".$_SESSION['Qobj'][$count]['objectrise']."</td>";
+        echo "<td align=\"center\" id=\"C".$c++."D".$countline."\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objecttransitpopup'] . "')\">".$_SESSION['Qobj'][$count]['objecttransit']."</td>";
+        echo "<td align=\"center\" id=\"C".$c++."D".$countline."\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objectsetpopup'] . "')\">".$_SESSION['Qobj'][$count]['objectset']."</td>";
+        echo "<td align=\"center\" id=\"C".$c++."D".$countline."\" onmouseover=\"Tip('". LangBest . ": ". substr($_SESSION['Qobj'][$count]['objectbest'],0,-6)."')\" >".$_SESSION['Qobj'][$count]['objectbest']."</td>";
+        echo "<td align=\"center\" id=\"C".$c++."D".$countline."\" onmouseover=\"Tip('" . $_SESSION['Qobj'][$count]['objectmaxaltitudepopup'] . "')\">".$_SESSION['Qobj'][$count]['objectmaxaltitude']."</td>";
+        echo "<td align=\"center\" id=\"C".$c++."D".$countline."\" onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectseen']."')\" class=\"".$seenclass."\" >".$_SESSION['Qobj'][$count]['objectseenlink']."</td>";
+        echo "<td align=\"center\" id=\"C".$c++."D".$countline."\" onmouseover=\"Tip('".$_SESSION['Qobj'][$count]['objectlastseen']."')\" class=\"".$seenclass."\">".$_SESSION['Qobj'][$count]['objectlastseenlink']."</td>";
 	    }
   	  if($myList)
   	  { echo("<td align=\"center\">");
@@ -1137,8 +1139,12 @@ class Objects implements iObjects
         echo LangObjectsFilter.": <a href=\"".$link."&amp;filteron=location\" title=\"".LangObjectsFilterLocationExpl."\">".LangObjectsFilterLocation."</a>";  //&nbsp;-&nbsp;<a href=\"".$link."&amp;filteron=time\">time</a>";
     if($columnSource)
     { echo "<script type=\"text/javascript\">";
-      echo "checkColumns('".$columnSource."');";
-      echo "writeColumnsOrder('".$columnSource."');";
+      echo "setColumnSource('".$columnSource.($showRank?"showRank":"")."');";     //set theColumnSource Parameter
+      echo "readTitleColumnData();";                                              //read basic data in data array
+      echo "readOrderColumnSourceOrder();";                                       //read order of columns
+      echo "readCollapseColumnsSourceCollapsed( );";                              //read the collapsed columns
+      echo "writeColumnsOrder();";                                                //rewrite columns in right order
+      echo "collapseColumns();";                                                  //collapse columns
       echo "</script>";
     }
   }
