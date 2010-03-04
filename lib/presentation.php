@@ -283,32 +283,32 @@ class Presentations implements iPresentation
   }
 	public  function tableSortHeader($header0, $link0, $id="", $columnSource="")
 	{ global $baseURL;
-	  echo "<td style=\"vertical-align:top;\" ".($id?"id=\"".$id."\" ":"").">";         
+	  echo "<td class=\"verticalaligntop;\" ".($id?"id=\"".$id."\" ":"").">";         
 	  echo "<table>";   
 	  echo "<tr>";          
 	  echo "<td>";         
 	  echo "<a href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc. "\"><img class=\"sortButton\" src=\"".$baseURL."styles/images/up10.gif\" alt=\"^\"/></a>";
 	  echo "</td>";        
 	  if($id)
-	  { echo "<td align=\"center\" width=\"100%\">";         
+	  { echo "<td class=\"centered width100pct\">";         
 	    echo "<a href=\"#\" onclick=\"removeColumn('".$id."','".$header0."');return false;\">x</a>";
 	    echo "</td>";        
 	  }
-	  echo "<td align=\"right\">";         
+	  echo "<td class=\"right\">";         
 	  echo "<a href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img class=\"sortButton\" src=\"".$baseURL."styles/images/down10.gif\" alt=\"v\"/></a>";
 	  echo "</td>";        
 	  echo "</tr>";        
 	  echo "<tr>";
 	  if($id)
-	  { echo "<td align=\"left\">";         
+	  { echo "<td class=\"left\">";         
 	    echo "<a href=\"#\" onclick=\"moveColumnLeft('".$id."');return false;\">&lt;</a>";
 	    echo "</td>";        
 	  }
-	  echo "<td colspan=\"2\" class=\"centered\" width=\"100%\">";           
+	  echo "<td class=\"centered width100pct\">";           
 	  echo "<a href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc."\">".trim($header0)."</a>";;
 	  echo "</td>";        
 	  if($id)
-	  { echo "<td align=\"left\">";         
+	  { echo "<td class=\"left\">";         
 	    echo "<a href=\"#\" onclick=\"moveColumnRight('".$id."');return false;\">&gt;</a>";
 	    echo "</td>";        
 	  }
@@ -318,32 +318,32 @@ class Presentations implements iPresentation
 	}
 	public  function tableSortInverseHeader($header0, $link0, $id="", $columnSource="")
 	{ global $baseURL;
-	  echo "<td style=\"vertical-align:top;\" ".($id?"id=\"".$id."\" ":"").">";         
+	  echo "<td class=\"verticalaligntop;\" ".($id?"id=\"".$id."\" ":"").">";         
 	  echo "<table>";   
 	  echo "<tr>";          
 	  echo "<td>";         
 	  echo "<a href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img class=\"sortButton\" src=\"".$baseURL."styles/images/up10.gif\" alt=\"^\" /></a>";
 	  echo "</td>";        
 	  if($id)
-	  { echo "<td align=\"center\" width=\"100%\">";         
+	  { echo "<td class=\"centered\" width=\"100%\">";         
 	    echo "<a href=\"#\" onclick=\"removeColumn('".$id."','".$header0."');return false;\">x</a>";
 	    echo "</td>";        
 	  }
-	  echo "<td align=\"right\">";         
+	  echo "<td class=\"right\">";         
 	  echo "<a href=\"".$link0."&amp;sortdirection=asc\" title=\"".LangSortOnAsc."\"><img class=\"sortButton\" src=\"".$baseURL."styles/images/down10.gif\" alt=\"v\" /></a>";
 	  echo "</td>";        
 	  echo "</tr>";        
 	  echo "<tr >";
 	  if($id)
-	  { echo "<td align=\"left\">";         
+	  { echo "<td class=\"left\">";         
 	    echo "<a href=\"#\" onclick=\"moveColumnLeft('".$id."');return false;\">&lt;</a>";
 	    echo "</td>";        
 	  }
-	  echo "<td colspan=\"2\" class=\"centered\">";           
+	  echo "<td class=\"centered\">";           
 	  echo "<a href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\">".trim($header0)."</a>";;
 	  echo "</td>";        
 	  if($id)
-	  { echo "<td align=\"left\">";         
+	  { echo "<td class=\"left\">";         
 	    echo "<a href=\"#\" onclick=\"moveColumnRight('".$id."');return false;\">&gt;</a>";
 	    echo "</td>";        
 	  }

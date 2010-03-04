@@ -377,7 +377,10 @@ img.w3c {
 .inputfield {
   font-weight      : normal;
 	font-style       : italic;
-}	
+}
+.left {
+	text-align       : left;
+}
 li {
   list-style-image : url('styles/images/arrow.gif');
   list-style-position : inside
@@ -481,6 +484,9 @@ p, td, tr, div {
 }
 .requiredField {
 	background-color : #FFFFCC;
+}
+.right {
+  text-align       : right;
 }
 .seenN {
   background-color : #CC2222;
@@ -598,6 +604,9 @@ ul{
 .underline {
 	text-decoration  : underline;
 }
+.verticalaligntop {
+	vertical-align   : top;
+}
 #veil {
   position         : absolute;
   left             : 0px;
@@ -625,4 +634,7 @@ ul{
 }
 .width300px {
   width            : 300px;
+}
+.width100pct {
+  width            : 100%;
 }
