@@ -118,28 +118,25 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
         $maxDeclMinutesError = true;
     }
     else
-    {
-      $maxDeclMinutes = 0; 
+    { $maxDeclMinutes = 0; 
       $_GET['maxDeclMinutes']=0; 
     }
     if(array_key_exists('maxDeclseconds',$_GET) && $_GET['maxDeclseconds']!='') 
-    {
-      $maxDeclSeconds = $_GET['maxDeclSeconds']; 
+    { $maxDeclSeconds = $_GET['maxDeclSeconds']; 
       if((!is_numeric($_GET['maxDeclSeconds'])) || ($_GET['maxDeclSeconds']<0) || ($_GET['maxDeclSeconds']>=60))
         $maxDeclSecondsError = true;
     }
     else
-    {
-      $maxDeclseconds = 0;
+    { $maxDeclseconds = 0;
       $_GET['maxDeclSeconds'] = 0;
     }
     if($maxDeclDegreesError || $maxDeclMinutesError || $maxDeclSecondsError)
       $errorQuery = true;
     else
       if(substr(trim($_GET['maxDeclDegrees']),1,1)=="-")
-        $maxDecl = $maxDeclDegrees - ($_GET['maxDeclMinutes'] / 60) - ($_GET['maxDeclSeconds'] / 3600);
+        $maxDecl=$maxDeclDegrees-($maxDeclMinutes/60)-($maxDeclSeconds/3600);
       else 
-        $maxDecl = $maxDeclDegrees + ($_GET['maxDeclMinutes'] / 60) + ($_GET['maxDeclSeconds'] / 3600);
+        $maxDecl=$maxDeclDegrees+($maxDeclMinutes/60) + ($maxDeclSeconds/3600);
   }
   // MIN RA
   if(($minRAHours=$objUtil->checkGetKey('minRAHours'))!='') 
@@ -165,36 +162,33 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
       $_GET['minRASeconds'] = 0;
     }
     if(!($minRAHoursError || $minRAMinutesError || $minRASecondsError))
-      $minRA = $minRAHours + ($_GET['minRAMinutes'] / 60) + ($_GET['minRASeconds'] / 3600);
+      $minRA = $minRAHours + ($minRAMinutes/60) + ($minRASeconds/3600);
   }
   // MAX RA
-  if(($maxRAHours=$objUtil->checkGetKey('maxRAHours')!='')) 
+  if(($maxRAHours=$objUtil->checkGetKey('maxRAHours'))!='') 
   { if((!is_numeric($_GET['maxRAHours'])) || ($_GET['maxRAHours']<0) || ($_GET['maxRAHours']>24))
-      $maxRAHoursError = True;
+      $maxRAHoursError = true;
     if(array_key_exists('maxRAMinutes',$_GET) && $_GET['maxRAMinutes']!='') 
-    {  
-      $maxRAMinutes = $_GET['maxRAMinutes']; 
+    { $maxRAMinutes = $_GET['maxRAMinutes']; 
       if((!is_numeric($_GET['maxRAMinutes'])) || ($_GET['maxRAMinutes']<0) || ($_GET['maxRAMinutes']>=60))
         $maxRAMinutesError = true;
     }
     else
-    {
-      $maxRAMinutes = 0; 
+    { $maxRAMinutes = 0; 
       $_GET['maxRAMinutes']=0; 
     }
     if(array_key_exists('maxRASeconds',$_GET) && $_GET['maxRASeconds']!='') 
-    {
-      $maxRASeconds = $_GET['maxRASeconds']; 
-      if((!is_numeric($_GET['maxRASeconds'])) || ($_GET['maxRASeconds']<0) || ($_GET['maxRASeconds']>=60))
+    { if((!is_numeric($_GET['maxRASeconds'])) || ($_GET['maxRASeconds']<0) || ($_GET['maxRASeconds']>=60))
         $maxRASecondsError = true;
+      else
+        $maxRASeconds = $_GET['maxRASeconds']; 
     }
     else
-    {
-      $maxRASeconds = 0;
+    { $maxRASeconds = 0;
       $_GET['maxRASeconds'] = 0;
     }
     if(!($maxRAHoursError || $maxRAMinutesError || $maxRASecondsError))
-      $maxRA = $maxRAHours + ($_GET['maxRAMinutes'] / 60) + ($_GET['maxRASeconds'] / 3600);
+      $maxRA=$maxRAHours+($maxRAMinutes/60)+($maxRASeconds/3600);
   }
   // MAGNITUDE BRIGHTER THAN
   if(array_key_exists('maxMag',$_GET) && $_GET['maxMag']!='') 
