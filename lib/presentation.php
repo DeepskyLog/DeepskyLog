@@ -325,7 +325,7 @@ class Presentations implements iPresentation
 	  echo "<a href=\"".$link0."&amp;sortdirection=desc\" title=\"".LangSortOnDesc."\"><img class=\"sortButton\" src=\"".$baseURL."styles/images/up10.gif\" alt=\"^\" /></a>";
 	  echo "</td>";        
 	  if($id)
-	  { echo "<td class=\"centered\" width=\"100%\">";         
+	  { echo "<td class=\"centered width100pct\" >";         
 	    echo "<a href=\"#\" onclick=\"removeColumn('".$id."','".$header0."');return false;\">x</a>";
 	    echo "</td>";        
 	  }

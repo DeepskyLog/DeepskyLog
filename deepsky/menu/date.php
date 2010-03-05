@@ -4,21 +4,28 @@ if($loggedUser)
 { echo "  <script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/CalendarPopupCC.js\"></script>";
   echo "<div class=\"menuDivExtended\">";
   $link=$baseURL."index.php?";
-  $link2="index.php?";
   reset($_GET);
   while(list($key,$value)=each($_GET))
     if(!(in_array($key,array('changeDay','changeMonth','changeYear'))))
       $link.=$key.'='.urlencode($value).'&amp;';
-  $link=substr($link,0,strlen($link)-5);
+  $link2="index.php?";
+  reset($_GET);
+  while(list($key,$value)=each($_GET))
+    if(!(in_array($key,array('changeDay','changeMonth','changeYear'))))
+      $link2.=$key.'='.urlencode($value).'&';
+  $link2=substr($link2,0,strlen($link2)-1);
+  
   echo "  <script type=\"text/javascript\" >";
+  echo "  /* <![CDATA[ */";
   echo "  var cal = new CalendarPopup();";
   echo "  function SetDate(y,m,d)";
   echo "  { thelocation=\"".($link2)."\";
-            thelocation=thelocation+'changeDay='+d;
-            thelocation=thelocation+'&amp;'+'changeMonth='+m;
-            thelocation=thelocation+'&amp;'+'changeYear='+y;
-            window.location=thelocation;";                   
+            thelocation=thelocation+'&changeDay='+d;
+            thelocation=thelocation+'&changeMonth='+m;
+            thelocation=thelocation+'&changeYear='+y;
+            location.href=thelocation;";                   
   echo "  }";
+  echo "  /* ]]> */";
   echo "  </script>";
      
   $today=date('Ymd',strtotime('today'));
