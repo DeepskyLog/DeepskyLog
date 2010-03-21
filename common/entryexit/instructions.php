@@ -1,7 +1,11 @@
 <?php  //instruction.php treats all commands for changing data in the database or setting program parameters
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else
-{	if(($markAsRead=$objUtil->checkGetKey('markAsRead',0))==="All")
+{	if($objUtil->checkGetKey('saveLayout'))
+  { $objFormLayout->saveLayout($objUtil->checkGetKey('formName','NoFormName'),$objUtil->checkGetKey('layoutName','layoutName'),
+                               $objUtil->checkGetKey('restoreColumns',''),$objUtil->checkGetKey('orderColumns',''));
+  }
+  if(($markAsRead=$objUtil->checkGetKey('markAsRead',0))==="All")
     $objObserver->markAllAsRead();
   elseif($markAsRead)
     $objObserver->markAsRead($markAsRead);
@@ -497,7 +501,7 @@ else
 	  $myList=False;
 	  unset($_GET['removeList']);
 	}
-	if($objUtil->checkGetKey('activateList')&&$objUtil->checkGetKey('listname')&&($objUtil->checkGetKey('listname')!=$_SESSION['listname']))
+	if($objUtil->checkGetKey('activateList')&&$objUtil->checkGetKey('listname')&&($objUtil->checkGetKey('listname')!=$objUtil->checkSessionKey('listname')))
 	{ $_SESSION['listname']=$_GET['listname'];
 	  $listname=$_SESSION['listname'];
 	  $listname_ss=stripslashes($listname);

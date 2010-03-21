@@ -3,6 +3,16 @@
 // TO DO:
 
 
+define("LangLoadFormLayout"                              ,"Layout: ");
+
+define("LangLoadFormLayout1"                             ,"Load");
+define("LangLoadFormLayout2"                             ,"Please enter a name for the layout");
+
+define("LangSaveFormLayout1"                             ,"Save");
+define("LangSaveFormLayout2"                             ,"Please enter a name for the layout");
+
+
+
 define("profiledsosmagnitude"                            ,"Atlas standaard objectmagnitudes:");
 define("profiledsosmagnitudeselect"                      ,"overzicht / opzoeken / detail");
 define("profilestarsmagnitude"                           ,"Atlas standaard stermagnitudes:");

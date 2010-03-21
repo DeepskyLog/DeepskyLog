@@ -2,6 +2,15 @@
 
 // TO DO:
 
+define("LangLoadFormLayout"                              ,"Layout: &nbsp;");
+
+
+define("LangLoadFormLayout1"                             ,"Openen");
+define("LangLoadFormLayout2"                             ,"Gelieve de naam van de layout op te geven");
+
+define("LangSaveFormLayout1"                             ,"Bewaren");
+define("LangSaveFormLayout2"                             ,"Gelieve de naam van de layout op te geven");
+
 
 define("profiledsosmagnitude"                            ,"Atlas standaard objectmagnitudes:");
 define("profiledsosmagnitudeselect"                      ,"overzicht / opzoeken / detail");
@@ -29,7 +38,7 @@ define('DetailChart'                                     ,'Detail');
 
 define('atlasPageFoV'                                    ,'FoV:');
 define('atlasPageDSLM'                                   ,'Objecten tot mag:');
-define('atlasPageStarLM'                                 ,'Sterren tot mag:');         
+define('atlasPageStarLM'                                 ,'Sterren tot mag:');
 
 
 define("LangShowObjectDetails"                            ,"Toon object details");
@@ -461,7 +470,7 @@ define("LangAddEyepieceField3Expl"												,"eg 82");
 define("LangAddEyepieceField4"														,"Maximaal brandpunt (in mm)");
 define("LangAddEyepieceField4Expl"												,"enkel van toepassing met zoom oculairen");
 define("LangAddEyepieceButton"														,"Voeg oculair toe");
-define("LangAddEyepieceButton2"														,"Verander oculair"); 
+define("LangAddEyepieceButton2"														,"Verander oculair");
 define("LangDetailEyepiece"                               ,"Details oculair");
 
 define("LangOverviewLensTitle"														,"Overzicht lenzen");

@@ -2,6 +2,14 @@
 
 // TO DO:
 
+define("LangLoadFormLayout"                              ,"Layout: ");
+
+define("LangLoadFormLayout1"                             ,"Load");
+define("LangLoadFormLayout2"                             ,"Please enter a name for the layout");
+
+define("LangSaveFormLayout1"                             ,"Save");
+define("LangSaveFormLayout2"                             ,"Please enter a name for the layout");
+
 
 define("profiledsosmagnitude"                            ,"Atlas standard object magnitudes:");
 define("profiledsosmagnitudeselect"                      ,"Overview / Lookup / Detail");

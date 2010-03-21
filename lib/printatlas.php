@@ -915,7 +915,7 @@ class PrintAtlas
   
 
   function gridShowInfo()
-  { $t1 =atlasPageFoV.' '.(round($this->gridSpanL*20)/10)." x ".(round($this->gridSpanD*20)/10)."ï¿½ - ";
+  { $t1 =atlasPageFoV.' '.(round($this->gridSpanL*20)/10)." x ".(round($this->gridSpanD*20)/10)."° - ";
 	  $t1.=atlasPageDSLM.' '.($this->maxshowndsomag==-99?'-':$this->maxshowndsomag)." - ";
 	  $t1.=atlasPageStarLM.' '.$this->starsmagnitude;
 	  $this->pdf->addText($this->gridOffsetXpx,$this->Legend2y,8,$t1);

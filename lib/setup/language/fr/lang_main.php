@@ -2,6 +2,14 @@
 
 // TO DO
 
+define("LangLoadFormLayout"                              ,"Layout: ");
+
+define("LangLoadFormLayout1"                             ,"Opladen");
+define("LangLoadFormLayout2"                             ,"Gelieve de naam van de layout op te geven");
+
+define("LangSaveFormLayout1"                             ,"Bewaren");
+define("LangSaveFormLayout2"                             ,"Gelieve de naam van de layout op te geven");
+
 
 define("profiledsosmagnitude"                            ,"Atlas standaard objectmagnitudes:");
 define("profiledsosmagnitudeselect"                      ,"overzicht / opzoeken / detail");

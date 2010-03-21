@@ -177,6 +177,18 @@ class Presentations implements iPresentation
   	}
   	echo "</div>";
   }
+  public  function setPopupForm()
+  { global $baseURL,$indexAction;
+    echo "<div id=\"veil\">";
+	  echo "</div>"; 
+	  echo "<div id=\"dialogback\">";
+	  echo "</div>";
+	  echo "<div id=\"dialog\">";
+	  echo "<div id=\"dialogdiv1\">";
+	  echo "Temp Placeholder";
+	  echo "</div>";
+	  echo "</div>";
+  }
   public  function presentationInt($value, $nullcontition='', $nullvalue='')
   { return (($value==$nullcontition)?$nullvalue:$value);
   }
@@ -187,7 +199,10 @@ class Presentations implements iPresentation
 	{ echo "<a href=\"#\" onclick=\"thetitle = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;pdfTitle='+thetitle; return false;\"	rel=\"external\">".$text."</a>";
   }
   public function promptWithLinkText($prompt,$promptDefault,$javaLink,$text)
-	{ return "<a href=\"#\" onclick=\"thetitle = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;pdfTitle='+thetitle; return false;\"	rel=\"external\">".$text."</a>";
+	{ return "<a href=\"#\" onclick=\"thename = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."'); location.href='".$javaLink."&amp;layoutName='+thename; return false;\"	rel=\"external\">".$text."</a>";
+  }
+  public function promptWithLinkAndLayout($prompt,$promptDefault,$javaLink,$text)
+	{ return "<a href=\"#\" onclick=\"theLayoutName = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."');  location.href='".$javaLink."&amp;layoutName='+theLayoutName+'&amp;orderColumns='+getColumnsOrder()+'&amp;restoreColumns='+getColumnsRestore();  return false;\" >".$text."</a>";
   }
   public  function raArgoToString($ra)
   { $ra_hours  =floor($ra);

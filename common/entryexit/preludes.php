@@ -34,6 +34,7 @@ else
 	include_once "lib/cometobjects.php";
   include_once 'lib/presentation.php';                                                               // functions etc. concerning layout
   include_once 'lib/constellations.php';                                                               // functions etc. concerning layout
+  include_once 'lib/formlayouts.php';                                                               // functions etc. concerning layout
   
 	if(strpos(($browser=$objUtil->checkArrayKey($_SERVER,'HTTP_USER_AGENT','')),'Firefox')===false)
 	  $FF=false;
@@ -44,6 +45,32 @@ else
 	else
 	  $MSIE=true;
 	  
+	  
+  $today=date('Ymd',strtotime('today'));
+  $thisYear=date("Y");
+  $thisMonth=date("n");
+  $thisDay=date("j");
+  if (array_key_exists('globalMonth',$_SESSION) && $_SESSION['globalMonth']) {
+  } else {
+    $_SESSION['globalYear']=$thisYear;
+    $_SESSION['globalMonth']=$thisMonth;
+    $_SESSION['globalDay']=$thisDay;
+  }
+  if(array_key_exists('changeMonth',$_GET) && $_GET['changeMonth'])
+  { $_SESSION['globalMonth'] = $_GET['changeMonth'];
+    if(array_key_exists('Qobj',$_SESSION))
+      $_SESSION['Qobj']=$objObject->getObjectRisSetTrans($_SESSION['Qobj']);
+  }
+  if(array_key_exists('changeYear',$_GET) && $_GET['changeYear'])
+  { $_SESSION['globalYear'] = $_GET['changeYear'];
+    if(array_key_exists('Qobj',$_SESSION))
+      $_SESSION['Qobj']=$objObject->getObjectRisSetTrans($_SESSION['Qobj']);
+  }
+  if(array_key_exists('changeDay',$_GET) && $_GET['changeDay'])
+  { $_SESSION['globalDay'] = $_GET['changeDay'];
+    if(array_key_exists('Qobj',$_SESSION))
+      $_SESSION['Qobj']=$objObject->getObjectRisSetTrans($_SESSION['Qobj']);
+  }
 	  
 }
 function Nz($arg)

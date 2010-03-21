@@ -492,7 +492,7 @@ class Objects implements iObjects
     if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) {
       $theYear=$objUtil->checkSessionKey('globalYear',date('Y'));
       $theMonth=$objUtil->checkSessionKey('globalMonth',date('n'));
-      $theDay=$objUtil->checkSessionKey('globalDay','j');
+      $theDay=$objUtil->checkSessionKey('globalDay',date('j'));
       
       // 2) Get the julian day of today...
       $jd = gregoriantojd($theMonth, $theDay, $theYear);
@@ -1026,7 +1026,7 @@ class Objects implements iObjects
 	  echo "<hr />";
   }
   public  function showObjects($link, $min, $max, $ownShow='', $showRank=0, $step=25, $pageListAction="addAllObjectsFromPageToList",$columnSource="")        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
-  { global $MSIE, $FF, $objAtlas, $objObserver, $objLocation, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil,$objPresentations,$objList;
+  { global $MSIE, $FF, $objFormLayout, $objAtlas, $objObserver, $objLocation, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil,$objPresentations,$objList;
 	  $atlas='';
 	  $c=0;
     echo "<table>";
@@ -1135,18 +1135,31 @@ class Objects implements iObjects
     }
     echo "</table>";
     if($loggedUser)
-      if($objUtil->checkRequestKey('filteron')=='location')
-      	echo LangObjectsFilter.": <a href=\"".$objUtil->removeFromLink($link,'filteron=location')."\" title=\"".LangObjectsFilterLocationOffExpl."\">".LangObjectsFilterLocation."</a>";  //&nbsp;-&nbsp;<a href=\"".$link."&amp;filteron=time\">time</a>";
+    { if($objUtil->checkRequestKey('filteron')=='location')
+      	$content1=LangObjectsFilter.": <a href=\"".$objUtil->removeFromLink($link,'filteron=location')."\" title=\"".LangObjectsFilterLocationOffExpl."\">".LangObjectsFilterLocation."</a>";  //&nbsp;-&nbsp;<a href=\"".$link."&amp;filteron=time\">time</a>";
       else
-        echo LangObjectsFilter.": <a href=\"".$link."&amp;filteron=location\" title=\"".LangObjectsFilterLocationExpl."\">".LangObjectsFilterLocation."</a>";  //&nbsp;-&nbsp;<a href=\"".$link."&amp;filteron=time\">time</a>";
+        $content1=LangObjectsFilter.": <a href=\"".$link."&amp;filteron=location\" title=\"".LangObjectsFilterLocationExpl."\">".LangObjectsFilterLocation."</a>";  //&nbsp;-&nbsp;<a href=\"".$link."&amp;filteron=time\">time</a>";
+      $content2="Layout: ";
+      $content2.=$objPresentations->promptWithLinkAndLayout(LangSaveFormLayout2,"layoutName",$link."&amp;saveLayout=saveLayout&amp;formName=".$columnSource,LangSaveFormLayout1);
+      $content2.=" - ";
+      //$content2.="<a onclick=\"popupForm(600,400,'".addslashes("Hello David")."'); return false;\" href=\"#\" >"."load"."</a>";
+      //$objPresentations->setPopupForm();
+      $content2.=$objPresentations->promptWithLinkAndLayout(LangLoadFormLayout2,"layoutName",$link."&amp;loadLayout=loadLayout&amp;formName=".$columnSource,LangLoadFormLayout1);
+      $objPresentations->line(array($content1,$content2),"LR",array(50,50),20);
+    }
     if($columnSource)
     { echo "<script type=\"text/javascript\">";
       if($MSIE)
         echo "setClassName('className');";
       echo "setColumnSource('".$columnSource.($showRank?"showRank":"")."');";     //set theColumnSource Parameter
-      echo "readTitleColumnData(".--$c.");";                                              //read basic data in data array
-      echo "readOrderColumnSourceOrder();";                                       //read order of columns
-      echo "readCollapseColumnsSourceCollapsed( );";                              //read the collapsed columns
+      echo "readTitleColumnData(".--$c.");";                                      //read basic data in data array
+      if($objUtil->checkGetKey('loadLayout'))
+      { $objFormLayout->loadLayout($objUtil->checkGetKey('formName','NoFormName'),$objUtil->checkGetKey('layoutName','layoutName'));
+      }
+      else
+      { echo "readOrderColumnSourceOrder();";                                     //read order of columns
+        echo "readCollapseColumnsSourceCollapsed( );";                            //read the collapsed columns
+      }
       echo "writeColumnsOrder();";                                                //rewrite columns in right order
       echo "collapseColumns();";                                                  //collapse columns
       echo "</script>";
