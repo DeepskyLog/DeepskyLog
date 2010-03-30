@@ -17,10 +17,10 @@
   $title         = "<a href=\"http://www.deepskylog.org\">DeepskyLog</a>";
   // The first part of the title that has to appear on each browser window
   $browsertitle  = "DeepskyLog";
-  $copyrightInfo = "Copyright&nbsp;2004&nbsp;-&nbsp;2009&nbsp;-&nbsp;";
+  $copyrightInfo = "Copyright&nbsp;2004&nbsp;-&nbsp;2010&nbsp;-&nbsp;";
   $vvsInfo       = "<a href=\"http://www.deepsky.be\">VVS Deepsky</a>&nbsp;-&nbsp;";
   $dslInfo       = "Powered by&nbsp;<a href=\"http://www.deepskylog.org\">DeepskyLog</a>&nbsp;";
-  $versionInfo   = "3.7-Trunk";
+  $versionInfo   = "3.9-Trunk";
   $objectInfo    = " - Object Database by <a href=\"http://www.eyeandtelescope.com/\" >Eye&amp;Telescope</a>" . 
                    " - Star Database by Tycho2+";
   $w3cInfo = "<a class=\"w3c\" href=\"http://validator.w3.org/check?uri=referer\">".
