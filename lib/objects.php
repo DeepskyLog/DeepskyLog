@@ -540,9 +540,13 @@ class Objects implements iObjects
           $popup4 = $obs[$j]["objectname"] . LangAltitude . $ristraset[3] . LangRistrasetIn . addslashes($location);
         }
         $obs[$j]['objectrise'] = $ristraset[0];
+        $obs[$j]['objectriseorder'] = ($ristraset[0]!='-'?($ristraset[0]<12?substr($ristraset[0],0,2)+24+(substr($ristraset[0],3,2)/100):substr($ristraset[0],0,2)+(substr($ristraset[0],3,2)/100)):99.0);
         $obs[$j]['objecttransit'] = $ristraset[1];
+        $obs[$j]['objecttransitorder'] = ($ristraset[1]!='-'?($ristraset[1]<12?substr($ristraset[1],0,2)+24+(substr($ristraset[1],3,2)/100):substr($ristraset[1],0,2)+(substr($ristraset[1],3,2)/100)):99.0);
         $obs[$j]['objectset'] = $ristraset[2];
+        $obs[$j]['objectsetorder'] = ($ristraset[2]!='-'?($ristraset[2]<12?substr($ristraset[2],0,2)+24+(substr($ristraset[2],3,2)/100):substr($ristraset[2],0,2)+(substr($ristraset[2],3,2)/100)):99.0);
         $obs[$j]['objectbest'] = $ristraset[4];
+        $obs[$j]['objectbestorder'] = ($ristraset[4]!='-'?($ristraset[4]<12?substr($ristraset[4],0,2)+24+(substr($ristraset[4],3,2)/100):substr($ristraset[4],0,2)+(substr($ristraset[4],3,2)/100)):99.0);
         $obs[$j]['objectmaxaltitude'] = $ristraset[3];
         $obs[$j]['objectrisepopup'] = $popup1;
         $obs[$j]['objecttransitpopup'] = $popup2;
@@ -555,6 +559,7 @@ class Objects implements iObjects
         $obs[$j]['objecttransit'] = "-";
         $obs[$j]['objectset'] = "-";
         $obs[$j]['objectbest'] = "-";
+        $obs[$j]['objectbestorder'] = "99";
         $obs[$j]['objectmaxaltitude'] = "-";
         $obs[$j]['objectrisepopup'] = "-";
         $obs[$j]['objecttransitpopup'] = "-";
@@ -1045,11 +1050,11 @@ class Objects implements iObjects
       $objPresentations->tableSortHeader($objAtlas->atlasCodes[$atlas], $link."&amp;sort=".$atlas,             "C".$c++, $columnSource);
 	    $objPresentations->tableSortInverseHeader(LangViewObjectFieldContrastReserve, $link."&amp;sort=objectcontrast", "C".$c++, $columnSource);
 	    $objPresentations->tableSortHeader(LangViewObjectFieldMagnification, $link."&amp;sort=objectoptimalmagnification", "C".$c++, $columnSource);
-      $objPresentations->tableSortHeader(LangMoonRise, $link."&amp;sort=objectrise",                           "C".$c++, $columnSource);
-      $objPresentations->tableSortHeader(LangTransit, $link."&amp;sort=objecttransit",                         "C".$c++, $columnSource);
-      $objPresentations->tableSortHeader(LangMoonSet, $link."&amp;sort=objectset",                             "C".$c++, $columnSource);
-      $objPresentations->tableSortHeader(LangBest, $link."&amp;sort=objectbest",                               "C".$c++, $columnSource);
-      $objPresentations->tableSortHeader(LangMaxAltitude, $link."&amp;sort=objectmaxaltitude",                 "C".$c++, $columnSource);
+      $objPresentations->tableSortHeader(LangMoonRise, $link."&amp;sort=objectriseorder",                      "C".$c++, $columnSource);
+      $objPresentations->tableSortHeader(LangTransit, $link."&amp;sort=objecttransitorder",                    "C".$c++, $columnSource);
+      $objPresentations->tableSortHeader(LangMoonSet, $link."&amp;sort=objectsetorder",                        "C".$c++, $columnSource);
+      $objPresentations->tableSortHeader(LangBest, $link."&amp;sort=objectbestorder",                          "C".$c++, $columnSource);
+      $objPresentations->tableSortInverseHeader(LangMaxAltitude, $link."&amp;sort=objectmaxaltitude",          "C".$c++, $columnSource);
 	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader7, $link."&amp;sort=objectseen",             "C".$c++, $columnSource);
 	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader8, $link."&amp;sort=objectlastseen",         "C".$c++, $columnSource);
     }
