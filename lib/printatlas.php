@@ -558,8 +558,8 @@ class PrintAtlas
 	  }
 	  $this->dsl_deg=$sign.$this->dsl_deg;
 	  if($this->dsl_amn>0)
-	    return $this->dsl_deg.'ï¿½'.$this->dsl_amn.'\'';
-	  return $this->dsl_deg.'ï¿½';
+	    return $this->dsl_deg.'°'.$this->dsl_amn.'\'';
+	  return $this->dsl_deg.'°';
 	}  
 	
   function coordHrDecToHrMin($theHr)
