@@ -1156,9 +1156,8 @@ class Objects implements iObjects
       $content2="Layout: ";
       $content2.=$objPresentations->promptWithLinkAndLayout(LangSaveFormLayout2,"layoutName",$link."&amp;saveLayout=saveLayout&amp;formName=".$columnSource,LangSaveFormLayout1);
       $content2.=" - ";
-      //$content2.="<a onclick=\"popupForm(600,400,'".addslashes("Hello David")."'); return false;\" href=\"#\" >"."load"."</a>";
-      //$objPresentations->setPopupForm();
-      $content2.=$objPresentations->promptWithLinkAndLayout(LangLoadFormLayout2,"layoutName",$link."&amp;loadLayout=loadLayout&amp;formName=".$columnSource,LangLoadFormLayout1);
+      $content2.=" Openen ";
+      $content2.=$objPresentations->promptWithLinkAndLayoutList($columnSource,$link."&amp;loadLayout=loadLayout&amp;formName=".$columnSource);
       $objPresentations->line(array($content1,$content2),"LR",array(50,50),20);
     }
     if($columnSource)

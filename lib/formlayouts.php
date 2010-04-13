@@ -11,11 +11,15 @@ class formLayouts
   }
   public function saveLayout($formName,$layoutName,$restoreColumns,$orderColumns)
   { global $loggedUser, $objDatabase;
-	  echo "saving layout";
-    if($layoutName&&($layoutName!='null'))
+	  if($layoutName&&($layoutName!='null'))
     { $objDatabase->execSQL("DELETE FROM formlayouts WHERE observerid='".$loggedUser."' AND formName='".$formName."' AND layoutName='".$layoutName."';");
       $objDatabase->execSQL("INSERT INTO formlayouts VALUES(\"".$loggedUser."\",\"".$formName."\",\"".$layoutName."\",\"".$restoreColumns."\",\"".$orderColumns."\");");
     }
+  }
+  public function getLayoutList($formName)
+  { global $loggedUser, $objDatabase;
+	  if($formName)
+    return $objDatabase->selectSingleArray("SELECT layoutName FROM formlayouts WHERE observerid='".$loggedUser."' AND formName='".$formName."';","layoutName");
   }
 }
 $objFormLayout = new formLayouts

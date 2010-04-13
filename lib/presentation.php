@@ -204,6 +204,16 @@ class Presentations implements iPresentation
   public function promptWithLinkAndLayout($prompt,$promptDefault,$javaLink,$text)
 	{ return "<a href=\"#\" onclick=\"theLayoutName = prompt('".addslashes($prompt)."','".addslashes($promptDefault)."');  location.href='".$javaLink."&amp;layoutName='+theLayoutName+'&amp;orderColumns='+getColumnsOrder()+'&amp;restoreColumns='+getColumnsRestore();  return false;\" >".$text."</a>";
   }
+  public function promptWithLinkAndLayoutList($formName,$javaLink)
+	{ global $objFormLayout;
+	  $layoutList=$objFormLayout->getLayoutList($formName);
+		$list ="<select name=\"loadLayout\" class=\"\" onchange=\"location.href='".$javaLink."&amp;layoutName='+this.options[this.selectedIndex].value; \">";
+    $list.="<option value=\"\">-----</option>";
+    while(list($key,$value)=each($layoutList))
+      $list.= "<option value=\"".$value."\">".$value."</option>";
+    $list.="</select>";
+    return $list;
+  }
   public  function raArgoToString($ra)
   { $ra_hours  =floor($ra);
     $subminutes=60*($ra-$ra_hours);
