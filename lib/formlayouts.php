@@ -4,10 +4,8 @@ class formLayouts
   { global $objDatabase;
     $restoreColumns=$objDatabase->selectSingleValue("SELECT restoreColumns FROM formlayouts WHERE formName=\"".$formName."\" AND layoutName=\"".$layoutName."\";",'restoreColumns','');
     $orderColumns=$objDatabase->selectSingleValue("SELECT orderColumns FROM formlayouts WHERE formName=\"".$formName."\" AND layoutName=\"".$layoutName."\";",'orderColumns','');
-    //echo "<script type=\"text/javascript\">";
     echo "setColumnsOrder(\"".$orderColumns."\");";                                                  //collapse columns
     echo "setColumnsRestore(\"".$restoreColumns."\");";                                              //collapse columns
-    //echo "</script>";
   }
   public function saveLayout($formName,$layoutName,$restoreColumns,$orderColumns)
   { global $loggedUser, $objDatabase;

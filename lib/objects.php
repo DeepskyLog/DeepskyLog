@@ -1171,7 +1171,7 @@ class Objects implements iObjects
       }
       else
       { echo "readOrderColumnSourceOrder();";                                     //read order of columns
-        echo "readCollapseColumnsSourceCollapsed( );";                            //read the collapsed columns
+        echo "readCollapseColumnsSourceCollapsed();";                            //read the collapsed columns
       }
       echo "writeColumnsOrder();";                                                //rewrite columns in right order
       echo "collapseColumns();";                                                  //collapse columns
