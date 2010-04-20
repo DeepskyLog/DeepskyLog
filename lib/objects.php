@@ -465,7 +465,8 @@ class Objects implements iObjects
     return $objects;
   }
   public  function getObjectVisibilities($obs)
-  { $popupT = $this->prepareObjectsContrast();
+  { global $objPresentations;
+    $popupT = $this->prepareObjectsContrast();
     if($popupT)
       for($j=0;$j<count($obs);$j++)
       { $obs[$j]['objectcontrast'] = '-';
@@ -477,7 +478,7 @@ class Objects implements iObjects
     else
       for($j=0;$j<count($obs);$j++)
       { $this->calcContrastAndVisibility($obs[$j]['objectname'],$obs[$j]['showname'],$obs[$j]['objectmagnitude'],$obs[$j]['objectsbcalc'],$obs[$j]['objectdiam1'],$obs[$j]['objectdiam2'],$contrast,$contype,$popup,$contrastcalc1);
-        $obs[$j]['objectcontrast'] = $contrast;
+        $obs[$j]['objectcontrast'] = $objPresentations->presentationInt1($contrast,'','');
         $obs[$j]['objectcontrasttype'] = $contype;
         $obs[$j]['objectcontrastpopup'] = $popup;
         $obs[$j]['objectoptimalmagnification'] = $contrastcalc1[0].$contrastcalc1[1];
@@ -639,7 +640,7 @@ class Objects implements iObjects
 		return;
 	}
   public  function getSeenObjectDetails($obs, $seen="D")
-  { global $objAtlas, $objDatabase;
+  { global $objAtlas, $objDatabase,$objPresentations;
     $result2=array();
 	  $obscnt=sizeof($obs);
     if($obscnt > 0)
@@ -668,11 +669,14 @@ class Objects implements iObjects
           $result2[$j]['objectsurfacebrightness'] =  $get->subr;
   	      $result2[$j]['objectra'] =  $get->ra;
   	      $result2[$j]['objectdecl'] =  $get->decl;
+  	      $result2[$j]['objectradecl'] = $objPresentations->raToStringHM($result2[$j]['objectra']).' '.
+				                                 $objPresentations->decToString($result2[$j]['objectdecl'],0);
   	      $result2[$j]['objectdiam1'] = $get->diam1;
   	      $result2[$j]['objectdiam2'] = $get->diam2;
   	      $result2[$j]['objectsize'] = $this->calculateSize($get->diam1,$get->diam2);
   	      $result2[$j]['objectpa'] = $get->pa;
-          $result2[$j]['objectpositioninlist'] = $value[0]; 
+  	      $result2[$j]['objectsizepa'] = $result2[$j]['objectsize'].'/'.$objPresentations->presentationInt($result2[$j]['objectpa'],999,"-");
+  	      $result2[$j]['objectpositioninlist'] = $value[0]; 
           $result2[$j]['objectsbcalc'] = $get->SBObj; 
           $result2[$j]['objectdescription'] = $get->description;
 		  	  if(count($value)==3)

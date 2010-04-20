@@ -1765,11 +1765,22 @@ class Utils implements iUtils
 			}
 			if(!$sort)
 			{ reset($reportdata);
+				$deltaymax=0;
 				while(list($key,$dataelement)=each($reportdata))
-				  $pdf->addTextWrap($xbase+$dataelement['fieldposition']    , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $valueA[$dataelement['fieldname']]);			                   // seen
-			  
+				{ if($dataelement['fieldname']=="showname")
+				    $pdf->addTextWrap($xbase+$dataelement['fieldposition']    , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, 
+				        '<b>'.'<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.
+					      urlencode($valueA['objectname']).'>'.$valueA[$dataelement['fieldname']].'</c:alink></b>');			                 
+				  else if($dataelement['fieldname']=="objectuseratlaspage")
+				    $pdf->addTextWrap($xbase+$dataelement['fieldposition']    , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, 
+				                      '<b>'.$valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')].'</b>');			                  				  
+				  else
+				    $pdf->addTextWrap($xbase+$dataelement['fieldposition']    , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $valueA[$dataelement['fieldname']]);			                   // seen
+				  $deltaymax=max($deltaymax,$dataelement['fieldline']);
+				}
 				
-				/*$pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA['objectseen']);			                   // seen
+				/*
+				$pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA['objectseen']);			                   // seen
 			  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA['objectlastseen']);		                     // last seen	
 			  $pdf->addTextWrap($xbase+ 70, $y,  85, $fontSizeText, '<b>'.
 				  '<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.
@@ -1780,11 +1791,13 @@ class Utils implements iUtils
 			  $pdf->addTextWrap($xbase+217, $y,  18, $fontSizeText, $objPresentations->presentationInt1($valueA['objectsurfacebrightness'],99.9,''), 'left');		                   // sb
 			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, $objPresentations->raToStringHM($valueA['objectra']) . ' '.
 				                                                      $objPresentations->decToString($valueA['objectdecl'],0));	 // ra - decl
-			  */
-				  $pdf->addTextWrap($xbase+295, $y,  55, $fontSizeText, $valueA['objectsize'] . '/' . $objPresentations->presentationInt($valueA['objectpa'],999,"-"));			             // size
-	  		$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectcontrast'],'',''), 'left');			             // contrast				
+			  
+				$pdf->addTextWrap($xbase+295, $y,  55, $fontSizeText, $valueA['objectsizepa'] . '/' . $objPresentations->presentationInt($valueA['objectpa'],999,"-"));			             // size
+	  		
+				$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectcontrast'],'',''), 'left');			             // contrast				
 	  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, (int)$valueA['objectoptimalmagnification'], 'left');			             // magnification				
 			  $pdf->addTextWrap($xbase+380, $y,  20, $fontSizeText, '<b>'.$valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')].'</b>', 'right');			   // atlas page
+        */
       }
       else
 			{ $pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA['objectseen']);			                   // seen
@@ -1802,7 +1815,7 @@ class Utils implements iUtils
 	  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, $objPresentations->presentationInt((int)$valueA['objectoptimalmagnification'],0,''), 'left');		               // magnification				
 			  $pdf->addTextWrap($xbase+380, $y,  20, $fontSizeText, '<b>'.$valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')].'</b>', 'right');			   // atlas page
       }
-			$y-=$deltaline;
+			$y-=$deltaline*(++$deltaymax);
       if($sort)
 			  $actualsort = $$sort;
 			if(array_key_exists('objectlistdescription',$valueA) && $valueA['objectlistdescription'])
