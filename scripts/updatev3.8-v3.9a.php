@@ -39,13 +39,12 @@
  $objReportLayout->saveLayoutField("execute_query_objects","default","fontSizeSection"           , 0, 10,  0,0,'LAYOUTMETADATA');
  $objReportLayout->saveLayoutField("execute_query_objects","default","fontSizeText"              , 0,  8,  0,0,'LAYOUTMETADATA');
  
- $objReportLayout->saveLayoutField("execute_query_objects","default","descriptionLeadingSpace"   , 0, 20,  0,0,'LAYOUTMETADATA');
  $objReportLayout->saveLayoutField("execute_query_objects","default","sectionBarSpace"           , 0,  3,  0,0,'LAYOUTMETADATA');
  $objReportLayout->saveLayoutField("execute_query_objects","default","deltalineSection"          , 0,  2,  0,0,'LAYOUTMETADATA');
  
  $objReportLayout->saveLayoutField("execute_query_objects","default","deltalineextra"            , 0,  4,  0,0,'LAYOUTMETADATA');
  $objReportLayout->saveLayoutField("execute_query_objects","default","sectionBarHeightextra"     , 0,  4,  0,0,'LAYOUTMETADATA');
- $objReportLayout->saveLayoutField("execute_query_objects","default","SectionBarWidthbase"       , 0, 40,  0,0,'LAYOUTMETADATA');
+ $objReportLayout->saveLayoutField("execute_query_objects","default","SectionBarWidthbase"       , 0,400,  0,0,'LAYOUTMETADATA');
  
  $objReportLayout->saveLayoutField("execute_query_objects","default","startpagenumber"           , 0,  0,  0,0,'LAYOUTMETADATA');
  
@@ -64,17 +63,9 @@
  $objReportLayout->saveLayoutField("execute_query_objects","default","objectoptimalmagnification", 0,368, 17,0,'');
  $objReportLayout->saveLayoutField("execute_query_objects","default","objectuseratlaspage"       , 0,380, 20,0,'');
  
- /*$objReportLayout->saveLayoutField("execute_query_objects","default","objectseen",0,0,30,0,'');
- $objReportLayout->saveLayoutField("execute_query_objects","default","objectseen",0,0,30,0,'');
- $objReportLayout->saveLayoutField("execute_query_objects","default","objectseen",0,0,30,0,'');
- $objReportLayout->saveLayoutField("execute_query_objects","default","objectseen",0,0,30,0,'');
- $objReportLayout->saveLayoutField("execute_query_objects","default","objectseen",0,0,30,0,'');
- $objReportLayout->saveLayoutField("execute_query_objects","default","objectseen",0,0,30,0,'');
- $objReportLayout->saveLayoutField("execute_query_objects","default","objectseen",0,0,30,0,'');
- $objReportLayout->saveLayoutField("execute_query_objects","default","objectseen",0,0,30,0,'');
- $objReportLayout->saveLayoutField("execute_query_objects","default","objectseen",0,0,30,0,'');
- $objReportLayout->saveLayoutField("execute_query_objects","default","objectseen",0,0,30,0,'');
- */
- print "Database update successful.\n";
+ $objReportLayout->saveLayoutField("execute_query_objects","default","objectdescription"         , 1, 20,400,0,'');
+ 
+
+  print "Database update successful.\n";
 
 ?>
