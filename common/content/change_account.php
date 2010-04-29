@@ -95,20 +95,24 @@ $line[]=array(LangChangeAccountField7,$tempLocationList,"<a href=\"".$baseURL."i
 $line[]=array(LangChangeAccountField8,$tempInstrumentList,"<a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeAccountField8Expl."</a>");
 $line[]=array(LangChangeAccountField9,$tempAtlasList,"");
 $line[]=array(LangChangeAccountField12,
-              "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"fstOffset\" size=\"4\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'fstOffset')."\" />",
+              "<input type=\"text\" class=\"inputfield centered\" maxlength=\"4\" name=\"fstOffset\" size=\"4\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'fstOffset')."\" />",
               LangChangeAccountField12Expl);
 $line[]=array(LangChangeAccountPicture,"<input type=\"file\" name=\"picture\" class=\"inputfield\"/>","");
 $line[]=array(profiledsosmagnitude,"","");
 $line[]=array(profiledsosmagnitudeselect,
-              " <input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"overviewdsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewdsos')."\" />".
-              " / <input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"lookupdsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupdsos')."\" />".
-              " / <input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"detaildsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detaildsos')."\" />",
+              " <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"overviewdsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewdsos')."\" />".
+              " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"lookupdsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupdsos')."\" />".
+              " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"detaildsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detaildsos')."\" />",
               "");
 $line[]=array(profilestarsmagnitude,"","");
 $line[]=array(profilestarsmagnitudeselect,
-              "<input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"overviewstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewstars')."\" />".
-              " / <input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"lookupstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupstars')."\" />".
-              " / <input type=\"text\" class=\"inputfield\" maxlength=\"5\" name=\"detailstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detailstars')."\" />",
+              "<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"overviewstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewstars')."\" />".
+              " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"lookupstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupstars')."\" />".
+              " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"detailstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detailstars')."\" />",
+              "");
+$line[]=array("");        
+$line[]=array(AtlasPageFont,
+              "<input type=\"text\" class=\"inputfield centered\" maxlength=\"1\" name=\"atlaspagefont\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'atlaspagefont')."\" />",
               "");
 $line[]=array("");        
 $line[]=array(LangChangeAccountCopyright,
@@ -130,6 +134,8 @@ $tempObsLangList[]=LangChangeVisibleLanguagesExpl;
 $objPresentations->line($tempObsLangList,"RLLLL",array(20,13,13,14,40),'',array("fieldname","fieldvalue","","","fieldexplanation"));
 unset($tempObsLangList);
 $tempObsLangList[]="";
+$tempObsLangList[]="<input type=\"checkbox\" ".(in_array($key,$usedLanguages)?"checked=\"checked\"":"")." name=\"".$key."\" value=\"".$key."\" />".$value;
+$j++;
 while((list($key,$value)=each($allLanguages)))
 { $tempObsLangList[]="<input type=\"checkbox\" ".(in_array($key,$usedLanguages)?"checked=\"checked\"":"")." name=\"".$key."\" value=\"".$key."\" />".$value;
   $j++;
@@ -139,6 +145,12 @@ while((list($key,$value)=each($allLanguages)))
     unset($tempObsLangList);
     $tempObsLangList[]="";
   }
+}
+if(($j%3)!=0)
+{ $tempObsLangList[]="";
+  $objPresentations->line($tempObsLangList,"RLLLL",array(20,13,13,14,40),'',array("fieldname","fieldvalue","","","fieldexplanation"));
+  unset($tempObsLangList);
+  $tempObsLangList[]="";
 }
 echo "</div></form>";
 $upload_dir = 'common/observer_pics';

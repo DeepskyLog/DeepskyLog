@@ -1,6 +1,7 @@
 <?php
 
 // TO DO
+define("AtlasPageFont"                                   ,"Tekengrootte pdf atlaspagina (6..9)");
 
 define("LangLoadFormLayout"                              ,"Layout: ");
 

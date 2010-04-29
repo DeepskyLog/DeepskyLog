@@ -40,6 +40,11 @@ class reportLayouts
     $sql="SELECT * FROM reportlayouts WHERE observerid='".$observer."' AND reportname='".$reportname."' AND reportlayout='".$layoutname."' AND fieldstyle!='LAYOUTMETADATA';";
     return $objDatabase->selectRecordsetArray($sql);
   }
+  public function getReportAll($observer,$reportname,$layoutname)
+  { global $objDatabase;
+    $sql="SELECT * FROM reportlayouts WHERE observerid='".$observer."' AND reportname='".$reportname."' AND reportlayout='".$layoutname."';";
+    return $objDatabase->selectRecordsetArray($sql);
+  }
   public function getLayoutListObserver($reportName)
   { global $loggedUser, $objDatabase;
 	  if($reportName)

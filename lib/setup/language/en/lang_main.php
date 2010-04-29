@@ -2,6 +2,8 @@
 
 // TO DO:
 
+define("AtlasPageFont"                                   ,"Font size printed atlas pages (6..9)");
+
 define("LangLoadFormLayout"                              ,"Layout: ");
 
 define("LangLoadFormLayout1"                             ,"Load");

@@ -260,8 +260,9 @@ class Observers implements iObservers
         $this->setObserverProperty($loggedUser,'overviewstars', $_POST['overviewstars']);
         $this->setObserverProperty($loggedUser,'lookupstars', $_POST['lookupstars']);
         $this->setObserverProperty($loggedUser,'detailstars', $_POST['detailstars']);
+        $this->setObserverProperty($loggedUser,'atlaspagefont', $_POST['atlaspagefont']);
         $this->setObserverProperty($loggedUser,'copyright', $_POST['copyright']);
-		    $this->setObserverProperty($loggedUser,'UT', ((array_key_exists('local_time', $_POST)&&($_POST['local_time']=="on"))?"0":"1"));
+        $this->setObserverProperty($loggedUser,'UT', ((array_key_exists('local_time', $_POST)&&($_POST['local_time']=="on"))?"0":"1"));
 		    if ($_POST['icq_name'] != "")
 		      $this->setObserverProperty($loggedUser,'icqname', $_POST['icq_name']);
 		    $_SESSION['lang']=$_POST['language'];
