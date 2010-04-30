@@ -19,7 +19,7 @@ if($listname)
 { $link = $baseURL."index.php?indexAction=listaction";
   reset($_GET);
   while(list($key,$value)=each($_GET))
-    if(!in_array($key,array('indexAction','multiplepagenr','sort','sortdirection','showPartOfs','noShowName')))
+    if(!in_array($key,array('restoreColumns','orderColumn','loadLayout','saveLayout','indexAction','multiplepagenr','sort','sortdirection','showPartOfs','noShowName')))
       $link.='&amp;'.urlencode($key).'='.urlencode($value);
   if((array_key_exists('steps',$_SESSION))&&(array_key_exists("listObj",$_SESSION['steps'])))
 	  $step=$_SESSION['steps']["listObj"];

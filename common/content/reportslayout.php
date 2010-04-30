@@ -17,6 +17,8 @@ function reportsLayout()
   echo "&nbsp;";
   echo "<input type=\"button\" onclick=\"location.href=('".$baseURL."report.pdf?reportname=".$reportName."&amp;pdfTitle=".$objUtil->checkRequestKey('pdfTtile',"DeepskyLog")."&amp;SID=".$_GET['SID']."&amp;sort=".$_GET['sort']."&amp;'+document.getElementById('layouts').value);\" value=\"Generate pdf\"/>";
   echo "</div>";
+  echo"<div id=\"reportlayout\">";
+  echo "</div>";
 }
 reportsLayout();
 ?>
