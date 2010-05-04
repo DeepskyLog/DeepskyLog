@@ -188,8 +188,10 @@ class Observers implements iObservers
 		else
 		  $outputtable .= "<tr class=\"type3 centered\"><td>".LangTopObservers1."</td><td></td>".
 		                  "<td class=\"centered\">$numberOfObservations</td>" .
-			                "<td class=\"centered\">$numberOfObservationsThisYear</td>" .
-		 			  				  "<td class=\"centered\">".$objectsInCatalog."</td>" .
+			                "<td class=\"centered\">$numberOfDrawings</td>" .
+		                  "<td class=\"centered\">$numberOfObservationsThisYear</td>" .
+			                "<td class=\"centered\">$numberOfDrawingsThisYear</td>" .
+		                  "<td class=\"centered\">".$objectsInCatalog."</td>" .
 						   			  "<td class=\"centered\">".$numberOfDifferentObjects."</td></tr>";
 		$outputtable .= "</table></div>";
 		$outputtable .= "<hr />";
