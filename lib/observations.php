@@ -461,6 +461,10 @@ class Observations {
 	{ global $objDatabase;
 		return $objDatabase->selectSingleValue("SELECT ".$property." FROM observations WHERE id=\"".$id."\"",$property,$defaultvalue);
 	}
+	public  function getDsDrawingsCountFromObserver($id)
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT COUNT(*) as Cnt FROM observations WHERE observations.observerid = \"$id\" and visibility != 7 AND hasDrawing=1", "Cnt", 0);
+	}
 	public  function getDsObservationsCountFromObserver($id)
 	{ global $objDatabase;
 		return $objDatabase->selectSingleValue("SELECT COUNT(*) as Cnt FROM observations WHERE observations.observerid = \"$id\" and visibility != 7 ", "Cnt", 0);
@@ -481,6 +485,10 @@ class Observations {
 	{ global $objDatabase;
 	  return $objDatabase->selectSingleValue("SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE visibility != 7 ",'Cnt');
 	}
+	public  function getNumberOfDsDrawings()                                                                                                                        // returns the total number of observations
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT COUNT(objectname) As Cnt FROM observations WHERE visibility != 7 AND hasDrawing=1",'Cnt',0);
+	} 
 	public  function getNumberOfDsObservations()                                                                                                                        // returns the total number of observations
 	{ global $objDatabase;
 		return $objDatabase->selectSingleValue("SELECT COUNT(objectname) As Cnt FROM observations WHERE visibility != 7 ",'Cnt',0);
@@ -744,6 +752,11 @@ class Observations {
 			return $get->ObsCnt;
 		}
 	}
+	public  function getDrawingsLastYear($id) 
+	{ global $objDatabase;
+	  $t=getdate();
+		return $objDatabase->selectSingleValue("SELECT COUNT(*) AS Cnt FROM observations WHERE observations.observerid LIKE \"".$id."\" AND observations.date > \"" . date('Ymd', strtotime('-1 year'))."\" AND observations.visibility != 7 AND hasDrawing=1 ", 'Cnt', 0);
+	}
 	public  function getObservationsLastYear($id) 
 	{ global $objDatabase;
 	  $t=getdate();
@@ -851,6 +864,13 @@ class Observations {
 			       "JOIN observers on observations.observerid = observers.id " .
 			       "WHERE observations.date > \"" . date('Ymd', strtotime('-1 year')) . "\" AND observations.visibility != \"7\" ";
 		}
+	  elseif ($sort == "jaardrawings") {
+			$t = getdate();
+			$sql = "SELECT observations.observerid, COUNT(*) AS Cnt, observers.name " .
+			       "FROM observations " .
+			       "JOIN observers on observations.observerid = observers.id " .
+			       "WHERE observations.date > \"" . date('Ymd', strtotime('-1 year')) . "\" AND observations.visibility != \"7\" AND hasDrawing=1 ";
+		}
 		elseif ($sort == "catalog") {
 			if (substr($cat, 0, 5) == "List:")
 				if (substr($cat, 5, 7) == "Public:")
@@ -879,6 +899,10 @@ class Observations {
 			$sql = "SELECT observations.observerid, COUNT(DISTINCT observations.objectname) AS Cnt " .
 			"FROM observations " .
 			"JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 ";
+		} elseif($sort == "totaaldrawings") {
+			$sql = "SELECT observations.observerid, COUNT(*) AS Cnt " .
+			"FROM observations " .
+			"JOIN observers on observations.observerid = observers.id WHERE observations.visibility != 7 and observations.hasDrawing=1 ";
 		} else {
 			$sql = "SELECT observations.observerid, COUNT(*) AS Cnt " .
 			"FROM observations " .

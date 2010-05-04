@@ -1161,6 +1161,8 @@ define("LangTopObserversHeader5b"													,"Objets Caldwell");
 define("LangTopObserversHeader5c"													,"Objets H400");
 define("LangTopObserversHeader5d"													,"Objets H II");
 define("LangTopObserversHeader6"													,"Objets diff&eacute;rents");
+define("LangTopObserversHeader7"													,"Nombre de dessins");
+define("LangTopObserversHeader8"													,"Dessins durant la derni&egrave;re ann&eacute;e");
 define("LangTopObservers1"															  ,"Total");
 
 // content/details_observer_messier

@@ -1,6 +1,9 @@
 <?php
 
-// TO DO:
+// TO DO
+//define("LangTopObserversHeader7"													,"Number of drawings");
+//define("LangTopObserversHeader8"													,"Drawings last year");
+
 
 define("AtlasPageFont"                                   ,"Font size printed atlas pages (6..9)");
 
@@ -1165,6 +1168,8 @@ define("LangTopObserversHeader5b"													,"Caldwell Objekte");
 define("LangTopObserversHeader5c"													,"H400 Objekte");
 define("LangTopObserversHeader5d"													,"H II Objekte");
 define("LangTopObserversHeader6"													,"Andere Objekte");
+define("LangTopObserversHeader7"													,"Number of drawings");
+define("LangTopObserversHeader8"													,"Drawings last year");
 define("LangTopObservers1"																,"Total");
 
 // content/details_observer_messier

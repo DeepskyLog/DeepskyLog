@@ -115,7 +115,9 @@ class Observers implements iObservers
 		echo "<td class=\"centered\">".LangTopObserversHeader1."</td>";
 		echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=observer&amp;catalog=".urlencode($catalog)."\">".LangTopObserversHeader2."</a></td>";
 		echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=totaal&amp;catalog="  .urlencode($catalog)."\">".LangTopObserversHeader3."</a></td>";
+		echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=totaaldrawings&amp;catalog="  .urlencode($catalog)."\">".LangTopObserversHeader7."</a></td>";
 		echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=jaar&amp;catalog="    .urlencode($catalog)."\">".LangTopObserversHeader4."</a></td>";
+		echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=jaardrawings&amp;catalog="    .urlencode($catalog)."\">".LangTopObserversHeader8."</a></td>";
 		echo "<td class=\"width125px centered\">";
 		echo "<select class=\"width125px inputfield\" onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
 		while(list($key,$value)=each($catalogs))
@@ -133,15 +135,19 @@ class Observers implements iObservers
 		  echo "<td>&nbsp;&nbsp;</td>";
 		echo"</tr>";
 		$numberOfObservations = $objObservation->getNumberOfDsObservations();
+		$numberOfDrawings = $objObservation->getNumberOfDsDrawings();
 		$numberOfObservationsThisYear = $objObservation->getObservationsLastYear('%');
+		$numberOfDrawingsThisYear = $objObservation->getDrawingsLastYear('%');
 		$numberOfDifferentObjects = $objObservation->getNumberOfDifferentObservedDSObjects();
 		if($FF)
 		{ echo "</thead>";
 		  echo "<tfoot>";
 		  echo "<tr class=\"type3 centered\"><td>".LangTopObservers1."</td><td></td>".
 		                "<td class=\"centered\">$numberOfObservations</td>" .
+			              "<td class=\"centered\">$numberOfDrawings</td>" .
 			              "<td class=\"centered\">$numberOfObservationsThisYear</td>" .
-		 							  "<td class=\"centered\">".$objectsInCatalog."</td>" .
+			              "<td class=\"centered\">$numberOfDrawingsThisYear</td>" .
+		                "<td class=\"centered\">".$objectsInCatalog."</td>" .
 									  "<td class=\"centered\">".$numberOfDifferentObjects."</td></tr>";
       echo "</tfoot>";
 		  echo "<tbody id=\"topobs_list\" class=\"tbody_obs\">";
@@ -155,9 +161,16 @@ class Observers implements iObservers
 		    $outputtable.="<td class=\"centered\">" . ($count + 1) . "</td><td> <a href=\"".$baseURL."index.php?indexAction=detail_observer&amp;user=".urlencode($key)."\">$firstname&nbsp;$name</a> </td>";
 		    if($sort=="totaal") $value2 = $value; else $value2 = $objObservation->getDsObservationsCountFromObserver($key);
 		    $outputtable .= "<td class=\"centered\"> $value2 &nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf("%.2f", (($value2 / $numberOfObservations) * 100)). "%)</td>";
+		    if($sort=="totaaldrawings") $value2 = $value; else $value2 = $objObservation->getDsDrawingsCountFromObserver($key);
+		    $outputtable .= "<td class=\"centered\"> $value2 &nbsp;&nbsp;&nbsp;&nbsp;(" . sprintf("%.2f", (($value2 / $numberOfDrawings) * 100)). "%)</td>";
 		    if($sort=="jaar") $observationsThisYear = $value; else $observationsThisYear = $objObservation->getObservationsLastYear($key);
 		    if ($numberOfObservationsThisYear != 0) $percentObservations = ($observationsThisYear / $numberOfObservationsThisYear) * 100; else $percentObservations = 0;
 		    $outputtable .= "<td class=\"centered\">". $observationsThisYear . "&nbsp;&nbsp;&nbsp;&nbsp;(".sprintf("%.2f", $percentObservations)."%)</td>";
+		    
+		    if($sort=="jaardrawings") $drawingsThisYear = $value; else $drawingsThisYear = $objObservation->getDrawingsLastYear($key);
+		    if ($numberOfDrawingsThisYear != 0) $percentDrawings = ($drawingsThisYear / $numberOfDrawingsThisYear) * 100; else $percentDrawings = 0;
+		    $outputtable .= "<td class=\"centered\">". $drawingsThisYear . "&nbsp;&nbsp;&nbsp;&nbsp;(".sprintf("%.2f", $percentDrawings)."%)</td>";
+		    
 		    if($sort=="catalog") $objectsCount = $value; else $objectsCount = $objObservation->getObservedCountFromCatalogOrList($key,$catalog);
 				$outputtable .= "<td class=\"centered\"> <a href=\"".$baseURL."index.php?indexAction=view_observer_catalog&amp;catalog=".urlencode($catalog)."&amp;user=".urlencode($key)."\">". $objectsCount . "</a> (" . sprintf("%.2f",(($objectsCount / $objectsInCatalog)*100)) . "%)</td>";
 		    if($sort=="objecten") $numberOfObjects = $value; else $numberOfObjects = $objObservation->getNumberOfObjects($key);
