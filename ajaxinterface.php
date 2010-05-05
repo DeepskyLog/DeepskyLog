@@ -9,5 +9,5 @@ elseif($ajaxInstruction=="getStarsMagnitudeJSON")
 elseif($ajaxInstruction=="getConstellationBoundriesJSON")
   echo(json_encode($objConstellation->getAllBoundries()));
 elseif($ajaxInstruction=="getReportLayout")
-  echo(json_encode($objReportLayout->getReportAll($objUtil->checkRequestKey('reportuser'),$objUtil->checkRequestKey('reportname'),$objUtil->checkRequestKey('reportlayout'))));
+  echo(json_encode($objReportLayout->getReportAll($loggedUser,$objUtil->checkRequestKey('reportname'),$objUtil->checkRequestKey('reportlayout'))));
 ?>
