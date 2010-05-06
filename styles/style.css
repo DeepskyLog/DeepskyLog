@@ -44,6 +44,12 @@ a.observercatalog {
   border-width     : 1px;
   border-color     : #FFFF00;
 }
+.alike {
+  color            : #FF9900;
+  cursor           : pointer;
+  cursor           : hand;
+  text-decoration  : underline;
+}
 td.abbrevTable {
 	font-family      : Lucida Console,sans-serif;
   font-size        : 8pt;

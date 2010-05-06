@@ -15,7 +15,7 @@ function reportsLayout()
     echo "<option value=\"".$value."\">".$value."</option>";
   echo "</select>";
   echo "&nbsp;";
-  echo "<input type=\"button\" onclick=\"location.href=('".$baseURL."report.pdf?reportname=".$reportName."&amp;pdfTitle=".$objUtil->checkRequestKey('pdfTtile',"DeepskyLog")."&amp;SID=".$_GET['SID']."&amp;sort=".$_GET['sort']."&amp;'+document.getElementById('reportlayoutselect').value);\" value=\"Generate pdf\"/>";
+  echo "<input type=\"button\" onclick=\"saveLayoutPage('".$baseURL."report.pdf','".$reportName."','".$objUtil->checkRequestKey('pdfTtile',"DeepskyLog")."','".$_GET['SID']."','".$_GET['sort']."');\" value=\"Generate pdf\"/>";
   echo "<input type=\"button\" onclick=\"savereportlayout();\" value=\"Save as...\"/>";
   echo "</div>";
   echo "<div id=\"reportlayout\">";

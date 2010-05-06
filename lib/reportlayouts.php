@@ -56,6 +56,11 @@ class reportLayouts
     else
       return array();
   }
+  public function saveLayout($reportname,$reportlayout,$reportdata)
+  { $reportdata=eval('return '.$reportdata.';');
+    while(list($key,$data)=each($reportdata))
+      $this->saveLayoutField($reportname,$reportlayout,$data['fieldname'],$data['fieldline'],$data['fieldposition'],$data['fieldwidth'],$data['fieldheight'],$data['fieldstyle']); 
+  }
 }
 $objReportLayout = new reportLayouts
 ?>
