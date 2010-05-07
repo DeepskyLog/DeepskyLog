@@ -8,20 +8,20 @@ class reportLayouts
 	  if($reportname&&$reportlayout&&$fieldname)
       if($thepk=$objDatabase->selectSingleValue("SELECT reportlayoutpk FROM reportlayouts WHERE observerid='".$loggedUser."' AND reportname='".$reportname."' AND reportlayout='".$reportlayout."' and fieldname='".$fieldname."';","reportlayoutpk",''))
         $objDatabase->execSQL("UPDATE reportlayouts 
-                               SET    fieldline=".$fieldline.",
-                                      fieldposition=".$fieldposition.",
-                                      fieldwidth=".$fieldwidth.",
-                                      fieldheight=".$fieldheight.",
+                               SET    fieldline='".$fieldline."',
+                                      fieldposition='".$fieldposition."',
+                                      fieldwidth='".$fieldwidth."',
+                                      fieldheight='".$fieldheight."',
                                       fieldstyle='".$fieldstyle."'
                                WHERE  reportlayoutpk=".$thepk.";");
       else
         $objDatabase->execSQL("INSERT INTO reportlayouts (observerid, reportname,reportlayout,fieldname,fieldline,fieldposition,fieldwidth,fieldheight,fieldstyle)
-                               VALUES('".$loggedUser."','".$reportname."','".$reportlayout."','".$fieldname."',".$fieldline.",".$fieldposition.",".$fieldwidth.",".$fieldheight.",'".$fieldstyle."');");   
+                               VALUES('".$loggedUser."','".$reportname."','".$reportlayout."','".$fieldname."','".$fieldline."','".$fieldposition."','".$fieldwidth."','".$fieldheight."','".$fieldstyle."');");   
   }
   public function getLayoutListDefault($reportName)
   { global $loggedUser, $objDatabase;
 	  if($reportName)
-      return $objDatabase->selectSingleArray("SELECT DISTINCT reportlayout FROM reportlayouts WHERE observerid='"."defaultuser"."' AND reportname='".$reportName."' ORDER BY reportlayout;","reportlayout");
+      return $objDatabase->selectSingleArray("SELECT DISTINCT reportlayout FROM reportlayouts WHERE observerid='".$loggedUser."' AND reportname='".$reportName."' ORDER BY reportlayout;","reportlayout");
     else
       return array();
   }
@@ -37,7 +37,7 @@ class reportLayouts
   }
   public function getReportData($observer,$reportname,$layoutname)
   { global $objDatabase;
-    $sql="SELECT * FROM reportlayouts WHERE observerid='".$observer."' AND reportname='".$reportname."' AND reportlayout='".$layoutname."' AND fieldstyle!='LAYOUTMETADATA';";
+    $sql="SELECT * FROM reportlayouts WHERE observerid='".$observer."' AND reportname='".$reportname."' AND reportlayout='".$layoutname."' AND fieldstyle!='LAYOUTMETADATA' ORDER BY fieldline;";
     return $objDatabase->selectRecordsetArray($sql);
   }
   public function getReportAll($observer,$reportname,$layoutname)
@@ -46,7 +46,7 @@ class reportLayouts
     if($result=$objDatabase->selectRecordsetArray($sql))
       return $result;
     else
-      $sql="SELECT * FROM reportlayouts WHERE observerid='defaultuser' AND reportname='".$reportname."' AND reportlayout='".$layoutname."';";
+      $sql="SELECT * FROM reportlayouts WHERE observerid='Deepskylog' AND reportname='".$reportname."' AND reportlayout='Default';";
     return $objDatabase->selectRecordsetArray($sql);
   }
   public function getLayoutListObserver($reportName)
@@ -59,7 +59,8 @@ class reportLayouts
   public function saveLayout($reportname,$reportlayout,$reportdata)
   { $reportdata=eval('return '.$reportdata.';');
     while(list($key,$data)=each($reportdata))
-      $this->saveLayoutField($reportname,$reportlayout,$data['fieldname'],$data['fieldline'],$data['fieldposition'],$data['fieldwidth'],$data['fieldheight'],$data['fieldstyle']); 
+      $this->saveLayoutField($reportname,$reportlayout,$data['fieldname'],$data['fieldline'],$data['fieldposition'],$data['fieldwidth'],$data['fieldheight'],$data['fieldstyle']);
+    return $this->getLayoutListDefault($reportname);
   }
 }
 $objReportLayout = new reportLayouts

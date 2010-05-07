@@ -1648,6 +1648,23 @@ class Utils implements iUtils
 		}		
     $pdf->Stream(); 
   }
+  private function firstpage(&$y,$bottomsection,$top,&$xbase,$xmid,&$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i)
+  { global $objObserver,$loggedUser,$objLocation,$objInstrument;
+    $y=$top;
+    $pdf->addTextWrap($xleft, $header, 100, $fontSizeText, $theDate);
+    if($objObserver->getObserverProperty($loggedUser,'name')
+			&& $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')
+			&& $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name'))
+		{ $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, $fontSizeText, 
+                        html_entity_decode(LangPDFMessage19 . $objObserver->getObserverProperty($loggedUser,'name') . ' ' . 
+                        $objObserver->getObserverProperty($loggedUser,'firstname') . 
+                        LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name') . ' ' . 
+                        LangPDFMessage21 . $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')), 'center' );
+      $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($this->checkRequestKey('pdfTitle')), 'center' );
+      $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, $fontSizeText, LangPDFMessage22 . $pagenr, 'right');
+    }
+		$xbase = $xleft;
+  } 
   private function newpage(&$y,$bottomsection,$top,&$xbase,$xmid,&$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i)
   { global $objObserver,$loggedUser,$objLocation,$objInstrument;
     if($y<$bottomsection) 
@@ -1688,52 +1705,35 @@ class Utils implements iUtils
   { global $objReportLayout,$dateformat,$baseURL,$instDir,$objObserver,$loggedUser,$objLocation,$objInstrument,$objPresentations;
 
     $reportdata=$objReportLayout->getReportData($reportuser,$reportname,$reportlayout);
-  
     if($sort=='objectconstellation') $sort='con'; else $sort='';
-	  $pdf = new Cezpdf('a4', 'landscape');
-    $pdf->selectFont($instDir.'lib/fonts/Helvetica.afm');
-    
-    $bottom = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'bottom');
-    $top = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'top');
-    $header = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'header');
-    
-    $footer = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'footer');
-    $xleft = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'xleft');
-    $xmid = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'xmid');
 
-    $fontSizeSection = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'fontSizeSection');
-    $fontSizeText = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'fontSizeText');
-
-    $sectionBarSpace = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'sectionBarSpace');
+    $pagesize         = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'pagesize');
+    $pageorientation  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'pageorientation');
+    $bottom           = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'bottom');
+    $top              = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'top');
+    $header           = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'header');
+    $footer           = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'footer');
+    $xleft            = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'xleft');
+    $xmid             = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'xmid');
+    $fontSizeSection  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'fontSizeSection');
+    $fontSizeText     = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'fontSizeText');
+    $sectionBarSpace  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'sectionBarSpace');
     $deltalineSection = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'deltalineSection');    
+    $deltaline        = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'deltalineExtra')+$fontSizeText;
+    $pagenr           = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'startpagenumber');
+		$sectionBarHeight = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'sectionBarHeightextra')+$fontSizeSection;
+		$SectionBarWidth  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'SectionBarWidthbase')+$sectionBarSpace;
     
-    $deltaline = $fontSizeText+$objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'deltalineExtra');
-    $pagenr = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'startpagenumber');
-    
-    $actualsort='';
-    $y = $top;
-    $xbase = $xleft;
-		$sectionBarHeight = $fontSizeSection + $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'sectionBarHeightextra');
-		$SectionBarWidth = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'SectionBarWidthbase')+$sectionBarSpace;
-		
+	  $pdf = new Cezpdf($pagesize, $pageorientation);
+    $pdf->selectFont($instDir.'lib/fonts/Helvetica.afm');
+		$actualsort='';
 		$theDate=date('d/m/Y');
-    $pdf->addTextWrap($xleft,$header,100,$fontSizeText,$theDate);
-		if($loggedUser&&$objObserver->getObserverProperty($loggedUser,'name')
-		&& $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')
-		&& $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name'))
-      $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, $fontSizeText, 
-		    html_entity_decode(LangPDFMessage19 .$objObserver->getObserverProperty($loggedUser,'firstname') . ' ' . 
-				                   $objObserver->getObserverProperty($loggedUser,'name') . ' ' .
-		    LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name') . ' ' . 
-				LangPDFMessage21 . $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')), 'center' );
-		$pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, $fontSizeText, html_entity_decode($this->checkRequestKey('pdfTitle')), 'center' );
-		$pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, $fontSizeText, LangPDFMessage22 . $pagenr, 'right');
-		while(list($key, $valueA) = each($result))
+    $this->firstpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,'');		
+    while(list($key, $valueA) = each($result))
     { $con = $valueA['objectconstellation'];
     	if($y<$bottom) 
 			  $this->newpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"");
-			else
-			if($sort && ($$sort!=$actualsort))
+			else if($sort && ($$sort!=$actualsort))
 			{ $pdf->addText(0,0,$fontSizeText,'</i>');
 			  $y-=$deltalineSection;
         $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
@@ -1743,76 +1743,52 @@ class Utils implements iUtils
 			reset($reportdata);
 			$deltaymax=0;
 			while(list($key,$dataelement)=each($reportdata))
-			{ if($dataelement['fieldname']=="showname")
-			    $pdf->addTextWrap($xbase+$dataelement['fieldposition']    , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, 
-			        '<b>'.'<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.
-				      urlencode($valueA['objectname']).'>'.$valueA[$dataelement['fieldname']].'</c:alink></b>');			                 
-			  else if($dataelement['fieldname']=="objectuseratlaspage")
-			    $pdf->addTextWrap($xbase+$dataelement['fieldposition']    , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, 
-			                      '<b>'.$valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')].'</b>');			                  				  
-			  else if(($dataelement['fieldname']=="objectlistdescription")&&array_key_exists('objectlistdescription',$valueA) && $valueA['objectlistdescription'])
-	      { $theText= $objPresentations->br2nl($valueA['objectlistdescription']);
-				  $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, '<i>'.$theText);
-	  			while($theText)
-					{ $y-=$deltaline;	
-	          if($y<$bottom) 
-				      $this->newpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"<i>");
-					  $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText);
-	  			}
-				  $pdf->addText(0,0,$fontSizeText,'</i>');
-				}
-			  elseif(($dataelement['fieldname']=="objectdescription")&&array_key_exists('objectdescription',$valueA) && $valueA['objectdescription'])
-	      { $theText= $objPresentations->br2nl($valueA['objectdescription']);
-				  $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, '<i>'.$theText);
-	  			while($theText)
-					{ $y-=$deltaline;	
-	          if($y<$bottom) 
-				      $this->newpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"<i>");
-					  $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText);
-	  			}
-				  $pdf->addText(0,0,$fontSizeText,'</i>');
-				}
-			  else
-			    $pdf->addTextWrap($xbase+$dataelement['fieldposition']    , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $valueA[$dataelement['fieldname']]);			                   // seen
-			  $deltaymax=max($deltaymax,$dataelement['fieldline']);
-			}
-			
-			/*
-			$pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA['objectseen']);			                   // seen
-		  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA['objectlastseen']);		                     // last seen	
-		  $pdf->addTextWrap($xbase+ 70, $y,  85, $fontSizeText, '<b>'.
-			  '<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.
-				urlencode($valueA['objectname']).'>'.$valueA['showname']);		               //	object
-		  $pdf->addTextWrap($xbase+150, $y,  30, $fontSizeText, '</c:alink></b>'.$valueA['objecttype']);			                 // type
-		  $pdf->addTextWrap($xbase+180, $y,  20, $fontSizeText, $valueA['objectconstellation']);			                         // constellation
-		  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectmagnitude'],99.9,''), 'left');  	                 // mag
-		  $pdf->addTextWrap($xbase+217, $y,  18, $fontSizeText, $objPresentations->presentationInt1($valueA['objectsurfacebrightness'],99.9,''), 'left');		                   // sb
-		  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, $objPresentations->raToStringHM($valueA['objectra']) . ' '.
-			                                                      $objPresentations->decToString($valueA['objectdecl'],0));	 // ra - decl
-		  
-			$pdf->addTextWrap($xbase+295, $y,  55, $fontSizeText, $valueA['objectsizepa'] . '/' . $objPresentations->presentationInt($valueA['objectpa'],999,"-"));			             // size
-  		
-			$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectcontrast'],'',''), 'left');			             // contrast				
-  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, (int)$valueA['objectoptimalmagnification'], 'left');			             // magnification				
-		  $pdf->addTextWrap($xbase+380, $y,  20, $fontSizeText, '<b>'.$valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')].'</b>', 'right');			   // atlas page
-        
-      }
-      else
-		{ $pdf->addTextWrap($xbase    , $y,  30, $fontSizeText, $valueA['objectseen']);			                   // seen
-		  $pdf->addTextWrap($xbase+ 30, $y,  40, $fontSizeText, $valueA['objectlastseen']);		                     // last seen	
-		  $pdf->addTextWrap($xbase+ 70, $y, 100, $fontSizeText, '<b>'.
-			  '<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.
-				urlencode($valueA['objectname']).'>'.$valueA['showname']);		                                       //	object
-		  $pdf->addTextWrap($xbase+170, $y,  30, $fontSizeText, '</c:alink></b>'.$valueA['objecttype']);			                 // type
-		  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectmagnitude'],99.9,''), 'left');			                 // mag
-		  $pdf->addTextWrap($xbase+217, $y,  18, $fontSizeText, $objPresentations->presentationInt1($valueA['objectsurfacebrightness'],99.9,''), 'left');			                   // sb
-		  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, $objPresentations->raToStringHM($valueA['objectra']) . ' '.
-			                                                      $objPresentations->decToString($valueA['objectdecl'],0));	 // ra - decl
-		  $pdf->addTextWrap($xbase+295, $y,  55, $fontSizeText, $valueA['objectsize'] . '/' . $objPresentations->presentationInt($valueA['objectpa'],999,"-"));         			   // size
-  		$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectcontrast'],0,''), 'left');			             // contrast				
-  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, $objPresentations->presentationInt((int)$valueA['objectoptimalmagnification'],0,''), 'left');		               // magnification				
-		  $pdf->addTextWrap($xbase+380, $y,  20, $fontSizeText, '<b>'.$valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')].'</b>', 'right');			   // atlas page
-      */
+			{ if(($dataelement['fieldwidth']))
+			  { $justification='left';
+			  	if(strpos($dataelement['fieldstyle'],'r')!==FALSE)
+			      $justification='right';
+			  	if(strpos($dataelement['fieldstyle'],'c')!==FALSE)
+			      $justification='center';
+			  	if(strpos($dataelement['fieldstyle'],'b')!==FALSE)
+			      $pdf->addText(0,0,$fontSizeText,'<b>');
+			    if(strpos($dataelement['fieldstyle'],'i')!==FALSE)
+			      $pdf->addText(0,0,$fontSizeText,'<i>');
+			  	if($dataelement['fieldname']=="showname")
+			    { $pdf->addText(0,0,$fontSizeText,'<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($valueA['objectname']).'>');
+			      $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $valueA[$dataelement['fieldname']],$justification);
+		  		  $pdf->addText(0,0,$fontSizeText,'</c:alink>');
+			    }			                 
+			    else if($dataelement['fieldname']=="objectuseratlaspage")
+			      $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText,$valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')],$justification);			                  				  
+  			  else if(($dataelement['fieldname']=="objectlistdescription")&&array_key_exists('objectlistdescription',$valueA) && $valueA['objectlistdescription'])
+	        { $theText= $objPresentations->br2nl($valueA['objectlistdescription']);
+		  		  $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
+	  	  		while($theText)
+				  	{ $y-=$deltaline;	
+	            if($y<$bottom) 
+				        $this->newpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"<i>");
+					    $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
+	  		  	}
+		   		}
+			    elseif(($dataelement['fieldname']=="objectdescription")&&array_key_exists('objectdescription',$valueA) && $valueA['objectdescription'])
+  	      { $theText= $objPresentations->br2nl($valueA['objectdescription']);
+	   			  $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
+	  	  		while($theText)
+				  	{ $y-=$deltaline;	
+	            if($y<$bottom) 
+				        $this->newpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"<i>");
+					    $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
+	  			  }
+				  }
+			    else
+			      $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $valueA[$dataelement['fieldname']],$justification);
+			    $deltaymax=max($deltaymax,$dataelement['fieldline']);
+			   if(strpos($dataelement['fieldstyle'],'b')!==FALSE)
+			      $pdf->addText(0,0,$fontSizeText,'</b>');
+			   if(strpos($dataelement['fieldstyle'],'i')!==FALSE)
+			      $pdf->addText(0,0,$fontSizeText,'</i>');
+			  }
+			}			
 			$y-=$deltaline*(++$deltaymax);
       if($sort)
 			  $actualsort = $$sort;

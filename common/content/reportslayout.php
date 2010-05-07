@@ -10,19 +10,22 @@ function reportsLayout()
   $defaults=$objReportLayout->getLayoutListDefault($reportName);
   echo "Known layouts: ";
   echo "<select id=\"reportlayoutselect\" name=\"reportlayoutselect\" onchange=\"setLayoutPage();\">";
-  echo "<option value=\"\">"."-----"."</option>";
+  echo "<option value=\""."GeneralDefaultDeepskylog"."\">"."Deepskylog Default Layout"."</option>";
+  echo "<option value=\"\" selected=\"selected\" >"."-----"."</option>";
   while(list($key, $value) = each($defaults))
     echo "<option value=\"".$value."\">".$value."</option>";
   echo "</select>";
   echo "&nbsp;";
-  echo "<input type=\"button\" onclick=\"saveLayoutPage('".$baseURL."report.pdf','".$reportName."','".$objUtil->checkRequestKey('pdfTtile',"DeepskyLog")."','".$_GET['SID']."','".$_GET['sort']."');\" value=\"Generate pdf\"/>";
-  echo "<input type=\"button\" onclick=\"savereportlayout();\" value=\"Save as...\"/>";
+  echo "<input type=\"button\" onclick=\"saveLayoutPage('".$baseURL."report.pdf','".$reportName."','".$objUtil->checkRequestKey('pdfTtile',"DeepskyLog")."','".$_GET['SID']."','".$_GET['sort']."');\" value=\"Save and Generate pdf\"/>";
+  echo "<input type=\"button\" onclick=\"saveAsLayoutPage('".$reportName."');\" value=\"Save as...\"/>";
+  echo "<input type=\"hidden\" id=\"tempname\" value=\"\" />";
   echo "</div>";
   echo "<div id=\"reportlayout\">";
   echo "</div>";
 	echo "<script type=\"text/javascript\">
 	      /* <![CDATA[ */ 
         thereport='".$reportName."';
+	      setLayoutPage();
 	      /* ]]> */ 
 	      </script>";
 }

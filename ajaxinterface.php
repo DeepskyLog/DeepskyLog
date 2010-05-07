@@ -11,9 +11,7 @@ elseif($ajaxInstruction=="getConstellationBoundriesJSON")
 elseif($ajaxInstruction=="getReportLayout")
   echo(json_encode($objReportLayout->getReportAll($loggedUser,$objUtil->checkRequestKey('reportname'),$objUtil->checkRequestKey('reportlayout'))));
 elseif($ajaxInstruction=="saveReportLayout")
-{ $objReportLayout->saveLayout($objUtil->checkRequestKey('reportname'),$objUtil->checkRequestKey('reportlayout'),stripslashes($objUtil->checkRequestKey('thedata')));
-  echo "Done.";
-}
+  echo json_encode($objReportLayout->saveLayout($objUtil->checkRequestKey('reportname'),$objUtil->checkRequestKey('reportlayout'),stripslashes($objUtil->checkRequestKey('thedata'))));
 else
   echo "No result.";  
 ?>
