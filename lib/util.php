@@ -1724,9 +1724,10 @@ class Utils implements iUtils
 		$sectionBarHeight = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'sectionBarHeightextra')+$fontSizeSection;
 		$SectionBarWidth  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'SectionBarWidthbase')+$sectionBarSpace;
     
-	  $pdf = new Cezpdf($pagesize, $pageorientation);
+    $pdf = new Cezpdf($pagesize, $pageorientation);
     $pdf->selectFont($instDir.'lib/fonts/Helvetica.afm');
-		$actualsort='';
+		    
+    $actualsort='';
 		$theDate=date('d/m/Y');
     $this->firstpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,'');		
     while(list($key, $valueA) = each($result))

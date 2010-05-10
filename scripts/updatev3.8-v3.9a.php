@@ -25,7 +25,7 @@
  $run = mysql_query($sql) or die(mysql_error());
  
  print "Starting making default report profiles.\n";
- $loggedUser="Deepskylog";
+ $loggedUserName="Deepskylog";
  $objReportLayout->saveLayoutField("execute_query_objects","default","pagesize"                        , '0',       'A4',  '0', '0', 'LAYOUTMETADATA');
  $objReportLayout->saveLayoutField("execute_query_objects","default","pageorientation"                 , '0','landscape',  '0', '0', 'LAYOUTMETADATA');
  $objReportLayout->saveLayoutField("execute_query_objects","default","startpagenumber"                 , '0',        '1',  '0', '0', 'LAYOUTMETADATA');
