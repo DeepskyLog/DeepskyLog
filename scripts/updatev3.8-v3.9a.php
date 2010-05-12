@@ -98,7 +98,6 @@
  $objReportLayout->saveLayoutField("ReportQueryOfObjects","default","objectset"                       , '0',        '0',  '0', '0', '','','');
  $objReportLayout->saveLayoutField("ReportQueryOfObjects","default","objectsetpopup"                  , '0',        '0',  '0', '0', '','','');
  $objReportLayout->saveLayoutField("ReportQueryOfObjects","default","objectbest"                      , '0',        '0',  '0', '0', '','','');
- $objReportLayout->saveLayoutField("ReportQueryOfObjects","default","objectbestpopup"                 , '0',        '0',  '0', '0', '','','');
  $objReportLayout->saveLayoutField("ReportQueryOfObjects","default","objectmaxaltitude"               , '0',        '0',  '0', '0', '','','');
  $objReportLayout->saveLayoutField("ReportQueryOfObjects","default","objectmaxaltitudepopup"          , '0',        '0',  '0', '0', '','','');
  
