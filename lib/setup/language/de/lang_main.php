@@ -4,6 +4,10 @@
 //define("LangTopObserversHeader7"													,"Number of drawings");
 //define("LangTopObserversHeader8"													,"Drawings last year");
 
+define("ReportLink"               ,"Report"); 
+
+define("ReportQueryOfObjects"     ,"objects overview");
+
 define("ReportTitle"              ,"Reports Layout for ");
 define("ReportKnownLayouts"       ,"Known layouts: ");
 define("ReportSaveAndGeneratePdf" ,"Save and Generate pdf");

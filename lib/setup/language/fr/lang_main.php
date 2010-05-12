@@ -1,6 +1,8 @@
 <?php
 
 // TO DO
+define("ReportLink"               ,"Rapport"); 
+define("ReportQueryOfObjects"     ,"objects overview");
 
 define("ReportTitle"              ,"Reports Layout for ");
 define("ReportKnownLayouts"       ,"Known layouts: ");

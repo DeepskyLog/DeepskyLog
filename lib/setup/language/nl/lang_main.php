@@ -2,11 +2,14 @@
 
 // TO DO:
 
-define("ReportTitle"              ,"Reports Layout for ");
-define("ReportKnownLayouts"       ,"Known layouts: ");
-define("ReportSaveAndGeneratePdf" ,"Save and Generate pdf");
-define("ReportSaveAs"             ,"Save as...");
-define("ReportDelete"             ,"Delete");
+define("ReportLink"               ,"Rapport"); 
+define("ReportQueryOfObjects"     ,"objectenoverzicht");
+
+define("ReportTitle"              ,"Gekende layouts voor ");
+define("ReportKnownLayouts"       ,"Gekende layouts: ");
+define("ReportSaveAndGeneratePdf" ,"Bewaar en Maak pdf");
+define("ReportSaveAs"             ,"Bewaar als...");
+define("ReportDelete"             ,"Verwijder");
 
 
 define("ReportFieldname"                                       ,"Veld");

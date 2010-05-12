@@ -5,7 +5,7 @@ function reportsLayout()
   $reportName=$objUtil->checkGetKey('reportname');
   $reportTitle=$objUtil->checkGetKey('reporttitle');
   echo "<div id=\"main\">";
-  $objPresentations->line(array("<h4>".ReportTitle.$reportTitle."</h4>"),"L",array(100),40);
+  $objPresentations->line(array("<h4>".ReportTitle.constant($reportTitle)."</h4>"),"L",array(100),40);
   $objPresentations->line(array("<hr />"),"L",array(100));
   $defaults=$objReportLayout->getLayoutListDefault($reportName);
   echo ReportKnownLayouts;
