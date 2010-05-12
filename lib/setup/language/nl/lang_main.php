@@ -2,6 +2,74 @@
 
 // TO DO:
 
+define("ReportTitle"              ,"Reports Layout for ");
+define("ReportKnownLayouts"       ,"Known layouts: ");
+define("ReportSaveAndGeneratePdf" ,"Save and Generate pdf");
+define("ReportSaveAs"             ,"Save as...");
+define("ReportDelete"             ,"Delete");
+
+
+define("ReportFieldname"                                       ,"Veld");
+define("ReportFieldlineposition"                               ,"Veld is op lijn ... (0=eerste)");
+define("ReportFieldxposition"                                  ,"Veld is op positie x ... in kolom");
+define("ReportFieldwidth"                                      ,"Breedte van het veld");
+define("ReportFieldStyle"                                      ,"Font style (combinatie van i (italic), b (bold) en l, r of c (uitlijning)");
+define("ReportFieldTextBefore"                                 ,"Tekst voor het veld");
+define("ReportFieldTextAfter"                                  ,"Tekst achter het veld");
+
+define("Reportpagesize"                                        ,"Paginagrootte (A4/A3/LETTER/...)");
+define("Reportpageorientation"                                 ,"Pagina orientatie (landscape/portrait)");
+define("Reportstartpagenumber"                                 ,"Eerste paginanummer");
+define("Reporttop"                                             ,"Bovenste marge positie voor de tekst (y-coordinate)");
+define("Reportheader"                                          ,"Positie van de hoofdinglijn (y-coordinaat)");
+define("Reportxleft"                                           ,"Positie van de eerste kolom (x-coordinaat)");
+define("Reportbottom"                                          ,"Bodemmarge positie voor de tekst (y-coordinaat)");
+define("Reportfooter"                                          ,"Positie voor de voetlijn (y-coordinaat)");
+define("Reportxmid"                                            ,"Positie van de tweede kolom (x-coordinaat");
+define("ReportfontSizeText"                                    ,"Fontgrootte tekst");
+define("ReportfontSizeSection"                                 ,"Fontgrootte voor de sectietitel");
+define("Reportdeltalineextra"                                  ,"Supplementaire lijn-interlinie");
+define("ReportsectionBarHeightextra"                           ,"Supplementaire grootte sectievak");
+define("ReportdeltalineSection"                                ,"Supplmentaire ruimte na sectievak");
+define("Reportdeltaobjectline"                                 ,"Supplementaire ruilmte tussen verschillende objecten");
+define("ReportSectionBarWidthbase"                             ,"Breedte van het sectievak (bv. indeling sterrenbeelden)");
+define("Reportobjectseen"                                      ,"Object gezien door jou of anderen");
+define("Reportobjectlastseen"                                  ,"Object laatst gezien door jou");
+define("Reportshowname"                                        ,"Object naam zoals opgezocht (b.v. op Caldwell nummer)");
+define("Reportobjectname"                                      ,"Object hoofdnaam");
+define("Reportaltname"                                         ,"Alternatieve objectnamen");
+define("Reportobjecttype"                                      ,"Object type afkorting");
+define("Reportobjecttypefull"                                  ,"Object type");
+define("Reportobjectconstellation"                             ,"Sterrenbeeld afkorting");
+define("Reportobjectconstellationfull"                         ,"Sterrenbeeld");
+define("Reportobjectmagnitude"                                 ,"Object magnitude");
+define("Reportobjectsurfacebrightness"                         ,"Object oppervlaktehelderheid");
+define("Reportobjectradecl"                                    ,"Rechte klimming en declinatie");
+define("Reportobjectra"                                        ,"Rechte klimming");
+define("Reportobjectdecl"                                      ,"Declinatie");
+define("Reportobjectsizepa"                                    ,"Objectgrootte en positiehoek");
+define("Reportobjectdiam1"                                     ,"Objectgrootte 1");
+define("Reportobjectdiam2"                                     ,"Objectgrootte 2");
+define("Reportobjectsize"                                      ,"Object grotte (grootte1 x grootte2)");
+define("Reportobjectpa"                                        ,"Object orientatie - positiehoek");
+define("Reportobjectuseratlaspage"                             ,"Atlas pagina");
+define("Reportobjectdescription"                               ,"Object beschrijving");
+define("Reportobjectcontrast"                                  ,"Object contrast-zichtbaarheidswaarde");
+define("Reportobjectcontrastpopup"                             ,"Object contrast-zichtbaarheidsuitleg");
+define("Reportobjectcontrasttype"                              ,"Object contrast-zichtbaarheidstype");
+define("Reportobjectoptimalmagnification"                      ,"Optimale vergroting - tekst");
+define("Reportobjectoptimalmagnificationvalue"                 ,"Optimale vergroting - waarde");
+define("Reportobjectrise"                                      ,"Opkomsttijd - uur");
+define("Reportobjectrisepopup"                                 ,"Opkomsttijd - tekst");
+define("Reportobjecttransit"                                   ,"Doorgangstijd - uur");
+define("Reportobjecttransitpopup"                              ,"doorgangstijd - tekst");
+define("Reportobjectset"                                       ,"Ondergangstijds - uur");
+define("Reportobjectsetpopup"                                  ,"Ondergangstijd - tekst");
+define("Reportobjectbest"                                      ,"Beste observatiemoment - uur");
+define("Reportobjectbestpopup"                                 ,"Beste observatiemoment - tekst");
+define("Reportobjectmaxaltitude"                               ,"Hoogte bij beste observatietijd - uur");
+define("Reportobjectmaxaltitudepopup"                          ,"Hoogte bij beste observatietijd - tekst");
+
 define("AtlasPageFont"                                   ,"Tekengrootte pdf atlaspagina (6..9)");
 
 define("LangLoadFormLayout"                              ,"Layout: &nbsp;");

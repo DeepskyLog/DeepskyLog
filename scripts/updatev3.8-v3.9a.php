@@ -41,7 +41,7 @@
  $objReportLayout->saveLayoutField("execute_query_objects","default","xmid"                            , '0',      '431',  '0', '0', 'LAYOUTMETADATA','','');
  
  $objReportLayout->saveLayoutField("execute_query_objects","default","fontSizeText"                    , '0',        '8',  '0', '0', 'LAYOUTMETADATA','','');
- $objReportLayout->saveLayoutField("execute_query_objects","default","sectionBarSpace"                 , '0',        '3',  '0', '0', 'LAYOUTMETADATA','','');
+ $objReportLayout->saveLayoutField("execute_query_objects","default","SectionBarWidthbase"             , '0',      '400',  '0', '0', 'LAYOUTMETADATA','','');
  $objReportLayout->saveLayoutField("execute_query_objects","default","fontSizeSection"                 , '0',       '10',  '0', '0', 'LAYOUTMETADATA','','');
  
  $objReportLayout->saveLayoutField("execute_query_objects","default","deltalineextra"                  , '0',        '4',  '0', '0', 'LAYOUTMETADATA','','');
@@ -49,7 +49,6 @@
  $objReportLayout->saveLayoutField("execute_query_objects","default","deltalineSection"                , '0',        '2',  '0', '0', 'LAYOUTMETADATA','','');
  
  $objReportLayout->saveLayoutField("execute_query_objects","default","deltaobjectline"                 , '0',        '4',  '0', '0', 'LAYOUTMETADATA','','');
- $objReportLayout->saveLayoutField("execute_query_objects","default","SectionBarWidthbase"             , '0',      '400',  '0', '0', 'LAYOUTMETADATA','','');
  
  
  
