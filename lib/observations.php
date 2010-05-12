@@ -1010,7 +1010,7 @@ class Observations {
 						$alt.="<br />".trim($altvalue);
 			  $alt=substr($alt,6);
 		    $explanation = "(".$GLOBALS[$value['objecttype']]." ".LangOverviewObservations12." " . $GLOBALS[$value['objectconstellation']].
-				                   (($_SESSION['Qobj'][$count]['objectsurfacebrightness']!='')&&($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)?", ".LangOverviewObservations13." ".sprintf("%.1f",$value['objectmagnitude']):"").
+				                   (($value['objectmagnitude']!='')&&($value['objectmagnitude']<99.9)?", ".LangOverviewObservations13." ".sprintf("%.1f",$value['objectmagnitude']):"").
 				                   (($value['objectsurfacebrigthness']!='')&&($value['objectsurfacebrigthness']<99.9)?", ".LangOverviewObservations14." ".sprintf("%.1f",$value['objectsurfacebrigthness']):"").	                  
 				                   (($alt)?(", ".LangOverviewObservations15." ").$objPresentations->br2dash($alt):""). 
 				               ")";				                 		     
