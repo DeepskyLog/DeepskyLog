@@ -2,6 +2,8 @@
 
 // TO DO:
 
+define("ReportPreparedForDate"    ," voor waarnemen op ");
+
 define("ReportLink"               ,"Rapport"); 
 define("ReportQueryOfObjects"     ,"objectenoverzicht");
 

@@ -1,6 +1,10 @@
 <?php
 
 // TO DO:
+
+define("ReportPreparedForDate"    ," for observing on ");
+
+
 define("ReportLink"               ,"Report"); 
 define("ReportQueryOfObjects"     ,"objects overview");
 

@@ -1657,9 +1657,9 @@ class Utils implements iUtils
 			&& $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name'))
 		{ $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, $fontSizeText, 
                         html_entity_decode(LangPDFMessage19 . $objObserver->getObserverProperty($loggedUser,'name') . ' ' . 
-                        $objObserver->getObserverProperty($loggedUser,'firstname') . 
+                        $objObserver->getObserverProperty($loggedUser,'firstname') . ' ' .
                         LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name') . ' ' . 
-                        LangPDFMessage21 . $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')), 'center' );
+                        LangPDFMessage21 . $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name').LangRistrasetOn.$this->checkSessionKey('globalDay').' '.$GLOBALS['Month'.$this->checkSessionKey('globalMonth')].' '.$this->checkSessionKey('globalYear')), 'center' );
       $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($this->checkRequestKey('pdfTitle')), 'center' );
       $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, $fontSizeText, LangPDFMessage22 . $pagenr, 'right');
     }
@@ -1678,9 +1678,9 @@ class Utils implements iUtils
 					&& $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name'))
 				    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, $fontSizeText, 
                    html_entity_decode(LangPDFMessage19 . $objObserver->getObserverProperty($loggedUser,'name') . ' ' . 
-                                      $objObserver->getObserverProperty($loggedUser,'firstname') . 
+                                      $objObserver->getObserverProperty($loggedUser,'firstname') . ' ' .
                        LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name') . ' ' . 
-	               LangPDFMessage21 . $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')), 'center' );
+	               LangPDFMessage21 . $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name').LangRistrasetOn.$this->checkSessionKey('globalDay').' '.$GLOBALS['Month'.$this->checkSessionKey('globalMonth')].' '.$this->checkSessionKey('globalYear')), 'center' );
             $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($this->checkRequestKey('pdfTitle')), 'center' );
             $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, $fontSizeText, LangPDFMessage22 . $pagenr, 'right');
             }
@@ -1736,7 +1736,7 @@ class Utils implements iUtils
     	if($y<$bottom) 
 			  $this->newpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"");
 			else if($sort && ($$sort!=$actualsort))
-			{ $pdf->addText(0,0,$fontSizeText,'</i>');
+			{ //$pdf->addText(0,0,$fontSizeText,'</i>');
 			  $y-=$deltalineSection;
         $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
         $pdf->addText($xbase, $y, $fontSizeSection, $GLOBALS[$$sort]);

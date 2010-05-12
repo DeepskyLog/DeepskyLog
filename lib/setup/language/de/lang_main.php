@@ -4,6 +4,8 @@
 //define("LangTopObserversHeader7"													,"Number of drawings");
 //define("LangTopObserversHeader8"													,"Drawings last year");
 
+define("ReportPreparedForDate"    ," for observing on ");
+
 define("ReportLink"               ,"Report"); 
 
 define("ReportQueryOfObjects"     ,"objects overview");
