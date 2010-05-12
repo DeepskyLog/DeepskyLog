@@ -2,8 +2,58 @@
 
 // TO DO:
 
-define("ReportPageSize"                                  ,"Page Size");
-define("ReportPageOrientation"                           ,"Page Orientation");
+define("Reportpagesize","ReportPageSize");
+define("Reportpageorientation","ReportPageOrientation");
+define("Reportstartpagenumber","ReportPagestartpagenumber");
+define("Reporttop","Reporttop");
+define("Reportheader","Reportheader");
+define("Reportxleft","Reportxleft");
+define("Reportbottom","Reportbottom");
+define("Reportfooter","Reportfooter");
+define("Reportxmid","Reportxmid");
+define("ReportfontSizeText","ReportfontSizeText");
+define("ReportsectionBarSpace","ReportsectionBarSpace");
+define("ReportfontSizeSection","ReportfontSizeSection");
+define("Reportdeltalineextra","Reportdeltalineextra");
+define("ReportsectionBarHeightextra","ReportsectionBarHeightextra");
+define("ReportdeltalineSection","ReportdeltalineSection");
+define("Reportdeltaobjectline","Reportdeltaobjectline");
+define("ReportSectionBarWidthbase","ReportSectionBarWidthbase");
+define("Reportobjectseen","Reportobjectseen");
+define("Reportobjectlastseen","Reportobjectlastseen");
+define("Reportshowname","Reportshowname");
+define("Reportobjectname","Reportobjectname");
+define("Reportaltname","Reportaltname");
+define("Reportobjecttype","Reportobjecttype");
+define("Reportobjecttypefull","Reportobjecttypefull");
+define("Reportobjectconstellation","Reportobjectconstellation");
+define("Reportobjectconstellationfull","Reportobjectconstellationfull");
+define("Reportobjectsurfacebrightness","Reportobjectsurfacebrightness");
+define("Reportobjectradecl","Reportobjectradecl");
+define("Reportobjectra","Reportobjectra");
+define("Reportobjectdecl","Reportobjectdecl");
+define("Reportobjectsizepa","Reportobjectsizepa");
+define("Reportobjectdiam1","Reportobjectdiam1");
+define("Reportobjectdiam2","Reportobjectdiam2");
+define("Reportobjectsize","Reportobjectsize");
+define("Reportobjectpa","Reportobjectpa");
+define("Reportobjectuseratlaspage","Reportobjectuseratlaspage");
+define("Reportobjectdescription","Reportobjectdescription");
+define("Reportobjectcontrast","Reportobjectcontrast");
+define("Reportobjectcontrastpopup","Reportobjectcontrastpopup");
+define("Reportobjectcontrasttype","Reportobjectcontrasttype");
+define("Reportobjectoptimalmagnification","Reportobjectoptimalmagnification");
+define("Reportobjectoptimalmagnificationvalue","Reportobjectoptimalmagnificationvalue");
+define("Reportobjectrise","Reportobjectrise");
+define("Reportobjectrisepopup","Reportobjectrisepopup");
+define("Reportobjecttransit","Reportobjecttransit");
+define("Reportobjecttransitpopup","Reportobjecttransitpopup");
+define("Reportobjectset","Reportobjectset");
+define("Reportobjectsetpopup","Reportobjectsetpopup");
+define("Reportobjectbest"                                      ,"Best observeing time");
+define("Reportobjectbestpopup"                                 ,"Best observing time explanation");
+define("Reportobjectmaxaltitude"                               ,"Maximal altitude at best time");
+define("Reportobjectmaxaltitudepopup"                          ,"Maximal altitude explanation");
 
 define("AtlasPageFont"                                   ,"Font size printed atlas pages (6..9)");
 
