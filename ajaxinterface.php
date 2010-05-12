@@ -2,6 +2,7 @@
 $inIndex=true;
 include 'common/entryexit/preludes.php';                                                                // Includes of all classes and assistance files
 $ajaxInstruction=$objUtil->checkRequestKey('instruction');
+//echo ($objUtil->checkRequestKey('thedata'));
 if($ajaxInstruction=="getObjectsMagnitudeJSON")
   echo(json_encode($objObject->getObjectsMag($objUtil->checkGetKey('lLhr',0),$objUtil->checkGetKey('rLhr',0),$objUtil->checkGetKey('dDdeg',0),$objUtil->checkGetKey('uDdeg',0),$objUtil->checkGetKey('frommag',0),$objUtil->checkGetKey('tomag',10),$objUtil->checkGetKey('theobject'))));
 elseif($ajaxInstruction=="getStarsMagnitudeJSON")
@@ -9,9 +10,11 @@ elseif($ajaxInstruction=="getStarsMagnitudeJSON")
 elseif($ajaxInstruction=="getConstellationBoundriesJSON")
   echo(json_encode($objConstellation->getAllBoundries()));
 elseif($ajaxInstruction=="getReportLayout")
-  echo(json_encode($objReportLayout->getReportAll($loggedUser,$objUtil->checkRequestKey('reportname'),$objUtil->checkRequestKey('reportlayout'))));
+  echo(json_encode($objReportLayout->getReportAll($objUtil->checkRequestKey('reportuser'),$objUtil->checkRequestKey('reportname'),$objUtil->checkRequestKey('reportlayout'))));
 elseif($ajaxInstruction=="saveReportLayout")
   echo json_encode($objReportLayout->saveLayout($objUtil->checkRequestKey('reportname'),$objUtil->checkRequestKey('reportlayout'),stripslashes($objUtil->checkRequestKey('thedata'))));
+elseif($ajaxInstruction=="deleteReportLayout")
+  echo json_encode($objReportLayout->deleteLayout($objUtil->checkRequestKey('reportname'),$objUtil->checkRequestKey('reportlayout')));
 else
   echo "No result.";  
 ?>

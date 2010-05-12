@@ -2,6 +2,9 @@
 
 // TO DO:
 
+define("ReportPageSize"                                  ,"Page Size");
+define("ReportPageOrientation"                           ,"Page Orientation");
+
 define("AtlasPageFont"                                   ,"Font size printed atlas pages (6..9)");
 
 define("LangLoadFormLayout"                              ,"Layout: ");

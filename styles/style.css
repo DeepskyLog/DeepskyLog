@@ -50,6 +50,18 @@ a.observercatalog {
   cursor           : hand;
   text-decoration  : underline;
 }
+.blike {
+  color            : #FF9900;
+  }
+.alikegreyed {
+  color            : #AAAAAA;
+  cursor           : pointer;
+  cursor           : hand;
+  text-decoration  : underline;
+}
+.blikegreyed {
+  color            : #AAAAAA;
+}
 td.abbrevTable {
 	font-family      : Lucida Console,sans-serif;
   font-size        : 8pt;
@@ -357,6 +369,12 @@ h4 {
 height5px {
 	height           : 5px;
 }
+.hidden {
+	visibility       : hidden;
+}
+.visible {
+	visibility       : visible;
+}
 hr {
 	border           : none;
 	padding          : 0px;
@@ -516,6 +534,10 @@ p, td, tr, div {
 }
 table {
 	width            : 100%;
+}
+.tableinputtext {
+  background-color : transparent;
+  border           : none;
 }
 .tbody_obj {
   overflow         : scroll;

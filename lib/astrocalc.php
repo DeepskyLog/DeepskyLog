@@ -216,7 +216,7 @@ class AstroCalc implements iAstroCalc
       if ($minutes < 10) {
         $minutes = "0" . $minutes;
       }
-      $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd . ":" . $minutes . "<br />";
+      $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd . ":" . $minutes;
     }    
 
     $set = $ris_tra_set[2];
@@ -240,7 +240,7 @@ class AstroCalc implements iAstroCalc
       if ($minutes < 10) {
         $minutes = "0" . $minutes;
       }
-      $ris_tra_set[2] = floor($ris_tra_set[2]) + $toAdd . ":" . $minutes . "<br />";
+      $ris_tra_set[2] = floor($ris_tra_set[2]) + $toAdd . ":" . $minutes;
     }    
     $ris_tra_set[4] = 0;
     $ra2 = $ra2 / 15;
@@ -342,7 +342,7 @@ class AstroCalc implements iAstroCalc
       if ($ris_tra_set[3] < 0) {
         $ris_tra_set[3] = "-";
       } else {
-        $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes . "<br />";
+        $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes;
       }
 
       if ($ris_tra_set[4] > 24 || $ris_tra_set[4] < 0 || $ris_tra_set[3] == "-") {
@@ -365,7 +365,7 @@ class AstroCalc implements iAstroCalc
         if ($minutes < 10) {
           $minutes = "0" . $minutes;
         }
-        $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd . ":" . $minutes . "<br />";
+        $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd . ":" . $minutes;
       }
     } else {
       $ris_tra_set[3] = "-";
@@ -445,7 +445,7 @@ class AstroCalc implements iAstroCalc
 	      if ($ris_tra_set[3] < 0) {
 	        $ris_tra_set[3] = "-";
 	      } else {
-	        $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes . "<br />";
+	        $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes;
 	      }
 	
 	      if ($ris_tra_set[4] > 24 || $ris_tra_set[4] < 0 || $ris_tra_set[3] == "-") {
@@ -468,7 +468,7 @@ class AstroCalc implements iAstroCalc
 	        if ($minutes < 10) {
 	          $minutes = "0" . $minutes;
 	        }
-	        $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd . ":" . $minutes . "<br />";
+	        $ris_tra_set[4] = floor($ris_tra_set[4]) + $toAdd . ":" . $minutes;
 	      }
 	    } else {
 	      $ris_tra_set[3] = "-";

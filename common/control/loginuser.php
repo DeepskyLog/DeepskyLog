@@ -114,7 +114,7 @@ else
     $entryMessage=constant($loginErrorCode)." ".$loginErrorText;
   }
   if($loggedUser)
-    $loggedUserName=$objObserver->getObserverProperty($loggedUser,'firstname')."&nbsp;".$objObserver->getObserverProperty($loggedUser,'name');
+    $loggedUserName=$objObserver->getObserverProperty($loggedUser,'firstname')." ".$objObserver->getObserverProperty($loggedUser,'name');
 }
 $objDatabase->execSQL("INSERT INTO logging(loginid, logdate, logtime, logurl, navigator, screenresolution, language) 
                        VALUES(\"".($loggedUser?$loggedUser:"anonymous")."\", ".
