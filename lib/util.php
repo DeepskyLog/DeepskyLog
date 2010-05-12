@@ -1768,7 +1768,9 @@ class Utils implements iUtils
 	  	  		while($theText)
 				  	{ $y-=$deltaline;	
 	            if($y<$bottom) 
-				        $this->newpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"<i>");
+	            { $this->newpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"<i>");
+					      $y+=($deltaline*$dataelement['fieldline']);
+	            }
 					    $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
 	  		  	}
 		   		}
@@ -1778,14 +1780,16 @@ class Utils implements iUtils
 	  	  		while($theText)
 				  	{ $y-=$deltaline;	
 	            if($y<$bottom) 
-				        $this->newpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"<i>");
-					    $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
+	            { $this->newpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"<i>");
+					      $y+=($deltaline*$dataelement['fieldline']);
+	            }
+	            $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
 	  			  }
 				  }
 			    else
 			      $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $dataelement['fieldbefore'].html_entity_decode($valueA[$dataelement['fieldname']]).$dataelement['fieldafter'],$justification);
 			    $deltaymax=max($deltaymax,$dataelement['fieldline']);
-			   if(strpos($dataelement['fieldstyle'],'b')!==FALSE)
+			    if(strpos($dataelement['fieldstyle'],'b')!==FALSE)
 			      $pdf->addText(0,0,$fontSizeText,'</b>');
 			   if(strpos($dataelement['fieldstyle'],'i')!==FALSE)
 			      $pdf->addText(0,0,$fontSizeText,'</i>');

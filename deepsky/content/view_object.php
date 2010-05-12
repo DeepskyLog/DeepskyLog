@@ -84,6 +84,8 @@ else
 		$content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objectsDetails.pdf?SID=Qobj&amp;sort=".$_SESSION['QobjSort'],LangExecuteQueryObjectsMessage4c)."&nbsp;-&nbsp;";
 		$content.="<a href=\"".$baseURL."objects.argo?SID=Qobj\">".LangExecuteQueryObjectsMessage8."</a>&nbsp;-&nbsp;";
 		$content.="<a href=\"".$baseURL."objects.csv?SID=Qobj\" >".LangExecuteQueryObjectsMessage6."</a>";;
+	  if($loggedUser)
+	    $content.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;sort=".$_SESSION['QobjSort']."&amp;pdfTitle=Test\" >".ReportLink."</a>";
 		$objPresentations->line(array($content),"L",array(),20);
 	}
 	else

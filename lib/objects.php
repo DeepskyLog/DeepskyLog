@@ -668,8 +668,8 @@ class Objects implements iObjects
           $result2[$j]['objectseenlink']=$objectseenlink;
           $result2[$j]['objectlastseenlink']=$objectlastseenlink;       
           $result2[$j]['showname'] =  $key;
-          $result2[$j]['objectmagnitude'] =  $get->mag;
-          $result2[$j]['objectsurfacebrightness'] =  $get->subr;
+          $result2[$j]['objectmagnitude'] =  ($get->mag==99.9?'':round($get->mag,1));
+          $result2[$j]['objectsurfacebrightness'] =  ($get->subr==99.9?'':round($get->subr,1));
   	      $result2[$j]['objectra'] =  $get->ra;
   	      $result2[$j]['objectdecl'] =  $get->decl;
   	      $result2[$j]['objectradecl'] = $objPresentations->raToStringHM($result2[$j]['objectra']).' '.
@@ -896,7 +896,7 @@ class Objects implements iObjects
   public  function setDsObjectSBObj($name)
   { global $objDatabase,$objUtil;
     $result=$objDatabase->selectRecordArray("SELECT diam1, diam2, mag FROM objects WHERE name=\"".$name."\"");
- 	  if(($result['mag']!=99.9)&&(($result['diam1']!= 0)||($result['diam2']!=0)))
+ 	  if(($result['mag']!=99.9)&&($result['mag']!='')&&(($result['diam1']!= 0)||($result['diam2']!=0)))
 	  { if(($result['diam1']!=0)&&($result['diam2']==0))
 	 	    $result['diam2']=$result['diam1'];
 		  elseif(($result['diam2']!=0)&&($result['diam1']==0))
@@ -1112,8 +1112,8 @@ class Objects implements iObjects
 	      echo "<td class=\"centered\" id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader9.": ".$_SESSION['Qobj'][$count]['objectpositioninlist']."')\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader1.": ".$_SESSION['Qobj'][$count]['objectname']."')\" class=\"".$specialclass." centered\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" >".$_SESSION['Qobj'][$count]['showname']."</a></td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader2.": ".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."')\" class=\"centered\">".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."</td>";
-      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3.": ".$_SESSION['Qobj'][$count]['objectmagnitude']."')\" class=\"centered\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>";
-      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3b.": ".$_SESSION['Qobj'][$count]['objectsurfacebrightness']."')\" class=\"centered\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>";
+      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3.": ".$_SESSION['Qobj'][$count]['objectmagnitude']."')\" class=\"centered\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)||($_SESSION['Qobj'][$count]['objectmagnitude']=='')?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>";
+      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3b.": ".$_SESSION['Qobj'][$count]['objectsurfacebrightness']."')\" class=\"centered\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)||($_SESSION['Qobj'][$count]['objectsurfacebrightness']=='')?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader4.": ".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."')\" class=\"centered\">".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."</td>";
       if($loggedUser) 
 	    { $page = $_SESSION['Qobj'][$count][$atlas];
@@ -1255,9 +1255,9 @@ class Objects implements iObjects
 	      if($value=="objectconstellation")
 		      echo "<td align=\"center\">".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."</td>";
 	      if($value=="objectmagnitude")
-		      echo "<td align=\"center\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>";
+		      echo "<td align=\"center\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)||($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>";
 	      if($value=="objectsurfacebrightness")
-		      echo "<td align=\"center\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>";
+		      echo "<td align=\"center\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)||($_SESSION['Qobj'][$count]['objectsurfacebrightness']=='')?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>";
 	      if($value=="objecttype")
 		      echo "<td align=\"center\">".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."</td>";
 	      if($value=="objectra")
@@ -1432,7 +1432,7 @@ class Objects implements iObjects
 					$check = false;
 		    }
 		  if($check)                                                                    // magnitude
-		  { $magnitude = "99.9";
+		  { $magnitude = "";
 		    if($objUtil->checkPostKey('magnitude')&&(!(ereg('^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$',$_POST['magnitude'],$matches))))
 		    { $entryMessage=LangValidateObjectMessage9;
 		      $_GET['indexAction']='add_object';
@@ -1458,7 +1458,7 @@ class Objects implements iObjects
 		      $posangle=$_POST['posangle'];
 		  }
 		  if($check)                                                                    // surface brightness
-		  { $sb = "99.9";
+		  { $sb = "";
 		    if($_POST['sb'] && ereg('^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$', $_POST['sb'], $matches)) 
 		    { $sb = "" . $matches[1] . ".";
 		      if($matches[2] != "")

@@ -36,7 +36,7 @@ class reportLayouts
   public function getLayoutListJavascript($reportName)
   { global $loggedUser, $objDatabase;
 	  if($reportName)
-	  { $temp=$objDatabase->selectRecordsetArray("SELECT DISTINCT observerid, reportlayout FROM reportlayouts WHERE reportname='".$reportName."' ORDER BY reportlayout;","reportlayout");
+	  { $temp=$objDatabase->selectRecordsetArray("SELECT DISTINCT observerid, reportlayout FROM reportlayouts WHERE reportname='".$reportName."' ORDER BY observerid, reportlayout;","reportlayout");
 	    for($i=0;$i<count($temp);$i++)
 	    { $temp[$i]['observerid']=$temp[$i]['observerid'];
 	      $temp[$i]['reportlayout']=$temp[$i]['reportlayout'];
@@ -63,7 +63,7 @@ class reportLayouts
   }
   public function getReportAll($observer,$reportname,$layoutname)
   { global $objDatabase;
-    $sql="SELECT * FROM reportlayouts WHERE observerid='".$observer."' AND reportname='".$reportname."' AND reportlayout='".$layoutname."';";
+    $sql="SELECT * FROM reportlayouts WHERE observerid='".$observer."' AND reportname='".$reportname."' AND reportlayout='".$layoutname."' ORDER BY reportlayoutpk;";
     if($result=$objDatabase->selectRecordsetArray($sql))
       return $result;
     else
