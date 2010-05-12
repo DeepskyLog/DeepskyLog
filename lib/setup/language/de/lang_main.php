@@ -39,6 +39,7 @@ define("ReportsectionBarHeightextra"                           ,"Extra section b
 define("ReportdeltalineSection"                                ,"Extra space after a section bar");
 define("Reportdeltaobjectline"                                 ,"Extra separation between the different objects");
 define("ReportSectionBarWidthbase"                             ,"Width of the section title bars (e.b. constellation)");
+define("ReportSectionBarSpace"                                 ,"Reverse indent of the section bar");
 define("Reportobjectseen"                                      ,"Object seen by you or others");
 define("Reportobjectlastseen"                                  ,"Object last seen date");
 define("Reportshowname"                                        ,"Object name as in query (e.b. Caldwell number)");

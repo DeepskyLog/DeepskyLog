@@ -49,6 +49,7 @@
  $objReportLayout->saveLayoutField("ReportQueryOfObjects","default","deltalineSection"                , '0',        '2',  '0', '0', 'LAYOUTMETADATA','','');
  
  $objReportLayout->saveLayoutField("ReportQueryOfObjects","default","deltaobjectline"                 , '0',        '4',  '0', '0', 'LAYOUTMETADATA','','');
+ $objReportLayout->saveLayoutField("ReportQueryOfObjects","default","sectionbarspace"                 , '0',        '4',  '0', '0', 'LAYOUTMETADATA','','');
  
  
  

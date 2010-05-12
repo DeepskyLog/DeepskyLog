@@ -557,7 +557,7 @@ class Objects implements iObjects
                                         )
                                        :99999999
                                       );
-                $obs[$j]['objectmaxaltitude'] = $ristraset[3];
+        $obs[$j]['objectmaxaltitude'] = $ristraset[3];
         $obs[$j]['objectrisepopup'] = $popup1;
         $obs[$j]['objecttransitpopup'] = $popup2;
         $obs[$j]['objectsetpopup'] = $popup3;

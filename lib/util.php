@@ -1717,7 +1717,7 @@ class Utils implements iUtils
     $xmid             = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'xmid');
     $fontSizeSection  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'fontSizeSection');
     $fontSizeText     = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'fontSizeText');
-    $sectionBarSpace  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'sectionBarSpace');
+    $sectionBarSpace  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'sectionbarspace');
     $deltalineSection = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'deltalineSection');    
     $deltaline        = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'deltalineExtra')+$fontSizeText;
     $deltaobjectline  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'deltaobjectline');
@@ -1757,13 +1757,13 @@ class Utils implements iUtils
 			      $pdf->addText(0,0,$fontSizeText,'<i>');
 			  	if($dataelement['fieldname']=="showname")
 			    { $pdf->addText(0,0,$fontSizeText,'<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($valueA['objectname']).'>');
-			      $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $dataelement['fieldafter'].$valueA[$dataelement['fieldname']].$dataelement['fieldafter'],$justification);
+			      $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $dataelement['fieldafter'].html_entity_decode($valueA[$dataelement['fieldname']]).$dataelement['fieldafter'],$justification);
 		  		  $pdf->addText(0,0,$fontSizeText,'</c:alink>');
 			    }			                 
 			    else if($dataelement['fieldname']=="objectuseratlaspage")
-			      $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText,$dataelement['fieldbefore'].$valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')].$dataelement['fieldafter'],$justification);			                  				  
+			      $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText,$dataelement['fieldbefore'].html_entity_decode($valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')]).$dataelement['fieldafter'],$justification);			                  				  
   			  else if(($dataelement['fieldname']=="objectlistdescription")&&array_key_exists('objectlistdescription',$valueA) && $valueA['objectlistdescription'])
-	        { $theText= $dataelement['fieldbefore'].$objPresentations->br2nl($valueA['objectlistdescription']).$dataelement['fieldafter'];
+	        { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectlistdescription'])).$dataelement['fieldafter'];
 		  		  $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
 	  	  		while($theText)
 				  	{ $y-=$deltaline;	
@@ -1773,7 +1773,7 @@ class Utils implements iUtils
 	  		  	}
 		   		}
 			    elseif(($dataelement['fieldname']=="objectdescription")&&array_key_exists('objectdescription',$valueA) && $valueA['objectdescription'])
-  	      { $theText= $dataelement['fieldbefore'].$objPresentations->br2nl($valueA['objectdescription']).$dataelement['fieldafter'];
+  	      { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectdescription'])).$dataelement['fieldafter'];
 	   			  $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
 	  	  		while($theText)
 				  	{ $y-=$deltaline;	
@@ -1783,7 +1783,7 @@ class Utils implements iUtils
 	  			  }
 				  }
 			    else
-			      $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $dataelement['fieldbefore'].$valueA[$dataelement['fieldname']].$dataelement['fieldafter'],$justification);
+			      $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $dataelement['fieldbefore'].html_entity_decode($valueA[$dataelement['fieldname']]).$dataelement['fieldafter'],$justification);
 			    $deltaymax=max($deltaymax,$dataelement['fieldline']);
 			   if(strpos($dataelement['fieldstyle'],'b')!==FALSE)
 			      $pdf->addText(0,0,$fontSizeText,'</b>');

@@ -59,7 +59,7 @@ if(count($_SESSION['Qobj'])>1) //===============================================
 	  $content1.="<a href=\"".$link."&amp;min=".$min."&amp;addAllObjectsFromQueryToList=true\" title=\"".LangListQueryObjectsMessage5.$_SESSION['listname']."\">".LangListQueryObjectsMessage4."</a>"."&nbsp;-&nbsp;";
 	$content1.="<a href=\"".$baseURL."objects.csv?SID=Qobj\" rel=\"external\">".LangExecuteQueryObjectsMessage6."</a>";
 	$content1.="&nbsp;-&nbsp;";
-	$content1.="<a href=\"".$baseURL."index.php?indexAction=reportsLayout&amp;reportname=execute_query_objects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;sort=".$_SESSION['QobjSort']."&amp;pdfTitle=Test\" >".ReportLink."</a>";
+	$content1.="<a href=\"".$baseURL."index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;sort=".$_SESSION['QobjSort']."&amp;pdfTitle=Test\" >".ReportLink."</a>";
 	$objPresentations->line(array($content1),"L",array(100),20);
   echo "</div>";
 }

@@ -36,6 +36,7 @@ define("ReportsectionBarHeightextra"                           ,"Supplementaire 
 define("ReportdeltalineSection"                                ,"Supplmentaire ruimte na sectievak");
 define("Reportdeltaobjectline"                                 ,"Supplementaire ruilmte tussen verschillende objecten");
 define("ReportSectionBarWidthbase"                             ,"Breedte van het sectievak (bv. indeling sterrenbeelden)");
+define("ReportSectionBarSpace"                                 ,"Terugsprong grootte van het sectievak");
 define("Reportobjectseen"                                      ,"Object gezien door jou of anderen");
 define("Reportobjectlastseen"                                  ,"Object laatst gezien door jou");
 define("Reportshowname"                                        ,"Object naam zoals opgezocht (b.v. op Caldwell nummer)");

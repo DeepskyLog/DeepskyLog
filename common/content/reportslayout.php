@@ -59,6 +59,7 @@ function reportsLayout()
         titles['deltalineSection']='".ReportdeltalineSection."';
         titles['deltaobjectline']='".Reportdeltaobjectline."';
         titles['SectionBarWidthbase']='".ReportSectionBarWidthbase."';
+        titles['sectionbarspace']='".ReportSectionBarSpace."';
         titles['objectseen']='".Reportobjectseen."';
         titles['objectlastseen']='".Reportobjectlastseen."';
         titles['showname']='".Reportshowname."';
