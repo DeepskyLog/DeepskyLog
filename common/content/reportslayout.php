@@ -53,7 +53,6 @@ function reportsLayout()
         titles['footer']='".Reportfooter."';
         titles['xmid']='".Reportxmid."';
         titles['fontSizeText']='".ReportfontSizeText."';
-        titles['sectionBarSpace']='".ReportsectionBarSpace."';
         titles['fontSizeSection']='".ReportfontSizeSection."';
         titles['deltalineextra']='".Reportdeltalineextra."';
         titles['sectionBarHeightextra']='".ReportsectionBarHeightextra."';
