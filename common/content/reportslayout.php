@@ -43,6 +43,7 @@ function reportsLayout()
 	      titles['ReportFieldStyle']='".ReportFieldStyle."';
 	      titles['ReportFieldTextBefore']='".ReportFieldTextBefore."';
 	      titles['ReportFieldTextAfter']='".ReportFieldTextAfter."';
+	      titles['ReportFieldLegend']='".ReportFieldLegend."';
 	      titles['pagesize']='".Reportpagesize."';
 	      titles['pageorientation']='".Reportpageorientation."';
         titles['startpagenumber']='".Reportstartpagenumber."';
@@ -60,6 +61,7 @@ function reportsLayout()
         titles['deltaobjectline']='".Reportdeltaobjectline."';
         titles['SectionBarWidthbase']='".ReportSectionBarWidthbase."';
         titles['sectionbarspace']='".ReportSectionBarSpace."';
+        titles['showelements']='".ReportShowElements."';
         titles['objectseen']='".Reportobjectseen."';
         titles['objectlastseen']='".Reportobjectlastseen."';
         titles['showname']='".Reportshowname."';

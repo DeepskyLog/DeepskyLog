@@ -1648,24 +1648,41 @@ class Utils implements iUtils
 		}		
     $pdf->Stream(); 
   }
-  private function firstpage(&$y,$bottomsection,$top,&$xbase,$xmid,&$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i)
+  private function firstpage(&$y,$bottomsection,$top,&$xbase,$xmid,&$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$showelements)
   { global $objObserver,$loggedUser,$objLocation,$objInstrument;
     $y=$top;
     $pdf->addTextWrap($xleft, $header, 100, $fontSizeText, $theDate);
     if($objObserver->getObserverProperty($loggedUser,'name')
 			&& $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')
-			&& $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name'))
+			&& $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name')
+			&& (strpos($showelements,'h')!==FALSE))
 		{ $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, $fontSizeText, 
                         html_entity_decode(LangPDFMessage19 . $objObserver->getObserverProperty($loggedUser,'name') . ' ' . 
                         $objObserver->getObserverProperty($loggedUser,'firstname') . ' ' .
                         LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name') . ' ' . 
-                        LangPDFMessage21 . $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name').LangRistrasetOn.$this->checkSessionKey('globalDay').' '.$GLOBALS['Month'.$this->checkSessionKey('globalMonth')].' '.$this->checkSessionKey('globalYear')), 'center' );
-      $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($this->checkRequestKey('pdfTitle')), 'center' );
-      $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, $fontSizeText, LangPDFMessage22 . $pagenr, 'right');
+                        LangPDFMessage21 . $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name').LangRistrasetOn.$this->checkSessionKey('globalDay').' '.$GLOBALS['Month'.$this->checkSessionKey('globalMonth')].' '.$this->checkSessionKey('globalYear'))
+                        , 'center' );
+		}	
+    if($objObserver->getObserverProperty($loggedUser,'name')
+			&& $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')
+			&& $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name')
+			&& (strpos($showelements,'e')!==FALSE))
+		{ $pdf->addTextWrap($xleft, $footer-$deltaline, $xmid+$SectionBarWidth, $fontSizeText, 
+	              'Sun down : '.$_SESSION['efemerides']['sset'].' to '.$_SESSION['efemerides']['srise']." - ".
+                'Naut night: '.$_SESSION['efemerides']['naute'].' to '.$_SESSION['efemerides']['nautb']." - ".
+                'Astro night: '.$_SESSION['efemerides']['astroe'].' to '.$_SESSION['efemerides']['astrob']." - ".
+                'Moon up: '.$_SESSION['efemerides']['moon0']. ' to '.$_SESSION['efemerides']['moon2']
+	              , 'center');
+		}  
+    if(strpos($showelements,'p')!==FALSE)
+		{ $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, $fontSizeText, LangPDFMessage22 . $pagenr, 'right');
     }
-		$xbase = $xleft;
+    if(strpos($showelements,'t')!==FALSE)
+		{ $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($this->checkRequestKey('pdfTitle')), 'center' );
+    }
+    $xbase = $xleft;
   } 
-  private function newpage(&$y,$bottomsection,$top,&$xbase,$xmid,&$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i)
+  private function newpage(&$y,$bottomsection,$top,&$xbase,$xmid,&$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$showelements)
   { global $objObserver,$loggedUser,$objLocation,$objInstrument;
     if($y<$bottomsection) 
     { $y=$top;
@@ -1675,15 +1692,32 @@ class Utils implements iUtils
 				  $pdf->addTextWrap($xleft, $header, 100, $fontSizeText, $theDate);
 					if($objObserver->getObserverProperty($loggedUser,'name')
 					&& $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')
-					&& $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name'))
+					&& $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name')
+			    && (strpos($showelements,'h')!==FALSE))
 				    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, $fontSizeText, 
-                   html_entity_decode(LangPDFMessage19 . $objObserver->getObserverProperty($loggedUser,'name') . ' ' . 
-                                      $objObserver->getObserverProperty($loggedUser,'firstname') . ' ' .
-                       LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name') . ' ' . 
-	               LangPDFMessage21 . $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name').LangRistrasetOn.$this->checkSessionKey('globalDay').' '.$GLOBALS['Month'.$this->checkSessionKey('globalMonth')].' '.$this->checkSessionKey('globalYear')), 'center' );
-            $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($this->checkRequestKey('pdfTitle')), 'center' );
-            $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, $fontSizeText, LangPDFMessage22 . $pagenr, 'right');
-            }
+                html_entity_decode(LangPDFMessage19 . $objObserver->getObserverProperty($loggedUser,'name') . ' ' . 
+                $objObserver->getObserverProperty($loggedUser,'firstname') . ' ' .
+                LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name') . ' ' . 
+	              LangPDFMessage21 . $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name').
+	              LangRistrasetOn.$this->checkSessionKey('globalDay').' '.$GLOBALS['Month'.$this->checkSessionKey('globalMonth')].' '.$this->checkSessionKey('globalYear'))
+	              , 'center' );
+				  if($objObserver->getObserverProperty($loggedUser,'name')
+					&& $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')
+					&& $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name')
+	    		&& (strpos($showelements,'e')!==FALSE))
+            $pdf->addTextWrap($xleft, $footer-$deltaline, $xmid+$SectionBarWidth, $fontSizeText, 
+	              'Sun down : '.$_SESSION['efemerides']['sset'].' to '.$_SESSION['efemerides']['srise']." - ".
+                'Naut night: '.$_SESSION['efemerides']['naute'].' to '.$_SESSION['efemerides']['nautb']." - ".
+                'Astro night: '.$_SESSION['efemerides']['astroe'].' to '.$_SESSION['efemerides']['astrob']." - ".
+                'Moon up: '.$_SESSION['efemerides']['moon0']. ' to '.$_SESSION['efemerides']['moon2']
+	              , 'center');
+		      if(strpos($showelements,'p')!==FALSE)
+		      { $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, $fontSizeText, LangPDFMessage22 . $pagenr, 'right');
+		      }
+					if(strpos($showelements,'t')!==FALSE)
+		      { $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($this->checkRequestKey('pdfTitle')), 'center' );
+		      }
+			  }
 			  $xbase = $xleft;
 	    }
 	    else
@@ -1724,17 +1758,18 @@ class Utils implements iUtils
     $pagenr           = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'startpagenumber');
 		$sectionBarHeight = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'sectionBarHeightextra')+$fontSizeSection;
 		$SectionBarWidth  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'SectionBarWidthbase')+$sectionBarSpace;
-    
+    $showelements     = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'showelements');
+		
     $pdf = new Cezpdf($pagesize, $pageorientation);
     $pdf->selectFont($instDir.'lib/fonts/Helvetica.afm');
 		    
     $actualsort='';
 		$theDate=date('d/m/Y');
-    $this->firstpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,'');		
+    $this->firstpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,'',$showelements);		
     while(list($key, $valueA) = each($result))
     { $con = $valueA['objectconstellation'];
     	if($y<$bottom) 
-			  $this->newpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"");
+			  $this->newpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"",$showelements);
 			else if($sort && ($$sort!=$actualsort))
 			{ //$pdf->addText(0,0,$fontSizeText,'</i>');
 			  $y-=$deltalineSection;
@@ -1745,8 +1780,9 @@ class Utils implements iUtils
 			reset($reportdata);
 			$deltaymax=0;
 			while(list($key,$dataelement)=each($reportdata))
-			{ if(($dataelement['fieldwidth']))
+			{ if($dataelement['fieldwidth'])
 			  { $justification='left';
+			  	$i='';
 			  	if(strpos($dataelement['fieldstyle'],'r')!==FALSE)
 			      $justification='right';
 			  	if(strpos($dataelement['fieldstyle'],'c')!==FALSE)
@@ -1754,44 +1790,55 @@ class Utils implements iUtils
 			  	if(strpos($dataelement['fieldstyle'],'b')!==FALSE)
 			      $pdf->addText(0,0,$fontSizeText,'<b>');
 			    if(strpos($dataelement['fieldstyle'],'i')!==FALSE)
+			    { $i='<i>';
 			      $pdf->addText(0,0,$fontSizeText,'<i>');
-			  	if($dataelement['fieldname']=="showname")
+			    }
+			    if($dataelement['fieldname']=="showname")
 			    { $pdf->addText(0,0,$fontSizeText,'<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($valueA['objectname']).'>');
 			      $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $dataelement['fieldafter'].html_entity_decode($valueA[$dataelement['fieldname']]).$dataelement['fieldafter'],$justification);
 		  		  $pdf->addText(0,0,$fontSizeText,'</c:alink>');
 			    }			                 
 			    else if($dataelement['fieldname']=="objectuseratlaspage")
-			      $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText,$dataelement['fieldbefore'].html_entity_decode($valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')]).$dataelement['fieldafter'],$justification);			                  				  
-  			  else if(($dataelement['fieldname']=="objectlistdescription")&&array_key_exists('objectlistdescription',$valueA) && $valueA['objectlistdescription'])
-	        { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectlistdescription'])).$dataelement['fieldafter'];
-		  		  $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
-	  	  		while($theText)
-				  	{ $y-=$deltaline;	
-	            if($y<$bottom) 
-	            { $this->newpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"<i>");
-					      $y+=($deltaline*$dataelement['fieldline']);
-	            }
-					    $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
-	  		  	}
+			    { $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText,$dataelement['fieldbefore'].html_entity_decode($valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')]).$dataelement['fieldafter'],$justification);			                  				  
+  			    $deltaymax=max($deltaymax,$dataelement['fieldline']);
+			    }
+			    else if(($dataelement['fieldname']=="objectlistdescription"))
+	        { if(array_key_exists('objectlistdescription',$valueA) && $valueA['objectlistdescription'])
+	          { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectlistdescription'])).$dataelement['fieldafter'];
+		  		    $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
+	  	  		  while($theText)
+				  	  { $y-=$deltaline;	
+	              if($y<$bottom) 
+	              { $this->newpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$showelements);
+					        $y+=($deltaline*$dataelement['fieldline']);
+	              }
+					     $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
+	  		  	  }
+			        $deltaymax=max($deltaymax,$dataelement['fieldline']);
+	          } 
 		   		}
-			    elseif(($dataelement['fieldname']=="objectdescription")&&array_key_exists('objectdescription',$valueA) && $valueA['objectdescription'])
-  	      { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectdescription'])).$dataelement['fieldafter'];
-	   			  $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
-	  	  		while($theText)
-				  	{ $y-=$deltaline;	
-	            if($y<$bottom) 
-	            { $this->newpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"<i>");
-					      $y+=($deltaline*$dataelement['fieldline']);
-	            }
-	            $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
-	  			  }
+			    elseif($dataelement['fieldname']=="objectdescription")
+  	      { if(array_key_exists('objectdescription',$valueA) && ($valueA['objectdescription']<>''))
+  	        { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectdescription'])).$dataelement['fieldafter'];
+	   			    $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
+	  	  		  while($theText)
+              { $y-=$deltaline;	
+	               if($y<$bottom) 
+	              { $this->newpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$showelements);
+					        $y+=($deltaline*$dataelement['fieldline']);
+	              }
+	              $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
+	  			    }
+			        $deltaymax=max($deltaymax,$dataelement['fieldline']);
+  	        }
 				  }
 			    else
-			      $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $dataelement['fieldbefore'].html_entity_decode($valueA[$dataelement['fieldname']]).$dataelement['fieldafter'],$justification);
-			    $deltaymax=max($deltaymax,$dataelement['fieldline']);
+			    { $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $dataelement['fieldbefore'].html_entity_decode($valueA[$dataelement['fieldname']]).$dataelement['fieldafter'],$justification);
+			      $deltaymax=max($deltaymax,$dataelement['fieldline']);
+			    }
 			    if(strpos($dataelement['fieldstyle'],'b')!==FALSE)
 			      $pdf->addText(0,0,$fontSizeText,'</b>');
-			   if(strpos($dataelement['fieldstyle'],'i')!==FALSE)
+			    if(strpos($dataelement['fieldstyle'],'i')!==FALSE)
 			      $pdf->addText(0,0,$fontSizeText,'</i>');
 			  }
 			}			

@@ -64,80 +64,89 @@ if($menuMoon!="collapsed") {
     // 3) Get the standard location of the observer
     $longitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'longitude');
     $latitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'latitude');
-
-    if ($longitude > -199) {
-      $timezone=$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'),'timezone');
-
-      $dateTimeZone=new DateTimeZone($timezone);
-      $datestr=sprintf("%02d",$_SESSION['globalMonth'])."/".sprintf("%02d",$_SESSION['globalDay'])."/".$_SESSION['globalYear'];
-      $dateTime = new DateTime($datestr, $dateTimeZone);
-      // Geeft tijdsverschil terug in seconden
-      $timedifference = $dateTimeZone->getOffset($dateTime);
-      $timedifference = $timedifference / 3600.0;
-      if (strncmp($timezone, "Etc/GMT", 7) == 0) {
-        $timedifference = -$timedifference;
+    if((!($objUtil->checkSessionKey('efemerides'))) || ($_SESSION['efemerides']['base']!=$jd."/".$longitude."/".$latitude))
+    { if ($longitude > -199) 
+      { $timezone=$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'),'timezone');
+	
+	      $dateTimeZone=new DateTimeZone($timezone);
+	      $datestr=sprintf("%02d",$_SESSION['globalMonth'])."/".sprintf("%02d",$_SESSION['globalDay'])."/".$_SESSION['globalYear'];
+	      $dateTime = new DateTime($datestr, $dateTimeZone);
+	      // Geeft tijdsverschil terug in seconden
+	      $timedifference = $dateTimeZone->getOffset($dateTime);
+	      $timedifference = $timedifference / 3600.0;
+	      if (strncmp($timezone, "Etc/GMT", 7) == 0) {
+	        $timedifference = -$timedifference;
+	      }
+	
+	      // Calculate the rise and set time of the moon
+	      $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime($jd, $longitude, $latitude, $timedifference);
+	
+	      // SUNRISE and SET, TWILIGHT...
+	      date_default_timezone_set ("UTC");
+	      $timestr = $theYear . "-" . $theMonth . "-" . $theDay;
+	
+	      $sun_info = date_sun_info(strtotime($timestr), $latitude, $longitude);
+	    
+	      $srise = $sun_info["sunrise"];
+	      if ($srise > 1) {
+	        $srise = date("H:i", $srise + $timedifference * 60 * 60);
+	      } else {
+	        $srise = "-";
+	      }
+	      
+	      $sset = $sun_info["sunset"];
+	      if ($sset > 1) {
+	        $sset = date("H:i", $sset + $timedifference * 60 * 60);
+	      } else {
+	        $sset = "-";
+	      }
+	
+	      $nautb = $sun_info["nautical_twilight_begin"];
+	      if ($nautb > 1) {
+	        $nautb = date("H:i", $nautb + $timedifference * 60 * 60);
+	      } else {
+	        $nautb = "-";
+	      }
+	
+	      $naute = $sun_info["nautical_twilight_end"];
+	      if ($naute > 1) {
+	        $naute = date("H:i", $naute + $timedifference * 60 * 60);
+	      } else {
+	        $naute = "-";
+	      }
+	      
+	      $astrob = $sun_info["astronomical_twilight_begin"];
+	      if ($astrob > 1) {
+	        $astrob = date("H:i", $astrob + $timedifference * 60 * 60);
+	      } else {
+	        $astrob = "-";
+	      }
+	
+	      $astroe = $sun_info["astronomical_twilight_end"];
+	      if ($astroe > 1) {
+	        $astroe = date("H:i", $astroe + $timedifference * 60 * 60);
+	      } else {
+	        $astroe = "-";
+	      }
+	      $_SESSION['efemerides']['base']=$jd."/".$longitude."/".$latitude;
+	      $_SESSION['efemerides']['astrob']=$astrob;
+	      $_SESSION['efemerides']['astroe']=$astroe;
+	      $_SESSION['efemerides']['nautb']=$nautb;
+	      $_SESSION['efemerides']['naute']=$naute;
+	      $_SESSION['efemerides']['srise']=$srise;
+	      $_SESSION['efemerides']['sset']=$sset;
+	      $_SESSION['efemerides']['moon0']=$moon[0];
+	      $_SESSION['efemerides']['moon2']=$moon[2];
+	      
       }
-
-      // Calculate the rise and set time of the moon
-      $moon = $objAstroCalc->calculateMoonRiseTransitSettingTime($jd, $longitude, $latitude, $timedifference);
-      echo "<span class=\"menuText\">".LangMoonRise." : " . $moon[0] . "<br />";
-
-      // Setting of the moon
-      echo LangMoonSet." : " . $moon[2] . "<br />";
-
-      // SUNRISE and SET, TWILIGHT...
-      date_default_timezone_set ("UTC");
-      $timestr = $theYear . "-" . $theMonth . "-" . $theDay;
-
-      $sun_info = date_sun_info(strtotime($timestr), $latitude, $longitude);
-    
-      $srise = $sun_info["sunrise"];
-      if ($srise > 1) {
-        $srise = date("H:i", $srise + $timedifference * 60 * 60);
-      } else {
-        $srise = "-";
-      }
-      
-      $sset = $sun_info["sunset"];
-      if ($sset > 1) {
-        $sset = date("H:i", $sset + $timedifference * 60 * 60);
-      } else {
-        $sset = "-";
-      }
-
-      $nautb = $sun_info["nautical_twilight_begin"];
-      if ($nautb > 1) {
-        $nautb = date("H:i", $nautb + $timedifference * 60 * 60);
-      } else {
-        $nautb = "-";
-      }
-
-      $naute = $sun_info["nautical_twilight_end"];
-      if ($naute > 1) {
-        $naute = date("H:i", $naute + $timedifference * 60 * 60);
-      } else {
-        $naute = "-";
-      }
-      
-      $astrob = $sun_info["astronomical_twilight_begin"];
-      if ($astrob > 1) {
-        $astrob = date("H:i", $astrob + $timedifference * 60 * 60);
-      } else {
-        $astrob = "-";
-      }
-
-      $astroe = $sun_info["astronomical_twilight_end"];
-      if ($astroe > 1) {
-        $astroe = date("H:i", $astroe + $timedifference * 60 * 60);
-      } else {
-        $astroe = "-";
-      }
-
-      print(LangMoonSun . " : " . $srise . " - " . $sset);
-      print("<br />" . LangMoonTwilight . " : ");
-      print("<br />&nbsp;&nbsp;" . LangMoonNaut . " : " . $nautb . " - " . $naute);
-      print("<br />&nbsp;&nbsp;" . LangMoonAstro . " : " . $astrob . " - " . $astroe);
-    }
+    }  
+	  echo "<span class=\"menuText\">".LangMoonRise." : " . $_SESSION['efemerides']['moon0'] . "<br />";
+	  // Setting of the moon
+	  echo LangMoonSet." : " . $_SESSION['efemerides']['moon2'] . "<br />";
+    echo LangMoonSun . " : " . $_SESSION['efemerides']['srise'] . " - " . $_SESSION['efemerides']['sset'];
+    echo "<br />" . LangMoonTwilight . " : ";
+    echo "<br />&nbsp;&nbsp;" . LangMoonNaut . " : " .  $_SESSION['efemerides']['nautb'] . " - " . $_SESSION['efemerides']['naute'];
+    echo "<br />&nbsp;&nbsp;" . LangMoonAstro . " : " . $_SESSION['efemerides']['astrob'] . " - " . $_SESSION['efemerides']['astroe'];
     echo "</span><br />";
   }
 }

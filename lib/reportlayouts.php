@@ -9,7 +9,7 @@ class reportLayouts
     $objDatabase->execSQL($sql);
   	return $this->getLayoutListJavascript($reportname);
   }
-  public function saveLayoutField($reportname,$reportlayout,$fieldname,$fieldline,$fieldposition,$fieldwidth,$fieldheight,$fieldstyle,$fieldbefore,$fieldafter)
+  public function saveLayoutField($reportname,$reportlayout,$fieldname,$fieldline,$fieldposition,$fieldwidth,$fieldheight,$fieldstyle,$fieldbefore,$fieldafter,$fieldlegend)
   { global $loggedUserName, $objDatabase;
 	  if($reportname&&$reportlayout&&$fieldname)
       if($thepk=$objDatabase->selectSingleValue("SELECT reportlayoutpk FROM reportlayouts WHERE observerid='".$loggedUserName."' AND reportname='".$reportname."' AND reportlayout='".$reportlayout."' and fieldname='".$fieldname."';","reportlayoutpk",''))
@@ -20,11 +20,12 @@ class reportLayouts
                                       fieldheight='".$fieldheight."',
                                       fieldstyle='".$fieldstyle."',
                                       fieldbefore='".$fieldbefore."',
-                                      fieldafter='".$fieldafter."'
+                                      fieldafter='".$fieldafter."',
+                                      fieldlegend='".$fieldlegend."'
                                       WHERE  reportlayoutpk=".$thepk.";");
       else
-        $objDatabase->execSQL("INSERT INTO reportlayouts (observerid, reportname,reportlayout,fieldname,fieldline,fieldposition,fieldwidth,fieldheight,fieldstyle,fieldbefore,fieldafter)
-                               VALUES('".$loggedUserName."','".$reportname."','".$reportlayout."','".$fieldname."','".$fieldline."','".$fieldposition."','".$fieldwidth."','".$fieldheight."','".$fieldstyle."','".$fieldbefore."','".$fieldafter."');");   
+        $objDatabase->execSQL("INSERT INTO reportlayouts (observerid, reportname,reportlayout,fieldname,fieldline,fieldposition,fieldwidth,fieldheight,fieldstyle,fieldbefore,fieldafter,fieldlegend)
+                               VALUES('".$loggedUserName."','".$reportname."','".$reportlayout."','".$fieldname."','".$fieldline."','".$fieldposition."','".$fieldwidth."','".$fieldheight."','".$fieldstyle."','".$fieldbefore."','".$fieldafter."','".$fieldlegend."');");   
   }
   public function getLayoutListDefault($reportName)
   { global $loggedUser, $objDatabase;
@@ -82,7 +83,7 @@ class reportLayouts
     //return;
     $reportdata=eval('return '.$reportdata.';');
     while(list($key,$data)=each($reportdata))
-      $this->saveLayoutField($reportname,$reportlayout,$data['fieldname'],$data['fieldline'],$data['fieldposition'],$data['fieldwidth'],$data['fieldheight'],$data['fieldstyle'],$data['fieldbefore'],$data['fieldafter']);
+      $this->saveLayoutField($reportname,$reportlayout,$data['fieldname'],$data['fieldline'],$data['fieldposition'],$data['fieldwidth'],$data['fieldheight'],$data['fieldstyle'],$data['fieldbefore'],$data['fieldafter'],$data['fieldlegend']);
     return $this->getLayoutListJavascript($reportname);
   }
 }

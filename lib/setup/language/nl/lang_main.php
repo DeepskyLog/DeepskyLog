@@ -18,9 +18,10 @@ define("ReportFieldname"                                       ,"Veld");
 define("ReportFieldlineposition"                               ,"Veld is op lijn ... (0=eerste)");
 define("ReportFieldxposition"                                  ,"Veld is op positie x ... in kolom");
 define("ReportFieldwidth"                                      ,"Breedte van het veld");
-define("ReportFieldStyle"                                      ,"Font style (combinatie van i (italic), b (bold) en l, r of c (uitlijning)");
+define("ReportFieldStyle"                                      ,"Font style: combinatie van <br />i (italic), b (bold) en l, r of c (uitlijning)");
 define("ReportFieldTextBefore"                                 ,"Tekst voor het veld");
 define("ReportFieldTextAfter"                                  ,"Tekst achter het veld");
+define("ReportFieldLegend"                                     ,"Legendetext");
 
 define("Reportpagesize"                                        ,"Paginagrootte (A4/A3/LETTER/...)");
 define("Reportpageorientation"                                 ,"Pagina orientatie (landscape/portrait)");
@@ -36,9 +37,10 @@ define("ReportfontSizeSection"                                 ,"Fontgrootte voo
 define("Reportdeltalineextra"                                  ,"Supplementaire lijn-interlinie");
 define("ReportsectionBarHeightextra"                           ,"Supplementaire grootte sectievak");
 define("ReportdeltalineSection"                                ,"Supplmentaire ruimte na sectievak");
-define("Reportdeltaobjectline"                                 ,"Supplementaire ruilmte tussen verschillende objecten");
+define("Reportdeltaobjectline"                                 ,"Supplementaire ruimte tussen verschillende objecten");
 define("ReportSectionBarWidthbase"                             ,"Breedte van het sectievak (bv. indeling sterrenbeelden)");
 define("ReportSectionBarSpace"                                 ,"Terugsprong grootte van het sectievak");
+define("ReportShowElements"                                    ,"Toon (t) titel, (h) opgemaakt voor, (e) efemeriden,<br >(p) paginanummers, (l) legende, (s) separatielijnen");
 define("Reportobjectseen"                                      ,"Object gezien door jou of anderen");
 define("Reportobjectlastseen"                                  ,"Object laatst gezien door jou");
 define("Reportshowname"                                        ,"Object naam zoals opgezocht (b.v. op Caldwell nummer)");
@@ -73,8 +75,8 @@ define("Reportobjectset"                                       ,"Ondergangstijds
 define("Reportobjectsetpopup"                                  ,"Ondergangstijd - tekst");
 define("Reportobjectbest"                                      ,"Beste observatiemoment - uur");
 define("Reportobjectbestpopup"                                 ,"Beste observatiemoment - tekst");
-define("Reportobjectmaxaltitude"                               ,"Hoogte bij beste observatietijd - uur");
-define("Reportobjectmaxaltitudepopup"                          ,"Hoogte bij beste observatietijd - tekst");
+define("Reportobjectmaxaltitude"                               ,"Hoogte bij beste observatietijd");
+define("Reportobjectmaxaltitudepopup"                          ,"Hoogte bij beste observatietijd uitleg");
 
 define("AtlasPageFont"                                   ,"Tekengrootte pdf atlaspagina (6..9)");
 

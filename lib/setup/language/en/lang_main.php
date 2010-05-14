@@ -18,9 +18,10 @@ define("ReportFieldname"                                       ,"Field name");
 define("ReportFieldlineposition"                               ,"Field is on line ... (0=first)");
 define("ReportFieldxposition"                                  ,"Field is on x-position ... in column");
 define("ReportFieldwidth"                                      ,"Display width of the field");
-define("ReportFieldStyle"                                      ,"Font style (combination of i (italic), b (bold) and l, r or c (alignment)");
+define("ReportFieldStyle"                                      ,"Font style: combination of<br />i (italic), b (bold) and l, r or c (alignment)");
 define("ReportFieldTextBefore"                                 ,"Text to be shown in front of the field");
 define("ReportFieldTextAfter"                                  ,"Text to be shown after the field");
+define("ReportFieldLegend"                                     ,"Legend text");
 
 define("Reportpagesize"                                        ,"Page size (A4/A3/LETTER/...)");
 define("Reportpageorientation"                                 ,"Page orientation (landscape/portrait)");
@@ -39,7 +40,7 @@ define("ReportsectionBarHeightextra"                           ,"Extra section b
 define("ReportdeltalineSection"                                ,"Extra space after a section bar");
 define("Reportdeltaobjectline"                                 ,"Extra separation between the different objects");
 define("ReportSectionBarWidthbase"                             ,"Width of the section title bars (e.b. constellation)");
-define("ReportSectionBarSpace"                                 ,"Reverse indent of the section bar");
+define("ReportShowElements"                                    ,"Show (t) title, (h) made up for, (e) efemerides,<br >(p) page numbers, (l) legend, (s) separation lines");
 define("Reportobjectseen"                                      ,"Object seen by you or others");
 define("Reportobjectlastseen"                                  ,"Object last seen date");
 define("Reportshowname"                                        ,"Object name as in query (e.b. Caldwell number)");
