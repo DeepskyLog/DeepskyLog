@@ -55,7 +55,6 @@ echo "<span class=\"menuText\">".$nextNewMoonText."</span><br />";
 
 echo "<span class=\"menuText\">".$dateTimeText."</span>&nbsp;"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" /><br />";
 
-if($menuMoon!="collapsed") {
   // 1) Check if logged in
   if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) {
     // 2) Get the julian day of today...
@@ -140,7 +139,8 @@ if($menuMoon!="collapsed") {
 	      
       }
     }  
-	  echo "<span class=\"menuText\">".LangMoonRise." : " . $_SESSION['efemerides']['moon0'] . "<br />";
+if($menuMoon!="collapsed") {
+    echo "<span class=\"menuText\">".LangMoonRise." : " . $_SESSION['efemerides']['moon0'] . "<br />";
 	  // Setting of the moon
 	  echo LangMoonSet." : " . $_SESSION['efemerides']['moon2'] . "<br />";
     echo LangMoonSun . " : " . $_SESSION['efemerides']['srise'] . " - " . $_SESSION['efemerides']['sset'];

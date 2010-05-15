@@ -30,7 +30,7 @@ class reportLayouts
   public function getLayoutListDefault($reportName)
   { global $loggedUser, $objDatabase;
 	  if($reportName)
-      return $objDatabase->selectRecordsetArray("SELECT DISTINCT observerid, reportlayout FROM reportlayouts WHERE reportname='".$reportName."' ORDER BY reportlayout;","reportlayout");
+      return $objDatabase->selectRecordsetArray("SELECT DISTINCT observerid, reportlayout FROM reportlayouts WHERE reportname='".$reportName."' ORDER BY observerid, reportlayout;","reportlayout");
     else
       return array();
   }
@@ -68,7 +68,7 @@ class reportLayouts
     if($result=$objDatabase->selectRecordsetArray($sql))
       return $result;
     else
-      $sql="SELECT * FROM reportlayouts WHERE observerid='Deepskylog' AND reportname='".$reportname."' AND reportlayout='Default';";
+      $sql="SELECT * FROM reportlayouts WHERE observerid='Deepskylog default' AND reportname='".$reportname."' AND reportlayout='Default';";
     return $objDatabase->selectRecordsetArray($sql);
   }
   public function getLayoutListObserver($reportName)

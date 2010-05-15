@@ -11,7 +11,7 @@ function reportsLayout()
   echo ReportKnownLayouts;
   echo "<select id=\"reportlayoutselect\" name=\"reportlayoutselect\" onchange=\"setLayoutPage('".$loggedUserName."');\">";
   while(list($key, $value) = each($defaults))
-    if($value['observerid']=="Deepskylog")
+    if($value['observerid']=="Deepskylog default")
       echo "<option value=\"".$value['observerid'].': '.$value['reportlayout']."\">".$value['observerid'].': '.$value['reportlayout']."</option>";
   echo "<option value=\"\" selected=\"selected\" >"."-----"."</option>";
   reset($defaults);
@@ -21,7 +21,7 @@ function reportsLayout()
   echo "<option value=\"\" selected=\"selected\" >"."-----"."</option>";
   reset($defaults);
   while(list($key, $value) = each($defaults))
-    if(($value['observerid']!="Deepskylog")&&($value['observerid']!=$loggedUserName))
+    if(($value['observerid']!="Deepskylog default")&&($value['observerid']!=$loggedUserName))
       echo "<option value=\"".$value['observerid'].': '.$value['reportlayout']."\">".$value['observerid'].': '.$value['reportlayout']."</option>";
   echo "</select>";
   echo "&nbsp;";
