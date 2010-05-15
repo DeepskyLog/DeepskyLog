@@ -454,7 +454,7 @@ define("LangEditObjectDescription"												,"DESC-Beschrijving aanpassen");
 
 define("LangChangeAccountTitle"														,"Persoonlijke data");
 define("LangChangeAccountField1"													,"Gebruikersnaam");
-define("LangChangeAccountField1Expl"											,"Onder deze naam ben je bekend bij de andere gebruikers");
+define("LangChangeAccountField1Expl"											,"Onder deze naam kan je inloggen op Deepskylog");
 define("LangChangeAccountField2"													,"Emailadres");
 define("LangChangeAccountField2Expl"											,"Uw emailadres wordt niet verder verspreid");
 define("LangChangeAccountField3"													,"Voornaam");

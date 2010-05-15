@@ -463,7 +463,7 @@ define("LangEditObjectDescription"												,"Adapter la description");
 
 define("LangChangeAccountTitle"														,"D&eacute;tails du compte");
 define("LangChangeAccountField1"													,"Nom de l'utilisateur");
-define("LangChangeAccountField1Expl"											,"C'est par ce nom que les autres utilisateurs vous connaissent");
+define("LangChangeAccountField1Expl"											,"C'est par ce nom que vous pouvez rentrer en Deepskylog");
 define("LangChangeAccountField2"													,"Adresse &eacute;mail");
 define("LangChangeAccountField2Expl"											,"Votre adresse &eacute;mail n'est sera pas communiqu&eacute;e aux autres"); 
 define("LangChangeAccountField3"													,"Pr&eacute;nom");

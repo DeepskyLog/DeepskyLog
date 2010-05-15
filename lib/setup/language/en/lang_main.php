@@ -457,7 +457,7 @@ define("LangEditObjectDescription"												,"Edit Description");
 
 define("LangChangeAccountTitle"														,"Account details");
 define("LangChangeAccountField1"													,"Username");
-define("LangChangeAccountField1Expl"											,"This is how you will be known by other users");
+define("LangChangeAccountField1Expl"											,"This is the name you will use to log in");
 define("LangChangeAccountField2"													,"Email address");
 define("LangChangeAccountField2Expl"											,"Your email address will remain confidential");
 define("LangChangeAccountField3"													,"First name");

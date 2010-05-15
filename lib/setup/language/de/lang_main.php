@@ -468,7 +468,7 @@ define("LangEditObjectDescription"												,"Beschreibung bearbeiten");
 
 define("LangChangeAccountTitle"														,"Benutzer Data");
 define("LangChangeAccountField1"													,"Name");
-define("LangChangeAccountField1Expl"											,"So werden Sie von anderen Benutzern gesehen");
+define("LangChangeAccountField1Expl"											,"So werden Sie sich anmelden");
 define("LangChangeAccountField2"													,"Email adresse");
 define("LangChangeAccountField2Expl"											,"Ihre eMail Adresse bleibt geheim und wird vertraulich behandelt");
 define("LangChangeAccountField3"													,"Vorname");
