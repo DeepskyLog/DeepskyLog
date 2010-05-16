@@ -1668,10 +1668,10 @@ class Utils implements iUtils
 			&& $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')
 			&& (strpos($showelements,'e')!==FALSE))
 		{ $pdf->addTextWrap($xleft, $footer-$deltaline, $xmid+$SectionBarWidth, $fontSizeText, 
-	              'Sun down : '.$_SESSION['efemerides']['sset'].' to '.$_SESSION['efemerides']['srise']." - ".
-                'Naut night: '.$_SESSION['efemerides']['naute'].' to '.$_SESSION['efemerides']['nautb']." - ".
-                'Astro night: '.$_SESSION['efemerides']['astroe'].' to '.$_SESSION['efemerides']['astrob']." - ".
-                'Moon up: '.$_SESSION['efemerides']['moon0']. ' to '.$_SESSION['efemerides']['moon2']
+	              ReportSunDown.$_SESSION['efemerides']['sset'].' to '.$_SESSION['efemerides']['srise']." - ".
+                ReportNautNight.$_SESSION['efemerides']['naute'].' to '.$_SESSION['efemerides']['nautb']." - ".
+                ReportAstroNight.$_SESSION['efemerides']['astroe'].' to '.$_SESSION['efemerides']['astrob']." - ".
+                ReportMoonUp.$_SESSION['efemerides']['moon0']. ' to '.$_SESSION['efemerides']['moon2']
 	              , 'center');
 		}  
     if(strpos($showelements,'p')!==FALSE)
@@ -1736,12 +1736,12 @@ class Utils implements iUtils
 					&& $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')
 	    		&& (strpos($showelements,'e')!==FALSE))
             $pdf->addTextWrap($xleft, $footer-$deltaline, $xmid+$SectionBarWidth, $fontSizeText, 
-	              'Sun down : '.$_SESSION['efemerides']['sset'].' to '.$_SESSION['efemerides']['srise']." - ".
-                'Naut night: '.$_SESSION['efemerides']['naute'].' to '.$_SESSION['efemerides']['nautb']." - ".
-                'Astro night: '.$_SESSION['efemerides']['astroe'].' to '.$_SESSION['efemerides']['astrob']." - ".
-                'Moon up: '.$_SESSION['efemerides']['moon0']. ' to '.$_SESSION['efemerides']['moon2']
+	              ReportSunDown.$_SESSION['efemerides']['sset'].' to '.$_SESSION['efemerides']['srise']." - ".
+                ReportNautNight.$_SESSION['efemerides']['naute'].' to '.$_SESSION['efemerides']['nautb']." - ".
+                ReportAstroNight.$_SESSION['efemerides']['astroe'].' to '.$_SESSION['efemerides']['astrob']." - ".
+                ReportMoonUp.$_SESSION['efemerides']['moon0']. ' to '.$_SESSION['efemerides']['moon2']
 	              , 'center');
-		      if(strpos($showelements,'p')!==FALSE)
+	              if(strpos($showelements,'p')!==FALSE)
 		      { $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, $fontSizeText, LangPDFMessage22 . $pagenr, 'right');
 		      }
 					if(strpos($showelements,'t')!==FALSE)

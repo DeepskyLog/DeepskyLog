@@ -4,7 +4,12 @@
 //define("LangTopObserversHeader7"													,"Number of drawings");
 //define("LangTopObserversHeader8"													,"Drawings last year");
 
-define("ReportPreparedForDate"    ," for observing on ");
+define("ReportSunDown",          'Sun down: ');
+define("ReportNautNight",        'Nautical night: ');
+define("ReportAstroNight",       'Astronomical night: ');
+define("ReportMoonUp",           'Moon up: ');
+
+
 
 define("ReportLink"               ,"Report"); 
 

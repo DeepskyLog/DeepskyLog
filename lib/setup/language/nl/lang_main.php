@@ -2,6 +2,11 @@
 
 // TO DO:
 
+define("ReportSunDown",          'Zon onder: ');
+define("ReportNautNight",        'Nautische nacht: ');
+define("ReportAstroNight",       'Astronomische nacht: ');
+define("ReportMoonUp",           'Maan op: ');
+
 define("ReportPreparedForDate"    ," voor waarnemen op ");
 
 define("ReportLink"               ,"Rapport"); 

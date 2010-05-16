@@ -2,6 +2,12 @@
 
 // TO DO:
 
+
+define("ReportSunDown",          'Sun down: ');
+define("ReportNautNight",        'Nautical night: ');
+define("ReportAstroNight",       'Astronomical night: ');
+define("ReportMoonUp",           'Moon up: ');
+
 define("ReportPreparedForDate"    ," for observing on ");
 
 
