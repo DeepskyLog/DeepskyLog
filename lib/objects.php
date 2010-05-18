@@ -207,32 +207,42 @@ class Objects implements iObjects
     return $seen;
   }
   public  function getExactDsObject($value, $cat='', $catindex='')              // returns the exact name of an object
-  { global $objDatabase;
+  { global $objDatabase,$objCatalog;
     if($value)
+    { $value=$objCatalog->checkObject($value);
       $sql = "SELECT objectnames.objectname FROM objectnames " .
 		  	   "WHERE UPPER(altname) = \"".strtoupper(trim($value))."\" " .
 					 "OR altname = \"".trim($value)."\"";
-	  else
-	    $sql = "SELECT objectnames.objectname FROM objectnames " .
+    }
+    else
+    { $catandindex=$objCatalog->checkCatalogIndex($cat,ucwords(trim($catindex)));
+	    $cat=$catandindex[0];
+	    $catindex=$catandindex[1];
+      $sql = "SELECT objectnames.objectname FROM objectnames " .
 		        "WHERE objectnames.catalog=\"".$cat."\" AND objectnames.catindex=\"".ucwords(trim($catindex))."\"";
-	  if((!($object=$objDatabase->selectSingleValue($sql,'objectname','')))&&$value)
-	  { $sql="SELECT objectnames.objectname FROM objectnames " .
+    }
+    if((!($object=$objDatabase->selectSingleValue($sql,'objectname','')))&&$value)
+	  { $value=$objCatalog->checkObject($value);
+      $sql="SELECT objectnames.objectname FROM objectnames " .
 	         "WHERE CONCAT(UPPER(objectnames.catalog),UPPER(objectnames.catindex))=\"".strtoupper(str_replace(' ','',$value))."\"";
 	    $object=$objDatabase->selectSingleValue($sql,'objectname','');
 	  }    
     return $object;
   }
   public  function getLikeDsObject($value, $cat='', $catindex='')               // returns the exact name of an object
-  { global $objDatabase;
-	  $value2=trim($value);
-	  $value=strtoupper(trim($value));
+  { global $objDatabase,$objCatalog;
+	  $value2=$objCatalog->checkObject(trim($value));
+	  $value=strtoupper($objCatalog->checkObject(trim($value)));
     if($value)
       $sql = "SELECT objectnames.objectname FROM objectnames " .
 	 	         "WHERE UPPER(altname) LIKE \"$value\" " .
 		 	 	 	   "OR altname LIKE \"$value2\"";
 	  else
 	  { $catindex=ucwords($catindex);
-      $sql = "SELECT objectnames.objectname FROM objectnames " .
+      $catandindex=$objCatalog->checkCatalogIndex($cat,$catindex);
+      $cat=$catandindex[0];
+      $catindex=$catandindex[1];
+	    $sql = "SELECT objectnames.objectname FROM objectnames " .
 		         "WHERE CONCAT(objectnames.catalog, ' ', objectnames.catindex) LIKE \"$cat $catindex\"";
 	  }
 	  return $objDatabase->selectSingleArray($sql,'objectname');
@@ -273,7 +283,7 @@ class Objects implements iObjects
     //             "taki" => "11", "psa" => "12", "torresB" => "11", "torresBC" => "13",
     //             "torresC" => "31", "mindiam1" => "12.2", "maxdiam1" => "13.2", 
     // 		"mindiam2" => "11.1", "maxdiam2" => "22.2", "inList" => "Public: Edge-ons", "notInList" => "My observed Edge-ons");
-    global $loggedUser,$objDatabase;
+    global $loggedUser,$objDatabase, $objCatalog;
     $obs=array();
     $sql = "";
     $sqland = "";
@@ -327,7 +337,7 @@ class Objects implements iObjects
       if ($exact == 0)
         $sqland = $sqland . " AND (objectnames.catalog = \"" . $queries["name"] . "\")"; 
       elseif ($exact == 1)
-        $sqland = $sqland . " AND (UPPER(objectnames.altname) like \"" . strtoupper($queries["name"]) . "\")";
+        $sqland = $sqland . " AND (UPPER(objectnames.altname) like \"" . strtoupper($objCatalog->checkObject($queries["name"])) . "\")";
 //       $sqland = $sqland . " AND (CONCAT(UPPER(objectnames.catalog),UPPER(objectnames.catindex)) like \"" . strtoupper(str_replace(' ','',$queries["name"])) . "\") ";
     $sqland.=(array_key_exists('type',$queries)&&$queries['type'])?" AND (objects.type=\"".$queries['type']."\")":'';
     $sqland.=(array_key_exists('con',$queries)&&$queries['con'])?" AND (objects.con=\"".$queries['con']."\")":'';
@@ -1511,6 +1521,36 @@ class Objects implements iObjects
 		  $_GET['indexAction']="add_object";	
 		else
 		  throw new Exception(LangException000);
+	}
+	public function checknames()
+	{ global $objDatabase,$objCatalog;
+	  $resulttext="";
+	  $theobjects=$objDatabase->selectSingleArray('SELECT name FROM objects','name');
+		while(list($key,$theobject)=each($theobjects))
+		{  $thenewobject=$objCatalog->checkObject($theobject);
+		   if($thenewobject!=$theobject)
+		   { $firstspace=strpos($thenewobject,' ',0);
+		     $thecatalog=substr($thenewobject,0,$firstspace);
+		     $theindex=substr($thenewobject,$firstspace+1);
+		     $this->newName($theobject,$thecatalog,$theindex);
+		     $resulttext.="Changed object name: ".$thecatalog.' '.$theindex." <= ".$theobject."\n";
+		   }
+		}
+		
+		$theobjects=$objDatabase->selectSingleArray('SELECT altname FROM objectnames WHERE catalog="MCG";','altname');
+		while(list($key,$theobject)=each($theobjects))
+		{  $thenewobject=$objCatalog->checkObject($theobject);
+		   if($thenewobject!=$theobject)
+		   { $firstspace=strpos($thenewobject,' ',0);
+		     $thecatalog=substr($thenewobject,0,$firstspace);
+		     $theindex=substr($thenewobject,$firstspace+1);
+		     $sql="UPDATE objectnames SET catalog='".$thecatalog."', catindex='".$theindex."', altname='MCG ".$theindex."' WHERE altname='".$theobject."';";
+		     $objDatabase->execSQL($sql);
+		     //echo($sql);
+		     $resulttext.="Changed altname: ".$thecatalog.' '.$theindex." <= ".$theobject."\n";
+		   }
+		}
+	  return $resulttext;
 	}
 }
 $objObject=new Objects;

@@ -32,11 +32,12 @@ else
 	require_once "lib/stars.php";
 	include_once "lib/cometobservations.php";
 	include_once "lib/cometobjects.php";
-  include_once 'lib/presentation.php';                                                               // functions etc. concerning layout
-  include_once 'lib/constellations.php';                                                               // functions etc. concerning layout
-  include_once 'lib/formlayouts.php';                                                               // functions etc. concerning layout
-  include_once 'lib/reportlayouts.php';                                                               // functions etc. concerning layout
-  
+  include_once 'lib/presentation.php';
+  include_once 'lib/constellations.php';
+  include_once 'lib/formlayouts.php';
+  include_once 'lib/reportlayouts.php';
+  include_once 'lib/catalogs.php';
+    
 	if(strpos(($browser=$objUtil->checkArrayKey($_SERVER,'HTTP_USER_AGENT','')),'Firefox')===false)
 	  $FF=false;
 	else

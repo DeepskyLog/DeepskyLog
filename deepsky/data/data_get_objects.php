@@ -411,7 +411,10 @@ elseif($objUtil->checkGetKey('source')=='quickpick')   //=======================
 }
 elseif($objUtil->checkGetKey('source')=='add_object10')   //========================== from quickpick page
 { $validQobj=false;
-  $_GET['object']="%".$objUtil->checkRequestKey('catalog')."%".str_replace(" ","%",$objUtil->checkRequestKey('number'))."%";
+  $catandindex=$objCatalog->checkCatalogIndex($objUtil->checkRequestKey('catalog'),$objUtil->checkRequestKey('number'));
+  $_REQUEST['catalog']=$catandindex[0];
+  $_REQUEST['number']=$catandindex[1];
+  $_GET['object']="%".$_REQUEST['catalog']."%".str_replace(" ","%",$_REQUEST['number'])."%";
   if(array_key_exists('QobjParams',$_SESSION)
   && array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='add_object')
   && array_key_exists('object',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['object']==$objUtil->checkGetKey('object')))
@@ -436,7 +439,10 @@ elseif($objUtil->checkGetKey('source')=='add_object10')   //====================
 	} 
 }
 elseif($objUtil->checkGetKey('source')=='add_object20')   //========================== from quickpick page
-{ $_SESSION['QobjParams']=array('source'=>'add_object20');
+{ $catandindex=$objCatalog->checkCatalogIndex($objUtil->checkRequestKey('catalog'),$objUtil->checkRequestKey('number'));
+  $_REQUEST['catalog']=$catandindex[0];
+  $_REQUEST['number']=$catandindex[1];
+  $_SESSION['QobjParams']=array('source'=>'add_object20');
   $ra=(abs($objUtil->checkRequestKey('RAhours'))+($objUtil->checkRequestKey('RAminutes')/60)+($objUtil->checkRequestKey('RAseconds')/3600));
   $decl=((substr(trim($objUtil->checkRequestKey('DeclDegrees')),0,1)=='-')?-1:1)*(abs($objUtil->checkRequestKey('DeclDegrees'))+($objUtil->checkRequestKey('DeclMinutes')/60)+($objUtil->checkRequestKey('DeclSeconds')/3600));
   $_SESSION['Qobj']=$objObject->getSeenObjectDetails($objObject->getNearbyObjects("",60,$ra,$decl));
