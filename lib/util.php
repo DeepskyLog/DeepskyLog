@@ -1668,10 +1668,10 @@ class Utils implements iUtils
 			&& $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')
 			&& (strpos($showelements,'e')!==FALSE))
 		{ $pdf->addTextWrap($xleft, $footer-$deltaline, $xmid+$SectionBarWidth, $fontSizeText, 
-	              ReportSunDown.$_SESSION['efemerides']['sset'].' to '.$_SESSION['efemerides']['srise']." - ".
-                ReportNautNight.$_SESSION['efemerides']['naute'].' to '.$_SESSION['efemerides']['nautb']." - ".
-                ReportAstroNight.$_SESSION['efemerides']['astroe'].' to '.$_SESSION['efemerides']['astrob']." - ".
-                ReportMoonUp.$_SESSION['efemerides']['moon0']. ' to '.$_SESSION['efemerides']['moon2']
+	              ReportSunDown.$_SESSION['efemerides']['sset'].LangTo.$_SESSION['efemerides']['srise']." - ".
+                ReportNautNight.$_SESSION['efemerides']['naute'].LangTo.$_SESSION['efemerides']['nautb']." - ".
+                ReportAstroNight.$_SESSION['efemerides']['astroe'].LangTo.$_SESSION['efemerides']['astrob']." - ".
+                ReportMoonUp.$_SESSION['efemerides']['moon0'].LangTo.$_SESSION['efemerides']['moon2']
 	              , 'center');
 		}  
     if(strpos($showelements,'p')!==FALSE)
@@ -1736,10 +1736,10 @@ class Utils implements iUtils
 					&& $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')
 	    		&& (strpos($showelements,'e')!==FALSE))
             $pdf->addTextWrap($xleft, $footer-$deltaline, $xmid+$SectionBarWidth, $fontSizeText, 
-	              ReportSunDown.$_SESSION['efemerides']['sset'].' to '.$_SESSION['efemerides']['srise']." - ".
-                ReportNautNight.$_SESSION['efemerides']['naute'].' to '.$_SESSION['efemerides']['nautb']." - ".
-                ReportAstroNight.$_SESSION['efemerides']['astroe'].' to '.$_SESSION['efemerides']['astrob']." - ".
-                ReportMoonUp.$_SESSION['efemerides']['moon0']. ' to '.$_SESSION['efemerides']['moon2']
+	              ReportSunDown.$_SESSION['efemerides']['sset'].LangTo.$_SESSION['efemerides']['srise']." - ".
+                ReportNautNight.$_SESSION['efemerides']['naute'].LangTo.$_SESSION['efemerides']['nautb']." - ".
+                ReportAstroNight.$_SESSION['efemerides']['astroe'].LangTo.$_SESSION['efemerides']['astrob']." - ".
+                ReportMoonUp.$_SESSION['efemerides']['moon0']. LangTo.$_SESSION['efemerides']['moon2']
 	              , 'center');
 	              if(strpos($showelements,'p')!==FALSE)
 		      { $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, $fontSizeText, LangPDFMessage22 . $pagenr, 'right');
@@ -1845,13 +1845,19 @@ class Utils implements iUtils
 		        $deltaymax=max($deltaymax,$dataelement['fieldline']);
 		    }
 		  }
+		  $deltaymax++;
       if($y-($deltaline*$deltaymax)<$bottom) 
         $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
       else if($sort && ($$sort!=$actualsort))
-			{ $y-=$deltalineSection;
-        $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
-        $pdf->addText($xbase, $y, $fontSizeSection, $GLOBALS[$$sort]);
-        $y-=$deltaline+$deltalineSection;
+			{ //$pdf->addText(0, $y+10, $fontSizeSection,$y.' tot '.$deltaymax);
+        if(($y-($deltaline*$deltaymax)-$sectionBarSpace-$deltalineSection)<$bottom) 
+          $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
+        else
+        { $y-=$deltalineSection;
+          $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
+          $pdf->addText($xbase, $y, $fontSizeSection, $GLOBALS[$$sort]);
+          $y-=$deltaline+$deltalineSection;
+        }
 			}
 			else
 			{ if(strpos($showelements,'s')!==FALSE)
@@ -1865,8 +1871,7 @@ class Utils implements iUtils
 			while(list($key,$dataelement)=each($reportdata))
 			{ if($dataelement['fieldwidth'])
 			  { if($y-($deltaline*$dataelement['fieldline'])<$bottom) 
-          { $pdf->addText(5,$y,10,$y-($deltaline*(++$deltaymax)).' '.$bottom.' '.($y-($deltaline*(++$deltaymax))<$bottom));
-             $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);
+          { $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);
           }
           $justification='left';
 			  	$i='';$b='';

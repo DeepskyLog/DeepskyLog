@@ -2,6 +2,9 @@
 
 // TO DO:
 
+define("LangTo",                 'tot');
+define("LangNoExcludeIfSeen",    'maar niet uitsluiten wanneer gezien');
+
 define("ReportSunDown",          'Zon onder: ');
 define("ReportNautNight",        'Nautische nacht: ');
 define("ReportAstroNight",       'Astronomische nacht: ');

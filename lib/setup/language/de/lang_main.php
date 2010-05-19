@@ -4,6 +4,10 @@
 //define("LangTopObserversHeader7"													,"Number of drawings");
 //define("LangTopObserversHeader8"													,"Drawings last year");
 
+define('LangTo',                 ' bis ');
+
+define("LangNoExcludeIfSeen",    'but not if seen');
+
 define("ReportSunDown",          'Sun down: ');
 define("ReportNautNight",        'Nautical night: ');
 define("ReportAstroNight",       'Astronomical night: ');

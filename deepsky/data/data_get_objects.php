@@ -328,6 +328,7 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
 	while(list($key,$value)=each($_GET))
 	  if(substr($key,0,5)=='excl_')
 	    $excl[]=substr($key,5);
+  $excludeexceptseen=$objUtil->checkGetKey('excludeexceptseen','off');
   if(!($pageError || $minDeclDegreesError || $minDeclMinutesError || $minDeclSecondsError || 
          $maxDeclDegreesError || $maxDeclMinutesError || $maxDeclSecondsError || $minRAHoursError || 
          $minRAMinutesError || $minRASecondsError || $maxRAHoursError || $maxRAMinutesError || 
@@ -352,7 +353,8 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
                      "notInList"       => $notInList,
                      "atlas"           => $atlas,
 										 "atlasPageNumber" => $atlasPageNumber,
-                     "excl"            => $excl);
+                     "excl"            => $excl,
+                     "exclexceptseen"  => $excludeexceptseen);
       if(array_key_exists('seen',$_GET) && $_GET['seen'])
         $seenPar = $_GET['seen'];
       else

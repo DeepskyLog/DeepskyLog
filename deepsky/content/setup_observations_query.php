@@ -478,7 +478,7 @@ while(list($key,$value)=each($allLanguages))
   if(!($j++%3))
      echo "</tr><tr><td></td>"; 
 } 
-print "</tr>";
+echo "</tr>";
 echo "</table>";
 echo "</div></form>";
 echo "</div>";

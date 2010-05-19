@@ -354,10 +354,10 @@ class Objects implements iObjects
     $sqland.=(array_key_exists('mindiam2',$queries)&&$queries['mindiam2'])?" AND (objects.diam2 > \"" . $queries["mindiam2"] . "\" or objects.diam2 like \"" . $queries["mindiam2"] . "\")":'';
     $sqland.=(array_key_exists('maxdiam2',$queries)&&$queries['maxdiam2'])?" AND(objects.diam2 <= \"" . $queries["maxdiam2"] . "\" or objects.diam2 like \"" . $queries["maxdiam2"] . "\")":'';
     $sqland.=(array_key_exists('atlas',$queries)&&$queries['atlas']&&array_key_exists('atlasPageNumber',$queries)&&$queries["atlasPageNumber"])?" AND (objects.".$queries["atlas"]."=\"".$queries["atlasPageNumber"]."\")":'';
-    if(array_key_exists('excl',$queries)&&($excl=$queries['excl']))
-    { while(list($key,$value)=each($excl))
-      $sqland.=" AND (objects.name NOT LIKE '".$value." %')";
-    }
+    //if(array_key_exists('excl',$queries)&&($excl=$queries['excl']))
+    //{ while(list($key,$value)=each($excl))
+    //  $sqland.=" AND (objects.name NOT LIKE '".$value." %')";
+    //}
     $sqland = substr($sqland, 4);
     if(trim($sqland)=='') 
 	    $sqland=" (objectnames.altname like \"%\")";
@@ -394,6 +394,19 @@ class Objects implements iObjects
       for($new_obs=$obs,$obs=array();list($key,$value)=each($new_obs);)
         if ($value['objectcontrast']<=$queries["maxContrast"])
 			    $obs[]=$value;
+    if(array_key_exists('exclexceptseen',$queries)&&($queries['exclexceptseen']=='on'))
+    { if(array_key_exists('excl',$queries)&&($excl=$queries['excl']))
+      {  for($new_obs=$obs,$obs=array();list($key,$value)=each($new_obs);)
+          if(($value['objectseen']!='-')||(!(in_array(substr($value['objectname'],0,strpos($value['objectname'],' ')),$excl))))
+			      $obs[]=$value; 
+      }
+    }
+    else 
+    { if(array_key_exists('excl',$queries)&&($excl=$queries['excl']))
+		    for($new_obs=$obs,$obs=array();list($key,$value)=each($new_obs);)
+          if(!(in_array(substr($value['objectname'],0,strpos($value['objectname'],' ')),$excl)))
+			      $obs[]=$value;
+    }
     return $obs;
   }
   public  function getObjectsFromCatalog($cat)

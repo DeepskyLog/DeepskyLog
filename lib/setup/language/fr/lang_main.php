@@ -1,6 +1,9 @@
 <?php
 
 // TO DO
+define("LangTo",                 ' à ');
+
+define("LangNoExcludeIfSeen",    'mais ne pas exclure si vu');
 
 define("ReportSunDown",          'Zon onder: ');
 define("ReportNautNight",        'Nautische nacht: ');

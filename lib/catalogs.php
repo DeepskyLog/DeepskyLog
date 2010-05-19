@@ -1,6 +1,23 @@
 <?php
 class catalogs
-{ private function formatMCGIndex($theindex)
+{ private function format2MASX($theindex)
+  { $nextindex=0;
+    if(($temp=substr($theindex,$nextindex,1))=="J")
+    { $returnindex=$temp;
+      $theindex=substr($theindex,1);
+      $nextindex++;
+    }
+    else
+      $returnindex='J';
+    $temp=strpos($theindex,'+');
+    if($temp===FALSE)
+      $temp=strpos($theindex,'-');
+    if($temp===FALSE)
+      return $returnindex.$theindex;
+    return $returnindex.$theindex;  
+    
+  }
+  private function formatMCGIndex($theindex)
   { $nextindex=0;
     if((($temp=substr($theindex,$nextindex,1))=="+")||($temp=="-"))
     { $returnindex=$temp;
@@ -42,6 +59,8 @@ class catalogs
       $theindex=substr($theobject,$firstspace+1);
       if($thecatalog=='MCG')
 	      return 'MCG '.$this->formatMCGIndex($theindex);
+      if($thecatalog=='2MASX')
+	      return '2M1SX '.$this->formatMCGIndex($theindex);
 	    else
 	      return $theobject;
   	}
@@ -53,6 +72,8 @@ class catalogs
   	{ $thenewcatalog=strtoupper($thecatalog);
       if($thenewcatalog=='MCG')
 	      return array('MCG',$this->formatMCGIndex($theindex));
+      if($thenewcatalog=='2MASX')
+	      return array('2MASX',$this->format2MASX($theindex));
 	    else
 	      return array($thecatalog,$theindex);
   	}

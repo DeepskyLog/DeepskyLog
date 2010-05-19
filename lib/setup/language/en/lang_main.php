@@ -2,6 +2,9 @@
 
 // TO DO:
 
+define('LangTo',                 ' to ');
+
+define("LangNoExcludeIfSeen",    'but not if seen');
 
 define("ReportSunDown",          'Sun down: ');
 define("ReportNautNight",        'Nautical night: ');

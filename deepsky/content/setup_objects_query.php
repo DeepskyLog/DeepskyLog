@@ -270,7 +270,14 @@ while(list($key,$value)=each($catalogs))
   } 
 } 
 echo "</tr>";
-echo("</table>");
+echo "<tr>";
+echo "<td class=\"fieldname\" align=\"right\" style=\"width:25%\">";
+echo LangNoExcludeIfSeen;
+echo "</td>";
+echo "<td><input type=\"checkbox\" name=\"excludeexceptseen\"  /></td>";
+echo "<td></td>";
+echo "</tr>";
+echo "</table>";
 echo "</div>";
 echo "</form>";
 echo "</div>";
