@@ -181,7 +181,7 @@ class catalogs
     if((strpos($theobject,"%")!==FALSE)||(strpos($theobject,"?")!==FALSE))
       return trim($thenewcatalog.' '.$theindex);
   	else
-  	{ $tocheck=array("MCG","2MASX","APMUKS(BJ)","BD",'CGCG');
+  	{ $tocheck=array("2MASX","APMUKS(BJ)","BD",'CGCG');
       while(list($key,$value)=each($tocheck))
         if($thenewcatalog==$value)
           return $value.' '.$this->formatIndex($value,trim($theindex));

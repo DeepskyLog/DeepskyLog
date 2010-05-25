@@ -40,6 +40,8 @@ $inIndex='true';
   $objObject->removeAltName('HICKSON 82A','NPM','1G+32.0473');
   $objObject->newAltName('HICKSON 82A','NPM1G','+32.0473');  
   $objObject->removeAltName('Stock 2','ST','2');
+  $objDatabase->execSQL("UPDATE objectnames SET catindex='-4-2-18' WHERE objectname='MCG -4-2-18' AND catalog='MCG';");
+  $objDatabase->execSQL("UPDATE objectnames SET altname='MCG -4-2-18' WHERE objectname='MCG -4-2-18' AND catalog='MCG';");
   
   
   echo "Checking names:\n";
