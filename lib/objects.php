@@ -215,7 +215,7 @@ class Objects implements iObjects
 					 "OR altname = \"".trim($value)."\"";
     }
     else
-    { $catandindex=$objCatalog->checkCatalogIndex($cat,ucwords(trim($catindex)));
+    { $catandindex=$objCatalog->checkObject($cat.' '.ucwords(trim($catindex)));
 	    $cat=$catandindex[0];
 	    $catindex=$catandindex[1];
       $sql = "SELECT objectnames.objectname FROM objectnames " .
@@ -239,7 +239,7 @@ class Objects implements iObjects
 		 	 	 	   "OR altname LIKE \"$value2\"";
 	  else
 	  { $catindex=ucwords($catindex);
-      $catandindex=$objCatalog->checkCatalogIndex($cat,$catindex);
+      $catandindex=$objCatalog->checkObject($cat.' '.$catindex);
       $cat=$catandindex[0];
       $catindex=$catandindex[1];
 	    $sql = "SELECT objectnames.objectname FROM objectnames " .
@@ -1537,7 +1537,6 @@ class Objects implements iObjects
 	}
 	public function checknames()
 	{ global $objDatabase,$objCatalog;
-	  $resulttext="";
 	  $theobjects=$objDatabase->selectSingleArray('SELECT name FROM objects','name');
 		while(list($key,$theobject)=each($theobjects))
 		{  $thenewobject=$objCatalog->checkObject($theobject);
@@ -1546,24 +1545,22 @@ class Objects implements iObjects
 		     $thecatalog=substr($thenewobject,0,$firstspace);
 		     $theindex=substr($thenewobject,$firstspace+1);
 		     $this->newName($theobject,$thecatalog,$theindex);
-		     $resulttext.="Changed object name: ".$thecatalog.' '.$theindex." <= ".$theobject."\n";
+		     echo "Changed object name: ".$thecatalog.' '.$theindex." <= ".$theobject."\n";
 		   }
 		}
 		
-		$theobjects=$objDatabase->selectSingleArray('SELECT altname FROM objectnames WHERE catalog="MCG";','altname');
+		$theobjects=$objDatabase->selectSingleArray('SELECT altname FROM objectnames;','altname');
 		while(list($key,$theobject)=each($theobjects))
 		{  $thenewobject=$objCatalog->checkObject($theobject);
 		   if($thenewobject!=$theobject)
 		   { $firstspace=strpos($thenewobject,' ',0);
 		     $thecatalog=substr($thenewobject,0,$firstspace);
 		     $theindex=substr($thenewobject,$firstspace+1);
-		     $sql="UPDATE objectnames SET catalog='".$thecatalog."', catindex='".$theindex."', altname='MCG ".$theindex."' WHERE altname='".$theobject."';";
+		     $sql="UPDATE objectnames SET catalog='".$thecatalog."', catindex='".$theindex."', altname='".$thecatalog." " .$theindex."' WHERE altname='".$theobject."';";
 		     $objDatabase->execSQL($sql);
-		     //echo($sql);
-		     $resulttext.="Changed altname: ".$thecatalog.' '.$theindex." <= ".$theobject."\n";
+		     echo "Changed altname: ".$thecatalog.' '.$theindex." <= ".$theobject."\n";
 		   }
 		}
-	  return $resulttext;
 	}
 }
 $objObject=new Objects;

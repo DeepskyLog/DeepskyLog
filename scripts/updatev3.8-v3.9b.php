@@ -26,11 +26,24 @@ $inIndex='true';
   include_once '../lib/reportlayouts.php';
   include_once '../lib/catalogs.php';
 
-  echo "Deleting faulty object on objectnames (MCG +0-12-53)\n";
+  
+  echo "Deleting faulty object or objectnames.\n";
   $objDatabase->execSQL("DELETE FROM objectnames WHERE catindex=\"+0-12-53\";");
+  $objDatabase->execSQL("DELETE FROM objects     WHERE name='MCG 8-31-3A';");
+  $objObject->removeAndReplaceObjectBy('Feinstein 1','Fein','1');
+  $objObject->newName('Markarian 38','Mrk','38');
+  $objObject->removeAndReplaceObjectBy('Markarian 205','Mrk','205');
+  $objObject->newName('Markarian 756','Mrk','756');
+  $objObject->newName('Markarian 829','Mrk','829');
+  $objObject->newName('Markarian 839','Mrk','839');
+  $objObject->newName('Markarian 897','Mrk','897');
+  $objObject->removeAltName('HICKSON 82A','NPM','1G+32.0473');
+  $objObject->newAltName('HICKSON 82A','NPM1G','+32.0473');  
+  $objObject->removeAltName('Stock 2','ST','2');
+  
   
   echo "Checking names:\n";
-  echo $objObject->checknames();
+  $objObject->checknames();
   echo"\nEnd checking names.\n";
 
 ?>
