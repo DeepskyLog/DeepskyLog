@@ -185,7 +185,7 @@ class catalogs
       while(list($key,$value)=each($tocheck))
         if($thenewcatalog==$value)
           return $value.' '.$this->formatIndex($value,trim($theindex));
-	    return $theobject;
+	    return trim($thenewcatalog.' '.$theindex);
   	}
   }
 }
