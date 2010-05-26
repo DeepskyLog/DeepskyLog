@@ -9,6 +9,7 @@ function reportsLayout()
   $objPresentations->line(array("<hr />"),"L",array(100));
   $defaults=$objReportLayout->getLayoutListDefault($reportName);
   echo ReportKnownLayouts;
+  echo " (".LangShowAll." "."<input id=\"showallcheckbox\" type=\"checkbox\" onchange=\"showSelectOptions('".$reportName."');\" />"."):&nbsp;";
   echo "<select id=\"reportlayoutselect\" name=\"reportlayoutselect\" onchange=\"setLayoutPage('".$loggedUserName."');\">";
   while(list($key, $value) = each($defaults))
     if($value['observerid']=="Deepskylog default")
@@ -18,11 +19,13 @@ function reportsLayout()
   while(list($key, $value) = each($defaults))
     if($value['observerid']==$loggedUserName)
       echo "<option value=\"".$value['observerid'].': '.$value['reportlayout']."\">".$value['observerid'].': '.$value['reportlayout']."</option>";
+  /*
   echo "<option value=\"\" selected=\"selected\" >"."-----"."</option>";
   reset($defaults);
   while(list($key, $value) = each($defaults))
     if(($value['observerid']!="Deepskylog default")&&($value['observerid']!=$loggedUserName))
       echo "<option value=\"".$value['observerid'].': '.$value['reportlayout']."\">".$value['observerid'].': '.$value['reportlayout']."</option>";
+  */
   echo "</select>";
   echo "&nbsp;";
   echo "<input type=\"button\" onclick=\"saveAndGeneratePdf('".$baseURL."report.pdf','".$reportName."','".$objUtil->checkRequestKey('pdfTtile',"DeepskyLog")."','".$_GET['SID']."','".$_GET['sort']."');\" value=\"".ReportSaveAndGeneratePdf."\"/>";

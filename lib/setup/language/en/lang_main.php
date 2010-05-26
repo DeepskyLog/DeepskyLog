@@ -2,6 +2,8 @@
 
 // TO DO:
 
+define("LangShowAll",            'show all');
+
 define('LangTo',                 ' to ');
 
 define("LangNoExcludeIfSeen",    'but not if seen');
@@ -18,7 +20,7 @@ define("ReportLink"               ,"Report");
 define("ReportQueryOfObjects"     ,"objects overview");
 
 define("ReportTitle"              ,"Reports Layout for ");
-define("ReportKnownLayouts"       ,"Known layouts: ");
+define("ReportKnownLayouts"       ,"Known layouts");
 define("ReportSaveAndGeneratePdf" ,"Save and Generate pdf");
 define("ReportSaveAs"             ,"Save as...");
 define("ReportDelete"             ,"Delete");
@@ -48,6 +50,7 @@ define("Reportdeltalineextra"                                  ,"Extra line sepa
 define("ReportsectionBarHeightextra"                           ,"Extra section bar height");
 define("ReportdeltalineSection"                                ,"Extra space after a section bar");
 define("Reportdeltaobjectline"                                 ,"Extra separation between the different objects");
+define("ReportSectionBarSpace"                                 ,"Reverse indent of the section bar");
 define("ReportSectionBarWidthbase"                             ,"Width of the section title bars (e.b. constellation)");
 define("ReportShowElements"                                    ,"Show (t) title, (h) made up for, (e) efemerides,<br >(p) page numbers, (l) legend, (s) separation lines");
 define("Reportobjectseen"                                      ,"Object seen by you or others");

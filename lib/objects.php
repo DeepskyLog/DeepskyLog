@@ -683,7 +683,11 @@ class Objects implements iObjects
           $get = mysql_fetch_object($objDatabase->selectRecordset("SELECT * FROM objects WHERE name = \"". $value[1] . "\""));
           $result2[$j]['objecttype'] = $get->type;
           $result2[$j]['objecttypefull'] = $GLOBALS[$get->type];
-         
+          $altnames=$this->getAlternativeNames($value[1]); $alt="";
+          while(list($keyaltnames,$valuealtnames)=each($altnames))
+          if(trim($valuealtnames)!=trim($value[1]))
+            $alt.=($alt?"/":"").(trim($valuealtnames));
+          $result2[$j]['altname'] = $alt;
           $result2[$j]['objectconstellation'] = $get->con;
           $result2[$j]['objectconstellationfull'] = $GLOBALS[$get->con];
           $result2[$j]['objectseen']=$objectseen;

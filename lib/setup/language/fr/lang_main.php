@@ -1,6 +1,9 @@
 <?php
 
 // TO DO
+define("LangShowAll",            'montrez tous');
+
+
 define("LangTo",                 ' à ');
 
 define("LangNoExcludeIfSeen",    'mais ne pas exclure si vu');
@@ -16,7 +19,7 @@ define("ReportLink"               ,"Rapport");
 define("ReportQueryOfObjects"     ,"objects overview");
 
 define("ReportTitle"              ,"Reports Layout for ");
-define("ReportKnownLayouts"       ,"Known layouts: ");
+define("ReportKnownLayouts"       ,"Known layouts");
 define("ReportSaveAndGeneratePdf" ,"Save and Generate pdf");
 define("ReportSaveAs"             ,"Save as...");
 define("ReportDelete"             ,"Delete");

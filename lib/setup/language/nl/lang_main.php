@@ -2,6 +2,8 @@
 
 // TO DO:
 
+define("LangShowAll",            'toon alle');
+
 define("LangTo",                 'tot');
 define("LangNoExcludeIfSeen",    'maar niet uitsluiten wanneer gezien');
 
@@ -16,7 +18,7 @@ define("ReportLink"               ,"Rapport");
 define("ReportQueryOfObjects"     ,"objectenoverzicht");
 
 define("ReportTitle"              ,"Gekende layouts voor ");
-define("ReportKnownLayouts"       ,"Gekende layouts: ");
+define("ReportKnownLayouts"       ,"Gekende layouts");
 define("ReportSaveAndGeneratePdf" ,"Bewaar en Maak pdf");
 define("ReportSaveAs"             ,"Bewaar als...");
 define("ReportDelete"             ,"Verwijder");

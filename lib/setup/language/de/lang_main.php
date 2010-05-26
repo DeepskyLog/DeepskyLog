@@ -4,6 +4,8 @@
 //define("LangTopObserversHeader7"													,"Number of drawings");
 //define("LangTopObserversHeader8"													,"Drawings last year");
 
+define("LangShowAll",            'show all');
+
 define('LangTo',                 ' bis ');
 
 define("LangNoExcludeIfSeen",    'but not if seen');
@@ -20,7 +22,7 @@ define("ReportLink"               ,"Report");
 define("ReportQueryOfObjects"     ,"objects overview");
 
 define("ReportTitle"              ,"Reports Layout for ");
-define("ReportKnownLayouts"       ,"Known layouts: ");
+define("ReportKnownLayouts"       ,"Known layouts");
 define("ReportSaveAndGeneratePdf" ,"Save and Generate pdf");
 define("ReportSaveAs"             ,"Save as...");
 define("ReportDelete"             ,"Delete");
@@ -47,6 +49,7 @@ define("ReportfontSizeText"                                    ,"Font size text"
 define("ReportsectionBarSpace"                                 ,"ReportsectionBarSpace");
 define("ReportfontSizeSection"                                 ,"Font size for section bar");
 define("Reportdeltalineextra"                                  ,"Extra line separation");
+define("ReportSectionBarSpace"                                 ,"Reverse indent of the section bar");
 define("ReportsectionBarHeightextra"                           ,"Extra section bar height");
 define("ReportdeltalineSection"                                ,"Extra space after a section bar");
 define("Reportdeltaobjectline"                                 ,"Extra separation between the different objects");
