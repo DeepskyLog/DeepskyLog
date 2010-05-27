@@ -4,7 +4,7 @@
 
 define("LangShowAll",            'toon alle');
 
-define("LangTo",                 'tot');
+define("LangTo",                 ' tot ');
 define("LangNoExcludeIfSeen",    'maar niet uitsluiten wanneer gezien');
 
 define("ReportSunDown",          'Zon onder: ');
@@ -50,7 +50,7 @@ define("ReportdeltalineSection"                                ,"Supplmentaire r
 define("Reportdeltaobjectline"                                 ,"Supplementaire ruimte tussen verschillende objecten");
 define("ReportSectionBarWidthbase"                             ,"Breedte van het sectievak (bv. indeling sterrenbeelden)");
 define("ReportSectionBarSpace"                                 ,"Terugsprong grootte van het sectievak");
-define("ReportShowElements"                                    ,"Toon (t) titel, (h) opgemaakt voor, (e) efemeriden,<br >(p) paginanummers, (l) legende, (s) separatielijnen");
+define("ReportShowElements"                                    ,"Toon (t) titel, (h) opgemaakt voor, (e) efemeriden,(p) paginanummers, (l) legende, (s) separatielijnen, (i) index");
 define("Reportobjectseen"                                      ,"Object gezien door jou of anderen");
 define("Reportobjectlastseen"                                  ,"Object laatst gezien door jou");
 define("Reportshowname"                                        ,"Object naam zoals opgezocht (b.v. op Caldwell nummer)");

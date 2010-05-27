@@ -1751,10 +1751,10 @@ class Utils implements iUtils
 			  $xbase = $xleft;
 	    }
 	    else
-	    { $xbase = $xmid;
-	      $pdf->setLineStyle(0.5);
-	      $pdf->line($xbase-$sectionBarSpace-5, $top+$fontSizeText,$xbase-$sectionBarSpace-5, $bottom);
+	    { $pdf->setLineStyle(0.5);
+	      $pdf->line(($xbase+$SectionBarWidth+$xmid-$sectionBarSpace)/2, $top+$fontSizeText,($xbase+$SectionBarWidth+$xmid-$sectionBarSpace)/2, $bottom);
 	      $pdf->setLineStyle(1);
+	      $xbase = $xmid;
 	    }
       if(strpos($showelements,'l')!==FALSE)
 		  { $pdf->line($xbase-$sectionBarSpace, $y+$fontSizeText+$sectionBarSpace, $xbase+$SectionBarWidth, $y+$fontSizeText+$sectionBarSpace);
@@ -1799,7 +1799,7 @@ class Utils implements iUtils
   { global $objReportLayout,$dateformat,$baseURL,$instDir,$objObserver,$loggedUser,$objLocation,$objInstrument,$objPresentations;
 
     $reportdata=$objReportLayout->getReportData($reportuser,$reportname,$reportlayout);
-    if($sort=='objectconstellation') $sort='con'; else $sort='';
+    if($sort=='objectconstellation') $sort='con'; else $sort=''; $indexlist=array();
 
     $pagesize         = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'pagesize');
     $pageorientation  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'pageorientation');
@@ -1846,11 +1846,18 @@ class Utils implements iUtils
 		    }
 		  }
 		  $deltaymax++;
-      if($y-($deltaline*$deltaymax)<$bottom) 
+      if(($y-($deltaline*$deltaymax)<$bottom) && $sort)
         $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
-      else if($sort && ($$sort!=$actualsort))
-			{ //$pdf->addText(0, $y+10, $fontSizeSection,$y.' tot '.$deltaymax);
-        if(($y-($deltaline*$deltaymax)-$sectionBarSpace-$deltalineSection)<$bottom) 
+      elseif(($y-($deltaline*$deltaymax)<$bottom) && (!($sort)))
+      { $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
+        if(strpos($showelements,'s')!==FALSE)
+        { $pdf->setLineStyle(0.5);
+          $pdf->line($xbase-$sectionBarSpace, $y+(($deltaline+$deltaobjectline)*.75), $xbase+$SectionBarWidth, $y+(($deltaline+$deltaobjectline)*.75));
+          $pdf->setLineStyle(1);
+        }
+      }
+      elseif($sort && ($$sort!=$actualsort))
+			{ if(($y-($deltaline*$deltaymax)-$sectionBarSpace-$deltalineSection)<$bottom) 
           $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
         else
         { $y-=$deltalineSection;
@@ -1858,14 +1865,13 @@ class Utils implements iUtils
           $pdf->addText($xbase, $y, $fontSizeSection, $GLOBALS[$$sort]);
           $y-=$deltaline+$deltalineSection;
         }
+        $indexlist[$$sort]=$pagenr;
 			}
-			else
-			{ if(strpos($showelements,'s')!==FALSE)
-        { $pdf->setLineStyle(0.5);
-          $pdf->line($xbase-$sectionBarSpace, $y+(($deltaline+$deltaobjectline)*.75), $xbase+$SectionBarWidth, $y+(($deltaline+$deltaobjectline)*.75));
-          $pdf->setLineStyle(1);
-        }
-			}
+			else if(strpos($showelements,'s')!==FALSE)
+      { $pdf->setLineStyle(0.5);
+        $pdf->line($xbase-$sectionBarSpace, $y+(($deltaline+$deltaobjectline)*.75), $xbase+$SectionBarWidth, $y+(($deltaline+$deltaobjectline)*.75));
+        $pdf->setLineStyle(1);
+      }
 			reset($reportdata);
 			$deltaymax=0;
 			while(list($key,$dataelement)=each($reportdata))
@@ -1888,17 +1894,19 @@ class Utils implements iUtils
 			      $pdf->addText(0,0,$fontSizeText,'<i>');
 			    }
 			    if($dataelement['fieldname']=="showname")
-			    { $pdf->addText(0,0,$fontSizeText,'<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($valueA['objectname']).'>');
-			      $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $dataelement['fieldafter'].html_entity_decode($valueA[$dataelement['fieldname']]).$dataelement['fieldafter'],$justification);
-		  		  $pdf->addText(0,0,$fontSizeText,'</c:alink>');
-			      $deltaymax=max($deltaymax,$dataelement['fieldline']);
+			    { if($valueA[$dataelement['fieldname']])
+			      { $pdf->addText(0,0,$fontSizeText,'<c:alink:'.$baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($valueA['objectname']).'>');
+			        $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $dataelement['fieldafter'].html_entity_decode($valueA[$dataelement['fieldname']]).$dataelement['fieldafter'],$justification);
+		  		    $pdf->addText(0,0,$fontSizeText,'</c:alink>');
+			        $deltaymax=max($deltaymax,$dataelement['fieldline']);
+			      }
 			    }			                 
 			    else if($dataelement['fieldname']=="objectuseratlaspage")
 			    { $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText,$dataelement['fieldbefore'].html_entity_decode($valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')]).$dataelement['fieldafter'],$justification);			                  				  
   			    $deltaymax=max($deltaymax,$dataelement['fieldline']);
 			    }
 			    else if(($dataelement['fieldname']=="objectlistdescription"))
-	        { if(array_key_exists('objectlistdescription',$valueA) && $valueA['objectlistdescription'])
+	        { if(array_key_exists('objectlistdescription',$valueA) && ($valueA['objectlistdescription']<>''))
 	          { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectlistdescription'])).$dataelement['fieldafter'];
 		  		    $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
 	  	  		  while($theText)
@@ -1928,8 +1936,10 @@ class Utils implements iUtils
   	        }
 				  }
 			    else
-			    { $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $dataelement['fieldbefore'].html_entity_decode($valueA[$dataelement['fieldname']]).$dataelement['fieldafter'],$justification);
-			      $deltaymax=max($deltaymax,$dataelement['fieldline']);
+			    { if($valueA[$dataelement['fieldname']]<>'')
+			      { $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $dataelement['fieldbefore'].html_entity_decode($valueA[$dataelement['fieldname']]).$dataelement['fieldafter'],$justification);
+			        $deltaymax=max($deltaymax,$dataelement['fieldline']);
+			      }
 			    }
 			    if(strpos($dataelement['fieldstyle'],'b')!==FALSE)
 			      $pdf->addText(0,0,$fontSizeText,'</b>');
@@ -1941,11 +1951,28 @@ class Utils implements iUtils
       $y-=($deltaline+$deltaobjectline);
 			if($sort)
 			  $actualsort = $$sort;
-		}		
-    $pdf->Stream(); 
+		}
+		if((strpos($showelements,'i')!==FALSE)&&(count($indexlist)>0)&&($sort))
+		{ $base=$xmid;
+		  $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,'','',$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
+			$pdf->setLineStyle(0.5);
+      $y=$top;
+			while(list($key,$value)=each($indexlist))	  
+			{ $pdf->line($xbase-$sectionBarSpace, $y+(($deltaline+$deltaobjectline)*.75), $xbase+$SectionBarWidth, $y+(($deltaline+$deltaobjectline)*.75));
+        $pdf->addTextWrap($xbase,$y,50,$fontSizeText,$key,'left');
+        $pdf->addTextWrap($xbase+$SectionBarWidth-$sectionBarSpace-50,$y,50,$fontSizeText,trim($value),'right');
+        
+			  $y-=($deltaline+$deltaobjectline);
+			  if(($y-($deltaline+$deltaobjectline))<$bottom)
+			  { $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,'','',$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
+          $pdf->setLineStyle(0.5);
+			  }
+      }
+		}
+		$pdf->Stream(); 
   }
   
-  public  function pdfObservations($result) // Creates a pdf document from an array of observations
+  public function pdfObservations($result) // Creates a pdf document from an array of observations
   { global $loggedUser, $dateformat, $instDir, $objObservation, $objObserver, $objInstrument, $objLocation, $objPresentations, $objObject, $objFilter, $objEyepiece, $objLens;
     $pdf = new Cezpdf('a4', 'portrait');
     $pdf->ezStartPageNumbers(300, 30, 10);

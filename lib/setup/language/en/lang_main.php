@@ -52,7 +52,7 @@ define("ReportdeltalineSection"                                ,"Extra space aft
 define("Reportdeltaobjectline"                                 ,"Extra separation between the different objects");
 define("ReportSectionBarSpace"                                 ,"Reverse indent of the section bar");
 define("ReportSectionBarWidthbase"                             ,"Width of the section title bars (e.b. constellation)");
-define("ReportShowElements"                                    ,"Show (t) title, (h) made up for, (e) efemerides,<br >(p) page numbers, (l) legend, (s) separation lines");
+define("ReportShowElements"                                    ,"Show (t) title, (h) made up for, (e) efemerides, (p) page numbers, (l) legend, (s) separation lines, (i) index");
 define("Reportobjectseen"                                      ,"Object seen by you or others");
 define("Reportobjectlastseen"                                  ,"Object last seen date");
 define("Reportshowname"                                        ,"Object name as in query (e.b. Caldwell number)");
