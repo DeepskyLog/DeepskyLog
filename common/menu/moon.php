@@ -13,19 +13,6 @@ if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) {
   else
     echo "<a href=\"".$baseURL."index.php?menuMoon=collapsed".$link."\" title=\"".LangMenuCollapse."\">-</a> ";
 }
-echo LangMoonMenuTitle."</p>";
-
-// Only show the current moon phase
-include_once "lib/moonphase.inc.php";
-include_once "lib/astrocalc.php";
-  
-/*$theYear=$_SESSION['globalYear'];
-$theMonth=$_SESSION['globalMonth'];
-$theDay=$_SESSION['globalDay'];
-$theHour="";
-$theMinute="";
-*/
-//temp suggestion to allow trunk to work for some testing by david
 $theYear=$objUtil->checkSessionKey('globalYear',date("Y"));
 $theMonth=$objUtil->checkSessionKey('globalMonth',date("n"));
 $theDay=$objUtil->checkSessionKey('globalDay',date('j'));
@@ -36,12 +23,28 @@ $date = $theYear . "-". $theMonth . "-" . $theDay;
 $time = "23:59:59";
 $tzone = "GMT";
 $dateTimeText=date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear));
+echo LangMoonMenuTitle."<br /><span class=\"menuText\" style=\"font-weight:normal;\">";
+if($menuMoon!="collapsed")
+  echo"(op ".$dateTimeText.")";
+echo "</span>"."</p>";
 
+  
+/*$theYear=$_SESSION['globalYear'];
+$theMonth=$_SESSION['globalMonth'];
+$theDay=$_SESSION['globalDay'];
+$theHour="";
+$theMinute="";
+*/
+//temp suggestion to allow trunk to work for some testing by david
+
+// Only show the current moon phase
+include_once "lib/moonphase.inc.php";
+include_once "lib/astrocalc.php";
 $moondata = phase(strtotime($date . ' ' . $time . ' ' . $tzone));
 
 $MoonIllum  = $moondata[1];
 $MoonAge    = $moondata[2];
-$nextNewMoonText=LangMoonMenuNewMoon." : ";
+$nextNewMoonText=LangMoonMenuNewMoon.": ";
 $phases = array();
 $phases = phasehunt(strtotime($date));
 $nextNewMoonText.=date("j M", $phases[4]);
@@ -50,10 +53,6 @@ $nextNewMoonText.=date("j M", $phases[4]);
 $MoonIllum = round( $MoonIllum, 2 );
 $MoonIllum *= 100;
 
-$file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
-echo "<span class=\"menuText\">".$nextNewMoonText."</span><br />";
-
-echo "<span class=\"menuText\">".$dateTimeText."</span>&nbsp;"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" /><br />";
 
   // 1) Check if logged in
   if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) {
@@ -140,14 +139,41 @@ echo "<span class=\"menuText\">".$dateTimeText."</span>&nbsp;"."<img src=\"".$ba
       }
     }  
 if($menuMoon!="collapsed") {
-    echo "<span class=\"menuText\">".LangMoonRise." : " . $_SESSION['efemerides']['moon0'] . "<br />";
+    //echo "<span class=\"menuText\">".LangMoonRise." : " . $_SESSION['efemerides']['moon0'] . "<br />";
 	  // Setting of the moon
-	  echo LangMoonSet." : " . $_SESSION['efemerides']['moon2'] . "<br />";
+	  //echo LangMoonSet." : " . $_SESSION['efemerides']['moon2'] . "<br />";
+
+
+    
+    /*
     echo LangMoonSun . " : " . $_SESSION['efemerides']['srise'] . " - " . $_SESSION['efemerides']['sset'];
     echo "<br />" . LangMoonTwilight . " : ";
     echo "<br />&nbsp;&nbsp;" . LangMoonNaut . " : " .  $_SESSION['efemerides']['nautb'] . " - " . $_SESSION['efemerides']['naute'];
     echo "<br />&nbsp;&nbsp;" . LangMoonAstro . " : " . $_SESSION['efemerides']['astrob'] . " - " . $_SESSION['efemerides']['astroe'];
     echo "</span><br />";
+    */
+    echo "<table class=\"centered\">";
+    echo "<tr class=\"menuText\">";
+    echo "<th>"."Nacht"."</th>"."<th>"."van"."</th>"."<th>"."tot"."</th>";
+    echo "</tr>";
+    echo "<tr>";
+    echo "<td>"."Maan"."</td>"."<td>".$_SESSION['efemerides']['moon0']."</td>"."<td>".$_SESSION['efemerides']['moon2']."</td>";
+    echo "</tr>";
+    echo "<tr>";
+    echo "<td>"."Zon"."</td>"."<td>".$_SESSION['efemerides']['sset']."</td>"."<td>".$_SESSION['efemerides']['srise']."</td>";
+    echo "</tr>";
+    echo "<tr>";
+    echo "<td>"."Naut"."</td>"."<td>".$_SESSION['efemerides']['naute']."</td>"."<td>".$_SESSION['efemerides']['nautb']."</td>";
+    echo "</tr>";
+    echo "<tr>";
+    echo "<td>"."Astro"."</td>"."<td>".$_SESSION['efemerides']['astroe']."</td>"."<td>".$_SESSION['efemerides']['astrob']."</td>";
+    echo "</tr>";
+    echo "</table>";
+    
+    $file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
+    echo "<p><span class=\"menuText\">".LangMoonMenuActualMoon."&nbsp;"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" /></span><p />";
+    echo "<span class=\"menuText\">".$nextNewMoonText."</span><br />";
+    
   }
 }
 echo "</div>";

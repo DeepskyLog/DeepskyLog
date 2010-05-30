@@ -1,6 +1,9 @@
 <?php
 
 // TO DO
+define("LangExclude",            "Excepté:");
+define("LangDescriptioncontains","Description NGC contient:");
+
 define("LangShowAll",            'montrez tous');
 
 
@@ -155,7 +158,7 @@ define("LangMaxAltitude"                                  ,"Max altitude");
 
 // Text for moon menu
 define("LangMoonMenuTitle"                                ,"Lune / Soleil");
-define("LangMoonMenuNewMoon"                              ,"Next new moon");
+define("LangMoonMenuNewMoon"                              ,"New moon");
 define("LangMoonMenuActualMoon"                           ,"Huidige maan:");
 define("LangMoonRise"                                     ,"Op");
 define("LangMoonSet"                                      ,"Onder");

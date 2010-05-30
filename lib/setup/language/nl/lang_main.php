@@ -2,6 +2,8 @@
 
 // TO DO:
 
+define("LangExclude",            "Uitgezonderd:");
+define("LangDescriptioncontains","NGC omschrijving bevat:");
 define("LangShowAll",            'toon alle');
 
 define("LangTo",                 ' tot ');
@@ -151,7 +153,7 @@ define("LangMaxAltitude"                                  ,"Max hoogte");
 
 // Text for moon menu
 define("LangMoonMenuTitle"                                ,"Maan / Zon");
-define("LangMoonMenuNewMoon"                              ,"Volgende nieuwe maan");
+define("LangMoonMenuNewMoon"                              ,"Nieuwe maan");
 define("LangMoonMenuActualMoon"                           ,"Huidige maan:");
 define("LangMoonRise"                                     ,"Op");
 define("LangMoonSet"                                      ,"Onder");

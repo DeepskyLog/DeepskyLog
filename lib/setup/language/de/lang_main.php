@@ -4,6 +4,9 @@
 //define("LangTopObserversHeader7"													,"Number of drawings");
 //define("LangTopObserversHeader8"													,"Drawings last year");
 
+define("LangExclude",            "Exclude:");
+define("LangDescriptioncontains","NGC Decription contains:");
+
 define("LangShowAll",            'show all');
 
 define('LangTo',                 ' bis ');

@@ -37,7 +37,7 @@ else
   include_once 'lib/formlayouts.php';
   include_once 'lib/reportlayouts.php';
   include_once 'lib/catalogs.php';
-    
+  
 	if(strpos(($browser=$objUtil->checkArrayKey($_SERVER,'HTTP_USER_AGENT','')),'Firefox')===false)
 	  $FF=false;
 	else

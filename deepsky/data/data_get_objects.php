@@ -92,7 +92,10 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
       $atlasPageNumber = $_GET['atlasPageNumber'];
   }
   $con =$objUtil->checkGetKey('con');                                           // CONSTELLATION
+  $conto =$objUtil->checkGetKey('conto',$con);                                           // CONSTELLATION
   $type=$objUtil->checkGetKey('type');                                          // TYPE
+  $descriptioncontains=$objUtil->checkGetKey('descriptioncontains');
+  $minDecl='';
   if(($minDeclDegrees=$objUtil->checkGetKey('minDeclDegrees'))!='')             // MINIMUM DECLINATION
   { if((!is_numeric($minDeclDegrees))||($minDeclDegrees<=-90)||($minDeclDegrees>=90))
       $minDeclDegreesError = True;
@@ -103,42 +106,29 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
     if((!is_numeric($minDeclSeconds))||($minDeclSeconds<0)||($minDeclSeconds>=60))
       $minDeclSecondsError = true;
     if(!($errorQuery=($minDeclDegreesError||$minDeclMinutesError||$minDeclSecondsError)))
-      if(substr(trim($_GET['minDeclDegrees']),1,1)=="-")
+      if(substr(trim($_GET['minDeclDegrees']),0,1)=="-")
         $minDecl=$minDeclDegrees-($minDeclMinutes/60)-($minDeclSeconds/3600);
       else 
         $minDecl=$minDeclDegrees+($minDeclMinutes/60)+($minDeclSeconds/3600);
   }
+  $maxDecl='';
   if(($maxDeclDegrees=$objUtil->checkGetKey('maxDeclDegrees'))!='')   // MAXIMUM DECLINATION 
-  { if((!is_numeric($_GET['maxDeclDegrees'])) || ($_GET['maxDeclDegrees']<=-90) || ($_GET['maxDeclDegrees']>=90))
+  { if((!is_numeric($maxDeclDegrees))||($maxDeclDegrees<=-90)||($maxDeclDegrees>=90))
       $maxDeclDegreesError = true;
-    if(array_key_exists('maxDeclMinutes',$_GET) && $_GET['maxDeclMinutes']!='') 
-    {  
-      $maxDeclMinutes = $_GET['maxDeclMinutes']; 
-      if((!is_numeric($_GET['maxDeclMinutes'])) || ($_GET['maxDeclMinutes']<0) || ($_GET['maxDeclMinutes']>=60))
-        $maxDeclMinutesError = true;
-    }
-    else
-    { $maxDeclMinutes = 0; 
-      $_GET['maxDeclMinutes']=0; 
-    }
-    if(array_key_exists('maxDeclseconds',$_GET) && $_GET['maxDeclseconds']!='') 
-    { $maxDeclSeconds = $_GET['maxDeclSeconds']; 
-      if((!is_numeric($_GET['maxDeclSeconds'])) || ($_GET['maxDeclSeconds']<0) || ($_GET['maxDeclSeconds']>=60))
-        $maxDeclSecondsError = true;
-    }
-    else
-    { $maxDeclseconds = 0;
-      $_GET['maxDeclSeconds'] = 0;
-    }
-    if($maxDeclDegreesError || $maxDeclMinutesError || $maxDeclSecondsError)
-      $errorQuery = true;
-    else
-      if(substr(trim($_GET['maxDeclDegrees']),1,1)=="-")
+    $maxDeclMinutes=$objUtil->checkGetKey('maxDeclMinutes',0);
+    if((!is_numeric($maxDeclMinutes))||($maxDeclMinutes<0)||($maxDeclMinutes>=60))
+      $maxDeclMinutesError = true;
+    $maxDeclSeconds=$objUtil->checkGetKey('maxDeclSeconds',0); 
+    if((!is_numeric($maxDeclSeconds))||($maxDeclSeconds<0)||($maxDeclSeconds>=60))
+      $maxDeclSecondsError = true;
+    if(!($errorQuery=($maxDeclDegreesError||$maxDeclMinutesError||$maxDeclSecondsError)))
+      if(substr(trim($_GET['maxDeclDegrees']),0,1)=="-")
         $maxDecl=$maxDeclDegrees-($maxDeclMinutes/60)-($maxDeclSeconds/3600);
       else 
-        $maxDecl=$maxDeclDegrees+($maxDeclMinutes/60) + ($maxDeclSeconds/3600);
+        $maxDecl=$maxDeclDegrees+($maxDeclMinutes/60)+($maxDeclSeconds/3600);
   }
   // MIN RA
+  $minRA='';
   if(($minRAHours=$objUtil->checkGetKey('minRAHours'))!='') 
   { if((!is_numeric($_GET['minRAHours'])) || ($_GET['minRAHours']<0) || ($_GET['minRAHours']>24))
       $minRAHoursError = true;
@@ -165,6 +155,7 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
       $minRA = $minRAHours + ($minRAMinutes/60) + ($minRASeconds/3600);
   }
   // MAX RA
+  $maxRA='';
   if(($maxRAHours=$objUtil->checkGetKey('maxRAHours'))!='') 
   { if((!is_numeric($_GET['maxRAHours'])) || ($_GET['maxRAHours']<0) || ($_GET['maxRAHours']>24))
       $maxRAHoursError = true;
@@ -215,6 +206,7 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
       $minSBError=true;
   }
   // MINIMUM SIZE
+  $minSizeC='';
   if(array_key_exists('minSize',$_GET) && ($_GET['minSize']!=''))
   { if((!is_numeric($_GET['minSize'])) || ($_GET['minSize']<0))
       $minSizeError=True; 
@@ -232,6 +224,7 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
     }
   }
   // MAXIMUM SIZE
+  $maxSizeC='';
   if(array_key_exists('maxSize',$_GET) && $_GET['maxSize']!='')
   { if((!is_numeric($_GET['maxSize'])) || ($_GET['maxSize']<0))
       $maxSizeError=True; 
@@ -260,6 +253,8 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
     if(!is_numeric($_GET['maxContrast']))
       $maxContrastError=True; 
   }
+  // DESCRIPTION CONTAINS
+  $descriptioncontains=$_GET['descriptioncontains'];
   if($minDecl && $maxDecl && ($minDecl<$MaxDecl))
   {
     $minDeclError = True;
@@ -334,27 +329,31 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
          $minRAMinutesError || $minRASecondsError || $maxRAHoursError || $maxRAMinutesError || 
          $maxRASecondsError || $minMagError || $maxMagError || $minSBError || $maxSBError || 
          $minSizeError || $maxSizeError || $minContrastError || $maxContrastError ||$listError))
-  { $query = array("name"            => $name,
-                     "type"            => $type,
-                     "con"             => $con,             
-                     "minmag"          => $minMag,
-                     "maxmag"          => $maxMag,
-                     "minsubr"         => $minSB,             
-                     "maxsubr"         => $maxSB,
-                     "minra"           => $minRA,   
-                     "maxra"           => $maxRA,
-                     "mindecl"         => $minDecl,
-                     "maxdecl"         => $maxDecl,
-                     "mindiam1"        => $minSizeC,
-                     "maxdiam1"        => $maxSizeC, 
-                     "minContrast"     => $minContrast,
-                     "maxContrast"     => $maxContrast,
-                     "inList"          => $inList,
-                     "notInList"       => $notInList,
-                     "atlas"           => $atlas,
-										 "atlasPageNumber" => $atlasPageNumber,
-                     "excl"            => $excl,
-                     "exclexceptseen"  => $excludeexceptseen);
+  { $query = array("name"                  => $name,
+                     "type"                => $type,
+                     "con"                 => $con,             
+                     "conto"               => $conto,             
+                     "minmag"              => $minMag,
+                     "maxmag"              => $maxMag,
+                     "minsubr"             => $minSB,             
+                     "maxsubr"             => $maxSB,
+                     "minra"               => $minRA,   
+                     "maxra"               => $maxRA,
+                     "mindecl"             => $minDecl,
+                     "maxdecl"             => $maxDecl,
+                     "mindiam1"            => $minSizeC,
+                     "maxdiam1"            => $maxSizeC, 
+                     "minContrast"         => $minContrast,
+                     "maxContrast"         => $maxContrast,
+                     "inList"              => $inList,
+                     "notInList"           => $notInList,
+                     "atlas"               => $atlas,
+										 "atlasPageNumber"     => $atlasPageNumber,
+                     "excl"                => $excl,
+                     "exclexceptseen"      => $excludeexceptseen,
+                     "descriptioncontains" => $descriptioncontains,
+                     "catalog"             => $objUtil->checkGetKey('catalog'),
+                     "catNumber"           => $objUtil->checkGetKey('catNumber'));
       if(array_key_exists('seen',$_GET) && $_GET['seen'])
         $seenPar = $_GET['seen'];
       else
@@ -396,7 +395,7 @@ elseif($objUtil->checkGetKey('source')=='quickpick')   //=======================
     $validQobj=false;
 	if(!$validQobj)
 	{ if(!$objUtil->checkGetKey('object'))
-		{ $_SESSION['QobjParams']=array();
+		{ //$_SESSION['QobjParams']=array();
     	$_SESSION['QobjPO']=$showPartOfs;
 		  $_SESSION['Qobj']=array();
 		  $_SESSION['QobjSort']='';
@@ -430,6 +429,7 @@ elseif($objUtil->checkGetKey('source')=='add_object10')   //====================
 		  $_SESSION['Qobj']=array();
 		  $_SESSION['QobjSort']='';
 		  $_SESSION['QobjSortDirection']='';
+		  
 		}
 		else
 		{	$_SESSION['QobjParams']=array('source'=>'add_object','object'=>$objUtil->checkGetKey('object'));
@@ -458,7 +458,7 @@ else
   $_SESSION['QobjSort']='';
   $_SESSION['QobjSortDirection']='';
 }
-		
+
 //=========================================== CHECK TO SEE IF SORTING IS NECESSARY ===========================================
 if(!array_key_exists('sort',$_GET))      
 { if(!$objUtil->checkGetKey('sort'))
@@ -512,5 +512,4 @@ if($_SESSION['QobjSortDirection']!=$_GET['sortdirection'])
   $_SESSION['QobjSortDirection']=$_GET['sortdirection'];
 	$min=0;
 }	
-
 ?>

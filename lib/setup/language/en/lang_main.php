@@ -1,6 +1,8 @@
 <?php
 
 // TO DO:
+define("LangExclude",            "Exclude:");
+define("LangDescriptioncontains","NGC Decription contains:");
 
 define("LangShowAll",            'show all');
 
@@ -153,7 +155,7 @@ define("LangMaxAltitude"                                  ,"Max altitude");
 
 // Text for moon menu
 define("LangMoonMenuTitle"                                ,"Moon / Sun");
-define("LangMoonMenuNewMoon"                              ,"Next new moon");
+define("LangMoonMenuNewMoon"                              ,"New moon");
 define("LangMoonMenuActualMoon"                           ,"Actual moon:");
 define("LangMoonRise"                                     ,"Rise");
 define("LangMoonSet"                                      ,"Set");

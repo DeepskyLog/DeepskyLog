@@ -13,7 +13,8 @@ else
 	else
 	{ include $instDir.'common/menu/languagemenu.php';                                         // LANGUAGE MENU 
 	}
-	include $instDir.'common/menu/moon.php';                                                   // MOON MENU
+	if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) 
+	  include $instDir.'common/menu/moon.php';                                                   // MOON MENU
   include $instDir.'common/menu/help.php';                                                   // HELP MENU 
 	include $instDir.'common/menu/tellus.php';
 	include $instDir.'common/menu/oalmenu.php';

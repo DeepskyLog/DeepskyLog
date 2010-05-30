@@ -340,19 +340,20 @@ class Objects implements iObjects
         $sqland = $sqland . " AND (UPPER(objectnames.altname) like \"" . strtoupper($objCatalog->checkObject($queries["name"])) . "\")";
 //       $sqland = $sqland . " AND (CONCAT(UPPER(objectnames.catalog),UPPER(objectnames.catindex)) like \"" . strtoupper(str_replace(' ','',$queries["name"])) . "\") ";
     $sqland.=(array_key_exists('type',$queries)&&$queries['type'])?" AND (objects.type=\"".$queries['type']."\")":'';
-    $sqland.=(array_key_exists('con',$queries)&&$queries['con'])?" AND (objects.con=\"".$queries['con']."\")":'';
+    $sqland.=(array_key_exists('con',$queries)&&$queries['con'])?" AND (objects.con>=\"".$queries['con']."\") AND (objects.con<=\"".$queries['conto']."\")":'';
     $sqland.=(array_key_exists('minmag',$queries)&&$queries['minmag'])?" AND (objects.mag>\"".$queries["minmag"]."\" or objects.mag like \"" . $queries["minmag"] . "\")":'';
     $sqland.=(array_key_exists('maxmag',$queries)&&$queries['maxmag'])?" AND (objects.mag<\"".$queries["maxmag"]."\" or objects.mag like \"" . $queries["maxmag"] . "\")":'';
     $sqland.=(array_key_exists('minsubr',$queries)&&$queries['minsubr'])?" AND objects.subr>=\"".$queries["minsubr"]."\"":'';
     $sqland.=(array_key_exists('maxsubr',$queries)&&$queries['maxsubr'])?" AND objects.subr<=\"".$queries["maxsubr"]."\"":'';
     $sqland.=(array_key_exists('minra',$queries)&&($queries['minra']!==''))?" AND (objects.ra >= \"" . $queries["minra"] . "\")":"";
-    $sqland.=(array_key_exists('maxra',$queries)&&$queries['maxra'])?" AND (objects.ra <= \"" . $queries["maxra"] . "\")":'';
+    $sqland.=(array_key_exists('maxra',$queries)&&($queries['maxra']!==''))?" AND (objects.ra <= \"" . $queries["maxra"] . "\")":'';
     $sqland.=(array_key_exists('mindecl',$queries)&&($queries['mindecl']!==''))?" AND (objects.decl >= \"" . $queries["mindecl"] . "\")":'';
-    $sqland.=(array_key_exists('maxdecl',$queries)&&$queries['maxdecl'])?" AND (objects.decl <= \"" . $queries["maxdecl"] . "\")":'';
+    $sqland.=(array_key_exists('maxdecl',$queries)&&($queries['maxdecl']!==''))?" AND (objects.decl <= \"" . $queries["maxdecl"] . "\")":'';
     $sqland.=(array_key_exists('mindiam1',$queries)&&$queries['mindiam1'])?" AND (objects.diam1 > \"" . $queries["mindiam1"] . "\" or objects.diam1 like \"" . $queries["mindiam1"] . "\")":'';
     $sqland.=(array_key_exists('maxdiam1',$queries)&&$queries['maxdiam1'])?" AND (objects.diam1 <= \"" . $queries["maxdiam1"] . "\" or objects.diam1 like \"" . $queries["maxdiam1"] . "\")":'';
     $sqland.=(array_key_exists('mindiam2',$queries)&&$queries['mindiam2'])?" AND (objects.diam2 > \"" . $queries["mindiam2"] . "\" or objects.diam2 like \"" . $queries["mindiam2"] . "\")":'';
     $sqland.=(array_key_exists('maxdiam2',$queries)&&$queries['maxdiam2'])?" AND(objects.diam2 <= \"" . $queries["maxdiam2"] . "\" or objects.diam2 like \"" . $queries["maxdiam2"] . "\")":'';
+    $sqland.=(array_key_exists('descriptioncontains',$queries)&&$queries['descriptioncontains'])?" AND(objects.description LIKE \"%" . $queries["descriptioncontains"] . "%\")":'';
     $sqland.=(array_key_exists('atlas',$queries)&&$queries['atlas']&&array_key_exists('atlasPageNumber',$queries)&&$queries["atlasPageNumber"])?" AND (objects.".$queries["atlas"]."=\"".$queries["atlasPageNumber"]."\")":'';
     //if(array_key_exists('excl',$queries)&&($excl=$queries['excl']))
     //{ while(list($key,$value)=each($excl))
