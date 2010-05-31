@@ -329,7 +329,11 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
          $minRAMinutesError || $minRASecondsError || $maxRAHoursError || $maxRAMinutesError || 
          $maxRASecondsError || $minMagError || $maxMagError || $minSBError || $maxSBError || 
          $minSizeError || $maxSizeError || $minContrastError || $maxContrastError ||$listError))
-  { $query = array("name"                  => $name,
+  { if(array_key_exists('seen',$_GET) && $_GET['seen'])
+        $seenPar = $_GET['seen'];
+      else
+        $seenPar = "D";
+  	$query = array("name"                  => $name,
                      "type"                => $type,
                      "con"                 => $con,             
                      "conto"               => $conto,             
@@ -353,11 +357,8 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
                      "exclexceptseen"      => $excludeexceptseen,
                      "descriptioncontains" => $descriptioncontains,
                      "catalog"             => $objUtil->checkGetKey('catalog'),
-                     "catNumber"           => $objUtil->checkGetKey('catNumber'));
-      if(array_key_exists('seen',$_GET) && $_GET['seen'])
-        $seenPar = $_GET['seen'];
-      else
-        $seenPar = "D";
+                     "catNumber"           => $objUtil->checkGetKey('catNumber'),
+  	                 "seen"                => $seenPar);
     	$validQobj=false;
       if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])>1)&&array_key_exists('Qobj',$_SESSION)&&(count($_SESSION['Qobj'])>0))
     	  $validQobj=true;

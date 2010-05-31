@@ -1,5 +1,6 @@
 <?php // setup_objects_query.php - interface to query objects
-$QobjParamsCount=25;
+echo "<script type=\"text/javascript\" src=\"".$baseURL."deepsky/content/setup_objects_query.js\"></script>";
+$QobjParamsCount=26;
 if($objUtil->checkGetKey('object'))
   $entryMessage.=LangInstructionsNoObjectFound.$_GET['object'];
 $link=$baseURL."index.php?indexAction=query_objects";
@@ -17,14 +18,18 @@ echo "<input type=\"hidden\" name=\"sort\" value=\"showname\" />";
 echo "<input type=\"hidden\" name=\"sortdirection\" value=\"asc\" />";
 echo "<input type=\"hidden\" name=\"showPartOfs\" value=\"0\" />";
 $content1=LangSeen.":";
-$content2="<select name=\"seen\" class=\"inputfield\">";
+$seen=$objUtil->checkGetKey('seen');
+if($seen=='')
+  if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
+    $seen=$_SESSION['QobjParams']['seen'];
+$content2="<select name=\"seen\" id=\"seen\" class=\"inputfield\">";
 $content2.="<option selected=\"selected\" value=\"D\">".LangSeenDontCare."</option>";
 $content2.="<option value=\"-\">".LangNotSeen."</option>";
 if($loggedUser)
-{ $content2.="<option value=\"X\">".LangSeenSomeoneElse."</option>";
-  $content2.="<option value=\"-X\">".LangNotSeenByMeOrNotSeenAtAll."</option>";
-  $content2.="<option value=\"XY\">".LangSeenByMeOrSomeoneElse."</option>";
-  $content2.="<option value=\"Y\">".LangSeenByMe."</option>";
+{ $content2.="<option value=\"X\" ".($seen=="X"?"selected=\"selected\"":"").">".LangSeenSomeoneElse."</option>";
+  $content2.="<option value=\"-X\" ".($seen=="-X"?"selected=\"selected\"":"").">".LangNotSeenByMeOrNotSeenAtAll."</option>";
+  $content2.="<option value=\"XY\" ".($seen=="XY"?"selected=\"selected\"":"").">".LangSeenByMeOrSomeoneElse."</option>";
+  $content2.="<option value=\"Y\" ".($seen=="Y"?"selected=\"selected\"":"").">".LangSeenByMe."</option>";
 }
 $content2.="</select>";
 $content3="<input type=\"submit\" name=\"query\" value=\"" . LangQueryObjectsButton1 . "\" />";
@@ -32,52 +37,43 @@ $objPresentations->line(array("<h4>".LangQueryObjectsTitle."</h4>",$content1,$co
 echo "<hr />";
 
 echo "<table>";
-echo "<tr>";
 // OBJECT NAME 
-if($catalog=='')
-  if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
-    $catalog=$_SESSION['QobjParams']['catalog'];
-echo "<td class=\"fieldname\">";
-echo LangQueryObjectsField1;
-echo "</td>";
-echo "<td>";
-echo "<select name=\"catalog\" class=\"inputfield\">";
-echo "<option value=\"\">-----</option>";
-$catalogs = $objObject->getCatalogs();
-while(list($key, $value) = each($catalogs))
-  if($value==$catalog)
-    echo "<option selected=\"selected\" value=\"".$value."\">$value</option>";
-  else
-    echo "<option value=\"$value\">$value</option>";
-echo "</select>";
-if($catNumber=='')
-  if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
-    $catNumber=$_SESSION['QobjParams']['catNumber'];
-echo "<input type=\"text\" class=\"inputfield\" maxlength=\"255\" name=\"catNumber\" size=\"30\" value=\"" . $catNumber .  "\" />";
-echo "</td>";
-// ATLAS PAGE NUMBER
-echo "<td class=\"fieldname".(($pageError)?" errorclass":"")."\">";
-  echo LangQueryObjectsField12; 
+  echo "<tr>";
+  if($catalog=='')
+    if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
+      $catalog=$_SESSION['QobjParams']['catalog'];
+  echo "<td class=\"fieldname\">".LangQueryObjectsField1."</td>";
+  echo "<td>";
+  echo "<select id=\"catalog\" name=\"catalog\" class=\"inputfield\">";
+  echo "<option value=\"\">-----</option>";
+  $catalogs = $objObject->getCatalogs();
+  while(list($key, $value) = each($catalogs))
+    echo "<option".(($value==$catalog)?" selected=\"selected\"":"")." value=\"".$value."\">$value</option>";
+  echo "</select>";
+  if($catNumber=='')
+    if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
+      $catNumber=$_SESSION['QobjParams']['catNumber'];
+  echo "<input id=\"catNumber\" name=\"catNumber\" type=\"text\" class=\"inputfield\" maxlength=\"255\" size=\"30\" value=\"".$catNumber .  "\" />";
   echo "</td>";
+// ATLAS PAGE NUMBER
+  echo "<td class=\"fieldname".(($pageError)?" errorclass":"")."\">".LangQueryObjectsField12."</td>";
   echo "<td>";
   if($atlas=='')
     if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
       $atlas=$_SESSION['QobjParams']['atlas'];
-  echo "<select name=\"atlas\" class=\"inputfield\">";
+  echo "<select id=\"atlas\" name=\"atlas\" class=\"inputfield\">";
   echo "<option value=\"\">-----</option>";
   while(list($key,$value)=each($objAtlas->atlasCodes))
-    if($key==$atlas) echo"<option selected=\"selected\" value=\"" . $key . "\">".$value."</option>"; 
-	  else echo "<option value=\"" . $key . "\">".$value."</option>";
+     echo"<option ".(($key==$atlas)?" selected=\"selected\"":"")." value=\"".$key."\">".$value."</option>"; 
   echo "</select>";
   if($atlasPageNumber=='')
     if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
       $atlasPageNumber=$_SESSION['QobjParams']['atlasPageNumber'];
-  echo "<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"atlasPageNumber\" size=\"4\" value=\"" . $atlasPageNumber .  "\" />"; 
+  echo "<input id=\"atlasPageNumber\" name=\"atlasPageNumber\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"" . $atlasPageNumber .  "\" />"; 
   echo "</td>";
-  echo "</tr>";
-  
-  echo"<tr>";
+  echo "</tr>";  
 // CONSTELLATION
+  echo"<tr>";
   echo "<td class=\"fieldname\" >";
   echo LangQueryObjectsField2;
   echo "</td>";
@@ -91,31 +87,25 @@ echo "<td class=\"fieldname".(($pageError)?" errorclass":"")."\">";
   if($con=='')
     if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
       $con=$_SESSION['QobjParams']['con'];
-  echo "<select name=\"con\" class=\"inputfield\">";
+  echo "<select id=\"con\" name=\"con\" class=\"inputfield\">";
   echo "<option value=\"\">-----</option>"; // empty field
   while(list($key, $value) = each($cons))
-    if($key==$con)
-      echo "<option selected=\"selected\" value=\"$key\">".$value."</option>";
-	else
-      echo "<option value=\"$key\">".$value."</option>";
+      echo "<option".(($key==$con)?" selected=\"selected\"":"")." value=\"$key\">".$value."</option>";
   echo "</select>";
   echo LangTo; 
   $conto=$objUtil->checkGetKey('conto',$con);
   if($conto=='')
     if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
       $conto=$_SESSION['QobjParams']['conto'];
-  echo "<select name=\"conto\" class=\"inputfield\">";
+  echo "<select id=\"conto\" name=\"conto\" class=\"inputfield\">";
   echo "<option value=\"\">-----</option>"; // empty field
   if(array_key_exists('conto',$_GET)) $con=$_GET['conto']; else $con='';
   reset($cons);
   while(list($key, $value) = each($cons))
-    if($key==$conto)
-      echo "<option selected=\"selected\" value=\"$key\">".$value."</option>";
-	else
-      echo "<option value=\"$key\">".$value."</option>";
+      echo "<option ".(($key==$conto)?"selected=\"selected\"":"")." value=\"$key\">".$value."</option>";
   echo "</select>";
   echo "</td>";
-  // TYPE
+// TYPE
   echo "<td class=\"fieldname\" >";
   echo LangQueryObjectsField11;
   echo "</td>";
@@ -128,19 +118,15 @@ echo "<td class=\"fieldname".(($pageError)?" errorclass":"")."\">";
   if($type=='')
     if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
       $type=$_SESSION['QobjParams']['type'];
-  echo "<select name=\"type\" class=\"inputfield\">";
+  echo "<select id=\"type\" name=\"type\" class=\"inputfield\">";
   echo "<option value=\"\">-----</option>";
   while(list($key, $value) = each($stypes))
-    if($key==$type)
-	    echo "<option selected=\"selected\" value=\"$key\">".$value."</option>";
-	  else
-	   echo "<option value=\"$key\">".$value."</option>";
+	    echo "<option ".(($key==$type)?"selected=\"selected\" ":"")."value=\"$key\">".$value."</option>";
   echo "</select>";
   echo "</td>"; 
-  echo "</tr>";
-  
+  echo "</tr>";  
+// MINIMUM DECLINATION
   echo "<tr>";
-  // MINIMUM DECLINATION
   echo "<td class=\"fieldname".(($minDeclDegreesError || $minDeclMinutesError || $minDeclSecondsError)?" errorclass":"")."\">";
   echo LangQueryObjectsField9;
   echo("</td><td>");
@@ -153,15 +139,14 @@ echo "<td class=\"fieldname".(($pageError)?" errorclass":"")."\">";
   if($minDeclSeconds=='')
     if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount)&&($_SESSION['QobjParams']['mindecl']!==''))
       $minDeclSeconds=round(abs($_SESSION['QobjParams']['mindecl']*3600)) % 60;
-  echo("<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"minDeclDegrees\" size=\"3\" value=\"" . $minDeclDegrees .  "\" />&nbsp;&deg;&nbsp;");
-  echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"minDeclMinutes\" size=\"2\" value=\"" . $minDeclMinutes .  "\" />&nbsp;&#39;&nbsp;");
-  echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"minDeclSeconds\" size=\"2\" value=\"" . $minDeclSeconds .  "\" />&nbsp;&quot;&nbsp;"); 
-  echo("</td>");
-
-  // MAXIMUM DECLINATION
-  echo("<td class=\"fieldname".(($maxDeclDegreesError || $maxDeclMinutesError || $maxDeclSecondsError)?" errorclass":"")."\">");
-  echo LangQueryObjectsField10;
-  echo("</td><td>");
+  echo "<input id=\"minDeclDegrees\" name=\"minDeclDegrees\" type=\"text\" class=\"inputfield\" maxlength=\"3\" size=\"3\" value=\"" . $minDeclDegrees .  "\" />&nbsp;&deg;&nbsp;";
+  echo "<input id=\"minDeclMinutes\" name=\"minDeclMinutes\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $minDeclMinutes .  "\" />&nbsp;&#39;&nbsp;";
+  echo "<input id=\"minDeclSeconds\" name=\"minDeclSeconds\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $minDeclSeconds .  "\" />&nbsp;&quot;&nbsp;"; 
+  echo "</td>";
+// MAXIMUM DECLINATION
+  $errorclass=($maxDeclDegreesError || $maxDeclMinutesError || $maxDeclSecondsError);
+  echo "<td class=\"fieldname".($errorclass?" errorclass":"")."\">".LangQueryObjectsField10."</td>";
+  echo "<td>";
   if($maxDeclDegrees=='')
     if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount)&&($_SESSION['QobjParams']['maxdecl']!==''))
       $maxDeclDegrees=(int)($_SESSION['QobjParams']['maxdecl']);
@@ -171,17 +156,16 @@ echo "<td class=\"fieldname".(($pageError)?" errorclass":"")."\">";
   if($maxDeclSeconds=='')
     if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount)&&($_SESSION['QobjParams']['maxdecl']!==''))
       $maxDeclSeconds=round(abs($_SESSION['QobjParams']['maxdecl']*3600)) % 60;
-  echo("<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"maxDeclDegrees\" size=\"3\" value=\"" . $maxDeclDegrees .  "\" />&nbsp;&deg;&nbsp;");
-  echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"maxDeclMinutes\" size=\"2\" value=\"" . $maxDeclMinutes .  "\" />&nbsp;&#39;&nbsp;");
-  echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"maxDeclSeconds\" size=\"2\" value=\"" . $maxDeclSeconds .  "\" />&nbsp;&quot;&nbsp;");
-  echo("</td>");
-  echo("</tr>");
-  
-  echo("<tr>");
-  // MINIMUM RIGHT ASCENSION
-  echo("<td class=\"fieldname".(($minRAHoursError || $minRAMinutesError || $minRASecondsError)?" errorclass":"")."\">");
-  echo LangQueryObjectsField7;
-  echo("</td><td>");
+  echo "<input id=\"maxDeclDegrees\" name=\"maxDeclDegrees\" type=\"text\" class=\"inputfield\" maxlength=\"3\" size=\"3\" value=\"" . $maxDeclDegrees .  "\" />&nbsp;&deg;&nbsp;";
+  echo "<input id=\"maxDeclMinutes\" name=\"maxDeclMinutes\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $maxDeclMinutes .  "\" />&nbsp;&#39;&nbsp;";
+  echo "<input id=\"maxDeclSeconds\" name=\"maxDeclSeconds\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $maxDeclSeconds .  "\" />&nbsp;&quot;&nbsp;";
+  echo "</td>";
+  echo "</tr>";
+// MINIMUM RIGHT ASCENSION
+  echo "<tr>";
+  $errorclass=($minRAHoursError || $minRAMinutesError || $minRASecondsError);
+  echo "<td class=\"fieldname".($errorclass?" errorclass":"")."\">".LangQueryObjectsField7."</td>";
+  echo "<td>";
   if($minRAHours=='')
     if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount)&&($_SESSION['QobjParams']['minra']!==''))
       $minRAHours=(int)($_SESSION['QobjParams']['minra']);
@@ -191,14 +175,14 @@ echo "<td class=\"fieldname".(($pageError)?" errorclass":"")."\">";
   if($minRASeconds=='')
     if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount)&&($_SESSION['QobjParams']['minra']!==''))
       $minRASeconds=round(abs($_SESSION['QobjParams']['minra']*3600)) % 60;
-  echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"minRAHours\" size=\"2\" value=\"" . $minRAHours .  "\" />&nbsp;h&nbsp;");
-  echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"minRAMinutes\" size=\"2\" value=\"" . $minRAMinutes .  "\" />&nbsp;m&nbsp;");
-  echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"minRASeconds\" size=\"2\" value=\"" . $minRASeconds .  "\" />&nbsp;s&nbsp;");
-  echo("</td>");
-    // MAXIMUM RIGHT ASCENSION
-  echo("<td class=\"fieldname".(($maxRAHoursError || $maxRAMinutesError || $maxRASecondsError)?" errorclass":"")."\">");
-  echo LangQueryObjectsField8;  
-  echo("</td><td>");
+  echo "<input id=\"minRAHours\" name=\"minRAHours\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $minRAHours .  "\" />&nbsp;h&nbsp;";
+  echo "<input id=\"minRAMinutes\" name=\"minRAMinutes\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $minRAMinutes .  "\" />&nbsp;m&nbsp;";
+  echo "<input id=\"minRASeconds\" name=\"minRASeconds\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $minRASeconds .  "\" />&nbsp;s&nbsp;";
+  echo "</td>";
+// MAXIMUM RIGHT ASCENSION
+  $errorclass=($maxRAHoursError || $maxRAMinutesError || $maxRASecondsError);
+  echo "<td class=\"fieldname".($errorclass?" errorclass":"")."\">".LangQueryObjectsField8."</td>";
+  echo "<td>";
   if($maxRAHours=='')
     if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount)&&($_SESSION['QobjParams']['maxra']!==''))
       $maxRAHours=(int)($_SESSION['QobjParams']['maxra']);
@@ -208,11 +192,21 @@ echo "<td class=\"fieldname".(($pageError)?" errorclass":"")."\">";
   if($maxRASeconds=='')
     if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount)&&($_SESSION['QobjParams']['maxra']!==''))
       $maxRASeconds=round(abs($_SESSION['QobjParams']['maxra']*3600)) % 60;
-  echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"maxRAHours\" size=\"2\" value=\"" . $maxRAHours .  "\" />&nbsp;h&nbsp;");
-  echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"maxRAMinutes\" size=\"2\" value=\"" . $maxRAMinutes .  "\" />&nbsp;m&nbsp;");
-  echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"maxRASeconds\" size=\"2\" value=\"" . $maxRASeconds .  "\" />&nbsp;s&nbsp;");
-  echo("</td>");
-  echo("</tr>");
+  echo "<input id=\"maxRAHours\" name=\"maxRAHours\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $maxRAHours .  "\" />&nbsp;h&nbsp;";
+  echo "<input id=\"maxRAMinutes\" name=\"maxRAMinutes\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $maxRAMinutes .  "\" />&nbsp;m&nbsp;";
+  echo "<input id=\"maxRASeconds\" name=\"maxRASeconds\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $maxRASeconds .  "\" />&nbsp;s&nbsp;";
+  echo "</td>";
+  echo "</tr>";
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   echo("<tr>");
   // MAGNITUDE BRIGHTER THAN
@@ -389,5 +383,7 @@ echo "</tr>";
 echo "</table>";
 echo "</div>";
 echo "</form>";
+echo "<hr />";
+echo '<input type="button" onclick="clearFields();" value="Clear fields"/>';
 echo "</div>";
 ?>
