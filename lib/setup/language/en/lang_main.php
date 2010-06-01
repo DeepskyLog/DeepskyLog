@@ -6,6 +6,8 @@ define("LangDescriptioncontains","NGC Decription contains:");
 
 define("LangShowAll",            'show all');
 
+define("LangOn",                 "on");
+define("LangFrom",               "from");
 define('LangTo',                 ' to ');
 
 define("LangNoExcludeIfSeen",    'but not if seen');
@@ -159,6 +161,8 @@ define("LangMoonMenuNewMoon"                              ,"New moon");
 define("LangMoonMenuActualMoon"                           ,"Actual moon:");
 define("LangMoonRise"                                     ,"Rise");
 define("LangMoonSet"                                      ,"Set");
+define("LangMoon"                                         ,"Moon");
+define("LangMoonNight"                                    ,"Night");
 define("LangMoonSun"                                      ,"Sun");
 define("LangMoonTwilight"                                 ,"Twilight");
 define("LangMoonNaut"                                     ,"Naut.");

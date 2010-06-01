@@ -7,6 +7,8 @@ define("LangDescriptioncontains","Description NGC contient:");
 define("LangShowAll",            'montrez tous');
 
 
+define("LangOn",               "le");
+define("LangFrom",               "de");
 define("LangTo",                 ' à ');
 
 define("LangNoExcludeIfSeen",    'mais ne pas exclure si vu');
@@ -162,6 +164,8 @@ define("LangMoonMenuNewMoon"                              ,"New moon");
 define("LangMoonMenuActualMoon"                           ,"Huidige maan:");
 define("LangMoonRise"                                     ,"Op");
 define("LangMoonSet"                                      ,"Onder");
+define("LangMoon"                                         ,"Lune");
+define("LangMoonNight"                                    ,"Nuit");
 define("LangMoonSun"                                      ,"Soleil");
 define("LangMoonTwilight"                                 ,"Twilight");
 define("LangMoonNaut"                                     ,"Naut.");

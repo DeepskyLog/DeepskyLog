@@ -2,10 +2,13 @@
 
 // TO DO:
 
+
 define("LangExclude",            "Uitgezonderd:");
 define("LangDescriptioncontains","NGC omschrijving bevat:");
 define("LangShowAll",            'toon alle');
 
+define("LangOn",                 'op');
+define("LangFrom",               "van");
 define("LangTo",                 ' tot ');
 define("LangNoExcludeIfSeen",    'maar niet uitsluiten wanneer gezien');
 
@@ -157,6 +160,8 @@ define("LangMoonMenuNewMoon"                              ,"Nieuwe maan");
 define("LangMoonMenuActualMoon"                           ,"Huidige maan:");
 define("LangMoonRise"                                     ,"Op");
 define("LangMoonSet"                                      ,"Onder");
+define("LangMoon"                                         ,"Maan");
+define("LangMoonNight"                                    ,"Nacht");
 define("LangMoonSun"                                      ,"Zon");
 define("LangMoonTwilight"                                 ,"Schemering");
 define("LangMoonNaut"                                     ,"Naut.");

@@ -25,7 +25,7 @@ $tzone = "GMT";
 $dateTimeText=date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear));
 echo LangMoonMenuTitle."<br /><span class=\"menuText\" style=\"font-weight:normal;\">";
 if($menuMoon!="collapsed")
-  echo"(op ".$dateTimeText.")";
+  echo"(".LangOn." ".$dateTimeText.")";
 echo "</span>"."</p>";
 
   
@@ -154,24 +154,24 @@ if($menuMoon!="collapsed") {
     */
     echo "<table class=\"centered\">";
     echo "<tr class=\"menuText\">";
-    echo "<th>"."Nacht"."</th>"."<th>"."van"."</th>"."<th>"."tot"."</th>";
+    echo "<th>".LangMoonNight."</th>"."<th>".LangFrom."</th>"."<th>".LangTo."</th>";
     echo "</tr>";
     echo "<tr>";
-    echo "<td>"."Maan"."</td>"."<td>".$_SESSION['efemerides']['moon0']."</td>"."<td>".$_SESSION['efemerides']['moon2']."</td>";
+    echo "<td>".LangMoon."</td>"."<td>".$_SESSION['efemerides']['moon0']."</td>"."<td>".$_SESSION['efemerides']['moon2']."</td>";
     echo "</tr>";
     echo "<tr>";
-    echo "<td>"."Zon"."</td>"."<td>".$_SESSION['efemerides']['sset']."</td>"."<td>".$_SESSION['efemerides']['srise']."</td>";
+    echo "<td>".LangMoonSun."</td>"."<td>".$_SESSION['efemerides']['sset']."</td>"."<td>".$_SESSION['efemerides']['srise']."</td>";
     echo "</tr>";
     echo "<tr>";
-    echo "<td>"."Naut"."</td>"."<td>".$_SESSION['efemerides']['naute']."</td>"."<td>".$_SESSION['efemerides']['nautb']."</td>";
+    echo "<td>".LangMoonNaut."</td>"."<td>".$_SESSION['efemerides']['naute']."</td>"."<td>".$_SESSION['efemerides']['nautb']."</td>";
     echo "</tr>";
     echo "<tr>";
-    echo "<td>"."Astro"."</td>"."<td>".$_SESSION['efemerides']['astroe']."</td>"."<td>".$_SESSION['efemerides']['astrob']."</td>";
+    echo "<td>".LangMoonAstro."</td>"."<td>".$_SESSION['efemerides']['astroe']."</td>"."<td>".$_SESSION['efemerides']['astrob']."</td>";
     echo "</tr>";
     echo "</table>";
     
     $file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
-    echo "<p><span class=\"menuText\">".LangMoonMenuActualMoon."&nbsp;"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" /></span><p />";
+    echo "<p><span class=\"menuText\">".LangMoonMenuActualMoon."&nbsp;"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" /></span></p>";
     echo "<span class=\"menuText\">".$nextNewMoonText."</span><br />";
     
   }

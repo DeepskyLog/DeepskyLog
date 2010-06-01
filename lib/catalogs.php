@@ -162,6 +162,8 @@ class catalogs
       $thenewcatalog='Fein';
     if($thenewcatalog=='HGC')
       $thenewcatalog='Hickson';
+    if($thenewcatalog=='HCG')
+      $thenewcatalog='Hickson';
     if($thenewcatalog=='MARKARIAN')
       $thenewcatalog='Mrk';
     if($thenewcatalog=='MARK')
@@ -170,14 +172,13 @@ class catalogs
       $thenewcatalog='Pal';
     if($thenewcatalog=='PEREZ-P...')
       $thenewcatalog='PK';
-    if($thenewcatalog=='RRUBRECHT') // ? Ruprecht ?
+    if($thenewcatalog=='RUBRECHT') // ? Ruprecht ?
       $thenewcatalog='Ru';
     if($thenewcatalog=='ST')
       $thenewcatalog='Stock';
     if($thenewcatalog=='TRUMPLER')
       $thenewcatalog='Tr';
-      
-      
+
     if((strpos($theobject,"%")!==FALSE)||(strpos($theobject,"?")!==FALSE))
       return trim($thenewcatalog.' '.$theindex);
   	else

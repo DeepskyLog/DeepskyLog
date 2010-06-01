@@ -19,5 +19,23 @@ function clearFields()
   document.getElementById('maxRAHours').value='';
   document.getElementById('maxRAMinutes').value='';
   document.getElementById('maxRASeconds').value='';
-  alert('Done');
+  document.getElementById('maxMag').value='';
+  document.getElementById('minMag').value='';
+  document.getElementById('maxSB').value='';
+  document.getElementById('minSB').value='';
+  document.getElementById('minSize').value='';
+  document.getElementById('size_min_units').selectedIndex=0;
+  document.getElementById('maxSize').value='';
+  document.getElementById('size_max_units').selectedIndex=0;
+  document.getElementById('minContrast').value='';
+  document.getElementById('maxContrast').value='';
+  document.getElementById('inList').selectedIndex=0;
+  document.getElementById('descriptioncontains').value='';
+//document.getElementById('notInList').selectedIndex=0;
+  var temp=document.getElementById("temp").value;
+  while((pos=temp.indexOf('/'))>=0)
+  { document.getElementById(temp.substr(0,pos)).checked='';
+    temp=temp.substr(pos+1);
+  }
+  document.getElementById('excludeexceptseen').checked='';
 }
