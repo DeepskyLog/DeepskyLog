@@ -657,9 +657,9 @@ class Observations {
 		if (isset ($queries["maxLat"]) && (strcmp($queries["maxLat"], "") != 0))
 			$sqland .= "AND locations.latitude <= " . $queries["maxLat"] . " ";
 		if (isset ($queries["mindiam1"]) && (strcmp($queries["mindiam1"], "") != 0))
-			$sqland .= "AND (objects.diam1 > \"$diam1\" or objects.diam1 like \"" . $queries["mindiam1"] . "\") ";
+			$sqland .= "AND (objects.diam1 > \"".$queries["mindiam1"]."\" or objects.diam1 like \"" . $queries["mindiam1"] . "\") ";
 		if (isset ($queries["maxdiam1"]) && (strcmp($queries["maxdiam1"], "") != 0))
-			$sqland .= "AND (objects.diam1 <= \"$diam1\" or objects.diam1 like \"" . $queries["maxdiam1"] . "\") ";
+			$sqland .= "AND (objects.diam1 <= \"".$queries["mindiam1"]."\" or objects.diam1 like \"" . $queries["maxdiam1"] . "\") ";
 		if (isset ($queries["mindiam2"]) && (strcmp($queries["mindiam2"], "") != 0))
 			$sqland .= "AND (objects.diam2 > \"$diam2\" or objects.diam2 like \"" . $queries["mindiam2"] . "\") ";
 		if (isset ($queries["maxdiam2"]) && (strcmp($queries["maxdiam2"], "") != 0))

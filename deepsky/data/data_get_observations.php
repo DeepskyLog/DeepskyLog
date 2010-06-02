@@ -70,7 +70,8 @@ $query = array("object"           => $object,
                "eyepiece"         => $objUtil->checkGetKey('eyepiece'),
                "hasDrawing"       => $objUtil->checkGetKey('drawings','off'),            
                "languages"        => $selectedLanguages,
-               "minobservation"   => ($objUtil->checkGetKey('newobservations')?$objObserver->getObserverProperty($loggedUser,'lastReadObservationId',0):0));
+               "minobservation"   => ($objUtil->checkGetKey('newobservations')?$objObserver->getObserverProperty($loggedUser,'lastReadObservationId',0):0),
+               "seen"             => $objUtil->checkGetKey('seen','D'));
 //============================================ CHECK TO SEE IF OBSERVATIONS ALREADY FETCHED BEFORE, OTHERWISE FETCH DATA FROM DB ===============================
 $validQobs=false;
 if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])>1)&&array_key_exists('Qobs',$_SESSION)&&(count($_SESSION['Qobs'])>0)&&array_key_exists('QobsMaxCnt',$_SESSION)&&($_SESSION['QobsMaxCnt']==$MaxCnt))

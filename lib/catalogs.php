@@ -133,60 +133,61 @@ class catalogs
   public function checkObject($theobject)
   { $firstspace=strpos($theobject,' ',0);
     if($firstspace!==FALSE)
-    { $thenewcatalog=trim(strtoupper(substr($theobject,0,$firstspace)));
+    { $thenewcatalog0=trim(substr($theobject,0,$firstspace));
       $theindex=trim(substr($theobject,$firstspace+1));
     }
     else
-    { $thenewcatalog=$theobject;
+    { $thenewcatalog0=$theobject;
       $theindex='';
     }
+    $thenewcatalog=strtoupper($thenewcatalog0);
     if($thenewcatalog=='MELOTTE')
-      $thenewcatalog='MEL';
+      $thenewcatalog0='MEL';
     if($thenewcatalog=='ACG')
-      $thenewcatalog='AGC';
+      $thenewcatalog0='AGC';
     if($thenewcatalog=='BARNARD')
-      $thenewcatalog='B';
+      $thenewcatalog0='B';
     if($thenewcatalog=='BERNARD')
-      $thenewcatalog='B';
+      $thenewcatalog0='B';
     if($thenewcatalog=='BERKELEY')
-      $thenewcatalog='Berk';
+      $thenewcatalog0='Berk';
     if($thenewcatalog=='CEDERBALD')
-      $thenewcatalog='Ced';
+      $thenewcatalog0='Ced';
     if($thenewcatalog=='CZ')
-      $thenewcatalog='Czernik';
+      $thenewcatalog0='Czernik';
     if($thenewcatalog=='DOLIDZE')
-      $thenewcatalog='Do';
+      $thenewcatalog0='Do';
     if($thenewcatalog=='DOLIDZE-D...')
-      $thenewcatalog='DoDz';
+      $thenewcatalog0='DoDz';
     if($thenewcatalog=='FEINSTEIN')
-      $thenewcatalog='Fein';
+      $thenewcatalog0='Fein';
     if($thenewcatalog=='HGC')
-      $thenewcatalog='Hickson';
+      $thenewcatalog0='Hickson';
     if($thenewcatalog=='HCG')
-      $thenewcatalog='Hickson';
+      $thenewcatalog0='Hickson';
     if($thenewcatalog=='MARKARIAN')
-      $thenewcatalog='Mrk';
+      $thenewcatalog0='Mrk';
     if($thenewcatalog=='MARK')
-      $thenewcatalog='Mrk';
+      $thenewcatalog0='Mrk';
     if($thenewcatalog=='PALOMAR')
-      $thenewcatalog='Pal';
+      $thenewcatalog0='Pal';
     if($thenewcatalog=='PEREZ-P...')
-      $thenewcatalog='PK';
+      $thenewcatalog0='PK';
     if($thenewcatalog=='RUBRECHT') // ? Ruprecht ?
-      $thenewcatalog='Ru';
+      $thenewcatalog0='Ru';
     if($thenewcatalog=='ST')
-      $thenewcatalog='Stock';
+      $thenewcatalog0='Stock';
     if($thenewcatalog=='TRUMPLER')
-      $thenewcatalog='Tr';
+      $thenewcatalog0='Tr';
 
     if((strpos($theobject,"%")!==FALSE)||(strpos($theobject,"?")!==FALSE))
-      return trim($thenewcatalog.' '.$theindex);
+      return trim($thenewcatalog0.' '.$theindex);
   	else
   	{ $tocheck=array("2MASX","APMUKS(BJ)","BD",'CGCG');
       while(list($key,$value)=each($tocheck))
-        if($thenewcatalog==$value)
+        if(strtoupper($thenewcatalog0)==$value)
           return $value.' '.$this->formatIndex($value,trim($theindex));
-	    return trim($thenewcatalog.' '.$theindex);
+	    return trim($thenewcatalog0.' '.$theindex);
   	}
   }
 }

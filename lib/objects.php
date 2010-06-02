@@ -1561,7 +1561,8 @@ class Objects implements iObjects
 		   { $firstspace=strpos($thenewobject,' ',0);
 		     $thecatalog=substr($thenewobject,0,$firstspace);
 		     $theindex=substr($thenewobject,$firstspace+1);
-		     $sql="UPDATE objectnames SET catalog='".$thecatalog."', catindex='".$theindex."', altname='".$thecatalog." " .$theindex."' WHERE altname='".$theobject."';";
+		     $sql="UPDATE objectnames SET catalog='".addslashes($thecatalog)."', catindex='".addslashes($theindex)."', altname='".addslashes($thecatalog)." " .addslashes($theindex)."' WHERE altname='".addslashes($theobject)."';";
+		     echo "Changed altname: ".$thecatalog.' '.$theindex." <= ".$theobject."\n";
 		     $objDatabase->execSQL($sql);
 		     echo "Changed altname: ".$thecatalog.' '.$theindex." <= ".$theobject."\n";
 		   }
