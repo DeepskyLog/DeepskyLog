@@ -1,82 +1,11 @@
-<?php
-
-// search.php
-// menu which allows the user to search the observation database 
-include_once "../lib/util.php";
-
-$util = new Util();
-$util->checkUserInput();
-
-include_once "../lib/observers.php";
-include_once "../lib/setup/vars.php";
-
-$obs = new Observers;
-
-echo "<table cellpadding=\"0\" cellspacing=\"0\" class=\"moduletable\">\n
-      <tr>\n
-      <th valign=\"top\">\n";
-
-echo (LangSearchMenuTitle);
-
-echo "</th>\n</tr>\n<tr>\n<td>\n
-      <table width=\"100%\" border=\"0\" cellpadding=\"0\" cellspacing=\"0\">\n";
-
-if($loggedUser) // logged in
-{
-   if($obs->getObserverProperty($loggedUser,'role',2) != "2") // user is not in waitlist
-   {
-      if($loggedUser != "admin") // admin doesn't have own observations
-      {
-//      echo "<tr align=\"left\">\n<td>\n<a class=\"mainlevel\" href=\"deepsky/result_query_observations.php?user=" . $loggedUser . "\">";
-//      echo (LangSearchMenuItem1);
-//      echo "</a>\n</td>\n</tr>\n";
-      }
-   } 
+<?php // search.php - menu which allows the user to search the observation database 
+echo "<div class=\"menuDiv\">";
+echo "<p  class=\"menuHead\">"."Search title"."</p>";
+if($loggedUser) {
+  // TODO : Add the action the method utilitiesDispatchIndexAction in lib/util.php 
+  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=new_module_result_query_observations&amp;user=".urlencode($loggedUser)."\">"."New entry 1"."</a><br />";
 }
-
-
-//echo "<tr align=\"left\">\n<td>\n<a href=\"deepsky/all_observations.php\" class=\"mainlevel\">";
-//
-//echo (LangSearchMenuItem2);
-
-//echo "</a>\n</td>\n</tr>\n";
-//
-//echo "<tr align=\"left\">\n<td>\n<a href=\"deepsky/query_observations.php\" class=\"mainlevel\">";
-//
-//echo (LangSearchMenuItem3);
-//
-//echo "</a>\n</td>\n</tr>\n";
-//
-//echo "<tr align=\"left\">\n<td>\n<a href=\"deepsky/view_objects.php\" class=\"mainlevel\">";
-//
-//echo (LangSearchMenuItem4);
-//
-//echo "</a>\n</td>\n</tr>\n";
-//
-//echo "<tr align=\"left\">\n<td>\n<a href=\"deepsky/query_objects.php\" class=\"mainlevel\">";
-//
-//echo (LangSearchMenuItem5);
-//
-//echo "</a>\n</td>\n</tr>\n";
-//
-//echo "<tr align=\"left\">\n<td>\n<a href=\"deepsky/rank_observers.php\" class=\"mainlevel\">";
-//
-//$step1 = 25;
-//
-//echo ($step1 . "&nbsp;" . LangSearchMenuItem6);
-//
-//echo "</a>\n</td>\n</tr>\n";
-//
-//$step2 = 25;
-//
-//echo "<tr align=\"left\">\n<td>\n<a href=\"deepsky/rank_objects.php?number=" . $step2 . "\" class=\"mainlevel\">";
-//
-//echo ($step2 . "&nbsp;" . LangSearchMenuItem7);
-//
-//echo "</a>\n</td>\n</tr>\n";
-
-echo "</table>\n</td>\n
-      </tr>\n
-      </table>\n";
-
+// TODO : Add the action the method utilitiesDispatchIndexAction in lib/util.php 
+echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=new_module_all_observations\" >"."New entry 2"."</a><br />";
+echo "</div>";
 ?>
