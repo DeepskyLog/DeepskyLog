@@ -63,8 +63,7 @@
 		echo "<td class=\"fieldname\">".LangViewObservationField1."</td>";
 		echo "<td>";
 		$catalogs = $objObject->getCatalogs();
-		$catalog=$objUtil->checkGetKey('catalog');
-	  if($catalog=='')
+		if($catalog=$objUtil->checkGetKey('catalog'))
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $catalog=$_SESSION['QobsParams']['catalog'];
 		echo "<select id=\"catalog\" name=\"catalog\" class=\"inputfield\">";
@@ -72,8 +71,7 @@
 		while(list($key, $value) = each($catalogs))
 		  echo "<option".(($value==$catalog)?" selected=\"selected\"":"")." value=\"".$value."\">".$value."</option>";
 		echo "</select>";
-	  $catNumber=$objUtil->checkGetKey('number');
-		if($catNumber=='')
+	  if($catNumber=$objUtil->checkGetKey('number'))
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $catNumber=$_SESSION['QobsParams']['number'];
 		echo "<input id=\"number\" name=\"number\" type=\"text\" class=\"inputfield\" maxlength=\"255\" size=\"40\" value=\"".$catNumber."\" />";
@@ -81,8 +79,7 @@
 	// ATLAS PAGE NUMBER
 		echo "<td class=\"fieldname\">".LangQueryObjectsField12."</td>";
 		echo "<td>";
-		$atlas=$objUtil->checkGetKey('atlas');
-	  if($atlas=='')
+		if($atlas=$objUtil->checkGetKey('atlas'))
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $atlas=$_SESSION['QobsParams']['atlas'];	
 		echo "<select id=\"atlas\" name=\"atlas\" class=\"inputfield\">";
@@ -106,8 +103,7 @@
 		  $cons[$value] = $GLOBALS[$value];
 		asort($cons);
 		reset($cons);
-	  $con=$objUtil->checkGetKey('con');
-	  if($con=='')
+	  if($con=$objUtil->checkGetKey('con'))
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $con=$_SESSION['QobsParams']['con'];	
 		echo "<select name=\"con\" class=\"inputfield\">";
@@ -172,7 +168,7 @@
 		echo "<tr>";
 		echo "<td class=\"fieldname\">".LangQueryObjectsField4."</td>";
 		echo "<td>";
-	  if(($maxMag=$objUtil->checkGetKey('maxMag'))=='')
+	  if(($maxMag=$objUtil->checkGetKey('maxmag'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $maxMag=$_SESSION['QobsParams']['maxmag'];
 		echo "<input id=\"maxmag\" name=\"maxmag\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"".$maxMag."\" />";
@@ -198,7 +194,7 @@
 		echo "<tr>";
 		echo "<td class=\"fieldname\">".LangQueryObjectsField3."</td>";
 		echo "<td>";
-	  if(($minMag=$objUtil->checkGetKey('minMag'))=='')
+	  if(($minMag=$objUtil->checkGetKey('minmag'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $minMag=$_SESSION['QobsParams']['minmag'];
 		echo "<input id=\"minmag\" name=\"minmag\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"".$minMag."\" />";
@@ -224,7 +220,7 @@
 		echo "<tr>";
 	  echo "<td class=\"fieldname\">".LangQueryObjectsField5."</td>";
 		echo "<td>";
-	  if(($minSB=$objUtil->checkGetKey('minSB'))=='')
+	  if(($minSB=$objUtil->checkGetKey('minsb'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $minSB=$_SESSION['QobsParams']['minsb'];
 		echo "<input id=\"minsb\" name=\"minsb\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"".$minSB."\" />";
@@ -250,7 +246,7 @@
 	  echo "<tr>";
 		echo "<td class=\"fieldname\">".LangQueryObjectsField6."</td>";
 		echo "<td>";
-	  if(($maxSB=$objUtil->checkGetKey('maxSB'))=='')
+	  if(($maxSB=$objUtil->checkGetKey('maxsb'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $maxSB=$_SESSION['QobsParams']['maxsb'];
 		echo "<input id=\"maxsb\" name=\"maxsb\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"".$maxSB."\" />";
@@ -274,7 +270,6 @@
 		echo "</tr>";
 	echo "</table>";
 	echo "<hr />";
-
 	echo "<table style=\"width:100%\">";
 	// OBSERVER 
 		echo "<tr>";
@@ -364,146 +359,189 @@
 		echo "<option".($mindiameterunits=='mm'?' selected="selected"':"").">mm</option>";
 		echo "</select>";
 		echo "</td>";
-		echo "</tr>";
-		
+		echo "</tr>";	
 	// MAXIMUM DATE
-	echo("<tr>");
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
-	echo("<a href=\"#\" onclick=\"cal.showNavigationDropdowns();
-	                              cal.setReturnFunction('SetMultipleValuesTillDate');
-															  cal.showCalendar('TillDateAnchor');
-	                              return false;\" 
-										 name=\"TillDateAnchor\" 
-										 id=\"TillDateAnchor\">" . LangTillDate . "</a>"); 
-	echo("</td>");
-	echo("<td>");
-	echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"maxday\" id=\"maxday\" value=\"\" />");
-	echo("&nbsp;");
-	echo("<select name=\"maxmonth\" id=\"maxmonth\" class=\"inputfield\">
-	             <option value=\"\">-----</option>
-	             <option value=\"1\">" . LangNewObservationMonth1 . "</option>
-	             <option value=\"2\">" . LangNewObservationMonth2 . "</option>
-	             <option value=\"3\">" . LangNewObservationMonth3 . "</option>
-	             <option value=\"4\">" . LangNewObservationMonth4 . "</option>
-	             <option value=\"5\">" . LangNewObservationMonth5 . "</option>
-	             <option value=\"6\">" . LangNewObservationMonth6 . "</option>
-	             <option value=\"7\">" . LangNewObservationMonth7 . "</option>
-	             <option value=\"8\">" . LangNewObservationMonth8 . "</option>
-	             <option value=\"9\">" . LangNewObservationMonth9 . "</option>
-	             <option value=\"10\">" . LangNewObservationMonth10 . "</option>
-	             <option value=\"11\">" . LangNewObservationMonth11 . "</option>
-	             <option value=\"12\">" . LangNewObservationMonth12 . "</option>
-	             </select>");
-	echo("&nbsp;");
-	echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" name=\"maxyear\" id=\"maxyear\" value=\"\" />");
-	echo("</td>");
+		echo "<tr>";
+		echo "<td class=\"fieldname\">";
+		echo "<a href=\"#\" onclick=\"cal.showNavigationDropdowns();
+		                              cal.setReturnFunction('SetMultipleValuesTillDate');
+																  cal.showCalendar('TillDateAnchor');
+		                              return false;\" 
+											 name=\"TillDateAnchor\" 
+											 id=\"TillDateAnchor\">" . LangTillDate . "</a>"; 
+		echo "</td>";
+		echo "<td>";
+	  $maxday=$objUtil->checkGetKey('maxday');
+	  if($maxday=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $maxday=substr($_SESSION['QobsParams']['maxdate'],-2);
+		echo "<input id=\"maxday\" name=\"maxday\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"".$maxday."\" />";
+		echo "&nbsp;";
+	  $maxmonth=$objUtil->checkGetKey('maxmonth');
+	  if($maxmonth=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $maxmonth=substr($_SESSION['QobsParams']['maxdate'],-4,2);
+		echo "<select id=\"maxmonth\" name=\"maxmonth\" class=\"inputfield\">
+		             <option value=\"\">-----</option>
+		             <option".($maxmonth=='01'?' selected="selected"':"")." value=\"01\">" . LangNewObservationMonth1 . "</option>
+		             <option".($maxmonth=='02'?' selected="selected"':"")." value=\"02\">" . LangNewObservationMonth2 . "</option>
+		             <option".($maxmonth=='03'?' selected="selected"':"")." value=\"03\">" . LangNewObservationMonth3 . "</option>
+		             <option".($maxmonth=='04'?' selected="selected"':"")." value=\"04\">" . LangNewObservationMonth4 . "</option>
+		             <option".($maxmonth=='05'?' selected="selected"':"")." value=\"05\">" . LangNewObservationMonth5 . "</option>
+		             <option".($maxmonth=='06'?' selected="selected"':"")." value=\"06\">" . LangNewObservationMonth6 . "</option>
+		             <option".($maxmonth=='07'?' selected="selected"':"")." value=\"07\">" . LangNewObservationMonth7 . "</option>
+		             <option".($maxmonth=='08'?' selected="selected"':"")." value=\"08\">" . LangNewObservationMonth8 . "</option>
+		             <option".($maxmonth=='09'?' selected="selected"':"")." value=\"09\">" . LangNewObservationMonth9 . "</option>
+		             <option".($maxmonth=='10'?' selected="selected"':"")." value=\"10\">" . LangNewObservationMonth10 . "</option>
+		             <option".($maxmonth=='11'?' selected="selected"':"")." value=\"11\">" . LangNewObservationMonth11 . "</option>
+		             <option".($maxmonth=='12'?' selected="selected"':"")." value=\"12\">" . LangNewObservationMonth12 . "</option>
+		             </select>";
+		echo "&nbsp;";
+	  $maxyear=$objUtil->checkGetKey('maxyear');
+	  if($maxyear=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $maxyear=substr($_SESSION['QobsParams']['maxdate'],-8,4);
+		echo "<input id=\"maxyear\" name=\"maxyear\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"".$maxyear."\" />";
+		echo "</td>";
 	// MAXIMUM DIAMETER
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
-	echo LangViewObservationField14;
-	echo("</td>
-	      <td>
-	      <input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"maxdiameter\" size=\"10\" />
-	      <select name=\"maxdiameterunits\" class=\"inputfield\"><option>inch</option><option>mm</option></select>
-	      </td>");
-	echo("</tr>");
-	
-	echo("</table>");
-	echo("<hr />");
-	echo("<table width=\"100%\">");
-	
-	
-	echo("<tr>");
+		echo "<td class=\"fieldname\">".LangViewObservationField14."</td>";
+		echo "<td>";
+	  $maxdiameterunits=$objUtil->checkGetKey('maxdiameterunits');
+	  if(($maxdiameter=$objUtil->checkGetKey('maxdiameter'))=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	    { $maxdiameter=$_SESSION['QobsParams']['maxdiameter'];
+	      $maxdiameterunits="mm";
+	    }
+		echo "<input id=\"maxdiameter\" name=\"maxdiameter\" type=\"text\" class=\"inputfield\" maxlength=\"64\" size=\"10\" value=\"".$maxdiameter."\" />";
+		echo "<select name=\"maxdiameterunits\" class=\"inputfield\">";
+		echo "<option".($maxdiameterunits=='inch'?' selected="selected"':"").">inch</option>";
+		echo "<option".($maxdiameterunits=='mm'?' selected="selected"':"").">mm</option>";
+		echo "</select>";
+		echo "</td>";
+		echo "</tr>";
+	echo "</table>";
+	echo "<hr />" ;
+	echo "<table>";
 	// SITE 
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
-	echo LangViewObservationField4;
-	echo("</td><td style=\"width:25%\">");
-	echo("<select name=\"site\" class=\"inputfield\">");
-	echo("<option value=\"\">-----</option>"); // empty field
-	$sites = $objLocation->getSortedLocations('name');
-	while(list($key, $value) = each($sites))
-	  if($key != 0) // remove empty location in database
-	    echo("<option value=\"$value\">".$objLocation->getLocationPropertyFromId($value,'name')."</option>");
-	echo("</select>");
-	echo("</td>");
-	echo("<td style=\"width:25%\"> &nbsp; </td> <td style=\"width:25%\"> &nbsp;</td>"); 
-	echo("</tr>");
-	
-	echo("<tr>");
+		echo "<tr>";
+		echo "<td class=\"fieldname\">".LangViewObservationField4."</td>";
+		echo "<td>";
+		$sites = $objLocation->getSortedLocations('name');
+	  $site=$objUtil->checkGetKey('site');
+	  if($site=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $site=$_SESSION['QobsParams']['location'];
+		echo "<select id=\"site\" name=\"site\" class=\"inputfield\">";
+		echo "<option value=\"\">-----</option>";
+		while(list($key, $value) = each($sites))
+		  if($key)
+		    echo "<option".(($value==$site)?' selected="selected"':'')." value=\"".$value."\">".$objLocation->getLocationPropertyFromId($value,'name')."</option>";
+		echo "</select>";
+		echo "</td>";
+		echo "<td>"."&nbsp;"."</td>";
+		echo "<td>"."&nbsp;"."</td>"; 
+		echo "</tr>";
 	// MINIMUM Latitude
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
-	echo LangQueryObjectsField15;
-	echo("</td><td style=\"width:25%\">");
-	echo("<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"minLatDegrees\" size=\"3\" value=\"\" />&nbsp;&deg;&nbsp;");
-	echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"minLatMinutes\" size=\"2\" value=\"\" />&nbsp;&#39;&nbsp;");
-	echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"minLatSeconds\" size=\"2\" value=\"\" />&nbsp;&quot;&nbsp;");
-	echo("</td>");
+		echo "<tr>";
+		echo "<td class=\"fieldname\">".LangQueryObjectsField15."</td>";
+		echo "<td>";
+	  if(($minLatDegrees=$objUtil->checkGetKey('minLatDegrees'))=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount)&&($_SESSION['QobsParams']['minLat']!==''))
+	      $minLatDegrees=(int)($_SESSION['QobsParams']['minLat']);
+	  if(($minLatMinutes=$objUtil->checkGetKey('minLatMinutes'))=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount)&&($_SESSION['QobsParams']['minLat']!==''))
+	      $minLatMinutes=(int)(abs($_SESSION['QobsParams']['minLat']*60) % 60);
+	  if(($minLatSeconds=$objUtil->checkGetKey('minLatSeconds'))=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount)&&($_SESSION['QobsParams']['minLat']!==''))
+	      $minLatSeconds=round(abs($_SESSION['QobsParams']['minLat']*3600)) % 60;
+		echo "<input id=\"minLatDegrees\" name=\"minLatDegrees\" type=\"text\" class=\"inputfield\" maxlength=\"3\" size=\"3\" value=\"".$minLatDegrees."\" />&nbsp;&deg;&nbsp;";
+		echo "<input id=\"minLatMinutes\" name=\"minLatMinutes\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"".$minLatMinutes."\" />&nbsp;&#39;&nbsp;";
+		echo "<input id=\"minLatSeconds\" name=\"minLatSeconds\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"".$minLatSeconds."\" />&nbsp;&quot;&nbsp;";
+		echo "</td>" ;
 	// MINIMUM LIMITING MAGNITUDE
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
-	echo LangViewObservationField25;
-	echo("</td><td style=\"width:25%\">");
-	echo("<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"minlimmag\" size=\"4\" value=\"\" />");
-	echo("</td>");
-	echo("</tr>");
-	
-	echo("<tr>");
+		echo "<td class=\"fieldname\">".LangViewObservationField25."</td>";
+		echo "<td>";
+	  $minlimmag=$objUtil->checkGetKey('minlimmag');
+	  if($minlimmag=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $minlimmag=$_SESSION['QobsParams']['minlimmag'];
+		echo "<input id=\"minlimmag\" name=\"minlimmag\" type=\"text\" class=\"inputfield\" maxlength=\"3\" size=\"4\" value=\"".$minlimmag."\" />";
+		echo "</td>";
+		echo "</tr>";
 	// MAXIMUM latitude
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
-	echo LangQueryObjectsField16;
-	echo("</td><td style=\"width:25%\">");
-	echo("<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"maxLatDegrees\" size=\"3\" value=\"\" />&nbsp;&deg;&nbsp;");
-	echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"maxLatMinutes\" size=\"2\" value=\"\" />&nbsp;&#39;&nbsp;");
-	echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" name=\"maxLatSeconds\" size=\"2\" value=\"\" />&nbsp;&quot;&nbsp;");
-	echo("</td>");
+  	echo "<tr>";
+		echo "<td class=\"fieldname\">".LangQueryObjectsField16."</td>";
+		echo "<td>";
+	  if(($maxLatDegrees=$objUtil->checkGetKey('maxLatDegrees'))=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount)&&($_SESSION['QobsParams']['maxLat']!==''))
+	      $maxLatDegrees=(int)($_SESSION['QobsParams']['maxLat']);
+	  if(($maxLatMinutes=$objUtil->checkGetKey('maxLatMinutes'))=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount)&&($_SESSION['QobsParams']['maxLat']!==''))
+	      $maxLatMinutes=(int)(abs($_SESSION['QobsParams']['maxLat']*60) % 60);
+	  if(($maxLatSeconds=$objUtil->checkGetKey('maxLatSeconds'))=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount)&&($_SESSION['QobsParams']['maxLat']!==''))
+	      $maxLatSeconds=round(abs($_SESSION['QobsParams']['maxLat']*3600)) % 60;
+		echo "<input id=\"maxLatDegrees\" name=\"maxLatDegrees\" type=\"text\" class=\"inputfield\" maxlength=\"3\" size=\"3\" value=\"".$maxLatDegrees."\" />&nbsp;&deg;&nbsp;";
+		echo "<input id=\"maxLatMinutes\" name=\"maxLatMinutes\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"".$maxLatMinutes."\" />&nbsp;&#39;&nbsp;";
+		echo "<input id=\"maxLatSeconds\" name=\"maxLatSeconds\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"".$maxLatSeconds."\" />&nbsp;&quot;&nbsp;";
+		echo "</td>" ;
 	// MAXIMUM LIMITING MAGNITUDE
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
-	echo LangViewObservationField26;
-	echo("</td><td style=\"width:25%\">");
-	echo("<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"maxlimmag\" size=\"4\" value=\"\" />");
-	echo("</td>");
-	echo("</tr>");
-	
-	echo("<tr>");
+		echo "<td class=\"fieldname\">".LangViewObservationField26."</td>";
+		echo "<td>";
+	  $maxlimmag=$objUtil->checkGetKey('maxlimmag');
+	  if($maxlimmag=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $maxlimmag=$_SESSION['QobsParams']['maxlimmag'];
+		echo "<input id=\"maxlimmag\" name=\"maxlimmag\" type=\"text\" class=\"inputfield\" maxlength=\"3\" size=\"4\" value=\"".$maxlimmag."\" />";
+		echo "</td>";
+		echo "</tr>";
 	// MINIMUM SEEING
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
-	echo LangViewObservationField27;
-	echo("</td><td style=\"width:25%\">");
-	echo("<select name=\"minseeing\" class=\"inputfield\"><option value=\"\">-----</option>");
-	// EXCELLENT
-	echo("<option value=\"1\">".SeeingExcellent."</option>");
-	// GOOD
-	echo("<option value=\"2\">".SeeingGood."</option>");
-	// MODERATE
-	echo("<option value=\"3\">".SeeingModerate."</option>");
-	// POOR
-	echo("<option value=\"4\">".SeeingPoor."</option>");
-	// BAD
-	echo("<option value=\"5\">".SeeingBad."</option>");
-	echo("</select></td>");
+		echo "<tr>";
+		echo "<td class=\"fieldname\">".LangViewObservationField27."</td>";
+		echo "<td>";
+	  $minseeing=$objUtil->checkGetKey('minseeing');
+	  if($minseeing=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $minseeing=$_SESSION['QobsParams']['minseeing'];
+		echo "<select id=\"minseeing\" name=\"minseeing\" class=\"inputfield\">";
+		echo "<option value=\"\">-----</option>";
+    echo "<option".(($minseeing==1)?' selected="selected"':'')." value=\"1\">".SeeingExcellent."</option>";  // EXCELLENT
+	  echo "<option".(($minseeing==2)?' selected="selected"':'')." value=\"2\">".SeeingGood."</option>";	     // GOOD
+    echo "<option".(($minseeing==3)?' selected="selected"':'')." value=\"3\">".SeeingModerate."</option>";	 // MODERATE
+    echo "<option".(($minseeing==4)?' selected="selected"':'')." value=\"4\">".SeeingPoor."</option>";       // POOR
+	  echo "<option".(($minseeing==5)?' selected="selected"':'')." value=\"5\">".SeeingBad."</option>" ;	     // BAD	
+	  echo "</select>";
+	  echo "</td>";
 	// MAXIMUM SEEING
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
-	echo LangViewObservationField28;
-	echo("</td><td style=\"width:25%\">");
-	echo("<select name=\"maxseeing\" class=\"inputfield\"><option value=\"\">-----</option>");
-	// EXCELLENT
-	echo("<option value=\"1\">".SeeingExcellent."</option>");
-	// GOOD
-	echo("<option value=\"2\">".SeeingGood."</option>");
-	// MODERATE
-	echo("<option value=\"3\">".SeeingModerate."</option>");
-	// POOR
-	echo("<option value=\"4\">".SeeingPoor."</option>");
-	// BAD
-	echo("<option value=\"5\">".SeeingBad."</option>");
-	echo("</select></td>");
-	echo("</tr>");
-	
-	echo("</table>");
-	echo("<hr />");
-	echo("<table width=\"100%\">");
-	echo "<tr>";
+		echo "<td class=\"fieldname\">".LangViewObservationField28."</td>";
+		echo "<td>";
+	  $maxseeing=$objUtil->checkGetKey('maxseeing');
+	  if($maxseeing=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $maxseeing=$_SESSION['QobsParams']['maxseeing'];
+		echo "<select id=\"maxseeing\" name=\"maxseeing\" class=\"inputfield\">";
+		echo "<option value=\"\">-----</option>";
+		echo "<option".(($maxseeing==1)?' selected="selected"':'')." value=\"1\">".SeeingExcellent."</option>";		// EXCELLENT
+		echo "<option".(($maxseeing==2)?' selected="selected"':'')." value=\"2\">".SeeingGood."</option>";	      // GOOD
+		echo "<option".(($maxseeing==3)?' selected="selected"':'')." value=\"3\">".SeeingModerate."</option>"; 		// MODERATE
+		echo "<option".(($maxseeing==4)?' selected="selected"':'')." value=\"4\">".SeeingPoor."</option>";     		// POOR
+		echo "<option".(($maxseeing==5)?' selected="selected"':'')." value=\"5\">".SeeingBad."</option>";		      // BAD
+		echo "</select>";
+		echo "</td>";
+		echo "</tr>";
+	echo "</table>";
+	echo "<hr />";
+	echo "<table>";
 	// DRAWINGS
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">". LangQueryObservationsMessage1 . "</td>");
-	echo("<td style=\"width:25%\"><input type=\"checkbox\" class=\"inputfield\" name=\"drawings\" /></td>");
+		echo "<tr>";
+		echo "<td class=\"fieldname\">". LangQueryObservationsMessage1."</td>";
+		echo "<td>";
+	  $drawings=$objUtil->checkGetKey('drawings');
+	  if($drawings=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $drawings=$_SESSION['QobsParams']['hasDrawing'];
+		echo "<input id=\"drawings\" name=\"drawings\" type=\"checkbox\" class=\"inputfield\" ".($drawings?' checked="on"':"")."/>";
+		echo "</td>";
 	// MINIMUM VISIBILITY
 	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
 	echo LangViewObservationField23;
