@@ -1,4 +1,5 @@
 <?php
+
 $MaxCnt=$objObservation->getMaxObservation();
 //=========================================================================================== LOOKING FOR SPECIFIC OBJECT, OR LOOKING FOR SOME OTHER CHARACTERISTIC ============================================================
 if(array_key_exists('number',$_GET) && $_GET['number'])
@@ -32,6 +33,7 @@ if((!count($selectedLanguages))&&$objUtil->checkGetKey('myLanguages'))
     ||((!$loggedUser)&&($key==$_SESSION['lang'])))
       $selectedLanguages[]=$key;
 }
+
 $query = array("object"           => $object,
                "catalog"          => $objUtil->checkGetKey('catalog'),
                "number"           => $objUtil->checkGetKey('number'),
@@ -71,7 +73,8 @@ $query = array("object"           => $object,
                "hasDrawing"       => $objUtil->checkGetKey('drawings','off'),            
                "languages"        => $selectedLanguages,
                "minobservation"   => ($objUtil->checkGetKey('newobservations')?$objObserver->getObserverProperty($loggedUser,'lastReadObservationId',0):0),
-               "seen"             => $objUtil->checkGetKey('seen','D'));
+               "seen"             => $objUtil->checkGetKey('seen','D'),
+               "includefile"      => $includeFile);
 //============================================ CHECK TO SEE IF OBSERVATIONS ALREADY FETCHED BEFORE, OTHERWISE FETCH DATA FROM DB ===============================
 $validQobs=false;
 if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])>1)&&array_key_exists('Qobs',$_SESSION)&&(count($_SESSION['Qobs'])>0)&&array_key_exists('QobsMaxCnt',$_SESSION)&&($_SESSION['QobsMaxCnt']==$MaxCnt))
@@ -82,7 +85,6 @@ while($validQobs && (list($key,$value) = each($_SESSION['QobsParams'])))
 while($validQobs && (list($key,$value) = each($query)))
  if(!array_key_exists($key,$_SESSION['QobsParams'])||($value!=$_SESSION['QobsParams'][$key]))
    $validQobs=false;
-
 if(!$validQobs)
 { $_SESSION['Qobs']=$objObservation->getObservationFromQuery($query, $objUtil->checkGetKey('seen','D'),$objUtil->checkGetKey('exactinstrumentlocation',0));
   $_SESSION['QobsParams']=$query; 

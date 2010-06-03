@@ -76,10 +76,13 @@ class Utils implements iUtils
   }
   public  function checkGetTimeOrDegrees($hr,$min,$sec)
   { if($this->checkGetKey($hr).$this->checkGetKey($min).$this->checkGetKey($sec))
-      if(substr($this->checkGetKey($hr),0,1)=="-")
+    {  if(substr($this->checkGetKey($hr),0,1)=="-")
 	      return -(abs($this->checkGetKey($hr,0))+($this->checkGetKey($min,0)/60)+($this->checkGetKey($sec,0)/3600));
 			else
 	      return $this->checkGetKey($hr,0)+($this->checkGetKey($min,0)/60)+($this->checkGetKey($sec,0)/3600);
+    }
+    else
+      return '';
   }
   public  function checkLimitsInclusive($value,$low,$high)
 	{ return(($value>=$low)&&($value<=$high));

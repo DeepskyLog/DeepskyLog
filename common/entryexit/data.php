@@ -78,6 +78,6 @@ else
 	}
 	if($includeFile=='deepsky/content/selected_observations2.php')
 	{  require_once 'deepsky/data/data_get_observations.php';
-	}
+	}	
 }
 ?>

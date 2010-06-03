@@ -1,7 +1,11 @@
 <?php
 	// setup_observations_query.php
 	// interface to query observations
-	
+
+  $QobsParamsCount=0;
+	if(array_key_exists('QobsParams',$_SESSION))
+    if(!(($_SESSION['QobsParams']['mindate']==date('Ymd', strtotime('-1 year')))&&($_SESSION['QobsParams']['catalog']='%')))
+      $QobsParamsCount=41;
 	echo "	<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/CalendarPopupCC.js\"></script>";
 	echo "	<script type=\"text/javascript\" >";
 	echo "	var cal = new CalendarPopup();";
@@ -19,7 +23,6 @@
 	echo "	}";
 	echo "	</script>";
 	
-	$QobsParamsCount=40;
 	if($objUtil->checkGetKey('object'))
 	  $entryMessage.=LangInstructionsNoObjectFound.$_GET['object'];
 	$_SESSION['result'] = "";
@@ -232,7 +235,7 @@
 	  $size_min_units=$objUtil->checkGetKey('size_min_units');
 	  if(($minSize=$objUtil->checkGetKey('minsize'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
-	    { $minSize=$_SESSION['QobsParams']['mindiameter'];
+	    { $minSize=$_SESSION['QobsParams']['mindiam1'];
 	      $size_min_units="sec";
 	    }
 		echo "<input id=\"minsize\" name=\"minsize\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"".$minSize."\" />";
@@ -258,7 +261,7 @@
 	  $size_max_units=$objUtil->checkGetKey('size_max_units');
 	  if(($maxSize=$objUtil->checkGetKey('maxsize'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
-	    { $maxSize=$_SESSION['QobsParams']['maxdiameter'];
+	    { $maxSize=$_SESSION['QobsParams']['maxdiam1'];
 	      $size_max_units="sec";
 	    }
 		echo "<input id=\"maxsize\" name=\"maxsize\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"".$maxSize."\" />";
@@ -271,76 +274,100 @@
 		echo "</tr>";
 	echo "</table>";
 	echo "<hr />";
+
 	echo "<table style=\"width:100%\">";
-	
-	echo("<tr>");
 	// OBSERVER 
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
-	echo LangViewObservationField2;
-	echo("</td><td style=\"width:25%\">");
-	echo("<select name=\"observer\" class=\"inputfield\">");
-	echo("<option value=\"\">-----</option>"); // empty field
-	$obs = $objObserver->getPopularObserversByName();
-	while(list($key, $value) = each($obs))
-	   echo("<option value=\"$key\">".$value."</option>");
-	echo("</select>");
-	echo("</td>");
+		echo "<tr>";
+		echo "<td class=\"fieldname\">".LangViewObservationField2."</td>";
+		echo "<td>";
+	  $observer=$objUtil->checkGetKey('observer');
+	  if($observer=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $observer=$_SESSION['QobsParams']['observer'];
+		echo "<select id=\"observer\" name=\"observer\" class=\"inputfield\">";
+		echo "<option value=\"\">-----</option>";
+		$obs = $objObserver->getPopularObserversByName();
+		while(list($key, $value) = each($obs))
+		   echo "<option".($key==$observer?' selected="selected"':'')." value=\"".$key."\">".$value."</option>";
+		echo "</select>";
+		echo "</td>";
 	// INSTRUMENT 
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
-	echo LangViewObservationField3;
-	echo("</td><td>");
-	echo("<select name=\"instrument\" class=\"inputfield\">");
-	echo("<option value=\"\">-----</option>"); // empty field
-	$inst = $objInstrument->getSortedInstrumentsList('name');
-	while(list($key, $value) = each($inst))
-	  echo("<option value=\"".$key."\">".$value."</option>");
-	echo("</select>");
-	echo("</td>");
-	echo("</tr>");
-	
-	echo("<tr>");
+		echo "<td class=\"fieldname\">".LangViewObservationField3."</td>";
+		echo "<td>";
+		$inst = $objInstrument->getSortedInstrumentsList('name');
+	  $instrument=$objUtil->checkGetKey('instrument');
+	  if($instrument=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $instrument=$_SESSION['QobsParams']['instrument'];
+		echo "<select id=\"instrument\" name=\"instrument\" class=\"inputfield\">";
+		echo "<option value=\"\">-----</option>";
+		while(list($key,$value)=each($inst))
+		  echo "<option".($key==$instrument?' selected="selected"':'')." value=\"".$key."\">".$value."</option>";
+		echo "</select>";
+		echo "</td>";
+		echo "</tr>";
 	// MINIMUM DATE
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
-	echo("<a href=\"#\" onclick=\"cal.showNavigationDropdowns();
-	                             cal.setReturnFunction('SetMultipleValuesFromDate');
-															 cal.showCalendar('FromDateAnchor');
-	                             return false;\" 
-										 name=\"FromDateAnchor\" 
-										 id=\"FromDateAnchor\">" . LangFromDate . "</a>"); 
-	echo("</td>");
-	echo("<td>");
-	echo("<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"minday\" id=\"minday\" value=\"\" />");
-	echo("&nbsp;");
-	echo("<select name=\"minmonth\" id=\"minmonth\" class=\"inputfield\">
-	             <option value=\"\">-----</option>
-	             <option value=\"1\">" . LangNewObservationMonth1 . "</option>
-	             <option value=\"2\">" . LangNewObservationMonth2 . "</option>
-	             <option value=\"3\">" . LangNewObservationMonth3 . "</option>
-	             <option value=\"4\">" . LangNewObservationMonth4 . "</option>
-	             <option value=\"5\">" . LangNewObservationMonth5 . "</option>
-	             <option value=\"6\">" . LangNewObservationMonth6 . "</option>
-	             <option value=\"7\">" . LangNewObservationMonth7 . "</option>
-	             <option value=\"8\">" . LangNewObservationMonth8 . "</option>
-	             <option value=\"9\">" . LangNewObservationMonth9 . "</option>
-	             <option value=\"10\">" . LangNewObservationMonth10 . "</option>
-	             <option value=\"11\">" . LangNewObservationMonth11 . "</option>
-	             <option value=\"12\">" . LangNewObservationMonth12 . "</option>
-	             </select>");
-	echo("&nbsp;");
-	echo("<input type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" name=\"minyear\" id=\"minyear\" value=\"\" />");
-	echo("</td>");
+		echo "<tr>";
+		echo "<td class=\"fieldname\" align=\"right\" style=\"width:25%\">";
+		echo "<a href=\"#\" onclick=\"cal.showNavigationDropdowns();
+		                             cal.setReturnFunction('SetMultipleValuesFromDate');
+																 cal.showCalendar('FromDateAnchor');
+		                             return false;\" 
+											 name=\"FromDateAnchor\" 
+											 id=\"FromDateAnchor\">".LangFromDate."</a>"; 
+		echo "</td>";
+		echo "<td>";
+	  $minday=$objUtil->checkGetKey('minday');
+	  if($minday=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $minday=substr($_SESSION['QobsParams']['mindate'],-2);
+    echo "<input id=\"minday\" name=\"minday\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"".$minday."\" />";
+		echo "&nbsp;";
+	  $minmonth=$objUtil->checkGetKey('minmonth');
+	  if($minmonth=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $minmonth=substr($_SESSION['QobsParams']['mindate'],-4,2);
+		echo "<select id=\"minmonth\" name=\"minmonth\" class=\"inputfield\">
+		             <option value=\"\">-----</option>
+		             <option".($minmonth=='01'?' selected="selected"':"")." value=\"01\">" . LangNewObservationMonth1 . "</option>
+		             <option".($minmonth=='02'?' selected="selected"':"")." value=\"02\">" . LangNewObservationMonth2 . "</option>
+		             <option".($minmonth=='03'?' selected="selected"':"")." value=\"03\">" . LangNewObservationMonth3 . "</option>
+		             <option".($minmonth=='04'?' selected="selected"':"")." value=\"04\">" . LangNewObservationMonth4 . "</option>
+		             <option".($minmonth=='05'?' selected="selected"':"")." value=\"05\">" . LangNewObservationMonth5 . "</option>
+		             <option".($minmonth=='06'?' selected="selected"':"")." value=\"06\">" . LangNewObservationMonth6 . "</option>
+		             <option".($minmonth=='07'?' selected,="selected"':"")." value=\"07\">" . LangNewObservationMonth7 . "</option>
+		             <option".($minmonth=='08'?' selected="selected"':"")." value=\"08\">" . LangNewObservationMonth8 . "</option>
+		             <option".($minmonth=='09'?' selected="selected"':"")." value=\"09\">" . LangNewObservationMonth9 . "</option>
+		             <option".($minmonth=='10'?' selected="selected"':"")." value=\"10\">" . LangNewObservationMonth10 . "</option>
+		             <option".($minmonth=='11'?' selected="selected"':"")." value=\"11\">" . LangNewObservationMonth11 . "</option>
+		             <option".($minmonth=='12'?' selected="selected"':"")." value=\"12\">" . LangNewObservationMonth12 . "</option>
+		             </select>";
+		echo "&nbsp;";
+	  $minyear=$objUtil->checkGetKey('minyear');
+	  if($minyear=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $minyear=substr($_SESSION['QobsParams']['mindate'],-8,4);
+		echo "<input id=\"minyear\" name=\"minyear\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"".$minyear."\" />";
+		echo "</td>";
 	// MINIMUM DIAMETER
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
-	echo LangViewObservationField13;
-	echo("</td>
-	      <td>
-	      <input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"mindiameter\" size=\"10\" />
-	      <select name=\"mindiameterunits\" class=\"inputfield\"><option>inch</option><option>mm</option></select>
-	      </td>");
-	echo("</tr>");
-	
-	echo("<tr>");
+		echo "<td class=\"fieldname\">".LangViewObservationField13."</td>";
+		echo "<td>";
+	  $mindiameterunits=$objUtil->checkGetKey('mindiameterunits');
+	  if(($mindiameter=$objUtil->checkGetKey('mindiameter'))=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	    { $mindiameter=$_SESSION['QobsParams']['mindiameter'];
+	      $mindiameterunits="mm";
+	    }
+	  echo "<input id=\"mindiameter\" name=\"mindiameter\" type=\"text\" class=\"inputfield\" maxlength=\"64\" size=\"10\" value=\"".$mindiameter."\"/>";
+		echo "<select id=\"mindiameterunits\" name=\"mindiameterunits\" class=\"inputfield\">";
+		echo "<option".($mindiameterunits=='inch'?' selected="selected"':"").">inch</option>";
+		echo "<option".($mindiameterunits=='mm'?' selected="selected"':"").">mm</option>";
+		echo "</select>";
+		echo "</td>";
+		echo "</tr>";
+		
 	// MAXIMUM DATE
+	echo("<tr>");
 	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
 	echo("<a href=\"#\" onclick=\"cal.showNavigationDropdowns();
 	                              cal.setReturnFunction('SetMultipleValuesTillDate');
