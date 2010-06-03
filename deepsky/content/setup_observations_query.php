@@ -1,7 +1,7 @@
 <?php
-	// setup_observations_query.php
-	// interface to query observations
-
+function setup_observations_query()
+{ global $baseURL, $loggedUser, $allLanguages,
+         $objPresentations, $objUtil, $objObserver, $objAtlas, $objObject, $objInstrument, $objLocation;
   $QobsParamsCount=0;
 	if(array_key_exists('QobsParams',$_SESSION))
     if(!(($_SESSION['QobsParams']['mindate']==date('Ymd', strtotime('-1 year')))&&($_SESSION['QobsParams']['catalog']='%')))
@@ -540,77 +540,78 @@
 	  if($drawings=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $drawings=$_SESSION['QobsParams']['hasDrawing'];
-		echo "<input id=\"drawings\" name=\"drawings\" type=\"checkbox\" class=\"inputfield\" ".($drawings?' checked="on"':"")."/>";
+	  echo "<input id=\"drawings\" name=\"drawings\" type=\"checkbox\" class=\"inputfield\" ".($drawings=='on'?' checked="on"':"")."/>";
 		echo "</td>";
 	// MINIMUM VISIBILITY
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
-	echo LangViewObservationField23;
-	echo("</td>
-	      <td>
-	      <select name=\"minvisibility\" class=\"inputfield\"><option value=\"\">-----</option>");
-	// Very simple, prominent object
-	echo("<option value=\"1\">".LangVisibility1."</option>");
-	// Object easily percepted with direct vision
-	echo("<option value=\"2\">".LangVisibility2."</option>");
-	// Object perceptable with direct vision
-	echo("<option value=\"3\">".LangVisibility3."</option>");
-	// Averted vision required to percept object
-	echo("<option value=\"4\">".LangVisibility4."</option>");
-	// Object barely perceptable with averted vision
-	echo("<option value=\"5\">".LangVisibility5."</option>");
-	// Perception of object is very questionable
-	echo("<option value=\"6\">".LangVisibility6."</option>");
-	// Object definitely not seen
-	echo("<option value=\"7\">".LangVisibility7."</option>");
-	echo("</select></td>");
-	echo("</tr>");
-	
+		echo "<td class=\"fieldname\">".LangViewObservationField23."</td>";
+		echo "<td>";
+	  $minvisibility=$objUtil->checkGetKey('minvisibility');
+	  if($minvisibility=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $minvisibility=$_SESSION['QobsParams']['minvisibility'];
+		echo "<select id=\"minvisibility\" name=\"minvisibility\" class=\"inputfield\">";
+		echo "<option value=\"\">-----</option>";
+		echo "<option".($minvisibility==1?' selected="selected"':'')." value=\"1\">".LangVisibility1."</option>";	// Very simple, prominent object
+		echo "<option".($minvisibility==2?' selected="selected"':'')." value=\"2\">".LangVisibility2."</option>";	// Object easily percepted with direct vision
+		echo "<option".($minvisibility==3?' selected="selected"':'')." value=\"3\">".LangVisibility3."</option>";	// Object perceptable with direct vision
+	  echo "<option".($minvisibility==4?' selected="selected"':'')." value=\"4\">".LangVisibility4."</option>";	// Averted vision required to percept object
+	  echo "<option".($minvisibility==5?' selected="selected"':'')." value=\"5\">".LangVisibility5."</option>";	// Object barely perceptable with averted vision
+		echo "<option".($minvisibility==6?' selected="selected"':'')." value=\"6\">".LangVisibility6."</option>";	// Perception of object is very questionable
+		echo "<option".($minvisibility==7?' selected="selected"':'')." value=\"7\">".LangVisibility7."</option>";	// Object definitely not seen
+		echo "</select>";
+		echo "</td>";
+		echo "</tr>";
 	echo("<tr>");
 	// DESCRIPTION
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">". LangQueryObservationsMessage2 . "</td><td style=\"width:25%\">
-	      <input type=\"text\" class=\"inputfield\" maxlength=\"40\" name=\"description\" size=\"35\" value=\"\" />&nbsp;
-	      </td>");
+	  echo "<td class=\"fieldname\">". LangQueryObservationsMessage2 . "</td>";
+	  echo "<td>";
+	  $description=$objUtil->checkGetKey('description');
+	  if($description=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $description=$_SESSION['QobsParams']['description'];
+	  echo "<input id=\"description\" name=\"description\" type=\"text\" class=\"inputfield\" maxlength=\"40\" size=\"35\" value=\"".$description."\" />";
+	  echo "</td>";
 	// MAXIMUM VISIBILITY
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
-	echo LangViewObservationField24;
-	echo("</td>
-	      <td>
-	      <select name=\"maxvisibility\" class=\"inputfield\"><option value=\"\">-----</option>"); 
-	      
-	// Very simple, prominent object
-	echo("<option value=\"1\">".LangVisibility1."</option>");
-	// Object easily percepted with direct vision
-	echo("<option value=\"2\">".LangVisibility2."</option>");
-	
-	// Object perceptable with direct vision
-	echo("<option value=\"3\">".LangVisibility3."</option>");
-	// Averted vision required to percept object
-	echo("<option value=\"4\">".LangVisibility4."</option>");
-	// Object barely perceptable with averted vision
-	echo("<option value=\"5\">".LangVisibility5."</option>");
-	// Perception of object is very questionable
-	echo("<option value=\"6\">".LangVisibility6."</option>");
-	// Object definitely not seen
-	echo("<option value=\"7\">".LangVisibility7."</option>");
-	echo("</select></td><td></td>");
-	echo("</tr>");
-	
-	echo("<tr>");
-	echo("<td class=\"fieldname\" align=\"right\" style=\"width:25%\">");
-	echo(LangChangeVisibleLanguages);
-	echo("</td>");
-	$j=1;
-	while(list($key,$value)=each($allLanguages))
-	{ if($loggedUser)
-	    echo "<td><input type=\"checkbox\" ".((in_array($key,$usedLanguages))?"checked=\"checked\" ":"")."name=\"".$key."\" value=\"".$key."\" />".$value."</td>";
-	  else
-	    echo "<td><input type=\"checkbox\" ".(($key==$_SESSION['lang'])?"checked=\"checked\" ":"")."name=\"".$key."\" value=\"".$key."\" />".$value."</td>";
-	  if(!($j++%3))
-	     echo "</tr><tr><td></td>"; 
-	} 
-	echo "</tr>";
-echo "</table>";
-echo "</div>";
-echo "</form>";
-echo "</div>";
+	  echo "<td class=\"fieldname\">".LangViewObservationField24."</td>";
+	  echo "<td>";
+	  $maxvisibility=$objUtil->checkGetKey('maxvisibility');
+	  if($maxvisibility=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $maxvisibility=$_SESSION['QobsParams']['maxvisibility'];
+	  echo "<select id=\"maxvisibility\" name=\"maxvisibility\" class=\"inputfield\">";
+	  echo "<option value=\"\">-----</option>"; 
+		echo "<option".($maxvisibility==1?' selected="selected"':'')." value=\"1\">".LangVisibility1."</option>";		// Very simple, prominent object
+		echo "<option".($maxvisibility==2?' selected="selected"':'')." value=\"2\">".LangVisibility2."</option>";		// Object easily percepted with direct vision
+		echo "<option".($maxvisibility==3?' selected="selected"':'')." value=\"3\">".LangVisibility3."</option>";		// Object perceptable with direct vision
+		echo "<option".($maxvisibility==4?' selected="selected"':'')." value=\"4\">".LangVisibility4."</option>";		// Averted vision required to percept object
+		echo "<option".($maxvisibility==5?' selected="selected"':'')." value=\"5\">".LangVisibility5."</option>";		// Object barely perceptable with averted vision
+		echo "<option".($maxvisibility==6?' selected="selected"':'')." value=\"6\">".LangVisibility6."</option>";		// Perception of object is very questionable
+		echo "<option".($maxvisibility==7?' selected="selected"':'')." value=\"7\">".LangVisibility7."</option>";		// Object definitely not seen		
+		echo "</select>";
+		echo "</td>";
+		echo "<td>"."&nbsp;"."</td>";
+		echo "</tr>";
+	// LANGUAGES
+		echo "<tr>";
+		echo "<td class=\"fieldname\">".LangChangeVisibleLanguages."</td>";
+		$j=1;
+		while(list($key,$value)=each($allLanguages))
+		{ if($objUtil->checkRequestKey($key))
+		    echo "<td><input id=\"".$key."\" name=\"".$key."\" type=\"checkbox\" ".(($objUtil->checkRequestKey($key))?"checked=\"checked\" ":"")." value=\"".$key."\" />".$value."</td>";
+		  elseif(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+		    echo "<td><input id=\"".$key."\" name=\"".$key."\" type=\"checkbox\" ".((in_array($key,$_SESSION['QobsParams']['languages']))?"checked=\"checked\" ":"")." value=\"".$key."\" />".$value."</td>";
+		  elseif($loggedUser)
+		    echo "<td><input id=\"".$key."\" name=\"".$key."\" type=\"checkbox\" ".((in_array($key,$usedLanguages))?"checked=\"checked\" ":"")." value=\"".$key."\" />".$value."</td>";
+		  else
+		    echo "<td><input id=\"".$key."\"name=\"".$key."\" type=\"checkbox\" ".(($key==$_SESSION['lang'])?"checked=\"checked\" ":"")." value=\"".$key."\" />".$value."</td>";
+		  if(!($j++%3))
+		     echo "</tr><tr><td></td>"; 
+		} 
+		echo "</tr>";
+	echo "</table>";
+	echo "</div>";
+	echo "</form>";
+	echo "</div>";
+}
+setup_observations_query();	
 ?>
