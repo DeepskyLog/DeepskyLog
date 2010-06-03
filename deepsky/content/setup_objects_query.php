@@ -5,7 +5,6 @@ function setup_objects_query()
          $pageError,$minDeclDegreesError,$minDeclMinutesError,$minDeclSecondsError,$maxDeclDegreesError,$maxDeclMinutesError,$maxDeclSecondsError,
          $minRAHoursError,$minRAMinutesError,$minRASecondsError,$maxRAHoursError,$maxRAMinutesError,$maxRASecondsError,$maxMagError,$minMagError,
          $maxSBError,$minSBError,$minSizeError,$maxSizeError,$minContrastError,$maxContrastError,$listError;
-	echo "<script type=\"text/javascript\" src=\"".$baseURL."deepsky/content/setup_objects_query.js\"></script>";
 	$QobjParamsCount=26;
 	if($objUtil->checkGetKey('object'))
 	  $entryMessage.=LangInstructionsNoObjectFound.$_GET['object'];
@@ -367,6 +366,7 @@ function setup_objects_query()
 	echo "</div>";
 	echo "</form>";
 	echo "<hr />";
+	echo "<script type=\"text/javascript\" src=\"".$baseURL."deepsky/content/setup_objects_query.js\"></script>";
 	echo '<input type="button" onclick="clearFields();" value="'.LangQueryObjectsButton2.'"/>';
 	echo "</div>";
 }

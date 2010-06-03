@@ -106,7 +106,7 @@ function setup_observations_query()
 	  if($con=$objUtil->checkGetKey('con'))
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $con=$_SESSION['QobsParams']['con'];	
-		echo "<select name=\"con\" class=\"inputfield\">";
+		echo "<select id=\"con\" name=\"con\" class=\"inputfield\">";
 		echo "<option value=\"\">-----</option>"; 
 		while(list($key, $value) = each($cons))
 		  echo "<option".(($key==$con)?" selected=\"selected\"":"")." value=\"".$key."\">".$value."</option>";
@@ -413,7 +413,7 @@ function setup_observations_query()
 	      $maxdiameterunits="mm";
 	    }
 		echo "<input id=\"maxdiameter\" name=\"maxdiameter\" type=\"text\" class=\"inputfield\" maxlength=\"64\" size=\"10\" value=\"".$maxdiameter."\" />";
-		echo "<select name=\"maxdiameterunits\" class=\"inputfield\">";
+		echo "<select id=\"maxdiameterunits\" name=\"maxdiameterunits\" class=\"inputfield\">";
 		echo "<option".($maxdiameterunits=='inch'?' selected="selected"':"").">inch</option>";
 		echo "<option".($maxdiameterunits=='mm'?' selected="selected"':"").">mm</option>";
 		echo "</select>";
@@ -595,6 +595,7 @@ function setup_observations_query()
 		echo "<tr>";
 		echo "<td class=\"fieldname\">".LangChangeVisibleLanguages."</td>";
 		$j=1;
+		$temp='';
 		while(list($key,$value)=each($allLanguages))
 		{ if($objUtil->checkRequestKey($key))
 		    echo "<td><input id=\"".$key."\" name=\"".$key."\" type=\"checkbox\" ".(($objUtil->checkRequestKey($key))?"checked=\"checked\" ":"")." value=\"".$key."\" />".$value."</td>";
@@ -606,11 +607,16 @@ function setup_observations_query()
 		    echo "<td><input id=\"".$key."\"name=\"".$key."\" type=\"checkbox\" ".(($key==$_SESSION['lang'])?"checked=\"checked\" ":"")." value=\"".$key."\" />".$value."</td>";
 		  if(!($j++%3))
 		     echo "</tr><tr><td></td>"; 
+	    $temp=$temp.$key."/";
 		} 
 		echo "</tr>";
 	echo "</table>";
 	echo "</div>";
 	echo "</form>";
+	echo "<input id=\"temp\" type=\"hidden\" value=\"".$temp."\" />";
+		echo "<hr />";
+	echo "<script type=\"text/javascript\" src=\"".$baseURL."deepsky/content/setup_observations_query.js\"></script>";
+  echo '<input type="button" onclick="clearFields();" value="'.LangQueryObservationsButton2.'"/>';
 	echo "</div>";
 }
 setup_observations_query();	
