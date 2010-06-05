@@ -141,6 +141,9 @@ define("LangObjectsFilter"                                ,"Mark");
 define("LangObjectsFilterLocation"                        ,"Location");
 define("LangObjectsFilterLocationExpl"                    ,"Mark the objects that are not visible from the selected observation location.");
 define("LangObjectsFilterLocationOffExpl"                 ,"Unmark the objects that are not visible from the selected observation location.");
+define("LangObjectsFilterDateTime"                        ,"Date-Time");
+define("LangObjectsFilterDateTimeExpl"                    ,"Mark the objects that are not visible on the selected date and time.");
+define("LangObjectsFilterDateTimeOffExpl"                 ,"Unmark the objects that are not visible from the selected date and time.");
 
 
 

@@ -145,6 +145,9 @@ define("LangObjectsFilter"                                ,"Marquer");
 define("LangObjectsFilterLocation"                        ,"Endroit d'observation");
 define("LangObjectsFilterLocationExpl"                    ,"Marquez les objets qui ne sont pas visibles &agrave; partir du lieu d'observation s&eacute;lectionn&eacute;.");
 define("LangObjectsFilterLocationOffExpl"                 ,"D&eacute;marquez les objets qui ne sont pas visibles &agrave; partir du lieu d'observation s&eacute;lectionn&eacute;.");
+define("LangObjectsFilterDateTime"                        ,"Datum-Tijd");
+define("LangObjectsFilterDateTimeExpl"                    ,"Markeer de objecten aan die niet zichtbaar zijn op de geselecteerde datum en tijd.");
+define("LangObjectsFilterDateTimeOffExpl"                 ,"On-markeer de objecten aan die niet zichtbaar zijn op de geselecteerde datum en tijd.");
 
 
 define("LangMarkAllAsRead"                                ,"Allen markeren als gelezen.");

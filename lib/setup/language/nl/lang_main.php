@@ -139,8 +139,11 @@ define("LangHideObjectDetails"                            ,"Verberg object detai
 
 define("LangObjectsFilter"                                ,"Markeer");
 define("LangObjectsFilterLocation"                        ,"Waarneemplaats");
-define("LangObjectsFilterLocationExpl"                    ,"Markeer de objecten aan die niet zichtbaarzijn vanop de geselecteerde waarneemplaats.");
-define("LangObjectsFilterLocationOffExpl"                 ,"On-markeer de objecten aan die niet zichtbaarzijn vanop de geselecteerde waarneemplaats.");
+define("LangObjectsFilterLocationExpl"                    ,"Markeer de objecten aan die niet zichtbaar zijn vanop de geselecteerde waarneemplaats.");
+define("LangObjectsFilterLocationOffExpl"                 ,"On-markeer de objecten aan die niet zichtbaar zijn vanop de geselecteerde waarneemplaats.");
+define("LangObjectsFilterDateTime"                        ,"Datum-Tijd");
+define("LangObjectsFilterDateTimeExpl"                    ,"Markeer de objecten aan die niet zichtbaar zijn op de geselecteerde datum en tijd.");
+define("LangObjectsFilterDateTimeOffExpl"                 ,"On-markeer de objecten aan die niet zichtbaar zijn op de geselecteerde datum en tijd.");
 
 define("LangMarkAllAsRead"                                ,"Allen markeren als gelezen.");
 define("LangMarkUpToHereAsRead"                           ,"Tot hier als gelezen markeren.");

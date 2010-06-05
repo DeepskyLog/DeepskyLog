@@ -1119,11 +1119,11 @@ class Objects implements iObjects
 	  $countline = 0;
 	  if($max>count($_SESSION['Qobj']))
 	 	  $max=count($_SESSION['Qobj']);
-	 	$filteron="";
+	 	$filteron=$objUtil->checkRequestKey('filteron');
+	 	$filteron1=$objUtil->checkRequestKey('filteron1');
 	 	$locationdecl=0;
-	 	if($objUtil->checkRequestKey('filteron')=='location')
-	 	{ $filteron='location';
-	 	  if($loggedUser&&($location=$objObserver->getObserverProperty($loggedUser,'stdlocation')))
+	 	if($filteron=='location')
+	 	{ if($loggedUser&&($location=$objObserver->getObserverProperty($loggedUser,'stdlocation')))
 	 	    $locationdecl=$objLocation->getLocationPropertyFromId($location,'latitude',0);
 	 	}
     while($count<$max)
@@ -1133,6 +1133,10 @@ class Objects implements iObjects
          ((($_SESSION['Qobj'][$count]['objectdecl']+90.0)<$locationdecl) ||
           (($_SESSION['Qobj'][$count]['objectdecl']-90.0)>$locationdecl)))
        $specialclass="strikethrough"; 
+      if(($filteron1=='time')&&
+         ($_SESSION['Qobj'][$count]['objectmaxaltitude']=="-"))
+       $specialclass="strikethrough"; 
+      
       echo "<tr ".(($_SESSION['Qobj'][$count]['objectname']==$ownShow)?"class=\"type3 height5px\"":"class=\"height5px type".(2-($countline%2)."\"")).">";
       if(($showRank==1)&&$myList)
         echo "<td class=\"centered\" id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader9.": ".$_SESSION['Qobj'][$count]['objectpositioninlist']."')\"><a href=\"#\" onclick=\"theplace = prompt('".LangNewPlaceInList."','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
@@ -1184,11 +1188,9 @@ class Objects implements iObjects
     }
     echo "</table>";
     if($loggedUser)
-    { if($objUtil->checkRequestKey('filteron')=='location')
-      	$content1=LangObjectsFilter.": <a href=\"".$objUtil->removeFromLink($link,'filteron=location')."\" title=\"".LangObjectsFilterLocationOffExpl."\">".LangObjectsFilterLocation."</a>";  //&nbsp;-&nbsp;<a href=\"".$link."&amp;filteron=time\">time</a>";
-      else
-        $content1=LangObjectsFilter.": <a href=\"".$link."&amp;filteron=location\" title=\"".LangObjectsFilterLocationExpl."\">".LangObjectsFilterLocation."</a>";  //&nbsp;-&nbsp;<a href=\"".$link."&amp;filteron=time\">time</a>";
-      $content2="Layout: ";
+    { $content1=LangObjectsFilter.": <a href=\"".(($objUtil->checkRequestKey('filteron')=='location')?$objUtil->removeFromLink($link,'filteron=location')."\" title=\"".LangObjectsFilterLocationOffExpl."\"":$link."&amp;filteron=location"."\" title=\"".LangObjectsFilterLocationExpl."\"").">".LangObjectsFilterLocation."</a>"."&nbsp;-&nbsp;";
+      $content1.="<a href=\"".(($objUtil->checkRequestKey('filteron1')=='time')?$objUtil->removeFromLink($link,'filteron1=time')."\" title=\"".LangObjectsFilterDateTimeOffExpl."\"":$link."&amp;filteron1=time"."\" title=\"".LangObjectsFilterDateTimeExpl."\"").">".LangObjectsFilterDateTime."</a>";
+     $content2="Layout: ";
       $content2.=$objPresentations->promptWithLinkAndLayout(LangSaveFormLayout2,"layoutName",$link."&amp;saveLayout=saveLayout&amp;formName=".$columnSource,LangSaveFormLayout1);
       $content2.=" - ";
       $content2.=" Openen ";
