@@ -1,18 +1,140 @@
 <?php 
+  $inIndex = 1;
   header ("Content-Type: text/plain");
-  header ("Content-Disposition: attachment; filename=\"observations.icq\"");
+  //header ("Content-Disposition: attachment; filename=\"cometobservations.icq\"");
   session_start();
   $_SESSION['module'] = "comets";
 
-  include_once "lib/cometobservations.php";
-  include_once "lib/util.php";
-  $util = new util;
-  $util->checkUserInput();
+  include 'common/entryexit/preludes.php';
+  global $objCometObservation;
+  global $objCometObject;
+  global $objInstrument;
+  $_SESSION['module'] = "comets";
 
   $result = $_SESSION['observation_query'];
 
-  if ($result != "")
+  if (!empty($result))
   {
-    print "ICQ LIST OF OBSERVATIONS";
+    //print "ICQ LIST OF OBSERVATIONS";
+     
+   //$result bevat observ id's
+   for($i=0; $i<count($result); $i++){
+   		//print $result[$i] . "\r\n";
+   		$objectid = $objCometObservation->getObjectId($result[$i]);
+   		$icqname = substr($objCometObject->getIcqName($objectid), 0, 10);
+   		
+   		$datum = $objCometObservation->getDate($result[$i]);
+   		$jaar = substr($datum, 0, 4);
+   		$maand = substr($datum, 4, 2);
+   		$dag = substr($datum, 6, 2);
+   		$tijd = $objCometObservation->getTime($result[$i]);
+   		
+   			
+   		   
+   		$uurpuntminuut = $tijd/100;
+   		if(!strstr($uurpuntminuut, ".")) $uurpuntminuut .= ".0";
+   		$uur = explode(".", $uurpuntminuut);
+   		$uur = $uur[0];
+   		$minuten = explode(".", $uurpuntminuut);
+   		$minuten = $minuten[1];
+   		$percentageuur = $minuten/60;
+   		$uurdecimaal = $uur + $percentageuur;
+   		$dagdecimaal = round(($uurdecimaal/24)+$dag, 2);
+   		
+   		if($dagdecimaal < 10) $dagdecimaal = "0" . round($dagdecimaal, 2);
+   		while(strlen($dagdecimaal)<5) $dagdecimaal = "0" . $dagdecimaal;
+   		
+   		$M = $objCometObservation->getMethode($result[$i]);	//Methode
+   		
+   		if(empty($M)) $M = " ";			   		
+   		/// ----------------
+   		//opbouwen ICQ lijn
+   		//volgorde:  IIIYYYYMnL YYYY MM DD.DD eM mm.m:r AAA.ATF/xxxx &dd.ddnDC &t.ttmANG ICQ XX*OBSxx
+   		//              icqname  jaar m dagdec
+   		//									  e hebben we niet, dan methode 
+   		
+   		$magnitude = $objCometObservation->getMagnitude($result[$i]);
+   		$magnitude = round($magnitude, 1);
+   		if($magnitude == -99.9) $magnitude = str_pad(' ', 4);
+   		if($magnitude < 10) $magnitude = "0" . $magnitude;
+   		if(strlen($magnitude) < 4) $magnitude .= ".0";
+   		if($magnitude == 0) $magnitude = "00.0";
+   		
+   		if($objCometObservation->getMagnitudeUncertain($result[$i])){
+   			$onzekerheid = ":";
+   		}else{
+   			$onzekerheid = " ";
+   		}
+   		
+   		$r = $objCometObservation->getChart($result[$i]);
+   		while(strlen($r)<2) $r = " " . $r;
+   		
+   		$instrumentid = $objCometObservation->getInstrumentId($result[$i]);
+   		$instrumentdia = $objInstrument->getInstrumentPropertyFromId($instrumentid, "diameter"	)/10;
+		
+		if($instrumentdia < 10) $instrumentdia = " " . $instrumentdia;
+		if($instrumentdia < 100) $instrumentdia = " " . $instrumentdia;
+		
+		//indien geen kommagetal: 2 spaties achter
+		if(ceil($instrumentdia) == floor($instrumentdia)) $instrumentdia .= "  ";   		
+		$instrtypenumeriek = $objInstrument->getInstrumentPropertyFromId($instrumentid, "type");
+		
+		switch($instrtypenumeriek){
+			case 0:
+				$instrtype="E";
+			break;
+			
+			case 1:
+				$instrtype="B";
+			break;
+			
+			case 2:
+				$instrtype="R";
+			break;
+			
+			case 3:
+				$instrtype="L";
+			break;
+			
+			case 4:
+				$instrtype="R";
+			break;
+			
+			case 5:
+				$instrtype=" ";
+			break;
+			
+			case 6:
+				$instrtype="C";
+			break;
+			
+			case 7:
+				$instrtype=" ";			
+			break;
+			
+			case 8:
+				$instrtype="M";
+			break;
+			
+			case 9:
+				$instrtype="T";
+			break;
+			
+			default:
+			$instrtype=" ";	
+		}
+   			
+   		
+   		echo $icqname . " " . $jaar . " " . $maand . " " . $dag . " " . $dagdecimaal . "  " . $M . " " . $magnitude . $onzekerheid . " " . $r . " " . $instrumentdia . " " . $instrtype . "\r\n";		
+   		
+   }
+   //    print_r($result);
+    
   }
+  
+  /*
+  IIIYYYYMnL	YYYY MM DD.DD eM mm.m:r AAA.ATF/xxxx &dd.ddnDC &t.ttmANG ICQ XX*OBSxx
+ 
+  2006W3     	2008 12 27.83  S 09.4 	TK 35  L 4 178   1.5       D7    ICQ XX DEK01
+*/
 ?>
