@@ -156,7 +156,8 @@ define("LangTransit"                                      ,"Transit");
 define("LangMaxAltitude"                                  ,"Max altitude");
 
 // Text for moon menu
-define("LangMoonMenuTitle"                                ,"Moon / Sun");
+define("LangMoonMenuTitle"                                ,"Moon");
+define("LangMoonSunMenuTitle"                             ,"Moon / Sun");
 define("LangMoonMenuNewMoon"                              ,"New moon");
 define("LangMoonMenuActualMoon"                           ,"Actual moon:");
 define("LangMoonRise"                                     ,"Rise");

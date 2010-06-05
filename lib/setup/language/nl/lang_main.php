@@ -155,7 +155,8 @@ define("LangTransit"                                      ,"Doorgang");
 define("LangMaxAltitude"                                  ,"Max hoogte");
 
 // Text for moon menu
-define("LangMoonMenuTitle"                                ,"Maan / Zon");
+define("LangMoonMenuTitle"                                ,"Maan");
+define("LangMoonSunMenuTitle"                             ,"Maan / Zon");
 define("LangMoonMenuNewMoon"                              ,"Nieuwe maan");
 define("LangMoonMenuActualMoon"                           ,"Huidige maan:");
 define("LangMoonRise"                                     ,"Op");

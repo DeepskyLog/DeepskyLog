@@ -165,9 +165,11 @@ class catalogs
       $thenewcatalog0='Hickson';
     if($thenewcatalog=='HCG')
       $thenewcatalog0='Hickson';
+    if($thenewcatalog=='MESSIER')
+      $thenewcatalog0='M';
     if($thenewcatalog=='MARKARIAN')
       $thenewcatalog0='Mrk';
-    if($thenewcatalog=='MARK')
+      if($thenewcatalog=='MARK')
       $thenewcatalog0='Mrk';
     if($thenewcatalog=='PALOMAR')
       $thenewcatalog0='Pal';

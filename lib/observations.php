@@ -1257,7 +1257,7 @@ class Observations {
     $date = $date[0] . "-". $date[1] . "-" . $date[2];
     $time = "23:59:59";
     $tzone = "GMT";
-  
+  echo $date . ' ' . $time . ' ' . $tzone;
     $moondata = phase(strtotime($date . ' ' . $time . ' ' . $tzone));
 
     $MoonIllum  = $moondata[1];

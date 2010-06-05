@@ -7,9 +7,9 @@ define("LangDescriptioncontains","Description NGC contient:");
 define("LangShowAll",            'montrez tous');
 
 
-define("LangOn",               "le");
-define("LangFrom",               "de");
-define("LangTo",                 ' à ');
+define("LangOn",                  "le");
+define("LangFrom",                "de");
+define("LangTo",                  ' à ');
 
 define("LangNoExcludeIfSeen",    'mais ne pas exclure si vu');
 
@@ -159,7 +159,8 @@ define("LangTransit"                                      ,"Transit");
 define("LangMaxAltitude"                                  ,"Max altitude");
 
 // Text for moon menu
-define("LangMoonMenuTitle"                                ,"Lune / Soleil");
+define("LangMoonMenuTitle"                                ,"Lune");
+define("LangMoonSunMenuTitle"                             ,"Lune / Soleil");
 define("LangMoonMenuNewMoon"                              ,"New moon");
 define("LangMoonMenuActualMoon"                           ,"Huidige maan:");
 define("LangMoonRise"                                     ,"Op");
