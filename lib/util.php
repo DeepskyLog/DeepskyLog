@@ -102,8 +102,8 @@ class Utils implements iUtils
   { global $loggedUser;
     return ($loggedUser==$toCheck);
   }
-  public  function comastObservations($result)  // Creates a csv file from an array of observations
-  { global $objPresentations, $objObservation;
+  public  function comastObservations($result)  // Creates a oal file from an array of observations
+  { global $objPresentations, $objObservation, $objCatalog;
     include_once "cometobjects.php";
     include_once "observers.php";
     include_once "instruments.php";
@@ -113,6 +113,7 @@ class Utils implements iUtils
     include_once "cometobservations.php";
     include_once "icqmethod.php";
     include_once "icqreferencekey.php";
+    include_once "catalogs.php";
     include_once "setup/vars.php";
     include_once "setup/databaseInfo.php";
 
@@ -724,7 +725,7 @@ class Utils implements iUtils
 	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\,/", "_", $correctedValue )));
     $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\(/", "_", $correctedValue )));
     $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\)/", "_", $correctedValue )));
-    
+    $correctedValue = $objCatalog->checkObject($correctedValue);
       $target->appendChild($dom->createTextNode("_" . $correctedValue));
 
 	  if ($obs["time"] >= 0)
@@ -2510,8 +2511,9 @@ class Utils implements iUtils
       $lastReadObservation=($loggedUser?$objObserver->getLastReadObservation($loggedUser):-1);
   	  return 'deepsky/content/selected_observations2.php';
 		}
-		else
-		  return 'comets/content/overview_observations.php';	
+		else if($_SESSION['module']=='comets')
+		{ return 'comets/content/overview_observations.php';
+		}
   }
   private function utilitiesCheckIndexActionMember($action, $includefile)
   { global $loggedUser;
