@@ -378,7 +378,7 @@ define("LangShowWithoutPartOfs"														,"Zeige ohne Teile von Objekten");
 define("LangShowWithPartOfs"															,"Zeige mit Teilen von Objekten");
 
 define("LangShowAllLanguages"															,"Zeige alle Sprachen");
-define("LangShowInterfaceLanguage"												,"Nur Beobachtungen in Englisch");
+define("LangShowInterfaceLanguage"												,"Nur Beobachtungen in Deutsch");
 define("LangShowMyLanguages"															,"Nur Beobachtungen in meiner (Profil) Sprache");
 define("LangAllLanguagesShown"														,"Alle Sprachen");
 define("LangSelectedLanguagesShown"												,"Nur ausgew&auml;hlte Sprachen");
