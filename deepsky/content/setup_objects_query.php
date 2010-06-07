@@ -38,6 +38,8 @@ function setup_objects_query()
 	}
 	$content2.="</select>";
 	$content3="<input type=\"submit\" name=\"query\" value=\"" . LangQueryObjectsButton1 . "\" />";
+	echo "<script type=\"text/javascript\" src=\"".$baseURL."deepsky/content/setup_objects_query.js\"></script>";
+	$content3.='<input type="button" onclick="clearFields();" value="'.LangQueryObjectsButton2.'"/>';
 	$objPresentations->line(array("<h4>".LangQueryObjectsTitle."</h4>",$content1,$content2,$content3),"LRLR",array(20,20,40,20),30);
 	echo "<hr />";
 	
@@ -366,8 +368,6 @@ function setup_objects_query()
 	echo "</div>";
 	echo "</form>";
 	echo "<hr />";
-	echo "<script type=\"text/javascript\" src=\"".$baseURL."deepsky/content/setup_objects_query.js\"></script>";
-	echo '<input type="button" onclick="clearFields();" value="'.LangQueryObjectsButton2.'"/>';
 	echo "</div>";
 }
 setup_objects_query();
