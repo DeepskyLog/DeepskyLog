@@ -1,5 +1,4 @@
 <?php
-
 $MaxCnt=$objObservation->getMaxObservation();
 //=========================================================================================== LOOKING FOR SPECIFIC OBJECT, OR LOOKING FOR SOME OTHER CHARACTERISTIC ============================================================
 if(array_key_exists('number',$_GET) && $_GET['number'])

@@ -42,7 +42,6 @@ function setup_objects_query()
 	$content3.='<input type="button" onclick="clearFields();" value="'.LangQueryObjectsButton2.'"/>';
 	$objPresentations->line(array("<h4>".LangQueryObjectsTitle."</h4>",$content1,$content2,$content3),"LRLR",array(20,20,40,20),30);
 	echo "<hr />";
-	
 	echo "<table>";
 	// OBJECT NAME 
 	  echo "<tr>";
@@ -248,7 +247,7 @@ function setup_objects_query()
 	  $size_min_units=$objUtil->checkGetKey('size_min_units');
 	  if(($minSize=$objUtil->checkGetKey('minSize'))=='')
 	    if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
-	    { $minSize=$_SESSION['QobjParams']['minSize'];
+	    { $minSize=$_SESSION['QobjParams']['mindiam1'];
 	      $size_min_units="sec";
 	    }
 	  echo "<input id=\"minSize\" name=\"minSize\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"".$minSize."\" />";
@@ -264,7 +263,7 @@ function setup_objects_query()
 	  $size_max_units=$objUtil->checkGetKey('size_max_units');
 	  if(($maxSize=$objUtil->checkGetKey('maxSize'))=='')
 	    if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
-	    { $maxSize=$_SESSION['QobjParams']['maxSize'];
+	    { $maxSize=$_SESSION['QobjParams']['maxdiam1'];
 	      $size_max_units="sec";
 	    }
 	  echo"<input id=\"maxSize\" name=\"maxSize\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"" . $maxSize . "\" />";

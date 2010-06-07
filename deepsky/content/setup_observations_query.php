@@ -4,7 +4,7 @@ function setup_observations_query()
          $objPresentations, $objUtil, $objObserver, $objAtlas, $objObject, $objInstrument, $objLocation;
   $QobsParamsCount=0;
 	if(array_key_exists('QobsParams',$_SESSION))
-    if(!(($_SESSION['QobsParams']['mindate']==date('Ymd', strtotime('-1 year')))&&($_SESSION['QobsParams']['catalog']='%')))
+    if(!(($_SESSION['QobsParams']['mindate']==date('Ymd', strtotime('-1 year')))&&($_SESSION['QobsParams']['catalog']=='%')))
       $QobsParamsCount=41;
 	echo "	<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/CalendarPopupCC.js\"></script>";
 	echo "	<script type=\"text/javascript\" >";
@@ -58,14 +58,13 @@ function setup_observations_query()
 	$content2.="&nbsp;".'<input type="button" onclick="clearFields();" value="'.LangQueryObservationsButton2.'"/>';
   $objPresentations->line(array("<h4>".LangQueryObservationsTitle."</h4>",$content,$content1,$content2),"LRLL",array(20,20,40,20),30);
 	echo "<hr />";
-	
-	echo "<table width=\"100%\">";
+  	echo "<table width=\"100%\">";
 	// OBJECT NAME 
 		echo "<tr>";
 		echo "<td class=\"fieldname\">".LangViewObservationField1."</td>";
 		echo "<td>";
 		$catalogs = $objObject->getCatalogs();
-		if($catalog=$objUtil->checkGetKey('catalog'))
+		if(($catalog=$objUtil->checkGetKey('catalog'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $catalog=$_SESSION['QobsParams']['catalog'];
 		echo "<select id=\"catalog\" name=\"catalog\" class=\"inputfield\">";
@@ -73,7 +72,7 @@ function setup_observations_query()
 		while(list($key, $value) = each($catalogs))
 		  echo "<option".(($value==$catalog)?" selected=\"selected\"":"")." value=\"".$value."\">".$value."</option>";
 		echo "</select>";
-	  if($catNumber=$objUtil->checkGetKey('number'))
+	  if(($catNumber=$objUtil->checkGetKey('number'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $catNumber=$_SESSION['QobsParams']['number'];
 		echo "<input id=\"number\" name=\"number\" type=\"text\" class=\"inputfield\" maxlength=\"255\" size=\"40\" value=\"".$catNumber."\" />";
@@ -81,7 +80,7 @@ function setup_observations_query()
 	// ATLAS PAGE NUMBER
 		echo "<td class=\"fieldname\">".LangQueryObjectsField12."</td>";
 		echo "<td>";
-		if($atlas=$objUtil->checkGetKey('atlas'))
+		if(($atlas=$objUtil->checkGetKey('atlas'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $atlas=$_SESSION['QobsParams']['atlas'];	
 		echo "<select id=\"atlas\" name=\"atlas\" class=\"inputfield\">";
@@ -105,7 +104,7 @@ function setup_observations_query()
 		  $cons[$value] = $GLOBALS[$value];
 		asort($cons);
 		reset($cons);
-	  if($con=$objUtil->checkGetKey('con'))
+	  if(($con=$objUtil->checkGetKey('con'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $con=$_SESSION['QobsParams']['con'];	
 		echo "<select id=\"con\" name=\"con\" class=\"inputfield\">";

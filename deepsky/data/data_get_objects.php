@@ -211,14 +211,12 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
   { if((!is_numeric($_GET['minSize'])) || ($_GET['minSize']<0))
       $minSizeError=True; 
     if(array_key_exists('size_min_units', $_GET) && ($_GET['size_min_units'] == "sec"))
-    {
-      $size_min_units = 'sec';
+    { $size_min_units = 'sec';
       $minSize = $_GET['minSize'];
       $minSizeC = $_GET['minSize'];
     }
     else
-    {
-      $size_min_units = 'min';
+    { $size_min_units = 'min';
       $minSize = $_GET['minSize'];
       $minSizeC = $_GET['minSize'] * 60;
     }
