@@ -371,7 +371,7 @@ class Utils implements iUtils
       $datasource->appendChild($dom->createCDATASection(utf8_encode(html_entity_decode($object["datasource"])))); 
       
       $name = $objectChild->appendChild($dom->createElement('name')); 
-      $name->appendChild($dom->createCDATASection(($value)));
+      $name->appendChild($dom->createCDATASection(($objCatalog->checkObject($value))));
       
       $altnames = $GLOBALS['objObject']->getAlternativeNames($value);
       while(list($key2, $value2) = each($altnames)) // go through names array
@@ -379,7 +379,7 @@ class Utils implements iUtils
   	  	{
   	  	  if (trim($value2) != "") {
             $alias = $objectChild->appendChild($dom->createElement('alias')); 
-            $alias->appendChild($dom->createCDataSection((trim($value2))));
+            $alias->appendChild($dom->createCDataSection((trim($objCatalog->checkObject($value2)))));
   	  	  }
   	  	} 
       }
@@ -726,7 +726,6 @@ class Utils implements iUtils
     $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\(/", "_", $correctedValue )));
     $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\)/", "_", $correctedValue )));
     $correctedValue = $objCatalog->checkObject($correctedValue);
-      $target->appendChild($dom->createTextNode("_" . $correctedValue));
 
 	  if ($obs["time"] >= 0)
 	  {
