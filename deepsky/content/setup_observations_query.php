@@ -1,6 +1,6 @@
 <?php
 function setup_observations_query()
-{ global $baseURL, $loggedUser, $allLanguages,
+{ global $baseURL, $loggedUser, $allLanguages, $usedLanguages, $usedLanguages,
          $objPresentations, $objUtil, $objObserver, $objAtlas, $objObject, $objInstrument, $objLocation;
   $QobsParamsCount=0;
 	if(array_key_exists('QobsParams',$_SESSION))
@@ -54,7 +54,9 @@ function setup_observations_query()
 	  $content1.="</select>";
 	}
 	$content2="<input type=\"submit\" name=\"query\" value=\"" . LangQueryObservationsButton1 . "\" />";
-	$objPresentations->line(array("<h4>".LangQueryObservationsTitle."</h4>",$content,$content1,$content2),"LRLL",array(20,20,40,20),30);
+	echo "<script type=\"text/javascript\" src=\"".$baseURL."deepsky/content/setup_observations_query.js\"></script>";
+	$content2.="&nbsp;".'<input type="button" onclick="clearFields();" value="'.LangQueryObservationsButton2.'"/>';
+  $objPresentations->line(array("<h4>".LangQueryObservationsTitle."</h4>",$content,$content1,$content2),"LRLL",array(20,20,40,20),30);
 	echo "<hr />";
 	
 	echo "<table width=\"100%\">";
@@ -614,9 +616,7 @@ function setup_observations_query()
 	echo "</div>";
 	echo "</form>";
 	echo "<input id=\"temp\" type=\"hidden\" value=\"".$temp."\" />";
-		echo "<hr />";
-	echo "<script type=\"text/javascript\" src=\"".$baseURL."deepsky/content/setup_observations_query.js\"></script>";
-  echo '<input type="button" onclick="clearFields();" value="'.LangQueryObservationsButton2.'"/>';
+	echo "<hr />";
 	echo "</div>";
 }
 setup_observations_query();	
