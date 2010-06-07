@@ -839,6 +839,7 @@ if ($dom->schemaValidate($xmlschema)) {
         $targetName = str_replace("  ", " ", $targetName);
         $objeId = -1;
         // Check if the object with the given name exists. If this is the case, set the objeId, else check the alternative names
+        $targetName = $objCatalog->checkObject($targetName);
         if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $targetName)) . "\");")) > 0) {
           $objeId = $objObject->getDsObjectName(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $targetName)));
         } else {
@@ -846,6 +847,7 @@ if ($dom->schemaValidate($xmlschema)) {
           for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
             $targetName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
             $targetName = str_replace("  ", " ", $targetName);
+            $targetName = $objCatalog->checkObject($targetName);
             if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\")")) > 0) {
               $objeId = $objObject->getDsObjectName($targetName);
             }
@@ -868,6 +870,7 @@ if ($dom->schemaValidate($xmlschema)) {
               // else, add new object
               $targetName = preg_replace($pattern, '${1} ${2}', $target);
               $targetName = str_replace("  ", " ", $targetName);
+              $targetName = $objCatalog->checkObject($targetName);
               $names = explode(" ", $targetName);
               $objObject->addDSObject($names[0]." ".$names[1], $names[0], $names[1], $ta["type"], $ta["constellation"], $ta["ra"], $ta["dec"], $ta["mag"], $ta["subr"], $ta["diam1"], $ta["diam2"], $ta["pa"], "", $ta["datasource"]);
               for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
