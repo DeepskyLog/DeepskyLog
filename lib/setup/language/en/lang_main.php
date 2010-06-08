@@ -246,14 +246,14 @@ define("LangDetailDSColor5"                               ,"green");
 define("LangDetailDSColor6"                               ,"blue");
 
 $atlasPageText=array(
-       'atlasPageUpBtnTxt'                               =>"Pagina Noord",
-       'atlasPageSmallUpBtnTxt'                          =>"Sectie Noord",  
-       'atlasPageDownBtnTxt'                             =>"Pagina Zuid",
-       'atlasPageSmallDownBtnTxt'                        =>"Sectie Zuid",
-       'atlasPageLeftBtnTxt'                             =>"Pagina Oost",
-       'atlasPageSmallLeftBtnTxt'                        =>'Sectie Oost',
-       'atlasPageRightBtnTxt'                            =>'Pagina West',
-       'atlasPageSmallRightBtnTxt'                       =>'Sectie West',
+       'atlasPageUpBtnTxt'                               =>"Page North",
+       'atlasPageSmallUpBtnTxt'                          =>"Section North",  
+       'atlasPageDownBtnTxt'                             =>"Page South",
+       'atlasPageSmallDownBtnTxt'                        =>"Section South",
+       'atlasPageLeftBtnTxt'                             =>"Page East",
+       'atlasPageSmallLeftBtnTxt'                        =>'Section East',
+       'atlasPageRightBtnTxt'                            =>'Page West',
+       'atlasPageSmallRightBtnTxt'                       =>'Section West',
        'atlasPageZoomInBtnTxt'                           =>'Zoom In',
        'atlasPageZoom1BtnTxt'                            =>'Zoom to 1&deg;',
        'atlasPageZoom2BtnTxt'                            =>'Zoom to 2&deg;',
@@ -282,8 +282,8 @@ define("LangGeneralObservations"													,"observations");
 
 define("LangIndexPleaseWait"															,"Please wait a moment while loading data...");
 
-define("LangTitlecomets_result_query_objects"       			,"Resultaten opzoeken komeet");
-define("LangTitlecomets_result_query_observations"  			,"Resultaten opzoeken waarnemingen komeet");
+define("LangTitlecomets_result_query_objects"       			,"Searching for comet results");
+define("LangTitlecomets_result_query_observations"  			,"Searching for comet observation results");
 
 define("LangTitleview_observer_catalog"  									,"Overview catalog");
 define("LangTitlerank_observers"         									,"Overview observers");
