@@ -1,4 +1,5 @@
 <?php 
+  // wordt aan gewerkt door Laurens - Bugzilla bug 119
   $inIndex = 1;
   header ("Content-Type: text/plain");
   //header ("Content-Disposition: attachment; filename=\"cometobservations.icq\"");
@@ -42,7 +43,7 @@
    		$dagdecimaal = round(($uurdecimaal/24)+$dag, 2);
    		
    		if($dagdecimaal < 10) $dagdecimaal = "0" . round($dagdecimaal, 2);
-   		while(strlen($dagdecimaal)<5) $dagdecimaal = "0" . $dagdecimaal;
+   		while(strlen($dagdecimaal)<5) $dagdecimaal = $dagdecimaal . " ";
    		
    		$M = $objCometObservation->getMethode($result[$i]);	//Methode
    		
@@ -56,9 +57,9 @@
    		$magnitude = $objCometObservation->getMagnitude($result[$i]);
    		$magnitude = round($magnitude, 1);
    		if($magnitude == -99.9) $magnitude = str_pad(' ', 4);
-   		if($magnitude < 10) $magnitude = "0" . $magnitude;
+   		if($magnitude < 10) $magnitude = " " . $magnitude;
    		if(strlen($magnitude) < 4) $magnitude .= ".0";
-   		if($magnitude == 0) $magnitude = "00.0";
+   		if($magnitude == 0) $magnitude = "   0";
    		
    		if($objCometObservation->getMagnitudeUncertain($result[$i])){
    			$onzekerheid = ":";
@@ -123,9 +124,10 @@
 			default:
 			$instrtype=" ";	
 		}
-   			
-   		
-   		echo $icqname . " " . $jaar . " " . $maand . " " . $dag . " " . $dagdecimaal . "  " . $M . " " . $magnitude . $onzekerheid . " " . $r . " " . $instrumentdia . " " . $instrtype . "\r\n";		
+		
+		$focalratio = str_pad($objCometObservation->getDc($result[$i]), 2, " ", STR_PAD_LEFT);				
+   		$magnification = $objCometObservation->getMagnification($result[$i]);
+   		echo $icqname . " " . $jaar . " " . $maand . " " . $dagdecimaal . "  " . $M . " " . $magnitude . $onzekerheid . $r . $instrumentdia . $instrtype . $focalratio . " " . $magnification .	 "\r\n";		
    		
    }
    //    print_r($result);
