@@ -76,7 +76,7 @@ function setobserverqueries()
 }
 
 function saveObserverQueryAs()
-{ var jsonhttp;
+{ var jsonhttp, newqueryname;
   if(window.XMLHttpRequest)
     jsonhttp=new XMLHttpRequest();
   else if(window.activeXObject)
@@ -91,17 +91,17 @@ function saveObserverQueryAs()
         document.getElementById('observerqueries').remove(i);
 
       optn = document.createElement("option");
-      optn.text = queries[i]["-----"];
-      optn.value = layouts[i]["------"];
+      optn.text = "-----";
+      optn.value = "------";
       document.getElementById('observerqueries').options.add(optn);
-    
+      
       for(i=0;i<queries.length;i++)
       { optn = document.createElement("option");
-        optn.text = queries[i]["observerquery"];
-        optn.value = queries[i]["observerqueryname"];
+        optn.value = queries[i]["observerquery"];
+        optn.text = queries[i]["observerqueryname"];
         document.getElementById('observerqueries').options.add(optn);
       }
-      alert('To do: set to correct query');
+      document.getElementById('observerqueries').selectedIndex=i;
     }
   };
 
@@ -145,11 +145,13 @@ function saveObserverQueryAs()
     temp=temp.substr(pos+1);
   }
   query=query+'excludeexceptseen='+document.getElementById('excludeexceptseen').checked;  
-  
+  newqueryname=prompt('Give the name','queryname');
+  if(!(newqueryname))
+    newqueryname='newqueryname';
   var url="ajaxinterface.php"            +"?"+
           "instruction=saveObserverQuery" +"&"+
           "observerquerytype="+"obj"     +"&"+
-          "observerqueryname="+prompt('Give the name','queryname')     +"&"+
+          "observerqueryname="+  newqueryname   +"&"+
           query;
   jsonhttp.open("GET",url,true);
   jsonhttp.send(null);
@@ -166,11 +168,12 @@ function restoreQuery()
     temp=temp.substring(temp.indexOf('=')+1);
     value=temp.substring(0,temp.indexOf('&'));
     temp=temp.substring(temp.indexOf('&')+1);
-    //alert('Field: '+field+' Value: '+value+' Type: '+document.getElementById(field).type);
     if(document.getElementById(field).type=='select-one')
       document.getElementById(field).selectedIndex=value;
     else if(document.getElementById(field).type=='text')
       document.getElementById(field).text=value;
+    else if(document.getElementById(field).type=='checkbox')
+      document.getElementById(field).checked=(value==='true'?true:false);
   }
 }
 
