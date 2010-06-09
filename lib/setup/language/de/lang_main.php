@@ -109,10 +109,10 @@ define("LangSaveFormLayout2"                             ,"Bitte geben Sie einen
 
 
 
-define("profiledsosmagnitude"                            ,"Atlas standaard objectmagnitudes:");
-define("profiledsosmagnitudeselect"                      ,"overzicht / opzoeken / detail");
-define("profilestarsmagnitude"                           ,"Atlas standaard stermagnitudes:");
-define("profilestarsmagnitudeselect"                     ,"overzicht / opzoeken / detail");
+define("profiledsosmagnitude"                            ,"Standard Objekt Helligkeit im Atlas:");
+define("profiledsosmagnitudeselect"                      ,"&Uuml;bersicht / Nachschlagen / Details");
+define("profilestarsmagnitude"                           ,"Standard Sterne Helligkeit im Atlas:");
+define("profilestarsmagnitudeselect"                     ,"&Uuml;bersicht / Nachschlagen / Details");
 
 
 define('LangBest'                                        ,'Beste');
@@ -133,8 +133,8 @@ define('LookupChart'                                     ,'Nachschlagen');
 define('DetailChart'                                     ,'Detail');
 
 define('atlasPageFoV'                                    ,'FoV:');
-define('atlasPageDSLM'                                   ,'Objecten tot mag:');
-define('atlasPageStarLM'                                 ,'Sterren tot mag:');
+define('atlasPageDSLM'                                   ,'Objekte bis mag:');
+define('atlasPageStarLM'                                 ,'Sterne bis mag:');
 
 
 define("LangShowObjectDetails"                            ,"Zeige Objekt Details");
@@ -144,9 +144,9 @@ define("LangObjectsFilter"                                ,"Marke");
 define("LangObjectsFilterLocation"                        ,"Lokation");
 define("LangObjectsFilterLocationExpl"                    ,"Markiere die Objekte welche nicht sichtbar sind von der ausgew&aumlhlten Lokation.");
 define("LangObjectsFilterLocationOffExpl"                 ,"Entferne die Markierung der Objekte welche nicht sichtbar sind von der ausgew&aumlhlten Lokation.");
-define("LangObjectsFilterDateTime"                        ,"Datum-Tijd");
-define("LangObjectsFilterDateTimeExpl"                    ,"Markeer de objecten aan die niet zichtbaar zijn op de geselecteerde datum en tijd.");
-define("LangObjectsFilterDateTimeOffExpl"                 ,"On-markeer de objecten aan die niet zichtbaar zijn op de geselecteerde datum en tijd.");
+define("LangObjectsFilterDateTime"                        ,"Datum-Zeit");
+define("LangObjectsFilterDateTimeExpl"                    ,"Markiere die Objekte welche nicht sichtbar sind an dem ausgew&aumlhlten Datum und Uhrzeit");
+define("LangObjectsFilterDateTimeOffExpl"                 ,"Entferne die Makierung an Objekten welche nicht sichtbar sind an dem ausgew&aumlhlten Datum und Uhrzeit");
 
 
 
@@ -186,7 +186,7 @@ define("LangMoonAstro"                                    ,"Astro.");
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Interaktiver Atlas");
 
-define("LangAtlasAbbrev"                                  ,"Afkortingen pagina - gebruik A om aan of uit te zetten");
+define("LangAtlasAbbrev"                                  ,"Abk&uuml;rzungen - dr&uuml;cke A zum an- abschalten");
 
 
 
@@ -257,31 +257,31 @@ define("LangDetailDSColor5"                               ,"gr&uuml;n");
 define("LangDetailDSColor6"                               ,"blau");
 
 $atlasPageText=array(
-       'atlasPageUpBtnTxt'                               =>"Pagina Noord",
-       'atlasPageSmallUpBtnTxt'                          =>"Sectie Noord",
-       'atlasPageDownBtnTxt'                             =>"Pagina Zuid",
-       'atlasPageSmallDownBtnTxt'                        =>"Sectie Zuid",
-       'atlasPageLeftBtnTxt'                             =>"Pagina Oost",
-       'atlasPageSmallLeftBtnTxt'                        =>'Sectie Oost',
-       'atlasPageRightBtnTxt'                            =>'Pagina West',
-       'atlasPageSmallRightBtnTxt'                       =>'Sectie West',
-       'atlasPageZoomInBtnTxt'                           =>'Zoom In',
-       'atlasPageZoom1BtnTxt'                            =>'Zoom to 1&deg;',
-       'atlasPageZoom2BtnTxt'                            =>'Zoom to 2&deg',
-       'atlasPageZoomOutBtnTxt'                          =>'Zoom out',
-       'atlasPageObjectTxt'                              =>'Object',
-       'atlasPageTypeTxt'                                =>'Type',
-       'atlasPageConsTxt'                                =>'Constellation',
-       'atlasPageSeenTxt'                                =>'Seen',
-       'atlasPageMagnTxt'                                =>'Magn.',
-       'atlasPageSubrTxt'                                =>'Surf.Br.',
-       'atlasPageDiamTxt'                                =>'Dimensions',
-       'atlasPageDone'                                   =>'Druk H voor help - A voor afkortingen - P for printing - O for Overview chart - Z for Lookup chart - D for Detail chart',
-       'atlasPageObjectsFetching'                        =>'Ophalen objectgegevens tot magnitude ...',
-       'atlasPageStarsFetching'                          =>'Ophalen stargegevens tot magnitude ...',
+       'atlasPageUpBtnTxt'                               =>"Seite n&ouml;rdlich",
+       'atlasPageSmallUpBtnTxt'                          =>"Bereich n&ouml;rdlich",
+       'atlasPageDownBtnTxt'                             =>"Seite s&uuml;dlich",
+       'atlasPageSmallDownBtnTxt'                        =>"Bereich s&uuml;dlich",
+       'atlasPageLeftBtnTxt'                             =>"Seite &ouml;stlich",
+       'atlasPageSmallLeftBtnTxt'                        =>'Bereich &ouml;stlich',
+       'atlasPageRightBtnTxt'                            =>'Seite westlich',
+       'atlasPageSmallRightBtnTxt'                       =>'Bereich westlich',
+       'atlasPageZoomInBtnTxt'                           =>'Vergr&ouml;&szlig;ern',
+       'atlasPageZoom1BtnTxt'                            =>'Vergr&ouml;&szlig;ern um 1&deg;',
+       'atlasPageZoom2BtnTxt'                            =>'Vergr&ouml;&szlig;ern um 2&deg;',
+       'atlasPageZoomOutBtnTxt'                          =>'Verkleinern',
+       'atlasPageObjectTxt'                              =>'Objekt',
+       'atlasPageTypeTxt'                                =>'Typ',
+       'atlasPageConsTxt'                                =>'Sternbild',
+       'atlasPageSeenTxt'                                =>'Gesehen',
+       'atlasPageMagnTxt'                                =>'Hellig.',
+       'atlasPageSubrTxt'                                =>'Oberfl. Hellig.',
+       'atlasPageDiamTxt'                                =>'Ausma&szlig;e',
+       'atlasPageDone'                                   =>'Dr&uuml;cke H f&uuml;r Hilfe - A f&uuml;r Abk&uuml;rzungen - P f&uuml;r Drucken - O f&uuml;r &Uuml;bersichtskarte - Z f&uuml;r Aufsuchkarte - D f&uuml;r Detailkarte',
+       'atlasPageObjectsFetching'                        =>'Lade Objektdaten bis zur Helligkeit ...',
+       'atlasPageStarsFetching'                          =>'Lade Sterndaten bis zur Helligkeit ...',
        'atlasPageFoV'                                    =>'FoV:',
-       'atlasPageDSLM'                                   =>'Objecten tot mag:',
-       'atlasPageStarLM'                                 =>'Sterren tot mag:'
+       'atlasPageDSLM'                                   =>'Objekte bis mag:',
+       'atlasPageStarLM'                                 =>'Sterne bis mag:'
 
 );
 // LangListQueryObjectsMessage17
@@ -294,11 +294,11 @@ define("LangGeneralObservations"													,"Beobachtungen");
 
 define("LangIndexPleaseWait"															,"Bitte warten Sie einen Moment w&aumlhrend die Daten geladen werden...");
 
-define("LangTitlecomets_result_query_objects"       			,"Resultaten opzoeken komeet");
-define("LangTitlecomets_result_query_observations"  			,"Resultaten opzoeken waarnemingen komeet");
+define("LangTitlecomets_result_query_objects"       			,"Suche nach Kometen Ergebnisse");
+define("LangTitlecomets_result_query_observations"  			,"Suche nach Kometen Beobachtungen");
 
-define("LangTitleview_observer_catalog"  									,"Overview catalog");
-define("LangTitlerank_observers"         									,"Overview observers");
+define("LangTitleview_observer_catalog"  									,"Katalog &Uuml;bersicht");
+define("LangTitlerank_observers"         									,"Beobachter &Uuml;bersicht");
 
 define("LangException000"																	,"Es trat ein Fehler auf. Bitte kontaktieren Sie die Entwickler mit dieser Nachricht.");
 define("LangException001"																	,"Sie m&uuml;ssen als Administrator angemeldet sein um diese Funktion auszuf&uuml;hren.");
@@ -571,7 +571,7 @@ define("LangOverviewSiteTitle"														,"&uuml;bersicht Beobachtungspl&auml
 define("LangAddSiteExisting"															,"Beobachtungsplatz hinzuf&uuml;gen");
 
 define("LangOverviewEyepieceTitle"												,"&uuml;bersicht Okulare");
-define("LangAddEyepieceExisting"													,"Select the eyepiece details from the list");
+define("LangAddEyepieceExisting"													,"W&aumlhle die Okulardetails von der Liste");
 define("LangAddEyepieceManually"													,"geben Sie das Okulare Details an");
 define("LangAddEyepieceTitle"															,"Neues Okular");
 define("LangAddEyepieceField1"														,"Name");
@@ -738,8 +738,8 @@ define("LangCheckRA"																			,"Koordinaten &uuml;berpr&uuml;fen");
 define("LangPossibleCandidateObjects"											,"M&ouml;gliche Kandidaten");
 define("LangPossibleCandidateObjectsExplanation"					,"Bitte best&aumltigen Sie, da&szlig; das Objekt nicht unten aufgelistet ist");
 define("LangObjectNotFound"																,"Best&aumltigen");
-define("LangNewObjectPhase0"															,"Geef enkel objecten in die nog niet in het systeem zitten. Geef eerst de naam van het object in. ".
-                             															 "In het eerste vak geef je de cataloog in, in het tweede vak het nummer binnen de cataloog (bv. M in het eerste vak, 1 in het tweede vak). ");
+define("LangNewObjectPhase0"															,"F&uuml;gen Sie nur Objekte hinzu, welche nicht bereits im System sind. Geben Sie zuerst den Namen des Objektes an. ".
+                             															 "Im ersten Feld geben Sie den Katalognamen an, im zweiten Feld geben Sie die Katalognummer des Objektes an (z.B.: M im ersten Feld und 1 im zweiten Feld). ");
 define("LangNewObjectPhase10"															,"Bitte &uuml;berpr&uuml;fen Sie, ob das Objekt in der unten stehenden Liste auftaucht. Lassen Sie sich Zeit um die Eintr&aumlge zu &uuml;berpr&uuml;fen. ".
                               														 "Sollte das Objekt in der Liste unten auftauchen, k&ouml;nnen Sie diesen Bereich verlassen indem Sie das Objekt anklicken. ".
                               														 "Sollte das Objekt nihct in der Liste unten auftauchen, dr&uuml;cken Sie den Bst&aumltigungsknopf. Vorsicht! Sie m&uuml;ssen ggf. scrollen um die komplette Liste zu sehen.");
@@ -882,14 +882,14 @@ define("LangViewObserverName"															,"Name");
 define("LangViewObserverFirstName"												,"Vorname");
 define("LangViewObserverRole"															,"Rolle");
 define("LangViewObserverLastLogin"                        ,"Lestes login");
-define("LangViewObserverinstrumentCount"                  ,"Aantal instrumenten");
+define("LangViewObserverinstrumentCount"                  ,"Anzahl der Instrumente");
 define("LangViewObserverAdmin"														,"Admin");
 define("LangViewObserverWaitlist"													,"Warteliste");
 define("LangViewObserverUser"															,"Beobachter");
 define("LangViewObserverCometAdmin"												,"Komet admin");
 define("LangViewObserverValidate"													,"&Uuml;berpr&uuml;fen");
 define("LangViewObserverChange"														,"&Auml;ndere Rolle");
-define("LangViewObserverChangeNameFirstname"              ,"Verander email / voornaam / naam");
+define("LangViewObserverChangeNameFirstname"              ,"&Auml;ndere eMail / Vorname / Name");
 define("LangViewObserverNumberOfObservations"							,"Anzahl der Beobachtungen");
 define("LangViewObserverRank"															,"Rang");
 define("LangViewObserverInexistant"												,"Dieser Beobachter existiert nicht!");
@@ -1087,7 +1087,7 @@ define("LangNewObservationSubtitle1b"											,"Beobachtungen von CSV Datei im
 define("LangNewObservationSubtitle1c"											,"Beobachtungen von &lt;OAL&gt; (XML) Datei importieren");
 define("LangNewObservationSubtitle2"											,"Pr&uuml;fen der Objekt details");
 define("LangNewObservationSubtitle3"											,"Beobachtungsdetail Eingabe ");
-define("LangNewObservationSubtitle3B"											,"Change the observation details ");
+define("LangNewObservationSubtitle3B"											,"&Auml;ndere die Beobachtungsdetails ");
 define("LangNewObservationSubtitle3A"											,"(* Pflichtfelder)");
 define("LangNewObservationSubtitle3C"											," - ");
 define("LangNewObservationButton1"												,"Objekt suche");
@@ -1308,11 +1308,9 @@ define("LangRemove"																				,"L&ouml;schen");
 // content/new_observationcsv.php
 define("LangCSVTitle"																			,"Beobachtungen von CSV Datei importieren");
 define("LangCSVMessage1"																	,"Diese Eingabemaske erlaubt Ihnen mehrere Beobachtungen auf einmal einzugeben, indem Sie eine CSV Datei importieren (comma seperated value Datei). Dies beschleunigt das Hochladen ihrer Beobachtungen, ferner k&ouml;nnen sie alte Beobachtungen aus Drittanwendungen leichter importieren. Zu Ihrer Information: Alle Beobachtungen mit Ihrem (vollen) Namen werden importiert.");
-define("LangCSVMessage2"																	,"The CSV file uses the following format: <span class=\"bold\">(NEW FORMAT!!!)</span>");
-define("LangCSVMessage3"																	,"<span class=\"bold\"><i>1-Objekt; 2-Beobachter; 3-Datum; 4-UT; 5-Beobachtungsplatz; 6-Beobachtungsger&auml;t; 7-Okular; 8-Filter; 9-Linse; 10-Seeing; 11-Schw&auml;chsterStern oder SQM as you wish; 12-Sichtbarkeit; 13-Sprache; 14-Beschreibung</i></span>");
-define("LangCSVMessage4"																	,"<span class=\"bold\">Vorsicht!</span>Im Gegensatz zur Version 3.3 (und Vorg&aumlngern)kann die Datei <span class=\"bold\">keine</span> <span class=\"underline\">Kopfzeile</span> mehr enthalten. Die erste Zeile enth&aumllt direkt die eigentlichen Beobachtungen im angegebenen Format, wie z.B.: <br /><br />NGC 2392;John Smith;21-01-2005;20:45;Aalst;Obsession 15\";31mm Nagler;Lumicon O-III filter;Televue 2x Barlow;2;4.0;3;en;H&uuml;bsche Planetarischer Nebel mit hellem zentralen Stern!<br />M 35;John Smith;21-01-2005;20:53;Aalst;Obsession 15\";;;;2;4.0;1;en;About thirty members with several curved chains of stars.<br />...<br /><br />Seeing should be given as a number between 1 and 5 (1=excellent, 2=good, 3=moderate, 4=poor, 5=bad).<br />Visibility should be given as a number between 1 and 7 (1=Very simple, prominent object, 2=Object easily percepted with direct vision, 3=Object perceptable with direct vision, 4=Averted vision required to percept object, 5=Object barely perceptable with averted vision, 6=Perception of object is very questionable, 7=Object definitely not seen).<br />If an observation has been done by naked eye, 'Naked Eye' should be given as instrument.<br />Language should be the short name for the language the description is in  (de for German)");
-
-
+define("LangCSVMessage2"																	,"Die CSV Datei nutzt folgendes Format: <span class=\"bold\">(NEUES FORMAT!!!)</span>");
+define("LangCSVMessage3"																	,"<span class=\"bold\"><i>1-Objekt; 2-Beobachter; 3-Datum; 4-UT; 5-Beobachtungsplatz; 6-Beobachtungsger&auml;t; 7-Okular; 8-Filter; 9-Linse; 10-Seeing; 11-Schw&auml;chsterStern oder SQM; 12-Sichtbarkeit; 13-Sprache; 14-Beschreibung</i></span>");
+define("LangCSVMessage4"																	,"<span class=\"bold\">Vorsicht!</span>Im Gegensatz zur Version 3.3 (und Vorg&auml;ngern) kann die Datei <span class=\"bold\">keine</span> <span class=\"underline\">Kopfzeile</span> mehr enthalten. Die erste Zeile enth&auml;lt direkt die eigentlichen Beobachtungen im angegebenen Format, wie z.B.: <br /><br />NGC 2392;John Smith;21-01-2005;20:45;Aalst;Obsession 15\";31mm Nagler;Lumicon O-III filter;Televue 2x Barlow;2;4.0;3;en;H&uuml;bsche Planetarischer Nebel mit hellem zentralen Stern!<br />M 35;John Smith;21-01-2005;20:53;Aalst;Obsession 15\";;;;2;4.0;1;en;Ungef&auml;hr 30 Mitglieder mit einigen Sternmustern.<br />...<br /><br />Seeing sollte als Zahl zwischen 1 und 5 (1=excellent, 2=gut, 3=Moderat, 4=Schwach, 5=Sehr schwach) angegeben werden.<br />Sichtbarkeit sollte als Zahl zwischen 1 und 7 (1=Sehr einfaches, auff&auml;lliges Objekt im Okular, 2=Objekt bei direktem Beobachten gut zu sehen, 3=Objekt bei direktem Beobachten zu sehen, 4=Indirektes Beobachten ist n&ouml;tig, um das Objekt zu sehen, 5=Objekt bei indirektem Beobachten gerade noch wahrnehmbar, 6=Sichtung des Objektes sehr fraglich, 7=Objekt sicher nicht zu sehen) angegeben werden.<br />Wenn eine Beobachtung mit dem blo&szlig;en Auge gemacht wurde, sollte \"Naked Eye\" als Instrument ausgew&aumlhlt werden.<br />Sprache sollte als Kurzkennung der Sprache angegeben werden (z.B.: de f&uuml;r deutsch)");
 define("LangCSVMessage5"																	,"Achtung!<br />Das Beobachtungsger&auml;t, der Beobachtungsplatz und die Objekte in der CSV-Datei sollten schon in DeepskyLog bekannt sein,
                           																 sonst erhalten Sie eine Fehlermeldung und diesen Beobachtungen wirden nicht importiert.<br />
                            																 In diesem Fall geben Sie bitte die fehlenden Daten per Hand ein und starten Sie den Import erneut bis keine Fehlermeldung mehr erscheint.<br />&nbsp;<br />
