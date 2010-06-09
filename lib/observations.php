@@ -1257,19 +1257,15 @@ class Observations {
     $date = $date[0] . "-". $date[1] . "-" . $date[2];
     $time = "23:59:59";
     $tzone = "GMT";
-  echo $date . ' ' . $time . ' ' . $tzone;
     $moondata = phase(strtotime($date . ' ' . $time . ' ' . $tzone));
-
     $MoonIllum  = $moondata[1];
     $MoonAge    = $moondata[2];
-
     // Convert $MoonIllum to percent and round to whole percent.
     $MoonIllum = round( $MoonIllum, 2 );
     $MoonIllum *= 100;
-
     $file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
     $moon = "<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" />";
-    $objPresentations->line(array($moon), "RL", array(100), 50, array("type20"));
+    $objPresentations->line(array($moon), "R", array(100), 50, array("type20"));
 		                     
     if(in_array($objObject->getDsoProperty($object,'type'),array("DS","AA2STAR"))) {
       $objPresentations->line(array(LangViewObservationField22,
