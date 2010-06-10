@@ -16,6 +16,7 @@ else
 	require_once "lib/util.php";
 	require_once "lib/setup/language.php";
 	require_once "lib/observers.php";
+  require_once "lib/observerqueries.php";
 	require_once "lib/setup/vars.php";
 	require_once "common/control/loginuser.php";
 	require_once "lib/atlasses.php";

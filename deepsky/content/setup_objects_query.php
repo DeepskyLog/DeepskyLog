@@ -368,7 +368,7 @@ function setup_objects_query()
 	echo "</form>";
 	echo "<hr />";
 	$content="Stored queries:"."&nbsp;";
-	$content.='<select id="observerqueries" onchange="restoreQuery();"></select>'.'&nbsp;';
+	$content.='<select id="observerqueries" onchange="restoreQuery();"><option value="-----">-----</option></select>'.'&nbsp;';
 	$content.='<input id="savequeryas" type="button" value="Save As..." onclick="saveObserverQueryAs();"/>'.'&nbsp;';
 	$content.='<input id="deletequery" type="button" value="Remove" class="hidden" onclick="removeQuery();"/>'.'&nbsp;';
 	$objPresentations->line(array($content),"L",array(100));

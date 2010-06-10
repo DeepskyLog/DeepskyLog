@@ -18,27 +18,11 @@ elseif($ajaxInstruction=="saveReportLayout")
 elseif($ajaxInstruction=="deleteReportLayout")
   echo json_encode($objReportLayout->deleteLayout($objUtil->checkRequestKey('reportname'),$objUtil->checkRequestKey('reportlayout')));
 elseif($ajaxInstruction=="getObserverQueries")
-  echo json_encode($objDatabase->selectRecordsetArray("SELECT * FROM observerqueries WHERE observerid=\"".$loggedUser."\" AND observerquerytype=\"".$objUtil->checkGetKey('observerquerytype')."\";"));
+  echo json_encode($objObserverQueries->getObserverQueries($objUtil->checkGetKey('observerquerytype')));
 elseif($ajaxInstruction=="removeObserverQuery")
-{ $sql="DELETE FROM observerqueries WHERE (observerid=\"".$loggedUser."\" AND 
-                                     observerquerytype=\"".$objUtil->checkGetKey('observerquerytype')."\" AND
-                                     observerqueryname=\"".$objUtil->checkGetKey('observerqueryname')."\");";
-  $objDatabase->execSQL($sql);
-	echo json_encode($objDatabase->selectRecordsetArray("SELECT * FROM observerqueries WHERE observerid=\"".$loggedUser."\" AND observerquerytype=\"".$objUtil->checkGetKey('observerquerytype')."\";"));
-}
+  echo json_encode($objObserverQueries->removeObserverQuery($objUtil->checkGetKey('observerquerytype'),$objUtil->checkGetKey('observerqueryname')));
 elseif($ajaxInstruction=="saveObserverQuery")
-{ reset($_GET);
-  $temp="";
-  while(list($key,$value)=each($_GET))
-    $temp=$temp.$key."=".$value."&";
-  $sql="INSERT INTO observerqueries(observerid,observerquerytype,observerqueryname,observerquery) 
-                             VALUES (\"".$loggedUser."\", 
-                                     \"".$objUtil->checkGetKey('observerquerytype')."\",
-                                     \"".$objUtil->checkGetKey('observerqueryname')."\",
-                                     \"".($temp)."\");";
-  $objDatabase->execSQL($sql);
-	echo json_encode($objDatabase->selectRecordsetArray("SELECT * FROM observerqueries WHERE observerid=\"".$loggedUser."\" AND observerquerytype=\"".$objUtil->checkGetKey('observerquerytype')."\";"));
-}
+  echo json_encode($objObserverQueries->saveObserverQuery($objUtil->checkGetKey('observerquerytype'),$objUtil->checkGetKey('observerqueryname')));
 else
   echo "No result.";  
 ?>

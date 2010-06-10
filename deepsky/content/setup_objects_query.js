@@ -171,7 +171,7 @@ function restoreQuery()
     if(document.getElementById(field).type=='select-one')
       document.getElementById(field).selectedIndex=value;
     else if(document.getElementById(field).type=='text')
-      document.getElementById(field).text=value;
+      document.getElementById(field).value=value;
     else if(document.getElementById(field).type=='checkbox')
       document.getElementById(field).checked=(value==='true'?true:false);
   }
