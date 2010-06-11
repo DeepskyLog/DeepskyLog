@@ -196,9 +196,9 @@ class AstroCalc implements iAstroCalc
     }
 
     $transit = $ris_tra_set[1];
-    if($ris_tra_set[1] > 24 || $ris_tra_set[1] < 0) {
+    /*if($ris_tra_set[1] > 24 || $ris_tra_set[1] < 0) {
       $ris_tra_set[1] = "-";
-    } else {
+    } else {*/
       $ris_tra_set[1] = $ris_tra_set[1] + $timedifference;
       if ($ris_tra_set[1] < 0) {
         $ris_tra_set[1] = $ris_tra_set[1] + 24;
@@ -217,7 +217,7 @@ class AstroCalc implements iAstroCalc
         $minutes = "0" . $minutes;
       }
       $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd . ":" . $minutes;
-    }    
+    /*}*/   
 
     $set = $ris_tra_set[2];
     if ($ris_tra_set[2] > 24 || $ris_tra_set[2] < 0) {

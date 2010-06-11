@@ -1413,7 +1413,6 @@ class Objects implements iObjects
   }
 	public  function validateObject()                                                 // checks if the add new object form is correctly filled in and eventually adds the object to the database
 	{ global $objUtil,$objObject, $objObserver, $entryMessage, $loggedUser, $developversion,$mailTo,$mailFrom;
-	  echo "Con: ".$_POST['con'];
 	  if(!($loggedUser))
 	     new Exception(LangException002c);
 	  if($objUtil->checkPostKey('newobject'))

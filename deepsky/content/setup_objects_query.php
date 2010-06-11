@@ -1,7 +1,7 @@
 <?php // setup_objects_query.php - interface to query objects
 function setup_objects_query()
 { global $baseURL,$loggedUser,$objPresentations,$objUtil,$objObject,$objList,$objAtlas,
-         $catalog,$catNumber,$atlas,$atlasPageNumber,
+         $catalog,$catNumber,$atlas,$atlasPageNumber,$entryMessage,
          $pageError,$minDeclDegreesError,$minDeclMinutesError,$minDeclSecondsError,$maxDeclDegreesError,$maxDeclMinutesError,$maxDeclSecondsError,
          $minRAHoursError,$minRAMinutesError,$minRASecondsError,$maxRAHoursError,$maxRAMinutesError,$maxRASecondsError,$maxMagError,$minMagError,
          $maxSBError,$minSBError,$minSizeError,$maxSizeError,$minContrastError,$maxContrastError,$listError;
@@ -367,11 +367,13 @@ function setup_objects_query()
 	echo "</div>";
 	echo "</form>";
 	echo "<hr />";
-	$content="Stored queries:"."&nbsp;";
-	$content.='<select id="observerqueries" onchange="restoreQuery();"><option value="-----">-----</option></select>'.'&nbsp;';
-	$content.='<input id="savequeryas" type="button" value="Save As..." onclick="saveObserverQueryAs();"/>'.'&nbsp;';
-	$content.='<input id="deletequery" type="button" value="Remove" class="hidden" onclick="removeQuery();"/>'.'&nbsp;';
-	$objPresentations->line(array($content),"L",array(100));
+	if($loggedUser)
+	{ $content="Stored queries:"."&nbsp;";
+	  $content.='<select id="observerqueries" onchange="restoreQuery();"><option value="-----">-----</option></select>'.'&nbsp;';
+	  $content.='<input id="savequeryas" type="button" value="Save As..." onclick="saveObserverQueryAs();"/>'.'&nbsp;';
+	  $content.='<input id="deletequery" type="button" value="Remove" class="hidden" onclick="removeQuery();"/>'.'&nbsp;';
+	  $objPresentations->line(array($content),"L",array(100));
+	}
 	echo "</div>";
 	echo '<script type="text/javascript">setobserverqueries();</script>';
 }
