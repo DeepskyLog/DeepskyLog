@@ -313,7 +313,7 @@ class Observers implements iObservers
     $objDatabase->execSQL("UPDATE observers SET role = \"".($role=RoleUser)."\" WHERE id=\"".($id=$objUtil->checkGetKey('validate'))."\"");
     if ($role == RoleAdmin) $ad = LangValidateAdmin;
 	  else                    $ad = "";
-    $array = array(LangValidateMail1, $id, LangValidateMail2, $ad, LangValidateMail3);
+    $array = array(LangValidateMail1, $this->getObserverProperty($id,'firstname').' '.$this->getObserverProperty($id,'name'), LangValidateMail2, $ad, LangValidateMail3);
     $body = implode("", $array);
     if(isset($developversion)&&($developversion==1))
       $entryMessage.="On the live server, a mail would be sent with the subject: ".LangValidateSubject.".<br />";
