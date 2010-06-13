@@ -238,11 +238,8 @@ class Objects implements iObjects
 		 	 	 	   "OR altname LIKE \"$value2\"";
 	  else
 	  { $catindex=ucwords($catindex);
-      $catandindex=$objCatalog->checkObject($cat.' '.$catindex);
-      $cat=$catandindex[0];
-      $catindex=$catandindex[1];
-	    $sql = "SELECT objectnames.objectname FROM objectnames " .
-		         "WHERE CONCAT(objectnames.catalog, ' ', objectnames.catindex) LIKE \"$cat $catindex\"";
+      $sql = "SELECT objectnames.objectname FROM objectnames " .
+		         "WHERE CONCAT(objectnames.catalog, ' ', objectnames.catindex) LIKE \"".$objCatalog->checkObject($cat.' '.$catindex)."\"";
 	  }
 	  return $objDatabase->selectSingleArray($sql,'objectname');
   }
