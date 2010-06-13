@@ -92,7 +92,7 @@ function setup_observations_query()
 	  if($atlasPageNumber=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $atlasPageNumber=$_SESSION['QobsParams']['atlasPageNumber'];
-		echo "<input id=\"atlasPageNumber\" name=\"atlasPageNumber\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"".$atlasPageNumber."\" />";
+		echo "<input id=\"atlasPageNumber\" name=\"atlasPageNumber\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"".$atlasPageNumber."\" />";
 		echo "</td>";
 		echo "</tr>";
 	// OBJECT CONSTELLATION
