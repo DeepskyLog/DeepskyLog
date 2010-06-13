@@ -4,6 +4,11 @@
 //define("LangTopObserversHeader7"													,"Anzahl der Zeichnungen");
 //define("LangTopObserversHeader8"													,"Zeichnungen letztes Jahr");
 
+
+define("LangStoredQueries"      ,"Stored queries:");
+define("LangSaveAs"             ,"Save As...");
+define("LangRemove"             ,"Remove");
+
 define("LangExclude",            "Ausnahme:");
 define("LangDescriptioncontains","NGC Beschreibung enth&aumllt:");
 

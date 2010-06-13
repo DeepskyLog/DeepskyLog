@@ -1,6 +1,12 @@
 <?php
 
 // TO DO:
+
+define("LangStoredQueries"      ,"Stored queries:");
+define("LangSaveAs"             ,"Save As...");
+define("LangRemove"             ,"Remove");
+
+
 define("LangExclude",            "Exclude:");
 define("LangDescriptioncontains","NGC Decription contains:");
 

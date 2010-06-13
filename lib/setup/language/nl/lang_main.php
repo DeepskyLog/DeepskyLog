@@ -2,6 +2,10 @@
 
 // TO DO:
 
+define("LangStoredQueries"      ,"Stored queries:");
+define("LangSaveAs"             ,"Save As...");
+define("LangRemove"             ,"Remove");
+
 
 define("LangExclude",            "Uitgezonderd:");
 define("LangDescriptioncontains","NGC omschrijving bevat:");

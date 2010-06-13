@@ -617,11 +617,11 @@ function setup_observations_query()
 	echo "<input id=\"temp\" type=\"hidden\" value=\"".$temp."\" />";
 	echo "<hr />";
 	if($loggedUser)
-	{ $content="Stored queries:"."&nbsp;";
+	{ $content=LangStoredQueries."&nbsp;";
 	  $content.='<select id="observerqueries" onchange="restoreQuery();"><option value="-----">-----</option></select>'.'&nbsp;';
-	  $content.='<input id="savequeryas" type="button" value="Save As..." onclick="saveObserverQueryAs();"/>'.'&nbsp;';
-	  $content.='<input id="deletequery" type="button" value="Remove" class="hidden" onclick="removeQuery();"/>'.'&nbsp;';
-	  $objPresentations->line(array($content),"L",array(100));
+	  $content.='<input id="savequeryas" type="button" value="'.LangSaveAs.'" onclick="saveObserverQueryAs();"/>'.'&nbsp;';
+	  $content.='<input id="deletequery" type="button" value="'.LangRemove.'" class="hidden" onclick="removeQuery();"/>'.'&nbsp;';
+		  $objPresentations->line(array($content),"L",array(100));
 	}
 	echo "</div>";
 	echo '<script type="text/javascript">setobserverqueries();</script>';
