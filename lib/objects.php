@@ -211,15 +211,14 @@ class Objects implements iObjects
     if($value)
     { $value=$objCatalog->checkObject($value);
       $sql = "SELECT objectnames.objectname FROM objectnames " .
-		  	   "WHERE UPPER(altname) = \"".strtoupper(trim($value))."\" " .
-					 "OR altname = \"".trim($value)."\"";
+		  	     "WHERE UPPER(altname) = \"".strtoupper(trim($value))."\" " .
+			  		 "OR altname = \"".trim($value)."\"";
     }
     else
     { $catandindex=$objCatalog->checkObject($cat.' '.ucwords(trim($catindex)));
-	    $cat=$catandindex[0];
-	    $catindex=$catandindex[1];
       $sql = "SELECT objectnames.objectname FROM objectnames " .
-		        "WHERE objectnames.catalog=\"".$cat."\" AND objectnames.catindex=\"".ucwords(trim($catindex))."\"";
+		  	     "WHERE UPPER(altname) = \"".strtoupper(trim($catandindex))."\" " .
+			  		 "OR altname = \"".trim($catandindex)."\"";
     }
     if((!($object=$objDatabase->selectSingleValue($sql,'objectname','')))&&$value)
 	  { $value=$objCatalog->checkObject($value);
