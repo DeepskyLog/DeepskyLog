@@ -4,7 +4,7 @@
 
 define("LangStoredQueries"      ,"Stored queries:");
 define("LangSaveAs"             ,"Save As...");
-define("LangRemove"             ,"Remove");
+define("LangRemoveQuery"        ,"Remove");
 
 
 define("LangExclude",            "Uitgezonderd:");

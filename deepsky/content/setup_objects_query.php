@@ -146,9 +146,9 @@ function setup_objects_query()
 	  if(($minDeclSeconds=$objUtil->checkGetKey('minDeclSeconds'))=='')
 	    if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount)&&($_SESSION['QobjParams']['mindecl']!==''))
 	      $minDeclSeconds=round(abs($_SESSION['QobjParams']['mindecl']*3600)) % 60;
-	  echo "<input id=\"minDeclDegrees\" name=\"minDeclDegrees\" type=\"text\" class=\"inputfield\" maxlength=\"3\" size=\"3\" value=\"" . $minDeclDegrees .  "\" />&nbsp;&deg;&nbsp;";
-	  echo "<input id=\"minDeclMinutes\" name=\"minDeclMinutes\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $minDeclMinutes .  "\" />&nbsp;&#39;&nbsp;";
-	  echo "<input id=\"minDeclSeconds\" name=\"minDeclSeconds\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $minDeclSeconds .  "\" />&nbsp;&quot;&nbsp;"; 
+	  echo "<input id=\"minDeclDegrees\" name=\"minDeclDegrees\" type=\"text\" class=\"inputfield centered\" maxlength=\"3\" size=\"3\" value=\"" . $minDeclDegrees .  "\" />&nbsp;&deg;&nbsp;";
+	  echo "<input id=\"minDeclMinutes\" name=\"minDeclMinutes\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"" . $minDeclMinutes .  "\" />&nbsp;&#39;&nbsp;";
+	  echo "<input id=\"minDeclSeconds\" name=\"minDeclSeconds\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"" . $minDeclSeconds .  "\" />&nbsp;&quot;&nbsp;"; 
 	  echo "</td>";
 	// MAXIMUM DECLINATION
 	  $errorclass=($maxDeclDegreesError || $maxDeclMinutesError || $maxDeclSecondsError);
@@ -163,9 +163,9 @@ function setup_objects_query()
 	  if(($maxDeclSeconds=$objUtil->checkGetKey('maxDeclSeconds'))=='')
 	    if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount)&&($_SESSION['QobjParams']['maxdecl']!==''))
 	      $maxDeclSeconds=round(abs($_SESSION['QobjParams']['maxdecl']*3600)) % 60;
-	  echo "<input id=\"maxDeclDegrees\" name=\"maxDeclDegrees\" type=\"text\" class=\"inputfield\" maxlength=\"3\" size=\"3\" value=\"" . $maxDeclDegrees .  "\" />&nbsp;&deg;&nbsp;";
-	  echo "<input id=\"maxDeclMinutes\" name=\"maxDeclMinutes\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $maxDeclMinutes .  "\" />&nbsp;&#39;&nbsp;";
-	  echo "<input id=\"maxDeclSeconds\" name=\"maxDeclSeconds\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $maxDeclSeconds .  "\" />&nbsp;&quot;&nbsp;";
+	  echo "<input id=\"maxDeclDegrees\" name=\"maxDeclDegrees\" type=\"text\" class=\"inputfield centered\" maxlength=\"3\" size=\"3\" value=\"" . $maxDeclDegrees .  "\" />&nbsp;&deg;&nbsp;";
+	  echo "<input id=\"maxDeclMinutes\" name=\"maxDeclMinutes\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"" . $maxDeclMinutes .  "\" />&nbsp;&#39;&nbsp;";
+	  echo "<input id=\"maxDeclSeconds\" name=\"maxDeclSeconds\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"" . $maxDeclSeconds .  "\" />&nbsp;&quot;&nbsp;";
 	  echo "</td>";
 	  echo "</tr>";
 	// MINIMUM RIGHT ASCENSION
@@ -182,9 +182,9 @@ function setup_objects_query()
 	  if(($minRASeconds=$objUtil->checkGetKey('minRASeconds'))=='')
 	    if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount)&&($_SESSION['QobjParams']['minra']!==''))
 	      $minRASeconds=round(abs($_SESSION['QobjParams']['minra']*3600)) % 60;
-	  echo "<input id=\"minRAHours\" name=\"minRAHours\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $minRAHours .  "\" />&nbsp;h&nbsp;";
-	  echo "<input id=\"minRAMinutes\" name=\"minRAMinutes\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $minRAMinutes .  "\" />&nbsp;m&nbsp;";
-	  echo "<input id=\"minRASeconds\" name=\"minRASeconds\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $minRASeconds .  "\" />&nbsp;s&nbsp;";
+	  echo "<input id=\"minRAHours\"   name=\"minRAHours\"   type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"" . $minRAHours .  "\" />&nbsp;h&nbsp;";
+	  echo "<input id=\"minRAMinutes\" name=\"minRAMinutes\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"" . $minRAMinutes .  "\" />&nbsp;m&nbsp;";
+	  echo "<input id=\"minRASeconds\" name=\"minRASeconds\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"" . $minRASeconds .  "\" />&nbsp;s&nbsp;";
 	  echo "</td>";
 	// MAXIMUM RIGHT ASCENSION
 	  $errorclass=($maxRAHoursError || $maxRAMinutesError || $maxRASecondsError);
@@ -199,9 +199,9 @@ function setup_objects_query()
 	  if(($maxRASeconds=$objUtil->checkGetKey('maxRASeconds'))=='')
 	    if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount)&&($_SESSION['QobjParams']['maxra']!==''))
 	      $maxRASeconds=round(abs($_SESSION['QobjParams']['maxra']*3600)) % 60;
-	  echo "<input id=\"maxRAHours\" name=\"maxRAHours\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $maxRAHours .  "\" />&nbsp;h&nbsp;";
-	  echo "<input id=\"maxRAMinutes\" name=\"maxRAMinutes\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $maxRAMinutes .  "\" />&nbsp;m&nbsp;";
-	  echo "<input id=\"maxRASeconds\" name=\"maxRASeconds\" type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" value=\"" . $maxRASeconds .  "\" />&nbsp;s&nbsp;";
+	  echo "<input id=\"maxRAHours\"   name=\"maxRAHours\"   type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"" . $maxRAHours .  "\" />&nbsp;h&nbsp;";
+	  echo "<input id=\"maxRAMinutes\" name=\"maxRAMinutes\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"" . $maxRAMinutes .  "\" />&nbsp;m&nbsp;";
+	  echo "<input id=\"maxRASeconds\" name=\"maxRASeconds\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"" . $maxRASeconds .  "\" />&nbsp;s&nbsp;";
 	  echo "</td>";
 	  echo "</tr>";
 	  echo("<tr>");
@@ -211,7 +211,7 @@ function setup_objects_query()
 	  if(($maxMag=$objUtil->checkGetKey('maxMag'))=='')
 	    if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
 	      $maxMag=$_SESSION['QobjParams']['maxmag'];
-	  echo "<input id=\"maxMag\" name=\"maxMag\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"" . $maxMag .  "\" />"; 
+	  echo "<input id=\"maxMag\" name=\"maxMag\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"" . $maxMag .  "\" />"; 
 	  echo "</td>";
 	// MAGNITUDE LESSER THAN
 	  echo "<td class=\"fieldname".(($minMagError)?" errorclass":"")."\" >".LangQueryObjectsField3."</td>";
@@ -229,7 +229,7 @@ function setup_objects_query()
 	  if(($maxSB=$objUtil->checkGetKey('maxSB'))=='')
 	    if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
 	      $maxSB=$_SESSION['QobjParams']['maxsubr'];
-	  echo "<input id=\"maxSB\" name=\"maxSB\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"" . $maxSB .  "\" />";
+	  echo "<input id=\"maxSB\" name=\"maxSB\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"" . $maxSB .  "\" />";
 	  echo "</td>";
 	// SURFACE BRIGHTNESS LESSER THAN
 	  echo "<td class=\"fieldname".(($minSBError)?" errorclass":"")."\">".LangQueryObjectsField5."</td>";
@@ -237,7 +237,7 @@ function setup_objects_query()
 	  if(($minSB=$objUtil->checkGetKey('minSB'))=='')
 	    if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
 	      $minSB=$_SESSION['QobjParams']['minsubr'];
-	  echo "<input id=\"minSB\" name=\"minSB\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"" . $minSB .  "\" />";
+	  echo "<input id=\"minSB\" name=\"minSB\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"" . $minSB .  "\" />";
 	  echo "</td>";
 	  echo "</tr>";
 	  echo "<tr>";
@@ -250,7 +250,7 @@ function setup_objects_query()
 	    { $minSize=$_SESSION['QobjParams']['mindiam1'];
 	      $size_min_units="sec";
 	    }
-	  echo "<input id=\"minSize\" name=\"minSize\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"".$minSize."\" />";
+	  echo "<input id=\"minSize\" name=\"minSize\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"".$minSize."\" />";
 	  echo "&nbsp;&nbsp;";
 	  echo "<select id=\"size_min_units\" name=\"size_min_units\" class=\"inputfield\">";
 	  echo "<option".(($size_min_units=="min")?" selected=\"selected\"":"")." value=\"min\">".LangNewObjectSizeUnits1."</option>";
@@ -266,7 +266,7 @@ function setup_objects_query()
 	    { $maxSize=$_SESSION['QobjParams']['maxdiam1'];
 	      $size_max_units="sec";
 	    }
-	  echo"<input id=\"maxSize\" name=\"maxSize\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"" . $maxSize . "\" />";
+	  echo"<input id=\"maxSize\" name=\"maxSize\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"" . $maxSize . "\" />";
 	  echo "&nbsp;&nbsp;";
 	  echo "<select id=\"size_max_units\" name=\"size_max_units\" class=\"inputfield\">";
 	  echo "<option".(($size_max_units=="min")?" selected=\"selected\"":"")." value=\"min\">".LangNewObjectSizeUnits1."</option>";
@@ -282,7 +282,7 @@ function setup_objects_query()
 	    if(($minContrast=$objUtil->checkGetKey('minContrast'))=='')
 	      if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
 	        $minContrast=$_SESSION['QobjParams']['minContrast'];
-	    echo "<input id=\"minContrast\" name=\"minContrast\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"".$minContrast."\" />";
+	    echo "<input id=\"minContrast\" name=\"minContrast\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"".$minContrast."\" />";
 	    echo "</td>";
 	  // MAXIMUM CONTRAST RESERVE
 	    echo "<td class=\"fieldname".(($maxContrastError)?" errorclass":"")."\">".LangQueryObjectsField17."</td>";
@@ -290,7 +290,7 @@ function setup_objects_query()
 	    if(($maxContrast=$objUtil->checkGetKey('maxContrast'))=='')
 	      if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
 	        $maxContrast=$_SESSION['QobjParams']['maxContrast'];
-	    echo "<input id=\"maxContrast\" name=\"maxContrast\" type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" value=\"".$maxContrast."\" />";
+	    echo "<input id=\"maxContrast\" name=\"maxContrast\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"".$maxContrast."\" />";
 	    echo "</td>";
 	    echo "</tr>";
 	    echo "<tr>";
@@ -371,7 +371,7 @@ function setup_objects_query()
 	{ $content=LangStoredQueries."&nbsp;";
 	  $content.='<select id="observerqueries" onchange="restoreQuery();"><option value="-----">-----</option></select>'.'&nbsp;';
 	  $content.='<input id="savequeryas" type="button" value="'.LangSaveAs.'" onclick="saveObserverQueryAs();"/>'.'&nbsp;';
-	  $content.='<input id="deletequery" type="button" value="'.LangRemove.'" class="hidden" onclick="removeQuery();"/>'.'&nbsp;';
+	  $content.='<input id="deletequery" type="button" value="'.LangRemoveQuery.'" class="hidden" onclick="removeQuery();"/>'.'&nbsp;';
 	  $objPresentations->line(array($content),"L",array(100));
 	}
 	echo "</div>";

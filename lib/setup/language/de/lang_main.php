@@ -7,7 +7,7 @@
 
 define("LangStoredQueries"      ,"Stored queries:");
 define("LangSaveAs"             ,"Save As...");
-define("LangRemove"             ,"Remove");
+define("LangRemoveQuery"        ,"Remove");
 
 define("LangExclude",            "Ausnahme:");
 define("LangDescriptioncontains","NGC Beschreibung enth&aumllt:");
