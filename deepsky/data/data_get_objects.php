@@ -448,8 +448,17 @@ elseif($objUtil->checkGetKey('source')=='add_object10')   //====================
 }
 elseif($objUtil->checkGetKey('source')=='add_object20')   //========================== from quickpick page
 { $catandindex=$objCatalog->checkObject($objUtil->checkRequestKey('catalog').' '.$objUtil->checkRequestKey('number'));
-  $_REQUEST['catalog']=$catandindex[0];
-  $_REQUEST['number']=$catandindex[1];
+  $firstspace=strpos($catandindex,' ',0);
+  if($firstspace!==FALSE)
+  { $thenewcatalog0=trim(substr($catandindex,0,$firstspace));
+    $theindex=trim(substr($catandindex,$firstspace+1));
+  }
+  else
+  { $thenewcatalog0=$catandindex;
+    $theindex='';
+  }
+  $_REQUEST['catalog']=$thenewcatalog0;
+  $_REQUEST['number']=$theindex;
   $_SESSION['QobjParams']=array('source'=>'add_object20');
   $ra=(abs($objUtil->checkRequestKey('RAhours'))+($objUtil->checkRequestKey('RAminutes')/60)+($objUtil->checkRequestKey('RAseconds')/3600));
   $decl=((substr(trim($objUtil->checkRequestKey('DeclDegrees')),0,1)=='-')?-1:1)*(abs($objUtil->checkRequestKey('DeclDegrees'))+($objUtil->checkRequestKey('DeclMinutes')/60)+($objUtil->checkRequestKey('DeclSeconds')/3600));
