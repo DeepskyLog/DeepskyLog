@@ -24,5 +24,5 @@ elseif($ajaxInstruction=="removeObserverQuery")
 elseif($ajaxInstruction=="saveObserverQuery")
   echo json_encode($objObserverQueries->saveObserverQuery($objUtil->checkGetKey('observerquerytype'),$objUtil->checkGetKey('observerqueryname')));
 else
-  echo "No result.";  
+  echo "No result.";
 ?>
