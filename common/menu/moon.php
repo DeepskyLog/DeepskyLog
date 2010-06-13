@@ -99,10 +99,10 @@ if($menuMoon=="collapsed")
   echo "<a href=\"".$baseURL."index.php?menuMoon=expanded".$link."\" title=\"".LangMenuExpand."\">+</a> ";
 else
   echo "<a href=\"".$baseURL."index.php?menuMoon=collapsed".$link."\" title=\"".LangMenuCollapse."\">-</a> ";
-echo (($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation'))?LangMoonSunMenuTitle:LangMoonMenuTitle)."<br /><span class=\"menuText\" style=\"font-weight:normal;\">";
+echo (($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation'))?LangMoonSunMenuTitle:LangMoonMenuTitle)."<br />";
 if($menuMoon!="collapsed")
-  echo"(".LangOn." ".$dateTimeText.")";
-echo "</span>"."</p>";
+  echo"<span class=\"menuText\" style=\"font-weight:normal;\">(".LangOn." ".$dateTimeText.")</span>";
+echo "</p>";
 if($menuMoon!="collapsed") 
 { if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) 
   { echo "<table class=\"centered\">";
