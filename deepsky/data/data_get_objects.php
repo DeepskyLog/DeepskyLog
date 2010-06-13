@@ -411,10 +411,17 @@ elseif($objUtil->checkGetKey('source')=='quickpick')   //=======================
 }
 elseif($objUtil->checkGetKey('source')=='add_object10')   //========================== from quickpick page
 { $validQobj=false;
-  $catandindex=$objCatalog->checkObject($objUtil->checkRequestKey('catalog').' '.$objUtil->checkRequestKey('number'));
-  $_REQUEST['catalog']=$catandindex[0];
-  $_REQUEST['number']=$catandindex[1];
-  $_GET['object']="%".$_REQUEST['catalog']."%".str_replace(" ","%",$_REQUEST['number'])."%";
+  $firstspace=strpos($catandindex,' ',0);
+  if($firstspace!==FALSE)
+  { $thenewcatalog0=trim(substr($catandindex,0,$firstspace));
+    $theindex=trim(substr($catandindex,$firstspace+1));
+  }
+  else
+  { $thenewcatalog0=$catandindex;
+    $theindex='';
+  }
+  $_REQUEST['catalog']=$thenewcatalog0;
+  $_REQUEST['number']=$theindex;
   if(array_key_exists('QobjParams',$_SESSION)
   && array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='add_object')
   && array_key_exists('object',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['object']==$objUtil->checkGetKey('object')))
