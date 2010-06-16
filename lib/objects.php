@@ -736,9 +736,9 @@ class Objects implements iObjects
   { $newname = trim($cat . " " . ucwords(trim($catindex)));
 	  $newcatindex = ucwords(trim($catindex));
     global $objDatabase;
-	  $objDatabase->execSQL("UPDATE objectnames SET catalog=\"$cat\", catindex=\"$newcatindex\", altname=TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")) WHERE objectname = \"$name\" AND altname = \"$name\"");
+	  $objDatabase->execSQL("UPDATE objects SET name=\"$newname\" WHERE name = \"$name\"");
+    $objDatabase->execSQL("UPDATE objectnames SET catalog=\"$cat\", catindex=\"$newcatindex\", altname=TRIM(CONCAT(\"$cat\", \" \", \"$newcatindex\")) WHERE objectname = \"$name\" AND altname = \"$name\"");
     $objDatabase->execSQL("UPDATE objectnames SET objectname=\"$newname\" WHERE objectname = \"$name\"");
-    $objDatabase->execSQL("UPDATE objects SET name=\"$newname\" WHERE name = \"$name\"");
     $objDatabase->execSQL("UPDATE observerobjectlist SET objectshowname=\"$newname\" WHERE objectname = \"$name\"");
     $objDatabase->execSQL("UPDATE observerobjectlist SET objectname=\"$newname\" WHERE objectname = \"$name\"");
     $objDatabase->execSQL("UPDATE observations SET objectname=\"$newname\" WHERE objectname = \"$name\"");
@@ -1561,7 +1561,6 @@ class Objects implements iObjects
 		     $sql="UPDATE objectnames SET catalog='".addslashes($thecatalog)."', catindex='".addslashes($theindex)."', altname='".addslashes($thecatalog)." " .addslashes($theindex)."' WHERE altname='".addslashes($theobject)."';";
 		     echo "Changed altname: ".$thecatalog.' '.$theindex." <= ".$theobject."\n";
 		     $objDatabase->execSQL($sql);
-		     echo "Changed altname: ".$thecatalog.' '.$theindex." <= ".$theobject."\n";
 		   }
 		}
 	}

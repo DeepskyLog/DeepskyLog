@@ -129,6 +129,251 @@ class catalogs
 
 	    return $returnindex.$theindex;  
 	  }
+	  if($theformat=="IRAS")
+	  { $returnindex='';
+	    $temp=strpos($theindex,'+');
+	    if($temp===FALSE)
+	      $temp=strpos($theindex,'-');
+	    if($temp===FALSE)
+	      return $returnindex.$theindex;
+	    for($i=$temp;$i<5;$i++)
+	      $returnindex.="0";
+	    $returnindex.=substr($theindex,0,$temp+1);
+	    $theindex=substr($theindex,$temp+1);
+
+	    $temp=strlen($theindex);
+	    for($i=$temp;$i<4;$i++)
+	      $returnindex.="0";
+
+	    return $returnindex.$theindex;  
+	  }
+	  if($theformat=="KUG")
+	  { $returnindex='';
+	    $temp=strpos($theindex,'+');
+	    if($temp===FALSE)
+	      $temp=strpos($theindex,'-');
+	    if($temp===FALSE)
+	      return $returnindex.$theindex;
+	    for($i=$temp;$i<4;$i++)
+	      $returnindex.="0";
+	    $returnindex.=substr($theindex,0,$temp+1);
+	    $theindex=substr($theindex,$temp+1);
+
+	    $temp=strlen($theindex);
+	    for($i=$temp;$i<3;$i++)
+	      $returnindex.="0";
+      if(($temp<4)&&substr($theindex,-1)>"9")
+	      $returnindex.="0";
+      return $returnindex.$theindex;  
+	  }
+	  if($theformat=="MAC")
+	  { $returnindex='';
+	    $temp=strpos($theindex,'+');
+	    if($temp===FALSE)
+	      $temp=strpos($theindex,'-');
+	    if($temp===FALSE)
+	      return $returnindex.$theindex;
+	    for($i=$temp;$i<4;$i++)
+	      $returnindex.="0";
+	    $returnindex.=substr($theindex,0,$temp+1);
+	    $theindex=substr($theindex,$temp+1);
+
+	    $temp=strlen($theindex);
+	    for($i=$temp;$i<4;$i++)
+	      $returnindex.="0";
+      if(($temp<5)&&substr($theindex,-1)>"9")
+	      $returnindex.="0";
+      return $returnindex.$theindex;  
+	  }
+	  if($theformat=="NPM1G")
+	  { $temp=substr($theindex,0,1);
+	    if(($temp!="-")&&($temp!="+"))
+	      return $theindex;
+	    $returnindex=$temp;
+	    $theindex=substr($theindex,1);
+	      
+	  	$temp=strpos($theindex,'.');
+	    if($temp===FALSE)
+	      return $returnindex.$theindex;
+	    for($i=$temp;$i<2;$i++)
+	      $returnindex.="0";
+	    $returnindex.=substr($theindex,0,$temp+1);
+	    $theindex=substr($theindex,$temp+1);
+	    
+	    $temp=strlen($theindex);
+	    for($i=$temp;$i<4;$i++)
+	      $returnindex.="0";
+	    return $returnindex.$theindex; 
+	  	
+	  }
+	  if($theformat=="PK")
+	  { $returnindex='';
+	    $temp=strpos($theindex,'+');
+	    if($temp===FALSE)
+	      $temp=strpos($theindex,'-');
+	    if($temp===FALSE)
+	      return $returnindex.$theindex;
+	    for($i=$temp;$i<3;$i++)
+	      $returnindex.="0";
+	    $returnindex.=substr($theindex,0,$temp+1);
+	    $theindex=substr($theindex,$temp+1);
+	  	$temp=strpos($theindex,'.');
+	    if($temp===FALSE)
+	      return $returnindex.$theindex;
+	    for($i=$temp;$i<2;$i++)
+	      $returnindex.="0";
+	    $returnindex.=substr($theindex,0,$temp+1);
+	    $theindex=substr($theindex,$temp+1);
+	    
+	    $temp=strlen($theindex);
+	    for($i=$temp;$i<2;$i++)
+	      $returnindex.="0";
+	    return $returnindex.$theindex; 
+ 	  }
+	  if($theformat=="PKS")
+	  { $returnindex='';
+	    $temp=strpos($theindex,'+');
+	    if($temp===FALSE)
+	      $temp=strpos($theindex,'-');
+	    if($temp===FALSE)
+	      return $returnindex.$theindex;
+	    for($i=$temp;$i<4;$i++)
+	      $returnindex.="0";
+	    $returnindex.=substr($theindex,0,$temp+1);
+	    $theindex=substr($theindex,$temp+1);
+
+	    $temp=strlen($theindex);
+	    for($i=$temp;$i<2;$i++)
+	      $returnindex.="0";
+
+	    return $returnindex.$theindex;  
+	  }
+    if($theformat=="QSO")
+    { $returnindex='';
+	    if(strtoupper(substr($theindex,0,1))=="J")
+	    { $returnindex='J';
+	      $theindex=substr($theindex,1);
+	    }
+	    if(strtoupper(substr($theindex,0,1))=="B")
+	    { $returnindex='B';
+	      $theindex=substr($theindex,1);
+	    }
+	    $temp=strpos($theindex,'+');
+	    if($temp===FALSE)
+	      $temp=strpos($theindex,'-');
+	    if($temp===FALSE)
+	      return $returnindex.$theindex;
+	    for($i=$temp;$i<4;$i++)
+	      $returnindex.="0";
+	    $returnindex.=substr($theindex,0,$temp+1);
+	    $theindex=substr($theindex,$temp+1);
+
+	    $temp=strlen($theindex);
+	    for($i=$temp;$i<4;$i++)
+	      $returnindex.="0";
+
+	    return $returnindex.$theindex;  
+    }
+    if($theformat=="SAO")
+    { $returnindex='';
+	    $temp=strlen($theindex);
+	    for($i=$temp;$i<6;$i++)
+	      $returnindex.="0";
+
+	    return $returnindex.$theindex;  
+    }
+	  if($theformat=="SBS")
+	  { $returnindex='';
+	    $temp=strpos($theindex,'+');
+	    if($temp===FALSE)
+	      $temp=strpos($theindex,'-');
+	    if($temp===FALSE)
+	      return $returnindex.$theindex;
+	    for($i=$temp;$i<4;$i++)
+	      $returnindex.="0";
+	    $returnindex.=substr($theindex,0,$temp+1);
+	    $theindex=substr($theindex,$temp+1);
+
+	    $temp=strlen($theindex);
+	    for($i=$temp;$i<3;$i++)
+	      $returnindex.="0";
+
+	    return $returnindex.$theindex;  
+	  }
+	  if($theformat=="SDSS")
+	  { $returnindex='J';
+	    if(strtoupper(substr($theindex,0,1))=="J")
+	      $theindex=substr($theindex,1);
+
+	    $temp=strpos($theindex,'.');
+	    if($temp===FALSE)
+	      return $returnindex.$theindex;
+	    for($i=$temp;$i<6;$i++)
+	      $returnindex.="0";
+	    $returnindex.=substr($theindex,0,$temp+1);
+	    $theindex=substr($theindex,$temp+1);
+	    
+	    $temp=strpos($theindex,'+');
+	    if($temp===FALSE)
+	      $temp=strpos($theindex,'-');
+	    if($temp===FALSE)
+	      return $returnindex.$theindex;
+	    for($i=$temp;$i<2;$i++)
+	      $returnindex.="0";
+	    $returnindex.=substr($theindex,0,$temp+1);
+	    $theindex=substr($theindex,$temp+1);
+	    
+	    $temp=strpos($theindex,'.');
+	    if($temp===FALSE)
+	      return $returnindex.$theindex;
+	    for($i=$temp;$i<6;$i++)
+	      $returnindex.="0";
+	    $returnindex.=substr($theindex,0,$temp+1);
+	    $theindex=substr($theindex,$temp+1);
+	    
+	    $temp=strlen($theindex);
+	    for($i=$temp;$i<1;$i++)
+	      $returnindex.="0";
+	    return $returnindex.$theindex;  
+	  }
+	  if($theformat=="WRAY")
+	  { $returnindex='';
+	    if(strtoupper(substr($theindex,0,3))=="15-")
+	    { $theindex=substr($theindex,3);
+	      $temp=strlen($theindex);
+	      for($i=$temp;$i<4;$i++)
+	        $returnindex.="0";
+	      return '15-'.$returnindex.$theindex;  
+	    }
+      if(strtoupper(substr($theindex,0,3))=="16-")
+	    { $theindex=substr($theindex,3);
+	      $temp=strlen($theindex);
+	      for($i=$temp;$i<3;$i++)
+	        $returnindex.="0";
+	      return '16-'.$returnindex.$theindex;  
+	    }
+	    if(strtoupper(substr($theindex,0,3))=="17-")
+	    { $theindex=substr($theindex,3);
+	      $temp=strlen($theindex);
+	      for($i=$temp;$i<3;$i++)
+	        $returnindex.="0";
+	      return '17-'.$returnindex.$theindex;  
+	    }
+	    if(strtoupper(substr($theindex,0,3))=="18-")
+	    { $theindex=substr($theindex,3);
+	      $temp=strlen($theindex);
+	      for($i=$temp;$i<3;$i++)
+	        $returnindex.="0";
+	      return '18-'.$returnindex.$theindex;  
+	    }
+	    if(strtoupper(substr($theindex,0,3))=="19-")
+	    { $theindex=substr($theindex,3);
+	      $temp=strlen($theindex);
+	      for($i=$temp;$i<2;$i++)
+	        $returnindex.="0";
+	      return '19-'.$returnindex.$theindex;  
+	    }
+	  }
   }
   public function checkObject($theobject)
   { $firstspace=strpos($theobject,' ',0);
@@ -137,12 +382,20 @@ class catalogs
       $theindex=trim(substr($theobject,$firstspace+1));
     }
     else
-    { $thenewcatalog0=$theobject;
-      $theindex='';
+    { if(strtoupper(substr($theobject,0,3))=='PKS')
+      { $thenewcatalog0='PKS';
+        $theindex=substr($theobject,3);
+      }
+    	elseif(strtoupper(substr($theobject,0,2))=='PK')
+      { $thenewcatalog0='PK';
+        $theindex=substr($theobject,2);
+      }
+    	else
+    	{ $thenewcatalog0=$theobject;
+        $theindex='';
+    	}
     }
     $thenewcatalog=strtoupper($thenewcatalog0);
-    if($thenewcatalog=='MELOTTE')
-      $thenewcatalog0='MEL';
     if($thenewcatalog=='ACG')
       $thenewcatalog0='AGC';
     if($thenewcatalog=='BARNARD')
@@ -171,6 +424,8 @@ class catalogs
       $thenewcatalog0='Mrk';
       if($thenewcatalog=='MARK')
       $thenewcatalog0='Mrk';
+    if($thenewcatalog=='MELOTTE')
+      $thenewcatalog0='MEL';
     if($thenewcatalog=='PALOMAR')
       $thenewcatalog0='Pal';
     if($thenewcatalog=='PEREZ-P...')
@@ -179,13 +434,18 @@ class catalogs
       $thenewcatalog0='Ru';
     if($thenewcatalog=='ST')
       $thenewcatalog0='Stock';
+    if($thenewcatalog=='SANDULEAK')
+      $thenewcatalog0='Sa';
     if($thenewcatalog=='TRUMPLER')
       $thenewcatalog0='Tr';
-
+    if($thenewcatalog=='WRAY')
+      $thenewcatalog0='Wray';  
+      
+      
     if((strpos($theobject,"%")!==FALSE)||(strpos($theobject,"?")!==FALSE))
       return trim($thenewcatalog0.' '.$theindex);
   	else
-  	{ $tocheck=array("2MASX","MCG","APMUKS(BJ)","BD",'CGCG');
+  	{ $tocheck=array("2MASX","MCG","APMUKS(BJ)","BD",'CGCG','IRAS','KUG','MAC','NPM1G','PK','PKS','QSO','SAO','SBS','SDSS','WRAY');
       while(list($key,$value)=each($tocheck))
         if(strtoupper($thenewcatalog0)==$value)
           return $value.' '.$this->formatIndex($value,trim($theindex));
