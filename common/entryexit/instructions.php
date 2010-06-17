@@ -646,6 +646,8 @@ else
 	   	}
 	   	if($_GET['newaction']=="LangObjectSetPA")
 			  $objObject->setDsoProperty($_GET['object'],'pa', $_GET['newnumber']);
+	   	if($_GET['newaction']=="LangObjectSetDESC")
+			  $objObject->setDsoProperty($_GET['object'],'description', $_GET['newnumber']);
 		}
 	}
 }

@@ -98,30 +98,31 @@ else
 	//============================================================================== Admin section permits to change object settings in DB remotely
 	if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
 	{ echo "<hr />";
-	  echo("<form action=\"".$baseURL."index.php\" method=\"get\"><div>");
-	  echo("<input type=\"hidden\" name=\"object\" value=\"" . $_GET['object'] . "\" />");
-	  echo("<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />");
-	  echo("<select name=\"newaction\">");
-	  echo("<option value=\"\">&nbsp;</option>"); // empty field
-	  echo("<option value=\"NewName\">" . LangObjectNewName . "</option>");
-	  echo("<option value=\"NewAltName\">" . LangObjectNewAltName . "</option>");
-	  echo("<option value=\"RemoveAltNameName\">" . LangObjectRemoveAltNameName . "</option>");
-	  echo("<option value=\"NewPartOf\">" . LangObjectNewPartOf . "</option>");
-	  echo("<option value=\"RemovePartOf\">" . LangObjectRemovePartOf . "</option>");
-	  echo("<option value=\"RemoveAndReplaceObjectBy\">" . LangObjectRemoveAndReplaceObjectBy . "</option>");
-	  echo("<option value=\"LangObjectSetRA\">" . LangObjectSetRA . "</option>");
-	  echo("<option value=\"LangObjectSetDECL\">" . LangObjectSetDECL . "</option>");
-	  echo("<option value=\"LangObjectSetCon\">" . LangObjectSetCon . "</option>");
-	  echo("<option value=\"LangObjectSetType\">" . LangObjectSetType . "</option>");
-	  echo("<option value=\"LangObjectSetMag\">" . LangObjectSetMag . "</option>");
-	  echo("<option value=\"LangObjectSetSUBR\">" . LangObjectSetSUBR . "</option>");
-	  echo("<option value=\"LangObjectSetDiam1\">" . LangObjectSetDiam1 . "</option>");
-	  echo("<option value=\"LangObjectSetDiam2\">" . LangObjectSetDiam2 . "</option>");
-	  echo("<option value=\"LangObjectSetPA\">" . LangObjectSetPA . "</option>");
-	  echo("</select>");		
+	  echo "<form action=\"".$baseURL."index.php\" method=\"get\"><div>";
+	  echo "<input type=\"hidden\" name=\"object\" value=\"" . $_GET['object'] . "\" />";
+	  echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
+	  echo "<select name=\"newaction\">";
+	  echo "<option value=\"\">&nbsp;</option>";
+	  echo "<option value=\"NewName\">" . LangObjectNewName . "</option>";
+	  echo "<option value=\"NewAltName\">" . LangObjectNewAltName . "</option>";
+	  echo "<option value=\"RemoveAltNameName\">" . LangObjectRemoveAltNameName . "</option>";
+	  echo "<option value=\"NewPartOf\">" . LangObjectNewPartOf . "</option>";
+	  echo "<option value=\"RemovePartOf\">" . LangObjectRemovePartOf . "</option>";
+	  echo "<option value=\"RemoveAndReplaceObjectBy\">" . LangObjectRemoveAndReplaceObjectBy . "</option>";
+	  echo "<option value=\"LangObjectSetRA\">" . LangObjectSetRA . "</option>";
+	  echo "<option value=\"LangObjectSetDECL\">" . LangObjectSetDECL . "</option>";
+	  echo "<option value=\"LangObjectSetCon\">" . LangObjectSetCon . "</option>";
+	  echo "<option value=\"LangObjectSetType\">" . LangObjectSetType . "</option>";
+	  echo "<option value=\"LangObjectSetMag\">" . LangObjectSetMag . "</option>";
+	  echo "<option value=\"LangObjectSetSUBR\">" . LangObjectSetSUBR . "</option>";
+	  echo "<option value=\"LangObjectSetDiam1\">" . LangObjectSetDiam1 . "</option>";
+	  echo "<option value=\"LangObjectSetDiam2\">" . LangObjectSetDiam2 . "</option>";
+	  echo "<option value=\"LangObjectSetPA\">" . LangObjectSetPA . "</option>";
+	  echo "<option value=\"LangObjectSetDESC\">" . LangEditObjectDescription . "</option>";
+	  echo "</select>";		
 	  echo "<select name=\"newcatalog\">";
-	  echo "<option value=\"\">&nbsp;</option>"; // empty field
-	  $catalogs = $objObject->getCatalogs(); // should be sorted
+	  echo "<option value=\"\">&nbsp;</option>";
+	  $catalogs = $objObject->getCatalogs();
 	  while(list($key, $value) = each($catalogs))
 	    echo "<option value=\"$value\">".$value."</option>";
 	  echo "</select>";		

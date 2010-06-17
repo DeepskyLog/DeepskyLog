@@ -1,49 +1,5 @@
 <?php // The objects class collects all functions needed to enter, retrieve and adapt object data from the database and functions to display the data.
-interface iObjects
-{ public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec,$mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource); // Add a deepsky object in all detail
-//private function calcContrastAndVisibility($object,$showname,$magnitude,$SBobj,$diam1,$diam2,&$contrast,&$contype,&$popup,&$prefMag);
-//private function calculateSize($diam1, $diam2);                               // Construct a string from the sizes
-  public  function getAllInfoDsObject($name);                                   // Returns all information of an object
-  public  function getAlternativeNames($name);
-  public  function getCatalogs();                                               // returns a list of all different catalogs
-  public  function getCatalogsAndLists();
-  public  function getConstellations();                                         // returns a list of all different constellations
-//private function getContainsNames($name);
-  public  function getDsObjectName($name);                                      // returns the name when the original or alternative name is given.
-  public  function getDsObjectTypes();                                          // returns a list of all different types
-  public  function getDsoProperty($theObject,$theProperty, $default='');        // returns the property of the object, or default if not found
-  public  function getDSOseenLink($object);                                     // Returns the getSeen result, encoded to a href that shows the seen observations
-  public  function getExactDsObject($value, $cat='', $catindex='');             // returns the exact name of an object
-  public  function getLikeDsObject($value, $cat='', $catindex='');              // returns the exact name of an object
-  public  function getNearbyObjects($objectname, $dist, $ra=0, $decl=0);        // returns an array with nearby objects
-  public  function getNumberOfObjectsInCatalog($catalog);                       // returns the number of objects in the catalog given as a parameter
-  public  function getObjectFromQuery($queries,$exact=0,$seen="D",$partof=0);
-  public  function getObjects($lLhr,$rLhr,$dDdeg,$uDdeg,$mag);                 // returns an array containing all objects data between the specified coordinates
-  public  function getObjectsFromCatalog($cat);
-  public  function getObjectVisibilities($obs);                                // completes an objects array containing already the object characteristics with the visibility and magnifications parameters
-//private function getPartOfNames($name);
-  public  function getPartOfs($objects);
-  public  function getSeen($object);                                            // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
-//private function getSeenLastseenLink($object,&$seenlink,&$lastseenlink);      // Returns the -/X(nr)/Y(nr) seen link to all observations of object, and the date last seen link, linking to all user observations inversely sorted by date
-  public  function getSeenObjectDetails($obs, $seen="D");                       // Fills in all object details and seen characteristics for an array of objects Obj[key]=array(position,name,optional descritpion)
-//private function getSize($name);                                              // Returns the size of the object
-  public  function newAltName($name, $cat, $catindex);                          // ADMIN FUNCTION, Add a new Altname in objectnames for this object
-  public  function newName($name, $cat, $catindex);                             // ADMIN FUNCTION, Set a new name for a DS object, and adapt all observations, objectnames, partofs and list occurences
-  public  function newPartOf($name, $cat, $catindex);                           // ADMIN FUNCTION, Adds a new partof entry for $name in the partsof table, making it part of $cat $index
-  public  function prepareObjectsContrast();                                    // internal procedure to speed up contrast calculations
-  public  function removeAltName($name, $cat, $catindex);                       // ADMIN FUNCTION, Remove the alternative name $cat $index from the objectnames of $name
-  public  function removeAndReplaceObjectBy($name, $cat, $catindex);            // ADMIN FUNCTION, Remove the object after replacing it in the observations, partofs, lists by the object $cat $index
-  public  function removePartOf($name, $cat, $catindex);                        // ADMIN FUNCTION, Remove the partof entry for $name from the partsof table, so that $name is no longer a part of $cat $index
-  public  function setDsObjectAtlasPages($name);                                // sets the different atlas pages for an object (e.g. after changing its coordinates)
-  public  function setDsObjectSBObj($name);                                     // sets the SBObj for an object, based on its mag and diam1 & 2, e.g. after changing its diam or mag.
-  public  function setDsoProperty($name,$property,$propertyValue);              // sets the property to the specified value for the given object
-  public  function showObject($object);                                         // shows the characteristics of a single object
-  public  function showObjects($link, $min, $max, $ownShow='', $showRank=0, $step=25, $pageListAction="addAllObjectsFromPageToList");    // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
-  public  function showObjectsFields($link, $min, $max, $ownShow='', $showRank=0, $step=25, $fields=array("showname","objectconstellation","objectmagnitude"), $pageListAction="addAllObjectsFromPageToList");        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
-  public  function sortObjects($objectList, $sort, $reverse=false);             // Sort the array of objectList on the $sort field, and in second order on the showname field 
-	public  function validateObject();                                            // checks if the add new object form is correctly filled in and eventually adds the object to the database
-}
-class Objects implements iObjects
+class Objects
 { public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec, $mag, $subr, $diam1, $diam2, $pa, $catalogs, $datasource)               // addObject adds a new object to the database. The name, alternative name, type, constellation, right ascension, declination, magnitude, surface brightness, diam1, diam2, position angle and info about the catalogs should be given as parameters. The chart numbers for different atlasses are put in the database. $datasource describes where the data comes from eg : SAC7.2, DeepskyLogUser or E&T 2.5
   { global $objDatabase;
     $array = array("INSERT INTO objects (name, type, con, ra, decl, mag, subr, diam1, diam2, pa, datasource, urano, urano_new, sky, millenium, taki, psa, torresB, torresBC, torresC, milleniumbase) 
@@ -1085,7 +1041,9 @@ class Objects implements iObjects
 	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader3,  $link."&amp;sort=objectmagnitude",         "C".$c++, $columnSource);
 	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader3b, $link."&amp;sort=objectsurfacebrightness", "C".$c++, $columnSource);
 	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader4,  $link."&amp;sort=objecttype",              "C".$c++, $columnSource);
-    if($loggedUser)
+	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader5,  $link."&amp;sort=objectra",         "C".$c++, $columnSource);
+	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader6,  $link."&amp;sort=objectdecl",         "C".$c++, $columnSource);
+	  if($loggedUser)
 	  { $atlas = $objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano');
       $objPresentations->tableSortHeader($objAtlas->atlasCodes[$atlas], $link."&amp;sort=".$atlas,             "C".$c++, $columnSource);
 	    $objPresentations->tableSortInverseHeader(LangViewObjectFieldContrastReserve, $link."&amp;sort=objectcontrast", "C".$c++, $columnSource);
@@ -1143,6 +1101,8 @@ class Objects implements iObjects
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3.": ".$_SESSION['Qobj'][$count]['objectmagnitude']."')\" class=\"centered\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)||($_SESSION['Qobj'][$count]['objectmagnitude']=='')?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3b.": ".$_SESSION['Qobj'][$count]['objectsurfacebrightness']."')\" class=\"centered\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)||($_SESSION['Qobj'][$count]['objectsurfacebrightness']=='')?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader4.": ".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."')\" class=\"centered\">".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."</td>";
+      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader5.": ".$_SESSION['Qobj'][$count]['objectra']."')\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectra']."</td>";
+      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader6.": ".$_SESSION['Qobj'][$count]['objectdecl']."')\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectdecl']."</td>";
       if($loggedUser) 
 	    { $page = $_SESSION['Qobj'][$count][$atlas];
         if(substr($_SESSION['Qobj'][$count]['objectseen'],0,2)=="YD")
