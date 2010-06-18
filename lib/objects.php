@@ -651,7 +651,9 @@ class Objects
           $result2[$j]['objectmagnitude'] =  ($get->mag==99.9?'':round($get->mag,1));
           $result2[$j]['objectsurfacebrightness'] =  ($get->subr==99.9?'':round($get->subr,1));
   	      $result2[$j]['objectra'] =  $get->ra;
+  	      $result2[$j]['objectrahms'] =  $objPresentations->raToStringHM($result2[$j]['objectra']);
   	      $result2[$j]['objectdecl'] =  $get->decl;
+  	      $result2[$j]['objectdecldms'] =  $objPresentations->decToString($result2[$j]['objectdecl'],0);
   	      $result2[$j]['objectradecl'] = $objPresentations->raToStringHM($result2[$j]['objectra']).' '.
 				                                 $objPresentations->decToString($result2[$j]['objectdecl'],0);
   	      $result2[$j]['objectdiam1'] = $get->diam1;
@@ -1041,8 +1043,9 @@ class Objects
 	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader3,  $link."&amp;sort=objectmagnitude",         "C".$c++, $columnSource);
 	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader3b, $link."&amp;sort=objectsurfacebrightness", "C".$c++, $columnSource);
 	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader4,  $link."&amp;sort=objecttype",              "C".$c++, $columnSource);
-	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader5,  $link."&amp;sort=objectra",         "C".$c++, $columnSource);
-	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader6,  $link."&amp;sort=objectdecl",         "C".$c++, $columnSource);
+	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader10, $link."&amp;sort=objectsizepa",            "C".$c++, $columnSource);
+	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader5,  $link."&amp;sort=objectradecl",            "C".$c++, $columnSource);
+	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader6,  $link."&amp;sort=objectdecl",              "C".$c++, $columnSource);
 	  if($loggedUser)
 	  { $atlas = $objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano');
       $objPresentations->tableSortHeader($objAtlas->atlasCodes[$atlas], $link."&amp;sort=".$atlas,             "C".$c++, $columnSource);
@@ -1101,8 +1104,9 @@ class Objects
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3.": ".$_SESSION['Qobj'][$count]['objectmagnitude']."')\" class=\"centered\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)||($_SESSION['Qobj'][$count]['objectmagnitude']=='')?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3b.": ".$_SESSION['Qobj'][$count]['objectsurfacebrightness']."')\" class=\"centered\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)||($_SESSION['Qobj'][$count]['objectsurfacebrightness']=='')?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader4.": ".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."')\" class=\"centered\">".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."</td>";
-      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader5.": ".$_SESSION['Qobj'][$count]['objectra']."')\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectra']."</td>";
-      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader6.": ".$_SESSION['Qobj'][$count]['objectdecl']."')\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectdecl']."</td>";
+      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader10.": ".$_SESSION['Qobj'][$count]['objectsizepa']."')\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectsizepa']."</td>";
+      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader5.": ".$_SESSION['Qobj'][$count]['objectrahms']."')\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectrahms']."</td>";
+      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader6.": ".$_SESSION['Qobj'][$count]['objectdecldms']."')\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectdecldms']."</td>";
       if($loggedUser) 
 	    { $page = $_SESSION['Qobj'][$count][$atlas];
         if(substr($_SESSION['Qobj'][$count]['objectseen'],0,2)=="YD")
@@ -1146,11 +1150,14 @@ class Objects
     if($loggedUser)
     { $content1=LangObjectsFilter.": <a href=\"".(($objUtil->checkRequestKey('filteron')=='location')?$objUtil->removeFromLink($link,'filteron=location')."\" title=\"".LangObjectsFilterLocationOffExpl."\"":$link."&amp;filteron=location"."\" title=\"".LangObjectsFilterLocationExpl."\"").">".LangObjectsFilterLocation."</a>"."&nbsp;-&nbsp;";
       $content1.="<a href=\"".(($objUtil->checkRequestKey('filteron1')=='time')?$objUtil->removeFromLink($link,'filteron1=time')."\" title=\"".LangObjectsFilterDateTimeOffExpl."\"":$link."&amp;filteron1=time"."\" title=\"".LangObjectsFilterDateTimeExpl."\"").">".LangObjectsFilterDateTime."</a>";
-     $content2="Layout: ";
+      $content2="Layout: ";
       $content2.=$objPresentations->promptWithLinkAndLayout(LangSaveFormLayout2,"layoutName",$link."&amp;saveLayout=saveLayout&amp;formName=".$columnSource,LangSaveFormLayout1);
       $content2.=" - ";
-      $content2.=" Openen ";
+      $content2.=LangSaveFormLayout3;
+      $content2.=" ";
       $content2.=$objPresentations->promptWithLinkAndLayoutList($columnSource,$link."&amp;loadLayout=loadLayout&amp;formName=".$columnSource);
+      $content2.=" ";
+      $content2.=$objPresentations->promptWithLinkAndLayout(LangSaveFormLayout2,"layoutName",$link."&amp;removeLayout=removeLayout&amp;formName=".$columnSource,LangSaveFormLayout4);
       $objPresentations->line(array($content1,$content2),"LR",array(50,50),20);
     }
     if($columnSource)
@@ -1158,7 +1165,7 @@ class Objects
       if($MSIE)
         echo "setClassName('className');";
       echo "setColumnSource('".$columnSource.($showRank?"showRank":"")."');";     //set theColumnSource Parameter
-      echo "readTitleColumnData(".--$c.");";                                      //read basic data in data array
+      echo "readTitleColumnData(".$c.");";                                      //read basic data in data array
       if($objUtil->checkGetKey('loadLayout'))
       { $objFormLayout->loadLayout($objUtil->checkGetKey('formName','NoFormName'),$objUtil->checkGetKey('layoutName','layoutName'));
       }

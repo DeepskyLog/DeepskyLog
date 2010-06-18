@@ -111,6 +111,8 @@ define("LangLoadFormLayout2"                             ,"Bitte geben Sie einen
 
 define("LangSaveFormLayout1"                             ,"Speichern");
 define("LangSaveFormLayout2"                             ,"Bitte geben Sie einen Layoutnamen ein");
+define("LangSaveFormLayout3"                             ,"Open");
+define("LangSaveFormLayout4"                             ,"Remove");
 
 
 

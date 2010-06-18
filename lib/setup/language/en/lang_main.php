@@ -109,6 +109,8 @@ define("LangLoadFormLayout2"                             ,"Please enter a name f
 
 define("LangSaveFormLayout1"                             ,"Save");
 define("LangSaveFormLayout2"                             ,"Please enter a name for the layout");
+define("LangSaveFormLayout3"                             ,"Open");
+define("LangSaveFormLayout4"                             ,"Remove");
 
 
 define("profiledsosmagnitude"                            ,"Atlas standard object magnitudes:");

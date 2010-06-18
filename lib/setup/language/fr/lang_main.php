@@ -112,6 +112,8 @@ define("LangLoadFormLayout2"                             ,"Gelieve de naam van d
 
 define("LangSaveFormLayout1"                             ,"Bewaren");
 define("LangSaveFormLayout2"                             ,"Gelieve de naam van de layout op te geven");
+define("LangSaveFormLayout3"                             ,"Openen");
+define("LangSaveFormLayout4"                             ,"Verwijderen");
 
 
 define("profiledsosmagnitude"                            ,"Atlas standaard objectmagnitudes:");

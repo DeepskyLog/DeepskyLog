@@ -5,6 +5,9 @@ else
   { $objFormLayout->saveLayout($objUtil->checkGetKey('formName','NoFormName'),$objUtil->checkGetKey('layoutName','layoutName'),
                                $objUtil->checkGetKey('restoreColumns',''),$objUtil->checkGetKey('orderColumns',''));
   }
+  if($objUtil->checkGetKey('removeLayout'))
+  { $objFormLayout->removeLayout($objUtil->checkGetKey('formName','NoFormName'),$objUtil->checkGetKey('layoutName','layoutName'));
+  }
   if(($markAsRead=$objUtil->checkGetKey('markAsRead',0))==="All")
     $objObserver->markAllAsRead();
   elseif($markAsRead)

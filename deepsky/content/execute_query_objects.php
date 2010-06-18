@@ -14,7 +14,7 @@ else
 $link=$baseURL."index.php?indexAction=query_objects";
 reset($_GET);
 while(list($key,$value)=each($_GET))
-  if(!(in_array($key,array('restoreColumns','orderColumns','loadLayout','saveLayout','sort','soretorder','multiplepagenr','noShowName','sortdirection'))))  
+  if(!(in_array($key,array('formName','layoutName','restoreColumns','orderColumns','loadLayout','saveLayout','removeLayout','sort','soretorder','multiplepagenr','noShowName','sortdirection'))))  
     $link.='&amp;'.urlencode($key).'='.urlencode($value);
 if(count($_SESSION['Qobj'])>1) //=============================================== valid result, multiple objects found
 { echo "<div id=\"main\">";

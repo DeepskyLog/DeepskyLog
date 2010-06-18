@@ -14,6 +14,12 @@ class formLayouts
       $objDatabase->execSQL("INSERT INTO formlayouts VALUES(\"".$loggedUser."\",\"".$formName."\",\"".$layoutName."\",\"".$restoreColumns."\",\"".$orderColumns."\");");
     }
   }
+  public function removeLayout($formName,$layoutName)
+  { global $loggedUser, $objDatabase;
+    if($layoutName&&($layoutName!='null'))
+    { $objDatabase->execSQL("DELETE FROM formlayouts WHERE observerid='".$loggedUser."' AND formName='".$formName."' AND layoutName='".$layoutName."';");
+    }
+  }
   public function getLayoutList($formName)
   { global $loggedUser, $objDatabase;
 	  if($formName)
