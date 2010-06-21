@@ -199,30 +199,30 @@ class AstroCalc implements iAstroCalc
     /*if($ris_tra_set[1] > 24 || $ris_tra_set[1] < 0) {
       $ris_tra_set[1] = "-";
     } else {*/
-      $ris_tra_set[1] = $ris_tra_set[1] + $timedifference;
-      if ($ris_tra_set[1] < 0) {
-        $ris_tra_set[1] = $ris_tra_set[1] + 24;
-      }
-      if ($ris_tra_set[1] > 24) {
-        $ris_tra_set[1] = $ris_tra_set[1] - 24;
-      }
-      $minutes = round(($ris_tra_set[1] - floor($ris_tra_set[1])) * 60);
-      if ($minutes == 60) {
-        $minutes = 0;
-        $toAdd = 1;
-      } else {
-        $toAdd = 0;
-      }
-      if ($minutes < 10) {
-        $minutes = "0" . $minutes;
-      }
-      $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd . ":" . $minutes;
-    /*}*/   
+    $ris_tra_set[1] = $ris_tra_set[1] + $timedifference;
+    if ($ris_tra_set[1] < 0) {
+      $ris_tra_set[1] = $ris_tra_set[1] + 24;
+    }
+    if ($ris_tra_set[1] > 24) {
+      $ris_tra_set[1] = $ris_tra_set[1] - 24;
+    }
+    $minutes = round(($ris_tra_set[1] - floor($ris_tra_set[1])) * 60);
+    if ($minutes == 60) {
+      $minutes = 0;
+      $toAdd = 1;
+    } else {
+      $toAdd = 0;
+    }
+    if ($minutes < 10) {
+      $minutes = "0" . $minutes;
+    }
+    $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd . ":" . $minutes;
+    /*}*/    
 
     $set = $ris_tra_set[2];
-    if ($ris_tra_set[2] > 24 || $ris_tra_set[2] < 0) {
-      $ris_tra_set[2] = "-";
-    } else {
+    /*if ($ris_tra_set[2] > 24 || $ris_tra_set[2] < 0) {
+      $ris_tra_set[2] = "x";
+    } else {*/
       $ris_tra_set[2] = $ris_tra_set[2] + $timedifference;
       if ($ris_tra_set[2] < 0) {
         $ris_tra_set[2] = $ris_tra_set[2] + 24;
@@ -241,7 +241,7 @@ class AstroCalc implements iAstroCalc
         $minutes = "0" . $minutes;
       }
       $ris_tra_set[2] = floor($ris_tra_set[2]) + $toAdd . ":" . $minutes;
-    }    
+    /*}*/
     $ris_tra_set[4] = 0;
     $ra2 = $ra2 / 15;
 
@@ -486,7 +486,7 @@ class AstroCalc implements iAstroCalc
   {
     // Step one : calculate the ra and dec for the moon for today, yesterday and tomorrow
     $jd = floor($jd) - 0.5;
-    
+
     $radec1 = $this->calculateMoonCoordinates($jd - 1, $longitude, $latitude);
     $radec2 = $this->calculateMoonCoordinates($jd, $longitude, $latitude);
     $radec3 = $this->calculateMoonCoordinates($jd + 1, $longitude, $latitude);

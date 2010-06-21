@@ -7,7 +7,12 @@ $theMinute="";
 $date = $theYear . "-". $theMonth . "-" . $theDay;
 $time = "23:59:59";
 $tzone = "GMT";
-$dateTimeText=date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear));
+$dateTimeText0=date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear));
+$dateTimeText1=date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear)+(60*60*24));
+if(substr($dateTimeText0,-8)==substr($dateTimeText1,-8))
+  $dateTimeText0=substr($dateTimeText0,0,2);
+elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
+  $dateTimeText0=substr($dateTimeText0,0,5);
 $moondata = phase(strtotime($date . ' ' . $time . ' ' . $tzone));
 $MoonIllum  = $moondata[1];
 $MoonAge    = $moondata[2];
@@ -23,7 +28,6 @@ $MoonIllum *= 100;
 if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) 
 { // 2) Get the julian day of today...
   $jd = gregoriantojd($theMonth, $theDay, $theYear);
-  
   // 3) Get the standard location of the observer
   $longitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'longitude');
   $latitude = $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser, 'stdLocation'), 'latitude');
@@ -101,7 +105,7 @@ else
   echo "<a href=\"".$baseURL."index.php?menuMoon=collapsed".$link."\" title=\"".LangMenuCollapse."\">-</a> ";
 echo (($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation'))?LangMoonSunMenuTitle:LangMoonMenuTitle)."<br />";
 if($menuMoon!="collapsed")
-  echo"<span class=\"menuText\" style=\"font-weight:normal;\">(".LangOn." ".$dateTimeText.")</span>";
+  echo"<span class=\"menuText\" style=\"font-weight:normal;\">(".LangOn." ".$dateTimeText0."-".$dateTimeText1.")</span>";
 echo "</p>";
 if($menuMoon!="collapsed") 
 { if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) 
