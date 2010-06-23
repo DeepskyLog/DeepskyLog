@@ -1,0 +1,3509 @@
+Checking 40045 objects.
+
+Object 156 Correction 1
+Nearby B 364 of type DRKNB on 21.56 54.55
+    is B B 157 of type DRKNB on 21.56 54.55
+
+Object 485 Correction 2
+Nearby Gum 35 of type BRTNB on 9.04 -48.7
+    is Gum 25 of type HII on 9.04 -48.7
+
+Object 555 Correction 3
+Nearby IC 348 of type REFNB on 3.74333 32.15
+    is Cr 41 of type OPNCL on 3.74333 32.15
+
+Object 614 Correction 4
+Nearby IC 1318 of type EMINB on 20.465 40
+    is IC 1318B of type EMINB on 20.465 40
+
+Object 681 Correction 5
+Nearby IC 3115 of type GALXY on 12.3 6.65361
+    is NGC 4241 of type GALXY on 12.3 6.65361
+
+Object 691 Correction 6
+Nearby IC 3568 of type PLNNB on 12.5519 82.5638
+    is UGC 7731 of type GALXY on 12.5519 82.564
+
+Object 749 Correction 7
+Nearby IC 5070 of type EMINB on 20.8467 44.35
+    is IC 5067 of type HII on 20.8467 44.35
+
+Object 847 Correction 8
+Nearby MCG -01-25-011 of type GALXY on 9.64833 -4.81667
+    is MCG -01-25-012 of type GALXY on 9.64833 -4.81694
+
+Object 899 Correction 9
+Nearby NGC 21 of type GALXY on 0.179722 33.3514
+    is NGC 29 of type GALXY on 0.179722 33.3514
+
+Object 907 Correction 10
+Nearby NGC 29 of type GALXY on 0.179722 33.3514
+    is NGC 21 of type GALXY on 0.179722 33.3514
+
+Object 1217 Correction 11
+Nearby NGC 333 of type GALXY on 0.980917 -16.4694
+    is NGC 333A of type GALXY on 0.980917 -16.4694
+
+Object 1256 Correction 12
+Nearby NGC 370 of type AA4STAR on 1.11167 32.4333
+    is NGC 372 of type AA4STAR on 1.11167 32.4333
+
+Object 1258 Correction 13
+Nearby NGC 372 of type AA4STAR on 1.11167 32.4333
+    is NGC 370 of type AA4STAR on 1.11167 32.4333
+
+Object 1334 Correction 14
+Nearby NGC 447 of type GALXY on 1.26053 33.0658
+    is NGC 449 of type GALXY on 1.26053 33.0658
+
+Object 1336 Correction 15
+Nearby NGC 449 of type GALXY on 1.26053 33.0658
+    is NGC 447 of type GALXY on 1.26053 33.0658
+
+Object 1411 Correction 16
+Nearby NGC 523 of type GALXY on 1.42242 34.0247
+    is NGC 537 of type GALXY on 1.42242 34.0247
+
+Object 1426 Correction 17
+Nearby NGC 537 of type GALXY on 1.42242 34.0247
+    is NGC 523 of type GALXY on 1.42242 34.0247
+
+Object 1428 Correction 18
+Nearby NGC 539 of type GALXY on 1.42269 -18.165
+    is NGC 563 of type GALXY on 1.42269 -18.165
+
+Object 1453 Correction 19
+Nearby NGC 563 of type GALXY on 1.42269 -18.165
+    is NGC 539 of type GALXY on 1.42269 -18.165
+
+Object 1497 Correction 20
+Nearby NGC 608 of type GALXY on 1.59114 33.6558
+    is NGC 618 of type GALXY on 1.59114 33.6558
+
+Object 1503 Correction 21
+Nearby NGC 614 of type GALXY on 1.59783 33.6814
+    is NGC 627 of type GALXY on 1.59783 33.6814
+
+Object 1507 Correction 22
+Nearby NGC 618 of type GALXY on 1.59114 33.6558
+    is NGC 608 of type GALXY on 1.59114 33.6558
+
+Object 1516 Correction 23
+Nearby NGC 627 of type GALXY on 1.59783 33.6814
+    is NGC 614 of type GALXY on 1.59783 33.6814
+
+Object 1565 Correction 24
+Nearby NGC 674 of type GALXY on 1.85486 22.3569
+    is NGC 697 of type GALXY on 1.85486 22.3569
+
+Object 1588 Correction 25
+Nearby NGC 697 of type GALXY on 1.85486 22.3569
+    is NGC 674 of type GALXY on 1.85486 22.3569
+
+Object 1595 Correction 26
+Nearby NGC 704 of type GALXY on 1.87714 36.1264
+    is UGC 1343A of type GALXY on 1.87717 36.1265
+
+Object 1617 Correction 27
+Nearby NGC 727 of type GALXY on 1.89703 -35.8564
+    is NGC 729 of type GALXY on 1.89703 -35.8564
+
+Object 1619 Correction 28
+Nearby NGC 729 of type GALXY on 1.89703 -35.8564
+    is NGC 727 of type GALXY on 1.89703 -35.8564
+
+Object 1621 Correction 29
+Nearby NGC 731 of type GALXY on 1.91553 -9.01194
+    is NGC 757 of type GALXY on 1.91553 -9.01194
+
+Object 1645 Correction 30
+Nearby NGC 755 of type GALXY on 1.93961 -9.06306
+    is NGC 763 of type GALXY on 1.93961 -9.06306
+
+Object 1647 Correction 31
+Nearby NGC 757 of type GALXY on 1.91553 -9.01194
+    is NGC 731 of type GALXY on 1.91553 -9.01194
+
+Object 1653 Correction 32
+Nearby NGC 763 of type GALXY on 1.93961 -9.06306
+    is NGC 755 of type GALXY on 1.93961 -9.06306
+
+Object 1673 Correction 33
+Nearby NGC 783 of type GALXY on 2.0185 31.8814
+    is IC 1765 of type GALXY on 2.0185 31.8814
+
+Object 1751 Correction 34
+Nearby NGC 863 of type GALXY on 2.24264 -0.766667
+    is NGC 885 of type GALXY on 2.24264 -0.766667
+
+Object 1845 Correction 35
+Nearby NGC 961 of type GALXY on 2.68394 -6.93611
+    is IC 249 of type GALXY on 2.68394 -6.93611
+
+Object 1845 Correction 36
+Nearby NGC 961 of type GALXY on 2.68394 -6.93611
+    is NGC 1051 of type GALXY on 2.68394 -6.93611
+
+Object 1868 Correction 37
+Nearby NGC 983 of type GALXY on 2.64881 34.6214
+    is NGC 1002 of type GALXY on 2.64881 34.6214
+
+Object 1887 Correction 38
+Nearby NGC 1002 of type GALXY on 2.64881 34.6214
+    is NGC 983 of type GALXY on 2.64881 34.6214
+
+Object 1925 Correction 39
+Nearby NGC 1040 of type GALXY on 2.72014 41.4997
+    is NGC 1053 of type GALXY on 2.72014 41.4997
+
+Object 1937 Correction 40
+Nearby NGC 1051 of type GALXY on 2.68394 -6.93611
+    is IC 249 of type GALXY on 2.68394 -6.93611
+
+Object 1937 Correction 41
+Nearby NGC 1051 of type GALXY on 2.68394 -6.93611
+    is NGC 961 of type GALXY on 2.68394 -6.93611
+
+Object 1939 Correction 42
+Nearby NGC 1053 of type GALXY on 2.72014 41.4997
+    is NGC 1040 of type GALXY on 2.72014 41.4997
+
+Object 1963 Correction 43
+Nearby NGC 1077A of type GALXY on 2.76683 40.0894
+    is NGC 1077 of type GALXY on 2.76683 40.0894
+
+Object 2008 Correction 44
+Nearby NGC 1120 of type GALXY on 2.81778 -14.4708
+    is IC 261 of type GALXY on 2.81778 -14.4708
+
+Object 2028 Correction 45
+Nearby NGC 1141 of type GALXY on 2.91936 -0.178611
+    is NGC 1143 of type GALXY on 2.91936 -0.178611
+
+Object 2029 Correction 46
+Nearby NGC 1142 of type GALXY on 2.92006 -0.184444
+    is NGC 1144 of type GALXY on 2.92006 -0.184444
+
+Object 2030 Correction 47
+Nearby NGC 1143 of type GALXY on 2.91936 -0.178611
+    is NGC 1141 of type GALXY on 2.91936 -0.178611
+
+Object 2031 Correction 48
+Nearby NGC 1144 of type GALXY on 2.92006 -0.184444
+    is NGC 1142 of type GALXY on 2.92006 -0.184444
+
+Object 2089 Correction 49
+Nearby NGC 1203A of type GALXY on 3.08667 -14.3833
+    is NGC 1203B of type GALXY on 3.08667 -14.3833
+
+Object 2090 Correction 50
+Nearby NGC 1203B of type GALXY on 3.08667 -14.3833
+    is NGC 1203A of type GALXY on 3.08667 -14.3833
+
+Object 2098 Correction 51
+Nearby NGC 1212 of type GALXY on 3.16175 40.8925
+    is UGC 2560 of type GALXY on 3.16179 40.8929
+
+Object 2099 Correction 52
+Nearby NGC 1213 of type GALXY on 3.15481 38.6486
+    is IC 1881 of type GALXY on 3.15481 38.6486
+
+Object 2120 Correction 53
+Nearby NGC 1233 of type GALXY on 3.20919 39.3186
+    is NGC 1235 of type GALXY on 3.20919 39.3186
+
+Object 2122 Correction 54
+Nearby NGC 1235 of type GALXY on 3.20919 39.3186
+    is NGC 1233 of type GALXY on 3.20919 39.3186
+
+Object 2304 Correction 55
+Nearby NGC 1412 of type GALXY on 3.67481 -26.8625
+    is IC 1981 of type GALXY on 3.67481 -26.8625
+
+Object 2329 Correction 56
+Nearby NGC 1436 of type GALXY on 3.72697 -35.8547
+    is NGC 1437 of type GALXY on 3.72697 -35.8547
+
+Object 2330 Correction 57
+Nearby NGC 1437 of type GALXY on 3.72697 -35.8547
+    is NGC 1436 of type GALXY on 3.72697 -35.8547
+
+Object 2345 Correction 58
+Nearby NGC 1452 of type GALXY on 3.75619 -18.6336
+    is NGC 1455 of type GALXY on 3.75619 -18.6336
+
+Object 2348 Correction 59
+Nearby NGC 1455 of type GALXY on 3.75619 -18.6336
+    is NGC 1452 of type GALXY on 3.75619 -18.6336
+
+Object 2410 Correction 60
+Nearby NGC 1516A of type GALXY on 4.13542 -8.83
+    is NGC 1524 of type GALXY on 4.13542 -8.83
+
+Object 2411 Correction 61
+Nearby NGC 1516B of type GALXY on 4.13561 -8.83528
+    is NGC 1525 of type GALXY on 4.13561 -8.83528
+
+Object 2419 Correction 62
+Nearby NGC 1524 of type GALXY on 4.13542 -8.83
+    is NGC 1516A of type GALXY on 4.13542 -8.83
+
+Object 2420 Correction 63
+Nearby NGC 1525 of type GALXY on 4.13561 -8.83528
+    is NGC 1516B of type GALXY on 4.13561 -8.83528
+
+Object 2433 Correction 64
+Nearby NGC 1538 of type GALXY on 4.24889 -13.1919
+    is IC 2047 of type GALXY on 4.24889 -13.1919
+
+Object 2462 Correction 65
+Nearby NGC 1568 of type GALXY on 4.40703 -0.746667
+    is UGC 3032 of type GALXY on 4.40706 -0.74663
+
+Object 2464 Correction 66
+Nearby NGC 1570 of type GALXY on 4.36914 -43.6306
+    is NGC 1571 of type GALXY on 4.36914 -43.6306
+
+Object 2465 Correction 67
+Nearby NGC 1571 of type GALXY on 4.36914 -43.6306
+    is NGC 1570 of type GALXY on 4.36914 -43.6306
+
+Object 2468 Correction 68
+Nearby NGC 1573A of type GALXY on 4.80742 73.4689
+    is UGC 3150 of type GALXY on 4.80751 73.4692
+
+Object 2470 Correction 69
+Nearby NGC 1575 of type GALXY on 4.43903 -10.0994
+    is NGC 1577 of type GALXY on 4.43903 -10.0994
+
+Object 2472 Correction 70
+Nearby NGC 1577 of type GALXY on 4.43903 -10.0994
+    is NGC 1575 of type GALXY on 4.43903 -10.0994
+
+Object 2502 Correction 71
+Nearby NGC 1608 of type GALXY on 4.53503 0.567222
+    is IC 2077 of type GALXY on 4.53503 0.567222
+
+Object 2542 Correction 72
+Nearby NGC 1649 of type OPNCL on 4.63969 -68.6731
+    is NGC 1652 of type OPNCL on 4.63969 -68.6731
+
+Object 2545 Correction 73
+Nearby NGC 1652 of type OPNCL on 4.63969 -68.6731
+    is NGC 1649 of type OPNCL on 4.63969 -68.6731
+
+Object 2564 Correction 74
+Nearby NGC 1671 of type GALXY on 4.82606 0.252778
+    is IC 395 of type GALXY on 4.82606 0.252778
+
+Object 2567 Correction 75
+Nearby NGC 1674 of type NONEX on 4.87333 23.9
+    is NGC 1675 of type NONEX on 4.87333 23.9
+
+Object 2568 Correction 76
+Nearby NGC 1675 of type NONEX on 4.87333 23.9
+    is NGC 1674 of type NONEX on 4.87333 23.9
+
+Object 2656 Correction 77
+Nearby NGC 1763 of type GALXY on 4.947 -66.4092
+    is IC 2116 of type GALXY on 4.947 -66.4092
+
+Object 2775 Correction 78
+Nearby NGC 1882 of type OPNCL on 5.25928 -66.1297
+    is NGC 1884 of type OPNCL on 5.25928 -66.1297
+
+Object 2777 Correction 79
+Nearby NGC 1884 of type OPNCL on 5.25928 -66.1297
+    is NGC 1882 of type OPNCL on 5.25928 -66.1297
+
+Object 2811 Correction 80
+Nearby NGC 1920 of type CLANB on 5.3425 -66.7786
+    is NGC 1911 of type CLANB on 5.3425 -66.7786
+
+Object 2865 Correction 81
+Nearby NGC 1974 of type OPNCL on 5.46678 -67.4231
+    is NGC 1991 of type GALXY on 5.46678 -67.4231
+
+Object 2882 Correction 82
+Nearby NGC 1991 of type GALXY on 5.46678 -67.4231
+    is NGC 1974 of type OPNCL on 5.46678 -67.4231
+
+Object 3176 Correction 83
+Nearby NGC 2282 of type REFNB on 6.78167 1.33333
+    is vdB 85 of type OPNCL on 6.7817 1.3333
+
+Object 3193 Correction 84
+Nearby NGC 2299 of type OPNCL on 6.86572 -7.08444
+    is NGC 2302 of type OPNCL on 6.86572 -7.08444
+
+Object 3196 Correction 85
+Nearby NGC 2302 of type OPNCL on 6.86572 -7.08444
+    is NGC 2299 of type OPNCL on 6.86572 -7.08444
+
+Object 3285 Correction 86
+Nearby NGC 2390 of type AA1STAR on 7.485 33.8333
+    is NGC 2391 of type AA1STAR on 7.485 33.8333
+
+Object 3286 Correction 87
+Nearby NGC 2391 of type AA1STAR on 7.485 33.8333
+    is NGC 2390 of type AA1STAR on 7.485 33.8333
+
+Object 3328 Correction 88
+Nearby NGC 2431 of type GALXY on 7.75369 53.075
+    is NGC 2436 of type GALXY on 7.75369 53.075
+
+Object 3333 Correction 89
+Nearby NGC 2436 of type GALXY on 7.75369 53.075
+    is NGC 2431 of type GALXY on 7.75369 53.075
+
+Object 3533 Correction 90
+Nearby NGC 2630 of type NONEX on 8.775 73
+    is NGC 2631 of type NONEX on 8.775 73
+
+Object 3534 Correction 91
+Nearby NGC 2631 of type NONEX on 8.775 73
+    is NGC 2630 of type NONEX on 8.775 73
+
+Object 3571 Correction 92
+Nearby NGC 2667A of type GALXY on 8.80756 19.0192
+    is IC 2410 of type GALXY on 8.80756 19.0192
+
+Object 3648 Correction 93
+Nearby NGC 2742 of type GALXY on 9.12589 60.4789
+    is NGC 2816 of type GALXY on 9.12589 60.4789
+
+Object 3692 Correction 94
+Nearby NGC 2783B of type GALXY on 9.22578 29.9992
+    is IC 2449 of type GALXY on 9.22581 29.9997
+
+Object 3728 Correction 95
+Nearby NGC 2816 of type GALXY on 9.12589 60.4789
+    is NGC 2742 of type GALXY on 9.12589 60.4789
+
+Object 3777 Correction 96
+Nearby NGC 2863 of type GALXY on 9.39347 -10.4336
+    is NGC 2869 of type GALXY on 9.39347 -10.4336
+
+Object 3849 Correction 97
+Nearby NGC 2936 of type GALXY on 9.629 2.76
+    is MAC 0937+0246 of type GALXY on 9.629 2.76
+
+Object 3860 Correction 98
+Nearby NGC 2947 of type GALXY on 9.60161 -12.4372
+    is IC 2494 of type GALXY on 9.60161 -12.4372
+
+Object 3876 Correction 99
+Nearby NGC 2961 of type GALXY on 9.75619 68.6086
+    is NGC 2959A of type GALXY on 9.75619 68.6086
+
+Object 3887 Correction 100
+Nearby NGC 2972 of type OPNCL on 9.66986 -50.3208
+    is NGC 2999 of type OPNCL on 9.66986 -50.3208
+
+Object 3914 Correction 101
+Nearby NGC 2999 of type OPNCL on 9.66986 -50.3208
+    is NGC 2972 of type OPNCL on 9.66986 -50.3208
+
+Object 4027 Correction 102
+Nearby NGC 3110 of type GALXY on 10.0672 -6.47528
+    is NGC 3122 of type GALXY on 10.0672 -6.47528
+
+Object 4027 Correction 103
+Nearby NGC 3110 of type GALXY on 10.0672 -6.47528
+    is NGC 3518 of type GALXY on 10.0672 -6.47528
+
+Object 4038 Correction 104
+Nearby NGC 3122 of type GALXY on 10.0672 -6.47528
+    is NGC 3110 of type GALXY on 10.0672 -6.47528
+
+Object 4038 Correction 105
+Nearby NGC 3122 of type GALXY on 10.0672 -6.47528
+    is NGC 3518 of type GALXY on 10.0672 -6.47528
+
+Object 4108 Correction 106
+Nearby NGC 3191 of type GALXY on 10.3181 46.4544
+    is NGC 3192 of type GALXY on 10.3181 46.4544
+
+Object 4109 Correction 107
+Nearby NGC 3192 of type GALXY on 10.3181 46.4544
+    is NGC 3191 of type GALXY on 10.3181 46.4544
+
+Object 4149 Correction 108
+Nearby NGC 3234 of type GALXY on 10.4165 28.0236
+    is NGC 3235 of type GALXY on 10.4165 28.0236
+
+Object 4150 Correction 109
+Nearby NGC 3235 of type GALXY on 10.4165 28.0236
+    is NGC 3234 of type GALXY on 10.4165 28.0236
+
+Object 4210 Correction 110
+Nearby NGC 3280A of type GALXY on 10.5455 -12.6372
+    is IC 617 of type GALXY on 10.5455 -12.6372
+
+Object 4220 Correction 111
+Nearby NGC 3284 of type GALXY on 10.6059 58.6197
+    is NGC 3286 of type GALXY on 10.6059 58.6197
+
+Object 4224 Correction 112
+Nearby NGC 3286 of type GALXY on 10.6059 58.6197
+    is NGC 3284 of type GALXY on 10.6059 58.6197
+
+Object 4271 Correction 113
+Nearby NGC 3332 of type GALXY on 10.6745 9.18194
+    is NGC 3342 of type GALXY on 10.6745 9.18194
+
+Object 4281 Correction 114
+Nearby NGC 3342 of type GALXY on 10.6745 9.18194
+    is NGC 3332 of type GALXY on 10.6745 9.18194
+
+Object 4314 Correction 115
+Nearby NGC 3373 of type GALXY on 10.8078 12.5325
+    is NGC 3389 of type GALXY on 10.8078 12.5325
+
+Object 4330 Correction 116
+Nearby NGC 3388 of type GALXY on 10.8571 8.56694
+    is NGC 3425 of type GALXY on 10.8571 8.56694
+
+Object 4331 Correction 117
+Nearby NGC 3389 of type GALXY on 10.8078 12.5325
+    is NGC 3373 of type GALXY on 10.8078 12.5325
+
+Object 4343 Correction 118
+Nearby NGC 3402 of type GALXY on 10.8406 -12.8456
+    is NGC 3411 of type GALXY on 10.8406 -12.8456
+
+Object 4346 Correction 119
+Nearby NGC 3405 of type GALXY on 10.829 16.2419
+    is UGC 5933B of type GALXY on 10.829 16.2418
+
+Object 4352 Correction 120
+Nearby NGC 3411 of type GALXY on 10.8406 -12.8456
+    is NGC 3402 of type GALXY on 10.8406 -12.8456
+
+Object 4367 Correction 121
+Nearby NGC 3425 of type GALXY on 10.8571 8.56694
+    is NGC 3388 of type GALXY on 10.8571 8.56694
+
+Object 4370 Correction 122
+Nearby NGC 3428 of type GALXY on 10.8582 9.27861
+    is NGC 3429 of type GALXY on 10.8582 9.27861
+
+Object 4371 Correction 123
+Nearby NGC 3429 of type GALXY on 10.8582 9.27861
+    is NGC 3428 of type GALXY on 10.8582 9.27861
+
+Object 4372 Correction 124
+Nearby NGC 3430 of type GALXY on 10.8699 32.9503
+    is IC 2613 of type GALXY on 10.8699 32.9503
+
+Object 4407 Correction 125
+Nearby NGC 3465 of type GALXY on 11.0309 75.2006
+    is UGC 6090 of type GALXY on 11.031 75.2011
+
+Object 4418 Correction 126
+Nearby NGC 3476 of type GALXY on 10.9688 9.27556
+    is NGC 3480 of type GALXY on 10.9688 9.27556
+
+Object 4421 Correction 127
+Nearby NGC 3479 of type GALXY on 10.9821 -14.9617
+    is NGC 3502 of type GALXY on 10.9821 -14.9617
+
+Object 4422 Correction 128
+Nearby NGC 3480 of type GALXY on 10.9688 9.27556
+    is NGC 3476 of type GALXY on 10.9688 9.27556
+
+Object 4442 Correction 129
+Nearby NGC 3502 of type GALXY on 10.9821 -14.9617
+    is NGC 3479 of type GALXY on 10.9821 -14.9617
+
+Object 4445 Correction 130
+Nearby NGC 3505 of type GALXY on 11.0499 -16.2892
+    is IC 2622 of type GALXY on 11.0499 -16.2892
+
+Object 4445 Correction 131
+Nearby NGC 3505 of type GALXY on 11.0499 -16.2892
+    is NGC 3508 of type GALXY on 11.0499 -16.2892
+
+Object 4448 Correction 132
+Nearby NGC 3508 of type GALXY on 11.0499 -16.2892
+    is IC 2622 of type GALXY on 11.0499 -16.2892
+
+Object 4448 Correction 133
+Nearby NGC 3508 of type GALXY on 11.0499 -16.2892
+    is NGC 3505 of type GALXY on 11.0499 -16.2892
+
+Object 4458 Correction 134
+Nearby NGC 3518 of type GALXY on 10.0672 -6.47528
+    is NGC 3110 of type GALXY on 10.0672 -6.47528
+
+Object 4458 Correction 135
+Nearby NGC 3518 of type GALXY on 10.0672 -6.47528
+    is NGC 3122 of type GALXY on 10.0672 -6.47528
+
+Object 4465 Correction 136
+Nearby NGC 3525 of type GALXY on 11.1217 -19.4719
+    is IC 2624 of type GALXY on 11.1217 -19.4719
+
+Object 4465 Correction 137
+Nearby NGC 3525 of type GALXY on 11.1217 -19.4719
+    is NGC 3528 of type GALXY on 11.1217 -19.4719
+
+Object 4468 Correction 138
+Nearby NGC 3528 of type GALXY on 11.1217 -19.4719
+    is IC 2624 of type GALXY on 11.1217 -19.4719
+
+Object 4468 Correction 139
+Nearby NGC 3528 of type GALXY on 11.1217 -19.4719
+    is NGC 3525 of type GALXY on 11.1217 -19.4719
+
+Object 4480 Correction 140
+Nearby NGC 3540 of type GALXY on 11.1544 36.0208
+    is NGC 3548 of type GALXY on 11.1544 36.0208
+
+Object 4488 Correction 141
+Nearby NGC 3548 of type GALXY on 11.1544 36.0208
+    is NGC 3540 of type GALXY on 11.1544 36.0208
+
+Object 4500 Correction 142
+Nearby NGC 3559 of type GALXY on 11.1792 12.0158
+    is NGC 3560 of type GALXY on 11.1792 12.0158
+
+Object 4501 Correction 143
+Nearby NGC 3560 of type GALXY on 11.1792 12.0158
+    is NGC 3559 of type GALXY on 11.1792 12.0158
+
+Object 4545 Correction 144
+Nearby NGC 3604 of type GALXY on 11.2917 4.55472
+    is NGC 3611 of type GALXY on 11.2917 4.55472
+
+Object 4552 Correction 145
+Nearby NGC 3611 of type GALXY on 11.2917 4.55472
+    is NGC 3604 of type GALXY on 11.2917 4.55472
+
+Object 4572 Correction 146
+Nearby NGC 3630 of type GALXY on 11.338 2.96389
+    is NGC 3645 of type GALXY on 11.338 2.96389
+
+Object 4586 Correction 147
+Nearby NGC 3645 of type GALXY on 11.338 2.96389
+    is NGC 3630 of type GALXY on 11.338 2.96389
+
+Object 4639 Correction 148
+Nearby NGC 3695 of type GALXY on 11.4881 35.575
+    is NGC 3698 of type GALXY on 11.4881 35.575
+
+Object 4641 Correction 149
+Nearby NGC 3697A of type GALXY on 11.4807 20.7944
+    is UGC 6479 of type GALXY on 11.4807 20.7948
+
+Object 4644 Correction 150
+Nearby NGC 3698 of type GALXY on 11.4881 35.575
+    is NGC 3695 of type GALXY on 11.4881 35.575
+
+Object 4772 Correction 151
+Nearby NGC 3822 of type GALXY on 11.7031 10.2775
+    is NGC 3848 of type GALXY on 11.7031 10.2775
+
+Object 4775 Correction 152
+Nearby NGC 3825 of type GALXY on 11.7066 10.2642
+    is NGC 3852 of type GALXY on 11.7066 10.2642
+
+Object 4776 Correction 153
+Nearby NGC 3826 of type GALXY on 11.7091 26.4886
+    is NGC 3830 of type GALXY on 11.7091 26.4886
+
+Object 4780 Correction 154
+Nearby NGC 3830 of type GALXY on 11.7091 26.4886
+    is NGC 3826 of type GALXY on 11.7091 26.4886
+
+Object 4800 Correction 155
+Nearby NGC 3848 of type GALXY on 11.7031 10.2775
+    is NGC 3822 of type GALXY on 11.7031 10.2775
+
+Object 4804 Correction 156
+Nearby NGC 3852 of type GALXY on 11.7066 10.2642
+    is NGC 3825 of type GALXY on 11.7066 10.2642
+
+Object 4841 Correction 157
+Nearby NGC 3890 of type GALXY on 11.8221 74.3014
+    is NGC 3939 of type GALXY on 11.8221 74.3014
+
+Object 4850 Correction 158
+Nearby NGC 3899 of type GALXY on 11.8346 26.4797
+    is NGC 3912 of type GALXY on 11.8346 26.4797
+
+Object 4864 Correction 159
+Nearby NGC 3912 of type GALXY on 11.8346 26.4797
+    is NGC 3899 of type GALXY on 11.8346 26.4797
+
+Object 4891 Correction 160
+Nearby NGC 3937 of type GALXY on 11.8751 20.6253
+    is CGCG 127-085 of type GALXY on 11.8751 20.6255
+
+Object 4893 Correction 161
+Nearby NGC 3939 of type GALXY on 11.8221 74.3014
+    is NGC 3890 of type GALXY on 11.8221 74.3014
+
+Object 4925 Correction 162
+Nearby NGC 3971 of type GALXY on 11.9268 29.9953
+    is NGC 3984 of type GALXY on 11.9268 29.9953
+
+Object 4938 Correction 163
+Nearby NGC 3984 of type GALXY on 11.9268 29.9953
+    is NGC 3971 of type GALXY on 11.9268 29.9953
+
+Object 4957 Correction 164
+Nearby NGC 4003 of type GALXY on 11.9694 25.1217
+    is NGC 4005 of type GALXY on 11.9694 25.1217
+
+Object 4960 Correction 165
+Nearby NGC 4005 of type GALXY on 11.9694 25.1217
+    is NGC 4003 of type GALXY on 11.9694 25.1217
+
+Object 4968 Correction 166
+Nearby NGC 4014 of type GALXY on 11.9766 16.1767
+    is NGC 4028 of type GALXY on 11.9766 16.1767
+
+Object 4969 Correction 167
+Nearby NGC 4015 of type GALXY on 11.9785 25.0361
+    is UGC 6965A of type GALXY on 11.9785 25.0366
+
+Object 4983 Correction 168
+Nearby NGC 4028 of type GALXY on 11.9766 16.1767
+    is NGC 4014 of type GALXY on 11.9766 16.1767
+
+Object 5010 Correction 169
+Nearby NGC 4055 of type GALXY on 12.0671 20.2322
+    is NGC 4061 of type GALXY on 12.0671 20.2322
+
+Object 5012 Correction 170
+Nearby NGC 4057 of type GALXY on 12.0684 20.2353
+    is NGC 4065 of type GALXY on 12.0684 20.2353
+
+Object 5014 Correction 171
+Nearby NGC 4059 of type GALXY on 12.0698 20.4092
+    is NGC 4070 of type GALXY on 12.0698 20.4092
+
+Object 5016 Correction 172
+Nearby NGC 4061 of type GALXY on 12.0671 20.2322
+    is NGC 4055 of type GALXY on 12.0671 20.2322
+
+Object 5020 Correction 173
+Nearby NGC 4065 of type GALXY on 12.0684 20.2353
+    is NGC 4057 of type GALXY on 12.0684 20.2353
+
+Object 5025 Correction 174
+Nearby NGC 4070 of type GALXY on 12.0698 20.4092
+    is NGC 4059 of type GALXY on 12.0698 20.4092
+
+Object 5033 Correction 175
+Nearby NGC 4078 of type GALXY on 12.0799 10.5953
+    is NGC 4107 of type GALXY on 12.0799 10.5953
+
+Object 5053 Correction 176
+Nearby NGC 4098 of type GALXY on 12.101 20.6072
+    is NGC 4099 of type GALXY on 12.101 20.6072
+
+Object 5054 Correction 177
+Nearby NGC 4099 of type GALXY on 12.101 20.6072
+    is NGC 4098 of type GALXY on 12.101 20.6072
+
+Object 5062 Correction 178
+Nearby NGC 4107 of type GALXY on 12.0799 10.5953
+    is NGC 4078 of type GALXY on 12.0799 10.5953
+
+Object 5070 Correction 179
+Nearby NGC 4113 of type GALXY on 12.119 32.9956
+    is NGC 4122 of type GALXY on 12.119 32.9956
+
+Object 5076 Correction 180
+Nearby NGC 4119 of type GALXY on 12.136 10.3783
+    is IC 3011 of type GALXY on 12.136 10.3783
+
+Object 5076 Correction 181
+Nearby NGC 4119 of type GALXY on 12.136 10.3783
+    is NGC 4124 of type GALXY on 12.136 10.3783
+
+Object 5079 Correction 182
+Nearby NGC 4122 of type GALXY on 12.119 32.9956
+    is NGC 4113 of type GALXY on 12.119 32.9956
+
+Object 5081 Correction 183
+Nearby NGC 4124 of type GALXY on 12.136 10.3783
+    is IC 3011 of type GALXY on 12.136 10.3783
+
+Object 5081 Correction 184
+Nearby NGC 4124 of type GALXY on 12.136 10.3783
+    is NGC 4119 of type GALXY on 12.136 10.3783
+
+Object 5096 Correction 185
+Nearby NGC 4139 of type GALXY on 12.0761 1.80083
+    is IC 2989 of type GALXY on 12.0761 1.80083
+
+Object 5102 Correction 186
+Nearby NGC 4145A of type GALXY on 12.1818 39.7567
+    is UGC 7175 of type GALXY on 12.1818 39.7572
+
+Object 5106 Correction 187
+Nearby NGC 4149 of type GALXY on 12.1758 58.3033
+    is NGC 4154 of type GALXY on 12.1758 58.3033
+
+Object 5111 Correction 188
+Nearby NGC 4154 of type GALXY on 12.1758 58.3033
+    is NGC 4149 of type GALXY on 12.1758 58.3033
+
+Object 5120 Correction 189
+Nearby NGC 4163 of type GALXY on 12.2025 36.1681
+    is NGC 4167 of type GALXY on 12.2025 36.1681
+
+Object 5124 Correction 190
+Nearby NGC 4167 of type GALXY on 12.2025 36.1681
+    is NGC 4163 of type GALXY on 12.2025 36.1681
+
+Object 5137 Correction 191
+Nearby NGC 4180 of type GALXY on 12.2175 7.03889
+    is NGC 4182 of type GALXY on 12.2175 7.03889
+
+Object 5139 Correction 192
+Nearby NGC 4182 of type GALXY on 12.2175 7.03889
+    is NGC 4180 of type GALXY on 12.2175 7.03889
+
+Object 5143 Correction 193
+Nearby NGC 4186 of type GALXY on 12.2351 14.7253
+    is NGC 4192B of type GALXY on 12.2351 14.7253
+
+Object 5202 Correction 194
+Nearby NGC 4241 of type GALXY on 12.3 6.65361
+    is IC 3115 of type GALXY on 12.3 6.65361
+
+Object 5262 Correction 195
+Nearby NGC 4301 of type GALXY on 12.3742 4.56528
+    is NGC 4303A of type GALXY on 12.3742 4.56528
+
+Object 5265 Correction 196
+Nearby NGC 4303A of type GALXY on 12.3742 4.56528
+    is NGC 4301 of type GALXY on 12.3742 4.56528
+
+Object 5274 Correction 197
+Nearby NGC 4310 of type GALXY on 12.374 29.2075
+    is NGC 4338 of type GALXY on 12.374 29.2075
+
+Object 5288 Correction 198
+Nearby NGC 4325 of type GALXY on 12.3852 10.6211
+    is NGC 4368 of type GALXY on 12.3852 10.6211
+
+Object 5301 Correction 199
+Nearby NGC 4338 of type GALXY on 12.374 29.2075
+    is NGC 4310 of type GALXY on 12.374 29.2075
+
+Object 5318 Correction 200
+Nearby NGC 4357 of type GALXY on 12.3997 48.7794
+    is NGC 4381 of type GALXY on 12.3997 48.7794
+
+Object 5324 Correction 201
+Nearby NGC 4362 of type GALXY on 12.4031 58.3608
+    is NGC 4364 of type GALXY on 12.4031 58.3608
+
+Object 5326 Correction 202
+Nearby NGC 4364 of type GALXY on 12.4031 58.3608
+    is NGC 4362 of type GALXY on 12.4031 58.3608
+
+Object 5330 Correction 203
+Nearby NGC 4368 of type GALXY on 12.3852 10.6211
+    is NGC 4325 of type GALXY on 12.3852 10.6211
+
+Object 5345 Correction 204
+Nearby NGC 4381 of type GALXY on 12.3997 48.7794
+    is NGC 4357 of type GALXY on 12.3997 48.7794
+
+Object 5354 Correction 205
+Nearby NGC 4390 of type GALXY on 12.4307 10.4583
+    is IC 3320 of type GALXY on 12.4307 10.4583
+
+Object 5374 Correction 206
+Nearby NGC 4411A of type GALXY on 12.4417 8.87111
+    is IC 3339 of type GALXY on 12.4417 8.87111
+
+Object 5381 Correction 207
+Nearby NGC 4417 of type GALXY on 12.546 0.115
+    is NGC 4517 of type GALXY on 12.546 0.115
+
+Object 5390 Correction 208
+Nearby NGC 4426 of type AA2STAR on 12.4533 27.8333
+    is NGC 4427 of type AA2STAR on 12.4533 27.8333
+
+Object 5391 Correction 209
+Nearby NGC 4427 of type AA2STAR on 12.4533 27.8333
+    is NGC 4426 of type AA2STAR on 12.4533 27.8333
+
+Object 5461 Correction 210
+Nearby NGC 4496A of type GALXY on 12.5276 3.93917
+    is NGC 4505 of type GALXY on 12.5276 3.93917
+
+Object 5471 Correction 211
+Nearby NGC 4505 of type GALXY on 12.5276 3.93917
+    is NGC 4496A of type GALXY on 12.5276 3.93917
+
+Object 5478 Correction 212
+Nearby NGC 4512 of type GALXY on 12.5466 63.9389
+    is NGC 4521 of type GALXY on 12.5466 63.9389
+
+Object 5483 Correction 213
+Nearby NGC 4517 of type GALXY on 12.546 0.115
+    is NGC 4417 of type GALXY on 12.546 0.115
+
+Object 5490 Correction 214
+Nearby NGC 4521 of type GALXY on 12.5466 63.9389
+    is NGC 4512 of type GALXY on 12.5466 63.9389
+
+Object 5507 Correction 215
+Nearby NGC 4537 of type GALXY on 12.5803 50.805
+    is NGC 4542 of type GALXY on 12.5803 50.805
+
+Object 5512 Correction 216
+Nearby NGC 4542 of type GALXY on 12.5803 50.805
+    is NGC 4537 of type GALXY on 12.5803 50.805
+
+Object 5537 Correction 217
+Nearby NGC 4565B of type GALXY on 12.5949 26.2219
+    is IC 3546 of type GALXY on 12.5949 26.2219
+
+Object 5549 Correction 218
+Nearby NGC 4577 of type GALXY on 12.6534 6.01167
+    is NGC 4591 of type GALXY on 12.6534 6.01167
+
+Object 5563 Correction 219
+Nearby NGC 4591 of type GALXY on 12.6534 6.01167
+    is NGC 4577 of type GALXY on 12.6534 6.01167
+
+Object 5644 Correction 220
+Nearby NGC 4664 of type GALXY on 12.7517 3.05472
+    is NGC 4665 of type GALXY on 12.7517 3.05472
+
+Object 5645 Correction 221
+Nearby NGC 4665 of type GALXY on 12.7517 3.05472
+    is NGC 4664 of type GALXY on 12.7517 3.05472
+
+Object 5757 Correction 222
+Nearby NGC 4768 of type AA1STAR on 12.8883 -9.53333
+    is NGC 4769 of type AA1STAR on 12.8883 -9.53333
+
+Object 5758 Correction 223
+Nearby NGC 4769 of type AA1STAR on 12.8883 -9.53333
+    is NGC 4768 of type AA1STAR on 12.8883 -9.53333
+
+Object 5765 Correction 224
+Nearby NGC 4776 of type GALXY on 12.8846 -9.20028
+    is NGC 4759A of type GALXY on 12.8846 -9.20028
+
+Object 5767 Correction 225
+Nearby NGC 4778 of type GALXY on 12.8849 -9.20444
+    is NGC 4759B of type GALXY on 12.8849 -9.20444
+
+Object 5788 Correction 226
+Nearby NGC 4797 of type GALXY on 12.9154 27.4122
+    is NGC 4798 of type GALXY on 12.9154 27.4122
+
+Object 5789 Correction 227
+Nearby NGC 4798 of type GALXY on 12.9154 27.4122
+    is NGC 4797 of type GALXY on 12.9154 27.4122
+
+Object 5835 Correction 228
+Nearby NGC 4842A of type GALXY on 12.96 27.4925
+    is NGC 4842 of type GALXY on 12.96 27.4925
+
+Object 5839 Correction 229
+Nearby NGC 4845 of type GALXY on 12.9669 1.575
+    is NGC 4910 of type GALXY on 12.9669 1.575
+
+Object 5844 Correction 230
+Nearby NGC 4849A of type GALXY on 12.9705 26.4256
+    is IC 838 of type GALXY on 12.9705 26.4256
+
+Object 5856 Correction 231
+Nearby NGC 4861 of type GALXY on 12.9835 34.8447
+    is UGC 8098A of type GALXY on 12.9835 34.8446
+
+Object 5904 Correction 232
+Nearby NGC 4910 of type GALXY on 12.9669 1.575
+    is NGC 4845 of type GALXY on 12.9669 1.575
+
+Object 5915 Correction 233
+Nearby NGC 4920 of type GALXY on 13.0345 -11.3789
+    is IC 4134 of type GALXY on 13.0345 -11.3789
+
+Object 5929 Correction 234
+Nearby NGC 4933A of type GALXY on 13.0658 -11.4981
+    is NGC 4933B of type GALXY on 13.0658 -11.4981
+
+Object 5930 Correction 235
+Nearby NGC 4933B of type GALXY on 13.0658 -11.4981
+    is NGC 4933A of type GALXY on 13.0658 -11.4981
+
+Object 5953 Correction 236
+Nearby NGC 4952 of type GALXY on 13.0829 29.1219
+    is NGC 4962 of type GALXY on 13.0829 29.1219
+
+Object 5961 Correction 237
+Nearby NGC 4960 of type GALXY on 13.0966 27.7336
+    is NGC 4961 of type GALXY on 13.0966 27.7336
+
+Object 5962 Correction 238
+Nearby NGC 4961 of type GALXY on 13.0966 27.7336
+    is NGC 4960 of type GALXY on 13.0966 27.7336
+
+Object 5963 Correction 239
+Nearby NGC 4962 of type GALXY on 13.0829 29.1219
+    is NGC 4952 of type GALXY on 13.0829 29.1219
+
+Object 5993 Correction 240
+Nearby NGC 4993 of type GALXY on 13.1632 -23.3844
+    is NGC 4994 of type GALXY on 13.1632 -23.3844
+
+Object 5994 Correction 241
+Nearby NGC 4994 of type GALXY on 13.1632 -23.3844
+    is NGC 4993 of type GALXY on 13.1632 -23.3844
+
+Object 6075 Correction 242
+Nearby NGC 5070 of type GALXY on 13.3202 -12.5403
+    is NGC 5072 of type GALXY on 13.3202 -12.5403
+
+Object 6077 Correction 243
+Nearby NGC 5072 of type GALXY on 13.3202 -12.5403
+    is NGC 5070 of type GALXY on 13.3202 -12.5403
+
+Object 6108 Correction 244
+Nearby NGC 5100 of type GALXY on 13.3498 8.97694
+    is NGC 5106 of type GALXY on 13.3498 8.97694
+
+Object 6114 Correction 245
+Nearby NGC 5106 of type GALXY on 13.3498 8.97694
+    is NGC 5100 of type GALXY on 13.3498 8.97694
+
+Object 6117 Correction 246
+Nearby NGC 5109 of type GALXY on 13.3479 57.6417
+    is NGC 5113 of type GALXY on 13.3479 57.6417
+
+Object 6118 Correction 247
+Nearby NGC 5110 of type GALXY on 13.3823 -12.9647
+    is NGC 5111 of type GALXY on 13.3823 -12.9647
+
+Object 6119 Correction 248
+Nearby NGC 5111 of type GALXY on 13.3823 -12.9647
+    is NGC 5110 of type GALXY on 13.3823 -12.9647
+
+Object 6121 Correction 249
+Nearby NGC 5113 of type GALXY on 13.3479 57.6417
+    is NGC 5109 of type GALXY on 13.3479 57.6417
+
+Object 6145 Correction 250
+Nearby NGC 5136 of type GALXY on 13.4143 13.7375
+    is IC 888 of type GALXY on 13.4143 13.7375
+
+Object 6172 Correction 251
+Nearby NGC 5162 of type GALXY on 13.4905 11.0072
+    is NGC 5174 of type GALXY on 13.4905 11.0072
+
+Object 6185 Correction 252
+Nearby NGC 5174 of type GALXY on 13.4905 11.0072
+    is NGC 5162 of type GALXY on 13.4905 11.0072
+
+Object 6256 Correction 253
+Nearby NGC 5244 of type GALXY on 13.6449 -45.8553
+    is NGC 5219 of type GALXY on 13.6449 -45.8553
+
+Object 6392 Correction 254
+Nearby NGC 5375 of type GALXY on 13.9489 29.1636
+    is NGC 5396 of type GALXY on 13.9489 29.1636
+
+Object 6412 Correction 255
+Nearby NGC 5396 of type GALXY on 13.9489 29.1636
+    is NGC 5375 of type GALXY on 13.9489 29.1636
+
+Object 6438 Correction 256
+Nearby NGC 5421B of type GALXY on 14.0284 33.8214
+    is UGC 8941B of type GALXY on 14.0284 33.8212
+
+Object 6456 Correction 257
+Nearby NGC 5438 of type GALXY on 14.0633 9.61056
+    is NGC 5446 of type GALXY on 14.0633 9.61056
+
+Object 6464 Correction 258
+Nearby NGC 5446 of type GALXY on 14.0633 9.61056
+    is NGC 5438 of type GALXY on 14.0633 9.61056
+
+Object 6488 Correction 259
+Nearby NGC 5469 of type GALXY on 14.2083 8.64861
+    is CGCG 074-136 of type GALXY on 14.2083 8.648
+
+Object 6524 Correction 260
+Nearby NGC 5502 of type GALXY on 14.1594 60.4094
+    is NGC 5503 of type GALXY on 14.1594 60.4094
+
+Object 6525 Correction 261
+Nearby NGC 5503 of type GALXY on 14.1594 60.4094
+    is NGC 5502 of type GALXY on 14.1594 60.4094
+
+Object 6544 Correction 262
+Nearby NGC 5519 of type GALXY on 14.2391 7.515
+    is NGC 5570 of type GALXY on 14.2391 7.515
+
+Object 6578 Correction 263
+Nearby NGC 5552 of type GALXY on 14.3177 7.03167
+    is NGC 5558 of type GALXY on 14.3177 7.03167
+
+Object 6580 Correction 264
+Nearby NGC 5554 of type GALXY on 14.3208 7.02056
+    is NGC 5564 of type GALXY on 14.3208 7.02056
+
+Object 6584 Correction 265
+Nearby NGC 5558 of type GALXY on 14.3177 7.03167
+    is NGC 5552 of type GALXY on 14.3177 7.03167
+
+Object 6590 Correction 266
+Nearby NGC 5564 of type GALXY on 14.3208 7.02056
+    is NGC 5554 of type GALXY on 14.3208 7.02056
+
+Object 6596 Correction 267
+Nearby NGC 5570 of type GALXY on 14.2391 7.515
+    is NGC 5519 of type GALXY on 14.2391 7.515
+
+Object 6601 Correction 268
+Nearby NGC 5575 of type GALXY on 14.3499 6.20222
+    is NGC 5578 of type GALXY on 14.3499 6.20222
+
+Object 6604 Correction 269
+Nearby NGC 5578 of type GALXY on 14.3499 6.20222
+    is NGC 5575 of type GALXY on 14.3499 6.20222
+
+Object 6606 Correction 270
+Nearby NGC 5580 of type GALXY on 14.3606 35.2044
+    is NGC 5590 of type GALXY on 14.3606 35.2044
+
+Object 6614 Correction 271
+Nearby NGC 5588 of type GALXY on 14.3569 35.27
+    is NGC 5589 of type GALXY on 14.3569 35.27
+
+Object 6615 Correction 272
+Nearby NGC 5589 of type GALXY on 14.3569 35.27
+    is NGC 5588 of type GALXY on 14.3569 35.27
+
+Object 6616 Correction 273
+Nearby NGC 5590 of type GALXY on 14.3606 35.2044
+    is NGC 5580 of type GALXY on 14.3606 35.2044
+
+Object 6647 Correction 274
+Nearby NGC 5619B of type GALXY on 14.459 4.82083
+    is IC 4424 of type GALXY on 14.459 4.82083
+
+Object 6678 Correction 275
+Nearby NGC 5650 of type GALXY on 14.5169 5.97778
+    is NGC 5652 of type GALXY on 14.5169 5.97778
+
+Object 6680 Correction 276
+Nearby NGC 5652 of type GALXY on 14.5169 5.97778
+    is NGC 5650 of type GALXY on 14.5169 5.97778
+
+Object 6707 Correction 277
+Nearby NGC 5679A of type GALXY on 14.5851 5.35583
+    is NGC 5679D of type GALXY on 14.5851 5.35611
+
+Object 6729 Correction 278
+Nearby NGC 5699 of type GALXY on 14.6451 30.4653
+    is NGC 5706 of type GALXY on 14.6451 30.4653
+
+Object 6733 Correction 279
+Nearby NGC 5703 of type GALXY on 14.6473 30.4419
+    is NGC 5709 of type GALXY on 14.6473 30.4419
+
+Object 6734 Correction 280
+Nearby NGC 5704 of type GALXY on 14.6378 40.4572
+    is NGC 5708 of type GALXY on 14.6378 40.4572
+
+Object 6736 Correction 281
+Nearby NGC 5706 of type GALXY on 14.6451 30.4653
+    is NGC 5699 of type GALXY on 14.6451 30.4653
+
+Object 6738 Correction 282
+Nearby NGC 5708 of type GALXY on 14.6378 40.4572
+    is NGC 5704 of type GALXY on 14.6378 40.4572
+
+Object 6739 Correction 283
+Nearby NGC 5709 of type GALXY on 14.6473 30.4419
+    is NGC 5703 of type GALXY on 14.6473 30.4419
+
+Object 6809 Correction 284
+Nearby NGC 5778 of type GALXY on 14.9087 18.6422
+    is NGC 5825 of type GALXY on 14.9087 18.6422
+
+Object 6838 Correction 285
+Nearby NGC 5808 of type GALXY on 14.9008 73.1314
+    is NGC 5819 of type GALXY on 14.9008 73.1314
+
+Object 6849 Correction 286
+Nearby NGC 5819 of type GALXY on 14.9008 73.1314
+    is NGC 5808 of type GALXY on 14.9008 73.1314
+
+Object 6855 Correction 287
+Nearby NGC 5825 of type GALXY on 14.9087 18.6422
+    is NGC 5778 of type GALXY on 14.9087 18.6422
+
+Object 6856 Correction 288
+Nearby NGC 5826 of type GALXY on 15.1094 55.4786
+    is NGC 5870 of type GALXY on 15.1094 55.4786
+
+Object 6901 Correction 289
+Nearby NGC 5870 of type GALXY on 15.1094 55.4786
+    is NGC 5826 of type GALXY on 15.1094 55.4786
+
+Object 6951 Correction 290
+Nearby NGC 5917 of type GALXY on 15.359 -7.37806
+    is MCG -01-39-003 of type GALXY on 15.359 -7.37806
+
+Object 7070 Correction 291
+Nearby NGC 6028 of type GALXY on 16.0247 19.3589
+    is NGC 6046 of type GALXY on 16.0247 19.3589
+
+Object 7087 Correction 292
+Nearby NGC 6046 of type GALXY on 16.0247 19.3589
+    is NGC 6028 of type GALXY on 16.0247 19.3589
+
+Object 7094 Correction 293
+Nearby NGC 6053 of type GALXY on 16.0943 18.1642
+    is NGC 6057 of type GALXY on 16.0943 18.1642
+
+Object 7095 Correction 294
+Nearby NGC 6054 of type GALXY on 16.0939 17.7669
+    is IC 1183 of type GALXY on 16.0939 17.7669
+
+Object 7098 Correction 295
+Nearby NGC 6057 of type GALXY on 16.0943 18.1642
+    is NGC 6053 of type GALXY on 16.0943 18.1642
+
+Object 7113 Correction 296
+Nearby NGC 6070A of type GALXY on 16.1692 0.764444
+    is CGCG 023-018 of type GALXY on 16.1692 0.76497
+
+Object 7171 Correction 297
+Nearby NGC 6125 of type GALXY on 16.3198 57.9842
+    is NGC 6127 of type GALXY on 16.3198 57.9842
+
+Object 7173 Correction 298
+Nearby NGC 6127 of type GALXY on 16.3198 57.9842
+    is NGC 6125 of type GALXY on 16.3198 57.9842
+
+Object 7222 Correction 299
+Nearby NGC 6170 of type GALXY on 16.4601 59.5625
+    is NGC 6176 of type GALXY on 16.4601 59.5625
+
+Object 7224 Correction 300
+Nearby NGC 6172 of type GALXY on 16.3695 -1.51472
+    is IC 1213 of type GALXY on 16.3695 -1.51472
+
+Object 7228 Correction 301
+Nearby NGC 6176 of type GALXY on 16.4601 59.5625
+    is NGC 6170 of type GALXY on 16.4601 59.5625
+
+Object 7241 Correction 302
+Nearby NGC 6189 of type GALXY on 16.528 59.6261
+    is NGC 6191 of type GALXY on 16.528 59.6261
+
+Object 7243 Correction 303
+Nearby NGC 6191 of type GALXY on 16.528 59.6261
+    is NGC 6189 of type GALXY on 16.528 59.6261
+
+Object 7254 Correction 304
+Nearby NGC 6202 of type GALXY on 16.7231 61.9831
+    is NGC 6226 of type GALXY on 16.7231 61.9831
+
+Object 7269 Correction 305
+Nearby NGC 6216 of type OPNCL on 16.8232 -44.7314
+    is NGC 6222 of type OPNCL on 16.8232 -44.7314
+
+Object 7275 Correction 306
+Nearby NGC 6222 of type OPNCL on 16.8232 -44.7314
+    is NGC 6216 of type OPNCL on 16.8232 -44.7314
+
+Object 7279 Correction 307
+Nearby NGC 6226 of type GALXY on 16.7231 61.9831
+    is NGC 6202 of type GALXY on 16.7231 61.9831
+
+Object 7415 Correction 308
+Nearby NGC 6361 of type GALXY on 17.3114 60.6075
+    is MCG +10-25-003 of type GALXY on 17.3113 60.6067
+
+Object 7420 Correction 309
+Nearby NGC 6365A of type GALXY on 17.3789 62.1653
+    is NGC 6365B of type GALXY on 17.3788 62.166
+
+Object 7481 Correction 310
+Nearby NGC 6427 of type GALXY on 17.7274 25.4933
+    is NGC 6431 of type GALXY on 17.7274 25.4933
+
+Object 7485 Correction 311
+Nearby NGC 6431 of type GALXY on 17.7274 25.4933
+    is NGC 6427 of type GALXY on 17.7274 25.4933
+
+Object 7545 Correction 312
+Nearby NGC 6491 of type GALXY on 17.8335 61.5314
+    is NGC 6493A of type GALXY on 17.8335 61.5314
+
+Object 7548 Correction 313
+Nearby NGC 6493A of type GALXY on 17.8335 61.5314
+    is NGC 6491 of type GALXY on 17.8335 61.5314
+
+Object 7552 Correction 314
+Nearby NGC 6497 of type GALXY on 17.8549 59.4706
+    is NGC 6498 of type GALXY on 17.8549 59.4706
+
+Object 7553 Correction 315
+Nearby NGC 6498 of type GALXY on 17.8549 59.4706
+    is NGC 6497 of type GALXY on 17.8549 59.4706
+
+Object 7627 Correction 316
+Nearby NGC 6574 of type GALXY on 18.1976 14.9811
+    is NGC 6610 of type GALXY on 18.1976 14.9811
+
+Object 7652 Correction 317
+Nearby NGC 6599 of type GALXY on 18.2619 24.9125
+    is NGC 6600 of type GALXY on 18.2619 24.9125
+
+Object 7653 Correction 318
+Nearby NGC 6600 of type GALXY on 18.2619 24.9125
+    is NGC 6599 of type GALXY on 18.2619 24.9125
+
+Object 7663 Correction 319
+Nearby NGC 6610 of type GALXY on 18.1976 14.9811
+    is NGC 6574 of type GALXY on 18.1976 14.9811
+
+Object 7720 Correction 320
+Nearby NGC 6667 of type GALXY on 18.511 67.9861
+    is NGC 6668 of type GALXY on 18.511 67.9861
+
+Object 7720 Correction 321
+Nearby NGC 6667 of type GALXY on 18.511 67.9861
+    is NGC 6678 of type GALXY on 18.511 67.9861
+
+Object 7721 Correction 322
+Nearby NGC 6668 of type GALXY on 18.511 67.9861
+    is NGC 6667 of type GALXY on 18.511 67.9861
+
+Object 7721 Correction 323
+Nearby NGC 6668 of type GALXY on 18.511 67.9861
+    is NGC 6678 of type GALXY on 18.511 67.9861
+
+Object 7731 Correction 324
+Nearby NGC 6678 of type GALXY on 18.511 67.9861
+    is NGC 6667 of type GALXY on 18.511 67.9861
+
+Object 7731 Correction 325
+Nearby NGC 6678 of type GALXY on 18.511 67.9861
+    is NGC 6668 of type GALXY on 18.511 67.9861
+
+Object 7839 Correction 326
+Nearby IC 5067 of type HII on 20.8467 44.35
+    is IC 5070 of type EMINB on 20.8467 44.35
+
+Object 7949 Correction 327
+Nearby NGC 6882 of type OPNCL on 20.1994 26.4833
+    is NGC 6885 of type OPNCL on 20.1994 26.4833
+
+Object 7952 Correction 328
+Nearby NGC 6885 of type OPNCL on 20.1994 26.4833
+    is NGC 6882 of type OPNCL on 20.1994 26.4833
+
+Object 7968 Correction 329
+Nearby NGC 6901 of type GALXY on 20.3727 6.42917
+    is IC 5000 of type GALXY on 20.3727 6.42917
+
+Object 8035 Correction 330
+Nearby NGC 6965 of type GALXY on 20.789 0.483611
+    is IC 5058 of type GALXY on 20.789 0.483611
+
+Object 8045 Correction 331
+Nearby NGC 6975 of type GALXY on 20.8739 -5.77194
+    is NGC 6976 of type GALXY on 20.8739 -5.77194
+
+Object 8046 Correction 332
+Nearby NGC 6976 of type GALXY on 20.8739 -5.77194
+    is NGC 6975 of type GALXY on 20.8739 -5.77194
+
+Object 8373 Correction 333
+Nearby NGC 7294 of type GALXY on 22.5355 -25.3986
+    is IC 5225 of type GALXY on 22.5355 -25.3986
+
+Object 8402 Correction 334
+Nearby NGC 7320B of type GALXY on 22.6245 33.9228
+    is CGCG 514-072 of type GALXY on 22.6245 33.9228
+
+Object 8457 Correction 335
+Nearby NGC 7374B of type GALXY on 22.7664 10.8675
+    is IC 1452 of type GALXY on 22.7664 10.8675
+
+Object 8527 Correction 336
+Nearby NGC 7441 of type GALXY on 22.9448 -7.38028
+    is IC 1458 of type GALXY on 22.9448 -7.38028
+
+Object 8646 Correction 337
+Nearby NGC 7559A of type GALXY on 23.2629 13.2897
+    is NGC 7559 of type GALXY on 23.2629 13.2897
+
+Object 8657 Correction 338
+Nearby NGC 7568 of type GALXY on 23.2736 24.4967
+    is NGC 7574 of type GALXY on 23.2736 24.4967
+
+Object 8660 Correction 339
+Nearby NGC 7571 of type GALXY on 23.3084 18.6878
+    is NGC 7597 of type GALXY on 23.3084 18.6878
+
+Object 8663 Correction 340
+Nearby NGC 7574 of type GALXY on 23.2736 24.4967
+    is NGC 7568 of type GALXY on 23.2736 24.4967
+
+Object 8673 Correction 341
+Nearby NGC 7583 of type GALXY on 23.298 7.37889
+    is NGC 7605 of type GALXY on 23.298 7.37889
+
+Object 8687 Correction 342
+Nearby NGC 7597 of type GALXY on 23.3084 18.6878
+    is NGC 7571 of type GALXY on 23.3084 18.6878
+
+Object 8695 Correction 343
+Nearby NGC 7605 of type GALXY on 23.298 7.37889
+    is NGC 7583 of type GALXY on 23.298 7.37889
+
+Object 8699 Correction 344
+Nearby NGC 7609 of type GALXY on 23.325 9.50806
+    is MCG +01-59-046 of type GALXY on 23.325 9.50833
+
+Object 8699 Correction 345
+Nearby NGC 7609 of type GALXY on 23.325 9.50806
+    is MCG +01-59-048 of type GALXY on 23.325 9.50833
+
+Object 8699 Correction 346
+Nearby NGC 7609 of type GALXY on 23.325 9.50806
+    is PGC 71077 of type GALXY on 23.325 9.50833
+
+Object 8717 Correction 347
+Nearby NGC 7627 of type GALXY on 23.3752 11.8931
+    is NGC 7641 of type GALXY on 23.3752 11.8931
+
+Object 8731 Correction 348
+Nearby NGC 7641 of type GALXY on 23.3752 11.8931
+    is NGC 7627 of type GALXY on 23.3752 11.8931
+
+Object 8733 Correction 349
+Nearby NGC 7643 of type GALXY on 23.3807 11.9881
+    is NGC 7644 of type GALXY on 23.3807 11.9881
+
+Object 8734 Correction 350
+Nearby NGC 7644 of type GALXY on 23.3807 11.9881
+    is NGC 7643 of type GALXY on 23.3807 11.9881
+
+Object 8739 Correction 351
+Nearby NGC 7649 of type GALXY on 23.4056 14.6464
+    is IC 1487 of type GALXY on 23.4056 14.6464
+
+Object 8759 Correction 352
+Nearby NGC 7668 of type GALXY on 23.4067 -0.116667
+    is NGC 7669 of type GALXY on 23.4067 -0.116667
+
+Object 8759 Correction 353
+Nearby NGC 7668 of type GALXY on 23.4067 -0.116667
+    is NGC 7670 of type GALXY on 23.4067 -0.116667
+
+Object 8760 Correction 354
+Nearby NGC 7669 of type GALXY on 23.4067 -0.116667
+    is NGC 7668 of type GALXY on 23.4067 -0.116667
+
+Object 8760 Correction 355
+Nearby NGC 7669 of type GALXY on 23.4067 -0.116667
+    is NGC 7670 of type GALXY on 23.4067 -0.116667
+
+Object 8761 Correction 356
+Nearby NGC 7670 of type GALXY on 23.4067 -0.116667
+    is NGC 7668 of type GALXY on 23.4067 -0.116667
+
+Object 8761 Correction 357
+Nearby NGC 7670 of type GALXY on 23.4067 -0.116667
+    is NGC 7669 of type GALXY on 23.4067 -0.116667
+
+Object 8832 Correction 358
+Nearby NGC 7740 of type GALXY on 23.7256 27.3111
+    is CGCG 476-123 of type GALXY on 23.7256 27.3114
+
+Object 8875 Correction 359
+Nearby NGC 7783A of type GALXY on 23.9028 0.382778
+    is UGC 12837A of type GALXY on 23.9028 0.38292
+
+Object 8876 Correction 360
+Nearby NGC 7783B of type GALXY on 23.9033 0.376944
+    is UGC 12837B of type GALXY on 23.9033 0.37702
+
+Object 9077 Correction 361
+Nearby PK 289-00.01 of type BRTNB on 10.9367 -60.45
+    is A G Car of type STNEB on 10.9367 -60.45
+
+Object 9355 Correction 362
+Nearby Sh 2-82 of type BRTNB on 19.505 18.2667
+    is Simeis 82 of type RNHII on 19.505 18.2667
+
+Object 9359 Correction 363
+Nearby Sh 2-91 of type SNREM on 19.5933 29.6167
+    is Simeis 91 of type SNREM on 19.5933 29.6167
+
+Object 9360 Correction 364
+Nearby Sh 2-101 of type BRTNB on 20 35.2833
+    is Simeis 101 of type HII on 20 35.2833
+
+Object 9361 Correction 365
+Nearby Sh 2-104 of type BRTNB on 20.2967 36.7333
+    is Simeis 104 of type HII on 20.2967 36.7333
+
+Object 9362 Correction 366
+Nearby Sh 2-112 of type BRTNB on 20.565 45.65
+    is Simeis 112 of type HII on 20.565 45.65
+
+Object 9363 Correction 367
+Nearby Sh 2-115 of type BRTNB on 20.575 46.8667
+    is Simeis 115 of type HII on 20.575 46.8667
+
+Object 9364 Correction 368
+Nearby Sh 2-129 of type BRTNB on 21.1967 59.95
+    is Simeis 129 of type HII on 21.1967 59.95
+
+Object 9366 Correction 369
+Nearby Sh 2-155 of type BRTNB on 22.9467 62.6167
+    is Simeis 155 of type HII on 22.9467 62.6167
+
+Object 9367 Correction 370
+Nearby Sh 2-157 of type BRTNB on 23.2683 60.0333
+    is Simeis 157A of type HII on 23.2683 60.0333
+
+Object 9373 Correction 371
+Nearby Sh 2-235 of type BRTNB on 5.685 35.8667
+    is Simeis 235 of type HII on 5.685 35.8667
+
+Object 9381 Correction 372
+Nearby Sh 2-282 of type BRTNB on 6.63333 1.51667
+    is Simeis 282 of type HII on 6.63333 1.51667
+
+Object 9383 Correction 373
+Nearby Sh 2-301 of type BRTNB on 7.16333 -18.4833
+    is Simeis 301 of type HII on 7.16333 -18.4833
+
+Object 9384 Correction 374
+Nearby Sh 2-302 of type BRTNB on 7.52667 -16.9667
+    is Simeis 302 of type HII on 7.52667 -16.9667
+
+Object 9498 Correction 375
+Nearby UGC 3504 of type GALXY on 6.66867 60.0808
+    is NGC 2273A of type GALXY on 6.66861 60.08
+
+Object 9592 Correction 376
+Nearby UGC 6616 of type GALXY on 11.656 58.2684
+    is NGC 3795A of type GALXY on 11.6559 58.2681
+
+Object 9616 Correction 377
+Nearby UGC 7175 of type GALXY on 12.1818 39.7572
+    is NGC 4145A of type GALXY on 12.1818 39.7567
+
+Object 9752 Correction 378
+Nearby vdB 85 of type OPNCL on 6.7817 1.3333
+    is NGC 2282 of type REFNB on 6.78167 1.33333
+
+Object 9853 Correction 379
+Nearby IC 1183 of type GALXY on 16.0939 17.7669
+    is NGC 6054 of type GALXY on 16.0939 17.7669
+
+Object 9913 Correction 380
+Nearby IC 610 of type GALXY on 10.4412 20.2264
+    is IC 611 of type GALXY on 10.4412 20.2264
+
+Object 9973 Correction 381
+Nearby IC 412 of type GALXY on 5.36575 3.48583
+    is IC 2123 of type GALXY on 5.36575 3.48583
+
+Object 9974 Correction 382
+Nearby IC 413 of type GALXY on 5.36631 3.48167
+    is IC 2124 of type GALXY on 5.36631 3.48167
+
+Object 10031 Correction 383
+Nearby IC 162 of type GALXY on 1.81483 10.5217
+    is MCG +02-05-039 of type GALXY on 1.81483 10.5217
+
+Object 10031 Correction 384
+Nearby IC 162 of type GALXY on 1.81483 10.5217
+    is UGC 1267 of type GALXY on 1.81487 10.5213
+
+Object 10033 Correction 385
+Nearby MCG -02-05-050 of type GALXY on 1.80717 -12.3817
+    is MCG -02-05-50A of type GALXY on 1.80717 -12.3817
+
+Object 10034 Correction 386
+Nearby MCG -02-05-50A of type GALXY on 1.80717 -12.3817
+    is MCG -02-05-050 of type GALXY on 1.80717 -12.3817
+
+Object 10053 Correction 387
+Nearby MCG +08-31-003 of type GALXY on 16.8238 45.4583
+    is PGC 59062 of type GALXY on 16.8238 45.4583
+
+Object 10054 Correction 388
+Nearby PGC 59062 of type GALXY on 16.8238 45.4583
+    is MCG +08-31-003 of type GALXY on 16.8238 45.4583
+
+Object 10065 Correction 389
+Nearby NGC 6365B of type GALXY on 17.3788 62.166
+    is NGC 6365A of type GALXY on 17.3789 62.1653
+
+Object 10079 Correction 390
+Nearby MCG +03-38-014 of type GALXY on 14.7868 18.8583
+    is NPM1G +19.0402 of type GALXY on 14.7868 18.8583
+
+Object 10080 Correction 391
+Nearby NPM1G +19.0402 of type GALXY on 14.7868 18.8583
+    is MCG +03-38-014 of type GALXY on 14.7868 18.8583
+
+Object 10081 Correction 392
+Nearby PGC 4789 of type GALXY on 1.33333 12.3483
+    is CGCG 436-026 of type GALXY on 1.33333 12.3483
+
+Object 10082 Correction 393
+Nearby CGCG 436-026 of type GALXY on 1.33333 12.3483
+    is PGC 4789 of type GALXY on 1.33333 12.3483
+
+Object 10090 Correction 394
+Nearby MCG -01-07-007 of type GALXY on 2.4005 -4.69333
+    is PGC 9107 of type GALXY on 2.4005 -4.69333
+
+Object 10091 Correction 395
+Nearby PGC 9107 of type GALXY on 2.4005 -4.69333
+    is MCG -01-07-007 of type GALXY on 2.4005 -4.69333
+
+Object 10097 Correction 396
+Nearby MCG +03-34-012 of type GALXY on 13.2778 14.4367
+    is MCG +03-34-013 of type GALXY on 13.2778 14.4367
+
+Object 10098 Correction 397
+Nearby MCG +03-34-013 of type GALXY on 13.2778 14.4367
+    is MCG +03-34-012 of type GALXY on 13.2778 14.4367
+
+Object 10104 Correction 398
+Nearby PGC 1762846 of type GALXY on 13.2465 26.085
+    is MAC 1314+2606A of type GALXY on 13.2465 26.085
+
+Object 10105 Correction 399
+Nearby MAC 1314+2606A of type GALXY on 13.2465 26.085
+    is PGC 1762846 of type GALXY on 13.2465 26.085
+
+Object 10107 Correction 400
+Nearby MGC +0-12-53 of type GALXY on 4.61167 -2.28667
+    is MCG +00-12-055 of type GALXY on 4.61167 -2.28667
+
+Object 10108 Correction 401
+Nearby MCG +00-12-055 of type GALXY on 4.61167 -2.28667
+    is MGC +0-12-53 of type GALXY on 4.61167 -2.28667
+
+Object 10141 Correction 402
+Nearby MCG +05-34-076 of type GALXY on 14.5838 26.5433
+    is IC 4461 of type GALXY on 14.5838 26.5436
+
+Object 10143 Correction 403
+Nearby MCG +14-04-010 of type GALXY on 7.05017 86.6033
+    is MCG +14-04-011 of type GALXY on 7.05017 86.6033
+
+Object 10144 Correction 404
+Nearby MCG +14-04-011 of type GALXY on 7.05017 86.6033
+    is MCG +14-04-010 of type GALXY on 7.05017 86.6033
+
+Object 10146 Correction 405
+Nearby MCG +05-29-010 of type GALXY on 12.096 31.06
+    is MCG +05-29-011 of type GALXY on 12.096 31.06
+
+Object 10146 Correction 406
+Nearby MCG +05-29-010 of type GALXY on 12.096 31.06
+    is MCG +05-29-012 of type GALXY on 12.096 31.06
+
+Object 10147 Correction 407
+Nearby MCG +05-29-011 of type GALXY on 12.096 31.06
+    is MCG +05-29-010 of type GALXY on 12.096 31.06
+
+Object 10147 Correction 408
+Nearby MCG +05-29-011 of type GALXY on 12.096 31.06
+    is MCG +05-29-012 of type GALXY on 12.096 31.06
+
+Object 10148 Correction 409
+Nearby MCG +05-29-012 of type GALXY on 12.096 31.06
+    is MCG +05-29-010 of type GALXY on 12.096 31.06
+
+Object 10148 Correction 410
+Nearby MCG +05-29-012 of type GALXY on 12.096 31.06
+    is MCG +05-29-011 of type GALXY on 12.096 31.06
+
+Object 10163 Correction 411
+Nearby MCG +08-31-041 of type GALXY on 17.3207 48.98
+    is MCG +08-31-042 of type GALXY on 17.3207 48.98
+
+Object 10164 Correction 412
+Nearby MCG +08-31-042 of type GALXY on 17.3207 48.98
+    is MCG +08-31-041 of type GALXY on 17.3207 48.98
+
+Object 10169 Correction 413
+Nearby MCG -04-08-017 of type GALXY on 3.0515 -22.2167
+    is MCG -04-08-018 of type GALXY on 3.0515 -22.2167
+
+Object 10170 Correction 414
+Nearby MCG -04-08-018 of type GALXY on 3.0515 -22.2167
+    is MCG -04-08-017 of type GALXY on 3.0515 -22.2167
+
+Object 10172 Correction 415
+Nearby MCG +12-15-017 of type GALXY on 15.8022 69.4583
+    is MCG +12-15-018 of type GALXY on 15.8022 69.4583
+
+Object 10173 Correction 416
+Nearby MCG +12-15-018 of type GALXY on 15.8022 69.4583
+    is MCG +12-15-017 of type GALXY on 15.8022 69.4583
+
+Object 10195 Correction 417
+Nearby NPM1G +42.0445 of type GALXY on 16.6372 41.93
+    is UGC 10491A of type GALXY on 16.6372 41.9306
+
+Object 10202 Correction 418
+Nearby IC 5378 of type GALXY on 0.043833 16.6436
+    is UGC 1B of type GALXY on 0.04388 16.6437
+
+Object 10204 Correction 419
+Nearby MCG -03-08-025 of type GALXY on 2.78833 -14.8017
+    is MCG -03-08-026 of type GALXY on 2.78833 -14.8017
+
+Object 10205 Correction 420
+Nearby MCG -03-08-026 of type GALXY on 2.78833 -14.8017
+    is MCG -03-08-025 of type GALXY on 2.78833 -14.8017
+
+Object 10210 Correction 421
+Nearby MCG -01-03-051 of type GALXY on 0.989833 -4.80333
+    is MCG -01-03-052 of type GALXY on 0.989833 -4.80333
+
+Object 10211 Correction 422
+Nearby MCG -01-03-052 of type GALXY on 0.989833 -4.80333
+    is MCG -01-03-051 of type GALXY on 0.989833 -4.80333
+
+Object 10215 Correction 423
+Nearby MCG +10-25-003 of type GALXY on 17.3113 60.6067
+    is NGC 6361 of type GALXY on 17.3114 60.6075
+
+Object 10217 Correction 424
+Nearby MAC 0937+0246 of type GALXY on 9.629 2.76
+    is NGC 2936 of type GALXY on 9.629 2.76
+
+Object 10223 Correction 425
+Nearby PGC 509 of type GALXY on 0.112333 -6.63667
+    is PGC 510 of type GALXY on 0.112333 -6.63667
+
+Object 10224 Correction 426
+Nearby PGC 510 of type GALXY on 0.112333 -6.63667
+    is PGC 509 of type GALXY on 0.112333 -6.63667
+
+Object 10251 Correction 427
+Nearby MCG +09-27-092 of type GALXY on 16.8202 53.405
+    is MCG +09-27-093 of type GALXY on 16.8202 53.4051
+
+Object 10252 Correction 428
+Nearby MCG +09-27-093 of type GALXY on 16.8202 53.4051
+    is MCG +09-27-092 of type GALXY on 16.8202 53.405
+
+Object 10288 Correction 429
+Nearby MCG +01-59-046 of type GALXY on 23.325 9.50833
+    is MCG +01-59-048 of type GALXY on 23.325 9.50833
+
+Object 10288 Correction 430
+Nearby MCG +01-59-046 of type GALXY on 23.325 9.50833
+    is NGC 7609 of type GALXY on 23.325 9.50806
+
+Object 10288 Correction 431
+Nearby MCG +01-59-046 of type GALXY on 23.325 9.50833
+    is PGC 71077 of type GALXY on 23.325 9.50833
+
+Object 10289 Correction 432
+Nearby MCG +01-59-048 of type GALXY on 23.325 9.50833
+    is MCG +01-59-046 of type GALXY on 23.325 9.50833
+
+Object 10289 Correction 433
+Nearby MCG +01-59-048 of type GALXY on 23.325 9.50833
+    is NGC 7609 of type GALXY on 23.325 9.50806
+
+Object 10289 Correction 434
+Nearby MCG +01-59-048 of type GALXY on 23.325 9.50833
+    is PGC 71077 of type GALXY on 23.325 9.50833
+
+Object 10290 Correction 435
+Nearby PGC 71077 of type GALXY on 23.325 9.50833
+    is MCG +01-59-046 of type GALXY on 23.325 9.50833
+
+Object 10290 Correction 436
+Nearby PGC 71077 of type GALXY on 23.325 9.50833
+    is MCG +01-59-048 of type GALXY on 23.325 9.50833
+
+Object 10290 Correction 437
+Nearby PGC 71077 of type GALXY on 23.325 9.50833
+    is NGC 7609 of type GALXY on 23.325 9.50806
+
+Object 10307 Correction 438
+Nearby MCG +02-38-019 of type GALXY on 14.8573 9.32833
+    is MCG +02-38-020 of type GALXY on 14.8573 9.32833
+
+Object 10308 Correction 439
+Nearby MCG +02-38-020 of type GALXY on 14.8573 9.32833
+    is MCG +02-38-019 of type GALXY on 14.8573 9.32833
+
+Object 10316 Correction 440
+Nearby MCG +04-35-016 of type GALXY on 14.9302 24.5983
+    is MCG +04-35-017 of type GALXY on 14.9302 24.5983
+
+Object 10317 Correction 441
+Nearby MCG +04-35-017 of type GALXY on 14.9302 24.5983
+    is MCG +04-35-016 of type GALXY on 14.9302 24.5983
+
+Object 10449 Correction 442
+Nearby UGC 1B of type GALXY on 0.04388 16.6437
+    is IC 5378 of type GALXY on 0.043833 16.6436
+
+Object 10968 Correction 443
+Nearby UGC 392 of type GALXY on 0.67638 83.2219
+    is MCG +14-01-009 of type GALXY on 0.676389 83.2219
+
+Object 11068 Correction 444
+Nearby KAZ 371 of type GALXY on 0.82185 -12.4944
+    is KAZ 372 of type GALXY on 0.82185 -12.4944
+
+Object 11069 Correction 445
+Nearby KAZ 372 of type GALXY on 0.82185 -12.4944
+    is KAZ 371 of type GALXY on 0.82185 -12.4944
+
+Object 11581 Correction 446
+Nearby UGC 1343A of type GALXY on 1.87717 36.1265
+    is NGC 704 of type GALXY on 1.87714 36.1264
+
+Object 11671 Correction 447
+Nearby UGC 1424 of type GALXY on 1.94721 4.02552
+    is IC 1754 of type GALXY on 1.94717 4.02556
+
+Object 12048 Correction 448
+Nearby UGC 1267 of type GALXY on 1.81487 10.5213
+    is IC 162 of type GALXY on 1.81483 10.5217
+
+Object 12048 Correction 449
+Nearby UGC 1267 of type GALXY on 1.81487 10.5213
+    is MCG +02-05-039 of type GALXY on 1.81483 10.5217
+
+Object 12107 Correction 450
+Nearby UGC 1320 of type GALXY on 1.85925 41.8364
+    is CGCG 537-025 of type GALXY on 1.8592 41.8366
+
+Object 12108 Correction 451
+Nearby CGCG 537-025 of type GALXY on 1.8592 41.8366
+    is UGC 1320 of type GALXY on 1.85925 41.8364
+
+Object 12224 Correction 452
+Nearby UGCA 23 of type GALXY on 2.05059 -9.65702
+    is MCG -02-06-019 of type GALXY on 2.05056 -9.65667
+
+Object 12224 Correction 453
+Nearby UGCA 23 of type GALXY on 2.05059 -9.65702
+    is PGC 7806 of type GALXY on 2.05056 -9.65667
+
+Object 12262 Correction 454
+Nearby UGC 1577 of type GALXY on 2.09077 31.1751
+    is IC 200 of type GALXY on 2.09072 31.175
+
+Object 12750 Correction 455
+Nearby CGCG 388-036 of type GALXY on 2.52802 2.80975
+    is IC 233 of type GALXY on 2.52797 2.81
+
+Object 12921 Correction 456
+Nearby CGCG 439-026 of type GALXY on 2.67579 14.2975
+    is IC 1829 of type GALXY on 2.67578 14.2975
+
+Object 13090 Correction 457
+Nearby CGCG 389-027 of type GALXY on 2.82778 -0.06985
+    is IC 263 of type GALXY on 2.82775 -0.070278
+
+Object 13122 Correction 458
+Nearby UGC 2337A of type GALXY on 2.85361 13.1918
+    is NGC 1117A of type GALXY on 2.85358 13.1919
+
+Object 13137 Correction 459
+Nearby CGCG 539-115 of type GALXY on 2.87219 44.0654
+    is UGC 2342 of type GALXY on 2.8722 44.0654
+
+Object 13140 Correction 460
+Nearby UGC 2342 of type GALXY on 2.8722 44.0654
+    is CGCG 539-115 of type GALXY on 2.87219 44.0654
+
+Object 13384 Correction 461
+Nearby UGC 2560 of type GALXY on 3.16179 40.8929
+    is NGC 1212 of type GALXY on 3.16175 40.8925
+
+Object 13461 Correction 462
+Nearby UGC 2619 of type GALXY on 3.27108 41.181
+    is IC 308 of type GALXY on 3.27108 41.1808
+
+Object 13527 Correction 463
+Nearby UGC 2691A of type GALXY on 3.34595 -1.05449
+    is PGC 12538 of type GALXY on 3.34594 -1.05417
+
+Object 13534 Correction 464
+Nearby UGC 2688B of type GALXY on 3.35558 41.9286
+    is IC 316 of type GALXY on 3.35553 41.9281
+
+Object 13635 Correction 465
+Nearby UGC 2769 of type GALXY on 3.52057 42.7921
+    is IC 1934 of type GALXY on 3.52053 42.7922
+
+Object 13929 Correction 466
+Nearby UGC 3032 of type GALXY on 4.40706 -0.74663
+    is NGC 1568 of type GALXY on 4.40703 -0.746667
+
+Object 14069 Correction 467
+Nearby UGC 3150 of type GALXY on 4.80751 73.4692
+    is NGC 1573A of type GALXY on 4.80742 73.4689
+
+Object 14073 Correction 468
+Nearby UGCA 95 of type GALXY on 4.82004 -29.2075
+    is ESO 421-19 of type GALXY on 4.82 -29.2075
+
+Object 14462 Correction 469
+Nearby UGC 3413 of type GALXY on 6.28358 81.1382
+    is PGC 18764 of type GALXY on 6.28361 81.1383
+
+Object 14554 Correction 470
+Nearby UGC 3491 of type GALXY on 6.64104 75.4041
+    is UGC 3492 of type GALXY on 6.64115 75.4045
+
+Object 14555 Correction 471
+Nearby UGC 3492 of type GALXY on 6.64115 75.4045
+    is UGC 3491 of type GALXY on 6.64104 75.4041
+
+Object 15500 Correction 472
+Nearby CGCG 236-006 of type GALXY on 7.85491 50.1793
+    is UGC 4051 of type GALXY on 7.85493 50.179
+
+Object 15501 Correction 473
+Nearby UGC 4051 of type GALXY on 7.85493 50.179
+    is CGCG 236-006 of type GALXY on 7.85491 50.1793
+
+Object 15525 Correction 474
+Nearby CGCG 148-053 of type GALXY on 7.86886 27.4837
+    is IC 2208 of type GALXY on 7.86886 27.4836
+
+Object 15860 Correction 475
+Nearby CGCG 178-028 of type GALXY on 8.11866 36.2332
+    is IC 2227 of type GALXY on 8.11864 36.2328
+
+Object 15981 Correction 476
+Nearby UGC 4299 of type GALXY on 8.26643 23.1995
+    is IC 2247 of type GALXY on 8.26639 23.1992
+
+Object 16939 Correction 477
+Nearby CGCG 121-029 of type GALXY on 9.15911 20.4792
+    is CGCG 091-011 of type GALXY on 9.15913 20.4795
+
+Object 16942 Correction 478
+Nearby CGCG 091-011 of type GALXY on 9.15913 20.4795
+    is CGCG 121-029 of type GALXY on 9.15911 20.4792
+
+Object 17088 Correction 479
+Nearby UGC 4902 of type GALXY on 9.28482 25.4289
+    is IC 2450 of type GALXY on 9.28478 25.4286
+
+Object 17314 Correction 480
+Nearby UGC 5044A of type GALXY on 9.46212 12.2871
+    is UGC 5044 of type GALXY on 9.46214 12.2878
+
+Object 17338 Correction 481
+Nearby UGC 5057A of type GALXY on 9.49088 -1.33987
+    is PGC 26925 of type GALXY on 9.49083 -1.33917
+
+Object 17771 Correction 482
+Nearby UGC 5273A of type GALXY on 9.84255 44.3146
+    is NGC 3010B of type GALXY on 9.84256 44.3142
+
+Object 18666 Correction 483
+Nearby CGCG 065-050 of type GALXY on 10.5442 12.1778
+    is IC 619 of type GALXY on 10.5442 12.1775
+
+Object 18869 Correction 484
+Nearby CGCG 038-004 of type GALXY on 10.738 2.78803
+    is CGCG 038-006 of type GALXY on 10.738 2.78773
+
+Object 18873 Correction 485
+Nearby CGCG 038-006 of type GALXY on 10.738 2.78773
+    is CGCG 038-004 of type GALXY on 10.738 2.78803
+
+Object 18976 Correction 486
+Nearby CGCG 066-026 of type GALXY on 10.815 14.1241
+    is PGC 32348 of type GALXY on 10.815 14.1244
+
+Object 18980 Correction 487
+Nearby CGCG 038-021 of type GALXY on 10.8184 2.22366
+    is CGCG 010-023 of type GALXY on 10.8184 2.22366
+
+Object 18984 Correction 488
+Nearby CGCG 010-023 of type GALXY on 10.8184 2.22366
+    is CGCG 038-021 of type GALXY on 10.8184 2.22366
+
+Object 18999 Correction 489
+Nearby UGC 5933B of type GALXY on 10.829 16.2418
+    is NGC 3405 of type GALXY on 10.829 16.2419
+
+Object 19156 Correction 490
+Nearby CGCG 313-040 of type GALXY on 10.9449 67.1852
+    is CGCG 314-01A of type GALXY on 10.945 67.1847
+
+Object 19274 Correction 491
+Nearby UGC 6090 of type GALXY on 11.031 75.2011
+    is NGC 3465 of type GALXY on 11.0309 75.2006
+
+Object 19282 Correction 492
+Nearby UGC 6107 of type GALXY on 11.04 38.5053
+    is IC 2620 of type GALXY on 11.04 38.505
+
+Object 19942 Correction 493
+Nearby UGC 6479 of type GALXY on 11.4807 20.7948
+    is NGC 3697A of type GALXY on 11.4807 20.7944
+
+Object 20020 Correction 494
+Nearby UGC 6527B of type GALXY on 11.5436 52.9473
+    is UGC 6527 of type GALXY on 11.5436 52.9472
+
+Object 20322 Correction 495
+Nearby CGCG 186-044 of type GALXY on 11.7721 35.0037
+    is IC 2960 of type GALXY on 11.7721 35.0036
+
+Object 20465 Correction 496
+Nearby CGCG 127-085 of type GALXY on 11.8751 20.6255
+    is NGC 3937 of type GALXY on 11.8751 20.6253
+
+Object 20593 Correction 497
+Nearby UGC 6965A of type GALXY on 11.9785 25.0366
+    is NGC 4015 of type GALXY on 11.9785 25.0361
+
+Object 20946 Correction 498
+Nearby CGCG 128-061 of type GALXY on 12.2544 23.9586
+    is IC 3067 of type GALXY on 12.2544 23.9583
+
+Object 20946 Correction 499
+Nearby CGCG 128-061 of type GALXY on 12.2544 23.9586
+    is IC 772 of type GALXY on 12.2544 23.9583
+
+Object 21009 Correction 500
+Nearby CGCG 128-072 of type GALXY on 12.3023 24.6881
+    is IC 3119 of type GALXY on 12.3023 24.6883
+
+Object 21026 Correction 501
+Nearby UGC 7347 of type GALXY on 12.3152 12.4697
+    is IC 3137 of type GALXY on 12.3152 12.4689
+
+Object 21088 Correction 502
+Nearby CGCG 128-081 of type GALXY on 12.3479 25.4296
+    is IC 3185 of type GALXY on 12.3479 25.4289
+
+Object 21211 Correction 503
+Nearby UGC 7588 of type GALXY on 12.4704 13.5708
+    is IC 3382 of type GALXY on 12.4704 13.5706
+
+Object 21285 Correction 504
+Nearby UGC 7731 of type GALXY on 12.5519 82.564
+    is IC 3568 of type PLNNB on 12.5519 82.5638
+
+Object 21620 Correction 505
+Nearby UGC 8059 of type GALXY on 12.9317 63.6116
+    is IC 836 of type GALXY on 12.9317 63.6111
+
+Object 21783 Correction 506
+Nearby UGC 8163 of type GALXY on 13.0604 40.2487
+    is IC 4135 of type GALXY on 13.0604 40.2481
+
+Object 21868 Correction 507
+Nearby UGC 8224 of type GALXY on 13.1393 39.4608
+    is IC 4204 of type GALXY on 13.1393 39.4603
+
+Object 22078 Correction 508
+Nearby UGC 8361 of type GALXY on 13.3052 6.33566
+    is IC 872 of type GALXY on 13.3052 6.33556
+
+Object 22489 Correction 509
+Nearby UGC 8610 of type GALXY on 13.6222 6.48537
+    is MCG +01-35-019 of type GALXY on 13.6222 6.48556
+
+Object 22693 Correction 510
+Nearby UGC 8732 of type GALXY on 13.7855 72.0701
+    is IC 945 of type GALXY on 13.7854 72.0694
+
+Object 22891 Correction 511
+Nearby UGC 8849A of type GALXY on 13.9331 17.4991
+    is IC 960 of type GALXY on 13.9331 17.4989
+
+Object 23039 Correction 512
+Nearby UGC 8941B of type GALXY on 14.0284 33.8212
+    is NGC 5421B of type GALXY on 14.0284 33.8214
+
+Object 23301 Correction 513
+Nearby CGCG 074-136 of type GALXY on 14.2083 8.648
+    is NGC 5469 of type GALXY on 14.2083 8.64861
+
+Object 23445 Correction 514
+Nearby CGCG 047-015 of type GALXY on 14.3451 5.48553
+    is IC 1002 of type GALXY on 14.3451 5.48528
+
+Object 23828 Correction 515
+Nearby MCG +08-31-010 of type GALXY on 16.8519 47.2333
+    is MCG +08-31-011 of type GALXY on 16.8519 47.2333
+
+Object 24237 Correction 516
+Nearby UGC 9668 of type GALXY on 14.9356 83.5226
+    is Mrk 839 of type GALXY on 14.9356 83.5225
+
+Object 24445 Correction 517
+Nearby UGC 9713 of type GALXY on 15.1116 23.6415
+    is IC 4534 of type GALXY on 15.1116 23.6411
+
+Object 24471 Correction 518
+Nearby CGCG 077-015 of type GALXY on 15.1267 9.35876
+    is IC 1092 of type GALXY on 15.1267 9.35833
+
+Object 25689 Correction 519
+Nearby UGC 10195 of type GALXY on 16.0979 18.2204
+    is IC 1190 of type GALXY on 16.0979 18.22
+
+Object 25775 Correction 520
+Nearby CGCG 023-018 of type GALXY on 16.1692 0.76497
+    is NGC 6070A of type GALXY on 16.1692 0.764444
+
+Object 26279 Correction 521
+Nearby UGC 10491A of type GALXY on 16.6372 41.9306
+    is NPM1G +42.0445 of type GALXY on 16.6372 41.93
+
+Object 26327 Correction 522
+Nearby CGCG 080-057 of type GALXY on 16.6933 9.43167
+    is CGCG 080-056 of type GALXY on 16.6933 9.43197
+
+Object 26328 Correction 523
+Nearby CGCG 080-056 of type GALXY on 16.6933 9.43197
+    is CGCG 080-057 of type GALXY on 16.6933 9.43167
+
+Object 26410 Correction 524
+Nearby UGC 10561 of type GALXY on 16.7767 62.8225
+    is PGC 58960 of type GALXY on 16.7767 62.8231
+
+Object 26517 Correction 525
+Nearby KAZ 106 of type GALXY on 16.9143 70.4376
+    is UGC 10622 of type GALXY on 16.9144 70.4377
+
+Object 26518 Correction 526
+Nearby UGC 10622 of type GALXY on 16.9144 70.4377
+    is KAZ 106 of type GALXY on 16.9143 70.4376
+
+Object 26996 Correction 527
+Nearby UGC 10869B of type GALXY on 17.4575 58.5166
+    is IC 1259 of type GALXY on 17.4574 58.5158
+
+Object 27644 Correction 528
+Nearby UGC 11230 of type GALXY on 18.4008 65.306
+    is PGC 61824 of type GALXY on 18.4008 65.3058
+
+Object 27741 Correction 529
+Nearby CGCG 201-015 of type GALXY on 18.6028 38.1605
+    is PGC 62108 of type GALXY on 18.6028 38.1603
+
+Object 28430 Correction 530
+Nearby UGC 11680B of type GALXY on 21.1294 3.87773
+    is Mrk 897 of type GALXY on 21.1294 3.87778
+
+Object 28783 Correction 531
+Nearby CGCG 377-016 of type GALXY on 22.05 2.5988
+    is IC 1422 of type GALXY on 22.05 2.59889
+
+Object 28905 Correction 532
+Nearby UGC 11963 of type GALXY on 22.2507 37.3
+    is IC 5191 of type GALXY on 22.2507 37.2997
+
+Object 29126 Correction 533
+Nearby CGCG 514-072 of type GALXY on 22.6245 33.9228
+    is NGC 7320B of type GALXY on 22.6245 33.9228
+
+Object 29994 Correction 534
+Nearby CGCG 476-123 of type GALXY on 23.7256 27.3114
+    is NGC 7740 of type GALXY on 23.7256 27.3111
+
+Object 30109 Correction 535
+Nearby UGC 12837A of type GALXY on 23.9028 0.38292
+    is NGC 7783A of type GALXY on 23.9028 0.382778
+
+Object 30110 Correction 536
+Nearby UGC 12837B of type GALXY on 23.9033 0.37702
+    is NGC 7783B of type GALXY on 23.9033 0.376944
+
+Object 30211 Correction 537
+Nearby UGC 8098A of type GALXY on 12.9835 34.8446
+    is NGC 4861 of type GALXY on 12.9835 34.8447
+
+Object 30757 Correction 538
+Nearby PK 329+02.01 of type PLNNB on 15.8614 -51.5231
+    is SP 1 of type PLNNB on 15.8614 -51.5231
+
+Object 30941 Correction 539
+Nearby NGC 333A of type GALXY on 0.980917 -16.4694
+    is NGC 333 of type GALXY on 0.980917 -16.4694
+
+Object 30944 Correction 540
+Nearby NGC 885 of type GALXY on 2.24264 -0.766667
+    is NGC 863 of type GALXY on 2.24264 -0.766667
+
+Object 30945 Correction 541
+Nearby NGC 1077 of type GALXY on 2.76683 40.0894
+    is NGC 1077A of type GALXY on 2.76683 40.0894
+
+Object 30946 Correction 542
+Nearby NGC 1117A of type GALXY on 2.85358 13.1919
+    is UGC 2337A of type GALXY on 2.85361 13.1918
+
+Object 30949 Correction 543
+Nearby NGC 1911 of type CLANB on 5.3425 -66.7786
+    is NGC 1920 of type CLANB on 5.3425 -66.7786
+
+Object 30952 Correction 544
+Nearby NGC 2273A of type GALXY on 6.66861 60.08
+    is UGC 3504 of type GALXY on 6.66867 60.0808
+
+Object 30957 Correction 545
+Nearby NGC 2869 of type GALXY on 9.39347 -10.4336
+    is NGC 2863 of type GALXY on 9.39347 -10.4336
+
+Object 30958 Correction 546
+Nearby NGC 2959A of type GALXY on 9.75619 68.6086
+    is NGC 2961 of type GALXY on 9.75619 68.6086
+
+Object 30960 Correction 547
+Nearby NGC 3010B of type GALXY on 9.84256 44.3142
+    is UGC 5273A of type GALXY on 9.84255 44.3146
+
+Object 30965 Correction 548
+Nearby NGC 3795A of type GALXY on 11.6559 58.2681
+    is UGC 6616 of type GALXY on 11.656 58.2684
+
+Object 30966 Correction 549
+Nearby NGC 4192B of type GALXY on 12.2351 14.7253
+    is NGC 4186 of type GALXY on 12.2351 14.7253
+
+Object 30968 Correction 550
+Nearby NGC 4565C of type GALXY on 12.5948 26.2861
+    is IC 3543 of type GALXY on 12.5948 26.2861
+
+Object 30971 Correction 551
+Nearby NGC 4759A of type GALXY on 12.8846 -9.20028
+    is NGC 4776 of type GALXY on 12.8846 -9.20028
+
+Object 30972 Correction 552
+Nearby NGC 4759B of type GALXY on 12.8849 -9.20444
+    is NGC 4778 of type GALXY on 12.8849 -9.20444
+
+Object 30973 Correction 553
+Nearby NGC 4842 of type GALXY on 12.96 27.4925
+    is NGC 4842A of type GALXY on 12.96 27.4925
+
+Object 30980 Correction 554
+Nearby NGC 5219 of type GALXY on 13.6449 -45.8553
+    is NGC 5244 of type GALXY on 13.6449 -45.8553
+
+Object 30984 Correction 555
+Nearby NGC 5679D of type GALXY on 14.5851 5.35611
+    is NGC 5679A of type GALXY on 14.5851 5.35583
+
+Object 30987 Correction 556
+Nearby NGC 6050A of type GALXY on 16.0899 17.7567
+    is IC 1179A of type GALXY on 16.0899 17.7567
+
+Object 30988 Correction 557
+Nearby NGC 6050B of type GALXY on 16.0895 17.7539
+    is IC 1179B of type GALXY on 16.0895 17.7539
+
+Object 30998 Correction 558
+Nearby NGC 7559 of type GALXY on 23.2629 13.2897
+    is NGC 7559A of type GALXY on 23.2629 13.2897
+
+Object 31040 Correction 559
+Nearby IC 48 of type GALXY on 0.726222 -8.18611
+    is IC 1577 of type GALXY on 0.726222 -8.18611
+
+Object 31076 Correction 560
+Nearby IC 93 of type GALXY on 1.31728 -17.0617
+    is IC 1671 of type GALXY on 1.31728 -17.0617
+
+Object 31087 Correction 561
+Nearby IC 107 of type GALXY on 1.42353 14.8642
+    is IC 1700 of type GALXY on 1.42353 14.8642
+
+Object 31149 Correction 562
+Nearby IC 199 of type GALXY on 2.10539 9.22667
+    is IC 1778 of type GALXY on 2.10539 9.22667
+
+Object 31150 Correction 563
+Nearby IC 200 of type GALXY on 2.09072 31.175
+    is UGC 1577 of type GALXY on 2.09077 31.1751
+
+Object 31167 Correction 564
+Nearby IC 217 of type GALXY on 2.26961 -11.9261
+    is IC 1787 of type GALXY on 2.26961 -11.9261
+
+Object 31181 Correction 565
+Nearby IC 233 of type GALXY on 2.52797 2.81
+    is CGCG 388-036 of type GALXY on 2.52802 2.80975
+
+Object 31194 Correction 566
+Nearby IC 249 of type GALXY on 2.68394 -6.93611
+    is NGC 1051 of type GALXY on 2.68394 -6.93611
+
+Object 31194 Correction 567
+Nearby IC 249 of type GALXY on 2.68394 -6.93611
+    is NGC 961 of type GALXY on 2.68394 -6.93611
+
+Object 31205 Correction 568
+Nearby IC 261 of type GALXY on 2.81778 -14.4708
+    is NGC 1120 of type GALXY on 2.81778 -14.4708
+
+Object 31207 Correction 569
+Nearby IC 263 of type GALXY on 2.82775 -0.070278
+    is CGCG 389-027 of type GALXY on 2.82778 -0.06985
+
+Object 31226 Correction 570
+Nearby IC 290 of type GALXY on 3.16189 40.9744
+    is IC 1884 of type GALXY on 3.16189 40.9744
+
+Object 31228 Correction 571
+Nearby IC 292 of type GALXY on 3.17025 40.7653
+    is IC 1887 of type GALXY on 3.17025 40.7653
+
+Object 31229 Correction 572
+Nearby IC 293 of type GALXY on 3.18225 41.1372
+    is IC 1888 of type GALXY on 3.18225 41.1372
+
+Object 31230 Correction 573
+Nearby IC 294 of type GALXY on 3.18419 40.6211
+    is IC 1889 of type GALXY on 3.18419 40.6211
+
+Object 31230 Correction 574
+Nearby IC 294 of type GALXY on 3.18419 40.6211
+    is IC 295 of type GALXY on 3.18419 40.6211
+
+Object 31230 Correction 575
+Nearby IC 294 of type GALXY on 3.18419 40.6211
+    is IC 296 of type GALXY on 3.18419 40.6211
+
+Object 31231 Correction 576
+Nearby IC 295 of type GALXY on 3.18419 40.6211
+    is IC 1889 of type GALXY on 3.18419 40.6211
+
+Object 31231 Correction 577
+Nearby IC 295 of type GALXY on 3.18419 40.6211
+    is IC 294 of type GALXY on 3.18419 40.6211
+
+Object 31231 Correction 578
+Nearby IC 295 of type GALXY on 3.18419 40.6211
+    is IC 296 of type GALXY on 3.18419 40.6211
+
+Object 31232 Correction 579
+Nearby IC 296 of type GALXY on 3.18419 40.6211
+    is IC 1889 of type GALXY on 3.18419 40.6211
+
+Object 31232 Correction 580
+Nearby IC 296 of type GALXY on 3.18419 40.6211
+    is IC 294 of type GALXY on 3.18419 40.6211
+
+Object 31232 Correction 581
+Nearby IC 296 of type GALXY on 3.18419 40.6211
+    is IC 295 of type GALXY on 3.18419 40.6211
+
+Object 31242 Correction 582
+Nearby IC 308 of type GALXY on 3.27108 41.1808
+    is UGC 2619 of type GALXY on 3.27108 41.181
+
+Object 31247 Correction 583
+Nearby IC 316 of type GALXY on 3.35553 41.9281
+    is UGC 2688B of type GALXY on 3.35558 41.9286
+
+Object 31261 Correction 584
+Nearby IC 335 of type GALXY on 3.592 -34.4472
+    is IC 1963 of type GALXY on 3.592 -34.4472
+
+Object 31307 Correction 585
+Nearby IC 395 of type GALXY on 4.82606 0.252778
+    is NGC 1671 of type GALXY on 4.82606 0.252778
+
+Object 31315 Correction 586
+Nearby IC 408 of type GALXY on 5.32908 -25.065
+    is IC 2121 of type GALXY on 5.32908 -25.065
+
+Object 31324 Correction 587
+Nearby IC 422 of type GALXY on 5.53847 -17.2244
+    is IC 2131 of type GALXY on 5.53847 -17.2244
+
+Object 31417 Correction 588
+Nearby IC 554 of type GALXY on 9.69917 12.2958
+    is IC 555 of type GALXY on 9.69917 12.2958
+
+Object 31418 Correction 589
+Nearby IC 555 of type GALXY on 9.69917 12.2958
+    is IC 554 of type GALXY on 9.69917 12.2958
+
+Object 31465 Correction 590
+Nearby IC 611 of type GALXY on 10.4412 20.2264
+    is IC 610 of type GALXY on 10.4412 20.2264
+
+Object 31468 Correction 591
+Nearby IC 617 of type GALXY on 10.5455 -12.6372
+    is NGC 3280A of type GALXY on 10.5455 -12.6372
+
+Object 31469 Correction 592
+Nearby IC 619 of type GALXY on 10.5442 12.1775
+    is CGCG 065-050 of type GALXY on 10.5442 12.1778
+
+Object 31592 Correction 593
+Nearby IC 772 of type GALXY on 12.2544 23.9583
+    is CGCG 128-061 of type GALXY on 12.2544 23.9586
+
+Object 31592 Correction 594
+Nearby IC 772 of type GALXY on 12.2544 23.9583
+    is IC 3067 of type GALXY on 12.2544 23.9583
+
+Object 31617 Correction 595
+Nearby IC 809 of type GALXY on 12.7024 11.7536
+    is IC 3672 of type GALXY on 12.7024 11.7536
+
+Object 31624 Correction 596
+Nearby IC 817 of type GALXY on 12.7824 9.85722
+    is IC 3764 of type GALXY on 12.7824 9.85722
+
+Object 31640 Correction 597
+Nearby IC 836 of type GALXY on 12.9317 63.6111
+    is UGC 8059 of type GALXY on 12.9317 63.6116
+
+Object 31642 Correction 598
+Nearby IC 838 of type GALXY on 12.9705 26.4256
+    is NGC 4849A of type GALXY on 12.9705 26.4256
+
+Object 31673 Correction 599
+Nearby IC 872 of type GALXY on 13.3052 6.33556
+    is UGC 8361 of type GALXY on 13.3052 6.33566
+
+Object 31677 Correction 600
+Nearby IC 879 of type GALXY on 13.3279 -27.4297
+    is IC 4222 of type GALXY on 13.3279 -27.4297
+
+Object 31682 Correction 601
+Nearby IC 888 of type GALXY on 13.4143 13.7375
+    is NGC 5136 of type GALXY on 13.4143 13.7375
+
+Object 31725 Correction 602
+Nearby IC 934 of type GALXY on 13.7342 55.6492
+    is IC 936 of type GALXY on 13.7342 55.6492
+
+Object 31726 Correction 603
+Nearby IC 936 of type GALXY on 13.7342 55.6492
+    is IC 934 of type GALXY on 13.7342 55.6492
+
+Object 31735 Correction 604
+Nearby IC 945 of type GALXY on 13.7854 72.0694
+    is UGC 8732 of type GALXY on 13.7855 72.0701
+
+Object 31746 Correction 605
+Nearby IC 960 of type GALXY on 13.9331 17.4989
+    is UGC 8849A of type GALXY on 13.9331 17.4991
+
+Object 31783 Correction 606
+Nearby IC 1002 of type GALXY on 14.3451 5.48528
+    is CGCG 047-015 of type GALXY on 14.3451 5.48553
+
+Object 31792 Correction 607
+Nearby IC 1012 of type GALXY on 14.4526 30.9478
+    is IC 4431 of type GALXY on 14.4526 30.9478
+
+Object 31828 Correction 608
+Nearby IC 1056 of type GALXY on 14.7636 50.3928
+    is IC 1057 of type GALXY on 14.7636 50.3928
+
+Object 31829 Correction 609
+Nearby IC 1057 of type GALXY on 14.7636 50.3928
+    is IC 1056 of type GALXY on 14.7636 50.3928
+
+Object 31835 Correction 610
+Nearby IC 1063 of type GALXY on 14.8697 4.68083
+    is IC 1064 of type GALXY on 14.8697 4.68083
+
+Object 31836 Correction 611
+Nearby IC 1064 of type GALXY on 14.8697 4.68083
+    is IC 1063 of type GALXY on 14.8697 4.68083
+
+Object 31859 Correction 612
+Nearby IC 1092 of type GALXY on 15.1267 9.35833
+    is CGCG 077-015 of type GALXY on 15.1267 9.35876
+
+Object 31880 Correction 613
+Nearby IC 1118 of type GALXY on 15.4165 13.445
+    is IC 4543 of type GALXY on 15.4165 13.445
+
+Object 31887 Correction 614
+Nearby IC 1127 of type GALXY on 15.5826 23.5019
+    is IC 4553 of type GALXY on 15.5826 23.5019
+
+Object 31919 Correction 615
+Nearby IC 1165 of type GALXY on 16.0355 15.6958
+    is IC 1165A of type GALXY on 16.0355 15.6958
+
+Object 31920 Correction 616
+Nearby IC 1165A of type GALXY on 16.0355 15.6958
+    is IC 1165 of type GALXY on 16.0355 15.6958
+
+Object 31924 Correction 617
+Nearby IC 1168 of type GALXY on 16.0654 14.9025
+    is IC 1168A of type GALXY on 16.0654 14.9025
+
+Object 31925 Correction 618
+Nearby IC 1168A of type GALXY on 16.0654 14.9025
+    is IC 1168 of type GALXY on 16.0654 14.9025
+
+Object 31931 Correction 619
+Nearby IC 1179A of type GALXY on 16.0899 17.7567
+    is NGC 6050A of type GALXY on 16.0899 17.7567
+
+Object 31932 Correction 620
+Nearby IC 1179B of type GALXY on 16.0895 17.7539
+    is NGC 6050B of type GALXY on 16.0895 17.7539
+
+Object 31934 Correction 621
+Nearby IC 1190 of type GALXY on 16.0979 18.22
+    is UGC 10195 of type GALXY on 16.0979 18.2204
+
+Object 31949 Correction 622
+Nearby IC 1213 of type GALXY on 16.3695 -1.51472
+    is NGC 6172 of type GALXY on 16.3695 -1.51472
+
+Object 31975 Correction 623
+Nearby IC 1252 of type GALXY on 17.2639 57.3664
+    is IC 4649 of type GALXY on 17.2639 57.3664
+
+Object 31979 Correction 624
+Nearby IC 1259 of type GALXY on 17.4574 58.5158
+    is UGC 10869B of type GALXY on 17.4575 58.5166
+
+Object 32005 Correction 625
+Nearby IC 1318B of type EMINB on 20.465 40
+    is IC 1318 of type EMINB on 20.465 40
+
+Object 32016 Correction 626
+Nearby IC 1333 of type GALXY on 20.8714 -16.2864
+    is IC 1334 of type GALXY on 20.8714 -16.2864
+
+Object 32017 Correction 627
+Nearby IC 1334 of type GALXY on 20.8714 -16.2864
+    is IC 1333 of type GALXY on 20.8714 -16.2864
+
+Object 32032 Correction 628
+Nearby IC 1350 of type GALXY on 21.0312 -13.8528
+    is IC 1354 of type GALXY on 21.0312 -13.8528
+
+Object 32036 Correction 629
+Nearby IC 1354 of type GALXY on 21.0312 -13.8528
+    is IC 1350 of type GALXY on 21.0312 -13.8528
+
+Object 32098 Correction 630
+Nearby IC 1422 of type GALXY on 22.05 2.59889
+    is CGCG 377-016 of type GALXY on 22.05 2.5988
+
+Object 32120 Correction 631
+Nearby IC 1452 of type GALXY on 22.7664 10.8675
+    is NGC 7374B of type GALXY on 22.7664 10.8675
+
+Object 32124 Correction 632
+Nearby IC 1458 of type GALXY on 22.9448 -7.38028
+    is NGC 7441 of type GALXY on 22.9448 -7.38028
+
+Object 32127 Correction 633
+Nearby IC 1464 of type GALXY on 23.0531 -8.98917
+    is IC 1464A of type GALXY on 23.0531 -8.98917
+
+Object 32128 Correction 634
+Nearby IC 1464A of type GALXY on 23.0531 -8.98917
+    is IC 1464 of type GALXY on 23.0531 -8.98917
+
+Object 32144 Correction 635
+Nearby IC 1487 of type GALXY on 23.4056 14.6464
+    is NGC 7649 of type GALXY on 23.4056 14.6464
+
+Object 32149 Correction 636
+Nearby IC 1495 of type GALXY on 23.5132 -13.4858
+    is IC 5327 of type GALXY on 23.5132 -13.4858
+
+Object 32172 Correction 637
+Nearby IC 1523 of type GALXY on 23.9851 6.87306
+    is IC 5368 of type GALXY on 23.9851 6.87306
+
+Object 32211 Correction 638
+Nearby IC 1577 of type GALXY on 0.726222 -8.18611
+    is IC 48 of type GALXY on 0.726222 -8.18611
+
+Object 32249 Correction 639
+Nearby IC 1623 of type GALXY on 1.12967 -17.5072
+    is IC 1623A of type GALXY on 1.12967 -17.5072
+
+Object 32250 Correction 640
+Nearby IC 1623A of type GALXY on 1.12967 -17.5072
+    is IC 1623 of type GALXY on 1.12967 -17.5072
+
+Object 32268 Correction 641
+Nearby IC 1642 of type GALXY on 1.20758 15.75
+    is IC 1645 of type GALXY on 1.20758 15.75
+
+Object 32271 Correction 642
+Nearby IC 1645 of type GALXY on 1.20758 15.75
+    is IC 1642 of type GALXY on 1.20758 15.75
+
+Object 32280 Correction 643
+Nearby IC 1657 of type GALXY on 1.23522 -32.6511
+    is IC 1663 of type GALXY on 1.23522 -32.6511
+
+Object 32284 Correction 644
+Nearby IC 1663 of type GALXY on 1.23522 -32.6511
+    is IC 1657 of type GALXY on 1.23522 -32.6511
+
+Object 32289 Correction 645
+Nearby IC 1670 of type GALXY on 1.31353 -16.8042
+    is IC 1670A of type GALXY on 1.31353 -16.8042
+
+Object 32290 Correction 646
+Nearby IC 1670A of type GALXY on 1.31353 -16.8042
+    is IC 1670 of type GALXY on 1.31353 -16.8042
+
+Object 32292 Correction 647
+Nearby IC 1671 of type GALXY on 1.31728 -17.0617
+    is IC 93 of type GALXY on 1.31728 -17.0617
+
+Object 32316 Correction 648
+Nearby IC 1700 of type GALXY on 1.42353 14.8642
+    is IC 107 of type GALXY on 1.42353 14.8642
+
+Object 32354 Correction 649
+Nearby IC 1754 of type GALXY on 1.94717 4.02556
+    is UGC 1424 of type GALXY on 1.94721 4.02552
+
+Object 32359 Correction 650
+Nearby IC 1759 of type GALXY on 1.96542 -32.9878
+    is IC 1760 of type GALXY on 1.96542 -32.9878
+
+Object 32360 Correction 651
+Nearby IC 1760 of type GALXY on 1.96542 -32.9878
+    is IC 1759 of type GALXY on 1.96542 -32.9878
+
+Object 32365 Correction 652
+Nearby IC 1765 of type GALXY on 2.0185 31.8814
+    is NGC 783 of type GALXY on 2.0185 31.8814
+
+Object 32376 Correction 653
+Nearby IC 1778 of type GALXY on 2.10539 9.22667
+    is IC 199 of type GALXY on 2.10539 9.22667
+
+Object 32382 Correction 654
+Nearby IC 1787 of type GALXY on 2.26961 -11.9261
+    is IC 217 of type GALXY on 2.26961 -11.9261
+
+Object 32412 Correction 655
+Nearby IC 1826 of type GALXY on 2.65103 -27.4436
+    is IC 1830 of type GALXY on 2.65103 -27.4436
+
+Object 32414 Correction 656
+Nearby IC 1829 of type GALXY on 2.67578 14.2975
+    is CGCG 439-026 of type GALXY on 2.67579 14.2975
+
+Object 32415 Correction 657
+Nearby IC 1830 of type GALXY on 2.65103 -27.4436
+    is IC 1826 of type GALXY on 2.65103 -27.4436
+
+Object 32459 Correction 658
+Nearby IC 1881 of type GALXY on 3.15481 38.6486
+    is NGC 1213 of type GALXY on 3.15481 38.6486
+
+Object 32461 Correction 659
+Nearby IC 1884 of type GALXY on 3.16189 40.9744
+    is IC 290 of type GALXY on 3.16189 40.9744
+
+Object 32464 Correction 660
+Nearby IC 1887 of type GALXY on 3.17025 40.7653
+    is IC 292 of type GALXY on 3.17025 40.7653
+
+Object 32465 Correction 661
+Nearby IC 1888 of type GALXY on 3.18225 41.1372
+    is IC 293 of type GALXY on 3.18225 41.1372
+
+Object 32466 Correction 662
+Nearby IC 1889 of type GALXY on 3.18419 40.6211
+    is IC 294 of type GALXY on 3.18419 40.6211
+
+Object 32466 Correction 663
+Nearby IC 1889 of type GALXY on 3.18419 40.6211
+    is IC 295 of type GALXY on 3.18419 40.6211
+
+Object 32466 Correction 664
+Nearby IC 1889 of type GALXY on 3.18419 40.6211
+    is IC 296 of type GALXY on 3.18419 40.6211
+
+Object 32495 Correction 665
+Nearby IC 1925 of type GALXY on 3.42378 -51.2672
+    is IC 1929 of type GALXY on 3.42378 -51.2672
+
+Object 32498 Correction 666
+Nearby IC 1929 of type GALXY on 3.42378 -51.2672
+    is IC 1925 of type GALXY on 3.42378 -51.2672
+
+Object 32502 Correction 667
+Nearby IC 1934 of type GALXY on 3.52053 42.7922
+    is UGC 2769 of type GALXY on 3.52057 42.7921
+
+Object 32526 Correction 668
+Nearby IC 1963 of type GALXY on 3.592 -34.4472
+    is IC 335 of type GALXY on 3.592 -34.4472
+
+Object 32543 Correction 669
+Nearby IC 1981 of type GALXY on 3.67481 -26.8625
+    is NGC 1412 of type GALXY on 3.67481 -26.8625
+
+Object 32559 Correction 670
+Nearby IC 2007 of type GALXY on 3.92294 -28.1594
+    is IC 2008 of type GALXY on 3.92294 -28.1594
+
+Object 32560 Correction 671
+Nearby IC 2008 of type GALXY on 3.92294 -28.1594
+    is IC 2007 of type GALXY on 3.92294 -28.1594
+
+Object 32593 Correction 672
+Nearby IC 2047 of type GALXY on 4.24889 -13.1919
+    is NGC 1538 of type GALXY on 4.24889 -13.1919
+
+Object 32610 Correction 673
+Nearby IC 2077 of type GALXY on 4.53503 0.567222
+    is NGC 1608 of type GALXY on 4.53503 0.567222
+
+Object 32632 Correction 674
+Nearby IC 2116 of type GALXY on 4.947 -66.4092
+    is NGC 1763 of type GALXY on 4.947 -66.4092
+
+Object 32634 Correction 675
+Nearby IC 2121 of type GALXY on 5.32908 -25.065
+    is IC 408 of type GALXY on 5.32908 -25.065
+
+Object 32636 Correction 676
+Nearby IC 2123 of type GALXY on 5.36575 3.48583
+    is IC 412 of type GALXY on 5.36575 3.48583
+
+Object 32637 Correction 677
+Nearby IC 2124 of type GALXY on 5.36631 3.48167
+    is IC 413 of type GALXY on 5.36631 3.48167
+
+Object 32641 Correction 678
+Nearby IC 2131 of type GALXY on 5.53847 -17.2244
+    is IC 422 of type GALXY on 5.53847 -17.2244
+
+Object 32644 Correction 679
+Nearby IC 2135 of type GALXY on 5.55367 -36.4
+    is IC 2136 of type GALXY on 5.55367 -36.4
+
+Object 32645 Correction 680
+Nearby IC 2136 of type GALXY on 5.55367 -36.4
+    is IC 2135 of type GALXY on 5.55367 -36.4
+
+Object 32646 Correction 681
+Nearby IC 2137 of type GALXY on 5.57264 -23.5339
+    is IC 2138 of type GALXY on 5.57264 -23.5339
+
+Object 32647 Correction 682
+Nearby IC 2138 of type GALXY on 5.57264 -23.5339
+    is IC 2137 of type GALXY on 5.57264 -23.5339
+
+Object 32671 Correction 683
+Nearby IC 2186 of type GALXY on 7.37864 21.5131
+    is IC 2188 of type GALXY on 7.37864 21.5131
+
+Object 32673 Correction 684
+Nearby IC 2188 of type GALXY on 7.37864 21.5131
+    is IC 2186 of type GALXY on 7.37864 21.5131
+
+Object 32690 Correction 685
+Nearby IC 2208 of type GALXY on 7.86886 27.4836
+    is CGCG 148-053 of type GALXY on 7.86886 27.4837
+
+Object 32701 Correction 686
+Nearby IC 2223 of type GALXY on 8.09731 37.4592
+    is IC 2224 of type GALXY on 8.09731 37.4592
+
+Object 32702 Correction 687
+Nearby IC 2224 of type GALXY on 8.09731 37.4592
+    is IC 2223 of type GALXY on 8.09731 37.4592
+
+Object 32705 Correction 688
+Nearby IC 2227 of type GALXY on 8.11864 36.2328
+    is CGCG 178-028 of type GALXY on 8.11866 36.2332
+
+Object 32711 Correction 689
+Nearby IC 2247 of type GALXY on 8.26639 23.1992
+    is UGC 4299 of type GALXY on 8.26643 23.1995
+
+Object 32741 Correction 690
+Nearby IC 2365 of type GALXY on 8.43833 27.84
+    is IC 2366 of type GALXY on 8.43833 27.84
+
+Object 32742 Correction 691
+Nearby IC 2366 of type GALXY on 8.43833 27.84
+    is IC 2365 of type GALXY on 8.43833 27.84
+
+Object 32771 Correction 692
+Nearby IC 2410 of type GALXY on 8.80756 19.0192
+    is NGC 2667A of type GALXY on 8.80756 19.0192
+
+Object 32796 Correction 693
+Nearby IC 2449 of type GALXY on 9.22581 29.9997
+    is NGC 2783B of type GALXY on 9.22578 29.9992
+
+Object 32797 Correction 694
+Nearby IC 2450 of type GALXY on 9.28478 25.4286
+    is UGC 4902 of type GALXY on 9.28482 25.4289
+
+Object 32809 Correction 695
+Nearby IC 2467 of type GALXY on 9.41464 38.3511
+    is IC 2468 of type GALXY on 9.41461 38.3517
+
+Object 32810 Correction 696
+Nearby IC 2468 of type GALXY on 9.41461 38.3517
+    is IC 2467 of type GALXY on 9.41464 38.3511
+
+Object 32831 Correction 697
+Nearby IC 2494 of type GALXY on 9.60161 -12.4372
+    is NGC 2947 of type GALXY on 9.60161 -12.4372
+
+Object 32843 Correction 698
+Nearby IC 2513 of type GALXY on 9.8335 -32.8844
+    is IC 2514 of type GALXY on 9.8335 -32.8844
+
+Object 32844 Correction 699
+Nearby IC 2514 of type GALXY on 9.8335 -32.8844
+    is IC 2513 of type GALXY on 9.8335 -32.8844
+
+Object 32916 Correction 700
+Nearby A G Car of type STNEB on 10.9367 -60.45
+    is PK 289-00.01 of type BRTNB on 10.9367 -60.45
+
+Object 32924 Correction 701
+Nearby IC 2613 of type GALXY on 10.8699 32.9503
+    is NGC 3430 of type GALXY on 10.8699 32.9503
+
+Object 32930 Correction 702
+Nearby IC 2620 of type GALXY on 11.04 38.505
+    is UGC 6107 of type GALXY on 11.04 38.5053
+
+Object 32931 Correction 703
+Nearby IC 2622 of type GALXY on 11.0499 -16.2892
+    is NGC 3505 of type GALXY on 11.0499 -16.2892
+
+Object 32931 Correction 704
+Nearby IC 2622 of type GALXY on 11.0499 -16.2892
+    is NGC 3508 of type GALXY on 11.0499 -16.2892
+
+Object 32933 Correction 705
+Nearby IC 2624 of type GALXY on 11.1217 -19.4719
+    is NGC 3525 of type GALXY on 11.1217 -19.4719
+
+Object 32933 Correction 706
+Nearby IC 2624 of type GALXY on 11.1217 -19.4719
+    is NGC 3528 of type GALXY on 11.1217 -19.4719
+
+Object 32996 Correction 707
+Nearby IC 2725 of type GALXY on 11.3326 13.4292
+    is IC 2726 of type GALXY on 11.3326 13.4289
+
+Object 32997 Correction 708
+Nearby IC 2726 of type GALXY on 11.3326 13.4289
+    is IC 2725 of type GALXY on 11.3326 13.4292
+
+Object 33021 Correction 709
+Nearby IC 2759 of type GALXY on 11.3703 24.3167
+    is MCG +04-27-027 of type GALXY on 11.3703 24.3169
+
+Object 33062 Correction 710
+Nearby IC 2810 of type GALXY on 11.4291 14.6761
+    is IC 2810A of type GALXY on 11.4291 14.6761
+
+Object 33063 Correction 711
+Nearby IC 2810A of type GALXY on 11.4291 14.6761
+    is IC 2810 of type GALXY on 11.4291 14.6761
+
+Object 33158 Correction 712
+Nearby IC 2960 of type GALXY on 11.7721 35.0036
+    is CGCG 186-044 of type GALXY on 11.7721 35.0037
+
+Object 33171 Correction 713
+Nearby IC 2989 of type GALXY on 12.0761 1.80083
+    is NGC 4139 of type GALXY on 12.0761 1.80083
+
+Object 33187 Correction 714
+Nearby IC 3011 of type GALXY on 12.136 10.3783
+    is NGC 4119 of type GALXY on 12.136 10.3783
+
+Object 33187 Correction 715
+Nearby IC 3011 of type GALXY on 12.136 10.3783
+    is NGC 4124 of type GALXY on 12.136 10.3783
+
+Object 33229 Correction 716
+Nearby IC 3067 of type GALXY on 12.2544 23.9583
+    is CGCG 128-061 of type GALXY on 12.2544 23.9586
+
+Object 33229 Correction 717
+Nearby IC 3067 of type GALXY on 12.2544 23.9583
+    is IC 772 of type GALXY on 12.2544 23.9583
+
+Object 33262 Correction 718
+Nearby IC 3119 of type GALXY on 12.3023 24.6883
+    is CGCG 128-072 of type GALXY on 12.3023 24.6881
+
+Object 33269 Correction 719
+Nearby IC 3131 of type GALXY on 12.3141 7.86083
+    is IC 3132 of type GALXY on 12.3141 7.86083
+
+Object 33270 Correction 720
+Nearby IC 3132 of type GALXY on 12.3141 7.86083
+    is IC 3131 of type GALXY on 12.3141 7.86083
+
+Object 33273 Correction 721
+Nearby IC 3137 of type GALXY on 12.3152 12.4689
+    is UGC 7347 of type GALXY on 12.3152 12.4697
+
+Object 33305 Correction 722
+Nearby IC 3185 of type GALXY on 12.3479 25.4289
+    is CGCG 128-081 of type GALXY on 12.3479 25.4296
+
+Object 33389 Correction 723
+Nearby IC 3301 of type GALXY on 12.4216 14.1714
+    is IC 3307 of type GALXY on 12.4216 14.1714
+
+Object 33395 Correction 724
+Nearby IC 3307 of type GALXY on 12.4216 14.1714
+    is IC 3301 of type GALXY on 12.4216 14.1714
+
+Object 33405 Correction 725
+Nearby IC 3320 of type GALXY on 12.4307 10.4583
+    is NGC 4390 of type GALXY on 12.4307 10.4583
+
+Object 33420 Correction 726
+Nearby IC 3339 of type GALXY on 12.4417 8.87111
+    is NGC 4411A of type GALXY on 12.4417 8.87111
+
+Object 33452 Correction 727
+Nearby IC 3382 of type GALXY on 12.4704 13.5706
+    is UGC 7588 of type GALXY on 12.4704 13.5708
+
+Object 33562 Correction 728
+Nearby IC 3543 of type GALXY on 12.5948 26.2861
+    is NGC 4565C of type GALXY on 12.5948 26.2861
+
+Object 33564 Correction 729
+Nearby IC 3546 of type GALXY on 12.5949 26.2219
+    is NGC 4565B of type GALXY on 12.5949 26.2219
+
+Object 33603 Correction 730
+Nearby IC 3612 of type GALXY on 12.6513 14.7311
+    is IC 3616 of type GALXY on 12.6513 14.7311
+
+Object 33607 Correction 731
+Nearby IC 3616 of type GALXY on 12.6513 14.7311
+    is IC 3612 of type GALXY on 12.6513 14.7311
+
+Object 33652 Correction 732
+Nearby IC 3672 of type GALXY on 12.7024 11.7536
+    is IC 809 of type GALXY on 12.7024 11.7536
+
+Object 33681 Correction 733
+Nearby IC 3721 of type GALXY on 12.7481 18.7547
+    is IC 3725 of type GALXY on 12.7481 18.7547
+
+Object 33684 Correction 734
+Nearby IC 3725 of type GALXY on 12.7481 18.7547
+    is IC 3721 of type GALXY on 12.7481 18.7547
+
+Object 33709 Correction 735
+Nearby IC 3764 of type GALXY on 12.7824 9.85722
+    is IC 817 of type GALXY on 12.7824 9.85722
+
+Object 33872 Correction 736
+Nearby IC 4023 of type GALXY on 13.0074 19.0961
+    is IC 4025 of type GALXY on 13.0074 19.0967
+
+Object 33873 Correction 737
+Nearby IC 4025 of type GALXY on 13.0074 19.0967
+    is IC 4023 of type GALXY on 13.0074 19.0961
+
+Object 33953 Correction 738
+Nearby IC 4134 of type GALXY on 13.0345 -11.3789
+    is NGC 4920 of type GALXY on 13.0345 -11.3789
+
+Object 33954 Correction 739
+Nearby IC 4135 of type GALXY on 13.0604 40.2481
+    is UGC 8163 of type GALXY on 13.0604 40.2487
+
+Object 34001 Correction 740
+Nearby IC 4204 of type GALXY on 13.1393 39.4603
+    is UGC 8224 of type GALXY on 13.1393 39.4608
+
+Object 34012 Correction 741
+Nearby IC 4222 of type GALXY on 13.3279 -27.4297
+    is IC 879 of type GALXY on 13.3279 -27.4297
+
+Object 34122 Correction 742
+Nearby IC 4339 of type GALXY on 13.8929 37.5214
+    is IC 4341 of type GALXY on 13.8929 37.5214
+
+Object 34124 Correction 743
+Nearby IC 4341 of type GALXY on 13.8929 37.5214
+    is IC 4339 of type GALXY on 13.8929 37.5214
+
+Object 34189 Correction 744
+Nearby IC 4424 of type GALXY on 14.459 4.82083
+    is NGC 5619B of type GALXY on 14.459 4.82083
+
+Object 34196 Correction 745
+Nearby IC 4431 of type GALXY on 14.4526 30.9478
+    is IC 1012 of type GALXY on 14.4526 30.9478
+
+Object 34221 Correction 746
+Nearby IC 4461 of type GALXY on 14.5838 26.5436
+    is MCG +05-34-076 of type GALXY on 14.5838 26.5433
+
+Object 34283 Correction 747
+Nearby IC 4534 of type GALXY on 15.1116 23.6411
+    is UGC 9713 of type GALXY on 15.1116 23.6415
+
+Object 34289 Correction 748
+Nearby IC 4542 of type GALXY on 15.3682 33.1481
+    is IC 4542A of type GALXY on 15.3682 33.1481
+
+Object 34290 Correction 749
+Nearby IC 4542A of type GALXY on 15.3682 33.1481
+    is IC 4542 of type GALXY on 15.3682 33.1481
+
+Object 34292 Correction 750
+Nearby IC 4543 of type GALXY on 15.4165 13.445
+    is IC 1118 of type GALXY on 15.4165 13.445
+
+Object 34298 Correction 751
+Nearby IC 4553 of type GALXY on 15.5826 23.5019
+    is IC 1127 of type GALXY on 15.5826 23.5019
+
+Object 34364 Correction 752
+Nearby IC 4649 of type GALXY on 17.2639 57.3664
+    is IC 1252 of type GALXY on 17.2639 57.3664
+
+Object 34525 Correction 753
+Nearby IC 4854 of type GALXY on 19.4559 -59.3156
+    is IC 4855 of type GALXY on 19.4559 -59.3156
+
+Object 34526 Correction 754
+Nearby IC 4855 of type GALXY on 19.4559 -59.3156
+    is IC 4854 of type GALXY on 19.4559 -59.3156
+
+Object 34528 Correction 755
+Nearby IC 4857 of type GALXY on 19.4775 -58.7686
+    is IC 4858 of type GALXY on 19.4775 -58.7686
+
+Object 34529 Correction 756
+Nearby IC 4858 of type GALXY on 19.4775 -58.7686
+    is IC 4857 of type GALXY on 19.4775 -58.7686
+
+Object 34539 Correction 757
+Nearby IC 4871 of type GALXY on 19.5951 -57.5194
+    is IC 4872 of type GALXY on 19.5951 -57.5194
+
+Object 34540 Correction 758
+Nearby IC 4872 of type GALXY on 19.5951 -57.5194
+    is IC 4871 of type GALXY on 19.5951 -57.5194
+
+Object 34645 Correction 759
+Nearby IC 4998 of type GALXY on 20.3696 -38.3092
+    is IC 5018 of type GALXY on 20.3696 -38.3092
+
+Object 34647 Correction 760
+Nearby IC 5000 of type GALXY on 20.3727 6.42917
+    is NGC 6901 of type GALXY on 20.3727 6.42917
+
+Object 34660 Correction 761
+Nearby IC 5018 of type GALXY on 20.3696 -38.3092
+    is IC 4998 of type GALXY on 20.3696 -38.3092
+
+Object 34670 Correction 762
+Nearby IC 5029 of type GALXY on 20.7206 -29.8525
+    is IC 5039 of type GALXY on 20.7206 -29.8525
+
+Object 34670 Correction 763
+Nearby IC 5029 of type GALXY on 20.7206 -29.8525
+    is IC 5046 of type GALXY on 20.7206 -29.8525
+
+Object 34671 Correction 764
+Nearby IC 5030 of type GALXY on 20.7262 -29.7036
+    is IC 5041 of type GALXY on 20.7262 -29.7036
+
+Object 34671 Correction 765
+Nearby IC 5030 of type GALXY on 20.7262 -29.7036
+    is IC 5047 of type GALXY on 20.7262 -29.7036
+
+Object 34680 Correction 766
+Nearby IC 5039 of type GALXY on 20.7206 -29.8525
+    is IC 5029 of type GALXY on 20.7206 -29.8525
+
+Object 34680 Correction 767
+Nearby IC 5039 of type GALXY on 20.7206 -29.8525
+    is IC 5046 of type GALXY on 20.7206 -29.8525
+
+Object 34682 Correction 768
+Nearby IC 5041 of type GALXY on 20.7262 -29.7036
+    is IC 5030 of type GALXY on 20.7262 -29.7036
+
+Object 34682 Correction 769
+Nearby IC 5041 of type GALXY on 20.7262 -29.7036
+    is IC 5047 of type GALXY on 20.7262 -29.7036
+
+Object 34687 Correction 770
+Nearby IC 5046 of type GALXY on 20.7206 -29.8525
+    is IC 5029 of type GALXY on 20.7206 -29.8525
+
+Object 34687 Correction 771
+Nearby IC 5046 of type GALXY on 20.7206 -29.8525
+    is IC 5039 of type GALXY on 20.7206 -29.8525
+
+Object 34688 Correction 772
+Nearby IC 5047 of type GALXY on 20.7262 -29.7036
+    is IC 5030 of type GALXY on 20.7262 -29.7036
+
+Object 34688 Correction 773
+Nearby IC 5047 of type GALXY on 20.7262 -29.7036
+    is IC 5041 of type GALXY on 20.7262 -29.7036
+
+Object 34697 Correction 774
+Nearby IC 5058 of type GALXY on 20.789 0.483611
+    is NGC 6965 of type GALXY on 20.789 0.483611
+
+Object 34787 Correction 775
+Nearby IC 5179 of type GALXY on 22.2692 -36.8453
+    is IC 5183 of type GALXY on 22.2692 -36.8453
+
+Object 34787 Correction 776
+Nearby IC 5179 of type GALXY on 22.2692 -36.8453
+    is IC 5184 of type GALXY on 22.2692 -36.8453
+
+Object 34790 Correction 777
+Nearby IC 5183 of type GALXY on 22.2692 -36.8453
+    is IC 5179 of type GALXY on 22.2692 -36.8453
+
+Object 34790 Correction 778
+Nearby IC 5183 of type GALXY on 22.2692 -36.8453
+    is IC 5184 of type GALXY on 22.2692 -36.8453
+
+Object 34791 Correction 779
+Nearby IC 5184 of type GALXY on 22.2692 -36.8453
+    is IC 5179 of type GALXY on 22.2692 -36.8453
+
+Object 34791 Correction 780
+Nearby IC 5184 of type GALXY on 22.2692 -36.8453
+    is IC 5183 of type GALXY on 22.2692 -36.8453
+
+Object 34796 Correction 781
+Nearby IC 5191 of type GALXY on 22.2507 37.2997
+    is UGC 11963 of type GALXY on 22.2507 37.3
+
+Object 34824 Correction 782
+Nearby IC 5225 of type GALXY on 22.5355 -25.3986
+    is NGC 7294 of type GALXY on 22.5355 -25.3986
+
+Object 34904 Correction 783
+Nearby IC 5327 of type GALXY on 23.5132 -13.4858
+    is IC 1495 of type GALXY on 23.5132 -13.4858
+
+Object 34934 Correction 784
+Nearby IC 5368 of type GALXY on 23.9851 6.87306
+    is IC 1523 of type GALXY on 23.9851 6.87306
+
+Object 34960 Correction 785
+Nearby Simeis 235 of type HII on 5.685 35.8667
+    is Sh 2-235 of type BRTNB on 5.685 35.8667
+
+Object 34975 Correction 786
+Nearby Simeis 282 of type HII on 6.63333 1.51667
+    is Sh 2-282 of type BRTNB on 6.63333 1.51667
+
+Object 34981 Correction 787
+Nearby Simeis 301 of type HII on 7.16333 -18.4833
+    is Sh 2-301 of type BRTNB on 7.16333 -18.4833
+
+Object 34984 Correction 788
+Nearby Simeis 302 of type HII on 7.52667 -16.9667
+    is Sh 2-302 of type BRTNB on 7.52667 -16.9667
+
+Object 34992 Correction 789
+Nearby Gum 25 of type HII on 9.04 -48.7
+    is Gum 35 of type BRTNB on 9.04 -48.7
+
+Object 35011 Correction 790
+Nearby Simeis 82 of type RNHII on 19.505 18.2667
+    is Sh 2-82 of type BRTNB on 19.505 18.2667
+
+Object 35012 Correction 791
+Nearby Simeis 91 of type SNREM on 19.5933 29.6167
+    is Sh 2-91 of type SNREM on 19.5933 29.6167
+
+Object 35013 Correction 792
+Nearby Simeis 101 of type HII on 20 35.2833
+    is Sh 2-101 of type BRTNB on 20 35.2833
+
+Object 35026 Correction 793
+Nearby Simeis 104 of type HII on 20.2967 36.7333
+    is Sh 2-104 of type BRTNB on 20.2967 36.7333
+
+Object 35037 Correction 794
+Nearby Simeis 112 of type HII on 20.565 45.65
+    is Sh 2-112 of type BRTNB on 20.565 45.65
+
+Object 35038 Correction 795
+Nearby Simeis 115 of type HII on 20.575 46.8667
+    is Sh 2-115 of type BRTNB on 20.575 46.8667
+
+Object 35041 Correction 796
+Nearby Simeis 129 of type HII on 21.1967 59.95
+    is Sh 2-129 of type BRTNB on 21.1967 59.95
+
+Object 35051 Correction 797
+Nearby Simeis 155 of type HII on 22.9467 62.6167
+    is Sh 2-155 of type BRTNB on 22.9467 62.6167
+
+Object 35055 Correction 798
+Nearby Simeis 157A of type HII on 23.2683 60.0333
+    is Sh 2-157 of type BRTNB on 23.2683 60.0333
+
+Object 35127 Correction 799
+Nearby MCG +08-31-011 of type GALXY on 16.8519 47.2333
+    is MCG +08-31-010 of type GALXY on 16.8519 47.2333
+
+Object 35140 Correction 800
+Nearby B B 157 of type DRKNB on 21.56 54.55
+    is B 364 of type DRKNB on 21.56 54.55
+
+Object 35153 Correction 801
+Nearby PGC 2526 of type GALXY on 0.704167 -18.1611
+    is MCG -02-03-041 of type GALXY on 0.704167 -18.1611
+
+Object 35153 Correction 802
+Nearby PGC 2526 of type GALXY on 0.704167 -18.1611
+    is MCG -03-02-041 of type GALXY on 0.704167 -18.1611
+
+Object 35167 Correction 803
+Nearby PGC 6966 of type GALXY on 1.88028 -3.44694
+    is MCG -01-05-047 of type GALXY on 1.88028 -3.44722
+
+Object 35168 Correction 804
+Nearby PGC 10766 of type GALXY on 2.83833 -8.59722
+    is MCG -02-08-012 of type GALXY on 2.83833 -8.59694
+
+Object 35169 Correction 805
+Nearby PGC 13646 of type GALXY on 3.71556 -12.9161
+    is MCG -02-10-009 of type GALXY on 3.71556 -12.9156
+
+Object 35202 Correction 806
+Nearby PGC 58960 of type GALXY on 16.7767 62.8231
+    is UGC 10561 of type GALXY on 16.7767 62.8225
+
+Object 35206 Correction 807
+Nearby PGC 61824 of type GALXY on 18.4008 65.3058
+    is UGC 11230 of type GALXY on 18.4008 65.306
+
+Object 35212 Correction 808
+Nearby PGC 18764 of type GALXY on 6.28361 81.1383
+    is UGC 3413 of type GALXY on 6.28358 81.1382
+
+Object 35216 Correction 809
+Nearby UGC 5044 of type GALXY on 9.46214 12.2878
+    is UGC 5044A of type GALXY on 9.46212 12.2871
+
+Object 35222 Correction 810
+Nearby MCG -01-30-032 of type GALXY on 11.7793 -3.84833
+    is MCG -01-30-033 of type GALXY on 11.7793 -3.84833
+
+Object 35222 Correction 811
+Nearby MCG -01-30-032 of type GALXY on 11.7793 -3.84833
+    is MCG -01-30-034 of type GALXY on 11.7793 -3.84833
+
+Object 35223 Correction 812
+Nearby MCG -01-30-033 of type GALXY on 11.7793 -3.84833
+    is MCG -01-30-032 of type GALXY on 11.7793 -3.84833
+
+Object 35223 Correction 813
+Nearby MCG -01-30-033 of type GALXY on 11.7793 -3.84833
+    is MCG -01-30-034 of type GALXY on 11.7793 -3.84833
+
+Object 35224 Correction 814
+Nearby MCG -01-30-034 of type GALXY on 11.7793 -3.84833
+    is MCG -01-30-032 of type GALXY on 11.7793 -3.84833
+
+Object 35224 Correction 815
+Nearby MCG -01-30-034 of type GALXY on 11.7793 -3.84833
+    is MCG -01-30-033 of type GALXY on 11.7793 -3.84833
+
+Object 35229 Correction 816
+Nearby MCG -01-25-031 of type GALXY on 9.72431 -5.27833
+    is MCG -01-25-032 of type GALXY on 9.72431 -5.27833
+
+Object 35230 Correction 817
+Nearby MCG -01-25-032 of type GALXY on 9.72431 -5.27833
+    is MCG -01-25-031 of type GALXY on 9.72431 -5.27833
+
+Object 35232 Correction 818
+Nearby MCG -01-39-003 of type GALXY on 15.359 -7.37806
+    is NGC 5917 of type GALXY on 15.359 -7.37806
+
+Object 35233 Correction 819
+Nearby MCG +02-05-039 of type GALXY on 1.81483 10.5217
+    is IC 162 of type GALXY on 1.81483 10.5217
+
+Object 35233 Correction 820
+Nearby MCG +02-05-039 of type GALXY on 1.81483 10.5217
+    is UGC 1267 of type GALXY on 1.81487 10.5213
+
+Object 35235 Correction 821
+Nearby MCG -02-01-052 of type GALXY on 0.313917 -10.3611
+    is MCG -02-01-051 of type GALXY on 0.313917 -10.3611
+
+Object 35236 Correction 822
+Nearby MCG -02-01-051 of type GALXY on 0.313917 -10.3611
+    is MCG -02-01-052 of type GALXY on 0.313917 -10.3611
+
+Object 35238 Correction 823
+Nearby Mrk 1089 of type GALXY on 5.02731 -4.25694
+    is PGC 16571 of type GALXY on 5.02731 -4.25694
+
+Object 35239 Correction 824
+Nearby PGC 16571 of type GALXY on 5.02731 -4.25694
+    is Mrk 1089 of type GALXY on 5.02731 -4.25694
+
+Object 35241 Correction 825
+Nearby MCG -02-38-016 of type GALXY on 14.8258 -10.1636
+    is MCG -02-38-017 of type GALXY on 14.8258 -10.1636
+
+Object 35242 Correction 826
+Nearby MCG -02-38-017 of type GALXY on 14.8258 -10.1636
+    is MCG -02-38-016 of type GALXY on 14.8258 -10.1636
+
+Object 35257 Correction 827
+Nearby MCG -01-60-021 of type GALXY on 23.6965 -3.66722
+    is MCG -01-60-022 of type GALXY on 23.6965 -3.66722
+
+Object 35258 Correction 828
+Nearby MCG -01-60-022 of type GALXY on 23.6965 -3.66722
+    is MCG -01-60-021 of type GALXY on 23.6965 -3.66722
+
+Object 35271 Correction 829
+Nearby MCG +08-31-004 of type GALXY on 16.8294 46.7081
+    is MCG +08-31-005 of type GALXY on 16.8294 46.7081
+
+Object 35271 Correction 830
+Nearby MCG +08-31-004 of type GALXY on 16.8294 46.7081
+    is MCG +08-31-006 of type GALXY on 16.8294 46.7081
+
+Object 35272 Correction 831
+Nearby MCG +08-31-005 of type GALXY on 16.8294 46.7081
+    is MCG +08-31-004 of type GALXY on 16.8294 46.7081
+
+Object 35272 Correction 832
+Nearby MCG +08-31-005 of type GALXY on 16.8294 46.7081
+    is MCG +08-31-006 of type GALXY on 16.8294 46.7081
+
+Object 35273 Correction 833
+Nearby MCG +08-31-006 of type GALXY on 16.8294 46.7081
+    is MCG +08-31-004 of type GALXY on 16.8294 46.7081
+
+Object 35273 Correction 834
+Nearby MCG +08-31-006 of type GALXY on 16.8294 46.7081
+    is MCG +08-31-005 of type GALXY on 16.8294 46.7081
+
+Object 35278 Correction 835
+Nearby MCG -01-25-008 of type GALXY on 9.64822 -4.86111
+    is MCG -01-25-009 of type GALXY on 9.64822 -4.86111
+
+Object 35278 Correction 836
+Nearby MCG -01-25-008 of type GALXY on 9.64822 -4.86111
+    is MCG -01-25-010 of type GALXY on 9.64822 -4.86111
+
+Object 35279 Correction 837
+Nearby MCG -01-25-009 of type GALXY on 9.64822 -4.86111
+    is MCG -01-25-008 of type GALXY on 9.64822 -4.86111
+
+Object 35279 Correction 838
+Nearby MCG -01-25-009 of type GALXY on 9.64822 -4.86111
+    is MCG -01-25-010 of type GALXY on 9.64822 -4.86111
+
+Object 35280 Correction 839
+Nearby MCG -01-25-010 of type GALXY on 9.64822 -4.86111
+    is MCG -01-25-008 of type GALXY on 9.64822 -4.86111
+
+Object 35280 Correction 840
+Nearby MCG -01-25-010 of type GALXY on 9.64822 -4.86111
+    is MCG -01-25-009 of type GALXY on 9.64822 -4.86111
+
+Object 35281 Correction 841
+Nearby UGC 6527 of type GALXY on 11.5436 52.9472
+    is UGC 6527B of type GALXY on 11.5436 52.9473
+
+Object 35285 Correction 842
+Nearby MCG +01-35-019 of type GALXY on 13.6222 6.48556
+    is UGC 8610 of type GALXY on 13.6222 6.48537
+
+Object 35287 Correction 843
+Nearby Mrk 897 of type GALXY on 21.1294 3.87778
+    is UGC 11680B of type GALXY on 21.1294 3.87773
+
+Object 35288 Correction 844
+Nearby Mrk 839 of type GALXY on 14.9356 83.5225
+    is UGC 9668 of type GALXY on 14.9356 83.5226
+
+Object 35299 Correction 845
+Nearby PGCD 55822 of type GALXY on 15.7058 81.8506
+    is PGC 55822 of type GALXY on 15.7058 81.8506
+
+Object 35300 Correction 846
+Nearby PGC 55822 of type GALXY on 15.7058 81.8506
+    is PGCD 55822 of type GALXY on 15.7058 81.8506
+
+Object 35302 Correction 847
+Nearby MCG -01-25-012 of type GALXY on 9.64833 -4.81694
+    is MCG -01-25-011 of type GALXY on 9.64833 -4.81667
+
+Object 35318 Correction 848
+Nearby MCG -02-03-041 of type GALXY on 0.704167 -18.1611
+    is MCG -03-02-041 of type GALXY on 0.704167 -18.1611
+
+Object 35318 Correction 849
+Nearby MCG -02-03-041 of type GALXY on 0.704167 -18.1611
+    is PGC 2526 of type GALXY on 0.704167 -18.1611
+
+Object 35320 Correction 850
+Nearby MCG -03-05-028 of type GALXY on 1.8875 -18.9375
+    is PGC 6999 of type GALXY on 1.8875 -18.9375
+
+Object 35321 Correction 851
+Nearby MCG -02-06-019 of type GALXY on 2.05056 -9.65667
+    is PGC 7806 of type GALXY on 2.05056 -9.65667
+
+Object 35321 Correction 852
+Nearby MCG -02-06-019 of type GALXY on 2.05056 -9.65667
+    is UGCA 23 of type GALXY on 2.05059 -9.65702
+
+Object 35322 Correction 853
+Nearby MCG -02-08-012 of type GALXY on 2.83833 -8.59694
+    is PGC 10766 of type GALXY on 2.83833 -8.59722
+
+Object 35324 Correction 854
+Nearby MCG -02-10-009 of type GALXY on 3.71556 -12.9156
+    is PGC 13646 of type GALXY on 3.71556 -12.9161
+
+Object 35328 Correction 855
+Nearby MCG -01-26--12 of type GALXY on 10.0433 -6.01417
+    is MCG -01-26-012 of type GALXY on 10.0433 -6.01417
+
+Object 35337 Correction 856
+Nearby MCG -03-38-031 of type GALXY on 14.9583 -18.4553
+    is PGC 53456 of type GALXY on 14.9583 -18.4553
+
+Object 35338 Correction 857
+Nearby MCG -03-02-041 of type GALXY on 0.704167 -18.1611
+    is MCG -02-03-041 of type GALXY on 0.704167 -18.1611
+
+Object 35338 Correction 858
+Nearby MCG -03-02-041 of type GALXY on 0.704167 -18.1611
+    is PGC 2526 of type GALXY on 0.704167 -18.1611
+
+Object 35339 Correction 859
+Nearby MCG -01-05-047 of type GALXY on 1.88028 -3.44722
+    is PGC 6966 of type GALXY on 1.88028 -3.44694
+
+Object 35340 Correction 860
+Nearby MCG -01-26-012 of type GALXY on 10.0433 -6.01417
+    is MCG -01-26--12 of type GALXY on 10.0433 -6.01417
+
+Object 35341 Correction 861
+Nearby PGC 6999 of type GALXY on 1.8875 -18.9375
+    is MCG -03-05-028 of type GALXY on 1.8875 -18.9375
+
+Object 35342 Correction 862
+Nearby PGC 7806 of type GALXY on 2.05056 -9.65667
+    is MCG -02-06-019 of type GALXY on 2.05056 -9.65667
+
+Object 35342 Correction 863
+Nearby PGC 7806 of type GALXY on 2.05056 -9.65667
+    is UGCA 23 of type GALXY on 2.05059 -9.65702
+
+Object 35346 Correction 864
+Nearby PGC 53456 of type GALXY on 14.9583 -18.4553
+    is MCG -03-38-031 of type GALXY on 14.9583 -18.4553
+
+Object 35469 Correction 865
+Nearby PGC 62108 of type GALXY on 18.6028 38.1603
+    is CGCG 201-015 of type GALXY on 18.6028 38.1605
+
+Object 35536 Correction 866
+Nearby PGC 26925 of type GALXY on 9.49083 -1.33917
+    is UGC 5057A of type GALXY on 9.49088 -1.33987
+
+Object 35561 Correction 867
+Nearby CGCG 314-01A of type GALXY on 10.945 67.1847
+    is CGCG 313-040 of type GALXY on 10.9449 67.1852
+
+Object 35572 Correction 868
+Nearby PGC 12538 of type GALXY on 3.34594 -1.05417
+    is UGC 2691A of type GALXY on 3.34595 -1.05449
+
+Object 39616 Correction 869
+Nearby MCG +14-01-009 of type GALXY on 0.676389 83.2219
+    is UGC 392 of type GALXY on 0.67638 83.2219
+
+Object 39627 Correction 870
+Nearby PCG 63592 of type GALXY on 19.7392 -27.4058
+    is PGC 63592 of type GALXY on 19.7392 -27.4058
+
+Object 39648 Correction 871
+Nearby PGC 63592 of type GALXY on 19.7392 -27.4058
+    is PCG 63592 of type GALXY on 19.7392 -27.4058
+
+Object 39669 Correction 872
+Nearby SP 1 of type PLNNB on 15.8614 -51.5231
+    is PK 329+02.01 of type PLNNB on 15.8614 -51.5231
+
+Object 39689 Correction 873
+Nearby ESO 421-19 of type GALXY on 4.82 -29.2075
+    is UGCA 95 of type GALXY on 4.82004 -29.2075
+
+Object 39693 Correction 874
+Nearby Cr 41 of type OPNCL on 3.74333 32.15
+    is IC 348 of type REFNB on 3.74333 32.15
+
+Object 39710 Correction 875
+Nearby PGC 32348 of type GALXY on 10.815 14.1244
+    is CGCG 066-026 of type GALXY on 10.815 14.1241
+
+Object 39713 Correction 876
+Nearby MCG +04-27-027 of type GALXY on 11.3703 24.3169
+    is IC 2759 of type GALXY on 11.3703 24.3167
+
+
+
+End checking coordinates.
