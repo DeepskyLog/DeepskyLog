@@ -212,6 +212,11 @@ class Objects
       $result[$get->name] = array($i, $get->name);
 	  return $result;
   } 
+  public  function getNearbyObjectsForCheck($ra=0, $decl=0, $dist)
+  { global $objDatabase;
+	  $dra = 0.0011 * $dist / cos($decl/180*3.1415926535);
+    return $objDatabase->selectRecordsetArray("SELECT objects.name,objects.type,objects.ra,decl FROM objects WHERE ((objects.ra > $ra - $dra) AND (objects.ra < $ra + $dra) AND (objects.decl > $decl - ($dist/60)) AND (objects.decl < $decl + ($dist/60))) ORDER BY objects.name");
+  } 
   public  function getNumberOfObjectsInCatalog($catalog)  // returns the number of objects in the catalog given as a parameter
   { global $objDatabase,$loggedUser;
   	if(substr($catalog,0,5)=="List:")
