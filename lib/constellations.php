@@ -14,7 +14,7 @@ class Constellation implements iConstellation
   }
   public function getConstellationFromCoordinates($thera,$thedecl)
   { $tempdecl=-90;
-    $tempcon="";
+    $tempcon="OCT";
     $thera0=0.0;
     $thera1=0.0;
     $thedecl0=0.0;
