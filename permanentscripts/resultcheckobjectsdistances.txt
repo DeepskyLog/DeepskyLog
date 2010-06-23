@@ -1,28 +1,8 @@
 Checking 40045 objects.
+Done checks are at the end of thsi file.
 
-Object 156 Correction 1
-Nearby B 364 of type DRKNB on 21.56 54.55
-    is B B 157 of type DRKNB on 21.56 54.55
 
-Object 485 Correction 2
-Nearby Gum 35 of type BRTNB on 9.04 -48.7
-    is Gum 25 of type HII on 9.04 -48.7
 
-Object 555 Correction 3
-Nearby IC 348 of type REFNB on 3.74333 32.15
-    is Cr 41 of type OPNCL on 3.74333 32.15
-
-Object 614 Correction 4
-Nearby IC 1318 of type EMINB on 20.465 40
-    is IC 1318B of type EMINB on 20.465 40
-
-Object 681 Correction 5
-Nearby IC 3115 of type GALXY on 12.3 6.65361
-    is NGC 4241 of type GALXY on 12.3 6.65361
-
-Object 691 Correction 6
-Nearby IC 3568 of type PLNNB on 12.5519 82.5638
-    is UGC 7731 of type GALXY on 12.5519 82.564
 
 Object 749 Correction 7
 Nearby IC 5070 of type EMINB on 20.8467 44.35
@@ -3507,3 +3487,28 @@ Nearby MCG +04-27-027 of type GALXY on 11.3703 24.3169
 
 
 End checking coordinates.
+
+
+Done: Object 156 Correction 1
+Nearby B 364 of type DRKNB on 21.56 54.55
+    is B B 157 of type DRKNB on 21.56 54.55
+
+Done: Object 485 Correction 2
+Nearby Gum 35 of type BRTNB on 9.04 -48.7
+    is Gum 25 of type HII on 9.04 -48.7
+
+Done: Object 555 Correction 3
+Nearby IC 348 of type REFNB on 3.74333 32.15
+    is Cr 41 of type OPNCL on 3.74333 32.15
+
+Done: Object 614 Correction 4
+Nearby IC 1318 of type EMINB on 20.465 40
+    is IC 1318B of type EMINB on 20.465 40
+
+Done: Object 681 Correction 5
+Nearby IC 3115 of type GALXY on 12.3 6.65361
+    is NGC 4241 of type GALXY on 12.3 6.65361
+
+Done: Object 691 Correction 6
+Nearby IC 3568 of type PLNNB on 12.5519 82.5638
+    is UGC 7731 of type GALXY on 12.5519 82.564
