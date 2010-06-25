@@ -172,7 +172,7 @@ class AstroCalc implements iAstroCalc
     $ris_tra_set[2] = $m2;
 
     $rise = $ris_tra_set[0];
-    if($ris_tra_set[0] > 24 || $ris_tra_set[0] < 0) {
+    if($ris_tra_set[0] > 48 || $ris_tra_set[0] < -24) {
       $ris_tra_set[0] = "-";
     } else {
       $ris_tra_set[0] = $ris_tra_set[0] + $timedifference;
@@ -196,9 +196,9 @@ class AstroCalc implements iAstroCalc
     }
 
     $transit = $ris_tra_set[1];
-    /*if($ris_tra_set[1] > 24 || $ris_tra_set[1] < 0) {
+    if($ris_tra_set[1] > 48 || $ris_tra_set[1] < -24) {
       $ris_tra_set[1] = "-";
-    } else {*/
+    } else {
     $ris_tra_set[1] = $ris_tra_set[1] + $timedifference;
     if ($ris_tra_set[1] < 0) {
       $ris_tra_set[1] = $ris_tra_set[1] + 24;
@@ -217,12 +217,12 @@ class AstroCalc implements iAstroCalc
       $minutes = "0" . $minutes;
     }
     $ris_tra_set[1] = floor($ris_tra_set[1]) + $toAdd . ":" . $minutes;
-    /*}*/    
+    }
 
     $set = $ris_tra_set[2];
-    /*if ($ris_tra_set[2] > 24 || $ris_tra_set[2] < 0) {
-      $ris_tra_set[2] = "x";
-    } else {*/
+    if ($ris_tra_set[2] > 48 || $ris_tra_set[2] < -24) {
+      $ris_tra_set[2] = "-";
+    } else {
       $ris_tra_set[2] = $ris_tra_set[2] + $timedifference;
       if ($ris_tra_set[2] < 0) {
         $ris_tra_set[2] = $ris_tra_set[2] + 24;
@@ -241,7 +241,7 @@ class AstroCalc implements iAstroCalc
         $minutes = "0" . $minutes;
       }
       $ris_tra_set[2] = floor($ris_tra_set[2]) + $toAdd . ":" . $minutes;
-    /*}*/
+    }
     $ris_tra_set[4] = 0;
     $ra2 = $ra2 / 15;
 
