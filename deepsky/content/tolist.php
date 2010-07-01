@@ -70,7 +70,9 @@ if($listname)
     $content.="<a href=\"objectslist.csv?SID=Qobj\" rel=\"external\">".LangExecuteQueryObjectsMessage6."</a>";
 	  if($loggedUser)
 	    $content.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;sort=".$_SESSION['QobjSort']."&amp;pdfTitle=Test\" >".ReportLink."</a>";
-    $objPresentations->line(array($content),"L",array(),30);
+	  $content.="&nbsp;-&nbsp;";
+    $content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objectsSet.pdf?SID=Qobj","Print objects Set");
+	  $objPresentations->line(array($content),"L",array(),30);
 	}
 	else
 	{ echo LangToListEmptyList;

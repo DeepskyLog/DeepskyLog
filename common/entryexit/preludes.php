@@ -40,6 +40,8 @@ else
   include_once 'lib/catalogs.php';
   include_once "lib/moonphase.inc.php";
   include_once "lib/astrocalc.php";
+  include_once "lib/printatlas.php";
+ 
   
 	if(strpos(($browser=$objUtil->checkArrayKey($_SERVER,'HTTP_USER_AGENT','')),'Firefox')===false)
 	  $FF=false;

@@ -1,0 +1,5 @@
+<?php 
+$inIndex = true;
+include 'common/entryexit/preludes.php';
+$objPrintAtlas->pdfAtlasSet(array(array('zoom'=>13),array('zoom'=>16),array('zoom'=>19),array('zoom'=>22)));
+?>

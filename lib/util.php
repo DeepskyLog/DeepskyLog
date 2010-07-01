@@ -1,41 +1,6 @@
 <?php // util
-interface iUtils
-{ public  function __construct();
-  public  function argoObjects($result);                                       // Creates an argo navis file from an array of objects
-  public  function checkAdminOrUserID($toCheck);                               // returns true if logged user equals toCheck, or admin is logged in
-  public  function checkArrayKey($theArray,$key,$default='');                  // returns the value of $theArray[$key] or $default if the key doesn't exist
-  public  function checkGetDate($year,$month,$day);                            // if year exists (eg 2009), returns 2009xxyy, else if month exists (eg5), returns 05yy 
-  public  function checkGetKey($key,$default='');                              // returns the value of $_GET[$key] or $default if the key doesn't exist
-  public  function checkGetKeyReturnString($key,$string,$default='');
-  public  function checkGetTimeOrDegrees($hr,$min,$sec);
-  public  function checkLimitsInclusive($value,$low,$high);
-  public  function checkPostKey($key,$default='');                             // returns the value of $_POST[$key] or $default if the key doesn't exist
-  public  function checkSessionKey($key,$default='');                          // returns the value of $_SESSION[$key] or $default if the key doesn't exist
-  public  function checkUserID($toCheck);                                      // returns true if logged user equals toCheck
-  public  function comastObservations($result);                                // Creates a xml file from an array of observations
-  public  function csvObjects($result);                                        // Creates a csv file from an array of objects
-  public  function csvObjectsList($result);                                    // Creates a csv file from an array of list objects
-  public  function csvObservations($result);                                   // Creates a csv file from an array of observations
-  public  function csvObservationsImportErrors($result);                       // Creates a csv file from an array of error csv import observations
-  public  function pdfCometObservations($result);                              // Creates a pdf document from an array of comet observations
-  public  function pdfObjectnames($result);                                    // Creates a pdf document from an array of objects
-  public  function pdfObjects($result);                                        // Creates a pdf document from an array of objects
-  public  function pdfObjectsDetails($result, $sort='');                       // Creates a pdf detail document from an array of objects
-  public  function pdfObservations($result);                                   // Creates a pdf document from an array of observations
-  public  function printNewListHeader3(&$list, $link, $min, $step, $total=0,$showNumberOfRecords=true,$showArrows=true);
-  public  function printStepsPerPage3($link,$detaillink,$steps=25);
-  public  function recordsetSort(array $data /*$name, $order, $mode*/); 
-  public  function rssObservations();                                          // Creates an rss feed
-  //private function utilitiesCheckIndexActionDSquickPick();                     // returns the includefile if one of the quickpick buttons is pressed
-//private function utilitiesCheckIndexActionAdmin($action, $includefile);      // returns the includefile for the specified indexs action after checking it is an admin who is looged in
-//private function utilitiesCheckIndexActionAll($action, $includefile);        // returns the includefile for the specified indexs action
-//private function utilitiesGetIndexActionDefaultAction();                     // returns the includefile for the specified indexs action
-//private function utilitiesCheckIndexActionMember($action, $includefile);     // returns the includefile for the specified indexs action after checking if it is a logged user
-  public  function utilitiesDispatchIndexAction();
-  public  function utilitiesSetModuleCookie($module);
-}
 include_once "class.ezpdf.php";
-class Utils implements iUtils
+class Utils
 { public  function __construct()
 	{ foreach($_POST as $foo => $bar)
       $_POST[$foo]=htmlentities(stripslashes($bar),ENT_COMPAT,"ISO-8859-15",0);
