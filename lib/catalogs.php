@@ -373,6 +373,7 @@ class catalogs
 	        $returnindex.="0";
 	      return '19-'.$returnindex.$theindex;  
 	    }
+	    return $theindex;
 	  }
   }
   public function checkObject($theobject)

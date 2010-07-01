@@ -621,7 +621,7 @@ function setup_observations_query()
 	  $content.='<select id="observerqueries" onchange="restoreQuery();"><option value="-----">-----</option></select>'.'&nbsp;';
 	  $content.='<input id="savequeryas" type="button" value="'.LangSaveAs.'" onclick="saveObserverQueryAs();"/>'.'&nbsp;';
 	  $content.='<input id="deletequery" type="button" value="'.LangRemoveQuery.'" class="hidden" onclick="removeQuery();"/>'.'&nbsp;';
-		  $objPresentations->line(array($content),"L",array(100));
+	  $objPresentations->line(array($content),"L",array(100));
 	}
 	echo "</div>";
 	echo '<script type="text/javascript">setobserverqueries();</script>';
