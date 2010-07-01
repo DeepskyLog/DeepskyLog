@@ -2,7 +2,6 @@
 
 $inIndex = true;
 include 'common/entryexit/preludes.php';
-include 'lib/printatlas.php';
 require_once "lib/setup/vars.php";
 
 if(($zoom=$objUtil->checkRequestKey('zoom'))==AtlasOverviewZoom)
