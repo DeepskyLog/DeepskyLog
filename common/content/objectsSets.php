@@ -1,6 +1,6 @@
 <?php
 function objectsSets()
-{ global $objObserver, $loggedUser;
+{ global $objObserver, $loggedUser, $baseURL;
   $fovo=$objObserver->getObserverProperty($loggedUser,'overviewFoV',120);
   $fovl=$objObserver->getObserverProperty($loggedUser,'lookupFoV',60);
   $fovd=$objObserver->getObserverProperty($loggedUser,'detailFoV',15);
@@ -12,16 +12,16 @@ function objectsSets()
   $starsd=$objObserver->getObserverProperty($loggedUser,'detailstars',14);
   $k=count($_SESSION['Qobj']);
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."common/content/objectsSets.js\"></script>";
-  echo "<input type=\"button\" value=\""."Go"."\" onclick=\"alert('Go');\"/>";
+  echo "<input type=\"button\" value=\""."Go"."\" onclick=\"generate();\"/>";
   echo "<hr />";
   echo "<table>";
   echo "<tr><td>Object</td><td>FoVs</td><td>dsos</td><td>stars</td></tr>";
   for($i=0;$i<$k;$i++)
   { echo "<tr>";
-    echo "<td>".$_SESSION['Qobj'][$i]['showname']."</td>
-          <td><input type=\"text\" id=\"C".$i."D"."min"."\" value=\"".$fovo." ".$fovl." ".$fovd."\" /></td>
-          <td><input type=\"text\" id=\"C".$i."D"."dsos"."\" value=\"".$dsoso." ".$dsosl." ".$dsosd."\"/></td>
-          <td><input type=\"text\" id=\"C".$i."D"."stars"."\" value=\"".$starso." ".$starsl." ".$starsd."\"/></td>";
+    echo "<td id=\"R".$i."\">".$_SESSION['Qobj'][$i]['showname']."</td>
+          <td><input type=\"text\" id=\"R".$i."D"."fov"."\" value=\"".$fovo." ".$fovl." ".$fovd."\" /></td>
+          <td><input type=\"text\" id=\"R".$i."D"."dsos"."\" value=\"".$dsoso." ".$dsosl." ".$dsosd."\"/></td>
+          <td><input type=\"text\" id=\"R".$i."D"."stars"."\" value=\"".$starso." ".$starsl." ".$starsd."\"/></td>";
   	echo "</tr>";
   }
   echo "</table>";
