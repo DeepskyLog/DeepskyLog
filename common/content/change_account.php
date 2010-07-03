@@ -98,7 +98,13 @@ $line[]=array(LangChangeAccountField12,
               "<input type=\"text\" class=\"inputfield centered\" maxlength=\"4\" name=\"fstOffset\" size=\"4\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'fstOffset')."\" />",
               LangChangeAccountField12Expl);
 $line[]=array(LangChangeAccountPicture,"<input type=\"file\" name=\"picture\" class=\"inputfield\"/>","");
-$line[]=array(profiledsosmagnitude,"","");
+$line[]=array(profilefovmagnitude,"","");
+$line[]=array(profilefovmagnitudeselect,
+              " <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"overviewFoV\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewFoV')."\" />".
+              " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"lookupFoV\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupFoV')."\" />".
+              " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"detailFoV\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detailFoV')."\" />",
+              "");
+$line[]=array(profilestarsmagnitude,"","");
 $line[]=array(profiledsosmagnitudeselect,
               " <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"overviewdsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewdsos')."\" />".
               " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"lookupdsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupdsos')."\" />".

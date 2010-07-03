@@ -983,7 +983,7 @@ class PrintAtlas
   }
   public  function pdfAtlasSet($theSet)  // Creates a pdf atlas page
   { set_time_limit(round(count($_SESSION['Qobj'])*0.005));
-  global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
+    global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
     $this->pdf = new Cezpdf('a4', 'landscape');
     $this->pdf->selectFont($instDir.'lib/fonts/Courier.afm');
     $this->fontSize1b=max(min($objUtil->checkRequestKey('fontsize',$this->fontSize1b),9),6);
@@ -996,10 +996,14 @@ class PrintAtlas
     	
 	    for($k=0;$k<count($theSet);$k++)
 	    { if($k) $this->pdf->newPage();
-	    	$this->gridActualDimension=max(min($theSet[$k]['zoom'],$this->gridMaxDimension),14);
-	      $this->atlasmagnitude=max(min((int)((array_key_exists('dsos',$theSet[$k])?$thSet[$k]['dsos']:$this->gridDimensions[$this->gridActualDimension][3])),99),8);
-	      $this->starsmagnitude=max(min((int)((array_key_exists('dsos',$theSet[$k])?$thSet[$k]['stars']:$this->gridDimensions[$this->gridActualDimension][3])),16),8);
-	        
+	    	$minDegs=$theSet[$k]/60;
+	    	$i=$this->gridMaxDimension;
+	      while($i && ($this->gridDimensions[$i][0]<$minDegs))
+	        $i--;
+	      $this->gridActualDimension=$i;
+	      $this->atlasmagnitude=max(min((int)(($this->gridDimensions[$this->gridActualDimension][3])),99),8);
+	      $this->starsmagnitude=max(min((int)(($this->gridDimensions[$this->gridActualDimension][3])),16),8);
+	      
 	      $this->pdf->setLineStyle(0.5);
 	      $this->gridInit();
 	      $this->gridInitScale($this->atlaspagerahr,$this->atlaspagedecldeg,$this->atlaspagezoomdeg);
@@ -1012,7 +1016,7 @@ class PrintAtlas
 	      $this->pdf->setStrokeColor(0,0,0);
 	      $this->astroDrawStarsArr();
 	      $this->astroDrawObjects($_SESSION['Qobj'][$j]['objectname']);
-	    
+	      
 	      $this->pdf->setColor(1,1,1);
 	      $this->pdf->filledRectangle(0,0,$this->gridOffsetXpx,$this->canvasDimensionYpx);
 	      $this->pdf->filledRectangle(0,0,$this->canvasDimensionXpx,$this->gridOffsetYpx);

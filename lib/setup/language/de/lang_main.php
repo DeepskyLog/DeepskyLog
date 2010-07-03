@@ -116,6 +116,8 @@ define("LangSaveFormLayout4"                             ,"Remove");
 
 
 
+define("profilefovmagnitude"                            ,"Standard Fov im Atlas:");
+define("profilefovmagnitudeselect"                      ,"&Uuml;bersicht / Nachschlagen / Details");
 define("profiledsosmagnitude"                            ,"Standard Objekt Helligkeit im Atlas:");
 define("profiledsosmagnitudeselect"                      ,"&Uuml;bersicht / Nachschlagen / Details");
 define("profilestarsmagnitude"                           ,"Standard Sterne Helligkeit im Atlas:");

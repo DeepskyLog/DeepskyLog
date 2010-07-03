@@ -1,5 +1,12 @@
 <?php 
 $inIndex = true;
 include 'common/entryexit/preludes.php';
-$objPrintAtlas->pdfAtlasSet(array(array('zoom'=>13),array('zoom'=>16),array('zoom'=>19),array('zoom'=>22)));
+$theSet=array();
+$theParam=$objUtil->checkGetKey('pdfTitle');
+while($thepos=strpos($theParam,' '))
+{ $theSet[]=substr($theParam,0,$thepos);
+  $theParam=substr($theParam,$thepos+1);
+}
+$theSet[]=$theParam;
+$objPrintAtlas->pdfAtlasSet($theSet);
 ?>

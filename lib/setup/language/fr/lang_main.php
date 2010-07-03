@@ -116,6 +116,8 @@ define("LangSaveFormLayout3"                             ,"Openen");
 define("LangSaveFormLayout4"                             ,"Verwijderen");
 
 
+define("profilefovmagnitude"                            ,"Atlas standaard FoVs:");
+define("profilefovmagnitudeselect"                      ,"overzicht / opzoeken / detail");
 define("profiledsosmagnitude"                            ,"Atlas standaard objectmagnitudes:");
 define("profiledsosmagnitudeselect"                      ,"overzicht / opzoeken / detail");
 define("profilestarsmagnitude"                           ,"Atlas standaard stermagnitudes:");
