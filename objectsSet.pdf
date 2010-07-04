@@ -1,6 +1,7 @@
 <?php 
 $inIndex = true;
 include 'common/entryexit/preludes.php';
+$filename=str_replace(' ','_',html_entity_decode($objUtil->checkGetKey('theobject')));
 $theSet=array();
 $theParam=$objUtil->checkGetKey('theSet');
 while($thepos=strpos($theParam,' '))
@@ -8,6 +9,19 @@ while($thepos=strpos($theParam,' '))
   $theParam=substr($theParam,$thepos+1);
 }
 $theSet[]=$theParam;
-$filename=str_replace(' ','_',html_entity_decode($objUtil->checkGetKey('theobject')));
-$objPrintAtlas->pdfAtlasObjectSet($objUtil->checkGetKey('theobject'),$theSet);
+$thedsos=array();
+$theParam=$objUtil->checkGetKey('thedsos');
+while($thepos=strpos($theParam,' '))
+{ $thedsos[]=substr($theParam,0,$thepos);
+  $theParam=substr($theParam,$thepos+1);
+}
+$thedsos[]=$theParam;
+$thestars=array();
+$theParam=$objUtil->checkGetKey('thestars');
+while($thepos=strpos($theParam,' '))
+{ $thestars[]=substr($theParam,0,$thepos);
+  $theParam=substr($theParam,$thepos+1);
+}
+$thestars[]=$theParam;
+$objPrintAtlas->pdfAtlasObjectSet($objUtil->checkGetKey('theobject'),$theSet,$thedsos,$thestars);
 ?>

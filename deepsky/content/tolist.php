@@ -71,7 +71,7 @@ if($listname)
 	  if($loggedUser)
 	    $content.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;sort=".$_SESSION['QobjSort']."&amp;pdfTitle=Test\" >".ReportLink."</a>";
 	  $content.="&nbsp;-&nbsp;";
-    $content.=$objPresentations->promptWithLinkText("Enter the FoVs (in minutes) that you need, separated by a space:","60 30 15",$baseURL."index.php?indexAction=objectsSets","Print objects Set");
+    $content.="<a href=\"".$baseURL."index.php?indexAction=objectsSets"."\" rel=\"external\">".LangExecuteQueryObjectsMessage11."</a> &nbsp;-&nbsp;";
 	  $objPresentations->line(array($content),"L",array(),30);
 	}
 	else

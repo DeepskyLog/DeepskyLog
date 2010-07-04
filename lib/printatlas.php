@@ -1040,7 +1040,7 @@ class PrintAtlas
     }
     $this->pdf->Stream(); 
   }
-  public  function pdfAtlasObjectSet($theobject,$theSet)
+  public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars)
   { set_time_limit(round(count($_SESSION['Qobj'])*0.005));
     global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
     $_GET['pdfTitle']=$theobject;
@@ -1059,8 +1059,8 @@ class PrintAtlas
       while($i && ($this->gridDimensions[$i][0]<$minDegs))
         $i--;
       $this->gridActualDimension=$i;
-      $this->atlasmagnitude=max(min((int)(($this->gridDimensions[$this->gridActualDimension][3])),99),8);
-      $this->starsmagnitude=max(min((int)(($this->gridDimensions[$this->gridActualDimension][3])),16),8);
+      $this->atlasmagnitude=max(min((int)(($thedsos[$k])),99),8);
+      $this->starsmagnitude=max(min((int)(($thestars[$k])),16),8);
       
       $this->pdf->setLineStyle(0.5);
       $this->gridInit();

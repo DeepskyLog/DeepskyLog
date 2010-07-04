@@ -12,16 +12,29 @@ function objectsSets()
   $starsd=$objObserver->getObserverProperty($loggedUser,'detailstars',14);
   $k=count($_SESSION['Qobj']);
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."common/content/objectsSets.js\"></script>";
-  echo "<input type=\"button\" value=\""."Go"."\" onclick=\"generate();\"/>";
+	echo LangpdfseriesExplain1.'<br />';
+	echo LangpdfseriesExplain2.'<br />';
+	echo LangpdfseriesExplain3.'<br />';
+	echo LangpdfseriesExplain4.'<br />'.'<br />';		
+	echo LangpdfseriesExplain5.'<br />'.'<br />';		
+	echo "<input type=\"button\" value=\"".LangpdfseriesButton."\" onclick=\"generate();\"/>";
   echo "<hr />";
   echo "<table>";
-  echo "<tr><td>Object</td><td>FoVs</td><td>dsos</td><td>stars</td></tr>";
+  echo "<tr>";
+  echo "<td class=\"bold\">".LangpdfseriesObject."</td>";
+  echo "<td class=\"bold\">".LangpdfseriesSize."</td>";
+  echo "<td class=\"bold\">".LangpdfseriesFoVs."</td>";
+  echo "<td class=\"bold\">".Langpdfseriesdsos."</td>";
+  echo "<td class=\"bold\">".Langpdfseriesstars."</td>";
+  
+  echo "</tr>";
   for($i=0;$i<$k;$i++)
   { echo "<tr>";
-    echo "<td id=\"R".$i."\">".$_SESSION['Qobj'][$i]['showname']."</td>
-          <td><input type=\"text\" id=\"R".$i."D"."fov"."\" value=\"".$fovo." ".$fovl." ".$fovd."\" /></td>
-          <td><input type=\"text\" id=\"R".$i."D"."dsos"."\" value=\"".$dsoso." ".$dsosl." ".$dsosd."\"/></td>
-          <td><input type=\"text\" id=\"R".$i."D"."stars"."\" value=\"".$starso." ".$starsl." ".$starsd."\"/></td>";
+    echo "<td id=\"R".$i."\">".$_SESSION['Qobj'][$i]['objectname']."</td>";
+    echo "<td id=\"R".$i."Dsize\">".$_SESSION['Qobj'][$i]['objectsize']."</td>";
+    echo "<td>"."<input type=\"text\" ".((($_SESSION['Qobj'][$i]['objectdiam1']/60)>$fovd)?"class=\"textred\"":"")." id=\"R".$i."D"."fov"."\" value=\"".$fovo." ".$fovl." ".$fovd."\" />"."</td>";
+    echo "<td>"."<input type=\"text\" id=\"R".$i."D"."dsos"."\" value=\"".$dsoso." ".$dsosl." ".$dsosd."\"/>"."</td>";
+    echo "<td>"."<input type=\"text\" id=\"R".$i."D"."stars"."\" value=\"".$starso." ".$starsl." ".$starsd."\"/>"."</td>";
   	echo "</tr>";
   }
   echo "</table>";

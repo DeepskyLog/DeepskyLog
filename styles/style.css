@@ -317,6 +317,9 @@ div#main {
   text-align       : left;
   width            : 100%;
 }
+.bold {
+	font-weight      : bold;
+}
 .DSSImage {
 	width            : 495px;
 	height           : 495px;
@@ -505,6 +508,9 @@ p, td, tr, div {
   font-family      : Verdana, Trebuchet MS, Arial, Helvetica, sans-serif;
   font-size        : 11px;
   color            : #000000;
+}
+.textred {
+  color            : #FF0000;
 }
 .requiredField {
 	background-color : #FFFFCC;

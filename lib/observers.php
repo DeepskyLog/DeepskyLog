@@ -269,6 +269,9 @@ class Observers implements iObservers
 		    $this->setObserverProperty($loggedUser,'stdtelescope', $_POST['instrument']);
 		    $this->setObserverProperty($loggedUser,'standardAtlasCode', $_POST['atlas']);
         $this->setObserverProperty($loggedUser,'fstOffset', $_POST['fstOffset']);
+        $this->setObserverProperty($loggedUser,'overviewFoV', $_POST['overviewFoV']);
+        $this->setObserverProperty($loggedUser,'lookupFoV', $_POST['lookupFoV']);
+        $this->setObserverProperty($loggedUser,'detailFoV', $_POST['detailFoV']);
         $this->setObserverProperty($loggedUser,'overviewdsos', $_POST['overviewdsos']);
         $this->setObserverProperty($loggedUser,'lookupdsos', $_POST['lookupdsos']);
         $this->setObserverProperty($loggedUser,'detaildsos', $_POST['detaildsos']);

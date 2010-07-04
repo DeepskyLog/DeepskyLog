@@ -1,6 +1,22 @@
 <?php
 
+define("LangpdfseriesExplain1"  ,"Maak een set van kaarten voor elk object.");
+define("LangpdfseriesExplain2"  ,"Elke set bevat even veel kaarten als gespecifieerd in het FoV vak.");
+define("LangpdfseriesExplain3"  ,"Elke kaart gespecifieerd in het vak FoVs, toont sterren en objecten zoals gespecifieerd in de respectievelijke vakken.");
+define("LangpdfseriesExplain4"  ,"Elk magnitudevak moet even veel magnitudes bevatten als er FoVs zijn.");
+define("LangpdfseriesExplain5"  ,"U kan elke set opslaan en eventueel met een pdf samenvoegprogramma samenstellen tot één catalogus-atlas.");
+define("LangpdfseriesButton"    ,"Maak aan");
+
+define("LangpdfseriesObject"    ,"Object");
+define("LangpdfseriesSize"      ,"Grootte");
+define("LangpdfseriesFoVs"      ,"FoVs: Afgebeelde beeldvelden");
+define("Langpdfseriesdsos"      ,"Respectievelijke objectenmagnitudes");
+define("Langpdfseriesstars"     ,"Respectievelijke sterrenmagnitudes");
+
+
+
 // TO DO:
+
 
 define("LangStoredQueries"      ,"Stored queries:");
 define("LangSaveAs"             ,"Save As...");
@@ -795,6 +811,7 @@ define("LangExecuteQueryObjectsMessage7"									,"icq");
 define("LangExecuteQueryObjectsMessage8"									,"Argo Navis");
 define("LangExecuteQueryObjectsMessage9"									,"Filter objecten");
 define("LangExecuteQueryObjectsMessage10"									,"&lt;OAL&gt;");
+define("LangExecuteQueryObjectsMessage11"	  							,"pdf reeks");
 define("LangInvalidCSVfile"																,"U gaf geen geldig CSV bestand!");
 define("LangSeenDontCare"																	,"Alle objecten, ongeacht of ik ze waarnam of niet");
 define("LangSeenByMe"																			,"Enkel objecten die ik reeds heb waargenomen");

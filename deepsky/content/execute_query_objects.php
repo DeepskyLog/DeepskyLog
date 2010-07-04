@@ -60,6 +60,7 @@ if(count($_SESSION['Qobj'])>1) //===============================================
 	$content1.="<a href=\"".$baseURL."objects.csv?SID=Qobj\" rel=\"external\">".LangExecuteQueryObjectsMessage6."</a>";
 	if($loggedUser)
 	  $content1.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;sort=".$_SESSION['QobjSort']."&amp;pdfTitle=Test\" >".ReportLink."</a>";
+  $content1.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=objectsSets"."\" rel=\"external\">".LangExecuteQueryObjectsMessage11."</a> &nbsp;-&nbsp;";
 	$objPresentations->line(array($content1),"L",array(100),20);
   echo "</div>";
 }

@@ -1,5 +1,19 @@
 <?php
 
+define("LangpdfseriesExplain1"  ,"Generate a set of charts for each object.");
+define("LangpdfseriesExplain2"  ,"Each set contains a number of charts specified by the FoVs asked below.");
+define("LangpdfseriesExplain3"  ,"Each charts specified by the FoVs, shows stars and object up to the specified magnitudes.");
+define("LangpdfseriesExplain4"  ,"Each magnitude field should contain as many magnitudes as there are FoVs.");
+define("LangpdfseriesExplain5"  ,"You can save each set and use a pdf merger to make one large atlas-catalogue if you wish.");
+define("LangpdfseriesButton"    ,"Generate");
+
+define("LangpdfseriesObject"    ,"Object");
+define("LangpdfseriesSize"      ,"Size");
+define("LangpdfseriesFoVs"      ,"FoVs: shown field of views");
+define("Langpdfseriesdsos"      ,"Object magnitudes");
+define("Langpdfseriesstars"     ,"Stellar magnitudes");
+
+
 // TO DO
 //define("LangTopObserversHeader7"													,"Anzahl der Zeichnungen");
 //define("LangTopObserversHeader8"													,"Zeichnungen letztes Jahr");
@@ -810,6 +824,7 @@ define("LangExecuteQueryObjectsMessage7"									,"ICQ");
 define("LangExecuteQueryObjectsMessage8"									,"Argo Navis");
 define("LangExecuteQueryObjectsMessage9"									,"Filter objects");
 define("LangExecuteQueryObjectsMessage10"									,"&lt;OAL&gt;");
+define("LangExecuteQueryObjectsMessage11"	  							,"pdf series");
 define("LangInvalidCSVfile"																,"Sie haben keine g&uuml;ltige CSV Datei angegeben!");
 define("LangSeenDontCare"																	,"Egal");
 define("LangSeenByMe"																			,"Bereits von mir beobachtet");

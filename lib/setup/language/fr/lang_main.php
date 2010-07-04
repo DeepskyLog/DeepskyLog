@@ -1,5 +1,19 @@
 <?php
 
+define("LangpdfseriesExplain1"  ,"Generate a set of charts for each object.");
+define("LangpdfseriesExplain2"  ,"Each set contains a number of charts specified by the FoVs asked below.");
+define("LangpdfseriesExplain3"  ,"Each charts specified by the FoVs, shows stars and object up to the specified magnitudes.");
+define("LangpdfseriesExplain4"  ,"Each magnitude field should contain as many magnitudes as there are FoVs.");
+define("LangpdfseriesExplain5"  ,"U kan elke set opslaan en eventueel met een pdf samenvoegprogramma samenstellen tot één catalogus-atlas.");
+define("LangpdfseriesButton"    ,"Generate");
+
+define("LangpdfseriesObject"    ,"Objet");
+define("LangpdfseriesSize"      ,"Taille");
+define("LangpdfseriesFoVs"      ,"FoVs: Afgebeelde beeldvelden");
+define("Langpdfseriesdsos"      ,"Respectievelijke objectenmagnitudes");
+define("Langpdfseriesstars"     ,"Respectievelijke sterrenmagnitudes");
+
+
 // TO DO
 
 
@@ -808,6 +822,7 @@ define("LangExecuteQueryObjectsMessage7"									,"icq");
 define("LangExecuteQueryObjectsMessage8"									,"Argo Navis");
 define("LangExecuteQueryObjectsMessage9"									,"Filtrer les objects");
 define("LangExecuteQueryObjectsMessage10"									,"&lt;OAL&gt;");
+define("LangExecuteQueryObjectsMessage11"	  							,"s&eacute;rie pdf");
 define("LangInvalidCSVfile"																,"Vous n'avez pas sp&eacute;cifi&eacute; un fichier csv valable!");
 define("LangSeenDontCare"																	,"Tous les objets, vus ou pas vus");
 define("LangSeenByMe"															        ,"Juste les objets que j'ai vus moi-m&ecirc;me");
