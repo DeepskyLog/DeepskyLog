@@ -18,6 +18,7 @@ function generateOne(i)
                                           '&thestars='+document.getElementById('R'+i+'Dstars').value,
                            document.getElementById('R'+i).value
                            );
-  //alert('Generating '+document.getElementById('R'+i).value+'.');
+  alert('Generating '+document.getElementById('R'+i).value+'.');
   document.getElementById('T'+i).setAttribute('style','background-color:#EEEEEE;');
+  document.getElementById('R'+(i+1)).focus();
 }
