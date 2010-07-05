@@ -11,3 +11,13 @@ function generate()
     i++;
   }
 }
+function generateOne(i)
+{ var load = window.open('objectsSet.pdf?theobject='+document.getElementById('R'+i).value+
+                                          '&theSet='+document.getElementById('R'+i+'Dfov').value+
+                                          '&thedsos='+document.getElementById('R'+i+'Ddsos').value+
+                                          '&thestars='+document.getElementById('R'+i+'Dstars').value,
+                           document.getElementById('R'+i).value
+                           );
+  //alert('Generating '+document.getElementById('R'+i).value+'.');
+  document.getElementById('T'+i).setAttribute('style','background-color:#EEEEEE;');
+}

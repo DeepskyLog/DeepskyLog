@@ -5,7 +5,7 @@ define("LangpdfseriesExplain2"  ,"Elke set bevat even veel kaarten als gespecifi
 define("LangpdfseriesExplain3"  ,"Elke kaart gespecifieerd in het vak FoVs, toont sterren en objecten zoals gespecifieerd in de respectievelijke vakken.");
 define("LangpdfseriesExplain4"  ,"Elk magnitudevak moet even veel magnitudes bevatten als er FoVs zijn.");
 define("LangpdfseriesExplain5"  ,"U kan elke set opslaan en eventueel met een pdf samenvoegprogramma samenstellen tot één catalogus-atlas.");
-define("LangpdfseriesButton"    ,"Maak aan");
+define("LangpdfseriesButton"    ,"Maak alles aan");
 
 define("LangpdfseriesObject"    ,"Object");
 define("LangpdfseriesSize"      ,"Grootte");

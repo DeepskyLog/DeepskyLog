@@ -5,7 +5,7 @@ define("LangpdfseriesExplain2"  ,"Each set contains a number of charts specified
 define("LangpdfseriesExplain3"  ,"Each charts specified by the FoVs, shows stars and object up to the specified magnitudes.");
 define("LangpdfseriesExplain4"  ,"Each magnitude field should contain as many magnitudes as there are FoVs.");
 define("LangpdfseriesExplain5"  ,"You can save each set and use a pdf merger to make one large atlas-catalogue if you wish.");
-define("LangpdfseriesButton"    ,"Generate");
+define("LangpdfseriesButton"    ,"Generate all");
 
 define("LangpdfseriesObject"    ,"Object");
 define("LangpdfseriesSize"      ,"Size");

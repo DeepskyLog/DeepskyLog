@@ -30,7 +30,7 @@ function objectsSets()
   echo "</tr>";
   for($i=0;$i<$k;$i++)
   { echo "<tr>";
-    echo "<td id=\"R".$i."\">".$_SESSION['Qobj'][$i]['objectname']."</td>";
+    echo "<td id=\"T".$i."\">"."<input id=\"R".$i."\" type=\"button\" value=\"".$_SESSION['Qobj'][$i]['objectname']."\" onclick=\"generateOne(".$i.");\"/>"."</td>";
     echo "<td id=\"R".$i."Dsize\">".$_SESSION['Qobj'][$i]['objectsize']."</td>";
     echo "<td>"."<input type=\"text\" ".((($_SESSION['Qobj'][$i]['objectdiam1']/60)>$fovd)?"class=\"textred\"":"")." id=\"R".$i."D"."fov"."\" value=\"".$fovo." ".$fovl." ".$fovd."\" />"."</td>";
     echo "<td>"."<input type=\"text\" id=\"R".$i."D"."dsos"."\" value=\"".$dsoso." ".$dsosl." ".$dsosd."\"/>"."</td>";
