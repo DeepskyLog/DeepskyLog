@@ -12,6 +12,7 @@ function objectsSets()
   $starsd=$objObserver->getObserverProperty($loggedUser,'detailstars',14);
   $k=count($_SESSION['Qobj']);
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."common/content/objectsSets.js\"></script>";
+	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
 	echo LangpdfseriesExplain1.'<br />';
 	echo LangpdfseriesExplain2.'<br />';
 	echo LangpdfseriesExplain3.'<br />';
