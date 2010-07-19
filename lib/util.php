@@ -691,6 +691,7 @@ class Utils
     $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\(/", "_", $correctedValue )));
     $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\)/", "_", $correctedValue )));
     $correctedValue = $objCatalog->checkObject($correctedValue);
+      $target->appendChild($dom->createTextNode("_" . $correctedValue));
 
 	  if ($obs["time"] >= 0)
 	  {
