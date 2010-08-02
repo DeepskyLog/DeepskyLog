@@ -991,6 +991,15 @@ class Observations {
 		if($MSIE)
 			echo "<td class=\"width10px\">&nbsp;&nbsp;&nbsp;</td>";
 		echo "</tr>";
+		echo "<tr class=\"type30\">";
+		if($myList)
+			echo "<td>&nbsp;</td>";
+		echo "<td>&nbsp;</td>";
+		echo "<td>Alt name</td>";
+		echo "<td colspan=\"5\">";
+	  echo "<a href=\"".$link2."&amp;sort=observationdescription&amp;sortdirection=desc\"  title=\"".LangSortOnAsc."\">"."Description"."</a>";;
+		echo "</td>";
+	  echo "</tr>";
 		if($FF)
 		{ echo "</thead>";
 		  echo "<tbody id=\"obs_list\" class=\"tbody_obs\">";
