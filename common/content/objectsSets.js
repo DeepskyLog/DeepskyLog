@@ -17,7 +17,8 @@ function generateOne(i)
 { var load = window.open('objectsSet.pdf?theobject='+urlencode(document.getElementById('R'+i).value)+
 	                                   '&theSet='+urlencode(document.getElementById('R'+i+'Dfov').value)+
 	                                   '&thedsos='+urlencode(document.getElementById('R'+i+'Ddsos').value)+
-	                                   '&thestars='+urlencode(document.getElementById('R'+i+'Dstars').value),
+	                                   '&thestars='+urlencode(document.getElementById('R'+i+'Dstars').value)+
+	                                   '&datapage='+urlencode(document.getElementById('datapage').checked),
                            document.getElementById('R'+i).value
                            );
   alert('Generating '+document.getElementById('R'+i).value+'.');

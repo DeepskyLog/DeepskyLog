@@ -1040,17 +1040,59 @@ class PrintAtlas
     }
     $this->pdf->Stream(); 
   }
-  public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars)
-  { set_time_limit(round(count($_SESSION['Qobj'])*0.005));
-    global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
+  public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars,$datapage='false')
+  { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject,$objPresentations;
+    set_time_limit(round(count($_SESSION['Qobj'])*5));
     $_GET['pdfTitle']=$theobject;
     $this->pdf = new Cezpdf('a4', 'landscape');
+    $this->canvasDimensionXpx=$this->pdf->ez['pageWidth']; 
+    $this->canvasDimensionYpx=$this->pdf->ez['pageHeight'];
     $this->pdf->selectFont($instDir.'lib/fonts/Courier.afm');
     $this->fontSize1b=max(min($objUtil->checkRequestKey('fontsize',$this->fontSize1b),9),6);
     $this->fontSize1a=round($this->fontSize1b*1.666);
-    
     $this->atlaspagerahr=$objObject->getDsoProperty($theobject,'ra',0);
     $this->atlaspagedecldeg=$objObject->getDsoProperty($theobject,'decl',0);
+    if($datapage=='true')
+    { if(array_key_exists('Qobj',$_SESSION))
+    	{ $i=0;
+    	  while(($_SESSION['Qobj'][$i]['objectname']!=$theobject)&&($i<count($_SESSION['Qobj'])))
+          $i++;
+    	  if($_SESSION['Qobj'][$i]['objectname']==$theobject)
+    	  { $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-50, $this->canvasDimensionXpx-100, 15, 'Atlas pages for '.$theobject,  'center');
+    	    $this->pdf->line(50,$this->canvasDimensionYpx-55,$this->canvasDimensionXpx-50,$this->canvasDimensionYpx-55);
+    	    $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx- 70, 150, 10, 'Object Right Asc.: '.$_SESSION['Qobj'][$i]['objectrahms'],  'left');
+    	    $this->pdf->addTextWrap(250, $this->canvasDimensionYpx- 70, 150, 10, 'Declination: '.$_SESSION['Qobj'][$i]['objectdecldms'],  'left');
+    	    $this->pdf->addTextWrap(450, $this->canvasDimensionYpx- 70, 150, 10, 'Type: '.$_SESSION['Qobj'][$i]['objecttype'],  'left');
+    	    $this->pdf->addTextWrap(650, $this->canvasDimensionYpx- 70, 150, 10, 'Constellation: '.$_SESSION['Qobj'][$i]['objectconstellation'],  'left');
+    	    $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx- 85, 150, 10, 'Object Mag: '.$_SESSION['Qobj'][$i]['objectmagnitude'],  'left');
+    	    $this->pdf->addTextWrap(250, $this->canvasDimensionYpx- 85, 150, 10, 'Surfcae Brightness: '.$_SESSION['Qobj'][$i]['objectsurfacebrightness'],  'left');
+    	    $this->pdf->addTextWrap(450, $this->canvasDimensionYpx- 85, 150, 10, 'Size: '.$_SESSION['Qobj'][$i]['objectsize'],  'left');
+    	    $this->pdf->addTextWrap(650, $this->canvasDimensionYpx- 85, 150, 10, 'Position Angle: '.(($pa=$_SESSION['Qobj'][$i]['objectpa'])==999?'':$pa),  'left');
+    	    $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-115, 150, 10, 'Sun Set: '.$_SESSION['efemerides']['sset'],  'left');
+    	    $this->pdf->addTextWrap(250, $this->canvasDimensionYpx-115, 150, 10, 'Sun Rise: '.$_SESSION['efemerides']['srise'],  'left');
+    	    $this->pdf->addTextWrap(450, $this->canvasDimensionYpx-115, 150, 10, 'Moon Rise: '.$_SESSION['efemerides']['moon0'],  'left');
+    	    $this->pdf->addTextWrap(650, $this->canvasDimensionYpx-115, 150, 10, 'Moon Set: '.$_SESSION['efemerides']['moon2'],  'left');
+    	    $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-130, 150, 10, 'Astro Night: '.$_SESSION['efemerides']['astroe'],  'left');
+    	    $this->pdf->addTextWrap(250, $this->canvasDimensionYpx-130, 150, 10, 'Till: '.$_SESSION['efemerides']['astrob'],  'left');
+    	    $this->pdf->addTextWrap(450, $this->canvasDimensionYpx-130, 150, 10, 'Naut Night: '.$_SESSION['efemerides']['naute'],  'left');
+    	    $this->pdf->addTextWrap(650, $this->canvasDimensionYpx-130, 150, 10, 'Till: '.$_SESSION['efemerides']['nautb'],  'left');
+    	    $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-145, 150, 10, 'Object Rise: '.$_SESSION['Qobj'][$i]['objectrise'],  'left');
+    	    $this->pdf->addTextWrap(250, $this->canvasDimensionYpx-145, 150, 10, 'Transit: '.$_SESSION['Qobj'][$i]['objecttransit'],  'left');
+    	    $this->pdf->addTextWrap(450, $this->canvasDimensionYpx-145, 150, 10, 'Set: '.$_SESSION['Qobj'][$i]['objectset'],  'left');
+    	    $this->pdf->addTextWrap(650, $this->canvasDimensionYpx-145, 150, 10, 'Altitude: '.$objPresentations->decToString($_SESSION['Qobj'][$i]['objectmaxaltitude'],0),  'left');
+    	    $k=0;$textextra='';
+    	    if($_SESSION['Qobj'][$i]['objectlistdescription'])
+    	      $textextra=$this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-175, 750, 10, $_SESSION['Qobj'][$i]['objectlistdescription'],  'left');
+    	    elseif($_SESSION['Qobj'][$i]['objectdescription'])
+    	     $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-160, 750, 10, $_SESSION['Qobj'][$i]['objectdescription'],  'left');
+          while($textextra)
+          { $k++;
+            $textextra=$this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-175-($k*15), 750, 10, $textextra,  'left');
+          }
+    	    $this->pdf->newPage();
+    	  }
+     	}
+    }
     
     for($k=0;$k<count($theSet);$k++)
     { if($k) $this->pdf->newPage();

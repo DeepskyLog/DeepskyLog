@@ -23,5 +23,6 @@ while($thepos=strpos($theParam,' '))
   $theParam=substr($theParam,$thepos+1);
 }
 $thestars[]=$theParam;
-$objPrintAtlas->pdfAtlasObjectSet($objUtil->checkGetKey('theobject'),$theSet,$thedsos,$thestars);
+$datapage=$objUtil->checkGetKey('datapage');
+$objPrintAtlas->pdfAtlasObjectSet($objUtil->checkGetKey('theobject'),$theSet,$thedsos,$thestars,$datapage);
 ?>

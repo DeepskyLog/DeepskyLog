@@ -1903,6 +1903,19 @@ class Utils
 	  			    }
 			        $deltaymax=max($deltaymax,$dataelement['fieldline']);
   	        }
+  	        if(array_key_exists('objectlistdescription',$valueA) && ($valueA['objectlistdescription']<>''))
+	          { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectlistdescription'])).$dataelement['fieldafter'];
+		  		    $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
+	  	  		  while($theText)
+				  	  { $y-=$deltaline;	
+	              if($y<$bottom) 
+	              { $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$b,$showelements,$reportdata);
+					        $y+=($deltaline*$dataelement['fieldline']);
+	              }
+					     $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
+	  		  	  }
+			        $deltaymax=max($deltaymax,$dataelement['fieldline']);
+	          }
 				  }
 			    else
 			    { if($valueA[$dataelement['fieldname']]<>'')

@@ -83,7 +83,7 @@ class Presentations implements iPresentation
     { $decl_minutes=0;
       $decl_degrees++;
     }
-    return($sign.$decl_degrees.(($web==1)?"&deg;":"d").sprintf("%02d",$decl_minutes).(($web==1)?"m":"'"));
+    return($sign.$decl_degrees.(($web==1)?"&deg;":"°").sprintf("%02d",$decl_minutes).(($web==1)?"m":"'"));
   }
   public  function decToStringDegMin($decl)
   { $sign="";

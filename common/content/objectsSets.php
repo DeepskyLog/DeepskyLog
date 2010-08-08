@@ -18,8 +18,9 @@ function objectsSets()
 	echo LangpdfseriesExplain3.'<br />';
 	echo LangpdfseriesExplain4.'<br />'.'<br />';		
 	echo LangpdfseriesExplain5.'<br />'.'<br />';		
-	echo "<input type=\"button\" value=\"".LangpdfseriesButton."\" onclick=\"generate();\"/>";
-  echo "<hr />";
+	echo "<input type=\"button\" value=\"".LangpdfseriesButton."\" onclick=\"generate();\"/>".'<br />';
+  echo "Add Data page"."<input id=\"datapage\" type=\"checkbox\" value=\"\" />";
+	echo "<hr />";
   echo "<table>";
   echo "<tr>";
   echo "<td class=\"bold\">".LangpdfseriesObject."</td>";
