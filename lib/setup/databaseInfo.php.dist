@@ -11,6 +11,7 @@
   // Installation directory and url (each one has to end on a slash!)
   $instDir      = "/software/www/htdocs/deepskylog/";
   $baseURL      = "http://localhost/deepskylog/";
+  $tempfolder   = 'c:/temp/';
   
   // General settings
   // The title to appear above all pages

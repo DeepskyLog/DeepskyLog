@@ -1041,13 +1041,13 @@ class PrintAtlas
     $this->pdf->Stream(); 
   }
   public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars,$datapage='false')
-  { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject,$objPresentations;
+  { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject,$objPresentations,$tempfolder;
     set_time_limit(round(count($_SESSION['Qobj'])*5));
     $raDSS=$objPresentations->raToStringDSS($objObject->getDsoProperty($theobject,'ra'));
     $declDSS=$objPresentations->decToStringDSS($objObject->getDsoProperty($theobject,'decl'));
     $imagesize=15;
     $url="http://aladin.u-strasbg.fr/java/alapre.pl?out=image&-c=".urlencode($theobject)."&fmt=JPEG&resolution=FULL&qual=POSSII%20F%20DSS2";
-    $img = 'c:/temp/test.jpg';
+    $img = $tempfolder.'test.jpg';
     file_put_contents($img, file_get_contents($url));
     $_GET['pdfTitle']=$theobject;
     $this->pdf = new Cezpdf('a4', 'landscape');
