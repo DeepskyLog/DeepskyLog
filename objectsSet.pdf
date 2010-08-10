@@ -24,5 +24,6 @@ while($thepos=strpos($theParam,' '))
 }
 $thestars[]=$theParam;
 $datapage=$objUtil->checkGetKey('datapage');
-$objPrintAtlas->pdfAtlasObjectSet($objUtil->checkGetKey('theobject'),$theSet,$thedsos,$thestars,$datapage);
+$reportlayoutselect=$objUtil->checkGetKey('reportlayoutselect');
+$objPrintAtlas->pdfAtlasObjectSet($objUtil->checkGetKey('theobject'),$theSet,$thedsos,$thestars,$datapage,$reportlayoutselect);
 ?>

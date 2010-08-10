@@ -1040,15 +1040,12 @@ class PrintAtlas
     }
     $this->pdf->Stream(); 
   }
-  public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars,$datapage='false')
+  public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars,$datapage='false',$reportlayoutselect='')
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject,$objPresentations,$tempfolder;
     set_time_limit(round(count($_SESSION['Qobj'])*5));
     $raDSS=$objPresentations->raToStringDSS($objObject->getDsoProperty($theobject,'ra'));
     $declDSS=$objPresentations->decToStringDSS($objObject->getDsoProperty($theobject,'decl'));
     $imagesize=15;
-    $url="http://aladin.u-strasbg.fr/java/alapre.pl?out=image&-c=".urlencode($theobject)."&fmt=JPEG&resolution=FULL&qual=POSSII%20F%20DSS2";
-    $img = $tempfolder.'test.jpg';
-    file_put_contents($img, file_get_contents($url));
     $_GET['pdfTitle']=$theobject;
     $this->pdf = new Cezpdf('a4', 'landscape');
     $this->canvasDimensionXpx=$this->pdf->ez['pageWidth']; 
@@ -1064,7 +1061,10 @@ class PrintAtlas
     	  while(($_SESSION['Qobj'][$i]['objectname']!=$theobject)&&($i<count($_SESSION['Qobj'])))
           $i++;
     	  if($_SESSION['Qobj'][$i]['objectname']==$theobject)
-    	  { $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-50, $this->canvasDimensionXpx-100, 15, 'Atlas pages for '.$theobject,  'center');
+    	  { $url="http://aladin.u-strasbg.fr/java/alapre.pl?out=image&-c=".urlencode($theobject)."&fmt=JPEG&resolution=FULL&qual=POSSII%20F%20DSS2";
+          $img = $tempfolder.'test.jpg';
+          @file_put_contents($img, file_get_contents($url));
+          $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-50, $this->canvasDimensionXpx-100, 15, 'Atlas pages for '.$theobject,  'center');
     	    $this->pdf->line(50,$this->canvasDimensionYpx-55,$this->canvasDimensionXpx-50,$this->canvasDimensionYpx-55);
     	    $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx- 70, 150, 10, 'Object Right Asc.: '.$_SESSION['Qobj'][$i]['objectrahms'],  'left');
     	    $this->pdf->addTextWrap(250, $this->canvasDimensionYpx- 70, 150, 10, 'Declination: '.$_SESSION['Qobj'][$i]['objectdecldms'],  'left');
@@ -1090,12 +1090,12 @@ class PrintAtlas
     	    if($_SESSION['Qobj'][$i]['objectlistdescription'])
     	      $textextra=$this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-175, 750, 10, $_SESSION['Qobj'][$i]['objectlistdescription'],  'left');
     	    elseif($_SESSION['Qobj'][$i]['objectdescription'])
-    	     $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-160, 750, 10, $_SESSION['Qobj'][$i]['objectdescription'],  'left');
+    	      $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-160, 750, 10, $_SESSION['Qobj'][$i]['objectdescription'],  'left');
           while($textextra)
           { $k++;
             $textextra=$this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-175-($k*15), 750, 10, $textextra,  'left');
           }
-    	    $this->pdf->addJpegFromFile($img,50,50,300);
+    	    @$this->pdf->addJpegFromFile($img,50,50,300);
           $this->pdf->newPage();
     	  }
      	}
@@ -1144,6 +1144,8 @@ class PrintAtlas
       $temp='(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).';
       $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
     }
+    if($reportlayoutselect)
+      $this->pdf->newPage();
     $this->pdf->Stream(); 
   }
   

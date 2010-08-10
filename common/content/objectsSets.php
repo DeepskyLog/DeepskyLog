@@ -1,6 +1,6 @@
 <?php
 function objectsSets()
-{ global $objObserver, $loggedUser, $baseURL;
+{ global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout;
   $fovo=$objObserver->getObserverProperty($loggedUser,'overviewFoV',120);
   $fovl=$objObserver->getObserverProperty($loggedUser,'lookupFoV',60);
   $fovd=$objObserver->getObserverProperty($loggedUser,'detailFoV',15);
@@ -20,7 +20,26 @@ function objectsSets()
 	echo LangpdfseriesExplain5.'<br />'.'<br />';		
 	echo "<input type=\"button\" value=\"".LangpdfseriesButton."\" onclick=\"generate();\"/>".'<br />';
   echo "Add Data page"."<input id=\"datapage\" type=\"checkbox\" value=\"\" />";
-	echo "<hr />";
+  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."Add index page"."<input id=\"indexpage\" type=\"checkbox\" onclick=\"if(document.getElementById('indexpage').checked==true) document.getElementById('reportlayoutselect').style.visibility='visible'; else document.getElementById('reportlayoutselect').style.visibility='hidden';\" value=\"\" />";
+  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<select id=\"reportlayoutselect\" name=\"reportlayoutselect\"  style=\"visibility:hidden;\" >";
+  $defaults=$objReportLayout->getLayoutListDefault("ReportQueryOfObjects");
+  while(list($key, $value) = each($defaults))
+    if($value['observerid']=="Deepskylog default")
+      echo "<option value=\"".$value['observerid'].': '.$value['reportlayout']."\">".$value['observerid'].': '.$value['reportlayout']."</option>";
+  echo "<option value=\"\" selected=\"selected\" >"."-----"."</option>";
+  reset($defaults);
+  while(list($key, $value) = each($defaults))
+    if($value['observerid']==$loggedUserName)
+      echo "<option value=\"".$value['observerid'].': '.$value['reportlayout']."\">".$value['observerid'].': '.$value['reportlayout']."</option>";
+  /*
+  echo "<option value=\"\" selected=\"selected\" >"."-----"."</option>";
+  reset($defaults);
+  while(list($key, $value) = each($defaults))
+    if(($value['observerid']!="Deepskylog default")&&($value['observerid']!=$loggedUserName))
+      echo "<option value=\"".$value['observerid'].': '.$value['reportlayout']."\">".$value['observerid'].': '.$value['reportlayout']."</option>";
+  */
+  echo "</select>";
+  echo "<hr />";
   echo "<table>";
   echo "<tr>";
   echo "<td class=\"bold\">".LangpdfseriesObject."</td>";
