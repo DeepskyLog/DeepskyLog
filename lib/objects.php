@@ -628,7 +628,10 @@ class Objects
     { $j=0;
       reset($obs);
       while(list($key,$value)=each($obs))
-      { $object=$value[1];
+      { if(array_key_exists('name',$value))
+           $object=$value['name'];
+        else
+           $object=$value[1];
         $seentype = "-";
         $objectseen='';
 				$objectseenlink='';
@@ -637,13 +640,13 @@ class Objects
         $this->getSeenLastseenLink($object,$objectseen,$objectseenlink,$objectlastseen,$objectlastseenlink); 
         if(($seen == "D") ||
 			    (strpos(" " . $seen, substr($objectseen,0,1))))
-		    { $result2[$j]['objectname'] = $value[1];
-          $get = mysql_fetch_object($objDatabase->selectRecordset("SELECT * FROM objects WHERE name = \"". $value[1] . "\""));
+		    { $result2[$j]['objectname'] = $object;
+          $get = mysql_fetch_object($objDatabase->selectRecordset("SELECT * FROM objects WHERE name = \"".$object. "\""));
           $result2[$j]['objecttype'] = $get->type;
           $result2[$j]['objecttypefull'] = $GLOBALS[$get->type];
-          $altnames=$this->getAlternativeNames($value[1]); $alt="";
+          $altnames=$this->getAlternativeNames($object); $alt="";
           while(list($keyaltnames,$valuealtnames)=each($altnames))
-          if(trim($valuealtnames)!=trim($value[1]))
+          if(trim($valuealtnames)!=trim($object))
             $alt.=($alt?"/":"").(trim($valuealtnames));
           $result2[$j]['altname'] = $alt;
           $result2[$j]['objectconstellation'] = $get->con;
@@ -652,7 +655,10 @@ class Objects
           $result2[$j]['objectlastseen']=$objectlastseen;       
           $result2[$j]['objectseenlink']=$objectseenlink;
           $result2[$j]['objectlastseenlink']=$objectlastseenlink;       
-          $result2[$j]['showname'] =  $key;
+          if(is_numeric($key))
+            $result2[$j]['showname'] =  $object;
+          else
+            $result2[$j]['showname'] =  $key;
           $result2[$j]['objectmagnitude'] =  ($get->mag==99.9?'':round($get->mag,1));
           $result2[$j]['objectsurfacebrightness'] =  ($get->subr==99.9?'':round($get->subr,1));
   	      $result2[$j]['objectra'] =  $get->ra;
@@ -666,10 +672,13 @@ class Objects
   	      $result2[$j]['objectsize'] = $this->calculateSize($get->diam1,$get->diam2);
   	      $result2[$j]['objectpa'] = $get->pa;
   	      $result2[$j]['objectsizepa'] = $result2[$j]['objectsize'].'/'.$objPresentations->presentationInt($result2[$j]['objectpa'],999,"-");
-  	      $result2[$j]['objectpositioninlist'] = $value[0]; 
+          if(array_key_exists('name',$value))
+            $result2[$j]['objectpositioninlist'] = $j; 
+          else
+            $result2[$j]['objectpositioninlist'] = $value[0]; 
           $result2[$j]['objectsbcalc'] = $get->SBObj; 
           $result2[$j]['objectdescription'] = $get->description;
-		  	  if(count($value)==3)
+		  	  if(is_array($value) && count($value)==3)
 				    $result2[$j]['objectlistdescription'] = $value[2];
 				  reset($objAtlas->atlasCodes);
 				  while(list($key,$value)=each($objAtlas->atlasCodes))
