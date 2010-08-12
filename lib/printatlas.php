@@ -1044,8 +1044,9 @@ class PrintAtlas
   { global $baseURL,$objUtil,$instDir,$loggedUser,$loggedUserName,$objObserver,$objObject,$objPresentations,$tempfolder,$objReportLayout ;
     $astroObjects=array();
     set_time_limit(round(count($_SESSION['Qobj'])*5));
-    $raDSS=$objPresentations->raToStringDSS($objObject->getDsoProperty($theobject,'ra'));
-    $declDSS=$objPresentations->decToStringDSS($objObject->getDsoProperty($theobject,'decl'));
+    $raDSS=$objPresentations->raToStringDSS2($objObject->getDsoProperty($theobject,'ra'));
+    $declDSS=$objPresentations->decToStringDSS2($objObject->getDsoProperty($theobject,'decl'));
+    $radeclALADIN=$objPresentations->radeclToStringALADIN($objObject->getDsoProperty($theobject,'ra'),$objObject->getDsoProperty($theobject,'decl'));
     $_GET['pdfTitle']=$theobject;
     $this->pdf = new Cezpdf('a4', 'landscape');
     $this->canvasDimensionXpx=$this->pdf->ez['pageWidth']; 
@@ -1076,7 +1077,6 @@ class PrintAtlas
     	    $this->pdf->addTextWrap(250, $this->canvasDimensionYpx- 85, 150, 10, 'Surfcae Brightness: '.$_SESSION['Qobj'][$i]['objectsurfacebrightness'],  'left');
     	    $this->pdf->addTextWrap(450, $this->canvasDimensionYpx- 85, 150, 10, 'Size: '.$_SESSION['Qobj'][$i]['objectsize'],  'left');
     	    $this->pdf->addTextWrap(650, $this->canvasDimensionYpx- 85, 150, 10, 'Position Angle: '.(($pa=$_SESSION['Qobj'][$i]['objectpa'])==999?'':$pa),  'left');
-    	    
     	    /*
     	    $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-115, 150, 10, 'Sun Set: '.$_SESSION['efemerides']['sset'],  'left');
     	    $this->pdf->addTextWrap(250, $this->canvasDimensionYpx-115, 150, 10, 'Sun Rise: '.$_SESSION['efemerides']['srise'],  'left');
@@ -1100,16 +1100,18 @@ class PrintAtlas
           { $k++;
             $textextra=$this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-175-($k*15), 750, 10, $textextra,  'left');
           }
+          
+          $url="http://aladin.u-strasbg.fr/java/alapre.pl?out=image&-c=".$radeclALADIN."&fmt=JPEG&resolution=FULL&qual=POSSII%20F%20DSS2";
+          $img2 = $tempfolder.'test2.jpg';
+          @file_put_contents($img2, file_get_contents($url));
+          $this->pdf->addJpegFromFile($img2,50,50,300);
+          
           //$url="http://aladin.u-strasbg.fr/java/alapre.pl?out=image&-c=".urlencode($theobject)."&fmt=JPEG&resolution=FULL&qual=POSSII%20F%20DSS2";
-          $url="http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r=".$raDSS.".0&d=".$declDSS."&e=J2000&h=".$imagesize.".0&w=".$imagesize."&f=gif&c=none&fov=NONE&v3=";
-          $img = $tempfolder.'test.jpg';
-          @file_put_contents($img, file_get_contents($url));
-          @$this->pdf->addJpegFromFile($img,50,50,300);
-          //$url="http://aladin.u-strasbg.fr/java/alapre.pl?out=image&-c=".urlencode($theobject)."&fmt=JPEG&resolution=FULL&qual=POSSII%20F%20DSS2";
-          $url="http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r=".$raDSS.".0&d=".$declDSS."&e=J2000&h=".($imagesize<<1).".0&w=".$imagesize."&f=gif&c=none&fov=NONE&v3=";
-          $img = $tempfolder.'test.jpg';
-          @file_put_contents($img, file_get_contents($url));
-          @$this->pdf->addJpegFromFile($img,50,400,300);
+          //$url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$imagesize.'.0&w='.$imagesize.'&f=jpeg&c=none&fov=NONE&v3=';
+          //$img = $tempfolder.'test.jpg';
+          //@file_put_contents($img, file_get_contents($url));
+          //$this->pdf->addJpegFromFile($img,400,50,300);
+
           $this->pdf->newPage();
     	  }
      	}
@@ -1161,6 +1163,7 @@ class PrintAtlas
     }
     if($reportlayoutselect)
     { $this->pdf->newPage();
+      $this->pdf->setLineStyle(1);
       $reportuser=$loggedUserName;
       $reportname='ReportQueryOfObjects';
       $reportlayout=substr($reportlayoutselect,strpos($reportlayoutselect,": ")+2);
@@ -1188,7 +1191,7 @@ class PrintAtlas
 			$sort='';    
 	    $actualsort='';
 			$theDate=date('d/m/Y');
-	    $this->firstpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,'',$showelements,$reportdata);		
+	    $objUtil->firstpage($y,$bottom,$top,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,'',$showelements,$reportdata);		
 	    for($j=0;$j<$k;$j++)
 	    { $y-=$deltalineSection;
 		    $this->pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
@@ -1215,9 +1218,9 @@ class PrintAtlas
 				  }
 				  $deltaymax++;
 		      if(($y-($deltaline*$deltaymax)<$bottom) && $sort)
-		        $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
+		        $this->$objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
 		      elseif(($y-($deltaline*$deltaymax)<$bottom) && (!($sort)))
-		      { $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
+		      { $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
 		        if(strpos($showelements,'s')!==FALSE)
 		        { $this->pdf->setLineStyle(0.5);
 		          $this->pdf->line($xbase-$sectionBarSpace, $y+(($deltaline+$deltaobjectline)*.75), $xbase+$SectionBarWidth, $y+(($deltaline+$deltaobjectline)*.75));
@@ -1226,7 +1229,7 @@ class PrintAtlas
 		      }
 		      elseif($sort && ($$sort!=$actualsort))
 					{ if(($y-($deltaline*$deltaymax)-$sectionBarSpace-$deltalineSection)<$bottom) 
-		          $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
+		          $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
 		        else
 		        { $y-=$deltalineSection;
 		          $this->pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
@@ -1245,7 +1248,7 @@ class PrintAtlas
 					while(list($key,$dataelement)=each($reportdata))
 					{ if($dataelement['fieldwidth'])
 					  { if($y-($deltaline*$dataelement['fieldline'])<$bottom) 
-		          { $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);
+		          { $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);
 		          }
 		          $justification='left';
 					  	$i='';$b='';
@@ -1280,7 +1283,7 @@ class PrintAtlas
 			  	  		  while($theText)
 						  	  { $y-=$deltaline;	
 			              if($y<$bottom) 
-			              { $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$b,$showelements,$reportdata);
+			              { $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$b,$showelements,$reportdata);
 							        $y+=($deltaline*$dataelement['fieldline']);
 			              }
 							     $theText= $this->pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
@@ -1295,7 +1298,7 @@ class PrintAtlas
 			  	  		  while($theText)
 		              { $y-=$deltaline;	
 			               if($y<$bottom) 
-			              { $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$b,$showelements,$reportdata);
+			              { $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$b,$showelements,$reportdata);
 							        $y+=($deltaline*$dataelement['fieldline']);
 			              }
 			              $theText= $this->pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
@@ -1308,7 +1311,7 @@ class PrintAtlas
 			  	  		  while($theText)
 						  	  { $y-=$deltaline;	
 			              if($y<$bottom) 
-			              { $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$b,$showelements,$reportdata);
+			              { $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$b,$showelements,$reportdata);
 							        $y+=($deltaline*$dataelement['fieldline']);
 			              }
 							     $theText= $this->pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
@@ -1335,7 +1338,7 @@ class PrintAtlas
 				}
 				if((strpos($showelements,'i')!==FALSE)&&(count($indexlist)>0)&&($sort))
 				{ $base=$xmid;
-				  $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,'','',$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
+				  $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,'','',$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
 					$this->pdf->setLineStyle(0.5);
 		      $y=$top;
 					while(list($key,$value)=each($indexlist))	  
@@ -1345,7 +1348,7 @@ class PrintAtlas
 		        
 					  $y-=($deltaline+$deltaobjectline);
 					  if(($y-($deltaline+$deltaobjectline))<$bottom)
-					  { $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,'','',$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
+					  { $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,'','',$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,"","",$showelements,$reportdata);      
 		          $this->pdf->setLineStyle(0.5);
 					  }
 		      }
@@ -1358,153 +1361,7 @@ class PrintAtlas
 	function roundPrecision($theValue,$thePrecision)
 	{ return(round($theValue/$thePrecision)*$thePrecision);
 	}
-  private function firstpage(&$y,$bottomsection,$top,&$xbase,$xmid,&$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$showelements,$reportdata)
-  { global $objReportLayout,$dateformat,$baseURL,$instDir,$objObserver,$loggedUser,$objLocation,$objInstrument,$objPresentations,$objUtil;
-    $y=$top;
-    $xbase=$xleft;
-    $pdf->addTextWrap($xleft, $header, 100, $fontSizeText, $theDate);
-    if($objObserver->getObserverProperty($loggedUser,'name')
-			&& $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')
-			&& $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name')
-			&& (strpos($showelements,'h')!==FALSE))
-		{ $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, $fontSizeText, 
-                        html_entity_decode(LangPDFMessage19 . $objObserver->getObserverProperty($loggedUser,'name') . ' ' . 
-                        $objObserver->getObserverProperty($loggedUser,'firstname') . ' ' .
-                        LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name') . ' ' . 
-                        LangPDFMessage21 . $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name').LangRistrasetOn.$objUtil->checkSessionKey('globalDay').' '.$GLOBALS['Month'.$objUtil->checkSessionKey('globalMonth')].' '.$objUtil->checkSessionKey('globalYear'))
-                        , 'center' );
-		}	
-    if($objObserver->getObserverProperty($loggedUser,'name')
-			&& $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')
-			&& (strpos($showelements,'e')!==FALSE))
-		{ $pdf->addTextWrap($xleft, $footer-$deltaline, $xmid+$SectionBarWidth, $fontSizeText, 
-	              ReportSunDown.$_SESSION['efemerides']['sset'].LangTo.$_SESSION['efemerides']['srise']." - ".
-                ReportNautNight.$_SESSION['efemerides']['naute'].LangTo.$_SESSION['efemerides']['nautb']." - ".
-                ReportAstroNight.$_SESSION['efemerides']['astroe'].LangTo.$_SESSION['efemerides']['astrob']." - ".
-                ReportMoonUp.$_SESSION['efemerides']['moon0'].LangTo.$_SESSION['efemerides']['moon2']
-	              , 'center');
-		}  
-    if(strpos($showelements,'p')!==FALSE)
-		{ $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, $fontSizeText, LangPDFMessage22 . $pagenr, 'right');
-    }
-    if(strpos($showelements,'t')!==FALSE)
-		{ $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($objUtil->checkRequestKey('pdfTitle')), 'center' );
-    }
-    if(strpos($showelements,'l')!==FALSE)
-		{ $pdf->line($xbase-$sectionBarSpace, $y+$fontSizeText+$sectionBarSpace, $xbase+$SectionBarWidth, $y+$fontSizeText+$sectionBarSpace);
-			reset($reportdata);
-			$deltaymax=0;
-			while(list($key,$dataelement)=each($reportdata))
-			{ if($dataelement['fieldwidth'])
-			  { $justification='left';
-			  	if(strpos($dataelement['fieldstyle'],'r')!==FALSE)
-			      $justification='right';
-			  	if(strpos($dataelement['fieldstyle'],'c')!==FALSE)
-			      $justification='center';
-			  	if(strpos($dataelement['fieldstyle'],'b')!==FALSE)
-			      $pdf->addText(0,0,$fontSizeText,'<b>');
-			    if(strpos($dataelement['fieldstyle'],'i')!==FALSE)
-			      $pdf->addText(0,0,$fontSizeText,'<i>');
-			    $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $dataelement['fieldlegend'] ,$justification);
-			    $deltaymax=max($deltaymax,$dataelement['fieldline']);
-			    if(strpos($dataelement['fieldstyle'],'b')!==FALSE)
-			      $pdf->addText(0,0,$fontSizeText,'</b>');
-			    if(strpos($dataelement['fieldstyle'],'i')!==FALSE)
-			      $pdf->addText(0,0,$fontSizeText,'</i>');
-			  }
-			}			
-      $y-=$deltaline*($deltaymax);
-      $pdf->line($xbase-$sectionBarSpace, $y-$sectionBarSpace, $xbase+$SectionBarWidth, $y-$sectionBarSpace);
-      $y-=($deltaline+$sectionBarSpace);
-		}
-    $xbase = $xleft;
-  } 
-  private function newpage(&$y,$bottomsection,$top,$bottom,&$xbase,$xmid,&$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$b,$showelements,$reportdata)
-  { global $objObserver,$loggedUser,$objLocation,$objInstrument,$objUtil;
-    //if($y<$bottomsection) 
-    { if($i)
-			  $pdf->addText(0,0,$fontSizeText,'</i>');
-			if($b)
-			  $pdf->addText(0,0,$fontSizeText,'</b>');
-			$y=$top;
-      if($xbase==$xmid)
-	    { if($pagenr++)
-			  { $pdf->newPage();
-				  $pdf->addTextWrap($xleft, $header, 100, $fontSizeText, $theDate);
-					if($objObserver->getObserverProperty($loggedUser,'name')
-					&& $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')
-					&& $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name')
-			    && (strpos($showelements,'h')!==FALSE))
-				    $pdf->addTextWrap($xleft, $footer, $xmid+$SectionBarWidth, $fontSizeText, 
-                html_entity_decode(LangPDFMessage19 . $objObserver->getObserverProperty($loggedUser,'name') . ' ' . 
-                $objObserver->getObserverProperty($loggedUser,'firstname') . ' ' .
-                LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdtelescope'),'name') . ' ' . 
-	              LangPDFMessage21 . $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name').
-	              LangRistrasetOn.$objUtil->checkSessionKey('globalDay').' '.$GLOBALS['Month'.$objUtil->checkSessionKey('globalMonth')].' '.$objUtil->checkSessionKey('globalYear'))
-	              , 'center' );
-				  if($objObserver->getObserverProperty($loggedUser,'name')
-					&& $objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name')
-	    		&& (strpos($showelements,'e')!==FALSE))
-            $pdf->addTextWrap($xleft, $footer-$deltaline, $xmid+$SectionBarWidth, $fontSizeText, 
-	              ReportSunDown.$_SESSION['efemerides']['sset'].LangTo.$_SESSION['efemerides']['srise']." - ".
-                ReportNautNight.$_SESSION['efemerides']['naute'].LangTo.$_SESSION['efemerides']['nautb']." - ".
-                ReportAstroNight.$_SESSION['efemerides']['astroe'].LangTo.$_SESSION['efemerides']['astrob']." - ".
-                ReportMoonUp.$_SESSION['efemerides']['moon0']. LangTo.$_SESSION['efemerides']['moon2']
-	              , 'center');
-	              if(strpos($showelements,'p')!==FALSE)
-		      { $pdf->addTextWrap($xmid+$SectionBarWidth-$sectionBarSpace-100, $header, 100, $fontSizeText, LangPDFMessage22 . $pagenr, 'right');
-		      }
-					if(strpos($showelements,'t')!==FALSE)
-		      { $pdf->addTextWrap($xleft, $header, $xmid+$SectionBarWidth, 10, html_entity_decode($objUtil->checkRequestKey('pdfTitle')), 'center' );
-		      }
-			  }
-			  $xbase = $xleft;
-	    }
-	    else
-	    { $pdf->setLineStyle(0.5);
-	      $pdf->line(($xbase+$SectionBarWidth+$xmid-$sectionBarSpace)/2, $top+$fontSizeText,($xbase+$SectionBarWidth+$xmid-$sectionBarSpace)/2, $bottom);
-	      $pdf->setLineStyle(1);
-	      $xbase = $xmid;
-	    }
-      if(strpos($showelements,'l')!==FALSE)
-		  { $pdf->line($xbase-$sectionBarSpace, $y+$fontSizeText+$sectionBarSpace, $xbase+$SectionBarWidth, $y+$fontSizeText+$sectionBarSpace);
-			  reset($reportdata);
-				$deltaymax=0;
-				while(list($key,$dataelement)=each($reportdata))
-				{ if($dataelement['fieldwidth'])
-				  { $justification='left';
-				  	if(strpos($dataelement['fieldstyle'],'r')!==FALSE)
-				      $justification='right';
-				  	if(strpos($dataelement['fieldstyle'],'c')!==FALSE)
-				      $justification='center';
-				  	if(strpos($dataelement['fieldstyle'],'b')!==FALSE)
-				      $pdf->addText(0,0,$fontSizeText,'<b>');
-				    if(strpos($dataelement['fieldstyle'],'i')!==FALSE)
-				      $pdf->addText(0,0,$fontSizeText,'<i>');
-				    $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $dataelement['fieldlegend'] ,$justification);
-				    $deltaymax=max($deltaymax,$dataelement['fieldline']);
-				    if(strpos($dataelement['fieldstyle'],'b')!==FALSE)
-				      $pdf->addText(0,0,$fontSizeText,'</b>');
-				    if(strpos($dataelement['fieldstyle'],'i')!==FALSE)
-				      $pdf->addText(0,0,$fontSizeText,'</i>');
-				  }
-				}			
-        $y-=$deltaline*($deltaymax);
-        $pdf->line($xbase-$sectionBarSpace, $y-$sectionBarSpace, $xbase+$SectionBarWidth, $y-$sectionBarSpace);
-        $y-=($deltaline+$sectionBarSpace);
-		  }
-	    if($sort)
-			{ $y-=$deltalineSection;
-        $pdf->rectangle($xbase-$sectionBarSpace, $y-$sectionBarSpace, $SectionBarWidth, $sectionBarHeight);
-        $pdf->addText($xbase, $y, $fontSizeSection, $GLOBALS[$$sort]);
-        $y-=$deltaline+$deltalineSection;
-			}
-	  if($i)
-      $pdf->addText(0,0,$fontSizeText,'<i>');
-	  if($b)
-      $pdf->addText(0,0,$fontSizeText,'<b>');
-    }  	
-  } 
+
 	public  function pdfAtlasIndex($reportuser,$reportname, $reportlayout, $result, $sort='')  // Creates a pdf document from an array of objects
   { 
 

@@ -131,6 +131,21 @@ class Presentations implements iPresentation
     }
     return($sign.$decl_degrees."&#43;".$sign.$decl_minutes);
   }
+  public  function decToStringDSS2($decl)
+  { $sign="";
+    if($decl<0)
+    { $sign="-";
+      $decl=-$decl;
+    }
+    $decl_degrees=floor($decl);
+    $subminutes  =60*($decl-$decl_degrees);
+    $decl_minutes=round($subminutes);
+    if($decl_minutes==60)
+    { $decl_minutes=0;
+      $decl_degrees++;
+    }
+    return($sign.$decl_degrees.'+'.$sign.$decl_minutes);
+  }
   public  function decToTrimmedString($decl)
   { $sign="";
 	  if($decl<0)
@@ -281,6 +296,54 @@ class Presentations implements iPresentation
     if($ra_hours == 24)
       $ra_hours = 0;
     return($ra_hours."&#43;".$ra_minutes."&#43;".$ra_seconds);
+  }
+  public  function raToStringDSS2($ra)
+  { $ra_hours=floor($ra);
+    $subminutes=60*($ra - $ra_hours);
+    $ra_minutes=floor($subminutes);
+    $ra_seconds=round(60*($subminutes-$ra_minutes));
+    if($ra_seconds==60)
+    { $ra_seconds=0;
+      $ra_minutes++;
+    }
+    if($ra_minutes==60)
+    { $ra_minutes=0;
+      $ra_hours++;
+    }
+    if($ra_hours == 24)
+      $ra_hours = 0;
+    return($ra_hours.'+'.$ra_minutes.'+'.$ra_seconds);
+  }
+  public function radeclToStringALADIN($ra,$decl)
+  { $sign="";
+    if($decl<0)
+    { $sign="-";
+      $decl=-$decl;
+    }
+    else
+      $sign="%2b";
+    $decl_degrees=floor($decl);
+    $subminutes  =60*($decl-$decl_degrees);
+    $decl_minutes=round($subminutes);
+    if($decl_minutes==60)
+    { $decl_minutes=0;
+      $decl_degrees++;
+    }
+    $ra_hours=floor($ra);
+    $subminutes=60*($ra - $ra_hours);
+    $ra_minutes=floor($subminutes);
+    $ra_seconds=round(60*($subminutes-$ra_minutes));
+    if($ra_seconds==60)
+    { $ra_seconds=0;
+      $ra_minutes++;
+    }
+    if($ra_minutes==60)
+    { $ra_minutes=0;
+      $ra_hours++;
+    }
+    if($ra_hours == 24)
+      $ra_hours = 0;
+    return($ra_hours.'%20'.$ra_minutes.'%20'.$ra_seconds.'%20'.$sign.$decl_degrees.'%20'.$decl_minutes);
   }
   public  function raToStringHM($ra)
   { $ra_hours=floor($ra);

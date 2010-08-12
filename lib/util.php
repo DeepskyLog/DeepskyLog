@@ -1617,7 +1617,7 @@ class Utils
 		}		
     $pdf->Stream(); 
   }
-  private function firstpage(&$y,$bottomsection,$top,&$xbase,$xmid,&$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$showelements,$reportdata)
+  public function firstpage(&$y,$bottomsection,$top,&$xbase,$xmid,&$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$showelements,$reportdata)
   { global $objObserver,$loggedUser,$objLocation,$objInstrument;
     $y=$top;
     $xbase=$xleft;
@@ -1678,7 +1678,7 @@ class Utils
 		}
     $xbase = $xleft;
   } 
-  private function newpage(&$y,$bottomsection,$top,$bottom,&$xbase,$xmid,&$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$b,$showelements,$reportdata)
+  public function newpage(&$y,$bottomsection,$top,$bottom,&$xbase,$xmid,&$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$b,$showelements,$reportdata)
   { global $objObserver,$loggedUser,$objLocation,$objInstrument;
     //if($y<$bottomsection) 
     { if($i)
