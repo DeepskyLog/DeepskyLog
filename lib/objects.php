@@ -442,8 +442,15 @@ class Objects
       $objects=array_merge($objects,$objDatabase->selectRecordsetArray($sql));  
     }
     for($i=0;$i<count($objects);$i++)
-     $objects[$i]['seen']=$this->getSeen($objects[$i]['name']);       
-    return $objects;
+      $objects[$i]['seen']=$this->getSeen($objects[$i]['name']);
+    $theobjects=array();
+    $theresult=array();
+    for($i=0;$i<count($objects);$i++)
+      if(!(in_array($objects[$i]['name'],$theobjects)))
+      { $theobjects[]=$objects[$i]['name'];
+        $theresult[]=$objects[$i];
+      }
+    return $theresult;
   }
   public  function getObjectVisibilities($obs)
   { global $objPresentations;
