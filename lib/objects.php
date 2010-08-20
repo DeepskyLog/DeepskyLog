@@ -651,7 +651,8 @@ class Objects
           $get = mysql_fetch_object($objDatabase->selectRecordset("SELECT * FROM objects WHERE name = \"".$object. "\""));
           $result2[$j]['objecttype'] = $get->type;
           $result2[$j]['objecttypefull'] = $GLOBALS[$get->type];
-          $altnames=$this->getAlternativeNames($object); $alt="";
+          $altnames=$this->getAlternativeNames($object); 
+          $alt="";
           while(list($keyaltnames,$valuealtnames)=each($altnames))
           if(trim($valuealtnames)!=trim($object))
             $alt.=($alt?"/":"").(trim($valuealtnames));

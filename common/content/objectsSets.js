@@ -1,7 +1,8 @@
+var objectList;
 function generate()
 { i=0;
   while(theobject=document.getElementById('R'+i))
-  { var load = window.open('objectsSet.pdf?theobject='+urlencode(document.getElementById('R'+i).value)+
+  { var load = window.open('objectsSet.pdf?theobject='+urlencode(document.getElementById('R'+i).title)+
                                          '&theSet='+urlencode(document.getElementById('R'+i+'Dfov').value)+
                                          '&thedsos='+urlencode(document.getElementById('R'+i+'Ddsos').value)+
                                          '&thestars='+urlencode(document.getElementById('R'+i+'Dstars').value),
@@ -14,7 +15,7 @@ function generate()
   }
 }
 function generateOne(i)
-{ var load = window.open('objectsSet.pdf?theobject='+urlencode(document.getElementById('R'+i).value)+
+{ var load = window.open('objectsSet.pdf?theobject='+urlencode(document.getElementById('R'+i).title)+
 	                                   '&theSet='+urlencode(document.getElementById('R'+i+'Dfov').value)+
 	                                   '&thedsos='+urlencode(document.getElementById('R'+i+'Ddsos').value)+
 	                                   '&thestars='+urlencode(document.getElementById('R'+i+'Dstars').value)+
