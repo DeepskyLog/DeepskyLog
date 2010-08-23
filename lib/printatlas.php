@@ -1098,17 +1098,25 @@ class PrintAtlas
         $textextra=$this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-175-($k*15), 750, 10, $textextra,  'left');
       }
           
-      $url="http://aladin.u-strasbg.fr/java/alapre.pl?out=image&-c=".$radeclALADIN."&fmt=JPEG&resolution=FULL&qual=POSSII%20F%20DSS2";
-      $img2 = $tempfolder.'test2.jpg';
-      @file_put_contents($img2, file_get_contents($url));
-      $this->pdf->addJpegFromFile($img2,50,50,300);
+      //$url="http://aladin.u-strasbg.fr/java/alapre.pl?out=image&-c=".$radeclALADIN."&fmt=JPEG&resolution=FULL&qual=POSSII%20F%20DSS2";
+      //$img2 = $tempfolder.'test2.jpg';
+      //@file_put_contents($img2, file_get_contents($url));
+      //$this->pdf->addJpegFromFile($img2,50,50,300);
           
-      $url="http://aladin.u-strasbg.fr/java/alapre.pl?out=image&-c=".urlencode($theobject)."&fmt=JPEG&resolution=FULL&qual=POSSII%20F%20DSS2";
-      //$url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$imagesize.'.0&w='.$imagesize.'&f=jpeg&c=none&fov=NONE&v3=';
-      $img = $tempfolder.'test.jpg';
-      @file_put_contents($img, file_get_contents($url));
-      $this->pdf->addJpegFromFile($img,400,50,300);
-
+      //$url="http://aladin.u-strasbg.fr/java/alapre.pl?out=image&-c=".urlencode($theobject)."&fmt=JPEG&resolution=FULL&qual=POSSII%20F%20DSS2";
+      //$img = $tempfolder.'test.gif';
+      //@file_put_contents($img, file_get_contents($url));
+      //$img=imagecreatefromgif($img);
+      //$this->pdf->addJpegFromFile($img,400,50,300);
+      $url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$imagesize.'.0&w='.$imagesize.'&f=gif&c=none&fov=NONE&v3=';
+      $img=imagecreatefromgif($url);
+      imagefilter($img, IMG_FILTER_NEGATE);
+      $this->pdf->addImage($img,50,50,300);
+      $url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.($imagesize<<1).'.0&w='.($imagesize<<1).'&f=gif&c=none&fov=NONE&v3=';
+      $img=imagecreatefromgif($url);
+      imagefilter($img, IMG_FILTER_NEGATE);
+      $this->pdf->addImage($img,400,50,300);
+      
       $this->pdf->newPage();
     }
     
