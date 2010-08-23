@@ -1043,7 +1043,7 @@ class PrintAtlas
   public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars,$datapage='false',$reportlayoutselect='')
   { global $baseURL,$objUtil,$instDir,$loggedUser,$loggedUserName,$objObserver,$objObject,$objPresentations,$tempfolder,$objReportLayout ;
     $astroObjects=array();
-    set_time_limit(round(count($_SESSION['Qobj'])*5));
+    set_time_limit(round(count($_SESSION['Qobj'])*30));
     $raDSS=$objPresentations->raToStringDSS2($objObject->getDsoProperty($theobject,'ra'));
     $declDSS=$objPresentations->decToStringDSS2($objObject->getDsoProperty($theobject,'decl'));
     $radeclALADIN=$objPresentations->radeclToStringALADIN($objObject->getDsoProperty($theobject,'ra'),$objObject->getDsoProperty($theobject,'decl'));
@@ -1064,8 +1064,6 @@ class PrintAtlas
         $imagesize<<1;
       $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-50, $this->canvasDimensionXpx-100, 15, 'Atlas pages for '.$theobject,  'center');
       $this->pdf->line(50,$this->canvasDimensionYpx-55,$this->canvasDimensionXpx-50,$this->canvasDimensionYpx-55);
-      $this->pdf->rectangle(48,48,304,304);
-      $this->pdf->rectangle(398,48,304,304);
       $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx- 70, 150, 10, 'Object Right Asc.: '.$theobjectdata['objectrahms'],  'left');
       $this->pdf->addTextWrap(250, $this->canvasDimensionYpx- 70, 150, 10, 'Declination: '.$theobjectdata['objectdecldms'],  'left');
       $this->pdf->addTextWrap(450, $this->canvasDimensionYpx- 70, 150, 10, 'Type: '.$theobjectdata['objecttype'],  'left');
@@ -1098,25 +1096,20 @@ class PrintAtlas
         $textextra=$this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-175-($k*15), 750, 10, $textextra,  'left');
       }
           
-      //$url="http://aladin.u-strasbg.fr/java/alapre.pl?out=image&-c=".$radeclALADIN."&fmt=JPEG&resolution=FULL&qual=POSSII%20F%20DSS2";
-      //$img2 = $tempfolder.'test2.jpg';
-      //@file_put_contents($img2, file_get_contents($url));
-      //$this->pdf->addJpegFromFile($img2,50,50,300);
-          
-      //$url="http://aladin.u-strasbg.fr/java/alapre.pl?out=image&-c=".urlencode($theobject)."&fmt=JPEG&resolution=FULL&qual=POSSII%20F%20DSS2";
-      //$img = $tempfolder.'test.gif';
-      //@file_put_contents($img, file_get_contents($url));
-      //$img=imagecreatefromgif($img);
-      //$this->pdf->addJpegFromFile($img,400,50,300);
       $url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$imagesize.'.0&w='.$imagesize.'&f=gif&c=none&fov=NONE&v3=';
-      $img=imagecreatefromgif($url);
-      imagefilter($img, IMG_FILTER_NEGATE);
-      $this->pdf->addImage($img,50,50,300);
+      if($img=imagecreatefromgif($url))
+      { $this->pdf->rectangle(48,48,304,304);
+        imagefilter($img, IMG_FILTER_NEGATE);
+        $this->pdf->addImage($img,50,50,350);
+        $this->pdf->addText(50, 35, 10, 'Image size: '.$imagesize.'x'.$imagesize.'arc min');
+      }
       $url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.($imagesize<<1).'.0&w='.($imagesize<<1).'&f=gif&c=none&fov=NONE&v3=';
-      $img=imagecreatefromgif($url);
-      imagefilter($img, IMG_FILTER_NEGATE);
-      $this->pdf->addImage($img,400,50,300);
-      
+      if($img=imagecreatefromgif($url))
+      { $this->pdf->rectangle(398,48,304,304);
+      	imagefilter($img, IMG_FILTER_NEGATE);
+        $this->pdf->addImage($img,450,50,350);
+        $this->pdf->addText(450, 35, 10, 'Image size: '.($imagesize<<1).'x'.($imagesize<<1).'arc min');
+      }
       $this->pdf->newPage();
     }
     
