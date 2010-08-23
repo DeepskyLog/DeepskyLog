@@ -17,6 +17,8 @@ function objectsSets()
 	echo LangpdfseriesExplain2.'<br />';
 	echo LangpdfseriesExplain3.'<br />';
 	echo LangpdfseriesExplain4.'<br />'.'<br />';		
+	echo LangpdfseriesExplain6.'<br />'.'<br />';		
+	echo LangpdfseriesExplain7.'<br />'.'<br />';		
 	echo LangpdfseriesExplain5.'<br />'.'<br />';		
 	echo "<input type=\"button\" value=\"".LangpdfseriesButton."\" onclick=\"generate();\"/>".'<br />';
   echo "Add Data page"."<input id=\"datapage\" type=\"checkbox\" value=\"\" />";
@@ -47,6 +49,7 @@ function objectsSets()
   echo "<td class=\"bold\">".LangpdfseriesFoVs."</td>";
   echo "<td class=\"bold\">".Langpdfseriesdsos."</td>";
   echo "<td class=\"bold\">".Langpdfseriesstars."</td>";
+  echo "<td class=\"bold\">".Langpdfseriesphotos."</td>";
   
   echo "</tr>";
   for($i=0;$i<$k;$i++)
@@ -56,7 +59,8 @@ function objectsSets()
     echo "<td>"."<input type=\"text\" ".((($_SESSION['Qobj'][$i]['objectdiam1']/60)>$fovd)?"class=\"textred\"":"")." id=\"R".$i."D"."fov"."\" value=\"".$fovo." ".$fovl." ".$fovd."\" />"."</td>";
     echo "<td>"."<input type=\"text\" id=\"R".$i."D"."dsos"."\" value=\"".$dsoso." ".$dsosl." ".$dsosd."\"/>"."</td>";
     echo "<td>"."<input type=\"text\" id=\"R".$i."D"."stars"."\" value=\"".$starso." ".$starsl." ".$starsd."\"/>"."</td>";
-  	echo "</tr>";
+    echo "<td>"."<input type=\"text\" ".((($_SESSION['Qobj'][$i]['objectdiam1']/60)>15)?"class=\"textred\"":"")."id=\"R".$i."D"."photos"."\" value=\"15 30\"/>"."</td>";
+    echo "</tr>";
   }
   echo "</table>";
 }

@@ -5,7 +5,11 @@ function generate()
   { var load = window.open('objectsSet.pdf?theobject='+urlencode(document.getElementById('R'+i).title)+
                                          '&theSet='+urlencode(document.getElementById('R'+i+'Dfov').value)+
                                          '&thedsos='+urlencode(document.getElementById('R'+i+'Ddsos').value)+
-                                         '&thestars='+urlencode(document.getElementById('R'+i+'Dstars').value),
+                                         '&thestars='+urlencode(document.getElementById('R'+i+'Dstars').value)+
+                                         '&thephotos='+urlencode(document.getElementById('R'+i+'Dphotos').value)+
+	                                     '&datapage='+urlencode(document.getElementById('datapage').checked)+
+	                                     (document.getElementById('indexpage').checked==true?
+	                                     ('&reportlayoutselect='+urlencode(document.getElementById('reportlayoutselect').value)):''),
                            document.getElementById('R'+i).value
                            );
     alert('Click "Ok", only when '+document.getElementById('R'+i).value+' is finished!');
@@ -19,6 +23,7 @@ function generateOne(i)
 	                                   '&theSet='+urlencode(document.getElementById('R'+i+'Dfov').value)+
 	                                   '&thedsos='+urlencode(document.getElementById('R'+i+'Ddsos').value)+
 	                                   '&thestars='+urlencode(document.getElementById('R'+i+'Dstars').value)+
+	                                   '&thephotos='+urlencode(document.getElementById('R'+i+'Dphotos').value)+
 	                                   '&datapage='+urlencode(document.getElementById('datapage').checked)+
 	                                   (document.getElementById('indexpage').checked==true?
 	                                   ('&reportlayoutselect='+urlencode(document.getElementById('reportlayoutselect').value)):''),

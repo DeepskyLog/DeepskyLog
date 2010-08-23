@@ -4,7 +4,9 @@ define("LangpdfseriesExplain1"  ,"Generate a set of charts for each object.");
 define("LangpdfseriesExplain2"  ,"Each set contains a number of charts specified by the FoVs asked below.");
 define("LangpdfseriesExplain3"  ,"Each charts specified by the FoVs, shows stars and object up to the specified magnitudes.");
 define("LangpdfseriesExplain4"  ,"Each magnitude field should contain as many magnitudes as there are FoVs.");
-define("LangpdfseriesExplain5"  ,"U kan elke set opslaan en eventueel met een pdf samenvoegprogramma samenstellen tot één catalogus-atlas.");
+define("LangpdfseriesExplain5"  ,"U kan elke set opslaan en eventueel met een pdf samenvoegprogramma samenstellen tot één catalogus-atlas. Indien u alles in een keer aanmaakt, reken dan op een lange verwerkingstijd, tot 30 seconden of meer per object.");
+define("LangpdfseriesExplain6"  ,"Voor elk object kan u een datasectie toevoegen. Dit bevat de elementaire data, een objectbeschrijving indien beschikbaar, en 2 foto's met de door u aangeduide grootte (15, 30 of 60 boogminuten, of geen).");
+define("LangpdfseriesExplain7"  ,"Na elk object kan u een inhoudstafel toevoegen. Deze bevat een overzicht van elk van de objecten die op de verschillende kaarten staan.");
 define("LangpdfseriesButton"    ,"Generate all");
 
 define("LangpdfseriesObject"    ,"Objet");
@@ -12,6 +14,7 @@ define("LangpdfseriesSize"      ,"Taille");
 define("LangpdfseriesFoVs"      ,"FoVs: Afgebeelde beeldvelden");
 define("Langpdfseriesdsos"      ,"Respectievelijke objectenmagnitudes");
 define("Langpdfseriesstars"     ,"Respectievelijke sterrenmagnitudes");
+define("Langpdfseriesphotos"    ,"Respectievelijke foto's (boogminuten)");
 
 
 // TO DO
@@ -822,7 +825,7 @@ define("LangExecuteQueryObjectsMessage7"									,"icq");
 define("LangExecuteQueryObjectsMessage8"									,"Argo Navis");
 define("LangExecuteQueryObjectsMessage9"									,"Filtrer les objects");
 define("LangExecuteQueryObjectsMessage10"									,"&lt;OAL&gt;");
-define("LangExecuteQueryObjectsMessage11"	  							,"s&eacute;rie pdf");
+define("LangExecuteQueryObjectsMessage11"	  							,"Fardes");
 define("LangInvalidCSVfile"																,"Vous n'avez pas sp&eacute;cifi&eacute; un fichier csv valable!");
 define("LangSeenDontCare"																	,"Tous les objets, vus ou pas vus");
 define("LangSeenByMe"															        ,"Juste les objets que j'ai vus moi-m&ecirc;me");

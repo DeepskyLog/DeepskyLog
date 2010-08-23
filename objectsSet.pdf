@@ -23,7 +23,14 @@ while($thepos=strpos($theParam,' '))
   $theParam=substr($theParam,$thepos+1);
 }
 $thestars[]=$theParam;
+$thephotos=array();
+$theParam=$objUtil->checkGetKey('thephotos');
+while($thepos=strpos($theParam,' '))
+{ $thephotos[]=substr($theParam,0,$thepos);
+  $theParam=substr($theParam,$thepos+1);
+}
+$thephotos[]=$theParam;
 $datapage=$objUtil->checkGetKey('datapage');
 $reportlayoutselect=$objUtil->checkGetKey('reportlayoutselect');
-$objPrintAtlas->pdfAtlasObjectSet($objUtil->checkGetKey('theobject'),$theSet,$thedsos,$thestars,$datapage,$reportlayoutselect);
+$objPrintAtlas->pdfAtlasObjectSet($objUtil->checkGetKey('theobject'),$theSet,$thedsos,$thestars,$thephotos,$datapage,$reportlayoutselect);
 ?>

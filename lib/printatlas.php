@@ -1040,8 +1040,8 @@ class PrintAtlas
     }
     $this->pdf->Stream(); 
   }
-  public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars,$datapage='false',$reportlayoutselect='')
-  { global $baseURL,$objUtil,$instDir,$loggedUser,$loggedUserName,$objObserver,$objObject,$objPresentations,$tempfolder,$objReportLayout ;
+  public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='')
+  { global $baseURL,$objList,$objUtil,$instDir,$loggedUser,$loggedUserName,$objObserver,$objObject,$objPresentations,$tempfolder,$objReportLayout,$listname,$myList;
     $astroObjects=array();
     set_time_limit(round(count($_SESSION['Qobj'])*30));
     $raDSS=$objPresentations->raToStringDSS2($objObject->getDsoProperty($theobject,'ra'));
@@ -1087,8 +1087,8 @@ class PrintAtlas
         $this->pdf->addTextWrap(650, $this->canvasDimensionYpx-145, 150, 10, 'Altitude: '.$objPresentations->decToString($theobjectdata['objectmaxaltitude'],0),  'left');
         */
       $k=0;$textextra='';
-      if(array_key_exists('objectlistdescription',$theobjectdata) && $theobjectdata['objectlistdescription'])
-        $textextra=$this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-175, 750, 10, $theobjectdata['objectlistdescription'],  'left');
+	    if(($listname=$objUtil->checkSessionKey('listname'))&&($objList->checkObjectInMyActiveList($theobject)))
+	      $textextra=$this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-175, 750, 10, $objList->getListObjectDescription($theobject),  'left');
       elseif($theobjectdata['objectdescription'])
         $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-160, 750, 10, $theobjectdata['objectdescription'],  'left');
       while($textextra)
@@ -1097,15 +1097,15 @@ class PrintAtlas
       }
           
       $url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$imagesize.'.0&w='.$imagesize.'&f=gif&c=none&fov=NONE&v3=';
-      if($img=imagecreatefromgif($url))
-      { $this->pdf->rectangle(48,48,304,304);
+      if($img=@imagecreatefromgif($url))
+      { $this->pdf->rectangle(48,48,354,354);
         imagefilter($img, IMG_FILTER_NEGATE);
         $this->pdf->addImage($img,50,50,350);
         $this->pdf->addText(50, 35, 10, 'Image size: '.$imagesize.'x'.$imagesize.'arc min');
       }
       $url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.($imagesize<<1).'.0&w='.($imagesize<<1).'&f=gif&c=none&fov=NONE&v3=';
-      if($img=imagecreatefromgif($url))
-      { $this->pdf->rectangle(398,48,304,304);
+      if($img=@imagecreatefromgif($url))
+      { $this->pdf->rectangle(448,48,354,354);
       	imagefilter($img, IMG_FILTER_NEGATE);
         $this->pdf->addImage($img,450,50,350);
         $this->pdf->addText(450, 35, 10, 'Image size: '.($imagesize<<1).'x'.($imagesize<<1).'arc min');

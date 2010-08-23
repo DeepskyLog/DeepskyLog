@@ -4,7 +4,9 @@ define("LangpdfseriesExplain1"  ,"Maak een set van kaarten voor elk object.");
 define("LangpdfseriesExplain2"  ,"Elke set bevat even veel kaarten als gespecifieerd in het FoV vak.");
 define("LangpdfseriesExplain3"  ,"Elke kaart gespecifieerd in het vak FoVs, toont sterren en objecten zoals gespecifieerd in de respectievelijke vakken.");
 define("LangpdfseriesExplain4"  ,"Elk magnitudevak moet even veel magnitudes bevatten als er FoVs zijn.");
-define("LangpdfseriesExplain5"  ,"U kan elke set opslaan en eventueel met een pdf samenvoegprogramma samenstellen tot één catalogus-atlas.");
+define("LangpdfseriesExplain5"  ,"U kan elke set opslaan en eventueel met een pdf samenvoegprogramma samenstellen tot één catalogus-atlas. Als u alles in één keer aanmaakt, reken dan op een lange verwerkingstijd, tot 30 seconden of meer per oject.");
+define("LangpdfseriesExplain6"  ,"Voor elk object kan u een datasectie toevoegen. Dit bevat de elementaire data, een objectbeschrijving indien beschikbaar, en 2 foto's met de door u aangeduide grootte (15, 30 of 60 boogminuten;, of geen).");
+define("LangpdfseriesExplain7"  ,"Na elk object kan u een inhoudstafel toevoegen. Deze bevat een overzicht van elk van de objecten die op de verschillende kaarten staan.");
 define("LangpdfseriesButton"    ,"Maak alles aan");
 
 define("LangpdfseriesObject"    ,"Object");
@@ -12,6 +14,7 @@ define("LangpdfseriesSize"      ,"Grootte");
 define("LangpdfseriesFoVs"      ,"FoVs: Afgebeelde beeldvelden");
 define("Langpdfseriesdsos"      ,"Respectievelijke objectenmagnitudes");
 define("Langpdfseriesstars"     ,"Respectievelijke sterrenmagnitudes");
+define("Langpdfseriesphotos"    ,"Respectievelijke foto's (boogminuten)");
 
 
 
@@ -811,7 +814,7 @@ define("LangExecuteQueryObjectsMessage7"									,"icq");
 define("LangExecuteQueryObjectsMessage8"									,"Argo Navis");
 define("LangExecuteQueryObjectsMessage9"									,"Filter objecten");
 define("LangExecuteQueryObjectsMessage10"									,"&lt;OAL&gt;");
-define("LangExecuteQueryObjectsMessage11"	  							,"pdf reeks");
+define("LangExecuteQueryObjectsMessage11"	  							,"Mappen");
 define("LangInvalidCSVfile"																,"U gaf geen geldig CSV bestand!");
 define("LangSeenDontCare"																	,"Alle objecten, ongeacht of ik ze waarnam of niet");
 define("LangSeenByMe"																			,"Enkel objecten die ik reeds heb waargenomen");
