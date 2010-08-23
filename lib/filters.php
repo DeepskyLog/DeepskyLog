@@ -178,8 +178,7 @@ class Filters implements iFilters
  { global $objUtil,$loggedUser;
    if($objUtil->checkPostKey('add')
    && $objUtil->checkSessionKey('deepskylog_id')
-   && $objUtil->checkPostKey('filtername')
-   && $objUtil->checkPostKey('type'))
+   && $objUtil->checkPostKey('filtername'))
    { $id=$this->addFilter($objUtil->checkPostKey('filtername'), $objUtil->checkPostKey('type'), $objUtil->checkPostKey('color',0), $objUtil->checkPostKey('wratten'), $objUtil->checkPostKey('schott'));
      $this->setFilterProperty($id, 'observer', $loggedUser);
      return LangValidateFilterMessage2;
@@ -187,7 +186,6 @@ class Filters implements iFilters
    elseif($objUtil->checkPostKey('change')
    && $objUtil->checkPostKey('id')
    && $objUtil->checkPostKey('filtername')
-   && $objUtil->checkPostKey('type')
    && $objUtil->checkAdminOrUserID($this->getFilterPropertyFromId($_POST['id'],'observer')))
    { $this->setFilterProperty($_POST['id'], 'name', $objUtil->checkPostKey('filtername'));
      $this->setFilterProperty($_POST['id'], 'type', $objUtil->checkPostKey('type'));
