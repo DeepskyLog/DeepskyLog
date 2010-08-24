@@ -2357,6 +2357,9 @@ function addTextWrap($x,$y,$width,$size,$text,$justification='left',$angle=0,$te
   $breakWidth=0;
   $len=strlen($text);
   $cf = $this->currentFont;
+  if($size==0) {
+   $size = 1;
+  }
   $tw = $width/$size*1000;
   for ($i=0;$i<$len;$i++){
     $f=1;
@@ -2913,7 +2916,7 @@ function addImage(&$img,$x,$y,$w=0,$h=0,$quality=75){
   $fp=fopen($tmpName,'rb');
 
   $tmp = get_magic_quotes_runtime();
-  set_magic_quotes_runtime(0);
+  ini_set('magic_quotes_runtime', 0);
   $fp = @fopen($tmpName,'rb');
   if ($fp){
     $data='';
@@ -2926,7 +2929,7 @@ function addImage(&$img,$x,$y,$w=0,$h=0,$quality=75){
     $errormsg = 'trouble opening file';
   }
 //  $data = fread($fp,filesize($tmpName));
-  set_magic_quotes_runtime($tmp);
+  ini_set('magic_quotes_runtime', $tmp);
 //  fclose($fp);
   unlink($tmpName);
   $this->addJpegImage_common($data,$x,$y,$w,$h,$imageWidth,$imageHeight);
