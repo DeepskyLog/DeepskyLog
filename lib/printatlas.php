@@ -1059,9 +1059,6 @@ class PrintAtlas
     if($datapage=='true')
     { $theobjectdata=$objObject->getSeenObjectDetails(array($theobject => array(0,$theobject)));
       $theobjectdata=$theobjectdata[0];
-      $imagesize=15;
-      if(($theobjectdata['objectdiam1']/60)>15)
-        $imagesize<<1;
       $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-50, $this->canvasDimensionXpx-100, 15, 'Atlas pages for '.$theobject,  'center');
       $this->pdf->line(50,$this->canvasDimensionYpx-55,$this->canvasDimensionXpx-50,$this->canvasDimensionYpx-55);
       $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx- 70, 150, 10, 'Object Right Asc.: '.$theobjectdata['objectrahms'],  'left');
@@ -1087,7 +1084,8 @@ class PrintAtlas
         $this->pdf->addTextWrap(650, $this->canvasDimensionYpx-145, 150, 10, 'Altitude: '.$objPresentations->decToString($theobjectdata['objectmaxaltitude'],0),  'left');
         */
       $k=0;$textextra='';
-	    if(($listname=$objUtil->checkSessionKey('listname'))&&($objList->checkObjectInMyActiveList($theobject)))
+	    
+      if(($listname=$objUtil->checkSessionKey('listname'))&&($objList->checkObjectInMyActiveList($theobject)))
 	      $textextra=$this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-175, 750, 10, $objList->getListObjectDescription($theobject),  'left');
       elseif($theobjectdata['objectdescription'])
         $this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-160, 750, 10, $theobjectdata['objectdescription'],  'left');
@@ -1096,19 +1094,27 @@ class PrintAtlas
         $textextra=$this->pdf->addTextWrap( 50, $this->canvasDimensionYpx-175-($k*15), 750, 10, $textextra,  'left');
       }
           
-      $url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$imagesize.'.0&w='.$imagesize.'&f=gif&c=none&fov=NONE&v3=';
-      if($img=@imagecreatefromgif($url))
-      { $this->pdf->rectangle(48,48,354,354);
-        imagefilter($img, IMG_FILTER_NEGATE);
-        $this->pdf->addImage($img,50,50,350);
-        $this->pdf->addText(50, 35, 10, 'Image size: '.$imagesize.'x'.$imagesize.'arc min');
+      if(is_array($thephotos) && array_key_exists(0,$thephotos) && ($thephotos[0]>0))
+      { if($thephotos[0]>75)
+         $thephotos[0]=75;
+      	$url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[0].'.0&w='.$thephotos[0].'&f=gif&c=none&fov=NONE&v3=';
+        if($img=@imagecreatefromgif($url))
+        { $this->pdf->rectangle(48,48,354,354);
+          imagefilter($img, IMG_FILTER_NEGATE);
+          $this->pdf->addImage($img,50,50,350);
+          $this->pdf->addText(50, 35, 10, 'Image size: '.$thephotos[0].'x'.$thephotos[0].'arc min');
+        }
       }
-      $url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.($imagesize<<1).'.0&w='.($imagesize<<1).'&f=gif&c=none&fov=NONE&v3=';
-      if($img=@imagecreatefromgif($url))
-      { $this->pdf->rectangle(448,48,354,354);
-      	imagefilter($img, IMG_FILTER_NEGATE);
-        $this->pdf->addImage($img,450,50,350);
-        $this->pdf->addText(450, 35, 10, 'Image size: '.($imagesize<<1).'x'.($imagesize<<1).'arc min');
+      if(is_array($thephotos) && array_key_exists(1,$thephotos) && ($thephotos[1]>0))
+      { if($thephotos[1]>75)
+         $thephotos[1]=75;
+        $url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[1].'.0&w='.$thephotos[1].'&f=gif&c=none&fov=NONE&v3=';
+        if($img=@imagecreatefromgif($url))
+        { $this->pdf->rectangle(448,48,354,354);
+        	imagefilter($img, IMG_FILTER_NEGATE);
+          $this->pdf->addImage($img,450,50,350);
+          $this->pdf->addText(450, 35, 10, 'Image size: '.$thephotos[1].'x'.$thephotos[1].'arc min');
+        }
       }
       $this->pdf->newPage();
     }
