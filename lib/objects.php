@@ -424,21 +424,21 @@ class Objects
       //$objects=$objDatabase->selectRecordsetArray($sql);  
       //$sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
       //$objects=array_merge($objects,$objDatabase->selectRecordsetArray($sql));  
-      $sql="SELECT * FROM objects WHERE ((ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND (mag>".$frommag.") AND (mag<=".$tomag.")) OR name='".addslashes($theobject)."';";
+      $sql="SELECT * FROM objects WHERE ((ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND (mag>".$frommag.") AND (mag<=".$tomag.")) OR name='".addslashes($theobject)."' ORDER BY name;";
       $objects=$objDatabase->selectRecordsetArray($sql);  
-      $sql="SELECT * FROM objects WHERE ((ra<".$lLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND (mag>".$frommag.") AND (mag<=".$tomag.")) OR name='".addslashes($theobject)."';";
+      $sql="SELECT * FROM objects WHERE ((ra<".$lLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND (mag>".$frommag.") AND (mag<=".$tomag.")) OR name='".addslashes($theobject)."' ORDER BY name;";
       $objects=array_merge($objects,array_merge($objects,$objDatabase->selectRecordsetArray($sql)));  
-      $sql="SELECT * FROM objects WHERE ((ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag>99) AND (diam1<".(60*(15-$frommag)).") AND (diam1>=".(60*(15-$tomag))."))) OR name='".addslashes($theobject)."';";
+      $sql="SELECT * FROM objects WHERE ((ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag>99) AND (diam1<".(60*(15-$frommag)).") AND (diam1>=".(60*(15-$tomag))."))) OR name='".addslashes($theobject)."' ORDER BY name;";
       $objects=array_merge($objects,$objDatabase->selectRecordsetArray($sql));  
-      $sql="SELECT * FROM objects WHERE ((ra<".$lLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag>99) AND (diam1<".(60*(15-$frommag)).") AND (diam1>=".(60*(15-$tomag))."))) OR name='".addslashes($theobject)."';";
+      $sql="SELECT * FROM objects WHERE ((ra<".$lLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag>99) AND (diam1<".(60*(15-$frommag)).") AND (diam1>=".(60*(15-$tomag))."))) OR name='".addslashes($theobject)."' ORDER BY name;";
       $objects=array_merge($objects,$objDatabase->selectRecordsetArray($sql));  
     }
     else
     { //$sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
       //$objects=$objDatabase->selectRecordsetArray($sql);  
-      $sql="SELECT * FROM objects WHERE ((ra<".$lLhr.") AND (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND (mag<=".$tomag.") AND (mag>".$frommag.")) OR name='".addslashes($theobject)."';";
+      $sql="SELECT * FROM objects WHERE ((ra<".$lLhr.") AND (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND (mag<=".$tomag.") AND (mag>".$frommag.")) OR name='".addslashes($theobject)."' ORDER BY name;";
       $objects=$objDatabase->selectRecordsetArray($sql);  
-      $sql="SELECT * FROM objects WHERE ((ra<".$lLhr.") AND (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag>99) AND (diam1>=".(60*(15-$tomag)).") AND (diam1<".(60*(15-$frommag))."))) OR name='".addslashes($theobject)."';";
+      $sql="SELECT * FROM objects WHERE ((ra<".$lLhr.") AND (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag>99) AND (diam1>=".(60*(15-$tomag)).") AND (diam1<".(60*(15-$frommag))."))) OR name='".addslashes($theobject)."' ORDER BY name;";
       $objects=array_merge($objects,$objDatabase->selectRecordsetArray($sql));  
     }
     for($i=0;$i<count($objects);$i++)
