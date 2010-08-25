@@ -1192,7 +1192,7 @@ class PrintAtlas
     if($reportlayoutselect)
     { $this->pdf->newPage();
       $this->pdf->setLineStyle(1);
-      $reportuser=$loggedUserName;
+      $reportuser=substr($reportlayoutselect,0,strpos($reportlayoutselect,": "));
       $reportname='ReportQueryOfObjects';
       $reportlayout=substr($reportlayoutselect,strpos($reportlayoutselect,": ")+2);
       $reportdata=$objReportLayout->getReportData($reportuser,$reportname,$reportlayout);
