@@ -19,7 +19,7 @@ if($listname)
 { $link = $baseURL."index.php?indexAction=listaction";
   reset($_GET);
   while(list($key,$value)=each($_GET))
-    if(!in_array($key,array('restoreColumns','orderColumn','loadLayout','saveLayout','removeLayout','indexAction','multiplepagenr','sort','sortdirection','showPartOfs','noShowName')))
+    if(!in_array($key,array('addobservationstolist','restoreColumns','orderColumn','loadLayout','saveLayout','removeLayout','indexAction','multiplepagenr','sort','sortdirection','showPartOfs','noShowName')))
       $link.='&amp;'.urlencode($key).'='.urlencode($value);
   if((array_key_exists('steps',$_SESSION))&&(array_key_exists("listObj",$_SESSION['steps'])))
 	  $step=$_SESSION['steps']["listObj"];
@@ -40,7 +40,8 @@ if($listname)
   if($myList)
   { $content1 ="<a href=\"".$baseURL."index.php?indexAction=import_csv_list\">" .  LangToListImport . "</a> - ";
   	$content1.="<a href=\"".$baseURL."index.php?indexAction=listaction&amp;emptyList=emptyList\">".LangToListEmpty."</a> - ";
-    $content1.="<a href=\"".$baseURL."index.php?indexAction=listaction&amp;removeList=removeList\">".LangToListMyListsRemove."</a>";
+    $content1.="<a href=\"".$baseURL."index.php?indexAction=listaction&amp;removeList=removeList\">".LangToListMyListsRemove."</a> - ";
+    $content1.="<a href=\"".$baseURL."index.php?indexAction=listaction&amp;addobservationstolist=longest\">".LangToListMyListsAddLongestObsDescription."</a>";
   }
   else
     $content1="(".LangToListListBy.$objObserver->getObserverProperty(($listowner=$objList->getListOwner()),'firstname').' '.$objObserver->getObserverProperty($listowner,'name').")";

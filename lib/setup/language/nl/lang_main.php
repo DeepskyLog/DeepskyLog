@@ -439,6 +439,8 @@ define("LangToListEmpty"																	, "Lijst leeg maken");
 define("LangToListMyLists"																, "Mijn lijsten: ");
 define("LangToListMyListsView"														, "Bekijk");
 define("LangToListMyListsRemove"													, "Verwijder de lijst");
+define("LangToListMyListsAddLongestObsDescription"				, "Waarnemingen toevoegen (langste)");
+define("LangToListMyListsAddedLongestObsDescription"		  , "Waarnemingen toegevoegd (langste)");
 define("LangToListRemovePageObjectsFromList"							, "Verwijder de objecten van deze pagina uit de lijst.");
 define("LangToListRemovePageObjectsFromListText"					, "R");
 define("LangToListEmptyList"															, "De lijst is leeg, er zijn geen objecten in de lijst.");

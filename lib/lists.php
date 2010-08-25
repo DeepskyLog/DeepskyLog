@@ -1,27 +1,40 @@
 <?php
-interface iLists
-{ public  function addList($name);                                 // add a list with the specified name, after checking loggedUser and listname
-  public  function addObjectToList($name, $showname='');           // adds an object to the active list, if the object isn't already in
-  public  function addObservationToList($id);                      // adds the specified observation to the description of the object in the list, adding also the object if it isn't in already
-  public  function checkList($name);                               // check a list: 0=non-existant, 1=existant, 2=existant and owner
-  public  function checkObjectInMyActiveList($value);              // verifies if the object is in the active list 
-  public  function checkObjectMyOrPublicList($value, $list);       // verifies if the object is in the active or the specified list
-  public  function emptyList($listname);                           // empties the list after checking ownership
-  public  function getListOwner();
-  public  function getLists();                                     // returns an array of lists, first the private ones of the logged user, then the public ones
-  public  function getListObjectDescription($object);              // returns a string with the list object description
-  public  function getMyLists();                                   // returns an array of logged user lists
-  public  function getObjectsFromList($theListname);               // returns an array with the deatils of the objects in the specified list
-  public  function ObjectDownInList($place);                       // move object down in list after checking list ownership
-  public  function ObjectFromToInList($from, $to);                 // move object from to in list after checking ownership
-  public  function ObjectUpInList($place);                         // move object up in list after checking ownership
-  public  function removeList($name);                              // remove a list with the specified name after checking ownership
-  public  function removeObjectFromList($name);                    // remove the object from the active list, after checking list ownership
-  public  function renameList($nameFrom, $nameTo);                 // renames a list after checking ownership
-  public  function setListObjectDescription($object,$description); // sets the object description in the active list after checking ownership  
-}
-class Lists implements iLists
-{
+class Lists
+{public function addObservations($thetype)
+ { global $entryMessage,$myList,$objObject,$objDatabase,$loggedUser,$listname,$objPresentations;
+   if(!$myList)
+     return; 
+   if($thetype=="longest")
+   { $sql = "SELECT objectname FROM observerobjectlist " .
+	 	    	  "WHERE observerid = \"".$loggedUser."\" AND listname = \"".$listname."\" AND objectname <>\"\"";
+     $run=$objDatabase->selectSingleArray($sql, 'objectname');
+     for($i=0;$i<count($run);$i++)
+   	 { $theobject=$run[$i];
+   	   $sql="SELECT observations.id, observations.description FROM observations WHERE observations.objectname=\"".$theobject."\";";
+   	 	 $get2=$objDatabase->selectRecordsetArray($sql);
+	     while(list($key, $value)=each($get2))
+	     { $sortarray[strlen($value['description'])]=$value['id'];
+       }
+	     ksort($sortarray,SORT_NUMERIC);
+	     $temp=array_pop($sortarray);
+	     $sql = "SELECT observations.objectname, observations.description, observers.name, observers.firstname, locations.name as location, instruments.name AS instrument " .
+	        "FROM observations " .
+		 		  "JOIN observers ON observations.observerid=observers.id " .
+				  "JOIN locations ON observations.locationid=locations.id " .
+				  "JOIN instruments ON observations.instrumentid=instruments.id " .
+				  "WHERE observations.id=".$temp;
+	     $temp=$objDatabase->selectRecordArray($sql);
+	     $name=$temp['objectname'];
+	     $description = '(' .$temp['firstname'].' '.$temp['name'];
+		   $description .='/' .$temp['instrument'];
+		   $description .='/' .$temp['location'];
+		   $description .=') '.$objPresentations->br2nl($temp['description']);
+	     $get3=$objDatabase->selectRecordArray("SELECT description FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND listname = \"".$listname."\" AND objectname=\"".$theobject."\"");
+		   $objDatabase->execSQL("UPDATE observerobjectlist SET description = \"".substr((($get3['description'])?($get3['description']." "):'').$description,0,4096)."\" WHERE observerid = \"".$loggedUser."\" AND listname=\"".$listname."\" AND objectname=\"".$theobject."\"");
+     }
+		 $entryMessage.=LangToListMyListsAddedLongestObsDescription;
+   }
+ }
  public function addList($name)
  { global $objDatabase,$objUtil,$loggedUser;
    if($loggedUser&&$name&&(!($this->checkList($name))))
@@ -43,9 +56,7 @@ class Lists implements iLists
  }
  public  function addObservationToList($id)
  { global $objDatabase, $loggedUser, $listname, $myList,$objPresentations;
-   if(!$myList)
-     return; 
-   $sql = "SELECT observations.objectname, observations.description, observers.name, observers.firstname, locations.name as location, instruments.name AS instrument " .
+  $sql = "SELECT observations.objectname, observations.description, observers.name, observers.firstname, locations.name as location, instruments.name AS instrument " .
 	        "FROM observations " .
 		 		  "JOIN observers ON observations.observerid=observers.id " .
 				  "JOIN locations ON observations.locationid=locations.id " .

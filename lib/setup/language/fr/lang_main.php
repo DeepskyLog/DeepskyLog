@@ -450,6 +450,8 @@ define("LangToListEmpty"																	,"Vider la liste");
 define("LangToListMyLists"																,"Mes listes: ");
 define("LangToListMyListsView"														,"Consulter");
 define("LangToListMyListsRemove"													,"Enlever la liste");
+define("LangToListMyListsAddLongestObsDescription"				,"Add observation (longest)");                                // To translate
+define("LangToListMyListsAddedLongestObsDescription"		  ,"Observations added (longest)");
 define("LangToListRemovePageObjectsFromList"							,"Effacer les objects de cette page de la liste.");
 define("LangToListRemovePageObjectsFromListText"					,"R");
 define("LangToListEmptyList"															,"La liste est vide, il n'y a pas d'objects dans la liste.");
