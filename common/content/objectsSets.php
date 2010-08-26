@@ -2,10 +2,10 @@
 function objectsSets()
 { global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout;
   echo "<script type=\"text/javascript\">";
-  echo "Langpdfseriesclickok='".Langpdfseriesclickok."'";
-  echo "Langpdfserieswhenfinished='".Langpdfserieswhenfinished."'";
-  echo "LangpdfseriesGenerating='".LangpdfseriesGenerating."'";
-  echo "Langpdfserieschoselayout='".Langpdfserieschoselayout."'";
+  echo "var Langpdfseriesclickok='".Langpdfseriesclickok."';";
+  echo "var Langpdfserieswhenfinished='".Langpdfserieswhenfinished."';";
+  echo "var LangpdfseriesGenerating='".LangpdfseriesGenerating."';";
+  echo "var Langpdfserieschoselayout='".Langpdfserieschoselayout."';";
   echo "</script>";
   $fovo=$objObserver->getObserverProperty($loggedUser,'overviewFoV',120);
   $fovl=$objObserver->getObserverProperty($loggedUser,'lookupFoV',60);
