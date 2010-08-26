@@ -13,7 +13,7 @@ $observations = new CometObservations();
 $queries = array("object" => $objCometObject->getName($_GET['object']));
 $content="";
 if (count($observations->getObservationFromQuery($queries)) > 0)
-  $content.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=".urlencode($_GET['object'])."\">" . LangViewObjectObservations . $objCometObject->getName($_GET['object']) . "</a>";
+  $content.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=comets_result_query_observations&amp;objectname=".urlencode($_GET['object'])."\">" . LangViewObjectObservations . " " . $objCometObject->getName($_GET['object']) . "</a>";
 # extra link to add observation of this object
 if($loggedUser)
 { $_SESSION['observedobject'] = $_GET['object'];
