@@ -13,8 +13,8 @@ function generate()
 	                                     ('&reportlayoutselect='+urlencode(document.getElementById('reportlayoutselect').value)):''),
                            document.getElementById('R'+i).value
                            );
-    alert('Click "Ok", only when '+document.getElementById('R'+i).value+' is finished!');
-    document.getElementById('T'+i).setAttribute('style','background-color:#EEEEEE;');
+    alert(Langpdfseriesclickok+document.getElementById('R'+i).value+Langpdfserieswhenfinished);
+    document.getElementById('T'+i).setAttribute('style','background-color:#DDDDDD;');
     document.getElementById('R'+(i+1)).focus();
     i++;
   }
@@ -31,7 +31,7 @@ function generateOne(i)
 	                                   ('&reportlayoutselect='+urlencode(document.getElementById('reportlayoutselect').value)):''),
                            document.getElementById('R'+i).value
                            );
-  alert('Generating '+document.getElementById('R'+i).value+'.');
-  document.getElementById('T'+i).setAttribute('style','background-color:#EEEEEE;');
+  alert(LangpdfseriesGenerating+document.getElementById('R'+i).value+'.');
+  document.getElementById('T'+i).setAttribute('style','background-color:#DDDDDD;');
   document.getElementById('R'+(i+1)).focus();
 }

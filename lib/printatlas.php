@@ -1041,7 +1041,7 @@ class PrintAtlas
     $this->pdf->Stream(); 
   }
   public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true')
-  { global $baseURL,$objList,$objInstrument,$objLocation,$objUtil,$instDir,$loggedUser,$loggedUserName,$objObserver,$objObject,$objPresentations,$tempfolder,$objReportLayout,$listname,$myList;
+  { global $theMonth,$theDay,$theYear,$dateformat,$baseURL,$objList,$objInstrument,$objLocation,$objUtil,$instDir,$loggedUser,$loggedUserName,$objObserver,$objObject,$objPresentations,$tempfolder,$objReportLayout,$listname,$myList;
     $astroObjects=array();
     set_time_limit(120);
     $raDSS=$objPresentations->raToStringDSS2($objObject->getDsoProperty($theobject,'ra'));
@@ -1062,49 +1062,62 @@ class PrintAtlas
       $liney=$this->canvasDimensionYpx-50;
       $this->pdf->addTextWrap( 50, $liney, $this->canvasDimensionXpx-100, 15, 'Atlas pages for '.$theobject,  'center');
       $liney-=5;
-      $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$this->canvasDimensionYpx-55);
+      $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
       $liney-=15;
-      $this->pdf->addTextWrap(50, $liney, 450, 10, 'Alt names: '.($theobjectdata['altname']?$theobjectdata['altname']:'-'),  'left');
+      $this->pdf->addTextWrap(50, $liney, 450, 10, Reportaltname.": ".($theobjectdata['altname']?$theobjectdata['altname']:'-'),  'left');
       $liney-=25;
-      $this->pdf->addTextWrap( 50, $liney, 200, 10, 'Object Right Asc.: '.$theobjectdata['objectrahms'],  'left');
-      $this->pdf->addTextWrap(300, $liney, 200, 10, 'Declination: '.$theobjectdata['objectdecldms'],  'left');
-      $this->pdf->addTextWrap(550, $liney, 200, 10, 'Constellation: '.$theobjectdata['objectconstellationfull'],  'left');
+      $this->pdf->addTextWrap( 50, $liney, 200, 10, Reportobjectra.': '.$theobjectdata['objectrahms'],  'left');
+      $this->pdf->addTextWrap(300, $liney, 200, 10, Reportobjectdecl.': '.$theobjectdata['objectdecldms'],  'left');
+      $this->pdf->addTextWrap(550, $liney, 200, 10, Reportobjectconstellationfull.': '.$theobjectdata['objectconstellationfull'],  'left');
       $liney-=15;
-      $this->pdf->addTextWrap( 50, $liney, 200, 10, 'Object Mag: '.($theobjectdata['objectmagnitude']?$theobjectdata['objectmagnitude']:'-'),  'left');
-      $this->pdf->addTextWrap(300, $liney, 200, 10, 'Surface Brightness: '.($theobjectdata['objectsurfacebrightness']?$theobjectdata['objectsurfacebrightness']:'-'),  'left');
-      $this->pdf->addTextWrap(550, $liney, 200, 10, 'Type: '.$theobjectdata['objecttypefull'],  'left');
+      $this->pdf->addTextWrap( 50, $liney, 200, 10, Reportobjectmagnitude.': '.($theobjectdata['objectmagnitude']?$theobjectdata['objectmagnitude']:'-'),  'left');
+      $this->pdf->addTextWrap(300, $liney, 200, 10, Reportobjectsurfacebrightness.': '.($theobjectdata['objectsurfacebrightness']?$theobjectdata['objectsurfacebrightness']:'-'),  'left');
+      $this->pdf->addTextWrap(550, $liney, 200, 10, Reportobjecttypefull.': '.$theobjectdata['objecttypefull'],  'left');
       $liney-=25;
-      $this->pdf->addTextWrap( 50, $liney, 200, 10, 'Size: '.($theobjectdata['objectsize']?$theobjectdata['objectsize']:'-'),  'left');
-      $this->pdf->addTextWrap(300, $liney, 200, 10, 'Position Angle: '.(($pa=$theobjectdata['objectpa'])==999?'-':$pa),  'left');
+      $this->pdf->addTextWrap( 50, $liney, 200, 10, LangViewObjectField9.': '.($theobjectdata['objectsize']?$theobjectdata['objectsize']:'-'),  'left');
+      $this->pdf->addTextWrap(300, $liney, 200, 10, LangViewObjectField12.': '.(($pa=$theobjectdata['objectpa'])==999?'-':$pa),  'left');
       $liney-=25;
       if($loggedUser)
-      { $this->pdf->addTextWrap( 50, $liney, 200, 10, 'Object seen: '.$theobjectdata['objectseen'],  'left');
-        $this->pdf->addTextWrap(300, $liney, 200, 10, 'Last seen: '.($theobjectdata['objectlastseen']?$theobjectdata['objectlastseen']:'-'),  'left');
-        $liney-=25;
-      	$this->pdf->addTextWrap( 50, $liney, 750, 10, 'Contrast: '.($theobjectdata['objectcontrast']<>'0.0'?$theobjectdata['objectcontrast'].' - ':'').stripslashes($theobjectdata['objectcontrastpopup']),  'left');
-      	$liney-=15;
-        $this->pdf->addTextWrap( 50, $liney, 300, 10, 'Optimal Magnification: '.$theobjectdata['objectoptimalmagnification'],  'left');
+      { $this->pdf->addTextWrap( 50, $liney, 200, 10, LangViewObservationField2.': '.$loggedUserName,  'left');
+        $this->pdf->addTextWrap(300, $liney, 200, 10, LangOverviewObjectsHeader8.': '.($theobjectdata['objectlastseen']?$theobjectdata['objectlastseen']:'-'),  'left');
+        $this->pdf->addTextWrap(550, $liney, 200, 10, LangOverviewObjectsHeader7.': '.$theobjectdata['objectseen'],  'left');
         $liney-=15;
-      
-      
+      	$this->pdf->addTextWrap( 50, $liney, 750, 10, Reportobjectcontrast.': '.($theobjectdata['objectcontrast']<>'0.0'?$theobjectdata['objectcontrast'].' - ':'').stripslashes($theobjectdata['objectcontrastpopup']),  'left');
+      	$liney-=15;
+        $this->pdf->addTextWrap( 50, $liney, 300, 10, LangViewObjectFieldOptimumDetectionMagnification.': '.$theobjectdata['objectoptimalmagnification'],  'left');
+        $liney-=15;
         if($ephemerides=='true')
         { $liney-=15;
-          $this->pdf->addTextWrap( 50, $liney, 150, 10, 'Sun Set: '.$_SESSION['efemerides']['sset'],  'left');
-          $this->pdf->addTextWrap(250, $liney, 150, 10, 'Sun Rise: '.$_SESSION['efemerides']['srise'],  'left');
-          $this->pdf->addTextWrap(450, $liney, 150, 10, 'Moon Rise: '.$_SESSION['efemerides']['moon0'],  'left');
-          $this->pdf->addTextWrap(650, $liney, 150, 10, 'Moon Set: '.$_SESSION['efemerides']['moon2'],  'left');
+          $theYear=$objUtil->checkSessionKey('globalYear',date("Y"));
+          $theMonth=$objUtil->checkSessionKey('globalMonth',date("n"));
+          $theDay=$objUtil->checkSessionKey('globalDay',date('j'));
+          $dateTimeText0=date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear));
+          $dateTimeText1=date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear)+(60*60*24));
+        	if(substr($dateTimeText0,-8)==substr($dateTimeText1,-8))
+            $dateTimeText0=substr($dateTimeText0,0,2);
+          elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
+            $dateTimeText0=substr($dateTimeText0,0,5);
+          $this->pdf->addTextWrap( 50, $liney, 600, 10, ReportEpehemeridesFor.' '.$dateTimeText0."-".$dateTimeText1.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name'). " in LOCAL TIME !" ,  'left');
+          $liney-=5;
+          $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
+        	$liney-=15;
+          $this->pdf->addTextWrap( 50, $liney, 150, 10, LangMoonSun.' '.LangMoonSet.': '.$_SESSION['efemerides']['sset'],  'left');
+          $this->pdf->addTextWrap(250, $liney, 150, 10, LangMoonSun.' '.LangMoonRise.': '.$_SESSION['efemerides']['srise'],  'left');
+          $this->pdf->addTextWrap(450, $liney, 150, 10, LangMoon.' '.LangMoonRise.': '.$_SESSION['efemerides']['moon0'],  'left');
+          $this->pdf->addTextWrap(650, $liney, 150, 10, LangMoon.' '.LangMoonSet.': '.$_SESSION['efemerides']['moon2'],  'left');
           $liney-=15;
-          $this->pdf->addTextWrap( 50, $liney, 150, 10, 'Astro Night: '.$_SESSION['efemerides']['astroe'],  'left');
-          $this->pdf->addTextWrap(250, $liney, 150, 10, 'Till: '.$_SESSION['efemerides']['astrob'],  'left');
-          $this->pdf->addTextWrap(450, $liney, 150, 10, 'Naut Night: '.$_SESSION['efemerides']['naute'],  'left');
-          $this->pdf->addTextWrap(650, $liney, 150, 10, 'Till: '.$_SESSION['efemerides']['nautb'],  'left');
+          $this->pdf->addTextWrap( 50, $liney, 150, 10, LangMoonTwilight.' '.LangFrom.': '.$_SESSION['efemerides']['astroe'],  'left');
+          $this->pdf->addTextWrap(250, $liney, 150, 10, LangTo.': '.$_SESSION['efemerides']['astrob'],  'left');
+          $this->pdf->addTextWrap(450, $liney, 150, 10, LangMoonTwilight.' '.LangFrom.': '.$_SESSION['efemerides']['naute'],  'left');
+          $this->pdf->addTextWrap(650, $liney, 150, 10, LangTo.': '.$_SESSION['efemerides']['nautb'],  'left');
         
           $liney-=15;
-          $this->pdf->addTextWrap( 50, $liney, 150, 10, 'Object Rise: '.$theobjectdata['objectrise'],  'left');
-          $this->pdf->addTextWrap(250, $liney, 150, 10, 'Transit: '.$theobjectdata['objecttransit'],  'left');
-          $this->pdf->addTextWrap(450, $liney, 150, 10, 'Set: '.$theobjectdata['objectset'],  'left');
-          $this->pdf->addTextWrap(650, $liney, 150, 10, 'Altitude: '.$objPresentations->decToString($theobjectdata['objectmaxaltitude'],0),  'left');
+          $this->pdf->addTextWrap( 50, $liney, 150, 10, Reportobjectrise.': '.$theobjectdata['objectrise'],  'left');
+          $this->pdf->addTextWrap(250, $liney, 150, 10, Reportobjecttransit.': '.$theobjectdata['objecttransit'],  'left');
+          $this->pdf->addTextWrap(450, $liney, 150, 10, Reportobjectset.': '.$theobjectdata['objectset'],  'left');
+          $this->pdf->addTextWrap(650, $liney, 150, 10, Reportobjectmaxaltitude.": ".$objPresentations->decToString($theobjectdata['objectmaxaltitude'],0),  'left');
           $liney-=15;
+          $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
         }
       }
       $liney-=15;$textextra='';
@@ -1124,16 +1137,16 @@ class PrintAtlas
         $this->pdf->addTextWrap( 50, $liney, $this->canvasDimensionXpx-100, 15, 'Images for '.$theobject,  'center');
         $liney-=5;
         $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$this->canvasDimensionYpx-55);
-        $liney-=15;
-        $this->pdf->addTextWrap(50, $liney, 450, 10, '(c) DSS aanvullen',  'left');
+        $liney-=50;
+        $this->pdf->addTextWrap(350, $liney, 450, 10, '(c) STScI Digitized Sky Survey',  'left');
         if($thephotos[0]>75)
          $thephotos[0]=75;
       	$url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[0].'.0&w='.$thephotos[0].'&f=gif&c=none&fov=NONE&v3=';
         if($img=@imagecreatefromgif($url))
-        { $this->pdf->rectangle(48,48,354,354);
+        { $this->pdf->rectangle(48,98,354,354);
           imagefilter($img, IMG_FILTER_NEGATE);
-          $this->pdf->addImage($img,50,50,350);
-          $this->pdf->addText(50, 35, 10, 'Image size: '.$thephotos[0].'x'.$thephotos[0].'arc min');
+          $this->pdf->addImage($img,50,100,350);
+          $this->pdf->addText(50, 80, 10, LangViewDSSImageTitle.$thephotos[0].'x'.$thephotos[0].' '.LangNewObjectSizeUnits1);
         }
       }
       if(is_array($thephotos) && array_key_exists(1,$thephotos) && ($thephotos[1]>0))
@@ -1141,10 +1154,10 @@ class PrintAtlas
          $thephotos[1]=75;
         $url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[1].'.0&w='.$thephotos[1].'&f=gif&c=none&fov=NONE&v3=';
         if($img=@imagecreatefromgif($url))
-        { $this->pdf->rectangle(448,48,354,354);
+        { $this->pdf->rectangle(448,98,354,354);
         	imagefilter($img, IMG_FILTER_NEGATE);
-          $this->pdf->addImage($img,450,50,350);
-          $this->pdf->addText(450, 35, 10, 'Image size: '.$thephotos[1].'x'.$thephotos[1].'arc min');
+          $this->pdf->addImage($img,450,100,350);
+          $this->pdf->addText(450, 80, 10, LangViewDSSImageTitle.$thephotos[1].'x'.$thephotos[1].' '.LangNewObjectSizeUnits1);
         }
       }
       $this->pdf->newPage();
@@ -1152,7 +1165,7 @@ class PrintAtlas
     
     for($k=0;$k<count($theSet);$k++)
     { if($k) $this->pdf->newPage();
-    	$minDegs=$theSet[$k]/60;
+    	$minDegs=$theSet[$k]/120;
     	$i=$this->gridMaxDimension;
       while($i && ($this->gridDimensions[$i][0]<$minDegs))
         $i--;

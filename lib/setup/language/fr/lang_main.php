@@ -8,6 +8,9 @@ define("LangpdfseriesExplain5"  ,"U kan elke set opslaan en eventueel met een pd
 define("LangpdfseriesExplain6"  ,"Voor elk object kan u een datasectie toevoegen. Dit bevat de elementaire data, een objectbeschrijving indien beschikbaar, en 2 foto's met de door u aangeduide grootte (15, 30 of 60 boogminuten, of geen).");
 define("LangpdfseriesExplain7"  ,"Na elk object kan u een inhoudstafel toevoegen. Deze bevat een overzicht van elk van de objecten die op de verschillende kaarten staan.");
 define("LangpdfseriesButton"    ,"Generate all");
+define("LangpdfseriesAddDataPage","Add a data page");
+define("LangpdfseriesWithEphemerides","with ephemerides");
+define("LangpdfseriesAddIndexPage","Add an index page");
 
 define("LangpdfseriesObject"    ,"Objet");
 define("LangpdfseriesSize"      ,"Taille");
@@ -15,6 +18,10 @@ define("LangpdfseriesFoVs"      ,"FoVs: Afgebeelde beeldvelden");
 define("Langpdfseriesdsos"      ,"Respectievelijke objectenmagnitudes");
 define("Langpdfseriesstars"     ,"Respectievelijke sterrenmagnitudes");
 define("Langpdfseriesphotos"    ,"Respectievelijke foto's (boogminuten)");
+define("Langpdfseriesclickok"   ,'Click "Ok", only when ');
+define("Langpdfserieswhenfinished",' is finished!');
+define("LangpdfseriesGenerating",'Generating ');
+define("Langpdfserieschoselayout","Please select a layout for the index page.");
 
 
 // TO DO
@@ -117,7 +124,8 @@ define("Reportobjectbest"                                      ,"Best observing 
 define("Reportobjectbestpopup"                                 ,"Best observing time explanation");
 define("Reportobjectmaxaltitude"                               ,"Maximal altitude at best time");
 define("Reportobjectmaxaltitudepopup"                          ,"Maximal altitude explanation");
-
+define("ReportEpehemeridesFor"                                 ,"Ephemerides for");
+define("ReportEpehemeridesIn"                                  ,"&agrave;");
 
 
 define("AtlasPageFont"                                   ,"Tekengrootte pdf atlaspagina (6..9)");

@@ -8,6 +8,9 @@ define("LangpdfseriesExplain5"  ,"You can save each set and use a pdf merger to 
 define("LangpdfseriesExplain6"  ,"Before each object, you can add a data section. This contains the elementary data, an object description when available, and 2 photos by the size indicated by you (15, 30 or 60 arc minutes, or nothing).");
 define("LangpdfseriesExplain7"  ,"You can add an index after each section. This index contains an overview of all the objects on each of the maps.");
 define("LangpdfseriesButton"    ,"Generate all");
+define("LangpdfseriesAddDataPage","Add a data page");
+define("LangpdfseriesWithEphemerides","with ephemerides");
+define("LangpdfseriesAddIndexPage","Add an index page");
 
 define("LangpdfseriesObject"    ,"Object");
 define("LangpdfseriesSize"      ,"Size");
@@ -15,6 +18,10 @@ define("LangpdfseriesFoVs"      ,"FoVs: shown field of views");
 define("Langpdfseriesdsos"      ,"Object magnitudes");
 define("Langpdfseriesstars"     ,"Stellar magnitudes");
 define("Langpdfseriesphotos"    ,"Photos (arc minutes)");
+define("Langpdfseriesclickok"   ,'Click "Ok", only when ');
+define("Langpdfserieswhenfinished",' is finished!');
+define("LangpdfseriesGenerating",'Generating ');
+define("Langpdfserieschoselayout","Please select a layout for the index page.");
 
 // TO DO:
 
@@ -115,6 +122,8 @@ define("Reportobjectbest"                                      ,"Best observing 
 define("Reportobjectbestpopup"                                 ,"Best observing time explanation");
 define("Reportobjectmaxaltitude"                               ,"Maximal altitude at best time");
 define("Reportobjectmaxaltitudepopup"                          ,"Maximal altitude explanation");
+define("ReportEpehemeridesFor"                                 ,"Ephemerides for");
+define("ReportEpehemeridesIn"                                  ,"in");
 
 define("AtlasPageFont"                                   ,"Font size printed atlas pages (6..9)");
 

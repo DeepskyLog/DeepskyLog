@@ -1,6 +1,12 @@
 <?php
 function objectsSets()
 { global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout;
+  echo "<script type=\"text/javascript\">";
+  echo "Langpdfseriesclickok='".Langpdfseriesclickok."'";
+  echo "Langpdfserieswhenfinished='".Langpdfserieswhenfinished."'";
+  echo "LangpdfseriesGenerating='".LangpdfseriesGenerating."'";
+  echo "Langpdfserieschoselayout='".Langpdfserieschoselayout."'";
+  echo "</script>";
   $fovo=$objObserver->getObserverProperty($loggedUser,'overviewFoV',120);
   $fovl=$objObserver->getObserverProperty($loggedUser,'lookupFoV',60);
   $fovd=$objObserver->getObserverProperty($loggedUser,'detailFoV',15);
@@ -20,13 +26,13 @@ function objectsSets()
 	echo LangpdfseriesExplain6.'<br />'.'<br />';		
 	echo LangpdfseriesExplain7.'<br />'.'<br />';		
 	echo LangpdfseriesExplain5.'<br />'.'<br />';		
-	echo "<input type=\"button\" value=\"".LangpdfseriesButton."\" onclick=\"generate();\"/>".'<br />';
-  echo "Add Data page"."<input id=\"datapage\" type=\"checkbox\" value=\"\" />";
+	echo "<input type=\"button\" value=\"".LangpdfseriesButton."\" onclick=\"generate();\"/>".'<br />';	
+  echo LangpdfseriesAddDataPage."<input id=\"datapage\" type=\"checkbox\" value=\"\" />";
   if($loggedUser)
-    echo "&nbsp;"."with ephemeridese"."<input id=\"ephemerides\" type=\"checkbox\" checked=\"false\" />";
+    echo "&nbsp;".LangpdfseriesWithEphemerides."<input id=\"ephemerides\" type=\"checkbox\" checked=\"false\" />";
   else
     echo "<input style=\"visibility:hidden;\" id=\"ephemerides\" type=\"checkbox\" checked=\"false\" />";
-  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."Add index page"."<input id=\"indexpage\" type=\"checkbox\" onclick=\"if(document.getElementById('indexpage').checked==true) {document.getElementById('reportlayoutselect').style.visibility='visible'; alert('Please select a layout for the index page.');} else document.getElementById('reportlayoutselect').style.visibility='hidden';\" value=\"\" />";
+  echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".LangpdfseriesAddIndexPage."<input id=\"indexpage\" type=\"checkbox\" onclick=\"if(document.getElementById('indexpage').checked==true) {document.getElementById('reportlayoutselect').style.visibility='visible'; alert('".Langpdfserieschoselayout."');} else document.getElementById('reportlayoutselect').style.visibility='hidden';\" value=\"\" />";
   echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<select id=\"reportlayoutselect\" name=\"reportlayoutselect\"  style=\"visibility:hidden;\" >";
   $defaults=$objReportLayout->getLayoutListDefault("ReportQueryOfObjects");
   while(list($key, $value) = each($defaults))
@@ -63,7 +69,7 @@ function objectsSets()
     echo "<td>"."<input type=\"text\" ".((($_SESSION['Qobj'][$i]['objectdiam1']/60)>$fovd)?"class=\"textred\"":"")." id=\"R".$i."D"."fov"."\" value=\"".$fovo." ".$fovl." ".$fovd."\" />"."</td>";
     echo "<td>"."<input type=\"text\" id=\"R".$i."D"."dsos"."\" value=\"".$dsoso." ".$dsosl." ".$dsosd."\"/>"."</td>";
     echo "<td>"."<input type=\"text\" id=\"R".$i."D"."stars"."\" value=\"".$starso." ".$starsl." ".$starsd."\"/>"."</td>";
-    echo "<td>"."<input type=\"text\" ".((($_SESSION['Qobj'][$i]['objectdiam1']/60)>15)?"class=\"textred\"":"")."id=\"R".$i."D"."photos"."\" value=\"15 30\"/>"."</td>";
+    echo "<td>"."<input type=\"text\" ".((($_SESSION['Qobj'][$i]['objectdiam1']/60)>15)?"class=\"textred\"":"")."id=\"R".$i."D"."photos"."\" value=\"60 25\"/>"."</td>";
     echo "</tr>";
   }
   echo "</table>";

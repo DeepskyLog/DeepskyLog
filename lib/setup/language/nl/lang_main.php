@@ -8,6 +8,9 @@ define("LangpdfseriesExplain5"  ,"U kan elke set opslaan en eventueel met een pd
 define("LangpdfseriesExplain6"  ,"Voor elk object kan u een datasectie toevoegen. Dit bevat de elementaire data, een objectbeschrijving indien beschikbaar, en 2 foto's met de door u aangeduide grootte (15, 30 of 60 boogminuten;, of geen).");
 define("LangpdfseriesExplain7"  ,"Na elk object kan u een inhoudstafel toevoegen. Deze bevat een overzicht van elk van de objecten die op de verschillende kaarten staan.");
 define("LangpdfseriesButton"    ,"Maak alles aan");
+define("LangpdfseriesAddDataPage","Voeg een datapagina toe");
+define("LangpdfseriesWithEphemerides","met efemeriden");
+define("LangpdfseriesAddIndexPage","Voeg een indexpagina toe");
 
 define("LangpdfseriesObject"    ,"Object");
 define("LangpdfseriesSize"      ,"Grootte");
@@ -15,6 +18,10 @@ define("LangpdfseriesFoVs"      ,"FoVs: Afgebeelde beeldvelden");
 define("Langpdfseriesdsos"      ,"Respectievelijke objectenmagnitudes");
 define("Langpdfseriesstars"     ,"Respectievelijke sterrenmagnitudes");
 define("Langpdfseriesphotos"    ,"Respectievelijke foto's (boogminuten)");
+define("Langpdfseriesclickok"   ,'Klik "Ok", alleen als ');
+define("Langpdfserieswhenfinished",' gedaan is!');
+define("LangpdfseriesGenerating",'Generen ');
+define("Langpdfserieschoselayout","Gelieve een layout voor de index te kiezen.");
 
 
 
@@ -115,6 +122,8 @@ define("Reportobjectbest"                                      ,"Beste observati
 define("Reportobjectbestpopup"                                 ,"Beste observatiemoment - tekst");
 define("Reportobjectmaxaltitude"                               ,"Hoogte bij beste observatietijd");
 define("Reportobjectmaxaltitudepopup"                          ,"Hoogte bij beste observatietijd uitleg");
+define("ReportEpehemeridesFor"                                 ,"Efemeriden voor");
+define("ReportEpehemeridesIn"                                  ,"in");
 
 define("AtlasPageFont"                                   ,"Tekengrootte pdf atlaspagina (6..9)");
 
