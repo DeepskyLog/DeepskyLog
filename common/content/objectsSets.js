@@ -8,6 +8,7 @@ function generate()
                                          '&thestars='+urlencode(document.getElementById('R'+i+'Dstars').value)+
                                          '&thephotos='+urlencode(document.getElementById('R'+i+'Dphotos').value)+
 	                                     '&datapage='+urlencode(document.getElementById('datapage').checked)+
+                                         '&ephemerides='+urlencode(document.getElementById('ephemerides').checked)+
 	                                     (document.getElementById('indexpage').checked==true?
 	                                     ('&reportlayoutselect='+urlencode(document.getElementById('reportlayoutselect').value)):''),
                            document.getElementById('R'+i).value
@@ -25,6 +26,7 @@ function generateOne(i)
 	                                   '&thestars='+urlencode(document.getElementById('R'+i+'Dstars').value)+
 	                                   '&thephotos='+urlencode(document.getElementById('R'+i+'Dphotos').value)+
 	                                   '&datapage='+urlencode(document.getElementById('datapage').checked)+
+	                                   '&ephemerides='+urlencode(document.getElementById('ephemerides').checked)+
 	                                   (document.getElementById('indexpage').checked==true?
 	                                   ('&reportlayoutselect='+urlencode(document.getElementById('reportlayoutselect').value)):''),
                            document.getElementById('R'+i).value

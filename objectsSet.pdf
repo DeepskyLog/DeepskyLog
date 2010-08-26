@@ -31,6 +31,7 @@ while($thepos=strpos($theParam,' '))
 }
 $thephotos[]=$theParam;
 $datapage=$objUtil->checkGetKey('datapage');
+$ephemerides=$objUtil->checkGetKey('ephemerides');
 $reportlayoutselect=$objUtil->checkGetKey('reportlayoutselect');
-$objPrintAtlas->pdfAtlasObjectSet($objUtil->checkGetKey('theobject'),$theSet,$thedsos,$thestars,$thephotos,$datapage,$reportlayoutselect);
+$objPrintAtlas->pdfAtlasObjectSet($objUtil->checkGetKey('theobject'),$theSet,$thedsos,$thestars,$thephotos,$datapage,$reportlayoutselect,$ephemerides);
 ?>

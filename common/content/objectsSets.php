@@ -22,6 +22,10 @@ function objectsSets()
 	echo LangpdfseriesExplain5.'<br />'.'<br />';		
 	echo "<input type=\"button\" value=\"".LangpdfseriesButton."\" onclick=\"generate();\"/>".'<br />';
   echo "Add Data page"."<input id=\"datapage\" type=\"checkbox\" value=\"\" />";
+  if($loggedUser)
+    echo "&nbsp;"."with ephemeridese"."<input id=\"ephemerides\" type=\"checkbox\" checked=\"false\" />";
+  else
+    echo "<input style=\"visibility:hidden;\" id=\"ephemerides\" type=\"checkbox\" checked=\"false\" />";
   echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."Add index page"."<input id=\"indexpage\" type=\"checkbox\" onclick=\"if(document.getElementById('indexpage').checked==true) {document.getElementById('reportlayoutselect').style.visibility='visible'; alert('Please select a layout for the index page.');} else document.getElementById('reportlayoutselect').style.visibility='hidden';\" value=\"\" />";
   echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<select id=\"reportlayoutselect\" name=\"reportlayoutselect\"  style=\"visibility:hidden;\" >";
   $defaults=$objReportLayout->getLayoutListDefault("ReportQueryOfObjects");
