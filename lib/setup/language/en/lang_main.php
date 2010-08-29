@@ -453,6 +453,8 @@ define("LangToListMyListsView"														,"Consult");
 define("LangToListMyListsRemove"													,"Remove the list");
 define("LangToListMyListsAddLongestObsDescription"				,"Add observation (longest)");
 define("LangToListMyListsAddedLongestObsDescription"		  ,"Observations added (longest)");
+define("LangToListMyListsRemoveObsDescription"		     		,"Remove observations");
+define("LangToListMyListsRemovedObsDescription"		        ,"Observations removed");
 define("LangToListRemovePageObjectsFromList"							,"Remove the objects from this page from the list.");
 define("LangToListRemovePageObjectsFromListText"					,"R");
 define("LangToListEmptyList"															,"The list is empty, there are no objects in the list.");

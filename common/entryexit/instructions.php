@@ -507,6 +507,9 @@ else
 	if($objUtil->checkGetKey('addobservationstolist')&&$myList)
 	{ $objList->addObservations($objUtil->checkGetKey('addobservationstolist'));
 	}
+	if($objUtil->checkGetKey('removeobservationsfromlist')&&$myList)
+	{ $objList->removeObservations($objUtil->checkGetKey('removeobservationsfromlist'));
+	}
 	if($objUtil->checkGetKey('activateList')&&$objUtil->checkGetKey('listname')&&($objUtil->checkGetKey('listname')!=$objUtil->checkSessionKey('listname')))
 	{ $_SESSION['listname']=$_GET['listname'];
 	  $listname=$_SESSION['listname'];

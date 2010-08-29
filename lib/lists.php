@@ -12,7 +12,8 @@ class Lists
    	 { $theobject=$run[$i];
    	   $sql="SELECT observations.id, observations.description FROM observations WHERE observations.objectname=\"".$theobject."\";";
    	 	 $get2=$objDatabase->selectRecordsetArray($sql);
-	     while(list($key, $value)=each($get2))
+	     $sortarray= array();
+   	 	 while(list($key, $value)=each($get2))
 	     { $sortarray[strlen($value['description'])]=$value['id'];
        }
 	     ksort($sortarray,SORT_NUMERIC);
@@ -32,7 +33,19 @@ class Lists
 	     $get3=$objDatabase->selectRecordArray("SELECT description FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND listname = \"".$listname."\" AND objectname=\"".$theobject."\"");
 		   $objDatabase->execSQL("UPDATE observerobjectlist SET description = \"".substr((($get3['description'])?($get3['description']." "):'').$description,0,4096)."\" WHERE observerid = \"".$loggedUser."\" AND listname=\"".$listname."\" AND objectname=\"".$theobject."\"");
      }
-		 $entryMessage.=LangToListMyListsAddedLongestObsDescription;
+		 $entryMessage.LangToListMyListsAddedLongestObsDescription;		 
+   }
+ }
+ public function removeObservations($thetype)
+ { global $entryMessage,$myList,$objObject,$objDatabase,$loggedUser,$listname,$objPresentations;
+   if(!$myList)
+     return; 
+   if($thetype=="all")
+   { $sql = "UPDATE observerobjectlist " .
+            "SET description = (SELECT objects.description FROM objects WHERE objects.name=observerobjectlist.objectname) " .
+	 	    	  "WHERE observerid = \"".$loggedUser."\" AND listname = \"".$listname."\" AND objectname <>\"\"";
+     $run=$objDatabase->execSQL($sql);
+		 $entryMessage.=LangToListMyListsRemovedObsDescription;
    }
  }
  public function addList($name)

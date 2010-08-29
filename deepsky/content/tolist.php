@@ -41,7 +41,8 @@ if($listname)
   { $content1 ="<a href=\"".$baseURL."index.php?indexAction=import_csv_list\">" .  LangToListImport . "</a> - ";
   	$content1.="<a href=\"".$baseURL."index.php?indexAction=listaction&amp;emptyList=emptyList\">".LangToListEmpty."</a> - ";
     $content1.="<a href=\"".$baseURL."index.php?indexAction=listaction&amp;removeList=removeList\">".LangToListMyListsRemove."</a> - ";
-    $content1.="<a href=\"".$baseURL."index.php?indexAction=listaction&amp;addobservationstolist=longest\">".LangToListMyListsAddLongestObsDescription."</a>";
+    $content1.="<a href=\"".$baseURL."index.php?indexAction=listaction&amp;addobservationstolist=longest\">".LangToListMyListsAddLongestObsDescription."</a> - ";
+    $content1.="<a href=\"".$baseURL."index.php?indexAction=listaction&amp;removeobservationsfromlist=all\">".LangToListMyListsRemoveObsDescription."</a>";
   }
   else
     $content1="(".LangToListListBy.$objObserver->getObserverProperty(($listowner=$objList->getListOwner()),'firstname').' '.$objObserver->getObserverProperty($listowner,'name').")";
