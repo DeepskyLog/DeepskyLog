@@ -33,7 +33,7 @@ class Lists
 	     $get3=$objDatabase->selectRecordArray("SELECT description FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND listname = \"".$listname."\" AND objectname=\"".$theobject."\"");
 		   $objDatabase->execSQL("UPDATE observerobjectlist SET description = \"".substr((($get3['description'])?($get3['description']." "):'').$description,0,4096)."\" WHERE observerid = \"".$loggedUser."\" AND listname=\"".$listname."\" AND objectname=\"".$theobject."\"");
      }
-		 $entryMessage.LangToListMyListsAddedLongestObsDescription;		 
+		 $entryMessage.=LangToListMyListsAddedLongestObsDescription;		 
    }
  }
  public function removeObservations($thetype)
