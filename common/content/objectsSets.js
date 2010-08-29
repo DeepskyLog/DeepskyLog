@@ -11,7 +11,7 @@ function generate()
                                          '&ephemerides='+urlencode(document.getElementById('ephemerides').checked)+
 	                                     (document.getElementById('indexpage').checked==true?
 	                                     ('&reportlayoutselect='+urlencode(document.getElementById('reportlayoutselect').value)):''),
-                           document.getElementById('R'+i).value
+                          ""
                            );
     alert(Langpdfseriesclickok+document.getElementById('R'+i).value+Langpdfserieswhenfinished);
     document.getElementById('T'+i).setAttribute('style','background-color:#DDDDDD;');
