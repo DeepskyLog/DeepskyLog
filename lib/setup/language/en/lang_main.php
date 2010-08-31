@@ -124,6 +124,8 @@ define("Reportobjectmaxaltitude"                               ,"Maximal altitud
 define("Reportobjectmaxaltitudepopup"                          ,"Maximal altitude explanation");
 define("ReportEpehemeridesFor"                                 ,"Ephemerides for");
 define("ReportEpehemeridesIn"                                  ,"in");
+define("ReportInLocalTime"                                     ," in LOCAL TIME !");
+define("ReportImagesFor"                                       ,'Images for ');
 
 define("AtlasPageFont"                                   ,"Font size printed atlas pages (6..9)");
 
@@ -144,6 +146,8 @@ define("profiledsosmagnitude"                            ,"Atlas standard object
 define("profiledsosmagnitudeselect"                      ,"Overview / Lookup / Detail");
 define("profilestarsmagnitude"                           ,"Atlas standard star magnitudes:");
 define("profilestarsmagnitudeselect"                     ,"Overview / Lookup / Detail");
+define("profilephotosizes"                               ,"Standard size of photos:");
+define("profilephotosizesselect"                         ,"photo 1 / photo 2");
 
 
 

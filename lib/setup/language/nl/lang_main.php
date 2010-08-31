@@ -124,6 +124,8 @@ define("Reportobjectmaxaltitude"                               ,"Hoogte bij best
 define("Reportobjectmaxaltitudepopup"                          ,"Hoogte bij beste observatietijd uitleg");
 define("ReportEpehemeridesFor"                                 ,"Efemeriden voor");
 define("ReportEpehemeridesIn"                                  ,"in");
+define("ReportInLocalTime"                                     ," in LOKALE TIJD !");
+define("ReportImagesFor"                                       ,'Beelden voor ');
 
 define("AtlasPageFont"                                   ,"Tekengrootte pdf atlaspagina (6..9)");
 
@@ -145,6 +147,8 @@ define("profiledsosmagnitude"                            ,"Atlas standaard objec
 define("profiledsosmagnitudeselect"                      ,"overzicht / opzoeken / detail");
 define("profilestarsmagnitude"                           ,"Atlas standaard stermagnitudes:");
 define("profilestarsmagnitudeselect"                     ,"overzicht / opzoeken / detail");
+define("profilephotosizes"                               ,"Standaard fotogroottes:");
+define("profilephotosizesselect"                         ,"foto 1 / foto 2");
 
 
 

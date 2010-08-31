@@ -1097,7 +1097,7 @@ class PrintAtlas
             $dateTimeText0=substr($dateTimeText0,0,2);
           elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
             $dateTimeText0=substr($dateTimeText0,0,5);
-          $this->pdf->addTextWrap( 50, $liney, 600, 10, ReportEpehemeridesFor.' '.$dateTimeText0."-".$dateTimeText1.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name'). " in LOCAL TIME !" ,  'left');
+          $this->pdf->addTextWrap( 50, $liney, 600, 10, ReportEpehemeridesFor.' '.$dateTimeText0."-".$dateTimeText1.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name'). ReportInLocalTime ,  'left');
           $liney-=5;
           $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
         	$liney-=15;
@@ -1131,7 +1131,7 @@ class PrintAtlas
       if(is_array($thephotos) && array_key_exists(0,$thephotos) && ($thephotos[0]>0))
       { $this->pdf->newPage();
         $liney=$this->canvasDimensionYpx-50;
-        $this->pdf->addTextWrap( 50, $liney, $this->canvasDimensionXpx-100, 15, 'Images for '.$theobject,  'center');
+        $this->pdf->addTextWrap( 50, $liney, $this->canvasDimensionXpx-100, 15, ReportImagesFor.$theobject,  'center');
         $liney-=5;
         $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$this->canvasDimensionYpx-55);
         $liney-=50;

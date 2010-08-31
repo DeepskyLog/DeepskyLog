@@ -127,6 +127,8 @@ define("Reportobjectmaxaltitude"                               ,"Maximale H&ouml
 define("Reportobjectmaxaltitudepopup"                          ,"Maximale H&ouml;he Beschreibung");
 define("ReportEpehemeridesFor"                                 ,"Ephemerides for");
 define("ReportEpehemeridesIn"                                  ,"in");
+define("ReportInLocalTime"                                     ," in LOCAL TIME !");
+define("ReportImagesFor"                                       ,'Images for ');
 
 define("AtlasPageFont"                                   ,"Schriftgr&ouml;&szlig;e f&uuml;r Atlas Seitenzahlen (6..9)");
 
@@ -148,6 +150,8 @@ define("profiledsosmagnitude"                            ,"Standard Objekt Helli
 define("profiledsosmagnitudeselect"                      ,"&Uuml;bersicht / Nachschlagen / Details");
 define("profilestarsmagnitude"                           ,"Standard Sterne Helligkeit im Atlas:");
 define("profilestarsmagnitudeselect"                     ,"&Uuml;bersicht / Nachschlagen / Details");
+define("profilephotosizes"                               ,"Standard size of photos:");
+define("profilephotosizesselect"                         ,"photo 1 / photo 2");
 
 
 define('LangBest'                                        ,'Beste');

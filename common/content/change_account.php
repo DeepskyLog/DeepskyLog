@@ -104,7 +104,7 @@ $line[]=array(profilefovmagnitudeselect,
               " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"lookupFoV\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupFoV')."\" />".
               " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"detailFoV\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detailFoV')."\" />",
               "");
-$line[]=array(profilestarsmagnitude,"","");
+$line[]=array(profiledsosmagnitude,"","");
 $line[]=array(profiledsosmagnitudeselect,
               " <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"overviewdsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewdsos')."\" />".
               " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"lookupdsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupdsos')."\" />".
@@ -115,6 +115,11 @@ $line[]=array(profilestarsmagnitudeselect,
               "<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"overviewstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewstars')."\" />".
               " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"lookupstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupstars')."\" />".
               " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"detailstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detailstars')."\" />",
+              "");
+$line[]=array(profilephotosizes,"","");
+$line[]=array(profilephotosizesselect,
+              "<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"photosize1\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'photosize1')."\" />".
+              " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"photosize2\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'photosize2')."\" />",
               "");
 $line[]=array("");        
 $line[]=array(AtlasPageFont,

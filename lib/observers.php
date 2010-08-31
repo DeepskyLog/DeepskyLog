@@ -279,6 +279,8 @@ class Observers implements iObservers
         $this->setObserverProperty($loggedUser,'lookupstars', $_POST['lookupstars']);
         $this->setObserverProperty($loggedUser,'detailstars', $_POST['detailstars']);
         $this->setObserverProperty($loggedUser,'atlaspagefont', $_POST['atlaspagefont']);
+        $this->setObserverProperty($loggedUser,'photosize1', $_POST['photosize1']);
+        $this->setObserverProperty($loggedUser,'photosize2', $_POST['photosize2']);
         $this->setObserverProperty($loggedUser,'copyright', $_POST['copyright']);
         $this->setObserverProperty($loggedUser,'UT', ((array_key_exists('local_time', $_POST)&&($_POST['local_time']=="on"))?"0":"1"));
 		    if ($_POST['icq_name'] != "")
