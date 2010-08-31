@@ -7,15 +7,17 @@ function objectsSets()
   echo "var LangpdfseriesGenerating='".LangpdfseriesGenerating."';";
   echo "var Langpdfserieschoselayout='".Langpdfserieschoselayout."';";
   echo "</script>";
-  $fovo=$objObserver->getObserverProperty($loggedUser,'overviewFoV',120);
-  $fovl=$objObserver->getObserverProperty($loggedUser,'lookupFoV',60);
-  $fovd=$objObserver->getObserverProperty($loggedUser,'detailFoV',15);
-  $dsoso=$objObserver->getObserverProperty($loggedUser,'overviewdsos',10);
-  $dsosl=$objObserver->getObserverProperty($loggedUser,'lookupdsos',11);
-  $dsosd=$objObserver->getObserverProperty($loggedUser,'detaildsos',14);
-  $starso=$objObserver->getObserverProperty($loggedUser,'overviewstars',10);
-  $starsl=$objObserver->getObserverProperty($loggedUser,'lookupstars',11);
-  $starsd=$objObserver->getObserverProperty($loggedUser,'detailstars',14);
+  $fovo=$objObserver->getObserverProperty($loggedUser,'overviewFoV','');
+  $fovl=$objObserver->getObserverProperty($loggedUser,'lookupFoV','');
+  $fovd=$objObserver->getObserverProperty($loggedUser,'detailFoV','');
+  $dsoso=$objObserver->getObserverProperty($loggedUser,'overviewdsos','');
+  $dsosl=$objObserver->getObserverProperty($loggedUser,'lookupdsos','');
+  $dsosd=$objObserver->getObserverProperty($loggedUser,'detaildsos','');
+  $starso=$objObserver->getObserverProperty($loggedUser,'overviewstars','');
+  $starsl=$objObserver->getObserverProperty($loggedUser,'lookupstars','');
+  $starsd=$objObserver->getObserverProperty($loggedUser,'detailstars','');
+  $foto1=$objObserver->getObserverProperty($loggedUser,'photosize1','');
+  $foto2=$objObserver->getObserverProperty($loggedUser,'photosize2','');
   $k=count($_SESSION['Qobj']);
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."common/content/objectsSets.js\"></script>";
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
@@ -69,7 +71,7 @@ function objectsSets()
     echo "<td>"."<input type=\"text\" ".((($_SESSION['Qobj'][$i]['objectdiam1']/60)>$fovd)?"class=\"textred\"":"")." id=\"R".$i."D"."fov"."\" value=\"".$fovo." ".$fovl." ".$fovd."\" />"."</td>";
     echo "<td>"."<input type=\"text\" id=\"R".$i."D"."dsos"."\" value=\"".$dsoso." ".$dsosl." ".$dsosd."\"/>"."</td>";
     echo "<td>"."<input type=\"text\" id=\"R".$i."D"."stars"."\" value=\"".$starso." ".$starsl." ".$starsd."\"/>"."</td>";
-    echo "<td>"."<input type=\"text\" ".((($_SESSION['Qobj'][$i]['objectdiam1']/60)>15)?"class=\"textred\"":"")."id=\"R".$i."D"."photos"."\" value=\"60 25\"/>"."</td>";
+    echo "<td>"."<input type=\"text\" ".((($_SESSION['Qobj'][$i]['objectdiam1']/60)>15)?"class=\"textred\"":"")."id=\"R".$i."D"."photos"."\" value=\"".$foto1." ".$foto2."\"/>"."</td>";
     echo "</tr>";
   }
   echo "</table>";

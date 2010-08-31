@@ -266,61 +266,30 @@ define("LangChangeAccountField12Expl"                     ,"Différence entre les
 
 // Visibility for resolved open clusters
 define("LangVisibilityOC1"                                ,"Amas très magnifique et remarquable");
-define("LangVisibilityOC2"                                ,"Amas  magnifique et remarquable");
-define("LangVisibilityOC3"                                ,"Conspicuously seen cluster");
-define("LangVisibilityOC4"                                ,"Cluster hardly attracts attention");
-define("LangVisibilityOC5"                                ,"Very unconspicuously, easily overlooked when slewing");
-define("LangVisibilityOC6"                                ,"Questionable sighting; star density similar to neighborhood");
+define("LangVisibilityOC2"                                ,"Amas magnifique et remarquable");
+define("LangVisibilityOC3"                                ,"Amas médiocre");
+define("LangVisibilityOC4"                                ,"L'amas n'attire gère l'attention");
+define("LangVisibilityOC5"                                ,"Très peu remarquable, on le rate facilement durant les déplacements");
+define("LangVisibilityOC6"                                ,"Observation questionnable, les étoiles ne sortent presque pas des environs");
 define("LangVisibilityOC7"                                ,"Presque pas d'étoiles détectables");
 
 // Visibility for double stars
-define("LangVisibilityDS1"                                ,"Binary can be resolved");
-define("LangVisibilityDS2"                                ,"Binary appears as 8");
-define("LangVisibilityDS3"                                ,"Binary cannot be resolved");
+define("LangVisibilityDS1"                                ,"L'étoile binary est séparable");
+define("LangVisibilityDS2"                                ,"L'étoile binaire ressemble la lettre 8");
+define("LangVisibilityDS3"                                ,"L'étoile binaire n'est pas séparable");
 
-define("LangDetailDS1"                                    ,"Equal Brightness");
-define("LangDetailDS2"                                    ,"in nice field");
+define("LangDetailDS1"                                    ,"Liminosité égale");
+define("LangDetailDS2"                                    ,"dans un champ attractif");
 define("LangDetailDS3"                                    ,"component 1");
 define("LangDetailDS4"                                    ,"component 2");
-define("LangDetailDSColor1"                               ,"white");
-define("LangDetailDSColor2"                               ,"red");
+define("LangDetailDSColor1"                               ,"blanc");
+define("LangDetailDSColor2"                               ,"rouge");
 define("LangDetailDSColor3"                               ,"orange");
-define("LangDetailDSColor4"                               ,"yellow");
-define("LangDetailDSColor5"                               ,"green");
-define("LangDetailDSColor6"                               ,"blue");
+define("LangDetailDSColor4"                               ,"jaune");
+define("LangDetailDSColor5"                               ,"vert");
+define("LangDetailDSColor6"                               ,"bleu");
 
-$atlasPageText=array(
-       'atlasPageUpBtnTxt'                               =>"Pagina Noord",
-       'atlasPageSmallUpBtnTxt'                          =>"Sectie Noord",  
-       'atlasPageDownBtnTxt'                             =>"Pagina Zuid",
-       'atlasPageSmallDownBtnTxt'                        =>"Sectie Zuid",
-       'atlasPageLeftBtnTxt'                             =>"Pagina Oost",
-       'atlasPageSmallLeftBtnTxt'                        =>'Sectie Oost',
-       'atlasPageRightBtnTxt'                            =>'Pagina West',
-       'atlasPageSmallRightBtnTxt'                       =>'Sectie West',
-       'atlasPageZoomInBtnTxt'                           =>'Zoom In',
-       'atlasPageZoom1BtnTxt'                            =>'Zoom to 1&deg;',
-       'atlasPageZoom2BtnTxt'                            =>'Zoom to 2&deg;',
-       'atlasPageZoomOutBtnTxt'                          =>'Zoom out',
-       'atlasPageObjectTxt'                              =>'Object',
-       'atlasPageTypeTxt'                                =>'Type',
-       'atlasPageConsTxt'                                =>'Sterrenbeeld',
-       'atlasPageSeenTxt'                                =>'Gezien',
-       'atlasPageMagnTxt'                                =>'Magn.',
-       'atlasPageSubrTxt'                                =>'Opp.Held.',
-       'atlasPageDiamTxt'                                =>'Grootte',
-       'atlasPageDone'                                   =>'Druk H voor help - A voor afkortingen - P voor afdrukken  - O voor overzichtskaart - Z voor zoekkaart - D voor detailkaart',
-       'atlasPageObjectsFetching'                        =>'Ophalen objectgegevens tot magnitude ...',
-       'atlasPageStarsFetching'                          =>'Ophalen stargegevens tot magnitude ...',
-       'atlasPageFoV'                                    =>'FoV:',
-       'atlasPageDSLM'                                   =>'Objecten tot mag:',
-       'atlasPageStarLM'                                 =>'Sterren tot mag:'             
-
-
-);
-
-// LangListQueryObjectsMessage17
-
+// LangListQueryObjectsMessage17;
 
 
 
@@ -328,8 +297,8 @@ define("LangGeneralObservations"													,"observations");
 
 define("LangIndexPleaseWait"															,"Pri&egrave;re d'attendre un moment pendant la recherche des donn&eacute;es...");
 
-define("LangTitlecomets_result_query_objects"        			,"Resultaten opzoeken komeet");
-define("LangTitlecomets_result_query_observations"  			,"Resultaten opzoeken waarnemingen komeet");
+define("LangTitlecomets_result_query_objects"        			,"Recherche des résultats de comète");
+define("LangTitlecomets_result_query_observations"  			,"Recherche des résultats d'observation de comète");
 
 define("LangTitleview_observer_catalog"  									,"R&eacute;sultat recherche com&egrave;tes");
 define("LangTitlerank_observers"         									,"Pr&eacute;sentation observateurs");
@@ -462,10 +431,10 @@ define("LangToListEmpty"																	,"Vider la liste");
 define("LangToListMyLists"																,"Mes listes: ");
 define("LangToListMyListsView"														,"Consulter");
 define("LangToListMyListsRemove"													,"Enlever la liste");
-define("LangToListMyListsAddLongestObsDescription"				,"Add observation (longest)");                                // To translate
-define("LangToListMyListsAddedLongestObsDescription"		  ,"Observations added (longest)");
-define("LangToListMyListsRemoveObsDescription"		     		,"Remove observations");
-define("LangToListMyListsRemovedObsDescription"		        ,"Observations removed");
+define("LangToListMyListsAddLongestObsDescription"				,"Rajouter une observation (la plus longue");                                
+define("LangToListMyListsAddedLongestObsDescription"		  ,"Les observations sont rajoutés (les plus longues)");
+define("LangToListMyListsRemoveObsDescription"		     		,"Enlever les observations");
+define("LangToListMyListsRemovedObsDescription"		        ,"Les observations sont enlevées");
 define("LangToListRemovePageObjectsFromList"							,"Effacer les objects de cette page de la liste.");
 define("LangToListRemovePageObjectsFromListText"					,"R");
 define("LangToListEmptyList"															,"La liste est vide, il n'y a pas d'objects dans la liste.");
@@ -1537,18 +1506,18 @@ $Visibility6						="Visibilit&eacute; de l'objet est douteuse";
 $Visibility7						="L'objet n'est pas visible";
 
 // Visibility for resolved open clusters
-$VisibilityOC1          ="Very prominent and very beautiful cluster";
-$VisibilityOC2          ="Prominent and beautiful cluster";
-$VisibilityOC3          ="Conspicuously seen cluster";
-$VisibilityOC4          ="Cluster hardly attracts attention";
-$VisibilityOC5          ="Very unconspicuously, easily overlooked when slewing";
-$VisibilityOC6          ="Questionable sighting; star density similar to neighborhood";
-$VisibilityOC7          ="Virtually no stars at catalog position";
+$VisibilityOC1          ="Amas très magnifique et remarquable";
+$VisibilityOC2          ="Amas magnifique et remarquable";
+$VisibilityOC3          ="Amas médiocre";
+$VisibilityOC4          ="L'amas n'attire gère l'attention";
+$VisibilityOC5          ="Très peu remarquable, on le rate facilement durant les déplacements";
+$VisibilityOC6          ="Observation questionnable, les étoiles ne sortent presque pas des environs";
+$VisibilityOC7          ="Presque pas d'étoiles détectables";
 
 // Visibility for double stars
-$VisibilityDS1          ="Binary can be resolved";
-$VisibilityDS2          ="Binary appears as 8";
-$VisibilityDS3          ="Binary cannot be resolved";
+$VisibilityDS1          ="L'étoile binary est séparable";
+$VisibilityDS2          ="L'étoile binaire ressemble la lettre 8";
+$VisibilityDS3          ="L'étoile binaire n'est pas séparable";
 
 //Seeing definitions
 $Seeing0								="-----";
