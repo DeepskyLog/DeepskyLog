@@ -210,6 +210,8 @@ define("LangMoonSun"                                      ,"Zon");
 define("LangMoonTwilight"                                 ,"Schemering");
 define("LangMoonNaut"                                     ,"Naut.");
 define("LangMoonAstro"                                    ,"Astro.");
+define("LangAstronomicalTwilight"                         ,"Astronomische schemering");
+define("LangNauticalTwilight"                             ,"Maritieme chemering");
 
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Interactieve atlas");

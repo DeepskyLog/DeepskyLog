@@ -221,6 +221,8 @@ define("LangMoonSun"                                      ,"Sonne");
 define("LangMoonTwilight"                                 ,"D&aumlmmerung");
 define("LangMoonNaut"                                     ,"Naut.");
 define("LangMoonAstro"                                    ,"Astro.");
+define("LangAstronomicalTwilight"                         ,"Astronomical twilight");
+define("LangNauticalTwilight"                             ,"Nautical twilight");
 
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Interaktiver Atlas");

@@ -1093,10 +1093,20 @@ class PrintAtlas
           $theDay=$objUtil->checkSessionKey('globalDay',date('j'));
           $dateTimeText0=date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear));
           $dateTimeText1=date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear)+(60*60*24));
-        	if(substr($dateTimeText0,-8)==substr($dateTimeText1,-8))
-            $dateTimeText0=substr($dateTimeText0,0,2);
-          elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
-            $dateTimeText0=substr($dateTimeText0,0,5);
+        	if($dateformat=='d-m-Y')
+        	{ if(substr($dateTimeText0,-8)==substr($dateTimeText1,-8))
+              $dateTimeText0=substr($dateTimeText0,0,2);
+            elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
+              $dateTimeText0=substr($dateTimeText0,0,5);
+          }
+          elseif($dateformat='M-d-Y')
+        	{ if(substr($dateTimeText0,0,3)==substr($dateTimeText1,0,3))
+        	  { $dateTimeText0=substr($dateTimeText0,0,6);
+        	    $dateTimeText1=substr($dateTimeText1,-7);
+        	  }
+        	  elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
+              $dateTimeText0=substr($dateTimeText0,0,6);
+          }
           $this->pdf->addTextWrap( 50, $liney, 600, 10, ReportEpehemeridesFor.' '.$dateTimeText0."-".$dateTimeText1.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name'). ReportInLocalTime ,  'left');
           $liney-=5;
           $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
@@ -1106,8 +1116,8 @@ class PrintAtlas
           $this->pdf->addTextWrap(450, $liney, 150, 10, LangMoon.' '.LangMoonRise.': '.$_SESSION['efemerides']['moon0'],  'left');
           $this->pdf->addTextWrap(650, $liney, 150, 10, LangMoon.' '.LangMoonSet.': '.$_SESSION['efemerides']['moon2'],  'left');
           $liney-=15;
-          $this->pdf->addTextWrap( 50, $liney, 350, 10, LangMoonTwilight.' '.LangMoonAstro.' '.LangFrom.' '.$_SESSION['efemerides']['astroe'].LangTo.$_SESSION['efemerides']['astrob'],  'left');
-          $this->pdf->addTextWrap(450, $liney, 350, 10, LangMoonTwilight.' '.LangMoonNaut.' '.LangFrom.' '.$_SESSION['efemerides']['naute'].LangTo.$_SESSION['efemerides']['nautb'],  'left');        
+          $this->pdf->addTextWrap( 50, $liney, 350, 10, LangAstronomicalTwilight.' '.LangFrom.' '.$_SESSION['efemerides']['astroe'].LangTo.$_SESSION['efemerides']['astrob'],  'left');
+          $this->pdf->addTextWrap(450, $liney, 350, 10, LangNauticalTwilight.' '.LangFrom.' '.$_SESSION['efemerides']['naute'].LangTo.$_SESSION['efemerides']['nautb'],  'left');        
           $liney-=15;
           $this->pdf->addTextWrap( 50, $liney, 150, 10, LangpdfseriesObject.' '.LangMoonRise.': '.$theobjectdata['objectrise'],  'left');
           $this->pdf->addTextWrap(250, $liney, 150, 10, LangTransit.': '.$theobjectdata['objecttransit'],  'left');

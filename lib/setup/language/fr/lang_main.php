@@ -155,7 +155,7 @@ define("profilephotosizesselect"                        ,"photo 1 / photo 2");
 
 
 define('LangBest'                                        ,'Meilleur');
-define('LangToday'                                       ,"'Aujourd'hui");
+define('LangToday'                                       ,"Aujourd'hui");
 define('LangDate'                                        ,'Date');
 define('LangCircumpolar'                                 ,' est circumpolair');
 define('LangDoesntrise'                                  ," ne monte pas au-dessus de l'horizon");
@@ -204,7 +204,7 @@ define("LangMaxAltitude"                                  ,"Altitude max.");
 // Text for moon menu
 define("LangMoonMenuTitle"                                ,"Lune");
 define("LangMoonSunMenuTitle"                             ,"Lune / Soleil");
-define("LangMoonMenuNewMoon"                              ,"Noucvelle lune");
+define("LangMoonMenuNewMoon"                              ,"Nouvelle lune");
 define("LangMoonMenuActualMoon"                           ,"Lune actuelle:");
 define("LangMoonRise"                                     ,"Montant");
 define("LangMoonSet"                                      ,"Coucher");
@@ -214,6 +214,8 @@ define("LangMoonSun"                                      ,"Soleil");
 define("LangMoonTwilight"                                 ,"Crépuscule");
 define("LangMoonNaut"                                     ,"Naut.");
 define("LangMoonAstro"                                    ,"Astro.");
+define("LangAstronomicalTwilight"                         ,"Crepuscule astronomique");
+define("LangNauticalTwilight"                             ,"Crepuscule nautique");
 
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Atlas interactif");
@@ -431,7 +433,7 @@ define("LangToListEmpty"																	,"Vider la liste");
 define("LangToListMyLists"																,"Mes listes: ");
 define("LangToListMyListsView"														,"Consulter");
 define("LangToListMyListsRemove"													,"Enlever la liste");
-define("LangToListMyListsAddLongestObsDescription"				,"Rajouter une observation (la plus longue");                                
+define("LangToListMyListsAddLongestObsDescription"				,"Rajouter une observation (la plus longue)");                                
 define("LangToListMyListsAddedLongestObsDescription"		  ,"Les observations sont rajoutés (les plus longues)");
 define("LangToListMyListsRemoveObsDescription"		     		,"Enlever les observations");
 define("LangToListMyListsRemovedObsDescription"		        ,"Les observations sont enlevées");
@@ -784,7 +786,7 @@ define("LangOverviewObjectsHeader2"												,"Constellation");
 define("LangOverviewObjectsHeader3"												,"Mag");
 define("LangOverviewObjectsHeader3b"											,"MS");
 define("LangOverviewObjectsHeader4"												,"Type");
-define("LangOverviewObjectsHeader5"												,"AD");
+define("LangOverviewObjectsHeader5"												,"Ascension Droite");
 define("LangOverviewObjectsHeader6"												,"Decl");
 define("LangOverviewObjectsHeader7"												,"Vu");
 define("LangOverviewObjectsHeader8"												,"Vu r&eacute;cemment");
@@ -848,7 +850,7 @@ define("LangViewObjectTitle"															,"D&eacute;tail objet");
 define("LangViewObjectField1"															,"Nom");
 define("LangViewObjectField2"															,"Nom alternatif");
 define("LangViewObjectField2b"														,"(Contient)/Fait partie de");
-define("LangViewObjectField3"															,"AD");
+define("LangViewObjectField3"															,"Ascension droite");
 define("LangViewObjectField4"															,"D&eacute;clinaison");
 define("LangViewObjectField5"															,"Constellation");
 define("LangViewObjectField6"															,"Type");
@@ -865,7 +867,7 @@ define("LangViewObjectField16"														,"Pocket Sky Atlas page");
 define("LangViewObjectField17"														,"Torres B page");
 define("LangViewObjectField18"														,"Torres BC page");
 define("LangViewObjectField19"														,"Torres C page");
-define("LangViewObjectFieldContrastReserve"								,"Contrast reserve");
+define("LangViewObjectFieldContrastReserve"								,"Réserve de contrast");
 define("LangViewObjectFieldMagnification"									,"Agrandissement pr&#233;f&#233;r&#233;");
 define("LangViewObjectFieldOptimumDetectionMagnification"	,"Agrandissement de d&#233;tection optimale");
 define("LangViewObjectDSS"																,"Voir l'image DSS");
@@ -883,7 +885,7 @@ define("LangViewObjectNearbyObjectsLess"									,"Moins d'objets");
 define("LangViewObjectNearbyObjectsMoreLess"							,"jusqu'&agrave; environ ");
 define("LangViewObjectNGCDescription"											,"Description NGC");
 define("LangViewObjectListDescription"										,"Description de liste");
-define("LangViewObjectDreyerDescription"									,"Dreyer codes");
+define("LangViewObjectDreyerDescription"									,"Codes de Dreyer");
 
 // content/view_observers.php
 
@@ -940,7 +942,7 @@ define("LangOverviewInstrumentsName"											,"Nom");
 define("LangOverviewInstrumentsDiameter"									,"Diam&egrave;tre (mm)");
 define("LangOverviewInstrumentsFD"												,"F/D");
 define("LangOverviewInstrumentsType"											,"Type");
-define("LangOverviewInstrumentsFixedMagnification"				,"Agrandissement fixed");
+define("LangOverviewInstrumentsFixedMagnification"				,"Agrandissement fixe");
 define("InstrumentsNakedEye"															,"Oeil nu");
 define("InstrumentsFinderscope"														,"Chercheur");
 define("InstrumentsReflector"															,"R&eacute;flecteur");
@@ -1237,8 +1239,8 @@ define("LangQueryObjectsField13"													,"Taille minimale");
 define("LangQueryObjectsField14"													,"Taille maximale");
 define("LangQueryObjectsField15"													,"Latitude minimale");
 define("LangQueryObjectsField16"													,"Latitude maximale");
-define("LangQueryObjectsField17"													,"Maximum contrast reserve");
-define("LangQueryObjectsField18"													,"Minimum contrast reserve");
+define("LangQueryObjectsField17"													,"Réserve de contrast maximal");
+define("LangQueryObjectsField18"													,"Réserve de contrast minimal");
 define("LangQueryObjectsField19"													,"Dans la liste");
 define("LangQueryObjectsField20"													,"Pas dans la liste");
 define("LangQueryObjectsButton1"													,"Recherchez les objets");
@@ -1468,13 +1470,13 @@ define("LangPDFTitle3"																		,"Observations des com&#232;tes de Deeps
 // deepsky/content/overview_observations_compact.php
 define("LangOverviewCompactDescription"										,"Description");
 
-define("LangContrastNotLoggedIn"													,"Contrast reserve ne peut &#234;tre calcul&#233; que lorseque que vous &#234;tes enregistr&#233; ...");
-define("LangContrastNoStandardLocation"										,"Contrast reserve ne peut &#234;tre calcul&#233; que lorseque vous avez d&#233;termin&#233; un endroit standard ...");
-define("LangContrastNoStandardInstrument"									,"Contrast reserve ne peut &#234;tre calcul&#233; que lorseque vous avez d&#233;termin&#233; un instument standard ...");
-define("LangContrastNoEyepiece"														,"Contrast reserve ne peut &#234;tre calcul&#233; que lorseque votre instrument standard &#224; un agrandissement fixe ou lorseque vous avez d&#233;termin&#233; un oculaire ...");
-define("LangContrastNoLimMag"															,"Contrast reserve ne peut &#234;tre calcul&#233; que lorseque vous avez d&#233;termin&#233; un magnitude limite typique our le sky background de votre endroit standard ...");
-define("LangContrastNoDiameter"														,"Contrast reserve ne peut &#234;tre calcul&#233; que lorseque le diam&#232;tre de l'objet est connu");
-define("LangContrastNoMagnitude"													,"Contrast reserve ne peut &#234;tre calcul&#233; que lorseque la magnitude de l'object est d&#233;finie");
+define("LangContrastNotLoggedIn"													,"Réserve de contrast ne peut &#234;tre calcul&#233; que lorseque que vous &#234;tes enregistr&#233; ...");
+define("LangContrastNoStandardLocation"										,"Réserve de contrast ne peut &#234;tre calcul&#233; que lorseque vous avez d&#233;termin&#233; un endroit standard ...");
+define("LangContrastNoStandardInstrument"									,"Réserve de contrast ne peut &#234;tre calcul&#233; que lorseque vous avez d&#233;termin&#233; un instument standard ...");
+define("LangContrastNoEyepiece"														,"Réserve de contrast ne peut &#234;tre calcul&#233; que lorseque votre instrument standard &#224; un agrandissement fixe ou lorseque vous avez d&#233;termin&#233; un oculaire ...");
+define("LangContrastNoLimMag"															,"Réserve de contrast ne peut &#234;tre calcul&#233; que lorseque vous avez d&#233;termin&#233; un magnitude limite typique our le sky background de votre endroit standard ...");
+define("LangContrastNoDiameter"														,"Réserve de contrast ne peut &#234;tre calcul&#233; que lorseque le diam&#232;tre de l'objet est connu");
+define("LangContrastNoMagnitude"													,"Réserve de contrast ne peut &#234;tre calcul&#233; que lorseque la magnitude de l'object est d&#233;finie");
 define("LangContrastNotVisible"														," n'est pas visible &#224; partir de ");
 define("LangContrastQuestionable"													,"La visibilit&#233; de ");
 define("LangContrastQuestionableB"												," est douteuse ");

@@ -31,7 +31,8 @@ class Lists
 		   $description .='/' .$temp['location'];
 		   $description .=') '.$objPresentations->br2nl($temp['description']);
 	     $get3=$objDatabase->selectRecordArray("SELECT description FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND listname = \"".$listname."\" AND objectname=\"".$theobject."\"");
-		   $objDatabase->execSQL("UPDATE observerobjectlist SET description = \"".substr((($get3['description'])?($get3['description']." "):'').$description,0,4096)."\" WHERE observerid = \"".$loggedUser."\" AND listname=\"".$listname."\" AND objectname=\"".$theobject."\"");
+		   if(strpos($get3['description'],$description)===FALSE)
+		     $objDatabase->execSQL("UPDATE observerobjectlist SET description = \"".substr((($get3['description'])?($get3['description']." "):'').$description,0,4096)."\" WHERE observerid = \"".$loggedUser."\" AND listname=\"".$listname."\" AND objectname=\"".$theobject."\"");
      }
 		 $entryMessage.=LangToListMyListsAddedLongestObsDescription;		 
    }

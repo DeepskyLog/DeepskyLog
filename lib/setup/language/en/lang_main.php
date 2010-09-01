@@ -210,6 +210,8 @@ define("LangMoonSun"                                      ,"Sun");
 define("LangMoonTwilight"                                 ,"Twilight");
 define("LangMoonNaut"                                     ,"Naut.");
 define("LangMoonAstro"                                    ,"Astro.");
+define("LangAstronomicalTwilight"                         ,"Astronomical twilight");
+define("LangNauticalTwilight"                             ,"Nautical twilight");
 
 
 // text for Atlas page help
