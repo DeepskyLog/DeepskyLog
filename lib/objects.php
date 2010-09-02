@@ -1050,6 +1050,53 @@ class Objects
     echo "</div></form>";
 	  echo "<hr />";
   }
+  public function getEphemerides($theObject,$theDay,$theMonth,$theYear,$theLocation="")
+  { global $objAstroCalc,$objObserver,$loggedUser,$objLocation;
+    $thejd = gregoriantojd($theMonth, $theDay, $theYear);
+    if(!($theLocation))
+      $theLocation=$objObserver->getObserverProperty($loggedUser, 'stdLocation');
+    $longitude = $objLocation->getLocationPropertyFromId($theLocation, 'longitude');
+    $latitude = $objLocation->getLocationPropertyFromId($theLocation, 'latitude');
+    $timezone=$objLocation->getLocationPropertyFromId($theLocation,'timezone');
+    $dateTimeZone=new DateTimeZone($timezone);
+    $datestr=sprintf("%02d",$theMonth)."/".sprintf("%02d",$theDay)."/".$theYear;
+    $dateTime = new DateTime($datestr, $dateTimeZone);
+    // Geeft tijdsverschil terug in seconden
+    $timedifference = $dateTimeZone->getOffset($dateTime);
+    $timedifference = $timedifference / 3600.0;
+    if (strncmp($timezone, "Etc/GMT", 7) == 0) {
+      $timedifference = -$timedifference;
+    }
+    $ra = $this->getDsoProperty($theObject,'ra');
+    $dec = $this->getDsoProperty($theObject,'decl');
+    $ristraset = $objAstroCalc->calculateRiseTransitSettingTime($longitude, $latitude, $ra, $dec, $thejd, $timedifference);
+    $theEphemerides['transit']=$ristraset[1];
+    return $theEphemerides;  
+    /*  if ($ristraset[0] == "-" && strncmp($ristraset[3], "-", 1) == 0) {
+        $popup1 = $object . LangDoesntrise;
+      } else if ($ristraset[0] == "-") {
+        $popup1 = $object . LangCircumpolar;
+      } else {
+        $popup1 = $object . LangRise . $ristraset[0] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes($location);
+      }
+      $popup2 = $object . LangTransitPopup . $ristraset[1] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes($location);
+      if ($ristraset[2] == "-" && strncmp($ristraset[3], "-", 1) == 0) {
+        $popup3 = $object . LangDoesntrise;
+      } else if ($ristraset[2] == "-") {
+        $popup3 = $object . LangCircumpolar;
+      } else {
+        $popup3 = $object . LangSet . $ristraset[2] . LangRistrasetOn . $dateTimeText . LangRistrasetIn . addslashes($location);
+      }
+      if ($ristraset[3] == "-") {
+        $popup4 = $object . LangDoesntrise;
+      } else {
+        $popup4 = $object . LangAltitude . $ristraset[3] . LangRistrasetIn . addslashes($location);
+      }
+      
+      $objPresentations->line(array(LangMoonRise, "<span onmouseover=\"Tip('" . $popup1 . "')\">".$ristraset[0]."</span>", LangTransit, "<span onmouseover=\"Tip('" . $popup2 . "')\">".$ristraset[1]."</span>", LangMoonSet, "<span onmouseover=\"Tip('" . $popup3 . "')\">".$ristraset[2]."</span>", LangBest, $ristraset[4], LangMaxAltitude, "<span class=\"" . "\"  onmouseover=\"Tip('" . $popup4 . "')\">".$ristraset[3]."</span>"), "RLRLRLRLRL", array(10,10,10,10,10,10,10,10,10,10), 20, array("type20", "type20", "type20", "type20", "type20", "type20", "type20", "type20", "type20", "type20"));
+  	*/
+  	
+  }
   public  function showObjects($link, $min, $max, $ownShow='', $showRank=0, $step=25, $pageListAction="addAllObjectsFromPageToList",$columnSource="")        // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
   { global $MSIE, $FF, $objFormLayout, $objAtlas, $objObserver, $objLocation, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil,$objPresentations,$objList;
 	  $atlas='';

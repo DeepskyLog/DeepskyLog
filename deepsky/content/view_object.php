@@ -20,7 +20,22 @@ else
   $objPresentations->line(array("<a href=\"" . $baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode($object) . "\">" . LangAtlasPage . "</a>",$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(40,60),20);
 	echo "<hr />";
 	$objObject->showObject($object);
-	
+	if($loggedUser && $objObserver->getObserverProperty($loggedUser, 'stdLocation'))
+	{ echo "<table>";
+		echo "<tr>";
+		echo "<td>Month</td>";
+		for($i=1;$i<13;$i++)
+		  echo"<td>".$i."</td>";
+		echo "</tr>";
+		echo "<tr>";
+		echo "<td>Transit</td>";
+		for($i=1;$i<13;$i++)
+		{ $theEphemerides=$objObject->getEphemerides($object,15,$i,2010);
+		  echo"<td>".$theEphemerides['transit']."</td>";
+		}echo "</tr>";
+		echo "</table>";
+		echo "<hr />";
+	}
 	if(!($imagesize))
 	{ $maxcount=count($_SESSION['Qobj']);
 		$max = 9999;
