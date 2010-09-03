@@ -66,7 +66,7 @@ if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation'))
       $sset = $sun_info["sunset"];
       if ($sset > 1)
         $sset = date("H:i", $sset + $timedifference * 60 * 60);
-       else 
+      else 
         $sset = "-";
       $nautb = $sun_info["nautical_twilight_begin"];
       if ($nautb > 1)

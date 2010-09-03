@@ -246,7 +246,15 @@ class AstroCalc implements iAstroCalc
     $ra2 = $ra2 / 15;
 
     date_default_timezone_set ("UTC");
-    $timestr = $_SESSION['globalYear'] . "-" . $_SESSION['globalMonth'] . "-" . $_SESSION['globalDay'];
+    $temptime=jdtogregorian($jd+1).' ';
+    $temppos=strpos($temptime,"/");
+    $tempmonth=substr($temptime,0,$temppos);
+    $temptime=substr($temptime,$temppos+1);
+    $temppos=strpos($temptime,"/");
+    $tempday=substr($temptime,0,$temppos);
+    $tempyear=substr($temptime,$temppos+1);
+    
+    $timestr = $tempyear . "-" . $tempmonth . "-" . $tempday;
 
     $sun_info = date_sun_info(strtotime($timestr), $latitude, -$longitude);
     $astrobegin = date("H:i", $sun_info["astronomical_twilight_begin"]);
