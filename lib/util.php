@@ -16,7 +16,7 @@ class Utils
   	if($thehourvalue<1200)
   	{ if($thelastvalue>1200) return false;
   		if($thelastvalue<$thehourvalue) return false;
-  		if($thefirstvalue>1200) return true;
+  	 if($thefirstvalue>1200) return true;
   		if($thefirstvalue>$thehourvalue) return false;
   		return true;
   	}
@@ -27,6 +27,20 @@ class Utils
   	  if($thelastvalue<$thehourvalue) return false;
   	  return true;
   	}
+  }
+  public function checkNightHourMinutePeriodOverlap($firststart,$firstend,$secondstart,$secondend)
+  { $firststartvalue=$this->hourminuteTimeToValue($firststart);
+    $firstendvalue=$this->hourminuteTimeToValue($firstend);
+    $secondstartvalue=$this->hourminuteTimeToValue($secondstart);
+    $secondendvalue=$this->hourminuteTimeToValue($secondend);
+    if($secondstartvalue<$secondendvalue) return ((($firststartvalue>$secondstartvalue)&&($firststartvalue<$secondendvalue))||
+                                                  (($firstendvalue>$secondstartvalue)&&($firstendvalue<$secondendvalue))||
+                                                  (($firststartvalue<$secondend)&&($firstendvalue>$secondendvalue))||
+                                                  (($firststartvalue<$secondstartvalue)&&($firststartvalue>$firstendvalue))||
+                                                  (($firstendvalue>$secondendvalue)&&($firststartvalue>$firstendvalue)));
+    else return ($firststartvalue>$secondstartvalue)||($firststartvalue<$secondendvalue)||
+                ($firstendvalue>$secondstartvalue)||($firstendvalue<$secondendvalue)||
+                (($firststartvalue<$secondstartvalue)&&($firstendvalue>$secondendvalue)&&($firststartvalue>$firstendvalue));
   }
   public  function __construct()
 	{ foreach($_POST as $foo => $bar)
