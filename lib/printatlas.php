@@ -1040,6 +1040,9 @@ class PrintAtlas
     }
     $this->pdf->Stream(); 
   }
+  private function filterdegpart($thevalue)
+  { return substr($thealtitude=html_entity_decode($thevalue),0,strpos($thealtitude,'°')+1);
+  }
   public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true')
   { global $theMonth,$theDay,$theYear,$dateformat,$baseURL,$objList,$objInstrument,$objLocation,$objUtil,$instDir,$loggedUser,$loggedUserName,$objObserver,$objObject,$objPresentations,$tempfolder,$objReportLayout,$listname,$myList;
     $astroObjects=array();
@@ -1086,8 +1089,224 @@ class PrintAtlas
       	$liney-=15;
         $this->pdf->addTextWrap( 50, $liney, 300, 10, LangViewObjectFieldOptimumDetectionMagnification.': '.$theobjectdata['objectoptimalmagnification'],  'left');
         $liney-=15;
+
+        
+        
+        
+        
+        
+        
+        
         if($ephemerides=='true')
         { $liney-=15;
+        	$theLocation=$objObserver->getObserverProperty($loggedUser, 'stdLocation');
+	   
+          $this->pdf->addTextWrap( 50, $liney, 600, 10, ReportEpehemeridesFor.' '.$theobject.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name'). ReportInLocalTime ,  'left');
+          $liney-=5;
+          $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
+        	$liney-=15;
+          $object=$theobject;
+          $longitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'longitude');
+          $latitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'latitude');
+          $timezone=$objLocation->getLocationPropertyFromId($theLocation,'timezone');
+          $dateTimeZone=new DateTimeZone($timezone);
+          for($i=1;$i<13;$i++)
+			    { $datestr=sprintf("%02d",$i)."/".sprintf("%02d",1)."/".$_SESSION['globalYear'];
+	          $dateTime = new DateTime($datestr, $dateTimeZone);
+	          $timedifference = $dateTimeZone->getOffset($dateTime);
+	          if (strncmp($timezone, "Etc/GMT", 7)==0) 
+	            $timedifference = -$timedifference;
+			      date_default_timezone_set ("UTC");
+						$theTimeDifference1[$i]=$timedifference;
+			      $theEphemerides1[$i]=$objObject->getEphemerides($object,1,$i,2010);
+			      $theNightEphemerides1[$i]=date_sun_info(strtotime("2010"."-".$i."-"."1"), $latitude, $longitude);
+						$datestr=sprintf("%02d",$i)."/".sprintf("%02d",1)."/".$_SESSION['globalYear'];
+			      $dateTime = new DateTime($datestr, $dateTimeZone);
+			      $timedifference = $dateTimeZone->getOffset($dateTime);
+			      if (strncmp($timezone, "Etc/GMT", 7)==0) 
+			        $timedifference = -$timedifference;
+			      date_default_timezone_set ("UTC");
+						$theTimeDifference15[$i]=$timedifference;
+			      $theEphemerides15[$i]=$objObject->getEphemerides($object,15,$i,2010);
+			      $theNightEphemerides15[$i]=date_sun_info(strtotime("2010"."-".$i."-"."15"), $latitude, $longitude);	
+					}
+			    $this->pdf->addTextWrap( 50, $liney, 50, 10, LangMonth,'center');
+			    for($i=1;$i<13;$i++)
+			    { $this->pdf->addTextWrap( 77+(55*$i), $liney, 27, 10, $i,'center');
+			    }
+			    $liney-=15;
+			    $this->pdf->addTextWrap( 50, $liney, 50, 8, LangMaxAltitude,'center');
+				  for($i=1;$i<13;$i++)
+				  { $colorclass="";
+					  $colorclass2="";
+					  if($i==1)
+					  { if(($theEphemerides1[$i]['altitude']!='-') && ($theEphemerides15[$i]['altitude']!='-') &&
+					       (($theEphemerides1[$i]['altitude']==$theEphemerides15[$i]['altitude']) ||
+					        ($theEphemerides1[$i]['altitude']==$theEphemerides15[12]['altitude'])))
+					    { $colorclass="<b>";
+					      $colorclass2="</b>";
+					    }
+					  }
+			      else
+			        if(($theEphemerides1[$i]['altitude']!='-') && ($theEphemerides15[$i]['altitude']!='-') && 
+			           (($theEphemerides1[$i]['altitude']==$theEphemerides15[$i]['altitude']) ||
+					        ($theEphemerides1[$i]['altitude']==$theEphemerides15[$i-1]['altitude'])))
+					    { $colorclass="<b>";
+					      $colorclass2="</b>";
+					    }
+			      $this->pdf->addTextWrap( 50+(55*$i), $liney, 27, 7, $colorclass.$this->filterdegpart($theEphemerides1[$i]['altitude']).$colorclass2,'center');
+			      if($i==12)
+					  { if(($theEphemerides1[$i]['altitude']!='-') && ($theEphemerides15[$i]['altitude']!='-') &&
+					       (($theEphemerides15[$i]['altitude']==$theEphemerides1[$i]['altitude']) ||
+					        ($theEphemerides15[$i]['altitude']==$theEphemerides1[1]['altitude'])))
+					      { $colorclass="<b>";
+					        $colorclass2="</b>";
+					      }
+					  }
+			      else
+			        if(($theEphemerides15[$i]['altitude']!='-') && ($theEphemerides15[$i]['altitude']!='-') && 
+			           (($theEphemerides15[$i]['altitude']==$theEphemerides1[$i]['altitude']) ||
+					        ($theEphemerides15[$i]['altitude']==$theEphemerides1[$i+1]['altitude'])))
+					      { $colorclass="<b>";
+					        $colorclass2="</b>";
+					      }
+			      $this->pdf->addTextWrap( 77+(55*$i), $liney, 27, 7, $colorclass.$this->filterdegpart($theEphemerides15[$i]['altitude']).$colorclass2,'center');
+					}
+					if(($theEphemerides1[1]['altitude']!='-') && ($theEphemerides15[1]['altitude']!='-') &&
+					       (($theEphemerides1[1]['altitude']==$theEphemerides15[1]['altitude']) ||
+					        ($theEphemerides1[1]['altitude']==$theEphemerides15[12]['altitude'])))
+					      { $colorclass="<b>";
+					        $colorclass2="</b>";
+					      }
+					      //echo"<td class=\"centered ".$colorclass."\">".$theEphemerides1[1]['altitude']."</td>";
+			    $this->pdf->addTextWrap( 50+(55*13), $liney, 27, 7,  $colorclass.$this->filterdegpart($theEphemerides1[1]['altitude']).$colorclass2,'center');
+				
+			    
+			 
+			      
+			/*
+			echo "<tr class=\"type10\">";
+			echo "<td class=\"centered\">".LangTransit."</td>";
+			for($i=1;$i<13;$i++)
+			{ $colorclass="";
+			  if((date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])!="00:00") && $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['transit'],date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])))
+			    $colorclass="ephemeridesgreen";
+			  elseif((date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"])!="00:00") && $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['transit'],date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i])))
+			    $colorclass="ephemeridesyellow";  
+			  echo"<td class=\"centered ".$colorclass."\">".$theEphemerides1[$i]['transit']."</td>";
+			  $colorclass="";
+			  if((date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])!="00:00") && $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['transit'],date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])))
+			    $colorclass="ephemeridesgreen";
+			  elseif((date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])!="00:00") && $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['transit'],date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i])))
+			    $colorclass="ephemeridesyellow";  
+			  echo"<td class=\"centered ".$colorclass."\">".$theEphemerides15[$i]['transit']."</td>";
+			}
+			echo"<td class=\"centered ".$colorclass."\">".$theEphemerides15[1]['transit']."</td>";
+			echo "</tr>";
+			echo "<tr class=\"type20\">";
+			echo "<td class=\"centered\">".LangAstroNight."</td>";
+			for($i=1;$i<13;$i++)
+			{ echo"<td class=\"centered\">".
+			  ((date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])!="00:00")
+			   ?date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i])."<br />-<br />".date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i])
+			   :"-")."</td>";
+			  echo"<td class=\"centered\">".
+			  ((date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"])!="00:00")
+			   ?date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i])."<br />-<br />".date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])
+			   :"-")."</td>";
+			}
+			echo"<td class=\"centered\">".
+			  ((date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"])!="00:00")
+			   ?date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]+$theTimeDifference1[1])."<br />-<br />".date("H:i", $theNightEphemerides15[1]["astronomical_twilight_begin"]+$theTimeDifference15[1])
+			   :"-")."</td>";
+			echo "</tr>";
+			echo "<tr class=\"type20\">";
+			echo "<td class=\"centered\">".LangNauticalNight."</td>";
+			for($i=1;$i<13;$i++)
+			{ echo"<td class=\"centered\">".
+			  ((date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"])!="00:00")
+			   ?date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]+$theTimeDifference1[$i])."<br />-<br />".date("H:i", $theNightEphemerides1[$i]["nautical_twilight_begin"]+$theTimeDifference1[$i])
+			   :"-")."</td>";
+			  echo"<td class=\"centered\">".
+			  ((date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])!="00:00")
+			   ?date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]+$theTimeDifference15[$i])."<br />-<br />".date("H:i", $theNightEphemerides15[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i])
+			   :"-")."</td>";
+			}
+			echo"<td class=\"centered\">".
+			 ((date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"])!="00:00")
+			  ?date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"]+$theTimeDifference1[1])."<br />-<br />".date("H:i", $theNightEphemerides1[1]["nautical_twilight_begin"]+$theTimeDifference15[1])
+			  :"-")."</td>";
+			echo "</tr>";
+			echo "<tr class=\"type20\">";
+			echo "<td class=\"centered\">".LangObjectRiseSet."</td>";
+			for($i=1;$i<13;$i++)
+			{ $colorclass="";
+				if($theEphemerides1[$i]['rise']=='-')
+			  { if((date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])!="00:00"))
+			      $colorclass="ephemeridesgreen";
+			    else if ((date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"])!="00:00"))
+			      $colorclass="ephemeridesyellow";
+			  }
+			  if((date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])!="00:00") && 
+			    ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['rise'],date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i])) ||
+			     $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['set'],date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i])) ||
+			     $objUtil->checkNightHourMinuteBetweenOthers(date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),$theEphemerides1[$i]['rise'],$theEphemerides1[$i]['set']))
+			    )
+			    $colorclass="ephemeridesgreen";
+			  else if((date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"])!="00:00")&&
+			         ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['rise'],date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["nautical_twilight_begin"]+$theTimeDifference1[$i])) ||
+			          $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['set'],date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["nautical_twilight_begin"]+$theTimeDifference1[$i])) ||
+			          $objUtil->checkNightHourMinuteBetweenOthers(date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]+$theTimeDifference1[$i]),$theEphemerides1[$i]['rise'],$theEphemerides1[$i]['set']))
+			    )
+			    $colorclass="ephemeridesyellow";
+			  echo"<td class=\"centered ".$colorclass."\">".($theEphemerides1[$i]['rise']=='-'?"-":$theEphemerides1[$i]['rise']."<br />-<br />".$theEphemerides1[$i]['set'])."</td>";
+				if($theEphemerides15[$i]['rise']=='-')
+			  { if((date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"])!="00:00"))
+			      $colorclass="ephemeridesgreen";
+			    else if ((date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])!="00:00"))
+			      $colorclass="ephemeridesyellow";
+			  }
+			  if((date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"])!="00:00") && 
+			    ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['rise'],date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])) ||
+			     $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['set'],date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])) ||
+			     $objUtil->checkNightHourMinuteBetweenOthers(date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),$theEphemerides15[$i]['rise'],$theEphemerides15[$i]['set']))
+			    )
+			    $colorclass="ephemeridesgreen";
+			  else if((date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])!="00:00")&&
+			         ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['rise'],date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i])) ||
+			          $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['set'],date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i])) ||
+			          $objUtil->checkNightHourMinuteBetweenOthers(date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]+$theTimeDifference15[$i]),$theEphemerides15[$i]['rise'],$theEphemerides15[$i]['set']))
+			    )
+			    $colorclass="ephemeridesyellow";
+			  echo"<td class=\"centered ".$colorclass."\">".($theEphemerides15[$i]['rise']=="-"?"-":$theEphemerides15[$i]['rise']."<br />-<br />".$theEphemerides15[$i]['set'])."</td>";
+			}
+      $colorclass="";
+			if($theEphemerides1[1]['rise']=='-')
+		  { if((date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"])!="00:00"))
+		      $colorclass="ephemeridesgreen";
+		    else if ((date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"])!="00:00"))
+		      $colorclass="ephemeridesyellow";
+		  }
+		  if((date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"])!="00:00") && 
+		    ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[1]['rise'],date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]+$theTimeDifference1[1]),date("H:i", $theNightEphemerides1[1]["astronomical_twilight_begin"]+$theTimeDifference1[1])) ||
+		     $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[1]['set'],date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]+$theTimeDifference1[1]),date("H:i", $theNightEphemerides1[1]["astronomical_twilight_begin"]+$theTimeDifference1[1])) ||
+		     $objUtil->checkNightHourMinuteBetweenOthers(date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]+$theTimeDifference1[1]),$theEphemerides1[1]['rise'],$theEphemerides1[1]['set']))
+		    )
+		    $colorclass="ephemeridesgreen";
+		  else if((date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"])!="00:00")&&
+		         ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[1]['rise'],date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"]+$theTimeDifference1[1]),date("H:i", $theNightEphemerides1[1]["nautical_twilight_begin"]+$theTimeDifference1[1])) ||
+		          $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[1]['set'],date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"]+$theTimeDifference1[1]),date("H:i", $theNightEphemerides1[1]["nautical_twilight_begin"]+$theTimeDifference1[1])) ||
+		          $objUtil->checkNightHourMinuteBetweenOthers(date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"]+$theTimeDifference1[1]),$theEphemerides1[1]['rise'],$theEphemerides1[1]['set']))
+		    )
+		    $colorclass="ephemeridesyellow";
+			echo"<td class=\"centered ".$colorclass."\">".($theEphemerides1[1]['rise']=='-'?'-':$theEphemerides1[1]['rise']."<br />-<br />".$theEphemerides1[1]['set'])."</td>";
+
+    }
+	}        	
+        	*/
+        	
+        /*	
+        	$liney-=15;
           $theYear=$objUtil->checkSessionKey('globalYear',date("Y"));
           $theMonth=$objUtil->checkSessionKey('globalMonth',date("n"));
           $theDay=$objUtil->checkSessionKey('globalDay',date('j'));
@@ -1123,9 +1342,11 @@ class PrintAtlas
           $this->pdf->addTextWrap(250, $liney, 150, 10, LangTransit.': '.$theobjectdata['objecttransit'],  'left');
           $this->pdf->addTextWrap(450, $liney, 150, 10, LangMoonSet.': '.$theobjectdata['objectset'],  'left');
           $this->pdf->addTextWrap(650, $liney, 150, 10, LangMaxAltitude.": ".$objPresentations->decToString($theobjectdata['objectmaxaltitude'],0),  'left');
+        */
           $liney-=15;
           $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
         }
+        
       }
       $liney-=15;$textextra='';
       if(($listname=$objUtil->checkSessionKey('listname'))&&($objList->checkObjectInMyActiveList($theobject)))

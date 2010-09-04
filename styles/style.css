@@ -1,6 +1,9 @@
 .ephemeridesgreen {
 	background-color      : #008800;
 }
+.ephemeridesyellow {
+	background-color      : #DDDD00;
+}
 a:hover {
   text-decoration  : underline;
 }

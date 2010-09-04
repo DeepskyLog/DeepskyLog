@@ -1,7 +1,34 @@
 <?php // util
 include_once "class.ezpdf.php";
 class Utils
-{ public  function __construct()
+{ public function hourminuteTimeToValue($thetime)
+  { if($thetime=="-") return -1;
+    if($thetime==":") return -1;
+    if(($thepos=strpos($thetime,":"))===false) return -1;
+    if(!(is_numeric($thehour=substr($thetime,0,$thepos)))) return -1;
+    if(!(is_numeric($theminute=substr($thetime,$thepos+1,2)))) return -1;
+  	return 1*(($thehour*100)+$theminute);
+  }
+  public function checkNightHourMinuteBetweenOthers($thehour,$firsthour,$lasthour)
+  { $thehourvalue=$this->hourminuteTimeToValue($thehour);
+    $thefirstvalue=$this->hourminuteTimeToValue($firsthour);
+    $thelastvalue=$this->hourminuteTimeToValue($lasthour);
+  	if($thehourvalue<1200)
+  	{ if($thelastvalue>1200) return false;
+  		if($thelastvalue<$thehourvalue) return false;
+  		if($thefirstvalue>1200) return true;
+  		if($thefirstvalue>$thehourvalue) return false;
+  		return true;
+  	}
+  	else
+  	{ if($thefirstvalue<1200) return false;
+  	  if($thefirstvalue>$thehourvalue) return false;
+  	  if($thelastvalue<1200) return true;
+  	  if($thelastvalue<$thehourvalue) return false;
+  	  return true;
+  	}
+  }
+  public  function __construct()
 	{ foreach($_POST as $foo => $bar)
       $_POST[$foo]=htmlentities(stripslashes($bar),ENT_COMPAT,"ISO-8859-15",0);
     foreach($_GET as $foo => $bar)

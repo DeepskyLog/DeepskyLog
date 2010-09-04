@@ -1,5 +1,11 @@
 <?php
 
+
+define("LangMonth"              ,"Maand");
+define("LangAstroNight"         ,"Astronomische nacht");
+define("LangNauticalNight"      ,"Nautische nacht");
+define("LangObjectRiseSet"      ,"Object opgang<br />-<br />ondergang");
+
 define("LangpdfseriesExplain1"  ,"Maak een set van kaarten voor elk object.");
 define("LangpdfseriesExplain2"  ,"Elke set bevat even veel kaarten als gespecifieerd in het FoV vak.");
 define("LangpdfseriesExplain3"  ,"Elke kaart gespecifieerd in het vak FoVs, toont sterren en objecten zoals gespecifieerd in de respectievelijke vakken.");
@@ -123,6 +129,8 @@ define("Reportobjectbestpopup"                                 ,"Beste observati
 define("Reportobjectmaxaltitude"                               ,"Hoogte bij beste observatietijd");
 define("Reportobjectmaxaltitudepopup"                          ,"Hoogte bij beste observatietijd uitleg");
 define("ReportEpehemeridesFor"                                 ,"Efemeriden voor");
+define("ReportEpehemeridesForShow"                             ,"Toon de efemeriden");
+define("ReportEpehemeridesForHide"                             ,"Verberg de efemeriden");
 define("ReportEpehemeridesIn"                                  ,"in");
 define("ReportInLocalTime"                                     ," in LOKALE TIJD !");
 define("ReportImagesFor"                                       ,'Beelden voor ');

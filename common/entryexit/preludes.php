@@ -65,6 +65,10 @@ else
   }
   if(array_key_exists('changeMonth',$_GET) && $_GET['changeMonth'])
   { $_SESSION['globalMonth'] = $_GET['changeMonth'];
+    if(($_SESSION['globalDay']>28)&&($_SESSION['globalMonth']==2))
+      $_SESSION['globalDay']=28;
+    if(($_SESSION['globalDay']==31)&&(($_SESSION['globalMonth']==4)||($_SESSION['globalMonth']==6)||($_SESSION['globalMonth']==9)||($_SESSION['globalMonth']==11)))
+     $_SESSION['globalDay']=30;
     if(array_key_exists('Qobj',$_SESSION))
       $_SESSION['Qobj']=$objObject->getObjectRisSetTrans($_SESSION['Qobj']);
   }

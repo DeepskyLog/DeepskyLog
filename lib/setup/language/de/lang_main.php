@@ -1,5 +1,11 @@
 <?php
 
+
+define("LangMonth"              ,"Month");
+define("LangAstroNight"         ,"Astronomical night");
+define("LangNauticalNight"      ,"Nautical night");
+define("LangObjectRiseSet"      ,"Object rise<br />-<br />set");
+
 define("LangpdfseriesExplain1"  ,"Generate a set of charts for each object.");
 define("LangpdfseriesExplain2"  ,"Each set contains a number of charts specified by the FoVs asked below.");
 define("LangpdfseriesExplain3"  ,"Each charts specified by the FoVs, shows stars and object up to the specified magnitudes.");
@@ -126,6 +132,8 @@ define("Reportobjectbestpopup"                                 ,"Beste Beobachtu
 define("Reportobjectmaxaltitude"                               ,"Maximale H&ouml;he w&aumlhrend der besten Beobachtungszeit");
 define("Reportobjectmaxaltitudepopup"                          ,"Maximale H&ouml;he Beschreibung");
 define("ReportEpehemeridesFor"                                 ,"Ephemerides for");
+define("ReportEpehemeridesForShow"                             ,"Show the ephemerides");
+define("ReportEpehemeridesForHide"                             ,"Hide the ephemerides");
 define("ReportEpehemeridesIn"                                  ,"in");
 define("ReportInLocalTime"                                     ," in LOCAL TIME !");
 define("ReportImagesFor"                                       ,'Images for ');

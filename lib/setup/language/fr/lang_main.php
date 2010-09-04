@@ -1,5 +1,12 @@
 <?php
 
+
+define("LangMonth"              ,"Mois");
+define("LangAstroNight"         ,"Nuit astronomique");
+define("LangNauticalNight"      ,"Nuit nautique");
+define("LangObjectRiseSet"      ,"Montant de l'objet<br />-<br />descandant");
+
+
 define("LangpdfseriesExplain1"  ,"Generez une collection de cartes pour chaque objet.");
 define("LangpdfseriesExplain2"  ,"Chaque collection contient le nombre de cartes spécifié par le nombre de champs de vue spécifiés.");
 define("LangpdfseriesExplain3"  ,"Chaque carte spécifié par les champs de vue, montre des étoiles et des objets juqsu'à la magnitude spécifié dans les cases correspondantes.");
@@ -125,6 +132,8 @@ define("Reportobjectbestpopup"                                 ,"Explication du 
 define("Reportobjectmaxaltitude"                               ,"Altitude maximale au moment du meilleur temps");
 define("Reportobjectmaxaltitudepopup"                          ,"Explacation de l'altitude maximale");
 define("ReportEpehemeridesFor"                                 ,"Epheméides pour");
+define("ReportEpehemeridesForShow"                             ,"Montez les éphemerides");
+define("ReportEpehemeridesForHide"                             ,"Cachez les éphemerides");
 define("ReportEpehemeridesIn"                                  ,"&agrave;");
 define("ReportInLocalTime"                                     ," en temps local !");
 define("ReportImagesFor"                                       ,'Les images pour ');
