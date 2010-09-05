@@ -1043,7 +1043,7 @@ class PrintAtlas
   private function filterdegpart($thevalue)
   { return substr($thealtitude=html_entity_decode($thevalue),0,strpos($thealtitude,'°')+1);
   }
-  public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true')
+  public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false)
   { global $theMonth,$theDay,$theYear,$dateformat,$baseURL,$objList,$objInstrument,$objLocation,$objUtil,$instDir,$loggedUser,$loggedUserName,$objObserver,$objObject,$objPresentations,$tempfolder,$objReportLayout,$listname,$myList;
     $astroObjects=array();
     set_time_limit(120);
@@ -1097,7 +1097,7 @@ class PrintAtlas
         
         
         
-        if($ephemerides=='true')
+        if($yearephemerides=='true')
         { $liney-=15;
         	$theLocation=$objObserver->getObserverProperty($loggedUser, 'stdLocation');
 	   
@@ -1304,9 +1304,10 @@ class PrintAtlas
     }
 	}        	
         	*/
+        }	
         	
-        /*	
-        	$liney-=15;
+			   if($ephemerides=='true')
+        { $liney-=15;
           $theYear=$objUtil->checkSessionKey('globalYear',date("Y"));
           $theMonth=$objUtil->checkSessionKey('globalMonth',date("n"));
           $theDay=$objUtil->checkSessionKey('globalDay',date('j'));
@@ -1342,7 +1343,7 @@ class PrintAtlas
           $this->pdf->addTextWrap(250, $liney, 150, 10, LangTransit.': '.$theobjectdata['objecttransit'],  'left');
           $this->pdf->addTextWrap(450, $liney, 150, 10, LangMoonSet.': '.$theobjectdata['objectset'],  'left');
           $this->pdf->addTextWrap(650, $liney, 150, 10, LangMaxAltitude.": ".$objPresentations->decToString($theobjectdata['objectmaxaltitude'],0),  'left');
-        */
+        
           $liney-=15;
           $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
         }
