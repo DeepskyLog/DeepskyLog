@@ -16,6 +16,7 @@ define("LangpdfseriesExplain7"  ,"Na elk object kan u een inhoudstafel toevoegen
 define("LangpdfseriesButton"    ,"Maak alles aan");
 define("LangpdfseriesAddDataPage","Voeg een datapagina toe");
 define("LangpdfseriesWithEphemerides","met efemeriden");
+define("LangpdfseriesWithYearEphemerides","met jaarefemeriden");
 define("LangpdfseriesAddIndexPage","Voeg een indexpagina toe");
 
 define("LangpdfseriesObject"    ,"Object");

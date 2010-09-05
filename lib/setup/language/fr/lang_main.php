@@ -17,6 +17,7 @@ define("LangpdfseriesExplain7"  ,"Par objet, vous pouvez rajouter une table de c
 define("LangpdfseriesButton"    ,"Generez tous");
 define("LangpdfseriesAddDataPage","Rajoutez une page de données");
 define("LangpdfseriesWithEphemerides","avec les éphémerides");
+define("LangpdfseriesWithYearEphemerides","avec les éphémerides pour toute l'année");
 define("LangpdfseriesAddIndexPage","Rajoutez une table de contenu");
 
 define("LangpdfseriesObject"    ,"Objet");

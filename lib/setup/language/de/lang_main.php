@@ -16,6 +16,7 @@ define("LangpdfseriesExplain7"  ,"You can add an index after each section. This 
 define("LangpdfseriesButton"    ,"Generate all");
 define("LangpdfseriesAddDataPage","Add a data page");
 define("LangpdfseriesWithEphemerides","with ephemerides");
+define("LangpdfseriesWithYearEphemerides","with yearephemerides");
 define("LangpdfseriesAddIndexPage","Add an index page");
 
 define("LangpdfseriesObject"    ,"Object");
