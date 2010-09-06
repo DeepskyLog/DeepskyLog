@@ -138,7 +138,7 @@ else
 			}
 			echo"<td class=\"centered\">".
 			  ((date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"])!="00:00")
-			   ?date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]+$theTimeDifference1[1])."<br />-<br />".date("H:i", $theNightEphemerides15[1]["astronomical_twilight_begin"]+$theTimeDifference15[1])
+			   ?date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]+$theTimeDifference1[1])."<br />-<br />".date("H:i", $theNightEphemerides1[1]["astronomical_twilight_begin"]+$theTimeDifference1[1])
 			   :"-")."</td>";
 			echo "</tr>";
 			echo "<tr class=\"type20\">";
