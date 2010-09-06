@@ -1131,11 +1131,9 @@ class PrintAtlas
           $liney-=15;
         }
 
-      $liney-=25;
-      if($loggedUser && $objObserver->getObserverProperty($loggedUser, 'stdLocation') && ($yearephemerides=='true'))
-        { if(!((is_array($thephotos) && array_key_exists(0,$thephotos) && ($thephotos[0]>0))))
-            $this->pdf->newPage();
-          $this->pdf->addTextWrap( 50, $liney, $this->canvasDimensionXpx-100, 10, ReportEpehemeridesFor.' '.$theobject.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name'). ReportInLocalTime,  'left');
+        $liney-=25;
+        if($objObserver->getObserverProperty($loggedUser, 'stdLocation') && ($yearephemerides=='true'))
+        { $this->pdf->addTextWrap( 50, $liney, $this->canvasDimensionXpx-100, 10, ReportEpehemeridesFor.' '.$theobject.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name'). ReportInLocalTime,  'left');
           $liney-=5;
           $this->pdf->line(50,$liney,$this->canvasDimensionXpx-50,$liney);
           $theLocation=$objObserver->getObserverProperty($loggedUser, 'stdLocation');	   
@@ -1210,14 +1208,31 @@ class PrintAtlas
 					if(($theEphemerides1[7]['altitude']!='-') && ($theEphemerides15[7]['altitude']!='-') &&
 					       (($theEphemerides1[7]['altitude']==$theEphemerides15[7]['altitude']) ||
 					        ($theEphemerides1[7]['altitude']==$theEphemerides15[6]['altitude'])))
-					      { $colorclass="<b>";
-					        $colorclass2="</b>";
-					      }
+		      { $colorclass="<b>";
+		        $colorclass2="</b>";
+		      }
 					      //echo"<td class=\"centered ".$colorclass."\">".$theEphemerides1[1]['altitude']."</td>";
 			    $this->pdf->addTextWrap( (100*7), $liney, 50, 8,  $colorclass.$this->filterdegpart($theEphemerides1[7]['altitude']).$colorclass2,'center');
 				
 			    
-			 
+					for($i=1;$i<13;$i++)
+					{ $colorclass="";
+					  if((date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])!="00:00") && $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['transit'],date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])))
+			      { $colorclass="<b>";
+			        $colorclass2="</b>";
+			      }
+					  elseif((date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"])!="00:00") && $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['transit'],date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i])))
+					    $colorclass="";  
+					  echo"<td class=\"centered ".$colorclass."\">".$theEphemerides1[$i]['transit']."</td>";
+					  $colorclass="";
+					  if((date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])!="00:00") && $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['transit'],date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])))
+					    $colorclass="ephemeridesgreen";
+					  elseif((date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])!="00:00") && $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['transit'],date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i])))
+					    $colorclass="ephemeridesyellow";  
+			      $this->pdf->addTextWrap( 50+(100*$i), $liney, 50, 8, $colorclass.$this->filterdegpart($theEphemerides15[$i]['altitude']).$colorclass2,'center');
+					}
+					echo"<td class=\"centered ".$colorclass."\">".$theEphemerides15[1]['transit']."</td>";
+			    
 			      
 			/*
 			echo "<tr class=\"type10\">";
