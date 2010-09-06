@@ -16,23 +16,25 @@ class Lists
    	 	 while(list($key, $value)=each($get2))
 	     { $sortarray[strlen($value['description'])]=$value['id'];
        }
-	     ksort($sortarray,SORT_NUMERIC);
-	     $temp=array_pop($sortarray);
-	     $sql = "SELECT observations.objectname, observations.description, observers.name, observers.firstname, locations.name as location, instruments.name AS instrument " .
-	        "FROM observations " .
-		 		  "JOIN observers ON observations.observerid=observers.id " .
-				  "JOIN locations ON observations.locationid=locations.id " .
-				  "JOIN instruments ON observations.instrumentid=instruments.id " .
-				  "WHERE observations.id=".$temp;
-	     $temp=$objDatabase->selectRecordArray($sql);
-	     $name=$temp['objectname'];
-	     $description = '(' .$temp['firstname'].' '.$temp['name'];
-		   $description .='/' .$temp['instrument'];
-		   $description .='/' .$temp['location'];
-		   $description .=') '.$objPresentations->br2nl($temp['description']);
-	     $get3=$objDatabase->selectRecordArray("SELECT description FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND listname = \"".$listname."\" AND objectname=\"".$theobject."\"");
-		   if(strpos($get3['description'],$description)===FALSE)
-		     $objDatabase->execSQL("UPDATE observerobjectlist SET description = \"".substr((($get3['description'])?($get3['description']." "):'').$description,0,4096)."\" WHERE observerid = \"".$loggedUser."\" AND listname=\"".$listname."\" AND objectname=\"".$theobject."\"");
+	     if(count($sortarray)>0)
+	     { ksort($sortarray,SORT_NUMERIC);
+	       $temp=array_pop($sortarray);
+	       $sql = "SELECT observations.objectname, observations.description, observers.name, observers.firstname, locations.name as location, instruments.name AS instrument " .
+  	        "FROM observations " .
+	  	 		  "JOIN observers ON observations.observerid=observers.id " .
+		  		  "JOIN locations ON observations.locationid=locations.id " .
+			  	  "JOIN instruments ON observations.instrumentid=instruments.id " .
+				    "WHERE observations.id=".$temp;
+	       $temp=$objDatabase->selectRecordArray($sql);
+	       $name=$temp['objectname'];
+	       $description = '(' .$temp['firstname'].' '.$temp['name'];
+		     $description .='/' .$temp['instrument'];
+		     $description .='/' .$temp['location'];
+		     $description .=') '.$objPresentations->br2nl($temp['description']);
+	       $get3=$objDatabase->selectRecordArray("SELECT description FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND listname = \"".$listname."\" AND objectname=\"".$theobject."\"");
+		     if(strpos($get3['description'],$description)===FALSE)
+		       $objDatabase->execSQL("UPDATE observerobjectlist SET description = \"".substr((($get3['description'])?($get3['description']." "):'').$description,0,4096)."\" WHERE observerid = \"".$loggedUser."\" AND listname=\"".$listname."\" AND objectname=\"".$theobject."\"");
+	     }
      }
 		 $entryMessage.=LangToListMyListsAddedLongestObsDescription;		 
    }

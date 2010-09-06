@@ -325,7 +325,6 @@ class AstroCalc implements iAstroCalc
       }
 
       $ris_tra_set[3] = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($dec2)) + cos(deg2rad($latitude)) * cos(deg2rad($dec2)) * cos(deg2rad($H))));
-
       if ($tocompare != -999) {
         if ($tocompare > $ris_tra_set[3]) {
           $ris_tra_set[3] = $tocompare;
@@ -336,7 +335,7 @@ class AstroCalc implements iAstroCalc
       } else {
         $ris_tra_set[4] = $transit;
       }
-
+      
       $minutes = round(($ris_tra_set[3] - floor($ris_tra_set[3])) * 60);
       if ($minutes == 60) {
         $minutes = 0;
@@ -352,7 +351,7 @@ class AstroCalc implements iAstroCalc
       } else {
         $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes;
       }
-
+      
       if ($ris_tra_set[4] > 24 || $ris_tra_set[4] < 0 || $ris_tra_set[3] == "-") {
         $ris_tra_set[4] = "-";
       } else {
@@ -428,7 +427,7 @@ class AstroCalc implements iAstroCalc
 	      }
 	
 	      $ris_tra_set[3] = rad2deg(asin(sin(deg2rad($latitude)) * sin(deg2rad($dec2)) + cos(deg2rad($latitude)) * cos(deg2rad($dec2)) * cos(deg2rad($H))));
-	
+	      
 	      if ($tocompare != -999) {
 	        if ($tocompare > $ris_tra_set[3]) {
 	          $ris_tra_set[3] = $tocompare;
@@ -482,6 +481,8 @@ class AstroCalc implements iAstroCalc
 	      $ris_tra_set[3] = "-";
 	      $ris_tra_set[4] = "-";
 	    }  
+	    if($ris_tra_set[3]!="-")
+	      $ris_tra_set[3]="(".$ris_tra_set[3].")";
     }
     
     return $ris_tra_set;
