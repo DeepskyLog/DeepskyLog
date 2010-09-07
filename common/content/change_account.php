@@ -6,6 +6,7 @@ else
 {
 $sites = $objLocation->getSortedLocations("name", $loggedUser);
 $tempLocationList="<select name=\"site\" class=\"inputfield\">";
+$tempLocationList.= "<option value=\"0\">-----</option>";
 // If there are locations with the same name, the province should also be shown
 $previous = "fskfskf";
 for($i=0;$i<count($sites);$i++)
@@ -25,6 +26,7 @@ for ($i = 0;$i < count($sites);$i++)
 }
 $tempLocationList.="</select>";
 $tempInstrumentList="<select name=\"instrument\" class=\"inputfield\">";
+$tempInstrumentList.= "<option value=\"0\">-----</option>";
 $instr=$objInstrument->getSortedInstruments("name",$loggedUser);
 $noStd=false;
 while(list($key,$value)=each($instr))

@@ -911,7 +911,7 @@ define("LangViewObserverUser"															,"Utilisateur");
 define("LangViewObserverCometAdmin"												,"Administrateur com&egrave;tes");
 define("LangViewObserverValidate"													,"Validez");
 define("LangViewObserverChange"														,"Changez le r&ocirc;le");
-define("LangViewObserverChangeNameFirstname"              ,"Changez l'adresse &eegu; / pr&eegu;;nom / nom");
+define("LangViewObserverChangeNameFirstname"              ,"Changez l'adresse émail / prénom / nom");
 define("LangViewObserverNumberOfObservations"							,"Nombre d'observations");
 define("LangViewObserverRank"															,"Position");
 define("LangViewObserverInexistant"												,"Cet observateur n'existe pas!");

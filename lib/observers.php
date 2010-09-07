@@ -231,14 +231,14 @@ class Observers implements iObservers
         $this->setObserverProperty($_POST['deepskylog_id'],'observationlanguage', $_POST['description_language']);
         $this->setObserverProperty($_POST['deepskylog_id'],'language', $_POST['language']);
 		    $this->setObserverProperty($_POST['deepskylog_id'],'registrationDate', date("Ymd H:i"));
-		    $body = LangValidateAccountEmailLine1 . "\n"                            // send mail to administrator
+		    $body = htmlspecialchars(LangValidateAccountEmailLine1 . "\n"                            // send mail to administrator
 		              . "\n" . LangValidateAccountEmailLine1bis
 		              . $_POST['deepskylog_id']
 		              . "\n" . LangValidateAccountEmailLine2
 		              . $_POST['email']
 		              . "\n" . LangValidateAccountEmailLine3
 		              . $_POST['firstname'] . " " . $_POST['name']
-		              . "\n\n" . LangValidateAccountEmailLine4;
+		              . "\n\n" . LangValidateAccountEmailLine4);
         if(isset($developversion)&&($developversion==true))
           $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<p>";
         else

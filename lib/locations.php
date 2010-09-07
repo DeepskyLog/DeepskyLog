@@ -228,11 +228,13 @@ class Locations
 		}  	
   }
   public  function validateDeleteLocation()
-  { global $objUtil, $objDatabase;
+  { global $loggedUser, $objUtil, $objDatabase, $objObserver;
     if(($locationid=$objUtil->checkGetKey('locationid'))
     && ($objUtil->checkAdminOrUserID($this->getLocationPropertyFromId($locationid,'observer')))
     && (!($this->getLocationUsedFromId($locationid))))
-    { $objDatabase->execSQL("DELETE FROM locations WHERE id=\"".$locationid."\"");
+    { if($loggedUser && $objObserver->getObserverProperty($loggedUser,'stdlocation')==$locationid)
+        $objObserver->setObserverProperty($loggedUser,'stdlocation',0);
+      $objDatabase->execSQL("DELETE FROM locations WHERE id=\"".$locationid."\"");
       return LangValidateLocationMessage3;
     }
   }
