@@ -1,44 +1,37 @@
 <?php
 
+define("LangMonth"              ,"Monat");
+define("LangAstroNight"         ,"Astronomische Nacht");
+define("LangNauticalNight"      ,"Nautische Nacht");
+ define("LangObjectRiseSet"      ,"Objekt Auf-<br />-<br />Untergang");
 
-define("LangMonth"              ,"Month");
-define("LangAstroNight"         ,"Astronomical night");
-define("LangNauticalNight"      ,"Nautical night");
-define("LangObjectRiseSet"      ,"Object rise<br />-<br />set");
+define("LangpdfseriesExplain1"  ,"Kartensammlung zu einem Objekt erstellen.");
+define("LangpdfseriesExplain2"  ,"Jede Kartensammlung enth&auml;lt mehrere Aufsuchkarten mit den jeweils unten angegebenen Gesichtsfeldwerten.");
+ define("LangpdfseriesExplain3"  ,"Jede Aufsuchkarte zeigt Sterne und Objekte bis zur unten angegebenen max. Helligkeit.");
+define("LangpdfseriesExplain4"  ,"Die max. Helligkeitsfelder unten sollten soviele Eintr&auml;ge haben, wie Gesichtsfelder angegeben wurden.");
+ define("LangpdfseriesExplain5"  ,"Sie k&ouml;nnen die Kartensammlungen speichern und mit einem PDF Merger zusammenf&uuml;gen. Damit k&ouml;nnen Sie Ihren eigenen Sternkartenatlas erstellen. Sie k&ouml;nnen auch angeben, alle Kartensammlungen in einem Durchgang zu erstellen, bedenken Sie jedoch, da&szlig; dies etwas l&auml;nger zur Generierung ben&ouml;tigt.");
+ define("LangpdfseriesExplain6"  ,"Vor jedem Objekt k&ouml;nnen Sie einen Datenbereich angeben. Dieser enth&auml;lt grundlegende Daten, eine Objektbeschreibung (falls verf&uuml;gbar) sowie 2 Fotos in der von Ihnen angegebenen Gr&ouml;&szlig;e (15, 30 oder 60 Bogenminuten).");
+ define("LangpdfseriesExplain7"  ,"Sie k&ouml;nnen einen Index nach jedem Abschnitt anlegen lassen. Dieser Index enth&auml;lt eine &uuml;bersicht &uuml;ber alle Objekte auf jeder Karte.");
+ define("LangpdfseriesButton"    ,"Alle generieren");
+define("LangpdfseriesAddDataPage","Datenbereich hinzuf&uuml;gen");
+define("LangpdfseriesWithEphemerides","mit Ephemeriden");
+ define("LangpdfseriesWithYearEphemerides","mit Jahresephemeriden");
+define("LangpdfseriesAddIndexPage","Index hinzuf&uuml;gen");
 
-define("LangpdfseriesExplain1"  ,"Generate a set of charts for each object.");
-define("LangpdfseriesExplain2"  ,"Each set contains a number of charts specified by the FoVs asked below.");
-define("LangpdfseriesExplain3"  ,"Each charts specified by the FoVs, shows stars and object up to the specified magnitudes.");
-define("LangpdfseriesExplain4"  ,"Each magnitude field should contain as many magnitudes as there are FoVs.");
-define("LangpdfseriesExplain5"  ,"You can save each set and use a pdf merger to make one large atlas-catalogue if you wish. If you choose to make all objects in one pass, please remember that each object can take up to 30 seconds or more to generate.");
-define("LangpdfseriesExplain6"  ,"Before each object, you can add a data section. This contains the elementary data, an object description when available, and 2 photos by the size indicated by you (15, 30 or 60 arc minutes, or nothing).");
-define("LangpdfseriesExplain7"  ,"You can add an index after each section. This index contains an overview of all the objects on each of the maps.");
-define("LangpdfseriesButton"    ,"Generate all");
-define("LangpdfseriesAddDataPage","Add a data page");
-define("LangpdfseriesWithEphemerides","with ephemerides");
-define("LangpdfseriesWithYearEphemerides","with yearephemerides");
-define("LangpdfseriesAddIndexPage","Add an index page");
-
-define("LangpdfseriesObject"    ,"Object");
-define("LangpdfseriesSize"      ,"Size");
-define("LangpdfseriesFoVs"      ,"FoVs: shown field of views");
-define("Langpdfseriesdsos"      ,"Object magnitudes");
-define("Langpdfseriesstars"     ,"Stellar magnitudes");
-define("Langpdfseriesphotos"    ,"Photos (arc minutes)");
-define("Langpdfseriesclickok"   ,'Click "Ok", only when ');
-define("Langpdfserieswhenfinished",' is finished!');
-define("LangpdfseriesGenerating",'Generating ');
-define("Langpdfserieschoselayout","Please select a layout for the index page.");
-
-
-// TO DO
-//define("LangTopObserversHeader7"													,"Anzahl der Zeichnungen");
-//define("LangTopObserversHeader8"													,"Zeichnungen letztes Jahr");
-
-
-define("LangStoredQueries"      ,"Stored queries:");
-define("LangSaveAs"             ,"Save As...");
-define("LangRemoveQuery"        ,"Remove");
+define("LangpdfseriesObject"    ,"Objekt");
+ define("LangpdfseriesSize"      ,"Gr&ouml;&szlig;e");
+define("LangpdfseriesFoVs"      ,"Gesichtsfelder:");
+define("Langpdfseriesdsos"      ,"Objekt Helligkeit");
+ define("Langpdfseriesstars"     ,"Stern Helligkeit");
+define("Langpdfseriesphotos"    ,"Fotos (Bogenminuten)");
+define("Langpdfseriesclickok"   ,'Dr&uuml;cken Sie "Ok", nur wenn ');
+ define("Langpdfserieswhenfinished",' Sie wirklich fertig sind!');
+define("LangpdfseriesGenerating",'Generiere ');
+define("Langpdfserieschoselayout","Bitte w&auml;hlen Sie ein Layout f&uuml;r den Index.");
+ 
+define("LangStoredQueries"      ,"Gespeicherte Abfragen:");
+define("LangSaveAs"             ,"Speichern als...");
+define("LangRemoveQuery"        ,"Entfernen");
 
 define("LangExclude",            "Ausnahme:");
 define("LangDescriptioncontains","NGC Beschreibung enth&aumllt:");
