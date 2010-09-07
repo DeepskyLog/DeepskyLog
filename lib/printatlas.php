@@ -1131,7 +1131,7 @@ class PrintAtlas
           $liney-=15;
         }
 
-        $liney-=25;
+        $liney-=15;
         if($objObserver->getObserverProperty($loggedUser, 'stdLocation') && ($yearephemerides=='true'))
         { $this->pdf->addTextWrap( 50, $liney, $this->canvasDimensionXpx-100, 10, ReportEpehemeridesFor.' '.$theobject.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($objObserver->getObserverProperty($loggedUser,'stdlocation'),'name'). ReportInLocalTime,  'left');
           $liney-=5;
@@ -1163,12 +1163,12 @@ class PrintAtlas
 			      $theEphemerides15[$i]=$objObject->getEphemerides($object,15,$i,2010);
 			      $theNightEphemerides15[$i]=date_sun_info(strtotime("2010"."-".$i."-"."15"), $latitude, $longitude);	
 					}
-			    $this->pdf->addTextWrap( 50, $liney, 50, 8, LangMonth,'center');
+			    $this->pdf->addTextWrap( 50, $liney, 100, 8, LangMonth,'center');
 			    for($i=1;$i<7;$i++)
-			    { $this->pdf->addTextWrap( 50+(100*$i), $liney, 50, 8, $i,'center');
+			    { $this->pdf->addTextWrap( 100+(100*$i), $liney, 50, 8, $i,'center');
 			    }
 			    $liney-=15;
-			    $this->pdf->addTextWrap( 50, $liney, 50, 8, LangMaxAltitude,'center');
+			    $this->pdf->addTextWrap( 50, $liney, 100, 8, LangMaxAltitude,'center');
 				  for($i=1;$i<7;$i++)
 				  { $colorclass="";
 					  $colorclass2="";
@@ -1187,7 +1187,7 @@ class PrintAtlas
 					    { $colorclass="<b>";
 					      $colorclass2="</b>";
 					    }
-			      $this->pdf->addTextWrap( (100*$i), $liney, 50, 8, $colorclass.$this->filterdegpart($theEphemerides1[$i]['altitude']).$colorclass2,'center');
+			      $this->pdf->addTextWrap( 50+(100*$i), $liney, 50, 8, $colorclass.$this->filterdegpart($theEphemerides1[$i]['altitude']).$colorclass2,'center');
 			      if($i==12)
 					  { if(($theEphemerides1[$i]['altitude']!='-') && ($theEphemerides15[$i]['altitude']!='-') &&
 					       (($theEphemerides15[$i]['altitude']==$theEphemerides1[$i]['altitude']) ||
@@ -1203,7 +1203,7 @@ class PrintAtlas
 					      { $colorclass="<b>";
 					        $colorclass2="</b>";
 					      }
-			      $this->pdf->addTextWrap( 50+(100*$i), $liney, 50, 8, $colorclass.$this->filterdegpart($theEphemerides15[$i]['altitude']).$colorclass2,'center');
+			      $this->pdf->addTextWrap( 100+(100*$i), $liney, 50, 8, $colorclass.$this->filterdegpart($theEphemerides15[$i]['altitude']).$colorclass2,'center');
 					}
 					if(($theEphemerides1[7]['altitude']!='-') && ($theEphemerides15[7]['altitude']!='-') &&
 					       (($theEphemerides1[7]['altitude']==$theEphemerides15[7]['altitude']) ||
@@ -1211,12 +1211,10 @@ class PrintAtlas
 		      { $colorclass="<b>";
 		        $colorclass2="</b>";
 		      }
-			    $this->pdf->addTextWrap( (100*7), $liney, 50, 8,  $colorclass.$this->filterdegpart($theEphemerides1[7]['altitude']).$colorclass2,'center');
-
-			    			    
+			    $this->pdf->addTextWrap( 50+(100*7), $liney, 50, 8,  $colorclass.$this->filterdegpart($theEphemerides1[7]['altitude']).$colorclass2,'center');
 
           $liney-=15;
-					$this->pdf->addTextWrap( 50, $liney, 50, 8, LangTransit,'center');
+					$this->pdf->addTextWrap( 50, $liney, 100, 8, LangTransit,'center');
 					for($i=1;$i<7;$i++)
 					{ $colorclass="";
 					  $colorclass2="";
@@ -1224,179 +1222,139 @@ class PrintAtlas
 					  { $colorclass="<b>";
 					    $colorclass2="</b>";
 					  }
-					  $this->pdf->addTextWrap((100*$i), $liney  , 50, 8, $colorclass.$theEphemerides1[$i]['transit'].$colorclass2,"center");
+					  $this->pdf->addTextWrap(50+(100*$i), $liney  , 50, 8, $colorclass.$theEphemerides1[$i]['transit'].$colorclass2,"center");
 					  $colorclass="";
 					  if((date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])!="00:00") && $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['transit'],date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])))
 					  { $colorclass="<b>";
 					    $colorclass2="</b>";
 					  }
-					  $this->pdf->addTextWrap(50+(100*$i), $liney, 50, 8, $colorclass.$theEphemerides15[$i]['transit'].$colorclass2,"center");
+					  $this->pdf->addTextWrap(100+(100*$i), $liney, 50, 8, $colorclass.$theEphemerides15[$i]['transit'].$colorclass2,"center");
 					}
 		      $colorclass="";
 					if((date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"])!="00:00") && $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[7]['transit'],date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"]+$theTimeDifference1[7]),date("H:i", $theNightEphemerides1[7]["astronomical_twilight_begin"]+$theTimeDifference1[7])))
 					{ $colorclass="<b>";
 					  $colorclass2="</b>";
 					}
-					$this->pdf->addTextWrap((100*$i), $liney  , 50, 8, $colorclass.$theEphemerides1[7]['transit'].$colorclass2,"center");
+					$this->pdf->addTextWrap(50+(100*$i), $liney  , 50, 8, $colorclass.$theEphemerides1[7]['transit'].$colorclass2,"center");
 			  			    
-			    
-			    
-			    
-			    
 			    $liney-=15;
-			    $this->pdf->addTextWrap( 50, $liney-4, 50, 8, LangAstroNight,'center');
+			    $this->pdf->addTextWrap( 50, $liney-4, 100, 8, LangAstroNight,'center');
 			    for($i=1;$i<7;$i++)
 			    { if(date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])=="00:00")
-			        $this->pdf->addTextWrap((100*$i), $liney-4, 50, 8, "-", "center");
-			      else
-			      { $this->pdf->addTextWrap((100*$i), $liney  , 50, 8,date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]  +$theTimeDifference1[$i]),"center");
-			        $this->pdf->addTextWrap((100*$i), $liney-7, 50, 8,date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i]),'center');
-			      }
-			      if(date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"])=="00:00")
 			        $this->pdf->addTextWrap(50+(100*$i), $liney-4, 50, 8, "-", "center");
 			      else
-			      { $this->pdf->addTextWrap(50+(100*$i), $liney  , 50, 8,date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]  +$theTimeDifference15[$i]),"center");
-			        $this->pdf->addTextWrap(50+(100*$i), $liney-7, 50, 8,date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i]),'center');
+			      { $this->pdf->addTextWrap(50+(100*$i), $liney  , 50, 8,date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]  +$theTimeDifference1[$i]),"center");
+			        $this->pdf->addTextWrap(50+(100*$i), $liney-7, 50, 8,date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i]),'center');
+			      }
+			      if(date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"])=="00:00")
+			        $this->pdf->addTextWrap(100+(100*$i), $liney-4, 50, 8, "-", "center");
+			      else
+			      { $this->pdf->addTextWrap(100+(100*$i), $liney  , 50, 8,date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]  +$theTimeDifference15[$i]),"center");
+			        $this->pdf->addTextWrap(100+(100*$i), $liney-7, 50, 8,date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i]),'center');
 			      }
 			    }
 			    if(date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"])=="00:00")
-			      $this->pdf->addTextWrap((100*7), $liney-7, 50, 8, "-", "center");
+			      $this->pdf->addTextWrap(50+(100*7), $liney-7, 50, 8, "-", "center");
 			    else
-			    { $this->pdf->addTextWrap((100*7), $liney  , 50, 8,date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"]  +$theTimeDifference1[7]),"center");
-			      $this->pdf->addTextWrap((100*7), $liney-7, 50, 8,date("H:i", $theNightEphemerides1[7]["astronomical_twilight_begin"]+$theTimeDifference1[7]),'center');
+			    { $this->pdf->addTextWrap(50+(100*7), $liney  , 50, 8,date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"]  +$theTimeDifference1[7]),"center");
+			      $this->pdf->addTextWrap(50+(100*7), $liney-7, 50, 8,date("H:i", $theNightEphemerides1[7]["astronomical_twilight_begin"]+$theTimeDifference1[7]),'center');
 			    }
 
 			    $liney-=25;
-			    $this->pdf->addTextWrap( 50, $liney-4, 50, 8, LangNauticalNight,'center');
+			    $this->pdf->addTextWrap( 50, $liney-4, 100, 8, LangNauticalNight,'center');
 			    for($i=1;$i<7;$i++)
 			    { if(date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"])=="00:00")
-			        $this->pdf->addTextWrap((100*$i), $liney-4, 50, 8, "-", "center");
-			      else
-			      { $this->pdf->addTextWrap((100*$i), $liney  , 50, 8,date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]  +$theTimeDifference1[$i]),"center");
-			        $this->pdf->addTextWrap((100*$i), $liney-7, 50, 8,date("H:i", $theNightEphemerides1[$i]["nautical_twilight_begin"]+$theTimeDifference1[$i]),'center');
-			      }
-			      if(date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])=="00:00")
 			        $this->pdf->addTextWrap(50+(100*$i), $liney-4, 50, 8, "-", "center");
 			      else
-			      { $this->pdf->addTextWrap(50+(100*$i), $liney  , 50, 8,date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]  +$theTimeDifference15[$i]),"center");
-			        $this->pdf->addTextWrap(50+(100*$i), $liney-7, 50, 8,date("H:i", $theNightEphemerides15[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i]),'center');
+			      { $this->pdf->addTextWrap(50+(100*$i), $liney  , 50, 8,date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]  +$theTimeDifference1[$i]),"center");
+			        $this->pdf->addTextWrap(50+(100*$i), $liney-7, 50, 8,date("H:i", $theNightEphemerides1[$i]["nautical_twilight_begin"]+$theTimeDifference1[$i]),'center');
+			      }
+			      if(date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])=="00:00")
+			        $this->pdf->addTextWrap(100+(100*$i), $liney-4, 50, 8, "-", "center");
+			      else
+			      { $this->pdf->addTextWrap(100+(100*$i), $liney  , 50, 8,date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]  +$theTimeDifference15[$i]),"center");
+			        $this->pdf->addTextWrap(100+(100*$i), $liney-7, 50, 8,date("H:i", $theNightEphemerides15[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i]),'center');
 			      }
 			    }
 			    if(date("H:i", $theNightEphemerides1[7]["nautical_twilight_end"])=="00:00")
-			      $this->pdf->addTextWrap((100*7), $liney-7, 50, 8, "-", "center");
+			      $this->pdf->addTextWrap(50+(100*7), $liney-7, 50, 8, "-", "center");
 			    else
-			    { $this->pdf->addTextWrap((100*7), $liney  , 50, 8,date("H:i", $theNightEphemerides1[7]["nautical_twilight_end"]  +$theTimeDifference1[7]),"center");
-			      $this->pdf->addTextWrap((100*7), $liney-7, 50, 8,date("H:i", $theNightEphemerides1[7]["nautical_twilight_begin"]+$theTimeDifference1[7]),'center');
+			    { $this->pdf->addTextWrap(50+(100*7), $liney  , 50, 8,date("H:i", $theNightEphemerides1[7]["nautical_twilight_end"]  +$theTimeDifference1[7]),"center");
+			      $this->pdf->addTextWrap(50+(100*7), $liney-7, 50, 8,date("H:i", $theNightEphemerides1[7]["nautical_twilight_begin"]+$theTimeDifference1[7]),'center');
 			    }
 			    
+			    $liney-=25;
+			    $this->pdf->addTextWrap( 50, $liney-4, 100, 8, LangObjectRiseSet,'center');
+          for($i=1;$i<7;$i++)
+			    { $colorclass="";
+				    $colorclass2="";
+			      if($theEphemerides1[$i]['rise']=='-')
+					  { $colorclass="<b>";
+					    $colorclass2="</b>";
+					  }
+			      if((date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])!="00:00") && 
+			         ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['rise'],date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i])) ||
+			          $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['set'],date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i])) ||
+			          $objUtil->checkNightHourMinuteBetweenOthers(date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),$theEphemerides1[$i]['rise'],$theEphemerides1[$i]['set']))
+			         )
+					  { $colorclass="<b>";
+					    $colorclass2="</b>";
+					  }
+	 			    if($theEphemerides1[$i]['rise']=='-')
+			        $this->pdf->addTextWrap(50+(100*$i), $liney-4, 50, 8, "-", "center");
+			      else
+			      { $this->pdf->addTextWrap(50+(100*$i), $liney  , 50, 8,$theEphemerides1[$i]['rise'],"center");
+			        $this->pdf->addTextWrap(50+(100*$i), $liney-7, 50, 8,$theEphemerides1[$i]['set'],'center');
+			      }
+	          $colorclass="";
+				    $colorclass2="";
+			      if($theEphemerides15[$i]['rise']=='-')
+					  { $colorclass="<b>";
+					    $colorclass2="</b>";
+					  }
+				    if((date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"])!="00:00") && 
+			         ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['rise'],($theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])) ||
+			          $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['set'],($theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])) ||
+			          $objUtil->checkNightHourMinuteBetweenOthers(($theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),$theEphemerides15[$i]['rise'],$theEphemerides15[$i]['set']))
+			         )
+					  { $colorclass="<b>";
+					    $colorclass2="</b>";
+					  }
+	 			    if($theEphemerides1[$i]['rise']=='-')
+			        $this->pdf->addTextWrap(100+(100*$i), $liney-4, 50, 8, "-", "center");
+			      else
+			      { $this->pdf->addTextWrap(100+(100*$i), $liney  , 50, 8,($theEphemerides15[$i]['rise']),"center");
+			        $this->pdf->addTextWrap(100+(100*$i), $liney-7, 50, 8,($theEphemerides15[$i]['set']),'center');
+			      }
+			    }       
+          $colorclass="";
+			    $colorclass2="";
+		      if($theEphemerides1[7]['rise']=='-')
+				  { $colorclass="<b>";
+				    $colorclass2="</b>";
+				  }
+		      if((date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"])!="00:00") && 
+		         ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[7]['rise'],date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"]+$theTimeDifference1[7]),date("H:i", $theNightEphemerides1[7]["astronomical_twilight_begin"]+$theTimeDifference1[7])) ||
+		          $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[7]['set'],date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"]+$theTimeDifference1[7]),date("H:i", $theNightEphemerides1[7]["astronomical_twilight_begin"]+$theTimeDifference1[7])) ||
+		          $objUtil->checkNightHourMinuteBetweenOthers(date("H:i", $theNightEphemerides1[7]["astronomical_twilight_end"]+$theTimeDifference1[7]),$theEphemerides1[7]['rise'],$theEphemerides1[7]['set']))
+		         )
+				  { $colorclass="<b>";
+				    $colorclass2="</b>";
+				  }
+ 			    if($theEphemerides1[7]['rise']=='-')
+		        $this->pdf->addTextWrap(50+(100*7), $liney-4, 50, 8, "-", "center");
+		      else
+		      { $this->pdf->addTextWrap(50+(100*7), $liney  , 50, 8,$theEphemerides1[7]['rise'],"center");
+		        $this->pdf->addTextWrap(50+(100*7), $liney-7, 50, 8,$theEphemerides1[7]['set'],'center');
+		      }
 			    
-			    
-			      
-
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-			    /*
-			     * 			echo "<tr class=\"type20\">";
-			echo "<td class=\"centered\">".LangObjectRiseSet."</td>";
-			for($i=1;$i<13;$i++)
-			{ $colorclass="";
-				if($theEphemerides1[$i]['rise']=='-')
-			  { if((date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])!="00:00"))
-			      $colorclass="ephemeridesgreen";
-			    else if ((date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"])!="00:00"))
-			      $colorclass="ephemeridesyellow";
-			  }
-			  if((date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])!="00:00") && 
-			    ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['rise'],date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i])) ||
-			     $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['set'],date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i])) ||
-			     $objUtil->checkNightHourMinuteBetweenOthers(date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),$theEphemerides1[$i]['rise'],$theEphemerides1[$i]['set']))
-			    )
-			    $colorclass="ephemeridesgreen";
-			  else if((date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"])!="00:00")&&
-			         ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['rise'],date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["nautical_twilight_begin"]+$theTimeDifference1[$i])) ||
-			          $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['set'],date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["nautical_twilight_begin"]+$theTimeDifference1[$i])) ||
-			          $objUtil->checkNightHourMinuteBetweenOthers(date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]+$theTimeDifference1[$i]),$theEphemerides1[$i]['rise'],$theEphemerides1[$i]['set']))
-			    )
-			    $colorclass="ephemeridesyellow";
-			  echo"<td class=\"centered ".$colorclass."\">".($theEphemerides1[$i]['rise']=='-'?"-":$theEphemerides1[$i]['rise']."<br />-<br />".$theEphemerides1[$i]['set'])."</td>";
-				if($theEphemerides15[$i]['rise']=='-')
-			  { if((date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"])!="00:00"))
-			      $colorclass="ephemeridesgreen";
-			    else if ((date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])!="00:00"))
-			      $colorclass="ephemeridesyellow";
-			  }
-			  if((date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"])!="00:00") && 
-			    ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['rise'],date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])) ||
-			     $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['set'],date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])) ||
-			     $objUtil->checkNightHourMinuteBetweenOthers(date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),$theEphemerides15[$i]['rise'],$theEphemerides15[$i]['set']))
-			    )
-			    $colorclass="ephemeridesgreen";
-			  else if((date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])!="00:00")&&
-			         ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['rise'],date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i])) ||
-			          $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['set'],date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i])) ||
-			          $objUtil->checkNightHourMinuteBetweenOthers(date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]+$theTimeDifference15[$i]),$theEphemerides15[$i]['rise'],$theEphemerides15[$i]['set']))
-			    )
-			    $colorclass="ephemeridesyellow";
-			  echo"<td class=\"centered ".$colorclass."\">".($theEphemerides15[$i]['rise']=="-"?"-":$theEphemerides15[$i]['rise']."<br />-<br />".$theEphemerides15[$i]['set'])."</td>";
-			}
-      $colorclass="";
-			if($theEphemerides1[1]['rise']=='-')
-		  { if((date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"])!="00:00"))
-		      $colorclass="ephemeridesgreen";
-		    else if ((date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"])!="00:00"))
-		      $colorclass="ephemeridesyellow";
-		  }
-		  if((date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"])!="00:00") && 
-		    ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[1]['rise'],date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]+$theTimeDifference1[1]),date("H:i", $theNightEphemerides1[1]["astronomical_twilight_begin"]+$theTimeDifference1[1])) ||
-		     $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[1]['set'],date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]+$theTimeDifference1[1]),date("H:i", $theNightEphemerides1[1]["astronomical_twilight_begin"]+$theTimeDifference1[1])) ||
-		     $objUtil->checkNightHourMinuteBetweenOthers(date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]+$theTimeDifference1[1]),$theEphemerides1[1]['rise'],$theEphemerides1[1]['set']))
-		    )
-		    $colorclass="ephemeridesgreen";
-		  else if((date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"])!="00:00")&&
-		         ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[1]['rise'],date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"]+$theTimeDifference1[1]),date("H:i", $theNightEphemerides1[1]["nautical_twilight_begin"]+$theTimeDifference1[1])) ||
-		          $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[1]['set'],date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"]+$theTimeDifference1[1]),date("H:i", $theNightEphemerides1[1]["nautical_twilight_begin"]+$theTimeDifference1[1])) ||
-		          $objUtil->checkNightHourMinuteBetweenOthers(date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"]+$theTimeDifference1[1]),$theEphemerides1[1]['rise'],$theEphemerides1[1]['set']))
-		    )
-		    $colorclass="ephemeridesyellow";
-			echo"<td class=\"centered ".$colorclass."\">".($theEphemerides1[1]['rise']=='-'?'-':$theEphemerides1[1]['rise']."<br />-<br />".$theEphemerides1[1]['set'])."</td>";
-
-    }
-	}        	
-			     */
-			      
-			      
-			      
-			      
-			      
-			      
-			      
-			      
-			      
-			      
-			      
-			      
-			      
-			      
-			      
-			      
-			      
-			      
-			      
 			    $liney-=35;
-			    $this->pdf->addTextWrap( 50, $liney, 50, 8, LangMonth,'center');
+			    $this->pdf->addTextWrap( 50, $liney, 100, 8, LangMonth,'center');
 			    for($i=7;$i<13;$i++)
-			    { $this->pdf->addTextWrap( 50+(100*$i)-600, $liney, 50, 8, $i,'center');
+			    { $this->pdf->addTextWrap( 100+(100*$i)-600, $liney, 50, 8, $i,'center');
 			    }
 			    $liney-=15;
-			    $this->pdf->addTextWrap( 50, $liney, 50, 8, LangMaxAltitude,'center');
+			    $this->pdf->addTextWrap( 50, $liney, 100, 8, LangMaxAltitude,'center');
 			    for($i=7;$i<13;$i++)
 				  { $colorclass="";
 					  $colorclass2="";
@@ -1415,7 +1373,7 @@ class PrintAtlas
 					    { $colorclass="<b>";
 					      $colorclass2="</b>";
 					    }
-			      $this->pdf->addTextWrap( (100*$i)-600, $liney, 50, 8, $colorclass.$this->filterdegpart($theEphemerides1[$i]['altitude']).$colorclass2,'center');
+			      $this->pdf->addTextWrap((100*$i)-550, $liney, 50, 8, $colorclass.$this->filterdegpart($theEphemerides1[$i]['altitude']).$colorclass2,'center');
 			      if($i==12)
 					  { if(($theEphemerides1[$i]['altitude']!='-') && ($theEphemerides15[$i]['altitude']!='-') &&
 					       (($theEphemerides15[$i]['altitude']==$theEphemerides1[$i]['altitude']) ||
@@ -1431,7 +1389,7 @@ class PrintAtlas
 					      { $colorclass="<b>";
 					        $colorclass2="</b>";
 					      }
-			      $this->pdf->addTextWrap( 50+(100*$i)-600, $liney, 50, 8, $colorclass.$this->filterdegpart($theEphemerides15[$i]['altitude']).$colorclass2,'center');
+			      $this->pdf->addTextWrap((100*$i)-500, $liney, 50, 8, $colorclass.$this->filterdegpart($theEphemerides15[$i]['altitude']).$colorclass2,'center');
 					}
 					if(($theEphemerides1[1]['altitude']!='-') && ($theEphemerides15[1]['altitude']!='-') &&
 					       (($theEphemerides1[1]['altitude']==$theEphemerides15[12]['altitude']) ||
@@ -1439,11 +1397,11 @@ class PrintAtlas
 		      { $colorclass="<b>";
 		        $colorclass2="</b>";
 		      }
-			    $this->pdf->addTextWrap( (100*7), $liney, 50, 8,  $colorclass.$this->filterdegpart($theEphemerides1[1]['altitude']).$colorclass2,'center');
+			    $this->pdf->addTextWrap(50+(100*7), $liney, 50, 8,  $colorclass.$this->filterdegpart($theEphemerides1[1]['altitude']).$colorclass2,'center');
 
 			    
           $liney-=15;
-					$this->pdf->addTextWrap( 50, $liney, 50, 8, LangTransit,'center');
+					$this->pdf->addTextWrap( 50, $liney, 100, 8, LangTransit,'center');
 					for($i=7;$i<13;$i++)
 					{ $colorclass="";
 					  $colorclass2="";
@@ -1451,88 +1409,132 @@ class PrintAtlas
 					  { $colorclass="<b>";
 					    $colorclass2="</b>";
 					  }
-					  $this->pdf->addTextWrap((100*$i)-600, $liney  , 50, 8, $colorclass.$theEphemerides1[$i]['transit'].$colorclass2,"center");
+					  $this->pdf->addTextWrap((100*$i)-550, $liney  , 50, 8, $colorclass.$theEphemerides1[$i]['transit'].$colorclass2,"center");
 					  $colorclass="";
 					  if((date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])!="00:00") && $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['transit'],date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])))
 					  { $colorclass="<b>";
 					    $colorclass2="</b>";
 					  }
-					  $this->pdf->addTextWrap(50+(100*$i)-600, $liney, 50, 8, $colorclass.$theEphemerides15[$i]['transit'].$colorclass2,"center");
+					  $this->pdf->addTextWrap((100*$i)-500, $liney, 50, 8, $colorclass.$theEphemerides15[$i]['transit'].$colorclass2,"center");
 					}
 		      $colorclass="";
 					if((date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"])!="00:00") && $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[1]['transit'],date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]+$theTimeDifference1[1]),date("H:i", $theNightEphemerides1[1]["astronomical_twilight_begin"]+$theTimeDifference1[1])))
 					{ $colorclass="<b>";
 					  $colorclass2="</b>";
 					}
-					$this->pdf->addTextWrap((100*$i)-600, $liney  , 50, 8, $colorclass.$theEphemerides1[1]['transit'].$colorclass2,"center");
+					$this->pdf->addTextWrap((100*$i)-550, $liney  , 50, 8, $colorclass.$theEphemerides1[1]['transit'].$colorclass2,"center");
 			    
 			    $liney-=15;
-			    $this->pdf->addTextWrap( 50, $liney-4, 50, 8, LangAstroNight,'center');
+			    $this->pdf->addTextWrap( 50, $liney-4, 100, 8, LangAstroNight,'center');
 			    for($i=7;$i<13;$i++)
 			    { if(date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])=="00:00")
-			        $this->pdf->addTextWrap((100*$i)-600, $liney-4, 50, 8, "-", "center");
+			        $this->pdf->addTextWrap((100*$i)-550, $liney-4, 50, 8, "-", "center");
 			      else
-			      { $this->pdf->addTextWrap((100*$i)-600, $liney  , 50, 8,date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]  +$theTimeDifference1[$i]),"center");
-			        $this->pdf->addTextWrap((100*$i)-600, $liney-7, 50, 8,date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i]),'center');
+			      { $this->pdf->addTextWrap((100*$i)-550, $liney  , 50, 8,date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]  +$theTimeDifference1[$i]),"center");
+			        $this->pdf->addTextWrap((100*$i)-550, $liney-7, 50, 8,date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i]),'center');
 			      }
 			      if(date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"])=="00:00")
-			        $this->pdf->addTextWrap(50+(100*$i)-600, $liney-4, 50, 8, "-", "center");
+			        $this->pdf->addTextWrap((100*$i)-500, $liney-4, 50, 8, "-", "center");
 			      else
-			      { $this->pdf->addTextWrap(50+(100*$i)-600, $liney  , 50, 8,date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]  +$theTimeDifference15[$i]),"center");
-			        $this->pdf->addTextWrap(50+(100*$i)-600, $liney-7, 50, 8,date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i]),'center');
+			      { $this->pdf->addTextWrap((100*$i)-500, $liney  , 50, 8,date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"]  +$theTimeDifference15[$i]),"center");
+			        $this->pdf->addTextWrap((100*$i)-500, $liney-7, 50, 8,date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i]),'center');
 			      }
 			    }
 			    if(date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"])=="00:00")
-			      $this->pdf->addTextWrap((100*13)-600, $liney-7, 50, 8, "-", "center");
+			      $this->pdf->addTextWrap((100*13)-550, $liney-7, 50, 8, "-", "center");
 			    else
-			    { $this->pdf->addTextWrap((100*13)-600, $liney  , 50, 8,date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]  +$theTimeDifference1[1]),"center");
-			      $this->pdf->addTextWrap((100*13)-600, $liney-7, 50, 8,date("H:i", $theNightEphemerides1[1]["astronomical_twilight_begin"]+$theTimeDifference1[1]),'center');
+			    { $this->pdf->addTextWrap((100*13)-550, $liney  , 50, 8,date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]  +$theTimeDifference1[1]),"center");
+			      $this->pdf->addTextWrap((100*13)-550, $liney-7, 50, 8,date("H:i", $theNightEphemerides1[1]["astronomical_twilight_begin"]+$theTimeDifference1[1]),'center');
 			    }
 			    
 			    $liney-=25;
-			    $this->pdf->addTextWrap( 50, $liney-4, 50, 8, LangNauticalNight,'center');
+			    $this->pdf->addTextWrap( 50, $liney-4, 100, 8, LangNauticalNight,'center');
 			    for($i=7;$i<13;$i++)
 			    { if(date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"])=="00:00")
-			        $this->pdf->addTextWrap((100*$i)-600, $liney-4, 50, 8, "-", "center");
+			        $this->pdf->addTextWrap((100*$i)-550, $liney-4, 50, 8, "-", "center");
 			      else
-			      { $this->pdf->addTextWrap((100*$i)-600, $liney  , 50, 8,date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]  +$theTimeDifference1[$i]),"center");
-			        $this->pdf->addTextWrap((100*$i)-600, $liney-7, 50, 8,date("H:i", $theNightEphemerides1[$i]["nautical_twilight_begin"]+$theTimeDifference1[$i]),'center');
+			      { $this->pdf->addTextWrap((100*$i)-550, $liney  , 50, 8,date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"]  +$theTimeDifference1[$i]),"center");
+			        $this->pdf->addTextWrap((100*$i)-550, $liney-7, 50, 8,date("H:i", $theNightEphemerides1[$i]["nautical_twilight_begin"]+$theTimeDifference1[$i]),'center');
 			      }
 			      if(date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"])=="00:00")
-			        $this->pdf->addTextWrap(50+(100*$i)-600, $liney-4, 50, 8, "-", "center");
+			        $this->pdf->addTextWrap((100*$i)-500, $liney-4, 50, 8, "-", "center");
 			      else
-			      { $this->pdf->addTextWrap(50+(100*$i)-600, $liney  , 50, 8,date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]  +$theTimeDifference15[$i]),"center");
-			        $this->pdf->addTextWrap(50+(100*$i)-600, $liney-7, 50, 8,date("H:i", $theNightEphemerides15[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i]),'center');
+			      { $this->pdf->addTextWrap((100*$i)-500, $liney  , 50, 8,date("H:i", $theNightEphemerides15[$i]["nautical_twilight_end"]  +$theTimeDifference15[$i]),"center");
+			        $this->pdf->addTextWrap((100*$i)-500, $liney-7, 50, 8,date("H:i", $theNightEphemerides15[$i]["nautical_twilight_begin"]+$theTimeDifference15[$i]),'center');
 			      }
 			    }
 			    if(date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"])=="00:00")
-			      $this->pdf->addTextWrap((100*13)-600, $liney-7, 50, 8, "-", "center");
+			      $this->pdf->addTextWrap((100*13)-550, $liney-7, 50, 8, "-", "center");
 			    else
-			    { $this->pdf->addTextWrap((100*13)-600, $liney  , 50, 8,date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"]  +$theTimeDifference1[1]),"center");
-			      $this->pdf->addTextWrap((100*13)-600, $liney-7, 50, 8,date("H:i", $theNightEphemerides1[1]["nautical_twilight_begin"]+$theTimeDifference1[1]),'center');
+			    { $this->pdf->addTextWrap((100*13)-550, $liney  , 50, 8,date("H:i", $theNightEphemerides1[1]["nautical_twilight_end"]  +$theTimeDifference1[1]),"center");
+			      $this->pdf->addTextWrap((100*13)-550, $liney-7, 50, 8,date("H:i", $theNightEphemerides1[1]["nautical_twilight_begin"]+$theTimeDifference1[1]),'center');
 			    }
 			    
-
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-			    
-
+			    $liney-=25;
+			    $this->pdf->addTextWrap( 50, $liney-4, 100, 8, LangObjectRiseSet,'center');
+          for($i=7;$i<13;$i++)
+			    { $colorclass="";
+				    $colorclass2="";
+			      if($theEphemerides1[$i]['rise']=='-')
+					  { $colorclass="<b>";
+					    $colorclass2="</b>";
+					  }
+			      if((date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])!="00:00") && 
+			         ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['rise'],date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i])) ||
+			          $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[$i]['set'],date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i])) ||
+			          $objUtil->checkNightHourMinuteBetweenOthers(date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),$theEphemerides1[$i]['rise'],$theEphemerides1[$i]['set']))
+			         )
+					  { $colorclass="<b>";
+					    $colorclass2="</b>";
+					  }
+	 			    if($theEphemerides1[$i]['rise']=='-')
+			        $this->pdf->addTextWrap((100*$i)-550, $liney-4, 50, 8, "-", "center");
+			      else
+			      { $this->pdf->addTextWrap((100*$i)-550, $liney  , 50, 8,$theEphemerides1[$i]['rise'],"center");
+			        $this->pdf->addTextWrap((100*$i)-550, $liney-7, 50, 8,$theEphemerides1[$i]['set'],'center');
+			      }
+	          $colorclass="";
+				    $colorclass2="";
+			      if($theEphemerides15[$i]['rise']=='-')
+					  { $colorclass="<b>";
+					    $colorclass2="</b>";
+					  }
+				    if((date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_end"])!="00:00") && 
+			         ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['rise'],($theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])) ||
+			          $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides15[$i]['set'],($theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),date("H:i", $theNightEphemerides15[$i]["astronomical_twilight_begin"]+$theTimeDifference15[$i])) ||
+			          $objUtil->checkNightHourMinuteBetweenOthers(($theNightEphemerides15[$i]["astronomical_twilight_end"]+$theTimeDifference15[$i]),$theEphemerides15[$i]['rise'],$theEphemerides15[$i]['set']))
+			         )
+					  { $colorclass="<b>";
+					    $colorclass2="</b>";
+					  }
+	 			    if($theEphemerides1[$i]['rise']=='-')
+			        $this->pdf->addTextWrap((100*$i)-500, $liney-4, 50, 8, "-", "center");
+			      else
+			      { $this->pdf->addTextWrap((100*$i)-500, $liney  , 50, 8,($theEphemerides15[$i]['rise']),"center");
+			        $this->pdf->addTextWrap((100*$i)-500, $liney-7, 50, 8,($theEphemerides15[$i]['set']),'center');
+			      }
+			    }       
+          $colorclass="";
+			    $colorclass2="";
+		      if($theEphemerides1[1]['rise']=='-')
+				  { $colorclass="<b>";
+				    $colorclass2="</b>";
+				  }
+		      if((date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"])!="00:00") && 
+		         ($objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[1]['rise'],date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]+$theTimeDifference1[1]),date("H:i", $theNightEphemerides1[1]["astronomical_twilight_begin"]+$theTimeDifference1[1])) ||
+		          $objUtil->checkNightHourMinuteBetweenOthers($theEphemerides1[1]['set'],date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]+$theTimeDifference1[1]),date("H:i", $theNightEphemerides1[1]["astronomical_twilight_begin"]+$theTimeDifference1[1])) ||
+		          $objUtil->checkNightHourMinuteBetweenOthers(date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]+$theTimeDifference1[1]),$theEphemerides1[1]['rise'],$theEphemerides1[1]['set']))
+		         )
+				  { $colorclass="<b>";
+				    $colorclass2="</b>";
+				  }
+ 			    if($theEphemerides1[1]['rise']=='-')
+		        $this->pdf->addTextWrap(50+(100*7), $liney-4, 50, 8, "-", "center");
+		      else
+		      { $this->pdf->addTextWrap(50+(100*7), $liney  , 50, 8,$theEphemerides1[1]['rise'],"center");
+		        $this->pdf->addTextWrap(50+(100*7), $liney-7, 50, 8,$theEphemerides1[1]['set'],'center');
+		      }
+		      
         }	        
         
       }
