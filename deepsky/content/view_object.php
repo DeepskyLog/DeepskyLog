@@ -263,6 +263,7 @@ else
 		$content2=$objUtil->printStepsPerPage3($link,"nearbyObjects",$step);
 		$objPresentations->line(array($content1,$content2),"LR",array(50,50),25);
 		echo "<hr />";
+		echo "WP1";
 		if($max>count($_SESSION['Qobj']))
 		  $max=count($_SESSION['Qobj']);
 		$_GET['min']=$min;
@@ -281,7 +282,7 @@ else
 		$content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objectsDetails.pdf?SID=Qobj&amp;sort=".$_SESSION['QobjSort'],LangExecuteQueryObjectsMessage4c)."&nbsp;-&nbsp;";
 		$content.="<a href=\"".$baseURL."objects.argo?SID=Qobj\">".LangExecuteQueryObjectsMessage8."</a>&nbsp;-&nbsp;";
 		$content.="<a href=\"".$baseURL."objects.csv?SID=Qobj\" >".LangExecuteQueryObjectsMessage6."</a>";;
-	  if($loggedUser)
+	  //if($loggedUser)
 	  { $content.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;sort=".$_SESSION['QobjSort']."&amp;pdfTitle=Test\" >".ReportLink."</a>&nbsp;-&nbsp;";
       $content.="<a href=\"".$baseURL."index.php?indexAction=objectsSets"."\" rel=\"external\">".LangExecuteQueryObjectsMessage11."</a>";
 	  }

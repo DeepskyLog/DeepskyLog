@@ -380,7 +380,8 @@ class AstroCalc implements iAstroCalc
     }  
     
 // if no astro twilight, or no best astro time for object
-    if($ris_tra_set[3]=="-")
+//   if($ris_tra_set[3]=="-")
+    if(!(($astroend > 0 && $astrobegin > 0)))
     { if ($nautend > 0 && $nautbegin > 0) {
 	      $tocompare = -999;
 	      if ($nautbegin > 12) {
@@ -482,6 +483,7 @@ class AstroCalc implements iAstroCalc
 	      $ris_tra_set[4] = "-";
 	    }  
 	    if($ris_tra_set[3]!="-")
+	  //    $ris_tra_set[3]="(".$ris_tra_set[3].")";
 	      $ris_tra_set[3]="(".$ris_tra_set[3].")";
     }
     

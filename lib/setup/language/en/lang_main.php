@@ -5,6 +5,7 @@ define("LangMonth"              ,"Month");
 define("LangAstroNight"         ,"Astronomical night");
 define("LangNauticalNight"      ,"Nautical night");
 define("LangObjectRiseSet"      ,"Object rise<br />-<br />set");
+define("LangObjectRiseSet2"     ,"Object rise-set");
 
 
 define("LangpdfseriesExplain1"  ,"Generate a set of charts for each object.");

@@ -3,7 +3,8 @@
 define("LangMonth"              ,"Monat");
 define("LangAstroNight"         ,"Astronomische Nacht");
 define("LangNauticalNight"      ,"Nautische Nacht");
- define("LangObjectRiseSet"      ,"Objekt Auf-<br />-<br />Untergang");
+define("LangObjectRiseSet"      ,"Objekt Auf-<br />-<br />Untergang");
+define("LangObjectRiseSet2"     ,"Objekt Auf-Untergang");
 
 define("LangpdfseriesExplain1"  ,"Kartensammlung zu einem Objekt erstellen.");
 define("LangpdfseriesExplain2"  ,"Jede Kartensammlung enth&auml;lt mehrere Aufsuchkarten mit den jeweils unten angegebenen Gesichtsfeldwerten.");

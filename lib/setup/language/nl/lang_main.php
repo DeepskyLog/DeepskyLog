@@ -5,6 +5,7 @@ define("LangMonth"              ,"Maand");
 define("LangAstroNight"         ,"Astronomische nacht");
 define("LangNauticalNight"      ,"Nautische nacht");
 define("LangObjectRiseSet"      ,"Object opgang<br />-<br />ondergang");
+define("LangObjectRiseSet2"     ,"Object op-ondergang");
 
 define("LangpdfseriesExplain1"  ,"Maak een set van kaarten voor elk object.");
 define("LangpdfseriesExplain2"  ,"Elke set bevat even veel kaarten als gespecifieerd in het FoV vak.");

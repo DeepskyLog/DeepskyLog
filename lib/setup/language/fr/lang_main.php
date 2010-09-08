@@ -5,6 +5,7 @@ define("LangMonth"              ,"Mois");
 define("LangAstroNight"         ,"Nuit astronomique");
 define("LangNauticalNight"      ,"Nuit nautique");
 define("LangObjectRiseSet"      ,"Montant de l'objet<br />-<br />descandant");
+define("LangObjectRiseSet2"     ,"Mont.-desc. obj.");
 
 
 define("LangpdfseriesExplain1"  ,"Generez une collection de cartes pour chaque objet.");
