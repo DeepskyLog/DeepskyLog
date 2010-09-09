@@ -1,36 +1,4 @@
 <?php // The observations class collects all functions needed to enter, retrieve and adapt observation data from the database.
-interface iObservations
-{ public  function addCSVobservations();
-  public  function addDSObservation($objectname, $observerid, $instrumentid, $locationid, $date, $time, $description, $seeing, $limmag, $visibility, $language);      // adds an observation to the db
-  public  function getAllInfoDsObservation($id);                                                                                                                      // returns all information of an observation
-	public  function getAOObservationsId($object, $notobservation); 
-  public  function getDsObservationLocalDate($id);                                                                                                                    // returns the date of the given observation in local time
-	public  function getDsObservationLocalTime($id);                                                                                                                    // returns the time of the given observation in local time
-	public  function getDsObservationProperty($id, $property, $defaultvalue='');                                                                                        // returns the property of the observation
-	public  function getDsObservationsCountFromObserver($id);                                                                                                           // returns the number of observations entered by the observer with visibilty != 7                                                                                  
-	public  function getLOObservationId($objectname, $userid, $notobservation); 
-	public  function getMaxObservation();
-	public  function getMOObservationsId($object, $userid, $notobservation); 
-	public  function getNumberOfDifferentObservedDSObjects();	                                                                                                          // returns the number of different objects observed
-	public  function getNumberOfDsObservations();                                                                                                                       // returns the total number of observations
-	public  function getNumberOfObjects($id);                                                                                                                           // return the number of different objects seen by the observer
-	public  function getObjectsFromObservations($observations,$showPartOfs=0); 
-	public  function getObservationFromQuery($queries, $seenpar = "D", $exactinstrumentlocation = "0");                                                                 // returns an array with the names of all observations where the queries are defined in an array. 
-	public  function getObservationsLastYear($id); 
-	public  function getObservationsUserObject($userid, $object); 
-	public  function getObservedCountFromCatalogOrList($id, $catalog); 
-	public  function getObservedFromCatalog($id, $catalog); 
-  public  function getObservedFromCatalogPartOf($id, $catalog); 
-	public  function getPopularObservations();                                                                                                                          // returns the number of observations of the objects
-  public  function getPopularObservers();                                                                                                                             // returns the number of observations of the observers
-	public  function getPopularObserversOverviewCatOrList($sort, $cat = ""); 
-  public  function setDsObservationProperty($id,$property,$propertyValue);                                                                                            // sets the property to the specified value for the given observation
-	public  function setLocalDateAndTime($id, $date, $time);                                                                                                          	// sets the date and time for the given observation when the time is given in  local time
-	public  function showListObservation($obsKey, $link, $lco, $step=25); 
-	public  function showObservation($LOid);                                                                                                                            // shows the details of an observation 
-	public  function validateDeleteDSObservation();                                                                                                                     // removes the observation with id = $id
-	public  function validateObservation();
-}
 class Observations {
 	public function addCSVobservations()
 	{ global $objPresentations,$messageLines,$objObject,$objLocation,$loggedUser,$objInstrument,$objEyepiece,$objLens,$objFilter,$baseURL,$objObserver,$objUtil;
@@ -216,7 +184,7 @@ class Observations {
 		                                        $time,
 		                                        htmlentities(trim($parts_array[$i][13])),
 		                                        htmlentities(trim($parts_array[$i][9])),
-		                                        htmlentities(trim($parts_array[$i][10])),
+		                                        str_replace(',','.',htmlentities(trim($parts_array[$i][10]))),
 		                                        htmlentities(((trim($parts_array[$i][11])=="")?"0":trim($parts_array[$i][11]))),
 		                                        htmlentities(trim($parts_array[$i][12])),
 		                                        ((trim($parts_array[$i][6])!="")?Nz0($objEyepiece->getEyepieceObserverPropertyFromName(htmlentities(trim($parts_array[$i][6])), $loggedUser,'id')):0),
