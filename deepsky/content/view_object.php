@@ -168,7 +168,6 @@ else
 			    else if ((date("H:i", $theNightEphemerides1[$i]["nautical_twilight_end"])!="00:00"))
 			      $colorclass="ephemeridesyellow";
 			  }
-			   $colorclass="";
 			  if((date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"])!="00:00") && 
 		            $objUtil->checkNightHourMinutePeriodOverlap($theEphemerides1[$i]['rise'],$theEphemerides1[$i]['set'],date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_end"]+$theTimeDifference1[$i]),date("H:i", $theNightEphemerides1[$i]["astronomical_twilight_begin"]+$theTimeDifference1[$i]))
 			  			    )

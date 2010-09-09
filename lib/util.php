@@ -5,6 +5,7 @@ class Utils
   { if($thetime=="-") return -1;
     if($thetime==":") return -1;
     if(($thepos=strpos($thetime,":"))===false) return -1;
+    if(strpos($thetime,"(")==="0") $thetime=substr($thetime,1);
     if(!(is_numeric($thehour=substr($thetime,0,$thepos)))) return -1;
     if(!(is_numeric($theminute=substr($thetime,$thepos+1,2)))) return -1;
   	return 1*(($thehour*100)+$theminute);

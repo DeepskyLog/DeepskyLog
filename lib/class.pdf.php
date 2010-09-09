@@ -2880,7 +2880,9 @@ function addJpegFromFile($img,$x,$y,$w=0,$h=0){
 * the file based functions
 */
 function addImage(&$img,$x,$y,$w=0,$h=0,$quality=75){
-  // add a new image into the current location, as an external object
+  	global $tempDir;
+	
+	// add a new image into the current location, as an external object
   // add the image at $x,$y, and with width and height as defined by $w & $h
   
   // note that this will only work with full colour images and makes them jpg images for display
@@ -2910,10 +2912,13 @@ function addImage(&$img,$x,$y,$w=0,$h=0,$quality=75){
   // gotta get the data out of the img..
 
   // so I write to a temp file, and then read it back.. soo ugly, my apologies.
-  $tmpDir='/tmp';
+  //$tmpDir='/tmp';
+  //DSL adaption for server problem Leuven
+  $tmpDir=$tempDir;
   $tmpName=tempnam($tmpDir,'img');
   imagejpeg($img,$tmpName,$quality);
-  $fp=fopen($tmpName,'rb');
+  //DSL adaption: why open 2 times?
+  //$fp=fopen($tmpName,'rb');
 
   $tmp = get_magic_quotes_runtime();
   ini_set('magic_quotes_runtime', 0);
@@ -2928,11 +2933,9 @@ function addImage(&$img,$x,$y,$w=0,$h=0,$quality=75){
     $error = 1;
     $errormsg = 'trouble opening file';
   }
-//  $data = fread($fp,filesize($tmpName));
   ini_set('magic_quotes_runtime', $tmp);
-//  fclose($fp);
-  unlink($tmpName);
   $this->addJpegImage_common($data,$x,$y,$w,$h,$imageWidth,$imageHeight);
+  unlink($tmpName);
 }
 
 /**
