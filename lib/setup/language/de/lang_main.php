@@ -35,7 +35,7 @@ define("LangSaveAs"             ,"Speichern als...");
 define("LangRemoveQuery"        ,"Entfernen");
 
 define("LangExclude",            "Ausnahme:");
-define("LangDescriptioncontains","NGC Beschreibung enth&aumllt:");
+define("LangDescriptioncontains","NGC Beschreibung enth&auml;lt:");
 
 define("LangShowAll",            'Alle anzeigen');
 
@@ -46,8 +46,8 @@ define('LangTo',                 ' bis ');
 define("LangNoExcludeIfSeen",    'ohne erfolgreiche Beobachtungen');
 
 define("ReportSunDown",          'Sonnenuntergang: ');
-define("ReportNautNight",        'nautische  D&aumlmmerung: ');
-define("ReportAstroNight",       'astronomische  D&aumlmmerung: ');
+define("ReportNautNight",        'nautische  D&auml;mmerung: ');
+define("ReportAstroNight",       'astronomische  D&auml;mmerung: ');
 define("ReportMoonUp",           'Mond Aufgang: ');
 
 
@@ -100,7 +100,7 @@ define("Reportobjecttypefull"                                  ,"Objecttyp");
 define("Reportobjectconstellation"                             ,"Sternbild Abk&uuml;rzung");
 define("Reportobjectconstellationfull"                         ,"Sternbildname");
 define("Reportobjectmagnitude"                                 ,"Objekt Helligkeit");
-define("Reportobjectsurfacebrightness"                         ,"Objekt Oberfl&aumlchenhelligkeit");
+define("Reportobjectsurfacebrightness"                         ,"Objekt Oberfl&auml;chenhelligkeit");
 define("Reportobjectradecl"                                    ,"RA und Dekl");
 define("Reportobjectra"                                        ,"RA");
 define("Reportobjectdecl"                                      ,"Dekl");
@@ -112,7 +112,7 @@ define("Reportobjectpa"                                        ,"Objekt Orientie
 define("Reportobjectuseratlaspage"                             ,"Seitennummer auf welcher das Objekt im Atlas gefunden werden kann");
 define("Reportobjectdescription"                               ,"Objektbeschreibung");
 define("Reportobjectcontrast"                                  ,"Objekt Kontrast-Sichtbarkeitswert");
-define("Reportobjectcontrastpopup"                             ,"Objekt Kontrast-Sichtbarkeitserkl&aumlrung");
+define("Reportobjectcontrastpopup"                             ,"Objekt Kontrast-Sichtbarkeitserkl&auml;rung");
 define("Reportobjectcontrasttype"                              ,"Objekt Kontrast-Sichtbarkeitstyp");
 define("Reportobjectoptimalmagnification"                      ,"Optimale Vergr&ouml;&szlig;erungsbeschreibung");
 define("Reportobjectoptimalmagnificationvalue"                 ,"Optimaler Vergr&ouml;&szlig;erungswert");
@@ -124,7 +124,7 @@ define("Reportobjectset"                                       ,"Objekt Untergan
 define("Reportobjectsetpopup"                                  ,"Objekt Untergangszeit Beschreibung");
 define("Reportobjectbest"                                      ,"Beste Beobachtungszeit");
 define("Reportobjectbestpopup"                                 ,"Beste Beobachtungzeit Beschreibung");
-define("Reportobjectmaxaltitude"                               ,"Maximale H&ouml;he w&aumlhrend der besten Beobachtungszeit");
+define("Reportobjectmaxaltitude"                               ,"Maximale H&ouml;he w&auml;hrend der besten Beobachtungszeit");
 define("Reportobjectmaxaltitudepopup"                          ,"Maximale H&ouml;he Beschreibung");
 define("ReportEpehemeridesFor"                                 ,"Ephemerides for");
 define("ReportEpehemeridesForShow"                             ,"Show the ephemerides");
@@ -184,11 +184,11 @@ define("LangHideObjectDetails"                            ,"Verstecke Objekt Det
 
 define("LangObjectsFilter"                                ,"Marke");
 define("LangObjectsFilterLocation"                        ,"Lokation");
-define("LangObjectsFilterLocationExpl"                    ,"Markiere die Objekte welche nicht sichtbar sind von der ausgew&aumlhlten Lokation.");
-define("LangObjectsFilterLocationOffExpl"                 ,"Entferne die Markierung der Objekte welche nicht sichtbar sind von der ausgew&aumlhlten Lokation.");
+define("LangObjectsFilterLocationExpl"                    ,"Markiere die Objekte welche nicht sichtbar sind von der ausgew&auml;hlten Lokation.");
+define("LangObjectsFilterLocationOffExpl"                 ,"Entferne die Markierung der Objekte welche nicht sichtbar sind von der ausgew&auml;hlten Lokation.");
 define("LangObjectsFilterDateTime"                        ,"Datum-Zeit");
-define("LangObjectsFilterDateTimeExpl"                    ,"Markiere die Objekte welche nicht sichtbar sind an dem ausgew&aumlhlten Datum und Uhrzeit");
-define("LangObjectsFilterDateTimeOffExpl"                 ,"Entferne die Makierung an Objekten welche nicht sichtbar sind an dem ausgew&aumlhlten Datum und Uhrzeit");
+define("LangObjectsFilterDateTimeExpl"                    ,"Markiere die Objekte welche nicht sichtbar sind an dem ausgew&auml;hlten Datum und Uhrzeit");
+define("LangObjectsFilterDateTimeOffExpl"                 ,"Entferne die Makierung an Objekten welche nicht sichtbar sind an dem ausgew&auml;hlten Datum und Uhrzeit");
 
 
 
@@ -221,7 +221,7 @@ define("LangMoonSet"                                      ,"Untergang");
 define("LangMoon"                                         ,"Mond");
 define("LangMoonNight"                                    ,"Nacht");
 define("LangMoonSun"                                      ,"Sonne");
-define("LangMoonTwilight"                                 ,"D&aumlmmerung");
+define("LangMoonTwilight"                                 ,"D&auml;mmerung");
 define("LangMoonNaut"                                     ,"Naut.");
 define("LangMoonAstro"                                    ,"Astro.");
 define("LangAstronomicalTwilight"                         ,"Astronomical twilight");
@@ -256,7 +256,7 @@ define("LangAtlasMagnitude3"                              ,"&nbsp;&nbsp;&nbsp;&n
 define("LangAtlasMagnitude4"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Dr&uuml;cke Umschalt + M um mehr lichtschwache Objekte zu sehen, oder m um weniger lichtschwache (oder nur helle) Objekte zu sehen.");
 define("LangAtlasMagnitude5"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Die maximale Helligkeit der gezeigten Objekte ist am oberen Seitenrand beschrieben.");
 
-define("LangAtlasObjects"                                 ,"Objekte:&nbsp;&nbsp;&nbsp;&nbsp;Die Beschriftungen am Objekte zeigen den gebr&aumluchlisten Objektnamen");
+define("LangAtlasObjects"                                 ,"Objekte:&nbsp;&nbsp;&nbsp;&nbsp;Die Beschriftungen am Objekte zeigen den gebr&auml;uchlisten Objektnamen");
 define("LangAtlasObjects1"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Clicken Sie auf das Objekt um die Objektseite in DeepskyLog zu sehen.");
 define("LangAtlasObjects2"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Die Objektfarben zeigen Ihnen an, ob Sie das Objekt schon sehen haben: rot = nicht gesehen, gelb = von anderen gesehen, gr&uuml;n = von Ihnen gesehen.");
 define("LangAtlasObjects3"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Die Linien geben Ihnen vergleichs Informationen: keine Linie = nicht gesehen, gepunktete Linie = von anderen gesehen,");
@@ -273,7 +273,7 @@ define("LangAtlasWhatsnext"                               ,"Version:&nbsp;&nbsp;
 
 // text for fstOffset
 define("LangChangeAccountField12"                         ,"fstOffset");
-define("LangChangeAccountField12Expl"                     ,"Ausgleich zwischen einem gemessenen SQM Wert und dem schw&aumlchsten sichtbaren Stern. Wenn fstOffset 0.2 betr&aumlgt ist die begrenzende Magnitude 0.2 besser als der vom SQM gemessene Wert");
+define("LangChangeAccountField12Expl"                     ,"Ausgleich zwischen einem gemessenen SQM Wert und dem schw&auml;chsten sichtbaren Stern. Wenn fstOffset 0.2 betr&auml;gt ist die begrenzende Magnitude 0.2 besser als der vom SQM gemessene Wert");
 
 // Visibility for resolved open clusters
 define("LangVisibilityOC1"                                ,"Sehr auff&auml;lliger, besonders sch&ouml;ner Sternhaufen");
@@ -336,7 +336,7 @@ $atlasPageText=array(
 
 define("LangGeneralObservations"													,"Beobachtungen");
 
-define("LangIndexPleaseWait"															,"Bitte warten Sie einen Moment w&aumlhrend die Daten geladen werden...");
+define("LangIndexPleaseWait"															,"Bitte warten Sie einen Moment w&auml;hrend die Daten geladen werden...");
 
 define("LangTitlecomets_result_query_objects"       			,"Suche nach Kometen Ergebnisse");
 define("LangTitlecomets_result_query_observations"  			,"Suche nach Kometen Beobachtungen");
@@ -427,7 +427,7 @@ define("LangShowMyLanguages"															,"Nur Beobachtungen in meiner (Profil
 define("LangAllLanguagesShown"														,"Alle Sprachen");
 define("LangSelectedLanguagesShown"												,"Nur ausgew&auml;hlte Sprachen");
 
-define("LangItemsPerPage"																	,"Eintr&aumlge pro Seite");
+define("LangItemsPerPage"																	,"Eintr&auml;ge pro Seite");
 
 // common/entryexit/instructions
 define("LangInstructionsNoObjectFound"										,"Kein entsprechendes Objekt gefunden f&uuml;r ");
@@ -619,7 +619,7 @@ define("LangOverviewSiteTitle"														,"&uuml;bersicht Beobachtungspl&auml
 define("LangAddSiteExisting"															,"Beobachtungsplatz hinzuf&uuml;gen");
 
 define("LangOverviewEyepieceTitle"												,"&uuml;bersicht Okulare");
-define("LangAddEyepieceExisting"													,"W&aumlhle die Okulardetails von der Liste");
+define("LangAddEyepieceExisting"													,"W&auml;hle die Okulardetails von der Liste");
 define("LangAddEyepieceManually"													,"geben Sie das Okulare Details an");
 define("LangAddEyepieceTitle"															,"Neues Okular");
 define("LangAddEyepieceField1"														,"Name");
@@ -784,20 +784,20 @@ define("LangNewObjectIcqname"															,"ICQ name");
 define("LangCheckName"																		,"Namen &uuml;berpr&uuml;fen");
 define("LangCheckRA"																			,"Koordinaten &uuml;berpr&uuml;fen");
 define("LangPossibleCandidateObjects"											,"M&ouml;gliche Kandidaten");
-define("LangPossibleCandidateObjectsExplanation"					,"Bitte best&aumltigen Sie, da&szlig; das Objekt nicht unten aufgelistet ist");
-define("LangObjectNotFound"																,"Best&aumltigen");
+define("LangPossibleCandidateObjectsExplanation"					,"Bitte best&auml;tigen Sie, da&szlig; das Objekt nicht unten aufgelistet ist");
+define("LangObjectNotFound"																,"Best&auml;tigen");
 define("LangNewObjectPhase0"															,"F&uuml;gen Sie nur Objekte hinzu, welche nicht bereits im System sind. Geben Sie zuerst den Namen des Objektes an. ".
                              															 "Im ersten Feld geben Sie den Katalognamen an, im zweiten Feld geben Sie die Katalognummer des Objektes an (z.B.: M im ersten Feld und 1 im zweiten Feld). ");
-define("LangNewObjectPhase10"															,"Bitte &uuml;berpr&uuml;fen Sie, ob das Objekt in der unten stehenden Liste auftaucht. Lassen Sie sich Zeit um die Eintr&aumlge zu &uuml;berpr&uuml;fen. ".
+define("LangNewObjectPhase10"															,"Bitte &uuml;berpr&uuml;fen Sie, ob das Objekt in der unten stehenden Liste auftaucht. Lassen Sie sich Zeit um die Eintr&auml;ge zu &uuml;berpr&uuml;fen. ".
                               														 "Sollte das Objekt in der Liste unten auftauchen, k&ouml;nnen Sie diesen Bereich verlassen indem Sie das Objekt anklicken. ".
-                              														 "Sollte das Objekt nihct in der Liste unten auftauchen, dr&uuml;cken Sie den Bst&aumltigungsknopf. Vorsicht! Sie m&uuml;ssen ggf. scrollen um die komplette Liste zu sehen.");
+                              														 "Sollte das Objekt nihct in der Liste unten auftauchen, dr&uuml;cken Sie den Bst&auml;tigungsknopf. Vorsicht! Sie m&uuml;ssen ggf. scrollen um die komplette Liste zu sehen.");
 define("LangNewObjectPhase1" 															,"Geben Sie nun die Koordinaten des Objektes an: RA und Dekl. ".
                               														 "Unsere Koordinaten beziehen sich auf das Referenz Jahr 2000 (J2000).");
-define("LangNewObjectPhase20"															,"Bitte &uuml;berpr&uuml;fen Sie, da&szlig; der Objektname noch nicht in der untenstehenden Liste auftaucht. Lassen Sie sich Zeit um die Eintr&aumlge zu &uuml;berpr&uuml;fen. ".
+define("LangNewObjectPhase20"															,"Bitte &uuml;berpr&uuml;fen Sie, da&szlig; der Objektname noch nicht in der untenstehenden Liste auftaucht. Lassen Sie sich Zeit um die Eintr&auml;ge zu &uuml;berpr&uuml;fen. ".
                               														 "Sollte das Objekt in der Liste unten auftauchen, k&ouml;nnen Sie diesen Bereich verlassen indem Sie das Objekt anklicken. ".
-                               														 "Sollte das Objekt nihct in der Liste unten auftauchen, dr&uuml;cken Sie den Bst&aumltigungsknopf. Vorsicht! Sie m&uuml;ssen ggf. scrollen um die komplette Liste zu sehen.");
+                               														 "Sollte das Objekt nihct in der Liste unten auftauchen, dr&uuml;cken Sie den Bst&auml;tigungsknopf. Vorsicht! Sie m&uuml;ssen ggf. scrollen um die komplette Liste zu sehen.");
 define("LangNewObjectPhase2" 															,"Bitte fahren Sie fort und geben Sie die Objekt Details an.".
-                              														 "Wenn Sie fertig sind, best&aumltigen Sie bitte Ihr Eingaben und dr&uuml;cken Sie den 'Neues Objekt anlegen' Knopf.");
+                              														 "Wenn Sie fertig sind, best&auml;tigen Sie bitte Ihr Eingaben und dr&uuml;cken Sie den 'Neues Objekt anlegen' Knopf.");
 
 
 // control/validate_object.php
@@ -1339,6 +1339,7 @@ define("LangTopObjectsHeader5"														,"Anzahl der Beobachtungen");
 
 define("LangQueryObservationsTitle"												,"Beobachtungsabfrage");
 define("LangQueryObservationsMessage1"										,"Nur Beobachtungen mit Zeichnungen");
+define("LangQueryObservationsMessage1b"										,"ohne Zeichnungen");
 define("LangQueryObservationsMessage2"										,"Beschreibung enth&auml;lt");
 define("LangFromDate"																			,"Von");
 define("LangTillDate"																			,"bis");
@@ -1359,7 +1360,7 @@ define("LangCSVTitle"																			,"Beobachtungen von CSV Datei importiere
 define("LangCSVMessage1"																	,"Diese Eingabemaske erlaubt Ihnen mehrere Beobachtungen auf einmal einzugeben, indem Sie eine CSV Datei importieren (comma seperated value Datei). Dies beschleunigt das Hochladen ihrer Beobachtungen, ferner k&ouml;nnen sie alte Beobachtungen aus Drittanwendungen leichter importieren. Zu Ihrer Information: Alle Beobachtungen mit Ihrem (vollen) Namen werden importiert.");
 define("LangCSVMessage2"																	,"Die CSV Datei nutzt folgendes Format: <span class=\"bold\">(NEUES FORMAT!!!)</span>");
 define("LangCSVMessage3"																	,"<span class=\"bold\"><i>1-Objekt; 2-Beobachter; 3-Datum; 4-UT; 5-Beobachtungsplatz; 6-Beobachtungsger&auml;t; 7-Okular; 8-Filter; 9-Linse; 10-Seeing; 11-Schw&auml;chsterStern oder SQM; 12-Sichtbarkeit; 13-Sprache; 14-Beschreibung</i></span>");
-define("LangCSVMessage4"																	,"<span class=\"bold\">Vorsicht!</span>Im Gegensatz zur Version 3.3 (und Vorg&auml;ngern) kann die Datei <span class=\"bold\">keine</span> <span class=\"underline\">Kopfzeile</span> mehr enthalten. Die erste Zeile enth&auml;lt direkt die eigentlichen Beobachtungen im angegebenen Format, wie z.B.: <br /><br />NGC 2392;John Smith;21-01-2005;20:45;Aalst;Obsession 15\";31mm Nagler;Lumicon O-III filter;Televue 2x Barlow;2;4.0;3;en;H&uuml;bsche Planetarischer Nebel mit hellem zentralen Stern!<br />M 35;John Smith;21-01-2005;20:53;Aalst;Obsession 15\";;;;2;4.0;1;en;Ungef&auml;hr 30 Mitglieder mit einigen Sternmustern.<br />...<br /><br />Seeing sollte als Zahl zwischen 1 und 5 (1=excellent, 2=gut, 3=Moderat, 4=Schwach, 5=Sehr schwach) angegeben werden.<br />Sichtbarkeit sollte als Zahl zwischen 1 und 7 (1=Sehr einfaches, auff&auml;lliges Objekt im Okular, 2=Objekt bei direktem Beobachten gut zu sehen, 3=Objekt bei direktem Beobachten zu sehen, 4=Indirektes Beobachten ist n&ouml;tig, um das Objekt zu sehen, 5=Objekt bei indirektem Beobachten gerade noch wahrnehmbar, 6=Sichtung des Objektes sehr fraglich, 7=Objekt sicher nicht zu sehen) angegeben werden.<br />Wenn eine Beobachtung mit dem blo&szlig;en Auge gemacht wurde, sollte \"Naked Eye\" als Instrument ausgew&aumlhlt werden.<br />Sprache sollte als Kurzkennung der Sprache angegeben werden (z.B.: de f&uuml;r deutsch)");
+define("LangCSVMessage4"																	,"<span class=\"bold\">Vorsicht!</span>Im Gegensatz zur Version 3.3 (und Vorg&auml;ngern) kann die Datei <span class=\"bold\">keine</span> <span class=\"underline\">Kopfzeile</span> mehr enthalten. Die erste Zeile enth&auml;lt direkt die eigentlichen Beobachtungen im angegebenen Format, wie z.B.: <br /><br />NGC 2392;John Smith;21-01-2005;20:45;Aalst;Obsession 15\";31mm Nagler;Lumicon O-III filter;Televue 2x Barlow;2;4.0;3;en;H&uuml;bsche Planetarischer Nebel mit hellem zentralen Stern!<br />M 35;John Smith;21-01-2005;20:53;Aalst;Obsession 15\";;;;2;4.0;1;en;Ungef&auml;hr 30 Mitglieder mit einigen Sternmustern.<br />...<br /><br />Seeing sollte als Zahl zwischen 1 und 5 (1=excellent, 2=gut, 3=Moderat, 4=Schwach, 5=Sehr schwach) angegeben werden.<br />Sichtbarkeit sollte als Zahl zwischen 1 und 7 (1=Sehr einfaches, auff&auml;lliges Objekt im Okular, 2=Objekt bei direktem Beobachten gut zu sehen, 3=Objekt bei direktem Beobachten zu sehen, 4=Indirektes Beobachten ist n&ouml;tig, um das Objekt zu sehen, 5=Objekt bei indirektem Beobachten gerade noch wahrnehmbar, 6=Sichtung des Objektes sehr fraglich, 7=Objekt sicher nicht zu sehen) angegeben werden.<br />Wenn eine Beobachtung mit dem blo&szlig;en Auge gemacht wurde, sollte \"Naked Eye\" als Instrument ausgew&auml;hlt werden.<br />Sprache sollte als Kurzkennung der Sprache angegeben werden (z.B.: de f&uuml;r deutsch)");
 define("LangCSVMessage5"																	,"Achtung!<br />Das Beobachtungsger&auml;t, der Beobachtungsplatz und die Objekte in der CSV-Datei sollten schon in DeepskyLog bekannt sein,
                           																 sonst erhalten Sie eine Fehlermeldung und diesen Beobachtungen wirden nicht importiert.<br />
                            																 In diesem Fall geben Sie bitte die fehlenden Daten per Hand ein und starten Sie den Import erneut bis keine Fehlermeldung mehr erscheint.<br />&nbsp;<br />
@@ -1496,9 +1497,9 @@ define("LangNumberOfRecords"															,"Ergebnisse");
 define("LangNumberOfRecords1"															,"Ergebnis");
 define("LangNumberOfRecordsIn"														,"in");
 define("LangNumberOfRecords1Pages"												,"Seiten");
-define("LangNumberOfRecordsPerPages"											,"Eintr&aumlge/Seite");
-define("LangAskForDesiredNumberOfItemsPerPage"						,"Geben Sie die Anzahl der Eintr&aumlge pro Seite an");
-define("LangCaptionAskForDesiredNumberOfItemsPerPage"			,"Klicken Sie um die Anzahl der Eintr&aumlge pro Seite anzugeben");
+define("LangNumberOfRecordsPerPages"											,"Eintr&auml;ge/Seite");
+define("LangAskForDesiredNumberOfItemsPerPage"						,"Geben Sie die Anzahl der Eintr&auml;ge pro Seite an");
+define("LangCaptionAskForDesiredNumberOfItemsPerPage"			,"Klicken Sie um die Anzahl der Eintr&auml;ge pro Seite anzugeben");
 
 define("LangPDFTitle3"																		,"DeepskyLog Kometen Beobachtungen");
 

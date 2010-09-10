@@ -675,6 +675,8 @@ class Observations {
 			$sqland .= "AND observations.SQM <= \"" . $queries["minSQM"] . "\" ";
 		if (isset ($queries["hasDrawing"]) && ($queries["hasDrawing"]=='on'))
 			$sqland .= "AND observations.hasDrawing=TRUE ";
+		if (isset ($queries["hasNoDrawing"]) && ($queries["hasNoDrawing"]=='on'))
+			$sqland .= "AND observations.hasDrawing=FALSE ";
 		if (isset ($queries["minobservation"]) && ($queries["minobservation"]!=''))
 			$sqland .= "AND observations.id> ".$queries["minobservation"]." ";
 	  if ((!array_key_exists('countquery', $queries))

@@ -262,7 +262,6 @@ else
 		$content2=$objUtil->printStepsPerPage3($link,"nearbyObjects",$step);
 		$objPresentations->line(array($content1,$content2),"LR",array(50,50),25);
 		echo "<hr />";
-		echo "WP1";
 		if($max>count($_SESSION['Qobj']))
 		  $max=count($_SESSION['Qobj']);
 		$_GET['min']=$min;

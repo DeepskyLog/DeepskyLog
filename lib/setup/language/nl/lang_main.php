@@ -1333,6 +1333,7 @@ define("LangTopObjectsHeader5"														,"Aantal waarnemingen");
 
 define("LangQueryObservationsTitle"												,"Zoek waarnemingen");
 define("LangQueryObservationsMessage1"										,"Enkel waarnemingen met tekening");
+define("LangQueryObservationsMessage1b"										,"zonder tekening");
 define("LangQueryObservationsMessage2"										,"Beschrijving bevat");
 define("LangFromDate"																			,"Vanaf");
 define("LangTillDate"																			,"Tot en met");

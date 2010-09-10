@@ -542,6 +542,11 @@ function setup_observations_query()
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $drawings=$_SESSION['QobsParams']['hasDrawing'];
 	  echo "<input id=\"drawings\" name=\"drawings\" type=\"checkbox\" class=\"inputfield\" ".($drawings=='on'?' checked="on"':"")."/>";
+		$nodrawings=$objUtil->checkGetKey('nodrawings');
+	  if($nodrawings=='')
+	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
+	      $nodrawings=$_SESSION['QobsParams']['hasNoDrawing'];
+	  echo "&nbsp;&nbsp;&nbsp;".LangQueryObservationsMessage1b."<input id=\"nodrawings\" name=\"nodrawings\" type=\"checkbox\" class=\"inputfield\" ".($nodrawings=='on'?' checked="on"':"")."/>";
 		echo "</td>";
 	// MINIMUM VISIBILITY
 		echo "<td class=\"fieldname\">".LangViewObservationField23."</td>";

@@ -1313,6 +1313,7 @@ define("LangTopObjectsHeader5"														,"Nombre d'observations");
  
 define("LangQueryObservationsTitle"												,"Recherche d'observations");
 define("LangQueryObservationsMessage1"										,"Uniquement les observations avec dessin");
+define("LangQueryObservationsMessage1b"										,"sans dessin");
 define("LangQueryObservationsMessage2"										,"Description contient");
 define("LangFromDate"																			,"Du");
 define("LangTillDate"																			,"Jusqu'&agrave;, y compris,");
