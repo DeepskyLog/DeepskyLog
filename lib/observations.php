@@ -950,7 +950,7 @@ class Observations {
 		$objPresentations->tableSortHeader(LangOverviewObservationsHeader2, $link2 . "&amp;sort=observersortname");
 		$objPresentations->tableSortInverseHeader(LangOverviewObservationsHeader3, $link2 . "&amp;sort=instrumentsort");
 		$objPresentations->tableSortInverseHeader(LangOverviewObservationsHeader4, $link2 . "&amp;sort=observationdate");
-		if ($_SESSION['lco'] != "O")
+		if ($lco != "O")
 			echo "<td>&nbsp;</td>";
 		else
 			echo "<td>" . LangOverviewObservationsHeader8 . "</td>" .
@@ -961,15 +961,17 @@ class Observations {
 		if($MSIE)
 			echo "<td class=\"width10px\">&nbsp;&nbsp;&nbsp;</td>";
 		echo "</tr>";
-		echo "<tr class=\"type30\">";
-		if($myList)
+		if($lco!="L")
+		{ echo "<tr class=\"type30\">";
+			if($myList)
+				echo "<td>&nbsp;</td>";
 			echo "<td>&nbsp;</td>";
-		echo "<td>&nbsp;</td>";
-		echo "<td>Alt name</td>";
-		echo "<td colspan=\"5\">";
-	  echo "<a href=\"".$link2."&amp;sort=observationdescription&amp;sortdirection=desc\"  title=\"".LangSortOnAsc."\">"."Description"."</a>";;
-		echo "</td>";
-	  echo "</tr>";
+			echo "<td>Alt name</td>";
+			echo "<td colspan=\"".($lco=="L"?5:8)."\">";
+		  echo "<a href=\"".$link2."&amp;sort=observationdescription&amp;sortdirection=desc\"  title=\"".LangSortOnAsc."\">"."Description"."</a>";;
+			echo "</td>";
+		  echo "</tr>";
+		}
 		if($FF)
 		{ echo "</thead>";
 		  echo "<tbody id=\"obs_list\" class=\"tbody_obs\">";
