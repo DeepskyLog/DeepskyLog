@@ -31,13 +31,13 @@ function objectsSets()
 	echo "<input type=\"button\" value=\"".LangpdfseriesButton."\" onclick=\"generate();\"/>".'<br />';	
   echo LangpdfseriesAddDataPage."<input id=\"datapage\" type=\"checkbox\" value=\"\" />";
   if($loggedUser)
-    echo "&nbsp;".LangpdfseriesWithEphemerides."<input id=\"ephemerides\" type=\"checkbox\" />";
+    echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".LangpdfseriesWithEphemerides."<input id=\"ephemerides\" type=\"checkbox\" />";
   else
-    echo "<input style=\"visibility:hidden;\" id=\"ephemerides\" type=\"checkbox\" />";
+    echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<input style=\"visibility:hidden;\" id=\"ephemerides\" type=\"checkbox\" />";
   if($loggedUser)
-    echo "&nbsp;".LangpdfseriesWithYearEphemerides."<input id=\"yearephemerides\" type=\"checkbox\" />";
+    echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".LangpdfseriesWithYearEphemerides."<input id=\"yearephemerides\" type=\"checkbox\" />";
   else
-    echo "<input style=\"visibility:hidden;\" id=\"yearephemerides\" type=\"checkbox\" />";
+    echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<input style=\"visibility:hidden;\" id=\"yearephemerides\" type=\"checkbox\" />";
   echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".LangpdfseriesAddIndexPage."<input id=\"indexpage\" type=\"checkbox\" onclick=\"if(document.getElementById('indexpage').checked==true) {document.getElementById('reportlayoutselect').style.visibility='visible'; alert('".Langpdfserieschoselayout."');} else document.getElementById('reportlayoutselect').style.visibility='hidden';\" value=\"\" />";
   echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"."<select id=\"reportlayoutselect\" name=\"reportlayoutselect\"  style=\"visibility:hidden;\" >";
   $defaults=$objReportLayout->getLayoutListDefault("ReportQueryOfObjects");
