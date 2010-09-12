@@ -851,12 +851,16 @@ define("LangExecuteQueryObjectsMessage9"									,"Filter objects");
 define("LangExecuteQueryObjectsMessage10"									,"&lt;OAL&gt;");
 define("LangExecuteQueryObjectsMessage11"	  							,"Maps");
 define("LangInvalidCSVfile"																,"Sie haben keine g&uuml;ltige CSV Datei angegeben!");
-define("LangSeenDontCare"																	,"Egal");
-define("LangSeenByMe"																			,"Bereits von mir beobachtet");
-define("LangSeenSomeoneElse"															,"Bereits von Anderen beobachtet (aber nicht bei mir)");
-define("LangSeenByMeOrSomeoneElse"												,"Bereits von mir oder jemand anderem beobachtet");
-define("LangNotSeenByMeOrNotSeenAtAll"										,"Nicht von mir, oder noch &uuml;berhaupt nicht beobachtet");
-define("LangNotSeen"																			,"Noch nicht beobachtet");
+define("LangSeenDontCare"																	,"Egal");                                                          // TO TRANSLATE: should be:  All objects, seen or not
+define("LangSeenByMe"																			,"Bereits von mir beobachtet");                                    // TO TRANSLATE: should be: Only objects that have been seen by me    
+define("LangDrawnByMe"																	  ,"Bereits von mir drawn");                                         // TO TRANSLATE: should be: Only objects that have been dawn by me
+define("LangSeenSomeoneElse"															,"Bereits von Anderen beobachtet, aber nicht bei mir");
+define("LangSeenByMeOrSomeoneElse"												,"Bereits beobachtet");                                            // TO TRANSLATE: should be: Only objects that have been seen
+define("LangNotSeenByMeOrNotSeenAtAll"										,"Nicht von mir, oder noch &uuml;berhaupt nicht beobachtet");      // TO TRANSLATE: should be: Only objects that haven't been seen by me
+define("LangNotDrawnByMe"							              			,"Nicht von mir drawn");                                           // TO TRANSLATE: should be: Only objects that haven't been drawn by me
+define("LangNotSeen"																			,"Noch nicht beobachtet");                                         // TO TRANSLATE: should be: Only objects that haven't been seen
+define("LangNotDrawn"																			,"Noch nicht drawn");                                              // TO TRANSLATE: should be: Only objects that haven't been drawn
+define("LangDrawn"																	   		,"Drawn");                                                         // TO TRANSLATE: should be: Only objects that have been drawn
 define("LangSeen"																					,"Beobachtet");
 define("LangListQueryObjectsMessage1"											,"Alle Ergebnisse der Seite zur Liste hinzuf&uuml;gen");
 define("LangListQueryObjectsMessage1b"										,"Alle Ergebnisse der Seite zur Liste entfernen");

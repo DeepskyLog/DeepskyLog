@@ -228,7 +228,7 @@ class Objects
       $sql = "SELECT COUNT(DISTINCT catindex) AS number FROM objectnames WHERE catalog = \"$catalog\"";
     return $objDatabase->selectSingleValue($sql,'number',0);
   }
-  public  function getObjectFromQuery($queries, $exact = 0, $seen="D", $partof = 0)
+  public  function getObjectFromQuery($queries, $exact = 0, $seen="A", $partof = 0)
   { // getObjectFromQuery returns an array with the names of all objects where
     // the queries are defined in an array.
     // An example of an array :  
@@ -606,9 +606,11 @@ class Objects
     $seenlink = "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\" >-</a>";
     $lastseenlink = "-";
     $lastseenlink = "-";
-		if($ObsCnt=$objDatabase->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 ",'ObsCnt'))
-    { $seen = 'X('.$ObsCnt.')';
-      $seenlink = "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\" >".'X('.$ObsCnt.')'."</a>";
+    $ObsCnt=$objDatabase->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 ",'ObsCnt');
+    $DrwCnt=$objDatabase->selectSingleValue("SELECT COUNT(observations.id) As DrwCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 AND hasDrawing=1",'DrwCnt');
+		if($ObsCnt)
+    { $seen = 'X'.($DrwCnt?'S':'Z').'('.$ObsCnt.'/'.$DrwCnt.')';
+      $seenlink = "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\" >".'X'.($DrwCnt?'S':'Z').'('.$ObsCnt.'/'.$DrwCnt.')'."</a>";
       if($loggedUser)
       { $get3=mysql_fetch_object($objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7"));
   		  if($get3->PersObsCnt>0)
@@ -617,8 +619,8 @@ class Objects
             $seenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYDSeen."\" >".'YD('.$ObsCnt.'/'.$get3->PersObsCnt.')'."</a>";
           }
           else
-          { $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')';
-            $seenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\" >".'Y('.$ObsCnt.'/'.$get3->PersObsCnt.')'."</a>";
+          { $seen='Y'.($DrwCnt?'S':'Z').'('.$ObsCnt.'/'.$get3->PersObsCnt.')';
+            $seenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\" >".'Y'.($DrwCnt?'S':'Z').'('.$ObsCnt.'/'.$get3->PersObsCnt.')'."</a>";
           }
           $lastseen=$get3->PersObsMaxDate;
           $lastseenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".urlencode($loggedUser)."&amp;sort=observationdate&amp;sortdirection=desc&amp;object=".urlencode($object)."\" title=\"".LangObjectYSeen."\" >".$get3->PersObsMaxDate."</a>";
@@ -627,7 +629,7 @@ class Objects
 	  }
 		return;
 	}
-  public  function getSeenObjectDetails($obs, $seen="D")
+  public  function getSeenObjectDetails($obs, $seen="A")
   { global $objAtlas, $objDatabase,$objPresentations;
     $result2=array();
 	  $obscnt=sizeof($obs);
@@ -645,8 +647,10 @@ class Objects
         $objectlastseen='';
 				$objectlastseenlink='';
         $this->getSeenLastseenLink($object,$objectseen,$objectseenlink,$objectlastseen,$objectlastseenlink); 
-        if(($seen == "D") ||
-			    (strpos(" " . $seen, substr($objectseen,0,1))))
+        if(($seen == "A") ||
+			     ( strlen($seen)==1?(strpos(" ".$objectseen,substr($seen,0,1))):     
+           ( strlen($seen)==2?strpos(" ".$objectseen,substr($seen,0,1))||strpos(" ".$objectseen,substr($seen,1,1)):
+            (strpos(" ".$objectseen,substr($seen,0,1)))||(strpos(" ".$objectseen,substr($seen,1,1)))||(strpos(" ".$objectseen,substr($seen,2,1))))))
 		    { $result2[$j]['objectname'] = $object;
           $get = mysql_fetch_object($objDatabase->selectRecordset("SELECT * FROM objects WHERE name = \"".$object. "\""));
           $result2[$j]['objecttype'] = $get->type;

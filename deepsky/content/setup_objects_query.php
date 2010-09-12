@@ -28,13 +28,17 @@ function setup_objects_query()
 	  if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
 	    $seen=$_SESSION['QobjParams']['seen'];
 	$content2="<select name=\"seen\" id=\"seen\" class=\"inputfield\">";
-	$content2.="<option selected=\"selected\" value=\"D\">".LangSeenDontCare."</option>";
-	$content2.="<option value=\"-\">".LangNotSeen."</option>";
+	$content2.="<option value=\"A\"  ".($seen=="A" ?"selected=\"selected\"":"").">".LangSeenDontCare."</option>";
+	$content2.="<option value=\"XY\" ".($seen=="XY"?"selected=\"selected\"":"").">".LangSeenByMeOrSomeoneElse."</option>";
+	$content2.="<option value=\"SD\" ".($seen=="SD"?"selected=\"selected\"":"").">".LangDrawn."</option>";
+	$content2.="<option value=\"-\"  ".($seen=="-"?"selected=\"selected\"":"") .">".LangNotSeen."</option>";
+	$content2.="<option value=\"-Z\" ".($seen=="-Z"?"selected=\"selected\"":"").">".LangNotDrawn."</option>";
 	if($loggedUser)
-	{ $content2.="<option value=\"X\" ".($seen=="X"?"selected=\"selected\"":"").">".LangSeenSomeoneElse."</option>";
-	  $content2.="<option value=\"-X\" ".($seen=="-X"?"selected=\"selected\"":"").">".LangNotSeenByMeOrNotSeenAtAll."</option>";
-	  $content2.="<option value=\"XY\" ".($seen=="XY"?"selected=\"selected\"":"").">".LangSeenByMeOrSomeoneElse."</option>";
-	  $content2.="<option value=\"Y\" ".($seen=="Y"?"selected=\"selected\"":"").">".LangSeenByMe."</option>";
+	{ $content2.="<option value=\"Y\"   ".($seen=="Y"?"selected=\"selected\"":"")  .">".LangSeenByMe."</option>";
+		$content2.="<option value=\"D\"   ".($seen=="D"?"selected=\"selected\"":"")  .">".LangDrawnByMe."</option>";
+	  $content2.="<option value=\"-X\"  ".($seen=="-X"?"selected=\"selected\"":"") .">".LangNotSeenByMeOrNotSeenAtAll."</option>";
+	  $content2.="<option value=\"-SZ\" ".($seen=="-SZ"?"selected=\"selected\"":"").">".LangNotDrawnByMe."</option>";
+	  $content2.="<option value=\"X\"   ".($seen=="X"?"selected=\"selected\"":"")  .">".LangSeenSomeoneElse."</option>";
 	}
 	$content2.="</select>";
 	$content3="<input type=\"submit\" name=\"query\" value=\"" . LangQueryObjectsButton1 . "\" />";
