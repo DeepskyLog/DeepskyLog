@@ -301,9 +301,9 @@ function setup_objects_query()
 	  // IN LIST
 	    echo "<td class=\"fieldname".(($listError)?" errorclass":"")."\">".LangQueryObjectsField19."</td>";
 	    echo "<td>";
+	    $lists = $objList->getLists(); 
 	    echo "<select id=\"inList\" name=\"inList\" class=\"inputfield\">";
 	    echo "<option value=\"\">-----</option>";
-	    $lists = $objList->getLists(); 
 	    if(($inList=$objUtil->checkGetKey('inList'))=='')
 	      if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
 	        $inList=$_SESSION['QobjParams']['inList'];
@@ -322,19 +322,20 @@ function setup_objects_query()
 	    echo "</td>";
 	    echo "</tr>";
 	  // NOT IN LIST
-	    /*
 	    echo "<tr>";
 	    echo "<td class=\"fieldname".(($listError)?" errorclass":"")."\">".LangQueryObjectsField20."</td>";
 	    echo "<td>";
-	    echo("<select id=\"notInList\" name=\"notInList\">");
-	    echo("<option value=\"\">&nbsp;</option>"); // empty field
-	    $lists = $objList->getLists(); 
+	    reset($lists);
+	    echo "<select id=\"notInList\" name=\"notInList\" class=\"inputfield\">";
+	    echo "<option value=\"\">-----</option>";
+	    if(($notInList=$objUtil->checkGetKey('notInList'))=='')
+	      if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
+	        $notInList=$_SESSION['QobjParams']['notInList'];
 	    while(list($key, $value) = each($lists))
-	      echo("<option".(($value==$notInList)?" selected=\"selected\"":"")." value=\"$value\">$value</option>");
+	      echo("<option".(($value==$notInList)?" selected=\"selected\"":"")." value=\"".$value."\">".$value."</option>");
 	    echo "</select>";
 	    echo "</td>";
 	    echo "</tr>";
-	    */
 	}
 	// EXCLUDE LARGE CATALOGS
 	  echo "<tr>";

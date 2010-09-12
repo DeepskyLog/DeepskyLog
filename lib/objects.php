@@ -269,25 +269,20 @@ class Objects
 	      $sqland .= "AND A.observerid = \"" .$loggedUser. "\" AND A.listname = \"" . $queries['inList'] . "\" AND A.objectname <>\"\" ";
 		  }
     }  
-/*
+    
     if(array_key_exists('notInList',$queries) && $queries['notInList'])
-    {
-	    if(substr($queries['notInList'],0,7)=="Public:")
-      { $sql1 .= "LEFT JOIN observerobjectlist AS B " .
+    { if(substr($queries['notInList'],0,7)=="Public:")
+      { $sql1 .= " LEFT JOIN observerobjectlist AS B " .
 	               "ON B.objectname = objects.name ";
-        $sql2 .= "LEFT JOIN observerobjectlist AS B " .
+        $sql2 .= " LEFT JOIN observerobjectlist AS B " .
 	               "ON B.objectname = objects.name ";
-		    $sqland .= "AND B.listname = \"" . $queries['notInList'] . "\" AND B.objectname IS NULL ";
+		    $sqland .= " AND B.listname = \"" . $queries['notInList'] . "\" AND B.objectname IS NULL ";
 	    }
 		  elseif(array_key_exists('deepskylog_id',$_SESSION) && $loggedUser)
-      { $sql1 .= "LEFT JOIN observerobjectlist AS B " .
-	               "ON B.objectname = objects.name ";
-        $sql2 .= "LEFT JOIN observerobjectlist AS B " .
-	               "ON B.objectname = objects.name ";
-	      $sqland .= "AND B.observerid = \"" . $loggedUser . "\" AND B.listname = \"" . $queries['notInList'] . "\" AND B.objectname IS NULL ";
+      { $sqland .= " AND (objectnames.objectname NOT IN (SELECT objectname FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $queries['notInList'] . "\" ) ) ";
       }
 	  } 
-*/
+	  
 	  $sql1 .= "WHERE ";
 	  $sql2 .= "WHERE ";
     if (array_key_exists('name',$queries) && $queries["name"] != "")
