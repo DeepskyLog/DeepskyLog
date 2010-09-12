@@ -48,7 +48,7 @@ elseif($objUtil->checkGetKey('source')=='top_objects')
 	  $validQobj=true;
   if(!$validQobj)
 	{ $_SESSION['QobjParams']=array('source'=>'top_objects');
-	  $_SESSION['Qobj']=$objObject->getSeenObjectDetails($objObservation->getPopularObservations(),"D");
+	  $_SESSION['Qobj']=$objObject->getSeenObjectDetails($objObservation->getPopularObservations(),"A");
 	  $_SESSION['QobjSort']='objectpositioninlist';
 	  $_SESSION['QobjSortDirection']='asc';
 	}
@@ -330,7 +330,7 @@ elseif($objUtil->checkGetKey('source')=='setup_objects_query')
   { if(array_key_exists('seen',$_GET) && $_GET['seen'])
         $seenPar = $_GET['seen'];
       else
-        $seenPar = "D";
+        $seenPar = "A";
   	$query = array("name"                  => $name,
                      "type"                => $type,
                      "con"                 => $con,             
@@ -403,7 +403,7 @@ elseif($objUtil->checkGetKey('source')=='quickpick')   //=======================
 		else
 		{	$_SESSION['QobjParams']=array('source'=>'quickpick','object'=>$objUtil->checkGetKey('object'));
     	$_SESSION['QobjPO']=$showPartOfs;
-		  $_SESSION['Qobj']=$objObject->getObjectFromQuery(array('name'=>$objUtil->checkGetKey('object')),1,"D",$showPartOfs);
+		  $_SESSION['Qobj']=$objObject->getObjectFromQuery(array('name'=>$objUtil->checkGetKey('object')),1,"A",$showPartOfs);
 	    $_SESSION['QobjSort']='';
 	    $_SESSION['QobjSortDirection']='asc';
 		}
@@ -442,7 +442,7 @@ elseif($objUtil->checkGetKey('source')=='add_object10')   //====================
 		else
 		{	$_SESSION['QobjParams']=array('source'=>'add_object','object'=>$objUtil->checkGetKey('object'));
     	$_SESSION['QobjPO']=$showPartOfs;
-		  $_SESSION['Qobj']=$objObject->getObjectFromQuery(array('name'=>$objUtil->checkGetKey('object')),1,"D",$showPartOfs);
+		  $_SESSION['Qobj']=$objObject->getObjectFromQuery(array('name'=>$objUtil->checkGetKey('object')),1,"A",$showPartOfs);
 	    $_SESSION['QobjSort']='';
 	    $_SESSION['QobjSortDirection']='asc';
 		}

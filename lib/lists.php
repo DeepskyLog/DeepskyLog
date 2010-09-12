@@ -178,7 +178,7 @@ class Lists
    while($get=mysql_fetch_object($run))
      if(!in_array($get->objectname, $obs))
 	     $obs[$get->objectshowname] = array($get->objectplace,$get->objectname,$get->description);
-	 return $objObject->getSeenObjectDetails($obs, "D");	 
+	 return $objObject->getSeenObjectDetails($obs, "A");	 
  }  
  public  function ObjectDownInList($place)
  { global $loggedUser,$listname,$objDatabase, $myList;

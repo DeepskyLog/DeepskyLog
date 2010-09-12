@@ -476,7 +476,7 @@ class Observations {
 		  $objects=$objObject->getPartOfs($objects);
 	  return $objects;
 	}
-	public  function getObservationFromQuery($queries, $seenpar = "D", $exactinstrumentlocation = "0")                                                                  // returns an array with the names of all observations where the queries are defined in an array. 
+	public  function getObservationFromQuery($queries, $seenpar = "A", $exactinstrumentlocation = "0")                                                                  // returns an array with the names of all observations where the queries are defined in an array. 
 	{	// An example of an array :
   	//  $q = array("object" => "NGC 7293", "observer" => "wim",
   	// 		"instrument" => "3", "location" => "24",
@@ -706,10 +706,10 @@ class Observations {
 			$result = array ();
 			while ($get = mysql_fetch_object($run)) {
 				$seentype = "X";
-				if (array_key_exists('deepskylog_id', $_SESSION) && ($seenpar != "D"))
+				if (array_key_exists('deepskylog_id', $_SESSION) && ($seenpar != "A"))
 					if ($objDatabase->SelectSingleValue("SELECT observations.id FROM observations WHERE objectname = \"" . $get->objectname . "\" AND observerid = \"".$loggedUser."\"", 'id')) // object has been seen by the observer logged in
 						$seentype = "Y";
-				if (($seenpar == "D") || ($seenpar == $seentype)) {
+				if (($seenpar == "A") || ($seenpar == $seentype)) {
 					while (list ($key, $value) = each($get))
 						$result[$j][$key] = $value;
 					$j++;

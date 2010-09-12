@@ -49,7 +49,7 @@ function setup_observations_query()
 		  if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 		    $seen=$_SESSION['QobsParams']['seen'];
 	  $content1 ="<select id=\"seen\" name=\"seen\">";
-	  $content1.="<option ".($seen=="D"?"selected=\"selected\"":"")." value=\"D\">" . LangSeenDontCare . "</option>";
+	  $content1.="<option ".($seen=="A"?"selected=\"selected\"":"")." value=\"A\">" . LangSeenDontCare . "</option>";
 	  $content1.="<option ".($seen=="X"?"selected=\"selected\"":"")." value=\"X\">" . LangSeenSomeoneElse . "</option>"."<option value=\"Y\">" . LangSeenByMe . "</option>";
 	  $content1.="</select>";
 	}
