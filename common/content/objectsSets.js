@@ -1,4 +1,18 @@
 var objectList;
+function generateallonepass()
+{ var load = window.open('objectsSet.pdf?allonepass=allonepass'+
+		                                 '&theSet='+urlencode(document.getElementById('R0'+'Dfov').value)+
+                                         '&thedsos='+urlencode(document.getElementById('R0'+'Ddsos').value)+
+                                         '&thestars='+urlencode(document.getElementById('R0'+'Dstars').value)+
+                                         '&thephotos='+urlencode(document.getElementById('R0'+'Dphotos').value)+
+	                                     '&datapage='+urlencode(document.getElementById('datapage').checked)+
+                                         '&ephemerides='+urlencode(document.getElementById('ephemerides').checked)+
+                                         '&yearephemerides='+urlencode(document.getElementById('yearephemerides').checked)+
+	                                     (document.getElementById('indexpage').checked==true?
+	                                     ('&reportlayoutselect='+urlencode(document.getElementById('reportlayoutselect').value)):''),
+                          ""
+                           );
+}
 function generate()
 { i=0;
   while(theobject=document.getElementById('R'+i))

@@ -1,6 +1,6 @@
 <?php
 function objectsSets()
-{ global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout;
+{ global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout, $objUtil;
   echo "<script type=\"text/javascript\">";
   echo "var Langpdfseriesclickok='".Langpdfseriesclickok."';";
   echo "var Langpdfserieswhenfinished='".Langpdfserieswhenfinished."';";
@@ -29,6 +29,8 @@ function objectsSets()
 	echo LangpdfseriesExplain7.'<br />'.'<br />';		
 	echo LangpdfseriesExplain5.'<br />'.'<br />';		
 	echo "<input type=\"button\" value=\"".LangpdfseriesButton."\" onclick=\"generate();\"/>".'<br />';	
+  if($objUtil->checkGetKey('generateallonepass',''))
+    echo "<input type=\"button\" value=\""."one pass"."\" onclick=\"generateallonepass();\"/>".'<br />';	
   echo LangpdfseriesAddDataPage."<input id=\"datapage\" type=\"checkbox\" value=\"\" />";
   if($loggedUser)
     echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".LangpdfseriesWithEphemerides."<input id=\"ephemerides\" type=\"checkbox\" />";

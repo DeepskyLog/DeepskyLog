@@ -981,69 +981,20 @@ class PrintAtlas
     $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
     $this->pdf->Stream(); 
   }
-  public  function pdfAtlasSet($theSet)
-  { set_time_limit(round(count($_SESSION['Qobj'])*0.005));
-    global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
+  public  function pdfAtlasSet($theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false,$onepass=false)
+  { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
     $this->pdf = new Cezpdf('a4', 'landscape');
-    $this->pdf->selectFont($instDir.'lib/fonts/Courier.afm');
-    $this->fontSize1b=max(min($objUtil->checkRequestKey('fontsize',$this->fontSize1b),9),6);
-    $this->fontSize1a=round($this->fontSize1b*1.666);
-    
-    for($j=0;$j<count($_SESSION['Qobj']);$j++)
-    { if($j) $this->pdf->newPage();
-	    $this->atlaspagerahr=$objObject->getDsoProperty($_SESSION['Qobj'][$j]['objectname'],'ra',0);
-      $this->atlaspagedecldeg=$objObject->getDsoProperty($_SESSION['Qobj'][$j]['objectname'],'decl',0);
-    	
-	    for($k=0;$k<count($theSet);$k++)
-	    { if($k) $this->pdf->newPage();
-	    	$minDegs=$theSet[$k]/60;
-	    	$i=$this->gridMaxDimension;
-	      while($i && ($this->gridDimensions[$i][0]<$minDegs))
-	        $i--;
-	      $this->gridActualDimension=$i;
-	      $this->atlasmagnitude=max(min((int)(($this->gridDimensions[$this->gridActualDimension][3])),99),8);
-	      $this->starsmagnitude=max(min((int)(($this->gridDimensions[$this->gridActualDimension][3])),16),8);
-	      
-	      $this->pdf->setLineStyle(0.5);
-	      $this->gridInit();
-	      $this->gridInitScale($this->atlaspagerahr,$this->atlaspagedecldeg,$this->atlaspagezoomdeg);
-	      $this->pdf->setStrokeColor(0.9,0.9,0.9);
-	      $this->pdf->setLineStyle(0.5,'','',array(1));
-	      $this->gridDrawCoordLines();
-	      $this->pdf->setLineStyle(0.5,'','',array());
-	      $this->pdf->setStrokeColor(0.7,0.7,0.7);
-	      $this->astroDrawConstellations();
-	      $this->pdf->setStrokeColor(0,0,0);
-	      $this->astroDrawStarsArr();
-	      $this->astroDrawObjects($_SESSION['Qobj'][$j]['objectname']);
-	      
-	      $this->pdf->setColor(1,1,1);
-	      $this->pdf->filledRectangle(0,0,$this->gridOffsetXpx,$this->canvasDimensionYpx);
-	      $this->pdf->filledRectangle(0,0,$this->canvasDimensionXpx,$this->gridOffsetYpx);
-	      $this->pdf->filledRectangle($this->canvasDimensionXpx-$this->gridOffsetXpx,0,$this->gridOffsetXpx,$this->canvasDimensionYpx);
-	      $this->pdf->filledRectangle(0,$this->canvasDimensionYpx-$this->gridOffsetYpx,$this->canvasDimensionXpx,$this->gridOffsetYpx);
-	      $this->pdf->setColor(0,0,0);
-	      $this->gridShowInfo();
-	      $this->atlasDrawLegend();
-	      $temp=$objObserver->getObserverProperty($loggedUser,'firstname')." ".$objObserver->getObserverProperty($loggedUser,'name')." - ".date('d M Y');
-	      $this->pdf->addText($this->canvasDimensionXpx-$this->gridOffsetXpx-(strlen($temp)*5),$this->canvasDimensionYpx-$this->Legend1y-10,$this->fontSize1b,$temp);
-	      $this->pdf->setLineStyle(2,'round');
-	      $this->pdf->rectangle($this->gridOffsetXpx-1,$this->gridOffsetYpx-1,
-	                           ($this->canvasDimensionXpx-($this->gridOffsetXpx<<1))+2,($this->canvasDimensionYpx-($this->gridOffsetYpx<<1))+2);
-	         
-	      for($i=0,$z=count($this->labelsArr);$i<$z;$i++)   
-	        $this->pdf->addTextWrap($this->labelsArr[$i][0],$this->labelsArr[$i][1],$this->labelsArr[$i][2],$this->labelsArr[$i][3],$this->labelsArr[$i][4],$this->labelsArr[$i][5]);                  
-	      $this->labelsArr=array();
-	      $temp='(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).';
-	      $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
-	    }
+    for($j=0;$j<count($_SESSION['Qobj']);)
+    { $this->pdfAtlasObjectSet($_SESSION['Qobj'][$j]['objectname'],$theSet,$thedsos,$thestars,$thephotos,$datapage,$reportlayoutselect,$ephemerides,$yearephemerides,$onepass);
+      if(++$j<count($_SESSION['Qobj']))
+        $this->pdf->newPage();
     }
     $this->pdf->Stream(); 
   }
   private function filterdegpart($thevalue)
   { return substr($thealtitude=html_entity_decode($thevalue),0,strpos($thealtitude,'°')+1);
   }
-  public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false)
+  public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false,$onepass=false)
   { global $theMonth,$theDay,$theYear,$dateformat,$baseURL,$objList,$objInstrument,$objLocation,$objUtil,$instDir,$loggedUser,$loggedUserName,$objObserver,$objObject,$objPresentations,$tempfolder,$objReportLayout,$listname,$myList;
     $astroObjects=array();
     $indexlist=array();
@@ -1052,7 +1003,8 @@ class PrintAtlas
     $declDSS=$objPresentations->decToStringDSS2($objObject->getDsoProperty($theobject,'decl'));
     $radeclALADIN=$objPresentations->radeclToStringALADIN($objObject->getDsoProperty($theobject,'ra'),$objObject->getDsoProperty($theobject,'decl'));
     $_GET['pdfTitle']=$theobject;
-    $this->pdf = new Cezpdf('a4', 'landscape');
+    if(!$onepass)
+      $this->pdf = new Cezpdf('a4', 'landscape');
     $this->canvasDimensionXpx=$this->pdf->ez['pageWidth']; 
     $this->canvasDimensionYpx=$this->pdf->ez['pageHeight'];
     $this->pdf->selectFont($instDir.'lib/fonts/Courier.afm');
@@ -1764,7 +1716,8 @@ class PrintAtlas
 				}    
 	    }
     }
-    $this->pdf->Stream(); 
+    if(!$onepass)
+      $this->pdf->Stream(); 
   }
   
 	function roundPrecision($theValue,$thePrecision)
