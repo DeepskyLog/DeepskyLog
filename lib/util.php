@@ -2261,7 +2261,7 @@ class Utils
 	  
 	  $query = array("catalog"=>'%',"mindate"=>$objUtil->checkGetDate('minyear', 'minmonth','minday'));
 	
-	  $result = $objObservation->getObservationFromQuery($query, 'D');
+	  $result = $objObservation->getObservationFromQuery($query, 'A');
 	
 	  while (list($key,$value)=each($result)) {
 	    //add root - <channel> - <item>

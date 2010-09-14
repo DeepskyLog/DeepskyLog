@@ -73,7 +73,7 @@ $query = array("object"           => $object,
                "hasNoDrawing"     => $objUtil->checkGetKey('nodrawings','off'),            
                "languages"        => $selectedLanguages,
                "minobservation"   => ($objUtil->checkGetKey('newobservations')?$objObserver->getObserverProperty($loggedUser,'lastReadObservationId',0):0),
-               "seen"             => $objUtil->checkGetKey('seen','D'),
+               "seen"             => $objUtil->checkGetKey('seen','A'),
                "includefile"      => $includeFile);
 //============================================ CHECK TO SEE IF OBSERVATIONS ALREADY FETCHED BEFORE, OTHERWISE FETCH DATA FROM DB ===============================
 $validQobs=false;
@@ -86,7 +86,7 @@ while($validQobs && (list($key,$value) = each($query)))
  if(!array_key_exists($key,$_SESSION['QobsParams'])||($value!=$_SESSION['QobsParams'][$key]))
    $validQobs=false;
 if(!$validQobs)
-{ $_SESSION['Qobs']=$objObservation->getObservationFromQuery($query, $objUtil->checkGetKey('seen','D'),$objUtil->checkGetKey('exactinstrumentlocation',0));
+{ $_SESSION['Qobs']=$objObservation->getObservationFromQuery($query, $objUtil->checkGetKey('seen','A'),$objUtil->checkGetKey('exactinstrumentlocation',0));
   $_SESSION['QobsParams']=$query; 
   $_SESSION['QobsSort']='observationid';
   $_SESSION['QobsSortDirection']='desc';

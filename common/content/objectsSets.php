@@ -63,7 +63,6 @@ function objectsSets()
   echo "<table>";
   echo "<tr>";
   echo "<td class=\"bold\">".LangpdfseriesObject."</td>";
-  echo "<td class=\"bold\">".LangpdfseriesObject."</td>";
   echo "<td class=\"bold\">".LangpdfseriesSize."</td>";
   echo "<td class=\"bold\">".LangpdfseriesFoVs."</td>";
   echo "<td class=\"bold\">".Langpdfseriesdsos."</td>";
