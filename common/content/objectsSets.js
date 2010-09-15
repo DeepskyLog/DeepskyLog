@@ -1,15 +1,41 @@
 var objectList;
-function generateallonepass()
-{ location=('objectsSet.pdf?allonepass=allonepass'+
-		                                 '&theSet='+urlencode(document.getElementById('R0'+'Dfov').value)+
-                                         '&thedsos='+urlencode(document.getElementById('R0'+'Ddsos').value)+
-                                         '&thestars='+urlencode(document.getElementById('R0'+'Dstars').value)+
-                                         '&thephotos='+urlencode(document.getElementById('R0'+'Dphotos').value)+
-	                                     '&datapage='+urlencode(document.getElementById('datapage').checked)+
-                                         '&ephemerides='+urlencode(document.getElementById('ephemerides').checked)+
-                                         '&yearephemerides='+urlencode(document.getElementById('yearephemerides').checked)+
-	                                     (document.getElementById('indexpage').checked==true?
-	                                     ('&reportlayoutselect='+urlencode(document.getElementById('reportlayoutselect').value)):''));
+function generateallonepass(item)
+{ var jsonhttp;
+  if(window.XMLHttpRequest)
+    jsonhttp=new XMLHttpRequest();
+  else if(window.activeXObject)
+    jsonhttp=new ActiveXObject("Microsoft.XMLHTTP");
+  else
+    alert("Atlas pages are not supported on non-xmlhttp machines");
+  jsonhttp.onreadystatechange=function()
+  { if(jsonhttp.readyState==4)
+    { alert('theitem '+item);
+      window.location='objectsSetsOnePass.pdf?item='+item;
+      item=jsonhttp.responseText;
+      alert(item);
+      /*if(item)
+      { alert(item);
+        generateallonepass(item);
+      }
+      else
+    	alert('Done');
+      */
+    }
+  };
+  var url='ajaxinterface.php?instruction=allonepass'+
+  '&theSet='+urlencode(document.getElementById('R'+item+'Dfov').value)+
+  '&thedsos='+urlencode(document.getElementById('R'+item+'Ddsos').value)+
+  '&thestars='+urlencode(document.getElementById('R'+item+'Dstars').value)+
+  '&thephotos='+urlencode(document.getElementById('R'+item+'Dphotos').value)+
+  '&datapage='+urlencode(document.getElementById('datapage').checked)+
+  '&ephemerides='+urlencode(document.getElementById('ephemerides').checked)+
+  '&yearephemerides='+urlencode(document.getElementById('yearephemerides').checked)+
+  (document.getElementById('indexpage').checked==true?
+  ('&reportlayoutselect='+urlencode(document.getElementById('reportlayoutselect').value)):'')+
+  '&item=0';
+  //alert(url);
+  jsonhttp.open("GET",url,true);
+  jsonhttp.send(null);
 }
 function generate()
 { i=0;

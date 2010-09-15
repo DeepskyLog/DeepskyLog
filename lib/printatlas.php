@@ -981,21 +981,20 @@ class PrintAtlas
     $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
     $this->pdf->Stream(); 
   }
-  public  function pdfAtlasSet($theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false,$onepass=false)
-  { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
-    $this->pdf = new Cezpdf('a4', 'landscape');
-    for($j=0;$j<count($_SESSION['Qobj']);)
-    { $this->pdfAtlasObjectSet($_SESSION['Qobj'][$j]['objectname'],$theSet,$thedsos,$thestars,$thephotos,$datapage,$reportlayoutselect,$ephemerides,$yearephemerides,$onepass);
-      if(++$j<count($_SESSION['Qobj']))
-        $this->pdf->newPage();
-    }
-    $this->pdf->Stream(); 
+  public  function pdfAtlasObjectSets($item,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false)
+  { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject,$tmpDir;
+    $this->pdfAtlasObjectSet($_SESSION['Qobj'][$item]['objectname'],$theSet,$thedsos,$thestars,$thephotos,$datapage,$reportlayoutselect,$ephemerides,$yearephemerides,true);
+    $_SESSION['allonepass'.$item]=$this->pdf->output();
+    if(($item+1)<count($_SESSION['Qobj']))
+      echo 'allonepass'.$item;
+    else
+      echo 0;
   }
   private function filterdegpart($thevalue)
   { return substr($thealtitude=html_entity_decode($thevalue),0,strpos($thealtitude,'°')+1);
   }
-  public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false,$onepass=false)
-  { global $theMonth,$theDay,$theYear,$dateformat,$baseURL,$objList,$objInstrument,$objLocation,$objUtil,$instDir,$loggedUser,$loggedUserName,$objObserver,$objObject,$objPresentations,$tempfolder,$objReportLayout,$listname,$myList;
+  public  function pdfAtlasObjectSet($theobject,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false,$nostream=false)
+  { global $theMonth,$theDay,$theYear,$dateformat,$baseURL,$objList,$objInstrument,$objLocation,$objUtil,$instDir,$loggedUser,$loggedUserName,$objObserver,$objObject,$objPresentations,$objReportLayout,$listname,$myList;
     $astroObjects=array();
     $indexlist=array();
     set_time_limit(300);
@@ -1003,8 +1002,7 @@ class PrintAtlas
     $declDSS=$objPresentations->decToStringDSS2($objObject->getDsoProperty($theobject,'decl'));
     $radeclALADIN=$objPresentations->radeclToStringALADIN($objObject->getDsoProperty($theobject,'ra'),$objObject->getDsoProperty($theobject,'decl'));
     $_GET['pdfTitle']=$theobject;
-    if(!$onepass)
-      $this->pdf = new Cezpdf('a4', 'landscape');
+    $this->pdf = new Cezpdf('a4', 'landscape');
     $this->canvasDimensionXpx=$this->pdf->ez['pageWidth']; 
     $this->canvasDimensionYpx=$this->pdf->ez['pageHeight'];
     $this->pdf->selectFont($instDir.'lib/fonts/Courier.afm');
@@ -1716,7 +1714,7 @@ class PrintAtlas
 				}    
 	    }
     }
-    if(!$onepass)
+    if(!$nostream)
       $this->pdf->Stream(); 
   }
   

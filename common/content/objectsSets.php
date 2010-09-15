@@ -30,7 +30,7 @@ function objectsSets()
 	echo LangpdfseriesExplain5.'<br />'.'<br />';		
 	echo "<input type=\"button\" value=\"".LangpdfseriesButton."\" onclick=\"generate();\"/>".'<br />';	
   if($objUtil->checkGetKey('generateallonepass',''))
-    echo "<input type=\"button\" value=\""."one pass"."\" onclick=\"generateallonepass();\"/>".'<br />';	
+    echo "<input type=\"button\" value=\""."one pass"."\" onclick=\"generateallonepass(0);\"/>".'<br />';	
   echo LangpdfseriesAddDataPage."<input id=\"datapage\" type=\"checkbox\" value=\"\" />";
   if($loggedUser)
     echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".LangpdfseriesWithEphemerides."<input id=\"ephemerides\" type=\"checkbox\" />";
