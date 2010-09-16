@@ -983,12 +983,13 @@ class PrintAtlas
   }
   public  function pdfAtlasObjectSets($item,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false)
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject,$tmpDir;
-    $this->pdfAtlasObjectSet($_SESSION['Qobj'][$item]['objectname'],$theSet,$thedsos,$thestars,$thephotos,$datapage,$reportlayoutselect,$ephemerides,$yearephemerides,true);
-    $_SESSION['allonepass'.$item]=$this->pdf->output();
-    if(($item+1)<count($_SESSION['Qobj']))
-      echo 'allonepass'.$item;
+    if($item<count($_SESSION['Qobj']))
+    { $this->pdfAtlasObjectSet($_SESSION['Qobj'][$item]['objectname'],$theSet,$thedsos,$thestars,$thephotos,$datapage,$reportlayoutselect,$ephemerides,$yearephemerides,true);
+      $_SESSION['allonepass'.$item]=$this->pdf->output();
+      echo $item;
+    }
     else
-      echo 0;
+      echo -1;
   }
   private function filterdegpart($thevalue)
   { return substr($thealtitude=html_entity_decode($thevalue),0,strpos($thealtitude,'°')+1);

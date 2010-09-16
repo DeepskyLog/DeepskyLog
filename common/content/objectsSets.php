@@ -28,9 +28,9 @@ function objectsSets()
 	echo LangpdfseriesExplain6.'<br />'.'<br />';		
 	echo LangpdfseriesExplain7.'<br />'.'<br />';		
 	echo LangpdfseriesExplain5.'<br />'.'<br />';		
-	echo "<input type=\"button\" value=\"".LangpdfseriesButton."\" onclick=\"generate();\"/>".'<br />';	
-  if($objUtil->checkGetKey('generateallonepass',''))
-    echo "<input type=\"button\" value=\""."one pass"."\" onclick=\"generateallonepass(0);\"/>".'<br />';	
+	echo "<input type=\"button\" value=\"".LangpdfseriesButton."\" onclick=\"generateallonepass(0);\"/>";
+	echo "&nbsp;"."<div id='thecounter'> &nbsp; </div>";
+	echo '<br />';	
   echo LangpdfseriesAddDataPage."<input id=\"datapage\" type=\"checkbox\" value=\"\" />";
   if($loggedUser)
     echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;".LangpdfseriesWithEphemerides."<input id=\"ephemerides\" type=\"checkbox\" />";
@@ -71,7 +71,8 @@ function objectsSets()
   
   echo "</tr>";
   for($i=0;$i<$k;$i++)
-  { echo "<td id=\"T".$i."\">"."<input id=\"R".$i."\" type=\"button\" value=\"".$_SESSION['Qobj'][$i]['showname']."\" title=\"".$_SESSION['Qobj'][$i]['objectname']."\" onclick=\"generateOne(".$i.");\"/>"."</td>";
+  { echo "<tr>";
+  	echo "<td id=\"T".$i."\">"."<input id=\"R".$i."\" type=\"button\" value=\"".$_SESSION['Qobj'][$i]['showname']."\" title=\"".$_SESSION['Qobj'][$i]['objectname']."\" onclick=\"generateOne(".$i.");\"/>"."</td>";
     echo "<td id=\"R".$i."Dsize\">".$_SESSION['Qobj'][$i]['objectsize']."</td>";
     echo "<td>"."<input type=\"text\" ".((($_SESSION['Qobj'][$i]['objectdiam1']/60)>$fovd)?"class=\"textred\"":"")." id=\"R".$i."D"."fov"."\" value=\"".$fovo." ".$fovl." ".$fovd."\" />"."</td>";
     echo "<td>"."<input type=\"text\" id=\"R".$i."D"."dsos"."\" value=\"".$dsoso." ".$dsosl." ".$dsosd."\"/>"."</td>";

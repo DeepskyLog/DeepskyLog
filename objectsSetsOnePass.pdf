@@ -2,6 +2,8 @@
 session_start();
 header("Content-type: application/pdf");
 header("Content-Length: ".strlen($_SESSION['allonepass'.$_GET['item']]));
-header("Content-Disposition: attachment; filename=".$_SESSION[Qobj][$_GET['item']]['objectname'].".pdf");
+header("Content-Disposition: attachment; filename=".$_SESSION['Qobj'][$_GET['item']]['objectname'].".pdf");
 echo $_SESSION['allonepass'.$_GET['item']];
+$_SESSION['allonepass'.$_GET['item']]="";
+unset($_SESSION['allonepass'.$_GET['item']]);
 ?>
