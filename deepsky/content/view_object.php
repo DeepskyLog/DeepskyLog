@@ -21,11 +21,17 @@ else
 	echo "<hr />";
 	$objObject->showObject($object);
 	if($loggedUser && ($theLocation=$objObserver->getObserverProperty($loggedUser, 'stdLocation')))
-	{ if($objUtil->checkGetKey('ephemerides')=="hidden")
-	    $objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj'."\" title=\"".ReportEpehemeridesForShow."\">+</a> ".ReportEpehemeridesFor."&nbsp;".$object_ss.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($theLocation, 'name')."</h4>"),
-	                        "L",array(100),30);
+	{ if(array_key_exists('viewobjectephemerides',$_GET))
+	    $viewobjectephemerides=$_GET['viewobjectephemerides'];
+	  elseif(array_key_exists('viewobjectephemerides',$_COOKIE))
+	    $viewobjectephemerides=$_COOKIE['viewobjectephemerides'];
 	  else
-	    $objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;ephemerides=hidden'."\" title=\"".ReportEpehemeridesForHide."\">-</a> ".ReportEpehemeridesFor."&nbsp;".$object_ss.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($theLocation, 'name')."</h4>"),
+	    $viewobjectephemerides='show';
+		if($viewobjectephemerides=="show")
+      $objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectephemerides=hidden'."\" title=\"".ReportEpehemeridesForHide."\">-</a> ".ReportEpehemeridesFor."&nbsp;".$object_ss.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($theLocation, 'name')."</h4>"),
+	                        "L",array(100),30);
+    else
+		  $objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectephemerides=show'."\" title=\"".ReportEpehemeridesForShow."\">+</a> ".ReportEpehemeridesFor."&nbsp;".$object_ss.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($theLocation, 'name')."</h4>"),
 	                        "L",array(100),30);
     $longitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'longitude');
     $latitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'latitude');
@@ -34,7 +40,7 @@ else
     $dateTimeZone=new DateTimeZone($timezone);
       
     echo "<hr />";
-    if($objUtil->checkGetKey('ephemerides')!="hidden")
+    if($viewobjectephemerides=="show")
     { echo "<div id=\"ephemeridesdiv\">";
 	    for($i=1;$i<13;$i++)
 			{ $datestr=sprintf("%02d",$i)."/".sprintf("%02d",1)."/".$_SESSION['globalYear'];
@@ -234,7 +240,18 @@ else
 		
 		$link = $baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey('zoom',30).'&amp;SID=Qobj';
 		
-		$content1 ="<h4>".$_GET['object'];
+		$content1 ="<h4>";
+		if(array_key_exists('viewobjectobjectsnearby',$_GET))
+	    $viewobjectobjectsnearby=$_GET['viewobjectobjectsnearby'];
+	  elseif(array_key_exists('viewobjectobjectsnearby',$_COOKIE))
+	    $viewobjectobjectsnearby=$_COOKIE['viewobjectobjectsnearby'];
+	  else
+	    $viewobjectobjectsnearby='show';
+		if($viewobjectobjectsnearby=="show")
+		  $content1.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobjectsnearby=hidden'."\" title=\"".ReportEpehemeridesForHide."\">-</a> ";
+		else
+		  $content1.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobjectsnearby=show'."\" title=\"".ReportEpehemeridesForHide."\">+</a> ";
+		$content1.=$_GET['object'];
 		if(count($_SESSION['Qobj'])>2)
 		 $content1.=' '.LangViewObjectAndNearbyObjects.' '.(count($_SESSION['Qobj'])-1).' '.LangViewObjectNearbyObjects;
 		elseif(count($_SESSION['Qobj'])>1)
@@ -244,36 +261,38 @@ else
 		$content1.="</h4>";
 		list($min,$max,$content2)=$objUtil->printNewListHeader3($_SESSION['Qobj'],$link ,$min,$step);
 		$objPresentations->line(array($content1,$content2),"LR",array(50,50),30);
-	  $content1 ="<form action=\"".$link."\" method=\"get\"><div>";
-		$content1.=LangViewObjectNearbyObjectsMoreLess .":&nbsp;";
-	  $content1.="<select name=\"zoom\" onchange=\"submit();\">";
-		if($objUtil->checkGetKey('zoom',30)=="180") $content1.=("<option selected=\"selected\" value=\"180\">3x3&deg;</option>"); else $content1.=("<option value=\"180\">3x3&deg;</option>"); 
-		if($objUtil->checkGetKey('zoom',30)=="120") $content1.=("<option selected=\"selected\" value=\"120\">2x2&deg;</option>"); else $content1.=("<option value=\"120\">2x2&deg;</option>"); 
-		if($objUtil->checkGetKey('zoom',30)=="60")  $content1.=("<option selected=\"selected\" value=\"60\">1x1&deg;</option>"); else $content1.=("<option value=\"60\">1x1&deg;</option>"); 
-		if($objUtil->checkGetKey('zoom',30)=="30")  $content1.=("<option selected=\"selected\" value=\"30\">30x30'</option>"); else $content1.=("<option value=\"30\">30x30'</option>"); 
-		if($objUtil->checkGetKey('zoom',30)=="15")  $content1.=("<option selected=\"selected\" value=\"15\">15x15'</option>"); else $content1.=("<option value=\"15\">15x15'</option>"); 
-		if($objUtil->checkGetKey('zoom',30)=="10")  $content1.=("<option selected=\"selected\" value=\"10\">10x10'</option>"); else $content1.=("<option value=\"10\">10x10'</option>"); 
-		if($objUtil->checkGetKey('zoom',30)=="5")   $content1.=("<option selected=\"selected\" value=\"5\">5x5'</option>"); else $content1.=("<option value=\"5\">5x5'</option>"); 
-		$content1.="</select>";
-		$content1.="<input type=\"hidden\" name=\"object\" value=\"".$_GET['object']."\" /> ";
-		$content1.="<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" /> ";		
-		$content1.="</div></form>";
-		$content2="";
-		$content2=$objUtil->printStepsPerPage3($link,"nearbyObjects",$step);
-		$objPresentations->line(array($content1,$content2),"LR",array(50,50),25);
-		echo "<hr />";
-		if($max>count($_SESSION['Qobj']))
-		  $max=count($_SESSION['Qobj']);
-		$_GET['min']=$min;
-		$_GET['max']=$max;
-		if($FF)
-		{ echo "<script type=\"text/javascript\">";
-		  echo "theResizeElement='obj_list';";
-		  echo "theResizeSize=75;";
-		  echo "</script>";
+		if($viewobjectobjectsnearby=="show")
+		{ $content1 ="<form action=\"".$link."\" method=\"get\"><div>";
+			$content1.=LangViewObjectNearbyObjectsMoreLess .":&nbsp;";
+		  $content1.="<select name=\"zoom\" onchange=\"submit();\">";
+			if($objUtil->checkGetKey('zoom',30)=="180") $content1.=("<option selected=\"selected\" value=\"180\">3x3&deg;</option>"); else $content1.=("<option value=\"180\">3x3&deg;</option>"); 
+			if($objUtil->checkGetKey('zoom',30)=="120") $content1.=("<option selected=\"selected\" value=\"120\">2x2&deg;</option>"); else $content1.=("<option value=\"120\">2x2&deg;</option>"); 
+			if($objUtil->checkGetKey('zoom',30)=="60")  $content1.=("<option selected=\"selected\" value=\"60\">1x1&deg;</option>"); else $content1.=("<option value=\"60\">1x1&deg;</option>"); 
+			if($objUtil->checkGetKey('zoom',30)=="30")  $content1.=("<option selected=\"selected\" value=\"30\">30x30'</option>"); else $content1.=("<option value=\"30\">30x30'</option>"); 
+			if($objUtil->checkGetKey('zoom',30)=="15")  $content1.=("<option selected=\"selected\" value=\"15\">15x15'</option>"); else $content1.=("<option value=\"15\">15x15'</option>"); 
+			if($objUtil->checkGetKey('zoom',30)=="10")  $content1.=("<option selected=\"selected\" value=\"10\">10x10'</option>"); else $content1.=("<option value=\"10\">10x10'</option>"); 
+			if($objUtil->checkGetKey('zoom',30)=="5")   $content1.=("<option selected=\"selected\" value=\"5\">5x5'</option>"); else $content1.=("<option value=\"5\">5x5'</option>"); 
+			$content1.="</select>";
+			$content1.="<input type=\"hidden\" name=\"object\" value=\"".$_GET['object']."\" /> ";
+			$content1.="<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" /> ";		
+			$content1.="</div></form>";
+			$content2="";
+			$content2=$objUtil->printStepsPerPage3($link,"nearbyObjects",$step);
+			$objPresentations->line(array($content1,$content2),"LR",array(50,50),25);
+			echo "<hr />";
+			if($max>count($_SESSION['Qobj']))
+			  $max=count($_SESSION['Qobj']);
+			$_GET['min']=$min;
+			$_GET['max']=$max;
+			if($FF)
+			{ echo "<script type=\"text/javascript\">";
+			  echo "theResizeElement='obj_list';";
+			  echo "theResizeSize=75;";
+			  echo "</script>";
+			}
+			$objObject->showObjects($link, $min, $max,$_GET['object'],0,$step,'','view_object');
+			echo "<hr />";
 		}
-		$objObject->showObjects($link, $min, $max,$_GET['object'],0,$step,'','view_object');
-		echo "<hr />";
 		$content =LangExecuteQueryObjectsMessage4."&nbsp;";
 		$content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4a)."&nbsp;-&nbsp;";
 		$content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objectnames.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4b)."&nbsp;-&nbsp;";
@@ -284,7 +303,7 @@ else
 	  { $content.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;sort=".$_SESSION['QobjSort']."&amp;pdfTitle=Test\" >".ReportLink."</a>&nbsp;-&nbsp;";
       $content.="<a href=\"".$baseURL."index.php?indexAction=objectsSets"."\" rel=\"external\">".LangExecuteQueryObjectsMessage11."</a>";
 	  }
-	  $objPresentations->line(array($content),"L",array(),20);
+	  $objPresentations->line(array($content),"L",array(),20);    
 	}
 	else
 	{ $objPresentations->line(array("<h4>".LangViewDSSImageTitle.$object."&nbsp;(".$imagesize."&#39;&nbsp;x&nbsp;".$imagesize."&#39;)</h4>"),"L");

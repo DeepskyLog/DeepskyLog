@@ -188,7 +188,22 @@ else
     if(array_key_exists('menus',$_SESSION)&&array_key_exists('menuMoon',$_SESSION['menus']))
       $menuMoon=$_SESSION['menus']['menuMoon'];
   }
-	
+  if($objUtil->checkGetKey('viewobjectephemerides')=='hidden')
+	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("viewobjectephemerides",'hidden',$cookietime, "/");
+	}
+  if($objUtil->checkGetKey('viewobjectephemerides')=='show')
+	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("viewobjectephemerides",'show',$cookietime, "/");
+	}
+  if($objUtil->checkGetKey('viewobjectobjectsnearby')=='hidden')
+	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("viewobjectobjectsnearby",'hidden',$cookietime, "/");
+	}
+  if($objUtil->checkGetKey('viewobjectobjectsnearby')=='show')
+	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("viewobjectobjectsnearby",'show',$cookietime, "/");
+	}
   if(array_key_exists('menuAdmin',$_GET))
 	{ $menuAdmin=$_GET['menuAdmin'];
 	  $_SESSION['menus']['menuAdmin']=$menuAdmin;
