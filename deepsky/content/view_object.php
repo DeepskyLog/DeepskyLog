@@ -291,8 +291,8 @@ else
 			  echo "</script>";
 			}
 			$objObject->showObjects($link, $min, $max,$_GET['object'],0,$step,'','view_object');
-			echo "<hr />";
 		}
+		echo "<hr />";
 		$content =LangExecuteQueryObjectsMessage4."&nbsp;";
 		$content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4a)."&nbsp;-&nbsp;";
 		$content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objectnames.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4b)."&nbsp;-&nbsp;";
