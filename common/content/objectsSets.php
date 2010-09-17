@@ -28,7 +28,9 @@ function objectsSets()
 	echo LangpdfseriesExplain6.'<br />'.'<br />';		
 	echo LangpdfseriesExplain7.'<br />'.'<br />';		
 	echo LangpdfseriesExplain5.'<br />'.'<br />';		
-	echo "<input type=\"button\" value=\"".LangpdfseriesButton."\" onclick=\"generateallonepass(0,".($MSIE?'true':'false').");\"/>";
+	echo LangpdfseriesExplain5b.'<br />'.'<br />';		
+	if(!($MSIE))
+	  echo "<input type=\"button\" value=\"".LangpdfseriesButton."\" onclick=\"generateallonepass(0,".($MSIE?'true':'false').");\"/>";
 	echo "&nbsp;"."<div id='thecounter'> &nbsp; </div>";
 	echo '<br />';	
   echo LangpdfseriesAddDataPage."<input id=\"datapage\" type=\"checkbox\" value=\"\" />";

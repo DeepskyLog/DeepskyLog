@@ -41,8 +41,7 @@ function generateallonepass(item,msie)
 }
 function generateOne(i,msie)
 { if(msie)
-  { var mywindow=window.open("",'mywindow');
-    mywindow.location='objectsSet.pdf?theobject='+urlencode(document.getElementById('R'+i).title)+
+  { document.location='objectsSet.pdf?theobject='+urlencode(document.getElementById('R'+i).title)+
       '&theSet='+urlencode(document.getElementById('R'+i+'Dfov').value)+
       '&thedsos='+urlencode(document.getElementById('R'+i+'Ddsos').value)+
       '&thestars='+urlencode(document.getElementById('R'+i+'Dstars').value)+

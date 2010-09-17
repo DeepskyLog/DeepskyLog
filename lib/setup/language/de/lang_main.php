@@ -8,25 +8,26 @@ define("LangObjectRiseSet2"     ,"Objekt Auf-Untergang");
 
 define("LangpdfseriesExplain1"  ,"Kartensammlung zu einem Objekt erstellen.");
 define("LangpdfseriesExplain2"  ,"Jede Kartensammlung enth&auml;lt mehrere Aufsuchkarten mit den jeweils unten angegebenen Gesichtsfeldwerten.");
- define("LangpdfseriesExplain3"  ,"Jede Aufsuchkarte zeigt Sterne und Objekte bis zur unten angegebenen max. Helligkeit.");
+define("LangpdfseriesExplain3"  ,"Jede Aufsuchkarte zeigt Sterne und Objekte bis zur unten angegebenen max. Helligkeit.");
 define("LangpdfseriesExplain4"  ,"Die max. Helligkeitsfelder unten sollten soviele Eintr&auml;ge haben, wie Gesichtsfelder angegeben wurden.");
- define("LangpdfseriesExplain5"  ,"Sie k&ouml;nnen die Kartensammlungen speichern und mit einem PDF Merger zusammenf&uuml;gen. Damit k&ouml;nnen Sie Ihren eigenen Sternkartenatlas erstellen. Sie k&ouml;nnen auch angeben, alle Kartensammlungen in einem Durchgang zu erstellen, bedenken Sie jedoch, da&szlig; dies etwas l&auml;nger zur Generierung ben&ouml;tigt.");
- define("LangpdfseriesExplain6"  ,"Vor jedem Objekt k&ouml;nnen Sie einen Datenbereich angeben. Dieser enth&auml;lt grundlegende Daten, eine Objektbeschreibung (falls verf&uuml;gbar) sowie 2 Fotos in der von Ihnen angegebenen Gr&ouml;&szlig;e (15, 30 oder 60 Bogenminuten).");
- define("LangpdfseriesExplain7"  ,"Sie k&ouml;nnen einen Index nach jedem Abschnitt anlegen lassen. Dieser Index enth&auml;lt eine &uuml;bersicht &uuml;ber alle Objekte auf jeder Karte.");
- define("LangpdfseriesButton"    ,"Alle generieren");
+define("LangpdfseriesExplain5"  ,"Sie k&ouml;nnen die Kartensammlungen speichern und mit einem PDF Merger zusammenf&uuml;gen. Damit k&ouml;nnen Sie Ihren eigenen Sternkartenatlas erstellen.");
+ define("LangpdfseriesExplain5b" ,"Sie k&ouml;nnen auch angeben, alle Kartensammlungen in einem Durchgang zu erstellen, bedenken Sie jedoch, da&szlig; dies etwas l&auml;nger zur Generierung ben&ouml;tigt. Achtun: diesen Option ist present in jedem Browser, aber nicht in Microsoft Internet Explorer."); // TO TRANSLATE: please check second phrase
+define("LangpdfseriesExplain6"  ,"Vor jedem Objekt k&ouml;nnen Sie einen Datenbereich angeben. Dieser enth&auml;lt grundlegende Daten, eine Objektbeschreibung (falls verf&uuml;gbar) sowie 2 Fotos in der von Ihnen angegebenen Gr&ouml;&szlig;e (15, 30 oder 60 Bogenminuten).");
+define("LangpdfseriesExplain7"  ,"Sie k&ouml;nnen einen Index nach jedem Abschnitt anlegen lassen. Dieser Index enth&auml;lt eine &uuml;bersicht &uuml;ber alle Objekte auf jeder Karte.");
+define("LangpdfseriesButton"    ,"Alle generieren");
 define("LangpdfseriesAddDataPage","Datenbereich hinzuf&uuml;gen");
 define("LangpdfseriesWithEphemerides","mit Ephemeriden");
- define("LangpdfseriesWithYearEphemerides","mit Jahresephemeriden");
+define("LangpdfseriesWithYearEphemerides","mit Jahresephemeriden");
 define("LangpdfseriesAddIndexPage","Index hinzuf&uuml;gen");
 
 define("LangpdfseriesObject"    ,"Objekt");
- define("LangpdfseriesSize"      ,"Gr&ouml;&szlig;e");
+define("LangpdfseriesSize"      ,"Gr&ouml;&szlig;e");
 define("LangpdfseriesFoVs"      ,"Gesichtsfelder:");
 define("Langpdfseriesdsos"      ,"Objekt Helligkeit");
- define("Langpdfseriesstars"     ,"Stern Helligkeit");
+define("Langpdfseriesstars"     ,"Stern Helligkeit");
 define("Langpdfseriesphotos"    ,"Fotos (Bogenminuten)");
 define("Langpdfseriesclickok"   ,'Dr&uuml;cken Sie "Ok", nur wenn ');
- define("Langpdfserieswhenfinished",' Sie wirklich fertig sind!');
+define("Langpdfserieswhenfinished",' Sie wirklich fertig sind!');
 define("LangpdfseriesGenerating",'Generiere ');
 define("Langpdfserieschoselayout","Bitte w&auml;hlen Sie ein Layout f&uuml;r den Index.");
  

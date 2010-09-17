@@ -12,7 +12,8 @@ define("LangpdfseriesExplain1"  ,"Generez une collection de cartes pour chaque o
 define("LangpdfseriesExplain2"  ,"Chaque collection contient le nombre de cartes spécifié par le nombre de champs de vue spécifiés.");
 define("LangpdfseriesExplain3"  ,"Chaque carte spécifié par les champs de vue, montre des étoiles et des objets juqsu'à la magnitude spécifié dans les cases correspondantes.");
 define("LangpdfseriesExplain4"  ,"Chaque case de magnitude devra contenir autant de valuers que spécifiés par les champs de vue.");
-define("LangpdfseriesExplain5"  ,"Vous pouvez sauvegarder chaque collection et éventuellement les réunir dans un seule fichier pdf catalogue - atlas avec des outils libres disponibles sur l'internet. Si vous faites tout d'un coup, comptez sur une longue durée de traitement, jusqu'à 30 secondes ou plus par objet.");
+define("LangpdfseriesExplain5"  ,"Vous pouvez sauvegarder chaque collection et éventuellement les réunir dans un seule fichier pdf catalogue - atlas avec des outils libres disponibles sur l'internet.");
+define("LangpdfseriesExplain5b" ,"Si vous faites tout d'un coup, comptez sur une longue durée de traitement, jusqu'à 30 secondes ou plus par objet. Attention: cette option est disponible dans tous les navigateurs, sauf dans Microsoft Internet Explorer.");
 define("LangpdfseriesExplain6"  ,"Pour chaque objet, vous avez la possibilité derajouter une page de données. Celle-ci contient les données de base del'objet, eune description de l'objet si disponible, et deux photos avec la taille spécifié par vous (15, 30 ou 60 minutes d'arc, ou rien).");
 define("LangpdfseriesExplain7"  ,"Par objet, vous pouvez rajouter une table de contenu. Celli-ci contient l'aperçu de toutes les objet figurant sur les cartes correspondantes.");
 define("LangpdfseriesButton"    ,"Generez tous");
