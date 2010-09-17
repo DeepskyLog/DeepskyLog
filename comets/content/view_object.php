@@ -2,12 +2,48 @@
 if(!$_GET['object']) // no object defined in url 
   header("Location: ../index.php");
 echo "<div id=\"main\">";
-$objPresentations->line(array("<h4>".LangViewObjectTitle."&nbsp;-&nbsp;".$objCometObject->getName($_GET['object'])."</h4>"),"L",array(),30);
-echo "<hr />";
-$objPresentations->line(array(LangViewObjectField1,$objCometObject->getName($_GET['object'])),"RL",array(20,80),20);
-if ($objCometObject->getIcqName($_GET['object']))
-  $objPresentations->line(array(LangNewObjectIcqname,$objCometObject->getIcqName($_GET['object'])),"RL",array(20,80),20);
-echo "<hr />";
+
+// Let's test for the observer... If cometadministrator (or normal administrator), we can change the object)
+$admin = false;
+
+// Check if there is an observer
+if(array_key_exists('deepskylog_id', $_SESSION)) {
+  // Check if this observer is cometadministrator
+  if  ($objObserver->getObserverProperty($_SESSION['deepskylog_id'], "role") == RoleCometAdmin ||
+        $objObserver->getObserverProperty($_SESSION['deepskylog_id'], "role") == RoleAdmin) {
+          $admin = true;
+  } 
+}
+
+if ($admin) {
+  echo "<form action=\"".$baseURL."index.php?indexAction=comets_validate_change_object\" method=\"post\">";
+  echo "<input type=\"hidden\" name=\"object\" value=\"" . $_GET['object'] . "\">";
+  $content="<input type=\"submit\" name=\"newobject\" value=\"" . LangChangeAccountButton . "\" />";
+  $objPresentations->line(array("<h4>".LangChangeObject. " " . $objCometObject->getName($_GET['object']) . "</h4>",$content),"LR",array(60,40),30);
+  echo "<hr />";
+  $content="<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"40\" name=\"name\" size=\"40\" value=\"" . 
+    $objCometObject->getName($_GET['object']) . "\" />";
+  $objPresentations->line(array(LangViewObjectField1."&nbsp;*",$content),"RL",array(20,80),30,array("fieldname"));
+  
+  if ($objCometObject->getIcqName($_GET['object'])) {
+    $icqname = $objCometObject->getIcqName($_GET['object']);
+  } else {
+    $icqname = "";
+  }
+  $content="<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"40\" name=\"icqname\" size=\"40\" value=\"" . $icqname . "\" />";
+  $objPresentations->line(array(LangNewObjectIcqname."&nbsp;*",$content),"RL",array(20,80),30,array("fieldname"));
+  echo "<hr />";
+  echo "</form>";
+} else {
+  $objPresentations->line(array("<h4>".LangViewObjectTitle."&nbsp;-&nbsp;".$objCometObject->getName($_GET['object'])."</h4>"),"L",array(),30);
+  echo "<hr />";
+  
+  $objPresentations->line(array(LangViewObjectField1,$objCometObject->getName($_GET['object'])),"RL",array(20,80),20);
+  if ($objCometObject->getIcqName($_GET['object']))
+    $objPresentations->line(array(LangNewObjectIcqname,$objCometObject->getIcqName($_GET['object'])),"RL",array(20,80),20);
+  echo "<hr />";
+}
+
 // LINK TO OBSERVATIONS OF OBJECT
 $observations = new CometObservations();
 $queries = array("object" => $objCometObject->getName($_GET['object']));
