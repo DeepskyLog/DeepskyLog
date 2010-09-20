@@ -974,23 +974,27 @@ class Objects
  	                          "RLRL",array(),20,array("type10","type10","type10","type10"));
     $objPresentations->line(array(LangViewObjectFieldContrastReserve,"<span class=\"" . $contype . "\"  onmouseover=\"Tip('" . $popup . "')\">".$contrast."</span>",LangViewObjectFieldOptimumDetectionMagnification,$prefMag),
                             "RLRL",array(),20,array("type20","type20","type20","type20"));
+    $thetype='type10';
     if($listname&&($objList->checkObjectInMyActiveList($object)))
 	  { if($myList)
       { $objPresentations->line(array(LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" rel=\"external\">".LangViewObjectDreyerDescription."</a>)",
   	                                  "<textarea name=\"description\" class=\"listdescription inputfield\" cols=\"1\" rows=\"1\" onchange=\"submit()\">".$objList->getListObjectDescription($object)."</textarea>"),
  	                             "RL",array(25,75),130,array("type10","type10"));
+        $thetype='type20';
   	  }
 		  else
 		  { $objPresentations->line(array(LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" rel=\"external\">".LangViewObjectDreyerDescription."</a>)",
   	                                  $objList->getListObjectDescription($object)),
  	                             "RL",array(25,75),20,array("type10","type10"));
-  	  }
+        $thetype='type20';
+		  }
     }
 	  elseif($descriptionDsOject=$this->getDsoProperty($object,'description'))
 	  { $objPresentations->line(array(LangViewObjectNGCDescription.' ('."<a href=\"".DreyerDescriptionLink."\" rel=\"external\">".LangViewObjectDreyerDescription."</a>".')',
    	                                htmlentities($descriptionDsOject)),
  	                             "RL",array(25,75),20,array("type10","type10"));
-   	}
+        $thetype='type20';
+	  }
     if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) {
       $theYear=$_SESSION['globalYear'];
       $theMonth=$_SESSION['globalMonth'];
@@ -1044,7 +1048,7 @@ class Objects
         $popup4 = $object . LangAltitude . $ristraset[3] . LangRistrasetIn . addslashes($location);
       }
       
-      $objPresentations->line(array(LangMoonRise, "<span onmouseover=\"Tip('" . $popup1 . "')\">".$ristraset[0]."</span>", LangTransit, "<span onmouseover=\"Tip('" . $popup2 . "')\">".$ristraset[1]."</span>", LangMoonSet, "<span onmouseover=\"Tip('" . $popup3 . "')\">".$ristraset[2]."</span>", LangBest, $ristraset[4], LangMaxAltitude, "<span class=\"" . "\"  onmouseover=\"Tip('" . $popup4 . "')\">".$ristraset[3]."</span>"), "RLRLRLRLRL", array(10,10,10,10,10,10,10,10,10,10), 20, array("type20", "type20", "type20", "type20", "type20", "type20", "type20", "type20", "type20", "type20"));
+      $objPresentations->line(array(LangMoonRise, "<span onmouseover=\"Tip('" . $popup1 . "')\">".$ristraset[0]."</span>", LangTransit, "<span onmouseover=\"Tip('" . $popup2 . "')\">".$ristraset[1]."</span>", LangMoonSet, "<span onmouseover=\"Tip('" . $popup3 . "')\">".$ristraset[2]."</span>", LangBest, $ristraset[4], LangMaxAltitude, "<span class=\"" . "\"  onmouseover=\"Tip('" . $popup4 . "')\">".$ristraset[3]."</span>",'&nbsp;','&nbsp;'), "RLRLRLRLRLRL", array(8.33,8.34,8.33,8.33,8.33,8.33,8.33,8.33,8.33,8.33,8.33,8.33), 20, array($thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype));
     }
     echo "</div></form>";
 	  echo "<hr />";
@@ -1205,7 +1209,8 @@ class Objects
       $content2.=$objPresentations->promptWithLinkAndLayoutList($columnSource,$link."&amp;loadLayout=loadLayout&amp;formName=".$columnSource);
       $content2.=" ";
       $content2.=$objPresentations->promptWithLinkAndLayout(LangSaveFormLayout2,"layoutName",$link."&amp;removeLayout=removeLayout&amp;formName=".$columnSource,LangSaveFormLayout4);
-      $objPresentations->line(array($content1,$content2),"LR",array(50,50),20);
+      echo "<hr />";
+      $objPresentations->line(array($content1,$content2),"LR",array(50,50),30);
     }
     if($columnSource)
     { echo "<script type=\"text/javascript\">";
