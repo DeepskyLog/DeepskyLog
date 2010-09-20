@@ -1,23 +1,5 @@
 <?php  // The filters class collects all functions needed to enter, retrieve and adapt filters data from the database.
-interface iFilters
-{public  function addFilter($name, $type, $color, $wratten, $schott);                    // adds a new filter to the database. The name, type, color, wratten and schott should be given as parameters. 
- public  function getAllFiltersIds($id);                                                 // returns a list with all id's which have the same name as the name of the given id
- public  function getEchoColor($color);                                                  // returns the color in the activated language
- public  function getEchoListColor($color);                                              // returns the color in list format for the activated language
- public  function getEchoListType($type);                                                // returns the type in list format for the activated language 
- public  function getEchoType($type);                                                    // returns the type in the activated language
- public  function getFilterId($name, $observer);                                         // returns the id for this filter
- public  function getFilterObserverPropertyFromName($name, $observer, $property);        // returns the property for the filter of the observer
- public  function getFilterPropertiesFromId($id);                                        // returns the properties of the filters with id
- public  function getFilterPropertyFromId($id,$property,$defaultValue='');               // returns the property of the given filter
- public  function getFilterUsedFromId($id);                                              // returns the number of times the eyepiece is used in observations
- public  function getSortedFilters($sort, $observer = "");                               // returns an array with the ids of all filters, sorted by the column specified in $sort
- public  function setFilterProperty($id,$property,$propertyValue);                       // sets the property to the specified value for the given filter
- public  function showFiltersObserver();
- public  function validateDeleteFilter();                                                // validates and deletes a filter
- public  function validateSaveFilter();                                                  // validates and saves a filter and returns a message 
-}
-class Filters implements iFilters
+class Filters
 {public  function addFilter($name, $type, $color, $wratten, $schott)                    // addFilter adds a new filter to the database. The name, type, color, wratten and schott should be given as parameters. 
  { global $objDatabase;
    $objDatabase->execSQL("INSERT INTO filters (name, type, color, wratten, schott) VALUES (\"".$name."\", \"".$type."\", \"".$color."\", \"".$wratten."\", \"".$schott."\")");
@@ -109,9 +91,9 @@ class Filters implements iFilters
  { global $objDatabase; 
    return $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM observations WHERE filterid=\"".$id."\"",'ObsCnt',0);
  }
- public  function getSortedFilters($sort, $observer = "")                               // returns an array with the ids of all filters, sorted by the column specified in $sort
+ public  function getSortedFilters($sort, $observer = "",$active='')                               // returns an array with the ids of all filters, sorted by the column specified in $sort
  { global $objDatabase; 
-   return $objDatabase->selectSingleArray("SELECT id, name FROM filters ".($observer?"WHERE observer LIKE \"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
+   return $objDatabase->selectSingleArray("SELECT id, name FROM filters ".($observer?"WHERE observer LIKE \"".$observer."\" ".($active?" AND filteractive=".$active:''):" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
  } 
  public  function setFilterProperty($id,$property,$propertyValue)                       // sets the property to the specified value for the given filter
  { global $objDatabase;
@@ -136,6 +118,7 @@ class Filters implements iFilters
        $previous = $sort;
      echo "<table>";
      echo "<tr class=\"type3\">";
+     echo "<td class=\"centered\">".LangViewActive."</td>";
      echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=name&amp;previous=$previous\">".LangViewFilterName."</a></td>";
      echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=type&amp;previous=$previous\">".LangViewFilterType."</a></td>";
      echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=color&amp;previous=$previous\">".LangViewFilterColor."</a></td>";
@@ -147,6 +130,10 @@ class Filters implements iFilters
      while(list($key, $value)=each($filts))
      { $filterProperties=$objFilter->getFilterPropertiesFromId($value);
        echo "<tr class=\"type".(2-($count%2))."\">";
+       echo "<td class=\"centered\">".
+            "<input id=\"filteractive".$value."\" type=\"checkbox\" ".($filterProperties['filteractive']?" checked=\"checked\" ":"").
+                    " onclick=\"setactivation('filter',".$value.");\" />".
+            "</td>";
        echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_filter&amp;filter=".urlencode($value)."\">".stripslashes($filterProperties['name'])."</a></td>";
        echo "<td>".$objFilter->getEchoType($filterProperties['type'])."</td>";
        echo "<td>".$objFilter->getEchoColor($filterProperties['color'])."</td>";

@@ -19,7 +19,22 @@ elseif($ajaxInstruction=="seteyepieceactivation")
   }
   echo $theset;
 }
-
+elseif($ajaxInstruction=="setfilteractivation")
+{ $theset='';
+  if($objFilter->getFilterPropertyFromId($objUtil->checkGetKey('id',0),'observer',-1)==$loggedUser)
+  { $theset=($objUtil->checkGetKey('filteractive',true)=='true'?1:0);
+  	$objFilter->setFilterProperty($objUtil->checkGetKey('id',-1),'filteractive',$theset);
+  }
+  echo $theset;
+}
+elseif($ajaxInstruction=="setlensactivation")
+{ $theset='';
+  if($objLens->getLensPropertyFromId($objUtil->checkGetKey('id',0),'observer',-1)==$loggedUser)
+  { $theset=($objUtil->checkGetKey('lensactive',true)=='true'?1:0);
+  	$objLens->setLensProperty($objUtil->checkGetKey('id',-1),'lensactive',$theset);
+  }
+  echo $theset;
+}
 elseif($ajaxInstruction=="setlocationactivation")
 { $theset='';
   if($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('id',0),'observer',-1)==$loggedUser)
@@ -28,7 +43,6 @@ elseif($ajaxInstruction=="setlocationactivation")
   }
   echo $theset;
 }
-
 elseif($ajaxInstruction=="setinstrumentactivation")
 { $theset='';
   if($objInstrument->getInstrumentPropertyFromId($objUtil->checkGetKey('id',0),'observer',-1)==$loggedUser)

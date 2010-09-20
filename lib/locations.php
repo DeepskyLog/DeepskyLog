@@ -1,22 +1,4 @@
 <?php // The location class collects all functions needed to enter, retrieve and adapt location data from the database.
-interface iLocations
-{ public  function addLocation($name, $longitude, $latitude, $region, $country, $timezone);                            // adds a new location to the database. The name, longitude, latitude, region and country should be given as parameters. 
-  public  function getAllLocationsIds($id);                                                                            // returns a list with all id's which have the same name as the name of the given id
-  public  function getCountries();                                                                                     // returns all possible countries
-  public  function getDatabaseCountries();                                                                             // returns all countries for which the database of the locations is available
-  public  function getLocationId($name, $observer);                                                                    // returns the id for this location
-  public  function getLocationPropertyFromId($id,$property,$defaultValue='');
-  public  function getLocations();                                                                                     // returns an array with all locations
-  public  function getLocationsFromDatabase($name, $country);                                                          // returns an array with all information about the location where the name equals the given name in the given country (given the country string - e.g. Belgium).
-  public  function getLocationTimeDifference($id);
-  public  function getLocationUsedFromId($id);                                                                         // returns the number of times the location is used in observations
-  public  function getSortedLocations($sort,$observer="");                                                             // returns an array with the ids of all locations, sorted by the column specified in $sort
-  public  function getSortedLocationsList($sort, $observer = "");                                                      // returns an array with the ids of all locations, sorted by the column specified in $sort. Locations withthe same name are adapted by adding the province.
-  public  function setLocationProperty($id,$property,$propertyValue); 
-  public  function showLocationsObserver();                                                 // sets the property to the specified value for the given location  public  function validateDeleteLocation();                                                                           // deletes teh location of the list with locations
-  public  function validateDeleteLocation();
-  public  function validateSaveLocation();
-}
 class Locations
 { public function addLocation($name, $longitude, $latitude, $region, $country, $timezone)                             // addLocation adds a new location to the database. The name, longitude, latitude, region and country should be given as parameters. 
   { global $objDatabase;
@@ -206,8 +188,7 @@ class Locations
 		    { echo "<tr class=\"type".(2-($count%2))."\">";
           echo "<td class=\"centered\">".
             "<input id=\"locationactive".$value."\" type=\"checkbox\" ".($objLocation->getLocationPropertyFromId($value,'locationactive')?" checked=\"checked\" ":"").
-                    " onclick=\"ajaxbase('".$baseURL."ajaxinterface.php?instruction=setlocationactivation&id=".$value."&locationactive='+document.getElementById('"."locationactive".$value."').checked,'GET', function(result){});
-                                return true;\" />".
+                    " onclick=\"setactivation('location',".$value.");\" />".
             "</td>";
 		      echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_site&amp;location=".urlencode($value)."\">".$sitename."</a></td>";
 		      echo "<td>".$region."</td>";

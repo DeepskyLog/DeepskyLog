@@ -69,8 +69,7 @@ class Eyepieces
        echo "<tr class=\"type".(2-($count%2))."\">";
        echo "<td class=\"centered\">".
             "<input id=\"eyepieceactive".$value."\" type=\"checkbox\" ".($eyepiece['eyepieceactive']?" checked=\"checked\" ":"").
-                    " onclick=\"ajaxbase('".$baseURL."ajaxinterface.php?instruction=seteyepieceactivation&id=".$value."&eyepieceactive='+document.getElementById('"."eyepieceactive".$value."').checked,'GET', function(result){});
-                                return true;\" />".
+                    " onclick=\"setactivation('eyepiece',".$value.");\" />".
             "</td>";
        echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_eyepiece&amp;eyepiece=".urlencode($value)."\">".stripslashes($eyepiece['name'])."</a></td>";
 		   echo "<td class=\"centered\">".$eyepiece['focalLength']."</td>";

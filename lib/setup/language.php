@@ -38,6 +38,7 @@ class Language
    $country="name_".$cur_language;
    foreach($lang as $item=>$data)
      $countrylist[sprintf($data->attributes()->code)] = sprintf($data->attributes()->$country);
+   asort($countrylist);
    return $countrylist;
  }
  function getLanguageKeys($cur_language)                                        // getAllLanguages returns all keys of the available languages, in the given language

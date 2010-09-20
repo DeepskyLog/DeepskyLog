@@ -1,21 +1,6 @@
 <?php // The instruments class collects all functions needed to enter, retrieve and adapt instrument data from the database.
-interface iInstruments
-{ public  function addInstrument($name, $diameter, $fd, $type, $fixedMagnification, $observer);    // adds a new instrument to the database. The name, diameter, fd and type should be given as parameters. 
-  public  function getAllInstrumentsIds($id);                                                      // returns a list with all id's which have the same name as the name of the given id
-  public  function getInstrumentEchoType($instrumentType);                                         // returns the text corresponding to a certain instrument type
-  public  function getInstrumentEchoListType($type, $disabled="");                                    // returns the html code for a list containing the Instrument types, with the $type selected
-  public  function getInstrumentId($name, $observer);                                              // returns the id for this instrument
-  public  function getInstrumentPropertyFromId($id,$property,$defaultValue='');                    // returns the specified property for instrument id                    
-  public  function getInstrumentUsedFromId($id);                                                   // returns the number of times the instrument is used in observations
-  public  function getObserverFromInstrument($id);                                                 // returns the observerid for this instrument
-  public  function getSortedInstruments($sort,$observer="");                                       // returns an array with the ids of all instruments, sorted by the column specified in $sort
-  public  function getSortedInstrumentsList($sort,$observer="");                                   // returns an array with the ids of all instruments as key, and the name as value, sorted by the column specified in $sort
-  public  function setInstrumentProperty($id,$property,$propertyValue);                            // sets the property to the specified value for the given instrument
-  public  function showInstrumentsObserver();
-  public  function validateDeleteInstrument();                                                     // validates and deletes the instrument with id
-  public  function validateSaveInstrument();                                                       // validates and saves the instrument
-}
-class Instruments implements iInstruments
+
+class Instruments
 { public  function addInstrument($name, $diameter, $fd, $type, $fixedMagnification, $observer)    // adds a new instrument to the database. The name, diameter, fd and type should be given as parameters. 
   { global $objDatabase; $objDatabase->execSQL("INSERT INTO instruments (name, diameter, fd, type, fixedMagnification, observer) VALUES (\"$name\", \"$diameter\", \"$fd\", \"$type\", \"$fixedMagnification\", \"$observer\")");
     return $objDatabase->selectSingleValue("SELECT id FROM instruments ORDER BY id DESC LIMIT 1",'id');
@@ -120,8 +105,7 @@ class Instruments implements iInstruments
 		    echo "<tr class=\"type".(2-($count%2))."\">";
         echo "<td class=\"centered\">".
             "<input id=\"instrumentactive".$value."\" type=\"checkbox\" ".($objInstrument->getInstrumentPropertyFromId($value,'instrumentactive')?" checked=\"checked\" ":"").
-                    " onclick=\"ajaxbase('".$baseURL."ajaxinterface.php?instruction=setinstrumentactivation&id=".$value."&instrumentactive='+document.getElementById('"."instrumentactive".$value."').checked,'GET', function(result){});
-                                return true;\" />".
+                    " onclick=\"setactivation('instrument',".$value.");\" />".
             "</td>";
 		    if ($name == "Naked eye")
 		      echo "<td><a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($value)."\">".InstrumentsNakedEye."</a></td>";

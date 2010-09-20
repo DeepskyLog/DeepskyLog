@@ -1049,13 +1049,19 @@ class PrintAtlas
           $theDay=$objUtil->checkSessionKey('globalDay',date('j'));
           $dateTimeText0=date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear));
           $dateTimeText1=date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear)+(60*60*24));
-        	if($dateformat=='d-m-Y')
+        	if($dateformat=='d-M-Y')
         	{ if(substr($dateTimeText0,-8)==substr($dateTimeText1,-8))
               $dateTimeText0=substr($dateTimeText0,0,2);
             elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
               $dateTimeText0=substr($dateTimeText0,0,5);
           }
-          elseif($dateformat='M-d-Y')
+          elseif($dateformat=='d-m-Y')
+        	{ if(substr($dateTimeText0,-7)==substr($dateTimeText1,-7))
+              $dateTimeText0=substr($dateTimeText0,0,2);
+            elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
+              $dateTimeText0=substr($dateTimeText0,0,5);
+          }
+          elseif($dateformat=='M-d-Y')
         	{ if(substr($dateTimeText0,0,3)==substr($dateTimeText1,0,3))
         	  { $dateTimeText0=substr($dateTimeText0,0,6);
         	    $dateTimeText1=substr($dateTimeText1,-7);

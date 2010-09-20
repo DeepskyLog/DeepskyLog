@@ -161,7 +161,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$contentEyepiece.="</select>&nbsp;";
 	// Lens =====================================================================================================================================================================
 	$theLens=(($observationid)?$objObservation->getDsObservationProperty($observationid,'lensid'):$objUtil->checkPostKey('lens'));
-	$lns=$objLens->getSortedLenses("name",$loggedUser);
+	$lns=$objLens->getSortedLenses("name",$loggedUser,1);
 	$contentLens ="<select name=\"lens\" class=\"inputfield\">";
 	$contentLens.="<option value=\"\">-----</option>";
 	while (list ($key, $value) = each($lns))
@@ -169,7 +169,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$contentLens.="</select>&nbsp;";
 	// Filter =====================================================================================================================================================================
 	$theFilter=(($observationid)?$objObservation->getDsObservationProperty($observationid,'filterid'):$objUtil->checkPostKey('filter'));
-	$filts=$objFilter->getSortedFilters("name",$loggedUser);
+	$filts=$objFilter->getSortedFilters("name",$loggedUser,1);
 	$contentFilter ="<select name=\"filter\" class=\"inputfield\">";
 	$contentFilter.="<option value=\"\">-----</option>";
 	while (list ($key, $value) = each($filts))
