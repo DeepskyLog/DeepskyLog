@@ -29,6 +29,15 @@ elseif($ajaxInstruction=="setlocationactivation")
   echo $theset;
 }
 
+elseif($ajaxInstruction=="setinstrumentactivation")
+{ $theset='';
+  if($objInstrument->getInstrumentPropertyFromId($objUtil->checkGetKey('id',0),'observer',-1)==$loggedUser)
+  { $theset=($objUtil->checkGetKey('instrumentactive',true)=='true'?1:0);
+  	$objInstrument->setInstrumentProperty($objUtil->checkGetKey('id',-1),'instrumentactive',$theset);
+  }
+  echo $theset;
+}
+
 elseif($ajaxInstruction=="getReportLayout")
   echo(json_encode($objReportLayout->getReportAll($objUtil->checkRequestKey('reportuser'),$objUtil->checkRequestKey('reportname'),$objUtil->checkRequestKey('reportlayout'))));
 elseif($ajaxInstruction=="getReportLayouts")

@@ -65,13 +65,13 @@ class Instruments implements iInstruments
 	public  function getObserverFromInstrument($id)                                                 // returns the observerid for this instrument
   { global $objDatabase; return $objDatabase->selectSingleValue("SELECT observer FROM instruments WHERE id = \"".$id."\"",'observer');
   }
-  public  function getSortedInstruments($sort,$observer="")                                       // returns an array with the ids of all instruments, sorted by the column specified in $sort
+  public  function getSortedInstruments($sort,$observer="",$active='')                                       // returns an array with the ids of all instruments, sorted by the column specified in $sort
   { global $objDatabase; 
-    return $objDatabase->selectSingleArray("SELECT id, name FROM instruments ".($observer?"WHERE observer LIKE \"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
+    return $objDatabase->selectSingleArray("SELECT id, name FROM instruments ".($observer?"WHERE observer LIKE \"".$observer."\" ".($active?" AND instrumentactive=".$active:""):" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
   } 
-  public  function getSortedInstrumentsList($sort,$observer="")                                   // returns an array with the ids of all instruments, sorted by the column specified in $sort
+  public  function getSortedInstrumentsList($sort,$observer="",$active='')                                   // returns an array with the ids of all instruments, sorted by the column specified in $sort
   { global $objDatabase; 
-    return $objDatabase->selectKeyValueArray("SELECT id, name FROM instruments ".($observer?"WHERE observer LIKE \"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.", name",'id','name');  
+    return $objDatabase->selectKeyValueArray("SELECT id, name FROM instruments ".($observer?"WHERE observer LIKE \"".$observer."\" ".($active?" AND instrumentactive=".$active:""):" GROUP BY name")." ORDER BY ".$sort.", name",'id','name');  
   } 
   public  function setInstrumentProperty($id,$property,$propertyValue)                            // sets the property to the specified value for the given instrument
   { global $objDatabase;
@@ -99,6 +99,7 @@ class Instruments implements iInstruments
 		  echo "<input type=\"hidden\" name=\"adaption\" value=\"1\" />";
 		  echo "<table>";
 		  echo "<tr class=\"type3\">";
+       echo "<td class=\"centered\">".LangViewActive."</td>";
 		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=name&amp;previous=$previous\">".LangOverviewInstrumentsName."</a></td>";
 		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=diameter&amp;previous=$previous\">".LangOverviewInstrumentsDiameter."</a></td>";
 		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=fd&amp;previous=$previous\">".LangOverviewInstrumentsFD."</a></td>";
@@ -117,7 +118,12 @@ class Instruments implements iInstruments
 		    $type = $objInstrument->getInstrumentPropertyFromId($value,'type');
 		    $fixedMagnification = $objInstrument->getInstrumentPropertyFromId($value,'fixedMagnification');
 		    echo "<tr class=\"type".(2-($count%2))."\">";
-				if ($name == "Naked eye")
+        echo "<td class=\"centered\">".
+            "<input id=\"instrumentactive".$value."\" type=\"checkbox\" ".($objInstrument->getInstrumentPropertyFromId($value,'instrumentactive')?" checked=\"checked\" ":"").
+                    " onclick=\"ajaxbase('".$baseURL."ajaxinterface.php?instruction=setinstrumentactivation&id=".$value."&instrumentactive='+document.getElementById('"."instrumentactive".$value."').checked,'GET', function(result){});
+                                return true;\" />".
+            "</td>";
+		    if ($name == "Naked eye")
 		      echo "<td><a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($value)."\">".InstrumentsNakedEye."</a></td>";
 		    else
 		      echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_instrument&amp;instrument=".urlencode($value)."\">".$name."</a></td>";

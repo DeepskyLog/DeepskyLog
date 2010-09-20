@@ -123,7 +123,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$contentTime.="&nbsp;&nbsp;";
 	$contentTime.="<input type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" name=\"minutes\" value=\"".$theMinute."\" />&nbsp;&nbsp;";
 	// Instrument =====================================================================================================================================================================
-	$instr=$objInstrument->getSortedInstrumentsList("name", $loggedUser);
+	$instr=$objInstrument->getSortedInstrumentsList("name", $loggedUser,1);
 	$theInstrument=(($observationid)?$objObservation->getDsObservationProperty($observationid,'instrumentid'):$objUtil->checkPostKey('instrument',0));
 	$contentInstrument = "<select name=\"instrument\" class=\"inputfield requiredField\">";
 	while(list($key,$value)=each($instr))

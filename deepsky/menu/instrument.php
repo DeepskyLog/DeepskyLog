@@ -11,7 +11,7 @@ if($loggedUser)
 	  if(array_key_exists('Qobj',$_SESSION))
 		  $_SESSION['Qobj']=$objObject->getObjectVisibilities($_SESSION['Qobj']);
   }
-	$result=$objInstrument->getSortedInstruments('name',$loggedUser);
+	$result=$objInstrument->getSortedInstruments('name',$loggedUser,1);
   $instr=$objObserver->getObserverProperty($loggedUser,'stdtelescope');	
 	if($result)
 	{ echo "<select name=\"activateTelescope\" class=\"menuField menuDropdown\" onchange=\"location=this.options[this.selectedIndex].value;\">";
