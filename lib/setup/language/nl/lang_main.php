@@ -1,6 +1,9 @@
 <?php
 
 
+define("LangViewActive"					,"Aktief");
+
+
 define("LangMonth"              ,"Maand");
 define("LangAstroNight"         ,"Astronomische nacht");
 define("LangNauticalNight"      ,"Nautische nacht");
@@ -962,7 +965,6 @@ define("LangViewLocationStd"															,"Std locatie");
 // content/overview_eyepieces.php
 
 define("LangViewEyepieceTitle"														,"Oculair overzicht");
-define("LangViewEyepieceActive"														,"Aktief");
 define("LangViewEyepieceName"															,"Naam");
 define("LangViewEyepieceFocalLength"											,"Brandpunt (in mm)");
 define("LangViewEyepieceMaxFocalLength"										,"Max. brandpunt (in mm)");

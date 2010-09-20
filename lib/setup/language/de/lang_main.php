@@ -1,5 +1,8 @@
 <?php
 
+define("LangViewActive"					,"Actif");                           // TO TRANSLATE
+
+
 define("LangMonth"              ,"Monat");
 define("LangAstroNight"         ,"Astronomische Nacht");
 define("LangNauticalNight"      ,"Nautische Nacht");
@@ -968,7 +971,6 @@ define("LangViewLocationStd"															,"Std. Beobachtungsplatz");
 // content/overview_eyepieces.php
 
 define("LangViewEyepieceTitle"														,"Okular &uuml;bersicht");
-define("LangViewEyepieceActive"														,"Actif");                           // TO TRANSLATE
 define("LangViewEyepieceName"															,"Name");
 define("LangViewEyepieceFocalLength"											,"Brennweite (in mm)");
 define("LangViewEyepieceMaxFocalLength"										,"Max. Brennweite (in mm)");

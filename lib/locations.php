@@ -111,14 +111,14 @@ class Locations
     return $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM observations WHERE locationid=\"".$id."\"",'ObsCnt',0)
          + $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM cometobservations WHERE locationid=\"".$id."\"",'ObsCnt',0);
 	}
-  public  function getSortedLocations($sort,$observer="")                                       // returns an array with the ids of all locations, sorted by the column specified in $sort
+  public  function getSortedLocations($sort,$observer="",$active='')                                       // returns an array with the ids of all locations, sorted by the column specified in $sort
   { global $objDatabase; 
-    return $objDatabase->selectSingleArray("SELECT id, name FROM locations ".($observer?"WHERE observer LIKE \"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
+    return $objDatabase->selectSingleArray("SELECT id, name FROM locations ".($observer?"WHERE observer LIKE \"".$observer."\" ".($active?" AND locationactive=".$active:""):" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
   } 
-  public  function getSortedLocationsList($sort, $observer = "")                             // returns an array with the ids of all locations, sorted by the column specified in $sort. Locations withthe same name are adapted by adding the province.
+  public  function getSortedLocationsList($sort, $observer = "",$active='')                             // returns an array with the ids of all locations, sorted by the column specified in $sort. Locations withthe same name are adapted by adding the province.
   { global $objDatabase; 
     $new_sites=array();
-    $sites=$objDatabase->selectRecordsetArray("SELECT id, name FROM locations ".($observer?"WHERE observer LIKE \"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.",name",'id');  
+    $sites=$objDatabase->selectRecordsetArray("SELECT id, name FROM locations ".($observer?"WHERE observer LIKE \"".$observer."\" ".($active?" AND locationactive=".$active:""):" GROUP BY name")." ORDER BY ".$sort.",name",'id');  
     $previous = "fdgsdg";
     for($i=0;$i<count($sites);$i++)
     { $adapt[$i] = 0;
@@ -165,6 +165,7 @@ class Locations
 		  echo "<input type=\"hidden\" name=\"adaptStandardLocation\" value=\"1\" />";
 		  echo "<table>";
 		  echo "<tr class=\"type3\">";
+      echo "<td class=\"centered\">".LangViewActive."</td>";
 		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>";
 		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=region&amp;previous=$previous\">".LangViewLocationProvince."</a></td>";
 		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=country&amp;previous=$previous\">".LangViewLocationCountry."</a></td>";
@@ -203,6 +204,11 @@ class Locations
 		      $sb=sprintf("%.1f", $objContrast->calculateSkyBackgroundFromLimitingMagnitude($limmag));
 		    if($value!="1")
 		    { echo "<tr class=\"type".(2-($count%2))."\">";
+          echo "<td class=\"centered\">".
+            "<input id=\"locationactive".$value."\" type=\"checkbox\" ".($objLocation->getLocationPropertyFromId($value,'locationactive')?" checked=\"checked\" ":"").
+                    " onclick=\"ajaxbase('".$baseURL."ajaxinterface.php?instruction=setlocationactivation&id=".$value."&locationactive='+document.getElementById('"."locationactive".$value."').checked,'GET', function(result){});
+                                return true;\" />".
+            "</td>";
 		      echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_site&amp;location=".urlencode($value)."\">".$sitename."</a></td>";
 		      echo "<td>".$region."</td>";
 		      echo "<td>".$country."</td>";

@@ -11,7 +11,7 @@ if($loggedUser)
 	  if(array_key_exists('Qobj',$_SESSION))
 		  $_SESSION['Qobj']=$objObject->getObjectVisibilities($_SESSION['Qobj']);
   }
-	$result=$objLocation->getSortedLocations('name',$loggedUser);
+	$result=$objLocation->getSortedLocations('name',$loggedUser,1);
   $loc=$objObserver->getObserverProperty($loggedUser,'stdlocation');	
 	if($result)
 	{ echo "<select name=\"activateLocation\" class=\"menuField menuDropdown\" onchange=\"location=this.options[this.selectedIndex].value;\">";

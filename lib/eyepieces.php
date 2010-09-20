@@ -56,7 +56,7 @@ class Eyepieces
        $previous=$sort;
      echo "<table>";
      echo "<tr class=\"type3\">";
-     echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=view_eyepieces&amp;sort=eyepieceactive&amp;previous=$previous\">".LangViewEyepieceActive."</a></td>";
+     echo "<td class=\"centered\">".LangViewActive."</td>";
      echo "<td><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=name&amp;previous=$previous\">".LangViewEyepieceName."</a></td>";
      echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=focalLength&amp;previous=$previous\">".LangViewEyepieceFocalLength."</a></td>";
      echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=maxFocalLength&amp;previous=$previous\">".LangViewEyepieceMaxFocalLength."</a></td>";

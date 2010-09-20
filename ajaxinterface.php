@@ -12,14 +12,23 @@ elseif($ajaxInstruction=="getConstellationBoundriesJSON")
   echo(json_encode($objConstellation->getAllBoundries()));
 
 elseif($ajaxInstruction=="seteyepieceactivation")
-{ $theset=$objEyepiece->getEyepiecePropertyFromId($objUtil->checkGetKey('id',0),'observer',-1);
+{ $theset='';
   if($objEyepiece->getEyepiecePropertyFromId($objUtil->checkGetKey('id',0),'observer',-1)==$loggedUser)
   { $theset=($objUtil->checkGetKey('eyepieceactive',true)=='true'?1:0);
   	$objEyepiece->setEyepieceProperty($objUtil->checkGetKey('id',-1),'eyepieceactive',$theset);
   }
   echo $theset;
 }
- 
+
+elseif($ajaxInstruction=="setlocationactivation")
+{ $theset='';
+  if($objLocation->getLocationPropertyFromId($objUtil->checkGetKey('id',0),'observer',-1)==$loggedUser)
+  { $theset=($objUtil->checkGetKey('locationactive',true)=='true'?1:0);
+  	$objLocation->setLocationProperty($objUtil->checkGetKey('id',-1),'locationactive',$theset);
+  }
+  echo $theset;
+}
+
 elseif($ajaxInstruction=="getReportLayout")
   echo(json_encode($objReportLayout->getReportAll($objUtil->checkRequestKey('reportuser'),$objUtil->checkRequestKey('reportname'),$objUtil->checkRequestKey('reportlayout'))));
 elseif($ajaxInstruction=="getReportLayouts")

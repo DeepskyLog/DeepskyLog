@@ -1,5 +1,7 @@
 <?php
 
+define("LangViewActive"	        ,"Active&eaigu;");
+
 
 define("LangMonth"              ,"Mois");
 define("LangAstroNight"         ,"Nuit astronomique");
@@ -942,7 +944,6 @@ define("LangViewLocationStd"															,"Endroit standard");
 // content/overview_eyepieces.php
 
 define("LangViewEyepieceTitle"														,"Aper&#231;u oculaires");
-define("LangViewEyepieceActive"														,"Active&eaigu;");
 define("LangViewEyepieceName"															,"Nom");
 define("LangViewEyepieceFocalLength"											,"Distance focale (en mm)");
 define("LangViewEyepieceMaxFocalLength"										,"Distance focale maximum (en mm)");

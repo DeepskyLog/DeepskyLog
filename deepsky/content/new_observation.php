@@ -67,7 +67,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
   echo "<hr />";
 	echo "<div class=\"inputDiv\">";
   // Location =====================================================================================================================================================================
-  $sites = $objLocation->getSortedLocationsList("name", $loggedUser);
+  $sites = $objLocation->getSortedLocationsList("name", $loggedUser,1);
 	$theLoc=(($observationid)?$objObservation->getDsObservationProperty($_GET['observation'],'locationid'):$objUtil->checkPostKey('site'));
 	$contentLoc="<select class=\"inputfield requiredField\" name=\"site\">";
 	while(list($key,$value)=each($sites))
