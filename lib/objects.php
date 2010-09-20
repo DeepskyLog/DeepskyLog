@@ -785,7 +785,7 @@ class Objects
 		 			 $magnifications = array();
 			 	 }
          else if ($get6->fixedMagnification == 0)
-         { $sql7 = "SELECT focalLength, name, apparentFOV, maxFocalLength from eyepieces where observer = \"" . $loggedUser . "\"";
+         { $sql7 = "SELECT focalLength, name, apparentFOV, maxFocalLength from eyepieces where observer = \"" . $loggedUser . "\" AND eyepieceactive=1";
   	       $run7 = mysql_query($sql7) or die(mysql_error());
 				   while($get7 = mysql_fetch_object($run7))
            { if ($get7->maxFocalLength > 0.0)

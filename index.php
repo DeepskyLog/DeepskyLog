@@ -13,6 +13,7 @@ try
   echo    "<body  onkeydown=\"bodyOnKeyDown(event);\">";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/jsenvironment.js\"></script>";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/wz_tooltip.js\"></script>";
+  echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/ajaxbase.js\"></script>";
   echo    "<div id=\"div4\">";                                                                            
   echo    "<p class=\"waitMessage\">".LangIndexPleaseWait."</p>";
   echo    "<img id=\"div4a\" src=\"".$baseURL."styles/images/lu.gif\" alt=\"\" />";

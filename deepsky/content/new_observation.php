@@ -153,7 +153,7 @@ if($object&&($objUtil->checkArrayKey($_SESSION,'addObs',0)==$objUtil->checkPostK
 	$contentSeeing.="</select>&nbsp;";
 	// Eyepiece =====================================================================================================================================================================
 	$theEyepiece=(($observationid)?$objObservation->getDsObservationProperty($observationid,'eyepieceid'):$objUtil->checkPostKey('eyepiece'));
-	$eyeps = $objEyepiece->getSortedEyepieces("focalLength",$loggedUser);
+	$eyeps = $objEyepiece->getSortedEyepieces("focalLength",$loggedUser,1);
 	$contentEyepiece ="<select name=\"eyepiece\" class=\"inputfield\">";
 	$contentEyepiece.="<option value=\"\">-----</option>";
 	while (list ($key, $value) = each($eyeps))

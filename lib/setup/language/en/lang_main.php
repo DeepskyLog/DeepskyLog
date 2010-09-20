@@ -966,6 +966,7 @@ define("LangViewLocationStd"															,"Std location");
 // content/overview_eyepieces.php
 
 define("LangViewEyepieceTitle"														,"Eyepiece overview");
+define("LangViewEyepieceActive"														,"Actif");
 define("LangViewEyepieceName"															,"Name");
 define("LangViewEyepieceFocalLength"											,"Focal Length (in mm)");
 define("LangViewEyepieceMaxFocalLength"										,"Max focal length (in mm)");

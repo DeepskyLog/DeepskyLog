@@ -1,19 +1,5 @@
 <?php // The eyepieces class collects all functions needed to enter, retrieve and adapt eyepiece data from the database.
-interface iEyepieces
-{ public  function addEyepiece($name, $focalLength, $apparentFOV);                   // adds a new eyepiece to the database. The name, focalLength and apparentFOV should be given as parameters. 
-  public  function getAllEyepiecesIds($id);                                          // returns a list with all id's which have the same name as the name of the given id
-  public  function getEyepieceId($name, $observer);                                  // returns the id for this eyepiece
-  public  function getEyepieceObserverPropertyFromName($name, $observer, $property); // returns the property for the eyepiece of the observer
-  public  function getEyepiecePropertiesFromId($id);                                 // returns the properties of the eyepiece with id in an array(propertyname)=propertyvalue
-  public  function getEyepiecePropertyFromId($id,$property,$defaultValue='');        // returns the property of the given eyepiece
-  public  function getEyepieceUsedFromId($id);                                       // returns the number of times the eyepiece is used in observations
-  public  function getSortedEyepieces($sort,$observer="");                           // returns an array with the ids of all eyepieces, sorted by the column specified in $sort
-  public  function setEyepieceProperty($id,$property,$propertyValue);                // sets the property to the specified value for the given eyepiece
-  public  function showEyepiecesObserver();
-  public  function validateDeleteEyepiece();                                         // validates and deletes an eyepiece
-  public  function validateSaveEyepiece();                                           // validates and saves an eyepiece and returns a message 
-} 
-class Eyepieces implements iEyepieces
+class Eyepieces
 {public function addEyepiece($name, $focalLength, $apparentFOV)                      // addEyepiece adds a new eyepiece to the database. The name, focalLength and apparentFOV should be given as parameters. 
  { global $objDatabase;
    $objDatabase->execSQL("INSERT INTO eyepieces (name, focalLength, apparentFOV) VALUES (\"".$name."\", \"".$focalLength."\", \"".$apparentFOV."\")");
@@ -42,13 +28,14 @@ class Eyepieces implements iEyepieces
  { global $objDatabase; 
    return $objDatabase->selectSingleValue("SELECT count(id) as ObsCnt FROM observations WHERE eyepieceid=\"".$id."\"",'ObsCnt',0);
  }
- public  function getSortedEyepieces($sort,$observer="")                             // returns an array with the ids of all eyepieces, sorted by the column specified in $sort
+ public  function getSortedEyepieces($sort,$observer="",$active="")                             // returns an array with the ids of all eyepieces, sorted by the column specified in $sort
  { global $objDatabase; 
-   return $objDatabase->selectSingleArray("SELECT id, name FROM eyepieces ".($observer?"WHERE observer LIKE \"".$observer."\"":" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
+   return $objDatabase->selectSingleArray("SELECT id, name FROM eyepieces ".($observer?"WHERE observer LIKE \"".$observer."\"".($active?" AND eyepieceactive = ".$active:"") :" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
  }
  public  function setEyepieceProperty($id,$property,$propertyValue)                  // sets the property to the specified value for the given eyepiece
  { global $objDatabase;
-   return $objDatabase->execSQL("UPDATE eyepieces SET ".$property." = \"".$propertyValue."\" WHERE id = \"".$id."\"");
+   $sql="UPDATE eyepieces SET ".$property." = \"".$propertyValue."\" WHERE id = \"".$id."\"";
+   return $objDatabase->execSQL($sql);
  }
  public  function showEyepiecesObserver()
  { global $baseURL,$loggedUser,$objUtil,$objEyepiece,$objPresentations,$loggedUserName;
@@ -69,20 +56,26 @@ class Eyepieces implements iEyepieces
        $previous=$sort;
      echo "<table>";
      echo "<tr class=\"type3\">";
+     echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=view_eyepieces&amp;sort=eyepieceactive&amp;previous=$previous\">".LangViewEyepieceActive."</a></td>";
      echo "<td><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=name&amp;previous=$previous\">".LangViewEyepieceName."</a></td>";
-     echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=focalLength&amp;previous=$previous\">".LangViewEyepieceFocalLength."</a></td>";
-     echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=maxFocalLength&amp;previous=$previous\">".LangViewEyepieceMaxFocalLength."</a></td>";
-     echo "<td align=\"center\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=apparentFOV&amp;previous=$previous\">".LangViewEyepieceApparentFieldOfView."</a></td>";
+     echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=focalLength&amp;previous=$previous\">".LangViewEyepieceFocalLength."</a></td>";
+     echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=maxFocalLength&amp;previous=$previous\">".LangViewEyepieceMaxFocalLength."</a></td>";
+     echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=apparentFOV&amp;previous=$previous\">".LangViewEyepieceApparentFieldOfView."</a></td>";
      echo "<td></td>";
      echo "</tr>";
      $count = 0;
      while(list($key,$value) = each($eyeps))
      { $eyepiece=$objEyepiece->getEyepiecePropertiesFromId($value);
        echo "<tr class=\"type".(2-($count%2))."\">";
-		   echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_eyepiece&amp;eyepiece=".urlencode($value)."\">".stripslashes($eyepiece['name'])."</a></td>";
-		   echo "<td align=\"center\">".$eyepiece['focalLength']."</td>";
-		   echo "<td align=\"center\">".(($eyepiece['maxFocalLength']!=-1)?$eyepiece['maxFocalLength']:"-")."</td>";
-		   echo "<td align=\"center\">".$eyepiece['apparentFOV']."</td>";
+       echo "<td class=\"centered\">".
+            "<input id=\"eyepieceactive".$value."\" type=\"checkbox\" ".($eyepiece['eyepieceactive']?" checked=\"checked\" ":"").
+                    " onclick=\"ajaxbase('".$baseURL."ajaxinterface.php?instruction=seteyepieceactivation&id=".$value."&eyepieceactive='+document.getElementById('"."eyepieceactive".$value."').checked,'GET', function(result){});
+                                return true;\" />".
+            "</td>";
+       echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_eyepiece&amp;eyepiece=".urlencode($value)."\">".stripslashes($eyepiece['name'])."</a></td>";
+		   echo "<td class=\"centered\">".$eyepiece['focalLength']."</td>";
+		   echo "<td class=\"centered\">".(($eyepiece['maxFocalLength']!=-1)?$eyepiece['maxFocalLength']:"-")."</td>";
+		   echo "<td class=\"centered\">".$eyepiece['apparentFOV']."</td>";
 		   echo "<td>";
        if(!($obsCnt=$objEyepiece->getEyepieceUsedFromId($value)))
          echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_eyepiece&amp;eyepieceid=" . urlencode($value) . "\">" . LangRemove . "</a>");
