@@ -529,6 +529,6 @@ if($_SESSION['QobjSortDirection']!=$_GET['sortdirection'])
   $_SESSION['QobjSortDirection']=$_GET['sortdirection'];
 	$min=0;
 }
-if(count($_SESSION['Qobj']))
-  include "deepsky/data/data_get_observations.php";	
+//if(count($_SESSION['Qobj'])==1)
+//  include "deepsky/data/data_get_observations.php";	
 ?>
