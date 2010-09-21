@@ -212,7 +212,15 @@ else
 	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
 		setcookie("viewobjectobjectsnearby",'show',$cookietime, "/");
 	}
-  if(array_key_exists('menuAdmin',$_GET))
+	if($objUtil->checkGetKey('viewobjectobservations')=='hidden')
+	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("viewobjectobservations",'hidden',$cookietime, "/");
+	}
+  if($objUtil->checkGetKey('viewobjectobservations')=='show')
+	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("viewobjectobservations",'show',$cookietime, "/");
+	}
+	if(array_key_exists('menuAdmin',$_GET))
 	{ $menuAdmin=$_GET['menuAdmin'];
 	  $_SESSION['menus']['menuAdmin']=$menuAdmin;
 		$menuscookie="";

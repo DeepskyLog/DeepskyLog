@@ -13,14 +13,16 @@ else
 	else
 	  $viewobjectdetails='show';
 	if($viewobjectdetails=="hidden")
-		$objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectdetails=show'."\" title=\"".ObjectDetailsShow."\">+</a> ".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h4>",$objPresentations->getDSSDeepskyLiveLinks1($object)),
+	{ $objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectdetails=show'."\" title=\"".ObjectDetailsShow."\">+</a> ".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h4>",$objPresentations->getDSSDeepskyLiveLinks1($object)),
 	                        "LR",array(60,40),30);
-	else
+		echo "<hr />";
+  }
+  else
 	{ $objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectdetails=hidden'."\" title=\"".ObjectDetailsHide."\">-</a> ".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h4>",$objPresentations->getDSSDeepskyLiveLinks1($object)),
 	                        "LR",array(60,40),30);
 	  $objPresentations->line(array("<a href=\"" . $baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode($object) . "\">" . LangAtlasPage . "</a>",$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(40,60),20);
 		echo "<hr />";
-		$objObject->showObject($object);
+	  $objObject->showObject($object);
 	}
 	if($loggedUser && ($theLocation=$objObserver->getObserverProperty($loggedUser, 'stdLocation')))
 	{ if(array_key_exists('viewobjectephemerides',$_GET))
@@ -294,19 +296,7 @@ else
 			  echo "</script>";
 			}
 			$objObject->showObjects($link, $min, $max,$_GET['object'],0,$step,'','view_object');
-		}
-		echo "<hr />";
-		$content =LangExecuteQueryObjectsMessage4."&nbsp;";
-		$content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4a)."&nbsp;-&nbsp;";
-		$content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objectnames.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4b)."&nbsp;-&nbsp;";
-		$content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objectsDetails.pdf?SID=Qobj&amp;sort=".$_SESSION['QobjSort'],LangExecuteQueryObjectsMessage4c)."&nbsp;-&nbsp;";
-		$content.="<a href=\"".$baseURL."objects.argo?SID=Qobj\">".LangExecuteQueryObjectsMessage8."</a>&nbsp;-&nbsp;";
-		$content.="<a href=\"".$baseURL."objects.csv?SID=Qobj\" >".LangExecuteQueryObjectsMessage6."</a>";;
-	  //if($loggedUser)
-	  { $content.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;sort=".$_SESSION['QobjSort']."&amp;pdfTitle=Test\" >".ReportLink."</a>&nbsp;-&nbsp;";
-      $content.="<a href=\"".$baseURL."index.php?indexAction=objectsSets"."\" rel=\"external\">".LangExecuteQueryObjectsMessage11."</a>";
-	  }
-	  $objPresentations->line(array($content),"L",array(),20);    
+	  }		  
 	}
 	else
 	{ $objPresentations->line(array("<h4>".LangViewDSSImageTitle.$object."&nbsp;(".$imagesize."&#39;&nbsp;x&nbsp;".$imagesize."&#39;)</h4>"),"L");
@@ -314,7 +304,122 @@ else
 	  echo "<p class=\"centered DSSImage\"> <img class=\"centered DSSImage\" src=\"".$imagelink."\" alt=\"".$object."\" ></img> </p>";
 	  echo "<p>&copy;&nbsp;<a href=\"http://archive.stsci.edu/dss/index.html\">STScI Digitized Sky Survey</a></p>";
 	}
-	echo "</div>";
+	
+	if(array_key_exists('viewobjectobservations',$_GET))
+	    $viewobjectobservations=$_GET['viewobjectobservations'];
+	elseif(array_key_exists('viewobjectobservations',$_COOKIE))
+	    $viewobjectobservations=$_COOKIE['viewobjectobservations'];
+	else
+	  $viewobjectobservations='false';
+  echo "<hr />";
+  if (count($_SESSION['Qobs']) == 0) //================================================================================================== no reult present =======================================================================================
+  {	$objPresentations->line(array("<h4>".LangObservationNoResults.(($objUtil->checkGetKey('myLanguages'))?(" (".LangSelectedObservationsSelectedLanguagesIndication.")"):(" (".LangSelectedObservationsAllLanguagesIndication.")"))."</h4>"),
+		                          "L",array(100),30);
+			if ($objUtil->checkGetKey('myLanguages'))
+				echo "<p>"."<a href=\"" . $link2 . "\">" . LangSearchAllLanguages . "</a>&nbsp;</p>";
+			echo "<p>"."<a href=\"" . $baseURL . "index.php?indexAction=query_observations\">" . LangSearchDetailPage . "</a>"."</p>";
+	}
+	else
+	{ $theDate = date('Ymd', strtotime('-1 year'));
+		if($viewobjectobservations=="show")
+      $content1 ="<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobservations=hidden'."\" title=\"".ObjectObservationsHide."\">-</a> ";
+		else
+      $content1 ="<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobservations=show'."\" title=\"".ObjectObservationsShow."\">+</a> ";
+		if (array_key_exists('minyear', $_GET) && ($_GET['minyear'] == substr($theDate, 0, 4)) && array_key_exists('minmonth', $_GET) && ($_GET['minmonth'] == substr($theDate, 4, 2)) && array_key_exists('minday', $_GET) && ($_GET['minday'] == substr($theDate, 6, 2)))
+			$content1.=LangSelectedObservationsTitle3;
+		elseif ($object) 
+		  $content1.=LangSelectedObservationsTitle . $object;
+		else
+			$content1.=LangSelectedObservationsTitle2;
+		$content1.="</h4>";
+		$link3 = $link;
+		$content3 ="<h4>";
+		list($min, $max,$content2,$pageleft,$pageright,$pagemax)=$objUtil->printNewListHeader4($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
+		$objPresentations->line(array($content1,$content2),"LR",array(50,50),30);
+		
+	}
+	if($viewobjectobservations=="show")
+  {	//=============================================================================================== START OBSERVATION PAGE OUTPUT =====================================================================================
+    if ($objUtil->checkGetKey('myLanguages')) 
+		{ $content3.=" (".LangSelectedLanguagesShown.")";
+		  $link .= "&amp;myLanguages=true";
+		  $link2 .= "&amp;myLanguages=true";
+		} 
+		else
+		  $content3.=" (".LangAllLanguagesShown.")";
+		$content3.="</h4>";
+		if($object)
+	    $content4=$objUtil->printStepsPerPage3($link,"selObjObs".$_SESSION['lco'],$step);
+		else
+	    $content4=$objUtil->printStepsPerPage3($link,"selObs".$_SESSION['lco'],$step);
+		$objPresentations->line(array($content3,$content4),"LR",array(50,50),25);
+	 	$content5="";
+		if(($objUtil->checkSessionKey('lco','')!="L"))
+			$content5.="&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=L" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangOverviewObservationTitle . "\">" . LangOverviewObservations . "</a>";
+		if(($objUtil->checkSessionKey('lco','')!="C"))
+			$content5.="&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=C" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>";
+		if($loggedUser&&($objUtil->checkSessionKey('lco','')!= "O"))
+			$content5.="&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=O" . "&amp;min=" . urlencode($min) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>";
+		if($loggedUser&&(!($objUtil->checkGetKey('noOwnColor')))&&(($objUtil->checkSessionKey('lco','')=="L")))
+		  $content5.="&nbsp;-&nbsp;"."<a href=\"".$link."&amp;noOwnColor=yes\">".LangNoOwnColor."</a>";
+	  $content5=substr($content5,13);
+	 	if ($objUtil->checkGetKey('myLanguages'))
+			$content6="<a href=\"" . $link3 . "\">" . LangShowAllLanguages . "</a>";
+		elseif ($loggedUser) 
+		  $content6="<a href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowMyLanguages . "</a>";
+		else
+			$content6= "<a href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowInterfaceLanguage . "</a>";
+	  $objPresentations->line(array($content5,$content6),"LR",array(50,50),20);
+	  echo "<hr />";
+	  
+		$_GET['min']=$min;
+		$_GET['max']=$max;
+		if(($FF)&&($_SESSION['lco'] == "O"))
+		{ echo "<script type=\"text/javascript\">";
+	    echo "theResizeElement='obs_list';";
+	    echo "theResizeSize=100;";
+	    echo "</script>";
+		}
+		elseif(($FF))
+		{ echo "<script type=\"text/javascript\">";
+	    echo "theResizeElement='obs_list';";
+	    if($object)
+	      echo "theResizeSize=70;";
+	    else
+	      echo "theResizeSize=70;";
+	    echo "</script>";
+		}
+		$objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco'],$step);
+		echo "<hr />";
+		if ($_SESSION['lco'] == "O")
+			  $objPresentations->line(array(LangOverviewObservationsHeader5a),"R",array(100),25);
+		$content1 ="<a href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a> - ";
+		$content1.=LangExecuteQueryObjectsMessage4."&nbsp;";
+		$content1.=$objPresentations->promptWithLinkText(LangOverviewObservations10, LangOverviewObservations11, $baseURL . "observations.pdf?SID=Qobs", LangExecuteQueryObjectsMessage4a);
+		$content1.=" - ";
+		$content1.="<a href=\"" . $baseURL . "observations.csv\" rel=\"external\">" . LangExecuteQueryObjectsMessage5 . "</a> - ";
+		$content1.="<a href=\"" . $baseURL . "observations.xml\" rel=\"external\">" . LangExecuteQueryObjectsMessage10 . "</a>";
+		$objPresentations->line(array($content1),"L",array(100),25);
+	  echo "<script type=\"text/javascript\">";
+	  echo "
+	  function pageOnKeyDown(event)
+	  { if(event.keyCode==37)
+	      if(event.shiftKey)
+	        location=html_entity_decode('".$link."&amp;multiplepagenr=0"."');    
+	      else
+	        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageleft."');
+	    if(event.keyCode==39)
+	      if(event.shiftKey) 
+	        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pagemax."');
+	      else  
+	        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageright."');
+	  }
+	  this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDown;
+	  ";
+	  echo "</script>";
+  }
+  echo "<hr />";
+  
 	//============================================================================== Admin section permits to change object settings in DB remotely
 	if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
 	{ echo "<hr />";
@@ -351,6 +456,7 @@ else
 	  echo "<a href=\"".$baseURL."index.php?indexAction=manage_csv_object\">" . LangNewObjectSubtitle1b . "</a><br />";
 	  echo "</div></form>";
 	}
+	echo "</div>";
 }
 ?>
 	

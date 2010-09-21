@@ -528,5 +528,7 @@ if($_SESSION['QobjSortDirection']!=$_GET['sortdirection'])
  	  $_SESSION['Qobj']=array_reverse($_SESSION['Qobj'],false);
   $_SESSION['QobjSortDirection']=$_GET['sortdirection'];
 	$min=0;
-}	
+}
+if(count($_SESSION['Qobj']))
+  include "deepsky/data/data_get_observations.php";	
 ?>

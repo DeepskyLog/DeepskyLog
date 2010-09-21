@@ -4,6 +4,8 @@ define("ObjectDetailsShow"      ,"Montrer les détails de l'objet");
 define("ObjectDetailsHide"      ,"Cacher les détails de l'objets");
 define("ObjectNearbyObjectsShow","Montrer les autres objects proches");
 define("ObjectNearbyObjectsHide","Cacher les autres objets proches");
+define("ObjectObservationsShow" ,"Montrer les observations");
+define("ObjectObservationsHide" ,"Cacher les observations");
 
 
 define("LangViewActive"	        ,"Active&eaigu;");

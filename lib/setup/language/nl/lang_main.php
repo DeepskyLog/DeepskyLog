@@ -4,6 +4,8 @@ define("ObjectDetailsShow"      ,"Toon de objectdetails");
 define("ObjectDetailsHide"      ,"Verberg de objectdetails");
 define("ObjectNearbyObjectsShow","Toon de nabije objecten");
 define("ObjectNearbyObjectsHide","Verberg de nabije objecten");
+define("ObjectObservationsShow" ,"Toon de waarnemingen");
+define("ObjectObservationsHide" ,"Verberg de waarnemingen");
 
 
 define("LangViewActive"					,"Aktief");
