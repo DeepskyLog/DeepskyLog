@@ -12,7 +12,8 @@ echo "<base href=\"".$baseURL."\" />";
 echo "<link rel=\"shortcut icon\" href=\"".$baseURL."styles/images/favicon.ico\" />";
 echo "<link href=\"".$baseURL."styles/style.css\" rel=\"stylesheet\" type=\"text/css\" />";
 echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"DeepskyLog - latest observations\" href=\"observations.rss\" />";
-
+echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
+  
 $DSLTitle="DeepskyLog";
 $TitleText="";
 $theDispatch=$objUtil->checkRequestKey('indexAction');
