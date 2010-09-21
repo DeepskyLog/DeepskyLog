@@ -2115,6 +2115,38 @@ class Utils
 	  $content.= "</form>";
 	  return array($min,$max,$content,$pageleft,$pageright,$pages);
   }
+  public function printNewListHeader5(&$list, $link, $min, $step, $total=0,$showNumberOfRecords=true,$showArrows=true)
+  { global $baseURL;
+	  $pageleft=0;
+	  $pageright=0;
+	  $pages=ceil(count($list)/$step);           // total number of pages
+    if($min)                                   // minimum value
+    { $min=$min-($min%$step);                  // start display from number of $steps
+      if ($min < 0)                            // minimum value smaller than 0
+        $min=0;
+      if($min>count($list))                    // minimum value bigger than number of elements
+        $min=count($list)-(count($list)%$step);
+    }
+    else                                       // no minimum value defined
+      $min=0;
+    $max=$min+$step;                       // maximum number to be displayed
+    $content="<form action=\"".$link."\" method=\"post\">";
+    $content.="<div>";
+    if($showNumberOfRecords)
+      $content.= "(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" ".LangNumberOfRecordsIn." ".$pages." ".LangNumberOfRecords1Pages.")"):")")."&nbsp;";
+    if(($listcount>$step)&&($showArrows))
+    { $currentpage=ceil($min/$step)+1;
+			$content.= "<a href=\"".$link."&amp;viewObjectObservationsmultiplepagenr=0\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allleft20.gif\" alt=\"&lt;&lt;0\" />"."</a>";
+		  $content.= "<a href=\"".$link."&amp;viewObjectObservationsmultiplepagenr=".($pageleft=($currentpage>0?($currentpage-1):$currentpage))."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/left20.gif\" alt=\"&lt;\" />"."</a>";			
+		  $content.= "<input type=\"text\" name=\"viewObjectObservationsmultiplepagenr\" size=\"3\" class=\"inputfield centered\" value=\"".$currentpage."\" />";	
+		  $content.= "<a href=\"".$link."&ampviewObjectObservations;multiplepagenr=".($pageright=($currentpage<$pages?($currentpage+1):$currentpage))."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/right20.gif\" alt=\"&gt;\" />"."</a>";
+		  $content.= "<a href=\"".$link."&amp;viewObjectObservationsmultiplepagenr=".$pages."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allright20.gif\" alt=\"&gt;&gt;\" />"."</a>";
+		  $content.= "&nbsp;";
+	  }
+	  $content.="</div>";
+	  $content.= "</form>";
+	  return array($min,$max,$content,$pageleft,$pageright,$pages);
+  }
   public function printStepsPerPage3($link,$detaillink,$steps=25)
   { global $baseURL;
     $content =LangNumberOfRecordsPerPages.": ";

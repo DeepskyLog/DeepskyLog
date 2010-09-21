@@ -1,4 +1,12 @@
 <?php
+define("LangButtonOnlyObjectDetails"      ,"Juste les détails de lobjet");
+define("LangButtonObjectDetails"          ,"Les détails de l'objet");
+define("LangButtonOnlyObjectEphemerides"  ,"Juste les ephémérides de l'objet");
+define("LangButtonObjectEphemerides"      ,"Ephémerides de l'objet");
+define("LangButtonOnlyObjectObjectsNearby","Juste les objets proches");
+define("LangButtonObjectObjectsNearby"    ,"Les objets proches");
+define("LangButtonOnlyObjectObservations" ,"Juste les observations de l'objet");
+define("LangButtonObjectObservations"     ,"Les observations de l'objet");
 
 define("ObjectDetailsShow"      ,"Montrer les détails de l'objet");
 define("ObjectDetailsHide"      ,"Cacher les détails de l'objets");

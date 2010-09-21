@@ -1,4 +1,13 @@
 <?php
+define("LangButtonOnlyObjectDetails"      ,"Only object details");  // TO TRANSLATE
+define("LangButtonObjectDetails"          ,"Object details");  // TO TRANSLATE
+define("LangButtonOnlyObjectEphemerides"  ,"Only object ephemerides");  // TO TRANSLATE
+define("LangButtonObjectEphemerides"      ,"Object ephemerides");  // TO TRANSLATE
+define("LangButtonOnlyObjectObjectsNearby","Only nearby objects");  // TO TRANSLATE
+define("LangButtonObjectObjectsNearby"    ,"Nearby objects");  // TO TRANSLATE
+define("LangButtonOnlyObjectObservations" ,"Only object observations");  // TO TRANSLATE
+define("LangButtonObjectObservations"     ,"Object observations");  // TO TRANSLATE
+
 
 define("ObjectDetailsShow"      ,"Show the object details");         // TO TRANSLATE
 define("ObjectDetailsHide"      ,"Hide the object details");         // TO TRANSLATE

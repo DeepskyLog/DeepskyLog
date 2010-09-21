@@ -1,4 +1,13 @@
 <?php
+define("LangButtonOnlyObjectDetails"      ,"Enkel object details");
+define("LangButtonObjectDetails"          ,"Object details");
+define("LangButtonOnlyObjectEphemerides"  ,"Enkel object efemeriden");
+define("LangButtonObjectEphemerides"      ,"Object efemeriden");
+define("LangButtonOnlyObjectObjectsNearby","Enkel nabije objecten");
+define("LangButtonObjectObjectsNearby"    ,"Nabije objecten");
+define("LangButtonOnlyObjectObservations" ,"Enkel object observaties");
+define("LangButtonObjectObservations"     ,"Object observaties");
+
 
 define("ObjectDetailsShow"      ,"Toon de objectdetails");
 define("ObjectDetailsHide"      ,"Verberg de objectdetails");
