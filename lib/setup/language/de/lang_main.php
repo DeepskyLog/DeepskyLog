@@ -4,6 +4,8 @@ define("ObjectDetailsShow"      ,"Show the object details");         // TO TRANS
 define("ObjectDetailsHide"      ,"Hide the object details");         // TO TRANSLATE
 define("ObjectNearbyObjectsShow","Show the nearby objects");         // TO TRANSLATE
 define("ObjectNearbyObjectsHide","Hide the nearby objects");         // TO TRANSLATE
+define("ObjectObservationsShow" ,"Show the observations");           // TO TRANSLATE
+define("ObjectObservationsHide" ,"Hide the observations");           // TO TRANSLATE
 
 define("LangViewActive"					,"Actif");                           // TO TRANSLATE
 
