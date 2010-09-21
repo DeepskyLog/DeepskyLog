@@ -1,5 +1,10 @@
 <?php
 
+define("ObjectDetailsShow"      ,"Show the object details");         // TO TRANSLATE
+define("ObjectDetailsHide"      ,"Hide the object details");         // TO TRANSLATE
+define("ObjectNearbyObjectsShow","Show the nearby objects");         // TO TRANSLATE
+define("ObjectNearbyObjectsHide","Hide the nearby objects");         // TO TRANSLATE
+
 define("LangViewActive"					,"Actif");                           // TO TRANSLATE
 
 

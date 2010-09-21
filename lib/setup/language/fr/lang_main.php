@@ -1,5 +1,11 @@
 <?php
 
+define("ObjectDetailsShow"      ,"Montrer les détails de l'objet");
+define("ObjectDetailsHide"      ,"Cacher les détails de l'objets");
+define("ObjectNearbyObjectsShow","Montrer les autres objects proches");
+define("ObjectNearbyObjectsHide","Cacher les autres objets proches");
+
+
 define("LangViewActive"	        ,"Active&eaigu;");
 
 
