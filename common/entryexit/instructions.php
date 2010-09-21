@@ -190,8 +190,8 @@ else
   }
   if($objUtil->checkGetKey('viewobjectdetails')=='hidden')
 	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
-	}
 		setcookie("viewobjectdetails",'hidden',$cookietime, "/");
+	}
   if($objUtil->checkGetKey('viewobjectdetails')=='show')
 	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
 		setcookie("viewobjectdetails",'show',$cookietime, "/");
