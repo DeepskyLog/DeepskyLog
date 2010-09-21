@@ -1,49 +1,102 @@
-<?php  // view_object.php - view all information of one object 
+<?php  // view_object.php - view all information of one object
+define("LangButtonObjectDetails","Object details");
+define("LangButtonObjectEphemerides","Object efemeriden");
+define("LangButtonObjectObjectsNearby","Nabije objecten");
+define("LangButtonObjectObservations","Object observaties");
+
 if(!($object=$objUtil->checkGetKey('object')))
   throw new Exception('To implement');
 else
-{ echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
-	$seen=$objObject->getDSOseenLink($object);
-	echo "<div id=\"main\">";
-	$object_ss = stripslashes($object);
-	if(array_key_exists('viewobjectdetails',$_GET))
+{ $object_ss = stripslashes($object);
+  $theLocation=$objObserver->getObserverProperty($loggedUser, 'stdLocation');
+ 	if(array_key_exists('viewobjectdetails',$_GET))
 	  $viewobjectdetails=$_GET['viewobjectdetails'];
 	elseif(array_key_exists('viewobjectdetails',$_COOKIE))
 	  $viewobjectdetails=$_COOKIE['viewobjectdetails'];
 	else
 	  $viewobjectdetails='show';
+	if(array_key_exists('viewobjectephemerides',$_GET))
+    $viewobjectephemerides=$_GET['viewobjectephemerides'];
+  elseif(array_key_exists('viewobjectephemerides',$_COOKIE))
+    $viewobjectephemerides=$_COOKIE['viewobjectephemerides'];
+  else
+    $viewobjectephemerides='show';
+	if(array_key_exists('viewobjectobjectsnearby',$_GET))
+    $viewobjectobjectsnearby=$_GET['viewobjectobjectsnearby'];
+  elseif(array_key_exists('viewobjectobjectsnearby',$_COOKIE))
+    $viewobjectobjectsnearby=$_COOKIE['viewobjectobjectsnearby'];
+  else
+    $viewobjectobjectsnearby='show';
+	if(array_key_exists('viewobjectobservations',$_GET))
+	    $viewobjectobservations=$_GET['viewobjectobservations'];
+	elseif(array_key_exists('viewobjectobservations',$_COOKIE))
+	    $viewobjectobservations=$_COOKIE['viewobjectobservations'];
+	else
+	  $viewobjectobservations='false';
+    
+	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
+	$seen=$objObject->getSeen($object);
+	echo "<div id=\"main\">";
+
+	echo "<input type=\"button\" class=\"sectionOnlySelectionButton\" value=\">\" 
+	               title=\"".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."\"
+	               onclick=\"location='".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectdetails=show&amp;viewobjectephemerides=hidden&amp;viewobjectobjectsnearby=hidden&amp;viewobjectobservations=hidden'."';\"/>";
 	if($viewobjectdetails=="hidden")
-	{ $objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectdetails=show'."\" title=\"".ObjectDetailsShow."\">+</a> ".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h4>",$objPresentations->getDSSDeepskyLiveLinks1($object)),
-	                        "LR",array(60,40),30);
-		echo "<hr />";
+	  echo "<input type=\"button\" class=\"sectionSelectionButton\" value=\"+ ".LangButtonObjectDetails."\" 
+	               title=\"".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."\"
+	               onclick=\"location='".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectdetails=show'."';\"/>";
+	else
+	  echo "<input type=\"button\" class=\"sectionSelectionButton\" value=\"- ".LangButtonObjectDetails."\" 
+	               title=\"".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."\"
+	               onclick=\"location='".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectdetails=hidden'."';\"/>";
+	echo "&nbsp;";
+	if($viewobjectephemerides=="hidden")
+	  echo "<input type=\"button\" class=\"sectionSelectionButton\" value=\"+ ".LangButtonObjectEphemerides."\" 
+	               title=\"".ReportEpehemeridesFor."&nbsp;".$object_ss.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($theLocation, 'name')."\"
+	               onclick=\"location='".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectephemerides=show'."';\"/>";
+	else
+	  echo "<input type=\"button\" class=\"sectionSelectionButton\" value=\"- ".LangButtonObjectEphemerides."\" 
+	               title=\"".ReportEpehemeridesFor."&nbsp;".$object_ss.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($theLocation, 'name')."\"
+	               onclick=\"location='".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectephemerides=hidden'."';\"/>";
+	echo "&nbsp;";
+	if($viewobjectobjectsnearby=="hidden")
+	  echo "<input type=\"button\" class=\"sectionSelectionButton\" value=\"+ ".LangButtonObjectObjectsNearby."\" onclick=\"location='".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobjectsnearby=show'."';\"/>";
+	else
+	  echo "<input type=\"button\" class=\"sectionSelectionButton\" value=\"- ".LangButtonObjectObjectsNearby."\" onclick=\"location='".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobjectsnearby=hidden'."';\"/>";
+	echo "&nbsp;";
+	if($viewobjectobservations=="hidden")
+	  echo "<input type=\"button\" class=\"sectionSelectionButton\" value=\"+ ".LangButtonObjectObservations."\" onclick=\"location='".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobservations=show'."';\"/>";
+	else
+	  echo "<input type=\"button\" class=\"sectionSelectionButton\" value=\"- ".LangButtonObjectObservations."\" onclick=\"location='".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobservations=hidden'."';\"/>";
+	echo "&nbsp;";
+	echo "<input type=\"button\" class=\"sectionSelectionButton\" value=\"".LangAtlasPage."\" onclick=\"location='".$baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode($object)."';\"/>";
+	$seen=$objObject->getDSOseenLink($object);  
+	echo "<hr />";
+	if($viewobjectdetails=="hidden")
+	{ //$objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectdetails=show'."\" title=\"".ObjectDetailsShow."\">+</a> ".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h4>",$objPresentations->getDSSDeepskyLiveLinks1($object)),
+	  //                      "LR",array(60,40),30);
+		//echo "<hr />";
   }
   else
-	{ $objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectdetails=hidden'."\" title=\"".ObjectDetailsHide."\">-</a> ".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h4>",$objPresentations->getDSSDeepskyLiveLinks1($object)),
-	                        "LR",array(60,40),30);
-	  $objPresentations->line(array("<a href=\"" . $baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode($object) . "\">" . LangAtlasPage . "</a>",$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(40,60),20);
+	{ $objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectdetails=hidden'."\" title=\"".ObjectDetailsHide."\">-</a> ".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h4>"),"L",array(100),30);
 		echo "<hr />";
 	  $objObject->showObject($object);
 	}
-	if($loggedUser && ($theLocation=$objObserver->getObserverProperty($loggedUser, 'stdLocation')))
-	{ if(array_key_exists('viewobjectephemerides',$_GET))
-	    $viewobjectephemerides=$_GET['viewobjectephemerides'];
-	  elseif(array_key_exists('viewobjectephemerides',$_COOKIE))
-	    $viewobjectephemerides=$_COOKIE['viewobjectephemerides'];
-	  else
-	    $viewobjectephemerides='show';
-		if($viewobjectephemerides=="show")
-      $objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectephemerides=hidden'."\" title=\"".ReportEpehemeridesForHide."\">-</a> ".ReportEpehemeridesFor."&nbsp;".$object_ss.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($theLocation, 'name')."</h4>"),
+	if($loggedUser && $theLocation)
+	{ if($viewobjectephemerides=="show")
+	  { $objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectephemerides=hidden'."\" title=\"".ReportEpehemeridesForHide."\">-</a> ".ReportEpehemeridesFor."&nbsp;".$object_ss.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($theLocation, 'name')."</h4>"),
 	                        "L",array(100),30);
-    else
-		  $objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectephemerides=show'."\" title=\"".ReportEpehemeridesForShow."\">+</a> ".ReportEpehemeridesFor."&nbsp;".$object_ss.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($theLocation, 'name')."</h4>"),
-	                        "L",array(100),30);
+      echo "<hr />";
+	  }
+	  //else
+		//  $objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectephemerides=show'."\" title=\"".ReportEpehemeridesForShow."\">+</a> ".ReportEpehemeridesFor."&nbsp;".$object_ss.' '.ReportEpehemeridesIn.' '.$objLocation->getLocationPropertyFromId($theLocation, 'name')."</h4>"),
+	  //                      "L",array(100),30);
     $longitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'longitude');
     $latitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'latitude');
 	  
     $timezone=$objLocation->getLocationPropertyFromId($theLocation,'timezone');
     $dateTimeZone=new DateTimeZone($timezone);
       
-    echo "<hr />";
     if($viewobjectephemerides=="show")
     { echo "<div id=\"ephemeridesdiv\">";
 	    for($i=1;$i<13;$i++)
@@ -228,7 +281,7 @@ else
     }
 	}
 	
-	if(!($imagesize=$objUtil->checkRequestKey('imagesize')))
+ if($viewobjectobjectsnearby=="show")
 	{ $maxcount=count($_SESSION['Qobj']);
 		$max = 9999;
 		
@@ -246,16 +299,10 @@ else
 		$link = $baseURL.'index.php?indexAction=detail_object&amp;object='.urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey('zoom',30).'&amp;SID=Qobj';
 		
 		$content1 ="<h4>";
-		if(array_key_exists('viewobjectobjectsnearby',$_GET))
-	    $viewobjectobjectsnearby=$_GET['viewobjectobjectsnearby'];
-	  elseif(array_key_exists('viewobjectobjectsnearby',$_COOKIE))
-	    $viewobjectobjectsnearby=$_COOKIE['viewobjectobjectsnearby'];
-	  else
-	    $viewobjectobjectsnearby='show';
 		if($viewobjectobjectsnearby=="show")
 		  $content1.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobjectsnearby=hidden'."\" title=\"".ObjectNearbyObjectsHide."\">-</a> ";
-		else
-		  $content1.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobjectsnearby=show'."\" title=\"".ObjectNearbyObjectsShow."\">+</a> ";
+		//else
+		//  $content1.="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobjectsnearby=show'."\" title=\"".ObjectNearbyObjectsShow."\">+</a> ";
 		$content1.=$_GET['object'];
 		if(count($_SESSION['Qobj'])>2)
 		 $content1.=' '.LangViewObjectAndNearbyObjects.' '.(count($_SESSION['Qobj'])-1).' '.LangViewObjectNearbyObjects;
@@ -266,80 +313,71 @@ else
 		$content1.="</h4>";
 		list($min,$max,$content2)=$objUtil->printNewListHeader3($_SESSION['Qobj'],$link ,$min,$step);
 		$objPresentations->line(array($content1,$content2),"LR",array(50,50),30);
-		if($viewobjectobjectsnearby=="show")
-		{ $content1 ="<form action=\"".$link."\" method=\"get\"><div>";
-			$content1.=LangViewObjectNearbyObjectsMoreLess .":&nbsp;";
-		  $content1.="<select name=\"zoom\" onchange=\"submit();\">";
-			if($objUtil->checkGetKey('zoom',30)=="180") $content1.=("<option selected=\"selected\" value=\"180\">3x3&deg;</option>"); else $content1.=("<option value=\"180\">3x3&deg;</option>"); 
-			if($objUtil->checkGetKey('zoom',30)=="120") $content1.=("<option selected=\"selected\" value=\"120\">2x2&deg;</option>"); else $content1.=("<option value=\"120\">2x2&deg;</option>"); 
-			if($objUtil->checkGetKey('zoom',30)=="60")  $content1.=("<option selected=\"selected\" value=\"60\">1x1&deg;</option>"); else $content1.=("<option value=\"60\">1x1&deg;</option>"); 
-			if($objUtil->checkGetKey('zoom',30)=="30")  $content1.=("<option selected=\"selected\" value=\"30\">30x30'</option>"); else $content1.=("<option value=\"30\">30x30'</option>"); 
-			if($objUtil->checkGetKey('zoom',30)=="15")  $content1.=("<option selected=\"selected\" value=\"15\">15x15'</option>"); else $content1.=("<option value=\"15\">15x15'</option>"); 
-			if($objUtil->checkGetKey('zoom',30)=="10")  $content1.=("<option selected=\"selected\" value=\"10\">10x10'</option>"); else $content1.=("<option value=\"10\">10x10'</option>"); 
-			if($objUtil->checkGetKey('zoom',30)=="5")   $content1.=("<option selected=\"selected\" value=\"5\">5x5'</option>"); else $content1.=("<option value=\"5\">5x5'</option>"); 
-			$content1.="</select>";
-			$content1.="<input type=\"hidden\" name=\"object\" value=\"".$_GET['object']."\" /> ";
-			$content1.="<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" /> ";		
-			$content1.="</div></form>";
-			$content2="";
-			$content2=$objUtil->printStepsPerPage3($link,"nearbyObjects",$step);
-			$objPresentations->line(array($content1,$content2),"LR",array(50,50),25);
-			echo "<hr />";
-			if($max>count($_SESSION['Qobj']))
-			  $max=count($_SESSION['Qobj']);
-			$_GET['min']=$min;
-			$_GET['max']=$max;
-			if($FF)
-			{ echo "<script type=\"text/javascript\">";
-			  echo "theResizeElement='obj_list';";
-			  echo "theResizeSize=75;";
-			  echo "</script>";
-			}
-			$objObject->showObjects($link, $min, $max,$_GET['object'],0,$step,'','view_object');
-	  }		  
-	}
-	else
+		$content1 ="<form action=\"".$link."\" method=\"get\"><div>";
+		$content1.=LangViewObjectNearbyObjectsMoreLess .":&nbsp;";
+	  $content1.="<select name=\"zoom\" onchange=\"submit();\">";
+		if($objUtil->checkGetKey('zoom',30)=="180") $content1.=("<option selected=\"selected\" value=\"180\">3x3&deg;</option>"); else $content1.=("<option value=\"180\">3x3&deg;</option>"); 
+		if($objUtil->checkGetKey('zoom',30)=="120") $content1.=("<option selected=\"selected\" value=\"120\">2x2&deg;</option>"); else $content1.=("<option value=\"120\">2x2&deg;</option>"); 
+		if($objUtil->checkGetKey('zoom',30)=="60")  $content1.=("<option selected=\"selected\" value=\"60\">1x1&deg;</option>"); else $content1.=("<option value=\"60\">1x1&deg;</option>"); 
+		if($objUtil->checkGetKey('zoom',30)=="30")  $content1.=("<option selected=\"selected\" value=\"30\">30x30'</option>"); else $content1.=("<option value=\"30\">30x30'</option>"); 
+		if($objUtil->checkGetKey('zoom',30)=="15")  $content1.=("<option selected=\"selected\" value=\"15\">15x15'</option>"); else $content1.=("<option value=\"15\">15x15'</option>"); 
+		if($objUtil->checkGetKey('zoom',30)=="10")  $content1.=("<option selected=\"selected\" value=\"10\">10x10'</option>"); else $content1.=("<option value=\"10\">10x10'</option>"); 
+		if($objUtil->checkGetKey('zoom',30)=="5")   $content1.=("<option selected=\"selected\" value=\"5\">5x5'</option>"); else $content1.=("<option value=\"5\">5x5'</option>"); 
+		$content1.="</select>";
+		$content1.="<input type=\"hidden\" name=\"object\" value=\"".$_GET['object']."\" /> ";
+		$content1.="<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" /> ";		
+		$content1.="</div></form>";
+		$content2="";
+		$content2=$objUtil->printStepsPerPage3($link,"nearbyObjects",$step);
+		$objPresentations->line(array($content1,$content2),"LR",array(50,50),25);
+		echo "<hr />";
+		if($max>count($_SESSION['Qobj']))
+		  $max=count($_SESSION['Qobj']);
+		$_GET['min']=$min;
+		$_GET['max']=$max;
+		if($FF)
+		{ echo "<script type=\"text/javascript\">";
+		  echo "theResizeElement='obj_list';";
+		  echo "theResizeSize=75;";
+		  echo "</script>";
+		}
+		$objObject->showObjects($link, $min, $max,$_GET['object'],0,$step,'','view_object');
+		echo"<hr />";
+  }		  
+	
+	
+  if($imagesize=$objUtil->checkRequestKey('imagesize'))
 	{ $objPresentations->line(array("<h4>".LangViewDSSImageTitle.$object."&nbsp;(".$imagesize."&#39;&nbsp;x&nbsp;".$imagesize."&#39;)</h4>"),"L");
 	  $imagelink = "http://archive.stsci.edu/cgi-bin/dss_search?"."v=poss2ukstu_red&amp;r=".urlencode($objUtil->checkRequestKey('raDSS')).".0&amp;d=".urlencode($objUtil->checkRequestKey('declDSS'))."&amp;e=J2000&amp;h=".$imagesize.".0&amp;w=".$imagesize."&amp;f=gif&amp;c=none&amp;fov=NONE&amp;v3=";
 	  echo "<p class=\"centered DSSImage\"> <img class=\"centered DSSImage\" src=\"".$imagelink."\" alt=\"".$object."\" ></img> </p>";
 	  echo "<p>&copy;&nbsp;<a href=\"http://archive.stsci.edu/dss/index.html\">STScI Digitized Sky Survey</a></p>";
 	}
 	
-	if(array_key_exists('viewobjectobservations',$_GET))
-	    $viewobjectobservations=$_GET['viewobjectobservations'];
-	elseif(array_key_exists('viewobjectobservations',$_COOKIE))
-	    $viewobjectobservations=$_COOKIE['viewobjectobservations'];
-	else
-	  $viewobjectobservations='false';
-  echo "<hr />";
-  if (count($_SESSION['Qobs']) == 0) //================================================================================================== no reult present =======================================================================================
-  {	$objPresentations->line(array("<h4>".LangObservationNoResults.(($objUtil->checkGetKey('myLanguages'))?(" (".LangSelectedObservationsSelectedLanguagesIndication.")"):(" (".LangSelectedObservationsAllLanguagesIndication.")"))."</h4>"),
-		                          "L",array(100),30);
-			if ($objUtil->checkGetKey('myLanguages'))
-				echo "<p>"."<a href=\"" . $link2 . "\">" . LangSearchAllLanguages . "</a>&nbsp;</p>";
-			echo "<p>"."<a href=\"" . $baseURL . "index.php?indexAction=query_observations\">" . LangSearchDetailPage . "</a>"."</p>";
-	}
-	else
-	{ $theDate = date('Ymd', strtotime('-1 year'));
-		if($viewobjectobservations=="show")
-      $content1 ="<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobservations=hidden'."\" title=\"".ObjectObservationsHide."\">-</a> ";
-		else
-      $content1 ="<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobservations=show'."\" title=\"".ObjectObservationsShow."\">+</a> ";
-		if (array_key_exists('minyear', $_GET) && ($_GET['minyear'] == substr($theDate, 0, 4)) && array_key_exists('minmonth', $_GET) && ($_GET['minmonth'] == substr($theDate, 4, 2)) && array_key_exists('minday', $_GET) && ($_GET['minday'] == substr($theDate, 6, 2)))
-			$content1.=LangSelectedObservationsTitle3;
-		elseif ($object) 
-		  $content1.=LangSelectedObservationsTitle . $object;
-		else
-			$content1.=LangSelectedObservationsTitle2;
-		$content1.="</h4>";
-		$link3 = $link;
-		$content3 ="<h4>";
-		list($min, $max,$content2,$pageleft,$pageright,$pagemax)=$objUtil->printNewListHeader4($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
-		$objPresentations->line(array($content1,$content2),"LR",array(50,50),30);
-		
-	}
 	if($viewobjectobservations=="show")
-  {	//=============================================================================================== START OBSERVATION PAGE OUTPUT =====================================================================================
+  {	if (count($_SESSION['Qobs']) == 0) //================================================================================================== no reult present =======================================================================================
+	  {	$objPresentations->line(array("<h4>".LangObservationNoResults.(($objUtil->checkGetKey('myLanguages'))?(" (".LangSelectedObservationsSelectedLanguagesIndication.")"):(" (".LangSelectedObservationsAllLanguagesIndication.")"))."</h4>"),
+			                          "L",array(100),30);
+				if ($objUtil->checkGetKey('myLanguages'))
+					echo "<p>"."<a href=\"" . $link2 . "\">" . LangSearchAllLanguages . "</a>&nbsp;</p>";
+				echo "<p>"."<a href=\"" . $baseURL . "index.php?indexAction=query_observations\">" . LangSearchDetailPage . "</a>"."</p>";
+		}
+		else
+		{ $theDate = date('Ymd', strtotime('-1 year'));
+			$content1 ="<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobservations=hidden'."\" title=\"".ObjectObservationsHide."\">-</a> ";
+			if (array_key_exists('minyear', $_GET) && ($_GET['minyear'] == substr($theDate, 0, 4)) && array_key_exists('minmonth', $_GET) && ($_GET['minmonth'] == substr($theDate, 4, 2)) && array_key_exists('minday', $_GET) && ($_GET['minday'] == substr($theDate, 6, 2)))
+				$content1.=LangSelectedObservationsTitle3;
+			elseif ($object) 
+			  $content1.=LangSelectedObservationsTitle . $object;
+			else
+				$content1.=LangSelectedObservationsTitle2;
+			$content1.="</h4>";
+			$link3 = $link;
+			$content3 ="<h4>";
+			list($min, $max,$content2,$pageleft,$pageright,$pagemax)=$objUtil->printNewListHeader4($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
+			$objPresentations->line(array($content1,$content2),"LR",array(50,50),30);
+			
+		}
+  	//=============================================================================================== START OBSERVATION PAGE OUTPUT =====================================================================================
     if ($objUtil->checkGetKey('myLanguages')) 
 		{ $content3.=" (".LangSelectedLanguagesShown.")";
 		  $link .= "&amp;myLanguages=true";
@@ -417,8 +455,10 @@ else
 	  this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDown;
 	  ";
 	  echo "</script>";
+    echo "<hr />";
   }
-  echo "<hr />";
+	$objPresentations->line(array($objPresentations->getDSSDeepskyLiveLinks1($object),$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(50,50),30);
+	echo "<hr />";
   
 	//============================================================================== Admin section permits to change object settings in DB remotely
 	if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
