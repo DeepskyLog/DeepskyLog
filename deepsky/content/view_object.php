@@ -13,7 +13,7 @@ else
 	else
 	  $viewobjectdetails='show';
 	if($viewobjectdetails=="hidden")
-		$objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;'."\" title=\"".ReportEpehemeridesForHide."\">+</a> ".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h4>",$objPresentations->getDSSDeepskyLiveLinks1($object)),
+		$objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectdetails=show'."\" title=\"".ReportEpehemeridesForHide."\">+</a> ".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h4>",$objPresentations->getDSSDeepskyLiveLinks1($object)),
 	                        "LR",array(60,40),30);
 	else
 	{ $objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectdetails=hidden'."\" title=\"".ReportEpehemeridesForHide."\">-</a> ".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h4>",$objPresentations->getDSSDeepskyLiveLinks1($object)),
