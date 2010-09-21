@@ -6,20 +6,22 @@ else
 	$seen=$objObject->getDSOseenLink($object);
 	echo "<div id=\"main\">";
 	$object_ss = stripslashes($object);
-	$objPresentations->line(array("<h4>".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h4>",$objPresentations->getDSSDeepskyLiveLinks1($object)),
+	if(array_key_exists('viewobjectdetails',$_GET))
+	  $viewobjectdetails=$_GET['viewobjectdetails'];
+	elseif(array_key_exists('viewobjectdetails',$_COOKIE))
+	  $viewobjectdetails=$_COOKIE['viewobjectdetails'];
+	else
+	  $viewobjectdetails='show';
+	if($viewobjectdetails=="hidden")
+		$objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;'."\" title=\"".ReportEpehemeridesForHide."\">+</a> ".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h4>",$objPresentations->getDSSDeepskyLiveLinks1($object)),
 	                        "LR",array(60,40),30);
-	$topline="";
-	if($imagesize=$objUtil->checkRequestKey('imagesize'))
-	  $topline="&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\">".LangViewObjectViewNearbyObject."</a>";
-	if ($myList) 
-	{ if ($objList->checkObjectInMyActiveList($object))
-			$topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;removeObjectFromList=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage3 . $listname_ss . "</a>";
-		else
-			$topline.="&nbsp;-&nbsp;"."<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode($object) . "&amp;addObjectToList=" . urlencode($object) . "&amp;showname=" . urlencode($object) . "\">" . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a>";
+	else
+	{ $objPresentations->line(array("<h4>"."<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectdetails=hidden'."\" title=\"".ReportEpehemeridesForHide."\">-</a> ".LangViewObjectTitle."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."</h4>",$objPresentations->getDSSDeepskyLiveLinks1($object)),
+	                        "LR",array(60,40),30);
+	  $objPresentations->line(array("<a href=\"" . $baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode($object) . "\">" . LangAtlasPage . "</a>",$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(40,60),20);
+		echo "<hr />";
+		$objObject->showObject($object);
 	}
-  $objPresentations->line(array("<a href=\"" . $baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode($object) . "\">" . LangAtlasPage . "</a>",$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(40,60),20);
-	echo "<hr />";
-	$objObject->showObject($object);
 	if($loggedUser && ($theLocation=$objObserver->getObserverProperty($loggedUser, 'stdLocation')))
 	{ if(array_key_exists('viewobjectephemerides',$_GET))
 	    $viewobjectephemerides=$_GET['viewobjectephemerides'];
@@ -64,7 +66,7 @@ else
 			}
 			echo "<table>";
 			echo "<tr class=\"type10\">";
-			echo "<td class=\"centered\">".LangMonth." > </td>";
+			echo "<td class=\"right\">".LangMonth." > </td>";
 			for($i=1;$i<13;$i++)
 			{ echo"<td>&nbsp;</td><td class=\"centered\">".$i."</td>";
 			}
@@ -223,7 +225,8 @@ else
 			echo "</div>";
     }
 	}
-	if(!($imagesize))
+	
+	if(!($imagesize=$objUtil->checkRequestKey('imagesize')))
 	{ $maxcount=count($_SESSION['Qobj']);
 		$max = 9999;
 		

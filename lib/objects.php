@@ -915,7 +915,7 @@ class Objects
     return $objDatabase->execSQL("UPDATE objects SET ".$property." = \"".$propertyValue."\" WHERE name = \"".$name."\"");
   }
   public  function showObject($object)
-  { global $objPresentations, $objLocation, $objAstroCalc, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL, $objPresentations,$objObserver,$dateformat;	
+  { global $theMonth, $theDay, $theYear,$objPresentations, $objLocation, $objAstroCalc, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL, $objPresentations,$objObserver,$dateformat;	
     $object=$this->getDsObjectName($object);
     $_SESSION['object']=$object;
     $altnames=$this->getAlternativeNames($object); $alt=""; $alttip="";
@@ -1048,7 +1048,7 @@ class Objects
         $popup4 = $object . LangAltitude . $ristraset[3] . LangRistrasetIn . addslashes($location);
       }
       
-      $objPresentations->line(array(LangMoonRise, "<span onmouseover=\"Tip('" . $popup1 . "')\">".$ristraset[0]."</span>", LangTransit, "<span onmouseover=\"Tip('" . $popup2 . "')\">".$ristraset[1]."</span>", LangMoonSet, "<span onmouseover=\"Tip('" . $popup3 . "')\">".$ristraset[2]."</span>", LangBest, $ristraset[4], LangMaxAltitude, "<span class=\"" . "\"  onmouseover=\"Tip('" . $popup4 . "')\">".$ristraset[3]."</span>",'&nbsp;','&nbsp;'), "RLRLRLRLRLRL", array(8.33,8.34,8.33,8.33,8.33,8.33,8.33,8.33,8.33,8.33,8.33,8.33), 20, array($thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype));
+      $objPresentations->line(array(LangDate,date($dateformat, mktime(0, 0, 0, $theMonth, $theDay, $theYear)),LangMoonRise, "<span onmouseover=\"Tip('" . $popup1 . "')\">".$ristraset[0]."</span>", LangTransit, "<span onmouseover=\"Tip('" . $popup2 . "')\">".$ristraset[1]."</span>", LangMoonSet, "<span onmouseover=\"Tip('" . $popup3 . "')\">".$ristraset[2]."</span>", LangBest, $ristraset[4], LangMaxAltitude, "<span class=\"" . "\"  onmouseover=\"Tip('" . $popup4 . "')\">".$ristraset[3]."</span>"), "RLRLRLRLRLRL", array(8.33,8.34,8.33,8.33,8.33,8.33,8.33,8.33,8.33,8.33,8.33,8.33), 20, array($thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype, $thetype));
     }
     echo "</div></form>";
 	  echo "<hr />";
