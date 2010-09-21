@@ -62,7 +62,27 @@ if(count($_SESSION['Qobj'])>1) //===============================================
 	  $content1.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;sort=".$_SESSION['QobjSort']."&amp;pdfTitle=Test\" >".ReportLink."</a>";
   $content1.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=objectsSets"."\" rel=\"external\">".LangExecuteQueryObjectsMessage11."</a>";
 	$objPresentations->line(array($content1),"L",array(100),20);
-  echo "</div>";
+  /*
+  echo "<script type=\"text/javascript\">";
+  echo "
+  function pageOnKeyDown(event)
+  { if(event.keyCode==37)
+      if(event.shiftKey)
+        location=html_entity_decode('".$link."&amp;multiplepagenr=0"."');    
+      else
+        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageleft."');
+    if(event.keyCode==39)
+      if(event.shiftKey) 
+        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pagemax."');
+      else  
+        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageright."');
+  }
+  this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDown;
+  alert('done');
+  ";
+  echo "</script>";
+  */
+	echo "</div>";
 }
 else // ========================================================================no results found
 { echo "<div id=\"main\">";
