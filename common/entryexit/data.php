@@ -74,7 +74,16 @@ else
 	    throw new Exception(LangException016b);
 	  $_GET['source']='objects_nearby';
 	  $_GET['zoom']=$objUtil->checkGetKey('zoom',30);	
-	  include "deepsky/data/data_get_objects.php";	
+    if((!(array_key_exists('viewObjectObjectsNearby',$_SESSION)))||($_GET['object']!=$_SESSION['viewObjectObjectsNearby']))
+    { include "deepsky/data/data_get_objects.php";	
+      $_SESSION['minViewObjectObjectsNearby']=0;
+      $_SESSION['viewObjectObjectsNearby']=$_GET['object'];
+    }  	
+    if((!(array_key_exists('viewObjectObservations',$_SESSION)))||($_GET['object']!=$_SESSION['viewObjectObservations']))
+    { include "deepsky/data/data_get_observations.php";	
+      $_SESSION['minViewObjectObservations']=0;
+      $_SESSION['viewObjectObservations']=$_GET['object'];
+    }
 	}
 	if($includeFile=='deepsky/content/selected_observations2.php')
 	{  require_once 'deepsky/data/data_get_observations.php';

@@ -1220,7 +1220,7 @@ class Objects
 		  { $content.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;sort=".$_SESSION['QobjSort']."&amp;pdfTitle=Test\" >".ReportLink."</a>&nbsp;-&nbsp;";
 	      $content.="<a href=\"".$baseURL."index.php?indexAction=objectsSets"."\" rel=\"external\">".LangExecuteQueryObjectsMessage11."</a>";
 		  }
-      $objPresentations->line(array($content1."&nbsp;".$content,$content2),"LR",array(50,50),30);
+      $objPresentations->line(array($content1."&nbsp;&nbsp;&nbsp;&nbsp;".$content,$content2),"LR",array(50,50),30);
     }
     if($columnSource)
     { echo "<script type=\"text/javascript\">";

@@ -2139,7 +2139,7 @@ class Utils
 			$content.= "<a href=\"".$link."&amp;viewObjectObservationsmultiplepagenr=0\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allleft20.gif\" alt=\"&lt;&lt;0\" />"."</a>";
 		  $content.= "<a href=\"".$link."&amp;viewObjectObservationsmultiplepagenr=".($pageleft=($currentpage>0?($currentpage-1):$currentpage))."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/left20.gif\" alt=\"&lt;\" />"."</a>";			
 		  $content.= "<input type=\"text\" name=\"viewObjectObservationsmultiplepagenr\" size=\"3\" class=\"inputfield centered\" value=\"".$currentpage."\" />";	
-		  $content.= "<a href=\"".$link."&ampviewObjectObservations;multiplepagenr=".($pageright=($currentpage<$pages?($currentpage+1):$currentpage))."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/right20.gif\" alt=\"&gt;\" />"."</a>";
+		  $content.= "<a href=\"".$link."&amp;viewObjectObservationsmultiplepagenr=".($pageright=($currentpage<$pages?($currentpage+1):$currentpage))."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/right20.gif\" alt=\"&gt;\" />"."</a>";
 		  $content.= "<a href=\"".$link."&amp;viewObjectObservationsmultiplepagenr=".$pages."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allright20.gif\" alt=\"&gt;&gt;\" />"."</a>";
 		  $content.= "&nbsp;";
 	  }
@@ -2457,7 +2457,8 @@ class Utils
 	        elseif(array_key_exists('newObservationQuickPick', $_GET))
 	          return 'deepsky/content/new_observation.php';   
 	        else
-	          return 'deepsky/content/view_object.php';  
+	        {  return 'deepsky/content/view_object.php';
+	        }  
 	      }
 	      else
 	      { $_GET['object']=ucwords(trim($_GET['object']));
