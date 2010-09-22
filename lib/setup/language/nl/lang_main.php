@@ -1,4 +1,5 @@
 <?php
+define("LangObjectShowExtraInfo","Toon of verwijder extra informatie...");
 define("LangButtonOnlyObjectDetails"      ,"Enkel object details");
 define("LangButtonObjectDetails"          ,"Object details");
 define("LangButtonOnlyObjectEphemerides"  ,"Enkel object efemeriden");

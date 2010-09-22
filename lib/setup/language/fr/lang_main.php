@@ -1,4 +1,5 @@
 <?php
+define("LangObjectShowExtraInfo","Monter ou enlever des informations supplémentaires...");
 define("LangButtonOnlyObjectDetails"      ,"Juste les détails de lobjet");
 define("LangButtonObjectDetails"          ,"Les détails de l'objet");
 define("LangButtonOnlyObjectEphemerides"  ,"Juste les ephémérides de l'objet");

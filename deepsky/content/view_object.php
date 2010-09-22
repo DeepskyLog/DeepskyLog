@@ -1,14 +1,15 @@
 <?php  // view_object.php - view all information of one object
 if(!($object=$objUtil->checkGetKey('object')))
   throw new Exception('To implement');
-  
+
 function showButtons($theLocation,$viewobjectdetails,$viewobjectephemerides,$viewobjectobjectsnearby,$viewobjectobservations)
 { global $baseURL,$object,
          $objLocation,$objObject,$objPresentations,$objUtil;
   $object_ss = stripslashes($object);
   $seen=$objObject->getSeen($object);
-  
-	$content1="<input type=\"button\" class=\"sectionOnlySelectionButton\" value=\">\" 
+  $content1="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectextrainfo=hidden'."\" >-</a>";  
+	$content1.="&nbsp;&nbsp;&nbsp;&nbsp;";
+  $content1.="<input type=\"button\" class=\"sectionOnlySelectionButton\" value=\">\" 
 	               title=\"".LangButtonOnlyObjectDetails."&nbsp;-&nbsp;".$object_ss."&nbsp;-&nbsp;".LangOverviewObjectsHeader7."&nbsp;:&nbsp;".$seen."\"
 	               onclick=\"location='".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectdetails=show&amp;viewobjectephemerides=hidden&amp;viewobjectobjectsnearby=hidden&amp;viewobjectobservations=hidden'."';\"/>";
 	if($viewobjectdetails=="hidden")
@@ -51,6 +52,7 @@ function showButtons($theLocation,$viewobjectdetails,$viewobjectephemerides,$vie
 	  $content1.="<input type=\"button\" class=\"sectionSelectionButton\" value=\"- ".LangButtonObjectObservations."\" onclick=\"location='".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobservations=hidden'."';\"/>";
 	$content2="<input type=\"button\" class=\"sectionSelectionButton\" value=\"".LangAtlasPage."\" onclick=\"location='".$baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode($object)."';\"/>";
 	$objPresentations->line(array($content1,$content2),"LR",array(80,20),30);
+	$objPresentations->line(array($objPresentations->getDSSDeepskyLiveLinks1($object),$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(50,50),20);
 	echo "<hr />";
 }
 
@@ -95,7 +97,7 @@ function showObjectsNearby()
 	else
 	 $content1.=' '.LangViewObjectNoNearbyObjects;
 	$content1.="</h4>";
-	list($min,$max,$content2)=$objUtil->printNewListHeader3($_SESSION['Qobj'],$link ,$min,$step);
+	list($min, $max,$content2,$pageleft,$pageright,$pagemax)=$objUtil->printNewListHeader4($_SESSION['Qobj'],$link ,$min,$step);
 	$objPresentations->line(array($content1,$content2),"LR",array(50,50),30);
 	$content1 ="<form action=\"".$link."\" method=\"get\"><div>";
 	$content1.=LangViewObjectNearbyObjectsMoreLess .":&nbsp;";
@@ -127,6 +129,23 @@ function showObjectsNearby()
 	}
 	$objObject->showObjects($link, $min, $max,$_GET['object'],0,$step,'','view_object');
 	echo"<hr />";
+  echo "<script type=\"text/javascript\">";
+  echo "
+  function pageOnKeyDown1(event)
+  { if(event.keyCode==37)
+      if(event.shiftKey)
+        location=html_entity_decode('".$link."&amp;multiplepagenr=0"."');    
+      else
+        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageleft."');
+    if(event.keyCode==39)
+      if(event.shiftKey) 
+        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pagemax."');
+      else  
+        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageright."');
+  }
+  this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDown1;
+  ";
+  echo "</script>";
 }
 
 function showObjectEphemerides($theLocation)
@@ -403,16 +422,13 @@ function showObjectObservations()
 	if(($FF)&&($_SESSION['lco'] == "O"))
 	{ echo "<script type=\"text/javascript\">";
     echo "theResizeElement='obs_list';";
-    echo "theResizeSize=100;";
+    echo "theResizeSize=150;";
     echo "</script>";
 	}
 	elseif(($FF))
 	{ echo "<script type=\"text/javascript\">";
     echo "theResizeElement='obs_list';";
-    if($object)
-      echo "theResizeSize=70;";
-    else
-      echo "theResizeSize=70;";
+    echo "theResizeSize=150;";
     echo "</script>";
 	}
 	$objObservation->showListObservation($link . "&amp;min=" . $min,$link2,$_SESSION['lco'],$step);
@@ -426,24 +442,24 @@ function showObjectObservations()
 	$content1.="<a href=\"" . $baseURL . "observations.csv\" rel=\"external\">" . LangExecuteQueryObjectsMessage5 . "</a> - ";
 	$content1.="<a href=\"" . $baseURL . "observations.xml\" rel=\"external\">" . LangExecuteQueryObjectsMessage10 . "</a>";
 	$objPresentations->line(array($content1),"L",array(100),25);
+  echo "<hr />";
   echo "<script type=\"text/javascript\">";
   echo "
-  function pageOnKeyDown(event)
+  function pageOnKeyDown2(event)
   { if(event.keyCode==37)
       if(event.shiftKey)
-        location=html_entity_decode('".$link."&amp;multiplepagenr=0"."');    
+        location=html_entity_decode('".$link."&amp;viewObjectObservationsmultiplepagenr=0"."');    
       else
-        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageleft."');
+        location=html_entity_decode('".$link."&amp;viewObjectObservationsmultiplepagenr=".$pageleft."');
     if(event.keyCode==39)
       if(event.shiftKey) 
-        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pagemax."');
+        location=html_entity_decode('".$link."&amp;viewObjectObservationsmultiplepagenr=".$pagemax."');
       else  
-        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageright."');
+        location=html_entity_decode('".$link."&amp;viewObjectObservationsmultiplepagenr=".$pageright."');
   }
-  this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDown;
+  this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDown2;
   ";
-  echo "</script>";
-  echo "<hr />";
+  echo "</script>";	
 }
 
 function showAdminObjectFunctions()
@@ -488,6 +504,12 @@ function view_object()
 { global $baseURL,$FF,$link,$link2,$loggedUser,$min,$object,$step,
          $objLocation,$objObject,$objObservation,$objObserver,$objPresentations,$objUtil;
   echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
+  if(array_key_exists('viewobjectextrainfo',$_GET))
+	  $viewobjectextrainfo=$_GET['viewobjectextrainfo'];
+	elseif(array_key_exists('viewobjectextrainfo',$_COOKIE))
+	  $viewobjectextrainfo=$_COOKIE['viewobjectextrainfo'];
+	else
+	  $viewobjectextrainfo='hidden';
   if(array_key_exists('viewobjectdetails',$_GET))
 	  $viewobjectdetails=$_GET['viewobjectdetails'];
 	elseif(array_key_exists('viewobjectdetails',$_COOKIE))
@@ -499,7 +521,7 @@ function view_object()
   elseif(array_key_exists('viewobjectephemerides',$_COOKIE))
     $viewobjectephemerides=$_COOKIE['viewobjectephemerides'];
   else
-    $viewobjectephemerides='show';
+    $viewobjectephemerides='hidden';
 	if(array_key_exists('viewobjectobjectsnearby',$_GET))
     $viewobjectobjectsnearby=$_GET['viewobjectobjectsnearby'];
   elseif(array_key_exists('viewobjectobjectsnearby',$_COOKIE))
@@ -511,13 +533,18 @@ function view_object()
 	elseif(array_key_exists('viewobjectobservations',$_COOKIE))
 	    $viewobjectobservations=$_COOKIE['viewobjectobservations'];
 	else
-	  $viewobjectobservations='false';
+	  $viewobjectobservations='hidden';
   if(!($theLocation=($loggedUser?$objObserver->getObserverProperty($loggedUser, 'stdLocation'):'')))
 	  $viewobjectephemerides='hidden';
 	
   echo "<div id=\"main\">";
-	showButtons($theLocation,$viewobjectdetails,$viewobjectephemerides,$viewobjectobjectsnearby,$viewobjectobservations);
-  if($viewobjectdetails=="show")
+	if($viewobjectextrainfo=="show")
+	  showButtons($theLocation,$viewobjectdetails,$viewobjectephemerides,$viewobjectobjectsnearby,$viewobjectobservations);
+  if($viewobjectextrainfo=="hidden")
+  { $content="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectextrainfo=show'."\" >+&nbsp;".LangObjectShowExtraInfo."</a>";
+    $objPresentations->line(array($content),"L",array(100),10);
+  }
+	if($viewobjectdetails=="show")
     showObjectDetails(stripslashes($object));
 	if($viewobjectephemerides=="show")
     showObjectEphemerides($theLocation);  
@@ -527,8 +554,6 @@ function view_object()
 	  showObjectImage($imagesize);
 	if($viewobjectobservations=="show")
     showObjectObservations();
-	$objPresentations->line(array($objPresentations->getDSSDeepskyLiveLinks1($object),$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(50,50),30);
-	echo "<hr />"; 
 	if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
 	  showAdminObjectFunctions();
 	echo "</div>";
