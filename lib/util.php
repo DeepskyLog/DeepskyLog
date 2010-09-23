@@ -2453,7 +2453,7 @@ class Utils
 	    { if($temp=$objObject->getExactDsObject($_GET['object']))
 	      { $_GET['object']=$temp;
 					if(array_key_exists('searchObservationsQuickPick', $_GET))
-	          return 'deepsky/content/selected_observations2.php';  
+	          return 'deepsky/content/selected_observations.php';  
 	        elseif(array_key_exists('newObservationQuickPick', $_GET))
 	          return 'deepsky/content/new_observation.php';   
 	        else
@@ -2463,7 +2463,7 @@ class Utils
 	      else
 	      { $_GET['object']=ucwords(trim($_GET['object']));
 	        if(array_key_exists('searchObservationsQuickPick', $_GET))
-	          return 'deepsky/content/selected_observations2.php';  
+	          return 'deepsky/content/selected_observations.php';  
 	        elseif(array_key_exists('newObservationQuickPick', $_GET))
 	          return 'deepsky/content/setup_objects_query.php';   
 	        else
@@ -2495,8 +2495,8 @@ class Utils
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('query_observations'                 ,'deepsky/content/setup_observations_query.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('rank_objects'                       ,'deepsky/content/top_objects.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('rank_observers'                     ,'deepsky/content/top_observers.php')))
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('result_query_objects'               ,'deepsky/content/execute_query_objects.php'))) 
-    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('result_selected_observations'       ,'deepsky/content/selected_observations2.php')))  
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('result_query_objects'               ,'deepsky/content/selected_objects.php'))) 
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('result_selected_observations'       ,'deepsky/content/selected_observations.php')))  
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('view_observer_catalog'              ,'deepsky/content/details_observer_catalog.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('objectsSets'                        ,'common/content/objectsSets.php')))
     
@@ -2563,7 +2563,7 @@ class Utils
       $_GET['minmonth'] = substr($theDate,4,2);
       $_GET['minday'] = substr($theDate,6,2);
       $lastReadObservation=($loggedUser?$objObserver->getLastReadObservation($loggedUser):-1);
-  	  return 'deepsky/content/selected_observations2.php';
+  	  return 'deepsky/content/selected_observations.php';
 		}
 		else if($_SESSION['module']=='comets')
 		{ return 'comets/content/overview_observations.php';

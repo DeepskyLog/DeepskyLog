@@ -122,7 +122,7 @@ else
   echo "<a href=\"".$baseURL."index.php?menuMoon=collapsed".$link."\" title=\"".LangMenuCollapse."\">-</a> ";
 echo (($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation'))?LangMoonSunMenuTitle:LangMoonMenuTitle)."<br />";
 if($menuMoon!="collapsed")
-  echo"<span class=\"menuText\" style=\"font-weight:normal;\">(".LangOn." ".$dateTimeText0."><".$dateTimeText1.")</span>";
+  echo"<span class=\"menuText\" style=\"font-weight:normal;\">".LangOn." ".$dateTimeText0."&gt;&lt;".$dateTimeText1."</span>";
 echo "</p>";
 if($menuMoon!="collapsed") 
 { if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) 

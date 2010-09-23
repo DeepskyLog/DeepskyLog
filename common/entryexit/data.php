@@ -32,7 +32,7 @@ else
 	  $inList = '';                               $notInList = '';
 	  require_once 'deepsky/data/data_get_objects.php'; 
 	  if(array_key_exists('Qobj',$_SESSION)&&(count($_SESSION['Qobj'])>1))
-	    $includeFile="deepsky/content/execute_query_objects.php";
+	    $includeFile="deepsky/content/selected_objects.php";
 	  elseif(count($_SESSION['Qobj'])==1) // ========================================= 1 object found
 	  { $_GET['object']=$_SESSION['Qobj'][0]['objectname'];
 	    $includeFile="deepsky/content/view_object.php";
@@ -85,7 +85,7 @@ else
       $_SESSION['viewObjectObservations']=$_GET['object'];
     }
 	}
-	if($includeFile=='deepsky/content/selected_observations2.php')
+	if($includeFile=='deepsky/content/selected_observations.php')
 	{  require_once 'deepsky/data/data_get_observations.php';
 	}	
 }

@@ -34,8 +34,8 @@ elseif($includeFile=='deepsky/content/view_object.php')              $TitleText=
 elseif($includeFile=='deepsky/content/setup_observations_query.php') $TitleText=LangQueryObservationsTitle;
 elseif($includeFile=='deepsky/content/top_objects.php')              $TitleText=LangTopObjectsTitle;
 elseif($includeFile=='deepsky/content/top_observers.php')            $TitleText=LangTopObserversTitle;
-elseif($includeFile=='deepsky/content/execute_query_objects.php')    $TitleText=LangSelectedObjectsTitle;
-elseif($includeFile=='deepsky/content/selected_observations2.php')   
+elseif($includeFile=='deepsky/content/selected_objects.php')         $TitleText=LangSelectedObjectsTitle;
+elseif($includeFile=='deepsky/content/selected_observations.php')   
 { if (array_key_exists('minyear', $_GET) && ($_GET['minyear'] == substr($theDate, 0, 4)) && array_key_exists('minmonth', $_GET) && ($_GET['minmonth'] == substr($theDate, 4, 2)) && array_key_exists('minday', $_GET) && ($_GET['minday'] == substr($theDate, 6, 2)))
     $TitleText=LangSelectedObservationsTitle3;
   elseif ($object) 

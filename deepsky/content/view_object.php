@@ -50,7 +50,7 @@ function showButtons($theLocation,$viewobjectdetails,$viewobjectephemerides,$vie
 	  $content1.="<input type=\"button\" class=\"sectionSelectionButton\" value=\"+ ".LangButtonObjectObservations."\" onclick=\"location='".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobservations=show'."';\"/>";
 	else
 	  $content1.="<input type=\"button\" class=\"sectionSelectionButton\" value=\"- ".LangButtonObjectObservations."\" onclick=\"location='".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobservations=hidden'."';\"/>";
-	$content2="<input type=\"button\" class=\"sectionSelectionButton\" value=\"".LangAtlasPage."\" onclick=\"location='".$baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode($object)."';\"/>";
+	$content2="<a href=\"".$baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode($object)."\"><input type=\"button\" class=\"sectionSelectionButton\" value=\"".LangAtlasPage."\"/></a>";
 	$objPresentations->line(array($content1,$content2),"LR",array(80,20),30);
 	$objPresentations->line(array($objPresentations->getDSSDeepskyLiveLinks1($object),$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(50,50),20);
 	echo "<hr />";
