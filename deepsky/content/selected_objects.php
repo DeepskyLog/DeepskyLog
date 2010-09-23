@@ -24,7 +24,7 @@ if(count($_SESSION['Qobj'])>1) //===============================================
   if($myList)
     $title.="&nbsp;-&nbsp;<a href=\"".$link."&amp;min=".$min."&amp;addAllObjectsFromQueryToList=true\" title=\"".LangListQueryObjectsMessage5.$listname_ss."\">".LangListQueryObjectsMessage4."</a>";
   $title.="</h4>";
-  list ($min,$max,$content) = $objUtil->printNewListHeader3($_SESSION['Qobj'],$link,$min,$step);
+  list($min, $max,$content,$pageleft,$pageright,$pagemax)=$objUtil->printNewListHeader4($_SESSION['Qobj'],$link,$min,$step);
   $objPresentations->line(array($title,$content),"LR",array(70,30),30);
   $content1=" - <a href=\"".$link."&amp;noShowName=noShowName\">".LangListQueryObjectsMessage17."</a>";
   $content2=$objUtil->printStepsPerPage3($link,"selObj",$step);
@@ -60,10 +60,9 @@ if(count($_SESSION['Qobj'])>1) //===============================================
 	  $content1.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;sort=".$_SESSION['QobjSort']."&amp;pdfTitle=Test\" >".ReportLink."</a>";
   $content1.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=objectsSets"."\" rel=\"external\">".LangExecuteQueryObjectsMessage11."</a>";
 	$objPresentations->line(array($content1),"L",array(100),20);
-  /*
   echo "<script type=\"text/javascript\">";
   echo "
-  function pageOnKeyDown(event)
+  function pageOnKeyDownSelectedObjects(event)
   { if(event.keyCode==37)
       if(event.shiftKey)
         location=html_entity_decode('".$link."&amp;multiplepagenr=0"."');    
@@ -75,11 +74,10 @@ if(count($_SESSION['Qobj'])>1) //===============================================
       else  
         location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageright."');
   }
-  this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDown;
-  alert('done');
+  this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDownSelectedObjects;
   ";
   echo "</script>";
-  */
+
 	echo "</div>";
 }
 else // ========================================================================no results found

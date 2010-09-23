@@ -31,7 +31,7 @@ if($listname)
 	  $min=$_GET['min'];
 	else
 	  $min = 0;
-  list($min, $max,$content)=$objUtil->printNewListHeader3($_SESSION['Qobj'], $link, $min, $step, "");	
+  list($min, $max,$content,$pageleft,$pageright,$pagemax)=$objUtil->printNewListHeader4($_SESSION['Qobj'], $link, $min, $step, "");	
   $objPresentations->line(array("<h4>".LangSelectedObjectsTitle." ".$listname_ss. "</h4>",
                                 $content),
                           "LR", array(60,40),30);  
@@ -79,6 +79,24 @@ if($listname)
 	else
 	{ echo LangToListEmptyList;
 	}
+  echo "<script type=\"text/javascript\">";
+  echo "
+  function pageOnKeyDownToList(event)
+  { if(event.keyCode==37)
+      if(event.shiftKey)
+        location=html_entity_decode('".$link."&amp;multiplepagenr=0"."');    
+      else
+        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageleft."');
+    if(event.keyCode==39)
+      if(event.shiftKey) 
+        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pagemax."');
+      else  
+        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageright."');
+  }
+  this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDownToList;
+  ";
+  echo "</script>";
+	
 }
 echo "</div>";
 
