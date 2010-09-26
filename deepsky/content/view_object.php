@@ -134,14 +134,16 @@ function showObjectsNearby()
   function pageOnKeyDown1(event)
   { if(event.keyCode==37)
       if(event.shiftKey)
-        location=html_entity_decode('".$link."&amp;multiplepagenr=0"."');    
-      else
-        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageleft."');
+        if(event.ctrlKey)
+          location=html_entity_decode('".$link."&amp;multiplepagenr=0"."');    
+        else
+          location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageleft."');
     if(event.keyCode==39)
       if(event.shiftKey) 
-        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pagemax."');
-      else  
-        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageright."');
+        if(event.ctrlKey)
+          location=html_entity_decode('".$link."&amp;multiplepagenr=".$pagemax."');
+        else  
+          location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageright."');
   }
   this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDown1;
   ";
@@ -366,7 +368,11 @@ function showObjectObservations()
 	$_SESSION['minViewObjectObservations']=$min;
   $link=$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj';
   $link2=$link;
-  if(count($_SESSION['Qobs'])==0)
+  $link3 = $link;
+  $content3 ="<h4>";
+	$min=0;
+	$max=0;
+	if(count($_SESSION['Qobs'])==0)
   {	$objPresentations->line(array("<h4>".LangObservationNoResults.(($objUtil->checkGetKey('myLanguages'))?(" (".LangSelectedObservationsSelectedLanguagesIndication.")"):(" (".LangSelectedObservationsAllLanguagesIndication.")"))."</h4>"),
 		                          "L",array(100),30);
 		if ($objUtil->checkGetKey('myLanguages'))
@@ -383,8 +389,6 @@ function showObjectObservations()
 		else
 			$content1.=LangSelectedObservationsTitle2;
 		$content1.="</h4>";
-		$link3 = $link;
-		$content3 ="<h4>";
 		list($min, $max,$content2,$pageleft,$pageright,$pagemax)=$objUtil->printNewListHeader5($_SESSION['Qobs'], $link, $min, $step, $_SESSION['QobsTotal']);
 		$objPresentations->line(array($content1,$content2),"LR",array(50,50),30);
 	}
@@ -448,14 +452,16 @@ function showObjectObservations()
   function pageOnKeyDown2(event)
   { if(event.keyCode==37)
       if(event.shiftKey)
-        location=html_entity_decode('".$link."&amp;viewObjectObservationsmultiplepagenr=0"."');    
-      else
-        location=html_entity_decode('".$link."&amp;viewObjectObservationsmultiplepagenr=".$pageleft."');
+        if(event.ctrlKey)
+          location=html_entity_decode('".$link."&amp;viewObjectObservationsmultiplepagenr=0"."');    
+        else
+          location=html_entity_decode('".$link."&amp;viewObjectObservationsmultiplepagenr=".$pageleft."');
     if(event.keyCode==39)
       if(event.shiftKey) 
-        location=html_entity_decode('".$link."&amp;viewObjectObservationsmultiplepagenr=".$pagemax."');
-      else  
-        location=html_entity_decode('".$link."&amp;viewObjectObservationsmultiplepagenr=".$pageright."');
+        if(event.ctrlKey)
+          location=html_entity_decode('".$link."&amp;viewObjectObservationsmultiplepagenr=".$pagemax."');
+        else  
+          location=html_entity_decode('".$link."&amp;viewObjectObservationsmultiplepagenr=".$pageright."');
   }
   this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDown2;
   ";

@@ -162,14 +162,16 @@ else
   function pageOnKeyDown(event)
   { if(event.keyCode==37)
       if(event.shiftKey)
-        location=html_entity_decode('".$link."&amp;multiplepagenr=0"."');    
-      else
-        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageleft."');
+        if(event.ctrlKey)
+          location=html_entity_decode('".$link."&amp;multiplepagenr=0"."');    
+        else
+          location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageleft."');
     if(event.keyCode==39)
       if(event.shiftKey) 
-        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pagemax."');
-      else  
-        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageright."');
+        if(event.ctrlKey)
+          location=html_entity_decode('".$link."&amp;multiplepagenr=".$pagemax."');
+        else  
+          location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageright."');
   }
   this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDown;
   ";

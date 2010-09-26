@@ -15,7 +15,7 @@ while(list($key,$value)=each($_GET))
   if(!(in_array($key,array('formName','layoutName','restoreColumns','orderColumns','loadLayout','saveLayout','removeLayout','sort','soretorder','multiplepagenr','noShowName','sortdirection'))))  
     $link.='&amp;'.urlencode($key).'='.urlencode($value);
 if(count($_SESSION['Qobj'])>1) //=============================================== valid result, multiple objects found
-{ echo "<div id=\"main\">";
+{ echo "<div>";
   $title="<h4>".LangSelectedObjectsTitle;
 	if($showPartOfs)	
 	  $title.=LangListQueryObjectsMessage10;
@@ -67,14 +67,16 @@ if(count($_SESSION['Qobj'])>1) //===============================================
   function pageOnKeyDownSelectedObjects(event)
   { if(event.keyCode==37)
       if(event.shiftKey)
-        location=html_entity_decode('".$link."&amp;multiplepagenr=0"."');    
-      else
-        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageleft."');
+        if(event.ctrlKey)
+          location=html_entity_decode('".$link."&amp;multiplepagenr=0"."');    
+        else
+          location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageleft."');
     if(event.keyCode==39)
       if(event.shiftKey) 
-        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pagemax."');
-      else  
-        location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageright."');
+        if(event.ctrlKey)
+          location=html_entity_decode('".$link."&amp;multiplepagenr=".$pagemax."');
+        else  
+          location=html_entity_decode('".$link."&amp;multiplepagenr=".$pageright."');
   }
   this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDownSelectedObjects;
   ";
