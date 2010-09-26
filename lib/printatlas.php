@@ -1055,6 +1055,12 @@ class PrintAtlas
             elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
               $dateTimeText0=substr($dateTimeText0,0,5);
           }
+					elseif($dateformat=="d/m/Y")
+					{ if(substr($dateTimeText0,-7)==substr($dateTimeText1,-7))
+					    $dateTimeText0=substr($dateTimeText0,0,2);
+					  elseif(substr($dateTimeText0,-5)==substr($dateTimeText1,-5))
+					    $dateTimeText0=substr($dateTimeText0,0,5);
+					}
           elseif($dateformat=='d-m-Y')
         	{ if(substr($dateTimeText0,-7)==substr($dateTimeText1,-7))
               $dateTimeText0=substr($dateTimeText0,0,2);
