@@ -61,6 +61,7 @@ if($listname)
   	}
 	  $objObject->showObjects($link, $min, $max,'',1, $step,"removePageObjectsFromList","tolist");
 	  echo "<hr />";
+	  /*
 	  $content=LangExecuteQueryObjectsMessage4."&nbsp;";
     $content.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,$listname_ss,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4a);
 	  $content.="&nbsp;-&nbsp;";
@@ -75,6 +76,7 @@ if($listname)
 	  $content.="&nbsp;-&nbsp;";
     $content.="<a href=\"".$baseURL."index.php?indexAction=objectsSets"."\" rel=\"external\">".LangExecuteQueryObjectsMessage11."</a>";
 	  $objPresentations->line(array($content),"L",array(),30);
+	  */
 	}
 	else
 	{ echo LangToListEmptyList;
