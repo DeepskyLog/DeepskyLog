@@ -44,6 +44,7 @@ if(count($_SESSION['Qobj'])>1) //===============================================
 	}
 	$objObject->showObjects($link, $min, $max,'',0, $step,'',"selected_objects");
 	echo "<hr />";
+	/*
 	$content1 =LangExecuteQueryObjectsMessage4."&nbsp;";
 	$content1.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4a);
 	$content1.="&nbsp;-&nbsp;";
@@ -60,7 +61,8 @@ if(count($_SESSION['Qobj'])>1) //===============================================
 	  $content1.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;sort=".$_SESSION['QobjSort']."&amp;pdfTitle=Test\" >".ReportLink."</a>";
   $content1.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=objectsSets"."\" rel=\"external\">".LangExecuteQueryObjectsMessage11."</a>";
 	$objPresentations->line(array($content1),"L",array(100),20);
-  echo "<script type=\"text/javascript\">";
+  */
+	echo "<script type=\"text/javascript\">";
   echo "
   function pageOnKeyDownSelectedObjects(event)
   { if(event.keyCode==37)
