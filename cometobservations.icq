@@ -256,10 +256,13 @@
    		//16: tail
    		$tail = $objCometObservation->getTail($result[$i]);
    		print str_pad($tail, 3, " ", STR_PAD_LEFT);
-
-   		//17: observation angle?
+		print " ";
    		
+   		//17: observation angle
+   		print str_pad($objCometObservation->getPa($result[$i]), 3, " ", STR_PAD_LEFT);
   		print "\r\n";
+  		
+  		
   	}
   	
 
