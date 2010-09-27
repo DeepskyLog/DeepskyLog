@@ -52,7 +52,6 @@ function showButtons($theLocation,$viewobjectdetails,$viewobjectephemerides,$vie
 	  $content1.="<input type=\"button\" class=\"sectionSelectionButton\" value=\"- ".LangButtonObjectObservations."\" onclick=\"location='".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectobservations=hidden'."';\"/>";
 	$content2="<a href=\"".$baseURL . "index.php?indexAction=atlaspage&amp;object=" . urlencode($object)."\"><input type=\"button\" class=\"sectionSelectionButton\" value=\"".LangAtlasPage."\"/></a>";
 	$objPresentations->line(array($content1,$content2),"LR",array(80,20),30);
-	$objPresentations->line(array($objPresentations->getDSSDeepskyLiveLinks1($object),$objPresentations->getDSSDeepskyLiveLinks2($object)),"LR",array(50,50),20);
 	echo "<hr />";
 }
 
@@ -545,10 +544,14 @@ function view_object()
 	
   echo "<div id=\"main\">";
 	if($viewobjectextrainfo=="show")
-	  showButtons($theLocation,$viewobjectdetails,$viewobjectephemerides,$viewobjectobjectsnearby,$viewobjectobservations);
+	{ showButtons($theLocation,$viewobjectdetails,$viewobjectephemerides,$viewobjectobjectsnearby,$viewobjectobservations);
+    $objPresentations->line(array($objPresentations->getDSSDeepskyLiveLinks1($object),$objPresentations->getDSSDeepskyLiveLinks2($object)),"RR",array(55,45),25);
+	  echo "<hr />";
+	}
   if($viewobjectextrainfo=="hidden")
   { $content="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($_GET['object']).'&amp;zoom='.$objUtil->checkGetKey("zoom",30).'&amp;SID=Qobj&amp;viewobjectextrainfo=show'."\" >+&nbsp;".LangObjectShowExtraInfo."</a>";
-    $objPresentations->line(array($content),"L",array(100),10);
+    $objPresentations->line(array($content,$objPresentations->getDSSDeepskyLiveLinks1($object),$objPresentations->getDSSDeepskyLiveLinks2($object)),"LRR",array(20,35,45),15);
+    echo "<hr />";
   }
 	if($viewobjectdetails=="show")
     showObjectDetails(stripslashes($object));

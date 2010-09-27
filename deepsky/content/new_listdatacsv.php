@@ -11,10 +11,10 @@ if($objList->checkList($_SESSION['listname'])==2)
   $objPresentations->line(array(LangCSVListMessage5a),"L");
   $objPresentations->line(array(LangCSVListMessage5b),"L");
   $objPresentations->line(array(LangCSVListMessage5c),"L");
-  $objPresentations->line(array(LangCSVListMessage6),"L");
   echo "<hr />";
+  $objPresentations->line(array(LangCSVListMessage6.":"),"L",array(100),50);
   echo "<form action=\"".$baseURL."index.php?indexAction=add_csv_listdata\" enctype=\"multipart/form-data\" method=\"post\">";
-  $objPresentations->line(array("<input type=\"file\" name=\"csv\" />"),"L"); 
+  $objPresentations->line(array("<input type=\"file\" name=\"csv\" />"),"L",array(100),40); 
   $objPresentations->line(array("<input type=\"submit\" name=\"change\" value=\"".LangCSVListButton."\" />"),"L");
 	echo "</form>";
 }

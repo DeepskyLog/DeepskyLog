@@ -79,7 +79,7 @@ if($listname)
 	  */
 	}
 	else
-	{ echo LangToListEmptyList;
+	{ echo "<hr />";$objPresentations->line(array(LangToListEmptyList),"L",array(100),50);
 	}
   echo "<script type=\"text/javascript\">";
   echo "

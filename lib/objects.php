@@ -962,8 +962,6 @@ class Objects
 	   $objPresentations->line(array(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(stripslashes($object))."\">".(stripslashes($object))."</a>",
 	                                "&nbsp;","&nbsp;"),
 	                          "RLRL",array(),20,array("type20","type20","type20","type20"));
- 	  $objPresentations->line(array(LangViewObjectField2,($alt?"<span onmouseover=\"Tip('".$alttip."')\">".$alt."</span>":"-"),LangViewObjectField2b,"<span onmouseover=\"Tip('(".($containstip?$containstip:"-").")/".($partoftip?$partoftip:"-")."')\">".($containst?$containst."/":"(-)/").($partoft?$partoft:"-")."</span>"),
- 	                          "RLRL",array(),20,array("type10","type10","type10","type10"));
 	  $objPresentations->line(array(LangViewObjectField3,$objPresentations->raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,$objPresentations->decToStringDegMin($this->getDsoProperty($object,'decl'))),
                             "RLRL",array(),20,array("type20","type20","type20","type20"));
     $objPresentations->line(array(LangViewObjectField5,$GLOBALS[$this->getDsoProperty($object,'con')],LangViewObjectField6,$GLOBALS[$this->getDsoProperty($object,'type')]),
@@ -975,26 +973,51 @@ class Objects
     $objPresentations->line(array(LangViewObjectFieldContrastReserve,"<span class=\"" . $contype . "\"  onmouseover=\"Tip('" . $popup . "')\">".$contrast."</span>",LangViewObjectFieldOptimumDetectionMagnification,$prefMag),
                             "RLRL",array(),20,array("type20","type20","type20","type20"));
     $thetype='type10';
+    if($alt)
+    { $objPresentations->line(array(LangViewObjectField2,"<span onmouseover=\"Tip('".$alttip."')\">".$alt."</span>"),
+ 	                             "RL",array(25,75),20,array($thetype,$thetype));
+      if($thetype=='type10')
+        $thetype='type20';
+      else
+        $thetype='type10';
+    }
+    if($partoft || $containst)
+    { $objPresentations->line(array(LangViewObjectField2b,"<span onmouseover=\"Tip('(".($containstip?$containstip:"-").")/".($partoftip?$partoftip:"-")."')\">".($containst?$containst."/":"(-)/").($partoft?$partoft:"-")."</span>"),
+ 	                             "RL",array(25,75),20,array($thetype,$thetype));
+      if($thetype=='type10')
+        $thetype='type20';
+      else
+        $thetype='type10';
+    }
     if($listname&&($objList->checkObjectInMyActiveList($object)))
 	  { if($myList)
       { $objPresentations->line(array(LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" rel=\"external\">".LangViewObjectDreyerDescription."</a>)",
   	                                  "<textarea name=\"description\" class=\"listdescription inputfield\" cols=\"1\" rows=\"1\" onchange=\"submit()\">".$objList->getListObjectDescription($object)."</textarea>"),
- 	                             "RL",array(25,75),130,array("type10","type10"));
-        $thetype='type20';
-  	  }
+ 	                             "RL",array(25,75),130,array($thetype,$thetype));
+        if($thetype=='type10')
+          $thetype='type20';
+        else
+          $thetype='type10';
+      }
 		  else
 		  { $objPresentations->line(array(LangViewObjectListDescription.' ('."<a href=\"".DreyerDescriptionLink."\" rel=\"external\">".LangViewObjectDreyerDescription."</a>)",
   	                                  $objList->getListObjectDescription($object)),
- 	                             "RL",array(25,75),20,array("type10","type10"));
-        $thetype='type20';
+ 	                             "RL",array(25,75),20,array($thetype,$thetype));
+        if($thetype=='type10')
+          $thetype='type20';
+        else
+          $thetype='type10';
 		  }
     }
 	  elseif($descriptionDsOject=$this->getDsoProperty($object,'description'))
 	  { $objPresentations->line(array(LangViewObjectNGCDescription.' ('."<a href=\"".DreyerDescriptionLink."\" rel=\"external\">".LangViewObjectDreyerDescription."</a>".')',
    	                                htmlentities($descriptionDsOject)),
- 	                             "RL",array(25,75),20,array("type10","type10"));
+ 	                             "RL",array(25,75),20,array($thetype,$thetype));
+      if($thetype=='type10')
         $thetype='type20';
-	  }
+      else
+        $thetype='type10';
+   	                                	  }
 	  $inlists=$objList->getInPrivateLists($object);
 	  if($inlists!="")
 	  { $objPresentations->line(array(LangInPrivateLists,$inlists),
