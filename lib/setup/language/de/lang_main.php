@@ -1,4 +1,6 @@
 <?php
+define('LangInPrivateLists','In my lists');
+define('LangInLPublicists','In public lists');
 define("LangObjectShowExtraInfo","Show or remove extra info...");    // TO TRANSLATE
 define("LangButtonOnlyObjectDetails"      ,"Only object details");  // TO TRANSLATE
 define("LangButtonObjectDetails"          ,"Object details");  // TO TRANSLATE

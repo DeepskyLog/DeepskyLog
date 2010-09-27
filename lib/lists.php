@@ -138,6 +138,28 @@ class Lists
  { global $listname,$objDatabase; 
    return $objDatabase->selectSingleValue("SELECT observerobjectlist.observerid FROM observerobjectlist WHERE listname=\"".$listname."\" AND objectplace=0",'observerid','');
  }
+ public function getInPrivateLists($theobject)
+ { global $objDatabase,$loggedUser;
+   $result='';
+   $results=array();
+   if($loggedUser)
+   { $sql='SELECT listname FROM observerobjectlist WHERE objectname="'.$theobject.'" AND observerid="'.$loggedUser.'"';
+     $results=$objDatabase->selectSingleArray($sql,'listname');
+     while(list($key,$value)=each($results))
+ 	     $result.="/".$value;
+   }
+   return substr($result,1);
+ }
+ public function getInPublicLists($theobject)
+ { global $objDatabase,$loggedUser;
+   $result='';
+   $results=array();
+   $sql='SELECT listname FROM observerobjectlist WHERE objectname="'.$theobject.'" AND listname LIKE "Public:%"';
+   $results=$objDatabase->selectSingleArray($sql,'listname');
+   while(list($key,$value)=each($results))
+ 	   $result.="/".substr($value,8);
+   return substr($result,1);
+ }
  public  function getLists()
  { global $objDatabase, $loggedUser;
    $result=array();

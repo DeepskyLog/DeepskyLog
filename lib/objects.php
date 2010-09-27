@@ -995,7 +995,25 @@ class Objects
  	                             "RL",array(25,75),20,array("type10","type10"));
         $thetype='type20';
 	  }
-    if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) {
+	  $inlists=$objList->getInPrivateLists($object);
+	  if($inlists!="")
+	  { $objPresentations->line(array(LangInPrivateLists,$inlists),
+ 	                             "RL",array(25,75),20,array($thetype,$thetype));
+      if($thetype=='type10')
+        $thetype='type20';
+      else
+        $thetype='type10';
+	  }
+	  $inlists=$objList->getInPublicLists($object);
+	  if($inlists!="")
+	  { $objPresentations->line(array(LangInPublicLists,$inlists),
+ 	                             "RL",array(25,75),20,array($thetype,$thetype));
+      if($thetype=='type10')
+        $thetype='type20';
+      else
+        $thetype='type10';
+	  }
+	  if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) {
       $theYear=$_SESSION['globalYear'];
       $theMonth=$_SESSION['globalMonth'];
       $theDay=$_SESSION['globalDay'];

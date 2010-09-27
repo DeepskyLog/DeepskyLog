@@ -1,4 +1,6 @@
 <?php
+define('LangInPrivateLists','Dans mes listes');
+define('LangInPublicLists','Dans les listes publics');
 define("LangObjectShowExtraInfo","Monter ou enlever des informations supplémentaires...");
 define("LangButtonOnlyObjectDetails"      ,"Juste les détails de lobjet");
 define("LangButtonObjectDetails"          ,"Les détails de l'objet");
