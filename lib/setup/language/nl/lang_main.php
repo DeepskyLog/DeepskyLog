@@ -1,4 +1,6 @@
 <?php
+define('LangHideTopMenu','De hoofding verbergen');
+define('LangShowTopMenu','De hoofding tonen');
 define('LangHideLeftMenu','De linkermenu structuur verbergen');
 define('LangShowLeftMenu','De linkermenu structuur tonen');
 

@@ -495,8 +495,11 @@ if($_SESSION['QobjSort']!=$_GET['sort'])
             $sortarray['0 _'.($value['showname'])]=$value;
           else
             $sortarray[($value[$_GET['sort']]*100+1000).' _'.($value['showname'])]=$value;
-        else
-          $sortarray[($value[$_GET['sort']]).' _'.($value['showname'])]=$value;
+        else 
+          if($_GET['sort']=='objectdecl')
+            $sortarray[100+(1*$value[$_GET['sort']]).' _'.($value['showname'])]=$value;
+          else
+            $sortarray[($value[$_GET['sort']]).' _'.($value['showname'])]=$value;
       uksort($sortarray,"strnatcasecmp");
 			$sortarray=array_reverse($sortarray);
 			$_SESSION['Qobj']=array_values($sortarray);
@@ -513,8 +516,11 @@ if($_SESSION['QobjSort']!=$_GET['sort'])
             $sortarray['0 _'.($value['showname'])]=$value;
           else
             $sortarray[($value[$_GET['sort']]*100+1000).' _'.($value['showname'])]=$value;
-        else
-          $sortarray[($value[$_GET['sort']]).' _'.($value['showname'])]=$value;
+        else 
+          if($_GET['sort']=='objectdecl')
+            $sortarray[100+(1*$value[$_GET['sort']]).' _'.($value['showname'])]=$value;
+          else
+            $sortarray[($value[$_GET['sort']]).' _'.($value['showname'])]=$value;            
       uksort($sortarray,"strnatcasecmp");
       $_SESSION['Qobj']=array_values($sortarray);
 	  }

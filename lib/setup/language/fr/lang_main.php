@@ -1,4 +1,6 @@
 <?php
+define('LangHideTopMenu','Cacher le menu de tête');
+define('LangShowTopMenu','Montrer le menu de tête');
 define('LangHideLeftMenu','Cacher la structure de menu gauche');
 define('LangShowLeftMenu','Montrer la structure de menu gauch');
 define('LangInPrivateLists','Dans mes listes');

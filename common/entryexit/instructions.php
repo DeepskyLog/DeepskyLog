@@ -188,6 +188,14 @@ else
     if(array_key_exists('menus',$_SESSION)&&array_key_exists('menuMoon',$_SESSION['menus']))
       $menuMoon=$_SESSION['menus']['menuMoon'];
   }
+  if($objUtil->checkGetKey('topmenu')=='hidden')
+	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("topmenu",'hidden',$cookietime, "/");
+	}
+  if($objUtil->checkGetKey('topmenu')=='show')
+	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("topmenu",'show',$cookietime, "/");
+	}
   if($objUtil->checkGetKey('leftmenu')=='hidden')
 	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
 		setcookie("leftmenu",'hidden',$cookietime, "/");
@@ -196,7 +204,7 @@ else
 	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
 		setcookie("leftmenu",'show',$cookietime, "/");
 	}
-  if($objUtil->checkGetKey('viewobjectextrainfo')=='hidden')
+	if($objUtil->checkGetKey('viewobjectextrainfo')=='hidden')
 	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
 		setcookie("viewobjectextrainfo",'hidden',$cookietime, "/");
 	}

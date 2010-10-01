@@ -42,7 +42,7 @@ catch (Exception $e)
   // EMAIL developers with error codes
 }
 echo "<script type=\"text/javascript\">";
-echo "resizeForm('".$leftmenu."');";
+echo "resizeForm('".$leftmenu."','".$topmenu."');";
 if($loadAtlasPage)
 { echo "atlasFillPage();";
 }

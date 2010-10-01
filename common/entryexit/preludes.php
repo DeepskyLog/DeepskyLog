@@ -87,8 +87,11 @@ else
 	  $leftmenu=$_GET['leftmenu'];
 	elseif(array_key_exists('leftmenu',$_COOKIE))
 	  $leftmenu=$_COOKIE['leftmenu'];
-	else
-	  $leftmenu='show';
+  $topmenu="show"; 
+  if(array_key_exists('topmenu',$_GET))
+	  $topmenu=$_GET['topmenu'];
+	elseif(array_key_exists('topmenu',$_COOKIE))
+	  $topmenu=$_COOKIE['topmenu'];
 }
 function Nz($arg)
 { if($arg) return $arg;

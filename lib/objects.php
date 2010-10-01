@@ -678,7 +678,7 @@ class Objects
   	      $result2[$j]['objectdiam2'] = $get->diam2;
   	      $result2[$j]['objectsize'] = $this->calculateSize($get->diam1,$get->diam2);
   	      $result2[$j]['objectpa'] = $get->pa;
-  	      $result2[$j]['objectsizepa'] = $result2[$j]['objectsize'].'/'.$objPresentations->presentationInt($result2[$j]['objectpa'],999,"-");
+  	      $result2[$j]['objectsizepa'] = ($result2[$j]['objectsize']?($result2[$j]['objectsize'].'/'.$objPresentations->presentationInt($result2[$j]['objectpa'],999,"-")):'-');
           if(array_key_exists('name',$value))
             $result2[$j]['objectpositioninlist'] = $j; 
           else
