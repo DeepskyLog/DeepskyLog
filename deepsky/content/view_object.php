@@ -265,7 +265,7 @@ function showObjectEphemerides($theLocation)
 	   ?date("H:i", $theNightEphemerides1[1]["astronomical_twilight_end"]+$theTimeDifference1[1])."<br />-<br />".date("H:i", $theNightEphemerides1[1]["astronomical_twilight_begin"]+$theTimeDifference1[1])
 	   :"-")."</td>";
 	echo "</tr>";
-	echo "<tr class=\"type20\">";
+	echo "<tr class=\"type10\">";
 	echo "<td class=\"centered\">".LangNauticalNight."</td>";
 	for($i=1;$i<13;$i++)
 	{ echo"<td class=\"centered\">".
