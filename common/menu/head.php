@@ -104,6 +104,6 @@ elseif($objUtil->checkRequestKey(('titleobjectaction')))
 }
 echo "<title>".$DSLTitle.($TitleText?": ".$TitleText:"")."</title>";
 echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
-echo "<script type=\"text/javascript\">window.onresize=resizeForm;</script>";
+echo "<script type=\"text/javascript\">window.onresize=resizeForm('".$leftmenu."');</script>";
 echo "</head>";
 ?>

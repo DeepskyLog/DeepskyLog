@@ -11,7 +11,6 @@ try
   echo    "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
   include 'common/menu/head.php';                                                                         // HTML head
   echo    "<body onkeydown=\"bodyOnKeyDown(event);\">";
-  //echo    "<body>";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/jsenvironment.js\"></script>";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/wz_tooltip.js\"></script>";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/ajaxbase.js\"></script>";
@@ -43,7 +42,7 @@ catch (Exception $e)
   // EMAIL developers with error codes
 }
 echo "<script type=\"text/javascript\">";
-echo "resizeForm();";
+echo "resizeForm('".$leftmenu."');";
 if($loadAtlasPage)
 { echo "atlasFillPage();";
 }

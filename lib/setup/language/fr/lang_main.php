@@ -1,4 +1,6 @@
 <?php
+define('LangHideLeftMenu','Cacher la structure de menu gauche');
+define('LangShowLeftMenu','Montrer la structure de menu gauch');
 define('LangInPrivateLists','Dans mes listes');
 define('LangInPublicLists','Dans les listes publics');
 define("LangObjectShowExtraInfo","Monter ou enlever des informations supplémentaires...");

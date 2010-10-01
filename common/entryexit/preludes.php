@@ -82,7 +82,13 @@ else
     if(array_key_exists('Qobj',$_SESSION))
       $_SESSION['Qobj']=$objObject->getObjectRisSetTrans($_SESSION['Qobj']);
   }
-	  
+  $leftmenu="show"; 
+  if(array_key_exists('leftmenu',$_GET))
+	  $leftmenu=$_GET['leftmenu'];
+	elseif(array_key_exists('leftmenu',$_COOKIE))
+	  $leftmenu=$_COOKIE['leftmenu'];
+	else
+	  $leftmenu='show';
 }
 function Nz($arg)
 { if($arg) return $arg;

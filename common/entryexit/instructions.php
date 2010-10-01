@@ -28,7 +28,7 @@ else
   if($objUtil->checkGetKey('indexAction')=="logout")                                                                 // logout
 	  require_once $instDir."common/control/logout.php";
 	//listnames
-	$myList=False;
+	$myList=False;	
 	$listname='';
 	if(array_key_exists('listname', $_SESSION)&&($_SESSION['listname']<>"----------"))
 	  $listname=$_SESSION['listname'];
@@ -188,6 +188,14 @@ else
     if(array_key_exists('menus',$_SESSION)&&array_key_exists('menuMoon',$_SESSION['menus']))
       $menuMoon=$_SESSION['menus']['menuMoon'];
   }
+  if($objUtil->checkGetKey('leftmenu')=='hidden')
+	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("leftmenu",'hidden',$cookietime, "/");
+	}
+  if($objUtil->checkGetKey('leftmenu')=='show')
+	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("leftmenu",'show',$cookietime, "/");
+	}
   if($objUtil->checkGetKey('viewobjectextrainfo')=='hidden')
 	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
 		setcookie("viewobjectextrainfo",'hidden',$cookietime, "/");
@@ -196,7 +204,7 @@ else
 	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
 		setcookie("viewobjectextrainfo",'show',$cookietime, "/");
 	}
-  if($objUtil->checkGetKey('viewobjectdetails')=='hidden')
+	if($objUtil->checkGetKey('viewobjectdetails')=='hidden')
 	{ $cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
 		setcookie("viewobjectdetails",'hidden',$cookietime, "/");
 	}

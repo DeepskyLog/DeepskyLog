@@ -1,4 +1,6 @@
 <?php
+define('LangHideLeftMenu','De linkermenu structuur verbergen');
+define('LangShowLeftMenu','De linkermenu structuur tonen');
 
 define('LangInPrivateLists','In mijn lijsten');
 define('LangInPublicLists','In publike lijsten');
