@@ -155,7 +155,7 @@ if($_SESSION['QobsSort']!=$_GET['sort'])
 	      { $sortarray[strlen($value['observationdescription'])]=$value;
 	      }
 	      else
-	      { $sortarray[$value[$_GET['sort']].'_'.(99999999-$value['observationid'])]=$value;
+	      { $sortarray[(array_key_exists($_GET['sort'],$value)?$value[$_GET['sort']]:'').'_'.(99999999-$value['observationid'])]=$value;
 	      }
       if($_GET['sort']=='observationdescription')
 	      ksort($sortarray,SORT_NUMERIC );
