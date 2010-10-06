@@ -260,7 +260,13 @@
    		
    		//17: observation angle
    		print str_pad($objCometObservation->getPa($result[$i]), 3, " ", STR_PAD_LEFT);
+   		
+   		//18: icq name
+   		
+   		print $objObserver->getObserverProperty($objCometObservation->getObserverId($result[$i]), "icqname");
   		print "\r\n";
+  		
+  		
   		
   		
   	}
