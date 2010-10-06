@@ -297,8 +297,14 @@ class Objects
     $sqland.=(array_key_exists('maxmag',$queries)&&$queries['maxmag'])?" AND (objects.mag<\"".$queries["maxmag"]."\" or objects.mag like \"" . $queries["maxmag"] . "\")":'';
     $sqland.=(array_key_exists('minsubr',$queries)&&$queries['minsubr'])?" AND objects.subr>=\"".$queries["minsubr"]."\"":'';
     $sqland.=(array_key_exists('maxsubr',$queries)&&$queries['maxsubr'])?" AND objects.subr<=\"".$queries["maxsubr"]."\"":'';
-    $sqland.=(array_key_exists('minra',$queries)&&($queries['minra']!==''))?" AND (objects.ra >= \"" . $queries["minra"] . "\")":"";
-    $sqland.=(array_key_exists('maxra',$queries)&&($queries['maxra']!==''))?" AND (objects.ra <= \"" . $queries["maxra"] . "\")":'';
+    if((array_key_exists('minra',$queries)&&($queries['minra']!=='')) &&
+       (array_key_exists('maxra',$queries)&&($queries['maxra']!==''))  &&
+       ($queries['minra']>$queries['maxra']))
+      $sqland.=(array_key_exists('minra',$queries)&&($queries['minra']!==''))?" AND ((objects.ra >= \"" . $queries["minra"] . "\") OR (objects.ra <= \"" . $queries["maxra"] . "\"))":"";   	
+    else
+    { $sqland.=(array_key_exists('minra',$queries)&&($queries['minra']!==''))?" AND (objects.ra >= \"" . $queries["minra"] . "\")":"";
+      $sqland.=(array_key_exists('maxra',$queries)&&($queries['maxra']!==''))?" AND (objects.ra <= \"" . $queries["maxra"] . "\")":'';
+    }
     $sqland.=(array_key_exists('mindecl',$queries)&&($queries['mindecl']!==''))?" AND (objects.decl >= \"" . $queries["mindecl"] . "\")":'';
     $sqland.=(array_key_exists('maxdecl',$queries)&&($queries['maxdecl']!==''))?" AND (objects.decl <= \"" . $queries["maxdecl"] . "\")":'';
     $sqland.=(array_key_exists('mindiam1',$queries)&&$queries['mindiam1'])?" AND (objects.diam1 > \"" . $queries["mindiam1"] . "\" or objects.diam1 like \"" . $queries["mindiam1"] . "\")":'';
