@@ -150,7 +150,7 @@ function showObjectsNearby()
 }
 
 function showObjectEphemerides($theLocation)
-{ global $baseURL,$object ,
+{ global $baseURL,$object,$theMonth,$theDay,
          $objLocation,$objObject,$objPresentations,$objUtil;
   $longitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'longitude');
   $latitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'latitude');
@@ -184,9 +184,22 @@ function showObjectEphemerides($theLocation)
 	echo "<tr class=\"type10\">";
 	echo "<td class=\"right\">".LangMonth." > </td>";
 	for($i=1;$i<13;$i++)
-	{ echo"<td>&nbsp;</td><td class=\"centered\">".$i."</td>";
+	{ $background1='';
+	  $background15='';
+	  if((($i==$theMonth)&&($theDay<8)) ||
+       ((($i-1)==$theMonth)&&($theDay>22)) 	    
+	    )
+	    $background1=" style=\"background-color:#FFAAAA\" ";
+	  
+	  if(($i==$theMonth)&&($theDay>=8)&&($theDay<=22))
+	    $background15=" style=\"background-color:#FFAAAA\" ";
+	  
+	  echo"<td ".$background1.">&nbsp;</td><td class=\"centered\" ".$background15.">".$i."</td>";
 	}
-	echo"<td>&nbsp;</td>";
+	$background1='';
+	if((12==$theMonth)&&($theDay>22))
+	  $background1=" style=\"background-color:#FFAAAA\" ";
+	echo"<td".$background1.">&nbsp;</td>";
 	echo "</tr>";
 	echo "<tr class=\"type20\">";
 	echo "<td class=\"centered\">".LangMaxAltitude."</td>";
