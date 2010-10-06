@@ -35,7 +35,7 @@ reset($allLanguages);
 $usedLanguages=$languagesDuringRegistration;
 $j=0;
 $tempObsLangList[]=LangChangeVisibleLanguages;
-while((list($key,$value)=each($allLanguages))&&($j<3))
+while(($j<3)&&(list($key,$value)=each($allLanguages)))
 { $tempObsLangList[]="<input type=\"checkbox\" ".(($objUtil->checkPostKey($key)||in_array($key,$usedLanguages))?"checked=\"checked\" ":"")." name=\"".$key."\" value=\"".$key."\" />".$value;
   $j++;
 }
