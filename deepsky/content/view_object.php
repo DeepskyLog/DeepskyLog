@@ -69,7 +69,6 @@ function showObjectsNearby()
          $objObject,$objPresentations,$objUtil;
   $maxcount=count($_SESSION['Qobj']);
 	$max = 9999;
-	
 	if((array_key_exists('steps',$_SESSION))&&(array_key_exists("nearbyObjects",$_SESSION['steps'])))
 	  $step=$_SESSION['steps']["nearbyObjects"];
 	if(array_key_exists('multiplepagenr',$_GET))
@@ -572,12 +571,13 @@ function view_object()
     showObjectEphemerides($theLocation);  
   if($viewobjectobjectsnearby=="show")
 	  showObjectsNearby();		  
-  if($imagesize=$objUtil->checkRequestKey('imagesize'))
+  /*if($imagesize=$objUtil->checkRequestKey('imagesize'))
 	  showObjectImage($imagesize);
 	if($viewobjectobservations=="show")
     showObjectObservations();
 	if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
 	  showAdminObjectFunctions();
+	*/
 	echo "</div>";
 }
 view_object();

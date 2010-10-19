@@ -1202,9 +1202,9 @@ class Objects
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3.": ".$_SESSION['Qobj'][$count]['objectmagnitude']."')\" class=\"centered\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)||($_SESSION['Qobj'][$count]['objectmagnitude']=='')?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3b.": ".$_SESSION['Qobj'][$count]['objectsurfacebrightness']."')\" class=\"centered\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)||($_SESSION['Qobj'][$count]['objectsurfacebrightness']=='')?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader4.": ".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."')\" class=\"centered\">".$GLOBALS[$_SESSION['Qobj'][$count]['objecttype']]."</td>";
-      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader10.": ".$_SESSION['Qobj'][$count]['objectsizepa']."')\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectsizepa']."</td>";
-      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader5.": ".$_SESSION['Qobj'][$count]['objectrahms']."')\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectrahms']."</td>";
-      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader6.": ".$_SESSION['Qobj'][$count]['objectdecldms']."')\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectdecldms']."</td>";
+      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader10.": ".addslashes($_SESSION['Qobj'][$count]['objectsizepa'])."')\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectsizepa']."</td>";
+      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader5.": ".addslashes($_SESSION['Qobj'][$count]['objectrahms'])."')\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectrahms']."</td>";
+      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader6.": ".addslashes($_SESSION['Qobj'][$count]['objectdecldms'])."')\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectdecldms']."</td>";
       if($loggedUser) 
 	    { $page = $_SESSION['Qobj'][$count][$atlas];
         if(substr($_SESSION['Qobj'][$count]['objectseen'],0,2)=="YD")

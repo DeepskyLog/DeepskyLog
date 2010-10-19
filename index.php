@@ -7,10 +7,10 @@ try
   include 'common/entryexit/instructions.php';                                                            // Execution of all non-layout related instructions (login, add objects to lists, etc.)
   $includeFile=$objUtil->utilitiesDispatchIndexAction();                                                  // Determine the page to show
   include 'common/entryexit/data.php';                                                                    // Get data for the form, object data, observation data, etc.
-  echo    "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
+  echo    "<!DOCTYPE html public \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
   echo    "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
   include 'common/menu/head.php';                                                                         // HTML head
-  echo    "<body onkeydown=\"bodyOnKeyDown(event);\">";
+  echo    "<body onkeydown=\"function() { bodyOnKeyDown(event); }\">";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/jsenvironment.js\"></script>";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/wz_tooltip.js\"></script>";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/ajaxbase.js\"></script>";
@@ -31,7 +31,7 @@ try
   echo    "<div id=\"div5\">";                                                                            // div 5 = page contents
   if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
     echo "<p class=\"centered\">".$entryMessage."</p><hr />";
-    include $includeFile;     
+  include $includeFile;     
   echo    "</div>";
 }
 catch (Exception $e)
