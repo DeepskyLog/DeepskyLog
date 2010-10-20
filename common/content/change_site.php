@@ -1,8 +1,17 @@
-<?php // change_site.php - allows the administrator to change site details 
+<?php 
+// change_site.php
+// allows a site owner or an the administrator to change site details
+// or another user to view the site details
+ 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($locationid=$objUtil->checkGetKey('location'))) throw new Exception(LangException011b);
-else
-{  $disabled=" disabled=\"disabled\"";
+elseif(!($objLocation->getLocationPropertyFromId($locationid,'name'))) throw new Exception("Location not found in change_instrument.php, please contact the developers with this message:".$eyepieceid);
+else change_site();
+
+function change_site()
+{ global $baseURL,$locationid,$loggedUser,
+         $objLocation,$objPresentations,$objUtil;
+  $disabled=" disabled=\"disabled\"";
 	if(($loggedUser) &&
 	   ($objUtil->checkAdminOrUserID($objLocation->getLocationPropertyFromId($locationid,'observer',''))))
 	  $disabled="";

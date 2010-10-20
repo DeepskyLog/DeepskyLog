@@ -1,8 +1,17 @@
-<?php // change_instrument.php - form which allows the administrator to change an instrument 
+<?php 
+// change_instrument.php
+// allows the instrument owner or an administrator to change an instrument
+// or another user to view the instrument details 
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($instrumentid=$objUtil->checkGetKey('instrument'))) throw new Exception(LangException007b);
-else
-{ $disabled=" disabled=\"disabled\"";
+elseif(!($objInstrument->getInstrumentPropertyFromId($instrumentid,'name'))) throw new Exception("Instrument not found in change_instrument.php, please contact the developers with this message:".$eyepieceid);
+else change_instrument();
+
+function change_instrument()
+{ global $baseURL,$instrumentid,$loggedUser,
+         $objInstrument,$objPresentations,$objUtil;
+  $disabled=" disabled=\"disabled\"";
 	if(($loggedUser) &&
 	   ($objUtil->checkAdminOrUserID($objInstrument->getInstrumentPropertyFromId($instrumentid,'observer',''))))
 	  $disabled="";

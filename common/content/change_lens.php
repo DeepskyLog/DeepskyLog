@@ -1,8 +1,17 @@
-<?php // change_lens.php - form which allows the owner to change a lens
+<?php 
+// change_lens.php
+// allows the lens owner or an administrator to change a lens
+// or another user to view the lens details
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($lensid=$objUtil->checkGetKey('lens'))) throw new Exception(LangException009b);
-else
-{ $disabled=" disabled=\"disabled\"";
+elseif(!($objLens->getLensPropertyFromId($lensid,'name'))) throw new Exception("Lens not found in change_lens.php, please contact the developers with this message:".$eyepieceid);
+else change_lens();
+
+function change_lens()
+{ global $baseURL,$lensid,$loggedUser,
+         $objLens,$objPresentations,$objUtil;
+  $disabled=" disabled=\"disabled\"";
 	if(($loggedUser) &&
 	   ($objUtil->checkAdminOrUserID($objLens->getLensPropertyFromId($lensid,'observer',''))))
 	  $disabled="";

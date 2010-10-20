@@ -1,7 +1,11 @@
-<?php // change_account.php - allows the user to view and change his account's details
+<?php 
+// change_account.php 
+// allows the user to view and change his account's details
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($loggedUser)) throw new Exception(LangExcpetion001);
 elseif(!($objUtil->checkAdminOrUserID($loggedUser))) throw new Exception(LangExcpetion012);
+else change_account();
 
 function change_account()
 { global $baseURL,$instDir,$languageMenu,$loggedUser,
@@ -182,5 +186,4 @@ function change_account()
 	echo "<p>&nbsp;</p>";
 	echo "</div>";
 }
-change_account();
 ?>

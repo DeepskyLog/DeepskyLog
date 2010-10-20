@@ -1,11 +1,12 @@
 <?php 
 // change_eyepiece.php
-// allows the eyepiece owner or an admin to change eyepiece details 
-// or another user to view the eyepiece specs
+// allows the eyepiece owner or an admin to an eyepiece 
+// or another user to view the eyepiece details
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($eyepieceid=$objUtil->checkGetKey('eyepiece'))) throw new Exception(LangException003);
 elseif(!($objEyepiece->getEyepiecePropertyFromId($eyepieceid,'name'))) throw new Exception("Eyepiece not found in change_eyepiece.php, please contact the developers with this message:".$eyepieceid);
+else change_eyepiece();
 
 function change_eyepiece()
 { global $baseURL,$loggedUser,$eyepieceid,
@@ -40,5 +41,4 @@ function change_eyepiece()
 	echo "</div></form>";
 	echo "</div>";
 }
-change_eyepiece();
 ?>

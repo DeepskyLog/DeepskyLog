@@ -1,11 +1,12 @@
 <?php
 // change_filter.php
-// form which allows the filter owner or an admin to change a filter
-// or another user to view the filter specs
+// allows the filter owner or an admin to change a filter
+// or another user to view the filter details
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($filterid=$objUtil->checkGetKey('filter'))) throw new Exception(LangException005b);
 elseif(!($objFilter->getFilterPropertyFromId($filterid,'name'))) throw new Exception("Filter not found in change_filter.php, please contact the developers with this message:".$filterid);
+else change_filter();
 
 function change_filter()
 { global $baseURL,$filterid,$loggedUser,
@@ -33,5 +34,4 @@ function change_filter()
 	echo "</div></form>";
 	echo "</div>";
 }
-change_filter();
 ?>
