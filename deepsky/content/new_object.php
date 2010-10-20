@@ -62,8 +62,7 @@ if($phase==0)
   else
   { $tempcat=("<select name=\"catalog\" class=\"inputfield requiredField\"".(($phase==0)?"":$disabled).">");
     $tempcat.=("<option value=\"\">-----</option>"); // empty field
-    $catalogs = $objObject->getCatalogs(); // should be sorted
-    while(list($key, $value) = each($catalogs))
+    while(list($key, $value) = each($DSOcatalogs))
       $tempcat.=("<option value=\"".$value."\" ".($objUtil->checkRequestKey('catalog')==$value?"selected=\"selected\"":"")." >".$value."</option>");
     $tempcat.=("</select>");
     $objPresentations->line(array("&gt;&gt;&gt;&gt;&nbsp;".LangViewObjectField1 . "&nbsp;*",

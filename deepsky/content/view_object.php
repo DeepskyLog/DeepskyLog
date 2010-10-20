@@ -480,7 +480,7 @@ function showObjectObservations()
 }
 
 function showAdminObjectFunctions()
-{ global $baseURL,$object,
+{ global $baseURL,$object,$DSOcatalogs,
          $objObject;
   echo "<hr />";
   echo "<form action=\"".$baseURL."index.php\" method=\"get\"><div>";
@@ -507,8 +507,7 @@ function showAdminObjectFunctions()
   echo "</select>";		
   echo "<select name=\"newcatalog\">";
   echo "<option value=\"\">&nbsp;</option>";
-  $catalogs = $objObject->getCatalogs();
-  while(list($key, $value) = each($catalogs))
+  while(list($key, $value) = each($DSOcatalogs))
     echo "<option value=\"$value\">".$value."</option>";
   echo "</select>";		
   echo "<input type=\"text\" class=\"inputfield\" maxlength=\"255\" name=\"newnumber\" size=\"40\" value=\"\"/>";
@@ -571,13 +570,12 @@ function view_object()
     showObjectEphemerides($theLocation);  
   if($viewobjectobjectsnearby=="show")
 	  showObjectsNearby();		  
-  /*if($imagesize=$objUtil->checkRequestKey('imagesize'))
+  if($imagesize=$objUtil->checkRequestKey('imagesize'))
 	  showObjectImage($imagesize);
 	if($viewobjectobservations=="show")
     showObjectObservations();
 	if(array_key_exists('admin', $_SESSION) && $_SESSION['admin'] == "yes")
 	  showAdminObjectFunctions();
-	*/
 	echo "</div>";
 }
 view_object();

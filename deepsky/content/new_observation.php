@@ -346,8 +346,7 @@ else // no object found or not pushed on search button yet
 	echo "<input type=\"hidden\" name=\"titleobject\"   value=\"".LangQuickPickNewObservation."\" />";
 	$content ="<select name=\"catalog\" class=\"inputfield\">";
 	$content.="<option value=\"\">&nbsp;</option>";
-	$catalogs = $objObject->getCatalogs();
-	while (list ($key, $value) = each($catalogs))
+	while (list ($key, $value) = each($DSOcatalogs))
 		$content.="<option value=\"$value\">$value</option>";
 	$content.="</select>";
 	$content.="&nbsp;";

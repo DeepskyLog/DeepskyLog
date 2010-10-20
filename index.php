@@ -4,10 +4,11 @@ try
   if(!array_key_exists('indexAction',$_GET)&&array_key_exists('indexAction',$_POST)) 
     $_GET['indexAction']=$_POST['indexAction'];
   include 'common/entryexit/preludes.php';                                                                // Includes of all classes and assistance files
+  include 'common/entryexit/globals.php';                                                                // Includes of all classes and assistance files
   include 'common/entryexit/instructions.php';                                                            // Execution of all non-layout related instructions (login, add objects to lists, etc.)
   $includeFile=$objUtil->utilitiesDispatchIndexAction();                                                  // Determine the page to show
   include 'common/entryexit/data.php';                                                                    // Get data for the form, object data, observation data, etc.
-  echo    "<!DOCTYPE html public \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
+  echo    "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
   echo    "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
   include 'common/menu/head.php';                                                                         // HTML head
   echo    "<body onkeydown=\"function() { bodyOnKeyDown(event); }\">";

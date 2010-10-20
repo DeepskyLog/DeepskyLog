@@ -872,7 +872,7 @@ if ($dom->schemaValidate($xmlschema)) {
               $targetName = str_replace("  ", " ", $targetName);
               $targetName = $objCatalog->checkObject($targetName);
               $names = explode(" ", $targetName);
-              $objObject->addDSObject($names[0]." ".$names[1], $names[0], $names[1], $ta["type"], $ta["constellation"], $ta["ra"], $ta["dec"], $ta["mag"], $ta["subr"], $ta["diam1"], $ta["diam2"], $ta["pa"], "", $ta["datasource"]);
+              $objObject->addDSObject($names[0]." ".$names[1], $names[0], $names[1], $ta["type"], $ta["constellation"], $ta["ra"], $ta["dec"], $ta["mag"], $ta["subr"], $ta["diam1"], $ta["diam2"], $ta["pa"], $ta["datasource"]);
               for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
                 $aliasName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
                 $aliasNames = explode(" ", $aliasName);

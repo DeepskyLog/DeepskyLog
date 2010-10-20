@@ -1,8 +1,16 @@
-<?php // change_filter.php - form which allows the filter owner to change a filter
+<?php
+// change_filter.php
+// form which allows the filter owner or an admin to change a filter
+// or another user to view the filter specs
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($filterid=$objUtil->checkGetKey('filter'))) throw new Exception(LangException005b);
-else
-{ $disabled=" disabled=\"disabled\"";
+elseif(!($objFilter->getFilterPropertyFromId($filterid,'name'))) throw new Exception("Filter not found in change_filter.php, please contact the developers with this message:".$filterid);
+
+function change_filter()
+{ global $baseURL,$filterid,$loggedUser,
+         $objFilter,$objPresentations,$objUtil;
+  $disabled=" disabled=\"disabled\"";
 	if(($loggedUser) &&
 	   ($objUtil->checkAdminOrUserID($objFilter->getFilterPropertyFromId($filterid,'observer',''))))
 	  $disabled="";
@@ -25,4 +33,5 @@ else
 	echo "</div></form>";
 	echo "</div>";
 }
+change_filter();
 ?>

@@ -56,8 +56,7 @@ function setup_objects_query()
 	  echo "<td>";
 	  echo "<select id=\"catalog\" name=\"catalog\" class=\"inputfield\">";
 	  echo "<option value=\"\">-----</option>";
-	  $catalogs = $objObject->getCatalogs();
-	  while(list($key, $value) = each($catalogs))
+	  while(list($key, $value) = each($DSOcatalogs))
 	    echo "<option".(($value==$catalog)?" selected=\"selected\"":"")." value=\"".$value."\">$value</option>";
 	  echo "</select>";
 	  if($catNumber=='')
@@ -341,9 +340,9 @@ function setup_objects_query()
 	  echo "<tr>";
 	  echo "<td class=\"fieldname\" align=\"right\">".LangExclude."</td>";
 	  $j=1;
-	  reset($catalogs);
+	  reset($DSOcatalogs);
 	  $temp="";
-	  while(list($key,$value)=each($catalogs))
+	  while(list($key,$value)=each($DSOcatalogs))
 	  { if(($nmb=$objObject->getNumberOfObjectsInCatalog($value))>1000)
 	    { $checked='';
 	  	  if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))

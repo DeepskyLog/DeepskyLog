@@ -1,9 +1,16 @@
-<?php // change_eyepiece.php - allows the eyepiece owner to change eyepiece details 
+<?php 
+// change_eyepiece.php
+// allows the eyepiece owner or an admin to change eyepiece details 
+// or another user to view the eyepiece specs
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($eyepieceid=$objUtil->checkGetKey('eyepiece'))) throw new Exception(LangException003);
 elseif(!($objEyepiece->getEyepiecePropertyFromId($eyepieceid,'name'))) throw new Exception("Eyepiece not found in change_eyepiece.php, please contact the developers with this message:".$eyepieceid);
-else
-{ $disabled=" disabled=\"disabled\"";
+
+function change_eyepiece()
+{ global $baseURL,$loggedUser,$eyepieceid,
+         $objEyepiece,$objPresentations,$objUtil;
+  $disabled=" disabled=\"disabled\"";
 	if(($loggedUser) &&
 	   ($objUtil->checkAdminOrUserID($objEyepiece->getEyepiecePropertyFromId($eyepieceid,'observer',''))))
 	  $disabled="";
@@ -33,4 +40,5 @@ else
 	echo "</div></form>";
 	echo "</div>";
 }
+change_eyepiece();
 ?>

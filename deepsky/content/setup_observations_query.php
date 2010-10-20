@@ -63,13 +63,12 @@ function setup_observations_query()
 		echo "<tr>";
 		echo "<td class=\"fieldname\">".LangViewObservationField1."</td>";
 		echo "<td>";
-		$catalogs = $objObject->getCatalogs();
 		if(($catalog=$objUtil->checkGetKey('catalog'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $catalog=$_SESSION['QobsParams']['catalog'];
 		echo "<select id=\"catalog\" name=\"catalog\" class=\"inputfield\">";
 		echo "<option value=\"\">-----</option>";
-		while(list($key, $value) = each($catalogs))
+		while(list($key, $value) = each($DSOcatalogs))
 		  echo "<option".(($value==$catalog)?" selected=\"selected\"":"")." value=\"".$value."\">".$value."</option>";
 		echo "</select>";
 	  if(($catNumber=$objUtil->checkGetKey('number'))=='')

@@ -1,27 +1,5 @@
 <?php // The observers class collects all functions needed to enter, retrieve and adapt observer data from the database and functions to display the data.
-interface iObservers
-{ public  function addObserver($id, $name, $firstname, $email, $password);                // adds a new observer to the database. The id, name, first name email address and password should be given as parameters. The password must be encoded using md5(...). The new observer will not be able to log in yet. Before being able to do so, the administrator must validate the new user.
-  public  function getAdministrators();
-  public  function getCometRank($observer);                                               // returns the number of observations of the given observer
-  public  function getDsRank($observer);                                                  // returns the number of observations of the given observer
-  public  function getLastReadObservation($observerid);
-  public  function getListOfInstruments();                                                // returns a list of all StandardInstruments of all observers
-  public  function getListOfLocations();                                                  // returns a list of all StandardLocations of all observers
-  public  function getNumberOfCometObservations($observerid);                             // returns the number of comet observations for the given observerid
-  public  function getNumberOfDsObservations($observerid);                                // returns the number of observations of the given observerid
-  public  function getObserverProperty($id,$property,$defaultValue='');
-  public  function getPopularObserversByName();                                           // returns an array with the ids(key) and names(value) of all active observers, sorted by name
-  public  function getSortedObservers($sort);                                             // returns an array with the ids of all observers, sorted by the column specified in $sort
-  public  function getUsedLanguages($id);
-  public  function markAllAsRead();
-  public  function markAsRead($themark);
-  public  function setObserverProperty($id, $property, $propertyValue);                   // sets a new value for the property of the observer
-//private function setUsedLanguages($id, $language);                                      // setUsedLanguages sets all the used languages for the observer with id = $id
-  public  function showTopObservers($catalog,$rank,$sort,$min,$max,$step); 
-  public  function valideAccount();
-  public  function validateObserver();                                                    // validates the user with the given id and gives the user  the given role (which should be $ADMIN or $USER).
-}
-class Observers implements iObservers
+class Observers
 { public  function addObserver($id, $name, $firstname, $email, $password)                       // addObserver adds a new observer to the database. The id, name, first name email address and password should be given as parameters. The password must be encoded using md5(...). The new observer will not be able to log in yet. Before being able to do so, the administrator must validate the new user.
   { global $objDatabase; 
     return $objDatabase->execSQL("INSERT INTO observers (id, name, firstname, email, password, role, language) VALUES (\"$id\", \"$name\", \"$firstname\", \"$email\", \"$password\", \"".RoleWaitlist."\", \"".$_SESSION['lang']."\")");
@@ -105,7 +83,7 @@ class Observers implements iObservers
    $objDatabase->execSQL("UPDATE observers SET usedLanguages = '".serialize($language)."' WHERE id=\"$id\"");
   }
   public  function showTopObservers($catalog,$rank,$sort,$min,$max,$step)
-  { global $baseURL,$objObservation,$objUtil,$objObserver,$objObject,$catalogs,$FF;
+  { global $baseURL,$objObservation,$objUtil,$objObserver,$objObject,$DSOcatalogsLists,$FF;
   	$outputtable = "";   $count=0;
 		$objectsInCatalog=$objObject->getNumberOfObjectsInCatalog($catalog);
     echo "<div><table>";
@@ -120,7 +98,7 @@ class Observers implements iObservers
 		echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=rank_observers&amp;sort=jaardrawings&amp;catalog="    .urlencode($catalog)."\">".LangTopObserversHeader8."</a></td>";
 		echo "<td class=\"width125px centered\">";
 		echo "<select class=\"width125px inputfield\" onchange=\"location = this.options[this.selectedIndex].value;\" name=\"catalog\">";
-		while(list($key,$value)=each($catalogs))
+		while(list($key,$value)=each($DSOcatalogsLists))
 		{ if(!($value))
 		    $value="-----------";
 		  if($value==stripslashes($catalog))

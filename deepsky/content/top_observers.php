@@ -1,7 +1,6 @@
 <?php // top_observers.php - generates an overview of all observers and their rank 
-$catalogs=array();
 function topobservers()
-{ global $catalogs,$baseURL,$FF,$objObject,$objObservation,$objObserver,$objPresentations,$objUtil,$step;
+{ global $DSOcatalogsLists,$baseURL,$FF,$objObject,$objObservation,$objObserver,$objPresentations,$objUtil,$step;
   if((array_key_exists('steps',$_SESSION))&&(array_key_exists("topObs",$_SESSION['steps'])))
 	  $step=$_SESSION['steps']["topObs"];
 	if(array_key_exists('multiplepagenr',$_GET))
@@ -14,8 +13,7 @@ function topobservers()
 	  $min = 0;
 	$sort=$objUtil->checkGetKey('sort','totaal');
 	$catalog=$objUtil->checkGetKey('catalog','M');
-	$catalogs=$objObject->getCatalogsAndLists();
-	if(!(in_array(stripslashes($catalog),$catalogs)))
+	if(!(in_array(stripslashes($catalog),$DSOcatalogsLists)))
 	  $catalog="M";
 	$rank=$objObservation->getPopularObserversOverviewCatOrList($sort, $catalog);
 	$link=$baseURL."index.php?indexAction=rank_observers&amp;sort=".$sort."&amp;size=25&amp;catalog=".urlencode($catalog);
