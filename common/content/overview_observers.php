@@ -1,9 +1,16 @@
-<?php // overview_observers.php - generates an overview of all observers (admin only)
+<?php 
+// overview_observers.php
+// generates an overview of all observers (admin only)
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!$loggedUser) throw new Exception(LangException002);
 elseif($_SESSION['admin']!="yes") throw new Exception(LangException001);
-else
-{ set_time_limit(60);
+else overview_observers();
+
+function overview_observers()
+{ global $baseURL, $step,
+         $objObserver,$objPresentations,$objUtil;
+	set_time_limit(60);
   $sort=$objUtil->checkGetKey('sort','inverse.observers.registrationDate');
   $inverse=false;
   if(substr($sort,0,8)=='inverse.')

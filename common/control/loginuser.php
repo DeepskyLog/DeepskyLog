@@ -1,7 +1,14 @@
-<?php // loginuser.php - checks if the user is logged in based on cookie
+<?php 
+// loginuser.php
+// checks if the user is logged in based on cookie
+
 if((!isset($inIndex))||(!$inIndex)) include "/redirect.php";
-else
-{ $loggedUser='';
+else login();
+
+function login()
+{ global $loggedUser,$loggedUserName,$modules,$language,$entryMessage,$usedLanguages,$allLanguages,
+         $objUtil,$objObserver,$objLanguage;
+  $loggedUser='';
   $loggedUserName='';
   $_SESSION['admin']="no";
   $loginErrorCode="";

@@ -1,8 +1,15 @@
-<?php // new_site.php - allows the user to add a new site
+<?php 
+// new_site.php
+// allows the user to add a new site
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!$loggedUser) throw new Exception(LangException002);
-else
-{ $sort=$objUtil->checkRequestKey('sort','name');
+else new_site();
+
+function new_site()
+{ global $baseURL,$loggedUser,$loggedUserName,
+         $objLocation,$objObserver,$objPresentations,$objUtil;
+  $sort=$objUtil->checkRequestKey('sort','name');
   $locationid=$objUtil->checkRequestKey('locationid');
   $timezone_identifiers = DateTimeZone::listIdentifiers();
   $tempTimeZoneList="<select name=\"timezone\" class=\"inputfield requiredField\">";

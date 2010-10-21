@@ -1,4 +1,12 @@
 <?php
+// ObjectSets.php
+// allows the user to generate a pdf series with object data, DSS photos, DSL charts an index pages
+
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!$loggedUser) throw new Exception(LangException002);
+else objectsSets();
+
+
 function objectsSets()
 { global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout, $objUtil, $MSIE;
   echo "<script type=\"text/javascript\">";

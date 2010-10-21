@@ -1,4 +1,11 @@
 <?php
+// reportslayout.php
+// allows to specify a report layout
+
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!($loggedUser)) throw new Exception(LangExcpetion001);
+else reportsLayout();
+
 function reportsLayout()
 { global $baseURL,$objPresentations,$objReportLayout,$objUtil,$loggedUserName;
   echo   "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/reportlayouts.js\"></script>";
@@ -107,5 +114,4 @@ function reportsLayout()
 	      /* ]]> */ 
 	      </script>";
 }
-reportsLayout();
 ?>

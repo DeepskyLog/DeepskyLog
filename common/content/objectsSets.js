@@ -1,4 +1,3 @@
-var objectList;
 function generateallonepass(item,msie)
 { var jsonhttp;
   if(window.XMLHttpRequest)
