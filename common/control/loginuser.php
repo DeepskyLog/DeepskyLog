@@ -114,7 +114,6 @@ function login()
     $_SESSION['alllanguages'] = $allLanguages; 
     $usedLanguages = $objLanguage->getLanguageKeys($_SESSION['lang']);
   }
-  require_once "lib/setup/"."$language";
   if($loginErrorCode||$loginErrorText)
   { $_SESSION['deepskylog_id']='';
   	setcookie("deepskylogsec","",time()-3600,"/");
@@ -123,6 +122,7 @@ function login()
   if($loggedUser)
     $loggedUserName=$objObserver->getObserverProperty($loggedUser,'firstname')." ".$objObserver->getObserverProperty($loggedUser,'name');
 }
+require_once "lib/setup/"."$language";
 $objDatabase->execSQL("INSERT INTO logging(loginid, logdate, logtime, logurl, navigator, screenresolution, language) 
                        VALUES(\"".($loggedUser?$loggedUser:"anonymous")."\", ".
                                 date('Ymd').", ".date('His').", '".addslashes(substr($objUtil->checkArrayKey($_SERVER,'REQUEST_URI',''),0,255))."', '".addslashes(substr($objUtil->checkArrayKey($_SERVER,'HTTP_USER_AGENT',''),0,255))."', 'screenres', '".$_SESSION['lang']."');");
