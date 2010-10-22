@@ -1,7 +1,14 @@
 <?php
+// data.php
+// checks wheter data needs to get fetched from the DB
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-else
-{ if($includeFile=='deepsky/content/top_objects.php')
+else get_data();
+
+function get_data()
+{ global $includeFile,$entryMessage,
+         $objObject,$objUtil;
+  if($includeFile=='deepsky/content/top_objects.php')
 	{ $_GET['source']='top_objects';
 	  require_once 'deepsky/data/data_get_objects.php';
 	}
