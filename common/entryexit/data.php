@@ -12,7 +12,7 @@ function get_data()
 	{ $_GET['source']='top_objects';
 	  require_once 'deepsky/data/data_get_objects.php';
 	}
-	if($includeFile=='deepsky/content/setup_objects_query.php')
+	elseif($includeFile=='deepsky/content/setup_objects_query.php')
 	{ $pageError = false;       
 	  $minDeclDegreesError = false;    $minDeclMinutesError = false;    $minDeclSecondsError = false;
 	  $maxDeclDegreesError = false;    $maxDeclMinutesError = false;    $maxDeclSecondsError = false;
@@ -49,11 +49,11 @@ function get_data()
 	  	  $entryMessage=LangExecuteQueryObjectsMessage2;
 	  }
 	}   
-	if($includeFile=='deepsky/content/tolist.php')
+	elseif($includeFile=='deepsky/content/tolist.php')
 	{ $_GET['source']='tolist';
 	  require_once 'deepsky/data/data_get_objects.php';
 	}
-	if($includeFile=='deepsky/content/view_object.php')
+	elseif($includeFile=='deepsky/content/view_object.php')
 	{ if(!($objUtil->checkGetKey('object'))) 
 	    throw new Exception(LangException016);
 	  if(!($_GET['object']=$objObject->getDsObjectName($_GET['object'])))
@@ -62,19 +62,19 @@ function get_data()
 	  $_GET['zoom']=$objUtil->checkGetKey('zoom',30);	
 	  include "deepsky/data/data_get_objects.php";	
 	}
-	if(($includeFile=='deepsky/content/new_object.php')&&($objUtil->checkRequestKey('phase10')))
+	elseif(($includeFile=='deepsky/content/new_object.php')&&($objUtil->checkRequestKey('phase10')))
 	{ $_GET['source']="add_object10";
 	  require_once 'deepsky/data/data_get_objects.php'; 
 	}   
-	if(($includeFile=='deepsky/content/new_object.php')&&($objUtil->checkRequestKey('phase20')))
+	elseif(($includeFile=='deepsky/content/new_object.php')&&($objUtil->checkRequestKey('phase20')))
 	{ $_GET['source']="add_object20";
 	  require_once 'deepsky/data/data_get_objects.php'; 
 	}   
-	if($includeFile=='deepsky/content/tolist.php')
+	elseif($includeFile=='deepsky/content/tolist.php')
 	{ $_GET['source']='tolist';
 	  require_once 'deepsky/data/data_get_objects.php';
 	}
-	if($includeFile=='deepsky/content/view_object.php')
+	elseif($includeFile=='deepsky/content/view_object.php')
 	{ if(!($objUtil->checkGetKey('object'))) 
 	    throw new Exception(LangException016);
 	  if(!($_GET['object']=$objObject->getDsObjectName($_GET['object'])))
@@ -85,14 +85,14 @@ function get_data()
     { include "deepsky/data/data_get_objects.php";	
       $_SESSION['minViewObjectObjectsNearby']=0;
       $_SESSION['viewObjectObjectsNearby']=$_GET['object'];
-    }  	
+    }
     if((!(array_key_exists('viewObjectObservations',$_SESSION)))||($_GET['object']!=$_SESSION['viewObjectObservations']))
     { include "deepsky/data/data_get_observations.php";	
       $_SESSION['minViewObjectObservations']=0;
       $_SESSION['viewObjectObservations']=$_GET['object'];
     }
 	}
-	if($includeFile=='deepsky/content/selected_observations.php')
+	elseif($includeFile=='deepsky/content/selected_observations.php')
 	{  require_once 'deepsky/data/data_get_observations.php';
 	}	
 }

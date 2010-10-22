@@ -33,7 +33,7 @@ try
   echo    "<div id=\"div5\">";                                                                            // div 5 = page contents
   if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
     echo "<p class=\"centered\">".$entryMessage."</p><hr />";
-  include $includeFile;     
+  include $includeFile;
   echo    "</div>";
 }
 catch (Exception $e)
