@@ -1,6 +1,7 @@
 <?php // index.php - main entrance to DeepskyLog
 try
 { $inIndex=true;
+  $language="nl";
   if(!array_key_exists('indexAction',$_GET)&&array_key_exists('indexAction',$_POST)) 
     $_GET['indexAction']=$_POST['indexAction'];
   include 'common/entryexit/preludes.php';                                                                // Includes of all classes and assistance files

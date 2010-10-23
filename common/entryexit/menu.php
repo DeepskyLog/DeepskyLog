@@ -1,4 +1,7 @@
 <?php
+// menu.php
+// shows the menus
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else menu();
 

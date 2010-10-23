@@ -112,5 +112,4 @@ class Lenses
       return LangValidateMessage1;
  }
 }
-$objLens=new Lenses;
 ?>

@@ -87,5 +87,4 @@ class reportLayouts
     return $this->getLayoutListJavascript($reportname);
   }
 }
-$objReportLayout = new reportLayouts
 ?>

@@ -3,8 +3,7 @@
 // languages.
 
 class Language
-{
- function getLanguages()                                                        // getLanguages returns a list of all available translations.
+{function getLanguages()                                                        // getLanguages returns a list of all available translations.
  { $mydir=opendir("lib/setup/language/") ;
    $exclude=array("index.php",".","..",".svn","languages.xml");
    $langs=array();
@@ -55,5 +54,4 @@ class Language
    return $path;
  }
 }
-$objLanguage=new Language;
 ?>

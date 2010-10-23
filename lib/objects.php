@@ -1641,7 +1641,6 @@ class Objects
 		}
 	}
 }
-$objObject=new Objects;
 class contrastcompare 
 { var $_reverse;
   function contrastCompare($reverse) 

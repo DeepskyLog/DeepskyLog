@@ -285,5 +285,4 @@ class Lists
      unset($_SESSION['QobjParams']);
  }
 }
-$objList=new Lists;
 ?>

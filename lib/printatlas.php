@@ -1740,5 +1740,4 @@ class PrintAtlas
 
   }
 }
-$objPrintAtlas = new PrintAtlas;
 ?>

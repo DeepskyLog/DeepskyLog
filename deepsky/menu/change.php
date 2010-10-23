@@ -2,13 +2,16 @@
 // change.php
 // menu which allows the user to add or change things in the database
 
+global $inIndex,$loggedUser,$objUtil;
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($loggedUser)) throw new Exception(LangExcpetion001);
 elseif(!($objUtil->checkAdminOrUserID($loggedUser))) throw new Exception(LangExcpetion012);
 else menu_change();
 
 function menu_change()
-{ global $loggedUser;
+{ global $baseURL,$loggedUser,$menuAddChange,
+         $objUtil;
 	if($loggedUser)
 	{ echo "<div class=\"menuDiv\">";
 		reset($_GET);

@@ -56,5 +56,4 @@ class Constellation implements iConstellation
     return $tempcon;
   }
 }
-$objConstellation=new Constellation;
 ?>

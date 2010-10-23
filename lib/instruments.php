@@ -222,5 +222,4 @@ class Instruments
       return LangValidateMessage1;
 	}
 }
-$objInstrument=new Instruments;
 ?>

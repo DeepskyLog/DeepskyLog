@@ -454,4 +454,3 @@ class catalogs
   	}
   }
 }
-$objCatalog=new catalogs;

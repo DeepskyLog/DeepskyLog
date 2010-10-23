@@ -1,30 +1,5 @@
 <?php
-interface iPresentation
-{ public  function alertMessage($theMessage);
-  public  function br2dash($data); 
-  public  function br2nl($data);                                                       // The opposite of nl2br
-  public  function decToArgoString($decl);
-  public  function decToString($decl,$web=1);
-  public  function decToStringDSL($decl);
-  public  function decToStringDSS($decl);                                              // returns html DSS decl coordinates eg 6+44 for 6°43'55''
-  public  function decToTrimmedString($decl);
-  public  function getDSSDeepskyLiveLinks1($object);
-  public  function getDSSDeepskyLiveLinks2($object);
-  public  function line($content,$alignment='',$widths=array(),$lineheight='',$classes=array());
-  public  function presentationInt($value, $nullcontition='', $nullvalue='');          // if the null condtion is met, it returns the nullvalue, otherwise returns the value
-  public  function presentationInt1($value, $nullcondition='', $nullvalue='');         // if the null condtion is met, it returns the nullvalue, otherwise returns the value formatted %1.1f
-  public  function promptWithLink($prompt,$promptDefault,$javaLink,$text);             // displays an anchor link with $text as text, showing when clicked an inputbox with the question $prompt and $promptDefault answer, jumping to $javalink (java format) afterwards 
-  public  function promptWithLinkText($prompt,$promptDefault,$javaLink,$text);         // returns an anchor link with $text as text, showing when clicked an inputbox with the question $prompt and $promptDefault answer, jumping to $javalink (java format) afterwards 
-  public  function raArgoToString($ra);
-  public  function raToString($ra);
-  public  function raToStringDSL($ra);
-  public  function raToStringDSS($ra);                                         // returns html DSS ra coordinates eg 6+43+55 for 6h43m55s
-  public  function raToStringHM($ra);
-  public  function searchAndLinkCatalogsInText($theText);                              // hyperlinks M, NGC, .. catalogs in a text
-  public  function tableSortHeader($header0, $link0, $id="", $columnSource="");                                           // sorting header on table
-  public  function tableSortInverseHeader($header0, $link0, $id="", $columnSource="");                                    // inverse sorting header on table
-}
-class Presentations implements iPresentation
+class Presentations
 { public  function alertMessage($theMessage)
   { global $baseURL,$indexAction;
     echo "<div id=\"veil\">";
@@ -440,5 +415,4 @@ class Presentations implements iPresentation
 	  echo "</td>";        
 	}
 }
-$objPresentations=new Presentations;
 ?>

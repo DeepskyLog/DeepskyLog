@@ -1504,5 +1504,4 @@ class Observations {
 		}
 	}  
 }
-$objObservation = new Observations;
 ?>

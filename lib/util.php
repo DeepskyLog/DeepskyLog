@@ -1,5 +1,8 @@
-<?php // util
+<?php 
+// util
+
 include_once "class.ezpdf.php";
+
 class Utils
 { public function hourminuteTimeToValue($thetime)
   { if($thetime=="-") return -1;
@@ -2583,5 +2586,4 @@ class Utils
     }
   }
 }
-$objUtil=new Utils;
 ?>

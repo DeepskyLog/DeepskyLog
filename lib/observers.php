@@ -305,5 +305,4 @@ class Observers
     return LangValidateObserverMessage1.' '.LangValidateObserverMessage2;
   }
 }
-$objObserver=new Observers;
 ?>

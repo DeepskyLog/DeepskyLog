@@ -26,5 +26,4 @@ class formLayouts
     return $objDatabase->selectSingleArray("SELECT layoutName FROM formlayouts WHERE observerid='".$loggedUser."' AND formName='".$formName."';","layoutName");
   }
 }
-$objFormLayout = new formLayouts
 ?>

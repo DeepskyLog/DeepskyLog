@@ -2,7 +2,7 @@
 define('LangHideTopMenu','Hide header');  // TO TRANSLATE
 define('LangShowTopMenu','Show header');  // TO TRANSLATE
 define('LangHideLeftMenu','Hide left menu structure');  // TO TRANSLATE
-efine('LangShowLeftMenu','Show left menu structure');  // TO TRANSLATE
+define('LangShowLeftMenu','Show left menu structure');  // TO TRANSLATE
 define('LangInPrivateLists','In my lists');
 define('LangInLPublicists','In public lists');
 define("LangObjectShowExtraInfo","Show or remove extra info...");    // TO TRANSLATE

@@ -99,5 +99,4 @@ class Stars
     return $stars;
   }
 }
-$objStar=new Stars;
 ?>

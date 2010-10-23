@@ -2,13 +2,13 @@
 // quickpick.php
 // allows the user to quiclky enter the name of an object and search it, its observations or make a new observation
 
+global $loggedUser,$inIndex,$objUtil;
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!($loggedUser)) throw new Exception(LangExcpetion001);
-elseif(!($objUtil->checkAdminOrUserID($loggedUser))) throw new Exception(LangExcpetion012);
 else menu_quickpick();
 
 function menu_quickpick()
-{ global $baseURL,$menuSearch,$loggedUser;
+{ global $baseURL,$menuSearch,$loggedUser,$loggedUser;
 	echo "<div   class=\"menuDiv\">";
 	echo "<form  action=\"".$baseURL."index.php\" method=\"get\">";
 	echo "<div>";

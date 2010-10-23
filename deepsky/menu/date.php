@@ -2,13 +2,15 @@
 // date.php
 // menu which allows the user to change the date
 
+global $inIndex,$loggedUser,$objUtil;
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($loggedUser)) throw new Exception(LangExcpetion001);
 elseif(!($objUtil->checkAdminOrUserID($loggedUser))) throw new Exception(LangExcpetion012);
 else menu_date();
 
 function menu_date()
-{ global $loggedUser;
+{ global $baseURL,$loggedUser,$thisDay,$thisMonth,$thisYear;
 	if($loggedUser) 
 	{ echo "  <script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/CalendarPopupCC.js\"></script>";
 	  echo "<div class=\"menuDivExtended\">";

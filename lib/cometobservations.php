@@ -1237,5 +1237,4 @@ function getObservationsThisObserver($id)
   }
  }
 }
-$objCometObservation = new cometObservations;
 ?>

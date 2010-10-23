@@ -30,5 +30,4 @@ class Observerqueries
 	  return $objDatabase->selectRecordsetArray($sql);
   }
 }
-$objObserverQueries=new Observerqueries;
 ?>

@@ -2,9 +2,9 @@
 // search.php
 // menu which allows the user to search the observation database 
 
+global $inIndex,$loggedUser,$objUtil;
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!($loggedUser)) throw new Exception(LangExcpetion001);
-elseif(!($objUtil->checkAdminOrUserID($loggedUser))) throw new Exception(LangExcpetion012);
 else menu_search();
 
 function menu_search()

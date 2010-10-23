@@ -1,12 +1,13 @@
 <?php  
-//instruction.php treats all commands for changing data in the database or setting program parameters
+//instruction.php 
+// treats all commands for changing data in the database or setting program parameters
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else instructions();
 
 function instructions()
-{	global $myList,$lastReadObservation,$theDate,$modules,$menuView,$menuAddChange,$menuAdmin,$menuLogin,$menuSearch,$menuMoon,
-         $listname_ss,$listname,$entryMessage,
+{	global $loggedUser,$myList,$lastReadObservation,$theDate,$modules,$menuView,$menuAddChange,$menuAdmin,$menuLogin,$menuSearch,$menuMoon,
+         $listname_ss,$listname,$entryMessage,$step,
          $objEyepiece,$objFilter,$objLens,$objIntrument,$objLocation,
          $objObject,$objObserver,$objFormLayout,$objUtil,$objList;
   if($objUtil->checkGetKey('saveLayout'))

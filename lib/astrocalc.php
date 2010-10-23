@@ -941,5 +941,4 @@ class AstroCalc implements iAstroCalc
     return $equa;
   }
 }
-$objAstroCalc=new AstroCalc;
 ?>

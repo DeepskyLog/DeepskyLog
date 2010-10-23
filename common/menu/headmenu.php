@@ -10,21 +10,22 @@ function headmenu()
 	echo "<img src=\"".$baseURL."styles/images/deepskylog.gif\" alt=\"DSL\" />";
 	echo "</div>";
 	
-	echo "<div id=\"div1b\">";
-	echo "<div class=\"floatright\">";
-	include $_SESSION['module'].'/menu/date.php';
-	echo "</div>";
-	echo "<div class=\"floatright\">";
-	include $_SESSION['module'].'/menu/location.php';
-	echo "</div>";
-	echo "<div class=\"floatright\">";
-	include $_SESSION['module'].'/menu/instrument.php';
-	echo "</div>";
-	echo "<div class=\"floatright\">";
-	include $_SESSION['module'].'/menu/list.php';
-	echo "</div>";
-	echo "</div>";
-	
+	if($loggedUser)
+	{ echo "<div id=\"div1b\">";
+		echo "<div class=\"floatright\">";
+		include $_SESSION['module'].'/menu/date.php';
+		echo "</div>";
+		echo "<div class=\"floatright\">";
+		include $_SESSION['module'].'/menu/location.php';
+		echo "</div>";
+		echo "<div class=\"floatright\">";
+		include $_SESSION['module'].'/menu/instrument.php';
+		echo "</div>";
+		echo "<div class=\"floatright\">";
+		include $_SESSION['module'].'/menu/list.php';
+		echo "</div>";
+		echo "</div>";
+	}
 	echo "</div>";
 	
 	// Welcome line with login name

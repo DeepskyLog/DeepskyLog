@@ -125,5 +125,4 @@ class Eyepieces
      return LangValidateMessage1;
  }
 }
-$objEyepiece=new Eyepieces;
 ?>

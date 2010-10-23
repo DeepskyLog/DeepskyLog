@@ -186,5 +186,4 @@ class Filters
      return LangValidateMessage1;
  }
 }
-$objFilter=new Filters;
 ?>

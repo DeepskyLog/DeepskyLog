@@ -2,6 +2,8 @@
 // location.php
 // menu which allows the user to change its standard location
 
+global $inIndex,$loggedUser,$objUtil;
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($loggedUser)) throw new Exception(LangExcpetion001);
 elseif(!($objUtil->checkAdminOrUserID($loggedUser))) throw new Exception(LangExcpetion012);

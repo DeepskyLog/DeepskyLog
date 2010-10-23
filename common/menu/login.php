@@ -6,7 +6,7 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else menu_login();
 
 function menu_login()
-{ global $loggedUser,$register,$menuLogin,
+{ global $baseURL,$loggedUser,$register,$menuLogin,
          $objUtil;
 	if((!($loggedUser))||($objUtil->checkGetKey('indexAction')=='logout'))
 	{ echo "<div  class=\"menuDiv\">";

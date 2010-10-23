@@ -415,5 +415,4 @@ class CometObjects
   
  }
 }
-$objCometObject=new CometObjects;
 ?>

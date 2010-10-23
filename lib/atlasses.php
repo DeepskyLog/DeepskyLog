@@ -852,5 +852,4 @@ class Atlasses
 	  return (int)$urano;
  }
 }
-$objAtlas=new Atlasses;
 ?>

@@ -6,7 +6,7 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else get_data();
 
 function get_data()
-{ global $includeFile,$entryMessage,
+{ global $includeFile,$entryMessage, 
          $objObject,$objUtil;
   if($includeFile=='deepsky/content/top_objects.php')
 	{ $_GET['source']='top_objects';

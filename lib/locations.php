@@ -283,5 +283,4 @@ class Locations
       return LangValidateMessage1;
   }	
 }
-$objLocation=new Locations;
 ?>

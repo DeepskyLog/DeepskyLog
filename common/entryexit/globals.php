@@ -14,9 +14,13 @@ $showPartOfs="";
 $theDate='';
 $lastReadObservation='';
 
-$myList=False;
+$myList=false;
 $listname='';
 $listname_ss='';
+
+$leftmenu="show"; 
+$topmenu="show"; 
+
 
 $menuView="collapsed";
 $menuAddChange="collapsed";
@@ -24,5 +28,19 @@ $menuAdmin="collapsed";
 $menuLogin="expanded";
 $menuSearch="expanded";
 $menuMoon="collapsed";
+
+
+$entryMessage="";
+$resizeElement="";
+$resizeSize=0;
+$loadAtlasPage=0;
+
+$FF=false;
+$MSIE=false;
+
+$today=date('Ymd',strtotime('today'));
+$thisYear=date("Y");
+$thisMonth=date("n");
+$thisDay=date("j");
 
 ?>

@@ -2,6 +2,8 @@
 // loginuser.php
 // checks if the user is logged in based on cookie
 
+global $inIndex,$language;
+
 if((!isset($inIndex))||(!$inIndex)) include "/redirect.php";
 else login();
 
@@ -122,7 +124,7 @@ function login()
   if($loggedUser)
     $loggedUserName=$objObserver->getObserverProperty($loggedUser,'firstname')." ".$objObserver->getObserverProperty($loggedUser,'name');
 }
-require_once "lib/setup/"."$language";
+global $loggedUser;
 $objDatabase->execSQL("INSERT INTO logging(loginid, logdate, logtime, logurl, navigator, screenresolution, language) 
                        VALUES(\"".($loggedUser?$loggedUser:"anonymous")."\", ".
                                 date('Ymd').", ".date('His').", '".addslashes(substr($objUtil->checkArrayKey($_SERVER,'REQUEST_URI',''),0,255))."', '".addslashes(substr($objUtil->checkArrayKey($_SERVER,'HTTP_USER_AGENT',''),0,255))."', 'screenres', '".$_SESSION['lang']."');");
