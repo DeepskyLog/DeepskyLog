@@ -1,5 +1,13 @@
-<?php //list.php - shows the lists available to the user
-function listmenu()
+<?php 
+//list.php
+// shows the lists available to the user
+
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!($loggedUser)) throw new Exception(LangExcpetion001);
+elseif(!($objUtil->checkAdminOrUserID($loggedUser))) throw new Exception(LangExcpetion012);
+else menu_list();
+
+function menu_list()
 { global 	$baseURL,$loggedUser,$myList;
 	echo "<div class=\"menuDivExtended\">";
 	  echo "<p   class=\"menuHead\">".LangListsTitle;
@@ -44,5 +52,4 @@ function listmenu()
 	}
 	echo "</div>";
 }
-listmenu();
 ?>

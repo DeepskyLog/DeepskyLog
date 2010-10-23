@@ -1,4 +1,8 @@
-<?php // head.php - prints the html headers
+<?php 
+// head.php
+// prints the html headers
+
+
 echo "<head>";
 echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />";
 echo "<meta http-equiv=\"pragma\" content=\"no-cache\" />";

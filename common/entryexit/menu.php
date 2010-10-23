@@ -1,7 +1,10 @@
 <?php
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-else
-{ include $instDir.'common/menu/login.php';
+else menu();
+
+function menu()
+{ global $loggedUser,$instDir,$inIndex;
+  include $instDir.'common/menu/login.php';
 	include $instDir.$_SESSION['module'].'/menu/quickpick.php';                                // QUICKPICK MENU
 	include $instDir.$_SESSION['module'].'/menu/search.php';                                   // SEARCH MENU
 	if($loggedUser)                                                                            // LOGGED IN

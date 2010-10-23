@@ -1,7 +1,15 @@
-<?php  //instruction.php treats all commands for changing data in the database or setting program parameters
+<?php  
+//instruction.php treats all commands for changing data in the database or setting program parameters
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-else
-{	if($objUtil->checkGetKey('saveLayout'))
+else instructions();
+
+function instructions()
+{	global $myList,$lastReadObservation,$theDate,$modules,$menuView,$menuAddChange,$menuAdmin,$menuLogin,$menuSearch,$menuMoon,
+         $listname_ss,$listname,$entryMessage,
+         $objEyepiece,$objFilter,$objLens,$objIntrument,$objLocation,
+         $objObject,$objObserver,$objFormLayout,$objUtil,$objList;
+  if($objUtil->checkGetKey('saveLayout'))
   { $objFormLayout->saveLayout($objUtil->checkGetKey('formName','NoFormName'),$objUtil->checkGetKey('layoutName','layoutName'),
                                $objUtil->checkGetKey('restoreColumns',''),$objUtil->checkGetKey('orderColumns',''));
   }
@@ -84,12 +92,6 @@ else
 		reset($_SESSION['steps']);
 	}
 	// collapsed menus ================================================================================================================================================================
-  $menuView="collapsed";
-  $menuAddChange="collapsed";
-  $menuAdmin="collapsed";
-  $menuLogin="expanded";
-  $menuSearch="expanded";
-  $menuMoon="collapsed";
   if(array_key_exists('menuView',$_GET))
 	{ $menuView=$_GET['menuView'];
 	  $_SESSION['menus']['menuView']=$menuView;

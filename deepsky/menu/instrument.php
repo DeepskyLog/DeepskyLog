@@ -1,5 +1,13 @@
-<?php // instrument.php - menu which allows the user to change its standard instrument
-function menuinstrument()
+<?php 
+// instrument.php
+// menu which allows the user to change its standard instrument
+
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!($loggedUser)) throw new Exception(LangExcpetion001);
+elseif(!($objUtil->checkAdminOrUserID($loggedUser))) throw new Exception(LangExcpetion012);
+else menu_instrument();
+
+function menu_instrument()
 { global $baseURL,$loggedUser,
          $objInstrument,$objObject,$objObserver;
   if($loggedUser) 
@@ -26,5 +34,4 @@ function menuinstrument()
 		$link="";
 	}
 }
-menuinstrument();
 ?>

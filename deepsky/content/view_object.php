@@ -383,6 +383,9 @@ function showObjectObservations()
   $content3 ="<h4>";
 	$min=0;
 	$max=0;
+	$pageleft='';
+	$pageright='';
+	$pagemax='';
 	if(count($_SESSION['Qobs'])==0)
   {	$objPresentations->line(array("<h4>".LangObservationNoResults.(($objUtil->checkGetKey('myLanguages'))?(" (".LangSelectedObservationsSelectedLanguagesIndication.")"):(" (".LangSelectedObservationsAllLanguagesIndication.")"))."</h4>"),
 		                          "L",array(100),30);

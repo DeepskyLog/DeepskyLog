@@ -60,7 +60,16 @@ function get_data()
 	    throw new Exception(LangException016b);
 	  $_GET['source']='objects_nearby';
 	  $_GET['zoom']=$objUtil->checkGetKey('zoom',30);	
-	  include "deepsky/data/data_get_objects.php";	
+    if((!(array_key_exists('viewObjectObjectsNearby',$_SESSION)))||($_GET['object']!=$_SESSION['viewObjectObjectsNearby']))
+    { include "deepsky/data/data_get_objects.php";	
+      $_SESSION['minViewObjectObjectsNearby']=0;
+      $_SESSION['viewObjectObjectsNearby']=$_GET['object'];
+    }
+    if((!(array_key_exists('viewObjectObservations',$_SESSION)))||($_GET['object']!=$_SESSION['viewObjectObservations']))
+    { include "deepsky/data/data_get_observations.php";	
+      $_SESSION['minViewObjectObservations']=0;
+      $_SESSION['viewObjectObservations']=$_GET['object'];
+    }
 	}
 	elseif(($includeFile=='deepsky/content/new_object.php')&&($objUtil->checkRequestKey('phase10')))
 	{ $_GET['source']="add_object10";
@@ -73,24 +82,6 @@ function get_data()
 	elseif($includeFile=='deepsky/content/tolist.php')
 	{ $_GET['source']='tolist';
 	  require_once 'deepsky/data/data_get_objects.php';
-	}
-	elseif($includeFile=='deepsky/content/view_object.php')
-	{ if(!($objUtil->checkGetKey('object'))) 
-	    throw new Exception(LangException016);
-	  if(!($_GET['object']=$objObject->getDsObjectName($_GET['object'])))
-	    throw new Exception(LangException016b);
-	  $_GET['source']='objects_nearby';
-	  $_GET['zoom']=$objUtil->checkGetKey('zoom',30);	
-    if((!(array_key_exists('viewObjectObjectsNearby',$_SESSION)))||($_GET['object']!=$_SESSION['viewObjectObjectsNearby']))
-    { include "deepsky/data/data_get_objects.php";	
-      $_SESSION['minViewObjectObjectsNearby']=0;
-      $_SESSION['viewObjectObjectsNearby']=$_GET['object'];
-    }
-    if((!(array_key_exists('viewObjectObservations',$_SESSION)))||($_GET['object']!=$_SESSION['viewObjectObservations']))
-    { include "deepsky/data/data_get_observations.php";	
-      $_SESSION['minViewObjectObservations']=0;
-      $_SESSION['viewObjectObservations']=$_GET['object'];
-    }
 	}
 	elseif($includeFile=='deepsky/content/selected_observations.php')
 	{  require_once 'deepsky/data/data_get_observations.php';

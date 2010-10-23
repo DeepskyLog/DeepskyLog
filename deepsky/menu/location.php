@@ -1,5 +1,13 @@
-<?php // location.php - menu which allows the user to change its standard location
-function menulocation()
+<?php 
+// location.php
+// menu which allows the user to change its standard location
+
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!($loggedUser)) throw new Exception(LangExcpetion001);
+elseif(!($objUtil->checkAdminOrUserID($loggedUser))) throw new Exception(LangExcpetion012);
+else menu_location();
+
+function menu_location()
 { global $baseURL,$loggedUser, 
          $objLocation,$objObject,$objObserver;
   if($loggedUser)
@@ -26,5 +34,4 @@ function menulocation()
 		$link="";
 	}
 }
-menulocation();
 ?>

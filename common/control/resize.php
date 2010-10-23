@@ -1,4 +1,8 @@
-<?php // utility functions in resizing
+<?php 
+// utility functions in resizing
+
+if((!isset($inIndex))||(!$inIndex)) include "/redirect.php";
+
 function image_createThumb($src,$dest,$maxWidth,$maxHeight,$quality=75) {
    if (file_exists($src)  && isset($dest)) {
        // path info
