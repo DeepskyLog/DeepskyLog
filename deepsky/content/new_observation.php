@@ -7,7 +7,7 @@ elseif(!$loggedUser) throw new Exception(LangException002);
 else new_observation();
 
 function new_observation()
-{ global $baseURL,$loggedUser,
+{ global $baseURL,$loggedUser,$DSOcatalogs,
          $ClusterTypeA,$ClusterTypeB,$ClusterTypeC,$ClusterTypeD,$ClusterTypeE,$ClusterTypeF,$ClusterTypeG,$ClusterTypeH,$ClusterTypeI,$ClusterTypeX,
          $objObject,$objFilter,$objLens,$objEyepiece,$objLanguage,$objObserver,$objInstrument,$objLocation,$objPresentations,$objUtil;
 
@@ -352,7 +352,7 @@ function new_observation()
 		$content.="<a href=\"" . $baseURL . "index.php?indexAction=add_csv\">" . LangNewObservationSubtitle1b . "</a>" . LangNewObservationSubtitle1abis;
 		$content.="<a href=\"" . $baseURL . "index.php?indexAction=add_xml\">" . LangNewObservationSubtitle1c . "</a>";
 		$objPresentations->line(array($content),"L",array(),50);
-		echo "<form action=\"" . $baseURL . "index.php\" method=\"post\">";
+		echo "<form action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 		echo "<input type=\"hidden\" name=\"indexAction\"   value=\"add_observation\" />";
 		echo "<input type=\"hidden\" name=\"titleobject\"   value=\"".LangQuickPickNewObservation."\" />";
 		$content ="<select name=\"catalog\" class=\"inputfield\">";
@@ -365,7 +365,7 @@ function new_observation()
 		$content3="<input type=\"submit\" name=\"objectsearch\" value=\"" . LangNewObservationButton1 . "\" />";
 		$objPresentations->line(array(LangQueryObjectsField1,$content,$content3),"RLR",array(20,60,20),30,array('fieldname'));
 	  echo "<hr />";
-		echo "</form>";
+		echo "</div></form>";
 	}
 	echo "</div>";
 }

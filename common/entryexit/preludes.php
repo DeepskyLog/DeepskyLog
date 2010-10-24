@@ -4,12 +4,13 @@
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else 
 { preludesA();
-  require_once "lib/setup/"."$language";
+  require_once "lib/setup/".$language;
   preludesB();
 }
 
 function preludesA()
-{ global $objDatabase,
+{ global $language,
+         $objDatabase,
          $objLanguage,
          $objObserver,
          $objUtil;
@@ -52,7 +53,7 @@ function preludesB()
          $objUtil
          ;
 
-  require_once "lib/observerqueries.php";        $objObserverQueries=new Observerqueries;
+  require_once "lib/observerqueries.php";         $objObserverQueries=new Observerqueries;
   require_once "lib/atlasses.php";                $objAtlas=new Atlasses;
 	require_once "lib/locations.php";               $objLocation=new Locations;
 	require_once "lib/instruments.php";             $objInstrument=new Instruments;

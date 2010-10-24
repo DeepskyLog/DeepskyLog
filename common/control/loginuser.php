@@ -8,7 +8,7 @@ if((!isset($inIndex))||(!$inIndex)) include "/redirect.php";
 else login();
 
 function login()
-{ global $loggedUser,$loggedUserName,$modules,$language,$entryMessage,$usedLanguages,$allLanguages,
+{ global $loggedUser,$loggedUserName,$modules,$language,$entryMessage,$usedLanguages,$allLanguages,$defaultLanguage,
          $objUtil,$objObserver,$objLanguage;
   $loggedUser='';
   $loggedUserName='';

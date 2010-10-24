@@ -50,7 +50,8 @@ class Language
    return $countrylist;
  }
  function getPath($lang)                                                        // getPath returns the path to include for the given language.
- { $path="language/$lang/lang_main.php";
+ { global $defaultLanguage;
+   $path="language/".($lang?$lang:$defaultLanguage)."/lang_main.php";
    return $path;
  }
 }
