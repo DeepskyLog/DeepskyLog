@@ -8,7 +8,7 @@ elseif($_SESSION['admin']!="yes") throw new Exception(LangException001);
 else admin();
 
 function admin()
-{ global $baseURL,menuAdmin,
+{ global $baseURL,$menuAdmin,
          $objUtil;
 	echo "<div class=\"menuDiv\">";
 	reset($_GET);

@@ -6,12 +6,6 @@
 // Version 0.8 : 12/09/2005, WDM
 //
 
-include_once "database.php";
-include_once "instruments.php";
-include_once "locations.php";
-include_once "observers.php";
-include_once "cometobjects.php";
-include_once "setup/databaseInfo.php";
 
 class CometObservations
 {
@@ -171,7 +165,6 @@ class CometObservations
  // when the time is given in  local time
  function setLocalDateAndTime($id, $date, $time)
  {
-  include_once "locations.php";
   $locations = new Locations();
 
   if ($time >= 0)
@@ -251,7 +244,6 @@ class CometObservations
  // getLocalDate returns the date of the given observation in local time
  function getLocalDate($id)
  {
-  include_once "locations.php";
   $locations = new Locations();
 
 
@@ -349,7 +341,6 @@ class CometObservations
  // getLocalTime returns the time of the given observation in local time
  function getLocalTime($id)
  {
-  include_once "locations.php";
   $locations = new Locations();
 
 
@@ -748,7 +739,6 @@ class CometObservations
  // getObservations returns an array with all observations
  function getObservations()
  {
-  include "setup/databaseInfo.php";
   $observers = new Observers;
 
     
@@ -784,8 +774,6 @@ class CometObservations
  // observed
  function getNumberOfDifferentObjects()
  {
-  include "setup/databaseInfo.php";
-  include_once "observers.php";
 
   $observers = new Observers;
     
@@ -800,8 +788,6 @@ class CometObservations
  // getNumberOfObservations() returns the total number of observations
  function getNumberOfObservations()
  {
-  include "setup/databaseInfo.php";
-  include_once "observers.php";
 
   $observers = new Observers;
 
@@ -818,8 +804,6 @@ class CometObservations
  // year
  function getNumberOfObservationsThisYear()
  {
-  include "setup/databaseInfo.php";
-  include_once "observers.php";
 
   $observers = new Observers;
 
@@ -856,8 +840,6 @@ function getObservationsThisObserver($id)
  // the observer
  function getNumberOfObjects($id)
  {
-  include "setup/databaseInfo.php";
-
     
  
   $sql = "SELECT COUNT(DISTINCT objectid) FROM cometobservations WHERE observerid=\"$id\"";
@@ -871,7 +853,6 @@ function getObservationsThisObserver($id)
  // objects
  function getPopularObservations()
  {
-  include "setup/databaseInfo.php";
   $observers = new Observers;
 
     
@@ -897,7 +878,6 @@ function getObservationsThisObserver($id)
  // sorted by the column specified in $sort
  function getSortedObservations($sort)
  {
-  include "setup/databaseInfo.php";
   $observers = new Observers;
 
     
@@ -951,7 +931,6 @@ function getObservationsThisObserver($id)
  //             "mintail" => "11.0", "maxtail" => "15.0");
  function getObservationFromQuery($queries, $sort = "", $exactmatch = "1", $clubOnly = "True")
  {
-  include "setup/databaseInfo.php";
   $observers = new Observers;
   $objects = new CometObjects;
   $locations = new Locations;

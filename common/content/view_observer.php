@@ -31,7 +31,7 @@ function view_observer()
 	  $userDSrank++;
 	$userCometobservation=$objObserver->getNumberOfCometObservations($user);
 	$totalCometObservations=$objCometObservation->getNumberOfObservations();
-	/*$userCometYearObservations=$objCometObservation->getObservationsThisYear($user);
+	$userCometYearObservations=$objCometObservation->getObservationsThisYear($user);
 	$totalCometYearObservations=$objCometObservation->getNumberOfObservationsThisYear();
 	$userCometObjects = $objCometObservation->getNumberOfObjects($user);
 	$totalCometobjects=$objCometObservation->getNumberOfDifferentObjects();
@@ -217,6 +217,6 @@ function view_observer()
 	  }
 	}
 	
-	echo "</div>";*/
+	echo "</div>";
 }
 ?>
