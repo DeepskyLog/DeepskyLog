@@ -1,4 +1,7 @@
-<?php // index.php - main entrance to DeepskyLog
+<?php 
+// index.php
+// main entrance to DeepskyLog
+
 try
 { $inIndex=true;
   $language="nl";

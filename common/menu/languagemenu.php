@@ -2,7 +2,8 @@
 // language.php
 // menu which allows a non-registered user to change the language he sees the information in 
 
-menu_language();
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else  menu_language();
 
 function menu_language()
 { global $baseURL,$languageMenu,

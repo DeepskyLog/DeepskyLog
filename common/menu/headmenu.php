@@ -1,4 +1,9 @@
-<?php // VVS Header and our 3 dropdown boxes if logged in 
+<?php 
+// headmenu.php
+// VVS Header and our 3 dropdown boxes if logged in 
+
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else headmenu();
 
 function headmenu()
 { global $baseURL,$leftmenu,$loggedUser,$modules,$thisDay,$thisMonth,$thisYear,$topmenu,
@@ -74,5 +79,4 @@ function headmenu()
 	echo "</div>";
 	echo "</div>";
 }
-headmenu();
 ?>

@@ -2,7 +2,8 @@
 // moon.php
 // menu which shows the moon phase
 
-menu_moon();
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else menu_moon();
 
 function menu_moon()
 { global $baseURL,$dateformat,$loggedUser,$menuMoon,

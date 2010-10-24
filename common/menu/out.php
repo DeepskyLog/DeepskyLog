@@ -2,7 +2,8 @@
 // out.php
 // menu which allows the user to logout from deepskylog
 
-logout();
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else logout();
 
 function logout()
 { global $baseURL ;

@@ -1,8 +1,9 @@
 <?php 
 // oalmenu.php
-// dispalys a site counter
+// dispalys the OAL logo
 
-menu_aol();
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else menu_aol();
 
 function menu_aol()
 { global $baseURL;
