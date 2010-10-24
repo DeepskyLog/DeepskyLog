@@ -24,7 +24,7 @@ function preludesA()
 	require_once "common/control/loginuser.php";
 }
 function preludesB()
-{ global $FF,$MSIE,$leftMenu,$topMenu,
+{ global $FF,$MSIE,$leftMenu,$topMenu,$thisYear,$thisMonth,$thisDay,$DSOcatalogsLists,$DSOcatalogs,
          $objAstroCalc,
          $objAtlas,
          $objCatalog,
@@ -119,6 +119,8 @@ function preludesB()
 	  $topmenu=$_GET['topmenu'];
 	elseif(array_key_exists('topmenu',$_COOKIE))
 	  $topmenu=$_COOKIE['topmenu'];
+  $DSOcatalogsLists = $objObject->getCatalogsAndLists();
+  $DSOcatalogs      = $objObject->getCatalogs();
 }
 function Nz($arg)
 { if($arg) return $arg;

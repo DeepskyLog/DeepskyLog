@@ -4,8 +4,9 @@
 
 if((!isset($inIndex))||(!$inIndex)) include "/redirect.php";
 
-$DSOcatalogsLists = $objObject->getCatalogsAndLists();
-$DSOcatalogs      = $objObject->getCatalogs();
+
+$DSOcatalogsLists = array();
+$DSOcatalogs      = array();
 
 $sort;                                                  // defines in data_get_objects.php
 $showPartOfs="";
