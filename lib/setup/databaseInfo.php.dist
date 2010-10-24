@@ -1,4 +1,15 @@
 <?php
+
+databaseInfo();
+
+function databaseInfo()
+{ 
+  global $host,$user,$pass,$dbname,$developversion,
+         $instDir,$baseURL,$tempfolder,
+         $title,$browsertitle,$copyrightInfo,$vvsInfo,$dslInfo,$versionInfo,$objectInfo,$w3cInfo,
+         $register,$dateformat,$defaultLanguage,$languageMenu,$maxFileSize,$modules,
+         $standardLanguagesForObservationsDuringRegistration,$languagesDuringRegistration;
+
   // Change the following to make deepskylog work with your database
   $host           = "localhost";
   $user           = "wim";
@@ -75,4 +86,5 @@
   // Defines the different languages which are selected during the 
   // registration.
   $languagesDuringRegistration = array("en", "nl");
+}
 ?>
