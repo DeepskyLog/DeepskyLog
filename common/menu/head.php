@@ -6,7 +6,7 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else head();
 
 function head()
-{ global $baseURL,$includeFile,$topmenu,$leftmenu,
+{ global $baseURL,$includeFile,$topmenu,$leftmenu,$theDate,$object,$listname, 
          $objObserver,$objUtil;
 	echo "<head>";
 	echo "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\" />";

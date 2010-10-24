@@ -1533,7 +1533,7 @@ class Objects
 					$check = false;
 		    }
 		  if($check)                                                                    // magnitude
-		  { $magnitude = "";
+		  { $magnitude = "99.9";
 		    if($objUtil->checkPostKey('magnitude')&&(!(ereg('^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$',$_POST['magnitude'],$matches))))
 		    { $entryMessage=LangValidateObjectMessage9;
 		      $_GET['indexAction']='add_object';
@@ -1559,7 +1559,7 @@ class Objects
 		      $posangle=$_POST['posangle'];
 		  }
 		  if($check)                                                                    // surface brightness
-		  { $sb = "";
+		  { $sb = "99.9";
 		    if($_POST['sb'] && ereg('^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$', $_POST['sb'], $matches)) 
 		    { $sb = "" . $matches[1] . ".";
 		      if($matches[2] != "")
@@ -1601,7 +1601,7 @@ class Objects
 		    $body=LangValidateAccountEmailTitleObject." ".$name." ". "www.deepskylog.org/index.php?indexAction=detail_object&object=".urlencode($name)." ".
 				      LangValidateAccountEmailTitleObjectObserver." ".$objObserver->getObserverProperty($loggedUser,'name')." ".$objObserver->getObserverProperty($loggedUser,'firstname')." www.deepskylog.org/index.php?indexAction=detail_observer&user=".urlencode($loggedUser);
         if(isset($developversion)&&($developversion==1))
-          $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<p>";
+          $entryMessage.="On the live server, a mail would be sent with the subject: ".LangValidateAccountEmailTitleObject . " " . $name.".<p>";
         else
           mail($mailTo, LangValidateAccountEmailTitleObject . " " . $name, $body, "From:".$mailFrom);
 			  $_GET['indexAction']='detail_object';

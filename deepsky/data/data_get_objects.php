@@ -3,8 +3,8 @@
 data_get_objects();
 
 function data_get_objects()
-{ global $showPartOfs,
-         $objObject,$objUtil;
+{ global $showPartOfs,$listname,
+         $objCatalog,$objList,$objObject,$objUtil;
 	$showPartOfs=$objUtil->checkGetKey('showPartOfs',$objUtil->checkSessionKey('QobjPO',0));
 	// ========================================= filter objects from observation query
 	if($objUtil->checkGetKey('source')=='observation_query') 
