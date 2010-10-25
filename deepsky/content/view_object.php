@@ -1,6 +1,11 @@
-<?php  // view_object.php - view all information of one object
-if(!($object=$objUtil->checkGetKey('object')))
+<?php
+// view_object.php
+// view all information of one object
+
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else if(!($object=$objUtil->checkGetKey('object')))
   throw new Exception('To implement');
+else view_object();
 
 function showButtons($theLocation,$viewobjectdetails,$viewobjectephemerides,$viewobjectobjectsnearby,$viewobjectobservations)
 { global $baseURL,$object,
@@ -581,6 +586,5 @@ function view_object()
 	  showAdminObjectFunctions();
 	echo "</div>";
 }
-view_object();
 ?>
 	

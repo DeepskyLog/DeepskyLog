@@ -1,4 +1,10 @@
-<?php // top_observers.php - generates an overview of all observers and their rank 
+<?php 
+// top_observers.php
+// generates an overview of all observers and their rank 
+
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else topobservers();
+
 function topobservers()
 { global $DSOcatalogsLists,$baseURL,$FF,$objObject,$objObservation,$objObserver,$objPresentations,$objUtil,$step;
   if((array_key_exists('steps',$_SESSION))&&(array_key_exists("topObs",$_SESSION['steps'])))
@@ -32,5 +38,4 @@ function topobservers()
 	}
 	echo "</div>";
 }
-topobservers();
 ?>

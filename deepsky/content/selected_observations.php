@@ -2,7 +2,8 @@
 // selected_observations.php
 // generates an overview of selected observations in the database
 
-selected_observations();
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else selected_observations();
 
 function selected_observations()
 { global $baseURL,$FF,$loggedUser,$object,$myList,$step,

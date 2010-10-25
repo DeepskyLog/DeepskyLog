@@ -1,7 +1,13 @@
-<?php // setup_objects_query.php - interface to query objects
+<?php 
+// setup_objects_query.php
+// interface to query objects
+
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else setup_objects_query();
+
 function setup_objects_query()
 { global $baseURL,$loggedUser,$objPresentations,$objUtil,$objObject,$objList,$objAtlas,
-         $catalog,$catNumber,$atlas,$atlasPageNumber,$entryMessage,
+         $catalog,$catNumber,$atlas,$atlasPageNumber,$entryMessage,$DSOcatalogs,
          $pageError,$minDeclDegreesError,$minDeclMinutesError,$minDeclSecondsError,$maxDeclDegreesError,$maxDeclMinutesError,$maxDeclSecondsError,
          $minRAHoursError,$minRAMinutesError,$minRASecondsError,$maxRAHoursError,$maxRAMinutesError,$maxRASecondsError,$maxMagError,$minMagError,
          $maxSBError,$minSBError,$minSizeError,$maxSizeError,$minContrastError,$maxContrastError,$listError;
@@ -381,5 +387,4 @@ function setup_objects_query()
 	echo "</div>";
 	echo '<script type="text/javascript">setobserverqueries();</script>';
 }
-setup_objects_query();
 ?>

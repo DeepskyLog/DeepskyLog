@@ -1,6 +1,12 @@
 <?php
+// setup_observations_query
+// allows the user to set up a search for a selected number of observations
+
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else setup_observations_query();	
+
 function setup_observations_query()
-{ global $baseURL, $loggedUser, $allLanguages, $usedLanguages, $usedLanguages,
+{ global $baseURL, $loggedUser, $allLanguages, $usedLanguages, $usedLanguages,$DSOcatalogs,
          $objPresentations, $objUtil, $objObserver, $objAtlas, $objObject, $objInstrument, $objLocation;
   $QobsParamsCount=0;
 	if(array_key_exists('QobsParams',$_SESSION))
@@ -630,5 +636,4 @@ function setup_observations_query()
 	echo "</div>";
 	echo '<script type="text/javascript">setobserverqueries();</script>';
 }
-setup_observations_query();	
 ?>
