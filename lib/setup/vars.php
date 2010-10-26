@@ -1,4 +1,9 @@
 <?php
+// vars.php
+// contains a series of defines for the project
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 
 define("AtlasOverviewZoom", 17);
 define("AtlasLookupZoom",   18);

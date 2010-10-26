@@ -1,4 +1,11 @@
-<?php  // The contrast class calculates the contrast and magnification of a certain object, with a certain instrument, under a certain sky
+<?php  
+// contrast.php
+// The contrast class calculates the contrast and magnification of a certain object, 
+// with a certain instrument, under a certain sky
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class Contrast
 { private function calcSubroutine($x, $SBObj, $minObjArcmin, $maxObjArcmin, $maxLog, $logObjContrast)// This function should not be used. Only needed for the calculations
   { $SBReduc = 5 * log10( $x / (2.833 * $_SESSION['aperIn']));

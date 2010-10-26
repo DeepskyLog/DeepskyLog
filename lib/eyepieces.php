@@ -1,4 +1,10 @@
-<?php // The eyepieces class collects all functions needed to enter, retrieve and adapt eyepiece data from the database.
+<?php 
+// eyepieces.php
+// The eyepieces class collects all functions needed to enter, retrieve and adapt eyepiece data from the database.
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class Eyepieces
 {public function addEyepiece($name, $focalLength, $apparentFOV)                      // addEyepiece adds a new eyepiece to the database. The name, focalLength and apparentFOV should be given as parameters. 
  { global $objDatabase;

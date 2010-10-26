@@ -1,4 +1,10 @@
-<?php // The location class collects all functions needed to enter, retrieve and adapt location data from the database.
+<?php 
+//locations.php
+// The location class collects all functions needed to enter, retrieve and adapt location data from the database.
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class Locations
 { public function addLocation($name, $longitude, $latitude, $region, $country, $timezone)                             // addLocation adds a new location to the database. The name, longitude, latitude, region and country should be given as parameters. 
   { global $objDatabase;

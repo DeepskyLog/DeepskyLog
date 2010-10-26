@@ -1,4 +1,9 @@
-<?php // The instruments class collects all functions needed to enter, retrieve and adapt instrument data from the database.
+<?php 
+// instruments.php
+// The instruments class collects all functions needed to enter, retrieve and adapt instrument data from the database.
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 
 class Instruments
 { public  function addInstrument($name, $diameter, $fd, $type, $fixedMagnification, $observer)    // adds a new instrument to the database. The name, diameter, fd and type should be given as parameters. 

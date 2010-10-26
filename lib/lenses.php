@@ -1,4 +1,10 @@
-<?php  // The lenses class collects all functions needed to enter, retrieve and adapt lenses data from the database.
+<?php  
+// lenses.php
+// The lenses class collects all functions needed to enter, retrieve and adapt lenses data from the database.
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class Lenses
 { public  function addLens($name, $factor)                                      // adds a new lens to the database. The name and the factor should be given as parameters. 
   { global $objDatabase;

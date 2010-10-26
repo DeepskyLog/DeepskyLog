@@ -1,4 +1,10 @@
-<?php  // The filters class collects all functions needed to enter, retrieve and adapt filters data from the database.
+<?php  
+// filters.php
+// The filters class collects all functions needed to enter, retrieve and adapt filters data from the database.
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class Filters
 {public  function addFilter($name, $type, $color, $wratten, $schott)                    // addFilter adds a new filter to the database. The name, type, color, wratten and schott should be given as parameters. 
  { global $objDatabase;

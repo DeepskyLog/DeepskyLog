@@ -9,7 +9,8 @@ elseif(!$loggedUser) throw new Exception(LangException002);
 else add_csv_listdata();
 
 function add_csv_listdata()
-{ global $objList,$objObject;
+{ global $myList,
+         $objList,$objObject;
 	if($_FILES['csv']['tmp_name'])
 	   $csvfile=$_FILES['csv']['tmp_name'];
 	$data_array=file($csvfile);

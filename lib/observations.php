@@ -1,4 +1,10 @@
-<?php // The observations class collects all functions needed to enter, retrieve and adapt observation data from the database.
+<?php 
+// observations.php
+// The observations class collects all functions needed to enter, retrieve and adapt observation data from the database.
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class Observations {
 	public function addCSVobservations()
 	{ global $objPresentations,$messageLines,$objObject,$objLocation,$loggedUser,$objInstrument,$objEyepiece,$objLens,$objFilter,$baseURL,$objObserver,$objUtil;

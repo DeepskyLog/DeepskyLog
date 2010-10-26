@@ -1,6 +1,11 @@
 <?php
+// databaseInfo.php
+// contains several startup parameters
 
-databaseInfo();
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else databaseInfo();
+
 
 function databaseInfo()
 { 
@@ -30,12 +35,12 @@ function databaseInfo()
   $title         = "<a href=\"http://www.deepskylog.org\">DeepskyLog</a>";
   // The first part of the title that has to appear on each browser window
   $browsertitle  = "DeepskyLog";
-  $copyrightInfo = "Copyright&nbsp;2004&nbsp;-&nbsp;2010&nbsp;-&nbsp;";
+  $copyrightInfo = "Copyright&nbsp;2004&nbsp;-&nbsp;2010&nbsp;-&nbsp;Deepskylog developers&nbsp;-&nbsp;";
   $vvsInfo       = "<a href=\"http://www.deepsky.be\">VVS Deepsky</a>&nbsp;-&nbsp;";
   $dslInfo       = "Powered by&nbsp;<a href=\"http://www.deepskylog.org\">DeepskyLog</a>&nbsp;";
   $versionInfo   = "4.1-Trunk";
   $objectInfo    = " - Object Database by <a href=\"http://www.eyeandtelescope.com/\" >Eye&amp;Telescope</a>" . 
-                   " - Star Database by Tycho2+";
+                   " - Star Database by Tycho2+ &amp; USNO-UCAC3";
   $w3cInfo = "<a class=\"w3c\" href=\"http://validator.w3.org/check?uri=referer\">".
              "<img class=\"w3c\" src=\"".$baseURL."styles/images/valid-xhtml10S.png\" alt=\"Valid XHTML 1.0 Strict\" />".
              "</a>".

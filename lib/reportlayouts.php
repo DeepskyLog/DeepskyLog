@@ -1,4 +1,10 @@
 <?php
+// reportlayouts
+// functions for managing the report layouts
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class reportLayouts
 { public function loadLayout($formName,$layoutName)
   { global $objDatabase;

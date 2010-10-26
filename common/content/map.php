@@ -3,6 +3,10 @@
 // These are the coordinates the location we wish to plot. 
 // These are being passed in the URL, but we will set them to a default if nothing is passed. if(empty($long))$long = -70.7333; if(empty($lat)) $lat = -29.25;
 
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else map();
+
 function getlocationcoords($lat, $lon, $width, $height)
 { // Convert the long/lat coordinates into screen coordinates
   $x = (($lon + 180) * ($width / 360));
@@ -31,5 +35,4 @@ function map()
 	imagepng($im);
 	imagedestroy($im);
 }
-map();
 ?>

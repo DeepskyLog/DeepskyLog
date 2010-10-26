@@ -9,7 +9,7 @@ function instructions()
 {	global $loggedUser,$myList,$lastReadObservation,$theDate,$modules,$menuView,$menuAddChange,$menuAdmin,$menuLogin,$menuSearch,$menuMoon,
          $listname_ss,$listname,$entryMessage,$step,
          $objEyepiece,$objFilter,$objLens,$objIntrument,$objLocation,
-         $objObject,$objObserver,$objFormLayout,$objUtil,$objList;
+         $objObject,$objObserver,$objObservation,$objFormLayout,$objUtil,$objList;
   if($objUtil->checkGetKey('saveLayout'))
   { $objFormLayout->saveLayout($objUtil->checkGetKey('formName','NoFormName'),$objUtil->checkGetKey('layoutName','layoutName'),
                                $objUtil->checkGetKey('restoreColumns',''),$objUtil->checkGetKey('orderColumns',''));

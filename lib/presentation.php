@@ -1,4 +1,10 @@
 <?php
+// presentations.php
+// code for showing ordered divs on the screen, conversion of formats, etc.
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class Presentations
 { public  function alertMessage($theMessage)
   { global $baseURL,$indexAction;

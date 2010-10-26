@@ -1,27 +1,34 @@
 <?php 
 
 $inIndex = true;
-include 'common/entryexit/preludes.php';
+require_once 'common/entryexit/preludes.php';
 require_once "lib/setup/vars.php";
 
-if(($zoom=$objUtil->checkRequestKey('zoom'))==AtlasOverviewZoom)
-  $filename=OverviewChart;
-elseif($zoom==AtlasLookupZoom)
-  $filename=LookupChart;
-elseif($zoom==AtlasDetailZoom)
-  $filename=DetailChart;
-else
-  $filename="Zoom_".$zoom;
-$filename.="_".str_replace(' ','_',$objUtil->checkRequestKey('object','Deepskylog_Atlas'));
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else atlas();
 
-/*
-header ("Content-Type: application/pdf");
-header ("Content-Disposition: attachment; filename=".$filename.".pdf");
-
-echo "<head>";
-echo "<title>".$objUtil->checkRequestKey('object','Deepskylog Atlas page')."</title>";
-echo "</head>";
-*/
-
-$objPrintAtlas->pdfAtlas();
+function atlas()
+{ global $objUtil,$objPrintAtlas;
+	if(($zoom=$objUtil->checkRequestKey('zoom'))==AtlasOverviewZoom)
+	  $filename=OverviewChart;
+	elseif($zoom==AtlasLookupZoom)
+	  $filename=LookupChart;
+	elseif($zoom==AtlasDetailZoom)
+	  $filename=DetailChart;
+	else
+	  $filename="Zoom_".$zoom;
+	$filename.="_".str_replace(' ','_',$objUtil->checkRequestKey('object','Deepskylog_Atlas'));
+	
+	/*
+	header ("Content-Type: application/pdf");
+	header ("Content-Disposition: attachment; filename=".$filename.".pdf");
+	
+	echo "<head>";
+	echo "<title>".$objUtil->checkRequestKey('object','Deepskylog Atlas page')."</title>";
+	echo "</head>";
+	*/
+	
+	$objPrintAtlas->pdfAtlas();
+}
 ?>

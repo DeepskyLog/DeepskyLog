@@ -1,4 +1,10 @@
 <?php
+// atlasses.php
+// contains the code for calculating the atlas pages of objects
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class Atlasses
 { public  $atlasCodes=array();
   public  function __construct()                                                // Constructor initialises the public atlasCodes property

@@ -1,7 +1,9 @@
 <?php 
-// util
+// util.php
+// several handy functions
 
-include_once "class.ezpdf.php";
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 
 class Utils
 { public function hourminuteTimeToValue($thetime)

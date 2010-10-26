@@ -1,4 +1,9 @@
-<?php  // The database class collects all functions needed to login and logout from the database.
+<?php  
+// database.php
+// The database class collects all functions needed to login and logout from the database.
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 
 class Database
 { private $databaseId;

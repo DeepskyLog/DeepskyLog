@@ -1,9 +1,11 @@
 <?php
-interface iConstellation
-{ public function getAllBoundries();
-  public function getConstellationFromCoordinates($thera,$thedecl);
-}
-class Constellation implements iConstellation
+// constellations.php
+// code for checking to which consttellation some coordinates belong
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
+class Constellation
 { public $conBoundries;
   public function __construct()
   { $this->conBoundries=$this->getAllBoundries();

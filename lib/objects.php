@@ -1,4 +1,10 @@
-<?php // The objects class collects all functions needed to enter, retrieve and adapt object data from the database and functions to display the data.
+<?php 
+// objects.php
+// The objects class collects all functions needed to enter, retrieve and adapt object data from the database and functions to display the data.
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class Objects
 { public  function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec, $mag, $subr, $diam1, $diam2, $pa, $datasource)               // addObject adds a new object to the database. The name, alternative name, type, constellation, right ascension, declination, magnitude, surface brightness, diam1, diam2, position angle and info about the catalogs should be given as parameters. The chart numbers for different atlasses are put in the database. $datasource describes where the data comes from eg : SAC7.2, DeepskyLogUser or E&T 2.5
   { global $objDatabase;

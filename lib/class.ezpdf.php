@@ -1,6 +1,9 @@
 <?php
+// class.ezpdf.php
+// ez functions for printing to a pdf file
 
-include_once('class.pdf.php');
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 
 class Cezpdf extends Cpdf {
 //==============================================================================

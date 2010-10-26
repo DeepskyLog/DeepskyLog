@@ -1,6 +1,11 @@
 <?php
+// data_get_objects
+// get objects for queries, lists, nearby objects...
 
-data_get_objects();
+global $inIndex;
+
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else data_get_objects();
 
 function data_get_objects()
 { global $showPartOfs,$listname,

@@ -1,4 +1,10 @@
 <?php
+// observerqueries.php
+// manages the observation queries a user can makes, store, recall or remove
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class Observerqueries
 { function getObserverQueries($querytype)
   { global $objDatabase,$loggedUser;

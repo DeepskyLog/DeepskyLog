@@ -1,4 +1,10 @@
 <?php
+// formlayouts.php
+// code for column arrangements on forms
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class formLayouts
 { public function loadLayout($formName,$layoutName)
   { global $objDatabase;

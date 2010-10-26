@@ -1,8 +1,11 @@
 <?php
 // data_get_observations.php
-// gets the DSO data from the DB into the SESSION variable
+// gets the observations data from the database
 
-data_get_observations();
+global $inIndex;
+
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else data_get_observations();
 
 function data_get_observations()
 { global $allLanguages,$usedLanguages,$sort,$loggedUser,$includeFile,

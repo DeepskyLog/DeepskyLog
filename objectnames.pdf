@@ -1,7 +1,15 @@
 <?php 
 $inIndex = true;
-include_once 'common/entryexit/preludes.php';
-$filename=str_replace(' ','_',html_entity_decode($objUtil->checkRequestKey('pdfTitle','Deepskylog_Objects_Names')));
-if(array_key_exists('SID', $_GET)&&$_GET['SID']&&array_key_exists($_GET['SID'],$_SESSION)&&$_SESSION[$_GET['SID']])
-  $objUtil->pdfObjectnames($_SESSION[$_GET['SID']]);
+require_once 'common/entryexit/preludes.php';
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else objectnames();
+
+function objectnames()
+{ global $objUtil;
+  $filename=str_replace(' ','_',html_entity_decode($objUtil->checkRequestKey('pdfTitle','Deepskylog_Objects_Names')));
+  if(array_key_exists('SID', $_GET)&&$_GET['SID']&&array_key_exists($_GET['SID'],$_SESSION)&&$_SESSION[$_GET['SID']])
+    $objUtil->pdfObjectnames($_SESSION[$_GET['SID']]);
+}
 ?>

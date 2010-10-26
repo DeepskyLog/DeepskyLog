@@ -1,4 +1,10 @@
 <?php
+// lists.php
+// code for maintance of lists
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class Lists
 {public function addObservations($thetype)
  { global $entryMessage,$myList,$objObject,$objDatabase,$loggedUser,$listname,$objPresentations;

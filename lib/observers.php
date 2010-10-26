@@ -1,4 +1,10 @@
-<?php // The observers class collects all functions needed to enter, retrieve and adapt observer data from the database and functions to display the data.
+<?php 
+// observers.php
+// The observers class collects all functions needed to enter, retrieve and adapt observer data from the database and functions to display the data.
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class Observers
 { public  function addObserver($id, $name, $firstname, $email, $password)                       // addObserver adds a new observer to the database. The id, name, first name email address and password should be given as parameters. The password must be encoded using md5(...). The new observer will not be able to log in yet. Before being able to do so, the administrator must validate the new user.
   { global $objDatabase; 

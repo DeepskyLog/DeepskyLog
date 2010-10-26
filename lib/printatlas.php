@@ -1,5 +1,10 @@
 <?php
-include_once "class.ezpdf.php";
+// printaltas.php
+// functions for printing the atlas
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class PrintAtlas
 { var $astroObjectsArr,
       $atlasmagnitude=0,

@@ -1,9 +1,11 @@
 <?php
-interface iAstroCalc
-{    public function calculateRiseTransitSettingTime($longitude, $latitude, $ra, $dec, $jd, $timedifference);  // Rising, transit and setting time of an object
-     public function calculateMoonRiseTransitSettingTime($jd, $longitude, $latitude, $timedifference);         // Rising,transit and setting of the moon
-}
-class AstroCalc implements iAstroCalc
+// astrocalc.php
+// pocedures for calculating astronomical timing etc.
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
+class AstroCalc
 {
   public  function __construct()                                                // Constructor initialises the public astroCalc property
   { 

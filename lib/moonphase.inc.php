@@ -1,4 +1,9 @@
 <?php
+// moonphase.inc.php
+// functions for calculating the moon phase
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 
  //
  // 2008-10-27

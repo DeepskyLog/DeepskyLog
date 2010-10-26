@@ -1,4 +1,10 @@
 <?php
+// stars.php
+// functions for retieving the star data from the database
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class Stars
 { public function getStarsMagnitude($lLhr,$rLhr,$dDdeg,$uDdeg,$frommag,$tomag)
   { global$objDatabase;

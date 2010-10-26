@@ -1,4 +1,10 @@
 <?php
+// catalogs.php
+// code for uniform index generation and ofr translating catalog names (eg Messier -> M)
+
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+
 class catalogs
 { private function formatIndex($theformat,$theindex)
   { if($theformat=="2MASX")

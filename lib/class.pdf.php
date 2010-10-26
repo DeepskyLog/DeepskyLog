@@ -1,6 +1,9 @@
 <?php
+// class.pdf.php
+// functions for printing to a pdf file
 
-// $$ ok
+global $inIndex;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 
 /**
 * Cpdf
