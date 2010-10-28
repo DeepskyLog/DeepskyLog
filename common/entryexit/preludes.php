@@ -78,8 +78,9 @@ function preludesB()
   include_once "lib/printatlas.php";              $objPrintAtlas = new PrintAtlas;
   include_once "lib/class.pdf.php";
   include_once "lib/class.ezpdf.php";
-  
-  
+  include_once "lib/icqmethod.php";
+  include_once "lib/icqreferencekey.php";
+
 	if(strpos(($browser=$objUtil->checkArrayKey($_SERVER,'HTTP_USER_AGENT','')),'Firefox')===false)
 	  $FF=false;
 	else

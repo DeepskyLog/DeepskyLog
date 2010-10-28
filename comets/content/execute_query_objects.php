@@ -2,9 +2,13 @@
 // execute_query_objects.php
 // executes the comet query passed by setup_query_objects.php
 
+global $inIndex,$loggedUser,$objUtil;
+if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+else comets_execute_query_objects();
+
 function comets_execute_query_objects()
-{ global $baseURL,
-         $objCometObject;
+{ global $baseURL,$step,$loggedUser,
+         $objCometObject,$objPresentations,$objUtil,$objCometObservation;
 	echo "<div id=\"main\">";
 	$content="";
 	if($_GET['name'] || $_GET['icqname']) // at least one search field filled in 
@@ -72,6 +76,7 @@ function comets_execute_query_objects()
 	    else
 	    { echo "<td>".LangOverviewObjectsHeader7."</a></td>";
 	    }
+	    echo "</tr>";
 	    while(list($key,$value)=each($result))
 	    { if(($count>=$min)&&($count<$max))
 	      { if ($count % 2)
