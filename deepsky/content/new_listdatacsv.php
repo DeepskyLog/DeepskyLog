@@ -1,6 +1,6 @@
 <?php 
 // new_listdatacsv.php
-// add new list data viacsv file
+// add new list data via csv file
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else new_listdatacsv();

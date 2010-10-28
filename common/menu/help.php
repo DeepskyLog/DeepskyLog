@@ -1,5 +1,6 @@
 <?php 
 // help.php
+// displays the help menu (only in Dutch)
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else help();

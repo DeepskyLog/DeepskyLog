@@ -1,6 +1,6 @@
 <?php
-// The language class collects all functions needed to work with different
-// languages.
+// language.php
+// The language class collects all functions needed to work with different languages.
 
 global $inIndex;
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";

@@ -1,15 +1,16 @@
 <?php 
+// atlas.pdf
+// print one atlas page
 
 $inIndex = true;
 require_once 'common/entryexit/preludes.php';
 require_once "lib/setup/vars.php";
 
-global $inIndex;
-if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-else atlas();
+atlas();
 
 function atlas()
-{ global $objUtil,$objPrintAtlas;
+{ global $filename,
+         $objUtil,$objPrintAtlas;
 	if(($zoom=$objUtil->checkRequestKey('zoom'))==AtlasOverviewZoom)
 	  $filename=OverviewChart;
 	elseif($zoom==AtlasLookupZoom)

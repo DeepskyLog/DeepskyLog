@@ -1,4 +1,7 @@
-<?php // overview_instruments.php - generates an overview of all instruments (admin only)
+<?php 
+// overview_instruments.php
+// generates an overview of all instruments (admin only)
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!$loggedUser) throw new Exception(LangException002);
 elseif($_SESSION['admin']!="yes") throw new Exception(LangException001);

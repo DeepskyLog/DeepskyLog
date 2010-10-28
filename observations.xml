@@ -1,8 +1,18 @@
 <?php 
+// observations.xml
+// exports an xml file containing the selected observations
+
+$inIndex = true;
+require_once 'common/entryexit/preludes.php';
+
 header ("Content-Type: text/xml");
 header ("Content-Disposition: attachment; filename=\"observations.xml\"");
-$inIndex = true;
-include 'common/entryexit/preludes.php';
-if(array_key_exists('Qobs',$_SESSION)&&$_SESSION['Qobs'])
-  $objUtil->comastObservations($_SESSION['Qobs']);
+
+observation_xml();
+
+function observation_xml()
+{ global $objUtil;
+  if(array_key_exists('Qobs',$_SESSION)&&$_SESSION['Qobs'])
+    $objUtil->comastObservations($_SESSION['Qobs']);
+}
 ?>

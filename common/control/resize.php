@@ -1,4 +1,5 @@
 <?php 
+//resize.php
 // utility functions in resizing
 
 if((!isset($inIndex))||(!$inIndex)) include "/redirect.php";

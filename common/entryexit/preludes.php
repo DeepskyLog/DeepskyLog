@@ -1,5 +1,6 @@
 <?php
 // preludes.php
+// loads all libraries for further use in includeFile
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else 

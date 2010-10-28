@@ -1,5 +1,5 @@
 <?php
-// ObjectSets.php
+// objectSets.php
 // allows the user to generate a pdf series with object data, DSS photos, DSL charts an index pages
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";

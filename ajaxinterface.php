@@ -10,7 +10,8 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else ajaxinterface();
 
 function ajaxinterface()
-{ global $objEyepiece,$objFilter,$objLens,$objLocation,$objInstrument,$objObject,$objStar,$objUtil,
+{ global $loggedUser,
+         $objEyepiece,$objFilter,$objLens,$objLocation,$objInstrument,$objObject,$objStar,$objUtil,
          $objReportLayout,$objObserverQueries,$objPrintAtlas;
 	$ajaxInstruction=$objUtil->checkRequestKey('instruction');
 	//echo ($objUtil->checkRequestKey('thedata'));

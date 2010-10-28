@@ -8,9 +8,7 @@ header ("Content-Disposition: attachment; filename=\"objects.argo\"");
 $inIndex = true;
 require_once 'common/entryexit/preludes.php';
 
-global $inIndex;
-if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-else objects_argo();
+objects_argo();
 
 function objects_argo()
 { global $objUtil;

@@ -1,4 +1,7 @@
-<?php // logout.php - let the user logout of deepskylog
+<?php 
+// logout.php
+// let the user logout of deepskylog
+
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else logout();
 

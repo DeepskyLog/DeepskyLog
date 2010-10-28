@@ -1,4 +1,7 @@
 <?php
+// redirect.php
+// redirects to the main entry page when one tries to enter via another way than foreseen
+
 echo "<html>";
 echo "<head>";
 echo "<meta http-equiv=\"refresh\" content=\"2; url=/index.php\" />"; 

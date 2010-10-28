@@ -60,7 +60,13 @@ function get_data()
 	    throw new Exception(LangException016b);
 	  $_GET['source']='objects_nearby';
 	  $_GET['zoom']=$objUtil->checkGetKey('zoom',30);	
-    if((!(array_key_exists('viewObjectObjectsNearby',$_SESSION)))||($_GET['object']!=$_SESSION['viewObjectObjectsNearby']))
+    $actualzoom=0;
+    if($objUtil->checkSessionKey('QobjParams'))
+      if(array_key_exists('zoom',  $_SESSION['QobjParams']))
+        $actualzoom=$_SESSION['QobjParams']['zoom'];
+    if((!(array_key_exists('viewObjectObjectsNearby',$_SESSION)))||
+       ($_GET['object']!=$_SESSION['viewObjectObjectsNearby'])||
+       ($_GET['zoom']!=$actualzoom))
     { include "deepsky/data/data_get_objects.php";	
       $_SESSION['minViewObjectObjectsNearby']=0;
       $_SESSION['viewObjectObjectsNearby']=$_GET['object'];

@@ -1493,7 +1493,7 @@ class PrintAtlas
     }
     
     for($k=0;$k<count($theSet);$k++)
-    { if(is_numeric($theSet[$k]))
+    { if(is_numeric($theSet[$k]) && is_numeric($thedsos[$k]) && is_numeric($thestars[$k]))
       { if($k) $this->pdf->newPage();
 	    	$minDegs=$theSet[$k]/120;
 	    	$i=$this->gridMaxDimension;

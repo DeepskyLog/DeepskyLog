@@ -1,5 +1,5 @@
 <?php  
-//instruction.php 
+// instruction.php 
 // treats all commands for changing data in the database or setting program parameters
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
