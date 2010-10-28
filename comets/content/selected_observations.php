@@ -7,8 +7,8 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else selected_observation();
 
 function selected_observation()
-{ global $baseURL,$dateformat,
-         $objUtil;
+{ global $instDir,$baseURL,$dateformat,$step,$loggedUser,
+         $objUtil,$objPresentations;
 	// creation of objects
 	
 	$observations = new CometObservations;

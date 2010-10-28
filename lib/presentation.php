@@ -26,7 +26,10 @@ class Presentations
   { return preg_replace('!<br.*>!iU', "-", $data );
   }
   public function br2nl($data)  // The opposite of nl2br
-  { return preg_replace('!<br.*>!iU', " ", $data );
+  { $data= str_replace('<br/>',' ',$data);
+    $data= str_replace('<br>',' ',$data);
+    $data= str_replace('<br />',' ',$data);
+    return $data;
   }
   public  function decToArgoString($decl)
   { $sign="+";

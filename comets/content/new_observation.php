@@ -46,8 +46,8 @@ function new_observation()
 	  $content1=LangViewObservationField9."&nbsp;*";
 	else
 	  $content1=LangViewObservationField9lt . "&nbsp;*";
-	$content2="<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" size=\"2\" name=\"hours\" value=\"".($adapt?substr($objCometObservation->getTime($obsid),0,2):"")."\" />&nbsp;&nbsp;".
-	          "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" size=\"2\" name=\"minutes\" value=\"".($adapt?substr($objCometObservation->getTime($obsid),2,2):"")."\" />";
+	$content2="<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" size=\"2\" name=\"hours\" value=\"".($adapt?(int)($objCometObservation->getTime($obsid)/100):"")."\" />&nbsp;&nbsp;".
+	          "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" size=\"2\" name=\"minutes\" value=\"".($adapt?($objCometObservation->getTime($obsid)%100):"")."\" />";
 	$content3=LangViewObservationField11;
 	$objPresentations->line(array($content1,$content2,$content3),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 	$content1=LangViewObservationField4;
@@ -105,7 +105,7 @@ function new_observation()
 	$content2.="<option value=\"1\"".($adapt&&$objCometObservation->getMagnitudeWeakerThan($obsid)?" selected=\"selected\" ":"").">". LangNewComet3 . "</option>";
 	$content2.="</select>";
 	$content2.="&nbsp;";
-	$content2.="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"mag\" size=\"4\" value=\"".($adapt?$objCometObservation->getMagnitude($obsid):"")."\"/>";
+	$content2.="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"mag\" size=\"4\" value=\"".($adapt?($objCometObservation->getMagnitude($obsid)!=-99.9?$objCometObservation->getMagnitude($obsid):''):"")."\"/>";
 	$content2.="<input type=\"checkbox\" name=\"uncertain\" class=\"inputField\" ".($adapt&&$objCometObservation->getMagnitudeUncertain($obsid)?" checked=\"checked\" ":"")." />" . LangNewComet2;
 	$objPresentations->line(array($content1,$content2,""),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 	$content1=LangNewComet8;
@@ -116,15 +116,15 @@ function new_observation()
 	$content2.="</select>";
 	$objPresentations->line(array($content1,$content2,""),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 	$content1=LangNewComet9;
-	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"coma\" size=\"3\" value=\"".($adapt?$objCometObservation->getComa($obsid):"")."\" />";
+	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"coma\" size=\"3\" value=\"".($adapt?($objCometObservation->getComa($obsid)!=-99?$objCometObservation->getComa($obsid):''):"")."\" />";
 	$content3=LangNewComet13;
 	$objPresentations->line(array($content1,$content2,$content3),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 	$content1=LangNewComet10;
-	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"tail_length\" size=\"3\" value=\"".($adapt?$objCometObservation->getTail($obsid):"")."\" />";
+	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"tail_length\" size=\"3\" value=\"".($adapt?($objCometObservation->getTail($obsid)!=-99?$objCometObservation->getTail($obsid):''):"")."\" />";
 	$content3=LangNewComet13;
 	$objPresentations->line(array($content1,$content2,$content3),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 	$content1=LangNewComet11;
-	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"position_angle\" size=\"3\" value=\"".($adapt?$objCometObservation->getPa($obsid):"")."\" />";
+	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"position_angle\" size=\"3\" value=\"".($adapt?($objCometObservation->getPa($obsid)!=-99?$objCometObservation->getPa($obsid):''):"")."\" />";
 	$content3=LangNewComet12;
 	$objPresentations->line(array($content1,$content2,$content3),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 	$content1=LangViewObservationField12;

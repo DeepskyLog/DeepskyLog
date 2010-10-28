@@ -1,10 +1,7 @@
 <?php
-
 // The observations class collects all functions needed to enter, retrieve and
 // adapt observation data from the database.
-//
-// Version 0.8 : 12/09/2005, WDM
-//
+
 
 
 class CometObservations
@@ -50,10 +47,10 @@ class CometObservations
 
   $get = mysql_fetch_object($run);
 
-  $objectid = $get->objectid;
-
-
-  return $objectid;
+  if($get)
+    return $get->objectid;
+  else
+    return 0;
  }
 
  // setObjectId sets a new object for the given observation
@@ -122,10 +119,10 @@ class CometObservations
 
   $get = mysql_fetch_object($run);
 
-  $locationid = $get->locationid;
-
-
-  return $locationid;
+  if($get)
+    return $get->locationid;
+  else
+    return 0;
  }
 
  // setLocationId sets a new location for the given observation
@@ -332,10 +329,10 @@ class CometObservations
 
   $get = mysql_fetch_object($run);
 
-  $time = $get->time;
-
-
-  return $time;
+  if($get)
+    return $get->time;
+  else
+    return 0;
  }
 
  // getLocalTime returns the time of the given observation in local time
