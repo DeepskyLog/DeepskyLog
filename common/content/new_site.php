@@ -7,7 +7,7 @@ elseif(!$loggedUser) throw new Exception(LangException002);
 else new_site();
 
 function new_site()
-{ global $baseURL,$loggedUser,$loggedUserName,
+{ global $baseURL,$loggedUser,$loggedUserName,$sites,
          $objLocation,$objObserver,$objPresentations,$objUtil;
   $sort=$objUtil->checkRequestKey('sort','name');
   $locationid=$objUtil->checkRequestKey('locationid');
