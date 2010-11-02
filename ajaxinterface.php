@@ -12,7 +12,7 @@ else ajaxinterface();
 function ajaxinterface()
 { global $loggedUser,
          $objEyepiece,$objFilter,$objLens,$objLocation,$objInstrument,$objObject,$objStar,$objUtil,
-         $objReportLayout,$objObserverQueries,$objPrintAtlas;
+         $objReportLayout,$objObserverQueries,$objPrintAtlas,$objConstellation;
 	$ajaxInstruction=$objUtil->checkRequestKey('instruction');
 	//echo ($objUtil->checkRequestKey('thedata'));
 	

@@ -6,7 +6,7 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else instructions();
 
 function instructions()
-{	global $loggedUser,$myList,$lastReadObservation,$theDate,$modules,$menuView,$menuAddChange,$menuAdmin,$menuLogin,$menuSearch,$menuMoon,
+{	global $baseURL,$loggedUser,$myList,$lastReadObservation,$theDate,$modules,$menuView,$menuAddChange,$menuAdmin,$menuLogin,$menuSearch,$menuMoon,
          $listname_ss,$listname,$entryMessage,$step,
          $objEyepiece,$objFilter,$objLens,$objIntrument,$objLocation,
          $objObject,$objObserver,$objObservation,$objFormLayout,$objUtil,$objList;
