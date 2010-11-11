@@ -7,7 +7,7 @@ global $inIndex;
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 
 class Contrast
-{ private function calcSubroutine($x, $SBObj, $minObjArcmin, $maxObjArcmin, $maxLog, $logObjContrast)// This function should not be used. Only needed for the calculations
+{ private function calcSubroutine($x, $SBObj, $minObjArcmin, $maxObjArcmin, $maxLog, $logObjContrast) // This function should not be used. Only needed for the calculations
   { $SBReduc = 5 * log10( $x / (2.833 * $_SESSION['aperIn']));
     $SBB = $_SESSION['initBB'] + $SBReduc;
     $SBScopeAtX = -2.5 * log10( pow( 10, (-0.4 * $SBObj))) + $SBReduc;
