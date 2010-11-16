@@ -41,7 +41,8 @@ function generateallonepass(item,msie)
 function generateOne(i,msie)
 { if(msie)
   { document.location='objectsSet.pdf?theobject='+urlencode(document.getElementById('R'+i).title)+
-      '&theSet='+urlencode(document.getElementById('R'+i+'Dfov').value)+
+	  '&theShowname='+urlencode(document.getElementById('R'+i).value)+
+	  '&theSet='+urlencode(document.getElementById('R'+i+'Dfov').value)+
       '&thedsos='+urlencode(document.getElementById('R'+i+'Ddsos').value)+
       '&thestars='+urlencode(document.getElementById('R'+i+'Dstars').value)+
       '&thephotos='+urlencode(document.getElementById('R'+i+'Dphotos').value)+
@@ -53,6 +54,7 @@ function generateOne(i,msie)
   }
   else
     window.open('objectsSet.pdf?theobject='+urlencode(document.getElementById('R'+i).title)+
+    	'&theShowname='+urlencode(document.getElementById('R'+i).value)+
         '&theSet='+urlencode(document.getElementById('R'+i+'Dfov').value)+
         '&thedsos='+urlencode(document.getElementById('R'+i+'Ddsos').value)+
         '&thestars='+urlencode(document.getElementById('R'+i+'Dstars').value)+

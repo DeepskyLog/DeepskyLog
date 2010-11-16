@@ -67,12 +67,12 @@ function get_data()
     if((!(array_key_exists('viewObjectObjectsNearby',$_SESSION)))||
        ($_GET['object']!=$_SESSION['viewObjectObjectsNearby'])||
        ($_GET['zoom']!=$actualzoom))
-    { include "deepsky/data/data_get_objects.php";	
+    { require_once "deepsky/data/data_get_objects.php";	
       $_SESSION['minViewObjectObjectsNearby']=0;
       $_SESSION['viewObjectObjectsNearby']=$_GET['object'];
     }
     if((!(array_key_exists('viewObjectObservations',$_SESSION)))||($_GET['object']!=$_SESSION['viewObjectObservations']))
-    { include "deepsky/data/data_get_observations.php";	
+    { require_once "deepsky/data/data_get_observations.php";	
       $_SESSION['minViewObjectObservations']=0;
       $_SESSION['viewObjectObservations']=$_GET['object'];
     }

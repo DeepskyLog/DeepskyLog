@@ -10,7 +10,7 @@ objectsSet();
 function objectsSet()
 { global $filename,$filename, 
          $objPrintAtlas,$objUtil;
-	$filename=str_replace(' ','_',html_entity_decode($objUtil->checkGetKey('theobject')));
+	$filename=str_replace(' ','_',html_entity_decode($objUtil->checkGetKey('theShowname')));
 	$theSet=array();
 	$theParam=$objUtil->checkGetKey('theSet');
 	while($thepos=strpos($theParam,' '))
@@ -43,6 +43,6 @@ function objectsSet()
 	$ephemerides=$objUtil->checkGetKey('ephemerides');
 	$yearephemerides=$objUtil->checkGetKey('yearephemerides');
 	$reportlayoutselect=$objUtil->checkGetKey('reportlayoutselect');
-	$objPrintAtlas->pdfAtlasObjectSet($objUtil->checkGetKey('theobject'),$theSet,$thedsos,$thestars,$thephotos,$datapage,$reportlayoutselect,$ephemerides,$yearephemerides,false);
+	$objPrintAtlas->pdfAtlasObjectSet($objUtil->checkGetKey('theobject'),$objUtil->checkGetKey('theShowname'),$theSet,$thedsos,$thestars,$thephotos,$datapage,$reportlayoutselect,$ephemerides,$yearephemerides,false);
 }
 ?>

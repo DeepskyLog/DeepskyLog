@@ -1,5 +1,5 @@
 <?php  
-// instruction.php 
+// instructions.php 
 // treats all commands for changing data in the database or setting program parameters
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
@@ -653,9 +653,11 @@ function instructions()
     }
     $_GET['indexAction']="detail_observer";  
   }
- if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="change_emailNameFirstname"))
+
+ if(($objUtil->checkSessionKey('admin')=='yes')&&($objUtil->checkGetKey('indexAction')=="change_emailNameFirstname_Password"))
   { if(($_SESSION['admin']=="yes")
-    && ($theuser=$objUtil->checkGetKey('user')))
+    && ($theuser=$objUtil->checkGetKey('user'))
+    && $objUtil->checkGetKey('change_email_name_firstname'))
     { $email=$objUtil->checkGetKey('email',2);
       $objObserver->setObserverProperty($theuser,'email', $email);
       $name=$objUtil->checkGetKey('name',2);
@@ -665,8 +667,18 @@ function instructions()
       $entryMessage.="Email, name and firstname are successfully updated!";
       unset($_SESSION['observersArr']);
     }
+    if(($_SESSION['admin']=="yes")
+    && ($theuser=$objUtil->checkGetKey('user'))
+    && $objUtil->checkGetKey('change_password'))
+    { if($password=$objUtil->checkGetKey('password',''))
+        $objObserver->setObserverProperty($theuser,'password', md5($password));
+      $entryMessage.="Password successfully updated!";
+      unset($_SESSION['observersArr']);
+    }
     $_GET['indexAction']="detail_observer";  
   }
+  
+  
   if(array_key_exists('admin', $_SESSION)&&$_SESSION['admin']=="yes")
 	{ if(array_key_exists("newaction",$_GET))
 		{ if($_GET['newaction']=="NewName")

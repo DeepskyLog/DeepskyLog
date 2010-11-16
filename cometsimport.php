@@ -1,5 +1,5 @@
 <?php
-include "lib/cometobjects.php";
+require_once "lib/cometobjects.php";
 
 $obj = new CometObjects;
 $observations = new CometObservations;

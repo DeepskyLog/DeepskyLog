@@ -1304,7 +1304,7 @@ function newDocument($pageSize=array(0,0,612,792)){
 * open the font file and return a php structure containing it.
 * first check if this one has been done before and saved in a form more suited to php
 * note that if a php serialized version does not exist it will try and make one, but will
-* require write access to the directory to do it... it is MUCH faster to have these serialized
+* requires write access to the directory to do it... it is MUCH faster to have these serialized
 * files.
 *
 * @access private
@@ -2011,9 +2011,9 @@ function PRVTcheckTextDirective(&$text,$i,&$f){
 /**
 * checks if the text stream contains a control directive
 * if so then makes some changes and returns the number of characters involved in the directive
-* this has been re-worked to include everything neccesary to fins the current writing point, so that
+* this has been re-worked to includes everything neccesary to fins the current writing point, so that
 * the location can be sent to the callback function if required
-* if the directive does not require a font change, then $f should be set to 0
+* if the directive does not requires a font change, then $f should be set to 0
 *
 * @access private
 */

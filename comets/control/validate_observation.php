@@ -72,7 +72,7 @@ function validate_observation()
 	        { $upload_dir = 'cometdrawings';
 	          $dir = opendir($instDir."comets/".$upload_dir);
 	          // resize code
-	          include "common/control/resize.php";
+	          require_once "common/control/resize.php";
 	          $original_image = $_FILES['drawing']['tmp_name'];
 	          $destination_image = $instDir.'comets/'.$upload_dir . "/" . $current_observation . "_resized.jpg";
 	          $new_image = image_createThumb($original_image,$destination_image,490,490,100);

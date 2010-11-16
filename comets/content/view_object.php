@@ -1,6 +1,6 @@
 <?php 
 // view_object.php
-// view all information of one object - version 0.5: 2005/09/21, WDM
+// view all information of one object
 
 global $inIndex,$loggedUser,$objUtil;
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";

@@ -62,12 +62,14 @@ function view_observer()
 	
 	if(array_key_exists('admin',$_SESSION)&&($_SESSION['admin']=="yes"))       // admin logged in
 	{ echo "<form action=\"".$baseURL."index.php\" >";
-	  echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_emailNameFirstname\" />";
+	  echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_emailNameFirstname_Password\" />";
 	  echo "<input type=\"hidden\" name=\"user\" value=\"".$user."\" />";
+	  $objPresentations->line(array(LangChangeAccountField1.":",$objObserver->getObserverProperty($user,'id')),"RL",array(20,80),30,array('type10','type10'));
 	  $objPresentations->line(array(LangChangeAccountField2.":","<input name=\"email\" type=\"text\" value=\"".$objObserver->getObserverProperty($user,'email')."\" />"),"RL",array(20,80),30,array('type10','type10'));
-	  $objPresentations->line(array(LangChangeAccountField3.":","<input name=\"firstname\" type=\"text\" value=\"".$objObserver->getObserverProperty($user,'firstname')."\" /><input type=\"submit\" name=\"change\" value=\"".LangViewObserverChangeNameFirstname."\" />"),"RL",array(20,80),30,array('type20','type20'));
+	  $objPresentations->line(array(LangChangeAccountField3.":","<input name=\"firstname\" type=\"text\" value=\"".$objObserver->getObserverProperty($user,'firstname')."\" /><input type=\"submit\" name=\"change_email_name_firstname\" value=\"".LangViewObserverChangeNameFirstname."\" />"),"RL",array(20,80),30,array('type20','type20'));
 	  $objPresentations->line(array(LangChangeAccountField4.":","<input name=\"name\" type=\"text\" value=\"".$objObserver->getObserverProperty($user,'name')."\" />"),"RL",array(20,80),30,array('type10','type10'));
-	  echo "</form>";
+	  $objPresentations->line(array(LangChangeAccountField5.":","<input name=\"password\" type=\"text\" value=\"\" /><input type=\"submit\" name=\"change_password\" value=\""."Change password"."\" />"),"RL",array(20,80),30,array('type20','type20'));
+	  	  echo "</form>";
 	}
 	else
 	{ $objPresentations->line(array(LangChangeAccountField3.":",$objObserver->getObserverProperty($user,'firstname')),"RL",array(20,80),20,array('type20','type20'));

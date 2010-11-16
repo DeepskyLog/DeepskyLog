@@ -52,7 +52,7 @@ class Language
      $countrylist[]=sprintf($data->attributes()->code);
    return $countrylist;
  }
- function getPath($lang)                                                        // getPath returns the path to include for the given language.
+ function getPath($lang)                                                        // getPath returns the path to includ for the given language.
  { global $defaultLanguage;
    $path="language/".($lang?$lang:$defaultLanguage)."/lang_main.php";
    return $path;

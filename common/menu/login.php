@@ -22,7 +22,7 @@ function menu_login()
 		else
 		  echo "<a href=\"".$baseURL."index.php?menuLogin=collapsed".$link."\" title=\"".LangMenuCollapse."\">-</a> ";
 		echo LangLoginMenuTitle.LangLoginMenuTitle1;
-	  if($register == "yes")                                                        // include register link
+	  if($register == "yes")                                                        // includes register link
 	    echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=subscribe&amp;title=".urlencode(LangLoginMenuRegister)."\">".LangLoginMenuRegister."</a>";
 	  echo "</p>";
 	  if($menuLogin=="expanded")

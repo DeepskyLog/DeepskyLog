@@ -8,8 +8,8 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else data_get_objects();
 
 function data_get_objects()
-{ global $showPartOfs,$listname,
-         $objObservation,$objCatalog,$objList,$objObject,$objUtil;
+{ global $showPartOfs,$listname,$loggedUser,
+         $objAtlas,$objObserver,$objObservation,$objCatalog,$objList,$objObject,$objUtil;
 	$showPartOfs=$objUtil->checkGetKey('showPartOfs',$objUtil->checkSessionKey('QobjPO',0));
 	// ========================================= filter objects from observation query
 	if($objUtil->checkGetKey('source')=='observation_query') 
@@ -96,6 +96,7 @@ function data_get_objects()
 	    $exact = "1";
 	  }
 	  // ATLAS PAGE
+	  $pageError=false;
 	  if(array_key_exists('atlasPageNumber',$_GET) && $_GET['atlasPageNumber'])
 	  { if(!is_numeric($_GET['atlasPageNumber']) || ($_GET['atlasPageNumber']<1) || ($_GET['atlasPageNumber']>5000))
 	      $pageError = true;
@@ -107,6 +108,9 @@ function data_get_objects()
 	  $type=$objUtil->checkGetKey('type');                                          // TYPE
 	  $descriptioncontains=$objUtil->checkGetKey('descriptioncontains');
 	  $minDecl='';
+	  $minDeclDegreesError=false;
+	  $minDeclMinutesError=false;
+	  $minDeclSecondsError=false; 
 	  if(($minDeclDegrees=$objUtil->checkGetKey('minDeclDegrees'))!='')             // MINIMUM DECLINATION
 	  { if((!is_numeric($minDeclDegrees))||($minDeclDegrees<=-90)||($minDeclDegrees>=90))
 	      $minDeclDegreesError = True;
@@ -123,6 +127,9 @@ function data_get_objects()
 	        $minDecl=$minDeclDegrees+($minDeclMinutes/60)+($minDeclSeconds/3600);
 	  }
 	  $maxDecl='';
+	  $maxDeclDegreesError=false;
+	  $maxDeclMinutesError=false;
+	  $maxDeclSecondsError=false;
 	  if(($maxDeclDegrees=$objUtil->checkGetKey('maxDeclDegrees'))!='')   // MAXIMUM DECLINATION 
 	  { if((!is_numeric($maxDeclDegrees))||($maxDeclDegrees<=-90)||($maxDeclDegrees>=90))
 	      $maxDeclDegreesError = true;
@@ -140,6 +147,9 @@ function data_get_objects()
 	  }
 	  // MIN RA
 	  $minRA='';
+	  $minRAHoursError=false;
+	  $minRAMinutesError=false;
+	  $minRASecondsError=false;
 	  if(($minRAHours=$objUtil->checkGetKey('minRAHours'))!='') 
 	  { if((!is_numeric($_GET['minRAHours'])) || ($_GET['minRAHours']<0) || ($_GET['minRAHours']>24))
 	      $minRAHoursError = true;
@@ -167,6 +177,9 @@ function data_get_objects()
 	  }
 	  // MAX RA
 	  $maxRA='';
+	  $maxRAHoursError=false;
+	  $maxRAMinutesError=false;
+	  $maxRASecondsError=false;
 	  if(($maxRAHours=$objUtil->checkGetKey('maxRAHours'))!='') 
 	  { if((!is_numeric($_GET['maxRAHours'])) || ($_GET['maxRAHours']<0) || ($_GET['maxRAHours']>24))
 	      $maxRAHoursError = true;
@@ -193,24 +206,28 @@ function data_get_objects()
 	      $maxRA=$maxRAHours+($maxRAMinutes/60)+($maxRASeconds/3600);
 	  }
 	  // MAGNITUDE BRIGHTER THAN
+	  $maxMag='';
 	  if(array_key_exists('maxMag',$_GET) && $_GET['maxMag']!='') 
 	  { $maxMag = $_GET['maxMag'];
 	    if((!is_numeric($_GET['maxMag'])) || ($_GET['maxMag']<=-2) || ($_GET['maxMag']>=30))
 	      $maxMagError=true;
 	  }
 	  // MAGNITUDE LESSER THAN
+	  $minMag='';
 	  if(array_key_exists('minMag',$_GET) && $_GET['minMag']!='')   
 	  { $minMag = $_GET['minMag'];
 	    if((!is_numeric($_GET['minMag'])) || ($_GET['minMag']<=-2) || ($_GET['minMag']>=30))
 	      $minMagError=true;
 	  }
 	  // SB BRIGHTER THAN
+	  $maxSB='';
 	  if(array_key_exists('maxSB',$_GET) && $_GET['maxSB']!='')  
 	  { $maxSB = $_GET['maxSB'];
 	    if((!is_numeric($_GET['maxSB'])) || ($_GET['maxSB']<=-2) || ($_GET['maxSB']>=30))
 	      $maxSBError=true;
 	  }
 	  // SB LESSER THAN
+	  $minSB='';
 	  if(array_key_exists('minSB',$_GET) && $_GET['minSB']!='')
 	  { $minSB = $_GET['minSB'];
 	    if((!is_numeric($_GET['minSB'])) || ($_GET['minSB']<=-2) || ($_GET['minSB']>=30))
@@ -251,12 +268,14 @@ function data_get_objects()
 	    }
 	  }
 	  // MIN CONTRAST
+	  $minContrast='';
 	  if(array_key_exists('minContrast',$_GET) && $_GET['minContrast']!='')	   
 	  { $minContrast = $_GET['minContrast'];
 	    if(!is_numeric($_GET['minContrast']))
 	      $minContrastError=True; 
 	  }
 	  // MAX CONTRAST
+	  $maxContrast='';
 	  if(array_key_exists('maxContrast',$_GET) && $_GET['maxContrast']!='')	   
 	  { $maxContrast = $_GET['maxContrast'];
 	    if(!is_numeric($_GET['maxContrast']))
@@ -274,26 +293,35 @@ function data_get_objects()
 	    $minRAError = True;
 	    $maxRAError = True;
 	  }
+	  $minMagError=false;
+	  $maxMagError=false;
 	  if($maxMag && $minMag && ($maxMag<$minMag))
 	  {
 	    $maxMagError = True;
 	    $minMagError = True;
 	  }    
+	  $minSBError=false;
+	  $maxSBError=false;
 	  if($minSB && $maxSB && ($maxSB<$minSB))
 	  {
 	    $minSBError=True;
 	    $maxSBError=True;
 	  }
+	  $minSizeError=false;
+	  $maxSizeError=false;
 	  if($minSizeC && $maxSizeC && ($minSizeC>$maxSizeC))
 	  {
 	    $minSizeError=True;
 	    $maxSizeError=True;
 	  }
+	  $minContrastError=false;
+	  $maxContrastError=false;
 	  if($minContrast && $maxContrast && ($minContrast > $maxContrast))
 	  {
 	    $minContrastError=True;
 	    $maxContrastError=True;
 	  }
+	  $listError=false;
 	  if($inList && $notInList && ($inList==$notInList))
 	    $listError = True;
 	  // Disable possibility to search for objects with a contrast reserve alone!!!!

@@ -3,7 +3,7 @@
 // accepts ajax requests and dispatches the calls. Upon receiving teh result, an xml response is send back
 
 $inIndex=true;
-include 'common/entryexit/preludes.php';                                                                // Includes of all classes and assistance files
+require_once 'common/entryexit/preludes.php';                                                                // Includes of all classes and assistance files
 
 global $inIndex;
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
@@ -81,7 +81,7 @@ function ajaxinterface()
 	  echo json_encode($objObserverQueries->saveObserverQuery($objUtil->checkGetKey('observerquerytype'),$objUtil->checkGetKey('observerqueryname')));
 	  
 	elseif($ajaxInstruction=="allonepass")
-	{ $filename=$_SESSION['Qobj'][$objUtil->checkGetKey('item')]['objectname'];
+	{ $filename=$_SESSION['Qobj'][$objUtil->checkGetKey('item')]['showname'];
 		$theSet=array();
 		$theParam=$objUtil->checkGetKey('theSet');
 		while($thepos=strpos($theParam,' '))

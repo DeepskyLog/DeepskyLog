@@ -7,22 +7,22 @@ else menu();
 
 function menu()
 { global $loggedUser,$instDir,$inIndex;
-  include $instDir.'common/menu/login.php';
-	include $instDir.$_SESSION['module'].'/menu/quickpick.php';                                // QUICKPICK MENU
-	include $instDir.$_SESSION['module'].'/menu/search.php';                                   // SEARCH MENU
+  require_once $instDir.'common/menu/login.php';
+	require_once $instDir.$_SESSION['module'].'/menu/quickpick.php';                                // QUICKPICK MENU
+	require_once $instDir.$_SESSION['module'].'/menu/search.php';                                   // SEARCH MENU
 	if($loggedUser)                                                                            // LOGGED IN
-	{ include $instDir.$_SESSION['module'].'/menu/change.php';                                 // CHANGE MENU
+	{ require_once $instDir.$_SESSION['module'].'/menu/change.php';                                 // CHANGE MENU
 	  if(array_key_exists('admin', $_SESSION)&&($_SESSION['admin']=='yes'))
-	    include $instDir.'common/menu/admin.php';                                              // ADMINISTRATION MENU
-	  include $instDir.'common/menu/out.php';                                                  // LOG OUT MENU 
+	    require_once $instDir.'common/menu/admin.php';                                              // ADMINISTRATION MENU
+	  require_once $instDir.'common/menu/out.php';                                                  // LOG OUT MENU 
 	}
 	else
-	{ include $instDir.'common/menu/languagemenu.php';                                         // LANGUAGE MENU 
+	{ require_once $instDir.'common/menu/languagemenu.php';                                         // LANGUAGE MENU 
 	}
-  include $instDir.'common/menu/moon.php';                                                   // MOON MENU
-  include $instDir.'common/menu/help.php';                                                   // HELP MENU 
-	include $instDir.'common/menu/tellus.php';
-	include $instDir.'common/menu/oalmenu.php';
-//	include $instDir.'common/menu/validationmenu.php';
+  require_once $instDir.'common/menu/moon.php';                                                   // MOON MENU
+  require_once $instDir.'common/menu/help.php';                                                   // HELP MENU 
+	require_once $instDir.'common/menu/tellus.php';
+	require_once $instDir.'common/menu/oalmenu.php';
+//	require_once $instDir.'common/menu/validationmenu.php';
 }
 ?>

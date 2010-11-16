@@ -273,7 +273,7 @@ class Observers
 		    if($_FILES['picture']['tmp_name'] != "")
 		    { $upload_dir = 'common/observer_pics';
 		      $dir = opendir($upload_dir);
-		      include $instDir."common/control/resize.php";                                             // resize code
+		      require_once $instDir."common/control/resize.php";                                             // resize code
 		      $original_image = $_FILES['picture']['tmp_name'];
 		      $destination_image = $upload_dir . "/" . $loggedUser . ".jpg"; 
 		      $new_image = image_createThumb($original_image,$destination_image,300,300,75);

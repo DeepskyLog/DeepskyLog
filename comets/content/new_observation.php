@@ -1,6 +1,6 @@
 <?php  
 // new_observation.php
-// GUI to add a new observation of a comet to the database - Version 0.5: 2005/12/05, JV
+// GUI to add a new observation of a comet to the database
 
 global $inIndex,$loggedUser,$objUtil;
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";

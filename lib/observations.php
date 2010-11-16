@@ -1487,7 +1487,7 @@ class Observations {
 					$dir = opendir($upload_dir);
 					$original_image = $_FILES['drawing']['tmp_name'];
 					$destination_image = $upload_dir . "/" . $current_observation . "_resized.jpg";
-					include $instDir . "common/control/resize.php"; // resize code
+					require_once $instDir . "common/control/resize.php"; // resize code
 					$new_image = image_createThumb($original_image, $destination_image,490,490,100);
 					move_uploaded_file($_FILES['drawing']['tmp_name'], $upload_dir . "/" . $current_observation . ".jpg");
 				  $objObservation->setDsObservationProperty($current_observation,'hasDrawing',1);  

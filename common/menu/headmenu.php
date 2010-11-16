@@ -18,16 +18,16 @@ function headmenu()
 	if($loggedUser)
 	{ echo "<div id=\"div1b\">";
 		echo "<div class=\"floatright\">";
-		include $_SESSION['module'].'/menu/date.php';
+		require_once $_SESSION['module'].'/menu/date.php';
 		echo "</div>";
 		echo "<div class=\"floatright\">";
-		include $_SESSION['module'].'/menu/location.php';
+		require_once $_SESSION['module'].'/menu/location.php';
 		echo "</div>";
 		echo "<div class=\"floatright\">";
-		include $_SESSION['module'].'/menu/instrument.php';
+		require_once $_SESSION['module'].'/menu/instrument.php';
 		echo "</div>";
 		echo "<div class=\"floatright\">";
-		include $_SESSION['module'].'/menu/list.php';
+		require_once $_SESSION['module'].'/menu/list.php';
 		echo "</div>";
 		echo "</div>";
 	}

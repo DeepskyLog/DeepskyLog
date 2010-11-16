@@ -92,5 +92,4 @@ function objectsSets()
   }
   echo "</table>";
 }
-objectsSets();
 ?>
