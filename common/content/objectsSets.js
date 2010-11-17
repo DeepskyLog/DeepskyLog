@@ -1,3 +1,12 @@
+function setAllCheckboxes(theCBs,theNumber,theValue)
+{ for(i=0;i<theNumber;i++)
+    document.getElementById('R'+i+theCBs).checked=theValue;
+}
+function setCheckedValues(theField,theNumber,theValue)
+{ for(i=0;i<theNumber;i++)
+	if(document.getElementById('R'+i+'CB'+theField).checked==true)
+	  document.getElementById('R'+i+'D'+theField).value=theValue;
+}
 function generateallonepass(item,msie)
 { var jsonhttp;
   if(window.XMLHttpRequest)
@@ -24,7 +33,7 @@ function generateallonepass(item,msie)
   };
   document.getElementById('thecounter').innerHTML=(LangpdfseriesGenerating+document.getElementById('R'+item).value+'.');
   var url='ajaxinterface.php?instruction=allonepass'+
-  '&theSet='+urlencode(document.getElementById('R'+item+'Dfov').value)+
+  '&theSet='+urlencode(document.getElementById('R'+item+'Dfovs').value)+
   '&thedsos='+urlencode(document.getElementById('R'+item+'Ddsos').value)+
   '&thestars='+urlencode(document.getElementById('R'+item+'Dstars').value)+
   '&thephotos='+urlencode(document.getElementById('R'+item+'Dphotos').value)+
@@ -42,7 +51,7 @@ function generateOne(i,msie)
 { if(msie)
   { document.location='objectsSet.pdf?theobject='+urlencode(document.getElementById('R'+i).title)+
 	  '&theShowname='+urlencode(document.getElementById('R'+i).value)+
-	  '&theSet='+urlencode(document.getElementById('R'+i+'Dfov').value)+
+	  '&theSet='+urlencode(document.getElementById('R'+i+'Dfovs').value)+
       '&thedsos='+urlencode(document.getElementById('R'+i+'Ddsos').value)+
       '&thestars='+urlencode(document.getElementById('R'+i+'Dstars').value)+
       '&thephotos='+urlencode(document.getElementById('R'+i+'Dphotos').value)+
@@ -55,7 +64,7 @@ function generateOne(i,msie)
   else
     window.open('objectsSet.pdf?theobject='+urlencode(document.getElementById('R'+i).title)+
     	'&theShowname='+urlencode(document.getElementById('R'+i).value)+
-        '&theSet='+urlencode(document.getElementById('R'+i+'Dfov').value)+
+        '&theSet='+urlencode(document.getElementById('R'+i+'Dfovs').value)+
         '&thedsos='+urlencode(document.getElementById('R'+i+'Ddsos').value)+
         '&thestars='+urlencode(document.getElementById('R'+i+'Dstars').value)+
         '&thephotos='+urlencode(document.getElementById('R'+i+'Dphotos').value)+

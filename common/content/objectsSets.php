@@ -72,6 +72,14 @@ function objectsSets()
   echo "<hr />";
   echo "<table>";
   echo "<tr>";
+  echo "<td> &nbsp; </td>";
+  echo "<td> &nbsp; </td>";
+  echo "<td>"."<input type=\"text\" id=\"RD"."fovs"."\" value=\"".$fovo." ".$fovl." ".$fovd."\" /><input id=\"RCB"."fovs"."\" type=\"button\" value=\"V\" onclick=\"setCheckedValues('fovs',".$k.",document.getElementById('RDfovs').value);\" />"."</td>";
+  echo "<td>"."<input type=\"text\" id=\"RD"."dsos"."\" value=\"".$dsoso." ".$dsosl." ".$dsosd."\"/><input id=\"RCB"."dsos"."\" type=\"button\" value=\"V\" onclick=\"setCheckedValues('dsos',".$k.",document.getElementById('RDdsos').value);\" />"."</td>";
+  echo "<td>"."<input type=\"text\" id=\"RD"."stars"."\" value=\"".$starso." ".$starsl." ".$starsd."\"/><input id=\"RCB"."stars"."\" type=\"button\" value=\"V\" onclick=\"setCheckedValues('stars',".$k.",document.getElementById('RDstars').value);\" />"."</td>";
+  echo "<td>"."<input type=\"text\" id=\"RD"."photos"."\" value=\"".$foto1." ".$foto2."\"/><input id=\"RCB"."photos"."\" type=\"button\" value=\"V\" onclick=\"setCheckedValues('photos',".$k.",document.getElementById('RDphotos').value);\" />"."</td>";
+  echo "</tr>";  
+  echo "<tr>";
   echo "<td class=\"bold\">".LangpdfseriesObject."</td>";
   echo "<td class=\"bold\">".LangpdfseriesSize."</td>";
   echo "<td class=\"bold\">".LangpdfseriesFoVs."</td>";
@@ -84,12 +92,20 @@ function objectsSets()
   { echo "<tr>";
   	echo "<td id=\"T".$i."\">"."<input id=\"R".$i."\" type=\"button\" value=\"".$_SESSION['Qobj'][$i]['showname']."\" title=\"".$_SESSION['Qobj'][$i]['objectname']."\" onclick=\"generateOne(".$i.",".($MSIE?'true':'false').");\"/>"."</td>";
     echo "<td id=\"R".$i."Dsize\">".$_SESSION['Qobj'][$i]['objectsize']."</td>";
-    echo "<td>"."<input type=\"text\" ".((($_SESSION['Qobj'][$i]['objectdiam1']/60)>$fovd)?"class=\"textred\"":"")." id=\"R".$i."D"."fov"."\" value=\"".$fovo." ".$fovl." ".$fovd."\" />"."</td>";
-    echo "<td>"."<input type=\"text\" id=\"R".$i."D"."dsos"."\" value=\"".$dsoso." ".$dsosl." ".$dsosd."\"/>"."</td>";
-    echo "<td>"."<input type=\"text\" id=\"R".$i."D"."stars"."\" value=\"".$starso." ".$starsl." ".$starsd."\"/>"."</td>";
-    echo "<td>"."<input type=\"text\" ".((($_SESSION['Qobj'][$i]['objectdiam1']/60)>15)?"class=\"textred\"":"")."id=\"R".$i."D"."photos"."\" value=\"".$foto1." ".$foto2."\"/>"."</td>";
+    echo "<td>"."<input type=\"text\" ".((($_SESSION['Qobj'][$i]['objectdiam1']/60)>$fovd)?"class=\"textred\"":"")." id=\"R".$i."D"."fovs"."\" value=\"".$fovo." ".$fovl." ".$fovd."\" /><input id=\"R".$i."CB"."fovs"."\" type=\"checkbox\" />"."</td>";
+    echo "<td>"."<input type=\"text\" id=\"R".$i."D"."dsos"."\" value=\"".$dsoso." ".$dsosl." ".$dsosd."\"/><input id=\"R".$i."CB"."dsos"."\" type=\"checkbox\" />"."</td>";
+    echo "<td>"."<input type=\"text\" id=\"R".$i."D"."stars"."\" value=\"".$starso." ".$starsl." ".$starsd."\"/><input id=\"R".$i."CB"."stars"."\" type=\"checkbox\" />"."</td>";
+    echo "<td>"."<input type=\"text\" ".((($_SESSION['Qobj'][$i]['objectdiam1']/60)>15)?"class=\"textred\"":"")."id=\"R".$i."D"."photos"."\" value=\"".$foto1." ".$foto2."\"/><input id=\"R".$i."CB"."photos"."\" type=\"checkbox\" />"."</td>";
     echo "</tr>";
   }
+  echo "<tr>";
+  echo "<td> &nbsp; </td>";
+  echo "<td> &nbsp; </td>";
+  echo "<td>"."Select all: "."<input id=\"RCBA"."fovs"."\" type=\"checkbox\" onclick=\"setAllCheckboxes('CBfovs',".$i.",document.getElementById('RCBAfovs').checked);\"/>"."</td>";
+  echo "<td>"."Select all: "."<input id=\"RCBA"."dsos"."\" type=\"checkbox\" onclick=\"setAllCheckboxes('CBdsos',".$i.",document.getElementById('RCBAdsos').checked);\" />"."</td>";
+  echo "<td>"."Select all: "."<input id=\"RCBA"."stars"."\" type=\"checkbox\" onclick=\"setAllCheckboxes('CBstars',".$i.",document.getElementById('RCBAstars').checked);\" />"."</td>";
+  echo "<td>"."Select all: "."<input id=\"RCBA"."photos"."\" type=\"checkbox\" onclick=\"setAllCheckboxes('CBphotos',".$i.",document.getElementById('RCBAphotos').checked);\" />"."</td>";
+  echo "</tr>";  
   echo "</table>";
 }
 ?>
