@@ -6,7 +6,7 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else selected_objects();
 
 function selected_objects()
-{ global $baseURL,$showPartOfs,$myList,$listname_ss,$FF,
+{ global $baseURL,$showPartOfs,$myList,$listname_ss,$FF,$step,
          $objObject,$objPresentations,$objUtil;
 	if((array_key_exists('steps',$_SESSION))&&(array_key_exists("selObj",$_SESSION['steps'])))
 	  $step=$_SESSION['steps']["selObj"];

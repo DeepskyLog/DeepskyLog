@@ -637,7 +637,7 @@ class Objects
 		return;
 	}
   public  function getSeenObjectDetails($obs, $seen="A")
-  { global $objAtlas, $objDatabase,$objPresentations,$objObserver;
+  { global $loggedUser, $objAtlas, $objLocation,$objDatabase,$objPresentations,$objObserver;
     $result2=array();
 	  $obscnt=sizeof($obs);
     if($obscnt > 0)
@@ -707,16 +707,18 @@ class Objects
           $result2[$j]['objectcontrastpopup'] = '';
           $result2[$j]['objectoptimalmagnification'] = '-';
           
+          $result2[$j]['objectmaxalt'] = "-";
+          $result2[$j]['objectmaxaltstart'] = "-";
+          $result2[$j]['objectmaxaltend'] = "-";
           if($loggedUser && $objObserver->getObserverProperty($loggedUser, 'stdLocation'))
 	        { $theLocation=$objObserver->getObserverProperty($loggedUser, 'stdLocation');	   
-	          $object=$theobject;
 	          $longitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'longitude');
 	          $latitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'latitude');
 	          $timezone=$objLocation->getLocationPropertyFromId($theLocation,'timezone');
 	          $dateTimeZone=new DateTimeZone($timezone);
-	          $maxalt=0;
-	          $maxaltstart=0;
-	          $maxaltend=0;
+	          $maxalt='-';
+	          $maxaltstart='-';
+	          $maxaltend='-';
 	          for($i=1;$i<13;$i++)
 				    { $datestr=sprintf("%02d",$i)."/".sprintf("%02d",1)."/".$_SESSION['globalYear'];
 		          $dateTime = new DateTime($datestr, $dateTimeZone);
@@ -725,7 +727,7 @@ class Objects
 		            $timedifference = -$timedifference;
 				      date_default_timezone_set ("UTC");
 							$theTimeDifference1[$i]=$timedifference;
-				      $theEphemerides1[$i]=$objObject->getEphemerides($object,1,$i,2010);
+				      $theEphemerides1[$i]=$this->getEphemerides($object,1,$i,2010);
 				      $theNightEphemerides1[$i]=date_sun_info(strtotime("2010"."-".$i."-"."1"), $latitude, $longitude);
 							$datestr=sprintf("%02d",$i)."/".sprintf("%02d",1)."/".$_SESSION['globalYear'];
 				      $dateTime = new DateTime($datestr, $dateTimeZone);
@@ -734,53 +736,71 @@ class Objects
 				        $timedifference = -$timedifference;
 				      date_default_timezone_set ("UTC");
 							$theTimeDifference15[$i]=$timedifference;
-				      $theEphemerides15[$i]=$objObject->getEphemerides($object,15,$i,2010);
+				      $theEphemerides15[$i]=$this->getEphemerides($object,15,$i,2010);
 				      $theNightEphemerides15[$i]=date_sun_info(strtotime("2010"."-".$i."-"."15"), $latitude, $longitude);	
 						}
 						for($i=1;$i<13;$i++)
 						{ if($i==1)
 					    { if(($theEphemerides1[$i]['altitude']!='-') &&
-					        (($theEphemerides1[$i]['altitude']==$theEphemerides15[$i]['altitude']) ||
-					         ($theEphemerides1[$i]['altitude']==$theEphemerides15[12]['altitude'])))
-					        $maxalt=$theEphemerides1[$i]['altitude'];
-					        $maxaltstart=1;
-					        $maxaltend=1;
+					         (($theEphemerides1[$i]['altitude']==$theEphemerides15[$i]['altitude']) ||
+					          ($theEphemerides1[$i]['altitude']==$theEphemerides15[12]['altitude'])))
+					      { $maxalt=$theEphemerides1[$i]['altitude'];
+					        if($theEphemerides1[$i]['altitude']>$theEphemerides15[12]['altitude'])
+					          $maxaltstart=0;
+					        else if ($theEphemerides1[$i]['altitude']>$theEphemerides15[$i]['altitude'])
+					          $maxaltend=0;
+					      }
 					    }
 						  else
 						  { if(($theEphemerides1[$i]['altitude']!='-') && 
 			             (($theEphemerides1[$i]['altitude']==$theEphemerides15[$i]['altitude']) ||
 					          ($theEphemerides1[$i]['altitude']==$theEphemerides15[$i-1]['altitude'])))
 					      { $maxalt=$theEphemerides1[$i]['altitude'];
-					        if(!($maxaltstart))
-					          $maxaltstart=$i;
-					        $maxaltend=$i;
+					        if($theEphemerides1[$i]['altitude']>$theEphemerides15[$i-1]['altitude'])
+					          $maxaltstart=$i-1;
+					        else if ($theEphemerides1[$i]['altitude']>$theEphemerides15[$i]['altitude'])
+					          $maxaltend=$i-1;
 					      }
 						  }
 			        if($i==12)
 					    { if(($theEphemerides15[$i]['altitude']!='-') &&
 					       (($theEphemerides15[$i]['altitude']==$theEphemerides1[$i]['altitude']) ||
 					        ($theEphemerides15[$i]['altitude']==$theEphemerides1[1]['altitude'])))
-					      { $maxalt=$theEphemerides1[$i]['altitude'];
-					        if(!($maxaltstart))
-					          $maxaltstart=$i+0.5;
-					        $maxaltend=$i+0.5;
+					      { $maxalt=$theEphemerides15[$i]['altitude'];
+					        if($theEphemerides15[$i]['altitude']>$theEphemerides1[$i]['altitude'])
+					          $maxaltstart=$i+.5-1;
+					        else if ($theEphemerides15[$i]['altitude']>$theEphemerides1[1]['altitude'])
+					          $maxaltend=$i+.5-1;
 					      }
 					    }
 			        else
 						  { if(($theEphemerides15[$i]['altitude']!='-') && 
 	                (($theEphemerides15[$i]['altitude']==$theEphemerides1[$i]['altitude']) ||
 			             ($theEphemerides15[$i]['altitude']==$theEphemerides1[$i+1]['altitude'])))
-			          { $maxalt=$theEphemerides1[$i]['altitude'];
-					        if(!($maxaltstart))
-					          $maxaltstart=$i+0.5;
-					        $maxaltend=$i+0.5;
+			          { $maxalt=$theEphemerides15[$i]['altitude'];
+					        if($theEphemerides15[$i]['altitude']>$theEphemerides1[$i]['altitude'])
+					          $maxaltstart=$i+.5-1;
+					        else if ($theEphemerides15[$i]['altitude']>$theEphemerides1[$i+1]['altitude'])
+					          $maxaltend=$i+.5-1;
 			          }
 						  }
 						}
             $result2[$j]['objectmaxalt'] = $maxalt;
-            $result2[$j]['objectmaxaltstart'] = $maxaltstart;
-            $result2[$j]['objectmaxaltend'] = $maxaltend;
-	        }          
+            $result2[$j]['objectmaxaltstart'] = '-';
+            $result2[$j]['objectmaxaltend'] = '-';
+            $result2[$j]['objectmaxaltmid'] = '-';
+            if($maxalt!='-')
+            { $result2[$j]['objectmaxaltstart'] = $maxaltstart+1;
+              $result2[$j]['objectmaxaltend'] = $maxaltend+1;
+            	if($maxaltstart>$maxaltend)
+                $maxaltmid=($maxaltstart+12+$maxaltend)/2;
+              else 
+                $maxaltmid=($maxaltstart+$maxaltend)/2;
+              if($maxaltmid>=12)
+                $maxaltmid-=12;
+              $result2[$j]['objectmaxaltmid'] = $maxaltmid+1;
+            }
+          }          
           
 			    $j++;		
         }
@@ -1243,6 +1263,7 @@ class Objects
 	  { $objPresentations->tableSortHeader("Max Alt", $link."&amp;sort=objectmaxalt",         "C".$c++, $columnSource);
 	    $objPresentations->tableSortHeader("Max Alt Start", $link."&amp;sort=objectmaxaltstart",         "C".$c++, $columnSource);
 	    $objPresentations->tableSortHeader("Max Alt End", $link."&amp;sort=objectmaxaltend",         "C".$c++, $columnSource);
+	    $objPresentations->tableSortHeader("Max Alt Mid", $link."&amp;sort=objectmaxaltmid",         "C".$c++, $columnSource);
 	  }
     if(($myList) && ($pageListAction=="addAllObjectsFromPageToList"))
       echo("<td class=\"centered\"><a href=\"".$link."&amp;min=".$min."&amp;max=".($min+$step)."&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">&nbsp;P&nbsp;</a></td>");
@@ -1317,6 +1338,7 @@ class Objects
 	    { echo "<td id=\"C".$c++."D".$countline."\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectmaxalt']."</td>";
         echo "<td id=\"C".$c++."D".$countline."\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectmaxaltstart']."</td>";
         echo "<td id=\"C".$c++."D".$countline."\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectmaxaltend']."</td>";
+        echo "<td id=\"C".$c++."D".$countline."\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectmaxaltmid']."</td>";
 	    }
   	  if($myList)
   	  { echo("<td class=\"centered\">");
