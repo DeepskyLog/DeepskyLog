@@ -1297,10 +1297,10 @@ class Objects
 	    $objPresentations->tableSortHeader(LangOverviewObjectsHeader8, $link."&amp;sort=objectlastseen",         "C".$c++, $columnSource);
 	  }
 	  if($loggedUser && $objObserver->getObserverProperty($loggedUser, 'stdLocation'))
-	  { $objPresentations->tableSortHeader("Max Alt", $link."&amp;sort=objectmaxalt",         "C".$c++, $columnSource);
-	    $objPresentations->tableSortHeader("Max Alt Start", $link."&amp;sort=objectmaxaltstart",         "C".$c++, $columnSource);
-	    $objPresentations->tableSortHeader("Max Alt End", $link."&amp;sort=objectmaxaltend",         "C".$c++, $columnSource);
-	    $objPresentations->tableSortHeader("Max Alt Mid", $link."&amp;sort=objectmaxaltmid",         "C".$c++, $columnSource);
+	  { $objPresentations->tableSortHeader(LangObjectHighestAlt, $link."&amp;sort=objectmaxalt",         "C".$c++, $columnSource);
+	    $objPresentations->tableSortHeader(LangObjectHighestFrom, $link."&amp;sort=objectmaxaltstart",         "C".$c++, $columnSource);
+	    $objPresentations->tableSortHeader(LangObjectHighestTo, $link."&amp;sort=objectmaxaltend",         "C".$c++, $columnSource);
+	    $objPresentations->tableSortHeader(LangObjectHighestAround, $link."&amp;sort=objectmaxaltmid",         "C".$c++, $columnSource);
 	  }
     if(($myList) && ($pageListAction=="addAllObjectsFromPageToList"))
       echo("<td class=\"centered\"><a href=\"".$link."&amp;min=".$min."&amp;max=".($min+$step)."&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">&nbsp;P&nbsp;</a></td>");

@@ -1,4 +1,8 @@
 <?php
+define("LangObjectHighestAlt","Highest Alt.");
+define("LangObjectHighestFrom","Highest from");
+define("LangObjectHighestTo","Highest to");
+define("LangObjectHighestAround","Highest around");
 
 define("LangMonthStart", "begin");
 define("LangMonthMid", "mid");
