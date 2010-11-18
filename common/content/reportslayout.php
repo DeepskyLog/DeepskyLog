@@ -108,6 +108,10 @@ function reportsLayout()
         titles['objectbestpopup']='".Reportobjectbestpopup."';
         titles['objectmaxaltitude']='".Reportobjectmaxaltitude."';
         titles['objectmaxaltitudepopup']='".Reportobjectmaxaltitudepopup."';
+        titles['objectmaxalt']='".LangReportObjectHighestAlt."';
+        titles['objectmaxaltstarttext']='".LangReportObjectHighestFrom."';
+        titles['objectmaxaltmidtext']='".LangReportObjectHighestAround."';
+        titles['objectmaxaltendtext']='".LangReportObjectHighestTo."';
         
         thereport='".$reportName."';
 	      setLayoutPage();

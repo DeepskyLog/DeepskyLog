@@ -4,6 +4,11 @@ define("LangObjectHighestFrom","Highest from");
 define("LangObjectHighestTo","Highest to");
 define("LangObjectHighestAround","Highest around");
 
+define("LangReportObjectHighestAlt","Highest altitude during the year");
+define("LangReportObjectHighestFrom","Highest from the month");
+define("LangReportObjectHighestTo","Highest till the month");
+define("LangReportObjectHighestAround","Highest around the month");
+
 define("LangMonthStart", "begin");
 define("LangMonthMid", "midden");
 define("LangMonthEnd", "eind");
