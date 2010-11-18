@@ -1,4 +1,13 @@
 <?php
+
+
+define("LangMonthStart", "begin");
+define("LangMonthMid", "midden");
+define("LangMonthEnd", "eind");
+define("LangMonthTransit", "start");
+
+// prior to 4.1
+
 define('LangHideTopMenu','Hide header');  // TO TRANSLATE
 define('LangShowTopMenu','Show header');  // TO TRANSLATE
 define('LangHideLeftMenu','Hide left menu structure');  // TO TRANSLATE
@@ -1609,6 +1618,19 @@ $Month9									="September";
 $Month10								="Oktober";
 $Month11								="November";
 $Month12								="Dezember";
+
+$Month1Short="Jan";
+$Month2Short="Feb";
+$Month3Short="M&auml;r";
+$Month4Short="Apr";
+$Month5Short="Mai";
+$Month6Short="Jun";
+$Month7Short="Jul";
+$Month8Short="Aug";
+$Month9Short="Sep";
+$Month10Short="Okt";
+$Month11Short="Nov";
+$Month12Short="Dez";
 
 // Names of Atlasses
 $AtlasNameurano 				="Uranometria";

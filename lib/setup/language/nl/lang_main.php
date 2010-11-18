@@ -1,4 +1,11 @@
 <?php
+
+define("LangMonthStart", "begin");
+define("LangMonthMid", "midden");
+define("LangMonthEnd", "eind");
+define("LangMonthTransit", "start");
+
+// Prior to 4.1
 define('LangHideTopMenu','De hoofding verbergen');
 define('LangShowTopMenu','De hoofding tonen');
 define('LangHideLeftMenu','De linkermenu structuur verbergen');
@@ -1608,6 +1615,19 @@ $Month9									="September";
 $Month10								="Oktober";
 $Month11								="November";
 $Month12								="December";
+
+$Month1Short="Jan";
+$Month2Short="Feb";
+$Month3Short="Mar";
+$Month4Short="Apr";
+$Month5Short="Mei";
+$Month6Short="Jun";
+$Month7Short="Jul";
+$Month8Short="Aug";
+$Month9Short="Sep";
+$Month10Short="Okt";
+$Month11Short="Nov";
+$Month12Short="Dec";
 
 // Names of Atlasses
 $AtlasNameurano 				="Uranometria";

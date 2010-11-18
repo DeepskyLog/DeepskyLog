@@ -789,9 +789,13 @@ class Objects
             $result2[$j]['objectmaxaltstart'] = '-';
             $result2[$j]['objectmaxaltend'] = '-';
             $result2[$j]['objectmaxaltmid'] = '-';
+            $result2[$j]['objectmaxaltstarttext'] = "-";
+            $result2[$j]['objectmaxaltmidtext'] = "-";
+            $result2[$j]['objectmaxaltendtext'] = "-";
             if($maxalt!='-')
             { $result2[$j]['objectmaxaltstart'] = $maxaltstart+1;
               $result2[$j]['objectmaxaltend'] = $maxaltend+1;
+            	$result2[$j]['objectmaxaltend'] = $maxaltend+1;
             	if($maxaltstart>$maxaltend)
                 $maxaltmid=($maxaltstart+12+$maxaltend)/2;
               else 
@@ -799,6 +803,39 @@ class Objects
               if($maxaltmid>=12)
                 $maxaltmid-=12;
               $result2[$j]['objectmaxaltmid'] = $maxaltmid+1;
+              $a=floor($maxaltstart+1);
+              $b=$maxaltstart+1-$a;
+              if($b==0.75)
+                $c=LangMonthEnd;
+              else if ($b==0.5)
+                 $c=LangMonthMid;
+              else if ($b==0.25)
+                $c=LangMonthStart;
+              else
+                $c=LangMonthTransit; 
+              $result2[$j]['objectmaxaltstarttext'] = $c.' '.$GLOBALS['Month'.$a.'Short'];
+              $a=floor($maxaltend+1);
+              $b=$maxaltend+1-$a;
+              if($b==0.75)
+                $c=LangMonthEnd;
+              else if ($b==0.5)
+                 $c=LangMonthMid;
+              else if ($b==0.25)
+                $c=LangMonthStart;
+              else
+                $c=LangMonthTransit; 
+              $result2[$j]['objectmaxaltendtext'] = $c.' '.$GLOBALS['Month'.$a.'Short'];
+              $a=floor($maxaltmid+1);
+              $b=$maxaltmid+1-$a;
+              if($b==0.75)
+                $c=LangMonthEnd;
+              else if ($b==0.5)
+                 $c=LangMonthMid;
+              else if ($b==0.25)
+                $c=LangMonthStart;
+              else
+                $c=LangMonthTransit; 
+              $result2[$j]['objectmaxaltmidtext'] = $c.' '.$GLOBALS['Month'.$a.'Short'];
             }
           }          
           
@@ -1336,9 +1373,9 @@ class Objects
 	    }
 	    if($loggedUser && $objObserver->getObserverProperty($loggedUser, 'stdLocation'))
 	    { echo "<td id=\"C".$c++."D".$countline."\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectmaxalt']."</td>";
-        echo "<td id=\"C".$c++."D".$countline."\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectmaxaltstart']."</td>";
-        echo "<td id=\"C".$c++."D".$countline."\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectmaxaltend']."</td>";
-        echo "<td id=\"C".$c++."D".$countline."\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectmaxaltmid']."</td>";
+        echo "<td id=\"C".$c++."D".$countline."\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectmaxaltstarttext']."</td>";
+        echo "<td id=\"C".$c++."D".$countline."\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectmaxaltendtext']."</td>";
+        echo "<td id=\"C".$c++."D".$countline."\" class=\"centered\">".$_SESSION['Qobj'][$count]['objectmaxaltmidtext']."</td>";
 	    }
   	  if($myList)
   	  { echo("<td class=\"centered\">");
