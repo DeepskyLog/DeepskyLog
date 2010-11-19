@@ -1,4 +1,5 @@
 <?php
+ $inIndex=true;
  require_once "../lib/setup/databaseInfo.php";
  require_once "../lib/database.php";
  $objDatabase=new Database();
