@@ -29,8 +29,8 @@ function add_csv_listdata()
 	        $objectsMissing[$j++]=ucwords(trim($parts_array[$i][0]));
 	  		else
 	  		  if(array_key_exists(1,$parts_array[$i])
-	  		  && ($parts_array[$i][1]<>'')
-	  		  && (ucwords(trim($parts_array[$i][1]))<>$objectsquery))
+	  		  && ($parts_array[$i][1]!='')
+	  		  && (ucwords(trim($parts_array[$i][1]))!=$objectsquery))
 					  $objects[$i] = array($objectsquery, trim($parts_array[$i][1]).' ('.$objectsquery.')');
 					else
 					  $objects[$i] = array($objectsquery, trim($parts_array[$i][0]));	

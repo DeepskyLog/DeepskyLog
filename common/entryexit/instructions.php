@@ -39,7 +39,7 @@ function instructions()
 	//listnames
 	$myList=False;	
 	$listname='';
-	if(array_key_exists('listname', $_SESSION)&&($_SESSION['listname']<>"----------"))
+	if(array_key_exists('listname', $_SESSION)&&($_SESSION['listname']!="----------"))
 	  $listname=$_SESSION['listname'];
 	$listname_ss = stripslashes($listname);
 	if(array_key_exists('listname',$_SESSION)&&$objList->checkList($_SESSION['listname'])==2)
@@ -575,7 +575,7 @@ function instructions()
 	  $myList=False;
 	  if(array_key_exists('listname',$_SESSION)&&$objList->checkList($_SESSION['listname'])==2)
 	    $myList=True;
-	  if($_GET['listname']<>"----------")
+	  if($_GET['listname']!="----------")
 	  { if($myList)
 	      $entryMessage.=LangToListList.$listname_ss.LangToListActivation1;
 	  }

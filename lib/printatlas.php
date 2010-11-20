@@ -1046,7 +1046,7 @@ class PrintAtlas
       { $this->pdf->addTextWrap( 50, $liney, 4500, 10, LangViewObjectFieldOptimumDetectionMagnification.': '.$theobjectdata['objectoptimalmagnification'],  'left');
         $this->pdf->addTextWrap(550, $liney, 200, 10, LangOverviewObjectsHeader8.': '.($theobjectdata['objectlastseen']?$theobjectdata['objectlastseen']:'-'),  'left');
         $liney-=15;
-      	$this->pdf->addTextWrap( 50, $liney, 750, 10, Reportobjectcontrast.': '.($theobjectdata['objectcontrast']<>'0.0'?$theobjectdata['objectcontrast'].' - ':'').stripslashes($theobjectdata['objectcontrastpopup']),  'left');
+      	$this->pdf->addTextWrap( 50, $liney, 750, 10, Reportobjectcontrast.': '.($theobjectdata['objectcontrast']!='0.0'?$theobjectdata['objectcontrast'].' - ':'').stripslashes($theobjectdata['objectcontrastpopup']),  'left');
       	$liney-=15;
         if($ephemerides=='true')
         { $liney-=15;
@@ -1594,7 +1594,7 @@ class PrintAtlas
 			            $deltaymax=max($deltaymax,$dataelement['fieldline']); 
 				 		  }
 				      elseif($dataelement['fieldname']=="objectdescription")
-		  	      { if(array_key_exists('objectdescription',$valueA) && ($valueA['objectdescription']<>''))
+		  	      { if(array_key_exists('objectdescription',$valueA) && ($valueA['objectdescription']!=''))
 		  	          $deltaymax=max($deltaymax,$dataelement['fieldline']);
 				      }
 				      else
@@ -1664,12 +1664,12 @@ class PrintAtlas
 		  			    $deltaymax=max($deltaymax,$dataelement['fieldline']);
 					    }
 					    else if(($dataelement['fieldname']=="objectlistdescription"))
-			        { if(array_key_exists('objectlistdescription',$valueA) && ($valueA['objectlistdescription']<>''))
+			        { if(array_key_exists('objectlistdescription',$valueA) && ($valueA['objectlistdescription']!=''))
 			          { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectlistdescription'])).$dataelement['fieldafter'];
 				  		    $theText= $this->pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
 			  	  		  while($theText)
 						  	  { $y-=$deltaline;	
-			              if($y<$bottom) 
+			              if($y-($deltaline*$dataelement['fieldline'])<$bottom) 
 			              { $objUtil->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$this->pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$b,$showelements,$reportdata);
 			                $y+=($deltaline*$dataelement['fieldline']);
 			              }
@@ -1679,7 +1679,7 @@ class PrintAtlas
 			          } 
 				   		}
 					    elseif($dataelement['fieldname']=="objectdescription")
-		  	      { if(array_key_exists('objectlistdescription',$valueA) && ($valueA['objectlistdescription']<>''))
+		  	      { if(array_key_exists('objectlistdescription',$valueA) && ($valueA['objectlistdescription']!=''))
 			          { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectlistdescription'])).$dataelement['fieldafter'];
 				  		    $theText= $this->pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
 			  	  		  while($theText)
@@ -1692,7 +1692,7 @@ class PrintAtlas
 			  		  	  }
 					        $deltaymax=max($deltaymax,$dataelement['fieldline']);
 			          }
-			          else if(array_key_exists('objectdescription',$valueA) && ($valueA['objectdescription']<>''))
+			          else if(array_key_exists('objectdescription',$valueA) && ($valueA['objectdescription']!=''))
 		  	        { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectdescription'])).$dataelement['fieldafter'];
 			   			    $theText= $this->pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
 			  	  		  while($theText)
@@ -1707,7 +1707,7 @@ class PrintAtlas
 		  	        }
 						  }
 					    else
-					    { if($valueA[$dataelement['fieldname']]<>'')
+					    { if($valueA[$dataelement['fieldname']]!='')
 					      { $this->pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $dataelement['fieldbefore'].html_entity_decode($valueA[$dataelement['fieldname']]).$dataelement['fieldafter'],$justification);
 					        $deltaymax=max($deltaymax,$dataelement['fieldline']);
 					      }

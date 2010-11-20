@@ -1768,7 +1768,7 @@ class Utils
 	    }
 	    else
 	    { $pdf->setLineStyle(0.5);
-	      $pdf->line(($xbase+$SectionBarWidth+$xmid-$sectionBarSpace)/2, $top+$fontSizeText,($xbase+$SectionBarWidth+$xmid-$sectionBarSpace)/2, $bottom);
+	      $pdf->line(($xbase+$SectionBarWidth+$xmid-$sectionBarSpace)/2, $top+$fontSizeText,($xbase+$SectionBarWidth+$xmid-$sectionBarSpace)/2, $bottom+$fontSizeText);
 	      $pdf->setLineStyle(1);
 	      $xbase = $xmid;
 	    }
@@ -1854,7 +1854,7 @@ class Utils
 	            $deltaymax=max($deltaymax,$dataelement['fieldline']); 
 		 		  }
 		      elseif($dataelement['fieldname']=="objectdescription")
-  	      { if(array_key_exists('objectdescription',$valueA) && ($valueA['objectdescription']<>''))
+  	      { if(array_key_exists('objectdescription',$valueA) && ($valueA['objectdescription']!=''))
   	          $deltaymax=max($deltaymax,$dataelement['fieldline']);
 		      }
 		      else
@@ -1922,12 +1922,12 @@ class Utils
   			    $deltaymax=max($deltaymax,$dataelement['fieldline']);
 			    }
 			    else if(($dataelement['fieldname']=="objectlistdescription"))
-	        { if(array_key_exists('objectlistdescription',$valueA) && ($valueA['objectlistdescription']<>''))
+	        { if(array_key_exists('objectlistdescription',$valueA) && ($valueA['objectlistdescription']!=''))
 	          { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectlistdescription'])).$dataelement['fieldafter'];
 		  		    $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
 	  	  		  while($theText)
 				  	  { $y-=$deltaline;	
-	              if($y<$bottom) 
+	              if($y-($deltaline*$dataelement['fieldline'])<$bottom) 
 	              { $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$b,$showelements,$reportdata);
 					        $y+=($deltaline*$dataelement['fieldline']);
 	              }
@@ -1937,7 +1937,7 @@ class Utils
 	          } 
 		   		}
 			    elseif($dataelement['fieldname']=="objectdescription")
-  	      { if(array_key_exists('objectlistdescription',$valueA) && ($valueA['objectlistdescription']<>''))
+  	      { if(array_key_exists('objectlistdescription',$valueA) && ($valueA['objectlistdescription']!=''))
 	          { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectlistdescription'])).$dataelement['fieldafter'];
 		  		    $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
 	  	  		  while($theText)
@@ -1950,12 +1950,12 @@ class Utils
 	  		  	  }
 			        $deltaymax=max($deltaymax,$dataelement['fieldline']);
 	          }
-	          else if(array_key_exists('objectdescription',$valueA) && ($valueA['objectdescription']<>''))
+	          else if(array_key_exists('objectdescription',$valueA) && ($valueA['objectdescription']!=''))
   	        { $theText= $dataelement['fieldbefore'].html_entity_decode($objPresentations->br2nl($valueA['objectdescription'])).$dataelement['fieldafter'];
 	   			    $theText= $pdf->addTextWrap($xbase+$dataelement['fieldposition'], $y-($deltaline*$dataelement['fieldline']), $dataelement['fieldwidth'] ,$fontSizeText, $theText,$justification);
 	  	  		  while($theText)
               { $y-=$deltaline;	
-	              if( $y-($deltaline*$dataelement['fieldline'])<$bottom) 
+	              if($y-($deltaline*$dataelement['fieldline'])<$bottom) 
 	              { $this->newpage($y,$bottom,$top,$bottom,$xbase,$xmid,$pagenr,$pdf,$xleft,$header,$fontSizeText,$theDate,$footer,$SectionBarWidth,$sectionBarSpace,$sort,$con,$deltalineSection,$sectionBarHeight,$fontSizeSection,$deltaline,$deltalineSection,$i,$b,$showelements,$reportdata);
 					        $y+=($deltaline*$dataelement['fieldline']);
 	              }
@@ -1965,7 +1965,7 @@ class Utils
   	        }
 				  }
 			    else
-			    { if($valueA[$dataelement['fieldname']]<>'')
+			    { if(trim($valueA[$dataelement['fieldname']])!='')
 			      { $pdf->addTextWrap($xbase+$dataelement['fieldposition'] , $y-($deltaline*$dataelement['fieldline']),  $dataelement['fieldwidth'], $fontSizeText, $dataelement['fieldbefore'].html_entity_decode($valueA[$dataelement['fieldname']]).$dataelement['fieldafter'],$justification);
 			        $deltaymax=max($deltaymax,$dataelement['fieldline']);
 			      }
