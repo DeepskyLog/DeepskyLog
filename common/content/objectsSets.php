@@ -72,6 +72,10 @@ function objectsSets()
   echo "<hr />";
   echo "<table>";
   echo "<tr>";
+  echo "<td>"."<input id=\"RCB"."all"."\" type=\"button\" value=\"V\" onclick=\"setCheckedValues('all',".$k.",document.getElementById('RDfovs').value);
+                                                                                setCheckedValues('all',".$k.",document.getElementById('RDdsos').value);
+                                                                                setCheckedValues('all',".$k.",document.getElementById('RDstars').value);
+                                                                                setCheckedValues('all',".$k.",document.getElementById('RDphotos').value);\" />"."</td>";
   echo "<td> &nbsp; </td>";
   echo "<td> &nbsp; </td>";
   echo "<td>"."<input type=\"text\" id=\"RD"."fovs"."\" value=\"".$fovo." ".$fovl." ".$fovd."\" /><input id=\"RCB"."fovs"."\" type=\"button\" value=\"V\" onclick=\"setCheckedValues('fovs',".$k.",document.getElementById('RDfovs').value);\" />"."</td>";
@@ -80,6 +84,7 @@ function objectsSets()
   echo "<td>"."<input type=\"text\" id=\"RD"."photos"."\" value=\"".$foto1." ".$foto2."\"/><input id=\"RCB"."photos"."\" type=\"button\" value=\"V\" onclick=\"setCheckedValues('photos',".$k.",document.getElementById('RDphotos').value);\" />"."</td>";
   echo "</tr>";  
   echo "<tr>";
+  echo "<td> &nbsp; </td>";
   echo "<td class=\"bold\">".LangpdfseriesObject."</td>";
   echo "<td class=\"bold\">".LangpdfseriesSize."</td>";
   echo "<td class=\"bold\">".LangpdfseriesFoVs."</td>";
@@ -90,7 +95,8 @@ function objectsSets()
   echo "</tr>";
   for($i=0;$i<$k;$i++)
   { echo "<tr>";
-  	echo "<td id=\"T".$i."\">"."<input id=\"R".$i."\" type=\"button\" value=\"".$_SESSION['Qobj'][$i]['showname']."\" title=\"".$_SESSION['Qobj'][$i]['objectname']."\" onclick=\"generateOne(".$i.",".($MSIE?'true':'false').");\"/>"."</td>";
+  	echo "<td>"."<input id=\"R".$i."CB"."all"."\" type=\"checkbox\" />"."</td>";
+    echo "<td id=\"T".$i."\">"."<input id=\"R".$i."\" type=\"button\" value=\"".$_SESSION['Qobj'][$i]['showname']."\" title=\"".$_SESSION['Qobj'][$i]['objectname']."\" onclick=\"generateOne(".$i.",".($MSIE?'true':'false').");\"/>"."</td>";
     echo "<td id=\"R".$i."Dsize\">".$_SESSION['Qobj'][$i]['objectsize']."</td>";
     echo "<td>"."<input type=\"text\" ".((($_SESSION['Qobj'][$i]['objectdiam1']/60)>$fovd)?"class=\"textred\"":"")." id=\"R".$i."D"."fovs"."\" value=\"".$fovo." ".$fovl." ".$fovd."\" /><input id=\"R".$i."CB"."fovs"."\" type=\"checkbox\" />"."</td>";
     echo "<td>"."<input type=\"text\" id=\"R".$i."D"."dsos"."\" value=\"".$dsoso." ".$dsosl." ".$dsosd."\"/><input id=\"R".$i."CB"."dsos"."\" type=\"checkbox\" />"."</td>";
