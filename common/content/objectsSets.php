@@ -107,6 +107,7 @@ function objectsSets()
   echo "<tr>";
   echo "<td> &nbsp; </td>";
   echo "<td> &nbsp; </td>";
+  echo "<td> &nbsp; </td>";
   echo "<td>"."Select all: "."<input id=\"RCBA"."fovs"."\" type=\"checkbox\" onclick=\"setAllCheckboxes('CBfovs',".$i.",document.getElementById('RCBAfovs').checked);\"/>"."</td>";
   echo "<td>"."Select all: "."<input id=\"RCBA"."dsos"."\" type=\"checkbox\" onclick=\"setAllCheckboxes('CBdsos',".$i.",document.getElementById('RCBAdsos').checked);\" />"."</td>";
   echo "<td>"."Select all: "."<input id=\"RCBA"."stars"."\" type=\"checkbox\" onclick=\"setAllCheckboxes('CBstars',".$i.",document.getElementById('RCBAstars').checked);\" />"."</td>";
