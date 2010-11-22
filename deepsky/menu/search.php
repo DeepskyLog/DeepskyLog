@@ -37,6 +37,7 @@ function menu_search()
 	  echo "<option value=\"".$baseURL."index.php?indexAction=rank_observers\">".LangSearchMenuItem6."</option>";
 	  echo "<option value=\"".$baseURL."index.php?indexAction=rank_objects\">".LangSearchMenuItem7."</option>";
 	  echo "<option value=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;catalog=%\">".LangSearchMenuItem2."</option>";
+	  echo "<option value=\"".$baseURL."index.php?indexAction=view_catalogs\">".LangSearchMenuItem10."</option>";
 	  echo "</select>";
 	}
 	else
@@ -49,6 +50,7 @@ function menu_search()
 	  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=rank_observers\">".LangSearchMenuItem6."</a><br />";
 	  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=rank_objects\">".LangSearchMenuItem7."</a><br />";
 	  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;catalog=%\">".LangSearchMenuItem2."</a><br />";
+	  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=view_catalogs\">".LangSearchMenuItem10."</a><br />";
 	}
 	echo "</div>";
 }

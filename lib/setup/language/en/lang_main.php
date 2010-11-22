@@ -1,4 +1,8 @@
 <?php
+
+define('LangBuildingCatalogList'        ,'Building catalog list');
+define('LangClickToViewCatalogDetails'  ,'Click on a list to view its details');
+
 define("LangObjectHighestAlt","Highest Alt.");
 define("LangObjectHighestFrom","Highest from");
 define("LangObjectHighestTo","Highest to");
@@ -626,6 +630,7 @@ define("LangSearchMenuItem6"															,"Observers");
 define("LangSearchMenuItem7"															,"Popular objects");
 define("LangSearchMenuItem8"                              ,"Year of observations");
 define("LangSearchMenuItem9"                              ,"New observations");
+define("LangSearchMenuItem10"                             ,"Catalogs");
 define("LangSearchAllLanguages"														,"Look again, using all languages.");
 define("LangSearchDetailPage"															,"Set up a detailed search.");
 

@@ -459,4 +459,9 @@ class catalogs
 	    return trim($thenewcatalog0.' '.$theindex);
   	}
   }
+  public function getCatalogs()
+  { global $objDatabase;
+    $sql="SELECT DISTINCT catalog FROM objectnames;";
+    return $objDatabase->selectSingleArray($sql,'catalog');
+  }
 }

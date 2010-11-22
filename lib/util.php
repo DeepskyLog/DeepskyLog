@@ -2492,6 +2492,7 @@ class Utils
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_observation'                    ,'deepsky/content/new_observation.php'))) 
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_object'                      ,'deepsky/content/view_object.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_observation'                 ,'deepsky/content/view_observation.php'))) 
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('view_catalogs'                      ,'deepsky/content/view_catalogs.php'))) 
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('atlaspage'                          ,'deepsky/content/dsatlas.php'))) 
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('import_csv_list'                    ,'deepsky/content/new_listdatacsv.php')))  
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('listaction'                         ,'deepsky/content/tolist.php')))
@@ -2534,7 +2535,7 @@ class Utils
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_lenses'                        ,'common/content/overview_lenses.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_locations'                     ,'common/content/overview_locations.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_observers'                     ,'common/content/overview_observers.php')))
-
+    
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('admin_check_objects'                ,'deepsky/control/admincheckobjects.php')))
     
     

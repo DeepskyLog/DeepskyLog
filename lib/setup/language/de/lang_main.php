@@ -1,4 +1,11 @@
 <?php
+
+// Line further down define("LangSearchMenuItem10"                             ,"Catalogs");
+
+define('LangBuildingCatalogList'        ,'Building catalog list');
+define('LangClickToViewCatalogDetails'  ,'Click on a list to view its details');
+
+
 define("LangObjectHighestAlt","Highest Alt.");
 define("LangObjectHighestFrom","Highest from");
 define("LangObjectHighestTo","Highest to");
@@ -629,6 +636,7 @@ define("LangSearchMenuItem6"															,"Beobachter");
 define("LangSearchMenuItem7"															,"Beliebteste Objekte");
 define("LangSearchMenuItem8"                              ,"Jahres Beobachtungen");
 define("LangSearchMenuItem9"                              ,"Neues Beobachtungen");
+define("LangSearchMenuItem10"                             ,"Catalogs");                                                   // TO TRANSLATE
 define("LangSearchAllLanguages"														,"Suche nochmal in allen Sprachen.");
 define("LangSearchDetailPage"															,"Detailierte Suche.");
 

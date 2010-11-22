@@ -1,4 +1,8 @@
 <?php
+
+define('LangBuildingCatalogList'        ,'Even geduld terwijl de lijst wordt samengesteld.');
+define('LangClickToViewCatalogDetails'  ,'Klik op een lijst om zijn details te zien.');
+
 define("LangObjectHighestAlt","Hoogste alt.");
 define("LangObjectHighestFrom","Hoogst van");
 define("LangObjectHighestTo","Hoogst tot");
@@ -624,6 +628,7 @@ define("LangSearchMenuItem6"															,"Waarnemers");
 define("LangSearchMenuItem7"															,"Populaire&nbsp;objecten");
 define("LangSearchMenuItem8"                              ,"Jaarwaarnemingen");
 define("LangSearchMenuItem9"                              ,"Nieuwe waarnemingen");
+define("LangSearchMenuItem10"                             ,"Catalogussen");
 define("LangSearchAllLanguages"														,"Opnieuw zoeken, in alle talen.");
 define("LangSearchDetailPage"															,"Een gedetailleerde zoekopdracht maken.");
 

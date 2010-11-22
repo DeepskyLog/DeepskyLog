@@ -26,7 +26,7 @@ function preludesA()
 	require_once "common/control/loginuser.php";
 }
 function preludesB()
-{ global $FF,$MSIE,$leftMenu,$topMenu,$thisYear,$thisMonth,$thisDay,$DSOcatalogsLists,$DSOcatalogs,
+{ global $FF,$MSIE,$leftmenu,$topmenu,$thisYear,$thisMonth,$thisDay,$DSOcatalogsLists,$DSOcatalogs,
          $objAstroCalc,
          $objAtlas,
          $objCatalog,
@@ -54,6 +54,7 @@ function preludesB()
          $objUtil
          ;
 
+  $topmenu="testpreludesB1";
   require_once "lib/observerqueries.php";         $objObserverQueries=new Observerqueries;
   require_once "lib/atlasses.php";                $objAtlas=new Atlasses;
 	require_once "lib/locations.php";               $objLocation=new Locations;

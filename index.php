@@ -49,6 +49,9 @@ catch (Exception $e)
 }
 echo "<script type=\"text/javascript\">";
 echo "resizeForm('".$leftmenu."','".$topmenu."');";
+if($includeFile=='deepsky/content/view_catalogs.php')
+{ echo "view_catalogs('".$leftmenu."','".$topmenu."');";
+}
 if($loadAtlasPage)
 { echo "atlasFillPage();";
 }
