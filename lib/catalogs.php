@@ -6,7 +6,28 @@ global $inIndex;
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 
 class catalogs
-{ private function formatIndex($theformat,$theindex)
+{ public function getCatalogData($thecatalog)
+  { global $objDatabase;
+    $sql="SELECT DISTINCT objects.*, objectnames.objectname, objectnames.altname FROM objects JOIN objectnames ON objects.name = objectnames.objectname WHERE catalog='".$thecatalog."' ORDER BY objectname;";
+    $result=$objDatabase->selectRecordsetArray($sql);
+    $t=count($result);
+    $n="";
+    for($i=0,$k='';$i<$t;$i++)
+    { if($result[$i]['objectname']!=$n)
+      { $result2[$k=$result[$i]['altname']]=$result[$i];
+        $n=$result[$i]['objectname'];
+      }
+      else
+      { $result2[$k]['objectname']=$result2[$k]['objectname'].'/'.$result[$i]['altname'];
+      }
+    }
+    uksort($result2,"strnatcasecmp");
+    $t=count($result2);
+    while(list($key,$value)=each($result2))
+      $result3[]=$value;
+    return $result3;  
+  }
+  private function formatIndex($theformat,$theindex)
   { if($theformat=="2MASX")
     { $returnindex='J';
 	    if(strtoupper(substr($theindex,0,1))=="J")

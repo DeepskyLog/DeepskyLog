@@ -331,7 +331,7 @@ class Objects
     else
       $sql = $sql1 . $sqland;		
 //    $sql.=" LIMIT 0,10000";
-//  echo $sql."<p>&nbsp;</p>"; die;
+//  echo $sql."<p>&nbsp;</p>"; return;
     $run=$objDatabase->selectRecordset($sql);
     $i=0;
     if (array_key_exists('name',$queries)&&$queries["name"])

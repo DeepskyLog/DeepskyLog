@@ -42,7 +42,47 @@ function view_catalog(thecatalog)
   jsonhttp.send(null);	
 }
 
-function show_catalog(thecatalogdata)
-{ thetext="Number of objects: ...";	
-  document.getElementById('view_catalogs_right').innerHTML=thetext;
+function show_catalog($thecatalogdata)
+{ $thecount=count($thecatalogdata);
+  $thetext="Number of objects: ";	
+  $thetext+=$thecount+"<br />";
+  var $theconname= new array();
+  var $theconcount=new array();
+  for($i=0;$i<$thecount;$i++)
+  { for($j=0;$j<$theconname.length;$j++)
+      if($thecatalogdata[$i]['con']==$theconname[$j])
+      { $theconcount[$j]=$theconcount[$j]+1;
+        $j=999;
+      }
+    if($j<999)
+    { $theconname[$theconname.length]=$thecatalogdata[$i]['con'];
+      $theconcount[$theconcount.length]=1;
+    }
+  }
+  for($i=0;$i<$theconname.length-1;$i++)
+    for($j=$i+1;$j<$theconname.length;$j++)
+      if($theconname[$i]>$theconname[$j])
+      {  $temp1=$theconname[$j];
+         $temp2=$theconcount[$j];
+         $theconname[$j]=$theconname[$i];
+         $theconcount[$j]=$theconcount[$i];
+         $theconname[$i]=$temp1;
+         $theconcount[$i]=$temp2;
+      }
+  $thetext+='<hr />';
+  $thetext+='<table>';
+  for($j=0;$j<$theconname.length;$j++)
+  { if(($j%3)==0)
+	  $thetext+='<tr>';
+	$thetext=$thetext+'<td>'+$theconname[$j]+': '+$theconcount[$j]+"</td>";
+	if(($j%3)==2)
+	  $thetext+='</tr>';
+  }
+  if(($j%3)!=0)
+    $thetext+='</tr>';
+  $thetext+='</table>';
+  $thetext+='<hr />';
+  for($i=0;$i<$thecount;$i++)
+    $thetext=$thetext+"&nbsp;"+$thecatalogdata[$i]['altname']+($thecatalogdata[$i]['altname']!=$thecatalogdata[$i]['objectname']?"&nbsp;("+$thecatalogdata[$i]['objectname']+")":"")+"<br />";
+  document.getElementById('view_catalogs_right').innerHTML=$thetext;
 }

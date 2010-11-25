@@ -16,7 +16,9 @@ function ajaxinterface()
 	$ajaxInstruction=$objUtil->checkRequestKey('instruction');
 	//echo ($objUtil->checkRequestKey('thedata'));
 	
-	if($ajaxInstruction=="getCatalogs")
+	if($ajaxInstruction=="getCatalogData")
+	  echo(json_encode($objCatalog->getCatalogData($objUtil->checkGetKey('thecatalog'))));
+	elseif($ajaxInstruction=="getCatalogs")
 	  echo(json_encode($objCatalog->getCatalogs()));
 	elseif($ajaxInstruction=="getObjectsMagnitudeJSON")
 	  echo(json_encode($objObject->getObjectsMag($objUtil->checkGetKey('lLhr',0),$objUtil->checkGetKey('rLhr',0),$objUtil->checkGetKey('dDdeg',0),$objUtil->checkGetKey('uDdeg',0),$objUtil->checkGetKey('frommag',0),$objUtil->checkGetKey('tomag',10),$objUtil->checkGetKey('theobject'))));
