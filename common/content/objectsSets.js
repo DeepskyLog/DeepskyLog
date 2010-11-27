@@ -2,9 +2,11 @@ function setAllCheckboxes(theCBs,theNumber,theValue)
 { for(i=0;i<theNumber;i++)
     document.getElementById('R'+i+theCBs).checked=theValue;
 }
-function setCheckedValues(theField,theNumber,theValue)
-{ for(i=0;i<theNumber;i++)
-	if(document.getElementById('R'+i+'CB'+theField).checked==true)
+function setCheckedValues(theField,theNumber,theValue,thecheckfield)
+{ if(!(thecheckfield))
+	thecheckfield=theField;
+  for(i=0;i<theNumber;i++)
+	if(document.getElementById('R'+i+'CB'+thecheckfield).checked==true)
 	  document.getElementById('R'+i+'D'+theField).value=theValue;
 }
 function generateallonepass(item,msie)
