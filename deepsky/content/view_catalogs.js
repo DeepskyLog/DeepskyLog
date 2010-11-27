@@ -19,8 +19,10 @@ function view_catalogs(leftmenu,topmenu)
 
 function show_catalogs(thecatalogs)
 { var thetext='';
+//  $thetext='<list>';
   for(i=0;i<thecatalogs.length;i++)
 	thetext+='<a href="#" onclick="view_catalog(\''+thecatalogs[i]+'\');return false;";>'+thecatalogs[i]+'</a><br />';
+//  $thetext+='</list>';
   document.getElementById('view_catalogs_left').innerHTML=thetext;
 }
 function view_catalog(thecatalog)
@@ -74,15 +76,73 @@ function show_catalog($thecatalogdata)
   for($j=0;$j<$theconname.length;$j++)
   { if(($j%3)==0)
 	  $thetext+='<tr>';
-	$thetext=$thetext+'<td>'+$theconname[$j]+': '+$theconcount[$j]+"</td>";
+	$thetext=$thetext+'<td class="td33pct">'+$theconname[$j]+': '+$theconcount[$j]+"</td>";
 	if(($j%3)==2)
 	  $thetext+='</tr>';
   }
   if(($j%3)!=0)
-    $thetext+='</tr>';
+  { while((($j++)%3!=2))
+	  $thetext=$thetext+'<td class="td33pct">&nbsp;</td>';
+	$thetext+='</tr>';
+  }
   $thetext+='</table>';
-  $thetext+='<hr />';
+
+  var $thetypename= new array();
+  var $thetypecount=new array();
   for($i=0;$i<$thecount;$i++)
-    $thetext=$thetext+"&nbsp;"+$thecatalogdata[$i]['altname']+($thecatalogdata[$i]['altname']!=$thecatalogdata[$i]['objectname']?"&nbsp;("+$thecatalogdata[$i]['objectname']+")":"")+"<br />";
+  { for($j=0;$j<$thetypename.length;$j++)
+      if($thecatalogdata[$i]['type']==$thetypename[$j])
+      { $thetypecount[$j]=$thetypecount[$j]+1;
+        $j=999;
+      }
+    if($j<999)
+    { $thetypename[$thetypename.length]=$thecatalogdata[$i]['type'];
+      $thetypecount[$thetypecount.length]=1;
+    }
+  }
+  for($i=0;$i<$thetypename.length-1;$i++)
+    for($j=$i+1;$j<$thetypename.length;$j++)
+      if($thetypename[$i]>$thetypename[$j])
+      {  $temp1=$thetypename[$j];
+         $temp2=$thetypecount[$j];
+         $thetypename[$j]=$thetypename[$i];
+         $thetypecount[$j]=$thetypecount[$i];
+         $thetypename[$i]=$temp1;
+         $thetypecount[$i]=$temp2;
+      }
+  $thetext+='<hr />';
+  $thetext+='<table>';
+  for($j=0;$j<$thetypename.length;$j++)
+  { if(($j%3)==0)
+	  $thetext+='<tr>';
+	$thetext=$thetext+'<td class="td33pct">'+$thetypename[$j]+': '+$thetypecount[$j]+"</td>";
+	if(($j%3)==2)
+	  $thetext+='</tr>';
+  }
+  if(($j%3)!=0)
+  { while((($j++)%3!=0))
+	  $thetext=$thetext+'<td class="td33pct">&nbsp;</td>';
+	$thetext+='</tr>';
+  }
+  $thetext+='</table>';
+
+  
+  
+  
+  $thetext+='<hr />';
+  $thetext+='<table>';
+  for($j=0;$j<$thecatalogdata.length;$j++)
+  { if(($j%3)==0)
+	  $thetext+='<tr>';
+	$thetext=$thetext+'<td class="td33pct"><a href="index.php?indexAction=quickpick&titleobjectaction=Search&source=quickpick&searchObjectQuickPickQuickPick=Search%A0Object&object='+urlencode($thecatalogdata[$j]['altname'])+'">'+$thecatalogdata[$j]['altname']+($thecatalogdata[$j]['altname']!=$thecatalogdata[$j]['objectname']?"&nbsp;("+$thecatalogdata[$j]['objectname']+")":"")+"</a></td>";
+	if(($j%3)==2)
+	  $thetext+='</tr>';
+  }
+  if(($j%3)!=0)
+  { while((($j++)%3!=2))
+	  $thetext=$thetext+'<td class="td33pct">&nbsp;</td>';
+	$thetext+='</tr>';
+  }
+  $thetext+='</table>';
   document.getElementById('view_catalogs_right').innerHTML=$thetext;
 }
