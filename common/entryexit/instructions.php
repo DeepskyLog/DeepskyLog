@@ -8,9 +8,9 @@ else instructions();
 function instructions()
 {	global $baseURL,$loggedUser,$myList,$lastReadObservation,$theDate,$modules,$menuView,$menuAddChange,$menuAdmin,$menuLogin,$menuSearch,$menuMoon,
          $listname_ss,$listname,$entryMessage,$step,
-         $objEyepiece,$objFilter,$objLens,$objIntrument,$objLocation,
+         $objEyepiece,$objFilter,$objLens,$objInstrument,$objLocation,
          $objObject,$objObserver,$objObservation,$objFormLayout,$objUtil,$objList;
-  if($objUtil->checkGetKey('saveLayout'))
+	if($objUtil->checkGetKey('saveLayout'))
   { $objFormLayout->saveLayout($objUtil->checkGetKey('formName','NoFormName'),$objUtil->checkGetKey('layoutName','layoutName'),
                                $objUtil->checkGetKey('restoreColumns',''),$objUtil->checkGetKey('orderColumns',''));
   }
