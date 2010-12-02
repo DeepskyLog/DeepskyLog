@@ -8,7 +8,7 @@ else tolist();
 
 function tolist()
 { global $baseURL,$loggedUser,$listname,$myList,$listname_ss,$FF,$step,
-         $objObject,$objPresentations,$objUtil;
+         $objObject,$objObserver,$objPresentations,$objUtil,$objList;
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 	echo "<div id=\"main\">";
 	if($loggedUser)
