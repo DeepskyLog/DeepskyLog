@@ -138,6 +138,20 @@ function view_observation()
 		$role = $objObserver->getObserverProperty($loggedUser,'role',2);
 	  if(($role == RoleAdmin) || ($role == RoleCometAdmin))
 		  echo "<p><a href=\"".$baseURL."index.php?indexAction=comets_adapt_observation&amp;observation=".$_GET['observation']."\">".LangChangeObservationTitle."</a></p>";
+		if ($loggedUser != "") {
+		  $observerid = $objCometObservation->getObserverId($_GET['observation']);
+		  $name = $objObserver->getObserverProperty($observerid, 'firstname') . " " . 
+		          $objObserver->getObserverProperty($observerid, 'name') . " ";
+
+		  $date=sscanf($objCometObservation->getDate($_GET['observation']),"%4d%2d%2d");
+		  $object = $objCometObject->getName($objCometObservation->getObjectId($_GET['observation']));
+		  
+		  $subject = LangMessageYourObservation . $object . LangMessageOn .
+	              $date[2] . "/" . $date[1] . "/" . $date[0];
+	    echo "<a href=\"" . $baseURL . "index.php?indexAction=new_message&receiver=" . $observerid . 
+	    			"&subject=" . $subject . "\">" . LangMessagePublicList5 . $name . LangMessageAboutObservation . "</a>";
+	}  
+		  
 	}
 	echo("</div>");
 }

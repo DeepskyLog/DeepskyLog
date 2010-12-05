@@ -37,11 +37,11 @@ try
   echo    "<div id=\"div5\">";                                                                            // div 5 = page contents
   if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
     echo "<p class=\"centered\">".$entryMessage."</p><hr />";
-  require_once $includeFile;
+    require_once $includeFile;
   echo    "</div>";
 }
 catch (Exception $e)
-{ $entryMessage.="<p>DeepskyLog encounterd a problem. Could you please report it to the Developers?</p>";
+{ $entryMessage.="<p>DeepskyLog encountered a problem. Could you please report it to the Developers?</p>";
   $entryMessage.="<p>Report problem with error message: " . $e->getMessage()."</p>";
   $entryMessage.="<p>You can report the problem by sending an email to developers@deepskylog.be.</p>";
   $entryMessage.="<p>Thank you.</p>";

@@ -11,7 +11,7 @@ else view_observation();
 
 function view_observation()
 { global $baseURL,$object,$loggedUser,$myList,$observationid,$listname_ss,
-         $objObservation,$objObject,$objPresentations,$objUtil,$objList ;
+         $objObservation,$objObject,$objPresentations,$objUtil,$objList,$objObserver;
 	echo "<div id=\"main\">";
 	$object_ss = stripslashes($object);
 	$seen = "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
@@ -60,6 +60,18 @@ function view_observation()
 	else $AOid=array();
 	while(list($key, $LOid) = each($AOid)) 
 	  $objObservation->showObservation($LOid);
+	if ($loggedUser != "") {
+	  $observerid = $objObservation->getDsObservationProperty($_GET['observation'],'observerid');
+	  $name = $objObserver->getObserverProperty($observerid, 'firstname') . " " . 
+	          $objObserver->getObserverProperty($observerid, 'name') . " ";
+
+	  $date=sscanf($objObservation->getDsObservationProperty($_GET['observation'],'date'),"%4d%2d%2d");
+
+	  $subject = LangMessageYourObservation . $objObservation->getDsObservationProperty($_GET['observation'],'objectname') . 
+	  						LangMessageOn . $date[2] . "/" . $date[1] . "/" . $date[0];
+	  echo "<a href=\"" . $baseURL . "index.php?indexAction=new_message&receiver=" . $observerid . "&subject=" . $subject . 
+	  			"\">" . LangMessagePublicList5 . $name . LangMessageAboutObservation . "</a>";
+	}  
 	echo "</div>";
 }
 ?>

@@ -594,6 +594,10 @@ textarea.listdescription {
    height          : 120px;
    width           : 98%;
 }
+textarea.messageArea {
+   height          : 240px;
+   width           : 97%;
+}
 ul{
   color            : #000000;
   margin           : 0px 0px 0px 0px;
@@ -635,6 +639,10 @@ ul{
   background-color : #D0D3D6;
 	color            : #000000;
 	border           : #FFFFFF thin solid;
+}
+.typeGreen { 
+  background-color : #00AA00;
+  color            : #000000;
 }
 .typeDifficult { 
   background-color : #CC0000;

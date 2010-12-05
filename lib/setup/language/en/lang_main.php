@@ -1,4 +1,33 @@
 <?php
+define('LangAdminMenuItem8'							,'Send message to all');
+define('LangAdminMenuItem7'							,'Check Objects');
+
+define('LangMessagePublicList1'         ,'Public list created with name ');
+define('LangMessagePublicList2'         ,' by ');
+define('LangMessagePublicList3'         ,'A new public list is available in DeepskyLog.<br /><br />');
+define('LangMessagePublicList4'         ,'Go to ');
+define('LangMessagePublicList5'         ,'Send message to ');
+define('LangViewMessages'               ,'View messages');
+define('LangMessageNotLoggedIn'				  ,'You should be logged in to be able to send messages.');
+define('LangMessageSubject'             ,'Subject');
+define('LangMessageSender'              ,'Sender');
+define('LangMessageReceiver'						,'Receiver');
+define('LangMessageMessage'							,'Message');
+define('LangMessageDate'                ,'Date');
+define('LangMessageAllDeepskyLogUser'		,'All DeepskyLog users');
+define('LangMessageBy'									,'by ');
+define('LangMessageReply'               ,'Reply');
+define('LangMessageDelete'              ,'Delete');
+define('LangNoPermissionToRead'         ,'You have no permission to see this message.');
+define('LangMessageYourObservation'			,'Your observation of ');
+define('LangMessageOn'									,' on ');
+define('LangMessageAboutObservation'		,'about this observation');
+define('LangMessageWelcomeSubject'      ,'Welcome in DeepskyLog, ');
+define('LangMessageWelcome'             ,'Welcome in DeepskyLog, ');
+define('LangMessageWelcome1'            ,'We hope you will have a lot of fun using DeepskyLog. You can already find some interesting links to get you started :<br /><br />');
+define('LangMessageWelcome2'            ,'Add an instrument</a><br /><br />');
+define('LangMessageWelcome3'            ,'Add an observing site</a><br />After entering a typical limiting magnitude or a typical SQM-value, DeepskyLog will calculate visibility of all objects! Do not forget to select a standard observation site!<br /><br />');
+define('LangMessageWelcome4'            ,'Set your standard observing atlas and send a picture of youself.</a><br /><br />A lot of fun using DeepskyLog!<br /><br />The DeepskyLog developers');
 
 define('LangBuildingCatalogList'        ,'Building catalog list');
 define('LangClickToViewCatalogDetails'  ,'Click on a list to view its details');

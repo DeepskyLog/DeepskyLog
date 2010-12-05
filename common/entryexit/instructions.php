@@ -8,7 +8,7 @@ else instructions();
 function instructions()
 {	global $baseURL,$loggedUser,$myList,$lastReadObservation,$theDate,$modules,$menuView,$menuAddChange,$menuAdmin,$menuLogin,$menuSearch,$menuMoon,
          $listname_ss,$listname,$entryMessage,$step,
-         $objEyepiece,$objFilter,$objLens,$objInstrument,$objLocation,
+         $objEyepiece,$objFilter,$objLens,$objInstrument,$objLocation,$objMessages,
          $objObject,$objObserver,$objObservation,$objFormLayout,$objUtil,$objList;
 	if($objUtil->checkGetKey('saveLayout'))
   { $objFormLayout->saveLayout($objUtil->checkGetKey('formName','NoFormName'),$objUtil->checkGetKey('layoutName','layoutName'),
@@ -385,6 +385,10 @@ function instructions()
 	  else
 	    $_GET['indexAction']='add_site';
 	}  
+	if($objUtil->checkGetKey('indexAction')=="validate_delete_message")                                                // delete message
+	{ $entryMessage.=$objMessages->validateDeleteMessage();
+	  $_GET['indexAction']='show_messages';
+	}
 	if($objUtil->checkGetKey('indexAction')=="validate_account")                                                       // validate account
 	{ $objObserver->valideAccount();
 	  //$entryMessage is set in the validateAccount() function;
@@ -451,7 +455,9 @@ function instructions()
 	}
 	if(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="validate_observation")
 	  $objObservation->validateObservation();
-  if($objUtil->checkRequestKey(('phase1')))
+	if(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="validate_message")
+	  $objMessages->validateMessage();
+	if($objUtil->checkRequestKey(('phase1')))
     $_REQUEST['phase']=1;
   if($objUtil->checkRequestKey(('phase2')))
     $_REQUEST['phase']=2;

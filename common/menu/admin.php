@@ -32,7 +32,8 @@ function admin()
 	  echo "<option ".(($objUtil->checkGetKey('indexAction')=='view_eyepieces')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=view_eyepieces\">".LangAdminMenuItem4."</option>";                        
 	  echo "<option ".(($objUtil->checkGetKey('indexAction')=='view_filters')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=view_filters\">".LangAdminMenuItem5."</option>";
 	  echo "<option ".(($objUtil->checkGetKey('indexAction')=='view_lenses')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=view_lenses\">".LangAdminMenuItem6."</option>";
-	  echo "<option ".(($objUtil->checkGetKey('indexAction')=='admin_check_objects')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=admin_check_objects\">"."Check Objects"."</option>";
+	  echo "<option ".(($objUtil->checkGetKey('indexAction')=='admin_check_objects')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=admin_check_objects\">".LangAdminMenuItem7."</option>";
+	  echo "<option ".(($objUtil->checkGetKey('indexAction')=='new_message&receiver=all')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=new_message&receiver=all\">".LangAdminMenuItem8."</option>";
 	  echo "</select>";
 	}
 	else
@@ -42,6 +43,8 @@ function admin()
 	  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=view_eyepieces\">".LangAdminMenuItem4."</a><br />";
 	  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=view_filters\">".LangAdminMenuItem5."</a><br />";
 	  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=view_lenses\">".LangAdminMenuItem6."</a><br />";
+	  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=admin_check_objects\">".LangAdminMenuItem7."</a><br />";
+	  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=new_message&receiver=all\">".LangAdminMenuItem8."</a><br />";
 	}
 	echo "</div>";
 }

@@ -182,7 +182,8 @@ class Observers
 		echo $outputtable;
   }
   public  function valideAccount()
-	{	global $entryMessage, $objUtil, $objLanguage, $developversion,$loggedUser,$allLanguages,$mailTo,$mailFrom;
+	{	global $entryMessage, $objUtil, $objLanguage, $developversion,$loggedUser,$allLanguages,$mailTo,$mailFrom,
+	          $objMessages, $baseURL;
 		if(!$_POST['email']||!$_POST['firstname']||!$_POST['name']||!$_POST['passwd']||!$_POST['passwd_again'])
 		{ $entryMessage.=LangValidateAccountMessage1;
 			if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
@@ -224,12 +225,23 @@ class Observers
 		              . $_POST['firstname'] . " " . $_POST['name']
 		              . "\n\n" . LangValidateAccountEmailLine4);
         if(isset($developversion)&&($developversion==true))
-          $entryMessage.="On the live server, a mail would be sent with the subject: ".$body.".<br />";
+          $entryMessage.="On the live server, a mail would be sent with the subject: ".LangValidateAccountEmailTitle.".<p>";
         else
           mail($mailTo, LangValidateAccountEmailTitle, $body, "From:".$mailFrom);
         $entryMessage = LangAccountSubscribed1.LangAccountSubscribed2.LangAccountSubscribed3.LangAccountSubscribed4.LangAccountSubscribed5.LangAccountSubscribed6.LangAccountSubscribed7.LangAccountSubscribed8.LangAccountSubscribed9;
 		    $_GET['user']=$_POST['deepskylog_id'];
 		    $_GET['indexAction']='detail_observer';
+		    
+		    // After registration, all old messages are removed
+		    $objMessages->removeAllMessages($_POST['deepskylog_id']);
+		    // After registration, a welcome message is sent
+		    $objMessages->sendMessage("DeepskyLog", $_POST['deepskylog_id'], 
+		          LangMessageWelcomeSubject . $_POST['firstname'] . "!", 
+		    			LangMessageWelcomeSubject . $_POST['firstname'] . "!<br /><br />" . 
+		    			LangMessageWelcome1 . "<a href=\"" . $baseURL . "index.php?indexAction=add_instrument\">" . 
+		    			LangMessageWelcome2 . "<a href=\"" . $baseURL . "index.php?indexAction=add_site\">" . 
+		    			LangMessageWelcome3 . "<a href=\"" . $baseURL . "index.php?indexAction=change_account\">" . 
+		    			LangMessageWelcome4);
 		  }
 		}  
 		elseif($objUtil->checkPostKey('change'))                // pressed change button

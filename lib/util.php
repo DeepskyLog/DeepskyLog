@@ -2535,9 +2535,11 @@ class Utils
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_lenses'                        ,'common/content/overview_lenses.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_locations'                     ,'common/content/overview_locations.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('view_observers'                     ,'common/content/overview_observers.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('show_messages'                      ,'common/content/messages.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('view_message'                       ,'common/content/view_message.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('new_message'                        ,'common/content/new_message.php')))
     
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('admin_check_objects'                ,'deepsky/control/admincheckobjects.php')))
-    
     
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('comets_all_observations'            ,'comets/content/overview_observations.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('comets_detail_object'               ,'comets/content/view_object.php'))) 
@@ -2564,15 +2566,16 @@ class Utils
   { global $lastReadObservation,$loggedUser,$objObserver;
     if($_SESSION['module']=='deepsky')
 	  { $_GET['catalog']='%';
-  	  $theDate = date('Ymd', strtotime('-1 year'));
-      $_GET['minyear'] = substr($theDate,0,4);
-      $_GET['minmonth'] = substr($theDate,4,2);
-      $_GET['minday'] = substr($theDate,6,2);
-      $lastReadObservation=($loggedUser?$objObserver->getLastReadObservation($loggedUser):-1);
-  	  return 'deepsky/content/selected_observations.php';
+	    $theDate = date('Ymd', strtotime('-1 year'));
+	    $_GET['minyear'] = substr($theDate,0,4);
+	    $_GET['minmonth'] = substr($theDate,4,2);
+	    $_GET['minday'] = substr($theDate,6,2);
+	    $lastReadObservation=($loggedUser?$objObserver->getLastReadObservation($loggedUser):-1);
+	    return 'deepsky/content/selected_observations.php';
 		}
 		else if($_SESSION['module']=='comets')
-		{ return 'comets/content/overview_observations.php';
+		{
+		  return 'comets/content/overview_observations.php';
 		}
   }
   private function utilitiesCheckIndexActionMember($action, $includefile)

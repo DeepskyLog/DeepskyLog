@@ -1,4 +1,32 @@
 <?php
+define('LangAdminMenuItem8'							,'Stuur bericht naar iedereen');
+define('LangAdminMenuItem7'							,'Controleer objecten');
+
+define('LangMessagePublicList1'         ,'Publieke lijst met naam ');
+define('LangMessagePublicList2'         ,' aangemaakt door ');
+define('LangMessagePublicList3'         ,'Er is een nieuwe publieke lijst beschikbaar in DeepskyLog.<br /><br />');
+define('LangMessagePublicList4'         ,'Bekijk ');
+define('LangMessagePublicList5'         ,'Stuur bericht naar ');
+define('LangViewMessages'               ,'Bekijk berichten');
+define('LangMessageNotLoggedIn'				  ,'U dient ingelogd te zijn om berichten te sturen.');
+define('LangMessageSubject'             ,'Onderwerp');
+define('LangMessageSender'              ,'Afzender');
+define('LangMessageReceiver'						,'Bestemmeling');
+define('LangMessageMessage'							,'Bericht');
+define('LangMessageDate'                ,'Datum');
+define('LangMessageAllDeepskyLogUser'		,'Alle DeepskyLog gebruikers');
+define('LangMessageBy'									,'door ');
+define('LangMessageReply'               ,'Beantwoord');
+define('LangMessageDelete'              ,'Verwijder');
+define('LangNoPermissionToRead'         ,'U hebt niet de toelating om dit bericht te bekijken.');
+define('LangMessageYourObservation'			,'Jouw waarneming van ');
+define('LangMessageOn'									,' op ');
+define('LangMessageAboutObservation'		,'over deze waarneming');
+define('LangMessageWelcomeSubject'      ,'Welkom in DeepskyLog, ');
+define('LangMessageWelcome1'            ,'We hopen dat je veel plezier aan DeepskyLog zal beleven. Om je op weg te zetten kan je hier alvast enkele nuttige links vinden :<br /><br />');
+define('LangMessageWelcome2'            ,'Voeg een instrument toe</a><br /><br />');
+define('LangMessageWelcome3'            ,'Voeg een waarneemplaats toe</a><br />Als je een typische grensmagnitude of een typische SQM bij je waarneemplaats ingeeft, dan berekent DeepskyLog voor jou de zichtbaarheid van alle objecten! Vergeet niet om een standaard waarneemplaats te kiezen!<br /><br />');
+define('LangMessageWelcome4'            ,'Stel je standaardatlas in en stuur een foto van jezelf door.</a><br /><br />Veel plezier met DeepskyLog!<br /><br />De DeepskyLog ontwikkelaars');
 
 define('LangBuildingCatalogList'        ,'Even geduld terwijl de lijst wordt samengesteld.');
 define('LangClickToViewCatalogDetails'  ,'Klik op een lijst om zijn details te zien.');
@@ -59,8 +87,8 @@ define("LangpdfseriesExplain1"  ,"Maak een set van kaarten voor elk object.");
 define("LangpdfseriesExplain2"  ,"Elke set bevat even veel kaarten als gespecifieerd in het FoV vak.");
 define("LangpdfseriesExplain3"  ,"Elke kaart gespecifieerd in het vak FoVs, toont sterren en objecten zoals gespecifieerd in de respectievelijke vakken.");
 define("LangpdfseriesExplain4"  ,"Elk magnitudevak moet even veel magnitudes bevatten als er FoVs zijn.");
-define("LangpdfseriesExplain5"  ,"U kan elke set opslaan en eventueel met een pdf samenvoegprogramma samenstellen tot één catalogus-atlas.");
-define("LangpdfseriesExplain5b" ,"Als u alles in één keer aanmaakt, reken dan op een lange verwerkingstijd, tot 30 seconden of meer per oject. Let op: deze optie is beschikbaar in alle browsers behalve Microsoft Internet Explorer.");
+define("LangpdfseriesExplain5"  ,"U kan elke set opslaan en eventueel met een pdf samenvoegprogramma samenstellen tot ï¿½ï¿½n catalogus-atlas.");
+define("LangpdfseriesExplain5b" ,"Als u alles in ï¿½ï¿½n keer aanmaakt, reken dan op een lange verwerkingstijd, tot 30 seconden of meer per oject. Let op: deze optie is beschikbaar in alle browsers behalve Microsoft Internet Explorer.");
 define("LangpdfseriesExplain6"  ,"Voor elk object kan u een datasectie toevoegen. Dit bevat de elementaire data, een objectbeschrijving indien beschikbaar, en 2 foto's met de door u aangeduide grootte (15, 30 of 60 boogminuten;, of geen).");
 define("LangpdfseriesExplain7"  ,"Na elk object kan u een inhoudstafel toevoegen. Deze bevat een overzicht van elk van de objecten die op de verschillende kaarten staan.");
 define("LangpdfseriesButton"    ,"Maak alles aan");

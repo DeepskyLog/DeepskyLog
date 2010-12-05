@@ -7,7 +7,7 @@ elseif(!($user=$objUtil->checkGetKey('user'))) throw new Exception(LangException
 else view_observer();
 
 function view_observer()
-{ global $user,$modules,$deepsky,$comets,$baseURL,$instDir,
+{ global $user,$modules,$deepsky,$comets,$baseURL,$instDir,$loggedUser,
          $objInstrument,$objPresentations,$objObservation,$objUtil,$objCometObservation,$objObserver,$objLocation;
 	$name=$objObserver->getObserverProperty($user,'name'); 
 	$firstname=$objObserver->getObserverProperty($user,'firstname');
@@ -207,6 +207,12 @@ function view_observer()
 	  $alignment.="C";
 	}
 	$objPresentations->line($content,$alignment,array(33,33,34),25,$classes);
+	
+	if ($loggedUser != "") {
+	  echo "<hr />";
+	  echo "<a href=\"" . $baseURL . "index.php?indexAction=new_message&receiver=" . $user . "\">" .
+	        LangMessagePublicList5 . $firstname . " " . $name ."</a>";
+	}
 	
 	echo "<hr />";
 	$dir = opendir($instDir.'common/observer_pics');

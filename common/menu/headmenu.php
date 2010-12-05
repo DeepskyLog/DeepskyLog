@@ -7,7 +7,7 @@ else headmenu();
 
 function headmenu()
 { global $baseURL,$leftmenu,$loggedUser,$modules,$thisDay,$thisMonth,$thisYear,$topmenu,
-         $objUtil,$objLocation,$objInstrument,$objObserver;
+         $objUtil,$objLocation,$objInstrument,$objObserver,$objMessages;
   echo "<div id=\"div1\">";
 	echo "<img src=\"".$baseURL."styles/images/header_bg.jpg\" alt=\"Vereniging voor Sterrenkunde - DeepskyLog\"/>";
 	
@@ -64,7 +64,7 @@ function headmenu()
 	else
 	  echo LangWelcome3;
 	echo " - ";
-	echo "<a href=\"".$baseURL."index.php?title=Home\">"."Home"."</a>";
+	echo "<a href=\"".$baseURL."index.php?title=Home\">"."Home</a> - <a href=\"". $baseURL . "index.php?indexAction=show_messages\">" . "Inbox" . $objMessages->getNumberOfUnreadMails() . "</a>";
 	echo "</span>";
 	echo "</div>";
 	echo "<div id=\"div2b\">";  

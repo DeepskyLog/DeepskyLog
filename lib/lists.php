@@ -58,9 +58,29 @@ class Lists
    }
  }
  public function addList($name)
- { global $objDatabase,$objUtil,$loggedUser;
+ { global $objDatabase,$objUtil,$loggedUser,$objObserver,$objMessages,$baseURL;
    if($loggedUser&&$name&&(!($this->checkList($name))))
-   { $objDatabase->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname) VALUES (\"".$loggedUser."\", \"\", \"".$name."\", '0', \"\")");
+   { // Send mail when we are creating a public list
+     $pos = strpos($name, "Public");
+
+     if ($pos !== false) {
+       $username = $objObserver->getObserverProperty($loggedUser, "firstname") . " " . 
+                   $objObserver->getObserverProperty($loggedUser, "name");
+       // Remove the public from the list
+       $listname = substr($name, 8);
+
+       $subject = LangMessagePublicList1 . $listname . LangMessagePublicList2 . $username;
+       $message = LangMessagePublicList3;
+       $message = $message . LangMessagePublicList4 . "<a href=\"" . $baseURL . 
+                    "index.php?indexAction=listaction&activateList=true&listname=Public:%20" . str_replace(" ", "%20", $listname) . "\">" . 
+       							$listname . "</a><br /><br />";
+       $message = $message . LangMessagePublicList5 . "<a href=\"" . $baseURL . 
+	    						"index.php?indexAction=new_message&receiver=" . str_replace(" ", "%20", $loggedUser) . 
+	    						"&subject=\"Re:%20" . str_replace(" ", "%20", $listname) . "\"\">" . $username . "</a>";
+       							
+       $objMessages->sendMessage("DeepskyLog", "all", $subject, $message);
+     }
+     $objDatabase->execSQL("INSERT INTO observerobjectlist(observerid, objectname, listname, objectplace, objectshowname) VALUES (\"".$loggedUser."\", \"\", \"".$name."\", '0', \"\")");
      if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
        unset($_SESSION['QobjParams']);
    }

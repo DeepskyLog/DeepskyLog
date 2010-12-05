@@ -14,7 +14,8 @@ function preludesA()
          $objDatabase,
          $objLanguage,
          $objObserver,
-         $objUtil;
+         $objUtil,
+         $objMessages;
 
  	if(!session_id()) session_start();
 	require_once "lib/setup/databaseInfo.php";
@@ -22,6 +23,7 @@ function preludesA()
 	require_once "lib/util.php";                   $objUtil=new Utils;
 	require_once "lib/setup/language.php";         $objLanguage=new Language;
 	require_once "lib/observers.php";              $objObserver=new Observers;
+	require_once "lib/messages.php";               $objMessages=new Messages;
 	require_once "lib/setup/vars.php";
 	require_once "common/control/loginuser.php";
 }
