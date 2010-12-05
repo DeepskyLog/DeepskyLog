@@ -795,16 +795,15 @@ class Objects
             $result2[$j]['objectmaxaltmidtext'] = "-";
             $result2[$j]['objectmaxaltendtext'] = "-";
             if($maxalt!='-')
-            { $result2[$j]['objectmaxaltstart'] = $maxaltstart+1;
-              $result2[$j]['objectmaxaltend'] = $maxaltend+1;
-            	$result2[$j]['objectmaxaltend'] = $maxaltend+1;
+            { $result2[$j]['objectmaxaltstart'] = 100*($maxaltstart+1);
+              $result2[$j]['objectmaxaltend'] = 100*($maxaltend+1);
             	if($maxaltstart>$maxaltend)
                 $maxaltmid=($maxaltstart+12+$maxaltend)/2;
               else 
                 $maxaltmid=($maxaltstart+$maxaltend)/2;
               if($maxaltmid>=12)
                 $maxaltmid-=12;
-              $result2[$j]['objectmaxaltmid'] = $maxaltmid+1;
+              $result2[$j]['objectmaxaltmid'] = 100*($maxaltmid+1);
               $a=floor($maxaltstart+1);
               $b=$maxaltstart+1-$a;
               if($b==0.75)
