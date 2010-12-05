@@ -100,16 +100,16 @@ function head()
 	elseif($includeFile=='comets/content/setup_observations_query.php')  $TitleText=LangQueryObservationsTitle;
 	elseif($includeFile=='comets/content/setup_objects_query.php')       $TitleText=LangQueryObjectsTitle;
 	elseif($objUtil->checkRequestKey('title'))
-	  echo "<title>DSL: ".$objUtil->checkRequestKey('title','')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+	 $TitleText="DSL: ".$objUtil->checkRequestKey('title','');  // 20081209 Here should come a better solution, see bug report 44
 	elseif($objUtil->checkRequestKey(('titleobject')))
-	  echo "<title>DSL: ".$objUtil->checkRequestKey('titleobject','')." - ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+	  $TitleText="DSL: ".$objUtil->checkRequestKey('titleobject','')." - ".$objUtil->checkGetKey('object');  // 20081209 Here should come a better solution, see bug report 44
 	elseif($objUtil->checkRequestKey(('titleobjectaction')))
 	{ if($objUtil->checkRequestKey('searchObjectQuickPickQuickPick',''))
-	    echo "<title>DSL: ".LangSelectedObjectsTitle." - ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+	    $TitleText="DSL: ".LangSelectedObjectsTitle." - ".$objUtil->checkGetKey('object');  // 20081209 Here should come a better solution, see bug report 44
 	  elseif($objUtil->checkRequestKey('searchObservationsQuickPick',''))
-	    echo "<title>DSL: ".LangSelectedObservationsTitle2." - ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+	   $TitleText="DSL: ".LangSelectedObservationsTitle2." - ".$objUtil->checkGetKey('object');  // 20081209 Here should come a better solution, see bug report 44
 	  elseif($objUtil->checkRequestKey('newObservationQuickPick',''))
-	    echo "<title>DSL: ".LangQuickPickNewObservation." - ".$objUtil->checkGetKey('object')."</title>";  // 20081209 Here should come a better solution, see bug report 44
+	    $TitleText="DSL: ".LangQuickPickNewObservation." - ".$objUtil->checkGetKey('object');  // 20081209 Here should come a better solution, see bug report 44
 	}
 	echo "<title>".$DSLTitle.($TitleText?": ".$TitleText:"")."</title>";
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";

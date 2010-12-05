@@ -4,6 +4,7 @@
 
 global $inIndex,$loggedUser,$objUtil;
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+elseif(!($loggedUser)) throw new Exception(LangExcpetion001);
 else validate_observation();
 
 function validate_observation()

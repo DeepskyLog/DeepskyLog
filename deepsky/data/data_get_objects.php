@@ -81,16 +81,15 @@ function data_get_objects()
 	// ========================================= get objects for objects query page
 	elseif($objUtil->checkGetKey('source')=='setup_objects_query')
 	{ $exact = 0;
-	  if(array_key_exists('catalog',$_GET) && $_GET['catalog']) $name = $_GET['catalog'];
-	  if(array_key_exists('catalog',$_GET)) $catalog = $_GET['catalog'];
-	  if(array_key_exists('catNumber',$_GET)) $catNumber = $_GET['catNumber'];
-	  if(array_key_exists('atlas',$_GET) && $_GET['atlas']);
+	  $name = $objUtil->checkGetKey('catalog');
+	  $catalog = $objUtil->checkGetKey('catalog');
+	  $catNumber = $objUtil->checkGetKey('catNumber');
 	  $atlas=$objUtil->checkGetKey('atlas',(($loggedUser)?$objAtlas->atlasCodes[$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano')]:''));
 	  $atlasPageNumber=$objUtil->checkGetKey('atlasPageNumber','');
-	  if(array_key_exists('inList', $_GET)) $inList = $_GET['inList']; else $inList = '';
-	  if(array_key_exists('notInList', $_GET)) $notInList = $_GET['notInList']; else $notInList = '';
-	  if(array_key_exists('size_min_units',$_GET)) $size_min_units=$_GET['size_min_units']; else $size_min_units='';
-	  if(array_key_exists('size_max_units',$_GET)) $size_max_units=$_GET['size_max_units']; else $size_max_units='';
+	  $inList = $objUtil->checkGetKey('inList');
+	  $notInList = $objUtil->checkGetKey('notInList');
+	  $size_min_units=$objUtil->checkGetKey('size_min_units');
+	  $size_max_units=$objUtil->checkGetKey('size_max_units');
 	  if(array_key_exists('catNumber',$_GET) && $_GET['catNumber'])
 	  { $name = ucwords(trim($name . " " . trim($_GET['catNumber'])));
 	    $exact = "1";
@@ -282,7 +281,7 @@ function data_get_objects()
 	      $maxContrastError=True; 
 	  }
 	  // DESCRIPTION CONTAINS
-	  $descriptioncontains=$_GET['descriptioncontains'];
+	  $descriptioncontains=$objUtil->checkGetKey('descriptioncontains');
 	  if($minDecl && $maxDecl && ($minDecl<$MaxDecl))
 	  {
 	    $minDeclError = True;

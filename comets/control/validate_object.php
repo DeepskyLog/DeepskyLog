@@ -8,22 +8,17 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else validate_object();
 
 function validate_object()
-{ global $entryMessage;
+{ global $entryMessage,$objUtil;
 	$util = new Utils();
 	
-	if ($_POST['newobject']) // pushed add new object button
-	{
-	
-	  // check if required fields are filled in
-	
-	  if (!$_POST['name'])
-	  {
-	    $entryMessage = LangValidateObjectMessage1;
+	if ($objUtil->checkPostKey('newobject')) // pushed add new object button
+	{ // check if required fields are filled in
+	  if (!($objUtil->checkPostKey('name')))
+	  { $entryMessage = LangValidateObjectMessage1;
 	    $_GET['indexAction']='default_action';
 	  }
 	  else // all required fields filled in
-	  {
-	    $objects = new CometObjects();
+	  { $objects = new CometObjects();
 	    // control if object doesn't exist yet
 	    $name = $_POST['name'];
 	    $query1 = array("name" => $name);
@@ -33,8 +28,7 @@ function validate_object()
 	    $_GET['indexAction']='default_action';
 	          }
 	    else
-	    {
-	    // fill database
+	    { // fill database
 	      $id = $objects->addObject($name);
 	      if($_POST['icqname'])
 	      {
@@ -45,9 +39,8 @@ function validate_object()
 	    }
 	  }
 	}
-	elseif ($_POST['clearfields']) // pushed clear fields button
-	{
-	   $_GET['indexAction'] = 'comets_add_object';
+	elseif ($objUtil->checkPostKey('clearfields')) // pushed clear fields button
+	{ $_GET['indexAction'] = 'comets_add_object';
 	}
 }
 ?>

@@ -9,7 +9,7 @@ else data_get_observations();
 
 function data_get_observations()
 { global $allLanguages,$usedLanguages,$sort,$loggedUser,$includeFile,
-         $objObserver,$objObservation,$objUtil;
+         $objObject,$objObserver,$objObservation,$objUtil;
 	$MaxCnt=$objObservation->getMaxObservation();
 	//=========================================================================================== LOOKING FOR SPECIFIC OBJECT, OR LOOKING FOR SOME OTHER CHARACTERISTIC ============================================================
 	if(array_key_exists('number',$_GET) && $_GET['number'])

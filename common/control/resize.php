@@ -2,6 +2,7 @@
 //resize.php
 // utility functions in resizing
 
+global $inIndex;
 if((!isset($inIndex))||(!$inIndex)) include "/redirect.php";
 
 function image_createThumb($src,$dest,$maxWidth,$maxHeight,$quality=75) {

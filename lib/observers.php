@@ -224,7 +224,7 @@ class Observers
 		              . $_POST['firstname'] . " " . $_POST['name']
 		              . "\n\n" . LangValidateAccountEmailLine4);
         if(isset($developversion)&&($developversion==true))
-          $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<p>";
+          $entryMessage.="On the live server, a mail would be sent with the subject: ".$body.".<br />";
         else
           mail($mailTo, LangValidateAccountEmailTitle, $body, "From:".$mailFrom);
         $entryMessage = LangAccountSubscribed1.LangAccountSubscribed2.LangAccountSubscribed3.LangAccountSubscribed4.LangAccountSubscribed5.LangAccountSubscribed6.LangAccountSubscribed7.LangAccountSubscribed8.LangAccountSubscribed9;
@@ -290,7 +290,7 @@ class Observers
       throw new Exception(LangException001);
     $objDatabase->execSQL("DELETE FROM observers WHERE id=\"".($id=$objUtil->checkGetKey('validateDelete'))."\"");
     if(isset($developversion)&&($developversion==1))
-      $entryMessage.="On the live server, a mail would be sent with the subject: Deepskylog account deleted<p>";
+      $entryMessage.="On the live server, a mail would be sent with the subject: Deepskylog account deleted.<br />";
     else
       mail($mailTo, "Deepskylog account deleted", "The account for ".$id." was deleted by ".$loggedUser, "From:".$mailFrom);
     return "The user has been erased.";

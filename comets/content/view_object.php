@@ -26,8 +26,8 @@ function view_object()
 	}
 	
 	if ($admin) {
-	  echo "<form action=\"".$baseURL."index.php?indexAction=comets_validate_change_object\" method=\"post\">";
-	  echo "<input type=\"hidden\" name=\"object\" value=\"" . $_GET['object'] . "\">";
+	  echo "<form action=\"".$baseURL."index.php?indexAction=comets_validate_change_object\" method=\"post\"><div>";
+	  echo "<input type=\"hidden\" name=\"object\" value=\"" . $_GET['object'] . "\" />";
 	  $content="<input type=\"submit\" name=\"newobject\" value=\"" . LangChangeAccountButton . "\" />";
 	  $objPresentations->line(array("<h4>".LangChangeObject. " " . $objCometObject->getName($_GET['object']) . "</h4>",$content),"LR",array(60,40),30);
 	  echo "<hr />";
@@ -43,7 +43,7 @@ function view_object()
 	  $content="<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"40\" name=\"icqname\" size=\"40\" value=\"" . $icqname . "\" />";
 	  $objPresentations->line(array(LangNewObjectIcqname."&nbsp;*",$content),"RL",array(20,80),30,array("fieldname"));
 	  echo "<hr />";
-	  echo "</form>";
+	  echo "</div></form>";
 	} else {
 	  $objPresentations->line(array("<h4>".LangViewObjectTitle."&nbsp;-&nbsp;".$objCometObject->getName($_GET['object'])."</h4>"),"L",array(),30);
 	  echo "<hr />";

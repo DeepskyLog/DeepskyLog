@@ -10,8 +10,8 @@ else if(!($object=$objObservation->getDsObservationProperty($observationid,'obje
 else view_observation();
 
 function view_observation()
-{ global $baseURL,$object,$loggedUser,$myList,$observationid,
-         $objObservation,$objObject,$objPresentations,$objUtil;
+{ global $baseURL,$object,$loggedUser,$myList,$observationid,$listname_ss,
+         $objObservation,$objObject,$objPresentations,$objUtil,$objList ;
 	echo "<div id=\"main\">";
 	$object_ss = stripslashes($object);
 	$seen = "<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode($object)."\" title=\"".LangObjectNSeen."\">-</a>";
