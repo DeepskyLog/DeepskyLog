@@ -47,17 +47,17 @@ function view_message()
 	
 	  // When the user is not logged in, it should not be possibleto have links in the mails
 	  if ($loggedUser == "") {
-	    echo preg_replace("/&amp;/", "&", $objMessages->getContentWithoutLinks($id));
+	    echo $objMessages->getContentWithoutLinks($id);
 	  } else {
-	    echo $objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $objMessages->getContent($id)));
+	    echo $objPresentations->searchAndLinkCatalogsInText($objMessages->getContent($id));
 	  }
 	  
 	  echo "<hr />";
 
 	  if ($senderName != "DeepskyLog") {
-	    echo "<a href=\"" . $baseURL . "index.php?indexAction=new_message&id=" . $id . "\">" . LangMessageReply . "</a> - ";
+	    echo "<a href=\"" . $baseURL . "index.php?indexAction=new_message&amp;id=" . $id . "\">" . LangMessageReply . "</a> - ";
 	  }
-	  echo "<a href=\"". $baseURL . "index.php?indexAction=validate_delete_message&id=" . $id . "\">" . LangMessageDelete . "</a>";
+	  echo "<a href=\"". $baseURL . "index.php?indexAction=validate_delete_message&amp;id=" . $id . "\">" . LangMessageDelete . "</a>";
 
 	  echo "</div>";
 	} else {

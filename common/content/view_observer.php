@@ -210,7 +210,7 @@ function view_observer()
 	
 	if ($loggedUser != "") {
 	  echo "<hr />";
-	  echo "<a href=\"" . $baseURL . "index.php?indexAction=new_message&receiver=" . $user . "\">" .
+	  echo "<a href=\"" . $baseURL . "index.php?indexAction=new_message&amp;receiver=" . $user . "\">" .
 	        LangMessagePublicList5 . $firstname . " " . $name ."</a>";
 	}
 	

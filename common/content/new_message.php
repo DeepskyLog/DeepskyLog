@@ -75,6 +75,7 @@ function new_message()
     echo "</div>";
     echo "</div>";
     echo "</form>";
+    echo "</div>";
   } else {
 		throw new Exception(LangMessageNotLoggedIn);
   }

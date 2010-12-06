@@ -231,7 +231,7 @@ class Observers
         $entryMessage = LangAccountSubscribed1.LangAccountSubscribed2.LangAccountSubscribed3.LangAccountSubscribed4.LangAccountSubscribed5.LangAccountSubscribed6.LangAccountSubscribed7.LangAccountSubscribed8.LangAccountSubscribed9;
 		    $_GET['user']=$_POST['deepskylog_id'];
 		    $_GET['indexAction']='detail_observer';
-		    
+
 		    // After registration, all old messages are removed
 		    $objMessages->removeAllMessages($_POST['deepskylog_id']);
 		    // After registration, a welcome message is sent

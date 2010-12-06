@@ -187,42 +187,42 @@ class Messages
 		$subject = preg_replace("/(\")/", "", $subject);
 		$subject = preg_replace("/;/", ",", $subject);
     
-    $message = html_entity_decode($message, ENT_COMPAT, "ISO-8859-15");
-		$message = preg_replace("/(\")/", "", $message);
-		$message = preg_replace("/;/", ",", $message);
+//    $message = html_entity_decode($message, ENT_COMPAT, "ISO-8859-15");
+//		$message = preg_replace("/(\")/", "", $message);
+//		$message = preg_replace("/;/", ",", $message);
 
 		$date = $mysqldate = date('Y-m-d H:i:s');
 		
-		$objDatabase->execSQL("INSERT into messages (sender, receiver, subject, message, date) VALUES(\"" . $sender . "\", \"" . $receiver . "\", \"" . $subject . "\", \"" . $message . "\", \"" . $date . "\")");
+		$objDatabase->execSQL("INSERT into messages (sender, receiver, subject, message, date) VALUES(\"" . $sender . "\", \"" . $receiver . "\", \"" . $subject . "\", '" . $message . "', \"" . $date . "\")");
   }
 
   public  function showListMails($newMails, $readMails, $min, $max, $link2, $step=25) 
 	{ global $baseURL, $baseURL, $objPresentations, $objObserver, $dateformat, $loggedUser; 
-    echo "<table id=\"showListMailsTable\">";
+    echo "<table id=\"showListMailsTable\">\n";
     echo "<tr class=\"type30\">";
 
     // Making the header for the mails
     echo "<td class=\"verticalaligntop;\">";         
-	  echo "<table>";
+	  echo "<table><tr>";
 	  echo "<td class=\"centered width100pct\">";           
 	  echo LangMessageSubject;
-	  echo "</td>";        
+	  echo "</td></tr>";
 	  echo "</table>";
 	  echo "</td>";        
     
     echo "<td class=\"verticalaligntop;\">";         
 	  echo "<table>";
-	  echo "<td class=\"centered width100pct\">";           
+	  echo "<tr><td class=\"centered width100pct\">";           
 	  echo LangMessageSender;
-	  echo "</td>";        
+	  echo "</td></tr>";        
 	  echo "</table>";
 	  echo "</td>";
 
 	  echo "<td class=\"verticalaligntop;\">";         
 	  echo "<table>";
-	  echo "<td class=\"centered width100pct\">";           
+	  echo "<tr><td class=\"centered width100pct\">";           
 	  echo LangMessageDate;
-	  echo "</td>";        
+	  echo "</td></tr>";        
 	  echo "</table>";
 	  echo "</td>";        
 	  
@@ -259,14 +259,14 @@ class Messages
 	      }
 	      echo "<td>";
 
-			  echo "<a href = \"" . $baseURL . "index.php?indexAction=view_message&id=" . $allMails[$cnt] . "\">" . $this->getSubject($allMails[$cnt]) . "</a>";
+			  echo "<a href = \"" . $baseURL . "index.php?indexAction=view_message&amp;id=" . $allMails[$cnt] . "\">" . $this->getSubject($allMails[$cnt]) . "</a>";
 			  echo "</td>";
 			  $senderId = $this->getSender($allMails[$cnt]);
 			  if ($senderId == "DeepskyLog") {
 			    $senderName = $senderId;
 			  } else {
 			    $senderName = $objObserver->getObserverProperty($senderId, "firstname") . "&nbsp;" . $objObserver->getObserverProperty($senderId, "name");
-			    $senderName = "<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $senderId . "\">" . $senderName . "</a>";
+			    $senderName = "<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . $senderId . "\">" . $senderName . "</a>";
 			  }
 			  echo "<td>" . $senderName . "</td>";
 

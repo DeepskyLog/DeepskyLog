@@ -69,7 +69,7 @@ function view_observation()
 
 	  $subject = LangMessageYourObservation . $objObservation->getDsObservationProperty($_GET['observation'],'objectname') . 
 	  						LangMessageOn . $date[2] . "/" . $date[1] . "/" . $date[0];
-	  echo "<a href=\"" . $baseURL . "index.php?indexAction=new_message&receiver=" . $observerid . "&subject=" . $subject . 
+	  echo "<a href=\"" . $baseURL . "index.php?indexAction=new_message&amp;receiver=" . urlencode($observerid) . "&amp;subject=" . urlencode($subject) . 
 	  			"\">" . LangMessagePublicList5 . $name . LangMessageAboutObservation . "</a>";
 	}  
 	echo "</div>";

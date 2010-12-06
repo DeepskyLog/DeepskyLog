@@ -72,11 +72,11 @@ class Lists
        $subject = LangMessagePublicList1 . $listname . LangMessagePublicList2 . $username;
        $message = LangMessagePublicList3;
        $message = $message . LangMessagePublicList4 . "<a href=\"" . $baseURL . 
-                    "index.php?indexAction=listaction&activateList=true&listname=Public:%20" . str_replace(" ", "%20", $listname) . "\">" . 
+                    "index.php?indexAction=listaction&amp;activateList=true&amp;listname=Public:%20" . urlencode($listname) . "\">" . 
        							$listname . "</a><br /><br />";
        $message = $message . LangMessagePublicList5 . "<a href=\"" . $baseURL . 
-	    						"index.php?indexAction=new_message&receiver=" . str_replace(" ", "%20", $loggedUser) . 
-	    						"&subject=\"Re:%20" . str_replace(" ", "%20", $listname) . "\"\">" . $username . "</a>";
+	    						"index.php?indexAction=new_message&amp;receiver=" . urlencode($loggedUser) . 
+	    						"&amp;subject=Re:%20" . urlencode($listname) . "\">" . $username . "</a>";
        							
        $objMessages->sendMessage("DeepskyLog", "all", $subject, $message);
      }
