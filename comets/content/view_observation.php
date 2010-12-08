@@ -148,8 +148,8 @@ function view_observation()
 		  
 		  $subject = LangMessageYourObservation . $object . LangMessageOn .
 	              $date[2] . "/" . $date[1] . "/" . $date[0];
-	    echo "<a href=\"" . $baseURL . "index.php?indexAction=new_message&receiver=" . $observerid . 
-	    			"&subject=" . $subject . "\">" . LangMessagePublicList5 . $name . LangMessageAboutObservation . "</a>";
+	    echo "<a href=\"" . $baseURL . "index.php?indexAction=new_message&amp;receiver=" . urlencode($observerid) . 
+	    			"&amp;subject=" . urlencode($subject) . "\">" . LangMessagePublicList5 . $name . LangMessageAboutObservation . "</a>";
 	}  
 		  
 	}
