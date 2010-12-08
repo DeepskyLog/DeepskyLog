@@ -1,6 +1,35 @@
 <?php
+define('LangAdminMenuItem8'							,'Envoyer un message à tous');
+define('LangAdminMenuItem7'							,'Vérifier les objets');
 
-define('LangBuildingCatalogList'        ,'En train de construire la liste de cataloguest');
+define('LangMessagePublicList1'         ,'Liste publique créeée avec le nom ');
+define('LangMessagePublicList2'         ,' par ');
+define('LangMessagePublicList3'         ,'Une nouvelle liste publique est disponible en DeepskyLog.<br /><br />');
+define('LangMessagePublicList4'         ,'Aller vers ');
+define('LangMessagePublicList5'         ,'Envoyer un message à ');
+define('LangViewMessages'               ,'Voir les messages');
+define('LangMessageNotLoggedIn'				  ,'Vous devez vous connecter avant de pouvoir envoyer des messages.');
+define('LangMessageSubject'             ,'Sujet');
+define('LangMessageSender'              ,'De');
+define('LangMessageReceiver'						,'A');
+define('LangMessageMessage'							,'Message');
+define('LangMessageDate'                ,'Date');
+define('LangMessageAllDeepskyLogUser'		,'Toutes les utilisateurs de Deepskylog');
+define('LangMessageBy'									,'par ');
+define('LangMessageReply'               ,'Réponse');
+define('LangMessageDelete'              ,'Effacer');
+define('LangNoPermissionToRead'         ,'Vous n\'avez pas les droits de voir ce message.');
+define('LangMessageYourObservation'			,'Votre observation de ');
+define('LangMessageOn'									,' vue le ');
+define('LangMessageAboutObservation'		,'concernant cette observation');
+define('LangMessageWelcomeSubject'      ,'Bienvenu à DeepskyLog, ');
+define('LangMessageWelcome'             ,'Bienvenu à DeepskyLog, ');
+define('LangMessageWelcome1'            ,'Nous vous souhaitons un bon usage de Deepskylog. Vous retrouverez déjà quelques lins intéressants pour commencer :<br /><br />');
+define('LangMessageWelcome2'            ,'Rajouter un instrument</a><br /><br />');
+define('LangMessageWelcome3'            ,'Rajouter un site d\'observation</a><br />Après l\'introduction un ciel typique, ou une valeur SQM typique, DeepskyLog vous calculera la visibilité visibility de tous les objets!N\'oubliez pas de sélectionner votre site d\'observation!<br /><br />');
+define('LangMessageWelcome4'            ,'Indiquez l\'atlas qui vous convient et envoyez une photo de vous-même ou votre instrument.</a><br /><br />On vous souhaite un boin usage de DeepskyLog!<br /><br />Les dévelopeurs de DeepskyLog');
+
+define('LangBuildingCatalogList'        ,'En train de construire la liste de catalogues');
 define('LangClickToViewCatalogDetails'  ,'Cliquez une catalogue pour voir ses détails');
 
 define("LangObjectHighestAlt","Alt. Supérieure");
