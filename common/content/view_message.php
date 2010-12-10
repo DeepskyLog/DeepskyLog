@@ -54,11 +54,12 @@ function view_message()
 	  
 	  echo "<hr />";
 
-	  if ($senderName != "DeepskyLog") {
-	    echo "<a href=\"" . $baseURL . "index.php?indexAction=new_message&amp;id=" . $id . "\">" . LangMessageReply . "</a> - ";
-	  }
-	  echo "<a href=\"". $baseURL . "index.php?indexAction=validate_delete_message&amp;id=" . $id . "\">" . LangMessageDelete . "</a>";
-
+      if ($loggedUser != "") {
+	    if ($senderName != "DeepskyLog") {
+	      echo "<a href=\"" . $baseURL . "index.php?indexAction=new_message&amp;id=" . $id . "\">" . LangMessageReply . "</a> - ";
+	    }
+	    echo "<a href=\"". $baseURL . "index.php?indexAction=validate_delete_message&amp;id=" . $id . "\">" . LangMessageDelete . "</a>";
+      }
 	  echo "</div>";
 	} else {
 		throw new Exception(LangNoPermissionToRead);
