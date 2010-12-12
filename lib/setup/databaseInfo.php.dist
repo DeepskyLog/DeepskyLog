@@ -10,7 +10,7 @@ else databaseInfo();
 function databaseInfo()
 { 
   global $host,$user,$pass,$dbname,$developversion,
-         $instDir,$baseURL,$tempDir,
+         $instDir,$baseURL,$tempDir,$mailFrom,$mailTo,
          $title,$browsertitle,$copyrightInfo,$vvsInfo,$dslInfo,$versionInfo,$objectInfo,$w3cInfo,
          $register,$dateformat,$defaultLanguage,$languageMenu,$maxFileSize,$modules,
          $standardLanguagesForObservationsDuringRegistration,$languagesDuringRegistration;
