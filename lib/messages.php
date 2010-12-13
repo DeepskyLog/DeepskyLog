@@ -89,9 +89,11 @@ class Messages
 
   public  function removeAllMessages($id)
   { global $objDatabase;
-    $allMessages = $this->getIdsAllMails($id);
-    for ($cnt=0;$cnt<count($allMessages);$cnt++) {
-      $objDatabase->execSQL("insert into messagesDeleted VALUES(\"" . $allMessages[$cnt] . "\", \"" . $id . "\")");
+    if ($id != "") {
+      $allMessages = $this->getIdsAllMails($id);
+      for ($cnt=0;$cnt<count($allMessages);$cnt++) {
+        $objDatabase->execSQL("insert into messagesDeleted VALUES(\"" . $allMessages[$cnt] . "\", \"" . $id . "\")");
+      }
     }
   }
 
@@ -128,8 +130,10 @@ class Messages
 
   public  function validateDeleteMessage()
   { global $objDatabase, $loggedUser;
-  	$id = $_GET["id"];
-    $objDatabase->execSQL("insert into messagesDeleted VALUES(\"" . $id . "\", \"" . $loggedUser . "\")");
+    if ($loggedUser != "") {
+      $id = $_GET["id"];
+      $objDatabase->execSQL("insert into messagesDeleted VALUES(\"" . $id . "\", \"" . $loggedUser . "\")");
+    }
   }
   
   public  function getReplyToSubject($id) 
