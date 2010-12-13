@@ -295,9 +295,32 @@ class Lists
      unset($_SESSION['QobjParams']);
  }
  public  function renameList($nameFrom, $nameTo)
- { global $loggedUser,$objDatabase,$myList;
+ { global $loggedUser,$objDatabase,$myList,$objMessages,$objObserver,$baseURL;
    if($loggedUser&&$myList)
-   { $objDatabase->execSQL("UPDATE observerobjectlist SET listname=\"".$nameTo."\" WHERE observerid=\"".$loggedUser."\" AND listname=\"".$nameFrom."\"");
+   { // Send mail when we are creating a public list
+     $pos = strpos($nameTo, "Public");
+     $posOld = strpos($nameFrom, "Public");
+     
+     if (!($posOld !== false)) {
+       if ($pos !== false) {
+         $username = $objObserver->getObserverProperty($loggedUser, "firstname") . " " . 
+                     $objObserver->getObserverProperty($loggedUser, "name");
+         // Remove the public from the list
+         $listname = substr($nameTo, 8);
+
+         $subject = LangMessagePublicList1 . $listname . LangMessagePublicList2 . $username;
+         $message = LangMessagePublicList3;
+         $message = $message . LangMessagePublicList4 . "<a href=\"" . $baseURL . 
+                    "index.php?indexAction=listaction&amp;activateList=true&amp;listname=Public:%20" . urlencode($listname) . "\">" . 
+       							$listname . "</a><br /><br />";
+         $message = $message . LangMessagePublicList5 . "<a href=\"" . $baseURL . 
+	    						"index.php?indexAction=new_message&amp;receiver=" . urlencode($loggedUser) . 
+	    						"&amp;subject=Re:%20" . urlencode($listname) . "\">" . $username . "</a>";
+       							
+         $objMessages->sendMessage("DeepskyLog", "all", $subject, $message);
+       }
+     }
+     $objDatabase->execSQL("UPDATE observerobjectlist SET listname=\"".$nameTo."\" WHERE observerid=\"".$loggedUser."\" AND listname=\"".$nameFrom."\"");
      if(array_key_exists('QobjParams',$_SESSION)&&array_key_exists('source',$_SESSION['QobjParams'])&&($_SESSION['QobjParams']['source']=='tolist'))
        unset($_SESSION['QobjParams']);  
    }
