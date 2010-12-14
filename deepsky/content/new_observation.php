@@ -9,7 +9,7 @@ else new_observation();
 function new_observation()
 { global $baseURL,$loggedUser,$DSOcatalogs,
          $ClusterTypeA,$ClusterTypeB,$ClusterTypeC,$ClusterTypeD,$ClusterTypeE,$ClusterTypeF,$ClusterTypeG,$ClusterTypeH,$ClusterTypeI,$ClusterTypeX,
-         $objObject,$objFilter,$objLens,$objEyepiece,$objLanguage,$objObserver,$objInstrument,$objLocation,$objPresentations,$objUtil;
+         $objObservation,$objObject,$objFilter,$objLens,$objEyepiece,$objLanguage,$objObserver,$objInstrument,$objLocation,$objPresentations,$objUtil;
 
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/checkUtils.js\"></script>";
 	// Script to change the visibility when we are observing a resolved open cluster

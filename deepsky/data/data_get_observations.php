@@ -131,7 +131,14 @@ function data_get_observations()
 	    }
 	  }
 	}
-	
+	//=========================================== REMOVE EMPTY OBSERVATIONS OF OTHER USERS =======================================
+  $nonempty=array();
+  if(count($_SESSION['Qobs'])>1)
+  { while(list($key, $value)=each($_SESSION['Qobs']))
+      if((strlen(trim($value['observationdescription']))>0)||($loggedUser && ($value['observerid']==$loggedUser)))
+        $nonempty[]=$value;
+  }
+  $_SESSION['Qobs']=$nonempty;
 	//=========================================== CHECK TO SEE IF SORTING IS NECESSARY ===========================================
 	if(!array_key_exists('sort',$_GET))      
 	{ $_GET['sort'] = $_SESSION['QobsSort'];
