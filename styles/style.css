@@ -598,6 +598,10 @@ textarea.messageArea {
    height          : 240px;
    width           : 97%;
 }
+textarea.messageAreaSmall {
+   height          : 120px;
+   width           : 97%;
+}
 ul{
   color            : #000000;
   margin           : 0px 0px 0px 0px;

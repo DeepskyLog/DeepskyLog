@@ -7,6 +7,16 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 
 class Sessions
 {
+  public  function getSessionPropertiesFromId($id)                                   // returns the properties of the session with id
+  { global $objDatabase;
+    return $objDatabase->selectRecordArray("SELECT * FROM sessions WHERE id=\"".$id."\"");
+  }
+  public  function getSessionPropertyFromId($id,$property,$defaultValue='')          // returns the property of the given session
+  { global $objDatabase; 
+    return $objDatabase->selectSingleValue("SELECT ".$property." FROM sessions WHERE id = \"".$id."\"",$property,$defaultValue);
+  }
+  
+  
   // TODO : Check in Eye&Telescope why comment is used...
   // TODO : If comment is just used for comments, also add a title for the session -> Bijv Waarneemreis werkgroep Deepsky 2008 
 //{  public  function getNumberOfUnreadMails()

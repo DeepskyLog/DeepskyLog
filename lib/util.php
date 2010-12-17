@@ -2512,6 +2512,7 @@ class Utils
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_instrument'                   ,'common/content/change_instrument.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_lens'                         ,'common/content/change_lens.php')))	  
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_site'                         ,'common/content/change_site.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_session'                        ,'deepsky/content/new_session.php')))		 
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_eyepiece'                       ,'common/content/new_eyepiece.php')))		 
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_filter'                         ,'common/content/new_filter.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('add_instrument'                     ,'common/content/new_instrument.php'))) 		

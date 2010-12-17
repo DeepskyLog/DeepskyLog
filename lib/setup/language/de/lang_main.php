@@ -1,4 +1,12 @@
 <?php
+// This is version 4.2
+define("LangSearchMenuItem11"           ,"My sessions");
+define("LangSearchMenuItem12"           ,"All sessions");
+define("LangChangeMenuItem9"						,"Sessions");
+define("LangAddSessionTitle"						,"Add a new session");
+define("LangAddSessionButton"						,"Add session");
+
+// This is version 4.1
 define('LangAdminMenuItem8'							,'Send message to all');
 define('LangAdminMenuItem7'							,'Check Objects');
 

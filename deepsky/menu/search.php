@@ -31,9 +31,12 @@ function menu_search()
 	  if($loggedUser)
 	    echo "<option value=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;myLanguages=true&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay&amp;newobservations=true\">".LangSearchMenuItem9."</option>";
 	  if($loggedUser
-	  &&($loggedUser!="admin"))                                                            // admin doesn't have own observations
+	  &&($loggedUser!="admin")) {                                                           // admin doesn't have own observations
 	    echo "<option value=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".urlencode($loggedUser)."\">".LangSearchMenuItem1."</option>";
+	    echo "<option value=\"".$baseURL."index.php?indexAction=result_selected_sessions&amp;observer=".urlencode($loggedUser)."\">".LangSearchMenuItem11."</option>";
+	  }
 	  echo "<option value=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;myLanguages=true&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay\">".LangSearchMenuItem8."</option>";
+	  echo "<option value=\"".$baseURL."index.php?indexAction=result_selected_sessions\">".LangSearchMenuItem12."</option>";
 	  echo "<option value=\"".$baseURL."index.php?indexAction=rank_observers\">".LangSearchMenuItem6."</option>";
 	  echo "<option value=\"".$baseURL."index.php?indexAction=rank_objects\">".LangSearchMenuItem7."</option>";
 	  echo "<option value=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;catalog=%\">".LangSearchMenuItem2."</option>";
@@ -44,9 +47,12 @@ function menu_search()
 	{ if($loggedUser)
 	    echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;myLanguages=true&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay&amp;newobservations=true\">".LangSearchMenuItem9."</a><br />";
 	  if(($loggedUser)
-	  && ($loggedUser!="admin"))           // admin doesn't have own observations
+	  && ($loggedUser!="admin")) {          // admin doesn't have own observations
 	    echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".urlencode($loggedUser)."\">".LangSearchMenuItem1."</a><br />";
+	    echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=result_selected_sessions&amp;observer=".urlencode($loggedUser)."\">".LangSearchMenuItem11."</a><br />";
+	  }
 	  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;myLanguages=true&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay\">".LangSearchMenuItem8."</a><br />";
+	  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=result_selected_sessions\">".LangSearchMenuItem12."</a><br />";
 	  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=rank_observers\">".LangSearchMenuItem6."</a><br />";
 	  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=rank_objects\">".LangSearchMenuItem7."</a><br />";
 	  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;catalog=%\">".LangSearchMenuItem2."</a><br />";

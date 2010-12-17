@@ -1,4 +1,32 @@
 <?php
+// This is version 4.2
+define("LangSearchMenuItem11"           ,"Mijn sessies");
+define("LangSearchMenuItem12"           ,"Alle sessies");
+define("LangChangeMenuItem9"						,"Sessies");
+define("LangAddSessionTitle"						,"Voeg een nieuwe sessie toe");
+define("LangAddSessionButton"						,"Voeg sessie toe");
+define("LangAddSessionField1"						,"Naam");
+define("LangAddSessionField1Expl"				,"Als je geen naam invult, maakt DeepskyLog zelf een naam met de begin- en einddatum aan.");
+define("LangAddSessionField2"						,"Begin van de sessie *");
+define("LangAddSessionField2Expl"				,"De start van je waarneemsessie.");
+define("LangAddSessionField3"						,"Einde van de sessie *");
+define("LangAddSessionField3Expl"				,"Het einde van je waarneemsessie.");
+define("LangAddSessionField4"						,"Waarnemingsplaats *");
+define("LangAddSessionField4Expl"				,"De waarnemingsplaats van je sessie.");
+define("LangAddSessionField5"						,"Weersomstandigheden");
+define("LangAddSessionField5Expl"				,"Het weer tijdens je waarneemsessie.");
+define("LangAddSessionField6"						,"Gebruikte instrumenten");
+define("LangAddSessionField6Expl"				,"Commentaar over de gebruikte instrumenten tijdens je sessie.");
+define("LangAddSessionField7"						,"Commentaar");
+define("LangAddSessionField7Expl"				,"Commentaar over je waarneemsessie.");
+define("LangAddSessionField8"						,"Taal *");
+define("LangAddSessionField8Expl"				,"Taal van je waarnemingen tijdens je sessie.");
+define("LangAddSessionField9"						,"Waarnemers *");
+define("LangAddSessionField9Expl"				,"Waarnemers tijdens deze sessie. De andere waarnemers krijgen een bericht om deze sessie ook aan te maken.");
+define("LangAddSessionField10"					,"Voeg waarnemer toe");
+define("LangAddSessionField10Expl"			,"Selecteer hier een waarnemer om toe te voegen aan de sessie.");
+
+// This is version 4.1
 define('LangAdminMenuItem8'							,'Stuur bericht naar iedereen');
 define('LangAdminMenuItem7'							,'Controleer objecten');
 
