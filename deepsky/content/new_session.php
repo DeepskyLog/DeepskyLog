@@ -36,11 +36,67 @@ function new_session()
 	echo " <script type=\"text/javascript\" >";
 	echo " function addUser(elm)";
 	echo " {";
-	echo "  document.forms[\"sessionForm\"].observers.value += \"\" + elm";
-  echo " }";
+	// Value (=key) = elm.value
+	// TODO : Always make a new list, with all the observers -> Also when removing
+	echo "  var w = document.forms[\"sessionForm\"].addObserver.selectedIndex;";
+  echo "  var selected_text = document.forms[\"sessionForm\"].addObserver.options[w].text;";
+  echo "  document.forms[\"sessionForm\"].observers.value += \"\\n\" + selected_text;";
+	// Remove observer from list of observers
+	echo "  var elSel = document.getElementById('addObserver');";
+  echo "  var i;";
+  echo "  for (i = elSel.length - 1; i>=0; i--) {";
+  echo "    if (elSel.options[i].selected) {";
+  echo "      elSel.remove(i);";
+  echo "    }";
+  echo "  }";
+	
+	// Add to list of deletable observers
+	echo "  var newOption = document.createElement('option');";
+	echo "  newOption.text = selected_text;";
+	echo "  newOption.value = elm.value;";
+	echo "  var elSel = document.getElementById('deleteObserver');";
+	echo "  try {";
+	echo "    elSel.add(newOption, null);"; // standards compliant; doesn't work in IE
+  echo "  }";
+  echo "  catch(ex) {";
+  echo "    elSel.add(newOption);"; // IE only
+  echo "  }	";
+	echo " }";
   echo "	</script>";
-
-	echo "<div id=\"main\">";  
+  
+	// Javascript to delete a user
+	// TODO : Check : First user in the list can not be deleted????
+	echo " <script type=\"text/javascript\" >";
+	echo " function deleteUser(elm)";
+	echo " {";
+	// Value (=key) = elm.value
+	echo "  var w = document.forms[\"sessionForm\"].deleteObserver.selectedIndex;";
+  echo "  var selected_text = document.forms[\"sessionForm\"].deleteObserver.options[w].text;";
+	echo "  document.forms[\"sessionForm\"].observers.value += \"Deleted : \" + selected_text;";
+	// Remove observer from list of observers
+	echo "  var elSel = document.getElementById('deleteObserver');";
+  echo "  var i;";
+  echo "  for (i = elSel.length - 1; i>=0; i--) {";
+  echo "    if (elSel.options[i].selected) {";
+  echo "      elSel.remove(i);";
+  echo "    }";
+  echo "  }";
+	
+	// Add to list of observers
+	echo "  var newOption = document.createElement('option');";
+	echo "  newOption.text = selected_text;";
+	echo "  newOption.value = elm.value;";
+	echo "  var elSel = document.getElementById('addObserver');";
+	echo "  try {";
+	echo "    elSel.add(newOption, null);"; // standards compliant; doesn't work in IE
+  echo "  }";
+  echo "  catch(ex) {";
+  echo "    elSel.add(newOption);"; // IE only
+  echo "  }	";
+	echo " }";
+  echo "	</script>";
+  
+  echo "<div id=\"main\">";  
 	$objPresentations->line(array("<h4>".LangAddSessionTitle."&nbsp;<span class=\"requiredField\">".LangRequiredFields."</span>"."</h4>"),"L",array(),30);
 	echo "<hr />";
 	echo "<form id=\"sessionForm\" action=\"".$baseURL."index.php\" method=\"post\"><div>";
@@ -151,13 +207,14 @@ function new_session()
 	                               LangAddSessionField9Expl),
 	                        "RLL",array(25,40,35),136,array("fieldname","fieldvalue","fieldexplanation"));
 
-	$addObserver = "<select id=\"observer\" name=\"observer\" onchange=\"addUser(this.value)\" class=\"inputfield\">";
+  // Add observer
+	$addObserver = "<select id=\"addObserver\" name=\"addObserver\" onchange=\"addUser(this)\" class=\"inputfield\">";
 	$obs = $objObserver->getPopularObserversByName();
-// TODO : Remove the names which are in the list
-		while(list($key, $value) = each($obs)) {
-//	  if (!in_array($key, $observers)) {
+
+	while(list($key, $value) = each($obs)) {
+	  if ($key != $loggedUser) {
 	    $addObserver .= "<option value=\"".$key."\">".$value."</option>";
-//	  }
+	  }
 	}
 	$addObserver .= "</select>";
 
@@ -166,6 +223,17 @@ function new_session()
 	                               LangAddSessionField10Expl),
 	                        "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 	
+  // Delete observer
+	$deleteObserver = "<select id=\"deleteObserver\" name=\"deleteObserver\" onchange=\"deleteUser(this)\" class=\"inputfield\">";
+
+  $deleteObserver .= "<option value=\"\"></option>";
+	$deleteObserver .= "</select>";
+
+  $objPresentations->line(array(LangAddSessionField11,
+	                               $deleteObserver,
+	                               LangAddSessionField11Expl),
+	                        "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
+	                               
   // Weather
 	$objPresentations->line(array(LangAddSessionField5,
 	                              "<textarea name=\"weather\"  class=\"messageAreaSmall inputfield\" cols=\"1\" rows=\"1\">" . "</textarea>",

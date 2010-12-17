@@ -25,6 +25,8 @@ define("LangAddSessionField9"						,"Waarnemers *");
 define("LangAddSessionField9Expl"				,"Waarnemers tijdens deze sessie. De andere waarnemers krijgen een bericht om deze sessie ook aan te maken.");
 define("LangAddSessionField10"					,"Voeg waarnemer toe");
 define("LangAddSessionField10Expl"			,"Selecteer hier een waarnemer om toe te voegen aan de sessie.");
+define("LangAddSessionField11"					,"Wis waarnemer");
+define("LangAddSessionField11Expl"			,"Selecteer hier een waarnemer om te verwijderen van de sessie.");
 
 // This is version 4.1
 define('LangAdminMenuItem8'							,'Stuur bericht naar iedereen');

@@ -16,7 +16,8 @@
              equipment					VARCHAR(500)     NOT NULL DEFAULT '',
              comments						VARCHAR(500)     NOT NULL DEFAULT '',
              language						VARCHAR(255)		 NOT NULL DEFAULT '',
-         PRIMARY KEY (id)
+             active							INTEGER UNSIGNED NOT NULL,
+             PRIMARY KEY (id)
          )";
  $run = mysql_query($sql) or die(mysql_error());
  
