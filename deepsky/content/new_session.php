@@ -11,7 +11,7 @@ function new_session()
          $objLocation,$objPresentations,$objUtil,$objLanguage;
 
   // TODO : When there are sessions added by another observer, where the observer is co-observer, then we should first see a list with sessions. 
-  // It should be possible to click on the seesion, and all information should be filled out (or maybe it should be possible to just accept this session).
+  // It should be possible to click on the session, and all information should be filled out (or maybe it should be possible to just accept this session).
 
 	echo "	<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/CalendarPopupCC.js\"></script>";
 	echo "	<script type=\"text/javascript\" >";
@@ -34,23 +34,20 @@ function new_session()
 	echo "	</script>";
 	// Javascript to add a user
 	echo " <script type=\"text/javascript\" >";
-	echo " function addUser(elm)";
+	echo " function addUser(elm,user)";
 	echo " {";
-	// Value (=key) = elm.value
-	// TODO : Always make a new list, with all the observers -> Also when removing
 	echo "  var w = document.forms[\"sessionForm\"].addObserver.selectedIndex;";
   echo "  var selected_text = document.forms[\"sessionForm\"].addObserver.options[w].text;";
-  echo "  document.forms[\"sessionForm\"].observers.value += \"\\n\" + selected_text;";
 	// Remove observer from list of observers
 	echo "  var elSel = document.getElementById('addObserver');";
   echo "  var i;";
-  echo "  for (i = elSel.length - 1; i>=0; i--) {";
+  echo "  for (i = elSel.length - 1; i>0; i--) {";
   echo "    if (elSel.options[i].selected) {";
   echo "      elSel.remove(i);";
   echo "    }";
   echo "  }";
 	
-	// Add to list of deletable observers
+  // Add to list of deletable observers
 	echo "  var newOption = document.createElement('option');";
 	echo "  newOption.text = selected_text;";
 	echo "  newOption.value = elm.value;";
@@ -61,22 +58,25 @@ function new_session()
   echo "  catch(ex) {";
   echo "    elSel.add(newOption);"; // IE only
   echo "  }	";
-	echo " }";
+
+  echo "  document.forms[\"sessionForm\"].observers.value = user;";
+  echo "  for (i = 1;i < elSel.length;i++) {";
+  echo "    document.forms[\"sessionForm\"].observers.value += \"\\n\" + document.forms[\"sessionForm\"].deleteObserver.options[i].text;";
+  echo "  }";
+  echo " }";
   echo "	</script>";
-  
-	// Javascript to delete a user
-	// TODO : Check : First user in the list can not be deleted????
+
+  // Javascript to delete a user
 	echo " <script type=\"text/javascript\" >";
-	echo " function deleteUser(elm)";
+	echo " function deleteUser(elm,user)";
 	echo " {";
 	// Value (=key) = elm.value
 	echo "  var w = document.forms[\"sessionForm\"].deleteObserver.selectedIndex;";
   echo "  var selected_text = document.forms[\"sessionForm\"].deleteObserver.options[w].text;";
-	echo "  document.forms[\"sessionForm\"].observers.value += \"Deleted : \" + selected_text;";
 	// Remove observer from list of observers
 	echo "  var elSel = document.getElementById('deleteObserver');";
   echo "  var i;";
-  echo "  for (i = elSel.length - 1; i>=0; i--) {";
+  echo "  for (i = elSel.length - 1; i>0; i--) {";
   echo "    if (elSel.options[i].selected) {";
   echo "      elSel.remove(i);";
   echo "    }";
@@ -93,7 +93,13 @@ function new_session()
   echo "  catch(ex) {";
   echo "    elSel.add(newOption);"; // IE only
   echo "  }	";
-	echo " }";
+  // Make the text
+  echo "  document.forms[\"sessionForm\"].observers.value = user;";
+  echo "  var elSel = document.getElementById('deleteObserver');";
+  echo "  for (i = 1;i < elSel.length;i++) {";
+  echo "    document.forms[\"sessionForm\"].observers.value += \"\\n\" + document.forms[\"sessionForm\"].deleteObserver.options[i].text;";
+  echo "  }";
+  echo " }";
   echo "	</script>";
   
   echo "<div id=\"main\">";  
@@ -208,9 +214,10 @@ function new_session()
 	                        "RLL",array(25,40,35),136,array("fieldname","fieldvalue","fieldexplanation"));
 
   // Add observer
-	$addObserver = "<select id=\"addObserver\" name=\"addObserver\" onchange=\"addUser(this)\" class=\"inputfield\">";
+	$addObserver = "<select id=\"addObserver\" name=\"addObserver\" onchange=\"addUser(this,'" . $loggedUserName . "')\" class=\"inputfield\">";
 	$obs = $objObserver->getPopularObserversByName();
 
+	$addObserver .= "<option value=\"\"></option>";
 	while(list($key, $value) = each($obs)) {
 	  if ($key != $loggedUser) {
 	    $addObserver .= "<option value=\"".$key."\">".$value."</option>";
@@ -224,7 +231,7 @@ function new_session()
 	                        "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 	
   // Delete observer
-	$deleteObserver = "<select id=\"deleteObserver\" name=\"deleteObserver\" onchange=\"deleteUser(this)\" class=\"inputfield\">";
+	$deleteObserver = "<select id=\"deleteObserver\" name=\"deleteObserver\" onchange=\"deleteUser(this,'" . $loggedUserName . "')\" class=\"inputfield\">";
 
   $deleteObserver .= "<option value=\"\"></option>";
 	$deleteObserver .= "</select>";
