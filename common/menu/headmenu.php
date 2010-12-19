@@ -8,7 +8,7 @@ else headmenu();
 function headmenu()
 { global $baseURL,$leftmenu,$loggedUser,$modules,$thisDay,$thisMonth,$thisYear,$topmenu,
          $objUtil,$objLocation,$objInstrument,$objObserver,$objMessages;
-  echo "<div id=\"div1\">";
+  echo "<div id=\"div1\" onmouseover=\"resizeForm(theLeftMenu,'show');\">";
 	echo "<img src=\"".$baseURL."styles/images/header_bg.jpg\" alt=\"Vereniging voor Sterrenkunde - DeepskyLog\"/>";
 	
 	echo "<div id=\"div1a\">";
@@ -45,15 +45,11 @@ function headmenu()
   $thelink .= "&amp;" . $key . "=" . urlencode($value);
 	$thelink = $baseURL."index.php?".substr($thelink,5);
   
-	if($topmenu=="show")
-	  echo "<a href=\"".$thelink."&amp;topmenu=hidden\" title=\"".LangHideTopMenu."\">^</a> ";
-	else
-	  echo "<a href=\"".$thelink."&amp;topmenu=show\" title=\"".LangShowTopMenu."\" >v</a> ";
-	if($leftmenu=="show")
-	  echo "<a href=\"".$thelink."&amp;leftmenu=hidden\" title=\"".LangHideLeftMenu."\">&lt;</a> ";
-	else
-	  echo "<a href=\"".$thelink."&amp;leftmenu=show\" title=\"".LangShowLeftMenu."\" >&gt;</a> ";
-	  echo "<span class=\"menuLine\" >";
+	echo "<a href=\"".$thelink."&amp;topmenu=hidden\" title=\"".LangHideTopMenu."\">^</a> ";
+	echo "<a href=\"".$thelink."&amp;topmenu=show\" title=\"".LangShowTopMenu."\" >v</a> ";
+	echo "<a href=\"".$thelink."&amp;leftmenu=hidden\" title=\"".LangHideLeftMenu."\">&lt;</a> ";
+  echo "<a href=\"".$thelink."&amp;leftmenu=show\" title=\"".LangShowLeftMenu."\" >&gt;</a> ";
+  echo "<span class=\"menuLine\" >";
 	echo LangWelcome;
 	echo $objUtil->checkSessionKey('module');
 	echo LangWelcome1;

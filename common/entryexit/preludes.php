@@ -58,7 +58,6 @@ function preludesB()
          $objUtil
          ;
 
-  $topmenu="testpreludesB1";
   require_once "lib/observerqueries.php";         $objObserverQueries=new Observerqueries;
   require_once "lib/atlasses.php";                $objAtlas=new Atlasses;
 	require_once "lib/locations.php";               $objLocation=new Locations;
