@@ -158,7 +158,7 @@ class Messages
 		if(!($loggedUser))
 			throw new Exception(LangMessageNotLoggedIn);
 
-		$this->sendMessage($loggedUser, $_POST['receiver'], $_POST['subject'], nl2br($_POST['message']));
+		$this->sendMessage($loggedUser, $_POST['receiver'], $_POST['subject'], nl2br(addslashes($_POST['message'])));
   }
 
   // Returns a list of all read mails.  
