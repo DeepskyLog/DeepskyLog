@@ -15,7 +15,48 @@ class Sessions
   { global $objDatabase; 
     return $objDatabase->selectSingleValue("SELECT ".$property." FROM sessions WHERE id = \"".$id."\"",$property,$defaultValue);
   }
-  
+  public  function validateSession() 
+  { global $loggedUser;
+		if(!($loggedUser))
+			throw new Exception(LangMessageNotLoggedIn);
+
+		// TODO : Check if all the needed entries are given
+		print $loggedUser . "<br />";
+		print $_POST['sessionname'] . "<br />";
+		print $_POST['beginday'] . "/" . $_POST['beginmonth'] . "/" . $_POST['beginyear'] . "<br />";
+		print $_POST['beginhours'] . ":" . $_POST['beginminutes'] . "<br />";
+		print $_POST['endday'] . "/" . $_POST['endmonth'] . "/" . $_POST['endyear'] . "<br />";
+		print $_POST['endhours'] . ":" . $_POST['endminutes'] . "<br />";
+		print $_POST['site'] . "<br />";
+		print $_POST['description_language'] . "<br />";
+		// TODO : All the observers
+		print_r($_POST['addedObserver']);
+		print "<br />";
+		print_r($_POST['deletedObserver']);
+		print "<br />";
+//		foreach( $_POST['addedObserver'] as $k => $v)
+//		{
+//		  $k++;
+//		  $val = 'addedObserver['.$k.']';
+//		  print $val.' = '.$v . '<br />';
+//		}
+		
+//		foreach( $_POST['deletedObserver'] as $k => $v)
+//		{
+//		  $k++;
+//		  $val = 'deletedObserver['.$k.']';
+//		  print $val.' = '.$v . '<br />';
+//		}
+		
+		print_r(array_diff($_POST['addedObserver'], $_POST['deletedObserver']));
+		
+		print $_POST['weather'] . "<br />";
+		print $_POST['equipment'] . "<br />";
+		print $_POST['comments'] . "<br />";
+
+		exit;
+//		$this->sendMessage($loggedUser, $_POST['receiver'], $_POST['subject'], nl2br($_POST['message']));
+  }
   
   // TODO : Check in Eye&Telescope why comment is used...
   // TODO : If comment is just used for comments, also add a title for the session -> Bijv Waarneemreis werkgroep Deepsky 2008 
@@ -166,13 +207,6 @@ class Sessions
 //    return "> " . $message;
 //  }
 //
-//  public  function validateMessage() 
-//  { global $loggedUser;
-//		if(!($loggedUser))
-//			throw new Exception(LangMessageNotLoggedIn);
-//
-//		$this->sendMessage($loggedUser, $_POST['receiver'], $_POST['subject'], nl2br($_POST['message']));
-//  }
 //
 //  // Returns a list of all read mails.  
 //  public  function getIdsReadMails($user)

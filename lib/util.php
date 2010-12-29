@@ -49,8 +49,11 @@ class Utils
                 (($firststartvalue<$secondstartvalue)&&($firstendvalue>$secondendvalue)&&($firststartvalue>$firstendvalue));
   }
   public  function __construct()
-	{ foreach($_POST as $foo => $bar)
-      $_POST[$foo]=htmlentities(stripslashes($bar),ENT_COMPAT,"ISO-8859-15",0);
+	{ foreach($_POST as $foo => $bar) {
+	    if (!is_array($_POST[$foo])) {
+	      $_POST[$foo]=htmlentities(stripslashes($bar),ENT_COMPAT,"ISO-8859-15",0);
+	    }
+	  }
     foreach($_GET as $foo => $bar)
       $_GET[$foo] =htmlentities(stripslashes($bar),ENT_COMPAT,"ISO-8859-15",0);
   }

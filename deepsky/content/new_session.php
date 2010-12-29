@@ -36,9 +36,11 @@ function new_session()
 	echo " <script type=\"text/javascript\" >";
 	echo " function addUser(elm,user)";
 	echo " {";
+	echo "  var userToAdd = elm.value;";
 	echo "  var w = document.forms[\"sessionForm\"].addObserver.selectedIndex;";
   echo "  var selected_text = document.forms[\"sessionForm\"].addObserver.options[w].text;";
-	// Remove observer from list of observers
+
+  // Remove observer from list of observers
 	echo "  var elSel = document.getElementById('addObserver');";
   echo "  var i;";
   echo "  for (i = elSel.length - 1; i>0; i--) {";
@@ -50,7 +52,7 @@ function new_session()
   // Add to list of deletable observers
 	echo "  var newOption = document.createElement('option');";
 	echo "  newOption.text = selected_text;";
-	echo "  newOption.value = elm.value;";
+	echo "  newOption.value = userToAdd;";
 	echo "  var elSel = document.getElementById('deleteObserver');";
 	echo "  try {";
 	echo "    elSel.add(newOption, null);"; // standards compliant; doesn't work in IE
@@ -63,14 +65,19 @@ function new_session()
   echo "  for (i = 1;i < elSel.length;i++) {";
   echo "    document.forms[\"sessionForm\"].observers.value += \"\\n\" + document.forms[\"sessionForm\"].deleteObserver.options[i].text;";
   echo "  }";
+  echo "  var div1 = document.createElement('div');";  
+  // Get template data  
+  echo "  div1.innerHTML = \"<input type='hidden' name='addedObserver[]' value='\" + userToAdd + \"' />\";";
+  // append to our form, so that template data become part of form  
+  echo "  document.getElementById('newlink').appendChild(div1);";  
   echo " }";
   echo "	</script>";
 
   // Javascript to delete a user
 	echo " <script type=\"text/javascript\" >";
-	echo " function deleteUser(elm,user)";
+	echo " function deleteUser(elm2,user)";
 	echo " {";
-	// Value (=key) = elm.value
+  echo "  var userToDelete = elm2.value;";
 	echo "  var w = document.forms[\"sessionForm\"].deleteObserver.selectedIndex;";
   echo "  var selected_text = document.forms[\"sessionForm\"].deleteObserver.options[w].text;";
 	// Remove observer from list of observers
@@ -81,11 +88,17 @@ function new_session()
   echo "      elSel.remove(i);";
   echo "    }";
   echo "  }";
-	
-	// Add to list of observers
+  
+  echo "  var div1 = document.createElement('div');";  
+  // Get template data  
+  echo "  div1.innerHTML = \"<input type='hidden' name='deletedObserver[]' value='\" + userToDelete + \"' />\";";
+  // append to our form, so that template data become part of form  
+  echo "  document.getElementById('newlink').appendChild(div1);";  
+  
+  // Add to list of observers
 	echo "  var newOption = document.createElement('option');";
 	echo "  newOption.text = selected_text;";
-	echo "  newOption.value = elm.value;";
+	echo "  newOption.value = userToDelete;";
 	echo "  var elSel = document.getElementById('addObserver');";
 	echo "  try {";
 	echo "    elSel.add(newOption, null);"; // standards compliant; doesn't work in IE
@@ -217,7 +230,7 @@ function new_session()
 	$addObserver = "<select id=\"addObserver\" name=\"addObserver\" onchange=\"addUser(this,'" . $loggedUserName . "')\" class=\"inputfield\">";
 	$obs = $objObserver->getPopularObserversByName();
 
-	$addObserver .= "<option value=\"\"></option>";
+	$addObserver .= "<option value=\"\">&nbsp;</option>";
 	while(list($key, $value) = each($obs)) {
 	  if ($key != $loggedUser) {
 	    $addObserver .= "<option value=\"".$key."\">".$value."</option>";
@@ -233,14 +246,22 @@ function new_session()
   // Delete observer
 	$deleteObserver = "<select id=\"deleteObserver\" name=\"deleteObserver\" onchange=\"deleteUser(this,'" . $loggedUserName . "')\" class=\"inputfield\">";
 
-  $deleteObserver .= "<option value=\"\"></option>";
+  $deleteObserver .= "<option value=\"\">&nbsp;</option>";
 	$deleteObserver .= "</select>";
 
   $objPresentations->line(array(LangAddSessionField11,
 	                               $deleteObserver,
 	                               LangAddSessionField11Expl),
 	                        "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
-	                               
+
+	// Hidden field with all the observers
+	// First the loggedUser
+	echo "<div id=\"newlink\">";  
+  echo "  <div class=\"observer\">";  
+  echo "     <input type=\"hidden\" name=\"addedObserver[]\" value=\"" . $loggedUser . "\" />";  
+  echo "  </div>";  
+  echo "</div>";
+
   // Weather
 	$objPresentations->line(array(LangAddSessionField5,
 	                              "<textarea name=\"weather\"  class=\"messageAreaSmall inputfield\" cols=\"1\" rows=\"1\">" . "</textarea>",

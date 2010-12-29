@@ -7,7 +7,7 @@ else instructions();
 
 function instructions()
 {	global $baseURL,$loggedUser,$myList,$lastReadObservation,$theDate,$modules,$menuView,$menuAddChange,$menuAdmin,$menuLogin,$menuSearch,$menuMoon,
-         $listname_ss,$listname,$entryMessage,$step,
+         $listname_ss,$listname,$entryMessage,$step,$objSession,
          $objEyepiece,$objFilter,$objLens,$objInstrument,$objLocation,$objMessages,
          $objObject,$objObserver,$objObservation,$objFormLayout,$objUtil,$objList;
 	if($objUtil->checkGetKey('saveLayout'))
@@ -457,6 +457,8 @@ function instructions()
 	  $objObservation->validateObservation();
 	if(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="validate_message")
 	  $objMessages->validateMessage();
+	if(array_key_exists('indexAction',$_POST)&&$_POST['indexAction']=="validate_session")
+	  $objSession->validateSession();
 	if($objUtil->checkRequestKey(('phase1')))
     $_REQUEST['phase']=1;
   if($objUtil->checkRequestKey(('phase2')))
