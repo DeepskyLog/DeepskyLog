@@ -9,6 +9,7 @@
  $sql = "CREATE TABLE sessions (
              id									INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
              name   						VARCHAR(200)     NOT NULL DEFAULT '',
+             observerid					VARCHAR(200)     NOT NULL DEFAULT '',
              begindate					DATETIME				 NOT NULL,
              enddate						DATETIME				 NOT NULL,
              locationid 				INTEGER UNSIGNED NOT NULL,

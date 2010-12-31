@@ -20,42 +20,68 @@ class Sessions
 		if(!($loggedUser))
 			throw new Exception(LangMessageNotLoggedIn);
 
-		// TODO : Check if all the needed entries are given
-		print $loggedUser . "<br />";
-		print $_POST['sessionname'] . "<br />";
-		print $_POST['beginday'] . "/" . $_POST['beginmonth'] . "/" . $_POST['beginyear'] . "<br />";
-		print $_POST['beginhours'] . ":" . $_POST['beginminutes'] . "<br />";
-		print $_POST['endday'] . "/" . $_POST['endmonth'] . "/" . $_POST['endyear'] . "<br />";
-		print $_POST['endhours'] . ":" . $_POST['endminutes'] . "<br />";
-		print $_POST['site'] . "<br />";
-		print $_POST['description_language'] . "<br />";
-		// TODO : All the observers
-		print_r($_POST['addedObserver']);
-		print "<br />";
-		print_r($_POST['deletedObserver']);
-		print "<br />";
-//		foreach( $_POST['addedObserver'] as $k => $v)
-//		{
-//		  $k++;
-//		  $val = 'addedObserver['.$k.']';
-//		  print $val.' = '.$v . '<br />';
-//		}
-		
-//		foreach( $_POST['deletedObserver'] as $k => $v)
-//		{
-//		  $k++;
-//		  $val = 'deletedObserver['.$k.']';
-//		  print $val.' = '.$v . '<br />';
-//		}
-		
-		print_r(array_diff($_POST['addedObserver'], $_POST['deletedObserver']));
-		
-		print $_POST['weather'] . "<br />";
-		print $_POST['equipment'] . "<br />";
-		print $_POST['comments'] . "<br />";
+		// The observers
+		$observers = Array();
 
+		$count = array_count_values($_POST['addedObserver']);
+		$countRemoved = array_count_values($_POST['deletedObserver']);
+
+		foreach( $count as $k => $v)
+		{
+		  $val = $v;
+		  $val2 = 0;
+		  if (array_key_exists($k, $countRemoved)) {
+		    $val2 = $countRemoved[$k];
+		  }
+		  if (($val - $val2) == 1) {
+		    $observers[] = $k;
+		  }
+		}
+
+		print_r($observers);
+		print "<br />";
+
+		$this->addSession($_POST['sessionname'], $_POST['beginday'], $_POST['beginmonth'], $_POST['beginyear'], 
+		                  $_POST['beginhours'], $_POST['beginminutes'], $_POST['endday'], $_POST['endmonth'], 
+		                  $_POST['endyear'], $_POST['endhours'], $_POST['endminutes'], $_POST['site'], $_POST['weather'], 
+		                  $_POST['equipment'], $_POST['comments'], $_POST['description_language']);
+		
 		exit;
-//		$this->sendMessage($loggedUser, $_POST['receiver'], $_POST['subject'], nl2br($_POST['message']));
+  }
+  
+  public  function addSession($sessionname, $beginday, $beginmonth, $beginyear, $beginhours, $beginminutes, $endday, 
+                                $endmonth, $endyear, $endhours, $endminutes, $location, $weather, $equipment, $comments,
+                                $language)
+  { global $objDatabase, $loggedUser;
+    // Make sure not to insert bad code in the database
+    $name = html_entity_decode($sessionname, ENT_COMPAT, "ISO-8859-15");
+		$name = preg_replace("/(\")/", "", $name);
+		$name = preg_replace("/;/", ",", $name);
+    
+		$begindate = date('Y-m-d H:i:s', mktime($beginhours, $beginminutes, 0, $beginmonth, $beginday, $beginyear));
+		$enddate = date('Y-m-d H:i:s', mktime($endhours, $endminutes, 0, $endmonth, $endday, $endyear));
+		
+    $weather = html_entity_decode($weather, ENT_COMPAT, "ISO-8859-15");
+		$weather = preg_replace("/(\")/", "", $weather);
+		$weather = preg_replace("/;/", ",", $weather);
+		
+    $equipment = html_entity_decode($equipment, ENT_COMPAT, "ISO-8859-15");
+		$equipment = preg_replace("/(\")/", "", $equipment);
+		$equipment = preg_replace("/;/", ",", $equipment);
+		
+    $comments = html_entity_decode($comments, ENT_COMPAT, "ISO-8859-15");
+		$comments = preg_replace("/(\")/", "", $comments);
+		$comments = preg_replace("/;/", ",", $comments);
+
+		// First add a new session with the observer which created the session (and set to active)
+		$objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \""  . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)");
+
+		// TODO : Add the observers to the sessionObservers table 
+		
+		// TODO : Add a new session with the other observers (and set to inactive)
+		//$objDatabase->execSQL("INSERT into sessions (name, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)");
+
+		// TODO : Add all observations to the sessionObservations table 
   }
   
   // TODO : Check in Eye&Telescope why comment is used...
@@ -229,22 +255,6 @@ class Sessions
 //    $listOfReadMails = array_reverse($listOfReadMails);
 //
 //    return $listOfReadMails;
-//  }
-//  
-//  public  function sendMessage($sender, $receiver, $subject, $message)
-//  { global $objDatabase;
-//    // Make sure not to insert bad code in the database
-//    $subject = html_entity_decode($subject, ENT_COMPAT, "ISO-8859-15");
-//		$subject = preg_replace("/(\")/", "", $subject);
-//		$subject = preg_replace("/;/", ",", $subject);
-//    
-////    $message = html_entity_decode($message, ENT_COMPAT, "ISO-8859-15");
-////		$message = preg_replace("/(\")/", "", $message);
-////		$message = preg_replace("/;/", ",", $message);
-//
-//		$date = $mysqldate = date('Y-m-d H:i:s');
-//		
-//		$objDatabase->execSQL("INSERT into messages (sender, receiver, subject, message, date) VALUES(\"" . $sender . "\", \"" . $receiver . "\", \"" . $subject . "\", '" . $message . "', \"" . $date . "\")");
 //  }
 //
 //  public  function showListMails($newMails, $readMails, $min, $max, $link2, $step=25) 
