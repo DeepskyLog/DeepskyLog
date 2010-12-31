@@ -133,7 +133,7 @@ function data_get_observations()
 	}
 	//=========================================== REMOVE EMPTY OBSERVATIONS OF OTHER USERS =======================================
   $nonempty=array();
-  if(count($_SESSION['Qobs'])>1)
+  if(count($_SESSION['Qobs'])>0)
   { while(list($key, $value)=each($_SESSION['Qobs']))
       if((strlen(trim($value['observationdescription']))>0)||($loggedUser && ($value['observerid']==$loggedUser)))
         $nonempty[]=$value;
