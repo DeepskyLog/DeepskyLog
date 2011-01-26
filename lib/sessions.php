@@ -24,7 +24,11 @@ class Sessions
 		$observers = Array();
 
 		$count = array_count_values($_POST['addedObserver']);
-		$countRemoved = array_count_values($_POST['deletedObserver']);
+		if (isset($_POST['deletedObserver'])) {
+		  $countRemoved = array_count_values($_POST['deletedObserver']);
+		} else {
+		  $countRemoved = Array();
+		}
 
 		foreach( $count as $k => $v)
 		{
