@@ -48,14 +48,14 @@ class Sessions
 		$this->addSession($_POST['sessionname'], $_POST['beginday'], $_POST['beginmonth'], $_POST['beginyear'], 
 		                  $_POST['beginhours'], $_POST['beginminutes'], $_POST['endday'], $_POST['endmonth'], 
 		                  $_POST['endyear'], $_POST['endhours'], $_POST['endminutes'], $_POST['site'], $_POST['weather'], 
-		                  $_POST['equipment'], $_POST['comments'], $_POST['description_language']);
-		
+		                  $_POST['equipment'], $_POST['comments'], $_POST['description_language'], $observers);
+
 		exit;
   }
   
   public  function addSession($sessionname, $beginday, $beginmonth, $beginyear, $beginhours, $beginminutes, $endday, 
                                 $endmonth, $endyear, $endhours, $endminutes, $location, $weather, $equipment, $comments,
-                                $language)
+                                $language, $observers)
   { global $objDatabase, $loggedUser;
     // Make sure not to insert bad code in the database
     $name = html_entity_decode($sessionname, ENT_COMPAT, "ISO-8859-15");
@@ -80,10 +80,13 @@ class Sessions
 		// First add a new session with the observer which created the session (and set to active)
 		$objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \""  . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)");
 
-		// TODO : Add the observers to the sessionObservers table 
+		// TODO : Add the observers to the sessionObservers table
 		
-		// TODO : Add a new session with the other observers (and set to inactive)
-		//$objDatabase->execSQL("INSERT into sessions (name, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)");
+    // Add the new session also for the other observers (and set to inactive)
+    // TODO : First check whether the session already exists
+    for ($i=1;$i<count($observers);$i++) {
+		  $objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers[$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)");
+    }
 
 		// TODO : Add all observations to the sessionObservations table 
   }
