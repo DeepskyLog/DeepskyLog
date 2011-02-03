@@ -42,9 +42,6 @@ class Sessions
 		  }
 		}
 
-		print_r($observers);
-		print "<br />";
-
 		$this->addSession($_POST['sessionname'], $_POST['beginday'], $_POST['beginmonth'], $_POST['beginyear'], 
 		                  $_POST['beginhours'], $_POST['beginminutes'], $_POST['endday'], $_POST['endmonth'], 
 		                  $_POST['endyear'], $_POST['endhours'], $_POST['endminutes'], $_POST['site'], $_POST['weather'], 
@@ -80,18 +77,23 @@ class Sessions
 		// First add a new session with the observer which created the session (and set to active)
 		$objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \""  . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)");
 
-		// TODO : Add the observers to the sessionObservers table
-		
-    // Add the new session also for the other observers (and set to inactive)
+		// Get the id of the new session
+		$id = mysql_insert_id();
+
     // TODO : First check whether the session already exists
     for ($i=1;$i<count($observers);$i++) {
-		  $objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers[$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)");
+		  // Add the observers to the sessionObservers table
+      $objDatabase->execSQL("INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $id . "\", \"" . $observers[$i] . "\");");
+      // Add the new session also for the other observers (and set to inactive)
+      $objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers[$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)");
+		  $newId = mysql_insert_id();
+		  // Also add the extra observers to the sessionObservers table
+		  $objDatabase->execSQL("INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $newId . "\", \"" . $observers[0] . "\");");
     }
 
 		// TODO : Add all observations to the sessionObservations table 
   }
   
-  // TODO : Check in Eye&Telescope why comment is used...
   // TODO : If comment is just used for comments, also add a title for the session -> Bijv Waarneemreis werkgroep Deepsky 2008 
 //{  public  function getNumberOfUnreadMails()
 //  { global $objDatabase, $loggedUser;
