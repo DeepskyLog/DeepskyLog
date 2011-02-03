@@ -91,10 +91,24 @@ class Sessions
 		  $objDatabase->execSQL("INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $newId . "\", \"" . $observers[0] . "\");");
     }
 
-		// TODO : Add all observations to the sessionObservations table 
+    $begindate = sprintf("%4d%02d%02d", $beginyear, $beginmonth, $beginday);
+    $enddate = sprintf("%4d%02d%02d", $endyear, $endmonth, $endday);
+
+    // Add all observations to the sessionObservations table
+		for ($i=0;$i<count($observers);$i++) {
+		  // Select the observations of the observers in this session 
+		  $obsids = $objDatabase->selectSingleArray("SELECT id from observations where observerid=\"" . $observers[$i] . "\" and date>=\"" . $begindate . "\" and date<=\"" . $enddate . "\";", "id");
+		  for ($cnt=0;$cnt<count($obsids);$cnt++) {
+		    // Add the observations to the sesionObservations table
+		    $objDatabase->execSQL("INSERT into sessionObservations (sessionid, observationid) VALUES(\"" . $id . "\", \"" . $obsids[$cnt] . "\");");
+		  }
+		}
+		
+		// TODO : Also add comet observations to a session?
+		// TODO : When adding a new observation, the session should be automatically added!
+		// TODO : Auto-generate title
   }
   
-  // TODO : If comment is just used for comments, also add a title for the session -> Bijv Waarneemreis werkgroep Deepsky 2008 
 //{  public  function getNumberOfUnreadMails()
 //  { global $objDatabase, $loggedUser;
 //  	if($loggedUser) {
