@@ -1,4 +1,36 @@
 <?php
+// This is version 4.2
+define("LangSearchMenuItem11"           ,"My sessions");
+define("LangSearchMenuItem12"           ,"All sessions");
+define("LangChangeMenuItem9"						,"Sessions");
+define("LangAddSessionTitle"						,"Add a new session");
+define("LangAddSessionButton"						,"Add session");
+define("LangSessionTitle1"              ,"Observing session from ");
+define("LangSessionTitle2"              ," till ");
+define("LangAddSessionField1"						,"Name");
+define("LangAddSessionField1Expl"				,"When you leave this field blank, DeepskyLog makes a name with begin- and enddate.");
+define("LangAddSessionField2"						,"Start of the session *");
+define("LangAddSessionField2Expl"				,"The start of your observing session.");
+define("LangAddSessionField3"						,"End of the session *");
+define("LangAddSessionField3Expl"				,"The end of your observing session.");
+define("LangAddSessionField4"						,"Location *");
+define("LangAddSessionField4Expl"				,"The location of your observing session.");
+define("LangAddSessionField5"						,"Weather");
+define("LangAddSessionField5Expl"				,"The weather during your observing session.");
+define("LangAddSessionField6"						,"Instruments");
+define("LangAddSessionField6Expl"				,"Comments about the used instruments during your observing session.");
+define("LangAddSessionField7"						,"Comments");
+define("LangAddSessionField7Expl"				,"Comments on your observing session.");
+define("LangAddSessionField8"						,"Language *");
+define("LangAddSessionField8Expl"				,"Language of the observations during your observing session.");
+define("LangAddSessionField9"						,"Observers *");
+define("LangAddSessionField9Expl"				,"Observers during this session. The other observers will get a message to make a similar session.");
+define("LangAddSessionField10"					,"Add observer");
+define("LangAddSessionField10Expl"			,"Select an observer to add to your observing session.");
+define("LangAddSessionField11"					,"Remove observer");
+define("LangAddSessionField11Expl"			,"Select an observer to remove from your observing session.");
+
+// This is version 4.1
 define('LangAdminMenuItem8'							,'Envoyer un message à tous');
 define('LangAdminMenuItem7'							,'Vérifier les objets');
 
