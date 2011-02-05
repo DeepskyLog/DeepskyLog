@@ -85,13 +85,17 @@ class Sessions
 		$comments = preg_replace("/;/", ",", $comments);
 
     // First check whether the session already exists
-    $exists = false;
 		$sessions = $objDatabase->selectSingleArray("SELECT id from sessions where begindate=\"" . $begindate . "\" and enddate=\"" . $enddate . "\" and observerid=\"" . $loggedUser . "\";", "id");
 		if (count($sessions) > 0) {
-      // TODO : What if there is a new observer????
-      // TODO : If the begin and enddate changes, we have to recalculate the observations in this session
+      // Update the session
 		  $this->updateSession($sessions[0], $name, $loggedUser, $begindate, $enddate, $location, $weather, $equipment, $comments, $language);
-		  $exists = true;
+
+		  // First make sure to remove all old observations
+		  $objDatabase->execSQL("DELETE from sessionObservations where sessionid=\"" . $sessions[0] . "\"");
+		  // Add observations to the session
+      $this->addObservations($session[0], $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
+      
+      // TODO : What if there is a new observer????
 		} else {
 		  // First add a new session with the observer which created the session (and set to active)
 		  $objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \""  . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)");
@@ -110,25 +114,31 @@ class Sessions
 		    $objDatabase->execSQL("INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $newId . "\", \"" . $observers[0] . "\");");
       }
 
-      $begindate = sprintf("%4d%02d%02d", $beginyear, $beginmonth, $beginday);
-      $enddate = sprintf("%4d%02d%02d", $endyear, $endmonth, $endday);
-
-      // Add all observations to the sessionObservations table
-		  for ($i=0;$i<count($observers);$i++) {
-		    // Select the observations of the observers in this session 
-		    $obsids = $objDatabase->selectSingleArray("SELECT id from observations where observerid=\"" . $observers[$i] . "\" and date>=\"" . $begindate . "\" and date<=\"" . $enddate . "\";", "id");
-		    for ($cnt=0;$cnt<count($obsids);$cnt++) {
-		      // Add the observations to the sesionObservations table
-		      $objDatabase->execSQL("INSERT into sessionObservations (sessionid, observationid) VALUES(\"" . $id . "\", \"" . $obsids[$cnt] . "\");");
-		    }
-		  }
+      // Add observations to the session
+      $this->addObservations($id, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
 		}
 		
 		// TODO : Also add comet observations to a session?
 		// TODO : When adding a new observation, the session should be automatically added!
   }
 
-  public  function updateSession($id, $name, $begindate, $enddate, $location, $weather, $equipment, $comments, $language)
+	private  function addObservations($id, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday)
+	{ global $objDatabase;
+	  $begindate = sprintf("%4d%02d%02d", $beginyear, $beginmonth, $beginday);
+    $enddate = sprintf("%4d%02d%02d", $endyear, $endmonth, $endday);
+
+    // Add all observations to the sessionObservations table
+		for ($i=0;$i<count($observers);$i++) {
+		  // Select the observations of the observers in this session 
+		  $obsids = $objDatabase->selectSingleArray("SELECT id from observations where observerid=\"" . $observers[$i] . "\" and date>=\"" . $begindate . "\" and date<=\"" . $enddate . "\";", "id");
+		  for ($cnt=0;$cnt<count($obsids);$cnt++) {
+		    // Add the observations to the sesionObservations table
+		    $objDatabase->execSQL("INSERT into sessionObservations (sessionid, observationid) VALUES(\"" . $id . "\", \"" . $obsids[$cnt] . "\");");
+		  }
+		}
+	}
+		  
+	private  function updateSession($id, $name, $begindate, $enddate, $location, $weather, $equipment, $comments, $language)
   { global $objDatabase;
     // Here we change the session
 		$objDatabase->execSQL("UPDATE sessions set name=\"" . $name . "\" where id=\"" . $id . "\";");
