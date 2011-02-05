@@ -84,40 +84,63 @@ class Sessions
 		$comments = preg_replace("/(\")/", "", $comments);
 		$comments = preg_replace("/;/", ",", $comments);
 
-		// First add a new session with the observer which created the session (and set to active)
-		$objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \""  . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)");
+    // First check whether the session already exists
+    $exists = false;
+		$sessions = $objDatabase->selectSingleArray("SELECT id from sessions where begindate=\"" . $begindate . "\" and enddate=\"" . $enddate . "\" and observerid=\"" . $loggedUser . "\";", "id");
+		if (count($sessions) > 0) {
+      // TODO : What if there is a new observer????
+      // TODO : If the begin and enddate changes, we have to recalculate the observations in this session
+		  $this->updateSession($sessions[0], $name, $loggedUser, $begindate, $enddate, $location, $weather, $equipment, $comments, $language);
+		  $exists = true;
+		} else {
+		  // First add a new session with the observer which created the session (and set to active)
+		  $objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \""  . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)");
 
-		// Get the id of the new session
-		$id = mysql_insert_id();
+		  // Get the id of the new session
+		  $id = mysql_insert_id();
 
-    // TODO : First check whether the session already exists
-    for ($i=1;$i<count($observers);$i++) {
-		  // Add the observers to the sessionObservers table
-      $objDatabase->execSQL("INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $id . "\", \"" . $observers[$i] . "\");");
-      // Add the new session also for the other observers (and set to inactive)
-      $objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers[$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)");
-		  $newId = mysql_insert_id();
-		  // Also add the extra observers to the sessionObservers table
-		  $objDatabase->execSQL("INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $newId . "\", \"" . $observers[0] . "\");");
-    }
+		  // TODO : Send message to the other observers
+      for ($i=1;$i<count($observers);$i++) {
+		    // Add the observers to the sessionObservers table
+        $objDatabase->execSQL("INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $id . "\", \"" . $observers[$i] . "\");");
+        // Add the new session also for the other observers (and set to inactive)
+        $objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers[$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)");
+		    $newId = mysql_insert_id();
+		    // Also add the extra observers to the sessionObservers table
+		    $objDatabase->execSQL("INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $newId . "\", \"" . $observers[0] . "\");");
+      }
 
-    $begindate = sprintf("%4d%02d%02d", $beginyear, $beginmonth, $beginday);
-    $enddate = sprintf("%4d%02d%02d", $endyear, $endmonth, $endday);
+      $begindate = sprintf("%4d%02d%02d", $beginyear, $beginmonth, $beginday);
+      $enddate = sprintf("%4d%02d%02d", $endyear, $endmonth, $endday);
 
-    // Add all observations to the sessionObservations table
-		for ($i=0;$i<count($observers);$i++) {
-		  // Select the observations of the observers in this session 
-		  $obsids = $objDatabase->selectSingleArray("SELECT id from observations where observerid=\"" . $observers[$i] . "\" and date>=\"" . $begindate . "\" and date<=\"" . $enddate . "\";", "id");
-		  for ($cnt=0;$cnt<count($obsids);$cnt++) {
-		    // Add the observations to the sesionObservations table
-		    $objDatabase->execSQL("INSERT into sessionObservations (sessionid, observationid) VALUES(\"" . $id . "\", \"" . $obsids[$cnt] . "\");");
+      // Add all observations to the sessionObservations table
+		  for ($i=0;$i<count($observers);$i++) {
+		    // Select the observations of the observers in this session 
+		    $obsids = $objDatabase->selectSingleArray("SELECT id from observations where observerid=\"" . $observers[$i] . "\" and date>=\"" . $begindate . "\" and date<=\"" . $enddate . "\";", "id");
+		    for ($cnt=0;$cnt<count($obsids);$cnt++) {
+		      // Add the observations to the sesionObservations table
+		      $objDatabase->execSQL("INSERT into sessionObservations (sessionid, observationid) VALUES(\"" . $id . "\", \"" . $obsids[$cnt] . "\");");
+		    }
 		  }
 		}
 		
 		// TODO : Also add comet observations to a session?
 		// TODO : When adding a new observation, the session should be automatically added!
   }
-  
+
+  public  function updateSession($id, $name, $begindate, $enddate, $location, $weather, $equipment, $comments, $language)
+  { global $objDatabase;
+    // Here we change the session
+		$objDatabase->execSQL("UPDATE sessions set name=\"" . $name . "\" where id=\"" . $id . "\";");
+		$objDatabase->execSQL("UPDATE sessions set begindate=\"" . $begindate . "\" where id=\"" . $id . "\";");
+		$objDatabase->execSQL("UPDATE sessions set enddate=\"" . $enddate . "\" where id=\"" . $id . "\";");
+		$objDatabase->execSQL("UPDATE sessions set locationid=\"" . $location . "\" where id=\"" . $id . "\";");
+		$objDatabase->execSQL("UPDATE sessions set weather=\"" . $weather . "\" where id=\"" . $id . "\";");
+		$objDatabase->execSQL("UPDATE sessions set equipment=\"" . $equipment . "\" where id=\"" . $id . "\";");
+		$objDatabase->execSQL("UPDATE sessions set comments=\"" . $comments . "\" where id=\"" . $id . "\";");
+		$objDatabase->execSQL("UPDATE sessions set language=\"" . $language . "\" where id=\"" . $id . "\";");
+		$objDatabase->execSQL("UPDATE sessions set active=\"1\" where id=\"" . $id . "\";");
+  }
 //{  public  function getNumberOfUnreadMails()
 //  { global $objDatabase, $loggedUser;
 //  	if($loggedUser) {
