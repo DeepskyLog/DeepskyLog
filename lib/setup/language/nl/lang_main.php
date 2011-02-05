@@ -5,6 +5,8 @@ define("LangSearchMenuItem12"           ,"Alle sessies");
 define("LangChangeMenuItem9"						,"Sessies");
 define("LangAddSessionTitle"						,"Voeg een nieuwe sessie toe");
 define("LangAddSessionButton"						,"Voeg sessie toe");
+define("LangSessionTitle1"              ,"Waarneemsessie van ");
+define("LangSessionTitle2"              ," tot ");
 define("LangAddSessionField1"						,"Naam");
 define("LangAddSessionField1Expl"				,"Als je geen naam invult, maakt DeepskyLog zelf een naam met de begin- en einddatum aan.");
 define("LangAddSessionField2"						,"Begin van de sessie *");

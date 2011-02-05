@@ -53,16 +53,26 @@ class Sessions
   public  function addSession($sessionname, $beginday, $beginmonth, $beginyear, $beginhours, $beginminutes, $endday, 
                                 $endmonth, $endyear, $endhours, $endminutes, $location, $weather, $equipment, $comments,
                                 $language, $observers)
-  { global $objDatabase, $loggedUser;
+  { global $objDatabase, $loggedUser, $dateformat;
     // Make sure not to insert bad code in the database
     $name = html_entity_decode($sessionname, ENT_COMPAT, "ISO-8859-15");
 		$name = preg_replace("/(\")/", "", $name);
 		$name = preg_replace("/;/", ",", $name);
-    
+
 		$begindate = date('Y-m-d H:i:s', mktime($beginhours, $beginminutes, 0, $beginmonth, $beginday, $beginyear));
 		$enddate = date('Y-m-d H:i:s', mktime($endhours, $endminutes, 0, $endmonth, $endday, $endyear));
 		
-    $weather = html_entity_decode($weather, ENT_COMPAT, "ISO-8859-15");
+		// Auto-generate the session name
+		if ($name == "") {
+		  if ($beginday == $endday && $beginmonth == $endmonth && $beginyear == $endyear) {
+		    $name = LangSessionTitle1 . date($dateformat, mktime(0, 0, 0, $beginmonth, $beginday, $beginyear));
+		  } else {  
+		    $name = LangSessionTitle1 . date($dateformat, mktime(0, 0, 0, $beginmonth, $beginday, $beginyear))
+		              . LangSessionTitle2 . date($dateformat, mktime(0, 0, 0, $endmonth, $endday, $endyear));
+		  }
+		}
+		
+		$weather = html_entity_decode($weather, ENT_COMPAT, "ISO-8859-15");
 		$weather = preg_replace("/(\")/", "", $weather);
 		$weather = preg_replace("/;/", ",", $weather);
 		
@@ -106,7 +116,6 @@ class Sessions
 		
 		// TODO : Also add comet observations to a session?
 		// TODO : When adding a new observation, the session should be automatically added!
-		// TODO : Auto-generate title
   }
   
 //{  public  function getNumberOfUnreadMails()
