@@ -88,14 +88,30 @@ class Sessions
 		$sessions = $objDatabase->selectSingleArray("SELECT id from sessions where begindate=\"" . $begindate . "\" and enddate=\"" . $enddate . "\" and observerid=\"" . $loggedUser . "\";", "id");
 		if (count($sessions) > 0) {
       // Update the session
-		  $this->updateSession($sessions[0], $name, $loggedUser, $begindate, $enddate, $location, $weather, $equipment, $comments, $language);
+		  $this->updateSession($sessions[0], $name, $begindate, $enddate, $location, $weather, $equipment, $comments, $language);
 
 		  // First make sure to remove all old observations
 		  $objDatabase->execSQL("DELETE from sessionObservations where sessionid=\"" . $sessions[0] . "\"");
 		  // Add observations to the session
-      $this->addObservations($session[0], $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
+      $this->addObservations($sessions[0], $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
       
-      // TODO : What if there is a new observer????
+      // Check if there is a new observer
+		  $observersFromDatabase = $objDatabase->selectSingleArray("SELECT observer from sessionObservers where sessionid=\"" . $sessions[0] . "\";", "observer");
+		  // Add the logged user to the list of the observers
+		  $observersFromDatabase[] = $loggedUser;
+		  for ($i = 0;$i < count($observers);$i++) {
+		    if (!in_array($observers[$i], $observersFromDatabase)) {
+		      // The observer is not in the database. We have to add a new user.
+		      $this->addObserver($sessions[0], $observers[$i]);
+		      
+		      // TODO : We also have to add the new observations
+		      // TODO : TEST
+          // Add observations to the session
+          //$this->addObservations($sessions[0], $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
+		    }
+		  }
+		  // TODO : Remove, this is only for testing the message which will be sent!
+		  $this->addObserver($sessions[0], $observers[0]);
 		} else {
 		  // First add a new session with the observer which created the session (and set to active)
 		  $objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \""  . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)");
@@ -103,15 +119,19 @@ class Sessions
 		  // Get the id of the new session
 		  $id = mysql_insert_id();
 
-		  // TODO : Send message to the other observers
-      for ($i=1;$i<count($observers);$i++) {
+		  for ($i=1;$i<count($observers);$i++) {
 		    // Add the observers to the sessionObservers table
-        $objDatabase->execSQL("INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $id . "\", \"" . $observers[$i] . "\");");
-        // Add the new session also for the other observers (and set to inactive)
+		    $this->addObserver($id, $observers[$i]);
+
+		    // Add the new session also for the other observers (and set to inactive)
         $objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers[$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)");
 		    $newId = mysql_insert_id();
 		    // Also add the extra observers to the sessionObservers table
-		    $objDatabase->execSQL("INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $newId . "\", \"" . $observers[0] . "\");");
+		    for ($j=0;$j<count($observers);$j++) {
+		      if ($j != $i) {
+		        $objDatabase->execSQL("INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $newId . "\", \"" . $observers[$j] . "\");");
+		      }
+		    }
       }
 
       // Add observations to the session
@@ -122,7 +142,19 @@ class Sessions
 		// TODO : When adding a new observation, the session should be automatically added!
   }
 
-	private  function addObservations($id, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday)
+	private  function addObserver($id, $observer) 
+	{  global $objDatabase, $objMessages, $loggedUser, $objObserver;
+     // TODO : Uncomment
+	   //$objDatabase->execSQL("INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $id . "\", \"" . $observer . "\");");
+     
+     // TODO : Send message to the other observers
+     // TODO : Translate
+     $subject = $objObserver->getObserverProperty($loggedUser, "firstname") . "&nbsp;" . $objObserver->getObserverProperty($loggedUser, "name") . 
+                   LangAddSessionMessageTitle;
+     $objMessages->sendMessage($loggedUser, $observer, $subject, "TEST");
+	}
+	
+  private  function addObservations($id, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers)
 	{ global $objDatabase;
 	  $begindate = sprintf("%4d%02d%02d", $beginyear, $beginmonth, $beginday);
     $enddate = sprintf("%4d%02d%02d", $endyear, $endmonth, $endday);

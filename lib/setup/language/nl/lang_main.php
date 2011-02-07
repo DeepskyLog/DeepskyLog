@@ -1,5 +1,6 @@
 <?php
 // This is version 4.2
+define("LangAddSessionMessageTitle"     ," heeft een nieuwe sessie aangemaakt met jou als waarnemer");
 define("LangSearchMenuItem11"           ,"Mijn sessies");
 define("LangSearchMenuItem12"           ,"Alle sessies");
 define("LangChangeMenuItem9"						,"Sessies");
