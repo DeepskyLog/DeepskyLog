@@ -1,5 +1,10 @@
 <?php
 // This is version 4.2
+define("LangAddSessionMessageTitle"     ," made a new session where you are an observer");
+define("LangAddSessionMessage1"         ," made the session \'");
+define("LangAddSessionMessage2"         ,"\'.");
+define("LangAddSessionMessage3"         ,"A similar session is prepared for you. Check ");
+define("LangAddSessionMessage4"         ,"Add/Sessions</a> to validate the session.");
 define("LangSearchMenuItem11"           ,"My sessions");
 define("LangSearchMenuItem12"           ,"All sessions");
 define("LangChangeMenuItem9"						,"Sessions");

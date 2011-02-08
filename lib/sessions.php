@@ -105,6 +105,7 @@ class Sessions
 		      $this->addObserver($sessions[0], $observers[$i]);
 		      
 		      // TODO : We also have to add the new observations
+		      // TODO : Best to remove all observations from the $loggedUser and re-add them all?
 		      // TODO : TEST
           // Add observations to the session
           //$this->addObservations($sessions[0], $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
@@ -143,15 +144,22 @@ class Sessions
   }
 
 	private  function addObserver($id, $observer) 
-	{  global $objDatabase, $objMessages, $loggedUser, $objObserver;
+	{  global $objDatabase, $objMessages, $loggedUser, $objObserver, $baseURL;
      // TODO : Uncomment
 	   //$objDatabase->execSQL("INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $id . "\", \"" . $observer . "\");");
      
      // TODO : Send message to the other observers
      // TODO : Translate
-     $subject = $objObserver->getObserverProperty($loggedUser, "firstname") . "&nbsp;" . $objObserver->getObserverProperty($loggedUser, "name") . 
-                   LangAddSessionMessageTitle;
-     $objMessages->sendMessage($loggedUser, $observer, $subject, "TEST");
+     $observername = $objObserver->getObserverProperty($loggedUser, "firstname") . " " . $objObserver->getObserverProperty($loggedUser, "name");
+     $subject =  $observername . LangAddSessionMessageTitle;
+     $sessionname = $this->getSessionPropertyFromId($id, "name");
+     $content = $observername . LangAddSessionMessage1 . $sessionname . LangAddSessionMessage2;
+     $content .= "<br /><br />" . LangAddSessionMessage3 . "<a href=\"" . $baseURL . "index.php?indexAction=add_session\">" . LangAddSessionMessage4;
+     $content .= "<br /><br />" . LangMessagePublicList5 . "<a href=\"" . $baseURL . 
+	    						"index.php?indexAction=new_message&amp;receiver=" . urlencode($loggedUser) . 
+	    						"&amp;subject=Re:%20" . urlencode($sessionname) . "\">" . $observername . "</a>";
+     $content .= "<br /><br />Zend een bericht naar " . $observername;
+     $objMessages->sendMessage($loggedUser, $observer, $subject, $content);
 	}
 	
   private  function addObservations($id, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers)

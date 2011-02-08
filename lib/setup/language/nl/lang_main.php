@@ -1,6 +1,10 @@
 <?php
 // This is version 4.2
 define("LangAddSessionMessageTitle"     ," heeft een nieuwe sessie aangemaakt met jou als waarnemer");
+define("LangAddSessionMessage1"         ," heeft de sessie \'");
+define("LangAddSessionMessage2"         ,"\' aangemaakt.");
+define("LangAddSessionMessage3"         ,"Een gelijkaardige sessie is voor jou voorbereid. Kijk bij ");
+define("LangAddSessionMessage4"         ,"Toevoegen/sessies</a> om de sessie te valideren.");
 define("LangSearchMenuItem11"           ,"Mijn sessies");
 define("LangSearchMenuItem12"           ,"Alle sessies");
 define("LangChangeMenuItem9"						,"Sessies");
