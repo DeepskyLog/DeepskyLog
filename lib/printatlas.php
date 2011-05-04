@@ -719,31 +719,27 @@ class PrintAtlas
         //jg.setColor(coordLineColor);
         for($d=$Ddeg;$d<$Udeg;$d+=$DStep/$this->Dsteps)
           $this->gridDrawLineLD($l,$d,$l,($d+($DStep/$this->Dsteps)));
-        if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
-          $this->labelsArr[]=array($this->canvasX2px-30,$this->gridOffsetYpx-$this->fontSize1a,60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
-        else if($this->canvasX2px&&($this->canvasX2px<=$this->gridOffsetXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->labelsArr[]=array($this->gridOffsetXpx-62,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'right');
-        else if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->labelsArr[]=array($this->gridOffsetXpx+$this->gridWidthXpx+2,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'left');
-        else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->labelsArr[]=array($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+4,60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
+        if($this->canvasX2px&&($this->canvasX1px<=$this->gridOffsetXpx))
+          $this->labelsArr[]=array($this->gridOffsetXpx-64,$this->gridOffsetYpx-($this->fontSize1a),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'right');
+        else if($this->canvasX2px&&($this->canvasX1px>=$this->gridOffsetXpx+$this->gridWidthXpx))
+          $this->labelsArr[]=array($this->gridOffsetXpx+$this->gridWidthXpx+4,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'left');
+        else if($this->canvasX2px)
+          $this->labelsArr[]=array($this->canvasX1px-30,$this->gridOffsetYpx+$this->gridHeightYpx+4,60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
       }
     }
     else
     { for($l=$LhrStart;$l>$RhrNeg;$l-=$LStep)
       { $l=round($l*60)/60;
-        $this->canvasX2px=0;
+        $this->canvasX1px=0;
         //jg.setColor(coordLineColor);
         for($d=$Udeg;$d>$Ddeg;$d-=$DStep/$this->Dsteps)
           $this->gridDrawLineLD($l,$d,$l,($d-($DStep/$this->Dsteps)));
-        if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
-          $this->labelsArr[]=array($this->canvasX2px-30,$this->gridOffsetYpx-($this->fontSize1a),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
-        else if($this->canvasX2px&&($this->canvasX2px<=$this->gridOffsetXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->labelsArr[]=array($this->gridOffsetXpx-64,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'right');
-        else if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx)&&($this->canvasY2px<$this->gridOffsetYpx+$this->gridHeightYpx))
+        if($this->canvasX1px&&($this->canvasX1px<=$this->gridOffsetXpx))
+          $this->labelsArr[]=array($this->gridOffsetXpx-64,$this->gridOffsetYpx-($this->fontSize1a),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'right');
+        else if($this->canvasX1px&&($this->canvasX1px>=$this->gridOffsetXpx+$this->gridWidthXpx))
           $this->labelsArr[]=array($this->gridOffsetXpx+$this->gridWidthXpx+4,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'left');
-        else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
-          $this->labelsArr[]=array($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+4,60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
+        else if($this->canvasX1px)
+          $this->labelsArr[]=array($this->canvasX1px-30,$this->gridOffsetYpx-($this->fontSize1b)-5,60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
       }
     }
   }
@@ -1001,6 +997,7 @@ class PrintAtlas
   }
   public  function pdfAtlasObjectSet($theobject,$theShowname,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false,$nostream=false)
   { global $theMonth,$theDay,$theYear,$dateformat,$baseURL,$objList,$objInstrument,$objLocation,$objUtil,$instDir,$loggedUser,$loggedUserName,$objObserver,$objObject,$objPresentations,$objReportLayout,$listname,$myList;
+    $firstpage = true;
     $astroObjects=array();
     $indexlist=array();
     set_time_limit(300);
@@ -1018,7 +1015,8 @@ class PrintAtlas
     $this->atlaspagedecldeg=$objObject->getDsoProperty($theobject,'decl',0);
     $this->pdf->addTextWrap(0,10,$this->pdf->ez['pageWidth']-10,10,$theShowname,'right');
     if($datapage=='true')
-    { $theobjectdata=$objObject->getSeenObjectDetails(array($theobject => array(0,$theobject)));
+    { $firstpage=false;
+    	$theobjectdata=$objObject->getSeenObjectDetails(array($theobject => array(0,$theobject)));
       $theobjectdata=$theobjectdata[0];
       $liney=$this->canvasDimensionYpx-50;
       $this->pdf->addTextWrap( 50, $liney, $this->canvasDimensionXpx-100, 15, 'Atlas pages for '.$theShowname,  'center');
@@ -1461,13 +1459,17 @@ class PrintAtlas
           $liney=$this->canvasDimensionYpx-50;
         }
       }
-          
-      $this->pdf->newPage();
-      $this->pdf->addTextWrap(0,10,$this->pdf->ez['pageWidth']-10,10,$theShowname,'right');
     }
 
     if(is_array($thephotos) && array_key_exists(0,$thephotos) && ($thephotos[0]>0))
-    { $liney=$this->canvasDimensionYpx-50;
+    { if($firstpage)
+      { $firstpage=false;
+    	}
+    	else
+    	{ $this->pdf->newPage();
+        $this->pdf->addTextWrap(0,10,$this->pdf->ez['pageWidth']-10,10,$theShowname,'right');	
+    	}
+    	$liney=$this->canvasDimensionYpx-50;
       $this->pdf->addTextWrap( 50, $liney, $this->canvasDimensionXpx-100, 15, ReportImagesFor.$theShowname,  'center');
       $this->pdf->addTextWrap(600, $liney, 450, 10, '(c) STScI Digitized Sky Survey',  'left');
       $liney-=5;
@@ -1493,16 +1495,34 @@ class PrintAtlas
           $this->pdf->addText(450, $liney-15, 10, LangViewDSSImageTitle.$thephotos[1].'x'.$thephotos[1].' '.LangNewObjectSizeUnits1);
         }
       }
-      $this->pdf->newPage();
-      $this->pdf->addTextWrap(0,10,$this->pdf->ez['pageWidth']-10,10,$theShowname,'right');
+      if($datapage!='true')
+      { $theobjectdata=$objObject->getSeenObjectDetails(array($theobject => array(0,$theobject)));
+        $theobjectdata=$theobjectdata[0];
+      	$liney=$this->canvasDimensionYpx-470;
+	      $this->pdf->addTextWrap(50, $liney, 450, 10, Reportaltname.": ".($theobjectdata['altname']?$theobjectdata['altname']:'-'),  'left');
+	      $liney-=25;
+	      $this->pdf->addTextWrap( 50, $liney, 200, 10, Reportobjectra.': '.$theobjectdata['objectrahms'],  'left');
+	      $this->pdf->addTextWrap(300, $liney, 200, 10, Reportobjectmagnitude.': '.($theobjectdata['objectmagnitude']?$theobjectdata['objectmagnitude']:'-'),  'left');
+	      $this->pdf->addTextWrap(550, $liney, 200, 10, Reportobjectconstellationfull.': '.$theobjectdata['objectconstellationfull'],  'left');
+	      $liney-=15;
+	      $this->pdf->addTextWrap( 50, $liney, 200, 10, Reportobjectdecl.': '.$theobjectdata['objectdecldms'],  'left');
+	      $this->pdf->addTextWrap(300, $liney, 200, 10, Reportobjectsurfacebrightness.': '.($theobjectdata['objectsurfacebrightness']?$theobjectdata['objectsurfacebrightness']:'-'),  'left');
+	      $this->pdf->addTextWrap(550, $liney, 200, 10, Reportobjecttypefull.': '.$theobjectdata['objecttypefull'],  'left');
+	      $liney-=15;
+	      $this->pdf->addTextWrap( 50, $liney, 200, 10, LangViewObjectField9.': '.($theobjectdata['objectsize']?$theobjectdata['objectsize']:'-'),  'left');
+	      $this->pdf->addTextWrap(300, $liney, 200, 10, LangViewObjectField12.': '.(($pa=$theobjectdata['objectpa'])==999?'-':$pa),  'left');
+      } 
     }
     
     for($k=0;$k<count($theSet);$k++)
     { if(is_numeric($theSet[$k]) && is_numeric($thedsos[$k]) && is_numeric($thestars[$k]))
-      { if($k) 
-        { $this->pdf->newPage();
-        }
-        $minDegs=$theSet[$k]/120;
+      { if($firstpage)
+        { $firstpage=false;
+    	  }
+    	  else
+    	  { $this->pdf->newPage();
+    	  }
+      	$minDegs=$theSet[$k]/120;
 	    	$i=$this->gridMaxDimension;
 	      while($i && ($this->gridDimensions[$i][0]<$minDegs))
 	        $i--;
@@ -1541,13 +1561,19 @@ class PrintAtlas
 	        $this->pdf->addTextWrap($this->labelsArr[$i][0],$this->labelsArr[$i][1],$this->labelsArr[$i][2],$this->labelsArr[$i][3],$this->labelsArr[$i][4],$this->labelsArr[$i][5]);                  
 	      $this->labelsArr=array();
 	      $temp='(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).';
+	        $this->pdf->addTextWrap(0,10,$this->pdf->ez['pageWidth']-10,10,$theShowname,'right');
 	      $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
 	      $astroObjects[$k]=$objObject->getSeenObjectDetails($this->astroObjectsArr);
-	      $this->pdf->addTextWrap(0,10,$this->pdf->ez['pageWidth']-10,10,$theShowname,'right');
       }
     }
     if($reportlayoutselect)
-    { $this->pdf->newPage();
+    { if($firstpage)
+      { $firstpage=false;
+    	}
+    	else
+    	{ $this->pdf->newPage();
+	      $this->pdf->addTextWrap(0,10,$this->pdf->ez['pageWidth']-10,10,$theShowname,'right');
+    	}
       $this->pdf->setLineStyle(1);
       $reportuser=substr($reportlayoutselect,0,strpos($reportlayoutselect,": "));
       $reportname='ReportQueryOfObjects';

@@ -218,7 +218,7 @@ define("Reportobjecttypefull"                                  ,"Object type");
 define("Reportobjectconstellation"                             ,"Sterrenbeeld afkorting");
 define("Reportobjectconstellationfull"                         ,"Sterrenbeeld");
 define("Reportobjectmagnitude"                                 ,"Object magnitude");
-define("Reportobjectsurfacebrightness"                         ,"Object oppervlaktehelderheid");
+define("Reportobjectsurfacebrightness"                         ,"Object oppervlaktehelderh.");
 define("Reportobjectradecl"                                    ,"Rechte klimming en declinatie");
 define("Reportobjectra"                                        ,"Rechte klimming");
 define("Reportobjectdecl"                                      ,"Declinatie");
