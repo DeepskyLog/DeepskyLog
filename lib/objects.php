@@ -459,6 +459,15 @@ class Objects
       }
     return $theresult;
   }
+  public  function getObject($theobject='')                 // returns an array containing all objects data between the specified coordinates
+  { global $objDatabase;
+    $objects=array();
+    $sql="SELECT * FROM objects WHERE name='".addslashes($theobject)."';";
+    $objects=$objDatabase->selectRecordsetArray($sql);  
+    for($i=0;$i<count($objects);$i++)
+      $objects[$i]['seen']=$this->getSeen($objects[$i]['name']);
+    return $objects;
+  }
   public  function getObjectVisibilities($obs)
   { global $objPresentations;
     $popupT = $this->prepareObjectsContrast();

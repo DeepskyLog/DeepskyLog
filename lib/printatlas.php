@@ -446,7 +446,44 @@ class PrintAtlas
   	  }
 	  }
 	}
-	  
+
+	function astroDrawObject($theobject='')
+	{ global $objObject,$objUtil;
+	  $this->astroObjectsArr=$objObject->getObject($theobject);
+	  $z=count($this->astroObjectsArr);
+	  for($i=0;$i<$z;$i++)
+	  { if($this->astroObjectsArr[$i]["type"]!='AASTAR1')
+  	  { if(($this->astroObjectsArr[$i]["mag"]>$this->maxshowndsomag)&&($this->astroObjectsArr[$i]["mag"]<99))
+  	      $this->maxshowndsomag=$this->astroObjectsArr[$i]["mag"];
+  	    if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
+	        $this->astroDrawStar1Object($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('AA2STAR','AA3STAR','AA4STAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
+	        $this->astroDrawStarxObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('ASTER','LMCOC','OPNCL','SMCOC')))
+	        $this->astroDrawOCObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('BRTNB','EMINB','ENRNN','ENSTR','GXADN','LMCDN','REFNB','RNHII','SMCDN','SNREM','STNEB','WRNEB')))
+	        $this->astroDrawBRTNBObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('CLANB','GACAN','LMCCN','SMCCN','GXADN','LMCDN','HII')))
+	        $this->astroDrawCLANBObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('DRKNB')))
+	        $this->astroDrawDRKNBObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('GALCL')))
+	        $this->astroDrawGXCLObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('GALXY')))
+	        $this->astroDrawGXObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('GLOCL','GXAGC','LMCGC','SMCGC')))
+	        $this->astroDrawGCObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('PLNNB')))
+	        $this->astroDrawPNObject($i);
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('QUASR')))
+	        $this->astroDrawQSRObject($i);
+	      else 
+	        $this->astroDrawBRTNBObject($i); 
+  	  }
+	  }
+	}
+	
+	
 	function astroDrawPNObject($i)
 	{ $this->pdf->addText(10,10,$this->fontSize1b,"PN");
 		$this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
@@ -844,10 +881,10 @@ class PrintAtlas
     $this->ty = $this->gridOffsetYpx+$this->gridHeightYpx;
     $this->by = $this->gridOffsetYpx;
   }
-  private function gridInitSpecial($thex,$liney,$w,$h)
+  private function gridInitSpecial($thex,$they,$w,$h)
   { $this->canvasDimensionXpx=$this->pdf->ez['pageWidth']; 
     $this->canvasDimensionYpx=$this->pdf->ez['pageHeight'];
-    $this->gridOffsetXpx=$thex; $this->gridOffsetYpx=$liney-150;
+    $this->gridOffsetXpx=$thex; $this->gridOffsetYpx=$they;
     
     $this->gridWidthXpx=$w;
     $this->gridWidthXpx2=(($this->gridWidthXpx+1)>>1);
@@ -1483,123 +1520,111 @@ class PrintAtlas
     	}
     	else
     	{ $this->pdf->newPage();
-        $this->pdf->addTextWrap(0,10,$this->pdf->ez['pageWidth']-10,10,$theShowname,'right');	
     	}
-    	$liney=$this->canvasDimensionYpx-50;
-      $this->pdf->addTextWrap( 50, $liney, $this->canvasDimensionXpx-100, 15, ReportImagesFor.$theShowname,  'center');
-      //$this->pdf->addTextWrap(600, $liney, 450, 10, '(c) STScI Digitized Sky Survey',  'left');
-      $liney-=5;
-      $this->pdf->line(50,$liney,$this->canvasDimensionXpx-250,$liney);
-      $liney-=15;
-      if((count($theSet)>0)&&(is_numeric($theSet[0])))
-      { if($datapage!='true')
-	      { $theobjectdata=$objObject->getSeenObjectDetails(array($theobject => array(0,$theobject)));
-	        $theobjectdata=$theobjectdata[0];
-	      	$this->pdf->addTextWrap(50, $liney, 450, 10, Reportaltname.": ".($theobjectdata['altname']?$theobjectdata['altname']:'-'),  'left');
-		      $liney-=25;
-		      $this->pdf->addTextWrap( 50, $liney, 200, 10, Reportobjectra.': '.$theobjectdata['objectrahms'],  'left');
-		      $this->pdf->addTextWrap(300, $liney, 200, 10, Reportobjectmagnitude.': '.($theobjectdata['objectmagnitude']?$theobjectdata['objectmagnitude']:'-'),  'left');
-		      $this->pdf->addTextWrap(550, $liney, 200, 10, Reportobjectconstellationfull.': '.$theobjectdata['objectconstellationfull'],  'left');
-		      $liney-=15;
-		      $this->pdf->addTextWrap( 50, $liney, 200, 10, Reportobjectdecl.': '.$theobjectdata['objectdecldms'],  'left');
-		      $this->pdf->addTextWrap(300, $liney, 200, 10, Reportobjectsurfacebrightness.': '.($theobjectdata['objectsurfacebrightness']?$theobjectdata['objectsurfacebrightness']:'-'),  'left');
-		      $this->pdf->addTextWrap(550, $liney, 200, 10, Reportobjecttypefull.': '.$theobjectdata['objecttypefull'],  'left');
-		      $liney-=15;
-		      $this->pdf->addTextWrap( 50, $liney, 200, 10, LangViewObjectField9.': '.($theobjectdata['objectsize']?$theobjectdata['objectsize']:'-'),  'left');
-		      $this->pdf->addTextWrap(300, $liney, 200, 10, LangViewObjectField12.': '.(($pa=$theobjectdata['objectpa'])==999?'-':$pa),  'left');
-	      }
-      }
-      else
-      { $theView=180;
-      	$minDegs=$theView/120;
-	    	$i=$this->gridMaxDimension;
-	      while($i && ($this->gridDimensions[$i][0]<$minDegs))
-	        $i--;
-	      $this->gridActualDimension=$i;
-	      $this->atlasmagnitude=max(min((int)((9)),99),8);
-	      $this->starsmagnitude=max(min((int)((9)),16),8);
-	      
-	      $this->pdf->setLineStyle(0.5);
-	      $this->gridInitSpecial(605,$liney+20,200,200);
-	      $this->gridInitScale($this->atlaspagerahr,$this->atlaspagedecldeg,$this->atlaspagezoomdeg);
-	      $this->pdf->setStrokeColor(0.9,0.9,0.9);
-	      $this->pdf->setLineStyle(0.5,'','',array(1));
-	      $this->gridDrawCoordLines();
-	      $this->pdf->setLineStyle(0.5,'','',array());
-	      $this->pdf->setStrokeColor(0.7,0.7,0.7);
-	      $this->astroDrawConstellations();
-	      $this->pdf->setStrokeColor(0,0,0);
-	      $this->astroDrawStarsArr();
-	      $this->astroDrawObjects($theobject);
-	      
-	      $this->pdf->setColor(1,1,1);
-	      //$this->pdf->filledRectangle(0,0,$this->gridOffsetXpx,$this->canvasDimensionYpx);
-	      //$this->pdf->filledRectangle(0,0,$this->canvasDimensionXpx,$this->gridOffsetYpx);
-	      //$this->pdf->filledRectangle($this->canvasDimensionXpx-$this->gridOffsetXpx,0,$this->gridOffsetXpx,$this->canvasDimensionYpx);
-	      //$this->pdf->filledRectangle(0,$this->canvasDimensionYpx-$this->gridOffsetYpx,$this->canvasDimensionXpx,$this->gridOffsetYpx);
-	      $this->pdf->setColor(0,0,0);
-	      $this->pdf->rectangle(605,$liney-160+20,200,200);
-		    //$this->gridShowInfo();
-	      //$this->atlasDrawLegend();
-	      //$temp=$objObserver->getObserverProperty($loggedUser,'firstname')." ".$objObserver->getObserverProperty($loggedUser,'name')." - ".date('d M Y');
-	      //$this->pdf->addText($this->canvasDimensionXpx-$this->gridOffsetXpx-(strlen($temp)*5),$this->canvasDimensionYpx-$this->Legend1y-10,$this->fontSize1b,$temp);
-	      //$this->pdf->setLineStyle(2,'round');
-	      //$this->pdf->rectangle($this->gridOffsetXpx-1,$this->gridOffsetYpx-1,
-	      //                     ($this->canvasDimensionXpx-($this->gridOffsetXpx<<1))+2,($this->canvasDimensionYpx-($this->gridOffsetYpx<<1))+2);
-	         
-	      //for($i=0,$z=count($this->labelsArr);$i<$z;$i++)   
-	      //  $this->pdf->addTextWrap($this->labelsArr[$i][0],$this->labelsArr[$i][1],$this->labelsArr[$i][2],$this->labelsArr[$i][3],$this->labelsArr[$i][4],$this->labelsArr[$i][5]);                  
-	      //$this->labelsArr=array();
-	      //$temp='(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).';
-	      //$this->pdf->addTextWrap(0,10,$this->pdf->ez['pageWidth']-10,10,$theShowname,'right');
-	      //$this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
-	      //$astroObjects[$k]=$objObject->getSeenObjectDetails($this->astroObjectsArr);
+    	
+    	// show small lookup map
+      $theView=120;
+      $minDegs=$theView/120;
+    	$i=$this->gridMaxDimension;
+      while($i && ($this->gridDimensions[$i][0]<$minDegs))
+        $i--;
+      $this->gridActualDimension=$i;
+      $this->atlasmagnitude=10;
+      $this->starsmagnitude=11;
+      $tempw=200;
+      $temph=200;
+      $tempx=$this->pdf->ez['pageWidth']-$tempw-30;
+      $tempy=$this->pdf->ez['pageHeight']-$temph-15;
+      $this->pdf->setLineStyle(0.5);
+      $this->gridInitSpecial($tempx,$tempy,$tempw,$temph);
+      $this->gridInitScale($this->atlaspagerahr,$this->atlaspagedecldeg,$this->atlaspagezoomdeg);
+      $this->pdf->setStrokeColor(0.9,0.9,0.9);
+      $this->pdf->setLineStyle(0.5,'','',array(1));
+      $this->gridDrawCoordLines();
+      $this->pdf->setLineStyle(0.5,'','',array());
+      $this->pdf->setStrokeColor(0.7,0.7,0.7);
+      $this->pdf->setStrokeColor(0,0,0);
+      $this->astroDrawStarsArr();
+      $this->astroDrawObjects($theobject);
+      $this->pdf->setStrokeColor(0,0,0);
+      $this->pdf->setColor(1,1,1);
+      $this->pdf->filledRectangle(0,0,$this->pdf->ez['pageWidth'],$tempy);
+      $this->pdf->filledRectangle(0,0,$tempx,$this->pdf->ez['pageHeight']);
+      $this->pdf->filledRectangle($tempx+$tempw,0,$this->pdf->ez['pageWidth']-($tempx+$tempw),$this->pdf->ez['pageHeight']);
+      $this->pdf->filledRectangle(0,$tempy+$temph,$this->pdf->ez['pageWidth'],$this->pdf->ez['pageHeight']-($tempy+$temph));
+      $this->pdf->setColor(0,0,0);
+      $this->pdf->rectangle($tempx,$tempy,$tempw,$temph);
+      $this->pdf->addTextWrap(0,10,$this->pdf->ez['pageWidth']-10,10,$theShowname,'right');	
       
-      
-      
-      
-      
-      
-      
-        if($datapage!='true')
-	      { $theobjectdata=$objObject->getSeenObjectDetails(array($theobject => array(0,$theobject)));
-	        $theobjectdata=$theobjectdata[0];
-	      	$this->pdf->addTextWrap(50, $liney, 450, 10, Reportaltname.": ".($theobjectdata['altname']?$theobjectdata['altname']:'-'),  'left');
-		      $liney-=25;
-		      $this->pdf->addTextWrap( 50, $liney, 200, 10, Reportobjectra.': '.$theobjectdata['objectrahms'],  'left');
-		      $this->pdf->addTextWrap(300, $liney, 200, 10, Reportobjectmagnitude.': '.($theobjectdata['objectmagnitude']?$theobjectdata['objectmagnitude']:'-'),  'left');
-		      $liney-=15;
-		      $this->pdf->addTextWrap( 50, $liney, 200, 10, Reportobjectdecl.': '.$theobjectdata['objectdecldms'],  'left');
-		      $this->pdf->addTextWrap(300, $liney, 200, 10, Reportobjectsurfacebrightness.': '.($theobjectdata['objectsurfacebrightness']?$theobjectdata['objectsurfacebrightness']:'-'),  'left');
-		      $liney-=15;
-		      $this->pdf->addTextWrap( 50, $liney, 200, 10, Reportobjectconstellationfull.': '.$theobjectdata['objectconstellationfull'],  'left');
-		      $this->pdf->addTextWrap(300, $liney, 200, 10, LangViewObjectField9.': '.($theobjectdata['objectsize']?$theobjectdata['objectsize']:'-'),  'left');
-		      $liney-=15;
-		      $this->pdf->addTextWrap( 50, $liney, 200, 10, Reportobjecttypefull.': '.$theobjectdata['objecttypefull'],  'left');
-		      $this->pdf->addTextWrap(300, $liney, 200, 10, LangViewObjectField12.': '.(($pa=$theobjectdata['objectpa'])==999?'-':$pa),  'left');
-	      }
-      } 
-      $liney=25;
+    	$liney=25;
       if($thephotos[0]>75)
        $thephotos[0]=75;
     	$url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[0].'.0&w='.$thephotos[0].'&f=gif&c=none&fov=NONE&v3=';
-      $this->pdf->rectangle(48,$liney-2,354,354);
-      //$this->pdf->addText(50, $liney-15, 10, LangViewDSSImageTitle.$thephotos[0].'x'.$thephotos[0].' '.LangNewObjectSizeUnits1);
+      $this->pdf->addText(50, $liney-15, 10, LangViewDSSImageTitle.$thephotos[0].'x'.$thephotos[0].' '.LangNewObjectSizeUnits1);
     	if($img=@imagecreatefromgif($url))
       { imagefilter($img, IMG_FILTER_NEGATE);
         $this->pdf->addImage($img,50,$liney,350);
+        
+        if($thephotos[0]==60)
+        { $theView=60;
+	      	$minDegs=$theView/120;
+		    	$i=$this->gridMaxDimension;
+		      while($i && ($this->gridDimensions[$i][0]<$minDegs))
+		        $i--;
+		      $this->gridActualDimension=$i;
+		      $this->atlasmagnitude=-10;
+		      
+		      $tempw=350;
+		      $temph=350;
+		      $tempx=50;
+		      $tempy=$liney;
+		      $this->pdf->setLineStyle(0.5);
+		      $this->gridInitSpecial($tempx,$tempy,$tempw,$temph);
+		      $this->gridInitScale($this->atlaspagerahr,$this->atlaspagedecldeg,$this->atlaspagezoomdeg);
+	        $this->astroDrawObject($theobject);	        
+	        $this->pdf->setStrokeColor(0,0,0);
+        }       
       }
+      $this->pdf->rectangle(48,$liney-2,354,354);
+      
       if(is_array($thephotos) && array_key_exists(1,$thephotos) && ($thephotos[1]>0))
       { if($thephotos[1]>75)
          $thephotos[1]=75;
         $url='http://archive.stsci.edu/cgi-bin/dss_search?v=poss2ukstu_red&r='.$raDSS.'.0&d='.$declDSS.'&e=J2000&h='.$thephotos[1].'.0&w='.$thephotos[1].'&f=gif&c=none&fov=NONE&v3=';
         $this->pdf->rectangle(448,$liney-2,354,354);
-        //$this->pdf->addText(450, $liney-15, 10, LangViewDSSImageTitle.$thephotos[1].'x'.$thephotos[1].' '.LangNewObjectSizeUnits1);
+        $this->pdf->addText(450, $liney-15, 10, LangViewDSSImageTitle.$thephotos[1].'x'.$thephotos[1].' '.LangNewObjectSizeUnits1);
         if($img=@imagecreatefromgif($url))
         { imagefilter($img, IMG_FILTER_NEGATE);
           $this->pdf->addImage($img,450,$liney,350);
         }
       }
+      $this->pdf->rectangle(448,$liney-2,354,354);
+      
+		  $this->pdf->setColor(0,0,0);		            
+     	$liney=$this->canvasDimensionYpx-50;
+      $this->pdf->addTextWrap( 50, $liney, $this->canvasDimensionXpx-100, 15, ReportImagesFor.$theShowname,  'center');
+      $liney-=5;
+      $this->pdf->line(50,$liney,$this->canvasDimensionXpx-250,$liney);
+      $liney-=15;
+      $this->pdf->addTextWrap(50, $liney, 450, 10, '(c) STScI Digitized Sky Survey',  'left');
+      $liney-=25;
+      if($datapage!='true')
+      { $theobjectdata=$objObject->getSeenObjectDetails(array($theobject => array(0,$theobject)));
+        $theobjectdata=$theobjectdata[0];
+      	$this->pdf->addTextWrap(50, $liney, 450, 10, Reportaltname.": ".($theobjectdata['altname']?$theobjectdata['altname']:'-'),  'left');
+      	$liney-=25;
+	      $this->pdf->addTextWrap( 50, $liney, 200, 10, Reportobjecttypefull.': '.$theobjectdata['objecttypefull'],  'left');
+	      $this->pdf->addTextWrap(300, $liney, 200, 10, Reportobjectmagnitude.': '.($theobjectdata['objectmagnitude']?$theobjectdata['objectmagnitude']:'-'),  'left');
+	      $liney-=15;
+	      $this->pdf->addTextWrap( 50, $liney, 200, 10, Reportobjectconstellationfull.': '.$theobjectdata['objectconstellationfull'],  'left');
+	      $this->pdf->addTextWrap(300, $liney, 200, 10, Reportobjectsurfacebrightness.': '.($theobjectdata['objectsurfacebrightness']?$theobjectdata['objectsurfacebrightness']:'-'),  'left');
+	      $liney-=15;
+	      $this->pdf->addTextWrap( 50, $liney, 200, 10, Reportobjectra.': '.$theobjectdata['objectrahms'],  'left');
+	      $this->pdf->addTextWrap(300, $liney, 200, 10, LangViewObjectField9.': '.($theobjectdata['objectsize']?$theobjectdata['objectsize']:'-'),  'left');
+	      $liney-=15;
+	      $this->pdf->addTextWrap( 50, $liney, 200, 10, Reportobjectdecl.': '.$theobjectdata['objectdecldms'],  'left');
+	      $this->pdf->addTextWrap(300, $liney, 200, 10, LangViewObjectField12.': '.(($pa=$theobjectdata['objectpa'])==999?'-':$pa),  'left');
+      }      
     }
     
     for($k=0;$k<count($theSet);$k++)
