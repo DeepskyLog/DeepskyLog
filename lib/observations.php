@@ -19,7 +19,6 @@ class Observations {
 		{ $objects[$i]     = htmlentities($objUtil->checkArrayKey($parts_array[$i],0,''));
 		  $dates[$i]       = htmlentities($objUtil->checkArrayKey($parts_array[$i],2,''));
 		  $locations[$i]   = htmlentities($objUtil->checkArrayKey($parts_array[$i],4,''));
-		  $instruments[$i] = htmlentities($objUtil->checkArrayKey($parts_array[$i],5,''));
 		  $filters[$i]     = htmlentities($objUtil->checkArrayKey($parts_array[$i],7,''));
 		  $eyepieces[$i]   = htmlentities($objUtil->checkArrayKey($parts_array[$i],6,''));
 		  $lenses[$i]      = htmlentities($objUtil->checkArrayKey($parts_array[$i],8,''));
@@ -221,9 +220,7 @@ class Observations {
 				$limmag=$matches[1].".".$matches[2];    // valid limiting magnitude // save current magnitude limit
 			$limmag="$limmag";
 		}
-		$description = html_entity_decode($description, ENT_COMPAT, "ISO-8859-15");
 		$description = preg_replace("/(\")/", "", $description);
-		$description = preg_replace("/;/", ",", $description);
 
 		$objDatabase->execSQL("INSERT INTO observations (objectname, observerid, instrumentid, locationid, date, time, description, seeing, limmag, visibility, language) " .
 		                      "VALUES (\"$objectname\", \"$observerid\", \"$instrumentid\", \"$locationid\", \"$date\", \"$time\", \"$description\", $seeing, $limmag, $visibility, \"$language\")");
@@ -249,10 +246,10 @@ class Observations {
 		  $limmag=$limmag;
 		else
 		  $limmag="0";
-		$description = html_entity_decode($description, ENT_COMPAT, "ISO-8859-15");
 		$description = preg_replace("/(\")/", "", $description);
 		$description = preg_replace("/;/", ",", $description);
-    
+		$description = htmlentities($description, ENT_COMPAT, "UTF-8");
+		
 		if($id=$objDatabase->selectSingleValue("SELECT id FROM observations WHERE objectname=\"$objectname\" AND 
 		                                                                          observerid=\"$observerid\" AND 
     	          	                                                            instrumentid=\"$instrumentid\" AND 
@@ -1283,7 +1280,7 @@ class Observations {
                          "RLRLRL",array(15,22,15,19,15,14),25,array("type30","type30","type30","type30","type30","type30"));                                     
 		                     echo "<br />";
     }
-    echo $objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
+    echo $objPresentations->searchAndLinkCatalogsInText($this->getDsObservationProperty($LOid,'description'));
 		if($this->getDsObservationProperty($LOid,'hasDrawing'))
 		  echo "<p>"."<a  href=\"".$baseURL."deepsky/drawings/" . $LOid . ".jpg" . "\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . "_resized.jpg\" alt=\"\"></img></a></p>";
     if($copyright=$objObserver->getObserverProperty($this->getDsObservationProperty($LOid,'observerid'),'copyright'))

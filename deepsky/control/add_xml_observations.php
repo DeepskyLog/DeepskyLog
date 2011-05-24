@@ -83,7 +83,7 @@ function add_xml_observations()
 	      $id = $comastid;
 	    }
 	  }
-	
+
 	  if ($id == "") {
 	    $entryMessage.= LangXMLError2 . $deepskylog_username . LangXMLError2a;
 	    $_GET['indexAction']="add_xml";
@@ -333,7 +333,7 @@ function add_xml_observations()
 	      } else {
 	        $targetInfoArray["constellation"] = strtoupper($cons);
 	      }
-	
+		
 	      // Get Ra and convert it to degrees
 	      $unit = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "ra" )->item(0)->getAttribute("unit");
 	      if ($unit == "deg") {
@@ -431,7 +431,7 @@ function add_xml_observations()
 	    $targetInfoArray["aliases"] = $aliasesArray;
 	    $targetArray[$targetid] = $targetInfoArray;
 	  }
-	
+
 	  // SITES
 	  $sites = $dom->getElementsByTagName( "sites" );
 	  $site = $sites->item(0)->getElementsByTagName( "site" );
@@ -743,7 +743,7 @@ function add_xml_observations()
 	        $locId = $objLocation->addLocation(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $sa["name"])), $sa["longitude"], $sa["latitude"], "", "", $sa["timezone"]);
 	        $objDatabase->execSQL("update locations set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $locId . "\";");
 	      }
-	
+		
 	      $instId = -1;
 	      // Check if the instrument already exists in DeepskyLog
 	      if ($observation->getElementsByTagName( "scope" )->item(0)) {
@@ -775,7 +775,7 @@ function add_xml_observations()
 	          $instId = $objInstrument->addInstrument(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $instrument)), 7, 1, 0, 1, $_SESSION['deepskylog_id']);
 	        } 
 	      }
-	
+
 	      // Filter is not mandatory
 	      if ($observation->getElementsByTagName( "filter" )->item(0)) {
 	        // Check if the filter already exists in DeepskyLog
@@ -898,7 +898,6 @@ function add_xml_observations()
 	            }
 	          }
 	        }
-	        
 	        // Check if the observation already exists!
 	        $dateArray = sscanf($observation->getElementsByTagName( "begin" )->item(0)->nodeValue, "%4d-%2d-%2dT%2d:%2d:%2d%c%02d:%02d");
 	        $date = mktime($dateArray[3], $dateArray[4], 0, $dateArray[1], $dateArray[2], $dateArray[0]);
@@ -924,11 +923,9 @@ function add_xml_observations()
 	            $resultNode = $observation->getElementsByTagName("result")->item(0);
 	            if ($resultNode->getElementsByTagName( "description" )->item(0)) {
 	              $description = $resultNode->getElementsByTagName( "description" )->item(0)->nodeValue;
-	              $description = htmlentities(iconv("UTF-8", "ISO-8859-15//TRANSLIT", $description));
 	            } else {
 	              $description = "";
 	            }
-	
 	            // Seeing is not mandatory
 	            if ($observation->getElementsByTagName( "seeing" )->item(0)) {
 	              $seeing = $observation->getElementsByTagName( "seeing" )->item(0)->nodeValue;
@@ -973,10 +970,9 @@ function add_xml_observations()
 	            } else {
 	              $li = 0;
 	            }
-	            
 	            $obsId = $objObservation->addDSObservation2($objeId, $_SESSION['deepskylog_id'], $instId, $locId, $dateStr, $timeStr, $description, $seeing, $limmag, $visibility, $language, $ei, $fi, $li);
 	            $obsId = $objDatabase->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1",'id');
-	
+
 	            // Magnification is not mandatory
 	            if ($observation->getElementsByTagName( "magnification" )->item(0)) {
 	              $objObservation->setDsObservationProperty($obsId, "magnification", $observation->getElementsByTagName( "magnification" )->item(0)->nodeValue);

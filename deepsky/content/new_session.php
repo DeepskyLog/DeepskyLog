@@ -12,7 +12,8 @@ function new_session()
 
   // TODO : When there are sessions added by another observer, where the observer is co-observer, then we should first see a list with sessions. 
   // It should be possible to click on the session, and all information should be filled out (or maybe it should be possible to just accept this session).
-
+  // TODO : Import from 
+         
 	echo "	<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/CalendarPopupCC.js\"></script>";
 	echo "	<script type=\"text/javascript\" >";
 	echo "	var calBegin = new CalendarPopup();";
