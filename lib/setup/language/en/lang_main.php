@@ -1,9 +1,10 @@
 <?php
 // This is version 4.2
+define("LangValidateSessionMessage1"		,"The session is removed from DeepskyLog.");
 define("LangAddSessionField2a"					,"Begin");
-define("LangAddSessionField3a"					,"Einde");
-define("LangAddSessionField4a"					,"Waarneemplaats");
-define("LangAddSessionField5a"					,"Waarnemers");
+define("LangAddSessionField3a"					,"End");
+define("LangAddSessionField4a"					,"Location");
+define("LangAddSessionField5a"					,"Observers");
 define("LangAddExistingSessionTitle"    ,"Select one of the sessions added by other observers");
 define("LangAddSessionMessageTitle"     ," made a new session where you are an observer");
 define("LangAddSessionMessage1"         ," made the session \'");

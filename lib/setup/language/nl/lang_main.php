@@ -1,5 +1,6 @@
 <?php
 // This is version 4.2
+define("LangValidateSessionMessage1"		,"De sessie is verwijderd uit DeepskyLog.");
 define("LangAddSessionField2a"					,"Begin");
 define("LangAddSessionField3a"					,"Einde");
 define("LangAddSessionField4a"					,"Waarneemplaats");

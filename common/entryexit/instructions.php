@@ -357,6 +357,14 @@ function instructions()
 	  else
 	    $_GET['indexAction']='add_eyepiece';
 	}
+	if($objUtil->checkGetKey('indexAction')=="validate_delete_existingsession")                                        // delete existing session
+	{ $entryMessage.=$objSession->validateDeleteSession();
+	  $_GET['indexAction']='add_session';
+	}
+	if($objUtil->checkGetKey('indexAction')=="validate_existingsession")
+	{ $entryMessage.=$objSession->validateExistingSession();
+	  $_GET['indexAction']='add_session';
+	}
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_filter")                                                 // delete filter
 	{ $entryMessage.=$objFilter->validateDeleteFilter();
 	  if($_SESSION['admin']=='yes')
