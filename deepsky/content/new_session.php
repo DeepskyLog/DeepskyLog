@@ -10,10 +10,6 @@ function new_session()
 { global $baseURL,$loggedUserName,$objSession,$loggedUser,$objObserver,
          $objLocation,$objPresentations,$objUtil,$objLanguage;
 
-  // TODO : When there are sessions added by another observer, where the observer is co-observer, then we should first see a list with sessions. 
-  // It should be possible to click on the session, and all information should be filled out (or maybe it should be possible to just accept this session).
-  // TODO : Import from 
-         
 	echo "	<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/CalendarPopupCC.js\"></script>";
 	echo "	<script type=\"text/javascript\" >";
 	echo "	var calBegin = new CalendarPopup();";
@@ -117,7 +113,23 @@ function new_session()
   echo "	</script>";
   
   echo "<div id=\"main\">";  
-	$objPresentations->line(array("<h4>".LangAddSessionTitle."&nbsp;<span class=\"requiredField\">".LangRequiredFields."</span>"."</h4>"),"L",array(),30);
+  // When there are sessions added by another observer, where the observer is co-observer, 
+  // we should first see a list with sessions.
+  // Get the list with sessions for this observer, which are not yet active
+  $listWithSessions = $objSession->getListWithInactiveSessions($loggedUser);
+  if (count($listWithSessions) > 0) {
+    $objPresentations->line(array("<h4>".LangAddExistingSessionTitle."&nbsp;</h4>"),"L",array(),30);
+    echo "<hr />"; 
+	  $objSession->showInactiveSessions($loggedUser);
+  }
+         
+  // TODO : It should be possible to click on the session, and all information should be filled out (or maybe it should be possible to just accept this session).
+  // ATTENTION! You should also add automatically the location here!
+  // TODO : Import from comast / export to comast (example file from Constantin Lazarri (22 may 2011) 
+  // TODO : Add observations -> moet mogelijk zijn vanaf detail van sessies
+  // TODO : When adding a new observation, the session should be automatically added!
+         
+  $objPresentations->line(array("<h4>".LangAddSessionTitle."&nbsp;<span class=\"requiredField\">".LangRequiredFields."</span>"."</h4>"),"L",array(),30);
 	echo "<hr />";
 	echo "<form id=\"sessionForm\" action=\"".$baseURL."index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_session\" />";

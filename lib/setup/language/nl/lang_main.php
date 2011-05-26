@@ -1,5 +1,10 @@
 <?php
 // This is version 4.2
+define("LangAddSessionField2a"					,"Begin");
+define("LangAddSessionField3a"					,"Einde");
+define("LangAddSessionField4a"					,"Waarneemplaats");
+define("LangAddSessionField5a"					,"Waarnemers");
+define("LangAddExistingSessionTitle"    ,"Selecteer een sessie die door iemand is aangemaakt");
 define("LangAddSessionMessageTitle"     ," heeft een nieuwe sessie aangemaakt met jou als waarnemer");
 define("LangAddSessionMessage1"         ," heeft de sessie \'");
 define("LangAddSessionMessage2"         ,"\' aangemaakt.");
@@ -18,8 +23,8 @@ define("LangAddSessionField2"						,"Begin van de sessie *");
 define("LangAddSessionField2Expl"				,"De start van je waarneemsessie.");
 define("LangAddSessionField3"						,"Einde van de sessie *");
 define("LangAddSessionField3Expl"				,"Het einde van je waarneemsessie.");
-define("LangAddSessionField4"						,"Waarnemingsplaats *");
-define("LangAddSessionField4Expl"				,"De waarnemingsplaats van je sessie.");
+define("LangAddSessionField4"						,"Waarneemplaats *");
+define("LangAddSessionField4Expl"				,"De waarneemplaats van je sessie.");
 define("LangAddSessionField5"						,"Weersomstandigheden");
 define("LangAddSessionField5Expl"				,"Het weer tijdens je waarneemsessie.");
 define("LangAddSessionField6"						,"Gebruikte instrumenten");

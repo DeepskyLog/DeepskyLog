@@ -46,8 +46,6 @@ class Sessions
 		                  $_POST['beginhours'], $_POST['beginminutes'], $_POST['endday'], $_POST['endmonth'], 
 		                  $_POST['endyear'], $_POST['endhours'], $_POST['endminutes'], $_POST['site'], $_POST['weather'], 
 		                  $_POST['equipment'], $_POST['comments'], $_POST['description_language'], $observers);
-
-		exit;
   }
   
   public  function addSession($sessionname, $beginday, $beginmonth, $beginyear, $beginhours, $beginminutes, $endday, 
@@ -99,20 +97,16 @@ class Sessions
 		  $observersFromDatabase = $objDatabase->selectSingleArray("SELECT observer from sessionObservers where sessionid=\"" . $sessions[0] . "\";", "observer");
 		  // Add the logged user to the list of the observers
 		  $observersFromDatabase[] = $loggedUser;
+		  $this->removeAllSessionObservations($sessions[0]);
 		  for ($i = 0;$i < count($observers);$i++) {
 		    if (!in_array($observers[$i], $observersFromDatabase)) {
 		      // The observer is not in the database. We have to add a new user.
 		      $this->addObserver($sessions[0], $observers[$i]);
-		      
-		      // TODO : We also have to add the new observations
-		      // TODO : Best to remove all observations from the $loggedUser and re-add them all?
-		      // TODO : TEST
+
           // Add observations to the session
-          //$this->addObservations($sessions[0], $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
+          $this->addObservations($sessions[0], $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
 		    }
 		  }
-		  // TODO : Remove, this is only for testing the message which will be sent!
-		  $this->addObserver($sessions[0], $observers[0]);
 		} else {
 		  // First add a new session with the observer which created the session (and set to active)
 		  $objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \""  . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)");
@@ -138,18 +132,12 @@ class Sessions
       // Add observations to the session
       $this->addObservations($id, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
 		}
-		
-		// TODO : Also add comet observations to a session?
-		// TODO : When adding a new observation, the session should be automatically added!
   }
 
 	private  function addObserver($id, $observer) 
 	{  global $objDatabase, $objMessages, $loggedUser, $objObserver, $baseURL;
-     // TODO : Uncomment
-	   //$objDatabase->execSQL("INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $id . "\", \"" . $observer . "\");");
+	   $objDatabase->execSQL("INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $id . "\", \"" . $observer . "\");");
      
-     // TODO : Send message to the other observers
-     // TODO : Translate
      $observername = $objObserver->getObserverProperty($loggedUser, "firstname") . " " . $objObserver->getObserverProperty($loggedUser, "name");
      $subject =  $observername . LangAddSessionMessageTitle;
      $sessionname = $this->getSessionPropertyFromId($id, "name");
@@ -171,6 +159,7 @@ class Sessions
 		for ($i=0;$i<count($observers);$i++) {
 		  // Select the observations of the observers in this session 
 		  $obsids = $objDatabase->selectSingleArray("SELECT id from observations where observerid=\"" . $observers[$i] . "\" and date>=\"" . $begindate . "\" and date<=\"" . $enddate . "\";", "id");
+
 		  for ($cnt=0;$cnt<count($obsids);$cnt++) {
 		    // Add the observations to the sesionObservations table
 		    $objDatabase->execSQL("INSERT into sessionObservations (sessionid, observationid) VALUES(\"" . $id . "\", \"" . $obsids[$cnt] . "\");");
@@ -191,6 +180,70 @@ class Sessions
 		$objDatabase->execSQL("UPDATE sessions set language=\"" . $language . "\" where id=\"" . $id . "\";");
 		$objDatabase->execSQL("UPDATE sessions set active=\"1\" where id=\"" . $id . "\";");
   }
+  
+  public  function removeAllSessionObservations($sessionid) 
+  { global $objDatabase;
+    $objDatabase->execSQL("DELETE FROM sessionObservations WHERE sessionid=\"". $sessionid . "\"");
+  }
+  
+  public  function getListWithInactiveSessions($userid) 
+  { global $objDatabase;
+    return $objDatabase->selectRecordsetArray("SELECT id from sessions where observerid = \"" . $userid . "\" and active = \"0\";");
+  }
+  
+  public  function getObservers($id) 
+  { global $objDatabase;
+    return $objDatabase->selectRecordsetArray("SELECT observer from sessionObservers where sessionid = \"" . $id . "\";");
+  }
+  
+  public  function showInactiveSessions($userid) 
+  { global $baseURL,$loggedUser,$objUtil,$objLocation,$objPresentations,$loggedUserName, $objObserver;
+    $sessions = $this->getListWithInactiveSessions($userid);
+    if($sessions!=null)
+   {
+     echo "<table>";
+     echo "<tr class=\"type3\">";
+     echo "<td class=\"centered\">" . LangAddSessionField1 ."</td>";
+     echo "<td class=\"centered\">" . LangAddSessionField2a ."</td>";
+     echo "<td class=\"centered\">" . LangAddSessionField3a ."</a></td>";
+     echo "<td class=\"centered\">" . LangAddSessionField4a ."</a></td>";
+     echo "<td class=\"centered\">" . LangAddSessionField5a ."</a></td>";
+     echo "<td></td>";
+     echo "<td></td>";
+     echo "</tr>";
+     $count = 0;
+     while(list($key,$value) = each($sessions))
+     { $session=$this->getSessionPropertiesFromId($value['id']);
+       echo "<tr class=\"type".(2-($count%2))."\">";
+       echo "<td>".$session['name']."</td>";
+       echo "<td>".$session['begindate']."</td>";
+       echo "<td>".$session['enddate']."</td>";
+       echo "<td>".$objLocation->getLocationPropertyFromId($session['locationid'], "name")."</td>";
+       echo "<td>";
+       $observers = $this->getObservers($value['id']);
+       if (count($observers) > 0) {
+         for ($cnt = 0;$cnt < count($observers) - 1;$cnt++) {
+           print $objObserver->getObserverProperty($observers[$cnt]['observer'], "firstname") . " " . 
+             $objObserver->getObserverProperty($observers[$cnt]['observer'], "name") . " - ";
+         }
+         print $objObserver->getObserverProperty($observers[count($observers) - 1]['observer'], "firstname") . " " . 
+             $objObserver->getObserverProperty($observers[count($observers) - 1]['observer'], "name");
+       }
+       echo "</td>";
+		   echo "<td>";
+		   // TODO : Remove the session
+       echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_eyepiece&amp;eyepieceid=" . urlencode($value['id']) . "\">" . LangRemove . "</a>");
+       echo "</td>";
+       echo "<td>";
+		   // TODO : Add the session
+       echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_eyepiece&amp;eyepieceid=" . urlencode($value['id']) . "\">" . LangAddSessionButton . "</a>");
+       echo "</td></tr>";
+       $count++;
+     }
+     echo "</table>";
+     echo "<hr />";
+   }
+ }
 //{  public  function getNumberOfUnreadMails()
 //  { global $objDatabase, $loggedUser;
 //  	if($loggedUser) {

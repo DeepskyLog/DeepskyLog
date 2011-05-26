@@ -1,5 +1,10 @@
 <?php
 // This is version 4.2
+define("LangAddSessionField2a"					,"Begin");
+define("LangAddSessionField3a"					,"Einde");
+define("LangAddSessionField4a"					,"Waarneemplaats");
+define("LangAddSessionField5a"					,"Waarnemers");
+define("LangAddExistingSessionTitle"    ,"Select one of the sessions added by other observers");
 define("LangAddSessionMessageTitle"     ," made a new session where you are an observer");
 define("LangAddSessionMessage1"         ," made the session \'");
 define("LangAddSessionMessage2"         ,"\'.");
