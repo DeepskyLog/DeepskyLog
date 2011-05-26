@@ -45,12 +45,12 @@ class Sessions
 		$this->addSession($_POST['sessionname'], $_POST['beginday'], $_POST['beginmonth'], $_POST['beginyear'], 
 		                  $_POST['beginhours'], $_POST['beginminutes'], $_POST['endday'], $_POST['endmonth'], 
 		                  $_POST['endyear'], $_POST['endhours'], $_POST['endminutes'], $_POST['site'], $_POST['weather'], 
-		                  $_POST['equipment'], $_POST['comments'], $_POST['description_language'], $observers);
+		                  $_POST['equipment'], $_POST['comments'], $_POST['description_language'], $observers, -1);
   }
   
   public  function addSession($sessionname, $beginday, $beginmonth, $beginyear, $beginhours, $beginminutes, $endday, 
                                 $endmonth, $endyear, $endhours, $endminutes, $location, $weather, $equipment, $comments,
-                                $language, $observers)
+                                $language, $observers, $sessionid)
   { global $objDatabase, $loggedUser, $dateformat;
     // Make sure not to insert bad code in the database
     $name = html_entity_decode($sessionname, ENT_COMPAT, "ISO-8859-15");
@@ -83,28 +83,32 @@ class Sessions
 		$comments = preg_replace("/;/", ",", $comments);
 
     // First check whether the session already exists
-		$sessions = $objDatabase->selectSingleArray("SELECT id from sessions where begindate=\"" . $begindate . "\" and enddate=\"" . $enddate . "\" and observerid=\"" . $loggedUser . "\";", "id");
-		if (count($sessions) > 0) {
+		if ($sessionid > 0) {
       // Update the session
-		  $this->updateSession($sessions[0], $name, $begindate, $enddate, $location, $weather, $equipment, $comments, $language);
+		  $this->updateSession($sessionid, $name, $begindate, $enddate, $location, $weather, $equipment, $comments, $language);
 
 		  // First make sure to remove all old observations
-		  $objDatabase->execSQL("DELETE from sessionObservations where sessionid=\"" . $sessions[0] . "\"");
+		  $objDatabase->execSQL("DELETE from sessionObservations where sessionid=\"" . $sessionid . "\"");
 		  // Add observations to the session
-      $this->addObservations($sessions[0], $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
+      $this->addObservations($sessionid, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
       
       // Check if there is a new observer
-		  $observersFromDatabase = $objDatabase->selectSingleArray("SELECT observer from sessionObservers where sessionid=\"" . $sessions[0] . "\";", "observer");
+		  $observersFromDatabase = $objDatabase->selectSingleArray("SELECT observer from sessionObservers where sessionid=\"" . $sessionid . "\";", "observer");
 		  // Add the logged user to the list of the observers
 		  $observersFromDatabase[] = $loggedUser;
-		  $this->removeAllSessionObservations($sessions[0]);
 		  for ($i = 0;$i < count($observers);$i++) {
 		    if (!in_array($observers[$i], $observersFromDatabase)) {
 		      // The observer is not in the database. We have to add a new user.
-		      $this->addObserver($sessions[0], $observers[$i]);
+		      $this->addObserver($sessionid, $observers[$i]);
 
-          // Add observations to the session
-          $this->addObservations($sessions[0], $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
+          $objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers[$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)");
+		      $newId = mysql_insert_id();
+		      // Also add the extra observers to the sessionObservers table
+		      for ($j=0;$j<count($observers);$j++) {
+		        if ($j != $i) {
+		          $objDatabase->execSQL("INSERT into sessionObservers (sessionid, observer) VALUES(\"" . $newId . "\", \"" . $observers[$j] . "\");");
+		        }
+		      }
 		    }
 		  }
 		} else {
@@ -161,7 +165,7 @@ class Sessions
 		  $obsids = $objDatabase->selectSingleArray("SELECT id from observations where observerid=\"" . $observers[$i] . "\" and date>=\"" . $begindate . "\" and date<=\"" . $enddate . "\";", "id");
 
 		  for ($cnt=0;$cnt<count($obsids);$cnt++) {
-		    // Add the observations to the sesionObservations table
+		    // Add the observations to the sessionObservations table
 		    $objDatabase->execSQL("INSERT into sessionObservations (sessionid, observationid) VALUES(\"" . $id . "\", \"" . $obsids[$cnt] . "\");");
 		  }
 		}
@@ -236,7 +240,7 @@ class Sessions
        echo "</td>";
        echo "<td>";
 		   // Add the session
-       echo("<a href=\"".$baseURL."index.php?indexAction=validate_existingsession&amp;sessionid=" . urlencode($value['id']) . "\">" . LangAddSessionButton . "</a>");
+       echo("<a href=\"".$baseURL."index.php?indexAction=adapt_session&amp;sessionid=" . urlencode($value['id']) . "\">" . LangAddSessionButton . "</a>");
        echo "</td></tr>";
        $count++;
      }
@@ -255,17 +259,71 @@ class Sessions
      return LangValidateSessionMessage1;
    }
  }
- 
- public  function validateExistingSession()                                        // validates and deletes a session
- { global $objUtil, $objDatabase;
- // TODO : IMPLEMENT!
-//   if(($sessionid=$objUtil->checkGetKey('sessionid')) 
-//   && $objUtil->checkAdminOrUserID($this->getSessionPropertyFromId($sessionid,'observerid')))
-//   { $objDatabase->execSQL("DELETE FROM sessions WHERE id=\"".$sessionid."\"");
-//     $objDatabase->execSQL("DELETE FROM sessionObservations WHERE sessionid=\"".$sessionid."\"");
-//     $objDatabase->execSQL("DELETE FROM sessionObservers WHERE sessionid=\"".$sessionid."\"");
-//     return LangValidateSessionMessage1;
-//   }
- }
+
+  public  function validateChangeSession() 
+  { global $loggedUser,$objUtil,$objLocation;
+		if(!($loggedUser))
+			throw new Exception(LangMessageNotLoggedIn);
+
+		$sessionid=$objUtil->checkRequestKey('sessionid');
+
+		// The observers
+		$observers = Array();
+
+		$count = array_count_values($_POST['addedObserver']);
+		if (isset($_POST['deletedObserver'])) {
+		  $countRemoved = array_count_values($_POST['deletedObserver']);
+		} else {
+		  $countRemoved = Array();
+		}
+
+		foreach( $count as $k => $v)
+		{
+		  $val = $v;
+		  $val2 = 0;
+		  if (array_key_exists($k, $countRemoved)) {
+		    $val2 = $countRemoved[$k];
+		  }
+		  if (($val - $val2) == 1) {
+		    $observers[] = $k;
+		  }
+		}
+		
+		// Add the new location if needed
+		// Location of the session
+		$sites = $objLocation->getSortedLocationsList("name", $loggedUser,1);
+		$theLoc = $this->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'locationid');
+		$theLocName = $objLocation->getLocationPropertyFromId($theLoc, "name");
+		$found = 1;
+		// Check if the number is owned by the loggedUser
+		if ($objLocation->getLocationPropertyFromId($theLoc, "observer") != $loggedUser) {
+		  $found = 0;
+		  for ($i=0;$i<count($sites);$i++) {
+		    if (strcmp($sites[$i][1], $theLocName) == 0) {
+		      $theLoc = $sites[$i][0];
+		      $found = 1;
+		    }
+		  }
+		}
+    if ($found == 0) {
+      $id = $objLocation->addLocation($theLocName, $objLocation->getLocationPropertyFromId($theLoc, "longitude"), 
+        $objLocation->getLocationPropertyFromId($theLoc, "latitude"), 
+        $objLocation->getLocationPropertyFromId($theLoc, "region"), 
+        $objLocation->getLocationPropertyFromId($theLoc, "country"), 
+        $objLocation->getLocationPropertyFromId($theLoc, "timezone"));
+      $objLocation->setLocationProperty($id, "limitingMagnitude", $objLocation->getLocationPropertyFromId($theLoc, "limitingMagnitude"));
+      $objLocation->setLocationProperty($id, "skyBackground", $objLocation->getLocationPropertyFromId($theLoc, "skyBackground"));
+      $objLocation->setLocationProperty($id, "observer", $loggedUser);
+      $objLocation->setLocationProperty($id, "locationactive", 1);
+      $site = $id;
+    } else {
+      $site = $_POST['site'];
+    }
+		
+		$this->addSession($_POST['sessionname'], $_POST['beginday'], $_POST['beginmonth'], $_POST['beginyear'], 
+		                  $_POST['beginhours'], $_POST['beginminutes'], $_POST['endday'], $_POST['endmonth'], 
+		                  $_POST['endyear'], $_POST['endhours'], $_POST['endminutes'], $site, $_POST['weather'], 
+		                  $_POST['equipment'], $_POST['comments'], $_POST['description_language'], $observers, $sessionid);
+  }
 }
 ?>

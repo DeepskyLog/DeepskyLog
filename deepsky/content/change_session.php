@@ -1,12 +1,13 @@
 <?php  
-// new_session.php
-// allows the user to add a new observing session
+// change_session.php
+// allows the user to change an observing session
 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
-elseif(!$loggedUser) throw new Exception(LangException002);
-else new_session();
+elseif(!($sessionid=$objUtil->checkGetKey('sessionid'))) throw new Exception(LangException003);
+elseif(!($objSession->getSessionPropertyFromId($sessionid,'name'))) throw new Exception("Session not found in change_session.php, please contact the developers with this message:".$sessionid);
+else change_session();
 
-function new_session()
+function change_session()
 { global $baseURL,$loggedUserName,$objSession,$loggedUser,$objObserver,
          $objLocation,$objPresentations,$objUtil,$objLanguage;
 
@@ -113,25 +114,12 @@ function new_session()
   echo "	</script>";
   
   echo "<div id=\"main\">";  
-  // When there are sessions added by another observer, where the observer is co-observer, 
-  // we should first see a list with sessions.
-  // Get the list with sessions for this observer, which are not yet active
-  $listWithSessions = $objSession->getListWithInactiveSessions($loggedUser);
-  if (count($listWithSessions) > 0) {
-    $objPresentations->line(array("<h4>".LangAddExistingSessionTitle."&nbsp;</h4>"),"L",array(),30);
-    echo "<hr />"; 
-	  $objSession->showInactiveSessions($loggedUser);
-  }
          
-  // TODO : Show a list with all your sessions         
-  // TODO : Import from comast / export to comast (example file from Constantin Lazarri (22 may 2011) 
-  // TODO : Add observations -> moet mogelijk zijn vanaf detail van sessies
-  // TODO : When adding a new observation, the session should be automatically added!
-  $objPresentations->line(array("<h4>".LangAddSessionTitle."&nbsp;<span class=\"requiredField\">".LangRequiredFields."</span>"."</h4>"),"L",array(),30);
+  $objPresentations->line(array("<h4>".LangChangeSessionTitle."&nbsp;<span class=\"requiredField\">".LangRequiredFields."</span>"."</h4>"),"L",array(),30);
 	echo "<hr />";
 	echo "<form id=\"sessionForm\" action=\"".$baseURL."index.php\" method=\"post\"><div>";
-	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_session\" />";
-
+	echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_session\" />";
+  echo "<input type=\"hidden\" name=\"sessionid\" value=\"". $objUtil->checkRequestKey('sessionid') . "\" />";
 	$objPresentations->line(array("", "<input type=\"submit\" name=\"add\" value=\"".LangAddSessionButton."\" />&nbsp;"),
 	                        "LR",array(80,20),'',array("fieldname"));                              
 	$objPresentations->line(array(LangAddSessionField1,
@@ -140,12 +128,12 @@ function new_session()
 	                        "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 
   // Add the begindate field
-  $yesterday=date('Ymd',strtotime('-1 day'));
-	$theYear=substr($yesterday,0,4);
-	$theMonth=substr($yesterday,4,2);
-	$theDay=substr($yesterday,6,2);
-	$theHour="22";
-  $theMinute="00";
+  $beginday= $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'begindate');
+  $theYear=substr($beginday,0,4);
+	$theMonth=substr($beginday,5,2);
+	$theDay=substr($beginday,8,2);
+	$theHour=substr($beginday,11,2);
+  $theMinute=substr($beginday,14,2);
 
   $contentBeginDate ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"3\"  name=\"beginday\" id=\"beginday\" value=\"".$theDay."\" onkeypress=\"return checkPositiveInteger(event);\" />";
   $contentBeginDate.="&nbsp;&nbsp;";
@@ -171,12 +159,13 @@ function new_session()
 	                        "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 
   // End date field
-  $today=date('Ymd',strtotime('today'));
-	$theYear=substr($today,0,4);
-	$theMonth=substr($today,4,2);
-	$theDay=substr($today,6,2);
-	$theHour="02";
-  $theMinute="00";
+  // Add the begindate field
+  $beginday= $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'enddate');
+  $theYear=substr($beginday,0,4);
+	$theMonth=substr($beginday,5,2);
+	$theDay=substr($beginday,8,2);
+	$theHour=substr($beginday,11,2);
+  $theMinute=substr($beginday,14,2);
 
   $contentEndDate ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"3\"  name=\"endday\" id=\"endday\" value=\"".$theDay."\" onkeypress=\"return checkPositiveInteger(event);\" />";
   $contentEndDate.="&nbsp;&nbsp;";
@@ -203,12 +192,27 @@ function new_session()
 
   // Location of the session
   $sites = $objLocation->getSortedLocationsList("name", $loggedUser,1);
-  // Get the standard location here!
-  $theLoc=$objObserver->getObserverProperty($loggedUser, "stdlocation");
-	$contentLoc="<select class=\"inputfield requiredField\" name=\"site\">";
+  // Get the given location here!
+  $theLoc = $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'locationid');
+  $theLocName = $objLocation->getLocationPropertyFromId($theLoc, "name");
+  $found = 1;
+  // Check if the number is owned by the loggedUser
+  if ($objLocation->getLocationPropertyFromId($theLoc, "observer") != $loggedUser) {
+    $found = 0;
+    for ($i=0;$i<count($sites);$i++) {
+      if (strcmp($sites[$i][1], $theLocName) == 0) {
+        $theLoc = $sites[$i][0];
+        $found = 1;
+      }
+    }
+  }
+  $contentLoc="<select class=\"inputfield requiredField\" name=\"site\">";
 	while(list($key,$value)=each($sites))
 		$contentLoc.="<option ".(($value[0]==$theLoc)?"selected=\"selected\"":'')." value=\"".$value[0]."\">".$value[1]."</option>";
-	$contentLoc.="</select>&nbsp;";
+  if ($found == 0) {
+    $contentLoc.="<option selected=\"selected\" value=\"".$theLoc."\">".$theLocName." (" . LangAddLocationSession . ")</option>";
+  }
+  $contentLoc.="</select>&nbsp;";
 
 	$objPresentations->line(array("<a href=\"".$baseURL."index.php?indexAction=add_site\" title=\"".LangChangeAccountField7Expl."\" >".LangAddSessionField4."</a>",$contentLoc,LangAddSessionField4Expl),
 		                        "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
@@ -227,11 +231,13 @@ function new_session()
 	                        "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 	
   // Other observers
-  // First add the loggedUser
   $observersCont = "<textarea readonly=\"readonly\" class=\"messageAreaSmall\" id=\"observers\" rows=\"1\" cols=\"1\">";
-  $observersCont .= $objObserver->getObserverProperty($loggedUser, "firstname") . "&nbsp;" . $objObserver->getObserverProperty($loggedUser, "name");
+	$observersArray = $objSession->getObservers($objUtil->checkRequestKey('sessionid')); 
+  for ($i=0;$i<count($observersArray);$i++) {
+    $observersCont .= $objObserver->getObserverProperty($observersArray[$i]['observer'], "firstname") . "&nbsp;" . 
+                      $objObserver->getObserverProperty($observersArray[$i]['observer'], "name") . "\n";
+  }
   $observersCont .= "</textarea>";
-  
   $objPresentations->line(array(LangAddSessionField9,
 	                               $observersCont,
 	                               LangAddSessionField9Expl),
@@ -242,9 +248,18 @@ function new_session()
 	$obs = $objObserver->getPopularObserversByName();
 
 	$addObserver .= "<option value=\"\">&nbsp;</option>";
+	$addObserver .= "<option value=\"".$loggedUser."\">".$loggedUserName."</option>";
 	while(list($key, $value) = each($obs)) {
 	  if ($key != $loggedUser) {
-	    $addObserver .= "<option value=\"".$key."\">".$value."</option>";
+	    $foundKey = 0;
+	    for ($i=0;$i<count($observersArray);$i++) {
+	      if (strcmp($key, $observersArray[$i]['observer']) == 0) {
+	        $foundKey = 1;
+	      }
+	    }
+	    if ($foundKey == 0) {
+	      $addObserver .= "<option value=\"".$key."\">".$value."</option>";
+	    }
 	  }
 	}
 	$addObserver .= "</select>";
@@ -256,8 +271,11 @@ function new_session()
 	
   // Delete observer
 	$deleteObserver = "<select id=\"deleteObserver\" name=\"deleteObserver\" onchange=\"deleteUser(this,'" . $loggedUserName . "')\" class=\"inputfield\">";
-
-  $deleteObserver .= "<option value=\"\">&nbsp;</option>";
+	for ($i=0;$i<count($observersArray);$i++) {
+	  $deleteObserver .= "<option value=\"".$observersArray[$i]['observer']."\">".
+	          $objObserver->getObserverProperty($observersArray[$i]['observer'], "firstname") . " " . 
+	          $objObserver->getObserverProperty($observersArray[$i]['observer'], "name")."</option>";
+	}
 	$deleteObserver .= "</select>";
 
   $objPresentations->line(array(LangAddSessionField11,
@@ -271,23 +289,34 @@ function new_session()
   echo "  <div class=\"observer\">";  
   echo "     <input type=\"hidden\" name=\"addedObserver[]\" value=\"" . $loggedUser . "\" />";  
   echo "  </div>";  
+	for ($i=0;$i<count($observersArray);$i++) {
+    echo "  <div class=\"observer\">";  
+    echo "     <input type=\"hidden\" name=\"addedObserver[]\" value=\"" . $observersArray[$i]['observer'] . "\" />";  
+    echo "  </div>";  
+	}
   echo "</div>";
 
   // Weather
 	$objPresentations->line(array(LangAddSessionField5,
-	                              "<textarea name=\"weather\"  class=\"messageAreaSmall inputfield\" cols=\"1\" rows=\"1\">" . "</textarea>",
+	                              "<textarea name=\"weather\"  class=\"messageAreaSmall inputfield\" cols=\"1\" rows=\"1\">" . 
+	                              $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'weather') . 
+	                              "</textarea>",
 	                              LangAddSessionField5Expl),
 	                        "RLL",array(25,40,35),136,array("fieldname","fieldvalue","fieldexplanation"));
 
   // Equipment
 	$objPresentations->line(array(LangAddSessionField6,
-	                              "<textarea name=\"equipment\"  class=\"messageAreaSmall inputfield\" cols=\"1\" rows=\"1\">" . "</textarea>",
+	                              "<textarea name=\"equipment\"  class=\"messageAreaSmall inputfield\" cols=\"1\" rows=\"1\">" . 
+	                              $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'equipment') . 
+	                              "</textarea>",
 	                              LangAddSessionField6Expl),
 	                        "RLL",array(25,40,35),136,array("fieldname","fieldvalue","fieldexplanation"));
 	
   // Comments
 	$objPresentations->line(array(LangAddSessionField7,
-	                              "<textarea name=\"comments\"  class=\"messageAreaSmall inputfield\" cols=\"1\" rows=\"1\">" . "</textarea>",
+	                              "<textarea name=\"comments\"  class=\"messageAreaSmall inputfield\" cols=\"1\" rows=\"1\">" . 
+	                              $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'comments') . 
+	                              "</textarea>",
 	                              LangAddSessionField7Expl),
 	                        "RLL",array(25,40,35),136,array("fieldname","fieldvalue","fieldexplanation"));
 

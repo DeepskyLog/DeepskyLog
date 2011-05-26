@@ -1,5 +1,7 @@
 <?php
 // This is version 4.2
+define("LangAddLocationSession"         ,"wordt toegevoegd door DeepskyLog");
+define("LangChangeSessionTitle"         ,"Pas een sessie aan");
 define("LangValidateSessionMessage1"		,"De sessie is verwijderd uit DeepskyLog.");
 define("LangAddSessionField2a"					,"Begin");
 define("LangAddSessionField3a"					,"Einde");

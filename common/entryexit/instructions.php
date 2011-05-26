@@ -361,9 +361,9 @@ function instructions()
 	{ $entryMessage.=$objSession->validateDeleteSession();
 	  $_GET['indexAction']='add_session';
 	}
-	if($objUtil->checkGetKey('indexAction')=="validate_existingsession")
-	{ $entryMessage.=$objSession->validateExistingSession();
-	  $_GET['indexAction']='add_session';
+	if($objUtil->checkGetKey('indexAction')=="change_session")                                                         // change existing session
+	{ $entryMessage.=$objSession->validateChangeSession();
+	  $_GET['indexAction']='result_selected_sessions';
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_filter")                                                 // delete filter
 	{ $entryMessage.=$objFilter->validateDeleteFilter();
