@@ -60,7 +60,7 @@ function selected_sessions()
     $content4=$objUtil->printStepsPerPage3($link2,"sessions",$step);
 		$objPresentations->line(array("",$content4),"LR",array(50,50),25);
 
-	  $objSession->showListSessions($sessions, $min, $max, $link2);
+	  $objSession->showListSessions($sessions, $min, $max, $link, $link2);
 	}
 }
 ?>  

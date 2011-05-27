@@ -272,36 +272,108 @@ class Sessions
    }
  }
  
-  public  function showListSessions($sessions, $min, $max, $link2, $step=25)
+  public  function showListSessions($sessions, $min, $max, $link, $link2, $step=25)
   { global $baseURL,$loggedUser,$objUtil,$objDatabase,$objLocation,$objPresentations,$loggedUserName, $objObserver;
     if($sessions!=null)
     {
       echo "<table>";
       echo "<tr class=\"type3\">";
-      echo "<td class=\"centered\">" . LangAddSessionField1 ."</td>";
-      echo "<td class=\"centered\">" . LangAddSessionField2a ."</td>";
-      echo "<td class=\"centered\">" . LangAddSessionField3a ."</a></td>";
-      echo "<td class=\"centered\">" . LangAddSessionField4a ."</a></td>";
-      echo "<td class=\"centered\">" . LangAddSessionField5a ."</a></td>";
-      echo "<td class=\"centered\"></td>";
+      $objPresentations->tableSortHeader(LangAddSessionField1, $link2 . "&amp;sort=name");
+      $objPresentations->tableSortHeader(LangAddSessionField2a, $link2 . "&amp;sort=begindate");
+      $objPresentations->tableSortHeader(LangAddSessionField3a, $link2 . "&amp;sort=enddate");
+      $objPresentations->tableSortHeader(LangAddSessionField4a, $link2 . "&amp;sort=location");
+      echo "<td class=\"centered\">" . LangAddSessionField5a ."</td>";
+      $objPresentations->tableSortHeader("", $link2 . "&amp;sort=numberOfObservations");
       echo "</tr>";
 		  $countline = 0; // counter for altering table colors
 	    for ($cnt = 0;$cnt < count($sessions);$cnt++)
 		  {
+		    // First we have to put all the sessions in an array, to be able to sort
+		    $allSessions[]=$this->getSessionPropertiesFromId($sessions[$cnt]['id']);
+		  }
+		  if (array_key_exists('sort',$_GET)) {
+		    if ($_GET['sort'] == "location") {
+		      // Get an array with only the locations
+	        for ($cnt = 0;$cnt < count($sessions);$cnt++)
+		      {
+		        $tmpArray[] = $objLocation->getLocationPropertyFromId($allSessions[$cnt]['locationid'], "name"); 
+		      }
+		      if ($_GET['sortdirection'] == "asc") {
+		        asort($tmpArray);
+		      } else {
+		        arsort($tmpArray);
+		      }
+		    } else if ($_GET['sort'] == "name") {
+		      // Get an array with only the names
+	        for ($cnt = 0;$cnt < count($sessions);$cnt++)
+		      {
+		        $tmpArray[] = $allSessions[$cnt]['name']; 
+		      }
+		      if ($_GET['sortdirection'] == "asc") {
+		        asort($tmpArray);
+		      } else {
+		        arsort($tmpArray);
+		      }
+		    } else if ($_GET['sort'] == "begindate") {
+		      // Get an array with only the names
+	        for ($cnt = 0;$cnt < count($sessions);$cnt++)
+		      {
+		        $tmpArray[] = $allSessions[$cnt]['begindate']; 
+		      }
+		      if ($_GET['sortdirection'] == "asc") {
+		        asort($tmpArray);
+		      } else {
+		        arsort($tmpArray);
+		      }
+		    } else if ($_GET['sort'] == "enddate") {
+		      // Get an array with only the names
+	        for ($cnt = 0;$cnt < count($sessions);$cnt++)
+		      {
+		        $tmpArray[] = $allSessions[$cnt]['enddate']; 
+		      }
+		      if ($_GET['sortdirection'] == "asc") {
+		        asort($tmpArray);
+		      } else {
+		        arsort($tmpArray);
+		      }
+		    } else if ($_GET['sort'] == "numberOfObservations") {
+		      // Get an array with only the names
+	        for ($cnt = 0;$cnt < count($sessions);$cnt++)
+		      {
+            $numberOfObservations = $objDatabase->selectRecordsetArray("SELECT COUNT(sessionid) from sessionObservations where sessionid = \"" . $allSessions[$cnt]["id"] . "\";");
+		        $tmpArray[] = $numberOfObservations[0]['COUNT(sessionid)']; 
+		      }
+		      if ($_GET['sortdirection'] == "asc") {
+		        asort($tmpArray);
+		      } else {
+		        arsort($tmpArray);
+		      }
+		    } else {
+		      $tmpArray[] = $objLocation->getLocationPropertyFromId($allSessions[$cnt]['locationid'], "name");
+		    }
+		  } else {
+		    $tmpArray[] = $objLocation->getLocationPropertyFromId($allSessions[$cnt]['locationid'], "name"); 
+		  }
+		  $tmpArray = array_keys($tmpArray);
+		  // Sort the array
+		  for ($cnt = 0;$cnt < count($sessions);$cnt++) {
+		    $newArray[$cnt] = $allSessions[$tmpArray[$cnt]];
+		  }
+	    for ($cnt = 0;$cnt < count($sessions);$cnt++)
+		  {
 		    if ($cnt >= $min && $cnt < $max) {
 		      $countline++;
-  		    $session=$this->getSessionPropertiesFromId($sessions[$cnt]['id']);
 	  	    if ($countline % 2 == 0) {
 		        echo "<tr class=\"height5px type20\">";
 		      } else {
 		        echo "<tr class=\"height5px type10\">";
 		      }
-          echo "<td><a href=\"" . $baseURL . "index.php?indexAction=adapt_session&amp;sessionid=" . $sessions[$cnt]['id'] . "\">" .$session['name']."</a></td>";
-          echo "<td>".$session['begindate']."</td>";
-          echo "<td>".$session['enddate']."</td>";
-          echo "<td><a href=\"" . $baseURL . "index.php?indexAction=detail_location&location=" . $session['locationid'] . "\">".$objLocation->getLocationPropertyFromId($session['locationid'], "name")."</a></td>";
+          echo "<td><a href=\"" . $baseURL . "index.php?indexAction=adapt_session&amp;sessionid=" . $newArray[$cnt]['id'] . "\">" . $newArray[$cnt]['name']."</a></td>";
+          echo "<td>".$newArray[$cnt]['begindate']."</td>";
+          echo "<td>".$newArray[$cnt]['enddate']."</td>";
+          echo "<td><a href=\"" . $baseURL . "index.php?indexAction=detail_location&location=" . $newArray[$cnt]['locationid'] . "\">".$objLocation->getLocationPropertyFromId($newArray[$cnt]['locationid'], "name")."</a></td>";
           echo "<td>";
-          $observers = $this->getObservers($sessions[$cnt]['id']);
+          $observers = $this->getObservers($newArray[$cnt]['id']);
           if (count($observers) > 0) {
             for ($cnt2 = 0;$cnt2 < count($observers);$cnt2++) {
               print "<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $observers[$cnt2]['observer'] . "\">" . 
@@ -312,14 +384,15 @@ class Sessions
               }
             }
           }
-          echo "</td><td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&sessionid=" . $session["id"] . "\">";
+          echo "</td><td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&sessionid=" . $newArray[$cnt]["id"] . "\">";
           // the number of observations
-          $numberOfObservations = $objDatabase->selectRecordsetArray("SELECT COUNT(sessionid) from sessionObservations where sessionid = \"" . $session["id"] . "\";");
+          $numberOfObservations = $objDatabase->selectRecordsetArray("SELECT COUNT(sessionid) from sessionObservations where sessionid = \"" . $newArray[$cnt]["id"] . "\";");
           echo $numberOfObservations[0]['COUNT(sessionid)'] . " " . LangGeneralObservations;
           echo "</a></td></tr>";
 		    }
 		  }
-      echo "</table>";
+
+		  echo "</table>";
       echo "<hr />";
     }
   }
