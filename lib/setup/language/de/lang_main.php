@@ -1,5 +1,7 @@
 <?php
 // This is version 4.2
+define("LangSessionNoResults"           ,"No sessions available for ");
+define("LangOverviewSessionTitle"       ,"Sessions of  ");
 define("LangAddLocationSession"         ,"will be added by DeepskyLog");
 define("LangChangeSessionTitle"         ,"Adapt a session");
 define("LangValidateSessionMessage1"		,"The session is removed from DeepskyLog.");

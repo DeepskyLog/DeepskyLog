@@ -123,10 +123,10 @@ function new_session()
 	  $objSession->showInactiveSessions($loggedUser);
   }
          
-  // TODO : Show a list with all your sessions         
-  // TODO : Import from comast / export to comast (example file from Constantin Lazarri (22 may 2011) 
-  // TODO : Add observations -> moet mogelijk zijn vanaf detail van sessies
+  // TODO : Make link to detail of session -> waar je kan verwijderen en editeren         
+  // TODO : Sorteren van lijst van sessies 
   // TODO : When adding a new observation, the session should be automatically added!
+  // TODO : Import from comast / export to comast (example file from Constantin Lazarri (22 may 2011) 
   $objPresentations->line(array("<h4>".LangAddSessionTitle."&nbsp;<span class=\"requiredField\">".LangRequiredFields."</span>"."</h4>"),"L",array(),30);
 	echo "<hr />";
 	echo "<form id=\"sessionForm\" action=\"".$baseURL."index.php\" method=\"post\"><div>";

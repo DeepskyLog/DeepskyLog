@@ -7,14 +7,19 @@ else selected_observations();
 
 function selected_observations()
 { global $baseURL,$FF,$loggedUser,$object,$myList,$step,
-         $objObject,$objObservation,$objPresentations,$objUtil;
+         $objObject,$objObservation,$objSession,$objPresentations,$objUtil;
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 	$link2 = $baseURL . "index.php?indexAction=result_selected_observations&amp;lco=" . urlencode($_SESSION['lco']);
 	reset($_GET);
+	if(array_key_exists('sessionid',$_GET)) {
+	  $sessionid = $_GET['sessionid'];
+	  $_SESSION['Qobs'] = $objSession->getObservations($sessionid);
+	}
 	while (list ($key, $value) = each($_GET))
 	  if (!in_array($key, array (
 				'indexAction',
 				'lco',
+	      'sessionid',
 				'sortdirection',
 				'sort',
 				'multiplepagenr',

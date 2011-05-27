@@ -195,11 +195,39 @@ class Sessions
     return $objDatabase->selectRecordsetArray("SELECT id from sessions where observerid = \"" . $userid . "\" and active = \"0\";");
   }
   
+  public  function getListWithActiveSessions($userid) 
+  { global $objDatabase;
+    return $objDatabase->selectRecordsetArray("SELECT id from sessions where observerid = \"" . $userid . "\" and active = \"1\";");
+  }
+  
   public  function getObservers($id) 
   { global $objDatabase;
     return $objDatabase->selectRecordsetArray("SELECT observer from sessionObservers where sessionid = \"" . $id . "\";");
   }
   
+  public  function getObservations($id) 
+  { global $objDatabase,$objObservation,$objObject,$objObserver,$objInstrument;
+    $obs = $objDatabase->selectRecordsetArray("SELECT observationid from sessionObservations where sessionid = \"" . $id . "\";");
+    $qobs = Array();
+    for ($i=0;$i<count($obs);$i++) {
+      $obsid = $obs[$i]["observationid"];
+      $qobs[$i] = $objObservation->getAllInfoDsObservation($obsid);
+      $qobs[$i]["observationid"] = $obsid;
+      $qobs[$i]["objecttype"] = $objObject->getDsoProperty($qobs[$i]['objectname'], "type");
+      $qobs[$i]["objectconstellation"] = $objObject->getDsoProperty($qobs[$i]['objectname'], "con");
+      $qobs[$i]["objectmagnitude"] = $objObject->getDsoProperty($qobs[$i]['objectname'], "mag");
+      $qobs[$i]["objectsurfacebrigthness"] = $objObject->getDsoProperty($qobs[$i]['objectname'], "subr");
+      $observerid = $objObservation->getDsObservationProperty($obsid, "observerid");
+      $qobs[$i]["observername"] = $objObserver->getObserverProperty($observerid, "firstname") . " " . 
+                    $objObserver->getObserverProperty($observerid, "name");
+      $qobs[$i]["observationdescription"] = $objObservation->getDsObservationProperty($obsid, "description");
+      $qobs[$i]["observationdate"] = $objObservation->getDsObservationProperty($obsid, "date");
+      $qobs[$i]["instrumentname"] = $objInstrument->getInstrumentPropertyFromId($qobs[$i]['instrumentid'], "name");
+      $qobs[$i]["instrumentdiameter"] = $objInstrument->getInstrumentPropertyFromId($qobs[$i]['instrumentid'], "diameter");
+    }
+    return $qobs;
+  }
+
   public  function showInactiveSessions($userid) 
   { global $baseURL,$loggedUser,$objUtil,$objLocation,$objPresentations,$loggedUserName, $objObserver;
     $sessions = $this->getListWithInactiveSessions($userid);
@@ -249,7 +277,58 @@ class Sessions
    }
  }
  
- public  function validateDeleteSession()                                          // validates and deletes a session
+  public  function showListSessions($sessions, $min, $max, $link2, $step=25)
+  { global $baseURL,$loggedUser,$objUtil,$objDatabase,$objLocation,$objPresentations,$loggedUserName, $objObserver;
+    if($sessions!=null)
+    {
+      echo "<table>";
+      echo "<tr class=\"type3\">";
+      echo "<td class=\"centered\">" . LangAddSessionField1 ."</td>";
+      echo "<td class=\"centered\">" . LangAddSessionField2a ."</td>";
+      echo "<td class=\"centered\">" . LangAddSessionField3a ."</a></td>";
+      echo "<td class=\"centered\">" . LangAddSessionField4a ."</a></td>";
+      echo "<td class=\"centered\">" . LangAddSessionField5a ."</a></td>";
+      echo "<td class=\"centered\"></td>";
+      echo "</tr>";
+		  $countline = 0; // counter for altering table colors
+	    for ($cnt = 0;$cnt < count($sessions);$cnt++)
+		  {
+		    if ($cnt >= $min && $cnt < $max) {
+		      $countline++;
+  		    $session=$this->getSessionPropertiesFromId($sessions[$cnt]['id']);
+	  	    if ($countline % 2 == 0) {
+		        echo "<tr class=\"height5px type20\">";
+		      } else {
+		        echo "<tr class=\"height5px type10\">";
+		      }
+          echo "<td>".$session['name']."</td>";
+          echo "<td>".$session['begindate']."</td>";
+          echo "<td>".$session['enddate']."</td>";
+          echo "<td>".$objLocation->getLocationPropertyFromId($session['locationid'], "name")."</td>";
+          echo "<td>";
+          $observers = $this->getObservers($sessions[$cnt]['id']);
+          if (count($observers) > 0) {
+            for ($cnt2 = 0;$cnt2 < count($observers) - 1;$cnt2++) {
+              print $objObserver->getObserverProperty($observers[$cnt2]['observer'], "firstname") . " " . 
+                $objObserver->getObserverProperty($observers[$cnt2]['observer'], "name") . " - ";
+            }
+            print $objObserver->getObserverProperty($observers[count($observers) - 1]['observer'], "firstname") . " " . 
+                $objObserver->getObserverProperty($observers[count($observers) - 1]['observer'], "name");
+          }
+          echo "</td><td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&sessionid=" . $session["id"] . "\">";
+          // the number of observations
+          $numberOfObservations = $objDatabase->selectRecordsetArray("SELECT COUNT(sessionid) from sessionObservations where sessionid = \"" . $session["id"] . "\";");
+          echo $numberOfObservations[0]['COUNT(sessionid)'] . " " . LangGeneralObservations;
+          echo "</a></td></tr>";
+		    }
+		  }
+      echo "</table>";
+      echo "<hr />";
+    }
+  }
+
+ 
+	public  function validateDeleteSession()                                          // validates and deletes a session
  { global $objUtil, $objDatabase;
    if(($sessionid=$objUtil->checkGetKey('sessionid')) 
    && $objUtil->checkAdminOrUserID($this->getSessionPropertyFromId($sessionid,'observerid')))

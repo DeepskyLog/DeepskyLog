@@ -2506,6 +2506,7 @@ class Utils
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('rank_observers'                     ,'deepsky/content/top_observers.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('result_query_objects'               ,'deepsky/content/selected_objects.php'))) 
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('result_selected_observations'       ,'deepsky/content/selected_observations.php')))  
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('result_selected_sessions'           ,'deepsky/content/selected_sessions.php')))  
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('view_observer_catalog'              ,'deepsky/content/details_observer_catalog.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('objectsSets'                        ,'common/content/objectsSets.php')))
     
