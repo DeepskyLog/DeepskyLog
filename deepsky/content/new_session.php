@@ -123,7 +123,6 @@ function new_session()
 	  $objSession->showInactiveSessions($loggedUser);
   }
          
-  // TODO : Make link to detail of session -> waar je kan verwijderen en editeren         
   // TODO : Sorteren van lijst van sessies 
   // TODO : When adding a new observation, the session should be automatically added!
   // TODO : Import from comast / export to comast (example file from Constantin Lazarri (22 may 2011) 

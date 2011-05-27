@@ -120,8 +120,13 @@ function change_session()
 	echo "<form id=\"sessionForm\" action=\"".$baseURL."index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_session\" />";
   echo "<input type=\"hidden\" name=\"sessionid\" value=\"". $objUtil->checkRequestKey('sessionid') . "\" />";
-	$objPresentations->line(array("", "<input type=\"submit\" name=\"add\" value=\"".LangAddSessionButton."\" />&nbsp;"),
-	                        "LR",array(80,20),'',array("fieldname"));                              
+  if ($objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'), "active") == 0) {
+    $sessionButton = LangAddSessionButton;
+  } else {
+    $sessionButton = LangChangeSessionButton;
+  }
+  $objPresentations->line(array("", "<a href=\"".$baseURL."index.php?indexAction=validate_delete_existingsession&amp;sessionid=" . urlencode($_GET['sessionid']) . "\">" . LangRemove . "</a>", "<input type=\"submit\" name=\"add\" value=\"".$sessionButton."\" />&nbsp;"),
+	                        "LRR",array(60, 20,20),'',array("fieldname"));                              
 	$objPresentations->line(array(LangAddSessionField1,
 	                              "<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"sessionname\" size=\"30\" value=\"".stripslashes($objUtil->checkRequestKey('sessionname')).stripslashes($objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'name'))."\" />",
 	                              LangAddSessionField1Expl),

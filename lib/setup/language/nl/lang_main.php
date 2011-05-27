@@ -1,5 +1,6 @@
 <?php
 // This is version 4.2
+define("LangChangeSessionButton"        ,"Pas sessie aan");
 define("LangSessionNoResults"           ,"Geen sessies beschikbaar voor ");
 define("LangOverviewSessionTitle"       ,"Sessies van ");
 define("LangAddLocationSession"         ,"wordt toegevoegd door DeepskyLog");

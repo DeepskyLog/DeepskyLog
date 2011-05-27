@@ -241,7 +241,6 @@ class Sessions
      echo "<td class=\"centered\">" . LangAddSessionField4a ."</a></td>";
      echo "<td class=\"centered\">" . LangAddSessionField5a ."</a></td>";
      echo "<td></td>";
-     echo "<td></td>";
      echo "</tr>";
      $count = 0;
      while(list($key,$value) = each($sessions))
@@ -263,10 +262,6 @@ class Sessions
        }
        echo "</td>";
 		   echo "<td>";
-		   // Remove the session
-       echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_existingsession&amp;sessionid=" . urlencode($value['id']) . "\">" . LangRemove . "</a>");
-       echo "</td>";
-       echo "<td>";
 		   // Add the session
        echo("<a href=\"".$baseURL."index.php?indexAction=adapt_session&amp;sessionid=" . urlencode($value['id']) . "\">" . LangAddSessionButton . "</a>");
        echo "</td></tr>";
@@ -301,19 +296,21 @@ class Sessions
 		      } else {
 		        echo "<tr class=\"height5px type10\">";
 		      }
-          echo "<td>".$session['name']."</td>";
+          echo "<td><a href=\"" . $baseURL . "index.php?indexAction=adapt_session&amp;sessionid=" . $sessions[$cnt]['id'] . "\">" .$session['name']."</a></td>";
           echo "<td>".$session['begindate']."</td>";
           echo "<td>".$session['enddate']."</td>";
-          echo "<td>".$objLocation->getLocationPropertyFromId($session['locationid'], "name")."</td>";
+          echo "<td><a href=\"" . $baseURL . "index.php?indexAction=detail_location&location=" . $session['locationid'] . "\">".$objLocation->getLocationPropertyFromId($session['locationid'], "name")."</a></td>";
           echo "<td>";
           $observers = $this->getObservers($sessions[$cnt]['id']);
           if (count($observers) > 0) {
-            for ($cnt2 = 0;$cnt2 < count($observers) - 1;$cnt2++) {
-              print $objObserver->getObserverProperty($observers[$cnt2]['observer'], "firstname") . " " . 
-                $objObserver->getObserverProperty($observers[$cnt2]['observer'], "name") . " - ";
+            for ($cnt2 = 0;$cnt2 < count($observers);$cnt2++) {
+              print "<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $observers[$cnt2]['observer'] . "\">" . 
+                   $objObserver->getObserverProperty($observers[$cnt2]['observer'], "firstname") . " " . 
+                   $objObserver->getObserverProperty($observers[$cnt2]['observer'], "name") . "</a>";
+              if ($cnt2 < count($observers) - 1) {
+                echo " - ";
+              }
             }
-            print $objObserver->getObserverProperty($observers[count($observers) - 1]['observer'], "firstname") . " " . 
-                $objObserver->getObserverProperty($observers[count($observers) - 1]['observer'], "name");
           }
           echo "</td><td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&sessionid=" . $session["id"] . "\">";
           // the number of observations

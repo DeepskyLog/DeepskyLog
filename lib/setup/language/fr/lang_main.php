@@ -1,5 +1,6 @@
 <?php
 // This is version 4.2
+define("LangChangeSessionButton"        ,"Adapt session");
 define("LangSessionNoResults"           ,"No sessions available for ");
 define("LangOverviewSessionTitle"       ,"Sessions of  ");
 define("LangAddLocationSession"         ,"will be added by DeepskyLog");
