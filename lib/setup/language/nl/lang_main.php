@@ -9,7 +9,7 @@ define("LangValidateSessionMessage1"		,"De sessie is verwijderd uit DeepskyLog."
 define("LangAddSessionField2a"					,"Begin");
 define("LangAddSessionField3a"					,"Einde");
 define("LangAddSessionField4a"					,"Waarneemplaats");
-define("LangAddSessionField5a"					,"Waarnemers");
+define("LangAddSessionField5a"					,"Extra waarnemers");
 define("LangAddExistingSessionTitle"    ,"Selecteer een sessie die door iemand is aangemaakt");
 define("LangAddSessionMessageTitle"     ," heeft een nieuwe sessie aangemaakt met jou als waarnemer");
 define("LangAddSessionMessage1"         ," heeft de sessie \'");

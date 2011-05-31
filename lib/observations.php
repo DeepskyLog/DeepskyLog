@@ -196,9 +196,11 @@ class Observations {
 						                                ((trim($parts_array[$i][7])!="")?Nz0($objFilter->getFilterObserverPropertyFromName(htmlentities(trim($parts_array[$i][7])), $loggedUser,'id')):0),            
 						                                ((trim($parts_array[$i][8])!="")?Nz0($objLens->getLensObserverPropertyFromName(htmlentities(trim($parts_array[$i][8])), $loggedUser,'id')):0)
 						                                );
-		      if($obsid)
+		      if($obsid) {
 		        $added++;
-		      else
+		        // Add the observation to all the sessions
+		        $objSession->addObservationToSessions($current_observation);
+		      } else
 		        $double++;
 		      }
 		      unset($_SESSION['QobsParams']);

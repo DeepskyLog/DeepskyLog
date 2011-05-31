@@ -349,10 +349,16 @@ class Sessions
 		        arsort($tmpArray);
 		      }
 		    } else {
-		      $tmpArray[] = $objLocation->getLocationPropertyFromId($allSessions[$cnt]['locationid'], "name");
+	        for ($cnt = 0;$cnt < count($sessions);$cnt++)
+		      {
+		        $tmpArray[] = $objLocation->getLocationPropertyFromId($allSessions[$cnt]['locationid'], "name");
+		      }
 		    }
 		  } else {
-		    $tmpArray[] = $objLocation->getLocationPropertyFromId($allSessions[$cnt]['locationid'], "name"); 
+	      for ($cnt = 0;$cnt < count($sessions);$cnt++)
+		    {
+		      $tmpArray[] = $objLocation->getLocationPropertyFromId($allSessions[$cnt]['locationid'], "name");
+		    } 
 		  }
 		  $tmpArray = array_keys($tmpArray);
 		  // Sort the array

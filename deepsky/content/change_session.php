@@ -1,10 +1,11 @@
 <?php  
 // change_session.php
 // allows the user to change an observing session
-
+global $loggedUser;
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($sessionid=$objUtil->checkGetKey('sessionid'))) throw new Exception(LangException003);
 elseif(!($objSession->getSessionPropertyFromId($sessionid,'name'))) throw new Exception("Session not found in change_session.php, please contact the developers with this message:".$sessionid);
+elseif(strcmp($objSession->getSessionPropertyFromId($sessionid, 'observerid'),$loggedUser) != 0)  throw new Exception("Session can only be viewed by the owner of the session");
 else change_session();
 
 function change_session()

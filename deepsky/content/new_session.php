@@ -123,9 +123,6 @@ function new_session()
 	  $objSession->showInactiveSessions($loggedUser);
   }
 
-  // TODO : When adding a new observation, the session should be automatically added! CVS
-  // TODO : TEST : Adapt session from other user
-  // TODO : TEST with no additional observers
   // TODO : When adding a new observation, the session should be automatically added! OAL
   // TODO : Import from OAL / export to OAL (example file from Constantin Lazarri (22 may 2011) 
   $objPresentations->line(array("<h4>".LangAddSessionTitle."&nbsp;<span class=\"requiredField\">".LangRequiredFields."</span>"."</h4>"),"L",array(),30);
