@@ -409,6 +409,36 @@ class Sessions
    }
  }
 
+ 	public  function addObservationToSessions($current_observation) 
+ 	{ global $objObservation, $objDatabase;
+ 	  $obs = $objObservation->getAllInfoDsObservation($current_observation);
+ 	  $dateWithoutTime = $obs['date'];
+ 	  $date = substr($dateWithoutTime, 0, 4) . "-" . substr($dateWithoutTime, 4, 2) . "-" . substr($dateWithoutTime, 6, 2) . " ";
+ 	  $time = $obs['time'];
+ 	  if ($time > 0) {
+ 	    if ($time < 1000) {
+ 	      $date = $date . "0" . substr($time, 0, 1) . ":" . substr($time, 1, 2) . ":00";
+ 	    } else {
+ 	      $date = $date . substr($time, 0, 2) . ":" . substr($time, 2, 2) . ":00";
+ 	    }
+ 	  } else {
+ 	    $date = $date . "00:00:00";
+ 	  }
+ 	  
+ 	  $sessions = $objDatabase->selectRecordsetArray("SELECT * from sessions where begindate <= \"" . $date . "\" and enddate >= \"" . $date . "\" and active = 1");
+ 	  // We now have a list with all sessions, but we only have one observer. Get the other observers from the sessionObservers table
+ 	  for ($i=0;$i<count($sessions);$i++) {
+ 	    $users[] = $sessions[$i]['observerid'];
+ 	    $extraUsers = $objDatabase->selectRecordsetArray("SELECT * from sessionObservers where sessionid =  \"" . $sessions[$i]['id'] . "\"");
+ 	    for($cnt=0;$cnt<count($extraUsers);$cnt++) {
+ 	      $users[] = $extraUsers[$cnt]['observer'];
+ 	    }
+ 	    if (in_array($obs['observerid'], $users)) {
+ 	      $objDatabase->execSQL("INSERT into sessionObservations (sessionid, observationid) VALUES (\"" . $sessions[$i]['id'] . "\", \"" . $obs['id'] . "\");");
+ 	    }
+ 	  }
+ 	}
+ 
   public  function validateChangeSession() 
   { global $loggedUser,$objUtil,$objLocation;
 		if(!($loggedUser))

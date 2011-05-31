@@ -1314,7 +1314,7 @@ class Observations {
     }
 	}
 	public function validateObservation()
-	{ global $loggedUser, $objUtil, $objObservation, $objObserver, $maxFileSize, $entryMessage, $objPresentations, $inIndex,$instDir;
+	{ global $loggedUser, $objUtil, $objObservation, $objObserver, $maxFileSize, $entryMessage, $objPresentations, $inIndex,$instDir,$objSession;
 		if(!($loggedUser))
 			throw new Exception(LangException002b);
 		elseif($objUtil->checkSessionKey('addObs',0)!=$objUtil->checkPostKey('timestamp', -1)) 
@@ -1489,6 +1489,10 @@ class Observations {
 					move_uploaded_file($_FILES['drawing']['tmp_name'], $upload_dir . "/" . $current_observation . ".jpg");
 				  $objObservation->setDsObservationProperty($current_observation,'hasDrawing',1);  
 				}
+				
+				// Add the observation to all the sessions
+				$objSession->addObservationToSessions($current_observation);
+				
 				$_SESSION['newObsYear'] =       $_POST['year']; // save current details for faster submission of multiple observations
 				$_SESSION['newObsMonth'] =      $_POST['month'];
 				$_SESSION['newObsDay'] =        $_POST['day'];
