@@ -124,7 +124,8 @@ function new_session()
   }
 
   // TODO : When adding a new observation, the session should be automatically added! OAL
-  // TODO : Import from OAL / export to OAL (example file from Constantin Lazarri (22 may 2011) 
+  // TODO : Import from OAL(example file from Constantin Lazarri (22 may 2011) - TEST : zonder comment, weather, ...
+  // TODO : Export to OAL  
   $objPresentations->line(array("<h4>".LangAddSessionTitle."&nbsp;<span class=\"requiredField\">".LangRequiredFields."</span>"."</h4>"),"L",array(),30);
 	echo "<hr />";
 	echo "<form id=\"sessionForm\" action=\"".$baseURL."index.php\" method=\"post\"><div>";

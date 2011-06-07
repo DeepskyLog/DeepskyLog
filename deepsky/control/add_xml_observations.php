@@ -9,7 +9,7 @@ elseif(!$loggedUser) throw new Exception(LangException002);
 else add_xml_observations();
 
 function add_xml_observations()
-{ global $baseURL,$entryMessage,
+{ global $baseURL,$entryMessage,$objSession,
          $objObject,$objCatalog,$objLocation,$objInstrument,$objFilter,$objEyepiece,$objLens,$objDatabase,$objObserver,$objObservation;
 	if($_FILES['xml']['tmp_name']!="") {
 	  $xmlfile=$_FILES['xml']['tmp_name'];
@@ -51,15 +51,19 @@ function add_xml_observations()
 	  // Check the observers -> In OpenAstronomyLog 2.0 the deepskylog_id is also added
 	  $searchNode = $dom->getElementsByTagName( "observers" );
 	  $observer = $searchNode->item(0)->getElementsByTagName( "observer" );
-	
+	  $observerArray = Array();
+
 	  $id = "";
 	  foreach( $observer as $observer )
 	  {
+	    $tmpObserverArray = Array();
 	    // Get the id and the name of the observers in the comast file
 	    $comastid = $observer->getAttribute("id");
 	    $name = $observer->getElementsByTagName( "name" )->item(0)->nodeValue;
+	    $tmpObserverArray['name'] = $name;
 	    $surname = $observer->getElementsByTagName( "surname" )->item(0)->nodeValue;
-	
+	    $tmpObserverArray['surname'] = $surname;
+	    
 	    if ($observer->getElementsByTagName( "fstOffset" )->item(0)) {
 	      $fstOffset[$comastid] = $observer->getElementsByTagName( "fstOffset" )->item(0)->nodeValue;
 	    } else {
@@ -82,6 +86,7 @@ function add_xml_observations()
 	    } else if ($deepskylog_username == $name . " " . $surname) {
 	      $id = $comastid;
 	    }
+	    $observerArray[$comastid] = $tmpObserverArray;
 	  }
 
 	  if ($id == "") {
@@ -511,6 +516,80 @@ function add_xml_observations()
 	    $siteArray[$siteid] = $siteInfoArray;
 	  }
 	
+	  // SESSIONS
+	  $sessions = $dom->getElementsByTagName( "sessions" );
+	  $session = $sessions->item(0)->getElementsByTagName( "session" );
+	
+	  $sessionArray = Array();
+	
+	  foreach( $session as $session )
+	  {
+	    $sessionInfoArray = Array();
+	    $sessionid = $session->getAttribute("id");
+	    $sessionLang = $session->getAttribute("lang");
+
+	    $sessionInfoArray['lang'] = $sessionLang;
+
+	    // Get the begindate and convert it to the DeepskyLog format
+	    $tmpBegin = $session->getElementsByTagName( "begin" )->item(0)->nodeValue;
+	    $beginDate = substr($tmpBegin, 0, 10);
+	    $beginTime = substr($tmpBegin, 11, 8);
+	    $timeDiff = substr($tmpBegin, 19, 6);
+	    $timeDiffHours = substr($timeDiff, 0, 3);
+	    $timeDiffMinutes = substr($timeDiff, 4, 2);
+	    if ($timeDiffHours > 0) {
+	      $beginDate2 = add_date($beginDate . " " . $beginTime, -$timeDiffHours, -$timeDiffMinutes); 
+	    } else {
+	      $beginDate2 = add_date($beginDate . " " . $beginTime, -$timeDiffHours, $timeDiffMinutes); 
+	    }
+	    $sessionInfoArray["begindate"] = $beginDate2;
+
+	    $tmpEnd = $session->getElementsByTagName( "end" )->item(0)->nodeValue;
+	    $endDate = substr($tmpEnd, 0, 10);
+	    $endTime = substr($tmpEnd, 11, 8);
+	    $timeDiff = substr($tmpEnd, 19, 6);
+	    $timeDiffHours = substr($timeDiff, 0, 3);
+	    $timeDiffMinutes = substr($timeDiff, 4, 2);
+	    if ($timeDiffHours > 0) {
+	      $endDate2 = add_date($endDate . " " . $endTime, -$timeDiffHours, -$timeDiffMinutes); 
+	    } else {
+	      $endDate2 = add_date($endDate . " " . $endTime, -$timeDiffHours, $timeDiffMinutes); 
+	    }
+	    $sessionInfoArray["enddate"] = $endDate2;
+	    
+	    // Get siteid -> Maybe we still have to add the site later
+	    $siteid = $session->getElementsByTagName( "site" )->item(0)->nodeValue;
+	    $sessionInfoArray["site"] = $siteid;
+	    
+	    // Get all coObservers
+	    if ($session->getElementsByTagName( "coObserver" )->item(0)) {
+	      $coObs = $session->getElementsByTagName( "coObserver" );
+	
+	      $coObsArray = Array();
+	      foreach( $coObs as $coObs )
+	      {
+	        $coObsArray[] = $coObs->nodeValue;
+	      }
+	      $sessionInfoArray["coObservers"] = $coObsArray;
+	    }
+	    
+	    // Get weather
+	    if ($session->getElementsByTagName( "weather" )->item(0)) {
+	      $sessionInfoArray["weather"] = $session->getElementsByTagName("weather")->item(0)->nodeValue;
+	    }
+	    
+      // Get the equipment
+	    if ($session->getElementsByTagName( "equipment" )->item(0)) {
+	      $sessionInfoArray["equipment"] = $session->getElementsByTagName("equipment")->item(0)->nodeValue;
+	    }
+	
+      // Get the comments
+	    if ($session->getElementsByTagName( "comments" )->item(0)) {
+	      $sessionInfoArray["comments"] = $session->getElementsByTagName("comments")->item(0)->nodeValue;
+	    }
+	    $sessionArray[$sessionid] = $sessionInfoArray;
+	  }
+	  
 	  // SCOPES
 	  $scopes = $dom->getElementsByTagName( "scopes" );
 	  $scope = $scopes->item(0)->getElementsByTagName( "scope" );
@@ -716,7 +795,98 @@ function add_xml_observations()
 	
 	    $filterArray[$filterid] = $filterInfoArray;
 	  }
+
+	  // Add the sessions
+    while(list ($key, $value) = each($sessionArray)) {
+      if (count($objDatabase->selectRecordArray("SELECT * from sessions where begindate = \"" . $sessionArray[$key]['begindate'] . "\" and enddate = \"" . $sessionArray[$key]['enddate'] . "\";")) == 0) {
+        $sessionid = 0;
+      } else {
+        $sessionid = ($objDatabase->selectRecordArray("SELECT * from sessions where begindate = \"" . $sessionArray[$key]['begindate'] . "\" and enddate = \"" . $sessionArray[$key]['enddate'] . "\";"));
+        $sessionid = $sessionid['id'];
+      }
+      $beginday = substr($sessionArray[$key]['begindate'], 8, 2);
+      $beginmonth = substr($sessionArray[$key]['begindate'], 5, 2);
+      $beginyear = substr($sessionArray[$key]['begindate'], 0, 4);
+      $beginhours = substr($sessionArray[$key]['begindate'], 11, 2);
+      $beginminutes = substr($sessionArray[$key]['begindate'], 14, 2);
+
+      $endday = substr($sessionArray[$key]['enddate'], 8, 2);
+      $endmonth = substr($sessionArray[$key]['enddate'], 5, 2);
+      $endyear = substr($sessionArray[$key]['enddate'], 0, 4);
+      $endhours = substr($sessionArray[$key]['enddate'], 11, 2);
+      $endminutes = substr($sessionArray[$key]['enddate'], 14, 2);
+        
+      $location = $sessionArray[$key]['site'];
+
+      // Check if the site already exists in DeepskyLog
+	    $site = $siteArray[$sessionArray[$key]['site']]["name"];
 	
+	    $sa = $siteArray[$sessionArray[$key]['site']];
+	    if (count($objDatabase->selectRecordArray("SELECT * from locations where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $site)) . "\";")) > 0) {
+	      // Update the coordinates
+	      $run = $objDatabase->selectRecordset("SELECT id FROM locations WHERE observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $site)) . "\";");
+	      $get=mysql_fetch_object($run);
+	
+	      $locId = $get->id;
+	
+	      $objLocation->setLocationProperty($locId, "longitude", $sa["longitude"]);
+	      $objLocation->setLocationProperty($locId, "latitude", $sa["latitude"]);
+	      $objLocation->setLocationProperty($locId, "timezone", $sa["timezone"]);
+	    } else {
+	      // Add the new site!
+	      $locId = $objLocation->addLocation(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $sa["name"])), $sa["longitude"], $sa["latitude"], "", "", $sa["timezone"]);
+	      $objDatabase->execSQL("update locations set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $locId . "\";");
+	    }
+
+      $location = $locId;
+
+      if (array_key_exists('weather', $sessionArray[$key])) {
+        $weather = $sessionArray[$key]['weather'];
+      } else {
+        $weather = "";
+      }
+      if (array_key_exists('equipment', $sessionArray[$key])) {
+        $equipment = $sessionArray[$key]['equipment'];
+      } else {
+        $equipment = "";
+      }
+      if (array_key_exists('comments', $sessionArray[$key])) {
+        $comments = $sessionArray[$key]['comments'];
+      } else {
+        $comments = "";
+      }
+
+      // $language
+      $language = $sessionArray[$key]['lang'];
+
+      // If the observers exist, add them to the session
+      $observers = Array();
+      if(array_key_exists('coObservers', $sessionArray[$key])) {
+        for ($cnt = 0;$cnt < count($sessionArray[$key]['coObservers']);$cnt++) {
+          $name = $observerArray[$sessionArray[$key]['coObservers'][$cnt]]['surname'];
+          $firstname = $observerArray[$sessionArray[$key]['coObservers'][$cnt]]['name'];
+          $foundUser = $objDatabase->selectRecordArray("SELECT * from observers where name = \"" . $name . "\" and firstname = \"" . $firstname . "\"");
+          if (count($foundUser) > 0) {
+            $observers[] = $foundUser['id'];
+          }
+        }
+      }
+
+      if ($sessionid == 0) {
+      // Add new session
+        $objSession->addSession("", $beginday, $beginmonth, $beginyear, $beginhours, $beginminutes, $endday, 
+                                $endmonth, $endyear, $endhours, $endminutes, $location, $weather, $equipment, $comments,
+                               $language, $observers, 0);
+      } else {
+//        updateSession($id, $name, $begindate, $enddate, $location, $weather, $equipment, $comments, $language);
+        print_r($sessionArray[$key]);
+        // TODO : Adapt session
+      }
+      print "<br />";
+    }
+    // TODO : Make sure the observations are added to the session after importing
+	  exit;
+	  
 	  // Check if there are observations for the given observer
 	  $searchNode = $dom->getElementsByTagName( "observations" );
 	  $observation = $searchNode->item(0)->getElementsByTagName( "observation" );
@@ -1199,4 +1369,13 @@ function add_xml_observations()
 	  return;
 	}
 }
+
+function add_date($givendate,$hr=0,$mn=0) {
+  $cd = strtotime($givendate);
+  $newdate = date('Y-m-d H:i:s', mktime(date('H',$cd)+$hr,
+     date('i',$cd)+$mn, date('s',$cd), date('m',$cd),
+     date('d',$cd), date('Y',$cd)));
+  return $newdate;
+}
+ 
 ?>

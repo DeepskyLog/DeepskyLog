@@ -118,7 +118,7 @@ class Sessions
 		  // Get the id of the new session
 		  $id = mysql_insert_id();
 
-		  for ($i=1;$i<count($observers);$i++) {
+		  for ($i=0;$i<count($observers);$i++) {
 		    // Add the observers to the sessionObservers table
 		    $this->addObserver($id, $observers[$i]);
 
