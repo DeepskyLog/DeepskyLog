@@ -873,21 +873,16 @@ function add_xml_observations()
       }
 
       if ($sessionid == 0) {
-      // Add new session
+        // Add new session
         $objSession->addSession("", $beginday, $beginmonth, $beginyear, $beginhours, $beginminutes, $endday, 
                                 $endmonth, $endyear, $endhours, $endminutes, $location, $weather, $equipment, $comments,
                                $language, $observers, 0);
       } else {
-//        updateSession($id, $name, $begindate, $enddate, $location, $weather, $equipment, $comments, $language);
-        print_r($sessionArray[$key]);
-        // TODO : Adapt session
+        // Adapt sessions
+        $objSession->updateSession($sessionid, "", $sessionArray[$key]['begindate'], $sessionArray[$key]['enddate'], $location, $weather, $equipment, $comments, $language);
       }
-      print "<br />";
     }
-    // TODO : Make sure the observations are added to the session after importing
-	  exit;
-	  
-	  // Check if there are observations for the given observer
+    // Check if there are observations for the given observer
 	  $searchNode = $dom->getElementsByTagName( "observations" );
 	  $observation = $searchNode->item(0)->getElementsByTagName( "observation" );
 	  foreach( $observation as $observation )
@@ -1143,6 +1138,9 @@ function add_xml_observations()
 	            $obsId = $objObservation->addDSObservation2($objeId, $_SESSION['deepskylog_id'], $instId, $locId, $dateStr, $timeStr, $description, $seeing, $limmag, $visibility, $language, $ei, $fi, $li);
 	            $obsId = $objDatabase->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1",'id');
 
+	            // Add the observation to the session
+	            $objSession->addObservationToSessions($obsId);
+	            
 	            // Magnification is not mandatory
 	            if ($observation->getElementsByTagName( "magnification" )->item(0)) {
 	              $objObservation->setDsObservationProperty($obsId, "magnification", $observation->getElementsByTagName( "magnification" )->item(0)->nodeValue);

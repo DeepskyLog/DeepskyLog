@@ -2308,7 +2308,7 @@ class Utils
 	    $itemDom = $channelDom->appendChild($dom->createElement('item'));
 	
 	    $titleDom = $itemDom->appendChild($dom->createElement('title'));
-	    $titleDom->appendChild($dom->createTextNode($value['objectname'] . " with "
+	    $titleDom->appendChild($dom->createTextNode($value['observername'] . " : " . $value['objectname'] . " with "
 	     . htmlspecialchars_decode($objInstrument->getInstrumentPropertyFromId($value['instrumentid'],'name')) . " from "
 	     . $objLocation->getLocationPropertyFromId($objObservation->getDsObservationProperty($value['observationid'],'locationid'), 'name')));
 	    $linkDom = $itemDom->appendChild($dom->createElement('link'));

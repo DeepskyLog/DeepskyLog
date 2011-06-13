@@ -59,7 +59,7 @@ class Sessions
 
 		$begindate = date('Y-m-d H:i:s', mktime($beginhours, $beginminutes, 0, $beginmonth, $beginday, $beginyear));
 		$enddate = date('Y-m-d H:i:s', mktime($endhours, $endminutes, 0, $endmonth, $endday, $endyear));
-		
+
 		// Auto-generate the session name
 		if ($name == "") {
 		  if ($beginday == $endday && $beginmonth == $endmonth && $beginyear == $endyear) {
@@ -132,10 +132,10 @@ class Sessions
 		      }
 		    }
       }
-
-      // Add observations to the session
-      $this->addObservations($id, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
 		}
+    // Add observations to the session
+    $observers[] = $loggedUser;
+    $this->addObservations($id, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
   }
 
 	private  function addObserver($id, $observer) 
@@ -158,12 +158,10 @@ class Sessions
 	{ global $objDatabase;
 	  $begindate = sprintf("%4d%02d%02d", $beginyear, $beginmonth, $beginday);
     $enddate = sprintf("%4d%02d%02d", $endyear, $endmonth, $endday);
-
     // Add all observations to the sessionObservations table
 		for ($i=0;$i<count($observers);$i++) {
 		  // Select the observations of the observers in this session 
 		  $obsids = $objDatabase->selectSingleArray("SELECT id from observations where observerid=\"" . $observers[$i] . "\" and date>=\"" . $begindate . "\" and date<=\"" . $enddate . "\";", "id");
-
 		  for ($cnt=0;$cnt<count($obsids);$cnt++) {
 		    // Add the observations to the sessionObservations table
 		    $objDatabase->execSQL("INSERT into sessionObservations (sessionid, observationid) VALUES(\"" . $id . "\", \"" . $obsids[$cnt] . "\");");
@@ -171,10 +169,30 @@ class Sessions
 		}
 	}
 		  
-	private  function updateSession($id, $name, $begindate, $enddate, $location, $weather, $equipment, $comments, $language)
-  { global $objDatabase;
+	public  function updateSession($id, $name, $begindate, $enddate, $location, $weather, $equipment, $comments, $language)
+  { global $objDatabase,$dateformat;
     // Here we change the session
-		$objDatabase->execSQL("UPDATE sessions set name=\"" . $name . "\" where id=\"" . $id . "\";");
+    // Make sure not to insert bad code in the database
+    $name = html_entity_decode($name, ENT_COMPAT, "ISO-8859-15");
+		$name = preg_replace("/(\")/", "", $name);
+		$name = preg_replace("/;/", ",", $name);
+
+		// Auto-generate the session name
+		if ($name == "") {
+		  $beginyear = substr($begindate, 0, 4);
+		  $beginmonth = substr($begindate, 5, 2);
+		  $beginday = substr($begindate, 8, 2);
+		  $endyear = substr($enddate, 0, 4);
+		  $endmonth = substr($enddate, 5, 2);
+		  $endday = substr($enddate, 8, 2);
+		  if ($begindate == $enddate) {
+		    $name = LangSessionTitle1 . date($dateformat, mktime(0, 0, 0, $beginmonth, $beginday, $beginyear));
+		  } else {  
+		    $name = LangSessionTitle1 . date($dateformat, mktime(0, 0, 0, $beginmonth, $beginday, $beginyear))
+		              . LangSessionTitle2 . date($dateformat, mktime(0, 0, 0, $endmonth, $endday, $endyear));
+		  }
+		}
+    $objDatabase->execSQL("UPDATE sessions set name=\"" . $name . "\" where id=\"" . $id . "\";");
 		$objDatabase->execSQL("UPDATE sessions set begindate=\"" . $begindate . "\" where id=\"" . $id . "\";");
 		$objDatabase->execSQL("UPDATE sessions set enddate=\"" . $enddate . "\" where id=\"" . $id . "\";");
 		$objDatabase->execSQL("UPDATE sessions set locationid=\"" . $location . "\" where id=\"" . $id . "\";");
@@ -442,6 +460,7 @@ class Sessions
  	    if (in_array($obs['observerid'], $users)) {
  	      $objDatabase->execSQL("INSERT into sessionObservations (sessionid, observationid) VALUES (\"" . $sessions[$i]['id'] . "\", \"" . $obs['id'] . "\");");
  	    }
+ 	    $users = Array();
  	  }
  	}
  
