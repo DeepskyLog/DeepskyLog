@@ -123,7 +123,6 @@ function new_session()
 	  $objSession->showInactiveSessions($loggedUser);
   }
 
-  // TODO : Export to OAL  
   $objPresentations->line(array("<h4>".LangAddSessionTitle."&nbsp;<span class=\"requiredField\">".LangRequiredFields."</span>"."</h4>"),"L",array(),30);
 	echo "<hr />";
 	echo "<form id=\"sessionForm\" action=\"".$baseURL."index.php\" method=\"post\"><div>";

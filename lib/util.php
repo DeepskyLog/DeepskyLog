@@ -118,7 +118,7 @@ class Utils
     return ($loggedUser==$toCheck);
   }
   public  function comastObservations($result)  // Creates a oal file from an array of observations
-  { global $objPresentations, $objObservation, $objCatalog;
+  { global $objPresentations, $objObservation, $objCatalog, $objSession, $loggedUser, $objDatabase;
     include_once "cometobjects.php";
     include_once "observers.php";
     include_once "instruments.php";
@@ -145,9 +145,9 @@ class Utils
 	$lenses = array();
 	$filters = array();
 
-    $cntObservers = 0;
-    $cntSites = 0;
-    $cntObjects = 0;
+  $cntObservers = 0;
+  $cntSites = 0;
+  $cntObjects = 0;
 	$cntScopes = 0;
 	$cntEyepieces = 0;
 	$cntLens = 0;
@@ -319,8 +319,56 @@ class Utils
       $timezone->appendChild($dom->createTextNode($timedifference)); 
     }
 
-    //add root - <sessions>  DeepskyLog has no sessions
+    //add root - <sessions> We export all the sessions of the logged observer
     $observersDom = $fcgaDom->appendChild($dom->createElement('sessions')); 
+
+    if ($loggedUser != "") {
+      $sessions = $objSession->getAllSessionsForUser($loggedUser);
+
+      $usedSessions = Array();
+      // Only add session for which the location is also exported
+      for ($scnt=0;$scnt<count($sessions);$scnt++) {
+        if (in_array($sessions[$scnt]['locationid'], $sites)) {
+          $session = $dom->createElement('session');
+          $sessionChild = $observersDom->appendChild($session);
+          $attr = $dom->createAttribute("id");
+          $session->appendChild($attr);
+    
+    	    $attrText = $dom->createTextNode("se_" . $sessions[$scnt]['id']);
+	        $attr->appendChild($attrText);
+
+          $attr = $dom->createAttribute("lang");
+          $session->appendChild($attr);
+
+    	    $attrText = $dom->createTextNode($sessions[$scnt]['language']);
+	        $attr->appendChild($attrText);
+
+          $begin = $sessionChild->appendChild($dom->createElement('begin'));
+          $begindate = $sessions[$scnt]['begindate'];
+          $begindate = str_replace(" ", "T", $begindate) . "+00:00";
+          $begin->appendChild($dom->createTextNode($begindate)); 
+
+          $end = $sessionChild->appendChild($dom->createElement('end'));
+          $enddate = $sessions[$scnt]['enddate'];
+          $enddate = str_replace(" ", "T", $enddate) . "+00:00";
+          $end->appendChild($dom->createTextNode($enddate)); 
+        
+          $site = $sessionChild->appendChild($dom->createElement('site'));
+          $site->appendChild($dom->createTextNode("site_" . $sessions[$scnt]['locationid'])); 
+        
+          $weather = $sessionChild->appendChild($dom->createElement('weather'));
+          $weather->appendChild($dom->createCDATASection($sessions[$scnt]['weather'])); 
+
+          $equipment = $sessionChild->appendChild($dom->createElement('equipment'));
+          $equipment->appendChild($dom->createCDATASection($sessions[$scnt]['equipment'])); 
+
+          $comments = $sessionChild->appendChild($dom->createElement('comments'));
+          $comments->appendChild($dom->createCDATASection($sessions[$scnt]['comments']));
+
+          $usedSessions[] = $sessions[$scnt]['id'];
+        }
+      } 
+    }
 
     //add root - <targets> 
     $observersDom = $fcgaDom->appendChild($dom->createElement('targets')); 
@@ -733,6 +781,16 @@ class Utils
       $site = $observation->appendChild($dom->createElement('site')); 
       $site->appendChild($dom->createTextNode("site_" . $loc));
 
+      // Check whether this observation is part of a session...
+      for ($scnt=0;$scnt<count($usedSessions);$scnt++) {
+        $sessionObs = $objDatabase->selectRecordsetArray("select * from sessionObservations where sessionid = \"" . $usedSessions[$scnt] . "\" and observationid = \"" . $value['observationid'] . "\"");
+
+        if (count($sessionObs) >= 1) {
+          $session = $observation->appendChild($dom->createElement('session'));
+          $session->appendChild($dom->createTextNode("se_" . $usedSessions[$scnt]));
+        }
+      }
+      
       $target = $observation->appendChild($dom->createElement('target')); 
       $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\s+/", "_", $objectname )));
 	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\+/", "_", $correctedValue )));
@@ -1128,7 +1186,7 @@ class Utils
            $obs['limmag'].";". 
            $objPresentations->presentationInt($obs['visibility'],"0","").";". 
            $obs['language'].";". 
-           preg_replace("/(\")/", "", preg_replace("/(\r\n|\n|\r)/", "", preg_replace("/;/", ",",$objPresentations->br2nl(html_entity_decode($obs['description']))))). 
+           preg_replace("/(\")/", "", preg_replace("/(\r\n|\n|\r)/", "", preg_replace("/;/", ",",$objPresentations->br2nl(html_entity_decode($obs['description'], ENT_COMPAT , 'UTF-8'))))). 
            "\n";
     }
   }  

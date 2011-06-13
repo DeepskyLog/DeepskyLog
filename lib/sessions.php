@@ -15,6 +15,10 @@ class Sessions
   { global $objDatabase; 
     return $objDatabase->selectSingleValue("SELECT ".$property." FROM sessions WHERE id = \"".$id."\"",$property,$defaultValue);
   }
+  public  function getAllSessionsForUser($user)                                     // returns all the sessions for a given user
+  { global $objDatabase;
+    return $objDatabase->selectRecordsetArray("SELECT * FROM sessions WHERE observerid=\"".$user."\"");
+  }
   public  function validateSession() 
   { global $loggedUser;
 		if(!($loggedUser))
