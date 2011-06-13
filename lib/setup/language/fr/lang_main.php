@@ -487,15 +487,15 @@ define("LangWelcome5"																			,"Votre compte est sur la liste d'attent
 define("LangManage"																				,"Gestion");
 define("LangManageDots"																		,"Gestion...");
 
-define("LangAccountSubscribed1"														,"Votre compte Deepskylog est cr&eacute;e. ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed2"														,"Un de nos d&eacute;veloppeurs validera votre compte au plus vite. ");  // javascript strings, please no html encoding
+define("LangAccountSubscribed1"														,"Votre compte Deepskylog est crée. ");  // javascript strings, please no html encoding
+define("LangAccountSubscribed2"														,"Un de nos développeurs validera votre compte au plus vite. ");  // javascript strings, please no html encoding
 define("LangAccountSubscribed3"														,"Vous recevrez un email de confirmation lorsque ceci se produira. ");  // javascript strings, please no html encoding
 define("LangAccountSubscribed4"														,"Sachez que Deepskylog est le travail d'un petit groupe de volontaires ");  // javascript strings, please no html encoding
 define("LangAccountSubscribed5"														,"et que la validation peut durer un jour ou plus. ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed6"														,"Exceptionnellement, tous les d&eacute;veloppeurs sont en observation astronomique ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed7"														,"pendant une semaine. Normalement un backup est pr&eacute;vu pendant cette p&eacute;riode. ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed8"														,"Si votre compte n'est pas valid&eacute; dans les 24 heures, veuillez envoyer un email ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed9"														,"aux d&eacute;veloppeurs de deepskylog.be pour en &ecirc;tre sur.");  // javascript strings, please no html encoding
+define("LangAccountSubscribed6"														,"Exceptionnellement, tous les développeurs sont en observation astronomique ");  // javascript strings, please no html encoding
+define("LangAccountSubscribed7"														,"pendant une semaine. Normalement un backup est prévu pendant cette période. ");  // javascript strings, please no html encoding
+define("LangAccountSubscribed8"														,"Si votre compte n'est pas validé dans les 24 heures, veuillez envoyer un email ");  // javascript strings, please no html encoding
+define("LangAccountSubscribed9"														,"aux d&eacute;veloppeurs de deepskylog.be pour en être sur.");  // javascript strings, please no html encoding
 
 
 define("LangValidateSubject"															,"DeepskyLog - votre compte est accept&eacute;");
@@ -569,9 +569,9 @@ define("LangToListMyLists"																,"Mes listes: ");
 define("LangToListMyListsView"														,"Consulter");
 define("LangToListMyListsRemove"													,"Enlever la liste");
 define("LangToListMyListsAddLongestObsDescription"				,"Rajouter une observation (la plus longue)");                                
-define("LangToListMyListsAddedLongestObsDescription"		  ,"Les observations sont rajout�s (les plus longues)");
+define("LangToListMyListsAddedLongestObsDescription"		  ,"Les observations sont rajout&eacute;s (les plus longues)");
 define("LangToListMyListsRemoveObsDescription"		     		,"Enlever les observations");
-define("LangToListMyListsRemovedObsDescription"		        ,"Les observations sont enlev�es");
+define("LangToListMyListsRemovedObsDescription"		        ,"Les observations sont enlev&eacute;es");
 define("LangToListRemovePageObjectsFromList"							,"Effacer les objects de cette page de la liste.");
 define("LangToListRemovePageObjectsFromListText"					,"R");
 define("LangToListEmptyList"															,"La liste est vide, il n'y a pas d'objects dans la liste.");
@@ -1007,7 +1007,7 @@ define("LangViewObjectField16"														,"Pocket Sky Atlas page");
 define("LangViewObjectField17"														,"Torres B page");
 define("LangViewObjectField18"														,"Torres BC page");
 define("LangViewObjectField19"														,"Torres C page");
-define("LangViewObjectFieldContrastReserve"								,"R�serve de contrast");
+define("LangViewObjectFieldContrastReserve"								,"R&eacute;serve de contrast");
 define("LangViewObjectFieldMagnification"									,"Agrandissement pr&#233;f&#233;r&#233;");
 define("LangViewObjectFieldOptimumDetectionMagnification"	,"Agrandissement de d&#233;tection optimale");
 define("LangViewObjectDSS"																,"Voir l'image DSS");
@@ -1041,7 +1041,7 @@ define("LangViewObserverUser"															,"Utilisateur");
 define("LangViewObserverCometAdmin"												,"Administrateur com&egrave;tes");
 define("LangViewObserverValidate"													,"Validez");
 define("LangViewObserverChange"														,"Changez le r&ocirc;le");
-define("LangViewObserverChangeNameFirstname"              ,"Changez l'adresse �mail / pr�nom / nom");
+define("LangViewObserverChangeNameFirstname"              ,"Changez l'adresse &eacute;mail / pr&eacute;nom / nom");
 define("LangViewObserverNumberOfObservations"							,"Nombre d'observations");
 define("LangViewObserverRank"															,"Position");
 define("LangViewObserverInexistant"												,"Cet observateur n'existe pas!");
@@ -1379,8 +1379,8 @@ define("LangQueryObjectsField13"													,"Taille minimale");
 define("LangQueryObjectsField14"													,"Taille maximale");
 define("LangQueryObjectsField15"													,"Latitude minimale");
 define("LangQueryObjectsField16"													,"Latitude maximale");
-define("LangQueryObjectsField17"													,"R�serve de contrast maximal");
-define("LangQueryObjectsField18"													,"R�serve de contrast minimal");
+define("LangQueryObjectsField17"													,"R&eacute;serve de contrast maximal");
+define("LangQueryObjectsField18"													,"R&eacute;serve de contrast minimal");
 define("LangQueryObjectsField19"													,"Dans la liste");
 define("LangQueryObjectsField20"													,"Pas dans la liste");
 define("LangQueryObjectsButton1"													,"Recherchez les objets");
@@ -1500,10 +1500,10 @@ define("LangXMLTitle"																			,"Importez les observations &agrave; par
 define("LangXMLMessage1"																	,"Ce formulaire vous donne la possibilit&eacute; d'ajouter diff&eacute;rentes observations en utilisant un fichier OpenAstonomyLog XML.");
 define("LangXMLMessage2"																	,"De cette fa&ccedil;on, vous pouvez &eacute;changer facilement et rapidement des observations entre diff&eacute;rentes applications qui supportent le format OpenAstonomyLog XML (comme <a href=\"http://observation.sourceforge.net\">Observation Manager</a>, <a href=\"http://www.eyeandtelescope.com/\">Eye&amp;Telescope</a>), ...");
 define("LangXMLMessage3"																	,"Informations: uniquement les observations avec votre nom (pr&eacute;nom et nom) seront ajout&eacute;es. Les observations qui sont d&eacute;j&agrave; disponibles dans deepskylog ne seront pas import&eacute;es une seconde fois.");
-define("LangXMLError1"																		,"DeepskyLog ne supporte que openAstronomyLog version 1.7");
+define("LangXMLError1"																		,"DeepskyLog ne supporte que openAstronomyLog version 2.0");
 define("LangXMLError2"																		,"Pas d'observations pour cet utilisateur ");
 define("LangXMLError2a"																		," dans ce fichier OpenAstronomyLog!");
-define("LangXMLError3"																		,"IFichier XML invalide!");
+define("LangXMLError3"																		,"Fichier XML invalide!");
 define("LangXMLError4"																		,"");
 define("LangXMLError5"																		,"");
 define("LangXMLError6"																		,"");
@@ -1528,7 +1528,7 @@ define("LangCSVListButton"																,"Importez!");
 // content/manage_csv.php
 define("LangNewObjectSubtitle1b"													,"G&#233;rez les objets &#224; partir d'un fichier CSV");
 define("LangCSVObjectTitle"																,"Gestion des objets &#224; partir d'un fichier CSV");
-define("LangCSVObjectMessage1"														," Ce formulaire vous donne la possibilit&#233; de rajouter plusieurs objets &#224; la fois &#224; partir d&#8217;un fichier CSV (comma seperated value).");
+define("LangCSVObjectMessage1"														," Ce formulaire vous donne la possibilit&#233; de rajouter plusieurs objets &#224; la fois &#224; partir d&#8217;un fichier CSV (comma separated value).");
 define("LangCSVObjectMessage1b"														,"De cette fa&#231;on vous pouvez rajouter facilement et tr&#232;s vite des objets, des noms alternatifs, etc.");
 define("LangCSVObjectMessage2"														,"Le fichier csv file doit suivra la syntax suivante si les instructions concernent un object du type:");
 define("LangCSVObjectMessage3"														,"Instruction;Objet;Catalog;Catalogindex;");
@@ -1584,22 +1584,22 @@ define("LangPDFMessage5"																	,"Type");
 define("LangPDFMessage6"																	,"Constellation");
 define("LangPDFMessage7"																	,"Mag.");
 define("LangPDFMessage8"																	,"Mag. de surf.");
-define("LangPDFMessage9"																	,"Diam&#232;tre");
+define("LangPDFMessage9"																	,"Diam&egrave;tre");
 define("LangPDFMessage10"																	,"Endroit");
 define("LangPDFMessage11"																	,"Instrument");
 define("LangPDFMessage12"																	," en ");
-define("LangPDFMessage13"																	,"Observ&#233; par ");
+define("LangPDFMessage13"																	,"Observ&eacute; par ");
 define("LangPDFMessage14"																	," le ");
 define("LangPDFMessage15"																	,"Description");
 define("LangPDFMessage16"																	,"Angle de pos.");
-define("LangPDFMessage17"																	,"R&#233;s. de contr.");
+define("LangPDFMessage17"																	,"R&eacute;s. de contr.");
 define("LangPDFMessage18"																	,"Agr. opt.");
 define("LangPDFMessage19"																	,"Pr&eacute;par&eacute; pour ");
 define("LangPDFMessage20"																	,"avec un  ");
 define("LangPDFMessage21"																	,"&agrave; ");
 define("LangPDFMessage22"																	,"Page ");
-define("LangNumberOfRecords"															,"r&#233;sultats");
-define("LangNumberOfRecords1"															,"r&#233;sultat");
+define("LangNumberOfRecords"															,"r&eacute;sultats");
+define("LangNumberOfRecords1"															,"r&eacute;sultat");
 define("LangNumberOfRecordsIn"														,"en");
 define("LangNumberOfRecords1Pages"												,"pages");
 define("LangNumberOfRecordsPerPages"											,"Nombre de r&eacute;sultats par page");
@@ -1611,13 +1611,13 @@ define("LangPDFTitle3"																		,"Observations des com&#232;tes de Deeps
 // deepsky/content/overview_observations_compact.php
 define("LangOverviewCompactDescription"										,"Description");
 
-define("LangContrastNotLoggedIn"													,"R�serve de contrast ne peut &#234;tre calcul&#233; que lorseque que vous &#234;tes enregistr&#233; ...");
-define("LangContrastNoStandardLocation"										,"R�serve de contrast ne peut &#234;tre calcul&#233; que lorseque vous avez d&#233;termin&#233; un endroit standard ...");
-define("LangContrastNoStandardInstrument"									,"R�serve de contrast ne peut &#234;tre calcul&#233; que lorseque vous avez d&#233;termin&#233; un instument standard ...");
-define("LangContrastNoEyepiece"														,"R�serve de contrast ne peut &#234;tre calcul&#233; que lorseque votre instrument standard &#224; un agrandissement fixe ou lorseque vous avez d&#233;termin&#233; un oculaire ...");
-define("LangContrastNoLimMag"															,"R�serve de contrast ne peut &#234;tre calcul&#233; que lorseque vous avez d&#233;termin&#233; un magnitude limite typique our le sky background de votre endroit standard ...");
-define("LangContrastNoDiameter"														,"R�serve de contrast ne peut &#234;tre calcul&#233; que lorseque le diam&#232;tre de l'objet est connu");
-define("LangContrastNoMagnitude"													,"R�serve de contrast ne peut &#234;tre calcul&#233; que lorseque la magnitude de l'object est d&#233;finie");
+define("LangContrastNotLoggedIn"													,"R&eacute;serve de contrast ne peut &#234;tre calcul&#233; que lorseque que vous &#234;tes enregistr&#233; ...");
+define("LangContrastNoStandardLocation"										,"R&eacute;serve de contrast ne peut &#234;tre calcul&#233; que lorseque vous avez d&#233;termin&#233; un endroit standard ...");
+define("LangContrastNoStandardInstrument"									,"R&eacute;serve de contrast ne peut &#234;tre calcul&#233; que lorseque vous avez d&#233;termin&#233; un instument standard ...");
+define("LangContrastNoEyepiece"														,"R&eacute;serve de contrast ne peut &#234;tre calcul&#233; que lorseque votre instrument standard &#224; un agrandissement fixe ou lorseque vous avez d&#233;termin&#233; un oculaire ...");
+define("LangContrastNoLimMag"															,"R&eacute;serve de contrast ne peut &#234;tre calcul&#233; que lorseque vous avez d&#233;termin&#233; un magnitude limite typique our le sky background de votre endroit standard ...");
+define("LangContrastNoDiameter"														,"R&eacute;serve de contrast ne peut &#234;tre calcul&#233; que lorseque le diam&#232;tre de l'objet est connu");
+define("LangContrastNoMagnitude"													,"R&eacute;serve de contrast ne peut &#234;tre calcul&#233; que lorseque la magnitude de l'object est d&#233;finie");
 define("LangContrastNotVisible"														," n'est pas visible &#224; partir de ");
 define("LangContrastQuestionable"													,"La visibilit&#233; de ");
 define("LangContrastQuestionableB"												," est douteuse ");
@@ -1649,18 +1649,18 @@ $Visibility6						="Visibilit&eacute; de l'objet est douteuse";
 $Visibility7						="L'objet n'est pas visible";
 
 // Visibility for resolved open clusters
-$VisibilityOC1          ="Amas tr�s magnifique et remarquable";
+$VisibilityOC1          ="Amas tr&egrave;s magnifique et remarquable";
 $VisibilityOC2          ="Amas magnifique et remarquable";
-$VisibilityOC3          ="Amas m�diocre";
-$VisibilityOC4          ="L'amas n'attire g�re l'attention";
-$VisibilityOC5          ="Tr�s peu remarquable, on le rate facilement durant les d�placements";
-$VisibilityOC6          ="Observation questionnable, les �toiles ne sortent presque pas des environs";
-$VisibilityOC7          ="Presque pas d'�toiles d�tectables";
+$VisibilityOC3          ="Amas m&eacute;diocre";
+$VisibilityOC4          ="L'amas n'attire g&egrave;re l'attention";
+$VisibilityOC5          ="Tr&eacute;s peu remarquable, on le rate facilement durant les d&eacute;placements";
+$VisibilityOC6          ="Observation questionnable, les &eacute;toiles ne sortent presque pas des environs";
+$VisibilityOC7          ="Presque pas d'&eacute;toiles d&eacute;tectables";
 
 // Visibility for double stars
-$VisibilityDS1          ="L'�toile binary est s�parable";
-$VisibilityDS2          ="L'�toile binaire ressemble la lettre 8";
-$VisibilityDS3          ="L'�toile binaire n'est pas s�parable";
+$VisibilityDS1          ="L'&eacute;toile binary est s&eacute;parable";
+$VisibilityDS2          ="L'&eacute;toile binaire ressemble la lettre 8";
+$VisibilityDS3          ="L'&eacute;toile binaire n'est pas s&eacute;parable";
 
 //Seeing definitions
 $Seeing0								="-----";
@@ -1714,9 +1714,9 @@ $BRTNB 									="N&eacute;bulosit&eacute; claire";
 $CLANB 									="Amas ouvert avec n&eacute;bulosit&eacute;";
 $DS    									="Etoile double";
 $DRKNB 									="N&eacute;bulosit&eacute; noire";
-$EMINB 									="N&#233;buleuse d'&#233;mission";
-$ENRNN 									="N&#233;buleuse d'&#233;misson et par reflection";
-$ENSTR 									="N&#233;buleuse d'&#233;mission autour d'une &#233;toile";
+$EMINB 									="N&eacute;buleuse d'&eacute;mission";
+$ENRNN 									="N&eacute;buleuse d'&eacute;misson et par reflection";
+$ENSTR 									="N&eacute;buleuse d'&eacute;mission autour d'une &eacute;toile";
 $GALCL 									="Amas de galaxies";
 $GALXY 									="Galaxie";
 $GLOCL 									="Amas globulaire";
@@ -1731,16 +1731,16 @@ $LMCOC 									="Amas ouvert dans LMC";
 $NONEX 									="N'existe pas";
 $OPNCL 									="Amas ouvert";
 $PLNNB 									="N&eacute;buleuse plan&eacute;taire";
-$REFNB 									="N&#233;buleuse par reflection";
-$RNHII 									="N&#233;buleuse par reflection et H-II";
+$REFNB 									="N&eacute;buleuse par reflection";
+$RNHII 									="N&eacute;buleuse par reflection et H-II";
 $SMCCN 									="Amas avec n&eacute;bulosit&eacute; dans SMC";
 $SMCDN 									="N&eacute;bulosit&eacute; diffuse dans SMC";
 $SMCGC 									="Amas globulaire dans SMC";
 $SMCOC 									="Amas ouvert dans SMC";
 $SNREM 									="Reste de supernova";
-$STNEB 									="N&#233;buleuse autour d'une &#233;toile";
+$STNEB 									="N&eacute;buleuse autour d'une &eacute;toile";
 $QUASR 									="Quasar";
-$WRNEB 									="N&#233;buleuse de Wolf-Rayet";
+$WRNEB 									="N&eacute;buleuse de Wolf-Rayet";
 $AA1STAR 								="Etoile";
 $AA2STAR 								="Etoile double";
 $AA3STAR 								="3 &eacute;toiles";
