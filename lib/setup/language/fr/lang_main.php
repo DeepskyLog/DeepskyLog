@@ -47,14 +47,14 @@ define("LangAddSessionField11"					,"Remove observer");
 define("LangAddSessionField11Expl"			,"Select an observer to remove from your observing session.");
 
 // This is version 4.1
-define('LangAdminMenuItem8'							,'Envoyer un message � tous');
-define('LangAdminMenuItem7'							,'V�rifier les objets');
+define('LangAdminMenuItem8'							,'Envoyer un message &agrave; tous');
+define('LangAdminMenuItem7'							,'V&eacute;rifier les objets');
 
-define('LangMessagePublicList1'         ,'Liste publique cr�e�e avec le nom ');
+define('LangMessagePublicList1'         ,'Liste publique cr&eacute;e&eacute;e avec le nom ');
 define('LangMessagePublicList2'         ,' par ');
 define('LangMessagePublicList3'         ,'Une nouvelle liste publique est disponible en DeepskyLog.<br /><br />');
 define('LangMessagePublicList4'         ,'Aller vers ');
-define('LangMessagePublicList5'         ,'Envoyer un message � ');
+define('LangMessagePublicList5'         ,'Envoyer un message &agrave; ');
 define('LangViewMessages'               ,'Voir les messages');
 define('LangMessageNotLoggedIn'				  ,'Vous devez vous connecter avant de pouvoir envoyer des messages.');
 define('LangMessageSubject'             ,'Sujet');
@@ -64,57 +64,57 @@ define('LangMessageMessage'							,'Message');
 define('LangMessageDate'                ,'Date');
 define('LangMessageAllDeepskyLogUser'		,'Toutes les utilisateurs de Deepskylog');
 define('LangMessageBy'									,'par ');
-define('LangMessageReply'               ,'R�ponse');
+define('LangMessageReply'               ,'R&eacute;ponse');
 define('LangMessageDelete'              ,'Effacer');
 define('LangNoPermissionToRead'         ,'Vous n\'avez pas les droits de voir ce message.');
 define('LangMessageYourObservation'			,'Votre observation de ');
 define('LangMessageOn'									,' vue le ');
 define('LangMessageAboutObservation'		,'concernant cette observation');
-define('LangMessageWelcomeSubject'      ,'Bienvenu � DeepskyLog, ');
-define('LangMessageWelcome'             ,'Bienvenu � DeepskyLog, ');
-define('LangMessageWelcome1'            ,'Nous vous souhaitons un bon usage de Deepskylog. Vous retrouverez d�j� quelques lins int�ressants pour commencer :<br /><br />');
+define('LangMessageWelcomeSubject'      ,'Bienvenu &agrave; DeepskyLog, ');
+define('LangMessageWelcome'             ,'Bienvenu &agrave; DeepskyLog, ');
+define('LangMessageWelcome1'            ,'Nous vous souhaitons un bon usage de Deepskylog. Vous retrouverez d&eacute;j&agrave; quelques lins int&eacute;ressants pour commencer :<br /><br />');
 define('LangMessageWelcome2'            ,'Rajouter un instrument</a><br /><br />');
-define('LangMessageWelcome3'            ,'Rajouter un site d\'observation</a><br />Apr�s l\'introduction un ciel typique, ou une valeur SQM typique, DeepskyLog vous calculera la visibilit� visibility de tous les objets!N\'oubliez pas de s�lectionner votre site d\'observation!<br /><br />');
-define('LangMessageWelcome4'            ,'Indiquez l\'atlas qui vous convient et envoyez une photo de vous-m�me ou votre instrument.</a><br /><br />On vous souhaite un boin usage de DeepskyLog!<br /><br />Les d�velopeurs de DeepskyLog');
+define('LangMessageWelcome3'            ,'Rajouter un site d\'observation</a><br />Apr&egrave;s l\'introduction un ciel typique, ou une valeur SQM typique, DeepskyLog vous calculera la visibilit&eacute; visibility de tous les objets!N\'oubliez pas de s&eacute;lectionner votre site d\'observation!<br /><br />');
+define('LangMessageWelcome4'            ,'Indiquez l\'atlas qui vous convient et envoyez une photo de vous-m&ecirc;me ou votre instrument.</a><br /><br />On vous souhaite un boin usage de DeepskyLog!<br /><br />Les d&eacute;velopeurs de DeepskyLog');
 
 define('LangBuildingCatalogList'        ,'En train de construire la liste de catalogues');
-define('LangClickToViewCatalogDetails'  ,'Cliquez une catalogue pour voir ses d�tails');
+define('LangClickToViewCatalogDetails'  ,'Cliquez une catalogue pour voir ses d&eacute;tails');
 
-define("LangObjectHighestAlt","Alt. Sup�rieure");
+define("LangObjectHighestAlt","Alt. Sup&eacute;rieure");
 define("LangObjectHighestFrom","Sup. de");
-define("LangObjectHighestTo","Sup. �");
+define("LangObjectHighestTo","Sup. &agrave;");
 define("LangObjectHighestAround","Sup. autour de");
 
-define("LangReportObjectHighestAlt","Altitude maximale durant l'ann�e");
-define("LangReportObjectHighestFrom","Maximal � partir du mois");
+define("LangReportObjectHighestAlt","Altitude maximale durant l'ann&eacute;e");
+define("LangReportObjectHighestFrom","Maximal &agrave; partir du mois");
 define("LangReportObjectHighestTo","Maximal juqu'au mois");
 define("LangReportObjectHighestAround","Maximal autour du mois");
 
-define("LangMonthStart", "d�but");
+define("LangMonthStart", "d&eacute;but");
 define("LangMonthMid", "mi-");
 define("LangMonthEnd", "fin");
 define("LangMonthTransit", "premier");
 
 // prior to 4.1
 
-define('LangHideTopMenu','Cacher le menu de t�te');
-define('LangShowTopMenu','Montrer le menu de t�te');
+define('LangHideTopMenu','Cacher le menu de t&ecirc;te');
+define('LangShowTopMenu','Montrer le menu de t&ecirc;te');
 define('LangHideLeftMenu','Cacher la structure de menu gauche');
 define('LangShowLeftMenu','Montrer la structure de menu gauch');
 define('LangInPrivateLists','Dans mes listes');
 define('LangInPublicLists','Dans les listes publics');
-define("LangObjectShowExtraInfo","Monter ou enlever des informations suppl�mentaires...");
-define("LangButtonOnlyObjectDetails"      ,"Juste les d�tails de lobjet");
-define("LangButtonObjectDetails"          ,"Les d�tails de l'objet");
-define("LangButtonOnlyObjectEphemerides"  ,"Juste les eph�m�rides de l'objet");
-define("LangButtonObjectEphemerides"      ,"Eph�merides de l'objet");
+define("LangObjectShowExtraInfo","Monter ou enlever des informations suppl&eacute;mentaires...");
+define("LangButtonOnlyObjectDetails"      ,"Juste les d&eacute;tails de lobjet");
+define("LangButtonObjectDetails"          ,"Les d&eacute;tails de l'objet");
+define("LangButtonOnlyObjectEphemerides"  ,"Juste les &eacute;ph&eacute;merides de l'objet");
+define("LangButtonObjectEphemerides"      ,"Eph&eacute;merides de l'objet");
 define("LangButtonOnlyObjectObjectsNearby","Juste les objets proches");
 define("LangButtonObjectObjectsNearby"    ,"Les objets proches");
 define("LangButtonOnlyObjectObservations" ,"Juste les observations de l'objet");
 define("LangButtonObjectObservations"     ,"Les observations de l'objet");
 
-define("ObjectDetailsShow"      ,"Montrer les d�tails de l'objet");
-define("ObjectDetailsHide"      ,"Cacher les d�tails de l'objets");
+define("ObjectDetailsShow"      ,"Montrer les d&eacute;tails de l'objet");
+define("ObjectDetailsHide"      ,"Cacher les d&eacute;tails de l'objets");
 define("ObjectNearbyObjectsShow","Montrer les autres objects proches");
 define("ObjectNearbyObjectsHide","Cacher les autres objets proches");
 define("ObjectObservationsShow" ,"Montrer les observations");
@@ -132,40 +132,36 @@ define("LangObjectRiseSet2"     ,"Mont.-desc. obj.");
 
 
 define("LangpdfseriesExplain1"  ,"Generez une collection de cartes pour chaque objet.");
-define("LangpdfseriesExplain2"  ,"Chaque collection contient le nombre de cartes sp�cifi� par le nombre de champs de vue sp�cifi�s.");
-define("LangpdfseriesExplain3"  ,"Chaque carte sp�cifi� par les champs de vue, montre des �toiles et des objets juqsu'� la magnitude sp�cifi� dans les cases correspondantes.");
-define("LangpdfseriesExplain4"  ,"Chaque case de magnitude devra contenir autant de valuers que sp�cifi�s par les champs de vue.");
-define("LangpdfseriesExplain5"  ,"Vous pouvez sauvegarder chaque collection et �ventuellement les r�unir dans un seule fichier pdf catalogue - atlas avec des outils libres disponibles sur l'internet.");
-define("LangpdfseriesExplain5b" ,"Si vous faites tout d'un coup, comptez sur une longue dur�e de traitement, jusqu'� 30 secondes ou plus par objet. Attention: cette option est disponible dans tous les navigateurs, sauf dans Microsoft Internet Explorer.");
-define("LangpdfseriesExplain6"  ,"Pour chaque objet, vous avez la possibilit� derajouter une page de donn�es. Celle-ci contient les donn�es de base del'objet, eune description de l'objet si disponible, et deux photos avec la taille sp�cifi� par vous (15, 30 ou 60 minutes d'arc, ou rien).");
-define("LangpdfseriesExplain7"  ,"Par objet, vous pouvez rajouter une table de contenu. Celli-ci contient l'aper�u de toutes les objet figurant sur les cartes correspondantes.");
+define("LangpdfseriesExplain2"  ,"Chaque collection contient le nombre de cartes sp&eacute;cifi&eacute; par le nombre de champs de vue sp&eacute;cifi&eacute;s.");
+define("LangpdfseriesExplain3"  ,"Chaque carte sp&eacute;cifi&eacute; par les champs de vue, montre des &eacute;toiles et des objets juqsu'&agrave; la magnitude sp&eacute;cifi&eacute; dans les cases correspondantes.");
+define("LangpdfseriesExplain4"  ,"Chaque case de magnitude devra contenir autant de valuers que sp&eacute;cifi&eacute;s par les champs de vue.");
+define("LangpdfseriesExplain5"  ,"Vous pouvez sauvegarder chaque collection et &eacute;ventuellement les r&eacute;unir dans un seule fichier pdf catalogue - atlas avec des outils libres disponibles sur l'internet.");
+define("LangpdfseriesExplain5b" ,"Si vous faites tout d'un coup, comptez sur une longue dur&eacute;e de traitement, jusqu'&agrave; 30 secondes ou plus par objet. Attention: cette option est disponible dans tous les navigateurs, sauf dans Microsoft Internet Explorer.");
+define("LangpdfseriesExplain6"  ,"Pour chaque objet, vous avez la possibilit&eacute; derajouter une page de donn&eacute;es. Celle-ci contient les donn&eacute;es de base de l'objet, eune description de l'objet si disponible, et deux photos avec la taille sp&eacute;cifi&eacute; par vous (15, 30 ou 60 minutes d'arc, ou rien).");
+define("LangpdfseriesExplain7"  ,"Par objet, vous pouvez rajouter une table de contenu. Celli-ci contient l'aper&ccedil;u de toutes les objet figurant sur les cartes correspondantes.");
 define("LangpdfseriesButton"    ,"Generez tous");
-define("LangpdfseriesAddDataPage","Rajoutez une page de donn�es");
-define("LangpdfseriesWithEphemerides","avec les �ph�merides");
-define("LangpdfseriesWithYearEphemerides","avec les �ph�merides pour toute l'ann�e");
+define("LangpdfseriesAddDataPage","Rajoutez une page de donn&eacute;es");
+define("LangpdfseriesWithEphemerides","avec les &eacute;ph&eacute;merides");
+define("LangpdfseriesWithYearEphemerides","avec les &eacute;ph&eacute;merides pour toute l'ann&eacute;e");
 define("LangpdfseriesAddIndexPage","Rajoutez une table de contenu");
 
 define("LangpdfseriesObject"    ,"Objet");
 define("LangpdfseriesSize"      ,"Taille");
 define("LangpdfseriesFoVs"      ,"Champs de vue");
 define("Langpdfseriesdsos"      ,"Magnitudes des objets correspondantes");
-define("Langpdfseriesstars"     ,"Magnitudes des �toiles correspondantes");
+define("Langpdfseriesstars"     ,"Magnitudes des &eacute;toiles correspondantes");
 define("Langpdfseriesphotos"    ,"Taille des photos (minutes d'arc)");
 define("Langpdfseriesclickok"   ,'Cliquez "Ok", seulement quand ');
 define("Langpdfserieswhenfinished",' est fait!');
-define("LangpdfseriesGenerating",'G�n�ration en cours: ');
-define("Langpdfserieschoselayout","Pri�re de s�lectionner le type de page � utiliser.");
-
-
-// TO DO
-
+define("LangpdfseriesGenerating",'G&eacute;n&eacute;ration en cours: ');
+define("Langpdfserieschoselayout","Pri&egrave;re de s&eacute;lectionner le type de page &agrave; utiliser.");
 
 define("LangStoredQueries"      ,"Recherches connues:");
 define("LangSaveAs"             ,"Sauvegarder commme...");
 define("LangRemoveQuery"        ,"Effacer");
 
 
-define("LangExclude",            "Except�:");
+define("LangExclude",            "Except&eacute;:");
 define("LangDescriptioncontains","Description NGC contient:");
 
 define("LangShowAll",            'montrez tous');
@@ -173,7 +169,7 @@ define("LangShowAll",            'montrez tous');
 
 define("LangOn",                  "le");
 define("LangFrom",                "de");
-define("LangTo",                  ' � ');
+define("LangTo",                  ' &agrave; ');
 
 define("LangNoExcludeIfSeen",    'mais ne pas exclure si vu');
 
@@ -185,11 +181,11 @@ define("ReportMoonUp",           'Lever lune: ');
 define("ReportPreparedForDate"    ," pour les observations du ");
 
 define("ReportLink"               ,"Rapport"); 
-define("ReportQueryOfObjects"     ,"aper�u des objets");
+define("ReportQueryOfObjects"     ,"aper&ccedil;u des objets");
 
 define("ReportTitle"              ,"Mises en page pour ");
 define("ReportKnownLayouts"       ,"Mises en pages connues");
-define("ReportSaveAndGeneratePdf" ,"Sauvegarder et g�n�ration pdf");
+define("ReportSaveAndGeneratePdf" ,"Sauvegarder et g&eacute;n&eacute;ration pdf");
 define("ReportSaveAs"             ,"Sauvegarder comme...");
 define("ReportDelete"             ,"Effacer");
 
@@ -199,42 +195,42 @@ define("ReportFieldxposition"                                  ,"Le champ est su
 define("ReportFieldwidth"                                      ,"Montrez la taille du champ");
 define("ReportFieldStyle"                                      ,"Type de police: combination de<br />i (italic), b (gras) and l, r or c (alignement gauche, droite ou milieu)");
 define("ReportFieldTextBefore"                                 ,"Texte devant le champ");
-define("ReportFieldTextAfter"                                  ,"Texte derri�re le champ");
-define("ReportFieldLegend"                                     ,"Text de l�gende");
+define("ReportFieldTextAfter"                                  ,"Texte derri&egrave;re le champ");
+define("ReportFieldLegend"                                     ,"Text de l&eacute;gende");
 
 define("Reportpagesize"                                        ,"Taille papier (A4/A3/LETTER/...)");
 define("Reportpageorientation"                                 ,"Orientation de la page (landscape/portrait)");
-define("Reportstartpagenumber"                                 ,"Num�ro de la premi�re page");
-define("Reporttop"                                             ,"Marge en haut de la premi�re ligne (coordonn� y)");
-define("Reportheader"                                          ,"Position de la ligne de t�te (coordonn� y)");
-define("Reportxleft"                                           ,"Position de la premi�re colonne (coordonn� x)");
-define("Reportbottom"                                          ,"Marge en dessous de la derni�re ligne (coordonn� y)");
-define("Reportfooter"                                          ,"Position de la ligne en bas de page (coordonn� y)");
-define("Reportxmid"                                            ,"Position de la deuxi�me colonne (coordonn� y");
+define("Reportstartpagenumber"                                 ,"Num&eacute;ro de la premi&egrave;re page");
+define("Reporttop"                                             ,"Marge en haut de la premi&egrave;re ligne (coordonn&eacute; y)");
+define("Reportheader"                                          ,"Position de la ligne de t&ecirc;te (coordonn&eacute; y)");
+define("Reportxleft"                                           ,"Position de la premi&egrave;re colonne (coordonn&eacute; x)");
+define("Reportbottom"                                          ,"Marge en dessous de la derni&egrave;re ligne (coordonn&eacute; y)");
+define("Reportfooter"                                          ,"Position de la ligne en bas de page (coordonn&eacute; y)");
+define("Reportxmid"                                            ,"Position de la deuxi&egrave;me colonne (coordonn&eacute; y");
 define("ReportfontSizeText"                                    ,"Taille de la police");
 define("ReportsectionBarSpace"                                 ,"ReportsectionBarSpace");
 define("ReportfontSizeSection"                                 ,"Taille de la police des titres");
 define("Reportdeltalineextra"                                  ,"Egcard entre les lignes");
 define("ReportsectionBarHeightextra"                           ,"Ecard devant les titres");
-define("ReportdeltalineSection"                                ,"Ecard apr�s les titres");
-define("Reportdeltaobjectline"                                 ,"Ecard suppl�mentaire ntre les objets");
+define("ReportdeltalineSection"                                ,"Ecard apr&egrave;s les titres");
+define("Reportdeltaobjectline"                                 ,"Ecard suppl&eacute;mentaire entre les objets");
 define("ReportSectionBarWidthbase"                             ,"Largeur des titres (p.e. les constellations)");
 define("ReportSectionBarSpace"                                 ,"Recul des titres");
-define("ReportShowElements"                                    ,"Montrez les titres (t), l'observateur (h), les �ph�merides (e), les num�ros de page (p), (l) l�gende, (s) lignes de s�paration, (i) index");
+define("ReportShowElements"                                    ,"Montrez les titres (t), l'observateur (h), les &eacute;ph&eacute;merides (e), les num&eacute;ros de page (p), (l) l&eacute;gende, (s) lignes de s&eacute;paration, (i) index");
 define("Reportobjectseen"                                      ,"Objet vu par vous ou des autres");
-define("Reportobjectlastseen"                                  ,"Derni�re date d'observation");
+define("Reportobjectlastseen"                                  ,"Derni&egrave;re date d'observation");
 define("Reportshowname"                                        ,"Nom de l'objet dans la recherche (p.e. Caldwell x)");
 define("Reportobjectname"                                      ,"Nom principal de l'objet");
 define("Reportaltname"                                         ,"Les noms alternatives de  l'objet");
-define("Reportobjecttype"                                      ,"Abbr�viation du type");
+define("Reportobjecttype"                                      ,"Abbr&eacute;viation du type");
 define("Reportobjecttypefull"                                  ,"Type de l'objet");
 define("Reportobjectconstellation"                             ,"Abbreviationde la constellation");
 define("Reportobjectconstellationfull"                         ,"Nom de le constellation");
 define("Reportobjectmagnitude"                                 ,"Magnitude de l'objet");
 define("Reportobjectsurfacebrightness"                         ,"Mgnitude de surface de l'objet");
-define("Reportobjectradecl"                                    ,"Ascension droite et d�clination");
+define("Reportobjectradecl"                                    ,"Ascension droite et d&eacute;clination");
 define("Reportobjectra"                                        ,"Ascension droite");
-define("Reportobjectdecl"                                      ,"D�clination");
+define("Reportobjectdecl"                                      ,"D&eacute;clination");
 define("Reportobjectsizepa"                                    ,"Largeur et position d'angle");
 define("Reportobjectdiam1"                                     ,"Largeur 1");
 define("Reportobjectdiam2"                                     ,"Largeur 2");
@@ -242,24 +238,24 @@ define("Reportobjectsize"                                      ,"Largeur (largeu
 define("Reportobjectpa"                                        ,"Position d'angle");
 define("Reportobjectuseratlaspage"                             ,"Page d'atlas contenant l'objet");
 define("Reportobjectdescription"                               ,"Description de l'object");
-define("Reportobjectcontrast"                                  ,"Valeur de la diff�rence de contrast");
-define("Reportobjectcontrastpopup"                             ,"Explication de la diff�rence de contrast");
-define("Reportobjectcontrasttype"                              ,"Type de diff�rence de contrast");
+define("Reportobjectcontrast"                                  ,"Valeur de la diff&eacute;rence de contrast");
+define("Reportobjectcontrastpopup"                             ,"Explication de la diff&eacute;rence de contrast");
+define("Reportobjectcontrasttype"                              ,"Type de diff&eacute;rence de contrast");
 define("Reportobjectoptimalmagnification"                      ,"Magnification optimale avec oculaire");
 define("Reportobjectoptimalmagnificationvalue"                 ,"Valeur de magnification optimale");
 define("Reportobjectrise"                                      ,"L'heure du montant de l'objet");
 define("Reportobjectrisepopup"                                 ,"Explication de l'heure du montant de l'objet");
 define("Reportobjecttransit"                                   ,"L'heure du transit de objet");
 define("Reportobjecttransitpopup"                              ,"Explication de l'heure de transit de l'objet");
-define("Reportobjectset"                                       ,"L'heure de la d�scente de l'objet");
-define("Reportobjectsetpopup"                                  ,"Explication de l'heure de d�scente de l'objet");
+define("Reportobjectset"                                       ,"L'heure de la d&eacute;scente de l'objet");
+define("Reportobjectsetpopup"                                  ,"Explication de l'heure de d&eacute;scente de l'objet");
 define("Reportobjectbest"                                      ,"Meilleur temps pour l'observation");
 define("Reportobjectbestpopup"                                 ,"Explication du meilleur temps pour l'observation");
 define("Reportobjectmaxaltitude"                               ,"Altitude maximale au moment du meilleur temps");
 define("Reportobjectmaxaltitudepopup"                          ,"Explacation de l'altitude maximale");
-define("ReportEpehemeridesFor"                                 ,"Ephem�ides pour");
-define("ReportEpehemeridesForShow"                             ,"Montez les �phemerides");
-define("ReportEpehemeridesForHide"                             ,"Cachez les �phemerides");
+define("ReportEpehemeridesFor"                                 ,"Eph&eacute;merides pour");
+define("ReportEpehemeridesForShow"                             ,"Montez les &eacute;ph&eacute;merides");
+define("ReportEpehemeridesForHide"                             ,"Cachez les &eacute;ph&eacute;merides");
 define("ReportEpehemeridesIn"                                  ,"&agrave;");
 define("ReportInLocalTime"                                     ," en temps local !");
 define("ReportImagesFor"                                       ,'Les images pour ');
@@ -270,20 +266,20 @@ define("AtlasPageFont"                                   ,"Taille de la police d
 define("LangLoadFormLayout"                              ,"Mise en page: ");
 
 define("LangLoadFormLayout1"                             ,"Fait");
-define("LangLoadFormLayout2"                             ,"Pri�re d'indiquer le nom de la mise en page");
+define("LangLoadFormLayout2"                             ,"Pri&egrave;re d'indiquer le nom de la mise en page");
 
 define("LangSaveFormLayout1"                             ,"Sauvegarder");
-define("LangSaveFormLayout2"                             ,"Pri�re de donner un nom � la mise en page");
+define("LangSaveFormLayout2"                             ,"Pri&egrave;re de donner un nom &agrave; la mise en page");
 define("LangSaveFormLayout3"                             ,"Ouvrir");
 define("LangSaveFormLayout4"                             ,"Effacer");
 
 
 define("profilefovmagnitude"                            ,"Les champs de vue standard de l'atlas:");
-define("profilefovmagnitudeselect"                      ,"aper�u / recherche / d�tail");
+define("profilefovmagnitudeselect"                      ,"aper&ccedil;u / recherche / d&eacute;tail");
 define("profiledsosmagnitude"                           ,"Les magnitudes des objets dans l'atlas:");
-define("profiledsosmagnitudeselect"                     ,"aper�u / recherche / d�tail");
-define("profilestarsmagnitude"                          ,"Les magnitudes des �toiles:");
-define("profilestarsmagnitudeselect"                    ,"aper�u / recherche / d�tail");
+define("profiledsosmagnitudeselect"                     ,"aper&ccedil;u / recherche / d&eacute;tail");
+define("profilestarsmagnitude"                          ,"Les magnitudes des &eacute;toiles:");
+define("profilestarsmagnitudeselect"                    ,"aper&ccedil;u / recherche / d&eacute;tail");
 define("profilephotosizes"                              ,"Taille standard des photos:");
 define("profilephotosizesselect"                        ,"photo 1 / photo 2");
 
@@ -294,12 +290,12 @@ define('LangToday'                                       ,"Aujourd'hui");
 define('LangDate'                                        ,'Date');
 define('LangCircumpolar'                                 ,' est circumpolair');
 define('LangDoesntrise'                                  ," ne monte pas au-dessus de l'horizon");
-define('LangRise'                                        ,' monte � ');
-define('LangTransitPopup'                                ,' passe � ');
-define('LangSet'                                         ,' d�scend � ');
+define('LangRise'                                        ,' monte &agrave; ');
+define('LangTransitPopup'                                ,' passe &agrave; ');
+define('LangSet'                                         ,' d&eacute;scend &agrave; ');
 define('LangAltitude'                                    ,' atteint une altitude de ');
 define('LangRistrasetOn'                                 ,' le ');
-define('LangRistrasetIn'                                 ,' � ');
+define('LangRistrasetIn'                                 ,' &agrave; ');
 
 
 define('OverviewChart'                                   ,'Aper&ccedil;u');
@@ -307,8 +303,8 @@ define('LookupChart'                                     ,'Recherche');
 define('DetailChart'                                     ,'D&eacute;tail');
 
 define('atlasPageFoV'                                    ,'Champ de vue:');
-define('atlasPageDSLM'                                   ,"Objets jusqu'� mag.:");
-define('atlasPageStarLM'                                 ,"Etoiles jusqu'� mag:");
+define('atlasPageDSLM'                                   ,"Objets jusqu'&agrave; mag.:");
+define('atlasPageStarLM'                                 ,"Etoiles jusqu'&agrave; mag:");
             
 
 define("LangShowObjectDetails"                            ,"Montrer del d&eacute;tails de l'objet");
@@ -321,12 +317,12 @@ define("LangObjectsFilterLocation"                        ,"Endroit d'observatio
 define("LangObjectsFilterLocationExpl"                    ,"Marquez les objets qui ne sont pas visibles &agrave; partir du lieu d'observation s&eacute;lectionn&eacute;.");
 define("LangObjectsFilterLocationOffExpl"                 ,"D&eacute;marquez les objets qui ne sont pas visibles &agrave; partir du lieu d'observation s&eacute;lectionn&eacute;.");
 define("LangObjectsFilterDateTime"                        ,"Date-Temps");
-define("LangObjectsFilterDateTimeExpl"                    ,"Marquez les objets invisibles � l'endroit et la date s�lectionn�s.");
-define("LangObjectsFilterDateTimeOffExpl"                 ,"Ne marquez plus les objets invisibles � l'endroit et la date s�lectionn�s.");
+define("LangObjectsFilterDateTimeExpl"                    ,"Marquez les objets invisibles &agrave; l'endroit et la date s&eacute;lectionn&eacute;s.");
+define("LangObjectsFilterDateTimeOffExpl"                 ,"Ne marquez plus les objets invisibles &agrave; l'endroit et la date s&eacute;lectionn&eacute;s.");
 
 
 define("LangMarkAllAsRead"                                ,"Marquez tout comme lu.");
-define("LangMarkUpToHereAsRead"                           ,"Marquez les observations pr�c�dentes comme lu.");
+define("LangMarkUpToHereAsRead"                           ,"Marquez les observations pr&eacute;c&eacute;dentes comme lu.");
 
 define("LangValidateMessage1"                             ,"Tous les champs obligatoires doivent &#234;tre remplis!");
 define("LangRequiredFields"                               ,"(*= champs obligatoires)");
@@ -346,7 +342,7 @@ define("LangMoonSet"                                      ,"Coucher");
 define("LangMoon"                                         ,"Lune");
 define("LangMoonNight"                                    ,"Nuit");
 define("LangMoonSun"                                      ,"Soleil");
-define("LangMoonTwilight"                                 ,"Cr�puscule");
+define("LangMoonTwilight"                                 ,"Cr&eacute;puscule");
 define("LangMoonNaut"                                     ,"Naut.");
 define("LangMoonAstro"                                    ,"Astro.");
 define("LangAstronomicalTwilight"                         ,"Crepuscule astronomique");
@@ -355,67 +351,67 @@ define("LangNauticalTwilight"                             ,"Crepuscule nautique"
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Atlas interactif");
 
-define("LangAtlasAbbrev"                                  ,"Page d'abbreviations - utilisez la touche A pour la montrer ou cahcer");
+define("LangAtlasAbbrev"                                  ,"Page d'abbreviations - utilisez la touche A pour la montrer ou cacher");
 
 
 
 
-define("LangAtlasHelp"                                    ,"Page d'aide - utilisez la touche H pour la montrer ou cahcer");
-define("LangAtlasNavigation"                              ,"Navigation: cliquez le souris pour centrer la page � un endroit pr�cis.");
-define("LangAtlasNavigation1"                             ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;soit, utilisez les fl�ches du clavier. " .
-                                                           "Boutons suppl�mentaires: Ctrl (minimal) - Shift (d�placement maximal).");
-define("LangAtlasZoom"                                    ,"Zoom:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Le champs de vue est indiqu� en bas de page (CdV) en minutes ou secondes d'arc.");
+define("LangAtlasHelp"                                    ,"Page d'aide - utilisez la touche H pour la montrer ou cacher");
+define("LangAtlasNavigation"                              ,"Navigation: cliquez le souris pour centrer la page &agrave; un endroit pr&eacute;cis.");
+define("LangAtlasNavigation1"                             ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;soit, utilisez les fl&egrave;ches du clavier. " .
+                                                           "Boutons suppl&eacute;mentaires: Ctrl (minimal) - Shift (d&eacute;placement maximal).");
+define("LangAtlasZoom"                                    ,"Zoom:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Le champs de vue est indiqu&eacute; en bas de page (CdV) en minutes ou secondes d'arc.");
 define("LangAtlasZoom1"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;utilisez le bouton trounant du souris pour zoomer.");
 define("LangAtlasZoom2"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;soit vous utilisez les touches du clavier: " .
                                                            "Ctrl + Shift + ^ ou v.");
-define("LangAtlasZoom3"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;soit vous utilisez les touches avec les num�ros 0 � 9 pour un affichage entre 1 et 40 degr�es.");
-define("LangAtlasZoom4"                                   ,"NOTICE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dans certains navigateurs, ces touches peuvent �voquer d'autres actions,");
-define("LangAtlasZoom5"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;et ils ne supportent pas ces op�rations. Utilisez le souris dans ce cas.");
+define("LangAtlasZoom3"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;soit vous utilisez les touches avec les num&eacute;ros 0 &agrave; 9 pour un affichage entre 1 et 40 degr&eacute;es.");
+define("LangAtlasZoom4"                                   ,"NOTICE:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dans certains navigateurs, ces touches peuvent &eacute;voquer d'autres actions,");
+define("LangAtlasZoom5"                                   ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;et ils ne supportent pas ces op&eacute;rations. Utilisez le souris dans ce cas.");
 
 define("LangAtlasGrid"                                    ,"Grid:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;utilisez la touche G pour montrer ou cacher le grillage.");
-define("LangAtlasLabels"                                  ,"Labels:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;utilisez la touche L pour montrer ou cacher les libell�s.");
-define("LangAtlasMagnitude"                               ,"Magnitude:&nbsp;&nbsp;La magnitude maximale des objet sur l'�cran en montr� en bas de l'�cran.");
+define("LangAtlasLabels"                                  ,"Labels:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;utilisez la touche L pour montrer ou cacher les libell&eacute;s.");
+define("LangAtlasMagnitude"                               ,"Magnitude:&nbsp;&nbsp;La magnitude maximale des objet sur l'&eacute;cran en montr&eacute; en bas de l'&eacute;cran.");
 define("LangAtlasMagnitude1"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utilisez la touche SHIFT+M pour afficher plus d'objets faibles, utilisez m pour en afficher moins.");
 define("LangAtlasMagnitude2"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utilisez CTRL+M pour un maximum d'objets.");
-define("LangAtlasMagnitude3"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;La magnitude maximale des �toiles sur l'�cran en montr� en bas de l'�cran.");
-define("LangAtlasMagnitude4"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utilisez la touche SHIFT+S pour afficher plus d'�toiles faibles, utilisez s pour en afficher moins.");
-define("LangAtlasMagnitude5"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;La magnitude correspondant � chaque taille d'�toile est mentionn�e en haut de la page.");
+define("LangAtlasMagnitude3"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;La magnitude maximale des &eacute;toiles sur l'&eacute;cran en montr&eacute; en bas de l'&eacute;cran.");
+define("LangAtlasMagnitude4"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Utilisez la touche SHIFT+S pour afficher plus d'&eacute;toiles faibles, utilisez s pour en afficher moins.");
+define("LangAtlasMagnitude5"                              ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;La magnitude correspondant &agrave; chaque taille d'&eacute;toile est mentionn&eacute;e en haut de la page.");
 
-define("LangAtlasObjects"                                 ,"Objects:&nbsp;&nbsp;&nbsp;&nbsp;Les intitul�s montrent le nom principal de l'objet.");
-define("LangAtlasObjects1"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vous pouvez cliquer ce nom pour aller aux d�tails de cet objet en DeepskyLog.");
-define("LangAtlasObjects2"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;La couleur vvous montre si l'objet a �t� vu: rouge = pas vu par personne, jaune = svu par des autres, vert = vu par vous.");
-define("LangAtlasObjects3"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Les lignes vous disent la m�me chose: aucune ligne = pas vu, ligne pointill� = vu par les autres,");
-define("LangAtlasObjects4"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ligne en-dessous = vu par vous, ligne au-dessus = vous avez �galement fait un dessin.");
-define("LangAtlasObjects5"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Laissez le souris au-dessus du nom pour voir des informations suppl�mentaires.");
+define("LangAtlasObjects"                                 ,"Objects:&nbsp;&nbsp;&nbsp;&nbsp;Les intitul&eacute;s montrent le nom principal de l'objet.");
+define("LangAtlasObjects1"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Vous pouvez cliquer ce nom pour aller aux d&eacute;tails de cet objet en DeepskyLog.");
+define("LangAtlasObjects2"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;La couleur vvous montre si l'objet a &eacute;t&eacute; vu: rouge = pas vu par personne, jaune = vu par des autres, vert = vu par vous.");
+define("LangAtlasObjects3"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Les lignes vous disent la m&ecirc;me chose: aucune ligne = pas vu, ligne pointill&eacute; = vu par les autres,");
+define("LangAtlasObjects4"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ligne en-dessous = vu par vous, ligne au-dessus = vous avez &eacute;galement fait un dessin.");
+define("LangAtlasObjects5"                                ,"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Laissez le souris au-dessus du nom pour voir des informations suppl&eacute;mentaires.");
 
-define("LangAtlasCursor"                                  ,"Cursor:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Les coordonn�es du curseur sont mentionn�s en bas de page.");
+define("LangAtlasCursor"                                  ,"Cursor:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Les coordonn&eacute;es du curseur sont mentionn&eacute;s en bas de page.");
 
-define("LangAtlasPrint"                                   ,"Print:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;En appuyant sur la touche p vous pouvez g�n�rer une version pdf de la page.");
+define("LangAtlasPrint"                                   ,"Print:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;En appuyant sur la touche p vous pouvez g&eacute;n&eacute;rer une version pdf de la page.");
 
-define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Les donn�es des �toiles sont fournis par Tycho2+ et USNO UCAC3");
+define("LangAtlasCredit"                                  ,"Credit:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Les donn&eacute;es des &eacute;toiles sont fournis par Tycho2+ et USNO UCAC3");
 
-define("LangAtlasWhatsnext"                               ,"Version:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Des options suppl�mentaires sont en pr�paration (les fronti�res entre les constellations p.e.).");
+define("LangAtlasWhatsnext"                               ,"Version:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Des options suppl&eacute;mentaires sont en pr&eacute;paration (les fronti&egrave;res entre les constellations p.e.).");
 
 
 // text for fstOffset
 define("LangChangeAccountField12"                         ,"fstOffset");
-define("LangChangeAccountField12Expl"                     ,"Diff�rence entre les valeurs SQM mesur�es et l'�toile la plus faible qui est visible. Quand fstOffset est 0.2, la magnitude limite est de 0.2 mieux que la valeur calcul� par l'appareil SQM.");
+define("LangChangeAccountField12Expl"                     ,"Diff&eacute;rence entre les valeurs SQM mesur&eacute;es et l'&eacute;toile la plus faible qui est visible. Quand fstOffset est 0.2, la magnitude limite est de 0.2 mieux que la valeur calcul&eacute; par l'appareil SQM.");
 
 // Visibility for resolved open clusters
-define("LangVisibilityOC1"                                ,"Amas tr�s magnifique et remarquable");
+define("LangVisibilityOC1"                                ,"Amas tr&egrave;s magnifique et remarquable");
 define("LangVisibilityOC2"                                ,"Amas magnifique et remarquable");
-define("LangVisibilityOC3"                                ,"Amas m�diocre");
-define("LangVisibilityOC4"                                ,"L'amas n'attire g�re l'attention");
-define("LangVisibilityOC5"                                ,"Tr�s peu remarquable, on le rate facilement durant les d�placements");
-define("LangVisibilityOC6"                                ,"Observation questionnable, les �toiles ne sortent presque pas des environs");
-define("LangVisibilityOC7"                                ,"Presque pas d'�toiles d�tectables");
+define("LangVisibilityOC3"                                ,"Amas m&eacute;diocre");
+define("LangVisibilityOC4"                                ,"L'amas n'attire g&egrave;re l'attention");
+define("LangVisibilityOC5"                                ,"Tr&eacute;s peu remarquable, on le rate facilement durant les d&eacute;placements");
+define("LangVisibilityOC6"                                ,"Observation questionnable, les &eacute;toiles ne sortent presque pas des environs");
+define("LangVisibilityOC7"                                ,"Presque pas d'&eacute;toiles d&eacute;tectables");
 
 // Visibility for double stars
-define("LangVisibilityDS1"                                ,"L'�toile binary est s�parable");
-define("LangVisibilityDS2"                                ,"L'�toile binaire ressemble la lettre 8");
-define("LangVisibilityDS3"                                ,"L'�toile binaire n'est pas s�parable");
+define("LangVisibilityDS1"                                ,"L'&eacute;toile binary est s&eacute;parable");
+define("LangVisibilityDS2"                                ,"L'&eacute;toile binaire ressemble la lettre 8");
+define("LangVisibilityDS3"                                ,"L'&eacute;toile binaire n'est pas s&eacute;parable");
 
-define("LangDetailDS1"                                    ,"Liminosit� �gale");
+define("LangDetailDS1"                                    ,"Liminosit&eacute; &eacute;gale");
 define("LangDetailDS2"                                    ,"dans un champ attractif");
 define("LangDetailDS3"                                    ,"component 1");
 define("LangDetailDS4"                                    ,"component 2");
@@ -434,8 +430,8 @@ define("LangGeneralObservations"													,"observations");
 
 define("LangIndexPleaseWait"															,"Pri&egrave;re d'attendre un moment pendant la recherche des donn&eacute;es...");
 
-define("LangTitlecomets_result_query_objects"        			,"Recherche des r�sultats de com�te");
-define("LangTitlecomets_result_query_observations"  			,"Recherche des r�sultats d'observation de com�te");
+define("LangTitlecomets_result_query_objects"        			,"Recherche des r&eacute;sultats de com&egrave;te");
+define("LangTitlecomets_result_query_observations"  			,"Recherche des r&eacute;sultats d'observation de com&egrave;te");
 
 define("LangTitleview_observer_catalog"  									,"R&eacute;sultat recherche com&egrave;tes");
 define("LangTitlerank_observers"         									,"Pr&eacute;sentation observateurs");
