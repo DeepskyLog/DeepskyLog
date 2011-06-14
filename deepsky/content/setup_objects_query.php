@@ -349,7 +349,7 @@ function setup_objects_query()
 	  reset($DSOcatalogs);
 	  $temp="";
 	  while(list($key,$value)=each($DSOcatalogs))
-	  { if(($nmb=$objObject->getNumberOfObjectsInCatalog($value))>1000)
+	  { if(($nmb=$objObject->getNumberOfObjectsInCatalog($value))>10)
 	    { $checked='';
 	  	  if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
 	        $checked=in_array($value,$_SESSION['QobjParams']['excl']);
