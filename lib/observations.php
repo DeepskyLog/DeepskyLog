@@ -7,18 +7,19 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 
 class Observations {
 	public function addCSVobservations()
-	{ global $objPresentations,$messageLines,$objObject,$objLocation,$loggedUser,$objInstrument,$objEyepiece,$objLens,$objFilter,$baseURL,$objObserver,$objUtil;
+	{ global $objPresentations,$messageLines,$objObject,$objLocation,$loggedUser,$objInstrument,$objEyepiece,$objLens,$objFilter,$baseURL,$objObserver,$objUtil,$objSession;
 	  $_GET['indexAction']='default_action';
 		if($_FILES['csv']['tmp_name']!="")
 		  $csvfile=$_FILES['csv']['tmp_name'];
 		$data_array=file($csvfile); 
-	  set_time_limit('line count '.count($data_array));
+	  set_time_limit(count($data_array));
 		for($i=0;$i<count($data_array);$i++ ) 
 		  $parts_array[$i]=explode(";",$data_array[$i]); 
 		for($i=0;$i<count($parts_array);$i++)
 		{ $objects[$i]     = htmlentities($objUtil->checkArrayKey($parts_array[$i],0,''));
 		  $dates[$i]       = htmlentities($objUtil->checkArrayKey($parts_array[$i],2,''));
 		  $locations[$i]   = htmlentities($objUtil->checkArrayKey($parts_array[$i],4,''));
+		  $instruments[$i] = htmlentities($objUtil->checkArrayKey($parts_array[$i],5,''));
 		  $filters[$i]     = htmlentities($objUtil->checkArrayKey($parts_array[$i],7,''));
 		  $eyepieces[$i]   = htmlentities($objUtil->checkArrayKey($parts_array[$i],6,''));
 		  $lenses[$i]      = htmlentities($objUtil->checkArrayKey($parts_array[$i],8,''));
@@ -187,7 +188,7 @@ class Observations {
 		                                        $locat,
 		                                        $date,
 		                                        $time,
-		                                        htmlentities(trim($parts_array[$i][13])),
+		                                        trim($parts_array[$i][13]),
 		                                        htmlentities(trim($parts_array[$i][9])),
 		                                        str_replace(',','.',htmlentities(trim($parts_array[$i][10]))),
 		                                        htmlentities(((trim($parts_array[$i][11])=="")?"0":trim($parts_array[$i][11]))),
@@ -196,11 +197,12 @@ class Observations {
 						                                ((trim($parts_array[$i][7])!="")?Nz0($objFilter->getFilterObserverPropertyFromName(htmlentities(trim($parts_array[$i][7])), $loggedUser,'id')):0),            
 						                                ((trim($parts_array[$i][8])!="")?Nz0($objLens->getLensObserverPropertyFromName(htmlentities(trim($parts_array[$i][8])), $loggedUser,'id')):0)
 						                                );
-		      if($obsid) {
+          if($obsid) {
 		        $added++;
 		        // Add the observation to all the sessions
-		        $objSession->addObservationToSessions($current_observation);
-		      } else
+		        $current_observation = 
+		        $objSession->addObservationToSessions($obsid);
+          } else
 		        $double++;
 		      }
 		      unset($_SESSION['QobsParams']);
@@ -300,7 +302,8 @@ class Observations {
 		                                                 $filterid, 
 		                                                 $lensid,
 		                                                 $sqm)");
-		return 1;
+    // Return the obsid
+		return $objDatabase->selectSingleValue("SELECT id FROM observations ORDER BY id DESC LIMIT 1", 'id');
 	}
 	public  function getAllInfoDsObservation($id)                                                                                                                       // returns all information of an observation
 	{ global $objDatabase;
@@ -405,7 +408,7 @@ class Observations {
       if (strncmp($timezone, "Etc/GMT", 7) == 0) {
         $timedifference = -$timedifference;
       }
-			if ($time < 0)
+      if ($time < 0)
 				return $time;
 			$time = sscanf(sprintf("%04d", $time), "%2d%2d");
 			$hours = $time[0] + (int) $timedifference;
@@ -428,7 +431,7 @@ class Observations {
 			$time = $hours * 100 + $minutes;
 			return $time;
 		} else
-			throw new Exception("Error in getDsObservationLocalTime of observations.php");
+		throw new Exception("Error in getDsObservationLocalTime of observations.php");
 	}
 	public  function getDsObservationProperty($id, $property, $defaultvalue='')                                                                                         // returns the property of the observation
 	{ global $objDatabase;

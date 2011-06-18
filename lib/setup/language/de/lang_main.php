@@ -96,8 +96,8 @@ define("LangReportObjectHighestTo","Highest till the month");
 define("LangReportObjectHighestAround","Highest around the month");
 
 define("LangMonthStart", "begin");
-define("LangMonthMid", "midden");
-define("LangMonthEnd", "eind");
+define("LangMonthMid", "middle");
+define("LangMonthEnd", "end");
 define("LangMonthTransit", "start");
 
 // prior to 4.1

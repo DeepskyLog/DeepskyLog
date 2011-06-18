@@ -2078,12 +2078,17 @@ class Utils
         $date=sscanf($obs["date"], "%4d%2d%2d");
       else
         $date=sscanf($obs["localdate"], "%4d%2d%2d");
+      if ($obs['seeing'] > -1) {
+        $seeing = true;
+      } else {
+        $seeing = false;
+      }
       $formattedDate=date($dateformat,mktime(0,0,0,$date[1],$date[2],$date[0]));
       $temp = array("Name"        => html_entity_decode(LangPDFMessage1)." : ".$obs['objectname'],
                     "altname"     => html_entity_decode(LangPDFMessage2)." : ".$object["altname"],
                     "type"        => $GLOBALS[$object['type']].html_entity_decode(LangPDFMessage12).$GLOBALS[$object['con']],
                     "visibility"  => (($obs['visibility'])?(html_entity_decode(LangViewObservationField22)." : ".$GLOBALS['Visibility'.$obs['visibility']]):''),
-                    "seeing"      => (($obs['seeing'])?(LangViewObservationField6." : ".$GLOBALS['Seeing'.$obs['seeing']]):''),
+                    "seeing"      => (($seeing)?(LangViewObservationField6." : ".$GLOBALS['Seeing'.$obs['seeing']]):''),
                     "limmag"      => (($obs['limmag'])?(LangViewObservationField7." : ".$obs['limmag']):''), 
                     "filter"      => (($obs['filterid'])?(LangViewObservationField31. " : " . $objFilter->getFilterPropertyFromId($obs['filterid'],'name')):''),
                     "eyepiece"    => (($obs['eyepieceid'])?(LangViewObservationField30. " : " .$objEyepiece->getEyepiecePropertyFromId($obs['eyepieceid'],'name')):''),
@@ -2104,7 +2109,7 @@ class Utils
       if($obs['eyepieceid']) $pdf->ezTable($tmp=array(array("eyepiece"=>$temp["eyepiece"])),     array("eyepiece" => "test"),   "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
       if($obs['filterid'])   $pdf->ezTable($tmp=array(array("filter"=>$temp["filter"])),         array("filter" => "test"),     "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
       if($obs['lensid'])     $pdf->ezTable($tmp=array(array("lens"=>$temp["lens"])),             array("lens" => "test"),       "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
-      if($obs['seeing'])     $pdf->ezTable($tmp=array(array("seeing"=>$temp["seeing"])),         array("seeing" => "test"),     "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
+      if($seeing)     $pdf->ezTable($tmp=array(array("seeing"=>$temp["seeing"])),         array("seeing" => "test"),     "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
       if($obs['limmag'])     $pdf->ezTable($tmp=array(array("limmag"=>$temp["limmag"])),         array("limmag" => "test"),     "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
       if($obs['visibility']) $pdf->ezTable($tmp=array(array("visibility"=>$temp["visibility"])), array("visibility" => "test"), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));
       $pdf->ezTable($tmp=array(array("observer"=>$temp["observer"])), array("observer" => html_entity_decode(LangPDFMessage1)), "", array("width" => "500", "showHeadings" => "0", "showLines" => "0", "shaded" => "0"));

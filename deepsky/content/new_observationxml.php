@@ -11,9 +11,9 @@ function new_observationxml()
 	echo "<div id=\"main\">";
 	$objPresentations->line(array("<h4>".LangXMLTitle."</h4>"),"L",array(),30);
 	echo "<hr />";
-	$objPresentations->line(array(LangXMLMessage1),"L",array(),30);
-	$objPresentations->line(array(LangXMLMessage2),"L",array(),30);
-	$objPresentations->line(array(LangXMLMessage3),"L",array(),30);
+	print LangXMLMessage1 . "<br />";
+	print LangXMLMessage2 . "<br />";
+	print LangXMLMessage3 . "<br />";
 	echo "<hr />";
 	echo "<form action=\"".$baseURL."index.php?indexAction=add_xml_observations\" enctype=\"multipart/form-data\" method=\"post\"><div>";
 	echo "<input type=\"file\" name=\"xml\" /><br />"; 

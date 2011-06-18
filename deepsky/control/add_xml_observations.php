@@ -1113,11 +1113,14 @@ function add_xml_observations()
 	
 	            // Rating is not mandatory
 	            if ($resultNode->getElementsByTagName( "rating" )->item(0)) {
-	              $visibility = $resultNode->getElementsByTagName( "rating" )->item(0)->nodeValue;
+               $visibility = $resultNode->getElementsByTagName( "rating" )->item(0)->nodeValue;
 	            } else {
 	              $visibility = 0;
 	            }
-	
+	            if ($visibility == 99) {
+	              $visibility = 0;
+	            }
+
 	            if ($observation->getElementsByTagName( "eyepiece" )->item(0)) {
 	              $ei = $eyepId;
 	            } else {
