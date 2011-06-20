@@ -1,130 +1,129 @@
 <?php
 // This is version 4.2
-define("LangChangeSessionButton"        ,"Adapt session");
-define("LangSessionNoResults"           ,"No sessions available for ");
-define("LangOverviewSessionTitle"       ,"Sessions of  ");
-define("LangAddLocationSession"         ,"will be added by DeepskyLog");
-define("LangChangeSessionTitle"         ,"Adapt a session");
-define("LangValidateSessionMessage1"		,"The session is removed from DeepskyLog.");
-define("LangAddSessionField2a"					,"Begin");
-define("LangAddSessionField3a"					,"End");
-define("LangAddSessionField4a"					,"Location");
-define("LangAddSessionField5a"					,"Extra observers");
-define("LangAddExistingSessionTitle"    ,"Select one of the sessions added by other observers");
-define("LangAddSessionMessageTitle"     ," made a new session where you are an observer");
-define("LangAddSessionMessage1"         ," made the session \'");
+define("LangChangeSessionButton"        ,"&Uuml;bernehme Sitzung");
+define("LangSessionNoResults"           ,"Keine Sitzung verf&uuml;gbar f&uuml;r ");
+define("LangOverviewSessionTitle"       ,"Sitzungen von  ");
+define("LangAddLocationSession"         ,"wird von DeepskyLog hinzugef&uuml;gt");
+define("LangChangeSessionTitle"         ,"&Uuml;bernehme Sitzung");
+define("LangValidateSessionMessage1"		,"Die Sitzung wurde von DeepskyLog entfernt.");
+define("LangAddSessionField2a"					,"Anfang");
+define("LangAddSessionField3a"					,"Ende");
+define("LangAddSessionField4a"					,"Beobachtungsplatz");
+define("LangAddSessionField5a"					,"Zus&auml;tzliche Beobachter");
+define("LangAddExistingSessionTitle"    ,"W&auml;hlen Sie eine Sitzung von anderen Beobachtern aus");
+define("LangAddSessionMessageTitle"     ," erzeugte eine Sitzung in der Sie Beobachter sind");
+define("LangAddSessionMessage1"         ," erzeugte eine Sitzung \'");
 define("LangAddSessionMessage2"         ,"\'.");
-define("LangAddSessionMessage3"         ,"A similar session is prepared for you. Check ");
-define("LangAddSessionMessage4"         ,"Add/Sessions</a> to validate the session.");
-define("LangSearchMenuItem11"           ,"My sessions");
-define("LangSearchMenuItem12"           ,"All sessions");
-define("LangChangeMenuItem9"						,"Sessions");
-define("LangAddSessionTitle"						,"Add a new session");
-define("LangAddSessionButton"						,"Add session");
-define("LangSessionTitle1"              ,"Observing session from");
-define("LangSessionTitle2"              ," till ");
-define("LangSessionTitle1"              ,"Observing session from ");
-define("LangSessionTitle2"              ," till ");
+define("LangAddSessionMessage3"         ,"Eine &auml;hnliche Sitzung ist f&uuml;r Sie vorbereitet. Pr&uuml;fe ");
+define("LangAddSessionMessage4"         ,"Sitzung hinzuf&uuml;gen</a> um Sitzung zu pr&uuml;fen.");
+define("LangSearchMenuItem11"           ,"Meine Sitzungen");
+define("LangSearchMenuItem12"           ,"Alle Sitzungen");
+define("LangChangeMenuItem9"						,"Sitzungen");
+define("LangAddSessionTitle"						,"Neue Sitzung hinzuf&uuml;gen");
+define("LangAddSessionButton"						,"Sitzung hinzuf&uuml;gen");
+define("LangSessionTitle1"              ,"Sitzung von");
+define("LangSessionTitle2"              ," bis ");
 define("LangAddSessionField1"						,"Name");
-define("LangAddSessionField1Expl"				,"When you leave this field blank, DeepskyLog makes a name with begin- and enddate.");
-define("LangAddSessionField2"						,"Start of the session *");
-define("LangAddSessionField2Expl"				,"The start of your observing session.");
-define("LangAddSessionField3"						,"End of the session *");
-define("LangAddSessionField3Expl"				,"The end of your observing session.");
-define("LangAddSessionField4"						,"Location *");
-define("LangAddSessionField4Expl"				,"The location of your observing session.");
-define("LangAddSessionField5"						,"Weather");
-define("LangAddSessionField5Expl"				,"The weather during your observing session.");
-define("LangAddSessionField6"						,"Instruments");
-define("LangAddSessionField6Expl"				,"Comments about the used instruments during your observing session.");
-define("LangAddSessionField7"						,"Comments");
-define("LangAddSessionField7Expl"				,"Comments on your observing session.");
-define("LangAddSessionField8"						,"Language *");
-define("LangAddSessionField8Expl"				,"Language of the observations during your observing session.");
-define("LangAddSessionField9"						,"Observers *");
-define("LangAddSessionField9Expl"				,"Observers during this session. The other observers will get a message to make a similar session.");
-define("LangAddSessionField10"					,"Add observer");
-define("LangAddSessionField10Expl"			,"Select an observer to add to your observing session.");
-define("LangAddSessionField11"					,"Remove observer");
-define("LangAddSessionField11Expl"			,"Select an observer to remove from your observing session.");
+define("LangAddSessionField1Expl"				,"Wenn Sie dieses Feld leer lassen, wird DeepskyLog einen Namen aus Anfangs- und Endezeit ermitteln.");
+define("LangAddSessionField2"						,"Start der Sitzung *");
+define("LangAddSessionField2Expl"				,"Der Start Ihrer Sitzung.");
+define("LangAddSessionField3"						,"Ende der Sitzung *");
+define("LangAddSessionField3Expl"				,"Das Ende Ihrer Sitzung.");
+define("LangAddSessionField4"						,"Beobachtungsplatz *");
+define("LangAddSessionField4Expl"				,"Der Beobachtungsplatz Ihrer Sitzung.");
+define("LangAddSessionField5"						,"Wetter");
+define("LangAddSessionField5Expl"				,"Das Wetter w&auml;hrend Ihrer Sitzung.");
+define("LangAddSessionField6"						,"Beobachtungsger&auml;te");
+define("LangAddSessionField6Expl"				,"Kommentare zu den Beobachtungsger&auml;ten die Sie w&auml;hrend der Sitzung verwendet haben.");
+define("LangAddSessionField7"						,"Kommentar");
+define("LangAddSessionField7Expl"				,"Kommentar zur Sitzung.");
+define("LangAddSessionField8"						,"Sprache *");
+define("LangAddSessionField8Expl"				,"Sprache der Beobachtungen, die zur Sitzung geh&ouml;ren.");
+define("LangAddSessionField9"						,"Beobachter *");
+define("LangAddSessionField9Expl"				,"Beobachter der Sitzung. Andere Beobachter bekommen eine Benachrichtigung um eine &auml;hnliche Sitzung anzulegen.");
+define("LangAddSessionField10"					,"Beobachter hinzuf&uuml;gen");
+define("LangAddSessionField10Expl"			,"W&auml;hlen Sie einen Beobachter aus um Ihn/Sie zu Ihrer Sitzung hinzuzuf&uuml;gen.");
+define("LangAddSessionField11"					,"Beobachter entfernen");
+define("LangAddSessionField11Expl"			,"W&auml;hlen Sie einen Beobachter aus, um Ihn/Sie aus Ihrer Sitzung zu entfernen.");
 
 // This is version 4.1
-define('LangAdminMenuItem8'							,'Send message to all');
-define('LangAdminMenuItem7'							,'Check Objects');
+// This is version 4.1
+define('LangAdminMenuItem8'							,'Sende Benachrichtigung an Alle');
+define('LangAdminMenuItem7'							,'Pr&uuml;fe Objekte');
 
-define('LangMessagePublicList1'         ,'Public list created with name ');
-define('LangMessagePublicList2'         ,' by ');
-define('LangMessagePublicList3'         ,'A new public list is available in DeepskyLog.<br /><br />');
-define('LangMessagePublicList4'         ,'Go to ');
-define('LangMessagePublicList5'         ,'Send message to ');
-define('LangViewMessages'               ,'View messages');
-define('LangMessageNotLoggedIn'				  ,'You should be logged in to be able to send messages.');
-define('LangMessageSubject'             ,'Subject');
+define('LangMessagePublicList1'         ,'&Ouml;ffentliche Liste angelegt ');
+define('LangMessagePublicList2'         ,' von ');
+define('LangMessagePublicList3'         ,'Eine neue &ouml;ffentliche Liste ist verf&uuml;gbar in DeepskyLog.<br /><br />');
+define('LangMessagePublicList4'         ,'Gehe zu ');
+define('LangMessagePublicList5'         ,'Sende Benachrichtigung an ');
+define('LangViewMessages'               ,'Nachrichten anzeigen');
+define('LangMessageNotLoggedIn'				  ,'Sie m&uuml;ssen angemeldet sein um Nachrichten zu versenden.');
+define('LangMessageSubject'             ,'Betreff');
 define('LangMessageSender'              ,'Sender');
-define('LangMessageReceiver'						,'Receiver');
-define('LangMessageMessage'							,'Message');
-define('LangMessageDate'                ,'Date');
-define('LangMessageAllDeepskyLogUser'		,'All DeepskyLog users');
-define('LangMessageBy'									,'by ');
-define('LangMessageReply'               ,'Reply');
-define('LangMessageDelete'              ,'Delete');
-define('LangNoPermissionToRead'         ,'You have no permission to see this message.');
-define('LangMessageYourObservation'			,'Your observation of ');
-define('LangMessageOn'									,' on ');
-define('LangMessageAboutObservation'		,'about this observation');
-define('LangMessageWelcomeSubject'      ,'Welcome in DeepskyLog, ');
-define('LangMessageWelcome'             ,'Welcome in DeepskyLog, ');
-define('LangMessageWelcome1'            ,'We hope you will have a lot of fun using DeepskyLog. You can already find some interesting links to get you started :<br /><br />');
-define('LangMessageWelcome2'            ,'Add an instrument</a><br /><br />');
-define('LangMessageWelcome3'            ,'Add an observing site</a><br />After entering a typical limiting magnitude or a typical SQM-value, DeepskyLog will calculate visibility of all objects! Do not forget to select a standard observation site!<br /><br />');
-define('LangMessageWelcome4'            ,'Set your standard observing atlas and send a picture of youself.</a><br /><br />A lot of fun using DeepskyLog!<br /><br />The DeepskyLog developers');
+define('LangMessageReceiver'						,'Empf&auml;nger');
+define('LangMessageMessage'							,'Nachricht');
+define('LangMessageDate'                ,'Datum');
+define('LangMessageAllDeepskyLogUser'		,'Alle DeepskyLog Benutzer');
+define('LangMessageBy'									,'von ');
+define('LangMessageReply'               ,'Antworten');
+define('LangMessageDelete'              ,'L&ouml;schen');
+define('LangNoPermissionToRead'         ,'Sie haben keine Berechtigung um diese Nachricht zu &ouml;ffnen.');
+define('LangMessageYourObservation'			,'Ihre Beobachtung von ');
+define('LangMessageOn'									,' am ');
+define('LangMessageAboutObservation'		,'&uuml;ber diese Beobachtung');
+define('LangMessageWelcomeSubject'      ,'Willkommen bei DeepskyLog, ');
+define('LangMessageWelcome'             ,'Willkommen bei DeepskyLog, ');
+define('LangMessageWelcome1'            ,'Wir hoffen Sie haben viel Spa&szlig; bei DeepskyLog. Anbei finden Sie ein paar interessante Links f&uuml;r den Anfang :<br /><br />');
+define('LangMessageWelcome2'            ,'Beobachtungsger&auml;t hinzuf&uuml;gen</a><br /><br />');
+define('LangMessageWelcome3'            ,'Beobachtungsplatz hinzuf&uuml;gen</a><br />Nach der Eingabe der typischen Grenzmagnitude oder des SQM-Wertes, wird DeepskyLog die Sichtbarkeit aller Objekte berechnen! Vergessen Sie nicht einen Standard-Beobachtungsplatz anzugeben!<br /><br />');
+define('LangMessageWelcome4'            ,'W&auml;hlen Sie Ihren Standard Sternenatlas und setzen Sie ein Bild f&uuml;r Ihren Benutzer.</a><br /><br />Viel Spa&szlig; bei DeepskyLog!<br /><br />Die DeepskyLog Entwickler');
 
-// Line further down define("LangSearchMenuItem10"                             ,"Catalogs");
+// Line further down define("LangSearchMenuItem10"                             ,"Kataloge");
 
-define('LangBuildingCatalogList'        ,'Building catalog list');
-define('LangClickToViewCatalogDetails'  ,'Click on a list to view its details');
+define('LangBuildingCatalogList'        ,'Baue Katalogliste');
+define('LangClickToViewCatalogDetails'  ,'W&auml;hlen Sie eine Liste um Details zu sehen');
 
 
-define("LangObjectHighestAlt","Highest Alt.");
-define("LangObjectHighestFrom","Highest from");
-define("LangObjectHighestTo","Highest to");
-define("LangObjectHighestAround","Highest around");
+define("LangObjectHighestAlt","H&ouml;chste Alt.");
+define("LangObjectHighestFrom","Am h&ouml;chsten von");
+define("LangObjectHighestTo","Am h&ouml;chsten bis");
+define("LangObjectHighestAround","Am h&ouml;chsten um");
 
-define("LangReportObjectHighestAlt","Highest altitude during the year");
-define("LangReportObjectHighestFrom","Highest from the month");
-define("LangReportObjectHighestTo","Highest till the month");
-define("LangReportObjectHighestAround","Highest around the month");
+define("LangReportObjectHighestAlt","H&ouml;chste Altitude w&auml;hrend des Jahres");
+define("LangReportObjectHighestFrom","H&ouml;chste Altitude diesen Monat von");
+define("LangReportObjectHighestTo","H&ouml;chste Altitude diesen Monat bis");
+define("LangReportObjectHighestAround","H&ouml;chste Altitude um");
 
-define("LangMonthStart", "begin");
-define("LangMonthMid", "middle");
-define("LangMonthEnd", "end");
-define("LangMonthTransit", "start");
+define("LangMonthStart", "Start");
+define("LangMonthMid", "Mitte");
+define("LangMonthEnd", "Ende");
+define("LangMonthTransit", "Start");
 
 // prior to 4.1
 
-define('LangHideTopMenu','Hide header');  // TO TRANSLATE
-define('LangShowTopMenu','Show header');  // TO TRANSLATE
-define('LangHideLeftMenu','Hide left menu structure');  // TO TRANSLATE
-define('LangShowLeftMenu','Show left menu structure');  // TO TRANSLATE
-define('LangInPrivateLists','In my lists');
-define('LangInLPublicists','In public lists');
-define("LangObjectShowExtraInfo","Show or remove extra info...");    // TO TRANSLATE
-define("LangButtonOnlyObjectDetails"      ,"Only object details");  // TO TRANSLATE
-define("LangButtonObjectDetails"          ,"Object details");  // TO TRANSLATE
-define("LangButtonOnlyObjectEphemerides"  ,"Only object ephemerides");  // TO TRANSLATE
-define("LangButtonObjectEphemerides"      ,"Object ephemerides");  // TO TRANSLATE
-define("LangButtonOnlyObjectObjectsNearby","Only nearby objects");  // TO TRANSLATE
-define("LangButtonObjectObjectsNearby"    ,"Nearby objects");  // TO TRANSLATE
-define("LangButtonOnlyObjectObservations" ,"Only object observations");  // TO TRANSLATE
-define("LangButtonObjectObservations"     ,"Object observations");  // TO TRANSLATE
+define('LangHideTopMenu','Kopfzeilen ausblenden');  // TO TRANSLATE
+define('LangShowTopMenu','Kopfzeilen anzeigen');  // TO TRANSLATE
+define('LangHideLeftMenu','Menu Struktur links ausblenden');  // TO TRANSLATE
+define('LangShowLeftMenu','Menu Struktur links einblenden');  // TO TRANSLATE
+define('LangInPrivateLists','In meinen Listen');
+define('LangInLPublicists','In &ouml;ffentlichen Listen');
+define("LangObjectShowExtraInfo","Anzeigen/Ausblenden von Zusatzinformationen...");    // TO TRANSLATE
+define("LangButtonOnlyObjectDetails"      ,"Nur Objekt Details");  // TO TRANSLATE
+define("LangButtonObjectDetails"          ,"Objekt Details");  // TO TRANSLATE
+define("LangButtonOnlyObjectEphemerides"  ,"Nur Objekt Ephemeridien");  // TO TRANSLATE
+define("LangButtonObjectEphemerides"      ,"Objekt Ephemeridien");  // TO TRANSLATE
+define("LangButtonOnlyObjectObjectsNearby","Nur nahegelegene Objekte");  // TO TRANSLATE
+define("LangButtonObjectObjectsNearby"    ,"Nahegelegene Objekte");  // TO TRANSLATE
+define("LangButtonOnlyObjectObservations" ,"Nur Objekt Beobachtungen");  // TO TRANSLATE
+define("LangButtonObjectObservations"     ,"Objekt Beobachtungen");  // TO TRANSLATE
 
 
-define("ObjectDetailsShow"      ,"Show the object details");         // TO TRANSLATE
-define("ObjectDetailsHide"      ,"Hide the object details");         // TO TRANSLATE
-define("ObjectNearbyObjectsShow","Show the nearby objects");         // TO TRANSLATE
-define("ObjectNearbyObjectsHide","Hide the nearby objects");         // TO TRANSLATE
-define("ObjectObservationsShow" ,"Show the observations");           // TO TRANSLATE
-define("ObjectObservationsHide" ,"Hide the observations");           // TO TRANSLATE
+define("ObjectDetailsShow"      ,"Objekt Details anzeigen");         // TO TRANSLATE
+define("ObjectDetailsHide"      ,"Objekt Details ausblenden");         // TO TRANSLATE
+define("ObjectNearbyObjectsShow","Nahegelegene Objekte anzeigen");         // TO TRANSLATE
+define("ObjectNearbyObjectsHide","Nahegelegene Objekte ausblenden");         // TO TRANSLATE
+define("ObjectObservationsShow" ,"Beobachtungen anzeigen");           // TO TRANSLATE
+define("ObjectObservationsHide" ,"Beobachtungen ausblenden");           // TO TRANSLATE
 
 define("LangViewActive"					,"Actif");                           // TO TRANSLATE
 
@@ -256,12 +255,12 @@ define("Reportobjectbest"                                      ,"Beste Beobachtu
 define("Reportobjectbestpopup"                                 ,"Beste Beobachtungzeit Beschreibung");
 define("Reportobjectmaxaltitude"                               ,"Maximale H&ouml;he w&auml;hrend der besten Beobachtungszeit");
 define("Reportobjectmaxaltitudepopup"                          ,"Maximale H&ouml;he Beschreibung");
-define("ReportEpehemeridesFor"                                 ,"Ephemerides for");
-define("ReportEpehemeridesForShow"                             ,"Show the ephemerides");
-define("ReportEpehemeridesForHide"                             ,"Hide the ephemerides");
+define("ReportEpehemeridesFor"                                 ,"Ephemeridien f&uuml;r");
+define("ReportEpehemeridesForShow"                             ,"Ephemeridien anzeigen");
+define("ReportEpehemeridesForHide"                             ,"Ephemeridien ausblenden");
 define("ReportEpehemeridesIn"                                  ,"in");
-define("ReportInLocalTime"                                     ," in LOCAL TIME !");
-define("ReportImagesFor"                                       ,'Images for ');
+define("ReportInLocalTime"                                     ," in LOKALER ZEIT !");
+define("ReportImagesFor"                                       ,'Bilder f&uuml;r ');
 
 define("AtlasPageFont"                                   ,"Schriftgr&ouml;&szlig;e f&uuml;r Atlas Seitenzahlen (6..9)");
 
@@ -272,8 +271,8 @@ define("LangLoadFormLayout2"                             ,"Bitte geben Sie einen
 
 define("LangSaveFormLayout1"                             ,"Speichern");
 define("LangSaveFormLayout2"                             ,"Bitte geben Sie einen Layoutnamen ein");
-define("LangSaveFormLayout3"                             ,"Open");
-define("LangSaveFormLayout4"                             ,"Remove");
+define("LangSaveFormLayout3"                             ,"&Ouml;ffnen");
+define("LangSaveFormLayout4"                             ,"L&ouml;schen");
 
 
 
@@ -283,8 +282,8 @@ define("profiledsosmagnitude"                            ,"Standard Objekt Helli
 define("profiledsosmagnitudeselect"                      ,"&Uuml;bersicht / Nachschlagen / Details");
 define("profilestarsmagnitude"                           ,"Standard Sterne Helligkeit im Atlas:");
 define("profilestarsmagnitudeselect"                     ,"&Uuml;bersicht / Nachschlagen / Details");
-define("profilephotosizes"                               ,"Standard size of photos:");
-define("profilephotosizesselect"                         ,"photo 1 / photo 2");
+define("profilephotosizes"                               ,"Foto Standardgr&ouml;&szlig;e:");
+define("profilephotosizesselect"                         ,"Foto 1 / Foto 2");
 
 
 define('LangBest'                                        ,'Beste');
