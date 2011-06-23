@@ -231,17 +231,6 @@ class Observers
         $entryMessage = LangAccountSubscribed1.LangAccountSubscribed2.LangAccountSubscribed3.LangAccountSubscribed4.LangAccountSubscribed5.LangAccountSubscribed6.LangAccountSubscribed7.LangAccountSubscribed8.LangAccountSubscribed9;
 		    $_GET['user']=$_POST['deepskylog_id'];
 		    $_GET['indexAction']='detail_observer';
-
-		    // After registration, all old messages are removed
-		    $objMessages->removeAllMessages($_POST['deepskylog_id']);
-		    // After registration, a welcome message is sent
-		    $objMessages->sendMessage("DeepskyLog", $_POST['deepskylog_id'], 
-		          LangMessageWelcomeSubject . $_POST['firstname'] . "!", 
-		    			LangMessageWelcomeSubject . $_POST['firstname'] . "!<br /><br />" . 
-		    			LangMessageWelcome1 . "<a href=\"" . $baseURL . "index.php?indexAction=add_instrument\">" . 
-		    			LangMessageWelcome2 . "<a href=\"" . $baseURL . "index.php?indexAction=add_site\">" . 
-		    			LangMessageWelcome3 . "<a href=\"" . $baseURL . "index.php?indexAction=change_account\">" . 
-		    			LangMessageWelcome4);
 		  }
 		}  
 		elseif($objUtil->checkPostKey('change'))                // pressed change button
@@ -308,7 +297,7 @@ class Observers
     return "The user has been erased.";
   }	
   public  function validateObserver()                                          // validateObserver validates the user with the given id and gives the user the given role
-  { global $objDatabase,$objUtil, $entryMessage, $developversion,$mailTo,$mailFrom;
+  { global $objDatabase,$objUtil, $entryMessage, $developversion,$mailTo,$mailFrom, $objMessages;
     if(!($objUtil->checkSessionKey('admin')=='yes'))
       throw new Exception(LangException001);
     $objDatabase->execSQL("UPDATE observers SET role = \"".($role=RoleUser)."\" WHERE id=\"".($id=$objUtil->checkGetKey('validate'))."\"");
@@ -320,6 +309,17 @@ class Observers
       $entryMessage.="On the live server, a mail would be sent with the subject: ".LangValidateSubject.".<br />";
     else
       mail($this->getObserverProperty($id,'email').";".$mailTo, LangValidateSubject, $body, $mailFrom);
+
+		// After registration, all old messages are removed
+		$objMessages->removeAllMessages($id);
+		// After registration, a welcome message is sent
+		$objMessages->sendMessage("DeepskyLog", $id, 
+		      LangMessageWelcomeSubject . $this->getObserverProperty($id,'firstname') . "!", 
+					LangMessageWelcomeSubject . $this->getObserverProperty($id,'firstname') . "!<br /><br />" . 
+					LangMessageWelcome1 . "<a href=\"" . $baseURL . "index.php?indexAction=add_instrument\">" . 
+		 			LangMessageWelcome2 . "<a href=\"" . $baseURL . "index.php?indexAction=add_site\">" . 
+		 			LangMessageWelcome3 . "<a href=\"" . $baseURL . "index.php?indexAction=change_account\">" . 
+		 			LangMessageWelcome4);
     return LangValidateObserverMessage1.' '.LangValidateObserverMessage2;
   }
 }
