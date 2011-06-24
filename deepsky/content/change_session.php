@@ -239,6 +239,9 @@ function change_session()
   // Other observers
   $observersCont = "<textarea readonly=\"readonly\" class=\"messageAreaSmall\" id=\"observers\" rows=\"1\" cols=\"1\">";
 	$observersArray = $objSession->getObservers($objUtil->checkRequestKey('sessionid')); 
+  if (!in_array($loggedUser, $observersArray)) {
+    $observersCont .= $loggedUserName . "\n";
+  }
   for ($i=0;$i<count($observersArray);$i++) {
     $observersCont .= $objObserver->getObserverProperty($observersArray[$i]['observer'], "firstname") . "&nbsp;" . 
                       $objObserver->getObserverProperty($observersArray[$i]['observer'], "name") . "\n";
@@ -254,7 +257,6 @@ function change_session()
 	$obs = $objObserver->getPopularObserversByName();
 
 	$addObserver .= "<option value=\"\">&nbsp;</option>";
-	$addObserver .= "<option value=\"".$loggedUser."\">".$loggedUserName."</option>";
 	while(list($key, $value) = each($obs)) {
 	  if ($key != $loggedUser) {
 	    $foundKey = 0;
@@ -277,6 +279,7 @@ function change_session()
 	
   // Delete observer
 	$deleteObserver = "<select id=\"deleteObserver\" name=\"deleteObserver\" onchange=\"deleteUser(this,'" . $loggedUserName . "')\" class=\"inputfield\">";
+	$deleteObserver .= "<option value=\"\">&nbsp;</option>";
 	for ($i=0;$i<count($observersArray);$i++) {
 	  $deleteObserver .= "<option value=\"".$observersArray[$i]['observer']."\">".
 	          $objObserver->getObserverProperty($observersArray[$i]['observer'], "firstname") . " " . 

@@ -44,7 +44,7 @@ function selected_sessions()
 	// Get the number of sessions
 	$sessions = $objSession->getListWithActiveSessions($observer);
 	if (count($sessions) == 0) //================================================================================================== no result present =======================================================================================
-	{	$objPresentations->line(array("<h4>".LangSessionNoResults . $objObserver->getObserverProperty($observer, "firstname") . " " .
+	{	$objPresentations->line(array("<h4>".LangSessionNoResults . " " . $objObserver->getObserverProperty($observer, "firstname") . " " .
 		       $objObserver->getObserverProperty($observer, "name")."!</h4>"),
 	                          "L",array(100),30);
 	}

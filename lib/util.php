@@ -386,6 +386,7 @@ class Utils
 	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\,/", "_", $correctedValue )));
     $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\(/", "_", $correctedValue )));
     $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\)/", "_", $correctedValue )));
+    $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/ /", "_", $correctedValue )));
     
 	  $attrText = $dom->createTextNode("_" . $correctedValue);
 	  $attr->appendChild($attrText);
@@ -791,15 +792,17 @@ class Utils
         }
       }
       
-      $target = $observation->appendChild($dom->createElement('target')); 
-      $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\s+/", "_", $objectname )));
+    $target = $observation->appendChild($dom->createElement('target')); 
+    $correctedValue = $objCatalog->checkObject($objectname);
+    $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\s+/", "_", $correctedValue )));
 	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\+/", "_", $correctedValue )));
 	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\//", "_", $correctedValue )));
 	  $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\,/", "_", $correctedValue )));
     $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\(/", "_", $correctedValue )));
     $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/\)/", "_", $correctedValue )));
-    $correctedValue = $objCatalog->checkObject($correctedValue);
-      $target->appendChild($dom->createTextNode("_" . $correctedValue));
+    $correctedValue = utf8_encode(html_entity_decode(preg_replace( "/ /", "_", $correctedValue )));
+
+    $target->appendChild($dom->createTextNode("_" . $correctedValue));
 
 	  if ($obs["time"] >= 0)
 	  {

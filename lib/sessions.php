@@ -88,7 +88,14 @@ class Sessions
 
     // First check whether the session already exists
 		if ($sessionid > 0) {
-      // Update the session
+      // Check if there is a deleted observer
+		  $observersFromDatabase = $objDatabase->selectSingleArray("SELECT observer from sessionObservers where sessionid=\"" . $sessionid . "\";", "observer");
+		  for ($i=0;$i<count($observersFromDatabase);$i++) {
+		    if (!in_array($observersFromDatabase[$i], $observers)) {
+		      $objDatabase->execSQL("DELETE from sessionObservers where sessionid=\"" . $sessionid . "\" AND observer=\"" . $observersFromDatabase[$i] .  "\"");
+		    }
+		  }
+		  // Update the session
 		  $this->updateSession($sessionid, $name, $begindate, $enddate, $location, $weather, $equipment, $comments, $language);
 
 		  // First make sure to remove all old observations
@@ -122,7 +129,7 @@ class Sessions
 		  // Get the id of the new session
 		  $id = mysql_insert_id();
 
-		  for ($i=0;$i<count($observers);$i++) {
+		  for ($i=1;$i<count($observers);$i++) {
 		    // Add the observers to the sessionObservers table
 		    $this->addObserver($id, $observers[$i]);
 
@@ -136,10 +143,10 @@ class Sessions
 		      }
 		    }
       }
+      // Add observations to the session
+      $observers[] = $loggedUser;
+      $this->addObservations($id, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
 		}
-    // Add observations to the session
-    $observers[] = $loggedUser;
-    $this->addObservations($id, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
   }
 
 	private  function addObserver($id, $observer) 
@@ -155,7 +162,9 @@ class Sessions
 	    						"index.php?indexAction=new_message&amp;receiver=" . urlencode($loggedUser) . 
 	    						"&amp;subject=Re:%20" . urlencode($sessionname) . "\">" . $observername . "</a>";
      $content .= "<br /><br />Zend een bericht naar " . $observername;
-     $objMessages->sendMessage($loggedUser, $observer, $subject, $content);
+     if ($loggedUser != $observer) {
+       $objMessages->sendMessage($loggedUser, $observer, $subject, $content);
+     }
 	}
 	
   private  function addObservations($id, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers)
@@ -163,7 +172,7 @@ class Sessions
 	  $begindate = sprintf("%4d%02d%02d", $beginyear, $beginmonth, $beginday);
     $enddate = sprintf("%4d%02d%02d", $endyear, $endmonth, $endday);
     // Add all observations to the sessionObservations table
-		for ($i=0;$i<count($observers);$i++) {
+    for ($i=0;$i<count($observers);$i++) {
 		  // Select the observations of the observers in this session 
 		  $obsids = $objDatabase->selectSingleArray("SELECT id from observations where observerid=\"" . $observers[$i] . "\" and date>=\"" . $begindate . "\" and date<=\"" . $enddate . "\";", "id");
 		  for ($cnt=0;$cnt<count($obsids);$cnt++) {
@@ -263,6 +272,7 @@ class Sessions
      echo "<td class=\"centered\">" . LangAddSessionField4a ."</a></td>";
      echo "<td class=\"centered\">" . LangAddSessionField5a ."</a></td>";
      echo "<td></td>";
+     echo "<td></td>";
      echo "</tr>";
      $count = 0;
      while(list($key,$value) = each($sessions))
@@ -286,6 +296,10 @@ class Sessions
 		   echo "<td>";
 		   // Add the session
        echo("<a href=\"".$baseURL."index.php?indexAction=adapt_session&amp;sessionid=" . urlencode($value['id']) . "\">" . LangAddSessionButton . "</a>");
+       echo "</td>";
+		   echo "<td>";
+		   // Remove the session
+       echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_existingsession&amp;sessionid=" . urlencode($value['id']) . "\">" . LangDeleteSessionButton . "</a>");
        echo "</td></tr>";
        $count++;
      }

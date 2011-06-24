@@ -21,6 +21,7 @@ define("LangSearchMenuItem12"           ,"Alle Sitzungen");
 define("LangChangeMenuItem9"						,"Sitzungen");
 define("LangAddSessionTitle"						,"Neue Sitzung hinzuf&uuml;gen");
 define("LangAddSessionButton"						,"Sitzung hinzuf&uuml;gen");
+define("LangDeleteSessionButton"    		,"Sitzung Entfernen");
 define("LangSessionTitle1"              ,"Sitzung von");
 define("LangSessionTitle2"              ," bis ");
 define("LangAddSessionField1"						,"Name");
