@@ -248,7 +248,7 @@ class AstroCalc
     $ra2 = $ra2 / 15;
 
     date_default_timezone_set ("UTC");
-    $temptime=jdtogregorian($jd+1).' ';
+    $temptime=jdtogregorian($jd+1);
     $temppos=strpos($temptime,"/");
     $tempmonth=substr($temptime,0,$temppos);
     $temptime=substr($temptime,$temppos+1);
@@ -257,7 +257,7 @@ class AstroCalc
     $tempyear=substr($temptime,$temppos+1);
     
     $timestr = $tempyear . "-" . $tempmonth . "-" . $tempday;
-
+  
     $sun_info = date_sun_info(strtotime($timestr), $latitude, -$longitude);
     $astrobegin = date("H:i", $sun_info["astronomical_twilight_begin"]);
     sscanf($astrobegin, "%d:%d", $hour, $minute);
@@ -485,10 +485,8 @@ class AstroCalc
 	      $ris_tra_set[4] = "-";
 	    }  
 	    if($ris_tra_set[3]!="-")
-	  //    $ris_tra_set[3]="(".$ris_tra_set[3].")";
-	      $ris_tra_set[3]=$ris_tra_set[3];
+	    $ris_tra_set[3]="(".$ris_tra_set[3].")";
     }
-    
     return $ris_tra_set;
   }
 
