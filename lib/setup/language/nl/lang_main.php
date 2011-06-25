@@ -91,7 +91,7 @@ define("LangReportObjectHighestTo","Hoogst tot maand");
 define("LangReportObjectHighestAround","Hoogst rond maand");
 
 define("LangMonthStart", "begin");
-define("LangMonthMid", "midden");
+define("LangMonthMid", "mid");
 define("LangMonthEnd", "eind");
 define("LangMonthTransit", "start");
 
