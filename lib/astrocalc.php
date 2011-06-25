@@ -485,7 +485,7 @@ class AstroCalc
 	      $ris_tra_set[4] = "-";
 	    }  
 	    if($ris_tra_set[3]!="-")
-	    $ris_tra_set[3]="(".$ris_tra_set[3].")";
+	      $ris_tra_set[3]="(".$ris_tra_set[3].")";
     }
     return $ris_tra_set;
   }
