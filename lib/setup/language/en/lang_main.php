@@ -690,6 +690,8 @@ define("LangChangeAccountField10"													,"ICQ observercode");
 define("LangChangeAccountField10Expl"											,"<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a> code for comet observations");
 define("LangChangeAccountField11"													,"Use local time");
 define("LangChangeAccountField11Expl"											,"Use local time to enter and query observations");
+define("LangChangeAccountField13"													,"Motivation");
+define("LangChangeAccountField13Expl"											,"Please tell us briefly why you register, this allows us to eliminate automatic registrations.");
 
 define("LangLoginMenuTitle"																,"Login");
 define("LangLoginMenuTitle1"															," or ");
@@ -1315,6 +1317,8 @@ define("LangValidateAccountEmailTitleObjectObserver"			,"by observer ");
 define("LangValidateAccountMessage4"											,"There is already someone with this account name, please choose another one!");
 define("LangValidateAccountMessage5"											,"Your account has been successfully updated!");
 define("LangValidateAccountMessage"												,"Message");
+define("LangValidateAccountMessage6"											,"Your name and / or first name are not correct.");
+define("LangValidateAccountMessage7"											,"The field 'Motivation' is not filled in.");
 
 // control/validate_observation.php
 

@@ -484,15 +484,15 @@ define("LangWelcome5"																			,"Votre compte est sur la liste d'attent
 define("LangManage"																				,"Gestion");
 define("LangManageDots"																		,"Gestion...");
 
-define("LangAccountSubscribed1"														,"Votre compte Deepskylog est crée. ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed2"														,"Un de nos développeurs validera votre compte au plus vite. ");  // javascript strings, please no html encoding
+define("LangAccountSubscribed1"														,"Votre compte Deepskylog est cr&#233;e. ");  // javascript strings, please no html encoding
+define("LangAccountSubscribed2"														,"Un de nos d&#233;veloppeurs validera votre compte au plus vite. ");  // javascript strings, please no html encoding
 define("LangAccountSubscribed3"														,"Vous recevrez un email de confirmation lorsque ceci se produira. ");  // javascript strings, please no html encoding
 define("LangAccountSubscribed4"														,"Sachez que Deepskylog est le travail d'un petit groupe de volontaires ");  // javascript strings, please no html encoding
 define("LangAccountSubscribed5"														,"et que la validation peut durer un jour ou plus. ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed6"														,"Exceptionnellement, tous les développeurs sont en observation astronomique ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed7"														,"pendant une semaine. Normalement un backup est prévu pendant cette période. ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed8"														,"Si votre compte n'est pas validé dans les 24 heures, veuillez envoyer un email ");  // javascript strings, please no html encoding
-define("LangAccountSubscribed9"														,"aux d&eacute;veloppeurs de deepskylog.be pour en être sur.");  // javascript strings, please no html encoding
+define("LangAccountSubscribed6"														,"Exceptionnellement, tous les d&#233;veloppeurs sont en observation astronomique ");  // javascript strings, please no html encoding
+define("LangAccountSubscribed7"														,"pendant une semaine. Normalement un backup est pr&#233;vu pendant cette p&#233;riode. ");  // javascript strings, please no html encoding
+define("LangAccountSubscribed8"														,"Si votre compte n'est pas valid&#233; dans les 24 heures, veuillez envoyer un email ");  // javascript strings, please no html encoding
+define("LangAccountSubscribed9"														,"aux d&eacute;veloppeurs de deepskylog.be pour en &ecirc;tre sur.");  // javascript strings, please no html encoding
 
 
 define("LangValidateSubject"															,"DeepskyLog - votre compte est accept&eacute;");
@@ -662,6 +662,8 @@ define("LangChangeAccountField10"													,"Code ICQ de l'observateur");
 define("LangChangeAccountField10Expl"											,"<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a> code pour les observations de com&egrave;tes");
 define("LangChangeAccountField11"													,"Utilisez le temps local");
 define("LangChangeAccountField11Expl"											,"Utilisez le temps locale pour remplir et lire les observations");
+define("LangChangeAccountField13"													,"Motivation");
+define("LangChangeAccountField13Expl"											,"Dites-nous bri&egrave;vement pourquoi vous registrez, cela nous permet d'annuler les registrations automatiques.");
 
 define("LangLoginMenuTitle"																,"Rentrer");
 define("LangLoginMenuTitle1"															,"ou ");
@@ -1287,6 +1289,9 @@ define("LangValidateAccountEmailTitleObjectObserver"			,"par l'observateur ");
 define("LangValidateAccountMessage4"											,"Il y a d&eacute;j&agrave; un utilisateur avec ce nom, veuillez choisir un autre nom!");
 define("LangValidateAccountMessage5"											,"Les adaptations ont &eacute;t&eacute; enregistr&eacute;es!");
 define("LangValidateAccountMessage"												,"Message");
+define("LangValidateAccountMessage6"											,"Votre nom et / ou pr&#233;nom ne sont pas corrects.");
+define("LangValidateAccountMessage7"											,"Le champ 'Motivation' n'est pas rempli.");
+
 
 // control/validate_observation.php
 

@@ -687,6 +687,8 @@ define("LangChangeAccountField10"													,"ICQ waarnemercode");
 define("LangChangeAccountField10Expl"											,"<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a> code voor komeetwaarnemingen");
 define("LangChangeAccountField11"													,"Gebruik lokale tijd");
 define("LangChangeAccountField11Expl"											,"Gebruik lokale tijd voor ingeven en opvragen van waarnemingen");
+define("LangChangeAccountField13"													,"Motivatie");
+define("LangChangeAccountField13Expl"											,"Geef kort even op waarom je wil registreren, zo vermijden we automatische registraties van zoekmachines.");
 
 define("LangLoginMenuTitle"																,"Log in");
 define("LangLoginMenuTitle1"															," of ");
@@ -1312,6 +1314,8 @@ define("LangValidateAccountEmailTitleObjectObserver"			,"door waarnemer ");
 define("LangValidateAccountMessage4"											,"Er is al een gebruiker met dezelfde naam, gelieve een andere te kiezen!");
 define("LangValidateAccountMessage5"											,"De aanpassingen zijn succesvol weggeschreven!");
 define("LangValidateAccountMessage"												,"Boodschap");
+define("LangValidateAccountMessage6"											,"Uw naam en / of voornaam zijn niet correct.");
+define("LangValidateAccountMessage7"											,"Het veld 'Motivatie' is niet ingevuld");
 
 // control/validate_observation.php
 

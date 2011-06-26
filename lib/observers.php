@@ -194,6 +194,16 @@ class Observers
 			if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
 			else  $_GET['indexAction']='subscribe';
 		}
+		elseif($_POST['firstname']==$_POST['name'])
+		{ $entryMessage.=LangValidateAccountMessage6;                                                              
+			if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
+			else  $_GET['indexAction']='subscribe';
+		}
+		elseif($_POST['motivation']=='')
+		{ $entryMessage.=LangValidateAccountMessage7;                                                              
+			if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
+			else  $_GET['indexAction']='subscribe';
+		}
 		elseif(!preg_match("/.*@.*..*/", $_POST['email']) | preg_match("/(<|>)/", $_POST['email']))
 		{ $entryMessage.=LangValidateAccountMessage3;                              // check if email address is legal (contains @ symbol)
 			if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
