@@ -510,7 +510,7 @@ define("LangCounter"																			,"Z&auml;hler");
 define("LangMenuExpand"																		,"Menu aufklappen");
 define("LangMenuCollapse"																	,"Menu zusammenklappen");
 
-define("DreyerDescriptionLink"														,"http://www.deepskylog.org/wiki/bin/view/DeepskyLog/DreyerDescriptionen");
+define("DreyerDescriptionLink"														,"http://www.deepskylog.org/twiki/bin/view/DeepskyLog/DreyerDescriptionen");
 
 define("LangYouAreHere"																		,"Sie sind hier:");
 define("LangHome"																					,"Startseite");
