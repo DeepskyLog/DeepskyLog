@@ -187,9 +187,9 @@ class Messages
   public  function sendMessage($sender, $receiver, $subject, $message)
   { global $objDatabase;
     // Make sure not to insert bad code in the database
-    $subject = html_entity_decode($subject, ENT_COMPAT, "ISO-8859-15");
-		$subject = preg_replace("/(\")/", "", $subject);
-		$subject = preg_replace("/;/", ",", $subject);
+//    $subject = html_entity_decode($subject, ENT_COMPAT, "ISO-8859-15");
+//		$subject = preg_replace("/(\")/", "", $subject);
+//		$subject = preg_replace("/;/", ",", $subject);
     
 //    $message = html_entity_decode($message, ENT_COMPAT, "ISO-8859-15");
 //		$message = preg_replace("/(\")/", "", $message);

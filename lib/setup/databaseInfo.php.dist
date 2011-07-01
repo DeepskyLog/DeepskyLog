@@ -28,7 +28,7 @@ function databaseInfo()
   $instDir      = "/software/www/htdocs/deepskylog/";
   $baseURL      = "http://localhost/deepskylog/";
   // tempDir has NO end slash !
-  $tempDir      = "c:\windows\temp";
+  $tempDir      = "/tmp/DeepskyLog";
   
   // General settings
   // The title to appear above all pages
