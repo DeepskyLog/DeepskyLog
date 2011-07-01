@@ -38,7 +38,7 @@ function databaseInfo()
   $copyrightInfo = "Copyright&nbsp;2004&nbsp;-&nbsp;2010&nbsp;-&nbsp;Deepskylog developers&nbsp;-&nbsp;";
   $vvsInfo       = "<a href=\"http://www.deepsky.be\">VVS Deepsky</a>&nbsp;-&nbsp;";
   $dslInfo       = "Powered by&nbsp;<a href=\"http://www.deepskylog.org\">DeepskyLog</a>&nbsp;";
-  $versionInfo   = "4.1-Trunk";
+  $versionInfo   = "4.3-Trunk";
   $objectInfo    = " - Object Database by <a href=\"http://www.eyeandtelescope.com/\" >Eye&amp;Telescope</a>" . 
                    " - Star Database by Tycho2+ &amp; USNO-UCAC3";
   $w3cInfo = "<a class=\"w3c\" href=\"http://validator.w3.org/check?uri=referer\">".
