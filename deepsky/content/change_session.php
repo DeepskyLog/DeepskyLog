@@ -5,7 +5,7 @@ global $loggedUser;
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($sessionid=$objUtil->checkGetKey('sessionid'))) throw new Exception(LangException003);
 elseif(!($objSession->getSessionPropertyFromId($sessionid,'name'))) throw new Exception("Session not found in change_session.php, please contact the developers with this message:".$sessionid);
-elseif(strcmp($objSession->getSessionPropertyFromId($sessionid, 'observerid'),$loggedUser) != 0)  throw new Exception("Session can only be viewed by the owner of the session");
+elseif(strcmp($objSession->getSessionPropertyFromId($sessionid, 'observerid'),$loggedUser) != 0)  view_session();
 else change_session();
 
 function change_session()
@@ -115,7 +115,6 @@ function change_session()
   echo "	</script>";
   
   echo "<div id=\"main\">";  
-         
   $objPresentations->line(array("<h4>".LangChangeSessionTitle."&nbsp;<span class=\"requiredField\">".LangRequiredFields."</span>"."</h4>"),"L",array(),30);
 	echo "<hr />";
 	echo "<form id=\"sessionForm\" action=\"".$baseURL."index.php\" method=\"post\"><div>";
@@ -333,4 +332,77 @@ function change_session()
 	echo "</div></form>";
 	echo "</div>";
 }
+
+function view_session()
+{ global $baseURL,$loggedUserName,$objSession,$loggedUser,$objObserver,
+         $objLocation,$objPresentations,$objUtil,$objLanguage;
+
+  echo "<div id=\"main\">";
+  $objPresentations->line(array("<h4>".stripslashes($objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'name')). "</h4>")); 
+
+  // Add the begindate field
+  $beginday= $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'begindate');
+  $contentBeginDate = $beginday;
+  $objPresentations->line(array(LangAddSessionField2, 
+	                              $contentBeginDate),
+	                        "RL",array(25,75),'',array("fieldname","fieldvalue"));
+
+  // End date field
+  // Add the begindate field
+  $endday= $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'enddate');
+  $contentEndDate = $endday;
+  $objPresentations->line(array(LangAddSessionField3, 
+	                              $contentEndDate),
+	                        "RL",array(25,75),'',array("fieldname","fieldvalue"));
+
+  // Location of the session
+  $sites = $objLocation->getSortedLocationsList("name", $loggedUser,1);
+  // Get the given location here!
+  $theLoc = $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'locationid');
+  $theLocName = $objLocation->getLocationPropertyFromId($theLoc, "name");
+
+  $objPresentations->line(array(LangAddSessionField4,"<a href=\"".$baseURL."index.php?indexAction=detail_location&location=" . $theLoc . "\">" . $theLocName. "</a>"),
+		                        "RL",array(25,75),'',array("fieldname","fieldvalue"));
+	
+  // Language
+  $theLanguage=$objObserver->getObserverProperty($loggedUser,'observationlanguage');
+  $allLanguages = $objLanguage->getAllLanguages($objObserver->getObserverProperty($loggedUser,'language'));                              
+  $objPresentations->line(array(LangAddSessionField8,
+	                               $allLanguages[$theLanguage]),
+	                        "RL",array(25,75),'',array("fieldname","fieldvalue"));
+	
+  // Other observers
+  $theObserver = $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'observerid');
+  $observersCont = "<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $theObserver . "\"> " . $objObserver->getObserverProperty($theObserver, "firstname") . "&nbsp;" . $objObserver->getObserverProperty($theObserver, "name") . "</a>";
+  $observersArray = $objSession->getObservers($objUtil->checkRequestKey('sessionid')); 
+
+  for ($i=0;$i<count($observersArray);$i++) {
+    $observersCont .= " - ";
+    $observersCont .= "<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $observersArray[$i]['observer'] . "\">" . $objObserver->getObserverProperty($observersArray[$i]['observer'], "firstname") . "&nbsp;" . 
+                      $objObserver->getObserverProperty($observersArray[$i]['observer'], "name") . "</a>";
+  }
+  $objPresentations->line(array(LangAddSessionField9,
+	                               $observersCont),
+	                        "RL",array(25,75),'',array("fieldname","fieldvalue"));
+
+  // Weather
+	$objPresentations->line(array(LangAddSessionField5,
+	                              $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'weather')),
+	                        "RL",array(25,75),'',array("fieldname","fieldvalue"));
+
+  // Equipment
+	$objPresentations->line(array(LangAddSessionField6,
+	  $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'equipment')),
+	                        "RL",array(25,75),'',array("fieldname","fieldvalue"));
+	
+  // Comments
+	$objPresentations->line(array(LangAddSessionField7,
+	                              $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'comments')),
+	                        "RL",array(25,75),'',array("fieldname","fieldvalue","fieldexplanation"));
+
+  echo "<hr />";
+	echo "</div></form>";
+	echo "</div>";
+}
+
 ?>
