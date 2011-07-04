@@ -39,10 +39,14 @@ function selected_sessions()
 	if (array_key_exists('observer', $_GET)) {
 	  $observer = $_GET['observer'];
 	} else {
-	  $observer = $loggedUser;
+	  $observer = "-1";
 	}
 	// Get the number of sessions
-	$sessions = $objSession->getListWithActiveSessions($observer);
+	if (array_key_exists("observer", $_SESSION)) {
+	  $sessions = $objSession->getListWithActiveSessions($observer);
+	} else {
+	  $sessions = $objSession->getListWithAllActiveSessions();
+	}
 	if (count($sessions) == 0) //================================================================================================== no result present =======================================================================================
 	{	$objPresentations->line(array("<h4>".LangSessionNoResults . " " . $objObserver->getObserverProperty($observer, "firstname") . " " .
 		       $objObserver->getObserverProperty($observer, "name")."!</h4>"),
@@ -51,10 +55,14 @@ function selected_sessions()
 	else 
 	{ //=============================================================================================== START OBSERVATION PAGE OUTPUT =====================================================================================
 		echo "<div id=\"main\">";
-		$content1 ="<h4>" . LangOverviewSessionTitle . $objObserver->getObserverProperty($observer, "firstname") . " " .
-		       $objObserver->getObserverProperty($observer, "name");
+		if ($observer == "-1") {
+		  $content1 ="<h4>" . LangSearchMenuItem12;
+		} else {
+		  $content1 ="<h4>" . LangOverviewSessionTitle . $objObserver->getObserverProperty($observer, "firstname") . " " .
+		                $objObserver->getObserverProperty($observer, "name");
+		}
 		$content1.="</h4>";
-
+		
 		list($min, $max,$content2,$pageleft,$pageright,$pagemax)=$objUtil->printNewListHeader4($sessions, $link2, $min, $step);
 		$objPresentations->line(array($content1,$content2),"LR",array(50,50),30);
     $content4=$objUtil->printStepsPerPage3($link2,"sessions",$step);

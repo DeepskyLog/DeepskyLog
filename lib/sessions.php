@@ -231,6 +231,11 @@ class Sessions
     return $objDatabase->selectRecordsetArray("SELECT id from sessions where observerid = \"" . $userid . "\" and active = \"1\";");
   }
   
+  public  function getListWithAllActiveSessions()
+  { global $objDatabase;
+    return $objDatabase->selectRecordsetArray("SELECT id from sessions where active = \"1\";");
+  }
+  
   public  function getObservers($id) 
   { global $objDatabase;
     return $objDatabase->selectRecordsetArray("SELECT observer from sessionObservers where sessionid = \"" . $id . "\";");
@@ -415,8 +420,12 @@ class Sessions
           echo "<td>".$newArray[$cnt]['enddate']."</td>";
           echo "<td><a href=\"" . $baseURL . "index.php?indexAction=detail_location&location=" . $newArray[$cnt]['locationid'] . "\">".$objLocation->getLocationPropertyFromId($newArray[$cnt]['locationid'], "name")."</a></td>";
           echo "<td>";
+          print "<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $newArray[$cnt]['observerid'] . "\">" . 
+                   $objObserver->getObserverProperty($newArray[$cnt]['observerid'], "firstname") . " " . 
+                   $objObserver->getObserverProperty($newArray[$cnt]['observerid'], "name") . "</a>";
           $observers = $this->getObservers($newArray[$cnt]['id']);
           if (count($observers) > 0) {
+            echo " - ";
             for ($cnt2 = 0;$cnt2 < count($observers);$cnt2++) {
               print "<a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $observers[$cnt2]['observer'] . "\">" . 
                    $objObserver->getObserverProperty($observers[$cnt2]['observer'], "firstname") . " " . 
