@@ -45,7 +45,6 @@ class Sessions
 		    $observers[] = $k;
 		  }
 		}
-
 		$this->addSession($_POST['sessionname'], $_POST['beginday'], $_POST['beginmonth'], $_POST['beginyear'], 
 		                  $_POST['beginhours'], $_POST['beginminutes'], $_POST['endday'], $_POST['endmonth'], 
 		                  $_POST['endyear'], $_POST['endhours'], $_POST['endminutes'], $_POST['site'], $_POST['weather'], 
@@ -122,6 +121,8 @@ class Sessions
 		      }
 		    }
 		  }
+    // Add observations to the session
+    $observers[] = $loggedUser;
 		} else {
 		  // First add a new session with the observer which created the session (and set to active)
 		  $objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \""  . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)");
@@ -143,8 +144,6 @@ class Sessions
 		      }
 		    }
       }
-      // Add observations to the session
-      $observers[] = $loggedUser;
       $this->addObservations($id, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
 		}
   }
