@@ -38,15 +38,12 @@ function selected_sessions()
 	// First check the number of sessions for the observer
 	if (array_key_exists('observer', $_GET)) {
 	  $observer = $_GET['observer'];
-	} else {
-	  $observer = "-1";
-	}
-	// Get the number of sessions
-	if (array_key_exists("observer", $_SESSION)) {
 	  $sessions = $objSession->getListWithActiveSessions($observer);
 	} else {
 	  $sessions = $objSession->getListWithAllActiveSessions();
+	  $observer = "-1";
 	}
+	// Get the number of sessions
 	if (count($sessions) == 0) //================================================================================================== no result present =======================================================================================
 	{	$objPresentations->line(array("<h4>".LangSessionNoResults . " " . $objObserver->getObserverProperty($observer, "firstname") . " " .
 		       $objObserver->getObserverProperty($observer, "name")."!</h4>"),
