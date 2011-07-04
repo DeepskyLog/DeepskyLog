@@ -237,7 +237,7 @@ function change_session()
 	                        "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 	
   // Other observers
-  $observersCont = "<textarea readonly=\"readonly\" class=\"messageAreaSmall\" id=\"observers\" rows=\"1\" cols=\"1\">";
+  $observersCont = "<textarea readonly=\"readonly\" class=\"messageAreaSmall\" id=\"observers\" rows=\"7\" cols=\"50\">";
 	$observersArray = $objSession->getObservers($objUtil->checkRequestKey('sessionid')); 
   if (!in_array($loggedUser, $observersArray)) {
     $observersCont .= $loggedUserName . "\n";
@@ -307,7 +307,7 @@ function change_session()
 
   // Weather
 	$objPresentations->line(array(LangAddSessionField5,
-	                              "<textarea name=\"weather\"  class=\"messageAreaSmall inputfield\" cols=\"1\" rows=\"1\">" . 
+	                              "<textarea name=\"weather\"  class=\"messageAreaSmall inputfield\" cols=\"50\" rows=\"7\">" . 
 	                              $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'weather') . 
 	                              "</textarea>",
 	                              LangAddSessionField5Expl),
@@ -315,7 +315,7 @@ function change_session()
 
   // Equipment
 	$objPresentations->line(array(LangAddSessionField6,
-	                              "<textarea name=\"equipment\"  class=\"messageAreaSmall inputfield\" cols=\"1\" rows=\"1\">" . 
+	                              "<textarea name=\"equipment\"  class=\"messageAreaSmall inputfield\" cols=\"50\" rows=\"7\">" . 
 	                              $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'equipment') . 
 	                              "</textarea>",
 	                              LangAddSessionField6Expl),
@@ -323,7 +323,7 @@ function change_session()
 	
   // Comments
 	$objPresentations->line(array(LangAddSessionField7,
-	                              "<textarea name=\"comments\"  class=\"messageAreaSmall inputfield\" cols=\"1\" rows=\"1\">" . 
+	                              "<textarea name=\"comments\"  class=\"messageAreaSmall inputfield\" cols=\"50\" rows=\"7\">" . 
 	                              $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'comments') . 
 	                              "</textarea>",
 	                              LangAddSessionField7Expl),

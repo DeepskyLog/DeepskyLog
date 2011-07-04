@@ -224,7 +224,7 @@ function new_session()
 	
   // Other observers
   // First add the loggedUser
-  $observersCont = "<textarea readonly=\"readonly\" class=\"messageAreaSmall\" id=\"observers\" rows=\"1\" cols=\"1\">";
+  $observersCont = "<textarea readonly=\"readonly\" class=\"messageAreaSmall\" id=\"observers\" rows=\"7\" cols=\"50\">";
   $observersCont .= $objObserver->getObserverProperty($loggedUser, "firstname") . "&nbsp;" . $objObserver->getObserverProperty($loggedUser, "name");
   $observersCont .= "</textarea>";
   
@@ -271,19 +271,19 @@ function new_session()
 
   // Weather
 	$objPresentations->line(array(LangAddSessionField5,
-	                              "<textarea name=\"weather\"  class=\"messageAreaSmall inputfield\" cols=\"1\" rows=\"1\">" . "</textarea>",
+	                              "<textarea name=\"weather\"  class=\"messageAreaSmall inputfield\" cols=\"50\" rows=\"7\">" . "</textarea>",
 	                              LangAddSessionField5Expl),
 	                        "RLL",array(25,40,35),136,array("fieldname","fieldvalue","fieldexplanation"));
 
   // Equipment
 	$objPresentations->line(array(LangAddSessionField6,
-	                              "<textarea name=\"equipment\"  class=\"messageAreaSmall inputfield\" cols=\"1\" rows=\"1\">" . "</textarea>",
+	                              "<textarea name=\"equipment\"  class=\"messageAreaSmall inputfield\" cols=\"50\" rows=\"7\">" . "</textarea>",
 	                              LangAddSessionField6Expl),
 	                        "RLL",array(25,40,35),136,array("fieldname","fieldvalue","fieldexplanation"));
 	
   // Comments
 	$objPresentations->line(array(LangAddSessionField7,
-	                              "<textarea name=\"comments\"  class=\"messageAreaSmall inputfield\" cols=\"1\" rows=\"1\">" . "</textarea>",
+	                              "<textarea name=\"comments\"  class=\"messageAreaSmall inputfield\" cols=\"50\" rows=\"7\">" . "</textarea>",
 	                              LangAddSessionField7Expl),
 	                        "RLL",array(25,40,35),136,array("fieldname","fieldvalue","fieldexplanation"));
 
