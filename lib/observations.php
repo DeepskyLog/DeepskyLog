@@ -1304,6 +1304,7 @@ class Observations {
 		  $bottomline.="&nbsp;-&nbsp;<a  href=\"".$baseURL."index.php?indexAction=validate_delete_observation&amp;observationid=".$LOid."\">".LangDeleteObservation."</a>";
 		}
     echo substr($bottomline,13);
+    echo " <g:plusone size=\"small\"></g:plusone>";
 		echo "<hr />";
 	}
 	public  function validateDeleteDSObservation()                                                                                                                   // removes the observation with id = $id
