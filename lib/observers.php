@@ -48,7 +48,7 @@ class Observers
   }
   public  function getObserverPropertyCS($id,$property,$defaultValue='')
   { global $objDatabase; 
-    return $objDatabase->selectSingleValue("SELECT ".$property." FROM observers WHERE id COLLATE latin1_general_cs =\"".$id."\"",$property,$defaultValue);
+    return $objDatabase->selectSingleValue("SELECT ".$property." FROM observers WHERE id COLLATE utf8_bin =\"".$id."\"",$property,$defaultValue);
   }
   public  function getPopularObserversByName()                                           // getSortedActiveObservers returns an array with the ids(key) and names(value) of all active observers, sorted by name
   { global $objDatabase; 

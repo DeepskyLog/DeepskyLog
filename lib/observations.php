@@ -1314,6 +1314,7 @@ class Observations {
     if(($id=$objUtil->checkGetKey('observationid'))
     && ($objUtil->checkAdminOrUserID($this->getDsObservationProperty($id,'observerid'))))
     { $objDatabase->execSQL("DELETE FROM observations WHERE id=\"".$id."\"");
+      $objDatabase->execSQL("DELETE FROM sessionObservations WHERE observationid=\"".$id."\"");
 	    $_SESSION['Qobs']=array();
 	    $_SESSION['QobsParams']=array();
       return LangObservationDeleted;
