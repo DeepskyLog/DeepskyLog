@@ -498,7 +498,6 @@ class Objects
       $theYear=$objUtil->checkSessionKey('globalYear',date('Y'));
       $theMonth=$objUtil->checkSessionKey('globalMonth',date('n'));
       $theDay=$objUtil->checkSessionKey('globalDay',date('j'));
-      
       // 2) Get the julian day of today...
       $jd = gregoriantojd($theMonth, $theDay, $theYear);
       
@@ -1694,7 +1693,7 @@ class Objects
 		  if($check)                                                                    // magnitude
 		  { $magnitude = "99.9";
 		    if($objUtil->checkPostKey('magnitude')&&(!(ereg('^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$',$_POST['magnitude'],$matches))))
-		    { $entryMessage=LangValidateObjectMessage9;
+		    { $entryMessage=LangValidateObjectMessage8;
 		      $_GET['indexAction']='add_object';
 					$check = false;
 		    }
