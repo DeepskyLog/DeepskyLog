@@ -6,6 +6,9 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else 
 { preludesA();
   require_once "lib/setup/".$language;
+  if($loginErrorCode||$loginErrorText)
+  { $entryMessage=constant($loginErrorCode)." ".$loginErrorText;
+  }
   preludesB();
 }
 

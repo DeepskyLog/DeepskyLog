@@ -46,6 +46,10 @@ class Observers
   { global $objDatabase; 
     return $objDatabase->selectSingleValue("SELECT ".$property." FROM observers WHERE id=\"".$id."\"",$property,$defaultValue);
   }
+  public  function getObserverPropertyCS($id,$property,$defaultValue='')
+  { global $objDatabase; 
+    return $objDatabase->selectSingleValue("SELECT ".$property." FROM observers WHERE id COLLATE latin1_general_cs =\"".$id."\"",$property,$defaultValue);
+  }
   public  function getPopularObserversByName()                                           // getSortedActiveObservers returns an array with the ids(key) and names(value) of all active observers, sorted by name
   { global $objDatabase; 
    return $objDatabase->selectKeyValueArray("SELECT DISTINCT observers.id, CONCAT(observers.firstname,' ',observers.name) As observername, observers.name FROM observers JOIN observations ON (observers.id = observations.observerid) ORDER BY observers.name",'id','observername');

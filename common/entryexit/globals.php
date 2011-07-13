@@ -44,4 +44,7 @@ $thisYear=date("Y");
 $thisMonth=date("n");
 $thisDay=date("j");
 
+$loginErrorText="";
+$loginErrorCode="";
+
 ?>

@@ -9,7 +9,7 @@ else login();
 
 function login()
 { global $loggedUser,$loggedUserName,$modules,$language,$entryMessage,$usedLanguages,$allLanguages,$defaultLanguage,
-         $objUtil,$objObserver,$objLanguage;
+         $objUtil,$objObserver,$objLanguage,$loginErrorCode,$loginErrorText;
   $loggedUser='';
   $loggedUserName='';
   $_SESSION['admin']="no";
@@ -44,7 +44,7 @@ function login()
   { if(array_key_exists('deepskylog_id', $_POST)&&$_POST['deepskylog_id']&&array_key_exists('passwd', $_POST)&&$_POST['passwd'])              // all fields filled in
     { $login  = $_POST['deepskylog_id'];                                          // get password from form and encrypt
   	  $passwd = md5($_POST['passwd']);
-  	  $passwd_db = $objObserver->getObserverProperty($login,'password');                  // get password from database 
+  	  $passwd_db = $objObserver->getObserverPropertyCS($login,'password');                  // get password from database 
       if($passwd_db==$passwd)                                                     // check if passwords match
       { $_SESSION['lang']=$objUtil->checkPostKey('language',$objObserver->getObserverProperty($login,'language'));
         if($objObserver->getObserverProperty($login,'role',2)=="2")                         // user in waitlist already tries to log in
@@ -119,7 +119,6 @@ function login()
   if($loginErrorCode||$loginErrorText)
   { $_SESSION['deepskylog_id']='';
   	setcookie("deepskylogsec","",time()-3600,"/");
-    $entryMessage=constant($loginErrorCode)." ".$loginErrorText;
   }
   if($loggedUser)
     $loggedUserName=$objObserver->getObserverProperty($loggedUser,'firstname')." ".$objObserver->getObserverProperty($loggedUser,'name');
