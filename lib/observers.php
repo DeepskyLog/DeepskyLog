@@ -203,7 +203,7 @@ class Observers
 			if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
 			else  $_GET['indexAction']='subscribe';
 		}
-		elseif($_POST['motivation']=='')
+		elseif($_POST['motivation']=='' && !$loggedUser)
 		{ $entryMessage.=LangValidateAccountMessage7;                                                              
 			if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
 			else  $_GET['indexAction']='subscribe';
@@ -237,7 +237,8 @@ class Observers
 		              . $_POST['email']
 		              . "\n" . LangValidateAccountEmailLine3
 		              . $_POST['firstname'] . " " . $_POST['name']
-		              . "\n\n" . LangValidateAccountEmailLine4);
+		              . "\n\n" . LangValidateAccountEmailLine4 
+                      . "\n\n" . $_POST['motivation']);
         if(isset($developversion)&&($developversion==true))
           $entryMessage.="On the live server, a mail would be sent with the subject: ".LangValidateAccountEmailTitle.".<p>";
         else
