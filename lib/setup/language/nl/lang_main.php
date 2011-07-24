@@ -102,7 +102,7 @@ define('LangHideLeftMenu','De linkermenu structuur verbergen');
 define('LangShowLeftMenu','De linkermenu structuur tonen');
 
 define('LangInPrivateLists','In mijn lijsten');
-define('LangInPublicLists','In publike lijsten');
+define('LangInPublicLists','In publieke lijsten');
 
 define("LangObjectShowExtraInfo","Toon of verwijder extra informatie...");
 define("LangButtonOnlyObjectDetails"      ,"Enkel object details");

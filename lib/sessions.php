@@ -475,6 +475,9 @@ class Sessions
  	    $date = $date . "00:00:00";
  	  }
  	  
+      // First remove the observation from the existing sessions
+      $objDatabase->selectRecordsetArray("DELETE from sessionObservations where observationid =  \"" . $current_observation . "\"");
+
  	  $sessions = $objDatabase->selectRecordsetArray("SELECT * from sessions where begindate <= \"" . $date . "\" and enddate >= \"" . $date . "\" and active = 1");
  	  // We now have a list with all sessions, but we only have one observer. Get the other observers from the sessionObservers table
  	  for ($i=0;$i<count($sessions);$i++) {
