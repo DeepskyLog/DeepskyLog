@@ -83,6 +83,12 @@ function ajaxinterface()
 	  echo json_encode($objObserverQueries->removeObserverQuery($objUtil->checkGetKey('observerquerytype'),$objUtil->checkGetKey('observerqueryname')));
 	elseif($ajaxInstruction=="saveObserverQuery")
 	  echo json_encode($objObserverQueries->saveObserverQuery($objUtil->checkGetKey('observerquerytype'),$objUtil->checkGetKey('observerqueryname')));
+	elseif($ajaxInstruction=="atlasPages")
+	{ $filename="testpage.pef";
+		$_REQUEST['ra']=20;
+		$_REQUEST['decl']=30;	  
+		echo $objPrintAtlas->pdfAtlasAtlasPages();
+	}
 	  
 	elseif($ajaxInstruction=="allonepass")
 	{ $filename=$_SESSION['Qobj'][$objUtil->checkGetKey('item')]['showname'];

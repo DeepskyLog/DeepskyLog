@@ -1,4 +1,6 @@
 <?php
+// This is version 4.3
+define("LangSearchMenuItem13"           ,"Atlas paginas");
 // To translate
 define("LangChangeAccountField13"													,"Motivation");
 define("LangChangeAccountField13Expl"											,"Please tell us briefly why you register, this allows us to eliminate automatic registrations.");

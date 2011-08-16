@@ -41,6 +41,7 @@ function menu_search()
 	  echo "<option value=\"".$baseURL."index.php?indexAction=rank_objects\">".LangSearchMenuItem7."</option>";
 	  echo "<option value=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;catalog=%\">".LangSearchMenuItem2."</option>";
 	  echo "<option value=\"".$baseURL."index.php?indexAction=view_catalogs\">".LangSearchMenuItem10."</option>";
+	  echo "<option value=\"".$baseURL."index.php?indexAction=view_atlaspages\">".LangSearchMenuItem13."</option>";
 	  echo "</select>";
 	}
 	else

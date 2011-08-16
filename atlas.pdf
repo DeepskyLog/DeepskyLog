@@ -11,7 +11,9 @@ atlas();
 function atlas()
 { global $filename,
          $objUtil,$objPrintAtlas;
-	if(($zoom=$objUtil->checkRequestKey('zoom'))==AtlasOverviewZoom)
+	if($objUtil->checkRequestKey('filename'))
+	  $filename=$objUtil->checkRequestKey('filename');
+	elseif(($zoom=$objUtil->checkRequestKey('zoom'))==AtlasOverviewZoom)
 	  $filename=OverviewChart;
 	elseif($zoom==AtlasLookupZoom)
 	  $filename=LookupChart;

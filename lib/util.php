@@ -2575,6 +2575,7 @@ class Utils
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('result_selected_sessions'           ,'deepsky/content/selected_sessions.php')))  
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('view_observer_catalog'              ,'deepsky/content/details_observer_catalog.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('objectsSets'                        ,'common/content/objectsSets.php')))
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('view_atlaspages'                    ,'common/content/atlasPages.php')))
     
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('change_account'                     ,'common/content/change_account.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('adapt_eyepiece'                     ,'common/content/change_eyepiece.php')))

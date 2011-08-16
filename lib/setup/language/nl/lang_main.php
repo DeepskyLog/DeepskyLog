@@ -1,4 +1,6 @@
 <?php
+// This is version 4.3
+define("LangSearchMenuItem13"           ,"Atlaspaginas");
 // This is version 4.2
 define("LangChangeSessionButton"        ,"Pas sessie aan");
 define("LangSessionNoResults"           ,"Geen sessies beschikbaar voor ");

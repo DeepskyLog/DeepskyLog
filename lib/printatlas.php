@@ -985,8 +985,9 @@ class PrintAtlas
 
   
   
-  public  function pdfAtlas()  // Creates a pdf atlas page
+  public  function pdfAtlas($nostream=false)  // Creates a pdf atlas page
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
+    $object='';
     if(!(($this->atlaspagerahr=$objUtil->checkRequestKey('ra',0))&&
          ($this->atlaspagedecldeg=$objUtil->checkRequestKey('decl',0))))
       if($object=$objObject->getExactDsObject($objUtil->checkRequestKey('object'),''))
@@ -1033,7 +1034,8 @@ class PrintAtlas
       $this->pdf->addTextWrap($this->labelsArr[$i][0],$this->labelsArr[$i][1],$this->labelsArr[$i][2],$this->labelsArr[$i][3],$this->labelsArr[$i][4],$this->labelsArr[$i][5]);                  
     $temp='(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).';
     $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
-    $this->pdf->Stream(); 
+    if(!$nostream)
+      $this->pdf->Stream(); 
   }
   public  function pdfAtlasObjectSets($item,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false)
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject,$tmpDir;
@@ -1044,6 +1046,16 @@ class PrintAtlas
     }
     else
       echo -1;
+  }
+  public  function pdfAtlasAtlasPages()
+  { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject,$tmpDir;
+    if($item<2)
+    { $this->pdfAtlas(true);
+      $_SESSION['allonepass'.$item]=$this->pdf->output();
+      echo $item+1;
+    }
+    else
+      echo 2;
   }
   private function filterdegpart($thevalue)
   { return substr($thealtitude=html_entity_decode($thevalue),0,strpos($thealtitude,'°')+1);

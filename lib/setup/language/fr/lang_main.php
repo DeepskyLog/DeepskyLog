@@ -1,4 +1,6 @@
 <?php
+// This is version 4.3
+define("LangSearchMenuItem13"           ,"Les pages de l'atlas");
 // This is version 4.2
 define("LangChangeSessionButton"        ,"Adapter la session");
 define("LangSessionNoResults"           ,"Pas de sessions disponible pour ");
