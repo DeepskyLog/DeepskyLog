@@ -12,8 +12,7 @@ try
   require_once 'common/entryexit/instructions.php';                                                            // Execution of all non-layout related instructions (login, add objects to lists, etc.)
   $includeFile=$objUtil->utilitiesDispatchIndexAction();                                                  // Determine the page to show
   require_once 'common/entryexit/data.php';                                                                    // Get data for the form, object data, observation data, etc.
-  echo    "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">";
-  echo    "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
+  echo    "<!DOCTYPE html>";
   require_once 'common/menu/head.php';                                                                         // HTML head
   echo    "<body onkeydown=\"bodyOnKeyDown(event);\">"; 
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."common/entryexit/globals.js\"></script>";

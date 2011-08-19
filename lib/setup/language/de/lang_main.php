@@ -685,7 +685,7 @@ define("LangChangeAccountField3Expl"											,"");
 define("LangChangeAccountField4"													,"Name");
 define("LangChangeAccountField4Expl"											,"");
 define("LangChangeAccountField5"													,"Passwort");
-define("LangChangeAccountField5Expl"											,"Dies ist <em>nicht</em> das Passwort Ihres eMail Zugangs!");
+define("LangChangeAccountField5Expl"											,"Dies ist nicht das Passwort Ihres eMail Zugangs!");
 define("LangChangeAccountField6"													,"Passwort Best&auml;tigung");
 define("LangChangeAccountField6Expl"											,"");
 define("LangChangeAccountField7"													,"Standard Beobachtungsplatz");

@@ -667,7 +667,7 @@ define("LangChangeAccountField3Expl"											,"");
 define("LangChangeAccountField4"													,"Familienaam");
 define("LangChangeAccountField4Expl"											,"");
 define("LangChangeAccountField5"													,"Paswoord");
-define("LangChangeAccountField5Expl"											,"Dit is <em>niet</em> het paswoord van je provider");
+define("LangChangeAccountField5Expl"											,"Dit is niet het paswoord van je provider");
 define("LangChangeAccountField6"													,"Bevestig paswoord");
 define("LangChangeAccountField6Expl"											,"");
 define("LangChangeAccountField7"													,"Standaard waarnemingsplaats");

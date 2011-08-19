@@ -642,7 +642,7 @@ define("LangChangeAccountField3Expl"											,"");
 define("LangChangeAccountField4"													,"Nom de famille");
 define("LangChangeAccountField4Expl"											,"");
 define("LangChangeAccountField5"													,"Mot de passe");
-define("LangChangeAccountField5Expl"											,"Ceci n'est <em>pas</em> le mot de passe de votre fournisseur  d'internet");
+define("LangChangeAccountField5Expl"											,"Ceci n'est pas le mot de passe de votre fournisseur d'internet");
 define("LangChangeAccountField6"													,"Confirmation de votre mot de passe");
 define("LangChangeAccountField6Expl"											,"");                                      
 define("LangChangeAccountField7"													,"Endroit standard d'observation");

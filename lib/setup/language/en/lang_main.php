@@ -670,7 +670,7 @@ define("LangChangeAccountField3Expl"											,"");
 define("LangChangeAccountField4"													,"Name");
 define("LangChangeAccountField4Expl"											,"");
 define("LangChangeAccountField5"													,"Password");
-define("LangChangeAccountField5Expl"											,"This is <em>not</em> your email account's password");
+define("LangChangeAccountField5Expl"											,"This is not your email account's password");
 define("LangChangeAccountField6"													,"Confirm password");
 define("LangChangeAccountField6Expl"											,"");
 define("LangChangeAccountField7"													,"Default observing site");
