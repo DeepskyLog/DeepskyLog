@@ -61,9 +61,9 @@ function new_object()
 	if($phase==0)
 	  if($_SESSION['admin']=="yes")
 	  { $objPresentations->line(array("&gt;&gt;&gt;&gt;&nbsp;".LangViewObjectField1 . "&nbsp;*",
-	                              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"20\" name=\"catalog\" size=\"20\" value=\"".$objUtil->checkRequestKey('catalog')."\" ".(($phase==0)?"":$disabled)."/>".
+	                              "<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"20\" name=\"catalog\" size=\"20\" value=\"".$objUtil->checkRequestKey('catalog')."\" ".(($phase==0)?"":$disabled)."/>".
 	                              "&nbsp;&nbsp;".
-	                              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"20\" name=\"number\" size=\"20\" value=\"".$objUtil->checkRequestKey('number')."\" ".(($phase==0)?"":$disabled)."/>",
+	                              "<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"20\" name=\"number\" size=\"20\" value=\"".$objUtil->checkRequestKey('number')."\" ".(($phase==0)?"":$disabled)."/>",
 	                              $content2),
 	                        "RLL",array(20,40,40),35,array("fieldname"));
 	  	
@@ -77,16 +77,16 @@ function new_object()
 	    $objPresentations->line(array("&gt;&gt;&gt;&gt;&nbsp;".LangViewObjectField1 . "&nbsp;*",
 	                              $tempcat.
 	                              "&nbsp;&nbsp;".
-	                              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"20\" name=\"number\" size=\"20\" value=\"".$objUtil->checkRequestKey('number')."\" ".(($phase==0)?"":$disabled)."/>",
+	                              "<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"20\" name=\"number\" size=\"20\" value=\"".$objUtil->checkRequestKey('number')."\" ".(($phase==0)?"":$disabled)."/>",
 	                              $content2),
 	                        "RLL",array(20,40,40),35,array("fieldname"));
 	
 	  }
 	else
 	{ $objPresentations->line(array(LangViewObjectField1 . "&nbsp;*",
-	                              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"20\" name=\"catalog0\" size=\"20\" value=\"".$objUtil->checkRequestKey('catalog')."\" ".$disabled."/>".
+	                              "<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"20\" name=\"catalog0\" size=\"20\" value=\"".$objUtil->checkRequestKey('catalog')."\" ".$disabled."/>".
 	                              "&nbsp;&nbsp;".
-	                              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"20\" name=\"number0\" size=\"20\" value=\"".$objUtil->checkRequestKey('number')."\" ".$disabled."/>",
+	                              "<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"20\" name=\"number0\" size=\"20\" value=\"".$objUtil->checkRequestKey('number')."\" ".$disabled."/>",
 	                              ""),
 	                        "RLL",array(20,40,40),35,array("fieldname"));
 	  echo "<input type=\"hidden\" name=\"catalog\" id=\"catalog\" value=\"".$objUtil->checkRequestKey('catalog')."\" />";
@@ -96,30 +96,30 @@ function new_object()
 	{ // RIGHT ASCENSION
 		// DECLINATION
 		if($phase==1)
-		{ $content ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAhours\" size=\"3\" value=\"".$objUtil->checkRequestKey('RAhours')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;h&nbsp;";
-		  $content.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAminutes\" size=\"3\" value=\"".$objUtil->checkRequestKey('RAminutes')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;m&nbsp;"; 
-		  $content.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAseconds\" size=\"3\" value=\"".$objUtil->checkRequestKey('RAseconds')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;s&nbsp;";
+		{ $content ="<input type=\"number\" min=\"0\" max=\"23\" required class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAhours\" size=\"3\" value=\"".$objUtil->checkRequestKey('RAhours')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;h&nbsp;";
+		  $content.="<input type=\"number\" min=\"0\" max=\"59\" required class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAminutes\" size=\"3\" value=\"".$objUtil->checkRequestKey('RAminutes')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;m&nbsp;"; 
+		  $content.="<input type=\"number\" min=\"0\" max=\"59\" required class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAseconds\" size=\"3\" value=\"".$objUtil->checkRequestKey('RAseconds')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;s&nbsp;";
 		  $objPresentations->line(array("&gt;&gt;&gt;&gt;&nbsp;".LangViewObjectField3 . "&nbsp;*",
 		                              $content),                              
 		                        "RL",array(20,80),35,array("fieldname"));
-			$content ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"DeclDegrees\" size=\"3\" value=\"".$objUtil->checkRequestKey('DeclDegrees')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;d&nbsp;";
-			$content.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"DeclMinutes\" size=\"3\" value=\"".$objUtil->checkRequestKey('DeclMinutes')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;m&nbsp;";
-			$content.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"DeclSeconds\" size=\"3\" value=\"".$objUtil->checkRequestKey('DeclSeconds')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;s&nbsp;";
+			$content ="<input type=\"number\" min=\"-89\" max=\"89\" required class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"DeclDegrees\" size=\"3\" value=\"".$objUtil->checkRequestKey('DeclDegrees')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;d&nbsp;";
+			$content.="<input type=\"number\" min=\"0\" max=\"59\" required class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"DeclMinutes\" size=\"3\" value=\"".$objUtil->checkRequestKey('DeclMinutes')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;m&nbsp;";
+			$content.="<input type=\"number\" min=\"0\" max=\"59\" required class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"DeclSeconds\" size=\"3\" value=\"".$objUtil->checkRequestKey('DeclSeconds')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;s&nbsp;";
 			$objPresentations->line(array("&gt;&gt;&gt;&gt;&nbsp;".LangViewObjectField4."&nbsp;*",
 			                              $content,
 		                                $content4),                              
 			                        "RLL",array(20,40,40),35,array("fieldname"));
 		}
 		else
-		{ $content ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAhours1\"   size=\"3\" value=\"".$objUtil->checkRequestKey('RAhours')  ."\" ".(($phase==1)?"":$disabled)."/>&nbsp;h&nbsp;";
-		  $content.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAminutes1\" size=\"3\" value=\"".$objUtil->checkRequestKey('RAminutes')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;m&nbsp;"; 
-		  $content.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAseconds1\" size=\"3\" value=\"".$objUtil->checkRequestKey('RAseconds')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;s&nbsp;";
+		{ $content ="<input type=\"number\" min=\"0\" max=\"23\" required class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAhours1\"   size=\"3\" value=\"".$objUtil->checkRequestKey('RAhours')  ."\" ".(($phase==1)?"":$disabled)."/>&nbsp;h&nbsp;";
+		  $content.="<input type=\"number\" min=\"0\" max=\"59\" required class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAminutes1\" size=\"3\" value=\"".$objUtil->checkRequestKey('RAminutes')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;m&nbsp;"; 
+		  $content.="<input type=\"number\" min=\"0\" max=\"59\" required class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"RAseconds1\" size=\"3\" value=\"".$objUtil->checkRequestKey('RAseconds')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;s&nbsp;";
 		  $objPresentations->line(array(LangViewObjectField3 . "&nbsp;*",
 		                              $content),                              
 		                        "RL",array(20,80),35,array("fieldname"));
-			$content ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"DeclDegrees1\" size=\"3\" value=\"".$objUtil->checkRequestKey('DeclDegrees')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;d&nbsp;";
-			$content.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"DeclMinutes1\" size=\"3\" value=\"".$objUtil->checkRequestKey('DeclMinutes')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;m&nbsp;";
-			$content.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"DeclSeconds1\" size=\"3\" value=\"".$objUtil->checkRequestKey('DeclSeconds')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;s&nbsp;";
+			$content ="<input type=\"number\" min=\"-89\" max=\"89\" required class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"DeclDegrees1\" size=\"3\" value=\"".$objUtil->checkRequestKey('DeclDegrees')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;d&nbsp;";
+			$content.="<input type=\"number\" min=\"0\" max=\"59\" required class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"DeclMinutes1\" size=\"3\" value=\"".$objUtil->checkRequestKey('DeclMinutes')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;m&nbsp;";
+			$content.="<input type=\"number\" min=\"0\" max=\"59\" required class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"DeclSeconds1\" size=\"3\" value=\"".$objUtil->checkRequestKey('DeclSeconds')."\" ".(($phase==1)?"":$disabled)."/>&nbsp;s&nbsp;";
 			$objPresentations->line(array(LangViewObjectField4."&nbsp;*",
 			                              $content,
 		                                $content4),                              
@@ -135,7 +135,7 @@ function new_object()
 	  { // CONSTELLATION 
 		  $thecon='';
 	    $thecon=$objConstellation->getConstellationFromCoordinates($objUtil->checkRequestKey('RAhours',0)+($objUtil->checkRequestKey('RAminutes',0)/60)+($objUtil->checkRequestKey('RAhours',0)/3600),$objUtil->checkRequestKey('DeclDegrees',0)+($objUtil->checkRequestKey('DeclMinutes',0)/60)+($objUtil->checkRequestKey('DeclSeconds',0)/3600));                            
-		  $content ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"3\" disabled=\"disabled\" name=\"showcon\" size=\"3\" value=\"".$thecon."\" />";
+		  $content ="<input type=\"text\" required class=\"inputfield requiredField centered\" maxlength=\"3\" disabled=\"disabled\" name=\"showcon\" size=\"3\" value=\"".$thecon."\" />";
 		  $objPresentations->line(array(LangViewObjectField5 . "&nbsp;*",
 		                                $content),                              
 		                          "RL",array(20,80),35,array("fieldname"));
@@ -144,7 +144,7 @@ function new_object()
 	}
 	if($phase==2)
 	{ // TYPE
-		$content ="<select name=\"type\" class=\"requiredField\"".(($phase==2)?"":$disabled).">";
+		$content ="<select name=\"type\" required class=\"requiredField\"".(($phase==2)?"":$disabled).">";
 		$types=$objObject->getDsObjectTypes();
 		while(list($key,$value)=each($types))
 		  $stypes[$value] = $GLOBALS[$value];
@@ -156,22 +156,22 @@ function new_object()
 		                              $content),                              
 		                        "RL",array(20,80),35,array("fieldname"));
 		// MAGNITUDE
-		$content ="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"magnitude\" size=\"4\" value=\"".$objUtil->checkRequestKey('magnitude')."\" ".(($phase==2)?"":$disabled)."/>";
+		$content ="<input type=\"number\" min=\"-5.5\" max=\"20.0\" step=\"0.1\" class=\"inputfield\" maxlength=\"4\" name=\"magnitude\" size=\"4\" value=\"".$objUtil->checkRequestKey('magnitude')."\" ".(($phase==2)?"":$disabled)."/>";
 		$objPresentations->line(array(LangViewObjectField7,
 		                              $content),                              
 		                        "RL",array(20,80),35,array("fieldname"));
 		// SURFACE BRIGHTNESS
-		$content ="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"sb\" size=\"4\" value=\"".$objUtil->checkRequestKey('sb')."\" ".(($phase==2)?"":$disabled)."/>";
+		$content ="<input type=\"number\" min=\"-5.5\" max=\"20.0\" step=\"0.1\" class=\"inputfield\" maxlength=\"4\" name=\"sb\" size=\"4\" value=\"".$objUtil->checkRequestKey('sb')."\" ".(($phase==2)?"":$disabled)."/>";
 		$objPresentations->line(array(LangViewObjectField8,
 		                              $content),                              
 		                        "RL",array(20,80),35,array("fieldname"));
 		// SIZE
-		$content ="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"size_x\" size=\"4\" value=\"".$objUtil->checkRequestKey('size_x')."\"".(($phase==2)?"":$disabled)."/>&nbsp;&nbsp;";
+		$content ="<input type=\"number\" class=\"inputfield\" maxlength=\"4\" name=\"size_x\" size=\"4\" value=\"".$objUtil->checkRequestKey('size_x')."\"".(($phase==2)?"":$disabled)."/>&nbsp;&nbsp;";
 		$content.="<select name=\"size_x_units\"".(($phase==2)?"":$disabled)."> <option value=\"min\"".(("min"==$objUtil->checkRequestKey('size_x_units'))?" selected=\"selected\" ":"").">" . LangNewObjectSizeUnits1 . "</option>
 					                               <option value=\"sec\"".(("sec"==$objUtil->checkRequestKey('size_x_units'))?" selected=\"selected\" ":"").">" . LangNewObjectSizeUnits2 . "</option>";
 		$content.="</select>";
 		$content.="&nbsp;&nbsp;X&nbsp;&nbsp;";
-		$content.="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"size_y\" size=\"4\" value=\"".$objUtil->checkRequestKey('size_y')."\"".(($phase==2)?"":$disabled)."/>&nbsp;&nbsp;";
+		$content.="<input type=\"number\" class=\"inputfield\" maxlength=\"4\" name=\"size_y\" size=\"4\" value=\"".$objUtil->checkRequestKey('size_y')."\"".(($phase==2)?"":$disabled)."/>&nbsp;&nbsp;";
 		$content.="<select name=\"size_y_units\"".(($phase==2)?"":$disabled)."> <option value=\"min\"".(("min"==$objUtil->checkRequestKey('size_y_units'))?" selected=\"selected\" ":"").">" . LangNewObjectSizeUnits1 . "</option>
 					                               <option value=\"sec\"".(("sec"==$objUtil->checkRequestKey('size_y_units'))?" selected=\"selected\" ":"").">" . LangNewObjectSizeUnits2 . "</option>";
 		$content.="</select>";
@@ -179,7 +179,7 @@ function new_object()
 		                              $content),                              
 		                        "RL",array(20,80),35,array("fieldname"));
 		// POSITION ANGLE 
-		$content ="<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"posangle\" size=\"3\" value=\"".$objUtil->checkRequestKey('posangle')."\" ".(($phase==2)?"":$disabled)."/>&deg;";
+		$content ="<input type=\"number\" min=\"-360\" max=\"360\" class=\"inputfield\" maxlength=\"3\" name=\"posangle\" size=\"3\" value=\"".$objUtil->checkRequestKey('posangle')."\" ".(($phase==2)?"":$disabled)."/>&deg;";
 		$objPresentations->line(array(LangViewObjectField12,
 		                              $content),                              
 		                        "RL",array(20,80),35,array("fieldname"));

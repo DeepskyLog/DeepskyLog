@@ -140,17 +140,17 @@ function change_session()
 	$theHour=substr($beginday,11,2);
   $theMinute=substr($beginday,14,2);
 
-  $contentBeginDate ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"3\"  name=\"beginday\" id=\"beginday\" value=\"".$theDay."\" onkeypress=\"return checkPositiveInteger(event);\" />";
+  $contentBeginDate ="<input type=\"number\" min=\"1\" max=\"31\" required class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"4\"  name=\"beginday\" id=\"beginday\" value=\"".$theDay."\" onkeypress=\"return checkPositiveInteger(event);\" />";
   $contentBeginDate.="&nbsp;&nbsp;";
-	$contentBeginDate.="<select name=\"beginmonth\" id=\"beginmonth\" class=\"inputfield requiredField centered\">";
+	$contentBeginDate.="<select required name=\"beginmonth\" id=\"beginmonth\" class=\"inputfield requiredField centered\">";
 	for($i= 1;$i<13;$i++)
 		$contentBeginDate.="<option value=\"".$i."\"".(($theMonth==$i)?" selected=\"selected\"" : "").">".$GLOBALS['Month'.$i]."</option>";
 	$contentBeginDate.="</select>";
 	$contentBeginDate.="&nbsp;&nbsp;";
-	$contentBeginDate.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"4\" size=\"4\" name=\"beginyear\" id=\"beginyear\" onkeypress=\"return checkPositiveInteger(event);\" value=\"".$theYear."\" />";
-	$contentBeginTime ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"2\" name=\"beginhours\" value=\"".$theHour."\" />";
+	$contentBeginDate.="<input type=\"number\" min=\"1500\" max=\"2200\" required class=\"inputfield requiredField centered\" maxlength=\"4\" size=\"6\" name=\"beginyear\" id=\"beginyear\" onkeypress=\"return checkPositiveInteger(event);\" value=\"".$theYear."\" />";
+	$contentBeginTime ="<input type=\"number\" min=\"0\" max=\"23\" required class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"4\" name=\"beginhours\" value=\"".$theHour."\" />";
 	$contentBeginTime.="&nbsp;&nbsp;";
-	$contentBeginTime.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"2\" name=\"beginminutes\" value=\"".$theMinute."\" />&nbsp;&nbsp;";
+	$contentBeginTime.="<input type=\"number\" min=\"0\" max=\"59\" required class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"4\" name=\"beginminutes\" value=\"".$theMinute."\" />&nbsp;&nbsp;";
 
 	$contentBeginDateText = "<a href=\"#\" onclick=\"calBegin.showNavigationDropdowns();
 	                             calBegin.setReturnFunction('SetObsDateBegin');
@@ -172,7 +172,7 @@ function change_session()
 	$theHour=substr($beginday,11,2);
   $theMinute=substr($beginday,14,2);
 
-  $contentEndDate ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"3\"  name=\"endday\" id=\"endday\" value=\"".$theDay."\" onkeypress=\"return checkPositiveInteger(event);\" />";
+  $contentEndDate ="<input type=\"number\" min=\"1\" max=\"31\" required class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"4\"  name=\"endday\" id=\"endday\" value=\"".$theDay."\" onkeypress=\"return checkPositiveInteger(event);\" />";
   $contentEndDate.="&nbsp;&nbsp;";
 	$contentEndDate.="<select name=\"endmonth\" id=\"endmonth\" class=\"inputfield requiredField centered\">";
 	for($i= 1;$i<13;$i++)
