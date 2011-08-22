@@ -174,15 +174,15 @@ function change_session()
 
   $contentEndDate ="<input type=\"number\" min=\"1\" max=\"31\" required class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"4\"  name=\"endday\" id=\"endday\" value=\"".$theDay."\" onkeypress=\"return checkPositiveInteger(event);\" />";
   $contentEndDate.="&nbsp;&nbsp;";
-	$contentEndDate.="<select name=\"endmonth\" id=\"endmonth\" class=\"inputfield requiredField centered\">";
+	$contentEndDate.="<select required name=\"endmonth\" id=\"endmonth\" class=\"inputfield requiredField centered\">";
 	for($i= 1;$i<13;$i++)
 		$contentEndDate.="<option value=\"".$i."\"".(($theMonth==$i)?" selected=\"selected\"" : "").">".$GLOBALS['Month'.$i]."</option>";
 	$contentEndDate.="</select>";
 	$contentEndDate.="&nbsp;&nbsp;";
-	$contentEndDate.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"4\" size=\"4\" name=\"endyear\" id=\"endyear\" onkeypress=\"return checkPositiveInteger(event);\" value=\"".$theYear."\" />";
-	$contentEndTime ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"2\" name=\"endhours\" value=\"".$theHour."\" />";
+	$contentEndDate.="<input type=\"number\" min=\"1500\" max=\"2200\" required class=\"inputfield requiredField centered\" maxlength=\"4\" size=\"6\" name=\"endyear\" id=\"endyear\" onkeypress=\"return checkPositiveInteger(event);\" value=\"".$theYear."\" />";
+	$contentEndTime ="<input type=\"number\" min=\"0\" max=\"23\" required class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"4\" name=\"endhours\" value=\"".$theHour."\" />";
 	$contentEndTime.="&nbsp;&nbsp;";
-	$contentEndTime.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"2\" name=\"endminutes\" value=\"".$theMinute."\" />&nbsp;&nbsp;";
+	$contentEndTime.="<input type=\"number\" min=\"0\" max=\"59\" required class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"4\" name=\"endminutes\" value=\"".$theMinute."\" />&nbsp;&nbsp;";
 
 	$contentEndDateText = "<a href=\"#\" onclick=\"calEnd.showNavigationDropdowns();
 	                             calEnd.setReturnFunction('SetObsDateEnd');
