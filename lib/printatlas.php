@@ -747,7 +747,7 @@ class PrintAtlas
       else if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
         $this->labelsArr[]=array($this->canvasX2px-30,$this->gridOffsetYpx-($this->fontSize1a),60,$this->fontSize1b,$this->coordDeclDecToDegMin($d),'center');
       else if($this->canvasX2px)
-        $this->labelsArr[]=array($this->gridOffsetXpx-62,$this->canvasY2px-17,60,$this->fontSize1b,$this->coordDeclDecToDegMin($d),'center');
+        $this->labelsArr[]=array($this->canvasX2px-30,$this->canvasY2px,60,$this->fontSize1b,$this->coordDeclDecToDegMin($d),'center');
     }
     if($this->gridD0rad<0)
     { for($l=$LhrStart;$l>$RhrNeg;$l-=$LStep)
@@ -756,10 +756,12 @@ class PrintAtlas
         //jg.setColor(coordLineColor);
         for($d=$Ddeg;$d<$Udeg;$d+=$DStep/$this->Dsteps)
           $this->gridDrawLineLD($l,$d,$l,($d+($DStep/$this->Dsteps)));
-        if($this->canvasX2px&&($this->canvasX1px<=$this->gridOffsetXpx))
-          $this->labelsArr[]=array($this->gridOffsetXpx-64,$this->gridOffsetYpx-($this->fontSize1a),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'right');
-        else if($this->canvasX2px&&($this->canvasX1px>=$this->gridOffsetXpx+$this->gridWidthXpx))
+        if($this->canvasX2px&&($this->canvasX2px-10<=$this->gridOffsetXpx))
+          $this->labelsArr[]=array($this->gridOffsetXpx-64,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'right');
+        else if($this->canvasX2px&&($this->canvasX2px+10>=$this->gridOffsetXpx+$this->gridWidthXpx))
           $this->labelsArr[]=array($this->gridOffsetXpx+$this->gridWidthXpx+4,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'left');
+        else if($this->canvasY2px&&($this->canvasY2px-10<=$this->gridOffsetYpx))
+          $this->labelsArr[]=array($this->canvasX1px-30,$this->gridOffsetYpx-10,60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
         else if($this->canvasX2px)
           $this->labelsArr[]=array($this->canvasX1px-30,$this->gridOffsetYpx+$this->gridHeightYpx+4,60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
       }
@@ -771,9 +773,9 @@ class PrintAtlas
         //jg.setColor(coordLineColor);
         for($d=$Udeg;$d>$Ddeg;$d-=$DStep/$this->Dsteps)
           $this->gridDrawLineLD($l,$d,$l,($d-($DStep/$this->Dsteps)));
-        if($this->canvasX1px&&($this->canvasX1px<=$this->gridOffsetXpx))
-          $this->labelsArr[]=array($this->gridOffsetXpx-64,$this->gridOffsetYpx-($this->fontSize1a),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'right');
-        else if($this->canvasX1px&&($this->canvasX1px>=$this->gridOffsetXpx+$this->gridWidthXpx))
+        if($this->canvasX1px&&($this->canvasX1px-10<=$this->gridOffsetXpx))
+          $this->labelsArr[]=array($this->gridOffsetXpx-64,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'right');
+        else if($this->canvasX1px&&($this->canvasX1px+10>=$this->gridOffsetXpx+$this->gridWidthXpx))
           $this->labelsArr[]=array($this->gridOffsetXpx+$this->gridWidthXpx+4,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'left');
         else if($this->canvasX1px)
           $this->labelsArr[]=array($this->canvasX1px-30,$this->gridOffsetYpx-($this->fontSize1b)-5,60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
@@ -983,8 +985,6 @@ class PrintAtlas
   { return (($this->gridHeightYpx2*$Drad/$this->gridSpanDrad));
   }
 
-  
-  
   public  function pdfAtlas($nostream=false)  // Creates a pdf atlas page
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
     $object='';
@@ -994,7 +994,6 @@ class PrintAtlas
       { $this->atlaspagerahr=$objObject->getDsoProperty($object,'ra',0);
         $this->atlaspagedecldeg=$objObject->getDsoProperty($object,'decl',0);
       }
-  
     $this->gridActualDimension=max(min($objUtil->checkRequestKey('zoom',18),$this->gridMaxDimension),14);
     $this->atlasmagnitude=max(min((int)($objUtil->checkRequestKey('dsos',$this->gridDimensions[$this->gridActualDimension][3])),99),8);
     $this->starsmagnitude=max(min((int)($objUtil->checkRequestKey('stars',$this->gridDimensions[$this->gridActualDimension][3])),16),8);
@@ -1036,6 +1035,7 @@ class PrintAtlas
     $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
     if(!$nostream)
       $this->pdf->Stream(); 
+    return 'stepra:'.($this->gridSpanL*2).',stepdecl:'.($this->gridSpanD*2);
   }
   public  function pdfAtlasObjectSets($item,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false)
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject,$tmpDir;
@@ -1047,15 +1047,11 @@ class PrintAtlas
     else
       echo -1;
   }
-  public  function pdfAtlasAtlasPages()
+  public  function pdfAtlasAtlasPages($item)
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject,$tmpDir;
-    if($item<2)
-    { $this->pdfAtlas(true);
-      $_SESSION['allonepass'.$item]=$this->pdf->output();
-      echo $item+1;
-    }
-    else
-      echo 2;
+    $result=$this->pdfAtlas(true);
+    $_SESSION['allonepass'.$item]=$this->pdf->output();
+    echo '{item:'.$item.','.$result.'}';
   }
   private function filterdegpart($thevalue)
   { return substr($thealtitude=html_entity_decode($thevalue),0,strpos($thealtitude,'°')+1);

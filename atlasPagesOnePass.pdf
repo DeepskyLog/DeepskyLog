@@ -7,7 +7,7 @@ require_once 'common/entryexit/preludes.php';
 
 header("Content-type: application/pdf");
 header("Content-Length: ".strlen($_SESSION['allonepass'.$_GET['item']]));
-header("Content-Disposition: attachment; filename=".str_replace(' ','_','Page '.$_GET['item'].".pdf"));
+header("Content-Disposition: attachment; filename=".str_replace(' ','_','Page '.$_GET['filename']).".pdf");
 
 atlasPagesOnePass_pdf();
 
