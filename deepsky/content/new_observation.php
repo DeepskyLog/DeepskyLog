@@ -303,7 +303,7 @@ function new_observation()
 		                        "RL",array(11,89),130,array("fieldname",""));
 		$objPresentations->line(array("",LangViewObservationField29 . "&nbsp;*&nbsp;".$contentLanguage,
 		                              LangViewObservationField12,"<input type=\"file\" name=\"drawing\" class=\"inputfield\" />",
-		                              "<a href=\"http://www.deepsky.be/beschrijfobjecten.php\" rel=\"external\">" . LangViewObservationFieldHelpDescription . "</a>"),
+		                              "<a href=\"http://www.distant-targets.be/beschrijven\" rel=\"external\">" . LangViewObservationFieldHelpDescription . "</a>"),
 		                        "LLRLR",array(11,25,19,30,15));                              
 		$objPresentations->line(array("","<hr />"),"LL",array(12,87),10);
 		$objPresentations->line(array((($objObserver->getObserverProperty($loggedUser,'UT')) ? LangViewObservationField9: LangViewObservationField9lt),$contentTime.LangViewObservationField11,

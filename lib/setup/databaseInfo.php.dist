@@ -36,7 +36,7 @@ function databaseInfo()
   // The first part of the title that has to appear on each browser window
   $browsertitle  = "DeepskyLog";
   $copyrightInfo = "Copyright&nbsp;2004&nbsp;-&nbsp;2010&nbsp;-&nbsp;Deepskylog developers&nbsp;-&nbsp;";
-  $vvsInfo       = "<a href=\"http://www.deepsky.be\">VVS Deepsky</a>&nbsp;-&nbsp;";
+  $vvsInfo       = "<a href=\"http://www.distant-targets.be\">VVS Deepsky</a>&nbsp;-&nbsp;";
   $dslInfo       = "Powered by&nbsp;<a href=\"http://www.deepskylog.org\">DeepskyLog</a>&nbsp;";
   $versionInfo   = "4.3-Trunk";
   $objectInfo    = " - Object Database by <a href=\"http://www.eyeandtelescope.com/\" >Eye&amp;Telescope</a>" . 
