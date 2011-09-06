@@ -130,7 +130,7 @@ function add_xml_observations()
 	    if ($type == "oal:deepSkyAS") {
 	      $targetInfoArray["type"] = "ASTER";
 	    } else if ($type == "oal:deepSkyDS") {
-	      $targetInfoArray["type"] = "DS";
+	      $targetInfoArray["type"] = "AA2STAR";
 	    } else if ($type == "oal:deepSkySC" || $type == "oal:deepSkyOC") {
 	      $targetInfoArray["type"] = "OPNCL";
 	    } else if ($type == "oal:deepSkyGC") {
