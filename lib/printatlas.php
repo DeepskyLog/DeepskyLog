@@ -1035,7 +1035,16 @@ class PrintAtlas
     $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
     if(!$nostream)
       $this->pdf->Stream(); 
-    return 'stepra:'.($this->gridSpanL*2).',stepdecl:'.($this->gridSpanD*2);
+    if($this->gridD0rad>0)
+      $this->gridLDinvRad($this->canvasDimensionXpx-$this->gridOffsetXpx,$this->canvasDimensionYpx-$this->gridOffsetYpx);
+    else
+      $this->gridLDinvRad($this->canvasDimensionXpx-$this->gridOffsetXpx,$this->gridOffsetYpx);
+    $tempra=($this->gridLxRad/3.1415926535*12);
+    if($this->gridD0rad>0)
+      $this->gridLDinvRad(($this->canvasDimensionXpx>>1),$this->canvasDimensionYpx-$this->gridOffsetYpx);
+    else
+      $this->gridLDinvRad(($this->canvasDimensionXpx>>1),$this->gridOffsetYpx);
+    return 'stepra:'.($this->gridSpanL*2).',stepdecl:'.($this->gridSpanD*2).',raright:'.$tempra.',declbottom:'.($this->gridDyRad/3.1415926535*180);
   }
   public  function pdfAtlasObjectSets($item,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false)
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject,$tmpDir;

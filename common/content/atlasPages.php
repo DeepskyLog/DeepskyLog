@@ -47,10 +47,13 @@ function atlasPages()
 	echo 'Objects to magnitude: ';
 	echo '<input id="dsos" name="dsos" type="text" value="13" size="5" class="centered"/>';
   echo '<br />';
+	echo 'Overlap: ';
+	echo '<input id="theoverlap" name="theoverlap" type="text" value="0.1" size="5" class="centered"/>';
+  echo '<br />';
 	echo 'Zoom: ';
 	echo '<input id="zoom" name="zoom" type="text" value="16" size="5" class="centered"/>';
   echo '<br />';
-	echo 'Generation ra: ';
+  echo 'Generation ra: ';
 	echo '<input id="ra" name="ra" type="text" value="" size="5" class="centered"/>';
   echo ' ';
   echo 'decl: ';

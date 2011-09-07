@@ -31,15 +31,21 @@ function generateallonepass(item,msie,stepra,stepdecl)
     document.getElementById('decl').value=document.getElementById('declto').value;
 	}
   else
-  { document.getElementById('ra').value=1.0*document.getElementById('ra').value-(stepra/15/cos(document.getElementById('decl').value/180*3.1415926535)*0.9);
-    if(document.getElementById('ra').value<1.0*document.getElementById('rafrom').value)
+  { document.getElementById('ra').value=1.0*document.getElementById('ra').value-stepra;
+    if((stepra<0) || (document.getElementById('ra').value<1.0*document.getElementById('rafrom').value))
     {	document.getElementById('ra').value=document.getElementById('rato').value;
-      document.getElementById('decl').value=document.getElementById('decl').value-(stepdecl*0.9);
-      if(document.getElementById('decl').value<1.0*document.getElementById('declfrom').value)
-    	  return;
+      ///if(document.getElementById('rafrom').value<document.getElementById('rato').value)
+  		  document.getElementById('decl').value=document.getElementById('decl').value-stepdecl;
+      //else
+	    //  document.getElementById('decl').value=document.getElementById('decl').value+stepdecl;	      	
+      if(((document.getElementById('declfrom').value*1.0<1.0*document.getElementById('declto').value) && (document.getElementById('decl').value*1.0<1.0*document.getElementById('declfrom').value)))
+      { alert('1');
+        return;
+      }
+      else if(((document.getElementById('declfrom').value*1.0>1.0*document.getElementById('declto').value) && (document.getElementById('decl').value*1.0>1.0*document.getElementById('declfrom').value)))     
+      { alert('2');  return; }
     }
   }
-  //alert('ok?');
   item=(item*1.0)+1.0;
   var jsonhttp;
   if(window.XMLHttpRequest)
@@ -71,7 +77,7 @@ function generateallonepass(item,msie,stepra,stepdecl)
       }  
       else
       	window.open('atlasPagesOnePass.pdf?item='+urlencode(item)+'&filename='+tempdecl+'d'+tempdeclmin+'m'+' '+tempra+'h'+tempramin+'m','');
-      generateallonepass(temp.item,msie,temp.stepra,temp.stepdecl);      
+      generateallonepass(temp.item,msie,((document.getElementById('ra').value-(temp.raright))*2*(1-document.getElementById('theoverlap').value)),((document.getElementById('decl').value-(temp.declbottom))*2*(1-document.getElementById('theoverlap').value)));      
     }
   };
   var url='ajaxinterface.php?instruction=atlasPages&item='+urlencode(item)+'&'+
