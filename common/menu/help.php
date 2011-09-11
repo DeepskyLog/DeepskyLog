@@ -9,7 +9,7 @@ function help()
 { echo "<div class=\"menuDiv\">";
 	if($_SESSION['lang']=="nl")
 	{ echo"<p class=\"menuHead\">Help</p>";
-		echo "<a href=\"http://www.deepskylog.org/twiki/bin/view/DeepskyLog/DeepskylogManualNL39\" rel=\"external\">Handleiding</a>";
+		echo "<a href=\"http://redmine.deepskylog.org/projects/deepskylog/wiki/DeepskylogManualNL39\" rel=\"external\">Handleiding</a>";
 	}
 	echo "</div>";
 }

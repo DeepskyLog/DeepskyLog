@@ -497,7 +497,7 @@ define("LangCounter"																			,"Counter");
 define("LangMenuExpand"																		,"Expand menu");
 define("LangMenuCollapse"																	,"Collapse menu");
 
-define("DreyerDescriptionLink"														,"http://www.deepskylog.org/twiki/bin/view/DeepskyLog/DreyerDescriptionen");
+define("DreyerDescriptionLink"														,"http://redmine.deepskylog.org/projects/deepskylog/wiki/DreyerDescriptionen");
 
 define("LangYouAreHere"																		,"You are here:");
 define("LangHome"																					,"Home");

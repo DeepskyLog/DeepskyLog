@@ -240,7 +240,7 @@ function new_observation()
 			$contentMisc2.="<input type=\"checkbox\" name=\"partlyUnresolved\" />" . LangViewObservationField42."&nbsp;";
 			$contentMisc2.="<input type=\"checkbox\" name=\"colorContrasts\" />" . LangViewObservationField43;
 			if($objObject->getDsoProperty($object,'type')!="GLOCL")
-			{ $contentMisc3.="<a href=\"http://www.deepskylog.org/twiki/bin/view/DeepskyLog/CharacterType".$objObserver->getObserverProperty($loggedUser,'language')."\" rel=\"external\" title=\"".LangViewObservationField40Expl."\" >".LangViewObservationField40."</a>";
+			{ $contentMisc3.="<a href=\"http://redmine.deepskylog.org/projects/deepskylog/wiki/CharacterType".$objObserver->getObserverProperty($loggedUser,'language')."\" rel=\"external\" title=\"".LangViewObservationField40Expl."\" >".LangViewObservationField40."</a>";
 			  $theClustertype=($observationid?$objObservation->getDsObservationProperty($observationid,'clusterType'):$objUtil->checkPostKey('clusterType'));
 			  $contentMisc4 ="<select name=\"clusterType\" class=\"inputfield\">";
 			  $contentMisc4.="<option value=\"\">-----</option>";
