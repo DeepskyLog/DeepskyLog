@@ -516,8 +516,23 @@ class PrintAtlas
     for($m=8;$m<=$this->starsmagnitude;$m++)
     { if($m>$this->gridDimensions[$this->gridActualDimension][3])
         $this->pdf->setColor(0.7,0.7,0.7);
-    	$this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,$m,$m);
-      $z=count($this->astroObjectsArr); 
+    	if($this->gridD0rad>0)
+    	{ //$this->gridLDinvRad($this->canvasDimensionXpx-$this->gridOffsetXpx,$this->canvasDimensionYpx-$this->gridOffsetYpx);
+    		//$tempra=($this->gridLxRad/3.1415926535*12);
+    		$this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,$m,$m);
+    	}
+    	else
+    	{ $this->gridLDinvRad($this->gridOffsetXpx,$this->gridOffsetYpx);
+        $tempdecl1=($this->gridDyRad*$this->f180OverPi);
+    		$this->gridLDinvRad(($this->canvasDimensionXpx>>1),$this->canvasDimensionYpx-$this->gridOffsetYpx);
+        $tempdecl2=($this->gridDyRad*$this->f180OverPi);
+    		if(($this->gridD0rad-($this->gridSpanDrad/1))<=(-$this->fPiOver2))
+    	    $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,-90,$tempdecl1,$m,$m);
+    	  else
+    	    $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$tempdecl2,$tempdecl1,$m,$m);
+    	}
+    	  
+    	$z=count($this->astroObjectsArr); 
       for($i=0;$i<$z;$i++)
         $this->canvasDrawStar($i);
     }

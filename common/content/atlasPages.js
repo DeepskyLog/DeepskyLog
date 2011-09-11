@@ -34,16 +34,10 @@ function generateallonepass(item,msie,stepra,stepdecl)
   { document.getElementById('ra').value=1.0*document.getElementById('ra').value-stepra;
     if((stepra<0) || (document.getElementById('ra').value<1.0*document.getElementById('rafrom').value))
     {	document.getElementById('ra').value=document.getElementById('rato').value;
-      ///if(document.getElementById('rafrom').value<document.getElementById('rato').value)
-  		  document.getElementById('decl').value=document.getElementById('decl').value-stepdecl;
-      //else
-	    //  document.getElementById('decl').value=document.getElementById('decl').value+stepdecl;	      	
-      if(((document.getElementById('declfrom').value*1.0<1.0*document.getElementById('declto').value) && (document.getElementById('decl').value*1.0<1.0*document.getElementById('declfrom').value)))
-      { alert('1');
+      document.getElementById('decl').value=document.getElementById('decl').value-stepdecl;
+      if((((document.getElementById('declfrom').value*1.0<1.0*document.getElementById('declto').value) && (document.getElementById('decl').value*1.0<1.0*document.getElementById('declfrom').value))) || 
+         (((document.getElementById('declfrom').value*1.0>1.0*document.getElementById('declto').value) && (document.getElementById('decl').value*1.0>1.0*document.getElementById('declfrom').value))))     
         return;
-      }
-      else if(((document.getElementById('declfrom').value*1.0>1.0*document.getElementById('declto').value) && (document.getElementById('decl').value*1.0>1.0*document.getElementById('declfrom').value)))     
-      { alert('2');  return; }
     }
   }
   item=(item*1.0)+1.0;
@@ -60,16 +54,27 @@ function generateallonepass(item,msie,stepra,stepdecl)
       temp=eval('('+jsonhttp.responseText+')');
       tempra=Math.floor(document.getElementById('ra').value,0);
       tempramin=Math.round((document.getElementById('ra').value-tempra)*60,0);
-      tempdecl=Math.floor(document.getElementById('decl').value,0);
-      tempdeclmin=Math.round((document.getElementById('decl').value-tempdecl)*60,1);
-      if(tempdecl<10)
-      	tempdecl='0'+tempdecl;
-      if(tempdeclmin<10)
-      	tempdeclmin='0'+tempdeclmin;
       if(tempra<10)
       	tempra='0'+tempra;
       if(tempramin<10)
       	tempramin='0'+tempramin;
+      tempdecl=Math.floor(document.getElementById('decl').value,0);
+      if(tempdecl>0)
+      { tempdeclmin=Math.round((document.getElementById('decl').value-tempdecl)*60,1);
+        if(tempdecl<10)
+      	  tempdecl='0'+tempdecl;
+        if(tempdeclmin<10)
+      	  tempdeclmin='0'+tempdeclmin;
+      }
+      else
+      { tempdeclmin=Math.round((document.getElementById('decl').value-tempdecl)*60,1);
+        tempdecl=-tempdecl;
+        if(tempdecl<10)
+    	    tempdecl='0'+tempdecl;
+        if(tempdeclmin<10)
+    	    tempdeclmin='0'+tempdeclmin;
+        tempdecl='-'+tempdecl;
+      }	
       //alert('preset zero under ten');
       if(msie)
       { var mywindow=window.open("",'mywindow'+item);

@@ -30,7 +30,7 @@ function atlasPages()
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
 	
 	echo 'Declination from: ';
-	echo '<input id="declfrom" name="declfrom" type="text" value="0" size="5" class="centered"/>';
+	echo '<input id="declfrom" name="declfrom" type="text" value="80" size="5" class="centered"/>';
 	echo '<br />';
 	echo 'Declination to: ';
 	echo '<input id="declto" name="declto" type="text" value="87" size="5" class="centered"/>';
