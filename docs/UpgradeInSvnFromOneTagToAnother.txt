@@ -1,6 +1,0 @@
-How to upgrade in SVN from one tag to a new one?
-------------------------------------------------
-
-When there is a new version of DeepskyLog, we need to upgrade from eg version 3.2 to version 3.3 on the server. 
-
-svn switch http://subversion.deepskylog.org/repos/deepskylog/tags/3.3
