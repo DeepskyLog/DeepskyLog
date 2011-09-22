@@ -24,16 +24,16 @@ function change_eyepiece()
 	$objPresentations->line(array("<h4>".stripslashes($eyepiece['name'])."</h4>",$content),"LR",array(80,20),30);
 	echo "<hr />";
 	$line[]=array(LangAddEyepieceField1,
-	              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"eyepiecename\" size=\"30\" value=\"".stripslashes($eyepiece['name'])."\" ".$disabled."/>",
+	              "<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"64\" name=\"eyepiecename\" size=\"30\" value=\"".stripslashes($eyepiece['name'])."\" ".$disabled."/>",
 	              LangAddEyepieceField1Expl);
 	$line[]=array(LangAddEyepieceField2,
-	              "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"5\" name=\"focalLength\" size=\"5\" value=\"".stripslashes($eyepiece['focalLength'])."\" ".$disabled."/>",
+	              "<input type=\"number\" min=\"0\" max=\"100\" step=\"0.01\" required class=\"inputfield requiredField centered\" maxlength=\"5\" name=\"focalLength\" size=\"5\" value=\"".stripslashes($eyepiece['focalLength'])."\" ".$disabled."/>",
 	              LangAddEyepieceField2Expl);
 	$line[]=array(LangAddEyepieceField4,
-	              "<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"maxFocalLength\" size=\"5\" value=\"".((($mfl=stripslashes($eyepiece['maxFocalLength']))<0)?"":$mfl)."\" ".$disabled."/>",
+	              "<input type=\"number\" min=\"0\" max=\"100\" step=\"0.01\" class=\"inputfield centered\" maxlength=\"5\" name=\"maxFocalLength\" size=\"5\" value=\"".((($mfl=stripslashes($eyepiece['maxFocalLength']))<0)?"":$mfl)."\" ".$disabled."/>",
 	              LangAddEyepieceField4Expl);
 	$line[]=array(LangAddEyepieceField3,
-	              "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"5\" name=\"apparentFOV\" size=\"5\" value=\"".$eyepiece['apparentFOV']."\" ".$disabled."/>",
+	              "<input type=\"number\" min=\"1\" max=\"180\" step=\"0.01\" required class=\"inputfield requiredField centered\" maxlength=\"5\" name=\"apparentFOV\" size=\"5\" value=\"".$eyepiece['apparentFOV']."\" ".$disabled."/>",
 	              LangAddEyepieceField3Expl);
 	for($i=0;$i<count($line);$i++)
 	  $objPresentations->line($line[$i],"RLL",array(20,40,40),'',array("fieldname","fieldvalue","fieldexplanation"));

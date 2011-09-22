@@ -23,7 +23,7 @@ function change_filter()
 	echo "<input type=\"hidden\" name=\"id\"          value=\"".$filterid."\" />";
 	$objPresentations->line(array("<h4>".stripslashes($filter['name'])."</h4>",$content),"LR",array(80,20),30);
 	echo "<hr />";
-	$line[]=array(LangAddFilterField1,"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"filtername\" size=\"30\" value=\"".stripslashes($filter['name'])."\" ".$disabled." />",LangAddFilterField1Expl);
+	$line[]=array(LangAddFilterField1,"<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"64\" name=\"filtername\" size=\"30\" value=\"".stripslashes($filter['name'])."\" ".$disabled." />",LangAddFilterField1Expl);
 	$line[]=array(LangAddFilterField2,$objFilter->getEchoListType($filter['type'],$disabled));
 	$line[]=array(LangAddFilterField3,$objFilter->getEchoListColor($filter['color'],$disabled));
 	$line[]=array(LangAddFilterField4,"<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"wratten\" size=\"5\" value=\"".stripslashes($filter['wratten'])."\" ".$disabled." />");

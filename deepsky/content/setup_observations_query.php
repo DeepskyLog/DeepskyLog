@@ -97,7 +97,7 @@ function setup_observations_query()
 	  if($atlasPageNumber=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $atlasPageNumber=$_SESSION['QobsParams']['atlasPageNumber'];
-		echo "<input id=\"atlasPageNumber\" name=\"atlasPageNumber\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"".$atlasPageNumber."\" />";
+		echo "<input id=\"atlasPageNumber\" name=\"atlasPageNumber\" type=\"number\" min=\"1\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"".$atlasPageNumber."\" />";
 		echo "</td>";
 		echo "</tr>";
 	// OBJECT CONSTELLATION
@@ -130,9 +130,9 @@ function setup_observations_query()
 	  if(($minDeclSeconds=$objUtil->checkGetKey('minDeclSeconds'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount)&&($_SESSION['QobsParams']['mindecl']!==''))
 	      $minDeclSeconds=round(abs($_SESSION['QobsParams']['mindecl']*3600)) % 60;
-		echo "<input id=\"minDeclDegrees\" name=\"minDeclDegrees\" type=\"text\" class=\"inputfield centered\" maxlength=\"3\" size=\"3\" value=\"".$minDeclDegrees."\" />&nbsp;&deg;&nbsp;";
-		echo "<input id=\"minDeclMinutes\" name=\"minDeclMinutes\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"".$minDeclMinutes."\" />&nbsp;&#39;&nbsp;";
-		echo "<input id=\"minDeclSeconds\" name=\"minDeclSeconds\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"".$minDeclSeconds."\" />&nbsp;&quot;&nbsp;";
+		echo "<input id=\"minDeclDegrees\" name=\"minDeclDegrees\" type=\"number\" min=\"-90\" max=\"90\" class=\"inputfield centered\" maxlength=\"3\" size=\"4\" value=\"".$minDeclDegrees."\" />&nbsp;&deg;&nbsp;";
+		echo "<input id=\"minDeclMinutes\" name=\"minDeclMinutes\" type=\"number\" min=\"0\" max=\"59\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" value=\"".$minDeclMinutes."\" />&nbsp;&#39;&nbsp;";
+		echo "<input id=\"minDeclSeconds\" name=\"minDeclSeconds\" type=\"number\" min=\"0\" max=\"59\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" value=\"".$minDeclSeconds."\" />&nbsp;&quot;&nbsp;";
 		echo "</td>";
 		echo "</tr>";
 	// OBJECT TYPE
@@ -165,9 +165,9 @@ function setup_observations_query()
 	  if(($maxDeclSeconds=$objUtil->checkGetKey('maxDeclSeconds'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount)&&($_SESSION['QobsParams']['maxdecl']!==''))
 	      $maxDeclSeconds=round(abs($_SESSION['QobsParams']['maxdecl']*3600)) % 60;
-		echo "<input id=\"maxDeclDegrees\" name=\"maxDeclDegrees\" type=\"text\" class=\"inputfield centered\" maxlength=\"3\" size=\"3\" value=\"".$maxDeclDegrees."\" />&nbsp;&deg;&nbsp;";
-		echo "<input id=\"maxDeclMinutes\" name=\"maxDeclMinutes\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"".$maxDeclMinutes."\" />&nbsp;&#39;&nbsp;";
-		echo "<input id=\"maxDeclSeconds\" name=\"maxDeclSeconds\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"".$maxDeclSeconds."\" />&nbsp;&quot;&nbsp;";
+		echo "<input id=\"maxDeclDegrees\" name=\"maxDeclDegrees\" type=\"number\" min=\"-90\" max=\"90\" class=\"inputfield centered\" maxlength=\"3\" size=\"4\" value=\"".$maxDeclDegrees."\" />&nbsp;&deg;&nbsp;";
+		echo "<input id=\"maxDeclMinutes\" name=\"maxDeclMinutes\" type=\"number\" min=\"0\" max=\"59\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" value=\"".$maxDeclMinutes."\" />&nbsp;&#39;&nbsp;";
+		echo "<input id=\"maxDeclSeconds\" name=\"maxDeclSeconds\" type=\"number\" min=\"0\" max=\"59\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" value=\"".$maxDeclSeconds."\" />&nbsp;&quot;&nbsp;";
 		echo "</td>";
 		echo "</tr>";
 	// MAXIMUM MAGNITUDE
@@ -177,7 +177,7 @@ function setup_observations_query()
 	  if(($maxMag=$objUtil->checkGetKey('maxmag'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $maxMag=$_SESSION['QobsParams']['maxmag'];
-		echo "<input id=\"maxmag\" name=\"maxmag\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"".$maxMag."\" />";
+		echo "<input id=\"maxmag\" name=\"maxmag\" type=\"number\" min=\"-5\" max=\"24\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"4\" size=\"5\" value=\"".$maxMag."\" />";
 		echo "</td>";
 	// MINIMUM RIGHT ASCENSION
 		echo "<td class=\"fieldname\">".LangQueryObjectsField7."</td>";
@@ -191,9 +191,9 @@ function setup_observations_query()
 	  if(($minRASeconds=$objUtil->checkGetKey('minRASeconds'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount)&&($_SESSION['QobsParams']['minra']!==''))
 	      $minRASeconds=round(abs($_SESSION['QobsParams']['minra']*3600)) % 60;
-		echo "<input id=\"minRAhours\"   name=\"minRAhours\"   type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"".$minRAHours."\" />&nbsp;h&nbsp;";
-		echo "<input id=\"minRAminutes\" name=\"minRAminutes\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"".$minRAMinutes."\" />&nbsp;m&nbsp;";
-		echo "<input id=\"minRAseconds\" name=\"minRAseconds\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"".$minRASeconds."\" />&nbsp;s&nbsp;";
+		echo "<input id=\"minRAhours\"   name=\"minRAhours\"   type=\"number\" min=\"0\" max=\"23\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" value=\"".$minRAHours."\" />&nbsp;h&nbsp;";
+		echo "<input id=\"minRAminutes\" name=\"minRAminutes\" type=\"number\" min=\"0\" max=\"59\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" value=\"".$minRAMinutes."\" />&nbsp;m&nbsp;";
+		echo "<input id=\"minRAseconds\" name=\"minRAseconds\" type=\"number\" min=\"0\" max=\"59\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" value=\"".$minRASeconds."\" />&nbsp;s&nbsp;";
 		echo "</td>";
 		echo "</tr>";	
 	// MINIMUM MAGNITUDE
@@ -203,7 +203,7 @@ function setup_observations_query()
 	  if(($minMag=$objUtil->checkGetKey('minmag'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $minMag=$_SESSION['QobsParams']['minmag'];
-		echo "<input id=\"minmag\" name=\"minmag\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"".$minMag."\" />";
+		echo "<input id=\"minmag\" name=\"minmag\" type=\"number\" min=\"-5\" max=\"24\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"4\" size=\"5\" value=\"".$minMag."\" />";
 		echo "</td>";
 	// MAXIMUM RIGHT ASCENSION
 		echo "<td class=\"fieldname\">".LangQueryObjectsField8."</td>";
@@ -217,9 +217,9 @@ function setup_observations_query()
 	  if(($maxRASeconds=$objUtil->checkGetKey('maxRASeconds'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount)&&($_SESSION['QobsParams']['maxra']!==''))
 	      $maxRASeconds=round(abs($_SESSION['QobsParams']['maxra']*3600)) % 60;
-		echo "<input id=\"maxRAhours\"   name=\"maxRAhours\"   type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"".$maxRAHours."\" />&nbsp;h&nbsp;";
-		echo "<input id=\"maxRAminutes\" name=\"maxRAminutes\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"".$maxRAMinutes."\" />&nbsp;m&nbsp;";
-		echo "<input id=\"maxRAseconds\" name=\"maxRAseconds\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"".$maxRASeconds."\" />&nbsp;s&nbsp;";
+		echo "<input id=\"maxRAhours\"   name=\"maxRAhours\"   type=\"number\" min=\"0\" max=\"23\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" value=\"".$maxRAHours."\" />&nbsp;h&nbsp;";
+		echo "<input id=\"maxRAminutes\" name=\"maxRAminutes\" type=\"number\" min=\"0\" max=\"59\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" value=\"".$maxRAMinutes."\" />&nbsp;m&nbsp;";
+		echo "<input id=\"maxRAseconds\" name=\"maxRAseconds\" type=\"number\" min=\"0\" max=\"59\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" value=\"".$maxRASeconds."\" />&nbsp;s&nbsp;";
 		echo "</td>";
 		echo "</tr>";	
 	// MINIMIM SURFACE BRIGHTNESS
@@ -229,7 +229,7 @@ function setup_observations_query()
 	  if(($minSB=$objUtil->checkGetKey('minsb'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $minSB=$_SESSION['QobsParams']['minsb'];
-		echo "<input id=\"minsb\" name=\"minsb\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"".$minSB."\" />";
+		echo "<input id=\"minsb\" name=\"minsb\" type=\"number\" min=\"-5\" max=\"24\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"4\" size=\"5\" value=\"".$minSB."\" />";
 		echo "</td>";
 	// MINIMIM SIZE
 		echo "<td class=\"fieldname\">".LangQueryObjectsField13."</td>";
@@ -240,7 +240,7 @@ function setup_observations_query()
 	    { $minSize=$_SESSION['QobsParams']['mindiam1'];
 	      $size_min_units="sec";
 	    }
-		echo "<input id=\"minsize\" name=\"minsize\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"".$minSize."\" />";
+		echo "<input id=\"minsize\" name=\"minsize\" type=\"number\" min=\"0\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"".$minSize."\" />";
 		echo "&nbsp;&nbsp;";
 		echo "<select id=\"size_min_units\" name=\"size_min_units\" class=\"inputfield\">";
 		echo "<option".(($size_min_units=="min")?" selected=\"selected\"":"")." value=\"min\">".LangNewObjectSizeUnits1."</option>";
@@ -255,7 +255,7 @@ function setup_observations_query()
 	  if(($maxSB=$objUtil->checkGetKey('maxsb'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $maxSB=$_SESSION['QobsParams']['maxsb'];
-		echo "<input id=\"maxsb\" name=\"maxsb\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"".$maxSB."\" />";
+		echo "<input id=\"maxsb\" name=\"maxsb\" type=\"number\" min=\"-5\" max=\"24\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"4\" size=\"5\" value=\"".$maxSB."\" />";
 		echo "</td>";
 	// MAXIMUM SIZE
 		echo "<td class=\"fieldname\">".LangQueryObjectsField14."</td>";
@@ -266,7 +266,7 @@ function setup_observations_query()
 	    { $maxSize=$_SESSION['QobsParams']['maxdiam1'];
 	      $size_max_units="sec";
 	    }
-		echo "<input id=\"maxsize\" name=\"maxsize\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"".$maxSize."\" />";
+		echo "<input id=\"maxsize\" name=\"maxsize\" type=\"number\" min=\"0\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"".$maxSize."\" />";
 		echo "&nbsp;&nbsp;";
 		echo "<select id=\"size_max_units\" name=\"size_max_units\" class=\"inputfield\">";
 		echo "<option".(($size_max_units=="min")?" selected=\"selected\"":"")." value=\"min\">" . LangNewObjectSizeUnits1 . "</option>";
@@ -322,7 +322,7 @@ function setup_observations_query()
 	  if($minday=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $minday=substr($_SESSION['QobsParams']['mindate'],-2);
-    echo "<input id=\"minday\" name=\"minday\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"".$minday."\" />";
+    echo "<input id=\"minday\" name=\"minday\" type=\"number\" min=\"1\" max=\"31\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" value=\"".$minday."\" />";
 		echo "&nbsp;";
 	  $minmonth=$objUtil->checkGetKey('minmonth');
 	  if($minmonth=='')
@@ -348,7 +348,7 @@ function setup_observations_query()
 	  if($minyear=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $minyear=substr($_SESSION['QobsParams']['mindate'],-8,4);
-		echo "<input id=\"minyear\" name=\"minyear\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"".$minyear."\" />";
+		echo "<input id=\"minyear\" name=\"minyear\" type=\"number\" min=\"1609\" class=\"inputfield centered\" maxlength=\"4\" size=\"5\" value=\"".$minyear."\" />";
 		echo "</td>";
 	// MINIMUM DIAMETER
 		echo "<td class=\"fieldname\">".LangViewObservationField13."</td>";
@@ -359,7 +359,7 @@ function setup_observations_query()
 	    { $mindiameter=$_SESSION['QobsParams']['mindiameter'];
 	      $mindiameterunits="mm";
 	    }
-	  echo "<input id=\"mindiameter\" name=\"mindiameter\" type=\"text\" class=\"inputfield centered\" maxlength=\"64\" size=\"10\" value=\"".$mindiameter."\"/>";
+	  echo "<input id=\"mindiameter\" name=\"mindiameter\" type=\"number\" min=\"0.01\" step=\"0.01\" class=\"inputfield centered\" maxlength=\"64\" size=\"10\" value=\"".$mindiameter."\"/>";
 		echo "<select id=\"mindiameterunits\" name=\"mindiameterunits\" class=\"inputfield\">";
 		echo "<option".($mindiameterunits=='inch'?' selected="selected"':"").">inch</option>";
 		echo "<option".($mindiameterunits=='mm'?' selected="selected"':"").">mm</option>";
@@ -381,7 +381,7 @@ function setup_observations_query()
 	  if($maxday=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $maxday=substr($_SESSION['QobsParams']['maxdate'],-2);
-		echo "<input id=\"maxday\" name=\"maxday\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"".$maxday."\" />";
+		echo "<input id=\"maxday\" name=\"maxday\" type=\"number\" min=\"1\" max=\"31\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" value=\"".$maxday."\" />";
 		echo "&nbsp;";
 	  $maxmonth=$objUtil->checkGetKey('maxmonth');
 	  if($maxmonth=='')
@@ -407,7 +407,7 @@ function setup_observations_query()
 	  if($maxyear=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $maxyear=substr($_SESSION['QobsParams']['maxdate'],-8,4);
-		echo "<input id=\"maxyear\" name=\"maxyear\" type=\"text\" class=\"inputfield centered\" maxlength=\"4\" size=\"4\" value=\"".$maxyear."\" />";
+		echo "<input id=\"maxyear\" name=\"maxyear\" type=\"number\" min=\"1609\" class=\"inputfield centered\" maxlength=\"4\" size=\"5\" value=\"".$maxyear."\" />";
 		echo "</td>";
 	// MAXIMUM DIAMETER
 		echo "<td class=\"fieldname\">".LangViewObservationField14."</td>";
@@ -418,7 +418,7 @@ function setup_observations_query()
 	    { $maxdiameter=$_SESSION['QobsParams']['maxdiameter'];
 	      $maxdiameterunits="mm";
 	    }
-		echo "<input id=\"maxdiameter\" name=\"maxdiameter\" type=\"text\" class=\"inputfield centered\" maxlength=\"64\" size=\"10\" value=\"".$maxdiameter."\" />";
+		echo "<input id=\"maxdiameter\" name=\"maxdiameter\" type=\"number\" min=\"0.01\" step=\"0.01\" class=\"inputfield centered\" maxlength=\"64\" size=\"10\" value=\"".$maxdiameter."\" />";
 		echo "<select id=\"maxdiameterunits\" name=\"maxdiameterunits\" class=\"inputfield\">";
 		echo "<option".($maxdiameterunits=='inch'?' selected="selected"':"").">inch</option>";
 		echo "<option".($maxdiameterunits=='mm'?' selected="selected"':"").">mm</option>";
@@ -460,9 +460,9 @@ function setup_observations_query()
 	  if(($minLatSeconds=$objUtil->checkGetKey('minLatSeconds'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount)&&($_SESSION['QobsParams']['minLat']!==''))
 	      $minLatSeconds=round(abs($_SESSION['QobsParams']['minLat']*3600)) % 60;
-		echo "<input id=\"minLatDegrees\" name=\"minLatDegrees\" type=\"text\" class=\"inputfield centered\" maxlength=\"3\" size=\"3\" value=\"".$minLatDegrees."\" />&nbsp;&deg;&nbsp;";
-		echo "<input id=\"minLatMinutes\" name=\"minLatMinutes\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"".$minLatMinutes."\" />&nbsp;&#39;&nbsp;";
-		echo "<input id=\"minLatSeconds\" name=\"minLatSeconds\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"".$minLatSeconds."\" />&nbsp;&quot;&nbsp;";
+		echo "<input id=\"minLatDegrees\" name=\"minLatDegrees\" type=\"number\" min=\"-90\" max=\"90\" class=\"inputfield centered\" maxlength=\"3\" size=\"4\" value=\"".$minLatDegrees."\" />&nbsp;&deg;&nbsp;";
+		echo "<input id=\"minLatMinutes\" name=\"minLatMinutes\" type=\"number\" min=\"0\" max=\"59\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" value=\"".$minLatMinutes."\" />&nbsp;&#39;&nbsp;";
+		echo "<input id=\"minLatSeconds\" name=\"minLatSeconds\" type=\"number\" min=\"0\" max=\"59\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" value=\"".$minLatSeconds."\" />&nbsp;&quot;&nbsp;";
 		echo "</td>" ;
 	// MINIMUM LIMITING MAGNITUDE
 		echo "<td class=\"fieldname\">".LangViewObservationField25."</td>";
@@ -471,7 +471,7 @@ function setup_observations_query()
 	  if($minlimmag=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $minlimmag=$_SESSION['QobsParams']['minlimmag'];
-		echo "<input id=\"minlimmag\" name=\"minlimmag\" type=\"text\" class=\"inputfield centered\" maxlength=\"3\" size=\"4\" value=\"".$minlimmag."\" />";
+		echo "<input id=\"minlimmag\" name=\"minlimmag\" type=\"number\" min=\"0.0\" max=\"9.9\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"3\" size=\"4\" value=\"".$minlimmag."\" />";
 		echo "</td>";
 		echo "</tr>";
 	// MAXIMUM latitude
@@ -487,9 +487,9 @@ function setup_observations_query()
 	  if(($maxLatSeconds=$objUtil->checkGetKey('maxLatSeconds'))=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount)&&($_SESSION['QobsParams']['maxLat']!==''))
 	      $maxLatSeconds=round(abs($_SESSION['QobsParams']['maxLat']*3600)) % 60;
-		echo "<input id=\"maxLatDegrees\" name=\"maxLatDegrees\" type=\"text\" class=\"inputfield centered\" maxlength=\"3\" size=\"3\" value=\"".$maxLatDegrees."\" />&nbsp;&deg;&nbsp;";
-		echo "<input id=\"maxLatMinutes\" name=\"maxLatMinutes\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"".$maxLatMinutes."\" />&nbsp;&#39;&nbsp;";
-		echo "<input id=\"maxLatSeconds\" name=\"maxLatSeconds\" type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" value=\"".$maxLatSeconds."\" />&nbsp;&quot;&nbsp;";
+		echo "<input id=\"maxLatDegrees\" name=\"maxLatDegrees\" type=\"number\" min=\"-90\" max=\"90\" class=\"inputfield centered\" maxlength=\"3\" size=\"4\" value=\"".$maxLatDegrees."\" />&nbsp;&deg;&nbsp;";
+		echo "<input id=\"maxLatMinutes\" name=\"maxLatMinutes\" type=\"number\" min=\"0\" max=\"59\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" value=\"".$maxLatMinutes."\" />&nbsp;&#39;&nbsp;";
+		echo "<input id=\"maxLatSeconds\" name=\"maxLatSeconds\" type=\"number\" min=\"0\" max=\"59\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" value=\"".$maxLatSeconds."\" />&nbsp;&quot;&nbsp;";
 		echo "</td>" ;
 	// MAXIMUM LIMITING MAGNITUDE
 		echo "<td class=\"fieldname\">".LangViewObservationField26."</td>";
@@ -498,7 +498,7 @@ function setup_observations_query()
 	  if($maxlimmag=='')
 	    if(array_key_exists('QobsParams',$_SESSION)&&(count($_SESSION['QobsParams'])==$QobsParamsCount))
 	      $maxlimmag=$_SESSION['QobsParams']['maxlimmag'];
-		echo "<input id=\"maxlimmag\" name=\"maxlimmag\" type=\"text\" class=\"inputfield centered\" maxlength=\"3\" size=\"4\" value=\"".$maxlimmag."\" />";
+		echo "<input id=\"maxlimmag\" name=\"maxlimmag\" type=\"number\" min=\"0.0\" max=\"9.9\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"3\" size=\"4\" value=\"".$maxlimmag."\" />";
 		echo "</td>";
 		echo "</tr>";
 	// MINIMUM SEEING

@@ -75,22 +75,22 @@ function change_account()
 	$objPresentations->line(array("<h4>".LangChangeAccountTitle."</h4>","<input type=\"submit\" name=\"change\" value=\"".LangChangeAccountButton."\" />&nbsp;"),"LR",array(80,20),30);
 	echo "<hr />";
 	$line[]=array(LangChangeAccountField1,
-	              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkSessionKey('deepskylog_id')."\" />",
+	              "<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"64\" name=\"deepskylog_id\" size=\"30\" value=\"".$objUtil->checkSessionKey('deepskylog_id')."\" />",
 	              LangChangeAccountField1Expl);
 	$line[]=array(LangChangeAccountField2,
-	              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"email\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'email')."\" />",
+	              "<input type=\"email\" required class=\"inputfield requiredField\" maxlength=\"64\" name=\"email\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'email')."\" />",
 	              LangChangeAccountField2Expl);
 	$line[]=array(LangChangeAccountField3,
-	              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"firstname\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'firstname')."\" />",
+	              "<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"64\" name=\"firstname\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'firstname')."\" />",
 	              LangChangeAccountField3Expl);
 	$line[]=array(LangChangeAccountField4,
-	              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'name')."\" />",
+	              "<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"64\" name=\"name\" size=\"30\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'name')."\" />",
 	              LangChangeAccountField4Expl);
 	$line[]=array(LangChangeAccountField5,
-	              "<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd\" size=\"30\" value=\"\" />",
+	              "<input type=\"password\" required class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd\" size=\"30\" value=\"\" />",
 	              LangChangeAccountField5Expl);
 	$line[]=array(LangChangeAccountField6,
-	              "<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd_again\" size=\"30\" value=\"\" />",
+	              "<input type=\"password\" required class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd_again\" size=\"30\" value=\"\" />",
 	              LangChangeAccountField6Expl);
 	$line[]=array(LangChangeAccountField11."&nbsp;*",
 	              "<input type=\"checkbox\" class=\"inputfield\" name=\"local_time\"".(($objObserver->getObserverProperty($loggedUser,'UT'))?"":"checked")." />",
@@ -103,35 +103,35 @@ function change_account()
 	$line[]=array(LangChangeAccountField8,$tempInstrumentList,"<a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeAccountField8Expl."</a>");
 	$line[]=array(LangChangeAccountField9,$tempAtlasList,"");
 	$line[]=array(LangChangeAccountField12,
-	              "<input type=\"text\" class=\"inputfield centered\" maxlength=\"4\" name=\"fstOffset\" size=\"4\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'fstOffset')."\" />",
+	              "<input type=\"number\" min=\"-5.0\" max=\"5.0\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"4\" name=\"fstOffset\" size=\"4\" value=\"".$objObserver->getObserverProperty($objUtil->checkSessionKey('deepskylog_id'),'fstOffset')."\" />",
 	              LangChangeAccountField12Expl);
 	$line[]=array(LangChangeAccountPicture,"<input type=\"file\" name=\"picture\" class=\"inputfield\"/>","");
 	$line[]=array(profilefovmagnitude,"","");
 	$line[]=array(profilefovmagnitudeselect,
-	              " <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"overviewFoV\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewFoV')."\" />".
-	              " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"lookupFoV\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupFoV')."\" />".
-	              " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"detailFoV\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detailFoV')."\" />",
+	              " <input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered\" maxlength=\"5\" name=\"overviewFoV\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewFoV')."\" />".
+	              " / <input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered\" maxlength=\"5\" name=\"lookupFoV\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupFoV')."\" />".
+	              " / <input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered\" maxlength=\"5\" name=\"detailFoV\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detailFoV')."\" />",
 	              "");
 	$line[]=array(profiledsosmagnitude,"","");
 	$line[]=array(profiledsosmagnitudeselect,
-	              " <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"overviewdsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewdsos')."\" />".
-	              " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"lookupdsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupdsos')."\" />".
-	              " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"detaildsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detaildsos')."\" />",
+	              " <input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"5\" name=\"overviewdsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewdsos')."\" />".
+	              " / <input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"5\" name=\"lookupdsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupdsos')."\" />".
+	              " / <input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"5\" name=\"detaildsos\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detaildsos')."\" />",
 	              "");
 	$line[]=array(profilestarsmagnitude,"","");
 	$line[]=array(profilestarsmagnitudeselect,
-	              "<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"overviewstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewstars')."\" />".
-	              " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"lookupstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupstars')."\" />".
-	              " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"detailstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detailstars')."\" />",
+	              "<input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"5\" name=\"overviewstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'overviewstars')."\" />".
+	              " / <input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"5\" name=\"lookupstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'lookupstars')."\" />".
+	              " / <input type=\"number\" min=\"1.00\" max=\"20.0\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"5\" name=\"detailstars\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'detailstars')."\" />",
 	              "");
 	$line[]=array(profilephotosizes,"","");
 	$line[]=array(profilephotosizesselect,
-	              "<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"photosize1\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'photosize1')."\" />".
-	              " / <input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"photosize2\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'photosize2')."\" />",
+	              "<input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered\" maxlength=\"5\" name=\"photosize1\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'photosize1')."\" />".
+	              " / <input type=\"number\" min=\"1\" max=\"3600\" class=\"inputfield centered\" maxlength=\"5\" name=\"photosize2\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'photosize2')."\" />",
 	              "");
 	$line[]=array("");        
 	$line[]=array(AtlasPageFont,
-	              "<input type=\"text\" class=\"inputfield centered\" maxlength=\"1\" name=\"atlaspagefont\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'atlaspagefont')."\" />",
+	              "<input type=\"number\" min=\"6\" max=\"9\" class=\"inputfield centered\" maxlength=\"1\" name=\"atlaspagefont\" size=\"5\" value=\"".$objObserver->getObserverProperty($loggedUser,'atlaspagefont')."\" />",
 	              "");
 	$line[]=array("");        
 	$line[]=array(LangChangeAccountCopyright,

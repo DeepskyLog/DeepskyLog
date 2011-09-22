@@ -122,17 +122,17 @@ function new_observation()
 	    $theHour="";
 		  $theMinute="";
 	  }
-	  $contentDate ="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"3\"  name=\"day\" id=\"day\" value=\"".$theDay."\" onkeypress=\"return checkPositiveInteger(event);\" />";
+	  $contentDate ="<input type=\"number\" min=\"1\" max=\"31\" class=\"inputfield requiredField centered\" maxlength=\"2\" size=\"3\"  name=\"day\" id=\"day\" value=\"".$theDay."\" onkeypress=\"return checkPositiveInteger(event);\" />";
 		$contentDate.="&nbsp;&nbsp;";
 		$contentDate.="<select name=\"month\" id=\"month\" class=\"inputfield requiredField centered\">";
 		for($i= 1;$i<13;$i++)
 			$contentDate.="<option value=\"".$i."\"".(($theMonth==$i)?" selected=\"selected\"" : "").">".$GLOBALS['Month'.$i]."</option>";
 		$contentDate.="</select>";
 		$contentDate.="&nbsp;&nbsp;";
-		$contentDate.="<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"4\" size=\"4\"  name=\"year\" id=\"year\" onkeypress=\"return checkPositiveInteger(event);\" value=\"".$theYear."\" />";
-		$contentTime ="<input type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\"name=\"hours\" value=\"".$theHour."\" />";
+		$contentDate.="<input type=\"number\" min=\"1609\" class=\"inputfield requiredField centered\" maxlength=\"4\" size=\"5\"  name=\"year\" id=\"year\" onkeypress=\"return checkPositiveInteger(event);\" value=\"".$theYear."\" />";
+		$contentTime ="<input type=\"number\" min=\"0\" max=\"23\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\"name=\"hours\" value=\"".$theHour."\" />";
 		$contentTime.="&nbsp;&nbsp;";
-		$contentTime.="<input type=\"text\" class=\"inputfield centered\" maxlength=\"2\" size=\"2\" name=\"minutes\" value=\"".$theMinute."\" />&nbsp;&nbsp;";
+		$contentTime.="<input type=\"number\" min=\"0\" max=\"59\" class=\"inputfield centered\" maxlength=\"2\" size=\"3\" name=\"minutes\" value=\"".$theMinute."\" />&nbsp;&nbsp;";
 		// Instrument =====================================================================================================================================================================
 		$instr=$objInstrument->getSortedInstrumentsList("name", $loggedUser,1);
 		$theInstrument=(($observationid)?$objObservation->getDsObservationProperty($observationid,'instrumentid'):$objUtil->checkPostKey('instrument',0));
@@ -152,9 +152,9 @@ function new_observation()
 		$contentLanguage.="</select>&nbsp;";
 		// Limiting Magnitude and SQM =====================================================================================================================================================================
 		$theLM=(($observationid)?$objObservation->getDsObservationProperty($observationid,'limmag'):$objUtil->checkPostKey('limit'));
-		$contentLM="<input type=\"text\" class=\"inputfield centered\" maxlength=\"3\" name=\"limit\" size=\"3\"  value=\"".($theLM?sprintf("%1.1f",$theLM):'')."\" />";
+		$contentLM="<input type=\"number\" min=\"0.0\" max=\"9.9\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"3\" name=\"limit\" size=\"4\"  value=\"".($theLM?sprintf("%1.1f",$theLM):'')."\" />";
 		$theSQM=(($observationid)?((($tempSQM=$objObservation->getDsObservationProperty($_GET['observation'],'SQM'))!=-1)?$tempSQM:''):$objUtil->checkPostKey('sqm'));
-		$contentSQM="<input type=\"text\" class=\"inputfield centered\" maxlength=\"4\" name=\"sqm\" size=\"4\"  value=\"".($theSQM?sprintf("%2.1f",$theSQM):'')."\" />";
+		$contentSQM="<input type=\"number\" min=\"10.00\" max=\"25.00\" step=\"0.01\" class=\"inputfield centered\" maxlength=\"4\" name=\"sqm\" size=\"4\"  value=\"".($theSQM?sprintf("%2.1f",$theSQM):'')."\" />";
 		// Seeing =====================================================================================================================================================================
 		$theSeeing=(($observationid)?$objObservation->getDsObservationProperty($observationid,'seeing'):$objUtil->checkPostKey('seeing',0));
 		$contentSeeing ="<select name=\"seeing\" class=\"inputfield\">";
@@ -188,7 +188,7 @@ function new_observation()
 		$contentFilter.="</select>&nbsp;";
 		// Magnification =====================================================================================================================================================================
 		$theMagnification=($observationid?$objObservation->getDsObservationProperty($observationid,'magnification'):(($tempMag=$objUtil->checkPostKey('magnification'))?sprintf("%2d",$tempMag):'') );
-		$contentMagnification="<input type=\"text\" class=\"inputfield centered\" maxlength=\"4\" name=\"magnification\" size=\"4\"  value=\"".$theMagnification."\" /> x";
+		$contentMagnification="<input type=\"number\" min=\"1\" step=\"0.01\" class=\"inputfield centered\" maxlength=\"4\" name=\"magnification\" size=\"4\"  value=\"".$theMagnification."\" /> x";
 		// Visibility =====================================================================================================================================================================
 		$theVisibility=($observationid?$objObservation->getDsObservationProperty($observationid,'visibility'):$objUtil->checkPostKey('visibility'));
 		$contentVisibility ="<select name=\"visibility\" id=\"visibility\" class=\"width300px inputfield\">";
@@ -216,9 +216,9 @@ function new_observation()
 		$theDiameter1=($observationid?(($tempD1=$objObservation->getDsObservationProperty($observationid,'largeDiameter'))?$tempD1:''):$objUtil->checkPostKey('largeDiam'));
 		$theDiameter2=($observationid?(($tempD2=$objObservation->getDsObservationProperty($observationid,'smallDiameter'))?$tempD2:''):$objUtil->checkPostKey('smallDiam'));
 		$theDiameterUnit=($observationid?'sec':$objUtil->checkPostKey('size_units'));
-		$contentDiameter ="<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"largeDiam\" size=\"5\" value=\"".$theDiameter1."\" />";
+		$contentDiameter ="<input type=\"number\" min=\"0.01\" step=\"0.01\" class=\"inputfield centered\" maxlength=\"5\" name=\"largeDiam\" size=\"5\" value=\"".$theDiameter1."\" />";
 		$contentDiameter.="&nbsp;x&nbsp;";
-		$contentDiameter.="<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"smallDiam\" size=\"5\" value=\"".$theDiameter2."\" />";
+		$contentDiameter.="<input type=\"number\" min=\"0.01\" step=\"0.01\" class=\"inputfield centered\" maxlength=\"5\" name=\"smallDiam\" size=\"5\" value=\"".$theDiameter2."\" />";
 		$contentDiameter.="&nbsp;";
 		$contentDiameter.="<select name=\"size_units\" class=\"inputfield\">";
 		$contentDiameter.="<option value=\"min\"".($theDiameterUnit=='min'?" selected=\"selected\"":"").">" . LangNewObjectSizeUnits1 . "</option>";

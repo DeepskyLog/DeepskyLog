@@ -29,11 +29,11 @@ function new_lens()
 	$objPresentations->line(array(LangAddSiteFieldOr." ".LangAddLensFieldManually),"R",array(25),'',array("fieldname"));
 	
 	$objPresentations->line(array(LangAddLensField1,
-	                               "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"lensname\" size=\"30\" value=\"".stripslashes($objUtil->checkRequestKey('lensname','')).stripslashes($objLens->getLensPropertyFromId($objUtil->checkRequestKey('lensid'),'name'))."\" />",
+	                               "<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"64\" name=\"lensname\" size=\"30\" value=\"".stripslashes($objUtil->checkRequestKey('lensname','')).stripslashes($objLens->getLensPropertyFromId($objUtil->checkRequestKey('lensid'),'name'))."\" />",
 	                               LangAddLensField1Expl),
 	                        "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 	$objPresentations->line(array(LangAddLensField2,
-	                               "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"5\" name=\"factor\" size=\"5\" value=\"".stripslashes($objUtil->checkRequestKey('factor','')).stripslashes($objLens->getLensPropertyFromId($objUtil->checkRequestKey('lensid'),'factor'))."\" />",
+	                               "<input type=\"number\" min=\"0.01\" max=\"99.99\" required step=\"0.01\" class=\"inputfield requiredField centered\" maxlength=\"5\" name=\"factor\" size=\"5\" value=\"".stripslashes($objUtil->checkRequestKey('factor','')).stripslashes($objLens->getLensPropertyFromId($objUtil->checkRequestKey('lensid'),'factor'))."\" />",
 	                               LangAddLensField2Expl),
 	                        "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 	echo "<hr />";

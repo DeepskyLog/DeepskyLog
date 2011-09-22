@@ -28,7 +28,7 @@ function new_filter()
 	                              "RLR",array(25,40,35),'',array("fieldname"));
 	$objPresentations->line(array(LangAddSiteFieldOr." ".LangAddFilterFieldManually),"R",array(25),'',array("fieldname"));
 	$objPresentations->line(array(LangAddFilterField1,
-	                              "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"filtername\" size=\"30\" value=\"".stripslashes($objUtil->checkRequestKey('filtername','')).stripslashes($objFilter->getFilterPropertyFromId($objUtil->checkRequestKey('filterid'),'name'))."\" />",
+	                              "<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"64\" name=\"filtername\" size=\"30\" value=\"".stripslashes($objUtil->checkRequestKey('filtername','')).stripslashes($objFilter->getFilterPropertyFromId($objUtil->checkRequestKey('filterid'),'name'))."\" />",
 	                              LangAddFilterField1Expl),
 	                        "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 	$objPresentations->line(array(LangAddFilterField2,
