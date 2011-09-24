@@ -55,7 +55,7 @@ function new_message()
 	  }
 
 		$subject=$objPresentations->br2nl(html_entity_decode(preg_replace("/&amp;/", "&",$subject)));
-		$subject="<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"120\" name=\"subject\" size=\"60\" value=\"".$subject."\" />";
+		$subject="<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"120\" name=\"subject\" size=\"60\" value=\"".$subject."\" />";
 		
 		$objPresentations->line(array(LangMessageSubject,$subject),
 		                        "RL",array(10,90),30,array("fieldname",""));
@@ -67,7 +67,7 @@ function new_message()
 		}
 
     $message=$objPresentations->br2nl(html_entity_decode(preg_replace("/&amp;/", "&",$replyToMessage)));
-		$contentDescription="<textarea name=\"message\" class=\"messageArea inputfield requiredField\" cols=\"1\" rows=\"1\">".$message."</textarea>";
+		$contentDescription="<textarea name=\"message\" required class=\"messageArea inputfield requiredField\" cols=\"1\" rows=\"1\">".$message."</textarea>";
 		
 	  $objPresentations->line(array(LangMessageMessage,$contentDescription),
 		                        "RL",array(10,90),250,array("fieldname",""));

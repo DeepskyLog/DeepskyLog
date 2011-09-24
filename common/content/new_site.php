@@ -68,37 +68,37 @@ function new_site()
                           "RLR",array(25,40,35),'',array("fieldname"));                              
   $objPresentations->line(array(LangAddSiteFieldOr." ".LangAddSiteFieldManually),"R",array(25),'',array("fieldname"));
   $objPresentations->line(array(LangAddSiteField1,
-                                 "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"sitename\" size=\"30\" value=\"".stripslashes($objUtil->checkRequestKey('sitename')).stripslashes($objLocation->getLocationPropertyFromId($objUtil->checkRequestKey('locationid'),'name'))."\" />",
+                                 "<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"64\" name=\"sitename\" size=\"30\" value=\"".stripslashes($objUtil->checkRequestKey('sitename')).stripslashes($objLocation->getLocationPropertyFromId($objUtil->checkRequestKey('locationid'),'name'))."\" />",
                                  ''),
                           "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
   $objPresentations->line(array(LangAddSiteField2,
-                                 "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"region\" size=\"30\" value=\"".stripslashes($objUtil->checkRequestKey('region')).stripslashes($objLocation->getLocationPropertyFromId($objUtil->checkRequestKey('locationid'),'region'))."\" />",
+                                 "<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"64\" name=\"region\" size=\"30\" value=\"".stripslashes($objUtil->checkRequestKey('region')).stripslashes($objLocation->getLocationPropertyFromId($objUtil->checkRequestKey('locationid'),'region'))."\" />",
                                  LangAddSiteField2Expl),
                           "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
   $objPresentations->line(array(LangAddSiteField3,$tempCountryList,''),
                           "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
   $objPresentations->line(array(LangAddSiteField4,
-                                 "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"latitude\" size=\"4\" value=\"".$latitudedeg.
+                                 "<input type=\"number\" min=\"-90\" max=\"90\" required class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"latitude\" size=\"4\" value=\"".$latitudedeg.
                                   "\" />&deg;&nbsp;".
-                                  "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"latitudemin\" size=\"4\"	value=\"".abs($latitudemin).
+                                  "<input type=\"number\" min=\"0\" max=\"59\" required class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"latitudemin\" size=\"4\"	value=\"".abs($latitudemin).
                                   "\" />&#39;",
                                   LangAddSiteField4Expl),
                           "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
   $objPresentations->line(array(LangAddSiteField5,
-                                 "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"".$longitudedeg.
+                                 "<input type=\"number\" min=\"-180\" max=\"180\" required class=\"inputfield requiredField centered\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"".$longitudedeg.
                                  "\" />&deg;&nbsp;".
-                                 "<input type=\"text\" class=\"inputfield requiredField centered\" maxlength=\"2\"	name=\"longitudemin\" size=\"4\" value=\"".abs($longitudemin).
+                                 "<input type=\"number\" min=\"0\" max=\"59\" required class=\"inputfield requiredField centered\" maxlength=\"2\"	name=\"longitudemin\" size=\"4\" value=\"".abs($longitudemin).
                                  "\" />&#39;",
                                  LangAddSiteField5Expl),
                           "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
   $objPresentations->line(array(LangAddSiteField6,$tempTimeZoneList,''),
                           "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
   $objPresentations->line(array(LangAddSiteField7,
-                                 "<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"".(($objLocation->getLocationPropertyFromId($objUtil->checkRequestKey('locationid'),'limitingMagnitude')>-900)?$objLocation->getLocationPropertyFromId($objUtil->checkRequestKey('locationid'),'limitingMagnitude'):"")."\" />",
+                                 "<input type=\"number\" min=\"0\" max=\"9.9\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"".(($objLocation->getLocationPropertyFromId($objUtil->checkRequestKey('locationid'),'limitingMagnitude')>-900)?$objLocation->getLocationPropertyFromId($objUtil->checkRequestKey('locationid'),'limitingMagnitude'):"")."\" />",
                                  LangAddSiteField7Expl),
                           "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
   $objPresentations->line(array(LangAddSiteField8,
-                                 "<input type=\"text\" class=\"inputfield centered\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"".(($objLocation->getLocationPropertyFromId($objUtil->checkRequestKey('locationid'),'skyBackground')>-900)?$objLocation->getLocationPropertyFromId($objUtil->checkRequestKey('locationid'),'skyBackground'):"")."\" />",
+                                 "<input type=\"number\" min=\"10.0\" max=\"25.0\" step=\"0.01\" class=\"inputfield centered\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"".(($objLocation->getLocationPropertyFromId($objUtil->checkRequestKey('locationid'),'skyBackground')>-900)?$objLocation->getLocationPropertyFromId($objUtil->checkRequestKey('locationid'),'skyBackground'):"")."\" />",
                                  LangAddSiteField8Expl),
                           "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
   echo "<hr />";
