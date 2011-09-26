@@ -33,21 +33,21 @@ function new_observation()
 	  $content.="<option value=\"".$value[0]."\"".(($objID==$objCometObject->getId($value[0]))?" selected=\"selected\" ":"").">".$value[0]."</option>";
 	$content.="</select>";
 	$objPresentations->line(array(LangQueryObjectsField1."&nbsp;*",$content),"RL",array(20,80),30);
-	$content="<input type=\"text\"  class=\"inputfield requiredField\" maxlength=\"2\" size=\"2\" name=\"day\"  value=\"".($adapt?substr($objCometObservation->getDate($obsid),6,2):$objUtil->checkSessionKey('day'))."\" />";
+	$content="<input type=\"number\" min=\"1\" max=\"31\" required class=\"inputfield requiredField\" maxlength=\"2\" size=\"3\" name=\"day\"  value=\"".($adapt?substr($objCometObservation->getDate($obsid),6,2):$objUtil->checkSessionKey('day'))."\" />";
 	$content.="&nbsp;&nbsp;";
-	$content.="<select name=\"month\" class=\"inputfield requiredField\">";
+	$content.="<select name=\"month\" required class=\"inputfield requiredField\">";
 	for($i= 1;$i<13;$i++)
 		$content.="<option value=\"".$i."\"".($adapt?(substr($objCometObservation->getDate($obsid),4,2)==$i?" selected=\"selected\"":""):(($objUtil->checkSessionKey('month')==$i)?" selected=\"selected\"":"")).">".$GLOBALS['Month'.$i]."</option>";
 	$content.="</select>";
 	$content.="&nbsp;&nbsp;";
-	$content.="<input type=\"text\"  class=\"inputfield requiredField\" maxlength=\"4\" size=\"4\" name=\"year\" value=\"".($adapt?substr($objCometObservation->getDate($obsid),0,4):$objUtil->checkSessionKey('year'))."\" />";
+	$content.="<input type=\"number\" min=\"1609\" required class=\"inputfield requiredField\" maxlength=\"4\" size=\"5\" name=\"year\" value=\"".($adapt?substr($objCometObservation->getDate($obsid),0,4):$objUtil->checkSessionKey('year'))."\" />";
 	$objPresentations->line(array(LangViewObservationField5."&nbsp;*",$content,LangViewObservationField10),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 	if ($objObserver->getObserverProperty($loggedUser,'UT'))
 	  $content1=LangViewObservationField9."&nbsp;*";
 	else
 	  $content1=LangViewObservationField9lt . "&nbsp;*";
-	$content2="<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" size=\"2\" name=\"hours\" value=\"".($adapt?(int)($objCometObservation->getTime($obsid)/100):"")."\" />&nbsp;&nbsp;".
-	          "<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"2\" size=\"2\" name=\"minutes\" value=\"".($adapt?($objCometObservation->getTime($obsid)%100):"")."\" />";
+	$content2="<input type=\"number\" min=\"0\" max=\"23\" required class=\"inputfield requiredField\" maxlength=\"2\" size=\"3\" name=\"hours\" value=\"".($adapt?(int)($objCometObservation->getTime($obsid)/100):"")."\" />&nbsp;&nbsp;".
+	          "<input type=\"number\" min=\"0\" max=\"59\" required class=\"inputfield requiredField\" maxlength=\"2\" size=\"3\" name=\"minutes\" value=\"".($adapt?($objCometObservation->getTime($obsid)%100):"")."\" />";
 	$content3=LangViewObservationField11;
 	$objPresentations->line(array($content1,$content2,$content3),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 	$content1=LangViewObservationField4;
@@ -78,7 +78,7 @@ function new_observation()
 	$content2.="</select>";
 	$content3="<a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeAccountField8Expl."</a>";
 	$objPresentations->line(array($content1,$content2,$content3),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
-	$objPresentations->line(array(LangNewComet4,"<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"magnification\" size=\"3\" value=\"".($adapt?$objCometObservation->getMagnification($obsid):"")."\"/>",""),"RLL",array(20,40,40),30,array("fieldname","","fieldexplanation"));
+	$objPresentations->line(array(LangNewComet4,"<input type=\"number\" min=\"0.0\" step=\"0.1\" class=\"inputfield\" maxlength=\"3\" name=\"magnification\" size=\"4\" value=\"".($adapt?$objCometObservation->getMagnification($obsid):"")."\"/>",""),"RLL",array(20,40,40),30,array("fieldname","","fieldexplanation"));
 	$ICQMETHODS = new ICQMETHOD();
 	$methods = $ICQMETHODS->getIds();
 	$content1=LangNewComet5;
@@ -105,7 +105,7 @@ function new_observation()
 	$content2.="<option value=\"1\"".($adapt&&$objCometObservation->getMagnitudeWeakerThan($obsid)?" selected=\"selected\" ":"").">". LangNewComet3 . "</option>";
 	$content2.="</select>";
 	$content2.="&nbsp;";
-	$content2.="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"mag\" size=\"4\" value=\"".($adapt?($objCometObservation->getMagnitude($obsid)!=-99.9?$objCometObservation->getMagnitude($obsid):''):"")."\"/>";
+	$content2.="<input type=\"number\" min=\"-5.00\" step=\"0.01\" class=\"inputfield\" maxlength=\"4\" name=\"mag\" size=\"4\" value=\"".($adapt?($objCometObservation->getMagnitude($obsid)!=-99.9?$objCometObservation->getMagnitude($obsid):''):"")."\"/>";
 	$content2.="<input type=\"checkbox\" name=\"uncertain\" class=\"inputField\" ".($adapt&&$objCometObservation->getMagnitudeUncertain($obsid)?" checked=\"checked\" ":"")." />" . LangNewComet2;
 	$objPresentations->line(array($content1,$content2,""),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 	$content1=LangNewComet8;
@@ -116,15 +116,15 @@ function new_observation()
 	$content2.="</select>";
 	$objPresentations->line(array($content1,$content2,""),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 	$content1=LangNewComet9;
-	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"coma\" size=\"3\" value=\"".($adapt?($objCometObservation->getComa($obsid)!=-99?$objCometObservation->getComa($obsid):''):"")."\" />";
+	$content2="<input type=\"number\" min=\"0.0\" step=\"0.1\" class=\"inputfield\" maxlength=\"3\" name=\"coma\" size=\"4\" value=\"".($adapt?($objCometObservation->getComa($obsid)!=-99?$objCometObservation->getComa($obsid):''):"")."\" />";
 	$content3=LangNewComet13;
 	$objPresentations->line(array($content1,$content2,$content3),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 	$content1=LangNewComet10;
-	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"tail_length\" size=\"3\" value=\"".($adapt?($objCometObservation->getTail($obsid)!=-99?$objCometObservation->getTail($obsid):''):"")."\" />";
+	$content2="<input type=\"number\" min=\"0.0\" step=\"0.1\" class=\"inputfield\" maxlength=\"3\" name=\"tail_length\" size=\"4\" value=\"".($adapt?($objCometObservation->getTail($obsid)!=-99?$objCometObservation->getTail($obsid):''):"")."\" />";
 	$content3=LangNewComet13;
 	$objPresentations->line(array($content1,$content2,$content3),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 	$content1=LangNewComet11;
-	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"3\" name=\"position_angle\" size=\"3\" value=\"".($adapt?($objCometObservation->getPa($obsid)!=-99?$objCometObservation->getPa($obsid):''):"")."\" />";
+	$content2="<input type=\"number\" min=\"0.0\" max=\"360.0\" step=\"0.1\" class=\"inputfield\" maxlength=\"3\" name=\"position_angle\" size=\"4\" value=\"".($adapt?($objCometObservation->getPa($obsid)!=-99?$objCometObservation->getPa($obsid):''):"")."\" />";
 	$content3=LangNewComet12;
 	$objPresentations->line(array($content1,$content2,$content3),"RLL",array(20,50,30),30,array("fieldname","","fieldexplanation"));
 	$content1=LangViewObservationField12;

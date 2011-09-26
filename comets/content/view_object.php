@@ -31,7 +31,7 @@ function view_object()
 	  $content="<input type=\"submit\" name=\"newobject\" value=\"" . LangChangeAccountButton . "\" />";
 	  $objPresentations->line(array("<h4>".LangChangeObject. " " . $objCometObject->getName($_GET['object']) . "</h4>",$content),"LR",array(60,40),30);
 	  echo "<hr />";
-	  $content="<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"40\" name=\"name\" size=\"40\" value=\"" . 
+	  $content="<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"40\" name=\"name\" size=\"40\" value=\"" . 
 	    $objCometObject->getName($_GET['object']) . "\" />";
 	  $objPresentations->line(array(LangViewObjectField1."&nbsp;*",$content),"RL",array(20,80),30,array("fieldname"));
 	  
@@ -40,7 +40,7 @@ function view_object()
 	  } else {
 	    $icqname = "";
 	  }
-	  $content="<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"40\" name=\"icqname\" size=\"40\" value=\"" . $icqname . "\" />";
+	  $content="<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"40\" name=\"icqname\" size=\"40\" value=\"" . $icqname . "\" />";
 	  $objPresentations->line(array(LangNewObjectIcqname."&nbsp;*",$content),"RL",array(20,80),30,array("fieldname"));
 	  echo "<hr />";
 	  echo "</div></form>";

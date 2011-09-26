@@ -51,13 +51,13 @@ function setup_observations_query()
 	$objPresentations->line(array($content1,$content2),"RL",array(30,70),30,array("fieldname",""));
 	// MINIMUM DIAMETER
 	$content1=LangViewObservationField13;
-	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"mindiameter\" size=\"10\" />";
+	$content2="<input type=\"number\" min=\"0\" step=\"0.1\" class=\"inputfield\" maxlength=\"64\" name=\"mindiameter\" size=\"10\" />";
 	$content2.="&nbsp;";
 	$content2.="<select name=\"mindiameterunits\" class=\"inputfield\"><option selected=\"selected\">&nbsp;</option><option>inch</option><option>mm</option></select>";
 	$objPresentations->line(array($content1,$content2),"RL",array(30,70),30,array("fieldname",""));
 	// MAXIMUM DIAMETER
 	$content1=LangViewObservationField14;
-	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"maxdiameter\" size=\"10\" />";
+	$content2="<input type=\"number\" min=\"0\" step=\"0.1\" class=\"inputfield\" maxlength=\"64\" name=\"maxdiameter\" size=\"10\" />";
 	$content2.="&nbsp;";
 	$content2.="<select name=\"maxdiameterunits\" class=\"inputfield\"><option selected=\"selected\">&nbsp;</option><option>inch</option><option>mm</option></select>";
 	$objPresentations->line(array($content1,$content2),"RL",array(30,70),30,array("fieldname",""));
@@ -73,7 +73,7 @@ function setup_observations_query()
 	$objPresentations->line(array($content1,$content2),"RL",array(30,70),30,array("fieldname",""));
 	// MINIMUM DATE
 	$content1=LangFromDate;
-	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"minday\" value=\"\" />";
+	$content2="<input type=\"number\" min=\"1\" max=\"31\" class=\"inputfield\" maxlength=\"2\" size=\"3\" name=\"minday\" value=\"\" />";
 	$content2.="&nbsp;&nbsp;";
 	$content2.="<select name=\"minmonth\">";
 	$content2.="<option value=\"\">&nbsp;</option>";
@@ -81,11 +81,11 @@ function setup_observations_query()
 	  $content2.="<option value=\"".$i."\">".constant("LangNewObservationMonth".$i)."</option>";
 	$content2.="</select>";
 	$content2.="&nbsp;&nbsp;";
-	$content2.="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" name=\"minyear\" value=\"\" />";
+	$content2.="<input type=\"number\" min=\"1609\" class=\"inputfield\" maxlength=\"4\" size=\"5\" name=\"minyear\" value=\"\" />";
 	$objPresentations->line(array($content1,$content2),"RL",array(30,70),30,array("fieldname",""));
 	// MAXIMUM DATE
 	$content1=LangTillDate;
-	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"2\" size=\"2\" name=\"maxday\" value=\"\" />";
+	$content2="<input type=\"number\" min=\"1\" max=\"31\" class=\"inputfield\" maxlength=\"2\" size=\"3\" name=\"maxday\" value=\"\" />";
 	$content2.="&nbsp;&nbsp;";
 	$content2.="<select name=\"maxmonth\">";
 	$content2.="<option value=\"\">&nbsp;</option>";
@@ -93,7 +93,7 @@ function setup_observations_query()
 	  $content2.="<option value=\"".$i."\">".constant("LangNewObservationMonth".$i)."</option>";
 	$content2.="</select>";
 	$content2.="&nbsp;&nbsp;";
-	$content2.="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" size=\"4\" name=\"maxyear\" value=\"\" />";
+	$content2.="<input type=\"number\" min=\"1609\" class=\"inputfield\" maxlength=\"4\" size=\"5\" name=\"maxyear\" value=\"\" />";
 	$objPresentations->line(array($content1,$content2),"RL",array(30,70),30,array("fieldname",""));
 	// DESCRIPTION
 	$content1=LangQueryObservationsMessage2;
@@ -101,11 +101,11 @@ function setup_observations_query()
 	$objPresentations->line(array($content1,$content2),"RL",array(30,70),30,array("fieldname",""));
 	// MAXIMUM MAGNITUDE
 	$content1=LangQueryObjectsField4;
-	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"maxmag\" size=\"4\" value=\"\" />";
+	$content2="<input type=\"number\" min=\"-5.0\" max=\"20.0\" step=\"0.1\" class=\"inputfield\" maxlength=\"4\" name=\"maxmag\" size=\"4\" value=\"\" />";
 	$objPresentations->line(array($content1,$content2),"RL",array(30,70),30,array("fieldname",""));
 	// MINIMUM MAGNITUDE
 	$content1=LangQueryObjectsField3;
-	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"minmag\" size=\"4\" value=\"\" />";
+	$content2="<input type=\"number\" min=\"-5.0\" max=\"20.0\" step=\"0.1\" class=\"inputfield\" maxlength=\"4\" name=\"minmag\" size=\"4\" value=\"\" />";
 	$objPresentations->line(array($content1,$content2),"RL",array(30,70),30,array("fieldname",""));
 	// MINIMUM DC
 	$content1=LangQueryCometObjectsField3;
@@ -125,19 +125,19 @@ function setup_observations_query()
 	$objPresentations->line(array($content1,$content2),"RL",array(30,70),30,array("fieldname",""));
 	// MINIMUM COMA
 	$content1=LangQueryCometObjectsField5;
-	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"mincoma\" size=\"4\" value=\"\" />";
+	$content2="<input type=\"number\" min=\"0.0\" step=\"0.01\" class=\"inputfield\" maxlength=\"4\" name=\"mincoma\" size=\"4\" value=\"\" />";
 	$objPresentations->line(array($content1,$content2),"RL",array(30,70),30,array("fieldname",""));
 	// MAXIMUM COMA
 	$content1=LangQueryCometObjectsField6;
-	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"maxcoma\" size=\"4\" value=\"\" />";
+	$content2="<input type=\"number\" min=\"0.0\" step=\"0.01\" class=\"inputfield\" maxlength=\"4\" name=\"maxcoma\" size=\"4\" value=\"\" />";
 	$objPresentations->line(array($content1,$content2),"RL",array(30,70),30,array("fieldname",""));
 	// MINIMUM TAIL
 	$content1=LangQueryCometObjectsField7;
-	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"mintail\" size=\"4\" value=\"\" />";
+	$content2="<input type=\"number\" min=\"0.0\" step=\"0.01\"  class=\"inputfield\" maxlength=\"4\" name=\"mintail\" size=\"4\" value=\"\" />";
 	$objPresentations->line(array($content1,$content2),"RL",array(30,70),30,array("fieldname",""));
 	// MAXIMUM TAIL
 	$content1=LangQueryCometObjectsField8;
-	$content2="<input type=\"text\" class=\"inputfield\" maxlength=\"4\" name=\"maxtail\" size=\"4\" value=\"\" />";
+	$content2="<input type=\"number\" min=\"0.0\" step=\"0.01\"  class=\"inputfield\" maxlength=\"4\" name=\"maxtail\" size=\"4\" value=\"\" />";
 	$objPresentations->line(array($content1,$content2),"RL",array(30,70),30,array("fieldname",""));
 	echo "</div></form>";
 	echo "</div>";
