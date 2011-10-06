@@ -1255,7 +1255,7 @@ class Observations {
     $file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
     $moon = "<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" />";
     $objPresentations->line(array($moon), "R", array(100), 50, array("type20"));
-		                     
+
     if(in_array($objObject->getDsoProperty($object,'type'),array("DS","AA2STAR"))) {
       $objPresentations->line(array(LangViewObservationField22,
 		                     (($visibility=$this->getDsObservationProperty($LOid,'visibility'))?$GLOBALS['VisibilityDS'.$visibility]:"-"),
@@ -1285,7 +1285,29 @@ class Observations {
                          "RLRLRL",array(15,22,15,19,15,14),25,array("type30","type30","type30","type30","type30","type30"));                                     
 		                     echo "<br />";
     }
+
+    // Add a google translate button
+    echo "<script>
+    			function googleSectionalElementInit() {
+			      new google.translate.SectionalElement({
+		    	    sectionalNodeClassName: 'goog-trans-section',
+    		  	  controlNodeClassName: 'goog-trans-control',
+        			background: '#f4fa58'
+      			}, 'google_sectional_element');
+    			}
+    			</script>";
+    // TODO : Change nl to the language of the observation
+    // TODO : Check when the language of the observation is the language to translate in
+    echo "<script src=\"//translate.google.com/translate_a/element.js?cb=googleSectionalElementInit&ug=section&hl=en\"></script>";
+    
+    // Make the google translate control node
+    echo "<div=\"goog-trans-section\">";
+    echo "<div=\"goog-trans-control\">";
+    echo "</div>";
+    // Make the google translate sectional node class
     echo $objPresentations->searchAndLinkCatalogsInText($this->getDsObservationProperty($LOid,'description'));
+    echo "</div>";
+    
 		if($this->getDsObservationProperty($LOid,'hasDrawing'))
 		  echo "<p>"."<a  href=\"".$baseURL."deepsky/drawings/" . $LOid . ".jpg" . "\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . "_resized.jpg\" alt=\"\"></img></a></p>";
     if($copyright=$objObserver->getObserverProperty($this->getDsObservationProperty($LOid,'observerid'),'copyright'))
