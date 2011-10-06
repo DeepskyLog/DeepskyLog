@@ -1301,8 +1301,8 @@ class Observations {
     echo "<script src=\"//translate.google.com/translate_a/element.js?cb=googleSectionalElementInit&ug=section&hl=en\"></script>";
     
     // Make the google translate control node
-    echo "<div=\"goog-trans-section\">";
-    echo "<div=\"goog-trans-control\">";
+    echo "<div class=\"goog-trans-section\">";
+    echo "<div class=\"goog-trans-control\">";
     echo "</div>";
     // Make the google translate sectional node class
     echo $objPresentations->searchAndLinkCatalogsInText($this->getDsObservationProperty($LOid,'description'));
