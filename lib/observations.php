@@ -1296,17 +1296,25 @@ class Observations {
       			}, 'google_sectional_element');
     			}
     			</script>";
-    // TODO : Change nl to the language of the observation
-    // TODO : Check when the language of the observation is the language to translate in
-    echo "<script src=\"//translate.google.com/translate_a/element.js?cb=googleSectionalElementInit&ug=section&hl=en\"></script>";
-    
-    // Make the google translate control node
-    echo "<div class=\"goog-trans-section\">";
-    echo "<div class=\"goog-trans-control\">";
-    echo "</div>";
-    // Make the google translate sectional node class
+
+    $toClose = false;
+    if ($loggedUser != "") {
+      $usedLang = $objObserver->getObserverProperty($loggedUser, "language");
+
+      if ($usedLang != $this->getDsObservationProperty($LOid,'language')) {
+        $toClose = true;
+        echo "<script src=\"//translate.google.com/translate_a/element.js?cb=googleSectionalElementInit&ug=section&hl=" . $usedLang . "\"></script>";
+      
+        // Make the google translate control node
+        echo "<div class=\"goog-trans-section\">";
+        echo "<div class=\"goog-trans-control\">";
+        echo "</div>";
+      }
+    }
     echo $objPresentations->searchAndLinkCatalogsInText($this->getDsObservationProperty($LOid,'description'));
-    echo "</div>";
+    if ($toClose) {
+      echo "</div>";
+    }
     
 		if($this->getDsObservationProperty($LOid,'hasDrawing'))
 		  echo "<p>"."<a  href=\"".$baseURL."deepsky/drawings/" . $LOid . ".jpg" . "\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . "_resized.jpg\" alt=\"\"></img></a></p>";
