@@ -262,8 +262,8 @@ class Observations {
 		                                                                          time=\"$time\" AND 
 		                                                                          description=\"$description\" AND 
 		                                                                          seeing=$seeing AND 
-		                                                                          limmag=$limmag AND 
-          		                                                                SQM=$sqm AND  
+		                                                                          ROUND(limmag)=ROUND($limmag) AND 
+          		                                                                ROUND(SQM)=ROUND($sqm) AND  
           		                                                                visibility=$visibility AND 
 		                                                                          language=\"$language\" AND 
 		                                                                          eyepieceid=$eyepieceid AND 

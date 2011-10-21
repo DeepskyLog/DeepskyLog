@@ -55,7 +55,7 @@ class Locations
   }
   public  function getLocationId($name, $observer)                                              // returns the id for this location
   { global $objDatabase; 
-    return $objDatabase->selectSingleValue("SELECT id FROM locations where name=\"".htmlentities($name)."\" and observer=\"".$observer."\"",'id',-1);
+    return $objDatabase->selectSingleValue("SELECT id FROM locations where name=\"".($name)."\" and observer=\"".$observer."\"",'id',-1);
   }
   public  function getLocationPropertyFromId($id,$property,$defaultValue='')
   { global $objDatabase; return $objDatabase->selectSingleValue("SELECT ".$property." FROM locations WHERE id = \"".$id."\"",$property,$defaultValue);
