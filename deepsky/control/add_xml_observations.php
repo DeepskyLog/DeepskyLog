@@ -37,16 +37,15 @@ function add_xml_observations()
 	  return;
 	}
 	
-	// Use the correct schema definition to check the xml file. Does not work with 2.0 yet (as
-	// there is no final scheme for 2.0 yet)
+	// Use the correct schema definition to check the xml file. 
 	$xmlschema = str_replace(' ', '/', $searchNode->item(0)->getAttribute("xsi:schemaLocation"));
 	
-	$xmlschema = $baseURL . "/xml/oal20.xsd";
+	$xmlschema = $baseURL . "/xml/oal21.xsd";
 	
 	//Validate the XML file against the schema
 	if ($dom->schemaValidate($xmlschema)) {
 	  // The XML file is valid. Let's start reading in the file.
-	  // Only 2.0 files!
+	  // Only 2.0 and 2.1 files!
 	
 	  // Check the observers -> In OpenAstronomyLog 2.0 the deepskylog_id is also added
 	  $searchNode = $dom->getElementsByTagName( "observers" );
@@ -587,6 +586,9 @@ function add_xml_observations()
 	    if ($session->getElementsByTagName( "comments" )->item(0)) {
 	      $sessionInfoArray["comments"] = $session->getElementsByTagName("comments")->item(0)->nodeValue;
 	    }
+	    
+	    // We don't use the image tag of the session element to import, only to export
+
 	    $sessionArray[$sessionid] = $sessionInfoArray;
 	  }
 	  

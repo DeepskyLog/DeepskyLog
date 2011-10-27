@@ -230,7 +230,7 @@ class Utils
     $attr = $dom->createAttribute("xsi:schemaLocation");
     $fcgaInfo->appendChild($attr);
 
-    $attrText = $dom->createTextNode("http://groups.google.com/group/openastronomylog oal20.xsd");
+    $attrText = $dom->createTextNode("http://groups.google.com/group/openastronomylog oal21.xsd");
     $attr->appendChild($attrText);
     
     //add root - <observers> 
@@ -365,6 +365,7 @@ class Utils
           $comments = $sessionChild->appendChild($dom->createElement('comments'));
           $comments->appendChild($dom->createCDATASection($sessions[$scnt]['comments']));
 
+          // TODO : Also add images of the session to the export
           $usedSessions[] = $sessions[$scnt]['id'];
         }
       } 
