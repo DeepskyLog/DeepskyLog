@@ -6,6 +6,8 @@ define("LangChangeAccountField13"													,"Motivation");
 define("LangChangeAccountField13Expl"											,"Please tell us briefly why you register, this allows us to eliminate automatic registrations.");
 define("LangValidateAccountMessage6"											,"Your name and / or first name are not correct.");
 define("LangValidateAccountMessage7"											,"The field 'Motivation' is not filled in.");
+define("LangAddSessionField12"					,"Picture");
+define("LangAddSessionField12Expl"			,"A picture showing the location of the session, a weather satellite picture, ...");
 
 // This is version 4.2
 define("LangChangeSessionButton"        ,"&Uuml;bernehme Sitzung");

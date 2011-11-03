@@ -286,6 +286,9 @@ function new_session()
 	                              "<textarea name=\"comments\"  class=\"messageAreaSmall inputfield\" cols=\"50\" rows=\"7\">" . "</textarea>",
 	                              LangAddSessionField7Expl),
 	                        "RLL",array(25,40,35),136,array("fieldname","fieldvalue","fieldexplanation"));
+	
+	// Pictures
+	$objPresentations->line(array(LangAddSessionField12, "<input type=\"file\" name=\"picture\" class=\"inputfield\" />", LangAddSessionField12Expl), "RLL", array(25,40,35),136,array("fieldname", "fieldvalue", "fieldexplanation"));
 
   echo "<hr />";
 	echo "</div></form>";

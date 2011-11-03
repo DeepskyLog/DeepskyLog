@@ -1,6 +1,9 @@
 <?php
 // This is version 4.3
 define("LangSearchMenuItem13"           ,"Atlas pages");
+define("LangAddSessionField12"					,"Picture");
+define("LangAddSessionField12Expl"			,"A picture showing the location of the session, a weather satellite picture, ...");
+
 // This is version 4.2
 define("LangChangeSessionButton"        ,"Adapt session");
 define("LangSessionNoResults"           ,"No sessions available for");

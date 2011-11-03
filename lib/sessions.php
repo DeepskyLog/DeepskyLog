@@ -49,6 +49,19 @@ class Sessions
 		                  $_POST['beginhours'], $_POST['beginminutes'], $_POST['endday'], $_POST['endmonth'], 
 		                  $_POST['endyear'], $_POST['endhours'], $_POST['endminutes'], $_POST['site'], $_POST['weather'], 
 		                  $_POST['equipment'], $_POST['comments'], $_POST['description_language'], $observers, -1);
+
+		// TODO : TEST
+		// TODO : Make sure to also add this picture to the other sessions
+		if ($_FILES['picture']['tmp_name'] != "") // picture to upload
+		{ 
+		  $upload_dir = $instDir . 'deepsky/sessions';
+		  $dir = opendir($upload_dir);
+		  $original_image = $_FILES['picture']['tmp_name'];
+		  $destination_image = $upload_dir . "/" . $current_session . "_resized.jpg";
+		  require_once $instDir . "common/control/resize.php"; // resize code
+		  $new_image = image_createThumb($original_image, $destination_image,490,490,100);
+		  move_uploaded_file($_FILES['drawing']['tmp_name'], $upload_dir . "/" . $current_session . ".jpg");
+		}		
   }
   
   public  function addSession($sessionname, $beginday, $beginmonth, $beginyear, $beginhours, $beginminutes, $endday, 

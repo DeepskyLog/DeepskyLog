@@ -328,6 +328,10 @@ function change_session()
 	                              LangAddSessionField7Expl),
 	                        "RLL",array(25,40,35),136,array("fieldname","fieldvalue","fieldexplanation"));
 
+	// TODO : Make it possible to keep the current picture
+	// Pictures
+	$objPresentations->line(array(LangAddSessionField12, "<input type=\"file\" name=\"picture\" class=\"inputfield\" />", LangAddSessionField12Expl), "RLL", array(25,40,35),136,array("fieldname", "fieldvalue", "fieldexplanation"));
+	
   echo "<hr />";
 	echo "</div></form>";
 	echo "</div>";
