@@ -1,7 +1,9 @@
 <?php
 // This is version 4.3
+define("LangSearchMenuItem14"           ,"AstroImageCatalogs");
 define("LangSearchMenuItem13"           ,"Atlas paginas");
 // To translate
+define("LangDownloadsMenuTitle"         ,"Downloads");
 define("LangChangeAccountField13"													,"Motivation");
 define("LangChangeAccountField13Expl"											,"Please tell us briefly why you register, this allows us to eliminate automatic registrations.");
 define("LangValidateAccountMessage6"											,"Your name and / or first name are not correct.");

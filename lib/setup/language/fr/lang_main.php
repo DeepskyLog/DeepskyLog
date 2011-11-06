@@ -1,8 +1,10 @@
 <?php
 // This is version 4.3
+define("LangSearchMenuItem14"           ,"AstroImageCatalogs");
 define("LangSearchMenuItem13"           ,"Les pages de l'atlas");
 define("LangAddSessionField12"					,"Picture");
 define("LangAddSessionField12Expl"			,"A picture showing the location of the session, a weather satellite picture, ...");
+define("LangDownloadsMenuTitle"         ,"T&eacute;l&eacute;chargements");
 
 // This is version 4.2
 define("LangChangeSessionButton"        ,"Adapter la session");

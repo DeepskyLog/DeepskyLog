@@ -28,6 +28,7 @@ $menuAddChange="collapsed";
 $menuAdmin="collapsed";
 $menuLogin="expanded";
 $menuSearch="expanded";
+$menuDownloads="expanded";
 $menuMoon="collapsed";
 
 

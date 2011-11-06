@@ -1,8 +1,10 @@
 <?php
 // This is version 4.3
+define("LangSearchMenuItem14"           ,"AstroImageCatalogs");
 define("LangSearchMenuItem13"           ,"Atlaspaginas");
 define("LangAddSessionField12"					,"Afbeelding");
 define("LangAddSessionField12Expl"			,"Een foto van de waarneemlocatie, van de waarnemers, ...");
+define("LangDownloadsMenuTitle"         ,"Downloads");
 // This is version 4.2
 define("LangChangeSessionButton"        ,"Pas sessie aan");
 define("LangSessionNoResults"           ,"Geen sessies beschikbaar voor ");

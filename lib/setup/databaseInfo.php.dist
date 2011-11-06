@@ -13,7 +13,7 @@ function databaseInfo()
          $instDir,$baseURL,$tempDir,$mailFrom,$mailTo,
          $title,$browsertitle,$copyrightInfo,$vvsInfo,$dslInfo,$versionInfo,$objectInfo,$w3cInfo,
          $register,$dateformat,$defaultLanguage,$languageMenu,$maxFileSize,$modules,
-         $standardLanguagesForObservationsDuringRegistration,$languagesDuringRegistration;
+         $standardLanguagesForObservationsDuringRegistration,$languagesDuringRegistration,$dirAstroImageCatalogs;
 
   // Change the following to make deepskylog work with your database
   $host           = "localhost";
@@ -29,6 +29,7 @@ function databaseInfo()
   $baseURL      = "http://localhost/deepskylog/";
   // tempDir has NO end slash !
   $tempDir      = "/tmp/DeepskyLog";
+  $dirAstroImageCatalogs = "astroimagecatalogs/constellations/";
   
   // General settings
   // The title to appear above all pages
