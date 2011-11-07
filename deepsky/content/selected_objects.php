@@ -55,11 +55,11 @@ function selected_objects()
 		echo "<hr />";
 		/*
 		$content1 =LangExecuteQueryObjectsMessage4."&nbsp;";
-		$content1.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4a);
+		$content1.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objects.pdf.php?SID=Qobj",LangExecuteQueryObjectsMessage4a);
 		$content1.="&nbsp;-&nbsp;";
-		$content1.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objectnames.pdf?SID=Qobj",LangExecuteQueryObjectsMessage4b);
+		$content1.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objectnames.pdf.php?SID=Qobj",LangExecuteQueryObjectsMessage4b);
 		$content1.="&nbsp;-&nbsp;";
-		$content1.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objectsDetails.pdf?SID=Qobj&amp;sort=".$_SESSION['QobjSort'],LangExecuteQueryObjectsMessage4c);
+		$content1.=$objPresentations->promptWithLinkText(LangListQueryObjectsMessage14,LangListQueryObjectsMessage15,$baseURL."objectsDetails.pdf.php?SID=Qobj&amp;sort=".$_SESSION['QobjSort'],LangExecuteQueryObjectsMessage4c);
 		$content1.="&nbsp;-&nbsp;";
 		$content1.="<a href=\"".$baseURL."objects.argo?SID=Qobj\" rel=\"external\">".LangExecuteQueryObjectsMessage8."</a>";
 		$content1.="&nbsp;-&nbsp;";

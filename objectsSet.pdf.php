@@ -1,5 +1,5 @@
 <?php 
-// objectsSet.pdf
+// objectsSet.pdf.php
 // Generate the objectsSet list
 
 $inIndex = true;

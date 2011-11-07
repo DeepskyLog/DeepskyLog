@@ -1,13 +1,12 @@
 <?php 
-$filename='cometobservations.pdf';
+$filename='cometobservations';
 $inIndex = true;
 include 'common/entryexit/preludes.php';
 $_SESSION['module'] = "comets";
-$_SESSION['pdfname'] = "observations.pdf"; // necessary for class.pdf.php
+$_SESSION['pdfname'] = "observations"; // necessary for class.pdf.php
 $result = $_SESSION['observation_query'];
 
 if (!empty($result))
-{
- $objUtil->pdfCometObservations($result);
+{ $objUtil->pdfCometObservations($result);
 }
 ?>

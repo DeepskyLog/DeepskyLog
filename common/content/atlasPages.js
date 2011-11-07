@@ -17,7 +17,7 @@ var gridDimensions=new Array(
     		  new Array(  4, 1.50,0.100,9),
     		  new Array(  3, 1.00,0.066,9),
     		  new Array(  2, 0.80,0.050,10),
-    		  new Array(  1, 0.40,0.026,10),
+    		  new Array(  1, 0.40,0.026,11),
     		  new Array(0.5, 0.20,0.012,12),
     		  new Array(0.25,0.20,0.012,14),
     		  new Array(0.2 ,0.20,0.012,16),
@@ -97,7 +97,7 @@ function generateallonepass(item,msie,stepra,stepdecl)
 }
 function generateOne(i,msie)
 { if(msie)
-  { document.location='objectsSet.pdf?theobject='+urlencode(document.getElementById('R'+i).title)+
+  { document.location='objectsSet.pdf.php?theobject='+urlencode(document.getElementById('R'+i).title)+
 	  '&theShowname='+urlencode(document.getElementById('R'+i).value)+
 	  '&theSet='+urlencode(document.getElementById('R'+i+'Dfovs').value)+
       '&thedsos='+urlencode(document.getElementById('R'+i+'Ddsos').value)+
@@ -110,7 +110,7 @@ function generateOne(i,msie)
       ('&reportlayoutselect='+urlencode(document.getElementById('reportlayoutselect').value)):'');
   }
   else
-    window.open('objectsSet.pdf?theobject='+urlencode(document.getElementById('R'+i).title)+
+    window.open('objectsSet.pdf.php?theobject='+urlencode(document.getElementById('R'+i).title)+
     	'&theShowname='+urlencode(document.getElementById('R'+i).value)+
         '&theSet='+urlencode(document.getElementById('R'+i+'Dfovs').value)+
         '&thedsos='+urlencode(document.getElementById('R'+i+'Ddsos').value)+

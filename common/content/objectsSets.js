@@ -22,10 +22,10 @@ function generateallonepass(item,msie)
     { item=jsonhttp.responseText*1;
       if(msie)
       { var mywindow=window.open("",'mywindow'+item);
-        mywindow.location='objectsSetsOnePass.pdf?item='+item;  
+        mywindow.location='objectsSetsOnePass.pdf.php?item='+item;  
       }  
       else
-    	window.open('objectsSetsOnePass.pdf?item='+item,'');
+    	window.open('objectsSetsOnePass.pdf.php?item='+item,'');
       if(document.getElementById('R'+(item+1)))
         generateallonepass(item+1);
       else
@@ -51,7 +51,7 @@ function generateallonepass(item,msie)
 }
 function generateOne(i,msie)
 { if(msie)
-  { document.location='objectsSet.pdf?theobject='+urlencode(document.getElementById('R'+i).title)+
+  { document.location='objectsSet.pdf.php?theobject='+urlencode(document.getElementById('R'+i).title)+
 	  '&theShowname='+urlencode(document.getElementById('R'+i).value)+
 	  '&theSet='+urlencode(document.getElementById('R'+i+'Dfovs').value)+
       '&thedsos='+urlencode(document.getElementById('R'+i+'Ddsos').value)+
@@ -64,7 +64,7 @@ function generateOne(i,msie)
       ('&reportlayoutselect='+urlencode(document.getElementById('reportlayoutselect').value)):'');
   }
   else
-    window.open('objectsSet.pdf?theobject='+urlencode(document.getElementById('R'+i).title)+
+    window.open('objectsSet.pdf.php?theobject='+urlencode(document.getElementById('R'+i).title)+
     	'&theShowname='+urlencode(document.getElementById('R'+i).value)+
         '&theSet='+urlencode(document.getElementById('R'+i+'Dfovs').value)+
         '&thedsos='+urlencode(document.getElementById('R'+i+'Ddsos').value)+

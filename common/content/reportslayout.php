@@ -35,7 +35,7 @@ function reportsLayout()
   */
   echo "</select>";
   echo "&nbsp;";
-  echo "<input type=\"button\" onclick=\"saveAndGeneratePdf('".$baseURL."report.pdf','".$reportName."','".$objUtil->checkRequestKey('pdfTtile',"DeepskyLog")."','".$_GET['SID']."','".$_GET['sort']."');\" value=\"".ReportSaveAndGeneratePdf."\"/>";
+  echo "<input type=\"button\" onclick=\"saveAndGeneratePdf('".$baseURL."report.pdf.php','".$reportName."','".$objUtil->checkRequestKey('pdfTtile',"DeepskyLog")."','".$_GET['SID']."','".$_GET['sort']."');\" value=\"".ReportSaveAndGeneratePdf."\"/>";
   echo "<input type=\"button\" onclick=\"saveAsLayoutPage('".$reportName."');\" value=\"".ReportSaveAs."\"/>";
   echo "<input type=\"button\" id=\"deletelayout\" class=\"hidden\" onclick=\"deleteLayoutPage('".$reportName."');\" value=\"".ReportDelete."\"/>";
   echo "<input type=\"hidden\" id=\"tempname\" value=\"\" />";

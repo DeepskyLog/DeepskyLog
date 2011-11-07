@@ -680,7 +680,7 @@ function selected_observations()
 	
 	$_SESSION['observation_query'] = $obs;
 	
-	echo "<p>".LangExecuteQueryObjectsMessage4." <a href=\"".$baseURL."cometobservations.pdf\" rel=\"external\">".LangExecuteQueryObjectsMessage4a."</a>";
+	echo "<p>".LangExecuteQueryObjectsMessage4." <a href=\"".$baseURL."cometobservations.pdf.php\" rel=\"external\">".LangExecuteQueryObjectsMessage4a."</a>";
 	echo " - <a href=\"".$baseURL."cometobservations.icq\" rel=\"external\">".LangExecuteQueryObjectsMessage7."</a></p>";
 	
 	}

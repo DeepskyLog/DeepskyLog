@@ -258,7 +258,7 @@ function selected_observation()
 	
 			echo ("</table>");
 			echo "<hr />";
-			$objPresentations->line(array(LangExecuteQueryObjectsMessage4." <a href=\"".$baseURL."cometobservations.pdf\" rel=\"external\">".LangExecuteQueryObjectsMessage4a."</a>"),"L",array(),20);
+			$objPresentations->line(array(LangExecuteQueryObjectsMessage4." <a href=\"".$baseURL."cometobservations.pdf.php\" rel=\"external\">".LangExecuteQueryObjectsMessage4a."</a>"),"L",array(),20);
 		}
 	  else // no observations of object
 	  {
@@ -478,7 +478,7 @@ function selected_observation()
 			echo ("</table>");
 			echo "<hr />";
 			$_SESSION['observation_query'] = $obs;
-			$objPresentations->line(array(LangExecuteQueryObjectsMessage4." <a href=\"".$baseURL."cometobservations.pdf\" rel=\"external\">".LangExecuteQueryObjectsMessage4a."</a>"),"L",array(),20);
+			$objPresentations->line(array(LangExecuteQueryObjectsMessage4." <a href=\"".$baseURL."cometobservations.pdf.php\" rel=\"external\">".LangExecuteQueryObjectsMessage4a."</a>"),"L",array(),20);
 		}
 		echo "</div>";
 	}

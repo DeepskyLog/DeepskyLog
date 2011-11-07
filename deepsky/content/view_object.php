@@ -460,7 +460,7 @@ function showObjectObservations()
 		  $objPresentations->line(array(LangOverviewObservationsHeader5a),"R",array(100),25);
 	$content1 ="<a href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a> - ";
 	$content1.=LangExecuteQueryObjectsMessage4."&nbsp;";
-	$content1.=$objPresentations->promptWithLinkText(LangOverviewObservations10, LangOverviewObservations11, $baseURL . "observations.pdf?SID=Qobs", LangExecuteQueryObjectsMessage4a);
+	$content1.=$objPresentations->promptWithLinkText(LangOverviewObservations10, LangOverviewObservations11, $baseURL . "observations.pdf.php?SID=Qobs", LangExecuteQueryObjectsMessage4a);
 	$content1.=" - ";
 	$content1.="<a href=\"" . $baseURL . "observations.csv\" rel=\"external\">" . LangExecuteQueryObjectsMessage5 . "</a> - ";
 	$content1.="<a href=\"" . $baseURL . "observations.xml\" rel=\"external\">" . LangExecuteQueryObjectsMessage10 . "</a>";

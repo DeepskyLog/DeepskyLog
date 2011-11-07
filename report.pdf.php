@@ -1,5 +1,5 @@
 <?php
-// report.pdf
+// report.pdf.php
 // generates a pdf file containing a personalised report
 
 $inIndex = true;
