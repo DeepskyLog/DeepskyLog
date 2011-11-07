@@ -78,10 +78,10 @@ function generateallonepass(item,msie,stepra,stepdecl)
       //alert('preset zero under ten');
       if(msie)
       { var mywindow=window.open("",'mywindow'+item);
-        mywindow.location='atlasPagesOnePass.pdf?item='+urlencode(item)+'&filename='+document.getElementById('decl').value+'_'+item+'_'+document.getElementById('ra').value.substr(0,5);  
+        mywindow.location='atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+document.getElementById('decl').value+'_'+item+'_'+document.getElementById('ra').value.substr(0,5);  
       }  
       else
-      	window.open('atlasPagesOnePass.pdf?item='+urlencode(item)+'&filename='+tempdecl+'d'+tempdeclmin+'m'+' '+tempra+'h'+tempramin+'m','');
+      	window.open('atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+tempdecl+'d'+tempdeclmin+'m'+' '+tempra+'h'+tempramin+'m','');
       generateallonepass(temp.item,msie,((document.getElementById('ra').value-(temp.raright))*2*(1-document.getElementById('theoverlap').value)),((document.getElementById('decl').value-(temp.declbottom))*2*(1-document.getElementById('theoverlap').value)));      
     }
   };
