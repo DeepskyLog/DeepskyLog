@@ -1738,7 +1738,7 @@ class PrintAtlas
 	    $deltalineSection = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'deltalineSection');    
 	    $deltaline        = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'deltalineExtra')+$fontSizeText;
 	    $deltaobjectline  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'deltaobjectline');
-	    $pagenr           = $objRepotLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'startpagenumber');
+	    $pagenr           = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'startpagenumber');
 			$sectionBarHeight = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'sectionBarHeightextra')+$fontSizeSection;
 			$SectionBarWidth  = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'SectionBarWidthbase')+$sectionBarSpace;
 	    $showelements     = $objReportLayout->getLayoutFieldPosition($reportuser,$reportname,$reportlayout,'showelements');
