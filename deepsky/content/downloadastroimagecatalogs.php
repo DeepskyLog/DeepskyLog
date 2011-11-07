@@ -8,5 +8,5 @@ while(list($key, $value) = each($constellations))
 asort($cons);
 reset($cons);
 while(list($key, $value) = each($cons))
-  echo "<a href=\"".$baseURL.$dirAstroImageCatalogs.$key.".pdf\">".$key."</a> ";
+  echo "<a href=\"".$dirAstroImageCatalogs.$key.".pdf\">".$key."</a> ";
 ?>
