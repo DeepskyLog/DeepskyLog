@@ -1657,6 +1657,7 @@ class PrintAtlas
 	      $this->pdf->addTextWrap( 50, $liney, 200, 10, Reportobjectdecl.': '.$theobjectdata['objectdecldms'],  'left');
 	      $this->pdf->addTextWrap(300, $liney, 200, 10, LangViewObjectField12.': '.(($pa=$theobjectdata['objectpa'])==999?'-':$pa),  'left');
       }      
+    $this->labelsArr=array();
     }
     
     for($k=0;$k<count($theSet);$k++)

@@ -6,7 +6,7 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else instructions();
 
 function instructions()
-{	global $baseURL,$loggedUser,$myList,$lastReadObservation,$theDate,$modules,$menuView,$menuAddChange,$menuAdmin,$menuLogin,$menuSearch,$menuMoon,
+{	global $baseURL,$loggedUser,$myList,$lastReadObservation,$theDate,$modules,$menuView,$menuAddChange,$menuAdmin,$menuLogin,$menuSearch,$menuDownloads,$menuMoon,
          $listname_ss,$listname,$entryMessage,$step,$objSession,
          $objEyepiece,$objFilter,$objLens,$objInstrument,$objLocation,$objMessages,
          $objObject,$objObserver,$objObservation,$objFormLayout,$objUtil,$objList;
@@ -93,7 +93,39 @@ function instructions()
 		reset($_SESSION['steps']);
 	}
 	// collapsed menus ================================================================================================================================================================
-  if(array_key_exists('menuView',$_GET))
+	  if(array_key_exists('menuDownloads',$_GET))
+	{ $menuDownloads=$_GET['menuDownloads'];
+	  $_SESSION['menus']['menuDownloads']=$menuDownloads;
+		$menuscookie="";
+		while(list($key,$value)=each($_SESSION['menus']))
+		  $menuscookie.=$key.":".$value.";";
+		$cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("menus",$menuscookie,$cookietime, "/");
+	  
+	}
+	elseif(array_key_exists('menuDownloads',$_POST))
+	{ $menuDownloads=$_POST['menuDownloads'];
+    $_SESSION['menus']['menuDownloads']=$menuDownloads;
+		$menuscookie="";
+    while(list($key,$value)=each($_SESSION['menus']))
+		  $menuscookie.=$key.":".$value.";";
+		$cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
+		setcookie("menus",$menuscookie,$cookietime, "/");
+	}
+	elseif(array_key_exists('menus',$_SESSION)&&array_key_exists('menuDownloads',$_SESSION['menus']))
+	  $menuDownloads=$_SESSION['menus']['menuDownloads'];
+	elseif(array_key_exists('menus',$_COOKIE))
+	{ $menubase=explode(";",$_COOKIE['menus']);
+	    while(list($key,$value)=each($menubase))
+	    { if($value)
+	      { $menubaseitems=explode(":",$value);
+	        $_SESSION['menus'][$menubaseitems[0]]=$menubaseitems[1];
+	      }
+	    }
+	  if(array_key_exists('menus',$_SESSION)&&array_key_exists('menuDownloads',$_SESSION['menus']))
+	    $menuDownloads=$_SESSION['menus']['menuDownloads'];
+	}
+	if(array_key_exists('menuView',$_GET))
 	{ $menuView=$_GET['menuView'];
 	  $_SESSION['menus']['menuView']=$menuView;
 		$menuscookie="";
@@ -101,7 +133,6 @@ function instructions()
 		  $menuscookie.=$key.":".$value.";";
 		$cookietime = time() + 365 * 24 * 60 * 60;            // 1 year
 		setcookie("menus",$menuscookie,$cookietime, "/");
-	  
 	}
 	elseif(array_key_exists('menuView',$_POST))
 	{ $menuView=$_POST['menuView'];
