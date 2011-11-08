@@ -1,13 +1,24 @@
-<?php
+<?php //GE
 // This is version 4.3
 define("LangSearchMenuItem14"           ,"Image catalogs");
 define("LangSearchMenuItem13"           ,"Atlasses");
 define('LangAtlassesIntro00'            ,'General information');
 define('LangAtlassesIntro01'            ,"You can download three kind of atlasses:<br />
-                                           - the <b>overview</b> atlasses have pages of 20 degrees, and shows stars to magnitude 8;<br />
+                                           - the <b>overview</b> atlasses have pages of 20 degrees, and show stars to magnitude 8;<br />
                                            - the <b>lookup</b> atlasses have pages of 10 degrees, and show stars to magnitude 11;<br />
-                                           - the <b>detail</b> atlasses have page of 5 degrees, and show stars to magnitude 14");
-define('LangAtlassesIntro02'            ,"You can download an individual page, with top-left coordinates to be specified by you,<br />
+                                           - the <b>detail</b> atlasses have page of 5 degrees, and show stars to magnitude 14.<br/><br/>
+                                           The atlasses mention if the objects are already seen in Deepskylog (dotted underline)<br />
+                                           or by yourself (personalised atlasses for registered users, full underline, or overline if sketched).");
+define('LangAtlassesIntro02'            ,'General Atlasses / Personalised Atlasses');
+define('LangAtlassesIntro03'            ,'You can either go for general atlasses, or (if you are a registered user) personalised atlasses.<br>
+                                          - General atlasses are precompiled and are ready to download as one big pdf file.<br/>
+                                          - Personalised atlasses are generated, page per page, for you in pdf format.<br /><br />
+                                          Personalised atlasses take some time (one page) or much more time (complete atlas) to generate and <br />
+                                          you will have to use some software to put the pages together yourself for the complete atlas.');
+define('LangAtlassesIntro04'            ,'General Atlasses');
+define('LangAtlassesIntro05'            ,'Choose one of the three available formats, they will download as a pdf:');
+define('LangAtlassesIntro06'            ,'Personalised Atlasses');
+define('LangAtlassesIntro07'            ,"You can download an individual page, with top-left coordinates to be specified by you,<br />
                                           or you can download all the pages of the complete helisphere.");
 // To translate
 define("LangDownloadsMenuTitle"         ,"Downloads");

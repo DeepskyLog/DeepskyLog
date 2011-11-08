@@ -135,7 +135,14 @@ function generateOneDetail(i,msie)
 {
 }
 function generateoverviewallonepass(item,msie,stepra,stepdecl)
-{
+{ document.getElementById('declfrom').value=0;
+  document.getElementById('declto').value=85;
+  document.getElementById('rafrom').value=0;
+  document.getElementById('rato').value=24;
+  document.getElementById('stars').value=8;
+  document.getElementById('dsos').value=10;
+  document.getElementById('zoom').value=10;
+  generateallonepass(item,msie);
 }
 function generatelookupallonepass(item,msie,stepra,stepdecl)
 {
