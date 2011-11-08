@@ -125,3 +125,21 @@ function generateOne(i,msie)
   document.getElementById('T'+i).setAttribute('style','background-color:#DDDDDD;');
   document.getElementById('R'+(i+1)).focus();
 }
+function generateOneOverview(i,msie)
+{
+}
+function generateOneLookup(i,msie)
+{
+}
+function generateOneDetail(i,msie)
+{
+}
+function generateoverviewallonepass(item,msie,stepra,stepdecl)
+{
+}
+function generatelookupallonepass(item,msie,stepra,stepdecl)
+{
+}
+function generatedetailallonepass(item,msie,stepra,stepdecl)
+{
+}

@@ -1,7 +1,14 @@
 <?php
 // This is version 4.3
-define("LangSearchMenuItem14"           ,"AstroImageCatalogs");
-define("LangSearchMenuItem13"           ,"Atlas paginas");
+define("LangSearchMenuItem14"           ,"Image catalogs");
+define("LangSearchMenuItem13"           ,"Atlasses");
+define('LangAtlassesIntro00'            ,'General information');
+define('LangAtlassesIntro01'            ,"You can download three kind of atlasses:<br />
+                                           - the <b>overview</b> atlasses have pages of 20 degrees, and shows stars to magnitude 8;<br />
+                                           - the <b>lookup</b> atlasses have pages of 10 degrees, and show stars to magnitude 11;<br />
+                                           - the <b>detail</b> atlasses have page of 5 degrees, and show stars to magnitude 14");
+define('LangAtlassesIntro02'            ,"You can download an individual page, with top-left coordinates to be specified by you,<br />
+                                          or you can download all the pages of the complete helisphere.");
 // To translate
 define("LangDownloadsMenuTitle"         ,"Downloads");
 define("LangChangeAccountField13"													,"Motivation");

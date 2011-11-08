@@ -25,10 +25,12 @@ function menu_downloads()
 	{ echo "<select name=\"view\" class=\"menuField menuDropdown\" onchange=\"{location=this.options[this.selectedIndex].value;}\">";
 	  echo "<option value=\"".$baseURL."index.php\">"."&nbsp;"."</option>";
 	  echo "<option value=\"".$baseURL."index.php?indexAction=downloadAstroImageCatalogs\">".LangSearchMenuItem14."</option>";
+	  echo "<option value=\"".$baseURL."index.php?indexAction=view_atlaspages\">".LangSearchMenuItem13."</option>";
 	  echo "</select>";
 	}
 	else
 	{ echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=downloadAstroImageCatalogs\">".LangSearchMenuItem14."</a><br />";
+	  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=view_atlaspages\">".LangSearchMenuItem13."</a><br />";
 	}
 	echo "</div>";
 }
