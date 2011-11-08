@@ -516,7 +516,9 @@ class PrintAtlas
     for($m=8;$m<=$this->starsmagnitude;$m++)
     { if($m>$this->gridDimensions[$this->gridActualDimension][3])
         $this->pdf->setColor(0.7,0.7,0.7);
-    	if($this->gridD0rad>0)
+      else
+        $this->pdf->setColor(0,0,0);
+      if($this->gridD0rad>0)
     	{ //$this->gridLDinvRad($this->canvasDimensionXpx-$this->gridOffsetXpx,$this->canvasDimensionYpx-$this->gridOffsetYpx);
     		//$tempra=($this->gridLxRad/3.1415926535*12);
     		$this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,$m,$m);
@@ -941,6 +943,8 @@ class PrintAtlas
     { $sinalpha=$xRad/$drad;
       $cosalpha=$yRad/$drad;
       $Dacc=acos((cos($drad)*sin($this->gridD0rad))+(sin($drad)*cos($this->gridD0rad)*$cosalpha));
+      //if($Dacc=0) 
+      //  echo " res:".$Dacc." ".(sin($Dacc));
       $cosLacc=(cos($drad)-(sin($this->gridD0rad)*cos($Dacc)))/(cos($this->gridD0rad)*sin($Dacc));
       if($cosLacc>=0)
         $this->gridLxRad=$this->gridL0rad+(asin(sin($drad)*$sinalpha/sin($Dacc)));
@@ -1009,7 +1013,7 @@ class PrintAtlas
       { $this->atlaspagerahr=$objObject->getDsoProperty($object,'ra',0);
         $this->atlaspagedecldeg=$objObject->getDsoProperty($object,'decl',0);
       }
-    $this->gridActualDimension=max(min($objUtil->checkRequestKey('zoom',18),$this->gridMaxDimension),14);
+    $this->gridActualDimension=max(min($objUtil->checkRequestKey('zoom',18),$this->gridMaxDimension),10);
     $this->atlasmagnitude=max(min((int)($objUtil->checkRequestKey('dsos',$this->gridDimensions[$this->gridActualDimension][3])),99),8);
     $this->starsmagnitude=max(min((int)($objUtil->checkRequestKey('stars',$this->gridDimensions[$this->gridActualDimension][3])),16),8);
     $this->fontSize1b=max(min($objUtil->checkRequestKey('fontsize',$this->fontSize1b),9),6);
