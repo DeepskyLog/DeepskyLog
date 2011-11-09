@@ -343,6 +343,7 @@ class Presentations
   }
   public function searchAndLinkCatalogsInText($theText)
   { global $baseURL;
+    $theText = mb_convert_encoding($theText, "HTML-ENTITIES", "UTF-8");
     $patterns[0]="/\s+(M)\s*(\d+)/";
 		$replacements[0]="<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=M%20\\2\">&nbsp;M&nbsp;\\2</a>";
 		$patterns[1]= "/(NGC|Ngc|ngc)\s*(\d+\w+)/";
