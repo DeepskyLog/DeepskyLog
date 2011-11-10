@@ -24,7 +24,6 @@ var gridDimensions=new Array(
     		  new Array(0.15,0.20,0.012,16),
     		  new Array(0.1 ,0.20,0.012,16)
     		  );
-
 function generateallonepass(item,msie,stepra,stepdecl)
 { if(item==0)
   { document.getElementById('ra').value=document.getElementById('rato').value;
@@ -34,9 +33,13 @@ function generateallonepass(item,msie,stepra,stepdecl)
   { document.getElementById('ra').value=1.0*document.getElementById('ra').value-stepra;
     if((stepra<0) || (document.getElementById('ra').value<1.0*document.getElementById('rafrom').value))
     { document.getElementById('ra').value=document.getElementById('rato').value;
-      if((((document.getElementById('declfrom').value*1.0<1.0*document.getElementById('declto').value) && (((1.0*document.getElementById('decl').value)-(stepdecl/2))<1.0*document.getElementById('declfrom').value))) || 
-    	 (((document.getElementById('declfrom').value*1.0>1.0*document.getElementById('declto').value) && (((1.0*document.getElementById('decl').value)-(stepdecl/2))>1.0*document.getElementById('declfrom').value))))     
-        return;
+      if((document.getElementById('declto').value*1.0)>0)
+      { if((document.getElementById('decl').value*1.0)<0)
+          return;
+      }
+      else 
+      	if((document.getElementById('decl').value*1.0)>0)
+          return;
       document.getElementById('decl').value=document.getElementById('decl').value-stepdecl;
     }
   }
@@ -51,7 +54,7 @@ function generateallonepass(item,msie,stepra,stepdecl)
   jsonhttp.onreadystatechange=function()
   { if(jsonhttp.readyState==4)
     { //alert(jsonhttp.responseText);
-	  temp=eval('('+jsonhttp.responseText+')');
+	    temp=eval('('+jsonhttp.responseText+')');
       tempra=Math.floor(document.getElementById('ra').value,0);
       tempramin=Math.round((document.getElementById('ra').value-tempra)*60,0);
       if(tempra<10)
@@ -82,6 +85,22 @@ function generateallonepass(item,msie,stepra,stepdecl)
       }  
       else
       	window.open('atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+tempdecl+'d'+tempdeclmin+'m'+' '+tempra+'h'+tempramin+'m','');
+      //alert('cond: '+(1.0*temp.declbottom)+' '+1.0*document.getElementById('declfrom').value);
+      //if((((document.getElementById('declfrom').value*1.0<1.0*document.getElementById('declto').value) && ((1.0*document.getElementById('decl').value)<1.0*document.getElementById('declfrom').value))) || 
+      // 	 (((document.getElementById('declfrom').value*1.0>1.0*document.getElementById('declto').value) && ((1.0*document.getElementById('decl').value)>1.0*document.getElementById('declfrom').value))))     
+      //     return;
+      if((document.getElementById('declto').value*1.0)>0)
+      { //if(((document.getElementById('declfrom').value*1.0<1.0*document.getElementById('declto').value) && (1.0*tempdecl<temp.declbottom))&&(temp.declbottom<0))
+        //  { alert("WP2");return;}
+        if(((((document.getElementById('ra').value-(temp.raright))*2*(1-document.getElementById('theoverlap').value))<0) || (((document.getElementById('ra').value*1.0)-((document.getElementById('ra').value-(temp.raright))*2*(1-document.getElementById('theoverlap').value)))<1.0*document.getElementById('rafrom').value))&&(temp.declbottom<0))
+          { alert("WP3");return;}
+      }
+      else
+      { //if(((document.getElementById('declfrom').value*1.0<1.0*document.getElementById('declto').value) && (1.0*tempdecl<temp.declbottom))&&(temp.declbottom<0))
+        { alert("WP2");return;}
+        //if(((((document.getElementById('ra').value-(temp.raright))*2*(1-document.getElementById('theoverlap').value))<0) || (((document.getElementById('ra').value*1.0)-((document.getElementById('ra').value-(temp.raright))*2*(1-document.getElementById('theoverlap').value)))<1.0*document.getElementById('rafrom').value))&&(temp.declbottom>0))
+        { alert("WP3");return;}
+      }	
       generateallonepass(temp.item,msie,((document.getElementById('ra').value-(temp.raright))*2*(1-document.getElementById('theoverlap').value)),((document.getElementById('decl').value-(temp.declbottom))*2*(1-document.getElementById('theoverlap').value)));      
     }
   };
@@ -136,9 +155,9 @@ function generateOneDetail(i,msie)
 }
 function generateoverviewallonepass(item,msie,stepra,stepdecl)
 { document.getElementById('declfrom').value=0;
-  document.getElementById('declto').value=82.99;
+  document.getElementById('declto').value=7.5;
   document.getElementById('rafrom').value=0;
-  document.getElementById('rato').value=24;
+  document.getElementById('rato').value=5;
   document.getElementById('stars').value=8;
   document.getElementById('dsos').value=10;
   document.getElementById('zoom').value=13;
