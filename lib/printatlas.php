@@ -1059,13 +1059,13 @@ class PrintAtlas
     else
       $this->gridLDinvRad($this->canvasDimensionXpx-$this->gridOffsetXpx,$this->gridOffsetYpx);
     $tempra=($this->gridLxRad/3.1415926535*12);
-    if($this->gridD0rad>0)
+    //if($this->gridD0rad>0)
       $this->gridLDinvRad(($this->canvasDimensionXpx>>1),$this->canvasDimensionYpx-$this->gridOffsetYpx);
-    else
-      $this->gridLDinvRad(($this->canvasDimensionXpx>>1),$this->gridOffsetYpx);
+    //else
+    //  $this->gridLDinvRad(($this->canvasDimensionXpx>>1),$this->gridOffsetYpx);
     return 'stepra:'.($this->gridSpanL*2).',stepdecl:'.($this->gridSpanD*2).',raright:'.$tempra.',declbottom:'.($this->gridDyRad/3.1415926535*180);
   }
-  public  function pdfAtlasObjectSets($item,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false)
+  public function pdfAtlasObjectSets($item,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false)
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject,$tmpDir;
     if($item<count($_SESSION['Qobj']))
     { $this->pdfAtlasObjectSet($_SESSION['Qobj'][$item]['objectname'],$_SESSION['Qobj'][$item]['showname'],$theSet,$thedsos,$thestars,$thephotos,$datapage,$reportlayoutselect,$ephemerides,$yearephemerides,true);
