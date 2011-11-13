@@ -7,7 +7,7 @@ else atlasPages();
 
 
 function atlasPages()
-{ global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout, $objUtil, $MSIE;
+{ global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout, $objUtil, $MSIE,$dirAstroImageCatalogs;
   echo "<script type=\"text/javascript\">";
   echo "var Langpdfseriesclickok='".Langpdfseriesclickok."';";
   echo "var Langpdfserieswhenfinished='".Langpdfserieswhenfinished."';";
@@ -36,9 +36,9 @@ function atlasPages()
 	echo "<h1>".LangAtlassesIntro04."</h1>";
 	echo "<hr />";
 	echo "<p>".LangAtlassesIntro05."</p>";
-  echo '<input type="button" class="width125px" value ="Overview" />';
-  echo '<input type="button" class="width125px" value ="Lookup" />';
-  echo '<input type="button" class="width125px" value ="Detail" />';
+  echo '<input type="button" class="width125px" value ="Overview" onclick="location.href=\''.$dirAstroImageCatalogs.'OverviewAtlas.pdf\';" />';
+  echo '<input type="button" class="width125px" value ="Lookup" onclick=alert(\'wordt geïmplementeerd\');" />';
+  echo '<input type="button" class="width125px" value ="Detail" onclick=alert(\'wordt geïmplementeerd\');" />';
 	echo "<h1>".LangAtlassesIntro06."</h1>";
 	echo "<hr />";
 	echo "<p>".LangAtlassesIntro07."</p>";
@@ -74,9 +74,9 @@ function atlasPages()
   echo 'decl: ';
 	echo '<input id="decl" name="decl" type="text" value="" size="5" class="centered"/>';
   echo '<br />';
-  echo '<input type="button" class="width125px" value ="Overview" />';
-  echo '<input type="button" class="width125px" value ="Lookup" />';
-  echo '<input type="button" class="width125px" value ="Detail" />';
+  echo '<input type="button" class="width125px" value ="Overview" onclick=alert(\'wordt geïmplementeerd\');"  />';
+  echo '<input type="button" class="width125px" value ="Lookup" onclick=alert(\'wordt geïmplementeerd\');"  />';
+  echo '<input type="button" class="width125px" value ="Detail" onclick=alert(\'wordt geïmplementeerd\');"  />';
   
   echo "<h2>"."Generate complete altas (not available in Internet Explorer)"."</h2>";
   if(!($MSIE))

@@ -143,12 +143,21 @@ function generatelookupallonepass(item,msie,stepra,stepdecl)
   document.getElementById('rato').value=24;
   document.getElementById('stars').value=11;
   document.getElementById('dsos').value=13;
-  document.getElementById('zoom').value=17;
+  document.getElementById('zoom').value=15;
   document.getElementById('ra').value=document.getElementById('rato').value;
   document.getElementById('decl').value=document.getElementById('declto').value;
   generateallonepass(item,msie,0,0);
 
 }
 function generatedetailallonepass(item,msie,stepra,stepdecl)
-{
+{ document.getElementById('declfrom').value=0;
+  document.getElementById('declto').value=88.49;
+  document.getElementById('rafrom').value=0; 
+  document.getElementById('rato').value=24;
+  document.getElementById('stars').value=15;
+  document.getElementById('dsos').value=15;
+  document.getElementById('zoom').value=17;
+  document.getElementById('ra').value=document.getElementById('rato').value;
+  document.getElementById('decl').value=document.getElementById('declto').value;
+  generateallonepass(item,msie,0,0);
 }
