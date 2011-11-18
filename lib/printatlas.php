@@ -1019,7 +1019,7 @@ class PrintAtlas
     $this->fontSize1b=max(min($objUtil->checkRequestKey('fontsize',$this->fontSize1b),9),6);
     $this->fontSize1a=round($this->fontSize1b*1.666);
         
-    $this->pdf = new Cezpdf('a4', 'landscape');
+    $this->pdf = new Cezpdf('a4', $objUtil->checkGetKey('pageorientation','landscape'));
     $this->pdf->selectFont($instDir.'lib/fonts/Courier.afm');
     $this->pdf->setLineStyle(0.5);
     $this->gridInit();

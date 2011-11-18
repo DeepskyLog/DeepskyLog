@@ -1,5 +1,8 @@
 <?php //NL
 // This is version 4.3
+define("LangpdfOrientation"             ,"Pagina orientatie: ");
+define("LangpdfOrientationPortrait"     ,"portrait");
+define("LangpdfOrientationLandscape"    ,"landscape");
 define("LangSearchMenuItem14"           ,"Beeldencatalogussen");
 define("LangSearchMenuItem13"           ,"Atlassen");
 define('LangAtlassesIntro00'            ,'General information');

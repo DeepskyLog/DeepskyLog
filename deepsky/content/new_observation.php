@@ -226,7 +226,7 @@ function new_observation()
 		$contentDiameter.="</select>&nbsp;";
 		// Misc =====================================================================================================================================================================
 	  $contentMisc1 ="<input type=\"radio\" name=\"stellarextended\" value=\"stellar\" ".(($objUtil->checkPostKey("stellarextended")=="stellar")?"checked=\"checked\" ":"")."/>" . LangViewObservationField35."&nbsp;";
-		$contentMisc1.="<input type=\"radio\" name=\"stellarextended\" value=\"extended\" ".(($objUtil->checkPostKey("stellarextended")=="extended")?"checked ":"")." />" . LangViewObservationField36."&nbsp;";
+		$contentMisc1.="<input type=\"radio\" name=\"stellarextended\" value=\"extended\" ".(($objUtil->checkPostKey("stellarextended")=="extended")?"checked=\"checked\" ":"")." />" . LangViewObservationField36."&nbsp;";
 		$contentMisc1.="<input type=\"checkbox\" name=\"mottled\" ".($objUtil->checkPostKey("mottled")?"checked ":"")."/>" . LangViewObservationField38."&nbsp;";
 	  $contentMisc2="";$contentMisc3="";$contentMisc4="";
 		if(in_array($objObject->getDsoProperty($object,'type'),array("ASTER","CLANB","OPNCL","AA1STAR","AA3STAR","AA4STAR","AA8STAR","GLOCL"))) 

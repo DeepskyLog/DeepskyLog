@@ -31,7 +31,7 @@ function atlasPages()
 	
   echo"<h1>".LangAtlassesIntro00."</h1>";
 	echo "<p>".LangAtlassesIntro01."</p>";
-	echo "<h1>".LangAtlassesIntro02."</h1>";
+	echo "<h2>".LangAtlassesIntro02."</h2>";
 	echo "<p>".LangAtlassesIntro03."</p>";
 	echo "<h1>".LangAtlassesIntro04."</h1>";
 	echo "<hr />";
@@ -42,7 +42,38 @@ function atlasPages()
 	echo "<h1>".LangAtlassesIntro06."</h1>";
 	echo "<hr />";
 	echo "<p>".LangAtlassesIntro07."</p>";
+  echo "<p>";
+  echo LangpdfOrientation;
+  echo '<input type="radio" id="pageorientationlandscape" name="pageorientation" value="landscape" />'.LangpdfOrientationLandscape;
+  echo '<input type="radio" id="pageorientationportrait" name="pageorientation" value="portrait" />'.LangpdfOrientationPortrait;
+  echo "</p>";
 	
+  echo "<h2>"."Generate one page:"."</h2>";
+  echo 'Generation ra: ';
+	echo '<input id="ra" name="ra" type="text" value="" size="5" class="centered"/>';
+  echo ' ';
+  echo 'decl: ';
+	echo '<input id="decl" name="decl" type="text" value="" size="5" class="centered"/>';
+  echo '<br />';
+  echo "<p>";
+  echo '<input type="button" class="width125px" value ="Overview" onclick="generateoneoverview(0,'.($MSIE?'\'true\'':'\'false\'').');" />';
+  echo '<input type="button" class="width125px" value ="Lookup" />';
+  echo '<input type="button" class="width125px" value ="Detail" />';
+  echo "</p>";
+  echo "<h2>"."Generate complete altas (not available in Internet Explorer)"."</h2>";
+  if(!($MSIE))
+  { echo"<p>";
+    echo "<input type=\"button\" class=\"width125px\" value=\"Overview ".LangpdfseriesButton."\" onclick=\"generateoverviewallonepass(0,".($MSIE?'true':'false').",24,180);\"/>";
+    echo "<input type=\"button\" class=\"width125px\" value=\"Lookup ".LangpdfseriesButton."\" onclick=\"generatelookupallonepass(0,".($MSIE?'true':'false').",24,180);\"/>";
+    echo "<input type=\"button\" class=\"width125px\" value=\"Detail ".LangpdfseriesButton."\" onclick=\"generatedetailallonepass(0,".($MSIE?'true':'false').",24,180);\"/>";
+    echo "</p>";
+  }
+  echo "&nbsp;"."<div id='thecounter'> &nbsp; </div>";
+  echo "<hr />";
+  $declfrom=10;
+  $declto=15;
+  $rafrom=0;
+  $rato=24;
   //echo 'Declination from: ';
 	echo '<input id="declfrom" name="declfrom" type="text" value="80" size="5" class="centered" />';
 	//echo '<br />';
@@ -67,30 +98,6 @@ function atlasPages()
 	//echo 'Zoom: ';
 	echo '<input id="zoom" name="zoom" type="text" value="16" size="5" class="centered" />';
   //echo '<br />';
-  echo "<h2>"."Generate one page:"."</h2>";
-  echo 'Generation ra: ';
-	echo '<input id="ra" name="ra" type="text" value="" size="5" class="centered"/>';
-  echo ' ';
-  echo 'decl: ';
-	echo '<input id="decl" name="decl" type="text" value="" size="5" class="centered"/>';
-  echo '<br />';
-  echo '<input type="button" class="width125px" value ="Overview" onclick=alert(\'wordt geïmplementeerd\');"  />';
-  echo '<input type="button" class="width125px" value ="Lookup" onclick=alert(\'wordt geïmplementeerd\');"  />';
-  echo '<input type="button" class="width125px" value ="Detail" onclick=alert(\'wordt geïmplementeerd\');"  />';
-  
-  echo "<h2>"."Generate complete altas (not available in Internet Explorer)"."</h2>";
-  if(!($MSIE))
-  { echo "<input type=\"button\" class=\"width125px\" value=\"Overview ".LangpdfseriesButton."\" onclick=\"generateoverviewallonepass(0,".($MSIE?'true':'false').",24,180);\"/>";
-    echo "<input type=\"button\" class=\"width125px\" value=\"Lookup ".LangpdfseriesButton."\" onclick=\"generatelookupallonepass(0,".($MSIE?'true':'false').",24,180);\"/>";
-    echo "<input type=\"button\" class=\"width125px\" value=\"Detail ".LangpdfseriesButton."\" onclick=\"generatedetailallonepass(0,".($MSIE?'true':'false').",24,180);\"/>";
-  }
-  echo "&nbsp;"."<div id='thecounter'> &nbsp; </div>";
-	echo '<br />';	
-  echo "<hr />";
-  $declfrom=10;
-  $declto=15;
-  $rafrom=0;
-  $rato=24;
   
 }
 ?>

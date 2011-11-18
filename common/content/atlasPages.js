@@ -80,58 +80,104 @@ function generateallonepass(item,msie,stepra,stepdecl)
           'decl='+document.getElementById('decl').value+'&'+
           'stars='+document.getElementById('stars').value+'&'+
           'dsos='+document.getElementById('dsos').value+'&'+
-          'zoom='+document.getElementById('zoom').value;
+          'zoom='+document.getElementById('zoom').value+'&'+
+          'pageorientation=';
+  if(document.getElementById('pageorientationportrait').checked)
+  	url+='portrait';
+  else
+  	url+='landscape';
   //alert(url);
   jsonhttp.open("GET",url,true);
   jsonhttp.send(null);	
 }
-function generateOne(i,msie)
-{ if(msie)
-  { document.location='objectsSet.pdf.php?theobject='+urlencode(document.getElementById('R'+i).title)+
-	  '&theShowname='+urlencode(document.getElementById('R'+i).value)+
-	  '&theSet='+urlencode(document.getElementById('R'+i+'Dfovs').value)+
-      '&thedsos='+urlencode(document.getElementById('R'+i+'Ddsos').value)+
-      '&thestars='+urlencode(document.getElementById('R'+i+'Dstars').value)+
-      '&thephotos='+urlencode(document.getElementById('R'+i+'Dphotos').value)+
-      '&datapage='+urlencode(document.getElementById('datapage').checked)+
-      '&ephemerides='+urlencode(document.getElementById('ephemerides').checked)+
-      '&yearephemerides='+urlencode(document.getElementById('yearephemerides').checked)+
-      (document.getElementById('indexpage').checked==true?
-      ('&reportlayoutselect='+urlencode(document.getElementById('reportlayoutselect').value)):'');
-  }
+function generateone(msie)
+{ var jsonhttp;
+  if(window.XMLHttpRequest)
+    jsonhttp=new XMLHttpRequest();
+  else if(window.activeXObject)
+    jsonhttp=new ActiveXObject("Microsoft.XMLHTTP");
   else
-    window.open('objectsSet.pdf.php?theobject='+urlencode(document.getElementById('R'+i).title)+
-    	'&theShowname='+urlencode(document.getElementById('R'+i).value)+
-        '&theSet='+urlencode(document.getElementById('R'+i+'Dfovs').value)+
-        '&thedsos='+urlencode(document.getElementById('R'+i+'Ddsos').value)+
-        '&thestars='+urlencode(document.getElementById('R'+i+'Dstars').value)+
-        '&thephotos='+urlencode(document.getElementById('R'+i+'Dphotos').value)+
-        '&datapage='+urlencode(document.getElementById('datapage').checked)+
-        '&ephemerides='+urlencode(document.getElementById('ephemerides').checked)+
-        '&yearephemerides='+urlencode(document.getElementById('yearephemerides').checked)+
-        (document.getElementById('indexpage').checked==true?
-        ('&reportlayoutselect='+urlencode(document.getElementById('reportlayoutselect').value)):''));
-  document.getElementById('thecounter').innerHTML=(LangpdfseriesGenerating+document.getElementById('R'+i).value+'.');
-  document.getElementById('T'+i).setAttribute('style','background-color:#DDDDDD;');
-  document.getElementById('R'+(i+1)).focus();
+    alert("Atlas pages are not supported on non-xmlhttp machines");
+  jsonhttp.onreadystatechange=function()
+  { if(jsonhttp.readyState==4)
+    { //alert(jsonhttp.responseText);
+	    temp=eval('('+jsonhttp.responseText+')');
+      tempra=Math.floor(document.getElementById('ra').value,0);
+      tempramin=Math.round((document.getElementById('ra').value-tempra)*60,0);
+      if(tempra<10)
+      	tempra='0'+tempra;
+      if(tempramin<10)
+      	tempramin='0'+tempramin;
+      tempdecl=Math.floor(document.getElementById('decl').value,0);
+      if(tempdecl>0)
+      { tempdeclmin=Math.round((document.getElementById('decl').value-tempdecl)*60,1);
+        if(tempdecl<10)
+      	  tempdecl='0'+tempdecl;
+        if(tempdeclmin<10)
+      	  tempdeclmin='0'+tempdeclmin;
+      }
+      else
+      { tempdeclmin=Math.round((document.getElementById('decl').value-tempdecl)*60,1);
+        tempdecl=-tempdecl;
+        if(tempdecl<10)
+    	    tempdecl='0'+tempdecl;
+        if(tempdeclmin<10)
+    	    tempdeclmin='0'+tempdeclmin;
+        tempdecl='-'+tempdecl;
+      }	
+      if(msie=='true')
+      { var mywindow=window.open("",'mywindow'+item);
+        mywindow.location='atlasPagesOnePass.pdf.php?item=0&filename='+document.getElementById('decl').value+'_'+item+'_'+document.getElementById('ra').value.substr(0,5);  
+      }  
+      else
+      	window.open('atlasPagesOnePass.pdf.php?item=0&filename='+tempdecl+'d'+tempdeclmin+'m'+'_'+tempra+'h'+tempramin+'m','');
+      //alert('cond: '+(1.0*temp.declbottom)+' '+1.0*document.getElementById('declfrom').value);
+      //if((((document.getElementById('declfrom').value*1.0<1.0*document.getElementById('declto').value) && ((1.0*document.getElementById('decl').value)<1.0*document.getElementById('declfrom').value))) || 
+      // 	 (((document.getElementById('declfrom').value*1.0>1.0*document.getElementById('declto').value) && ((1.0*document.getElementById('decl').value)>1.0*document.getElementById('declfrom').value))))     
+      //     return;
+    }
+  };
+  var url='ajaxinterface.php?instruction=atlasPages&item=0&'+
+          'ra='+document.getElementById('ra').value+'&'+
+          'decl='+document.getElementById('decl').value+'&'+
+          'stars='+document.getElementById('stars').value+'&'+
+          'dsos='+document.getElementById('dsos').value+'&'+
+          'zoom='+document.getElementById('zoom').value+'&'+
+          'pageorientation=';
+  if(document.getElementById('pageorientationportrait').checked)
+  	url+='portrait';
+  else
+  	url+='landscape';
+  //alert(url);
+  jsonhttp.open("GET",url,true);
+  jsonhttp.send(null);
 }
-function generateOneOverview(i,msie)
-{
+function generateoneoverview(i,msie)
+{ document.getElementById('stars').value=8;
+  document.getElementById('dsos').value=10;
+  document.getElementById('zoom').value=13;
+  generateone(msie);
 }
 function generateOneLookup(i,msie)
-{
+{	document.getElementById('stars').value=11;
+  document.getElementById('dsos').value=13;
+  document.getElementById('zoom').value=15;
+  generateone(msie);
 }
 function generateOneDetail(i,msie)
-{
+{ document.getElementById('stars').value=11;
+  document.getElementById('dsos').value=13;
+  document.getElementById('zoom').value=15;
+  generateone(msie);
 }
 function generateoverviewallonepass(item,msie,stepra,stepdecl)
 { document.getElementById('declfrom').value=0;
   document.getElementById('declto').value=82.99;
   document.getElementById('rafrom').value=0;
   document.getElementById('rato').value=24;
-  document.getElementById('stars').value=8;
-  document.getElementById('dsos').value=10;
-  document.getElementById('zoom').value=13;
+  document.getElementById('stars').value=15;
+  document.getElementById('dsos').value=15;
+  document.getElementById('zoom').value=17;
   document.getElementById('ra').value=document.getElementById('rato').value;
   document.getElementById('decl').value=document.getElementById('declto').value;
   generateallonepass(item,msie,0,0);
