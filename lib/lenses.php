@@ -16,7 +16,7 @@ class Lenses
     return $objDatabase->selectSinleArray("SELECT id FROM lenses WHERE name = \"".$objDatabase->selectSingleValue("SELECT name FROM lenses WHERE id = \"".$id."\"")."\"");
   }
   public  function getLensId($name, $observer)                                    // returns the id for this lens
-  { global $objDatabase; return $objDatabase->selectSingleValue("SELECT id FROM lenses where name=\"".htmlentities($name,ENT_COMPAT,"ISO-8859-15",0)."\" and observer=\"".$observer."\"",'id',-1);
+  { global $objDatabase; return $objDatabase->selectSingleValue("SELECT id FROM lenses where name=\"".$name."\" and observer=\"".$observer."\"",'id',-1);
   }
   public  function getLensObserverPropertyFromName($name, $observer, $property) // returns the property for the eyepiece of the observer
   { global $objDatabase; 

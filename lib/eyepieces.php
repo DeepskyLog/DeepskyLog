@@ -16,7 +16,7 @@ class Eyepieces
    return $objDatabase->selectSingleArray("SELECT id FROM eyepieces WHERE name=".$objDatabase->selectSingleValue("SELECT name FROM eyepieces WHERE id = \"".$id."\"",'name'),'id');
  }
  public  function getEyepieceId($name, $observer)                                    // returns the id for this eyepiece
- { global $objDatabase; return $objDatabase->selectSingleValue("SELECT id FROM eyepieces where name=\"".htmlentities($name,ENT_COMPAT,"ISO-8859-15",0)."\" and observer=\"".$observer."\"",'id',-1);
+ { global $objDatabase; return $objDatabase->selectSingleValue("SELECT id FROM eyepieces where name=\"".$name."\" and observer=\"".$observer."\"",'id',-1);
  }
  public  function getEyepieceObserverPropertyFromName($name, $observer, $property)   // returns the property for the eyepiece of the observer
  { global $objDatabase; 

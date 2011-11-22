@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <languages xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="languages.xsd">
 <lang code="bg" name_en="Bulgarian" name_fr="Bulgare" name_de="Bulgarisch" name_nl="Bulgaars" />
 <lang code="cs" name_en="Czech" name_fr="Tcheque" name_de="Tschechisch" name_nl="Tsjechisch" />

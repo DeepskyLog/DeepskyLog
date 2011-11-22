@@ -58,9 +58,10 @@ function add_xml_observations()
 	    $tmpObserverArray = Array();
 	    // Get the id and the name of the observers in the comast file
 	    $comastid = $observer->getAttribute("id");
-	    $name = $observer->getElementsByTagName( "name" )->item(0)->nodeValue;
+	    $name = htmlentities(utf8_decode($observer->getElementsByTagName( "name" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
+
 	    $tmpObserverArray['name'] = $name;
-	    $surname = $observer->getElementsByTagName( "surname" )->item(0)->nodeValue;
+	    $surname = htmlentities(utf8_decode($observer->getElementsByTagName( "surname" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
 	    $tmpObserverArray['surname'] = $surname;
 	    
 	    if ($observer->getElementsByTagName( "fstOffset" )->item(0)) {
@@ -447,8 +448,8 @@ function add_xml_observations()
 	    $siteInfoArray = Array();
 	    $siteid = $site->getAttribute("id");
 	
-	    $siteInfoArray["name"] = $site->getElementsByTagName( "name" )->item(0)->nodeValue;
-	
+	    $siteInfoArray["name"] = htmlentities(utf8_decode($site->getElementsByTagName( "name" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
+
 	    // Get longitude and convert it to degrees
 	    $unit = $site->getElementsByTagName( "longitude" )->item(0)->getAttribute("unit");
 	    if ($unit == "deg") {
@@ -476,42 +477,12 @@ function add_xml_observations()
 	    $siteInfoArray["latitude"] = $latitude;
 	
 	    // Get the timezone
-	    $timezone = $site->getElementsByTagName( "timezone" )->item(0)->nodeValue;
-	
-	    if ($timezone == 0) {
-	      $siteInfoArray["timezone"] = "UTC";
-	    } else if ($timezone == -570) {
-	      $siteInfoArray["timezone"] = "Pacific/Marquesas";
-	    } else if ($timezone == -270) {
-	      $siteInfoArray["timezone"] = "America/Caracas";
-	    } else if ($timezone == -210) {
-	      $siteInfoArray["timezone"] = "America/St_Johns";
-	    } else if ($timezone == 210) {
-	      $siteInfoArray["timezone"] = "Asia/Tehran";
-	    } else if ($timezone == 270) {
-	      $siteInfoArray["timezone"] = "Asia/Kabul";
-	    } else if ($timezone == 330) {
-	      $siteInfoArray["timezone"] = "Asia/Colombo";
-	    } else if ($timezone == 345) {
-	      $siteInfoArray["timezone"] = "Asia/Katmandu";
-	    } else if ($timezone == 390) {
-	      $siteInfoArray["timezone"] = "Asia/Rangoon";
-	    } else if ($timezone == 525) {
-	      $siteInfoArray["timezone"] = "Australia/Eucla";
-	    } else if ($timezone == 570) {
-	      $siteInfoArray["timezone"] = "Australia/Broken_Hill";
-	    } else if ($timezone == 630) {
-	      $siteInfoArray["timezone"] = "Australia/Lord_Howe";
-	    } else if ($timezone == 690) {
-	      $siteInfoArray["timezone"] = "Pacific/Norfolk";
-	    } else if ($timezone == 765) {
-	      $siteInfoArray["timezone"] = "Pacific/Chatham";
-	    } else if ($timezone > 0) {
-	      $siteInfoArray["timezone"] = "Etc/GMT+" . ($timezone / 60);
-	    } else if ($timezone < 0) {
-	      $siteInfoArray["timezone"] = "Etc/GMT" . ($timezone / 60);
-	    }
-	
+      $xmlfile2 = "http://ws.geonames.org/timezone?lat=" . $latitude . "&lng=" . $longitude;
+      $timezones = simplexml_load_file($xmlfile2);
+
+      $siteInfoArray["timezone"] = $timezones->timezone->timezoneId;
+      $siteInfoArray["country"] = $timezones->timezone->countryName;
+
 	    $siteArray[$siteid] = $siteInfoArray;
 	  }
 	
@@ -574,17 +545,17 @@ function add_xml_observations()
 	    
 	    // Get weather
 	    if ($session->getElementsByTagName( "weather" )->item(0)) {
-	      $sessionInfoArray["weather"] = $session->getElementsByTagName("weather")->item(0)->nodeValue;
+	      $sessionInfoArray["weather"] = htmlentities(utf8_decode($session->getElementsByTagName("weather")->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
 	    }
 	    
       // Get the equipment
 	    if ($session->getElementsByTagName( "equipment" )->item(0)) {
-	      $sessionInfoArray["equipment"] = $session->getElementsByTagName("equipment")->item(0)->nodeValue;
+	      $sessionInfoArray["equipment"] = htmlentities(utf8_decode($session->getElementsByTagName("equipment")->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
 	    }
 	
       // Get the comments
 	    if ($session->getElementsByTagName( "comments" )->item(0)) {
-	      $sessionInfoArray["comments"] = $session->getElementsByTagName("comments")->item(0)->nodeValue;
+	      $sessionInfoArray["comments"] = htmlentities(utf8_decode($session->getElementsByTagName("comments")->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
 	    }
 	    
 	    // We don't use the image tag of the session element to import, only to export
@@ -603,7 +574,7 @@ function add_xml_observations()
 	    $scopeInfoArray = Array();
 	    $scopeid = $scope->getAttribute("id");
 	
-	    $scopeInfoArray["name"] = $scope->getElementsByTagName( "model" )->item(0)->nodeValue;
+	    $scopeInfoArray["name"] = htmlentities(utf8_decode($scope->getElementsByTagName( "model" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
 	    $scopeInfoArray["diameter"] = $scope->getElementsByTagName( "aperture" )->item(0)->nodeValue;
 	
 	    $tp =  $scope->getAttribute("xsi:type");
@@ -663,7 +634,7 @@ function add_xml_observations()
 	    $eyepieceid = $eyepiece->getAttribute("id");
 	
 	
-	    $eyepieceInfoArray["name"] = $eyepiece->getElementsByTagName( "model" )->item(0)->nodeValue;
+	    $eyepieceInfoArray["name"] = htmlentities(utf8_decode($eyepiece->getElementsByTagName( "model" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);;
 	    $eyepieceInfoArray["focalLength"] = $eyepiece->getElementsByTagName( "focalLength" )->item(0)->nodeValue;
 	
 	    // Check if the maximal focal length exists. If so, we are using a zoom eyepiece
@@ -701,7 +672,7 @@ function add_xml_observations()
 	    $lensid = $lens->getAttribute("id");
 	
 	
-	    $lensInfoArray["name"] = $lens->getElementsByTagName( "model" )->item(0)->nodeValue;
+	    $lensInfoArray["name"] = htmlentities(utf8_decode($lens->getElementsByTagName( "model" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
 	    $lensInfoArray["factor"] = $lens->getElementsByTagName( "factor" )->item(0)->nodeValue;
 	
 	    $lensArray[$lensid] = $lensInfoArray;
@@ -718,7 +689,7 @@ function add_xml_observations()
 	    $filterInfoArray = Array();
 	    $filterid = $filter->getAttribute("id");
 	
-	    $filterInfoArray["name"] = $filter->getElementsByTagName( "model" )->item(0)->nodeValue;
+	    $filterInfoArray["name"] = htmlentities(utf8_decode($filter->getElementsByTagName( "model" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
 	    $type = $filter->getElementsByTagName( "type" )->item(0)->nodeValue;
 	
 	    if ($type == "other") {
@@ -824,9 +795,9 @@ function add_xml_observations()
 	    $site = $siteArray[$sessionArray[$key]['site']]["name"];
 	
 	    $sa = $siteArray[$sessionArray[$key]['site']];
-	    if (count($objDatabase->selectRecordArray("SELECT * from locations where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $site)) . "\";")) > 0) {
+	    if (count($objDatabase->selectRecordArray("SELECT * from locations where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $site . "\";")) > 0) {
 	      // Update the coordinates
-	      $run = $objDatabase->selectRecordset("SELECT id FROM locations WHERE observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $site)) . "\";");
+	      $run = $objDatabase->selectRecordset("SELECT id FROM locations WHERE observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $site . "\";");
 	      $get=mysql_fetch_object($run);
 	
 	      $locId = $get->id;
@@ -834,9 +805,10 @@ function add_xml_observations()
 	      $objLocation->setLocationProperty($locId, "longitude", $sa["longitude"]);
 	      $objLocation->setLocationProperty($locId, "latitude", $sa["latitude"]);
 	      $objLocation->setLocationProperty($locId, "timezone", $sa["timezone"]);
+	      $objLocation->setLocationProperty($locId, "country", $sa["country"]);
 	    } else {
 	      // Add the new site!
-	      $locId = $objLocation->addLocation(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $sa["name"])), $sa["longitude"], $sa["latitude"], "", "", $sa["timezone"]);
+	      $locId = $objLocation->addLocation($sa["name"], $sa["longitude"], $sa["latitude"], "", $sa["country"], $sa["timezone"]);
 	      $objDatabase->execSQL("update locations set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $locId . "\";");
 	    }
 
@@ -893,11 +865,11 @@ function add_xml_observations()
 	    if ($observerid == $id) {
 	      // Check if the site already exists in DeepskyLog
 	      $site = $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue]["name"];
-	
 	      $sa = $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue];
-	      if (count($objDatabase->selectRecordArray("SELECT * from locations where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $site)) . "\";")) > 0) {
+
+	      if (count($objDatabase->selectRecordArray("SELECT * from locations where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $site . "\";")) > 0) {
 	        // Update the coordinates
-	        $run = $objDatabase->selectRecordset("SELECT id FROM locations WHERE observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $site)) . "\";");
+	        $run = $objDatabase->selectRecordset("SELECT id FROM locations WHERE observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $site . "\";");
 	        $get=mysql_fetch_object($run);
 	
 	        $locId = $get->id;
@@ -907,7 +879,7 @@ function add_xml_observations()
 	        $objLocation->setLocationProperty($locId, "timezone", $sa["timezone"]);
 	      } else {
 	        // Add the new site!
-	        $locId = $objLocation->addLocation(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $sa["name"])), $sa["longitude"], $sa["latitude"], "", "", $sa["timezone"]);
+	        $locId = $objLocation->addLocation($sa["name"], $sa["longitude"], $sa["latitude"], "", $sa["country"], $sa["timezone"]);
 	        $objDatabase->execSQL("update locations set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $locId . "\";");
 	      }
 		
@@ -917,29 +889,28 @@ function add_xml_observations()
 	        $instrument = $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue]["name"];
 	        $ia = $scopeArray[$observation->getElementsByTagName( "scope" )->item(0)->nodeValue];
 	
-	        if (count($objDatabase->selectRecordArray("SELECT * from instruments where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $instrument)) . "\";")) > 0) {
+	        if (count($objDatabase->selectRecordArray("SELECT * from instruments where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $instrument . "\";")) > 0) {
 	          // Update
-	          $instId = $objInstrument->getInstrumentId(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $ia["name"])), $_SESSION['deepskylog_id']);
+	          $instId = $objInstrument->getInstrumentId($ia["name"], $_SESSION['deepskylog_id']);
 	     
-	          $objInstrument->setInstrumentProperty($instId, "name", htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $ia["name"])));
+	          $objInstrument->setInstrumentProperty($instId, "name", $ia["name"]);
 	          $objInstrument->setInstrumentProperty($instId, "diameter", $ia["diameter"]);
 	          $objInstrument->setInstrumentProperty($instId, "fd", $ia["fd"]);
 	          $objInstrument->setInstrumentProperty($instId, "type", $ia["type"]);
 	          $objInstrument->setInstrumentProperty($instId, "fixedMagnification", $ia["fixedMagnification"]);
 	        } else {
 	          // Add the new instrument!
-	          $instId = $objInstrument->addInstrument(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $ia["name"])), $ia["diameter"], $ia["fd"], $ia["type"], $ia["fixedMagnification"], $_SESSION['deepskylog_id']);
+	          $instId = $objInstrument->addInstrument($ia["name"], $ia["diameter"], $ia["fd"], $ia["type"], $ia["fixedMagnification"], $_SESSION['deepskylog_id']);
 	        }
 	      } else {
 	        // No scope defined, so this is a naked eye observation
 	        $instrument = "Naked eye";
-	        $instrument = html_entity_decode($instrument, ENT_COMPAT, "ISO-8859-15");
 	        
-	        if (count($objDatabase->selectRecordArray("SELECT * from instruments where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $instrument)) . "\";")) > 0) {
-	          $instId = $objInstrument->getInstrumentId(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $instrument)), $_SESSION['deepskylog_id']);
+	        if (count($objDatabase->selectRecordArray("SELECT * from instruments where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $instrument . "\";")) > 0) {
+	          $instId = $objInstrument->getInstrumentId($instrument, $_SESSION['deepskylog_id']);
 	        } else {
 	          // Add the new instrument!
-	          $instId = $objInstrument->addInstrument(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $instrument)), 7, 1, 0, 1, $_SESSION['deepskylog_id']);
+	          $instId = $objInstrument->addInstrument($instrument, 7, 1, 0, 1, $_SESSION['deepskylog_id']);
 	        } 
 	      }
 
@@ -949,17 +920,17 @@ function add_xml_observations()
 	        $filter = $filterArray[$observation->getElementsByTagName( "filter" )->item(0)->nodeValue]["name"];
 	
 	        $fa = $filterArray[$observation->getElementsByTagName( "filter" )->item(0)->nodeValue];
-	        if (count($objDatabase->selectRecordArray("SELECT * from filters where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $filter)) . "\";")) > 0) {
+	        if (count($objDatabase->selectRecordArray("SELECT * from filters where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $filter . "\";")) > 0) {
 	          // Update the filter
-	          $filtId = $objFilter->getFilterId(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $fa["name"])), $_SESSION['deepskylog_id']);
-	          $objFilter->setFilterProperty($filtId, "name", htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $fa["name"])));
+	          $filtId = $objFilter->getFilterId($fa["name"], $_SESSION['deepskylog_id']);
+	          $objFilter->setFilterProperty($filtId, "name", $fa["name"]);
 	          $objFilter->setFilterProperty($filtId, "type", $fa["type"]);
 	          $objFilter->setFilterProperty($filtId, "color", $fa["color"]);
 	          $objFilter->setFilterProperty($filtId, "wratten", $fa["wratten"]);
 	          $objFilter->setFilterProperty($filtId, "schott", $fa["schott"]);
 	        } else {
 	          // Add the new filter!
-	          $filtId = $objFilter->addFilter(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $fa["name"])), $fa["type"], $fa["color"], $fa["wratten"], $fa["schott"]);
+	          $filtId = $objFilter->addFilter($fa["name"], $fa["type"], $fa["color"], $fa["wratten"], $fa["schott"]);
 	          $objDatabase->execSQL("update filters set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $filtId . "\";");
 	        }
 	      }
@@ -972,36 +943,35 @@ function add_xml_observations()
 	
 	        $ea = $eyepieceArray[$observation->getElementsByTagName( "eyepiece" )->item(0)->nodeValue];
 	
-	        if (count($objDatabase->selectRecordArray("SELECT * from eyepieces where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $ea["name"])) . "\";")) > 0) {
+	        if (count($objDatabase->selectRecordArray("SELECT * from eyepieces where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $ea["name"] . "\";")) > 0) {
 	          // Update the eyepiece
-	          $eyepId = $objEyepiece->getEyepieceId(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $ea["name"])), $_SESSION['deepskylog_id']);
-	          $objEyepiece->setEyepieceProperty($eyepId, "name", htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $ea["name"])));
+	          $eyepId = $objEyepiece->getEyepieceId($ea["name"], $_SESSION['deepskylog_id']);
+	          $objEyepiece->setEyepieceProperty($eyepId, "name", $ea["name"]);
 	          $objEyepiece->setEyepieceProperty($eyepId, "focalLength", $ea["focalLength"]);
 	          $objEyepiece->setEyepieceProperty($eyepId, "apparentFOV", $ea["apparentFOV"]);
 	          $objEyepiece->setEyepieceProperty($eyepId, "maxFocalLength", $ea["maxFocalLength"]);
 	        } else {
 	          // Add the new eyepiece!
-	          $eyepId = $objEyepiece->addEyepiece(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $ea["name"])), $ea["focalLength"], $ea["apparentFOV"]);
+	          $eyepId = $objEyepiece->addEyepiece($ea["name"], $ea["focalLength"], $ea["apparentFOV"]);
 	          $objDatabase->execSQL("update eyepieces set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $eyepId . "\";");
 	          $objEyepiece->setEyepieceProperty($eyepId, "maxFocalLength", $ea["maxFocalLength"]);
 	        }
 	      }
 	
-	      
 	      // Lens is not mandatory
 	      if ($observation->getElementsByTagName( "lens" )->item(0)) {
 	        // Check if the eyepiece already exists in DeepskyLog
 	        $lens = $lensArray[$observation->getElementsByTagName( "lens" )->item(0)->nodeValue]["name"];
 	
 	        $la = $lensArray[$observation->getElementsByTagName( "lens" )->item(0)->nodeValue];
-	        if (count($objDatabase->selectRecordArray("SELECT * from lenses where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $lens)) . "\";")) > 0) {
+	        if (count($objDatabase->selectRecordArray("SELECT * from lenses where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $lens . "\";")) > 0) {
 	          // Update the lens
-	          $lensId = $objLens->getLensId(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $la["name"])), $_SESSION['deepskylog_id']);
-	          $objLens->setLensProperty($lensId, "name", htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $la["name"])));
+	          $lensId = $objLens->getLensId($la["name"], $_SESSION['deepskylog_id']);
+	          $objLens->setLensProperty($lensId, "name", $la["name"]);
 	          $objLens->setLensProperty($lensId, "factor", $la["factor"]);
 	        } else {
 	          // Add the new lens!
-	          $lensId = $objLens->addLens(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $la["name"])), $la["factor"]);
+	          $lensId = $objLens->addLens($la["name"], $la["factor"]);
 	          $objDatabase->execSQL("update lenses set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $lensId . "\";");
 	        }
 	      }
@@ -1017,8 +987,8 @@ function add_xml_observations()
 	        $objeId = -1;
 	        // Check if the object with the given name exists. If this is the case, set the objeId, else check the alternative names
 	        $targetName = $objCatalog->checkObject($targetName);
-	        if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $targetName)) . "\");")) > 0) {
-	          $objeId = $objObject->getDsObjectName(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $targetName)));
+	        if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\");")) > 0) {
+	          $objeId = $objObject->getDsObjectName($targetName);
 	        } else {
 	          // Object with the given name does not exist... Check if the name is an alternative name
 	          for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
@@ -1055,7 +1025,7 @@ function add_xml_observations()
 	                $aliasNames = explode(" ", $aliasName);
 	                $objObject->newAltName($names[0]." ".$names[1], $aliasNames[0], $aliasNames[1]);
 	              }
-	              $objeId = $objObject->getDsObjectName(htmlentities(iconv("UTF-8", "ISO-8859-1//TRANSLIT", $targetName)));
+	              $objeId = $objObject->getDsObjectName($targetName);
 	              $body="<OAL>" . LangValidateAccountEmailTitleObject." ".$targetName." ". "www.deepskylog.org/index.php?indexAction=detail_object&object=".urlencode($targetName)." ".
 	                    LangValidateAccountEmailTitleObjectObserver." ".$objObserver->getObserverProperty($loggedUser,'name')." ".$objObserver->getObserverProperty($loggedUser,'firstname')." www.deepskylog.org/index.php?indexAction=detail_observer&user=".urlencode($loggedUser);
 	              if(isset($developversion)&&($developversion==1))
@@ -1089,7 +1059,7 @@ function add_xml_observations()
 	            // New observation
 	            $resultNode = $observation->getElementsByTagName("result")->item(0);
 	            if ($resultNode->getElementsByTagName( "description" )->item(0)) {
-	              $description = $resultNode->getElementsByTagName( "description" )->item(0)->nodeValue;
+	              $description = utf8_decode($resultNode->getElementsByTagName( "description" )->item(0)->nodeValue);
 	            } else {
 	              $description = "";
 	            }

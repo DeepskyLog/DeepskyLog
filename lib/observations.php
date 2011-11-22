@@ -18,11 +18,11 @@ class Observations {
 		for($i=0;$i<count($parts_array);$i++)
 		{ $objects[$i]     = htmlentities($objUtil->checkArrayKey($parts_array[$i],0,''));
 		  $dates[$i]       = htmlentities($objUtil->checkArrayKey($parts_array[$i],2,''));
-		  $locations[$i]   = htmlentities($objUtil->checkArrayKey($parts_array[$i],4,''));
-		  $instruments[$i] = htmlentities($objUtil->checkArrayKey($parts_array[$i],5,''));
-		  $filters[$i]     = htmlentities($objUtil->checkArrayKey($parts_array[$i],7,''));
-		  $eyepieces[$i]   = htmlentities($objUtil->checkArrayKey($parts_array[$i],6,''));
-		  $lenses[$i]      = htmlentities($objUtil->checkArrayKey($parts_array[$i],8,''));
+		  $locations[$i]   = htmlentities($objUtil->checkArrayKey($parts_array[$i],4,''),ENT_COMPAT,"UTF-8", 0);
+		  $instruments[$i] = htmlentities($objUtil->checkArrayKey($parts_array[$i],5,''),ENT_COMPAT,"UTF-8", 0);
+		  $filters[$i]     = htmlentities($objUtil->checkArrayKey($parts_array[$i],7,''),ENT_COMPAT,"UTF-8", 0);
+		  $eyepieces[$i]   = htmlentities($objUtil->checkArrayKey($parts_array[$i],6,''),ENT_COMPAT,"UTF-8", 0);
+		  $lenses[$i]      = htmlentities($objUtil->checkArrayKey($parts_array[$i],8,''),ENT_COMPAT,"UTF-8", 0);
 		}
 		if(!is_array($objects))
 		 throw new Exception(LangInvalidCSVfile);
@@ -49,7 +49,7 @@ class Observations {
 		      $correctedObjects[$i]=$objectsquery;
 		  }
 			// Check for existence of locations
-		  for($i= 0,$j=0,$temploc='';$i<count($locations);$i++)
+		  for($i= 0,$j=0,$temploc='';$i<count($locations);$i++) 
 		    if((!trim($locations[$i]))||($temploc!=trim($locations[$i]))&&($objLocation->getLocationId(trim($locations[$i]),$loggedUser)==-1))
 		    { if(!in_array($locations[$i],$locationsMissing))
 		        $locationsMissing[$j++]=trim($locations[$i]);
@@ -58,6 +58,7 @@ class Observations {
 		    }
 			  else
 				  $temploc=trim($locations[$i]);
+
 		  // Check for existence of instruments
 		  for($i=0,$j=0,$tempinst='';$i<count($instruments);$i++)
 		    if((!trim($instruments[$i]))||($objInstrument->getInstrumentId(trim($instruments[$i]),$loggedUser)==-1))
@@ -172,8 +173,9 @@ class Observations {
 		  { if(!in_array($i,$errorlist))
 		    { $observername=$objObserver->getObserverProperty(htmlentities(trim($parts_array[$i][1])),'firstname'). " ".$objObserver->getObserverProperty(htmlentities(trim($parts_array[$i][1])),'name');
 		      if(trim($parts_array[$i][1])==$username)
-		      { $instrum=$objInstrument->getInstrumentId(htmlentities(trim($parts_array[$i][5])), $loggedUser);
-		        $locat  =$objLocation->getLocationId(htmlentities(trim($parts_array[$i][4])), $loggedUser);
+		      { $instrum=$objInstrument->getInstrumentId(htmlentities(trim($parts_array[$i][5]),ENT_COMPAT,"UTF-8", 0), $loggedUser);
+            $locat  =$objLocation->getLocationId(htmlentities(trim($parts_array[$i][4]),ENT_COMPAT,"UTF-8", 0), $loggedUser);
+
 		        $dates  =sscanf(trim($parts_array[$i][2]), "%2d%c%2d%c%4d");
 		        $date   =sprintf("%04d%02d%02d", $dates[4], $dates[2], $dates[0]);
 		        if($parts_array[$i][3])
@@ -1006,7 +1008,7 @@ class Observations {
 				$explantation1=LangOverviewObservations16." ".($seen=$objObject->getseen($value['objectname']));
 				if(($LOid=$this->getLOObservationId($value['objectname'], $loggedUser, $value['observationid']))&&($lco=="O"))
 				{ $LOdescription=$objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
-				  $LOinstrumentId=$this->getDsObservationProperty($LOid,'instrumentid');
+          $LOinstrumentId=$this->getDsObservationProperty($LOid,'instrumentid');
 					$LOinstrument=$objInstrument->getInstrumentPropertyFromId($LOinstrumentId,'name');
 					$LOinstrumentsize=round($objInstrument->getInstrumentPropertyFromId($LOinstrumentId,'diameter'), 0);
 				} 
@@ -1255,7 +1257,7 @@ class Observations {
     $file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
     $moon = "<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" />";
     $objPresentations->line(array($moon), "R", array(100), 50, array("type20"));
-
+		                     
     if(in_array($objObject->getDsoProperty($object,'type'),array("DS","AA2STAR"))) {
       $objPresentations->line(array(LangViewObservationField22,
 		                     (($visibility=$this->getDsObservationProperty($LOid,'visibility'))?$GLOBALS['VisibilityDS'.$visibility]:"-"),

@@ -51,11 +51,11 @@ class Utils
   public  function __construct()
 	{ foreach($_POST as $foo => $bar) {
 	    if (!is_array($_POST[$foo])) {
-	      $_POST[$foo]=htmlentities(stripslashes($bar),ENT_COMPAT,"ISO-8859-15",0);
-	    }
-	  }
-    foreach($_GET as $foo => $bar)
-      $_GET[$foo] =htmlentities(stripslashes($bar),ENT_COMPAT,"ISO-8859-15",0);
+	      $_POST[$foo]=htmlentities(stripslashes($bar),ENT_COMPAT,"UTF-8",0);
+	    }    foreach($_GET as $foo => $bar) {
+      $_GET[$foo] =htmlentities(stripslashes($bar),ENT_COMPAT,"UTF-8",0);
+   }
+",0);
   }
   public  function argoObjects($result)  // Creates an argo navis file from an array of objects
   { global $objObserver,$loggedUser,$objPresentations,$objAtlas;

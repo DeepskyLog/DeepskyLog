@@ -69,7 +69,6 @@ class Sessions
                                 $language, $observers, $sessionid)
   { global $objDatabase, $loggedUser, $dateformat;
     // Make sure not to insert bad code in the database
-    $name = html_entity_decode($sessionname, ENT_COMPAT, "ISO-8859-15");
 		$name = preg_replace("/(\")/", "", $name);
 		$name = preg_replace("/;/", ",", $name);
 
@@ -86,15 +85,12 @@ class Sessions
 		  }
 		}
 		
-		$weather = html_entity_decode($weather, ENT_COMPAT, "ISO-8859-15");
 		$weather = preg_replace("/(\")/", "", $weather);
 		$weather = preg_replace("/;/", ",", $weather);
 		
-    $equipment = html_entity_decode($equipment, ENT_COMPAT, "ISO-8859-15");
 		$equipment = preg_replace("/(\")/", "", $equipment);
 		$equipment = preg_replace("/;/", ",", $equipment);
 		
-    $comments = html_entity_decode($comments, ENT_COMPAT, "ISO-8859-15");
 		$comments = preg_replace("/(\")/", "", $comments);
 		$comments = preg_replace("/;/", ",", $comments);
 

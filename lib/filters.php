@@ -79,7 +79,7 @@ class Filters
 	 return "-";
  }
  public  function getFilterId($name, $observer)                                         // returns the id for this instrument
- { global $objDatabase; return $objDatabase->selectSingleValue("SELECT id FROM filters where name=\"".htmlentities($name,ENT_COMPAT,"ISO-8859-15",0)."\" and observer=\"".$observer."\"",'id',-1);
+ { global $objDatabase; return $objDatabase->selectSingleValue("SELECT id FROM filters where name=\"".$name."\" and observer=\"".$observer."\"",'id',-1);
  }
  public  function getFilterObserverPropertyFromName($name, $observer, $property)        // returns the property for the filter of the observer
  { global $objDatabase; 
