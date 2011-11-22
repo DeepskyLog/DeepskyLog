@@ -9,7 +9,7 @@ elseif(!$loggedUser) throw new Exception(LangException002);
 else add_xml_observations();
 
 function add_xml_observations()
-{ global $baseURL,$entryMessage,$objSession,$mailTo,$mailFrom,
+{ global $baseURL,$entryMessage,$objSession,$mailTo,$mailFrom,$loggedUser,
          $objObject,$objCatalog,$objLocation,$objInstrument,$objFilter,$objEyepiece,$objLens,$objDatabase,$objObserver,$objObservation;
 	if($_FILES['xml']['tmp_name']!="") {
 	  $xmlfile=$_FILES['xml']['tmp_name'];
