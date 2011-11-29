@@ -117,7 +117,7 @@ function change_session()
   echo "<div id=\"main\">";  
   $objPresentations->line(array("<h4>".LangChangeSessionTitle."&nbsp;<span class=\"requiredField\">".LangRequiredFields."</span>"."</h4>"),"L",array(),30);
 	echo "<hr />";
-	echo "<form id=\"sessionForm\" action=\"".$baseURL."index.php\" method=\"post\"><div>";
+	echo "<form id=\"sessionForm\" enctype=\"multipart/form-data\" action=\"".$baseURL."index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_session\" />";
   echo "<input type=\"hidden\" name=\"sessionid\" value=\"". $objUtil->checkRequestKey('sessionid') . "\" />";
   if ($objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'), "active") == 0) {
