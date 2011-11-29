@@ -20,7 +20,7 @@ class Sessions
     return $objDatabase->selectRecordsetArray("SELECT * FROM sessions WHERE observerid=\"".$user."\"");
   }
   public  function validateSession() 
-  { global $loggedUser;
+  { global $loggedUser, $instDir, $_FILES;
 		if(!($loggedUser))
 			throw new Exception(LangMessageNotLoggedIn);
 
@@ -45,13 +45,11 @@ class Sessions
 		    $observers[] = $k;
 		  }
 		}
-		$this->addSession($_POST['sessionname'], $_POST['beginday'], $_POST['beginmonth'], $_POST['beginyear'], 
+		$current_session = $this->addSession($_POST['sessionname'], $_POST['beginday'], $_POST['beginmonth'], $_POST['beginyear'], 
 		                  $_POST['beginhours'], $_POST['beginminutes'], $_POST['endday'], $_POST['endmonth'], 
 		                  $_POST['endyear'], $_POST['endhours'], $_POST['endminutes'], $_POST['site'], $_POST['weather'], 
 		                  $_POST['equipment'], $_POST['comments'], $_POST['description_language'], $observers, -1);
 
-		// TODO : TEST
-		// TODO : Make sure to also add this picture to the other sessions
 		if ($_FILES['picture']['tmp_name'] != "") // picture to upload
 		{ 
 		  $upload_dir = $instDir . 'deepsky/sessions';
@@ -60,7 +58,7 @@ class Sessions
 		  $destination_image = $upload_dir . "/" . $current_session . "_resized.jpg";
 		  require_once $instDir . "common/control/resize.php"; // resize code
 		  $new_image = image_createThumb($original_image, $destination_image,490,490,100);
-		  move_uploaded_file($_FILES['drawing']['tmp_name'], $upload_dir . "/" . $current_session . ".jpg");
+		  move_uploaded_file($_FILES['picture']['tmp_name'], $upload_dir . "/" . $current_session . ".jpg");
 		}		
   }
   
@@ -69,7 +67,7 @@ class Sessions
                                 $language, $observers, $sessionid)
   { global $objDatabase, $loggedUser, $dateformat;
     // Make sure not to insert bad code in the database
-		$name = preg_replace("/(\")/", "", $name);
+		$name = preg_replace("/(\")/", "", $sessionname);
 		$name = preg_replace("/;/", ",", $name);
 
 		$begindate = date('Y-m-d H:i:s', mktime($beginhours, $beginminutes, 0, $beginmonth, $beginday, $beginyear));
@@ -135,13 +133,12 @@ class Sessions
 		} else {
 		  // First add a new session with the observer which created the session (and set to active)
 		  $objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \""  . $loggedUser . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 1)");
-
+		  $sessionid = $objDatabase->selectSingleValue("SELECT id FROM sessions ORDER BY id DESC LIMIT 1", 'id');
 		  // Get the id of the new session
-		  $id = mysql_insert_id();
-
+		  
 		  for ($i=1;$i<count($observers);$i++) {
 		    // Add the observers to the sessionObservers table
-		    $this->addObserver($id, $observers[$i]);
+		    $this->addObserver($sessionid, $observers[$i]);
 
 		    // Add the new session also for the other observers (and set to inactive)
         $objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers[$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)");
@@ -153,8 +150,9 @@ class Sessions
 		      }
 		    }
       }
-      $this->addObservations($id, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
+      $this->addObservations($sessionid, $beginyear, $beginmonth, $beginday, $endyear, $endmonth, $endday, $observers);
 		}
+		return $sessionid;
   }
 
 	private  function addObserver($id, $observer) 
@@ -180,6 +178,7 @@ class Sessions
 	  $begindate = sprintf("%4d%02d%02d", $beginyear, $beginmonth, $beginday);
     $enddate = sprintf("%4d%02d%02d", $endyear, $endmonth, $endday);
     // Add all observations to the sessionObservations table
+    
     for ($i=0;$i<count($observers);$i++) {
 		  // Select the observations of the observers in this session 
 		  $obsids = $objDatabase->selectSingleArray("SELECT id from observations where observerid=\"" . $observers[$i] . "\" and date>=\"" . $begindate . "\" and date<=\"" . $enddate . "\";", "id");
@@ -322,7 +321,8 @@ class Sessions
  }
  
   public  function showListSessions($sessions, $min, $max, $link, $link2, $step=25)
-  { global $baseURL,$loggedUser,$objUtil,$objDatabase,$objLocation,$objPresentations,$loggedUserName, $objObserver;
+  { global $baseURL,$loggedUser,$objUtil,$objDatabase,$objLocation,$objPresentations,$loggedUserName, $objObserver, 
+            $instDir;
     if($sessions!=null)
     {
       echo "<table>";
@@ -332,6 +332,7 @@ class Sessions
       $objPresentations->tableSortHeader(LangAddSessionField3a, $link2 . "&amp;sort=enddate");
       $objPresentations->tableSortHeader(LangAddSessionField4a, $link2 . "&amp;sort=location");
       echo "<td class=\"centered\">" . LangAddSessionField5a ."</td>";
+      echo "<td class=\"centered\">" . LangAddSessionField12 ."</td>";
       $objPresentations->tableSortHeader("", $link2 . "&amp;sort=numberOfObservations");
       echo "</tr>";
 		  $countline = 0; // counter for altering table colors
@@ -443,7 +444,16 @@ class Sessions
               }
             }
           }
+		      // A link to the picture
+          if (file_exists($instDir . 'deepsky/sessions/'.$newArray[$cnt]["id"].".jpg")) {
+            echo "</td><td class=\"gallery clearfix\">";
+            echo "<a href=\"" . $baseURL . 'deepsky/sessions/'.$newArray[$cnt]["id"].".jpg\" rel=\"prettyPhoto\" title=\"".$newArray[$cnt]['name']. "\">" . LangAddSessionField12 . "</a></td>";
+          } else {
+            echo "</td><td> &nbsp; </td>";
+          }
+          
           echo "</td><td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&sessionid=" . $newArray[$cnt]["id"] . "\">";
+          
           // the number of observations
           $numberOfObservations = $objDatabase->selectRecordsetArray("SELECT COUNT(sessionid) from sessionObservations where sessionid = \"" . $newArray[$cnt]["id"] . "\";");
           echo $numberOfObservations[0]['COUNT(sessionid)'] . " " . LangGeneralObservations;
@@ -452,6 +462,7 @@ class Sessions
 		  }
 
 		  echo "</table>";
+
       echo "<hr />";
     }
   }

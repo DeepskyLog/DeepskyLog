@@ -125,7 +125,7 @@ function new_session()
 
   $objPresentations->line(array("<h4>".LangAddSessionTitle."&nbsp;<span class=\"requiredField\">".LangRequiredFields."</span>"."</h4>"),"L",array(),30);
 	echo "<hr />";
-	echo "<form id=\"sessionForm\" action=\"".$baseURL."index.php\" method=\"post\"><div>";
+	echo "<form id=\"sessionForm\" enctype=\"multipart/form-data\" action=\"".$baseURL."index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_session\" />";
 
 	$objPresentations->line(array("", "<input type=\"submit\" name=\"add\" value=\"".LangAddSessionButton."\" />&nbsp;"),
@@ -289,7 +289,6 @@ function new_session()
 	
 	// Pictures
 	$objPresentations->line(array(LangAddSessionField12, "<input type=\"file\" name=\"picture\" class=\"inputfield\" />", LangAddSessionField12Expl), "RLL", array(25,40,35),136,array("fieldname", "fieldvalue", "fieldexplanation"));
-
   echo "<hr />";
 	echo "</div></form>";
 	echo "</div>";
