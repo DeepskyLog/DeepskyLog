@@ -573,7 +573,7 @@ class Sessions
       $site = $_POST['site'];
     }
 		
-		$this->addSession($_POST['sessionname'], $_POST['beginday'], $_POST['beginmonth'], $_POST['beginyear'], 
+		$current_session = $this->addSession($_POST['sessionname'], $_POST['beginday'], $_POST['beginmonth'], $_POST['beginyear'], 
 		                  $_POST['beginhours'], $_POST['beginminutes'], $_POST['endday'], $_POST['endmonth'], 
 		                  $_POST['endyear'], $_POST['endhours'], $_POST['endminutes'], $site, $_POST['weather'], 
 		                  $_POST['equipment'], $_POST['comments'], $_POST['description_language'], $observers, $sessionid);
