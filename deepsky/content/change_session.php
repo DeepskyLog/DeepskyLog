@@ -5,8 +5,8 @@ global $loggedUser;
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 elseif(!($sessionid=$objUtil->checkGetKey('sessionid'))) throw new Exception(LangException003);
 elseif(!($objSession->getSessionPropertyFromId($sessionid,'name'))) throw new Exception("Session not found in change_session.php, please contact the developers with this message:".$sessionid);
-elseif(strcmp($objSession->getSessionPropertyFromId($sessionid, 'observerid'),$loggedUser) != 0)  view_session();
-else change_session();
+elseif(strcmp($objSession->getSessionPropertyFromId($sessionid, 'observerid'),$loggedUser) == 0 && isset($_GET['adapt']))  change_session();
+else view_session();
 
 function change_session()
 { global $baseURL,$loggedUserName,$objSession,$loggedUser,$objObserver,
@@ -338,7 +338,7 @@ function change_session()
 
 function view_session()
 { global $baseURL,$loggedUserName,$objSession,$loggedUser,$objObserver,
-         $objLocation,$objPresentations,$objUtil,$objLanguage;
+         $objLocation,$objPresentations,$objUtil,$objLanguage,$instDir;
 
   echo "<div id=\"main\">";
   $objPresentations->line(array("<h4>".stripslashes($objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'name')). "</h4>")); 
@@ -403,7 +403,19 @@ function view_session()
 	                              $objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'comments')),
 	                        "RL",array(25,75),'',array("fieldname","fieldvalue","fieldexplanation"));
 
-  echo "<hr />";
+	if (strcmp($objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'), 'observerid'),$loggedUser) == 0) {
+	  $linkToAdapt = "<a href=\"" . $baseURL . 'index.php?indexAction=adapt_session&sessionid=' . $objUtil->checkRequestKey('sessionid') . "&adapt=1\">";
+	  $linkToAdapt .= LangChangeSessionButton . "</a>";
+	  $objPresentations->line(array($linkToAdapt));
+	}
+
+	echo "<hr />";
+	// A link to the picture
+	if (file_exists($instDir . 'deepsky/sessions/'.$objUtil->checkRequestKey('sessionid').".jpg")) {
+	  echo "<a href=\"" . $baseURL . 'deepsky/sessions/'.$objUtil->checkRequestKey('sessionid').".jpg\" rel=\"prettyPhoto\" title=\"".stripslashes($objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'name')). "\" class=\"gallery clearfix\">
+	         <img src=\"" . $baseURL . 'deepsky/sessions/'.$objUtil->checkRequestKey('sessionid')."_resized.jpg\" /></a></td>";
+	}
+	
 	echo "</div></form>";
 	echo "</div>";
 }
