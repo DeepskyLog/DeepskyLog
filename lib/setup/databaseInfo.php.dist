@@ -9,7 +9,7 @@ else databaseInfo();
 
 function databaseInfo()
 { 
-  global $host,$user,$pass,$dbname,$developversion,
+  global $host,$user,$pass,$dbname,$developversion,$googleAnalytics,$domainName,
          $instDir,$baseURL,$tempDir,$mailFrom,$mailTo,
          $title,$browsertitle,$copyrightInfo,$vvsInfo,$dslInfo,$versionInfo,$objectInfo,$w3cInfo,
          $register,$dateformat,$defaultLanguage,$languageMenu,$maxFileSize,$modules,
@@ -95,5 +95,6 @@ function databaseInfo()
   
   // The google analytics code
   $googleAnalytics = "UA-24366178-9";
+  $domainName = "deepskylog.fr";
 }
 ?>

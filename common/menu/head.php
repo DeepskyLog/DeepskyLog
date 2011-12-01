@@ -7,7 +7,7 @@ else head();
 
 function head()
 { global $baseURL,$includeFile,$topmenu,$leftmenu,$theDate,$object,$listname, 
-         $objObserver,$objUtil,$googleAnalytics;
+         $objObserver,$objUtil,$googleAnalytics,$domainName;
 	echo "<head>";
 	echo "<meta charset=\"utf-8\" />";
 	echo "<meta http-equiv=\"pragma\" content=\"no-cache\" />";
@@ -121,7 +121,7 @@ function head()
 
      var _gaq = _gaq || [];
      _gaq.push(['_setAccount', '". $googleAnalytics ."']);
-     _gaq.push(['_setDomainName', 'deepskylog.org']);
+     _gaq.push(['_setDomainName', '" . $domainName . "']);
      _gaq.push(['_setAllowHash', 'false']);
      _gaq.push(['_setAllowLinker', true]);
      _gaq.push(['_trackPageview']);
