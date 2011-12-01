@@ -92,5 +92,8 @@ function databaseInfo()
   // Defines the different languages which are selected during the 
   // registration.
   $languagesDuringRegistration = array("en", "nl");
+  
+  // The google analytics code
+  $googleAnalytics = "UA-24366178-9";
 }
 ?>

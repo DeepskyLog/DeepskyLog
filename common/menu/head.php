@@ -7,7 +7,7 @@ else head();
 
 function head()
 { global $baseURL,$includeFile,$topmenu,$leftmenu,$theDate,$object,$listname, 
-         $objObserver,$objUtil;
+         $objObserver,$objUtil,$googleAnalytics;
 	echo "<head>";
 	echo "<meta charset=\"utf-8\" />";
 	echo "<meta http-equiv=\"pragma\" content=\"no-cache\" />";
@@ -117,6 +117,22 @@ function head()
 	echo "<title>".$DSLTitle.($TitleText?": ".$TitleText:"")."</title>";
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 	echo "<script type=\"text/javascript\">window.onresize=function(){resizeForm('".$leftmenu."','".$topmenu."');}</script>";
+  echo "<script type=\"text/javascript\">
+
+     var _gaq = _gaq || [];
+     _gaq.push(['_setAccount', '". $googleAnalytics ."']);
+     _gaq.push(['_setDomainName', 'deepskylog.org']);
+     _gaq.push(['_setAllowHash', 'false']);
+     _gaq.push(['_setAllowLinker', true]);
+     _gaq.push(['_trackPageview']);
+
+     (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+     })();
+
+     </script>";
 	echo "</head>";
  }
  ?>
