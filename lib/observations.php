@@ -1006,6 +1006,7 @@ class Observations {
 				                   (($alt)?(", ".LangOverviewObservations15." ").$objPresentations->br2dash($alt):""). 
 				               ")";				                 		     
 				$explantation1=LangOverviewObservations16." ".($seen=$objObject->getseen($value['objectname']));
+				$title = trim($value['objectname'] . " " .LangMessageBy . $value['observername']);
 				if(($LOid=$this->getLOObservationId($value['objectname'], $loggedUser, $value['observationid']))&&($lco=="O"))
 				{ $LOdescription=$objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
           $LOinstrumentId=$this->getDsObservationProperty($LOid,'instrumentid');
@@ -1115,14 +1116,14 @@ class Observations {
 					  if($lco=="C")
 					  { if($myList)
 			          echo "<td>&nbsp;</td>"; 
-			        echo "<td colspan=\"6\">".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a  href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\" alt=\"\"></img></a>"."</p>":"")."</td>";
+			        echo "<td colspan=\"6\">".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a  href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg\" rel=\"prettyPhoto\" title=\"\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\" alt=\"".$title."\"></img></a>"."</p>":"")."</td>";
 					  }
 					  elseif($lco=="O")
 				    { if($myList)
-				        echo "<td> &nbsp; </td><td colspan=\"5\">".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a  href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\" alt=\"\"></img></a>"."</p>":"")."</td>";
+				        echo "<td> &nbsp; </td><td colspan=\"5\">".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a  href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg\" rel=\"prettyPhoto\" title=\"\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\" alt=\"" . $title . "\"></img></a>"."</p>":"")."</td>";
 				      else
-				        echo "<td colspan=\"5\">".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a  href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg"."\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\" alt=\"\"></img></a>"."</p>":"")."</td>";
-					    echo "<td colspan=\"3\">".(($LOdescription&&($this->getDsObservationProperty($LOid,'hasDrawing')))?"<p>"."<a  href=\"".$baseURL."deepsky/drawings/".$LOid.".jpg" . "\"> <img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$LOid."_resized.jpg\" alt=\"\"></img></a>"."</p>":"")."</td>";
+				        echo "<td colspan=\"5\">".(($this->getDsObservationProperty($value['observationid'],'hasDrawing'))?"<p>"."<a  href=\"".$baseURL."deepsky/drawings/".$value['observationid'].".jpg\" rel=\"prettyPhoto\" title=\"\"><img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$value['observationid']."_resized.jpg\" alt=\"" . $title . "\"></img></a>"."</p>":"")."</td>";
+					    echo "<td colspan=\"3\">".(($LOdescription&&($this->getDsObservationProperty($LOid,'hasDrawing')))?"<p>"."<a  href=\"".$baseURL."deepsky/drawings/".$LOid.".jpg" . "\" rel=\"prettyPhoto\" title=\"\"> <img class=\"account\" src=\"".$baseURL."deepsky/drawings/".$LOid."_resized.jpg\" alt=\"" . $title . "\"></img></a>"."</p>":"")."</td>";
 					   }
 		         if($MSIE)
 		         	 echo "<td class=\"width10px\">&nbsp;&nbsp;&nbsp;</td>";
@@ -1318,9 +1319,11 @@ class Observations {
       echo "</div>";
     }
     
+    $title = $object . " " .LangMessageBy . $this->getDsObservationProperty($LOid,'observerid');
+    
 		if($this->getDsObservationProperty($LOid,'hasDrawing'))
-		  echo "<p>"."<a  href=\"".$baseURL."deepsky/drawings/" . $LOid . ".jpg" . "\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . "_resized.jpg\" alt=\"\"></img></a></p>";
-    if($copyright=$objObserver->getObserverProperty($this->getDsObservationProperty($LOid,'observerid'),'copyright'))
+		  echo "<p>"."<a  href=\"".$baseURL."deepsky/drawings/" . $LOid . ".jpg" . "\" rel=\"prettyPhoto\" title=\"\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . "_resized.jpg\" alt=\"".$title . "\"></img></a></p>";
+		if($copyright=$objObserver->getObserverProperty($this->getDsObservationProperty($LOid,'observerid'),'copyright'))
       echo "<p class=\"copyright\">".$copyright."</p>";
     echo "<br /><br />";
 		$bottomline="";

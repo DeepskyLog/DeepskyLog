@@ -220,7 +220,10 @@ function view_observer()
 	{ if(("." == $file)OR(".."== $file))
 	    continue;                                                                   // skip current directory and directory above
 	  if(fnmatch($user. ".gif", $file) || fnmatch($user. ".jpg",$file) || fnmatch($user. ".png", $file))
-	  { echo "<div><img class=\"viewobserver\" src=\"".$baseURL."common/observer_pics/".$file."\" alt=\"".$firstname."&nbsp;".$name."\"></img></div>";
+	  { echo "<div>";
+	    echo "<a href=\"".$baseURL."common/observer_pics/".$file."\" rel=\"prettyPhoto\" title=\"\">";
+	    echo "<img class=\"viewobserver\" src=\"".$baseURL."common/observer_pics/".$file."\" alt=\"".$firstname."&nbsp;".$name."\"></img>
+	          </a></div>";
 	    echo "<hr />";
 	  }
 	}
