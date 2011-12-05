@@ -994,7 +994,7 @@ class Observations {
 		  	$obsKey=$key;
 		    $LOid="";	 $LOinstrumentsize='';  $LOdescription="";  $LOinstrumentId='';  $LOinstrument = '';
 			  $value=$_SESSION['Qobs'][$obsKey];
-				$alt = "";
+			  $alt = "";
 				$altnames=$objObject->getAlternativeNames($value['objectname']);
 				while(list($key,$altvalue)=each($altnames))
 				  if(trim($altvalue)!=trim($value['objectname']))
@@ -1008,7 +1008,8 @@ class Observations {
 				$explantation1=LangOverviewObservations16." ".($seen=$objObject->getseen($value['objectname']));
 				$title = trim($value['objectname'] . " " .LangMessageBy . $value['observername']);
 				if(($LOid=$this->getLOObservationId($value['objectname'], $loggedUser, $value['observationid']))&&($lco=="O"))
-				{ $LOdescription=$objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
+				{ 
+				  $LOdescription=$objPresentations->searchAndLinkCatalogsInText(preg_replace("/&amp;/", "&", $this->getDsObservationProperty($LOid,'description')));
           $LOinstrumentId=$this->getDsObservationProperty($LOid,'instrumentid');
 					$LOinstrument=$objInstrument->getInstrumentPropertyFromId($LOinstrumentId,'name');
 					$LOinstrumentsize=round($objInstrument->getInstrumentPropertyFromId($LOinstrumentId,'diameter'), 0);
@@ -1100,11 +1101,103 @@ class Observations {
 					  if($myList)
 				  	  echo "<td>&nbsp;</td>";
 					  echo "<td valign=\"top\">".$alt."</td>";
-						if($lco=="C")
-					    echo "<td colspan=\"5\">".$objPresentations->searchAndLinkCatalogsInText($value['observationdescription'])."<br />"."</td>";
-					  elseif($lco=="O")
-			  		{ echo "<td colspan=\"4\">".$objPresentations->searchAndLinkCatalogsInText($value['observationdescription'])."<br />"."</td>";
-				  	  echo "<td colspan=\"3\">".$LOdescription."<br />"."</td>";
+						if($lco=="C") {
+						  // Add a google translate button
+						  echo "<script>
+						      			          function googleSectionalElementInit() {
+						  			                new google.translate.SectionalElement({
+						  		    	              sectionalNodeClassName: 'goog-trans-section',
+						      		  	            controlNodeClassName: 'goog-trans-control',
+						          			          background: '#f4fa58'
+						        			          }, 'google_sectional_element');
+						      			          }
+						      			          </script>";
+						  
+						  echo "<td colspan=\"5\">";
+						  $toClose = false;					  
+						  if ($loggedUser != "") {
+						    $usedLang = $objObserver->getObserverProperty($loggedUser, "language");
+						    if ($usedLang != $this->getDsObservationProperty($value['observationid'],'language')) {
+						      $toClose = true;
+						      echo "<script src=\"//translate.google.com/translate_a/element.js?cb=googleSectionalElementInit&ug=section&hl=" . $usedLang . "\"></script>";
+						  
+						      // Make the google translate control node
+						      echo "<div class=\"goog-trans-section\">";
+						      echo "<div class=\"goog-trans-control\">";
+						      echo "</div>";
+						    }
+						  }
+              echo $objPresentations->searchAndLinkCatalogsInText($value['observationdescription'])."<br />";						  
+						  if ($toClose) {
+						    echo "</div>";
+						  }
+						  
+						  echo "</td>";
+						} elseif($lco=="O")
+			  		{ 
+						  // Add a google translate button
+						  echo "<script>
+						      			          function googleSectionalElementInit() {
+						  			                new google.translate.SectionalElement({
+						  		    	              sectionalNodeClassName: 'goog-trans-section',
+						      		  	            controlNodeClassName: 'goog-trans-control',
+						          			          background: '#f4fa58'
+						        			          }, 'google_sectional_element');
+						      			          }
+						      			          </script>";
+						  
+						  echo "<td colspan=\"4\">";
+						  $toClose = false;
+						  if ($loggedUser != "") {
+						    $usedLang = $objObserver->getObserverProperty($loggedUser, "language");
+						    
+						    if ($usedLang != $this->getDsObservationProperty($value['observationid'],'language')) {
+						      $toClose = true;
+						      echo "<script src=\"//translate.google.com/translate_a/element.js?cb=googleSectionalElementInit&ug=section&hl=" . $usedLang . "\"></script>";
+						  
+						      // Make the google translate control node
+						      echo "<div class=\"goog-trans-section\">";
+						      echo "<div class=\"goog-trans-control\">";
+						      echo "</div>";
+						    }
+						  }
+              echo $objPresentations->searchAndLinkCatalogsInText($value['observationdescription'])."<br />";						  
+						  if ($toClose) {
+						    echo "</div>";
+						  }
+			  		  
+			  		  echo "</td>";
+              // Add a google translate button
+              echo "<script>
+    			          function googleSectionalElementInit() {
+			                new google.translate.SectionalElement({
+		    	              sectionalNodeClassName: 'goog-trans-section',
+    		  	            controlNodeClassName: 'goog-trans-control',
+        			          background: '#f4fa58'
+      			          }, 'google_sectional_element');
+    			          }
+    			          </script>";
+
+		  	  		echo "<td colspan=\"3\">";
+              $toClose = false;
+              if ($loggedUser != "") {
+                $usedLang = $objObserver->getObserverProperty($loggedUser, "language");
+
+						    if ($usedLang != $this->getDsObservationProperty($LOid,'language')) {
+                  $toClose = true;
+                  echo "<script src=\"//translate.google.com/translate_a/element.js?cb=googleSectionalElementInit&ug=section&hl=" . $usedLang . "\"></script>";
+      
+                  // Make the google translate control node
+                  echo "<div class=\"goog-trans-section\">";
+                  echo "<div class=\"goog-trans-control\">";
+                  echo "</div>";
+                }
+              }
+			  		  echo $LOdescription."<br />";
+              if ($toClose) {
+                echo "</div>";
+              }
+              echo "</td>";
 					  }
 		        if($MSIE)
 	          	echo "<td class=\"width10px\">&nbsp;&nbsp;&nbsp;</td>";
