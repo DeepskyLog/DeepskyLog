@@ -37,8 +37,8 @@ function atlasPages()
 	echo "<hr />";
 	echo "<p>".LangAtlassesIntro05."</p>";
   echo '<input type="button" class="width125px" value ="Overview" onclick="location.href=\''.$dirAstroImageCatalogs.'OverviewAtlas.pdf\';" />';
-  echo '<input type="button" class="width125px" value ="Lookup" onclick=alert(\'wordt geïmplementeerd\');" />';
-  echo '<input type="button" class="width125px" value ="Detail" onclick=alert(\'wordt geïmplementeerd\');" />';
+  echo '<input type="button" class="width125px" value ="Lookup" onclick="alert(\'wordt geïmplementeerd\');" />';
+  echo '<input type="button" class="width125px" value ="Detail" onclick="alert(\'wordt geïmplementeerd\');" />';
 	echo "<h1>".LangAtlassesIntro06."</h1>";
 	echo "<hr />";
 	echo "<p>".LangAtlassesIntro07."</p>";
@@ -57,8 +57,8 @@ function atlasPages()
   echo '<br />';
   echo "<p>";
   echo '<input type="button" class="width125px" value ="Overview" onclick="generateoneoverview(0,'.($MSIE?'\'true\'':'\'false\'').');" />';
-  echo '<input type="button" class="width125px" value ="Lookup" />';
-  echo '<input type="button" class="width125px" value ="Detail" />';
+  echo '<input type="button" class="width125px" value ="Lookup" onclick="generateonelookup(0,'.($MSIE?'\'true\'':'\'false\'').');" />';
+  echo '<input type="button" class="width125px" value ="Detail" onclick="generateonedetail(0,'.($MSIE?'\'true\'':'\'false\'').');" />';
   echo "</p>";
   echo "<h2>"."Generate complete altas (not available in Internet Explorer)"."</h2>";
   if(!($MSIE))

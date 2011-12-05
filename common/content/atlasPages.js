@@ -45,7 +45,7 @@ function generateallonepass(item,msie,stepra,stepdecl)
   jsonhttp.onreadystatechange=function()
   { if(jsonhttp.readyState==4)
     { //alert(jsonhttp.responseText);
-	  temp=eval('('+jsonhttp.responseText+')');
+	    temp=eval('('+jsonhttp.responseText+')');
       tempra=Math.max(Math.floor(document.getElementById('ra').value,0),0);
       tempramin=Math.max(Math.round((document.getElementById('ra').value-tempra)*60,0),0);
       if(tempra<10) tempra='0'+tempra;
@@ -158,38 +158,44 @@ function generateoneoverview(i,msie)
   document.getElementById('zoom').value=13;
   generateone(msie);
 }
-function generateOneLookup(i,msie)
-{	document.getElementById('stars').value=11;
+function generateonelookup(i,msie)
+{	document.getElementById('stars').value=9;
   document.getElementById('dsos').value=13;
   document.getElementById('zoom').value=15;
   generateone(msie);
 }
-function generateOneDetail(i,msie)
-{ document.getElementById('stars').value=11;
-  document.getElementById('dsos').value=13;
-  document.getElementById('zoom').value=15;
+function generateonedetail(i,msie)
+{ document.getElementById('stars').value=13;
+  document.getElementById('dsos').value=15;
+  document.getElementById('zoom').value=17;
   generateone(msie);
 }
 function generateoverviewallonepass(item,msie,stepra,stepdecl)
 { document.getElementById('declfrom').value=0;
-  document.getElementById('declto').value=82.99;
+  if(document.getElementById('pageorientationportrait').checked)
+  	document.getElementById('declto').value=79.99;
+  else
+  	document.getElementById('declto').value=82.99;
   document.getElementById('rafrom').value=0;
   document.getElementById('rato').value=24;
-  document.getElementById('stars').value=15;
-  document.getElementById('dsos').value=15;
-  document.getElementById('zoom').value=17;
+  document.getElementById('stars').value=8;
+  document.getElementById('dsos').value=10;
+  document.getElementById('zoom').value=13;
   document.getElementById('ra').value=document.getElementById('rato').value;
   document.getElementById('decl').value=document.getElementById('declto').value;
   generateallonepass(item,msie,0,0);
 }
 function generatelookupallonepass(item,msie,stepra,stepdecl)
 { document.getElementById('declfrom').value=0;
-  document.getElementById('declto').value=88.49;
+  if(document.getElementById('pageorientationportrait').checked)
+	  document.getElementById('declto').value=88.55;
+  else
+    document.getElementById('declto').value=88.49;
   document.getElementById('rafrom').value=0;
   document.getElementById('rato').value=24;
   document.getElementById('stars').value=11;
   document.getElementById('dsos').value=13;
-  document.getElementById('zoom').value=15;
+  document.getElementById('zoom').value=18;
   document.getElementById('ra').value=document.getElementById('rato').value;
   document.getElementById('decl').value=document.getElementById('declto').value;
   generateallonepass(item,msie,0,0);
