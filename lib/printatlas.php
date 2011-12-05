@@ -269,18 +269,18 @@ class PrintAtlas
   function atlasDrawLegend()
   { if($this->theOrientation=='landscape')
   	  for($i=0;$i<12;$i++)
-      { $this->pdf->filledEllipse($this->Legend1x+560-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-20,(.5*$i),(.5*$i),0,$this->nsegmente);
+      { $this->pdf->filledEllipse($this->Legend1x+560-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-20,(.25*$i),(.25*$i),0,$this->nsegmente);
         //$this->pdf->addTextWrap($this->Legend1x+570-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-23, 30, $this->fontSize1b, ((($this->gridDimensions[$this->gridActualDimension][3]))-(.5*$i)),  'center');
         $this->pdf->addTextWrap($this->Legend1x+570-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-23, 30, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)),  'center');
       }
     else
     { for($i=0;$i<6;$i++)
-      { $this->pdf->filledEllipse($this->Legend1x+310-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-40,(.5*$i),(.5*$i),0,$this->nsegmente);
+      { $this->pdf->filledEllipse($this->Legend1x+310-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-40,(.25*$i),(.25*$i),0,$this->nsegmente);
         //$this->pdf->addTextWrap($this->Legend1x+320-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-42, 30, $this->fontSize1b, ((($this->gridDimensions[$this->gridActualDimension][3]))-(.5*$i)),  'center');
         $this->pdf->addTextWrap($this->Legend1x+315-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-42, 30, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)),  'center');
       }
       for($i=6;$i<12;$i++)
-      { $this->pdf->filledEllipse($this->Legend1x+610-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-20,(.5*$i),(.5*$i),0,$this->nsegmente);
+      { $this->pdf->filledEllipse($this->Legend1x+610-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-20,(.25*$i),(.25*$i),0,$this->nsegmente);
         //$this->pdf->addTextWrap($this->Legend1x+620-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-23, 30, $this->fontSize1b, ((($this->gridDimensions[$this->gridActualDimension][3]))-(.5*$i)),  'center');
         $this->pdf->addTextWrap($this->Legend1x+615-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-23, 30, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)),  'center');
       }
@@ -623,7 +623,7 @@ class PrintAtlas
     $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
     if((!((($cx-$d<$this->lx)||($cx+$d>$this->rx))))&&
        (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
-    { $this->pdf->filledEllipse($cx,$cy,(.5*$d),(.5*$d),0,$this->nsegmente);
+    { $this->pdf->filledEllipse($cx,$cy,(.25*$d),(.25*$d),0,$this->nsegmente);
       if((($cx+4+(($d+1)>>1))>$this->lx)&&(($cx+4+(($d+1)>>1)+(strlen($name)*$this->fontSize1b))<$this->rx)&&(($cy-($this->fontSize1a>>1))<$this->ty)&&(($cy+($this->fontSize1a>>1))>$this->by))
         $this->pdf->addText(($cx+4+(($d+1)>>1)), $cy-($this->fontSize1a>>1), $this->fontSize1b, $name);
     }     
