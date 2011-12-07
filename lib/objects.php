@@ -988,13 +988,23 @@ class Objects
          { $sql6 = "SELECT limitingMagnitude, skyBackground, name from locations where id = \"" . $get5->stdlocation . "\"";
       	   $run6 = mysql_query($sql6) or die(mysql_error());
         	 $get6 = mysql_fetch_object($run6);
+        	 // Get the fst offset
+        	 $sql6bis = "SELECT fstOffset from observers where id = \"" . $loggedUser . "\"";
+      	   $run6bis = mysql_query($sql6bis) or die(mysql_error());
+        	 $get6bis = mysql_fetch_object($run6bis);
+        	 $fstOffset = $get6bis->fstOffset;
+
     	     if(($get6->limitingMagnitude < -900)&&($get6->skyBackground < -900))
       	     $popup = LangContrastNoLimMag;
 					 else
       	   { if($get6->skyBackground < -900)
-          	   $_SESSION['initBB'] = $objContrast->calculateSkyBackgroundFromLimitingMagnitude($get6->limitingMagnitude);
-        	   else
-          	   $_SESSION['initBB'] = $get6->skyBackground;
+          	   $limmag = $get6->limitingMagnitude + $fstOffset;
+        	   else {
+        	     $limmag = $objContrast->calculateLimitingMagnitudeFromSkyBackground($get6->skyBackground) + $fstOffset;
+        	   }        	     
+        	   $sqm = $objContrast->calculateSkyBackgroundFromLimitingMagnitude($limmag);
+        	   $_SESSION['initBB'] = $sqm;
+
   	         $sql7 = "SELECT diameter, name from instruments where id = \"" . $get5->stdtelescope . "\"";
     	       $run7 = mysql_query($sql7) or die(mysql_error());
       	     $get7 = mysql_fetch_object($run7);
