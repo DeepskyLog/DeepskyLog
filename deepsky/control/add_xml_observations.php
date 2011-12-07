@@ -40,13 +40,12 @@ function add_xml_observations()
 	// Use the correct schema definition to check the xml file. 
 	$xmlschema = str_replace(' ', '/', $searchNode->item(0)->getAttribute("xsi:schemaLocation"));
 	
-	$xmlschema = $baseURL . "/xml/oal21.xsd";
-	
+	$xmlschema = $baseURL . "xml/oal21/oal21.xsd";
+		
 	//Validate the XML file against the schema
 	if ($dom->schemaValidate($xmlschema)) {
 	  // The XML file is valid. Let's start reading in the file.
 	  // Only 2.0 and 2.1 files!
-	
 	  // Check the observers -> In OpenAstronomyLog 2.0 the deepskylog_id is also added
 	  $searchNode = $dom->getElementsByTagName( "observers" );
 	  $observer = $searchNode->item(0)->getElementsByTagName( "observer" );
@@ -101,7 +100,7 @@ function add_xml_observations()
 	  $target = $targets->item(0)->getElementsByTagName( "target" );
 	
 	  $targetArray = Array();
-	
+
 	  foreach( $target as $target )
 	  {
 	    $targetInfoArray = Array();
@@ -122,249 +121,268 @@ function add_xml_observations()
 	      $targetInfoArray["datasource"] = "OAL";
 	    }
 	
+	    $valid = true;
+
 	    // Get the type
-	    $type =  $target->getAttribute("xsi:type");
+	    if ($target->getAttribute("xsi:type")) {
+	      $type =  $target->getAttribute("xsi:type");
+
+	    	$next = 1;
 	
-	    $next = 1;
-	
-	    if ($type == "oal:deepSkyAS") {
-	      $targetInfoArray["type"] = "ASTER";
-	    } else if ($type == "oal:deepSkyDS") {
-	      $targetInfoArray["type"] = "AA2STAR";
-	    } else if ($type == "oal:deepSkySC" || $type == "oal:deepSkyOC") {
-	      $targetInfoArray["type"] = "OPNCL";
-	    } else if ($type == "oal:deepSkyGC") {
-	      $targetInfoArray["type"] = "GLOCL";
-	    } else if ($type == "oal:deepSkyGX") {
-	      $targetInfoArray["type"] = "GALXY";
-	    } else if ($type == "oal:deepSkyCG") {
-	      $targetInfoArray["type"] = "GALCL";
-	    } else if ($type == "oal:deepSkyGN") {
-	      $targetInfoArray["type"] = "BRTNB";
-	    } else if ($type == "oal:deepSkyGN") {
-	      $targetInfoArray["type"] = "BRTNB";
-	    } else if ($type == "oal:deepSkyPN") {
-	      $targetInfoArray["type"] = "PLNNB";
-	    } else if ($type == "oal:deepSkyQS") {
-	      $targetInfoArray["type"] = "QUASR";
-	    } else if ($type == "oal:deepSkyDN") {
-	      $targetInfoArray["type"] = "DRKNB";
-	    } else if ($type == "oal:deepSkyNA") {
-	      $targetInfoArray["type"] = "NONEX";
+	      if ($type == "oal:deepSkyAS") {
+	        $targetInfoArray["type"] = "ASTER";
+	      } else if ($type == "oal:deepSkyDS") {
+	        $targetInfoArray["type"] = "AA2STAR";
+  	    } else if ($type == "oal:deepSkySC" || $type == "oal:deepSkyOC") {
+	        $targetInfoArray["type"] = "OPNCL";
+	      } else if ($type == "oal:deepSkyGC") {
+	        $targetInfoArray["type"] = "GLOCL";
+  	    } else if ($type == "oal:deepSkyGX") {
+	        $targetInfoArray["type"] = "GALXY";
+	      } else if ($type == "oal:deepSkyCG") {
+	        $targetInfoArray["type"] = "GALCL";
+  	    } else if ($type == "oal:deepSkyGN") {
+	        $targetInfoArray["type"] = "BRTNB";
+	      } else if ($type == "oal:deepSkyGN") {
+	        $targetInfoArray["type"] = "BRTNB";
+  	    } else if ($type == "oal:deepSkyPN") {
+	        $targetInfoArray["type"] = "PLNNB";
+	      } else if ($type == "oal:deepSkyQS") {
+	        $targetInfoArray["type"] = "QUASR";
+  	    } else if ($type == "oal:deepSkyDN") {
+	        $targetInfoArray["type"] = "DRKNB";
+	      } else if ($type == "oal:deepSkyNA") {
+	        $targetInfoArray["type"] = "NONEX";
+   	    } else {
+	        $next = 0;
+	      }
 	    } else {
-	      $next = 0;
+	      $valid = false;
 	    }
+	
 	
 	    $targetInfoArray["known"] = $next;
 	
-	    if ($next == 1) {
-	      $cons = $targetInfoArray["constellation"] = $target->getElementsByTagName( "constellation" )->item(0)->nodeValue;
-	      // Convert the constellation to the 3 letter code
-	      if (strlen($cons) > 3) {
-	        $cons = strtolower($cons);
-	        if ($cons == "andromeda") {
-	          $targetInfoArray["constellation"] = "AND";
-	        } else if ($cons == "antlia") {
-	          $targetInfoArray["constellation"] = "ANT";
-	        } else if ($cons == "apus") {
-	          $targetInfoArray["constellation"] = "APS";
-	        } else if ($cons == "aquarius") {
-	          $targetInfoArray["constellation"] = "AQR";
-	        } else if ($cons == "aquila") {
-	          $targetInfoArray["constellation"] = "AQL";
-	        } else if ($cons == "aries") {
-	          $targetInfoArray["constellation"] = "ARI";
-	        } else if ($cons == "auriga") {
-	          $targetInfoArray["constellation"] = "AUR";
-	        } else if ($cons == "bootes") {
-	          $targetInfoArray["constellation"] = "BOO";
-	        } else if ($cons == "caelum") {
-	          $targetInfoArray["constellation"] = "CAE";
-	        } else if ($cons == "camelopardalis") {
-	          $targetInfoArray["constellation"] = "CAM";
-	        } else if ($cons == "cancer") {
-	          $targetInfoArray["constellation"] = "CNC";
-	        } else if ($cons == "canes venatici") {
-	          $targetInfoArray["constellation"] = "CVN";
-	        } else if ($cons == "canis major" || $cons == "canis maior") {
-	          $targetInfoArray["constellation"] = "CMA";
-	        } else if ($cons == "canis minor") {
-	          $targetInfoArray["constellation"] = "CMI";
-	        } else if ($cons == "capricornus") {
-	          $targetInfoArray["constellation"] = "CAP";
-	        } else if ($cons == "carina") {
-	          $targetInfoArray["constellation"] = "CAR";
-	        } else if ($cons == "cassiopeia") {
-	          $targetInfoArray["constellation"] = "CAS";
-	        } else if ($cons == "centaurus") {
-	          $targetInfoArray["constellation"] = "CEN";
-	        } else if ($cons == "cepheus") {
-	          $targetInfoArray["constellation"] = "CEP";
-	        } else if ($cons == "cetus") {
-	          $targetInfoArray["constellation"] = "CET";
-	        } else if ($cons == "chamaeleon") {
-	          $targetInfoArray["constellation"] = "CHA";
-	        } else if ($cons == "circinus") {
-	          $targetInfoArray["constellation"] = "CIR";
-	        } else if ($cons == "columba") {
-	          $targetInfoArray["constellation"] = "COL";
-	        } else if ($cons == "coma berenices") {
-	          $targetInfoArray["constellation"] = "COM";
-	        } else if ($cons == "corona australis") {
-	          $targetInfoArray["constellation"] = "CRA";
-	        } else if ($cons == "corona borealis") {
-	          $targetInfoArray["constellation"] = "CRB";
-	        } else if ($cons == "corvus") {
-	          $targetInfoArray["constellation"] = "CRV";
-	        } else if ($cons == "crater") {
-	          $targetInfoArray["constellation"] = "CRT";
-	        } else if ($cons == "crux") {
-	          $targetInfoArray["constellation"] = "CRU";
-	        } else if ($cons == "cygnus") {
-	          $targetInfoArray["constellation"] = "CYG";
-	        } else if ($cons == "delphinus") {
-	          $targetInfoArray["constellation"] = "DEL";
-	        } else if ($cons == "dorado") {
-	          $targetInfoArray["constellation"] = "DOR";
-	        } else if ($cons == "draco") {
-	          $targetInfoArray["constellation"] = "DRA";
-	        } else if ($cons == "equuleus") {
-	          $targetInfoArray["constellation"] = "EQU";
-	        } else if ($cons == "eridanus") {
-	          $targetInfoArray["constellation"] = "ERI";
-	        } else if ($cons == "fornax") {
-	          $targetInfoArray["constellation"] = "FOR";
-	        } else if ($cons == "gemini") {
-	          $targetInfoArray["constellation"] = "GEM";
-	        } else if ($cons == "grus") {
-	          $targetInfoArray["constellation"] = "GRU";
-	        } else if ($cons == "hercules") {
-	          $targetInfoArray["constellation"] = "HER";
-	        } else if ($cons == "horologium") {
-	          $targetInfoArray["constellation"] = "HOR";
-	        } else if ($cons == "hydra") {
-	          $targetInfoArray["constellation"] = "HYA";
-	        } else if ($cons == "hydrus") {
-	          $targetInfoArray["constellation"] = "HYI";
-	        } else if ($cons == "indus") {
-	          $targetInfoArray["constellation"] = "IND";
-	        } else if ($cons == "lacerta") {
-	          $targetInfoArray["constellation"] = "LAC";
-	        } else if ($cons == "leo minor") {
-	          $targetInfoArray["constellation"] = "LMI";
-	        } else if ($cons == "lepus") {
-	          $targetInfoArray["constellation"] = "LEP";
-	        } else if ($cons == "libra") {
-	          $targetInfoArray["constellation"] = "LIB";
-	        } else if ($cons == "lupus") {
-	          $targetInfoArray["constellation"] = "LUP";
-	        } else if ($cons == "lynx") {
-	          $targetInfoArray["constellation"] = "LYN";
-	        } else if ($cons == "lyra") {
-	          $targetInfoArray["constellation"] = "LYR";
-	        } else if ($cons == "mensa") {
-	          $targetInfoArray["constellation"] = "MEN";
-	        } else if ($cons == "microscopium") {
-	          $targetInfoArray["constellation"] = "MIC";
-	        } else if ($cons == "monoceros") {
-	          $targetInfoArray["constellation"] = "MON";
-	        } else if ($cons == "musca") {
-	          $targetInfoArray["constellation"] = "MUS";
-	        } else if ($cons == "norma") {
-	          $targetInfoArray["constellation"] = "NOR";
-	        } else if ($cons == "octans") {
-	          $targetInfoArray["constellation"] = "OCT";
-	        } else if ($cons == "ophiuchus") {
-	          $targetInfoArray["constellation"] = "OPH";
-	        } else if ($cons == "orion") {
-	          $targetInfoArray["constellation"] = "ORI";
-	        } else if ($cons == "pavo") {
-	          $targetInfoArray["constellation"] = "PAV";
-	        } else if ($cons == "pegasus") {
-	          $targetInfoArray["constellation"] = "PEG";
-	        } else if ($cons == "perseus") {
-	          $targetInfoArray["constellation"] = "PER";
-	        } else if ($cons == "phoenix") {
-	          $targetInfoArray["constellation"] = "PHE";
-	        } else if ($cons == "pictor") {
-	          $targetInfoArray["constellation"] = "PIC";
-	        } else if ($cons == "pisces") {
-	          $targetInfoArray["constellation"] = "PSC";
-	        } else if ($cons == "pisces austrinus") {
-	          $targetInfoArray["constellation"] = "PSA";
-	        } else if ($cons == "puppis") {
-	          $targetInfoArray["constellation"] = "PUP";
-	        } else if ($cons == "pyxis") {
-	          $targetInfoArray["constellation"] = "PYX";
-	        } else if ($cons == "reticulum") {
-	          $targetInfoArray["constellation"] = "RET";
-	        } else if ($cons == "sagitta") {
-	          $targetInfoArray["constellation"] = "SGE";
-	        } else if ($cons == "sagittarius") {
-	          $targetInfoArray["constellation"] = "SGR";
-	        } else if ($cons == "scorpius") {
-	          $targetInfoArray["constellation"] = "SCO";
-	        } else if ($cons == "sculptor") {
-	          $targetInfoArray["constellation"] = "SCL";
-	        } else if ($cons == "scutum") {
-	          $targetInfoArray["constellation"] = "SCT";
-	        } else if ($cons == "serpens") {
-	          $targetInfoArray["constellation"] = "SER";
-	        } else if ($cons == "sextans") {
-	          $targetInfoArray["constellation"] = "SEX";
-	        } else if ($cons == "taurus") {
-	          $targetInfoArray["constellation"] = "TAU";
-	        } else if ($cons == "telescopium") {
-	          $targetInfoArray["constellation"] = "TEL";
-	        } else if ($cons == "triangulum australe") {
-	          $targetInfoArray["constellation"] = "TRA";
-	        } else if ($cons == "triangulum") {
-	          $targetInfoArray["constellation"] = "TRI";
-	        } else if ($cons == "tucana") {
-	          $targetInfoArray["constellation"] = "TUC";
-	        } else if ($cons == "ursa major" || $cons == "ursa maior") {
-	          $targetInfoArray["constellation"] = "UMA";
-	        } else if ($cons == "ursa minor") {
-	          $targetInfoArray["constellation"] = "UMI";
-	        } else if ($cons == "vela") {
-	          $targetInfoArray["constellation"] = "VEL";
-	        } else if ($cons == "virgo") {
-	          $targetInfoArray["constellation"] = "VIR";
-	        } else if ($cons == "volans") {
-	          $targetInfoArray["constellation"] = "VOL";
-	        } else if ($cons == "vulpecula") {
-	          $targetInfoArray["constellation"] = "VUL";
-	        }
-	      } else {
+	    if ($valid && $target->getElementsByTagName( "constellation" )->item(0)) {
+	      if ($next == 1) {
+	        // TODO : Use DeepskyLog code to check the constellation of this object
+	        $cons = $targetInfoArray["constellation"] = $target->getElementsByTagName( "constellation" )->item(0)->nodeValue;
+	        // Convert the constellation to the 3 letter code
+	        if (strlen($cons) > 3) {
+	          $cons = strtolower($cons);
+	          if ($cons == "andromeda") {
+	            $targetInfoArray["constellation"] = "AND";
+	          } else if ($cons == "antlia") {
+	            $targetInfoArray["constellation"] = "ANT";
+	          } else if ($cons == "apus") {
+	            $targetInfoArray["constellation"] = "APS";
+	          } else if ($cons == "aquarius") {
+	            $targetInfoArray["constellation"] = "AQR";
+	          } else if ($cons == "aquila") {
+	            $targetInfoArray["constellation"] = "AQL";
+  	        } else if ($cons == "aries") {
+	            $targetInfoArray["constellation"] = "ARI";
+	          } else if ($cons == "auriga") {
+	            $targetInfoArray["constellation"] = "AUR";
+	          } else if ($cons == "bootes") {
+	            $targetInfoArray["constellation"] = "BOO";
+  	        } else if ($cons == "caelum") {
+	            $targetInfoArray["constellation"] = "CAE";
+	          } else if ($cons == "camelopardalis") {
+	            $targetInfoArray["constellation"] = "CAM";
+	          } else if ($cons == "cancer") {
+	            $targetInfoArray["constellation"] = "CNC";
+  	        } else if ($cons == "canes venatici") {
+	            $targetInfoArray["constellation"] = "CVN";
+	          } else if ($cons == "canis major" || $cons == "canis maior") {
+	            $targetInfoArray["constellation"] = "CMA";
+	          } else if ($cons == "canis minor") {
+	            $targetInfoArray["constellation"] = "CMI";
+  	        } else if ($cons == "capricornus") {
+	            $targetInfoArray["constellation"] = "CAP";
+	          } else if ($cons == "carina") {
+	            $targetInfoArray["constellation"] = "CAR";
+	          } else if ($cons == "cassiopeia") {
+	            $targetInfoArray["constellation"] = "CAS";
+  	        } else if ($cons == "centaurus") {
+	            $targetInfoArray["constellation"] = "CEN";
+	          } else if ($cons == "cepheus") {
+	            $targetInfoArray["constellation"] = "CEP";
+	          } else if ($cons == "cetus") {
+	            $targetInfoArray["constellation"] = "CET";
+  	        } else if ($cons == "chamaeleon") {
+	            $targetInfoArray["constellation"] = "CHA";
+	          } else if ($cons == "circinus") {
+	            $targetInfoArray["constellation"] = "CIR";
+	          } else if ($cons == "columba") {
+	            $targetInfoArray["constellation"] = "COL";
+  	        } else if ($cons == "coma berenices") {
+	            $targetInfoArray["constellation"] = "COM";
+	          } else if ($cons == "corona australis") {
+	            $targetInfoArray["constellation"] = "CRA";
+	          } else if ($cons == "corona borealis") {
+	            $targetInfoArray["constellation"] = "CRB";
+  	        } else if ($cons == "corvus") {
+	            $targetInfoArray["constellation"] = "CRV";
+	          } else if ($cons == "crater") {
+	            $targetInfoArray["constellation"] = "CRT";
+	          } else if ($cons == "crux") {
+	            $targetInfoArray["constellation"] = "CRU";
+  	        } else if ($cons == "cygnus") {
+	            $targetInfoArray["constellation"] = "CYG";
+	          } else if ($cons == "delphinus") {
+	            $targetInfoArray["constellation"] = "DEL";
+	          } else if ($cons == "dorado") {
+	            $targetInfoArray["constellation"] = "DOR";
+  	        } else if ($cons == "draco") {
+	            $targetInfoArray["constellation"] = "DRA";
+	          } else if ($cons == "equuleus") {
+	            $targetInfoArray["constellation"] = "EQU";
+	          } else if ($cons == "eridanus") {
+	            $targetInfoArray["constellation"] = "ERI";
+  	        } else if ($cons == "fornax") {
+	            $targetInfoArray["constellation"] = "FOR";
+	          } else if ($cons == "gemini") {
+	            $targetInfoArray["constellation"] = "GEM";
+	          } else if ($cons == "grus") {
+	            $targetInfoArray["constellation"] = "GRU";
+  	        } else if ($cons == "hercules") {
+	            $targetInfoArray["constellation"] = "HER";
+	          } else if ($cons == "horologium") {
+	            $targetInfoArray["constellation"] = "HOR";
+	          } else if ($cons == "hydra") {
+	            $targetInfoArray["constellation"] = "HYA";
+  	        } else if ($cons == "hydrus") {
+	            $targetInfoArray["constellation"] = "HYI";
+	          } else if ($cons == "indus") {
+	            $targetInfoArray["constellation"] = "IND";
+	          } else if ($cons == "lacerta") {
+	            $targetInfoArray["constellation"] = "LAC";
+  	        } else if ($cons == "leo minor") {
+	            $targetInfoArray["constellation"] = "LMI";
+	          } else if ($cons == "lepus") {
+	            $targetInfoArray["constellation"] = "LEP";
+	          } else if ($cons == "libra") {
+	            $targetInfoArray["constellation"] = "LIB";
+  	        } else if ($cons == "lupus") {
+	            $targetInfoArray["constellation"] = "LUP";
+	          } else if ($cons == "lynx") {
+	            $targetInfoArray["constellation"] = "LYN";
+	          } else if ($cons == "lyra") {
+	            $targetInfoArray["constellation"] = "LYR";
+  	        } else if ($cons == "mensa") {
+	            $targetInfoArray["constellation"] = "MEN";
+	          } else if ($cons == "microscopium") {
+	            $targetInfoArray["constellation"] = "MIC";
+	          } else if ($cons == "monoceros") {
+	            $targetInfoArray["constellation"] = "MON";
+  	        } else if ($cons == "musca") {
+	            $targetInfoArray["constellation"] = "MUS";
+	          } else if ($cons == "norma") {
+	            $targetInfoArray["constellation"] = "NOR";
+	          } else if ($cons == "octans") {
+	            $targetInfoArray["constellation"] = "OCT";
+  	        } else if ($cons == "ophiuchus") {
+	            $targetInfoArray["constellation"] = "OPH";
+	          } else if ($cons == "orion") {
+	            $targetInfoArray["constellation"] = "ORI";
+	          } else if ($cons == "pavo") {
+	            $targetInfoArray["constellation"] = "PAV";
+  	        } else if ($cons == "pegasus") {
+	            $targetInfoArray["constellation"] = "PEG";
+	          } else if ($cons == "perseus") {
+	            $targetInfoArray["constellation"] = "PER";
+	          } else if ($cons == "phoenix") {
+	            $targetInfoArray["constellation"] = "PHE";
+  	        } else if ($cons == "pictor") {
+	            $targetInfoArray["constellation"] = "PIC";
+	          } else if ($cons == "pisces") {
+	            $targetInfoArray["constellation"] = "PSC";
+	          } else if ($cons == "pisces austrinus") {
+	            $targetInfoArray["constellation"] = "PSA";
+  	        } else if ($cons == "puppis") {
+	            $targetInfoArray["constellation"] = "PUP";
+	          } else if ($cons == "pyxis") {
+	            $targetInfoArray["constellation"] = "PYX";
+	          } else if ($cons == "reticulum") {
+	            $targetInfoArray["constellation"] = "RET";
+  	        } else if ($cons == "sagitta") {
+	            $targetInfoArray["constellation"] = "SGE";
+	          } else if ($cons == "sagittarius") {
+	            $targetInfoArray["constellation"] = "SGR";
+	          } else if ($cons == "scorpius") {
+	            $targetInfoArray["constellation"] = "SCO";
+  	        } else if ($cons == "sculptor") {
+	            $targetInfoArray["constellation"] = "SCL";
+	          } else if ($cons == "scutum") {
+	            $targetInfoArray["constellation"] = "SCT";
+	          } else if ($cons == "serpens") {
+	            $targetInfoArray["constellation"] = "SER";
+  	        } else if ($cons == "sextans") {
+	            $targetInfoArray["constellation"] = "SEX";
+	          } else if ($cons == "taurus") {
+	            $targetInfoArray["constellation"] = "TAU";
+	          } else if ($cons == "telescopium") {
+	            $targetInfoArray["constellation"] = "TEL";
+  	        } else if ($cons == "triangulum australe") {
+	            $targetInfoArray["constellation"] = "TRA";
+	          } else if ($cons == "triangulum") {
+	            $targetInfoArray["constellation"] = "TRI";
+	          } else if ($cons == "tucana") {
+	            $targetInfoArray["constellation"] = "TUC";
+  	        } else if ($cons == "ursa major" || $cons == "ursa maior") {
+	            $targetInfoArray["constellation"] = "UMA";
+	          } else if ($cons == "ursa minor") {
+	            $targetInfoArray["constellation"] = "UMI";
+	          } else if ($cons == "vela") {
+	            $targetInfoArray["constellation"] = "VEL";
+  	        } else if ($cons == "virgo") {
+	            $targetInfoArray["constellation"] = "VIR";
+	          } else if ($cons == "volans") {
+	            $targetInfoArray["constellation"] = "VOL";
+	          } else if ($cons == "vulpecula") {
+	            $targetInfoArray["constellation"] = "VUL";
+  	        }
+	        } else {
 	        $targetInfoArray["constellation"] = strtoupper($cons);
 	      }
+	    } else {
+	      $valid = false;
+	    }
 		
 	      // Get Ra and convert it to degrees
-	      $unit = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "ra" )->item(0)->getAttribute("unit");
-	      if ($unit == "deg") {
-	        $ra = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "ra" )->item(0)->nodeValue;
-	      } else if ($unit == "rad") {
-	        $ra = Rad2Deg($target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "ra" )->item(0)->nodeValue);
-	      } else if ($unit == "arcmin") {
-	        $ra = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "ra" )->item(0)->nodeValue / 60.0;
-	      } else if ($unit == "arcsec") {
-	        $ra = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "ra" )->item(0)->nodeValue / 3600.0;
+	      if ((!$target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "ra" )->item(0))) {
+	        $valid = false;
+	      } else {
+  	      $unit = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "ra" )->item(0)->getAttribute("unit");
+	        if ($unit == "deg") {
+	          $ra = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "ra" )->item(0)->nodeValue;
+	        } else if ($unit == "rad") {
+	          $ra = Rad2Deg($target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "ra" )->item(0)->nodeValue);
+  	      } else if ($unit == "arcmin") {
+	          $ra = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "ra" )->item(0)->nodeValue / 60.0;
+	        } else if ($unit == "arcsec") {
+	          $ra = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "ra" )->item(0)->nodeValue / 3600.0;
+	        }
+  	      $targetInfoArray["ra"] = $ra / 15.0;
 	      }
-	      $targetInfoArray["ra"] = $ra / 15.0;
-	
-	      // Get Dec and convert it to degrees
-	      $unit = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "dec" )->item(0)->getAttribute("unit");
-	      if ($unit == "deg") {
-	        $dec = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "dec" )->item(0)->nodeValue;
-	      } else if ($unit == "rad") {
-	        $dec = Rad2Deg($target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "dec" )->item(0)->nodeValue);
-	      } else if ($unit == "arcmin") {
-	        $dec = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "dec" )->item(0)->nodeValue / 60.0;
-	      } else if ($unit == "arcsec") {
-	        $dec = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "dec" )->item(0)->nodeValue / 3600.0;
+	      
+	    	if (!($target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "dec" )->item(0))) {
+	        $valid = false;
+	      } else {
+	        // Get Dec and convert it to degrees
+	        $unit = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "dec" )->item(0)->getAttribute("unit");
+	        if ($unit == "deg") {
+	          $dec = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "dec" )->item(0)->nodeValue;
+  	      } else if ($unit == "rad") {
+	          $dec = Rad2Deg($target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "dec" )->item(0)->nodeValue);
+	        } else if ($unit == "arcmin") {
+	          $dec = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "dec" )->item(0)->nodeValue / 60.0;
+	        } else if ($unit == "arcsec") {
+	          $dec = $target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "dec" )->item(0)->nodeValue / 3600.0;
+  	      }
+	        $targetInfoArray["dec"] = $dec;
 	      }
-	      $targetInfoArray["dec"] = $dec;
-	
 	      // Check if the magnitude is defined. If this is the case, get it. Otherwise, set to 99.9
 	      if ($target->getElementsByTagName( "visMag" )->item(0)) {
 	        $targetInfoArray["mag"] = $target->getElementsByTagName( "visMag" )->item(0)->nodeValue;
@@ -433,6 +451,7 @@ function add_xml_observations()
 	        $targetInfoArray["diam2"] = "0";
 	      }
 	    }
+	    $targetInfoArray["valid"] = $valid;
 	    $targetInfoArray["aliases"] = $aliasesArray;
 	    $targetArray[$targetid] = $targetInfoArray;
 	  }
@@ -645,15 +664,19 @@ function add_xml_observations()
 	    }
 	
 	    // Get focal length and convert it to degrees
-	    $unit = $eyepiece->getElementsByTagName( "apparentFOV" )->item(0)->getAttribute("unit");
-	    if ($unit == "deg") {
-	      $fov = $eyepiece->getElementsByTagName( "apparentFOV" )->item(0)->nodeValue;
-	    } else if ($unit == "rad") {
-	      $fov = Rad2Deg($eyepiece->getElementsByTagName( "apparentFOV" )->item(0)->nodeValue);
-	    } else if ($unit == "arcmin") {
-	      $fov = $eyepiece->getElementsByTagName( "apparentFOV" )->item(0)->nodeValue / 60.0;
-	    } else if ($unit == "arcsec") {
-	      $fov = $eyepiece->getElementsByTagName( "apparentFOV" )->item(0)->nodeValue / 3600.0;
+	  	if (!$target->getElementsByTagName( "apparentFOV" )->item(0)) {
+	        $fov = 60.0;
+	    } else {
+	      $unit = $eyepiece->getElementsByTagName( "apparentFOV" )->item(0)->getAttribute("unit");
+	      if ($unit == "deg") {
+	        $fov = $eyepiece->getElementsByTagName( "apparentFOV" )->item(0)->nodeValue;
+  	    } else if ($unit == "rad") {
+	        $fov = Rad2Deg($eyepiece->getElementsByTagName( "apparentFOV" )->item(0)->nodeValue);
+	      } else if ($unit == "arcmin") {
+	        $fov = $eyepiece->getElementsByTagName( "apparentFOV" )->item(0)->nodeValue / 60.0;
+  	    } else if ($unit == "arcsec") {
+	        $fov = $eyepiece->getElementsByTagName( "apparentFOV" )->item(0)->nodeValue / 3600.0;
+	      }
 	    }
 	    $eyepieceInfoArray["apparentFOV"] = $fov;
 	
@@ -861,28 +884,33 @@ function add_xml_observations()
 	  $observation = $searchNode->item(0)->getElementsByTagName( "observation" );
 	  foreach( $observation as $observation )
 	  {
-	    $observerid = $observation->getElementsByTagName( "observer" )->item(0)->nodeValue;
-	    if ($observerid == $id) {
-	      // Check if the site already exists in DeepskyLog
-	      $site = $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue]["name"];
-	      $sa = $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue];
+	    $siteValid = true;
+	    if ($observation->getElementsByTagName( "site" )->item(0)) {
+		    $observerid = $observation->getElementsByTagName( "observer" )->item(0)->nodeValue;
+	      if ($observerid == $id) {
+	        // Check if the site already exists in DeepskyLog
+  	      $site = $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue]["name"];
+	        $sa = $siteArray[$observation->getElementsByTagName( "site" )->item(0)->nodeValue];
 
-	      if (count($objDatabase->selectRecordArray("SELECT * from locations where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $site . "\";")) > 0) {
-	        // Update the coordinates
-	        $run = $objDatabase->selectRecordset("SELECT id FROM locations WHERE observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $site . "\";");
-	        $get=mysql_fetch_object($run);
+	        if (count($objDatabase->selectRecordArray("SELECT * from locations where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $site . "\";")) > 0) {
+	          // Update the coordinates
+	          $run = $objDatabase->selectRecordset("SELECT id FROM locations WHERE observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $site . "\";");
+	          $get=mysql_fetch_object($run);
 	
-	        $locId = $get->id;
+  	        $locId = $get->id;
 	
-	        $objLocation->setLocationProperty($locId, "longitude", $sa["longitude"]);
-	        $objLocation->setLocationProperty($locId, "latitude", $sa["latitude"]);
-	        $objLocation->setLocationProperty($locId, "timezone", $sa["timezone"]);
+	          $objLocation->setLocationProperty($locId, "longitude", $sa["longitude"]);
+	          $objLocation->setLocationProperty($locId, "latitude", $sa["latitude"]);
+	          $objLocation->setLocationProperty($locId, "timezone", $sa["timezone"]);
+	        } else {
+	          // Add the new site!
+  	        $locId = $objLocation->addLocation($sa["name"], $sa["longitude"], $sa["latitude"], "", $sa["country"], $sa["timezone"]);
+	          $objDatabase->execSQL("update locations set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $locId . "\";");
+	        }
 	      } else {
-	        // Add the new site!
-	        $locId = $objLocation->addLocation($sa["name"], $sa["longitude"], $sa["latitude"], "", $sa["country"], $sa["timezone"]);
-	        $objDatabase->execSQL("update locations set observer = \"" . $_SESSION['deepskylog_id'] . "\" where id = \"" . $locId . "\";");
+	        $siteValid = false;
 	      }
-		
+	    	
 	      $instId = -1;
 	      // Check if the instrument already exists in DeepskyLog
 	      if ($observation->getElementsByTagName( "scope" )->item(0)) {
@@ -980,61 +1008,62 @@ function add_xml_observations()
 	      $target = $targetArray[$observation->getElementsByTagName( "target" )->item(0)->nodeValue]["name"];
 	      $ta = $targetArray[$observation->getElementsByTagName( "target" )->item(0)->nodeValue];
 	
-	      if ($ta["known"] == 1) {
-	        $pattern = '/([A-Za-z]+)([\d\D\w]*)/';
-	        $targetName = preg_replace($pattern, '${1} ${2}', $target);
-	        $targetName = str_replace("  ", " ", $targetName);
-	        $objeId = -1;
-	        // Check if the object with the given name exists. If this is the case, set the objeId, else check the alternative names
-	        $targetName = $objCatalog->checkObject($targetName);
-	        if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\");")) > 0) {
-	          $objeId = $objObject->getDsObjectName($targetName);
-	        } else {
-	          // Object with the given name does not exist... Check if the name is an alternative name
-	          for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
-	            $targetName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
-	            $targetName = str_replace("  ", " ", $targetName);
-	            $targetName = $objCatalog->checkObject($targetName);
-	            if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\")")) > 0) {
-	              $objeId = $objObject->getDsObjectName($targetName);
-	            }
-	          }
-	          if ($objeId == -1) {
-	            // Object does not exist (name or alternative name)
-	            // Check for the type and coordinates. If there is already an object at the same coordinates with the same type, add the alternative name
-	            if ((count($objDatabase->selectRecordArray("SELECT name FROM objects WHERE ra > " . ($ta["ra"] - 0.0001) . " and ra < " . ($ta["ra"] + 0.0001) . " and decl > " . ($ta["dec"] - 0.0001) . " and decl < " . ($ta["dec"] + 0.0001) . " and type = \"" . $ta["type"] . "\""))) > 0) {
-	              $run = $objDatabase->selectRecordset("SELECT name FROM objects WHERE ra > " . ($ta["ra"] - 0.0001) . " and ra < " . ($ta["ra"] + 0.0001) . " and decl > " . ($ta["dec"] - 0.0001) . " and decl < " . ($ta["dec"] + 0.0001) . " and type = \"" . $ta["type"] . "\"");
-	              $get=mysql_fetch_object($run);
-	              
-	              $objeId = $get->name;
-	              
-	              // Also add alternative name to the existing object.
-	              $names = explode(" ", $objeId);
-	              $aliasNames = explode(" ", $targetName);
-	
-	              $objObject->newAltName($names[0]." ".$names[1], $aliasNames[0], $aliasNames[1]);
-	            } else {
-	              // else, add new object
-	              $targetName = preg_replace($pattern, '${1} ${2}', $target);
+	      if ($ta["valid"] && $siteValid) {
+  	      if ($ta["known"] == 1) {
+	          $pattern = '/([A-Za-z]+)([\d\D\w]*)/';
+	          $targetName = preg_replace($pattern, '${1} ${2}', $target);
+	          $targetName = str_replace("  ", " ", $targetName);
+	          $objeId = -1;
+	          // Check if the object with the given name exists. If this is the case, set the objeId, else check the alternative names
+  	        $targetName = $objCatalog->checkObject($targetName);
+	          if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\");")) > 0) {
+	            $objeId = $objObject->getDsObjectName($targetName);
+	          } else {
+	            // Object with the given name does not exist... Check if the name is an alternative name
+	            for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
+	              $targetName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
 	              $targetName = str_replace("  ", " ", $targetName);
-	              $targetName = $objCatalog->checkObject($targetName);
-	              $names = explode(" ", $targetName);
-	              $objObject->addDSObject($names[0]." ".$names[1], $names[0], $names[1], $ta["type"], $ta["constellation"], $ta["ra"], $ta["dec"], $ta["mag"], $ta["subr"], $ta["diam1"], $ta["diam2"], $ta["pa"], $ta["datasource"]);
-	              for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
-	                $aliasName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
-	                $aliasNames = explode(" ", $aliasName);
-	                $objObject->newAltName($names[0]." ".$names[1], $aliasNames[0], $aliasNames[1]);
+  	            $targetName = $objCatalog->checkObject($targetName);
+	              if (count($objDatabase->selectRecordArray("SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $targetName . "\")")) > 0) {
+	                $objeId = $objObject->getDsObjectName($targetName);
 	              }
-	              $objeId = $objObject->getDsObjectName($targetName);
-	              $body="<OAL>" . LangValidateAccountEmailTitleObject." ".$targetName." ". "www.deepskylog.org/index.php?indexAction=detail_object&object=".urlencode($targetName)." ".
-	                    LangValidateAccountEmailTitleObjectObserver." ".$objObserver->getObserverProperty($loggedUser,'name')." ".$objObserver->getObserverProperty($loggedUser,'firstname')." www.deepskylog.org/index.php?indexAction=detail_observer&user=".urlencode($loggedUser);
-	              if(isset($developversion)&&($developversion==1))
-	                $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<br />";
-	              else
-	                mail($mailTo, LangValidateAccountEmailTitleObject . " " . $targetName, $body, "From:".$mailFrom);
+	            }
+	            if ($objeId == -1) {
+	              // Object does not exist (name or alternative name)
+	              // Check for the type and coordinates. If there is already an object at the same coordinates with the same type, add the alternative name
+  	            if ((count($objDatabase->selectRecordArray("SELECT name FROM objects WHERE ra > " . ($ta["ra"] - 0.0001) . " and ra < " . ($ta["ra"] + 0.0001) . " and decl > " . ($ta["dec"] - 0.0001) . " and decl < " . ($ta["dec"] + 0.0001) . " and type = \"" . $ta["type"] . "\""))) > 0) {
+	                $run = $objDatabase->selectRecordset("SELECT name FROM objects WHERE ra > " . ($ta["ra"] - 0.0001) . " and ra < " . ($ta["ra"] + 0.0001) . " and decl > " . ($ta["dec"] - 0.0001) . " and decl < " . ($ta["dec"] + 0.0001) . " and type = \"" . $ta["type"] . "\"");
+	                $get=mysql_fetch_object($run);
+	              
+	                $objeId = $get->name;
+	              
+	                // Also add alternative name to the existing object.
+	                $names = explode(" ", $objeId);
+	                $aliasNames = explode(" ", $targetName);
+	
+	                $objObject->newAltName($names[0]." ".$names[1], $aliasNames[0], $aliasNames[1]);
+  	            } else {
+	                // else, add new object
+	                $targetName = preg_replace($pattern, '${1} ${2}', $target);
+	                $targetName = str_replace("  ", " ", $targetName);
+	                $targetName = $objCatalog->checkObject($targetName);
+	                $names = explode(" ", $targetName);
+	                $objObject->addDSObject($names[0]." ".$names[1], $names[0], $names[1], $ta["type"], $ta["constellation"], $ta["ra"], $ta["dec"], $ta["mag"], $ta["subr"], $ta["diam1"], $ta["diam2"], $ta["pa"], $ta["datasource"]);
+	                for ($i = 0; $i < sizeof($ta["aliases"]);$i++) {
+	                  $aliasName = preg_replace($pattern, '${1} ${2}', $ta["aliases"]["alias" . $i]);
+	                  $aliasNames = explode(" ", $aliasName);
+  	                $objObject->newAltName($names[0]." ".$names[1], $aliasNames[0], $aliasNames[1]);
+	                }
+	                $objeId = $objObject->getDsObjectName($targetName);
+	                $body="<OAL>" . LangValidateAccountEmailTitleObject." ".$targetName." ". "www.deepskylog.org/index.php?indexAction=detail_object&object=".urlencode($targetName)." ".
+	                      LangValidateAccountEmailTitleObjectObserver." ".$objObserver->getObserverProperty($loggedUser,'name')." ".$objObserver->getObserverProperty($loggedUser,'firstname')." www.deepskylog.org/index.php?indexAction=detail_observer&user=".urlencode($loggedUser);
+	                if(isset($developversion)&&($developversion==1))
+	                  $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<br />";
+	                else
+	                  mail($mailTo, LangValidateAccountEmailTitleObject . " " . $targetName, $body, "From:".$mailFrom);
+  	            }
 	            }
 	          }
-	        }
 	        // Check if the observation already exists!
 	        $dateArray = sscanf($observation->getElementsByTagName( "begin" )->item(0)->nodeValue, "%4d-%2d-%2dT%2d:%2d:%2d%c%02d:%02d");
 	        $date = mktime($dateArray[3], $dateArray[4], 0, $dateArray[1], $dateArray[2], $dateArray[0]);
@@ -1333,6 +1362,7 @@ function add_xml_observations()
 	            }
 	          }
 	        }
+  	      }
 	      }
 	    } 
 	  }
