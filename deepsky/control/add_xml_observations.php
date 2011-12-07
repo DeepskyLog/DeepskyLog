@@ -9,7 +9,7 @@ elseif(!$loggedUser) throw new Exception(LangException002);
 else add_xml_observations();
 
 function add_xml_observations()
-{ global $baseURL,$entryMessage,$objSession,$mailTo,$mailFrom,$loggedUser,
+{ global $baseURL,$entryMessage,$objSession,$mailTo,$mailFrom,$loggedUser,$objConstellation,
          $objObject,$objCatalog,$objLocation,$objInstrument,$objFilter,$objEyepiece,$objLens,$objDatabase,$objObserver,$objObservation;
 	if($_FILES['xml']['tmp_name']!="") {
 	  $xmlfile=$_FILES['xml']['tmp_name'];
@@ -29,8 +29,9 @@ function add_xml_observations()
 	
 	$searchNode = $dom->getElementsByTagName( "observations" );
 	$version = $searchNode->item(0)->getAttribute("version");
-	
-	if ($version != "2.0") {
+
+	if ($version == "2.0" || $version == "2.1") {
+	} else {
 	  $entryMessage.= LangXMLError1;
 	  $_GET['indexAction']="add_xml";
 	  
@@ -163,192 +164,7 @@ function add_xml_observations()
 	
 	    $targetInfoArray["known"] = $next;
 	
-	    if ($valid && $target->getElementsByTagName( "constellation" )->item(0)) {
-	      if ($next == 1) {
-	        // TODO : Use DeepskyLog code to check the constellation of this object
-	        $cons = $targetInfoArray["constellation"] = $target->getElementsByTagName( "constellation" )->item(0)->nodeValue;
-	        // Convert the constellation to the 3 letter code
-	        if (strlen($cons) > 3) {
-	          $cons = strtolower($cons);
-	          if ($cons == "andromeda") {
-	            $targetInfoArray["constellation"] = "AND";
-	          } else if ($cons == "antlia") {
-	            $targetInfoArray["constellation"] = "ANT";
-	          } else if ($cons == "apus") {
-	            $targetInfoArray["constellation"] = "APS";
-	          } else if ($cons == "aquarius") {
-	            $targetInfoArray["constellation"] = "AQR";
-	          } else if ($cons == "aquila") {
-	            $targetInfoArray["constellation"] = "AQL";
-  	        } else if ($cons == "aries") {
-	            $targetInfoArray["constellation"] = "ARI";
-	          } else if ($cons == "auriga") {
-	            $targetInfoArray["constellation"] = "AUR";
-	          } else if ($cons == "bootes") {
-	            $targetInfoArray["constellation"] = "BOO";
-  	        } else if ($cons == "caelum") {
-	            $targetInfoArray["constellation"] = "CAE";
-	          } else if ($cons == "camelopardalis") {
-	            $targetInfoArray["constellation"] = "CAM";
-	          } else if ($cons == "cancer") {
-	            $targetInfoArray["constellation"] = "CNC";
-  	        } else if ($cons == "canes venatici") {
-	            $targetInfoArray["constellation"] = "CVN";
-	          } else if ($cons == "canis major" || $cons == "canis maior") {
-	            $targetInfoArray["constellation"] = "CMA";
-	          } else if ($cons == "canis minor") {
-	            $targetInfoArray["constellation"] = "CMI";
-  	        } else if ($cons == "capricornus") {
-	            $targetInfoArray["constellation"] = "CAP";
-	          } else if ($cons == "carina") {
-	            $targetInfoArray["constellation"] = "CAR";
-	          } else if ($cons == "cassiopeia") {
-	            $targetInfoArray["constellation"] = "CAS";
-  	        } else if ($cons == "centaurus") {
-	            $targetInfoArray["constellation"] = "CEN";
-	          } else if ($cons == "cepheus") {
-	            $targetInfoArray["constellation"] = "CEP";
-	          } else if ($cons == "cetus") {
-	            $targetInfoArray["constellation"] = "CET";
-  	        } else if ($cons == "chamaeleon") {
-	            $targetInfoArray["constellation"] = "CHA";
-	          } else if ($cons == "circinus") {
-	            $targetInfoArray["constellation"] = "CIR";
-	          } else if ($cons == "columba") {
-	            $targetInfoArray["constellation"] = "COL";
-  	        } else if ($cons == "coma berenices") {
-	            $targetInfoArray["constellation"] = "COM";
-	          } else if ($cons == "corona australis") {
-	            $targetInfoArray["constellation"] = "CRA";
-	          } else if ($cons == "corona borealis") {
-	            $targetInfoArray["constellation"] = "CRB";
-  	        } else if ($cons == "corvus") {
-	            $targetInfoArray["constellation"] = "CRV";
-	          } else if ($cons == "crater") {
-	            $targetInfoArray["constellation"] = "CRT";
-	          } else if ($cons == "crux") {
-	            $targetInfoArray["constellation"] = "CRU";
-  	        } else if ($cons == "cygnus") {
-	            $targetInfoArray["constellation"] = "CYG";
-	          } else if ($cons == "delphinus") {
-	            $targetInfoArray["constellation"] = "DEL";
-	          } else if ($cons == "dorado") {
-	            $targetInfoArray["constellation"] = "DOR";
-  	        } else if ($cons == "draco") {
-	            $targetInfoArray["constellation"] = "DRA";
-	          } else if ($cons == "equuleus") {
-	            $targetInfoArray["constellation"] = "EQU";
-	          } else if ($cons == "eridanus") {
-	            $targetInfoArray["constellation"] = "ERI";
-  	        } else if ($cons == "fornax") {
-	            $targetInfoArray["constellation"] = "FOR";
-	          } else if ($cons == "gemini") {
-	            $targetInfoArray["constellation"] = "GEM";
-	          } else if ($cons == "grus") {
-	            $targetInfoArray["constellation"] = "GRU";
-  	        } else if ($cons == "hercules") {
-	            $targetInfoArray["constellation"] = "HER";
-	          } else if ($cons == "horologium") {
-	            $targetInfoArray["constellation"] = "HOR";
-	          } else if ($cons == "hydra") {
-	            $targetInfoArray["constellation"] = "HYA";
-  	        } else if ($cons == "hydrus") {
-	            $targetInfoArray["constellation"] = "HYI";
-	          } else if ($cons == "indus") {
-	            $targetInfoArray["constellation"] = "IND";
-	          } else if ($cons == "lacerta") {
-	            $targetInfoArray["constellation"] = "LAC";
-  	        } else if ($cons == "leo minor") {
-	            $targetInfoArray["constellation"] = "LMI";
-	          } else if ($cons == "lepus") {
-	            $targetInfoArray["constellation"] = "LEP";
-	          } else if ($cons == "libra") {
-	            $targetInfoArray["constellation"] = "LIB";
-  	        } else if ($cons == "lupus") {
-	            $targetInfoArray["constellation"] = "LUP";
-	          } else if ($cons == "lynx") {
-	            $targetInfoArray["constellation"] = "LYN";
-	          } else if ($cons == "lyra") {
-	            $targetInfoArray["constellation"] = "LYR";
-  	        } else if ($cons == "mensa") {
-	            $targetInfoArray["constellation"] = "MEN";
-	          } else if ($cons == "microscopium") {
-	            $targetInfoArray["constellation"] = "MIC";
-	          } else if ($cons == "monoceros") {
-	            $targetInfoArray["constellation"] = "MON";
-  	        } else if ($cons == "musca") {
-	            $targetInfoArray["constellation"] = "MUS";
-	          } else if ($cons == "norma") {
-	            $targetInfoArray["constellation"] = "NOR";
-	          } else if ($cons == "octans") {
-	            $targetInfoArray["constellation"] = "OCT";
-  	        } else if ($cons == "ophiuchus") {
-	            $targetInfoArray["constellation"] = "OPH";
-	          } else if ($cons == "orion") {
-	            $targetInfoArray["constellation"] = "ORI";
-	          } else if ($cons == "pavo") {
-	            $targetInfoArray["constellation"] = "PAV";
-  	        } else if ($cons == "pegasus") {
-	            $targetInfoArray["constellation"] = "PEG";
-	          } else if ($cons == "perseus") {
-	            $targetInfoArray["constellation"] = "PER";
-	          } else if ($cons == "phoenix") {
-	            $targetInfoArray["constellation"] = "PHE";
-  	        } else if ($cons == "pictor") {
-	            $targetInfoArray["constellation"] = "PIC";
-	          } else if ($cons == "pisces") {
-	            $targetInfoArray["constellation"] = "PSC";
-	          } else if ($cons == "pisces austrinus") {
-	            $targetInfoArray["constellation"] = "PSA";
-  	        } else if ($cons == "puppis") {
-	            $targetInfoArray["constellation"] = "PUP";
-	          } else if ($cons == "pyxis") {
-	            $targetInfoArray["constellation"] = "PYX";
-	          } else if ($cons == "reticulum") {
-	            $targetInfoArray["constellation"] = "RET";
-  	        } else if ($cons == "sagitta") {
-	            $targetInfoArray["constellation"] = "SGE";
-	          } else if ($cons == "sagittarius") {
-	            $targetInfoArray["constellation"] = "SGR";
-	          } else if ($cons == "scorpius") {
-	            $targetInfoArray["constellation"] = "SCO";
-  	        } else if ($cons == "sculptor") {
-	            $targetInfoArray["constellation"] = "SCL";
-	          } else if ($cons == "scutum") {
-	            $targetInfoArray["constellation"] = "SCT";
-	          } else if ($cons == "serpens") {
-	            $targetInfoArray["constellation"] = "SER";
-  	        } else if ($cons == "sextans") {
-	            $targetInfoArray["constellation"] = "SEX";
-	          } else if ($cons == "taurus") {
-	            $targetInfoArray["constellation"] = "TAU";
-	          } else if ($cons == "telescopium") {
-	            $targetInfoArray["constellation"] = "TEL";
-  	        } else if ($cons == "triangulum australe") {
-	            $targetInfoArray["constellation"] = "TRA";
-	          } else if ($cons == "triangulum") {
-	            $targetInfoArray["constellation"] = "TRI";
-	          } else if ($cons == "tucana") {
-	            $targetInfoArray["constellation"] = "TUC";
-  	        } else if ($cons == "ursa major" || $cons == "ursa maior") {
-	            $targetInfoArray["constellation"] = "UMA";
-	          } else if ($cons == "ursa minor") {
-	            $targetInfoArray["constellation"] = "UMI";
-	          } else if ($cons == "vela") {
-	            $targetInfoArray["constellation"] = "VEL";
-  	        } else if ($cons == "virgo") {
-	            $targetInfoArray["constellation"] = "VIR";
-	          } else if ($cons == "volans") {
-	            $targetInfoArray["constellation"] = "VOL";
-	          } else if ($cons == "vulpecula") {
-	            $targetInfoArray["constellation"] = "VUL";
-  	        }
-	        } else {
-	        $targetInfoArray["constellation"] = strtoupper($cons);
-	      }
-	    } else {
-	      $valid = false;
-	    }
+	    if ($valid) {
 		
 	      // Get Ra and convert it to degrees
 	      if ((!$target->getElementsByTagName( "position" )->item(0)->getElementsByTagName( "ra" )->item(0))) {
@@ -383,6 +199,9 @@ function add_xml_observations()
   	      }
 	        $targetInfoArray["dec"] = $dec;
 	      }
+	      
+	      $targetInfoArray['constellation'] = $objConstellation->getConstellationFromCoordinates($targetInfoArray["ra"], $targetInfoArray["dec"]);
+	       
 	      // Check if the magnitude is defined. If this is the case, get it. Otherwise, set to 99.9
 	      if ($target->getElementsByTagName( "visMag" )->item(0)) {
 	        $targetInfoArray["mag"] = $target->getElementsByTagName( "visMag" )->item(0)->nodeValue;
