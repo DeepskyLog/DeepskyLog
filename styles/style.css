@@ -717,3 +717,9 @@ ul{
 .width100pct {
   width            : 100%;
 }
+th.catalog {
+	background-color : #E0E6EC;
+  padding          : 2px;
+  color            : #000000;
+  text-align       : left;
+}

@@ -29,7 +29,7 @@ function databaseInfo()
   $baseURL      = "http://localhost/deepskylog/";
   // tempDir has NO end slash !
   $tempDir      = "/tmp/DeepskyLog";
-  $dirAstroImageCatalogs = "http://www.distant-targets.be/files/DSL/astroimagecatalogs/constellations/";
+  $dirAstroImageCatalogs = "http://www.distant-targets.be/files/DSL/astroimagecatalogs/";
   
   // General settings
   // The title to appear above all pages
