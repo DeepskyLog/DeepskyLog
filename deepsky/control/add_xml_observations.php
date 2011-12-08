@@ -58,10 +58,10 @@ function add_xml_observations()
 	    $tmpObserverArray = Array();
 	    // Get the id and the name of the observers in the comast file
 	    $comastid = $observer->getAttribute("id");
-	    $name = htmlentities(utf8_decode($observer->getElementsByTagName( "name" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
+	    $name = htmlentities(($observer->getElementsByTagName( "name" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
 
 	    $tmpObserverArray['name'] = $name;
-	    $surname = htmlentities(utf8_decode($observer->getElementsByTagName( "surname" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
+	    $surname = htmlentities(($observer->getElementsByTagName( "surname" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
 	    $tmpObserverArray['surname'] = $surname;
 	    
 	    if ($observer->getElementsByTagName( "fstOffset" )->item(0)) {
@@ -280,13 +280,13 @@ function add_xml_observations()
 	  $site = $sites->item(0)->getElementsByTagName( "site" );
 	
 	  $siteArray = Array();
-	
+
 	  foreach( $site as $site )
 	  {
 	    $siteInfoArray = Array();
 	    $siteid = $site->getAttribute("id");
 	
-	    $siteInfoArray["name"] = htmlentities(utf8_decode($site->getElementsByTagName( "name" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
+	    $siteInfoArray["name"] = htmlentities(($site->getElementsByTagName( "name" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
 
 	    // Get longitude and convert it to degrees
 	    $unit = $site->getElementsByTagName( "longitude" )->item(0)->getAttribute("unit");
@@ -321,9 +321,12 @@ function add_xml_observations()
       $siteInfoArray["timezone"] = $timezones->timezone->timezoneId;
       $siteInfoArray["country"] = $timezones->timezone->countryName;
 
+      if($siteInfoArray["timezone"] == "") {
+        $siteInfoArray["timezone"] = "UTC";
+      }
 	    $siteArray[$siteid] = $siteInfoArray;
 	  }
-	
+
 	  // SESSIONS
 	  $sessions = $dom->getElementsByTagName( "sessions" );
 	  $session = $sessions->item(0)->getElementsByTagName( "session" );
@@ -383,17 +386,17 @@ function add_xml_observations()
 	    
 	    // Get weather
 	    if ($session->getElementsByTagName( "weather" )->item(0)) {
-	      $sessionInfoArray["weather"] = htmlentities(utf8_decode($session->getElementsByTagName("weather")->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
+	      $sessionInfoArray["weather"] = htmlentities(($session->getElementsByTagName("weather")->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
 	    }
 	    
       // Get the equipment
 	    if ($session->getElementsByTagName( "equipment" )->item(0)) {
-	      $sessionInfoArray["equipment"] = htmlentities(utf8_decode($session->getElementsByTagName("equipment")->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
+	      $sessionInfoArray["equipment"] = htmlentities(($session->getElementsByTagName("equipment")->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
 	    }
 	
       // Get the comments
 	    if ($session->getElementsByTagName( "comments" )->item(0)) {
-	      $sessionInfoArray["comments"] = htmlentities(utf8_decode($session->getElementsByTagName("comments")->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
+	      $sessionInfoArray["comments"] = htmlentities(($session->getElementsByTagName("comments")->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
 	    }
 	    
 	    // We don't use the image tag of the session element to import, only to export
@@ -412,7 +415,7 @@ function add_xml_observations()
 	    $scopeInfoArray = Array();
 	    $scopeid = $scope->getAttribute("id");
 	
-	    $scopeInfoArray["name"] = htmlentities(utf8_decode($scope->getElementsByTagName( "model" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
+	    $scopeInfoArray["name"] = htmlentities(($scope->getElementsByTagName( "model" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
 	    $scopeInfoArray["diameter"] = $scope->getElementsByTagName( "aperture" )->item(0)->nodeValue;
 	
 	    $tp =  $scope->getAttribute("xsi:type");
@@ -472,7 +475,7 @@ function add_xml_observations()
 	    $eyepieceid = $eyepiece->getAttribute("id");
 	
 	
-	    $eyepieceInfoArray["name"] = htmlentities(utf8_decode($eyepiece->getElementsByTagName( "model" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);;
+	    $eyepieceInfoArray["name"] = htmlentities(($eyepiece->getElementsByTagName( "model" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);;
 	    $eyepieceInfoArray["focalLength"] = $eyepiece->getElementsByTagName( "focalLength" )->item(0)->nodeValue;
 	
 	    // Check if the maximal focal length exists. If so, we are using a zoom eyepiece
@@ -514,7 +517,7 @@ function add_xml_observations()
 	    $lensid = $lens->getAttribute("id");
 	
 	
-	    $lensInfoArray["name"] = htmlentities(utf8_decode($lens->getElementsByTagName( "model" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
+	    $lensInfoArray["name"] = htmlentities(($lens->getElementsByTagName( "model" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
 	    $lensInfoArray["factor"] = $lens->getElementsByTagName( "factor" )->item(0)->nodeValue;
 	
 	    $lensArray[$lensid] = $lensInfoArray;
@@ -531,7 +534,7 @@ function add_xml_observations()
 	    $filterInfoArray = Array();
 	    $filterid = $filter->getAttribute("id");
 	
-	    $filterInfoArray["name"] = htmlentities(utf8_decode($filter->getElementsByTagName( "model" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
+	    $filterInfoArray["name"] = htmlentities(($filter->getElementsByTagName( "model" )->item(0)->nodeValue),ENT_COMPAT,"UTF-8", 0);
 	    $type = $filter->getElementsByTagName( "type" )->item(0)->nodeValue;
 	
 	    if ($type == "other") {
@@ -619,6 +622,7 @@ function add_xml_observations()
         $sessionid = ($objDatabase->selectRecordArray("SELECT * from sessions where begindate = \"" . $sessionArray[$key]['begindate'] . "\" and enddate = \"" . $sessionArray[$key]['enddate'] . "\";"));
         $sessionid = $sessionid['id'];
       }
+
       $beginday = substr($sessionArray[$key]['begindate'], 8, 2);
       $beginmonth = substr($sessionArray[$key]['begindate'], 5, 2);
       $beginyear = substr($sessionArray[$key]['begindate'], 0, 4);
@@ -907,7 +911,7 @@ function add_xml_observations()
 	            // New observation
 	            $resultNode = $observation->getElementsByTagName("result")->item(0);
 	            if ($resultNode->getElementsByTagName( "description" )->item(0)) {
-	              $description = utf8_decode($resultNode->getElementsByTagName( "description" )->item(0)->nodeValue);
+	              $description = ($resultNode->getElementsByTagName( "description" )->item(0)->nodeValue);
 	            } else {
 	              $description = "";
 	            }
