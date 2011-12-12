@@ -1,19 +1,20 @@
 <?php
 global $objObject,$baseURL;
 
-$exampleText = "Example page for Abell84";
+$exampleText = ImageCatalogExample;
 echo "<a href=\"" . $baseURL . "images/AbellExample.jpg\" rel=\"prettyPhoto\" title=\"\">";
 echo "<img class=\"floatright\" width=\"30%\" src=\"" . $baseURL . "images/AbellExample.jpg\"  alt=\"" . $exampleText . "\"/>";
 echo "</a>";
 
-echo "DeepskyLog is a very powerful tool, where you can create a personalized atlasses and image catalogs.";
-echo "<br />However, making your own image catalog is time consuming. To help you, we created some interesting image catalogs and make them available for download.";
-echo "You can click the example to get a preview of how the image catalogs look like. They are very useful for telescopes with a goto system, where the goto system guides you to the neighbourhood of the object. Using the images, it is very easy to find the final object.";
+echo "<h2>" . LangSearchMenuItem14 . "</h2>";
+echo ImageCatalogDescription1;
+echo "<br />" . ImageCatalogDescription2 . "<br />";
+echo ImageCatalogDescription3;
 
 echo "<br />";
 echo "<table>
-       <tr><th class=\"catalog\">Catalogs sorted by name</th></tr>
-       <tr><td><a href=\"" . $dirAstroImageCatalogs . "Abell.pdf\">The Abell Planetary Nebula Catalog</a></td></tr>
+       <tr><th class=\"catalog\">" . ImageCatalogDescription4 . "</th></tr>
+       <tr><td><a href=\"" . $dirAstroImageCatalogs . "Abell.pdf\">" . ImageCatalogAbell . "</a></td></tr>
       </table>";
 
 $constellations = Array("AND", "ANT", "AQL", "AQR", "ARI", "AUR", "BOO", "CAE", "CAM", "CAP", 
@@ -28,7 +29,7 @@ $constellations = Array("AND", "ANT", "AQL", "AQR", "ARI", "AUR", "BOO", "CAE", 
 // Add for constellations
 echo "<br />";
 echo "<table>
-       <tr><th colspan=\"3\" class=\"catalog\">Catalogs sorted by constellation</th></tr>";
+       <tr><th colspan=\"3\" class=\"catalog\">" . ImageCatalogDescription5 . "</th></tr>";
 
 // We have to add these manually, because we don't have all the files
 

@@ -1,5 +1,12 @@
 <?php //EN
 // This is version 4.3
+define("ImageCatalogExample"            ,"Example page for Abell 84");
+define("ImageCatalogDescription1"       ,"DeepskyLog is a very powerful tool, where you can create personalized atlasses and image catalogs.");
+define("ImageCatalogDescription2"       ,"However, making your own image catalog is time consuming. To help you, we created some interesting image catalogs and made them available for download.");
+define("ImageCatalogDescription3"       ,"You can click the example to get a preview of how the image catalogs look like. They are very useful for telescopes with a goto system, where the goto system guides you to the neighbourhood of the object. Using the images, it is very easy to find the final object.");
+define("ImageCatalogDescription4"       ,"Catalogs sorted by name");
+define("ImageCatalogDescription5"       ,"Catalogs sorted by constellation");
+define("ImageCatalogAbell"              ,"The Abell Planetary Nebula Catalog");
 define("LangpdfOrientation"             ,"Page orientation: ");
 define("LangpdfOrientationPortrait"     ,"portrait");
 define("LangpdfOrientationLandscape"    ,"landscape");
