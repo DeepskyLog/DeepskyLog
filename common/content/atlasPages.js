@@ -24,13 +24,20 @@ var gridDimensions=new Array(
     		  new Array(0.15,0.20,0.012,16),
     		  new Array(0.1 ,0.20,0.012,16)
     		  );
+var decl;
+var dsos;
+var ra;
+var rato;
+var stars;
+var zoom;
+
 function generateallonepass(item,msie,stepra,stepdecl)
 { if(stepra<0)
-  { document.getElementById('ra').value=document.getElementById('rato').value;
-    document.getElementById('decl').value=document.getElementById('decl').value-stepdecl;
+  { ra=rato;
+    decl=decl-stepdecl;
   }
   else
-    document.getElementById('ra').value=(1.0*document.getElementById('ra').value)-stepra;
+    ra=(1.0*ra)-stepra;
   item=(item*1.0)+1;
   if(item<10) item='0'+item;
   if(item<100) item='0'+item;
@@ -46,19 +53,19 @@ function generateallonepass(item,msie,stepra,stepdecl)
   { if(jsonhttp.readyState==4)
     { //alert(jsonhttp.responseText);
 	    temp=eval('('+jsonhttp.responseText+')');
-      tempra=Math.max(Math.floor(document.getElementById('ra').value,0),0);
-      tempramin=Math.max(Math.round((document.getElementById('ra').value-tempra)*60,0),0);
+      tempra=Math.max(Math.floor(ra,0),0);
+      tempramin=Math.max(Math.round((ra-tempra)*60,0),0);
       if(tempra<10) tempra='0'+tempra;
       if(tempramin<10) tempramin='0'+tempramin;
-      if(((document.getElementById('decl').value*1.0)>0))
-      { tempdecl=Math.floor(document.getElementById('decl').value,0);
-        tempdeclmin=Math.round((document.getElementById('decl').value-tempdecl)*60,1);
+      if(((decl*1.0)>0))
+      { tempdecl=Math.floor(decl,0);
+        tempdeclmin=Math.round((decl-tempdecl)*60,1);
         if(tempdecl<10) tempdecl='0'+tempdecl;
         if(tempdeclmin<10) tempdeclmin='0'+tempdeclmin;
       }
       else
-      { tempdecl=Math.floor(document.getElementById('decl').value,0)+1;
-        tempdeclmin=Math.round(-(document.getElementById('decl').value-tempdecl)*60,1);
+      { tempdecl=Math.floor(decl,0)+1;
+        tempdeclmin=Math.round(-(decl-tempdecl)*60,1);
         tempdecl=-tempdecl;
         if(tempdecl<10) tempdecl='0'+tempdecl;
         if(tempdeclmin<10) tempdeclmin='0'+tempdeclmin;
@@ -66,27 +73,30 @@ function generateallonepass(item,msie,stepra,stepdecl)
       }	
       if(msie)
       { var mywindow=window.open("",'mywindow'+item);
-        mywindow.location='atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+document.getElementById('decl').value+'_'+item+'_'+document.getElementById('ra').value.substr(0,5);  
+        mywindow.location='atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+decl+'_'+item+'_'+ra.substr(0,5);  
       }  
       else
       	window.open('atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+item+'_'+tempdecl+'d'+tempdeclmin+'m'+' '+tempra+'h'+tempramin+'m','');
-      if(((document.getElementById('ra').value*1.0)<(temp.raright))&&((temp.declbottom<-80)||((document.getElementById('decl').value*1.0)<-80)))
+      if(((ra*1.0)<(temp.raright))&&((temp.declbottom<-80)||((decl*1.0)<-80)))
         return;
-      generateallonepass(item,msie,((document.getElementById('ra').value-(temp.raright))*2*(1-document.getElementById('theoverlap').value)),((document.getElementById('decl').value-(temp.declbottom))*2*(1-document.getElementById('theoverlap').value)));      
+      generateallonepass(item,msie,((ra-(temp.raright))*2*(1-document.getElementById('theoverlap').value)),((decl-(temp.declbottom))*2*(1-document.getElementById('theoverlap').value)));      
     }
   };
   var url='ajaxinterface.php?instruction=atlasPages&item='+urlencode(item)+'&'+
-          'ra='+document.getElementById('ra').value+'&'+
-          'decl='+document.getElementById('decl').value+'&'+
-          'stars='+document.getElementById('stars').value+'&'+
-          'dsos='+document.getElementById('dsos').value+'&'+
-          'zoom='+document.getElementById('zoom').value+'&'+
+          'ra='+ra+'&'+
+          'decl='+decl+'&'+
+          'stars='+stars+'&'+
+          'dsos='+dsos+'&'+
+          'zoom='+zoom+'&'+
           'pageorientation=';
   if(document.getElementById('pageorientationportrait').checked)
   	url+='portrait';
   else
   	url+='landscape';
-  //alert(url);
+  if(document.getElementById('pagesizea3').checked)
+  	url+='&pagesize=a3';
+  else
+  	url+='&pagesize=a4';
   jsonhttp.open("GET",url,true);
   jsonhttp.send(null);	
 }
@@ -102,8 +112,8 @@ function generateone(msie)
   { if(jsonhttp.readyState==4)
     { //alert(jsonhttp.responseText);
 	    temp=eval('('+jsonhttp.responseText+')');
-      tempra=Math.floor(document.getElementById('ra').value,0);
-      tempramin=Math.round((document.getElementById('ra').value-tempra)*60,0);
+      tempra=Math.floor(ra,0);
+      tempramin=Math.round((ra-tempra)*60,0);
       if(tempra<10)
       	tempra='0'+tempra;
       if(tempramin<10)
@@ -127,89 +137,79 @@ function generateone(msie)
       }	
       if(msie=='true')
       { var mywindow=window.open("",'mywindow'+item);
-        mywindow.location='atlasPagesOnePass.pdf.php?item=0&filename='+document.getElementById('decl').value+'_'+item+'_'+document.getElementById('ra').value.substr(0,5);  
+        mywindow.location='atlasPagesOnePass.pdf.php?item=0&filename='+document.getElementById('decl').value+'_'+item+'_'+ra.substr(0,5);  
       }  
       else
       	window.open('atlasPagesOnePass.pdf.php?item=0&filename='+tempdecl+'d'+tempdeclmin+'m'+'_'+tempra+'h'+tempramin+'m','');
-      //alert('cond: '+(1.0*temp.declbottom)+' '+1.0*document.getElementById('declfrom').value);
-      //if((((document.getElementById('declfrom').value*1.0<1.0*document.getElementById('declto').value) && ((1.0*document.getElementById('decl').value)<1.0*document.getElementById('declfrom').value))) || 
-      // 	 (((document.getElementById('declfrom').value*1.0>1.0*document.getElementById('declto').value) && ((1.0*document.getElementById('decl').value)>1.0*document.getElementById('declfrom').value))))     
-      //     return;
     }
   };
   var url='ajaxinterface.php?instruction=atlasPages&item=0&'+
-          'ra='+document.getElementById('ra').value+'&'+
+          'ra='+ra+'&'+
           'decl='+document.getElementById('decl').value+'&'+
-          'stars='+document.getElementById('stars').value+'&'+
-          'dsos='+document.getElementById('dsos').value+'&'+
-          'zoom='+document.getElementById('zoom').value+'&'+
+          'stars='+stars+'&'+
+          'dsos='+dsos+'&'+
+          'zoom='+zoom+'&'+
           'pageorientation=';
   if(document.getElementById('pageorientationportrait').checked)
   	url+='portrait';
   else
   	url+='landscape';
-  //alert(url);
+  if(document.getElementById('pagesizea3').checked)
+  	url+='&pagesize=a3';
+  else
+  	url+='&pagesize=a4';
   jsonhttp.open("GET",url,true);
   jsonhttp.send(null);
 }
 function generateoneoverview(i,msie)
-{ document.getElementById('stars').value=10;
-  document.getElementById('dsos').value=10;
-  document.getElementById('zoom').value=13;
+{ stars=10;
+  dsos=10;
+  zoom=13;
   generateone(msie);
 }
 function generateonelookup(i,msie)
-{	document.getElementById('stars').value=12;
-  document.getElementById('dsos').value=13;
-  document.getElementById('zoom').value=15;
+{	stars=12;
+  dsos=13;
+  zoom=15;
   generateone(msie);
 }
 function generateonedetail(i,msie)
-{ document.getElementById('stars').value=15;
-  document.getElementById('dsos').value=15;
-  document.getElementById('zoom').value=17;
+{ stars=15;
+  dsos=15;
+  zoom=17;
   generateone(msie);
 }
 function generateoverviewallonepass(item,msie,stepra,stepdecl)
-{ document.getElementById('declfrom').value=0;
-  if(document.getElementById('pageorientationportrait').checked)
-  	document.getElementById('declto').value=79.99;
+{ if(document.getElementById('pageorientationportrait').checked)
+  	decl=79.99;
   else
-  	document.getElementById('declto').value=82.99;
-  document.getElementById('rafrom').value=0;
-  document.getElementById('rato').value=24;
-  document.getElementById('stars').value=10;
-  document.getElementById('dsos').value=10;
-  document.getElementById('zoom').value=13;
-  document.getElementById('ra').value=document.getElementById('rato').value;
-  document.getElementById('decl').value=document.getElementById('declto').value;
+  	decl=82.99;
+  rato=24;
+  stars=10;
+  dsos=10;
+  zoom=13;
+  ra=rato;
   generateallonepass(item,msie,0,0);
 }
 function generatelookupallonepass(item,msie,stepra,stepdecl)
-{ document.getElementById('declfrom').value=0;
-  if(document.getElementById('pageorientationportrait').checked)
-	  document.getElementById('declto').value=88.55;
+{ if(document.getElementById('pageorientationportrait').checked)
+	  decl=88.55;
   else
-    document.getElementById('declto').value=88.49;
-  document.getElementById('rafrom').value=0;
-  document.getElementById('rato').value=24;
-  document.getElementById('stars').value=12;
-  document.getElementById('dsos').value=13;
-  document.getElementById('zoom').value=15;
-  document.getElementById('ra').value=document.getElementById('rato').value;
-  document.getElementById('decl').value=document.getElementById('declto').value;
+    decl=88.49;
+  rato=24;
+  stars=12;
+  dsos=13;
+  zoom=15;
+  ra=rato;
   generateallonepass(item,msie,0,0);
 
 }
 function generatedetailallonepass(item,msie,stepra,stepdecl)
-{ document.getElementById('declfrom').value=0;
-  document.getElementById('declto').value=88.49;
-  document.getElementById('rafrom').value=0; 
-  document.getElementById('rato').value=24;
-  document.getElementById('stars').value=16;
-  document.getElementById('dsos').value=20;
-  document.getElementById('zoom').value=17;
-  document.getElementById('ra').value=document.getElementById('rato').value;
-  document.getElementById('decl').value=document.getElementById('declto').value;
+{ decl=88.49;
+  rato=24;
+  stars=16;
+  dsos=20;
+  zoom=17;
+  ra=rato;
   generateallonepass(item,msie,0,0);
 }

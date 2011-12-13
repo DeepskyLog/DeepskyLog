@@ -86,6 +86,7 @@ class PrintAtlas
       $rx=0,
       $starsmagnitude,
       $theOrientation,
+      $thePageSize,
       $ty=0; 
   
   var $pdf;
@@ -1050,7 +1051,8 @@ class PrintAtlas
     $this->fontSize1b=max(min($objUtil->checkRequestKey('fontsize',$this->fontSize1b),9),6);
     $this->fontSize1a=round($this->fontSize1b*1.666);
     $this->theOrientation = $objUtil->checkGetKey('pageorientation','landscape');    
-    $this->pdf = new Cezpdf('a4', $this->theOrientation);
+    $this->thePageSize = $objUtil->checkGetKey('pagesize','a4');    
+    $this->pdf = new Cezpdf($this->thePageSize, $this->theOrientation);
     $this->pdf->selectFont($instDir.'lib/fonts/Courier.afm');
     $this->pdf->setLineStyle(0.5);
     $this->gridInit();

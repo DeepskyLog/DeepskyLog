@@ -47,7 +47,12 @@ function atlasPages()
   echo '<input type="radio" id="pageorientationlandscape" name="pageorientation" value="landscape" />'.LangpdfOrientationLandscape;
   echo '<input type="radio" id="pageorientationportrait" name="pageorientation" value="portrait" />'.LangpdfOrientationPortrait;
   echo "</p>";
-	
+  echo "<p>";
+  echo 'Page size: ';
+  echo '<input type="radio" id="pagesizea4" name="pagesize" value="a4" />'.'A4';
+  echo '<input type="radio" id="pagesizea3" name="pagesize" value="a3" />'.'A3';
+  echo "</p>";
+  
   echo "<h2>"."Generate one page:"."</h2>";
   echo 'Generation ra: ';
 	echo '<input id="ra" name="ra" type="text" value="" size="5" class="centered"/>';
