@@ -1,5 +1,8 @@
 <?php //GE
 // This is version 4.3
+define("GraphObservations"              ,"Observations");
+define("GraphSource"                    ,"Source: ");
+define("GraphTitle1"                    ,"Number of observations per year");
 define("AtlasExample"                   ,"Lookup atlas page for M 45");
 define("ImageCatalogExample"            ,"Example page for Abell 84");
 define("ImageCatalogDescription1"       ,"DeepskyLog is a very powerful tool, where you can create personalized atlasses and image catalogs.");

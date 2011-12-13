@@ -7,7 +7,7 @@ elseif(!($user=$objUtil->checkGetKey('user'))) throw new Exception(LangException
 else view_observer();
 
 function view_observer()
-{ global $user,$modules,$deepsky,$comets,$baseURL,$instDir,$loggedUser,
+{ global $user,$modules,$deepsky,$comets,$baseURL,$instDir,$loggedUser,$objDatabase,
          $objInstrument,$objPresentations,$objObservation,$objUtil,$objCometObservation,$objObserver,$objLocation;
 	$name=$objObserver->getObserverProperty($user,'name'); 
 	$firstname=$objObserver->getObserverProperty($user,'firstname');
@@ -227,6 +227,92 @@ function view_observer()
 	    echo "<hr />";
 	  }
 	}
+	
+	// GRAFIEK
+	// TODO : Moet in aparte tab komen
+	
+	// Check the date of the first observation
+	$currentYear = date("Y");
+	$sql = $objDatabase->selectSingleValue("select MIN(date) from observations where observerid=\"" . $user . "\";", "MIN(date)", $currentYear."0606");
+  $startYear = floor($sql / 10000);	
+	// Add the JavaScript to initialize the chart on document ready
+	echo "<script type=\"text/javascript\">
+	  	        
+	  	      var chart;
+	  	      $(document).ready(function() {
+	  	      chart = new Highcharts.Chart({
+	  	        chart: {
+	  	          renderTo: 'container',
+	  	          defaultSeriesType: 'line',
+	  	          marginRight: 130,
+	  	          marginBottom: 25
+	  	        },
+	  	        title: {
+	  	          text: '" . GraphTitle1 . "',
+	  	          x: -20 //center
+	  	        },
+	  	        subtitle: {
+	  	          text: '" . GraphSource . $baseURL . "',
+	  	          x: -20
+	  	        },
+	  	        xAxis: {
+	  	          categories: [";
+
+	for ($i = $startYear;$i <= $currentYear;$i++) {
+	  if ($i != $currentYear) {
+	    echo "'" . $i . "', ";
+	  } else {
+	    echo "'" . $i . "'";
+	  }
+	}
+	
+  echo "]
+	  	        },
+	  	        yAxis: {
+	  	          title: {
+	  	            text: '" . GraphObservations . "'
+	  	        },
+	  	        plotLines: [{
+	  	          value: 0,
+	  	          width: 1,
+	  	          color: '#808080'
+	  	        }]
+	  	      },
+	  	      tooltip: {
+	  	        formatter: function() {
+	  	                            return '<b>'+ this.series.name +'</b><br/>'+
+	  	        this.x +': '+ this.y;
+	  	        }
+	  	                    },
+	  	                    legend: {
+	  	                    layout: 'vertical',
+	  	                    align: 'right',
+	  	                    verticalAlign: 'top',
+	  	                    x: -10,
+	  	                        y: 100,
+	  	                    borderWidth: 0
+	  	      },
+	  	                    series: [{
+	  	                      name: '" . $firstname.' '. $name . "',
+	  	                        data: [";
+  for ($i = $startYear;$i <= $currentYear;$i++) {
+    $obs = $objDatabase->selectSingleValue("select COUNT(date) from observations where observerid=\"" . $user . "\" and date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0");
+    if ($i != $currentYear) {
+      echo $obs . ", ";
+    } else {
+      echo $obs;
+    }
+  }
+  echo "                    ]
+	  	                      }]
+	  	                      });
+	  	                      });
+	  	                      
+	  	                      </script>";
+	
+//	                      <!-- 3. Add the container -->
+	echo "<div id=\"container\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
+	                       
 	
 	echo "</div>";
 }
