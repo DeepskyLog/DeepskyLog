@@ -26,6 +26,7 @@ var gridDimensions=new Array(
     		  );
 var decl;
 var dsos;
+var theoverlap = 0.15;
 var ra;
 var rato;
 var stars;
@@ -79,7 +80,7 @@ function generateallonepass(item,msie,stepra,stepdecl)
       	window.open('atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+item+'_'+tempdecl+'d'+tempdeclmin+'m'+' '+tempra+'h'+tempramin+'m','');
       if(((ra*1.0)<(temp.raright))&&((temp.declbottom<-80)||((decl*1.0)<-80)))
         return;
-      generateallonepass(item,msie,((ra-(temp.raright))*2*(1-document.getElementById('theoverlap').value)),((decl-(temp.declbottom))*2*(1-document.getElementById('theoverlap').value)));      
+      generateallonepass(item,msie,((ra-(temp.raright))*2*(1-theoverlap)),((decl-(temp.declbottom))*2*(1-theoverlap)));      
     }
   };
   var url='ajaxinterface.php?instruction=atlasPages&item='+urlencode(item)+'&'+
@@ -180,13 +181,23 @@ function generateonedetail(i,msie)
   generateone(msie);
 }
 function generateoverviewallonepass(item,msie,stepra,stepdecl)
-{ if(document.getElementById('pageorientationportrait').checked)
-  	decl=79.99;
+{ if(document.getElementById('pagesizea4').checked)
+  {  if(document.getElementById('pageorientationportrait').checked)
+  		decl=79.49;
+    else
+  	  decl=82.99;
+    stars=10;
+    dsos=10;
+  }
   else
-  	decl=82.99;
+  {	if(document.getElementById('pageorientationportrait').checked)
+    	decl=79.49;
+    else
+    	decl=82.99;
+    stars=11;
+    dsos=12;
+  }
   rato=24;
-  stars=10;
-  dsos=10;
   zoom=13;
   ra=rato;
   generateallonepass(item,msie,0,0);

@@ -268,26 +268,27 @@ class PrintAtlas
   }
   
   function atlasDrawLegend()
-  { if($this->theOrientation=='landscape')
-  	  for($i=0;$i<12;$i++)
-      { $this->pdf->filledEllipse($this->Legend1x+560-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-20,(.25*$i),(.25*$i),0,$this->nsegmente);
-        //$this->pdf->addTextWrap($this->Legend1x+570-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-23, 30, $this->fontSize1b, ((($this->gridDimensions[$this->gridActualDimension][3]))-(.5*$i)),  'center');
-        $this->pdf->addTextWrap($this->Legend1x+570-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-23, 30, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)),  'center');
-      }
-    else
+  { if(($this->theOrientation=="portrait")&&($this->thePageSize=='a4'))
     { for($i=0;$i<6;$i++)
-      { $this->pdf->filledEllipse($this->Legend1x+310-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-40,(.25*$i),(.25*$i),0,$this->nsegmente);
+      { $this->pdf->filledEllipse($this->Legend1x+310-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-30,(.25*$i),(.25*$i),0,$this->nsegmente);
         //$this->pdf->addTextWrap($this->Legend1x+320-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-42, 30, $this->fontSize1b, ((($this->gridDimensions[$this->gridActualDimension][3]))-(.5*$i)),  'center');
-        $this->pdf->addTextWrap($this->Legend1x+315-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-42, 30, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)),  'center');
+        $this->pdf->addTextWrap($this->Legend1x+315-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-32, 30, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)),  'center');
       }
       for($i=6;$i<12;$i++)
-      { $this->pdf->filledEllipse($this->Legend1x+610-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-20,(.25*$i),(.25*$i),0,$this->nsegmente);
+      { $this->pdf->filledEllipse($this->Legend1x+610-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-10,(.25*$i),(.25*$i),0,$this->nsegmente);
         //$this->pdf->addTextWrap($this->Legend1x+620-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-23, 30, $this->fontSize1b, ((($this->gridDimensions[$this->gridActualDimension][3]))-(.5*$i)),  'center');
-        $this->pdf->addTextWrap($this->Legend1x+615-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-23, 30, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)),  'center');
+        $this->pdf->addTextWrap($this->Legend1x+615-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-13, 30, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)),  'center');
       }
     }
-    if($this->theOrientation=='portrait')
-    { $this->Legend2x=$this->gridOffsetXpx+10;
+    else
+    {  for($i=0;$i<12;$i++)
+      { $this->pdf->filledEllipse($this->Legend1x+575-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-10,(.25*$i),(.25*$i),0,$this->nsegmente);
+        //$this->pdf->addTextWrap($this->Legend1x+570-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-23, 30, $this->fontSize1b, ((($this->gridDimensions[$this->gridActualDimension][3]))-(.5*$i)),  'center');
+        $this->pdf->addTextWrap($this->Legend1x+585-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-13, 30, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)),  'center');
+      }
+    }
+    if(($this->theOrientation=="portrait")&&($this->thePageSize=='a4'))
+    { $this->Legend2x=$this->gridOffsetXpx+5;
       $this->Legend2y+=20;
     }
     $this->pdf->ellipse($this->Legend2x+0, $this->Legend2y+3, 5, 2.5, -45);
@@ -445,7 +446,7 @@ class PrintAtlas
   	      $this->maxshowndsomag=$this->astroObjectsArr[$i]["mag"];
   	    if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
 	        $this->astroDrawStar1Object($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('AA2STAR','AA3STAR','AA4STAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('AA2STAR','AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
 	        $this->astroDrawStarxObject($i);
 	      else if(in_array($this->astroObjectsArr[$i]["type"],array('ASTER','LMCOC','OPNCL','SMCOC')))
 	        $this->astroDrawOCObject($i);
@@ -481,7 +482,7 @@ class PrintAtlas
   	      $this->maxshowndsomag=$this->astroObjectsArr[$i]["mag"];
   	    if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
 	        $this->astroDrawStar1Object($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('AA2STAR','AA3STAR','AA4STAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
+	      else if(in_array($this->astroObjectsArr[$i]["type"],array('AA2STAR','AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
 	        $this->astroDrawStarxObject($i);
 	      else if(in_array($this->astroObjectsArr[$i]["type"],array('ASTER','LMCOC','OPNCL','SMCOC')))
 	        $this->astroDrawOCObject($i);
@@ -914,10 +915,10 @@ class PrintAtlas
   { $this->canvasDimensionXpx=$this->pdf->ez['pageWidth']; 
     $this->canvasDimensionYpx=$this->pdf->ez['pageHeight'];
     $this->gridOffsetXpx=50; 
-    if($this->theOrientation=="landscape")
-      $this->gridOffsetYpx=50;
-    else
+    if(($this->theOrientation=="portrait")&&($this->thePageSize=='a4'))
       $this->gridOffsetYpx=70;
+    else
+      $this->gridOffsetYpx=50;
     $this->gridWidthXpx=$this->canvasDimensionXpx-($this->gridOffsetXpx<<1);
     $this->gridWidthXpx2=(($this->gridWidthXpx+1)>>1);
     $this->gridCenterOffsetXpx=$this->gridOffsetXpx+(($this->gridWidthXpx+1)>>1);
@@ -1022,10 +1023,10 @@ class PrintAtlas
   { $t1 =atlasPageFoV.' '.(round($this->gridSpanL*20)/10)." x ".(round($this->gridSpanD*20)/10)."° - ";
 	  $t1.=atlasPageDSLM.' '.($this->maxshowndsomag==-99?'-':$this->maxshowndsomag)." - ";
 	  $t1.=atlasPageStarLM.' '.$this->starsmagnitude;
-	  if($this->theOrientation=='landscape')
-	    $this->pdf->addText($this->gridOffsetXpx,$this->Legend2y,$this->fontSize1b,$t1);
-	  else
+	  if(($this->theOrientation=="portrait")&&($this->thePageSize=='a4'))
 	    $this->pdf->addText($this->gridOffsetXpx,$this->Legend2y+5,$this->fontSize1b,$t1);
+	  else
+      $this->pdf->addText($this->gridOffsetXpx,$this->Legend2y,$this->fontSize1b,$t1);
 	}
   
   function gridXpx($Lrad) 
@@ -1051,7 +1052,7 @@ class PrintAtlas
     $this->fontSize1b=max(min($objUtil->checkRequestKey('fontsize',$this->fontSize1b),9),6);
     $this->fontSize1a=round($this->fontSize1b*1.666);
     $this->theOrientation = $objUtil->checkGetKey('pageorientation','landscape');    
-    $this->thePageSize = $objUtil->checkGetKey('pagesize','a4');    
+    $this->thePageSize = $objUtil->checkGetKey('pagesize','');    
     $this->pdf = new Cezpdf($this->thePageSize, $this->theOrientation);
     $this->pdf->selectFont($instDir.'lib/fonts/Courier.afm');
     $this->pdf->setLineStyle(0.5);
@@ -1085,11 +1086,7 @@ class PrintAtlas
         
     for($i=0,$z=count($this->labelsArr);$i<$z;$i++)   
       $this->pdf->addTextWrap($this->labelsArr[$i][0],$this->labelsArr[$i][1],$this->labelsArr[$i][2],$this->labelsArr[$i][3],$this->labelsArr[$i][4],$this->labelsArr[$i][5]);                  
-    if($this->theOrientation=='landscape')
-    { $temp='(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).';
-      $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
-    }
-    else 
+	  if(($this->theOrientation=="portrait")&&($this->thePageSize=='a4'))
     { $temp='(c) www.deepskylog.org - No publishing without written autorisation';
       $this->pdf->addText($this->gridOffsetXpx,20,$this->fontSize1b,$temp);
       $temp='Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).';
@@ -1097,7 +1094,11 @@ class PrintAtlas
       if($objUtil->checkRequestKey('item',0)!='0')
         $this->pdf->addText($this->canvasDimensionXpx-$this->gridOffsetXpx,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
     }
- 
+	  else 
+    { $temp='(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).';
+    $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
+    }
+    
     if(!$nostream)
       $this->pdf->Stream(); 
     if($this->gridD0rad>0)

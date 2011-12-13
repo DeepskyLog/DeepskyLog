@@ -49,11 +49,11 @@ function atlasPages()
   echo "<p>";
   echo LangpdfOrientation;
   echo '<input type="radio" id="pageorientationlandscape" name="pageorientation" value="landscape" />'.LangpdfOrientationLandscape;
-  echo '<input type="radio" id="pageorientationportrait" name="pageorientation" value="portrait" />'.LangpdfOrientationPortrait;
+  echo '<input type="radio" id="pageorientationportrait" name="pageorientation" value="portrait" checked="checked"/>'.LangpdfOrientationPortrait;
   echo "</p>";
   echo "<p>";
   echo 'Page size: ';
-  echo '<input type="radio" id="pagesizea4" name="pagesize" value="a4" />'.'A4';
+  echo '<input type="radio" id="pagesizea4" name="pagesize" value="a4" checked="checked"/>'.'A4';
   echo '<input type="radio" id="pagesizea3" name="pagesize" value="a3" />'.'A3';
   echo "</p>";
   
@@ -79,7 +79,7 @@ function atlasPages()
   }
   echo "&nbsp;"."<div id='thecounter'> &nbsp; </div>";
   echo "<hr />";
-  $declfrom=10;
+  /*$declfrom=10;
   $declto=15;
   $rafrom=0;
   $rato=24;
@@ -107,6 +107,6 @@ function atlasPages()
 	//echo 'Zoom: ';
 	echo '<input id="zoom" name="zoom" type="text" value="16" size="5" class="centered" />';
   //echo '<br />';
-  
+  */
 }
 ?>
