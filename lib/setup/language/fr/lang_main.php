@@ -1,5 +1,6 @@
 <?php //FR
 // This is version 4.3
+define("AtlasExample"                   ,"Lookup atlas page for M 45");
 define("ImageCatalogExample"            ,"Example page for Abell 84");
 define("ImageCatalogDescription1"       ,"DeepskyLog is a very powerful tool, where you can create personalized atlasses and image catalogs.");
 define("ImageCatalogDescription2"       ,"However, making your own image catalog is time consuming. To help you, we created some interesting image catalogs and made them available for download.");

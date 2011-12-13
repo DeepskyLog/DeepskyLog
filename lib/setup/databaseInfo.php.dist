@@ -10,7 +10,7 @@ else databaseInfo();
 function databaseInfo()
 { 
   global $host,$user,$pass,$dbname,$developversion,$googleAnalytics,$domainName,
-         $instDir,$baseURL,$tempDir,$mailFrom,$mailTo,
+         $instDir,$baseURL,$tempDir,$mailFrom,$mailTo,$dirAtlasses,
          $title,$browsertitle,$copyrightInfo,$vvsInfo,$dslInfo,$versionInfo,$objectInfo,$w3cInfo,
          $register,$dateformat,$defaultLanguage,$languageMenu,$maxFileSize,$modules,
          $standardLanguagesForObservationsDuringRegistration,$languagesDuringRegistration,$dirAstroImageCatalogs;
@@ -30,7 +30,8 @@ function databaseInfo()
   // tempDir has NO end slash !
   $tempDir      = "/tmp/DeepskyLog";
   $dirAstroImageCatalogs = "http://www.distant-targets.be/files/DSL/astroimagecatalogs/";
-  
+  $dirAtlasses = "http://www.distant-targets.be/files/DSL/atlasses/";
+
   // General settings
   // The title to appear above all pages
   $title         = "<a href=\"http://www.deepskylog.org\">DeepskyLog</a>";

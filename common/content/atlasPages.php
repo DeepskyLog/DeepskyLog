@@ -7,7 +7,7 @@ else atlasPages();
 
 
 function atlasPages()
-{ global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout, $objUtil, $MSIE,$dirAstroImageCatalogs;
+{ global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout, $objUtil, $MSIE,$dirAtlasses;
   echo "<script type=\"text/javascript\">";
   echo "var Langpdfseriesclickok='".Langpdfseriesclickok."';";
   echo "var Langpdfserieswhenfinished='".Langpdfserieswhenfinished."';";
@@ -29,16 +29,20 @@ function atlasPages()
   echo "<script type=\"text/javascript\" src=\"".$baseURL."common/content/atlasPages.js\"></script>";
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
 	
-  echo"<h1>".LangAtlassesIntro00."</h1>";
+  $exampleText = AtlasExample;
+  echo "<a href=\"" . $baseURL . "images/AtlasExample.jpg\" rel=\"prettyPhoto\" title=\"\">";
+  echo "<img class=\"floatright\" width=\"30%\" src=\"" . $baseURL . "images/AtlasExample.jpg\"  alt=\"" . $exampleText . "\"/>";
+  echo "</a>";
+	echo"<h1>".LangAtlassesIntro00."</h1>";
 	echo "<p>".LangAtlassesIntro01."</p>";
 	echo "<h2>".LangAtlassesIntro02."</h2>";
 	echo "<p>".LangAtlassesIntro03."</p>";
 	echo "<h1>".LangAtlassesIntro04."</h1>";
 	echo "<hr />";
 	echo "<p>".LangAtlassesIntro05."</p>";
-  echo '<input type="button" class="width125px" value ="Overview" onclick="location.href=\''.$dirAstroImageCatalogs.'OverviewAtlas.pdf\';" />';
-  echo '<input type="button" class="width125px" value ="Lookup" onclick="alert(\'wordt geïmplementeerd\');" />';
-  echo '<input type="button" class="width125px" value ="Detail" onclick="alert(\'wordt geïmplementeerd\');" />';
+  echo '<input type="button" class="width125px" value ="Overview" onclick="location.href=\''.$dirAtlasses.'OverviewAtlas.pdf\';" />';
+  echo '<input type="button" class="width125px" value ="Lookup" onclick="location.href=\''.$dirAtlasses.'LookupAtlas.pdf\');" />';
+  echo '<input type="button" class="width125px" value ="Detail" onclick="alert(\'wordt ge&iuml;mplementeerd\');" />';
 	echo "<h1>".LangAtlassesIntro06."</h1>";
 	echo "<hr />";
 	echo "<p>".LangAtlassesIntro07."</p>";
