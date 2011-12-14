@@ -1,8 +1,10 @@
 <?php //NL
 // This is version 4.3
+define("ObjectsSeenGraph"               ,"Object types : ");
+$REST = "Rest";
 define("GraphObservations"              ,"Waarnemingen");
 define("GraphSource"                    ,"Bron: ");
-define("GraphTitle1"                    ,"Aantal waarnemingen per jaar");
+define("GraphTitle1"                    ,"Aantal waarnemingen per jaar : ");
 define("AtlasExample"                   ,"Lookup atlas pagina voor M 45");
 define("ImageCatalogExample"            ,"Voorbeeld pagina voor Abell 84");
 define("ImageCatalogDescription1"       ,"DeepskyLog is een zeer krachtige applicatie, die het mogelijk maakt om gepersonaliseerde atlassen en beeldencatalogi aan te maken.");

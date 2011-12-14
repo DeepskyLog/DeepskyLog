@@ -2609,6 +2609,8 @@ class Utils
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_lens'                        ,'common/content/change_lens.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_location'                    ,'common/content/change_site.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_observer'                    ,'common/content/view_observer.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_observer1'                   ,'common/content/view_observer1.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_observer2'                   ,'common/content/view_observer2.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('message'                            ,'common/content/message.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('reportsLayout'                      ,'common/content/reportslayout.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('search_sites'                       ,'common/content/search_locations.php')))

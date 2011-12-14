@@ -9,7 +9,7 @@ else view_observer();
 function view_observer()
 { global $user,$modules,$deepsky,$comets,$baseURL,$instDir,$loggedUser,$objDatabase,
          $objInstrument,$objPresentations,$objObservation,$objUtil,$objCometObservation,$objObserver,$objLocation;
-	$name=$objObserver->getObserverProperty($user,'name'); 
+  $name=$objObserver->getObserverProperty($user,'name'); 
 	$firstname=$objObserver->getObserverProperty($user,'firstname');
 	$location_id = $objObserver->getObserverProperty($user,'stdlocation');
 	$location_name = $objLocation->getLocationPropertyFromId($location_id,'name');
@@ -59,7 +59,12 @@ function view_observer()
 	echo "<div id=\"main\">";
 	$objPresentations->line(array("<h4>".$firstname.' '. $name."</h4>"),"L",array(),30);
 	echo "<hr />";
-	
+	echo "<ol id=\"toc\">
+	       <li class=\"current\"><a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $user . "\"><span>Info</span></a></li>
+	       <li><a href=\"" . $baseURL . "index.php?indexAction=detail_observer1&user=" . $user . "\"><span>Observations per year</span></a></li>
+	       <li><a href=\"" . $baseURL . "index.php?indexAction=detail_observer2&user=" . $user . "\"><span>Object types observed</span></a></li>
+	      </ol>";
+
 	if(array_key_exists('admin',$_SESSION)&&($_SESSION['admin']=="yes"))       // admin logged in
 	{ echo "<form action=\"".$baseURL."index.php\" >";
 	  echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_emailNameFirstname_Password\" />";
@@ -69,7 +74,7 @@ function view_observer()
 	  $objPresentations->line(array(LangChangeAccountField3.":","<input name=\"firstname\" type=\"text\" value=\"".$objObserver->getObserverProperty($user,'firstname')."\" /><input type=\"submit\" name=\"change_email_name_firstname\" value=\"".LangViewObserverChangeNameFirstname."\" />"),"RL",array(20,80),30,array('type20','type20'));
 	  $objPresentations->line(array(LangChangeAccountField4.":","<input name=\"name\" type=\"text\" value=\"".$objObserver->getObserverProperty($user,'name')."\" />"),"RL",array(20,80),30,array('type10','type10'));
 	  $objPresentations->line(array(LangChangeAccountField5.":","<input name=\"password\" type=\"text\" value=\"\" /><input type=\"submit\" name=\"change_password\" value=\""."Change password"."\" />"),"RL",array(20,80),30,array('type20','type20'));
-	  	  echo "</form>";
+	  echo "</form>";
 	}
 	else
 	{ $objPresentations->line(array(LangChangeAccountField3.":",$objObserver->getObserverProperty($user,'firstname')),"RL",array(20,80),20,array('type20','type20'));
@@ -228,92 +233,6 @@ function view_observer()
 	  }
 	}
 	
-	// GRAFIEK
-	// TODO : Moet in aparte tab komen
-	
-	// Check the date of the first observation
-	$currentYear = date("Y");
-	$sql = $objDatabase->selectSingleValue("select MIN(date) from observations where observerid=\"" . $user . "\";", "MIN(date)", $currentYear."0606");
-  $startYear = floor($sql / 10000);	
-	// Add the JavaScript to initialize the chart on document ready
-	echo "<script type=\"text/javascript\">
-	  	        
-	  	      var chart;
-	  	      $(document).ready(function() {
-	  	      chart = new Highcharts.Chart({
-	  	        chart: {
-	  	          renderTo: 'container',
-	  	          defaultSeriesType: 'line',
-	  	          marginRight: 130,
-	  	          marginBottom: 25
-	  	        },
-	  	        title: {
-	  	          text: '" . GraphTitle1 . "',
-	  	          x: -20 //center
-	  	        },
-	  	        subtitle: {
-	  	          text: '" . GraphSource . $baseURL . "',
-	  	          x: -20
-	  	        },
-	  	        xAxis: {
-	  	          categories: [";
-
-	for ($i = $startYear;$i <= $currentYear;$i++) {
-	  if ($i != $currentYear) {
-	    echo "'" . $i . "', ";
-	  } else {
-	    echo "'" . $i . "'";
-	  }
-	}
-	
-  echo "]
-	  	        },
-	  	        yAxis: {
-	  	          title: {
-	  	            text: '" . GraphObservations . "'
-	  	        },
-	  	        plotLines: [{
-	  	          value: 0,
-	  	          width: 1,
-	  	          color: '#808080'
-	  	        }]
-	  	      },
-	  	      tooltip: {
-	  	        formatter: function() {
-	  	                            return '<b>'+ this.series.name +'</b><br/>'+
-	  	        this.x +': '+ this.y;
-	  	        }
-	  	                    },
-	  	                    legend: {
-	  	                    layout: 'vertical',
-	  	                    align: 'right',
-	  	                    verticalAlign: 'top',
-	  	                    x: -10,
-	  	                        y: 100,
-	  	                    borderWidth: 0
-	  	      },
-	  	                    series: [{
-	  	                      name: '" . $firstname.' '. $name . "',
-	  	                        data: [";
-  for ($i = $startYear;$i <= $currentYear;$i++) {
-    $obs = $objDatabase->selectSingleValue("select COUNT(date) from observations where observerid=\"" . $user . "\" and date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0");
-    if ($i != $currentYear) {
-      echo $obs . ", ";
-    } else {
-      echo $obs;
-    }
-  }
-  echo "                    ]
-	  	                      }]
-	  	                      });
-	  	                      });
-	  	                      
-	  	                      </script>";
-	
-//	                      <!-- 3. Add the container -->
-	echo "<div id=\"container\" style=\"width: 800px; height: 400px; margin: 0 auto\"></div>";
-	                       
-	
-	echo "</div>";
+  echo "</div>";
 }
 ?>
