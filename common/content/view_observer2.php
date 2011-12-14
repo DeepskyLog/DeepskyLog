@@ -25,6 +25,15 @@ function view_observer()
   $all = count($objDatabase->selectRecordsetArray("select * from observations where observerid=\"" . $user . "\""));
   $rest = 0;
 
+  $cometobservations = count($objDatabase->selectRecordsetArray("select * from cometobservations where observerid = \"" . $user . "\""));
+  $all += $cometobservations;
+
+  if (($cometobservations / $all) >= 0.01) {
+    $objectsArray["comets"] = $cometobservations;
+  } else {
+    $rest += $cometobservations;
+  }
+  
   $aster = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"ASTER\" and observations.observerid = \"" . $user . "\""));
   $aster += count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"AA8STAR\" and observations.observerid = \"" . $user . "\""));
   $aster += count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"AA4STAR\" and observations.observerid = \"" . $user . "\""));
@@ -161,7 +170,7 @@ function view_observer()
   } else {
     $rest += $wrneb;
   }
-
+  
   $objectsArray["REST"] = $rest;
 
 	echo "<script type=\"text/javascript\">
