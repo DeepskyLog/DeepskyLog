@@ -21,7 +21,8 @@ function view_observer()
 	      </ol>";
    // Pie chart                  
   $objectsArray = array();
-
+  $colors = Array();
+  
   $all = count($objDatabase->selectRecordsetArray("select * from observations where observerid=\"" . $user . "\""));
   $rest = 0;
 
@@ -33,6 +34,7 @@ function view_observer()
   } else {
     $rest += $cometobservations;
   }
+  $colors["comets"] = "#4572A7";
   
   $aster = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"ASTER\" and observations.observerid = \"" . $user . "\""));
   $aster += count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"AA8STAR\" and observations.observerid = \"" . $user . "\""));
@@ -44,7 +46,8 @@ function view_observer()
   } else {
     $rest += $aster;
   }
-
+  $colors["ASTER"] = "#AA4643";
+  
   $brtnb = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"BRTNB\" and observations.observerid = \"" . $user . "\""));
 
   if (($brtnb / $all) >= 0.01) {
@@ -52,7 +55,9 @@ function view_observer()
   } else {
     $rest += $brtnb;
   }
-
+  $colors["BRTNB"] = "#89A54E";
+  
+  
   $ds = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"DS\" and observations.observerid = \"" . $user . "\""));
   $ds += count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"AA2STAR\" and observations.observerid = \"" . $user . "\""));
 
@@ -61,7 +66,8 @@ function view_observer()
   } else {
     $rest += $ds;
   }
-
+  $colors["DS"] = "#80699B";
+  
   $star = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"AA1STAR\" and observations.observerid = \"" . $user . "\""));
 
   if (($star / $all) >= 0.01) {
@@ -69,7 +75,8 @@ function view_observer()
   } else {
     $rest += $star;
   }
-
+  $colors["AA1STAR"] = "#3D96AE";
+  
   $drknb = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"DRKNB\" and observations.observerid = \"" . $user . "\""));
 
   if (($drknb / $all) >= 0.01) {
@@ -77,7 +84,8 @@ function view_observer()
   } else {
     $rest += $drknb;
   }
-
+  $colors["DRKNB"] = "#DB843D";
+  
   $galcl = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"GALCL\" and observations.observerid = \"" . $user . "\""));
 
   if (($galcl / $all) >= 0.01) {
@@ -85,7 +93,8 @@ function view_observer()
   } else {
     $rest += $galcl;
   }
-
+  $colors["GALCL"] = "#92A8CD";
+  
   $galxy = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"GALXY\" and observations.observerid = \"" . $user . "\""));
 
   if (($galxy / $all) >= 0.01) {
@@ -93,7 +102,8 @@ function view_observer()
   } else {
     $rest += $galxy;
   }
-
+  $colors["GALXY"] = "#68302F";
+  
   $plnnb = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"PLNNB\" and observations.observerid = \"" . $user . "\""));
 
   if (($plnnb / $all) >= 0.01) {
@@ -101,7 +111,8 @@ function view_observer()
   } else {
     $rest += $plnnb;
   }
-
+  $colors["PLNNB"] = "#A47D7C";
+  
   $opncl = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"OPNCL\" and observations.observerid = \"" . $user . "\""));
   $opncl += count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"CLANB\" and observations.observerid = \"" . $user . "\""));
 
@@ -110,7 +121,8 @@ function view_observer()
   } else {
     $rest += $opncl;
   }
-
+  $colors["OPNCL"] = "#B5CA92";
+  
   $glocl = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"GLOCL\" and observations.observerid = \"" . $user . "\""));
 
   if (($glocl / $all) >= 0.01) {
@@ -118,7 +130,8 @@ function view_observer()
   } else {
     $rest += $glocl;
   }
-
+  $colors["GLOCL"] = "#00FF00";
+  
   $eminb = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"EMINB\" and observations.observerid = \"" . $user . "\""));
   $eminb += count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"ENRNN\" and observations.observerid = \"" . $user . "\""));
   $eminb += count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"ENSTR\" and observations.observerid = \"" . $user . "\""));
@@ -128,7 +141,8 @@ function view_observer()
   } else {
     $rest += $eminb;
   }
-
+  $colors["EMINB"] = "#C0FFC0";
+  
   $refnb = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"REFNB\" and observations.observerid = \"" . $user . "\""));
   $refnb += count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"RNHII\" and observations.observerid = \"" . $user . "\""));
   $refnb += count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"HII\" and observations.observerid = \"" . $user . "\""));
@@ -138,7 +152,8 @@ function view_observer()
   } else {
     $rest += $refnb;
   }
-
+  $colors["REFNB"] = "#0000C0";
+  
   $nonex = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"NONEX\" and observations.observerid = \"" . $user . "\""));
 
   if (($nonex / $all) >= 0.01) {
@@ -146,7 +161,8 @@ function view_observer()
   } else {
     $rest += $nonex;
   }
-
+  $colors["NONEX"] = "#C0C0FF";
+  
   $snrem = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"SNREM\" and observations.observerid = \"" . $user . "\""));
 
   if (($snrem / $all) >= 0.01) {
@@ -154,7 +170,8 @@ function view_observer()
   } else {
     $rest += $snrem;
   }
-
+  $colors["SNREM"] = "#808000";
+  
   $quasr = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"QUASR\" and observations.observerid = \"" . $user . "\""));
 
   if (($quasr / $all) >= 0.01) {
@@ -162,7 +179,8 @@ function view_observer()
   } else {
     $rest += $quasr;
   }
-
+  $colors["QUASR"] = "#C0C000";
+  
   $wrneb = count($objDatabase->selectRecordsetArray("select objects.* from objects,observations where objects.name = observations.objectname and objects.type = \"WRNEB\" and observations.observerid = \"" . $user . "\""));
 
   if (($wrneb / $all) >= 0.01) {
@@ -170,9 +188,11 @@ function view_observer()
   } else {
     $rest += $wrneb;
   }
+  $colors["WRNEB"] = "#008080";
   
   $objectsArray["REST"] = $rest;
-
+  $colors["REST"] = "#00FFFF";
+  
 	echo "<script type=\"text/javascript\">
 		
 			var chart;
@@ -217,9 +237,9 @@ function view_observer()
 
   foreach ($objectsArray as $key => $value) {
     if ($key != "REST") {
-      print "['" . $GLOBALS[$key] . "', $value], ";
+      print "{name: '" . $GLOBALS[$key] . "', color: '" . $colors[$key] . "', y: " . $value . "}, ";
     } else {
-      print "['" . $GLOBALS[$key] . "', $value]";
+      print "{name: '" . $GLOBALS[$key] . "', color: '" . $colors[$key] . "', y: " . $value . "}";
     }
   }
   echo                     "
