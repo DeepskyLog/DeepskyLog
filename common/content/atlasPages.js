@@ -53,35 +53,46 @@ function generateallonepass(item,msie,stepra,stepdecl)
   jsonhttp.onreadystatechange=function()
   { if(jsonhttp.readyState==4)
     { //alert(jsonhttp.responseText);
-	    temp=eval('('+jsonhttp.responseText+')');
-      tempra=Math.max(Math.floor(ra,0),0);
-      tempramin=Math.max(Math.round((ra-tempra)*60,0),0);
-      if(tempra<10) tempra='0'+tempra;
-      if(tempramin<10) tempramin='0'+tempramin;
-      if(((decl*1.0)>0))
-      { tempdecl=Math.floor(decl,0);
-        tempdeclmin=Math.round((decl-tempdecl)*60,1);
-        if(tempdecl<10) tempdecl='0'+tempdecl;
-        if(tempdeclmin<10) tempdeclmin='0'+tempdeclmin;
-      }
-      else
-      { tempdecl=Math.floor(decl,0)+1;
-        tempdeclmin=Math.round(-(decl-tempdecl)*60,1);
-        tempdecl=-tempdecl;
-        if(tempdecl<10) tempdecl='0'+tempdecl;
-        if(tempdeclmin<10) tempdeclmin='0'+tempdeclmin;
-        tempdecl='-'+tempdecl;
-      }	
-      if(msie)
-      { var mywindow=window.open("",'mywindow'+item);
-        mywindow.location='atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+decl+'_'+item+'_'+ra.substr(0,5);  
-      }  
-      else
-      	window.open('atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+item+'_'+tempdecl+'d'+tempdeclmin+'m'+' '+tempra+'h'+tempramin+'m','');
-      if(((ra*1.0)<(temp.raright))&&((temp.declbottom<-80)||((decl*1.0)<-80)))
-        return;
-      generateallonepass(item,msie,((ra-(temp.raright))*2*(1-theoverlap)),((decl-(temp.declbottom))*2*(1-theoverlap)));      
-    }
+	    if(item==0)
+	    { if(msie)
+        { var mywindow=window.open("",'mywindow'+item);
+          mywindow.location='atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+item;  
+        }   
+	      else
+    	    window.open('atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+item);
+        generateallonepass(item,msie,0,0);
+	    }
+	    else
+	    { temp=eval('('+jsonhttp.responseText+')');
+	      tempra=Math.max(Math.floor(ra,0),0);
+	      tempramin=Math.max(Math.round((ra-tempra)*60,0),0);
+	      if(tempra<10) tempra='0'+tempra;
+	      if(tempramin<10) tempramin='0'+tempramin;
+	      if(((decl*1.0)>0))
+	      { tempdecl=Math.floor(decl,0);
+	        tempdeclmin=Math.round((decl-tempdecl)*60,1);
+	        if(tempdecl<10) tempdecl='0'+tempdecl;
+	        if(tempdeclmin<10) tempdeclmin='0'+tempdeclmin;
+	      }
+	      else
+	      { tempdecl=Math.floor(decl,0)+1;
+	        tempdeclmin=Math.round(-(decl-tempdecl)*60,1);
+	        tempdecl=-tempdecl;
+	        if(tempdecl<10) tempdecl='0'+tempdecl;
+	        if(tempdeclmin<10) tempdeclmin='0'+tempdeclmin;
+	        tempdecl='-'+tempdecl;
+	      }	
+	      if(msie)
+	      { var mywindow=window.open("",'mywindow'+item);
+	        mywindow.location='atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+decl+'_'+item+'_'+ra.substr(0,5);  
+	      }  
+	      else
+	      	window.open('atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+item+'_'+tempdecl+'d'+tempdeclmin+'m'+' '+tempra+'h'+tempramin+'m','');
+	      if(((ra*1.0)<(temp.raright))&&((temp.declbottom<-80)||((decl*1.0)<-80)))
+	        return;
+	      generateallonepass(item,msie,((ra-(temp.raright))*2*(1-theoverlap)),((decl-(temp.declbottom))*2*(1-theoverlap)));      
+	    }
+	  }
   };
   var url='ajaxinterface.php?instruction=atlasPages&item='+urlencode(item)+'&'+
           'ra='+ra+'&'+
@@ -98,6 +109,7 @@ function generateallonepass(item,msie,stepra,stepdecl)
   	url+='&pagesize=a3';
   else
   	url+='&pagesize=a4';
+  //alert(url);
   jsonhttp.open("GET",url,true);
   jsonhttp.send(null);	
 }
@@ -183,15 +195,15 @@ function generateonedetail(i,msie)
 function generateoverviewallonepass(item,msie,stepra,stepdecl)
 { if(document.getElementById('pagesizea4').checked)
   {  if(document.getElementById('pageorientationportrait').checked)
-  		decl=79.49;
+  		decl=80.05;
     else
   	  decl=82.99;
     stars=10;
     dsos=10;
   }
-  else
+  else if(document.getElementById('pagesizea3').checked)
   {	if(document.getElementById('pageorientationportrait').checked)
-    	decl=79.49;
+    	decl=79.69;
     else
     	decl=82.99;
     stars=11;
@@ -200,27 +212,49 @@ function generateoverviewallonepass(item,msie,stepra,stepdecl)
   rato=24;
   zoom=13;
   ra=rato;
-  generateallonepass(item,msie,0,0);
+  generateallonepass(-1,msie,0,0);
 }
 function generatelookupallonepass(item,msie,stepra,stepdecl)
-{ if(document.getElementById('pageorientationportrait').checked)
-	  decl=88.55;
-  else
-    decl=88.49;
+{ if(document.getElementById('pagesizea4').checked)
+	{ if(document.getElementById('pageorientationportrait').checked)
+  	  decl=84.29;
+	  else
+	    decl=85.99;
+	  stars=12;
+	  dsos=12;
+	}
+	else if(document.getElementById('pagesizea3').checked)
+	{	if(document.getElementById('pageorientationportrait').checked)
+	  	decl=84.99;
+	  else
+	  	decl=85.99;
+	  stars=13;
+	  dsos=14;
+	}
   rato=24;
-  stars=12;
-  dsos=13;
   zoom=15;
   ra=rato;
-  generateallonepass(item,msie,0,0);
-
+  generateallonepass(-1,msie,0,0);
 }
 function generatedetailallonepass(item,msie,stepra,stepdecl)
-{ decl=88.49;
+{ if(document.getElementById('pagesizea4').checked)
+  { if(document.getElementById('pageorientationportrait').checked)
+	    decl=87.14;
+    else
+      decl=87.99;
+    stars=14;
+    dsos=20;
+  }
+  else if(document.getElementById('pagesizea3').checked)
+  { if(document.getElementById('pageorientationportrait').checked)
+  	  decl=87.04;
+    else
+  	  decl=87.99;
+    stars=15;
+    dsos=20;
+  }
   rato=24;
-  stars=16;
-  dsos=20;
   zoom=17;
   ra=rato;
-  generateallonepass(item,msie,0,0);
+  generateallonepass(-1,msie,0,0);
 }

@@ -291,84 +291,7 @@ class PrintAtlas
     { $this->Legend2x=$this->gridOffsetXpx+5;
       $this->Legend2y+=20;
     }
-    $this->pdf->ellipse($this->Legend2x+0, $this->Legend2y+3, 5, 2.5, -45);
-    $this->pdf->addTextWrap($this->Legend2x+10, $this->Legend2y, 30, $this->fontSize1b, 'GALXY', 'left');
-    
-    $this->pdf->ellipse($this->Legend2x+50, $this->Legend2y+3, 2.5, 2.5, 0);
-    $this->pdf->line($this->Legend2x+55, $this->Legend2y+3, $this->Legend2x+52.5, $this->Legend2y+3);
-    $this->pdf->line($this->Legend2x+45, $this->Legend2y+3, $this->Legend2x+47.5, $this->Legend2y+3);
-    $this->pdf->line($this->Legend2x+50, $this->Legend2y+5.5, $this->Legend2x+50, $this->Legend2y+8);
-    $this->pdf->line($this->Legend2x+50, $this->Legend2y+0.5, $this->Legend2x+50, $this->Legend2y-2);
-    $this->pdf->addTextWrap($this->Legend2x+60, $this->Legend2y, 30, $this->fontSize1b, 'PLANB', 'left');
-
-    $this->pdf->ellipse($this->Legend2x+100, $this->Legend2y+3, 5, 5, 0);
-    $this->pdf->line($this->Legend2x+95, $this->Legend2y+3, $this->Legend2x+105, $this->Legend2y+3);
-    $this->pdf->line($this->Legend2x+100, $this->Legend2y+8, $this->Legend2x+100, $this->Legend2y-2);
-    $this->pdf->addTextWrap($this->Legend2x+110, $this->Legend2y, 30, $this->fontSize1b, 'GLOCL', 'left');
-   
-    $this->pdf->setLineStyle(0.5,'','',array(3));
-    $this->pdf->ellipse($this->Legend2x+150, $this->Legend2y+3, 5, 5, 0);
-    $this->pdf->addTextWrap($this->Legend2x+160, $this->Legend2y, 30, $this->fontSize1b, 'OPNCL', 'left');
-    
-    $this->pdf->rectangle($this->Legend2x+195, $this->Legend2y-2, 10, 10);
-    $this->pdf->addTextWrap($this->Legend2x+210, $this->Legend2y, 30, $this->fontSize1b, 'DRKNB', 'left');
-
-    $this->pdf->setLineStyle(0.5,'','',array());
-
-    $this->pdf->rectangle($this->Legend2x+245, $this->Legend2y-2, 10, 10);
-    $this->pdf->addTextWrap($this->Legend2x+260, $this->Legend2y, 30, $this->fontSize1b, 'NEB', 'left');
-
-    $this->pdf->rectangle($this->Legend2x+295.5, $this->Legend2y-1.5, 9, 9);
-    $this->pdf->setLineStyle(0.5,'','',array(3));
-    $this->pdf->rectangle($this->Legend2x+294.5, $this->Legend2y-2.5, 11, 11);
-    $this->pdf->addTextWrap($this->Legend2x+310, $this->Legend2y, 30, $this->fontSize1b, 'CLANB', 'left');
-    $this->pdf->setLineStyle(0.5,'','',array());
-  
-    $x=$this->Legend2x+350;
-    $y=$this->Legend2y+3;
-    $d1=12;
-    $d2=12;
-    $x1=0;
-    $x2=0;
-    $y1=0;
-    $y2=0;
-    $x1=$x;
-    $y1=$y+(($d2+1)>>1);
-    $x2=$x+(($d1+1)>>1);
-    $y2=$y+(($d2+1)>>3);
-    $this->pdf->line($x1,$y1,$x2,$y2);
-    $x1=$x+(($d1+1)>>1);
-    $y1=$y+(($d2+1)>>3);
-    $x2=$x+(3*(($d1+1)>>3));
-    $y2=$y-(($d2+1)>>1);
-    $this->pdf->line($x1,$y1,$x2,$y2);
-    $x1=$x+(3*(($d1+1)>>3));
-    $y1=$y-(($d2+1)>>1);
-    $x2=$x-(3*(($d1+1)>>3));
-    $y2=$y-(($d2+1)>>1);
-    $this->pdf->line($x1,$y1,$x2,$y2);
-    $x1=$x-(3*(($d1+1)>>3));
-    $y1=$y-(($d2+1)>>1);
-    $x2=$x-(($d1+1)>>1);
-    $y2=$y+(($d2+1)>>3);
-    $this->pdf->line($x1,$y1,$x2,$y2);
-    $x1=$x-(($d1+1)>>1);
-    $y1=$y+(($d2+1)>>3);
-    $x2=$x;
-    $y2=$y+(($d2+1)>>1);
-    $this->pdf->line($x1,$y1,$x2,$y2);
-    $this->pdf->addTextWrap($this->Legend2x+360, $this->Legend2y, 30, $this->fontSize1b, 'GALCL', 'left');
- 
-    $x=$this->Legend2x+400;
-    $y=$this->Legend2y+3;
-    $d1=3;
-    $d2=3;
-    $this->pdf->line($x-2, $y, $x-$d1-2, $y);
-    $this->pdf->line($x, $y-2-$d2, $x, $y-2);
-    $this->pdf->line($x, $y+2+$d2, $x, $y+2);
-    $this->pdf->line($x+2, $y, $x+2+$d1, $y);
-    $this->pdf->addTextWrap($this->Legend2x+410, $this->Legend2y, 30, $this->fontSize1b, 'QUASR', 'left');
-  }
+      }
     	
   function astroDrawObjectLabel($cx, $cy, $d, $name, $seen)
   { $this->pdf->addText(($cx+4+$d), $cy-($this->fontSize1a>>2), $this->fontSize1b, $name);
@@ -784,9 +707,9 @@ class PrintAtlas
       //jg.setColor(coordLineColor);
       for($l=$Lhr;$l>$RhrNeg;$l-=$LStep/$this->Lsteps)
         $this->gridDrawLineLD($l,$d,($l-($LStep/$this->Lsteps)),$d);
-      if($this->canvasX2px&&($this->canvasX2px>=$this->gridOffsetXpx+$this->gridWidthXpx))
+      if($this->canvasX2px&&($this->canvasX2px+15>=$this->gridOffsetXpx+$this->gridWidthXpx))
         $this->labelsArr[]=array($this->gridOffsetXpx+$this->gridWidthXpx+4,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordDeclDecToDegMin($d),'left');
-      else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx))
+      else if($this->canvasX2px&&($this->canvasY2px>=$this->gridOffsetYpx+$this->gridHeightYpx-($this->fontSize1a)))
         $this->labelsArr[]=array($this->canvasX2px-30,$this->gridOffsetYpx+$this->gridHeightYpx+4,60,$this->fontSize1b,$this->coordDeclDecToDegMin($d),'center');
       else if($this->canvasX2px&&($this->canvasY2px<=$this->gridOffsetYpx))
         $this->labelsArr[]=array($this->canvasX2px-30,$this->gridOffsetYpx-($this->fontSize1a),60,$this->fontSize1b,$this->coordDeclDecToDegMin($d),'center');
@@ -800,11 +723,11 @@ class PrintAtlas
         //jg.setColor(coordLineColor);
         for($d=$Ddeg;$d<$Udeg;$d+=$DStep/$this->Dsteps)
           $this->gridDrawLineLD($l,$d,$l,($d+($DStep/$this->Dsteps)));
-        if($this->canvasX2px&&($this->canvasX2px-10<=$this->gridOffsetXpx))
+        if($this->canvasX2px&&($this->canvasX2px-15<=$this->gridOffsetXpx))
           $this->labelsArr[]=array($this->gridOffsetXpx-64,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'right');
-        else if($this->canvasX2px&&($this->canvasX2px+10>=$this->gridOffsetXpx+$this->gridWidthXpx))
+        else if($this->canvasX2px&&($this->canvasX2px+15>=$this->gridOffsetXpx+$this->gridWidthXpx))
           $this->labelsArr[]=array($this->gridOffsetXpx+$this->gridWidthXpx+4,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'left');
-        else if($this->canvasY2px&&($this->canvasY2px-10<=$this->gridOffsetYpx))
+        else if($this->canvasY2px&&($this->canvasY2px-15<=$this->gridOffsetYpx))
           $this->labelsArr[]=array($this->canvasX1px-30,$this->gridOffsetYpx-10,60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
         else if($this->canvasX2px)
           $this->labelsArr[]=array($this->canvasX1px-30,$this->gridOffsetYpx+$this->gridHeightYpx+4,60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
@@ -817,9 +740,9 @@ class PrintAtlas
         //jg.setColor(coordLineColor);
         for($d=$Udeg;$d>$Ddeg;$d-=$DStep/$this->Dsteps)
           $this->gridDrawLineLD($l,$d,$l,($d-($DStep/$this->Dsteps)));
-        if($this->canvasX1px&&($this->canvasX1px-10<=$this->gridOffsetXpx))
+        if($this->canvasX1px&&($this->canvasX1px-15<=$this->gridOffsetXpx))
           $this->labelsArr[]=array($this->gridOffsetXpx-64,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'right');
-        else if($this->canvasX1px&&($this->canvasX1px+10>=$this->gridOffsetXpx+$this->gridWidthXpx))
+        else if($this->canvasX1px&&($this->canvasX1px+15>=$this->gridOffsetXpx+$this->gridWidthXpx))
           $this->labelsArr[]=array($this->gridOffsetXpx+$this->gridWidthXpx+4,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'left');
         else if($this->canvasX1px)
           $this->labelsArr[]=array($this->canvasX1px-30,$this->gridOffsetYpx-($this->fontSize1b)-5,60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
@@ -1037,6 +960,105 @@ class PrintAtlas
   { return (($this->gridHeightYpx2*$Drad/$this->gridSpanDrad));
   }
 
+  public  function pdfAtlasTitlePage($nostream=false)  // Creates a pdf atlas page
+  { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
+    $this->theOrientation = $objUtil->checkGetKey('pageorientation','landscape');    
+    $this->thePageSize = $objUtil->checkGetKey('pagesize','a4');    
+    $this->pdf = new Cezpdf($this->thePageSize, $this->theOrientation);
+    $this->pdf->selectFont($instDir.'lib/fonts/Courier.afm');
+    $temp='Deepskylog Atlas';
+    if($this->thePageSize=='a4')
+    { $this->pdf->addText(50,$this->pdf->ez['pageHeight'] - 50,32,$temp);
+      $this->pdf->line(50,$this->pdf->ez['pageHeight']-55,375,$this->pdf->ez['pageHeight']-55);
+    }
+    else
+    { $this->pdf->addText(100,$this->pdf->ez['pageHeight']-100,64,$temp);
+      $this->pdf->line(100,$this->pdf->ez['pageHeight']-45,750,$this->pdf->ez['pageHeight']-45);
+    }
+    
+    global $GALXY,$PLNNB,$GLOCL,$OPNCL,$DRKNB,$EMINB,$CLANB,$GALCL,$QUASR;
+    $this->pdf->ellipse(50, 53, 5, 2.5, -45);
+    $this->pdf->addTextWrap(60, 50, 300, $this->fontSize1b, $GALXY, 'left');
+    
+    $this->pdf->ellipse(50, 70+3, 2.5, 2.5, 0);
+    $this->pdf->line(55, 70+3, 52.5, 70+3);
+    $this->pdf->line(45, 70+3, 47.5, 70+3);
+    $this->pdf->line(50, 70+5.5, 50, 70+8);
+    $this->pdf->line(50, 70+0.5, 50, 70-2);
+    $this->pdf->addTextWrap(60, 70, 300, $this->fontSize1b, $PLNNB, 'left');
+    
+    $this->pdf->ellipse(50, 90+3, 5, 5, 0);
+    $this->pdf->line(45, 90+3, 55, 90+3);
+    $this->pdf->line(50, 90+8, 50, 90-2);
+    $this->pdf->addTextWrap(60, 90, 300, $this->fontSize1b, $GLOCL, 'left');
+     
+    $this->pdf->setLineStyle(0.5,'','',array(3));
+    $this->pdf->ellipse(50, 110+3, 5, 5, 0);
+    $this->pdf->addTextWrap(60, 110, 300, $this->fontSize1b, $OPNCL, 'left');
+    
+    $this->pdf->rectangle(45, 130-2, 10, 10);
+    $this->pdf->addTextWrap(60, 130, 300, $this->fontSize1b, $DRKNB, 'left');
+    
+    $this->pdf->setLineStyle(0.5,'','',array());
+    
+    $this->pdf->rectangle(45, 210-2, 10, 10);
+    $this->pdf->addTextWrap(60, 210, 300, $this->fontSize1b, $EMINB, 'left');
+    
+    $this->pdf->rectangle(45.5, 150-1.5, 9, 9);
+    $this->pdf->setLineStyle(0.5,'','',array(3));
+    $this->pdf->rectangle(44.5, 150-2.5, 11, 11);
+    $this->pdf->addTextWrap(60, 150, 300, $this->fontSize1b, $CLANB, 'left');
+    $this->pdf->setLineStyle(0.5,'','',array());
+    
+    $x=50;
+    $y=170+3;
+    $d1=12;
+    $d2=12;
+    $x1=0;
+    $x2=0;
+    $y1=0;
+    $y2=0;
+    $x1=$x;
+    $y1=$y+(($d2+1)>>1);
+    $x2=$x+(($d1+1)>>1);
+    $y2=$y+(($d2+1)>>3);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $x1=$x+(($d1+1)>>1);
+    $y1=$y+(($d2+1)>>3);
+    $x2=$x+(3*(($d1+1)>>3));
+    $y2=$y-(($d2+1)>>1);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $x1=$x+(3*(($d1+1)>>3));
+    $y1=$y-(($d2+1)>>1);
+    $x2=$x-(3*(($d1+1)>>3));
+    $y2=$y-(($d2+1)>>1);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $x1=$x-(3*(($d1+1)>>3));
+    $y1=$y-(($d2+1)>>1);
+    $x2=$x-(($d1+1)>>1);
+    $y2=$y+(($d2+1)>>3);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $x1=$x-(($d1+1)>>1);
+    $y1=$y+(($d2+1)>>3);
+    $x2=$x;
+    $y2=$y+(($d2+1)>>1);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $this->pdf->addTextWrap(60, 170, 300, $this->fontSize1b, $GALCL, 'left');
+    
+    $x=50;
+    $y=190+3;
+    $d1=3;
+    $d2=3;
+    $this->pdf->line($x-2, $y, $x-$d1-2, $y);
+    $this->pdf->line($x, $y-2-$d2, $x, $y-2);
+    $this->pdf->line($x, $y+2+$d2, $x, $y+2);
+    $this->pdf->line($x+2, $y, $x+2+$d1, $y);
+    $this->pdf->addTextWrap(60, 190, 300, $this->fontSize1b, $QUASR, 'left');
+    
+    if(!$nostream)
+      $this->pdf->Stream(); 
+    return 'stepra:999,stepdecl:999,raright:999,declbottom:999';
+  }
   public  function pdfAtlas($nostream=false)  // Creates a pdf atlas page
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
     $object='';
@@ -1052,7 +1074,7 @@ class PrintAtlas
     $this->fontSize1b=max(min($objUtil->checkRequestKey('fontsize',$this->fontSize1b),9),6);
     $this->fontSize1a=round($this->fontSize1b*1.666);
     $this->theOrientation = $objUtil->checkGetKey('pageorientation','landscape');    
-    $this->thePageSize = $objUtil->checkGetKey('pagesize','');    
+    $this->thePageSize = $objUtil->checkGetKey('pagesize','a4');    
     $this->pdf = new Cezpdf($this->thePageSize, $this->theOrientation);
     $this->pdf->selectFont($instDir.'lib/fonts/Courier.afm');
     $this->pdf->setLineStyle(0.5);
@@ -1087,18 +1109,24 @@ class PrintAtlas
     for($i=0,$z=count($this->labelsArr);$i<$z;$i++)   
       $this->pdf->addTextWrap($this->labelsArr[$i][0],$this->labelsArr[$i][1],$this->labelsArr[$i][2],$this->labelsArr[$i][3],$this->labelsArr[$i][4],$this->labelsArr[$i][5]);                  
 	  if(($this->theOrientation=="portrait")&&($this->thePageSize=='a4'))
-    { $temp='(c) www.deepskylog.org - No publishing without written autorisation';
+    { $temp=LangAtlasDataSource1;
       $this->pdf->addText($this->gridOffsetXpx,20,$this->fontSize1b,$temp);
-      $temp='Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).';
+      $temp=LangAtlasDataSource2;
       $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
       if($objUtil->checkRequestKey('item',0)!='0')
-        $this->pdf->addText($this->canvasDimensionXpx-$this->gridOffsetXpx,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+        if($objUtil->checkRequestKey('item',0)%2==0)
+          $this->pdf->addText($this->canvasDimensionXpx-$this->gridOffsetXpx,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+        else
+          $this->pdf->addText(15,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
     }
 	  else 
-    { $temp='(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).';
-    $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
+    { $temp=LangAtlasDataSource;
+      $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
+        if($objUtil->checkRequestKey('item',0)%2==0)
+          $this->pdf->addText($this->canvasDimensionXpx-$this->gridOffsetXpx,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+        else
+          $this->pdf->addText(15,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
     }
-    
     if(!$nostream)
       $this->pdf->Stream(); 
     if($this->gridD0rad>0)
@@ -1124,7 +1152,10 @@ class PrintAtlas
   }
   public  function pdfAtlasAtlasPages($item)
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject,$tmpDir;
-    $result=$this->pdfAtlas(true);
+    if($item==0)
+      $result=$this->pdfAtlasTitlePage(true);
+    else
+      $result=$this->pdfAtlas(true);
     $_SESSION['allonepass'.$item]=$this->pdf->output();
     echo '{item:'.$item.','.$result.'}';
   }

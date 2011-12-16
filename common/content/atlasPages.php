@@ -48,8 +48,8 @@ function atlasPages()
 	echo "<p>".LangAtlassesIntro07."</p>";
   echo "<p>";
   echo LangpdfOrientation;
-  echo '<input type="radio" id="pageorientationlandscape" name="pageorientation" value="landscape" />'.LangpdfOrientationLandscape;
   echo '<input type="radio" id="pageorientationportrait" name="pageorientation" value="portrait" checked="checked"/>'.LangpdfOrientationPortrait;
+  echo '<input type="radio" id="pageorientationlandscape" name="pageorientation" value="landscape" />'.LangpdfOrientationLandscape;
   echo "</p>";
   echo "<p>";
   echo 'Page size: ';
