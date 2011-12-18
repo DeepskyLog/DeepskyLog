@@ -463,7 +463,7 @@ class PrintAtlas
   { global $objStar;
     for($m=8;$m<=$this->starsmagnitude;$m++)
     { //if($m>$this->gridDimensions[$this->gridActualDimension][3])
-      if($m>$this->starsmagnitude)
+      if($m>$this->starsmagnitude-0.5)
         $this->pdf->setColor(0.7,0.7,0.7);
       else
         $this->pdf->setColor(0,0,0);
@@ -542,7 +542,7 @@ class PrintAtlas
         $name.=$this->astroObjectsArr[$i]["nameCon"];
     }
     //$d=floor(2*max(($this->gridDimensions[$this->gridActualDimension][3])-($this->astroObjectsArr[$i]["vMag"]/100.0),0)+1);
-    $d=floor(2.0*max(($this->starsmagnitude)-($this->astroObjectsArr[$i]["vMag"]/100.0),0));
+    $d=floor(2.0*max(($this->starsmagnitude)-($this->astroObjectsArr[$i]["vMag"]/100.0),0.5));
     $this->gridLDrad($this->astroObjectsArr[$i]["RA2000"],$this->astroObjectsArr[$i]["DE2000"]); 
     $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
     $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
