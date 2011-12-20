@@ -23,12 +23,16 @@ function menu_instrument()
 	  $instr=$objObserver->getObserverProperty($loggedUser,'stdtelescope');	
 		if($result) 
 		{
-	    echo "<span class=\"center\"><li>
+		  echo "<span class=\"center\"><li>
              <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . $objInstrument->getInstrumentPropertyFromId($instr,'name') ."<span class=\"arrow\"></span></a>";
       echo " <ul>";
       
-	    while(list($key, $value) = each($result)) {
-        echo "  <li><a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."&amp;activeTelescopeId=" . $value . "\">".$objInstrument->getInstrumentPropertyFromId($value,'name')."</a></li>";
+			$url = "http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"];
+      if ($url == $baseURL || $url == $baseURL."#") {
+        $url = $baseURL . "index.php?title=Home";
+      }
+      while(list($key, $value) = each($result)) {
+        echo "  <li><a href=\"" . $url ."&amp;activeTelescopeId=" . $value . "\">".$objInstrument->getInstrumentPropertyFromId($value,'name')."</a></li>";
 	    }
 		}
     echo " </ul>";

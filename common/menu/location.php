@@ -29,8 +29,12 @@ function menu_location()
              <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . $objLocation->getLocationPropertyFromId($loc,'name') ."<span class=\"arrow\"></span></a>";
       echo " <ul>";
       
+      $url = "http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"];
+      if ($url == $baseURL || $url == $baseURL."#") {
+        $url = $baseURL . "index.php?title=Home";
+      }
 	    while(list($key, $value) = each($result)) {
-        echo "  <li><a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."&amp;activeLocationId=" . $value . "\">".$objLocation->getLocationPropertyFromId($value,'name')."</a></li>";
+        echo "  <li><a href=\"" .$url . "&amp;activeLocationId=" . $value . "\">".$objLocation->getLocationPropertyFromId($value,'name')."</a></li>";
 	    }
 		}
     echo " </ul>";
