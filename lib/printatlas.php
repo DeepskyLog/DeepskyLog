@@ -271,27 +271,26 @@ class PrintAtlas
   { if(($this->theOrientation=="portrait")&&($this->thePageSize=='a4'))
     { for($i=0;$i<6;$i++)
       { $this->pdf->filledEllipse($this->Legend1x+310-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-30,(.25*$i),(.25*$i),0,$this->nsegmente);
-        //$this->pdf->addTextWrap($this->Legend1x+320-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-42, 30, $this->fontSize1b, ((($this->gridDimensions[$this->gridActualDimension][3]))-(.5*$i)),  'center');
         $this->pdf->addTextWrap($this->Legend1x+315-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-32, 30, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)),  'center');
       }
       for($i=6;$i<12;$i++)
       { $this->pdf->filledEllipse($this->Legend1x+610-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-10,(.25*$i),(.25*$i),0,$this->nsegmente);
-        //$this->pdf->addTextWrap($this->Legend1x+620-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-23, 30, $this->fontSize1b, ((($this->gridDimensions[$this->gridActualDimension][3]))-(.5*$i)),  'center');
         $this->pdf->addTextWrap($this->Legend1x+615-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-13, 30, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)),  'center');
       }
+      $this->pdf->setColor(0.7,0.7,0.7);
+      $this->pdf->filledEllipse($this->Legend1x+310,$this->canvasDimensionYpx-$this->Legend1y-30,.25,.25,0,$this->nsegmente);
+      $this->pdf->setColor(0,0,0);  
     }
     else
     {  for($i=0;$i<12;$i++)
       { $this->pdf->filledEllipse($this->Legend1x+575-(50*$i),$this->canvasDimensionYpx-$this->Legend1y-10,(.25*$i),(.25*$i),0,$this->nsegmente);
-        //$this->pdf->addTextWrap($this->Legend1x+570-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-23, 30, $this->fontSize1b, ((($this->gridDimensions[$this->gridActualDimension][3]))-(.5*$i)),  'center');
-        $this->pdf->addTextWrap($this->Legend1x+585-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-13, 30, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)),  'center');
+        $this->pdf->addTextWrap($this->Legend1x+580-(50*$i), $this->canvasDimensionYpx-$this->Legend1y-13, 30, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)),  'center');
       }
+      $this->pdf->setColor(0.7,0.7,0.7);
+      $this->pdf->filledEllipse($this->Legend1x+575,$this->canvasDimensionYpx-$this->Legend1y-10,.25,.25,0,$this->nsegmente);
+      $this->pdf->setColor(0,0,0);  
     }
-    if(($this->theOrientation=="portrait")&&($this->thePageSize=='a4'))
-    { $this->Legend2x=$this->gridOffsetXpx+5;
-      $this->Legend2y+=20;
-    }
-      }
+  }
     	
   function astroDrawObjectLabel($cx, $cy, $d, $name, $seen)
   { $this->pdf->addText(($cx+4+$d), $cy-($this->fontSize1a>>2), $this->fontSize1b, $name);
@@ -361,10 +360,12 @@ class PrintAtlas
   
 	function astroDrawObjects($theobject='')
 	{ global $objObject,$objUtil;
+	  $excludelist=Array('Sh','Simeis','Dwb');
 	  $this->astroObjectsArr=$objObject->getObjectsMag($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,-999999,$this->atlasmagnitude,$objObject->getExactDsObject($objUtil->checkRequestKey('object'),$theobject));
 	  $z=count($this->astroObjectsArr);
 	  for($i=0;$i<$z;$i++)
-	  { if($this->astroObjectsArr[$i]["type"]!='AASTAR1')
+	  { $thecat = substr($this->astroObjectsArr[$i]["name"],0,strrpos($this->astroObjectsArr[$i]["name"]," "));
+	  	if((!(in_array($thecat,$excludelist)))&&($this->astroObjectsArr[$i]["type"]!='AASTAR1'))
   	  { if(($this->astroObjectsArr[$i]["mag"]>$this->maxshowndsomag)&&($this->astroObjectsArr[$i]["mag"]<99))
   	      $this->maxshowndsomag=$this->astroObjectsArr[$i]["mag"];
   	    if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
@@ -485,7 +486,8 @@ class PrintAtlas
     	  
     	$z=count($this->astroObjectsArr); 
       for($i=0;$i<$z;$i++)
-        $this->canvasDrawStar($i);
+        if(($this->starsmagnitude)>($this->astroObjectsArr[$i]["vMag"]/100.0))
+          $this->canvasDrawStar($i);
     }
     $this->pdf->setColor(0,0,0);
   }
@@ -1114,18 +1116,21 @@ class PrintAtlas
       $temp=LangAtlasDataSource2;
       $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
       if($objUtil->checkRequestKey('item',0)!='0')
-        if($objUtil->checkRequestKey('item',0)%2==0)
-          $this->pdf->addText($this->canvasDimensionXpx-$this->gridOffsetXpx,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
-        else
-          $this->pdf->addText(15,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+      { $this->pdf->addText($this->canvasDimensionXpx-30,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+        $this->pdf->addText(15,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+        $this->pdf->addText($this->canvasDimensionXpx-30,$this->canvasDimensionYpx-20,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+        $this->pdf->addText(15,$this->canvasDimensionYpx-20,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+      }
     }
 	  else 
     { $temp=LangAtlasDataSource;
       $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
-        if($objUtil->checkRequestKey('item',0)%2==0)
-          $this->pdf->addText($this->canvasDimensionXpx-$this->gridOffsetXpx,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
-        else
-          $this->pdf->addText(15,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+      if($objUtil->checkRequestKey('item',0)!='0')
+      { $this->pdf->addText($this->canvasDimensionXpx-30,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+        $this->pdf->addText(15,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+        $this->pdf->addText($this->canvasDimensionXpx-30,$this->canvasDimensionYpx-20,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+        $this->pdf->addText(15,$this->canvasDimensionYpx-20,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+      }
     }
     if(!$nostream)
       $this->pdf->Stream(); 
