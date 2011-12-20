@@ -7,7 +7,7 @@ else headmenu();
 
 function headmenu()
 { global $baseURL,$leftmenu,$loggedUser,$modules,$thisDay,$thisMonth,$thisYear,$topmenu, $register,
-         $objUtil,$objLocation,$objInstrument,$objObserver,$objMessages, $instDir;
+         $objUtil,$objLocation,$objInstrument,$objObserver,$objMessages, $instDir, $objDatabase;
   echo "<div id=\"div1\" onmouseover=\"resizeForm(theLeftMenu,'show');\">";
 	echo "<img src=\"".$baseURL."styles/images/header_bg.jpg\" alt=\"Vereniging voor Sterrenkunde - DeepskyLog\"/>";
 	
@@ -19,12 +19,6 @@ function headmenu()
 	{ echo "<div id=\"div1b\">";
 		echo "<div class=\"floatright\">";
 		require_once $_SESSION['module'].'/menu/date.php';
-		echo "</div>";
-		echo "<div class=\"floatright\">";
-		require_once $_SESSION['module'].'/menu/location.php';
-		echo "</div>";
-		echo "<div class=\"floatright\">";
-		require_once $_SESSION['module'].'/menu/instrument.php';
 		echo "</div>";
 		echo "<div class=\"floatright\">";
 		require_once $_SESSION['module'].'/menu/list.php';
@@ -56,6 +50,13 @@ function headmenu()
 	  require_once $instDir.'deepsky/menu/downloads.php';
 	require_once $instDir.'common/menu/help.php';                                                   // HELP MENU
 
+	// Select the standard location and instrument
+	if($loggedUser)                                                                            // LOGGED IN
+	{
+	  require_once 'common/menu/location.php';
+		require_once 'common/menu/instrument.php';
+	}
+	
 	// Select the modules
 	echo "<span class=\"right\"><li>";
 	echo "<a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . $GLOBALS[$_SESSION['module']]. "<span class=\"arrow\"></span></a>";
@@ -87,7 +88,6 @@ function headmenu()
   	echo "<ul><span class=\"left\">";
   	echo " <li><a href=\"".$baseURL."index.php?indexAction=detail_observer&user=" . $loggedUser . "\">" . LangDetails . "</a></li>";
     echo " <li><a href=\"".$baseURL."index.php?indexAction=change_account\">".LangChangeMenuItem1."</a></li>";
-    // TODO : Remove out.php en common/menu/login.php
     echo " <li><a href=\"".$baseURL."index.php?indexAction=logout&amp;title=".urlencode(LangLogoutMenuItem1)."\">".LangLogoutMenuItem1."</a></li>";
   	echo "</span></ul>";
     echo " </li></span>";	

@@ -801,6 +801,9 @@ ol#toc span {
     float:right;
     margin: 0 10px 0 0;
 }
+.center{
+    margin: 0 30px 0 0;
+}
 .menu ul li ul li{
     padding:0;
     float:none;

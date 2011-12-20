@@ -13,27 +13,28 @@ function menu_location()
 { global $baseURL,$loggedUser, 
          $objLocation,$objObject,$objObserver;
   if($loggedUser)
-  { echo "<div class=\"menuDivExtended\">";
-		echo "<p   class=\"menuHead\">".LangLocationMenuTitle."&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=add_site\">".LangManage."</a>"."</p>";
-	  $link=$baseURL."index.php?";
-		reset($_GET);
-		while(list($key,$value)=each($_GET))
-		  $link.=$key.'='.$value.'&amp;';
+  { 
 		if(array_key_exists('activeLocationId',$_GET) && $_GET['activeLocationId'])
 	  { $objObserver->setObserverProperty($loggedUser,'stdlocation', $_GET['activeLocationId']);
 		  if(array_key_exists('Qobj',$_SESSION))
 			  $_SESSION['Qobj']=$objObject->getObjectVisibilities($_SESSION['Qobj']);
 	  }
 		$result=$objLocation->getSortedLocations('name',$loggedUser,1);
-	  $loc=$objObserver->getObserverProperty($loggedUser,'stdlocation');	
-		if($result)
-		{ echo "<select name=\"activateLocation\" class=\"menuField menuDropdown\" onchange=\"location=this.options[this.selectedIndex].value;\">";
-	    while(list($key, $value) = each($result))
-		    echo "<option ".(($value==$loc)?"selected=\"selected\"":"")." value=\"".$link."&amp;activeLocationId=$value\">".$objLocation->getLocationPropertyFromId($value,'name')."</option>";
-		  echo "</select>";
+	  $loc=$objObserver->getObserverProperty($loggedUser,'stdlocation');
+
+	  if($result)
+	  {
+	    echo "<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>";
+      echo "<li>
+             <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . $objLocation->getLocationPropertyFromId($loc,'name') ."<span class=\"arrow\"></span></a>";
+      echo " <ul>";
+      
+	    while(list($key, $value) = each($result)) {
+        echo "  <li><a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."&amp;activeLocationId=" . $value . "\">".$objLocation->getLocationPropertyFromId($value,'name')."</a></li>";
+	    }
 		}
-		echo "</div>";
-		$link="";
+    echo " </ul>";
+    echo "</li>";
 	}
 }
 ?>
