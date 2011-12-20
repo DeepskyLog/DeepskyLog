@@ -11,15 +11,16 @@ else comets_menu_change();
 
 function comets_menu_change()
 { global $baseURL,$loggedUser;
-	echo "<div class=\"menuDiv\">";
-	echo "<p class=\"menuHead\">".LangChangeMenuTitle."</p>";
-	echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=change_account\">".LangChangeMenuItem1."</a><br />";
+	  echo "<li>
+	  	       <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . LangChangeMenuTitle."<span class=\"arrow\"></span></a>";
+	  echo " <ul>";
 	if($loggedUser!="admin")
-	{ echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=comets_add_observation\">".LangChangeMenuItem2."</a><br />";
+	{ echo "  <li><a href=\"".$baseURL."index.php?indexAction=comets_add_observation\">".LangChangeMenuItem2."</a></li>";
 	}
-	echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeMenuItem3."</a><br />";
-	echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_site\">".LangChangeMenuItem4."</a><br />";
-	echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=comets_add_object\" >".LangChangeMenuItem5."</a><br />";
-	echo "</div>";
-	}
+	echo "  <li><a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeMenuItem3."</a></li>";
+	echo "  <li><a href=\"".$baseURL."index.php?indexAction=add_site\">".LangChangeMenuItem4."</a></li>";
+	echo "  <li><a href=\"".$baseURL."index.php?indexAction=comets_add_object\" >".LangChangeMenuItem5."</a></li>";
+  echo " </ul>";
+  echo "</li>";
+}
 ?>

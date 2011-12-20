@@ -13,39 +13,21 @@ function menu_change()
 { global $baseURL,$loggedUser,$menuAddChange,
          $objUtil;
 	if($loggedUser)
-	{ echo "<div class=\"menuDiv\">";
+	{ 
 		reset($_GET);
-		$link="";
-		while(list($key,$value)=each($_GET))
-		  if($key!="menuAddChange")
-		    $link.="&amp;".$key."=".urlencode($value);
-		reset($_GET);
-		echo "<p  class=\"menuHead\">";
-		if($menuAddChange=="collapsed")
-		  echo "<a href=\"".$baseURL."index.php?menuAddChange=expanded".$link."\" title=\"".LangMenuExpand."\">+</a> ";
-		else
-		  echo "<a href=\"".$baseURL."index.php?menuAddChange=collapsed".$link."\" title=\"".LangMenuCollapse."\">-</a> ";
-		echo LangChangeMenuTitle."</p>";
-		if($menuAddChange=="collapsed")
-		{ echo "<select name=\"search\" class=\"menuField menuDropdown\" onchange=\"{location=this.options[this.selectedIndex].value;}\">";
-		  echo "<option ".(($objUtil->checkGetKey('indexAction')=='default_action')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=default_action\">"."&nbsp;"."</option>";
-		  echo "<option ".(($objUtil->checkGetKey('indexAction')=='add_object')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=add_object\">".LangChangeMenuItem5."</option>";
-		  echo "<option ".(($objUtil->checkGetKey('indexAction')=='add_session')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=add_session\">".LangChangeMenuItem9."</option>";
-		  echo "<option ".(($objUtil->checkGetKey('indexAction')=='add_eyepiece')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=add_eyepiece\">".LangChangeMenuItem6."</option>";
-		  echo "<option ".(($objUtil->checkGetKey('indexAction')=='add_filter')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=add_filter\">".LangChangeMenuItem7."</option>";
-		  echo "<option ".(($objUtil->checkGetKey('indexAction')=='add_lens')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=add_lens\">".LangChangeMenuItem8."</option>";                        
-		  echo "<option ".(($objUtil->checkGetKey('indexAction')=='change_account')?"selected=\"selected\" ":"")."value=\"".$baseURL."index.php?indexAction=change_account\">".LangChangeMenuItem1."</option>";
-		  echo "</select>";
-		}
-		else
-		{ echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_object\">".LangChangeMenuItem5."</a><br />";
-		  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_session\">".LangChangeMenuItem9."</a><br />";
-		  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_eyepiece\">".LangChangeMenuItem6."</a><br />";
-		  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_filter\">".LangChangeMenuItem7."</a><br />";
-		  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_lens\">".LangChangeMenuItem8."</a><br />";
-		  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=change_account\">".LangChangeMenuItem1."</a><br />";
-		}
-		echo "</div>";
+	  echo "<li>
+	  	       <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . LangChangeMenuTitle."<span class=\"arrow\"></span></a>";
+	  echo " <ul>";
+	  echo "  <li><a href=\"".$baseURL."index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe waarneming\">".LangQuickPickNewObservation."</a></li>";
+	  echo "  <li><a href=\"".$baseURL."index.php?indexAction=add_object\">".LangChangeMenuItem5."</a></li>";
+    echo "  <li><a href=\"".$baseURL."index.php?indexAction=add_session\">".LangChangeMenuItem9."</a></li>";
+    echo "  <li><a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeMenuItem3."</a></li>";
+    echo "  <li><a href=\"".$baseURL."index.php?indexAction=add_site\">".LangChangeMenuItem4."</a></li>";
+    echo "  <li><a href=\"".$baseURL."index.php?indexAction=add_eyepiece\">".LangChangeMenuItem6."</a></li>";
+    echo "  <li><a href=\"".$baseURL."index.php?indexAction=add_filter\">".LangChangeMenuItem7."</a></li>";
+    echo "  <li><a href=\"".$baseURL."index.php?indexAction=add_lens\">".LangChangeMenuItem8."</a></li>";
+	  echo " </ul>";
+	  echo "</li>";
 	}
 }
 ?>

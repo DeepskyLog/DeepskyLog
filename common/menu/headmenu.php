@@ -6,8 +6,8 @@ if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else headmenu();
 
 function headmenu()
-{ global $baseURL,$leftmenu,$loggedUser,$modules,$thisDay,$thisMonth,$thisYear,$topmenu,
-         $objUtil,$objLocation,$objInstrument,$objObserver,$objMessages;
+{ global $baseURL,$leftmenu,$loggedUser,$modules,$thisDay,$thisMonth,$thisYear,$topmenu, $register,
+         $objUtil,$objLocation,$objInstrument,$objObserver,$objMessages, $instDir;
   echo "<div id=\"div1\" onmouseover=\"resizeForm(theLeftMenu,'show');\">";
 	echo "<img src=\"".$baseURL."styles/images/header_bg.jpg\" alt=\"Vereniging voor Sterrenkunde - DeepskyLog\"/>";
 	
@@ -35,44 +35,73 @@ function headmenu()
 	
 	// Welcome line with login name
 	echo "<div id=\"div2\">";
-	echo "<div id=\"div2a\">";
 
-  $thelink='';
-  reset($_GET);
-  while(list ($key, $value) = each($_GET))
-    if (!in_array($key, array (
-			'leftmenu'	  )))
-  $thelink .= "&amp;" . $key . "=" . urlencode($value);
-	$thelink = $baseURL."index.php?".substr($thelink,5);
-  
-	echo "<a href=\"".$thelink."&amp;topmenu=hidden\" title=\"".LangHideTopMenu."\">^</a> ";
-	echo "<a href=\"".$thelink."&amp;topmenu=show\" title=\"".LangShowTopMenu."\" >v</a> ";
-	echo "<a href=\"".$thelink."&amp;leftmenu=hidden\" title=\"".LangHideLeftMenu."\">&lt;</a> ";
-  echo "<a href=\"".$thelink."&amp;leftmenu=show\" title=\"".LangShowLeftMenu."\" >&gt;</a> ";
-  echo "<span class=\"menuLine\" >";
-	echo LangWelcome;
-	echo $objUtil->checkSessionKey('module');
-	echo LangWelcome1;
-	echo $baseURL;
-	echo ' - ';
-	if($loggedUser)
-	  echo LangWelcome2.$objObserver->getObserverProperty($loggedUser,'firstname')."&nbsp;".$objObserver->getObserverProperty($loggedUser,'name');
-	else
-	  echo LangWelcome3;
-	echo " - ";
-	echo "<a href=\"".$baseURL."index.php?title=Home\">"."Home</a> - <a href=\"". $baseURL . "index.php?indexAction=show_messages\">" . "Inbox" . $objMessages->getNumberOfUnreadMails() . "</a>";
-	echo "</span>";
-	echo "</div>";
-	echo "<div id=\"div2b\">";  
-	echo "<span class=\"menuLine\">";
-	echo LangWelcome4;
-	for ($i = 0; $i < count($modules);$i++)
-	{ $mod = $modules[$i];
-	  if($i>0) echo " - ";
-	    echo "<a href=\"".$baseURL."index.php?indexAction=module".$mod."\">".$GLOBALS[$mod]."</a>";
+	// Here, we set the new style, drop down menu
+	// Make the drop down menu
+	echo "<div class=\"menu\">";
+	echo " <ul>";
+ 	echo "<li>";
+ 	echo "<a href=\"" . $baseURL . "index.php?title=Home\"><img src=\"" . $baseURL . "images/home.png\" /></a>";
+ 	echo "</li>";
+	require_once $instDir.$_SESSION['module'].'/menu/search.php';                                   // Overview MENU
+ 	if($_SESSION['module']=='deepsky') {
+ 		require_once $instDir.$_SESSION['module'].'/menu/quickpickDropDown.php';                                   // Search MENU
+ 	}
+	if($loggedUser)                                                                            // LOGGED IN
+	{ require_once $instDir.$_SESSION['module'].'/menu/change.php';                                 // CHANGE MENU
+	  if(array_key_exists('admin', $_SESSION)&&($_SESSION['admin']=='yes'))
+	    require_once $instDir.'common/menu/admin.php';                                              // ADMINISTRATION MENU
 	}
-	echo "</span>";
+	if($_SESSION['module']=='deepsky')
+	  require_once $instDir.'deepsky/menu/downloads.php';
+	require_once $instDir.'common/menu/help.php';                                                   // HELP MENU
+
+	// Select the modules
+	echo "<span class=\"right\"><li>";
+	echo "<a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . $GLOBALS[$_SESSION['module']]. "<span class=\"arrow\"></span></a>";
+  echo "<ul><span class=\"left\">";
+	for ($i = 0; $i < count($modules);$i++)
+ 	{
+    $mod = $modules[$i];
+    if ($mod != $_SESSION['module']) {
+      echo " <li><a href=\"".$baseURL."index.php?indexAction=module".$mod."\">".$GLOBALS[$mod]."</a></li>";
+    }
+ 	}
+ 	echo "</span></ul>";
+	echo "</li></span>";
+	
+	// If new messages != 0, make background red
+	echo "<span class=\"right\"><li>";
+	$unreadMails = $objMessages->getNumberOfUnreadMails();
+	$unreadMailsSplit = explode("/", $unreadMails);
+	if ($unreadMailsSplit[0] > 0) {
+	  echo "<a class=\"newMails\" href=\"". $baseURL . "index.php?indexAction=show_messages\">" . $unreadMails . "</a>";
+	} else {
+	  echo "<a href=\"". $baseURL . "index.php?indexAction=show_messages\">" . $unreadMails . "</a>";
+	}
+	echo "</li></span>";
+
+	echo "<span class=\"right\">";
+	if($loggedUser) {
+	  echo "<li><a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . $objObserver->getObserverProperty($loggedUser,'firstname')."&nbsp;".$objObserver->getObserverProperty($loggedUser,'name') . "<span class=\"arrow\"></span></a>";
+  	echo "<ul><span class=\"left\">";
+  	echo " <li><a href=\"".$baseURL."index.php?indexAction=detail_observer&user=" . $loggedUser . "\">" . LangDetails . "</a></li>";
+    echo " <li><a href=\"".$baseURL."index.php?indexAction=change_account\">".LangChangeMenuItem1."</a></li>";
+    // TODO : Remove out.php en common/menu/login.php
+    echo " <li><a href=\"".$baseURL."index.php?indexAction=logout&amp;title=".urlencode(LangLogoutMenuItem1)."\">".LangLogoutMenuItem1."</a></li>";
+  	echo "</span></ul>";
+    echo " </li></span>";	
+	} else {
+	  // Let's make a sign in / register tab
+	  echo "<li><a href=\"" . $baseURL . "index.php?indexAction=login\">" . $objObserver->getObserverProperty($loggedUser,'firstname')."&nbsp;". LangLoginMenuTitle . "</a></li>";
+	  if($register == "yes") {                                                       // includes register link 
+	    echo "<li><a class=\"register\" href=\"".$baseURL."index.php?indexAction=subscribe&amp;title=".urlencode(LangLoginMenuRegister)."\">".LangLoginMenuRegister."</a></li>";
+	  }
+    echo "</span>";	
+	}
+	echo " </ul>";
 	echo "</div>";
+  
 	echo "</div>";
 }
 ?>

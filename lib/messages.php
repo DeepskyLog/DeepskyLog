@@ -9,7 +9,7 @@ class Messages
 {  public  function getNumberOfUnreadMails()
   { global $objDatabase, $loggedUser;
   	if($loggedUser) {
-  	  return " (" . count($this->getIdsNewMails($loggedUser)) . "/" . count($this->getIdsAllMails($loggedUser)) . ")";
+  	  return "" . count($this->getIdsNewMails($loggedUser)) . "/" . count($this->getIdsAllMails($loggedUser)) . "";
   	} else {
   	  return "";
   	}

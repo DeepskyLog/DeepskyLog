@@ -17,13 +17,7 @@ function menu_login()
 		    $link.="&amp;".$key."=".urlencode($value);
 		reset($_GET);
 		echo "<p  class=\"menuHead\">";
-		if($menuLogin=="collapsed")
-		  echo "<a href=\"".$baseURL."index.php?menuLogin=expanded".$link."\" title=\"".LangMenuExpand."\">+</a> ";
-		else
-		  echo "<a href=\"".$baseURL."index.php?menuLogin=collapsed".$link."\" title=\"".LangMenuCollapse."\">-</a> ";
 		echo LangLoginMenuTitle.LangLoginMenuTitle1;
-	  if($register == "yes")                                                        // includes register link
-	    echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=subscribe&amp;title=".urlencode(LangLoginMenuRegister)."\">".LangLoginMenuRegister."</a>";
 	  echo "</p>";
 	  if($menuLogin=="expanded")
 	  { echo "<form action=\"".$baseURL."index.php\" method=\"post\">";

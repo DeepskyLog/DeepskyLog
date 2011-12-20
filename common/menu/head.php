@@ -10,16 +10,14 @@ function head()
          $objObserver,$objUtil,$googleAnalytics,$domainName;
 	echo "<head>";
 	echo "<meta charset=\"utf-8\" />";
-	echo "<meta http-equiv=\"pragma\" content=\"no-cache\" />";
 	echo "<meta name=\"revisit-after\" content=\"1 day\" />";
-	echo "<meta name=\"copyright\" content=\"Copyright &copy; 2005-2011 VVS. Alle Rechten Voorbehouden.\" />";
 	echo "<meta name=\"author\" content=\"DeepskyLog - VVS\" />";
 	echo "<meta name=\"keywords\" content=\"VVS, Vereniging Voor Sterrenkunde, astronomie, sterrenkunde, Deepsky, waarnemingen, kometen\" />";
 	echo "<base href=\"".$baseURL."\" />";
 	echo "<link rel=\"shortcut icon\" href=\"".$baseURL."styles/images/favicon.ico\" />";
 	echo "<link href=\"".$baseURL."styles/style.css\" rel=\"stylesheet\" type=\"text/css\" />";
 	echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"DeepskyLog - latest observations\" href=\"observations.rss\" />";
-    echo "<link href=\"https://plus.google.com/105963409869875462537/\" rel=\"publisher\" />";
+  echo "<link href=\"https://plus.google.com/105963409869875462537/\" rel=\"publisher\" />";
   echo "<script type=\"text/javascript\" src=\"https://apis.google.com/js/plusone.js\"></script>";
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
   echo "<script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js\" type=\"text/javascript\"></script>
@@ -27,7 +25,12 @@ function head()
         <script src=\"".$baseURL."lib/javascript/jquery.prettyPhoto.js\" type=\"text/javascript\" charset=\"utf-8\"></script>";
   echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/highcharts.js\"></script>";
   echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/modules/exporting.js\"></script>";
-  
+  echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/jquery.fixedMenu.js\"></script>";
+  echo " <script>
+        $('document').ready(function(){
+            $('.menu').fixedMenu();
+        });
+        </script>";
   $DSLTitle="DeepskyLog";
 	$TitleText="";
 	$theDispatch=$objUtil->checkRequestKey('indexAction');

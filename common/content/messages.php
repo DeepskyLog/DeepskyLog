@@ -35,7 +35,7 @@ function messages()
 	else
 	  $min = 0;
 
-	$content1 = "<h4>" . LangViewMessages . $objMessages->getNumberOfUnreadMails() . "</h4>";
+	$content1 = "<h4>" . LangViewMessages . " (" . $objMessages->getNumberOfUnreadMails() . ")</h4>";
 
 	$newMails = $objMessages->getIdsNewMails($loggedUser);
 
