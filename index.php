@@ -16,7 +16,7 @@ try
   echo    "<html>";
   require_once 'common/menu/head.php';                                                                         // HTML head
   echo    "<body onkeydown=\"bodyOnKeyDown(event);\">"; 
-  echo    "<meta http-equiv=\"X-UA-Compatible\" content=\"chrome=1\">";
+  echo    "<meta http-equiv=\"X-UA-Compatible\" content=\"chrome=IE8\">";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."common/entryexit/globals.js\"></script>";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/jsenvironment.js\"></script>";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/wz_tooltip.js\"></script>";
