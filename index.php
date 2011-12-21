@@ -16,10 +16,30 @@ try
   echo    "<html>";
   require_once 'common/menu/head.php';                                                                         // HTML head
   echo    "<body onkeydown=\"bodyOnKeyDown(event);\">"; 
+  echo    "<meta http-equiv=\"X-UA-Compatible\" content=\"chrome=1\">";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."common/entryexit/globals.js\"></script>";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/jsenvironment.js\"></script>";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/wz_tooltip.js\"></script>";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/ajaxbase.js\"></script>";
+  echo    "<script type=\"text/javascript\" 
+              src=\"http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js\"></script>";
+  echo    "  <style>
+	   /* 
+  	  CSS rules to use for styling the overlay:
+    	  .chromeFrameOverlayContent
+      	.chromeFrameOverlayContent iframe
+	      .chromeFrameOverlayCloseBar
+  	    .chromeFrameOverlayUnderlay
+	   */
+  	</style> 
+
+	  <script>
+  	 // You may want to place these lines inside an onload handler
+	   CFInstall.check({
+  	   mode: \"overlay\",
+    	 destination: \"" . $baseURL . "\"
+		   });
+  		</script>";
   echo    "<div id=\"div4\">";                                                                            
   echo    "<p class=\"waitMessage\">".LangIndexPleaseWait."</p>";
   echo    "<img id=\"div4a\" src=\"".$baseURL."styles/images/lu.gif\" alt=\"\" />";
