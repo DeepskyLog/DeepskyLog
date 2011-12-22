@@ -23,7 +23,7 @@ function menu_instrument()
 	  $instr=$objObserver->getObserverProperty($loggedUser,'stdtelescope');	
 		if($result) 
 		{
-		  echo "<span class=\"center\"><li>
+		  echo "<li>
              <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . $objInstrument->getInstrumentPropertyFromId($instr,'name') ."<span class=\"arrow\"></span></a>";
       echo " <ul>";
       
@@ -36,7 +36,7 @@ function menu_instrument()
 	    }
 		}
     echo " </ul>";
-    echo "</li></span>";
+    echo "</li>";
 	}
 }
 ?>

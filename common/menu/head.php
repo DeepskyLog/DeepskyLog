@@ -15,7 +15,7 @@ function head()
 	echo "<meta name=\"keywords\" content=\"VVS, Vereniging Voor Sterrenkunde, astronomie, sterrenkunde, Deepsky, waarnemingen, kometen\" />";
 	echo "<base href=\"".$baseURL."\" />";
 	echo "<link rel=\"shortcut icon\" href=\"".$baseURL."styles/images/favicon.ico\" />";
-	echo "<link href=\"".$baseURL."styles/style.css\" rel=\"stylesheet\" type=\"text/css\" />";
+	echo "<link href=\"".$baseURL."styles/deepskylog.css\" rel=\"stylesheet\" type=\"text/css\" />";
 	echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"DeepskyLog - latest observations\" href=\"observations.rss\" />";
   echo "<link href=\"https://plus.google.com/105963409869875462537/\" rel=\"publisher\" />";
   echo "<script type=\"text/javascript\" src=\"https://apis.google.com/js/plusone.js\"></script>";
@@ -25,12 +25,6 @@ function head()
         <script src=\"".$baseURL."lib/javascript/jquery.prettyPhoto.js\" type=\"text/javascript\" charset=\"utf-8\"></script>";
   echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/highcharts.js\"></script>";
   echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/modules/exporting.js\"></script>";
-  echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/jquery.fixedMenu.js\"></script>";
-  echo " <script>
-        $('document').ready(function(){
-            $('.menu').fixedMenu();
-        });
-        </script>";
   $DSLTitle="DeepskyLog";
 	$TitleText="";
 	$theDispatch=$objUtil->checkRequestKey('indexAction');

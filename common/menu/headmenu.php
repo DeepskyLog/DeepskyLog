@@ -32,8 +32,7 @@ function headmenu()
 
 	// Here, we set the new style, drop down menu
 	// Make the drop down menu
-	echo "<div class=\"menu\">";
-	echo " <ul>";
+	echo " <ul id=\"menu\">";
  	echo "<li>";
  	echo "<a href=\"" . $baseURL . "index.php?title=Home\"><img src=\"" . $baseURL . "images/home.png\" /></a>";
  	echo "</li>";
@@ -93,14 +92,14 @@ function headmenu()
     echo " </li></span>";	
 	} else {
 	  // Let's make a sign in / register tab
-	  echo "<li><a href=\"" . $baseURL . "index.php?indexAction=login\">" . $objObserver->getObserverProperty($loggedUser,'firstname')."&nbsp;". LangLoginMenuTitle . "</a></li>";
 	  if($register == "yes") {                                                       // includes register link 
 	    echo "<li><a class=\"register\" href=\"".$baseURL."index.php?indexAction=subscribe&amp;title=".urlencode(LangLoginMenuRegister)."\">".LangLoginMenuRegister."</a></li>";
+	    echo "</span><span class=\"right\">";
 	  }
-    echo "</span>";	
+	  echo "<li><a href=\"" . $baseURL . "index.php?indexAction=login\">" . $objObserver->getObserverProperty($loggedUser,'firstname')."&nbsp;". LangLoginMenuTitle . "</a></li>";
+	  echo "</span>";	
 	}
 	echo " </ul>";
-	echo "</div>";
   
 	echo "</div>";
 }
