@@ -392,6 +392,8 @@ class PrintAtlas
 	        $this->astroDrawQSRObject($i);
 	      else 
 	        $this->astroDrawBRTNBObject($i); 
+  	    if(!(in_array($this->astroObjectsArr[$i]["type"],array('AA2STAR','AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS'))))
+  	      $_SESSION['atlasPagesIndex'][]=Array($this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]);
   	  }
 	  }
 	}
@@ -1144,6 +1146,19 @@ class PrintAtlas
     //else
     //  $this->gridLDinvRad(($this->canvasDimensionXpx>>1),$this->gridOffsetYpx);
     return 'stepra:'.($this->gridSpanL*2).',stepdecl:'.($this->gridSpanD*2).',raright:'.$tempra.',declbottom:'.($this->gridDyRad/3.1415926535*180);
+  }
+  public function pdfAtlasIndex()  // Creates a pdf atlas page
+  { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
+    $this->theOrientation = $objUtil->checkGetKey('pageorientation','landscape');    
+    $this->thePageSize = $objUtil->checkGetKey('pagesize','a4');    
+    $this->pdf = new Cezpdf($this->thePageSize, $this->theOrientation);
+    $this->pdf->selectFont($instDir.'lib/fonts/Courier.afm');
+    $this->pdf->addText(100, 100, 12, "Index");
+    $theindex=$_SESSION['atlasPagesIndex'];
+    //ksort($theindex);
+    for($i=0;$i<count($theindex);$i++)
+      $this->pdf->addtext(10,10+$i*10,10,$theindex[$i][0]);
+    $this->pdf->Stream(); 
   }
   public function pdfAtlasObjectSets($item,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false)
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject,$tmpDir;
@@ -2008,10 +2023,5 @@ class PrintAtlas
 	function roundPrecision($theValue,$thePrecision)
 	{ return(round($theValue/$thePrecision)*$thePrecision);
 	}
-
-	public  function pdfAtlasIndex($reportuser,$reportname, $reportlayout, $result, $sort='')  // Creates a pdf document from an array of objects
-  { 
-
-  }
 }
 ?>

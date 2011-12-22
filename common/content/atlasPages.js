@@ -89,7 +89,14 @@ function generateallonepass(item,msie,stepra,stepdecl)
 	      else
 	      	window.open('atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+item+'_'+tempdecl+'d'+tempdeclmin+'m'+' '+tempra+'h'+tempramin+'m','');
 	      if(((ra*1.0)<(temp.raright))&&((temp.declbottom<-80)||((decl*1.0)<-80)))
-	        return;
+	      { if(msie)
+	        { var mywindow=window.open("",'mywindow'+item);
+            mywindow.location='atlasPagesIndex.pdf.php';  
+          }  
+          else
+      	    window.open('atlasPagesIndex.pdf.php','');
+          return;
+	      }
 	      generateallonepass(item,msie,((ra-(temp.raright))*2*(1-theoverlap)),((decl-(temp.declbottom))*2*(1-theoverlap)));      
 	    }
 	  }
@@ -124,7 +131,7 @@ function generateone(msie)
   jsonhttp.onreadystatechange=function()
   { if(jsonhttp.readyState==4)
     { //alert(jsonhttp.responseText);
-	  temp=eval('('+jsonhttp.responseText+')');
+    temp=eval('('+jsonhttp.responseText+')');
       tempra=Math.floor(document.getElementById('ra').value,0);
       tempramin=Math.round((document.getElementById('ra').value-tempra)*60,0);
       if(tempra<10)
@@ -148,12 +155,16 @@ function generateone(msie)
     	    tempdeclmin='0'+tempdeclmin;
         tempdecl='-'+tempdecl;
       }	
+      
+      
       if(msie=='true')
       { var mywindow=window.open("",'mywindow'+item);
         mywindow.location='atlasPagesOnePass.pdf.php?item=1&filename='+document.getElementById('decl').value+'_'+item+'_'+ra.substr(0,5);  
       }  
       else
-      	window.open('atlasPagesOnePass.pdf.php?item=1&filename='+tempdecl+'d'+tempdeclmin+'m'+'_'+tempra+'h'+tempramin+'m','');
+      {	window.open('atlasPagesOnePass.pdf.php?item=1&filename='+tempdecl+'d'+tempdeclmin+'m'+'_'+tempra+'h'+tempramin+'m','');
+        window.open('atlasPagesIndex.pdf.php','');
+      } 
     }
   };
   var url='ajaxinterface.php?instruction=atlasPages&item=1&'+
