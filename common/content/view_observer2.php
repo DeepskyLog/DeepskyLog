@@ -237,9 +237,9 @@ function view_observer()
 
   foreach ($objectsArray as $key => $value) {
     if ($key != "REST") {
-      print "{name: '" . $GLOBALS[$key] . "', color: '" . $colors[$key] . "', y: " . $value . "}, ";
+      print "{name: \"" . html_entity_decode($GLOBALS[$key], ENT_QUOTES, "UTF-8") . "\", color: '" . $colors[$key] . "', y: " . $value . "}, ";
     } else {
-      print "{name: '" . $GLOBALS[$key] . "', color: '" . $colors[$key] . "', y: " . $value . "}";
+      print "{name: \"" . html_entity_decode($GLOBALS[$key], ENT_QUOTES, "UTF-8") . "\", color: '" . $colors[$key] . "', y: " . $value . "}";
     }
   }
   echo                     "
