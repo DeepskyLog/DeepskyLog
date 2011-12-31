@@ -72,9 +72,9 @@ function atlasPages()
   echo "<h2>"."Generate complete altas (not available in Internet Explorer)"."</h2>";
   if(!($MSIE))
   { echo"<p>";
-    echo "<input type=\"button\" class=\"width125px\" value=\"Overview ".LangpdfseriesButton."\" onclick=\"generateoverviewallonepass(0,".($MSIE?'true':'false').",24,180);\"/>";
-    echo "<input type=\"button\" class=\"width125px\" value=\"Lookup ".LangpdfseriesButton."\" onclick=\"generatelookupallonepass(0,".($MSIE?'true':'false').",24,180);\"/>";
-    echo "<input type=\"button\" class=\"width125px\" value=\"Detail ".LangpdfseriesButton."\" onclick=\"generatedetailallonepass(0,".($MSIE?'true':'false').",24,180);\"/>";
+    echo "<input type=\"button\" class=\"width250px\" value=\"Overview ".LangpdfseriesButton."\" onclick=\"generateoverviewallonepass(0,".($MSIE?'true':'false').",24,180);\"/>";
+    echo "<input type=\"button\" class=\"width250px\" value=\"Lookup ".LangpdfseriesButton."\" onclick=\"generatelookupallonepass(0,".($MSIE?'true':'false').",24,180);\"/>";
+    echo "<input type=\"button\" class=\"width250px\" value=\"Detail ".LangpdfseriesButton."\" onclick=\"generatedetailallonepass(0,".($MSIE?'true':'false').",24,180);\"/>";
     echo "</p>";
   }
   echo "&nbsp;"."<div id='thecounter'> &nbsp; </div>";
