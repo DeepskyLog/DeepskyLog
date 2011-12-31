@@ -85,6 +85,7 @@ class PrintAtlas
       $nsegmente=8,
       $rx=0,
       $starsmagnitude,
+      $theItemPage,
       $theOrientation,
       $thePageSize,
       $ty=0; 
@@ -393,7 +394,7 @@ class PrintAtlas
 	      else 
 	        $this->astroDrawBRTNBObject($i); 
   	    if(!(in_array($this->astroObjectsArr[$i]["type"],array('AA2STAR','AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS'))))
-  	      $_SESSION['atlasPagesIndex'][]=Array($this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]);
+  	      $_SESSION['atlasPagesIndex'][]=Array($this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"],$this->theItemPage);
   	  }
 	  }
 	}
@@ -1065,6 +1066,7 @@ class PrintAtlas
   }
   public  function pdfAtlas($nostream=false)  // Creates a pdf atlas page
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
+    $this->theItemPage=$objUtil->checkRequestKey('item',0);
     $object='';
     if(!(($this->atlaspagerahr=$objUtil->checkRequestKey('ra',0))&&
          ($this->atlaspagedecldeg=$objUtil->checkRequestKey('decl',0))))
@@ -1149,15 +1151,44 @@ class PrintAtlas
   }
   public function pdfAtlasIndex()  // Creates a pdf atlas page
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
+    
+    $indexFontSize = 8;
+  
+    $topborderIndexWidth=50;
+    $sideborderIndexWidth=50;
+    $columnIndexWidth=200; 
+    $columnIndexSeparation=10;
+    
+    $extraspacerdotline=10;
+    
     $this->theOrientation = $objUtil->checkGetKey('pageorientation','landscape');    
     $this->thePageSize = $objUtil->checkGetKey('pagesize','a4');    
     $this->pdf = new Cezpdf($this->thePageSize, $this->theOrientation);
     $this->pdf->selectFont($instDir.'lib/fonts/Courier.afm');
-    $this->pdf->addText(100, 100, 12, "Index");
+    $this->canvasDimensionXpx=$this->pdf->ez['pageWidth']; 
+    $this->canvasDimensionYpx=$this->pdf->ez['pageHeight'];
+    $this->pdf->selectFont($instDir.'lib/fonts/Courier.afm');
+    $this->pdf->addText($sideborderIndexWidth, $this->canvasDimensionYpx-$topborderIndexWidth, 12, "Index");
+    $this->pdf->line($sideborderIndexWidth,$this->canvasDimensionYpx-$topborderIndexWidth,$this->canvasDimensionXpx-$sideborderIndexWidth,$this->canvasDimensionYpx-$topborderIndexWidth);
+    $this->pdf->newPage();
     $theindex=$_SESSION['atlasPagesIndex'];
     //ksort($theindex);
-    for($i=0;$i<count($theindex);$i++)
-      $this->pdf->addtext(10,10+$i*10,10,$theindex[$i][0]);
+    for($i=0,$j=0,$columnX=0;$i<count($theindex);$i++)
+    { if($this->canvasDimensionYpx-($j*10)<$topborderIndexWidth)
+      { $j=0;
+        $columnX+=($columnIndexWidth+$columnIndexSeparation);
+        if(($columnX+$columnIndexWidth)>($this->canvasDimensionXpx-$sideborderIndexWidth))
+        { $this->pdf->newPage();
+        	$columnX=0;
+        }
+      }
+    	$thetextwidth0=$this->pdf->getTextWidth($indexFontSize,$theindex[$i][0]);
+      $thetextwidth3=$this->pdf->getTextWidth($indexFontSize,$theindex[$i][3]);
+      $this->pdf->addTextWrap($sideborderIndexWidth+$columnX+$thetextwidth0+$extraspacerdotline,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),$columnIndexWidth-$thetextwidth0-$thetextwidth3-$extraspacerdotline-$extraspacerdotline,$indexFontSize,'......................................................................................................................................................');
+    	$this->pdf->addTextWrap($sideborderIndexWidth+$columnX,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),100,$indexFontSize,$theindex[$i][0]);
+    	$this->pdf->addTextWrap($sideborderIndexWidth+$columnX+$columnIndexWidth-100,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),100,$indexFontSize,$theindex[$i][3],'right');
+    	$j++;
+    }
     $this->pdf->Stream(); 
   }
   public function pdfAtlasObjectSets($item,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false)
