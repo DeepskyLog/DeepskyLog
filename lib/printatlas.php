@@ -393,8 +393,16 @@ class PrintAtlas
 	        $this->astroDrawQSRObject($i);
 	      else 
 	        $this->astroDrawBRTNBObject($i); 
-  	    if(!(in_array($this->astroObjectsArr[$i]["type"],array('AA2STAR','AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS'))))
-  	      $_SESSION['atlasPagesIndex'][]=Array($this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"],$this->theItemPage);
+  	    if((isset($_SESSION['atlasPagesIndex']))&&(!(in_array($this->astroObjectsArr[$i]["type"],array('AA2STAR','AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))))
+  	    { $indexDistance=sqrt((abs($this->gridD0rad - $this->gridDyRad))^2 + ((abs($this->gridL0rad - $this->gridLxRad)*cos($this->gridLxRad))^2));
+  	    	if(!(in_array($this->astroObjectsArr[$i]["name"],$_SESSION['atlasPagesIndex'])))
+  	      { $_SESSION['atlasPagesIndex'][$this->astroObjectsArr[$i]["name"]]=Array($indexDistance,$this->theItemPage);
+  	      }
+  	      else 
+  	      { if($_SESSION['atlasPagesIndex'][$this->astroObjectsArr[$i]["name"]][0]>$indexDistance)
+  	          $_SESSION['atlasPagesIndex'][$this->astroObjectsArr[$i]["name"]]=Array($indexDistance,$this->theItemPage);
+  	      }
+  	    }
   	  }
 	  }
 	}
@@ -967,6 +975,7 @@ class PrintAtlas
 
   public  function pdfAtlasTitlePage($nostream=false)  // Creates a pdf atlas page
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
+    $_SESSION['atlasPagesIndex']=array();
     $this->theOrientation = $objUtil->checkGetKey('pageorientation','landscape');    
     $this->thePageSize = $objUtil->checkGetKey('pagesize','a4');    
     $this->pdf = new Cezpdf($this->thePageSize, $this->theOrientation);
@@ -1172,9 +1181,12 @@ class PrintAtlas
     $this->pdf->line($sideborderIndexWidth,$this->canvasDimensionYpx-$topborderIndexWidth,$this->canvasDimensionXpx-$sideborderIndexWidth,$this->canvasDimensionYpx-$topborderIndexWidth);
     $this->pdf->newPage();
     $theindex=$_SESSION['atlasPagesIndex'];
-    //ksort($theindex);
-    for($i=0,$j=0,$columnX=0;$i<count($theindex);$i++)
-    { if($this->canvasDimensionYpx-($j*10)<$topborderIndexWidth)
+    ksort($theindex);
+    
+    $j=0;
+    $columnX=0;
+    while(list($theobject,$theobjectdata)=each($theindex))
+    { if($this->canvasDimensionYpx-$topborderIndexWidth-($j*10)<$topborderIndexWidth)
       { $j=0;
         $columnX+=($columnIndexWidth+$columnIndexSeparation);
         if(($columnX+$columnIndexWidth)>($this->canvasDimensionXpx-$sideborderIndexWidth))
@@ -1182,11 +1194,11 @@ class PrintAtlas
         	$columnX=0;
         }
       }
-    	$thetextwidth0=$this->pdf->getTextWidth($indexFontSize,$theindex[$i][0]);
-      $thetextwidth3=$this->pdf->getTextWidth($indexFontSize,$theindex[$i][3]);
+    	$thetextwidth0=$this->pdf->getTextWidth($indexFontSize,$theobject);
+      $thetextwidth3=$this->pdf->getTextWidth($indexFontSize,$theobjectdata[1]);
       $this->pdf->addTextWrap($sideborderIndexWidth+$columnX+$thetextwidth0+$extraspacerdotline,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),$columnIndexWidth-$thetextwidth0-$thetextwidth3-$extraspacerdotline-$extraspacerdotline,$indexFontSize,'......................................................................................................................................................');
-    	$this->pdf->addTextWrap($sideborderIndexWidth+$columnX,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),100,$indexFontSize,$theindex[$i][0]);
-    	$this->pdf->addTextWrap($sideborderIndexWidth+$columnX+$columnIndexWidth-100,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),100,$indexFontSize,$theindex[$i][3],'right');
+    	$this->pdf->addTextWrap($sideborderIndexWidth+$columnX,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),100,$indexFontSize,$theobject);
+    	$this->pdf->addTextWrap($sideborderIndexWidth+$columnX+$columnIndexWidth-100,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),100,$indexFontSize,$theobjectdata[1],'right');
     	$j++;
     }
     $this->pdf->Stream(); 

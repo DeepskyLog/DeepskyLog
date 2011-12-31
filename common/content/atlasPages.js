@@ -32,7 +32,7 @@ var rato;
 var stars;
 var zoom;
 
-var magnegdecl=60;
+var magnegdecl=-80;
 
 function generateallonepass(item,msie,stepra,stepdecl)
 { if(stepra<0)
