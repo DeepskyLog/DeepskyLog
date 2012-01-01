@@ -1077,7 +1077,7 @@ class PrintAtlas
   }
   public  function pdfAtlas($nostream=false)  // Creates a pdf atlas page
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
-    set_time_limit(60);
+    set_time_limit(120);
 	  $this->theItemPage=$objUtil->checkRequestKey('item',0);
     $object='';
     if(!(($this->atlaspagerahr=$objUtil->checkRequestKey('ra',0))&&
@@ -1149,7 +1149,8 @@ class PrintAtlas
   }
   public function pdfAtlasIndex()  // Creates a pdf atlas page
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
-    
+    set_time_limit(300);
+   
     $indexFontSize = 8;
   
     $topborderIndexWidth=50;
