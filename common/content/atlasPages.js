@@ -247,17 +247,17 @@ function generateonedetail(i,msie)
 function generateoverviewallonepass(item,msie,stepra,stepdecl)
 { if(document.getElementById('pagesizea4').checked)
   { if(document.getElementById('pageorientationportrait').checked)
-  	  decl=80.05;
+  	  decl=81;
     else
-  	  decl=82.99;
+  	  decl=84;
     stars=10;
     dsos=10;
   }
   else if(document.getElementById('pagesizea3').checked)
   {	if(document.getElementById('pageorientationportrait').checked)
-      decl=79.69;
+      decl=81;
     else
-      decl=82.99;
+      decl=84;
     stars=11;
     dsos=12;
   }

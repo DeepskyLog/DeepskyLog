@@ -1,5 +1,22 @@
 <?php //NL
 // This is version 4.3
+define('LangAtlasPageOrientation'       ,"Pagina ori&euml;ntatie");
+define('LangAtlasPageSize'              ,"Pagina-grootte:");
+define('LangPageGenerationra'           ,'Generatie rechte klimming (h m s):');
+define('LangPageGenerationdecl'         ,'declinatie (h m s):');
+define('LangAtlasButton1'               ,"0verzicht");
+define('LangAtlasButton2'               ,"Opzoeken");
+define('LangAtlasButton3'               ,"Detail");
+define('LangAtlasButton4'               ,"Overzicht - Pagina");
+define('LangAtlasButton5'               ,"Opzoeken - Pagina");
+define('LangAtlasButton6'               ,"Detail - Pagina");
+define('LangAtlasButton7'               ,"Overzicht - Hele atlas");
+define('LangAtlasButton8'               ,"Opzoeken - Hele atlas");
+define('LangAtlasButton9'               ,"Detail - Hele atlas");
+
+define('LangAtlasGenerateCompleteAtlas' ,'Genereer de volledige atlas (niet beschikbaar in Internet Explorer)');
+define('LangAtlasGenerateOnePage'       ,'Genereer een pagina');
+define('LangAtlasGenerationTimes'       ,"Generatietijden vari&euml;ren van 20 minuten (overzicht A4) tot enkele uren (Opzoeken A3).");
 define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - Geen publicatie zonder schriftelijke toestemming - Object-databank origineel gebaseerd op Eye&Telescope - Ster-databank door Tycho 2+ en USNO UCAC3 (Zacharia).");
 define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - Geen publicatie zonder schriftelijke toestemming");
 define('LangAtlasDataSource2'           ,"Object-databank origineel gebaseerd op Eye&Telescope - Ster-databank door Tycho 2+ en USNO UCAC3 (Zacharia).");
@@ -22,25 +39,25 @@ define("LangpdfOrientationLandscape"    ,"landscape");
 define("LangSearchMenuItem14"           ,"Beeldencatalogi");
 define("LangSearchMenuItem13"           ,"Atlassen");
 define('LangAtlassesIntro00'            ,'General information');
-define('LangAtlassesIntro01'            ,"You can download three kind of atlasses:<br />
-                                           - the <b>overview</b> atlasses have pages of 20 degrees, and show stars to magnitude 8;<br />
-                                           - the <b>lookup</b> atlasses have pages of 10 degrees, and show stars to magnitude 11;<br />
-                                           - the <b>detail</b> atlasses have page of 5 degrees, and show stars to magnitude 14.<br/><br/>
-                                           The atlasses mention if the objects are already seen in Deepskylog (dotted underline)<br />
-                                           or by yourself (personalised atlasses for registered users, full underline, or overline if sketched).");
-define('LangAtlassesIntro02'            ,'General Atlasses / Personalised Atlasses');
-define('LangAtlassesIntro03'            ,'You can either go for general atlasses, or (if you are a registered user) personalised atlasses.<br>
-                                          - General atlasses are precompiled and are ready to download as one big pdf file.<br/>
-                                          - Personalised atlasses are generated, page per page, for you in pdf format.<br /><br />
-                                          Personalised atlasses take some time (one page) or much more time (complete atlas) to generate and <br />
-                                          you will have to use some software to put the pages together yourself for the complete atlas.');
-define('LangAtlassesIntro04'            ,'General Atlasses');
-define('LangAtlassesIntro05'            ,'Choose one of the three available formats, they will download as a pdf:');
-define('LangAtlassesIntro06'            ,'Personalised Atlasses');
-define('LangAtlassesIntro07'            ,"You can download an individual page, with top-left coordinates to be specified by you,<br />
-                                          or you can download all the pages of the complete helisphere.");
-define("LangAddSessionField12"					,"Afbeelding");
-define("LangAddSessionField12Expl"			,"Een foto van de waarneemlocatie, van de waarnemers, ...");
+define('LangAtlassesIntro01'            ,"Je kan drie types atlassen downloaden:<br />
+                                           - de <b>overzicht</b> atlassen hebben paginas van 20 graden, en tonen sterren tot magnitude 10;<br />
+                                           - de <b>opzoek</b> atlassen hebben paginas van 12 graden, en tonen sterren tot magnitude 12;<br />
+                                           - de <b>detail</b> atlassen hebben paginas van 6 graden, and show stars to magnitude 15.<br/><br/>
+                                           De atlassen vermelden of de objecten al gezien zijn in Deepskylog (streepjes ondelijnd)<br />
+                                           of door jezelf (bij de gepersonaliseerde atlassen voor geregistreerde gebruikers, volledige onderlijnd, of ook overlijnd indien geschetst).");
+define('LangAtlassesIntro02'            ,'Algemene atlassen / gepersonaliseerde atlassen');
+define('LangAtlassesIntro03'            ,'Je kan kiezen voor algemene atlassen, of (als je een geregistreerde gebruiker bent) voor gepersonaliseerde atlassen.<br>
+                                          - Algemene atlassen zijn voorgecompileerde atlassen die je als een pdf kan downloaden.<br/>
+                                          - Gepersonaliseerde atlassen worden pagina per pagina voor je aangemaakt, onder vorm van pdf bestanden.<br /><br />
+                                          Het aanmaken van gepersonaliseerde atlassen kan enige tijd vragen (voor een pagina) of veel meer tijd (complete atlas).<br />
+                                          Bij de gepersonaliseerde atlassen zal je zelf een software moeten gebruiken om de bladzijden tot een volledig boek samen te voegen (bv. pdfsam via google).');
+define('LangAtlassesIntro04'            ,'Algemene atlassen');
+define('LangAtlassesIntro05'            ,'Kies een van de drie beschikbare formaten, ze worden gedownload als een pdf:');
+define('LangAtlassesIntro06'            ,'Gepersonaliseerde atlassen');
+define('LangAtlassesIntro07'            ,"Je kan een individuele pagina downloaden,met de door jou gespecifieerde co&ouml;rdinaten,<br />
+                                          of je kan alle bladzijden van de hele hemel laten genereren.");
+define("LangAddSessionField12"          ,"Afbeelding");
+define("LangAddSessionField12Expl"      ,"Een foto van de waarneemlocatie, van de waarnemers, ...");
 define("LangDownloadsMenuTitle"         ,"Downloads");
 // This is version 4.2
 define("LangChangeSessionButton"        ,"Pas sessie aan");

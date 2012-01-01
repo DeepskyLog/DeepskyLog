@@ -1,5 +1,23 @@
 <?php //FR
 // This is version 4.3
+define('LangAtlasPageOrientation'       ,"Pagina ori&euml;ntatie");
+define('LangAtlasPageSize'              ,"Pagina-grootte:");
+define('LangPageGenerationra'           ,'Generatie rechte klimming (h m s):');
+define('LangPageGenerationdecl'         ,'declinatie (h m s):');
+define('LangAtlasButton1'               ,"0verzicht");
+define('LangAtlasButton2'               ,"Opzoeken");
+define('LangAtlasButton3'               ,"Detail");
+define('LangAtlasButton4'               ,"Overzicht - Pagina");
+define('LangAtlasButton5'               ,"Opzoeken - Pagina");
+define('LangAtlasButton6'               ,"Detail - Pagina");
+define('LangAtlasButton7'               ,"Overzicht - Hele atlas");
+define('LangAtlasButton8'               ,"Opzoeken - Hele atlas");
+define('LangAtlasButton9'               ,"Detail - Hele atlas");
+
+define('LangAtlasGenerateCompleteAtlas' ,'Genereer de volledige atlas (niet beschikbaar in Internet Explorer)');
+define('LangAtlasGenerateOnePage'       ,'Genereer een pagina');
+
+define('LangAtlasGenerationTimes'       ,"Les temps de génération varient entre 20 minutes (aperçu A4) jusqu'à plusieures heures (Recherche A3).");
 define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).");
 define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - No publishing without written autorisation");
 define('LangAtlasDataSource2'           ,"Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).");
