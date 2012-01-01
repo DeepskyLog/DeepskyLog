@@ -32,7 +32,7 @@ var rato;
 var stars;
 var zoom;
 
-var magnegdecl=-80;
+var magnegdecl=-90;
 
 function generateallonepass(item,msie,stepra,stepdecl)
 { if(stepra<0)
@@ -143,23 +143,23 @@ function generateone(msie)
   jsonhttp.onreadystatechange=function()
   { if(jsonhttp.readyState==4)
     { //alert(jsonhttp.responseText);
-    temp=eval('('+jsonhttp.responseText+')');
-      tempra=Math.floor(document.getElementById('ra').value,0);
-      tempramin=Math.round((document.getElementById('ra').value-tempra)*60,0);
+      temp=eval('('+jsonhttp.responseText+')');
+      tempra=Math.floor(ra,0);
+      tempramin=Math.round((ra-tempra)*60,0);
       if(tempra<10)
       	tempra='0'+tempra;
       if(tempramin<10)
       	tempramin='0'+tempramin;
-      tempdecl=Math.floor(document.getElementById('decl').value,0);
+      tempdecl=Math.floor(decl,0);
       if(tempdecl>0)
-      { tempdeclmin=Math.round((document.getElementById('decl').value-tempdecl)*60,1);
+      { tempdeclmin=Math.round((decl-tempdecl)*60,1);
         if(tempdecl<10)
       	  tempdecl='0'+tempdecl;
         if(tempdeclmin<10)
       	  tempdeclmin='0'+tempdeclmin;
       }
       else
-      { tempdeclmin=Math.round((document.getElementById('decl').value-tempdecl)*60,1);
+      { tempdeclmin=Math.round((decl-tempdecl)*60,1);
         tempdecl=-tempdecl;
         if(tempdecl<10)
     	    tempdecl='0'+tempdecl;
@@ -171,7 +171,7 @@ function generateone(msie)
       
       if(msie=='true')
       { var mywindow=window.open("",'mywindow'+item);
-        mywindow.location='atlasPagesOnePass.pdf.php?item=1&filename='+document.getElementById('decl').value+'_'+item+'_'+ra.substr(0,5);  
+        mywindow.location='atlasPagesOnePass.pdf.php?item=1&filename='+decl+'_'+item+'_'+ra.substr(0,5);  
       }  
       else
       {	window.open('atlasPagesOnePass.pdf.php?item=1&filename='+tempdecl+'d'+tempdeclmin+'m'+'_'+tempra+'h'+tempramin+'m','');
@@ -189,8 +189,8 @@ function generateone(msie)
     }
   };
   var url='ajaxinterface.php?instruction=atlasPages&item=1&'+
-          'ra='+document.getElementById('ra').value+'&'+
-          'decl='+document.getElementById('decl').value+'&'+
+          'ra='+ra+'&'+
+          'decl='+decl+'&'+
           'stars='+stars+'&'+
           'dsos='+dsos+'&'+
           'zoom='+zoom+'&'+
@@ -207,20 +207,39 @@ function generateone(msie)
   jsonhttp.open("GET",url,true);
   jsonhttp.send(null);
 }
+function setradecl()
+{ ra=document.getElementById('rah').value*1.0;
+  ra+=document.getElementById('ram').value/60;
+  ra+=document.getElementById('ras').value/3600;
+  decl=document.getElementById('declh').value*1.0;
+  if(document.getElementById('declh').value.substr(0,1)=='-')
+  { decl-=document.getElementById('declm').value/60;
+    decl-=document.getElementById('decls').value/3600;
+  }
+  else
+  { decl+=document.getElementById('declm').value/60;
+    decl+=document.getElementById('decls').value/3600;  
+  }
+  ra=max(min(ra,24),0);
+  decl=max(min(decl,90),-90);
+}
 function generateoneoverview(i,msie)
-{ stars=10;
+{ setradecl();
+  stars=10;
   dsos=10;
   zoom=13;
   generateone(msie);
 }
 function generateonelookup(i,msie)
-{	stars=12;
+{ setradecl();
+  stars=12;
   dsos=13;
   zoom=15;
   generateone(msie);
 }
 function generateonedetail(i,msie)
-{ stars=15;
+{ setradecl();
+  stars=15;
   dsos=15;
   zoom=17;
   generateone(msie);

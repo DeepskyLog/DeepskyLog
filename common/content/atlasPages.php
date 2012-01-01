@@ -40,9 +40,9 @@ function atlasPages()
 	echo "<h1>".LangAtlassesIntro04."</h1>";
 	echo "<hr />";
 	echo "<p>".LangAtlassesIntro05."</p>";
-  echo '<input type="button" class="width125px" value ="Overview" onclick="location.href=\''.$dirAtlasses.'OverviewAtlas.pdf\';" />';
-  echo '<input type="button" class="width125px" value ="Lookup" onclick="location.href=\''.$dirAtlasses.'LookupAtlas.pdf\');" />';
-  echo '<input type="button" class="width125px" value ="Detail" onclick="alert(\'wordt ge&iuml;mplementeerd\');" />';
+  echo '<input type="button" class="width200px" value ="Overview" onclick="location.href=\''.$dirAtlasses.'OverviewAtlas.pdf\';" /> ';
+  echo '<input type="button" class="width200px" value ="Lookup" onclick="location.href=\''.$dirAtlasses.'LookupAtlas.pdf\');" /> ';
+  echo '<input type="button" class="width200px" value ="Detail" onclick="alert(\'wordt ge&iuml;mplementeerd\');" />';
 	echo "<h1>".LangAtlassesIntro06."</h1>";
 	echo "<hr />";
 	echo "<p>".LangAtlassesIntro07."</p>";
@@ -59,54 +59,29 @@ function atlasPages()
   
   echo "<h2>"."Generate one page:"."</h2>";
   echo 'Generation ra: ';
-	echo '<input id="ra" name="ra" type="text" value="" size="5" class="centered"/>';
-  echo ' ';
+	echo '<input id="rah" name="rah" type="text" size="5" class="centered" value="0"/>';
+	echo '<input id="ram" name="ram" type="text" size="5" class="centered" value="0"/>';
+	echo '<input id="ras" name="ras" type="text" size="5" class="centered" value="0"/>';
+	echo ' ';
   echo 'decl: ';
-	echo '<input id="decl" name="decl" type="text" value="" size="5" class="centered"/>';
-  echo '<br />';
+	echo '<input id="declh" name="declh" type="text" size="5" class="centered" value="0"/>';
+	echo '<input id="declm" name="declm" type="text" size="5" class="centered" value="0"/>';
+	echo '<input id="decls" name="decls" type="text" size="5" class="centered" value="0"/>';
+	echo '<br />';
   echo "<p>";
-  echo '<input type="button" class="width125px" value ="Overview" onclick="generateoneoverview(0,'.($MSIE?'\'true\'':'\'false\'').');" />';
-  echo '<input type="button" class="width125px" value ="Lookup" onclick="generateonelookup(0,'.($MSIE?'\'true\'':'\'false\'').');" />';
-  echo '<input type="button" class="width125px" value ="Detail" onclick="generateonedetail(0,'.($MSIE?'\'true\'':'\'false\'').');" />';
+  echo '<input type="button" class="width200px" value ="Overview" onclick="generateoneoverview(0,'.($MSIE?'\'true\'':'\'false\'').');" /> ';
+  echo '<input type="button" class="width200px" value ="Lookup" onclick="generateonelookup(0,'.($MSIE?'\'true\'':'\'false\'').');" /> ';
+  echo '<input type="button" class="width200px" value ="Detail" onclick="generateonedetail(0,'.($MSIE?'\'true\'':'\'false\'').');" />';
   echo "</p>";
   echo "<h2>"."Generate complete altas (not available in Internet Explorer)"."</h2>";
   if(!($MSIE))
   { echo"<p>";
-    echo "<input type=\"button\" class=\"width250px\" value=\"Overview ".LangpdfseriesButton."\" onclick=\"generateoverviewallonepass(0,".($MSIE?'true':'false').",24,180);\"/>";
-    echo "<input type=\"button\" class=\"width250px\" value=\"Lookup ".LangpdfseriesButton."\" onclick=\"generatelookupallonepass(0,".($MSIE?'true':'false').",24,180);\"/>";
-    echo "<input type=\"button\" class=\"width250px\" value=\"Detail ".LangpdfseriesButton."\" onclick=\"generatedetailallonepass(0,".($MSIE?'true':'false').",24,180);\"/>";
+    echo "<input type=\"button\" class=\"width200px\" value=\"Overview ".LangpdfseriesButton."\" onclick=\"generateoverviewallonepass(0,".($MSIE?'true':'false').",24,180);\"/> ";
+    echo "<input type=\"button\" class=\"width200px\" value=\"Lookup ".LangpdfseriesButton."\" onclick=\"generatelookupallonepass(0,".($MSIE?'true':'false').",24,180);\"/> ";
+    echo "<input type=\"button\" class=\"width200px\" value=\"Detail ".LangpdfseriesButton."\" onclick=\"generatedetailallonepass(0,".($MSIE?'true':'false').",24,180);\"/>";
     echo "</p>";
   }
   echo "&nbsp;"."<div id='thecounter'> &nbsp; </div>";
   echo "<hr />";
-  /*$declfrom=10;
-  $declto=15;
-  $rafrom=0;
-  $rato=24;
-  //echo 'Declination from: ';
-	echo '<input id="declfrom" name="declfrom" type="text" value="80" size="5" class="centered" />';
-	//echo '<br />';
-	//echo 'Declination to: ';
-	echo '<input id="declto" name="declto" type="text" value="87" size="5" class="centered" />';
-	//echo '<br />';
-	//echo 'RA from: ';
-	echo '<input id="rafrom" name="rafrom" type="text" value="0" size="5" class="centered" />';
-	//echo '<br />';
-	//echo 'RA to: ';
-	echo '<input id="rato" name="rato" type="text" value="24" size="5" class="centered" />';
-  //echo '<br />';
-	//echo 'Stars to magnitude: ';
-	echo '<input id="stars" name="stars" type="text" value="10" size="5" class="centered" />';
-  //echo '<br />';
-	//echo 'Objects to magnitude: ';
-	echo '<input id="dsos" name="dsos" type="text" value="13" size="5" class="centered" />';
-  //echo '<br />';
-	//echo 'Overlap: ';
-	echo '<input id="theoverlap" name="theoverlap" type="text" value="0.15" size="5" class="centered" />';
-  //echo '<br />';
-	//echo 'Zoom: ';
-	echo '<input id="zoom" name="zoom" type="text" value="16" size="5" class="centered" />';
-  //echo '<br />';
-  */
 }
 ?>

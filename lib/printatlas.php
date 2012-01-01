@@ -38,6 +38,7 @@ class PrintAtlas
       $f2Pi       = 6.283185307179586476925286766559,
       $fontSize1a =10, 
       $fontSize1b =6,
+      $fontSizeAck=4,
       $gridActualDimension=16,
       $gridCenterOffsetXpx,
       $gridCenterOffsetYpx,
@@ -480,19 +481,16 @@ class PrintAtlas
       else
         $this->pdf->setColor(0,0,0);
       if($this->gridD0rad>0)
-    	{ //$this->gridLDinvRad($this->canvasDimensionXpx-$this->gridOffsetXpx,$this->canvasDimensionYpx-$this->gridOffsetYpx);
-    		//$tempra=($this->gridLxRad/3.1415926535*12);
-    		$this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,$m,$m);
+    	{ if(($this->gridD0rad+($this->gridSpanDrad/1))>=($this->fPiOver2))
+    		  $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,90,$m,$m);
+    		else
+    		  $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,$m,$m);
     	}
     	else
-    	{ $this->gridLDinvRad($this->gridOffsetXpx,$this->gridOffsetYpx);
-        $tempdecl1=($this->gridDyRad*$this->f180OverPi);
-    		$this->gridLDinvRad(($this->canvasDimensionXpx>>1),$this->canvasDimensionYpx-$this->gridOffsetYpx);
-        $tempdecl2=($this->gridDyRad*$this->f180OverPi);
-    		if(($this->gridD0rad-($this->gridSpanDrad/1))<=(-$this->fPiOver2))
-    	    $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,-90,$tempdecl1,$m,$m);
+    	{ if(($this->gridD0rad-($this->gridSpanDrad/1))<=(-$this->fPiOver2))
+    	    $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,-90,$this->griduDdeg,$m,$m);
     	  else
-    	    $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$tempdecl2,$tempdecl1,$m,$m);
+    	    $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,$m,$m);
     	}
     	  
     	$z=count($this->astroObjectsArr); 
@@ -742,7 +740,9 @@ class PrintAtlas
           $this->labelsArr[]=array($this->gridOffsetXpx+$this->gridWidthXpx+4,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'left');
         else if($this->canvasY2px&&($this->canvasY2px-15<=$this->gridOffsetYpx))
           $this->labelsArr[]=array($this->canvasX1px-30,$this->gridOffsetYpx-10,60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
-        else if($this->canvasX2px)
+        else if(($this->canvasX2px)&&($this->canvasY2px>($this->canvasDimensionYpx>>1)))
+          $this->labelsArr[]=array($this->canvasX1px-30,$this->gridOffsetYpx+$this->gridHeightYpx+4,60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
+        else if(($this->canvasX2px)&&($this->canvasY2px<($this->canvasDimensionYpx>>1)))
           $this->labelsArr[]=array($this->canvasX1px-30,$this->gridOffsetYpx+$this->gridHeightYpx+4,60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
       }
     }
@@ -757,7 +757,9 @@ class PrintAtlas
           $this->labelsArr[]=array($this->gridOffsetXpx-64,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'right');
         else if($this->canvasX1px&&($this->canvasX1px+15>=$this->gridOffsetXpx+$this->gridWidthXpx))
           $this->labelsArr[]=array($this->gridOffsetXpx+$this->gridWidthXpx+4,$this->canvasY2px-($this->fontSize1a>>2),60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'left');
-        else if($this->canvasX1px)
+        else if(($this->canvasX1px)&&($this->canvasY2px>($this->canvasDimensionYpx>>1)))
+          $this->labelsArr[]=array($this->canvasX1px-30,$this->canvasDimensionYpx-$this->gridOffsetYpx+5,60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
+        else if(($this->canvasX1px)&&($this->canvasY2px<($this->canvasDimensionYpx>>1)))
           $this->labelsArr[]=array($this->canvasX1px-30,$this->gridOffsetYpx-($this->fontSize1b)-5,60,$this->fontSize1b,$this->coordHrDecToHrMin($l),'center');
       }
     }
@@ -1123,27 +1125,13 @@ class PrintAtlas
         
     for($i=0,$z=count($this->labelsArr);$i<$z;$i++)   
       $this->pdf->addTextWrap($this->labelsArr[$i][0],$this->labelsArr[$i][1],$this->labelsArr[$i][2],$this->labelsArr[$i][3],$this->labelsArr[$i][4],$this->labelsArr[$i][5]);                  
-	  if(($this->theOrientation=="portrait")&&($this->thePageSize=='a4'))
-    { $temp=LangAtlasDataSource1;
-      $this->pdf->addText($this->gridOffsetXpx,20,$this->fontSize1b,$temp);
-      $temp=LangAtlasDataSource2;
-      $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
-      if($objUtil->checkRequestKey('item',0)!='0')
-      { $this->pdf->addText($this->canvasDimensionXpx-30,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
-        $this->pdf->addText(15,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
-        $this->pdf->addText($this->canvasDimensionXpx-30,$this->canvasDimensionYpx-20,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
-        $this->pdf->addText(15,$this->canvasDimensionYpx-20,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
-      }
-    }
-	  else 
-    { $temp=LangAtlasDataSource;
-      $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSize1b,$temp);
-      if($objUtil->checkRequestKey('item',0)!='0')
-      { $this->pdf->addText($this->canvasDimensionXpx-30,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
-        $this->pdf->addText(15,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
-        $this->pdf->addText($this->canvasDimensionXpx-30,$this->canvasDimensionYpx-20,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
-        $this->pdf->addText(15,$this->canvasDimensionYpx-20,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
-      }
+    $temp=LangAtlasDataSource;
+    $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSizeAck,$temp);
+    if($objUtil->checkRequestKey('item',0)!='0')
+    { $this->pdf->addText($this->canvasDimensionXpx-30,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+      $this->pdf->addText(15,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+      $this->pdf->addText($this->canvasDimensionXpx-30,$this->canvasDimensionYpx-20,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+      $this->pdf->addText(15,$this->canvasDimensionYpx-20,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
     }
     if(!$nostream)
       $this->pdf->Stream(); 
@@ -1166,7 +1154,8 @@ class PrintAtlas
     $topborderIndexWidth=50;
     $sideborderIndexWidth=50;
     $columnIndexWidth=200; 
-    $columnIndexSeparation=10;
+    $nameIndexMaxWidth=160;
+    $columnIndexSeparation=25;
     
     $extraspacerdotline=10;
     
@@ -1178,7 +1167,7 @@ class PrintAtlas
     $this->canvasDimensionYpx=$this->pdf->ez['pageHeight'];
     $this->pdf->selectFont($instDir.'lib/fonts/Courier.afm');
     $this->pdf->addText($sideborderIndexWidth, $this->canvasDimensionYpx-$topborderIndexWidth, 12, "Index");
-    $this->pdf->line($sideborderIndexWidth,$this->canvasDimensionYpx-$topborderIndexWidth,$this->canvasDimensionXpx-$sideborderIndexWidth,$this->canvasDimensionYpx-$topborderIndexWidth);
+    $this->pdf->line($sideborderIndexWidth,$this->canvasDimensionYpx-$topborderIndexWidth-5,$this->canvasDimensionXpx-$sideborderIndexWidth,$this->canvasDimensionYpx-$topborderIndexWidth-5);
     $this->pdf->newPage();
     $theindex=$_SESSION['atlasPagesIndex'];
     ksort($theindex);
@@ -1194,10 +1183,10 @@ class PrintAtlas
         	$columnX=0;
         }
       }
-    	$thetextwidth0=$this->pdf->getTextWidth($indexFontSize,$theobject);
+    	$thetextwidth0=min($this->pdf->getTextWidth($indexFontSize,$theobject),$nameIndexMaxWidth);
       $thetextwidth3=$this->pdf->getTextWidth($indexFontSize,$theobjectdata[1]);
       $this->pdf->addTextWrap($sideborderIndexWidth+$columnX+$thetextwidth0+$extraspacerdotline,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),$columnIndexWidth-$thetextwidth0-$thetextwidth3-$extraspacerdotline-$extraspacerdotline,$indexFontSize,'......................................................................................................................................................');
-    	$this->pdf->addTextWrap($sideborderIndexWidth+$columnX,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),100,$indexFontSize,$theobject);
+    	$this->pdf->addTextWrap($sideborderIndexWidth+$columnX,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),$thetextwidth0,$indexFontSize,$theobject);
     	$this->pdf->addTextWrap($sideborderIndexWidth+$columnX+$columnIndexWidth-100,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),100,$indexFontSize,$theobjectdata[1],'right');
     	$j++;
     }
