@@ -32,7 +32,7 @@ var rato;
 var stars;
 var zoom;
 
-var magnegdecl=-90;
+var magnegdecl=80;
 
 function generateallonepass(item,msie,stepra,stepdecl)
 { if(stepra<0)
@@ -57,9 +57,9 @@ function generateallonepass(item,msie,stepra,stepdecl)
     { //alert(jsonhttp.responseText);
 	    if(item==0)
 	    { if(msie)
-        { var mywindow=window.open("",'mywindow'+item);
-          mywindow.location='atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+item;  
-        }   
+          { var mywindow=window.open("",'mywindow'+item);
+            mywindow.location='atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+item;  
+          }   
 	      else
     	    window.open('atlasPagesOnePass.pdf.php?item='+urlencode(item)+'&filename='+item);
         generateallonepass(item,msie,0,0);
@@ -184,6 +184,7 @@ function generateone(msie)
         	url+='&pagesize=a3';
         else
         	url+='&pagesize=a4';
+        alert(url);
         window.open(url,'');
       } 
     }

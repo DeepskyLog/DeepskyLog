@@ -1,5 +1,6 @@
 <?php //GE
 // This is version 4.3
+define('LangNoIndexEntries'             ,"No index entries");
 define('LangAtlasPageOrientation'       ,"Page orientation:");
 define('LangAtlasPageSize'              ,"Page size:");
 define('LangPageGenerationra'           ,'Generation right ascention (h m s):');

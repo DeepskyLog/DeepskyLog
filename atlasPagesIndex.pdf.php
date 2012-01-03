@@ -15,7 +15,7 @@ function atlasPagesIndex()
 	$filename="PageIndex.pdf";
 	
 	header("Content-type: application/pdf");
-  header("Content-Disposition: attachment; filename=pageIndex.pdf");
+  header("Content-Disposition: attachment; filename=pageAtlasIndex.pdf");
   $objPrintAtlas->pdfAtlasIndex();
   unset($_SESSION['atlasPagesIndex']);
 }

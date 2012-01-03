@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 4.3
+define('LangNoIndexEntries'             ,"Geen index elementen");
 define('LangAtlasPageOrientation'       ,"Pagina ori&euml;ntatie");
 define('LangAtlasPageSize'              ,"Pagina-grootte:");
 define('LangPageGenerationra'           ,'Generatie rechte klimming (h m s):');

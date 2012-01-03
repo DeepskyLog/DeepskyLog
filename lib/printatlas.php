@@ -977,7 +977,6 @@ class PrintAtlas
 
   public  function pdfAtlasTitlePage($nostream=false)  // Creates a pdf atlas page
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
-    $_SESSION['atlasPagesIndex']=array();
     $this->theOrientation = $objUtil->checkGetKey('pageorientation','landscape');    
     $this->thePageSize = $objUtil->checkGetKey('pagesize','a4');    
     $this->pdf = new Cezpdf($this->thePageSize, $this->theOrientation);
@@ -1077,15 +1076,17 @@ class PrintAtlas
   }
   public  function pdfAtlas($nostream=false)  // Creates a pdf atlas page
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
+    if(!(isset($_SESSION['atlasPagesIndex'])))
+      $_SESSION['atlasPagesIndex']=Array();
     set_time_limit(120);
 	  $this->theItemPage=$objUtil->checkRequestKey('item',0);
     $object='';
-    if(!(($this->atlaspagerahr=$objUtil->checkRequestKey('ra',0))&&
-         ($this->atlaspagedecldeg=$objUtil->checkRequestKey('decl',0))))
-      if($object=$objObject->getExactDsObject($objUtil->checkRequestKey('object'),''))
-      { $this->atlaspagerahr=$objObject->getDsoProperty($object,'ra',0);
-        $this->atlaspagedecldeg=$objObject->getDsoProperty($object,'decl',0);
-      }
+    $this->atlaspagerahr=$objUtil->checkRequestKey('ra',0);
+	  $this->atlaspagedecldeg=$objUtil->checkRequestKey('decl',0);
+    if($object=$objObject->getExactDsObject($objUtil->checkRequestKey('object'),''))
+    { $this->atlaspagerahr=$objObject->getDsoProperty($object,'ra',0);
+      $this->atlaspagedecldeg=$objObject->getDsoProperty($object,'decl',0);
+    }
     $this->gridActualDimension=max(min($objUtil->checkRequestKey('zoom',18),$this->gridMaxDimension),10);
     $this->atlasmagnitude=max(min((int)($objUtil->checkRequestKey('dsos',$this->gridDimensions[$this->gridActualDimension][3])),99),8);
     $this->starsmagnitude=max(min((int)($objUtil->checkRequestKey('stars',$this->gridDimensions[$this->gridActualDimension][3])),16),8);
@@ -1171,27 +1172,31 @@ class PrintAtlas
     $this->pdf->addText($sideborderIndexWidth, $this->canvasDimensionYpx-$topborderIndexWidth, 12, "Index");
     $this->pdf->line($sideborderIndexWidth,$this->canvasDimensionYpx-$topborderIndexWidth-5,$this->canvasDimensionXpx-$sideborderIndexWidth,$this->canvasDimensionYpx-$topborderIndexWidth-5);
     $this->pdf->newPage();
-    $theindex=$_SESSION['atlasPagesIndex'];
-    ksort($theindex);
-    
-    $j=0;
-    $columnX=0;
-    while(list($theobject,$theobjectdata)=each($theindex))
-    { if($this->canvasDimensionYpx-$topborderIndexWidth-($j*10)<$topborderIndexWidth)
-      { $j=0;
-        $columnX+=($columnIndexWidth+$columnIndexSeparation);
-        if(($columnX+$columnIndexWidth)>($this->canvasDimensionXpx-$sideborderIndexWidth))
-        { $this->pdf->newPage();
-        	$columnX=0;
-        }
-      }
-    	$thetextwidth0=min($this->pdf->getTextWidth($indexFontSize,$theobject),$nameIndexMaxWidth);
-      $thetextwidth3=$this->pdf->getTextWidth($indexFontSize,$theobjectdata[1]);
-      $this->pdf->addTextWrap($sideborderIndexWidth+$columnX+$thetextwidth0+$extraspacerdotline,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),$columnIndexWidth-$thetextwidth0-$thetextwidth3-$extraspacerdotline-$extraspacerdotline,$indexFontSize,'......................................................................................................................................................');
-    	$this->pdf->addTextWrap($sideborderIndexWidth+$columnX,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),$thetextwidth0,$indexFontSize,$theobject);
-    	$this->pdf->addTextWrap($sideborderIndexWidth+$columnX+$columnIndexWidth-100,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),100,$indexFontSize,$theobjectdata[1],'right');
-    	$j++;
+    if(count($_SESSION['atlasPagesIndex'])>0)
+    { $theindex=$_SESSION['atlasPagesIndex'];
+	    uksort($theindex,"strnatcmp");
+	    
+	    $j=0;
+	    $columnX=0;
+	    while(list($theobject,$theobjectdata)=each($theindex))
+	    { if($this->canvasDimensionYpx-$topborderIndexWidth-($j*10)<$topborderIndexWidth)
+	      { $j=0;
+	        $columnX+=($columnIndexWidth+$columnIndexSeparation);
+	        if(($columnX+$columnIndexWidth)>($this->canvasDimensionXpx-$sideborderIndexWidth))
+	        { $this->pdf->newPage();
+	        	$columnX=0;
+	        }
+	      }
+	    	$thetextwidth0=min($this->pdf->getTextWidth($indexFontSize,$theobject),$nameIndexMaxWidth);
+	      $thetextwidth3=$this->pdf->getTextWidth($indexFontSize,$theobjectdata[1]);
+	      $this->pdf->addTextWrap($sideborderIndexWidth+$columnX+$thetextwidth0+$extraspacerdotline,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),$columnIndexWidth-$thetextwidth0-$thetextwidth3-$extraspacerdotline-$extraspacerdotline,$indexFontSize,'......................................................................................................................................................');
+	    	$this->pdf->addTextWrap($sideborderIndexWidth+$columnX,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),$thetextwidth0,$indexFontSize,$theobject);
+	    	$this->pdf->addTextWrap($sideborderIndexWidth+$columnX+$columnIndexWidth-100,$this->canvasDimensionYpx-$topborderIndexWidth-($j*10),100,$indexFontSize,$theobjectdata[1],'right');
+	    	$j++;
+	    }
     }
+    else
+      $this->pdf->addText(100,100,12,LangNoIndexEntries);
     $this->pdf->Stream(); 
   }
   public function pdfAtlasObjectSets($item,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false)
@@ -1216,7 +1221,7 @@ class PrintAtlas
   private function filterdegpart($thevalue)
   { return substr($thealtitude=html_entity_decode($thevalue),0,strpos($thealtitude,'°')+1);
   }
-  public  function pdfAtlasObjectSet($theobject,$theShowname,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false,$nostream=false)
+  public function pdfAtlasObjectSet($theobject,$theShowname,$theSet,$thedsos,$thestars,$thephotos,$datapage='false',$reportlayoutselect='',$ephemerides='true',$yearephemerides=false,$nostream=false)
   { global $theMonth,$theDay,$theYear,$dateformat,$baseURL,$objList,$objInstrument,$objLocation,$objUtil,$instDir,$loggedUser,$loggedUserName,$objObserver,$objObject,$objPresentations,$objReportLayout,$listname,$myList;
     $firstpage = true;
     $astroObjects=array();
