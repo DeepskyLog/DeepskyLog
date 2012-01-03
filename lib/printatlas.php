@@ -78,7 +78,7 @@ class PrintAtlas
       $Legend1x=25,
       $Legend1y=20, 
       $Legend2x=55,
-      $Legend2y=43,
+      $Legend2y=37,
       $Lsteps=10,
       $lx=0,
       $maxshowndsomag=-99,
@@ -556,15 +556,16 @@ class PrintAtlas
         $this->pdf->setColor(0,0,0);
       if($this->gridD0rad>0)
     	{ if(($this->gridD0rad+($this->gridSpanDrad/1))>=($this->fPiOver2))
-    		  $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,90,$m,$m);
+    		  $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->gridldDdeg,90,$m,$m);
     		else
-    		  $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,$m,$m);
+    		  $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->gridldDdeg,$this->griduDdeg,$m,$m);
     	}
     	else
-    	{ if(($this->gridD0rad-($this->gridSpanDrad/1))<=(-$this->fPiOver2))
-    	    $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,-90,$this->griduDdeg,$m,$m);
+    	{ 
+    		if(($this->gridD0rad-($this->gridSpanDrad/1))<=(-$this->fPiOver2))
+    	    $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridldLhr,$this->gridrdLhr,-90,$this->gridluDdeg,$m,$m);
     	  else
-    	    $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,$m,$m);
+    	    $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridldLhr,$this->gridrdLhr,$this->griddDdeg,$this->gridluDdeg,$m,$m);
     	}
     	  
     	$z=count($this->astroObjectsArr); 
@@ -735,7 +736,7 @@ class PrintAtlas
     
     $this->gridLDinvRad($this->gridOffsetXpx+(($this->gridWidthXpx+1)>>1),$this->gridOffsetYpx);
     $this->griduDdeg=$this->gridDyRad*$this->f180OverPi;
-    $this->gridLDinvRad($this->gridOffsetXpx+$this->gridWidthXpx,$this->gridOffsetYpx+$this->gridHeightYpx);
+    $this->gridLDinvRad($this->gridOffsetXpx+(($this->gridWidthXpx+1)>>1),$this->gridOffsetYpx+$this->gridHeightYpx);
     $this->griddDdeg=$this->gridDyRad*$this->f180OverPi;
   
     if((($this->gridD0rad+$this->gridSpanDrad)<($this->fPiOver2))&&(($this->gridD0rad-$this->gridSpanDrad)>-($this->fPiOver2)))
