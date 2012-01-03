@@ -184,7 +184,7 @@ function generateone(msie)
         	url+='&pagesize=a3';
         else
         	url+='&pagesize=a4';
-        alert(url);
+        //alert(url);
         window.open(url,'');
       } 
     }

@@ -12,10 +12,10 @@ function atlasPagesIndex()
 {
 	global $filename,
 	$objUtil,$objPrintAtlas;
-	$filename="PageIndex.pdf";
+	$filename="PageIndex";
 	
 	header("Content-type: application/pdf");
-  header("Content-Disposition: attachment; filename=pageAtlasIndex.pdf");
+  header("Content-Disposition: attachment; filename=PageIndex.pdf");
   $objPrintAtlas->pdfAtlasIndex();
   unset($_SESSION['atlasPagesIndex']);
 }
