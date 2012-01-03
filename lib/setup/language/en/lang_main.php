@@ -1,5 +1,6 @@
 <?php //EN
 // This is version 4.3
+define('atlasPageCenteredOn'            ,'Centered on ');
 define('LangNoIndexEntries'             ,"No index entries");
 define('LangAtlasPageOrientation'       ,"Page orientation:");
 define('LangAtlasPageSize'              ,"Page size:");

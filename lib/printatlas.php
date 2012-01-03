@@ -77,8 +77,8 @@ class PrintAtlas
       $labelsArr=array(),
       $Legend1x=25,
       $Legend1y=20, 
-      $Legend2x=365,
-      $Legend2y=25,
+      $Legend2x=55,
+      $Legend2y=43,
       $Lsteps=10,
       $lx=0,
       $maxshowndsomag=-99,
@@ -271,17 +271,104 @@ class PrintAtlas
   
   function atlasDrawLegend()
   { for($i=11,$legendx=30;$i>=0;$i--)
-	  { $this->pdf->filledEllipse($this->Legend1x+$legendx,$this->canvasDimensionYpx-$this->Legend1y-10,(.25*$i),(.25*$i),0,$this->nsegmente);
+	  { $this->pdf->filledEllipse($this->Legend1x+$legendx,$this->canvasDimensionYpx-$this->Legend1y-5,(.25*$i),(.25*$i),0,$this->nsegmente);
 	    $legendx+=(0.5*$i)+5;
-	    $this->pdf->addText($this->Legend1x+$legendx, $this->canvasDimensionYpx-$this->Legend1y-12, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)));
+	    $this->pdf->addText($this->Legend1x+$legendx, $this->canvasDimensionYpx-$this->Legend1y-7, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)));
 	    $legendx+=$this->pdf->getTextWidth($this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)));
 	    $legendx+=10;
      }
 	  $legendx-=$this->pdf->getTextWidth($this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)));
 	  $legendx-=10;
     $this->pdf->setColor(0.7,0.7,0.7);
-    $this->pdf->filledEllipse($this->Legend1x+$legendx,$this->canvasDimensionYpx-$this->Legend1y-10,.25,.25,0,$this->nsegmente);
+    $this->pdf->filledEllipse($this->Legend1x+$legendx,$this->canvasDimensionYpx-$this->Legend1y-5,.25,.25,0,$this->nsegmente);
     $this->pdf->setColor(0,0,0);
+    
+    
+    
+    
+    
+    $this->pdf->ellipse($this->Legend2x+0, $this->canvasDimensionYpx-$this->Legend2y+3, 5, 2.5, -45);
+    $this->pdf->addTextWrap($this->Legend2x+10, $this->canvasDimensionYpx-$this->Legend2y, 30, $this->fontSize1b, 'GALXY', 'left');
+    
+    $this->pdf->ellipse($this->Legend2x+50, $this->canvasDimensionYpx-$this->Legend2y+3, 2.5, 2.5, 0);
+    $this->pdf->line($this->Legend2x+55, $this->canvasDimensionYpx-$this->Legend2y+3, $this->Legend2x+52.5, $this->canvasDimensionYpx-$this->Legend2y+3);
+    $this->pdf->line($this->Legend2x+45, $this->canvasDimensionYpx-$this->Legend2y+3, $this->Legend2x+47.5, $this->canvasDimensionYpx-$this->Legend2y+3);
+    $this->pdf->line($this->Legend2x+50, $this->canvasDimensionYpx-$this->Legend2y+5.5, $this->Legend2x+50, $this->canvasDimensionYpx-$this->Legend2y+8);
+    $this->pdf->line($this->Legend2x+50, $this->canvasDimensionYpx-$this->Legend2y+0.5, $this->Legend2x+50, $this->canvasDimensionYpx-$this->Legend2y-2);
+    $this->pdf->addTextWrap($this->Legend2x+60, $this->canvasDimensionYpx-$this->Legend2y, 30, $this->fontSize1b, 'PLANB', 'left');
+    
+    $this->pdf->ellipse($this->Legend2x+100, $this->canvasDimensionYpx-$this->Legend2y+3, 5, 5, 0);
+    $this->pdf->line($this->Legend2x+95, $this->canvasDimensionYpx-$this->Legend2y+3, $this->Legend2x+105, $this->canvasDimensionYpx-$this->Legend2y+3);
+    $this->pdf->line($this->Legend2x+100, $this->canvasDimensionYpx-$this->Legend2y+8, $this->Legend2x+100, $this->canvasDimensionYpx-$this->Legend2y-2);
+    $this->pdf->addTextWrap($this->Legend2x+110, $this->canvasDimensionYpx-$this->Legend2y, 30, $this->fontSize1b, 'GLOCL', 'left');
+     
+    $this->pdf->setLineStyle(0.5,'','',array(3));
+    $this->pdf->ellipse($this->Legend2x+150, $this->canvasDimensionYpx-$this->Legend2y+3, 5, 5, 0);
+    $this->pdf->addTextWrap($this->Legend2x+160, $this->canvasDimensionYpx-$this->Legend2y, 30, $this->fontSize1b, 'OPNCL', 'left');
+    
+    $this->pdf->rectangle($this->Legend2x+195, $this->canvasDimensionYpx-$this->Legend2y-2, 10, 10);
+    $this->pdf->addTextWrap($this->Legend2x+210, $this->canvasDimensionYpx-$this->Legend2y, 30, $this->fontSize1b, 'DRKNB', 'left');
+    
+    $this->pdf->setLineStyle(0.5,'','',array());
+    
+    $this->pdf->rectangle($this->Legend2x+245, $this->canvasDimensionYpx-$this->Legend2y-2, 10, 10);
+    $this->pdf->addTextWrap($this->Legend2x+260, $this->canvasDimensionYpx-$this->Legend2y, 30, $this->fontSize1b, 'NEB', 'left');
+    
+    $this->pdf->rectangle($this->Legend2x+295.5, $this->canvasDimensionYpx-$this->Legend2y-1.5, 9, 9);
+    $this->pdf->setLineStyle(0.5,'','',array(3));
+    $this->pdf->rectangle($this->Legend2x+294.5, $this->canvasDimensionYpx-$this->Legend2y-2.5, 11, 11);
+    $this->pdf->addTextWrap($this->Legend2x+310, $this->canvasDimensionYpx-$this->Legend2y, 30, $this->fontSize1b, 'CLANB', 'left');
+    $this->pdf->setLineStyle(0.5,'','',array());
+    
+    $x=$this->Legend2x+350;
+    $y=$this->canvasDimensionYpx-$this->Legend2y+3;
+    $d1=12;
+    $d2=12;
+    $x1=0;
+    $x2=0;
+    $y1=0;
+    $y2=0;
+    $x1=$x;
+    $y1=$y+(($d2+1)>>1);
+    $x2=$x+(($d1+1)>>1);
+    $y2=$y+(($d2+1)>>3);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $x1=$x+(($d1+1)>>1);
+    $y1=$y+(($d2+1)>>3);
+    $x2=$x+(3*(($d1+1)>>3));
+    $y2=$y-(($d2+1)>>1);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $x1=$x+(3*(($d1+1)>>3));
+    $y1=$y-(($d2+1)>>1);
+    $x2=$x-(3*(($d1+1)>>3));
+    $y2=$y-(($d2+1)>>1);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $x1=$x-(3*(($d1+1)>>3));
+    $y1=$y-(($d2+1)>>1);
+    $x2=$x-(($d1+1)>>1);
+    $y2=$y+(($d2+1)>>3);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $x1=$x-(($d1+1)>>1);
+    $y1=$y+(($d2+1)>>3);
+    $x2=$x;
+    $y2=$y+(($d2+1)>>1);
+    $this->pdf->line($x1,$y1,$x2,$y2);
+    $this->pdf->addTextWrap($this->Legend2x+360, $this->canvasDimensionYpx-$this->Legend2y, 30, $this->fontSize1b, 'GALCL', 'left');
+    
+    $x=$this->Legend2x+400;
+    $y=$this->canvasDimensionYpx-$this->Legend2y+3;
+    $d1=3;
+    $d2=3;
+    $this->pdf->line($x-2, $y, $x-$d1-2, $y);
+    $this->pdf->line($x, $y-2-$d2, $x, $y-2);
+    $this->pdf->line($x, $y+2+$d2, $x, $y+2);
+    $this->pdf->line($x+2, $y, $x+2+$d1, $y);
+    $this->pdf->addTextWrap($this->Legend2x+410, $this->canvasDimensionYpx-$this->Legend2y, 30, $this->fontSize1b, 'QUASR', 'left');
+    
+    
+    
+    
+    
   }
     	
   function astroDrawObjectLabel($cx, $cy, $d, $name, $seen)
@@ -944,8 +1031,9 @@ class PrintAtlas
   function gridShowInfo()
   { $t1 =atlasPageFoV.' '.(round($this->gridSpanL*20)/10)." x ".(round($this->gridSpanD*20)/10)."° - ";
 	  $t1.=atlasPageDSLM.' '.($this->maxshowndsomag==-99?'-':$this->maxshowndsomag)." - ";
-	  $t1.=atlasPageStarLM.' '.$this->starsmagnitude;
-	  $this->pdf->addText($this->gridOffsetXpx,$this->Legend2y,$this->fontSize1b,$t1);
+	  $t1.=atlasPageStarLM.' '.$this->starsmagnitude.' - ';
+	  $t1.=atlasPageCenteredOn.$this->coordHrDecToHrMin($this->atlaspagerahr).' - '.$this->coordDeclDecToDegMin($this->atlaspagedecldeg);
+	  $this->pdf->addText($this->gridOffsetXpx,20,$this->fontSize1a,$t1);
 	}
   
   function gridXpx($Lrad) 
@@ -1095,7 +1183,7 @@ class PrintAtlas
     $temp=date('d M Y');
     if($loggedUser)
       $temp=$objObserver->getObserverProperty($loggedUser,'firstname')." ".$objObserver->getObserverProperty($loggedUser,'name')." - ".$temp;
-    $this->pdf->addTextWrap($this->canvasDimensionXpx-$this->gridOffsetXpx-(strlen($temp)*5),$this->canvasDimensionYpx-$this->Legend1y-10,strlen($temp)*5,$this->fontSize1b,$temp,'right');
+    $this->pdf->addTextWrap($this->canvasDimensionXpx-$this->gridOffsetXpx-(strlen($temp)*5),$this->canvasDimensionYpx-$this->Legend1y-5,strlen($temp)*5,$this->fontSize1b,$temp,'right');
     $this->pdf->setLineStyle(2,'round');
     $this->pdf->rectangle($this->gridOffsetXpx-1,$this->gridOffsetYpx-1,
                          ($this->canvasDimensionXpx-($this->gridOffsetXpx<<1))+2,($this->canvasDimensionYpx-($this->gridOffsetYpx<<1))+2);
@@ -1103,12 +1191,12 @@ class PrintAtlas
     for($i=0,$z=count($this->labelsArr);$i<$z;$i++)   
       $this->pdf->addTextWrap($this->labelsArr[$i][0],$this->labelsArr[$i][1],$this->labelsArr[$i][2],$this->labelsArr[$i][3],$this->labelsArr[$i][4],$this->labelsArr[$i][5]);                  
     $temp=LangAtlasDataSource;
-    $this->pdf->addText($this->gridOffsetXpx,13,$this->fontSizeAck,$temp);
+    $this->pdf->addText($this->gridOffsetXpx,7,$this->fontSizeAck,$temp);
     if($objUtil->checkRequestKey('item',0)!='0')
-    { $this->pdf->addText($this->canvasDimensionXpx-30,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
-      $this->pdf->addText(15,13,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
-      $this->pdf->addText($this->canvasDimensionXpx-30,$this->canvasDimensionYpx-20,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
-      $this->pdf->addText(15,$this->canvasDimensionYpx-20,$this->fontSize1b,$objUtil->checkRequestKey('item',0));
+    { $this->pdf->addText($this->canvasDimensionXpx-30,13,$this->fontSize1a,$objUtil->checkRequestKey('item',0));
+      $this->pdf->addText(15,13,$this->fontSize1a,$objUtil->checkRequestKey('item',0));
+      $this->pdf->addText($this->canvasDimensionXpx-30,$this->canvasDimensionYpx-20,$this->fontSize1a,$objUtil->checkRequestKey('item',0));
+      $this->pdf->addText(15,$this->canvasDimensionYpx-20,$this->fontSize1a,$objUtil->checkRequestKey('item',0));
     }
     if(!$nostream)
       $this->pdf->Stream(); 
