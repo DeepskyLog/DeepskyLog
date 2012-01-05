@@ -1214,7 +1214,7 @@ class PrintAtlas
   }
   public function pdfAtlasIndex()  // Creates a pdf atlas page
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
-    set_time_limit(300);
+    set_time_limit(1200);
    
     $indexFontSize = 8;
   
