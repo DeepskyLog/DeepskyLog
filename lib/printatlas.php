@@ -556,14 +556,13 @@ class PrintAtlas
         $this->pdf->setColor(0,0,0);
       if($this->gridD0rad>0)
     	{ if(($this->gridD0rad+($this->gridSpanDrad/1))>=($this->fPiOver2))
-    		  $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->gridldDdeg,90,$m,$m);
+    		  $this->astroObjectsArr=$objStar->getStarsMagnitude(24,0,$this->gridldDdeg,90,$m,$m);
     		else
     		  $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridlLhr,$this->gridrLhr,$this->gridldDdeg,$this->griduDdeg,$m,$m);
     	}
     	else
-    	{ 
-    		if(($this->gridD0rad-($this->gridSpanDrad/1))<=(-$this->fPiOver2))
-    	    $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridldLhr,$this->gridrdLhr,-90,$this->gridluDdeg,$m,$m);
+    	{ if(($this->gridD0rad-($this->gridSpanDrad/1))<=(-$this->fPiOver2))
+    	    $this->astroObjectsArr=$objStar->getStarsMagnitude(24,0,-90,$this->gridluDdeg,$m,$m);
     	  else
     	    $this->astroObjectsArr=$objStar->getStarsMagnitude($this->gridldLhr,$this->gridrdLhr,$this->griddDdeg,$this->gridluDdeg,$m,$m);
     	}
@@ -1052,7 +1051,7 @@ class PrintAtlas
     $this->pdf = new Cezpdf($this->thePageSize, $this->theOrientation);
     $this->pdf->selectFont($instDir.'lib/fonts/Courier.afm');
     $temp='Deepskylog Atlas';
-    $this->pdf->addText(100,$this->pdf->ez['pageHeight']-100,64,$temp);
+    $this->pdf->addText(100,$this->pdf->ez['pageHeight']-100,32,$temp);
     $this->pdf->line(100,$this->pdf->ez['pageHeight']-45,750,$this->pdf->ez['pageHeight']-45);
     
     global $GALXY,$PLNNB,$GLOCL,$OPNCL,$DRKNB,$EMINB,$CLANB,$GALCL,$QUASR;
@@ -1139,7 +1138,7 @@ class PrintAtlas
     return 'stepra:999,stepdecl:999,raright:999,declbottom:999';
   }
   public  function pdfAtlas($nostream=false)  // Creates a pdf atlas page
-  { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
+  { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject,$objAtlas;
     if(!(isset($_SESSION['atlasPagesIndex'])))
       $_SESSION['atlasPagesIndex']=Array();
     set_time_limit(120);
@@ -1147,6 +1146,10 @@ class PrintAtlas
     $object='';
     $this->atlaspagerahr=$objUtil->checkRequestKey('ra',0);
 	  $this->atlaspagedecldeg=$objUtil->checkRequestKey('decl',0);
+	  if($this->atlaspagedecldeg==90)
+	    $this->atlaspagedecldeg=89.99;
+	  if($this->atlaspagedecldeg==-90)
+	    $this->atlaspagedecldeg=-89.99;
     if($object=$objObject->getExactDsObject($objUtil->checkRequestKey('object'),''))
     { $this->atlaspagerahr=$objObject->getDsoProperty($object,'ra',0);
       $this->atlaspagedecldeg=$objObject->getDsoProperty($object,'decl',0);
@@ -1199,6 +1202,11 @@ class PrintAtlas
       $this->pdf->addText($this->canvasDimensionXpx-30,$this->canvasDimensionYpx-20,$this->fontSize1a,$objUtil->checkRequestKey('item',0));
       $this->pdf->addText(15,$this->canvasDimensionYpx-20,$this->fontSize1a,$objUtil->checkRequestKey('item',0));
     }
+    $this->pdf->setLineStyle(1);
+    $pageleftunder=$objAtlas->calculateAtlasPage('DSLO',$this->gridldLhr,$this->gridldDdeg);
+    $thetextsize=$this->pdf->getTextWidth($this->fontSize1a,$pageleftunder);
+    $this->pdf->addText($this->gridOffsetXpx-$thetextsize-4,$this->gridOffsetYpx-$this->fontSize1a-1,$this->fontSize1a,$pageleftunder);
+    $this->pdf->rectangle($this->gridOffsetXpx-$thetextsize-6,$this->gridOffsetYpx-$this->fontSize1a-4,$thetextsize+3,$this->fontSize1a+2);
     if(!$nostream)
       $this->pdf->Stream(); 
     if($this->gridD0rad>0)

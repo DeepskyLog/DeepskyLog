@@ -24,7 +24,23 @@ class Atlasses
     if($atlas=='torresBC')      return $this->calculateTorresBCPage($ra, $decl);
     if($atlas=='torresC')       return $this->calculateTorresCPage($ra, $decl);
     if($atlas=='urano')         return $this->calculateUranometriaPage($ra,$decl);
+    if($atlas=='DSLO')          return $this->calculateDSLO($ra,$decl);
     return '';
+  }
+  private function calculateDSLO($ra,$decl)
+  { $atlaspages = array(array(12,20,26,30,32,32,30,26,20,12),                          // overview
+		                    array(12,20,30,36,42,48,52,54,54,54,52,48,42,36,30,20,12),     // lookup
+                        array(12,21,31,40,48,55,63,70,77,83,89,94,98,101,104,106,107,107,107,107,106,104,101,98,94,89,83,77,70,63,55,48,40,31,21,12) // Detail
+                      );
+    $page=1;
+    for($i=0;$i<count($atlaspages[0]);$i++)
+    { if(($decl<(90+((-$i)*(180/(count($atlaspages[0]))))))&&($decl>=(90+((-1-$i)*(180/(count($atlaspages[0])))))))
+      { return ($page+floor((24-$ra)/(24 /($atlaspages[0][$i]))));
+      }
+      else
+        $page+=$atlaspages[0][$i];
+    }
+    return 0;
   }
   private function calculateMilleniumPage($ra, $decl)
   { $rao = $ra;	$pa = 0; $qt = 0; $qn = 0;
