@@ -85,7 +85,7 @@ function view_observer()
 	  	                    borderWidth: 0
 	  	      },
 	  	                    series: [{
-	  	                      name: '" . $deepsky . "',
+	  	                      name: '" . html_entity_decode($deepsky, ENT_QUOTES, "UTF-8") . "',
 	  	                        data: [";
   for ($i = $startYear;$i <= $currentYear;$i++) {
     $obs = $objDatabase->selectSingleValue("select COUNT(date) from observations where observerid=\"" . $user . "\" and date >= \"" . $i . "0101\" and date <= \"" . $i . "1231\";", "COUNT(date)", "0");
@@ -97,7 +97,7 @@ function view_observer()
   }
   echo "                    ]
 	  	                      }, {
-                              name: '" . $comets . "',
+                              name: '" . html_entity_decode($comets, ENT_QUOTES, "UTF-8") . "',
                                 data: [";
 
   for ($i = $startYear;$i <= $currentYear;$i++) {

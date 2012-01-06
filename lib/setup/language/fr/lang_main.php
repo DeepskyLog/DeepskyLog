@@ -1,7 +1,7 @@
 <?php //FR
 // This is version 4.3
 define('atlasPageCenteredOn'            ,'Centered on ');
-define('LangNoIndexEntries'             ,"Pas d'entrées dans l'index");
+define('LangNoIndexEntries'             ,"Pas d'entr&eacute;es dans l'index");
 define('LangAtlasPageOrientation'       ,"Pagina ori&euml;ntatie");
 define('LangAtlasPageSize'              ,"Pagina-grootte:");
 define('LangPageGenerationra'           ,'Generatie rechte klimming (h m s):');
@@ -19,7 +19,7 @@ define('LangAtlasButton9'               ,"Detail - Hele atlas");
 define('LangAtlasGenerateCompleteAtlas' ,'Genereer de volledige atlas (niet beschikbaar in Internet Explorer)');
 define('LangAtlasGenerateOnePage'       ,'Genereer een pagina');
 
-define('LangAtlasGenerationTimes'       ,"Les temps de génération varient entre 20 minutes (aperçu A4) jusqu'à plusieures heures (Recherche A3).");
+define('LangAtlasGenerationTimes'       ,"Les temps de g&eacute;n&eacute;ration varient entre 20 minutes (aper&ccedil;u A4) jusqu'&agrave; plusieures heures (Recherche A3).");
 define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).");
 define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - No publishing without written autorisation");
 define('LangAtlasDataSource2'           ,"Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).");

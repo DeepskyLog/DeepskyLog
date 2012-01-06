@@ -28,7 +28,7 @@ function menu_instrument()
       echo " <ul>";
       
 			$url = "http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"];
-      if ($url == $baseURL || $url == $baseURL."#") {
+      if ($url == $baseURL || $url == $baseURL."#" || $url = $baseURL."index.php") {
         $url = $baseURL . "index.php?title=Home";
       }
       while(list($key, $value) = each($result)) {
