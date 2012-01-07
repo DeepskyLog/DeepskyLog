@@ -24,21 +24,29 @@ class Atlasses
     if($atlas=='torresBC')      return $this->calculateTorresBCPage($ra, $decl);
     if($atlas=='torresC')       return $this->calculateTorresCPage($ra, $decl);
     if($atlas=='urano')         return $this->calculateUranometriaPage($ra,$decl);
-    if($atlas=='DSLO')          return $this->calculateDSLO($ra,$decl);
+    if($atlas=='DSLOP')         return $this->calculateDSL(0,$ra,$decl);
+    if($atlas=='DSLLP')         return $this->calculateDSL(0,$ra,$decl);
+    if($atlas=='DSLDP')         return $this->calculateDSL(0,$ra,$decl);
+    if($atlas=='DSLOL')         return $this->calculateDSL(0,$ra,$decl);
+    if($atlas=='DSLLL')         return $this->calculateDSL(0,$ra,$decl);
+    if($atlas=='DSLDL')         return $this->calculateDSL(0,$ra,$decl);
     return '';
   }
-  private function calculateDSLO($ra,$decl)
+  private function calculateDSL($atlastype,$ra,$decl)
   { $atlaspages = array(array(12,20,26,30,32,32,30,26,20,12),                          // overview
 		                    array(12,20,30,36,42,48,52,54,54,54,52,48,42,36,30,20,12),     // lookup
-                        array(12,21,31,40,48,55,63,70,77,83,89,94,98,101,104,106,107,107,107,107,106,104,101,98,94,89,83,77,70,63,55,48,40,31,21,12) // Detail
-                      );
+                        array(12,21,31,40,48,55,63,70,77,83,89,94,98,101,104,106,107,107,107,107,106,104,101,98,94,89,83,77,70,63,55,48,40,31,21,12), // Detail
+                        array(6,10,13,16,19,20,21,21,21,20,19,16,13,10,6),             // overview landscape
+                        array(6,10,13,17,21,24,27,30,32,34,35,36,36,36,36,36,35,34,32,30,27,24,21,17,13,10,6), // lookup landscape
+                        array(0)
+                       );
     $page=1;
-    for($i=0;$i<count($atlaspages[0]);$i++)
-    { if(($decl<(90+((-$i)*(180/(count($atlaspages[0]))))))&&($decl>=(90+((-1-$i)*(180/(count($atlaspages[0])))))))
-      { return ($page+floor((24-$ra)/(24 /($atlaspages[0][$i]))));
+    for($i=0;$i<count($atlaspages[$atlastype]);$i++)
+    { if(($decl<(90+((-$i)*(180/(count($atlaspages[$atlastype]))))))&&($decl>=(90+((-1-$i)*(180/(count($atlaspages[$atlastype])))))))
+      { return ($page+floor((24-$ra)/(24 /($atlaspages[$atlastype][$i]))));
       }
       else
-        $page+=$atlaspages[0][$i];
+        $page+=$atlaspages[$atlastype][$i];
     }
     return 0;
   }

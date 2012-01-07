@@ -28,15 +28,18 @@ var decl;
 var dsos;
 var theoverlap = 0.15;
 var ra;
-var rato;
+var rato=24;
 var stars;
 var zoom;
 
 var magnegdecl=-89.50;
 
-var atlaspages = new Array(new Array(12,20,26,30,32,32,30,26,20,12),                          // overview
-		                   new Array(12,20,30,36,42,48,52,54,54,54,52,48,42,36,30,20,12),     // lookup
-                           new Array(12,21,31,40,48,55,63,70,77,83,89,94,98,101,104,106,107,107,107,107,106,104,101,98,94,89,83,77,70,63,55,48,40,31,21,12) // Detail
+var atlaspages = new Array(new Array(12,20,26,30,32,32,30,26,20,12),                          // overview portrait
+		                   new Array(12,20,30,36,42,48,52,54,54,54,52,48,42,36,30,20,12),     // lookup portrait
+                           new Array(12,21,31,40,48,55,63,70,77,83,89,94,98,101,104,106,107,107,107,107,106,104,101,98,94,89,83,77,70,63,55,48,40,31,21,12), // Detail portrait
+                           new Array(6,10,13,16,19,20,21,21,21,20,19,16,13,10,6),             // overview landscape
+                           new Array(6,10,13,17,21,24,27,30,32,34,35,36,36,36,36,36,35,34,32,30,27,24,21,17,13,10,6), // lookup landscape
+                           new Array(0)
                           );
 var atlastype = 0;
 
@@ -129,6 +132,7 @@ function generateallonepassij(item,msie,stepra,stepdecl,i,j)
           'stars='+stars+'&'+
           'dsos='+dsos+'&'+
           'zoom='+zoom+'&'+
+          'atlastype='+atlastype+'&'
           'pageorientation=';
   if(document.getElementById('pageorientationportrait').checked)
   	url+='portrait';
@@ -231,6 +235,7 @@ function generateallonepass(item,msie,stepra,stepdecl)
           'stars='+stars+'&'+
           'dsos='+dsos+'&'+
           'zoom='+zoom+'&'+
+          'atlastype='+atlastype+'&'
           'pageorientation=';
   if(document.getElementById('pageorientationportrait').checked)
   	url+='portrait';
@@ -361,50 +366,39 @@ function generateonedetail(i,msie)
 
 function generateoverviewallonepass(item,msie,stepra,stepdecl)
 { if(document.getElementById('pagesizea4').checked)
-  { if(document.getElementById('pageorientationportrait').checked)
-  	  decl=81;
-    else
-  	  decl=84;
-    stars=10;
+  { stars=10;
     dsos=10;
   }
   else if(document.getElementById('pagesizea3').checked)
-  {	if(document.getElementById('pageorientationportrait').checked)
-      decl=81;
-    else
-      decl=84;
-    stars=11;
+  {	stars=11;
     dsos=12;
   }
-  rato=24;
   zoom=13;
-  ra=rato;
-  atlastype=0;
+  //ra=rato;
+  //generateallonepass(-1,msie,0,0);
+  if(document.getElementById('pageorientationportrait').checked)
+  	atlastype=0;
+  else
+  	atlastype=3;
   generateallonepassij(-1,msie,0,0,0,0);
 }
 function generatelookupallonepass(item,msie,stepra,stepdecl)
 { if(document.getElementById('pagesizea4').checked)
-	{ if(document.getElementById('pageorientationportrait').checked)
-  	    decl=84.29;
-	  else
-	    decl=85.99;
-	  stars=12;
+	{ stars=12;
 	  dsos=12;
 	}
 	else if(document.getElementById('pagesizea3').checked)
-	{	if(document.getElementById('pageorientationportrait').checked)
-	  	decl=84.99;
-	  else
-	  	decl=85.99;
-	  stars=13;
+	{ stars=13;
 	  dsos=14;
 	}
-  rato=24;
   zoom=15;
-  ra=rato;
-//  generateallonepass(-1,msie,0,0);
-  atlastype=1;
-  generateallonepassij(-1,msie,0,0,0,0);
+  //ra=rato;
+  //generateallonepass(-1,msie,0,0);
+  if(document.getElementById('pageorientationportrait').checked)
+    atlastype=1;
+  else
+	atlastype=4;
+  //generateallonepassij(-1,msie,0,0,0,0);
 }
 function generatedetailallonepass(item,msie,stepra,stepdecl)
 { if(document.getElementById('pagesizea4').checked)
