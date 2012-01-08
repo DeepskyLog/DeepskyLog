@@ -280,7 +280,7 @@ class PrintAtlas
 	  $legendx-=$this->pdf->getTextWidth($this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)));
 	  $legendx-=10;
     $this->pdf->setColor(0.7,0.7,0.7);
-    $this->pdf->filledEllipse($this->Legend1x+$legendx,$this->canvasDimensionYpx-$this->Legend1y-5,.25,.25,0,$this->nsegmente);
+    $this->pdf->filledEllipse($this->Legend1x+$legendx,$this->canvasDimensionYpx-$this->Legend1y-3,.25,.25,0,$this->nsegmente);
     $this->pdf->setColor(0,0,0);
     
     
