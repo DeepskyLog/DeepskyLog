@@ -448,9 +448,9 @@ class catalogs
       $thenewcatalog0='Hickson';
     if($thenewcatalog=='MESSIER')
       $thenewcatalog0='M';
-    if($thenewcatalog=='MARKARIAN')
-      $thenewcatalog0='Mrk';
-      if($thenewcatalog=='MARK')
+    //if($thenewcatalog=='MARKARIAN')
+    //  $thenewcatalog0='Mrk';
+    if($thenewcatalog=='MARK')
       $thenewcatalog0='Mrk';
     if($thenewcatalog=='MELOTTE')
       $thenewcatalog0='MEL';
