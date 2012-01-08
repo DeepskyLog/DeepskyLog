@@ -1212,7 +1212,10 @@ class PrintAtlas
     if($objUtil->checkRequestKey('atlastype',0)==4) $atlastype='DSLLL';
     if($objUtil->checkRequestKey('atlastype',0)==5) $atlastype='DSLDL';
     
-    $pageleft=$objAtlas->calculateAtlasPage($atlastype,$this->gridldLhr,$this->atlaspagedecldeg);
+    if($this->atlaspagedecldeg>0)
+      $pageleft=$objAtlas->calculateAtlasPage($atlastype,$this->gridldLhr,$this->atlaspagedecldeg);
+    else
+      $pageleft=$objAtlas->calculateAtlasPage($atlastype,$this->gridluLhr,$this->atlaspagedecldeg);
     $thetextsize=$this->pdf->getTextWidth($this->fontSize1a,$pageleft);
     $this->pdf->setColor(1,1,1);
     $this->pdf->filledrectangle($this->gridOffsetXpx,$this->gridCenterOffsetYpx-($this->fontSize1a>>1)-1,$thetextsize+6,$this->fontSize1a+2);
@@ -1220,7 +1223,10 @@ class PrintAtlas
     $this->pdf->rectangle($this->gridOffsetXpx,$this->gridCenterOffsetYpx-($this->fontSize1a>>1)-1,$thetextsize+6,$this->fontSize1a+2);
     $this->pdf->addText($this->gridOffsetXpx+2,$this->gridCenterOffsetYpx-($this->fontSize1a>>1)+1,$this->fontSize1a,$pageleft);
     
-    $pageright=$objAtlas->calculateAtlasPage($atlastype,$this->gridrdLhr,$this->atlaspagedecldeg);
+    if($this->atlaspagedecldeg>0)
+      $pageright=$objAtlas->calculateAtlasPage($atlastype,$this->gridrdLhr,$this->atlaspagedecldeg);
+    else
+      $pageright=$objAtlas->calculateAtlasPage($atlastype,$this->gridruLhr,$this->atlaspagedecldeg);
     $thetextsize=$this->pdf->getTextWidth($this->fontSize1a,$pageright);
     $this->pdf->setColor(1,1,1);
     $this->pdf->filledrectangle($this->canvasDimensionXpx-$this->gridOffsetXpx-$thetextsize-6,$this->gridCenterOffsetYpx-($this->fontSize1a>>1)-1,$thetextsize+6,$this->fontSize1a+2);
@@ -1229,34 +1235,27 @@ class PrintAtlas
     $this->pdf->addText($this->canvasDimensionXpx-$this->gridOffsetXpx-$thetextsize-3,$this->gridCenterOffsetYpx-($this->fontSize1a>>1)+1,$this->fontSize1a,$pageright);
         
     $pageupper=$objAtlas->calculateAtlasPage($atlastype,$this->atlaspagerahr,$this->gridluDdeg);
-    $thetextsize=$this->pdf->getTextWidth($this->fontSize1a,$pageupper);
-    $this->pdf->setColor(1,1,1);
-    $this->pdf->filledrectangle($this->gridCenterOffsetXpx+-($thetextsize>>1)-3,$this->canvasDimensionYpx-$this->gridOffsetYpx-$this->fontSize1a-2,$thetextsize+6,$this->fontSize1a+2);
-    $this->pdf->setColor(0,0,0);
-    $this->pdf->rectangle($this->gridCenterOffsetXpx+-($thetextsize>>1)-3,$this->canvasDimensionYpx-$this->gridOffsetYpx-$this->fontSize1a-2,$thetextsize+6,$this->fontSize1a+2);
-    $this->pdf->addText($this->gridCenterOffsetXpx-($thetextsize>>1),$this->canvasDimensionYpx-$this->gridOffsetYpx-$this->fontSize1a+1,$this->fontSize1a,$pageupper);
+    if($pageupper!=$this->theItemPage)
+    {	$thetextsize=$this->pdf->getTextWidth($this->fontSize1a,$pageupper);
+    	$this->pdf->setColor(1,1,1);
+    	$this->pdf->filledrectangle($this->gridCenterOffsetXpx+-($thetextsize>>1)-3,$this->canvasDimensionYpx-$this->gridOffsetYpx-$this->fontSize1a-2,$thetextsize+6,$this->fontSize1a+2);
+    	$this->pdf->setColor(0,0,0);
+    	$this->pdf->rectangle($this->gridCenterOffsetXpx+-($thetextsize>>1)-3,$this->canvasDimensionYpx-$this->gridOffsetYpx-$this->fontSize1a-2,$thetextsize+6,$this->fontSize1a+2);
+    	$this->pdf->addText($this->gridCenterOffsetXpx-($thetextsize>>1),$this->canvasDimensionYpx-$this->gridOffsetYpx-$this->fontSize1a+1,$this->fontSize1a,$pageupper); 
+    }
     
     $pageunder=$objAtlas->calculateAtlasPage($atlastype,$this->atlaspagerahr,$this->gridldDdeg);
-    $thetextsize=$this->pdf->getTextWidth($this->fontSize1a,$pageunder);
-    $this->pdf->setColor(1,1,1);
-    $this->pdf->filledrectangle($this->gridCenterOffsetXpx+-($thetextsize>>1)-3,$this->gridOffsetYpx,$thetextsize+6,$this->fontSize1a+2);
-    $this->pdf->setColor(0,0,0);
-    $this->pdf->rectangle($this->gridCenterOffsetXpx+-($thetextsize>>1)-3,$this->gridOffsetYpx,$thetextsize+6,$this->fontSize1a+2);
-    $this->pdf->addText($this->gridCenterOffsetXpx-($thetextsize>>1),$this->gridOffsetYpx+3,$this->fontSize1a,$pageunder);
-    
-    
+    if($pageunder!=$this->theItemPage)
+    { $thetextsize=$this->pdf->getTextWidth($this->fontSize1a,$pageunder);
+      $this->pdf->setColor(1,1,1);
+      $this->pdf->filledrectangle($this->gridCenterOffsetXpx+-($thetextsize>>1)-3,$this->gridOffsetYpx,$thetextsize+6,$this->fontSize1a+2);
+      $this->pdf->setColor(0,0,0);
+      $this->pdf->rectangle($this->gridCenterOffsetXpx+-($thetextsize>>1)-3,$this->gridOffsetYpx,$thetextsize+6,$this->fontSize1a+2);
+      $this->pdf->addText($this->gridCenterOffsetXpx-($thetextsize>>1),$this->gridOffsetYpx+3,$this->fontSize1a,$pageunder);
+    } 
     if(!$nostream)
       $this->pdf->Stream(); 
-    if($this->gridD0rad>0)
-      $this->gridLDinvRad($this->canvasDimensionXpx-$this->gridOffsetXpx,$this->canvasDimensionYpx-$this->gridOffsetYpx);
-    else
-      $this->gridLDinvRad($this->canvasDimensionXpx-$this->gridOffsetXpx,$this->gridOffsetYpx);
-    $tempra=($this->gridLxRad/3.1415926535*12);
-    //if($this->gridD0rad>0)
-      $this->gridLDinvRad(($this->canvasDimensionXpx>>1),$this->canvasDimensionYpx-$this->gridOffsetYpx);
-    //else
-    //  $this->gridLDinvRad(($this->canvasDimensionXpx>>1),$this->gridOffsetYpx);
-    return 'stepra:'.($this->gridSpanL*2).',stepdecl:'.($this->gridSpanD*2).',raright:'.$tempra.',declbottom:'.($this->gridDyRad/3.1415926535*180);
+    return;
   }
   public function pdfAtlasIndex()  // Creates a pdf atlas page
   { global $objUtil,$instDir,$loggedUser,$objObserver,$objObject;
