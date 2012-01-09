@@ -1251,7 +1251,7 @@ class PrintAtlas
     if($this->atlaspagedecldeg>0)
       $this->gridDyRad=$this->gridldDdeg*$this->fPiOver180;
     else
-      $this->gridLDinvRad($this->gridCenterOffsetXpx,$this->gridOffsetYpx+$this->gridHeightYpxx);
+      $this->gridLDinvRad($this->gridCenterOffsetXpx,$this->gridOffsetYpx+$this->gridHeightYpx);
     $pageunder=$objAtlas->calculateAtlasPage($atlastype,$this->atlaspagerahr,$this->gridDyRad*$this->f180OverPi);
     if($pageunder!=$this->theItemPage)
     { $thetextsize=$this->pdf->getTextWidth($this->fontSize1a,$pageunder);
