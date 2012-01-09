@@ -25,11 +25,11 @@ class Atlasses
     if($atlas=='torresC')       return $this->calculateTorresCPage($ra, $decl);
     if($atlas=='urano')         return $this->calculateUranometriaPage($ra,$decl);
     if($atlas=='DSLOP')         return $this->calculateDSL(0,$ra,$decl);
-    if($atlas=='DSLLP')         return $this->calculateDSL(0,$ra,$decl);
-    if($atlas=='DSLDP')         return $this->calculateDSL(0,$ra,$decl);
-    if($atlas=='DSLOL')         return $this->calculateDSL(0,$ra,$decl);
-    if($atlas=='DSLLL')         return $this->calculateDSL(0,$ra,$decl);
-    if($atlas=='DSLDL')         return $this->calculateDSL(0,$ra,$decl);
+    if($atlas=='DSLLP')         return $this->calculateDSL(1,$ra,$decl);
+    if($atlas=='DSLDP')         return $this->calculateDSL(2,$ra,$decl);
+    if($atlas=='DSLOL')         return $this->calculateDSL(3,$ra,$decl);
+    if($atlas=='DSLLL')         return $this->calculateDSL(4,$ra,$decl);
+    if($atlas=='DSLDL')         return $this->calculateDSL(5,$ra,$decl);
     return '';
   }
   private function calculateDSL($atlastype,$ra,$decl)
