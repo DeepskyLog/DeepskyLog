@@ -1,67 +1,67 @@
 <?php //GE
 // This is version 4.3
-define('atlasPageCenteredOn'            ,'Centered on ');
-define('LangNoIndexEntries'             ,"No index entries");
-define('LangAtlasPageOrientation'       ,"Page orientation:");
-define('LangAtlasPageSize'              ,"Page size:");
-define('LangPageGenerationra'           ,'Generation right ascention (h m s):');
-define('LangPageGenerationdecl'         ,'declination (h m s):');
-define('LangAtlasButton1'               ,"Overview");
-define('LangAtlasButton2'               ,"Lookup");
+define('atlasPageCenteredOn'            ,'Zentriert auf ');
+define('LangNoIndexEntries'             ,"Keine index Eintr&auml;ge");
+define('LangAtlasPageOrientation'       ,"Seitenorientierung:");
+define('LangAtlasPageSize'              ,"Seitengr&ouml;&szlig;e:");
+define('LangPageGenerationra'           ,'Generierung RA (h m s):');
+define('LangPageGenerationdecl'         ,'Deklination (h m s):');
+define('LangAtlasButton1'               ,"&uuml;bersicht");
+define('LangAtlasButton2'               ,"Nachschlagen");
 define('LangAtlasButton3'               ,"Detail");
-define('LangAtlasButton4'               ,"Overview - Page");
-define('LangAtlasButton5'               ,"Lookup - Page");
-define('LangAtlasButton6'               ,"Detail - Page");
-define('LangAtlasButton7'               ,"Overview - Whole atlas");
-define('LangAtlasButton8'               ,"Lookup - Whole atlas");
-define('LangAtlasButton9'               ,"Detail - Whole atlas");define('LangAtlasGenerationTimes'       ,"Generation times may take from 20 minutes (Overview A4) up to several hours (Lookup A3).");
-define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).");
-define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - No publishing without written autorisation");
-define('LangAtlasDataSource2'           ,"Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).");
-define("ObjectsSeenGraph"               ,"Object types seen : ");
+define('LangAtlasButton4'               ,"&uuml;bersicht - Seite");
+define('LangAtlasButton5'               ,"Nachschlagen - Seite");
+define('LangAtlasButton6'               ,"Detail - Seite");
+define('LangAtlasButton7'               ,"&uuml;bersicht - Ganzer Atlas");
+define('LangAtlasButton8'               ,"Nachschlagen - Ganzer Atlas");
+define('LangAtlasButton9'               ,"Detail - Ganzer Atlas");
+define('LangAtlasGenerationTimes'       ,"Generierung kann etwas dauern (zwischen 20min (&uuml;bersicht DinA4) und mehreren Stunden (&uuml;bersicht DinA3)).");
+define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - Keine Ver&Ouml;ffentlichung ohne vorherige Genehmigung - Objekt Datenbank basierend auf Eye&Telescope - Sternen Datenbank basierend auf Tycho 2+ sowie USNO UCAC3 (Zacharia).");
+define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - Keine Ver&Ouml;ffentlichung ohne vorherige Genehmigung");
+define('LangAtlasDataSource2'           ,"Objekt Datenbank basierend auf Eye&Telescope - Sternen Datenbank basierend auf Tycho 2+ sowie USNO UCAC3 (Zacharia).");
+define("ObjectsSeenGraph"               ,"Objekt Typen gesehen : ");
 $REST = "Rest";
-define("GraphObservations"              ,"Observations");
-define("GraphSource"                    ,"Source: ");
-define("GraphTitle1"                    ,"Number of observations per year : ");
-define("AtlasExample"                   ,"Lookup atlas page for M 45");
-define("ImageCatalogExample"            ,"Example page for Abell 84");
-define("ImageCatalogDescription1"       ,"DeepskyLog is a very powerful tool, where you can create personalized atlasses and image catalogs.");
-define("ImageCatalogDescription2"       ,"However, making your own image catalog is time consuming. To help you, we created some interesting image catalogs and made them available for download.");
-define("ImageCatalogDescription3"       ,"You can click the example to get a preview of how the image catalogs look like. They are very useful for telescopes with a goto system, where the goto system guides you to the neighbourhood of the object. Using the images, it is very easy to find the final object.");
-define("ImageCatalogDescription4"       ,"Catalogs sorted by name");
-define("ImageCatalogDescription5"       ,"Catalogs sorted by constellation");
+define("GraphObservations"              ,"Beobachtungen");
+define("GraphSource"                    ,"Quelle: ");
+define("GraphTitle1"                    ,"Anzahl der Beobachtungen pro Jahr: ");
+define("AtlasExample"                   ,"Nachschlagen der Atlas Seite f&uuml;r M 45");
+define("ImageCatalogExample"            ,"Beispielseite f&uuml;r Abell 84");
+define("ImageCatalogDescription1"       ,"DeepskyLog ist ein m&auml;chtiges Werkzeug. Sie k&Ouml;nnen u.a. personalisierte Atlanten und Bildb&auml;nde erzeugen.");
+define("ImageCatalogDescription2"       ,"Das Erstellen Ihres eigenen Bildbandes ist zeitaufw&auml;ndig. Um Ihnen die Arbeit zu erleichtern bieten wir einige interessante Bildb&auml;nde bereits zum Download an.");
+define("ImageCatalogDescription3"       ,"Klicken Sie auf eines der Beispiele um eine Voransicht zu bekommen. Diese Bildb&auml;nde sind sehr n&uuml;tzlich f&uuml;r Teleskope mit Goto-System, bei denen Sie durch das Goto-System in die N&auml;he eines Objektes gef&uuml;hrt werden. Mittels des Bilder ist es so einfach m&Ouml;glich das gesuchte Objekt zu finden.");
+define("ImageCatalogDescription4"       ,"Kataloge sortiert nach Namen");
+define("ImageCatalogDescription5"       ,"Kataloge sortiert nach Sternbildern");
 define("ImageCatalogAbell"              ,"The Abell Planetary Nebula Catalog");
-define("LangpdfOrientation"             ,"Page orientation: ");
-define("LangpdfOrientationPortrait"     ,"portrait");
-define("LangpdfOrientationLandscape"    ,"landscape");
-define("LangSearchMenuItem14"           ,"Image catalogs");
-define("LangSearchMenuItem13"           ,"Atlasses");
-define('LangAtlassesIntro00'            ,'General information');
-define('LangAtlassesIntro01'            ,"You can download three kind of atlasses:<br />
-                                           - the <b>overview</b> atlasses have pages of 20 degrees, and show stars to magnitude 8;<br />
-                                           - the <b>lookup</b> atlasses have pages of 10 degrees, and show stars to magnitude 11;<br />
-                                           - the <b>detail</b> atlasses have page of 5 degrees, and show stars to magnitude 14.<br/><br/>
-                                           The atlasses mention if the objects are already seen in Deepskylog (dotted underline)<br />
-                                           or by yourself (personalised atlasses for registered users, full underline, or overline if sketched).");
-define('LangAtlassesIntro02'            ,'General Atlasses / Personalised Atlasses');
-define('LangAtlassesIntro03'            ,'You can either go for general atlasses, or (if you are a registered user) personalised atlasses.<br>
-                                          - General atlasses are precompiled and are ready to download as one big pdf file.<br/>
-                                          - Personalised atlasses are generated, page per page, for you in pdf format.<br /><br />
-                                          Personalised atlasses take some time (one page) or much more time (complete atlas) to generate and <br />
-                                          you will have to use some software to put the pages together yourself for the complete atlas.');
-define('LangAtlassesIntro04'            ,'General Atlasses');
-define('LangAtlassesIntro05'            ,'Choose one of the three available formats, they will download as a pdf:');
-define('LangAtlassesIntro06'            ,'Personalised Atlasses');
-define('LangAtlassesIntro07'            ,"You can download an individual page, with top-left coordinates to be specified by you,<br />
-                                          or you can download all the pages of the complete helisphere.");
-// To translate
+define("LangpdfOrientation"             ,"Seitenorientierung: ");
+define("LangpdfOrientationPortrait"     ,"Portrait");
+define("LangpdfOrientationLandscape"    ,"Landschaft");
+define("LangSearchMenuItem14"           ,"Bildb&auml;nde");
+define("LangSearchMenuItem13"           ,"Atlanten");
+define('LangAtlassesIntro00'            ,'Allgemeine Informationen');
+define('LangAtlassesIntro01'            ,"Sie k&Ouml;nnen drei Arten von Atlanten downloaden:<br />
+                                          - <b>&uuml;bersicht</b>s Atlanten haben Seiten mit je 20 Grad und Sternen bis zu Mag 8;<br />
+                                          - <b>Nachschlage</b> Atlanten haben Seiten mit je 10 Grad und Sternen bis zu Mag 11;<br />
+                                          - <b>Detail</b> Atlanten haben Seiten mit je 5 Grad und Sternen bis zu Mag 14.<br/><br/>
+                                          Jeder Atlas zeigt an, ob f&uuml;r ein Objekt bereits eine Beobachtung in Deepskylog existiert (gestrichelt unterstrichen)<br />
+                                          oder sogar eine Beobachtung von Ihnen vorliegt (personalisierte Atlanten f&uuml;r registrierte Benutzer, unterstrichen bzw. &uuml;berstrichen wenn eine Zeichnung hinzugef&uuml;gt wurde).");
+define('LangAtlassesIntro02'            ,'Allgemeine Atlanten / Personalisierte Atlanten');
+define('LangAtlassesIntro03'            ,'Sie k&Ouml;nnen zu allgemeinen Atlanten wechseln, oder (wenn Sie angemeldet sind) zu personalisierten Atlanten.<br>
+                                         - Allgemeine Atlanten sind vorgefertigt und bereit zum Download (als PDF)<br/>
+                                         - Personalisierte Atlanten werden f&uuml;r Sie pers&Ouml;nlich, Seite f&uuml;r Seite, (als PDF) generiert.<br /><br />
+                                         Personalisierte Atlanten ben&Ouml;togen etwas Zeit (f&uuml;r eine Seite) oder sehr viel Zeit (f&uuml;r komplette Atlanten).<br />
+                                         Ferner ben&Ouml;tigen Sie eine Software welche Ihnen die generierten Seiten zusammenf&uuml;gt.');
+define('LangAtlassesIntro04'            ,'Allgemeine Atlanten');
+define('LangAtlassesIntro05'            ,'W&auml;hlen Sie eines der drei Formate. Der Download erfolgt als PDF:');
+define('LangAtlassesIntro06'            ,'Personalisierte Atlanten');
+define('LangAtlassesIntro07'            ,"Sie k&Ouml;nnen eine individuelle Seite downloaden, dabei geben Sie die Koordinaten in der Ecke oben-links vor,<br />
+                                         oder Sie k&Ouml;nnen alle Seiten der kompletten Hemisphere downloaded.");
 define("LangDownloadsMenuTitle"         ,"Downloads");
-define("LangChangeAccountField13"													,"Motivation");
-define("LangChangeAccountField13Expl"											,"Please tell us briefly why you register, this allows us to eliminate automatic registrations.");
-define("LangValidateAccountMessage6"											,"Your name and / or first name are not correct.");
-define("LangValidateAccountMessage7"											,"The field 'Motivation' is not filled in.");
-define("LangAddSessionField12"					,"Picture");
-define("LangAddSessionField12Expl"			,"A picture showing the location of the session, a weather satellite picture, ...");
+define("LangChangeAccountField13"       ,"Motivation");
+define("LangChangeAccountField13Expl"   ,"Bitte beschreiben Sie uns kurz, warum Sie sich registrieren. Dies erm&Ouml;glicht uns automatische Registrierungen zu erkennen.");
+define("LangValidateAccountMessage6"     ,"Ihr Name und / oder Vorname sind nicht korrekt.");
+define("LangValidateAccountMessage7"    ,"Das Feld 'Motivation' wurde nicht ausgef&uuml;llt.");
+define("LangAddSessionField12"          ,"Bild");
+define("LangAddSessionField12Expl"      ,"Ein Bild der Sitzung. (z.B. des Beobachtungsortes, Wetters, Sattelitenbild, etc.)");
 
 // This is version 4.2
 define("LangChangeSessionButton"        ,"&Uuml;bernehme Sitzung");
