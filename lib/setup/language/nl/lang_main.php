@@ -6,7 +6,7 @@ define('LangAtlasPageOrientation'       ,"Pagina ori&euml;ntatie");
 define('LangAtlasPageSize'              ,"Pagina-grootte:");
 define('LangPageGenerationra'           ,'Generatie rechte klimming (h m s):');
 define('LangPageGenerationdecl'         ,'declinatie (h m s):');
-define('LangAtlasButton1'               ,"0verzicht");
+define('LangAtlasButton1'               ,"Overzicht");
 define('LangAtlasButton2'               ,"Opzoeken");
 define('LangAtlasButton3'               ,"Detail");
 define('LangAtlasButton4'               ,"Overzicht - Pagina");
