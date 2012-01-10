@@ -80,11 +80,10 @@ function generateallonepassij(item,msie,i,j)
 	      if(tempdeclmin<10) tempdeclmin='0'+tempdeclmin;
 	    }
 	    else
-	    { tempdecl=Math.floor(decl,0)+1;
-	      tempdeclmin=Math.round(-(decl-tempdecl)*60,1);
-	      tempdecl=-tempdecl;
-	      if(tempdecl<10) tempdecl='0'+tempdecl;
-	      if(tempdeclmin<10) tempdeclmin='0'+tempdeclmin;
+	    { tempdecl=Math.floor(Math.abs(decl),0);
+        tempdeclmin=Math.round((Math.abs(decl)-tempdecl)*60,1);
+        if(tempdecl<10) tempdecl='0'+tempdecl;
+        if(tempdeclmin<10) tempdeclmin='0'+tempdeclmin;
 	      tempdecl='-'+tempdecl;
 	    }	
 
