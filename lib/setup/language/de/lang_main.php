@@ -9,26 +9,31 @@ define('LangPageGenerationdecl'         ,'Deklination (h m s):');
 define('LangAtlasButton1'               ,"&uuml;bersicht");
 define('LangAtlasButton2'               ,"Nachschlagen");
 define('LangAtlasButton3'               ,"Detail");
-define('LangAtlasButton4'               ,"&uuml;bersicht - Seite");
+define('LangAtlasButton4'               ,"&Uuml;bersicht - Seite");
 define('LangAtlasButton5'               ,"Nachschlagen - Seite");
 define('LangAtlasButton6'               ,"Detail - Seite");
 define('LangAtlasButton7'               ,"&uuml;bersicht - Ganzer Atlas");
 define('LangAtlasButton8'               ,"Nachschlagen - Ganzer Atlas");
 define('LangAtlasButton9'               ,"Detail - Ganzer Atlas");
+define('LangAtlasGenerateCompleteAtlas' ,'Generiere komplette Atlante (nicht in Internet Explorer)');
+define('LangAtlasGenerateOnePage'       ,'Generiere eine Seite');
 define('LangAtlasGenerationTimes'       ,"Generierung kann etwas dauern (zwischen 20min (&uuml;bersicht DinA4) und mehreren Stunden (&uuml;bersicht DinA3)).");
-define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - Keine Ver&Ouml;ffentlichung ohne vorherige Genehmigung - Objekt Datenbank basierend auf Eye&Telescope - Sternen Datenbank basierend auf Tycho 2+ sowie USNO UCAC3 (Zacharia).");
-define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - Keine Ver&Ouml;ffentlichung ohne vorherige Genehmigung");
+define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - Keine Ver&ouml;ffentlichung ohne vorherige Genehmigung - Objekt Datenbank basierend auf Eye&Telescope - Sternen Datenbank basierend auf Tycho 2+ sowie USNO UCAC3 (Zacharia).");
+define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - Keine Ver&ouml;ffentlichung ohne vorherige Genehmigung");
 define('LangAtlasDataSource2'           ,"Objekt Datenbank basierend auf Eye&Telescope - Sternen Datenbank basierend auf Tycho 2+ sowie USNO UCAC3 (Zacharia).");
 define("ObjectsSeenGraph"               ,"Objekt Typen gesehen : ");
 $REST = "Rest";
 define("GraphObservations"              ,"Beobachtungen");
 define("GraphSource"                    ,"Quelle: ");
 define("GraphTitle1"                    ,"Anzahl der Beobachtungen pro Jahr: ");
+define("GraphInfo"                      ,"Info");
+define("GraphObservationsTitle"         ,"Beobachtungen pro Jahr");
+define("GraphObservationsType"          ,"Object Typen gesehen");
 define("AtlasExample"                   ,"Nachschlagen der Atlas Seite f&uuml;r M 45");
 define("ImageCatalogExample"            ,"Beispielseite f&uuml;r Abell 84");
-define("ImageCatalogDescription1"       ,"DeepskyLog ist ein m&auml;chtiges Werkzeug. Sie k&Ouml;nnen u.a. personalisierte Atlanten und Bildb&auml;nde erzeugen.");
+define("ImageCatalogDescription1"       ,"DeepskyLog ist ein m&auml;chtiges Werkzeug. Sie k&ouml;nnen u.a. personalisierte Atlanten und Bildb&auml;nde erzeugen.");
 define("ImageCatalogDescription2"       ,"Das Erstellen Ihres eigenen Bildbandes ist zeitaufw&auml;ndig. Um Ihnen die Arbeit zu erleichtern bieten wir einige interessante Bildb&auml;nde bereits zum Download an.");
-define("ImageCatalogDescription3"       ,"Klicken Sie auf eines der Beispiele um eine Voransicht zu bekommen. Diese Bildb&auml;nde sind sehr n&uuml;tzlich f&uuml;r Teleskope mit Goto-System, bei denen Sie durch das Goto-System in die N&auml;he eines Objektes gef&uuml;hrt werden. Mittels des Bilder ist es so einfach m&Ouml;glich das gesuchte Objekt zu finden.");
+define("ImageCatalogDescription3"       ,"Klicken Sie auf eines der Beispiele um eine Voransicht zu bekommen. Diese Bildb&auml;nde sind sehr n&uuml;tzlich f&uuml;r Teleskope mit Goto-System, bei denen Sie durch das Goto-System in die N&auml;he eines Objektes gef&uuml;hrt werden. Mittels des Bilder ist es so einfach m&ouml;glich das gesuchte Objekt zu finden.");
 define("ImageCatalogDescription4"       ,"Kataloge sortiert nach Namen");
 define("ImageCatalogDescription5"       ,"Kataloge sortiert nach Sternbildern");
 define("ImageCatalogAbell"              ,"The Abell Planetary Nebula Catalog");
@@ -38,26 +43,26 @@ define("LangpdfOrientationLandscape"    ,"Landschaft");
 define("LangSearchMenuItem14"           ,"Bildb&auml;nde");
 define("LangSearchMenuItem13"           ,"Atlanten");
 define('LangAtlassesIntro00'            ,'Allgemeine Informationen');
-define('LangAtlassesIntro01'            ,"Sie k&Ouml;nnen drei Arten von Atlanten downloaden:<br />
+define('LangAtlassesIntro01'            ,"Sie k&ouml;nnen drei Arten von Atlanten downloaden:<br />
                                           - <b>&uuml;bersicht</b>s Atlanten haben Seiten mit je 20 Grad und Sternen bis zu Mag 8;<br />
                                           - <b>Nachschlage</b> Atlanten haben Seiten mit je 10 Grad und Sternen bis zu Mag 11;<br />
                                           - <b>Detail</b> Atlanten haben Seiten mit je 5 Grad und Sternen bis zu Mag 14.<br/><br/>
                                           Jeder Atlas zeigt an, ob f&uuml;r ein Objekt bereits eine Beobachtung in Deepskylog existiert (gestrichelt unterstrichen)<br />
                                           oder sogar eine Beobachtung von Ihnen vorliegt (personalisierte Atlanten f&uuml;r registrierte Benutzer, unterstrichen bzw. &uuml;berstrichen wenn eine Zeichnung hinzugef&uuml;gt wurde).");
 define('LangAtlassesIntro02'            ,'Allgemeine Atlanten / Personalisierte Atlanten');
-define('LangAtlassesIntro03'            ,'Sie k&Ouml;nnen zu allgemeinen Atlanten wechseln, oder (wenn Sie angemeldet sind) zu personalisierten Atlanten.<br>
+define('LangAtlassesIntro03'            ,'Sie k&ouml;nnen zu allgemeinen Atlanten wechseln, oder (wenn Sie angemeldet sind) zu personalisierten Atlanten.<br>
                                          - Allgemeine Atlanten sind vorgefertigt und bereit zum Download (als PDF)<br/>
-                                         - Personalisierte Atlanten werden f&uuml;r Sie pers&Ouml;nlich, Seite f&uuml;r Seite, (als PDF) generiert.<br /><br />
-                                         Personalisierte Atlanten ben&Ouml;togen etwas Zeit (f&uuml;r eine Seite) oder sehr viel Zeit (f&uuml;r komplette Atlanten).<br />
-                                         Ferner ben&Ouml;tigen Sie eine Software welche Ihnen die generierten Seiten zusammenf&uuml;gt.');
+                                         - Personalisierte Atlanten werden f&uuml;r Sie pers&ouml;nlich, Seite f&uuml;r Seite, (als PDF) generiert.<br /><br />
+                                         Personalisierte Atlanten ben&ouml;togen etwas Zeit (f&uuml;r eine Seite) oder sehr viel Zeit (f&uuml;r komplette Atlanten).<br />
+                                         Ferner ben&ouml;tigen Sie eine Software welche Ihnen die generierten Seiten zusammenf&uuml;gt.');
 define('LangAtlassesIntro04'            ,'Allgemeine Atlanten');
 define('LangAtlassesIntro05'            ,'W&auml;hlen Sie eines der drei Formate. Der Download erfolgt als PDF:');
 define('LangAtlassesIntro06'            ,'Personalisierte Atlanten');
-define('LangAtlassesIntro07'            ,"Sie k&Ouml;nnen eine individuelle Seite downloaden, dabei geben Sie die Koordinaten in der Ecke oben-links vor,<br />
-                                         oder Sie k&Ouml;nnen alle Seiten der kompletten Hemisphere downloaded.");
+define('LangAtlassesIntro07'            ,"Sie k&ouml;nnen eine individuelle Seite downloaden, dabei geben Sie die Koordinaten in der Ecke oben-links vor,<br />
+                                         oder Sie k&ouml;nnen alle Seiten der kompletten Hemisphere downloaded.");
 define("LangDownloadsMenuTitle"         ,"Downloads");
 define("LangChangeAccountField13"       ,"Motivation");
-define("LangChangeAccountField13Expl"   ,"Bitte beschreiben Sie uns kurz, warum Sie sich registrieren. Dies erm&Ouml;glicht uns automatische Registrierungen zu erkennen.");
+define("LangChangeAccountField13Expl"   ,"Bitte beschreiben Sie uns kurz, warum Sie sich registrieren. Dies erm&ouml;glicht uns automatische Registrierungen zu erkennen.");
 define("LangValidateAccountMessage6"     ,"Ihr Name und / oder Vorname sind nicht korrekt.");
 define("LangValidateAccountMessage7"    ,"Das Feld 'Motivation' wurde nicht ausgef&uuml;llt.");
 define("LangAddSessionField12"          ,"Bild");
@@ -707,8 +712,8 @@ define("LangQuickPickSearchObservations"									,"Beobachtungssuche");
 define("LangQuickPickNewObservation"											,"Neue&nbsp;Beobachtung");
 define("LangListsTitle"																		,"Beobachtungslist");
 define("LangListsAnnouncement"														,"In der n&auml;chsten Version von DeekskyLog wird es m&ouml;glich sein, da&szlig; Beobachter ihre eigene Beobachtungsliste zusammenstellen, editieren, speichern und ausdrucken. Beobachtungslisten k&ouml;nnen erstellt werden &uuml;ber die Position des Objektes am Himmel, den Typ des Objektes, ob das Objekt bereits beobachtet wurde, usw.");
-define("LangMailtoTitle"																	,"Feedback!");
-define("LangMailtoLink"																		,"<a href=\"mailto:&#100;&#101;v&#101;lop&#101;rs&#64;&#100;&#101;&#101;pskylog.&#98;&#101;\">Feedback</a>.");
+define("LangMailtoTitle"																	,"Feedback");
+define("LangMailtoLink"																		,"<a href=\"mailto:&#100;&#101;v&#101;lop&#101;rs&#64;&#100;&#101;&#101;pskylog.&#98;&#101;\">Feedback</a>");
 
 // deepsky/content/view_object
 define("LangObjectNewName"																,"Neuer Name");
@@ -786,8 +791,8 @@ define("LangSearchDetailPage"															,"Detailierte Suche.");
 define("LangChangeMenuTitle"															,"Neu / &Auml;ndern");
 define("LangChangeMenuItem1"															,"Benutzer Details");
 define("LangChangeMenuItem2"															,"Neue Beobachtung anlegen");
-define("LangChangeMenuItem3"															,"Neues Beobachtungsger&auml;t anlegen");
-define("LangChangeMenuItem4"															,"Neuen Beobachtungsplatz anlegen");
+define("LangChangeMenuItem3"															,"Beobachtungsger&auml;t");
+define("LangChangeMenuItem4"															,"Beobachtungsplatz");
 define("LangChangeMenuItem5"															,"Neues Objekt anlegen");
 define("LangChangeMenuItem6"															,"Okulare");
 define("LangChangeMenuItem7"															,"Filter");

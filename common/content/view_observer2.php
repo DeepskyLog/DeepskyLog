@@ -15,9 +15,9 @@ function view_observer()
 	$objPresentations->line(array("<h4>".$firstname.' '. $name."</h4>"),"L",array(),30);
 	echo "<hr />";
 	echo "<ol id=\"toc\">
-	       <li><a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $user . "\"><span>Info</span></a></li>
-	       <li><a href=\"" . $baseURL . "index.php?indexAction=detail_observer1&user=" . $user . "\"><span>Observations per year</span></a></li>
-	       <li class=\"current\"><a href=\"" . $baseURL . "index.php?indexAction=detail_observer2&user=" . $user . "\"><span>Object types observed</span></a></li>
+	       <li><a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $user . "\"><span>" . GraphInfo . "</span></a></li>
+	       <li><a href=\"" . $baseURL . "index.php?indexAction=detail_observer1&user=" . $user . "\"><span>" . GraphObservationsTitle . "</span></a></li>
+	       <li class=\"current\"><a href=\"" . $baseURL . "index.php?indexAction=detail_observer2&user=" . $user . "\"><span>" . GraphObservationsType . "</span></a></li>
 	      </ol>";
    // Pie chart                  
   $objectsArray = array();
