@@ -52,8 +52,11 @@ function headmenu()
 	// Select the standard location and instrument
 	if($loggedUser)                                                                            // LOGGED IN
 	{
+      if(array_key_exists('admin', $_SESSION)&&($_SESSION['admin']!='yes'))
+      {
 	  require_once 'common/menu/location.php';
 		require_once 'common/menu/instrument.php';
+      }
 	}
 	
 	// Select the modules
