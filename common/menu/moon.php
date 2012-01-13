@@ -145,18 +145,20 @@ function menu_moon()
 	    echo "<tr class=\"menuText\">";
 	    echo "<th>".LangMoonNight."</th>"."<th>".LangFrom."</th>"."<th>".LangTo."</th>";
 	    echo "</tr>";
-	    echo "<tr>";
-	    echo "<td>".LangMoon."</td>"."<td>".$_SESSION['efemerides']['moon0']."</td>"."<td>".$_SESSION['efemerides']['moon2']."</td>";
-	    echo "</tr>";
-	    echo "<tr>";
-	    echo "<td>".LangMoonSun."</td>"."<td>".$_SESSION['efemerides']['sset']."</td>"."<td>".$_SESSION['efemerides']['srise']."</td>";
-	    echo "</tr>";
-	    echo "<tr>";
-	    echo "<td>".LangMoonNaut."</td>"."<td>".$_SESSION['efemerides']['naute']."</td>"."<td>".$_SESSION['efemerides']['nautb']."</td>";
-	    echo "</tr>";
-	    echo "<tr>";
-	    echo "<td>".LangMoonAstro."</td>"."<td>".$_SESSION['efemerides']['astroe']."</td>"."<td>".$_SESSION['efemerides']['astrob']."</td>";
-	    echo "</tr>";
+        if (isset($_SESSION['efemerides'])) {
+	      echo "<tr>";
+	      echo "<td>".LangMoon."</td>"."<td>".$_SESSION['efemerides']['moon0']."</td>"."<td>".$_SESSION['efemerides']['moon2']."</td>";
+	      echo "</tr>";
+	      echo "<tr>";
+	      echo "<td>".LangMoonSun."</td>"."<td>".$_SESSION['efemerides']['sset']."</td>"."<td>".$_SESSION['efemerides']['srise']."</td>";
+	      echo "</tr>";
+	      echo "<tr>";
+	      echo "<td>".LangMoonNaut."</td>"."<td>".$_SESSION['efemerides']['naute']."</td>"."<td>".$_SESSION['efemerides']['nautb']."</td>";
+	      echo "</tr>";
+	      echo "<tr>";
+	      echo "<td>".LangMoonAstro."</td>"."<td>".$_SESSION['efemerides']['astroe']."</td>"."<td>".$_SESSION['efemerides']['astrob']."</td>";
+	      echo "</tr>";
+        }
 	    echo "</table>";
 	  }
 	  $file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
