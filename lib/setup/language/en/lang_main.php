@@ -1767,8 +1767,8 @@ $Seeing4								="Poor";
 $Seeing5								="Bad";
 
 //Names of Months
-$Month1									="Januar";
-$Month2									="Februar";
+$Month1									="January";
+$Month2									="February";
 $Month3									="March";
 $Month4									="April";
 $Month5									="May";
