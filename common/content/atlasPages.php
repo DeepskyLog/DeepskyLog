@@ -7,7 +7,7 @@ else atlasPages();
 
 
 function atlasPages()
-{ global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout, $objUtil, $MSIE,$dirAtlasses;
+{ global $objObserver, $loggedUser, $baseURL, $loggedUserName, $objReportLayout, $objUtil, $MSIE,$dirAtlasses, $language;
   echo "<script type=\"text/javascript\">";
   echo "var Langpdfseriesclickok='".Langpdfseriesclickok."';";
   echo "var Langpdfserieswhenfinished='".Langpdfserieswhenfinished."';";
@@ -26,25 +26,33 @@ function atlasPages()
 	echo "<p>".LangAtlassesIntro01."</p>";
 	echo "<h2>".LangAtlassesIntro02."</h2>";
 	echo "<p>".LangAtlassesIntro03."</p>";
+
+	echo "<h3>".LangAtlasChoosePageLayout."</h3>";
+	echo "<hr />";
+	echo "<p>";
+	echo LangAtlasPageOrientation;
+	echo '<input type="radio" id="pageorientationportrait" name="pageorientation" value="portrait" checked="checked"/>'.LangpdfOrientationPortrait;
+	echo '<input type="radio" id="pageorientationlandscape" name="pageorientation" value="landscape" />'.LangpdfOrientationLandscape;
+	echo "</p>";
+	echo "<p>";
+	echo LangAtlasPageSize;
+	echo '<input type="radio" id="pagesizea4" name="pagesize" value="a4" checked="checked"/>'.'A4';
+	echo '<input type="radio" id="pagesizea3" name="pagesize" value="a3" />'.'A3';
+	echo "</p>";
+	echo "<hr />";
+	
+	
 	echo "<h1>".LangAtlassesIntro04."</h1>";
 	echo "<hr />";
 	echo "<p>".LangAtlassesIntro05."</p>";
-  echo '<input type="button" class="width200px" value ="'.LangAtlasButton1.'" onclick="location.href=\''.$dirAtlasses.'OverviewAtlas.pdf\';" /> ';
+	echo '<input type="button" class="width200px" value ="'.LangAtlasButton1.'" onclick="location.href=\''.$dirAtlasses.strtoupper($_SESSION['lang']).'\'+(document.getElementById(\'pagesizea3\').checked?\'A3\':\'A4\')+\'O\'+(document.getElementById(\'pageorientationportrait\').checked?\'P\':\'L\')+\'.pdf\';" /> ';
   echo '<input type="button" class="width200px" value ="'.LangAtlasButton2.'" onclick="location.href=\''.$dirAtlasses.'LookupAtlas.pdf\');" /> ';
   echo '<input type="button" class="width200px" value ="'.LangAtlasButton3.'" onclick="alert(\'wordt ge&iuml;mplementeerd\');" />';
-	echo "<h1>".LangAtlassesIntro06."</h1>";
-	echo "<hr />";
+
+  echo "<h1>".LangAtlassesIntro06."</h1>";
+	echo'<p><b>'.LangAtlasBrowserInfo.'</b></p>';
 	echo "<p>".LangAtlassesIntro07."</p>";
-  echo "<p>";
-  echo LangAtlasPageOrientation;
-  echo '<input type="radio" id="pageorientationportrait" name="pageorientation" value="portrait" checked="checked"/>'.LangpdfOrientationPortrait;
-  echo '<input type="radio" id="pageorientationlandscape" name="pageorientation" value="landscape" />'.LangpdfOrientationLandscape;
-  echo "</p>";
-  echo "<p>";
-  echo LangAtlasPageSize;
-  echo '<input type="radio" id="pagesizea4" name="pagesize" value="a4" checked="checked"/>'.'A4';
-  echo '<input type="radio" id="pagesizea3" name="pagesize" value="a3" />'.'A3';
-  echo "</p>";
+	echo "<hr />";
   
   echo "<h2>".LangAtlasGenerateOnePage."</h2>";
   echo LangPageGenerationra.' ';

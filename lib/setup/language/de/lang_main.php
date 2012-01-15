@@ -1,4 +1,9 @@
 <?php //GE
+
+define('LangAtlasChoosePageLayout'      ,'First choose your page layout');
+define('LangAtlasBrowserInfo'           ,'The personalised atlasses are only available in Firefox, Chrome and Opera at this time.');
+
+
 // This is version 4.3
 define('atlasPageCenteredOn'            ,'Zentriert auf ');
 define('LangNoIndexEntries'             ,"Keine index Eintr&auml;ge");

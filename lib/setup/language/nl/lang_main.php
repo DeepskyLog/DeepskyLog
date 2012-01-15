@@ -1,5 +1,7 @@
 <?php //NL
 // This is version 4.3
+define('LangAtlasChoosePageLayout'      ,'Kies eerst je pagina layout');
+define('LangAtlasBrowserInfo'           ,'De gepersonaliseerde atlassen zijn enkel beschikbaar in Firefox, Chorme en Opera op dit moment.');
 define('atlasPageCenteredOn'            ,'Centrum op ');
 define('LangNoIndexEntries'             ,"Geen index elementen");
 define('LangAtlasPageOrientation'       ,"Pagina ori&euml;ntatie");
