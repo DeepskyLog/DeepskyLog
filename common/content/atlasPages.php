@@ -46,8 +46,8 @@ function atlasPages()
 	echo "<hr />";
 	echo "<p>".LangAtlassesIntro05."</p>";
 	echo '<input type="button" class="width200px" value ="'.LangAtlasButton1.'" onclick="location.href=\''.$dirAtlasses.strtoupper($_SESSION['lang']).'\'+(document.getElementById(\'pagesizea3\').checked?\'A3\':\'A4\')+\'O\'+(document.getElementById(\'pageorientationportrait\').checked?\'P\':\'L\')+\'.pdf\';" /> ';
-  echo '<input type="button" class="width200px" value ="'.LangAtlasButton2.'" onclick="location.href=\''.$dirAtlasses.'LookupAtlas.pdf\');" /> ';
-  echo '<input type="button" class="width200px" value ="'.LangAtlasButton3.'" onclick="alert(\'wordt ge&iuml;mplementeerd\');" />';
+  echo '<input type="button" class="width200px" value ="'.LangAtlasButton2.'" onclick="location.href=\''.$dirAtlasses.strtoupper($_SESSION['lang']).'\'+(document.getElementById(\'pagesizea3\').checked?\'A3\':\'A4\')+\'L\'+(document.getElementById(\'pageorientationportrait\').checked?\'P\':\'L\')+\'.pdf\';" /> ';
+  echo '<input type="button" class="width200px" value ="'.LangAtlasButton3.'" onclick="location.href=\''.$dirAtlasses.strtoupper($_SESSION['lang']).'\'+(document.getElementById(\'pagesizea3\').checked?\'A3\':\'A4\')+\'D\'+(document.getElementById(\'pageorientationportrait\').checked?\'P\':\'L\')+\'.pdf\';" /> ';
 
   echo "<h1>".LangAtlassesIntro06."</h1>";
 	echo'<p><b>'.LangAtlasBrowserInfo.'</b></p>';
