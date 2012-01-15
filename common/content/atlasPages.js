@@ -204,6 +204,7 @@ function generateone(msie)
           'decl='+decl+'&'+
           'stars='+stars+'&'+
           'dsos='+dsos+'&'+
+          'atlastype='+atlastype+'&'+
           'zoom='+zoom+'&'+
           'pageorientation=';
   if(document.getElementById('pageorientationportrait').checked)
@@ -236,23 +237,53 @@ function setradecl()
 }
 function generateoneoverview(i,msie)
 { setradecl();
-  stars=11;
-  dsos=12;
+  if(document.getElementById('pagesizea4').checked)
+  { stars=10;
+    dsos=10;
+  }
+  else if(document.getElementById('pagesizea3').checked) 
+  {	stars=11;
+    dsos=12;
+  }
   zoom=13;
+  if(document.getElementById('pageorientationportrait').checked)
+  	atlastype=0;
+  else
+  	atlastype=3;
   generateone(msie);
 }
 function generateonelookup(i,msie)
 { setradecl();
-  stars=13;
-  dsos=14;
+  if(document.getElementById('pagesizea4').checked)
+  { stars=12;
+	dsos=12;
+  }
+  else if(document.getElementById('pagesizea3').checked)
+  { stars=13;
+	dsos=14;
+  }
   zoom=15;
+  if(document.getElementById('pageorientationportrait').checked)
+	    atlastype=1;
+  else
+	atlastype=4;
   generateone(msie);
 }
 function generateonedetail(i,msie)
 { setradecl();
-  stars=15;
-  dsos=20;
+  if(document.getElementById('pagesizea4').checked)
+  { stars=14;
+    dsos=20; 
+  }
+  else if(document.getElementById('pagesizea3').checked)
+  { stars=15;
+    dsos=20;
+  }
   zoom=17;
+  if(document.getElementById('pageorientationportrait').checked)
+	    atlastype=2;
+  else
+	atlastype=5;
   generateone(msie);
 }
 function generateoverviewallonepass(item,msie,stepra,stepdecl)
