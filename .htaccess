@@ -1,4 +1,4 @@
-php_value memory_limit 512M
+php_value memory_limit 768M
 
 <IfModule mod_rewrite.c>
 RewriteEngine on
