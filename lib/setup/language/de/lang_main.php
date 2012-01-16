@@ -1,7 +1,7 @@
 <?php //GE
 
-define('LangAtlasChoosePageLayout'      ,'First choose your page layout');
-define('LangAtlasBrowserInfo'           ,'The personalised atlasses are only available in Firefox, Chrome and Opera at this time.');
+define('LangAtlasChoosePageLayout'      ,'W&auml;hlen Sie zuerst ein Seitenformat');
+define('LangAtlasBrowserInfo'           ,'Personalisierte Atlanten sind zurzeit nur in Firefox, Chrome und Opera m&ouml;glich.');
 
 
 // This is version 4.3
