@@ -689,11 +689,11 @@ class Objects
           $result2[$j]['objectmagnitude'] =  ($get->mag==99.9?'':round($get->mag,1));
           $result2[$j]['objectsurfacebrightness'] =  ($get->subr==99.9?'':round($get->subr,1));
   	      $result2[$j]['objectra'] =  $get->ra;
-  	      $result2[$j]['objectrahms'] =  $objPresentations->raToStringHM($result2[$j]['objectra']);
+  	      $result2[$j]['objectrahms'] =  $objPresentations->raToStringHMS($result2[$j]['objectra']);
   	      $result2[$j]['objectdecl'] =  $get->decl;
-  	      $result2[$j]['objectdecldms'] =  $objPresentations->decToString($result2[$j]['objectdecl'],0);
-  	      $result2[$j]['objectradecl'] = $objPresentations->raToStringHM($result2[$j]['objectra']).' '.
-				                                 $objPresentations->decToString($result2[$j]['objectdecl'],0);
+  	      $result2[$j]['objectdecldms'] =  $objPresentations->decToStringDegMinSec($result2[$j]['objectdecl'],0);
+  	      $result2[$j]['objectradecl'] = $objPresentations->raToStringHMS($result2[$j]['objectra']).' '.
+				                                 $objPresentations->decToStringDegMinSec($result2[$j]['objectdecl'],0);
   	      $result2[$j]['objectdiam1'] = $get->diam1;
   	      $result2[$j]['objectdiam2'] = $get->diam2;
   	      $result2[$j]['objectsize'] = $this->calculateSize($get->diam1,$get->diam2);
@@ -1126,7 +1126,7 @@ class Objects
 	   $objPresentations->line(array(LangViewObjectField1,"<a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=".urlencode(stripslashes($object))."\">".(stripslashes($object))."</a>",
 	                                "&nbsp;","&nbsp;"),
 	                          "RLRL",array(),20,array("type20","type20","type20","type20"));
-	  $objPresentations->line(array(LangViewObjectField3,$objPresentations->raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,$objPresentations->decToStringDegMin($this->getDsoProperty($object,'decl'))),
+	  $objPresentations->line(array(LangViewObjectField3,$objPresentations->raToString($this->getDsoProperty($object,'ra')),LangViewObjectField4,$objPresentations->decToStringDegMinSec($this->getDsoProperty($object,'decl'))),
                             "RLRL",array(),20,array("type20","type20","type20","type20"));
     $objPresentations->line(array(LangViewObjectField5,$GLOBALS[$this->getDsoProperty($object,'con')],LangViewObjectField6,$GLOBALS[$this->getDsoProperty($object,'type')]),
  	                          "RLRL",array(),20,array("type10","type10","type10","type10"));

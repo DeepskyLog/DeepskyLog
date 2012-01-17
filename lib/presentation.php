@@ -84,6 +84,27 @@ class Presentations
     }
     return($sign.sprintf("%02d",$decl_degrees)."&deg;".sprintf("%02d",$decl_minutes)."&#39;");
   }
+  public  function decToStringDegMinSec($decl,$web=1)
+  { $sign="";
+    if($decl<0)
+    { $sign='-';
+      $decl=-$decl;
+    }
+    $decl_degrees=floor($decl);
+    $subminutes=60*($decl-$decl_degrees);
+    $decl_minutes=floor($subminutes);
+    $subseconds=60*($subminutes-$decl_minutes);
+    $decl_seconds=round($subseconds);
+    if($decl_seconds==60)
+    { $decl_seconds=0;
+    	$decl_minutes++;
+    }
+    if($decl_minutes==60)
+    { $decl_minutes=0;
+      $decl_degrees++;
+    }
+    return($sign.sprintf("%02d",$decl_degrees).(($web==1)?"&deg;":"d").sprintf("%02d",$decl_minutes).(($web==1)?"&#39;":"m").sprintf("%02d",$decl_seconds).(($web==1)?"&quot;":"s"));
+  }
   public  function decToStringDSL($decl)
   { if($decl<0)
     { $sign="m";
@@ -340,6 +361,24 @@ class Presentations
     if($ra_hours == 24)
       $ra_hours = 0;
     return sprintf('%02d',($ra_hours%24)).'h'.sprintf('%02d',$ra_minutes).'m';
+  }
+  public  function raToStringHMS($ra)
+  { $ra_hours=floor($ra);
+    $subminutes=60*($ra-$ra_hours);
+    $ra_minutes=floor($subminutes);
+    $subseconds=60*($subminutes-$ra_minutes);
+    $ra_seconds=round($subseconds);
+    if($ra_seconds==60)
+    { $ra_seconds=0;
+      $ra_minutes++;
+    }
+    if($ra_minutes==60)
+    { $ra_minutes=0;
+      $ra_hours++;
+    } 
+    if($ra_hours == 24)
+      $ra_hours = 0;
+    return sprintf('%02d',($ra_hours%24)).'h'.sprintf('%02d',$ra_minutes).'m'.sprintf('%02d',$ra_seconds).'s';
   }
   public function searchAndLinkCatalogsInText($theText)
   { global $baseURL;

@@ -1120,8 +1120,8 @@ class Utils
       $alt=($alt?substr($alt,3):'');
       echo $valueA['objectname'].";". 
            $alt.";".
-           $objPresentations->raToString($valueA['objectra']).";".
-           $objPresentations->decToString($valueA['objectdecl'], 0).";".
+           $objPresentations->raToStringHMS($valueA['objectra']).";".
+           $objPresentations->decToStringDegMinSec($valueA['objectdecl'], 0).";".
            $GLOBALS[$valueA['objectconstellation']].";".
            $GLOBALS[$valueA['objecttype']].";".
            $objPresentations->presentationInt1($valueA['objectmagnitude'],99.9,'').";".
