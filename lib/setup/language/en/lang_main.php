@@ -1118,9 +1118,9 @@ define("LangViewObjectNoNearbyObjects"										," - there are no other objects 
 define("LangViewObjectNearbyObjectsMore"									,"More objects");
 define("LangViewObjectNearbyObjectsLess"									,"Less objects");
 define("LangViewObjectNearbyObjectsMoreLess"							,"up to about ");
-define("LangViewObjectNGCDescription"											,"NGC description");
+define("LangViewObjectNGCDescription"											,"Description");
 define("LangViewObjectListDescription"										,"List description");
-define("LangViewObjectDreyerDescription"									,"Dreyer codes");
+define("LangViewObjectDreyerDescription"									,"NGC/IC, Dreyer codes");
 
 // content/view_observers.php
 
@@ -1835,6 +1835,7 @@ $SMCCN 									="Cluster with nebulosity in SMC";
 $SMCDN 									="Diffuse nebula in SMC";
 $SMCGC 									="Globular cluster in SMC";
 $SMCOC 									="Open cluster in SMC";
+$SNOVA                  ="Supernova";
 $SNREM 									="Supernova remnant";
 $STNEB 									="Nebula around star";
 $QUASR 									="Quasar";

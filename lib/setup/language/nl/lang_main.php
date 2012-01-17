@@ -1114,9 +1114,9 @@ define("LangViewObjectNoNearbyObjects"										," - er zijn geen andere objecte
 define("LangViewObjectNearbyObjectsMore"									,"Meer objecten");
 define("LangViewObjectNearbyObjectsLess"									,"Minder objecten");
 define("LangViewObjectNearbyObjectsMoreLess"						  ,"tot op ongeveer ");
-define("LangViewObjectNGCDescription"											,"NGC omschrijving");
+define("LangViewObjectNGCDescription"											,"Omschrijving");
 define("LangViewObjectListDescription"										,"Lijst omschrijving");
-define("LangViewObjectDreyerDescription"									,"Dreyer codes");
+define("LangViewObjectDreyerDescription"									,"NGC/IC, Dreyer codes");
 
 // content/view_observers.php
 
@@ -1831,6 +1831,7 @@ $SMCCN 									="Cluster met nevel in SMC";
 $SMCDN 									="Diffuse nevel in SMC";
 $SMCGC 									="Bolhoop in SMC";
 $SMCOC 									="Open sterrenhoop in SMC";
+$SNOVA                  ="Supernova";
 $SNREM 									="Supernova restant";
 $STNEB 									="Nevel rond ster";
 $QUASR 									="Quasar";

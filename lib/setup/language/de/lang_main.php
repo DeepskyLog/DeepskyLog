@@ -1129,9 +1129,9 @@ define("LangViewObjectNoNearbyObjects"										," - es gibt keine anderen Objek
 define("LangViewObjectNearbyObjectsMore"									,"Mehr Objekte");
 define("LangViewObjectNearbyObjectsLess"									,"Weniger Objekte");
 define("LangViewObjectNearbyObjectsMoreLess"							,"bis zu ");
-define("LangViewObjectNGCDescription"											,"NGC Beschreibung");
+define("LangViewObjectNGCDescription"											,Beschreibung");
 define("LangViewObjectListDescription"										,"Listen Beschreibung");
-define("LangViewObjectDreyerDescription"									,"Dreyer Codes");
+define("LangViewObjectDreyerDescription"									,"NGC/IC, Dreyer Codes");
 
 // content/view_observers.php
 
@@ -1841,6 +1841,7 @@ $SMCCN 									="Sternhaufen mit Nebel in SMC";
 $SMCDN 									="Nebel in SMC";
 $SMCGC 									="Kugelsternhaufen in SMC";
 $SMCOC 									="Offener Sternhaufen in SMC";
+$SNOVA                  ="Supernova";
 $SNREM 									="Supernova &Uuml;berrest";
 $STNEB 									="Nebula around star";
 $QUASR 									="Quasar";

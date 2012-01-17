@@ -1095,9 +1095,9 @@ define("LangViewObjectNearbyObject"												,"objet proche: ");
 define("LangViewObjectNearbyObjectsMore"									,"Plus d'objets");
 define("LangViewObjectNearbyObjectsLess"									,"Moins d'objets");
 define("LangViewObjectNearbyObjectsMoreLess"							,"jusqu'&agrave; environ ");
-define("LangViewObjectNGCDescription"											,"Description NGC");
+define("LangViewObjectNGCDescription"											,"Description");
 define("LangViewObjectListDescription"										,"Description de liste");
-define("LangViewObjectDreyerDescription"									,"Codes de Dreyer");
+define("LangViewObjectDreyerDescription"									,"Codes de Dreyer, NGC/IC");
 
 // content/view_observers.php
 
@@ -1812,6 +1812,7 @@ $SMCCN 									="Amas avec n&eacute;bulosit&eacute; dans SMC";
 $SMCDN 									="N&eacute;bulosit&eacute; diffuse dans SMC";
 $SMCGC 									="Amas globulaire dans SMC";
 $SMCOC 									="Amas ouvert dans SMC";
+$SNOVA                  ="Supernova";
 $SNREM 									="Reste de supernova";
 $STNEB 									="N&eacute;buleuse autour d'une &eacute;toile";
 $QUASR 									="Quasar";
