@@ -6,24 +6,24 @@ define('LangAtlasBrowserInfo'           ,'The personalised atlasses are only ava
 
 
 // This is version 4.3
-define('atlasPageCenteredOn'            ,'Centered on ');
+define('atlasPageCenteredOn'            ,'Centr&eacute; sur ');
 define('LangNoIndexEntries'             ,"Pas d'entr&eacute;es dans l'index");
 define('LangAtlasPageOrientation'       ,"Pagina ori&euml;ntatie");
 define('LangAtlasPageSize'              ,"Pagina-grootte:");
 define('LangPageGenerationra'           ,'Generatie rechte klimming (h m s):');
-define('LangPageGenerationdecl'         ,'declinatie (h m s):');
-define('LangAtlasButton1'               ,"Overzicht");
-define('LangAtlasButton2'               ,"Opzoeken");
-define('LangAtlasButton3'               ,"Detail");
-define('LangAtlasButton4'               ,"Overzicht - Pagina");
-define('LangAtlasButton5'               ,"Opzoeken - Pagina");
-define('LangAtlasButton6'               ,"Detail - Pagina");
-define('LangAtlasButton7'               ,"Overzicht - Hele atlas");
-define('LangAtlasButton8'               ,"Opzoeken - Hele atlas");
-define('LangAtlasButton9'               ,"Detail - Hele atlas");
+define('LangPageGenerationdecl'         ,'d&eacut;clination (h m s):');
+define('LangAtlasButton1'               ,"Aper&ccedil;u");
+define('LangAtlasButton2'               ,"Chercher");
+define('LangAtlasButton3'               ,"D&eacute;tail");
+define('LangAtlasButton4'               ,"Aper&ccedil;u - Page");
+define('LangAtlasButton5'               ,"Chercher - Page");
+define('LangAtlasButton6'               ,"D&eacute;tail - Page");
+define('LangAtlasButton7'               ,"Aper&ccedil;u - Atlas complet");
+define('LangAtlasButton8'               ,"Chercher - Atlas complet");
+define('LangAtlasButton9'               ,"D&eacute;tail - Atlas complet");
 
-define('LangAtlasGenerateCompleteAtlas' ,'Genereer de volledige atlas (niet beschikbaar in Internet Explorer)');
-define('LangAtlasGenerateOnePage'       ,'Genereer een pagina');
+define('LangAtlasGenerateCompleteAtlas' ,'G&eacute;n&eacute;rer l’atlas complet (pas disponible avec Internet Explorer)');
+define('LangAtlasGenerateOnePage'       ,'G&eacute;n&eacute;rer une page');
 
 define('LangAtlasGenerationTimes'       ,"Les temps de g&eacute;n&eacute;ration varient entre 20 minutes (aper&ccedil;u A4) jusqu'&agrave; plusieures heures (Recherche A3).");
 define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).");
