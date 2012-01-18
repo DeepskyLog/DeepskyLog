@@ -1029,10 +1029,10 @@ class PrintAtlas
   
 
   function gridShowInfo()
-  { $t1 =atlasPageFoV.' '.(round($this->gridSpanL*20)/10)." x ".(round($this->gridSpanD*20)/10)."° - ";
-	  $t1.=atlasPageDSLM.' '.($this->maxshowndsomag==-99?'-':$this->maxshowndsomag)." - ";
-	  $t1.=atlasPageStarLM.' '.$this->starsmagnitude.' - ';
-	  $t1.='('.atlasPageCenteredOn.$this->coordHrDecToHrMin($this->atlaspagerahr).','.$this->coordDeclDecToDegMin($this->atlaspagedecldeg).')';
+  { $t1 =html_entity_decode(atlasPageFoV).' '.(round($this->gridSpanL*20)/10)." x ".(round($this->gridSpanD*20)/10)."° - ";
+	  $t1.=html_entity_decode(atlasPageDSLM).' '.($this->maxshowndsomag==-99?'-':$this->maxshowndsomag)." - ";
+	  $t1.=html_entity_decode(atlasPageStarLM).' '.$this->starsmagnitude.' - ';
+	  $t1.='('.html_entity_decode(atlasPageCenteredOn).$this->coordHrDecToHrMin($this->atlaspagerahr).','.$this->coordDeclDecToDegMin($this->atlaspagedecldeg).')';
 	  $this->pdf->addText($this->gridOffsetXpx,20,$this->fontSize1a,$t1);
 	}
   
@@ -1056,36 +1056,36 @@ class PrintAtlas
     
     global $GALXY,$PLNNB,$GLOCL,$OPNCL,$DRKNB,$EMINB,$CLANB,$GALCL,$QUASR;
     $this->pdf->ellipse(50, 53, 5, 2.5, -45);
-    $this->pdf->addTextWrap(60, 50, 300, $this->fontSize1b, $GALXY, 'left');
+    $this->pdf->addTextWrap(60, 50, 300, $this->fontSize1b, html_entity_decode($GALXY), 'left');
     
     $this->pdf->ellipse(50, 70+3, 2.5, 2.5, 0);
     $this->pdf->line(55, 70+3, 52.5, 70+3);
     $this->pdf->line(45, 70+3, 47.5, 70+3);
     $this->pdf->line(50, 70+5.5, 50, 70+8);
     $this->pdf->line(50, 70+0.5, 50, 70-2);
-    $this->pdf->addTextWrap(60, 70, 300, $this->fontSize1b, $PLNNB, 'left');
+    $this->pdf->addTextWrap(60, 70, 300, $this->fontSize1b, html_entity_decode($PLNNB), 'left');
     
     $this->pdf->ellipse(50, 90+3, 5, 5, 0);
     $this->pdf->line(45, 90+3, 55, 90+3);
     $this->pdf->line(50, 90+8, 50, 90-2);
-    $this->pdf->addTextWrap(60, 90, 300, $this->fontSize1b, $GLOCL, 'left');
+    $this->pdf->addTextWrap(60, 90, 300, $this->fontSize1b, html_entity_decode($GLOCL), 'left');
      
     $this->pdf->setLineStyle(0.5,'','',array(3));
     $this->pdf->ellipse(50, 110+3, 5, 5, 0);
-    $this->pdf->addTextWrap(60, 110, 300, $this->fontSize1b, $OPNCL, 'left');
+    $this->pdf->addTextWrap(60, 110, 300, $this->fontSize1b, html_entity_decode($OPNCL), 'left');
     
     $this->pdf->rectangle(45, 130-2, 10, 10);
-    $this->pdf->addTextWrap(60, 130, 300, $this->fontSize1b, $DRKNB, 'left');
+    $this->pdf->addTextWrap(60, 130, 300, $this->fontSize1b, html_entity_decode($DRKNB), 'left');
     
     $this->pdf->setLineStyle(0.5,'','',array());
     
     $this->pdf->rectangle(45, 210-2, 10, 10);
-    $this->pdf->addTextWrap(60, 210, 300, $this->fontSize1b, $EMINB, 'left');
+    $this->pdf->addTextWrap(60, 210, 300, $this->fontSize1b, html_entity_decode($EMINB), 'left');
     
     $this->pdf->rectangle(45.5, 150-1.5, 9, 9);
     $this->pdf->setLineStyle(0.5,'','',array(3));
     $this->pdf->rectangle(44.5, 150-2.5, 11, 11);
-    $this->pdf->addTextWrap(60, 150, 300, $this->fontSize1b, $CLANB, 'left');
+    $this->pdf->addTextWrap(60, 150, 300, $this->fontSize1b, html_entity_decode($CLANB), 'left');
     $this->pdf->setLineStyle(0.5,'','',array());
     
     $x=50;
@@ -1121,7 +1121,7 @@ class PrintAtlas
     $x2=$x;
     $y2=$y+(($d2+1)>>1);
     $this->pdf->line($x1,$y1,$x2,$y2);
-    $this->pdf->addTextWrap(60, 170, 300, $this->fontSize1b, $GALCL, 'left');
+    $this->pdf->addTextWrap(60, 170, 300, $this->fontSize1b, html_entity_decode($GALCL), 'left');
     
     $x=50;
     $y=190+3;
@@ -1131,7 +1131,7 @@ class PrintAtlas
     $this->pdf->line($x, $y-2-$d2, $x, $y-2);
     $this->pdf->line($x, $y+2+$d2, $x, $y+2);
     $this->pdf->line($x+2, $y, $x+2+$d1, $y);
-    $this->pdf->addTextWrap(60, 190, 300, $this->fontSize1b, $QUASR, 'left');
+    $this->pdf->addTextWrap(60, 190, 300, $this->fontSize1b, html_entity_decode($QUASR), 'left');
     
     if(!$nostream)
       $this->pdf->Stream(); 
@@ -1194,7 +1194,7 @@ class PrintAtlas
         
     for($i=0,$z=count($this->labelsArr);$i<$z;$i++)   
       $this->pdf->addTextWrap($this->labelsArr[$i][0],$this->labelsArr[$i][1],$this->labelsArr[$i][2],$this->labelsArr[$i][3],$this->labelsArr[$i][4],$this->labelsArr[$i][5]);                  
-    $temp=LangAtlasDataSource;
+    $temp=html_entity_decode(LangAtlasDataSource);
     $this->pdf->addText($this->gridOffsetXpx,7,$this->fontSizeAck,$temp);
     if($objUtil->checkRequestKey('item',0)!='0')
     { $this->pdf->addText($this->canvasDimensionXpx-30,13,$this->fontSize1a,$objUtil->checkRequestKey('item',0));

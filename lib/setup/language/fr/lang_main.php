@@ -57,7 +57,7 @@ define('LangAtlassesIntro03'            ,"Vous pouvez g&eacute;n&eacute;rer un a
 define('LangAtlassesIntro04'            ,'Atlas g&eacute;n&eacute;rales');
 define('LangAtlassesIntro05'            ,'Choisissez un des trois formats disponibles; ils se t&eacute;l&eacute;chargent en pdf:');
 define('LangAtlassesIntro06'            ,'Atlas personnalis&eacute;s');
-define('langAtlassesIntro07'            ,"Vous pouvez t&eacute;l&eacute;charger une page individuelle avec le coordonn&eacute; en haut &agrave; gauche d&eacute;fini par vous, <br /> ou vous pouvez t&eacute;l&eacute;charger toute les pages de l'h&eacute;liosph&egrave;re complet.");
+define('LangAtlassesIntro07'            ,"Vous pouvez t&eacute;l&eacute;charger une page individuelle avec le coordonn&eacute; en haut &agrave; gauche d&eacute;fini par vous, <br /> ou vous pouvez t&eacute;l&eacute;charger toute les pages de l'h&eacute;liosph&egrave;re complet.");
 define("LangAddSessionField12"					,"Image");
 define("LangAddSessionField12Expl"			,"Une image montrant l'endroit de la session, une image d'un satellite m&eacute;t&eacute;o, ...");
 define("LangDownloadsMenuTitle"         ,"T&eacute;l&eacute;chargements");
