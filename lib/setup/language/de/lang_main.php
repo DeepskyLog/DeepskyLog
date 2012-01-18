@@ -1129,7 +1129,7 @@ define("LangViewObjectNoNearbyObjects"										," - es gibt keine anderen Objek
 define("LangViewObjectNearbyObjectsMore"									,"Mehr Objekte");
 define("LangViewObjectNearbyObjectsLess"									,"Weniger Objekte");
 define("LangViewObjectNearbyObjectsMoreLess"							,"bis zu ");
-define("LangViewObjectNGCDescription"											,Beschreibung");
+define("LangViewObjectNGCDescription"											,"Beschreibung");
 define("LangViewObjectListDescription"										,"Listen Beschreibung");
 define("LangViewObjectDreyerDescription"									,"NGC/IC, Dreyer Codes");
 
