@@ -1,16 +1,16 @@
 <?php //FR
 
-define('LangAtlasChoosePageLayout'      ,'Kies eerst je pagina layout');
-define('LangAtlasBrowserInfo'           ,'The personalised atlasses are only available in Firefox, Chrome and Opera at this time.');
+define('LangAtlasChoosePageLayout'      ,'Choisissez la mise en page');
+define('LangAtlasBrowserInfo'           ,'Les atlas personnalis&eacute;s ne sont que disponible en Firefox, Chrome et Opera en ce moment.');
 
 
 
 // This is version 4.3
 define('atlasPageCenteredOn'            ,'Centr&eacute; sur ');
 define('LangNoIndexEntries'             ,"Pas d'entr&eacute;es dans l'index");
-define('LangAtlasPageOrientation'       ,"Pagina ori&euml;ntatie");
-define('LangAtlasPageSize'              ,"Pagina-grootte:");
-define('LangPageGenerationra'           ,'Generatie rechte klimming (h m s):');
+define('LangAtlasPageOrientation'       ,"Orientation de la page");
+define('LangAtlasPageSize'              ,"Taille de la page:");
+define('LangPageGenerationra'           ,"Cr&eacute;ation de l'ascension (h m s):");
 define('LangPageGenerationdecl'         ,'d&eacut;clination (h m s):');
 define('LangAtlasButton1'               ,"Aper&ccedil;u");
 define('LangAtlasButton2'               ,"Chercher");
@@ -26,50 +26,40 @@ define('LangAtlasGenerateCompleteAtlas' ,'G&eacute;n&eacute;rer l’atlas comple
 define('LangAtlasGenerateOnePage'       ,'G&eacute;n&eacute;rer une page');
 
 define('LangAtlasGenerationTimes'       ,"Les temps de g&eacute;n&eacute;ration varient entre 20 minutes (aper&ccedil;u A4) jusqu'&agrave; plusieures heures (Recherche A3).");
-define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - No publishing without written autorisation - Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).");
-define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - No publishing without written autorisation");
-define('LangAtlasDataSource2'           ,"Object Database originally based on Eye&Telescope - Star Database by Tycho 2+ and USNO UCAC3 (Zacharia).");
-define("ObjectsSeenGraph"               ,"Object types seen : ");
-$REST = "Rest";
+define('LangAtlasDataSource'            ,"(c) www.deepskylog.org - Pas de publication sans autorisation - Base de donnees basee sur Eye&Telescope - Base de donnees d'etoiles de Tycho 2+ et USNO UCAC3 (Zacharia).");
+define('LangAtlasDataSource1'           ,"(c) www.deepskylog.org - Pas de publication sans autorisation");
+define('LangAtlasDataSource2'           ,"Base de donnees basee sur Eye&Telescope - Base de donnees d'etoiles de Tycho 2+ et USNO UCAC3 (Zacharia).");
+define("ObjectsSeenGraph"               ,"Nombre de type d'objet vu:");
+$REST = "Reste";
 define("GraphObservations"              ,"Observations");
 define("GraphSource"                    ,"Source: ");
-define("GraphTitle1"                    ,"Number of observations per year : ");
+define("GraphTitle1"                    ,"Nombre d'observations par an :");
 define("GraphInfo"                      ,"Info");
-define("GraphObservationsTitle"         ,"Observations per year");
-define("GraphObservationsType"          ,"Object types observed");
-define("AtlasExample"                   ,"Lookup atlas page for M 45");
-define("ImageCatalogExample"            ,"Example page for Abell 84");
-define("ImageCatalogDescription1"       ,"DeepskyLog is a very powerful tool, where you can create personalized atlasses and image catalogs.");
-define("ImageCatalogDescription2"       ,"However, making your own image catalog is time consuming. To help you, we created some interesting image catalogs and made them available for download.");
-define("ImageCatalogDescription3"       ,"You can click the example to get a preview of how the image catalogs look like. They are very useful for telescopes with a goto system, where the goto system guides you to the neighbourhood of the object. Using the images, it is very easy to find the final object.");
-define("ImageCatalogDescription4"       ,"Catalogs sorted by name");
-define("ImageCatalogDescription5"       ,"Catalogs sorted by constellation");
-define("ImageCatalogAbell"              ,"The Abell Planetary Nebula Catalog");
+define("GraphObservationsTitle"         ,"Observations par an");
+define("GraphObservationsType"          ,"Nombre d'objets observé");
+define("AtlasExample"                   ,"Page atlas pour M 45");
+define("ImageCatalogExample"            ,"Page d'exemple pour Abell 84");
+define("ImageCatalogDescription1"       ,"Deepskylog est un outil puissant qui vous permet de cr&eacute;er des atlas personnalis&eacute;s et de catalogues d'images");
+define("ImageCatalogDescription2"       ,"N&eacute;anmoins, faire son propre catalogue d'images prends du temps. Pour vous aider, nous avons cr&eacute;&eacute; des catalogues d'images int&eacute;ressants que vous pouvez t&eacute;l&eacute;charger.");
+define("ImageCatalogDescription3"       ,"");
+define("ImageCatalogDescription4"       ,"Catalogues tri&eacute;s par nom");
+define("ImageCatalogDescription5"       ,"Catalogues tri&eacute;s par constellation");
+define("ImageCatalogAbell"              ,"Catalogue des N&eacute;buleuse plan&eacute;taires d'Abell");
 define("LangpdfOrientation"             ,"Orientation de la page: ");
 define("LangpdfOrientationPortrait"     ,"portrait");
-define("LangpdfOrientationLandscape"    ,"landscape");
+define("LangpdfOrientationLandscape"    ,"paysage");
 define("LangSearchMenuItem14"           ,"Catalogues d'images");
-define("LangSearchMenuItem13"           ,"Atlasses");
-define('LangAtlassesIntro00'            ,'General information');
-define('LangAtlassesIntro01'            ,"You can download three kind of atlasses:<br />
-                                           - the <b>overview</b> atlasses have pages of 20 degrees, and show stars to magnitude 8;<br />
-                                           - the <b>lookup</b> atlasses have pages of 10 degrees, and show stars to magnitude 11;<br />
-                                           - the <b>detail</b> atlasses have page of 5 degrees, and show stars to magnitude 14.<br/><br/>
-                                           The atlasses mention if the objects are already seen in Deepskylog (dotted underline)<br />
-                                           or by yourself (personalised atlasses for registered users, full underline, or overline if sketched).");
-define('LangAtlassesIntro02'            ,'General Atlasses / Personalised Atlasses');
-define('LangAtlassesIntro03'            ,'You can either go for general atlasses, or (if you are a registered user) personalised atlasses.<br>
-                                          - General atlasses are precompiled and are ready to download as one big pdf file.<br/>
-                                          - Personalised atlasses are generated, page per page, for you in pdf format.<br /><br />
-                                          Personalised atlasses take some time (one page) or much more time (complete atlas) to generate and <br />
-                                          you will have to use some software to put the pages together yourself for the complete atlas.');
-define('LangAtlassesIntro04'            ,'General Atlasses');
-define('LangAtlassesIntro05'            ,'Choose one of the three available formats, they will download as a pdf:');
-define('LangAtlassesIntro06'            ,'Personalised Atlasses');
-define('LangAtlassesIntro07'            ,"You can download an individual page, with top-left coordinates to be specified by you,<br />
-                                          or you can download all the pages of the complete helisphere.");
-define("LangAddSessionField12"					,"Picture");
-define("LangAddSessionField12Expl"			,"A picture showing the location of the session, a weather satellite picture, ...");
+define("LangSearchMenuItem13"           ,"Atlas");
+define('LangAtlassesIntro00'            ,'Informations g&eacute;n&eacute;rales');
+define('LangAtlassesIntro01'            ,"Vous pouvez t&eacute;l&eacute;charger trois types de atlas: <br /> - <b>Aper&ccirc;u</b> : des pages de 20 degr&eacutes, et &eacute;toiles jusqu'&agrave; la magnitude 8; <br /> - <b>Chercher</b> : des pages de 10 degr&eacute;s, et &eacute;toiles jusqu'&agrave; la magnitude 11;. <br /> - <b>D&eacute;tail</b> : des pages de 5 degr&eacute;s, et &eacute;toiles jusqu'&agrave; la magnitude 14 <br/><br /> Les atlas mentionnent si les objets sont d&eacute;j&agrave; vu dans Deepskylog (soulign&eacute en pointill&eacute;s) <br /> ou par vous-m&ecirc;me (atlas personnalis&eacute; pour les utilisateurs enregistr&eacute;s).");
+define('LangAtlassesIntro02'            ,'Atlas g&eacute;n&eacute;rales / Atlas personnalis&eacute;s');
+define('LangAtlassesIntro03'            ,"Vous pouvez g&eacute;n&eacute;rer un atlas g&eacute;n&eacute;ral, ou (si vous &ecirc;tes un utilisateur enregistr&eacute;) un atlas personnalis&eacute; <br> - Les atlas g&eacute;n&eacute;ral sont pr&eacute;compil&eacute;s et pr&ecirc;ts &agrave; t&eacute;l&eacute;charger comme un fichier pdf grande <br/> - Les atlas personnalisi&eacute;s sont g&eacute;n&eacute;r&eacute;s, page par page, pour vous en format pdf. <br /> <br /> Les atlas personnalis&eacute;s prend un certain temps (une page) ou beaucoup de temps (complet atlas) &agrave; g&eacute;n&eacute;rer et <br /> vous devez utiliser certains logiciels &agrave mettre les pages ensemble.");
+define('LangAtlassesIntro04'            ,'Atlas g&eacute;n&eacute;rales');
+define('LangAtlassesIntro05'            ,'Choisissez un des trois formats disponibles; ils se t&eacute;l&eacute;chargent en pdf:');
+define('LangAtlassesIntro06'            ,'Atlas personnalis&eacute;s');
+define('langAtlassesIntro07'            ,"Vous pouvez t&eacute;l&eacute;charger une page individuelle avec le coordonn&eacute; en haut &agrave; gauche d&eacute;fini par vous, <br /> ou vous pouvez t&eacute;l&eacute;charger toute les pages de l'h&eacute;liosph&egrave;re complet.");
+define("LangAddSessionField12"					,"Image");
+define("LangAddSessionField12Expl"			,"Une image montrant l'endroit de la session, une image d'un satellite m&eacute;t&eacute;o, ...");
 define("LangDownloadsMenuTitle"         ,"T&eacute;l&eacute;chargements");
 
 // This is version 4.2
