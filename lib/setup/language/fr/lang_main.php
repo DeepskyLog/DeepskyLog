@@ -44,7 +44,7 @@ define("ImageCatalogDescription2"       ,"N&eacute;anmoins, faire son propre cat
 define("ImageCatalogDescription3"       ,"");
 define("ImageCatalogDescription4"       ,"Catalogues tri&eacute;s par nom");
 define("ImageCatalogDescription5"       ,"Catalogues tri&eacute;s par constellation");
-define("ImageCatalogAbell"              ,"Catalogue des N&eacute;buleuse plan&eacute;taires d'Abell");
+define("ImageCatalogAbell"              ,"Catalogue de N&eacute;buleuses plan&eacute;taires d'Abell");
 define("LangpdfOrientation"             ,"Orientation de la page: ");
 define("LangpdfOrientationPortrait"     ,"portrait");
 define("LangpdfOrientationLandscape"    ,"paysage");
