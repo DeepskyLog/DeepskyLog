@@ -40,7 +40,7 @@ function view_observer()
 	  	          marginBottom: 25
 	  	        },
 	  	        title: {
-	  	          text: '" . GraphTitle1 . " " . $firstname . " " . $name . "',
+	  	          text: \"" . GraphTitle1 . " " . $firstname . " " . $name . "\",
 	  	          x: -20 //center
 	  	        },
 	  	        subtitle: {

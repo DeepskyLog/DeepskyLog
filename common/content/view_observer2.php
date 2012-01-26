@@ -192,7 +192,6 @@ function view_observer()
   
   $objectsArray["REST"] = $rest;
   $colors["REST"] = "#00FFFF";
-  
 	echo "<script type=\"text/javascript\">
 		
 			var chart;
@@ -205,7 +204,7 @@ function view_observer()
 						plotShadow: false
 					},
 					title: {
-						text: '" . ObjectsSeenGraph . $firstname . " " . $name . "'
+						text: \"" . ObjectsSeenGraph . $firstname . " " . $name . "\"
 					},
                 subtitle: {
                   text: '" . GraphSource . $baseURL . "'
