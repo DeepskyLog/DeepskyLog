@@ -24,10 +24,6 @@ function change_site()
 	$longitudemin = round(((float)($longitudestr) - (int)($longitudestr)) * 60);
 	$timezone_identifiers = DateTimeZone::listIdentifiers();
 	$theTimeZone=$objLocation->getLocationPropertyFromId($locationid,'timezone');
-	$tempTimeZoneList="<select name=\"timezone\" class=\"inputfield requiredField\" ".$disabled." >";
-	while(list ($key, $value) = each($timezone_identifiers))
-	  $tempTimeZoneList.="<option value=\"".$value."\"".(($value==$theTimeZone)?" selected=\"selected\"":"")."> ".$value."</option>";
-	$tempTimeZoneList.="</select>";
 	$lm = $objLocation->getLocationPropertyFromId($locationid,'limitingMagnitude');
 	$sb = $objLocation->getLocationPropertyFromId($locationid,'skyBackground');
 	
@@ -42,7 +38,7 @@ function change_site()
 	$line[]=array(LangAddSiteField3,"<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"64\" name=\"country\" size=\"30\" value=\"".$objLocation->getLocationPropertyFromId($locationid,'country')."\"  ".$disabled." />",LangAddSiteField3Expl);
 	$line[]=array(LangAddSiteField4,"<input type=\"number\" min=\"-90\" max=\"90\" required class=\"inputfield requiredField centered\" maxlength=\"3\" name=\"latitude\" size=\"4\" value=\"".$latitudedeg."\" ".$disabled." />&deg;<input type=\"number\" min=\"0\" max=\"59\" required class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"latitudemin\" size=\"3\" value=\"".abs($latitudemin) . "\"  ".$disabled." />&#39;",LangAddSiteField4Expl);
 	$line[]=array(LangAddSiteField5,"<input type=\"number\" min=\"-180\" max=\"180\" required class=\"inputfield requiredField centered\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"".$longitudedeg."\" ".$disabled." />&deg;<input type=\"number\" min=\"0\" max=\"59\" class=\"inputfield requiredField centered\" maxlength=\"2\" name=\"longitudemin\" size=\"3\" value=\"".abs($longitudemin)."\"  ".$disabled." />&#39;",LangAddSiteField5Expl);
-	$line[]=array(LangAddSiteField6,$tempTimeZoneList);
+	$line[]=array(LangAddSiteField6,$theTimeZone);
 	$line[]=array(LangAddSiteField7,"<input type=\"number\" min=\"0.0\" max=\"9.9\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"".(($lm > -900)?$lm:"")."\"  ".$disabled." />",LangAddSiteField7Expl);
 	$line[]=array(LangAddSiteField8,"<input type=\"number\" min=\"10.0\" max=\"25.0\" step=\"0.01\" class=\"inputfield centered\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"".(($sb > -900)?$sb:"")."\"  ".$disabled." />",LangAddSiteField8Expl);
 	for($i=0;$i<count($line);$i++)

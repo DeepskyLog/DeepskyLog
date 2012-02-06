@@ -11,15 +11,6 @@ function new_site()
          $objLocation,$objObserver,$objPresentations,$objUtil;
   $sort=$objUtil->checkRequestKey('sort','name');
   $locationid=$objUtil->checkRequestKey('locationid');
-  $timezone_identifiers = DateTimeZone::listIdentifiers();
-  $tempTimeZoneList="<select name=\"timezone\" class=\"inputfield requiredField\">";
-  while(list($key,$value)=each($timezone_identifiers))
-  { if($locationid)
-	    $tempTimeZoneList.="<option value=\"$value\"".(($value==$objLocation->getLocationPropertyFromId($locationid,'timezone'))?" selected=\"selected\"":"").">$value</option>";
-	  else
-	    $tempTimeZoneList.="<option value=\"".$value."\"".(($value=="UTC")?" selected=\"selected\"":"").">".$value."</option>";
-  }
-  $tempTimeZoneList.="</select>";
   $tempCountryList="<select name=\"country\" class=\"inputfield requiredField\">";
   $countries = $objLocation->getCountries();
   $tempCountryList.="<option value=\"\">-----</option>";
@@ -90,8 +81,6 @@ function new_site()
                                  "<input type=\"number\" min=\"0\" max=\"59\" required class=\"inputfield requiredField centered\" maxlength=\"2\"	name=\"longitudemin\" size=\"4\" value=\"".abs($longitudemin).
                                  "\" />&#39;",
                                  LangAddSiteField5Expl),
-                          "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
-  $objPresentations->line(array(LangAddSiteField6,$tempTimeZoneList,''),
                           "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
   $objPresentations->line(array(LangAddSiteField7,
                                  "<input type=\"number\" min=\"0\" max=\"9.9\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"".(($objLocation->getLocationPropertyFromId($objUtil->checkRequestKey('locationid'),'limitingMagnitude')>-900)?$objLocation->getLocationPropertyFromId($objUtil->checkRequestKey('locationid'),'limitingMagnitude'):"")."\" />",

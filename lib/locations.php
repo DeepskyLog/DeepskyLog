@@ -238,11 +238,18 @@ class Locations
     { $objObserver->setObserverProperty($loggedUser,'stdlocation', $_POST['stdlocation']);
     } 
     elseif($objUtil->checkPostKey('sitename')
-    && $objUtil->checkPostKey('country')
-    && $objUtil->checkPostKey('timezone'))
+    && $objUtil->checkPostKey('country'))
     { $latitude  = $objUtil->checkPostKey('latitude',0)  + $objUtil->checkPostKey('latitudemin',0) / 60.0;
       $longitude = $objUtil->checkPostKey('longitude',0) + $objUtil->checkPostKey('longitudemin',0) / 60.0;
-      $timezone  = $_POST['timezone'];
+      // Get the timezone
+      $xmlfile2 = "http://ws.geonames.org/timezone?lat=" . $latitude . "&lng=" . $longitude;
+      $timezones = simplexml_load_file($xmlfile2);
+        
+      $timezone = $timezones->timezone->timezoneId;
+      if (strlen($timezone) < 2) {
+        $timezone = "UTC";
+      }
+
       if($objUtil->checkPostKey('add'))
       { 
         if ($objUtil->checkPostKey('region')) {
@@ -250,6 +257,7 @@ class Locations
         } else {
           $region = "";
         }
+        
         $id = $this->addLocation($_POST['sitename'], $longitude, $latitude, $region, $_POST['country'], $timezone);
         if (array_key_exists('lm', $_POST) && $_POST['lm'])
         { $this->setLocationProperty($id, 'limitingMagnitude', $_POST['lm']);
@@ -264,6 +272,7 @@ class Locations
           $this->setLocationProperty($id, 'limitingMagnitude', -999);
     		}
     		$this->setLocationProperty($id, 'observer', $loggedUser);
+    		
         return LangValidateSiteMessage2;
       }
       if($objUtil->checkPostKey('change')
