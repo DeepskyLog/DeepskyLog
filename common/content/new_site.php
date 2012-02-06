@@ -72,7 +72,7 @@ function new_site()
                                  ''),
                           "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
   $objPresentations->line(array(LangAddSiteField2,
-                                 "<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"64\" name=\"region\" size=\"30\" value=\"".stripslashes($objUtil->checkRequestKey('region')).stripslashes($objLocation->getLocationPropertyFromId($objUtil->checkRequestKey('locationid'),'region'))."\" />",
+                                 "<input type=\"text\" class=\"inputfield\" maxlength=\"64\" name=\"region\" size=\"30\" value=\"".stripslashes($objUtil->checkRequestKey('region')).stripslashes($objLocation->getLocationPropertyFromId($objUtil->checkRequestKey('locationid'),'region'))."\" />",
                                  LangAddSiteField2Expl),
                           "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
   $objPresentations->line(array(LangAddSiteField3,$tempCountryList,''),

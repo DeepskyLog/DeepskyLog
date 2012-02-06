@@ -238,14 +238,19 @@ class Locations
     { $objObserver->setObserverProperty($loggedUser,'stdlocation', $_POST['stdlocation']);
     } 
     elseif($objUtil->checkPostKey('sitename')
-    && $objUtil->checkPostKey('region')
     && $objUtil->checkPostKey('country')
     && $objUtil->checkPostKey('timezone'))
     { $latitude  = $objUtil->checkPostKey('latitude',0)  + $objUtil->checkPostKey('latitudemin',0) / 60.0;
       $longitude = $objUtil->checkPostKey('longitude',0) + $objUtil->checkPostKey('longitudemin',0) / 60.0;
       $timezone  = $_POST['timezone'];
       if($objUtil->checkPostKey('add'))
-      { $id = $this->addLocation($_POST['sitename'], $longitude, $latitude, $_POST['region'], $_POST['country'], $timezone);
+      { 
+        if ($objUtil->checkPostKey('region')) {
+          $region = $_POST['region'];
+        } else {
+          $region = "";
+        }
+        $id = $this->addLocation($_POST['sitename'], $longitude, $latitude, $region, $_POST['country'], $timezone);
         if (array_key_exists('lm', $_POST) && $_POST['lm'])
         { $this->setLocationProperty($id, 'limitingMagnitude', $_POST['lm']);
           $this->setLocationProperty($id, 'skyBackground', -999);
@@ -264,7 +269,12 @@ class Locations
       if($objUtil->checkPostKey('change')
       && $objUtil->checkAdminOrUserID($this->getLocationPropertyFromId($objUtil->checkPostKey('id'),'observer')))
       { $this->setLocationProperty($_POST['id'], 'name',      $_POST['sitename']);
-        $this->setLocationProperty($_POST['id'], 'region',    $_POST['region']);
+        if ($objUtil->checkPostKey('region')) {
+          $region = $_POST['region'];
+        } else {
+          $region = "";
+        }
+        $this->setLocationProperty($_POST['id'], 'region',    $region);
         $this->setLocationProperty($_POST['id'], 'country',   $_POST['country']);
         $this->setLocationProperty($_POST['id'], 'longitude', $longitude);
         $this->setLocationProperty($_POST['id'], 'latitude',  $latitude);
