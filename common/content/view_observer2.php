@@ -24,6 +24,9 @@ function view_observer()
   $colors = Array();
   
   $all = count($objDatabase->selectRecordsetArray("select * from observations where observerid=\"" . $user . "\""));
+  if ($all == 0) {
+    $all = 1;
+  }
   $rest = 0;
 
   $cometobservations = count($objDatabase->selectRecordsetArray("select * from cometobservations where observerid = \"" . $user . "\""));
@@ -204,7 +207,7 @@ function view_observer()
 						plotShadow: false
 					},
 					title: {
-						text: \"" . ObjectsSeenGraph . $firstname . " " . $name . "\"
+						text: \"" . ObjectsSeenGraph . html_entity_decode($firstname, ENT_QUOTES, "UTF-8") . " " . html_entity_decode($name, ENT_QUOTES, "UTF-8") . "\"
 					},
                 subtitle: {
                   text: '" . GraphSource . $baseURL . "'

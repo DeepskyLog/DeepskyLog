@@ -239,6 +239,8 @@ class Observers
 		              . $_POST['firstname'] . " " . $_POST['name']
 		              . "\n\n" . LangValidateAccountEmailLine4 
                       . "\n\n" . $_POST['motivation']);
+		    $body = html_entity_decode($body, ENT_QUOTES, "UTF-8");
+		    
         if(isset($developversion)&&($developversion==true))
           $entryMessage.="On the live server, a mail would be sent with the subject: ".LangValidateAccountEmailTitle.".<p>";
         else
@@ -305,6 +307,7 @@ class Observers
     if(!($objUtil->checkSessionKey('admin')=='yes'))
       throw new Exception(LangException001);
     $objDatabase->execSQL("DELETE FROM observers WHERE id=\"".($id=$objUtil->checkGetKey('validateDelete'))."\"");
+    $id = html_entity_decode($id, ENT_QUOTES, "UTF-8");
     if(isset($developversion)&&($developversion==1))
       $entryMessage.="On the live server, a mail would be sent with the subject: Deepskylog account deleted.<br />";
     else
@@ -320,6 +323,8 @@ class Observers
 	  else                    $ad = "";
     $array = array(LangValidateMail1, $this->getObserverProperty($id,'firstname').' '.$this->getObserverProperty($id,'name'), LangValidateMail2, $ad, LangValidateMail3);
     $body = implode("", $array);
+    $body = html_entity_decode($body, ENT_QUOTES, "UTF-8");
+    
     if(isset($developversion)&&($developversion==1))
       $entryMessage.="On the live server, a mail would be sent with the subject: ".LangValidateSubject.".<br />";
     else
