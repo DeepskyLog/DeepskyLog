@@ -230,18 +230,17 @@ class Observers
         $this->setObserverProperty($_POST['deepskylog_id'],'observationlanguage', $_POST['description_language']);
         $this->setObserverProperty($_POST['deepskylog_id'],'language', $_POST['language']);
 		    $this->setObserverProperty($_POST['deepskylog_id'],'registrationDate', date("Ymd H:i"));
-		    $body = htmlspecialchars(LangValidateAccountEmailLine1 . "\n"                            // send mail to administrator
+		    $body = LangValidateAccountEmailLine1 . "\n"                            // send mail to administrator
 		              . "\n" . LangValidateAccountEmailLine1bis
 		              . $_POST['deepskylog_id']
 		              . "\n" . LangValidateAccountEmailLine2
 		              . $_POST['email']
 		              . "\n" . LangValidateAccountEmailLine3
-		              . $_POST['firstname'] . " " . $_POST['name']
+		              . html_entity_decode($_POST['firstname']) . " " . html_entity_decode($_POST['name'])
 		              . "\n\n" . LangValidateAccountEmailLine4 
-                      . "\n\n" . $_POST['motivation']);
-		    $body = html_entity_decode($body, ENT_QUOTES, "UTF-8");
+                      . "\n\n" . $_POST[                      . "\n\n" . html_entity_decode($_POST['motivation']);
 		    
-        if(isset($developversion)&&($developversion==true))
+elopversion==true))
           $entryMessage.="On the live server, a mail would be sent with the subject: ".LangValidateAccountEmailTitle.".<p>";
         else
           mail($mailTo, LangValidateAccountEmailTitle, $body, "From:".$mailFrom);
@@ -321,10 +320,7 @@ class Observers
     $objDatabase->execSQL("UPDATE observers SET role = \"".($role=RoleUser)."\" WHERE id=\"".($id=$objUtil->checkGetKey('validate'))."\"");
     if ($role == RoleAdmin) $ad = LangValidateAdmin;
 	  else                    $ad = "";
-    $array = array(LangValidateMail1, $this->getObserverProperty($id,'firstname').' '.$this->getObserverProperty($id,'name'), LangValidateMail2, $ad, LangValidateMail3);
-    $body = implode("", $array);
-    $body = html_entity_decode($body, ENT_QUOTES, "UTF-8");
-    
+    $body = LangValidateMail1 . "\n\n" . html_entity_decode($this->getObserverProperty($id,'firstname')).' '.html_entity_decode($this->getObserverProperty($id,'name')) . "\n\n" . LangValidateMail2. "\n\n" . $ad."\n\n" .  LangValidateMail3;
     if(isset($developversion)&&($developversion==1))
       $entryMessage.="On the live server, a mail would be sent with the subject: ".LangValidateSubject.".<br />";
     else
