@@ -238,9 +238,9 @@ class Observers
 		              . "\n" . LangValidateAccountEmailLine3
 		              . html_entity_decode($_POST['firstname']) . " " . html_entity_decode($_POST['name'])
 		              . "\n\n" . LangValidateAccountEmailLine4 
-                      . "\n\n" . $_POST[                      . "\n\n" . html_entity_decode($_POST['motivation']);
+                      . "\n\n" . html_entity_decode($_POST['motivation']);
 		    
-elopversion==true))
+        if(isset($developversion)&&($developversion==true))
           $entryMessage.="On the live server, a mail would be sent with the subject: ".LangValidateAccountEmailTitle.".<p>";
         else
           mail($mailTo, LangValidateAccountEmailTitle, $body, "From:".$mailFrom);
