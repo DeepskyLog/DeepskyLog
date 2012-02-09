@@ -793,7 +793,7 @@ define("LangSearchMenuItem10"                             ,"Catalogs");         
 define("LangSearchAllLanguages"														,"Suche nochmal in allen Sprachen.");
 define("LangSearchDetailPage"															,"Detailierte Suche.");
 
-define("LangChangeMenuTitle"															,"Neu / &Auml;ndern");
+define("LangChangeMenuTitle"															,"&Auml;ndern");
 define("LangChangeMenuItem1"															,"Benutzer Details");
 define("LangChangeMenuItem2"															,"Neue Beobachtung anlegen");
 define("LangChangeMenuItem3"															,"Beobachtungsger&auml;t");

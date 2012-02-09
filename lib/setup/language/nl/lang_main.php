@@ -778,7 +778,7 @@ define("LangSearchMenuItem10"                             ,"Catalogi");
 define("LangSearchAllLanguages"														,"Opnieuw zoeken, in alle talen.");
 define("LangSearchDetailPage"															,"Een gedetailleerde zoekopdracht maken.");
 
-define("LangChangeMenuTitle"															,"Toevoegen/Wijzigen");
+define("LangChangeMenuTitle"															,"Wijzigen");
 define("LangChangeMenuItem1"															,"Persoonlijke data");
 define("LangChangeMenuItem2"															,"Nieuwe waarneming");
 define("LangChangeMenuItem3"															,"Instrumenten");

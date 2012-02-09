@@ -749,7 +749,7 @@ define("LangSearchMenuItem10"                             ,"Catalogues");
 define("LangSearchAllLanguages"														,"Une nouvelle rechrerche dans toutes les languages.");
 define("LangSearchDetailPage"															,"Faire une recherche d&eacute;taill&eacute;e.");
 
-define("LangChangeMenuTitle"															,"Rajoutez / Modifiez");
+define("LangChangeMenuTitle"															,"Modifiez");
 define("LangChangeMenuItem1"															,"Donn&eacute;es personelles");
 define("LangChangeMenuItem2"															,"Nouvelle observation");
 define("LangChangeMenuItem3"															,"Instruments");
