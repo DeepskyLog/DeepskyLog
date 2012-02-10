@@ -86,7 +86,7 @@ function headmenu()
 
 	echo "<span class=\"right\">";
 	if($loggedUser) {
-	  echo "<li><a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . $objObserver->getObserverProperty($loggedUser,'firstname')."&nbsp;".$objObserver->getObserverProperty($loggedUser,'name') . "<span class=\"arrow\"></span></a>";
+	  echo "<li><a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . $objObserver->getObserverProperty($loggedUser,'firstname') . "<span class=\"arrow\"></span></a>";
   	echo "<ul><span class=\"left\">";
   	echo " <li><a href=\"".$baseURL."index.php?indexAction=detail_observer&user=" . $loggedUser . "\">" . LangDetails . "</a></li>";
     echo " <li><a href=\"".$baseURL."index.php?indexAction=change_account\">".LangChangeMenuItem1."</a></li>";
