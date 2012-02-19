@@ -1303,7 +1303,8 @@ class Objects
     if($showRank)
       $objPresentations->tableSortHeader(LangOverviewObjectsHeader9,$link."&amp;sort=objectpositioninlist",    "C".$c++, $columnSource);
     $objPresentations->tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=showname",                "C".$c++, $columnSource);
-	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader2,  $link."&amp;sort=objectconstellation",     "C".$c++, $columnSource);
+    $objPresentations->tableSortHeader(LangOverviewObjectsHeader1bis,  $link."&amp;sort=altname",                "C".$c++, $columnSource);
+    $objPresentations->tableSortHeader(LangOverviewObjectsHeader2,  $link."&amp;sort=objectconstellation",     "C".$c++, $columnSource);
 	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader3,  $link."&amp;sort=objectmagnitude",         "C".$c++, $columnSource);
 	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader3b, $link."&amp;sort=objectsurfacebrightness", "C".$c++, $columnSource);
 	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader4,  $link."&amp;sort=objecttype",              "C".$c++, $columnSource);
@@ -1370,6 +1371,7 @@ class Objects
       elseif($showRank)
 	      echo "<td class=\"centered\" id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader9.": ".$_SESSION['Qobj'][$count]['objectpositioninlist']."')\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader1.": ".$_SESSION['Qobj'][$count]['objectname']."')\" class=\"".$specialclass." centered\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" >".$_SESSION['Qobj'][$count]['showname']."</a></td>";
+      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader1bis.": ".$_SESSION['Qobj'][$count]['altname']."')\" class=\"".$specialclass." centered\">".$_SESSION['Qobj'][$count]['altname']."</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader2.": ".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."')\" class=\"centered\">".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3.": ".$_SESSION['Qobj'][$count]['objectmagnitude']."')\" class=\"centered\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)||($_SESSION['Qobj'][$count]['objectmagnitude']=='')?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3b.": ".$_SESSION['Qobj'][$count]['objectsurfacebrightness']."')\" class=\"centered\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)||($_SESSION['Qobj'][$count]['objectsurfacebrightness']=='')?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>";
