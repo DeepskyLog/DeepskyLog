@@ -74,7 +74,8 @@ function data_get_objects()
 	  if(!$validQobj)
 		{ $_SESSION['QobjParams']=array('source'=>'objects_nearby','object'=>$_GET['object'],'zoom'=>$_GET['zoom']);
 		  $_SESSION['Qobj']=$objObject->getSeenObjectDetails($objObject->getNearbyObjects($_GET['object'],$_GET['zoom']),"A",$_GET['object']);
-		  $_SESSION['QobjSort']='objectname';
+		  $_SESSION['QobjSort']='';
+		  $_GET['sort']='objectdistarcmin';
 		  $_SESSION['QobjSortDirection']='asc';
 		}
 	}
