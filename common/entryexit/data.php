@@ -66,7 +66,8 @@ function get_data()
         $actualzoom=$_SESSION['QobjParams']['zoom'];
     if((!(array_key_exists('viewObjectObjectsNearby',$_SESSION)))||
        ($_GET['object']!=$_SESSION['viewObjectObjectsNearby'])||
-       ($_GET['zoom']!=$actualzoom))
+       ($_GET['zoom']!=$actualzoom)||
+       (($objUtil->checkGetKey('sort')&&($_SESSION['QobjSort']!=$_GET['sort']))))
     { require_once "deepsky/data/data_get_objects.php";	
       $_SESSION['minViewObjectObjectsNearby']=0;
       $_SESSION['viewObjectObjectsNearby']=$_GET['object'];

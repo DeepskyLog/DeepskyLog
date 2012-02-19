@@ -73,7 +73,7 @@ function data_get_objects()
 		  $validQobj=true;
 	  if(!$validQobj)
 		{ $_SESSION['QobjParams']=array('source'=>'objects_nearby','object'=>$_GET['object'],'zoom'=>$_GET['zoom']);
-		  $_SESSION['Qobj']=$objObject->getSeenObjectDetails($objObject->getNearbyObjects($_GET['object'],$_GET['zoom']));
+		  $_SESSION['Qobj']=$objObject->getSeenObjectDetails($objObject->getNearbyObjects($_GET['object'],$_GET['zoom']),"A",$_GET['object']);
 		  $_SESSION['QobjSort']='objectname';
 		  $_SESSION['QobjSortDirection']='asc';
 		}
@@ -515,6 +515,7 @@ function data_get_objects()
 	}
 	
 	//=========================================== CHECK TO SEE IF SORTING IS NECESSARY ===========================================
+
 	if(!array_key_exists('sort',$_GET))      
 	{ if(!$objUtil->checkGetKey('sort'))
 	    $_GET['sort']=$_SESSION['QobjSort'];
@@ -525,7 +526,8 @@ function data_get_objects()
 	if(!array_key_exists('sortdirection',$_GET))
 		$_GET['sortdirection']=$_SESSION['QobjSortDirection'];
 	if($_SESSION['QobjSort']!=$_GET['sort'])
-	{ if($_GET['sortdirection']=='desc')
+	{ echo $_GET['sort'];
+	  if($_GET['sortdirection']=='desc')
 	  { if(count($_SESSION['Qobj'])>1)
 	    { while(list($key, $value)=each($_SESSION['Qobj']))
 	        if($_GET['sort']=='objectcontrast')  

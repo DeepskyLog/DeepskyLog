@@ -61,6 +61,43 @@ class Objects
 		     $prefMag=array(sprintf("%d", $contrastCalc[1])."x"," - ".$contrastCalc[2]);
     } 
   }
+  public function calcDistanceOneObjectOneCoordinate($objectname1,$ra2,$decl2)
+  { global $objDatabase;
+  	if($objectname1)
+  	{ $run=$objDatabase->selectRecordset("SELECT objects.ra, objects.decl FROM objects WHERE name = \"$objectname1\"");
+      $get = mysql_fetch_object($run);
+	    $ra1 = $get->ra; $decl1 = $get->decl;
+  	}
+  	else
+  	  return 999;
+  	return $this->calcDistanceTwoCoordinates($ra1,$decl1,$ra2,$decl2);
+  }
+  public function calcDistanceTwoCoordinates($ra1,$decl1,$ra2,$decl2)
+  { $ra1=($ra1/24)*3.1415926535;
+    $ra2=($ra2/24)*3.1415926535;
+    $decl1=($decl1/180)*3.1415926535;
+    $decl2=($decl2/180)*3.1415926535;
+    return acos((sin($decl1)*sin($decl2))+(cos($decl1)*cos($decl2)*cos($ra2-$ra1)))/3.1415926535*180;
+  }
+  public function calcDistanceTwoObjects($objectname1,$objectname2)
+  { global $objDatabase;
+  	if($objectname1)
+  	{ $run=$objDatabase->selectRecordset("SELECT objects.ra, objects.decl FROM objects WHERE name = \"$objectname1\"");
+      $get = mysql_fetch_object($run);
+	    $ra1 = $get->ra; $decl1 = $get->decl;
+  	}
+  	else
+  	  return 999;
+  	if($objectname2)
+  	{
+  		$run=$objDatabase->selectRecordset("SELECT objects.ra, objects.decl FROM objects WHERE name = \"$objectname2\"");
+  		$get = mysql_fetch_object($run);
+  		$ra2 = $get->ra; $decl2 = $get->decl;
+  	}
+  	else
+  	  return 999;
+  	return $this->calcDistanceTwoCoordinates($ra1,$decl1,$ra2,$decl2);
+  }
   private function calculateSize($diam1, $diam2)                                // Construct a string from the sizes
   { $size = "";
     if ($diam1!=0.0)
@@ -644,7 +681,7 @@ class Objects
 	  }
 		return;
 	}
-  public  function getSeenObjectDetails($obs, $seen="A")
+  public  function getSeenObjectDetails($obs, $seen="A", $distantObject="")
   { global $loggedUser, $objAtlas, $objLocation,$objDatabase,$objPresentations,$objObserver;
     $result2=array();
 	  $obscnt=sizeof($obs);
@@ -718,6 +755,8 @@ class Objects
           $result2[$j]['objectmaxalt'] = "-";
           $result2[$j]['objectmaxaltstart'] = "-";
           $result2[$j]['objectmaxaltend'] = "-";
+          if($distantObject)
+            $result2[$j]['objectdistarcmin'] = round(60*$this->calcDistanceOneObjectOneCoordinate($distantObject,$result2[$j]['objectra'],$result2[$j]['objectdecl']));
           if($loggedUser && $objObserver->getObserverProperty($loggedUser, 'stdLocation'))
 	        { $theLocation=$objObserver->getObserverProperty($loggedUser, 'stdLocation');	   
 	          $longitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'longitude');
@@ -1302,6 +1341,8 @@ class Objects
     echo "<tr class=\"type3\">";
     if($showRank)
       $objPresentations->tableSortHeader(LangOverviewObjectsHeader9,$link."&amp;sort=objectpositioninlist",    "C".$c++, $columnSource);
+    if($columnSource='view_object')
+      $objPresentations->tableSortHeader("Distance",  $link."&amp;sort=objectdistarcmin",                "C".$c++, $columnSource);
     $objPresentations->tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=showname",                "C".$c++, $columnSource);
     $objPresentations->tableSortHeader(LangOverviewObjectsHeader1bis,  $link."&amp;sort=altname",                "C".$c++, $columnSource);
     $objPresentations->tableSortHeader(LangOverviewObjectsHeader2,  $link."&amp;sort=objectconstellation",     "C".$c++, $columnSource);
@@ -1370,6 +1411,8 @@ class Objects
         echo "<td class=\"centered\" id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader9.": ".$_SESSION['Qobj'][$count]['objectpositioninlist']."')\"><a href=\"#\" onclick=\"theplace = prompt('".LangNewPlaceInList."','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
       elseif($showRank)
 	      echo "<td class=\"centered\" id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader9.": ".$_SESSION['Qobj'][$count]['objectpositioninlist']."')\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</td>";
+      if($columnSource='view_object')
+        echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('"."Distance (deg min)".": ".$_SESSION['Qobj'][$count]['objectdistarcmin']."')\" class=\"".$specialclass." centered\" >".$_SESSION['Qobj'][$count]['objectdistarcmin']."&rsquo;</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader1.": ".$_SESSION['Qobj'][$count]['objectname']."')\" class=\"".$specialclass." centered\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" >".$_SESSION['Qobj'][$count]['showname']."</a></td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader1bis.": ".$_SESSION['Qobj'][$count]['altname']."')\" class=\"".$specialclass." centered\">".$_SESSION['Qobj'][$count]['altname']."</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader2.": ".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."')\" class=\"centered\">".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."</td>";
