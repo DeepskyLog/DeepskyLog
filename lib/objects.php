@@ -1059,6 +1059,12 @@ class Objects
     $objDatabase->execSQL("UPDATE objects SET torresB       = \"".$objAtlas->calculateAtlasPage('torresB'      ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
     $objDatabase->execSQL("UPDATE objects SET torresBC      = \"".$objAtlas->calculateAtlasPage('torresBC'     ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
     $objDatabase->execSQL("UPDATE objects SET torresC       = \"".$objAtlas->calculateAtlasPage('torresC'      ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET DSLDL         = \"".$objAtlas->calculateAtlasPage('DSLDL'        ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET DSLDP         = \"".$objAtlas->calculateAtlasPage('DSLDP'        ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET DSLLL         = \"".$objAtlas->calculateAtlasPage('DSLLL'        ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET DSLLP         = \"".$objAtlas->calculateAtlasPage('DSLLP'        ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET DSLOL         = \"".$objAtlas->calculateAtlasPage('DSLOL'        ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET DSLOP         = \"".$objAtlas->calculateAtlasPage('DSLOP'        ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
   }
   public  function setDsObjectSBObj($name)
   { global $objDatabase,$objUtil;
@@ -1077,6 +1083,8 @@ class Objects
   public  function setDsoProperty($name,$property,$propertyValue)                            // sets the property to the specified value for the given object
   { global $objDatabase;
     return $objDatabase->execSQL("UPDATE objects SET ".$property." = \"".$propertyValue."\" WHERE name = \"".$name."\"");
+    if(($property=="ra")||($property=="decl"))
+      $this->setDsObjectAtlasPages($name);
   }
   public  function showObject($object)
   { global $theMonth, $theDay, $theYear,$objPresentations, $objLocation, $objAstroCalc, $objAtlas, $objContrast, $loggedUser, $baseURL, $objUtil, $objList, $listname, $myList, $baseURL, $objPresentations,$objObserver,$dateformat;	
