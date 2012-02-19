@@ -1098,6 +1098,12 @@ define("LangViewObjectField16"														,"Pocket Sky Atlas pagina");
 define("LangViewObjectField17"														,"Torres B pagina");
 define("LangViewObjectField18"														,"Torres BC pagina");
 define("LangViewObjectField19"														,"Torres C pagina");
+define("LangViewObjectField20"														,"Deepskylog Detail Landscape");
+define("LangViewObjectField21"														,"Deepskylog Detail Portrait");
+define("LangViewObjectField22"														,"Deepskylog Opzoeken Landscape");
+define("LangViewObjectField23"														,"Deepskylog Opzoeken Portrait");
+define("LangViewObjectField24"														,"Deepskylog Overzicht Landscape");
+define("LangViewObjectField25"														,"Deepskylog Overzicht Portrait");
 define("LangViewObjectFieldContrastReserve"								,"Contrast reserve");
 define("LangViewObjectFieldMagnification"									,"Aanbevolen vergroting");
 define("LangViewObjectFieldOptimumDetectionMagnification"	,"Optimale detectie vergroting");
@@ -1487,6 +1493,13 @@ define("LangQueryObjectsPsa"															,"Pocket Sky Atlas");
 define("LangQueryObjectsTorresB"													,"Tritatlas B (Torres)");
 define("LangQueryObjectsTorresBC"													,"Triatlas BC (Torres)");
 define("LangQueryObjectsTorresC"													,"Triatlas C (Torres)");
+define("LangQueryObjectsDSLDL"														,"Deepskylog Detail Landscape");
+define("LangQueryObjectsDSLDP"														,"Deepskylog Detail Portrait");
+define("LangQueryObjectsDSLLL"														,"Deepskylog Lookup Landscape");
+define("LangQueryObjectsDSLLP"														,"Deepskylog Lookup Portrait");
+define("LangQueryObjectsDSLOL"														,"Deepskylog Overview Landscape");
+define("LangQueryObjectsDSLOP"														,"Deepskylog Overview Portrait");
+
 
 define("LangQueryCometObjectsField1"											,"Minimum vergroting");
 define("LangQueryCometObjectsField2"											,"Maximum vergroting");
@@ -1801,6 +1814,12 @@ $AtlasNamepsa 					="Pocket Sky Atlas";
 $AtlasNametorresB 			="Triatlas B (Torres)";
 $AtlasNametorresBC 			="Triatlas BC (Torres)";
 $AtlasNametorresC 			="Triatlas C (Torres)";
+$AtlasNameDSLDL    			="Deepskylog Detail Landscape";
+$AtlasNameDSLDP 	  		="Deepskylog Detail Portrait";
+$AtlasNameDSLLL 		  	="Deepskylog Opzoeken Landscape";
+$AtlasNameDSLLP 			  ="Deepskylog Opzoeken Portrait";
+$AtlasNameDSLOL 		  	="Deepskylog Overzicht Landscape";
+$AtlasNameDSLOP 			  ="Deepskylog Overzicht Portrait";
 
 // Types of Observations
 $ASTER 									="Asterisme";

@@ -1,4 +1,25 @@
 <?php //FR
+/* To TRANSLATE: look for lines:
+$AtlasNameDSLDL    			="Deepskylog Detail Landscape";
+$AtlasNameDSLDP 	  		="Deepskylog Detail Portrait";
+$AtlasNameDSLLL 		  	="Deepskylog Lookup Landscape";
+$AtlasNameDSLLP 			  ="Deepskylog Lookup Portrait";
+$AtlasNameDSLOL 		  	="Deepskylog Overview Landscape";
+$AtlasNameDSLOP 			  ="Deepskylog Overview Portrait";
+define("LangViewObjectField20"														,"Deepskylog Detail Landscape");
+define("LangViewObjectField21"														,"Deepskylog Detail Portrait");
+define("LangViewObjectField22"														,"Deepskylog Lookup Landscape");
+define("LangViewObjectField23"														,"Deepskylog Lookup Portrait");
+define("LangViewObjectField24"														,"Deepskylog Overview Landscape");
+define("LangViewObjectField25"														,"Deepskylog Overview Portrait");
+define("LangQueryObjectsDSLDL"														,"Deepskylog Detail Landscape");
+define("LangQueryObjectsDSLDP"														,"Deepskylog Detail Portrait");
+define("LangQueryObjectsDSLLL"														,"Deepskylog Lookup Landscape");
+define("LangQueryObjectsDSLLP"														,"Deepskylog Lookup Portrait");
+define("LangQueryObjectsDSLOL"														,"Deepskylog Overview Landscape");
+define("LangQueryObjectsDSLOP"														,"Deepskylog Overview Portrait");
+*/
+
 
 define('LangAtlasChoosePageLayout'      ,'Choisissez la mise en page');
 define('LangAtlasBrowserInfo'           ,'Les atlas personnalis&eacute;s ne sont que disponible en Firefox, Chrome et Opera en ce moment.');
@@ -1069,7 +1090,12 @@ define("LangViewObjectField16"														,"Pocket Sky Atlas page");
 define("LangViewObjectField17"														,"Torres B page");
 define("LangViewObjectField18"														,"Torres BC page");
 define("LangViewObjectField19"														,"Torres C page");
-define("LangViewObjectFieldContrastReserve"								,"R&eacute;serve de contrast");
+define("LangViewObjectField20"														,"Deepskylog Detail Landscape");
+define("LangViewObjectField21"														,"Deepskylog Detail Portrait");
+define("LangViewObjectField22"														,"Deepskylog Opzoeken Landscape");
+define("LangViewObjectField23"														,"Deepskylog Opzoeken Portrait");
+define("LangViewObjectField24"														,"Deepskylog Overzicht Landscape");
+define("LangViewObjectField25"														,"Deepskylog Overzicht Portrait");define("LangViewObjectFieldContrastReserve"								,"R&eacute;serve de contrast");
 define("LangViewObjectFieldMagnification"									,"Agrandissement pr&#233;f&#233;r&#233;");
 define("LangViewObjectFieldOptimumDetectionMagnification"	,"Agrandissement de d&#233;tection optimale");
 define("LangViewObjectDSS"																,"Voir l'image DSS");
@@ -1459,6 +1485,12 @@ define("LangQueryObjectsPsa"															,"Pocket Sky Atlas");
 define("LangQueryObjectsTorresB"													,"Tritatlas B (Torres)");
 define("LangQueryObjectsTorresBC"													,"Triatlas BC (Torres)");
 define("LangQueryObjectsTorresC"													,"Triatlas C (Torres)");
+define("LangQueryObjectsDSLDL"														,"Deepskylog Detail Landscape");
+define("LangQueryObjectsDSLDP"														,"Deepskylog Detail Portrait");
+define("LangQueryObjectsDSLLL"														,"Deepskylog Lookup Landscape");
+define("LangQueryObjectsDSLLP"														,"Deepskylog Lookup Portrait");
+define("LangQueryObjectsDSLOL"														,"Deepskylog Overview Landscape");
+define("LangQueryObjectsDSLOP"														,"Deepskylog Overview Portrait");
 
 define("LangQueryCometObjectsField1"											,"Agrandissement minimale");
 define("LangQueryCometObjectsField2"											,"Agrandissement maximale");
@@ -1772,6 +1804,12 @@ $AtlasNamepsa 					="Pocket Sky Atlas";
 $AtlasNametorresB 			="Triatlas B (Torres)";
 $AtlasNametorresBC 			="Triatlas BC (Torres)";
 $AtlasNametorresC 			="Triatlas C (Torres)";
+$AtlasNameDSLDL    			="Deepskylog Detail Landscape";
+$AtlasNameDSLDP 	  		="Deepskylog Detail Portrait";
+$AtlasNameDSLLL 		  	="Deepskylog Opzoeken Landscape";
+$AtlasNameDSLLP 			  ="Deepskylog Opzoeken Portrait";
+$AtlasNameDSLOL 		  	="Deepskylog Overzicht Landscape";
+$AtlasNameDSLOP 			  ="Deepskylog Overzicht Portrait";
 
 // Types of Observations
 $ASTER 									= "Ast&eacute;risme";

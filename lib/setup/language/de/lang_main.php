@@ -1,4 +1,26 @@
 <?php //GE
+/* To TRANSLATE: look for lines:
+$AtlasNameDSLDL    			="Deepskylog Detail Landscape";
+$AtlasNameDSLDP 	  		="Deepskylog Detail Portrait";
+$AtlasNameDSLLL 		  	="Deepskylog Lookup Landscape";
+$AtlasNameDSLLP 			  ="Deepskylog Lookup Portrait";
+$AtlasNameDSLOL 		  	="Deepskylog Overview Landscape";
+$AtlasNameDSLOP 			  ="Deepskylog Overview Portrait";
+define("LangViewObjectField20"														,"Deepskylog Detail Landscape");
+define("LangViewObjectField21"														,"Deepskylog Detail Portrait");
+define("LangViewObjectField22"														,"Deepskylog Lookup Landscape");
+define("LangViewObjectField23"														,"Deepskylog Lookup Portrait");
+define("LangViewObjectField24"														,"Deepskylog Overview Landscape");
+define("LangViewObjectField25"														,"Deepskylog Overview Portrait");
+define("LangQueryObjectsDSLDL"														,"Deepskylog Detail Landscape");
+define("LangQueryObjectsDSLDP"														,"Deepskylog Detail Portrait");
+define("LangQueryObjectsDSLLL"														,"Deepskylog Lookup Landscape");
+define("LangQueryObjectsDSLLP"														,"Deepskylog Lookup Portrait");
+define("LangQueryObjectsDSLOL"														,"Deepskylog Overview Landscape");
+define("LangQueryObjectsDSLOP"														,"Deepskylog Overview Portrait");
+*/
+
+
 
 define('LangAtlasChoosePageLayout'      ,'W&auml;hlen Sie zuerst ein Seitenformat');
 define('LangAtlasBrowserInfo'           ,'Personalisierte Atlanten sind zurzeit nur in Firefox, Chrome und Opera m&ouml;glich.');
@@ -1113,6 +1135,12 @@ define("LangViewObjectField16"														,"Pocket Sky Atlas Seite");
 define("LangViewObjectField17"														,"Torres B Seite");
 define("LangViewObjectField18"														,"Torres BC Seite");
 define("LangViewObjectField19"														,"Torres C Seite");
+define("LangViewObjectField20"														,"Deepskylog Detail Landscape");
+define("LangViewObjectField21"														,"Deepskylog Detail Portrait");
+define("LangViewObjectField22"														,"Deepskylog Lookup Landscape");
+define("LangViewObjectField23"														,"Deepskylog Lookup Portrait");
+define("LangViewObjectField24"														,"Deepskylog Overview Landscape");
+define("LangViewObjectField25"														,"Deepskylog Overview Portrait");
 define("LangViewObjectFieldContrastReserve"								,"Kontrast Reserve");
 define("LangViewObjectFieldMagnification"									,"Bevorzugte Vergr&Ouml;&szlig;erung");
 define("LangViewObjectFieldOptimumDetectionMagnification"	,"Beste Vergr&Ouml;&szlig;erung");
@@ -1500,6 +1528,12 @@ define("LangQueryObjectsPsa"															,"Pocket Sky Atlas");
 define("LangQueryObjectsTorresB"													,"Tritatlas B (Torres)");
 define("LangQueryObjectsTorresBC"													,"Triatlas BC (Torres)");
 define("LangQueryObjectsTorresC"													,"Triatlas C (Torres)");
+define("LangQueryObjectsDSLDL"														,"Deepskylog Detail Landscape");
+define("LangQueryObjectsDSLDP"														,"Deepskylog Detail Portrait");
+define("LangQueryObjectsDSLLL"														,"Deepskylog Lookup Landscape");
+define("LangQueryObjectsDSLLP"														,"Deepskylog Lookup Portrait");
+define("LangQueryObjectsDSLOL"														,"Deepskylog Overview Landscape");
+define("LangQueryObjectsDSLOP"														,"Deepskylog Overview Portrait");
 
 define("LangQueryCometObjectsField1"											,"Minimale Helligkeit");
 define("LangQueryCometOrjectsField2"											,"Maximale Helligkeit");
@@ -1811,6 +1845,12 @@ $AtlasNamepsa 					="Pocket Sky Atlas";
 $AtlasNametorresB 			="Triatlas B (Torres)";
 $AtlasNametorresBC 			="Triatlas BC (Torres)";
 $AtlasNametorresC 			="Triatlas C (Torres)";
+$AtlasNameDSLDL    			="Deepskylog Detail Landscape";
+$AtlasNameDSLDP 	  		="Deepskylog Detail Portrait";
+$AtlasNameDSLLL 		  	="Deepskylog Lookup Landscape";
+$AtlasNameDSLLP 			  ="Deepskylog Lookup Portrait";
+$AtlasNameDSLOL 		  	="Deepskylog Overview Landscape";
+$AtlasNameDSLOP 			  ="Deepskylog Overview Portrait";
 
 // Types of Observations
 $ASTER 									="Assoziation";
