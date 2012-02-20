@@ -400,7 +400,8 @@ class PrintAtlas
     }
     if($linecy!=$cy)
     { $this->pdf->setStrokeColor(0.7, 0.7, 0.7);
-    	$this->pdf->line($linecx,$linecy,$cx+4+$d,$cy);
+      $this->pdf->setLineStyle(0.5,'','',array());
+      $this->pdf->line($linecx,$linecy,$cx+4+$d,$cy);
     	$this->pdf->setStrokeColor(0, 0, 0);
     }
     $this->astroLabels[]=array(($cx+4+$d),($cy-($this->fontSize1a>>2)),$w);
