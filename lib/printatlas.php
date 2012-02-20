@@ -119,6 +119,9 @@ class PrintAtlas
     Array(0.15 ,0.20,0.012,16),
     Array(0.1 ,0.20,0.012,16)
   );
+
+  var $astroLabels=Array();
+  
   
   function astroDrawBRTNBObject($i)
   { $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
@@ -372,7 +375,20 @@ class PrintAtlas
   }
     	
   function astroDrawObjectLabel($cx, $cy, $d, $name, $seen)
-  { $this->pdf->addText(($cx+4+$d), $cy-($this->fontSize1a>>2), $this->fontSize1b, $name);
+  { $w=$this->pdf->getTextWidth($this->fontSize1b, $name);
+    $linecx=$cx;
+    $linecy=$cy;
+  	do 
+  	{ $pass=true;
+  	  for($i=0;$i<count($this->astroLabels);$i++)
+      { if((($cx>$this->astroLabels[$i][0])&&($cx<$this->astroLabels[$i][0]+$this->astroLabels[$i][2])&&($cy>$this->astroLabels[$i][1]-($this->fontSize1b<<1))&&($cy<$this->astroLabels[$i][1]+($this->fontSize1b<<1)))
+        || (($this->astroLabels[$i][0]>$cx)&&($this->astroLabels[$i][0]<$cx+$w)&&($this->astroLabels[$i][1]>$cy-($this->fontSize1b<<1))&&($this->astroLabels[$i][1]<$cy+($this->fontSize1b<<1))))
+        { $cy-=($this->fontSize1b);
+          $pass=false;
+        }
+      }
+  	} while ($pass==false);
+  	$this->pdf->addText(($cx+4+$d), $cy-($this->fontSize1a>>2), $this->fontSize1b, $name);
     if(substr($seen,0,2)=='YD')
       $this->pdf->line($cx+$d+3, $cy+($this->fontSize1a>>2)+1.5, $cx+4+$d+(strlen($name)*0.6*$this->fontSize1b), $cy+($this->fontSize1a>>2)+1.5);
     if(substr($seen,0,1)=='Y')
@@ -382,8 +398,13 @@ class PrintAtlas
       $this->pdf->line($cx+$d+3, $cy-($this->fontSize1a>>2)-2, $cx+4+$d+(strlen($name)*0.6*$this->fontSize1b), $cy-($this->fontSize1a>>2)-2);
       $this->pdf->setLineStyle(0.5,'','',array());
     }
+    if($linecy!=$cy)
+    { $this->pdf->setStrokeColor(0.7, 0.7, 0.7);
+    	$this->pdf->line($linecx,$linecy,$cx+4+$d,$cy);
+    	$this->pdf->setStrokeColor(0, 0, 0);
+    }
+    $this->astroLabels[]=array($cx,$cy,$w);
  }
-  
   
   function astroDrawOCObject($i)
   { $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
