@@ -1341,7 +1341,7 @@ class Objects
     echo "<tr class=\"type3\">";
     if($showRank)
       $objPresentations->tableSortHeader(LangOverviewObjectsHeader9,$link."&amp;sort=objectpositioninlist",    "C".$c++, $columnSource);
-    if($columnSource='view_object')
+    if($ownShow)
       $objPresentations->tableSortHeader("Distance",  $link."&amp;sort=objectdistarcmin",                "C".$c++, $columnSource);
     $objPresentations->tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=showname",                "C".$c++, $columnSource);
     $objPresentations->tableSortHeader(LangOverviewObjectsHeader1bis,  $link."&amp;sort=altname",                "C".$c++, $columnSource);
@@ -1411,7 +1411,7 @@ class Objects
         echo "<td class=\"centered\" id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader9.": ".$_SESSION['Qobj'][$count]['objectpositioninlist']."')\"><a href=\"#\" onclick=\"theplace = prompt('".LangNewPlaceInList."','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
       elseif($showRank)
 	      echo "<td class=\"centered\" id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader9.": ".$_SESSION['Qobj'][$count]['objectpositioninlist']."')\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</td>";
-      if($columnSource='view_object')
+      if($ownShow)
         echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('"."Distance (deg min)".": ".$_SESSION['Qobj'][$count]['objectdistarcmin']."')\" class=\"".$specialclass." centered\" >".$_SESSION['Qobj'][$count]['objectdistarcmin']."&rsquo;</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader1.": ".$_SESSION['Qobj'][$count]['objectname']."')\" class=\"".$specialclass." centered\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" >".$_SESSION['Qobj'][$count]['showname']."</a></td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader1bis.": ".$_SESSION['Qobj'][$count]['altname']."')\" class=\"".$specialclass." centered\">".$_SESSION['Qobj'][$count]['altname']."</td>";
