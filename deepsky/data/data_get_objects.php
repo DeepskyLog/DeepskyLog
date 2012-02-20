@@ -527,8 +527,7 @@ function data_get_objects()
 	if(!array_key_exists('sortdirection',$_GET))
 		$_GET['sortdirection']=$_SESSION['QobjSortDirection'];
 	if($_SESSION['QobjSort']!=$_GET['sort'])
-	{ echo $_GET['sort'];
-	  if($_GET['sortdirection']=='desc')
+	{ if($_GET['sortdirection']=='desc')
 	  { if(count($_SESSION['Qobj'])>1)
 	    { while(list($key, $value)=each($_SESSION['Qobj']))
 	        if($_GET['sort']=='objectcontrast')  
