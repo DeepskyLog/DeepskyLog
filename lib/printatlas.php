@@ -269,7 +269,7 @@ class PrintAtlas
     else
       $d2=$this->gridDiam2SecToPxMin($this->astroObjectsArr[$i]["diam2"]*0.5);
 		$this->pdf->ellipse($cx,$cy,$d1,$d2,($pa=Nzx($this->astroObjectsArr[$i]["pa"],0))-90);
-    $this->astroDrawObjectLabel($cx,$cy-(cos($pa*$this->fPiOver180)*$d1),(5*abs(cos($pa*$this->fPiOver180)))+abs($d1*sin($pa*$this->fPiOver180)),$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
+    $this->astroDrawObjectLabel($cx,$cy,(5*abs(cos($pa*$this->fPiOver180)))+abs($d1*sin($pa*$this->fPiOver180)),$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
   }
   
   function atlasDrawLegend()
@@ -375,8 +375,7 @@ class PrintAtlas
   }
     	
   function astroDrawObjectLabel($cx, $cy, $d, $name, $seen)
-  { //$name=$name."/".count($this->astroLabels);
-  	$w=$this->pdf->getTextWidth($this->fontSize1b, $name);
+  { $w=$this->pdf->getTextWidth($this->fontSize1b, $name);
     $linecx=$cx;
     $linecy=$cy;
   	do 
