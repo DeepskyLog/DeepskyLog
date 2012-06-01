@@ -34,9 +34,10 @@ function menu_instrument()
       while(list($key, $value) = each($result)) {
         echo "  <li><a href=\"" . $url ."&amp;activeTelescopeId=" . $value . "\">".$objInstrument->getInstrumentPropertyFromId($value,'name')."</a></li>";
 	    }
+
+	    echo " </ul>";
+	    echo "</li>";
 		}
-    echo " </ul>";
-    echo "</li>";
 	}
 }
 ?>

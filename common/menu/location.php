@@ -36,9 +36,9 @@ function menu_location()
 	    while(list($key, $value) = each($result)) {
         echo "  <li><a href=\"" .$url . "&amp;activeLocationId=" . $value . "\">".$objLocation->getLocationPropertyFromId($value,'name')."</a></li>";
 	    }
-		}
-    echo " </ul>";
-    echo "</li>";
+	    echo " </ul>";
+	    echo "</li>";
+	  }
 	}
 }
 ?>
