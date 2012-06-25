@@ -288,6 +288,7 @@ function new_observation()
 		}
 		// Presentation =====================================================================================================================================================================
 		$contentDateText = "<a href=\"#\" onclick=\"cal.showNavigationDropdowns();
+								 cal.setYearSelectStartOffset(50);
 	                             cal.setReturnFunction('SetObsDate');
 															 cal.showCalendar('DateAnchor2');
 	                             return false;\" 
