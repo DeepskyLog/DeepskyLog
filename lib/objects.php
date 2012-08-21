@@ -73,11 +73,11 @@ class Objects
   	return $this->calcDistanceTwoCoordinates($ra1,$decl1,$ra2,$decl2);
   }
   public function calcDistanceTwoCoordinates($ra1,$decl1,$ra2,$decl2)
-  { $ra1=($ra1/24)*3.1415926535;
-    $ra2=($ra2/24)*3.1415926535;
+  { $ra1=($ra1/12)*3.1415926535;
+    $ra2=($ra2/12)*3.1415926535;
     $decl1=($decl1/180)*3.1415926535;
     $decl2=($decl2/180)*3.1415926535;
-    return acos((sin($decl1)*sin($decl2))+(cos($decl1)*cos($decl2)*cos($ra2-$ra1)))/3.1415926535*180;
+    return acos(max(min((sin($decl1)*sin($decl2))+(cos($decl1)*cos($decl2)*cos($ra2-$ra1)),1),-1))/3.1415926535*180;
   }
   public function calcDistanceTwoObjects($objectname1,$objectname2)
   { global $objDatabase;
