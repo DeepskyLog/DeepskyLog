@@ -681,6 +681,9 @@ class Objects
 	  }
 		return;
 	}
+	private function maxaltToInt($themaxalt)
+	{ return 1*(str_replace("&deg;", "",trim($themaxalt,'()')));
+	}
   public  function getSeenObjectDetails($obs, $seen="A", $distantObject="")
   { global $loggedUser, $objAtlas, $objLocation,$objDatabase,$objPresentations,$objObserver;
     $result2=array();
@@ -789,46 +792,46 @@ class Objects
 							}
 							for($i=1;$i<13;$i++)
 							{ if($i==1)
-						    { if(($theEphemerides1[$i]['altitude']!='-') &&
-						         (($theEphemerides1[$i]['altitude']==$theEphemerides15[$i]['altitude']) ||
-						          ($theEphemerides1[$i]['altitude']==$theEphemerides15[12]['altitude'])))
-						      { $maxalt=$theEphemerides1[$i]['altitude'];
-						        if($theEphemerides1[$i]['altitude']>$theEphemerides15[12]['altitude'])
+						    { if(($this->maxaltToInt($theEphemerides1[$i]['altitude'])!='-') &&
+						         (($this->maxaltToInt($theEphemerides1[$i]['altitude'])==$this->maxaltToInt($theEphemerides15[$i]['altitude'])) ||
+						          ($this->maxaltToInt($theEphemerides1[$i]['altitude'])==$this->maxaltToInt($theEphemerides15[12]['altitude']))))
+						      { $maxalt=$this->maxaltToInt($theEphemerides1[$i]['altitude']);
+						        if($this->maxaltToInt($theEphemerides1[$i]['altitude'])>$this->maxaltToInt($theEphemerides15[12]['altitude']))
 						          $maxaltstart=0;
-						        else if ($theEphemerides1[$i]['altitude']>$theEphemerides15[$i]['altitude'])
+						        if($this->maxaltToInt($theEphemerides1[$i]['altitude'])>$this->maxaltToInt($theEphemerides15[$i]['altitude']))
 						          $maxaltend=0;
 						      }
 						    }
 							  else
-							  { if(($theEphemerides1[$i]['altitude']!='-') && 
-				             (($theEphemerides1[$i]['altitude']==$theEphemerides15[$i]['altitude']) ||
-						          ($theEphemerides1[$i]['altitude']==$theEphemerides15[$i-1]['altitude'])))
-						      { $maxalt=$theEphemerides1[$i]['altitude'];
-						        if($theEphemerides1[$i]['altitude']>$theEphemerides15[$i-1]['altitude'])
+							  { if(($this->maxaltToInt($theEphemerides1[$i]['altitude'])!='-') && 
+				             (($this->maxaltToInt($theEphemerides1[$i]['altitude'])==$this->maxaltToInt($theEphemerides15[$i]['altitude'])) ||
+						          ($this->maxaltToInt($theEphemerides1[$i]['altitude'])==$this->maxaltToInt($theEphemerides15[$i-1]['altitude']))))
+						      { $maxalt=$this->maxaltToInt($theEphemerides1[$i]['altitude']);
+						        if($this->maxaltToInt($theEphemerides1[$i]['altitude'])>$this->maxaltToInt($theEphemerides15[$i-1]['altitude']))
 						          $maxaltstart=$i-1;
-						        else if ($theEphemerides1[$i]['altitude']>$theEphemerides15[$i]['altitude'])
+						        if($this->maxaltToInt($theEphemerides1[$i]['altitude'])>$this->maxaltToInt(str_replace("&deg;", "",$theEphemerides15[$i]['altitude'])))
 						          $maxaltend=$i-1;
 						      }
 							  }
 				        if($i==12)
-						    { if(($theEphemerides15[$i]['altitude']!='-') &&
-						       (($theEphemerides15[$i]['altitude']==$theEphemerides1[$i]['altitude']) ||
-						        ($theEphemerides15[$i]['altitude']==$theEphemerides1[1]['altitude'])))
-						      { $maxalt=$theEphemerides15[$i]['altitude'];
-						        if($theEphemerides15[$i]['altitude']>$theEphemerides1[$i]['altitude'])
+						    { if(($this->maxaltToInt($theEphemerides15[$i]['altitude'])!='-') &&
+						       (($this->maxaltToInt($theEphemerides15[$i]['altitude'])==$this->maxaltToInt($theEphemerides1[$i]['altitude'])) ||
+						        ($this->maxaltToInt($theEphemerides15[$i]['altitude'])==$this->maxaltToInt($theEphemerides1[1]['altitude']))))
+						      { $maxalt=$this->maxaltToInt($theEphemerides15[$i]['altitude']);
+						        if($this->maxaltToInt($theEphemerides15[$i]['altitude'])>$this->maxaltToInt($theEphemerides1[$i]['altitude']))
 						          $maxaltstart=$i+.5-1;
-						        else if ($theEphemerides15[$i]['altitude']>$theEphemerides1[1]['altitude'])
+						        if($this->maxaltToInt($theEphemerides15[$i]['altitude'])>$this->maxaltToInt($theEphemerides1[1]['altitude']))
 						          $maxaltend=$i+.5-1;
 						      }
 						    }
 				        else
-							  { if(($theEphemerides15[$i]['altitude']!='-') && 
-		                (($theEphemerides15[$i]['altitude']==$theEphemerides1[$i]['altitude']) ||
-				             ($theEphemerides15[$i]['altitude']==$theEphemerides1[$i+1]['altitude'])))
-				          { $maxalt=$theEphemerides15[$i]['altitude'];
-						        if($theEphemerides15[$i]['altitude']>$theEphemerides1[$i]['altitude'])
+							  { if(($this->maxaltToInt($theEphemerides15[$i]['altitude'])!='-') && 
+		                (($this->maxaltToInt($theEphemerides15[$i]['altitude'])==$this->maxaltToInt($theEphemerides1[$i]['altitude'])) ||
+				             ($this->maxaltToInt($theEphemerides15[$i]['altitude'])==$this->maxaltToInt($theEphemerides1[$i+1]['altitude']))))
+				          { $maxalt=$this->maxaltToInt($theEphemerides15[$i]['altitude']);
+						        if($this->maxaltToInt($theEphemerides15[$i]['altitude'])>$this->maxaltToInt($theEphemerides1[$i]['altitude']))
 						          $maxaltstart=$i+.5-1;
-						        else if ($theEphemerides15[$i]['altitude']>$theEphemerides1[$i+1]['altitude'])
+						        if($this->maxaltToInt($theEphemerides15[$i]['altitude'])>$this->maxaltToInt($theEphemerides1[$i+1]['altitude']))
 						          $maxaltend=$i+.5-1;
 				          }
 							  }
