@@ -1491,7 +1491,8 @@ class Objects
 			$content.="<a href=\"".$baseURL."objects.csv?SID=Qobj\" >".LangExecuteQueryObjectsMessage6."</a>";;
 		  $content.="&nbsp;-&nbsp;<a href=\"".$baseURL."index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;sort=".$_SESSION['QobjSort']."&amp;pdfTitle=Test\" >".ReportLink."</a>&nbsp;-&nbsp;";
 	    $content.="<a href=\"".$baseURL."index.php?indexAction=objectsSets"."\" rel=\"external\">".LangExecuteQueryObjectsMessage11."</a>";
-      $objPresentations->line(array($content1."&nbsp;&nbsp;&nbsp;&nbsp;".$content,$content2),"LR",array(70,30),30);
+      $objPresentations->line(array($content1,$content2),"LR",array(70,30),16);
+      $objPresentations->line(array($content),"LR",array(100,0),16);
     }
     if($columnSource)
     { echo "<script type=\"text/javascript\">";
