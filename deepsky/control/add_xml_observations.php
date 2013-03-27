@@ -123,7 +123,6 @@ function add_xml_observations()
 	    }
 	
 	    $valid = true;
-
 	    // Get the type
 	    if ($target->getAttribute("xsi:type")) {
 	      $type =  $target->getAttribute("xsi:type");
@@ -156,11 +155,11 @@ function add_xml_observations()
 	        $targetInfoArray["type"] = "NONEX";
    	    } else {
 	        $next = 0;
+                $valid = false;
 	      }
 	    } else {
 	      $valid = false;
 	    }
-	
 	
 	    $targetInfoArray["known"] = $next;
 	
