@@ -33,9 +33,9 @@ try
   echo    "<div id=\"div3\" onmouseover=\"resizeForm('show',theTopMenu);\">";                                                                            // div3 = left menu section
   require_once 'common/entryexit/menu.php';
   echo    "</div>";
-  echo    "<div id=\"div6\">";	
-  $objPresentations->line(array($copyrightInfo.$vvsInfo.$dslInfo.$versionInfo.$objectInfo,$w3cInfo),"LR",array(90,10),18);                                      // defined in databaseInfo.ph)
-  echo    "</div>";
+  echo    "<footer>";	
+  echo    $copyrightInfo.$vvsInfo.$dslInfo.$versionInfo.$objectInfo,$w3cInfo;                                      // defined in databaseInfo.ph)
+  echo    "</footer>";
   echo    "<div id=\"div5\">";                                                                            // div 5 = page contents
   if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
     echo "<p class=\"centered\">".$entryMessage."</p><hr />";

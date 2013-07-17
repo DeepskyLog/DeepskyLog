@@ -154,6 +154,7 @@ function add_xml_observations()
 	      } else if ($type == "oal:deepSkyNA") {
 	        $targetInfoArray["type"] = "NONEX";
    	    } else {
+   	      $valid = false;
 	        $next = 0;
                 $valid = false;
 	      }
