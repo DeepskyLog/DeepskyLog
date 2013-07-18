@@ -1,7 +1,7 @@
 <?php
 // selected_sessions.php
 // generates an overview of selected observations in the database
-
+ 
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 else selected_sessions();
 
