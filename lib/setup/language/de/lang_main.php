@@ -19,7 +19,7 @@ define("LangQueryObjectsDSLLP"														,"Deepskylog Lookup Portrait");
 define("LangQueryObjectsDSLOL"														,"Deepskylog Overview Landscape");
 define("LangQueryObjectsDSLOP"														,"Deepskylog Overview Portrait");
 */
-
+define('LangUnderHorizon'				,'unter dem Horizont');
 
 
 define('LangAtlasChoosePageLayout'      ,'W&auml;hlen Sie zuerst ein Seitenformat');

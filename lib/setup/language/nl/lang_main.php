@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 4.3
+define('LangUnderHorizon'				,'onder de horizon');
 define('LangAtlasChoosePageLayout'      ,'Kies eerst je pagina layout');
 define('LangAtlasBrowserInfo'           ,'De gepersonaliseerde atlassen zijn enkel beschikbaar in Firefox, Chorme en Opera op dit moment.');
 define('atlasPageCenteredOn'            ,'Centrum op ');

@@ -20,6 +20,7 @@ define("LangQueryObjectsDSLOL"														,"Deepskylog Overview Landscape");
 define("LangQueryObjectsDSLOP"														,"Deepskylog Overview Portrait");
 */
 
+define('LangUnderHorizon'				,'au-dessus de l\'horizon');
 
 define('LangAtlasChoosePageLayout'      ,'Choisissez la mise en page');
 define('LangAtlasBrowserInfo'           ,'Les atlas personnalis&eacute;s ne sont que disponible en Firefox, Chrome et Opera en ce moment.');
