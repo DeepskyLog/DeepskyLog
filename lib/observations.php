@@ -1389,8 +1389,10 @@ class Observations {
       // Now we know when the moon rises and sets. We have to convert the time and compare with the time of the observation.
       // $moonCalc[0] = rise
       // $moonCalc[2] = set
-      $moonRise = sscanf($moonCalc[0], "%d:%d")[0] * 100.0 + sscanf($moonCalc[0], "%d:%d")[1];
-      $moonSet = sscanf($moonCalc[2], "%d:%d")[0] * 100.0 + sscanf($moonCalc[2], "%d:%d")[1];
+      $moonriseArray = sscanf($moonCalc[0], "%d:%d");
+      $moonsetArray = sscanf($moonCalc[2], "%d:%d");
+      $moonRise = $moonriseArray[0] * 100.0 + $moonriseArray[1];
+      $moonSet = $moonsetArray[0] * 100.0 + $moonsetArray[1];
       
       $moonAboveHorizon = true;
       if ($moonRise > $moonSet) {
