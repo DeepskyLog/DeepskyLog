@@ -10,7 +10,7 @@ else databaseInfo();
 function databaseInfo()
 { 
   global $host,$user,$pass,$dbname,$developversion,$googleAnalytics,$domainName,
-         $instDir,$baseURL,$tempDir,$mailFrom,$mailTo,$dirAtlasses,
+         $instDir,$baseURL,$tempDir,$mailFrom,$mailTo,$dirAtlasses,$copyright,
          $title,$browsertitle,$copyrightInfo,$vvsInfo,$dslInfo,$versionInfo,$objectInfo,$w3cInfo,
          $register,$dateformat,$defaultLanguage,$languageMenu,$maxFileSize,$modules,
          $standardLanguagesForObservationsDuringRegistration,$languagesDuringRegistration,$dirAstroImageCatalogs;
@@ -37,12 +37,13 @@ function databaseInfo()
   $title         = "<a href=\"http://www.deepskylog.org\">DeepskyLog</a>";
   // The first part of the title that has to appear on each browser window
   $browsertitle  = "DeepskyLog";
-  $copyrightInfo = "Copyright&nbsp;2004&nbsp;-&nbsp;2010&nbsp;-&nbsp;Deepskylog developers&nbsp;-&nbsp;";
-  $vvsInfo       = "<a href=\"http://www.distant-targets.be\">VVS Deepsky</a>&nbsp;-&nbsp;";
-  $dslInfo       = "Powered by&nbsp;<a href=\"http://www.deepskylog.org\">DeepskyLog</a>&nbsp;";
+  $copyright     = "&copy;2004&nbsp;-&nbsp;2013";
+  $copyrightInfo = $copyright.",&nbsp;Deepskylog developers";
+  $vvsInfo       = "VVS Deepsky&nbsp;-&nbsp;";
+  $dslInfo       = "Powered by&nbsp;DeepskyLog&nbsp;";
   $versionInfo   = "4.4-Trunk";
-  $objectInfo    = " - Object Database by <a href=\"http://www.eyeandtelescope.com/\" >Eye&amp;Telescope</a>" . 
-                   " - Star Database by Tycho2+ &amp; USNO-UCAC3";
+  $objectInfo    = "Object Database by Eye&amp;Telescope<br />" . 
+                   "Star Database by Tycho2+ &amp; USNO-UCAC3";
   $w3cInfo = "<a class=\"w3c\" href=\"http://validator.w3.org/check?uri=referer\">".
              "<img class=\"w3c\" src=\"".$baseURL."styles/images/valid-xhtml10S.png\" alt=\"Valid XHTML 1.0 Strict\" />".
              "</a>".
