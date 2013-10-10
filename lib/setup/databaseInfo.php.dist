@@ -38,7 +38,7 @@ function databaseInfo()
   // The first part of the title that has to appear on each browser window
   $browsertitle  = "DeepskyLog";
   $copyright     = "&copy;2004&nbsp;-&nbsp;2013";
-  $copyrightInfo = $copyright.",&nbsp;Deepskylog developers";
+  $copyrightInfo = $copyright.",&nbsp;DeepskyLog developers";
   $vvsInfo       = "VVS Deepsky&nbsp;-&nbsp;";
   $dslInfo       = "Powered by&nbsp;DeepskyLog&nbsp;";
   $versionInfo   = "4.4-Trunk";
