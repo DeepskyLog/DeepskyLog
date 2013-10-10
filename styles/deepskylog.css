@@ -24,6 +24,11 @@ footer {
   }
 }
 
+/* Set color of the links in the footer to black */
+footer a:link, footer a:visited  {
+  color: #000000; /* Black */
+}
+
 /* Tooltips */
 .tooltip {
   border-bottom: 1px dotted #000000;
@@ -80,7 +85,7 @@ footer {
 .footertooltip:hover span {
   font-family: Calibri, Tahoma, Geneva, sans-serif;
   position: absolute;
-  left: 0em;
+  left: 1em;
   top: -5em;
   z-index: 99;
   margin-left: 0;
