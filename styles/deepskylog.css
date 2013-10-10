@@ -75,7 +75,7 @@ footer a:link, footer a:visited  {
 .footertooltip {
   border-bottom: 1px dotted #000000;
   color: #000000; outline: none;
-  cursor: help; text-decoration: none;
+  text-decoration: none;
   position: relative;
 }
 .footertooltip span {
