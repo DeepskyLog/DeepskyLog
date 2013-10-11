@@ -36,8 +36,7 @@ try
   echo    "<footer>";
   echo    "<a class=\"footertooltip\" href=\"#\">" . $browsertitle . " " . $versionInfo . ", ";
   echo    "<small>" . $copyright . "</small>";
-  echo    "<span class=\"classic\">".$copyrightInfo."<br/>".$dslInfo.$versionInfo."<br/>".$objectInfo."</span>";                                      // defined in databaseInfo.ph)
-//  echo    "<span class=\"classic\">" . $copyrightInfo.$vvsInfo.$dslInfo.$versionInfo.$objectInfo . "</span>";                                      // defined in databaseInfo.ph)
+  echo    "<span class=\"classic\">".$copyrightInfo."<br/>".$dslInfo.$versionInfo."<br/>".$objectInfo."<br/>".$objectInfo2."</span>";                                      // defined in databaseInfo.ph)
   echo    "</a>";
   echo    "</footer>";
   echo    "<div id=\"div5\">";                                                                            // div 5 = page contents
