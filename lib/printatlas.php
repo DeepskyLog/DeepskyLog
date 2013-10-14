@@ -274,7 +274,7 @@ class PrintAtlas
   
   function atlasDrawLegend()
   { for($i=11,$legendx=30;$i>=0;$i--)                    
-	  { $this->pdf->filledEllipse($this->Legend1x+$legendx,$this->canvasDimensionYpx-$this->Legend1y-3,(.25*$i),(.25*$i),0,$this->nsegmente);
+	  { $this->pdf->filledEllipse($this->Legend1x+$legendx,$this->canvasDimensionYpx-$this->Legend1y-3,(.25*$i + 0.5),(.25*$i + 0.5),0,$this->nsegmente);
 	    $legendx+=(0.5*$i)+5;
 	    $this->pdf->addText($this->Legend1x+$legendx, $this->canvasDimensionYpx-$this->Legend1y-5, $this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)));
 	    $legendx+=$this->pdf->getTextWidth($this->fontSize1b, ((($this->starsmagnitude))-(.5*$i)));
@@ -656,7 +656,7 @@ class PrintAtlas
     $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
     if((!((($cx-$d<$this->lx)||($cx+$d>$this->rx))))&&
        (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
-    { $this->pdf->filledEllipse($cx,$cy,(.25*$d),(.25*$d),0,$this->nsegmente);
+    { $this->pdf->filledEllipse($cx,$cy,(.25*$d + 0.5),(.25*$d + 0.5),0,$this->nsegmente);
       if($name && (($cx+4+(($d+1)>>1))>$this->lx)&&(($cx+4+(($d+1)>>1)+(strlen($name)*$this->fontSize1b))<$this->rx)&&(($cy-($this->fontSize1a>>1))<$this->ty)&&(($cy+($this->fontSize1a>>1))>$this->by))
         $this->astroDrawObjectLabel($cx, $cy, 1, $name, '-');
         //$this->pdf->addText(($cx+4+(($d+1)>>1)), $cy-($this->fontSize1a>>1), $this->fontSize1b, $name);
