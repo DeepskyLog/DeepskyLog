@@ -8,13 +8,12 @@ else headmenu();
 function headmenu()
 { global $baseURL,$leftmenu,$loggedUser,$modules,$thisDay,$thisMonth,$thisYear,$topmenu, $register,
          $objUtil,$objLocation,$objInstrument,$objObserver,$objMessages, $instDir, $objDatabase;
-  echo "<div id=\"div1\" onmouseover=\"resizeForm(theLeftMenu,'show');\">";
-	echo "<img src=\"".$baseURL."styles/images/header_bg.jpg\" alt=\"Vereniging voor Sterrenkunde - DeepskyLog\"/>";
+
+    echo "<header>";
+	// Everything is set in the css
+	echo "</header>";
 	
-	echo "<div id=\"div1a\">";
-	echo "<img src=\"".$baseURL."styles/images/deepskylog.gif\" alt=\"DSL\" />";
-	echo "</div>";
-	
+	// TODO : html5
 	if($loggedUser)
 	{ echo "<div id=\"div1b\">";
 		echo "<div class=\"floatright\">";
@@ -25,7 +24,6 @@ function headmenu()
 		echo "</div>";
 		echo "</div>";
 	}
-	echo "</div>";
 	
 	// Welcome line with login name
 	echo "<div id=\"div2\">";

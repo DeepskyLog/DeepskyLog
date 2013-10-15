@@ -5,6 +5,16 @@ a:link, a:visited {
   font-family      : Verdana, Arial, Helvetica, sans-serif;
 }
 
+/* Small media : set the header */
+header {
+  background-color : #003366;
+  background-image : url('images/deepskylog.gif');
+  background-repeat: no-repeat;
+  position         : fixed;
+  left             : 0px;        top     : 0px;
+  width            : 100%;       height  : 64px;
+}
+
 /* Small media : set the footer */
 footer {
   font-family      : Verdana, Trebuchet MS, Arial, Helvetica, sans-serif;
@@ -18,9 +28,13 @@ footer {
 }
 
 /* Media for larger devices */
-@media screen and (min-width: 800px) {
+@media screen and (min-width: 600px) {
   footer {
     background: #5C7D9D;
+  }
+
+  header {
+    background-image : url('images/header_bg.jpg');
   }
 }
 
