@@ -1851,6 +1851,7 @@ $AtlasNameDSLLL 		  	="Deepskylog Lookup Landscape";
 $AtlasNameDSLLP 			  ="Deepskylog Lookup Portrait";
 $AtlasNameDSLOL 		  	="Deepskylog Overview Landscape";
 $AtlasNameDSLOP 			  ="Deepskylog Overview Portrait";
+$AtlasNameDeepskyHunter     ="Deep Sky Hunter";
 
 // Types of Observations
 $ASTER 									="Assoziation";

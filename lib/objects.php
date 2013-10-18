@@ -1107,6 +1107,7 @@ class Objects
     $objDatabase->execSQL("UPDATE objects SET DSLLP         = \"".$objAtlas->calculateAtlasPage('DSLLP'        ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
     $objDatabase->execSQL("UPDATE objects SET DSLOL         = \"".$objAtlas->calculateAtlasPage('DSLOL'        ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
     $objDatabase->execSQL("UPDATE objects SET DSLOP         = \"".$objAtlas->calculateAtlasPage('DSLOP'        ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET DeepskyHunter = \"".$objAtlas->calculateAtlasPage('DeepskyHunter',$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
   }
   public  function setDsObjectSBObj($name)
   { global $objDatabase,$objUtil;

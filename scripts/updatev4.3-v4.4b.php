@@ -16,5 +16,7 @@
  $run = mysql_query($sql) or die(mysql_error()); 
   $sql = "ALTER TABLE objects ADD COLUMN DSLOP VARCHAR(4) NOT NULL DEFAULT 0 ;";
  $run = mysql_query($sql) or die(mysql_error()); 
+  $sql = "ALTER TABLE objects ADD COLUMN DeepskyHunter VARCHAR(4) NOT NULL DEFAULT 0 ;";
+ $run = mysql_query($sql) or die(mysql_error()); 
  print "Database update successful.\n";
 ?>

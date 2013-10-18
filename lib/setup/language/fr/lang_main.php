@@ -1097,6 +1097,7 @@ define("LangViewObjectField22"														,"Deepskylog Opzoeken Landscape");
 define("LangViewObjectField23"														,"Deepskylog Opzoeken Portrait");
 define("LangViewObjectField24"														,"Deepskylog Overzicht Landscape");
 define("LangViewObjectField25"														,"Deepskylog Overzicht Portrait");define("LangViewObjectFieldContrastReserve"								,"R&eacute;serve de contrast");
+define("LangViewObjectFieldContrastReserve"								,"R&eacute;serve de contrast");
 define("LangViewObjectFieldMagnification"									,"Agrandissement pr&#233;f&#233;r&#233;");
 define("LangViewObjectFieldOptimumDetectionMagnification"	,"Agrandissement de d&#233;tection optimale");
 define("LangViewObjectDSS"																,"Voir l'image DSS");
@@ -1805,12 +1806,13 @@ $AtlasNamepsa 					="Pocket Sky Atlas";
 $AtlasNametorresB 			="Triatlas B (Torres)";
 $AtlasNametorresBC 			="Triatlas BC (Torres)";
 $AtlasNametorresC 			="Triatlas C (Torres)";
-$AtlasNameDSLDL    			="Deepskylog Detail Landscape";
-$AtlasNameDSLDP 	  		="Deepskylog Detail Portrait";
-$AtlasNameDSLLL 		  	="Deepskylog Opzoeken Landscape";
-$AtlasNameDSLLP 			  ="Deepskylog Opzoeken Portrait";
-$AtlasNameDSLOL 		  	="Deepskylog Overzicht Landscape";
-$AtlasNameDSLOP 			  ="Deepskylog Overzicht Portrait";
+$AtlasNameDSLDL    			="Deepskylog D&eacute;tail Paysage";
+$AtlasNameDSLDP 	  		="Deepskylog D&eacute;tail Portrait";
+$AtlasNameDSLLL 		  	="Deepskylog Chercher Paysage";
+$AtlasNameDSLLP 			  ="Deepskylog Chercher Portrait";
+$AtlasNameDSLOL 		  	="Deepskylog Aper&ccedil;u Paysage";
+$AtlasNameDSLOP 			  ="Deepskylog Aper&ccedil;u Portrait";
+$AtlasNameDeepskyHunter     ="Deep Sky Hunter";
 
 // Types of Observations
 $ASTER 									= "Ast&eacute;risme";

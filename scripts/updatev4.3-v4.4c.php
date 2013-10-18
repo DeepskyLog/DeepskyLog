@@ -13,12 +13,13 @@
  $result=$objDatabase->selectRecordsetArray("SELECT name, ra, decl FROM objects");
 
  while(list($key,$value)=each($result))
- { $objDatabase->execSQL("UPDATE objects SET DSLDL       = \"".$objAtlas->calculateAtlasPage('DSLDL'      ,$value['ra'],$value['decl'])."\" WHERE name = \"".$value['name']."\"");
-   $objDatabase->execSQL("UPDATE objects SET DSLDP       = \"".$objAtlas->calculateAtlasPage('DSLDP'      ,$value['ra'],$value['decl'])."\" WHERE name = \"".$value['name']."\"");
-   $objDatabase->execSQL("UPDATE objects SET DSLLL       = \"".$objAtlas->calculateAtlasPage('DSLLL'      ,$value['ra'],$value['decl'])."\" WHERE name = \"".$value['name']."\"");
-   $objDatabase->execSQL("UPDATE objects SET DSLLP       = \"".$objAtlas->calculateAtlasPage('DSLLP'      ,$value['ra'],$value['decl'])."\" WHERE name = \"".$value['name']."\"");
-   $objDatabase->execSQL("UPDATE objects SET DSLOL       = \"".$objAtlas->calculateAtlasPage('DSLOL'      ,$value['ra'],$value['decl'])."\" WHERE name = \"".$value['name']."\"");
-   $objDatabase->execSQL("UPDATE objects SET DSLOP       = \"".$objAtlas->calculateAtlasPage('DSLOP'      ,$value['ra'],$value['decl'])."\" WHERE name = \"".$value['name']."\"");
+ { $objDatabase->execSQL("UPDATE objects SET DSLDL         = \"".$objAtlas->calculateAtlasPage('DSLDL'        ,$value['ra'],$value['decl'])."\" WHERE name = \"".$value['name']."\"");
+   $objDatabase->execSQL("UPDATE objects SET DSLDP         = \"".$objAtlas->calculateAtlasPage('DSLDP'        ,$value['ra'],$value['decl'])."\" WHERE name = \"".$value['name']."\"");
+   $objDatabase->execSQL("UPDATE objects SET DSLLL         = \"".$objAtlas->calculateAtlasPage('DSLLL'        ,$value['ra'],$value['decl'])."\" WHERE name = \"".$value['name']."\"");
+   $objDatabase->execSQL("UPDATE objects SET DSLLP         = \"".$objAtlas->calculateAtlasPage('DSLLP'        ,$value['ra'],$value['decl'])."\" WHERE name = \"".$value['name']."\"");
+   $objDatabase->execSQL("UPDATE objects SET DSLOL         = \"".$objAtlas->calculateAtlasPage('DSLOL'        ,$value['ra'],$value['decl'])."\" WHERE name = \"".$value['name']."\"");
+   $objDatabase->execSQL("UPDATE objects SET DSLOP         = \"".$objAtlas->calculateAtlasPage('DSLOP'        ,$value['ra'],$value['decl'])."\" WHERE name = \"".$value['name']."\"");
+   $objDatabase->execSQL("UPDATE objects SET DeepskyHunter = \"".$objAtlas->calculateAtlasPage('DeepskyHunter',$value['ra'],$value['decl'])."\" WHERE name = \"".$value['name']."\"");
  }
  
  print "Database update successful.\n";

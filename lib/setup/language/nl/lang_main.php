@@ -1821,6 +1821,7 @@ $AtlasNameDSLLL 		  	="Deepskylog Opzoeken Landscape";
 $AtlasNameDSLLP 			  ="Deepskylog Opzoeken Portrait";
 $AtlasNameDSLOL 		  	="Deepskylog Overzicht Landscape";
 $AtlasNameDSLOP 			  ="Deepskylog Overzicht Portrait";
+$AtlasNameDeepskyHunter     ="Deep Sky Hunter";
 
 // Types of Observations
 $ASTER 									="Asterisme";

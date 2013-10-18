@@ -30,6 +30,7 @@ class Atlasses
     if($atlas=='DSLOL')         return $this->calculateDSL(3,$ra,$decl);
     if($atlas=='DSLLL')         return $this->calculateDSL(4,$ra,$decl);
     if($atlas=='DSLDL')         return $this->calculateDSL(5,$ra,$decl);
+    if($atlas=='DeepskyHunter') return $this->calculateDeespkyHunter($ra,$decl);
     return '';
   }
   private function calculateDSL($atlastype,$ra,$decl)
@@ -378,6 +379,58 @@ class Atlasses
     // Offset; middle of 1st map is in the middle of 0 hours RA
     $MapOffset = (int)($ra / $HoursPerChart);
     return (int)($data[$Tier][1] + $MapOffset);
+  }
+  private function calculateDeespkyHunter($ra, $decl)
+  { if ($decl >= 75.0) {
+      if ($ra <= 12.0) {
+    	$dsh = 1;
+  	  } else {
+  	    $dsh = 2;
+  	  }
+    } else if ($decl >= 45.0) {
+  	  $ratemp = $ra - (24.0 / 14.0 / 2.0);
+  	  if ($ratemp < 0.0) {
+  		$ratemp += 24.0;
+  	  }
+  	  $diff = floor($ratemp / (24.0 / 14.0));
+  	  $dsh = 16 - $diff;
+    } else if ($decl >= 17.5) {
+  	  $ratemp = $ra - (24.0 / 20.0 / 2.0);
+  	  if ($ratemp < 0.0) {
+  		$ratemp += 24.0;
+  	  }
+  	  $diff = floor($ratemp / (24.0 / 20.0));
+  	  $dsh = 36 - $diff;
+    } else if ($decl >= -7.5) {
+  	  $ratemp = $ra - (24.0 / 20.0 / 2.0);
+  	  if ($ratemp < 0.0) {
+  		$ratemp += 24.0;
+  	  }
+  	  $diff = floor($ratemp / (24.0 / 20.0));
+  	  $dsh = 56 - $diff;
+    } else if ($decl >= -35.0) {
+  	  $ratemp = $ra - (24.0 / 20.0 / 2.0);
+  	  if ($ratemp < 0.0) {
+  		$ratemp += 24.0;
+  	  }
+  	  $diff = floor($ratemp / (24.0 / 20.0));
+  	  $dsh = 76 - $diff;
+    } else if ($decl >= -60.0) {
+  	  $ratemp = $ra - (24.0 / 16.0 / 2.0);
+  	  if ($ratemp < 0.0) {
+  		$ratemp += 24.0;
+  	  }
+  	  $diff = floor($ratemp / (24.0 / 16.0));
+  	  $dsh = 92 - $diff;
+    } else if ($decl >= -90.0) {
+  	  $ratemp = $ra - (24.0 / 9.0 / 2.0);
+  	  if ($ratemp < 0.0) {
+  		$ratemp += 24.0;
+  	  }
+  	  $diff = floor($ratemp / (24.0 / 9.0));
+  	  $dsh = 101 - $diff;
+    }
+    return $dsh;
   }
   private function calculateTakiPage($ra, $decl)
   { if ($decl >= 83)

@@ -16,6 +16,8 @@
  $run = mysql_query($sql) or die(mysql_error());
  $sql = "INSERT INTO atlasses VALUES ('DSLDL');";
  $run = mysql_query($sql) or die(mysql_error());
+ $sql = "INSERT INTO atlasses VALUES ('DeepskyHunter');";
+ $run = mysql_query($sql) or die(mysql_error());
  
  print "Database update successful.\n";
 ?>
