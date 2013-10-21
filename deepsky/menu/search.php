@@ -15,7 +15,7 @@ function menu_search()
 	$lastMinDay   = substr($theDate,6,2);
 	$link="";
 	reset($_GET);
-	echo "<li>
+	echo "<li class=\"test\">
 	       <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . LangSearchMenuTitle."<span class=\"arrow\"></span></a>";
 	echo " <ul>";
 	echo "  <li><a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;myLanguages=true&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay&amp;newobservations=true\">".LangSearchMenuItem9."</a></li>";

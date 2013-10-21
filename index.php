@@ -75,6 +75,8 @@ echo "<script type=\"text/javascript\" charset=\"utf-8\">
         });
        });
       </script>";
+echo "<script type=\"text/javascript\" src=\"".$baseURL."/lib/javascript/menu.js\"></script>";
+
 echo "</body>";
 echo "</html>";
 ?>

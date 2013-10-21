@@ -25,15 +25,16 @@ function headmenu()
 		echo "</div>";
 	}
 	
-	// Welcome line with login name
-	echo "<div id=\"div2\">";
+	echo "<nav>";
 
-	// Here, we set the new style, drop down menu
+	// Here, we set the new style, responsive drop down menu
 	// Make the drop down menu
-	echo " <ul id=\"menu\">";
- 	echo "<li>";
- 	echo "<a href=\"" . $baseURL . "index.php?title=Home\"><img src=\"" . $baseURL . "images/home.png\" /></a>";
- 	echo "</li>";
+	echo "<div class=\"container\">";
+	echo " <a class=\"toggleMenu\" href=\"#\">Menu</a>";
+	echo " <ul class=\"nav\">";
+ 	echo "  <li class=\"test\">";
+ 	echo "   <a href=\"" . $baseURL . "index.php?title=Home\"><img src=\"" . $baseURL . "images/home.png\" /></a>";
+ 	echo "  </li>";
 	require_once $instDir.$_SESSION['module'].'/menu/search.php';                                   // Overview MENU
  	if($_SESSION['module']=='deepsky') {
  		require_once $instDir.$_SESSION['module'].'/menu/quickpickDropDown.php';                                   // Search MENU
@@ -58,21 +59,21 @@ function headmenu()
 	}
 	
 	// Select the modules
-	echo "<span class=\"right\"><li>";
+	echo "<li>";
 	echo "<a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . $GLOBALS[$_SESSION['module']]. "<span class=\"arrow\"></span></a>";
-  echo "<ul><span class=\"left\">";
+    echo "<ul>"; //"<span class=\"left\">";
 	for ($i = 0; $i < count($modules);$i++)
  	{
     $mod = $modules[$i];
     if ($mod != $_SESSION['module']) {
       echo " <li><a href=\"".$baseURL."index.php?indexAction=module".$mod."\">".$GLOBALS[$mod]."</a></li>";
-    }
+   }
  	}
- 	echo "</span></ul>";
-	echo "</li></span>";
+ 	echo "</ul>";
+	echo "</li>";
 	
 	// If new messages != 0, make background red
-	echo "<span class=\"right\"><li>";
+	echo "<li>";
 	$unreadMails = $objMessages->getNumberOfUnreadMails();
 	$unreadMailsSplit = explode("/", $unreadMails);
 	if ($unreadMailsSplit[0] > 0) {
@@ -80,28 +81,25 @@ function headmenu()
 	} else {
 	  echo "<a href=\"". $baseURL . "index.php?indexAction=show_messages\">" . $unreadMails . "</a>";
 	}
-	echo "</li></span>";
+	echo "</li>";
 
-	echo "<span class=\"right\">";
 	if($loggedUser) {
 	  echo "<li><a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . $objObserver->getObserverProperty($loggedUser,'firstname') . "<span class=\"arrow\"></span></a>";
-  	echo "<ul><span class=\"left\">";
-  	echo " <li><a href=\"".$baseURL."index.php?indexAction=detail_observer&user=" . $loggedUser . "\">" . LangDetails . "</a></li>";
-    echo " <li><a href=\"".$baseURL."index.php?indexAction=change_account\">".LangChangeMenuItem1."</a></li>";
-    echo " <li><a href=\"".$baseURL."index.php?indexAction=logout&amp;title=".urlencode(LangLogoutMenuItem1)."\">".LangLogoutMenuItem1."</a></li>";
-  	echo "</span></ul>";
-    echo " </li></span>";	
+      echo "<ul>";
+      echo " <li><a href=\"".$baseURL."index.php?indexAction=detail_observer&user=" . $loggedUser . "\">" . LangDetails . "</a></li>";
+      echo " <li><a href=\"".$baseURL."index.php?indexAction=change_account\">".LangChangeMenuItem1."</a></li>";
+      echo " <li><a href=\"".$baseURL."index.php?indexAction=logout&amp;title=".urlencode(LangLogoutMenuItem1)."\">".LangLogoutMenuItem1."</a></li>";
+      echo "</ul>";
+      echo " </li>";	
 	} else {
 	  // Let's make a sign in / register tab
 	  if($register == "yes") {                                                       // includes register link 
 	    echo "<li><a class=\"register\" href=\"".$baseURL."index.php?indexAction=subscribe&amp;title=".urlencode(LangLoginMenuRegister)."\">".LangLoginMenuRegister."</a></li>";
-	    echo "</span><span class=\"right\">";
 	  }
 	  echo "<li><a href=\"" . $baseURL . "index.php?indexAction=login\">" . $objObserver->getObserverProperty($loggedUser,'firstname')."&nbsp;". LangLoginMenuTitle . "</a></li>";
-	  echo "</span>";	
 	}
 	echo " </ul>";
-  
 	echo "</div>";
+	echo "</nav>";
 }
 ?>

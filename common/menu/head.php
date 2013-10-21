@@ -13,6 +13,7 @@ function head()
 	echo "<meta name=\"revisit-after\" content=\"1 day\" />";
 	echo "<meta name=\"author\" content=\"DeepskyLog - VVS\" />";
 	echo "<meta name=\"keywords\" content=\"VVS, Vereniging Voor Sterrenkunde, astronomie, sterrenkunde, Deepsky, waarnemingen, kometen\" />";
+	echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
 	echo "<base href=\"".$baseURL."\" />";
 	echo "<link rel=\"shortcut icon\" href=\"".$baseURL."styles/images/favicon.ico\" />";
 	echo "<link href=\"".$baseURL."styles/deepskylog.css\" rel=\"stylesheet\" type=\"text/css\" />";
