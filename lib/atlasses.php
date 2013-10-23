@@ -15,22 +15,23 @@ class Atlasses
     asort($this->atlasCodes);
   }	
   public  function calculateAtlasPage($atlas, $ra, $decl)
-  { if($atlas=='milleniumbase') return $this->calculateMilleniumPage($ra,$decl);
-    if($atlas=='urano_new')     return $this->calculateNewUranometriaPage($ra,$decl);
-    if($atlas=='psa')           return $this->calculatePocketSkyAtlasPage($ra,$decl);
-    if($atlas=='sky')           return $this->calculateSkyAtlasPage($ra,$decl);
-    if($atlas=='taki')          return $this->calculateTakiPage($ra, $decl);
-    if($atlas=='torresB')       return $this->calculateTorresBPage($ra, $decl);
-    if($atlas=='torresBC')      return $this->calculateTorresBCPage($ra, $decl);
-    if($atlas=='torresC')       return $this->calculateTorresCPage($ra, $decl);
-    if($atlas=='urano')         return $this->calculateUranometriaPage($ra,$decl);
-    if($atlas=='DSLOP')         return $this->calculateDSL(0,$ra,$decl);
-    if($atlas=='DSLLP')         return $this->calculateDSL(1,$ra,$decl);
-    if($atlas=='DSLDP')         return $this->calculateDSL(2,$ra,$decl);
-    if($atlas=='DSLOL')         return $this->calculateDSL(3,$ra,$decl);
-    if($atlas=='DSLLL')         return $this->calculateDSL(4,$ra,$decl);
-    if($atlas=='DSLDL')         return $this->calculateDSL(5,$ra,$decl);
-    if($atlas=='DeepskyHunter') return $this->calculateDeespkyHunter($ra,$decl);
+  { if($atlas=='milleniumbase')  return $this->calculateMilleniumPage($ra,$decl);
+    if($atlas=='urano_new')      return $this->calculateNewUranometriaPage($ra,$decl);
+    if($atlas=='psa')            return $this->calculatePocketSkyAtlasPage($ra,$decl);
+    if($atlas=='sky')            return $this->calculateSkyAtlasPage($ra,$decl);
+    if($atlas=='taki')           return $this->calculateTakiPage($ra, $decl);
+    if($atlas=='torresB')        return $this->calculateTorresBPage($ra, $decl);
+    if($atlas=='torresBC')       return $this->calculateTorresBCPage($ra, $decl);
+    if($atlas=='torresC')        return $this->calculateTorresCPage($ra, $decl);
+    if($atlas=='urano')          return $this->calculateUranometriaPage($ra,$decl);
+    if($atlas=='DSLOP')          return $this->calculateDSL(0,$ra,$decl);
+    if($atlas=='DSLLP')          return $this->calculateDSL(1,$ra,$decl);
+    if($atlas=='DSLDP')          return $this->calculateDSL(2,$ra,$decl);
+    if($atlas=='DSLOL')          return $this->calculateDSL(3,$ra,$decl);
+    if($atlas=='DSLLL')          return $this->calculateDSL(4,$ra,$decl);
+    if($atlas=='DSLDL')          return $this->calculateDSL(5,$ra,$decl);
+    if($atlas=='DeepskyHunter')  return $this->calculateDeepskyHunter($ra,$decl);
+    if($atlas=='Interstellarum') return $this->calculateInterstellarum($ra,$decl);
     return '';
   }
   private function calculateDSL($atlastype,$ra,$decl)
@@ -380,7 +381,7 @@ class Atlasses
     $MapOffset = (int)($ra / $HoursPerChart);
     return (int)($data[$Tier][1] + $MapOffset);
   }
-  private function calculateDeespkyHunter($ra, $decl)
+  private function calculateDeepskyHunter($ra, $decl)
   { if ($decl >= 75.0) {
       if ($ra <= 12.0) {
     	$dsh = 1;
@@ -431,6 +432,27 @@ class Atlasses
   	  $dsh = 101 - $diff;
     }
     return $dsh;
+  }
+  private function calculateInterstellarum($ra, $decl)
+  { $data = array(array(  82.0,   1,  1),  // 1st tier, chart 1
+                  array(  67.0,   2,  6),  // 2nd tier, charts 2->7
+                  array(  52.0,   8,  8),  // 3rd tier, charts 8->15
+                  array(  37.0,  16,  12), // 4th tier, charts 16->27
+                  array(  22.0,  28,  12), // 5th tier, charts 28->39
+                  array(   7.0,  40,  12), // 6th tier, charts 40->51
+                  array(  -7.0,  52,  12), // 7th tier, charts 52->63
+                  array( -22.0,  64,  12), // 8th tier, charts 64->75
+                  array( -37.0,  76,  12), // 9th tier, charts 76->87
+                  array( -52.0,  88,  12), // 10th tier, charts 88->99
+                  array( -67.0, 100,  8),  // 11th tier, charts 100->107
+                  array( -82.0, 108,  6),  // 12th tier, charts 108->113
+                  array( -90.0, 114,  1)); // 13th tier, chart 114
+    // find proper tier
+    for ($Tier = 0; $decl < $data[$Tier][0]; $Tier++);
+      $HoursPerChart = 24.0 / $data[$Tier][2];
+    // Offset; middle of 1st map is in the middle of 0 hours RA
+    $MapOffset = (int)((24.0 - $ra) / $HoursPerChart);
+    return (int)($data[$Tier][1] + $MapOffset);
   }
   private function calculateTakiPage($ra, $decl)
   { if ($decl >= 83)

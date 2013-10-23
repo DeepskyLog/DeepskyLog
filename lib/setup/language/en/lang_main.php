@@ -1504,6 +1504,8 @@ define("LangQueryObjectsDSLLL"														,"Deepskylog Lookup Landscape");
 define("LangQueryObjectsDSLLP"														,"Deepskylog Lookup Portrait");
 define("LangQueryObjectsDSLOL"														,"Deepskylog Overview Landscape");
 define("LangQueryObjectsDSLOP"														,"Deepskylog Overview Portrait");
+define("LangQueryObjectsDeepskyHunter"												,"Deep Sky Hunter");
+define("LangQueryObjectsInterstellarum"												,"Interstellarum Deep Sky Atlas");
 
 define("LangQueryCometObjectsField1"											,"Minimum magnification");
 define("LangQueryCometObjectsField2"											,"Maximum magnification");
@@ -1825,6 +1827,7 @@ $AtlasNameDSLLP 			  ="Deepskylog Lookup Portrait";
 $AtlasNameDSLOL 		  	="Deepskylog Overview Landscape";
 $AtlasNameDSLOP 			  ="Deepskylog Overview Portrait";
 $AtlasNameDeepskyHunter     ="Deep Sky Hunter";
+$AtlasNameInterstellarum    ="Interstellarum Deep Sky Atlas";
 
 // Types of Observations
 $ASTER 									="Asterism";

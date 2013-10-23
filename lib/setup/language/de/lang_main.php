@@ -1,24 +1,4 @@
 <?php //GE
-/* To TRANSLATE: look for lines:
-$AtlasNameDSLDL    			="Deepskylog Detail Landscape";
-$AtlasNameDSLDP 	  		="Deepskylog Detail Portrait";
-$AtlasNameDSLLL 		  	="Deepskylog Lookup Landscape";
-$AtlasNameDSLLP 			  ="Deepskylog Lookup Portrait";
-$AtlasNameDSLOL 		  	="Deepskylog Overview Landscape";
-$AtlasNameDSLOP 			  ="Deepskylog Overview Portrait";
-define("LangViewObjectField20"														,"Deepskylog Detail Landscape");
-define("LangViewObjectField21"														,"Deepskylog Detail Portrait");
-define("LangViewObjectField22"														,"Deepskylog Lookup Landscape");
-define("LangViewObjectField23"														,"Deepskylog Lookup Portrait");
-define("LangViewObjectField24"														,"Deepskylog Overview Landscape");
-define("LangViewObjectField25"														,"Deepskylog Overview Portrait");
-define("LangQueryObjectsDSLDL"														,"Deepskylog Detail Landscape");
-define("LangQueryObjectsDSLDP"														,"Deepskylog Detail Portrait");
-define("LangQueryObjectsDSLLL"														,"Deepskylog Lookup Landscape");
-define("LangQueryObjectsDSLLP"														,"Deepskylog Lookup Portrait");
-define("LangQueryObjectsDSLOL"														,"Deepskylog Overview Landscape");
-define("LangQueryObjectsDSLOP"														,"Deepskylog Overview Portrait");
-*/
 define('LangUnderHorizon'				,'unter dem Horizont');
 
 
@@ -1534,6 +1514,8 @@ define("LangQueryObjectsDSLLL"														,"Deepskylog Lookup Landscape");
 define("LangQueryObjectsDSLLP"														,"Deepskylog Lookup Portrait");
 define("LangQueryObjectsDSLOL"														,"Deepskylog Overview Landscape");
 define("LangQueryObjectsDSLOP"														,"Deepskylog Overview Portrait");
+define("LangQueryObjectsDeepskyHunter"												,"Deep Sky Hunter");
+define("LangQueryObjectsInterstellarum"												,"Interstellarum Deep Sky Atlas");
 
 define("LangQueryCometObjectsField1"											,"Minimale Helligkeit");
 define("LangQueryCometOrjectsField2"											,"Maximale Helligkeit");
@@ -1848,10 +1830,11 @@ $AtlasNametorresC 			="Triatlas C (Torres)";
 $AtlasNameDSLDL    			="Deepskylog Detail Landscape";
 $AtlasNameDSLDP 	  		="Deepskylog Detail Portrait";
 $AtlasNameDSLLL 		  	="Deepskylog Lookup Landscape";
-$AtlasNameDSLLP 			  ="Deepskylog Lookup Portrait";
+$AtlasNameDSLLP 			="Deepskylog Lookup Portrait";
 $AtlasNameDSLOL 		  	="Deepskylog Overview Landscape";
-$AtlasNameDSLOP 			  ="Deepskylog Overview Portrait";
+$AtlasNameDSLOP 			="Deepskylog Overview Portrait";
 $AtlasNameDeepskyHunter     ="Deep Sky Hunter";
+$AtlasNameInterstellarum    ="Interstellarum Deep Sky Atlas";
 
 // Types of Observations
 $ASTER 									="Assoziation";

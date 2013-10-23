@@ -1092,22 +1092,23 @@ class Objects
   public  function setDsObjectAtlasPages($name)
   { global $objDatabase,$objAtlas;
     $result=$objDatabase->selectRecordArray("SELECT ra, decl FROM objects WHERE name = \"".$name."\"");
-    $objDatabase->execSQL("UPDATE objects SET urano         = \"".$objAtlas->calculateAtlasPage('urano'        ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
-    $objDatabase->execSQL("UPDATE objects SET urano_new     = \"".$objAtlas->calculateAtlasPage('urano_new'    ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
-    $objDatabase->execSQL("UPDATE objects SET sky           = \"".$objAtlas->calculateAtlasPage('sky'          ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
-    $objDatabase->execSQL("UPDATE objects SET milleniumbase = \"".$objAtlas->calculateAtlasPage('milleniumbase',$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
-    $objDatabase->execSQL("UPDATE objects SET taki          = \"".$objAtlas->calculateAtlasPage('taki'         ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
-    $objDatabase->execSQL("UPDATE objects SET psa           = \"".$objAtlas->calculateAtlasPage('psa'          ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
-    $objDatabase->execSQL("UPDATE objects SET torresB       = \"".$objAtlas->calculateAtlasPage('torresB'      ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
-    $objDatabase->execSQL("UPDATE objects SET torresBC      = \"".$objAtlas->calculateAtlasPage('torresBC'     ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
-    $objDatabase->execSQL("UPDATE objects SET torresC       = \"".$objAtlas->calculateAtlasPage('torresC'      ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
-    $objDatabase->execSQL("UPDATE objects SET DSLDL         = \"".$objAtlas->calculateAtlasPage('DSLDL'        ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
-    $objDatabase->execSQL("UPDATE objects SET DSLDP         = \"".$objAtlas->calculateAtlasPage('DSLDP'        ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
-    $objDatabase->execSQL("UPDATE objects SET DSLLL         = \"".$objAtlas->calculateAtlasPage('DSLLL'        ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
-    $objDatabase->execSQL("UPDATE objects SET DSLLP         = \"".$objAtlas->calculateAtlasPage('DSLLP'        ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
-    $objDatabase->execSQL("UPDATE objects SET DSLOL         = \"".$objAtlas->calculateAtlasPage('DSLOL'        ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
-    $objDatabase->execSQL("UPDATE objects SET DSLOP         = \"".$objAtlas->calculateAtlasPage('DSLOP'        ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
-    $objDatabase->execSQL("UPDATE objects SET DeepskyHunter = \"".$objAtlas->calculateAtlasPage('DeepskyHunter',$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET urano          = \"".$objAtlas->calculateAtlasPage('urano'         ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET urano_new      = \"".$objAtlas->calculateAtlasPage('urano_new'     ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET sky            = \"".$objAtlas->calculateAtlasPage('sky'           ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET milleniumbase  = \"".$objAtlas->calculateAtlasPage('milleniumbase' ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET taki           = \"".$objAtlas->calculateAtlasPage('taki'          ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET psa            = \"".$objAtlas->calculateAtlasPage('psa'           ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET torresB        = \"".$objAtlas->calculateAtlasPage('torresB'       ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET torresBC       = \"".$objAtlas->calculateAtlasPage('torresBC'      ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET torresC        = \"".$objAtlas->calculateAtlasPage('torresC'       ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET DSLDL          = \"".$objAtlas->calculateAtlasPage('DSLDL'         ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET DSLDP          = \"".$objAtlas->calculateAtlasPage('DSLDP'         ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET DSLLL          = \"".$objAtlas->calculateAtlasPage('DSLLL'         ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET DSLLP          = \"".$objAtlas->calculateAtlasPage('DSLLP'         ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET DSLOL          = \"".$objAtlas->calculateAtlasPage('DSLOL'         ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET DSLOP          = \"".$objAtlas->calculateAtlasPage('DSLOP'         ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET DeepskyHunter  = \"".$objAtlas->calculateAtlasPage('DeepskyHunter' ,$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
+    $objDatabase->execSQL("UPDATE objects SET Interstellarum = \"".$objAtlas->calculateAtlasPage('Interstellarum',$result['ra'],$result['decl'])."\" WHERE name = \"".$name."\"");
   }
   public  function setDsObjectSBObj($name)
   { global $objDatabase,$objUtil;
