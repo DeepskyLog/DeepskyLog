@@ -10,11 +10,11 @@
  $objAtlas=new Atlasses;
 
  print "Database update will add the interstellarum atlas as one of the standard atlasses.\n";
-# $sql = "INSERT INTO atlasses VALUES ('Interstellarum');";
-# $run = mysql_query($sql) or die(mysql_error());
+ $sql = "INSERT INTO atlasses VALUES ('Interstellarum');";
+ $run = mysql_query($sql) or die(mysql_error());
 
-# $sql = "ALTER TABLE objects ADD COLUMN Interstellarum VARCHAR(4) NOT NULL DEFAULT 0 ;";
-# $run = mysql_query($sql) or die(mysql_error());
+ $sql = "ALTER TABLE objects ADD COLUMN Interstellarum VARCHAR(4) NOT NULL DEFAULT 0 ;";
+ $run = mysql_query($sql) or die(mysql_error());
 
  $result=$objDatabase->selectRecordsetArray("SELECT name, ra, decl FROM objects");
 
