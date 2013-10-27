@@ -36,8 +36,11 @@ try
   echo    "<footer>";
   echo    "<a class=\"footertooltip\" href=\"#\">" . $browsertitle . " " . $versionInfo . ", ";
   echo    "<small>" . $copyright . "</small>";
-  echo    "<span class=\"classic\">".$copyrightInfo."<br/>".$dslInfo.$versionInfo."<br/>".$objectInfo."<br/>".$objectInfo2."</span>";                                      // defined in databaseInfo.ph)
-  echo    "</a>";
+  // defined in databaseInfo.php)
+  echo    "<span class=\"classic\">".$copyrightInfo."<br/>".$dslInfo.$versionInfo."<br/>".$objectInfo."<br/>".$objectInfo2;
+  echo    "</span></a>";
+  
+  
   echo    "</footer>";
   echo    "<div id=\"div5\">";                                                                            // div 5 = page contents
   if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
