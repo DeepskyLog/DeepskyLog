@@ -1000,7 +1000,7 @@ class Objects
 							 $fov[] = 1.0 / ($get6->diameter * $get6->fd / $get7->focalLength) * 60.0 * $get7->apparentFOV;
 						 }
   				 }
-	         $sql8 = "SELECT name, factor from lenses where observer = \"" . $loggedUser . "\"";
+	         $sql8 = "SELECT name, factor from lenses where observer = \"" . $loggedUser . "\"  AND lensactive=1";
   	       $run8 = mysql_query($sql8) or die(mysql_error());
  					 $origmagnifications = $magnifications;
 					 $origmagnificationsName = $magnificationsName;
