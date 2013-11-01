@@ -98,6 +98,7 @@ class Contrast
    // The preparations are finished, we can now start the calculations
 		$mags = $_SESSION['magnifications'];
     $magsName = $_SESSION['magnificationsName'];
+
     $fovs = $_SESSION['fov'];
 
 		if (count($mags) > 1)
