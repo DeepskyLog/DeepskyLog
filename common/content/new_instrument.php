@@ -51,7 +51,7 @@ function new_instrument()
 	                               ""),
 	                        "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 	$objPresentations->line(array(LangAddInstrumentField6,
-	                               "<input type=\"number\" min=\"0.1\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"5\" name=\"fixedMagnification\" size=\"5\" value=\"".($objUtil->checkRequestKey('fixedMagnification')).stripslashes($objInstrument->getInstrumentPropertyFromId($objUtil->checkRequestKey('instrumentid'),'fixedMagnification'))."\" />",
+	                               "<input type=\"number\" min=\"0.0\" step=\"0.1\" class=\"inputfield centered\" maxlength=\"5\" name=\"fixedMagnification\" size=\"5\" value=\"".($objUtil->checkRequestKey('fixedMagnification')).stripslashes($objInstrument->getInstrumentPropertyFromId($objUtil->checkRequestKey('instrumentid'),'fixedMagnification'))."\" />",
 	                               LangAddInstrumentField6Expl),
 	                        "RLL",array(25,40,35),'',array("fieldname","fieldvalue","fieldexplanation"));
 	echo "<hr />";
