@@ -51,6 +51,7 @@ function preludesB()
          $objList,
          $objLocation,
          $objObject,
+         $objObjectOutlines,
          $objObservation,
          $objObserverQueries,
          $objObserver,
@@ -72,6 +73,7 @@ function preludesB()
 	require_once "lib/observations.php";            $objObservation = new Observations;
 	require_once "lib/lists.php";                   $objList=new Lists;
 	require_once "lib/objects.php";                 $objObject=new Objects;
+	require_once "lib/objectOutlines.php";          $objObjectOutlines=new ObjectOutlines;
   include_once "lib/astrocalc.php";               $objAstroCalc=new AstroCalc;
 	require_once "lib/stars.php";                   $objStar=new Stars;
 	include_once "lib/cometobservations.php";       $objCometObservation = new cometObservations;

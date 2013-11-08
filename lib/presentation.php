@@ -416,7 +416,7 @@ class Presentations
 	    echo "<a href=\"#\" onclick=\"moveColumnLeft('".$id."');return false;\">&lt;</a>";
 	    echo "</td>";        
 	  }
-	  echo "<td class=\"centered width100pct\">";           
+	  echo "<td class=\"centered\">";           
 	  echo "<a href=\"".$link0."&amp;sortdirection=asc\"  title=\"".LangSortOnAsc."\">".trim($header0)."</a>";;
 	  echo "</td>";        
 	  if($id)
