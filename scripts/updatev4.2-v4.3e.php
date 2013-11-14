@@ -1082,35 +1082,73 @@ $sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 506
 $run = mysql_query($sql) or die(mysql_error());
 
 // IC 1318
-$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 1318\", 20.47457, +40.21134, \"start\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.47457, +40.21134, \"start\")";
 $run = mysql_query($sql) or die(mysql_error());
-$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 1318\", 20.46402, +40.13038, \"vertex\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.46402, +40.13038, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 1318\", 20.45030, +39.88822, \"vertex\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.45030, +39.88822, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 1318\", 20.44486, +39.80829, \"vertex\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.44486, +39.80829, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 1318\", 20.43594, +39.70678, \"vertex\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.43594, +39.70678, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 1318\", 20.44933, +39.65297, \"vertex\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.44933, +39.65297, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 1318\", 20.45952, +39.71713, \"vertex\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.45952, +39.71713, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 1318\", 20.46971, +39.79471, \"vertex\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.46971, +39.79471, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 1318\", 20.47961, +39.87883, \"vertex\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.47961, +39.87883, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 1318\", 20.48335, +39.76392, \"vertex\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.48335, +39.76392, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 1318\", 20.48779, +39.75469, \"vertex\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.48779, +39.75469, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 1318\", 20.49566, +39.82442, \"vertex\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.49566, +39.82442, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 1318\", 20.50193, +39.98566, \"vertex\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.50193, +39.98566, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 1318\", 20.50330, +40.06422, \"vertex\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.50330, +40.06422, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 1318\", 20.48595, +40.15946, \"end\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.48595, +40.15946, \"end\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.43614, +40.86146, \"start\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.45025, +40.72942, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.46687, +40.50231, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.45688, +40.28172, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.43490, +40.13899, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.39997, +40.09607, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.38600, +40.29152, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.38939, +40.35082, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.40055, +40.30751, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.42315, +40.31907, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.42364, +40.36011, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.40878, +40.34466, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.39934, +40.41266, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.40675, +40.53469, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.41112, +40.57716, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.42822, +40.55239, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.43046, +40.61443, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.42742, +40.74968, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"LDN 889\", 20.42849, +40.80113, \"end\")";
 $run = mysql_query($sql) or die(mysql_error());
 
 // NGC 6888
@@ -2743,183 +2781,305 @@ $run = mysql_query($sql) or die(mysql_error());
 $sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"IC 410\", 05.38512, +33.57147, \"end\")";
 $run = mysql_query($sql) or die(mysql_error());
 
-/*
-05.66984, +02.76126     Niet in DSL
-05.68822, +02.62955
-05.70925, +02.57636
-05.73902, +02.40463
-05.74861, +02.15482
-05.76873, +01.90444
-05.78095, +01.64117
-05.78791, +01.36493
-05.79928, +01.21985
-05.81240, +01.10095
-05.83080, +01.08693
-05.84483, +01.09938
-05.85271, +01.12526
-05.86319, +00.94078
-05.87366, +00.73002
-05.88240, +00.59819
-05.89199, +00.41378
-05.90161, +00.34763
-05.91470, +00.12369
-05.91727, -00.15232
-05.91720, -00.54645
-05.91801, -00.92743
-05.92758, -01.24293
-05.93536, -01.75512
-05.95194, -01.97849
-05.95975, -02.29336
-05.97715, -02.69977
-05.99110, -02.89620
-05.98580, -03.18427
-05.98050, -03.56381
-05.97606, -03.94309
-05.97165, -04.20454
-05.95331, -04.10035
-05.94810, -03.91739
-05.92182, -04.08763
-05.91133, -04.00922
-05.90876, -03.70826
-05.91754, -03.53808
-05.93772, -03.24999
-05.94738, -03.00110
-05.94480, -02.77833
-05.92033, -02.62082
-05.90812, -02.38455
-05.89682, -01.96435
-05.89516, -01.47845
-05.88644, -01.24174
-05.88563, -00.91324
-05.89268, -00.61126
-05.89713, -00.24348
-05.89367, -00.01994
-05.88233, +00.21710
-05.87009, +00.33593
-05.85697, +00.45482
-05.85000, +00.63916
-05.84740, +00.78386
-05.83426, +00.82391
-05.81848, +00.78522
-05.79921, +00.85183
-05.78085, +01.11555
-05.76775, +01.35271
-05.76167, +01.64205
-05.74242, +01.83992
-05.72666, +01.97190
-05.71532, +02.24806
-05.68207, +02.55104, \"end\")";
+// Sh 2-27625
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.66984, +02.76126, \"start\")";
 $run = mysql_query($sql) or die(mysql_error());
-05.95961, -05.23169 Niet in DeepskyLog
-05.96560, -05.55249
-05.96349, -06.15882
-05.93466, -06.45932
-05.90251, -06.90865
-05.87526, -07.30777
-05.86050, -07.85415
-05.85398, -08.23865
-05.83658, -08.57451
-05.80830, -08.94810
-05.79741, -08.84982
-05.78983, -08.59032
-05.82887, -07.98077
-05.83293, -07.67077
-05.83775, -07.15006
-05.86427, -06.90005
-05.88828, -06.68721
-05.90219, -06.25242
-05.91442, -05.83029
-05.93008, -05.68016
-05.94735, -05.48036, \"end\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.68822, +02.62955, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-05.64447, -09.61960 Niet in DeepskyLog
-05.62354, -09.81652
-05.59175, -09.88880
-05.54495, -09.86018
-05.50910, -09.74515
-05.49833, -09.55871
-05.48087, -09.45771
-05.45098, -09.29305
-05.41775, -09.28769
-05.39455, -09.22193
-05.41287, -09.10193
-05.42701, -09.04261
-05.44945, -09.02138
-05.48019, -09.09967
-05.51093, -09.28861
-05.51419, -09.48654
-05.53586, -09.53826
-05.55339, -09.51523
-05.58512, -09.56716
-05.61353, -09.54416
-05.63192, -09.59443, \"end\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.70925, +02.57636, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-20.43614, +40.86146  Misschien in DeepskyLog?
-20.45025, +40.72942
-20.46687, +40.50231
-20.45688, +40.28172
-20.43490, +40.13899
-20.39997, +40.09607
-20.38600, +40.29152
-20.38939, +40.35082
-20.40055, +40.30751
-20.42315, +40.31907
-20.42364, +40.36011
-20.40878, +40.34466
-20.39934, +40.41266
-20.40675, +40.53469
-20.41112, +40.57716
-20.42822, +40.55239
-20.43046, +40.61443
-20.42742, +40.74968
-20.42849, +40.80113, \"end\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.73902, +02.40463, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-20.81381, +31.96305 Stuk sluiernevel?
-20.80585, +31.97775
-20.79671, +31.92298
-20.79255, +31.90891
-20.80323, +31.88156
-20.81391, +31.85136
-20.81510, +31.91537, \"end\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.74861, +02.15482, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-20.81775, +31.75884 Stuk sluiernevel?
-20.80981, +31.77891
-20.79791, +31.78755
-20.78982, +31.74615
-20.79553, +31.67807
-20.80130, +31.54345
-20.80682, +31.42736
-20.81068, +31.30563
-20.81182, +31.19943
-20.81251, +31.12241
-20.81577, +31.18407
-20.81692, +31.28264
-20.81410, +31.42584
-20.81435, +31.60141
-20.81886, +31.68452
-20.82006, +31.74587
-20.81714, +31.74545, \"end\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.76873, +01.90444, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-20.78653, +31.53804 Stuk sluiernevel?
-20.78434, +31.45781
-20.78177, +31.35888
-20.78628, +31.40501
-20.78935, +31.44285
-20.78824, +31.50115, \"end\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.78095, +01.64117, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-20.79932, +30.51509 	Stuk sluiernevel?
-20.80394, +30.51257
-20.80731, +30.47993
-20.80607, +30.43991
-20.80039, +30.47546
-20.80063, +30.48545, \"end\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.78791, +01.36493, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-20.81282, +30.34806 Stuk sluiernevel?
-20.81390, +30.28517
-20.81471, +30.24215
-20.82033, +30.25624
-20.82028, +30.31596
-20.81771, +30.33219, \"end\")";
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.79928, +01.21985, \"vertex\")";
 $run = mysql_query($sql) or die(mysql_error());
-*/
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.81240, +01.10095, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.83080, +01.08693, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.84483, +01.09938, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.85271, +01.12526, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.86319, +00.94078, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.87366, +00.73002, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.88240, +00.59819, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.89199, +00.41378, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.90161, +00.34763, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.91470, +00.12369, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.91727, -00.15232, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.91720, -00.54645, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.91801, -00.92743, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.92758, -01.24293, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.93536, -01.75512, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.95194, -01.97849, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.95975, -02.29336, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.97715, -02.69977, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.99110, -02.89620, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.98580, -03.18427, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.98050, -03.56381, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.97606, -03.94309, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.97165, -04.20454, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.95331, -04.10035, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.94810, -03.91739, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.92182, -04.08763, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.91133, -04.00922, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.90876, -03.70826, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.91754, -03.53808, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.93772, -03.24999, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.94738, -03.00110, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.94480, -02.77833, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.92033, -02.62082, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.90812, -02.38455, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.89682, -01.96435, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.89516, -01.47845, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.88644, -01.24174, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.88563, -00.91324, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.89268, -00.61126, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.89713, -00.24348, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.89367, -00.01994, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.88233, +00.21710, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.87009, +00.33593, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.85697, +00.45482, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.85000, +00.63916, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.84740, +00.78386, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.83426, +00.82391, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.81848, +00.78522, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.79921, +00.85183, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.78085, +01.11555, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.76775, +01.35271, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.76167, +01.64205, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.74242, +01.83992, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.72666, +01.97190, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.71532, +02.24806, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.68207, +02.55104, \"end\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.95961, -05.23169, \"start\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.96560, -05.55249, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.96349, -06.15882, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.93466, -06.45932, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.90251, -06.90865, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.87526, -07.30777, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.86050, -07.85415, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.85398, -08.23865, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.83658, -08.57451, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.80830, -08.94810, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.79741, -08.84982, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.78983, -08.59032, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.82887, -07.98077, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.83293, -07.67077, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.83775, -07.15006, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.86427, -06.90005, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.88828, -06.68721, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.90219, -06.25242, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.91442, -05.83029, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.93008, -05.68016, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.94735, -05.48036, \"end\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.64447, -09.61960, \"start\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.62354, -09.81652, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.59175, -09.88880, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.54495, -09.86018, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.50910, -09.74515, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.49833, -09.55871, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.48087, -09.45771, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.45098, -09.29305, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.41775, -09.28769, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.39455, -09.22193, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.41287, -09.10193, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.42701, -09.04261, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.44945, -09.02138, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.48019, -09.09967, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.51093, -09.28861, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.51419, -09.48654, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.53586, -09.53826, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.55339, -09.51523, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.58512, -09.56716, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.61353, -09.54416, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"Sh 2-276\", 05.63192, -09.59443, \"end\")";
+$run = mysql_query($sql) or die(mysql_error());
+
+// NGC 6979
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81381, +31.96305, \"start\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.80585, +31.97775, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.79671, +31.92298, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.79255, +31.90891, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.80323, +31.88156, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81391, +31.85136, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81510, +31.91537, \"end\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81775, +31.75884, \"start\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.80981, +31.77891, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.79791, +31.78755, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.78982, +31.74615, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.79553, +31.67807, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.80130, +31.54345, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.80682, +31.42736, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81068, +31.30563, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81182, +31.19943, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81251, +31.12241, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81577, +31.18407, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81692, +31.28264, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81410, +31.42584, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81435, +31.60141, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81886, +31.68452, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.82006, +31.74587, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81714, +31.74545, \"end\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.78653, +31.53804, \"start\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.78434, +31.45781, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.78177, +31.35888, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.78628, +31.40501, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.78935, +31.44285, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.78824, +31.50115, \"end\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.79932, +30.51509, \"start\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.80394, +30.51257, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.80731, +30.47993, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.80607, +30.43991, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.80039, +30.47546, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.80063, +30.48545, \"end\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81282, +30.34806, \"start\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81390, +30.28517, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81471, +30.24215, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.82033, +30.25624, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.82028, +30.31596, \"vertex\")";
+$run = mysql_query($sql) or die(mysql_error());
+$sql = "INSERT INTO objectOutlines (objectname, ra, decl, type) VALUES (\"NGC 6979\", 20.81771, +30.33219, \"end\")";
+$run = mysql_query($sql) or die(mysql_error());
 ?>

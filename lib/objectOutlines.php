@@ -9,8 +9,13 @@ class ObjectOutlines
 { 
   public  function getAllObjects()                  // returns a list of all objects which have outlines
   { global $objDatabase;
-	$objectNames=$objDatabase->selectRecordArray("select DISTINCT(objectname) from objectOutlines");
+	$objectNames=$objDatabase->selectSingleArray("select DISTINCT(objectname) from objectOutlines", "objectname");
     return $objectNames;
+  }
+  public  function getOutlines($name)                // returns a list of all coordinates for the outlines of an object
+  { global $objDatabase;
+	$objectCoordinates=$objDatabase->selectRecordSetArray("select * from objectOutlines where objectname = \"".$name."\"");
+    return $objectCoordinates;
   }
 }
 ?>

@@ -426,7 +426,7 @@ class PrintAtlas
     if((!((($cx-$d<$this->lx)||($cx+$d>$this->rx))))&&
        (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
     { $this->pdf->filledEllipse($cx,$cy,(.5*$d),(.5*$d),0,$this->nsegmente);
-      $this->astroDrawObjectLabel($cx,$cy,(($d+1)>>1),$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
+      //$this->astroDrawObjectLabel($cx,$cy,(($d+1)>>1),$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
     }     
   }
   function astroDrawStar1Object($i)
@@ -457,16 +457,18 @@ class PrintAtlas
 	
   
 	function astroDrawObjects($theobject='')
-	{ global $objObject,$objUtil;
+	{ global $objObject,$objUtil,$objObjectOutlines;
 	  $excludelist=Array('Sh','Simeis','Dwb');
 	  $this->astroObjectsArr=$objObject->getObjectsMag($this->gridlLhr,$this->gridrLhr,$this->griddDdeg,$this->griduDdeg,-999999,$this->atlasmagnitude,$objObject->getExactDsObject($objUtil->checkRequestKey('object'),$theobject));
 	  $z=count($this->astroObjectsArr);
 	  for($i=0;$i<$z;$i++)
 	  { $thecat = substr($this->astroObjectsArr[$i]["name"],0,strrpos($this->astroObjectsArr[$i]["name"]," "));
-	  	if((!(in_array($thecat,$excludelist)))&&($this->astroObjectsArr[$i]["type"]!='AASTAR1'))
-  	  { if(($this->astroObjectsArr[$i]["mag"]>$this->maxshowndsomag)&&($this->astroObjectsArr[$i]["mag"]<99))
-  	      $this->maxshowndsomag=$this->astroObjectsArr[$i]["mag"];
-  	    if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
+	  	if (in_array($this->astroObjectsArr[$i]["name"], $objObjectOutlines->getAllObjects())) {
+  	    	$this->astroDrawObjectOutline($i);
+  	    } else if((!(in_array($thecat,$excludelist)))&&($this->astroObjectsArr[$i]["type"]!='AASTAR1')) {
+  	      if(($this->astroObjectsArr[$i]["mag"]>$this->maxshowndsomag)&&($this->astroObjectsArr[$i]["mag"]<99))
+  	      		$this->maxshowndsomag=$this->astroObjectsArr[$i]["mag"];
+		  else if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
 	        $this->astroDrawStar1Object($i);
 	      else if(in_array($this->astroObjectsArr[$i]["type"],array('AA2STAR','AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
 	        $this->astroDrawStarxObject($i);
@@ -505,41 +507,83 @@ class PrintAtlas
 	}
 
 	function astroDrawObject($theobject='')
-	{ global $objObject,$objUtil;
+	{ global $objObject,$objUtil,$objObjectOutlines;
 	  $this->astroObjectsArr=$objObject->getObject($theobject);
 	  $z=count($this->astroObjectsArr);
 	  for($i=0;$i<$z;$i++)
 	  { if($this->astroObjectsArr[$i]["type"]!='AASTAR1')
-  	  { if(($this->astroObjectsArr[$i]["mag"]>$this->maxshowndsomag)&&($this->astroObjectsArr[$i]["mag"]<99))
-  	      $this->maxshowndsomag=$this->astroObjectsArr[$i]["mag"];
-  	    if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
-	        $this->astroDrawStar1Object($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('AA2STAR','AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
-	        $this->astroDrawStarxObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('ASTER','LMCOC','OPNCL','SMCOC')))
-	        $this->astroDrawOCObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('BRTNB','EMINB','ENRNN','ENSTR','GXADN','LMCDN','REFNB','RNHII','SMCDN','SNREM','STNEB','WRNEB')))
-	        $this->astroDrawBRTNBObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('CLANB','GACAN','LMCCN','SMCCN','GXADN','LMCDN','HII')))
-	        $this->astroDrawCLANBObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('DRKNB')))
-	        $this->astroDrawDRKNBObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('GALCL')))
-	        $this->astroDrawGXCLObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('GALXY')))
-	        $this->astroDrawGXObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('GLOCL','GXAGC','LMCGC','SMCGC')))
-	        $this->astroDrawGCObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('PLNNB')))
-	        $this->astroDrawPNObject($i);
-	      else if(in_array($this->astroObjectsArr[$i]["type"],array('QUASR')))
-	        $this->astroDrawQSRObject($i);
-	      else 
-	        $this->astroDrawBRTNBObject($i); 
+  	  { if (in_array($this->astroObjectsArr[$i]["name"], $objObjectOutlines->getAllObjects())) {
+  	    	$this->astroDrawObjectOutline($i);
+  	    } else {
+  	  		if(($this->astroObjectsArr[$i]["mag"]>$this->maxshowndsomag)&&($this->astroObjectsArr[$i]["mag"]<99))
+  	      		$this->maxshowndsomag=$this->astroObjectsArr[$i]["mag"];
+			if($this->astroObjectsArr[$i]["type"]=='AA1STAR')
+	        	$this->astroDrawStar1Object($i);
+		    else if(in_array($this->astroObjectsArr[$i]["type"],array('AA2STAR','AA3STAR','ASTAR','AA5STAR','AA6STAR','AA7STAR','AA8STAR','DS')))
+		        $this->astroDrawStarxObject($i);
+	    	else if(in_array($this->astroObjectsArr[$i]["type"],array('ASTER','LMCOC','OPNCL','SMCOC')))
+	        	$this->astroDrawOCObject($i);
+		    else if(in_array($this->astroObjectsArr[$i]["type"],array('BRTNB','EMINB','ENRNN','ENSTR','GXADN','LMCDN','REFNB','RNHII','SMCDN','SNREM','STNEB','WRNEB')))
+		        $this->astroDrawBRTNBObject($i);
+	    	else if(in_array($this->astroObjectsArr[$i]["type"],array('CLANB','GACAN','LMCCN','SMCCN','GXADN','LMCDN','HII')))
+	        	$this->astroDrawCLANBObject($i);
+		    else if(in_array($this->astroObjectsArr[$i]["type"],array('DRKNB')))
+		        $this->astroDrawDRKNBObject($i);
+	    	else if(in_array($this->astroObjectsArr[$i]["type"],array('GALCL')))
+	        	$this->astroDrawGXCLObject($i);
+		    else if(in_array($this->astroObjectsArr[$i]["type"],array('GALXY')))
+		        $this->astroDrawGXObject($i);
+	    	else if(in_array($this->astroObjectsArr[$i]["type"],array('GLOCL','GXAGC','LMCGC','SMCGC')))
+	        	$this->astroDrawGCObject($i);
+		    else if(in_array($this->astroObjectsArr[$i]["type"],array('PLNNB')))
+		        $this->astroDrawPNObject($i);
+	    	else if(in_array($this->astroObjectsArr[$i]["type"],array('QUASR')))
+	        	$this->astroDrawQSRObject($i);
+		    else 
+		        $this->astroDrawBRTNBObject($i); 
+  	  	}
   	  }
 	  }
 	}
 	
+	function astroDrawObjectOutline($i) {
+		global $objObject,$objUtil,$objObjectOutlines;
+		
+		$outlines = $objObjectOutlines->getOutlines($this->astroObjectsArr[$i]["name"]);
+		
+		// Check the number of different parts of the nebula
+ 		$numberOfVertices = 0;
+ 		for ($j=0;$j<count($outlines);$j++) {
+   			if($outlines[$j]['type'] == "start") {
+     			$numberOfVertices++;
+   			}
+ 		}
+
+ 		$counter = 0;
+ 		for ($j=0;$j<$numberOfVertices;$j++) {
+  			$polygonCoordinates = Array();
+  			while($outlines[$counter]['type'] != "end") {
+  				$this->gridLDrad($outlines[$counter]['ra'], $outlines[$counter]['decl']);
+  				$cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+  				$cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+   				array_push($polygonCoordinates, $cx, $cy);
+   				$counter++;
+  			}
+			$this->gridLDrad($outlines[$counter]['ra'], $outlines[$counter]['decl']);
+  			$cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
+  			$cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
+   			array_push($polygonCoordinates, $cx, $cy);
+  			$counter++;
+
+			// Close the polygon
+			array_push($polygonCoordinates, $polygonCoordinates[0], $polygonCoordinates[1]);
+			$this->pdf->setLineStyle(0.5,'','');
+		    $this->pdf->polygon($polygonCoordinates, count($polygonCoordinates) / 2);
+		    $this->pdf->setLineStyle(0.5,'','');
+	 	}
+	    $d = 10;
+	    $this->astroDrawObjectLabel($cx,$cy,$d,$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
+	}
 	
 	function astroDrawPNObject($i)
 	{ $this->pdf->addText(10,10,$this->fontSize1b,"PN");
@@ -657,9 +701,10 @@ class PrintAtlas
     if((!((($cx-$d<$this->lx)||($cx+$d>$this->rx))))&&
        (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
     { $this->pdf->filledEllipse($cx,$cy,(.25*$d + 0.5),(.25*$d + 0.5),0,$this->nsegmente);
-      if($name && (($cx+4+(($d+1)>>1))>$this->lx)&&(($cx+4+(($d+1)>>1)+(strlen($name)*$this->fontSize1b))<$this->rx)&&(($cy-($this->fontSize1a>>1))<$this->ty)&&(($cy+($this->fontSize1a>>1))>$this->by))
+      if($name && (($cx+4+(($d+1)>>1))>$this->lx)&&(($cx+4+(($d+1)>>1)+(strlen($name)*$this->fontSize1b))<$this->rx)&&(($cy-($this->fontSize1a>>1))<$this->ty)&&(($cy+($this->fontSize1a>>1))>$this->by)) {
         $this->astroDrawObjectLabel($cx, $cy, 1, $name, '-');
         //$this->pdf->addText(($cx+4+(($d+1)>>1)), $cy-($this->fontSize1a>>1), $this->fontSize1b, $name);
+      }
     }     
   }
   
