@@ -5,6 +5,38 @@ a:link, a:visited {
   font-family      : Verdana, Arial, Helvetica, sans-serif;
 }
 
+aside {
+  position         : fixed;
+	width            : 153px;
+  background-color: #5C7D9D;
+  left             : 0px;         top    : 95px;
+  bottom           : 13px;
+}
+
+#blueBackground {
+  position         : fixed;
+  background-color : #5C7D9D;
+  left             : 153px;         top    : 95px;
+  bottom           : 13px;          right  : 0px;
+}
+
+#whiteArea {
+	border-radius    : 10px;
+  position         : fixed;
+	background-color : WHITE;
+  left             : 160px;         top    : 100px;
+  bottom           : 13px;          right  : 5px;
+}
+
+section {
+	position         : absolute;
+	overflow         : scroll;
+	overflow-x       : hidden;
+  overflow-y       : auto;
+	left             : 5px;           top    : 5px;  
+	bottom           : 20px;          right  : 10px;
+}
+
 /* Small media : set the header */
 header {
   background-color : #003366;

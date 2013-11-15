@@ -51,7 +51,7 @@ define('LangAtlassesIntro01'            ,"Je kan drie types atlassen downloaden:
                                            - de <b>overzicht</b> atlassen hebben paginas van 20 graden, en tonen sterren tot magnitude 10;<br />
                                            - de <b>opzoek</b> atlassen hebben paginas van 12 graden, en tonen sterren tot magnitude 12;<br />
                                            - de <b>detail</b> atlassen hebben paginas van 6 graden, and show stars to magnitude 15.<br/><br/>
-                                           De atlassen vermelden of de objecten al gezien zijn in Deepskylog (streepjes ondelijnd)<br />
+                                           De atlassen vermelden of de objecten al gezien zijn in Deepskylog (streepjes onderlijnd)<br />
                                            of door jezelf (bij de gepersonaliseerde atlassen voor geregistreerde gebruikers, volledige onderlijnd, of ook overlijnd indien geschetst).");
 define('LangAtlassesIntro02'            ,'Algemene atlassen / gepersonaliseerde atlassen');
 define('LangAtlassesIntro03'            ,'Je kan kiezen voor algemene atlassen, of (als je een geregistreerde gebruiker bent) voor gepersonaliseerde atlassen.<br>
