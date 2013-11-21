@@ -240,6 +240,11 @@ a {text-decoration: none;}
     border: 1px solid green;
     border-radius: 10px;
 }
+.moonpic {
+	float            : right;
+	margin-right     : 50px;
+  margin-top       : 7px; 
+}
 
 @media screen and (max-width: 768px) {
     .active {

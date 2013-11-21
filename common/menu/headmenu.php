@@ -10,7 +10,8 @@ function headmenu()
          $objUtil,$objLocation,$objInstrument,$objObserver,$objMessages, $instDir, $objDatabase;
 
     echo "<header>";
-	// Everything is set in the css
+	// We also put the moon in the header
+	require_once $instDir.'common/menu/moon.php';                                                   // MOON MENU
 	echo "</header>";
 	
 	// TODO : html5

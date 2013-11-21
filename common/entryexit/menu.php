@@ -12,6 +12,5 @@ function menu()
   } else
     require_once $instDir.'common/menu/languagemenu.php';                                         // LANGUAGE MENU   
     require_once $instDir.$_SESSION['module'].'/menu/quickpick.php';                                // QUICKPICK MENU
-    require_once $instDir.'common/menu/moon.php';                                                   // MOON MENU
   }
 ?>
