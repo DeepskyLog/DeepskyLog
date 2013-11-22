@@ -149,8 +149,8 @@ function menu_moon()
         echo "</tr>";
       }
       echo "</table>";
-      echo "<br />".$nextNewMoonText."<br />";
     }
+    echo "<br />".$nextNewMoonText."<br />";
     echo    "</span></a>";
 }
 ?>
