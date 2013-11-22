@@ -122,48 +122,35 @@ function menu_moon()
 	  }     
 	}
 	
-//	echo "<div class=\"menuDiv\">";
 	reset($_GET);
 	$link="";
-//	while(list($key,$value)=each($_GET))
-//	  if($key!="menuMoon")
-//	    $link.="&amp;".$key."=".urlencode($value);
-//	reset($_GET);
-//	echo "<p  class=\"menuHead\">";
-//	if($menuMoon=="collapsed")
-//	  echo "<a href=\"".$baseURL."index.php?menuMoon=expanded".$link."\" title=\"".LangMenuExpand."\">+</a> ";
-//	else
-//	  echo "<a href=\"".$baseURL."index.php?menuMoon=collapsed".$link."\" title=\"".LangMenuCollapse."\">-</a> ";
-//	echo (($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation'))?LangMoonSunMenuTitle:LangMoonMenuTitle)."<br />";
-//	if($menuMoon!="collapsed")
-//	  echo"<span class=\"menuText\" style=\"font-weight:normal;\">".LangOn." ".$dateTimeText0."&gt;&lt;".$dateTimeText1."</span>";
-//	echo "</p>";
-//	if($menuMoon!="collapsed") { 
-//	 if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) 
-//	  { echo "<table class=\"centered\">";
-//	    echo "<tr class=\"menuText\">";
-//	    echo "<th>".LangMoonNight."</th>"."<th>".LangFrom."</th>"."<th>".LangTo."</th>";
-//	    echo "</tr>";
- //       if (isset($_SESSION['efemerides'])) {
-//	      echo "<tr>";
-//	      echo "<td>".LangMoon."</td>"."<td>".$_SESSION['efemerides']['moon0']."</td>"."<td>".$_SESSION['efemerides']['moon2']."</td>";
-//	      echo "</tr>";
-//	      echo "<tr>";
-//	      echo "<td>".LangMoonSun."</td>"."<td>".$_SESSION['efemerides']['sset']."</td>"."<td>".$_SESSION['efemerides']['srise']."</td>";
-//	      echo "</tr>";
-//	      echo "<tr>";
-//	      echo "<td>".LangMoonNaut."</td>"."<td>".$_SESSION['efemerides']['naute']."</td>"."<td>".$_SESSION['efemerides']['nautb']."</td>";
-//	      echo "</tr>";
-//	      echo "<tr>";
-//	      echo "<td>".LangMoonAstro."</td>"."<td>".$_SESSION['efemerides']['astroe']."</td>"."<td>".$_SESSION['efemerides']['astrob']."</td>";
-//	      echo "</tr>";
- //       }
-//	    echo "</table>";
-//	  }
-	  $file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
-	  echo "<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" />";
-	  echo $nextNewMoonText;
-//	}
-//	echo "</div>";
+    $file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
+
+    echo    "<a class=\"tooltip\" href=\"#\">";
+    echo "<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" />";
+    echo    "<span class=\"classic\">";
+    echo    LangOn." ".$dateTimeText0."&gt;&lt;".$dateTimeText1;
+	if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) 
+    { echo "<table class=\"centered\">";
+      echo "<th>".LangMoonNight."</th>"."<th>".LangFrom."</th>"."<th>".LangTo."</th>";
+      echo "</tr>";
+      if (isset($_SESSION['efemerides'])) {
+        echo "<tr>";
+        echo "<td>".LangMoon."</td>"."<td>".$_SESSION['efemerides']['moon0']."</td>"."<td>".$_SESSION['efemerides']['moon2']."</td>";
+        echo "</tr>";
+        echo "<tr>";
+        echo "<td>".LangMoonSun."</td>"."<td>".$_SESSION['efemerides']['sset']."</td>"."<td>".$_SESSION['efemerides']['srise']."</td>";
+        echo "</tr>";
+        echo "<tr>";
+        echo "<td>".LangMoonNaut."</td>"."<td>".$_SESSION['efemerides']['naute']."</td>"."<td>".$_SESSION['efemerides']['nautb']."</td>";
+        echo "</tr>";
+        echo "<tr>";
+        echo "<td>".LangMoonAstro."</td>"."<td>".$_SESSION['efemerides']['astroe']."</td>"."<td>".$_SESSION['efemerides']['astrob']."</td>";
+        echo "</tr>";
+      }
+      echo "</table>";
+      echo "<br />".$nextNewMoonText."<br />";
+    }
+    echo    "</span></a>";
 }
 ?>

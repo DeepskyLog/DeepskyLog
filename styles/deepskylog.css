@@ -80,7 +80,7 @@ footer a:link, footer a:visited  {
   border-bottom: 1px dotted #000000;
   color: #000000; outline: none;
   cursor: help; text-decoration: none;
-  position: relative;
+#  position: relative;
 }
 .tooltip span {
   margin-left: -999em;
@@ -89,8 +89,8 @@ footer a:link, footer a:visited  {
 .tooltip:hover span {
   font-family: Calibri, Tahoma, Geneva, sans-serif;
   position: absolute;
-  left: 1em;
-  top: 2em;
+  right: 1em;
+  top: 5em;
   z-index: 99;
   margin-left: 0;
   width: 250px;
@@ -241,9 +241,9 @@ a {text-decoration: none;}
     border-radius: 10px;
 }
 .moonpic {
-	float            : right;
-	margin-right     : 50px;
-  margin-top       : 7px; 
+	position         : fixed;
+	right            : 50px;
+	top              : 7px;
 }
 
 @media screen and (max-width: 768px) {
