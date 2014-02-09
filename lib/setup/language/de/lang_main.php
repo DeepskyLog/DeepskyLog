@@ -1273,6 +1273,8 @@ define("LangViewObservationField41"												,"Ungew&ouml;hnliche Form");
 define("LangViewObservationField42"												,"Teilweise nicht aufgel&ouml;st");
 define("LangViewObservationField43"												,"Sterne zeigen auff&auml;lligen Kontrast z.B. in der Farbe");
 define("LangViewObservationField44"												,"F&uuml;ge die Beobachtung der Liste hinzu ");
+define("LangViewObservationField45"												,"In der Liste ");
+define("LangViewObservationField46"												,"Nicht in der Liste ");
 
 define("LangViewObservationButton1"												,"Beobachtung anlegen");
 define("LangViewObservationButton2"												,"Felder l&ouml;schen");
@@ -1495,7 +1497,7 @@ define("LangQueryObjectsField15"													,"Minimaler Breitengrad");
 define("LangQueryObjectsField16"													,"Maximaler Breitengrad");
 define("LangQueryObjectsField17"													,"Maximale Kontrast Reserve");
 define("LangQueryObjectsField18"													,"Minimale Kontrast Reserve");
-define("LangQueryObjectsField19"													,"Nicht in der Liste");
+define("LangQueryObjectsField19"													,"In der Liste");
 define("LangQueryObjectsField20"													,"Nicht in der Liste");
 define("LangQueryObjectsButton1"													,"Abfrage abschicken");
 define("LangQueryObjectsButton2"													,"L&ouml;sche Felder");

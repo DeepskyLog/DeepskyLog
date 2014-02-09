@@ -1261,6 +1261,8 @@ define("LangViewObservationField41"												,"Unusual Shape");
 define("LangViewObservationField42"												,"Partly unresolved");
 define("LangViewObservationField43"												,"Color contrasts");
 define("LangViewObservationField44"												,"Add the observation to the list ");
+define("LangViewObservationField45"												,"In the list ");
+define("LangViewObservationField46"												,"Not in the list ");
 
 define("LangViewObservationButton1"												,"Add observation");
 define("LangViewObservationButton2"												,"Clear fields");

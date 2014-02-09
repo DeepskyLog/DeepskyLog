@@ -549,6 +549,37 @@ class Observations {
 		  $sqland .= "AND (objectnames.altname like \"" .trim($queries["catalog"] . ' ' . $queries['number'] . '%') . "\") ";
 		elseif (array_key_exists('number', $queries)&&$queries['number']) 
 		  $sqland .= "AND (objectnames.altname like \"" .trim($queries["number"]) . "\") ";
+
+		
+		if(array_key_exists('inlist',$queries) && $queries['inlist'])
+		{	if(substr($queries['inlist'],0,7)=="Public:")
+			{ $sql1 .= "JOIN observerobjectlist AS A " .
+		             "ON A.objectname = objects.name ";
+		    $sql2 .= "JOIN observerobjectlist AS A " .
+			           "ON A.objectname = objects.name ";
+				$sqland .= "AND A.listname = \"" . $queries['inlist'] . "\" AND A.objectname <>\"\" ";
+			}
+			elseif($loggedUser)
+		  { $sql1 .= "JOIN observerobjectlist AS A " .
+		 	           "ON A.objectname = objects.name ";
+		    $sql2 .= "JOIN observerobjectlist AS A " .
+			           "ON A.objectname = objects.name ";
+			  $sqland .= "AND A.observerid = \"" .$loggedUser. "\" AND A.listname = \"" . $queries['inlist'] . "\" AND A.objectname <>\"\" ";
+			}
+		}  
+		if(array_key_exists('notinlist',$queries) && $queries['notinlist'])
+		{ if(substr($queries['notinlist'],0,7)=="Public:")
+		  { $sql1 .= " LEFT JOIN observerobjectlist AS B " .
+			           "ON B.objectname = objects.name ";
+		    $sql2 .= " LEFT JOIN observerobjectlist AS B " .
+			           "ON B.objectname = objects.name ";
+				$sqland .= " AND B.listname = \"" . $queries['notinlist'] . "\" AND B.objectname IS NULL ";
+			}
+			elseif(array_key_exists('deepskylog_id',$_SESSION) && $loggedUser)
+			{ $sqland .= " AND (objectnames.objectname NOT IN (SELECT objectname FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $queries['notinlist'] . "\" ) ) ";
+			}
+		}	
+		
 		$sqland .= (isset ($queries["observer"]) && $queries["observer"]) ? " AND observations.observerid = \"" . $queries["observer"] . "\" " : '';
 		if (isset ($queries["instrument"]) && ($queries["instrument"] != "")) {
 			$sqland .= "AND (observations.instrumentid = \"" . $queries["instrument"] . "\" ";
