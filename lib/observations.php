@@ -1427,7 +1427,7 @@ class Observations {
       
       $moonAboveHorizon = true;
       if ($moonRise > $moonSet) {
-      	if ($time <= $moonRise && $time >= moonSet) {
+      	if ($time <= $moonRise && $time >= $moonSet) {
       		$moonAboveHorizon = false;
       	}
       } else {

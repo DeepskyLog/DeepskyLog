@@ -183,7 +183,7 @@ define('LangShowTopMenu','Kopfzeilen anzeigen');  // TO TRANSLATE
 define('LangHideLeftMenu','Menu Struktur links ausblenden');  // TO TRANSLATE
 define('LangShowLeftMenu','Menu Struktur links einblenden');  // TO TRANSLATE
 define('LangInPrivateLists','In meinen Listen');
-define('LangInLPublicists','In &ouml;ffentlichen Listen');
+define('LangInPublicLists','In &ouml;ffentlichen Listen');
 define("LangObjectShowExtraInfo","Anzeigen/Ausblenden von Zusatzinformationen...");    // TO TRANSLATE
 define("LangButtonOnlyObjectDetails"      ,"Nur Objekt Details");  // TO TRANSLATE
 define("LangButtonObjectDetails"          ,"Objekt Details");  // TO TRANSLATE

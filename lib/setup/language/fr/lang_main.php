@@ -1075,7 +1075,7 @@ define("LangViewObjectField21"														,"Deepskylog Detail Portrait");
 define("LangViewObjectField22"														,"Deepskylog Opzoeken Landscape");
 define("LangViewObjectField23"														,"Deepskylog Opzoeken Portrait");
 define("LangViewObjectField24"														,"Deepskylog Overzicht Landscape");
-define("LangViewObjectField25"														,"Deepskylog Overzicht Portrait");define("LangViewObjectFieldContrastReserve"								,"R&eacute;serve de contrast");
+define("LangViewObjectField25"														,"Deepskylog Overzicht Portrait");
 define("LangViewObjectFieldContrastReserve"								,"R&eacute;serve de contrast");
 define("LangViewObjectFieldMagnification"									,"Agrandissement pr&#233;f&#233;r&#233;");
 define("LangViewObjectFieldOptimumDetectionMagnification"	,"Agrandissement de d&#233;tection optimale");
