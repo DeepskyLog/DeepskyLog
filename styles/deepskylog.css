@@ -1,4 +1,50 @@
-a:link, a:visited {
+header
+{
+  position:relative;
+  width:auto;
+  margin: 0 auto 20px auto;
+}
+
+header h1
+{
+  margin:3px 0 0 0;
+  font-size:55px;
+  color:#5C7D9D;
+  font-family: 'Baumans', cursive;
+  padding-left: 30px;
+}
+
+header .moonpic {
+  float            : right;
+  padding-right    : 50px;
+  top              : 7px;
+}
+
+footer {
+	background:#333333;
+	width: auto;
+}
+
+footer p {
+	padding-top:3px;
+  padding-bottom:3px;
+  font-size: 14px;
+  font-family: 'Open Sans', sans-serif;
+  color: #ababab;
+	text-align: center;	
+}
+
+footer p a:link {
+	text-decoration: none;
+	color: yellow;
+}
+
+// Todo : Make menu
+nav ul li {
+	display: inline-block;
+}
+
+/*a:link, a:visited {
   font-size        : 11px;
   color            : #FF9900;
   text-decoration  : none;
@@ -36,18 +82,18 @@ section {
 	left             : 5px;           top    : 5px;  
 	bottom           : 20px;          right  : 10px;
 }
-
+*/
 /* Small media : set the header */
-header {
+/*header {
   background-color : #003366;
   background-image : url('images/deepskylog.gif');
   background-repeat: no-repeat;
   left             : 0px;        top     : 0px;
   width            : 100%;       height  : 64px;
 }
-
+*/
 /* Small media : set the footer */
-footer {
+/*footer {
   font-family      : Verdana, Trebuchet MS, Arial, Helvetica, sans-serif;
   font-size        : 11px;
 	bottom: 0;
@@ -57,9 +103,9 @@ footer {
   right: 0;
   background: #5C7D9D;
 }
-
+*/
 /* Media for larger devices */
-@media screen and (min-width: 768px) {
+/*@media screen and (min-width: 768px) {
   footer {
     background: #5C7D9D;
   }
@@ -69,14 +115,14 @@ footer {
 	background-image : url('images/header_bg.jpg');
   }
 }
-
+*/
 /* Set color of the links in the footer to black */
-footer a:link, footer a:visited  {
+/*footer a:link, footer a:visited  {
   color: #000000; /* Black */
 }
-
+*/
 /* Tooltips */
-.tooltip {
+/*.tooltip {
   border-bottom: 1px dotted #000000;
   color: #000000; outline: none;
   cursor: help; text-decoration: none;
@@ -287,8 +333,8 @@ a {text-decoration: none;}
 }
 
 @media screen and (min-width: 768px) {
-    /* Color for hovering */
-    .nav a:hover{
+*/    /* Color for hovering */
+/*    .nav a:hover{
         background-color:#e4ebf8;
     }
     .container {
@@ -296,3 +342,4 @@ a {text-decoration: none;}
     }
     
 }
+*/

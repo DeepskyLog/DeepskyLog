@@ -10,6 +10,9 @@ function headmenu()
          $objUtil,$objLocation,$objInstrument,$objObserver,$objMessages, $instDir, $objDatabase;
 
     echo "<header>";
+    // We set the title of the page
+    echo "<h1>DeepskyLog</h1>";
+    
 	// We also put the moon in the header
 	require_once $instDir.'common/menu/moon.php';                                                   // MOON MENU
 	echo "</header>";
@@ -30,6 +33,8 @@ function headmenu()
 
 	// Here, we set the new style, responsive drop down menu
 	// Make the drop down menu
+	
+	// Position fixed for the menu??
 	echo "<div class=\"container\">";
 	echo " <a class=\"toggleMenu\" href=\"#\">Menu</a>";
 	echo " <ul class=\"nav\">";

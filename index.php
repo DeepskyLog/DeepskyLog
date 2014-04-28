@@ -12,7 +12,7 @@ try
   require_once 'common/entryexit/instructions.php';                                                            // Execution of all non-layout related instructions (login, add objects to lists, etc.)
   $includeFile=$objUtil->utilitiesDispatchIndexAction();                                                  // Determine the page to show
   require_once 'common/entryexit/data.php';                                                                    // Get data for the form, object data, observation data, etc.
-  echo    "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" >";
+  echo    "<!DOCTYPE html>";
   echo    "<html>";
   require_once 'common/menu/head.php';                                                                         // HTML head
   echo    "<body onkeydown=\"bodyOnKeyDown(event);\">"; 
@@ -26,23 +26,15 @@ try
   echo    "<aside>";                                                                            // div3 = left menu section
   require_once 'common/entryexit/menu.php';
   echo    "</aside>";
-  echo    "<div id=\"blueBackground\">";
-  echo    "<div id=\"whiteArea\">";
   echo    "<section>";                                                                            // div 5 = page contents
   if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
     echo "<p class=\"centered\">".$entryMessage."</p><hr />";
     require_once $includeFile;
   echo    "</section>";
-  echo    "</div>";
-  echo    "</div>";
   echo    "<footer>";
-  echo    "<a class=\"footertooltip\" href=\"#\">" . $browsertitle . " " . $versionInfo . ", ";
-  echo    "<small>" . $copyright . "</small>";
-  // defined in databaseInfo.php)
-  echo    "<span class=\"classic\">".$copyrightInfo."<br/>".$dslInfo.$versionInfo."<br/>".$objectInfo."<br/>".$objectInfo2;
-  echo    "</span></a>";
-  
-  
+  echo    "<p>" . $versionInfo . " - " . $copyright . "</p>";
+  echo    "<p>" . $vvsInfo . "</p>";
+  echo    "<p>" . $objectInfo." - ".$objectInfo2 . "</p>";
   echo    "</footer>";
 }
 catch (Exception $e)
