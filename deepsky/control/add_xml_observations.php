@@ -123,6 +123,7 @@ function add_xml_observations()
 	    }
 	
 	    $valid = true;
+
 	    // Get the type
 	    if ($target->getAttribute("xsi:type")) {
 	      $type =  $target->getAttribute("xsi:type");
@@ -154,13 +155,13 @@ function add_xml_observations()
 	      } else if ($type == "oal:deepSkyNA") {
 	        $targetInfoArray["type"] = "NONEX";
    	    } else {
-   	      $valid = false;
 	        $next = 0;
-                $valid = false;
+	        $valid = false;
 	      }
 	    } else {
 	      $valid = false;
 	    }
+	
 	
 	    $targetInfoArray["known"] = $next;
 	
@@ -881,7 +882,7 @@ function add_xml_observations()
 	                $body="<OAL>" . LangValidateAccountEmailTitleObject." ".$targetName." ". "www.deepskylog.org/index.php?indexAction=detail_object&object=".urlencode($targetName)." ".
 	                      LangValidateAccountEmailTitleObjectObserver." ".$objObserver->getObserverProperty($loggedUser,'name')." ".$objObserver->getObserverProperty($loggedUser,'firstname')." www.deepskylog.org/index.php?indexAction=detail_observer&user=".urlencode($loggedUser);
 	                if(isset($developversion)&&($developversion==1))
-	                  $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<br />".$mailTo . ", " . $targetName . ", " . $body . ", " . $mailFrom;
+	                  $entryMessage.="On the live server, a mail would be sent with the subject: ".$subject.".<br />";
 	                else
 	                  mail($mailTo, LangValidateAccountEmailTitleObject . " " . $targetName, $body, "From:".$mailFrom);
   	            }

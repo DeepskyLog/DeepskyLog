@@ -7,7 +7,7 @@ else setup_observations_query();
 
 function setup_observations_query()
 { global $baseURL, $loggedUser, $allLanguages, $usedLanguages, $usedLanguages,$DSOcatalogs,
-         $objPresentations, $objUtil, $objObserver, $objList, $objAtlas, $objObject, $objInstrument, $objLocation, $listError;
+         $objPresentations, $objUtil, $objObserver, $objAtlas, $objObject, $objInstrument, $objLocation;
   $QobsParamsCount=0;
 	if(array_key_exists('QobsParams',$_SESSION))
     if(!(($_SESSION['QobsParams']['mindate']==date('Ymd', strtotime('-1 year')))&&($_SESSION['QobsParams']['catalog']=='%')))
@@ -602,36 +602,7 @@ function setup_observations_query()
 		echo "</td>";
 		echo "<td>"."&nbsp;"."</td>";
 		echo "</tr>";
-		echo "<tr>";
-		// IN LIST
-		echo "<td class=\"fieldname".(($listError)?" errorclass":"")."\">".LangViewObservationField45."</td>";
-		echo "<td>";
-		$lists = $objList->getLists();
-		echo "<select id=\"inlist\" name=\"inlist\" class=\"inputfield\">";
-		echo "<option value=\"\">-----</option>";
-		if(($inList=$objUtil->checkGetKey('inList'))=='')
-		if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
-		$inList=$_SESSION['QobjParams']['inList'];
-		while(list($key, $value) = each($lists))
-		echo("<option".(($value==$inList)?" selected=\"selected\"":"")." value=\"".$value."\">".$value."</option>");
-		echo "</select>";
-		echo "</td>";
-/*		// NOT IN LIST
-		echo "<td class=\"fieldname".(($listError)?" errorclass":"")."\">".LangViewObservationField46."</td>";
-		echo "<td>";
-		reset($lists);
-		echo "<select id=\"notinlist\" name=\"notinlist\" class=\"inputfield\">";
-		echo "<option value=\"\">-----</option>";
-		if(($notInList=$objUtil->checkGetKey('notInList'))=='')
-		if(array_key_exists('QobjParams',$_SESSION)&&(count($_SESSION['QobjParams'])==$QobjParamsCount))
-		$notInList=$_SESSION['QobjParams']['notInList'];
-		while(list($key, $value) = each($lists))
-		echo("<option".(($value==$notInList)?" selected=\"selected\"":"")." value=\"".$value."\">".$value."</option>");
-		echo "</select>";
-		echo "</td>";
-*/
-		echo "</tr>";
-		// LANGUAGES
+	// LANGUAGES
 		echo "<tr>";
 		echo "<td class=\"fieldname\">".LangChangeVisibleLanguages."</td>";
 		$j=1;

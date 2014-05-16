@@ -53,8 +53,6 @@ function clearFields()
   document.getElementById('minvisibility').selectedIndex=0;
   document.getElementById('description').value='';
   document.getElementById('maxvisibility').selectedIndex=0;
-  document.getElementById('inlist').selectedIndex=0;
-  //document.getElementById('notinlist').selectedIndex=0;
   var temp=document.getElementById("temp").value;
   while((pos=temp.indexOf('/'))>=0)
   { document.getElementById(temp.substr(0,pos)).checked='';
