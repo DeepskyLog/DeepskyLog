@@ -78,6 +78,7 @@ function validate_observation()
 	          $destination_image = $instDir.'comets/'.$upload_dir . "/" . $current_observation . "_resized.jpg";
 	          $new_image = image_createThumb($original_image,$destination_image,490,490,100);
 	          move_uploaded_file($_FILES['drawing']['tmp_name'], $instDir.'comets/'.$upload_dir . "/" . $current_observation . ".jpg");
+              $objCometObservation->setDrawing($current_observation);
 	        }
 	        // save current details for faster submission of multiple observations
 	        $_SESSION['year'] = $_POST['year']; // save current year
