@@ -12,7 +12,7 @@ try
   require_once 'common/entryexit/instructions.php';                                                            // Execution of all non-layout related instructions (login, add objects to lists, etc.)
   $includeFile=$objUtil->utilitiesDispatchIndexAction();                                                  // Determine the page to show
   require_once 'common/entryexit/data.php';                                                                    // Get data for the form, object data, observation data, etc.
-  echo    "<!DOCTYPE html>";
+  echo    "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" >";
   echo    "<html>";
   require_once 'common/menu/head.php';                                                                         // HTML head
   echo    "<body onkeydown=\"bodyOnKeyDown(event);\">"; 
@@ -22,20 +22,25 @@ try
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/ajaxbase.js\"></script>";
   echo    "<script type=\"text/javascript\" 
               src=\"http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js\"></script>";
+  echo    "<div id=\"div4\">";                                                                            
+  echo    "<p class=\"waitMessage\">".LangIndexPleaseWait."</p>";
+  echo    "<img id=\"div4a\" src=\"".$baseURL."styles/images/lu.gif\" alt=\"\" />";
+  echo    "<img id=\"div4b\" src=\"".$baseURL."styles/images/lo.gif\" alt=\"\" />";
+  echo    "<img id=\"div4c\" src=\"".$baseURL."styles/images/ru.gif\" alt=\"\" />";                       
+  echo    "<img id=\"div4d\" src=\"".$baseURL."styles/images/ro.gif\" alt=\"\" />";                       
+  echo    "</div>";
   require_once 'common/menu/headmenu.php';                                                                     // div1&2 = Page Title and welcome line - modules choices
-  echo    "<aside>";                                                                            // div3 = left menu section
+  echo    "<div id=\"div3\" onmouseover=\"resizeForm('show',theTopMenu);\">";                                                                            // div3 = left menu section
   require_once 'common/entryexit/menu.php';
-  echo    "</aside>";
-  echo    "<section>";                                                                            // div 5 = page contents
+  echo    "</div>";
+  echo    "<div id=\"div6\">";	
+  $objPresentations->line(array($copyrightInfo." - " . $vvsInfo.$dslInfo.$versionInfo." - ".$objectInfo . " - " . $objectInfo2,$w3cInfo),"LR",array(90,10),18);                                      // defined in databaseInfo.ph)
+  echo    "</div>";
+  echo    "<div id=\"div5\">";                                                                            // div 5 = page contents
   if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
     echo "<p class=\"centered\">".$entryMessage."</p><hr />";
     require_once $includeFile;
-  echo    "</section>";
-  echo    "<footer>";
-  echo    "<p>" . $versionInfo . " - " . $copyright . "</p>";
-  echo    "<p>" . $vvsInfo . "</p>";
-  echo    "<p>" . $objectInfo." - ".$objectInfo2 . "</p>";
-  echo    "</footer>";
+  echo    "</div>";
 }
 catch (Exception $e)
 { $entryMessage.="<p>DeepskyLog encountered a problem. Could you please report it to the Developers?</p>";
@@ -67,8 +72,6 @@ echo "<script type=\"text/javascript\" charset=\"utf-8\">
         });
        });
       </script>";
-echo "<script type=\"text/javascript\" src=\"".$baseURL."/lib/javascript/menu.js\"></script>";
-
 echo "</body>";
 echo "</html>";
 ?>
