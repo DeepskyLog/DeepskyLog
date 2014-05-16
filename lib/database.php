@@ -46,6 +46,7 @@ class Database
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
 	  $result=array();
 		$run = $this->mysql_query_encaps($sql) or die(mysql_error());
+
 		while($get=mysql_fetch_object($run))
 		{ $resultparts=array();
 		  while(list($key,$value)=each($get))

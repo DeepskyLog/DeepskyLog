@@ -10,7 +10,7 @@ class CometObservations
  // observerid, date and time should be given as parameters.
  function addObservation($objectid, $observerid, $date, $time)
  {
-
+ 	global $objAccomplishments;
   if (!$_SESSION['lang'])
   {
    $_SESSION['lang'] = "English";
@@ -25,7 +25,9 @@ class CometObservations
   $get = mysql_fetch_object($run);
   $id = $get->id;
 
-
+  // Recalculate the accomplishments
+  $objAccomplishments->recalculateComets($observerid);
+  
   return $id;
  }
 
@@ -35,7 +37,6 @@ class CometObservations
 
   $sql = "DELETE FROM cometobservations WHERE id=\"$id\"";
   mysql_query($sql) or die(mysql_error());
-
  }
 
  // getObjectId returns the objectid of the given observation
@@ -157,6 +158,11 @@ class CometObservations
   $run = mysql_query($sql) or die(mysql_error());
 
  }
+
+  public  function getCometDrawingsCountFromObserver($id)
+  { global $objDatabase;
+	return $objDatabase->selectSingleValue("SELECT COUNT(*) as Cnt FROM cometobservations WHERE cometobservations.observerid = \"$id\" AND hasDrawing=1", "Cnt", 0);
+  }
 
  // setLocalDateAndTime sets the date and time for the given observation 
  // when the time is given in  local time
@@ -852,9 +858,6 @@ function getObservationsThisObserver($id)
  {
   $observers = new Observers;
 
-    
- 
-
   $sql = "SELECT * FROM cometobservations";
   $run = mysql_query($sql) or die(mysql_error());
 
@@ -876,9 +879,6 @@ function getObservationsThisObserver($id)
  function getSortedObservations($sort)
  {
   $observers = new Observers;
-
-    
- 
 
   if ($sort == "date")
   {
@@ -910,10 +910,12 @@ function getObservationsThisObserver($id)
   while($get = mysql_fetch_object($run)) {
    $observations[] = $get->id;
   }
-
-    
-
   return $observations;
+ }
+
+ function setDrawing($id) {
+	$sql = "UPDATE cometobservations SET hasDrawing = \"1\" where id = \"" . $id . "\"";	
+    $run = mysql_query($sql) or die(mysql_error());
  }
 
  // getObservationFromQuery returns an array with the names of all observations
@@ -951,10 +953,6 @@ function getObservationsThisObserver($id)
     $object = $queries["object"];
    }
   }
-
-
-    
-   
 
   $sql = "SELECT cometobservations.* FROM cometobservations LEFT JOIN instruments on cometobservations.instrumentid=instruments.id LEFT JOIN cometobjects on cometobservations.objectid=cometobjects.id LEFT JOIN observers on cometobservations.observerid=observers.id where";
  

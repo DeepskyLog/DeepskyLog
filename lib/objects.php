@@ -61,43 +61,6 @@ class Objects
 		     $prefMag=array(sprintf("%d", $contrastCalc[1])."x"," - ".$contrastCalc[2]);
     } 
   }
-  public function calcDistanceOneObjectOneCoordinate($objectname1,$ra2,$decl2)
-  { global $objDatabase;
-  	if($objectname1)
-  	{ $run=$objDatabase->selectRecordset("SELECT objects.ra, objects.decl FROM objects WHERE name = \"$objectname1\"");
-      $get = mysql_fetch_object($run);
-	    $ra1 = $get->ra; $decl1 = $get->decl;
-  	}
-  	else
-  	  return 999;
-  	return $this->calcDistanceTwoCoordinates($ra1,$decl1,$ra2,$decl2);
-  }
-  public function calcDistanceTwoCoordinates($ra1,$decl1,$ra2,$decl2)
-  { $ra1=($ra1/12)*3.1415926535;
-    $ra2=($ra2/12)*3.1415926535;
-    $decl1=($decl1/180)*3.1415926535;
-    $decl2=($decl2/180)*3.1415926535;
-    return acos(max(min((sin($decl1)*sin($decl2))+(cos($decl1)*cos($decl2)*cos($ra2-$ra1)),1),-1))/3.1415926535*180;
-  }
-  public function calcDistanceTwoObjects($objectname1,$objectname2)
-  { global $objDatabase;
-  	if($objectname1)
-  	{ $run=$objDatabase->selectRecordset("SELECT objects.ra, objects.decl FROM objects WHERE name = \"$objectname1\"");
-      $get = mysql_fetch_object($run);
-	    $ra1 = $get->ra; $decl1 = $get->decl;
-  	}
-  	else
-  	  return 999;
-  	if($objectname2)
-  	{
-  		$run=$objDatabase->selectRecordset("SELECT objects.ra, objects.decl FROM objects WHERE name = \"$objectname2\"");
-  		$get = mysql_fetch_object($run);
-  		$ra2 = $get->ra; $decl2 = $get->decl;
-  	}
-  	else
-  	  return 999;
-  	return $this->calcDistanceTwoCoordinates($ra1,$decl1,$ra2,$decl2);
-  }
   private function calculateSize($diam1, $diam2)                                // Construct a string from the sizes
   { $size = "";
     if ($diam1!=0.0)
@@ -681,10 +644,7 @@ class Objects
 	  }
 		return;
 	}
-	private function maxaltToInt($themaxalt)
-	{ return 1*(str_replace("&deg;", "",trim($themaxalt,'()')));
-	}
-  public  function getSeenObjectDetails($obs, $seen="A", $distantObject="")
+  public  function getSeenObjectDetails($obs, $seen="A")
   { global $loggedUser, $objAtlas, $objLocation,$objDatabase,$objPresentations,$objObserver;
     $result2=array();
 	  $obscnt=sizeof($obs);
@@ -758,8 +718,6 @@ class Objects
           $result2[$j]['objectmaxalt'] = "-";
           $result2[$j]['objectmaxaltstart'] = "-";
           $result2[$j]['objectmaxaltend'] = "-";
-          if($distantObject)
-            $result2[$j]['objectdistarcmin'] = round(60*$this->calcDistanceOneObjectOneCoordinate($distantObject,$result2[$j]['objectra'],$result2[$j]['objectdecl']));
           if($loggedUser && $objObserver->getObserverProperty($loggedUser, 'stdLocation'))
 	        { $theLocation=$objObserver->getObserverProperty($loggedUser, 'stdLocation');	   
 	          $longitude = 1.0 * $objLocation->getLocationPropertyFromId($theLocation, 'longitude');
@@ -792,46 +750,46 @@ class Objects
 							}
 							for($i=1;$i<13;$i++)
 							{ if($i==1)
-						    { if(($this->maxaltToInt($theEphemerides1[$i]['altitude'])!='-') &&
-						         (($this->maxaltToInt($theEphemerides1[$i]['altitude'])==$this->maxaltToInt($theEphemerides15[$i]['altitude'])) ||
-						          ($this->maxaltToInt($theEphemerides1[$i]['altitude'])==$this->maxaltToInt($theEphemerides15[12]['altitude']))))
-						      { $maxalt=$this->maxaltToInt($theEphemerides1[$i]['altitude']);
-						        if($this->maxaltToInt($theEphemerides1[$i]['altitude'])>$this->maxaltToInt($theEphemerides15[12]['altitude']))
+						    { if(($theEphemerides1[$i]['altitude']!='-') &&
+						         (($theEphemerides1[$i]['altitude']==$theEphemerides15[$i]['altitude']) ||
+						          ($theEphemerides1[$i]['altitude']==$theEphemerides15[12]['altitude'])))
+						      { $maxalt=$theEphemerides1[$i]['altitude'];
+						        if($theEphemerides1[$i]['altitude']>$theEphemerides15[12]['altitude'])
 						          $maxaltstart=0;
-						        if($this->maxaltToInt($theEphemerides1[$i]['altitude'])>$this->maxaltToInt($theEphemerides15[$i]['altitude']))
+						        else if ($theEphemerides1[$i]['altitude']>$theEphemerides15[$i]['altitude'])
 						          $maxaltend=0;
 						      }
 						    }
 							  else
-							  { if(($this->maxaltToInt($theEphemerides1[$i]['altitude'])!='-') && 
-				             (($this->maxaltToInt($theEphemerides1[$i]['altitude'])==$this->maxaltToInt($theEphemerides15[$i]['altitude'])) ||
-						          ($this->maxaltToInt($theEphemerides1[$i]['altitude'])==$this->maxaltToInt($theEphemerides15[$i-1]['altitude']))))
-						      { $maxalt=$this->maxaltToInt($theEphemerides1[$i]['altitude']);
-						        if($this->maxaltToInt($theEphemerides1[$i]['altitude'])>$this->maxaltToInt($theEphemerides15[$i-1]['altitude']))
+							  { if(($theEphemerides1[$i]['altitude']!='-') && 
+				             (($theEphemerides1[$i]['altitude']==$theEphemerides15[$i]['altitude']) ||
+						          ($theEphemerides1[$i]['altitude']==$theEphemerides15[$i-1]['altitude'])))
+						      { $maxalt=$theEphemerides1[$i]['altitude'];
+						        if($theEphemerides1[$i]['altitude']>$theEphemerides15[$i-1]['altitude'])
 						          $maxaltstart=$i-1;
-						        if($this->maxaltToInt($theEphemerides1[$i]['altitude'])>$this->maxaltToInt(str_replace("&deg;", "",$theEphemerides15[$i]['altitude'])))
+						        else if ($theEphemerides1[$i]['altitude']>$theEphemerides15[$i]['altitude'])
 						          $maxaltend=$i-1;
 						      }
 							  }
 				        if($i==12)
-						    { if(($this->maxaltToInt($theEphemerides15[$i]['altitude'])!='-') &&
-						       (($this->maxaltToInt($theEphemerides15[$i]['altitude'])==$this->maxaltToInt($theEphemerides1[$i]['altitude'])) ||
-						        ($this->maxaltToInt($theEphemerides15[$i]['altitude'])==$this->maxaltToInt($theEphemerides1[1]['altitude']))))
-						      { $maxalt=$this->maxaltToInt($theEphemerides15[$i]['altitude']);
-						        if($this->maxaltToInt($theEphemerides15[$i]['altitude'])>$this->maxaltToInt($theEphemerides1[$i]['altitude']))
+						    { if(($theEphemerides15[$i]['altitude']!='-') &&
+						       (($theEphemerides15[$i]['altitude']==$theEphemerides1[$i]['altitude']) ||
+						        ($theEphemerides15[$i]['altitude']==$theEphemerides1[1]['altitude'])))
+						      { $maxalt=$theEphemerides15[$i]['altitude'];
+						        if($theEphemerides15[$i]['altitude']>$theEphemerides1[$i]['altitude'])
 						          $maxaltstart=$i+.5-1;
-						        if($this->maxaltToInt($theEphemerides15[$i]['altitude'])>$this->maxaltToInt($theEphemerides1[1]['altitude']))
+						        else if ($theEphemerides15[$i]['altitude']>$theEphemerides1[1]['altitude'])
 						          $maxaltend=$i+.5-1;
 						      }
 						    }
 				        else
-							  { if(($this->maxaltToInt($theEphemerides15[$i]['altitude'])!='-') && 
-		                (($this->maxaltToInt($theEphemerides15[$i]['altitude'])==$this->maxaltToInt($theEphemerides1[$i]['altitude'])) ||
-				             ($this->maxaltToInt($theEphemerides15[$i]['altitude'])==$this->maxaltToInt($theEphemerides1[$i+1]['altitude']))))
-				          { $maxalt=$this->maxaltToInt($theEphemerides15[$i]['altitude']);
-						        if($this->maxaltToInt($theEphemerides15[$i]['altitude'])>$this->maxaltToInt($theEphemerides1[$i]['altitude']))
+							  { if(($theEphemerides15[$i]['altitude']!='-') && 
+		                (($theEphemerides15[$i]['altitude']==$theEphemerides1[$i]['altitude']) ||
+				             ($theEphemerides15[$i]['altitude']==$theEphemerides1[$i+1]['altitude'])))
+				          { $maxalt=$theEphemerides15[$i]['altitude'];
+						        if($theEphemerides15[$i]['altitude']>$theEphemerides1[$i]['altitude'])
 						          $maxaltstart=$i+.5-1;
-						        if($this->maxaltToInt($theEphemerides15[$i]['altitude'])>$this->maxaltToInt($theEphemerides1[$i+1]['altitude']))
+						        else if ($theEphemerides15[$i]['altitude']>$theEphemerides1[$i+1]['altitude'])
 						          $maxaltend=$i+.5-1;
 				          }
 							  }
@@ -1346,11 +1304,8 @@ class Objects
     echo "<tr class=\"type3\">";
     if($showRank)
       $objPresentations->tableSortHeader(LangOverviewObjectsHeader9,$link."&amp;sort=objectpositioninlist",    "C".$c++, $columnSource);
-    if($ownShow)
-      $objPresentations->tableSortHeader("Distance",  $link."&amp;sort=objectdistarcmin",                "C".$c++, $columnSource);
     $objPresentations->tableSortHeader(LangOverviewObjectsHeader1,  $link."&amp;sort=showname",                "C".$c++, $columnSource);
-    $objPresentations->tableSortHeader(LangOverviewObjectsHeader1bis,  $link."&amp;sort=altname",                "C".$c++, $columnSource);
-    $objPresentations->tableSortHeader(LangOverviewObjectsHeader2,  $link."&amp;sort=objectconstellation",     "C".$c++, $columnSource);
+	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader2,  $link."&amp;sort=objectconstellation",     "C".$c++, $columnSource);
 	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader3,  $link."&amp;sort=objectmagnitude",         "C".$c++, $columnSource);
 	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader3b, $link."&amp;sort=objectsurfacebrightness", "C".$c++, $columnSource);
 	  $objPresentations->tableSortHeader(LangOverviewObjectsHeader4,  $link."&amp;sort=objecttype",              "C".$c++, $columnSource);
@@ -1416,10 +1371,7 @@ class Objects
         echo "<td class=\"centered\" id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader9.": ".$_SESSION['Qobj'][$count]['objectpositioninlist']."')\"><a href=\"#\" onclick=\"theplace = prompt('".LangNewPlaceInList."','".$_SESSION['Qobj'][$count]['objectpositioninlist']."'); location.href='".$link."&amp;ObjectFromPlaceInList=".$_SESSION['Qobj'][$count]['objectpositioninlist']."&amp;ObjectToPlaceInList='+theplace+'&amp;min=".$min."'; return false;\" title=\"" . LangToListMoved6 . "\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</a></td>";
       elseif($showRank)
 	      echo "<td class=\"centered\" id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader9.": ".$_SESSION['Qobj'][$count]['objectpositioninlist']."')\">".$_SESSION['Qobj'][$count]['objectpositioninlist']."</td>";
-      if($ownShow)
-        echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('"."Distance (deg min)".": ".$_SESSION['Qobj'][$count]['objectdistarcmin']."')\" class=\"".$specialclass." centered\" >".$_SESSION['Qobj'][$count]['objectdistarcmin']."&rsquo;</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader1.": ".$_SESSION['Qobj'][$count]['objectname']."')\" class=\"".$specialclass." centered\"><a href=\"".$baseURL."index.php?indexAction=detail_object&amp;object=" . urlencode($_SESSION['Qobj'][$count]['objectname'])."\" >".$_SESSION['Qobj'][$count]['showname']."</a></td>";
-      echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader1bis.": ".$_SESSION['Qobj'][$count]['altname']."')\" class=\"".$specialclass." centered\">".$_SESSION['Qobj'][$count]['altname']."</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader2.": ".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."')\" class=\"centered\">".$GLOBALS[$_SESSION['Qobj'][$count]['objectconstellation']]."</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3.": ".$_SESSION['Qobj'][$count]['objectmagnitude']."')\" class=\"centered\">".(($_SESSION['Qobj'][$count]['objectmagnitude']==99.9)||($_SESSION['Qobj'][$count]['objectmagnitude']=='')?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectmagnitude']))."</td>";
       echo "<td id=\"C".$c++."D".$countline."\"  onmouseover=\"Tip('".LangOverviewObjectsHeader3b.": ".$_SESSION['Qobj'][$count]['objectsurfacebrightness']."')\" class=\"centered\">".(($_SESSION['Qobj'][$count]['objectsurfacebrightness']==99.9)||($_SESSION['Qobj'][$count]['objectsurfacebrightness']=='')?"&nbsp;&nbsp;-&nbsp;":sprintf("%01.1f", $_SESSION['Qobj'][$count]['objectsurfacebrightness']))."</td>";
@@ -1495,6 +1447,7 @@ class Objects
 	    $content.="<a href=\"".$baseURL."index.php?indexAction=objectsSets"."\" rel=\"external\">".LangExecuteQueryObjectsMessage11."</a>";
       $objPresentations->line(array($content1,$content2),"LR",array(70,30),16);
       $objPresentations->line(array($content),"LR",array(100,0),16);
+      
     }
     if($columnSource)
     { echo "<script type=\"text/javascript\">";

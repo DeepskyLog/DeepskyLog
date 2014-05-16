@@ -119,9 +119,6 @@ class PrintAtlas
     Array(0.15 ,0.20,0.012,16),
     Array(0.1 ,0.20,0.012,16)
   );
-
-  var $astroLabels=Array();
-  
   
   function astroDrawBRTNBObject($i)
   { $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
@@ -269,7 +266,7 @@ class PrintAtlas
     else
       $d2=$this->gridDiam2SecToPxMin($this->astroObjectsArr[$i]["diam2"]*0.5);
 		$this->pdf->ellipse($cx,$cy,$d1,$d2,($pa=Nzx($this->astroObjectsArr[$i]["pa"],0))-90);
-    $this->astroDrawObjectLabel($cx,$cy,(5*abs(cos($pa*$this->fPiOver180)))+abs($d1*sin($pa*$this->fPiOver180)),$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
+    $this->astroDrawObjectLabel($cx,$cy-(cos($pa*$this->fPiOver180)*$d1),(5*abs(cos($pa*$this->fPiOver180)))+abs($d1*sin($pa*$this->fPiOver180)),$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
   }
   
   function atlasDrawLegend()
@@ -375,37 +372,18 @@ class PrintAtlas
   }
     	
   function astroDrawObjectLabel($cx, $cy, $d, $name, $seen)
-  { $w=$this->pdf->getTextWidth($this->fontSize1b, $name);
-    $linecx=$cx;
-    $linecy=$cy;
-  	do 
-  	{ $pass=true;
-  	  for($i=0;$i<count($this->astroLabels);$i++)
-      { if((  (($cx+4+$d)>=$this->astroLabels[$i][0])&&(($cx+4+$d)<=($this->astroLabels[$i][0]+$this->astroLabels[$i][2]))&&(($cy-($this->fontSize1a>>2))>=$this->astroLabels[$i][1]-($this->fontSize1b*1.5))&&(($cy-($this->fontSize1a>>2))<=$this->astroLabels[$i][1]+($this->fontSize1b*1.5)))
-        || (($this->astroLabels[$i][0]>=($cx+4+$d))&&($this->astroLabels[$i][0]<=(($cx+4+$d)+$w))&&($this->astroLabels[$i][1]>=($cy-($this->fontSize1a>>2))-($this->fontSize1b*1.5))&&($this->astroLabels[$i][1]<=($cy-($this->fontSize1a>>2))+($this->fontSize1b*1.5))))
-        { $cy-=($this->fontSize1b>>1);
-          $pass=false;
-        } 
-      }
-  	} while ($pass==false);
-  	$this->pdf->addText(($cx+4+$d), ($cy-($this->fontSize1a>>2)), $this->fontSize1b, $name);
+  { $this->pdf->addText(($cx+4+$d), $cy-($this->fontSize1a>>2), $this->fontSize1b, $name);
     if(substr($seen,0,2)=='YD')
-      $this->pdf->line($cx+$d+3, $cy+($this->fontSize1a>>2)+1.5, $cx+4+$d+$w, $cy+($this->fontSize1a>>2)+1.5);
+      $this->pdf->line($cx+$d+3, $cy+($this->fontSize1a>>2)+1.5, $cx+4+$d+(strlen($name)*0.6*$this->fontSize1b), $cy+($this->fontSize1a>>2)+1.5);
     if(substr($seen,0,1)=='Y')
-      $this->pdf->line($cx+$d+3, $cy-($this->fontSize1a>>2)-1, $cx+4+$d+$w, $cy-($this->fontSize1a>>2)-1);
+      $this->pdf->line($cx+$d+3, $cy-($this->fontSize1a>>2)-2, $cx+4+$d+(strlen($name)*0.6*$this->fontSize1b), $cy-($this->fontSize1a>>2)-2);
     if(substr($seen,0,1)=='X')
     { $this->pdf->setLineStyle(0.5,'','',array(3));
-      $this->pdf->line($cx+$d+3, $cy-($this->fontSize1a>>2)-1, $cx+4+$d+$w, $cy-($this->fontSize1a>>2)-1);
+      $this->pdf->line($cx+$d+3, $cy-($this->fontSize1a>>2)-2, $cx+4+$d+(strlen($name)*0.6*$this->fontSize1b), $cy-($this->fontSize1a>>2)-2);
       $this->pdf->setLineStyle(0.5,'','',array());
     }
-    if($linecy!=$cy)
-    { $this->pdf->setStrokeColor(0.7, 0.7, 0.7);
-      $this->pdf->setLineStyle(0.5,'','',array());
-      $this->pdf->line($linecx,$linecy,$cx+4+$d,$cy);
-    	$this->pdf->setStrokeColor(0, 0, 0);
-    }
-    $this->astroLabels[]=array(($cx+4+$d),($cy-($this->fontSize1a>>2)),$w);
  }
+  
   
   function astroDrawOCObject($i)
   { $this->gridLDrad($this->astroObjectsArr[$i]["ra"],$this->astroObjectsArr[$i]["decl"]); 
@@ -426,7 +404,7 @@ class PrintAtlas
     if((!((($cx-$d<$this->lx)||($cx+$d>$this->rx))))&&
        (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
     { $this->pdf->filledEllipse($cx,$cy,(.5*$d),(.5*$d),0,$this->nsegmente);
-      //$this->astroDrawObjectLabel($cx,$cy,(($d+1)>>1),$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
+      $this->astroDrawObjectLabel($cx,$cy,(($d+1)>>1),$this->astroObjectsArr[$i]["name"],$this->astroObjectsArr[$i]["seen"]);
     }     
   }
   function astroDrawStar1Object($i)
@@ -693,18 +671,16 @@ class PrintAtlas
         $name.=$this->astroObjectsArr[$i]["nameCon"];
     }
     //$d=floor(2*max(($this->gridDimensions[$this->gridActualDimension][3])-($this->astroObjectsArr[$i]["vMag"]/100.0),0)+1);
-    $name=trim($name);
     $d=floor(2.0*max(($this->starsmagnitude)-($this->astroObjectsArr[$i]["vMag"]/100.0),0.5));
+//    $d=floor(2.0*max(($this->starsmagnitude)-($this->astroObjectsArr[$i]["vMag"]/100.0),0.5));
     $this->gridLDrad($this->astroObjectsArr[$i]["RA2000"],$this->astroObjectsArr[$i]["DE2000"]); 
     $cx=$this->gridCenterOffsetXpx+$this->gridXpx($this->gridLxRad);
     $cy=$this->gridCenterOffsetYpx+$this->gridYpx($this->gridDyRad);
     if((!((($cx-$d<$this->lx)||($cx+$d>$this->rx))))&&
        (!((($cy+$d>$this->ty)||($cy-$d<$this->by)))))
     { $this->pdf->filledEllipse($cx,$cy,(.25*$d + 0.5),(.25*$d + 0.5),0,$this->nsegmente);
-      if($name && (($cx+4+(($d+1)>>1))>$this->lx)&&(($cx+4+(($d+1)>>1)+(strlen($name)*$this->fontSize1b))<$this->rx)&&(($cy-($this->fontSize1a>>1))<$this->ty)&&(($cy+($this->fontSize1a>>1))>$this->by)) {
-        $this->astroDrawObjectLabel($cx, $cy, 1, $name, '-');
-        //$this->pdf->addText(($cx+4+(($d+1)>>1)), $cy-($this->fontSize1a>>1), $this->fontSize1b, $name);
-      }
+      if((($cx+4+(($d+1)>>1))>$this->lx)&&(($cx+4+(($d+1)>>1)+(strlen($name)*$this->fontSize1b))<$this->rx)&&(($cy-($this->fontSize1a>>1))<$this->ty)&&(($cy+($this->fontSize1a>>1))>$this->by))
+        $this->pdf->addText(($cx+4+(($d+1)>>1)), $cy-($this->fontSize1a>>1), $this->fontSize1b, $name);
     }     
   }
   

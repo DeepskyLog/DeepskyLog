@@ -202,8 +202,7 @@ class Observations {
           if($obsid) {
 		        $added++;
 		        // Add the observation to all the sessions
-		        $current_observation = 
-		        $objSession->addObservationToSessions($obsid);
+		        $current_observation = $objSession->addObservationToSessions($obsid);
           } else
 		        $double++;
 		      }
@@ -475,6 +474,10 @@ class Observations {
 	{ global $objDatabase;
 		return $objDatabase->selectSingleValue("SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE observerid=\"".$id."\" AND visibility != 7 ", 'Cnt', 0);
 	}
+	public  function getNumberOfObjectDrawings($id)                                                                                                                            // return the number of different objects seen by the observer
+	{ global $objDatabase;
+		return $objDatabase->selectSingleValue("SELECT COUNT(DISTINCT objectname) As Cnt FROM observations WHERE observerid=\"".$id."\" AND visibility != 7 and hasDrawing = 1", 'Cnt', 0);
+	}
 	public  function getObjectsFromObservations($observations,$showPartOfs=0) 
 	{ global $objObject;
 	  $objects=array ();
@@ -549,37 +552,6 @@ class Observations {
 		  $sqland .= "AND (objectnames.altname like \"" .trim($queries["catalog"] . ' ' . $queries['number'] . '%') . "\") ";
 		elseif (array_key_exists('number', $queries)&&$queries['number']) 
 		  $sqland .= "AND (objectnames.altname like \"" .trim($queries["number"]) . "\") ";
-
-		
-		if(array_key_exists('inlist',$queries) && $queries['inlist'])
-		{	if(substr($queries['inlist'],0,7)=="Public:")
-			{ $sql1 .= "JOIN observerobjectlist AS A " .
-		             "ON A.objectname = objects.name ";
-		    $sql2 .= "JOIN observerobjectlist AS A " .
-			           "ON A.objectname = objects.name ";
-				$sqland .= "AND A.listname = \"" . $queries['inlist'] . "\" AND A.objectname <>\"\" ";
-			}
-			elseif($loggedUser)
-		  { $sql1 .= "JOIN observerobjectlist AS A " .
-		 	           "ON A.objectname = objects.name ";
-		    $sql2 .= "JOIN observerobjectlist AS A " .
-			           "ON A.objectname = objects.name ";
-			  $sqland .= "AND A.observerid = \"" .$loggedUser. "\" AND A.listname = \"" . $queries['inlist'] . "\" AND A.objectname <>\"\" ";
-			}
-		}  
-		if(array_key_exists('notinlist',$queries) && $queries['notinlist'])
-		{ if(substr($queries['notinlist'],0,7)=="Public:")
-		  { $sql1 .= " LEFT JOIN observerobjectlist AS B " .
-			           "ON B.objectname = objects.name ";
-		    $sql2 .= " LEFT JOIN observerobjectlist AS B " .
-			           "ON B.objectname = objects.name ";
-				$sqland .= " AND B.listname = \"" . $queries['notinlist'] . "\" AND B.objectname IS NULL ";
-			}
-			elseif(array_key_exists('deepskylog_id',$_SESSION) && $loggedUser)
-			{ $sqland .= " AND (objectnames.objectname NOT IN (SELECT objectname FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND listname = \"" . $queries['notinlist'] . "\" ) ) ";
-			}
-		}	
-		
 		$sqland .= (isset ($queries["observer"]) && $queries["observer"]) ? " AND observations.observerid = \"" . $queries["observer"] . "\" " : '';
 		if (isset ($queries["instrument"]) && ($queries["instrument"] != "")) {
 			$sqland .= "AND (observations.instrumentid = \"" . $queries["instrument"] . "\" ";
@@ -805,6 +777,16 @@ class Observations {
 			       "AND observations.visibility != 7 ";
 		return $objDatabase->selectSingleValue($sql,'CatCnt',0);
 	}
+	public  function getDrawingsCountFromCatalog($id, $catalog) 
+	{ global $objDatabase,$loggedUser;
+	    $sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt FROM objectnames " .
+			       "INNER JOIN observations ON observations.objectname = objectnames.objectname " .
+			       "WHERE objectnames.catalog = \"".$catalog."\" " .
+			       "AND observations.observerid=\"".$id."\" " .
+			       "AND observations.visibility != 7 " . 
+			       "AND observations.hasDrawing = 1";
+		return $objDatabase->selectSingleValue($sql,'CatCnt',0);
+	}
 	public  function getObservedFromCatalog($id, $catalog) 
 	{ global $objDatabase,$loggedUser;
 	  if (substr($catalog, 0, 5) == "List:")
@@ -932,7 +914,6 @@ class Observations {
   }
 	public  function setLocalDateAndTime($id, $date, $time) 	                                                                                                                     // sets the date and time for the given observation when the time is given in  local time
 	{ global $objDatabase,$objLocation;
-		echo "Time: ".$time."<p>";
 	  if ($time >= 0) 
 		{ $timezone = $objLocation->getLocationPropertyFromId($this->getDsObservationProperty($id,'locationid'),'timezone');
 			$datearray = sscanf($date, "%4d%2d%2d");
@@ -1530,20 +1511,24 @@ class Observations {
 		echo "<hr />";
 	}
 	public  function validateDeleteDSObservation()                                                                                                                   // removes the observation with id = $id
-	{ global $objDatabase,$objUtil;
+	{ global $objDatabase, $objAccomplishments, $objUtil;
 	  if(!$_GET['observationid'])
       throw new Exception("No observation to delete.");                           
-    if(($id=$objUtil->checkGetKey('observationid'))
-    && ($objUtil->checkAdminOrUserID($this->getDsObservationProperty($id,'observerid'))))
+	  $id=$objUtil->checkGetKey('observationid');
+	  $user = $this->getDsObservationProperty($id,'observerid');
+	  if($id
+    && ($objUtil->checkAdminOrUserID($user)))
     { $objDatabase->execSQL("DELETE FROM observations WHERE id=\"".$id."\"");
       $objDatabase->execSQL("DELETE FROM sessionObservations WHERE observationid=\"".$id."\"");
 	    $_SESSION['Qobs']=array();
 	    $_SESSION['QobsParams']=array();
+	    // Recalculate the accomplishments
+	    $objAccomplishments->recalculateDeepsky($user);
       return LangObservationDeleted;
     }
 	}
 	public function validateObservation()
-	{ global $loggedUser, $objUtil, $objObservation, $objObserver, $maxFileSize, $entryMessage, $objPresentations, $inIndex,$instDir,$objSession;
+	{ global $loggedUser, $objUtil, $objObservation, $objObserver, $maxFileSize, $entryMessage, $objPresentations, $inIndex,$instDir,$objSession, $objAccomplishments;
 		if(!($loggedUser))
 			throw new Exception(LangException002b);
 		elseif($objUtil->checkSessionKey('addObs',0)!=$objUtil->checkPostKey('timestamp', -1)) 
@@ -1722,6 +1707,9 @@ class Observations {
 				// Add the observation to all the sessions
 				$objSession->addObservationToSessions($current_observation);
 				
+				// Recalculate the accomplishments
+				$objAccomplishments->recalculateDeepsky($loggedUser);
+
 				$_SESSION['newObsYear'] =       $_POST['year']; // save current details for faster submission of multiple observations
 				$_SESSION['newObsMonth'] =      $_POST['month'];
 				$_SESSION['newObsDay'] =        $_POST['day'];

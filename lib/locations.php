@@ -28,15 +28,6 @@ class Locations
     fclose($fh);
     return $countries;
   }
-  public  function getPreferredCountries() // getPreferredCountries returns BE + neighbour states of BE
-  { $countries["BE"]="Belgium";
-    $countries["NL"]="Netherlands";
-    $countries["LU"]="Luxembourg";
-    $countries["FR"]="France";
-    $countries["GE"]="Germany";
-    $countries["UK"]="United Kingdom";
-    return $countries;
-  }
   public function getDatabaseCountries()                                                                                 // returns all countries for which the database of the locations is available
   { global $instDir;
     $filename=$instDir."lib/setup/locations/countries.txt";

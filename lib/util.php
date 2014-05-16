@@ -1447,7 +1447,7 @@ class Utils
     while(list($key,$valueA)=each($result))
       $obs1[]=array("Name"          => $valueA['showname'],
                     "ra"            => $objPresentations->raToString($valueA['objectra']),
-                    "decl"          => $objPresentations->decToStringDegMinSec($valueA['objectdecl'], 0),
+                    "decl"          => $objPresentations->decToString($valueA['objectdecl'], 0),
                     "mag"           => $objPresentations->presentationInt1($valueA['objectmagnitude'],99.9,''),
                     "sb"            => $objPresentations->presentationInt1($valueA['objectsurfacebrightness'],99.9,''),
                     "con"           => $GLOBALS[$valueA['objectconstellation']],
@@ -1611,11 +1611,11 @@ class Utils
 			  $pdf->addTextWrap($xbase+180, $y,  20, $fontSizeText, $valueA['objectconstellation']);			                         // constellation
 			  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectmagnitude'],99.9,''), 'left');  	                 // mag
 			  $pdf->addTextWrap($xbase+217, $y,  18, $fontSizeText, $objPresentations->presentationInt1($valueA['objectsurfacebrightness'],99.9,''), 'left');		                   // sb
-			  $pdf->addTextWrap($xbase+235, $y,  95, $fontSizeText, $objPresentations->raToStringHMS($valueA['objectra']) . ' '.
-				                                                      $objPresentations->decToStringDegMinSec($valueA['objectdecl'],0));	 // ra - decl
-			  $pdf->addTextWrap($xbase+330, $y,  55, $fontSizeText, $valueA['objectsize'] . '/' . $objPresentations->presentationInt($valueA['objectpa'],999,"-"));			             // size
-	  		//$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectcontrast'],'',''), 'left');			             // contrast				
-	  		//$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, (int)$valueA['objectoptimalmagnification'], 'left');			             // magnification				
+			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, $objPresentations->raToStringHM($valueA['objectra']) . ' '.
+				                                                      $objPresentations->decToString($valueA['objectdecl'],0));	 // ra - decl
+			  $pdf->addTextWrap($xbase+295, $y,  55, $fontSizeText, $valueA['objectsize'] . '/' . $objPresentations->presentationInt($valueA['objectpa'],999,"-"));			             // size
+	  		$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectcontrast'],'',''), 'left');			             // contrast				
+	  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, (int)$valueA['objectoptimalmagnification'], 'left');			             // magnification				
 			  $pdf->addTextWrap($xbase+380, $y,  20, $fontSizeText, '<b>'.$valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')].'</b>', 'right');			   // atlas page
       }
       else
@@ -1627,11 +1627,11 @@ class Utils
 			  $pdf->addTextWrap($xbase+170, $y,  30, $fontSizeText, '</c:alink></b>'.$valueA['objecttype']);			                 // type
 			  $pdf->addTextWrap($xbase+200, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectmagnitude'],99.9,''), 'left');			                 // mag
 			  $pdf->addTextWrap($xbase+217, $y,  18, $fontSizeText, $objPresentations->presentationInt1($valueA['objectsurfacebrightness'],99.9,''), 'left');			                   // sb
-			  $pdf->addTextWrap($xbase+235, $y,  95, $fontSizeText, $objPresentations->raToStringHMS($valueA['objectra']) . ' '.
-				                                                      $objPresentations->decToStringDegMinSec($valueA['objectdecl'],0));	 // ra - decl
-			  $pdf->addTextWrap($xbase+230, $y,  55, $fontSizeText, $valueA['objectsize'] . '/' . $objPresentations->presentationInt($valueA['objectpa'],999,"-"));         			   // size
-//	  		$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectcontrast'],0,''), 'left');			             // contrast				
-//	  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, $objPresentations->presentationInt((int)$valueA['objectoptimalmagnification'],0,''), 'left');		               // magnification				
+			  $pdf->addTextWrap($xbase+235, $y,  60, $fontSizeText, $objPresentations->raToStringHM($valueA['objectra']) . ' '.
+				                                                      $objPresentations->decToString($valueA['objectdecl'],0));	 // ra - decl
+			  $pdf->addTextWrap($xbase+295, $y,  55, $fontSizeText, $valueA['objectsize'] . '/' . $objPresentations->presentationInt($valueA['objectpa'],999,"-"));         			   // size
+	  		$pdf->addTextWrap($xbase+351, $y,  17, $fontSizeText, $objPresentations->presentationInt1($valueA['objectcontrast'],0,''), 'left');			             // contrast				
+	  		$pdf->addTextWrap($xbase+368, $y,  17, $fontSizeText, $objPresentations->presentationInt((int)$valueA['objectoptimalmagnification'],0,''), 'left');		               // magnification				
 			  $pdf->addTextWrap($xbase+380, $y,  20, $fontSizeText, '<b>'.$valueA[($loggedUser?$objObserver->getObserverProperty($loggedUser,'standardAtlasCode','urano'):'urano')].'</b>', 'right');			   // atlas page
       }
 			$y-=$deltaline;
@@ -2611,6 +2611,7 @@ class Utils
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_observer'                    ,'common/content/view_observer.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_observer1'                   ,'common/content/view_observer1.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_observer2'                   ,'common/content/view_observer2.php')))		
+    if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('detail_observer3'                   ,'common/content/view_observer3.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionAll   ('message'                            ,'common/content/message.php')))		
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('reportsLayout'                      ,'common/content/reportslayout.php')))
     if(!($indexActionInclude=$this->utilitiesCheckIndexActionMember('search_sites'                       ,'common/content/search_locations.php')))

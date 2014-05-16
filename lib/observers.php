@@ -311,10 +311,11 @@ class Observers
       $entryMessage.="On the live server, a mail would be sent with the subject: Deepskylog account deleted.<br />";
     else
       mail($mailTo, "Deepskylog account deleted", "The account for ".$id." was deleted by ".$loggedUser, "From:".$mailFrom);
+		$objAccomplishments->deleteObserver($id);
     return "The user has been erased.";
   }	
   public  function validateObserver()                                          // validateObserver validates the user with the given id and gives the user the given role
-  { global $objDatabase,$objUtil, $entryMessage, $developversion,$mailTo,$mailFrom, $objMessages;
+  { global $objDatabase,$objUtil, $entryMessage, $developversion,$mailTo,$mailFrom, $objMessages, $objAccomplishments;
     if(!($objUtil->checkSessionKey('admin')=='yes'))
       throw new Exception(LangException001);
     $objDatabase->execSQL("UPDATE observers SET role = \"".($role=RoleUser)."\" WHERE id=\"".($id=$objUtil->checkGetKey('validate'))."\"");
@@ -336,7 +337,10 @@ class Observers
 		 			LangMessageWelcome2 . "<a href=\"" . $baseURL . "index.php?indexAction=add_site\">" . 
 		 			LangMessageWelcome3 . "<a href=\"" . $baseURL . "index.php?indexAction=change_account\">" . 
 		 			LangMessageWelcome4);
-    return LangValidateObserverMessage1.' '.LangValidateObserverMessage2;
+
+		$objAccomplishments->addObserver($id);
+
+		return LangValidateObserverMessage1.' '.LangValidateObserverMessage2;
   }
 }
 ?>
