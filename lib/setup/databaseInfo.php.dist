@@ -11,7 +11,7 @@ function databaseInfo()
 { 
   global $host,$user,$pass,$dbname,$developversion,$googleAnalytics,$domainName,
          $instDir,$baseURL,$tempDir,$mailFrom,$mailTo,$dirAtlasses,$copyright,
-         $title,$browsertitle,$copyrightInfo,$vvsInfo,$dslInfo,$versionInfo,$objectInfo,$objectInfo2,
+         $title,$browsertitle,$copyrightInfo,$vvsInfo,$dslInfo,$versionInfo,$objectInfo,$w3cInfo,
          $register,$dateformat,$defaultLanguage,$languageMenu,$maxFileSize,$modules,
          $standardLanguagesForObservationsDuringRegistration,$languagesDuringRegistration,$dirAstroImageCatalogs;
 
@@ -42,13 +42,25 @@ function databaseInfo()
   $vvsInfo       = "VVS Deepsky&nbsp;-&nbsp;";
   $dslInfo       = "Powered by&nbsp;DeepskyLog&nbsp;";
   $versionInfo   = "4.4-Trunk";
-  $objectInfo    = "Object Database by Eye&amp;Telescope"; 
-  $objectInfo2   = "Star Database by Tycho2+ &amp; USNO-UCAC3";
+  $objectInfo    = "Object Database by Eye&amp;Telescope<br />" . 
+                   "Star Database by Tycho2+ &amp; USNO-UCAC3";
+  $w3cInfo = "<a class=\"w3c\" href=\"http://validator.w3.org/check?uri=referer\">".
+             "<img class=\"w3c\" src=\"".$baseURL."styles/images/valid-xhtml10S.png\" alt=\"Valid XHTML 1.0 Strict\" />".
+             "</a>".
+             "&nbsp;".
+             "<a class=\"w3c\" href=\"http://jigsaw.w3.org/css-validator/check/referer\">".
+             "<img class=\"w3c\" src=\"".$baseURL."styles/images/vcssS.gif\" alt=\"Valid CSS\" />".
+             "</a>";
   
   // Allow users to register from within the DeepskyLog application directly
   // If you want to use a already existing database with users and passwords
   // eg ppb you should set this variable to "no" 
   $register = "yes";
+
+  // OBSOLETE since version 3.7 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  // Charts of Deepskylive (http://users.telenet.be/deepskylive) can be enabled
+  // or disabled. Set to 1 to enable the charts of deepskylive.
+  // $deepskylive = 1; Commented since version 3.7 ///////////////////////////
 
   // Configure the output format of observation dates  
   // Some examples of formatting december 28th 2004:

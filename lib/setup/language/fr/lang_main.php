@@ -1,4 +1,8 @@
 <?php //FR
+// This is version 4.4
+define('GraphAccomplishments'			,'R&eamp;alisations');
+
+
 define('LangUnderHorizon'				,'au-dessus de l\'horizon');
 
 define('LangAtlasChoosePageLayout'      ,'Choisissez la mise en page');
@@ -1228,8 +1232,6 @@ define("LangViewObservationField41"												,"Forme inhabituelle");
 define("LangViewObservationField42"												,"Partiellement non-r&eacute;solu");
 define("LangViewObservationField43"												,"Couleurs contrast&eacute;es");
 define("LangViewObservationField44"												,"Rajouter l'observation &agrave; la liste ");
-define("LangViewObservationField45"												,"Dans la liste ");
-define("LangViewObservationField46"												,"Pas dans la liste ");
 
 define("LangViewObservationButton1"												,"Rajoutez");
 define("LangViewObservationButton2"												,"Videz les champs");

@@ -1,4 +1,7 @@
 <?php //NL
+// This is version 4.4
+define('GraphAccomplishments'			,'Realisaties');
+
 // This is version 4.3
 define('LangUnderHorizon'				,'onder de horizon');
 define('LangAtlasChoosePageLayout'      ,'Kies eerst je pagina layout');
@@ -1257,8 +1260,6 @@ define("LangViewObservationField41"												,"Ongebruikelijke vorm");
 define("LangViewObservationField42"												,"Gedeeltelijk onopgelost");
 define("LangViewObservationField43"												,"Kleur contrast");
 define("LangViewObservationField44"												,"De waarneming toevoegen aan de lijst ");
-define("LangViewObservationField45"												,"In de lijst ");
-define("LangViewObservationField46"												,"Niet in de lijst ");
 
 define("LangViewObservationButton1"												,"Voeg toe");
 define("LangViewObservationButton2"												,"Wis velden");
