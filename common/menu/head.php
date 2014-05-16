@@ -13,31 +13,19 @@ function head()
 	echo "<meta name=\"revisit-after\" content=\"1 day\" />";
 	echo "<meta name=\"author\" content=\"DeepskyLog - VVS\" />";
 	echo "<meta name=\"keywords\" content=\"VVS, Vereniging Voor Sterrenkunde, astronomie, sterrenkunde, Deepsky, waarnemingen, kometen\" />";
-	echo "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">";
 	echo "<base href=\"".$baseURL."\" />";
 	echo "<link rel=\"shortcut icon\" href=\"".$baseURL."styles/images/favicon.ico\" />";
-	
-	// Stylesheets : First we really reset all styles.
-    echo "<link rel=\"stylesheet\" href=\"".$baseURL."styles/reset.css\" type=\"text/css\" media=\"screen\" />";
-    // Styleshhets : The real DeepskyLog style sheet.
 	echo "<link href=\"".$baseURL."styles/deepskylog.css\" rel=\"stylesheet\" type=\"text/css\" />";
-
-	// Javascript libraries : Modernizr to detect which html5 and css3 feature can be used in the browser
-    echo "<script src=\"".$baseURL."lib/javascript/modernizr.js\"></script>";
-	// Javascript libraries : Polyfill for min/max-width CSS3 Media Queries (for IE 6-8)
-    echo "<script src=\"".$baseURL."lib/javascript/respond.min.js\"></script>";
-	// Javascript libraries : Include jquery but fallback to local file
-	echo "<script src=\"http://code.jquery.com/jquery-1.11.0.min.js\"></script>";
-    echo "<script type=\"text/javascript\">window.jQuery || document.write('<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript\/1.11.0.jquery.min\"><\/script>')</script>";
-	// Javascript libraries : Lightbox to frame pictures
-  	echo "<script src=\"".$baseURL."lib/javascript/lightbox.js\"></script>";
-  	// Javascript libraries : prefixfree add all browser specific prefixes to html and css tags
-    echo "<script src=\"".$baseURL."lib/javascript/prefixfree.min.js\"></script>";
-
-
 	echo "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"DeepskyLog - latest observations\" href=\"observations.rss\" />";
-    echo "<link href=\"https://plus.google.com/105963409869875462537/\" rel=\"publisher\" />";
-    $DSLTitle="DeepskyLog";
+  echo "<link href=\"https://plus.google.com/105963409869875462537/\" rel=\"publisher\" />";
+  echo "<script type=\"text/javascript\" src=\"https://apis.google.com/js/plusone.js\"></script>";
+	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
+  echo "<script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js\" type=\"text/javascript\"></script>
+        <link rel=\"stylesheet\" href=\"".$baseURL."styles/prettyPhoto.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\" />
+        <script src=\"".$baseURL."lib/javascript/jquery.prettyPhoto.js\" type=\"text/javascript\" charset=\"utf-8\"></script>";
+  echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/highcharts.js\"></script>";
+  echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/modules/exporting.js\"></script>";
+  $DSLTitle="DeepskyLog";
 	$TitleText="";
 	$theDispatch=$objUtil->checkRequestKey('indexAction');
 	$theObject=$objUtil->checkRequestKey('object');
@@ -127,7 +115,8 @@ function head()
 	}
 	echo "<title>".$DSLTitle.($TitleText?": ".$TitleText:"")."</title>";
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
-	echo "<script type=\"text/javascript\">
+	echo "<script type=\"text/javascript\">window.onresize=function(){resizeForm('".$leftmenu."','".$topmenu."');}</script>";
+  echo "<script type=\"text/javascript\">
 
      var _gaq = _gaq || [];
      _gaq.push(['_setAccount', '". $googleAnalytics ."']);

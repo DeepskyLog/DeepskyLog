@@ -59,6 +59,7 @@ function preludesB()
          $objPrintAtlas,
          $objReportLayout,
          $objStar,
+         $objAccomplishments,
          $objUtil
          ;
 
@@ -71,6 +72,7 @@ function preludesB()
 	require_once "lib/contrast.php";                $objContrast = new Contrast;
 	require_once "lib/eyepieces.php";               $objEyepiece=new Eyepieces;
 	require_once "lib/observations.php";            $objObservation = new Observations;
+	require_once "lib/accomplishments.php";         $objAccomplishments = new Accomplishments;
 	require_once "lib/lists.php";                   $objList=new Lists;
 	require_once "lib/objects.php";                 $objObject=new Objects;
 	require_once "lib/objectOutlines.php";          $objObjectOutlines=new ObjectOutlines;

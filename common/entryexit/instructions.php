@@ -7,7 +7,7 @@ else instructions();
 
 function instructions()
 {	global $baseURL,$loggedUser,$myList,$lastReadObservation,$theDate,$modules,$menuView,$menuAddChange,$menuAdmin,$menuLogin,$menuSearch,$menuDownloads,$menuMoon,
-         $listname_ss,$listname,$entryMessage,$step,$objSession,
+         $listname_ss,$listname,$entryMessage,$step,$objSession, $objAccomplishments,
          $objEyepiece,$objFilter,$objLens,$objInstrument,$objLocation,$objMessages,
          $objObject,$objObserver,$objObservation,$objFormLayout,$objUtil,$objList;
 	if($objUtil->checkGetKey('saveLayout'))

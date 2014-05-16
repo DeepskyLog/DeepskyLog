@@ -18,6 +18,7 @@ function view_observer()
 	       <li><a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $user . "\"><span>" . GraphInfo . "</span></a></li>
 	       <li><a href=\"" . $baseURL . "index.php?indexAction=detail_observer1&user=" . $user . "\"><span>" . GraphObservationsTitle . "</span></a></li>
 	       <li class=\"current\"><a href=\"" . $baseURL . "index.php?indexAction=detail_observer2&user=" . $user . "\"><span>" . GraphObservationsType . "</span></a></li>
+	       <li><a href=\"" . $baseURL . "index.php?indexAction=detail_observer3&user=" . $user . "\"><span>" . GraphAccomplishments . "</span></a></li>
 	      </ol>";
    // Pie chart                  
   $objectsArray = array();
