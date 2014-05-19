@@ -260,15 +260,15 @@ class Accomplishments {
   }
   // Returns a boolean array for [ bronze, silver, gold ] 
   private function accomplishments3($numberOfObjects) {
-    return [ $numberOfObjects >= 25 ? 1:0, $numberOfObjects >= 50 ? 1:0, 
-             $numberOfObjects >= 110 ? 1:0 ];
+    return array( $numberOfObjects >= 25 ? 1:0, $numberOfObjects >= 50 ? 1:0, 
+             $numberOfObjects >= 110 ? 1:0 );
   }
 
   // Returns a boolean array for [ bronze, silver, gold, diamond, platina ] 
   private function accomplishments5($numberOfObjects) {
-    return [ $numberOfObjects >= 25 ? 1:0, $numberOfObjects >= 50 ? 1:0, 
+    return array( $numberOfObjects >= 25 ? 1:0, $numberOfObjects >= 50 ? 1:0, 
              $numberOfObjects >= 100 ? 1:0, $numberOfObjects >= 200 ? 1:0,
-             $numberOfObjects >= 400 ? 1:0 ];
+             $numberOfObjects >= 400 ? 1:0 );
   }
 
   // Returns a boolean array for [ Newbie, Rookie, Beginner, Talented, Skilled, Intermediate, Experienced, Advanced, Senior, Expert ]
@@ -283,11 +283,11 @@ class Accomplishments {
   	$total1000 = ($total / 5) >= 8 ? ($total / 5):8;
   	$total2500 = ($total / 2) >= 9 ? ($total / 2):9;
   	$total5000 = $total >= 4 ? $total:4;
-    return [ $numberOfObjects >= $total1 ? 1:0, $numberOfObjects >= $total10 ? 1:0, 
+    return array( $numberOfObjects >= $total1 ? 1:0, $numberOfObjects >= $total10 ? 1:0, 
              $numberOfObjects >= $total25 ? 1:0, $numberOfObjects >= $total50 ? 1:0,
              $numberOfObjects >= ($total / 50) ? 1:0, $numberOfObjects >= ($total / 20) ? 1:0,
              $numberOfObjects >= ($total / 10) ? 1:0, $numberOfObjects >= ($total / 5) ? 1:0,
-             $numberOfObjects >= ($total / 2) ? 1:0, $numberOfObjects >= ($total) ? 1:0 ];
+             $numberOfObjects >= ($total / 2) ? 1:0, $numberOfObjects >= ($total) ? 1:0 );
   }
   
   // Create an entry for a new observer in the accomplishments table
