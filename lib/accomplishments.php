@@ -431,1051 +431,1226 @@ class Accomplishments {
   // Returns 1 if the observer has drawn 25 Herschels
   public function getHerschelDrawingsBronze($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelDrawingsBronze from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelDrawingsBronze"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelDrawingsBronze from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelDrawingsBronze"];
   }
 
   // Returns 1 if the observer has drawn 50 Herschels
   public function getHerschelDrawingsSilver($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelDrawingsSilver from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelDrawingsSilver"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelDrawingsSilver from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelDrawingsSilver"];
   }
 
   // Returns 1 if the observer has drawn 100 Herschels
   public function getHerschelDrawingsGold($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelDrawingsGold from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelDrawingsGold"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelDrawingsGold from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelDrawingsGold"];
   }
   
   // Returns 1 if the observer has drawn 200 Herschels
   public function getHerschelDrawingsDiamond($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelDrawingsDiamond from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelDrawingsDiamond"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelDrawingsDiamond from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelDrawingsDiamond"];
   }
   
   // Returns 1 if the observer has drawn 400 Herschels
   public function getHerschelDrawingsPlatina($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelDrawingsPlatina from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelDrawingsPlatina"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelDrawingsPlatina from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelDrawingsPlatina"];
   }
   
   // Returns 1 if the observer has seen 25 HerschelIIs
   public function getHerschelIIBronze($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelIIBronze from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelIIBronze"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIBronze from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelIIBronze"];
   }
 
   // Returns 1 if the observer has seen 50 HerschelIIs
   public function getHerschelIISilver($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelIISilver from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelIISilver"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIISilver from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelIISilver"];
   }
 
   // Returns 1 if the observer has seen 100 HerschelIIs
   public function getHerschelIIGold($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelIIGold from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelIIGold"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIGold from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelIIGold"];
   }
   
   // Returns 1 if the observer has seen 200 HerschelIIs
   public function getHerschelIIDiamond($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelIIDiamond from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelIIDiamond"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIDiamond from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelIIDiamond"];
   }
   
   // Returns 1 if the observer has seen 400 HerschelIIs
   public function getHerschelIIPlatina($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelIIPlatina from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelIIPlatina"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIPlatina from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelIIPlatina"];
   }
   
   // Returns 1 if the observer has drawn 25 HerschelIIs
   public function getHerschelIIDrawingsBronze($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelIIDrawingsBronze from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelIIDrawingsBronze"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIDrawingsBronze from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelIIDrawingsBronze"];
   }
 
   // Returns 1 if the observer has drawn 50 HerschelIIs
   public function getHerschelIIDrawingsSilver($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelIIDrawingsSilver from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelIIDrawingsSilver"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIDrawingsSilver from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelIIDrawingsSilver"];
   }
 
   // Returns 1 if the observer has drawn 100 HerschelIIs
   public function getHerschelIIDrawingsGold($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelIIDrawingsGold from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelIIDrawingsGold"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIDrawingsGold from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelIIDrawingsGold"];
   }
   
   // Returns 1 if the observer has drawn 200 HerschelIIs
   public function getHerschelIIDrawingsDiamond($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelIIDrawingsDiamond from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelIIDrawingsDiamond"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIDrawingsDiamond from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelIIDrawingsDiamond"];
   }
   
   // Returns 1 if the observer has drawn 400 HerschelIIs
   public function getHerschelIIDrawingsPlatina($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelIIDrawingsPlatina from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelIIDrawingsPlatina"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelIIDrawingsPlatina from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelIIDrawingsPlatina"];
   }
 
   // Returns 1 if the observer has one drawing
   public function getDrawingsNewbie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select DrawingsNewbie from accomplishments where observer = \"". $observerId . "\";")[0]["DrawingsNewbie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsNewbie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["DrawingsNewbie"];
   }
   
   // Returns 1 if the observer has 10 drawings
   public function getDrawingsRookie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select DrawingsRookie from accomplishments where observer = \"". $observerId . "\";")[0]["DrawingsRookie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsRookie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["DrawingsRookie"];
   }
   
   // Returns 1 if the observer has 25 drawings
   public function getDrawingsBeginner($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select DrawingsBeginner from accomplishments where observer = \"". $observerId . "\";")[0]["DrawingsBeginner"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsBeginner from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["DrawingsBeginner"];
   }
   
   // Returns 1 if the observer has 50 drawings
   public function getDrawingsTalented($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select DrawingsTalented from accomplishments where observer = \"". $observerId . "\";")[0]["DrawingsTalented"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsTalented from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["DrawingsTalented"];
   }
   
   // Returns 1 if the observer has 100 drawings
   public function getDrawingsSkilled($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select DrawingsSkilled from accomplishments where observer = \"". $observerId . "\";")[0]["DrawingsSkilled"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsSkilled from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["DrawingsSkilled"];
   }
   
   // Returns 1 if the observer has 250 drawings
   public function getDrawingsIntermediate($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select DrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";")[0]["DrawingsIntermediate"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["DrawingsIntermediate"];
   }
   
   // Returns 1 if the observer has 500 drawings
   public function getDrawingsExperienced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select DrawingsExperienced from accomplishments where observer = \"". $observerId . "\";")[0]["DrawingsExperienced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsExperienced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["DrawingsExperienced"];
   }
   
   // Returns 1 if the observer has 1000 drawings
   public function getDrawingsAdvanced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select DrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";")[0]["DrawingsAdvanced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["DrawingsAdvanced"];
   }
   
   // Returns 1 if the observer has 2500 drawings
   public function getDrawingsSenior($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select DrawingsSenior from accomplishments where observer = \"". $observerId . "\";")[0]["DrawingsSenior"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsSenior from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["DrawingsSenior"];
   }
   
   // Returns 1 if the observer has 5000 drawings
   public function getDrawingsExpert($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select DrawingsExpert from accomplishments where observer = \"". $observerId . "\";")[0]["DrawingsExpert"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select DrawingsExpert from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["DrawingsExpert"];
   }
   
   // Returns 1 if the observer has one open clusters
   public function getOpenClustersNewbie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterNewbie from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterNewbie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterNewbie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterNewbie"];
   }
   
   // Returns 1 if the observer has 10 OpenClusters
   public function getOpenClustersRookie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterRookie from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterRookie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterRookie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterRookie"];
   }
   
   // Returns 1 if the observer has 25 OpenClusters
   public function getOpenClustersBeginner($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterBeginner from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterBeginner"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterBeginner from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterBeginner"];
   }
   
   // Returns 1 if the observer has 50 OpenClusters
   public function getOpenClustersTalented($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterTalented from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterTalented"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterTalented from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterTalented"];
   }
   
   // Returns 1 if the observer has 100 OpenClusters
   public function getOpenClustersSkilled($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterSkilled from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterSkilled"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterSkilled from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterSkilled"];
   }
   
   // Returns 1 if the observer has 250 OpenClusters
   public function getOpenClustersIntermediate($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterIntermediate from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterIntermediate"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterIntermediate from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterIntermediate"];
   }
   
   // Returns 1 if the observer has 500 OpenClusters
   public function getOpenClustersExperienced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterExperienced from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterExperienced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterExperienced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterExperienced"];
   }
   
   // Returns 1 if the observer has 1000 OpenClusters
   public function getOpenClustersAdvanced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterAdvanced from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterAdvanced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterAdvanced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterAdvanced"];
   }
   
   // Returns 1 if the observer has 2500 OpenClusters
   public function getOpenClustersSenior($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterSenior from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterSenior"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterSenior from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterSenior"];
   }
   
   // Returns 1 if the observer has 5000 OpenClusters
   public function getOpenClustersExpert($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterExpert from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterExpert"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterExpert from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterExpert"];
   }
   
   // Returns 1 if the observer has one open clusters
   public function getOpenClusterDrawingsNewbie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterDrawingsNewbie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterDrawingsNewbie"];
   }
   
   // Returns 1 if the observer has 10 OpenClusterDrawings
   public function getOpenClusterDrawingsRookie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterDrawingsRookie from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterDrawingsRookie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsRookie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterDrawingsRookie"];
   }
   
   // Returns 1 if the observer has 25 OpenClusterDrawings
   public function getOpenClusterDrawingsBeginner($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterDrawingsBeginner"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterDrawingsBeginner"];
   }
   
   // Returns 1 if the observer has 50 OpenClusterDrawings
   public function getOpenClusterDrawingsTalented($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterDrawingsTalented from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterDrawingsTalented"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsTalented from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterDrawingsTalented"];
   }
   
   // Returns 1 if the observer has 100 OpenClusterDrawings
   public function getOpenClusterDrawingsSkilled($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterDrawingsSkilled"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterDrawingsSkilled"];
   }
   
   // Returns 1 if the observer has 250 OpenClusterDrawings
   public function getOpenClusterDrawingsIntermediate($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterDrawingsIntermediate"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterDrawingsIntermediate"];
   }
   
   // Returns 1 if the observer has 500 OpenClusterDrawings
   public function getOpenClusterDrawingsExperienced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterDrawingsExperienced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterDrawingsExperienced"];
   }
   
   // Returns 1 if the observer has 1000 OpenClusterDrawings
   public function getOpenClusterDrawingsAdvanced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterDrawingsAdvanced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterDrawingsAdvanced"];
   }
   
   // Returns 1 if the observer has 2500 OpenClusterDrawings
   public function getOpenClusterDrawingsSenior($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterDrawingsSenior from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterDrawingsSenior"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsSenior from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterDrawingsSenior"];
   }
   
   // Returns 1 if the observer has 5000 OpenClusterDrawings
   public function getOpenClusterDrawingsExpert($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select OpenClusterDrawingsExpert from accomplishments where observer = \"". $observerId . "\";")[0]["OpenClusterDrawingsExpert"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select OpenClusterDrawingsExpert from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["OpenClusterDrawingsExpert"];
   }
 
   // Returns 1 if the observer has one Globular clusters
   public function getGlobularClustersNewbie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterNewbie from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterNewbie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterNewbie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterNewbie"];
   }
   
   // Returns 1 if the observer has 10 GlobularClusters
   public function getGlobularClustersRookie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterRookie from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterRookie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterRookie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterRookie"];
   }
   
   // Returns 1 if the observer has 25 GlobularClusters
   public function getGlobularClustersBeginner($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterBeginner from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterBeginner"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterBeginner from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterBeginner"];
   }
   
   // Returns 1 if the observer has 50 GlobularClusters
   public function getGlobularClustersTalented($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterTalented from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterTalented"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterTalented from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterTalented"];
   }
   
   // Returns 1 if the observer has 100 GlobularClusters
   public function getGlobularClustersSkilled($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterSkilled from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterSkilled"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterSkilled from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterSkilled"];
   }
   
   // Returns 1 if the observer has 250 GlobularClusters
   public function getGlobularClustersIntermediate($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterIntermediate from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterIntermediate"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterIntermediate from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterIntermediate"];
   }
   
   // Returns 1 if the observer has 500 GlobularClusters
   public function getGlobularClustersExperienced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterExperienced from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterExperienced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterExperienced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterExperienced"];
   }
   
   // Returns 1 if the observer has 1000 GlobularClusters
   public function getGlobularClustersAdvanced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterAdvanced from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterAdvanced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterAdvanced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterAdvanced"];
   }
   
   // Returns 1 if the observer has 2500 GlobularClusters
   public function getGlobularClustersSenior($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterSenior from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterSenior"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterSenior from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterSenior"];
   }
   
   // Returns 1 if the observer has 5000 GlobularClusters
   public function getGlobularClustersExpert($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterExpert from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterExpert"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterExpert from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterExpert"];
   }
   
   // Returns 1 if the observer has one Globular clusters
   public function getGlobularClusterDrawingsNewbie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterDrawingsNewbie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterDrawingsNewbie"];
   }
   
   // Returns 1 if the observer has 10 GlobularClusterDrawings
   public function getGlobularClusterDrawingsRookie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsRookie from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterDrawingsRookie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsRookie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterDrawingsRookie"];
   }
   
   // Returns 1 if the observer has 25 GlobularClusterDrawings
   public function getGlobularClusterDrawingsBeginner($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterDrawingsBeginner"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterDrawingsBeginner"];
   }
   
   // Returns 1 if the observer has 50 GlobularClusterDrawings
   public function getGlobularClusterDrawingsTalented($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsTalented from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterDrawingsTalented"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsTalented from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterDrawingsTalented"];
   }
   
   // Returns 1 if the observer has 100 GlobularClusterDrawings
   public function getGlobularClusterDrawingsSkilled($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterDrawingsSkilled"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterDrawingsSkilled"];
   }
   
   // Returns 1 if the observer has 250 GlobularClusterDrawings
   public function getGlobularClusterDrawingsIntermediate($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterDrawingsIntermediate"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterDrawingsIntermediate"];
   }
   
   // Returns 1 if the observer has 500 GlobularClusterDrawings
   public function getGlobularClusterDrawingsExperienced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterDrawingsExperienced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterDrawingsExperienced"];
   }
   
   // Returns 1 if the observer has 1000 GlobularClusterDrawings
   public function getGlobularClusterDrawingsAdvanced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterDrawingsAdvanced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterDrawingsAdvanced"];
   }
   
   // Returns 1 if the observer has 2500 GlobularClusterDrawings
   public function getGlobularClusterDrawingsSenior($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsSenior from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterDrawingsSenior"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsSenior from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterDrawingsSenior"];
   }
   
   // Returns 1 if the observer has 5000 GlobularClusterDrawings
   public function getGlobularClusterDrawingsExpert($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsExpert from accomplishments where observer = \"". $observerId . "\";")[0]["GlobularClusterDrawingsExpert"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GlobularClusterDrawingsExpert from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GlobularClusterDrawingsExpert"];
   }
 
   // Returns 1 if the observer has one planetary nebula
   public function getPlanetaryNebulaNewbie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaNewbie from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaNewbie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaNewbie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaNewbie"];
   }
   
   // Returns 1 if the observer has 10 PlanetaryNebula
   public function getPlanetaryNebulaRookie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaRookie from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaRookie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaRookie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaRookie"];
   }
   
   // Returns 1 if the observer has 25 PlanetaryNebula
   public function getPlanetaryNebulaBeginner($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaBeginner from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaBeginner"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaBeginner from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaBeginner"];
   }
   
   // Returns 1 if the observer has 50 PlanetaryNebula
   public function getPlanetaryNebulaTalented($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaTalented from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaTalented"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaTalented from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaTalented"];
   }
   
   // Returns 1 if the observer has 100 PlanetaryNebula
   public function getPlanetaryNebulaSkilled($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaSkilled from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaSkilled"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaSkilled from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaSkilled"];
   }
   
   // Returns 1 if the observer has 250 PlanetaryNebula
   public function getPlanetaryNebulaIntermediate($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaIntermediate from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaIntermediate"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaIntermediate from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaIntermediate"];
   }
   
   // Returns 1 if the observer has 500 PlanetaryNebula
   public function getPlanetaryNebulaExperienced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaExperienced from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaExperienced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaExperienced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaExperienced"];
   }
   
   // Returns 1 if the observer has 1000 PlanetaryNebula
   public function getPlanetaryNebulaAdvanced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaAdvanced from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaAdvanced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaAdvanced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaAdvanced"];
   }
   
   // Returns 1 if the observer has 2500 PlanetaryNebula
   public function getPlanetaryNebulaSenior($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaSenior from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaSenior"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaSenior from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaSenior"];
   }
   
   // Returns 1 if the observer has 5000 PlanetaryNebula
   public function getPlanetaryNebulaExpert($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaExpert from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaExpert"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaExpert from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaExpert"];
   }
   
   // Returns 1 if the observer has one Globular clusters
   public function getPlanetaryNebulaDrawingsNewbie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaDrawingsNewbie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaDrawingsNewbie"];
   }
   
   // Returns 1 if the observer has 10 PlanetaryNebulaDrawings
   public function getPlanetaryNebulaDrawingsRookie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsRookie from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaDrawingsRookie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsRookie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaDrawingsRookie"];
   }
   
   // Returns 1 if the observer has 25 PlanetaryNebulaDrawings
   public function getPlanetaryNebulaDrawingsBeginner($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaDrawingsBeginner"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaDrawingsBeginner"];
   }
   
   // Returns 1 if the observer has 50 PlanetaryNebulaDrawings
   public function getPlanetaryNebulaDrawingsTalented($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsTalented from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaDrawingsTalented"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsTalented from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaDrawingsTalented"];
   }
   
   // Returns 1 if the observer has 100 PlanetaryNebulaDrawings
   public function getPlanetaryNebulaDrawingsSkilled($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaDrawingsSkilled"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaDrawingsSkilled"];
   }
   
   // Returns 1 if the observer has 250 PlanetaryNebulaDrawings
   public function getPlanetaryNebulaDrawingsIntermediate($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaDrawingsIntermediate"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaDrawingsIntermediate"];
   }
   
   // Returns 1 if the observer has 500 PlanetaryNebulaDrawings
   public function getPlanetaryNebulaDrawingsExperienced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaDrawingsExperienced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaDrawingsExperienced"];
   }
   
   // Returns 1 if the observer has 1000 PlanetaryNebulaDrawings
   public function getPlanetaryNebulaDrawingsAdvanced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaDrawingsAdvanced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaDrawingsAdvanced"];
   }
   
   // Returns 1 if the observer has 2500 PlanetaryNebulaDrawings
   public function getPlanetaryNebulaDrawingsSenior($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsSenior from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaDrawingsSenior"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsSenior from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaDrawingsSenior"];
   }
   
   // Returns 1 if the observer has 5000 PlanetaryNebulaDrawings
   public function getPlanetaryNebulaDrawingsExpert($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsExpert from accomplishments where observer = \"". $observerId . "\";")[0]["PlanetaryNebulaDrawingsExpert"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select PlanetaryNebulaDrawingsExpert from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["PlanetaryNebulaDrawingsExpert"];
   }
 
   // Returns 1 if the observer has one planetary nebula
   public function getGalaxyNewbie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyNewbie from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyNewbie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyNewbie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyNewbie"];
   }
   
   // Returns 1 if the observer has 10 Galaxy
   public function getGalaxyRookie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyRookie from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyRookie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyRookie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyRookie"];
   }
   
   // Returns 1 if the observer has 25 Galaxy
   public function getGalaxyBeginner($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyBeginner from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyBeginner"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyBeginner from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyBeginner"];
   }
   
   // Returns 1 if the observer has 50 Galaxy
   public function getGalaxyTalented($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyTalented from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyTalented"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyTalented from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyTalented"];
   }
   
   // Returns 1 if the observer has 100 Galaxy
   public function getGalaxySkilled($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxySkilled from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxySkilled"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxySkilled from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxySkilled"];
   }
   
   // Returns 1 if the observer has 250 Galaxy
   public function getGalaxyIntermediate($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyIntermediate from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyIntermediate"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyIntermediate from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyIntermediate"];
   }
   
   // Returns 1 if the observer has 500 Galaxy
   public function getGalaxyExperienced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyExperienced from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyExperienced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyExperienced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyExperienced"];
   }
   
   // Returns 1 if the observer has 1000 Galaxy
   public function getGalaxyAdvanced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyAdvanced from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyAdvanced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyAdvanced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyAdvanced"];
   }
   
   // Returns 1 if the observer has 2500 Galaxy
   public function getGalaxySenior($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxySenior from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxySenior"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxySenior from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxySenior"];
   }
   
   // Returns 1 if the observer has 5000 Galaxy
   public function getGalaxyExpert($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyExpert from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyExpert"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyExpert from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyExpert"];
   }
 
   // Returns 1 if the observer has one galaxy Drawing
   public function getGalaxyDrawingsNewbie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyDrawingsNewbie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyDrawingsNewbie"];
   }
   
   // Returns 1 if the observer has 10 GalaxyDrawings
   public function getGalaxyDrawingsRookie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyDrawingsRookie from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyDrawingsRookie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsRookie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyDrawingsRookie"];
   }
   
   // Returns 1 if the observer has 25 GalaxyDrawings
   public function getGalaxyDrawingsBeginner($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyDrawingsBeginner"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyDrawingsBeginner"];
   }
   
   // Returns 1 if the observer has 50 GalaxyDrawings
   public function getGalaxyDrawingsTalented($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyDrawingsTalented from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyDrawingsTalented"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsTalented from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyDrawingsTalented"];
   }
   
   // Returns 1 if the observer has 100 GalaxyDrawings
   public function getGalaxyDrawingsSkilled($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyDrawingsSkilled"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyDrawingsSkilled"];
   }
   
   // Returns 1 if the observer has 250 GalaxyDrawings
   public function getGalaxyDrawingsIntermediate($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyDrawingsIntermediate"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyDrawingsIntermediate"];
   }
   
   // Returns 1 if the observer has 500 GalaxyDrawings
   public function getGalaxyDrawingsExperienced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyDrawingsExperienced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyDrawingsExperienced"];
   }
   
   // Returns 1 if the observer has 1000 GalaxyDrawings
   public function getGalaxyDrawingsAdvanced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyDrawingsAdvanced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyDrawingsAdvanced"];
   }
   
   // Returns 1 if the observer has 2500 GalaxyDrawings
   public function getGalaxyDrawingsSenior($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyDrawingsSenior from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyDrawingsSenior"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsSenior from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyDrawingsSenior"];
   }
   
   // Returns 1 if the observer has 5000 GalaxyDrawings
   public function getGalaxyDrawingsExpert($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select GalaxyDrawingsExpert from accomplishments where observer = \"". $observerId . "\";")[0]["GalaxyDrawingsExpert"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select GalaxyDrawingsExpert from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["GalaxyDrawingsExpert"];
   }
   
   // Returns 1 if the observer has one nebula
   public function getNebulaNewbie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaNewbie from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaNewbie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaNewbie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaNewbie"];
   }
   
   // Returns 1 if the observer has 10 Nebula
   public function getNebulaRookie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaRookie from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaRookie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaRookie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaRookie"];
   }
   
   // Returns 1 if the observer has 25 Nebula
   public function getNebulaBeginner($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaBeginner from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaBeginner"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaBeginner from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaBeginner"];
   }
   
   // Returns 1 if the observer has 50 Nebula
   public function getNebulaTalented($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaTalented from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaTalented"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaTalented from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaTalented"];
   }
   
   // Returns 1 if the observer has 100 Nebula
   public function getNebulaSkilled($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaSkilled from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaSkilled"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaSkilled from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaSkilled"];
   }
   
   // Returns 1 if the observer has 250 Nebula
   public function getNebulaIntermediate($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaIntermediate from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaIntermediate"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaIntermediate from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaIntermediate"];
   }
   
   // Returns 1 if the observer has 500 Nebula
   public function getNebulaExperienced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaExperienced from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaExperienced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaExperienced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaExperienced"];
   }
   
   // Returns 1 if the observer has 1000 Nebula
   public function getNebulaAdvanced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaAdvanced from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaAdvanced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaAdvanced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaAdvanced"];
   }
   
   // Returns 1 if the observer has 2500 Nebula
   public function getNebulaSenior($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaSenior from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaSenior"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaSenior from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaSenior"];
   }
   
   // Returns 1 if the observer has 5000 Nebula
   public function getNebulaExpert($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaExpert from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaExpert"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaExpert from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaExpert"];
   }
   
   // Returns 1 if the observer has one Nebula Drawing
   public function getNebulaDrawingsNewbie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaDrawingsNewbie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaDrawingsNewbie"];
   }
   
   // Returns 1 if the observer has 10 NebulaDrawings
   public function getNebulaDrawingsRookie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaDrawingsRookie from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaDrawingsRookie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaDrawingsRookie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaDrawingsRookie"];
   }
   
   // Returns 1 if the observer has 25 NebulaDrawings
   public function getNebulaDrawingsBeginner($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaDrawingsBeginner"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaDrawingsBeginner"];
   }
   
   // Returns 1 if the observer has 50 NebulaDrawings
   public function getNebulaDrawingsTalented($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaDrawingsTalented from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaDrawingsTalented"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaDrawingsTalented from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaDrawingsTalented"];
   }
   
   // Returns 1 if the observer has 100 NebulaDrawings
   public function getNebulaDrawingsSkilled($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaDrawingsSkilled"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaDrawingsSkilled"];
   }
   
   // Returns 1 if the observer has 250 NebulaDrawings
   public function getNebulaDrawingsIntermediate($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaDrawingsIntermediate"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaDrawingsIntermediate"];
   }
   
   // Returns 1 if the observer has 500 NebulaDrawings
   public function getNebulaDrawingsExperienced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaDrawingsExperienced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaDrawingsExperienced"];
   }
   
   // Returns 1 if the observer has 1000 NebulaDrawings
   public function getNebulaDrawingsAdvanced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaDrawingsAdvanced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaDrawingsAdvanced"];
   }
   
   // Returns 1 if the observer has 2500 NebulaDrawings
   public function getNebulaDrawingsSenior($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaDrawingsSenior from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaDrawingsSenior"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaDrawingsSenior from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaDrawingsSenior"];
   }
   
   // Returns 1 if the observer has 5000 NebulaDrawings
   public function getNebulaDrawingsExpert($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select NebulaDrawingsExpert from accomplishments where observer = \"". $observerId . "\";")[0]["NebulaDrawingsExpert"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select NebulaDrawingsExpert from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["NebulaDrawingsExpert"];
   }
 
   // Returns 1 if the observer has one Objects
   public function getObjectsNewbie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsNewbie from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsNewbie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsNewbie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsNewbie"];
   }
   
   // Returns 1 if the observer has 10 Objects
   public function getObjectsRookie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsRookie from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsRookie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsRookie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsRookie"];
   }
   
   // Returns 1 if the observer has 25 Objects
   public function getObjectsBeginner($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsBeginner from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsBeginner"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsBeginner from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsBeginner"];
   }
   
   // Returns 1 if the observer has 50 Objects
   public function getObjectsTalented($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsTalented from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsTalented"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsTalented from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsTalented"];
   }
   
   // Returns 1 if the observer has 100 Objects
   public function getObjectsSkilled($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsSkilled from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsSkilled"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsSkilled from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsSkilled"];
   }
   
   // Returns 1 if the observer has 250 Objects
   public function getObjectsIntermediate($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsIntermediate from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsIntermediate"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsIntermediate from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsIntermediate"];
   }
   
   // Returns 1 if the observer has 500 Objects
   public function getObjectsExperienced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsExperienced from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsExperienced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsExperienced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsExperienced"];
   }
   
   // Returns 1 if the observer has 1000 Objects
   public function getObjectsAdvanced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsAdvanced from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsAdvanced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsAdvanced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsAdvanced"];
   }
   
   // Returns 1 if the observer has 2500 Objects
   public function getObjectsSenior($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsSenior from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsSenior"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsSenior from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsSenior"];
   }
   
   // Returns 1 if the observer has 5000 Objects
   public function getObjectsExpert($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsExpert from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsExpert"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsExpert from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsExpert"];
   }
   
   // Returns 1 if the observer has one Objects Drawing
   public function getObjectsDrawingsNewbie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsDrawingsNewbie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsDrawingsNewbie"];
   }
   
   // Returns 1 if the observer has 10 ObjectsDrawings
   public function getObjectsDrawingsRookie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsDrawingsRookie from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsDrawingsRookie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsRookie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsDrawingsRookie"];
   }
   
   // Returns 1 if the observer has 25 ObjectsDrawings
   public function getObjectsDrawingsBeginner($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsDrawingsBeginner"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsDrawingsBeginner"];
   }
   
   // Returns 1 if the observer has 50 ObjectsDrawings
   public function getObjectsDrawingsTalented($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsDrawingsTalented from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsDrawingsTalented"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsTalented from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsDrawingsTalented"];
   }
   
   // Returns 1 if the observer has 100 ObjectsDrawings
   public function getObjectsDrawingsSkilled($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsDrawingsSkilled"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsDrawingsSkilled"];
   }
   
   // Returns 1 if the observer has 250 ObjectsDrawings
   public function getObjectsDrawingsIntermediate($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsDrawingsIntermediate"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsDrawingsIntermediate"];
   }
   
   // Returns 1 if the observer has 500 ObjectsDrawings
   public function getObjectsDrawingsExperienced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsDrawingsExperienced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsDrawingsExperienced"];
   }
   
   // Returns 1 if the observer has 1000 ObjectsDrawings
   public function getObjectsDrawingsAdvanced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsDrawingsAdvanced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsDrawingsAdvanced"];
   }
   
   // Returns 1 if the observer has 2500 ObjectsDrawings
   public function getObjectsDrawingsSenior($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select ObjectsDrawingsSenior from accomplishments where observer = \"". $observerId . "\";")[0]["ObjectsDrawingsSenior"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select ObjectsDrawingsSenior from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["ObjectsDrawingsSenior"];
   }
   
   // Returns 1 if the observer has 5000 ObjectsDrawings
   public function getObjectsDrawingsExpert($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select objectsDrawingsExpert from accomplishments where observer = \"". $observerId . "\";")[0]["objectsDrawingsExpert"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select objectsDrawingsExpert from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["objectsDrawingsExpert"];
   }
 
   // Returns 1 if the observer has one Objects Drawing
   public function getCometObservationsNewbie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometObservationsNewbie from accomplishments where observer = \"". $observerId . "\";")[0]["CometObservationsNewbie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometObservationsNewbie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometObservationsNewbie"];
   }
   
   // Returns 1 if the observer has 10 CometObservations
   public function getCometObservationsRookie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometObservationsRookie from accomplishments where observer = \"". $observerId . "\";")[0]["CometObservationsRookie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometObservationsRookie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometObservationsRookie"];
   }
   
   // Returns 1 if the observer has 25 CometObservations
   public function getCometObservationsBeginner($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometObservationsBeginner from accomplishments where observer = \"". $observerId . "\";")[0]["CometObservationsBeginner"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometObservationsBeginner from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometObservationsBeginner"];
   }
   
   // Returns 1 if the observer has 50 CometObservations
   public function getCometObservationsTalented($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometObservationsTalented from accomplishments where observer = \"". $observerId . "\";")[0]["CometObservationsTalented"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometObservationsTalented from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometObservationsTalented"];
   }
   
   // Returns 1 if the observer has 100 CometObservations
   public function getCometObservationsSkilled($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometObservationsSkilled from accomplishments where observer = \"". $observerId . "\";")[0]["CometObservationsSkilled"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometObservationsSkilled from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometObservationsSkilled"];
   }
   
   // Returns 1 if the observer has 250 CometObservations
   public function getCometObservationsIntermediate($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometObservationsIntermediate from accomplishments where observer = \"". $observerId . "\";")[0]["CometObservationsIntermediate"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometObservationsIntermediate from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometObservationsIntermediate"];
   }
   
   // Returns 1 if the observer has 500 CometObservations
   public function getCometObservationsExperienced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometObservationsExperienced from accomplishments where observer = \"". $observerId . "\";")[0]["CometObservationsExperienced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometObservationsExperienced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometObservationsExperienced"];
   }
   
   // Returns 1 if the observer has 1000 CometObservations
   public function getCometObservationsAdvanced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometObservationsAdvanced from accomplishments where observer = \"". $observerId . "\";")[0]["CometObservationsAdvanced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometObservationsAdvanced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometObservationsAdvanced"];
   }
   
   // Returns 1 if the observer has 2500 CometObservations
   public function getCometObservationsSenior($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometObservationsSenior from accomplishments where observer = \"". $observerId . "\";")[0]["CometObservationsSenior"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometObservationsSenior from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometObservationsSenior"];
   }
   
   // Returns 1 if the observer has 5000 CometObservations
   public function getCometObservationsExpert($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometObservationsExpert from accomplishments where observer = \"". $observerId . "\";")[0]["CometObservationsExpert"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometObservationsExpert from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometObservationsExpert"];
   }
 
   // Returns 1 if the observer has one Objects Drawing
   public function getCometsObservedNewbie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometsObservedNewbie from accomplishments where observer = \"". $observerId . "\";")[0]["CometsObservedNewbie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometsObservedNewbie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometsObservedNewbie"];
   }
   
   // Returns 1 if the observer has 10 CometsObserved
   public function getCometsObservedRookie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometsObservedRookie from accomplishments where observer = \"". $observerId . "\";")[0]["CometsObservedRookie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometsObservedRookie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometsObservedRookie"];
   }
   
   // Returns 1 if the observer has 25 CometsObserved
   public function getCometsObservedBeginner($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometsObservedBeginner from accomplishments where observer = \"". $observerId . "\";")[0]["CometsObservedBeginner"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometsObservedBeginner from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometsObservedBeginner"];
   }
   
   // Returns 1 if the observer has 50 CometsObserved
   public function getCometsObservedTalented($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometsObservedTalented from accomplishments where observer = \"". $observerId . "\";")[0]["CometsObservedTalented"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometsObservedTalented from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometsObservedTalented"];
   }
   
   // Returns 1 if the observer has 100 CometsObserved
   public function getCometsObservedSkilled($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometsObservedSkilled from accomplishments where observer = \"". $observerId . "\";")[0]["CometsObservedSkilled"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometsObservedSkilled from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometsObservedSkilled"];
   }
   
   // Returns 1 if the observer has 250 CometsObserved
   public function getCometsObservedIntermediate($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometsObservedIntermediate from accomplishments where observer = \"". $observerId . "\";")[0]["CometsObservedIntermediate"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometsObservedIntermediate from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometsObservedIntermediate"];
   }
   
   // Returns 1 if the observer has 500 CometsObserved
   public function getCometsObservedExperienced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometsObservedExperienced from accomplishments where observer = \"". $observerId . "\";")[0]["CometsObservedExperienced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometsObservedExperienced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometsObservedExperienced"];
   }
   
   // Returns 1 if the observer has 1000 CometsObserved
   public function getCometsObservedAdvanced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometsObservedAdvanced from accomplishments where observer = \"". $observerId . "\";")[0]["CometsObservedAdvanced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometsObservedAdvanced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometsObservedAdvanced"];
   }
   
   // Returns 1 if the observer has 2500 CometsObserved
   public function getCometsObservedSenior($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometsObservedSenior from accomplishments where observer = \"". $observerId . "\";")[0]["CometsObservedSenior"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometsObservedSenior from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometsObservedSenior"];
   }
   
   // Returns 1 if the observer has 5000 CometsObserved
   public function getCometsObservedExpert($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometsObservedExpert from accomplishments where observer = \"". $observerId . "\";")[0]["CometsObservedExpert"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometsObservedExpert from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometsObservedExpert"];
   }
   
   // Returns 1 if the observer has one Objects Drawing
   public function getCometDrawingsNewbie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";")[0]["CometDrawingsNewbie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsNewbie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometDrawingsNewbie"];
   }
   
   // Returns 1 if the observer has 10 CometDrawings
   public function getCometDrawingsRookie($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometDrawingsRookie from accomplishments where observer = \"". $observerId . "\";")[0]["CometDrawingsRookie"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsRookie from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometDrawingsRookie"];
   }
   
   // Returns 1 if the observer has 25 CometDrawings
   public function getCometDrawingsBeginner($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";")[0]["CometDrawingsBeginner"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsBeginner from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometDrawingsBeginner"];
   }
   
   // Returns 1 if the observer has 50 CometDrawings
   public function getCometDrawingsTalented($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometDrawingsTalented from accomplishments where observer = \"". $observerId . "\";")[0]["CometDrawingsTalented"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsTalented from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometDrawingsTalented"];
   }
   
   // Returns 1 if the observer has 100 CometDrawings
   public function getCometDrawingsSkilled($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";")[0]["CometDrawingsSkilled"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsSkilled from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometDrawingsSkilled"];
   }
   
   // Returns 1 if the observer has 250 CometDrawings
   public function getCometDrawingsIntermediate($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";")[0]["CometDrawingsIntermediate"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsIntermediate from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometDrawingsIntermediate"];
   }
   
   // Returns 1 if the observer has 500 CometDrawings
   public function getCometDrawingsExperienced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";")[0]["CometDrawingsExperienced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsExperienced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometDrawingsExperienced"];
   }
   
   // Returns 1 if the observer has 1000 CometDrawings
   public function getCometDrawingsAdvanced($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";")[0]["CometDrawingsAdvanced"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsAdvanced from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometDrawingsAdvanced"];
   }
   
   // Returns 1 if the observer has 2500 CometDrawings
   public function getCometDrawingsSenior($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometDrawingsSenior from accomplishments where observer = \"". $observerId . "\";")[0]["CometDrawingsSenior"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsSenior from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometDrawingsSenior"];
   }
   
   // Returns 1 if the observer has 5000 CometDrawings
   public function getCometDrawingsExpert($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CometDrawingsExpert from accomplishments where observer = \"". $observerId . "\";")[0]["CometDrawingsExpert"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CometDrawingsExpert from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CometDrawingsExpert"];
   }
   
   // Recalculates all deepsky accomplishments (for example after adding, removing or changing an observation)
