@@ -312,103 +312,120 @@ class Accomplishments {
   // Returns 1 if the observer has seen 25 messiers
   public function getMessierBronze($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select messierBronze from accomplishments where observer = \"". $observerId . "\";")[0]["messierBronze"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select messierBronze from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["messierBronze"];
   }
 
   // Returns 1 if the observer has seen 50 messiers
   public function getMessierSilver($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select messierSilver from accomplishments where observer = \"". $observerId . "\";")[0]["messierSilver"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select messierSilver from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["messierSilver"];
   }
 
   // Returns 1 if the observer has seen 110 messiers
   public function getMessierGold($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select messierGold from accomplishments where observer = \"". $observerId . "\";")[0]["messierGold"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select messierGold from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["messierGold"];
   }
   
   // Returns 1 if the observer has drawn 25 messiers
   public function getMessierDrawingsBronze($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select messierDrawingsBronze from accomplishments where observer = \"". $observerId . "\";")[0]["messierDrawingsBronze"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select messierDrawingsBronze from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["messierDrawingsBronze"];
   }
 
   // Returns 1 if the observer has drawn 50 messiers
   public function getMessierDrawingsSilver($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select messierDrawingsSilver from accomplishments where observer = \"". $observerId . "\";")[0]["messierDrawingsSilver"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select messierDrawingsSilver from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["messierDrawingsSilver"];
   }
 
   // Returns 1 if the observer has drawn 110 messiers
   public function getMessierDrawingsGold($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select messierDrawingsGold from accomplishments where observer = \"". $observerId . "\";")[0]["messierDrawingsGold"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select messierDrawingsGold from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["messierDrawingsGold"];
   }
   
   // Returns 1 if the observer has seen 25 Caldwells
   public function getCaldwellBronze($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CaldwellBronze from accomplishments where observer = \"". $observerId . "\";")[0]["CaldwellBronze"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CaldwellBronze from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CaldwellBronze"];
   }
 
   // Returns 1 if the observer has seen 50 Caldwells
   public function getCaldwellSilver($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CaldwellSilver from accomplishments where observer = \"". $observerId . "\";")[0]["CaldwellSilver"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CaldwellSilver from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CaldwellSilver"];
   }
 
   // Returns 1 if the observer has seen 110 Caldwells
   public function getCaldwellGold($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CaldwellGold from accomplishments where observer = \"". $observerId . "\";")[0]["CaldwellGold"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CaldwellGold from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CaldwellGold"];
   }
   
   // Returns 1 if the observer has drawn 25 Caldwells
   public function getCaldwellDrawingsBronze($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CaldwellDrawingsBronze from accomplishments where observer = \"". $observerId . "\";")[0]["CaldwellDrawingsBronze"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CaldwellDrawingsBronze from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CaldwellDrawingsBronze"];
   }
 
   // Returns 1 if the observer has drawn 50 Caldwells
   public function getCaldwellDrawingsSilver($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CaldwellDrawingsSilver from accomplishments where observer = \"". $observerId . "\";")[0]["CaldwellDrawingsSilver"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CaldwellDrawingsSilver from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CaldwellDrawingsSilver"];
   }
 
   // Returns 1 if the observer has drawn 110 Caldwells
   public function getCaldwellDrawingsGold($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select CaldwellDrawingsGold from accomplishments where observer = \"". $observerId . "\";")[0]["CaldwellDrawingsGold"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select CaldwellDrawingsGold from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["CaldwellDrawingsGold"];
   }
   
   // Returns 1 if the observer has seen 25 Herschels
   public function getHerschelBronze($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelBronze from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelBronze"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelBronze from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelBronze"];
   }
 
   // Returns 1 if the observer has seen 50 Herschels
   public function getHerschelSilver($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelSilver from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelSilver"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelSilver from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelSilver"];
   }
 
   // Returns 1 if the observer has seen 100 Herschels
   public function getHerschelGold($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelGold from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelGold"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelGold from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelGold"];
   }
   
   // Returns 1 if the observer has seen 200 Herschels
   public function getHerschelDiamond($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelDiamond from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelDiamond"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelDiamond from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelDiamond"];
   }
   
   // Returns 1 if the observer has seen 400 Herschels
   public function getHerschelPlatina($observerId) {
   	global $objDatabase;
-  	return $objDatabase->selectRecordsetArray("select HerschelPlatina from accomplishments where observer = \"". $observerId . "\";")[0]["HerschelPlatina"];
+  	$recordArray = $objDatabase->selectRecordsetArray("select HerschelPlatina from accomplishments where observer = \"". $observerId . "\";");
+  	return $recordArray[0]["HerschelPlatina"];
   }
   
   // Returns 1 if the observer has drawn 25 Herschels
