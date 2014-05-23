@@ -447,7 +447,7 @@ class Sessions
 		      // A link to the picture
           if (file_exists($instDir . 'deepsky/sessions/'.$newArray[$cnt]["id"].".jpg")) {
             echo "</td><td class=\"gallery clearfix\">";
-            echo "<a href=\"" . $baseURL . 'deepsky/sessions/'.$newArray[$cnt]["id"].".jpg\" rel=\"prettyPhoto\" title=\"".$newArray[$cnt]['name']. "\">" . LangAddSessionField12 . "</a></td>";
+            echo "<a href=\"" . $baseURL . 'deepsky/sessions/'.$newArray[$cnt]["id"].".jpg\" data-lightbox=\"image-1\" data-title=\"".$newArray[$cnt]['name']. "\">" . LangAddSessionField12 . "</a></td>";
           } else {
             echo "</td><td> &nbsp; </td>";
           }

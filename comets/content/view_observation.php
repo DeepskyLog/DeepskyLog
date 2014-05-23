@@ -130,7 +130,7 @@ function view_observation()
 		  }
 		  if(fnmatch($_GET['observation'] . "_resized.gif", $file) || fnmatch($_GET['observation'] . "_resized.jpg", $file) || fnmatch($_GET['observation']. "_resized.png", $file))
 		  { $content1=$baseURL."comets/" . $upload_dir . "/" . $_GET['observation'] . ".jpg";
-		  $content2="<a href=\"".$baseURL."comets/" . $upload_dir . "/" . $_GET['observation'] . ".jpg\" rel=\"prettyPhoto\" title=\"\"><img class=\"account\" src=\"".$baseURL."comets/$upload_dir" . "/" . "$file\" alt=\"\"></img></a>";
+		  $content2="<a href=\"".$baseURL."comets/" . $upload_dir . "/" . $_GET['observation'] . ".jpg\" data-lightbox=\"image-1\" data-title=\"\"><img class=\"account\" src=\"".$baseURL."comets/$upload_dir" . "/" . "$file\" alt=\"\"></img></a>";
 		    echo $content2;
 		    echo "<hr />";
 		  }

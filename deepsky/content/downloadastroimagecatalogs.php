@@ -2,7 +2,7 @@
 global $objObject,$baseURL;
 
 $exampleText = ImageCatalogExample;
-echo "<a href=\"" . $baseURL . "images/AbellExample.jpg\" rel=\"prettyPhoto\" title=\"\">";
+echo "<a href=\"" . $baseURL . "images/AbellExample.jpg\" data-lightbox=\"image-1\" data-title=\"\">";
 echo "<img class=\"floatright\" width=\"30%\" src=\"" . $baseURL . "images/AbellExample.jpg\"  alt=\"" . $exampleText . "\"/>";
 echo "</a>";
 

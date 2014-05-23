@@ -63,15 +63,6 @@ echo "</script>";
 if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
   $objPresentations->alertMessage($entryMessage);
 
-// Scripts for pretty-photo
-echo "<script type=\"text/javascript\" charset=\"utf-8\">
-        $(document).ready(function(){
-        $(\"a[rel^='prettyPhoto']\").prettyPhoto({
-         theme: 'dark_rounded',
-         social_tools: ''
-        });
-       });
-      </script>";
 echo "</body>";
 echo "</html>";
 ?>

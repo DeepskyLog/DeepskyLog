@@ -412,7 +412,7 @@ function view_session()
 	echo "<hr />";
 	// A link to the picture
 	if (file_exists($instDir . 'deepsky/sessions/'.$objUtil->checkRequestKey('sessionid').".jpg")) {
-	  echo "<a href=\"" . $baseURL . 'deepsky/sessions/'.$objUtil->checkRequestKey('sessionid').".jpg\" rel=\"prettyPhoto\" title=\"".stripslashes($objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'name')). "\" class=\"gallery clearfix\">
+	  echo "<a href=\"" . $baseURL . 'deepsky/sessions/'.$objUtil->checkRequestKey('sessionid').".jpg\" data-lightbox=\"image-1\" data-title=\"".stripslashes($objSession->getSessionPropertyFromId($objUtil->checkRequestKey('sessionid'),'name')). "\" class=\"gallery clearfix\">
 	         <img src=\"" . $baseURL . 'deepsky/sessions/'.$objUtil->checkRequestKey('sessionid')."_resized.jpg\" /></a></td>";
 	}
 	

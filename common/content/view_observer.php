@@ -227,7 +227,7 @@ function view_observer()
 	    continue;                                                                   // skip current directory and directory above
 	  if(fnmatch($user. ".gif", $file) || fnmatch($user. ".jpg",$file) || fnmatch($user. ".png", $file))
 	  { echo "<div>";
-	    echo "<a href=\"".$baseURL."common/observer_pics/".$file."\" rel=\"prettyPhoto\" title=\"\">";
+	    echo "<a href=\"".$baseURL."common/observer_pics/".$file."\" data-lightbox=\"image-1\" data-title=\"\">";
 	    echo "<img class=\"viewobserver\" src=\"".$baseURL."common/observer_pics/".$file."\" alt=\"".$firstname."&nbsp;".$name."\"></img>
 	          </a></div>";
 	    echo "<hr />";

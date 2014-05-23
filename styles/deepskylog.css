@@ -838,3 +838,50 @@ display: block;
     position: relative;
     top: 10px;
 }
+
+.accomplishmentRow {
+	clear:both;
+	height: 130px;
+}
+
+.accomplishmentText {
+ position: relative; 
+  top: 40px; 
+  font-size: 36px;
+  text-align: center;
+  color: red;
+  font-family: 'Yellowtail', cursive;
+}
+
+.star {
+  background-size: 100px;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100px;
+  width: 140px;
+  float: left;
+}
+
+#bronze {
+  background-image: url("images/star-bronze.png");
+}
+
+#silver {
+  background-image: url("images/star-silver.png");
+}
+
+#gold {
+  background-image: url("images/star-gold.png");
+}
+
+#diamond {
+  background-image: url("images/star-diamond.png");
+}
+
+#platinum {
+  background-image: url("images/star-platina.png");
+}
+
+.notAccomplished {
+  opacity: 0.2;
+}

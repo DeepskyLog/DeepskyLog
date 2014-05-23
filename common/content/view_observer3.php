@@ -7,7 +7,7 @@ elseif(!($user=$objUtil->checkGetKey('user'))) throw new Exception(LangException
 else view_observer();
 
 function view_observer()
-{ global $user,$modules,$deepsky,$comets,$baseURL,$instDir,$loggedUser,$objDatabase,
+{ global $user,$modules,$deepsky,$comets,$baseURL,$instDir,$loggedUser,$objDatabase,$objAccomplishments,
          $objInstrument,$objPresentations,$objObservation,$objUtil,$objCometObservation,$objObserver,$objLocation;
   $name=$objObserver->getObserverProperty($user,'name'); 
   $firstname=$objObserver->getObserverProperty($user,'firstname');
@@ -20,91 +20,76 @@ function view_observer()
 	       <li><a href=\"" . $baseURL . "index.php?indexAction=detail_observer2&user=" . $user . "\"><span>" . GraphObservationsType . "</span></a></li>
 	       <li class=\"current\"><a href=\"" . $baseURL . "index.php?indexAction=detail_observer3&user=" . $user . "\"><span>" . GraphAccomplishments . "</span></a></li>
 	      </ol>";
+  
+  // Some javascript for the tooltips
+  echo "<script>
+         $(function() {
+  	       $( document ).tooltip();
+         });
+  		  </script>
+  		";
+  
   // Messier
+  echo "<div class=\"accomplishmentRow\">";
   echo "<h2>Messier</h2>";                  
 
-  $numberOfMessiers = $objObservation->getObservedCountFromCatalogOrList($user,"M");
+  drawStar($objAccomplishments->getMessierBronze($user), "bronze", "Bronzen messier certificaat! Je hebt 25 verschillende messier objecten waargenomen!", "Neem minimaal 25 verschillende messier objecten waar om dit certificaat te krijgen!");
+  drawStar($objAccomplishments->getMessierSilver($user), "silver", "Zilveren messier certificaat! Je hebt 50 verschillende messier objecten waargenomen!", "Neem minimaal 50 verschillende messier objecten waar om dit certificaat te krijgen!");
+  drawStar($objAccomplishments->getMessierGold($user), "gold", "Gouden messier certificaat! Je hebt alle 110 messier objecten waargenomen!", "Neem alle 110 messier objecten waar om dit certificaat te krijgen!");
+  echo "</div>";
 
-  // TODO : Make pretty
-  if ($numberOfMessiers >= 25) {
-  	print "<b>Brons</b>";
-  } else {
-   	print "Brons";
-  }
-  print " - ";
-  if ($numberOfMessiers >= 50) {
-   	print "<b>Zilver</b>";
-  } else {
-   	print "Zilver";
-  }
-  print " - ";
-  if ($numberOfMessiers >= 110) {
-   	print "<b>Goud</b>";
-  } else {
-   	print "Goud";
-  }
-
+  // Messier Drawings
+  echo "<div class=\"accomplishmentRow\">";
+  echo "<h2>Drawings of Messier objects</h2>";
+  
+  drawStar($objAccomplishments->getMessierDrawingsBronze($user), "bronze", "Bronzen messier certificaat! Je hebt 25 verschillende messier objecten waargenomen!", "Neem minimaal 25 verschillende messier objecten waar om dit certificaat te krijgen!");
+  drawStar($objAccomplishments->getMessierDrawingsSilver($user), "silver", "Zilveren messier certificaat! Je hebt 50 verschillende messier objecten waargenomen!", "Neem minimaal 50 verschillende messier objecten waar om dit certificaat te krijgen!");
+  drawStar($objAccomplishments->getMessierDrawingsGold($user), "gold", "Gouden messier certificaat! Je hebt alle 110 messier objecten waargenomen!", "Neem alle 110 messier objecten waar om dit certificaat te krijgen!");
+  echo "</div>";
+  
   // Caldwell
-  $numberOfCaldwells = $objObservation->getObservedCountFromCatalogOrList($user,"Caldwell");
-
+  echo "<div class=\"accomplishmentRow\">";
   echo "<h2>Caldwell</h2>";                  
 
-  // TODO : Make pretty
-  if ($numberOfCaldwells >= 25) {
-  	print "<b>Brons</b>";
-  } else {
-   	print "Brons";
-  }
-  print " - ";
-  if ($numberOfCaldwells >= 50) {
-   	print "<b>Zilver</b>";
-  } else {
-   	print "Zilver";
-  }
-  print " - ";
-  if ($numberOfCaldwells >= 110) {
-   	print "<b>Goud</b>";
-  } else {
-   	print "Goud";
-  }
+  drawStar($objAccomplishments->getCaldwellBronze($user), "bronze", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!");
+  drawStar($objAccomplishments->getCaldwellSilver($user), "silver", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!");
+  drawStar($objAccomplishments->getCaldwellGold($user), "gold", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!");
+  echo "</div>";
+  
+  // Caldwell drawings
+  echo "<div class=\"accomplishmentRow\">";
+  echo "<h2>Drawings Caldwell objects</h2>";                  
 
+  drawStar($objAccomplishments->getCaldwellDrawingsBronze($user), "bronze", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!");
+  drawStar($objAccomplishments->getCaldwellDrawingsSilver($user), "silver", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!");
+  drawStar($objAccomplishments->getCaldwellDrawingsGold($user), "gold", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!");
+  echo "</div>";
+  
   // Herschel - 400
-  $numberOfHerschels = $objObservation->getObservedCountFromCatalogOrList($user,"H400");
-
+  echo "<div class=\"accomplishmentRow\">";
   echo "<h2>Herschel 400</h2>";                  
 
-  // TODO : Make pretty
-  if ($numberOfHerschels >= 25) {
-   	print "<b>Brons</b>";
-  } else {
-   	print "Brons";
-  }
-  print " - ";
-  if ($numberOfHerschels >= 50) {
-   	print "<b>Zilver</b>";
-  } else {
-   	print "Zilver";
-  }
-  print " - ";
-  if ($numberOfHerschels >= 100) {
-   	print "<b>Goud</b>";
-  } else {
-   	print "Goud";
-  }
-  print " - ";
-  if ($numberOfHerschels >= 200) {
-   	print "<b>Diamant</b>";
-  } else {
-   	print "Diamant";
-  }
-  print " - ";
-  if ($numberOfHerschels >= 400) {
-   	print "<b>Platina</b>";
-  } else {
-   	print "Platina";
-  }
+  drawStar($objAccomplishments->getHerschelBronze($user), "bronze", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!");
+  drawStar($objAccomplishments->getHerschelSilver($user), "silver", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!");
+  drawStar($objAccomplishments->getHerschelGold($user), "gold", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!");
+  drawStar($objAccomplishments->getHerschelDiamond($user), "diamond", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!");
+  drawStar($objAccomplishments->getHerschelPlatina($user), "platinum", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!");
+  echo "</div>";
+  
+  // Caldwell drawings
+  echo "<div class=\"accomplishmentRow\">";
+  echo "<h2>Drawings Herschel 400 objects</h2>";                  
 
+  drawStar($objAccomplishments->getHerschelDrawingsBronze($user), "bronze", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!");
+  drawStar($objAccomplishments->getHerschelDrawingsSilver($user), "silver", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!");
+  drawStar($objAccomplishments->getHerschelDrawingsGold($user), "gold", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!");
+  drawStar($objAccomplishments->getHerschelDrawingsDiamond($user), "diamond", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!");
+  drawStar($objAccomplishments->getHerschelDrawingsPlatina($user), "platinum", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!");
+  echo "</div>";
+  
+  // TODO
   // Herschel II
+  echo "<div class=\"accomplishmentRow\"></div>";
   $numberOfHIIs = $objObservation->getObservedCountFromCatalogOrList($user,"HII");
 
   echo "<h2>Herschel II</h2>";                  
@@ -351,5 +336,22 @@ function printScale($count, $max = 99999) {
    	print "Expert";
    }
   }
+}
+
+function drawStar($done, $color, $tooltip, $tooltipToDo) {
+	global $baseURL;
+
+	// TODO : Vul tooptips
+  // TODO : Tekst komt uit taalfiles!	
+  // TODO : Alle accomplishments tonen!
+	if ($done) {
+		print "<div class=\"star\" id=\"" . $color . "\">";
+		print "<div class=\"" . accomplishmentText . "\" title=\"" . $tooltip . "\">" . ucfirst($color) . "</div>";
+		print "</div>";
+	} else {
+		print "<div class=\"star notAccomplished\" id=\"" . $color . "\">";
+		print "<div class=\"" . accomplishmentText . "\" title=\"" . $tooltipToDo . "\">" . ucfirst($color) . "</div>";
+		print "</div>";
+	}
 }
 ?>

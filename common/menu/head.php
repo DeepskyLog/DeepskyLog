@@ -20,9 +20,12 @@ function head()
   echo "<link href=\"https://plus.google.com/105963409869875462537/\" rel=\"publisher\" />";
   echo "<script type=\"text/javascript\" src=\"https://apis.google.com/js/plusone.js\"></script>";
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
-  echo "<script src=\"http://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js\" type=\"text/javascript\"></script>
-        <link rel=\"stylesheet\" href=\"".$baseURL."styles/prettyPhoto.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\" />
-        <script src=\"".$baseURL."lib/javascript/jquery.prettyPhoto.js\" type=\"text/javascript\" charset=\"utf-8\"></script>";
+  echo "<script src=\"" . $baseURL . "lib/javascript/jquery-1.11.1.min.js\" type=\"text/javascript\"></script>
+        <link rel=\"stylesheet\" href=\"".$baseURL."styles/lightbox.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\" />
+        <script src=\"".$baseURL."lib/javascript/lightbox.min.js\" type=\"text/javascript\" charset=\"utf-8\"></script>";
+  echo "<link href='http://fonts.googleapis.com/css?family=Yellowtail' rel='stylesheet' type='text/css'>";
+  echo "<script src=\"" . $baseURL . "lib/javascript/jquery-ui-1.10.4.custom.min.js\" type=\"text/javascript\"></script>";
+  echo "<link rel=\"stylesheet\" href=\"" . $baseURL . "styles/jquery-ui-1.10.4.custom.min.css\">";
   echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/highcharts.js\"></script>";
   echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/modules/exporting.js\"></script>";
   $DSLTitle="DeepskyLog";

@@ -19,7 +19,7 @@ function atlasPages()
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
 	
   $exampleText = AtlasExample;
-  echo "<a href=\"" . $baseURL . "images/AtlasExample.jpg\" rel=\"prettyPhoto\" title=\"\">";
+  echo "<a href=\"" . $baseURL . "images/AtlasExample.jpg\" data-lightbox=\"image-1\" data-title=\"\">";
   echo "<img class=\"floatright\" width=\"30%\" src=\"" . $baseURL . "images/AtlasExample.jpg\"  alt=\"" . $exampleText . "\"/>";
   echo "</a>";
 	echo"<h1>".LangAtlassesIntro00."</h1>";
