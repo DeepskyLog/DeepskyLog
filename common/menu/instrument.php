@@ -23,9 +23,10 @@ function menu_instrument()
 	  $instr=$objObserver->getObserverProperty($loggedUser,'stdtelescope');	
 		if($result) 
 		{
-		  echo "<li>
-             <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . $objInstrument->getInstrumentPropertyFromId($instr,'name') ."<span class=\"arrow\"></span></a>";
-      echo " <ul>";
+	    echo "<ul class=\"nav navbar-nav\">
+			      <li class=\"dropdown\">
+	           <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . $objInstrument->getInstrumentPropertyFromId($instr,'name')."<b class=\"caret\"></b></a>";
+	    echo " <ul class=\"dropdown-menu\">";
       
 			$url = "http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"];
       if ($url == $baseURL || $url == $baseURL."#" || $url = $baseURL."index.php") {
@@ -36,8 +37,9 @@ function menu_instrument()
 	    }
 
 	    echo " </ul>";
-	    echo "</li>";
-		}
+	    echo "</li>
+			      </ul>";
+	  }
 	}
 }
 ?>

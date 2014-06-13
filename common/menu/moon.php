@@ -122,27 +122,27 @@ function menu_moon()
 	    }
 	  }     
 	}
-	
-	echo "<div class=\"menuDiv\">";
+
+	echo "<li>";
 	reset($_GET);
 	$link="";
 	while(list($key,$value)=each($_GET))
 	  if($key!="menuMoon")
 	    $link.="&amp;".$key."=".urlencode($value);
 	reset($_GET);
-	echo "<p  class=\"menuHead\">";
+	echo "<p>";
 	if($menuMoon=="collapsed")
 	  echo "<a href=\"".$baseURL."index.php?menuMoon=expanded".$link."\" title=\"".LangMenuExpand."\">+</a> ";
 	else
 	  echo "<a href=\"".$baseURL."index.php?menuMoon=collapsed".$link."\" title=\"".LangMenuCollapse."\">-</a> ";
 	echo (($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation'))?LangMoonSunMenuTitle:LangMoonMenuTitle)."<br />";
 	if($menuMoon!="collapsed")
-	  echo"<span class=\"menuText\" style=\"font-weight:normal;\">".LangOn." ".$dateTimeText0."&gt;&lt;".$dateTimeText1."</span>";
+	  echo"<span style=\"font-weight:normal;\">".LangOn." ".$dateTimeText0."&gt;&lt;".$dateTimeText1."</span>";
 	echo "</p>";
 	if($menuMoon!="collapsed") 
 	{ if($loggedUser&&$objObserver->getObserverProperty($loggedUser, 'stdLocation')) 
-	  { echo "<table class=\"centered\">";
-	    echo "<tr class=\"menuText\">";
+	  { echo "<table class=\"table table-condensed\">";
+	    echo "<tr>";
 	    echo "<th>".LangMoonNight."</th>"."<th>".LangFrom."</th>"."<th>".LangTo."</th>";
 	    echo "</tr>";
         if (isset($_SESSION['efemerides'])) {
@@ -162,9 +162,9 @@ function menu_moon()
 	    echo "</table>";
 	  }
 	  $file = "m" . round(($MoonAge / SYNMONTH) * 40) . ".gif";
-	  echo "<p><span class=\"menuText\">".LangMoonMenuActualMoon."&nbsp;"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" /></span></p>";
-	  echo "<span class=\"menuText\">".$nextNewMoonText."</span><br />";
+	  echo "<p>".LangMoonMenuActualMoon."&nbsp;"."<img src=\"".$baseURL."/lib/moonpics/" . $file . "\" class=\"moonpic\" title=\"" . $MoonIllum . "%\" alt=\"" . $MoonIllum . "%\" /></p>";
+	  echo $nextNewMoonText."<br />";
 	}
-	echo "</div>";
+	echo "</li>";
 }
 ?>

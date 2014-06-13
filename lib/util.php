@@ -2184,21 +2184,31 @@ class Utils
     else                                       // no minimum value defined
       $min=0;
     $max=$min+$step;                       // maximum number to be displayed
-    $content="<form action=\"".$link."\" method=\"post\">";
-    $content.="<div>";
+
+	  $content = "";
+	  $content2 = "";
+	  
     if($showNumberOfRecords)
-      $content.= "(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" ".LangNumberOfRecordsIn." ".$pages." ".LangNumberOfRecords1Pages.")"):")")."&nbsp;";
+	  	$content2.= "<span style=\"padding-top:6px;\" class=\"pull-right\">(".($listcount=count($list))."&nbsp;".(($listcount==1)?LangNumberOfRecords1:LangNumberOfRecords).(($total&&($total!=count($list)))?" / ".$total:"").(($pages>1)?(" ".LangNumberOfRecordsIn." ".$pages." ".LangNumberOfRecords1Pages.")"):")")."&nbsp;</span>";
+
+
     if(($listcount>$step)&&($showArrows))
     { $currentpage=ceil($min/$step)+1;
-			$content.= "<a href=\"".$link."&amp;multiplepagenr=0\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allleft20.gif\" alt=\"&lt;&lt;0\" />"."</a>";
-		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".($pageleft=($currentpage>0?($currentpage-1):$currentpage))."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/left20.gif\" alt=\"&lt;\" />"."</a>";			
-		  $content.= "<input type=\"number\" min=\"1\" max=\"" . $pages . "\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield centered\" value=\"".$currentpage."\" />";	
-		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".($pageright=($currentpage<$pages?($currentpage+1):$currentpage))."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/right20.gif\" alt=\"&gt;\" />"."</a>";
-		  $content.= "<a href=\"".$link."&amp;multiplepagenr=".$pages."\">"."<img class=\"navigationButton\" src=\"".$baseURL."styles/images/allright20.gif\" alt=\"&gt;&gt;\" />"."</a>";
-		  $content.= "&nbsp;";
+      $content.="<form action=\"".$link."\" method=\"post\">";
+      $content.= "<ul style=\"margin-top:0;\" class=\"pagination pull-right\">";
+      $content.= " <li class=\"".(($currentpage > 1)?"\">":"disabled\">")."<a href=\"".$link."&amp;multiplepagenr=0\">&laquo;</a></li>";
+      $content.= " <li class=\"".(($currentpage > 1)?"\">":"disabled\">")."<a href=\"".$link."&amp;multiplepagenr=".($pageleft=($currentpage>0?($currentpage-1):$currentpage))."\">&lt;</a></li>";
+      
+		  $content.= "<li><a style=\"height:34px;\" href=\"".$link."#\" onclick=\"doSomething(); return false;\"><input style=\"height:24px;\" type=\"number\" min=\"1\" max=\"" . $pages . "\" name=\"multiplepagenr\" size=\"4\" class=\"inputfield centered\" value=\"".$currentpage."\" /></a></li>";	
+ 		  $content.= "<li class=\"".(($currentpage < $pages)?"\">":"disabled\">")."<a href=\"".$link."&amp;multiplepagenr=".($pageright=($currentpage<$pages?($currentpage+1):$currentpage))."\">&gt;</a></li>";
+ 		  $content.= "<li class=\"".(($currentpage < $pages)?"\">":"disabled\">")."<a href=\"".$link."&amp;multiplepagenr=".$pages."\">&raquo;</a></li>";
+		  $content.= "</ul>";
 	  }
-	  $content.="</div>";
 	  $content.= "</form>";
+
+	  if($showNumberOfRecords)
+	  	$content.= $content2;
+	   
 	  return array($min,$max,$content,$pageleft,$pageright,$pages);
   }
   public function printNewListHeader5(&$list, $link, $min, $step, $total=0,$showNumberOfRecords=true,$showArrows=true)

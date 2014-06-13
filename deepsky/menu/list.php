@@ -11,12 +11,12 @@ else menu_list();
 
 function menu_list()
 { global 	$baseURL,$loggedUser,$myList;
-	echo "<div class=\"menuDivExtended\">";
-	  echo "<p   class=\"menuHead\">".LangListsTitle;
+  echo "<ul class=\"nav navbar-nav\">";
+	echo "<p class=\"navbar-text\">".LangListsTitle;
 	if($loggedUser)
-	  echo "&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=listaction\">".LangManage."</a>"."</p>";
-	else
-	  echo "</p>";
+	  echo "&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=listaction\">".LangManage."</a>";
+	echo "</p>
+			  </ul>";
 	$result1=array();
 	$result2=array();
 	$sql = "SELECT DISTINCT observerobjectlist.listname " .
@@ -34,6 +34,8 @@ function menu_list()
 				 "AND listname LIKE \"Public: %\" ORDER BY observerobjectlist.listname";
 	$run = mysql_query($sql) or die(mysql_error());
 	$get = mysql_fetch_object($run);
+  echo "<ul class=\"nav navbar-nav\">";
+	echo "<p class=\"navbar-text\">";
 	while($get)
 	{ $result2[]=$get->listname; 
 	  $get = mysql_fetch_object($run);
@@ -41,7 +43,7 @@ function menu_list()
 	$result1[]='----------';
 	$result=array_merge($result1,$result2);
 	if(count($result)>0)
-	{ echo "<select name=\"activatelist\" class=\"menuFieldExtended menuDropdown\" onchange=\"location=this.options[this.selectedIndex].value;\">";
+	{ echo "<select name=\"activatelist\" onchange=\"location=this.options[this.selectedIndex].value;\">";
 	  if((!array_key_exists('listname',$_SESSION)) || (!$_SESSION['listname']))
 			$_SESSION['listname']="----------";
 	  while(list($key, $value) = each($result))
@@ -52,6 +54,6 @@ function menu_list()
 	  }
 	  echo "</select>";
 	}
-	echo "</div>";
+	echo "</p></ul>";
 }
 ?>

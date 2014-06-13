@@ -28,6 +28,8 @@ function head()
   echo "<link rel=\"stylesheet\" href=\"" . $baseURL . "styles/jquery-ui-1.10.4.custom.min.css\">";
   echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/highcharts.js\"></script>";
   echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/modules/exporting.js\"></script>";
+  echo "<script src=\"".$baseURL."lib/javascript/bootstrap.min.js\"></script>";
+	echo "<link href=\"styles/bootstrap.min.css\" rel=\"stylesheet\">";
   $DSLTitle="DeepskyLog";
 	$TitleText="";
 	$theDispatch=$objUtil->checkRequestKey('indexAction');
@@ -117,8 +119,6 @@ function head()
 	    $TitleText="DSL: ".LangQuickPickNewObservation." - ".$objUtil->checkGetKey('object');  // 20081209 Here should come a better solution, see bug report 44
 	}
 	echo "<title>".$DSLTitle.($TitleText?": ".$TitleText:"")."</title>";
-	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
-	echo "<script type=\"text/javascript\">window.onresize=function(){resizeForm('".$leftmenu."','".$topmenu."');}</script>";
   echo "<script type=\"text/javascript\">
 
      var _gaq = _gaq || [];

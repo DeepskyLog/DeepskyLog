@@ -7,13 +7,17 @@ else menu();
 
 function menu()
 { global $loggedUser,$instDir,$inIndex;
-	// Old style menu
+
+  echo "  <div class=\"col-sm-2\">
+           <ul id=\"sidebar\" class=\"nav nav-stacked\">";
+
 	if($loggedUser) {                                                                            // LOGGED IN
 	} else
 	  require_once $instDir.'common/menu/languagemenu.php';                                         // LANGUAGE MENU   
 	require_once $instDir.$_SESSION['module'].'/menu/quickpick.php';                                // QUICKPICK MENU
   require_once $instDir.'common/menu/moon.php';                                                   // MOON MENU
-	require_once $instDir.'common/menu/oalmenu.php';
-//	require_once $instDir.'common/menu/validationmenu.php';
+
+  echo "    </ul>
+			     </div>";
 }
 ?>

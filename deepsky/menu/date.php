@@ -11,8 +11,6 @@ else menu_date();
 
 function menu_date()
 { global $baseURL,$loggedUser,$thisDay,$thisMonth,$thisYear;
-	if($loggedUser) 
-	{ 
 	  $link=$baseURL."index.php?";
 	  reset($_GET);
 	  while(list($key,$value)=each($_GET))
@@ -43,11 +41,12 @@ function menu_date()
               });
         	});
 	  		  </script>";
-	  echo "<p class=\"menuHead\">" . LangDate . "</p>";
+	  echo "<ul class=\"nav navbar-nav navbar-right\">";
+	   
+	  echo "<p class=\"navbar-text\">" . LangDate . " ";
 	
 	  echo "<input type=\"text\" value=\"" . $_SESSION['globalDay'] . "/" . $_SESSION['globalMonth'] . "/" . $_SESSION['globalYear'] . "\" id=\"datepicker\" size=\"10\" >";
-	  
+	  echo "</p></ul>";
 	  $link="";
-	}
 }
 ?>

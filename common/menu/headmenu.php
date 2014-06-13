@@ -8,61 +8,51 @@ else headmenu();
 function headmenu()
 { global $baseURL,$leftmenu,$loggedUser,$modules,$thisDay,$thisMonth,$thisYear,$topmenu, $register,
          $objUtil,$objLocation,$objInstrument,$objObserver,$objMessages, $instDir, $objDatabase;
-  echo "<div id=\"div1\" onmouseover=\"resizeForm(theLeftMenu,'show');\">";
-	echo "<img src=\"".$baseURL."styles/images/header_bg.jpg\" alt=\"Vereniging voor Sterrenkunde - DeepskyLog\"/>";
 	
-	echo "<div id=\"div1a\">";
-	echo "<img src=\"".$baseURL."styles/images/deepskylog.gif\" alt=\"DSL\" />";
-	echo "</div>";
-	
-	if($loggedUser)
-	{ echo "<div id=\"div1b\">";
-		echo "<div class=\"floatright\">";
-		require_once $_SESSION['module'].'/menu/date.php';
-		echo "</div>";
-		echo "<div class=\"floatright\">";
-		require_once $_SESSION['module'].'/menu/list.php';
-		echo "</div>";
-		echo "</div>";
-	}
-	echo "</div>";
-	
-	// Welcome line with login name
-	echo "<div id=\"div2\">";
-
-	// Here, we set the new style, drop down menu
+	// Here, we set the drop down menu
 	// Make the drop down menu
-	echo " <ul id=\"menu\">";
- 	echo "<li>";
- 	echo "<a href=\"" . $baseURL . "index.php?title=Home\"><img src=\"" . $baseURL . "images/home.png\" /></a>";
- 	echo "</li>";
+	echo "<nav class=\"navbar navbar-inverse navbar-fixed-top\" role=\"navigation\">
+        <div class=\"container-fluid\">
+          <div class=\"navbar-header\">
+            <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-1\">
+              <span class=\"sr-only\">Toggle navigation</span>
+              <span class=\"icon-bar\"></span>
+              <span class=\"icon-bar\"></span>
+              <span class=\"icon-bar\"></span>
+            </button>
+            <a class=\"navbar-brand\" href=\"" . $baseURL . "index.php?title=Home\">DeepskyLog</a>
+          </div>
+		  <div class=\"collapse navbar-collapse main-nav\" id=\"bs-example-navbar-collapse-1\">";
+	
 	require_once $instDir.$_SESSION['module'].'/menu/search.php';                                   // Overview MENU
  	if($_SESSION['module']=='deepsky') {
  		require_once $instDir.$_SESSION['module'].'/menu/quickpickDropDown.php';                                   // Search MENU
  	}
-	if($loggedUser)                                                                            // LOGGED IN
-	{ require_once $instDir.$_SESSION['module'].'/menu/change.php';                                 // CHANGE MENU
-	  if(array_key_exists('admin', $_SESSION)&&($_SESSION['admin']=='yes'))
-	    require_once $instDir.'common/menu/admin.php';                                              // ADMINISTRATION MENU
-	}
-	if($_SESSION['module']=='deepsky')
-	  require_once $instDir.'deepsky/menu/downloads.php';
-	require_once $instDir.'common/menu/help.php';                                                   // HELP MENU
+ 	if($loggedUser)                                                                            // LOGGED IN
+ 	{ require_once $instDir.$_SESSION['module'].'/menu/change.php';                                 // CHANGE MENU
+ 	  if(array_key_exists('admin', $_SESSION)&&($_SESSION['admin']=='yes'))
+ 	    require_once $instDir.'common/menu/admin.php';                                              // ADMINISTRATION MENU
+ 	}
+ 	if($_SESSION['module']=='deepsky')
+ 	  require_once $instDir.'deepsky/menu/downloads.php';
+ 	require_once $instDir.'common/menu/help.php';                                                   // HELP MENU
 
-	// Select the standard location and instrument
-	if($loggedUser)                                                                            // LOGGED IN
-	{
-      if(array_key_exists('admin', $_SESSION)&&($_SESSION['admin']!='yes'))
-      {
-	  require_once 'common/menu/location.php';
-		require_once 'common/menu/instrument.php';
-      }
-	}
+ 	// Select the standard location and instrument
+ 	if($loggedUser)                                                                            // LOGGED IN
+ 	{
+    if(array_key_exists('admin', $_SESSION)&&($_SESSION['admin']!='yes'))
+    {
+ 	    require_once 'common/menu/location.php';
+ 		  require_once 'common/menu/instrument.php';
+    }
+ 	}
 	
-	// Select the modules
-	echo "<span class=\"right\"><li>";
-	echo "<a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . $GLOBALS[$_SESSION['module']]. "<span class=\"arrow\"></span></a>";
-  echo "<ul><span class=\"left\">";
+ 	// Select the modules
+ 	echo "<ul class=\"nav navbar-nav navbar-right\">
+			  <li class=\"dropdown\">
+	       <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . $GLOBALS[$_SESSION['module']]."<b class=\"caret\"></b></a>";
+ 	echo " <ul class=\"dropdown-menu\">";
+ 	
 	for ($i = 0; $i < count($modules);$i++)
  	{
     $mod = $modules[$i];
@@ -70,40 +60,92 @@ function headmenu()
       echo " <li><a href=\"".$baseURL."index.php?indexAction=module".$mod."\">".$GLOBALS[$mod]."</a></li>";
     }
  	}
- 	echo "</span></ul>";
-	echo "</li></span>";
-	
-	// If new messages != 0, make background red
-	echo "<span class=\"right\"><li>";
-	$unreadMails = $objMessages->getNumberOfUnreadMails();
-	$unreadMailsSplit = explode("/", $unreadMails);
-	if ($unreadMailsSplit[0] > 0) {
-	  echo "<a class=\"newMails\" href=\"". $baseURL . "index.php?indexAction=show_messages\">" . $unreadMails . "</a>";
-	} else {
-	  echo "<a href=\"". $baseURL . "index.php?indexAction=show_messages\">" . $unreadMails . "</a>";
-	}
-	echo "</li></span>";
-
-	echo "<span class=\"right\">";
+ 	echo " </ul>";
+ 	echo "</li>
+			  </ul>";
+ 	
+	// Show inbox and number of messages
 	if($loggedUser) {
-	  echo "<li><a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . $objObserver->getObserverProperty($loggedUser,'firstname') . "<span class=\"arrow\"></span></a>";
-  	echo "<ul><span class=\"left\">";
-  	echo " <li><a href=\"".$baseURL."index.php?indexAction=detail_observer&user=" . $loggedUser . "\">" . LangDetails . "</a></li>";
+ 	  echo "<ul class=\"nav navbar-nav navbar-right\">";
+	  $unreadMails = $objMessages->getNumberOfUnreadMails();
+	  $unreadMailsSplit = explode("/", $unreadMails);
+	  echo "<li><a href=\"". $baseURL . "index.php?indexAction=show_messages\">Inbox <span class=\"badge\">". $unreadMailsSplit[0] . "</span></a></li>";
+	  echo "</ul>";
+	}
+
+	echo "<ul class=\"nav navbar-nav navbar-right\">";
+	if($loggedUser) {
+		echo "<li class=\"dropdown\">
+	         <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . $objObserver->getObserverProperty($loggedUser,'firstname') ."<b class=\"caret\"></b></a>";
+    echo " <ul class=\"dropdown-menu\">";
+   	echo " <li><a href=\"".$baseURL."index.php?indexAction=detail_observer&user=" . $loggedUser . "\">" . LangDetails . "</a></li>";
     echo " <li><a href=\"".$baseURL."index.php?indexAction=change_account\">".LangChangeMenuItem1."</a></li>";
     echo " <li><a href=\"".$baseURL."index.php?indexAction=logout&amp;title=".urlencode(LangLogoutMenuItem1)."\">".LangLogoutMenuItem1."</a></li>";
-  	echo "</span></ul>";
-    echo " </li></span>";	
-	} else {
+    echo " </ul>";
+    echo "</li>";
+    echo "</ul>";
+ 	} else {
 	  // Let's make a sign in / register tab
-	  if($register == "yes") {                                                       // includes register link 
-	    echo "<li><a class=\"register\" href=\"".$baseURL."index.php?indexAction=subscribe&amp;title=".urlencode(LangLoginMenuRegister)."\">".LangLoginMenuRegister."</a></li>";
-	    echo "</span><span class=\"right\">";
-	  }
-	  echo "<li><a href=\"" . $baseURL . "index.php?indexAction=login\">" . $objObserver->getObserverProperty($loggedUser,'firstname')."&nbsp;". LangLoginMenuTitle . "</a></li>";
-	  echo "</span>";	
+	  echo "<button type=\"button\" class=\"btn btn-default navbar-btn\" data-toggle=\"modal\" data-target=\"#login\">" . $objObserver->getObserverProperty($loggedUser,'firstname')."&nbsp;". LangLoginMenuTitle . "</button>";
+	  echo "</ul>";
+  		if($register == "yes") {                                                       // includes register link 
+ 	    echo "<ul class=\"nav navbar-nav navbar-right\">";
+  	  echo "<li><a href=\"".$baseURL."index.php?indexAction=subscribe&amp;title=".urlencode(LangLoginMenuRegister)."\">".LangLoginMenuRegister."</a></li>";
+ 	    echo "</ul>";
+ 	  }	  
+ 	}
+	// Closing the menu
+	echo "	</div>
+        </div>
+      </nav>";
+
+	// We need the following line to see the second menu...
+  echo "<div class=\"divide-nav\"></div>";
+
+  // The navbar with the date and the lists
+  if($loggedUser)
+  {
+  	echo "<nav class=\"navbar navbar-default navbar-lower\" role=\"navigation\">
+           <div class=\"container-fluid\">
+            <div class=\"navbar-header\">
+              <button type=\"button\" class=\"navbar-toggle\" data-toggle=\"collapse\" data-target=\"#bs-example-navbar-collapse-2\">
+                <span class=\"sr-only\">Toggle navigation</span>
+                <span class=\"icon-bar\"></span>
+                <span class=\"icon-bar\"></span>
+                <span class=\"icon-bar\"></span>
+              </button>
+            </div>
+		        <div class=\"collapse navbar-collapse \" id=\"bs-example-navbar-collapse-2\">";
+
+	  require_once $_SESSION['module'].'/menu/date.php';
+	  require_once $_SESSION['module'].'/menu/list.php';
+	
+	  echo "	</div>
+          </div>
+        </nav>";
+	
+  	// The log in modal box
+	  echo "<div class=\"modal fade\" id=\"login\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\">
+            <div class=\"modal-dialog\">
+              <div class=\"modal-content\">
+  		        <div class=\"modal-body\">
+  		          <h1 class=\"text-center login-title\">DeepskyLog</h1>
+                  <div class=\"account-wall\">
+                    <form class=\"form-signin\" action=\"".$baseURL."index.php\" method=\"post\">
+                    	<input type=\"hidden\" name=\"indexAction\" value=\"check_login\" />
+                      <input type=\"hidden\" name=\"title\"       value=\"".LangLoginMenuTitle."\" />
+                      <input type=\"text\" class=\"form-control\" placeholder=\"".LangLoginMenuItem1."\" required autofocus maxlength=\"64\" name=\"deepskylog_id\" id=\"deepskylog_id\">
+                      <input type=\"password\" class=\"form-control\" placeholder=\"".LangLoginMenuItem2."\" required maxlength=\"64\" name=\"passwd\" id=\"passwd\">
+                      <button class=\"btn btn-lg btn-primary btn-block\" type=\"submit\">" .
+	                      LangLoginMenuTitle
+	                      . "</button>
+	
+                    </form>
+  		          </div>
+  	  	        </div>
+              </div>
+            </div>
+          </div>";
 	}
-	echo " </ul>";
-  
-	echo "</div>";
 }
 ?>

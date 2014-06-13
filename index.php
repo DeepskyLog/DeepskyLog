@@ -12,7 +12,7 @@ try
   require_once 'common/entryexit/instructions.php';                                                            // Execution of all non-layout related instructions (login, add objects to lists, etc.)
   $includeFile=$objUtil->utilitiesDispatchIndexAction();                                                  // Determine the page to show
   require_once 'common/entryexit/data.php';                                                                    // Get data for the form, object data, observation data, etc.
-  echo    "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" >";
+  echo    "<!DOCTYPE html>";
   echo    "<html>";
   require_once 'common/menu/head.php';                                                                         // HTML head
   echo    "<body onkeydown=\"bodyOnKeyDown(event);\">"; 
@@ -22,25 +22,45 @@ try
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/ajaxbase.js\"></script>";
   echo    "<script type=\"text/javascript\" 
               src=\"http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js\"></script>";
-  echo    "<div id=\"div4\">";                                                                            
-  echo    "<p class=\"waitMessage\">".LangIndexPleaseWait."</p>";
-  echo    "<img id=\"div4a\" src=\"".$baseURL."styles/images/lu.gif\" alt=\"\" />";
-  echo    "<img id=\"div4b\" src=\"".$baseURL."styles/images/lo.gif\" alt=\"\" />";
-  echo    "<img id=\"div4c\" src=\"".$baseURL."styles/images/ru.gif\" alt=\"\" />";                       
-  echo    "<img id=\"div4d\" src=\"".$baseURL."styles/images/ro.gif\" alt=\"\" />";                       
-  echo    "</div>";
   require_once 'common/menu/headmenu.php';                                                                     // div1&2 = Page Title and welcome line - modules choices
-  echo    "<div id=\"div3\" onmouseover=\"resizeForm('show',theTopMenu);\">";                                                                            // div3 = left menu section
+
+  // Container-fluid makes the container the full width of the screen.
+  echo "<div class=\"container-fluid\">
+         <div class=\"row\">";
+  
   require_once 'common/entryexit/menu.php';
-  echo    "</div>";
-  echo    "<div id=\"div6\">";	
-  $objPresentations->line(array($copyrightInfo." - " . $vvsInfo.$dslInfo.$versionInfo." - ".$objectInfo . " - " . $objectInfo2,$w3cInfo),"LR",array(90,10),18);                                      // defined in databaseInfo.ph)
-  echo    "</div>";
-  echo    "<div id=\"div5\">";                                                                            // div 5 = page contents
-  if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
-    echo "<p class=\"centered\">".$entryMessage."</p><hr />";
-    require_once $includeFile;
-  echo    "</div>";
+  echo "   <div class=\"col-sm-10\">";
+  require_once $includeFile;
+  echo "    </div>
+  		     </div>
+  		    </div>";
+  
+  echo "<div class=\"navbar navbar-default navbar-bottom\">
+  		   <div class=\"container-fluid\">
+  		    <div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\">
+  		     <ul class=\"nav navbar-nav navbar-left\">
+  		  		<p class=\"navbar-text\">" . 
+  		       $copyrightInfo." - " . $vvsInfo.$dslInfo.$versionInfo." - ".$objectInfo . " - " . $objectInfo2 . 
+  		      "</p>
+  		     </ul>";
+  
+  // Add logo for oal
+  echo "<ul class=\"nav navbar-nav navbar-right\">";
+  
+  echo "<li><a href=\"http://groups.google.com/group/openastronomylog\" rel=\"external\">";
+  echo "<img width=\"24\" height=\"24\" src=\"".$baseURL."styles/images/oallogo_small.jpg\" alt=\"OAL\"/>";
+  echo "</a></li>";
+  
+  // Add link to google+ page
+  echo "<li><a href=\"https://plus.google.com/+DeepskylogOrg/\" style=\"text-decoration: none; color: #333;\"><img src=\"https://ssl.gstatic.com/images/icons/gplus-16.png\" width=\"24\" height=\"24\" style=\"border: 0;\"/></a></li>";
+  		  		
+  // Add link to twitter account
+  echo "<li><a href=\"https://twitter.com/DeepskyLog\"><img width=\"24\" height=\"24\" src=\"". $baseURL . "img/Twitter_logo_blue.png\"></a></li>";
+  
+  echo "</ul>";
+  echo "  </div>
+  		   </div>
+  		  </div>";
 }
 catch (Exception $e)
 { $entryMessage.="<p>DeepskyLog encountered a problem. Could you please report it to the Developers?</p>";
@@ -52,7 +72,6 @@ catch (Exception $e)
 echo "<script type=\"text/javascript\">";
 echo "theLeftMenu='".$leftmenu."';";
 echo "theTopMenu='".$topmenu."';";
-echo "resizeForm('".$leftmenu."','".$topmenu."');";
 if($includeFile=='deepsky/content/view_catalogs.php')
 { echo "view_catalogs('".$leftmenu."','".$topmenu."');";
 }
@@ -60,9 +79,27 @@ if($loadAtlasPage)
 { echo "atlasFillPage();";
 }
 echo "</script>";
-if(isset($entryMessage)&&$entryMessage)                                                                 // dispays $entryMessage if any
-  $objPresentations->alertMessage($entryMessage);
-
+ if(isset($entryMessage)&&$entryMessage) {                                                                 // dispays $entryMessage if any
+ 	echo "<div class=\"modal fade\" id=\"errorModal\" tabindex=\"-1\">
+          <div class=\"modal-dialog\">
+            <div class=\"modal-content\">
+ 			        <div class=\"modal-header\">
+ 			          <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-hidden=\"true\">&times;</button>
+ 			          <h4 class=\"modal-title\" id=\"myModalLabel\">DeepskyLog</h4>
+ 			        </div>
+  		        <div class=\"modal-body\">" .
+ 			          $entryMessage . "
+  	  	      </div>
+            </div>
+          </div>
+        </div>";
+ 	 
+ 	echo "<script type=\"text/javascript\">";
+ 	echo "$(document).ready(function() {
+          $('#errorModal').modal('show')
+        });";
+ 	echo "</script>";
+ }
 echo "</body>";
 echo "</html>";
 ?>

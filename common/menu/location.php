@@ -24,10 +24,10 @@ function menu_location()
 
 	  if($result)
 	  {
-	    echo "<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>";
-      echo "<li>
-             <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . $objLocation->getLocationPropertyFromId($loc,'name') ."<span class=\"arrow\"></span></a>";
-      echo " <ul>";
+	    echo "<ul class=\"nav navbar-nav\">
+			      <li class=\"dropdown\">
+	           <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . $objLocation->getLocationPropertyFromId($loc,'name')."<b class=\"caret\"></b></a>";
+	    echo " <ul class=\"dropdown-menu\">";
       
       $url = "http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"];
       if ($url == $baseURL || $url == $baseURL."#" || $url = $baseURL."index.php") {
@@ -38,7 +38,8 @@ function menu_location()
 	    }
 
 	    echo " </ul>";
-	    echo "</li>";
+	    echo "</li>
+			    </ul>";
 	  }
   }
 }

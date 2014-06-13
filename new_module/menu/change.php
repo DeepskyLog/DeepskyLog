@@ -1,14 +1,18 @@
 <?php // change.php - menu which allows the user to add or change things in the database
-echo "<div class=\"menuDiv\">";
-echo "<p class=\"menuHead\">"."Change title"."</p>";
-echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=change_account\">".LangChangeMenuItem1."</a><br />";
+	echo "<ul class=\"nav navbar-nav\">
+			  <li class=\"dropdown\">
+	       <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . LangChangeMenuTitle ."<b class=\"caret\"></b></a>";
+	echo " <ul class=\"dropdown-menu\">";
 if($loggedUser!="admin") { 
   // TODO : Add the action the method utilitiesDispatchIndexAction in lib/util.php 
-  echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=new_module_add_observation\">"."Change item 1"."</a><br />";
+  echo "<li><a href=\"".$baseURL."index.php?indexAction=new_module_add_observation\">"."Change item 1"."</a></li>";
 }
-echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeMenuItem3."</a><br />";
-echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=add_site\">".LangChangeMenuItem4."</a><br />";
+echo "<li><a href=\"".$baseURL."index.php?indexAction=add_instrument\">".LangChangeMenuItem3."</a></li>";
+echo "<li><a href=\"".$baseURL."index.php?indexAction=add_site\">".LangChangeMenuItem4."</a></li>";
 // TODO : Add the action the method utilitiesDispatchIndexAction in lib/util.php 
-echo "<a class=\"menuLine\" href=\"".$baseURL."index.php?indexAction=comets_add_object\" >"."Change item 3"."</a><br />";
-echo "</div>";
+echo "<li><a href=\"".$baseURL."index.php?indexAction=comets_add_object\" >"."Change item 3"."</a></li>";
+echo " </ul>";
+echo "</li>
+			  </ul>";
+
 ?>

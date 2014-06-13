@@ -15,9 +15,10 @@ function menu_search()
 	$lastMinDay   = substr($theDate,6,2);
 	$link="";
 	reset($_GET);
-	echo "<li>
-	       <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . LangSearchMenuTitle."<span class=\"arrow\"></span></a>";
-	echo " <ul>";
+	echo "<ul class=\"nav navbar-nav\">
+			  <li class=\"dropdown\">
+	       <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . LangSearchMenuTitle."<b class=\"caret\"></b></a>";
+	echo " <ul class=\"dropdown-menu\">";
 	echo "  <li><a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;myLanguages=true&amp;catalog=%&amp;minyear=$lastMinYear&amp;minmonth=$lastMinMonth&amp;minday=$lastMinDay&amp;newobservations=true\">".LangSearchMenuItem9."</a></li>";
 	if(($loggedUser) && ($loggedUser!="admin")) {          // admin doesn't have own observations
 	  echo "<li><a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".urlencode($loggedUser)."\">".LangSearchMenuItem1."</a></li>";
@@ -30,6 +31,7 @@ function menu_search()
 	echo "  <li><a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;catalog=%\">".LangSearchMenuItem2."</a></li>";
 	echo "  <li><a href=\"".$baseURL."index.php?indexAction=view_catalogs\">".LangSearchMenuItem10."</a></li>";
 	echo " </ul>";
-	echo "</li>";
+	echo "</li>
+			  </ul>";
 }
 ?>

@@ -9,12 +9,14 @@ else menu_downloads();
 
 function menu_downloads()
 { global $loggedUser,$menuDownloads,$baseURL;
-	echo "<li>
-	      <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\">" . LangDownloadsMenuTitle."<span class=\"arrow\"></span></a>";
-	echo " <ul>";
+	echo "<ul class=\"nav navbar-nav\">
+			  <li class=\"dropdown\">
+	       <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . LangDownloadsMenuTitle."<b class=\"caret\"></b></a>";
+	echo " <ul class=\"dropdown-menu\">";
   echo "  <li><a href=\"".$baseURL."index.php?indexAction=downloadAstroImageCatalogs\">".LangSearchMenuItem14."</a></li>";
 	echo "  <li><a href=\"".$baseURL."index.php?indexAction=view_atlaspages\">".LangSearchMenuItem13."</a></li>";
 	echo " </ul>";
-	echo "</li>";
+	echo "</li>
+			  </ul>";
 }
 ?>

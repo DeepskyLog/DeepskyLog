@@ -193,37 +193,22 @@ class Messages
 
   public  function showListMails($newMails, $readMails, $min, $max, $link2, $step=25) 
 	{ global $baseURL, $baseURL, $objPresentations, $objObserver, $dateformat, $loggedUser; 
-    echo "<table id=\"showListMailsTable\">\n";
-    echo "<tr class=\"type30\">";
+    echo "<table class=\"table table-condensed table-striped table-hover\">\n";
 
     // Making the header for the mails
-    echo "<td class=\"verticalaligntop;\">";         
-	  echo "<table><tr>";
-	  echo "<td class=\"centered width100pct\">";           
+	  echo "<thead><tr>";
+	  echo "<th>";           
 	  echo LangMessageSubject;
-	  echo "</td></tr>";
-	  echo "</table>";
-	  echo "</td>";        
-    
-    echo "<td class=\"verticalaligntop;\">";         
-	  echo "<table>";
-	  echo "<tr><td class=\"centered width100pct\">";           
+	  echo "</th>";
+	  echo "<th>";           
 	  echo LangMessageSender;
-	  echo "</td></tr>";        
-	  echo "</table>";
-	  echo "</td>";
+	  echo "</th>";
 
-	  echo "<td class=\"verticalaligntop;\">";         
-	  echo "<table>";
-	  echo "<tr><td class=\"centered width100pct\">";           
+	  echo "<th>";           
 	  echo LangMessageDate;
-	  echo "</td></tr>";        
-	  echo "</table>";
-	  echo "</td>";        
+	  echo "</th>";        
 	  
-		echo "</tr>";
-
-		$countline = 0; // counter for altering table colors
+		echo "</tr></thead>";
 
 		// Combining all mails
 		$allMails = array_merge($newMails, $readMails);
@@ -232,24 +217,15 @@ class Messages
 	  for ($cnt = 0;$cnt < count($allMails);$cnt++)
 		{
 		  if ($cnt >= $min && $cnt < $max) {
-		    $countline++;
 		    // Use the different colors for different lines, also make new mails green
 		    if ($loggedUser == "") {
-		      if ($countline % 2 == 0) {
-		        echo "<tr class=\"height5px type20\">";
-		      } else {
-		        echo "<tr class=\"height5px type10\">";
-		      }
+		      echo "<tr table-no-border>";
 	      } else {
 	        if (in_array($allMails[$cnt], $readMails)) {
-	          if ($countline % 2 == 0) {
-	            echo "<tr class=\"height5px type20\">";
-	          } else {
-	            echo "<tr class=\"height5px type10\">";
-	          }
+	          echo "<tr>";
 	        } else {
 	          // New mails are shown on a green background
-	          echo "<tr class=\"height5px typeGreen\">";
+	          echo "<tr class=\"success\">";
 	        }
 	      }
 	      echo "<td>";
