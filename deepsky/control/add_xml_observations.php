@@ -645,7 +645,7 @@ function add_xml_observations()
 	    if (count($objDatabase->selectRecordArray("SELECT * from locations where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $site . "\";")) > 0) {
 	      // Update the coordinates
 	      $run = $objDatabase->selectRecordset("SELECT id FROM locations WHERE observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $site . "\";");
-	      $get=mysql_fetch_object($run);
+	      $get=$run->fetch(PDO::FETCH_OBJ);
 	
 	      $locId = $get->id;
 	
@@ -719,7 +719,7 @@ function add_xml_observations()
 	        if (count($objDatabase->selectRecordArray("SELECT * from locations where observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $site . "\";")) > 0) {
 	          // Update the coordinates
 	          $run = $objDatabase->selectRecordset("SELECT id FROM locations WHERE observer = \"" . $_SESSION['deepskylog_id'] . "\" and name = \"" . $site . "\";");
-	          $get=mysql_fetch_object($run);
+	          $get=$run->fetch(PDO::FETCH_OBJ);
 	
   	        $locId = $get->id;
 	
@@ -857,7 +857,7 @@ function add_xml_observations()
 	              // Check for the type and coordinates. If there is already an object at the same coordinates with the same type, add the alternative name
   	            if ((count($objDatabase->selectRecordArray("SELECT name FROM objects WHERE ra > " . ($ta["ra"] - 0.0001) . " and ra < " . ($ta["ra"] + 0.0001) . " and decl > " . ($ta["dec"] - 0.0001) . " and decl < " . ($ta["dec"] + 0.0001) . " and type = \"" . $ta["type"] . "\""))) > 0) {
 	                $run = $objDatabase->selectRecordset("SELECT name FROM objects WHERE ra > " . ($ta["ra"] - 0.0001) . " and ra < " . ($ta["ra"] + 0.0001) . " and decl > " . ($ta["dec"] - 0.0001) . " and decl < " . ($ta["dec"] + 0.0001) . " and type = \"" . $ta["type"] . "\"");
-	                $get=mysql_fetch_object($run);
+	                $get=$run->fetch(PDO::FETCH_OBJ);
 	              
 	                $objeId = $get->name;
 	              

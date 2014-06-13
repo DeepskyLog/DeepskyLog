@@ -15,7 +15,7 @@ class CometObjects
  // parameters.
  function addObject($name)
  {
-
+  global $objDatabase;
   if (!$_SESSION['lang'])
   {
    $_SESSION['lang'] = "English";
@@ -25,11 +25,11 @@ class CometObjects
 
   $sql = implode("", $array);
 
-  mysql_query($sql) or die(mysql_error());
+  $objDatabase->execSQL($sql);
 
   $query = "SELECT id FROM cometobjects ORDER BY id DESC LIMIT 1";
-  $run = mysql_query($query) or die(mysql_error());
-  $get = mysql_fetch_object($run);
+  $run = $objDatabase->selectRecordset($query);
+  $get = $run->fetch(PDO::FETCH_OBJ);
   $id = $get->id;
   return $id;
  }
@@ -37,27 +37,23 @@ class CometObjects
  // deleteObject removes the object with id = $id 
  function deleteObject($id)
  {
- 
+  global $objDatabase;
   $sql = "DELETE FROM cometobjects WHERE id=\"$id\"";
-  mysql_query($sql) or die(mysql_error());
-
+  $objDatabase->execSQL($sql);
 }
 
  // getAllInfo returns all information of an object
  function getAllInfo($id)
  {
-  
- 
+  global $objDatabase;
 
   $sql = "SELECT * FROM cometobjects WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
+  $run = $objDatabase->selectRecordset($sql);
 
-  $get = mysql_fetch_object($run);
+  $get = $run->fetch(PDO::FETCH_OBJ);
 
   $object["name"] = $get->name;
   $object["icqname"] = $get->icqname;
-
-  
 
   return $object;
  }
@@ -70,8 +66,8 @@ class CometObjects
    $id="";
    $sql = "SELECT * FROM cometobjects WHERE name = \"$name\"";
       
-   $run = mysql_query($sql) or die(mysql_error());
-   if($get = mysql_fetch_object($run))
+   $run = $objDatabase->selectRecordset($sql);
+   if($get = $run->fetch(PDO::FETCH_OBJ))
      $id = $get->id;
    return $id;
  }
@@ -80,13 +76,12 @@ class CometObjects
  // getName returns the name of an object
  function getName($id)
  {
-  
- 
+  global $objDatabase;
 
   $sql = "SELECT * FROM cometobjects WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
+  $run = $objDatabase->selectRecordset($sql);
 
-  $get = mysql_fetch_object($run);
+  $get = $run->fetch(PDO::FETCH_OBJ);
 
   if ($get)
   {
@@ -97,25 +92,20 @@ class CometObjects
     $name = '';
   }
 
-  
-
   return $name;
  }
 
  // getIcqName returns the name of an object
  function getIcqName($id)
  {
-  
- 
+  global $objDatabase;
 
   $sql = "SELECT * FROM cometobjects WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
+  $run = $objDatabase->selectRecordset($sql);
 
-  $get = mysql_fetch_object($run);
+  $get = $run->fetch(PDO::FETCH_OBJ);
 
   $icqname = $get->icqname;
-
-  
 
   return $icqname;
  }
@@ -123,18 +113,15 @@ class CometObjects
  // getObjects returns an array with the names of all objects
  function getObjects()
  {
-  
- 
+  global $objDatabase;
 
   $sql = "SELECT * FROM cometobjects";
-  $run = mysql_query($sql) or die(mysql_error());
+  $run = $objDatabase->selectRecordset($sql);
 
-  while($get = mysql_fetch_object($run))
+  while($get = $run->fetch(PDO::FETCH_OBJ))
   {
    $obs[] = $get->name;
   }
-
-  
 
   return $obs;
  }
@@ -145,7 +132,7 @@ class CometObjects
  //  $q = array("name" => "NGC", "icqname" => "C200512");
  function getObjectFromQuery($queries, $sort, $exact = 0)
  {
-  
+  global $objDatabase;
  
   $sql = "SELECT * FROM cometobjects where";
 
@@ -175,9 +162,9 @@ class CometObjects
 
   $sql = $sql.";";
 
-  $run = mysql_query($sql) or die(mysql_error());
+  $run = $objDatabase->selectRecordset($sql);
   $obs=array();
-  while($get = mysql_fetch_object($run))
+  while($get = $run->fetch(PDO::FETCH_OBJ))
   {
    $obs[] = $get->name;
   }
@@ -190,8 +177,6 @@ class CometObjects
    }
   }
 
-  
-
   return $obs;
  }
 
@@ -199,22 +184,19 @@ class CometObjects
  // databasefield has the given value.
  function getSelectedObjects($dbfield, $value)
  {
-  
- 
+  global $objDatabase;
 
   if ($dbfield == "name")
   {
    $sql = "SELECT * FROM cometobjects where $dbfield like \"$value%\"";
   }
 
-  $run = mysql_query($sql) or die(mysql_error());
+  $run = $objDatabase->selectRecordset($sql);
 
-  while($get = mysql_fetch_object($run))
+  while($get = $run->fetch(PDO::FETCH_OBJ))
   {
    $obs[] = $get->name;
   }
-
-  
 
   return $obs;
  }
@@ -223,16 +205,15 @@ class CometObjects
  // databasefield has the given name.
  function getExactObject($value)
  {
-  
- 
+  global $objDatabase;  
 
   $sql = "SELECT * FROM cometobjects where name = \"$value\"";
 
-  $run = mysql_query($sql) or die(mysql_error());
+  $run = $objDatabase->selectRecordset($sql);
 
   if(isset($get))
   {
-    while($get = mysql_fetch_object($run))
+    while($get = $run->fetch(PDO::FETCH_OBJ))
     {
      $obs[] = $get->name;
     }
@@ -242,8 +223,6 @@ class CometObjects
     $obs[] = null;
   }
 
-  
-
   return $obs;
  }
 
@@ -251,8 +230,7 @@ class CometObjects
  // the column specified in $sort
  function getSortedObjects($sort)
  {
-  
- 
+  global $objDatabase;
 
   if ($sort == "seen")
   {
@@ -262,9 +240,9 @@ class CometObjects
   {
    $sql = "SELECT * FROM cometobjects ORDER BY $sort";
   }
-  $run = mysql_query($sql) or die(mysql_error());
+  $run = $objDatabase->selectRecordset($sql);
 
-  while($get = mysql_fetch_object($run))
+  while($get = $run->fetch(PDO::FETCH_OBJ))
   {
    $obs[] = $get->name;
   }
@@ -273,7 +251,6 @@ class CometObjects
   {
    natcasesort($obs);
   }
-
 
   if(sizeof($obs) > 0)
   {
@@ -285,13 +262,11 @@ class CometObjects
 
     if ($sort == "seen")
     {
-    
-
      $result2[$key][1] = "-";
      $sql = "SELECT observerid FROM cometobservations WHERE objectid = \"$id\"";
-     $run = mysql_query($sql) or die(mysql_error());
+     $run = $objDatabase->selectRecordset($sql);
 
-     $get = mysql_fetch_object($run);
+     $get = $run->fetch(PDO::FETCH_OBJ);
 
      if ($get->observerid != "")
      {
@@ -299,9 +274,9 @@ class CometObjects
      }
      if ($loggedUser)
      { $sql = "SELECT observerid FROM cometobservations WHERE objectid = \"$id\" AND observerid = \"".$loggedUser."\"";
-       $run = mysql_query($sql) or die(mysql_error());
+       $run = $objDatabase->selectRecordset($sql);
 
-      $get = mysql_fetch_object($run);
+      $get = $run->fetch(PDO::FETCH_OBJ);
 
       if ($get->observerid != "")
       {
@@ -394,25 +369,19 @@ class CometObjects
  // setName sets a new name for the object.
  function setName($id, $name)
  {
-  
- 
+  global $objDatabase;
 
   $sql = "UPDATE cometobjects SET name = \"$name\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  
+  $objDatabase->execSQL($sql);
  }
 
  // setIcqName sets a new ICQ name for the object.
  function setIcqName($id, $icq)
  {
-  
- 
+  global $objDatabase;
 
   $sql = "UPDATE cometobjects SET icqname = \"$icq\" WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
-
-  
+  $objDatabase->execSQL($sql);
  }
 }
 ?>

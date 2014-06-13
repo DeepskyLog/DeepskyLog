@@ -292,6 +292,7 @@ class Accomplishments {
   
   // Create an entry for a new observer in the accomplishments table
   public function addObserver($observerId) {
+  	global $objDatabase;
   	$sql = "INSERT INTO accomplishments (observer, messierBronze, messierSilver, messierGold, messierDrawingsBronze, messierDrawingsSilver, messierDrawingsGold, caldwellBronze, caldwellSilver, caldwellGold, caldwellDrawingsBronze, caldwellDrawingsSilver, caldwelldrawingsGold, herschelBronze, herschelSilver, herschelGold, herschelDiamond, herschelPlatina, herschelDrawingsBronze, herschelDrawingsSilver, herschelDrawingsGold, herschelDrawingsDiamond, herschelDrawingsPlatina, herschelIIBronze, herschelIISilver, herschelIIGold, herschelIIDiamond, herschelIIPlatina, herschelIIDrawingsBronze, herschelIIDrawingsSilver, herschelIIDrawingsGold, herschelIIDrawingsDiamond, herschelIIDrawingsPlatina, drawingsNewbie, drawingsRookie, drawingsBeginner, drawingsTalented, drawingsSkilled, drawingsIntermediate, drawingsExperienced, drawingsAdvanced, drawingsSenior, drawingsExpert, cometObservationsNewbie, cometObservationsRookie, cometObservationsBeginner, cometObservationsTalented, cometObservationsSkilled, cometObservationsIntermediate, cometObservationsExperienced, cometObservationsAdvanced, cometObservationsSenior, cometObservationsExpert, cometsObservedNewbie, cometsObservedRookie, cometsObservedBeginner, cometsObservedTalented, cometsObservedSkilled, cometsObservedIntermediate, cometsObservedExperienced, cometsObservedAdvanced, cometsObservedSenior, cometsObservedExpert, cometDrawingsNewbie, cometDrawingsRookie, cometDrawingsBeginner, cometDrawingsTalented, cometDrawingsSkilled, cometDrawingsIntermediate, cometDrawingsExperienced, cometDrawingsAdvanced, cometDrawingsSenior, cometDrawingsExpert, openClusterNewbie, openClusterRookie, openClusterBeginner, openClusterTalented, openClusterSkilled, openClusterIntermediate, openClusterExperienced, openClusterAdvanced, openClusterSenior, openClusterExpert, openClusterDrawingsNewbie, openClusterDrawingsRookie, openClusterDrawingsBeginner, openClusterDrawingsTalented, openClusterDrawingsSkilled, openClusterDrawingsIntermediate, openClusterDrawingsExperienced, openClusterDrawingsAdvanced, openClusterDrawingsSenior, openClusterDrawingsExpert, globularClusterNewbie, globularClusterRookie, globularClusterBeginner, globularClusterTalented, globularClusterSkilled, globularClusterIntermediate, globularClusterExperienced, globularClusterAdvanced, globularClusterSenior, globularClusterExpert, globularClusterDrawingsNewbie, globularClusterDrawingsRookie, globularClusterDrawingsBeginner, globularClusterDrawingsTalented, globularClusterDrawingsSkilled, globularClusterDrawingsIntermediate, globularClusterDrawingsExperienced, globularClusterDrawingsAdvanced, globularClusterDrawingsSenior, globularClusterDrawingsExpert, planetaryNebulaNewbie, planetaryNebulaRookie, planetaryNebulaBeginner, planetaryNebulaTalented, planetaryNebulaSkilled, planetaryNebulaIntermediate, planetaryNebulaExperienced, planetaryNebulaAdvanced, planetaryNebulaSenior, planetaryNebulaExpert, planetaryNebulaDrawingsNewbie, planetaryNebulaDrawingsRookie, planetaryNebulaDrawingsBeginner, planetaryNebulaDrawingsTalented, planetaryNebulaDrawingsSkilled, planetaryNebulaDrawingsIntermediate, planetaryNebulaDrawingsExperienced, planetaryNebulaDrawingsAdvanced, planetaryNebulaDrawingsSenior, planetaryNebulaDrawingsExpert, galaxyNewbie, galaxyRookie, galaxyBeginner, galaxyTalented, galaxySkilled, galaxyIntermediate, galaxyExperienced, galaxyAdvanced, galaxySenior, galaxyExpert, galaxyDrawingsNewbie, galaxyDrawingsRookie, galaxyDrawingsBeginner, galaxyDrawingsTalented, galaxyDrawingsSkilled, galaxyDrawingsIntermediate, galaxyDrawingsExperienced, galaxyDrawingsAdvanced, galaxyDrawingsSenior, galaxyDrawingsExpert, nebulaNewbie, nebulaRookie, nebulaBeginner, nebulaTalented, nebulaSkilled, nebulaIntermediate, nebulaExperienced, nebulaAdvanced, nebulaSenior, nebulaExpert, nebulaDrawingsNewbie, nebulaDrawingsRookie, nebulaDrawingsBeginner, nebulaDrawingsTalented, nebulaDrawingsSkilled, nebulaDrawingsIntermediate, nebulaDrawingsExperienced, nebulaDrawingsAdvanced, nebulaDrawingsSenior, nebulaDrawingsExpert, objectsNewbie, objectsRookie, objectsBeginner, objectsTalented, objectsSkilled, objectsIntermediate, objectsExperienced, objectsAdvanced, objectsSenior, objectsExpert, objectsDrawingsNewbie, objectsDrawingsRookie, objectsDrawingsBeginner, objectsDrawingsTalented, objectsDrawingsSkilled, objectsDrawingsIntermediate, objectsDrawingsExperienced, objectsDrawingsAdvanced, objectsDrawingsSenior, objectsDrawingsExpert) " .
   			"VALUES (\"". $observerId ."\", 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   			        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -300,13 +301,14 @@ class Accomplishments {
   			        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   			        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   			        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   }
 
   // Delete an entry for a deleted observer in the accomplishments table
   public function deleteObserver($observerId) {
+  	global $objDatabase;
   	$sql = "DELETE FROM accomplishments WHERE observer = \"". $observerId ."\");";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   }
   
   // Returns 1 if the observer has seen 25 messiers
@@ -1682,12 +1684,13 @@ class Accomplishments {
   }
   
   public function recalculateMessiers($observerId) {
+  	global $objDatabase;
   	// MESSIER
   	$messiers = $this->calculateMessier($observerId);
   	$oldMessierBronze = $this->getMessierBronze($observerId);
   	$newMessierBronze = $messiers[0];
   	$sql = "UPDATE accomplishments SET messierBronze = " . $newMessierBronze . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	
   	if ($oldMessierBronze == 0 && $newMessierBronze == 1) {
   		// TODO : Send mail
@@ -1697,7 +1700,7 @@ class Accomplishments {
   	$oldMessierSilver = $this->getMessierSilver($observerId);
   	$newMessierSilver = $messiers[1];
   	$sql = "UPDATE accomplishments SET messierSilver = " . $newMessierSilver . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	
   	if ($oldMessierSilver == 0 && $newMessierSilver == 1) {
   		// TODO : Send mail
@@ -1706,7 +1709,7 @@ class Accomplishments {
   	$oldMessierGold = $this->getMessierGold($observerId);
   	$newMessierGold = $messiers[2];
   	$sql = "UPDATE accomplishments SET messierGold = " . $newMessierGold . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	 
   	if ($oldMessierGold == 0 && $newMessierGold == 1) {
   		// TODO : Send mail
@@ -1717,7 +1720,7 @@ class Accomplishments {
   	$oldMessierDrawingsBronze = $this->getMessierDrawingsBronze($observerId);
   	$newMessierDrawingsBronze = $messierDrawings[0];
   	$sql = "UPDATE accomplishments SET messierDrawingsBronze = " . $newMessierDrawingsBronze . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	
   	if ($oldMessierDrawingsBronze == 0 && $newMessierDrawingsBronze == 1) {
   		// TODO : Send mail
@@ -1726,7 +1729,7 @@ class Accomplishments {
   	$oldMessierDrawingsSilver = $this->getMessierDrawingsSilver($observerId);
   	$newMessierDrawingsSilver = $messierDrawings[1];
   	$sql = "UPDATE accomplishments SET messierDrawingsSilver = " . $newMessierDrawingsSilver . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	
   	if ($oldMessierDrawingsSilver == 0 && $newMessierDrawingsSilver == 1) {
   		// TODO : Send mail
@@ -1735,7 +1738,7 @@ class Accomplishments {
   	$oldMessierDrawingsGold = $this->getMessierDrawingsGold($observerId);
   	$newMessierDrawingsGold = $messierDrawings[2];
   	$sql = "UPDATE accomplishments SET messierDrawingsGold = " . $newMessierDrawingsGold . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	 
   	if ($oldMessierDrawingsGold == 0 && $newMessierDrawingsGold == 1) {
   		// TODO : Send mail
@@ -1743,12 +1746,13 @@ class Accomplishments {
   }
   
   public function recalculateCaldwells($observerId) {
+  	global $objDatabase;
   	// CALDWELL
   	$caldwells = $this->calculateCaldwell($observerId);
   	$oldCaldwellBronze = $this->getCaldwellBronze($observerId);
   	$newCaldwellBronze = $caldwells[0];
   	$sql = "UPDATE accomplishments SET CaldwellBronze = " . $newCaldwellBronze . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	
   	if ($oldCaldwellBronze == 0 && $newCaldwellBronze == 1) {
   		// TODO : Send mail
@@ -1758,7 +1762,7 @@ class Accomplishments {
   	$oldCaldwellSilver = $this->getCaldwellSilver($observerId);
   	$newCaldwellSilver = $caldwells[1];
   	$sql = "UPDATE accomplishments SET CaldwellSilver = " . $newCaldwellSilver . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	
   	if ($oldCaldwellSilver == 0 && $newCaldwellSilver == 1) {
   		// TODO : Send mail
@@ -1767,7 +1771,7 @@ class Accomplishments {
   	$oldCaldwellGold = $this->getCaldwellGold($observerId);
   	$newCaldwellGold = $caldwells[2];
   	$sql = "UPDATE accomplishments SET CaldwellGold = " . $newCaldwellGold . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	 
   	if ($oldCaldwellGold == 0 && $newCaldwellGold == 1) {
   		// TODO : Send mail
@@ -1778,7 +1782,7 @@ class Accomplishments {
   	$oldCaldwellDrawingsBronze = $this->getCaldwellDrawingsBronze($observerId);
   	$newCaldwellDrawingsBronze = $caldwellDrawings[0];
   	$sql = "UPDATE accomplishments SET CaldwellDrawingsBronze = " . $newCaldwellDrawingsBronze . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	
   	if ($oldCaldwellDrawingsBronze == 0 && $newCaldwellDrawingsBronze == 1) {
   		// TODO : Send mail
@@ -1787,7 +1791,7 @@ class Accomplishments {
   	$oldCaldwellDrawingsSilver = $this->getCaldwellDrawingsSilver($observerId);
   	$newCaldwellDrawingsSilver = $caldwellDrawings[1];
   	$sql = "UPDATE accomplishments SET CaldwellDrawingsSilver = " . $newCaldwellDrawingsSilver . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	
   	if ($oldCaldwellDrawingsSilver == 0 && $newCaldwellDrawingsSilver == 1) {
   		// TODO : Send mail
@@ -1796,7 +1800,7 @@ class Accomplishments {
   	$oldCaldwellDrawingsGold = $this->getCaldwellDrawingsGold($observerId);
   	$newCaldwellDrawingsGold = $caldwellDrawings[2];
   	$sql = "UPDATE accomplishments SET CaldwellDrawingsGold = " . $newCaldwellDrawingsGold . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	 
   	if ($oldCaldwellDrawingsGold == 0 && $newCaldwellDrawingsGold == 1) {
   		// TODO : Send mail
@@ -1805,12 +1809,13 @@ class Accomplishments {
   }
 
   public function recalculateHerschels($observerId) {
+  	global $objDatabase;
   	// Herschel
   	$herschels = $this->calculateHerschel($observerId);
   	$oldHerschelBronze = $this->getHerschelBronze($observerId);
   	$newHerschelBronze = $herschels[0];
   	$sql = "UPDATE accomplishments SET HerschelBronze = " . $newHerschelBronze . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	 
   	if ($oldHerschelBronze == 0 && $newHerschelBronze == 1) {
   		// TODO : Send mail
@@ -1820,7 +1825,7 @@ class Accomplishments {
   	$oldHerschelSilver = $this->getHerschelSilver($observerId);
   	$newHerschelSilver = $herschels[1];
   	$sql = "UPDATE accomplishments SET HerschelSilver = " . $newHerschelSilver . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	 
   	if ($oldHerschelSilver == 0 && $newHerschelSilver == 1) {
   		// TODO : Send mail
@@ -1829,7 +1834,7 @@ class Accomplishments {
   	$oldHerschelGold = $this->getHerschelGold($observerId);
   	$newHerschelGold = $herschels[2];
   	$sql = "UPDATE accomplishments SET HerschelGold = " . $newHerschelGold . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldHerschelGold == 0 && $newHerschelGold == 1) {
   		// TODO : Send mail
@@ -1838,7 +1843,7 @@ class Accomplishments {
     $oldHerschelDiamond = $this->getHerschelDiamond($observerId);
   	$newHerschelDiamond = $herschels[3];
   	$sql = "UPDATE accomplishments SET HerschelDiamond = " . $newHerschelDiamond . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldHerschelDiamond == 0 && $newHerschelDiamond == 1) {
   		// TODO : Send mail
@@ -1847,7 +1852,7 @@ class Accomplishments {
     $oldHerschelPlatina = $this->getHerschelPlatina($observerId);
   	$newHerschelPlatina = $herschels[4];
   	$sql = "UPDATE accomplishments SET HerschelPlatina = " . $newHerschelPlatina . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldHerschelPlatina == 0 && $newHerschelPlatina == 1) {
   		// TODO : Send mail
@@ -1858,7 +1863,7 @@ class Accomplishments {
   	$oldHerschelDrawingsBronze = $this->getHerschelDrawingsBronze($observerId);
   	$newHerschelDrawingsBronze = $herschelDrawings[0];
   	$sql = "UPDATE accomplishments SET HerschelDrawingsBronze = " . $newHerschelDrawingsBronze . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	 
   	if ($oldHerschelDrawingsBronze == 0 && $newHerschelDrawingsBronze == 1) {
   		// TODO : Send mail
@@ -1867,7 +1872,7 @@ class Accomplishments {
   	$oldHerschelDrawingsSilver = $this->getHerschelDrawingsSilver($observerId);
   	$newHerschelDrawingsSilver = $herschelDrawings[1];
   	$sql = "UPDATE accomplishments SET HerschelDrawingsSilver = " . $newHerschelDrawingsSilver . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	 
   	if ($oldHerschelDrawingsSilver == 0 && $newHerschelDrawingsSilver == 1) {
   		// TODO : Send mail
@@ -1876,7 +1881,7 @@ class Accomplishments {
   	$oldHerschelDrawingsGold = $this->getHerschelDrawingsGold($observerId);
   	$newHerschelDrawingsGold = $herschelDrawings[2];
   	$sql = "UPDATE accomplishments SET HerschelDrawingsGold = " . $newHerschelDrawingsGold . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldHerschelDrawingsGold == 0 && $newHerschelDrawingsGold == 1) {
   		// TODO : Send mail
@@ -1885,7 +1890,7 @@ class Accomplishments {
   	$oldHerschelDrawingsDiamond = $this->getHerschelDrawingsDiamond($observerId);
   	$newHerschelDrawingsDiamond = $herschelDrawings[3];
   	$sql = "UPDATE accomplishments SET HerschelDrawingsDiamond = " . $newHerschelDrawingsDiamond . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	
   	if ($oldHerschelDrawingsDiamond == 0 && $newHerschelDrawingsDiamond == 1) {
   		// TODO : Send mail
@@ -1894,7 +1899,7 @@ class Accomplishments {
   	$oldHerschelDrawingsPlatina = $this->getHerschelDrawingsPlatina($observerId);
   	$newHerschelDrawingsPlatina = $herschelDrawings[4];
   	$sql = "UPDATE accomplishments SET HerschelDrawingsPlatina = " . $newHerschelDrawingsPlatina . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	
   	if ($oldHerschelDrawingsPlatina == 0 && $newHerschelDrawingsPlatina == 1) {
   		// TODO : Send mail
@@ -1902,12 +1907,13 @@ class Accomplishments {
   }
 
   public function recalculateHerschelIIs($observerId) {
+  	global $objDatabase;
   	// HerschelII
   	$HerschelIIs = $this->calculateHerschelII($observerId);
   	$oldHerschelIIBronze = $this->getHerschelIIBronze($observerId);
   	$newHerschelIIBronze = $HerschelIIs[0];
   	$sql = "UPDATE accomplishments SET HerschelIIBronze = " . $newHerschelIIBronze . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldHerschelIIBronze == 0 && $newHerschelIIBronze == 1) {
   		// TODO : Send mail
@@ -1917,7 +1923,7 @@ class Accomplishments {
   	$oldHerschelIISilver = $this->getHerschelIISilver($observerId);
   	$newHerschelIISilver = $HerschelIIs[1];
   	$sql = "UPDATE accomplishments SET HerschelIISilver = " . $newHerschelIISilver . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldHerschelIISilver == 0 && $newHerschelIISilver == 1) {
   		// TODO : Send mail
@@ -1926,7 +1932,7 @@ class Accomplishments {
   	$oldHerschelIIGold = $this->getHerschelIIGold($observerId);
   	$newHerschelIIGold = $HerschelIIs[2];
   	$sql = "UPDATE accomplishments SET HerschelIIGold = " . $newHerschelIIGold . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldHerschelIIGold == 0 && $newHerschelIIGold == 1) {
   		// TODO : Send mail
@@ -1935,7 +1941,7 @@ class Accomplishments {
   	$oldHerschelIIDiamond = $this->getHerschelIIDiamond($observerId);
   	$newHerschelIIDiamond = $HerschelIIs[3];
   	$sql = "UPDATE accomplishments SET HerschelIIDiamond = " . $newHerschelIIDiamond . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldHerschelIIDiamond == 0 && $newHerschelIIDiamond == 1) {
   		// TODO : Send mail
@@ -1944,7 +1950,7 @@ class Accomplishments {
   	$oldHerschelIIPlatina = $this->getHerschelIIPlatina($observerId);
   	$newHerschelIIPlatina = $HerschelIIs[4];
   	$sql = "UPDATE accomplishments SET HerschelIIPlatina = " . $newHerschelIIPlatina . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldHerschelIIPlatina == 0 && $newHerschelIIPlatina == 1) {
   		// TODO : Send mail
@@ -1955,7 +1961,7 @@ class Accomplishments {
   	$oldHerschelIIDrawingsBronze = $this->getHerschelIIDrawingsBronze($observerId);
   	$newHerschelIIDrawingsBronze = $HerschelIIDrawings[0];
   	$sql = "UPDATE accomplishments SET HerschelIIDrawingsBronze = " . $newHerschelIIDrawingsBronze . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldHerschelIIDrawingsBronze == 0 && $newHerschelIIDrawingsBronze == 1) {
   		// TODO : Send mail
@@ -1964,7 +1970,7 @@ class Accomplishments {
   	$oldHerschelIIDrawingsSilver = $this->getHerschelIIDrawingsSilver($observerId);
   	$newHerschelIIDrawingsSilver = $HerschelIIDrawings[1];
   	$sql = "UPDATE accomplishments SET HerschelIIDrawingsSilver = " . $newHerschelIIDrawingsSilver . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldHerschelIIDrawingsSilver == 0 && $newHerschelIIDrawingsSilver == 1) {
   		// TODO : Send mail
@@ -1973,7 +1979,7 @@ class Accomplishments {
   	$oldHerschelIIDrawingsGold = $this->getHerschelIIDrawingsGold($observerId);
   	$newHerschelIIDrawingsGold = $HerschelIIDrawings[2];
   	$sql = "UPDATE accomplishments SET HerschelIIDrawingsGold = " . $newHerschelIIDrawingsGold . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldHerschelIIDrawingsGold == 0 && $newHerschelIIDrawingsGold == 1) {
   		// TODO : Send mail
@@ -1982,7 +1988,7 @@ class Accomplishments {
   	$oldHerschelIIDrawingsDiamond = $this->getHerschelIIDrawingsDiamond($observerId);
   	$newHerschelIIDrawingsDiamond = $HerschelIIDrawings[3];
   	$sql = "UPDATE accomplishments SET HerschelIIDrawingsDiamond = " . $newHerschelIIDrawingsDiamond . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	 
   	if ($oldHerschelIIDrawingsDiamond == 0 && $newHerschelIIDrawingsDiamond == 1) {
   		// TODO : Send mail
@@ -1991,7 +1997,7 @@ class Accomplishments {
   	$oldHerschelIIDrawingsPlatina = $this->getHerschelIIDrawingsPlatina($observerId);
   	$newHerschelIIDrawingsPlatina = $HerschelIIDrawings[4];
   	$sql = "UPDATE accomplishments SET HerschelIIDrawingsPlatina = " . $newHerschelIIDrawingsPlatina . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	 
   	if ($oldHerschelIIDrawingsPlatina == 0 && $newHerschelIIDrawingsPlatina == 1) {
   		// TODO : Send mail
@@ -1999,12 +2005,13 @@ class Accomplishments {
   }
 
   public function recalculateDrawings($observerId) {
+  	global $objDatabase;
   	// drawings
   	$drawings = $this->calculateDrawings($observerId);
   	$oldDrawingsNewbie = $this->getDrawingsNewbie($observerId);
   	$newDrawingsNewbie = $drawings[0];
   	$sql = "UPDATE accomplishments SET drawingsNewbie = " . $newDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldDrawingsNewbie == 0 && $newDrawingsNewbie == 1) {
   		// TODO : Send mail
@@ -2014,7 +2021,7 @@ class Accomplishments {
   	$oldDrawingsRookie = $this->getDrawingsRookie($observerId);
   	$newDrawingsRookie = $drawings[1];
   	$sql = "UPDATE accomplishments SET drawingsRookie = " . $newDrawingsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldDrawingsRookie == 0 && $newDrawingsRookie == 1) {
   		// TODO : Send mail
@@ -2023,7 +2030,7 @@ class Accomplishments {
   	$oldDrawingsBeginner = $this->getDrawingsBeginner($observerId);
   	$newDrawingsBeginner = $drawings[2];
   	$sql = "UPDATE accomplishments SET drawingsBeginner = " . $newDrawingsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldDrawingsBeginner == 0 && $newDrawingsBeginner == 1) {
   		// TODO : Send mail
@@ -2032,7 +2039,7 @@ class Accomplishments {
   	$oldDrawingsTalented = $this->getDrawingsTalented($observerId);
   	$newDrawingsTalented = $drawings[3];
   	$sql = "UPDATE accomplishments SET drawingsTalented = " . $newDrawingsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldDrawingsTalented == 0 && $newDrawingsTalented == 1) {
   		// TODO : Send mail
@@ -2041,7 +2048,7 @@ class Accomplishments {
  		$oldDrawingsSkilled = $this->getDrawingsSkilled($observerId);
   	$newDrawingsSkilled = $drawings[4];
   	$sql = "UPDATE accomplishments SET drawingsSkilled = " . $newDrawingsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldDrawingsSkilled == 0 && $newDrawingsSkilled == 1) {
   		// TODO : Send mail
@@ -2050,7 +2057,7 @@ class Accomplishments {
   	$oldDrawingsIntermediate = $this->getDrawingsIntermediate($observerId);
   	$newDrawingsIntermediate = $drawings[5];
   	$sql = "UPDATE accomplishments SET drawingsIntermediate = " . $newDrawingsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	
   	if ($oldDrawingsIntermediate == 0 && $newDrawingsIntermediate == 1) {
   		// TODO : Send mail
@@ -2059,7 +2066,7 @@ class Accomplishments {
   	$oldDrawingsExperienced = $this->getDrawingsExperienced($observerId);
   	$newDrawingsExperienced = $drawings[6];
   	$sql = "UPDATE accomplishments SET drawingsExperienced = " . $newDrawingsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	 
   	if ($oldDrawingsExperienced == 0 && $newDrawingsExperienced == 1) {
   		// TODO : Send mail
@@ -2068,7 +2075,7 @@ class Accomplishments {
     $oldDrawingsAdvanced = $this->getDrawingsAdvanced($observerId);
   	$newDrawingsAdvanced = $drawings[7];
   	$sql = "UPDATE accomplishments SET drawingsAdvanced = " . $newDrawingsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	 
   	if ($oldDrawingsAdvanced == 0 && $newDrawingsAdvanced == 1) {
   		// TODO : Send mail
@@ -2077,7 +2084,7 @@ class Accomplishments {
     $oldDrawingsSenior = $this->getDrawingsSenior($observerId);
   	$newDrawingsSenior = $drawings[8];
   	$sql = "UPDATE accomplishments SET drawingsSenior = " . $newDrawingsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	 
   	if ($oldDrawingsSenior == 0 && $newDrawingsSenior == 1) {
   		// TODO : Send mail
@@ -2086,7 +2093,7 @@ class Accomplishments {
     $oldDrawingsExpert = $this->getDrawingsExpert($observerId);
   	$newDrawingsExpert = $drawings[9];
   	$sql = "UPDATE accomplishments SET drawingsExpert = " . $newDrawingsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	 
   	if ($oldDrawingsExpert == 0 && $newDrawingsExpert == 1) {
   		// TODO : Send mail
@@ -2094,12 +2101,13 @@ class Accomplishments {
   }
 
   public function recalculateOpenClusters($observerId) {
+  	global $objDatabase;
   	// OpenClusters
   	$OpenClusters = $this->calculateOpenClusters($observerId);
   	$oldOpenClustersNewbie = $this->getOpenClustersNewbie($observerId);
   	$newOpenClustersNewbie = $OpenClusters[0];
   	$sql = "UPDATE accomplishments SET OpenClusterNewbie = " . $newOpenClustersNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClustersNewbie == 0 && $newOpenClustersNewbie == 1) {
   		// TODO : Send mail
@@ -2109,7 +2117,7 @@ class Accomplishments {
   	$oldOpenClustersRookie = $this->getOpenClustersRookie($observerId);
   	$newOpenClustersRookie = $OpenClusters[1];
   	$sql = "UPDATE accomplishments SET OpenClusterRookie = " . $newOpenClustersRookie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClustersRookie == 0 && $newOpenClustersRookie == 1) {
   		// TODO : Send mail
@@ -2118,7 +2126,7 @@ class Accomplishments {
   	$oldOpenClustersBeginner = $this->getOpenClustersBeginner($observerId);
   	$newOpenClustersBeginner = $OpenClusters[2];
   	$sql = "UPDATE accomplishments SET OpenClusterBeginner = " . $newOpenClustersBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClustersBeginner == 0 && $newOpenClustersBeginner == 1) {
   		// TODO : Send mail
@@ -2127,7 +2135,7 @@ class Accomplishments {
   	$oldOpenClustersTalented = $this->getOpenClustersTalented($observerId);
   	$newOpenClustersTalented = $OpenClusters[3];
   	$sql = "UPDATE accomplishments SET OpenClusterTalented = " . $newOpenClustersTalented . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClustersTalented == 0 && $newOpenClustersTalented == 1) {
   		// TODO : Send mail
@@ -2136,7 +2144,7 @@ class Accomplishments {
   	$oldOpenClustersSkilled = $this->getOpenClustersSkilled($observerId);
   	$newOpenClustersSkilled = $OpenClusters[4];
   	$sql = "UPDATE accomplishments SET OpenClusterSkilled = " . $newOpenClustersSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClustersSkilled == 0 && $newOpenClustersSkilled == 1) {
   		// TODO : Send mail
@@ -2145,7 +2153,7 @@ class Accomplishments {
   	$oldOpenClustersIntermediate = $this->getOpenClustersIntermediate($observerId);
   	$newOpenClustersIntermediate = $OpenClusters[5];
   	$sql = "UPDATE accomplishments SET OpenClusterIntermediate = " . $newOpenClustersIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	 
   	if ($oldOpenClustersIntermediate == 0 && $newOpenClustersIntermediate == 1) {
   		// TODO : Send mail
@@ -2154,7 +2162,7 @@ class Accomplishments {
   	$oldOpenClustersExperienced = $this->getOpenClustersExperienced($observerId);
   	$newOpenClustersExperienced = $OpenClusters[6];
   	$sql = "UPDATE accomplishments SET OpenClusterExperienced = " . $newOpenClustersExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClustersExperienced == 0 && $newOpenClustersExperienced == 1) {
   		// TODO : Send mail
@@ -2163,7 +2171,7 @@ class Accomplishments {
   	$oldOpenClustersAdvanced = $this->getOpenClustersAdvanced($observerId);
   	$newOpenClustersAdvanced = $OpenClusters[7];
   	$sql = "UPDATE accomplishments SET OpenClusterAdvanced = " . $newOpenClustersAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClustersAdvanced == 0 && $newOpenClustersAdvanced == 1) {
   		// TODO : Send mail
@@ -2172,7 +2180,7 @@ class Accomplishments {
   	$oldOpenClustersSenior = $this->getOpenClustersSenior($observerId);
   	$newOpenClustersSenior = $OpenClusters[8];
   	$sql = "UPDATE accomplishments SET OpenClusterSenior = " . $newOpenClustersSenior . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClustersSenior == 0 && $newOpenClustersSenior == 1) {
   		// TODO : Send mail
@@ -2181,7 +2189,7 @@ class Accomplishments {
   	$oldOpenClustersExpert = $this->getOpenClustersExpert($observerId);
   	$newOpenClustersExpert = $OpenClusters[9];
   	$sql = "UPDATE accomplishments SET OpenClusterExpert = " . $newOpenClustersExpert . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClustersExpert == 0 && $newOpenClustersExpert == 1) {
   		// TODO : Send mail
@@ -2189,12 +2197,13 @@ class Accomplishments {
   }
   
   public function recalculateOpenClusterDrawings($observerId) {
+  	global $objDatabase;
   	// OpenClusterDrawings
   	$OpenClusterDrawings = $this->calculateOpenClusterDrawings($observerId);
   	$oldOpenClusterDrawingsNewbie = $this->getOpenClusterDrawingsNewbie($observerId);
   	$newOpenClusterDrawingsNewbie = $OpenClusterDrawings[0];
   	$sql = "UPDATE accomplishments SET OpenClusterDrawingsNewbie = " . $newOpenClusterDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClusterDrawingsNewbie == 0 && $newOpenClusterDrawingsNewbie == 1) {
   		// TODO : Send mail
@@ -2204,7 +2213,7 @@ class Accomplishments {
   	$oldOpenClusterDrawingsRookie = $this->getOpenClusterDrawingsRookie($observerId);
   	$newOpenClusterDrawingsRookie = $OpenClusterDrawings[1];
   	$sql = "UPDATE accomplishments SET OpenClusterDrawingsRookie = " . $newOpenClusterDrawingsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClusterDrawingsRookie == 0 && $newOpenClusterDrawingsRookie == 1) {
   		// TODO : Send mail
@@ -2213,7 +2222,7 @@ class Accomplishments {
   	$oldOpenClusterDrawingsBeginner = $this->getOpenClusterDrawingsBeginner($observerId);
   	$newOpenClusterDrawingsBeginner = $OpenClusterDrawings[2];
   	$sql = "UPDATE accomplishments SET OpenClusterDrawingsBeginner = " . $newOpenClusterDrawingsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClusterDrawingsBeginner == 0 && $newOpenClusterDrawingsBeginner == 1) {
   		// TODO : Send mail
@@ -2222,7 +2231,7 @@ class Accomplishments {
   	$oldOpenClusterDrawingsTalented = $this->getOpenClusterDrawingsTalented($observerId);
   	$newOpenClusterDrawingsTalented = $OpenClusterDrawings[3];
   	$sql = "UPDATE accomplishments SET OpenClusterDrawingsTalented = " . $newOpenClusterDrawingsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClusterDrawingsTalented == 0 && $newOpenClusterDrawingsTalented == 1) {
   		// TODO : Send mail
@@ -2231,7 +2240,7 @@ class Accomplishments {
   	$oldOpenClusterDrawingsSkilled = $this->getOpenClusterDrawingsSkilled($observerId);
   	$newOpenClusterDrawingsSkilled = $OpenClusterDrawings[4];
   	$sql = "UPDATE accomplishments SET OpenClusterDrawingsSkilled = " . $newOpenClusterDrawingsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClusterDrawingsSkilled == 0 && $newOpenClusterDrawingsSkilled == 1) {
   		// TODO : Send mail
@@ -2240,7 +2249,7 @@ class Accomplishments {
   	$oldOpenClusterDrawingsIntermediate = $this->getOpenClusterDrawingsIntermediate($observerId);
   	$newOpenClusterDrawingsIntermediate = $OpenClusterDrawings[5];
   	$sql = "UPDATE accomplishments SET OpenClusterDrawingsIntermediate = " . $newOpenClusterDrawingsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	 
   	if ($oldOpenClusterDrawingsIntermediate == 0 && $newOpenClusterDrawingsIntermediate == 1) {
   		// TODO : Send mail
@@ -2249,7 +2258,7 @@ class Accomplishments {
   	$oldOpenClusterDrawingsExperienced = $this->getOpenClusterDrawingsExperienced($observerId);
   	$newOpenClusterDrawingsExperienced = $OpenClusterDrawings[6];
   	$sql = "UPDATE accomplishments SET OpenClusterDrawingsExperienced = " . $newOpenClusterDrawingsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClusterDrawingsExperienced == 0 && $newOpenClusterDrawingsExperienced == 1) {
   		// TODO : Send mail
@@ -2258,7 +2267,7 @@ class Accomplishments {
   	$oldOpenClusterDrawingsAdvanced = $this->getOpenClusterDrawingsAdvanced($observerId);
   	$newOpenClusterDrawingsAdvanced = $OpenClusterDrawings[7];
   	$sql = "UPDATE accomplishments SET OpenClusterDrawingsAdvanced = " . $newOpenClusterDrawingsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClusterDrawingsAdvanced == 0 && $newOpenClusterDrawingsAdvanced == 1) {
   		// TODO : Send mail
@@ -2267,7 +2276,7 @@ class Accomplishments {
   	$oldOpenClusterDrawingsSenior = $this->getOpenClusterDrawingsSenior($observerId);
   	$newOpenClusterDrawingsSenior = $OpenClusterDrawings[8];
   	$sql = "UPDATE accomplishments SET OpenClusterDrawingsSenior = " . $newOpenClusterDrawingsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClusterDrawingsSenior == 0 && $newOpenClusterDrawingsSenior == 1) {
   		// TODO : Send mail
@@ -2276,7 +2285,7 @@ class Accomplishments {
   	$oldOpenClusterDrawingsExpert = $this->getOpenClusterDrawingsExpert($observerId);
   	$newOpenClusterDrawingsExpert = $OpenClusterDrawings[9];
   	$sql = "UPDATE accomplishments SET OpenClusterDrawingsExpert = " . $newOpenClusterDrawingsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClusterDrawingsExpert == 0 && $newOpenClusterDrawingsExpert == 1) {
   		// TODO : Send mail
@@ -2284,12 +2293,13 @@ class Accomplishments {
   }
 
   public function recalculateGlobularClusters($observerId) {
+  	global $objDatabase;
   	// GlobularClusters
   	$GlobularClusters = $this->calculateGlobularClusters($observerId);
   	$oldGlobularClustersNewbie = $this->getGlobularClustersNewbie($observerId);
   	$newGlobularClustersNewbie = $GlobularClusters[0];
   	$sql = "UPDATE accomplishments SET GlobularClusterNewbie = " . $newGlobularClustersNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClustersNewbie == 0 && $newGlobularClustersNewbie == 1) {
   		// TODO : Send mail
@@ -2299,7 +2309,7 @@ class Accomplishments {
   	$oldGlobularClustersRookie = $this->getGlobularClustersRookie($observerId);
   	$newGlobularClustersRookie = $GlobularClusters[1];
   	$sql = "UPDATE accomplishments SET GlobularClusterRookie = " . $newGlobularClustersRookie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClustersRookie == 0 && $newGlobularClustersRookie == 1) {
   		// TODO : Send mail
@@ -2308,7 +2318,7 @@ class Accomplishments {
   	$oldGlobularClustersBeginner = $this->getGlobularClustersBeginner($observerId);
   	$newGlobularClustersBeginner = $GlobularClusters[2];
   	$sql = "UPDATE accomplishments SET GlobularClusterBeginner = " . $newGlobularClustersBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClustersBeginner == 0 && $newGlobularClustersBeginner == 1) {
   		// TODO : Send mail
@@ -2317,7 +2327,7 @@ class Accomplishments {
   	$oldGlobularClustersTalented = $this->getGlobularClustersTalented($observerId);
   	$newGlobularClustersTalented = $GlobularClusters[3];
   	$sql = "UPDATE accomplishments SET GlobularClusterTalented = " . $newGlobularClustersTalented . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClustersTalented == 0 && $newGlobularClustersTalented == 1) {
   		// TODO : Send mail
@@ -2326,7 +2336,7 @@ class Accomplishments {
   	$oldGlobularClustersSkilled = $this->getGlobularClustersSkilled($observerId);
   	$newGlobularClustersSkilled = $GlobularClusters[4];
   	$sql = "UPDATE accomplishments SET GlobularClusterSkilled = " . $newGlobularClustersSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClustersSkilled == 0 && $newGlobularClustersSkilled == 1) {
   		// TODO : Send mail
@@ -2335,7 +2345,7 @@ class Accomplishments {
   	$oldGlobularClustersIntermediate = $this->getGlobularClustersIntermediate($observerId);
   	$newGlobularClustersIntermediate = $GlobularClusters[5];
   	$sql = "UPDATE accomplishments SET GlobularClusterIntermediate = " . $newGlobularClustersIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClustersIntermediate == 0 && $newGlobularClustersIntermediate == 1) {
   		// TODO : Send mail
@@ -2344,7 +2354,7 @@ class Accomplishments {
   	$oldGlobularClustersExperienced = $this->getGlobularClustersExperienced($observerId);
   	$newGlobularClustersExperienced = $GlobularClusters[6];
   	$sql = "UPDATE accomplishments SET GlobularClusterExperienced = " . $newGlobularClustersExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClustersExperienced == 0 && $newGlobularClustersExperienced == 1) {
   		// TODO : Send mail
@@ -2353,7 +2363,7 @@ class Accomplishments {
   	$oldGlobularClustersAdvanced = $this->getGlobularClustersAdvanced($observerId);
   	$newGlobularClustersAdvanced = $GlobularClusters[7];
   	$sql = "UPDATE accomplishments SET GlobularClusterAdvanced = " . $newGlobularClustersAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClustersAdvanced == 0 && $newGlobularClustersAdvanced == 1) {
   		// TODO : Send mail
@@ -2362,7 +2372,7 @@ class Accomplishments {
   	$oldGlobularClustersSenior = $this->getGlobularClustersSenior($observerId);
   	$newGlobularClustersSenior = $GlobularClusters[8];
   	$sql = "UPDATE accomplishments SET GlobularClusterSenior = " . $newGlobularClustersSenior . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClustersSenior == 0 && $newGlobularClustersSenior == 1) {
   		// TODO : Send mail
@@ -2371,7 +2381,7 @@ class Accomplishments {
   	$oldGlobularClustersExpert = $this->getGlobularClustersExpert($observerId);
   	$newGlobularClustersExpert = $GlobularClusters[9];
   	$sql = "UPDATE accomplishments SET GlobularClusterExpert = " . $newGlobularClustersExpert . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClustersExpert == 0 && $newGlobularClustersExpert == 1) {
   		// TODO : Send mail
@@ -2379,12 +2389,13 @@ class Accomplishments {
   }
   
   public function recalculateGlobularClusterDrawings($observerId) {
+  	global $objDatabase;
   	// GlobularClusterDrawings
   	$GlobularClusterDrawings = $this->calculateGlobularClusterDrawings($observerId);
   	$oldGlobularClusterDrawingsNewbie = $this->getGlobularClusterDrawingsNewbie($observerId);
   	$newGlobularClusterDrawingsNewbie = $GlobularClusterDrawings[0];
   	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsNewbie = " . $newGlobularClusterDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClusterDrawingsNewbie == 0 && $newGlobularClusterDrawingsNewbie == 1) {
   		// TODO : Send mail
@@ -2394,7 +2405,7 @@ class Accomplishments {
   	$oldGlobularClusterDrawingsRookie = $this->getGlobularClusterDrawingsRookie($observerId);
   	$newGlobularClusterDrawingsRookie = $GlobularClusterDrawings[1];
   	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsRookie = " . $newGlobularClusterDrawingsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClusterDrawingsRookie == 0 && $newGlobularClusterDrawingsRookie == 1) {
   		// TODO : Send mail
@@ -2403,7 +2414,7 @@ class Accomplishments {
   	$oldGlobularClusterDrawingsBeginner = $this->getGlobularClusterDrawingsBeginner($observerId);
   	$newGlobularClusterDrawingsBeginner = $GlobularClusterDrawings[2];
   	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsBeginner = " . $newGlobularClusterDrawingsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClusterDrawingsBeginner == 0 && $newGlobularClusterDrawingsBeginner == 1) {
   		// TODO : Send mail
@@ -2412,7 +2423,7 @@ class Accomplishments {
   	$oldGlobularClusterDrawingsTalented = $this->getGlobularClusterDrawingsTalented($observerId);
   	$newGlobularClusterDrawingsTalented = $GlobularClusterDrawings[3];
   	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsTalented = " . $newGlobularClusterDrawingsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClusterDrawingsTalented == 0 && $newGlobularClusterDrawingsTalented == 1) {
   		// TODO : Send mail
@@ -2421,7 +2432,7 @@ class Accomplishments {
   	$oldGlobularClusterDrawingsSkilled = $this->getGlobularClusterDrawingsSkilled($observerId);
   	$newGlobularClusterDrawingsSkilled = $GlobularClusterDrawings[4];
   	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsSkilled = " . $newGlobularClusterDrawingsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClusterDrawingsSkilled == 0 && $newGlobularClusterDrawingsSkilled == 1) {
   		// TODO : Send mail
@@ -2430,7 +2441,7 @@ class Accomplishments {
   	$oldGlobularClusterDrawingsIntermediate = $this->getGlobularClusterDrawingsIntermediate($observerId);
   	$newGlobularClusterDrawingsIntermediate = $GlobularClusterDrawings[5];
   	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsIntermediate = " . $newGlobularClusterDrawingsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClusterDrawingsIntermediate == 0 && $newGlobularClusterDrawingsIntermediate == 1) {
   		// TODO : Send mail
@@ -2439,7 +2450,7 @@ class Accomplishments {
   	$oldGlobularClusterDrawingsExperienced = $this->getGlobularClusterDrawingsExperienced($observerId);
   	$newGlobularClusterDrawingsExperienced = $GlobularClusterDrawings[6];
   	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsExperienced = " . $newGlobularClusterDrawingsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClusterDrawingsExperienced == 0 && $newGlobularClusterDrawingsExperienced == 1) {
   		// TODO : Send mail
@@ -2448,7 +2459,7 @@ class Accomplishments {
   	$oldGlobularClusterDrawingsAdvanced = $this->getGlobularClusterDrawingsAdvanced($observerId);
   	$newGlobularClusterDrawingsAdvanced = $GlobularClusterDrawings[7];
   	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsAdvanced = " . $newGlobularClusterDrawingsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClusterDrawingsAdvanced == 0 && $newGlobularClusterDrawingsAdvanced == 1) {
   		// TODO : Send mail
@@ -2457,7 +2468,7 @@ class Accomplishments {
   	$oldGlobularClusterDrawingsSenior = $this->getGlobularClusterDrawingsSenior($observerId);
   	$newGlobularClusterDrawingsSenior = $GlobularClusterDrawings[8];
   	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsSenior = " . $newGlobularClusterDrawingsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClusterDrawingsSenior == 0 && $newGlobularClusterDrawingsSenior == 1) {
   		// TODO : Send mail
@@ -2466,7 +2477,7 @@ class Accomplishments {
   	$oldGlobularClusterDrawingsExpert = $this->getGlobularClusterDrawingsExpert($observerId);
   	$newGlobularClusterDrawingsExpert = $GlobularClusterDrawings[9];
   	$sql = "UPDATE accomplishments SET GlobularClusterDrawingsExpert = " . $newGlobularClusterDrawingsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClusterDrawingsExpert == 0 && $newGlobularClusterDrawingsExpert == 1) {
   		// TODO : Send mail
@@ -2474,12 +2485,13 @@ class Accomplishments {
   }
 
   public function recalculatePlanetaryNebulae($observerId) {
+  	global $objDatabase;
   	// PlanetaryNebulae
   	$PlanetaryNebulae = $this->calculatePlanetaryNebulae($observerId);
   	$oldPlanetaryNebulaeNewbie = $this->getPlanetaryNebulaNewbie($observerId);
   	$newPlanetaryNebulaeNewbie = $PlanetaryNebulae[0];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaNewbie = " . $newPlanetaryNebulaeNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaeNewbie == 0 && $newPlanetaryNebulaeNewbie == 1) {
   		// TODO : Send mail
@@ -2489,7 +2501,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaeRookie = $this->getPlanetaryNebulaRookie($observerId);
   	$newPlanetaryNebulaeRookie = $PlanetaryNebulae[1];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaRookie = " . $newPlanetaryNebulaeRookie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaeRookie == 0 && $newPlanetaryNebulaeRookie == 1) {
   		// TODO : Send mail
@@ -2498,7 +2510,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaeBeginner = $this->getPlanetaryNebulaBeginner($observerId);
   	$newPlanetaryNebulaeBeginner = $PlanetaryNebulae[2];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaBeginner = " . $newPlanetaryNebulaeBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaeBeginner == 0 && $newPlanetaryNebulaeBeginner == 1) {
   		// TODO : Send mail
@@ -2507,7 +2519,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaeTalented = $this->getPlanetaryNebulaTalented($observerId);
   	$newPlanetaryNebulaeTalented = $PlanetaryNebulae[3];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaTalented = " . $newPlanetaryNebulaeTalented . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaeTalented == 0 && $newPlanetaryNebulaeTalented == 1) {
   		// TODO : Send mail
@@ -2516,7 +2528,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaeSkilled = $this->getPlanetaryNebulaSkilled($observerId);
   	$newPlanetaryNebulaeSkilled = $PlanetaryNebulae[4];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaSkilled = " . $newPlanetaryNebulaeSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaeSkilled == 0 && $newPlanetaryNebulaeSkilled == 1) {
   		// TODO : Send mail
@@ -2525,7 +2537,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaeIntermediate = $this->getPlanetaryNebulaIntermediate($observerId);
   	$newPlanetaryNebulaeIntermediate = $PlanetaryNebulae[5];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaIntermediate = " . $newPlanetaryNebulaeIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaeIntermediate == 0 && $newPlanetaryNebulaeIntermediate == 1) {
   		// TODO : Send mail
@@ -2534,7 +2546,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaeExperienced = $this->getPlanetaryNebulaExperienced($observerId);
   	$newPlanetaryNebulaeExperienced = $PlanetaryNebulae[6];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaExperienced = " . $newPlanetaryNebulaeExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaeExperienced == 0 && $newPlanetaryNebulaeExperienced == 1) {
   		// TODO : Send mail
@@ -2543,7 +2555,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaeAdvanced = $this->getPlanetaryNebulaAdvanced($observerId);
   	$newPlanetaryNebulaeAdvanced = $PlanetaryNebulae[7];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaAdvanced = " . $newPlanetaryNebulaeAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaeAdvanced == 0 && $newPlanetaryNebulaeAdvanced == 1) {
   		// TODO : Send mail
@@ -2552,7 +2564,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaeSenior = $this->getPlanetaryNebulaSenior($observerId);
   	$newPlanetaryNebulaeSenior = $PlanetaryNebulae[8];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaSenior = " . $newPlanetaryNebulaeSenior . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaeSenior == 0 && $newPlanetaryNebulaeSenior == 1) {
   		// TODO : Send mail
@@ -2561,7 +2573,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaeExpert = $this->getPlanetaryNebulaExpert($observerId);
   	$newPlanetaryNebulaeExpert = $PlanetaryNebulae[9];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaExpert = " . $newPlanetaryNebulaeExpert . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaeExpert == 0 && $newPlanetaryNebulaeExpert == 1) {
   		// TODO : Send mail
@@ -2569,12 +2581,13 @@ class Accomplishments {
   }
 
   public function recalculatePlanetaryNebulaDrawings($observerId) {
+  	global $objDatabase;
   	// PlanetaryNebulaDrawings
   	$PlanetaryNebulaDrawings = $this->calculatePlanetaryNebulaDrawings($observerId);
   	$oldPlanetaryNebulaDrawingsNewbie = $this->getPlanetaryNebulaDrawingsNewbie($observerId);
   	$newPlanetaryNebulaDrawingsNewbie = $PlanetaryNebulaDrawings[0];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsNewbie = " . $newPlanetaryNebulaDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaDrawingsNewbie == 0 && $newPlanetaryNebulaDrawingsNewbie == 1) {
   		// TODO : Send mail
@@ -2584,7 +2597,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaDrawingsRookie = $this->getPlanetaryNebulaDrawingsRookie($observerId);
   	$newPlanetaryNebulaDrawingsRookie = $PlanetaryNebulaDrawings[1];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsRookie = " . $newPlanetaryNebulaDrawingsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaDrawingsRookie == 0 && $newPlanetaryNebulaDrawingsRookie == 1) {
   		// TODO : Send mail
@@ -2593,7 +2606,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaDrawingsBeginner = $this->getPlanetaryNebulaDrawingsBeginner($observerId);
   	$newPlanetaryNebulaDrawingsBeginner = $PlanetaryNebulaDrawings[2];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsBeginner = " . $newPlanetaryNebulaDrawingsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaDrawingsBeginner == 0 && $newPlanetaryNebulaDrawingsBeginner == 1) {
   		// TODO : Send mail
@@ -2602,7 +2615,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaDrawingsTalented = $this->getPlanetaryNebulaDrawingsTalented($observerId);
   	$newPlanetaryNebulaDrawingsTalented = $PlanetaryNebulaDrawings[3];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsTalented = " . $newPlanetaryNebulaDrawingsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaDrawingsTalented == 0 && $newPlanetaryNebulaDrawingsTalented == 1) {
   		// TODO : Send mail
@@ -2611,7 +2624,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaDrawingsSkilled = $this->getPlanetaryNebulaDrawingsSkilled($observerId);
   	$newPlanetaryNebulaDrawingsSkilled = $PlanetaryNebulaDrawings[4];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsSkilled = " . $newPlanetaryNebulaDrawingsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaDrawingsSkilled == 0 && $newPlanetaryNebulaDrawingsSkilled == 1) {
   		// TODO : Send mail
@@ -2620,7 +2633,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaDrawingsIntermediate = $this->getPlanetaryNebulaDrawingsIntermediate($observerId);
   	$newPlanetaryNebulaDrawingsIntermediate = $PlanetaryNebulaDrawings[5];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsIntermediate = " . $newPlanetaryNebulaDrawingsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaDrawingsIntermediate == 0 && $newPlanetaryNebulaDrawingsIntermediate == 1) {
   		// TODO : Send mail
@@ -2629,7 +2642,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaDrawingsExperienced = $this->getPlanetaryNebulaDrawingsExperienced($observerId);
   	$newPlanetaryNebulaDrawingsExperienced = $PlanetaryNebulaDrawings[6];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsExperienced = " . $newPlanetaryNebulaDrawingsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaDrawingsExperienced == 0 && $newPlanetaryNebulaDrawingsExperienced == 1) {
   		// TODO : Send mail
@@ -2638,7 +2651,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaDrawingsAdvanced = $this->getPlanetaryNebulaDrawingsAdvanced($observerId);
   	$newPlanetaryNebulaDrawingsAdvanced = $PlanetaryNebulaDrawings[7];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsAdvanced = " . $newPlanetaryNebulaDrawingsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaDrawingsAdvanced == 0 && $newPlanetaryNebulaDrawingsAdvanced == 1) {
   		// TODO : Send mail
@@ -2647,7 +2660,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaDrawingsSenior = $this->getPlanetaryNebulaDrawingsSenior($observerId);
   	$newPlanetaryNebulaDrawingsSenior = $PlanetaryNebulaDrawings[8];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsSenior = " . $newPlanetaryNebulaDrawingsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaDrawingsSenior == 0 && $newPlanetaryNebulaDrawingsSenior == 1) {
   		// TODO : Send mail
@@ -2656,7 +2669,7 @@ class Accomplishments {
   	$oldPlanetaryNebulaDrawingsExpert = $this->getPlanetaryNebulaDrawingsExpert($observerId);
   	$newPlanetaryNebulaDrawingsExpert = $PlanetaryNebulaDrawings[9];
   	$sql = "UPDATE accomplishments SET PlanetaryNebulaDrawingsExpert = " . $newPlanetaryNebulaDrawingsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaDrawingsExpert == 0 && $newPlanetaryNebulaDrawingsExpert == 1) {
   		// TODO : Send mail
@@ -2664,12 +2677,13 @@ class Accomplishments {
   }
 
   public function recalculateGalaxies($observerId) {
+  	global $objDatabase;
   	// Galaxies
   	$Galaxies = $this->calculateGalaxies($observerId);
   	$oldGalaxiesNewbie = $this->getGalaxyNewbie($observerId);
   	$newGalaxiesNewbie = $Galaxies[0];
   	$sql = "UPDATE accomplishments SET GalaxyNewbie = " . $newGalaxiesNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxiesNewbie == 0 && $newGalaxiesNewbie == 1) {
   		// TODO : Send mail
@@ -2679,7 +2693,7 @@ class Accomplishments {
   	$oldGalaxiesRookie = $this->getGalaxyRookie($observerId);
   	$newGalaxiesRookie = $Galaxies[1];
   	$sql = "UPDATE accomplishments SET GalaxyRookie = " . $newGalaxiesRookie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxiesRookie == 0 && $newGalaxiesRookie == 1) {
   		// TODO : Send mail
@@ -2688,7 +2702,7 @@ class Accomplishments {
   	$oldGalaxiesBeginner = $this->getGalaxyBeginner($observerId);
   	$newGalaxiesBeginner = $Galaxies[2];
   	$sql = "UPDATE accomplishments SET GalaxyBeginner = " . $newGalaxiesBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxiesBeginner == 0 && $newGalaxiesBeginner == 1) {
   		// TODO : Send mail
@@ -2697,7 +2711,7 @@ class Accomplishments {
   	$oldGalaxiesTalented = $this->getGalaxyTalented($observerId);
   	$newGalaxiesTalented = $Galaxies[3];
   	$sql = "UPDATE accomplishments SET GalaxyTalented = " . $newGalaxiesTalented . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxiesTalented == 0 && $newGalaxiesTalented == 1) {
   		// TODO : Send mail
@@ -2706,7 +2720,7 @@ class Accomplishments {
   	$oldGalaxiesSkilled = $this->getGalaxySkilled($observerId);
   	$newGalaxiesSkilled = $Galaxies[4];
   	$sql = "UPDATE accomplishments SET GalaxySkilled = " . $newGalaxiesSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxiesSkilled == 0 && $newGalaxiesSkilled == 1) {
   		// TODO : Send mail
@@ -2715,7 +2729,7 @@ class Accomplishments {
   	$oldGalaxiesIntermediate = $this->getGalaxyIntermediate($observerId);
   	$newGalaxiesIntermediate = $Galaxies[5];
   	$sql = "UPDATE accomplishments SET GalaxyIntermediate = " . $newGalaxiesIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxiesIntermediate == 0 && $newGalaxiesIntermediate == 1) {
   		// TODO : Send mail
@@ -2724,7 +2738,7 @@ class Accomplishments {
   	$oldGalaxiesExperienced = $this->getGalaxyExperienced($observerId);
   	$newGalaxiesExperienced = $Galaxies[6];
   	$sql = "UPDATE accomplishments SET GalaxyExperienced = " . $newGalaxiesExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxiesExperienced == 0 && $newGalaxiesExperienced == 1) {
   		// TODO : Send mail
@@ -2733,7 +2747,7 @@ class Accomplishments {
   	$oldGalaxiesAdvanced = $this->getGalaxyAdvanced($observerId);
   	$newGalaxiesAdvanced = $Galaxies[7];
   	$sql = "UPDATE accomplishments SET GalaxyAdvanced = " . $newGalaxiesAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxiesAdvanced == 0 && $newGalaxiesAdvanced == 1) {
   		// TODO : Send mail
@@ -2742,7 +2756,7 @@ class Accomplishments {
   	$oldGalaxiesSenior = $this->getGalaxySenior($observerId);
   	$newGalaxiesSenior = $Galaxies[8];
   	$sql = "UPDATE accomplishments SET GalaxySenior = " . $newGalaxiesSenior . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxiesSenior == 0 && $newGalaxiesSenior == 1) {
   		// TODO : Send mail
@@ -2751,7 +2765,7 @@ class Accomplishments {
   	$oldGalaxiesExpert = $this->getGalaxyExpert($observerId);
   	$newGalaxiesExpert = $Galaxies[9];
   	$sql = "UPDATE accomplishments SET GalaxyExpert = " . $newGalaxiesExpert . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxiesExpert == 0 && $newGalaxiesExpert == 1) {
   		// TODO : Send mail
@@ -2759,12 +2773,13 @@ class Accomplishments {
   }
   
   public function recalculateGalaxyDrawings($observerId) {
+  	global $objDatabase;
   	// GalaxyDrawings
   	$GalaxyDrawings = $this->calculateGalaxyDrawings($observerId);
   	$oldGalaxyDrawingsNewbie = $this->getGalaxyDrawingsNewbie($observerId);
   	$newGalaxyDrawingsNewbie = $GalaxyDrawings[0];
   	$sql = "UPDATE accomplishments SET GalaxyDrawingsNewbie = " . $newGalaxyDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxyDrawingsNewbie == 0 && $newGalaxyDrawingsNewbie == 1) {
   		// TODO : Send mail
@@ -2774,7 +2789,7 @@ class Accomplishments {
   	$oldGalaxyDrawingsRookie = $this->getGalaxyDrawingsRookie($observerId);
   	$newGalaxyDrawingsRookie = $GalaxyDrawings[1];
   	$sql = "UPDATE accomplishments SET GalaxyDrawingsRookie = " . $newGalaxyDrawingsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxyDrawingsRookie == 0 && $newGalaxyDrawingsRookie == 1) {
   		// TODO : Send mail
@@ -2783,7 +2798,7 @@ class Accomplishments {
   	$oldGalaxyDrawingsBeginner = $this->getGalaxyDrawingsBeginner($observerId);
   	$newGalaxyDrawingsBeginner = $GalaxyDrawings[2];
   	$sql = "UPDATE accomplishments SET GalaxyDrawingsBeginner = " . $newGalaxyDrawingsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxyDrawingsBeginner == 0 && $newGalaxyDrawingsBeginner == 1) {
   		// TODO : Send mail
@@ -2792,7 +2807,7 @@ class Accomplishments {
   	$oldGalaxyDrawingsTalented = $this->getGalaxyDrawingsTalented($observerId);
   	$newGalaxyDrawingsTalented = $GalaxyDrawings[3];
   	$sql = "UPDATE accomplishments SET GalaxyDrawingsTalented = " . $newGalaxyDrawingsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxyDrawingsTalented == 0 && $newGalaxyDrawingsTalented == 1) {
   		// TODO : Send mail
@@ -2801,7 +2816,7 @@ class Accomplishments {
   	$oldGalaxyDrawingsSkilled = $this->getGalaxyDrawingsSkilled($observerId);
   	$newGalaxyDrawingsSkilled = $GalaxyDrawings[4];
   	$sql = "UPDATE accomplishments SET GalaxyDrawingsSkilled = " . $newGalaxyDrawingsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxyDrawingsSkilled == 0 && $newGalaxyDrawingsSkilled == 1) {
   		// TODO : Send mail
@@ -2810,7 +2825,7 @@ class Accomplishments {
   	$oldGalaxyDrawingsIntermediate = $this->getGalaxyDrawingsIntermediate($observerId);
   	$newGalaxyDrawingsIntermediate = $GalaxyDrawings[5];
   	$sql = "UPDATE accomplishments SET GalaxyDrawingsIntermediate = " . $newGalaxyDrawingsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxyDrawingsIntermediate == 0 && $newGalaxyDrawingsIntermediate == 1) {
   		// TODO : Send mail
@@ -2819,7 +2834,7 @@ class Accomplishments {
   	$oldGalaxyDrawingsExperienced = $this->getGalaxyDrawingsExperienced($observerId);
   	$newGalaxyDrawingsExperienced = $GalaxyDrawings[6];
   	$sql = "UPDATE accomplishments SET GalaxyDrawingsExperienced = " . $newGalaxyDrawingsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxyDrawingsExperienced == 0 && $newGalaxyDrawingsExperienced == 1) {
   		// TODO : Send mail
@@ -2828,7 +2843,7 @@ class Accomplishments {
   	$oldGalaxyDrawingsAdvanced = $this->getGalaxyDrawingsAdvanced($observerId);
   	$newGalaxyDrawingsAdvanced = $GalaxyDrawings[7];
   	$sql = "UPDATE accomplishments SET GalaxyDrawingsAdvanced = " . $newGalaxyDrawingsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxyDrawingsAdvanced == 0 && $newGalaxyDrawingsAdvanced == 1) {
   		// TODO : Send mail
@@ -2837,7 +2852,7 @@ class Accomplishments {
   	$oldGalaxyDrawingsSenior = $this->getGalaxyDrawingsSenior($observerId);
   	$newGalaxyDrawingsSenior = $GalaxyDrawings[8];
   	$sql = "UPDATE accomplishments SET GalaxyDrawingsSenior = " . $newGalaxyDrawingsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxyDrawingsSenior == 0 && $newGalaxyDrawingsSenior == 1) {
   		// TODO : Send mail
@@ -2846,7 +2861,7 @@ class Accomplishments {
   	$oldGalaxyDrawingsExpert = $this->getGalaxyDrawingsExpert($observerId);
   	$newGalaxyDrawingsExpert = $GalaxyDrawings[9];
   	$sql = "UPDATE accomplishments SET GalaxyDrawingsExpert = " . $newGalaxyDrawingsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxyDrawingsExpert == 0 && $newGalaxyDrawingsExpert == 1) {
   		// TODO : Send mail
@@ -2854,12 +2869,13 @@ class Accomplishments {
   }
 
   public function recalculateNebulae($observerId) {
+  	global $objDatabase;
   	// Nebula
   	$Nebula = $this->calculateNebulae($observerId);
   	$oldNebulaNewbie = $this->getNebulaNewbie($observerId);
   	$newNebulaNewbie = $Nebula[0];
   	$sql = "UPDATE accomplishments SET NebulaNewbie = " . $newNebulaNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaNewbie == 0 && $newNebulaNewbie == 1) {
   		// TODO : Send mail
@@ -2869,7 +2885,7 @@ class Accomplishments {
   	$oldNebulaRookie = $this->getNebulaRookie($observerId);
   	$newNebulaRookie = $Nebula[1];
   	$sql = "UPDATE accomplishments SET NebulaRookie = " . $newNebulaRookie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaRookie == 0 && $newNebulaRookie == 1) {
   		// TODO : Send mail
@@ -2878,7 +2894,7 @@ class Accomplishments {
   	$oldNebulaBeginner = $this->getNebulaBeginner($observerId);
   	$newNebulaBeginner = $Nebula[2];
   	$sql = "UPDATE accomplishments SET NebulaBeginner = " . $newNebulaBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaBeginner == 0 && $newNebulaBeginner == 1) {
   		// TODO : Send mail
@@ -2887,7 +2903,7 @@ class Accomplishments {
   	$oldNebulaTalented = $this->getNebulaTalented($observerId);
   	$newNebulaTalented = $Nebula[3];
   	$sql = "UPDATE accomplishments SET NebulaTalented = " . $newNebulaTalented . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaTalented == 0 && $newNebulaTalented == 1) {
   		// TODO : Send mail
@@ -2896,7 +2912,7 @@ class Accomplishments {
   	$oldNebulaSkilled = $this->getNebulaSkilled($observerId);
   	$newNebulaSkilled = $Nebula[4];
   	$sql = "UPDATE accomplishments SET NebulaSkilled = " . $newNebulaSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaSkilled == 0 && $newNebulaSkilled == 1) {
   		// TODO : Send mail
@@ -2905,7 +2921,7 @@ class Accomplishments {
   	$oldNebulaIntermediate = $this->getNebulaIntermediate($observerId);
   	$newNebulaIntermediate = $Nebula[5];
   	$sql = "UPDATE accomplishments SET NebulaIntermediate = " . $newNebulaIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaIntermediate == 0 && $newNebulaIntermediate == 1) {
   		// TODO : Send mail
@@ -2914,7 +2930,7 @@ class Accomplishments {
   	$oldNebulaExperienced = $this->getNebulaExperienced($observerId);
   	$newNebulaExperienced = $Nebula[6];
   	$sql = "UPDATE accomplishments SET NebulaExperienced = " . $newNebulaExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaExperienced == 0 && $newNebulaExperienced == 1) {
   		// TODO : Send mail
@@ -2923,7 +2939,7 @@ class Accomplishments {
   	$oldNebulaAdvanced = $this->getNebulaAdvanced($observerId);
   	$newNebulaAdvanced = $Nebula[7];
   	$sql = "UPDATE accomplishments SET NebulaAdvanced = " . $newNebulaAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaAdvanced == 0 && $newNebulaAdvanced == 1) {
   		// TODO : Send mail
@@ -2932,7 +2948,7 @@ class Accomplishments {
   	$oldNebulaSenior = $this->getNebulaSenior($observerId);
   	$newNebulaSenior = $Nebula[8];
   	$sql = "UPDATE accomplishments SET NebulaSenior = " . $newNebulaSenior . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaSenior == 0 && $newNebulaSenior == 1) {
   		// TODO : Send mail
@@ -2941,7 +2957,7 @@ class Accomplishments {
   	$oldNebulaExpert = $this->getNebulaExpert($observerId);
   	$newNebulaExpert = $Nebula[9];
   	$sql = "UPDATE accomplishments SET NebulaExpert = " . $newNebulaExpert . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaExpert == 0 && $newNebulaExpert == 1) {
   		// TODO : Send mail
@@ -2949,12 +2965,13 @@ class Accomplishments {
   }
   
   public function recalculateNebulaDrawings($observerId) {
+  	global $objDatabase;
   	// NebulaDrawings
   	$NebulaDrawings = $this->calculateNebulaDrawings($observerId);
   	$oldNebulaDrawingsNewbie = $this->getNebulaDrawingsNewbie($observerId);
   	$newNebulaDrawingsNewbie = $NebulaDrawings[0];
   	$sql = "UPDATE accomplishments SET NebulaDrawingsNewbie = " . $newNebulaDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaDrawingsNewbie == 0 && $newNebulaDrawingsNewbie == 1) {
   		// TODO : Send mail
@@ -2964,7 +2981,7 @@ class Accomplishments {
   	$oldNebulaDrawingsRookie = $this->getNebulaDrawingsRookie($observerId);
   	$newNebulaDrawingsRookie = $NebulaDrawings[1];
   	$sql = "UPDATE accomplishments SET NebulaDrawingsRookie = " . $newNebulaDrawingsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaDrawingsRookie == 0 && $newNebulaDrawingsRookie == 1) {
   		// TODO : Send mail
@@ -2973,7 +2990,7 @@ class Accomplishments {
   	$oldNebulaDrawingsBeginner = $this->getNebulaDrawingsBeginner($observerId);
   	$newNebulaDrawingsBeginner = $NebulaDrawings[2];
   	$sql = "UPDATE accomplishments SET NebulaDrawingsBeginner = " . $newNebulaDrawingsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaDrawingsBeginner == 0 && $newNebulaDrawingsBeginner == 1) {
   		// TODO : Send mail
@@ -2982,7 +2999,7 @@ class Accomplishments {
   	$oldNebulaDrawingsTalented = $this->getNebulaDrawingsTalented($observerId);
   	$newNebulaDrawingsTalented = $NebulaDrawings[3];
   	$sql = "UPDATE accomplishments SET NebulaDrawingsTalented = " . $newNebulaDrawingsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaDrawingsTalented == 0 && $newNebulaDrawingsTalented == 1) {
   		// TODO : Send mail
@@ -2991,7 +3008,7 @@ class Accomplishments {
   	$oldNebulaDrawingsSkilled = $this->getNebulaDrawingsSkilled($observerId);
   	$newNebulaDrawingsSkilled = $NebulaDrawings[4];
   	$sql = "UPDATE accomplishments SET NebulaDrawingsSkilled = " . $newNebulaDrawingsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaDrawingsSkilled == 0 && $newNebulaDrawingsSkilled == 1) {
   		// TODO : Send mail
@@ -3000,7 +3017,7 @@ class Accomplishments {
   	$oldNebulaDrawingsIntermediate = $this->getNebulaDrawingsIntermediate($observerId);
   	$newNebulaDrawingsIntermediate = $NebulaDrawings[5];
   	$sql = "UPDATE accomplishments SET NebulaDrawingsIntermediate = " . $newNebulaDrawingsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaDrawingsIntermediate == 0 && $newNebulaDrawingsIntermediate == 1) {
   		// TODO : Send mail
@@ -3009,7 +3026,7 @@ class Accomplishments {
   	$oldNebulaDrawingsExperienced = $this->getNebulaDrawingsExperienced($observerId);
   	$newNebulaDrawingsExperienced = $NebulaDrawings[6];
   	$sql = "UPDATE accomplishments SET NebulaDrawingsExperienced = " . $newNebulaDrawingsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaDrawingsExperienced == 0 && $newNebulaDrawingsExperienced == 1) {
   		// TODO : Send mail
@@ -3018,7 +3035,7 @@ class Accomplishments {
   	$oldNebulaDrawingsAdvanced = $this->getNebulaDrawingsAdvanced($observerId);
   	$newNebulaDrawingsAdvanced = $NebulaDrawings[7];
   	$sql = "UPDATE accomplishments SET NebulaDrawingsAdvanced = " . $newNebulaDrawingsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaDrawingsAdvanced == 0 && $newNebulaDrawingsAdvanced == 1) {
   		// TODO : Send mail
@@ -3027,7 +3044,7 @@ class Accomplishments {
   	$oldNebulaDrawingsSenior = $this->getNebulaDrawingsSenior($observerId);
   	$newNebulaDrawingsSenior = $NebulaDrawings[8];
   	$sql = "UPDATE accomplishments SET NebulaDrawingsSenior = " . $newNebulaDrawingsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaDrawingsSenior == 0 && $newNebulaDrawingsSenior == 1) {
   		// TODO : Send mail
@@ -3036,7 +3053,7 @@ class Accomplishments {
   	$oldNebulaDrawingsExpert = $this->getNebulaDrawingsExpert($observerId);
   	$newNebulaDrawingsExpert = $NebulaDrawings[9];
   	$sql = "UPDATE accomplishments SET NebulaDrawingsExpert = " . $newNebulaDrawingsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaDrawingsExpert == 0 && $newNebulaDrawingsExpert == 1) {
   		// TODO : Send mail
@@ -3044,12 +3061,13 @@ class Accomplishments {
   }
   
   public function recalculateObjects($observerId) {
+  	global $objDatabase;
   	// Different Objects
   	$Objects = $this->calculateDifferentObjects($observerId);
   	$oldObjectsNewbie = $this->getObjectsNewbie($observerId);
   	$newObjectsNewbie = $Objects[0];
   	$sql = "UPDATE accomplishments SET objectsNewbie = " . $newObjectsNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsNewbie == 0 && $newObjectsNewbie == 1) {
   		// TODO : Send mail
@@ -3059,7 +3077,7 @@ class Accomplishments {
   	$oldObjectsRookie = $this->getObjectsRookie($observerId);
   	$newObjectsRookie = $Objects[1];
   	$sql = "UPDATE accomplishments SET objectsRookie = " . $newObjectsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsRookie == 0 && $newObjectsRookie == 1) {
   		// TODO : Send mail
@@ -3068,7 +3086,7 @@ class Accomplishments {
   	$oldObjectsBeginner = $this->getObjectsBeginner($observerId);
   	$newObjectsBeginner = $Objects[2];
   	$sql = "UPDATE accomplishments SET objectsBeginner = " . $newObjectsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsBeginner == 0 && $newObjectsBeginner == 1) {
   		// TODO : Send mail
@@ -3077,7 +3095,7 @@ class Accomplishments {
   	$oldObjectsTalented = $this->getObjectsTalented($observerId);
   	$newObjectsTalented = $Objects[3];
   	$sql = "UPDATE accomplishments SET objectsTalented = " . $newObjectsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsTalented == 0 && $newObjectsTalented == 1) {
   		// TODO : Send mail
@@ -3086,7 +3104,7 @@ class Accomplishments {
   	$oldObjectsSkilled = $this->getObjectsSkilled($observerId);
   	$newObjectsSkilled = $Objects[4];
   	$sql = "UPDATE accomplishments SET objectsSkilled = " . $newObjectsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsSkilled == 0 && $newObjectsSkilled == 1) {
   		// TODO : Send mail
@@ -3095,7 +3113,7 @@ class Accomplishments {
   	$oldObjectsIntermediate = $this->getObjectsIntermediate($observerId);
   	$newObjectsIntermediate = $Objects[5];
   	$sql = "UPDATE accomplishments SET objectsIntermediate = " . $newObjectsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsIntermediate == 0 && $newObjectsIntermediate == 1) {
   		// TODO : Send mail
@@ -3104,7 +3122,7 @@ class Accomplishments {
   	$oldObjectsExperienced = $this->getObjectsExperienced($observerId);
   	$newObjectsExperienced = $Objects[6];
   	$sql = "UPDATE accomplishments SET objectsExperienced = " . $newObjectsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsExperienced == 0 && $newObjectsExperienced == 1) {
   		// TODO : Send mail
@@ -3113,7 +3131,7 @@ class Accomplishments {
   	$oldObjectsAdvanced = $this->getObjectsAdvanced($observerId);
   	$newObjectsAdvanced = $Objects[7];
   	$sql = "UPDATE accomplishments SET objectsAdvanced = " . $newObjectsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsAdvanced == 0 && $newObjectsAdvanced == 1) {
   		// TODO : Send mail
@@ -3122,7 +3140,7 @@ class Accomplishments {
   	$oldObjectsSenior = $this->getObjectsSenior($observerId);
   	$newObjectsSenior = $Objects[8];
   	$sql = "UPDATE accomplishments SET objectsSenior = " . $newObjectsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsSenior == 0 && $newObjectsSenior == 1) {
   		// TODO : Send mail
@@ -3131,7 +3149,7 @@ class Accomplishments {
   	$oldObjectsExpert = $this->getObjectsExpert($observerId);
   	$newObjectsExpert = $Objects[9];
   	$sql = "UPDATE accomplishments SET objectsExpert = " . $newObjectsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsExpert == 0 && $newObjectsExpert == 1) {
   		// TODO : Send mail
@@ -3139,12 +3157,13 @@ class Accomplishments {
   }
 
   public function recalculateObjectDrawings($observerId) {
+  	global $objDatabase;
   	// ObjectsDrawings
   	$ObjectsDrawings = $this->calculateDifferentObjectDrawings($observerId);
   	$oldObjectsDrawingsNewbie = $this->getObjectsDrawingsNewbie($observerId);
   	$newObjectsDrawingsNewbie = $ObjectsDrawings[0];
   	$sql = "UPDATE accomplishments SET ObjectsDrawingsNewbie = " . $newObjectsDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   	if ($oldObjectsDrawingsNewbie == 0 && $newObjectsDrawingsNewbie == 1) {
   		// TODO : Send mail
   		print "Congratulations! You made a drawing of 1 object and are now a drawing newbie!<tekening> Check out your accomplishments at http://www.deepskylog.org/index.php?indexAction=detail_observer3&user=\"" . $observerId . "\"" ;
@@ -3153,7 +3172,7 @@ class Accomplishments {
   	$oldObjectsDrawingsRookie = $this->getObjectsDrawingsRookie($observerId);
   	$newObjectsDrawingsRookie = $ObjectsDrawings[1];
   	$sql = "UPDATE accomplishments SET ObjectsDrawingsRookie = " . $newObjectsDrawingsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsDrawingsRookie == 0 && $newObjectsDrawingsRookie == 1) {
   		// TODO : Send mail
@@ -3162,7 +3181,7 @@ class Accomplishments {
   	$oldObjectsDrawingsBeginner = $this->getObjectsDrawingsBeginner($observerId);
   	$newObjectsDrawingsBeginner = $ObjectsDrawings[2];
   	$sql = "UPDATE accomplishments SET ObjectsDrawingsBeginner = " . $newObjectsDrawingsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsDrawingsBeginner == 0 && $newObjectsDrawingsBeginner == 1) {
   		// TODO : Send mail
@@ -3171,7 +3190,7 @@ class Accomplishments {
   	$oldObjectsDrawingsTalented = $this->getObjectsDrawingsTalented($observerId);
   	$newObjectsDrawingsTalented = $ObjectsDrawings[3];
   	$sql = "UPDATE accomplishments SET ObjectsDrawingsTalented = " . $newObjectsDrawingsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsDrawingsTalented == 0 && $newObjectsDrawingsTalented == 1) {
   		// TODO : Send mail
@@ -3180,7 +3199,7 @@ class Accomplishments {
   	$oldObjectsDrawingsSkilled = $this->getObjectsDrawingsSkilled($observerId);
   	$newObjectsDrawingsSkilled = $ObjectsDrawings[4];
   	$sql = "UPDATE accomplishments SET ObjectsDrawingsSkilled = " . $newObjectsDrawingsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsDrawingsSkilled == 0 && $newObjectsDrawingsSkilled == 1) {
   		// TODO : Send mail
@@ -3189,7 +3208,7 @@ class Accomplishments {
   	$oldObjectsDrawingsIntermediate = $this->getObjectsDrawingsIntermediate($observerId);
   	$newObjectsDrawingsIntermediate = $ObjectsDrawings[5];
   	$sql = "UPDATE accomplishments SET ObjectsDrawingsIntermediate = " . $newObjectsDrawingsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsDrawingsIntermediate == 0 && $newObjectsDrawingsIntermediate == 1) {
   		// TODO : Send mail
@@ -3198,7 +3217,7 @@ class Accomplishments {
   	$oldObjectsDrawingsExperienced = $this->getObjectsDrawingsExperienced($observerId);
   	$newObjectsDrawingsExperienced = $ObjectsDrawings[6];
   	$sql = "UPDATE accomplishments SET ObjectsDrawingsExperienced = " . $newObjectsDrawingsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsDrawingsExperienced == 0 && $newObjectsDrawingsExperienced == 1) {
   		// TODO : Send mail
@@ -3207,7 +3226,7 @@ class Accomplishments {
   	$oldObjectsDrawingsAdvanced = $this->getObjectsDrawingsAdvanced($observerId);
   	$newObjectsDrawingsAdvanced = $ObjectsDrawings[7];
   	$sql = "UPDATE accomplishments SET ObjectsDrawingsAdvanced = " . $newObjectsDrawingsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsDrawingsAdvanced == 0 && $newObjectsDrawingsAdvanced == 1) {
   		// TODO : Send mail
@@ -3216,7 +3235,7 @@ class Accomplishments {
   	$oldObjectsDrawingsSenior = $this->getObjectsDrawingsSenior($observerId);
   	$newObjectsDrawingsSenior = $ObjectsDrawings[8];
   	$sql = "UPDATE accomplishments SET objectsDrawingsSenior = " . $newObjectsDrawingsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsDrawingsSenior == 0 && $newObjectsDrawingsSenior == 1) {
   		// TODO : Send mail
@@ -3225,7 +3244,7 @@ class Accomplishments {
   	$oldObjectsDrawingsExpert = $this->getObjectsDrawingsExpert($observerId);
   	$newObjectsDrawingsExpert = $ObjectsDrawings[9];
   	$sql = "UPDATE accomplishments SET objectsDrawingsExpert = " . $newObjectsDrawingsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsDrawingsExpert == 0 && $newObjectsDrawingsExpert == 1) {
   		// TODO : Send mail
@@ -3233,12 +3252,13 @@ class Accomplishments {
   }
     
   public function recalculateCometObservations($observerId) {
+  	global $objDatabase;
   	// Comet Observations
   	$CometObservations = $this->calculateCometObservations($observerId);
   	$oldCometObservationsNewbie = $this->getCometObservationsNewbie($observerId);
   	$newCometObservationsNewbie = $CometObservations[0];
   	$sql = "UPDATE accomplishments SET CometObservationsNewbie = " . $newCometObservationsNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometObservationsNewbie == 0 && $newCometObservationsNewbie == 1) {
   		// TODO : Send mail
@@ -3248,7 +3268,7 @@ class Accomplishments {
   	$oldCometObservationsRookie = $this->getCometObservationsRookie($observerId);
   	$newCometObservationsRookie = $CometObservations[1];
   	$sql = "UPDATE accomplishments SET CometObservationsRookie = " . $newCometObservationsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometObservationsRookie == 0 && $newCometObservationsRookie == 1) {
   		// TODO : Send mail
@@ -3257,7 +3277,7 @@ class Accomplishments {
   	$oldCometObservationsBeginner = $this->getCometObservationsBeginner($observerId);
   	$newCometObservationsBeginner = $CometObservations[2];
   	$sql = "UPDATE accomplishments SET CometObservationsBeginner = " . $newCometObservationsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometObservationsBeginner == 0 && $newCometObservationsBeginner == 1) {
   		// TODO : Send mail
@@ -3266,7 +3286,7 @@ class Accomplishments {
   	$oldCometObservationsTalented = $this->getCometObservationsTalented($observerId);
   	$newCometObservationsTalented = $CometObservations[3];
   	$sql = "UPDATE accomplishments SET CometObservationsTalented = " . $newCometObservationsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometObservationsTalented == 0 && $newCometObservationsTalented == 1) {
   		// TODO : Send mail
@@ -3275,7 +3295,7 @@ class Accomplishments {
   	$oldCometObservationsSkilled = $this->getCometObservationsSkilled($observerId);
   	$newCometObservationsSkilled = $CometObservations[4];
   	$sql = "UPDATE accomplishments SET CometObservationsSkilled = " . $newCometObservationsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometObservationsSkilled == 0 && $newCometObservationsSkilled == 1) {
   		// TODO : Send mail
@@ -3284,7 +3304,7 @@ class Accomplishments {
   	$oldCometObservationsIntermediate = $this->getCometObservationsIntermediate($observerId);
   	$newCometObservationsIntermediate = $CometObservations[5];
   	$sql = "UPDATE accomplishments SET CometObservationsIntermediate = " . $newCometObservationsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometObservationsIntermediate == 0 && $newCometObservationsIntermediate == 1) {
   		// TODO : Send mail
@@ -3293,7 +3313,7 @@ class Accomplishments {
   	$oldCometObservationsExperienced = $this->getCometObservationsExperienced($observerId);
   	$newCometObservationsExperienced = $CometObservations[6];
   	$sql = "UPDATE accomplishments SET CometObservationsExperienced = " . $newCometObservationsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometObservationsExperienced == 0 && $newCometObservationsExperienced == 1) {
   		// TODO : Send mail
@@ -3302,7 +3322,7 @@ class Accomplishments {
   	$oldCometObservationsAdvanced = $this->getCometObservationsAdvanced($observerId);
   	$newCometObservationsAdvanced = $CometObservations[7];
   	$sql = "UPDATE accomplishments SET CometObservationsAdvanced = " . $newCometObservationsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometObservationsAdvanced == 0 && $newCometObservationsAdvanced == 1) {
   		// TODO : Send mail
@@ -3311,7 +3331,7 @@ class Accomplishments {
   	$oldCometObservationsSenior = $this->getCometObservationsSenior($observerId);
   	$newCometObservationsSenior = $CometObservations[8];
   	$sql = "UPDATE accomplishments SET CometObservationsSenior = " . $newCometObservationsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometObservationsSenior == 0 && $newCometObservationsSenior == 1) {
   		// TODO : Send mail
@@ -3320,7 +3340,7 @@ class Accomplishments {
   	$oldCometObservationsExpert = $this->getCometObservationsExpert($observerId);
   	$newCometObservationsExpert = $CometObservations[9];
   	$sql = "UPDATE accomplishments SET CometObservationsExpert = " . $newCometObservationsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometObservationsExpert == 0 && $newCometObservationsExpert == 1) {
   		// TODO : Send mail
@@ -3328,12 +3348,13 @@ class Accomplishments {
   }
 
   public function recalculateCometsObserved($observerId) {
+  	global $objDatabase;
   	// Comet Observations
   	$CometsObserved = $this->calculateCometsObserved($observerId);
   	$oldCometsObservedNewbie = $this->getCometsObservedNewbie($observerId);
   	$newCometsObservedNewbie = $CometsObserved[0];
   	$sql = "UPDATE accomplishments SET CometsObservedNewbie = " . $newCometsObservedNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometsObservedNewbie == 0 && $newCometsObservedNewbie == 1) {
   		// TODO : Send mail
@@ -3343,7 +3364,7 @@ class Accomplishments {
   	$oldCometsObservedRookie = $this->getCometsObservedRookie($observerId);
   	$newCometsObservedRookie = $CometsObserved[1];
   	$sql = "UPDATE accomplishments SET CometsObservedRookie = " . $newCometsObservedRookie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometsObservedRookie == 0 && $newCometsObservedRookie == 1) {
   		// TODO : Send mail
@@ -3352,7 +3373,7 @@ class Accomplishments {
   	$oldCometsObservedBeginner = $this->getCometsObservedBeginner($observerId);
   	$newCometsObservedBeginner = $CometsObserved[2];
   	$sql = "UPDATE accomplishments SET CometsObservedBeginner = " . $newCometsObservedBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometsObservedBeginner == 0 && $newCometsObservedBeginner == 1) {
   		// TODO : Send mail
@@ -3361,7 +3382,7 @@ class Accomplishments {
   	$oldCometsObservedTalented = $this->getCometsObservedTalented($observerId);
   	$newCometsObservedTalented = $CometsObserved[3];
   	$sql = "UPDATE accomplishments SET CometsObservedTalented = " . $newCometsObservedTalented . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometsObservedTalented == 0 && $newCometsObservedTalented == 1) {
   		// TODO : Send mail
@@ -3370,7 +3391,7 @@ class Accomplishments {
   	$oldCometsObservedSkilled = $this->getCometsObservedSkilled($observerId);
   	$newCometsObservedSkilled = $CometsObserved[4];
   	$sql = "UPDATE accomplishments SET CometsObservedSkilled = " . $newCometsObservedSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometsObservedSkilled == 0 && $newCometsObservedSkilled == 1) {
   		// TODO : Send mail
@@ -3379,7 +3400,7 @@ class Accomplishments {
   	$oldCometsObservedIntermediate = $this->getCometsObservedIntermediate($observerId);
   	$newCometsObservedIntermediate = $CometsObserved[5];
   	$sql = "UPDATE accomplishments SET CometsObservedIntermediate = " . $newCometsObservedIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometsObservedIntermediate == 0 && $newCometsObservedIntermediate == 1) {
   		// TODO : Send mail
@@ -3388,7 +3409,7 @@ class Accomplishments {
   	$oldCometsObservedExperienced = $this->getCometsObservedExperienced($observerId);
   	$newCometsObservedExperienced = $CometsObserved[6];
   	$sql = "UPDATE accomplishments SET CometsObservedExperienced = " . $newCometsObservedExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometsObservedExperienced == 0 && $newCometsObservedExperienced == 1) {
   		// TODO : Send mail
@@ -3397,7 +3418,7 @@ class Accomplishments {
   	$oldCometsObservedAdvanced = $this->getCometsObservedAdvanced($observerId);
   	$newCometsObservedAdvanced = $CometsObserved[7];
   	$sql = "UPDATE accomplishments SET CometsObservedAdvanced = " . $newCometsObservedAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometsObservedAdvanced == 0 && $newCometsObservedAdvanced == 1) {
   		// TODO : Send mail
@@ -3406,7 +3427,7 @@ class Accomplishments {
   	$oldCometsObservedSenior = $this->getCometsObservedSenior($observerId);
   	$newCometsObservedSenior = $CometsObserved[8];
   	$sql = "UPDATE accomplishments SET CometsObservedSenior = " . $newCometsObservedSenior . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometsObservedSenior == 0 && $newCometsObservedSenior == 1) {
   		// TODO : Send mail
@@ -3415,7 +3436,7 @@ class Accomplishments {
   	$oldCometsObservedExpert = $this->getCometsObservedExpert($observerId);
   	$newCometsObservedExpert = $CometsObserved[9];
   	$sql = "UPDATE accomplishments SET CometsObservedExpert = " . $newCometsObservedExpert . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometsObservedExpert == 0 && $newCometsObservedExpert == 1) {
   		// TODO : Send mail
@@ -3423,12 +3444,13 @@ class Accomplishments {
   }
   
   public function recalculateCometDrawings($observerId) {
+  	global $objDatabase;
   	// Comet Observations
   	$CometDrawings = $this->calculateCometDrawings($observerId);
   	$oldCometDrawingsNewbie = $this->getCometDrawingsNewbie($observerId);
   	$newCometDrawingsNewbie = $CometDrawings[0];
   	$sql = "UPDATE accomplishments SET CometDrawingsNewbie = " . $newCometDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometDrawingsNewbie == 0 && $newCometDrawingsNewbie == 1) {
   		// TODO : Send mail
@@ -3438,7 +3460,7 @@ class Accomplishments {
   	$oldCometDrawingsRookie = $this->getCometDrawingsRookie($observerId);
   	$newCometDrawingsRookie = $CometDrawings[1];
   	$sql = "UPDATE accomplishments SET CometDrawingsRookie = " . $newCometDrawingsRookie . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometDrawingsRookie == 0 && $newCometDrawingsRookie == 1) {
   		// TODO : Send mail
@@ -3447,7 +3469,7 @@ class Accomplishments {
   	$oldCometDrawingsBeginner = $this->getCometDrawingsBeginner($observerId);
   	$newCometDrawingsBeginner = $CometDrawings[2];
   	$sql = "UPDATE accomplishments SET CometDrawingsBeginner = " . $newCometDrawingsBeginner . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometDrawingsBeginner == 0 && $newCometDrawingsBeginner == 1) {
   		// TODO : Send mail
@@ -3456,7 +3478,7 @@ class Accomplishments {
   	$oldCometDrawingsTalented = $this->getCometDrawingsTalented($observerId);
   	$newCometDrawingsTalented = $CometDrawings[3];
   	$sql = "UPDATE accomplishments SET CometDrawingsTalented = " . $newCometDrawingsTalented . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometDrawingsTalented == 0 && $newCometDrawingsTalented == 1) {
   		// TODO : Send mail
@@ -3465,7 +3487,7 @@ class Accomplishments {
   	$oldCometDrawingsSkilled = $this->getCometDrawingsSkilled($observerId);
   	$newCometDrawingsSkilled = $CometDrawings[4];
   	$sql = "UPDATE accomplishments SET CometDrawingsSkilled = " . $newCometDrawingsSkilled . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometDrawingsSkilled == 0 && $newCometDrawingsSkilled == 1) {
   		// TODO : Send mail
@@ -3474,7 +3496,7 @@ class Accomplishments {
   	$oldCometDrawingsIntermediate = $this->getCometDrawingsIntermediate($observerId);
   	$newCometDrawingsIntermediate = $CometDrawings[5];
   	$sql = "UPDATE accomplishments SET CometDrawingsIntermediate = " . $newCometDrawingsIntermediate . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometDrawingsIntermediate == 0 && $newCometDrawingsIntermediate == 1) {
   		// TODO : Send mail
@@ -3483,7 +3505,7 @@ class Accomplishments {
   	$oldCometDrawingsExperienced = $this->getCometDrawingsExperienced($observerId);
   	$newCometDrawingsExperienced = $CometDrawings[6];
   	$sql = "UPDATE accomplishments SET CometDrawingsExperienced = " . $newCometDrawingsExperienced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometDrawingsExperienced == 0 && $newCometDrawingsExperienced == 1) {
   		// TODO : Send mail
@@ -3492,7 +3514,7 @@ class Accomplishments {
   	$oldCometDrawingsAdvanced = $this->getCometDrawingsAdvanced($observerId);
   	$newCometDrawingsAdvanced = $CometDrawings[7];
   	$sql = "UPDATE accomplishments SET CometDrawingsAdvanced = " . $newCometDrawingsAdvanced . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometDrawingsAdvanced == 0 && $newCometDrawingsAdvanced == 1) {
   		// TODO : Send mail
@@ -3501,7 +3523,7 @@ class Accomplishments {
   	$oldCometDrawingsSenior = $this->getCometDrawingsSenior($observerId);
   	$newCometDrawingsSenior = $CometDrawings[8];
   	$sql = "UPDATE accomplishments SET CometDrawingsSenior = " . $newCometDrawingsSenior . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometDrawingsSenior == 0 && $newCometDrawingsSenior == 1) {
   		// TODO : Send mail
@@ -3510,7 +3532,7 @@ class Accomplishments {
   	$oldCometDrawingsExpert = $this->getCometDrawingsExpert($observerId);
   	$newCometDrawingsExpert = $CometDrawings[9];
   	$sql = "UPDATE accomplishments SET CometDrawingsExpert = " . $newCometDrawingsExpert . " WHERE observer = \"". $observerId ."\";";
-  	$run = mysql_query($sql) or die(mysql_error());
+  	$objDatabase->execSQL($sql);
   
   	if ($oldCometDrawingsExpert == 0 && $newCometDrawingsExpert == 1) {
   		// TODO : Send mail

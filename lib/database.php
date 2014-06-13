@@ -9,79 +9,109 @@ class Database
 { private $databaseId;
   private function mysql_query_encaps($sql)
   { global $loggedUser, $developversion;
-    if($developversion)
-      mysql_query("INSERT INTO logging(loginid, logdate, logtime, logurl, navigator, screenresolution, language, sqlstatement) 
+   	try {
+      if($developversion) {
+    		$run = $this->databaseId->query("INSERT INTO logging(loginid, logdate, logtime, logurl, navigator, screenresolution, language, sqlstatement) 
                        VALUES(\"".($loggedUser?$loggedUser:"anonymous")."\", ".
                                 date('Ymd').", ".date('His').", '', '', '', '', '".$sql."');");
-    $run = mysql_query($sql) or die(mysql_error());
+      }
+      $run = $this->databaseId->query($sql);
+    } catch(PDOException $ex) {
+    	$entryMessage = "A database error occured!"; //user friendly message
+    }
+    
     return $run;
   }
   public function execSQL($sql)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
-		$run = $this->mysql_query_encaps($sql) or die(mysql_error());
+		$run = $this->mysql_query_encaps($sql);
   }
 	public function selectKeyValueArray($sql,$key,$value)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
-	  $run = $this->mysql_query_encaps($sql) or die(mysql_error());
-    while($get = mysql_fetch_object($run))
+	  $run = $this->mysql_query_encaps($sql);
+    while($get = $run->fetch(PDO::FETCH_OBJ))
 		  $result[$get->$key]=$get->$value;
 		if(isset($result)) return $result;
 		else               return array();
   }
 	public function selectRecordset($sql)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
-	  $run = $this->mysql_query_encaps($sql) or die(mysql_error());
+	  $run = $this->mysql_query_encaps($sql);
 		return $run;
   }
 	public function selectRecordArray($sql)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
 	  $result=array();
-		$run = $this->mysql_query_encaps($sql) or die(mysql_error());
-		if($get = mysql_fetch_object($run))
+		$run = $this->mysql_query_encaps($sql);
+		if($get = $run->fetch(PDO::FETCH_OBJ))
 		  while(list($key,$value)=each($get))
 			  $result[$key]=$value;
 		return $result;
   }
 	public function selectRecordsetArray($sql)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
-	  $result=array();
-		$run = $this->mysql_query_encaps($sql) or die(mysql_error());
 
-		while($get=mysql_fetch_object($run))
-		{ $resultparts=array();
-		  while(list($key,$value)=each($get))
-			  $resultparts[$key]=$value;
-		  $result[]=$resultparts;
-		}
-		return $result;
+	  try {
+		  $run = $this->databaseId->query($sql);
+	  } catch(PDOException $ex) {
+		  $entryMessage = "A database error occured!"; //user friendly message
+	  }
+
+  	$result=array();
+    while($get=$run->fetch(PDO::FETCH_OBJ))
+    { $resultparts=array();
+      while(list($key,$value)=each($get))
+  		$resultparts[$key]=$value;
+  		$result[]=$resultparts;
+    }
+  	  
+	  return $result;
   }
   public function selectSingleArray($sql,$name)
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
-	  $run = $this->mysql_query_encaps($sql) or die(mysql_error());
+		  try {
+		  $run = $this->databaseId->query($sql);
+	  } catch(PDOException $ex) {
+		  $entryMessage = "A database error occured!"; //user friendly message
+	  }
+
     $result=array();
-		while($get = mysql_fetch_object($run))
+		while($get = $run->fetch(PDO::FETCH_OBJ))
 		  $result[]=$get->$name;
 		return $result;
   }
+  public function result($sql)
+  {
+  	return $this->databaseId->query($sql)->fetchColumn();
+  }
+  public function insert_id()
+  {
+  	return $this->databaseId->lastInsertId();
+  }
   public function selectSingleValue($sql,$name,$nullvalue='')
 	{ if(!$this->databaseId) {echo "Database connection lost..."; $this->newLogin();}
-	  $run = mysql_query($sql) or die(mysql_error());
-    $get = mysql_fetch_object($run);
-		if($get) 
-		  if ($get->$name!='')
-		    return $get->$name;
-		  else 
-		    return $nullvalue;
-		else     
-		  return $nullvalue;
+    try {
+      $run = $this->databaseId->query($sql);
+    } catch(PDOException $ex) {
+      $entryMessage = "A database error occured!"; //user friendly message
+    }
+
+    $get = $run->fetch(PDO::FETCH_ASSOC);
+    if($get)
+      if ($get[$name]!='') {
+        return $get[$name];
+      }
+      else
+        return $nullvalue;
+      else
+        return $nullvalue;
   }
   function __construct()
 	{ global $dbname,$host,$user,$pass;
-		if(!$this->databaseId)
-    { $this->databaseId = mysql_pconnect($host, $user, $pass);
-      mysql_select_db($dbname, $this->databaseId) or die("Cannot connect to database!");
+    if(!$this->databaseId)
+    { $this->databaseId = new PDO('mysql:host='.$host.';dbname='.$dbname.';charset=utf8', $user, $pass);
     }
-		return $this->databaseId;
+    return $this->databaseId;
 	}
 }
 ?>

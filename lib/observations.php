@@ -346,7 +346,7 @@ class Observations {
 	public  function getDsObservationLocalDate($id)                                                                                                                     // returns the date of the given observation in local time
 	{ global $objDatabase, $objLocation;
 		$run = $objDatabase->selectRecordset("SELECT date,time,locationid FROM observations WHERE id=\"".$id."\"");
-		if($get=mysql_fetch_object($run)) 
+		if($get=$run->fetch(PDO::FETCH_OBJ))
 		{ $date=$get->date;
 			$time=$get->time;
 			$loc=$get->locationid;
@@ -394,7 +394,7 @@ class Observations {
 	}
 	public  function getDsObservationLocalTime($id)                                                                                                 // returns the time of the given observation in local time
 	{ global $objDatabase, $objLocation;
-	  if ($get = mysql_fetch_object($objDatabase->selectrecordset("SELECT date, time, locationid FROM observations WHERE id=\"$id\""))) {
+	  if ($get = $objDatabase->selectrecordset("SELECT date, time, locationid FROM observations WHERE id=\"$id\"")->fetch(PDO::FETCH_OBJ)) {
 			$date = $get->date;
 			$time = $get->time;
 			$loc = $get->locationid;
@@ -713,11 +713,11 @@ class Observations {
 			$sql .= " ORDER BY observationid DESC";
 		$sql = $sql . ";";
  //echo $sql.'<p>'; //=========================================================== HANDY DEBUG LINE
-		$run = mysql_query($sql) or die(mysql_error());
+		$run = $objDatabase->selectRecordset($sql);
 		if (!array_key_exists('countquery', $queries)) 
 		{ $j = 0;
 			$result = array ();
-			while ($get = mysql_fetch_object($run)) {
+			while ($get = $run->fetch(PDO::FETCH_OBJ)) {
 				$seentype = "X";
 				if (array_key_exists('deepskylog_id', $_SESSION) && ($seenpar != "A"))
 					if ($objDatabase->SelectSingleValue("SELECT observations.id FROM observations WHERE objectname = \"" . $get->objectname . "\" AND observerid = \"".$loggedUser."\"", 'id')) // object has been seen by the observer logged in
@@ -731,7 +731,7 @@ class Observations {
 			return $result;
 		} 
 		else 
-		{ $get = mysql_fetch_object($run);
+		{ $get = $run->fetch(PDO::FETCH_OBJ);
 			return $get->ObsCnt;
 		}
 	}
@@ -840,7 +840,7 @@ class Observations {
 	{ global $objDatabase;
 		$run = $objDatabase->selectRecordset("SELECT observations.objectname, COUNT(observations.id) As ObservationCount FROM observations GROUP BY observations.objectname ORDER BY ObservationCount DESC");
 		$i=1;
-		while($get=mysql_fetch_object($run))
+		while($run->fetch(PDO::FETCH_OBJ))
 			$numberOfObservations[$get->objectname]=array($i++,$get->objectname);
 		return $numberOfObservations;
 	}

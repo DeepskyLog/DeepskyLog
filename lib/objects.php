@@ -104,7 +104,7 @@ class Objects
     }
 		$run=$objDatabase->selectRecordset("SELECT altname FROM objectnames WHERE objectnames.objectname = \"".$name."\"");
     $object["altname"]="";
-	  while($get=mysql_fetch_object($run))
+	  while($get=$run->fetch(PDO::FETCH_OBJ))
       if($get->altname!=$name)
 	 	    if($object["altname"])
 		      $object["altname"].="/".$get->altname;
@@ -209,12 +209,12 @@ class Objects
   { global $objDatabase;
   	if($objectname)
   	{ $run=$objDatabase->selectRecordset("SELECT objects.ra, objects.decl FROM objects WHERE name = \"$objectname\"");
-      $get = mysql_fetch_object($run);
+      $get = $run->fetch(PDO::FETCH_OBJ);
 	    $ra = $get->ra; $decl = $get->decl;
   	}
 	  $dra = 0.0011 * $dist / cos($decl/180*3.1415926535);
     $run = $objDatabase->selectRecordset("SELECT objects.name FROM objects WHERE ((objects.ra > $ra - $dra) AND (objects.ra < $ra + $dra) AND (objects.decl > $decl - ($dist/60)) AND (objects.decl < $decl + ($dist/60))) ORDER BY objects.name");
-	  for($result=array(),$i=0;($get=mysql_fetch_object($run));$i++)
+	  for($result=array(),$i=0;($get=$run->fetch(PDO::FETCH_OBJ));$i++)
       $result[$get->name] = array($i, $get->name);
 	  return $result;
   } 
@@ -335,7 +335,7 @@ class Objects
     $run=$objDatabase->selectRecordset($sql);
     $i=0;
     if (array_key_exists('name',$queries)&&$queries["name"])
-	  { while($get = mysql_fetch_object($run))
+	  { while($get = $run->fetch(PDO::FETCH_OBJ))
         if($get->showname==$get->name)
         { if(!array_key_exists($get->showname, $obs))
    	        $obs[$get->showname] = array($i++,$get->name);		
@@ -345,7 +345,7 @@ class Objects
    	        $obs[$get->showname." (".$get->name.")"] = array($i++,$get->name);
     }
  	  else
-      while($get = mysql_fetch_object($run))
+      while($get = $run->fetch(PDO::FETCH_OBJ))
         if(!array_key_exists($get->name, $obs))
    	      $obs[$get->name] = array($i++,$get->name);				
     if(round(count($obs)*0.005)>30)
@@ -388,7 +388,7 @@ class Objects
 	           "FROM objectnames WHERE objectnames.catalog = \"$cat\"";
     $run=$objDatabase->selectRecordset($sql);
     $obs=array();
-	  while($get = mysql_fetch_object($run))
+	  while($get = $run->fetch(PDO::FETCH_OBJ))
 	    if($get->objectname)
         $obs[$get->catindex] = array($get->objectname, $get->altname);
 	  uksort($obs,"strnatcasecmp");
@@ -593,9 +593,11 @@ class Objects
     if($ObsCnt=$objDatabase->selectSingleValue("SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"".$object."\" AND visibility != 7 ",'ObsCnt'))
     { $seen='X('.$ObsCnt.')';
       if($loggedUser)
-      { $get3=mysql_fetch_object($objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7"));
+      { $run3 = $objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7");
+      	$get3=$run3->fetch(PDO::FETCH_OBJ);
   		  if($get3->PersObsCnt>0)
-  		  { if(mysql_fetch_object($objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7 AND hasDrawing=1"))->PersObsCnt>0)
+  		  { $run4 = $objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7 AND hasDrawing=1");
+  		  	if($run4->fetch(PDO::FETCH_OBJ)->PersObsCnt>0)
             $seen='YD('.$ObsCnt.'/'.$get3->PersObsCnt.')&nbsp;'.$get3->PersObsMaxDate;
   		    else
             $seen='Y('.$ObsCnt.'/'.$get3->PersObsCnt.')&nbsp;'.$get3->PersObsMaxDate;
@@ -627,9 +629,11 @@ class Objects
     { $seen = 'X'.($DrwCnt?'S':'Z').'('.$ObsCnt.'/'.$DrwCnt.')';
       $seenlink = "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectXSeen."\" >".'X'.($DrwCnt?'S':'Z').'('.$ObsCnt.'/'.$DrwCnt.')'."</a>";
       if($loggedUser)
-      { $get3=mysql_fetch_object($objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7"));
+      { $run3=$objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7");
+      	$get3=$run3->fetch(PDO::FETCH_OBJ);
   		  if($get3->PersObsCnt>0)
-        { if(mysql_fetch_object($objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7 AND hasDrawing=1"))->PersObsCnt>0)
+        { $run4 = $objDatabase->selectRecordset("SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"".$object."\" AND observerid = \"".$loggedUser."\" AND visibility != 7 AND hasDrawing=1");
+        	if($run4->fetch(PDO::FETCH_OBJ)->PersObsCnt>0)
           { $seen='YD('.$ObsCnt.'/'.$get3->PersObsCnt.')';
             $seenlink="<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;object=".urlencode($object)."\" title=\"".LangObjectYDSeen."\" >".'YD('.$ObsCnt.'/'.$get3->PersObsCnt.')'."</a>";
           }
@@ -667,7 +671,7 @@ class Objects
            ( strlen($seen)==2?strpos(" ".$objectseen,substr($seen,0,1))||strpos(" ".$objectseen,substr($seen,1,1)):
             (strpos(" ".$objectseen,substr($seen,0,1)))||(strpos(" ".$objectseen,substr($seen,1,1)))||(strpos(" ".$objectseen,substr($seen,2,1))))))
 		    { $result2[$j]['objectname'] = $object;
-          $get = mysql_fetch_object($objDatabase->selectRecordset("SELECT * FROM objects WHERE name = \"".$object. "\""));
+          $get = $objDatabase->selectRecordset("SELECT * FROM objects WHERE name = \"".$object. "\"")->fetch(PDO::FETCH_OBJ);
           $result2[$j]['objecttype'] = $get->type;
           $result2[$j]['objecttypefull'] = $GLOBALS[$get->type];
           $altnames=$this->getAlternativeNames($object); 
@@ -856,9 +860,10 @@ class Objects
 	  return $obs;
   }
   private function getSize($name)                                               // getSize returns the size of the object
-  { $sql = "SELECT diam1, diam2 FROM objects WHERE name = \"$name\"";
-    $run = mysql_query($sql) or die(mysql_error());
-    $get = mysql_fetch_object($run);
+  { global $objDatabase;
+  	$sql = "SELECT diam1, diam2 FROM objects WHERE name = \"$name\"";
+    $run = $objDatabase->selectRecordset($sql);
+    $get = $run->fetch(PDO::FETCH_OBJ);
     return $this->calculateSize($get->diam1, $get->diam2);
   }
   public  function newAltName($name, $cat, $catindex)
@@ -883,7 +888,7 @@ class Objects
 	  return $objDatabase->execSQL("INSERT INTO objectpartof (objectname, partofname) VALUES (\"$name\", \"".trim($cat . " " . ucwords(trim($catindex)))."\")");
   }
   public  function prepareObjectsContrast()                               // internal procedure to speed up contrast calculations
-  { global $objContrast, $loggedUser;
+  { global $objContrast, $loggedUser,$objDatabase;;
     if(!array_key_exists('LTC',$_SESSION)||(!$_SESSION['LTC']))
 		 $_SESSION['LTC'] = array(array(4, -0.3769, -1.8064, -2.3368, -2.4601, -2.5469, -2.5610, -2.5660), 
                               array(5, -0.3315, -1.7747, -2.3337, -2.4608, -2.5465, -2.5607, -2.5658),
@@ -923,8 +928,8 @@ class Objects
 		   $popup = LangContrastNotLoggedIn;
      else
 	 	 { $sql5 = "SELECT stdlocation, stdtelescope from observers where id = \"" . $loggedUser . "\"";
-       $run5 = mysql_query($sql5) or die(mysql_error());
-       $get5 = mysql_fetch_object($run5);
+       $run5 = $objDatabase->selectRecordset($sql5);
+       $get5 = $run5->fetch(PDO::FETCH_OBJ);
        if ($get5->stdlocation==0)
          $popup = LangContrastNoStandardLocation;
        elseif($get5->stdtelescope==0)
@@ -932,16 +937,16 @@ class Objects
 		 	 else
 			 { // Check for eyepieces or a fixed magnification
          $sql6 = "SELECT fixedMagnification, diameter, fd from instruments where id = \"" . $get5->stdtelescope . "\"";
-         $run6 = mysql_query($sql6) or die(mysql_error());
-         $get6 = mysql_fetch_object($run6);
+         $run6 = $objDatabase->selectRecordset($sql6);
+         $get6 = $run6->fetch(PDO::FETCH_OBJ);
          if ($get6->fd == 0 && $get6->fixedMagnification == 0)
          { // We are not setting $magnifications
 		 			 $magnifications = array();
 			 	 }
          else if ($get6->fixedMagnification == 0)
          { $sql7 = "SELECT focalLength, name, apparentFOV, maxFocalLength from eyepieces where observer = \"" . $loggedUser . "\" AND eyepieceactive=1";
-  	       $run7 = mysql_query($sql7) or die(mysql_error());
-				   while($get7 = mysql_fetch_object($run7))
+  	       $run7 = $objDatabase->selectRecordset($sql7);
+				   while($get7 = $run7->fetch(PDO::FETCH_OBJ))
            { if ($get7->maxFocalLength > 0.0)
 						 {
 							 $fRange = $get7->maxFocalLength - $get7->focalLength;
@@ -959,11 +964,11 @@ class Objects
 						 }
   				 }
 	         $sql8 = "SELECT name, factor from lenses where observer = \"" . $loggedUser . "\"  AND lensactive=1";
-  	       $run8 = mysql_query($sql8) or die(mysql_error());
+  	       $run8 = $objDatabase->selectRecordset($sql8);
  					 $origmagnifications = $magnifications;
 					 $origmagnificationsName = $magnificationsName;
 					 $origfov = $fov;
-				   while($get8 = mysql_fetch_object($run8))
+				   while($get8 = $run8->fetch(PDO::FETCH_OBJ))
 					 { $name=$get8->name;
 						 $factor=$get8->factor;
 						 for($i=0;$i<count($origmagnifications);$i++)
@@ -986,12 +991,12 @@ class Objects
 				 }
 				 else
          { $sql6 = "SELECT limitingMagnitude, skyBackground, name from locations where id = \"" . $get5->stdlocation . "\"";
-      	   $run6 = mysql_query($sql6) or die(mysql_error());
-        	 $get6 = mysql_fetch_object($run6);
+      	   $run6 = $objDatabase->selectRecordset($sql6);
+        	 $get6 = $run6->fetch(PDO::FETCH_OBJ);
         	 // Get the fst offset
         	 $sql6bis = "SELECT fstOffset from observers where id = \"" . $loggedUser . "\"";
-      	   $run6bis = mysql_query($sql6bis) or die(mysql_error());
-        	 $get6bis = mysql_fetch_object($run6bis);
+      	   $run6bis = $objDatabase->selectRecordset($sql6bis);
+        	 $get6bis = $run6bis->fetch(PDO::FETCH_OBJ);
         	 $fstOffset = $get6bis->fstOffset;
 
     	     if(($get6->limitingMagnitude < -900)&&($get6->skyBackground < -900))
@@ -1006,8 +1011,8 @@ class Objects
         	   $_SESSION['initBB'] = $sqm;
 
   	         $sql7 = "SELECT diameter, name from instruments where id = \"" . $get5->stdtelescope . "\"";
-    	       $run7 = mysql_query($sql7) or die(mysql_error());
-      	     $get7 = mysql_fetch_object($run7);
+    	       $run7 = $objDatabase->selectRecordset($sql7);
+      	     $get7 = $run7->fetch(PDO::FETCH_OBJ);
         	   $_SESSION['aperMm'] = $get7->diameter;
 						 $_SESSION['aperIn'] = $_SESSION['aperMm'] / 25.4;
 					   //$scopeTrans = 0.8;

@@ -12,14 +12,13 @@ class ICQMETHOD
 {
  // getDescription returns the description of an ICQMETHOD
  function getDescription($id)
- {
+ {global $objDatabase;
   $sql = "SELECT * FROM ICQ_METHOD WHERE id = \"$id\"";
-  $run = mysql_query($sql) or die(mysql_error());
+  $run = $objDatabase->selectRecordset($sql);
 
-  $get = mysql_fetch_object($run);
+  $get = $run->fetch(PDO::FETCH_OBJ);
 
   $description = $get->description;
-
 
   return $description;
  }
@@ -27,15 +26,14 @@ class ICQMETHOD
  // getIds returns an array with the ids of all ICQ METHODS
  function getIds()
  {
-  
+  global $objDatabase;
   $sql = "SELECT * FROM ICQ_METHOD";
-  $run = mysql_query($sql) or die(mysql_error());
+  $run = $objDatabase->selectRecordset($sql);
 
-  while($get = mysql_fetch_object($run))
+  while($get = $run->fetch(PDO::FETCH_OBJ))
   {
    $ids[] = $get->id;
   }
-
   
   return $ids;
  }

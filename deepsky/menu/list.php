@@ -10,7 +10,7 @@ elseif(!($objUtil->checkAdminOrUserID($loggedUser))) throw new Exception(LangExc
 else menu_list();
 
 function menu_list()
-{ global 	$baseURL,$loggedUser,$myList;
+{ global 	$baseURL,$loggedUser,$myList,$objDatabase;
   echo "<ul class=\"nav navbar-nav\">";
 	echo "<p class=\"navbar-text\">".LangListsTitle;
 	if($loggedUser)
@@ -22,23 +22,23 @@ function menu_list()
 	$sql = "SELECT DISTINCT observerobjectlist.listname " .
 				 "FROM observerobjectlist " .
 				 "WHERE observerid = \"" . $loggedUser . "\" ORDER BY observerobjectlist.listname";
-	$run = mysql_query($sql) or die(mysql_error());
-	$get = mysql_fetch_object($run);
+	$run = $objDatabase->selectRecordset($sql);
+	$get = $run->fetch(PDO::FETCH_OBJ);
 	while($get)
 	{ $result1[]=$get->listname;
-	  $get = mysql_fetch_object($run);
+	  $get = $run->fetch(PDO::FETCH_OBJ);
 	}
 	$sql = "SELECT DISTINCT observerobjectlist.listname " .
 				 "FROM observerobjectlist " .
 	       "WHERE observerid <> \"" . $loggedUser . "\"" . 
 				 "AND listname LIKE \"Public: %\" ORDER BY observerobjectlist.listname";
-	$run = mysql_query($sql) or die(mysql_error());
-	$get = mysql_fetch_object($run);
+	$run = $objDatabase->selectRecordset($sql);
+	$get = $run->fetch(PDO::FETCH_OBJ);
   echo "<ul class=\"nav navbar-nav\">";
 	echo "<p class=\"navbar-text\">";
 	while($get)
 	{ $result2[]=$get->listname; 
-	  $get = mysql_fetch_object($run);
+	  $get = $run->fetch(PDO::FETCH_OBJ);
 	}
 	$result1[]='----------';
 	$result=array_merge($result1,$result2);

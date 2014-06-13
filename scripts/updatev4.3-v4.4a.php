@@ -19,7 +19,7 @@
  
  print "Database update add a hasDrawing field to cometobservations.\n";
  $sql = "ALTER TABLE cometobservations ADD COLUMN hasDrawing INT(1) NOT NULL DEFAULT 0";
- $run = mysql_query($sql) or die(mysql_error());
+ $run = $objDatabase->execSQL($sql);
  
  $upload_dir = '../comets/cometdrawings';
  $dir = opendir($upload_dir);
@@ -31,7 +31,7 @@
  print "Database update add an accomplishments table and fill it for all users.\n";
 
  $sql ="DROP TABLE IF EXISTS accomplishments";
- $run = mysql_query($sql) or die(mysql_error());
+ $run = $objDatabase->execSQL($sql);
  $sql = "CREATE TABLE accomplishments (
              observer                                   VARCHAR(255)            NOT NULL DEFAULT '',
              messierBronze                              INT(1)                  NOT NULL DEFAULT 0,
@@ -228,7 +228,7 @@
              objectsDrawingsExpert                      INT(1)                  NOT NULL DEFAULT 0,
              PRIMARY KEY (observer)             
              )";
- $run = mysql_query($sql) or die(mysql_error());
+ $run = $objDatabase->execSQL($sql);
 
  // We loop over all observers
  $observers = $objObserver->getSortedObservers("id");
@@ -429,19 +429,19 @@
     		$objAccomplishments->calculateDifferentObjectDrawings($value)[8] .", " .
     		$objAccomplishments->calculateDifferentObjectDrawings($value)[9] .
             ");";
-    $run = mysql_query($sql) or die(mysql_error());
+    $objDatabase->execSQL($sql);
     
     // We check for all observers if they have at least one observation... If they do, they have at least 
     // one accomplishment and we can send a message.
     if ($objAccomplishments->calculateDifferentObjects($value)[0] == 1) {
 	    $sql = "select firstname from observers where id = \"". $value ."\""; 
-        $run = mysql_query($sql) or die(mysql_error());
-        $get = mysql_fetch_object($run);
+        $run = $objDatabase->selectRecordset($sql);
+        $get = $run->fetch(PDO::FETCH_OBJ);
     	$firstname = $get->firstname;
     	
 	    $sql = "select language from observers where id = \"". $value ."\""; 
-        $run = mysql_query($sql) or die(mysql_error());
-        $get = mysql_fetch_object($run);
+        $run = $objDatabase->selectRecordset($sql);
+        $get = $run->fetch(PDO::FETCH_OBJ);
 		if ($get->language == "nl") {
 			$subject = 'Je hebt &eacute;&eacute;n of meerdere realisaties in DeepskyLog!';
 			$content = 'Proficiat ' . $firstname;

@@ -124,18 +124,18 @@ class Lists
     unset($_SESSION['QobjParams']);
  }
  public  function checkList($name)
- { global $loggedUser;
+ { global $loggedUser,$objDatabase;
    $retval=0;
 	 if(substr($name,0,7)=="Public:")
 	 { $sql="SELECT listname FROM observerobjectlist WHERE listname=\"".$name."\"";	
-	   $run=mysql_query($sql) or die(mysql_error());
-	   if($get=mysql_fetch_object($run))
+	   $run=$objDatabase->selectRecordset($sql);
+	   if($get=$run->fetch(PDO::FETCH_OBJ))
 	     $retval =1;
 	 }
 	 if($loggedUser)
    { $sql="SELECT listname FROM observerobjectlist WHERE observerid = \"".$loggedUser."\" AND listname = \"".$name."\"";
-	   $run=mysql_query($sql) or die(mysql_error());
-	   if($get=mysql_fetch_object($run))
+	   $run=$objDatabase->selectRecordset($sql);
+	   if($get=$run->fetch(PDO::FETCH_OBJ))
        $retval=2;
 	 }
    return $retval;
@@ -191,7 +191,7 @@ class Lists
    $result=array();
 	 if(array_key_exists('deepskylog_id',$_SESSION))
 	 { $run=$objDatabase->selectRecordset("SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE observerid=\"".$loggedUser."\" OR listname LIKE \"Public: %\" ORDER BY observerobjectlist.listname");
-  	 $get=mysql_fetch_object($run);	
+  	 $get=$run->fetch(PDO::FETCH_OBJ);	
 	   if($get)
   	 { $result1=array();
   	   $result2=array();
@@ -200,7 +200,7 @@ class Lists
   			   $result2[]=$get->listname;
   			 else
   			   $result1[]=$get->listname;
-  			 $get = mysql_fetch_object($run);	
+  			 $get = $run->fetch(PDO::FETCH_OBJ);	
   		 }
   		 $result=array_merge($result1,$result2);
      }
@@ -223,7 +223,7 @@ class Lists
 	          "JOIN objects ON observerobjectlist.objectname = objects.name " .
 	 	    	  "WHERE observerid = \"".$loggedUser."\" AND listname = \"".$theListname."\" AND objectname <>\"\"";
    $run=$objDatabase->selectRecordset($sql);
-   while($get=mysql_fetch_object($run))
+   while($get=$run->fetch(PDO::FETCH_OBJ))
      if(!in_array($get->objectname, $obs))
 	     $obs[$get->objectshowname] = array($get->objectplace,$get->objectname,$get->description);
 	 return $objObject->getSeenObjectDetails($obs, "A");	 

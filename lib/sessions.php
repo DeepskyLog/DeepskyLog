@@ -119,7 +119,7 @@ class Sessions
 		      $this->addObserver($sessionid, $observers[$i]);
 
           $objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers[$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)");
-		      $newId = mysql_insert_id();
+		      $newId = $objDatabase->insert_id();
 		      // Also add the extra observers to the sessionObservers table
 		      for ($j=0;$j<count($observers);$j++) {
 		        if ($j != $i) {
@@ -142,7 +142,7 @@ class Sessions
 
 		    // Add the new session also for the other observers (and set to inactive)
         $objDatabase->execSQL("INSERT into sessions (name, observerid, begindate, enddate, locationid, weather, equipment, comments, language, active) VALUES(\"" . $name . "\", \"" . $observers[$i] . "\", \"" . $begindate . "\", \"" . $enddate . "\", \"" . $location . "\", \"" . $weather . "\", \"" . $equipment . "\", \"" . $comments . "\", \"" . $language . "\", 0)");
-		    $newId = mysql_insert_id();
+		    $newId = $objDatabase->insert_id();
 		    // Also add the extra observers to the sessionObservers table
 		    for ($j=0;$j<count($observers);$j++) {
 		      if ($j != $i) {
