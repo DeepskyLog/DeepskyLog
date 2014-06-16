@@ -70,14 +70,41 @@ function view_observer()
 	echo "<div id=\"my-tab-content\" class=\"tab-content\">";
 	echo "<div class=\"tab-pane active\" id=\"info\">";
 	if(array_key_exists('admin',$_SESSION)&&($_SESSION['admin']=="yes"))       // admin logged in
-	{ echo "<form role=\"form\" action=\"".$baseURL."index.php\" >";
-	  echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_emailNameFirstname_Password\" />";
+	{ echo "<br />";
+		echo "<form class=\"form-horizontal\" role=\"form\" action=\"".$baseURL."index.php\" >";
+		echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_emailNameFirstname_Password\" />";
 	  echo "<input type=\"hidden\" name=\"user\" value=\"".$user."\" />";
-	  $objPresentations->line(array(LangChangeAccountField1.":",$objObserver->getObserverProperty($user,'id')),"RL",array(20,80),30,array('type10','type10'));
-	  $objPresentations->line(array(LangChangeAccountField2.":","<input name=\"email\" type=\"text\" value=\"".$objObserver->getObserverProperty($user,'email')."\" />"),"RL",array(20,80),30,array('type10','type10'));
-	  $objPresentations->line(array(LangChangeAccountField3.":","<input name=\"firstname\" type=\"text\" value=\"".$objObserver->getObserverProperty($user,'firstname')."\" /><input type=\"submit\" name=\"change_email_name_firstname\" value=\"".LangViewObserverChangeNameFirstname."\" />"),"RL",array(20,80),30,array('type20','type20'));
-	  $objPresentations->line(array(LangChangeAccountField4.":","<input name=\"name\" type=\"text\" value=\"".$objObserver->getObserverProperty($user,'name')."\" />"),"RL",array(20,80),30,array('type10','type10'));
-	  $objPresentations->line(array(LangChangeAccountField5.":","<input name=\"password\" type=\"text\" value=\"\" /><input type=\"submit\" name=\"change_password\" value=\""."Change password"."\" />"),"RL",array(20,80),30,array('type20','type20'));
+	  echo "<div class=\"form-group\">";
+	  echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField1 . "</label>";
+	  echo "<div class=\"col-sm-5\">" . $objObserver->getObserverProperty($user,'id');
+	  echo "</div></div>";
+	  echo "<div class=\"form-group\">
+	         <label for=\"email\" class=\"col-sm-2 control-label\">".LangChangeAccountField2."</label>
+	         <div class=\"col-sm-5\">
+	          <input type=\"email\" name=\"email\" class=\"form-control\" id=\"email\" value=\"" . $objObserver->getObserverProperty($user,'email') . "\">
+           </div>
+	        </div>";
+	  echo "<div class=\"form-group\">
+	         <label for=\"firstname\" class=\"col-sm-2 control-label\">".LangChangeAccountField3."</label>
+	         <div class=\"col-sm-5\">
+	          <input type=\"text\" name=\"firstname\" class=\"form-control\" id=\"firstname\" value=\"" . $objObserver->getObserverProperty($user,'firstname') . "\">
+           </div>
+	        </div>";
+	  echo "<div class=\"form-group\">
+	         <label for=\"name\" class=\"col-sm-2 control-label\">".LangChangeAccountField4."</label>
+	         <div class=\"col-sm-5\">
+	          <input type=\"text\" name=\"name\" class=\"form-control\" id=\"name\" value=\"" . $objObserver->getObserverProperty($user,'name') . "\">
+           </div>
+	        </div>";
+	  echo "<div class=\"form-group\">
+	         <label for=\"password\" class=\"col-sm-2 control-label\">".LangChangeAccountField5."</label>
+	         <div class=\"col-sm-3\">
+	          <input type=\"text\" name=\"password\" class=\"form-control\" id=\"password\" value=\"\" />
+           </div>
+	         <div class=\"col-sm-2\">
+	         	<input type=\"submit\" class=\"btn btn-primary\" name=\"change_password\" value=\""."Change password"."\" />
+	         </div>	         		
+	        </div>";
 	  echo "</form>";
 	}
 	else
@@ -109,26 +136,39 @@ function view_observer()
    	      "</td>
  	       </tr>";
 	if($objUtil->checkSessionKey('admin')=="yes")
-	{ echo "<form action=\"".$baseURL."index.php\" >";
+	{ echo "<form class=\"form-horizontal\" role=\"form\" action=\"".$baseURL."index.php\" >";
 	  echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_role\" />";
 	  echo "<input type=\"hidden\" name=\"user\" value=\"".$user."\" />";
+	  echo "<div class=\"form-group\">";
 	  $content='';
-	  if($user!="admin")
-	  { $content = "<select name=\"role\" class=\"\">";
-	    $content.= "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleAdmin)?"selected=\"selected\"":"")." value=\"0\">".LangViewObserverAdmin."</option>";
-	    $content.= "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleUser)?"selected=\"selected\"":"")." value=\"1\">".LangViewObserverUser."</option>";
-	    $content.= "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleCometAdmin)?"selected=\"selected\"":"")." value=\"4\">".LangViewObserverCometAdmin."</option>";
-	    $content.= "<option ".(($objObserver->getObserverProperty($user,'role',2)==RoleWaitlist)?"selected=\"selected\"":"")." value=\"2\">".LangViewObserverWaitlist."</option>";
-	    $content.= "</select>&nbsp;";
-	    $content.= "<input type=\"submit\" name=\"change\" value=\"".LangViewObserverChange."\" />";
+ 	  if($user!="admin")
+ 	  { 
+ 	  	echo "<div class=\"form-group\">
+	         <label for=\"role\" class=\"col-sm-2 control-label\">".LangViewObserverRole."</label>
+	         <div class=\"col-sm-5\">
+	         		<select name=\"role\" class=\"\">
+ 	            <option ".(($objObserver->getObserverProperty($user,'role',2)==RoleAdmin)?"selected=\"selected\"":"")." value=\"0\">".LangViewObserverAdmin."</option>
+ 	            <option ".(($objObserver->getObserverProperty($user,'role',2)==RoleUser)?"selected=\"selected\"":"")." value=\"1\">".LangViewObserverUser."</option>
+ 	            <option ".(($objObserver->getObserverProperty($user,'role',2)==RoleCometAdmin)?"selected=\"selected\"":"")." value=\"4\">".LangViewObserverCometAdmin."</option>
+ 	            <option ".(($objObserver->getObserverProperty($user,'role',2)==RoleWaitlist)?"selected=\"selected\"":"")." value=\"2\">".LangViewObserverWaitlist."</option>
+              </select>&nbsp;
+              <input type=\"submit\" name=\"change\" value=\"".LangViewObserverChange."\" />
+           </div>
+	        </div>";
 	  }
-	  elseif($objObserver->getObserverProperty($user,'role',2)==RoleWaitlist)
-	    $content = LangViewObserverWaitlist;
-	  else                                                                          // fixed admin role
-	  { $content = LangViewObserverAdmin;
-	  }
-	  $objPresentations->line(array(LangViewObserverRole.":",$content),"RL",array(20,80),'40',array('fieldname type20','type20'));
-	  echo "</form>";
+ 	  elseif($objObserver->getObserverProperty($user,'role',2)==RoleWaitlist) {
+	  echo "<div class=\"form-group\">";
+	  echo "<label class=\"col-sm-2 control-label\">" . LangViewObserverRole . "</label>";
+	  echo "<div class=\"col-sm-5\">" . LangViewObserverWaitlist;
+	  echo "</div></div>";
+ 	  } else                                                                          // fixed admin role
+ 	  { 
+	  echo "<div class=\"form-group\">";
+	  echo "<label class=\"col-sm-2 control-label\">" . LangViewObserverRole . "</label>";
+	  echo "<div class=\"col-sm-5\">" . LangViewObserverAdmin;
+	  echo "</div></div>";
+ 	  }
+	  echo "</div></form>";
 	}
 	echo "</table>";
 	echo "<hr />";

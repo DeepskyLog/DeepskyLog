@@ -123,7 +123,7 @@ function headmenu()
 	  echo "	</div>
           </div>
         </nav>";
-	
+  } else {
   	// The log in modal box
 	  echo "<div class=\"modal fade\" id=\"login\" tabindex=\"-1\" role=\"dialog\" aria-hidden=\"true\">
             <div class=\"modal-dialog\">

@@ -29,7 +29,7 @@ function view_message()
   	    $objMessages->markMessageRead($id, $loggedUser);
 	    }
 	  }
-	  echo "<h1>" . $objMessages->getSubject($id) . "</h1>";
+	  echo "<h3>" . $objMessages->getSubject($id) . "</h3>";
 	
 	  $senderId = $objMessages->getSender($id);
 	  if ($senderId == "DeepskyLog") {
@@ -41,7 +41,7 @@ function view_message()
 	  // Use the date format from databaseInfo
 	  $phpdate = strtotime($objMessages->getDate($id));
 	
-	  echo "<h2>" . LangMessageBy . $senderName . " - " . date($dateformat . " G:i:s", $phpdate) . "</h2>";
+	  echo "<h4>" . LangMessageBy . $senderName . " - " . date($dateformat . " G:i:s", $phpdate) . "</h4>";
 
 	  echo "<hr />";
 	
@@ -56,11 +56,12 @@ function view_message()
 
       if ($loggedUser != "") {
 	    if ($senderName != "DeepskyLog") {
-	      echo "<a href=\"" . $baseURL . "index.php?indexAction=new_message&amp;id=" . $id . "\">" . LangMessageReply . "</a> - ";
+	      echo "<a class=\"btn btn-primary\" href=\"" . $baseURL . "index.php?indexAction=new_message&amp;id=" . $id . "\">" . LangMessageReply . "</a>&nbsp;&nbsp;&nbsp;";
 	    }
-	    echo "<a href=\"". $baseURL . "index.php?indexAction=validate_delete_message&amp;id=" . $id . "\">" . LangMessageDelete . "</a>";
+	    echo "<a class=\"btn btn-danger\" href=\"". $baseURL . "index.php?indexAction=validate_delete_message&amp;id=" . $id . "\">" . LangMessageDelete . "</a>";
       }
 	  echo "</div>";
+	  echo "<br />";
 	} else {
 		throw new Exception(LangNoPermissionToRead);
 	}

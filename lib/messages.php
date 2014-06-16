@@ -187,13 +187,22 @@ class Messages
   public  function sendMessage($sender, $receiver, $subject, $message)
   { global $objDatabase;
 		$date = $mysqldate = date('Y-m-d H:i:s');
-		
+
 		$objDatabase->execSQL("INSERT into messages (sender, receiver, subject, message, date) VALUES(\"" . $sender . "\", \"" . $receiver . "\", \"" . $subject . "\", '" . $message . "', \"" . $date . "\")");
   }
 
-  public  function showListMails($newMails, $readMails, $min, $max, $link2, $step=25) 
+  public  function showListMails($newMails, $readMails) 
 	{ global $baseURL, $baseURL, $objPresentations, $objObserver, $dateformat, $loggedUser; 
-    echo "<table class=\"table table-condensed table-striped table-hover\">\n";
+
+	  // Add the button to select which columns to show
+	  echo "   <div class=\"columnSelectorWrapper\">
+              <input id=\"colSelect1\" type=\"checkbox\" class=\"hidden\">
+              <label class=\"columnSelectorButton\" for=\"colSelect1\">Select columns</label>
+              <div id=\"columnSelector\" class=\"columnSelector\">
+              </div>
+	         </div>";
+	
+	  echo "<table class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">\n";
 
     // Making the header for the mails
 	  echo "<thead><tr>";
@@ -209,14 +218,13 @@ class Messages
 	  echo "</th>";        
 	  
 		echo "</tr></thead>";
-
+    echo "<tbody>";
 		// Combining all mails
 		$allMails = array_merge($newMails, $readMails);
 
 		// Showing the mails, loop over the id's of the combined array of new and read mails.
 	  for ($cnt = 0;$cnt < count($allMails);$cnt++)
 		{
-		  if ($cnt >= $min && $cnt < $max) {
 		    // Use the different colors for different lines, also make new mails green
 		    if ($loggedUser == "") {
 		      echo "<tr table-no-border>";
@@ -246,9 +254,81 @@ class Messages
 			  echo "<td>" . date($dateformat . " G:i:s", $phpdate) . "</td>";
 			
 			  echo "</tr>";
-		  }
 		}
+		echo "</tbody>";
+		echo "    </tbody>
+			         <tfoot>
+			          <tr>
+                 <th colspan=\"3\" class=\"ts-pager form-horizontal\">
+                 <button type=\"button\" class=\"btn first\"><i class=\"icon-step-backward glyphicon glyphicon-step-backward\"></i>
+                 </button>
+                 <button type=\"button\" class=\"btn prev\"><i class=\"icon-arrow-left glyphicon glyphicon-backward\"></i>
+                 </button>	<span class=\"pagedisplay\"></span>
+                 <!-- this can be any element, including an input -->
+                 <button type=\"button\" class=\"btn next\"><i class=\"icon-arrow-right glyphicon glyphicon-forward\"></i>
+                 </button>
+                 <button type=\"button\" class=\"btn last\"><i class=\"icon-step-forward glyphicon glyphicon-step-forward\"></i>
+                 </button>
+                 <select class=\"pagesize input-mini\" title=\"Select page size\">
+                     <option selected=\"selected\" value=\"10\">10</option>
+                     <option value=\"20\">20</option>
+                     <option value=\"30\">30</option>
+                     <option value=\"40\">40</option>
+                 </select>
+                 <select class=\"pagenum input-mini\" title=\"Select page number\"></select>";
+		echo "       </th>
+		            </tr>
+		           </tfoot>";
+		
 		echo "</table>";
+		
+		// Make the table sorter, add the pager and add the column chooser
+		echo "<script type=\"text/javascript\">";
+		echo "$(\"table\").tablesorter({
+            theme: \"bootstrap\",
+            widthFixed: true,
+            headerTemplate: '{content} {icon}',
+            widgets: [\"uitheme\", \"columnSelector\", \"filter\", \"zebra\"],
+            widgetOptions : {
+              // target the column selector markup
+              columnSelector_container : $('#columnSelector'),
+              // column status, true = display, false = hide
+              // disable = do not display on list
+              columnSelector_columns : {
+                0: 'disable' /* set to disabled; not allowed to unselect it */
+              },
+              // remember selected columns (requires $.tablesorter.storage)
+              columnSelector_saveColumns: true,
+		
+              // container layout
+              columnSelector_layout : '<label><input type=\"checkbox\">{name}</label>',
+              // data attribute containing column name to use in the selector container
+              columnSelector_name  : 'data-selector-name',
+		
+             /* Responsive Media Query settings */
+             // enable/disable mediaquery breakpoints
+             columnSelector_mediaquery: true,
+             // toggle checkbox name
+             columnSelector_mediaqueryName: 'Auto: ',
+             // breakpoints checkbox initial setting
+             columnSelector_mediaqueryState: true,
+             // responsive table hides columns with priority 1-6 at these breakpoints
+             // see http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/#Applyingapresetbreakpoint
+             // *** set to false to disable ***
+             columnSelector_breakpoints : [ '20em', '30em', '40em', '50em', '60em', '70em' ],
+             // data attribute containing column priority
+             // duplicates how jQuery mobile uses priorities:
+             // http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/
+             columnSelector_priority : 'data-priority'
+            }
+          })
+          .tablesorterPager({
+            container: $(\".ts-pager\"),
+            cssGoto: \".pagenum\",
+            output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
+          });";
+		
+		echo "</script>";
 	}
 }
 ?>

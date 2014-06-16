@@ -29,6 +29,12 @@ function head()
   echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/highcharts.js\"></script>";
   echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/modules/exporting.js\"></script>";
   echo "<script src=\"".$baseURL."lib/javascript/bootstrap.min.js\"></script>";
+  echo "<script src=\"lib/javascript/jquery.tablesorter.min.js\"></script>
+        <script src=\"lib/javascript/jquery.tablesorter.widgets.min.js\"></script>
+        <script src=\"lib/javascript/jquery.tablesorter.pager.min.js\"></script>
+        <script src=\"lib/javascript/widget-columnSelector.js\"></script>
+        <link href=\"styles/tablesorter.theme.bootstrap.css\" rel=\"stylesheet\">";
+  
 	echo "<link href=\"styles/bootstrap.min.css\" rel=\"stylesheet\">";
   $DSLTitle="DeepskyLog";
 	$TitleText="";
