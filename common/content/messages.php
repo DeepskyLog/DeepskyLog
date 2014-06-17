@@ -40,15 +40,6 @@ function messages()
 	// Combining all mails
 	$allMails = array_merge($newMails, $readMails);
 	
-// 	// Make a header and make it possible to move through the pages
-// 	echo "<span class=\"pull-left\">" . $content1 . "</span>";
-//  	list($min, $max,$content2,$pageleft,$pageright,$pagemax)=$objUtil->printNewListHeader4($allMails, $link2, $min, $step);
-//   echo $content2;
-//   // Change the number of steps
-//   $content4=$objUtil->printStepsPerPage3($link2,"messages",$step);
-  
-//   echo "<br /><br /><br /><p class=\"pull-right\">".$content4 . "</p>";
-  
   // Show the mails
 	$objMessages->showListMails($newMails, $readMails);
 }

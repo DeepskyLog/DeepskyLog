@@ -1,6 +1,7 @@
 <?php //NL
 // This is version 4.4
 define('GraphAccomplishments'			,'Realisaties');
+define('LangSelectColumns'        ,'Kies kolommen');
 
 // This is version 4.3
 define('LangUnderHorizon'				,'onder de horizon');

@@ -1,6 +1,7 @@
 <?php //EN
 // This is version 4.4
 define('GraphAccomplishments'			,'Accomplishments');
+define('LangSelectColumns'        ,'Select columns');
 
 // This is version 4.3
 define('LangUnderHorizon'				,'under the horizon');

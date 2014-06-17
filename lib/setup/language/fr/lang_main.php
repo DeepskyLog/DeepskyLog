@@ -1,6 +1,7 @@
 <?php //FR
 // This is version 4.4
 define('GraphAccomplishments'			,'R&eamp;alisations');
+define('LangSelectColumns'        ,'Kies kolommen');
 
 
 define('LangUnderHorizon'				,'au-dessus de l\'horizon');

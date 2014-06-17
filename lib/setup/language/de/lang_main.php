@@ -1,6 +1,7 @@
 <?php //GE
 // This is version 4.4
 define('GraphAccomplishments'			,'Leistungen');
+define('LangSelectColumns'        ,'Kies kolommen');
 
 define('LangUnderHorizon'				,'unter dem Horizont');
 
