@@ -43,7 +43,7 @@ define("AtlasExample"                   ,"Lookup atlas pagina voor M 45");
 define("ImageCatalogExample"            ,"Voorbeeld pagina voor Abell 84");
 define("ImageCatalogDescription1"       ,"DeepskyLog is een zeer krachtige applicatie, die het mogelijk maakt om gepersonaliseerde atlassen en beeldencatalogi aan te maken.");
 define("ImageCatalogDescription2"       ,"Het kan echter een hele tijd duren voor een beelden cataloog is aangemaakt. Om de gebruikers het leven eenvoudiger te maken, hebben we enkele interessante catalogi aangemaakt en beschikbaar gemaakt.");
-define("ImageCatalogDescription3"       ,"Klik op het voorbeeld om een preview te krijgen van de catalogi. De catalogi zijn zeer nuttig voor goto-telescopen, waar het goto systeem je al in de buurt van het object brengt. Met behulp van de beeldjes, is het eenvoudig om het object te vinden.");
+define("ImageCatalogDescription3"       ,"De catalogi zijn zeer nuttig voor goto-telescopen, waar het goto systeem je al in de buurt van het object brengt. Met behulp van de beeldjes, is het eenvoudig om het object te vinden.");
 define("ImageCatalogDescription4"       ,"Catalogi gesorteerd op naam");
 define("ImageCatalogDescription5"       ,"Catalogi gesorteerd op sterrenbeeld");
 define("ImageCatalogAbell"              ,"The Abell Planetary Nebula Catalog");

@@ -48,7 +48,7 @@ define("AtlasExample"                   ,"Nachschlagen der Atlas Seite f&uuml;r 
 define("ImageCatalogExample"            ,"Beispielseite f&uuml;r Abell 84");
 define("ImageCatalogDescription1"       ,"DeepskyLog ist ein m&auml;chtiges Werkzeug. Sie k&ouml;nnen u.a. personalisierte Atlanten und Bildb&auml;nde erzeugen.");
 define("ImageCatalogDescription2"       ,"Das Erstellen Ihres eigenen Bildbandes ist zeitaufw&auml;ndig. Um Ihnen die Arbeit zu erleichtern bieten wir einige interessante Bildb&auml;nde bereits zum Download an.");
-define("ImageCatalogDescription3"       ,"Klicken Sie auf eines der Beispiele um eine Voransicht zu bekommen. Diese Bildb&auml;nde sind sehr n&uuml;tzlich f&uuml;r Teleskope mit Goto-System, bei denen Sie durch das Goto-System in die N&auml;he eines Objektes gef&uuml;hrt werden. Mittels des Bilder ist es so einfach m&ouml;glich das gesuchte Objekt zu finden.");
+define("ImageCatalogDescription3"       ,"Diese Bildb&auml;nde sind sehr n&uuml;tzlich f&uuml;r Teleskope mit Goto-System, bei denen Sie durch das Goto-System in die N&auml;he eines Objektes gef&uuml;hrt werden. Mittels des Bilder ist es so einfach m&ouml;glich das gesuchte Objekt zu finden.");
 define("ImageCatalogDescription4"       ,"Kataloge sortiert nach Namen");
 define("ImageCatalogDescription5"       ,"Kataloge sortiert nach Sternbildern");
 define("ImageCatalogAbell"              ,"The Abell Planetary Nebula Catalog");
