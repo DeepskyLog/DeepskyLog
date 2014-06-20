@@ -262,7 +262,7 @@ function view_observer()
 		if ($user != $loggedUser) {
 		  echo "<br />";
 		  echo "<a class=\"btn btn-primary\" href=\"" . $baseURL . "index.php?indexAction=new_message&amp;receiver=" . $user . "\">";
- 		  echo "<span class=\"glyphicon glyphicon-envelope\"> " . LangMessagePublicList5 . $firstname ."</span></a>";
+ 		  echo "<span class=\"glyphicon glyphicon-envelope\"></span> " . LangMessagePublicList5 . $firstname ."</a>";
 		}
 	}
 

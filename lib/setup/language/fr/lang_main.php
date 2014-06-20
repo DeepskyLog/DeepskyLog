@@ -4,7 +4,8 @@ define('GraphAccomplishments'			,'R&eamp;alisations');
 define('LangSelectColumns'        ,'Kies kolommen');
 define('LangNewMessage'           ,'Nieuw bericht');
 define('LangSendMessage'          ,'Zend bericht');
-
+define("LangChangeAccountTitle"		,"Settings");
+define("LangChangeMenuItem1"		  ,"Settings");
 
 define('LangUnderHorizon'				,'au-dessus de l\'horizon');
 
@@ -25,7 +26,7 @@ define('LangAtlasButton2'               ,"Chercher");
 define('LangAtlasButton3'               ,"D&eacute;tail");
 define('LangAtlasButton4'               ,"Aper&ccedil;u - Page");
 define('LangAtlasButton5'               ,"Chercher - Page");
-define('LangAtlasButton6'               ,"D&eacute;tail - Page");
+define('LangAtlasButton6'              ,"D&eacute;tail - Page");
 define('LangAtlasButton7'               ,"Aper&ccedil;u - Atlas complet");
 define('LangAtlasButton8'               ,"Chercher - Atlas complet");
 define('LangAtlasButton9'               ,"D&eacute;tail - Atlas complet");
@@ -467,7 +468,7 @@ define("LangAtlasWhatsnext"                               ,"Version:&nbsp;&nbsp;
 
 // text for fstOffset
 define("LangChangeAccountField12"                         ,"fstOffset");
-define("LangChangeAccountField12Expl"                     ,"Diff&eacute;rence entre les valeurs SQM mesur&eacute;es et l'&eacute;toile la plus faible qui est visible. Quand fstOffset est 0.2, la magnitude limite est de 0.2 mieux que la valeur calcul&eacute; par l'appareil SQM.");
+define("LangChangeAccountField12Expl"                     ,"Diff&eacute;rence entre les valeurs SQM mesur&eacute;es et l'&eacute;toile la plus faible qui est visible.");
 
 // Visibility for resolved open clusters
 define("LangVisibilityOC1"                                ,"Amas tr&egrave;s magnifique et remarquable");
@@ -701,7 +702,6 @@ define("LangEditObjectDescription"												,"Adapter la description");
 
 // content/change_account.php
 
-define("LangChangeAccountTitle"														,"D&eacute;tails du compte");
 define("LangChangeAccountField1"													,"Nom de l'utilisateur");
 define("LangChangeAccountField1Expl"											,"C'est par ce nom que vous pouvez rentrer en Deepskylog");
 define("LangChangeAccountField2"													,"Adresse &eacute;mail");
@@ -758,7 +758,6 @@ define("LangSearchAllLanguages"														,"Une nouvelle rechrerche dans tout
 define("LangSearchDetailPage"															,"Faire une recherche d&eacute;taill&eacute;e.");
 
 define("LangChangeMenuTitle"															,"Modifiez");
-define("LangChangeMenuItem1"															,"Donn&eacute;es personelles");
 define("LangChangeMenuItem2"															,"Nouvelle observation");
 define("LangChangeMenuItem3"															,"Instruments");
 define("LangChangeMenuItem4"															,"Endroits d'observation");

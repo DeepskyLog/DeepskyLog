@@ -467,7 +467,7 @@ define("LangAtlasWhatsnext"                               ,"Versie:&nbsp;&nbsp;&
 
 // text for fstOffset
 define("LangChangeAccountField12"                         ,"fstOffset");
-define("LangChangeAccountField12Expl"                     ,"Offset tussen gemeten SQM waarde en zwakste zichtbare ster. Als fstOffset 0.2 is, dan is de grensmagnitude 0.2 beter dan de waarde van de SQM.");
+define("LangChangeAccountField12Expl"                     ,"Offset tussen gemeten SQM waarde en zwakste zichtbare ster.");
 
 // Visibility for resolved open clusters
 define("LangVisibilityOC1"                                ,"Zeer opvallende, zeer mooie sterrenhoop");
@@ -729,7 +729,7 @@ define("LangEditObjectDescription"												,"DESC-Beschrijving aanpassen");
 
 // content/change_account.php
 
-define("LangChangeAccountTitle"														,"Persoonlijke data");
+define("LangChangeAccountTitle"														,"Instellingen");
 define("LangChangeAccountField1"													,"Gebruikersnaam");
 define("LangChangeAccountField1Expl"											,"Onder deze naam kan je inloggen op Deepskylog");
 define("LangChangeAccountField2"													,"Emailadres");
@@ -742,7 +742,7 @@ define("LangChangeAccountField5"													,"Paswoord");
 define("LangChangeAccountField5Expl"											,"Dit is niet het paswoord van je provider");
 define("LangChangeAccountField6"													,"Bevestig paswoord");
 define("LangChangeAccountField6Expl"											,"");
-define("LangChangeAccountField7"													,"Standaard waarnemingsplaats");
+define("LangChangeAccountField7"													,"Standaard waarneemplaats");
 define("LangChangeAccountField7Expl"											,"Nieuwe plaats");
 define("LangChangeAccountField8"													,"Standaard instrument");
 define("LangChangeAccountField8Expl"											,"Nieuw instrument");
@@ -786,7 +786,7 @@ define("LangSearchAllLanguages"														,"Opnieuw zoeken, in alle talen.");
 define("LangSearchDetailPage"															,"Een gedetailleerde zoekopdracht maken.");
 
 define("LangChangeMenuTitle"															,"Wijzigen");
-define("LangChangeMenuItem1"															,"Persoonlijke data");
+define("LangChangeMenuItem1"															,"Instellingen");
 define("LangChangeMenuItem2"															,"Nieuwe waarneming");
 define("LangChangeMenuItem3"															,"Instrumenten");
 define("LangChangeMenuItem4"															,"Waarneemplaatsen");
@@ -812,7 +812,7 @@ define("LangInstrumentMenuTitle"													,"Instrument");
 define("LangLanguageMenuTitle"														,"Taal");
 define("LangLanguageMenuButton"														,"Verander");
 
-define("LangOverviewSiteTitle"														,"Overzicht waarnemingsplaatsen");
+define("LangOverviewSiteTitle"														,"Overzicht waarneemplaatsen");
 define("LangAddSiteExisting"															,"Voeg bestaande waarneemplaats toe");
 
 define("LangOverviewEyepieceTitle"												,"Overzicht oculairs");
@@ -895,7 +895,7 @@ define("FiltersColor"																			,"Kleuren filter");
 define("FiltersNeutral"																		,"Neutrale filter");
 define("FiltersCorrective"																,"Correctieve filter");
 
-define("LangAddSiteTitle"																	,"Voeg nieuwe waarnemingsplaats toe");
+define("LangAddSiteTitle"																	,"Voeg nieuwe waarneemplaats toe");
 define("LangAddSiteField1"																,"Plaatsnaam");
 define("LangAddSiteField1Expl"														,"(bv Aalst)");
 define("LangAddSiteField2"																,"Provincie / Staat");
@@ -1215,7 +1215,7 @@ define("LangViewObservationField1"												,"Objectnaam");
 define("LangViewObservationField1b"												,"Sterrenbeeld");
 define("LangViewObservationField2"												,"Waarnemer");
 define("LangViewObservationField3"												,"Instrument");
-define("LangViewObservationField4"												,"Waarnemingsplaats");
+define("LangViewObservationField4"												,"Waarneemplaats");
 define("LangViewObservationField5"												,"Datum");
 define("LangViewObservationField6"												,"Seeing");
 define("LangViewObservationField7"												,"Grensmagnitude");
@@ -1452,8 +1452,8 @@ define("LangMessageTitle"																	,"Boodschap");
 // control/validate_location.php
 
 define("LangValidateLocationMessage1"											,"Gelieve alle velden in te vullen!");
-define("LangValidateLocationMessage2"											,"De waarnemingsplaats is toegevoegd aan de database");
-define("LangValidateLocationMessage3"											,"De waarnemingsplaats werd verwijderd uit je lijst");
+define("LangValidateLocationMessage2"											,"De waarneemplaats is toegevoegd aan de database");
+define("LangValidateLocationMessage3"											,"De waarneemplaats werd verwijderd uit je lijst");
 
 // control/validate_intrument.php
 
@@ -1581,7 +1581,7 @@ define("LangCSVMessage3"																	,"<span class=\"bold\"><i> 1-Object; 2-
 define("LangCSVMessage4"																	,"<span class=\"bold\">Opgepast!</span> In tegenstelling tot versie 3.3 en daarvoor, is er <span class=\"bold\" \"underline\">geen header lijn meer toegelaten</span> in de csv import file.
                            																	De eerste lijn bevat onmiddellijk de eigenlijke waarnemingen in het bovenstaande formaat, bv: <br /><br />
                            																	NGC 2392;Piet Janssens;21-01-2005;20:45;Aalst;Obsession 15\";31mm Nagler;Lumicon O-III filter;Televue 2x Barlow;2;4.0;3;nl;Mooie planetaire nevel met een zeer heldere centrale ster!<br />M 35;Piet Janssens;21-01-2005;20:53;Aalst;Obsession 15\";;;;2;4.0;1;nl;Ongeveer dertig leden tellend in gebogen lijnen.<br />...<br /><br />Seeing wordt aangegeven door een nummer tussen 1 en 5 (1=uitstekend, 2=goed, 3=middelmatig, 4=zwak, 5=slecht).<br />Zichtbaarheid wordt aangegeven door een nummer tussen 1 en 7 (1=Zeer eenvoudig, helder object, 2=Object eenvoudig te zien bij direct kijken, 3=Object zichtbaar bij direct kijken, 4=Perifeer kijken nodig om object te zien, 5=Object amper zichtbaar bij perifeer kijken, 6=Zichtbaarheid van object is twijfelachtig, 7=Object niet zichtbaar).<br />Een waarneming met het blote oog moet 'Naked Eye' als instrument bevatten.<br />Taal moet de korte naam van de taal zijn (nl voor Nederlands)");
-define("LangCSVMessage5"																	,"Opgepast!<br />De instrumenten, waarnemingsplaatsen, oculairs, filters en objecten in het CSV bestand moeten reeds vooraf bekend zijn in DeepskyLog.
+define("LangCSVMessage5"																	,"Opgepast!<br />De instrumenten, waarneemplaatsen, oculairs, filters en objecten in het CSV bestand moeten reeds vooraf bekend zijn in DeepskyLog.
                            																	Indien dit niet het geval is, zal er een foutboodschap verschijnen en worden deze waarnemingen niet toegevoegd.<br />
                           																	Voeg de ontbrekende informatie toe, of pas de foute aan, totdat er geen foutboodschappen meer verschijnen.<br />&nbsp;<br />
                            																	Indien alles goed gaat, worden de ingevoerde waarnemingen getoond in het overzicht van alle waarnemingen.");
@@ -1594,7 +1594,7 @@ define("LangCSVMessage10"																	,"; waarnemingen reeds aanwezig en nie
 define("LangCSVError0"																		,"De CSV import van de waarnemingen is gestopt");
 define("LangCSVError1"																		,"Het CSV bestand kon niet ingelezen worden omdat: ");
 define("LangCSVError2"																		,"De onderstaande objecten niet gekend zijn in DeepskyLog");
-define("LangCSVError3"																		,"De onderstaande waarnemingsplaatsen niet gekend zijn in DeepskyLog");
+define("LangCSVError3"																		,"De onderstaande waarneemplaatsen niet gekend zijn in DeepskyLog");
 define("LangCSVError4"																		,"De onderstaande instrumenten niet gekend zijn in DeepskyLog");
 define("LangCSVError5"																		,"De onderstaande filters niet gekend zijn in DeepskyLog");
 define("LangCSVError6"																		,"De onderstaande oculairs niet gekend zijn in DeepskyLog");

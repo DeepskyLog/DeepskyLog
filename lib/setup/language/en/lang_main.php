@@ -470,7 +470,7 @@ define("LangAtlasWhatsnext"                               ,"Version:&nbsp;&nbsp;
 
 // text for fstOffset
 define("LangChangeAccountField12"                         ,"fstOffset");
-define("LangChangeAccountField12Expl"                     ,"Offset between measured SQM value and the faintest visible star. When fstOffset is 0.2, the limiting magnitude is 0.2 better than the value calculated using the SQM.");
+define("LangChangeAccountField12Expl"                     ,"Offset between measured SQM value and the faintest visible star.");
 
 // Visibility for resolved open clusters
 define("LangVisibilityOC1"                                ,"Very prominent and very beautiful cluster");
@@ -733,7 +733,7 @@ define("LangEditObjectDescription"												,"Edit Description");
 
 // content/change_account.php
 
-define("LangChangeAccountTitle"														,"Account details");
+define("LangChangeAccountTitle"														,"Settings");
 define("LangChangeAccountField1"													,"Username");
 define("LangChangeAccountField1Expl"											,"This is the name you will use to log in");
 define("LangChangeAccountField2"													,"Email address");
@@ -790,7 +790,7 @@ define("LangSearchAllLanguages"														,"Look again, using all languages."
 define("LangSearchDetailPage"															,"Set up a detailed search.");
 
 define("LangChangeMenuTitle"															,"Change");
-define("LangChangeMenuItem1"															,"Account details");
+define("LangChangeMenuItem1"															,"Settings");
 define("LangChangeMenuItem2"															,"New observation");
 define("LangChangeMenuItem3"															,"Instruments");
 define("LangChangeMenuItem4"															,"Locations");

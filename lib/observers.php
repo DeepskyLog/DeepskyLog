@@ -188,35 +188,36 @@ class Observers
   public  function valideAccount()
 	{	global $entryMessage, $objUtil, $objLanguage, $developversion,$loggedUser,$allLanguages,$mailTo,$mailFrom,
 	          $objMessages, $baseURL;
+	
 		if(!$_POST['email']||!$_POST['firstname']||!$_POST['name']||!$_POST['passwd']||!$_POST['passwd_again'])
 		{ $entryMessage.=LangValidateAccountMessage1;
-			if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
+		if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
 			else  $_GET['indexAction']='subscribe';
 		}
 		elseif($_POST['passwd']!=$_POST['passwd_again'])
 		{ $entryMessage.=LangValidateAccountMessage2;                                                              
-			if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
+		if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
 			else  $_GET['indexAction']='subscribe';
 		}
 		elseif($_POST['firstname']==$_POST['name'])
 		{ $entryMessage.=LangValidateAccountMessage6;                                                              
-			if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
+		if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
 			else  $_GET['indexAction']='subscribe';
 		}
-		elseif($_POST['motivation']=='' && !$loggedUser)
+		elseif(array_key_exists('motivation', $_POST) && $_POST['motivation']=='' && !$loggedUser)
 		{ $entryMessage.=LangValidateAccountMessage7;                                                              
-			if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
+		if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
 			else  $_GET['indexAction']='subscribe';
 		}
 		elseif(!preg_match("/.*@.*..*/", $_POST['email']) | preg_match("/(<|>)/", $_POST['email']))
 		{ $entryMessage.=LangValidateAccountMessage3;                              // check if email address is legal (contains @ symbol)
-			if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
+		if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
 			else  $_GET['indexAction']='subscribe';
 		} 
 		elseif(array_key_exists('register',$_POST)&&array_key_exists('deepskylog_id',$_POST)&&$_POST['register']&&$_POST['deepskylog_id']) 
 		{ if($this->getObserverProperty($_POST['deepskylog_id'],'name'))               // user doesn't exist yet
-		  { $entryMessage.=LangValidateAccountMessage4;                              // check if email address is legal (contains @ symbol)
-			  if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
+		{ $entryMessage.=LangValidateAccountMessage4;                              // check if email address is legal (contains @ symbol)
+		if($objUtil->checkPostKey('change')) $_GET['indexAction']='change_account';
 			  else  $_GET['indexAction']='subscribe';
 		  }  
 		  else
@@ -250,7 +251,8 @@ class Observers
 		  }
 		}  
 		elseif($objUtil->checkPostKey('change'))                // pressed change button
-		{ if(!$loggedUser)                                           // extra control on login
+		{ 
+			if(!$loggedUser)                                           // extra control on login
 		  { $entryMessage.=LangValidateAccountMessage1;                              
 			  $_GET['indexAction']='change_account';
 		  }
@@ -269,7 +271,7 @@ class Observers
 		    $this->setObserverProperty($loggedUser,'stdlocation', $_POST['site']);
 		    $this->setObserverProperty($loggedUser,'stdtelescope', $_POST['instrument']);
 		    $this->setObserverProperty($loggedUser,'standardAtlasCode', $_POST['atlas']);
-        $this->setObserverProperty($loggedUser,'fstOffset', $_POST['fstOffset']);
+		    $this->setObserverProperty($loggedUser,'fstOffset', $_POST['fstOffset']);
         $this->setObserverProperty($loggedUser,'overviewFoV', $_POST['overviewFoV']);
         $this->setObserverProperty($loggedUser,'lookupFoV', $_POST['lookupFoV']);
         $this->setObserverProperty($loggedUser,'detailFoV', $_POST['detailFoV']);
@@ -297,7 +299,7 @@ class Observers
 		    }
 		    $entryMessage.=LangValidateAccountMessage5;
 		    $_GET['user']=$loggedUser;
-		    $_GET['indexAction']='detail_observer';
+		    $_GET['indexAction']='change_account';
 		  }
 		}
 	}

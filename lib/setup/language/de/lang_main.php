@@ -4,6 +4,8 @@ define('GraphAccomplishments'			,'Leistungen');
 define('LangSelectColumns'        ,'Kies kolommen');
 define('LangNewMessage'           ,'Nieuw bericht');
 define('LangSendMessage'          ,'Zend bericht');
+define("LangChangeAccountTitle"		,"Settings");
+define("LangChangeMenuItem1"			,"Settings");
 
 define('LangUnderHorizon'				,'unter dem Horizont');
 
@@ -485,7 +487,7 @@ define("LangAtlasWhatsnext"                               ,"Version:&nbsp;&nbsp;
 
 // text for fstOffset
 define("LangChangeAccountField12"                         ,"fstOffset");
-define("LangChangeAccountField12Expl"                     ,"Ausgleich zwischen einem gemessenen SQM Wert und dem schw&auml;chsten sichtbaren Stern. Wenn fstOffset 0.2 betr&auml;gt ist die begrenzende Magnitude 0.2 besser als der vom SQM gemessene Wert");
+define("LangChangeAccountField12Expl"                     ,"Ausgleich zwischen einem gemessenen SQM Wert und dem schw&auml;chsten sichtbaren Stern. ");
 
 // Visibility for resolved open clusters
 define("LangVisibilityOC1"                                ,"Sehr auff&auml;lliger, besonders sch&ouml;ner Sternhaufen");
@@ -749,7 +751,6 @@ define("LangEditObjectDescription"												,"Beschreibung bearbeiten");
 
 // content/change_account.php
 
-define("LangChangeAccountTitle"														,"Benutzer Data");
 define("LangChangeAccountField1"													,"Name");
 define("LangChangeAccountField1Expl"											,"So werden Sie sich anmelden");
 define("LangChangeAccountField2"													,"Email adresse");
@@ -802,7 +803,6 @@ define("LangSearchAllLanguages"														,"Suche nochmal in allen Sprachen."
 define("LangSearchDetailPage"															,"Detailierte Suche.");
 
 define("LangChangeMenuTitle"															,"&Auml;ndern");
-define("LangChangeMenuItem1"															,"Benutzer Details");
 define("LangChangeMenuItem2"															,"Neue Beobachtung anlegen");
 define("LangChangeMenuItem3"															,"Beobachtungsger&auml;t");
 define("LangChangeMenuItem4"															,"Beobachtungsplatz");
