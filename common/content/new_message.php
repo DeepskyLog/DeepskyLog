@@ -17,16 +17,13 @@ function new_message()
 
 	  $senderName = $objObserver->getObserverProperty($loggedUser, "firstname") . "&nbsp;" . $objObserver->getObserverProperty($loggedUser, "name");
     
-	  echo "<div id=\"main\">";
-	  echo "<form action=\"".$baseURL."index.php\" method=\"post\" enctype=\"multipart/form-data\"><div>";
+	  echo "<div>";
+	  echo "<form class=\"form-horizontal\" role=\"form\" action=\"".$baseURL."index.php\" method=\"post\" enctype=\"multipart/form-data\">";
 		echo "<input type=\"hidden\" name=\"indexAction\"   value=\"validate_message\" />";
 	  
-		$content="<input type=\"submit\" name=\"newmessage\" value=\"" . "Zend bericht" . "\" />&nbsp;";
-		$objPresentations->line(array("<h4>"."Nieuw bericht"."</h4>",$content),"LR",array(80,20),30);
-
-		echo "<hr />";
-
-		echo "<div class=\"inputDiv\">";
+	  echo "<h4>" . LangNewMessage . "</h4>";
+		$content="<button class=\"pull-right btn btn-success\" type=\"submit\" name=\"newmessage\" />" . LangSendMessage . "</button>";
+		echo $content;
 
 		if ($id != -1) {
 		  $receiverId = $objMessages->getSender($id);
@@ -40,9 +37,16 @@ function new_message()
 		}
 		echo "<input type=\"hidden\" name=\"receiver\" value=\"".$receiverId."\" />";
 
-	  $objPresentations->line(array(LangMessageSender,$senderName,
-		                              LangMessageReceiver, $receiverName),
-		                        "RLRL",array(10,35,15,35),35,array("fieldname",""));
+	  echo "<div class=\"form-group\">";
+	  echo "<label class=\"col-sm-2 control-label\">" . LangMessageSender . "</label>";
+	  echo "<div class=\"col-sm-5\"><p class=\"form-control-static\">" . $senderName . "</p>";
+	  echo "</div></div>";
+
+	  echo "<div class=\"form-group\">";
+	  echo "<label class=\"col-sm-2 control-label\">" . LangMessageReceiver . "</label>";
+	  echo "<div class=\"col-sm-5\"><p class=\"form-control-static\">" . $receiverName . "</p>";
+	  echo "</div></div>";
+	   
 
 	  if ($id != -1) {
 	    $subject = $objMessages->getReplyToSubject($id);
@@ -57,9 +61,14 @@ function new_message()
 		$subject=$objPresentations->br2nl(html_entity_decode(preg_replace("/&amp;/", "&",$subject)));
 		$subject="<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"120\" name=\"subject\" size=\"60\" value=\"".$subject."\" />";
 		
-		$objPresentations->line(array(LangMessageSubject,$subject),
-		                        "RL",array(10,90),30,array("fieldname",""));
 
+		echo "<div class=\"form-group\">
+	         <label for=\"subject\" class=\"col-sm-2 control-label\">".LangMessageSubject."</label>
+	         <div class=\"col-sm-5\">" . $subject . 
+          "</div>
+	        </div>";
+		
+		
 		if ($id != -1) {
 		  $replyToMessage = $objMessages->getReplyToMessage($id);
 		} else {
@@ -67,13 +76,14 @@ function new_message()
 		}
 
     $message=$objPresentations->br2nl(html_entity_decode(preg_replace("/&amp;/", "&",$replyToMessage)));
-		$contentDescription="<textarea name=\"message\" required class=\"messageArea inputfield requiredField\" cols=\"1\" rows=\"1\">".$message."</textarea>";
-		
-	  $objPresentations->line(array(LangMessageMessage,$contentDescription),
-		                        "RL",array(10,90),250,array("fieldname",""));
+		$contentDescription="<textarea name=\"message\" required class=\"form-control inputfield requiredField\" rows=\"15\">".$message."</textarea>";
+
+		echo "<div class=\"form-group\">
+	         <label for=\"subject\" class=\"col-sm-2 control-label\">".LangMessageMessage."</label>
+	         <div class=\"col-sm-5\">" . $contentDescription .
+			         "</div>
+	        </div>";
 	  
-    echo "</div>";
-    echo "</div>";
     echo "</form>";
     echo "</div>";
   } else {

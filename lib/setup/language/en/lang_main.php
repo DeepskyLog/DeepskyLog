@@ -2,6 +2,8 @@
 // This is version 4.4
 define('GraphAccomplishments'			,'Accomplishments');
 define('LangSelectColumns'        ,'Select columns');
+define('LangNewMessage'           ,'New message');
+define('LangSendMessage'          ,'Send message');
 
 // This is version 4.3
 define('LangUnderHorizon'				,'under the horizon');

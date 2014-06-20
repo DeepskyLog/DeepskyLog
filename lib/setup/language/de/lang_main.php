@@ -2,6 +2,8 @@
 // This is version 4.4
 define('GraphAccomplishments'			,'Leistungen');
 define('LangSelectColumns'        ,'Kies kolommen');
+define('LangNewMessage'           ,'Nieuw bericht');
+define('LangSendMessage'          ,'Zend bericht');
 
 define('LangUnderHorizon'				,'unter dem Horizont');
 
