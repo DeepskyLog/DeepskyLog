@@ -795,7 +795,7 @@ function view_observer()
   
   // Total number of planetary nebulae
   echo "<div class=\"accomplishmentRow\">";
-  echo "<h4>Globular clusters seen</h4>";
+  echo "<h4>Planetary Nebulae seen</h4>";
   
   drawStar($objAccomplishments->getPlanetaryNebulaNewbie($user), "newbie", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!");
   drawStar($objAccomplishments->getPlanetaryNebulaRookie($user), "rookie", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!");

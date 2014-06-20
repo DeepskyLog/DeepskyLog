@@ -1,6 +1,6 @@
 <?php //FR
 // This is version 4.4
-define('GraphAccomplishments'			,'R&eamp;alisations');
+define('GraphAccomplishments'			,'&Eacute;toiles de DeepskyLog');
 define('LangSelectColumns'        ,'Kies kolommen');
 define('LangNewMessage'           ,'Nieuw bericht');
 define('LangSendMessage'          ,'Zend bericht');

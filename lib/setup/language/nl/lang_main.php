@@ -1,6 +1,6 @@
 <?php //NL
 // This is version 4.4
-define('GraphAccomplishments'			,'Realisaties');
+define('GraphAccomplishments'			,'DeepskyLog sterren');
 define('LangSelectColumns'        ,'Kies kolommen');
 define('LangNewMessage'           ,'Nieuw bericht');
 define('LangSendMessage'          ,'Zend bericht');
