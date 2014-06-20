@@ -76,7 +76,7 @@ function view_observer()
 	  echo "<input type=\"hidden\" name=\"user\" value=\"".$user."\" />";
 	  echo "<div class=\"form-group\">";
 	  echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField1 . "</label>";
-	  echo "<div class=\"col-sm-5\">" . $objObserver->getObserverProperty($user,'id');
+	  echo "<div class=\"col-sm-5\"><p class=\"form-control-static\">" . $objObserver->getObserverProperty($user,'id') . "</p>";
 	  echo "</div></div>";
 	  echo "<div class=\"form-group\">
 	         <label for=\"email\" class=\"col-sm-2 control-label\">".LangChangeAccountField2."</label>
@@ -105,6 +105,14 @@ function view_observer()
 	         	<input type=\"submit\" class=\"btn btn-primary\" name=\"change_password\" value=\""."Change password"."\" />
 	         </div>	         		
 	        </div>";
+	  echo "<div class=\"form-group\">";
+	  echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField7 . "</label>";
+	  echo "<div class=\"col-sm-5\"><p class=\"form-control-static\"><a href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=".urlencode($location_id)."\">".$location_name."</a></p>";
+	  echo "</div></div>";
+	  echo "<div class=\"form-group\">";
+	  echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField8 . "</label>";
+	  echo "<div class=\"col-sm-5\"><p class=\"form-control-static\">" . ($instrumentname?"<a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($objObserver->getObserverProperty($user,'stdtelescope'))."\">".(($instrumentname=="Naked eye")?InstrumentsNakedEye:$instrumentname)."</a>":"");
+	  echo "</p></div></div>";
 	  echo "</form>";
 	}
 	else
@@ -122,19 +130,19 @@ function view_observer()
 		        <td>" . $objObserver->getObserverProperty($user,'name') . 
 		       "</td>
 		       </tr>";
+		echo " <tr>
+				    <td>". LangChangeAccountField7 .
+	         "</td>
+	          <td><a href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=".urlencode($location_id)."\">".$location_name."</a> 
+	          </td>
+	         </tr>";
+		echo " <tr>
+	          <td>". LangChangeAccountField8 .
+	         "</td>
+ 	          <td>" . ($instrumentname?"<a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($objObserver->getObserverProperty($user,'stdtelescope'))."\">".(($instrumentname=="Naked eye")?InstrumentsNakedEye:$instrumentname)."</a>":"") . 
+   	       "</td>
+ 	         </tr>";
 	}
-	echo " <tr>
-	        <td>". LangChangeAccountField7 .
-	       "</td>
-	        <td><a href=\"".$baseURL."index.php?indexAction=detail_location&amp;location=".urlencode($location_id)."\">".$location_name."</a> 
-	        </td>
-	       </tr>";
-	echo " <tr>
-	        <td>". LangChangeAccountField8 .
-	       "</td>
- 	        <td>" . ($instrumentname?"<a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($objObserver->getObserverProperty($user,'stdtelescope'))."\">".(($instrumentname=="Naked eye")?InstrumentsNakedEye:$instrumentname)."</a>":"") . 
-   	      "</td>
- 	       </tr>";
 	if($objUtil->checkSessionKey('admin')=="yes")
 	{ echo "<form class=\"form-horizontal\" role=\"form\" action=\"".$baseURL."index.php\" >";
 	  echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_role\" />";
@@ -145,22 +153,24 @@ function view_observer()
  	  { 
  	  	echo "<div class=\"form-group\">
 	         <label for=\"role\" class=\"col-sm-2 control-label\">".LangViewObserverRole."</label>
-	         <div class=\"col-sm-5\">
-	         		<select name=\"role\" class=\"\">
+	         <div class=\"col-sm-3\">
+	         		<select name=\"role\" class=\"form-control\">
  	            <option ".(($objObserver->getObserverProperty($user,'role',2)==RoleAdmin)?"selected=\"selected\"":"")." value=\"0\">".LangViewObserverAdmin."</option>
  	            <option ".(($objObserver->getObserverProperty($user,'role',2)==RoleUser)?"selected=\"selected\"":"")." value=\"1\">".LangViewObserverUser."</option>
  	            <option ".(($objObserver->getObserverProperty($user,'role',2)==RoleCometAdmin)?"selected=\"selected\"":"")." value=\"4\">".LangViewObserverCometAdmin."</option>
  	            <option ".(($objObserver->getObserverProperty($user,'role',2)==RoleWaitlist)?"selected=\"selected\"":"")." value=\"2\">".LangViewObserverWaitlist."</option>
-              </select>&nbsp;
-              <input type=\"submit\" name=\"change\" value=\"".LangViewObserverChange."\" />
+ 	          </select>&nbsp;
+           </div>
+           <div class=\"col-sm-2\">
+                <button type=\"submit\" class=\"btn btn-default\" name=\"change\">".LangViewObserverChange."</button>
            </div>
 	        </div>";
 	  }
  	  elseif($objObserver->getObserverProperty($user,'role',2)==RoleWaitlist) {
-	  echo "<div class=\"form-group\">";
-	  echo "<label class=\"col-sm-2 control-label\">" . LangViewObserverRole . "</label>";
-	  echo "<div class=\"col-sm-5\">" . LangViewObserverWaitlist;
-	  echo "</div></div>";
+	    echo "<div class=\"form-group\">";
+	    echo "<label class=\"col-sm-2 control-label\">" . LangViewObserverRole . "</label>";
+	    echo "<div class=\"col-sm-5\">" . LangViewObserverWaitlist;
+	    echo "</div></div>";
  	  } else                                                                          // fixed admin role
  	  { 
 	  echo "<div class=\"form-group\">";
@@ -251,7 +261,7 @@ function view_observer()
 	if ($loggedUser != "") {
 		echo "<br />";
 		echo "<a class=\"btn btn-primary\" href=\"" . $baseURL . "index.php?indexAction=new_message&amp;receiver=" . $user . "\">";
- 		echo "<span class=\"glyphicon glyphicon-envelope\"> " . LangMessagePublicList5 . $firstname ."</a>";
+ 		echo "<span class=\"glyphicon glyphicon-envelope\"> " . LangMessagePublicList5 . $firstname ."</a></span>";
 	}
 
 	echo "<hr />";
