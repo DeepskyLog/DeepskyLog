@@ -52,12 +52,11 @@ define("LangpdfOrientationPortrait"     ,"portrait");
 define("LangpdfOrientationLandscape"    ,"landscape");
 define("LangSearchMenuItem14"           ,"Beeldencatalogi");
 define("LangSearchMenuItem13"           ,"Atlassen");
-define('LangAtlassesIntro00'            ,'General information');
-define('LangAtlassesIntro01'            ,"Je kan drie types atlassen downloaden:<br />
-                                           - de <b>overzicht</b> atlassen hebben paginas van 20 graden, en tonen sterren tot magnitude 10;<br />
-                                           - de <b>opzoek</b> atlassen hebben paginas van 12 graden, en tonen sterren tot magnitude 12;<br />
-                                           - de <b>detail</b> atlassen hebben paginas van 6 graden, and show stars to magnitude 15.<br/><br/>
-                                           De atlassen vermelden of de objecten al gezien zijn in Deepskylog (streepjes onderlijnd)<br />
+define('LangAtlassesIntro00'            ,'DeepskyLog atlassen');
+define('LangAtlassesIntro01'            ,"De <b>overzicht</b> atlassen hebben paginas van 20 graden, en tonen sterren tot magnitude 10.");
+define('LangAtlassesIntro01a'           ,"De <b>opzoek</b> atlassen hebben paginas van 12 graden, en tonen sterren tot magnitude 12.");
+define('LangAtlassesIntro01b'           ,"De <b>detail</b> atlassen hebben paginas van 6 graden, en tonen sterren tot magnitude 15.");
+define('LangAtlassesIntro01c'           ,"De atlassen vermelden of de objecten al gezien zijn in Deepskylog (streepjes onderlijnd)<br />
                                            of door jezelf (bij de gepersonaliseerde atlassen voor geregistreerde gebruikers, volledige onderlijnd, of ook overlijnd indien geschetst).");
 define('LangAtlassesIntro02'            ,'Algemene atlassen / gepersonaliseerde atlassen');
 define('LangAtlassesIntro03'            ,'Je kan kiezen voor algemene atlassen, of (als je een geregistreerde gebruiker bent) voor gepersonaliseerde atlassen.<br>

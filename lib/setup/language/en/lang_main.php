@@ -52,12 +52,11 @@ define("LangpdfOrientationPortrait"     ,"portrait");
 define("LangpdfOrientationLandscape"    ,"landscape");
 define("LangSearchMenuItem14"           ,"Image Catalogs");
 define("LangSearchMenuItem13"           ,"Atlasses");
-define('LangAtlassesIntro00'            ,'General information');
-define('LangAtlassesIntro01'            ,"You can download three kind of atlasses:<br />
-                                           - the <b>overview</b> atlasses have pages of 20 degrees, and show stars to magnitude 8;<br />
-                                           - the <b>lookup</b> atlasses have pages of 10 degrees, and show stars to magnitude 11;<br />
-                                           - the <b>detail</b> atlasses have page of 5 degrees, and show stars to magnitude 14.<br/><br/>
-                                           The atlasses mention if the objects are already seen in Deepskylog (dotted underline)<br />
+define('LangAtlassesIntro00'            ,'DeepskyLog atlasses');
+define('LangAtlassesIntro01'            ,"The <b>overview</b> atlasses have pages of 20 degrees, and show stars to magnitude 10.");
+define('LangAtlassesIntro01a'           ,"The <b>lookup</b> atlasses have pages of 12 degrees, and show stars to magnitude 12.");
+define('LangAtlassesIntro01b'           ,"The <b>detail</b> atlasses have page of 6 degrees, and show stars to magnitude 15.");
+define('LangAtlassesIntro01c'           ,"The atlasses mention if the objects are already seen in Deepskylog (dotted underline)<br />
                                            or by yourself (personalised atlasses for registered users, full underline, or overline if sketched).");
 define('LangAtlassesIntro02'            ,'General Atlasses / Personalised Atlasses');
 define('LangAtlassesIntro03'            ,'You can either go for general atlasses, or (if you are a registered user) personalised atlasses.<br>

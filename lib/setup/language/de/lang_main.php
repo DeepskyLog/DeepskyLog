@@ -57,12 +57,11 @@ define("LangpdfOrientationPortrait"     ,"Portrait");
 define("LangpdfOrientationLandscape"    ,"Landschaft");
 define("LangSearchMenuItem14"           ,"Bildb&auml;nde");
 define("LangSearchMenuItem13"           ,"Atlanten");
-define('LangAtlassesIntro00'            ,'Allgemeine Informationen');
-define('LangAtlassesIntro01'            ,"Sie k&ouml;nnen drei Arten von Atlanten downloaden:<br />
-                                          - <b>&uuml;bersicht</b>s Atlanten haben Seiten mit je 20 Grad und Sternen bis zu Mag 8;<br />
-                                          - <b>Nachschlage</b> Atlanten haben Seiten mit je 10 Grad und Sternen bis zu Mag 11;<br />
-                                          - <b>Detail</b> Atlanten haben Seiten mit je 5 Grad und Sternen bis zu Mag 14.<br/><br/>
-                                          Jeder Atlas zeigt an, ob f&uuml;r ein Objekt bereits eine Beobachtung in Deepskylog existiert (gestrichelt unterstrichen)<br />
+define('LangAtlassesIntro00'            ,'DeepskyLog Atlanten');
+define('LangAtlassesIntro01'            ,"<b>&Uuml;bersicht</b>s Atlanten haben Seiten mit je 20 Grad und Sternen bis zu Mag 10");
+define('LangAtlassesIntro01a'           ,"<b>Nachschlage</b> Atlanten haben Seiten mit je 12 Grad und Sternen bis zu Mag 12");
+define('LangAtlassesIntro01b'           ,"<b>Detail</b> Atlanten haben Seiten mit je 6 Grad und Sternen bis zu Mag 15.");
+define('LangAtlassesIntro01c'           ,"Jeder Atlas zeigt an, ob f&uuml;r ein Objekt bereits eine Beobachtung in Deepskylog existiert (gestrichelt unterstrichen)<br />
                                           oder sogar eine Beobachtung von Ihnen vorliegt (personalisierte Atlanten f&uuml;r registrierte Benutzer, unterstrichen bzw. &uuml;berstrichen wenn eine Zeichnung hinzugef&uuml;gt wurde).");
 define('LangAtlassesIntro02'            ,'Allgemeine Atlanten / Personalisierte Atlanten');
 define('LangAtlassesIntro03'            ,'Sie k&ouml;nnen zu allgemeinen Atlanten wechseln, oder (wenn Sie angemeldet sind) zu personalisierten Atlanten.<br>

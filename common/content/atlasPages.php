@@ -16,18 +16,59 @@ function atlasPages()
   echo "</script>";
 
   echo "<script type=\"text/javascript\" src=\"".$baseURL."common/content/atlasPages.js\"></script>";
-	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
+  echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
 	
   $exampleText = AtlasExample;
-  echo "<a href=\"" . $baseURL . "images/AtlasExample.jpg\" data-lightbox=\"image-1\" data-title=\"\">";
-  echo "<img class=\"floatright\" width=\"30%\" src=\"" . $baseURL . "images/AtlasExample.jpg\"  alt=\"" . $exampleText . "\"/>";
-  echo "</a>";
-	echo"<h1>".LangAtlassesIntro00."</h1>";
-	echo "<p>".LangAtlassesIntro01."</p>";
-	echo "<h2>".LangAtlassesIntro02."</h2>";
+  echo"<h3>".LangAtlassesIntro00."</h3>";
+  
+  echo "<div id=\"carousel-example-generic\" class=\"carousel slide\" data-ride=\"carousel\"  data-interval=\"5000\">
+       <!-- Indicators -->
+       <ol class=\"carousel-indicators\">
+        <li data-target=\"#carousel-example-generic\" data-slide-to=\"0\" class=\"active\"></li>
+        <li data-target=\"#carousel-example-generic\" data-slide-to=\"1\"></li>
+        <li data-target=\"#carousel-example-generic\" data-slide-to=\"2\"></li>
+  		</ol>
+  
+       <!-- Wrapper for slides -->
+       <div class=\"carousel-inner\">
+        <div class=\"item active\">
+         <img src=\"". $baseURL . "images/AtlasExample.jpg\" alt=\"...\">
+         <div class=\"carousel-caption\" style=\"background: gray;\"><p>" .
+           LangAtlassesIntro01 . "<br />" . LangAtlassesIntro01c .
+           "</p>
+         </div>
+        </div>
+        <div class=\"item\">
+         <img src=\"". $baseURL . "images/AtlasExample1.jpg\" alt=\"...\">
+         <div class=\"carousel-caption\" style=\"background: gray;\"><p>" .
+           LangAtlassesIntro01a . "<br />" . LangAtlassesIntro01c .
+           "</p>
+         </div>
+        </div>
+        <div class=\"item\">
+         <img src=\"". $baseURL . "images/AtlasExample2.jpg\" alt=\"...\">
+         <div class=\"carousel-caption\" style=\"background: gray;\"><p>" .
+           LangAtlassesIntro01b . "<br />" . LangAtlassesIntro01c .
+           "</p>
+         </div>
+        </div>
+       </div>
+  
+      	<!-- Controls -->
+        <a class=\"left carousel-control\" href=\"#carousel-example-generic\" data-slide=\"prev\">
+         <span class=\"glyphicon glyphicon-chevron-left\"></span>
+        </a>
+        <a class=\"right carousel-control\" href=\"#carousel-example-generic\" data-slide=\"next\">
+         <span class=\"glyphicon glyphicon-chevron-right\"></span>
+        </a>";
+  echo "</div>";
+  
+  
+  
+	echo "<h3>".LangAtlassesIntro02."</h3>";
 	echo "<p>".LangAtlassesIntro03."</p>";
 
-	echo "<h3>".LangAtlasChoosePageLayout."</h3>";
+	echo "<h4>".LangAtlasChoosePageLayout."</h4>";
 	echo "<hr />";
 	echo "<p>";
 	echo LangAtlasPageOrientation;
