@@ -42,7 +42,7 @@ function databaseInfo()
   $vvsInfo       = "VVS Deepsky&nbsp;-&nbsp;";
   $dslInfo       = "Powered by&nbsp;DeepskyLog&nbsp;";
   $versionInfo   = "4.4-Trunk";
-  $objectInfo    = "Object Database by Eye&amp;Telescope<br />" . 
+  $objectInfo    = "Object Database by Eye&amp;Telescope - " . 
                    "Star Database by Tycho2+ &amp; USNO-UCAC3";
   
   // Allow users to register from within the DeepskyLog application directly

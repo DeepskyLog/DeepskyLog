@@ -40,7 +40,7 @@ try
   		    <div class=\"collapse navbar-collapse\" id=\"bs-example-navbar-collapse-1\">
   		     <ul class=\"nav navbar-nav navbar-left\">
   		  		<p class=\"navbar-text\">" . 
-  		       $copyrightInfo." - " . $vvsInfo.$dslInfo.$versionInfo." - ".$objectInfo . " - " . $objectInfo2 . 
+  		       $copyrightInfo." - " . $vvsInfo.$dslInfo.$versionInfo." - ".$objectInfo . 
   		      "</p>
   		     </ul>";
   
