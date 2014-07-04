@@ -28,10 +28,10 @@ function menu_quickpick()
 	echo "<input type=\"hidden\" name=\"myLanguages\" value=\"true\" />";
 	echo "<input type=\"search\" placeholder=\"M 45\" id=\"quickpickobject\" name=\"object\" title=\"".LangQuickPickHelp."\" value=\"".((array_key_exists('object',$_GET)&&($_GET['object']!='* '))?$_GET['object']:"")."\" />";
 	if($menuSearch=="expanded")
-	{	echo "<div class=\"form group\"><input class=\"btn btn-primary btn-sm\" type=\"submit\" name=\"searchObjectQuickPickQuickPick\" value=\"".LangQuickPickSearchObject."\" /></div>";
-		echo "<div class=\"form group\"><input class=\"btn btn-primary btn-sm\" type=\"submit\" name=\"searchObservationsQuickPick\" value=\"".LangQuickPickSearchObservations."\" /></div>";
+	{	echo "<div class=\"form group\"><input class=\"btn btn-default btn-sm\" type=\"submit\" name=\"searchObjectQuickPickQuickPick\" value=\"".LangQuickPickSearchObject."\" /></div>";
+		echo "<div class=\"form group\"><input class=\"btn btn-default btn-sm\" type=\"submit\" name=\"searchObservationsQuickPick\" value=\"".LangQuickPickSearchObservations."\" /></div>";
 		if($loggedUser)	
-	  	echo "<div class=\"form group\"><input class=\"btn btn-primary btn-sm\" type=\"submit\" name=\"newObservationQuickPick\" value=\"".LangQuickPickNewObservation."\" /></div>";
+	  	echo "<div class=\"form group\"><input class=\"btn btn-default btn-sm\" type=\"submit\" name=\"newObservationQuickPick\" value=\"".LangQuickPickNewObservation."\" /></div>";
 	}
 	echo "</form></li>";
 }

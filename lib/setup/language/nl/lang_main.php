@@ -12,7 +12,7 @@ define('LangAtlasBrowserInfo'           ,'De gepersonaliseerde atlassen zijn enk
 define('atlasPageCenteredOn'            ,'Centrum op ');
 define('LangNoIndexEntries'             ,"Geen index elementen");
 define('LangAtlasPageOrientation'       ,"Pagina ori&euml;ntatie");
-define('LangAtlasPageSize'              ,"Pagina-grootte:");
+define('LangAtlasPageSize'              ,"Pagina-grootte");
 define('LangPageGenerationra'           ,'Generatie rechte klimming (h m s):');
 define('LangPageGenerationdecl'         ,'declinatie (h m s):');
 define('LangAtlasButton1'               ,"Overzicht");
