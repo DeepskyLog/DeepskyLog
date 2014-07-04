@@ -40,49 +40,46 @@ class Lenses
   }
   public  function showLensesObserver()
   { global $baseURL,$loggedUser,$objUtil,$objLens,$objPresentations,$loggedUserName;
-    $sort=$objUtil->checkGetKey('sort','name');
-		$lns =$objLens->getSortedLenses($sort, $loggedUser);
+		$lns =$objLens->getSortedLenses('id', $loggedUser);
 		if ($lns!=null)
-		{ $orig_previous=$objUtil->checkGetKey('previous','');
-		  if((isset($_GET['sort']))&&($orig_previous==$_GET['sort'])) // reverse sort when pushed twice
-		  { if ($_GET['sort'] == "name")
-		      $lns = array_reverse($lns, true);
-		    else
-		    { krsort($lns);
-		      reset($lns);
-		    }
-		    $previous = "";
-		  }
-		  else
-		    $previous = $sort;
-		  echo "<table>";
-		  echo "<tr class=\"type3\">";
-      echo "<td class=\"centered\">".LangViewActive."</td>";
-		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_lens&amp;sort=name&amp;previous=$previous\">".LangViewLensName."</a></td>";
-		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_lens&amp;sort=factor&amp;previous=$previous\" class=\"centered\">".LangViewLensFactor."</a></td>";
-		  echo "<td></td>";
-		  echo "</tr>";
-		  $count = 0;
+		{ // Add the button to select which columns to show
+		  $objUtil->addTableColumSelector();
+
+		  echo "<table class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
+		  echo "<thead><tr>";
+      echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">".LangViewActive."</td>";
+		  echo "<th>".LangViewLensName."</th>";
+		  echo "<th>".LangViewLensFactor."</th>";
+		  echo "<th>".LangTopObserversHeader3."</th>";
+		  echo "</tr></thead>";
 		  while(list($key,$value)=each($lns))
 		  { $name = stripslashes($objLens->getLensPropertyFromId($value,'name'));
 		    $factor = $objLens->getLensPropertyFromId($value,'factor');
-		    echo "<tr class=\"type".(2-($count%2))."\">";
-        echo "<td class=\"centered\">".
+		    echo "<tr>";
+        echo "<td>".
              "<input id=\"lensactive".$value."\" type=\"checkbox\" ".($objLens->getLensPropertyFromId($value,'lensactive')?" checked=\"checked\" ":"").
                     " onclick=\"setactivation('lens',".$value.");\" />".
             "</td>";
 		    echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_lens&amp;lens=".urlencode($value)."\">".$name."</a></td>";
-		    echo "<td class=\"centered\">".$factor."</td>";
+		    echo "<td>".$factor."</td>";
 		    echo "<td>";
-		    if(!($obsCnt=$objLens->getLensUsedFromId($value)))
+		    if(!($obsCnt=$objLens->getLensUsedFromId($value))) {
 		      echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_lens&amp;lensid=".urlencode($value)."\">".LangRemove."</a>";
-		    else
-		      echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".$loggedUser."&amp;lens=".$value."&amp;exactinstrumentlocation=true\">".$obsCnt.' '.LangGeneralObservations."</a>";
+		    } else {
+		      echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".$loggedUser."&amp;lens=".$value."&amp;exactinstrumentlocation=true\">";
+		      if ($obsCnt > 1) {
+		      	echo $obsCnt.' '.LangGeneralObservations."</a>";
+		      } else {
+		      	echo $obsCnt.' '.LangGeneralObservation."</a>";
+		      }
+		    }
 		    echo "</td>";
 		    echo "</tr>";
-		    $count++;
 		  }
 		  echo "</table>";
+		  echo $objUtil->addTablePager();
+
+		  echo $objUtil->addTableJavascript();
 		  echo "<hr />";
 		} 	
   }

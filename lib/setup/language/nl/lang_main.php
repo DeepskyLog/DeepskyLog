@@ -525,7 +525,8 @@ $atlasPageText=array(
 
 
 
-define("LangGeneralObservations"													,"observaties");
+define("LangGeneralObservations"													,"waarnemingen");
+define("LangGeneralObservation" 													,"waarneming");
 
 define("LangIndexPleaseWait"															,"Gelieve een moment te wachten terwijl de gegevens opgehaald worden...");
 
@@ -811,10 +812,10 @@ define("LangInstrumentMenuTitle"													,"Instrument");
 define("LangLanguageMenuTitle"														,"Taal");
 define("LangLanguageMenuButton"														,"Verander");
 
-define("LangOverviewSiteTitle"														,"Overzicht waarneemplaatsen");
+define("LangOverviewSiteTitle"														,"Waarneemplaatsen van");
 define("LangAddSiteExisting"															,"Voeg bestaande waarneemplaats toe");
 
-define("LangOverviewEyepieceTitle"												,"Overzicht oculairs");
+define("LangOverviewEyepieceTitle"												,"Oculairs van");
 define("LangAddEyepieceExisting"													,"Selecteer de oculairgegevens uit de lijst");
 define("LangAddEyepieceManually"													,"voeg de oculairgegevens manueel in");
 define("LangAddEyepieceTitle"															,"Voeg een nieuw oculair toe");
@@ -830,7 +831,7 @@ define("LangAddEyepieceButton"														,"Voeg oculair toe");
 define("LangAddEyepieceButton2"														,"Verander oculair");
 define("LangDetailEyepiece"                               ,"Details oculair");
 
-define("LangOverviewLensTitle"														,"Overzicht lenzen");
+define("LangOverviewLensTitle"														,"Lenzen van");
 define("LangViewLensName"																	,"Naam");
 define("LangViewLensFactor"																,"Factor");
 define("LangAddLensTitle"																	,"Nieuwe lens");
@@ -849,7 +850,7 @@ define("LangValidateLensMessage4"													,"Lens aangepast");
 define("LangValidateLensMessage5"													,"De lens is aangepast in je lijst met uitrustingen");
 define("LangDetailLens"                                   ,"Details lens");
 
-define("LangOverviewFilterTitle"													,"Overzicht filters");
+define("LangOverviewFilterTitle"													,"Filters van");
 define("LangViewFilterName"																,"Naam");
 define("LangViewFilterType"																,"Type");
 define("LangViewFilterColor"															,"Kleur");
@@ -1180,7 +1181,7 @@ define("LangViewLocationTitle2"														,"Locatie detail");
 
 // content/overview_instruments.php
 
-define("LangOverviewInstrumentsTitle"											,"Instrumenten overzicht");
+define("LangOverviewInstrumentsTitle"											,"Instrumenten van");
 define("LangOverviewInstrumentsName"											,"Naam");
 define("LangOverviewInstrumentsDiameter"									,"Diameter (mm)");
 define("LangOverviewInstrumentsFD"												,"F/D");

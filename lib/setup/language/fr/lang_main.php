@@ -503,6 +503,7 @@ define("LangDetailDSColor6"                               ,"bleu");
 
 
 define("LangGeneralObservations"													,"observations");
+define("LangGeneralObservation" 													,"observation");
 
 define("LangIndexPleaseWait"															,"Pri&egrave;re d'attendre un moment pendant la recherche des donn&eacute;es...");
 
@@ -786,10 +787,10 @@ define("LangInstrumentMenuTitle"													,"Instrument");
 define("LangLanguageMenuTitle"														,"Langue");
 define("LangLanguageMenuButton"														,"Changer");
 
-define("LangOverviewSiteTitle"														,"Aper&#231;u des endroits d'observation");
+define("LangOverviewSiteTitle"														,"Endroits d'observation de");
 define("LangAddSiteExisting"															,"Rajoutez un endroit existant");
 
-define("LangOverviewEyepieceTitle"												,"aper&#231;u oculaires");
+define("LangOverviewEyepieceTitle"												,"Oculaires de");
 define("LangAddEyepieceExisting"													,"S&eacute;lectionnez les donn&eacute;es de l'oculaire de la liste");
 define("LangAddEyepieceManually"													,"specifiez manuellement les d&eacute;tails de l'oculaire");
 define("LangAddEyepieceTitle"															,"Rajoutez un novel oculaire");
@@ -805,7 +806,7 @@ define("LangAddEyepieceButton"														,"Rajoutez oculaire");
 define("LangAddEyepieceButton2"														,"Modifiez oculaire"); 
 define("LangDetailEyepiece"                               ,"D&#233;tails de l'oculaire");
 
-define("LangOverviewLensTitle"														,"Aper&#231;u lentilles Barlow");
+define("LangOverviewLensTitle"														,"Lentilles Barlow de");
 define("LangViewLensName"																	,"Nom");
 define("LangViewLensFactor"																,"Facteur");
 define("LangAddLensTitle"																	,"Rajoutez une nouvelle lentille Barlow");
@@ -824,7 +825,7 @@ define("LangValidateLensMessage4"													,"Letille Barlow modifi&#233;e");
 define("LangValidateLensMessage5"													,"Cette lentille Barlow est modifi&#233;e dans la banque de donn&#233;es");
 define("LangDetailLens"                                   ,"D&#233;tails de la lentille");
 
-define("LangOverviewFilterTitle"													,"Aper&#231;u filtres");
+define("LangOverviewFilterTitle"													,"Filtres de");
 define("LangViewFilterName"																,"Nom");
 define("LangViewFilterType"																,"Type");
 define("LangViewFilterColor"															,"Couleur");
@@ -1155,7 +1156,7 @@ define("LangViewLocationTitle2"														,"D&eacute;tail endroit");
 
 // content/overview_instruments.php
 
-define("LangOverviewInstrumentsTitle"											,"Aper&ccedil;u des instruments");
+define("LangOverviewInstrumentsTitle"											,"Instruments de");
 define("LangOverviewInstrumentsName"											,"Nom");
 define("LangOverviewInstrumentsDiameter"									,"Diam&egrave;tre (mm)");
 define("LangOverviewInstrumentsFD"												,"F/D");

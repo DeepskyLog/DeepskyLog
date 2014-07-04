@@ -134,38 +134,29 @@ class Locations
   }
   public  function showLocationsObserver()
   { global $baseURL,$loggedUser,$objObserver,$objUtil,$objLocation,$objPresentations,$loggedUserName,$objContrast,$locationid,$sites;
-    $sort=$objUtil->checkGetKey('sort','name');
 		if($sites!=null)
-		{ $orig_previous=$objUtil->checkGetKey('previous','');
-		  if((isset($_GET['sort']))&&($orig_previous==$_GET['sort']))                   // reverse sort when pushed twice
-		  { if ($_GET['sort'] == "name")
-		      $insts = array_reverse($insts, true);
-		    else
-		    { krsort($insts);
-		      reset($insts);
-		    }
-		    $previous = "";
-		  }
-		  else
-		    $previous = $sort;
-		  echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
+		{ echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 		  echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 		  echo "<input type=\"hidden\" name=\"adaptStandardLocation\" value=\"1\" />";
-		  echo "<table>";
-		  echo "<tr class=\"type3\">";
-      echo "<td class=\"centered\">".LangViewActive."</td>";
-		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=name&amp;previous=$previous\">".LangViewLocationLocation."</a></td>";
-		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=region&amp;previous=$previous\">".LangViewLocationProvince."</a></td>";
-		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=country&amp;previous=$previous\">".LangViewLocationCountry."</a></td>";
-		  echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=longitude&amp;previous=$previous\">".LangViewLocationLongitude."</a></td>";
-		  echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=latitude&amp;previous=$previous\">".LangViewLocationLatitude."</a></td>";
-		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=timezone&amp;previous=$previous\">".LangAddSiteField6."</a></td>";
-		  echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=limitingMagnitude&amp;previous=$previous\">".LangViewLocationLimMag."</a></td>";
-		  echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_site&amp;sort=skyBackground&amp;previous=$previous\">".LangViewLocationSB."</a></td>";
-		  echo "<td class=\"centered\">".LangViewLocationStd."</td>";
-		  echo "<td></td>";
-		  echo "</tr>";
-		  $count = 0;
+		  
+		  // Add the button to select which columns to show
+		  $objUtil->addTableColumSelector();
+		  
+		  echo "<table class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
+		  echo "<thead><tr>";
+		  echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">".LangViewActive."</td>";
+		  
+		  echo "<th>".LangViewLocationLocation."</th>";
+		  echo "<th>".LangViewLocationProvince."</th>";
+		  echo "<th>".LangViewLocationCountry."</th>";
+		  echo "<th class=\"sorter-digit\">".LangViewLocationLongitude."</th>";
+		  echo "<th class=\"sorter-digit\">".LangViewLocationLatitude."</th>";
+		  echo "<th>".LangAddSiteField6."</th>";
+		  echo "<th>".LangViewLocationLimMag."</th>";
+		  echo "<th>".LangViewLocationSB."</th>";
+		  echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">".LangViewLocationStd."</th>";
+		  echo "<th>".LangTopObserversHeader3."</th>";
+		  echo "</tr></thead>";
 		  while(list($key,$value)=each($sites))
 		  { $sitename=stripslashes($objLocation->getLocationPropertyFromId($value,'name'));
 		    $region=stripslashes($objLocation->getLocationPropertyFromId($value,'region'));
@@ -191,31 +182,40 @@ class Locations
 		    else
 		      $sb=sprintf("%.1f", $objContrast->calculateSkyBackgroundFromLimitingMagnitude($limmag));
 		    if($value!="1")
-		    { echo "<tr class=\"type".(2-($count%2))."\">";
-          echo "<td class=\"centered\">".
+		    { echo "<tr>";
+          echo "<td>".
             "<input id=\"locationactive".$value."\" type=\"checkbox\" ".($objLocation->getLocationPropertyFromId($value,'locationactive')?" checked=\"checked\" ":"").
                     " onclick=\"setactivation('location',".$value.");\" />".
             "</td>";
 		      echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_site&amp;location=".urlencode($value)."\">".$sitename."</a></td>";
 		      echo "<td>".$region."</td>";
 		      echo "<td>".$country."</td>";
-		      echo "<td class=\"centered\">".$longitude."</td>";
-		      echo "<td class=\"centered\">".$latitude."</td>";
+		      echo "<td>".$longitude."</td>";
+		      echo "<td>".$latitude."</td>";
 		      echo "<td>".$timezone."</td>";
-		      echo "<td class=\"centered\">".$limmag."</td>";
-		      echo "<td class=\"centered\">".$sb."</td>";
-		      echo "<td class=\"centered\"><input type=\"radio\" name=\"stdlocation\" value=\"". $value ."\"".(($value==$objObserver->getObserverProperty($loggedUser,'stdlocation'))?" checked=\"checked\" ":"")." onclick=\"submit();\" />&nbsp;<br /></td>";
+		      echo "<td>".$limmag."</td>";
+		      echo "<td>".$sb."</td>";
+		      echo "<td><input type=\"radio\" name=\"stdlocation\" value=\"". $value ."\"".(($value==$objObserver->getObserverProperty($loggedUser,'stdlocation'))?" checked=\"checked\" ":"")." onclick=\"submit();\" />&nbsp;<br /></td>";
 					echo "<td>";
-		      if(!($obsCnt=$objLocation->getLocationUsedFromId($value)))
+		      if(!($obsCnt=$objLocation->getLocationUsedFromId($value))) {
 		        echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_location&amp;locationid=".urlencode($value)."\">".LangRemove."</a>";
-		      else
-		        echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".$loggedUser."&amp;site=".$value."&amp;exactinstrumentlocation=true\">".$obsCnt.' '.LangGeneralObservations."</a>";
+		      } else {
+		        echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".$loggedUser."&amp;site=".$value."&amp;exactinstrumentlocation=true\">";
+		        if ($obsCnt > 1) {
+		          echo $obsCnt.' '.LangGeneralObservations."</a>";
+		        } else {
+		      	  echo $obsCnt.' '.LangGeneralObservation."</a>";
+		        }
+		      }
 		      echo "</td>";
-					echo "</tr>";
-		      $count++;
+			  echo "</tr>";
 		    }
 		  }
 		  echo "</table>";
+		  echo $objUtil->addTablePager();
+		  
+		  echo $objUtil->addTableJavascript();
+		  
 		  echo "</div></form>";
 		  echo "<hr />";
 		}  	

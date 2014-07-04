@@ -69,36 +69,26 @@ class Instruments
   }
   public  function showInstrumentsObserver()
   { global $baseURL,$loggedUser,$objUtil,$objObserver,$objInstrument,$objPresentations,$loggedUserName;
-    $sort=$objUtil->checkGetKey('sort','name');
-		$insts=$objInstrument->getSortedInstruments($sort,$loggedUser);
+		$insts=$objInstrument->getSortedInstruments('id',$loggedUser);
 		if(count($insts)>0)
-		{ $orig_previous=$objUtil->checkGetKey('previous','');
-		  if((isset($_GET['sort']))&&($orig_previous==$_GET['sort']))                   // reverse sort when pushed twice
-		  { if ($_GET['sort'] == "name")
-		      $insts = array_reverse($insts, true);
-		    else
-		    { krsort($insts);
-		      reset($insts);
-		    }
-		    $previous = "";
-		  }
-		  else
-		    $previous = $sort;
-		  echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
+		{ echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
 		  echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_instrument\" />";
 		  echo "<input type=\"hidden\" name=\"adaption\" value=\"1\" />";
-		  echo "<table>";
-		  echo "<tr class=\"type3\">";
-       echo "<td class=\"centered\">".LangViewActive."</td>";
-		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=name&amp;previous=$previous\">".LangOverviewInstrumentsName."</a></td>";
-		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=diameter&amp;previous=$previous\">".LangOverviewInstrumentsDiameter."</a></td>";
-		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=fd&amp;previous=$previous\">".LangOverviewInstrumentsFD."</a></td>";
-		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=fixedMagnification&amp;previous=$previous\">".LangOverviewInstrumentsFixedMagnification."</a></td>";
-		  echo "<td><a href=\"".$baseURL."index.php?indexAction=add_instrument&amp;sort=type&amp;previous=$previous\">".LangOverviewInstrumentsType."</a></td>";
-		  echo "<td>".LangChangeAccountField8."</td>";
-		  echo "<td></td>";
-		  echo "</tr>";
-		  $count = 0;
+		  // Add the button to select which columns to show
+		  $objUtil->addTableColumSelector();
+		  
+		  echo "<table class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
+		  echo "<thead><tr>";
+		  echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">".LangViewActive."</td>";
+		  
+		  echo "<th>".LangOverviewInstrumentsName."</th>";
+		  echo "<th>".LangOverviewInstrumentsDiameter."</th>";
+		  echo "<th>".LangOverviewInstrumentsFD."</th>";
+		  echo "<th>".LangOverviewInstrumentsFixedMagnification."</th>";
+		  echo "<th>".LangOverviewInstrumentsType."</th>";
+		  echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">".LangChangeAccountField8."</th>";
+		  echo "<th>".LangTopObserversHeader3."</th>";
+		  echo "</tr></thead>";
 			while(list($key,$value)=each($insts))
 		  { $name = $objInstrument->getInstrumentPropertyFromId($value,'name');
 		    $diameter = round($objInstrument->getInstrumentPropertyFromId($value,'diameter'), 0);
@@ -107,8 +97,8 @@ class Instruments
 		      $fd = "-";
 		    $type = $objInstrument->getInstrumentPropertyFromId($value,'type');
 		    $fixedMagnification = $objInstrument->getInstrumentPropertyFromId($value,'fixedMagnification');
-		    echo "<tr class=\"type".(2-($count%2))."\">";
-        echo "<td class=\"centered\">".
+		    echo "<tr>";
+        echo "<td>".
             "<input id=\"instrumentactive".$value."\" type=\"checkbox\" ".($objInstrument->getInstrumentPropertyFromId($value,'instrumentactive')?" checked=\"checked\" ":"").
                     " onclick=\"setactivation('instrument',".$value.");\" />".
             "</td>";
@@ -116,9 +106,9 @@ class Instruments
 		      echo "<td><a href=\"".$baseURL."index.php?indexAction=detail_instrument&amp;instrument=".urlencode($value)."\">".InstrumentsNakedEye."</a></td>";
 		    else
 		      echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_instrument&amp;instrument=".urlencode($value)."\">".$name."</a></td>";
-		    echo "<td align=\"center\">$diameter</td>";
-		    echo "<td align=\"center\">$fd</td>";
-				echo "<td align=\"center\">";
+		    echo "<td>$diameter</td>";
+		    echo "<td>$fd</td>";
+				echo "<td>";
 		    if($fixedMagnification>0)
 		      echo($fixedMagnification);
 		    else
@@ -127,7 +117,7 @@ class Instruments
 				echo "<td>";
 		    echo $objInstrument->getInstrumentEchoType($type);
 		    echo "</td>";
-				echo "<td align=\"center\">";
+				echo "<td>";
 				
 				
 				// Radio button for the standard instrument
@@ -137,15 +127,24 @@ class Instruments
 					echo("<input type=\"radio\" name=\"stdtelescope\" value=\"". $value ."\" onclick=\"submit();\"/>&nbsp;<br />");
 		    echo "</td>";
 				echo "<td>";
-		    if(!($obsCnt=$objInstrument->getInstrumentUsedFromId($value)))
+		    if(!($obsCnt=$objInstrument->getInstrumentUsedFromId($value))) {
 		      echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_instrument&amp;instrumentid=".urlencode($value)."\">".LangRemove."</a>";
-		    else
-		      echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".$loggedUser."&amp;instrument=".$value."&amp;exactinstrumentlocation=true\">".$obsCnt.' '.LangGeneralObservations."</a>";
-				echo "</td>";
-				echo "</tr>";
-		    $count++;    
+		    } else {
+		      echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".$loggedUser."&amp;instrument=".$value."&amp;exactinstrumentlocation=true\">";
+		      if ($obsCnt > 1) {
+		        echo $obsCnt.' '.LangGeneralObservations."</a>";
+		      } else {
+		       echo $obsCnt.' '.LangGeneralObservation."</a>";
+		      }
+		    }
+			echo "</td>";
+			echo "</tr>";
 		  }
 		  echo "</table>";
+		  echo $objUtil->addTablePager();
+		  
+		  echo $objUtil->addTableJavascript();
+		  
 		  echo "</div></form>";
 		  echo "<hr />";
 		}  	

@@ -45,51 +45,48 @@ class Eyepieces
  }
  public  function showEyepiecesObserver()
  { global $baseURL,$loggedUser,$objUtil,$objEyepiece,$objPresentations,$loggedUserName;
-   $sort=$objUtil->checkGetKey('sort','focalLength');
-   $eyeps = $objEyepiece->getSortedEyepieces($sort, $loggedUser);
+   $eyeps = $objEyepiece->getSortedEyepieces('id', $loggedUser);
    if($eyeps!=null)
-   { $orig_previous=$objUtil->checkGetKey('previous','');
-     if((isset($_GET['sort'])) && ($orig_previous==$_GET['sort'])) // reverse sort when pushed twice
-     { if($_GET['sort']=="name")
-         $eyeps = array_reverse($eyeps, true);
-       else
-       { krsort($eyeps);
-         reset($eyeps);
-       }
-       $previous=""; // reset previous field to sort on
-     }
-     else
-       $previous=$sort;
-     echo "<table>";
-     echo "<tr class=\"type3\">";
-     echo "<td class=\"centered\">".LangViewActive."</td>";
-     echo "<td><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=name&amp;previous=$previous\">".LangViewEyepieceName."</a></td>";
-     echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=focalLength&amp;previous=$previous\">".LangViewEyepieceFocalLength."</a></td>";
-     echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=maxFocalLength&amp;previous=$previous\">".LangViewEyepieceMaxFocalLength."</a></td>";
-     echo "<td class=\"centered\"><a href=\"".$baseURL."index.php?indexAction=add_eyepiece&amp;sort=apparentFOV&amp;previous=$previous\">".LangViewEyepieceApparentFieldOfView."</a></td>";
-     echo "<td></td>";
-     echo "</tr>";
-     $count = 0;
+   { 	 // Add the button to select which columns to show
+	 $objUtil->addTableColumSelector();
+
+	 echo "<table class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
+	 echo "<thead><tr>";
+     echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">".LangViewActive."</td>";
+     echo "<th>".LangViewEyepieceName."</th>";
+     echo "<th>".LangViewEyepieceFocalLength."</th>";
+     echo "<th>".LangViewEyepieceMaxFocalLength."</th>";
+     echo "<th>".LangViewEyepieceApparentFieldOfView."</th>";
+     echo "<th>".LangTopObserversHeader3."</th>";
+     echo "</tr></thead>";
      while(list($key,$value) = each($eyeps))
      { $eyepiece=$objEyepiece->getEyepiecePropertiesFromId($value);
-       echo "<tr class=\"type".(2-($count%2))."\">";
-       echo "<td class=\"centered\">".
+       echo "<tr>";
+       echo "<td>".
             "<input id=\"eyepieceactive".$value."\" type=\"checkbox\" ".($eyepiece['eyepieceactive']?" checked=\"checked\" ":"").
                     " onclick=\"setactivation('eyepiece',".$value.");\" />".
             "</td>";
        echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_eyepiece&amp;eyepiece=".urlencode($value)."\">".stripslashes($eyepiece['name'])."</a></td>";
-		   echo "<td class=\"centered\">".$eyepiece['focalLength']."</td>";
-		   echo "<td class=\"centered\">".(($eyepiece['maxFocalLength']!=-1)?$eyepiece['maxFocalLength']:"-")."</td>";
-		   echo "<td class=\"centered\">".$eyepiece['apparentFOV']."</td>";
+		   echo "<td>".$eyepiece['focalLength']."</td>";
+		   echo "<td>".(($eyepiece['maxFocalLength']!=-1)?$eyepiece['maxFocalLength']:"-")."</td>";
+		   echo "<td>".$eyepiece['apparentFOV']."</td>";
 		   echo "<td>";
-       if(!($obsCnt=$objEyepiece->getEyepieceUsedFromId($value)))
+       if(!($obsCnt=$objEyepiece->getEyepieceUsedFromId($value))) {
          echo("<a href=\"".$baseURL."index.php?indexAction=validate_delete_eyepiece&amp;eyepieceid=" . urlencode($value) . "\">" . LangRemove . "</a>");
-       else
-         echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".$loggedUser."&amp;eyepiece=".$value."&amp;exactinstrumentlocation=true\">".$obsCnt.' '.LangGeneralObservations."</a>";
+       } else {
+         echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".$loggedUser."&amp;eyepiece=".$value."&amp;exactinstrumentlocation=true\">";
+         if ($obsCnt > 1) {
+	       echo $obsCnt.' '.LangGeneralObservations."</a>";
+		 } else {
+		   echo $obsCnt.' '.LangGeneralObservation."</a>";
+		 }
+	   }
        echo "</td></tr>";
-       $count++;
      }
      echo "</table>";
+	 echo $objUtil->addTablePager();
+
+	 echo $objUtil->addTableJavascript();
      echo "<hr />";
    }
  }

@@ -15,21 +15,27 @@ function change_lens()
 	if(($loggedUser) &&
 	   ($objUtil->checkAdminOrUserID($objLens->getLensPropertyFromId($lensid,'observer',''))))
 	  $disabled="";
-	$content=($disabled?"":"<input type=\"submit\" name=\"change\" value=\"".LangChangeLensButton."\" />&nbsp;");
+	$content=($disabled?"":"<input type=\"submit\" name=\"change\" class=\"btn btn-primary pull-right\" value=\"".LangChangeLensButton."\" />&nbsp;");
 	echo "<div id=\"main\">";
-	echo "<form action=\"".$baseURL."index.php\" method=\"post\"><div>";
+	echo "<form role=\"form\" action=\"".$baseURL."index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_lens\" />";
 	echo "<input type=\"hidden\" name=\"id\"          value=\"".$lensid."\" />";
-	$objPresentations->line(array("<h4>".stripslashes($objLens->getLensPropertyFromId($lensid,'name'))."</h4>",$content),"LR",array(80,20),30); 
+	echo "<h4>".stripslashes($objLens->getLensPropertyFromId($lensid,'name'))."</h4>";
 	echo "<hr />";
-	$line[]=array(LangAddLensField1,
-	              "<input type=\"text\" required class=\"inputfield requiredField\" maxlength=\"64\" name=\"lensname\" size=\"30\" value=\"".stripslashes($objLens->getLensPropertyFromId($lensid,'name'))."\" ".$disabled." />",
-	              LangAddLensField1Expl);
-	$line[]=array(LangAddLensField2,
-	              "<input type=\"number\" min=\"0.01\" max=\"99.99\" step=\"0.01\" required class=\"inputfield requiredField\" maxlength=\"5\" name=\"factor\" size=\"5\" value=\"".stripslashes($objLens->getLensPropertyFromId($lensid,'factor'))."\" ".$disabled." />",
-	              LangAddLensField2Expl);
-	for($i=0;$i<count($line);$i++)
-	  $objPresentations->line($line[$i],"RLL",array(20,40,40),'',array("fieldname","fieldvalue","fieldexplanation"));
+	echo $content; 
+
+	echo "<div class=\"form-group\">
+	       <label for=\"lensname\">". LangAddLensField1."</label>";
+	echo "<input type=\"text\" required class=\"form-control\" maxlength=\"64\" name=\"lensname\" size=\"30\" value=\"".stripslashes($objUtil->checkRequestKey('lensname','')).stripslashes($objLens->getLensPropertyFromId($objUtil->checkRequestKey('lensid'),'name'))."\" />";
+	echo "<span class=\"help-block\">" . LangAddLensField1Expl . "</span>";
+	echo "</div>";
+	
+	echo "<div class=\"form-group\">
+	       <label for=\"factor\">". LangAddLensField2."</label>";
+	echo "<input type=\"number\" min=\"0.01\" max=\"99.99\" required step=\"0.01\" class=\"form-control\" maxlength=\"5\" name=\"factor\" size=\"5\" value=\"".stripslashes($objUtil->checkRequestKey('factor','')).stripslashes($objLens->getLensPropertyFromId($objUtil->checkRequestKey('lensid'),'factor'))."\" />";
+	echo "<span class=\"help-block\">" . LangAddLensField2Expl . "</span>";
+	echo "</div>";
+	
 	echo "<hr />";
 	echo "</div></form>";
 	echo "</div>";

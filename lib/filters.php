@@ -107,36 +107,25 @@ class Filters
  }
  public  function showFiltersObserver()
  { global $baseURL,$loggedUser,$objUtil,$objFilter,$objPresentations,$loggedUserName;
-   $sort=$objUtil->checkGetKey('sort','name');
-   $filts=$objFilter->getSortedFilters($sort, $loggedUser);
+   $filts=$objFilter->getSortedFilters('id', $loggedUser);
    if(count($filts)>0)
-   { $orig_previous=$objUtil->checkGetKey('previous','');
-     if((isset($_GET['sort']))&&($orig_previous==$_GET['sort'])) // reverse sort when pushed twice
-     { if($_GET['sort']=="name")
-         $filts = array_reverse($filts, true);
-       else
-       { krsort($filts);
-         reset($filts);
-       }
-       $previous = ""; // reset previous field to sort on
-     }
-     else
-       $previous = $sort;
-     echo "<table>";
-     echo "<tr class=\"type3\">";
-     echo "<td class=\"centered\">".LangViewActive."</td>";
-     echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=name&amp;previous=$previous\">".LangViewFilterName."</a></td>";
-     echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=type&amp;previous=$previous\">".LangViewFilterType."</a></td>";
-     echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=color&amp;previous=$previous\">".LangViewFilterColor."</a></td>";
-     echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=wratten&amp;previous=$previous\">".LangViewFilterWratten."</a></td>";
-     echo "<td><a href=\"".$baseURL."index.php?indexAction=add_filter&amp;sort=schott&amp;previous=$previous\">".LangViewFilterSchott."</a></td>";
-     echo "<td></td>";
-     echo "</tr>";
-     $count = 0;
+   { // Add the button to select which columns to show
+	 $objUtil->addTableColumSelector();
+
+	 echo "<table class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
+	 echo "<thead><tr>";
+     echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">".LangViewActive."</th>";
+     echo "<th>".LangViewFilterName."</th>";
+     echo "<th>".LangViewFilterType."</th>";
+     echo "<th>".LangViewFilterColor."</th>";
+     echo "<th>".LangViewFilterWratten."</th>";
+     echo "<th>".LangViewFilterSchott."</th>";
+     echo "<th>".LangTopObserversHeader3."</th>";
+     echo "</tr></thead>";
      while(list($key, $value)=each($filts))
      { $filterProperties=$objFilter->getFilterPropertiesFromId($value);
-       echo "<tr class=\"type".(2-($count%2))."\">";
-       echo "<td class=\"centered\">".
+       echo "<tr>";
+       echo "<td>".
             "<input id=\"filteractive".$value."\" type=\"checkbox\" ".($filterProperties['filteractive']?" checked=\"checked\" ":"").
                     " onclick=\"setactivation('filter',".$value.");\" />".
             "</td>";
@@ -146,15 +135,23 @@ class Filters
        echo "<td>".($filterProperties['wratten']?$filterProperties['wratten']:"-")."</td>";
        echo "<td>".($filterProperties['schott']?$filterProperties['schott']:"-")."</td>";
        echo "<td>";
-       if(!($obsCnt=$objFilter->getFilterUsedFromId($value)))
+       if(!($obsCnt=$objFilter->getFilterUsedFromId($value))) {
          echo "<a href=\"".$baseURL."index.php?indexAction=validate_delete_filter&amp;filterid=" . urlencode($value) . "\">" . LangRemove . "</a>";
-       else
-         echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".$loggedUser."&amp;filter=".$value."&amp;exactinstrumentlocation=true\">".$obsCnt.' '.LangGeneralObservations."</a>";
+       } else {
+         echo "<a href=\"".$baseURL."index.php?indexAction=result_selected_observations&amp;observer=".$loggedUser."&amp;filter=".$value."&amp;exactinstrumentlocation=true\">";
+         if ($obsCnt > 1) {
+	       echo $obsCnt.' '.LangGeneralObservations."</a>";
+		 } else {
+		   echo $obsCnt.' '.LangGeneralObservation."</a>";
+		 }
+       }
        echo "</td>";
        echo "</tr>";
-       $count++;
 	   }
      echo "</table>";
+	 echo $objUtil->addTablePager();
+
+	 echo $objUtil->addTableJavascript();
      echo "<hr />";
    }
  } 

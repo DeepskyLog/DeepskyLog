@@ -530,6 +530,7 @@ $atlasPageText=array(
 
 
 define("LangGeneralObservations"													,"observations");
+define("LangGeneralObservation" 											 		,"observation");
 
 define("LangIndexPleaseWait"															,"Please wait a moment while loading data...");
 
@@ -815,10 +816,10 @@ define("LangInstrumentMenuTitle"													,"Instrument");
 define("LangLanguageMenuTitle"														,"Language");
 define("LangLanguageMenuButton"														,"Change");
 
-define("LangOverviewSiteTitle"														,"Overview observing sites");
+define("LangOverviewSiteTitle"														,"Observing sites of");
 define("LangAddSiteExisting"															,"Add existing location");
 
-define("LangOverviewEyepieceTitle"												,"Overview eyepieces");
+define("LangOverviewEyepieceTitle"												,"Eyepieces of");
 define("LangAddEyepieceExisting"													,"Select the eyepiece details from the list");
 define("LangAddEyepieceManually"													,"specify your eyepiece details manually");
 define("LangAddEyepieceTitle"															,"Add a new eyepiece");
@@ -834,7 +835,7 @@ define("LangAddEyepieceButton"														,"Add eyepiece");
 define("LangAddEyepieceButton2"														,"Adapt eyepiece"); 
 define("LangDetailEyepiece"                               ,"Details eyepiece");
 
-define("LangOverviewLensTitle"														,"Overview lenses");
+define("LangOverviewLensTitle"														,"Lenses of");
 define("LangViewLensName"																	,"Name");
 define("LangViewLensFactor"																,"Factor");
 define("LangAddLensTitle"																	,"Add a new lens");
@@ -853,7 +854,7 @@ define("LangValidateLensMessage4"													,"Lens changed");
 define("LangValidateLensMessage5"													,"The lens is changed in your equipment list");
 define("LangDetailLens"                                   ,"Details lens");
 
-define("LangOverviewFilterTitle"													,"Overview filters");
+define("LangOverviewFilterTitle"													,"Filters of");
 define("LangViewFilterName"																,"Name");
 define("LangViewFilterType"																,"Type");
 define("LangViewFilterColor"															,"Color");
@@ -1184,7 +1185,7 @@ define("LangViewLocationTitle2"														,"Location detail");
 
 // content/overview_instruments.php
 
-define("LangOverviewInstrumentsTitle"											,"Instruments overview");
+define("LangOverviewInstrumentsTitle"											,"Instruments of");
 define("LangOverviewInstrumentsName"											,"Name");
 define("LangOverviewInstrumentsDiameter"									,"Diameter (mm)");
 define("LangOverviewInstrumentsFD"												,"F/D");

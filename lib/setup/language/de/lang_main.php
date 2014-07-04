@@ -548,6 +548,7 @@ $atlasPageText=array(
 
 
 define("LangGeneralObservations"													,"Beobachtungen");
+define("LangGeneralObservation" 													,"Beobachtung");
 
 define("LangIndexPleaseWait"															,"Bitte warten Sie einen Moment w&auml;hrend die Daten geladen werden...");
 
@@ -827,10 +828,10 @@ define("LangInstrumentMenuTitle"													,"Beobachtungsger&auml;t");
 define("LangLanguageMenuTitle"														,"Sprache");
 define("LangLanguageMenuButton"														,"&Auml;ndern");
 
-define("LangOverviewSiteTitle"														,"&uuml;bersicht Beobachtungspl&auml;tze");
+define("LangOverviewSiteTitle"														,"Beobachtungspl&auml;tze von");
 define("LangAddSiteExisting"															,"Beobachtungsplatz hinzuf&uuml;gen");
 
-define("LangOverviewEyepieceTitle"												,"&uuml;bersicht Okulare");
+define("LangOverviewEyepieceTitle"												,"Okulare von");
 define("LangAddEyepieceExisting"													,"W&auml;hle die Okulardetails von der Liste");
 define("LangAddEyepieceManually"													,"geben Sie das Okulare Details an");
 define("LangAddEyepieceTitle"															,"Neues Okular");
@@ -846,7 +847,7 @@ define("LangAddEyepieceButton"														,"Okular hinzuf&uuml;gen");
 define("LangAddEyepieceButton2"														,"Okluar bearbeiten");
 define("LangDetailEyepiece"                               ,"Okular");
 
-define("LangOverviewLensTitle"														,"Linsen &uuml;bersicht");
+define("LangOverviewLensTitle"														,"Linsen von");
 define("LangViewLensName"																	,"Name");
 define("LangViewLensFactor"																,"Brennweitenfaktor");
 define("LangAddLensTitle"																	,"Linse hinzuf&uuml;gen");
@@ -865,7 +866,7 @@ define("LangValidateLensMessage4"													,"Linse ge&auml;ndert");
 define("LangValidateLensMessage5"													,"Die Linse wurde in der Datenbank ge&auml;ndert");
 define("LangDetailLens"                                   ,"Linse");
 
-define("LangOverviewFilterTitle"													,"Filter &uuml;bersicht");
+define("LangOverviewFilterTitle"													,"Filter von");
 define("LangViewFilterName"																,"Name");
 define("LangViewFilterType"																,"Typ");
 define("LangViewFilterColor"															,"Farbe");
@@ -1196,7 +1197,7 @@ define("LangViewLocationTitle2"														,"Beobachtungsplatz Details");
 
 // content/overview_instruments.php
 
-define("LangOverviewInstrumentsTitle"											,"Beobachtungsger&auml;t &Uuml;bersicht");
+define("LangOverviewInstrumentsTitle"											,"Beobachtungsger&auml;t von");
 define("LangOverviewInstrumentsName"											,"Name");
 define("LangOverviewInstrumentsDiameter"									,"&Ouml;ffnung (mm)");
 define("LangOverviewInstrumentsFD"												,"&Ouml;ffnungsverh&auml;ltnis (F/D)");
