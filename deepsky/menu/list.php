@@ -11,12 +11,11 @@ else menu_list();
 
 function menu_list()
 { global 	$baseURL,$loggedUser,$myList,$objDatabase;
-  echo "<ul class=\"nav navbar-nav\">";
+  echo "<form class=\"nav navbar-nav form-inline\">";
+  echo "<div class=\"form-group\">";
 	echo "<p class=\"navbar-text\">".LangListsTitle;
 	if($loggedUser)
 	  echo "&nbsp;-&nbsp;"."<a href=\"".$baseURL."index.php?indexAction=listaction\">".LangManage."</a>";
-	echo "</p>
-			  </ul>";
 	$result1=array();
 	$result2=array();
 	$sql = "SELECT DISTINCT observerobjectlist.listname " .
@@ -34,8 +33,7 @@ function menu_list()
 				 "AND listname LIKE \"Public: %\" ORDER BY observerobjectlist.listname";
 	$run = $objDatabase->selectRecordset($sql);
 	$get = $run->fetch(PDO::FETCH_OBJ);
-  echo "<ul class=\"nav navbar-nav\">";
-	echo "<p class=\"navbar-text\">";
+	echo "&nbsp;&nbsp;";
 	while($get)
 	{ $result2[]=$get->listname; 
 	  $get = $run->fetch(PDO::FETCH_OBJ);
@@ -43,7 +41,7 @@ function menu_list()
 	$result1[]='----------';
 	$result=array_merge($result1,$result2);
 	if(count($result)>0)
-	{ echo "<select name=\"activatelist\" onchange=\"location=this.options[this.selectedIndex].value;\">";
+	{ echo "<select class=\"form-control\" name=\"activatelist\" onchange=\"location=this.options[this.selectedIndex].value;\">";
 	  if((!array_key_exists('listname',$_SESSION)) || (!$_SESSION['listname']))
 			$_SESSION['listname']="----------";
 	  while(list($key, $value) = each($result))
@@ -54,6 +52,6 @@ function menu_list()
 	  }
 	  echo "</select>";
 	}
-	echo "</p></ul>";
+	echo "</p></div></form>";
 }
 ?>

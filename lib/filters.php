@@ -34,7 +34,7 @@ class Filters
    return "-";
  }
  public  function getEchoListColor($color,$disabled="")
- { $tempColorList="<select name=\"color\" class=\"inputfield\" ".$disabled." >";
+ { $tempColorList="<select name=\"color\" class=\"form-control inputfield\" ".$disabled." >";
    $tempColorList.="<option value=\"\">&nbsp;</option>";
  	 $tempColorList.="<option ".(($color==FilterColorLightRed)?   "selected=\"selected\" ":"")."value=\"".FilterColorLightRed.   "\">".FiltersColorLightRed."</option>";
 	 $tempColorList.="<option ".(($color==FilterColorRed)?        "selected=\"selected\" ":"")."value=\"".FilterColorRed.        "\">".FiltersColorRed."</option>";
@@ -55,7 +55,7 @@ class Filters
  	 return $tempColorList;
  }
  public  function getEchoListType($type,$disabled="")
- { $tempTypeList="<select name=\"type\" class=\"inputfield\" ".$disabled." >";
+ { $tempTypeList="<select name=\"type\" class=\"form-control inputfield\" ".$disabled." >";
    $tempTypeList.= "<option ".(($type==FilterOther)?     " selected=\"selected\" ":"")." value=\"".FilterOther.     "\">".FiltersOther."</option>";
    $tempTypeList.= "<option ".(($type==FilterBroadBand)? " selected=\"selected\" ":"")." value=\"".FilterBroadBand. "\">".FiltersBroadBand."</option>";
    $tempTypeList.= "<option ".(($type==FilterNarrowBand)?" selected=\"selected\" ":"")." value=\"".FilterNarrowBand."\">".FiltersNarrowBand."</option>";

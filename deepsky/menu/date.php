@@ -41,12 +41,14 @@ function menu_date()
               });
         	});
 	  		  </script>";
-	  echo "<ul class=\"nav navbar-nav navbar-right\">";
-	   
+	  echo "<form class=\"nav navbar-nav navbar-right form-inline\">";
+	  
+	  echo "<div class=\"form-group\">";
 	  echo "<p class=\"navbar-text\">" . LangDate . " ";
-	
-	  echo "<input type=\"text\" value=\"" . $_SESSION['globalDay'] . "/" . $_SESSION['globalMonth'] . "/" . $_SESSION['globalYear'] . "\" id=\"datepicker\" size=\"10\" >";
-	  echo "</p></ul>";
+	  echo "<input class=\"form-control\" type=\"text\" value=\"" . $_SESSION['globalDay'] . "/" . $_SESSION['globalMonth'] . "/" . $_SESSION['globalYear'] . "\" id=\"datepicker\" size=\"10\" >";
+      echo "</p>";
+      echo "</div>";
+	  echo "</form>";
 	  $link="";
 }
 ?>

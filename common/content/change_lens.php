@@ -26,16 +26,16 @@ function change_lens()
 
 	echo "<div class=\"form-group\">
 	       <label for=\"lensname\">". LangAddLensField1."</label>";
-	echo "<input type=\"text\" required class=\"form-control\" maxlength=\"64\" name=\"lensname\" size=\"30\" value=\"".stripslashes($objUtil->checkRequestKey('lensname','')).stripslashes($objLens->getLensPropertyFromId($objUtil->checkRequestKey('lensid'),'name'))."\" />";
+	echo "<input type=\"text\" required class=\"inputfield form-control\" maxlength=\"64\" name=\"lensname\" size=\"30\" value=\"".stripslashes($objLens->getLensPropertyFromId($lensid,'name'))."\" ".$disabled." />";
 	echo "<span class=\"help-block\">" . LangAddLensField1Expl . "</span>";
 	echo "</div>";
 	
 	echo "<div class=\"form-group\">
 	       <label for=\"factor\">". LangAddLensField2."</label>";
-	echo "<input type=\"number\" min=\"0.01\" max=\"99.99\" required step=\"0.01\" class=\"form-control\" maxlength=\"5\" name=\"factor\" size=\"5\" value=\"".stripslashes($objUtil->checkRequestKey('factor','')).stripslashes($objLens->getLensPropertyFromId($objUtil->checkRequestKey('lensid'),'factor'))."\" />";
+	echo "<input type=\"number\" min=\"0.01\" max=\"99.99\" step=\"0.01\" required class=\"inputfield form-control\" maxlength=\"5\" name=\"factor\" size=\"5\" value=\"".stripslashes($objLens->getLensPropertyFromId($lensid,'factor'))."\" ".$disabled." />";
 	echo "<span class=\"help-block\">" . LangAddLensField2Expl . "</span>";
 	echo "</div>";
-	
+
 	echo "<hr />";
 	echo "</div></form>";
 	echo "</div>";
