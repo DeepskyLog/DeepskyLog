@@ -806,6 +806,7 @@ define("LangAddEyepieceButton2"														,"Modifiez oculaire");
 define("LangDetailEyepiece"                               ,"D&#233;tails de l'oculaire");
 
 define("LangOverviewLensTitle"														,"Lentilles Barlow de");
+define("LangOverviewLensTitle1"														,"Lentilles Barlow");
 define("LangViewLensName"																	,"Nom");
 define("LangViewLensFactor"																,"Facteur");
 define("LangAddLensTitle"																	,"Rajoutez une nouvelle lentille Barlow");
@@ -825,6 +826,7 @@ define("LangValidateLensMessage5"													,"Cette lentille Barlow est modifi
 define("LangDetailLens"                                   ,"D&#233;tails de la lentille");
 
 define("LangOverviewFilterTitle"													,"Filtres de");
+define("LangOverviewFilterTitle1"													,"Filtres");
 define("LangViewFilterName"																,"Nom");
 define("LangViewFilterType"																,"Type");
 define("LangViewFilterColor"															,"Couleur");
@@ -1156,6 +1158,7 @@ define("LangViewLocationTitle2"														,"D&eacute;tail endroit");
 // content/overview_instruments.php
 
 define("LangOverviewInstrumentsTitle"											,"Instruments de");
+define("LangOverviewInstrumentsTitle1"											,"Instruments");
 define("LangOverviewInstrumentsName"											,"Nom");
 define("LangOverviewInstrumentsDiameter"									,"Diam&egrave;tre (mm)");
 define("LangOverviewInstrumentsFD"												,"F/D");

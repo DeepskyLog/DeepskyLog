@@ -847,6 +847,7 @@ define("LangAddEyepieceButton2"														,"Okluar bearbeiten");
 define("LangDetailEyepiece"                               ,"Okular");
 
 define("LangOverviewLensTitle"														,"Linsen von");
+define("LangOverviewLensTitle1"														,"Linsen");
 define("LangViewLensName"																	,"Name");
 define("LangViewLensFactor"																,"Brennweitenfaktor");
 define("LangAddLensTitle"																	,"Linse hinzuf&uuml;gen");
@@ -866,6 +867,7 @@ define("LangValidateLensMessage5"													,"Die Linse wurde in der Datenbank
 define("LangDetailLens"                                   ,"Linse");
 
 define("LangOverviewFilterTitle"													,"Filter von");
+define("LangOverviewFilterTitle1"													,"Filter");
 define("LangViewFilterName"																,"Name");
 define("LangViewFilterType"																,"Typ");
 define("LangViewFilterColor"															,"Farbe");
@@ -1197,6 +1199,7 @@ define("LangViewLocationTitle2"														,"Beobachtungsplatz Details");
 // content/overview_instruments.php
 
 define("LangOverviewInstrumentsTitle"											,"Beobachtungsger&auml;t von");
+define("LangOverviewInstrumentsTitle1"											,"Beobachtungsger&auml;te");
 define("LangOverviewInstrumentsName"											,"Name");
 define("LangOverviewInstrumentsDiameter"									,"&Ouml;ffnung (mm)");
 define("LangOverviewInstrumentsFD"												,"&Ouml;ffnungsverh&auml;ltnis (F/D)");

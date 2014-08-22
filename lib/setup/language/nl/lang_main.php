@@ -831,6 +831,7 @@ define("LangAddEyepieceButton2"														,"Verander oculair");
 define("LangDetailEyepiece"                               ,"Details oculair");
 
 define("LangOverviewLensTitle"														,"Lenzen van");
+define("LangOverviewLensTitle1"														,"Overzicht lenzen");
 define("LangViewLensName"																	,"Naam");
 define("LangViewLensFactor"																,"Factor");
 define("LangAddLensTitle"																	,"Nieuwe lens");
@@ -850,6 +851,7 @@ define("LangValidateLensMessage5"													,"De lens is aangepast in je lijst
 define("LangDetailLens"                                   ,"Details lens");
 
 define("LangOverviewFilterTitle"													,"Filters van");
+define("LangOverviewFilterTitle1"													,"Overzicht filters");
 define("LangViewFilterName"																,"Naam");
 define("LangViewFilterType"																,"Type");
 define("LangViewFilterColor"															,"Kleur");
@@ -1181,6 +1183,7 @@ define("LangViewLocationTitle2"														,"Locatie detail");
 // content/overview_instruments.php
 
 define("LangOverviewInstrumentsTitle"											,"Instrumenten van");
+define("LangOverviewInstrumentsTitle1"											,"Overzicht Instrumenten");
 define("LangOverviewInstrumentsName"											,"Naam");
 define("LangOverviewInstrumentsDiameter"									,"Diameter (mm)");
 define("LangOverviewInstrumentsFD"												,"F/D");

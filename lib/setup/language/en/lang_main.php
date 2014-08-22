@@ -835,6 +835,7 @@ define("LangAddEyepieceButton2"														,"Adapt eyepiece");
 define("LangDetailEyepiece"                               ,"Details eyepiece");
 
 define("LangOverviewLensTitle"														,"Lenses of");
+define("LangOverviewLensTitle1"														,"Overview Lenses");
 define("LangViewLensName"																	,"Name");
 define("LangViewLensFactor"																,"Factor");
 define("LangAddLensTitle"																	,"Add a new lens");
@@ -854,6 +855,7 @@ define("LangValidateLensMessage5"													,"The lens is changed in your equi
 define("LangDetailLens"                                   ,"Details lens");
 
 define("LangOverviewFilterTitle"													,"Filters of");
+define("LangOverviewFilterTitle1"													,"Overview Filters");
 define("LangViewFilterName"																,"Name");
 define("LangViewFilterType"																,"Type");
 define("LangViewFilterColor"															,"Color");
@@ -1185,6 +1187,7 @@ define("LangViewLocationTitle2"														,"Location detail");
 // content/overview_instruments.php
 
 define("LangOverviewInstrumentsTitle"											,"Instruments of");
+define("LangOverviewInstrumentsTitle1"											,"Overview Instruments");
 define("LangOverviewInstrumentsName"											,"Name");
 define("LangOverviewInstrumentsDiameter"									,"Diameter (mm)");
 define("LangOverviewInstrumentsFD"												,"F/D");
