@@ -28,7 +28,7 @@ class Instruments
     return "unkown instrument type";
   }
   public  function getInstrumentEchoListType($type, $disabled="")
-  { $tempTypeList ="<select name=\"type\" class=\"inputfield\" ".$disabled." >";
+  { $tempTypeList ="<select name=\"type\" class=\"form-control\" ".$disabled." >";
     $tempTypeList.="<option ".(($type==InstrumentReflector)?"selected=\"selected\" ":"")."value=\"".InstrumentReflector."\">".InstrumentsReflector."</option>";
     $tempTypeList.="<option ".(($type==InstrumentRefractor)?"selected=\"selected\" ":"")."value=\"".InstrumentRefractor."\">".InstrumentsRefractor."</option>";
     $tempTypeList.="<option ".(($type==InstrumentCassegrain)?"selected=\"selected\" ":"")."value=\"".InstrumentCassegrain."\">".InstrumentsCassegrain."</option>";
