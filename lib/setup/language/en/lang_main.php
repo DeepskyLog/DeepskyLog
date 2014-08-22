@@ -400,7 +400,6 @@ define("LangMarkAllAsRead"                                ,"Mark all as read.");
 define("LangMarkUpToHereAsRead"                           ,"Mark up to here as read.");
 
 define("LangValidateMessage1"                             ,"All required fields must be filled in!");
-define("LangRequiredFields"                               ,"(* required fields)");
 define("LangNoOwnColor"                                   , "No highlighting of own observations");
 
 // Text for transit
@@ -1348,7 +1347,6 @@ define("LangNewObservationSubtitle1c"											,"import observations from an &l
 define("LangNewObservationSubtitle2"											,"Check object details");
 define("LangNewObservationSubtitle3"											,"Enter observation details ");
 define("LangNewObservationSubtitle3B"											,"Change the observation details ");
-define("LangNewObservationSubtitle3A"											,"(* required fields)");
 define("LangNewObservationSubtitle3C"											," - ");
 define("LangNewObservationButton1"												,"Search object");
 define("LangNewObservationField1"													,"Date *");
