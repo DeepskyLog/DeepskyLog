@@ -78,7 +78,7 @@ class Instruments
 		  $objUtil->addTableColumSelector();
 		  
 		  echo "<table class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
-		  echo "<thead><tr>";
+		  echo "<thead>";
 		  echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">".LangViewActive."</td>";
 		  
 		  echo "<th>".LangOverviewInstrumentsName."</th>";
@@ -88,7 +88,7 @@ class Instruments
 		  echo "<th>".LangOverviewInstrumentsType."</th>";
 		  echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">".LangChangeAccountField8."</th>";
 		  echo "<th>".LangTopObserversHeader3."</th>";
-		  echo "</tr></thead>";
+		  echo "</thead>";
 			while(list($key,$value)=each($insts))
 		  { $name = $objInstrument->getInstrumentPropertyFromId($value,'name');
 		    $diameter = round($objInstrument->getInstrumentPropertyFromId($value,'diameter'), 0);
