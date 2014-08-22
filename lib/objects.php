@@ -264,16 +264,16 @@ class Objects {
 		return $objDatabase->selectSingleValue ( $sql, 'number', 0 );
 	}
 	public function getObjectFromQuery($queries, $exact = 0, $seen = "A", $partof = 0) { // getObjectFromQuery returns an array with the names of all objects where
-	  // the queries are defined in an array.
-	  // An example of an array :
-	  // $q = array("name" => "NGC", "type" => "GALXY", "constellation" => "AND",
-	  // "minmag" => "12.0", "maxmag" => "14.0", "minsubr" => "13.0",
-	  // "maxsubr" => "14.0", "minra" => "0.3", "maxra" => "0.9",
-	  // "mindecl" => "24.0", "maxdecl" => "30.0", "urano" => "111",
-	  // "uranonew" => "111", "sky" => "11", "msa" => "222",
-	  // "taki" => "11", "psa" => "12", "torresB" => "11", "torresBC" => "13",
-	  // "torresC" => "31", "mindiam1" => "12.2", "maxdiam1" => "13.2",
-	  // "mindiam2" => "11.1", "maxdiam2" => "22.2", "inList" => "Public: Edge-ons", "notInList" => "My observed Edge-ons");
+	                                                                                     // the queries are defined in an array.
+	                                                                                     // An example of an array :
+	                                                                                     // $q = array("name" => "NGC", "type" => "GALXY", "constellation" => "AND",
+	                                                                                     // "minmag" => "12.0", "maxmag" => "14.0", "minsubr" => "13.0",
+	                                                                                     // "maxsubr" => "14.0", "minra" => "0.3", "maxra" => "0.9",
+	                                                                                     // "mindecl" => "24.0", "maxdecl" => "30.0", "urano" => "111",
+	                                                                                     // "uranonew" => "111", "sky" => "11", "msa" => "222",
+	                                                                                     // "taki" => "11", "psa" => "12", "torresB" => "11", "torresBC" => "13",
+	                                                                                     // "torresC" => "31", "mindiam1" => "12.2", "maxdiam1" => "13.2",
+	                                                                                     // "mindiam2" => "11.1", "maxdiam2" => "22.2", "inList" => "Public: Edge-ons", "notInList" => "My observed Edge-ons");
 		global $loggedUser, $objDatabase, $objCatalog;
 		$obs = array ();
 		$sql = "";
@@ -415,9 +415,9 @@ class Objects {
 		global $objDatabase;
 		$objects = array ();
 		if ($lLhr < $rLhr) { // $sql="SELECT * FROM objects WHERE (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
-		  // $objects=$objDatabase->selectRecordsetArray($sql);
-		  // $sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
-		  // $objects=array_merge($objects,$objDatabase->selectRecordsetArray($sql));
+		                     // $objects=$objDatabase->selectRecordsetArray($sql);
+		                     // $sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
+		                     // $objects=array_merge($objects,$objDatabase->selectRecordsetArray($sql));
 			$sql = "SELECT * FROM objects WHERE (ra>" . $rLhr . ") AND (decl>" . $dDdeg . ") AND (decl<" . $uDdeg . ") AND ((mag<=" . $mag . ")) ORDER BY mag;";
 			$objects = $objDatabase->selectRecordsetArray ( $sql );
 			$sql = "SELECT * FROM objects WHERE (ra<" . $lLhr . ") AND (decl>" . $dDdeg . ") AND (decl<" . $uDdeg . ") AND ((mag<=" . $mag . ")) ORDER BY mag;";
@@ -427,7 +427,7 @@ class Objects {
 			$sql = "SELECT * FROM objects WHERE (ra<" . $lLhr . ") AND (decl>" . $dDdeg . ") AND (decl<" . $uDdeg . ") AND ((mag>99) AND (diam1>" . (60 * (15 - $mag)) . ")) ORDER BY mag;";
 			$objects = array_merge ( $objects, $objDatabase->selectRecordsetArray ( $sql ) );
 		} else { // $sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
-		  // $objects=$objDatabase->selectRecordsetArray($sql);
+		         // $objects=$objDatabase->selectRecordsetArray($sql);
 			$sql = "SELECT * FROM objects WHERE (ra<" . $lLhr . ") AND (ra>" . $rLhr . ") AND (decl>" . $dDdeg . ") AND (decl<" . $uDdeg . ") AND ((mag<=" . $mag . ")) ORDER BY mag;";
 			$objects = $objDatabase->selectRecordsetArray ( $sql );
 			$sql = "SELECT * FROM objects WHERE (ra<" . $lLhr . ") AND (ra>" . $rLhr . ") AND (decl>" . $dDdeg . ") AND (decl<" . $uDdeg . ") AND ((mag>90) AND (diam1>" . (60 * (15 - $mag)) . ")) ORDER BY mag;";
@@ -442,9 +442,9 @@ class Objects {
 		global $objDatabase;
 		$objects = array ();
 		if ($lLhr < $rLhr) { // $sql="SELECT * FROM objects WHERE (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
-		  // $objects=$objDatabase->selectRecordsetArray($sql);
-		  // $sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
-		  // $objects=array_merge($objects,$objDatabase->selectRecordsetArray($sql));
+		                     // $objects=$objDatabase->selectRecordsetArray($sql);
+		                     // $sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
+		                     // $objects=array_merge($objects,$objDatabase->selectRecordsetArray($sql));
 			$sql = "SELECT * FROM objects WHERE ((ra>" . $rLhr . ") AND (decl>" . $dDdeg . ") AND (decl<" . $uDdeg . ") AND (mag>" . $frommag . ") AND (mag<=" . $tomag . ")) OR name='" . addslashes ( $theobject ) . "' ORDER BY name;";
 			$objects = $objDatabase->selectRecordsetArray ( $sql );
 			$sql = "SELECT * FROM objects WHERE ((ra<" . $lLhr . ") AND (decl>" . $dDdeg . ") AND (decl<" . $uDdeg . ") AND (mag>" . $frommag . ") AND (mag<=" . $tomag . ")) OR name='" . addslashes ( $theobject ) . "' ORDER BY name;";
@@ -454,7 +454,7 @@ class Objects {
 			$sql = "SELECT * FROM objects WHERE ((ra<" . $lLhr . ") AND (decl>" . $dDdeg . ") AND (decl<" . $uDdeg . ") AND ((mag>99) AND (diam1<" . (60 * (15 - $frommag)) . ") AND (diam1>=" . (60 * (15 - $tomag)) . "))) OR name='" . addslashes ( $theobject ) . "' ORDER BY name;";
 			$objects = array_merge ( $objects, $objDatabase->selectRecordsetArray ( $sql ) );
 		} else { // $sql="SELECT * FROM objects WHERE (ra<".$lLhr.") AND (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
-		  // $objects=$objDatabase->selectRecordsetArray($sql);
+		         // $objects=$objDatabase->selectRecordsetArray($sql);
 			$sql = "SELECT * FROM objects WHERE ((ra<" . $lLhr . ") AND (ra>" . $rLhr . ") AND (decl>" . $dDdeg . ") AND (decl<" . $uDdeg . ") AND (mag<=" . $tomag . ") AND (mag>" . $frommag . ")) OR name='" . addslashes ( $theobject ) . "' ORDER BY name;";
 			$objects = $objDatabase->selectRecordsetArray ( $sql );
 			$sql = "SELECT * FROM objects WHERE ((ra<" . $lLhr . ") AND (ra>" . $rLhr . ") AND (decl>" . $dDdeg . ") AND (decl<" . $uDdeg . ") AND ((mag>99) AND (diam1>=" . (60 * (15 - $tomag)) . ") AND (diam1<" . (60 * (15 - $frommag)) . "))) OR name='" . addslashes ( $theobject ) . "' ORDER BY name;";
@@ -1356,204 +1356,109 @@ class Objects {
 			$this->calcContrastAndVisibility ( $object, $object, $this->getDsoProperty ( $object, 'mag' ), $this->getDsoProperty ( $object, 'SBObj' ), $this->getDsoProperty ( $object, 'diam1' ), $this->getDsoProperty ( $object, 'diam2' ), $contrast, $contype, $popup, $prefMagDetails );
 		}
 		$prefMag = $prefMagDetails [0] . $prefMagDetails [1];
-		echo "<form action=\"" . $baseURL . "index.php?indexAction=detail_object\"><div>";
+		echo "<form role=\"form\" action=\"" . $baseURL . "index.php?indexAction=detail_object\"><div>";
 		echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
 		echo "<input type=\"hidden\" name=\"object\" value=\"" . $object . "\" />";
 		echo "<input type=\"hidden\" name=\"editListObjectDescription\" value=\"editListObjectDescription\"/>";
-		if ($loggedUser && ($standardAtlasCode = $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' )))
-			$objPresentations->line ( array (
-					LangViewObjectField1,
-					"<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( stripslashes ( $object ) ) . "\">" . (stripslashes ( $object )) . "</a>",
-					$objAtlas->atlasCodes [$standardAtlasCode] . LangViewObjectField10,
-					$this->getDsoProperty ( $object, $standardAtlasCode ) 
-			), "RLRL", array (), 20, array (
-					"type20",
-					"type20",
-					"type20",
-					"type20" 
-			) );
-		else // object name / atlas page
-			$objPresentations->line ( array (
-					LangViewObjectField1,
-					"<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( stripslashes ( $object ) ) . "\">" . (stripslashes ( $object )) . "</a>",
-					"&nbsp;",
-					"&nbsp;" 
-			), "RLRL", array (), 20, array (
-					"type20",
-					"type20",
-					"type20",
-					"type20" 
-			) );
-		$objPresentations->line ( array (
-				LangViewObjectField3,
-				$objPresentations->raToString ( $this->getDsoProperty ( $object, 'ra' ) ),
-				LangViewObjectField4,
-				$objPresentations->decToStringDegMinSec ( $this->getDsoProperty ( $object, 'decl' ) ) 
-		), "RLRL", array (), 20, array (
-				"type20",
-				"type20",
-				"type20",
-				"type20" 
-		) );
-		$objPresentations->line ( array (
-				LangViewObjectField5,
-				$GLOBALS [$this->getDsoProperty ( $object, 'con' )],
-				LangViewObjectField6,
-				$GLOBALS [$this->getDsoProperty ( $object, 'type' )] 
-		), "RLRL", array (), 20, array (
-				"type10",
-				"type10",
-				"type10",
-				"type10" 
-		) );
-		$objPresentations->line ( array (
-				LangViewObjectField7,
-				((($magnitude == 99.9) || ($magnitude == "")) ? $magnitude = "-" : $magnitude),
-				LangViewObjectField8,
-				((($sb == 99.9) || ($sb == "")) ? "-" : $sb) 
-		), "RLRL", array (), 20, array (
-				"type20",
-				"type20",
-				"type20",
-				"type20" 
-		) );
-		$objPresentations->line ( array (
-				LangViewObjectField9,
-				(($size = $this->getSize ( $object )) ? $size : "-"),
-				LangViewObjectField12,
-				(($this->getDsoProperty ( $object, 'pa' ) != 999) ? ($this->getDsoProperty ( $object, 'pa' ) . "&deg;") : "-") 
-		), "RLRL", array (), 20, array (
-				"type10",
-				"type10",
-				"type10",
-				"type10" 
-		) );
-		$objPresentations->line ( array (
-				LangViewObjectFieldContrastReserve,
-				"<span class=\"" . $contype . "\"  onmouseover=\"Tip('" . $popup . "')\">" . $contrast . "</span>",
-				LangViewObjectFieldOptimumDetectionMagnification,
-				$prefMag 
-		), "RLRL", array (), 20, array (
-				"type20",
-				"type20",
-				"type20",
-				"type20" 
-		) );
-		$thetype = 'type10';
+		echo "<table class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
+		echo "<tr>";
+		echo "<td colspan=\"3\">" . LangViewObjectField1 . "</td>";
+		echo "<td colspan=\"3\">" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( stripslashes ( $object ) ) . "\">" . (stripslashes ( $object )) . "</a>" . "</td>";
+		if ($loggedUser && ($standardAtlasCode = $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ))) {
+			echo "<td colspan=\"3\"><span class=\"pull-right\">" . $objAtlas->atlasCodes [$standardAtlasCode] . LangViewObjectField10 . "</span></td>";
+			echo "<td colspan=\"3\">" . $this->getDsoProperty ( $object, $standardAtlasCode ) . "</td>";
+		} else {
+			echo "<td colspan=\"3\">&nbsp;</td>";
+			echo "<td colspan=\"3\">&nbsp;</td>";
+		}
+		echo "</tr>";
+		
+		echo "<tr>";
+		echo "<td colspan=\"3\">" . LangViewObjectField3 . "</td>";
+		echo "<td colspan=\"3\">" . $objPresentations->raToString ( $this->getDsoProperty ( $object, 'ra' ) ) . "</td>";
+		echo "<td colspan=\"3\"><span class=\"pull-right\">" . LangViewObjectField4 . "</span></td>";
+		echo "<td colspan=\"3\">" . $objPresentations->decToStringDegMinSec ( $this->getDsoProperty ( $object, 'decl' ) ) . "</td>";
+		echo "</tr>";
+		
+		echo "<tr>";
+		echo "<td colspan=\"3\">" . LangViewObjectField5 . "</td>";
+		echo "<td colspan=\"3\">" . $GLOBALS [$this->getDsoProperty ( $object, 'con' )] . "</td>";
+		echo "<td colspan=\"3\"><span class=\"pull-right\">" . LangViewObjectField6 . "</span></td>";
+		echo "<td colspan=\"3\">" . $GLOBALS [$this->getDsoProperty ( $object, 'type' )] . "</td>";
+		echo "</tr>";
+		
+		echo "<tr>";
+		echo "<td colspan=\"3\">" . LangViewObjectField7 . "</td>";
+		echo "<td colspan=\"3\">" . ((($magnitude == 99.9) || ($magnitude == "")) ? $magnitude = "-" : $magnitude) . "</td>";
+		echo "<td colspan=\"3\"><span class=\"pull-right\">" . LangViewObjectField8 . "</span></td>";
+		echo "<td colspan=\"3\">" . ((($sb == 99.9) || ($sb == "")) ? "-" : $sb) . "</td>";
+		echo "</tr>";
+		
+		echo "<tr>";
+		echo "<td colspan=\"3\">" . LangViewObjectField9 . "</td>";
+		echo "<td colspan=\"3\">" . (($size = $this->getSize ( $object )) ? $size : "-") . "</td>";
+		echo "<td colspan=\"3\"><span class=\"pull-right\">" . LangViewObjectField12 . "</span></td>";
+		echo "<td colspan=\"3\">" . (($this->getDsoProperty ( $object, 'pa' ) != 999) ? ($this->getDsoProperty ( $object, 'pa' ) . "&deg;") : "-") . "</td>";
+		echo "</tr>";
+		
+		echo "<tr>";
+		echo "<td colspan=\"3\">" . LangViewObjectFieldContrastReserve . "</td>";
+		echo "<td colspan=\"3\">" . "<span class=\"" . $contype . "\" onmouseover=\"Tip('" . $popup . "')\">" . $contrast . "</span>" . "</td>";
+		echo "<td colspan=\"3\"><span class=\"pull-right\">" . LangViewObjectFieldOptimumDetectionMagnification . "</span></td>";
+		echo "<td colspan=\"3\">" . $prefMag . "</td>";
+		echo "</tr>";
+		
 		if ($alt) {
-			$objPresentations->line ( array (
-					LangViewObjectField2,
-					"<span onmouseover=\"Tip('" . $alttip . "')\">" . $alt . "</span>" 
-			), "RL", array (
-					25,
-					75 
-			), 20, array (
-					$thetype,
-					$thetype 
-			) );
-			if ($thetype == 'type10')
-				$thetype = 'type20';
-			else
-				$thetype = 'type10';
+			echo "<tr>";
+			echo "<td colspan=\"3\">" . LangViewObjectField2 . "</td>";
+			echo "<td colspan=\"9\">" . "<span onmouseover=\"Tip('" . $alttip . "')\">" . $alt . "</span>" . "</td>";
+			echo "</tr>";
 		}
+		
 		if ($partoft || $containst) {
-			$objPresentations->line ( array (
-					LangViewObjectField2b,
-					"<span onmouseover=\"Tip('(" . ($containstip ? $containstip : "-") . ")/" . ($partoftip ? $partoftip : "-") . "')\">" . ($containst ? $containst . "/" : "(-)/") . ($partoft ? $partoft : "-") . "</span>" 
-			), "RL", array (
-					25,
-					75 
-			), 20, array (
-					$thetype,
-					$thetype 
-			) );
-			if ($thetype == 'type10')
-				$thetype = 'type20';
-			else
-				$thetype = 'type10';
+			echo "<tr>";
+			echo "<td colspan=\"3\">" . LangViewObjectField2b . "</td>";
+			echo "<td colspan=\"9\">" . "<span onmouseover=\"Tip('(" . ($containstip ? $containstip : "-") . ")/" . ($partoftip ? $partoftip : "-") . "')\">" . ($containst ? $containst . "/" : "(-)/") . ($partoft ? $partoft : "-") . "</span>" . "</td>";
+			echo "</tr>";
 		}
+		
 		if ($listname && ($objList->checkObjectInMyActiveList ( $object ))) {
+			echo "<tr>";
+			echo "<td colspan=\"3\">" . LangViewObjectListDescription . ' (' . "<a href=\"" . DreyerDescriptionLink . "\" rel=\"external\">" . LangViewObjectDreyerDescription . "</a>)" . "</td>";
 			if ($myList) {
-				$objPresentations->line ( array (
-						LangViewObjectListDescription . ' (' . "<a href=\"" . DreyerDescriptionLink . "\" rel=\"external\">" . LangViewObjectDreyerDescription . "</a>)",
-						"<textarea name=\"description\" class=\"listdescription inputfield\" cols=\"1\" rows=\"1\" onchange=\"submit()\">" . $objList->getListObjectDescription ( $object ) . "</textarea>" 
-				), "RL", array (
-						25,
-						75 
-				), 130, array (
-						$thetype,
-						$thetype 
-				) );
-				if ($thetype == 'type10')
-					$thetype = 'type20';
-				else
-					$thetype = 'type10';
+				echo "<td colspan=\"9\">" . "<textarea name=\"description\" class=\"listdescription inputfield\" cols=\"1\" rows=\"1\" onchange=\"submit()\">" . $objList->getListObjectDescription ( $object ) . "</textarea>" . "</td>";
 			} else {
-				$objPresentations->line ( array (
-						LangViewObjectListDescription . ' (' . "<a href=\"" . DreyerDescriptionLink . "\" rel=\"external\">" . LangViewObjectDreyerDescription . "</a>)",
-						$objList->getListObjectDescription ( $object ) 
-				), "RL", array (
-						25,
-						75 
-				), 20, array (
-						$thetype,
-						$thetype 
-				) );
-				if ($thetype == 'type10')
-					$thetype = 'type20';
-				else
-					$thetype = 'type10';
+				echo "<td colspan=\"9\">" . $objList->getListObjectDescription ( $object ) . "</td>";
 			}
+			echo "</tr>";
 		} elseif ($descriptionDsOject = $this->getDsoProperty ( $object, 'description' )) {
-			$objPresentations->line ( array (
-					LangViewObjectNGCDescription . ' (' . "<a href=\"" . DreyerDescriptionLink . "\" rel=\"external\">" . LangViewObjectDreyerDescription . "</a>" . ')',
-					htmlentities ( $descriptionDsOject ) 
-			), "RL", array (
-					25,
-					75 
-			), 20, array (
-					$thetype,
-					$thetype 
-			) );
-			if ($thetype == 'type10')
-				$thetype = 'type20';
-			else
-				$thetype = 'type10';
+			echo "<tr>";
+			echo "<td colspan=\"3\">" . LangViewObjectNGCDescription . ' (' . "<a href=\"" . DreyerDescriptionLink . "\" rel=\"external\">" . LangViewObjectDreyerDescription . "</a>" . ')' . "</td>";
+			echo "<td colspan=\"9\">" . htmlentities ( $descriptionDsOject ) . "</td>";
+			echo "</tr>";
+		} else {
+			echo "<tr>";
+			echo "<td colspan=\"3\">" . LangViewObjectNGCDescription . ' (' . "<a href=\"" . DreyerDescriptionLink . "\" rel=\"external\">" . LangViewObjectDreyerDescription . "</a>" . ')' . "</td>";
+			echo "<td colspan=\"9\">" . htmlentities ( $descriptionDsOject ) . "</td>";
+			echo "</tr>";
 		}
+		
 		$inlists = $objList->getInPrivateLists ( $object );
 		if ($inlists != "") {
-			$objPresentations->line ( array (
-					LangInPrivateLists,
-					$inlists 
-			), "RL", array (
-					25,
-					75 
-			), 20, array (
-					$thetype,
-					$thetype 
-			) );
-			if ($thetype == 'type10')
-				$thetype = 'type20';
-			else
-				$thetype = 'type10';
+			echo "<tr>";
+			echo "<td colspan=\"3\">" . LangInPrivateLists . "</td>";
+			echo "<td colspan=\"9\">" . $inlists . "</td>";
+			echo "</tr>";
 		}
+		
 		$inlists = $objList->getInPublicLists ( $object );
 		if ($inlists != "") {
-			$objPresentations->line ( array (
-					LangInPublicLists,
-					$inlists 
-			), "RL", array (
-					25,
-					75 
-			), 20, array (
-					$thetype,
-					$thetype 
-			) );
-			if ($thetype == 'type10')
-				$thetype = 'type20';
-			else
-				$thetype = 'type10';
+			echo "<tr>";
+			echo "<td colspan=\"3\">" . LangInPublicLists . "</td>";
+			echo "<td colspan=\"9\">" . $inlists . "</td>";
+			echo "</tr>";
 		}
+		
 		if ($loggedUser && $objObserver->getObserverProperty ( $loggedUser, 'stdLocation' )) {
 			$theYear = $_SESSION ['globalYear'];
 			$theMonth = $_SESSION ['globalMonth'];
@@ -1607,47 +1512,22 @@ class Objects {
 				$popup4 = $object . LangAltitude . $ristraset [3] . LangRistrasetIn . addslashes ( $location );
 			}
 			
-			$objPresentations->line ( array (
-					LangDate,
-					date ( $dateformat, mktime ( 0, 0, 0, $theMonth, $theDay, $theYear ) ),
-					LangMoonRise,
-					"<span onmouseover=\"Tip('" . $popup1 . "')\">" . $ristraset [0] . "</span>",
-					LangTransit,
-					"<span onmouseover=\"Tip('" . $popup2 . "')\">" . $ristraset [1] . "</span>",
-					LangMoonSet,
-					"<span onmouseover=\"Tip('" . $popup3 . "')\">" . $ristraset [2] . "</span>",
-					LangBest,
-					$ristraset [4],
-					LangMaxAltitude,
-					"<span class=\"" . "\"  onmouseover=\"Tip('" . $popup4 . "')\">" . $ristraset [3] . "</span>" 
-			), "RLRLRLRLRLRL", array (
-					8.33,
-					8.34,
-					8.33,
-					8.33,
-					8.33,
-					8.33,
-					8.33,
-					8.33,
-					8.33,
-					8.33,
-					8.33,
-					8.33 
-			), 20, array (
-					$thetype,
-					$thetype,
-					$thetype,
-					$thetype,
-					$thetype,
-					$thetype,
-					$thetype,
-					$thetype,
-					$thetype,
-					$thetype,
-					$thetype,
-					$thetype 
-			) );
+			echo "<tr>";
+			echo "<td>" . LangDate . "</td>";
+			echo "<td>" . date ( $dateformat, mktime ( 0, 0, 0, $theMonth, $theDay, $theYear ) ) . "</td>";
+			echo "<td>" . LangMoonRise . "</td>";
+			echo "<td>" . "<span onmouseover=\"Tip('" . $popup1 . "')\">" . $ristraset [0] . "</span>" . "</td>";
+			echo "<td>" . LangTransit . "</td>";
+			echo "<td>" . "<span onmouseover=\"Tip('" . $popup2 . "')\">" . $ristraset [1] . "</span>" . "</td>";
+			echo "<td>" . LangMoonSet . "</td>";
+			echo "<td>" . "<span onmouseover=\"Tip('" . $popup3 . "')\">" . $ristraset [2] . "</span>" . "</td>";
+			echo "<td>" . LangBest . "</td>";
+			echo "<td>" . $ristraset [4] . "</td>";
+			echo "<td>" . LangMaxAltitude . "</td>";
+			echo "<td>" . "<span class=\"" . "\" onmouseover=\"Tip('" . $popup4 . "')\">" . $ristraset [3] . "</span>" . "</td>";
+			echo "</tr>";
 		}
+		echo "</table>";
 		echo "</div></form>";
 		echo "<hr />";
 	}
@@ -1889,10 +1769,10 @@ class Objects {
 		}
 		echo "</tr>";
 		echo "</thead>";
-
+		
 		$count = 0;
-		if($max>count($_SESSION['Qobj']))
-			$max=count($_SESSION['Qobj']);
+		if ($max > count ( $_SESSION ['Qobj'] ))
+			$max = count ( $_SESSION ['Qobj'] );
 		while ( $max && ($count < $max) ) {
 			echo "<tr>";
 			reset ( $fields );

@@ -17,7 +17,7 @@ function new_observationxml()
 	echo "<hr />";
 	echo "<form action=\"".$baseURL."index.php?indexAction=add_xml_observations\" enctype=\"multipart/form-data\" method=\"post\"><div>";
 	echo "<input type=\"file\" name=\"xml\" /><br />"; 
-	echo "<input type=\"submit\" name=\"change\" value=\"".LangXMLButton."\" />";
+	echo "<input class=\"btn btn-success\" type=\"submit\" name=\"change\" value=\"".LangXMLButton."\" />";
 	echo "</div></form>";
 	echo "<hr />";
 	echo "</div>";

@@ -222,4 +222,36 @@ td.tablesorter-pager {
   filter: alpha(opacity=50);
   cursor: default;
 }
+.typeDifficult { 
+  background-color : #CC0000;
+  padding          : 2px;
+  color            : #000000;
+}
+.typeEasy { 
+  background-color : #339900;
+  padding          : 2px;
+  color            : #000000;
+}
+.typeNotVisible { 
+  background-color : #777777;
+  padding          : 2px;
+  color            : #000000;
+}
+.typeQuestionable { 
+  background-color : #999999;
+  padding          : 2px;
+  color            : #000000;
+}
+
+.typeQuiteDifficult { 
+  background-color : #FF6600;
+  padding          : 2px;
+  color            : #000000;
+}
+
+.typeVeryEasy { 
+  background-color : #66FF00;
+  padding          : 2px;
+  color            : #000000;
+}
 
