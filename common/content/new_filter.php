@@ -26,8 +26,9 @@ function new_filter()
 	echo "<input type=\"submit\" class=\"btn btn-primary pull-right\" name=\"add\" value=\"".LangAddFilterButton."\" />&nbsp;";
 	echo "<div class=\"form-group\">
 	       <label for=\"catalog\">". LangAddFilterExisting."</label>";
+	echo "<div class=\"form-inline\">";
 	echo $content1b;
-	echo "</div>";
+	echo "</div></div>";
 	
 	echo "<hr />";
 	echo LangAddSiteFieldOr." ".LangAddLensFieldManually;
@@ -41,23 +42,27 @@ function new_filter()
 
 	echo "<div class=\"form-group\">
 	       <label for=\"type\">". LangAddFilterField2."</label>";
+	echo "<div class=\"form-inline\">";
 	echo $objFilter->getEchoListType($objFilter->getFilterPropertyFromId($objUtil->checkRequestKey('filterid'),'type'));
-	echo "</div>";
+	echo "</div></div>";
 	
 	echo "<div class=\"form-group\">
 	       <label for=\"color\">". LangAddFilterField3."</label>";
+	echo "<div class=\"form-inline\">";
 	echo $objFilter->getEchoListColor($objFilter->getFilterPropertyFromId($objUtil->checkRequestKey('filterid'),'color'));
-	echo "</div>";
+	echo "</div></div>";
 	
 	echo "<div class=\"form-group\">
 	       <label for=\"wratten\">". LangAddFilterField4."</label>";
+	echo "<div class=\"form-inline\">";
 	echo "<input type=\"text\" class=\"inputfield form-control\" maxlength=\"5\" name=\"wratten\" size=\"5\" value=\"".stripslashes($objUtil->checkRequestKey('wratten')).stripslashes($objFilter->getFilterPropertyFromId($objUtil->checkRequestKey('filterid'),'wratten'))."\" />";
-	echo "</div>";
+	echo "</div></div>";
 	
 	echo "<div class=\"form-group\">
 	       <label for=\"schott\">". LangAddFilterField5."</label>";
+	echo "<div class=\"form-inline\">";
 	echo "<input type=\"text\" class=\"inputfield form-control\" maxlength=\"5\" name=\"schott\" size=\"5\" value=\"".stripslashes($objUtil->checkRequestKey('schott')).stripslashes($objFilter->getFilterPropertyFromId($objUtil->checkRequestKey('filterid'),'schott'))."\" />";
-	echo "</div>";
+	echo "</div></div>";
 	
 	echo "<hr />";
 	echo "</div></form>";

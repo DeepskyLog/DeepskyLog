@@ -417,7 +417,6 @@ define("LangChangeAccountCopyrightExpl"                   ,"Sie k&ouml;nnen eine
 // define("LangViewObserverChangeNameFirstname"              ,"Verander voornaam/naam");
 
 define("LangValidateMessage1"                             ,"Alle Pflichtfelder m&uuml;ssen ausgef&uuml;llt sein!");
-define("LangRequiredFields"                               ,"(* Pflichtfelder)");
 define("LangNoOwnColor"                                   , "Eigene Beobachtungen nicht hervorheben");
 
 // Text for transit
@@ -1360,7 +1359,6 @@ define("LangNewObservationSubtitle1c"											,"Beobachtungen von &lt;OAL&gt; 
 define("LangNewObservationSubtitle2"											,"Pr&uuml;fen der Objekt details");
 define("LangNewObservationSubtitle3"											,"Beobachtungsdetail Eingabe ");
 define("LangNewObservationSubtitle3B"											,"&Auml;ndere die Beobachtungsdetails ");
-define("LangNewObservationSubtitle3A"											,"(* Pflichtfelder)");
 define("LangNewObservationSubtitle3C"											," - ");
 define("LangNewObservationButton1"												,"Objekt suche");
 define("LangNewObservationField1"													,"Datum *");

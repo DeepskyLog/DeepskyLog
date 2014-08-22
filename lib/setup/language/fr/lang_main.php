@@ -401,7 +401,6 @@ define("LangMarkAllAsRead"                                ,"Marquez tout comme l
 define("LangMarkUpToHereAsRead"                           ,"Marquez les observations pr&eacute;c&eacute;dentes comme lu.");
 
 define("LangValidateMessage1"                             ,"Tous les champs obligatoires doivent &#234;tre remplis!");
-define("LangRequiredFields"                               ,"(*= champs obligatoires)");
 define("LangNoOwnColor"                                   , "Ne marquez plus mes propres observations");
 
 // Text for transit
@@ -1319,7 +1318,6 @@ define("LangNewObservationSubtitle1c"											,"importez les observations &agr
 define("LangNewObservationSubtitle2"											,"Contr&ocirc;lez les donn&eacute;es de l'objet");
 define("LangNewObservationSubtitle3"											,"Remplissez les d&eacute;tails de l'observation ");
 define("LangNewObservationSubtitle3B"											,"Changer les d&eacute;tails de l'observation ");
-define("LangNewObservationSubtitle3A"											,"(*= champs obligatoires)");
 define("LangNewObservationSubtitle3C"											," - ");
 define("LangNewObservationButton1"												,"Recherchez l'objet");
 define("LangNewObservationField1"													,"Date *");

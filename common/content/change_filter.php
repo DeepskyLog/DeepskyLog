@@ -33,23 +33,27 @@ function change_filter()
 	
 	echo "<div class=\"form-group\">
 	       <label for=\"type\">". LangAddFilterField2."</label>";
+	echo "<div class=\"form-inline\">";
 	echo $objFilter->getEchoListType($filter['type'],$disabled);
-	echo "</div>";
+	echo "</div></div>";
 	
 	echo "<div class=\"form-group\">
 	       <label for=\"color\">". LangAddFilterField3."</label>";
+	echo "<div class=\"form-inline\">";
 	echo $objFilter->getEchoListColor($filter['color'],$disabled);
-	echo "</div>";
+	echo "</div></div>";
 	
 	echo "<div class=\"form-group\">
 	       <label for=\"wratten\">". LangAddFilterField4."</label>";
+	echo "<div class=\"form-inline\">";
 	echo "<input type=\"text\" class=\"inputfield form-control\" maxlength=\"5\" name=\"wratten\" size=\"5\" value=\"".stripslashes($filter['wratten'])."\" ".$disabled." />";
-	echo "</div>";
+	echo "</div></div>";
 	
 	echo "<div class=\"form-group\">
 	       <label for=\"schott\">". LangAddFilterField5."</label>";
+	echo "<div class=\"form-inline\">";
 	echo "<input type=\"text\" class=\"inputfield form-control\" maxlength=\"5\" name=\"schott\" size=\"5\" value=\"".stripslashes($filter['schott'])."\" ".$disabled." />";
-	echo "</div>";
+	echo "</div></div>";
 	
 	echo "<hr />";
 	echo "</div></form>";

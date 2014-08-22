@@ -398,7 +398,6 @@ define("LangMarkAllAsRead"                                ,"Allen markeren als g
 define("LangMarkUpToHereAsRead"                           ,"Tot hier als gelezen markeren.");
 
 define("LangValidateMessage1"                             ,"Alle verplichte velden moeten worden ingevuld!");
-define("LangRequiredFields"                               ,"(* verplichte velden)");
 
 define("LangNoOwnColor"                                   , "Eigen waarnemingen niet oplichten");
 
@@ -1344,7 +1343,6 @@ define("LangNewObservationSubtitle1c"											,"importeer waarnemingen vanuit 
 define("LangNewObservationSubtitle2"											,"Controleer de gegevens van het object");
 define("LangNewObservationSubtitle3"											,"Vul de details van de waarneming in ");
 define("LangNewObservationSubtitle3B"											,"Wijzig de details van de waarneming ");
-define("LangNewObservationSubtitle3A"											,"(* verplichte velden)");
 define("LangNewObservationSubtitle3C"											," - ");
 define("LangNewObservationButton1"												,"Zoek object");
 define("LangNewObservationField1"													,"Datum *");
