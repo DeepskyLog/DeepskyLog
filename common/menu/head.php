@@ -35,7 +35,8 @@ function head()
         <script src=\"lib/javascript/jquery.tablesorter.widgets.min.js\"></script>
         <script src=\"lib/javascript/jquery.tablesorter.pager.min.js\"></script>
         <script src=\"lib/javascript/widget-columnSelector.js\"></script>
-        <link href=\"styles/tablesorter.theme.bootstrap.css\" rel=\"stylesheet\">";
+        <script src=\"lib/javascript/widget-reorder.js\"></script>
+		<link href=\"styles/tablesorter.theme.bootstrap.css\" rel=\"stylesheet\">";
 
   $DSLTitle="DeepskyLog";
 	$TitleText="";

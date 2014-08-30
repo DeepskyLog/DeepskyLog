@@ -2705,6 +2705,7 @@ class Utils {
               </div>
 	         </div>";
 	}
+	
 	// Add the pager for the table
 	public function addTablePager($id = "") {
 		echo "<!-- pager -->
@@ -2730,10 +2731,11 @@ class Utils {
 		global $dateformat;
 		// Make the table sorter, add the pager and add the column chooser
 		echo "<script type=\"text/javascript\">";
-		echo "$(\"table\").tablesorter({
-            theme: \"bootstrap\",
-            widthFixed: true,
-  			dateFormat : \"";
+
+		echo "$(function(){
+			$(\"table\").tablesorter({
+		       theme: \"bootstrap\",
+               dateFormat : \"";
 		
 		if ($dateformat == "d/m/Y") {
 			echo "ddmmyyyy";
@@ -2741,43 +2743,51 @@ class Utils {
 			echo "mmddyyyy";
 		}
 		echo "\", // set the default date format
-            headerTemplate: '{content} {icon}',
-            widgets: [\"uitheme\", \"columnSelector\", \"filter\", \"zebra\"],
-            widgetOptions : {
-              // target the column selector markup
-              columnSelector_container : $('#columnSelector'),
-              // column status, true = display, false = hide
-              // disable = do not display on list
-              columnSelector_columns : {
-                0: 'disable' /* set to disabled; not allowed to unselect it */
-              },
-              // remember selected columns (requires $.tablesorter.storage)
-              columnSelector_saveColumns: true,
-  
-              // container layout
-              columnSelector_layout : '<label><input type=\"checkbox\">{name}</label>',
-              // data attribute containing column name to use in the selector container
-              columnSelector_name  : 'data-selector-name',
-  
-             /* Responsive Media Query settings */
-             // enable/disable mediaquery breakpoints
-             columnSelector_mediaquery: true,
-             // toggle checkbox name
-             columnSelector_mediaqueryName: 'Auto: ',
-             // breakpoints checkbox initial setting
-             columnSelector_mediaqueryState: true,
-             // responsive table hides columns with priority 1-6 at these breakpoints
-             // see http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/#Applyingapresetbreakpoint
-             // *** set to false to disable ***
-             columnSelector_breakpoints : [ '20em', '30em', '40em', '50em', '60em', '70em' ],
-             // data attribute containing column priority
-             // duplicates how jQuery mobile uses priorities:
-             // http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/
-             columnSelector_priority : 'data-priority'
-            }
-          })
-  
-  		 var pagerOptions = {
+               headerTemplate: '{content} {icon}',
+               widgets: [\"reorder\", \"uitheme\", \"columnSelector\", \"filter\", \"zebra\", \"stickyHeaders\"],
+               widgetOptions : {
+                 // target the column selector markup
+                 columnSelector_container : $('#columnSelector'),
+                 // column status, true = display, false = hide
+                 // disable = do not display on list
+                 columnSelector_columns : {
+                   0: 'disable' /* set to disabled; not allowed to unselect it */
+                 },
+                 // remember selected columns (requires $.tablesorter.storage)
+                 columnSelector_saveColumns: true,
+
+                 // container layout
+                 columnSelector_layout : '<label><input type=\"checkbox\">{name}</label>',
+                 // data attribute containing column name to use in the selector container
+                 columnSelector_name  : 'data-selector-name',
+
+                 /* Responsive Media Query settings */
+                 // enable/disable mediaquery breakpoints
+                 columnSelector_mediaquery: true,
+                 // toggle checkbox name
+                 columnSelector_mediaqueryName: 'Auto: ',
+                 // breakpoints checkbox initial setting
+                 columnSelector_mediaqueryState: true,
+                 // responsive table hides columns with priority 1-6 at these breakpoints
+                 // see http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/#Applyingapresetbreakpoint
+                 // *** set to false to disable ***
+                 columnSelector_breakpoints : [ '20em', '30em', '40em', '50em', '60em', '70em' ],
+                 // data attribute containing column priority
+                 // duplicates how jQuery mobile uses priorities:
+                 // http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/
+                 columnSelector_priority : 'data-priority',
+				
+                 reorder_axis        : 'x', // 'x' or 'xy'
+                 reorder_delay       : 300,
+                 reorder_helperClass : 'tablesorter-reorder-helper',
+                 reorder_helperBar   : 'tablesorter-reorder-helper-bar',
+                 reorder_noReorder   : 'reorder-false',
+                 reorder_blocked     : 'reorder-block-left reorder-block-end',
+                 reorder_complete    : null // callback
+	}
+	})
+				
+    var pagerOptions = {
   
     // target the pager markup - see the HTML block below
     container: $(\"#pager" . $id . "\"),
@@ -2838,31 +2848,32 @@ class Utils {
     cssDisabled: 'disabled', // Note there is no period " . " in front of this class name
     cssErrorRow: 'tablesorter-errorRow' // ajax error information row
   
-  };
+  };    		
+
+  // initialize column selector using default settings
+  // note: no container is defined!
+  $(\".bootstrap-popup\").tablesorter({
+    theme: 'blue',
+    widgets: ['zebra', 'columnSelector', 'stickyHeaders']
+  });    		
+
+		// bind to pager events
+		// *********************
+		$(\"table\").bind('pagerChange pagerComplete pagerInitialized pageMoved', function(e, c){
+			var msg = '\"</span> event triggered, ' + (e.type === 'pagerChange' ? 'going to' : 'now on') +
+			' page <span class=\"typ\">' + (c.page + 1) + '/' + c.totalPages + '</span>';
+			$('#display')
+			.append('<li><span class=\"str\">\"' + e.type + msg + '</li>')
+			.find('li:first').remove();
+  })
+    		
+  // initialize the pager plugin
+  // ****************************
+  $(\"table\").tablesorterPager(pagerOptions);
+    		
+	});";
   
-  $(\"table\")
-  
-    // Initialize tablesorter
-    // ***********************
-    .tablesorter({
-      theme: 'blue',
-      widthFixed: true,
-      widgets: ['zebra']
-    })
-  
-    // bind to pager events
-    // *********************
-    .bind('pagerChange pagerComplete pagerInitialized pageMoved', function(e, c){
-      var msg = '\"</span> event triggered, ' + (e.type === 'pagerChange' ? 'going to' : 'now on') +
-        ' page <span class=\"typ\">' + (c.page + 1) + '/' + c.totalPages + '</span>';
-      $('#display')
-        .append('<li><span class=\"str\">\"' + e.type + msg + '</li>')
-        .find('li:first').remove();
-    })
-  
-    // initialize the pager plugin
-    // ****************************
-    .tablesorterPager(pagerOptions);";
+		
 		
 		echo "</script>";
 	}

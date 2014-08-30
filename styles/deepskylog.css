@@ -254,4 +254,33 @@ td.tablesorter-pager {
   padding          : 2px;
   color            : #000000;
 }
-
+.seenN {
+  background-color : #CC2222;
+  padding          : 2px;
+}
+.seenX {
+  background-color : #E5E500;
+  padding          : 2px;
+}
+.seenY {
+  background-color : #228822;
+  padding          : 2px;
+}
+.seenYD {
+  background-color : #228822;
+  padding          : 2px;
+  color: yellow;
+}
+.seenY > a:link, .seenY > a:visited, .seenYD > a:link, .seenYD > a:visited, .seenX > a:link, .seenX > a:visited, .seenN > a:link, .seenN > a:visited {
+    color: yellow;
+}
+.strikethrough {
+  text-decoration  : line-through;
+}
+.tablesorter-header.tablesorter-reorder-helper {
+  cursor: move;
+}
+.tablesorter-reorder-helper-bar {
+  width: 1px;
+  background: #000;
+}

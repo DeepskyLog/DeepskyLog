@@ -120,17 +120,7 @@ function showObjectsNearby()
 	$content2=$objUtil->printStepsPerPage3($link,"nearbyObjects",$step);
 	$objPresentations->line(array($content1,$content2),"LR",array(50,50),25);
 	echo "<hr />";
-	if($max>count($_SESSION['Qobj']))
-	  $max=count($_SESSION['Qobj']);
-	$_GET['min']=$min;
-	$_GET['max']=$max;
-	if($FF)
-	{ echo "<script type=\"text/javascript\">";
-	  echo "theResizeElement='obj_list';";
-	  echo "theResizeSize=125;";
-	  echo "</script>";
-	}
-	$objObject->showObjects($link, $min, $max,$_GET['object'],0,$step,'','view_object');
+	$objObject->showObjects($link, $_GET['object'],0,'','view_object');
 	echo"<hr />";
   echo "<script type=\"text/javascript\">";
   echo "

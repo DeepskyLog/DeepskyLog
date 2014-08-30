@@ -69,7 +69,7 @@ function tolist()
 	      echo "theResizeSize=90;";
 	      echo "</script>";
 	  	}
-		  $objObject->showObjects($link, $min, $max,'',1, $step,"removePageObjectsFromList","tolist");
+		  $objObject->showObjects($link, '',1, "removePageObjectsFromList","tolist");
 		  echo "<hr />";
 		  /*
 		  $content=LangExecuteQueryObjectsMessage4."&nbsp;";

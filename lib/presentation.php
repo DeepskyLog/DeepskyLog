@@ -218,7 +218,7 @@ class Presentations {
 		echo "<a href=\"#\" onclick=\"thetitle = prompt('" . addslashes ( $prompt ) . "','" . addslashes ( $promptDefault ) . "'); location.href='" . $javaLink . "&amp;pdfTitle='+thetitle; return false;\"	rel=\"external\">" . $text . "</a>";
 	}
 	public function promptWithLinkText($prompt, $promptDefault, $javaLink, $text) {
-		return "<a href=\"#\" onclick=\"thetitle = prompt('" . addslashes ( $prompt ) . "','" . addslashes ( $promptDefault ) . "'); location.href='" . $javaLink . "&amp;pdfTitle='+thetitle; return false;\"	rel=\"external\">" . $text . "</a>";
+		return "<a href=\"#\" onclick=\"thetitle = prompt('" . addslashes ( $prompt ) . "','" . addslashes ( $promptDefault ) . "'); location.href='" . $javaLink . "&amp;pdfTitle='+thetitle; return false;\"	rel=\"external\"  class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . $text . "</a>";
 	}
 	public function promptWithLinkAndLayout($prompt, $promptDefault, $javaLink, $text) {
 		return "<a href=\"#\" onclick=\"theLayoutName = prompt('" . addslashes ( $prompt ) . "','" . addslashes ( $promptDefault ) . "');  location.href='" . $javaLink . "&amp;layoutName='+theLayoutName+'&amp;orderColumns='+getColumnsOrder()+'&amp;restoreColumns='+getColumnsRestore();  return false;\" >" . $text . "</a>";

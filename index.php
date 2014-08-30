@@ -73,10 +73,8 @@ catch (Exception $e)
   // EMAIL developers with error codes
 }
 echo "<script type=\"text/javascript\">";
-echo "theLeftMenu='".$leftmenu."';";
-echo "theTopMenu='".$topmenu."';";
 if($includeFile=='deepsky/content/view_catalogs.php')
-{ echo "view_catalogs('".$leftmenu."','".$topmenu."');";
+{ echo "view_catalogs('','');";
 }
 if($loadAtlasPage)
 { echo "atlasFillPage();";
