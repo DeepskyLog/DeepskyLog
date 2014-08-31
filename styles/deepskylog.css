@@ -284,3 +284,6 @@ td.tablesorter-pager {
   width: 1px;
   background: #000;
 }
+.textred {
+  color            : #FF0000;
+}
