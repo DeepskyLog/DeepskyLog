@@ -179,7 +179,7 @@ class Messages {
 		// Add the button to select which columns to show
 		$objUtil->addTableColumSelector ();
 		
-		echo "<table class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">\n";
+		echo "<table id=\"sort-table\" class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">\n";
 		
 		// Making the header for the mails
 		echo "<thead><tr>";

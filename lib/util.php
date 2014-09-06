@@ -2733,7 +2733,7 @@ class Utils {
 		echo "<script type=\"text/javascript\">";
 
 		echo "$(function(){
-			$(\"table\").tablesorter({
+			$(\"#sort-table\").tablesorter({
 		       theme: \"bootstrap\",
                dateFormat : \"";
 		
@@ -2859,7 +2859,7 @@ class Utils {
 
 		// bind to pager events
 		// *********************
-		$(\"table\").bind('pagerChange pagerComplete pagerInitialized pageMoved', function(e, c){
+		$(\"#sort-table\").bind('pagerChange pagerComplete pagerInitialized pageMoved', function(e, c){
 			var msg = '\"</span> event triggered, ' + (e.type === 'pagerChange' ? 'going to' : 'now on') +
 			' page <span class=\"typ\">' + (c.page + 1) + '/' + c.totalPages + '</span>';
 			$('#display')

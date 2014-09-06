@@ -167,30 +167,27 @@ function showObjectEphemerides($theLocation) {
 		$theEphemerides15 [$i] = $objObject->getEphemerides ( $object, 15, $i, 2010 );
 		$theNightEphemerides15 [$i] = date_sun_info ( strtotime ( "2010" . "-" . $i . "-" . "15" ), $latitude, $longitude );
 	}
-	$objPresentations->line ( array (
-			"<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectephemerides=hidden' . "\" title=\"" . ReportEpehemeridesForHide . "\">-</a> " . ReportEpehemeridesFor . "&nbsp;" . stripslashes ( $object ) . ' ' . ReportEpehemeridesIn . ' ' . $objLocation->getLocationPropertyFromId ( $theLocation, 'name' ) . "</h4>" 
-	), "L", array (
-			100 
-	), 30 );
+	echo "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectephemerides=hidden' . "\" title=\"" . ReportEpehemeridesForHide . "\">-</a> " . ReportEpehemeridesFor . "&nbsp;" . stripslashes ( $object ) . ' ' . ReportEpehemeridesIn . ' ' . $objLocation->getLocationPropertyFromId ( $theLocation, 'name' ) . "</h4>"; 
 	echo "<hr />";
-	echo "<table>";
+	echo "<table class=\"table table-condensed\">";
 	echo "<tr class=\"type10\">";
-	echo "<td class=\"right\">" . LangMonth . " > </td>";
+	echo "<th class=\"right\">" . LangMonth . " > </th>";
+	print "TEST : " . $theMonth . " - " . $theDay;
 	for($i = 1; $i < 13; $i ++) {
 		$background1 = '';
 		$background15 = '';
 		if ((($i == $theMonth) && ($theDay < 8)) || ((($i - 1) == $theMonth) && ($theDay > 22)))
-			$background1 = " style=\"background-color:#FFAAAA\" ";
+			$background1 = 'class="current"';
 		
 		if (($i == $theMonth) && ($theDay >= 8) && ($theDay <= 22))
-			$background15 = " style=\"background-color:#FFAAAA\" ";
+			$background15 = 'class="current"';
 		
-		echo "<td " . $background1 . ">&nbsp;</td><td class=\"centered\" " . $background15 . ">" . $i . "</td>";
+		echo "<th " . $background1 . ">&nbsp;</th><th class=\"centered\" " . $background15 . ">" . $i . "</th>";
 	}
 	$background1 = '';
 	if ((12 == $theMonth) && ($theDay > 22))
-		$background1 = " style=\"background-color:#FFAAAA\" ";
-	echo "<td" . $background1 . ">&nbsp;</td>";
+		$background1 = " style=\"background-color:#FFAAAA\" color: red";
+	echo "<th" . $background1 . ">&nbsp;</th>";
 	echo "</tr>";
 	echo "<tr class=\"type20\">";
 	echo "<td class=\"centered\">" . LangMaxAltitude . "</td>";

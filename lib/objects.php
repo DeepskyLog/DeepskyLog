@@ -1566,7 +1566,7 @@ class Objects {
 		// Add the button to select which columns to show
 		$objUtil->addTableColumSelector ();
 
-		echo "<table class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
+		echo "<table id=\"sort-table\" class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
 		echo "<thead>";
 		echo "<tr>";
 		if ($showRank)
@@ -1702,7 +1702,7 @@ class Objects {
 	{
 		global $FF, $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil, $objPresentations, $objList;
 		$atlas = '';
-		echo "<table  class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
+		echo "<table id=\"sort-table\" class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
 		echo "<thead>";
 		echo "<tr>";
 		while ( list ( $key, $value ) = each ( $fields ) ) {

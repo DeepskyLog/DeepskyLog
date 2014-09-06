@@ -77,7 +77,7 @@ class Instruments
 		  // Add the button to select which columns to show
 		  $objUtil->addTableColumSelector();
 		  
-		  echo "<table class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
+		  echo "<table id=\"sort-table\" class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
 		  echo "<thead>";
 		  echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">".LangViewActive."</td>";
 		  

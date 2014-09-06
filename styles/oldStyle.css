@@ -26,12 +26,6 @@
 }.sectionSelectionButton {
   width           : 150px;  
 }
-.ephemeridesgreen {
-  background-color      : #008800;
-}
-.ephemeridesyellow {
-  background-color      : #DDDD00;
-}
 a.mainlevel:hover {
   color            : #FF9900;
   background-color : #5C7D9D;
@@ -172,9 +166,6 @@ body {
 }
 .bold {
   font-weight      : bold;
-}
-.centered {
-  text-align       : center;
 }
 .containerLine {
   position         : relative;    
@@ -581,11 +572,6 @@ ul{
   padding          : 2px;
   color            : #000000;
 }
-.type10 { 
-  background-color : #F0F0F0;
-  color            : #000000;
-  border           : #FFFFFF thin solid;
-}
 .type15 { 
   background-color : #EFE0E0;
   color            : #000000;
@@ -692,9 +678,4 @@ th.catalog {
   padding          : 2px;
   color            : #000000;
   text-align       : left;
-}
-.right{
-    padding:0;
-    float:right;
-    margin: 0 10px 0 0;
 }

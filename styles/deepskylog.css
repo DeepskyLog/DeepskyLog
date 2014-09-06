@@ -291,3 +291,25 @@ td.tablesorter-pager {
   width            : 495px;
   height           : 495px;
 }
+.ephemeridesgreen {
+  background-color      : #008800;
+}
+.ephemeridesyellow {
+  background-color      : #DDDD00;
+}
+.type10 { 
+  background-color : #F0F0F0;
+  color            : #000000;
+  border           : #FFFFFF thin solid;
+}
+.right{
+    padding:0;
+    float:right;
+    margin: 0 10px 0 0;
+}
+.centered {
+  text-align       : center;
+}
+.current {
+    background-color: #FFAAAA;
+} 
