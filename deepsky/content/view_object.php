@@ -334,13 +334,11 @@ function showObjectEphemerides($theLocation) {
 }
 function showObjectImage($imagesize) {
 	global $object, $objPresentations, $objUtil;
-	$objPresentations->line ( array (
-			"<h4>" . LangViewDSSImageTitle . $object . "&nbsp;(" . $imagesize . "&#39;&nbsp;x&nbsp;" . $imagesize . "&#39;)</h4>" 
-	), "L" );
+	echo "<h4>" . LangViewDSSImageTitle . $object . "&nbsp;(" . $imagesize . "&#39;&nbsp;x&nbsp;" . $imagesize . "&#39;)</h4>"; 
 	$imagelink = "http://archive.stsci.edu/cgi-bin/dss_search?" . "v=poss2ukstu_red&amp;r=" . urlencode ( $objUtil->checkRequestKey ( 'raDSS' ) ) . ".0&amp;d=" . urlencode ( $objUtil->checkRequestKey ( 'declDSS' ) ) . "&amp;e=J2000&amp;h=" . $imagesize . ".0&amp;w=" . $imagesize . "&amp;f=gif&amp;c=none&amp;fov=NONE&amp;v3=";
 	echo "<p class=\"centered DSSImage\" > 
 	       <a href=\"" . $imagelink . "\" data-lightbox=\"image-1\" data-title=\"\">
-	       <img class=\"centered DSSImage\" src=\"" . $imagelink . "\" alt=\"" . $object . "\" ></img> 
+	       <img class=\"DSSImage\" src=\"" . $imagelink . "\" alt=\"" . $object . "\" ></img> 
 	       </a></p>";
 	echo "<p>&copy;&nbsp;<a href=\"http://archive.stsci.edu/dss/index.html\">STScI Digitized Sky Survey</a></p>";
 	echo "<hr />";
@@ -569,15 +567,9 @@ function view_object() {
 	}
 	if ($viewobjectextrainfo == "hidden") {
 		$content = "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectextrainfo=show' . "\" >+&nbsp;" . LangObjectShowExtraInfo . "</a>";
-		$objPresentations->line ( array (
-				$content,
-				$objPresentations->getDSSDeepskyLiveLinks1 ( $object ),
-				$objPresentations->getDSSDeepskyLiveLinks2 ( $object ) 
-		), "LRR", array (
-				20,
-				35,
-				45 
-		), 15 );
+		echo $content;
+		echo $objPresentations->getDSSDeepskyLiveLinks1 ( $object );
+		echo $objPresentations->getDSSDeepskyLiveLinks2 ( $object ); 
 		echo "<hr />";
 	}
 	if ($viewobjectdetails == "show")
