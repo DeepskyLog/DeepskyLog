@@ -65,13 +65,9 @@ function selected_objects() {
 	} else 	// ========================================================================no results found
 	{
 		echo "<div id=\"main\">";
-		$objPresentations->line ( "<h4>" . LangSelectedObjectsTitle . "</h4>", "L", array (), 30 );
-		$objPresentations->line ( array (
-				LangExecuteQueryObjectsMessage2 
-		), "L" );
-		$objPresentations->line ( array (
-				"<a href=\"" . $baseURL . "index.php?indexAction=query_objects\">" . LangExecuteQueryObjectsMessage2a . "</a>" 
-		), "L" );
+		echo "<h4>" . LangSelectedObjectsTitle . "</h4>";
+		echo LangExecuteQueryObjectsMessage2; 
+		echo "<a href=\"" . $baseURL . "index.php?indexAction=query_objects\">" . LangExecuteQueryObjectsMessage2a . "</a>"; 
 		echo "</div>";
 	}
 }

@@ -146,6 +146,10 @@ function showObjectEphemerides($theLocation) {
 	$latitude = 1.0 * $objLocation->getLocationPropertyFromId ( $theLocation, 'latitude' );
 	$timezone = $objLocation->getLocationPropertyFromId ( $theLocation, 'timezone' );
 	$dateTimeZone = new DateTimeZone ( $timezone );
+	
+	$theMonth = $_SESSION ['globalMonth'];
+	$theDay = $_SESSION ['globalDay'];
+
 	echo "<div id=\"ephemeridesdiv\">";
 	for($i = 1; $i < 13; $i ++) {
 		$datestr = sprintf ( "%02d", $i ) . "/" . sprintf ( "%02d", 1 ) . "/" . $_SESSION ['globalYear'];
@@ -172,7 +176,6 @@ function showObjectEphemerides($theLocation) {
 	echo "<table class=\"table table-condensed\">";
 	echo "<tr class=\"type10\">";
 	echo "<th class=\"right\">" . LangMonth . " > </th>";
-	print "TEST : " . $theMonth . " - " . $theDay;
 	for($i = 1; $i < 13; $i ++) {
 		$background1 = '';
 		$background15 = '';
