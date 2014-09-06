@@ -311,17 +311,6 @@ function showObjectImage($imagesize) {
 function showObjectObservations() {
 	global $baseURL, $FF, $object, $loggedUser, $min, $step, $objObservation, $objPresentations, $objUtil;
 	
-	if ((array_key_exists ( 'steps', $_SESSION )) && (array_key_exists ( "selObjObs" . $_SESSION ['lco'], $_SESSION ['steps'] )))
-		$step = $_SESSION ['steps'] ["selObjObs" . $_SESSION ['lco']];
-	if (array_key_exists ( 'viewObjectObservationsmultiplepagenr', $_GET ))
-		$min = ($_GET ['viewObjectObservationsmultiplepagenr'] - 1) * $step;
-	elseif (array_key_exists ( 'viewObjectObservationsmultiplepagenr', $_POST ))
-		$min = ($_POST ['viewObjectObservationsmultiplepagenr'] - 1) * $step;
-	elseif (array_key_exists ( 'minViewObjectObservations', $_SESSION ))
-		$min = $_SESSION ['minViewObjectObservations'];
-	else
-		$min = 0;
-	$_SESSION ['minViewObjectObservations'] = $min;
 	$link = $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj';
 	$link2 = $link;
 	$link3 = $link;
@@ -455,10 +444,10 @@ function showObjectObservations() {
 function showAdminObjectFunctions() {
 	global $baseURL, $object, $DSOcatalogs, $objObject;
 	echo "<hr />";
-	echo "<form action=\"" . $baseURL . "index.php\" method=\"get\"><div>";
+	echo "<form class=\"form-inline\" action=\"" . $baseURL . "index.php\" method=\"get\"><div>";
 	echo "<input type=\"hidden\" name=\"object\" value=\"" . $object . "\" />";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" />";
-	echo "<select name=\"newaction\">";
+	echo "<select class=\"form-control\" name=\"newaction\">";
 	echo "<option value=\"\">&nbsp;</option>";
 	echo "<option value=\"NewName\">" . LangObjectNewName . "</option>";
 	echo "<option value=\"NewAltName\">" . LangObjectNewAltName . "</option>";
@@ -477,14 +466,14 @@ function showAdminObjectFunctions() {
 	echo "<option value=\"LangObjectSetPA\">" . LangObjectSetPA . "</option>";
 	echo "<option value=\"LangObjectSetDESC\">" . LangEditObjectDescription . "</option>";
 	echo "</select>";
-	echo "<select name=\"newcatalog\">";
+	echo "<select class=\"form-control\" name=\"newcatalog\">";
 	echo "<option value=\"\">&nbsp;</option>";
 	while ( list ( $key, $value ) = each ( $DSOcatalogs ) )
 		echo "<option value=\"$value\">" . $value . "</option>";
 	echo "</select>";
-	echo "<input type=\"text\" class=\"inputfield\" maxlength=\"255\" name=\"newnumber\" size=\"40\" value=\"\"/>";
-	echo "<input type=\"submit\" name=\"gonew\" value=\"Go\"/><br />";
-	echo "<a href=\"" . $baseURL . "index.php?indexAction=manage_csv_object\">" . LangNewObjectSubtitle1b . "</a><br />";
+	echo "<input type=\"text\" class=\"form-control\" maxlength=\"255\" name=\"newnumber\" size=\"40\" value=\"\"/>";
+	echo "<input type=\"submit\" name=\"gonew\" class=\"btn btn-success pull-right\" value=\"Go\"/><br /><br />";
+	echo "<a class=\"btn btn-success pull-right\" href=\"" . $baseURL . "index.php?indexAction=manage_csv_object\">" . LangNewObjectSubtitle1b . "</a><br />";
 	echo "</div></form>";
 }
 function view_object() {
