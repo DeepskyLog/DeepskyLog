@@ -62,32 +62,12 @@ function showButtons($theLocation, $viewobjectdetails, $viewobjectephemerides, $
 }
 function showObjectDetails($object_ss) {
 	global $baseURL, $object, $objObject, $objPresentations, $objUtil;
-	$objPresentations->line ( array (
-			"<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden' . "\" title=\"" . ObjectDetailsHide . "\">-</a> " . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $objObject->getDSOseenLink ( $object ) . "</h4>" 
-	), "L", array (
-			100 
-	), 30 );
+	echo "<h4>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( "zoom", 30 ) . '&amp;SID=Qobj&amp;viewobjectdetails=hidden' . "\" title=\"" . ObjectDetailsHide . "\">-</a> " . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $objObject->getDSOseenLink ( $object ) . "</h4>"; 
 	echo "<hr />";
 	$objObject->showObject ( $object );
 }
 function showObjectsNearby() {
 	global $baseURL, $FF, $step, $objObject, $objPresentations, $objUtil;
-	$maxcount = count ( $_SESSION ['Qobj'] );
-	$max = 9999;
-	if ((array_key_exists ( 'steps', $_SESSION )) && (array_key_exists ( "nearbyObjects", $_SESSION ['steps'] )))
-		$step = $_SESSION ['steps'] ["nearbyObjects"];
-	if (array_key_exists ( 'multiplepagenr', $_GET ))
-		$min = ($_GET ['multiplepagenr'] - 1) * $step;
-	elseif (array_key_exists ( 'multiplepagenr', $_POST ))
-		$min = ($_POST ['multiplepagenr'] - 1) * $step;
-	elseif (array_key_exists ( 'min', $_GET ))
-		$min = $_GET ['min'];
-	elseif (array_key_exists ( 'minViewObjectObjectsNearby', $_SESSION ))
-		$min = $_SESSION ['minViewObjectObjectsNearby'];
-	else
-		$min = 0;
-	$_SESSION ['minViewObjectObjectsNearby'] = $min;
-	
 	$link = $baseURL . 'index.php?indexAction=detail_object&amp;object=' . urlencode ( $_GET ['object'] ) . '&amp;zoom=' . $objUtil->checkGetKey ( 'zoom', 30 ) . '&amp;SID=Qobj';
 	
 	$content1 = "<h4>";
@@ -100,17 +80,10 @@ function showObjectsNearby() {
 	else
 		$content1 .= ' ' . LangViewObjectNoNearbyObjects;
 	$content1 .= "</h4>";
-	list ( $min, $max, $content2, $pageleft, $pageright, $pagemax ) = $objUtil->printNewListHeader4 ( $_SESSION ['Qobj'], $link, $min, $step );
-	$objPresentations->line ( array (
-			$content1,
-			$content2 
-	), "LR", array (
-			50,
-			50 
-	), 30 );
-	$content1 = "<form action=\"" . $link . "\" method=\"get\"><div>";
+	echo $content1;
+	$content1 = "<span class=\"pull-right\"><form class=\"form-inline\" action=\"" . $link . "\" method=\"get\"><div>";
 	$content1 .= LangViewObjectNearbyObjectsMoreLess . ":&nbsp;";
-	$content1 .= "<select name=\"zoom\" onchange=\"submit();\">";
+	$content1 .= "<select class=\"form-control\" name=\"zoom\" onchange=\"submit();\">";
 	if ($objUtil->checkGetKey ( 'zoom', 30 ) == "180")
 		$content1 .= ("<option selected=\"selected\" value=\"180\">3x3&deg;</option>");
 	else
@@ -142,17 +115,9 @@ function showObjectsNearby() {
 	$content1 .= "</select>";
 	$content1 .= "<input type=\"hidden\" name=\"object\" value=\"" . $_GET ['object'] . "\" /> ";
 	$content1 .= "<input type=\"hidden\" name=\"indexAction\" value=\"detail_object\" /> ";
-	$content1 .= "</div></form>";
-	$content2 = "";
-	$content2 = $objUtil->printStepsPerPage3 ( $link, "nearbyObjects", $step );
-	$objPresentations->line ( array (
-			$content1,
-			$content2 
-	), "LR", array (
-			50,
-			50 
-	), 25 );
-	echo "<hr />";
+	$content1 .= "</div></form></span>";
+	echo $content1;
+	echo "<br /><hr />";
 	$objObject->showObjects ( $link, $_GET ['object'], 0, '', 'view_object' );
 	echo "<hr />";
 	echo "<script type=\"text/javascript\">";
