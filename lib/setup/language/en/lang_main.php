@@ -401,7 +401,8 @@ define("LangMarkAllAsRead"                                ,"Mark all as read.");
 define("LangMarkUpToHereAsRead"                           ,"Mark up to here as read.");
 
 define("LangValidateMessage1"                             ,"All required fields must be filled in!");
-define("LangNoOwnColor"                                   , "No highlighting of own observations");
+define("LangNoOwnColor"                                   , "Don't highlight own observations");
+define("LangOwnColor"                                     , "Highlight own observations");
 
 // Text for transit
 define("LangTransit"                                      ,"Transit");

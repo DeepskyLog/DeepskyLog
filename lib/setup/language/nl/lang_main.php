@@ -401,6 +401,7 @@ define("LangMarkUpToHereAsRead"                           ,"Tot hier als gelezen
 define("LangValidateMessage1"                             ,"Alle verplichte velden moeten worden ingevuld!");
 
 define("LangNoOwnColor"                                   , "Eigen waarnemingen niet oplichten");
+define("LangOwnColor"                                     , "Eigen waarnemingen oplichten");
 
 // Text for transit
 define("LangTransit"                                      ,"Doorgang");

@@ -403,6 +403,7 @@ define("LangMarkUpToHereAsRead"                           ,"Marquez les observat
 
 define("LangValidateMessage1"                             ,"Tous les champs obligatoires doivent &#234;tre remplis!");
 define("LangNoOwnColor"                                   , "Ne marquez plus mes propres observations");
+define("LangOwnColor"                                     , "Marquez mes propres observations");
 
 // Text for transit
 define("LangTransit"                                      ,"Passage");
