@@ -419,6 +419,7 @@ define("LangChangeAccountCopyrightExpl"                   ,"Sie k&ouml;nnen eine
 
 define("LangValidateMessage1"                             ,"Alle Pflichtfelder m&uuml;ssen ausgef&uuml;llt sein!");
 define("LangNoOwnColor"                                   , "Eigene Beobachtungen nicht hervorheben");
+define("LangOwnColor"                                     , "Eigene Beobachtungen hervorheben");
 
 // Text for transit
 define("LangTransit"                                      ,"Transit");

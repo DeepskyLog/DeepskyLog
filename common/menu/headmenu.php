@@ -99,9 +99,6 @@ function headmenu()
         </div>
       </nav>";
 
-	// We need the following line to see the second menu...
-  echo "<div class=\"divide-nav\"></div>";
-
   // The navbar with the date and the lists
   if($loggedUser)
   {

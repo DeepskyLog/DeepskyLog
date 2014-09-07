@@ -120,25 +120,6 @@ function showObjectsNearby() {
 	echo "<br /><hr />";
 	$objObject->showObjects ( $link, $_GET ['object'], 0, '', 'view_object' );
 	echo "<hr />";
-	echo "<script type=\"text/javascript\">";
-	echo "
-  function pageOnKeyDown1(event)
-  { if(event.keyCode==37)
-      if(event.shiftKey)
-        if(event.ctrlKey)
-          location=html_entity_decode('" . $link . "&amp;multiplepagenr=0" . "');    
-        else
-          location=html_entity_decode('" . $link . "&amp;multiplepagenr=" . $pageleft . "');
-    if(event.keyCode==39)
-      if(event.shiftKey) 
-        if(event.ctrlKey)
-          location=html_entity_decode('" . $link . "&amp;multiplepagenr=" . $pagemax . "');
-        else  
-          location=html_entity_decode('" . $link . "&amp;multiplepagenr=" . $pageright . "');
-  }
-  this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDown1;
-  ";
-	echo "</script>";
 }
 function showObjectEphemerides($theLocation) {
 	global $baseURL, $object, $theMonth, $theDay, $objLocation, $objObject, $objPresentations, $objUtil;
@@ -352,8 +333,15 @@ function showObjectObservations() {
 		$content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=C" . "&amp;min=" . urlencode ( $min ) . "\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>";
 	if ($loggedUser && ($objUtil->checkSessionKey ( 'lco', '' ) != "O"))
 		$content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=O" . "&amp;min=" . urlencode ( $min ) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>";
-	if ($loggedUser && (! ($objUtil->checkGetKey ( 'noOwnColor' ))) && (($objUtil->checkSessionKey ( 'lco', '' ) == "L")))
-		$content5 .= "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $link . "&amp;noOwnColor=yes\">" . LangNoOwnColor . "</a>";
+	if ($loggedUser && $objUtil->checkSessionKey ( 'lco', '' ) == "L") {
+		$toAdd = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $link . "&amp;noOwnColor=no\">" . LangOwnColor . "</a>";
+		if ($objUtil->checkGetKey ( 'noOwnColor' )) {
+			if ($objUtil->checkGetKey('noOwnColor') == "no") {		
+				$toAdd = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $link . "&amp;noOwnColor=yes\">" . LangNoOwnColor . "</a>";
+			}
+		}
+		$content5 .= $toAdd;
+	}
 	$content5 .= "</span>";
 	if ($objUtil->checkGetKey ( 'myLanguages' ))
 		$content6 = "<a class=\"btn btn-success\" href=\"" . $link3 . "\">" . LangShowAllLanguages . "</a>";
@@ -376,25 +364,6 @@ function showObjectObservations() {
 	$content1 .= "<a class=\"btn btn-primary\" href=\"" . $baseURL . "observations.xml\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage10 . "</a>";
 	echo $content1; 
 	echo "<hr />";
-	echo "<script type=\"text/javascript\">";
-	echo "
-  function pageOnKeyDown2(event)
-  { if(event.keyCode==37)
-      if(event.shiftKey)
-        if(event.ctrlKey)
-          location=html_entity_decode('" . $link . "&amp;viewObjectObservationsmultiplepagenr=0" . "');    
-        else
-          location=html_entity_decode('" . $link . "&amp;viewObjectObservationsmultiplepagenr=" . $pageleft . "');
-    if(event.keyCode==39)
-      if(event.shiftKey) 
-        if(event.ctrlKey)
-          location=html_entity_decode('" . $link . "&amp;viewObjectObservationsmultiplepagenr=" . $pagemax . "');
-        else  
-          location=html_entity_decode('" . $link . "&amp;viewObjectObservationsmultiplepagenr=" . $pageright . "');
-  }
-  this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDown2;
-  ";
-	echo "</script>";
 }
 function showAdminObjectFunctions() {
 	global $baseURL, $object, $DSOcatalogs, $objObject;

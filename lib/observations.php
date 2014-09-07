@@ -906,12 +906,12 @@ class Observations {
 					$LOdate = sscanf ( $this->getDsObservationProperty ( $LOid, 'date' ), "%4d%2d%2d" );
 			}
 			if ($lco == 'L')
-				if (($value ['observerid'] == $loggedUser) && (! ($objUtil->checkGetKey ( 'noOwnColor' ))))
+				if (($value ['observerid'] == $loggedUser) && ($objUtil->checkGetKey ( 'noOwnColor' ) == "no"))
 					echo "<tr class=\"green\">";
 				else
 					echo "<tr>";
 			else
-				echo "<tr class=\"height5px type20\">";
+				echo "<tr>";
 			echo "<td class=\"centered\">";
 			if ($objUtil->checkGetKey ( 'expand' ) == $value ['observationid'])
 				echo "<a name=\"name" . $value ['observationid'] . "\" id=\"name" . $value ['observationid'] . "\" href=\"" . $link . "&amp;expand=0#name" . $value ['observationid'] . "\" title=\"" . $explantation1 . "\">" . "-" . "</a>";
