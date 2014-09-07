@@ -839,7 +839,7 @@ class Observations {
 		}
 		echo "<table class=\"table sort-tableObject tablesorter table-striped table-hover custom-popup\">";
 		echo "<thead>";
-		echo "<tr class=\"type30\">";
+		echo "<tr>";
 		echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">";
 		echo "&nbsp;";
 		if (($loggedUser) && ($lastReadObservation >= 0))
@@ -907,9 +907,9 @@ class Observations {
 			}
 			if ($lco == 'L')
 				if (($value ['observerid'] == $loggedUser) && (! ($objUtil->checkGetKey ( 'noOwnColor' ))))
-					echo "<tr class=\"height5px type" . (2 - ($obsKey % 2)) . "5\">";
+					echo "<tr class=\"green\">";
 				else
-					echo "<tr class=\"height5px type" . (2 - ($obsKey % 2)) . "\">";
+					echo "<tr>";
 			else
 				echo "<tr class=\"height5px type20\">";
 			echo "<td class=\"centered\">";

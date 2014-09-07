@@ -313,3 +313,6 @@ td.tablesorter-pager {
 .current {
     background-color: #FFAAAA;
 } 
+table.tablesorter tr.green td {
+    background-color: green;
+}

@@ -2696,12 +2696,12 @@ class Utils {
 	}
 	
 	// Add the table
-	public function addTableColumSelector($id = '') {
+	public function addTableColumSelector() {
 		// Add the button for the columns
 		echo "   <div class=\"columnSelectorWrapper\">
-              <input id=\"colSelect\" type=\"checkbox\" class=\"hidden\">
-              <label class=\"columnSelectorButton\" for=\"colSelect\">" . LangSelectColumns . "</label>
-              <div id=\"columnSelector\" class=\"columnSelector" . $id . "\">
+              <input id=\"colSelect1\" type=\"checkbox\" class=\"hidden\">
+              <label class=\"columnSelectorButton\" for=\"colSelect1\">" . LangSelectColumns . "</label>
+              <div id=\"columnSelector\" class=\"columnSelector\">
               </div>
 	         </div>";
 	}
@@ -2747,7 +2747,7 @@ class Utils {
                widgets: [\"reorder\", \"uitheme\", \"columnSelector\", \"filter\", \"zebra\", \"stickyHeaders\"],
                widgetOptions : {
                  // target the column selector markup
-                 columnSelector_container : $('#columnSelector" . $id . "'),
+                 columnSelector_container : $('.columnSelector'),
                  // column status, true = display, false = hide
                  // disable = do not display on list
                  columnSelector_columns : {
