@@ -18,7 +18,7 @@ function overview_instruments() {
 	echo "<h4>" . LangOverviewInstrumentsTitle1 . "</h4>";
 	
 	echo "<hr />";
-	echo "<table id=\"sort-table\" class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
+	echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 	echo "<thead><tr>";
 	echo "<th>" . LangOverviewInstrumentsName . "</th>";
 	echo "<th>" . LangOverviewInstrumentsDiameter . "</th>";

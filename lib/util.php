@@ -2696,12 +2696,12 @@ class Utils {
 	}
 	
 	// Add the table
-	public function addTableColumSelector() {
+	public function addTableColumSelector($id = '') {
 		// Add the button for the columns
 		echo "   <div class=\"columnSelectorWrapper\">
-              <input id=\"colSelect1\" type=\"checkbox\" class=\"hidden\">
-              <label class=\"columnSelectorButton\" for=\"colSelect1\">" . LangSelectColumns . "</label>
-              <div id=\"columnSelector\" class=\"columnSelector\">
+              <input id=\"colSelect\" type=\"checkbox\" class=\"hidden\">
+              <label class=\"columnSelectorButton\" for=\"colSelect\">" . LangSelectColumns . "</label>
+              <div id=\"columnSelector\" class=\"columnSelector" . $id . "\">
               </div>
 	         </div>";
 	}
@@ -2733,7 +2733,7 @@ class Utils {
 		echo "<script type=\"text/javascript\">";
 
 		echo "$(function(){
-			$(\"#sort-table\").tablesorter({
+			$(\".sort-table" . $id . "\").tablesorter({
 		       theme: \"bootstrap\",
                dateFormat : \"";
 		
@@ -2747,7 +2747,7 @@ class Utils {
                widgets: [\"reorder\", \"uitheme\", \"columnSelector\", \"filter\", \"zebra\", \"stickyHeaders\"],
                widgetOptions : {
                  // target the column selector markup
-                 columnSelector_container : $('#columnSelector'),
+                 columnSelector_container : $('#columnSelector" . $id . "'),
                  // column status, true = display, false = hide
                  // disable = do not display on list
                  columnSelector_columns : {
@@ -2859,7 +2859,7 @@ class Utils {
 
 		// bind to pager events
 		// *********************
-		$(\"#sort-table\").bind('pagerChange pagerComplete pagerInitialized pageMoved', function(e, c){
+		$(\".sort-table" . $id . "\").bind('pagerChange pagerComplete pagerInitialized pageMoved', function(e, c){
 			var msg = '\"</span> event triggered, ' + (e.type === 'pagerChange' ? 'going to' : 'now on') +
 			' page <span class=\"typ\">' + (c.page + 1) + '/' + c.totalPages + '</span>';
 			$('#display')
@@ -2869,7 +2869,7 @@ class Utils {
     		
   // initialize the pager plugin
   // ****************************
-  $(\"table\").tablesorterPager(pagerOptions);
+  $(\".sort-table" . $id . "\").tablesorterPager(pagerOptions);
     		
 	});";
   

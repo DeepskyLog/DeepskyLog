@@ -15,7 +15,7 @@ function overview_eyepieces() {
 	echo "<div id=\"main\">";
 	echo "<h4>" . LangViewEyepieceTitle . "</h4>";
 	echo "<hr />";
-	echo "<table id=\"sort-table\" class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
+	echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 	echo "<thead><tr>";
 	echo "<th>" . LangViewEyepieceName . "</th>";
 	echo "<th>" . LangViewEyepieceFocalLength . "</th>";

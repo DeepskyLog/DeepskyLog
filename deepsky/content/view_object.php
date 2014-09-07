@@ -321,11 +321,7 @@ function showObjectObservations() {
 	$pageright = '';
 	$pagemax = '';
 	if (count ( $_SESSION ['Qobs'] ) == 0) {
-		$objPresentations->line ( array (
-				"<h4>" . LangObservationNoResults . (($objUtil->checkGetKey ( 'myLanguages' )) ? (" (" . LangSelectedObservationsSelectedLanguagesIndication . ")") : (" (" . LangSelectedObservationsAllLanguagesIndication . ")")) . "</h4>" 
-		), "L", array (
-				100 
-		), 30 );
+		echo "<h4>" . LangObservationNoResults . (($objUtil->checkGetKey ( 'myLanguages' )) ? (" (" . LangSelectedObservationsSelectedLanguagesIndication . ")") : (" (" . LangSelectedObservationsAllLanguagesIndication . ")")) . "</h4>";
 		if ($objUtil->checkGetKey ( 'myLanguages' ))
 			echo "<p>" . "<a href=\"" . $link2 . "\">" . LangSearchAllLanguages . "</a>&nbsp;</p>";
 		echo "<p>" . "<a href=\"" . $baseURL . "index.php?indexAction=query_observations\">" . LangSearchDetailPage . "</a>" . "</p>";
@@ -339,14 +335,7 @@ function showObjectObservations() {
 		else
 			$content1 .= LangSelectedObservationsTitle2;
 		$content1 .= "</h4>";
-		list ( $min, $max, $content2, $pageleft, $pageright, $pagemax ) = $objUtil->printNewListHeader5 ( $_SESSION ['Qobs'], $link, $min, $step, $_SESSION ['QobsTotal'] );
-		$objPresentations->line ( array (
-				$content1,
-				$content2 
-		), "LR", array (
-				50,
-				50 
-		), 30 );
+		echo $content1;
 	}
 	if ($objUtil->checkGetKey ( 'myLanguages' )) {
 		$content3 .= " (" . LangSelectedLanguagesShown . ")";
@@ -355,71 +344,37 @@ function showObjectObservations() {
 	} else
 		$content3 .= " (" . LangAllLanguagesShown . ")";
 	$content3 .= "</h4>";
-	$content4 = $objUtil->printStepsPerPage3 ( $link, "selObjViewObs" . $_SESSION ['lco'], $step );
-	$objPresentations->line ( array (
-			$content3,
-			$content4 
-	), "LR", array (
-			50,
-			50 
-	), 25 );
-	$content5 = "";
+	echo $content3;
+	$content5 = "<span class=\"pull-right\">";
 	if (($objUtil->checkSessionKey ( 'lco', '' ) != "L"))
-		$content5 .= "&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=L" . "&amp;min=" . urlencode ( $min ) . "\" title=\"" . LangOverviewObservationTitle . "\">" . LangOverviewObservations . "</a>";
+		$content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=L" . "&amp;min=" . urlencode ( $min ) . "\" title=\"" . LangOverviewObservationTitle . "\">" . LangOverviewObservations . "</a>";
 	if (($objUtil->checkSessionKey ( 'lco', '' ) != "C"))
-		$content5 .= "&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=C" . "&amp;min=" . urlencode ( $min ) . "\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>";
+		$content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=C" . "&amp;min=" . urlencode ( $min ) . "\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>";
 	if ($loggedUser && ($objUtil->checkSessionKey ( 'lco', '' ) != "O"))
-		$content5 .= "&nbsp;-&nbsp;<a href=\"" . $link . "&amp;lco=O" . "&amp;min=" . urlencode ( $min ) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>";
+		$content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=O" . "&amp;min=" . urlencode ( $min ) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>";
 	if ($loggedUser && (! ($objUtil->checkGetKey ( 'noOwnColor' ))) && (($objUtil->checkSessionKey ( 'lco', '' ) == "L")))
-		$content5 .= "&nbsp;-&nbsp;" . "<a href=\"" . $link . "&amp;noOwnColor=yes\">" . LangNoOwnColor . "</a>";
-	$content5 = substr ( $content5, 13 );
+		$content5 .= "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $link . "&amp;noOwnColor=yes\">" . LangNoOwnColor . "</a>";
+	$content5 .= "</span>";
 	if ($objUtil->checkGetKey ( 'myLanguages' ))
-		$content6 = "<a href=\"" . $link3 . "\">" . LangShowAllLanguages . "</a>";
+		$content6 = "<a class=\"btn btn-success\" href=\"" . $link3 . "\">" . LangShowAllLanguages . "</a>";
 	elseif ($loggedUser)
-		$content6 = "<a href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowMyLanguages . "</a>";
+		$content6 = "<a class=\"btn btn-success\" href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowMyLanguages . "</a>";
 	else
-		$content6 = "<a href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowInterfaceLanguage . "</a>";
-	$objPresentations->line ( array (
-			$content5,
-			$content6 
-	), "LR", array (
-			50,
-			50 
-	), 20 );
+		$content6 = "<a class=\"btn btn-success\" href=\"" . $link3 . "&amp;myLanguages=true\">" . LangShowInterfaceLanguage . "</a>";
+	echo $content5;
+	echo $content6; 
 	echo "<hr />";
 	
-	$_GET ['min'] = $min;
-	$_GET ['max'] = $max;
-	if (($FF) && ($_SESSION ['lco'] == "O")) {
-		echo "<script type=\"text/javascript\">";
-		echo "theResizeElement='obs_list';";
-		echo "theResizeSize=150;";
-		echo "</script>";
-	} elseif (($FF)) {
-		echo "<script type=\"text/javascript\">";
-		echo "theResizeElement='obs_list';";
-		echo "theResizeSize=150;";
-		echo "</script>";
-	}
-	$objObservation->showListObservation ( $link . "&amp;min=" . $min, $link2, $_SESSION ['lco'], $step );
+	$objObservation->showListObservation ( $link, $_SESSION ['lco'] );
 	echo "<hr />";
 	if ($_SESSION ['lco'] == "O")
-		$objPresentations->line ( array (
-				LangOverviewObservationsHeader5a 
-		), "R", array (
-				100 
-		), 25 );
-	$content1 = "<a href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a> - ";
-	$content1 .= LangExecuteQueryObjectsMessage4 . "&nbsp;";
+		echo LangOverviewObservationsHeader5a; 
+	$content1 = "<a class=\"btn btn-primary\" href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a>  ";
 	$content1 .= $objPresentations->promptWithLinkText ( LangOverviewObservations10, LangOverviewObservations11, $baseURL . "observations.pdf.php?SID=Qobs", LangExecuteQueryObjectsMessage4a );
-	$content1 .= " - ";
-	$content1 .= "<a href=\"" . $baseURL . "observations.csv\" rel=\"external\">" . LangExecuteQueryObjectsMessage5 . "</a> - ";
-	$content1 .= "<a href=\"" . $baseURL . "observations.xml\" rel=\"external\">" . LangExecuteQueryObjectsMessage10 . "</a>";
-	$objPresentations->line ( array (
-			$content1 
-	), "L", array (
-			100 
-	), 25 );
+	$content1 .= "  ";
+	$content1 .= "<a class=\"btn btn-primary\" href=\"" . $baseURL . "observations.csv\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage5 . "</a>  ";
+	$content1 .= "<a class=\"btn btn-primary\" href=\"" . $baseURL . "observations.xml\" rel=\"external\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage10 . "</a>";
+	echo $content1; 
 	echo "<hr />";
 	echo "<script type=\"text/javascript\">";
 	echo "

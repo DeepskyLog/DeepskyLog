@@ -19,7 +19,7 @@ function overview_lenses() {
 	echo "<div id=\"main\">";
 	echo "<h4>" . LangOverviewLensTitle1 . "</h4>";
 	echo "<hr />";
-	echo "<table id=\"sort-table\" class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
+	echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 	echo "<thead><tr>";
 	echo "<th>" . LangViewLensName . "</th>";
 	echo "<th>" . LangViewLensFactor . "</th>";

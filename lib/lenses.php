@@ -45,7 +45,7 @@ class Lenses
 		{ // Add the button to select which columns to show
 		  $objUtil->addTableColumSelector();
 
-		  echo "<table id=\"sort-table\" class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
+		  echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 		  echo "<thead><tr>";
       echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">".LangViewActive."</td>";
 		  echo "<th>".LangViewLensName."</th>";

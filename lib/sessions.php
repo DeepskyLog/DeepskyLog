@@ -254,7 +254,7 @@ class Sessions {
 		global $baseURL, $loggedUser, $objUtil, $objLocation, $objPresentations, $loggedUserName, $objObserver;
 		$sessions = $this->getListWithInactiveSessions ( $userid );
 		if ($sessions != null) {
-			echo "<table id=\"sort-table\" class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
+			echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead>";
 			echo "<th>" . LangAddSessionField1 . "</th>";
 			echo "<th>" . LangAddSessionField2a . "</th>";

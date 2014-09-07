@@ -28,7 +28,7 @@ function overview_observers() {
 	echo "<div id=\"main\">";
 	echo "<h4>" . LangViewObserverTitle . "</h4>";
 	echo "<hr />";
-	echo "<table id=\"sort-table\" class=\"table table-condensed table-striped table-hover tablesorter custom-popup\">";
+	echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 	echo "<thead><tr>";
 	echo "<th>id</th>";
 	echo "<th>" . LangViewObserverName . "</th>";
