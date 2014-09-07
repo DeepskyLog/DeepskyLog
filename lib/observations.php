@@ -948,7 +948,7 @@ class Observations {
 				}
 				echo "</td>";
 				echo "</tr>";
-				echo "<tr class=\"type".(2 -($count%2)) . "\">";
+				echo "<tr class=\"type".(2 -($count%2)) . " tablesorter-childRow\">";
 				echo "<td class=\"expandedObservation\" colspan=\"" . ($myList ? (($lco == 'O') ? 9 : 7) : (($lco == 'O') ? 8 : 6)) . "\">";
 				echo "<hr />";
 				$this->showObservation ( $value ['observationid'] );
@@ -974,7 +974,7 @@ class Observations {
 			echo "</tr>";
 			if ($lco != 'L') {
 				if ($objUtil->checkGetKey ( 'expand' ) != $value ['observationid']) {
-					echo "<tr class=\"type".(2 -($count%2)) . "\">";
+					echo "<tr class=\"type".(2 -($count%2)) . " tablesorter-childRow\">";
 					echo "<td valign=\"top\">" . $alt . "</td>";
 					if ($lco == "C") {
 						// Add a google translate button
@@ -1076,7 +1076,7 @@ class Observations {
 					echo "</tr>";
 				}
 				if ((($lco == "O") && $LOid && $hasDrawing ) || $hasDrawing && ($objUtil->checkGetKey ( 'expand', 0 ) != $value ['observationid'])) {
-					echo "<tr class=\"type".(2 -($count%2)) . "\">";
+					echo "<tr class=\"type".(2 -($count%2)) . " tablesorter-childRow\">";
 					if ($lco == "C") {
 						echo "<td colspan=\"6\">" . (($this->getDsObservationProperty ( $value ['observationid'], 'hasDrawing' )) ? "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/" . $value ['observationid'] . ".jpg\" data-lightbox=" . $value ['observationid'] . " data-title=\"\"><img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $value ['observationid'] . "_resized.jpg\" alt=\"" . $title . "\"></img></a>" . "</p>" : "") . "</td>";
 					} elseif ($lco == "O") {
@@ -1090,7 +1090,7 @@ class Observations {
 				}
 			}
 			if ((($lco == "C") || ($lco == "O")) && ($objUtil->checkGetKey ( 'expand' ) != $value ['observationid']) && ($copyright = $objObserver->getObserverProperty ( $value ['observerid'], 'copyright' )))
-				echo "<tr class=\"copyright\"><td colspan=\"" . (($lco == "O") ? 8 : 6) . "\">" . $copyright . "</td></tr>";
+				echo "<tr class=\"copyright tablesorter-childRow\"><td colspan=\"" . (($lco == "O") ? 8 : 6) . "\">" . $copyright . "</td></tr>";
 			$count++;
 		}
 		echo "</tbody>";

@@ -355,8 +355,10 @@ function showObjectObservations() {
 	
 	$objObservation->showListObservation ( $link, $_SESSION ['lco'] );
 	echo "<hr />";
-	if ($_SESSION ['lco'] == "O")
-		echo LangOverviewObservationsHeader5a; 
+	if ($_SESSION ['lco'] == "O") {
+		echo LangOverviewObservationsHeader5a;
+		echo "<br /><br />";
+	} 
 	$content1 = "<a class=\"btn btn-primary\" href=\"" . $baseURL . "index.php?indexAction=query_objects&amp;source=observation_query\">" . LangExecuteQueryObjectsMessage9 . "</a>  ";
 	$content1 .= $objPresentations->promptWithLinkText ( LangOverviewObservations10, LangOverviewObservations11, $baseURL . "observations.pdf.php?SID=Qobs", LangExecuteQueryObjectsMessage4a );
 	$content1 .= "  ";
