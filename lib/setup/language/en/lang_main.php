@@ -1,6 +1,7 @@
 <?php //EN
 // This is version 4.4
-define('GraphAccomplishments'			,'DeepskyLog stars');
+define('LangDescription'          ,'Description');
+define('GraphAccomplishments'     ,'DeepskyLog stars');
 define('LangSelectColumns'        ,'Select columns');
 define('LangNewMessage'           ,'New message');
 define('LangSendMessage'          ,'Send message');
