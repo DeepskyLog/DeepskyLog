@@ -310,3 +310,18 @@ td.tablesorter-pager {
 table.tablesorter tr.green td {
     background-color: green;
 }
+table.tablesorter tr.copyright td {
+  font-size        : 80%;
+  background-color : #FFAAAA;
+}
+table.tablesorter tr.type1 td { 
+  background-color : #F0F0F0;
+  padding          : 2px;
+  color            : #000000;
+}
+table.tablesorter tr.type2 td { 
+  background-color : #E0E6EC;
+  padding          : 2px;
+  color            : #000000;
+}
+

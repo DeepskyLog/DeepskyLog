@@ -837,7 +837,7 @@ class Observations {
 			);
 			$_SESSION ['Qobs'] = $objObservation->getObservationFromQuery ( $queries );
 		}
-		echo "<table class=\"table sort-tableObject tablesorter table-striped table-hover custom-popup\">";
+		echo "<table class=\"table sort-tableObject tablesorter custom-popup\">";
 		echo "<thead>";
 		echo "<tr>";
 		echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">";
@@ -857,20 +857,10 @@ class Observations {
 		else
 			echo "<th>" . LangOverviewObservationsHeader8 . "</th>" . "<th>" . LangOverviewObservationsHeader9 . "</th>" . "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangOverviewObservationsHeader5 . "</th>";
 		echo "</tr>";
-		if ($lco != "L") {
-			echo "<tr>";
-			if ($myList)
-				echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">&nbsp;</th>";
-			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">&nbsp;</th>";
-			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">Alt name</th>";
-			echo "<th  class=\"filter-false columnSelector-disable\" data-sorter=\"false\" colspan=\"" . ($lco == "L" ? 5 : 8) . "\">";
-			echo LangDescription . "</a>";
-			echo "</th>";
-			echo "</tr>";
-		}
 		echo "</thead>";
 		echo "<tbody id=\"obs_list\" class=\"tbody_obs\">";
 		
+		$count = 0;
 		while ( list ( $key, $value ) = each ( $_SESSION ['Qobs'] ) ) {
 			$obsKey = $key;
 			$LOid = "";
@@ -909,10 +899,23 @@ class Observations {
 				if (($value ['observerid'] == $loggedUser) && ($objUtil->checkGetKey ( 'noOwnColor' ) == "no"))
 					echo "<tr class=\"green\">";
 				else
-					echo "<tr>";
+					echo "<tr class=\"type".(2 -($count%2)) . "\">";
 			else
-				echo "<tr>";
-			echo "<td class=\"centered\">";
+				echo "<tr class=\"type".(2 -($count%2)) . "\">";
+			if ($lco == "L") {
+				$rowspan = 1;
+				$hasDrawing = false;
+			} else {
+				$rowspan = 2;
+				$hasDrawing = $this->getDsObservationProperty ( $value ['observationid'], 'hasDrawing' );
+				if ($hasDrawing) {
+					$rowspan ++;
+				}
+				if ((($lco == "C") || ($lco == "O")) && ($objUtil->checkGetKey ( 'expand' ) != $value ['observationid']) && ($copyright = $objObserver->getObserverProperty ( $value ['observerid'], 'copyright' ))) {
+					$rowspan ++;
+				}
+			}
+			echo "<td rowspan=\"" . $rowspan . "\" class=\"centered\">";
 			if ($objUtil->checkGetKey ( 'expand' ) == $value ['observationid'])
 				echo "<a name=\"name" . $value ['observationid'] . "\" id=\"name" . $value ['observationid'] . "\" href=\"" . $link . "&amp;expand=0#name" . $value ['observationid'] . "\" title=\"" . $explantation1 . "\">" . "-" . "</a>";
 			else
@@ -921,7 +924,7 @@ class Observations {
 				echo "&nbsp;<a href=\"" . $link . "&amp;markAsRead=" . $value ['observationid'] . "\" title=\"" . LangMarkUpToHereAsRead . "\">!</a>";
 			echo "</td>";
 			if ($myList) {
-				echo "<td class=\"centered\">";
+				echo "<td rowspan=\"" . $rowspan . "\" class=\"centered\">";
 				if ($objDatabase->selectSingleValue ( "SELECT Count(observerobjectlist.objectname) As ObjCnt FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND objectname=\"" . $value ['objectname'] . "\" AND listname=\"" . $listname . "\"", 'ObjCnt', 0 ) > 0) {
 					echo "<a  href=\"" . $link . "&amp;addObservationToList=" . urlencode ( $value ['observationid'] ) . "\" title=\"" . LangViewObservationField44 . "\">E</a>";
 					echo "&nbsp;-&nbsp;";
@@ -937,7 +940,7 @@ class Observations {
 			if ($objUtil->checkGetKey ( 'expand' ) == $value ['observationid']) {
 				echo "<td colspan=\"" . ($myList ? (($lco == 'O') ? 6 : 4) : (($lco == 'O') ? 6 : 4)) . "\">" . $explanation . "</td>";
 				echo "<td>";
-				echo "<a  href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $value ['observationid'] . "&amp;QobsKey=" . $obsKey . "&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText . (($this->getDsObservationProperty ( $value ['observationid'], 'hasDrawing' )) ? LangDetailDrawingText : "") . "</a>&nbsp;";
+				echo "<a  href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $value ['observationid'] . "&amp;QobsKey=" . $obsKey . "&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText . ($hasDrawing ? LangDetailDrawingText : "") . "</a>&nbsp;";
 				echo "<a  href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $value ['observationid'] . "&amp;dalm=AO\" title=\"" . LangAO . "\">" . LangAOText . "</a>";
 				if ($loggedUser && $LOid) {
 					echo "&nbsp;<a  href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $value ['observationid'] . "&amp;dalm=MO\" title=\"" . LangMO . "\">" . LangMOText . "</a>";
@@ -945,8 +948,7 @@ class Observations {
 				}
 				echo "</td>";
 				echo "</tr>";
-				echo "<tr class=\"height5px\">";
-				echo "<td>&nbsp;</td>";
+				echo "<tr class=\"type".(2 -($count%2)) . "\">";
 				echo "<td class=\"expandedObservation\" colspan=\"" . ($myList ? (($lco == 'O') ? 9 : 7) : (($lco == 'O') ? 8 : 6)) . "\">";
 				echo "<hr />";
 				$this->showObservation ( $value ['observationid'] );
@@ -972,10 +974,7 @@ class Observations {
 			echo "</tr>";
 			if ($lco != 'L') {
 				if ($objUtil->checkGetKey ( 'expand' ) != $value ['observationid']) {
-					echo "<tr class=\"height5px type1\">";
-					echo "<td>&nbsp;</td>";
-					if ($myList)
-						echo "<td>&nbsp;</td>";
+					echo "<tr class=\"type".(2 -($count%2)) . "\">";
 					echo "<td valign=\"top\">" . $alt . "</td>";
 					if ($lco == "C") {
 						// Add a google translate button
@@ -1076,12 +1075,9 @@ class Observations {
 					}
 					echo "</tr>";
 				}
-				if ((($lco == "O") && $LOid && ($this->getDsObservationProperty ( $LOid, 'hasDrawing' ))) || ($this->getDsObservationProperty ( $value ['observationid'], 'hasDrawing' )) && ($objUtil->checkGetKey ( 'expand', 0 ) != $value ['observationid'])) {
-					echo "<tr class=\"height5px\">";
-					echo "<td> &nbsp; </td>";
+				if ((($lco == "O") && $LOid && $hasDrawing ) || $hasDrawing && ($objUtil->checkGetKey ( 'expand', 0 ) != $value ['observationid'])) {
+					echo "<tr class=\"type".(2 -($count%2)) . "\">";
 					if ($lco == "C") {
-						if ($myList)
-							echo "<td>&nbsp;</td>";
 						echo "<td colspan=\"6\">" . (($this->getDsObservationProperty ( $value ['observationid'], 'hasDrawing' )) ? "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/" . $value ['observationid'] . ".jpg\" data-lightbox=" . $value ['observationid'] . " data-title=\"\"><img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $value ['observationid'] . "_resized.jpg\" alt=\"" . $title . "\"></img></a>" . "</p>" : "") . "</td>";
 					} elseif ($lco == "O") {
 						if ($myList)
@@ -1094,12 +1090,13 @@ class Observations {
 				}
 			}
 			if ((($lco == "C") || ($lco == "O")) && ($objUtil->checkGetKey ( 'expand' ) != $value ['observationid']) && ($copyright = $objObserver->getObserverProperty ( $value ['observerid'], 'copyright' )))
-				echo "<tr><td>&nbsp;</td>" . ($myList ? "<td>&nbsp;</td>" : "") . "<td class=\"copyright\" colspan=\"" . (($lco == "O") ? 8 : 6) . "\">" . $copyright . "</td></tr>";
+				echo "<tr class=\"copyright\"><td colspan=\"" . (($lco == "O") ? 8 : 6) . "\">" . $copyright . "</td></tr>";
+			$count++;
 		}
 		echo "</tbody>";
 		echo "</table>";
-		$objUtil->addTablePager("Object");
-		$objUtil->addTableJavascript("Object");
+		$objUtil->addTablePager ( "Object" );
+		$objUtil->addTableJavascript ( "Object" );
 	}
 	public function showObservation($LOid) {
 		global $objUtil, $dateformat, $myList, $listname, $listname_ss, $baseURL, $objAstroCalc, $objEyepiece, $objObserver, $objInstrument, $loggedUser, $objObject, $objLens, $objFilter, $objPresentations, $objDatabase, $objLocation;
