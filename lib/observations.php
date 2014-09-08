@@ -828,6 +828,19 @@ class Observations {
 	public function showListObservation($link, $lco) {
 		global $lastReadObservation, $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations, $objObservation;
 		
+		// Add a google translate button
+		echo "<script>
+		       function googleSectionalElementInit() {
+		          new google.translate.SectionalElement({
+		              sectionalNodeClassName: 'goog-trans-section',
+		              controlNodeClassName: 'goog-trans-control',
+			          background: '#f4fa58'
+		          }, 'google_sectional_element');
+		          }
+		       </script>";
+		$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );
+		echo "<script src=\"//translate.google.com/translate_a/element.js?cb=googleSectionalElementInit&ug=section&hl=" . $usedLang . "\"></script>";
+		
 		$parsed = parse_url ( htmlspecialchars_decode ( $link ), PHP_URL_QUERY );
 		parse_str ( $parsed, $query );
 		
@@ -953,7 +966,6 @@ class Observations {
 				echo "</tr>";
 				echo "<tr class=\"type" . (2 - ($count % 2)) . " tablesorter-childRow\">";
 				echo "<td class=\"expandedObservation\" colspan=\"" . ($myList ? (($lco == 'O') ? 10 : 8) : (($lco == 'O') ? 8 : 6)) . "\">";
-				echo "<hr />";
 				$this->showObservation ( $value ['observationid'] );
 				echo "</td>";
 			} else {
@@ -980,24 +992,11 @@ class Observations {
 					echo "<tr class=\"type" . (2 - ($count % 2)) . " tablesorter-childRow\">";
 					echo "<td valign=\"top\">" . $alt . "</td>";
 					if ($lco == "C") {
-						// Add a google translate button
-						echo "<script>
-						      			          function googleSectionalElementInit() {
-						  			                new google.translate.SectionalElement({
-						  		    	              sectionalNodeClassName: 'goog-trans-section',
-						      		  	            controlNodeClassName: 'goog-trans-control',
-						          			          background: '#f4fa58'
-						        			          }, 'google_sectional_element');
-						      			          }
-						      			          </script>";
-						
 						echo "<td colspan=\"6\">";
 						$toClose = false;
 						if ($loggedUser != "") {
-							$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );
 							if ($usedLang != $this->getDsObservationProperty ( $value ['observationid'], 'language' )) {
 								$toClose = true;
-								echo "<script src=\"//translate.google.com/translate_a/element.js?cb=googleSectionalElementInit&ug=section&hl=" . $usedLang . "\"></script>";
 								
 								// Make the google translate control node
 								echo "<div class=\"goog-trans-section\">";
@@ -1012,26 +1011,11 @@ class Observations {
 						
 						echo "</td>";
 					} elseif ($lco == "O") {
-						// Add a google translate button
-						echo "<script>
-						      			          function googleSectionalElementInit() {
-						  			                new google.translate.SectionalElement({
-						  		    	              sectionalNodeClassName: 'goog-trans-section',
-						      		  	            controlNodeClassName: 'goog-trans-control',
-						          			          background: '#f4fa58'
-						        			          }, 'google_sectional_element');
-						      			          }
-						      			          </script>";
-						
 						echo "<td colspan=\"4\">";
 						$toClose = false;
 						if ($loggedUser != "") {
-							$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );
-							
 							if ($usedLang != $this->getDsObservationProperty ( $value ['observationid'], 'language' )) {
 								$toClose = true;
-								echo "<script src=\"//translate.google.com/translate_a/element.js?cb=googleSectionalElementInit&ug=section&hl=" . $usedLang . "\"></script>";
-								
 								// Make the google translate control node
 								echo "<div class=\"goog-trans-section\">";
 								echo "<div class=\"goog-trans-control\">";
@@ -1044,35 +1028,20 @@ class Observations {
 						}
 						
 						echo "</td>";
-						// Add a google translate button
-						echo "<script>
-    			          function googleSectionalElementInit() {
-			                new google.translate.SectionalElement({
-		    	              sectionalNodeClassName: 'goog-trans-section',
-    		  	            controlNodeClassName: 'goog-trans-control',
-        			          background: '#f4fa58'
-      			          }, 'google_sectional_element');
-    			          }
-    			          </script>";
-						
 						echo "<td colspan=\"4\">";
 						$toClose = false;
 						if ($loggedUser != "") {
-							$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );
-							
 							if ($usedLang != $this->getDsObservationProperty ( $LOid, 'language' )) {
 								$toClose = true;
-								// echo "<script src=\"//translate.google.com/translate_a/element.js?cb=googleSectionalElementInit&ug=section&hl=" . $usedLang . "\"></script>";
-								
-								// // Make the google translate control node
-								// echo "<div class=\"goog-trans-section\">";
-								// echo "<div class=\"goog-trans-control\">";
-								// echo "</div>";
+								// Make the google translate control node
+								echo "<div class=\"goog-trans-section\">";
+								echo "<div class=\"goog-trans-control\">";
+								echo "</div>";
 							}
 						}
 						echo $LOdescription . "<br />";
 						if ($toClose) {
-							// echo "</div>";
+							echo "</div>";
 						}
 						echo "</td>";
 					}
@@ -1395,25 +1364,11 @@ class Observations {
 			echo "</table>";
 		}
 		
-		// Add a google translate button
-		echo "<script>
-    			function googleSectionalElementInit() {
-			      new google.translate.SectionalElement({
-		    	    sectionalNodeClassName: 'goog-trans-section',
-    		  	  controlNodeClassName: 'goog-trans-control',
-        			background: '#f4fa58'
-      			}, 'google_sectional_element');
-    			}
-    			</script>";
-		
 		$toClose = false;
 		if ($loggedUser != "") {
 			$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );
-			
 			if ($usedLang != $this->getDsObservationProperty ( $LOid, 'language' )) {
 				$toClose = true;
-				echo "<script src=\"//translate.google.com/translate_a/element.js?cb=googleSectionalElementInit&ug=section&hl=" . $usedLang . "\"></script>";
-				
 				// Make the google translate control node
 				echo "<div class=\"goog-trans-section\">";
 				echo "<div class=\"goog-trans-control\">";
@@ -1422,7 +1377,7 @@ class Observations {
 		}
 		echo $objPresentations->searchAndLinkCatalogsInText ( $this->getDsObservationProperty ( $LOid, 'description' ) );
 		if ($toClose) {
-			echo "</div>";
+			echo "TEST4</div>";
 		}
 		
 		$title = $object . " " . LangMessageBy . $this->getDsObservationProperty ( $LOid, 'observerid' );
