@@ -840,7 +840,7 @@ class Observations {
 		echo "<table class=\"table sort-tableObject tablesorter custom-popup\">";
 		echo "<thead>";
 		echo "<tr>";
-		echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">";
+		echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\" width=\"10px\">";
 		echo "&nbsp;";
 		if (($loggedUser) && ($lastReadObservation >= 0))
 			echo "<a href=\"" . $link . "&amp;markAsRead=All\" title=\"" . LangMarkAllAsRead . "\">!</a>";
@@ -899,9 +899,9 @@ class Observations {
 				if (($value ['observerid'] == $loggedUser) && ($objUtil->checkGetKey ( 'noOwnColor' ) == "no"))
 					echo "<tr class=\"green\">";
 				else
-					echo "<tr class=\"type".(2 -($count%2)) . "\">";
+					echo "<tr class=\"type" . (2 - ($count % 2)) . "\">";
 			else
-				echo "<tr class=\"type".(2 -($count%2)) . "\">";
+				echo "<tr class=\"type" . (2 - ($count % 2)) . "\">";
 			if ($lco == "L") {
 				$rowspan = 1;
 				$hasDrawing = false;
@@ -914,6 +914,9 @@ class Observations {
 				if ((($lco == "C") || ($lco == "O")) && ($objUtil->checkGetKey ( 'expand' ) != $value ['observationid']) && ($copyright = $objObserver->getObserverProperty ( $value ['observerid'], 'copyright' ))) {
 					$rowspan ++;
 				}
+				if ($objUtil->checkGetKey ( 'expand' ) == $value ['observationid']) {
+					$rowspan --;
+				}
 			}
 			echo "<td rowspan=\"" . $rowspan . "\" class=\"centered\">";
 			if ($objUtil->checkGetKey ( 'expand' ) == $value ['observationid'])
@@ -924,7 +927,7 @@ class Observations {
 				echo "&nbsp;<a href=\"" . $link . "&amp;markAsRead=" . $value ['observationid'] . "\" title=\"" . LangMarkUpToHereAsRead . "\">!</a>";
 			echo "</td>";
 			if ($myList) {
-				echo "<td rowspan=\"" . $rowspan . "\" class=\"centered\">";
+				echo "<td>";
 				if ($objDatabase->selectSingleValue ( "SELECT Count(observerobjectlist.objectname) As ObjCnt FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND objectname=\"" . $value ['objectname'] . "\" AND listname=\"" . $listname . "\"", 'ObjCnt', 0 ) > 0) {
 					echo "<a  href=\"" . $link . "&amp;addObservationToList=" . urlencode ( $value ['observationid'] ) . "\" title=\"" . LangViewObservationField44 . "\">E</a>";
 					echo "&nbsp;-&nbsp;";
@@ -948,8 +951,8 @@ class Observations {
 				}
 				echo "</td>";
 				echo "</tr>";
-				echo "<tr class=\"type".(2 -($count%2)) . " tablesorter-childRow\">";
-				echo "<td class=\"expandedObservation\" colspan=\"" . ($myList ? (($lco == 'O') ? 9 : 7) : (($lco == 'O') ? 8 : 6)) . "\">";
+				echo "<tr class=\"type" . (2 - ($count % 2)) . " tablesorter-childRow\">";
+				echo "<td class=\"expandedObservation\" colspan=\"" . ($myList ? (($lco == 'O') ? 10 : 8) : (($lco == 'O') ? 8 : 6)) . "\">";
 				echo "<hr />";
 				$this->showObservation ( $value ['observationid'] );
 				echo "</td>";
@@ -974,7 +977,7 @@ class Observations {
 			echo "</tr>";
 			if ($lco != 'L') {
 				if ($objUtil->checkGetKey ( 'expand' ) != $value ['observationid']) {
-					echo "<tr class=\"type".(2 -($count%2)) . " tablesorter-childRow\">";
+					echo "<tr class=\"type" . (2 - ($count % 2)) . " tablesorter-childRow\">";
 					echo "<td valign=\"top\">" . $alt . "</td>";
 					if ($lco == "C") {
 						// Add a google translate button
@@ -988,7 +991,7 @@ class Observations {
 						      			          }
 						      			          </script>";
 						
-						echo "<td colspan=\"5\">";
+						echo "<td colspan=\"6\">";
 						$toClose = false;
 						if ($loggedUser != "") {
 							$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );
@@ -1052,54 +1055,71 @@ class Observations {
     			          }
     			          </script>";
 						
-						echo "<td colspan=\"3\">";
+						echo "<td colspan=\"4\">";
 						$toClose = false;
 						if ($loggedUser != "") {
 							$usedLang = $objObserver->getObserverProperty ( $loggedUser, "language" );
 							
 							if ($usedLang != $this->getDsObservationProperty ( $LOid, 'language' )) {
 								$toClose = true;
-								echo "<script src=\"//translate.google.com/translate_a/element.js?cb=googleSectionalElementInit&ug=section&hl=" . $usedLang . "\"></script>";
+								// echo "<script src=\"//translate.google.com/translate_a/element.js?cb=googleSectionalElementInit&ug=section&hl=" . $usedLang . "\"></script>";
 								
-								// Make the google translate control node
-								echo "<div class=\"goog-trans-section\">";
-								echo "<div class=\"goog-trans-control\">";
-								echo "</div>";
+								// // Make the google translate control node
+								// echo "<div class=\"goog-trans-section\">";
+								// echo "<div class=\"goog-trans-control\">";
+								// echo "</div>";
 							}
 						}
 						echo $LOdescription . "<br />";
 						if ($toClose) {
-							echo "</div>";
+							// echo "</div>";
 						}
 						echo "</td>";
 					}
 					echo "</tr>";
 				}
-				if ((($lco == "O") && $LOid && $hasDrawing ) || $hasDrawing && ($objUtil->checkGetKey ( 'expand', 0 ) != $value ['observationid'])) {
-					echo "<tr class=\"type".(2 -($count%2)) . " tablesorter-childRow\">";
+				if ((($lco == "O") && $LOid && $hasDrawing) || $hasDrawing && ($objUtil->checkGetKey ( 'expand', 0 ) != $value ['observationid'])) {
+					echo "<tr class=\"type" . (2 - ($count % 2)) . " tablesorter-childRow\">";
 					if ($lco == "C") {
-						echo "<td colspan=\"6\">" . (($this->getDsObservationProperty ( $value ['observationid'], 'hasDrawing' )) ? "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/" . $value ['observationid'] . ".jpg\" data-lightbox=" . $value ['observationid'] . " data-title=\"\"><img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $value ['observationid'] . "_resized.jpg\" alt=\"" . $title . "\"></img></a>" . "</p>" : "") . "</td>";
+						echo "<td colspan=\"7\">" . (($this->getDsObservationProperty ( $value ['observationid'], 'hasDrawing' )) ? "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/" . $value ['observationid'] . ".jpg\" data-lightbox=" . $value ['observationid'] . " data-title=\"\"><img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $value ['observationid'] . "_resized.jpg\" alt=\"" . $title . "\"></img></a>" . "</p>" : "") . "</td>";
 					} elseif ($lco == "O") {
-						if ($myList)
-							echo "<td> &nbsp; </td><td colspan=\"5\">" . (($this->getDsObservationProperty ( $value ['observationid'], 'hasDrawing' )) ? "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/" . $value ['observationid'] . ".jpg\"  title=\"\"><img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $value ['observationid'] . "_resized.jpg\" alt=\"" . $title . "\"></img></a>" . "</p>" : "") . "</td>";
-						else
-							echo "<td colspan=\"5\">" . (($this->getDsObservationProperty ( $value ['observationid'], 'hasDrawing' )) ? "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/" . $value ['observationid'] . ".jpg\" data-lightbox=\"image-1\" data-title=\"\"><img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $value ['observationid'] . "_resized.jpg\" alt=\"" . $title . "\"></img></a>" . "</p>" : "") . "</td>";
-						echo "<td colspan=\"3\">" . (($LOdescription && ($this->getDsObservationProperty ( $LOid, 'hasDrawing' ))) ? "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/" . $LOid . ".jpg" . "\" data-lightbox=\"image-1\" data-title=\"\"> <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . "_resized.jpg\" alt=\"" . $title . "\"></img></a>" . "</p>" : "") . "</td>";
+						if ($myList) {
+							if (($objUtil->checkGetKey ( 'expand' ) == $value ['observationid'])) {
+								echo "<td> &nbsp; </td><td colspan=\"6\"> &nbsp;</td>";
+							} else {
+								echo "<td> &nbsp; </td>
+								  <td colspan=\"6\">" . (($this->getDsObservationProperty ( $value ['observationid'], 'hasDrawing' )) ? "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/" . $value ['observationid'] . ".jpg\"  title=\"\">
+								  	   <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $value ['observationid'] . "_resized.jpg\" alt=\"" . $title . "\"></img>
+								  	  </a>" . "</p>" : "") . "</td>";
+							}
+						} else {
+							if (($objUtil->checkGetKey ( 'expand' ) == $value ['observationid'])) {
+								echo "<td> &nbsp; </td><td colspan=\"6\"> &nbsp;</td>";
+							} else {
+								echo "<td colspan=\"6\">" . (($this->getDsObservationProperty ( $value ['observationid'], 'hasDrawing' )) ? "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/" . $value ['observationid'] . ".jpg\" data-lightbox=\"image-1\" data-title=\"\">
+									   <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $value ['observationid'] . "_resized.jpg\" alt=\"" . $title . "\"></img>
+									  </a>" . "</p>" : "") . "</td>";
+							}
+						}
+						echo "<td colspan=\"4\">" . (($LOdescription && ($this->getDsObservationProperty ( $LOid, 'hasDrawing' ))) ? "<p>" . "<a  href=\"" . $baseURL . "deepsky/drawings/" . $LOid . ".jpg" . "\" data-lightbox=\"image-1\" data-title=\"\">
+								       <img class=\"account\" src=\"" . $baseURL . "deepsky/drawings/" . $LOid . "_resized.jpg\" alt=\"" . $title . "\"></img>
+								      </a>" . "</p>" : "") . "</td>";
 					}
 					echo "</tr>";
 				}
 			}
 			if ((($lco == "C") || ($lco == "O")) && ($objUtil->checkGetKey ( 'expand' ) != $value ['observationid']) && ($copyright = $objObserver->getObserverProperty ( $value ['observerid'], 'copyright' )))
 				echo "<tr class=\"copyright tablesorter-childRow\"><td colspan=\"" . (($lco == "O") ? 8 : 6) . "\">" . $copyright . "</td></tr>";
-			$count++;
+			$count ++;
 		}
+		
 		echo "</tbody>";
 		echo "</table>";
 		$objUtil->addTablePager ( "Object" );
 		$objUtil->addTableJavascript ( "Object" );
 	}
 	public function showObservation($LOid) {
-		global $objUtil, $dateformat, $myList, $listname, $listname_ss, $baseURL, $objAstroCalc, $objEyepiece, $objObserver, $objInstrument, $loggedUser, $objObject, $objLens, $objFilter, $objPresentations, $objDatabase, $objLocation;
+		global $objUtil, $dateformat, $myList, $listname, $listname_ss, $baseURL, $objAstroCalc, $objEyepiece, $objObserver, $objInstrument, $loggedUser, $objObject, $objLens, $objFilter, $objPresentations, $objDatabase, $objLocation, $instDir;
 		$link = $baseURL . "index.php?";
 		$linkamp = "";
 		reset ( $_GET );
@@ -1209,72 +1229,28 @@ class Observations {
 				"GLOCL" 
 		) ))
 			$charTypeText = (($clusterType = $this->getDsObservationProperty ( $LOid, 'clusterType' )) ? $clusterType . ': ' . $GLOBALS ['ClusterType' . $clusterType] : "-");
-		$objPresentations->line ( array (
-				LangViewObservationField2,
-				"<a  href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode ( $this->getDsObservationProperty ( $LOid, 'observerid' ) ) . "&amp;back=index.php?indexAction=detail_observation\">" . $objObserver->getObserverProperty ( $this->getDsObservationProperty ( $LOid, 'observerid' ), 'firstname' ) . "&nbsp;" . $objObserver->getObserverProperty ( $this->getDsObservationProperty ( $LOid, 'observerid' ), 'name' ) . "</a>",
-				LangViewObservationField3,
-				"<a  href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $this->getDsObservationProperty ( $LOid, 'instrumentid' ) ) . "\">" . $inst . "</a>",
-				LangViewObservationField4,
-				"<a  href=\"" . $baseURL . "index.php?indexAction=detail_location&amp;location=" . urlencode ( $this->getDsObservationProperty ( $LOid, 'locationid' ) ) . "\">" . $objLocation->getLocationPropertyFromId ( $this->getDsObservationProperty ( $LOid, 'locationid' ), 'name' ) . "</a>" 
-		), "RLRLRL", array (
-				15,
-				22,
-				15,
-				19,
-				15,
-				14 
-		), 25, array (
-				"type30",
-				"type30",
-				"type30",
-				"type30",
-				"type30",
-				"type30" 
-		) );
-		$objPresentations->line ( array (
-				LangViewObservationField5 . $dateTimeLabelText,
-				$dateTimeText,
-				LangViewObservationField6,
-				(($seeing) ? $GLOBALS ['Seeing' . $seeing] : "-"),
-				LangViewObservationField7 . "/" . LangViewObservationField34,
-				(($limmag = $this->getDsObservationProperty ( $LOid, 'limmag' )) ? sprintf ( "%1.1f", $limmag ) : "-") . "/" . ((($sqm = $this->getDsObservationProperty ( $LOid, 'SQM' )) != - 1) ? sprintf ( "%2.1f", $sqm ) : '-') 
-		), "RLRLRL", array (
-				15,
-				22,
-				15,
-				19,
-				15,
-				14 
-		), 25, array (
-				"type20",
-				"type20",
-				"type20",
-				"type20",
-				"type20",
-				"type20" 
-		) );
-		$objPresentations->line ( array (
-				LangViewObservationField30,
-				(((($eyepiece = $this->getDsObservationProperty ( $LOid, 'eyepieceid' )) == "") || ($eyepiece == 0)) ? "-" : "<a  href=\"" . $baseURL . "index.php?indexAction=detail_eyepiece&amp;eyepiece=" . urlencode ( $eyepiece ) . "\">" . stripslashes ( $objEyepiece->getEyepiecePropertyFromId ( $eyepiece, 'name' ) ) . "</a>") . (((($mag = $this->getDsObservationProperty ( $LOid, 'magnification' )) == "")) ? "" : " (" . $mag . "x)"),
-				LangViewObservationField31,
-				(((($filter = $this->getDsObservationProperty ( $LOid, 'filterid' )) == "") || ($filter == 0)) ? "-" : "<a  href=\"" . $baseURL . "index.php?indexAction=detail_filter&amp;filter=" . urlencode ( $filter ) . "\">" . $objFilter->getFilterPropertyFromId ( $filter, 'name' ) . "</a>"),
-				LangViewObservationField32,
-				(((($lens = $this->getDsObservationProperty ( $LOid, 'lensid' )) == "") || ($lens == 0)) ? "-" : "<a  href=\"" . $baseURL . "index.php?indexAction=detail_lens&amp;lens=" . urlencode ( $lens ) . "\">" . $objLens->getLensPropertyFromId ( $lens, 'name' ) . "</a>") 
-		), "RLRLRL", array (
-				15,
-				22,
-				15,
-				19,
-				15,
-				14 
-		), 25, array (
-				"type30",
-				"type30",
-				"type30",
-				"type30",
-				"type30",
-				"type30" 
-		) );
+		
+		echo "<table class=\"table\">";
+		echo "<tr>";
+		echo "<td>" . LangViewObservationField2 . "</td>";
+		$observer = $this->getDsObservationProperty ( $LOid, 'observerid' );
+		echo "<td><a href=\"" . $baseURL . "index.php?indexAction=detail_observer&amp;user=" . urlencode ( $observer ) . "&amp;back=index.php?indexAction=detail_observation\">" . $objObserver->getObserverProperty ( $this->getDsObservationProperty ( $LOid, 'observerid' ), 'firstname' ) . "&nbsp;" . $objObserver->getObserverProperty ( $this->getDsObservationProperty ( $LOid, 'observerid' ), 'name' ) . "</a>";
+		
+		// Show the picture of the sender
+		$dir = opendir ( $instDir . 'common/observer_pics' );
+		while ( FALSE !== ($file = readdir ( $dir )) ) {
+			if (("." == $file) or (".." == $file))
+				continue; // skip current directory and directory above
+			if (fnmatch ( $observer . ".gif", $file ) || fnmatch ( $observer . ".jpg", $file ) || fnmatch ( $observer . ".png", $file )) {
+				echo "<img height=\"72\" src=\"" . $baseURL . "/common/observer_pics/" . $file . "\" class=\"img-rounded pull-right\">";
+			}
+		}
+		
+		echo "</td>";
+		
+		echo "<td>" . LangViewObservationField3 . "</td>";
+		echo "<td><a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $this->getDsObservationProperty ( $LOid, 'instrumentid' ) ) . "\">" . $inst . "</a>";
+		
 		// Show the moon during the observation
 		$year = $date [0];
 		$month = $date [1];
@@ -1350,92 +1326,73 @@ class Observations {
 				$moon = "<img src=\"" . $baseURL . "/lib/moonpics/below.png\" class=\"moonpic\" title=\"" . $MoonIllum . "% - " . LangUnderHorizon . "\" alt=\"" . $MoonIllum . "%\" />";
 			}
 		}
-		$objPresentations->line ( array (
-				$moon 
-		), "R", array (
-				100 
-		), 50, array (
-				"type20" 
-		) );
+		echo "<td></td><td>" . $moon . "</td>";
+		
+		echo "</tr>";
+		echo "<tr>";
+		echo "<td>" . LangViewObservationField5 . $dateTimeLabelText . "</td>";
+		echo "<td>" . $dateTimeText . "</td>";
+		echo "<td>" . LangViewObservationField4 . "</td>";
+		echo "<td>" . "<a href=\"" . $baseURL . "index.php?indexAction=detail_location&amp;location=" . urlencode ( $this->getDsObservationProperty ( $LOid, 'locationid' ) ) . "\">" . $objLocation->getLocationPropertyFromId ( $this->getDsObservationProperty ( $LOid, 'locationid' ), 'name' ) . "</a></td>";
+		echo "<td></td>";
+		echo "<td></td>";
+		echo "</tr>";
+		
+		echo "<tr>";
+		echo "<td>" . LangViewObservationField7 . "/" . LangViewObservationField34 . "</td>";
+		echo "<td>" . (($limmag = $this->getDsObservationProperty ( $LOid, 'limmag' )) ? sprintf ( "%1.1f", $limmag ) : "-") . "/" . ((($sqm = $this->getDsObservationProperty ( $LOid, 'SQM' )) != - 1) ? sprintf ( "%2.1f", $sqm ) : '-') . "</td>";
+		echo "<td>" . LangViewObservationField6 . "</td>";
+		echo "<td>" . (($seeing) ? $GLOBALS ['Seeing' . $seeing] : "-") . "</td>";
+		echo "<td></td>";
+		echo "<td></td>";
+		echo "</tr>";
+		
+		echo "<tr>";
+		echo "<td>" . LangViewObservationField30 . "</td>";
+		echo "<td>" . (((($eyepiece = $this->getDsObservationProperty ( $LOid, 'eyepieceid' )) == "") || ($eyepiece == 0)) ? "-" : "<a  href=\"" . $baseURL . "index.php?indexAction=detail_eyepiece&amp;eyepiece=" . urlencode ( $eyepiece ) . "\">" . stripslashes ( $objEyepiece->getEyepiecePropertyFromId ( $eyepiece, 'name' ) ) . "</a>") . (((($mag = $this->getDsObservationProperty ( $LOid, 'magnification' )) == "")) ? "" : " (" . $mag . "x)") . "</td>";
+		echo "<td>" . LangViewObservationField31 . "</td>";
+		echo "<td>" . (((($filter = $this->getDsObservationProperty ( $LOid, 'filterid' )) == "") || ($filter == 0)) ? "-" : "<a  href=\"" . $baseURL . "index.php?indexAction=detail_filter&amp;filter=" . urlencode ( $filter ) . "\">" . $objFilter->getFilterPropertyFromId ( $filter, 'name' ) . "</a>") . "</td>";
+		echo "<td>" . LangViewObservationField32 . "</td>";
+		echo "<td>" . (((($lens = $this->getDsObservationProperty ( $LOid, 'lensid' )) == "") || ($lens == 0)) ? "-" : "<a  href=\"" . $baseURL . "index.php?indexAction=detail_lens&amp;lens=" . urlencode ( $lens ) . "\">" . $objLens->getLensPropertyFromId ( $lens, 'name' ) . "</a>") . "</td>";
+		echo "</tr>";
 		
 		if (in_array ( $objObject->getDsoProperty ( $object, 'type' ), array (
 				"DS",
 				"AA2STAR" 
 		) )) {
-			$objPresentations->line ( array (
-					LangViewObservationField22,
-					(($visibility = $this->getDsObservationProperty ( $LOid, 'visibility' )) ? $GLOBALS ['VisibilityDS' . $visibility] : "-"),
-					LangViewObservationField33,
-					$diameterText,
-					LangViewObservationField40,
-					$charTypeText 
-			), "RLRLRL", array (
-					15,
-					22,
-					15,
-					19,
-					15,
-					14 
-			), 25, array (
-					"type30",
-					"type30",
-					"type30",
-					"type30",
-					"type30",
-					"type30" 
-			) );
+			echo "<tr>";
+			echo "<td>" . LangViewObservationField22 . "</td>";
+			echo "<td>" . (($visibility = $this->getDsObservationProperty ( $LOid, 'visibility' )) ? $GLOBALS ['VisibilityDS' . $visibility] : "-") . "</td>";
+			echo "<td>" . LangViewObservationField33 . "</td>";
+			echo "<td>" . $diameterText . "</td>";
+			echo "<td>" . LangViewObservationField40 . "</td>";
+			echo "<td>" . $charTypeText . "</td>";
+			echo "</tr>";
+			echo "</table>";
 			echo $details1Text . " " . $details2Text;
-			echo "<br />";
 		} else if (in_array ( $objObject->getDsoProperty ( $object, 'type' ), array (
 				"OPNCL" 
 		) ) && $this->getDsObservationProperty ( $LOid, 'resolved' ) > 0) {
-			$objPresentations->line ( array (
-					LangViewObservationField22,
-					(($visibility = $this->getDsObservationProperty ( $LOid, 'visibility' )) ? $GLOBALS ['VisibilityOC' . $visibility] : "-"),
-					LangViewObservationField33,
-					$diameterText,
-					LangViewObservationField40,
-					$charTypeText 
-			), "RLRLRL", array (
-					15,
-					22,
-					15,
-					19,
-					15,
-					14 
-			), 25, array (
-					"type30",
-					"type30",
-					"type30",
-					"type30",
-					"type30",
-					"type30" 
-			) );
+			echo "<tr>";
+			echo "<td>" . LangViewObservationField22 . "</td>";
+			echo "<td>" . (($visibility = $this->getDsObservationProperty ( $LOid, 'visibility' )) ? $GLOBALS ['VisibilityOC' . $visibility] : "-") . "</td>";
+			echo "<td>" . LangViewObservationField33 . "</td>";
+			echo "<td>" . $diameterText . "</td>";
+			echo "<td>" . LangViewObservationField40 . "</td>";
+			echo "<td>" . $charTypeText . "</td>";
+			echo "</tr>";
+			echo "</table>";
 			echo $details1Text . " " . $details2Text;
 		} else {
-			$objPresentations->line ( array (
-					LangViewObservationField22,
-					(($visibility = $this->getDsObservationProperty ( $LOid, 'visibility' )) ? $GLOBALS ['Visibility' . $visibility] : "-"),
-					LangViewObservationField33,
-					$diameterText,
-					LangViewObservationField40,
-					$charTypeText 
-			), "RLRLRL", array (
-					15,
-					22,
-					15,
-					19,
-					15,
-					14 
-			), 25, array (
-					"type30",
-					"type30",
-					"type30",
-					"type30",
-					"type30",
-					"type30" 
-			) );
-			echo "<br />";
+			echo "<tr>";
+			echo "<td>" . LangViewObservationField22 . "</td>";
+			echo "<td>" . (($visibility = $this->getDsObservationProperty ( $LOid, 'visibility' )) ? $GLOBALS ['Visibility' . $visibility] : "-") . "</td>";
+			echo "<td>" . LangViewObservationField33 . "</td>";
+			echo "<td>" . $diameterText . "</td>";
+			echo "<td>" . LangViewObservationField40 . "</td>";
+			echo "<td>" . $charTypeText . "</td>";
+			echo "</tr>";
+			echo "</table>";
 		}
 		
 		// Add a google translate button
@@ -1488,8 +1445,6 @@ class Observations {
 			$bottomline .= "&nbsp;-&nbsp;<a  href=\"" . $baseURL . "index.php?indexAction=validate_delete_observation&amp;observationid=" . $LOid . "\">" . LangDeleteObservation . "</a>";
 		}
 		echo substr ( $bottomline, 13 );
-		echo " <g:plusone size=\"small\"></g:plusone>";
-		echo "<hr />";
 	}
 	public function validateDeleteDSObservation() 	// removes the observation with id = $id
 	{
