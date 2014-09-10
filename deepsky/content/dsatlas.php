@@ -9,8 +9,8 @@ function dsatlas()
 { global $baseURL,$loadAtlasPage,$atlasPageText,
          $objObject,$objUtil;
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
-	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/wz_jsgraphics.js\"></script>";
-	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/atlaspage.js\"></script>";
+// 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/wz_jsgraphics.js\"></script>";
+// 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/atlaspage.js\"></script>";
 	$loadAtlasPage=1; // ---> to load the atlas js in index.php
 	$ra=0;
 	$decl=0;
@@ -29,11 +29,12 @@ function dsatlas()
 	  echo $name."='".$value."';";
 	echo "</script>";
 	
-	echo "<div id=\"atlasPageDiv\" class=\"atlasPageDiv\" onmousemove=\"canvasOnMouseMove(event);\" onclick=\"canvasOnClick(event);\"  >";
-	echo "</div>"; 
-	echo "<div id=\"atlasPageDiv1\" class=\"atlasPageDiv1\" >";
-	echo "</div>";
-	echo "<div id=\"atlasPageDiv2\" class=\"atlasPageDiv2\" >";
+	echo "<canvas id=\"myCanvas\" width=\"200\" height=\"500\" style=\"border:1px solid #000000;\">></canvas>";
+// 	echo "<div id=\"atlasPageDiv\" class=\"atlasPageDiv\" onmousemove=\"canvasOnMouseMove(event);\" onclick=\"canvasOnClick(event);\"  >";
+// 	echo "</div>"; 
+// 	echo "<div id=\"atlasPageDiv1\" class=\"atlasPageDiv1\" >";
+// 	echo "</div>";
+// 	echo "<div id=\"atlasPageDiv2\" class=\"atlasPageDiv2\" >";
 	echo LangAtlasHelp;
 	echo "<hr /><br />";
 	echo LangAtlasNavigation."<br />";
