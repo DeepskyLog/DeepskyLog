@@ -1255,7 +1255,6 @@ class Observations {
 			// Get the julian day of the observation...
 			$jd = gregoriantojd ( $month, $day, $year );
 			
-			print $LOid;
 			$timezone = $objLocation->getLocationPropertyFromId ( $this->getDsObservationProperty ( $LOid, 'locationid' ), 'timezone' );
 			$dateTimeZone = new DateTimeZone ( $timezone );
 			
@@ -1379,7 +1378,7 @@ class Observations {
 		}
 		echo $objPresentations->searchAndLinkCatalogsInText ( $this->getDsObservationProperty ( $LOid, 'description' ) );
 		if ($toClose) {
-			echo "TEST4</div>";
+			echo "</div>";
 		}
 		
 		$title = $object . " " . LangMessageBy . $this->getDsObservationProperty ( $LOid, 'observerid' );
@@ -1391,17 +1390,18 @@ class Observations {
 		echo "<br /><br />";
 		$bottomline = "";
 		if ($myList) {
-			$bottomline .= "&nbsp;-&nbsp;<a  href=\"" . $link . $linkamp . "addObservationToList=" . urlencode ( $LOid ) . "\">" . LangViewObservationField44 . $listname_ss . "</a>";
+			$bottomline .= "<a class=\"btn btn-success\" href=\"" . $link . $linkamp . "addObservationToList=" . urlencode ( $LOid ) . "\"><span class=\"glyphicon glyphicon-plus\"></span> " . LangViewObservationField44 . $listname_ss . "</a>";
 			if ($objDatabase->selectSingleValue ( "SELECT Count(observerobjectlist.objectname) As ObjCnt FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\" AND objectname=\"" . $object . "\" AND listname=\"" . $listname . "\"", 'ObjCnt', 0 ) > 0)
-				$bottomline .= "&nbsp;-&nbsp;<a  href=\"" . $link . $linkamp . "removeObjectFromList=" . urlencode ( $object ) . "&amp;showname=" . urlencode ( $object ) . "\">" . $object_ss . LangListQueryObjectsMessage3 . $listname_ss . "</a>";
+				$bottomline .= "&nbsp;<a class=\"btn btn-danger\" href=\"" . $link . $linkamp . "removeObjectFromList=" . urlencode ( $object ) . "&amp;showname=" . urlencode ( $object ) . "\"><span class=\"glyphicon glyphicon-minus\"></span> " . $object_ss . LangListQueryObjectsMessage3 . $listname_ss . "</a><br /><br />";
 			else
-				$bottomline .= "&nbsp;-&nbsp;<a  href=\"" . $link . $linkamp . "addObjectToList=" . urlencode ( $object ) . "&amp;showname=" . urlencode ( $object ) . "\">" . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a>";
+				$bottomline .= "&nbsp;<a class=\"btn btn-success\" href=\"" . $link . $linkamp . "addObjectToList=" . urlencode ( $object ) . "&amp;showname=" . urlencode ( $object ) . "\"><span class=\"glyphicon glyphicon-plus\"></span> " . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a><br /><br />";
+			echo $bottomline;
 		}
 		if ($objUtil->checkAdminOrUserID ( $this->getDsObservationProperty ( $LOid, 'observerid' ) )) {
-			$bottomline .= "&nbsp;-&nbsp;<a  href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;observation=" . $LOid . "\">" . LangChangeObservationTitle . "</a>";
-			$bottomline .= "&nbsp;-&nbsp;<a  href=\"" . $baseURL . "index.php?indexAction=validate_delete_observation&amp;observationid=" . $LOid . "\">" . LangDeleteObservation . "</a>";
+			$bottomline = "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;observation=" . $LOid . "\">" . LangChangeObservationTitle . "</a>";
+			$bottomline .= "&nbsp;<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=validate_delete_observation&amp;observationid=" . $LOid . "\">" . LangDeleteObservation . "</a>";
+			echo $bottomline;
 		}
-		echo substr ( $bottomline, 13 );
 	}
 	public function validateDeleteDSObservation() 	// removes the observation with id = $id
 	{
