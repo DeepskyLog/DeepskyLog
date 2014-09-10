@@ -328,11 +328,11 @@ function showObjectObservations() {
 	echo $content3;
 	$content5 = "<span class=\"pull-right\">";
 	if (($objUtil->checkSessionKey ( 'lco', '' ) != "L"))
-		$content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=L" . "&amp;min=" . urlencode ( $min ) . "\" title=\"" . LangOverviewObservationTitle . "\">" . LangOverviewObservations . "</a>";
+		$content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=L\" title=\"" . LangOverviewObservationTitle . "\">" . LangOverviewObservations . "</a>";
 	if (($objUtil->checkSessionKey ( 'lco', '' ) != "C"))
-		$content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=C" . "&amp;min=" . urlencode ( $min ) . "\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>";
+		$content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=C\" title=\"" . LangCompactObservationsTitle . "\">" . LangCompactObservations . "</a>";
 	if ($loggedUser && ($objUtil->checkSessionKey ( 'lco', '' ) != "O"))
-		$content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=O" . "&amp;min=" . urlencode ( $min ) . "\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>";
+		$content5 .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $link . "&amp;lco=O\" title=\"" . LangCompactObservationsLOTitle . "\">" . LangCompactObservationsLO . "</a>";
 	if ($loggedUser && $objUtil->checkSessionKey ( 'lco', '' ) == "L") {
 		$toAdd = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $link . "&amp;noOwnColor=no\">" . LangOwnColor . "</a>";
 		if ($objUtil->checkGetKey ( 'noOwnColor' )) {
@@ -403,7 +403,7 @@ function showAdminObjectFunctions() {
 	echo "</div></form>";
 }
 function view_object() {
-	global $baseURL, $FF, $link, $link2, $loggedUser, $min, $object, $step, $objLocation, $objObject, $objObservation, $objObserver, $objPresentations, $objUtil;
+	global $baseURL, $FF, $link, $link2, $loggedUser, $object, $step, $objLocation, $objObject, $objObservation, $objObserver, $objPresentations, $objUtil;
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/presentation.js\"></script>";
 	if (array_key_exists ( 'viewobjectextrainfo', $_GET ))
 		$viewobjectextrainfo = $_GET ['viewobjectextrainfo'];
