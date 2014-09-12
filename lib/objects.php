@@ -1559,10 +1559,10 @@ class Objects {
 	}
 	public function showObjects($link, $ownShow = '', $showRank = 0, $pageListAction = "addAllObjectsFromPageToList", $columnSource = "") 	// ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
 	{
-		global $MSIE, $FF, $objFormLayout, $objAtlas, $objObserver, $objLocation, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil, $objPresentations, $objList;
+		global $objFormLayout, $objAtlas, $objObserver, $objLocation, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil, $objPresentations, $objList;
 		$atlas = '';
 		$c = 0;
-		
+
 		// Add the button to select which columns to show
 		$objUtil->addTableColumSelector ();
 
@@ -1700,7 +1700,7 @@ class Objects {
 	}
 	public function showObjectsFields($link, $min, $max, $ownShow = '', $showRank = 0, $fields = array("showname","objectconstellation","objectmagnitude"), $pageListAction = "addAllObjectsFromPageToList") 	// ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
 	{
-		global $FF, $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil, $objPresentations, $objList;
+		global $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil, $objPresentations, $objList;
 		$atlas = '';
 		echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 		echo "<thead>";

@@ -890,7 +890,7 @@ class Observations {
 			$explanation = "(" . $GLOBALS [$value ['objecttype']] . " " . LangOverviewObservations12 . " " . $GLOBALS [$value ['objectconstellation']] . (($value ['objectmagnitude'] != '') && ($value ['objectmagnitude'] < 99.9) ? ", " . LangOverviewObservations13 . " " . sprintf ( "%.1f", $value ['objectmagnitude'] ) : "") . (($value ['objectsurfacebrigthness'] != '') && ($value ['objectsurfacebrigthness'] < 99.9) ? ", " . LangOverviewObservations14 . " " . sprintf ( "%.1f", $value ['objectsurfacebrigthness'] ) : "") . (($alt) ? (", " . LangOverviewObservations15 . " ") . $objPresentations->br2dash ( $alt ) : "") . ")";
 			$explantation1 = LangOverviewObservations16 . " " . ($seen = $objObject->getseen ( $value ['objectname'] ));
 			$title = trim ( $value ['objectname'] . " " . LangMessageBy . $value ['observername'] );
-
+			
 			if (($LOid = $this->getLOObservationId ( $value ['objectname'], $loggedUser, $value ['observationid'] )) && ($lco == "O")) {
 				$LOdescription = $objPresentations->searchAndLinkCatalogsInText ( preg_replace ( "/&amp;/", "&", $this->getDsObservationProperty ( $LOid, 'description' ) ) );
 				$LOinstrumentId = $this->getDsObservationProperty ( $LOid, 'instrumentid' );
