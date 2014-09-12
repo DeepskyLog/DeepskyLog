@@ -153,7 +153,7 @@ define('LangMessageWelcome3'            ,'Voeg een waarneemplaats toe</a><br />A
 define('LangMessageWelcome4'            ,'Stel je standaardatlas in en stuur een foto van jezelf door.</a><br /><br />Veel plezier met DeepskyLog!<br /><br />De DeepskyLog ontwikkelaars');
 
 define('LangBuildingCatalogList'        ,'Even geduld terwijl de lijst wordt samengesteld.');
-define('LangClickToViewCatalogDetails'  ,'Klik op een lijst om zijn details te zien.');
+define('LangClickToViewCatalogDetails'  ,'Klik op een lijst om de details te zien.');
 
 define("LangObjectHighestAlt","Hoogste alt.");
 define("LangObjectHighestFrom","Hoogst van");
