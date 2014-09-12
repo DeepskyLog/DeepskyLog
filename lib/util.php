@@ -2672,7 +2672,7 @@ class Utils {
 		global $lastReadObservation, $loggedUser, $objObserver;
 		if ($_SESSION ['module'] == 'deepsky') {
 			$_GET ['catalog'] = '%';
-			$theDate = date ( 'Ymd', strtotime ( '-1 year' ) );
+			$theDate = date ( 'Ymd', strtotime ( '-1 month' ) );
 			$_GET ['minyear'] = substr ( $theDate, 0, 4 );
 			$_GET ['minmonth'] = substr ( $theDate, 4, 2 );
 			$_GET ['minday'] = substr ( $theDate, 6, 2 );

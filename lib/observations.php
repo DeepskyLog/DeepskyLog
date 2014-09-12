@@ -827,7 +827,7 @@ class Observations {
 	}
 	public function showListObservation($link, $lco) {
 		global $lastReadObservation, $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations, $objObservation;
-		
+
 		// Add a google translate button
 		echo "<script>
 		       function googleSectionalElementInit() {
