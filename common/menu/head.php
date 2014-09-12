@@ -186,6 +186,8 @@ function head() {
 			$TitleText = "DSL: " . LangQuickPickNewObservation . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
 	}
 	echo "<title>" . $DSLTitle . ($TitleText ? ": " . $TitleText : "") . "</title>";
+	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
+	
 	echo "<script type=\"text/javascript\">
 
      var _gaq = _gaq || [];

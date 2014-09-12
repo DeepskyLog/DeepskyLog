@@ -1,5 +1,7 @@
+
 function view_catalogs(leftmenu,topmenu)
-{ resizeDivsViewCatalogs(leftmenu,topmenu);
+{
+  resizeDivsViewCatalogs(leftmenu,topmenu);
   var jsonhttp;
   if(window.XMLHttpRequest)
     jsonhttp=new XMLHttpRequest();
