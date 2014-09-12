@@ -15,7 +15,7 @@ try
   echo    "<!DOCTYPE html>";
   echo    "<html>";
   require_once 'common/menu/head.php';                                                                         // HTML head
-  echo    "<body onkeydown=\"bodyOnKeyDown(event);\">"; 
+  echo    "<body onkeydown=\"bodyOnKeyDown(event);\">";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."common/entryexit/globals.js\"></script>";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/jsenvironment.js\"></script>";
   echo    "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/wz_tooltip.js\"></script>";
@@ -73,11 +73,12 @@ catch (Exception $e)
   // EMAIL developers with error codes
 }
 echo "<script type=\"text/javascript\">";
+if($loadAtlasPage)
+{ 
+  echo "atlasFillPage();";
+}
 if($includeFile=='deepsky/content/view_catalogs.php')
 { echo "view_catalogs('','');";
-}
-if($loadAtlasPage)
-{ echo "atlasFillPage();";
 }
 echo "</script>";
  if(isset($entryMessage)&&$entryMessage) {                                                                 // dispays $entryMessage if any

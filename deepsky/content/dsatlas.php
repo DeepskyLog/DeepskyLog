@@ -8,8 +8,8 @@ else dsatlas();
 function dsatlas()
 { global $baseURL,$loadAtlasPage,$atlasPageText,
          $objObject,$objUtil;
-	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
-	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/wz_jsgraphics.js\"></script>";
+ 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/phpjs.js\"></script>";
+ 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/wz_jsgraphics.js\"></script>";
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/atlaspage.js\"></script>";
 	$loadAtlasPage=1; // ---> to load the atlas js in index.php
 	$ra=0;
@@ -27,8 +27,8 @@ function dsatlas()
 	echo "this.AtlasDetailZoom=".AtlasDetailZoom.";";
 	while(list($name,$value)=each($atlasPageText))
 	  echo $name."='".$value."';";
-	echo "</script>";
-	
+	echo "</script>";	
+	echo "<div id=\"div5\">";
 	echo "<div id=\"atlasPageDiv\" class=\"atlasPageDiv\" onmousemove=\"canvasOnMouseMove(event);\" onclick=\"canvasOnClick(event);\"  >";
 	echo "</div>"; 
 	echo "<div id=\"atlasPageDiv1\" class=\"atlasPageDiv1\" >";
@@ -108,5 +108,6 @@ function dsatlas()
 	echo LangAtlasCredit."<br /><br />";
 	
 	echo "</div>"; 
+	echo "</div>";
 }
 ?>

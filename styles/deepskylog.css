@@ -338,8 +338,8 @@ table.tablesorter tr.type2 td {
   position         : absolute;
   top              : 0px;
   left             : 0px;
-  height           : 0px;
-  width            : 0px;
+  height           : 100%;
+  width            : 100%;
   margin           : 0%;
   color            : #FFFF00;
   background-color : #555555;
@@ -354,8 +354,8 @@ table.tablesorter tr.type2 td {
   position         : absolute;
   top              : 0px;
   left             : 0px;
-  height           : 0px;
-  width            : 0px;
+  height           : 100%;
+  width            : 100%;
   margin           : 0%;
   color            : #FFFF00;
   background-color : #555555;
@@ -373,8 +373,8 @@ table.tablesorter tr.type2 td {
   position         : absolute;
   top              : 0px;
   left             : 0px;
-  height           : 0px;
-  width            : 0px;
+  height           : 100%;
+  width            : 100%;
   margin           : 0%;
   color            : #FFFF00;
   background-color : #555555;
@@ -414,4 +414,11 @@ table.tablesorter tr.type2 td {
 }
 #catalogs {
   height           : 500px;
+}
+#div5 {
+  margin           : 0px;         border : 0px;
+  padding-left     : 0px;         padding-right : 2px; 
+  padding-top       : 0px;        padding-bottom: 0px;
+  background-color : #FFFFFF;
+  overflow         : auto;
 }
