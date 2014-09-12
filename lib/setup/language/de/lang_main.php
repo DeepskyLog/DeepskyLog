@@ -1,5 +1,6 @@
 <?php //GE
 // This is version 4.4
+define('LangTopObjectsDrawnTitle' ,'Beliebteste Objekte (Zeichnungen)');
 define('LangDescription'          ,'Beschreibung');
 define('GraphAccomplishments'			,'DeepskyLog Sternen');
 define('LangSelectColumns'        ,'Kies kolommen');

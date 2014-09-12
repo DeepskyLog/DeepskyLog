@@ -1,5 +1,6 @@
 <?php //FR
 // This is version 4.4
+define('LangTopObjectsDrawnTitle' ,'Les objets les plus populaires (dessins)');
 define('LangDescription'          ,'Description');
 define('GraphAccomplishments'			,'&Eacute;toiles de DeepskyLog');
 define('LangSelectColumns'        ,'Kies kolommen');

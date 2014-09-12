@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 4.4
+define('LangTopObjectsDrawnTitle' ,'Meest getekende objecten');
 define('LangDescription'          ,'Beschrijving');
 define('GraphAccomplishments'			,'DeepskyLog sterren');
 define('LangSelectColumns'        ,'Kies kolommen');

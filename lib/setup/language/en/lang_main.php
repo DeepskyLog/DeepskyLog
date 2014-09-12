@@ -1,5 +1,6 @@
 <?php //EN
 // This is version 4.4
+define('LangTopObjectsDrawnTitle' ,'Most popular objects (drawings)');
 define('LangDescription'          ,'Description');
 define('GraphAccomplishments'     ,'DeepskyLog stars');
 define('LangSelectColumns'        ,'Select columns');
