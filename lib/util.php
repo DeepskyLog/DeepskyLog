@@ -2679,7 +2679,31 @@ class Utils {
 			$lastReadObservation = ($loggedUser ? $objObserver->getLastReadObservation ( $loggedUser ) : - 1);
 			return 'deepsky/content/selected_observations.php';
 		} else if ($_SESSION ['module'] == 'comets') {
-			return 'comets/content/overview_observations.php';
+			$theDate = date ( 'Ymd', strtotime ( '-1 month' ) );
+			$_GET ['minyear'] = substr ( $theDate, 0, 4 );
+			$_GET ['minmonth'] = substr ( $theDate, 4, 2 );
+			$_GET ['minday'] = substr ( $theDate, 6, 2 );
+			$_GET ['observer'] = '';
+			$_GET ['instrument'] = '';
+			$_GET ['site'] = '';
+			$_GET ['maxyear'] = '';
+			$_GET ['maxmonth'] = '';
+			$_GET ['maxday'] = '';
+			$_GET ['mindiameter'] = '';
+			$_GET ['maxdiameter'] = '';
+			$_GET ['mindiameterunits'] = '';
+			$_GET ['maxdiameterunits'] = '';
+			$_GET ['maxmag'] = '';
+			$_GET ['minmag'] = '';
+			$_GET ['description'] = '';
+			$_GET ['object'] = '';
+			$_GET ['mintail'] = '';
+			$_GET ['maxtail'] = '';
+			$_GET ['mincoma'] = '';
+			$_GET ['maxcoma'] = '';
+			$_GET ['mindc'] = '';
+			$_GET ['maxdc'] = '';
+			return 'comets/content/selected_observations2.php';
 		}
 	}
 	private function utilitiesCheckIndexActionMember($action, $includefile) {
