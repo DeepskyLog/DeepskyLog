@@ -185,17 +185,6 @@ class Presentations {
 		$topline .= "</span><br /></br >";
 		return $topline;
 	}
-	public function line($content, $alignment = '', $widths = array(), $lineheight = '', $classes = array()) {
-		echo "<div class=\"containerLine\" " . ($lineheight ? "style=\"height:" . $lineheight . "px;\"" : '') . ">";
-		for($m = 0, $l = 0, $a = "L", $w = floor ( 100 / count ( $content ) ); $m < count ( $content ); $m ++, $l += $w) {
-			if (isset ( $widths ) && array_key_exists ( $m, $widths ))
-				$w = $widths [$m];
-			if (isset ( $alignment ))
-				$a = substr ( $alignment, $m, 1 );
-			echo "<div class=\"containerLinePart" . $a . ((array_key_exists ( $m, $classes )) ? " " . $classes [$m] : '') . "\" style=\"left:" . $l . "%;width:" . $w . "%;" . ($lineheight ? "line-height:" . $lineheight . "px;height:" . $lineheight . "px;" : '') . "\">" . $content [$m] . (($a == "R") ? "&nbsp;&nbsp;&nbsp;" : "") . "</div>";
-		}
-		echo "</div>";
-	}
 	public function setPopupForm() {
 		global $baseURL, $indexAction;
 		echo "<div id=\"veil\">";
