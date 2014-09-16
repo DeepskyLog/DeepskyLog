@@ -16,7 +16,7 @@ function top_objects() {
 	echo "<hr />";
 	echo "<table class=\"table sort-tablecometobjects table-condensed table-striped table-hover tablesorter custom-popup\">";
 	echo "<thead><tr>";
-	echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangTopObjectsHeader1 . "</th>";
+	echo "<th class=\"filter-false columnSelector-disable\">" . LangTopObjectsHeader1 . "</th>";
 	echo "<th>" . LangTopObjectsHeader2 . "</th>";
 	echo "<th>" . LangTopObjectsHeader5 . "</th>";
 	echo "</tr></thead>";
