@@ -395,7 +395,7 @@ class CometObservations {
 	function getMethode($id) {
 		global $objDatabase;
 		$sql = "SELECT * FROM cometobservations WHERE id = \"$id\"";
-		$run = $objDatase->selectRecordset ( $sql );
+		$run = $objDatabase->selectRecordset ( $sql );
 		
 		$get = $run->fetch ( PDO::FETCH_OBJ );
 		

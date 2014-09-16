@@ -64,8 +64,7 @@ class CometObjects
    global $objDatabase;
     	
    $id="";
-   $sql = "SELECT * FROM cometobjects WHERE name = \"$name\"";
-      
+   $sql = "SELECT * FROM cometobjects WHERE name = \"" . $name . "\"";
    $run = $objDatabase->selectRecordset($sql);
    if($get = $run->fetch(PDO::FETCH_OBJ))
      $id = $get->id;
