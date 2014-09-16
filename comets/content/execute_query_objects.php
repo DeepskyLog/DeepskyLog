@@ -32,15 +32,11 @@ function comets_execute_query_objects() {
 			echo "<hr />";
 			echo "<table class=\"table sort-tablecometobjects table-condensed table-striped table-hover tablesorter custom-popup\">";
 			echo "<thead><tr>";
-			echo "<th><a href=\"" . $baseURL . "index.php?indexAction=comets_result_query_objects&amp;name=" . urlencode ( $_GET ['name'] ) . "\">" . LangOverviewObjectsHeader1 . "</a></th>";
-			echo "<th><a href=\"" . $baseURL . "index.php?indexAction=comets_result_query_objects&amp;name=" . urlencode ( $_GET ['name'] ) . "\">" . LangNewObjectIcqname . "</a></th>";
+			echo "<th>" . LangOverviewObjectsHeader1 . "</th>";
+			echo "<th>" . LangNewObjectIcqname . "</th>";
 			// Check the number of objects. If there are less than 500 objects, we
 			// enable the sorting on seen.
-			if (count ( $result ) <= 500) {
-				echo "<th><a href=\"" . $baseURL . "index.php?indexAction=comets_result_query_objects&amp;name=" . urlencode ( $_GET ['name'] ) . "\">" . LangOverviewObjectsHeader7 . "</a></th>";
-			} else {
-				echo "<th>" . LangOverviewObjectsHeader7 . "</a></th>";
-			}
+				echo "<th>" . LangOverviewObjectsHeader7 . "</th>";
 			echo "</tr></thead>";
 			while ( list ( $key, $value ) = each ( $result ) ) {
 				// NAME
