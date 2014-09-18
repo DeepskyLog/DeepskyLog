@@ -57,9 +57,7 @@ function view_observer() {
 		}
 	}
 	echo "<div>";
-	$objPresentations->line ( array (
-			"<h4>" . $firstname . ' ' . $name . "</h4>" 
-	), "L", array (), 30 );
+	echo "<h4>" . $firstname . ' ' . $name . "</h4>";
 	echo "<hr />";
 	// We make some tabs.
 	echo "<ul id=\"tabs\" class=\"nav nav-tabs\" data-tabs=\"tabs\">

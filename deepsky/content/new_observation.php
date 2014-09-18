@@ -67,11 +67,17 @@ function new_observation() {
 		echo "<hr />";
 		echo "<div class=\"inputDiv\">";
 		// Location =====================================================================================================================================================================
-		$sites = $objLocation->getSortedLocationsList ( "name", $loggedUser, 1 );
+		if (array_key_exists('observation', $_GET)) {
+			$activeSites = '';
+		} else {
+			$activeSites = 1;
+		}
+		$sites = $objLocation->getSortedLocationsList ( "name", $loggedUser, $activeSites );
 		$theLoc = (($observationid) ? $objObservation->getDsObservationProperty ( $_GET ['observation'], 'locationid' ) : $objUtil->checkPostKey ( 'site' ));
 		$contentLoc = "<select class=\"form-control\" name=\"site\">";
-		while ( list ( $key, $value ) = each ( $sites ) )
+		while ( list ( $key, $value ) = each ( $sites ) ) {
 			$contentLoc .= "<option " . (($value [0] == $theLoc) ? "selected=\"selected\"" : '') . " value=\"" . $value [0] . "\">" . $value [1] . "</option>";
+		}
 		$contentLoc .= "</select>&nbsp;";
 		// Date and time =====================================================================================================================================================================
 		if ($observationid) {
@@ -119,7 +125,8 @@ function new_observation() {
 		$contentTime .= "&nbsp;&nbsp;";
 		$contentTime .= "<input type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" name=\"minutes\" value=\"" . $theMinute . "\" />&nbsp;&nbsp;";
 		// Instrument =====================================================================================================================================================================
-		$instr = $objInstrument->getSortedInstrumentsList ( "name", $loggedUser, 1 );
+
+		$instr = $objInstrument->getSortedInstrumentsList ( "name", $loggedUser, $activeSites );
 		$theInstrument = (($observationid) ? $objObservation->getDsObservationProperty ( $observationid, 'instrumentid' ) : $objUtil->checkPostKey ( 'instrument', 0 ));
 		$contentInstrument = "<select name=\"instrument\" class=\"form-control\">";
 		while ( list ( $key, $value ) = each ( $instr ) )
@@ -149,7 +156,7 @@ function new_observation() {
 		$contentSeeing .= "</select>&nbsp;";
 		// Eyepiece =====================================================================================================================================================================
 		$theEyepiece = (($observationid) ? $objObservation->getDsObservationProperty ( $observationid, 'eyepieceid' ) : $objUtil->checkPostKey ( 'eyepiece' ));
-		$eyeps = $objEyepiece->getSortedEyepieces ( "focalLength", $loggedUser, 1 );
+		$eyeps = $objEyepiece->getSortedEyepieces ( "focalLength", $loggedUser, $activeSites );
 		$contentEyepiece = "<select name=\"eyepiece\" class=\"form-control\">";
 		$contentEyepiece .= "<option value=\"\">-----</option>";
 		while ( list ( $key, $value ) = each ( $eyeps ) )
@@ -157,7 +164,7 @@ function new_observation() {
 		$contentEyepiece .= "</select>&nbsp;";
 		// Lens =====================================================================================================================================================================
 		$theLens = (($observationid) ? $objObservation->getDsObservationProperty ( $observationid, 'lensid' ) : $objUtil->checkPostKey ( 'lens' ));
-		$lns = $objLens->getSortedLenses ( "name", $loggedUser, 1 );
+		$lns = $objLens->getSortedLenses ( "name", $loggedUser, $activeSites );
 		$contentLens = "<select name=\"lens\" class=\"form-control\">";
 		$contentLens .= "<option value=\"\">-----</option>";
 		while ( list ( $key, $value ) = each ( $lns ) )
@@ -165,7 +172,7 @@ function new_observation() {
 		$contentLens .= "</select>&nbsp;";
 		// Filter =====================================================================================================================================================================
 		$theFilter = (($observationid) ? $objObservation->getDsObservationProperty ( $observationid, 'filterid' ) : $objUtil->checkPostKey ( 'filter' ));
-		$filts = $objFilter->getSortedFilters ( "name", $loggedUser, 1 );
+		$filts = $objFilter->getSortedFilters ( "name", $loggedUser, $activeSites );
 		$contentFilter = "<select name=\"filter\" class=\"form-control\">";
 		$contentFilter .= "<option value=\"\">-----</option>";
 		while ( list ( $key, $value ) = each ( $filts ) )
@@ -266,11 +273,11 @@ function new_observation() {
 				$contentMisc4 .= "<select name=\"component1\" class=\"form-control\">";
 				$contentMisc4 .= "<option value=\"\">-----</option>";
 				$contentMisc4 .= "<option value=\"1\"" . (($theComponent1Color == '1') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor1 . "</option>";
-				$contentMisc4 .= "<option value=\"2\"" . (($objUtil->checkPostKey ( 'component1' ) == '2') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor2 . "</option>";
-				$contentMisc4 .= "<option value=\"3\"" . (($objUtil->checkPostKey ( 'component1' ) == '3') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor3 . "</option>";
-				$contentMisc4 .= "<option value=\"4\"" . (($objUtil->checkPostKey ( 'component1' ) == '4') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor4 . "</option>";
-				$contentMisc4 .= "<option value=\"5\"" . (($objUtil->checkPostKey ( 'component1' ) == '5') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor5 . "</option>";
-				$contentMisc4 .= "<option value=\"6\"" . (($objUtil->checkPostKey ( 'component1' ) == '6') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor6 . "</option>";
+				$contentMisc4 .= "<option value=\"2\"" . (($theComponent1Color == '2') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor2 . "</option>";
+				$contentMisc4 .= "<option value=\"3\"" . (($theComponent1Color == '3') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor3 . "</option>";
+				$contentMisc4 .= "<option value=\"4\"" . (($theComponent1Color == '4') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor4 . "</option>";
+				$contentMisc4 .= "<option value=\"5\"" . (($theComponent1Color == '5') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor5 . "</option>";
+				$contentMisc4 .= "<option value=\"6\"" . (($theComponent1Color == '6') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor6 . "</option>";
 				$contentMisc4 .= "</select>&nbsp;";
 				
 				$contentMisc4 .= "&nbsp;" . LangDetailDS4 . "&nbsp;";
@@ -278,11 +285,11 @@ function new_observation() {
 				$contentMisc4 .= "<select name=\"component2\" class=\"form-control\">";
 				$contentMisc4 .= "<option value=\"\">-----</option>";
 				$contentMisc4 .= "<option value=\"1\"" . (($theComponent2Color == '1') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor1 . "</option>";
-				$contentMisc4 .= "<option value=\"2\"" . (($objUtil->checkPostKey ( 'component2' ) == '2') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor2 . "</option>";
-				$contentMisc4 .= "<option value=\"3\"" . (($objUtil->checkPostKey ( 'component2' ) == '3') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor3 . "</option>";
-				$contentMisc4 .= "<option value=\"4\"" . (($objUtil->checkPostKey ( 'component2' ) == '4') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor4 . "</option>";
-				$contentMisc4 .= "<option value=\"5\"" . (($objUtil->checkPostKey ( 'component2' ) == '5') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor5 . "</option>";
-				$contentMisc4 .= "<option value=\"6\"" . (($objUtil->checkPostKey ( 'component2' ) == '6') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor6 . "</option>";
+				$contentMisc4 .= "<option value=\"2\"" . (($theComponent2Color == '2') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor2 . "</option>";
+				$contentMisc4 .= "<option value=\"3\"" . (($theComponent2Color == '3') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor3 . "</option>";
+				$contentMisc4 .= "<option value=\"4\"" . (($theComponent2Color == '4') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor4 . "</option>";
+				$contentMisc4 .= "<option value=\"5\"" . (($theComponent2Color == '5') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor5 . "</option>";
+				$contentMisc4 .= "<option value=\"6\"" . (($theComponent2Color == '6') ? " selected=\"selected\" " : '') . ">" . LangDetailDSColor6 . "</option>";
 				$contentMisc4 .= "</select>&nbsp;";
 			}
 		}
