@@ -621,82 +621,83 @@ function view_observer() {
 	
 	// Messier
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Messier</h4>";
+	echo "<h4>" . LangMessier . "</h4>";
 	
-	drawStar ( $objAccomplishments->getMessierBronze ( $user ), "bronze", "Bronzen messier certificaat! Je hebt 25 verschillende messier objecten waargenomen!", "Neem minimaal 25 verschillende messier objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getMessierSilver ( $user ), "silver", "Zilveren messier certificaat! Je hebt 50 verschillende messier objecten waargenomen!", "Neem minimaal 50 verschillende messier objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getMessierGold ( $user ), "gold", "Gouden messier certificaat! Je hebt alle 110 messier objecten waargenomen!", "Neem alle 110 messier objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getMessierBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsMessierBronze, LangMessierBronzeToAccomplish );
+	drawStar ( $objAccomplishments->getMessierSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsMessierSilver, LangMessierSilverToAccomplish );
+	drawStar ( $objAccomplishments->getMessierGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsMessierGold, LangMessierGoldToAccomplish );
+
 	echo "</div>";
 	
 	// Messier Drawings
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Drawings of Messier objects</h4>";
+	echo "<h4>" . LangMessierDrawings . "</h4>";
 	
-	drawStar ( $objAccomplishments->getMessierDrawingsBronze ( $user ), "bronze", "Bronzen messier certificaat! Je hebt 25 verschillende messier objecten waargenomen!", "Neem minimaal 25 verschillende messier objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getMessierDrawingsSilver ( $user ), "silver", "Zilveren messier certificaat! Je hebt 50 verschillende messier objecten waargenomen!", "Neem minimaal 50 verschillende messier objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getMessierDrawingsGold ( $user ), "gold", "Gouden messier certificaat! Je hebt alle 110 messier objecten waargenomen!", "Neem alle 110 messier objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getMessierDrawingsBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsMessierBronzeDr, LangMessierBronzeToAccomplishDr );
+	drawStar ( $objAccomplishments->getMessierDrawingsSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsMessierSilverDr, LangMessierSilverToAccomplishDr );
+	drawStar ( $objAccomplishments->getMessierDrawingsGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsMessierGoldDr, LangMessierGoldToAccomplishDr );
 	echo "</div>";
 	
 	// Caldwell
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Caldwell</h4>";
+	echo "<h4>" . LangCaldwell . "</h4>";
 	
-	drawStar ( $objAccomplishments->getCaldwellBronze ( $user ), "bronze", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getCaldwellSilver ( $user ), "silver", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getCaldwellGold ( $user ), "gold", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getCaldwellBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsCaldwellBronze, LangCaldwellBronzeToAccomplish );
+	drawStar ( $objAccomplishments->getCaldwellSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsCaldwellSilver, LangCaldwellSilverToAccomplish );
+	drawStar ( $objAccomplishments->getCaldwellGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsCaldwellGold, LangCaldwellGoldToAccomplish );
 	echo "</div>";
 	
 	// Caldwell drawings
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Drawings Caldwell objects</h4>";
+	echo "<h4>" . LangCaldwellDrawings . "</h4>";
 	
-	drawStar ( $objAccomplishments->getCaldwellDrawingsBronze ( $user ), "bronze", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getCaldwellDrawingsSilver ( $user ), "silver", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getCaldwellDrawingsGold ( $user ), "gold", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getCaldwellDrawingsBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsCaldwellBronzeDr, LangCaldwellBronzeToAccomplishDr );
+	drawStar ( $objAccomplishments->getCaldwellDrawingsSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsCaldwellSilverDr, LangCaldwellSilverToAccomplishDr );
+	drawStar ( $objAccomplishments->getCaldwellDrawingsGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsCaldwellGoldDr, LangCaldwellGoldToAccomplishDr );
 	echo "</div>";
 	
 	// Herschel - 400
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Herschel 400</h4>";
+	echo "<h4>" . LangHerschel400 . "</h4>";
 	
-	drawStar ( $objAccomplishments->getHerschelBronze ( $user ), "bronze", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getHerschelSilver ( $user ), "silver", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getHerschelGold ( $user ), "gold", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getHerschelDiamond ( $user ), "diamond", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getHerschelPlatina ( $user ), "platinum", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getHerschelBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsH400Bronze, LangH400BronzeToAccomplish );
+	drawStar ( $objAccomplishments->getHerschelSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsH400Silver, LangH400SilverToAccomplish );
+	drawStar ( $objAccomplishments->getHerschelGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsH400Gold, LangH400GoldToAccomplish );
+	drawStar ( $objAccomplishments->getHerschelDiamond ( $user ), LangAccomplishmentsDiamond, "diamond", LangAccomplishmentsH400Diamond, LangH400DiamondToAccomplish );
+	drawStar ( $objAccomplishments->getHerschelPlatina ( $user ), LangAccomplishmentsPlatina, "platinum", LangAccomplishmentsH400Platina, LangH400PlatinaToAccomplish );
 	echo "</div>";
 	
 	// Herschel 400 drawings
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Drawings Herschel 400 objects</h4>";
+	echo "<h4>" . LangHerschel400Drawings . "</h4>";
 	
-	drawStar ( $objAccomplishments->getHerschelDrawingsBronze ( $user ), "bronze", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getHerschelDrawingsSilver ( $user ), "silver", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getHerschelDrawingsGold ( $user ), "gold", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getHerschelDrawingsDiamond ( $user ), "diamond", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getHerschelDrawingsPlatina ( $user ), "platinum", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getHerschelDrawingsBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsH400BronzeDr, LangH400BronzeToAccomplishDr );
+	drawStar ( $objAccomplishments->getHerschelDrawingsSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsH400SilverDr, LangH400SilverToAccomplishDr );
+	drawStar ( $objAccomplishments->getHerschelDrawingsGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsH400GoldDr, LangH400GoldToAccomplishDr );
+	drawStar ( $objAccomplishments->getHerschelDrawingsDiamond ( $user ), LangAccomplishmentsDiamond, "diamond", LangAccomplishmentsH400DiamondDr, LangH400DiamondToAccomplishDr );
+	drawStar ( $objAccomplishments->getHerschelDrawingsPlatina ( $user ), LangAccomplishmentsPlatina, "platinum", LangAccomplishmentsH400PlatinaDr, LangH400PlatinaToAccomplishDr );
 	echo "</div>";
 	
 	// Herschel II
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Herschel II</h4>";
+	echo "<h4>" . LangHerschelII . "</h4>";
 	
-	drawStar ( $objAccomplishments->getHerschelIIBronze ( $user ), "bronze", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getHerschelIISilver ( $user ), "silver", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getHerschelIIGold ( $user ), "gold", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getHerschelIIDiamond ( $user ), "diamond", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getHerschelIIPlatina ( $user ), "platinum", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getHerschelIIBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsHIIBronze, LangHIIBronzeToAccomplish );
+	drawStar ( $objAccomplishments->getHerschelIISilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsHIISilver, LangHIISilverToAccomplish );
+	drawStar ( $objAccomplishments->getHerschelIIGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsHIIGold, LangHIIGoldToAccomplish );
+	drawStar ( $objAccomplishments->getHerschelIIDiamond ( $user ), LangAccomplishmentsDiamond, "diamond", LangAccomplishmentsHIIDiamond, LangHIIDiamondToAccomplish );
+	drawStar ( $objAccomplishments->getHerschelIIPlatina ( $user ), LangAccomplishmentsPlatina, "platinum", LangAccomplishmentsHIIPlatina, LangHIIPlatinaToAccomplish );
 	echo "</div>";
 	
 	// Herschel II drawings
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Drawings Herschel II objects</h4>";
+	echo "<h4>" . LangHerschelIIDrawings . "</h4>";
 	
-	drawStar ( $objAccomplishments->getHerschelIIDrawingsBronze ( $user ), "bronze", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getHerschelIIDrawingsSilver ( $user ), "silver", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getHerschelIIDrawingsGold ( $user ), "gold", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getHerschelIIDrawingsDiamond ( $user ), "diamond", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getHerschelIIDrawingsPlatina ( $user ), "platinum", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getHerschelIIDrawingsBronze ( $user ), LangAccomplishmentsBronze, "bronze", LangAccomplishmentsHIIBronzeDr, LangHIIBronzeToAccomplishDr );
+	drawStar ( $objAccomplishments->getHerschelIIDrawingsSilver ( $user ), LangAccomplishmentsSilver, "silver", LangAccomplishmentsHIISilverDr, LangHIISilverToAccomplishDr );
+	drawStar ( $objAccomplishments->getHerschelIIDrawingsGold ( $user ), LangAccomplishmentsGold, "gold", LangAccomplishmentsHIIGoldDr, LangHIIGoldToAccomplishDr );
+	drawStar ( $objAccomplishments->getHerschelIIDrawingsDiamond ( $user ), LangAccomplishmentsDiamond, "diamond", LangAccomplishmentsHIIDiamondDr, LangHIIDiamondToAccomplishDr );
+	drawStar ( $objAccomplishments->getHerschelIIDrawingsPlatina ( $user ), LangAccomplishmentsPlatina, "platinum", LangAccomplishmentsHIIPlatinaDr, LangHIIPlatinaToAccomplishDr );
 	echo "</div>";
 	
 	// Total number of drawings
@@ -969,19 +970,18 @@ function view_observer() {
 	echo "</div>";
 	echo "</div>";
 }
-function drawStar($done, $color, $tooltip, $tooltipToDo) {
+function drawStar($done, $text, $color, $tooltip, $tooltipToDo) {
 	global $baseURL;
 	
 	// TODO : Vul tooptips
 	// TODO : Tekst komt uit taalfiles!
-	// TODO : Alle accomplishments tonen!
 	if ($done) {
 		print "<div class=\"star\" id=\"" . $color . "\">";
-		print "<div class=\"accomplishmentText\" title=\"" . $tooltip . "\">" . ucfirst ( $color ) . "</div>";
+		print "<div class=\"accomplishmentText\" title=\"" . $tooltip . "\">" . ucfirst ( $text ) . "</div>";
 		print "</div>";
 	} else {
 		print "<div class=\"star notAccomplished\" id=\"" . $color . "\">";
-		print "<div class=\"accomplishmentText\" title=\"" . $tooltipToDo . "\">" . ucfirst ( $color ) . "</div>";
+		print "<div class=\"accomplishmentText notAccomplished\" title=\"" . $tooltipToDo . "\">" . ucfirst ( $text ) . "</div>";
 		print "</div>";
 	}
 }

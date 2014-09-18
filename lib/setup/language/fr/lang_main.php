@@ -1,5 +1,83 @@
 <?php //FR
 // This is version 4.4
+define('LangMessier','Messier objects');
+define('LangMessierDrawings','Drawings of Messier objects');
+define('LangCaldwell','Caldwell objects');
+define('LangCaldwellDrawings','Drawings of Caldwell objects');
+define('LangHerschel400','Herschel 400 objects');
+define('LangHerschel400Drawings','Drawings of Herschel 400 objects');
+define('LangHerschelII','Herschel II objects');
+define('LangHerschelIIDrawings','Drawings of Herschel II objects');
+
+define('LangAccomplishmentsBronze','Bronze');
+define('LangAccomplishmentsSilver','Argent');
+define('LangAccomplishmentsGold','Or');
+define('LangAccomplishmentsDiamond','Diamant');
+define('LangAccomplishmentsPlatina','Platine');
+define('LangAccomplishmentsMessierBronze', "Bronze Messier certificat! You observed 25 different Messier objects!");
+define('LangAccomplishmentsMessierSilver', "Silver Messier certificat! You observed 50 different Messier objects!");
+define('LangAccomplishmentsMessierGold', "Golden Messier certificat! You observed all 110 different Messier objects!");
+define('LangMessierBronzeToAccomplish'   , "Observe at least 25 different Messier objects to get this certificat!");
+define('LangMessierSilverToAccomplish'   , "Observe at least 50 different Messier objects to get this certificat!");
+define('LangMessierGoldToAccomplish'     , "Observe all 110 Messier objects to get this certificat!");
+define('LangAccomplishmentsMessierBronzeDr', "Bronze Messier drawing-certificat! You drawed 25 different Messier objects!");
+define('LangAccomplishmentsMessierSilverDr', "Silver Messier drawing-certificat! You drawed 50 different Messier objects!");
+define('LangAccomplishmentsMessierGoldDr'  , "Golden Messier drawing-certificat! You drawed all 110 Messier objects!");
+define('LangMessierBronzeToAccomplishDr'   , "Draw at least 25 different Messier objects to get this certificat!");
+define('LangMessierSilverToAccomplishDr'   , "Draw at least 50 different Messier objects to get this certificat!");
+define('LangMessierGoldToAccomplishDr'     , "Draw all 110 Messier objects to get this certificat!");
+define('LangAccomplishmentsCaldwellBronze', "Bronze Caldwell certificat! You observed 25 different Caldwell objects!");
+define('LangAccomplishmentsCaldwellSilver', "Silver Caldwell certificat! You observed 50 different Caldwell objects!");
+define('LangAccomplishmentsCaldwellGold', "Golden Caldwell certificat! You observed all 110 different Caldwell objects!");
+define('LangCaldwellBronzeToAccomplish'   , "Observe at least 25 different Caldwell objects to get this certificat!");
+define('LangCaldwellSilverToAccomplish'   , "Observe at least 50 different Caldwell objects to get this certificat!");
+define('LangCaldwellGoldToAccomplish'     , "Observe all 110 Caldwell objects to get this certificat!");
+define('LangAccomplishmentsCaldwellBronzeDr', "Bronze Caldwell drawing-certificat! You drawed 25 different Caldwell objects!");
+define('LangAccomplishmentsCaldwellSilverDr', "Silver Caldwell drawing-certificat! You drawed 50 different Caldwell objects!");
+define('LangAccomplishmentsCaldwellGoldDr'  , "Golden Caldwell drawing-certificat! You drawed all 110 Caldwell objects!");
+define('LangCaldwellBronzeToAccomplishDr'   , "Draw at least 25 different Caldwell objects to get this certificat!");
+define('LangCaldwellSilverToAccomplishDr'   , "Draw at least 50 different Caldwell objects to get this certificat!");
+define('LangCaldwellGoldToAccomplishDr'     , "Draw all 110 Caldwell objects to get this certificat!");
+define('LangAccomplishmentsH400Bronze', "Bronze Herschel 400 certificat! You observed 25 different Herschel 400 objects!");
+define('LangAccomplishmentsH400Silver', "Silver Herschel 400 certificat! You observed 50 different Herschel 400 objects!");
+define('LangAccomplishmentsH400Gold', "Golden Herschel 400 certificat! You observed 100 different Herschel 400 objects!");
+define('LangAccomplishmentsH400Diamond', "Diamond Herschel 400 certificat! You observed 200 different Herschel 400 objects!");
+define('LangAccomplishmentsH400Platina', "Platinum Herschel 400 certificat! You observed all 400 Herschel 400 objects!");
+define('LangH400BronzeToAccomplish'   , "Observe at least 25 different Herschel 400 objects to get this certificat!");
+define('LangH400SilverToAccomplish'   , "Observe at least 50 different Herschel 400 objects to get this certificat!");
+define('LangH400GoldToAccomplish'     , "Observe at least 100 different Herschel 400 objects to get this certificat!");
+define('LangH400DiamondToAccomplish'     , "Observe at least 200 different Herschel 400 objects to get this certificat!");
+define('LangH400PlatinaToAccomplish'     , "Observe all 400 Herschel 400 objects to get this certificat!");
+define('LangAccomplishmentsH400BronzeDr', "Bronze Herschel 400 drawing-certificat! You drawed 25 different Herschel 400 objects!");
+define('LangAccomplishmentsH400SilverDr', "Silver Herschel 400 drawing-certificat! You drawed 50 different Herschel 400 objects!");
+define('LangAccomplishmentsH400GoldDr'  , "Golden Herschel 400 drawing-certificat! You drawed 100 different Herschel 400 objects!");
+define('LangAccomplishmentsH400DiamondDr'  , "Diamond Herschel 400 drawing-certificat! You drawed 200 different Herschel 400 objects!");
+define('LangAccomplishmentsH400PlatinaDr'  , "Platinum Herschel 400 drawing-certificat! You drawed all 400 Herschel 400 objects!");
+define('LangH400BronzeToAccomplishDr'   , "Draw at least 25 different Herschel 400 objects to get this certificat!");
+define('LangH400SilverToAccomplishDr'   , "Draw at least 50 different Herschel 400 objects to get this certificat!");
+define('LangH400GoldToAccomplishDr'     , "Draw at least 100 different Herschel 400 objects to get this certificat!");
+define('LangH400DiamondToAccomplishDr'     , "Draw at least 200 different Herschel 400 objects to get this certificat!");
+define('LangH400PlatinaToAccomplishDr'     , "Draw all 400 Herschel 400 objects to get this certificat!");
+define('LangAccomplishmentsHIIBronze', "Bronze Herschel II certificat! You observed 25 different Herschel II objects!");
+define('LangAccomplishmentsHIISilver', "Silver Herschel II certificat! You observed 50 different Herschel II objects!");
+define('LangAccomplishmentsHIIGold', "Golden Herschel II certificat! You observed 100 different Herschel II objects!");
+define('LangAccomplishmentsHIIDiamond', "Diamond Herschel II certificat! You observed 200 different Herschel II objects!");
+define('LangAccomplishmentsHIIPlatina', "Platinum Herschel II certificat! You observed all II Herschel II objects!");
+define('LangHIIBronzeToAccomplish'   , "Observe at least 25 different Herschel II objects to get this certificat!");
+define('LangHIISilverToAccomplish'   , "Observe at least 50 different Herschel II objects to get this certificat!");
+define('LangHIIGoldToAccomplish'     , "Observe at least 100 different Herschel II objects to get this certificat!");
+define('LangHIIDiamondToAccomplish'     , "Observe at least 200 different Herschel II objects to get this certificat!");
+define('LangHIIPlatinaToAccomplish'     , "Observe all II Herschel II objects to get this certificat!");
+define('LangAccomplishmentsHIIBronzeDr', "Bronze Herschel II drawing-certificat! You drawed 25 different Herschel II objects!");
+define('LangAccomplishmentsHIISilverDr', "Silver Herschel II drawing-certificat! You drawed 50 different Herschel II objects!");
+define('LangAccomplishmentsHIIGoldDr'  , "Golden Herschel II drawing-certificat! You drawed 100 different Herschel II objects!");
+define('LangAccomplishmentsHIIDiamondDr'  , "Diamond Herschel II drawing-certificat! You drawed 200 different Herschel II objects!");
+define('LangAccomplishmentsHIIPlatinaDr'  , "Platinum Herschel II drawing-certificat! You drawed all II Herschel II objects!");
+define('LangHIIBronzeToAccomplishDr'   , "Draw at least 25 different Herschel II objects to get this certificat!");
+define('LangHIISilverToAccomplishDr'   , "Draw at least 50 different Herschel II objects to get this certificat!");
+define('LangHIIGoldToAccomplishDr'     , "Draw at least 100 different Herschel II objects to get this certificat!");
+define('LangHIIDiamondToAccomplishDr'     , "Draw at least 200 different Herschel II objects to get this certificat!");
+define('LangHIIPlatinaToAccomplishDr'     , "Draw all II Herschel II objects to get this certificat!");
 define('LangSessionDateOverlap'   ,'The new session overlaps with an existing session. Please adapt the date so that there is no longer an overlap.');
 define('LangTopObjectsDrawnTitle' ,'Les objets les plus populaires (dessins)');
 define('LangDescription'          ,'Description');
@@ -1560,7 +1638,8 @@ define("LangCSVMessage2"																	,"Le fichier csv utilse le format suiva
 define("LangCSVMessage3"																	,"<span class=\"bold\"><i> 1-Objet; 2-Observateur; 3-Date; 4-TU; 5-Endroit; 6-Instrument; 7-Oculaire; 8-Filtre; 9-Lentille; 10-Seeing; 11-LimMag ou SQM comme vous voulez; 12-Visibilit&eacute;; 13-Langue; 14-Description</i></span>");
 define("LangCSVMessage4"																	,"<span class=\"bold\">Attention!</span> Contrairement &agrave; la version 3.3 et pr&eacute;c&eacute;dentes, le fichier <span class=\"bold\">ne peut plus</span> contenir <span class=\"underline\">une ligne de t&ecirc;te</span>, 
                            																	la premi&egrave;re ligne contient directement des observations dans le format mentionn&eacute;, par exemple: <br /><br />
-                           																	NGC 2392;Jean Leduc;21-01-2005;20:45;Mons;Obsession 15\";31mm Nagler;Lumicon O-III filter;2;4.0;3;nl;Une belle n&eacute;bulosit&eacute; plan&eacute;taire avec &eacute;toile centrale visible!<br />M 35;Jean Leduc;21-01-2005;20:53;Mons;Obsession 15\";;;2;4.0;1;nl;Plus ou moins trente membres dans des lignes courb&eacute;es.<br />...<br /><br />Le seeing est indiqu&eacute; avec un num&eacute;ro entre 1 et 5 (1=excellent, 2=bien, 3=m&eacute;diocre, 4=faible, 5=mauvais).<br />La visibilit&eacute; est indiqu&eacute;e avec un num&eacute;ro entre 1 et 7 (1=Objet tr&egrave;s facile et clair, 2=Objet facilement visible &agrave; vision direct, 3=Objet visible &agrave; vision direct, 4=Vision p&eacute;riph&eacute;rique n&eacute;cessaire pour voir  l'objet, 5=Objet difficilement visible en vision p&eacute;riph&eacute;rique, 6=Visibilit&eacute; de l'objet est douteuse, 7=L'objet n'est pas visible).<br />Une observation &agrave; l'oeil nu doit &ecirc;tre enregistr&eacute;e avec l'instrument 'Naked Eye' (en anglais!).<br />Indiquez 'fr' dans le champs 'langue'");
+                           																	NGC 2392;Jean Leduc;21-01-2005;20:45;Mons;Obsession 15\";31mm Nagler;Lumicon O-III filter;2;4.0;3;nl;Une belle n&eacute;bulosit&eacute; plan&eacute;taire avec &eacute;toile centrale visible!<br />M 35;Jean Leduc;21-01-2005;20:53;Mons;Obsession 15\";;;2;4.0;1;nl;Plus ou moins trente membres dans des lignes courb&eacute;es.<br />...<br /><br />Le seeing est indiqu&eacute; avec un num&eacute;ro entre 1 et 5 (1=excellent, 2=bien, 3=m&eacute;diocre, 4=faible, 5=mauvais).<br />La visibilit&eacute; est indiqu&eacute;e avec un num&eacute;ro entre 1 et 7 (1=Objet tr&egrave;s facile et clair, 2=Objet facilement visible &agrave; vision direct, 3=Objet visible &agrave; vision direct, 4=Vision p&eacute;riph&eacute;rique n&eacute;cessaire pour voir  l'objet, 5=Objet difficilement visible en vision p&eacute;riph&eacute;rique, 6=Visibilit&eacute; de l'objet est douteuse, 7=L'objet n'est pas visible).<br />Une observation &agrave; l'oeil nu doit &ecirc;tre enregistr&eacute;e avec l'
+instrument 'Naked Eye' (en anglais!).<br />Indiquez 'fr' dans le champs 'langue'");
 define("LangCSVMessage5"																	,"Attention!<br />Les instruments, les endroits, les oculaires, filters et les objets dans le fichier csv doivent d&eacute;j&agrave; &ecirc;tre connus par DeepskyLog. 
                            																	Si ceci n'est pas le cas, un message d'erreur sera affich&eacute; et ces observation ne seront pas enregistr&eacute;es.<br />
                            																	L'information manquante ou erroneuse doit &ecirc;tre remplie &agrave; la main ou adapt&eacute;e jusqu'au moment o&ugrave; il n'y a plus de messages d'erreur.<br />&nbsp;<br />
