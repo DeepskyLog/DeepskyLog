@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 4.4
+define('LangSessionDateOverlap'   ,'De nieuwe sessie overlapt met een bestaande sessie. Gelieve de datum aan te passen zodat er geen overlap is.');
 define('LangTopObjectsDrawnTitle' ,'Meest getekende objecten');
 define('LangDescription'          ,'Beschrijving');
 define('GraphAccomplishments'			,'DeepskyLog sterren');

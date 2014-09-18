@@ -1,5 +1,6 @@
 <?php //FR
 // This is version 4.4
+define('LangSessionDateOverlap'   ,'The new session overlaps with an existing session. Please adapt the date so that there is no longer an overlap.');
 define('LangTopObjectsDrawnTitle' ,'Les objets les plus populaires (dessins)');
 define('LangDescription'          ,'Description');
 define('GraphAccomplishments'			,'&Eacute;toiles de DeepskyLog');
