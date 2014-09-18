@@ -12,19 +12,10 @@ else
 function overview_observers() {
 	global $baseURL, $step, $objObserver, $objPresentations, $objUtil;
 	set_time_limit ( 60 );
-	$sort = $objUtil->checkGetKey ( 'sort', 'inverse.observers.registrationDate' );
-	if ((array_key_exists ( 'observersArr', $_SESSION )) && ($_SESSION ['observersArrSort'] == $sort)) {
-		$observersArr = $_SESSION ['observersArr'];
-	} elseif (array_key_exists ( 'observersArr', $_SESSION ) && ($_SESSION ['observersArrSort'] != $sort)) {
-		$observersArr = $_SESSION ['observersArr'];
-		$observersArr = $objUtil->recordsetSort ( $observersArr, ((substr ( $sort, 0, 10 ) == "observers.") ? substr ( $sort, 10 ) : $sort), SORT_ASC, SORT_ASC );
-		$_SESSION ['observersArr'] = $observersArr;
-		$_SESSION ['observersArrSort'] = $sort;
-	} else {
-		$observersArr = $objObserver->getSortedObserversAdmin ( $sort );
-		$_SESSION ['observersArr'] = $observersArr;
-		$_SESSION ['observersArrSort'] = $sort;
-	}
+	$sort = $objUtil->checkGetKey ( 'sort', 'observers.registrationDate DESC' );
+	$observersArr = $objObserver->getSortedObserversAdmin ( $sort );
+	$_SESSION ['observersArr'] = $observersArr;
+	$_SESSION ['observersArrSort'] = $sort;
 	echo "<div id=\"main\">";
 	echo "<h4>" . LangViewObserverTitle . "</h4>";
 	echo "<hr />";
