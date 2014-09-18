@@ -59,7 +59,7 @@ class Sessions {
 		}
 	}
 	public function addSession($sessionname, $beginday, $beginmonth, $beginyear, $beginhours, $beginminutes, $endday, $endmonth, $endyear, $endhours, $endminutes, $location, $weather, $equipment, $comments, $language, $observers, $sessionid) {
-		global $objDatabase, $loggedUser, $dateformat;
+		global $objDatabase, $loggedUser, $dateformat, $entryMessage;
 		// Make sure not to insert bad code in the database
 		$name = preg_replace ( "/(\")/", "", $sessionname );
 		$name = preg_replace ( "/;/", ",", $name );
@@ -67,6 +67,38 @@ class Sessions {
 		$begindate = date ( 'Y-m-d H:i:s', mktime ( $beginhours, $beginminutes, 0, $beginmonth, $beginday, $beginyear ) );
 		$enddate = date ( 'Y-m-d H:i:s', mktime ( $endhours, $endminutes, 0, $endmonth, $endday, $endyear ) );
 		
+		// Check if the date already is used in another session.
+		$existing_sessions = $this->getAllSessionsForUser ( $loggedUser );
+		$return = false;
+		for($i = 0; $i < count ( $existing_sessions ); $i ++) {
+			$session_begindate = $existing_sessions [$i] ['begindate'];
+			$session_enddate = $existing_sessions [$i] ['enddate'];
+			
+			
+			// Check if the begindate of the new session is in one of the other existing sessions
+			$start_ts = strtotime($session_begindate);
+			$end_ts = strtotime($session_enddate);
+			$user_ts = strtotime($begindate);
+			
+			// Check that user date is between start & end
+			if (($user_ts >= $start_ts) && ($user_ts <= $end_ts)) {
+				$return = true;
+			}
+
+			// Check if the enddate of the new session is in one of the other existing sessions
+			$user_ts = strtotime($enddate);
+				
+			// Check that user date is between start & end
+			if (($user_ts >= $start_ts) && ($user_ts <= $end_ts)) {
+				$return = true;
+			}
+		}
+		if ($return) {
+			$entryMessage = LangSessionDateOverlap;
+			$_GET ['indexAction'] = 'add_session';
+			return;
+		}
+
 		// Auto-generate the session name
 		if ($name == "") {
 			if ($beginday == $endday && $beginmonth == $endmonth && $beginyear == $endyear) {
