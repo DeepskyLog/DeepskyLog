@@ -735,9 +735,9 @@ function view_observer() {
 	
 	// Total number of open clusters drawn
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Drawings of open clusters</h4>";
+	echo "<h4>" . LangOpenClusterDrawings . "</h4>";
 	
-	drawStar ( $objAccomplishments->getOpenClusterDrawingsNewbie ( $user ), "newbie", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getOpenClusterDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getOpenClusterDrawingsRookie ( $user ), "rookie", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getOpenClusterDrawingsBeginner ( $user ), "beginner", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getOpenClusterDrawingsTalented ( $user ), "talented", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
@@ -752,9 +752,9 @@ function view_observer() {
 	
 	// Total number of globular clusters
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Globular clusters seen</h4>";
+	echo "<h4>" . LangGlobularClusters . "</h4>";
 	
-	drawStar ( $objAccomplishments->getGlobularClustersNewbie ( $user ), "newbie", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getGlobularClustersNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getGlobularClustersRookie ( $user ), "rookie", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getGlobularClustersBeginner ( $user ), "beginner", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getGlobularClustersTalented ( $user ), "talented", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
@@ -768,9 +768,9 @@ function view_observer() {
 	
 	// Total number of globular clusters drawn
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Drawings of globular clusters</h4>";
+	echo "<h4>" . LangGlobularClusterDrawings . "</h4>";
 	
-	drawStar ( $objAccomplishments->getGlobularClusterDrawingsNewbie ( $user ), "newbie", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getGlobularClusterDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getGlobularClusterDrawingsRookie ( $user ), "rookie", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getGlobularClusterDrawingsBeginner ( $user ), "beginner", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getGlobularClusterDrawingsTalented ( $user ), "talented", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
@@ -785,9 +785,9 @@ function view_observer() {
 	
 	// Total number of planetary nebulae
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Planetary Nebulae seen</h4>";
+	echo "<h4>" . LangPlanetaryNebulaeSeen . "</h4>";
 	
-	drawStar ( $objAccomplishments->getPlanetaryNebulaNewbie ( $user ), "newbie", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getPlanetaryNebulaNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaRookie ( $user ), "rookie", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaBeginner ( $user ), "beginner", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaTalented ( $user ), "talented", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
@@ -801,9 +801,9 @@ function view_observer() {
 	
 	// Total number of planetary nebulae drawn
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Drawings of planetary nebulae</h4>";
+	echo "<h4>" . LangPlanetaryNebulaDrawings . "</h4>";
 	
-	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsNewbie ( $user ), "newbie", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsRookie ( $user ), "rookie", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsBeginner ( $user ), "beginner", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsTalented ( $user ), "talented", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
@@ -818,9 +818,9 @@ function view_observer() {
 	
 	// Total number of galaxies
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Galaxies seen</h4>";
+	echo "<h4>" . LangGalaxiesSeen . "</h4>";
 	
-	drawStar ( $objAccomplishments->getGalaxyNewbie ( $user ), "newbie", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getGalaxyNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getGalaxyRookie ( $user ), "rookie", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getGalaxyBeginner ( $user ), "beginner", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getGalaxyTalented ( $user ), "talented", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
@@ -834,9 +834,9 @@ function view_observer() {
 	
 	// Total number of galaxies drawn
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Drawings of galaxies</h4>";
+	echo "<h4>" . LangGalaxyDrawings . "</h4>";
 	
-	drawStar ( $objAccomplishments->getGalaxyDrawingsNewbie ( $user ), "newbie", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getGalaxyDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getGalaxyDrawingsRookie ( $user ), "rookie", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getGalaxyDrawingsBeginner ( $user ), "beginner", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getGalaxyDrawingsTalented ( $user ), "talented", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
@@ -851,9 +851,9 @@ function view_observer() {
 	
 	// Total number of nebulae
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Nebulae seen</h4>";
+	echo "<h4>" . LangNebulaeSeen . "</h4>";
 	
-	drawStar ( $objAccomplishments->getNebulaNewbie ( $user ), "newbie", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getNebulaNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getNebulaRookie ( $user ), "rookie", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getNebulaBeginner ( $user ), "beginner", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getNebulaTalented ( $user ), "talented", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
@@ -867,9 +867,9 @@ function view_observer() {
 	
 	// Total number of nebulae drawn
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Drawings of nebulae</h4>";
+	echo "<h4>" . LangNebulaeDrawings . "</h4>";
 	
-	drawStar ( $objAccomplishments->getNebulaDrawingsNewbie ( $user ), "newbie", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getNebulaDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getNebulaDrawingsRookie ( $user ), "rookie", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getNebulaDrawingsBeginner ( $user ), "beginner", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getNebulaDrawingsTalented ( $user ), "talented", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
@@ -884,9 +884,9 @@ function view_observer() {
 	
 	// Total number of different objects
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Different objects seen</h4>";
+	echo "<h4>" . LangDifferentObjectsSeen . "</h4>";
 	
-	drawStar ( $objAccomplishments->getObjectsNewbie ( $user ), "newbie", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getObjectsNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getObjectsRookie ( $user ), "rookie", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getObjectsBeginner ( $user ), "beginner", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getObjectsTalented ( $user ), "talented", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
@@ -900,9 +900,9 @@ function view_observer() {
 	
 	// Total number of nebulae drawn
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Drawings of different objects</h4>";
+	echo "<h4>" . LangDifferentObjectsDrawings . "</h4>";
 	
-	drawStar ( $objAccomplishments->getObjectsDrawingsNewbie ( $user ), "newbie", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getObjectsDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getObjectsDrawingsRookie ( $user ), "rookie", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getObjectsDrawingsBeginner ( $user ), "beginner", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getObjectsDrawingsTalented ( $user ), "talented", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
@@ -917,9 +917,9 @@ function view_observer() {
 	
 	// Total number of comet observations
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Total comet observations</h4>";
+	echo "<h4>" . LangTotalCometsSeen . "</h4>";
 	
-	drawStar ( $objAccomplishments->getCometObservationsNewbie ( $user ), "newbie", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getCometObservationsNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getCometObservationsRookie ( $user ), "rookie", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getCometObservationsBeginner ( $user ), "beginner", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getCometObservationsTalented ( $user ), "talented", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
@@ -933,9 +933,9 @@ function view_observer() {
 	
 	// Total number of different comets seen
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Different comets seen</h4>";
+	echo "<h4>" . LangDifferentCometsSeen . "</h4>";
 	
-	drawStar ( $objAccomplishments->getObjectsDrawingsNewbie ( $user ), "newbie", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getObjectsDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getSeenAccomplishment ( 1 ), $objUtil->getSeenToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getObjectsDrawingsRookie ( $user ), "rookie", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getObjectsDrawingsBeginner ( $user ), "beginner", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getObjectsDrawingsTalented ( $user ), "talented", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
@@ -950,9 +950,9 @@ function view_observer() {
 	
 	// Total number of different comet drawings
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Drawings of comets</h4>";
+	echo "<h4>" . LangCometDrawings . "</h4>";
 	
-	drawStar ( $objAccomplishments->getCometDrawingsNewbie ( $user ), "newbie", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getCometDrawingsNewbie ( $user ), 1, "newbie", $objUtil->getDrawAccomplishment ( 1 ), $objUtil->getDrawToAccomplish ( 1 ) );
 	drawStar ( $objAccomplishments->getCometDrawingsRookie ( $user ), "rookie", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getCometDrawingsBeginner ( $user ), "beginner", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getCometDrawingsTalented ( $user ), "talented", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );

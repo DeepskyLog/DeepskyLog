@@ -1,6 +1,20 @@
 <?php //NL
 // This is version 4.4
+define('LangCometDrawings', 'Tekeningen van kometen');
+define('LangDifferentObjectsDrawings', 'Tekeningen van verschillende objecten');
+define('LangNebulaeDrawings', 'Tekeningen van nevels');
+define('LangGalaxyDrawings', 'Tekeningen van sterrenstelsels');
+define('LangPlanetaryNebulaDrawings', 'Tekeningen van planetaire nevels');
+define('LangDifferentCometsSeen', 'Verschillende kometen');
+define('LangTotalCometsSeen', 'Totaal aantal kometen');
+define('LangDifferentObjectsSeen', 'Verschillende objecten');
+define('LangNebulaeSeen', 'Nevels');
+define('LangGalaxiesSeen', 'Sterrenstelsels');
+define('LangPlanetaryNebulaeSeen', 'Planetaire nevels');
 define('LangOpenClusters', 'Open sterrenhopen');
+define('LangOpenClusterDrawings', 'Tekeningen van open sterrenhopen');
+define('LangGlobularClusters', 'Bolhopen');
+define('LangGlobularClusterDrawings', 'Tekeningen van bolhopen');
 define('LangMessier','Messier objecten');
 define('LangMessierDrawings','Tekeningen van Messier objecten');
 define('LangCaldwell','Caldwell objecten');

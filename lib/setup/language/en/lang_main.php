@@ -1,5 +1,20 @@
 <?php //EN
 // This is version 4.4
+define('LangCometDrawings', 'Drawings of comets');
+define('LangDifferentObjectsDrawings', 'Drawings of different objects');
+define('LangNebulaeDrawings', 'Drawings of nebulae');
+define('LangGalaxyDrawings', 'Drawings of galaxies');
+define('LangPlanetaryNebulaDrawings', 'Drawings of planetary nebulae');
+define('LangDifferentCometsSeen', 'Different comets');
+define('LangTotalCometsSeen', 'Total comet observations');
+define('LangDifferentObjectsSeen', 'Different objects');
+define('LangNebulaeSeen', 'Nebulae');
+define('LangGalaxiesSeen', 'Galaxies');
+define('LangPlanetaryNebulaeSeen', 'Planetary Nebulae');
+define('LangOpenClusters', 'Open clusters');
+define('LangOpenClusterDrawings', 'Drawings of open clusters');
+define('LangGlobularClusters', 'Globular clusters');
+define('LangGlobularClusterDrawings', 'Drawings of globular clusters');
 define('LangMessier','Messier objects');
 define('LangMessierDrawings','Drawings of Messier objects');
 define('LangCaldwell','Caldwell objects');
