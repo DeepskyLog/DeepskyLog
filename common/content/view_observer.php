@@ -702,18 +702,19 @@ function view_observer() {
 	
 	// Total number of drawings
 	echo "<div class=\"accomplishmentRow\">";
-	echo "<h4>Drawings</h4>";
+	echo "<h4>" . LangTotalDrawings . "</h4>";
 	
-	drawStar ( $objAccomplishments->getDrawingsNewbie ( $user ), "newbie", "Bronzen caldwell certificaat! Je hebt 25 verschillende caldwell objecten waargenomen!", "Neem minimaal 25 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getDrawingsRookie ( $user ), "rookie", "Zilveren caldwell certificaat! Je hebt 50 verschillende caldwell objecten waargenomen!", "Neem minimaal 50 verschillende caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getDrawingsBeginner ( $user ), "beginner", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getDrawingsTalented ( $user ), "talented", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getDrawingsSkilled ( $user ), "skilled", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getDrawingsIntermediate ( $user ), "intermediate", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getDrawingsExperienced ( $user ), "experienced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getDrawingsAdvanced ( $user ), "advanced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getDrawingsSenior ( $user ), "senior", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getDrawingsExpert ( $user ), "expert", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getDrawingsNewbie ( $user ), LangAccomplishmentsNewbie, "newbie", $objUtil->getDrawAccomplishment(1), $objUtil->getDrawToAccomplish(1) );
+	drawStar ( $objAccomplishments->getDrawingsRookie ( $user ), LangAccomplishmentsRookie, "rookie", $objUtil->getDrawAccomplishment(10), $objUtil->getDrawToAccomplish(10) );
+	drawStar ( $objAccomplishments->getDrawingsBeginner ( $user ), LangAccomplishmentsBeginner, "beginner", $objUtil->getDrawAccomplishment(25), $objUtil->getDrawToAccomplish(25) );
+	drawStar ( $objAccomplishments->getDrawingsTalented ( $user ), LangAccomplishmentsTalented, "talented", $objUtil->getDrawAccomplishment(50), $objUtil->getDrawToAccomplish(50) );
+	drawStar ( $objAccomplishments->getDrawingsSkilled ( $user ), LangAccomplishmentsSkilled, "skilled", $objUtil->getDrawAccomplishment(100), $objUtil->getDrawToAccomplish(100) );
+	drawStar ( $objAccomplishments->getDrawingsIntermediate ( $user ), LangAccomplishmentsIntermediate, "intermediate", $objUtil->getDrawAccomplishment(250), $objUtil->getDrawToAccomplish(250) );
+	drawStar ( $objAccomplishments->getDrawingsExperienced ( $user ), LangAccomplishmentsExperienced, "experienced", $objUtil->getDrawAccomplishment(500), $objUtil->getDrawToAccomplish(500) );
+	drawStar ( $objAccomplishments->getDrawingsAdvanced ( $user ), LangAccomplishmentsAdvanced, "advanced", $objUtil->getDrawAccomplishment(1000), $objUtil->getDrawToAccomplish(1000) );
+	drawStar ( $objAccomplishments->getDrawingsSenior ( $user ), LangAccomplishmentsSenior, "senior", $objUtil->getDrawAccomplishment(2500), $objUtil->getDrawToAccomplish(2500) );
+	drawStar ( $objAccomplishments->getDrawingsExpert ( $user ), LangAccomplishmentsExpert, "expert", $objUtil->getDrawAccomplishment(5000), $objUtil->getDrawToAccomplish(5000) );
+
 	echo "</div>";
 	
 	// Total number of open clusters

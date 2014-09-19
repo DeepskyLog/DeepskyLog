@@ -8,12 +8,22 @@ define('LangHerschel400','Herschel 400 objects');
 define('LangHerschel400Drawings','Drawings of Herschel 400 objects');
 define('LangHerschelII','Herschel II objects');
 define('LangHerschelIIDrawings','Drawings of Herschel II objects');
-
+define('LangTotalDrawings','Total number of drawings');
 define('LangAccomplishmentsBronze','Bronze');
 define('LangAccomplishmentsSilver','Silber');
 define('LangAccomplishmentsGold','Gold');
 define('LangAccomplishmentsDiamond','Diamant');
 define('LangAccomplishmentsPlatina','Platin');
+define('LangAccomplishmentsNewbie', 'Newbie');
+define('LangAccomplishmentsRookie', 'Rookie');
+define('LangAccomplishmentsBeginner', 'Beginner');
+define('LangAccomplishmentsTalented', 'Talented');
+define('LangAccomplishmentsSkilled', 'Skilled');
+define('LangAccomplishmentsIntermediate', 'Intermediate');
+define('LangAccomplishmentsExperienced', 'Experienced');
+define('LangAccomplishmentsAdvanced', 'Advanced');
+define('LangAccomplishmentsSenior', 'Senior');
+define('LangAccomplishmentsExpert', 'Expert');
 define('LangAccomplishmentsMessierBronze', "Bronze Messier-Zertifikat! Sie haben 25 verschiedene Messier-Objekte beobachtet!");
 define('LangAccomplishmentsMessierSilver', "Silber Messier-Zertifikat! Sie haben 50 verschiedene Messier-Objekte beobachtet!");
 define('LangAccomplishmentsMessierGold'  , "Goldene Messier-Zertifikat! Sie haben alle 110 Messier Objekte beobachtet!");
@@ -78,6 +88,10 @@ define('LangHIISilverToAccomplishDr'   , "Draw at least 50 different Herschel II
 define('LangHIIGoldToAccomplishDr'     , "Draw at least 100 different Herschel II objects to get this certificat!");
 define('LangHIIDiamondToAccomplishDr'     , "Draw at least 200 different Herschel II objects to get this certificat!");
 define('LangHIIPlatinaToAccomplishDr'     , "Draw all II Herschel II objects to get this certificat!");
+define('LangDrawAccomplishment1', 'You have made ');
+define('LangDrawAccomplishment2', ' drawings!');
+define('LangDrawToAccomplish1', 'Make ');
+define('LangDrawToAccomplish2', ' drawings to receive this certificat!');
 
 define('LangSessionDateOverlap'   ,'The new session overlaps with an existing session. Please adapt the date so that there is no longer an overlap.');
 define('LangTopObjectsDrawnTitle' ,'Beliebteste Objekte (Zeichnungen)');

@@ -2591,6 +2591,14 @@ class Utils {
 		}
 	}
 	
+	public function getDrawAccomplishment($number) {
+		return LangDrawAccomplishment1 . $number . LangDrawAccomplishment2;
+	}
+	
+	public function getDrawToAccomplish($number) {
+		return LangDrawToAccomplish1 . $number . LangDrawToAccomplish2;
+	}
+	
 	// Add the table
 	public function addTableColumSelector() {
 		// Add the button for the columns

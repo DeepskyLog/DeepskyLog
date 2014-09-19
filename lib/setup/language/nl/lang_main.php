@@ -8,12 +8,22 @@ define('LangHerschel400','Herschel 400 objecten');
 define('LangHerschel400Drawings','Tekeningen van Herschel 400 objecten');
 define('LangHerschelII','Herschel II objecten');
 define('LangHerschelIIDrawings','Tekeningen van Herschel II objecten');
-
+define('LangTotalDrawings','Totaal aantal tekeningen');
 define('LangAccomplishmentsBronze','Brons');
 define('LangAccomplishmentsSilver','Zilver');
 define('LangAccomplishmentsGold','Goud');
 define('LangAccomplishmentsDiamond','Diamant');
 define('LangAccomplishmentsPlatina','Platina');
+define('LangAccomplishmentsNewbie', 'Newbie');
+define('LangAccomplishmentsRookie', 'Rookie');
+define('LangAccomplishmentsBeginner', 'Beginner');
+define('LangAccomplishmentsTalented', 'Talented');
+define('LangAccomplishmentsSkilled', 'Skilled');
+define('LangAccomplishmentsIntermediate', 'Intermediate');
+define('LangAccomplishmentsExperienced', 'Experienced');
+define('LangAccomplishmentsAdvanced', 'Advanced');
+define('LangAccomplishmentsSenior', 'Senior');
+define('LangAccomplishmentsExpert', 'Expert');
 define('LangAccomplishmentsMessierBronze'  , "Bronzen Messier certificaat! Je hebt 25 verschillende Messier objecten waargenomen!");
 define('LangAccomplishmentsMessierSilver'  , "Zilveren Messier certificaat! Je hebt 50 verschillende Messier objecten waargenomen!");
 define('LangAccomplishmentsMessierGold'    , "Gouden Messier certificaat! Je hebt alle 110 Messier objecten waargenomen!");
@@ -78,6 +88,10 @@ define('LangHIISilverToAccomplishDr'     , "Teken minimaal 50 verschillende Hers
 define('LangHIIGoldToAccomplishDr'       , "Teken minimaal 100 verschillende Herschel II objecten om dit certificaat te krijgen!");
 define('LangHIIDiamondToAccomplishDr'       , "Teken minimaal 200 verschillende Herschel II objecten om dit certificaat te krijgen!");
 define('LangHIIPlatinaToAccomplishDr'       , "Teken alle II Herschel II objecten om dit certificaat te krijgen!");
+define('LangDrawAccomplishment1', 'Je hebt ');
+define('LangDrawAccomplishment2', ' tekeningen gemaakt!');
+define('LangDrawToAccomplish1', 'Maak ');
+define('LangDrawToAccomplish2', ' tekeningen om dit certificaat te ontvangen!');
 
 define('LangSessionDateOverlap'   ,'De nieuwe sessie overlapt met een bestaande sessie. Gelieve de datum aan te passen zodat er geen overlap is.');
 define('LangTopObjectsDrawnTitle' ,'Meest getekende objecten');
