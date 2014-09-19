@@ -743,8 +743,8 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getOpenClusterDrawingsTalented ( $user ), ( int ) (1700 / 100), "talented", $objUtil->getDrawAccomplishment ( 1700 / 100 ), $objUtil->getDrawToAccomplish ( 1700 / 100 ) );
 	drawStar ( $objAccomplishments->getOpenClusterDrawingsSkilled ( $user ), ( int ) (1700 / 50), "skilled", $objUtil->getDrawAccomplishment ( 1700 / 50 ), $objUtil->getDrawToAccomplish ( 1700 / 50 ) );
 	drawStar ( $objAccomplishments->getOpenClusterDrawingsIntermediate ( $user ), ( int ) (1700 / 20), "intermediate", $objUtil->getDrawAccomplishment ( 1700 / 20 ), $objUtil->getDrawToAccomplish ( 1700 / 20 ) );
-	drawStar ( $objAccomplishments->getOpenClusterDrawingsExperienced ( $user ), "experienced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getOpenClusterDrawingsAdvanced ( $user ), "advanced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getOpenClusterDrawingsExperienced ( $user ), ( int ) (1700 / 10), "experienced", $objUtil->getDrawAccomplishment ( 1700 / 10 ), $objUtil->getDrawToAccomplish ( 1700 / 10 ) );
+	drawStar ( $objAccomplishments->getOpenClusterDrawingsAdvanced ( $user ), ( int ) (1700 / 5), "advanced", $objUtil->getDrawAccomplishment ( 1700 / 5 ), $objUtil->getDrawToAccomplish ( 1700 / 5 ) );
 	drawStar ( $objAccomplishments->getOpenClusterDrawingsSenior ( $user ), "senior", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getOpenClusterDrawingsExpert ( $user ), "expert", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	
@@ -760,8 +760,8 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getGlobularClustersTalented ( $user ), 4, "talented", $objUtil->getSeenAccomplishment ( 4 ), $objUtil->getSeenToAccomplish ( 4 ) );
 	drawStar ( $objAccomplishments->getGlobularClustersSkilled ( $user ), 5, "skilled", $objUtil->getSeenAccomplishment ( 5 ), $objUtil->getSeenToAccomplish ( 5 ) );
 	drawStar ( $objAccomplishments->getGlobularClustersIntermediate ( $user ), ( int ) (152 / 20), "intermediate", $objUtil->getSeenAccomplishment ( 152 / 20 ), $objUtil->getSeenToAccomplish ( 152 / 20 ) );
-	drawStar ( $objAccomplishments->getGlobularClustersExperienced ( $user ), "experienced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getGlobularClustersAdvanced ( $user ), "advanced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getGlobularClustersExperienced ( $user ), ( int ) (152 / 10), "experienced", $objUtil->getSeenAccomplishment ( 152 / 10 ), $objUtil->getSeenToAccomplish ( 152 / 10 ) );
+	drawStar ( $objAccomplishments->getGlobularClustersAdvanced ( $user ), ( int ) (152 / 5), "advanced", $objUtil->getSeenAccomplishment ( 152 / 5 ), $objUtil->getSeenToAccomplish ( 152 / 5 ) );
 	drawStar ( $objAccomplishments->getGlobularClustersSenior ( $user ), "senior", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getGlobularClustersExpert ( $user ), "expert", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	echo "</div>";
@@ -776,8 +776,8 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getGlobularClusterDrawingsTalented ( $user ), 4, "talented", $objUtil->getDrawAccomplishment ( 4 ), $objUtil->getDrawToAccomplish ( 4 ) );
 	drawStar ( $objAccomplishments->getGlobularClusterDrawingsSkilled ( $user ), 5, "skilled", $objUtil->getDrawAccomplishment ( 5 ), $objUtil->getDrawToAccomplish ( 5 ) );
 	drawStar ( $objAccomplishments->getGlobularClusterDrawingsIntermediate ( $user ), ( int ) (152 / 20), "intermediate", $objUtil->getDrawAccomplishment ( 152 / 20 ), $objUtil->getDrawToAccomplish ( 152 / 20 ) );
-	drawStar ( $objAccomplishments->getGlobularClusterDrawingsExperienced ( $user ), "experienced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getGlobularClusterDrawingsAdvanced ( $user ), "advanced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getGlobularClusterDrawingsExperienced ( $user ), ( int ) (152 / 10), "experienced", $objUtil->getDrawAccomplishment ( 152 / 10 ), $objUtil->getDrawToAccomplish ( 152 / 10 ) );
+	drawStar ( $objAccomplishments->getGlobularClusterDrawingsAdvanced ( $user ), ( int ) (152 / 5), "advanced", $objUtil->getDrawAccomplishment ( 152 / 5 ), $objUtil->getDrawToAccomplish ( 152 / 5 ) );
 	drawStar ( $objAccomplishments->getGlobularClusterDrawingsSenior ( $user ), "senior", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getGlobularClusterDrawingsExpert ( $user ), "expert", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	
@@ -793,8 +793,8 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getPlanetaryNebulaTalented ( $user ), ( int ) (1023 / 100), "talented", $objUtil->getSeenAccomplishment ( 1023 / 100 ), $objUtil->getSeenToAccomplish ( 1023 / 100 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaSkilled ( $user ), ( int ) (1023 / 50), "skilled", $objUtil->getSeenAccomplishment ( 1023 / 50 ), $objUtil->getSeenToAccomplish ( 1023 / 50 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaIntermediate ( $user ), ( int ) (1023 / 20), "intermediate", $objUtil->getSeenAccomplishment ( 1023 / 20 ), $objUtil->getSeenToAccomplish ( 1023 / 20 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaExperienced ( $user ), "experienced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaAdvanced ( $user ), "advanced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getPlanetaryNebulaExperienced ( $user ), ( int ) (1023 / 10), "experienced", $objUtil->getSeenAccomplishment ( 1023 / 10 ), $objUtil->getSeenToAccomplish ( 1023 / 10 ) );
+	drawStar ( $objAccomplishments->getPlanetaryNebulaAdvanced ( $user ), ( int ) (1023 / 10), "advanced", $objUtil->getSeenAccomplishment ( 1023 / 5 ), $objUtil->getSeenToAccomplish ( 1023 / 5 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaSenior ( $user ), "senior", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaExpert ( $user ), "expert", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	echo "</div>";
@@ -809,8 +809,8 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsTalented ( $user ), ( int ) (1023 / 100), "talented", $objUtil->getDrawAccomplishment ( 1023 / 100 ), $objUtil->getDrawToAccomplish ( 1023 / 100 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsSkilled ( $user ), ( int ) (1023 / 50), "skilled", $objUtil->getDrawAccomplishment ( 1023 / 50 ), $objUtil->getDrawToAccomplish ( 1023 / 50 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsIntermediate ( $user ), ( int ) (1023 / 20), "intermediate", $objUtil->getDrawAccomplishment ( 1023 / 20 ), $objUtil->getDrawToAccomplish ( 1023 / 20 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsExperienced ( $user ), "experienced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsAdvanced ( $user ), "advanced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsExperienced ( $user ), ( int ) (1023 / 10), "experienced", $objUtil->getDrawAccomplishment ( 1023 / 10 ), $objUtil->getDrawToAccomplish ( 1023 / 10 ) );
+	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsAdvanced ( $user ), ( int ) (1023 / 5), "advanced", $objUtil->getDrawAccomplishment ( 1023 / 5 ), $objUtil->getDrawToAccomplish ( 1023 / 5 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsSenior ( $user ), "senior", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaDrawingsExpert ( $user ), "expert", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	
@@ -826,8 +826,8 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getGalaxyTalented ( $user ), 50, "talented", $objUtil->getSeenAccomplishment ( 50 ), $objUtil->getSeenToAccomplish ( 50 ) );
 	drawStar ( $objAccomplishments->getGalaxySkilled ( $user ), 100, "skilled", $objUtil->getSeenAccomplishment ( 100 ), $objUtil->getSeenToAccomplish ( 100 ) );
 	drawStar ( $objAccomplishments->getGalaxyIntermediate ( $user ), 250, "intermediate", $objUtil->getSeenAccomplishment ( 250 ), $objUtil->getSeenToAccomplish ( 250 ) );
-	drawStar ( $objAccomplishments->getGalaxyExperienced ( $user ), "experienced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getGalaxyAdvanced ( $user ), "advanced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getGalaxyExperienced ( $user ), 500, "experienced", $objUtil->getSeenAccomplishment ( 500 ), $objUtil->getSeenToAccomplish ( 500 ) );
+	drawStar ( $objAccomplishments->getGalaxyAdvanced ( $user ), 1000, "advanced", $objUtil->getSeenAccomplishment ( 1000 ), $objUtil->getSeenToAccomplish ( 1000 ) );
 	drawStar ( $objAccomplishments->getGalaxySenior ( $user ), "senior", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getGalaxyExpert ( $user ), "expert", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	echo "</div>";
@@ -842,8 +842,8 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getGalaxyDrawingsTalented ( $user ), 50, "talented", $objUtil->getDrawAccomplishment ( 50 ), $objUtil->getDrawToAccomplish ( 50 ) );
 	drawStar ( $objAccomplishments->getGalaxyDrawingsSkilled ( $user ), 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100) );
 	drawStar ( $objAccomplishments->getGalaxyDrawingsIntermediate ( $user ), 250, "intermediate", $objUtil->getDrawAccomplishment ( 250 ), $objUtil->getDrawToAccomplish ( 250 ) );
-	drawStar ( $objAccomplishments->getGalaxyDrawingsExperienced ( $user ), "experienced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getGalaxyDrawingsAdvanced ( $user ), "advanced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getGalaxyDrawingsExperienced ( $user ), 500, "experienced", $objUtil->getDrawAccomplishment ( 500 ), $objUtil->getDrawToAccomplish ( 500 ) );
+	drawStar ( $objAccomplishments->getGalaxyDrawingsAdvanced ( $user ), 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
 	drawStar ( $objAccomplishments->getGalaxyDrawingsSenior ( $user ), "senior", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getGalaxyDrawingsExpert ( $user ), "expert", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	
@@ -859,8 +859,8 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getNebulaTalented ( $user ), 4, "talented", $objUtil->getSeenAccomplishment ( 4 ), $objUtil->getSeenToAccomplish ( 4 ) );
 	drawStar ( $objAccomplishments->getNebulaSkilled ( $user ), ( int ) (384 / 50), "skilled", $objUtil->getSeenAccomplishment ( 384 / 50 ), $objUtil->getSeenToAccomplish ( 384 / 50 ) );
 	drawStar ( $objAccomplishments->getNebulaIntermediate ( $user ), ( int ) (384 / 20), "intermediate", $objUtil->getSeenAccomplishment ( 384 / 20 ), $objUtil->getSeenToAccomplish ( 384 / 20 ) );
-	drawStar ( $objAccomplishments->getNebulaExperienced ( $user ), "experienced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getNebulaAdvanced ( $user ), "advanced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getNebulaExperienced ( $user ), ( int ) (384 / 10), "experienced", $objUtil->getSeenAccomplishment ( 384 / 10 ), $objUtil->getSeenToAccomplish ( 384 / 10 ) );
+	drawStar ( $objAccomplishments->getNebulaAdvanced ( $user ), ( int ) (384 / 5), "advanced", $objUtil->getSeenAccomplishment ( 384 / 5 ), $objUtil->getSeenToAccomplish ( 384 / 5 ) );
 	drawStar ( $objAccomplishments->getNebulaSenior ( $user ), "senior", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getNebulaExpert ( $user ), "expert", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	echo "</div>";
@@ -875,8 +875,8 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getNebulaDrawingsTalented ( $user ), 4, "talented", $objUtil->getDrawAccomplishment ( 4 ), $objUtil->getDrawToAccomplish ( 4 ) );
 	drawStar ( $objAccomplishments->getNebulaDrawingsSkilled ( $user ), (int) (384 / 50), "skilled", $objUtil->getDrawAccomplishment ( 384 / 50 ), $objUtil->getDrawToAccomplish ( 384 / 50 ) );
 	drawStar ( $objAccomplishments->getNebulaDrawingsIntermediate ( $user ), ( int ) (384 / 20), "intermediate", $objUtil->getDrawAccomplishment ( 384 / 20 ), $objUtil->getDrawToAccomplish ( 384 / 20 ) );
-	drawStar ( $objAccomplishments->getNebulaDrawingsExperienced ( $user ), "experienced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getNebulaDrawingsAdvanced ( $user ), "advanced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getNebulaDrawingsExperienced ( $user ), ( int ) (384 / 10), "experienced", $objUtil->getDrawAccomplishment ( 384 / 10 ), $objUtil->getDrawToAccomplish ( 384 / 10 ) );
+	drawStar ( $objAccomplishments->getNebulaDrawingsAdvanced ( $user ), ( int ) (384 / 5), "advanced", $objUtil->getDrawAccomplishment ( 384 / 5 ), $objUtil->getDrawToAccomplish ( 384 / 5 ) );
 	drawStar ( $objAccomplishments->getNebulaDrawingsSenior ( $user ), "senior", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getNebulaDrawingsExpert ( $user ), "expert", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	
@@ -892,8 +892,8 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getObjectsTalented ( $user ), 50, "talented", $objUtil->getSeenAccomplishment ( 50 ), $objUtil->getSeenToAccomplish ( 50 ) );
 	drawStar ( $objAccomplishments->getObjectsSkilled ( $user ), 100, "skilled", $objUtil->getSeenAccomplishment ( 100 ), $objUtil->getSeenToAccomplish ( 100 ) );
 	drawStar ( $objAccomplishments->getObjectsIntermediate ( $user ), 250, "intermediate", $objUtil->getSeenAccomplishment ( 250 ), $objUtil->getSeenToAccomplish ( 250 ) );
-	drawStar ( $objAccomplishments->getObjectsExperienced ( $user ), "experienced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getObjectsAdvanced ( $user ), "advanced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getObjectsExperienced ( $user ), 500, "experienced", $objUtil->getSeenAccomplishment ( 500 ), $objUtil->getSeenToAccomplish ( 500 ) );
+	drawStar ( $objAccomplishments->getObjectsAdvanced ( $user ), 1000, "advanced", $objUtil->getSeenAccomplishment ( 1000 ), $objUtil->getSeenToAccomplish ( 1000 ) );
 	drawStar ( $objAccomplishments->getObjectsSenior ( $user ), "senior", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getObjectsExpert ( $user ), "expert", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	echo "</div>";
@@ -908,8 +908,8 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getObjectsDrawingsTalented ( $user ), 50, "talented", $objUtil->getDrawAccomplishment ( 50 ), $objUtil->getDrawToAccomplish ( 50 ) );
 	drawStar ( $objAccomplishments->getObjectsDrawingsSkilled ( $user ), 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100) );
 	drawStar ( $objAccomplishments->getObjectsDrawingsIntermediate ( $user ), 250, "intermediate", $objUtil->getDrawAccomplishment ( 250 ), $objUtil->getDrawToAccomplish ( 250 ) );
-	drawStar ( $objAccomplishments->getObjectsDrawingsExperienced ( $user ), "experienced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getObjectsDrawingsAdvanced ( $user ), "advanced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getObjectsDrawingsExperienced ( $user ), 500, "experienced", $objUtil->getDrawAccomplishment ( 500 ), $objUtil->getDrawToAccomplish ( 500 ) );
+	drawStar ( $objAccomplishments->getObjectsDrawingsAdvanced ( $user ), 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
 	drawStar ( $objAccomplishments->getObjectsDrawingsSenior ( $user ), "senior", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getObjectsDrawingsExpert ( $user ), "expert", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	
@@ -925,8 +925,8 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getCometObservationsTalented ( $user ), 50, "talented", $objUtil->getSeenAccomplishment ( 50 ), $objUtil->getSeenToAccomplish ( 50 ) );
 	drawStar ( $objAccomplishments->getCometObservationsSkilled ( $user ), 100, "skilled", $objUtil->getSeenAccomplishment ( 100 ), $objUtil->getSeenToAccomplish ( 100 ) );
 	drawStar ( $objAccomplishments->getCometObservationsIntermediate ( $user ), 250, "intermediate", $objUtil->getSeenAccomplishment ( 250 ), $objUtil->getSeenToAccomplish ( 250 ) );
-	drawStar ( $objAccomplishments->getCometObservationsExperienced ( $user ), "experienced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getCometObservationsAdvanced ( $user ), "advanced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getCometObservationsExperienced ( $user ), 500, "experienced", $objUtil->getSeenAccomplishment ( 500 ), $objUtil->getSeenToAccomplish ( 500 ) );
+	drawStar ( $objAccomplishments->getCometObservationsAdvanced ( $user ), 1000, "advanced", $objUtil->getSeenAccomplishment ( 1000 ), $objUtil->getSeenToAccomplish ( 1000 ) );
 	drawStar ( $objAccomplishments->getCometObservationsSenior ( $user ), "senior", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getCometObservationsExpert ( $user ), "expert", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	echo "</div>";
@@ -941,8 +941,8 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getCometsObservedTalented ( $user ), 50, "talented", $objUtil->getSeenAccomplishment ( 50 ), $objUtil->getSeenToAccomplish ( 50 ) );
 	drawStar ( $objAccomplishments->getCometsObservedSkilled ( $user ), 100, "skilled", $objUtil->getSeenAccomplishment ( 100 ), $objUtil->getSeenToAccomplish ( 100 ) );
 	drawStar ( $objAccomplishments->getCometsObservedIntermediate ( $user ), 250, "intermediate", $objUtil->getSeenAccomplishment ( 250 ), $objUtil->getSeenToAccomplish ( 250 ) );
-	drawStar ( $objAccomplishments->getCometsObservedExperienced ( $user ), "experienced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getCometsObservedAdvanced ( $user ), "advanced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getCometsObservedExperienced ( $user ), 500, "experienced", $objUtil->getSeenAccomplishment ( 500 ), $objUtil->getSeenToAccomplish ( 500 ) );
+	drawStar ( $objAccomplishments->getCometsObservedAdvanced ( $user ), 1000, "advanced", $objUtil->getSeenAccomplishment ( 1000 ), $objUtil->getSeenToAccomplish ( 1000 ) );
 	drawStar ( $objAccomplishments->getCometsObservedSenior ( $user ), "senior", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getCometsObservedExpert ( $user ), "expert", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	
@@ -958,8 +958,8 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getCometDrawingsTalented ( $user ), 50, "talented", $objUtil->getDrawAccomplishment ( 50 ), $objUtil->getDrawToAccomplish ( 50 ) );
 	drawStar ( $objAccomplishments->getCometDrawingsSkilled ( $user ), 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100) );
 	drawStar ( $objAccomplishments->getCometDrawingsIntermediate ( $user ), 250, "intermediate", $objUtil->getDrawAccomplishment ( 250 ), $objUtil->getDrawToAccomplish ( 250 ) );
-	drawStar ( $objAccomplishments->getCometDrawingsExperienced ( $user ), "experienced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
-	drawStar ( $objAccomplishments->getCometDrawingsAdvanced ( $user ), "advanced", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
+	drawStar ( $objAccomplishments->getCometDrawingsExperienced ( $user ), 500, "experienced", $objUtil->getDrawAccomplishment ( 500 ), $objUtil->getDrawToAccomplish ( 500 ) );
+	drawStar ( $objAccomplishments->getCometDrawingsAdvanced ( $user ), 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
 	drawStar ( $objAccomplishments->getCometDrawingsSenior ( $user ), "senior", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	drawStar ( $objAccomplishments->getCometDrawingsExpert ( $user ), "expert", "Gouden caldwell certificaat! Je hebt alle 110 caldwell objecten waargenomen!", "Neem alle 110 caldwell objecten waar om dit certificaat te krijgen!" );
 	
@@ -974,8 +974,6 @@ function view_observer() {
 function drawStar($done, $text, $color, $tooltip, $tooltipToDo) {
 	global $baseURL;
 	
-	// TODO : Vul tooptips
-	// TODO : Tekst komt uit taalfiles!
 	if ($done) {
 		print "<div class=\"star\" id=\"" . $color . "\">";
 		print "<div class=\"accomplishmentText\" title=\"" . $tooltip . "\">" . ucfirst ( $text ) . "</div>";
