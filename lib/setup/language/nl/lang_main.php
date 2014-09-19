@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 4.4
+define('LangOpenClusters', 'Open sterrenhopen');
 define('LangMessier','Messier objecten');
 define('LangMessierDrawings','Tekeningen van Messier objecten');
 define('LangCaldwell','Caldwell objecten');
@@ -92,6 +93,10 @@ define('LangDrawAccomplishment1', 'Je hebt ');
 define('LangDrawAccomplishment2', ' tekeningen gemaakt!');
 define('LangDrawToAccomplish1', 'Maak ');
 define('LangDrawToAccomplish2', ' tekeningen om dit certificaat te ontvangen!');
+define('LangSeenAccomplishment1', 'Je hebt ');
+define('LangSeenAccomplishment2', ' waarnemingen!');
+define('LangSeenToAccomplish1', 'Doe ');
+define('LangSeenToAccomplish2', ' waarnemingen om dit certificaat te ontvangen!');
 
 define('LangSessionDateOverlap'   ,'De nieuwe sessie overlapt met een bestaande sessie. Gelieve de datum aan te passen zodat er geen overlap is.');
 define('LangTopObjectsDrawnTitle' ,'Meest getekende objecten');

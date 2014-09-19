@@ -93,6 +93,10 @@ define('LangDrawAccomplishment1', 'You have made ');
 define('LangDrawAccomplishment2', ' drawings!');
 define('LangDrawToAccomplish1', 'Make ');
 define('LangDrawToAccomplish2', ' drawings to receive this certificat!');
+define('LangSeenAccomplishment1', 'You have made ');
+define('LangSeenAccomplishment2', ' observations!');
+define('LangSeenToAccomplish1', 'Make ');
+define('LangSeenToAccomplish2', ' observations to receive this certificat!');
 
 define('LangSessionDateOverlap'   ,'The new session overlaps with an existing session. Please adapt the date so that there is no longer an overlap.');
 define('LangTopObjectsDrawnTitle' ,'Most popular objects (drawings)');
