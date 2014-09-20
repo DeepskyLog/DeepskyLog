@@ -76,8 +76,14 @@ class Messages {
 		return $objDatabase->selectSingleValue ( "select date from messages where id = \"" . $id . "\"", "date" );
 	}
 	public function getContent($id) {
-		global $objDatabase;
-		return $objDatabase->selectSingleValue ( "select message from messages where id = \"" . $id . "\"", "message" );
+		global $objDatabase, $baseURL;
+		$message = $objDatabase->selectSingleValue ( "select message from messages where id = \"" . $id . "\"", "message" );
+		$message = str_replace ( 'http://www.deepskylog.be/', $baseURL, $message );
+		$message = str_replace ( 'http://www.deepskylog.nl/', $baseURL, $message );
+		$message = str_replace ( 'http://www.deepskylog.de/', $baseURL, $message );
+		$message = str_replace ( 'http://www.deepskylog.fr/', $baseURL, $message );
+		$message = str_replace ( 'http://www.deepskylog.org/', $baseURL, $message );
+		return $message;
 	}
 	public function removeAllMessages($id) {
 		global $objDatabase;

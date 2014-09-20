@@ -57,7 +57,7 @@ function view_message() {
 		
 		echo "<hr />";
 		
-		// When the user is not logged in, it should not be possibleto have links in the mails
+		// When the user is not logged in, it should not be possible to have links in the mails
 		if ($loggedUser == "") {
 			echo $objMessages->getContentWithoutLinks ( $id );
 		} else {

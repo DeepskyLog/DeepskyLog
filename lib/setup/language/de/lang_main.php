@@ -1,5 +1,12 @@
 <?php //GE
 // This is version 4.4
+define('LangDrawCheckout', ' and receive a certificat! Check out your accomplishments at ');
+define('LangDrawCongrats', 'Congratulations! You have drawn ');
+define('LangCheckout', ' and receive a certificat! Check out your accomplishments at ');
+define('LangCongrats', 'Congratulations! You have observed ');
+define('LangNewCertificat', 'New certificat! ');
+define('LangObserved', ' observed!');
+define('LangAccomplishmentsDrawn', ' drawn!');
 define('LangCometDrawings', 'Drawings of comets');
 define('LangDifferentObjectsDrawings', 'Drawings of different objects');
 define('LangNebulaeDrawings', 'Drawings of nebulae');

@@ -71,11 +71,9 @@ class Lists
 
        $subject = LangMessagePublicList1 . $listname . LangMessagePublicList2 . $username;
        $message = LangMessagePublicList3;
-       $message = $message . LangMessagePublicList4 . "<a href=\"" . $baseURL . 
-                    "index.php?indexAction=listaction&amp;activateList=true&amp;listname=Public:%20" . urlencode($listname) . "\">" . 
+       $message = $message . LangMessagePublicList4 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=Public:%20" . urlencode($listname) . "\">" . 
        							$listname . "</a><br /><br />";
-       $message = $message . LangMessagePublicList5 . "<a href=\"" . $baseURL . 
-	    						"index.php?indexAction=new_message&amp;receiver=" . urlencode($loggedUser) . 
+       $message = $message . LangMessagePublicList5 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode($loggedUser) . 
 	    						"&amp;subject=Re:%20" . urlencode($listname) . "\">" . $username . "</a>";
        							
        $objMessages->sendMessage("DeepskyLog", "all", $subject, $message);
@@ -310,11 +308,9 @@ class Lists
 
          $subject = LangMessagePublicList1 . $listname . LangMessagePublicList2 . $username;
          $message = LangMessagePublicList3;
-         $message = $message . LangMessagePublicList4 . "<a href=\"" . $baseURL . 
-                    "index.php?indexAction=listaction&amp;activateList=true&amp;listname=Public:%20" . urlencode($listname) . "\">" . 
+         $message = $message . LangMessagePublicList4 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=listaction&amp;activateList=true&amp;listname=Public:%20" . urlencode($listname) . "\">" . 
        							$listname . "</a><br /><br />";
-         $message = $message . LangMessagePublicList5 . "<a href=\"" . $baseURL . 
-	    						"index.php?indexAction=new_message&amp;receiver=" . urlencode($loggedUser) . 
+         $message = $message . LangMessagePublicList5 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode($loggedUser) . 
 	    						"&amp;subject=Re:%20" . urlencode($listname) . "\">" . $username . "</a>";
        							
          $objMessages->sendMessage("DeepskyLog", "all", $subject, $message);

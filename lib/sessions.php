@@ -187,8 +187,8 @@ class Sessions {
 		$subject = $observername . LangAddSessionMessageTitle;
 		$sessionname = $this->getSessionPropertyFromId ( $id, "name" );
 		$content = $observername . LangAddSessionMessage1 . $sessionname . LangAddSessionMessage2;
-		$content .= "<br /><br />" . LangAddSessionMessage3 . "<a href=\"" . $baseURL . "index.php?indexAction=add_session\">" . LangAddSessionMessage4;
-		$content .= "<br /><br />" . LangMessagePublicList5 . "<a href=\"" . $baseURL . "index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $sessionname ) . "\">" . $observername . "</a>";
+		$content .= "<br /><br />" . LangAddSessionMessage3 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=add_session\">" . LangAddSessionMessage4;
+		$content .= "<br /><br />" . LangMessagePublicList5 . "<a href=\"http://www.deepskylog.org/index.php?indexAction=new_message&amp;receiver=" . urlencode ( $loggedUser ) . "&amp;subject=Re:%20" . urlencode ( $sessionname ) . "\">" . $observername . "</a>";
 		$content .= "<br /><br />Zend een bericht naar " . $observername;
 		if ($loggedUser != $observer) {
 			$objMessages->sendMessage ( $loggedUser, $observer, $subject, $content );

@@ -1683,8 +1683,24 @@ class Accomplishments {
   	$this->recalculateCometDrawings($observerId);
   }
   
+  public function getSeenSubject($catalog, $numberOfObjects) {
+  	return LangNewCertificat . $numberOfObjects . ' ' . $catalog . LangObserved;
+  }
+
+  public function getSeenMessage($catalog, $numberOfObjects) {
+  	return LangCongrats . $numberOfObjects . " " . $catalog . LangCheckout . " http://www.deepskylog.org/index.php?indexAction=detail_observer3&user=\"" . $observerId . "\"";
+  }
+  
+  public function getDrawSubject($catalog, $numberOfObjects) {
+  	return LangNewCertificat . $numberOfObjects . ' ' . $catalog . LangAccomplishmentsDrawn;
+  }
+
+  public function getDrawMessage($catalog, $numberOfObjects) {
+  	return LangDrawCongrats . $numberOfObjects . " " . $catalog . LangDrawCheckout . " http://www.deepskylog.org/index.php?indexAction=detail_observer3&user=\"" . $observerId . "\"";
+  }
+  
   public function recalculateMessiers($observerId) {
-  	global $objDatabase;
+  	global $objDatabase, $objMessages;
   	// MESSIER
   	$messiers = $this->calculateMessier($observerId);
   	$oldMessierBronze = $this->getMessierBronze($observerId);
@@ -1693,8 +1709,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   	
   	if ($oldMessierBronze == 0 && $newMessierBronze == 1) {
-  		// TODO : Send mail
-  		print "Congratulations! You observed all messier objects and receive a bronze messier certificat! <tekening> Check out your accomplishments at http://www.deepskylog.org/index.php?indexAction=detail_observer3&user=\"" . $observerId . "\"" ;
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangMessier, 25), $this->getSeenMessage(LangMessier, 25));
   	}
   	 
   	$oldMessierSilver = $this->getMessierSilver($observerId);
@@ -1703,7 +1718,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   	
   	if ($oldMessierSilver == 0 && $newMessierSilver == 1) {
-  		// TODO : Send mail
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangMessier, 50), $this->getSeenMessage(LangMessier, 50));
   	}
   	 
   	$oldMessierGold = $this->getMessierGold($observerId);
@@ -1712,9 +1727,9 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   	 
   	if ($oldMessierGold == 0 && $newMessierGold == 1) {
-  		// TODO : Send mail
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangMessier, 110), $this->getSeenMessage(LangMessier, 110));
   	}
-  	 
+
   	// MESSIER DRAWINGS
   	$messierDrawings = $this->calculateMessierDrawings($observerId);
   	$oldMessierDrawingsBronze = $this->getMessierDrawingsBronze($observerId);
@@ -1723,7 +1738,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   	
   	if ($oldMessierDrawingsBronze == 0 && $newMessierDrawingsBronze == 1) {
-  		// TODO : Send mail
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangMessier, 25), $this->getDrawMessage(LangMessier, 25));
   	}
   	 
   	$oldMessierDrawingsSilver = $this->getMessierDrawingsSilver($observerId);
@@ -1732,7 +1747,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   	
   	if ($oldMessierDrawingsSilver == 0 && $newMessierDrawingsSilver == 1) {
-  		// TODO : Send mail
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangMessier, 50), $this->getDrawMessage(LangMessier, 50));
   	}
   	 
   	$oldMessierDrawingsGold = $this->getMessierDrawingsGold($observerId);
@@ -1741,12 +1756,12 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   	 
   	if ($oldMessierDrawingsGold == 0 && $newMessierDrawingsGold == 1) {
-  		// TODO : Send mail
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangMessier, 110), $this->getDrawMessage(LangMessier, 110));
   	}
   }
   
   public function recalculateCaldwells($observerId) {
-  	global $objDatabase;
+  	global $objDatabase, $objMessages;
   	// CALDWELL
   	$caldwells = $this->calculateCaldwell($observerId);
   	$oldCaldwellBronze = $this->getCaldwellBronze($observerId);

@@ -446,25 +446,25 @@
 			$subject = 'Je hebt &eacute;&eacute;n of meerdere realisaties in DeepskyLog!';
 			$content = 'Proficiat ' . $firstname;
 			$content = $content . ', <br/><br/>Je hebt &eacute;&eacute;n of meerdere realisaties in DeepskyLog!<br/><br/>';
-			$content = $content . 'Bekijk je realisaties op <a href="http://www.deepskylog.be/index.php?indexAction=detail_observer3&user=' . $value . '">http://www.deepskylog.be/index.php?indexAction=detail_observer3&user=' . $value . '</a>';
+			$content = $content . 'Bekijk je realisaties op <a href="http://www.deepskylog.org/index.php?indexAction=detail_observer3&user=' . $value . '">http://www.deepskylog.be/index.php?indexAction=detail_observer3&user=' . $value . '</a>';
 			$content = $content . '<br /><br />Het DeepskyLog team';
 		} else if ($get->language == "en") {
 			$subject = 'You have one of more realisations in DeepskyLog!';
 			$content = 'Congratulations ' . $firstname;
 			$content = $content . ', <br/><br/>You have one or more realisations in DeepskyLog!<br/><br/>';
-			$content = $content . 'Look at your realisation at <a href="http://www.deepskylog.be/index.php?indexAction=detail_observer3&user=' . $value . '">http://www.deepskylog.org/index.php?indexAction=detail_observer3&user=' . $value . '</a>';
+			$content = $content . 'Look at your realisation at <a href="http://www.deepskylog.org/index.php?indexAction=detail_observer3&user=' . $value . '">http://www.deepskylog.org/index.php?indexAction=detail_observer3&user=' . $value . '</a>';
 			$content = $content . '<br /><br />The DeepskyLog team';
 		} else if ($get->language == "fr") {
 			$subject = 'Vous avez une ou plusieures r&eacute;alisations dans DeepskyLog!';
 			$content = 'F&eacute;licitations ' . $firstname;
 			$content = $content . ', <br/><br/>Vous avez une ou plusieures r&eacute;alisations dans DeepskyLog!<br/><br/>';
-			$content = $content . 'Regardez vos r&eacute;alisations &agrave; <a href="http://www.deepskylog.be/index.php?indexAction=detail_observer3&user=' . $value . '">http://www.deepskylog.fr/index.php?indexAction=detail_observer3&user=' . $value . '</a>';
+			$content = $content . 'Regardez vos r&eacute;alisations &agrave; <a href="http://www.deepskylog.org/index.php?indexAction=detail_observer3&user=' . $value . '">http://www.deepskylog.fr/index.php?indexAction=detail_observer3&user=' . $value . '</a>';
 			$content = $content . '<br /><br />Le team DeepskyLog';
 		} else {
 			$subject = 'Sie haben ein oder mehrere Realisierungen in DeepskyLog!';
 			$content = 'Gratulation ' . $firstname;
 			$content = $content . ', <br/><br/>Sie haben ein oder mehrere Realisierungen in DeepskyLog!<br/><br/>';
-			$content = $content . 'Sehen Sie Ihre Erkenntnisse auf <a href="http://www.deepskylog.de/index.php?indexAction=detail_observer3&user=' . $value . '">http://www.deepskylog.be/index.php?indexAction=detail_observer3&user=' . $value . '</a>';
+			$content = $content . 'Sehen Sie Ihre Erkenntnisse auf <a href="http://www.deepskylog.org/index.php?indexAction=detail_observer3&user=' . $value . '">http://www.deepskylog.be/index.php?indexAction=detail_observer3&user=' . $value . '</a>';
 			$content = $content . '<br /><br />Das DeepskyLog Team';
 		}
 
