@@ -2,11 +2,11 @@
 // This is version 4.4
 define('LangComets', 'kometen');
 define('LangDifferentComets', 'verschillende kometen');
-define('LangDrawCheckout', ' getekend en ontvangt een certificaat! Bekijk je certificaten op ');
+define('LangDrawCheckout', ' getekend en ontvangt een DeepskyLog ster! Bekijk je DeepskyLog sterren op ');
 define('LangDrawCongrats', 'Proficiat! Je hebt ');
-define('LangCheckout', ' waargenomen en ontvangt een certificaat! Bekijk je certificaten op ');
+define('LangCheckout', ' waargenomen en ontvangt een DeepskyLog ster! Bekijk je DeepskyLog sterren op ');
 define('LangCongrats', 'Proficiat! Je hebt ');
-define('LangNewCertificat', 'Nieuw certificaat! ');
+define('LangNewCertificat', 'Nieuwe DeepskyLog ster! ');
 define('LangAccomplishmentsObjects', 'objecten');
 define('LangAccomplishmentsDifferentObjects', 'verschillende objecten');
 define('LangObserved', ' waargenomen!');
@@ -117,11 +117,11 @@ define('LangHIIPlatinaToAccomplishDr'       , "Teken alle II Herschel II objecte
 define('LangDrawAccomplishment1', 'Je hebt ');
 define('LangDrawAccomplishment2', ' tekeningen gemaakt!');
 define('LangDrawToAccomplish1', 'Maak ');
-define('LangDrawToAccomplish2', ' tekeningen om dit certificaat te ontvangen!');
+define('LangDrawToAccomplish2', ' tekeningen om deze DeepskyLog ster te ontvangen!');
 define('LangSeenAccomplishment1', 'Je hebt ');
 define('LangSeenAccomplishment2', ' waarnemingen!');
 define('LangSeenToAccomplish1', 'Doe ');
-define('LangSeenToAccomplish2', ' waarnemingen om dit certificaat te ontvangen!');
+define('LangSeenToAccomplish2', ' waarnemingen om deze DeepskyLog ster te ontvangen!');
 
 define('LangSessionDateOverlap'   ,'De nieuwe sessie overlapt met een bestaande sessie. Gelieve de datum aan te passen zodat er geen overlap is.');
 define('LangTopObjectsDrawnTitle' ,'Meest getekende objecten');

@@ -2,13 +2,13 @@
 // This is version 4.4
 define('LangComets', 'comets');
 define('LangDifferentComets', 'different comets');
-define('LangDrawCheckout', ' and receive a certificat! Check out your accomplishments at ');
+define('LangDrawCheckout', ' and receive a DeepskyLog star! Check out your DeepskyLog stars at ');
 define('LangDrawCongrats', 'Congratulations! You have drawn ');
-define('LangCheckout', ' and receive a certificat! Check out your accomplishments at ');
+define('LangCheckout', ' and receive a DeepskyLog star! Check out your DeepskyLog stars at ');
 define('LangCongrats', 'Congratulations! You have observed ');
 define('LangAccomplishmentsObjects', 'objects');
 define('LangAccomplishmentsDifferentObjects', 'different objects');
-define('LangNewCertificat', 'New certificat! ');
+define('LangNewCertificat', 'New DeepskyLog star! ');
 define('LangObserved', ' observed!');
 define('LangAccomplishmentsDrawn', ' drawn!');
 define('LangCometDrawings', 'Drawings of comets');
@@ -117,11 +117,11 @@ define('LangHIIPlatinaToAccomplishDr'     , "Draw all II Herschel II objects to 
 define('LangDrawAccomplishment1', 'You have made ');
 define('LangDrawAccomplishment2', ' drawings!');
 define('LangDrawToAccomplish1', 'Make ');
-define('LangDrawToAccomplish2', ' drawings to receive this certificat!');
+define('LangDrawToAccomplish2', ' drawings to receive this DeepskyLog star!');
 define('LangSeenAccomplishment1', 'You have made ');
 define('LangSeenAccomplishment2', ' observations!');
 define('LangSeenToAccomplish1', 'Make ');
-define('LangSeenToAccomplish2', ' observations to receive this certificat!');
+define('LangSeenToAccomplish2', ' observations to receive this DeepskyLog star!');
 
 define('LangSessionDateOverlap'   ,'The new session overlaps with an existing session. Please adapt the date so that there is no longer an overlap.');
 define('LangTopObjectsDrawnTitle' ,'Beliebteste Objekte (Zeichnungen)');
