@@ -1,10 +1,14 @@
 <?php //NL
 // This is version 4.4
+define('LangComets', 'kometen');
+define('LangDifferentComets', 'verschillende kometen');
 define('LangDrawCheckout', ' getekend en ontvangt een certificaat! Bekijk je certificaten op ');
 define('LangDrawCongrats', 'Proficiat! Je hebt ');
 define('LangCheckout', ' waargenomen en ontvangt een certificaat! Bekijk je certificaten op ');
 define('LangCongrats', 'Proficiat! Je hebt ');
 define('LangNewCertificat', 'Nieuw certificaat! ');
+define('LangAccomplishmentsObjects', 'objecten');
+define('LangAccomplishmentsDifferentObjects', 'verschillende objecten');
 define('LangObserved', ' waargenomen!');
 define('LangAccomplishmentsDrawn', ' getekend!');
 define('LangCometDrawings', 'Tekeningen van kometen');

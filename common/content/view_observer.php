@@ -794,7 +794,7 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getPlanetaryNebulaSkilled ( $user ), ( int ) (1023 / 50), "skilled", $objUtil->getSeenAccomplishment ( 1023 / 50 ), $objUtil->getSeenToAccomplish ( 1023 / 50 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaIntermediate ( $user ), ( int ) (1023 / 20), "intermediate", $objUtil->getSeenAccomplishment ( 1023 / 20 ), $objUtil->getSeenToAccomplish ( 1023 / 20 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaExperienced ( $user ), ( int ) (1023 / 10), "experienced", $objUtil->getSeenAccomplishment ( 1023 / 10 ), $objUtil->getSeenToAccomplish ( 1023 / 10 ) );
-	drawStar ( $objAccomplishments->getPlanetaryNebulaAdvanced ( $user ), ( int ) (1023 / 10), "advanced", $objUtil->getSeenAccomplishment ( 1023 / 5 ), $objUtil->getSeenToAccomplish ( 1023 / 5 ) );
+	drawStar ( $objAccomplishments->getPlanetaryNebulaAdvanced ( $user ), ( int ) (1023 / 5), "advanced", $objUtil->getSeenAccomplishment ( 1023 / 5 ), $objUtil->getSeenToAccomplish ( 1023 / 5 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaSenior ( $user ), ( int ) (1023 / 2), "senior", $objUtil->getSeenAccomplishment ( 1023 / 2 ), $objUtil->getSeenToAccomplish ( 1023 / 2 ) );
 	drawStar ( $objAccomplishments->getPlanetaryNebulaExpert ( $user ), 1023, "expert", $objUtil->getSeenAccomplishment ( 1023 ), $objUtil->getSeenToAccomplish ( 1023 ) );
 	echo "</div>";

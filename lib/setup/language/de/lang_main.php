@@ -1,9 +1,13 @@
 <?php //GE
 // This is version 4.4
+define('LangComets', 'comets');
+define('LangDifferentComets', 'different comets');
 define('LangDrawCheckout', ' and receive a certificat! Check out your accomplishments at ');
 define('LangDrawCongrats', 'Congratulations! You have drawn ');
 define('LangCheckout', ' and receive a certificat! Check out your accomplishments at ');
 define('LangCongrats', 'Congratulations! You have observed ');
+define('LangAccomplishmentsObjects', 'objects');
+define('LangAccomplishmentsDifferentObjects', 'different objects');
 define('LangNewCertificat', 'New certificat! ');
 define('LangObserved', ' observed!');
 define('LangAccomplishmentsDrawn', ' drawn!');
