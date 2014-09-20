@@ -1,6 +1,13 @@
 <?php //NL
 // This is version 4.4
 define('LangComets', 'kometen');
+define('LangComet', 'komeet');
+define('LangObject', 'object');
+define('LangNebula', 'nevel');
+define('LangGalaxy', 'sterrenstelsel');
+define('LangPlanetaryNebula', 'planetaire nevel');
+define('LangGlobularCluster', 'bolvormige sterrenhoop');
+define('LangOpenCluster', 'open sterrenhoop');
 define('LangDifferentComets', 'verschillende kometen');
 define('LangDrawCheckout', ' getekend en ontvangt een DeepskyLog ster! Bekijk je DeepskyLog sterren op ');
 define('LangDrawCongrats', 'Proficiat! Je hebt ');

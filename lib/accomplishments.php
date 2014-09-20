@@ -2026,7 +2026,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldDrawingsNewbie == 0 && $newDrawingsNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsObjects, 1), $this->getDrawMessage(LangAccomplishmentsObjects, 1));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangObject, 1), $this->getDrawMessage(LangObject, 1));
   	}
   
   	$oldDrawingsRookie = $this->getDrawingsRookie($observerId);
@@ -2121,7 +2121,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClustersNewbie == 0 && $newOpenClustersNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenClusters, 1), $this->getSeenMessage(LangOpenClusters, 1));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangOpenCluster, 1), $this->getSeenMessage(LangOpenCluster, 1));
   	}
   
   	$oldOpenClustersRookie = $this->getOpenClustersRookie($observerId);
@@ -2216,7 +2216,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldOpenClusterDrawingsNewbie == 0 && $newOpenClusterDrawingsNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenClusters, 1), $this->getDrawMessage(LangOpenClusters, 1));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangOpenCluster, 1), $this->getDrawMessage(LangOpenCluster, 1));
   	}
   
   	$oldOpenClusterDrawingsRookie = $this->getOpenClusterDrawingsRookie($observerId);
@@ -2311,7 +2311,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClustersNewbie == 0 && $newGlobularClustersNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularClusters, 1), $this->getSeenMessage(LangGlobularClusters, 1));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGlobularCluster, 1), $this->getSeenMessage(LangGlobularCluster, 1));
   	}
   
   	$oldGlobularClustersRookie = $this->getGlobularClustersRookie($observerId);
@@ -2406,7 +2406,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldGlobularClusterDrawingsNewbie == 0 && $newGlobularClusterDrawingsNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularClusters, 1), $this->getDrawMessage(LangGlobularClusters, 1));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGlobularCluster, 1), $this->getDrawMessage(LangGlobularCluster, 1));
   	}
   
   	$oldGlobularClusterDrawingsRookie = $this->getGlobularClusterDrawingsRookie($observerId);
@@ -2501,7 +2501,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaeNewbie == 0 && $newPlanetaryNebulaeNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebulaeSeen, 1), $this->getSeenMessage(LangPlanetaryNebulaeSeen, 1));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangPlanetaryNebula, 1), $this->getSeenMessage(LangPlanetaryNebula, 1));
   	}
   
   	$oldPlanetaryNebulaeRookie = $this->getPlanetaryNebulaRookie($observerId);
@@ -2596,7 +2596,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldPlanetaryNebulaDrawingsNewbie == 0 && $newPlanetaryNebulaDrawingsNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebulaeSeen, 1), $this->getDrawMessage(LangPlanetaryNebulaeSeen, 1));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangPlanetaryNebula, 1), $this->getDrawMessage(LangPlanetaryNebula, 1));
   	}
   
   	$oldPlanetaryNebulaDrawingsRookie = $this->getPlanetaryNebulaDrawingsRookie($observerId);
@@ -2691,7 +2691,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxiesNewbie == 0 && $newGalaxiesNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxiesSeen, 1), $this->getSeenMessage(LangGalaxiesSeen, 1));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangGalaxy, 1), $this->getSeenMessage(LangGalaxy, 1));
   	}
   
   	$oldGalaxiesRookie = $this->getGalaxyRookie($observerId);
@@ -2786,7 +2786,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldGalaxyDrawingsNewbie == 0 && $newGalaxyDrawingsNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxiesSeen, 1), $this->getDrawMessage(LangGalaxiesSeen, 1));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangGalaxy, 1), $this->getDrawMessage(LangGalaxy, 1));
   	}
   
   	$oldGalaxyDrawingsRookie = $this->getGalaxyDrawingsRookie($observerId);
@@ -2881,7 +2881,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaNewbie == 0 && $newNebulaNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangNebulaeSeen, 1), $this->getSeenMessage(LangNebulaeSeen, 1));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangNebula, 1), $this->getSeenMessage(LangNebula, 1));
   	}
   
   	$oldNebulaRookie = $this->getNebulaRookie($observerId);
@@ -2976,7 +2976,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldNebulaDrawingsNewbie == 0 && $newNebulaDrawingsNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangNebulaeSeen, 1), $this->getDrawMessage(LangNebulaeSeen, 1));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangNebula, 1), $this->getDrawMessage(LangNebula, 1));
   	}
   
   	$oldNebulaDrawingsRookie = $this->getNebulaDrawingsRookie($observerId);
@@ -3071,7 +3071,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldObjectsNewbie == 0 && $newObjectsNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangAccomplishmentsDifferentObjects, 1), $this->getSeenMessage(LangAccomplishmentsDifferentObjects, 1));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangObject, 1), $this->getSeenMessage(LangObject, 1));
   	}
   
   	$oldObjectsRookie = $this->getObjectsRookie($observerId);
@@ -3165,7 +3165,7 @@ class Accomplishments {
   	$sql = "UPDATE accomplishments SET ObjectsDrawingsNewbie = " . $newObjectsDrawingsNewbie . " WHERE observer = \"". $observerId ."\";";
   	$objDatabase->execSQL($sql);
   	if ($oldObjectsDrawingsNewbie == 0 && $newObjectsDrawingsNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangAccomplishmentsDifferentObjects, 1), $this->getDrawMessage(LangAccomplishmentsDifferentObjects, 1));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangObject, 1), $this->getDrawMessage(LangObject, 1));
   	}
   
   	$oldObjectsDrawingsRookie = $this->getObjectsDrawingsRookie($observerId);
@@ -3260,7 +3260,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldCometObservationsNewbie == 0 && $newCometObservationsNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangComets, 1), $this->getSeenMessage(LangComets, 1));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangComet, 1), $this->getSeenMessage(LangComet, 1));
   	}
   
   	$oldCometObservationsRookie = $this->getCometObservationsRookie($observerId);
@@ -3355,7 +3355,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldCometsObservedNewbie == 0 && $newCometsObservedNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangDifferentComets, 1), $this->getSeenMessage(LangDifferentComets, 1));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getSeenSubject(LangComet, 1), $this->getSeenMessage(LangComet, 1));
   	}
   
   	$oldCometsObservedRookie = $this->getCometsObservedRookie($observerId);
@@ -3450,7 +3450,7 @@ class Accomplishments {
   	$objDatabase->execSQL($sql);
   
   	if ($oldCometDrawingsNewbie == 0 && $newCometDrawingsNewbie == 1) {
-  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangComets, 1), $this->getDrawMessage(LangComets, 1));
+  		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangComet, 1), $this->getDrawMessage(LangComet, 1));
   	}
   
   	$oldCometDrawingsRookie = $this->getCometDrawingsRookie($observerId);
@@ -3534,6 +3534,5 @@ class Accomplishments {
   		$objMessages->sendMessage('DeepskyLog', $loggedUser, $this->getDrawSubject(LangComets, 5000), $this->getDrawMessage(LangComets, 5000));
   	}
   }
-  // TODO : Fix first object!
 }
 ?>

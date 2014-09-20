@@ -1,6 +1,13 @@
 <?php //FR
 // This is version 4.4
 define('LangComets', 'comets');
+define('LangComet', 'comet');
+define('LangObject', 'object');
+define('LangNebula', 'nebula');
+define('LangGalaxy', 'galaxy');
+define('LangPlanetaryNebula', 'planetary nebula');
+define('LangGlobularCluster', 'globular cluster');
+define('LangOpenCluster', 'open cluster');
 define('LangDifferentComets', 'different comets');
 define('LangDrawCheckout', ' and receive a DeepskyLog star! Check out your DeepskyLog stars at ');
 define('LangDrawCongrats', 'Congratulations! You have drawn ');
@@ -8,7 +15,7 @@ define('LangCheckout', ' and receive a DeepskyLog star! Check out your DeepskyLo
 define('LangCongrats', 'Congratulations! You have observed ');
 define('LangAccomplishmentsObjects', 'objects');
 define('LangAccomplishmentsDifferentObjects', 'different objects');
-define('LangNewCertificat', 'New certificat! ');
+define('LangNewCertificat', 'New DeepskyLog star! ');
 define('LangObserved', ' observed!');
 define('LangAccomplishmentsDrawn', ' drawn!');
 define('LangCometDrawings', 'Drawings of comets');
