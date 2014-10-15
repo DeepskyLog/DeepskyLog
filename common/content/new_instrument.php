@@ -10,11 +10,7 @@ else
 function new_instrument() {
 	global $baseURL, $loggedUserName, $objInstrument, $objPresentations, $objUtil;
 	echo "<div id=\"main\">";
-	$objPresentations->line ( array (
-			"<h4>" . LangOverviewInstrumentsTitle . " " . $loggedUserName . "</h4>" 
-	), "L", array (
-			100 
-	), 30 );
+	echo "<h4>" . LangOverviewInstrumentsTitle . " " . $loggedUserName . "</h4>"; 
 	echo "<hr />";
 	$objInstrument->showInstrumentsObserver ();
 	$insts = $objInstrument->getSortedInstruments ( 'name', "", true );
@@ -66,7 +62,7 @@ function new_instrument() {
 	echo "<div class=\"form-group\">
 	       <label for=\"catalog\">" . LangAddInstrumentField4 . "</label>";
 	echo "<div class=\"form-inline\">";
-	echo "<input type=\"number\" min=\"0.01\" step=\"0.01\" required class=\"form-control\" maxlength=\"64\" name=\"focallength\" size=\"10\"  value=\"" . stripslashes ( $objUtil->checkRequestKey ( 'focallength' ) ) . stripslashes ( $objInstrument->getInstrumentPropertyFromId ( $objUtil->checkRequestKey ( 'instrumentid' ), 'diameter' ) * $objInstrument->getInstrumentPropertyFromId ( $objUtil->checkRequestKey ( 'instrumentid' ), 'fd' ) ) . "\" />" . "<select class=\"form-control\" name=\"focallengthunits\"> <option>inch</option> <option selected=\"selected\">mm</option> </select>" . "&nbsp;<span>" . LangAddInstrumentOr . "&nbsp;" . LangAddInstrumentField3 . "</span>&nbsp;" . "<input type=\"number\" min=\"0.01\" step=\"0.01\" required class=\"form-control\" maxlength=\"64\" name=\"fd\" size=\"10\" value=\"" . stripslashes ( $objUtil->checkRequestKey ( 'fd' ) ) . stripslashes ( $objInstrument->getInstrumentPropertyFromId ( $objUtil->checkRequestKey ( 'instrumentid' ), 'fd' ) ) . "\" />";
+	echo "<input type=\"number\" min=\"0.01\" step=\"0.01\" class=\"form-control\" maxlength=\"64\" name=\"focallength\" size=\"10\"  value=\"" . stripslashes ( $objUtil->checkRequestKey ( 'focallength' ) ) . stripslashes ( $objInstrument->getInstrumentPropertyFromId ( $objUtil->checkRequestKey ( 'instrumentid' ), 'diameter' ) * $objInstrument->getInstrumentPropertyFromId ( $objUtil->checkRequestKey ( 'instrumentid' ), 'fd' ) ) . "\" />" . "<select class=\"form-control\" name=\"focallengthunits\"> <option>inch</option> <option selected=\"selected\">mm</option> </select>" . "&nbsp;<span>" . LangAddInstrumentOr . "&nbsp;" . LangAddInstrumentField3 . "</span>&nbsp;" . "<input type=\"number\" min=\"0.01\" step=\"0.01\" class=\"form-control\" maxlength=\"64\" name=\"fd\" size=\"10\" value=\"" . stripslashes ( $objUtil->checkRequestKey ( 'fd' ) ) . stripslashes ( $objInstrument->getInstrumentPropertyFromId ( $objUtil->checkRequestKey ( 'instrumentid' ), 'fd' ) ) . "\" />";
 	echo "</div>";
 	echo "</div>";
 	
