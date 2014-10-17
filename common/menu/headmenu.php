@@ -109,9 +109,12 @@ function headmenu() {
             </div>
 		        <div class=\"collapse navbar-collapse \" id=\"bs-example-navbar-collapse-2\">";
 		
+		echo "<div class=\"container-fluid\">";
+		
 		require_once $_SESSION ['module'] . '/menu/date.php';
 		require_once $_SESSION ['module'] . '/menu/list.php';
 		
+		echo "</div>";
 		echo "	</div>
           </div>
         </nav>";
