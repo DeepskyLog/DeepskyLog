@@ -422,3 +422,27 @@ table.tablesorter tr.type2 td {
   background-color : #FFFFFF;
   overflow         : auto;
 }
+.observercatalogbackground {
+  background       : #FFFFFF; 
+  color            : #000000;
+  padding          : 5px 5px 5px 5px; 
+  text-align       : right;
+}
+.observercataloggreen {
+  background       : #33FF00; 
+  color            : #000000;
+  padding          : 5px 5px 5px 5px; 
+  text-align       : center;
+}
+.observercatalogred {
+  background       : #FF0000; 
+  color            : #000000;
+  padding          : 5px 5px 5px 5px; 
+  text-align       : center;
+}
+.observercatalogyellow {
+  background       : #FFFF00; 
+  color            : #000000;
+  padding          : 5px 5px 5px 5px; 
+  text-align       : center;
+}

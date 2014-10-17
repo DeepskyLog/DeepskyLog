@@ -12,14 +12,14 @@ function getLocation()
 { global $baseURL,$locationname,$countryname,$loggedUser,
          $objLocation,$objPresentations;
   echo "<div id=\"main\">";
-	$objPresentations->line(array("<h4>".LangGetLocation1."</h4>"),"L",array(),30);
+	echo "<h4>".LangGetLocation1."</h4>";
 	echo "<hr />";
 	$count=0;
 	$result=$objLocation->getLocationsFromDatabase($locationname,$countryname);
 	if(($result)&&($locationname))
 	{ echo "<div class=\"results\">".LangGetLocation2."<a href=\"".$baseURL."index.php?indexAction=search_sites\">".LangGetLocation2a."</a></div><br />";
-	  echo "<table>";
-	  echo "<tr class=\"type3\">";
+	  echo "<table class=\"table table-striped\">";
+	  echo "<tr>";
 	  echo "<td>".LangGetLocation3."</td>";
 	  echo "<td>".LangGetLocation4."</td>";
 	  echo "<td>".LangGetLocation5."</td>";

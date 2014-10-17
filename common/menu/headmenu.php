@@ -27,8 +27,7 @@ function headmenu() {
 	if ($_SESSION ['module'] == 'deepsky') {
 		require_once $instDir . $_SESSION ['module'] . '/menu/quickpickDropDown.php'; // Search MENU
 	}
-	if ($loggedUser) // LOGGED IN
-{
+	if ($loggedUser) {
 		require_once $instDir . $_SESSION ['module'] . '/menu/change.php'; // CHANGE MENU
 		if (array_key_exists ( 'admin', $_SESSION ) && ($_SESSION ['admin'] == 'yes'))
 			require_once $instDir . 'common/menu/admin.php'; // ADMINISTRATION MENU
@@ -38,8 +37,7 @@ function headmenu() {
 	require_once $instDir . 'common/menu/help.php'; // HELP MENU
 	                                                
 	// Select the standard location and instrument
-	if ($loggedUser) // LOGGED IN
-{
+	if ($loggedUser) {
 		if (array_key_exists ( 'admin', $_SESSION ) && ($_SESSION ['admin'] != 'yes')) {
 			require_once 'common/menu/location.php';
 			require_once 'common/menu/instrument.php';
@@ -84,11 +82,13 @@ function headmenu() {
 		echo "</ul>";
 	} else {
 		// Let's make a sign in / register tab
-		echo "<button type=\"button\" class=\"btn btn-default navbar-btn pull-right\" data-toggle=\"modal\" data-target=\"#login\">" . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . "&nbsp;" . LangLoginMenuTitle . "</button>";
-		echo "</ul>";
+		echo "<span class=\"pull-right\">";
+		echo "<button type=\"button\" class=\"btn btn-default navbar-btn\" data-toggle=\"modal\" data-target=\"#login\">" . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . "&nbsp;" . LangLoginMenuTitle . "</button>&nbsp;";
 		if ($register == "yes") { // includes register link
-			echo "<a class=\"btn btn-default navbar-btn pull-right\" href=\"" . $baseURL . "index.php?indexAction=subscribe&amp;title=" . urlencode ( LangLoginMenuRegister ) . "\">" . LangLoginMenuRegister . "</a>";
+			echo "<a class=\"btn btn-success navbar-btn\" href=\"" . $baseURL . "index.php?indexAction=subscribe&amp;title=" . urlencode ( LangLoginMenuRegister ) . "\">" . LangLoginMenuRegister . "</a>&nbsp;";
 		}
+		echo "</span>";
+		echo "</ul>";
 	}
 	// Closing the menu
 	echo "	</div>

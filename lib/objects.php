@@ -1687,11 +1687,11 @@ class Objects {
 
 			$content = $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objects.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4a ) . "&nbsp;";
 			$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectnames.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4b ) . "&nbsp;";
-			$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectsDetails.pdf.php?SID=Qobj&amp;sort=" . $_SESSION ['QobjSort'], LangExecuteQueryObjectsMessage4c ) . "&nbsp;";
+			$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectsDetails.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4c ) . "&nbsp;";
 			$content .= "<a href=\"" . $baseURL . "objects.argo?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage8 . "</a>&nbsp;";
 			$content .= "<a href=\"" . $baseURL . "objects.csv?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage6 . "</a>";
 		
-			$content .= "&nbsp;<a href=\"" . $baseURL . "index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;sort=" . $_SESSION ['QobjSort'] . "&amp;pdfTitle=Test\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . ReportLink . "</a>&nbsp;";
+			$content .= "&nbsp;<a href=\"" . $baseURL . "index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;pdfTitle=Test\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . ReportLink . "</a>&nbsp;";
 			$content .= "<a href=\"" . $baseURL . "index.php?indexAction=objectsSets" . "\" rel=\"external\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage11 . "</a>";
 
 			echo $content1 . "<br /><br />";
