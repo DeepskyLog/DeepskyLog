@@ -9,13 +9,13 @@ function register() {
 	global $baseURL, $step, $defaultLanguage, $languagesDuringRegistration, $standardLanguagesForObservationsDuringRegistration, $objObserver, $objLanguage, $objPresentations, $objUtil;
 	$allLanguages = $objLanguage->getAllLanguages ( $objUtil->checkArrayKey ( $_SESSION, 'lang', $standardLanguagesForObservationsDuringRegistration ) );
 	$theAllKey = $objUtil->checkPostKey ( 'description_language', $objUtil->checkArrayKey ( $_SESSION, 'lang', $standardLanguagesForObservationsDuringRegistration ) );
-	$tempAllList = "<select name=\"description_language\" class=\"fieldvaluedropdown\">";
+	$tempAllList = "<select name=\"description_language\" class=\"form-control\">";
 	while ( list ( $key, $value ) = each ( $allLanguages ) )
 		$tempAllList .= "<option value=\"" . $key . "\" " . (($theAllKey == $key) ? "selected=\"selected\"" : "") . ">" . $value . "</option>";
 	$tempAllList .= "</select>";
 	$languages = $objLanguage->getLanguages ();
 	$theKey = $objUtil->checkPostKey ( 'language', $objUtil->checkArrayKey ( $_SESSION, 'lang', $defaultLanguage ) );
-	$tempList = "<select name=\"language\" class=\"fieldvaluedropdown\">";
+	$tempList = "<select name=\"language\" class=\"form-control\">";
 	while ( list ( $key, $value ) = each ( $languages ) )
 		$tempList .= "<option value=\"" . $key . "\"" . (($theKey = $key) ? " selected=\"selected\"" : "") . ">" . $value . "</option>";
 	$tempList .= "</select>";
@@ -23,165 +23,92 @@ function register() {
 	echo "<form action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_account\" />";
 	echo "<input type=\"hidden\" name=\"title\" value=\"" . LangRegisterNewTitle . "\" />";
-	echo "<h4>" . LangRegisterNewTitle . "</h4>";
-    echo "<input type=\"submit\" name=\"register\" value=\"" . LangRegisterNewTitle . "\" />&nbsp;"; 
+	echo "<h4>" . LangRegisterNewTitle;
+	echo "<input class=\"btn btn-success pull-right\" type=\"submit\" name=\"register\" value=\"" . LangRegisterNewTitle . "\" />&nbsp;</h4>";
 	echo "<hr />";
-	$objPresentations->line ( array (
-			LangChangeAccountField1,
-			"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"deepskylog_id\" required placeholder=\"" . LangChangeAccountField1Expl . "\"size=\"50\" value=\"" . $objUtil->checkPostKey ( 'deepskylog_id' ) . "\" />" 
-	), "RL", array (
-			20,
-			80 
-	), array (
-			'fieldname',
-			'fieldvalue' 
-	) );
-	$objPresentations->line ( array (
-			LangChangeAccountField2,
-			"<input type=\"email\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"email\" size=\"50\" required placeholder=\"" . LangChangeAccountField2Expl . "\" value=\"" . $objUtil->checkPostKey ( 'email' ) . "\" />" 
-	), "RL", array (
-			20,
-			80 
-	), array (
-			'fieldname',
-			'fieldvalue' 
-	) );
-	$objPresentations->line ( array (
-			LangChangeAccountField3,
-			"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"firstname\" size=\"50\" required placeholder=\"" . LangChangeAccountField3Expl . "\" value=\"" . $objUtil->checkPostKey ( 'firstname' ) . "\" />" 
-	), "RL", array (
-			20,
-			80 
-	), '', array (
-			'fieldname',
-			'fieldvalue' 
-	) );
-	$objPresentations->line ( array (
-			LangChangeAccountField4,
-			"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"name\" size=\"50\" required placeholder=\"" . LangChangeAccountField4Expl . "\" value=\"" . $objUtil->checkPostKey ( 'name' ) . "\" />" 
-	), "RL", array (
-			20,
-			80 
-	), '', array (
-			'fieldname',
-			'fieldvalue' 
-	) );
-	$objPresentations->line ( array (
-			LangChangeAccountField13,
-			"<input type=\"text\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"motivation\" size=\"120\" required placeholder=\"" . LangChangeAccountField13Expl . "\" value=\"" . $objUtil->checkPostKey ( 'explanation' ) . "\" />" 
-	), "RL", array (
-			20,
-			80 
-	), '', array (
-			'fieldname',
-			'fieldvalue' 
-	) );
-	$objPresentations->line ( array (
-			LangChangeAccountField5,
-			"<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd\" size=\"50\" required placeholder=\"" . LangChangeAccountField5Expl . "\" value=\"" . $objUtil->checkPostKey ( 'passwd' ) . "\" />" 
-	), "RL", array (
-			20,
-			80 
-	), '', array (
-			'fieldname',
-			'fieldvalue' 
-	) );
-	$objPresentations->line ( array (
-			LangChangeAccountField6,
-			"<input type=\"password\" class=\"inputfield requiredField\" maxlength=\"64\" name=\"passwd_again\" size=\"50\" required placeholder=\"" . LangChangeAccountField6Expl . "\" value=\"" . $objUtil->checkPostKey ( 'passwd_again' ) . "\" />" 
-	), "RL", array (
-			20,
-			80 
-	), '', array (
-			'fieldname',
-			'fieldvalue' 
-	) );
-	$objPresentations->line ( array (
-			LangChangeAccountObservationLanguage,
-			$tempAllList,
-			LangChangeAccountObservationLanguageExpl 
-	), "RLL", array (
-			20,
-			40,
-			40 
-	), '', array (
-			'fieldname',
-			'fieldvalue',
-			'fieldexplanation' 
-	) );
-	$objPresentations->line ( array (
-			LangChangeAccountLanguage,
-			$tempList,
-			LangChangeAccountLanguageExpl 
-	), "RLL", array (
-			20,
-			40,
-			40 
-	), '', array (
-			'fieldname',
-			'fieldvalue',
-			'fieldexplanation' 
-	) );
-	$objPresentations->line ( array (
-			LangChangeAccountCopyright,
-			"<input type=\"text\" class=\"inputfield\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"" . $objObserver->getObserverProperty ( $objUtil->checkSessionKey ( 'deepskylog_id' ), 'copyright' ) . "\" />",
-			LangChangeAccountCopyrightExpl 
-	), "RLL", array (
-			20,
-			40,
-			40 
-	), '', array (
-			'fieldname',
-			'fieldvalue',
-			'fieldexplanation' 
-	) );
+	
+	echo "<div class=\"form-group\">
+	       <label>" . LangChangeAccountField1 . "</label>";
+	echo "<input type=\"text\" class=\"form-control\" maxlength=\"64\" name=\"deepskylog_id\" required size=\"50\" value=\"" . $objUtil->checkPostKey ( 'deepskylog_id' ) . "\" />";
+	echo "<span class=\"help-block\">" . LangChangeAccountField1Expl . "</span>";
+	echo "</div>";
+	
+	
+	echo "<div class=\"form-group\">
+	       <label>" . LangChangeAccountField2 . "</label>";
+	echo "<input type=\"email\" class=\"form-control\" maxlength=\"64\" name=\"email\" size=\"50\" required value=\"" . $objUtil->checkPostKey ( 'email' ) . "\" />";
+	echo "<span class=\"help-block\">" . LangChangeAccountField2Expl . "</span>";
+	echo "</div>";
+	
+	echo "<div class=\"form-group\">
+	       <label>" . LangChangeAccountField3 . "</label>";
+	echo "<input type=\"text\" class=\"form-control\" maxlength=\"64\" name=\"firstname\" size=\"50\" required value=\"" . $objUtil->checkPostKey ( 'firstname' ) . "\" />";
+	echo "<span class=\"help-block\">" . LangChangeAccountField3Expl . "</span>";
+	echo "</div>";
+	
+	echo "<div class=\"form-group\">
+	       <label>" . LangChangeAccountField4 . "</label>";
+	echo "<input type=\"text\" class=\"form-control\" maxlength=\"64\" name=\"name\" size=\"50\" required value=\"" . $objUtil->checkPostKey ( 'name' ) . "\" />";
+	echo "<span class=\"help-block\">" . LangChangeAccountField4Expl . "</span>";
+	echo "</div>";
+	
+	echo "<div class=\"form-group\">
+	       <label>" . LangChangeAccountField13 . "</label>";
+	echo "<input type=\"text\" class=\"form-control\" maxlength=\"64\" name=\"motivation\" size=\"120\" required value=\"" . $objUtil->checkPostKey ( 'explanation' ) . "\" />";
+	echo "<span class=\"help-block\">" . LangChangeAccountField13Expl . "</span>";
+	echo "</div>";
+	
+	echo "<div class=\"form-group\">
+	       <label>" . LangChangeAccountField5 . "</label>";
+	echo "<input type=\"password\" class=\"form-control\" maxlength=\"64\" name=\"passwd\" size=\"50\" required value=\"" . $objUtil->checkPostKey ( 'passwd' ) . "\" />";
+	echo "<span class=\"help-block\">" . LangChangeAccountField5Expl . "</span>";
+	echo "</div>";
+	
+	echo "<div class=\"form-group\">
+	       <label>" . LangChangeAccountField6 . "</label>";
+	echo "<input type=\"password\" class=\"form-control\" maxlength=\"64\" name=\"passwd_again\" size=\"50\" required value=\"" . $objUtil->checkPostKey ( 'passwd_again' ) . "\" />";
+	echo "<span class=\"help-block\">" . LangChangeAccountField6Expl . "</span>";
+	echo "</div>";
+	
+	echo "<div class=\"form-group\">
+	       <label>" . LangChangeAccountObservationLanguage . "</label><br />";
+	echo "<span class=\"form-inline\">" . $tempAllList . "</span>";
+	echo "<span class=\"help-block\">" . LangChangeAccountObservationLanguageExpl . "</span>";
+	echo "</div>";
+	
+	echo "<div class=\"form-group\">
+	       <label>" . LangChangeAccountLanguage . "</label><br />";
+	echo "<span class=\"form-inline\">" . $tempList . "</span>";
+	echo "<span class=\"help-block\">" . LangChangeAccountLanguageExpl . "</span>";
+	echo "</div>";
+	
+	echo "<div class=\"form-group\">
+	       <label>" . LangChangeAccountCopyright . "</label>";
+	echo "<input type=\"text\" class=\"form-control\" maxlength=\"128\" name=\"copyright\" size=\"40\" value=\"" . $objObserver->getObserverProperty ( $objUtil->checkSessionKey ( 'deepskylog_id' ), 'copyright' ) . "\" />";
+	echo "<span class=\"help-block\">" . LangChangeAccountCopyrightExpl . "</span>";
+	echo "</div>";
 	
 	reset ( $allLanguages );
 	$usedLanguages = $languagesDuringRegistration;
+
+	echo "<div class=\"form-group\">";
+	echo "<label>" . LangChangeVisibleLanguages . "</label>";
+	echo "<table class=\"table table-condensed table-bordered\">";
+	
 	$j = 0;
-	$tempObsLangList [] = LangChangeVisibleLanguages;
-	while ( ($j < 3) && (list ( $key, $value ) = each ( $allLanguages )) ) {
-		$tempObsLangList [] = "<input type=\"checkbox\" " . (($objUtil->checkPostKey ( $key ) || in_array ( $key, $usedLanguages )) ? "checked=\"checked\" " : "") . " name=\"" . $key . "\" value=\"" . $key . "\" />" . $value;
-		$j ++;
+	echo "<tr>";
+	while((list($key,$value)=each($allLanguages)))
+	{ echo "<td><label class=\"checkbox-inline\"><input type=\"checkbox\" " . (($objUtil->checkPostKey ( $key ) || in_array ( $key, $usedLanguages )) ? "checked=\"checked\" " : "") . " name=\"" . $key . "\" value=\"" . $key . "\" />" . $value;
+	if (($j + 1) % 3 == 0) {
+		echo "</tr><tr>";
 	}
-	$tempObsLangList [] = LangChangeVisibleLanguagesExpl;
-	$objPresentations->line ( $tempObsLangList, "RLLLL", array (
-			20,
-			13,
-			13,
-			14,
-			40 
-	), '', array (
-			"fieldname",
-			"fieldvalue",
-			"",
-			"",
-			"fieldexplanation" 
-	) );
-	unset ( $tempObsLangList );
-	$tempObsLangList [] = "";
-	while ( (list ( $key, $value ) = each ( $allLanguages )) ) {
-		$tempObsLangList [] = "<input type=\"checkbox\" " . (($objUtil->checkPostKey ( $key ) || in_array ( $key, $usedLanguages )) ? "checked=\"checked\" " : "") . " name=\"" . $key . "\" value=\"" . $key . "\" />" . $value;
-		$j ++;
-		if (($j % 3) == 0) {
-			$tempObsLangList [] = "";
-			$objPresentations->line ( $tempObsLangList, "RLLLL", array (
-					20,
-					13,
-					13,
-					14,
-					40 
-			), '', array (
-					"fieldname",
-					"fieldvalue",
-					"",
-					"",
-					"fieldexplanation" 
-			) );
-			unset ( $tempObsLangList );
-			$tempObsLangList [] = "";
-		}
+	$j++;
 	}
+	for ($i = $j % 3;$i < 3;$i++) {
+		echo "<td></td>";
+	}
+	echo "</tr></table></div></div>";
+	
 	echo "<hr />";
 	echo "</div></form>";
 	echo "</div>";
