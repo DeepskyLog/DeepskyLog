@@ -36,14 +36,6 @@ function headmenu() {
 		require_once $instDir . 'deepsky/menu/downloads.php';
 	require_once $instDir . 'common/menu/help.php'; // HELP MENU
 	                                                
-	// Select the standard location and instrument
-	if ($loggedUser) {
-		if (array_key_exists ( 'admin', $_SESSION ) && ($_SESSION ['admin'] != 'yes')) {
-			require_once 'common/menu/location.php';
-			require_once 'common/menu/instrument.php';
-		}
-	}
-	
 	// Select the modules
 	echo "<ul class=\"nav navbar-nav navbar-right\">
 			  <li class=\"dropdown\">
@@ -111,6 +103,11 @@ function headmenu() {
 		
 		echo "<div class=\"container-fluid\">";
 		
+		// Select the standard location and instrument
+		if (array_key_exists ( 'admin', $_SESSION ) && ($_SESSION ['admin'] != 'yes')) {
+			require_once 'common/menu/location.php';
+			require_once 'common/menu/instrument.php';
+		}
 		require_once $_SESSION ['module'] . '/menu/date.php';
 		require_once $_SESSION ['module'] . '/menu/list.php';
 		

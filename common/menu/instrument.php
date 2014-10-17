@@ -25,7 +25,7 @@ function menu_instrument()
 		{
 	    echo "<ul class=\"nav navbar-nav\">
 			      <li class=\"dropdown\">
-	           <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . $objInstrument->getInstrumentPropertyFromId($instr,'name')."<b class=\"caret\"></b></a>";
+	           <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\" class=\"dropdown-toggle navbar-btn\" data-toggle=\"dropdown\">" . $objInstrument->getInstrumentPropertyFromId($instr,'name')."<b class=\"caret\"></b></a>";
 	    echo " <ul class=\"dropdown-menu\">";
       
 			$url = "http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"];

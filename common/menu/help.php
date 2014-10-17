@@ -8,7 +8,7 @@ else
 function help() {
 	echo "<ul class=\"nav navbar-nav\">
 			  <li class=\"dropdown\">
-	       <a href=\"http://" . $_SERVER ['SERVER_NAME'] . $_SERVER ["REQUEST_URI"] . "#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\"><div class=\"hidden-sm\">Help<b class=\"caret\"></b></div><span class=\"glyphicon glyphicon-info-sign visible-sm\"></span></a>";
+	       <a href=\"http://" . $_SERVER ['SERVER_NAME'] . $_SERVER ["REQUEST_URI"] . "#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">Help<b class=\"caret\"></b></a>";
 	echo " <ul class=\"dropdown-menu\">";
 	if ($_SESSION ['lang'] == "nl") {
 		echo "  <li><a href=\"http://redmine.deepskylog.org/projects/deepskylog/wiki/DeepskylogManualNL39\" rel=\"external\">Handleiding</a></li>";
