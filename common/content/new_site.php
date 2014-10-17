@@ -51,7 +51,7 @@ function new_site() {
 	
 	echo "<h4>" . LangAddSiteTitle . "</h4>";
 	echo "<hr />";
-	echo "<input type=\"submit\" class=\"btn btn-primary pull-right\" name=\"add\" value=\"" . LangAddSiteButton . "\" />&nbsp;";
+	echo "<input type=\"submit\" class=\"btn btn-primary pull-right tour4\" name=\"add\" value=\"" . LangAddSiteButton . "\" />&nbsp;";
 	
 	echo "<a href=\"" . $baseURL . "index.php?indexAction=search_sites\" class=\"btn btn-success\">" . LangAddSiteFieldSearchDatabase . "</a>";
 	echo "<br /><br />";

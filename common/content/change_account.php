@@ -164,7 +164,7 @@ function change_account()
 	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountPicture . "</label>";
 	echo "<div class=\"col-sm-6\"><p class=\"form-control-static\">" . 
-	    "<input type=\"file\" name=\"picture\" class=\"inputfield\"/>";
+	    "<input type=\"file\" name=\"picture\" class=\"inputfield tour6\"/>";
 	echo "</p></div></div>";
 	
 

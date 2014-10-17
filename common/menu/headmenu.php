@@ -57,14 +57,14 @@ function headmenu() {
 		echo "<ul class=\"nav navbar-nav navbar-right\">";
 		$unreadMails = $objMessages->getNumberOfUnreadMails ();
 		$unreadMailsSplit = explode ( "/", $unreadMails );
-		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=show_messages\"><span class=\"glyphicon glyphicon-inbox\"></span>&nbsp;<span class=\"badge\">" . $unreadMailsSplit [0] . "</span></a></li>";
+		echo "<li><a class=\"tour7\" href=\"" . $baseURL . "index.php?indexAction=show_messages\"><span class=\"glyphicon glyphicon-inbox\"></span>&nbsp;<span class=\"badge\">" . $unreadMailsSplit [0] . "</span></a></li>";
 		echo "</ul>";
 	}
 	
 	echo "<ul class=\"nav navbar-nav navbar-right\">";
 	if ($loggedUser) {
 		echo "<li class=\"dropdown\">
-	         <a href=\"http://" . $_SERVER ['SERVER_NAME'] . $_SERVER ["REQUEST_URI"] . "#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . "<b class=\"caret\"></b></a>";
+	         <a class=\"tour5\" href=\"http://" . $_SERVER ['SERVER_NAME'] . $_SERVER ["REQUEST_URI"] . "#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . "<b class=\"caret\"></b></a>";
 		echo " <ul class=\"dropdown-menu\">";
 		echo " <li><a href=\"" . $baseURL . "index.php?indexAction=detail_observer&user=" . $loggedUser . "\">" . LangDetails . "</a></li>";
 		echo " <li><a href=\"" . $baseURL . "index.php?indexAction=change_account\">" . LangChangeMenuItem1 . "</a></li>";

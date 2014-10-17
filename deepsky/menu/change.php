@@ -17,7 +17,7 @@ function menu_change() {
 		reset ( $_GET );
 		echo "<ul class=\"nav navbar-nav\">
 			  <li class=\"dropdown\">
-	       <a href=\"http://" . $_SERVER ['SERVER_NAME'] . $_SERVER ["REQUEST_URI"] . "#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . LangChangeMenuTitle . "<b class=\"caret\"></b></a>";
+	       <a class=\"tour1 tour3\" href=\"http://" . $_SERVER ['SERVER_NAME'] . $_SERVER ["REQUEST_URI"] . "#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . LangChangeMenuTitle . "<b class=\"caret\"></b></a>";
 		echo " <ul class=\"dropdown-menu\">";
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe waarneming\">" . LangQuickPickNewObservation . "</a></li>";
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_object\">" . LangChangeMenuItem5 . "</a></li>";

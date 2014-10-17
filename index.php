@@ -73,6 +73,69 @@ catch (Exception $e)
   // EMAIL developers with error codes
 }
 echo "<script type=\"text/javascript\">";
+// TODO : Remove name
+// TODO : Use translation files
+// TODO : Move to other file.
+echo "(function(){
+		// Instance the tour
+var tour = new Tour({
+  name: \"test1\",
+  steps: [
+  {
+    element: \".tour1\",
+	placement: \"left\",
+    title: \"Add one or more instruments\",
+    content: \"Click on Change and select Instruments. Add at least 1 instrument.\"
+  },
+  {
+    element: \".tour2\",
+	placement: \"bottom\",
+	reflex: \"true\",
+	title: \"Add at least one instrument!\",
+    content: \"DeepskyLog can calculate visibilities of objects when an instrument is inserted. You can also only add new observations when an instrument is known by DeepskyLog.\"
+  },
+  {
+    element: \".tour3\",
+	placement: \"left\",
+    title: \"Add one or more locations\",
+    content: \"Click on Change and select Locations. Add at least 1 location.\"
+  },
+  {
+    element: \".tour4\",
+	placement: \"bottom\",
+	reflex: \"true\",
+	title: \"Add at least one location!\",
+    content: \"DeepskyLog can calculate visibilities of objects when a location is inserted. You can also only add new observations when a location is known by DeepskyLog.\"
+  },
+  {
+    element: \".tour5\",
+	placement: \"right\",
+    title: \"Add a picture of yourself\",
+    content: \"Click on your name and select Settings. Add a picture of yourself.\"
+  },
+  {
+    element: \".tour6\",
+	placement: \"bottom\",
+	title: \"Add a picture of yourself!\",
+    content: \"When you add a picture, others will see your picture when you send them a message.\"
+  },
+  {
+    element: \".tour7\",
+	placement: \"left\",
+	reflex: \"true\",
+    title: \"Read your messages\",
+    content: \"Other observers can send you messages in DeepskyLog. Here, you can read the messages.\"
+  }
+]});
+
+// Initialize the tour
+tour.init();
+
+// Start the tour
+tour.start();
+}());";
+echo "</script>";
+echo "<script type=\"text/javascript\">";
 if($loadAtlasPage)
 { 
   echo "atlasFillPage();";

@@ -24,7 +24,7 @@ function new_instrument() {
 	
 	echo "<h4>" . LangAddInstrumentTitle . "</h4>";
 	echo "<hr />";
-	echo "<input type=\"submit\" class=\"btn btn-primary pull-right\" name=\"add\" value=\"" . LangAddInstrumentAdd . "\" />&nbsp;";
+	echo "<input type=\"submit\" class=\"btn btn-primary pull-right tour2\" name=\"add\" value=\"" . LangAddInstrumentAdd . "\" />&nbsp;";
 	
 	echo "<div class=\"form-group\">
 	       <label for=\"catalog\">" . LangAddInstrumentExisting . "</label>";
