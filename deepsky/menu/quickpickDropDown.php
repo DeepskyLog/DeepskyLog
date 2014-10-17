@@ -12,7 +12,7 @@ function menu_quickpickDropDown()
 
 	echo "<ul class=\"nav navbar-nav\">
 			  <li class=\"dropdown\">
-	      <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\">" . LangSearch."<b class=\"caret\"></b></a>";
+	      <a href=\"http://". $_SERVER['SERVER_NAME'] . $_SERVER["REQUEST_URI"] ."#\" class=\"dropdown-toggle\" data-toggle=\"dropdown\"><div class=\"hidden-sm\">" . LangSearch."<b class=\"caret\"></b></div><span class=\"glyphicon glyphicon-search visible-sm\"></span></a>";
 
 	echo " <ul class=\"dropdown-menu\">";
 	echo "  <li><a href=\"".$baseURL."index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObjectQuickPickQuickPick=Zoek object\">".LangQuickPickSearchObject."</a></li>";
