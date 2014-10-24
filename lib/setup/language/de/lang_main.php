@@ -1,5 +1,8 @@
 <?php //GE
 // This is version 4.4
+define("LangMessageRealMail","Send as real mail");
+define("LangChangeAccountSendMailExpl","Send messages as email.");
+define("LangChangeAccountSendMail","Send emails");
 define('LangTour1Title', 'Add one or more instruments');
 define('LangTour1Expl', 'Click on Change and select Instruments. Add at least 1 instrument.');
 define('LangTour2Title', 'Add at least one instrument!');

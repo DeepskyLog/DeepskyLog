@@ -148,7 +148,11 @@ class Messages {
 		if (! ($loggedUser))
 			throw new Exception ( LangMessageNotLoggedIn );
 		
-		$this->sendMessage ( $loggedUser, $_POST ['receiver'], $_POST ['subject'], nl2br ( addslashes ( $_POST ['message'] ) ) );
+		if (array_key_exists ( 'send_mail', $_POST ) && ($_POST ['send_mail'] == "on")) {
+			$this->sendRealMessage ( $loggedUser, $_POST ['receiver'], $_POST ['subject'], nl2br ( addslashes ( $_POST ['message'] ) ) );
+		} else {
+			$this->sendMessage ( $loggedUser, $_POST ['receiver'], $_POST ['subject'], nl2br ( addslashes ( $_POST ['message'] ) ) );
+		}
 	}
 	
 	// Returns a list of all read mails.
@@ -174,9 +178,36 @@ class Messages {
 		return $listOfReadMails;
 	}
 	public function sendMessage($sender, $receiver, $subject, $message) {
-		global $objDatabase;
+		global $objDatabase, $objObserver;
 		$date = $mysqldate = date ( 'Y-m-d H:i:s' );
 		
+		// We check whether the observer wants to receive the DeepskyLog messages as email. If so, we send an email.
+		if ($objObserver->getObserverProperty ( $receiver, 'sendMail' )) {
+			mail ( $objObserver->getObserverProperty ( $receiver, 'email' ), $subject, $message, $objObserver->getObserverProperty ( $sender, 'email' ) );
+		}
+		
+		if ($receiver == "all") {
+			// We loop over all observers and send all observers who wants to receive the messages as email a mail.
+			$toMail = $objDatabase->selectSingleArray ( "select * from observers where sendMail=\"1\" and role=\"1\"", "email" );
+			if (sizeof ( $toMail ) > 0) {
+				foreach ( $toMail as $mailTo ) {
+					mail ( $mailTo, $subject, $message, $objObserver->getObserverProperty ( $sender, 'email' ) );
+				}
+			}
+		}
+		$objDatabase->execSQL ( "INSERT into messages (sender, receiver, subject, message, date) VALUES(\"" . $sender . "\", \"" . $receiver . "\", \"" . $subject . "\", '" . $message . "', \"" . $date . "\")" );
+	}
+	public function sendRealMessage($sender, $receiver, $subject, $message) {
+		global $objDatabase, $objObserver;
+		$date = $mysqldate = date ( 'Y-m-d H:i:s' );
+		
+		// We loop over all observers and send all observers who wants to receive the messages as email a mail.
+		$toMail = $objDatabase->selectSingleArray ( "select * from observers where role=\"1\"", "email" );
+		if (sizeof ( $toMail ) > 0) {
+			foreach ( $toMail as $mailTo ) {
+				mail ( $mailTo, $subject, $message, $objObserver->getObserverProperty ( $sender, 'email' ) );
+			}
+		}
 		$objDatabase->execSQL ( "INSERT into messages (sender, receiver, subject, message, date) VALUES(\"" . $sender . "\", \"" . $receiver . "\", \"" . $subject . "\", '" . $message . "', \"" . $date . "\")" );
 	}
 	public function showListMails($newMails, $readMails) {

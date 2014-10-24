@@ -1,7 +1,9 @@
 <?php //NL
 // This is version 4.4
 
-
+define("LangMessageRealMail","Stuur als echte mail");
+define("LangChangeAccountSendMailExpl","Stuur berichten ook als mail.");
+define("LangChangeAccountSendMail","Stuur emails");
 define('LangTour1Title', 'Voeg minimaal 1 instrument toe');
 define('LangTour1Expl', 'Klik op Wijzigen en selecteer Instrumenten. Voeg minimaal 1 instrument toe.');
 define('LangTour2Title', 'Voeg minimaal 1 instrument toe!');

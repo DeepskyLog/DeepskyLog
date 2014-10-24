@@ -122,6 +122,13 @@ function change_account()
         LangChangeAccountField6Expl . "</p></div>";
 	
 	echo "<div class=\"form-group\">";
+	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountSendMail . "</label>";
+	echo "<div class=\"col-sm-6\">
+			<input type=\"checkbox\" class=\"inputfield\" name=\"send_mail\"".(($objObserver->getObserverProperty($loggedUser,'sendMail'))?"checked":"")." />";
+	echo "</div><p class=\"form-control-static\">" .
+        LangChangeAccountSendMailExpl . "</p></div>";
+	
+	echo "<div class=\"form-group\">";
 	echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField11 . "</label>";
 	echo "<div class=\"col-sm-6\">
 			<input type=\"checkbox\" class=\"inputfield\" name=\"local_time\"".(($objObserver->getObserverProperty($loggedUser,'UT'))?"":"checked")." />";

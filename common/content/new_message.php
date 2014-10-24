@@ -48,6 +48,13 @@ function new_message() {
 		echo "<div class=\"col-sm-5\"><p class=\"form-control-static\">" . $receiverName . "</p>";
 		echo "</div></div>";
 		
+		if ($receiverId == 'all') {
+			echo "<div class=\"form-group\">";
+			echo "<label class=\"col-sm-2 control-label\">" . LangMessageRealMail . "</label>";
+			echo "<div class=\"col-sm-5\"><p class=\"form-control-static\"><input type=\"checkbox\" class=\"inputfield\" name=\"send_mail\"></p>";			
+			echo "</div></div>";
+		}
+		
 		if ($id != - 1) {
 			$subject = $objMessages->getReplyToSubject ( $id );
 		} else {

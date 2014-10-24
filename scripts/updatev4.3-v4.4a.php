@@ -13,10 +13,6 @@
  $objAccomplishments=new Accomplishments();
  $objMessages=new Messages();
 
- print $objAccomplishments->getObjectsTalented("wim");
- $objAccomplishments->recalculateComets("wim");
- exit;
- 
  print "Database update add a hasDrawing field to cometobservations.\n";
  $sql = "ALTER TABLE cometobservations ADD COLUMN hasDrawing INT(1) NOT NULL DEFAULT 0";
  $run = $objDatabase->execSQL($sql);

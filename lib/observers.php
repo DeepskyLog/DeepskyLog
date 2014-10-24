@@ -289,6 +289,7 @@ class Observers {
 				$this->setObserverProperty ( $loggedUser, 'photosize2', $_POST ['photosize2'] );
 				$this->setObserverProperty ( $loggedUser, 'copyright', $_POST ['copyright'] );
 				$this->setObserverProperty ( $loggedUser, 'UT', ((array_key_exists ( 'local_time', $_POST ) && ($_POST ['local_time'] == "on")) ? "0" : "1") );
+				$this->setObserverProperty ( $loggedUser, 'sendMail', ((array_key_exists ( 'send_mail', $_POST ) && ($_POST ['send_mail'] == "on")) ? "1" : "0") );
 				if ($_POST ['icq_name'] != "")
 					$this->setObserverProperty ( $loggedUser, 'icqname', $_POST ['icq_name'] );
 				$_SESSION ['lang'] = $_POST ['language'];
