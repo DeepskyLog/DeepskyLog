@@ -74,7 +74,6 @@ catch (Exception $e)
 }
 echo "<script type=\"text/javascript\">";
 // TODO : Remove name
-// TODO : Use translation files
 // TODO : Move to other file.
 echo "(function(){
 		// Instance the tour
@@ -84,47 +83,47 @@ var tour = new Tour({
   {
     element: \".tour1\",
 	placement: \"left\",
-    title: \"Add one or more instruments\",
-    content: \"Click on Change and select Instruments. Add at least 1 instrument.\"
+    title: \"" . LangTour1Title . "\",
+    content: \"" . LangTour1Expl . "\"
   },
   {
     element: \".tour2\",
 	placement: \"bottom\",
 	reflex: \"true\",
-	title: \"Add at least one instrument!\",
-    content: \"DeepskyLog can calculate visibilities of objects when an instrument is inserted. You can also only add new observations when an instrument is known by DeepskyLog.\"
+	title: \"" . LangTour2Title . "\",
+    content: \"" . LangTour2Expl . "\"
   },
   {
     element: \".tour3\",
 	placement: \"left\",
-    title: \"Add one or more locations\",
-    content: \"Click on Change and select Locations. Add at least 1 location.\"
+    title: \"" . LangTour3Title . "\",
+    content: \"" . LangTour3Expl . "\"
   },
   {
     element: \".tour4\",
 	placement: \"bottom\",
 	reflex: \"true\",
-	title: \"Add at least one location!\",
-    content: \"DeepskyLog can calculate visibilities of objects when a location is inserted. You can also only add new observations when a location is known by DeepskyLog.\"
+	title: \"" . LangTour4Title . "\",
+    content: \"" . LangTour4Expl . "\"
   },
   {
     element: \".tour5\",
 	placement: \"right\",
-    title: \"Add a picture of yourself\",
-    content: \"Click on your name and select Settings. Add a picture of yourself.\"
+    title: \"" . LangTour5Title . "\",
+    content: \"" . LangTour5Expl . "\"
   },
   {
     element: \".tour6\",
 	placement: \"bottom\",
-	title: \"Add a picture of yourself!\",
-    content: \"When you add a picture, others will see your picture when you send them a message.\"
+	title: \"" . LangTour6Title . "\",
+    content: \"" . LangTour6Expl . "\"
   },
   {
     element: \".tour7\",
 	placement: \"left\",
 	reflex: \"true\",
-    title: \"Read your messages\",
-    content: \"Other observers can send you messages in DeepskyLog. Here, you can read the messages.\"
+    title: \"" . LangTour7Title . "\",
+    content: \"" . LangTour7Expl . "\"
   }
 ]});
 

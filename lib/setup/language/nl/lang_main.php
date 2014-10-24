@@ -1,5 +1,21 @@
 <?php //NL
 // This is version 4.4
+
+
+define('LangTour1Title', 'Voeg minimaal 1 instrument toe');
+define('LangTour1Expl', 'Klik op Wijzigen en selecteer Instrumenten. Voeg minimaal 1 instrument toe.');
+define('LangTour2Title', 'Voeg minimaal 1 instrument toe!');
+define('LangTour2Expl', 'DeepskyLog kan zichtbaarheden van objecten berekenen, maar daarvoor moet er wel een instrument zijn toegevoegd. Je kan ook pas waarnemingen toevoegen wanneer er een instrument is gekend.');
+define('LangTour3Title', 'Voeg minimaal 1 waarneemplaats toe');
+define('LangTour3Expl', 'Klik op Wijzigen en selecteer Waarneemplaatsen. Voeg minimaal 1 waarneemplaats toe.');
+define('LangTour4Title', 'Voeg minimaal 1 waarneemplaats toe!');
+define('LangTour4Expl', 'DeepskyLog kan zichtbaarheden van objecten berekenen, maar daarvoor moet er wel een waarneemplaats zijn toegevoegd. Je kan ook pas waarnemingen toevoegen wanneer er een waarneemplaats is gekend.');
+define('LangTour5Title', 'Voeg een foto van jezelf toe');
+define('LangTour5Expl', 'Klik op je naam en selecteer Instellingen. Voeg een foto van jezelf toe.');
+define('LangTour6Title', 'Voeg een foto van jezelf toe!');
+define('LangTour6Expl', 'Andere waarnemers zien je foto als je ze een bericht verstuurd of als ze &eacute;&eacute;n van je waarnemingen bekijken.');
+define('LangTour7Title', 'Lees je berichten');
+define('LangTour7Expl', 'Andere waarnemers kunnen jou een bericht zenden in DeepskyLog. Klik om je berichten te lezen.');
 define('LangComets', 'kometen');
 define('LangComet', 'komeet');
 define('LangObject', 'object');

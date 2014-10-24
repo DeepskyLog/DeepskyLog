@@ -1,5 +1,19 @@
 <?php //GE
 // This is version 4.4
+define('LangTour1Title', 'Add one or more instruments');
+define('LangTour1Expl', 'Click on Change and select Instruments. Add at least 1 instrument.');
+define('LangTour2Title', 'Add at least one instrument!');
+define('LangTour2Expl', 'DeepskyLog can calculate visibilities of objects when an instrument is inserted. You can also only add new observations when an instrument is known by DeepskyLog.');
+define('LangTour3Title', 'Add one or more locations');
+define('LangTour3Expl', 'Click on Change and select Locations. Add at least 1 location.');
+define('LangTour4Title', 'Add at least one location!');
+define('LangTour4Expl', 'DeepskyLog can calculate visibilities of objects when a location is inserted. You can also only add new observations when a location is known by DeepskyLog.');
+define('LangTour5Title', 'Add a picture of yourself');
+define('LangTour5Expl', 'Click on your name and select Settings. Add a picture of yourself.');
+define('LangTour6Title', 'Add a picture of yourself!');
+define('LangTour6Expl', 'When you add a picture, others will see your picture when you send them a message.');
+define('LangTour7Title', 'Read your messages');
+define('LangTour7Expl', 'Other observers can send you messages in DeepskyLog. Here, you can read the messages.');
 define('LangComets', 'comets');
 define('LangComet', 'comet');
 define('LangObject', 'object');
