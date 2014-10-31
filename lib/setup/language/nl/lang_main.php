@@ -424,7 +424,7 @@ define("ReportFieldwidth"                                      ,"Breedte van het
 define("ReportFieldStyle"                                      ,"Font style: combinatie van <br />i (italic), b (bold) en l, r of c (uitlijning)");
 define("ReportFieldTextBefore"                                 ,"Tekst voor het veld");
 define("ReportFieldTextAfter"                                  ,"Tekst achter het veld");
-define("ReportFieldLegend"                                     ,"Legendetext");
+define("ReportFieldLegend"                                     ,"Legendetekst");
 
 define("Reportpagesize"                                        ,"Paginagrootte (A4/A3/LETTER/...)");
 define("Reportpageorientation"                                 ,"Pagina orientatie (landscape/portrait)");
@@ -439,7 +439,7 @@ define("ReportfontSizeText"                                    ,"Fontgrootte tek
 define("ReportfontSizeSection"                                 ,"Fontgrootte voor de sectietitel");
 define("Reportdeltalineextra"                                  ,"Supplementaire lijn-interlinie");
 define("ReportsectionBarHeightextra"                           ,"Supplementaire grootte sectievak");
-define("ReportdeltalineSection"                                ,"Supplmentaire ruimte na sectievak");
+define("ReportdeltalineSection"                                ,"Supplementaire ruimte na sectievak");
 define("Reportdeltaobjectline"                                 ,"Supplementaire ruimte tussen verschillende objecten");
 define("ReportSectionBarWidthbase"                             ,"Breedte van het sectievak (bv. indeling sterrenbeelden)");
 define("ReportSectionBarSpace"                                 ,"Terugsprong grootte van het sectievak");

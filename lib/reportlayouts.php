@@ -66,7 +66,7 @@ class reportLayouts
   public function getReportData($observer,$reportname,$layoutname)
   { global $objDatabase;
     $sql="SELECT * FROM reportlayouts WHERE observerid='".$observer."' AND reportname='".$reportname."' AND reportlayout='".$layoutname."' AND fieldstyle!='LAYOUTMETADATA' ORDER BY fieldline;";
-    return $objDatabase->selectRecordsetArray($sql);
+	return $objDatabase->selectRecordsetArray($sql);
   }
   public function getReportAll($observer,$reportname,$layoutname)
   { global $objDatabase;
@@ -88,8 +88,9 @@ class reportLayouts
   { //echo $reportdata;
     //return;
     $reportdata=eval('return '.$reportdata.';');
-    while(list($key,$data)=each($reportdata))
+    while(list($key,$data)=each($reportdata)) {
       $this->saveLayoutField($reportname,$reportlayout,$data['fieldname'],$data['fieldline'],$data['fieldposition'],$data['fieldwidth'],$data['fieldheight'],$data['fieldstyle'],$data['fieldbefore'],$data['fieldafter'],$data['fieldlegend']);
+    }
     return $this->getLayoutListJavascript($reportname);
   }
 }
