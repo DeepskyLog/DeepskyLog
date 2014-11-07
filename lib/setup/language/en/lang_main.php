@@ -1,5 +1,6 @@
 <?php //EN
 // This is version 4.4
+define("LangDownloadAtlasses","Download atlasses");
 define("LangMessageRealMail","Send as real mail");
 define("LangChangeAccountSendMailExpl","Send messages as email.");
 define("LangChangeAccountSendMail","Send emails");

@@ -1,6 +1,7 @@
 <?php //NL
 // This is version 4.4
 
+define("LangDownloadAtlasses","Download atlassen");
 define("LangMessageRealMail","Stuur als echte mail");
 define("LangChangeAccountSendMailExpl","Stuur berichten ook als mail.");
 define("LangChangeAccountSendMail","Stuur emails");

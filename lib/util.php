@@ -2549,7 +2549,7 @@ class Utils {
 			$_GET ['minmonth'] = substr ( $theDate, 4, 2 );
 			$_GET ['minday'] = substr ( $theDate, 6, 2 );
 			$lastReadObservation = ($loggedUser ? $objObserver->getLastReadObservation ( $loggedUser ) : - 1);
-			return 'deepsky/content/selected_observations.php';
+			return 'deepsky/content/main.php';
 		} else if ($_SESSION ['module'] == 'comets') {
 			$theDate = date ( 'Ymd', strtotime ( '-1 month' ) );
 			$_GET ['minyear'] = substr ( $theDate, 0, 4 );
