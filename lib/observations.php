@@ -825,6 +825,14 @@ class Observations {
 		$objDatabase->execSQL ( "UPDATE observations SET date = \"" . $date . "\" WHERE id = \"" . $id . "\"" );
 		$objDatabase->execSQL ( "UPDATE observations SET time = \"" . $time . "\" WHERE id = \"" . $id . "\"" );
 	}
+	public function getLastObservations( $number = 10) {
+		// TODO : Implement
+// 		global $objDatabase;
+// 		$run = $objDatabase->selectRecordset("select count(DISTINCT id) from observations order by id desc LIMIT " . $number . ";");
+// 		$get = $run->fetch ( PDO::FETCH_OBJ );
+		
+// 		return $get->ObsCnt;
+	}
 	public function showListObservation($link, $lco) {
 		global $lastReadObservation, $objDatabase, $objObject, $baseURL, $loggedUser, $objObserver, $dateformat, $myList, $objUtil, $objInstrument, $listname, $listname_ss, $objPresentations, $objObservation;
 
@@ -873,6 +881,12 @@ class Observations {
 		echo "</thead>";
 		echo "<tbody id=\"obs_list\" class=\"tbody_obs\">";
 		$count = 0;
+		if (!array_key_exists('Qobs', $_SESSION)) {
+			// TODO : Get the new observations.
+			//$_SESSION ['Qobs'] = $objObservation->get
+			// TODO : If this array is empty, get the 10 last observations
+			$_SESSION ['Qobs'] = $objObservation->getLastObservations (  );
+		}
 		while ( list ( $key, $value ) = each ( $_SESSION ['Qobs'] ) ) {
 			$obsKey = $key;
 			$LOid = "";
@@ -1608,6 +1622,10 @@ class Observations {
 				$_GET ['observation'] = $current_observation;
 			}
 		}
+	}
+	public function getLastObservationsWithDrawing($numberOfObservations = 4) {
+		global $objDatabase;
+		return $objDatabase->selectRecordsetArray( "SELECT id, objectname, observerid, date FROM observations WHERE hasDrawing=\"1\" ORDER BY id DESC LIMIT 4", 'id' );
 	}
 }
 ?>

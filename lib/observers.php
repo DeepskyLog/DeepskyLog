@@ -102,6 +102,13 @@ class Observers {
 		global $objDatabase;
 		$objDatabase->execSQL ( "UPDATE observers SET usedLanguages = '" . serialize ( $language ) . "' WHERE id=\"$id\"" );
 	}
+	public function getFullName($id)
+	{
+		global $objDatabase;
+		$names = $objDatabase->selectRecordsetArray( "SELECT firstname, name FROM observers WHERE id = \"" . $id . "\"" );
+		$name = $names[0];
+		return $name["firstname"] . " " . $name["name"];
+	}
 	public function showTopObservers($catalog, $rank) {
 		global $baseURL, $objObservation, $objUtil, $objObserver, $objObject, $DSOcatalogsLists;
 		$outputtable = "";

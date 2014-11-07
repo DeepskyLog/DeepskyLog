@@ -87,6 +87,13 @@ class Utils {
 			return sprintf ( "%02d", $month ) . sprintf ( "%02d", $this->checkGetKey ( $day, '00' ) );
 		return '';
 	}
+	public function getLocalizedDate($date) {
+		global $dateformat;
+		$date = sscanf ( $date, "%4d%2d%2d" );
+		$dateTimeText = date ( $dateformat, mktime ( 0, 0, 0, $date [1], $date [2], $date [0] ) );
+		
+		return $dateTimeText;
+	}
 	public function checkGetKey($key, $default = '') {
 		return (array_key_exists ( $key, $_GET ) && ($_GET [$key] != '')) ? $_GET [$key] : $default;
 	}
@@ -2536,6 +2543,7 @@ class Utils {
 		if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_rank_objects', 'comets/content/top_objects.php' )))
 		if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_query_observations', 'comets/content/setup_observations_query.php' )))
 		if (! ($indexActionInclude = $this->utilitiesCheckIndexActionall ( 'comets_query_objects', 'comets/content/setup_objects_query.php' )))
+		if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'main', 'deepsky/content/main.php' )))
 		if (! ($indexActionInclude = $this->utilitiesCheckIndexActionDSquickPick ()))
 		$indexActionInclude = $this->utilitiesGetIndexActionDefaultAction ();
 		return $indexActionInclude;
