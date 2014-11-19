@@ -5,8 +5,8 @@ global $inIndex;
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 class Objects {
-	public function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec, $mag, $subr, $diam1, $diam2, $pa, $datasource) 	// addObject adds a new object to the database. The name, alternative name, type, constellation, right ascension, declination, magnitude, surface brightness, diam1, diam2, position angle and info about the catalogs should be given as parameters. The chart numbers for different atlasses are put in the database. $datasource describes where the data comes from eg : SAC7.2, DeepskyLogUser or E&T 2.5
-	{
+	public function addDSObject($name, $cat, $catindex, $type, $con, $ra, $dec, $mag, $subr, $diam1, $diam2, $pa, $datasource) // addObject adds a new object to the database. The name, alternative name, type, constellation, right ascension, declination, magnitude, surface brightness, diam1, diam2, position angle and info about the catalogs should be given as parameters. The chart numbers for different atlasses are put in the database. $datasource describes where the data comes from eg : SAC7.2, DeepskyLogUser or E&T 2.5
+{
 		global $objDatabase;
 		$array = array (
 				"INSERT INTO objects (name, type, con, ra, decl, mag, subr, diam1, diam2, pa, datasource, urano, urano_new, sky, millenium, taki, psa, torresB, torresBC, torresC, milleniumbase) 
@@ -86,8 +86,8 @@ class Objects {
 				);
 		}
 	}
-	private function calculateSize($diam1, $diam2) 	// Construct a string from the sizes
-	{
+	private function calculateSize($diam1, $diam2) // Construct a string from the sizes
+{
 		$size = "";
 		if ($diam1 != 0.0) {
 			if ($diam1 >= 40.0) {
@@ -116,8 +116,8 @@ class Objects {
 		}
 		return $size;
 	}
-	public function getAllInfoDsObject($name) 	// returns all information of an object
-	{
+	public function getAllInfoDsObject($name) // returns all information of an object
+{
 		global $objDatabase, $loggedUser;
 		$object = $objDatabase->selectRecordArray ( "SELECT * FROM objects WHERE name = \"" . $name . "\"" );
 		$object ["size"] = $this->calculateSize ( $object ['diam1'], $object ['diam2'] );
@@ -141,8 +141,8 @@ class Objects {
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT CONCAT(objectnames.catalog, \" \", objectnames.catindex) AS altnames FROM objectnames WHERE objectnames.objectname = \"" . $name . "\"", 'altnames' );
 	}
-	public function getCatalogs() 	// returns a list of all different catalogs
-	{
+	public function getCatalogs() // returns a list of all different catalogs
+{
 		global $objDatabase;
 		$ret = $objDatabase->selectSingleArray ( "SELECT DISTINCT objectnames.catalog FROM objectnames WHERE objectnames.catalog NOT IN (\"M\",\"NGC\",\"Caldwell\",\"H400\",\"HII\",\"IC\",\"\")", 'catalog' );
 		natcasesort ( $ret );
@@ -167,28 +167,28 @@ class Objects {
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT objectpartof.objectname FROM objectpartof WHERE objectpartof.partofname = \"" . $name . "\"", 'objectname' );
 	}
-	public function getDsObjectName($name) 	// returns the name when the original or alternative name is given.
-	{
+	public function getDsObjectName($name) // returns the name when the original or alternative name is given.
+{
 		global $objDatabase;
 		return $objDatabase->selectSingleValue ( "SELECT objectnames.objectname FROM objectnames WHERE (objectnames.altname = \"" . $name . "\")", 'objectname' );
 	}
-	public function getDsObjectTypes() 	// returns a list of all different types
-	{
+	public function getDsObjectTypes() // returns a list of all different types
+{
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT DISTINCT type FROM objects ORDER BY type", 'type' );
 	}
-	public function getConstellations() 	// returns a list of all different constellations
-	{
+	public function getConstellations() // returns a list of all different constellations
+{
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT DISTINCT con FROM objects ORDER BY con", 'con' );
 	}
-	public function getDsoProperty($theObject, $theProperty, $default = '') 	// returns the propperty of the object, or default if not found
-	{
+	public function getDsoProperty($theObject, $theProperty, $default = '') // returns the propperty of the object, or default if not found
+{
 		global $objDatabase;
 		return $objDatabase->selectSingleValue ( "SELECT objects." . $theProperty . " FROM objects WHERE name=\"" . $theObject . "\"", $theProperty, $default );
 	}
-	public function getDSOseenLink($object) 	// Returns the getSeen result, encoded to a href that shows the seen observations
-	{
+	public function getDSOseenLink($object) // Returns the getSeen result, encoded to a href that shows the seen observations
+{
 		global $baseURL, $loggedUser;
 		$seenDetails = $this->getSeen ( $object );
 		$seen = "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
@@ -199,8 +199,8 @@ class Objects {
 				$seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "&amp;observer=" . urlencode ( $loggedUser ) . "\" title=\"" . LangObjectYSeen . "\">" . $seenDetails . "</a>";
 		return $seen;
 	}
-	public function getExactDsObject($value, $cat = '', $catindex = '') 	// returns the exact name of an object
-	{
+	public function getExactDsObject($value, $cat = '', $catindex = '') // returns the exact name of an object
+{
 		global $objDatabase, $objCatalog;
 		if ($value) {
 			$value = $objCatalog->checkObject ( $value );
@@ -216,8 +216,8 @@ class Objects {
 		}
 		return $object;
 	}
-	public function getLikeDsObject($value, $cat = '', $catindex = '') 	// returns the exact name of an object
-	{
+	public function getLikeDsObject($value, $cat = '', $catindex = '') // returns the exact name of an object
+{
 		global $objDatabase, $objCatalog;
 		$value2 = $objCatalog->checkObject ( trim ( $value ) );
 		$value = strtoupper ( $objCatalog->checkObject ( trim ( $value ) ) );
@@ -251,8 +251,8 @@ class Objects {
 		$dra = 0.0011 * $dist / cos ( $decl / 180 * 3.1415926535 );
 		return $objDatabase->selectRecordsetArray ( "SELECT objects.name,objects.type,objects.ra,decl FROM objects WHERE ((objects.ra > $ra - $dra) AND (objects.ra < $ra + $dra) AND (objects.decl > $decl - ($dist/60)) AND (objects.decl < $decl + ($dist/60))) ORDER BY objects.name" );
 	}
-	public function getNumberOfObjectsInCatalog($catalog) 	// returns the number of objects in the catalog given as a parameter
-	{
+	public function getNumberOfObjectsInCatalog($catalog) // returns the number of objects in the catalog given as a parameter
+{
 		global $objDatabase, $loggedUser;
 		if (substr ( $catalog, 0, 5 ) == "List:")
 			if (substr ( $catalog, 5, 7 ) == "Public:")
@@ -410,8 +410,8 @@ class Objects {
 		uksort ( $obs, "strnatcasecmp" );
 		return $obs;
 	}
-	public function getObjects($lLhr, $rLhr, $dDdeg, $uDdeg, $mag) 	// returns an array containing all objects data between the specified coordinates
-	{
+	public function getObjects($lLhr, $rLhr, $dDdeg, $uDdeg, $mag) // returns an array containing all objects data between the specified coordinates
+{
 		global $objDatabase;
 		$objects = array ();
 		if ($lLhr < $rLhr) { // $sql="SELECT * FROM objects WHERE (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
@@ -437,8 +437,8 @@ class Objects {
 			$objects [$i] ['seen'] = $this->getSeen ( $objects [$i] ['name'] );
 		return $objects;
 	}
-	public function getObjectsMag($lLhr, $rLhr, $dDdeg, $uDdeg, $frommag, $tomag, $theobject = '') 	// returns an array containing all objects data between the specified coordinates
-	{
+	public function getObjectsMag($lLhr, $rLhr, $dDdeg, $uDdeg, $frommag, $tomag, $theobject = '') // returns an array containing all objects data between the specified coordinates
+{
 		global $objDatabase;
 		$objects = array ();
 		if ($lLhr < $rLhr) { // $sql="SELECT * FROM objects WHERE (ra>".$rLhr.") AND (decl>".$dDdeg.") AND (decl<".$uDdeg.") AND ((mag<=".$mag.") OR (mag>99)) ORDER BY mag;";
@@ -471,8 +471,8 @@ class Objects {
 			}
 		return $theresult;
 	}
-	public function getObject($theobject = '') 	// returns an array containing all objects data between the specified coordinates
-	{
+	public function getObject($theobject = '') // returns an array containing all objects data between the specified coordinates
+{
 		global $objDatabase;
 		$objects = array ();
 		$sql = "SELECT * FROM objects WHERE name='" . addslashes ( $theobject ) . "';";
@@ -590,8 +590,8 @@ class Objects {
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT objectpartof.partofname FROM objectpartof WHERE objectpartof.objectname = \"" . $name . "\"", 'partofname' );
 	}
-	public function getSeen($object) 	// Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
-	{
+	public function getSeen($object) // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
+{
 		global $loggedUser, $objDatabase;
 		$seen = '-';
 		if ($ObsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ", 'ObsCnt' )) {
@@ -852,8 +852,8 @@ class Objects {
 		$obs = $this->getObjectVisibilities ( $result2 );
 		return $obs;
 	}
-	private function getSize($name) 	// getSize returns the size of the object
-	{
+	private function getSize($name) // getSize returns the size of the object
+{
 		global $objDatabase;
 		$sql = "SELECT diam1, diam2 FROM objects WHERE name = \"$name\"";
 		$run = $objDatabase->selectRecordset ( $sql );
@@ -881,8 +881,8 @@ class Objects {
 		global $objDatabase;
 		return $objDatabase->execSQL ( "INSERT INTO objectpartof (objectname, partofname) VALUES (\"$name\", \"" . trim ( $cat . " " . ucwords ( trim ( $catindex ) ) ) . "\")" );
 	}
-	public function prepareObjectsContrast() 	// internal procedure to speed up contrast calculations
-	{
+	public function prepareObjectsContrast() // internal procedure to speed up contrast calculations
+{
 		global $objContrast, $loggedUser, $objDatabase;
 		;
 		if (! array_key_exists ( 'LTC', $_SESSION ) || (! $_SESSION ['LTC']))
@@ -1301,8 +1301,8 @@ class Objects {
 			$SBObj = - 999;
 		$objDatabase->execSQL ( "UPDATE objects SET SBObj=\"" . $SBObj . "\" WHERE name=\"" . $name . "\";" );
 	}
-	public function setDsoProperty($name, $property, $propertyValue) 	// sets the property to the specified value for the given object
-	{
+	public function setDsoProperty($name, $property, $propertyValue) // sets the property to the specified value for the given object
+{
 		global $objDatabase;
 		return $objDatabase->execSQL ( "UPDATE objects SET " . $property . " = \"" . $propertyValue . "\" WHERE name = \"" . $name . "\"" );
 		if (($property == "ra") || ($property == "decl"))
@@ -1557,20 +1557,28 @@ class Objects {
 		$theEphemerides ['altitude'] = $ristraset [3];
 		return $theEphemerides;
 	}
-	public function showObjects($link, $ownShow = '', $showRank = 0, $pageListAction = "addAllObjectsFromPageToList", $columnSource = "") 	// ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
-	{
+	public function showObjects($link, $ownShow = '', $showRank = 0, $pageListAction = "addAllObjectsFromPageToList", $columnSource = "") // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
+{
 		global $objFormLayout, $objAtlas, $objObserver, $objLocation, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil, $objPresentations, $objList;
 		$atlas = '';
 		$c = 0;
-
+		
 		// Add the button to select which columns to show
 		$objUtil->addTableColumSelector ();
-
+		
 		echo "<table class=\"table sort-tableobjectlist table-condensed table-striped table-hover tablesorter custom-popup\">";
 		echo "<thead>";
 		echo "<tr>";
-		if ($showRank)
-			echo "<th>" . LangOverviewObjectsHeader9 . "</th>";
+		if ($loggedUser) {
+			if ($showRank)
+				echo "<th>" . LangOverviewObjectsHeader9 . "</th>";
+			if (($myList) && ($pageListAction == "addAllObjectsFromPageToList"))
+				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\"><a href=\"" . $link . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">&nbsp;P&nbsp;</a></td>");
+			elseif (($myList) && ($pageListAction == "removePageObjectsFromList"))
+				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\"><a href=\"" . $link . "&amp;removePageObjectsFromList=true\" title=\"" . LangListQueryObjectsMessage1b . $listname_ss . "\">&nbsp;R&nbsp;</a></td>");
+			elseif ($myList)
+				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\">&nbsp;&nbsp;&nbsp;&nbsp;</td>");
+		}
 		echo "<th data-priority=\"critical\">" . LangOverviewObjectsHeader1 . "</th>";
 		echo "<th data-priority=\"5\">" . LangOverviewObjectsHeader2 . "</th>";
 		echo "<th data-priority=\"7\">" . LangOverviewObjectsHeader3 . "</th>";
@@ -1599,12 +1607,6 @@ class Objects {
 			echo "<th data-priority=\"6\">" . LangObjectHighestTo . "</th>";
 			echo "<th data-priority=\"7\">" . LangObjectHighestAround . "</th>";
 		}
-		if (($myList) && ($pageListAction == "addAllObjectsFromPageToList"))
-			echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\"><a href=\"" . $link . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">&nbsp;P&nbsp;</a></td>");
-		elseif (($myList) && ($pageListAction == "removePageObjectsFromList"))
-			echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\"><a href=\"" . $link . "&amp;removePageObjectsFromList=true\" title=\"" . LangListQueryObjectsMessage1b . $listname_ss . "\">&nbsp;R&nbsp;</a></td>");
-		elseif ($myList)
-			echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\">&nbsp;&nbsp;&nbsp;&nbsp;</td>");
 		echo "</tr>";
 		echo "</thead><tbody>";
 		$filteron = $objUtil->checkRequestKey ( 'filteron' );
@@ -1615,7 +1617,7 @@ class Objects {
 				$locationdecl = $objLocation->getLocationPropertyFromId ( $location, 'latitude', 0 );
 		}
 		$count = 0;
-		while ( $count < sizeof($_SESSION['Qobj']) ) {
+		while ( $count < sizeof ( $_SESSION ['Qobj'] ) ) {
 			$c = 0;
 			$specialclass = "";
 			if (($filteron == 'location') && ((($_SESSION ['Qobj'] [$count] ['objectdecl'] + 90.0) < $locationdecl) || (($_SESSION ['Qobj'] [$count] ['objectdecl'] - 90.0) > $locationdecl)))
@@ -1628,7 +1630,15 @@ class Objects {
 				echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader9 . ": " . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "')\"><a href=\"#\" onclick=\"theplace = prompt('" . LangNewPlaceInList . "','" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "'); location.href='" . $link . "&amp;ObjectFromPlaceInList=" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "&amp;ObjectToPlaceInList='+theplace; return false;\" title=\"" . LangToListMoved6 . "\">" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "</a></td>";
 			elseif ($showRank)
 				echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader9 . ": " . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "</td>";
-			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader1 . ": " . $_SESSION ['Qobj'] [$count] ['objectname'] . "')\" class=\"" . $specialclass ."\"><a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "\" >" . $_SESSION ['Qobj'] [$count] ['showname'] . "</a></td>";
+			if ($myList) {
+				echo ("<td>");
+				if ($objList->checkObjectInMyActiveList ( $_SESSION ['Qobj'] [$count] ['objectname'] ))
+					echo "<a href=\"" . $link . "&amp;removeObjectFromList=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "&amp;sort=" . $objUtil->checkGetKey ( 'sort' ) . "&amp;previous=" . $objUtil->checkGetKey ( 'previous' ) . "\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectname'] . LangListQueryObjectsMessage3 . $listname_ss . "\">R</a>";
+				else
+					echo "<a href=\"" . $link . "&amp;addObjectToList=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "&amp;showname=" . urlencode ( $_SESSION ['Qobj'] [$count] ['showname'] ) . "&amp;sort=" . $objUtil->checkGetKey ( 'sort' ) . "&amp;previous=" . $objUtil->checkGetKey ( 'previous' ) . "\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectname'] . LangListQueryObjectsMessage2 . $listname_ss . "\">L</a>";
+				echo "</td>";
+			}
+			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader1 . ": " . $_SESSION ['Qobj'] [$count] ['objectname'] . "')\" class=\"" . $specialclass . "\"><a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "\" >" . $_SESSION ['Qobj'] [$count] ['showname'] . "</a></td>";
 			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader2 . ": " . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objectconstellation']] . "')\">" . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objectconstellation']] . "</td>";
 			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader3 . ": " . $_SESSION ['Qobj'] [$count] ['objectmagnitude'] . "')\">" . (($_SESSION ['Qobj'] [$count] ['objectmagnitude'] == 99.9) || ($_SESSION ['Qobj'] [$count] ['objectmagnitude'] == '') ? "&nbsp;&nbsp;-&nbsp;" : sprintf ( "%01.1f", $_SESSION ['Qobj'] [$count] ['objectmagnitude'] )) . "</td>";
 			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader3b . ": " . $_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] . "')\">" . (($_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] == 99.9) || ($_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] == '') ? "&nbsp;&nbsp;-&nbsp;" : sprintf ( "%01.1f", $_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] )) . "</td>";
@@ -1663,43 +1673,35 @@ class Objects {
 				echo "<td>" . $_SESSION ['Qobj'] [$count] ['objectmaxaltendtext'] . "</td>";
 				echo "<td>" . $_SESSION ['Qobj'] [$count] ['objectmaxaltmidtext'] . "</td>";
 			}
-			if ($myList) {
-				echo ("<td>");
-				if ($objList->checkObjectInMyActiveList ( $_SESSION ['Qobj'] [$count] ['objectname'] ))
-					echo "<a href=\"" . $link . "&amp;removeObjectFromList=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "&amp;sort=" . $objUtil->checkGetKey ( 'sort' ) . "&amp;previous=" . $objUtil->checkGetKey ( 'previous' ) . "\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectname'] . LangListQueryObjectsMessage3 . $listname_ss . "\">R</a>";
-				else
-					echo "<a href=\"" . $link . "&amp;addObjectToList=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "&amp;showname=" . urlencode ( $_SESSION ['Qobj'] [$count] ['showname'] ) . "&amp;sort=" . $objUtil->checkGetKey ( 'sort' ) . "&amp;previous=" . $objUtil->checkGetKey ( 'previous' ) . "\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectname'] . LangListQueryObjectsMessage2 . $listname_ss . "\">L</a>";
-				echo "</td>";
-			}
 			echo "</tr>";
 			
 			$count ++;
 		}
 		echo "</tbody></table>";
 		
-		echo $objUtil->addTablePager ("objectlist");
+		echo $objUtil->addTablePager ( "objectlist" );
 		
-		echo $objUtil->addTableJavascript ("objectlist");
+		echo $objUtil->addTableJavascript ( "objectlist" );
 		
 		if ($loggedUser) {
 			$content1 = LangObjectsFilter . ": <a href=\"" . (($objUtil->checkRequestKey ( 'filteron' ) == 'location') ? $objUtil->removeFromLink ( $link, 'filteron=location' ) . "\" title=\"" . LangObjectsFilterLocationOffExpl . "\"" : $link . "&amp;filteron=location" . "\" title=\"" . LangObjectsFilterLocationExpl . "\"") . " class=\"btn btn-primary\">" . LangObjectsFilterLocation . "</a>" . "&nbsp;";
 			$content1 .= "<a href=\"" . (($objUtil->checkRequestKey ( 'filteron1' ) == 'time') ? $objUtil->removeFromLink ( $link, 'filteron1=time' ) . "\" title=\"" . LangObjectsFilterDateTimeOffExpl . "\"" : $link . "&amp;filteron1=time" . "\" title=\"" . LangObjectsFilterDateTimeExpl . "\"") . " class=\"btn btn-primary\">" . LangObjectsFilterDateTime . "</a>";
-
+			
 			$content = $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objects.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4a ) . "&nbsp;";
 			$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectnames.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4b ) . "&nbsp;";
 			$content .= $objPresentations->promptWithLinkText ( LangListQueryObjectsMessage14, LangListQueryObjectsMessage15, $baseURL . "objectsDetails.pdf.php?SID=Qobj", LangExecuteQueryObjectsMessage4c ) . "&nbsp;";
 			$content .= "<a href=\"" . $baseURL . "objects.argo?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage8 . "</a>&nbsp;";
 			$content .= "<a href=\"" . $baseURL . "objects.csv?SID=Qobj\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage6 . "</a>";
-		
+			
 			$content .= "&nbsp;<a href=\"" . $baseURL . "index.php?indexAction=reportsLayout&amp;reportname=ReportQueryOfObjects&amp;reporttitle=ReportQueryOfObjects&amp;SID=Qobj&amp;pdfTitle=Test\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . ReportLink . "</a>&nbsp;";
 			$content .= "<a href=\"" . $baseURL . "index.php?indexAction=objectsSets" . "\" rel=\"external\" class=\"btn btn-primary\"><span class=\"glyphicon glyphicon-download\"></span> " . LangExecuteQueryObjectsMessage11 . "</a>";
-
+			
 			echo $content1 . "<br /><br />";
 			echo $content;
 		}
 	}
-	public function showObjectsFields($link, $min, $max, $ownShow = '', $showRank = 0, $fields = array("showname","objectconstellation","objectmagnitude"), $pageListAction = "addAllObjectsFromPageToList") 	// ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
-	{
+	public function showObjectsFields($link, $min, $max, $ownShow = '', $showRank = 0, $fields = array("showname","objectconstellation","objectmagnitude"), $pageListAction = "addAllObjectsFromPageToList") // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
+{
 		global $objAtlas, $objObserver, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil, $objPresentations, $objList;
 		$atlas = '';
 		echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
@@ -1766,8 +1768,8 @@ class Objects {
 		
 		echo $objUtil->addTableJavascript ();
 	}
-	public function sortObjects($objectList, $sort, $reverse = false) 	// Sort the array of objectList on the $sort field, and in second order on the showname field
-	{
+	public function sortObjects($objectList, $sort, $reverse = false) // Sort the array of objectList on the $sort field, and in second order on the showname field
+{
 		if (! $objectList || count ( $objectList ) < 2)
 			return $objectList;
 		$sortmethod = "strnatcasecmp";
@@ -1844,8 +1846,8 @@ class Objects {
 		}
 		return $objectList;
 	}
-	public function validateObject() 	// checks if the add new object form is correctly filled in and eventually adds the object to the database
-	{
+	public function validateObject() // checks if the add new object form is correctly filled in and eventually adds the object to the database
+{
 		global $objUtil, $objObject, $objObserver, $entryMessage, $loggedUser, $developversion, $mailTo, $mailFrom;
 		if (! ($loggedUser))
 			new Exception ( LangException002c );
@@ -1860,8 +1862,8 @@ class Objects {
 				$entryMessage = LangValidateObjectMessage1; // check if required fields are filled in
 				$_GET ['indexAction'] = 'add_object';
 			}
-			if ($check) 			// check name
-			{
+			if ($check) // check name
+{
 				$catalog = trim ( $_POST ['catalog'] );
 				$catalogs = $objObject->getCatalogs ();
 				$foundcatalog = "";
@@ -1874,8 +1876,8 @@ class Objects {
 				$query1 = array (
 						"name" => $name 
 				);
-				if ($objObject->getObjectFromQuery ( $query1, 1 )) 				// object already exists
-				{
+				if ($objObject->getObjectFromQuery ( $query1, 1 )) // object already exists
+{
 					$entryMessage = LangValidateObjectMessage2;
 					$_GET ['object'] = $name;
 					$_GET ['indexAction'] = 'detail_object';
@@ -1894,8 +1896,8 @@ class Objects {
 					$_GET ['indexAction'] = 'add_object';
 					$check = false;
 				}
-			if ($check) 			// magnitude
-			{
+			if ($check) // magnitude
+{
 				$magnitude = "99.9";
 				if ($objUtil->checkPostKey ( 'magnitude' ) && (! (ereg ( '^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$', abs ( $_POST ['magnitude'] ), $matches )))) {
 					$entryMessage = LangValidateObjectMessage8;
@@ -1912,8 +1914,8 @@ class Objects {
 					}
 				}
 			}
-			if ($check) 			// postion angle
-			{
+			if ($check) // postion angle
+{
 				$posangle = "999";
 				if (! $objUtil->checkLimitsInclusive ( 'posangle', 0, 359 )) {
 					$entryMessage = LangValidateObjectMessage6;
@@ -1922,8 +1924,8 @@ class Objects {
 				} elseif ($objUtil->checkPostKey ( 'posangle' ))
 					$posangle = $_POST ['posangle'];
 			}
-			if ($check) 			// surface brightness
-			{
+			if ($check) // surface brightness
+{
 				$sb = "99.9";
 				if ($_POST ['sb'] && ereg ( '^([0-9]{1,2})[.,]{0,1}([0-9]{0,1})$', $_POST ['sb'], $matches )) {
 					$sb = "" . $matches [1] . ".";
@@ -1933,8 +1935,8 @@ class Objects {
 						$sb = $sb . "0";
 				}
 			}
-			if ($check) 			// check diam1
-			{
+			if ($check) // check diam1
+{
 				$diam1 = 0.0;
 				if ($objUtil->checkPostKey ( 'size_x' ) && $objUtil->checkPostKey ( 'size_x_units' )) {
 					if ($objUtil->checkPostKey ( 'size_x_units' ) == "min")
@@ -1948,8 +1950,8 @@ class Objects {
 					}
 				}
 			}
-			if ($check) 			// check diam2
-			{
+			if ($check) // check diam2
+{
 				$diam2 = 0.0;
 				if ($objUtil->checkPostKey ( 'size_y' ) && $objUtil->checkPostKey ( 'size_y_units' )) {
 					if ($objUtil->checkPostKey ( 'size_y_units' ) == "min")
@@ -1963,8 +1965,8 @@ class Objects {
 					}
 				}
 			}
-			if ($check) 			// fill database
-			{
+			if ($check) // fill database
+{
 				$objObject->addDSObject ( $name, $catalog, ucwords ( trim ( $_POST ['number'] ) ), $_POST ['type'], $_POST ['con'], $ra, $declination, $magnitude, $sb, $diam1, $diam2, $posangle, "DeepskyLogUser " . $loggedUser . " " . date ( 'Ymd' ) );
 				$body = LangValidateAccountEmailTitleObject . " " . $name . " " . "www.deepskylog.org/index.php?indexAction=detail_object&object=" . urlencode ( $name ) . " " . LangValidateAccountEmailTitleObjectObserver . " " . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . " " . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . " www.deepskylog.org/index.php?indexAction=detail_observer&user=" . urlencode ( $loggedUser );
 				if (isset ( $developversion ) && ($developversion == 1))
