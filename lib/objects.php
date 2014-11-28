@@ -1577,7 +1577,7 @@ class Objects {
 			elseif (($myList) && ($pageListAction == "removePageObjectsFromList"))
 				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\"><a href=\"" . $link . "&amp;removePageObjectsFromList=true\" title=\"" . LangListQueryObjectsMessage1b . $listname_ss . "\">&nbsp;R&nbsp;</a></td>");
 			elseif ($myList)
-				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\">&nbsp;&nbsp;&nbsp;&nbsp;</td>");
+				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangList . "</td>");
 		}
 		echo "<th data-priority=\"critical\">" . LangOverviewObjectsHeader1 . "</th>";
 		echo "<th data-priority=\"5\">" . LangOverviewObjectsHeader2 . "</th>";
@@ -1632,10 +1632,15 @@ class Objects {
 				echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader9 . ": " . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectpositioninlist'] . "</td>";
 			if ($myList) {
 				echo ("<td>");
-				if ($objList->checkObjectInMyActiveList ( $_SESSION ['Qobj'] [$count] ['objectname'] ))
-					echo "<a href=\"" . $link . "&amp;removeObjectFromList=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "&amp;sort=" . $objUtil->checkGetKey ( 'sort' ) . "&amp;previous=" . $objUtil->checkGetKey ( 'previous' ) . "\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectname'] . LangListQueryObjectsMessage3 . $listname_ss . "\">R</a>";
-				else
-					echo "<a href=\"" . $link . "&amp;addObjectToList=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "&amp;showname=" . urlencode ( $_SESSION ['Qobj'] [$count] ['showname'] ) . "&amp;sort=" . $objUtil->checkGetKey ( 'sort' ) . "&amp;previous=" . $objUtil->checkGetKey ( 'previous' ) . "\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectname'] . LangListQueryObjectsMessage2 . $listname_ss . "\">L</a>";
+				if ($objList->checkObjectInMyActiveList ( $_SESSION ['Qobj'] [$count] ['objectname'] )) {
+					echo "<a href=\"" . $link . "&amp;removeObjectFromList=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "&amp;sort=" . $objUtil->checkGetKey ( 'sort' ) . "&amp;previous=" . $objUtil->checkGetKey ( 'previous' ) . "\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectname'] . LangListQueryObjectsMessage3 . $listname_ss . "\">
+							<span class=\"glyphicon glyphicon-minus\" aria-hidden=\"true\"></span>
+							</a>";
+				} else {
+					echo "<a href=\"" . $link . "&amp;addObjectToList=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "&amp;showname=" . urlencode ( $_SESSION ['Qobj'] [$count] ['showname'] ) . "&amp;sort=" . $objUtil->checkGetKey ( 'sort' ) . "&amp;previous=" . $objUtil->checkGetKey ( 'previous' ) . "\" title=\"" . $_SESSION ['Qobj'] [$count] ['objectname'] . LangListQueryObjectsMessage2 . $listname_ss . "\">
+							<span class=\"glyphicon glyphicon-plus\" aria-hidden=\"true\"></span>
+							</a>";
+				}
 				echo "</td>";
 			}
 			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader1 . ": " . $_SESSION ['Qobj'] [$count] ['objectname'] . "')\" class=\"" . $specialclass . "\"><a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $_SESSION ['Qobj'] [$count] ['objectname'] ) . "\" >" . $_SESSION ['Qobj'] [$count] ['showname'] . "</a></td>";
