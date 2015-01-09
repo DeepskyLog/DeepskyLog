@@ -1,6 +1,19 @@
 <?php //NL
 // This is version 4.4
-
+define("IntroText", "<h2>Welkom bij DeepskyLog!</h2>
+In nauwe samenwerking met de <a href=\"http://www.vvs.be\">Vereniging Voor Sterrenkunde (VVS)</a> uit België bieden wij een uitgebreide en gratis database aan voor deepsky objecten. De database is ontwikkeld door de werkgroep deepsky van de VVS. De database bevat al tienduizenden waarnemingen en duizenden schetsen en tekeningen gemaakt door amateur-astronomen over de hele wereld. Nadat je geregistreerd bent op DeepskyLog krijgt u toegang tot een scala aan handige tools:<br /><br />
+<ul><li>Informatie over de waarnemingen, de waargenomen objecten en schetsen die je hebt gemaakt,</li>
+    <li>Waarneemlijsten met verschillende deepsky objecten,</li>
+    <li>u kunt uw waarnemingen te delen met andere waarnemers,</li>
+    <li>vertaalfunctie om waarnemingen in andere talen te lezen,</li>
+    <li>gratis steratlassen,</li>
+    <li>maak je eigen map met kaarten en DSS beelden van de objecten,</li>
+    <li>genereer pagina's van de objecten met de items waarin u geïnteresseerd bent,</li>
+    <li>interactieve ster atlas tot magnitude 16,</li>
+    <li>suggesties voor objecten die zichtbaar zijn met uw apparatuur,</li>
+    <li>informatie over de objecten die zichtbaar zijn vanaf uw waarneemplaats.</li>
+</ul>
+Om waarnemingen in te geven heb je een account nodig. Dit krijg je nadat u registreert. Neem contact op met de <a href=\"mailto:developers@deepskylog.be\">DeepskyLog ontwikkelaars</a> bij problemen of vragen.");
 define("LangDownloadAtlasses","Download atlassen");
 define("LangMessageRealMail","Stuur als echte mail");
 define("LangChangeAccountSendMailExpl","Stuur berichten ook als mail.");

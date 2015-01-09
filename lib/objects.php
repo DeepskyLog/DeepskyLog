@@ -1596,7 +1596,7 @@ class Objects {
 			echo "<th data-priority=\"6\">" . LangMoonRise . "</th>";
 			echo "<th data-priority=\"6\">" . LangTransit . "</th>";
 			echo "<th data-priority=\"6\">" . LangMoonSet . "</th>";
-			echo "<th data-priority=\"5\">" . LangBest . "</th>";
+			echo "<th data-priority=\"5\" class=\"sorter-digit\">" . LangBest . "</th>";
 			echo "<th data-priority=\"6\">" . LangMaxAltitude . "</th>";
 			echo "<th data-priority=\"3\">" . LangOverviewObjectsHeader7 . "</th>";
 			echo "<th data-priority=\"4\">" . LangOverviewObjectsHeader8 . "</th>";
