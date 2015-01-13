@@ -1,19 +1,26 @@
 <?php //EN
 // This is version 4.4
 define("IntroText", "<h2>Välkommen till DeepskyLog!</h2>
-I ett n&auml;ra samarbete med den astronomiska f&ouml;reningen VVS Vereniging Voor Sterrenkunde i Belgien kan SAAF Svensk Amat&ouml;rAstronomisk F&ouml;rening djuprymdssektion erbjuda en helt&auml;ckande och kostnadsfri databas för djuprymdsobjekt. Databasen &auml;r utvecklad av den Belgiska f&ouml;reningens djuprymdssektion och &auml;r en internationell databas med m&aring;nga funktioner och verktyg. Databasen inneh&aring;ller redan 10000-tals observationsrapporter och 1000-tals skisser och teckningar gjorda av amat&ouml;rastronomer runt om i v&auml;rlden. Efter att du har registrerat dig, vilket du g&ouml;r p&aring; DeepskyLogs hemsida, f&aring;r du tillg&aring;ng till en m&auml;ngd nyttiga verktyg som:<br /><br />
-<ul><li>Statistik &ouml;ver observationer du har genomf&ouml;rt, typ av objekt och skisser du har gjort,</li>
-    <li>Observationslistor med olika djuprymdsobjekt,</li>
-    <li>Du kan dela dina observationer med andra observat&ouml;rers observationer,</li>
-    <li>&Ouml;vers&auml;ttningsfunktion av olika spr&aring;k,</li>
-    <li>Tillg&aring;ng till flera olika kataloger,</li>
-    <li>Skapa din egen katalog med kartor och DSS-bilder p&aring; objekten,</li>  
-    <li>Generera kartblad &ouml;ver omr&aring;det med objekten du &auml;r intresserad av,</li>
-    <li>Interaktiv stj&auml;rnatlas ner till magnitud 16,</li>
-    <li>F&ouml;rslag p&aring; l&auml;mpliga objekt med din utrustning,</li>
-    <li>Information om vilka objekt som &auml;r synliga fr&aring;n din observationsplats.</li>
+I ett n&auml;ra samarbete med den astronomiska f&ouml;reningen VVS (Vereniging Voor Sterrenkunde) i Belgien kan Djuprymdssektionen i SAAF (Svensk Amat&ouml;rAstronomisk F&ouml;rening) erbjuda en helt&auml;ckande och kostnadsfri databas f&ouml; djuprymdsobjekt. DeepskyLog &auml;r utvecklad av den belgiska f&ouml;reningens djuprymdssektion och &auml;r en internationell databas med m&aring;nga funktioner och verktyg. Databasen inneh&aring;ller 10 000-tals observationsrapporter och 1 000-tals skisser och teckningar gjorda av amat&ouml;rastronomer runt om i v&auml;rlden och tj&auml;nar som SAAF/Djuprymdssektionens officiella observationsarkiv.
+<br /><br />
+Med DeepskyLog f&aring;r du tillg&aring;ng till en m&auml;ngd nyttiga verktyg, till exempel:<br /><br />
+<ul><li>Statistik &ouml;ver dina observationer, objekttyper och skisser,</li>
+	<li>M&ouml;jlighet att dela dina observationer med andra observat&ouml;rer,</li>
+	<li>Observationslistor med olika djuprymdsobjekt,</li> 
+	<li>Tillg&aring;ng till flera olika objektkataloger, </li>
+	<li>Skapa egna kataloger med kartor och DSS-bilder f&ouml;r objekten,</li> 
+	<li>Generera kartblad &ouml;ver omr&aring;det f&ouml;r det objekt du &auml;r intresserad av,</li> 
+	<li>Interaktiv stj&auml;rnatlas ner till magnitud 16, </li>
+	<li>F&ouml;rslag p&aring; observationsobjekt som &auml;r l&auml;mpliga f&ouml;r din utrustning,</li> 
+	<li>Information om vilka objekt som &auml;r synliga fr&aring;n din observationsplats, 
+	<li>Olika spr&aring;kversioner</li>
 </ul>
-F&ouml;r att b&ouml;rja registrera dina observationer beh&ouml;ver du ett konto. Detta f&aring;r du n&aring;gon dag efter du har registrerat dig p&aring; DeepskyLogs hemsida. Kontakta Mikael Anderlund SAAF om du &auml;r intresserad eller har fr&aring;gor om databasen. ");
+F&ouml;r att registrera dina observationer p&aring; DeepskyLog beh&ouml;ver du skapa ett konto, vilket du g&ouml;r p&aring; DeepskyLogs hemsida. H&ouml;r av dig f&ouml;r information om Djuprymdssekionens verksamhet eller om du har fr&aring;gor om databasen!
+<br /><br />
+Mikael Anderlund<br />
+SAAF/Djuprymdssektionen<br />
+mikael.anderlund@saaf.se<br />
+<br /><a href=\"http://saaf.se/sektioner.php\"><img width=\"200\" src=\"images/SAAF_nylogo.jpg\"></a>");
 
 define("LangDownloadAtlasses","Download atlasses");
 define("LangMessageRealMail","Send as real mail");
