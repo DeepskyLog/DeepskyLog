@@ -351,7 +351,8 @@ class AstroCalc
       if ($ris_tra_set[3] < 0) {
         $ris_tra_set[3] = "-";
       } else {
-        $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes;
+        $ris_tra_set[3] = floor($ris_tra_set[3]) + $toAdd . "&deg;" . $minutes . "&#39;";
+        
       }
       
       if ($ris_tra_set[4] > 24 || $ris_tra_set[4] < 0 || $ris_tra_set[3] == "-") {

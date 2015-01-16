@@ -2652,9 +2652,102 @@ class Utils {
 		// Make the table sorter, add the pager and add the column chooser
 		echo "<script type=\"text/javascript\">";
 
+		echo "// add astrotime parser. Use with class=sorter-astrotime
+              $.tablesorter.addParser({
+                // set a unique id
+                id: 'astrotime',
+                is: function(s, table, cell, \$cell) {
+                  // return false so this parser is not auto detected
+                  return false;
+                },
+                format: function(s, table, cell, cellIndex) {
+                  // format your data for normalization
+                  var time = s.split(\":\");
+                  var hour = time[0];
+                  if (hour < 12) {
+                    hour += 24;
+                  }
+                  return \"\" + hour + time[1];
+                },
+                // set type, either numeric or text
+                type: 'numeric'
+              });";
+		
+		echo "// add astrotime parser. Use with class=sorter-degrees
+              $.tablesorter.addParser({
+                // set a unique id
+                id: 'degrees',
+                is: function(s, table, cell, \$cell) {
+                  // return false so this parser is not auto detected
+                  return false;
+                },
+                format: function(s, table, cell, cellIndex) {
+                  // format your data for normalization
+				  s = s.replace(/\(|\'\)/g, '');
+			      
+                  var degrees = s.split(\"°\");
+				  var minutes = degrees[1];
+                  return \"\" + degrees[0] + minutes;
+                },
+                // set type, either numeric or text
+                type: 'numeric'
+              });";
+		
+		echo "// add astrotime parser. Use with class=sorter-months
+              $.tablesorter.addParser({
+                // set a unique id
+                id: 'months',
+                is: function(s, table, cell, \$cell) {
+                  // return false so this parser is not auto detected
+                  return false;
+                },
+                format: function(s, table, cell, cellIndex) {
+                  // format your data for normalization
+                  var months = s.split(\" \");
+				  var fraction = 0.75;
+				  if (months[0] == \"" . LangMonthTransit . "\") {
+				    fraction = 0.0;
+				  } else if (months[0] == \"" . LangMonthStart . "\") {
+				    fraction = 0.25;
+				  } else if (months[0] == \"" . LangMonthMid . "\") {
+				    fraction = 0.5;
+				  }
+				  		
+				  var month = 1;
+				  if (months[1] == \"" . $GLOBALS ['Month2Short'] . "\") {
+				    month = 2;
+				  } else if (months[1] == \"" . $GLOBALS ['Month3Short'] . "\") {
+				    month = 3;
+				  } else if (months[1] == \"" . $GLOBALS ['Month4Short'] . "\") {
+				    month = 4;
+				  } else if (months[1] == \"" . $GLOBALS ['Month5Short'] . "\") {
+				    month = 5;
+				  } else if (months[1] == \"" . $GLOBALS ['Month6Short'] . "\") {
+				    month = 6;
+				  } else if (months[1] == \"" . $GLOBALS ['Month7Short'] . "\") {
+				    month = 7;
+				  } else if (months[1] == \"" . $GLOBALS ['Month8Short'] . "\") {
+				    month = 8;
+				  } else if (months[1] == \"" . $GLOBALS ['Month9Short'] . "\") {
+				    month = 9;
+				  } else if (months[1] == \"" . $GLOBALS ['Month10Short'] . "\") {
+				    month = 10;
+				  } else if (months[1] == \"" . $GLOBALS ['Month11Short'] . "\") {
+				    month = 11;
+				  } else if (months[1] == \"" . $GLOBALS ['Month12Short'] . "\") {
+				    month = 12;
+				  }
+				  		
+                  return \"\" + month + fraction;
+                },
+                // set type, either numeric or text
+                type: 'numeric'
+              });";
+		
 		echo "$(function(){
 			$(\".sort-table" . $id . "\").tablesorter({
 		       theme: \"bootstrap\",
+			   stringTo: \"bottom\",
                dateFormat : \"";
 		
 		if ($dateformat == "d/m/Y") {
