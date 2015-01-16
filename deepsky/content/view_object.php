@@ -280,7 +280,7 @@ function showObjectEphemerides($theLocation) {
 }
 function showObjectImage($imagesize) {
 	global $object, $objPresentations, $objUtil;
-	echo "<h4>" . LangViewDSSImageTitle . $object . "&nbsp;(" . $imagesize . "&#39;&nbsp;x&nbsp;" . $imagesize . "&#39;)</h4>"; 
+	echo "<h4>" . LangViewDSSImageTitle . $object . "&nbsp;(" . $imagesize . "'&nbsp;x&nbsp;" . $imagesize . "')</h4>"; 
 	$imagelink = "http://archive.stsci.edu/cgi-bin/dss_search?" . "v=poss2ukstu_red&amp;r=" . urlencode ( $objUtil->checkRequestKey ( 'raDSS' ) ) . ".0&amp;d=" . urlencode ( $objUtil->checkRequestKey ( 'declDSS' ) ) . "&amp;e=J2000&amp;h=" . $imagesize . ".0&amp;w=" . $imagesize . "&amp;f=gif&amp;c=none&amp;fov=NONE&amp;v3=";
 	echo "<p class=\"centered DSSImage\" > 
 	       <a href=\"" . $imagelink . "\" data-lightbox=\"image-1\" data-title=\"\">

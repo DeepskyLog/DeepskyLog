@@ -85,7 +85,7 @@ function new_site() {
 	echo "<div class=\"form-group\">
 	       <label>" . LangAddSiteField4 . "</label>";
 	echo "<div class=\"form-inline\">";
-	echo "<input type=\"number\" min=\"-90\" max=\"90\" required class=\"form-control\" maxlength=\"3\" name=\"latitude\" size=\"4\" value=\"" . $latitudedeg . "\" />&deg;&nbsp;" . "<input type=\"number\" min=\"0\" max=\"59\" required class=\"form-control\" maxlength=\"2\" name=\"latitudemin\" size=\"4\"	value=\"" . abs ( $latitudemin ) . "\" />&#39;";
+	echo "<input type=\"number\" min=\"-90\" max=\"90\" required class=\"form-control\" maxlength=\"3\" name=\"latitude\" size=\"4\" value=\"" . $latitudedeg . "\" />&deg;&nbsp;" . "<input type=\"number\" min=\"0\" max=\"59\" required class=\"form-control\" maxlength=\"2\" name=\"latitudemin\" size=\"4\"	value=\"" . abs ( $latitudemin ) . "\" />'";
 	echo "</div>";
 	echo "<span class=\"help-block\">" . LangAddSiteField4Expl . "</span>";
 	echo "</div>";
@@ -93,7 +93,7 @@ function new_site() {
 	echo "<div class=\"form-group\">
 	       <label>" . LangAddSiteField5 . "</label>";
 	echo "<div class=\"form-inline\">";
-	echo "<input type=\"number\" min=\"-180\" max=\"180\" required class=\"form-control\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"" . $longitudedeg . "\" />&deg;&nbsp;" . "<input type=\"number\" min=\"0\" max=\"59\" required class=\"form-control\" maxlength=\"2\"	name=\"longitudemin\" size=\"4\" value=\"" . abs ( $longitudemin ) . "\" />&#39;";
+	echo "<input type=\"number\" min=\"-180\" max=\"180\" required class=\"form-control\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"" . $longitudedeg . "\" />&deg;&nbsp;" . "<input type=\"number\" min=\"0\" max=\"59\" required class=\"form-control\" maxlength=\"2\"	name=\"longitudemin\" size=\"4\" value=\"" . abs ( $longitudemin ) . "\" />'";
 	echo "</div>";
 	echo "<span class=\"help-block\">" . LangAddSiteField5Expl . "</span>";
 	echo "</div>";

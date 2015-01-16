@@ -80,7 +80,7 @@ class Presentations {
 			$decl_minutes = 0;
 			$decl_degrees ++;
 		}
-		return ($sign . sprintf ( "%02d", $decl_degrees ) . "&deg;" . sprintf ( "%02d", $decl_minutes ) . "&#39;");
+		return ($sign . sprintf ( "%02d", $decl_degrees ) . "&deg;" . sprintf ( "%02d", $decl_minutes ) . "'");
 	}
 	public function decToStringDegMinSec($decl, $web = 1) {
 		$sign = "";
@@ -101,7 +101,7 @@ class Presentations {
 			$decl_minutes = 0;
 			$decl_degrees ++;
 		}
-		return ($sign . sprintf ( "%02d", $decl_degrees ) . (($web == 1) ? "&deg;" : "d") . sprintf ( "%02d", $decl_minutes ) . (($web == 1) ? "&#39;" : "m") . sprintf ( "%02d", $decl_seconds ) . (($web == 1) ? "&quot;" : "s"));
+		return ($sign . sprintf ( "%02d", $decl_degrees ) . (($web == 1) ? "&deg;" : "d") . sprintf ( "%02d", $decl_minutes ) . (($web == 1) ? "'" : "m") . sprintf ( "%02d", $decl_seconds ) . (($web == 1) ? "&quot;" : "s"));
 	}
 	public function decToStringDSL($decl) {
 		if ($decl < 0) {
@@ -161,7 +161,7 @@ class Presentations {
 			$decl_minutes = 0;
 			$decl_degrees ++;
 		}
-		return ($sign . $decl_degrees . "&deg;" . sprintf ( "%02d", $decl_minutes ) . "&#39;");
+		return ($sign . $decl_degrees . "&deg;" . sprintf ( "%02d", $decl_minutes ) . "'");
 	}
 	public function getDSSDeepskyLiveLinks1($object) {
 		global $objPresentations, $objObject, $baseURL, $objUtil;

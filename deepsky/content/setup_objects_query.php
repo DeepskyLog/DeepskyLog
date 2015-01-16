@@ -152,7 +152,7 @@ function setup_objects_query() {
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount) && ($_SESSION ['QobjParams'] ['mindecl'] !== ''))
 			$minDeclSeconds = round ( abs ( $_SESSION ['QobjParams'] ['mindecl'] * 3600 ) ) % 60;
 	echo "<input id=\"minDeclDegrees\" name=\"minDeclDegrees\" type=\"number\" min=\"-90\" max=\"90\" class=\"form-control\" maxlength=\"3\" size=\"4\" value=\"" . $minDeclDegrees . "\" />&nbsp;&deg;&nbsp;";
-	echo "<input id=\"minDeclMinutes\" name=\"minDeclMinutes\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $minDeclMinutes . "\" />&nbsp;&#39;&nbsp;";
+	echo "<input id=\"minDeclMinutes\" name=\"minDeclMinutes\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $minDeclMinutes . "\" />&nbsp;'&nbsp;";
 	echo "<input id=\"minDeclSeconds\" name=\"minDeclSeconds\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $minDeclSeconds . "\" />&nbsp;&quot;&nbsp;";
 	echo "</td></tr>";
 	// MAXIMUM DECLINATION
@@ -168,7 +168,7 @@ function setup_objects_query() {
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && (count ( $_SESSION ['QobjParams'] ) == $QobjParamsCount) && ($_SESSION ['QobjParams'] ['maxdecl'] !== ''))
 			$maxDeclSeconds = round ( abs ( $_SESSION ['QobjParams'] ['maxdecl'] * 3600 ) ) % 60;
 	echo "<input id=\"maxDeclDegrees\" name=\"maxDeclDegrees\" type=\"number\" min=\"-90\" max=\"90\" class=\"form-control\" maxlength=\"3\" size=\"4\" value=\"" . $maxDeclDegrees . "\" />&nbsp;&deg;&nbsp;";
-	echo "<input id=\"maxDeclMinutes\" name=\"maxDeclMinutes\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $maxDeclMinutes . "\" />&nbsp;&#39;&nbsp;";
+	echo "<input id=\"maxDeclMinutes\" name=\"maxDeclMinutes\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $maxDeclMinutes . "\" />&nbsp;'&nbsp;";
 	echo "<input id=\"maxDeclSeconds\" name=\"maxDeclSeconds\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $maxDeclSeconds . "\" />&nbsp;&quot;&nbsp;";
 	echo "</td></tr>";
 	// MINIMUM RIGHT ASCENSION

@@ -132,7 +132,7 @@ function setup_observations_query() {
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount) && ($_SESSION ['QobsParams'] ['mindecl'] !== ''))
 			$minDeclSeconds = round ( abs ( $_SESSION ['QobsParams'] ['mindecl'] * 3600 ) ) % 60;
 	echo "<input id=\"minDeclDegrees\" name=\"minDeclDegrees\" type=\"number\" min=\"-90\" max=\"90\" class=\"form-control\" maxlength=\"3\" size=\"4\" value=\"" . $minDeclDegrees . "\" />&nbsp;&deg;&nbsp;";
-	echo "<input id=\"minDeclMinutes\" name=\"minDeclMinutes\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $minDeclMinutes . "\" />&nbsp;&#39;&nbsp;";
+	echo "<input id=\"minDeclMinutes\" name=\"minDeclMinutes\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $minDeclMinutes . "\" />&nbsp;'&nbsp;";
 	echo "<input id=\"minDeclSeconds\" name=\"minDeclSeconds\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $minDeclSeconds . "\" />&nbsp;&quot;&nbsp;";
 	echo "</td>";
 	echo "</tr>";
@@ -167,7 +167,7 @@ function setup_observations_query() {
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount) && ($_SESSION ['QobsParams'] ['maxdecl'] !== ''))
 			$maxDeclSeconds = round ( abs ( $_SESSION ['QobsParams'] ['maxdecl'] * 3600 ) ) % 60;
 	echo "<input id=\"maxDeclDegrees\" name=\"maxDeclDegrees\" type=\"number\" min=\"-90\" max=\"90\" class=\"form-control\" maxlength=\"3\" size=\"4\" value=\"" . $maxDeclDegrees . "\" />&nbsp;&deg;&nbsp;";
-	echo "<input id=\"maxDeclMinutes\" name=\"maxDeclMinutes\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $maxDeclMinutes . "\" />&nbsp;&#39;&nbsp;";
+	echo "<input id=\"maxDeclMinutes\" name=\"maxDeclMinutes\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $maxDeclMinutes . "\" />&nbsp;'&nbsp;";
 	echo "<input id=\"maxDeclSeconds\" name=\"maxDeclSeconds\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $maxDeclSeconds . "\" />&nbsp;&quot;&nbsp;";
 	echo "</td>";
 	echo "</tr>";
@@ -450,7 +450,7 @@ function setup_observations_query() {
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount) && ($_SESSION ['QobsParams'] ['minLat'] !== ''))
 			$minLatSeconds = round ( abs ( $_SESSION ['QobsParams'] ['minLat'] * 3600 ) ) % 60;
 	echo "<input id=\"minLatDegrees\" name=\"minLatDegrees\" type=\"number\" min=\"-90\" max=\"90\" class=\"form-control\" maxlength=\"3\" size=\"4\" value=\"" . $minLatDegrees . "\" />&nbsp;&deg;&nbsp;";
-	echo "<input id=\"minLatMinutes\" name=\"minLatMinutes\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $minLatMinutes . "\" />&nbsp;&#39;&nbsp;";
+	echo "<input id=\"minLatMinutes\" name=\"minLatMinutes\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $minLatMinutes . "\" />&nbsp;'&nbsp;";
 	echo "<input id=\"minLatSeconds\" name=\"minLatSeconds\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $minLatSeconds . "\" />&nbsp;&quot;&nbsp;";
 	echo "</td>";
 	// MINIMUM LIMITING MAGNITUDE
@@ -477,7 +477,7 @@ function setup_observations_query() {
 		if (array_key_exists ( 'QobsParams', $_SESSION ) && (count ( $_SESSION ['QobsParams'] ) == $QobsParamsCount) && ($_SESSION ['QobsParams'] ['maxLat'] !== ''))
 			$maxLatSeconds = round ( abs ( $_SESSION ['QobsParams'] ['maxLat'] * 3600 ) ) % 60;
 	echo "<input id=\"maxLatDegrees\" name=\"maxLatDegrees\" type=\"number\" min=\"-90\" max=\"90\" class=\"form-control\" maxlength=\"3\" size=\"4\" value=\"" . $maxLatDegrees . "\" />&nbsp;&deg;&nbsp;";
-	echo "<input id=\"maxLatMinutes\" name=\"maxLatMinutes\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $maxLatMinutes . "\" />&nbsp;&#39;&nbsp;";
+	echo "<input id=\"maxLatMinutes\" name=\"maxLatMinutes\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $maxLatMinutes . "\" />&nbsp;'&nbsp;";
 	echo "<input id=\"maxLatSeconds\" name=\"maxLatSeconds\" type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" size=\"3\" value=\"" . $maxLatSeconds . "\" />&nbsp;&quot;&nbsp;";
 	echo "</td>";
 	// MAXIMUM LIMITING MAGNITUDE
