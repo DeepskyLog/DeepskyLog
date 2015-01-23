@@ -25,7 +25,7 @@
 }
 
 /* bootstrap uses <i> for icons */
-.tablesorter-bootstrap .tablesorter-header i {
+.tablesorter-bootstrap .tablesorter-header i.tablesorter-icon {
 	font-size: 11px;
 	position: absolute;
 	right: 2px;
@@ -43,11 +43,10 @@
 	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAOCAMAAADOvxanAAAAVFBMVEUAAABCQkJZWVkZGRnJyckgICAZGRkZGRn8/PweHh4dHR0aGhoaGhpUVFQbGxvQ0NDc3NxMTExSUlIbGxvr6+s4ODhKSkogICAtLS00NDQzMzMnJydSEPrQAAAAGHRSTlMA1ssZRLgdAQbDyisqsZo8QdXUq0r9xPepSRwiAAAAX0lEQVQI13XHSQKAIAwEwQAKxn13Ev7/T2Pu9qmarJKPXIicI4PH4hxaKNrhm2S8bJK5h4YzKHrzJNtK6yYT/TdXzpS5zuYg4MSQYF6i4IHExdw1UVRi05HPrrvT53a+qyMFC9t04gcAAAAASUVORK5CYII=);
 }
 
-/* white unsorted icon
-.tablesorter-bootstrap .bootstrap-icon-unsorted {
+/* white unsorted icon */
+.tablesorter-bootstrap .icon-white.bootstrap-icon-unsorted {
 	background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAsAAAAOBAMAAAALT/umAAAAKlBMVEUAAAD///////////////////////////////////////////////////+Gu8ovAAAADXRSTlMA4EXKBtQqvR0+sxmalc142gAAAFdJREFUCNdjYGDoamAAAjZbMxCVfvd6AgMDd+3du9UMDKx3hWSvMjBwXZww8RYDGuC53NB8h4GB8a617UUGBs7Yu3cjGRhYVO9eVQFKOskKOQApFmUgBwBZ+xXRTttNdAAAAABJRU5ErkJggg==);
 }
- */
 
 /* since bootstrap (table-striped) uses nth-child(), we just use this to add a zebra stripe color */
 .tablesorter-bootstrap > tbody > tr.odd > td,
@@ -78,9 +77,9 @@
 }
 
 /* filter widget */
-.tablesorter-bootstrap .tablesorter-filter-row .tablesorter-filter {
+.tablesorter-bootstrap .tablesorter-filter-row input.tablesorter-filter,
+.tablesorter-bootstrap .tablesorter-filter-row select.tablesorter-filter {
 	width: 98%;
-	height: auto;
 	margin: 0 auto;
 	padding: 4px 6px;
 	color: #333;
@@ -119,7 +118,7 @@
 	margin: 0;
 	line-height: 0;
 }
-.tablesorter-bootstrap .tablesorter-filter-row.hideme .tablesorter-filter {
+.tablesorter-bootstrap .tablesorter-filter-row.hideme * {
 	height: 1px;
 	min-height: 0;
 	border: 0;
