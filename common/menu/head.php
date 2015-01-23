@@ -18,7 +18,7 @@ function head() {
 	echo "<link href=\"https://plus.google.com/105963409869875462537/\" rel=\"publisher\" />";
 	echo "<script type=\"text/javascript\" src=\"https://apis.google.com/js/plusone.js\"></script>";
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/phpjs.js\"></script>";
-	echo "<script src=\"" . $baseURL . "lib/javascript/jquery-1.11.1.min.js\" type=\"text/javascript\"></script>
+	echo "<script src=\"" . $baseURL . "lib/javascript/jquery-1.11.2.min.js\" type=\"text/javascript\"></script>
         <link rel=\"stylesheet\" href=\"" . $baseURL . "styles/lightbox.css\" type=\"text/css\" media=\"screen\" charset=\"utf-8\" />
         <script src=\"" . $baseURL . "lib/javascript/lightbox.min.js\" type=\"text/javascript\" charset=\"utf-8\"></script>";
 	echo "<link href='http://fonts.googleapis.com/css?family=Yellowtail' rel='stylesheet' type='text/css'>";
