@@ -2796,6 +2796,18 @@ class Utils {
 	}
 	})
 				
+	// TODO : Should be used to create the link to get the list and the report...
+	// Shows name of sorted column and the number to see if we sort from high to low or from low to high.
+	.bind(\"sortEnd\", function(sorter) {
+		currentSort = sorter.target.config.sortList;
+		var columns = \"\";
+		for (column = 0;column < currentSort.length;column++) {
+			columns = columns + \", \" + $(sorter.target.config.headerList[currentSort[column][0]]).text() + 
+				\"(\"+ (currentSort[column][1]) + \")\";
+		}
+		//alert(columns);
+	});
+				
     var pagerOptions = {
   
     // target the pager markup - see the HTML block below

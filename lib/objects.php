@@ -1566,7 +1566,20 @@ class Objects {
 		// Add the button to select which columns to show
 		$objUtil->addTableColumSelector ();
 		
-		echo "<table class=\"table sort-tableobjectlist table-condensed table-striped table-hover tablesorter custom-popup\">";
+		$nameLocation = 0;
+		if ($loggedUser) {
+			if ($showRank) {
+				$nameLocation = 0;
+			} else {
+				if (($myList) && ($pageListAction == "addAllObjectsFromPageToList"))
+					$nameLocation ++;
+				elseif (($myList) && ($pageListAction == "removePageObjectsFromList"))
+					$nameLocation ++;
+				elseif ($myList)
+					$nameLocation ++;
+			}
+		}
+		echo "<table class=\"table sort-tableobjectlist table-condensed table-striped table-hover tablesorter custom-popup\"  data-sortlist=\"[[" . $nameLocation . ",0]]\">";
 		echo "<thead>";
 		echo "<tr>";
 		if ($loggedUser) {
