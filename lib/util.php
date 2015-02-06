@@ -1158,12 +1158,12 @@ class Utils {
 		
 		$fontdir = $instDir . 'lib/fonts/Helvetica.afm';
 		$pdf->selectFont ( $fontdir );
-		$pdf->ezText ( utf8_decode( html_entity_decode ( LangPDFTitle3 ) ) . "\n" );
+		$pdf->ezText ( utf8_decode ( html_entity_decode ( LangPDFTitle3 ) ) . "\n" );
 		
 		while ( list ( $key, $value ) = each ( $result ) ) {
 			$objectname = $objCometObject->getName ( $observation->getObjectId ( $value ) );
 			
-			$pdf->ezText ( utf8_decode( $objectname ), "14" );
+			$pdf->ezText ( utf8_decode ( $objectname ), "14" );
 			
 			$observerid = $observation->getObserverId ( $value );
 			
@@ -1184,7 +1184,7 @@ class Utils {
 			
 			$observername = LangPDFMessage13 . $observer->getObserverProperty ( $observerid, 'firstname' ) . " " . $observer->getObserverProperty ( $observerid, 'name' ) . html_entity_decode ( LangPDFMessage14 ) . $formattedDate . " (" . $hour . ":" . $minute . ")";
 			
-			$pdf->ezText ( utf8_decode( $observername ), "12" );
+			$pdf->ezText ( utf8_decode ( $observername ), "12" );
 			
 			// Location and instrument
 			if (($observation->getLocationId ( $value ) != 0 && $observation->getLocationId ( $value ) != 1) || $observation->getInstrumentId ( $value ) != 0) {
@@ -1208,7 +1208,7 @@ class Utils {
 					}
 				}
 				
-				$pdf->ezText ( utf8_decode( $locationname ), "12" );
+				$pdf->ezText ( utf8_decode ( $locationname ), "12" );
 			}
 			
 			// Methode
@@ -1217,7 +1217,7 @@ class Utils {
 			if (strcmp ( $method, "" ) != 0) {
 				$methodstr = html_entity_decode ( LangViewObservationField15 ) . " : " . $method . " - " . $ICQMETHODS->getDescription ( $method );
 				
-				$pdf->ezText ( utf8_decode( $methodstr ), "12" );
+				$pdf->ezText ( utf8_decode ( $methodstr ), "12" );
 			}
 			
 			// Used chart
@@ -1226,7 +1226,7 @@ class Utils {
 			if (strcmp ( $chart, "" ) != 0) {
 				$chartstr = html_entity_decode ( LangViewObservationField17 ) . " : " . $chart . " - " . $ICQREFERENCEKEYS->getDescription ( $chart );
 				
-				$pdf->ezText ( utf8_decode( $chartstr ), "12" );
+				$pdf->ezText ( utf8_decode ( $chartstr ), "12" );
 			}
 			
 			// Magnitude
@@ -1244,7 +1244,7 @@ class Utils {
 					$magstr = $magstr . " (" . LangNewComet2 . ")";
 				}
 				
-				$pdf->ezText ( utf8_decode( $magstr ), "12" );
+				$pdf->ezText ( utf8_decode ( $magstr ), "12" );
 			}
 			
 			// Degree of condensation
@@ -1266,7 +1266,7 @@ class Utils {
 					$dcstr = $dcstr . $extra . html_entity_decode ( LangNewComet9 ) . " : " . $coma . "'";
 				}
 				
-				$pdf->ezText ( utf8_decode( $dcstr ), "12" );
+				$pdf->ezText ( utf8_decode ( $dcstr ), "12" );
 			}
 			
 			// Tail
@@ -1286,7 +1286,7 @@ class Utils {
 					$tailstr = $tailstr . $extra . html_entity_decode ( LangNewComet11 ) . " : " . $pa . "";
 				}
 				
-				$pdf->ezText ( utf8_decode( $tailstr ), "12" );
+				$pdf->ezText ( utf8_decode ( $tailstr ), "12" );
 			}
 			
 			// Description
@@ -1294,7 +1294,7 @@ class Utils {
 			
 			if (strcmp ( $description, "" ) != 0) {
 				$descstr = html_entity_decode ( LangPDFMessage15 ) . " : " . strip_tags ( $description );
-				$pdf->ezText ( utf8_decode( $descstr ), "12" );
+				$pdf->ezText ( utf8_decode ( $descstr ), "12" );
 			}
 			
 			$upload_dir = $instDir . 'comets/' . 'cometdrawings';
@@ -1327,7 +1327,7 @@ class Utils {
 		$pdf = new Cezpdf ( 'a4', 'landscape' );
 		$pdf->ezStartPageNumbers ( 450, 15, 10 );
 		$pdf->selectFont ( $instDir . 'lib/fonts/Helvetica.afm' );
-		$pdf->ezText ( utf8_decode( html_entity_decode ( $_GET ['pdfTitle'] ) ), 18 );
+		$pdf->ezText ( utf8_decode ( html_entity_decode ( $_GET ['pdfTitle'] ) ), 18 );
 		$pdf->ezColumnsStart ( array (
 				'num' => 10 
 		) );
@@ -1350,6 +1350,24 @@ class Utils {
 	public function pdfObjects($result) // Creates a pdf document from an array of objects
 {
 		global $instDir, $objAtlas, $objObserver, $objPresentations, $loggedUser;
+		
+		// TODO: Move to util.php
+// 		print "SORT : " . $_COOKIE ['sortOrder'];
+		
+// 		$sortOrder = explode ( ",", trim ( $_COOKIE ['sortOrder'], "|" ) );
+		
+// 		foreach ( $sortOrder as $sort ) {
+// 			$sort = trim($sort, ")");
+// 			$sort = explode(" (", $sort);
+// 			$sortName = $sort[0];
+// 			// 0 = up, 1 = down
+// 			$sortOrder = $sort[1];
+// 			print "<br />" . $sortName . " - " . $sortOrder;
+// 		}
+		
+// 		print_r(array_keys($result[0]));
+// 		exit ();
+		
 		while ( list ( $key, $valueA ) = each ( $result ) )
 			$obs1 [] = array (
 					"Name" => $valueA ['showname'],
@@ -1367,6 +1385,7 @@ class Utils {
 					"seen" => $valueA ['objectseen'],
 					"seendate" => $valueA ['objectlastseen'] 
 			);
+		
 		$pdf = new Cezpdf ( 'a4', 'landscape' );
 		$pdf->ezStartPageNumbers ( 450, 15, 10 );
 		$fontdir = $instDir . 'lib/fonts/Helvetica.afm';
@@ -1386,7 +1405,7 @@ class Utils {
 				"magnification" => html_entity_decode ( LangPDFMessage18 ),
 				"seen" => html_entity_decode ( LangOverviewObjectsHeader7 ),
 				"seendate" => html_entity_decode ( LangOverviewObjectsHeader8 ) 
-		), utf8_decode( html_entity_decode ( $_GET ['pdfTitle'] ) ), array (
+		), utf8_decode ( html_entity_decode ( $_GET ['pdfTitle'] ) ), array (
 				"width" => "750",
 				"cols" => array (
 						"Name" => array (
@@ -1482,11 +1501,11 @@ class Utils {
 		$SectionBarWidth = 400 + $sectionBarSpace;
 		
 		$theDate = date ( 'd/m/Y' );
-		$pdf->addTextWrap ( $xleft, $header, 100, 8, utf8_decode( $theDate ) );
+		$pdf->addTextWrap ( $xleft, $header, 100, 8, utf8_decode ( $theDate ) );
 		if ($loggedUser && $objObserver->getObserverProperty ( $loggedUser, 'name' ) && $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) && $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ))
-			$pdf->addTextWrap ( $xleft, $footer, $xmid + $SectionBarWidth, 8, utf8_decode( html_entity_decode ( LangPDFMessage19 . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . ' ' . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . ' ' . LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) . ' ' . LangPDFMessage21 . $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) ) ), 'center' );
-		$pdf->addTextWrap ( $xleft, $header, $xmid + $SectionBarWidth, 10, utf8_decode( html_entity_decode ( $_GET ['pdfTitle'] ) ), 'center' );
-		$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, 8, utf8_decode( LangPDFMessage22 . '1' ), 'right' );
+			$pdf->addTextWrap ( $xleft, $footer, $xmid + $SectionBarWidth, 8, utf8_decode ( html_entity_decode ( LangPDFMessage19 . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . ' ' . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . ' ' . LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) . ' ' . LangPDFMessage21 . $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) ) ), 'center' );
+		$pdf->addTextWrap ( $xleft, $header, $xmid + $SectionBarWidth, 10, utf8_decode ( html_entity_decode ( $_GET ['pdfTitle'] ) ), 'center' );
+		$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, 8, utf8_decode ( LangPDFMessage22 . '1' ), 'right' );
 		while ( list ( $key, $valueA ) = each ( $result ) ) {
 			$con = $valueA ['objectconstellation'];
 			if (! $sort || ($actualsort != $$sort)) {
@@ -1495,11 +1514,11 @@ class Utils {
 					if ($xbase == $xmid) {
 						if ($pagenr ++) {
 							$pdf->newPage ();
-							$pdf->addTextWrap ( $xleft, $header, 100, 8, utf8_decode( $theDate ) );
+							$pdf->addTextWrap ( $xleft, $header, 100, 8, utf8_decode ( $theDate ) );
 							if ($loggedUser && $objObserver->getObserverProperty ( $loggedUser, 'name' ) && $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) && $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ))
-								$pdf->addTextWrap ( $xleft, $footer, $xmid + $SectionBarWidth, 8, utf8_decode( html_entity_decode ( LangPDFMessage19 . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . ' ' . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . ' ' . LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) . ' ' . LangPDFMessage21 . $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) ) ), 'center' );
-							$pdf->addTextWrap ( $xleft, $header, $xmid + $SectionBarWidth, 10, utf8_decode( html_entity_decode ( $_GET ['pdfTitle'] ) ), 'center' );
-							$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, 8, utf8_decode( LangPDFMessage22 . $pagenr ), 'right' );
+								$pdf->addTextWrap ( $xleft, $footer, $xmid + $SectionBarWidth, 8, utf8_decode ( html_entity_decode ( LangPDFMessage19 . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . ' ' . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . ' ' . LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) . ' ' . LangPDFMessage21 . $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) ) ), 'center' );
+							$pdf->addTextWrap ( $xleft, $header, $xmid + $SectionBarWidth, 10, utf8_decode ( html_entity_decode ( $_GET ['pdfTitle'] ) ), 'center' );
+							$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, 8, utf8_decode ( LangPDFMessage22 . $pagenr ), 'right' );
 						}
 						$xbase = $xleft;
 					} else {
@@ -1509,7 +1528,7 @@ class Utils {
 				if ($sort) {
 					$y -= $deltalineSection;
 					$pdf->rectangle ( $xbase - $sectionBarSpace, $y - $sectionBarSpace, $SectionBarWidth, $sectionBarHeight );
-					$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode( $GLOBALS [$$sort] ) );
+					$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode ( $GLOBALS [$$sort] ) );
 					$y -= $deltaline + $deltalineSection;
 				}
 			} elseif ($y < $bottomsection) {
@@ -1517,17 +1536,17 @@ class Utils {
 				if ($xbase == $xmid) {
 					if ($pagenr ++) {
 						$pdf->newPage ();
-						$pdf->addTextWrap ( $xleft, $header, 100, 8, utf8_decode( $theDate ) );
+						$pdf->addTextWrap ( $xleft, $header, 100, 8, utf8_decode ( $theDate ) );
 						if ($loggedUser && $objObserver->getObserverProperty ( $loggedUser, 'name' ) && $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) && $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ))
-							$pdf->addTextWrap ( $xleft, $footer, $xmid + $SectionBarWidth, 8, utf8_decode( html_entity_decode ( LangPDFMessage19 . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . ' ' . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . ' ' . LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) . ' ' . LangPDFMessage21 . $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) ) ), 'center' );
-						$pdf->addTextWrap ( $xleft, $header, $xmid + $SectionBarWidth, 10, utf8_decode( html_entity_decode ( $_GET ['pdfTitle'] ) ), 'center' );
-						$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, 8, utf8_decode( LangPDFMessage22 . $pagenr ) , 'right' );
+							$pdf->addTextWrap ( $xleft, $footer, $xmid + $SectionBarWidth, 8, utf8_decode ( html_entity_decode ( LangPDFMessage19 . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . ' ' . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . ' ' . LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) . ' ' . LangPDFMessage21 . $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) ) ), 'center' );
+						$pdf->addTextWrap ( $xleft, $header, $xmid + $SectionBarWidth, 10, utf8_decode ( html_entity_decode ( $_GET ['pdfTitle'] ) ), 'center' );
+						$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, 8, utf8_decode ( LangPDFMessage22 . $pagenr ), 'right' );
 					}
 					$xbase = $xleft;
 					if ($sort) {
 						$y -= $deltalineSection;
 						$pdf->rectangle ( $xbase - $sectionBarSpace, $y - $sectionBarSpace, $SectionBarWidth, $sectionBarHeight );
-						$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode( $GLOBALS [$$sort] ) );
+						$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode ( $GLOBALS [$$sort] ) );
 						$y -= $deltaline + $deltalineSection;
 					}
 				} else {
@@ -1535,43 +1554,43 @@ class Utils {
 					if ($sort) {
 						$y -= $deltalineSection;
 						$pdf->rectangle ( $xbase - $sectionBarSpace, $y - $sectionBarSpace, $SectionBarWidth, $sectionBarHeight );
-						$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode( $GLOBALS [$$sort] ) );
+						$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode ( $GLOBALS [$$sort] ) );
 						$y -= $deltaline + $deltalineSection;
 					}
 				}
 			}
 			if (! $sort) {
-				$pdf->addTextWrap ( $xbase, $y, 30, $fontSizeText, utf8_decode( $valueA ['objectseen'] ) ); // seen
-				$pdf->addTextWrap ( $xbase + 30, $y, 40, $fontSizeText, utf8_decode( $valueA ['objectlastseen'] ) ) ; // last seen
-				$pdf->addTextWrap ( $xbase + 70, $y, 85, $fontSizeText, utf8_decode( '<b>' . '<c:alink:' . $baseURL . 'index.php?indexAction=detail_object&amp;object=' . urlencode ( $valueA ['objectname'] ) . '>' . $valueA ['showname'] ) ); // object
-				$pdf->addTextWrap ( $xbase + 150, $y, 30, $fontSizeText, utf8_decode( '</c:alink></b>' . $valueA ['objecttype'] ) ); // type
-				$pdf->addTextWrap ( $xbase + 180, $y, 20, $fontSizeText, utf8_decode( $valueA ['objectconstellation'] ) ); // constellation
-				$pdf->addTextWrap ( $xbase + 200, $y, 17, $fontSizeText, utf8_decode( $objPresentations->presentationInt1 ( $valueA ['objectmagnitude'], 99.9, '' ) ), 'left' ); // mag
-				$pdf->addTextWrap ( $xbase + 217, $y, 18, $fontSizeText, utf8_decode( $objPresentations->presentationInt1 ( $valueA ['objectsurfacebrightness'], 99.9, '' ) ), 'left' ); // sb
-				$pdf->addTextWrap ( $xbase + 235, $y, 60, $fontSizeText, utf8_decode( $objPresentations->raToStringHM ( $valueA ['objectra'] ) . ' ' . $objPresentations->decToString ( $valueA ['objectdecl'], 0 ) ) ); // ra - decl
-				$pdf->addTextWrap ( $xbase + 295, $y, 55, $fontSizeText, utf8_decode( $valueA ['objectsize'] . '/' . $objPresentations->presentationInt ( $valueA ['objectpa'], 999, "-" ) ) ); // size
-				$pdf->addTextWrap ( $xbase + 351, $y, 17, $fontSizeText, utf8_decode( $objPresentations->presentationInt1 ( $valueA ['objectcontrast'], '', '' ) ) , 'left' ); // contrast
-				$pdf->addTextWrap ( $xbase + 368, $y, 17, $fontSizeText, utf8_decode( ( int ) $valueA ['objectoptimalmagnification'] ) , 'left' ); // magnification
-				$pdf->addTextWrap ( $xbase + 380, $y, 20, $fontSizeText, utf8_decode( '<b>' . $valueA [($loggedUser ? $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ) : 'urano')] . '</b>' ), 'right' ); // atlas page
+				$pdf->addTextWrap ( $xbase, $y, 30, $fontSizeText, utf8_decode ( $valueA ['objectseen'] ) ); // seen
+				$pdf->addTextWrap ( $xbase + 30, $y, 40, $fontSizeText, utf8_decode ( $valueA ['objectlastseen'] ) ); // last seen
+				$pdf->addTextWrap ( $xbase + 70, $y, 85, $fontSizeText, utf8_decode ( '<b>' . '<c:alink:' . $baseURL . 'index.php?indexAction=detail_object&amp;object=' . urlencode ( $valueA ['objectname'] ) . '>' . $valueA ['showname'] ) ); // object
+				$pdf->addTextWrap ( $xbase + 150, $y, 30, $fontSizeText, utf8_decode ( '</c:alink></b>' . $valueA ['objecttype'] ) ); // type
+				$pdf->addTextWrap ( $xbase + 180, $y, 20, $fontSizeText, utf8_decode ( $valueA ['objectconstellation'] ) ); // constellation
+				$pdf->addTextWrap ( $xbase + 200, $y, 17, $fontSizeText, utf8_decode ( $objPresentations->presentationInt1 ( $valueA ['objectmagnitude'], 99.9, '' ) ), 'left' ); // mag
+				$pdf->addTextWrap ( $xbase + 217, $y, 18, $fontSizeText, utf8_decode ( $objPresentations->presentationInt1 ( $valueA ['objectsurfacebrightness'], 99.9, '' ) ), 'left' ); // sb
+				$pdf->addTextWrap ( $xbase + 235, $y, 60, $fontSizeText, utf8_decode ( $objPresentations->raToStringHM ( $valueA ['objectra'] ) . ' ' . $objPresentations->decToString ( $valueA ['objectdecl'], 0 ) ) ); // ra - decl
+				$pdf->addTextWrap ( $xbase + 295, $y, 55, $fontSizeText, utf8_decode ( $valueA ['objectsize'] . '/' . $objPresentations->presentationInt ( $valueA ['objectpa'], 999, "-" ) ) ); // size
+				$pdf->addTextWrap ( $xbase + 351, $y, 17, $fontSizeText, utf8_decode ( $objPresentations->presentationInt1 ( $valueA ['objectcontrast'], '', '' ) ), 'left' ); // contrast
+				$pdf->addTextWrap ( $xbase + 368, $y, 17, $fontSizeText, utf8_decode ( ( int ) $valueA ['objectoptimalmagnification'] ), 'left' ); // magnification
+				$pdf->addTextWrap ( $xbase + 380, $y, 20, $fontSizeText, utf8_decode ( '<b>' . $valueA [($loggedUser ? $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ) : 'urano')] . '</b>' ), 'right' ); // atlas page
 			} else {
-				$pdf->addTextWrap ( $xbase, $y, 30, $fontSizeText, utf8_decode( $valueA ['objectseen'] ) ); // seen
-				$pdf->addTextWrap ( $xbase + 30, $y, 40, $fontSizeText, utf8_decode( $valueA ['objectlastseen'] ) ); // last seen
-				$pdf->addTextWrap ( $xbase + 70, $y, 100, $fontSizeText, utf8_decode( '<b>' . '<c:alink:' . $baseURL . 'index.php?indexAction=detail_object&amp;object=' . urlencode ( $valueA ['objectname'] ) . '>' . $valueA ['showname'] ) ); // object
-				$pdf->addTextWrap ( $xbase + 170, $y, 30, $fontSizeText, utf8_decode( '</c:alink></b>' . $valueA ['objecttype'] ) ); // type
-				$pdf->addTextWrap ( $xbase + 200, $y, 17, $fontSizeText, utf8_decode( $objPresentations->presentationInt1 ( $valueA ['objectmagnitude'], 99.9, '' ) ), 'left' ); // mag
-				$pdf->addTextWrap ( $xbase + 217, $y, 18, $fontSizeText, utf8_decode( $objPresentations->presentationInt1 ( $valueA ['objectsurfacebrightness'], 99.9, '' ) ), 'left' ); // sb
-				$pdf->addTextWrap ( $xbase + 235, $y, 60, $fontSizeText, utf8_decode( $objPresentations->raToStringHM ( $valueA ['objectra'] ) . ' ' . $objPresentations->decToString ( $valueA ['objectdecl'], 0 ) ) ); // ra - decl
-				$pdf->addTextWrap ( $xbase + 295, $y, 55, $fontSizeText, utf8_decode( $valueA ['objectsize'] . '/' . $objPresentations->presentationInt ( $valueA ['objectpa'], 999, "-" ) ) ); // size
-				$pdf->addTextWrap ( $xbase + 351, $y, 17, $fontSizeText, utf8_decode( $objPresentations->presentationInt1 ( $valueA ['objectcontrast'], 0, '' ) ), 'left' ); // contrast
-				$pdf->addTextWrap ( $xbase + 368, $y, 17, $fontSizeText, utf8_decode( $objPresentations->presentationInt ( ( int ) $valueA ['objectoptimalmagnification'], 0, '' ) ), 'left' ); // magnification
-				$pdf->addTextWrap ( $xbase + 380, $y, 20, $fontSizeText, utf8_decode( '<b>' . $valueA [($loggedUser ? $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ) : 'urano')] . '</b>' ), 'right' ); // atlas page
+				$pdf->addTextWrap ( $xbase, $y, 30, $fontSizeText, utf8_decode ( $valueA ['objectseen'] ) ); // seen
+				$pdf->addTextWrap ( $xbase + 30, $y, 40, $fontSizeText, utf8_decode ( $valueA ['objectlastseen'] ) ); // last seen
+				$pdf->addTextWrap ( $xbase + 70, $y, 100, $fontSizeText, utf8_decode ( '<b>' . '<c:alink:' . $baseURL . 'index.php?indexAction=detail_object&amp;object=' . urlencode ( $valueA ['objectname'] ) . '>' . $valueA ['showname'] ) ); // object
+				$pdf->addTextWrap ( $xbase + 170, $y, 30, $fontSizeText, utf8_decode ( '</c:alink></b>' . $valueA ['objecttype'] ) ); // type
+				$pdf->addTextWrap ( $xbase + 200, $y, 17, $fontSizeText, utf8_decode ( $objPresentations->presentationInt1 ( $valueA ['objectmagnitude'], 99.9, '' ) ), 'left' ); // mag
+				$pdf->addTextWrap ( $xbase + 217, $y, 18, $fontSizeText, utf8_decode ( $objPresentations->presentationInt1 ( $valueA ['objectsurfacebrightness'], 99.9, '' ) ), 'left' ); // sb
+				$pdf->addTextWrap ( $xbase + 235, $y, 60, $fontSizeText, utf8_decode ( $objPresentations->raToStringHM ( $valueA ['objectra'] ) . ' ' . $objPresentations->decToString ( $valueA ['objectdecl'], 0 ) ) ); // ra - decl
+				$pdf->addTextWrap ( $xbase + 295, $y, 55, $fontSizeText, utf8_decode ( $valueA ['objectsize'] . '/' . $objPresentations->presentationInt ( $valueA ['objectpa'], 999, "-" ) ) ); // size
+				$pdf->addTextWrap ( $xbase + 351, $y, 17, $fontSizeText, utf8_decode ( $objPresentations->presentationInt1 ( $valueA ['objectcontrast'], 0, '' ) ), 'left' ); // contrast
+				$pdf->addTextWrap ( $xbase + 368, $y, 17, $fontSizeText, utf8_decode ( $objPresentations->presentationInt ( ( int ) $valueA ['objectoptimalmagnification'], 0, '' ) ), 'left' ); // magnification
+				$pdf->addTextWrap ( $xbase + 380, $y, 20, $fontSizeText, utf8_decode ( '<b>' . $valueA [($loggedUser ? $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ) : 'urano')] . '</b>' ), 'right' ); // atlas page
 			}
 			$y -= $deltaline;
 			if ($sort)
 				$actualsort = $$sort;
 			if (array_key_exists ( 'objectlistdescription', $valueA ) && $valueA ['objectlistdescription']) {
 				$theText = $objPresentations->br2nl ( $valueA ['objectlistdescription'] );
-				$theText = $pdf->addTextWrap ( $xbase + $descriptionLeadingSpace, $y, $xmid - $xleft - $descriptionLeadingSpace - 10, $fontSizeText, '<i>' . utf8_decode( $theText ) );
+				$theText = $pdf->addTextWrap ( $xbase + $descriptionLeadingSpace, $y, $xmid - $xleft - $descriptionLeadingSpace - 10, $fontSizeText, '<i>' . utf8_decode ( $theText ) );
 				$y -= $deltaline;
 				while ( $theText ) {
 					if ($y < $bottomsection) {
@@ -1579,17 +1598,17 @@ class Utils {
 						if ($xbase == $xmid) {
 							if ($pagenr ++) {
 								$pdf->newPage ();
-								$pdf->addTextWrap ( $xleft, $header, 100, 8, utf8_decode( $theDate ) );
+								$pdf->addTextWrap ( $xleft, $header, 100, 8, utf8_decode ( $theDate ) );
 								if ($objObserver->getObserverProperty ( $loggedUser, 'name' ) && $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) && $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ))
-									$pdf->addTextWrap ( $xleft, $footer, $xmid + $SectionBarWidth, 8, utf8_decode( html_entity_decode ( LangPDFMessage19 . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . ' ' . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) . ' ' . LangPDFMessage21 . $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) ) ), 'center' );
-								$pdf->addTextWrap ( $xleft, $header, $xmid + $SectionBarWidth, 10, utf8_decode( html_entity_decode ( $_GET ['pdfTitle'] ) ), 'center' );
-								$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, 8, utf8_decode( LangPDFMessage22 . $pagenr ), 'right' );
+									$pdf->addTextWrap ( $xleft, $footer, $xmid + $SectionBarWidth, 8, utf8_decode ( html_entity_decode ( LangPDFMessage19 . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . ' ' . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) . ' ' . LangPDFMessage21 . $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) ) ), 'center' );
+								$pdf->addTextWrap ( $xleft, $header, $xmid + $SectionBarWidth, 10, utf8_decode ( html_entity_decode ( $_GET ['pdfTitle'] ) ), 'center' );
+								$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, 8, utf8_decode ( LangPDFMessage22 . $pagenr ), 'right' );
 							}
 							$xbase = $xleft;
 							if ($sort) {
 								$y -= $deltalineSection;
 								$pdf->rectangle ( $xbase - $sectionBarSpace, $y - $sectionBarSpace, $SectionBarWidth, $sectionBarHeight );
-								$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode( $GLOBALS [$$sort] ) ) ;
+								$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode ( $GLOBALS [$$sort] ) );
 								$y -= $deltaline + $deltalineSection;
 							}
 						} else {
@@ -1597,18 +1616,18 @@ class Utils {
 							if ($sort) {
 								$y -= $deltalineSection;
 								$pdf->rectangle ( $xbase - $sectionBarSpace, $y - $sectionBarSpace, $SectionBarWidth, $sectionBarHeight );
-								$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode( $GLOBALS [$$sort] ) ) ;
+								$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode ( $GLOBALS [$$sort] ) );
 								$y -= $deltaline + $deltalineSection;
 							}
 						}
 					}
-					$theText = $pdf->addTextWrap ( $xbase + $descriptionLeadingSpace, $y, $xmid - $xleft - $descriptionLeadingSpace - 10, $fontSizeText, utf8_decode( $theText ) );
+					$theText = $pdf->addTextWrap ( $xbase + $descriptionLeadingSpace, $y, $xmid - $xleft - $descriptionLeadingSpace - 10, $fontSizeText, utf8_decode ( $theText ) );
 					$y -= $deltaline;
 				}
 				$pdf->addText ( 0, 0, 10, '</i>' );
 			} elseif (array_key_exists ( 'objectdescription', $valueA ) && $valueA ['objectdescription']) {
 				$theText = $objPresentations->br2nl ( $valueA ['objectdescription'] );
-				$theText = $pdf->addTextWrap ( $xbase + $descriptionLeadingSpace, $y, $xmid - $xleft - $descriptionLeadingSpace - 10, $fontSizeText, '<i>' . utf8_decode( $theText ) ) ;
+				$theText = $pdf->addTextWrap ( $xbase + $descriptionLeadingSpace, $y, $xmid - $xleft - $descriptionLeadingSpace - 10, $fontSizeText, '<i>' . utf8_decode ( $theText ) );
 				$y -= $deltaline;
 				while ( $theText ) {
 					if ($y < $bottomsection) {
@@ -1616,17 +1635,17 @@ class Utils {
 						if ($xbase == $xmid) {
 							if ($pagenr ++) {
 								$pdf->newPage ();
-								$pdf->addTextWrap ( $xleft, $header, 100, 8, utf8_decode( $theDate ) );
+								$pdf->addTextWrap ( $xleft, $header, 100, 8, utf8_decode ( $theDate ) );
 								if ($objObserver->getObserverProperty ( $loggedUser, 'name' ) && $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) && $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ))
-									$pdf->addTextWrap ( $xleft, $footer, $xmid + $SectionBarWidth, 8, utf8_decode( html_entity_decode ( LangPDFMessage19 . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . ' ' . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) . ' ' . LangPDFMessage21 . $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) ) ), 'center' );
-								$pdf->addTextWrap ( $xleft, $header, $xmid + $SectionBarWidth, 10, utf8_decode( html_entity_decode ( $_GET ['pdfTitle'] ) ), 'center' );
-								$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, 8, utf8_decode( LangPDFMessage22 . $pagenr ), 'right' );
+									$pdf->addTextWrap ( $xleft, $footer, $xmid + $SectionBarWidth, 8, utf8_decode ( html_entity_decode ( LangPDFMessage19 . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . ' ' . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) . ' ' . LangPDFMessage21 . $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) ) ), 'center' );
+								$pdf->addTextWrap ( $xleft, $header, $xmid + $SectionBarWidth, 10, utf8_decode ( html_entity_decode ( $_GET ['pdfTitle'] ) ), 'center' );
+								$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, 8, utf8_decode ( LangPDFMessage22 . $pagenr ), 'right' );
 							}
 							$xbase = $xleft;
 							if ($sort) {
 								$y -= $deltalineSection;
 								$pdf->rectangle ( $xbase - $sectionBarSpace, $y - $sectionBarSpace, $SectionBarWidth, $sectionBarHeight );
-								$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode( $GLOBALS [$$sort] ) );
+								$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode ( $GLOBALS [$$sort] ) );
 								$y -= $deltaline + $deltalineSection;
 							}
 						} else {
@@ -1634,12 +1653,12 @@ class Utils {
 							if ($sort) {
 								$y -= $deltalineSection;
 								$pdf->rectangle ( $xbase - $sectionBarSpace, $y - $sectionBarSpace, $SectionBarWidth, $sectionBarHeight );
-								$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode( $GLOBALS [$$sort] ) );
+								$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode ( $GLOBALS [$$sort] ) );
 								$y -= $deltaline + $deltalineSection;
 							}
 						}
 					}
-					$theText = $pdf->addTextWrap ( $xbase + $descriptionLeadingSpace, $y, $xmid - $xleft - $descriptionLeadingSpace - 10, $fontSizeText, utf8_decode( $theText ) );
+					$theText = $pdf->addTextWrap ( $xbase + $descriptionLeadingSpace, $y, $xmid - $xleft - $descriptionLeadingSpace - 10, $fontSizeText, utf8_decode ( $theText ) );
 					$y -= $deltaline;
 				}
 				$pdf->addText ( 0, 0, 10, '</i>' );
@@ -1651,15 +1670,15 @@ class Utils {
 		global $objObserver, $loggedUser, $objLocation, $objInstrument;
 		$y = $top;
 		$xbase = $xleft;
-		$pdf->addTextWrap ( $xleft, $header, 100, $fontSizeText, utf8_decode( $theDate ) );
+		$pdf->addTextWrap ( $xleft, $header, 100, $fontSizeText, utf8_decode ( $theDate ) );
 		if ($objObserver->getObserverProperty ( $loggedUser, 'name' ) && $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) && $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) && (strpos ( $showelements, 'h' ) !== FALSE)) {
-			$pdf->addTextWrap ( $xleft, $footer, $xmid + $SectionBarWidth, $fontSizeText, utf8_decode( html_entity_decode ( LangPDFMessage19 . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . ' ' . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . ' ' . LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) . ' ' . LangPDFMessage21 . $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) . LangRistrasetOn . $this->checkSessionKey ( 'globalDay' ) . ' ' . $GLOBALS ['Month' . $this->checkSessionKey ( 'globalMonth' )] . ' ' . $this->checkSessionKey ( 'globalYear' ) ) ), 'center' );
+			$pdf->addTextWrap ( $xleft, $footer, $xmid + $SectionBarWidth, $fontSizeText, utf8_decode ( html_entity_decode ( LangPDFMessage19 . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . ' ' . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . ' ' . LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) . ' ' . LangPDFMessage21 . $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) . LangRistrasetOn . $this->checkSessionKey ( 'globalDay' ) . ' ' . $GLOBALS ['Month' . $this->checkSessionKey ( 'globalMonth' )] . ' ' . $this->checkSessionKey ( 'globalYear' ) ) ), 'center' );
 		}
 		if ($objObserver->getObserverProperty ( $loggedUser, 'name' ) && $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) && (strpos ( $showelements, 'e' ) !== FALSE)) {
-			$pdf->addTextWrap ( $xleft, $footer - $deltaline, $xmid + $SectionBarWidth, $fontSizeText, utf8_decode( ReportSunDown . $_SESSION ['efemerides'] ['sset'] . LangTo . $_SESSION ['efemerides'] ['srise'] . " - " . ReportNautNight . $_SESSION ['efemerides'] ['naute'] . LangTo . $_SESSION ['efemerides'] ['nautb'] . " - " . ReportAstroNight . $_SESSION ['efemerides'] ['astroe'] . LangTo . $_SESSION ['efemerides'] ['astrob'] . " - " . ReportMoonUp . $_SESSION ['efemerides'] ['moon0'] . LangTo . $_SESSION ['efemerides'] ['moon2'] ), 'center' );
+			$pdf->addTextWrap ( $xleft, $footer - $deltaline, $xmid + $SectionBarWidth, $fontSizeText, utf8_decode ( ReportSunDown . $_SESSION ['efemerides'] ['sset'] . LangTo . $_SESSION ['efemerides'] ['srise'] . " - " . ReportNautNight . $_SESSION ['efemerides'] ['naute'] . LangTo . $_SESSION ['efemerides'] ['nautb'] . " - " . ReportAstroNight . $_SESSION ['efemerides'] ['astroe'] . LangTo . $_SESSION ['efemerides'] ['astrob'] . " - " . ReportMoonUp . $_SESSION ['efemerides'] ['moon0'] . LangTo . $_SESSION ['efemerides'] ['moon2'] ), 'center' );
 		}
 		if (strpos ( $showelements, 'p' ) !== FALSE) {
-			$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, $fontSizeText, utf8_decode( LangPDFMessage22 . $pagenr ), 'right' );
+			$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, $fontSizeText, utf8_decode ( LangPDFMessage22 . $pagenr ), 'right' );
 		}
 		if (strpos ( $showelements, 't' ) !== FALSE) {
 			$pdf->addTextWrap ( $xleft, $header, $xmid + $SectionBarWidth, 10, utf8_decode ( html_entity_decode ( $this->checkRequestKey ( 'pdfTitle' ) ) ), 'center' );
@@ -1679,7 +1698,7 @@ class Utils {
 						$pdf->addText ( 0, 0, $fontSizeText, '<b>' );
 					if (strpos ( $dataelement ['fieldstyle'], 'i' ) !== FALSE)
 						$pdf->addText ( 0, 0, $fontSizeText, '<i>' );
-					$pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode( $dataelement ['fieldlegend'] ) , $justification );
+					$pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode ( $dataelement ['fieldlegend'] ), $justification );
 					$deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
 					if (strpos ( $dataelement ['fieldstyle'], 'b' ) !== FALSE)
 						$pdf->addText ( 0, 0, $fontSizeText, '</b>' );
@@ -1705,16 +1724,16 @@ class Utils {
 			if ($xbase == $xmid) {
 				if ($pagenr ++) {
 					$pdf->newPage ();
-					$pdf->addTextWrap ( $xleft, $header, 100, $fontSizeText, utf8_decode( $theDate ) );
+					$pdf->addTextWrap ( $xleft, $header, 100, $fontSizeText, utf8_decode ( $theDate ) );
 					if ($objObserver->getObserverProperty ( $loggedUser, 'name' ) && $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) && $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) && (strpos ( $showelements, 'h' ) !== FALSE))
-						$pdf->addTextWrap ( $xleft, $footer, $xmid + $SectionBarWidth, $fontSizeText, utf8_decode( html_entity_decode ( LangPDFMessage19 . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . ' ' . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . ' ' . LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) . ' ' . LangPDFMessage21 . $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) . LangRistrasetOn . $this->checkSessionKey ( 'globalDay' ) . ' ' . $GLOBALS ['Month' . $this->checkSessionKey ( 'globalMonth' )] . ' ' . $this->checkSessionKey ( 'globalYear' ) ) ), 'center' );
+						$pdf->addTextWrap ( $xleft, $footer, $xmid + $SectionBarWidth, $fontSizeText, utf8_decode ( html_entity_decode ( LangPDFMessage19 . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . ' ' . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . ' ' . LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) . ' ' . LangPDFMessage21 . $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) . LangRistrasetOn . $this->checkSessionKey ( 'globalDay' ) . ' ' . $GLOBALS ['Month' . $this->checkSessionKey ( 'globalMonth' )] . ' ' . $this->checkSessionKey ( 'globalYear' ) ) ), 'center' );
 					if ($objObserver->getObserverProperty ( $loggedUser, 'name' ) && $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) && (strpos ( $showelements, 'e' ) !== FALSE))
-						$pdf->addTextWrap ( $xleft, $footer - $deltaline, $xmid + $SectionBarWidth, $fontSizeText, utf8_decode( ReportSunDown . $_SESSION ['efemerides'] ['sset'] . LangTo . $_SESSION ['efemerides'] ['srise'] . " - " . ReportNautNight . $_SESSION ['efemerides'] ['naute'] . LangTo . $_SESSION ['efemerides'] ['nautb'] . " - " . ReportAstroNight . $_SESSION ['efemerides'] ['astroe'] . LangTo . $_SESSION ['efemerides'] ['astrob'] . " - " . ReportMoonUp . $_SESSION ['efemerides'] ['moon0'] . LangTo . $_SESSION ['efemerides'] ['moon2'] ) , 'center' );
+						$pdf->addTextWrap ( $xleft, $footer - $deltaline, $xmid + $SectionBarWidth, $fontSizeText, utf8_decode ( ReportSunDown . $_SESSION ['efemerides'] ['sset'] . LangTo . $_SESSION ['efemerides'] ['srise'] . " - " . ReportNautNight . $_SESSION ['efemerides'] ['naute'] . LangTo . $_SESSION ['efemerides'] ['nautb'] . " - " . ReportAstroNight . $_SESSION ['efemerides'] ['astroe'] . LangTo . $_SESSION ['efemerides'] ['astrob'] . " - " . ReportMoonUp . $_SESSION ['efemerides'] ['moon0'] . LangTo . $_SESSION ['efemerides'] ['moon2'] ), 'center' );
 					if (strpos ( $showelements, 'p' ) !== FALSE) {
-						$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, $fontSizeText, utf8_decode( LangPDFMessage22 . $pagenr ) , 'right' );
+						$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, $fontSizeText, utf8_decode ( LangPDFMessage22 . $pagenr ), 'right' );
 					}
 					if (strpos ( $showelements, 't' ) !== FALSE) {
-						$pdf->addTextWrap ( $xleft, $header, $xmid + $SectionBarWidth, 10, utf8_decode( html_entity_decode ( $this->checkRequestKey ( 'pdfTitle' ) ) ), 'center' );
+						$pdf->addTextWrap ( $xleft, $header, $xmid + $SectionBarWidth, 10, utf8_decode ( html_entity_decode ( $this->checkRequestKey ( 'pdfTitle' ) ) ), 'center' );
 					}
 				}
 				$xbase = $xleft;
@@ -1739,7 +1758,7 @@ class Utils {
 							$pdf->addText ( 0, 0, $fontSizeText, '<b>' );
 						if (strpos ( $dataelement ['fieldstyle'], 'i' ) !== FALSE)
 							$pdf->addText ( 0, 0, $fontSizeText, '<i>' );
-						$pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode( $dataelement ['fieldlegend'] ), $justification );
+						$pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode ( $dataelement ['fieldlegend'] ), $justification );
 						$deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
 						if (strpos ( $dataelement ['fieldstyle'], 'b' ) !== FALSE)
 							$pdf->addText ( 0, 0, $fontSizeText, '</b>' );
@@ -1754,7 +1773,7 @@ class Utils {
 			if ($sort) {
 				$y -= $deltalineSection;
 				$pdf->rectangle ( $xbase - $sectionBarSpace, $y - $sectionBarSpace, $SectionBarWidth, $sectionBarHeight );
-				$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode( $GLOBALS [$$sort] ) );
+				$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode ( $GLOBALS [$$sort] ) );
 				$y -= $deltaline + $deltalineSection;
 			}
 			if ($i)
@@ -1832,7 +1851,7 @@ class Utils {
 				else {
 					$y -= $deltalineSection;
 					$pdf->rectangle ( $xbase - $sectionBarSpace, $y - $sectionBarSpace, $SectionBarWidth, $sectionBarHeight );
-					$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode( $GLOBALS [$$sort] ) );
+					$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode ( $GLOBALS [$$sort] ) );
 					$y -= $deltaline + $deltalineSection;
 				}
 				$indexlist [$$sort] = $pagenr;
@@ -1865,57 +1884,57 @@ class Utils {
 					}
 					if ($dataelement ['fieldname'] == "showname") {
 						if ($valueA [$dataelement ['fieldname']]) {
-							$pdf->addText ( 0, 0, $fontSizeText, utf8_decode( '<c:alink:' . $baseURL . 'index.php?indexAction=detail_object&amp;object=' . urlencode ( $valueA ['objectname'] ) ) . '>' );
-							$pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode( $dataelement ['fieldafter'] . html_entity_decode ( $valueA [$dataelement ['fieldname']] ) . $dataelement ['fieldafter'] ) , $justification );
+							$pdf->addText ( 0, 0, $fontSizeText, utf8_decode ( '<c:alink:' . $baseURL . 'index.php?indexAction=detail_object&amp;object=' . urlencode ( $valueA ['objectname'] ) ) . '>' );
+							$pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode ( $dataelement ['fieldafter'] . html_entity_decode ( $valueA [$dataelement ['fieldname']] ) . $dataelement ['fieldafter'] ), $justification );
 							$pdf->addText ( 0, 0, $fontSizeText, '</c:alink>' );
 							$deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
 						}
 					} else if ($dataelement ['fieldname'] == "objectuseratlaspage") {
-						$pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode( $dataelement ['fieldbefore'] . html_entity_decode ( $valueA [($loggedUser ? $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ) : 'urano')] ) . $dataelement ['fieldafter'] ) , $justification );
+						$pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode ( $dataelement ['fieldbefore'] . html_entity_decode ( $valueA [($loggedUser ? $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ) : 'urano')] ) . $dataelement ['fieldafter'] ), $justification );
 						$deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
 					} else if (($dataelement ['fieldname'] == "objectlistdescription")) {
 						if (array_key_exists ( 'objectlistdescription', $valueA ) && ($valueA ['objectlistdescription'] != '')) {
 							$theText = $dataelement ['fieldbefore'] . html_entity_decode ( $objPresentations->br2nl ( $valueA ['objectlistdescription'] ) ) . $dataelement ['fieldafter'];
-							$theText = $pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode( $theText ) , $justification );
+							$theText = $pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode ( $theText ), $justification );
 							while ( $theText ) {
 								$y -= $deltaline;
 								if ($y - ($deltaline * $dataelement ['fieldline']) < $bottom) {
 									$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, $i, $b, $showelements, $reportdata );
 									$y += ($deltaline * $dataelement ['fieldline']);
 								}
-								$theText = $pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode( $theText ), $justification );
+								$theText = $pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode ( $theText ), $justification );
 							}
 							$deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
 						}
 					} elseif ($dataelement ['fieldname'] == "objectdescription") {
 						if (array_key_exists ( 'objectlistdescription', $valueA ) && ($valueA ['objectlistdescription'] != '')) {
 							$theText = $dataelement ['fieldbefore'] . html_entity_decode ( $objPresentations->br2nl ( $valueA ['objectlistdescription'] ) ) . $dataelement ['fieldafter'];
-							$theText = $pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode( $theText ), $justification );
+							$theText = $pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode ( $theText ), $justification );
 							while ( $theText ) {
 								$y -= $deltaline;
 								if ($y - ($deltaline * $dataelement ['fieldline']) < $bottom) {
 									$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, $i, $b, $showelements, $reportdata );
 									$y += ($deltaline * $dataelement ['fieldline']);
 								}
-								$theText = $pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode( $theText ) , $justification );
+								$theText = $pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode ( $theText ), $justification );
 							}
 							$deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
 						} else if (array_key_exists ( 'objectdescription', $valueA ) && ($valueA ['objectdescription'] != '')) {
 							$theText = $dataelement ['fieldbefore'] . html_entity_decode ( $objPresentations->br2nl ( $valueA ['objectdescription'] ) ) . $dataelement ['fieldafter'];
-							$theText = $pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode( $theText ) , $justification );
+							$theText = $pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode ( $theText ), $justification );
 							while ( $theText ) {
 								$y -= $deltaline;
 								if ($y - ($deltaline * $dataelement ['fieldline']) < $bottom) {
 									$this->newpage ( $y, $bottom, $top, $bottom, $xbase, $xmid, $pagenr, $pdf, $xleft, $header, $fontSizeText, $theDate, $footer, $SectionBarWidth, $sectionBarSpace, $sort, $con, $deltalineSection, $sectionBarHeight, $fontSizeSection, $deltaline, $deltalineSection, $i, $b, $showelements, $reportdata );
 									$y += ($deltaline * $dataelement ['fieldline']);
 								}
-								$theText = $pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode( $theText ) , $justification );
+								$theText = $pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode ( $theText ), $justification );
 							}
 							$deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
 						}
 					} else {
 						if (trim ( $valueA [$dataelement ['fieldname']] ) != '') {
-							$pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode( html_entity_decode ( $dataelement ['fieldbefore'] . $valueA [$dataelement ['fieldname']] . $dataelement ['fieldafter'] ) ) , $justification );
+							$pdf->addTextWrap ( $xbase + $dataelement ['fieldposition'], $y - ($deltaline * $dataelement ['fieldline']), $dataelement ['fieldwidth'], $fontSizeText, utf8_decode ( html_entity_decode ( $dataelement ['fieldbefore'] . $valueA [$dataelement ['fieldname']] . $dataelement ['fieldafter'] ) ), $justification );
 							$deltaymax = max ( $deltaymax, $dataelement ['fieldline'] );
 						}
 					}
@@ -1937,8 +1956,8 @@ class Utils {
 			$y = $top;
 			while ( list ( $key, $value ) = each ( $indexlist ) ) {
 				$pdf->line ( $xbase - $sectionBarSpace, $y + (($deltaline + $deltaobjectline) * .75), $xbase + $SectionBarWidth, $y + (($deltaline + $deltaobjectline) * .75) );
-				$pdf->addTextWrap ( $xbase, $y, 50, $fontSizeText, utf8_decode( $key ) , 'left' );
-				$pdf->addTextWrap ( $xbase + $SectionBarWidth - $sectionBarSpace - 50, $y, 50, $fontSizeText, utf8_decode( trim ( $value ) ) , 'right' );
+				$pdf->addTextWrap ( $xbase, $y, 50, $fontSizeText, utf8_decode ( $key ), 'left' );
+				$pdf->addTextWrap ( $xbase + $SectionBarWidth - $sectionBarSpace - 50, $y, 50, $fontSizeText, utf8_decode ( trim ( $value ) ), 'right' );
 				
 				$y -= ($deltaline + $deltaobjectline);
 				if (($y - ($deltaline + $deltaobjectline)) < $bottom) {
@@ -1955,7 +1974,7 @@ class Utils {
 		$pdf = new Cezpdf ( 'a4', 'portrait' );
 		$pdf->ezStartPageNumbers ( 300, 30, 10 );
 		$pdf->selectFont ( $instDir . 'lib/fonts/Helvetica.afm' );
-		$pdf->ezText ( utf8_decode( html_entity_decode ( $_GET ['pdfTitle'] ) ) . "\n" );
+		$pdf->ezText ( utf8_decode ( html_entity_decode ( $_GET ['pdfTitle'] ) ) . "\n" );
 		$i = 0;
 		while ( list ( $key, $value ) = each ( $result ) ) {
 			if ($i ++ > 0)
@@ -1999,7 +2018,7 @@ class Utils {
 					) 
 			);
 			$pdf->ezTable ( $tmp, array (
-					"type" => utf8_decode( html_entity_decode ( LangPDFMessage5 ) ) 
+					"type" => utf8_decode ( html_entity_decode ( LangPDFMessage5 ) ) 
 			), "", array (
 					"width" => "500",
 					"showHeadings" => "0",
@@ -2013,8 +2032,8 @@ class Utils {
 					) 
 			);
 			$pdf->ezTable ( $tmp, array (
-					"location" => utf8_decode( html_entity_decode ( LangPDFMessage1 ) ),
-					"instrument" => utf8_decode( html_entity_decode ( LangPDFMessage2 ) ) 
+					"location" => utf8_decode ( html_entity_decode ( LangPDFMessage1 ) ),
+					"instrument" => utf8_decode ( html_entity_decode ( LangPDFMessage2 ) ) 
 			), "", array (
 					"width" => "500",
 					"showHeadings" => "0",
@@ -2111,14 +2130,14 @@ class Utils {
 					) 
 			);
 			$pdf->ezTable ( $tmp, array (
-					"observer" => utf8_decode( html_entity_decode ( LangPDFMessage1 ) ) 
+					"observer" => utf8_decode ( html_entity_decode ( LangPDFMessage1 ) ) 
 			), "", array (
 					"width" => "500",
 					"showHeadings" => "0",
 					"showLines" => "0",
 					"shaded" => "0" 
 			) );
-			$pdf->ezText ( utf8_decode( LangPDFMessage15 ), "12" );
+			$pdf->ezText ( utf8_decode ( LangPDFMessage15 ), "12" );
 			$pdf->ezText ( "" );
 			$tmp = array (
 					array (
@@ -2126,7 +2145,7 @@ class Utils {
 					) 
 			);
 			$pdf->ezTable ( $tmp, array (
-					"description" => utf8_decode( html_entity_decode ( LangPDFMessage1 ) ) 
+					"description" => utf8_decode ( html_entity_decode ( LangPDFMessage1 ) ) 
 			), "", array (
 					"width" => "500",
 					"showHeadings" => "0",
@@ -2796,16 +2815,21 @@ class Utils {
 	}
 	})
 				
-	// TODO : Should be used to create the link to get the list and the report...
-	// Shows name of sorted column and the number to see if we sort from high to low or from low to high.
+	// Add the sort order to a cookie to read out when needed...
+	// Shows id of sorted column and the number to see if we sort from high to low or from low to high.
 	.bind(\"sortEnd\", function(sorter) {
 		currentSort = sorter.target.config.sortList;
-		var columns = \"\";
+		var columns = \"\|\";
 		for (column = 0;column < currentSort.length;column++) {
-			columns = columns + \", \" + $(sorter.target.config.headerList[currentSort[column][0]]).text() + 
-				\"(\"+ (currentSort[column][1]) + \")\";
+			columns = columns + $(sorter.target.config.headerList[currentSort[column][0]])[0].id + 
+				\"(\"+ (currentSort[column][1]) + \")\" + \",\";
 		}
-		//alert(columns);
+		columns = columns.substring(0, columns.length - 1);	
+		columns = columns + \"\|\";
+        var date = new Date();
+        date.setTime(date.getTime()+(24*60*60*1000));
+        var expires = \"; expires=\"+date.toGMTString();
+	    document.cookie = \"sortOrder=\"+columns+expires+\"; path=/\";
 	});
 				
     var pagerOptions = {
@@ -2894,6 +2918,19 @@ class Utils {
     		
 	});";
 		
+		echo "</script>";
+	}
+	public function getSortOrder() {
+		echo "<script type=\"text/javascript\">";
+		echo "	.bind(\"sortEnd\", function(sorter) {
+		currentSort = sorter.target.config.sortList;
+		var columns = \"\";
+		for (column = 0;column < currentSort.length;column++) {
+			columns = columns + \", \" + $(sorter.target.config.headerList[currentSort[column][0]]).text() + 
+				\"(\"+ (currentSort[column][1]) + \")\";
+		}
+		document.write(columns);
+	});";
 		echo "</script>";
 	}
 }

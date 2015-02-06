@@ -1584,7 +1584,7 @@ class Objects {
 		echo "<tr>";
 		if ($loggedUser) {
 			if ($showRank)
-				echo "<th>" . LangOverviewObjectsHeader9 . "</th>";
+				echo "<th id=\"objectpositioninlist\">" . LangOverviewObjectsHeader9 . "</th>";
 			if (($myList) && ($pageListAction == "addAllObjectsFromPageToList"))
 				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\"><a href=\"" . $link . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">&nbsp;P&nbsp;</a></td>");
 			elseif (($myList) && ($pageListAction == "removePageObjectsFromList"))
@@ -1592,33 +1592,32 @@ class Objects {
 			elseif ($myList)
 				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangList . "</td>");
 		}
-		echo "<th data-priority=\"critical\">" . LangOverviewObjectsHeader1 . "</th>";
-		echo "<th data-priority=\"5\">" . LangOverviewObjectsHeader2 . "</th>";
-		echo "<th data-priority=\"7\">" . LangOverviewObjectsHeader3 . "</th>";
-		echo "<th data-priority=\"7\">" . LangOverviewObjectsHeader3b . "</th>";
-		echo "<th data-priority=\"6\">" . LangOverviewObjectsHeader4 . "</th>";
-		echo "<th data-priority=\"6\">" . LangOverviewObjectsHeader10 . "</th>";
-		echo "<th data-priority=\"6\">" . LangOverviewObjectsHeader5 . "</th>";
-		// Declination : Sort
-		echo "<th data-priority=\"6\" class=\"sorter-digit\">" . LangOverviewObjectsHeader6 . "</th>";
+		echo "<th data-priority=\"critical\" id=\"showname\">" . LangOverviewObjectsHeader1 . "</th>";
+		echo "<th data-priority=\"5\" id=\"objectconstellation\">" . LangOverviewObjectsHeader2 . "</th>";
+		echo "<th data-priority=\"7\" id=\"objectmagnitude\">" . LangOverviewObjectsHeader3 . "</th>";
+		echo "<th data-priority=\"7\" id=\"objectsurfacebrightness\">" . LangOverviewObjectsHeader3b . "</th>";
+		echo "<th data-priority=\"6\" id=\"objecttype\">" . LangOverviewObjectsHeader4 . "</th>";
+		echo "<th data-priority=\"6\" id=\"objectsizepa\">" . LangOverviewObjectsHeader10 . "</th>";
+		echo "<th data-priority=\"6\" id=\"objectradecl\">" . LangOverviewObjectsHeader5 . "</th>";
+		echo "<th data-priority=\"6\" id=\"objectdecl\" class=\"sorter-digit\">" . LangOverviewObjectsHeader6 . "</th>";
 		if ($loggedUser) {
 			$atlas = $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' );
-			echo "<th data-priority=\"6\">" . $objAtlas->atlasCodes [$atlas] . "</th>";
-			echo "<th data-priority=\"7\">" . LangViewObjectFieldContrastReserve . "</th>";
-			echo "<th data-priority=\"6\">" . LangViewObjectFieldMagnification . "</th>";
-			echo "<th data-priority=\"6\" class=\"sorter-astrotime\">" . LangMoonRise . "</th>";
-			echo "<th data-priority=\"6\" class=\"sorter-astrotime\">" . LangTransit . "</th>";
-			echo "<th data-priority=\"6\" class=\"sorter-astrotime\">" . LangMoonSet . "</th>";
-			echo "<th data-priority=\"5\" class=\"sorter-astrotime\">" . LangBest . "</th>";
-			echo "<th data-priority=\"6\" class=\"sorter-degrees\">" . LangMaxAltitude . "</th>";
-			echo "<th data-priority=\"3\">" . LangOverviewObjectsHeader7 . "</th>";
-			echo "<th data-priority=\"4\">" . LangOverviewObjectsHeader8 . "</th>";
+			echo "<th data-priority=\"6\" id=\"" . $atlas . "\">" . $objAtlas->atlasCodes [$atlas] . "</th>";
+			echo "<th data-priority=\"7\" id=\"objectcontrast\">" . LangViewObjectFieldContrastReserve . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectoptimalmagnification\">" . LangViewObjectFieldMagnification . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectriseorder\" class=\"sorter-astrotime\">" . LangMoonRise . "</th>";
+			echo "<th data-priority=\"6\" id=\"objecttransitorder\" class=\"sorter-astrotime\">" . LangTransit . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectsetorder\" class=\"sorter-astrotime\">" . LangMoonSet . "</th>";
+			echo "<th data-priority=\"5\" id=\"objectbestorder\" class=\"sorter-astrotime\">" . LangBest . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectmaxaltitude\" class=\"sorter-degrees\">" . LangMaxAltitude . "</th>";
+			echo "<th data-priority=\"3\" id=\"objectseen\">" . LangOverviewObjectsHeader7 . "</th>";
+			echo "<th data-priority=\"4\" id=\"objectlastseen\">" . LangOverviewObjectsHeader8 . "</th>";
 		}
 		if ($loggedUser && $objObserver->getObserverProperty ( $loggedUser, 'stdLocation' )) {
-			echo "<th data-priority=\"6\" class=\"sorter-degrees\">" . LangObjectHighestAlt . "</th>";
-			echo "<th data-priority=\"6\" class=\"sorter-months\">" . LangObjectHighestFrom . "</th>";
-			echo "<th data-priority=\"6\" class=\"sorter-months\">" . LangObjectHighestTo . "</th>";
-			echo "<th data-priority=\"7\" class=\"sorter-months\">" . LangObjectHighestAround . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectmaxalt\" class=\"sorter-degrees\">" . LangObjectHighestAlt . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectmaxaltstart\" class=\"sorter-months\">" . LangObjectHighestFrom . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectmaxaltend\" class=\"sorter-months\">" . LangObjectHighestTo . "</th>";
+			echo "<th data-priority=\"7\" id=\"objectmaxaltmid\" class=\"sorter-months\">" . LangObjectHighestAround . "</th>";
 		}
 		echo "</tr>";
 		echo "</thead><tbody>";
