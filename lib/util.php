@@ -69,6 +69,8 @@ class Utils {
 	public function argoObjects($result) // Creates an argo navis file from an array of objects
 {
 		global $objObserver, $loggedUser, $objPresentations, $objAtlas;
+		$result = $this->sortResult ( $result );
+		
 		while ( list ( $key, $valueA ) = each ( $result ) ) {
 			echo "DSL " . $valueA ['objectname'] . "|" . $objPresentations->raArgoToString ( $valueA ['objectra'] ) . "|" . $objPresentations->decToArgoString ( $valueA ['objectdecl'], 0 ) . "|" . $GLOBALS ["argo" . $valueA ['objecttype']] . "|" . $objPresentations->presentationInt ( $valueA ['objectmagnitude'], 99.9, '' ) . "|" . $valueA ['objectsize'] . ";" . $objAtlas->atlasCodes [($atlas = $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ))] . " " . $valueA [$atlas] . ";" . "CR " . $valueA ['objectcontrast'] . ";" . $valueA ['objectseen'] . ";" . $valueA ['objectlastseen'] . "\n";
 		}
@@ -1080,6 +1082,7 @@ class Utils {
 	public function csvObjects($result) // Creates a csv file from an array of objects
 {
 		global $objObject, $objPresentations, $objObserver, $loggedUser;
+		$result = $this->sortResult ( $result );
 		echo html_entity_decode ( LangCSVMessage7 ) . "\n";
 		while ( list ( $key, $valueA ) = each ( $result ) ) {
 			$alt = "";
@@ -1143,6 +1146,8 @@ class Utils {
 		include_once "setup/vars.php";
 		include_once "setup/databaseInfo.php";
 		global $instDir, $objCometObject, $loggedUser, $dateformat;
+		$result = $this->sortResult ( $result );
+		
 		$objects = new CometObjects ();
 		$observer = new Observers ();
 		$instrument = new Instruments ();
@@ -1319,6 +1324,7 @@ class Utils {
 		global $instDir;
 		$page = 1;
 		$i = 0;
+		$result = $this->sortResult ( $result );
 		while ( list ( $key, $valueA ) = each ( $result ) )
 			$obs1 [] = array (
 					$valueA ['showname'] 
@@ -1347,26 +1353,50 @@ class Utils {
 		) );
 		$pdf->ezStream ();
 	}
+	public function sortResult($result) {
+		// Sort the result based on the 'sortOrder' cookie.
+		$sortOrderArray = explode ( ",", trim ( $_COOKIE ['sortOrder'], "|" ) );
+		
+		foreach ( $sortOrderArray as $sort ) {
+			$sort = trim ( $sort, ")" );
+			$sort = explode ( "(", $sort );
+			$sortName [] = $sort [0];
+			// 0 = up, 1 = down
+			$sortOrder [] = $sort [1];
+		}
+		
+		// Multicolumn sort
+		$sort = array ();
+		foreach ( $sortName as $sName ) {
+			foreach ( $result as $k => $v ) {
+				$sort [$sName] [$k] = $v [$sName];
+			}
+		}
+		
+		$cnt = 0;
+		$dynamicSort = array ();
+		foreach ( $sortName as $sName ) {
+			$dynamicSort [] = $sort [$sName];
+			if ($sortOrder [$cnt] == 0) {
+				$dynamicSort [] = SORT_ASC;
+			} else {
+				$dynamicSort [] = SORT_DESC;
+			}
+			$dynamicSort [] = SORT_NATURAL;
+			$cnt ++;
+		}
+		$param = array_merge ( $dynamicSort, array (
+				&$result 
+		) );
+		call_user_func_array ( 'array_multisort', $param );
+		// Return the sorted result
+		return $result;
+	}
 	public function pdfObjects($result) // Creates a pdf document from an array of objects
 {
 		global $instDir, $objAtlas, $objObserver, $objPresentations, $loggedUser;
 		
-		// TODO: Move to util.php
-// 		print "SORT : " . $_COOKIE ['sortOrder'];
-		
-// 		$sortOrder = explode ( ",", trim ( $_COOKIE ['sortOrder'], "|" ) );
-		
-// 		foreach ( $sortOrder as $sort ) {
-// 			$sort = trim($sort, ")");
-// 			$sort = explode(" (", $sort);
-// 			$sortName = $sort[0];
-// 			// 0 = up, 1 = down
-// 			$sortOrder = $sort[1];
-// 			print "<br />" . $sortName . " - " . $sortOrder;
-// 		}
-		
-// 		print_r(array_keys($result[0]));
-// 		exit ();
+		$result = $this->sortResult ( $result );
 		
 		while ( list ( $key, $valueA ) = each ( $result ) )
 			$obs1 [] = array (
@@ -1469,13 +1499,11 @@ class Utils {
 		) );
 		$pdf->ezStream ();
 	}
-	public function pdfObjectsDetails($result, $sort = '') // Creates a pdf document from an array of objects
+	public function pdfObjectsDetails($result) // Creates a pdf document from an array of objects
 {
 		global $dateformat, $baseURL, $instDir, $objObserver, $loggedUser, $objLocation, $objInstrument, $objPresentations;
-		if ($sort == 'objectconstellation')
-			$sort = 'con';
-		else
-			$sort = '';
+		$result = $this->sortResult ( $result );
+		
 		$pdf = new Cezpdf ( 'a4', 'landscape' );
 		$pdf->selectFont ( $instDir . 'lib/fonts/Helvetica.afm' );
 		
@@ -1494,7 +1522,6 @@ class Utils {
 		
 		$deltaline = $fontSizeText + 4;
 		$pagenr = 0;
-		$actualsort = '';
 		$y = 0;
 		$xbase = $xmid;
 		$sectionBarHeight = $fontSizeSection + 4;
@@ -1508,30 +1535,7 @@ class Utils {
 		$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, 8, utf8_decode ( LangPDFMessage22 . '1' ), 'right' );
 		while ( list ( $key, $valueA ) = each ( $result ) ) {
 			$con = $valueA ['objectconstellation'];
-			if (! $sort || ($actualsort != $$sort)) {
-				if ($y < $bottom) {
-					$y = $top;
-					if ($xbase == $xmid) {
-						if ($pagenr ++) {
-							$pdf->newPage ();
-							$pdf->addTextWrap ( $xleft, $header, 100, 8, utf8_decode ( $theDate ) );
-							if ($loggedUser && $objObserver->getObserverProperty ( $loggedUser, 'name' ) && $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) && $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ))
-								$pdf->addTextWrap ( $xleft, $footer, $xmid + $SectionBarWidth, 8, utf8_decode ( html_entity_decode ( LangPDFMessage19 . $objObserver->getObserverProperty ( $loggedUser, 'name' ) . ' ' . $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . ' ' . LangPDFMessage20 . $objInstrument->getInstrumentPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' ), 'name' ) . ' ' . LangPDFMessage21 . $objLocation->getLocationPropertyFromId ( $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' ), 'name' ) ) ), 'center' );
-							$pdf->addTextWrap ( $xleft, $header, $xmid + $SectionBarWidth, 10, utf8_decode ( html_entity_decode ( $_GET ['pdfTitle'] ) ), 'center' );
-							$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, 8, utf8_decode ( LangPDFMessage22 . $pagenr ), 'right' );
-						}
-						$xbase = $xleft;
-					} else {
-						$xbase = $xmid;
-					}
-				}
-				if ($sort) {
-					$y -= $deltalineSection;
-					$pdf->rectangle ( $xbase - $sectionBarSpace, $y - $sectionBarSpace, $SectionBarWidth, $sectionBarHeight );
-					$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode ( $GLOBALS [$$sort] ) );
-					$y -= $deltaline + $deltalineSection;
-				}
-			} elseif ($y < $bottomsection) {
+			if ($y < $bottom) {
 				$y = $top;
 				if ($xbase == $xmid) {
 					if ($pagenr ++) {
@@ -1543,51 +1547,23 @@ class Utils {
 						$pdf->addTextWrap ( $xmid + $SectionBarWidth - $sectionBarSpace - 100, $header, 100, 8, utf8_decode ( LangPDFMessage22 . $pagenr ), 'right' );
 					}
 					$xbase = $xleft;
-					if ($sort) {
-						$y -= $deltalineSection;
-						$pdf->rectangle ( $xbase - $sectionBarSpace, $y - $sectionBarSpace, $SectionBarWidth, $sectionBarHeight );
-						$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode ( $GLOBALS [$$sort] ) );
-						$y -= $deltaline + $deltalineSection;
-					}
 				} else {
 					$xbase = $xmid;
-					if ($sort) {
-						$y -= $deltalineSection;
-						$pdf->rectangle ( $xbase - $sectionBarSpace, $y - $sectionBarSpace, $SectionBarWidth, $sectionBarHeight );
-						$pdf->addText ( $xbase, $y, $fontSizeSection, utf8_decode ( $GLOBALS [$$sort] ) );
-						$y -= $deltaline + $deltalineSection;
-					}
 				}
 			}
-			if (! $sort) {
-				$pdf->addTextWrap ( $xbase, $y, 30, $fontSizeText, utf8_decode ( $valueA ['objectseen'] ) ); // seen
-				$pdf->addTextWrap ( $xbase + 30, $y, 40, $fontSizeText, utf8_decode ( $valueA ['objectlastseen'] ) ); // last seen
-				$pdf->addTextWrap ( $xbase + 70, $y, 85, $fontSizeText, utf8_decode ( '<b>' . '<c:alink:' . $baseURL . 'index.php?indexAction=detail_object&amp;object=' . urlencode ( $valueA ['objectname'] ) . '>' . $valueA ['showname'] ) ); // object
-				$pdf->addTextWrap ( $xbase + 150, $y, 30, $fontSizeText, utf8_decode ( '</c:alink></b>' . $valueA ['objecttype'] ) ); // type
-				$pdf->addTextWrap ( $xbase + 180, $y, 20, $fontSizeText, utf8_decode ( $valueA ['objectconstellation'] ) ); // constellation
-				$pdf->addTextWrap ( $xbase + 200, $y, 17, $fontSizeText, utf8_decode ( $objPresentations->presentationInt1 ( $valueA ['objectmagnitude'], 99.9, '' ) ), 'left' ); // mag
-				$pdf->addTextWrap ( $xbase + 217, $y, 18, $fontSizeText, utf8_decode ( $objPresentations->presentationInt1 ( $valueA ['objectsurfacebrightness'], 99.9, '' ) ), 'left' ); // sb
-				$pdf->addTextWrap ( $xbase + 235, $y, 60, $fontSizeText, utf8_decode ( $objPresentations->raToStringHM ( $valueA ['objectra'] ) . ' ' . $objPresentations->decToString ( $valueA ['objectdecl'], 0 ) ) ); // ra - decl
-				$pdf->addTextWrap ( $xbase + 295, $y, 55, $fontSizeText, utf8_decode ( $valueA ['objectsize'] . '/' . $objPresentations->presentationInt ( $valueA ['objectpa'], 999, "-" ) ) ); // size
-				$pdf->addTextWrap ( $xbase + 351, $y, 17, $fontSizeText, utf8_decode ( $objPresentations->presentationInt1 ( $valueA ['objectcontrast'], '', '' ) ), 'left' ); // contrast
-				$pdf->addTextWrap ( $xbase + 368, $y, 17, $fontSizeText, utf8_decode ( ( int ) $valueA ['objectoptimalmagnification'] ), 'left' ); // magnification
-				$pdf->addTextWrap ( $xbase + 380, $y, 20, $fontSizeText, utf8_decode ( '<b>' . $valueA [($loggedUser ? $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ) : 'urano')] . '</b>' ), 'right' ); // atlas page
-			} else {
-				$pdf->addTextWrap ( $xbase, $y, 30, $fontSizeText, utf8_decode ( $valueA ['objectseen'] ) ); // seen
-				$pdf->addTextWrap ( $xbase + 30, $y, 40, $fontSizeText, utf8_decode ( $valueA ['objectlastseen'] ) ); // last seen
-				$pdf->addTextWrap ( $xbase + 70, $y, 100, $fontSizeText, utf8_decode ( '<b>' . '<c:alink:' . $baseURL . 'index.php?indexAction=detail_object&amp;object=' . urlencode ( $valueA ['objectname'] ) . '>' . $valueA ['showname'] ) ); // object
-				$pdf->addTextWrap ( $xbase + 170, $y, 30, $fontSizeText, utf8_decode ( '</c:alink></b>' . $valueA ['objecttype'] ) ); // type
-				$pdf->addTextWrap ( $xbase + 200, $y, 17, $fontSizeText, utf8_decode ( $objPresentations->presentationInt1 ( $valueA ['objectmagnitude'], 99.9, '' ) ), 'left' ); // mag
-				$pdf->addTextWrap ( $xbase + 217, $y, 18, $fontSizeText, utf8_decode ( $objPresentations->presentationInt1 ( $valueA ['objectsurfacebrightness'], 99.9, '' ) ), 'left' ); // sb
-				$pdf->addTextWrap ( $xbase + 235, $y, 60, $fontSizeText, utf8_decode ( $objPresentations->raToStringHM ( $valueA ['objectra'] ) . ' ' . $objPresentations->decToString ( $valueA ['objectdecl'], 0 ) ) ); // ra - decl
-				$pdf->addTextWrap ( $xbase + 295, $y, 55, $fontSizeText, utf8_decode ( $valueA ['objectsize'] . '/' . $objPresentations->presentationInt ( $valueA ['objectpa'], 999, "-" ) ) ); // size
-				$pdf->addTextWrap ( $xbase + 351, $y, 17, $fontSizeText, utf8_decode ( $objPresentations->presentationInt1 ( $valueA ['objectcontrast'], 0, '' ) ), 'left' ); // contrast
-				$pdf->addTextWrap ( $xbase + 368, $y, 17, $fontSizeText, utf8_decode ( $objPresentations->presentationInt ( ( int ) $valueA ['objectoptimalmagnification'], 0, '' ) ), 'left' ); // magnification
-				$pdf->addTextWrap ( $xbase + 380, $y, 20, $fontSizeText, utf8_decode ( '<b>' . $valueA [($loggedUser ? $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ) : 'urano')] . '</b>' ), 'right' ); // atlas page
-			}
+			$pdf->addTextWrap ( $xbase, $y, 30, $fontSizeText, utf8_decode ( $valueA ['objectseen'] ) ); // seen
+			$pdf->addTextWrap ( $xbase + 30, $y, 40, $fontSizeText, utf8_decode ( $valueA ['objectlastseen'] ) ); // last seen
+			$pdf->addTextWrap ( $xbase + 70, $y, 85, $fontSizeText, utf8_decode ( '<b>' . '<c:alink:' . $baseURL . 'index.php?indexAction=detail_object&amp;object=' . urlencode ( $valueA ['objectname'] ) . '>' . $valueA ['showname'] ) ); // object
+			$pdf->addTextWrap ( $xbase + 150, $y, 30, $fontSizeText, utf8_decode ( '</c:alink></b>' . $valueA ['objecttype'] ) ); // type
+			$pdf->addTextWrap ( $xbase + 180, $y, 20, $fontSizeText, utf8_decode ( $valueA ['objectconstellation'] ) ); // constellation
+			$pdf->addTextWrap ( $xbase + 200, $y, 17, $fontSizeText, utf8_decode ( $objPresentations->presentationInt1 ( $valueA ['objectmagnitude'], 99.9, '' ) ), 'left' ); // mag
+			$pdf->addTextWrap ( $xbase + 217, $y, 18, $fontSizeText, utf8_decode ( $objPresentations->presentationInt1 ( $valueA ['objectsurfacebrightness'], 99.9, '' ) ), 'left' ); // sb
+			$pdf->addTextWrap ( $xbase + 235, $y, 60, $fontSizeText, utf8_decode ( $objPresentations->raToStringHM ( $valueA ['objectra'] ) . ' ' . $objPresentations->decToString ( $valueA ['objectdecl'], 0 ) ) ); // ra - decl
+			$pdf->addTextWrap ( $xbase + 295, $y, 55, $fontSizeText, utf8_decode ( $valueA ['objectsize'] . '/' . $objPresentations->presentationInt ( $valueA ['objectpa'], 999, "-" ) ) ); // size
+			$pdf->addTextWrap ( $xbase + 351, $y, 17, $fontSizeText, utf8_decode ( $objPresentations->presentationInt1 ( $valueA ['objectcontrast'], '', '' ) ), 'left' ); // contrast
+			$pdf->addTextWrap ( $xbase + 368, $y, 17, $fontSizeText, utf8_decode ( ( int ) $valueA ['objectoptimalmagnification'] ), 'left' ); // magnification
+			$pdf->addTextWrap ( $xbase + 380, $y, 20, $fontSizeText, utf8_decode ( '<b>' . $valueA [($loggedUser ? $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' ) : 'urano')] . '</b>' ), 'right' ); // atlas page
 			$y -= $deltaline;
-			if ($sort)
-				$actualsort = $$sort;
 			if (array_key_exists ( 'objectlistdescription', $valueA ) && $valueA ['objectlistdescription']) {
 				$theText = $objPresentations->br2nl ( $valueA ['objectlistdescription'] );
 				$theText = $pdf->addTextWrap ( $xbase + $descriptionLeadingSpace, $y, $xmid - $xleft - $descriptionLeadingSpace - 10, $fontSizeText, '<i>' . utf8_decode ( $theText ) );
@@ -1786,6 +1762,8 @@ class Utils {
 {
 		global $objReportLayout, $dateformat, $baseURL, $instDir, $objObserver, $loggedUser, $objLocation, $objInstrument, $objPresentations;
 		
+		$result = $this->sortResult ( $result );
+		
 		$reportdata = $objReportLayout->getReportData ( $reportuser, $reportname, $reportlayout );
 		if ($sort == 'objectconstellation')
 			$sort = 'con';
@@ -1971,6 +1949,7 @@ class Utils {
 	public function pdfObservations($result) // Creates a pdf document from an array of observations
 {
 		global $loggedUser, $dateformat, $instDir, $objObservation, $objObserver, $objInstrument, $objLocation, $objPresentations, $objObject, $objFilter, $objEyepiece, $objLens;
+		$result = $this->sortResult ( $result );
 		$pdf = new Cezpdf ( 'a4', 'portrait' );
 		$pdf->ezStartPageNumbers ( 300, 30, 10 );
 		$pdf->selectFont ( $instDir . 'lib/fonts/Helvetica.afm' );
@@ -2666,7 +2645,10 @@ class Utils {
 		global $dateformat;
 		// Make the table sorter, add the pager and add the column chooser
 		echo "<script type=\"text/javascript\">";
-		
+		echo "	var date = new Date();
+    			date.setTime(date.getTime()+(24*60*60*1000));
+    			var expires = \"; expires=\"+date.toGMTString();
+				document.cookie = \"sortOrder=\|showname(0)\|\"+expires+\"; path=/\";";
 		echo "// add astrotime parser. Use with class=sorter-astrotime
               $.tablesorter.addParser({
                 // set a unique id
@@ -2771,7 +2753,7 @@ class Utils {
 			echo "mmddyyyy";
 		}
 		echo "\", // set the default date format
-               headerTemplate: '{content} {icon}',
+               headerTemplate: '{content} {icon}',	
                widgets: [\"reorder\", \"uitheme\", \"columnSelector\", \"filter\", \"zebra\", \"stickyHeaders\"],
                widgetOptions : {
                  // target the column selector markup
@@ -2918,19 +2900,6 @@ class Utils {
     		
 	});";
 		
-		echo "</script>";
-	}
-	public function getSortOrder() {
-		echo "<script type=\"text/javascript\">";
-		echo "	.bind(\"sortEnd\", function(sorter) {
-		currentSort = sorter.target.config.sortList;
-		var columns = \"\";
-		for (column = 0;column < currentSort.length;column++) {
-			columns = columns + \", \" + $(sorter.target.config.headerList[currentSort[column][0]]).text() + 
-				\"(\"+ (currentSort[column][1]) + \")\";
-		}
-		document.write(columns);
-	});";
 		echo "</script>";
 	}
 }

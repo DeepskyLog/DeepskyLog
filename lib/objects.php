@@ -1579,6 +1579,7 @@ class Objects {
 					$nameLocation ++;
 			}
 		}
+		
 		echo "<table class=\"table sort-tableobjectlist table-condensed table-striped table-hover tablesorter custom-popup\"  data-sortlist=\"[[" . $nameLocation . ",0]]\">";
 		echo "<thead>";
 		echo "<tr>";
@@ -1593,10 +1594,10 @@ class Objects {
 				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangList . "</td>");
 		}
 		echo "<th data-priority=\"critical\" id=\"showname\">" . LangOverviewObjectsHeader1 . "</th>";
-		echo "<th data-priority=\"5\" id=\"objectconstellation\">" . LangOverviewObjectsHeader2 . "</th>";
+		echo "<th data-priority=\"5\" id=\"objectconstellationfull\">" . LangOverviewObjectsHeader2 . "</th>";
 		echo "<th data-priority=\"7\" id=\"objectmagnitude\">" . LangOverviewObjectsHeader3 . "</th>";
 		echo "<th data-priority=\"7\" id=\"objectsurfacebrightness\">" . LangOverviewObjectsHeader3b . "</th>";
-		echo "<th data-priority=\"6\" id=\"objecttype\">" . LangOverviewObjectsHeader4 . "</th>";
+		echo "<th data-priority=\"6\" id=\"objecttypefull\">" . LangOverviewObjectsHeader4 . "</th>";
 		echo "<th data-priority=\"6\" id=\"objectsizepa\">" . LangOverviewObjectsHeader10 . "</th>";
 		echo "<th data-priority=\"6\" id=\"objectradecl\">" . LangOverviewObjectsHeader5 . "</th>";
 		echo "<th data-priority=\"6\" id=\"objectdecl\" class=\"sorter-digit\">" . LangOverviewObjectsHeader6 . "</th>";
@@ -1784,84 +1785,6 @@ class Objects {
 		echo $objUtil->addTablePager ();
 		
 		echo $objUtil->addTableJavascript ();
-	}
-	public function sortObjects($objectList, $sort, $reverse = false) // Sort the array of objectList on the $sort field, and in second order on the showname field
-{
-		if (! $objectList || count ( $objectList ) < 2)
-			return $objectList;
-		$sortmethod = "strnatcasecmp";
-		$k = 0;
-		if ($sort == "name")
-			while ( list ( $key, $value ) = each ( $objectList ) )
-				$objectList3 [$value ['objectname'] . $value ['showname']] = $value;
-		if ($sort == "type")
-			while ( list ( $key, $value ) = each ( $objectList ) )
-				$objectList3 [$value ['objecttype'] . $value ['showname']] = $value;
-		if ($sort == "con")
-			while ( list ( $key, $value ) = each ( $objectList ) )
-				$objectList3 [$value ['objectconstellation'] . $value ['showname']] = $value;
-		if ($sort == "seen")
-			while ( list ( $key, $value ) = each ( $objectList ) )
-				$objectList3 [$value ['objectseen'] . $value ['showname']] = $value;
-		if ($sort == "seendate")
-			while ( list ( $key, $value ) = each ( $objectList ) )
-				$objectList3 [$value ['objectlastseen'] . $value ['showname']] = $value;
-		if ($sort == "showname")
-			while ( list ( $key, $value ) = each ( $objectList ) )
-				$objectList3 [$value ['showname']] = $value;
-		if ($sort == "mag")
-			while ( list ( $key, $value ) = each ( $objectList ) )
-				$objectList3 [sprintf ( "%.2f", $value ['objectmagnitude'] ) . $value ['showname']] = $value;
-		if ($sort == "subr")
-			while ( list ( $key, $value ) = each ( $objectList ) )
-				$objectList3 [sprintf ( "%.2f", $value ['objectsurfacebrightness'] ) . $value ['showname']] = $value;
-		if ($sort == "ra")
-			while ( list ( $key, $value ) = each ( $objectList ) )
-				$objectList3 [$value ['objectra'] . $value ['showname']] = $value;
-		if ($sort == "decl")
-			while ( list ( $key, $value ) = each ( $objectList ) )
-				$objectList3 [$value ['objectdecl'] . $value ['showname']] = $value;
-		if (substr ( $sort, 0, 5 ) == "atlas") {
-			$cnt = 0;
-			while ( list ( $key, $value ) = each ( $objectList ) ) {
-				$objectList3 [$value [substr ( $sort, 5 )] . sprintf ( "%05d", $cnt ) / 10000] = $value;
-				$cnt = $cnt + 1;
-			}
-		}
-		if ($sort == "contrast") {
-			$sortmethod = array (
-					new contrastcompare ( $reverse ),
-					"compare" 
-			);
-			while ( list ( $key, $value ) = each ( $objectList ) ) {
-				if (strcmp ( $value ['objectcontrast'], "-" ) == 0)
-					$objectList3 ["-/" . $value ['showname']] = $value;
-				else
-					$objectList3 [sprintf ( "%.2f", $value ['objectcontrast'] ) . "/" . $value ['showname']] = $value;
-			}
-		}
-		if ($sort == "magnification") {
-			$cnt = 0;
-			while ( list ( $key, $value ) = each ( $objectList ) ) {
-				if ($value ['objectcontrast'] == "-") {
-					$objectList3 ["-" . sprintf ( "%05d", $cnt ) / 10000] = $value;
-				} else {
-					$objectList3 [$value ['objectoptimalmagnification'] . sprintf ( "%05d", $cnt ) / 10000] = $value;
-				}
-				$cnt = $cnt + 1;
-			}
-		}
-		if ($sort == "objectplace")
-			while ( list ( $key, $value ) = each ( $objectList ) )
-				$objectList3 [$value ['objectpositioninlist'] . $value ['showname']] = $value;
-		uksort ( $objectList3, $sortmethod );
-		$objectList = array ();
-		while ( list ( $key, $value ) = each ( $objectList3 ) )
-			$objectList [] = $value;
-		if ($sort != "contrast" && $reverse == true) {
-			$objectList = array_reverse ( $objectList, false );
-		}
-		return $objectList;
 	}
 	public function validateObject() // checks if the add new object form is correctly filled in and eventually adds the object to the database
 {
