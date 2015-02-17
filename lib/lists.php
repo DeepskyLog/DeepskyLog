@@ -225,7 +225,7 @@ class Lists
      if(!in_array($get->objectname, $obs))
 	     $obs[$get->objectshowname] = array($get->objectplace,$get->objectname,$get->description);
 	 return $objObject->getSeenObjectDetails($obs, "A");	 
- }  
+ }
  public  function ObjectDownInList($place)
  { global $loggedUser,$listname,$objDatabase, $myList;
    if(!$myList)

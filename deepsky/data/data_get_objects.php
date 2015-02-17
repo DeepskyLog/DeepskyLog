@@ -434,8 +434,6 @@ function data_get_objects() {
 		$_SESSION ['QobjParams'] = array ();
 		$_SESSION ['Qobj'] = array ();
 	}
-	$_SESSION ['Qobj'] = $objUtil->sortResult ( $_SESSION ['Qobj'] );
-	
 }
 
 ?>

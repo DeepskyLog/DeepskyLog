@@ -1364,15 +1364,26 @@ class Utils {
 			// 0 = up, 1 = down
 			$sortOrder [] = $sort [1];
 		}
-		
 		// Multicolumn sort
 		$sort = array ();
 		foreach ( $sortName as $sName ) {
+			$cnt = 0;
 			foreach ( $result as $k => $v ) {
-				$sort [$sName] [$k] = $v [$sName];
+				if ($v [$sName] == "") {
+					if ($sortOrder [$cnt] == 1) {
+						// TODO:CHECK
+						$sort [$sName] [$k] = +99.0;
+					} else {
+						// TODO:CHECK
+						$sort [$sName] [$k] = -99.0;
+					}
+				} else {
+					$sort [$sName] [$k] = $v [$sName];
+				}
 			}
+			$cnt ++;
 		}
-		
+
 		$cnt = 0;
 		$dynamicSort = array ();
 		foreach ( $sortName as $sName ) {
@@ -1389,6 +1400,7 @@ class Utils {
 				&$result 
 		) );
 		call_user_func_array ( 'array_multisort', $param );
+		
 		// Return the sorted result
 		return $result;
 	}
