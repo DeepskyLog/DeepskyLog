@@ -1366,16 +1366,15 @@ class Utils {
 		}
 		// Multicolumn sort
 		$sort = array ();
+		
+		$cnt = 0;
 		foreach ( $sortName as $sName ) {
-			$cnt = 0;
 			foreach ( $result as $k => $v ) {
 				if ($v [$sName] == "") {
 					if ($sortOrder [$cnt] == 1) {
-						// TODO:CHECK
-						$sort [$sName] [$k] = +99.0;
-					} else {
-						// TODO:CHECK
 						$sort [$sName] [$k] = -99.0;
+					} else {
+						$sort [$sName] [$k] = +99.0;
 					}
 				} else {
 					$sort [$sName] [$k] = $v [$sName];
@@ -1383,7 +1382,6 @@ class Utils {
 			}
 			$cnt ++;
 		}
-
 		$cnt = 0;
 		$dynamicSort = array ();
 		foreach ( $sortName as $sName ) {
