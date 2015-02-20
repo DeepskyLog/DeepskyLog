@@ -868,15 +868,18 @@ class Observations {
 		echo "</th>";
 		if ($myList)
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">&nbsp;</th>";
-		echo "<th>" . LangOverviewObservationsHeader1 . "</th>";
-		echo "<th>" . LangViewObservationField1b . "</th>";
-		echo "<th>" . LangOverviewObservationsHeader2 . "</th>";
-		echo "<th>" . LangOverviewObservationsHeader3 . "</th>";
-		echo "<th>" . LangOverviewObservationsHeader4 . "</th>";
-		if ($lco != "O")
+		echo "<th id=\"objectname\">" . LangOverviewObservationsHeader1 . "</th>";
+		echo "<th id=\"objectconstellation\">" . LangViewObservationField1b . "</th>";
+		echo "<th id=\"observername\">" . LangOverviewObservationsHeader2 . "</th>";
+		echo "<th id=\"instrumentname\">" . LangOverviewObservationsHeader3 . "</th>";
+		echo "<th id=\"observationdate\">" . LangOverviewObservationsHeader4 . "</th>";
+		if ($lco != "O") {
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">&nbsp;</th>";
-		else
-			echo "<th>" . LangOverviewObservationsHeader8 . "</th>" . "<th>" . LangOverviewObservationsHeader9 . "</th>" . "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangOverviewObservationsHeader5 . "</th>";
+		} else {
+			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangOverviewObservationsHeader8 . "</th>" .
+		         "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangOverviewObservationsHeader9 . "</th>" . 
+		         "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangOverviewObservationsHeader5 . "</th>";
+		}
 		echo "</tr>";
 		echo "</thead>";
 		echo "<tbody id=\"obs_list\" class=\"tbody_obs\">";

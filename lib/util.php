@@ -1354,7 +1354,7 @@ class Utils {
 		$pdf->ezStream ();
 	}
 	public function sortResult($result) {
-		// Sort the result based on the 'sortOrder' cookie.
+		// Sort the result based on the 'sortOrder' cookie.		
 		$sortOrderArray = explode ( ",", trim ( $_COOKIE ['sortOrder'], "|" ) );
 		
 		foreach ( $sortOrderArray as $sort ) {
