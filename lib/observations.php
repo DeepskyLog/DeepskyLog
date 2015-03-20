@@ -89,15 +89,12 @@ class Observations {
 					if (! in_array ( $i, $errorlist ))
 						$errorlist [] = $i;
 				}
+			
 				// Check for the correctness of dates
 			for($i = 0, $j = 0, $k = 0; $i < count ( $dates ); $i ++) {
-				$datepart = sscanf ( trim ( $dates [$i] ), "%2d%c%2d%c%4d" );
-				if ((! is_numeric ( $datepart [0] )) || (! is_numeric ( $datepart [2] )) || (! is_numeric ( $datepart [4] )) || (! checkdate ( $datepart [2], $datepart [0], $datepart [4] ))) {
-					if (! in_array ( $dates [$i], $noDates ))
-						$noDates [$j ++] = $dates [$i];
-					if (! in_array ( $i, $errorlist ))
-						$errorlist [] = $i;
-				} elseif ((sprintf ( "%04d", $datepart [4] ) . sprintf ( "%02d", $datepart [2] ) . sprintf ( "%02d", $datepart [0] )) > date ( 'Ymd' )) {
+				$parsed_date = date_parse($dates[$i]);
+
+				if ($parsed_date["error_count"] > 0 || $parsed_date["year"] < 1900) {
 					if (! in_array ( trim ( $dates [$i] ), $wrongDates ))
 						$wrongDates [$k ++] = trim ( $dates [$i] );
 					if (! in_array ( $i, $errorlist ))
@@ -161,6 +158,7 @@ class Observations {
 				$messageLines [] = "<h4>" . LangCSVError0 . "</h4>" . "<p>" . LangCSVError0 . "</p>" . $errormessage . "<p>" . LangCSVError10 . "<a href=\"" . $baseURL . "index.php?indexAction=add_csv\">" . LangCSVError10a . "</a>" . LangCSVError10b . "</p><hr /><p>" . LangCSVError10e . "<a href=\"" . $baseURL . "observationserrors.csv\">" . LangCSVError10c . "</a>" . LangCSVError10d . "</p><hr /><p>" . LangCSVMessage4 . "</p>";
 				$_GET ['indexAction'] = 'message';
 			}
+
 			$username = $objObserver->getObserverProperty ( $loggedUser, 'firstname' ) . " " . $objObserver->getObserverProperty ( $loggedUser, 'name' );
 			$added = 0;
 			$double = 0;
@@ -171,8 +169,8 @@ class Observations {
 						$instrum = $objInstrument->getInstrumentId ( htmlentities ( trim ( $parts_array [$i] [5] ), ENT_COMPAT, "UTF-8", 0 ), $loggedUser );
 						$locat = $objLocation->getLocationId ( htmlentities ( trim ( $parts_array [$i] [4] ), ENT_COMPAT, "UTF-8", 0 ), $loggedUser );
 						
-						$dates = sscanf ( trim ( $parts_array [$i] [2] ), "%2d%c%2d%c%4d" );
-						$date = sprintf ( "%04d%02d%02d", $dates [4], $dates [2], $dates [0] );
+						$parsed_date = date_parse($dates[$i]);
+						$date = sprintf ( "%04d%02d%02d", $parsed_date["year"], $parsed_date["month"], $parsed_date["day"] );
 						if ($parts_array [$i] [3]) {
 							$times = sscanf ( trim ( $parts_array [$i] [3] ), "%2d%c%2d" );
 							$time = sprintf ( "%02d%02d", $times [0], $times [2] );
