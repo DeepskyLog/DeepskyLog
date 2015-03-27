@@ -33,7 +33,8 @@ function new_location() {
 
       function initialize() {
         geocoder = new google.maps.Geocoder();
-        var loca = new google.maps.LatLng(41.7475, -74.0872);
+		// TODO: Use current location, else use 0.0
+        var loca = new google.maps.LatLng(-29.2558, -70.7403);
 
         map = new google.maps.Map(document.getElementById('map'), {
           mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -84,7 +85,7 @@ function new_location() {
 	
 	echo "<form>
 			<div class=\"form-inline\">
-	         <input type=\"text\" class=\"form-control\" id=\"address\" placeholder = \"La Silla, Chile\" autofocus onkeydown=\"if (event.keyCode == 13) document.getElementById('btnSearch').click()\"></input>
+	         <input type=\"text\" class=\"form-control\" id=\"address\" placeholder = \"La Silla, Chile\" autofocus onkeypress=\"if (event.keyCode == 13) document.getElementById('btnSearch').click()\"></input>
              <input type=\"button\" class=\"btn btn-success\" id=\"btnSearch\" value=\"" . LangSearchLocations0 . "\" onclick=\"codeAddress();\" ></input>
             </div>
            </form>
