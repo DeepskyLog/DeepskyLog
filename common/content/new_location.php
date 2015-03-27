@@ -43,7 +43,8 @@ function new_location() {
           });
           var marker = new google.maps.Marker({
             map: map,
-            position: loca
+            position: loca,
+			draggable: true
           });
         }
       }
@@ -57,11 +58,15 @@ function new_location() {
         });
         var marker = new google.maps.Marker({
             map: map,
-            position: loca
-        });
-			
+            position: loca,
+			draggable: true
+         });
 	  }
-			
+
+	  function moveBus( map, marker ) {
+		
+	  }
+
       function callback(results, status) {
         if (status == google.maps.places.PlacesServiceStatus.OK) {
           for (var i = 0; i < results.length; i++) {
@@ -90,7 +95,8 @@ function new_location() {
         map.setCenter(results[0].geometry.location);
         var marker = new google.maps.Marker({
             map: map,
-            position: results[0].geometry.location
+            position: results[0].geometry.location,
+			draggable: true
         });
 	 } else {
         alert(\"Geocode was not successful for the following reason: \" + status);
