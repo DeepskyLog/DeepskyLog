@@ -6,8 +6,10 @@ throw new Exception ( LangException002 );
 else
 	new_location ();
 function new_location() {
-    global $objLocation, $loggedUser, $objContrast;
+    global $objLocation, $loggedUser, $objContrast, $baseURL;
 	// TODO: Add other/existing locations to the map, only own locations and public locations
+	//           Change icon
+	//           Add information
 	// TODO: Read out the coordinates of the new location
 	// TODO: Read out the Timezone, ... of the new location
 
@@ -92,7 +94,9 @@ function new_location() {
 	    addLocations();
 	  }
 
-	  function addLocations( ) {";
+	  function addLocations( ) {
+		var image = '" . $baseURL . "/images/telescope.png';";
+	
   		foreach($objLocation->getSortedLocations("id", $loggedUser) as $location) {
   			echo "
 		// Let's add the existing locations to the map.
@@ -100,6 +104,7 @@ function new_location() {
 		                       ", " . $objLocation->getLocationPropertyFromId($location, "longitude") . ");
 		marker = new google.maps.Marker({
     		position: newLocation,
+            icon: image,
     		map: map
   		});
   		myLocations.push(marker);";
