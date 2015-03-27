@@ -7,11 +7,11 @@ else
 	new_location ();
 function new_location() {
     global $objLocation, $loggedUser, $objContrast, $baseURL;
-	// TODO: Add other/existing locations to the map, only own locations and public locations
-	//           Add information
+	// TODO: Add public locations to the map.
 	// TODO: Read out the coordinates of the new location
 	// TODO: Read out the Timezone, ... of the new location
-
+	// TODO: Move strings to language files. 
+	
 	// TODO: Select using google maps.
 	// TODO: Show the other locations on the map.
 	// TODO: Make it possible to select one of the other locations.
@@ -99,22 +99,27 @@ function new_location() {
   		foreach($objLocation->getSortedLocations("id", $loggedUser) as $location) {
   			echo "
   		// Let's add the existing locations to the map.
-  		var contentString = \"Limiting magnitude: "; 
-  		
-  		
+  		var contentString = \"<strong>" . html_entity_decode($objLocation->getLocationPropertyFromId($location, "name")) . "</strong><br /><br />Limiting magnitude: "; 
+	
 			$limmag = $objLocation->getLocationPropertyFromId($location,'limitingMagnitude');
   			$sb = $objLocation->getLocationPropertyFromId($location,'skyBackground');
   			if(($limmag<-900)&&($sb>0))
   				$limmag = sprintf("%.1f", $objContrast->calculateLimitingMagnitudeFromSkyBackground($sb));
   			elseif(($limmag<-900)&&($sb<-900))
-  			{ $limmag="&nbsp;";
-  			  $sb="&nbsp;";
+  			{ $limmag="-";
+  			  $sb="-";
   			} else {
   			  $sb=sprintf("%.1f", $objContrast->calculateSkyBackgroundFromLimitingMagnitude($limmag));
   			}
-  			//$limmag . "\nSQM: " . $sb . "\";
   			  	
-  		echo $limmag . "<br />SQM:" . $sb . "\";
+  		echo $limmag . "<br />SQM: " . $sb . "<br />";
+  		if ($objLocation->getLocationPropertyFromId($location, "locationactive")) {
+  			echo "Active";
+  		} else {
+  			echo "Not active";
+  		}
+
+  		echo "\";
  		var infowindow = new google.maps.InfoWindow({
  				content: contentString
  			});";
@@ -124,13 +129,23 @@ function new_location() {
     		position: newLocation,
             icon: image,
     		map: map,
+		    html: contentString,
 		    title: '" . html_entity_decode($objLocation->getLocationPropertyFromId($location, "name")) . "'
   		});
   		myLocations.push(marker);
+		google.maps.event.addListener(marker, 'mouseover', function() {
+		  infowindow.setContent(this.html);
+          infowindow.open(map, this);
+        });
+
+        // assuming you also want to hide the infowindow when user mouses-out
+        google.maps.event.addListener(marker, 'mouseout', function() {
+          infowindow.close();
+        });
+		    		
 		    		";
   		
   			
-//   			print $objLocation->getLocationPropertyFromId($location, "name");
 //   			print $objLocation->getLocationPropertyFromId($location, "locationactive");
   				
   		}
@@ -190,13 +205,5 @@ function new_location() {
 		}
       }
 			</script>";
-	
-// 	echo "<iframe
-// 			width=\"450\"
-// 			height=\"250\"
-// 			frameborder=\"0\" style=\"border:0\"
-// 							src=\"https://www.google.com/maps/embed/v1/search?key=AIzaSyDGQJvhs1ItqmrFfYPRrh3vNpBzNbWntis&q=record+stores+in+Seattle\">
-// 							</iframe>";
-//	exit();
 }
 ?>
