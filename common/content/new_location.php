@@ -7,8 +7,7 @@ throw new Exception ( LangException002 );
 else
 	new_location ();
 function new_location() {
-
-	// TODO: Use current location to start the map
+	// TODO: Make sure pressing enter works
 	// TODO: Add other/existing locations to the map.
 	// TODO: Read out the coordinates of the new location
 	// TODO: Read out the Timezone, ... of the new location
@@ -24,7 +23,6 @@ function new_location() {
 // 	echo "<input type=\"submit\" class=\"btn btn-primary pull-right tour4\" name=\"add\" value=\"" . LangAddSiteButton . "\" />&nbsp;";
 // 	echo "</form>";
 	echo "<script src=\"https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places\"></script>";
-
 	
 	echo "<script>
       var geocoder;
@@ -34,7 +32,7 @@ function new_location() {
 
       function initialize() {
         geocoder = new google.maps.Geocoder();
-		// TODO: Use current location, else use 0.0
+		// Use current location, else use La Silla.
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(getPosition);
 		} else {
@@ -43,7 +41,11 @@ function new_location() {
             center: loca,
             zoom: 15
           });
-		}
+          var marker = new google.maps.Marker({
+            map: map,
+            position: loca
+          });
+        }
       }
 
 	  function getPosition(position) {
@@ -53,6 +55,11 @@ function new_location() {
           center: loca,
           zoom: 15
         });
+        var marker = new google.maps.Marker({
+            map: map,
+            position: loca
+        });
+			
 	  }
 			
       function callback(results, status) {
