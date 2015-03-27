@@ -101,7 +101,7 @@ class Locations
 	}
   public  function getSortedLocations($sort,$observer="",$active='')                                       // returns an array with the ids of all locations, sorted by the column specified in $sort
   { global $objDatabase; 
-    return $objDatabase->selectSingleArray("SELECT id, name FROM locations ".($observer?"WHERE observer LIKE \"".$observer."\" ".($active?" AND locationactive=".$active:""):" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
+  return $objDatabase->selectSingleArray("SELECT id, name FROM locations ".($observer?"WHERE observer LIKE \"".$observer."\" ".($active?" AND locationactive=".$active:""):" GROUP BY name")." ORDER BY ".$sort.", name",'id');  
   } 
   public  function getSortedLocationsList($sort, $observer = "",$active='')                             // returns an array with the ids of all locations, sorted by the column specified in $sort. Locations withthe same name are adapted by adding the province.
   { global $objDatabase; 

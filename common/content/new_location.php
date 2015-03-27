@@ -1,5 +1,4 @@
 <?php
-
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! $loggedUser)
@@ -7,6 +6,7 @@ throw new Exception ( LangException002 );
 else
 	new_location ();
 function new_location() {
+    global $objLocation, $loggedUser, $objContrast;
 	// TODO: Add other/existing locations to the map, only own locations and public locations
 	// TODO: Read out the coordinates of the new location
 	// TODO: Read out the Timezone, ... of the new location
@@ -40,6 +40,7 @@ function new_location() {
       var infowindow;
 	  var loca = new google.maps.LatLng(-29.2558, -70.7403);
 	  var myLocationMarker;
+	  var myLocations = [];
 
       function initialize() {
         geocoder = new google.maps.Geocoder();
@@ -57,6 +58,7 @@ function new_location() {
             position: loca,
 			draggable: true
           });
+	      addLocations();
         }
       }
 
@@ -72,6 +74,7 @@ function new_location() {
             position: loca,
 			draggable: true
           });
+	    addLocations();
       }
 
 	  function getPosition(position) {
@@ -86,10 +89,39 @@ function new_location() {
             position: loca,
 			draggable: true
          });
+	    addLocations();
 	  }
 
-	  function moveBus( map, marker ) {
-		
+	  function addLocations( ) {";
+  		foreach($objLocation->getSortedLocations("id", $loggedUser) as $location) {
+  			echo "
+		// Let's add the existing locations to the map.
+		newLocation = new google.maps.LatLng(" . $objLocation->getLocationPropertyFromId($location, "latitude") .
+		                       ", " . $objLocation->getLocationPropertyFromId($location, "longitude") . ");
+		marker = new google.maps.Marker({
+    		position: newLocation,
+    		map: map
+  		});
+  		myLocations.push(marker);";
+  			
+  			
+//   			print $objLocation->getLocationPropertyFromId($location, "name");
+//   			print $objLocation->getLocationPropertyFromId($location, "locationactive");
+//   			$limmag = $objLocation->getLocationPropertyFromId($location,'limitingMagnitude');
+//   			$sb = $objLocation->getLocationPropertyFromId($location,'skyBackground');
+//   			if(($limmag<-900)&&($sb>0))
+//   				$limmag = sprintf("%.1f", $objContrast->calculateLimitingMagnitudeFromSkyBackground($sb));
+//   			elseif(($limmag<-900)&&($sb<-900))
+//   			{ $limmag="&nbsp;";
+//   			$sb="&nbsp;";
+//   			}
+//   			else {
+//   				$sb=sprintf("%.1f", $objContrast->calculateSkyBackgroundFromLimitingMagnitude($limmag));
+//   			}
+  				
+  		}
+	
+	echo "
 	  }
 
       function callback(results, status) {
