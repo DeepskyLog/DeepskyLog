@@ -7,7 +7,6 @@ throw new Exception ( LangException002 );
 else
 	new_location ();
 function new_location() {
-	// TODO: Make sure pressing enter works
 	// TODO: Add other/existing locations to the map, only own locations and public locations
 	// TODO: Read out the coordinates of the new location
 	// TODO: Read out the Timezone, ... of the new location
@@ -23,6 +22,16 @@ function new_location() {
 // 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 // 	echo "<input type=\"submit\" class=\"btn btn-primary pull-right tour4\" name=\"add\" value=\"" . LangAddSiteButton . "\" />&nbsp;";
 // 	echo "</form>";
+	echo "<form>
+			<div class=\"form-inline\">
+	         <input type=\"text\" class=\"form-control\" id=\"address\" onkeypress=\"searchKeyPress(event);\" placeholder=\"La Silla, Chile\" autofocus></input>
+             <input type=\"button\" class=\"btn btn-success\" id=\"btnSearch\" value=\"" . LangSearchLocations0 . "\" onclick=\"codeAddress();\" ></input>
+            </div>
+           </form>
+           <div id=\"map\"></div>
+           ";
+	
+	
 	echo "<script src=\"https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places\"></script>";
 	
 	echo "<script>
@@ -104,43 +113,38 @@ function new_location() {
         });
       }
 
-  function codeAddress() {
-    var address = document.getElementById(\"address\").value;
-    geocoder.geocode( { 'address': address}, function(results, status) {
-      if (status == google.maps.GeocoderStatus.OK) {
-        map.setCenter(results[0].geometry.location);
-	    // Remove old marker
-		myLocationMarker.setMap(null);
-        myLocationMarker = new google.maps.Marker({
-            map: map,
-            position: results[0].geometry.location,
-			draggable: true
+      function codeAddress() {
+         var address = document.getElementById(\"address\").value;
+         geocoder.geocode( { 'address': address}, function(results, status) {
+           if (status == google.maps.GeocoderStatus.OK) {
+             map.setCenter(results[0].geometry.location);
+	         // Remove old marker
+		     myLocationMarker.setMap(null);
+             myLocationMarker = new google.maps.Marker({
+               map: map,
+               position: results[0].geometry.location,
+			   draggable: true
+           });
+	     } else {
+            alert(\"Geocode was not successful for the following reason: \" + status);
+          }
         });
-	 } else {
-        alert(\"Geocode was not successful for the following reason: \" + status);
       }
-    });
-}
 
       google.maps.event.addDomListener(window, 'load', initialize);
-    
-	$(\"#myAddress\").keypress(function(event){
-      event.preventDefault();
-	  if(event.keyCode == 13){
-        $(\"#btnSearch\").click();
+
+	  function searchKeyPress(e)
+      {
+        // look for window.event in case event isn't passed in
+        e = e || window.event;
+        if (e.keyCode == 13)
+        {
+	        e.preventDefault();
+			document.getElementById('btnSearch').click();
+		}
       }
-    });
-			
 			</script>";
 	
-	echo "<form>
-			<div class=\"form-inline\">
-	         <input type=\"text\" class=\"form-control\" id=\"myAddress\" placeholder=\"La Silla, Chile\" autofocus></input>
-             <input type=\"button\" class=\"btn btn-success\" id=\"btnSearch\" value=\"" . LangSearchLocations0 . "\" onclick=\"codeAddress();\" ></input>
-            </div>
-           </form>
-           <div id=\"map\"></div>
-           ";
 // 	echo "<iframe
 // 			width=\"450\"
 // 			height=\"250\"
