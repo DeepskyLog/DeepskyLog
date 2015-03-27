@@ -8,7 +8,6 @@ else
 function new_location() {
     global $objLocation, $loggedUser, $objContrast, $baseURL;
 	// TODO: Add other/existing locations to the map, only own locations and public locations
-	//           Change icon
 	//           Add information
 	// TODO: Read out the coordinates of the new location
 	// TODO: Read out the Timezone, ... of the new location
@@ -99,30 +98,40 @@ function new_location() {
 	
   		foreach($objLocation->getSortedLocations("id", $loggedUser) as $location) {
   			echo "
-		// Let's add the existing locations to the map.
-		newLocation = new google.maps.LatLng(" . $objLocation->getLocationPropertyFromId($location, "latitude") .
+  		// Let's add the existing locations to the map.
+  		var contentString = \"Limiting magnitude: "; 
+  		
+  		
+			$limmag = $objLocation->getLocationPropertyFromId($location,'limitingMagnitude');
+  			$sb = $objLocation->getLocationPropertyFromId($location,'skyBackground');
+  			if(($limmag<-900)&&($sb>0))
+  				$limmag = sprintf("%.1f", $objContrast->calculateLimitingMagnitudeFromSkyBackground($sb));
+  			elseif(($limmag<-900)&&($sb<-900))
+  			{ $limmag="&nbsp;";
+  			  $sb="&nbsp;";
+  			} else {
+  			  $sb=sprintf("%.1f", $objContrast->calculateSkyBackgroundFromLimitingMagnitude($limmag));
+  			}
+  			//$limmag . "\nSQM: " . $sb . "\";
+  			  	
+  		echo $limmag . "<br />SQM:" . $sb . "\";
+ 		var infowindow = new google.maps.InfoWindow({
+ 				content: contentString
+ 			});";
+		echo "newLocation = new google.maps.LatLng(" . $objLocation->getLocationPropertyFromId($location, "latitude") .
 		                       ", " . $objLocation->getLocationPropertyFromId($location, "longitude") . ");
 		marker = new google.maps.Marker({
     		position: newLocation,
             icon: image,
-    		map: map
+    		map: map,
+		    title: '" . html_entity_decode($objLocation->getLocationPropertyFromId($location, "name")) . "'
   		});
-  		myLocations.push(marker);";
-  			
+  		myLocations.push(marker);
+		    		";
+  		
   			
 //   			print $objLocation->getLocationPropertyFromId($location, "name");
 //   			print $objLocation->getLocationPropertyFromId($location, "locationactive");
-//   			$limmag = $objLocation->getLocationPropertyFromId($location,'limitingMagnitude');
-//   			$sb = $objLocation->getLocationPropertyFromId($location,'skyBackground');
-//   			if(($limmag<-900)&&($sb>0))
-//   				$limmag = sprintf("%.1f", $objContrast->calculateLimitingMagnitudeFromSkyBackground($sb));
-//   			elseif(($limmag<-900)&&($sb<-900))
-//   			{ $limmag="&nbsp;";
-//   			$sb="&nbsp;";
-//   			}
-//   			else {
-//   				$sb=sprintf("%.1f", $objContrast->calculateSkyBackgroundFromLimitingMagnitude($limmag));
-//   			}
   				
   		}
 	
