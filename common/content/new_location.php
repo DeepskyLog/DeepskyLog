@@ -27,23 +27,34 @@ function new_location() {
 
 	
 	echo "<script>
-  var geocoder;
-  var map;
+      var geocoder;
+      var map;
       var infowindow;
+	  var loca = new google.maps.LatLng(-29.2558, -70.7403);
 
       function initialize() {
         geocoder = new google.maps.Geocoder();
 		// TODO: Use current location, else use 0.0
-        var loca = new google.maps.LatLng(-29.2558, -70.7403);
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(getPosition);
+		} else {
+          map = new google.maps.Map(document.getElementById('map'), {
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            center: loca,
+            zoom: 15
+          });
+		}
+      }
 
+	  function getPosition(position) {
+        loca = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
         map = new google.maps.Map(document.getElementById('map'), {
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           center: loca,
           zoom: 15
         });
-
-      }
-
+	  }
+			
       function callback(results, status) {
         if (status == google.maps.places.PlacesServiceStatus.OK) {
           for (var i = 0; i < results.length; i++) {
