@@ -29,6 +29,7 @@ function new_location() {
       var map;
       var infowindow;
 	  var loca = new google.maps.LatLng(-29.2558, -70.7403);
+	  var myLocationMarker;
 
       function initialize() {
         geocoder = new google.maps.Geocoder();
@@ -41,7 +42,7 @@ function new_location() {
             center: loca,
             zoom: 15
           });
-          var marker = new google.maps.Marker({
+          myLocationMarker = new google.maps.Marker({
             map: map,
             position: loca,
 			draggable: true
@@ -56,7 +57,7 @@ function new_location() {
           center: loca,
           zoom: 15
         });
-        var marker = new google.maps.Marker({
+        myLocationMarker = new google.maps.Marker({
             map: map,
             position: loca,
 			draggable: true
@@ -93,7 +94,9 @@ function new_location() {
     geocoder.geocode( { 'address': address}, function(results, status) {
       if (status == google.maps.GeocoderStatus.OK) {
         map.setCenter(results[0].geometry.location);
-        var marker = new google.maps.Marker({
+	    // Remove old marker
+		myLocationMarker.setMap(null);
+        myLocationMarker = new google.maps.Marker({
             map: map,
             position: results[0].geometry.location,
 			draggable: true
