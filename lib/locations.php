@@ -217,7 +217,6 @@ class Locations
 		  echo $objUtil->addTableJavascript();
 		  
 		  echo "</div></form>";
-		  echo "<hr />";
 		}  	
   }
   public  function validateDeleteLocation()
@@ -239,8 +238,16 @@ class Locations
     } 
     elseif($objUtil->checkPostKey('sitename')
     && $objUtil->checkPostKey('country'))
-    { $latitude  = $objUtil->checkPostKey('latitude',0)  + $objUtil->checkPostKey('latitudemin',0) / 60.0;
-      $longitude = $objUtil->checkPostKey('longitude',0) + $objUtil->checkPostKey('longitudemin',0) / 60.0;
+    { $latSign = 1;
+      if ($objUtil->checkPostKey('latitude',0) < 0) {
+      	$latSign = -1;
+      }
+      $latitude  = $latSign * (abs($objUtil->checkPostKey('latitude',0)) + $objUtil->checkPostKey('latitudemin',0) / 60.0 + $objUtil->checkPostKey('latitudesec', 0) / 3600.0);
+      $lonSign = 1;
+      if ($objUtil->checkPostKey('longitude',0) < 0) {
+      	$lonSign = -1;
+      }
+      $longitude = $lonSign * (abs($objUtil->checkPostKey('longitude',0)) + $objUtil->checkPostKey('longitudemin',0) / 60.0 + $objUtil->checkPostKey('longitudesec', 0) / 3600.0);
       // Get the timezone
       $xmlfile2 = "http://ws.geonames.org/timezone?lat=" . $latitude . "&lng=" . $longitude;
       $timezones = simplexml_load_file($xmlfile2);

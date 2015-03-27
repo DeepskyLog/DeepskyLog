@@ -117,7 +117,7 @@ function head() {
 		$TitleText = LangAddInstrumentAdd;
 	elseif ($includeFile == 'common/content/new_lens.php')
 		$TitleText = LangAddLensButton;
-	elseif ($includeFile == 'common/content/new_site.php')
+	elseif ($includeFile == 'common/content/locations.php')
 		$TitleText = LangAddSiteButton;
 	elseif ($includeFile == 'common/content/message.php')
 		$TitleText = "";

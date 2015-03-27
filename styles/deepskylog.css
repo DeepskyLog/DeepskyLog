@@ -442,3 +442,9 @@ table.tablesorter tr.type2 td {
   padding          : 5px 5px 5px 5px; 
   text-align       : center;
 }
+ #map {
+        height: 400px;
+        width: 600px;
+        border: 1px solid #333;
+        margin-top: 0.6em;
+}
