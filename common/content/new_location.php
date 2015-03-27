@@ -8,7 +8,7 @@ else
 	new_location ();
 function new_location() {
 	// TODO: Make sure pressing enter works
-	// TODO: Add other/existing locations to the map.
+	// TODO: Add other/existing locations to the map, only own locations and public locations
 	// TODO: Read out the coordinates of the new location
 	// TODO: Read out the Timezone, ... of the new location
 
@@ -18,6 +18,7 @@ function new_location() {
 	// TODO: In the overview of the locations, make it possible to show it on the map, and make it possible to get directions to the location.
 	// TODO: Maybe add a button with a pencil to change, else, show the google maps, only with your locations.
 	
+	// TODO: After clicking OK, ask in a dialog for the name, then public / private, SQM / limiting magnitude, ...
 // 	echo "<form role=\"form\" action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 // 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 // 	echo "<input type=\"submit\" class=\"btn btn-primary pull-right tour4\" name=\"add\" value=\"" . LangAddSiteButton . "\" />&nbsp;";
@@ -35,7 +36,7 @@ function new_location() {
         geocoder = new google.maps.Geocoder();
 		// Use current location, else use La Silla.
 		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(getPosition);
+			navigator.geolocation.getCurrentPosition(getPosition, errorCallBack);
 		} else {
           map = new google.maps.Map(document.getElementById('map'), {
             mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -48,6 +49,20 @@ function new_location() {
 			draggable: true
           });
         }
+      }
+
+	  function errorCallBack(error) {	
+	    var loca = new google.maps.LatLng(-29.2558, -70.7403);
+          map = new google.maps.Map(document.getElementById('map'), {
+            mapTypeId: google.maps.MapTypeId.ROADMAP,
+            center: loca,
+            zoom: 15
+          });
+          myLocationMarker = new google.maps.Marker({
+            map: map,
+            position: loca,
+			draggable: true
+          });
       }
 
 	  function getPosition(position) {
@@ -108,11 +123,19 @@ function new_location() {
 }
 
       google.maps.event.addDomListener(window, 'load', initialize);
-    </script>";
+    
+	$(\"#myAddress\").keypress(function(event){
+      event.preventDefault();
+	  if(event.keyCode == 13){
+        $(\"#btnSearch\").click();
+      }
+    });
+			
+			</script>";
 	
 	echo "<form>
 			<div class=\"form-inline\">
-	         <input type=\"text\" class=\"form-control\" id=\"address\" placeholder = \"La Silla, Chile\" autofocus onkeypress=\"if (event.keyCode == 13) document.getElementById('btnSearch').click()\"></input>
+	         <input type=\"text\" class=\"form-control\" id=\"myAddress\" placeholder=\"La Silla, Chile\" autofocus></input>
              <input type=\"button\" class=\"btn btn-success\" id=\"btnSearch\" value=\"" . LangSearchLocations0 . "\" onclick=\"codeAddress();\" ></input>
             </div>
            </form>
