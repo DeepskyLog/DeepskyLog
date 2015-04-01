@@ -9,7 +9,8 @@ function new_location() {
     global $objLocation, $loggedUser, $objContrast, $baseURL;
 	// TODO: Make sure the coordinates can be read out also when we search for a location.
 	// TODO: Read out the coordinates of the new location when we don't drag with the mouse.
-	// TODO: Read out the Timezone, ... of the new location
+	// TODO: Do we need state / province for OAL? What do we need. 
+	// TODO: Read out the Timezone of the new location
 	// TODO: Move strings to language files. 
 	
 	// TODO: Make it possible to select one of the other locations.
@@ -67,7 +68,7 @@ function new_location() {
  			document.getElementById('latitude').value = evt.latLng.lat().toFixed(6);
  			document.getElementById('longitude').value = evt.latLng.lng().toFixed(6);
 		  });
-			
+		  
 	      addLocations();
         }
       }
@@ -110,6 +111,27 @@ function new_location() {
           google.maps.event.addListener(myLocationMarker, 'dragend', function(evt){
  			document.getElementById('latitude').value = evt.latLng.lat().toFixed(6);
  			document.getElementById('longitude').value = evt.latLng.lng().toFixed(6);
+			
+			// Do reverse geocoding:
+			geocoder.geocode({'latLng': evt.latLng}, function(results, status) {
+    			if (status == google.maps.GeocoderStatus.OK) {
+      				if (results[0]) {
+						arrAddress = results[0].address_components;
+						for (ac = 0; ac < arrAddress.length; ac++) {
+							if (arrAddress[ac].types[0] == \"country\") { alert(arrAddress[ac].long_name) }
+						}
+			
+			
+//							var state = results[i].address_components[2].short_name;
+			
+//			            alert(results[1].address_components[5]);
+				    } else {
+        				alert('No results found');
+      				}
+    			} else {
+      				alert('Geocoder failed due to: ' + status);
+    			}
+  			});
 		  });
 		  addLocations();
 	  }
