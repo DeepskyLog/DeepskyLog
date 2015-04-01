@@ -7,13 +7,11 @@ else
 	new_location ();
 function new_location() {
     global $objLocation, $loggedUser, $objContrast, $baseURL;
-	// TODO: Add public locations to the map.
-	// TODO: Read out the coordinates of the new location
+	// TODO: Make sure the coordinates can be read out also when we search for a location.
+	// TODO: Read out the coordinates of the new location when we don't drag with the mouse.
 	// TODO: Read out the Timezone, ... of the new location
 	// TODO: Move strings to language files. 
 	
-	// TODO: Select using google maps.
-	// TODO: Show the other locations on the map.
 	// TODO: Make it possible to select one of the other locations.
 	// TODO: In the overview of the locations, make it possible to show it on the map, and make it possible to get directions to the location.
 	// TODO: Maybe add a button with a pencil to change, else, show the google maps, only with your locations.
@@ -32,6 +30,10 @@ function new_location() {
            <div id=\"map\"></div>
            ";
 	
+	echo "<label for='latitude'>Latitude:</label><br />
+	<input id='latitude' type='text' value='' /><br />
+	<label for='longitude'>Longitude:</label><br />
+	<input id='longitude' type='text' value='' /></p>";
 	
 	echo "<script src=\"https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places\"></script>";
 	
@@ -59,6 +61,13 @@ function new_location() {
             position: loca,
 			draggable: true
           });
+		  // gets the coords when drag event ends
+          // then updates the input with the new coords
+          google.maps.event.addListener(myLocationMarker, 'dragend', function(evt){
+ 			document.getElementById('latitude').value = evt.latLng.lat().toFixed(6);
+ 			document.getElementById('longitude').value = evt.latLng.lng().toFixed(6);
+		  });
+			
 	      addLocations();
         }
       }
@@ -75,7 +84,13 @@ function new_location() {
             position: loca,
 			draggable: true
           });
-	    addLocations();
+		  // gets the coords when drag event ends
+          // then updates the input with the new coords
+          google.maps.event.addListener(myLocationMarker, 'dragend', function(evt){
+ 			document.getElementById('latitude').value = evt.latLng.lat().toFixed(6);
+ 			document.getElementById('longitude').value = evt.latLng.lng().toFixed(6);
+		  });
+			addLocations();
       }
 
 	  function getPosition(position) {
@@ -90,7 +105,13 @@ function new_location() {
             position: loca,
 			draggable: true
          });
-	    addLocations();
+		  // gets the coords when drag event ends
+          // then updates the input with the new coords
+          google.maps.event.addListener(myLocationMarker, 'dragend', function(evt){
+ 			document.getElementById('latitude').value = evt.latLng.lat().toFixed(6);
+ 			document.getElementById('longitude').value = evt.latLng.lng().toFixed(6);
+		  });
+		  addLocations();
 	  }
 
 	  function addLocations( ) {
