@@ -8,6 +8,7 @@ else
 function new_location() {
     global $objLocation, $loggedUser, $objContrast, $baseURL;
     // TODO: Add Location
+    // 		TODO: Add button to add location
 	// 		TODO: Make sure the coordinates can be read out also when we search for a location.
 	// 		TODO: Read out the coordinates of the new location when we don't drag with the mouse.
     // 		TODO: Add elevation to database
@@ -24,10 +25,6 @@ function new_location() {
 	// TODO: Maybe add a button with a pencil to change, else, show the google maps, only with your locations.
 	
 	// TODO: After clicking OK, ask in a dialog for the name, then public / private, SQM / limiting magnitude, ...
-// 	echo "<form role=\"form\" action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
-// 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
-// 	echo "<input type=\"submit\" class=\"btn btn-primary pull-right tour4\" name=\"add\" value=\"" . LangAddSiteButton . "\" />&nbsp;";
-// 	echo "</form>";
 	echo "<form>
 			<div class=\"form-inline\">
 	         <input type=\"text\" class=\"form-control\" id=\"address\" onkeypress=\"searchKeyPress(event);\" placeholder=\"La Silla, Chile\" autofocus></input>
@@ -37,10 +34,30 @@ function new_location() {
            <div id=\"map\"></div>
            ";
 	
-	echo "<label for='latitude'>Latitude:</label><br />
-	<input id='latitude' type='text' value='' /><br />
-	<label for='longitude'>Longitude:</label><br />
-	<input id='longitude' type='text' value='' /></p>";
+	echo "<br /><button type=\"button\" class=\"btn btn-primary tour4\" data-toggle=\"modal\" data-target=\"#addSite\">" . LangAddSiteButton . "</button><br /><br />";
+// 	echo "<br /><form role=\"form\" action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
+// 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
+// 	echo "<input type=\"submit\" class=\"btn btn-primary tour4\" data-toggle=\"modal\" data-target=\"#addSite\" name=\"add\" value=\"" . LangAddSiteButton . "\" />&nbsp;";
+// 	echo "</form><br /><br />";
+	
+	// The modal dialog to add the site
+	echo "<div class=\"modal fade\" id=\"addSite\" tabindex=\"-1\" role=\"dialog\">
+  <div class=\"modal-dialog\">
+    <div class=\"modal-content\">
+      <div class=\"modal-header\">
+        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
+        <h4 class=\"modal-title\" id=\"myModalLabel\">" . LangAddSiteButton . "</h4>
+      </div>
+      <div class=\"modal-body\">
+        ...
+      </div>
+      <div class=\"modal-footer\">
+        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
+        <button type=\"button\" class=\"btn btn-primary\">" . LangAddSiteButton . "</button>
+      </div>
+    </div>
+  </div>
+</div>";
 	
 	echo "<script src=\"https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places\"></script>";
 	
