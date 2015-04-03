@@ -9,9 +9,10 @@ function new_location() {
     global $objLocation, $loggedUser, $objContrast, $baseURL;
 	// TODO: Make sure the coordinates can be read out also when we search for a location.
 	// TODO: Read out the coordinates of the new location when we don't drag with the mouse.
-	// TODO: Do we need state / province for OAL? What do we need. 
-	// TODO: Read out the Timezone of the new location
+	// TODO: Remove state / province for OAL? What do we need. 
+	// TODO: Make script to change all the timezones in DeepskyLog
 	// TODO: Move strings to language files. 
+	// TODO: Test on smartphone, we don't see the google maps... 
 	
 	// TODO: Make it possible to select one of the other locations.
 	// TODO: In the overview of the locations, make it possible to show it on the map, and make it possible to get directions to the location.
@@ -120,11 +121,6 @@ function new_location() {
 						for (ac = 0; ac < arrAddress.length; ac++) {
 							if (arrAddress[ac].types[0] == \"country\") { alert(arrAddress[ac].long_name) }
 						}
-			
-			
-//							var state = results[i].address_components[2].short_name;
-			
-//			            alert(results[1].address_components[5]);
 				    } else {
         				alert('No results found');
       				}
@@ -132,6 +128,18 @@ function new_location() {
       				alert('Geocoder failed due to: ' + status);
     			}
   			});
+
+  			// Find the timezone
+			url = 'https://maps.googleapis.com/maps/api/timezone/json?location=' + evt.latLng.lat() + ',' + evt.latLng.lng() + '&timestamp=' + new Date().getTime() / 1000;
+			var xmlhttp = new XMLHttpRequest();
+			xmlhttp.onreadystatechange = function() {
+ 			   if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        			var myArr = JSON.parse(xmlhttp.responseText);
+        			alert(myArr.timeZoneId);
+    			}
+			}
+			xmlhttp.open('GET', url, true);
+			xmlhttp.send();
 		  });
 		  addLocations();
 	  }
