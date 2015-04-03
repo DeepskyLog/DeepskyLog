@@ -8,9 +8,9 @@ else
 function new_location() {
     global $objLocation, $loggedUser, $objContrast, $baseURL;
     // TODO: Add Location
-    // 		TODO: Add button to add location
-	// 		TODO: Make sure the coordinates can be read out also when we search for a location.
-	// 		TODO: Read out the coordinates of the new location when we don't drag with the mouse.
+	// 		TODO: Read out the coordinates.
+	// 		TODO: Read out the elevation.
+	//      TODO: Read out the country.
     // 		TODO: Add elevation to database
     // TODO: Change location 
 	// TODO: Make script to change all the timezones, elevations and countries in DeepskyLog
@@ -25,6 +25,7 @@ function new_location() {
 	// TODO: Maybe add a button with a pencil to change, else, show the google maps, only with your locations.
 	
 	// TODO: After clicking OK, ask in a dialog for the name, then public / private, SQM / limiting magnitude, ...
+
 	echo "<form>
 			<div class=\"form-inline\">
 	         <input type=\"text\" class=\"form-control\" id=\"address\" onkeypress=\"searchKeyPress(event);\" placeholder=\"La Silla, Chile\" autofocus></input>
@@ -34,38 +35,62 @@ function new_location() {
            <div id=\"map\"></div>
            ";
 	
-	echo "<br /><button type=\"button\" class=\"btn btn-primary tour4\" data-toggle=\"modal\" data-target=\"#addSite\">" . LangAddSiteButton . "</button><br /><br />";
+    echo "<br /><form action=\"".$baseURL."index.php\" method=\"post\"><div>";
+    echo "<input type=\"hidden\" name=\"indexAction\" value=\"check_location\" />";
+    echo "<input type=\"hidden\" name=\"latitude\" id=\"latitude\" />";
+    echo "<input type=\"hidden\" name=\"longitude\" id=\"longitude\" />";
+    echo "<div class=\"form-inline\">
+    		<input type=\"text\" required class=\"form-control\" name=\"locationname\" placeholder=\"" . LangAddSiteField1 . "\"></input>";
+    echo "  <input type=\"submit\" class=\"btn btn-primary tour4\" name=\"add\" value=\"".LangAddSiteButton."\" />";
+	echo "</div></form><br /><br />";
+	
+	
+//	echo "<br /><button type=\"button\" class=\"btn btn-primary tour4\" data-toggle=\"modal\" data-target=\"#addSite\">" . LangAddSiteButton . "</button><br /><br />";
 // 	echo "<br /><form role=\"form\" action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 // 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 // 	echo "<input type=\"submit\" class=\"btn btn-primary tour4\" data-toggle=\"modal\" data-target=\"#addSite\" name=\"add\" value=\"" . LangAddSiteButton . "\" />&nbsp;";
 // 	echo "</form><br /><br />";
 	
 	// The modal dialog to add the site
-	echo "<div class=\"modal fade\" id=\"addSite\" tabindex=\"-1\" role=\"dialog\">
-  			<div class=\"modal-dialog\">
-    		  <div class=\"modal-content\">
-      			<div class=\"modal-header\">
-        		  <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">
-			        <span aria-hidden=\"true\">&times;</span>
-				  </button>
-        		  <h4 class=\"modal-title\" id=\"myModalLabel\">" . LangAddSiteButton . "</h4>
-      			</div>
-      			<div class=\"modal-body\">
-        		  	<form class=\"form-horizontal\" role=\"form\" action=\"" . $baseURL . "index.php\" method=\"post\">
-                      <div class=\"form-group\">
-                      	<label class=\"col-sm-3 control-label\" for=\"sitename\">" . LangAddSiteField1 . "</label>
-					  	<div class=\"col-sm-9\">
-                      	  <input type=\"text\" required class=\"form-control\" maxlength=\"64\" name=\"sitename\" placeholder=\"" . LangAddSiteField1Expl . "\" size=\"30\" value=\"\" />
-                      	</div>
-                      </div>";
+// 	echo "<div class=\"modal fade\" id=\"addSite\" tabindex=\"-1\" role=\"dialog\">
+//   			<div class=\"modal-dialog\">
+//     		  <div class=\"modal-content\">
+//       			<div class=\"modal-header\">
+//         		  <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">
+// 			        <span aria-hidden=\"true\">&times;</span>
+// 				  </button>
+//         		  <h4 class=\"modal-title\" id=\"myModalLabel\">" . LangAddSiteButton . "</h4>
+//       			</div>
+//       			<div class=\"modal-body\">
+//         		  	<form class=\"form-horizontal\" role=\"form\" action=\"" . $baseURL . "index.php\" method=\"post\">
+//                       <div class=\"form-group\">
+//                       	<label class=\"col-sm-3 control-label\" for=\"sitename\">" . LangAddSiteField1 . "</label>
+// 					  	<div class=\"col-sm-9\">
+//                       	  <input type=\"text\" required class=\"form-control\" maxlength=\"64\" name=\"sitename\" placeholder=\"" . LangAddSiteField1Expl . "\" size=\"30\" value=\"\" />
+//                       	</div>
+//                       </div>";
         		  		
-    echo "			<div class=\"form-group\">
-  	       			  <label class=\"col-sm-3 control-label\" for=\"country\">" . LangAddSiteField3 . "</label>";
- 	echo "		  	  <div class=\"col-sm-9\">
- 						<p class=\"form-control-static\">Country</p>
- 			  		  </div>";
-	echo "			</div>";
-	
+//     echo "			<div class=\"form-group\">
+//   	       			  <label class=\"col-sm-3 control-label\" for=\"country\">" . LangAddSiteField3 . "</label>";
+//  	echo "		  	  <div class=\"col-sm-9\">
+//  						<p class=\"form-control-static\">Test</p>
+//  			  		  </div>";
+// 	echo "			</div>";
+
+//     echo "			<div class=\"form-group\">
+//   	       			  <label class=\"col-sm-3 control-label\" for=\"country\">" . LangAddSiteField4 . "</label>";
+//  	echo "		  	  <div class=\"col-sm-9\">
+//  						<input id=\"longitude\" type='text' value='' />
+//  			  		  </div>";
+// 	echo "			</div>";
+
+// 	echo "			<div class=\"form-group\">
+//   	       			  <label class=\"col-sm-3 control-label\" for=\"country\">" . LangAddSiteField5 . "</label>";
+// 	echo "		  	  <div class=\"col-sm-9\">
+//  						<input id=\"latitude\" type='text' value='' />
+//  			  		  </div>";
+// 	echo "			</div>";
+
 // 	echo "<div class=\"form-group\">
 //  	       <label class=\"control-label\" for=\"filtername\">" . LangAddSiteField4 . "</label>";
 // 	echo "<div class=\"form-inline\">";
@@ -104,15 +129,15 @@ function new_location() {
 					  		
 					  		
 					  		
-	echo "		  </form>
-				</div>
-      			<div class=\"modal-footer\">
-        		  <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
-		          <button type=\"button\" class=\"btn btn-primary\">" . LangAddSiteButton . "</button>
-      			</div>
-    		  </div>
-  			</div>
-		  </div>";
+// 	echo "		  </form>
+// 				</div>
+//       			<div class=\"modal-footer\">
+//         		  <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
+// 		          <button type=\"button\" class=\"btn btn-primary\">" . LangAddSiteButton . "</button>
+//       			</div>
+//     		  </div>
+//   			</div>
+// 		  </div>";
 	
 	echo "<script src=\"https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places\"></script>";
 	
@@ -165,7 +190,8 @@ function new_location() {
           });
 		  // gets the coords when drag event ends
           // then updates the input with the new coords
-          google.maps.event.addListener(myLocationMarker, 'dragend', function(evt){
+		  // Set the coordinates in the form
+		  google.maps.event.addListener(myLocationMarker, 'dragend', function(evt){
  			document.getElementById('latitude').value = evt.latLng.lat().toFixed(6);
  			document.getElementById('longitude').value = evt.latLng.lng().toFixed(6);
 		  });
@@ -298,9 +324,6 @@ function new_location() {
         });
 		    		
 		    		";
-  		
-  			
-//   			print $objLocation->getLocationPropertyFromId($location, "locationactive");
   				
   		}
 	
