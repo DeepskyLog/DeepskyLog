@@ -39,12 +39,6 @@ function change_site() {
 	echo "</div>";
 	
 	echo "<div class=\"form-group\">
- 	       <label for=\"filtername\">" . LangAddSiteField2 . "</label>";
-	echo "<input type=\"text\" class=\"form-control\" maxlength=\"64\" name=\"region\" size=\"30\" value=\"" . stripslashes ( $objLocation->getLocationPropertyFromId ( $locationid, 'region' ) ) . "\"  " . $disabled . " />";
-	echo "<span class=\"help-block\">" . LangAddSiteField2Expl . "</span>";
-	echo "</div>";
-	
-	echo "<div class=\"form-group\">
  	       <label for=\"filtername\">" . LangAddSiteField3 . "</label>";
 	echo "<input type=\"text\" required class=\"form-control\" maxlength=\"64\" name=\"country\" size=\"30\" value=\"" . $objLocation->getLocationPropertyFromId ( $locationid, 'country' ) . "\"  " . $disabled . " />";
 	echo "<span class=\"help-block\">" . LangAddSiteField3Expl . "</span>";

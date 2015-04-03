@@ -24,10 +24,7 @@ function change_account()
 	 $previous=$objLocation->getLocationPropertyFromId($sites[$i],'name');
 	}
 	for($i=0;$i<count($sites);$i++)
-	{ if($adapt[$i])
-	    $sitename = $objLocation->getLocationPropertyFromId($sites[$i],'name')." (".$objLocation->getLocationPropertyFromId($sites[$i],'region').")";
-	  else
-	    $sitename = $objLocation->getLocationPropertyFromId($sites[$i],'name');
+	{ $sitename = $objLocation->getLocationPropertyFromId($sites[$i],'name');
 	  $tempLocationList.="<option ".(($objObserver->getObserverProperty($loggedUser,'stdlocation')==$sites[$i])?" selected=\"selected\"":"")." value=\"".$sites[$i]."\">".$sitename."</option>";
 	}
 	$tempLocationList.="</select>";

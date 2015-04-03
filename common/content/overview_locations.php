@@ -19,7 +19,6 @@ function overview_locations() {
 	echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 	echo "<thead><tr>";
 	echo "<th>" . LangViewLocationLocation . "</th>";
-	echo "<th>" . LangViewLocationProvince . "</th>";
 	echo "<th>" . LangViewLocationCountry . "</th>";
 	echo "<th>" . LangViewLocationLongitude . "</th>";
 	echo "<th>" . LangViewLocationLatitude . "</th>";
@@ -32,7 +31,6 @@ function overview_locations() {
 	$count = 0;
 	while ( list ( $key, $value ) = each ( $sites ) ) {
 			$sitename = stripslashes ( $objLocation->getLocationPropertyFromId ( $value, 'name' ) );
-			$region = stripslashes ( $objLocation->getLocationPropertyFromId ( $value, 'region' ) );
 			$country = $objLocation->getLocationPropertyFromId ( $value, 'country' );
 			if ($objLocation->getLocationPropertyFromId ( $value, 'longitude' ) > 0)
 				$longitude = "&nbsp;" . $objPresentations->decToString ( $objLocation->getLocationPropertyFromId ( $value, 'longitude' ) );
@@ -53,7 +51,6 @@ function overview_locations() {
 			if ($value != "1") {
 				echo "<tr>";
 				echo "<td><a href=\"" . $baseURL . "index.php?indexAction=adapt_site&amp;location=" . urlencode ( $value ) . "\">$sitename</a></td>";
-				echo "<td>" . $region . "</td>";
 				echo "<td>" . $country . "</td>";
 				echo "<td>" . $longitude . "</td>";
 				echo "<td>" . $latitude . "</td>";

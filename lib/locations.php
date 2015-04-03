@@ -6,9 +6,9 @@ global $inIndex;
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
 
 class Locations
-{ public function addLocation($name, $longitude, $latitude, $region, $country, $timezone)                             // addLocation adds a new location to the database. The name, longitude, latitude, region and country should be given as parameters. 
+{ public function addLocation($name, $longitude, $latitude, $country, $timezone)                             // addLocation adds a new location to the database. The name, longitude, latitude and country should be given as parameters. 
   { global $objDatabase;
-  	$objDatabase->execSQL("INSERT INTO locations (name, longitude, latitude, region, country, timezone) VALUES (\"$name\", \"$longitude\", \"$latitude\", \"$region\", \"$country\", \"$timezone\")");
+  	$objDatabase->execSQL("INSERT INTO locations (name, longitude, latitude, country, timezone) VALUES (\"$name\", \"$longitude\", \"$latitude\", \"$country\", \"$timezone\")");
     return $objDatabase->selectSingleValue("SELECT id FROM locations ORDER BY id DESC LIMIT 1",'id');
   }
   public  function getAllLocationsIds($id)                                                   // returns a list with all id's which have the same name as the name of the given id
@@ -117,14 +117,8 @@ class Locations
       $previous=$sites[$i]['name'];
     }
     for($i= 0;$i<count($sites);$i++)
-    { if($adapt[$i])
-      { $new_sites[$i][0] = $sites[$i]['id'];
-        $new_sites[$i][1] = $sites[$i]['name']." (".$this->getLocationPropertyFromId($sites[$i]['id'],'region').")";
-      }
-      else
-      { $new_sites[$i][0] = $sites[$i]['id'];
+    {   $new_sites[$i][0] = $sites[$i]['id'];
         $new_sites[$i][1] = $sites[$i]['name'];
-      }
     }
     return $new_sites;
   }
@@ -147,7 +141,6 @@ class Locations
 		  echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">".LangViewActive."</td>";
 		  
 		  echo "<th>".LangViewLocationLocation."</th>";
-		  echo "<th>".LangViewLocationProvince."</th>";
 		  echo "<th>".LangViewLocationCountry."</th>";
 		  echo "<th class=\"sorter-digit\">".LangViewLocationLongitude."</th>";
 		  echo "<th class=\"sorter-digit\">".LangViewLocationLatitude."</th>";
@@ -159,7 +152,6 @@ class Locations
 		  echo "</tr></thead>";
 		  while(list($key,$value)=each($sites))
 		  { $sitename=stripslashes($objLocation->getLocationPropertyFromId($value,'name'));
-		    $region=stripslashes($objLocation->getLocationPropertyFromId($value,'region'));
 		    $country=$objLocation->getLocationPropertyFromId($value,'country');
 		    if($objLocation->getLocationPropertyFromId($value,'longitude')>0)
 		      $longitude = "&nbsp;" . $objPresentations->decToString($objLocation->getLocationPropertyFromId($value,'longitude'));
@@ -188,7 +180,6 @@ class Locations
                     " onclick=\"setactivation('location',".$value.");\" />".
             "</td>";
 		      echo "<td><a href=\"".$baseURL."index.php?indexAction=adapt_site&amp;location=".urlencode($value)."\">".$sitename."</a></td>";
-		      echo "<td>".$region."</td>";
 		      echo "<td>".$country."</td>";
 		      echo "<td>".$longitude."</td>";
 		      echo "<td>".$latitude."</td>";
@@ -259,13 +250,7 @@ class Locations
 
       if($objUtil->checkPostKey('add'))
       { 
-        if ($objUtil->checkPostKey('region')) {
-          $region = $_POST['region'];
-        } else {
-          $region = "";
-        }
-        
-        $id = $this->addLocation($_POST['sitename'], $longitude, $latitude, $region, $_POST['country'], $timezone);
+        $id = $this->addLocation($_POST['sitename'], $longitude, $latitude, $_POST['country'], $timezone);
         if (array_key_exists('lm', $_POST) && $_POST['lm'])
         { $this->setLocationProperty($id, 'limitingMagnitude', $_POST['lm']);
           $this->setLocationProperty($id, 'skyBackground', -999);
@@ -285,12 +270,6 @@ class Locations
       if($objUtil->checkPostKey('change')
       && $objUtil->checkAdminOrUserID($this->getLocationPropertyFromId($objUtil->checkPostKey('id'),'observer')))
       { $this->setLocationProperty($_POST['id'], 'name',      $_POST['sitename']);
-        if ($objUtil->checkPostKey('region')) {
-          $region = $_POST['region'];
-        } else {
-          $region = "";
-        }
-        $this->setLocationProperty($_POST['id'], 'region',    $region);
         $this->setLocationProperty($_POST['id'], 'country',   $_POST['country']);
         $this->setLocationProperty($_POST['id'], 'longitude', $longitude);
         $this->setLocationProperty($_POST['id'], 'latitude',  $latitude);

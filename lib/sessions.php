@@ -475,7 +475,7 @@ class Sessions {
 			}
 		}
 		if ($found == 0) {
-			$id = $objLocation->addLocation ( $theLocName, $objLocation->getLocationPropertyFromId ( $theLoc, "longitude" ), $objLocation->getLocationPropertyFromId ( $theLoc, "latitude" ), $objLocation->getLocationPropertyFromId ( $theLoc, "region" ), $objLocation->getLocationPropertyFromId ( $theLoc, "country" ), $objLocation->getLocationPropertyFromId ( $theLoc, "timezone" ) );
+			$id = $objLocation->addLocation ( $theLocName, $objLocation->getLocationPropertyFromId ( $theLoc, "longitude" ), $objLocation->getLocationPropertyFromId ( $theLoc, "latitude" ), $objLocation->getLocationPropertyFromId ( $theLoc, "country" ), $objLocation->getLocationPropertyFromId ( $theLoc, "timezone" ) );
 			$objLocation->setLocationProperty ( $id, "limitingMagnitude", $objLocation->getLocationPropertyFromId ( $theLoc, "limitingMagnitude" ) );
 			$objLocation->setLocationProperty ( $id, "skyBackground", $objLocation->getLocationPropertyFromId ( $theLoc, "skyBackground" ) );
 			$objLocation->setLocationProperty ( $id, "observer", $loggedUser );

@@ -7,10 +7,15 @@ else
 	new_location ();
 function new_location() {
     global $objLocation, $loggedUser, $objContrast, $baseURL;
-	// TODO: Make sure the coordinates can be read out also when we search for a location.
-	// TODO: Read out the coordinates of the new location when we don't drag with the mouse.
-	// TODO: Remove state / province for OAL? What do we need. 
-	// TODO: Make script to change all the timezones in DeepskyLog
+    // TODO: Add Location
+	// 		TODO: Make sure the coordinates can be read out also when we search for a location.
+	// 		TODO: Read out the coordinates of the new location when we don't drag with the mouse.
+    // 		TODO: Add elevation to database
+    // TODO: Change location 
+	// TODO: Make script to change all the timezones, elevations and countries in DeepskyLog
+    // TODO: Add elevation
+	// 		TODO: Add elevation to the OAL export
+	// 		TODO: Add elevation to the OAL import
 	// TODO: Move strings to language files. 
 	// TODO: Test on smartphone, we don't see the google maps... 
 	
@@ -140,6 +145,32 @@ function new_location() {
 			}
 			xmlhttp.open('GET', url, true);
 			xmlhttp.send();
+
+  			// Find the elevation
+			elevator = new google.maps.ElevationService();
+
+			var locations = [];
+
+			locations.push(evt.latLng);
+
+			// Create a LocationElevationRequest object using the array's one value
+  			var positionalRequest = {
+    			'locations': locations
+  			}
+			
+			elevator.getElevationForLocations(positionalRequest, function(results, status) {
+		    if (status == google.maps.ElevationStatus.OK) {
+
+      			// Retrieve the first result
+      			if (results[0]) {
+			        alert(\"The elevation at this point is \" + results[0].elevation + \" meters.\");
+		        } else {
+        			alert(\"No elevation found\");
+      			}
+    		} else {
+      			alert(\"No elevation found\");
+    		}
+  		  });
 		  });
 		  addLocations();
 	  }
