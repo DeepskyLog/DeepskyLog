@@ -42,22 +42,77 @@ function new_location() {
 	
 	// The modal dialog to add the site
 	echo "<div class=\"modal fade\" id=\"addSite\" tabindex=\"-1\" role=\"dialog\">
-  <div class=\"modal-dialog\">
-    <div class=\"modal-content\">
-      <div class=\"modal-header\">
-        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
-        <h4 class=\"modal-title\" id=\"myModalLabel\">" . LangAddSiteButton . "</h4>
-      </div>
-      <div class=\"modal-body\">
-        ...
-      </div>
-      <div class=\"modal-footer\">
-        <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
-        <button type=\"button\" class=\"btn btn-primary\">" . LangAddSiteButton . "</button>
-      </div>
-    </div>
-  </div>
-</div>";
+  			<div class=\"modal-dialog\">
+    		  <div class=\"modal-content\">
+      			<div class=\"modal-header\">
+        		  <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\">
+			        <span aria-hidden=\"true\">&times;</span>
+				  </button>
+        		  <h4 class=\"modal-title\" id=\"myModalLabel\">" . LangAddSiteButton . "</h4>
+      			</div>
+      			<div class=\"modal-body\">
+        		  	<form class=\"form-horizontal\" role=\"form\" action=\"" . $baseURL . "index.php\" method=\"post\">
+                      <div class=\"form-group\">
+                      	<label class=\"col-sm-3 control-label\" for=\"sitename\">" . LangAddSiteField1 . "</label>
+					  	<div class=\"col-sm-9\">
+                      	  <input type=\"text\" required class=\"form-control\" maxlength=\"64\" name=\"sitename\" placeholder=\"" . LangAddSiteField1Expl . "\" size=\"30\" value=\"\" />
+                      	</div>
+                      </div>";
+        		  		
+    echo "			<div class=\"form-group\">
+  	       			  <label class=\"col-sm-3 control-label\" for=\"country\">" . LangAddSiteField3 . "</label>";
+ 	echo "		  	  <div class=\"col-sm-9\">
+ 						<p class=\"form-control-static\">Country</p>
+ 			  		  </div>";
+	echo "			</div>";
+	
+// 	echo "<div class=\"form-group\">
+//  	       <label class=\"control-label\" for=\"filtername\">" . LangAddSiteField4 . "</label>";
+// 	echo "<div class=\"form-inline\">";
+// 	echo "<input type=\"number\" min=\"-90\" max=\"90\" required class=\"form-control\" maxlength=\"3\" name=\"latitude\" size=\"4\" value=\"" . $latitudedeg . "\" " . $disabled . " />&deg;
+// 	      <input type=\"number\" min=\"0\" max=\"59\" required class=\"form-control\" maxlength=\"2\" name=\"latitudemin\" size=\"3\" value=\"" . abs ( $latitudemin ) . "\"  " . $disabled . " />'
+// 	      <input type=\"number\" min=\"0\" max=\"59\" required class=\"form-control\" maxlength=\"2\" name=\"latitudesec\" size=\"3\" value=\"" . abs ( $latitudesec ) . "\"  " . $disabled . " />''";
+// 	echo "</div>";
+// 	echo "<span class=\"help-block\">" . LangAddSiteField4Expl . "</span>";
+// 	echo "</div>";
+	
+// 	echo "<div class=\"form-group\">
+//  	       <label for=\"filtername\">" . LangAddSiteField5 . "</label>";
+// 	echo "<div class=\"form-inline\">";
+// 	echo "<input type=\"number\" min=\"-180\" max=\"180\" required class=\"form-control\" maxlength=\"4\" name=\"longitude\" size=\"4\" value=\"" . $longitudedeg . "\" " . $disabled . " />&deg;
+// 		  <input type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" name=\"longitudemin\" size=\"3\" value=\"" . abs ( $longitudemin ) . "\"  " . $disabled . " />'
+// 		  <input type=\"number\" min=\"0\" max=\"59\" class=\"form-control\" maxlength=\"2\" name=\"longitudesec\" size=\"3\" value=\"" . abs ( $longitudesec ) . "\"  " . $disabled . " />''";
+// 	echo "</div>";
+// 	echo "<span class=\"help-block\">" . LangAddSiteField5Expl . "</span>";
+// 	echo "</div>";
+	
+// 	echo "<div class=\"form-group\">
+//  	       <label for=\"filtername\">" . LangAddSiteField7 . "</label>";
+// 	echo "<div class=\"form-inline\">";
+// 	echo "<input type=\"number\" min=\"0.0\" max=\"9.9\" step=\"0.1\" class=\"form-control\" maxlength=\"5\" name=\"lm\" size=\"5\" value=\"" . (($lm > - 900) ? $lm : "") . "\"  " . $disabled . " />";
+// 	echo "</div>";
+// 	echo "<span class=\"help-block\">" . LangAddSiteField7Expl . "</span>";
+// 	echo "</div>";
+	
+// 	echo "<div class=\"form-group\">
+//  	       <label for=\"filtername\">" . LangAddSiteField8 . "</label>";
+// 	echo "<div class=\"form-inline\">";
+// 	echo "<input type=\"number\" min=\"10.0\" max=\"25.0\" step=\"0.01\" class=\"form-control\" maxlength=\"5\" name=\"sb\" size=\"5\" value=\"" . (($sb > - 900) ? $sb : "") . "\"  " . $disabled . " />";
+// 	echo "</div>";
+// 	echo "<span class=\"help-block\">" . LangAddSiteField8Expl . "</span>";
+// 	echo "</div>";
+					  		
+					  		
+					  		
+	echo "		  </form>
+				</div>
+      			<div class=\"modal-footer\">
+        		  <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
+		          <button type=\"button\" class=\"btn btn-primary\">" . LangAddSiteButton . "</button>
+      			</div>
+    		  </div>
+  			</div>
+		  </div>";
 	
 	echo "<script src=\"https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places\"></script>";
 	
