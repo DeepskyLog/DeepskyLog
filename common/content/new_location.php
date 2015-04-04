@@ -7,7 +7,6 @@ else
 	new_location ();
 function new_location() {
     global $objLocation, $loggedUser, $objContrast, $baseURL;
-    // TODO: The menu does not work in the settings page of the observer!!!!!!!!!!!
     // TODO: Add Location
     // 		TODO: Add elevation to database
     //      TODO: Add checked to locations in database
