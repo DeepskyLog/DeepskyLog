@@ -611,13 +611,6 @@ function view_observer() {
 	
 	// Draw the stars
 	echo "<div class=\"tab-pane\" id=\"stars\">";
-	// Some javascript for the tooltips
-	echo "<script>
-         $(function() {
-  	       $( document ).tooltip();
-         });
-  		  </script>
-  		";
 	
 	// Messier
 	echo "<div class=\"accomplishmentRow\">";

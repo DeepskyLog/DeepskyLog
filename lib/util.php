@@ -2609,16 +2609,16 @@ class Utils {
 		}
 	}
 	public function getDrawAccomplishment($number) {
-		return LangDrawAccomplishment1 . $number . LangDrawAccomplishment2;
+		return LangDrawAccomplishment1 . (int) $number . LangDrawAccomplishment2;
 	}
 	public function getDrawToAccomplish($number) {
-		return LangDrawToAccomplish1 . $number . LangDrawToAccomplish2;
+		return LangDrawToAccomplish1 . (int) $number . LangDrawToAccomplish2;
 	}
 	public function getSeenAccomplishment($number) {
-		return LangSeenAccomplishment1 . $number . LangSeenAccomplishment2;
+		return LangSeenAccomplishment1 . (int) $number . LangSeenAccomplishment2;
 	}
 	public function getSeenToAccomplish($number) {
-		return LangSeenToAccomplish1 . $number . LangSeenToAccomplish2;
+		return LangSeenToAccomplish1 . (int) $number . LangSeenToAccomplish2;
 	}
 	
 	// Add the table
