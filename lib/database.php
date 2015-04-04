@@ -16,6 +16,7 @@ class Database {
 			$run = $this->databaseId->query ( $sql );
 		} catch ( PDOException $ex ) {
 			$entryMessage = "A database error occured!"; // user friendly message
+			print $entryMessage;
 		}
 		
 		return $run;
