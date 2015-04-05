@@ -7,7 +7,8 @@ else
 	new_location ();
 function new_location() {
     global $objLocation, $loggedUser, $objContrast, $baseURL;
-    // TODO: Add Location
+    // TODO: Add SQM / limiting magnitude to the new site form.
+    // TODO: In list of locations, add elevation
 	// TODO: Make script to change all the timezones, elevations and countries in DeepskyLog. First time the observer goes to his list with observations, see the checked field in the database.
     // TODO: Add elevation
 	// 		TODO: Add elevation to the OAL export
@@ -34,7 +35,7 @@ function new_location() {
            ";
 	
     echo "<br /><form action=\"".$baseURL."index.php\" method=\"post\"><div>";
-    echo "<input type=\"hidden\" name=\"indexAction\" value=\"check_location\" />";
+    echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
     echo "<input type=\"hidden\" name=\"latitude\" id=\"latitude\" />";
     echo "<input type=\"hidden\" name=\"longitude\" id=\"longitude\" />";
     echo "<input type=\"hidden\" name=\"country\" id=\"country\" />";
