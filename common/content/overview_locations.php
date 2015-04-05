@@ -22,6 +22,7 @@ function overview_locations() {
 	echo "<th>" . LangViewLocationCountry . "</th>";
 	echo "<th>" . LangViewLocationLongitude . "</th>";
 	echo "<th>" . LangViewLocationLatitude . "</th>";
+	echo "<th>" . LangViewLocationElevation . "</th>";
 	echo "<th>" . LangAddSiteField6 . "</th>";
 	echo "<th>" . LangViewLocationLimMag . "</th>";
 	echo "<th>" . LangViewLocationSB . "</th>";
@@ -41,6 +42,7 @@ function overview_locations() {
 			else
 				$latitude = $objPresentations->decToString ( $objLocation->getLocationPropertyFromId ( $value, 'latitude' ) );
 			$timezone = $objLocation->getLocationPropertyFromId ( $value, 'timezone' );
+			$elevation = $objLocation->getLocationPropertyFromId ( $value, 'elevation' );
 			$observer = $objLocation->getLocationPropertyFromId ( $value, 'observer' );
 			$limmag = $objLocation->getLocationPropertyFromId ( $value, 'limitingMagnitude' );
 			if ($limmag < - 900)
@@ -54,6 +56,7 @@ function overview_locations() {
 				echo "<td>" . $country . "</td>";
 				echo "<td>" . $longitude . "</td>";
 				echo "<td>" . $latitude . "</td>";
+				echo "<td>" . $elevation . "</td>";
 				echo "<td>" . $timezone . "</td>";
 				echo "<td>" . $limmag . "</td>";
 				echo "<td>" . $sb . "</td>";

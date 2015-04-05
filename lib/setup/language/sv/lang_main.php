@@ -1,5 +1,6 @@
-<?php //EN
-// This is version 4.4
+<?php //SV
+// This is version 5.0
+define("LangViewLocationElevation", "Elevation");
 define("IntroText", "<h2>Välkommen till DeepskyLog!</h2>
 I ett n&auml;ra samarbete med den astronomiska f&ouml;reningen VVS (Vereniging Voor Sterrenkunde) i Belgien kan Djuprymdssektionen i SAAF (Svensk Amat&ouml;rAstronomisk F&ouml;rening) erbjuda en helt&auml;ckande och kostnadsfri databas f&ouml; djuprymdsobjekt. DeepskyLog &auml;r utvecklad av den belgiska f&ouml;reningens djuprymdssektion och &auml;r en internationell databas med m&aring;nga funktioner och verktyg. Databasen inneh&aring;ller 10 000-tals observationsrapporter och 1 000-tals skisser och teckningar gjorda av amat&ouml;rastronomer runt om i v&auml;rlden och tj&auml;nar som SAAF/Djuprymdssektionens officiella observationsarkiv.
 <br /><br />

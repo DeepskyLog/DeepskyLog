@@ -8,7 +8,6 @@ else
 function new_location() {
     global $objLocation, $loggedUser, $objContrast, $baseURL;
     // TODO: Add SQM / limiting magnitude to the new site form.
-    // TODO: In list of locations, add elevation
 	// TODO: Make script to change all the timezones, elevations and countries in DeepskyLog. First time the observer goes to his list with observations, see the checked field in the database.
     // TODO: Add elevation
 	// 		TODO: Add elevation to the OAL export
@@ -23,8 +22,6 @@ function new_location() {
 	// TODO: In the overview of the locations, make it possible to show it on the map, and make it possible to get directions to the location.
 	// TODO: Maybe add a button with a pencil to change, else, show the google maps, only with your locations.
 	
-	// TODO: After clicking OK, ask in a dialog for the name, then public / private, SQM / limiting magnitude, ...
-
 	echo "<form>
 			<div class=\"form-inline\">
 	         <input type=\"text\" class=\"form-control\" id=\"address\" onkeypress=\"searchKeyPress(event);\" placeholder=\"La Silla, Chile\" autofocus></input>

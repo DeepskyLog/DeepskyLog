@@ -158,6 +158,7 @@ class Locations {
 			echo "<th>" . LangViewLocationCountry . "</th>";
 			echo "<th class=\"sorter-digit\">" . LangViewLocationLongitude . "</th>";
 			echo "<th class=\"sorter-digit\">" . LangViewLocationLatitude . "</th>";
+			echo "<th>" . LangViewLocationElevation . "</th>";
 			echo "<th>" . LangAddSiteField6 . "</th>";
 			echo "<th>" . LangViewLocationLimMag . "</th>";
 			echo "<th>" . LangViewLocationSB . "</th>";
@@ -175,6 +176,7 @@ class Locations {
 					$latitude = "&nbsp;" . $objPresentations->decToString ( $objLocation->getLocationPropertyFromId ( $value, 'latitude' ) );
 				else
 					$latitude = $objPresentations->decToString ( $objLocation->getLocationPropertyFromId ( $value, 'latitude' ) );
+				$elevation = $objLocation->getLocationPropertyFromId ( $value, 'elevation' );
 				$timezone = $objLocation->getLocationPropertyFromId ( $value, 'timezone' );
 				$observer = $objLocation->getLocationPropertyFromId ( $value, 'observer' );
 				$limmag = $objLocation->getLocationPropertyFromId ( $value, 'limitingMagnitude' );
@@ -193,6 +195,7 @@ class Locations {
 					echo "<td>" . $country . "</td>";
 					echo "<td>" . $longitude . "</td>";
 					echo "<td>" . $latitude . "</td>";
+					echo "<td>" . $elevation . "m</td>";
 					echo "<td>" . $timezone . "</td>";
 					echo "<td>" . $limmag . "</td>";
 					echo "<td>" . $sb . "</td>";
