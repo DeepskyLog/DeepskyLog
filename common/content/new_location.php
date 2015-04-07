@@ -7,7 +7,6 @@ else
 	new_location ();
 function new_location() {
     global $objLocation, $loggedUser, $objContrast, $baseURL;
-    // TODO: Add SQM / limiting magnitude to the new site form.
 	// TODO: Make script to change all the timezones, elevations and countries in DeepskyLog. First time the observer goes to his list with observations, see the checked field in the database.
     // TODO: Add elevation
 	// 		TODO: Add elevation to the OAL export
@@ -41,7 +40,27 @@ function new_location() {
     echo "<div class=\"form-inline\">
     		<input type=\"text\" required class=\"form-control\" name=\"locationname\" placeholder=\"" . LangAddSiteField1 . "\"></input>";
     echo "  <input type=\"submit\" class=\"btn btn-primary tour4\" name=\"add\" value=\"".LangAddSiteButton."\" />";
-	echo "</div></form><br /><br />";
+    
+    
+    
+    echo "</div>
+ 	       <label>" . LangAddSiteField7 . "</label>";
+     	echo "<div class=\"form-inline\">";
+     	echo "<input type=\"number\" min=\"0\" max=\"9.9\" step=\"0.1\" class=\"form-control\" maxlength=\"5\" name=\"lm\" size=\"5\" />";
+     	echo "</div>";
+     	echo "<span class=\"help-block\">" . LangAddSiteField7Expl . "</span>";
+     	echo "</div>";
+    
+     	echo "<div class=\"form-group\">
+     	       <label>" . LangAddSiteField8 . "</label>";
+     	echo "<div class=\"form-inline\">";
+     	echo "<input type=\"number\" min=\"10.0\" max=\"25.0\" step=\"0.01\" class=\"form-control\" maxlength=\"5\" name=\"sb\" size=\"5\" />";
+     	echo "</div>";
+     	echo "<span class=\"help-block\">" . LangAddSiteField8Expl . "</span>";
+     	echo "</div>";
+    
+    
+    echo "</div></form><br /><br />";
 	
 	echo "<script src=\"https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places\"></script>";
 	
