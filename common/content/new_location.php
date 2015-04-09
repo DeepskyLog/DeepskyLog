@@ -15,6 +15,7 @@ function new_location() {
 	// TODO: Move strings to language files. 
 	// TODO: Move alerts away.
 	// TODO: Test on smartphone, we don't see the google maps... 
+        // TODO: Test on Mac / Safari... We don't see the google map using any of the browsers.
 	
     // TODO: Change location 
     // TODO: Make it possible to select one of the other locations.
