@@ -17,7 +17,7 @@ function databaseInfo()
 
   // Change the following to make deepskylog work with your database
   $host           = "localhost";
-  $user           = "wim";
+  $user           = "root";
   $pass           = "";
   $dbname         = "deepskylog";
   $developversion = 1;             // $developversion should be removed or set to 0 on the live server
@@ -25,8 +25,8 @@ function databaseInfo()
   $mailTo         = "developers@deepskylog.be";
   
   // Installation directory and url (each one has to end on a slash!)
-  $instDir      = "/software/www/htdocs/deepskylog/";
-  $baseURL      = "http://localhost/deepskylog/";
+  $instDir      = "/var/www/html/";
+  $baseURL      = "http://localhost/";
   // tempDir has NO end slash !
   $tempDir      = "/tmp/DeepskyLog";
   $dirAstroImageCatalogs = "http://www.distant-targets.be/files/DSL/astroimagecatalogs/";
