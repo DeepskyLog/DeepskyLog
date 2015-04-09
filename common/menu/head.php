@@ -23,7 +23,7 @@ function head() {
         <script src=\"" . $baseURL . "lib/javascript/lightbox.min.js\" type=\"text/javascript\" charset=\"utf-8\"></script>";
 	echo "<link href='http://fonts.googleapis.com/css?family=Yellowtail' rel='stylesheet' type='text/css'>";
 	echo "<script src=\"" . $baseURL . "lib/javascript/jquery-ui.min.js\" type=\"text/javascript\"></script>";
-	echo "<link rel=\"stylesheet\" href=\"" . $baseURL . "styles/jquery-ui.css\">";
+	echo "<link rel=\"stylesheet\" href=\"" . $baseURL . "styles/jquery-ui.min.css\">";
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/highcharts.js\"></script>";
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/modules/exporting.js\"></script>";
 	echo "<script src=\"" . $baseURL . "lib/javascript/bootstrap.min.js\"></script>";
