@@ -4,6 +4,8 @@
 
 global $inIndex;
 if((!isset($inIndex))||(!$inIndex)) include "../../redirect.php";
+require_once "observations.php"; 
+
 
 class Accomplishments {
   // Calculates the number of different messiers objects the observer has seen and 

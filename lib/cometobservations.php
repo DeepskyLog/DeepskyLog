@@ -53,6 +53,14 @@ class CometObservations {
 		$objDatabase->execSQL ( $sql );
 	}
 	
+        // setHasDrawing sets a drawing for the given observation
+        function setHasDrawing($id) {
+                global $objDatabase;
+
+                $sql = "UPDATE cometobservations SET hasDrawing = \"1\" WHERE id = \"$id\"";
+                $objDatabase->execSQL ( $sql );
+        }
+
 	// getObserverId returns the observerid of the given observation
 	function getObserverId($id) {
 		global $objDatabase;

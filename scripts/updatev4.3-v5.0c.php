@@ -2,6 +2,8 @@
  $inIndex=true;
  require_once "../lib/setup/databaseInfo.php";
  require_once "../lib/database.php";
+ date_default_timezone_set('UTC');
+
  $objDatabase=new Database();
  print "Database update will update the locations table: remove region and add elevation and checked.\n";
  $sql = "ALTER TABLE locations DROP COLUMN region;";
