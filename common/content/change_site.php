@@ -27,6 +27,9 @@ function change_site() {
 	
 	echo "<div id=\"main\">";
 	echo "<form role=\"form\" action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
+	echo "<td><a href=\"http://clearoutside.com/forecast/" . round($latitudestr, 2) . "/" . round($longitudestr, 2) . "\">
+				<img src=\"http://clearoutside.com/forecast_image_small/" . round($latitudestr, 2) . "/" . round($longitudestr, 2) . "/forecast.png\" /></a></td>";
+	
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 	echo "<input type=\"hidden\" name=\"id\" value=\"" . $locationid . "\" />&nbsp;";
 	echo "<h4>" . stripslashes ( $objLocation->getLocationPropertyFromId ( $locationid, 'name' ) ) . "</h4>";

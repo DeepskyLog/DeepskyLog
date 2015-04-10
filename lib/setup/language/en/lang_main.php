@@ -1,6 +1,7 @@
 <?php //EN
 // This is version 5.0
 define("LangViewLocationElevation", "Elevation");
+define("LangViewLocationWeatherPrediction", "Weather forecast");
 define("IntroText", "<h2>Welcome to DeepskyLog!</h2>
 In close collaboration with the Astronomical Society of Belgium (<a href=\"http://www.vvs.be\">Vereniging Voor Sterrenkunde (VVS)</a>) we are glad to offer a comprehensive and free database for deepsky objects. The database is developed by the deepsky-section of the VVS. The database already contains tens of thousands observations and thousands of sketches and drawings made by amateur astronomers around the world. After you have registered for DeepskyLog, you get access to a variety of useful tools:<br /><br />
 <ul><li>Information on the observations you made, the objects observed and sketches made,</li>

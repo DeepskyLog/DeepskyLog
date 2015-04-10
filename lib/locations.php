@@ -202,11 +202,9 @@ class Locations {
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangViewActive . "</td>";
 			
 			echo "<th>" . LangViewLocationLocation . "</th>";
+			echo "<th>" . LangViewLocationWeatherPrediction . "</th>";
 			echo "<th>" . LangViewLocationCountry . "</th>";
-			echo "<th class=\"sorter-digit\">" . LangViewLocationLongitude . "</th>";
-			echo "<th class=\"sorter-digit\">" . LangViewLocationLatitude . "</th>";
 			echo "<th>" . LangViewLocationElevation . "</th>";
-			echo "<th>" . LangAddSiteField6 . "</th>";
 			echo "<th>" . LangViewLocationLimMag . "</th>";
 			echo "<th>" . LangViewLocationSB . "</th>";
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangViewLocationStd . "</th>";
@@ -239,11 +237,10 @@ class Locations {
 					echo "<tr>";
 					echo "<td>" . "<input id=\"locationactive" . $value . "\" type=\"checkbox\" " . ($objLocation->getLocationPropertyFromId ( $value, 'locationactive' ) ? " checked=\"checked\" " : "") . " onclick=\"setactivation('location'," . $value . ");\" />" . "</td>";
 					echo "<td><a href=\"" . $baseURL . "index.php?indexAction=adapt_site&amp;location=" . urlencode ( $value ) . "\">" . $sitename . "</a></td>";
+					echo "<td><a href=\"http://clearoutside.com/forecast/" . round($objLocation->getLocationPropertyFromId ( $value, 'latitude' ), 2) . "/" . round($objLocation->getLocationPropertyFromId ( $value, 'longitude' ), 2) . "\">
+							  <img src=\"http://clearoutside.com/forecast_image_small/" . round($objLocation->getLocationPropertyFromId ( $value, 'latitude' ), 2) . "/" . round($objLocation->getLocationPropertyFromId ( $value, 'longitude' ), 2) . "/forecast.png\" /></a></td>";
 					echo "<td>" . $country . "</td>";
-					echo "<td>" . $longitude . "</td>";
-					echo "<td>" . $latitude . "</td>";
 					echo "<td>" . $elevation . "m</td>";
-					echo "<td>" . $timezone . "</td>";
 					echo "<td>" . $limmag . "</td>";
 					echo "<td>" . $sb . "</td>";
 					echo "<td><input type=\"radio\" name=\"stdlocation\" value=\"" . $value . "\"" . (($value == $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' )) ? " checked=\"checked\" " : "") . " onclick=\"submit();\" />&nbsp;<br /></td>";

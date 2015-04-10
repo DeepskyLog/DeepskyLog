@@ -7,7 +7,6 @@ else
 	new_location ();
 function new_location() {
 	global $objLocation, $loggedUser, $objContrast, $baseURL;
-	// TODO: Add weather predictions to the list of locations
 	// TODO: Add elevation to the OAL export
 	// TODO: Add elevation to the OAL import
 	// TODO: In OAL import, set the location to checked = 0
