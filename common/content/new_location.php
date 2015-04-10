@@ -99,11 +99,16 @@ function new_location() {
 			draggable: true
           });
 		  // Set the coordinates in the form
- 		  document.getElementById('latitude').value = loca.latLng.lat();
- 		  document.getElementById('longitude').value = loca.latLng.lng();
+ 		  document.getElementById('latitude').value = loca.lat();
+ 		  document.getElementById('longitude').value = loca.lng();
 		  fillHiddenFields(loca);
 		  addLocations();
-      }
+          google.maps.event.addListener(myLocationMarker, 'dragend', function(evt){
+ 			document.getElementById('latitude').value = evt.latLng.lat();
+ 			document.getElementById('longitude').value = evt.latLng.lng();
+			fillHiddenFields(evt.latLng);
+		  });
+	  }
 
 	  function getPosition(position) {
         loca = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
