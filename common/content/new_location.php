@@ -7,16 +7,13 @@ else
 	new_location ();
 function new_location() {
 	global $objLocation, $loggedUser, $objContrast, $baseURL;
+	// TODO: Change location
 	// TODO: Add elevation to the OAL export
 	// TODO: Add elevation to the OAL import
 	// TODO: In OAL import, set the location to checked = 0
 	// TODO: Move strings to language files.
 	// TODO: Move alerts away.
-	
-	// TODO: Change location
-	// TODO: Make it possible to select one of the other locations.
 	// TODO: In the overview of the locations, make it possible to show it on the map, and make it possible to get directions to the location.
-	// TODO: Maybe add a button with a pencil to change, else, show the google maps, only with your locations.
 	
 	echo "<form>
 			<div class=\"form-inline\">

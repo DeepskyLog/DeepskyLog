@@ -237,8 +237,8 @@ class Locations {
 					echo "<tr>";
 					echo "<td>" . "<input id=\"locationactive" . $value . "\" type=\"checkbox\" " . ($objLocation->getLocationPropertyFromId ( $value, 'locationactive' ) ? " checked=\"checked\" " : "") . " onclick=\"setactivation('location'," . $value . ");\" />" . "</td>";
 					echo "<td><a href=\"" . $baseURL . "index.php?indexAction=adapt_site&amp;location=" . urlencode ( $value ) . "\">" . $sitename . "</a></td>";
-					echo "<td><a href=\"http://clearoutside.com/forecast/" . round($objLocation->getLocationPropertyFromId ( $value, 'latitude' ), 2) . "/" . round($objLocation->getLocationPropertyFromId ( $value, 'longitude' ), 2) . "\">
-							  <img src=\"http://clearoutside.com/forecast_image_small/" . round($objLocation->getLocationPropertyFromId ( $value, 'latitude' ), 2) . "/" . round($objLocation->getLocationPropertyFromId ( $value, 'longitude' ), 2) . "/forecast.png\" /></a></td>";
+					echo "<td><a href=\"http://clearoutside.com/forecast/" . round ( $objLocation->getLocationPropertyFromId ( $value, 'latitude' ), 2 ) . "/" . round ( $objLocation->getLocationPropertyFromId ( $value, 'longitude' ), 2 ) . "\">
+							  <img src=\"http://clearoutside.com/forecast_image_small/" . round ( $objLocation->getLocationPropertyFromId ( $value, 'latitude' ), 2 ) . "/" . round ( $objLocation->getLocationPropertyFromId ( $value, 'longitude' ), 2 ) . "/forecast.png\" /></a></td>";
 					echo "<td>" . $country . "</td>";
 					echo "<td>" . $elevation . "m</td>";
 					echo "<td>" . $limmag . "</td>";
@@ -305,14 +305,15 @@ class Locations {
 				
 				return LangValidateSiteMessage2;
 			}
-			// TODO
 			if ($objUtil->checkPostKey ( 'change' ) && $objUtil->checkAdminOrUserID ( $this->getLocationPropertyFromId ( $objUtil->checkPostKey ( 'id' ), 'observer' ) )) {
-				$this->setLocationProperty ( $_POST ['id'], 'name', $_POST ['sitename'] );
+				$this->setLocationProperty ( $_POST ['id'], 'name', $_POST ['locationname'] );
 				$this->setLocationProperty ( $_POST ['id'], 'country', $_POST ['country'] );
 				$this->setLocationProperty ( $_POST ['id'], 'longitude', $longitude );
 				$this->setLocationProperty ( $_POST ['id'], 'latitude', $latitude );
 				$this->setLocationProperty ( $_POST ['id'], 'timezone', $timezone );
-				// $this->setLocationProperty($_POST['id'], 'observer', $loggedUser);
+				$this->setLocationProperty ( $_POST ['id'], 'elevation', $elevation );
+				$this->setLocationProperty ( $_POST ['id'], 'observer', $loggedUser );
+				$this->setLocationProperty ( $_POST ['id'], 'checked', 1 );
 				if ($objUtil->checkPostKey ( 'lm' )) {
 					$this->setLocationProperty ( $_POST ['id'], 'limitingMagnitude', $_POST ['lm'] );
 					$this->setLocationProperty ( $_POST ['id'], 'skyBackground', - 999 );
