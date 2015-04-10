@@ -2,23 +2,21 @@
 if ((! isset ( $inIndex )) || (! $inIndex))
 	include "../../redirect.php";
 elseif (! $loggedUser)
-throw new Exception ( LangException002 );
+	throw new Exception ( LangException002 );
 else
 	new_location ();
 function new_location() {
-    global $objLocation, $loggedUser, $objContrast, $baseURL;
+	global $objLocation, $loggedUser, $objContrast, $baseURL;
 	// TODO: Make script to change all the timezones, elevations and countries in DeepskyLog. First time the observer goes to his list with observations, see the checked field in the database.
-    // TODO: Add elevation
-	// 		TODO: Add elevation to the OAL export
-	// 		TODO: Add elevation to the OAL import
+	// TODO: Add elevation
+	// TODO: Add elevation to the OAL export
+	// TODO: Add elevation to the OAL import
 	// TODO: In OAL import, set the location to checked = 0
-	// TODO: Move strings to language files. 
+	// TODO: Move strings to language files.
 	// TODO: Move alerts away.
-	// TODO: Test on smartphone, we don't see the google maps... 
-        // TODO: Test on Mac / Safari... We don't see the google map using any of the browsers.
 	
-    // TODO: Change location 
-    // TODO: Make it possible to select one of the other locations.
+	// TODO: Change location
+	// TODO: Make it possible to select one of the other locations.
 	// TODO: In the overview of the locations, make it possible to show it on the map, and make it possible to get directions to the location.
 	// TODO: Maybe add a button with a pencil to change, else, show the google maps, only with your locations.
 	
@@ -31,40 +29,37 @@ function new_location() {
            <div id=\"map\"></div>
            ";
 	
-   echo "<br /><form action=\"".$baseURL."index.php\" method=\"post\"><div>";
-    echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
-    echo "<input type=\"hidden\" name=\"latitude\" id=\"latitude\" />";
-    echo "<input type=\"hidden\" name=\"longitude\" id=\"longitude\" />";
-    echo "<input type=\"hidden\" name=\"country\" id=\"country\" />";
-    echo "<input type=\"hidden\" name=\"elevation\" id=\"elevation\" />";
-    echo "<input type=\"hidden\" name=\"timezone\" id=\"timezone\" />";
-    echo "<div class=\"form-inline\">
+	echo "<br /><form action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
+	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
+	echo "<input type=\"hidden\" name=\"latitude\" id=\"latitude\" />";
+	echo "<input type=\"hidden\" name=\"longitude\" id=\"longitude\" />";
+	echo "<input type=\"hidden\" name=\"country\" id=\"country\" />";
+	echo "<input type=\"hidden\" name=\"elevation\" id=\"elevation\" />";
+	echo "<input type=\"hidden\" name=\"timezone\" id=\"timezone\" />";
+	echo "<div class=\"form-inline\">
     		<input type=\"text\" required class=\"form-control\" name=\"locationname\" placeholder=\"" . LangAddSiteField1 . "\"></input>";
-    echo "  <input type=\"submit\" class=\"btn btn-primary tour4\" name=\"add\" value=\"".LangAddSiteButton."\" />";
-    
-    
-    
-    echo "</div>
+	echo "  <input type=\"submit\" class=\"btn btn-primary tour4\" name=\"add\" value=\"" . LangAddSiteButton . "\" />";
+	
+	echo "</div>
  	       <label>" . LangAddSiteField7 . "</label>";
-     	echo "<div class=\"form-inline\">";
-     	echo "<input type=\"number\" min=\"0\" max=\"9.9\" step=\"0.1\" class=\"form-control\" maxlength=\"5\" name=\"lm\" size=\"5\" />";
-     	echo "</div>";
-     	echo "<span class=\"help-block\">" . LangAddSiteField7Expl . "</span>";
-    	echo "</div>";
-    
-     	echo "<div class=\"form-group\">
+	echo "<div class=\"form-inline\">";
+	echo "<input type=\"number\" min=\"0\" max=\"9.9\" step=\"0.1\" class=\"form-control\" maxlength=\"5\" name=\"lm\" size=\"5\" />";
+	echo "</div>";
+	echo "<span class=\"help-block\">" . LangAddSiteField7Expl . "</span>";
+	echo "</div>";
+	
+	echo "<div class=\"form-group\">
      	       <label>" . LangAddSiteField8 . "</label>";
-     	echo "<div class=\"form-inline\">";
-     	echo "<input type=\"number\" min=\"10.0\" max=\"25.0\" step=\"0.01\" class=\"form-control\" maxlength=\"5\" name=\"sb\" size=\"5\" />";
-     	echo "</div>";
-     	echo "<span class=\"help-block\">" . LangAddSiteField8Expl . "</span>";
-     	echo "</div>";
-    
-    
-   echo "</div></form><br /><br />";
+	echo "<div class=\"form-inline\">";
+	echo "<input type=\"number\" min=\"10.0\" max=\"25.0\" step=\"0.01\" class=\"form-control\" maxlength=\"5\" name=\"sb\" size=\"5\" />";
+	echo "</div>";
+	echo "<span class=\"help-block\">" . LangAddSiteField8Expl . "</span>";
+	echo "</div>";
+	
+	echo "</div></form><br /><br />";
 	
 	echo "<script type=\"text/javascript\" src=\"https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=true&libraries=places\"></script>";
-
+	
 	echo "<script>
 	  var geocoder;
       var map;
@@ -199,10 +194,8 @@ function new_location() {
     	  }
 	    });
 	  }
-			
 
       google.maps.event.addDomListener(window, 'load', initialize);
-			alert('test 3');
 			
 	  function searchKeyPress(e)
       {
@@ -216,112 +209,96 @@ function new_location() {
       }
 			
 			
+      function codeAddress() {
+         var address = document.getElementById(\"address\").value;
+         geocoder.geocode( { 'address': address}, function(results, status) {
+           if (status == google.maps.GeocoderStatus.OK) {
+             map.setCenter(results[0].geometry.location);
+			 document.getElementById('latitude').value = results[0].geometry.location.lat();
+ 		     document.getElementById('longitude').value = results[0].geometry.location.lng();
+			 fillHiddenFields(results[0].geometry.location);
 			
+	         // Remove old marker
+		     myLocationMarker.setMap(null);
+             myLocationMarker = new google.maps.Marker({
+               map: map,
+               position: results[0].geometry.location,
+			   draggable: true
+           });
+	     } else {
+            alert(\"Geocode was not successful for the following reason: \" + status);
+          }
+        });
+      }
+
+      function createMarker(place) {
+        var placeLoc = place.geometry.location;
+        var marker = new google.maps.Marker({
+          map: map,
+          position: place.geometry.location
+        });
+
+        google.maps.event.addListener(marker, 'mouseover', function() {
+          infowindow.setContent(place.name);
+          infowindow.open(map, this);
+        });
+      }
+
+      function callback(results, status) {
+        if (status == google.maps.places.PlacesServiceStatus.OK) {
+          for (var i = 0; i < results.length; i++) {
+            createMarker(results[i]);
+          }
+        }
+      }
+
+	  function addLocations( ) {
+		var image = '" . $baseURL . "/images/telescope.png';";
+	
+	foreach ( $objLocation->getSortedLocations ( "id", $loggedUser ) as $location ) {
+		echo "// Let's add the existing locations to the map.
+			   		  var contentString = \"<strong>" . html_entity_decode ( $objLocation->getLocationPropertyFromId ( $location, "name" ) ) . "</strong><br /><br />Limiting magnitude: ";
+		$limmag = $objLocation->getLocationPropertyFromId ( $location, 'limitingMagnitude' );
+		$sb = $objLocation->getLocationPropertyFromId ( $location, 'skyBackground' );
+		if (($limmag < - 900) && ($sb > 0))
+			$limmag = sprintf ( "%.1f", $objContrast->calculateLimitingMagnitudeFromSkyBackground ( $sb ) );
+		elseif (($limmag < - 900) && ($sb < - 900)) {
+			$limmag = "-";
+			$sb = "-";
+		} else {
+			$sb = sprintf ( "%.1f", $objContrast->calculateSkyBackgroundFromLimitingMagnitude ( $limmag ) );
+		}
+		echo $limmag . "<br />SQM: " . $sb . "<br />";
+		
+		if ($objLocation->getLocationPropertyFromId ( $location, "locationactive" )) {
+			echo "Active";
+		} else {
+			echo "Not active";
+		}
+		
+		echo "\";
+ 			var infowindow = new google.maps.InfoWindow({
+	 			content: contentString
+	 		});";
+		
+		echo "newLocation = new google.maps.LatLng(" . $objLocation->getLocationPropertyFromId ( $location, "latitude" ) . ", " . $objLocation->getLocationPropertyFromId ( $location, "longitude" ) . ");
+			  marker = new google.maps.Marker({
+			  position: newLocation,
+			  icon: image,
+			  map: map,
+			  html: contentString,
+			  title: \"" . html_entity_decode ( $objLocation->getLocationPropertyFromId ( $location, "name" ) ) . "\"
+			});
+				
+			myLocations.push(marker);
+			google.maps.event.addListener(marker, 'mouseover', function() {
+				infowindow.setContent(this.html);
+				infowindow.open(map, this);
+			});
+			";
+	}
+	
+	echo "	  }
 			</script>";
-// 	echo "<script>
-// 			alert('test 1');
-
-
-
-
-// 	  function addLocations( ) {
-// 		var image = '" . $baseURL . "/images/telescope.png';";
-	
-//   		foreach($objLocation->getSortedLocations("id", $loggedUser) as $location) {
-//   			echo "
-//   		// Let's add the existing locations to the map.
-//   		var contentString = \"<strong>" . html_entity_decode($objLocation->getLocationPropertyFromId($location, "name")) . "</strong><br /><br />Limiting magnitude: "; 
-	
-// 			$limmag = $objLocation->getLocationPropertyFromId($location,'limitingMagnitude');
-//   			$sb = $objLocation->getLocationPropertyFromId($location,'skyBackground');
-//   			if(($limmag<-900)&&($sb>0))
-//   				$limmag = sprintf("%.1f", $objContrast->calculateLimitingMagnitudeFromSkyBackground($sb));
-//   			elseif(($limmag<-900)&&($sb<-900))
-//   			{ $limmag="-";
-//   			  $sb="-";
-//   			} else {
-//   			  $sb=sprintf("%.1f", $objContrast->calculateSkyBackgroundFromLimitingMagnitude($limmag));
-//   			}
-  			  	
-//   		echo $limmag . "<br />SQM: " . $sb . "<br />";
-//   		if ($objLocation->getLocationPropertyFromId($location, "locationactive")) {
-//   			echo "Active";
-//   		} else {
-//   			echo "Not active";
-//   		}
-
-//   		echo "\";
-//  		var infowindow = new google.maps.InfoWindow({
-//  				content: contentString
-//  			});";
-// 		echo "newLocation = new google.maps.LatLng(" . $objLocation->getLocationPropertyFromId($location, "latitude") .
-// 		                       ", " . $objLocation->getLocationPropertyFromId($location, "longitude") . ");
-// 		marker = new google.maps.Marker({
-//     		position: newLocation,
-//             icon: image,
-//     		map: map,
-// 		    html: contentString,
-// 		    title: '" . html_entity_decode($objLocation->getLocationPropertyFromId($location, "name")) . "'
-//   		});
-//   		myLocations.push(marker);
-// 		google.maps.event.addListener(marker, 'mouseover', function() {
-// 		  infowindow.setContent(this.html);
-//           infowindow.open(map, this);
-//         });
-
-//         // assuming you also want to hide the infowindow when user mouses-out
-//         google.maps.event.addListener(marker, 'mouseout', function() {
-//           infowindow.close();
-//         });";
-  				
-//   		}
-	
-// 	echo "
-// 	  }
-
-//       function callback(results, status) {
-//         if (status == google.maps.places.PlacesServiceStatus.OK) {
-//           for (var i = 0; i < results.length; i++) {
-//             createMarker(results[i]);
-//           }
-//         }
-//       }
-
-//       function createMarker(place) {
-//         var placeLoc = place.geometry.location;
-//         var marker = new google.maps.Marker({
-//           map: map,
-//           position: place.geometry.location
-//         });
-
-//         google.maps.event.addListener(marker, 'mouseover', function() {
-//           infowindow.setContent(place.name);
-//           infowindow.open(map, this);
-//         });
-//       }
-
-//       function codeAddress() {
-//          var address = document.getElementById(\"address\").value;
-//          geocoder.geocode( { 'address': address}, function(results, status) {
-//            if (status == google.maps.GeocoderStatus.OK) {
-//              map.setCenter(results[0].geometry.location);
-// 			 document.getElementById('latitude').value = results[0].geometry.location.lat();
-//  		     document.getElementById('longitude').value = results[0].geometry.location.lng();
-// 			 fillHiddenFields(results[0].geometry.location);
-			
-// 	         // Remove old marker
-// 		     myLocationMarker.setMap(null);
-//              myLocationMarker = new google.maps.Marker({
-//                map: map,
-//                position: results[0].geometry.location,
-// 			   draggable: true
-//            });
-// 	     } else {
-//             alert(\"Geocode was not successful for the following reason: \" + status);
-//           }
-//         });
-//       }
-
-// 			</script>";
 }
 ?>
