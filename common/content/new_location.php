@@ -7,8 +7,7 @@ else
 	new_location ();
 function new_location() {
 	global $objLocation, $loggedUser, $objContrast, $baseURL;
-	// TODO: Make script to change all the timezones, elevations and countries in DeepskyLog. First time the observer goes to his list with observations, see the checked field in the database.
-	// TODO: Add elevation
+	// TODO: Add weather predictions to the list of locations
 	// TODO: Add elevation to the OAL export
 	// TODO: Add elevation to the OAL import
 	// TODO: In OAL import, set the location to checked = 0

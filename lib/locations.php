@@ -140,9 +140,56 @@ class Locations {
 		global $objDatabase;
 		return $objDatabase->execSQL ( "UPDATE locations SET " . $property . " = \"" . $propertyValue . "\" WHERE id = \"" . $id . "\"" );
 	}
+	public function getNotcheckedLocations($observer) {
+		global $objDatabase;
+		$sites = $objDatabase->selectRecordsetArray ( "SELECT id FROM locations where observer = \"" . $observer . "\" AND checked=\"0\"", 'id' );
+		
+		return $sites;
+	}
 	public function showLocationsObserver() {
 		global $baseURL, $loggedUser, $objObserver, $objUtil, $objLocation, $objPresentations, $loggedUserName, $objContrast, $locationid, $sites;
 		if ($sites != null) {
+			// First check if there are not checked locations
+			$locationsToCheck = $objLocation->getNotCheckedLocations ( $loggedUser );
+			if (sizeof ( $locationsToCheck ) > 0) {
+				foreach ( $locationsToCheck as $location ) {
+					// We adapt the timezone, elevation and country
+					$latitude = $objLocation->getLocationPropertyFromId ( $location ['id'], "latitude" );
+					$longitude = $objLocation->getLocationPropertyFromId ( $location ['id'], "longitude" );
+					
+					$url = "https://maps.googleapis.com/maps/api/timezone/json?location=" . $latitude . "," . $longitude . "&timestamp=0";
+					$json = file_get_contents ( $url );
+					$obj = json_decode ( $json );
+					if ($obj->status == "OK") {
+						$objLocation->setLocationProperty ( $location ['id'], "timezone", $obj->timeZoneId );
+						
+						// Get the elevation
+						$url = "https://maps.googleapis.com/maps/api/elevation/json?locations=" . $latitude . "," . $longitude;
+						$json = file_get_contents ( $url );
+						$obj = json_decode ( $json );
+						if ($obj->status == "OK") {
+							$results = $obj->results [0];
+							$objLocation->setLocationProperty ( $location ['id'], "elevation", (( int ) $results->elevation) );
+							
+							// Get the country
+							$url = "https://maps.googleapis.com/maps/api/geocode/json?latlng=" . $latitude . "," . $longitude . "&key=AIzaSyDGQJvhs1ItqmrFfYPRrh3vNpBzNbWntis";
+							$json = file_get_contents ( $url );
+							$obj = json_decode ( $json );
+							if ($obj->status == "OK") {
+								$results = $obj->results [0];
+								$components = $results->address_components;
+								for($ac = 0; $ac < sizeof ( $components ); $ac ++) {
+									if ($components [$ac]->types [0] == "country") {
+										$objLocation->setLocationProperty ( $location ['id'], "country", $components [$ac]->long_name );
+										$objLocation->setLocationProperty ( $location ['id'], "checked", 1 );
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			
 			echo "<form action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 			echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_site\" />";
 			echo "<input type=\"hidden\" name=\"adaptStandardLocation\" value=\"1\" />";
@@ -240,11 +287,11 @@ class Locations {
 			$latitude = $objUtil->checkPostKey ( 'latitude', 0 );
 			$longitude = $objUtil->checkPostKey ( 'longitude', 0 );
 			// Get the timezone
-			$timezone = $objUtil->checkPostKey( 'timezone' );
-			$locationname = $objUtil->checkPostKey('locationname');
-			$country = $objUtil->checkPostKey('country');
-			$elevation = $objUtil->checkPostKey('elevation');			
-
+			$timezone = $objUtil->checkPostKey ( 'timezone' );
+			$locationname = $objUtil->checkPostKey ( 'locationname' );
+			$country = $objUtil->checkPostKey ( 'country' );
+			$elevation = $objUtil->checkPostKey ( 'elevation' );
+			
 			if ($objUtil->checkPostKey ( 'add' )) {
 				$id = $this->addLocation ( $locationname, $longitude, $latitude, $country, $timezone, $elevation );
 				if (array_key_exists ( 'lm', $_POST ) && $_POST ['lm']) {
