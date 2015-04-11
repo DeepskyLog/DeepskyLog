@@ -646,8 +646,9 @@ function add_xml_observations() {
 				$objLocation->setLocationProperty ( $locId, "country", $sa ["country"] );
 			} else {
 				// Add the new site!
-				$locId = $objLocation->addLocation ( $sa ["name"], $sa ["longitude"], $sa ["latitude"], "", $sa ["country"], $sa ["timezone"] );
+				$locId = $objLocation->addLocation ( $sa ["name"], $sa ["longitude"], $sa ["latitude"], "", $sa ["country"], $sa ["timezone"], 0 );
 				$objDatabase->execSQL ( "update locations set observer = \"" . $_SESSION ['deepskylog_id'] . "\" where id = \"" . $locId . "\";" );
+				$objDatabase->execSQL ( "update locations set checked = \"0\" where id = \"" . $locId . "\";" );
 			}
 			
 			$location = $locId;

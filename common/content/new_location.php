@@ -7,10 +7,7 @@ else
 	new_location ();
 function new_location() {
 	global $objLocation, $loggedUser, $objContrast, $baseURL;
-	// TODO: Add elevation to the OAL export
-	// TODO: Add elevation to the OAL import
-	// TODO: In OAL import, set the location to checked = 0
-	// TODO: In the overview of the locations, make it possible to get directions to the location.
+	// TODO: Add elevation to the OAL export. To test, enable .htaccess in Docker...
 	
 	echo "<form>
 			<div class=\"form-inline\">
