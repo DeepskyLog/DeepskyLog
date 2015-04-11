@@ -310,6 +310,10 @@ class Utils {
 			$attrText = $dom->createTextNode ( "deg" );
 			$attr->appendChild ( $attrText );
 			
+			// ELEVATION
+			$elevation = $siteChild->appendChild ( $dom->createElement ( 'elevation' ) );
+			$elevation->appendChild ( $dom->createTextNode ( $location->getLocationPropertyFromId ( $value, 'elevation' ) ) );
+			
 			$timezone = $siteChild->appendChild ( $dom->createElement ( 'timezone' ) );
 			$dateTimeZone = new DateTimeZone ( $location->getLocationPropertyFromId ( $value, 'timezone' ) );
 			$datestr = "01/01/2008";
