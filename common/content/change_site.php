@@ -103,12 +103,8 @@ function change_site() {
 				  document.getElementById('country').value = arrAddress[ac].long_name;
 				}
 			  }
-		    } else {
-        	  alert('No results found');
-      		}
-     	  } else {
-      		alert('Geocoder failed due to: ' + status);
-    	  }
+		    }
+     	  }
   		});
 	
   		// Find the timezone
@@ -140,11 +136,7 @@ function change_site() {
       		// Retrieve the first result
       		if (results[0]) {
 			  document.getElementById('elevation').value = results[0].elevation;
-		    } else {
-        	  alert(\"No elevation found\");
-      		}
-    	  } else {
-      		alert(\"No elevation found\");
+		    }
     	  }
 	    });
 	  }
@@ -166,7 +158,7 @@ function change_site() {
 			} else {
 				$sb = sprintf ( "%.1f", $objContrast->calculateSkyBackgroundFromLimitingMagnitude ( $limmag ) );
 			}
-			echo $limmag . "<br />SQM: " . $sb . "<br />;";
+			echo $limmag . "<br />SQM: " . $sb . "<br />";
 			
 			if ($objLocation->getLocationPropertyFromId ( $location, "locationactive" )) {
 				echo "Active";

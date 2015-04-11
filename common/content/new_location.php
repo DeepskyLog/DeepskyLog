@@ -7,12 +7,10 @@ else
 	new_location ();
 function new_location() {
 	global $objLocation, $loggedUser, $objContrast, $baseURL;
-	// TODO: Change location
 	// TODO: Add elevation to the OAL export
 	// TODO: Add elevation to the OAL import
 	// TODO: In OAL import, set the location to checked = 0
 	// TODO: Move strings to language files.
-	// TODO: Move alerts away.
 	// TODO: In the overview of the locations, make it possible to show it on the map, and make it possible to get directions to the location.
 	
 	echo "<form>
@@ -149,12 +147,8 @@ function new_location() {
 				  document.getElementById('country').value = arrAddress[ac].long_name; 
 				}
 			  }
-		    } else {
-        	  alert('No results found');
-      		}
-     	  } else {
-      		alert('Geocoder failed due to: ' + status);
-    	  }
+		    }
+     	  }
   		});
 
   		// Find the timezone
@@ -186,11 +180,7 @@ function new_location() {
       		// Retrieve the first result
       		if (results[0]) {
 			  document.getElementById('elevation').value = results[0].elevation;
-		    } else {
-        	  alert(\"No elevation found\");
-      		}
-    	  } else {
-      		alert(\"No elevation found\");
+		    }
     	  }
 	    });
 	  }
@@ -225,9 +215,7 @@ function new_location() {
                position: results[0].geometry.location,
 			   draggable: true
            });
-	     } else {
-            alert(\"Geocode was not successful for the following reason: \" + status);
-          }
+	     }
         });
       }
 
