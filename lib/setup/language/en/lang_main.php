@@ -1,5 +1,6 @@
 <?php //EN
 // This is version 5.0
+define("LangViewNotActive","Not active");
 define("LangViewLocationElevation", "Elevation");
 define("LangViewLocationWeatherPrediction", "Weather forecast");
 define("IntroText", "<h2>Welcome to DeepskyLog!</h2>
@@ -363,7 +364,7 @@ define("ObjectObservationsShow" ,"Show the observations");
 define("ObjectObservationsHide" ,"Hide the observations");
 
 
-define("LangViewActive"					,"Actif");
+define("LangViewActive"					,"Active");
 
 
 define("LangMonth"              ,"Month");

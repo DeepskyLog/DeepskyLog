@@ -161,9 +161,9 @@ function change_site() {
 			echo $limmag . "<br />SQM: " . $sb . "<br />";
 			
 			if ($objLocation->getLocationPropertyFromId ( $location, "locationactive" )) {
-				echo "Active";
+				echo LangViewActive;
 			} else {
-				echo "Not active";
+				echo LangViewNotActive;
 			}
 			
 			echo "\";

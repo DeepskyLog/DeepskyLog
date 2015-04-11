@@ -10,7 +10,6 @@ function new_location() {
 	// TODO: Add elevation to the OAL export
 	// TODO: Add elevation to the OAL import
 	// TODO: In OAL import, set the location to checked = 0
-	// TODO: Move strings to language files.
 	// TODO: In the overview of the locations, make it possible to show it on the map, and make it possible to get directions to the location.
 	
 	echo "<form>
@@ -259,9 +258,9 @@ function new_location() {
 		echo $limmag . "<br />SQM: " . $sb . "<br />";
 		
 		if ($objLocation->getLocationPropertyFromId ( $location, "locationactive" )) {
-			echo "Active";
+			echo LangViewActive;
 		} else {
-			echo "Not active";
+			echo LangViewNotActive;
 		}
 		
 		echo "\";

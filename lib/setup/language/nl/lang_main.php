@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("LangViewNotActive","Niet actief");
 define("LangViewLocationElevation", "Hoogte");
 define("LangViewLocationWeatherPrediction", "Weersvoorspelling");
 define("IntroText", "<h2>Welkom bij DeepskyLog!</h2>

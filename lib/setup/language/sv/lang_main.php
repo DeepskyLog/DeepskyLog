@@ -1,5 +1,6 @@
 <?php //SV
 // This is version 5.0
+define("LangViewNotActive","Not active");
 define("LangViewLocationElevation", "Elevation");
 define("LangViewLocationWeatherPrediction", "Weather forecast");
 define("IntroText", "<h2>Välkommen till DeepskyLog!</h2>
