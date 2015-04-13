@@ -82,6 +82,7 @@ function change_site() {
 			draggable: true
           });
 		  fillHiddenFields(loca);
+      		
 	      addLocations();
       		
       	  google.maps.event.addListener(myLocationMarker, 'dragend', function(evt){
@@ -143,35 +144,35 @@ function change_site() {
 
       function addLocations( ) {
 		var image = '" . $baseURL . "/images/telescope.png';";
-	
-	foreach ( $objLocation->getSortedLocations ( "id", $loggedUser ) as $location ) {
-		if ($location != $locationid) {
-			echo "// Let's add the existing locations to the map.
+	if ($loggedUser != "") {
+		foreach ( $objLocation->getSortedLocations ( "id", $loggedUser ) as $location ) {
+			if ($location != $locationid) {
+				echo "// Let's add the existing locations to the map.
 	   		  var contentString = \"<strong>" . html_entity_decode ( $objLocation->getLocationPropertyFromId ( $location, "name" ) ) . "</strong><br /><br />Limiting magnitude: ";
-			$limmag = $objLocation->getLocationPropertyFromId ( $location, 'limitingMagnitude' );
-			$sb = $objLocation->getLocationPropertyFromId ( $location, 'skyBackground' );
-			if (($limmag < - 900) && ($sb > 0))
-				$limmag = sprintf ( "%.1f", $objContrast->calculateLimitingMagnitudeFromSkyBackground ( $sb ) );
-			elseif (($limmag < - 900) && ($sb < - 900)) {
-				$limmag = "-";
-				$sb = "-";
-			} else {
-				$sb = sprintf ( "%.1f", $objContrast->calculateSkyBackgroundFromLimitingMagnitude ( $limmag ) );
-			}
-			echo $limmag . "<br />SQM: " . $sb . "<br />";
-			
-			if ($objLocation->getLocationPropertyFromId ( $location, "locationactive" )) {
-				echo LangViewActive;
-			} else {
-				echo LangViewNotActive;
-			}
-			
-			echo "\";
+				$limmag = $objLocation->getLocationPropertyFromId ( $location, 'limitingMagnitude' );
+				$sb = $objLocation->getLocationPropertyFromId ( $location, 'skyBackground' );
+				if (($limmag < - 900) && ($sb > 0))
+					$limmag = sprintf ( "%.1f", $objContrast->calculateLimitingMagnitudeFromSkyBackground ( $sb ) );
+				elseif (($limmag < - 900) && ($sb < - 900)) {
+					$limmag = "-";
+					$sb = "-";
+				} else {
+					$sb = sprintf ( "%.1f", $objContrast->calculateSkyBackgroundFromLimitingMagnitude ( $limmag ) );
+				}
+				echo $limmag . "<br />SQM: " . $sb . "<br />";
+				
+				if ($objLocation->getLocationPropertyFromId ( $location, "locationactive" )) {
+					echo LangViewActive;
+				} else {
+					echo LangViewNotActive;
+				}
+				
+				echo "\";
  			var infowindow = new google.maps.InfoWindow({
 	 			content: contentString
 	 		});";
-			
-			echo "newLocation = new google.maps.LatLng(" . $objLocation->getLocationPropertyFromId ( $location, "latitude" ) . ", " . $objLocation->getLocationPropertyFromId ( $location, "longitude" ) . ");
+				
+				echo "newLocation = new google.maps.LatLng(" . $objLocation->getLocationPropertyFromId ( $location, "latitude" ) . ", " . $objLocation->getLocationPropertyFromId ( $location, "longitude" ) . ");
 			  marker = new google.maps.Marker({
 			  position: newLocation,
 			  icon: image,
@@ -186,6 +187,7 @@ function change_site() {
 				infowindow.open(map, this);
 			});
 			";
+			}
 		}
 	}
 	echo "}      		

@@ -7,7 +7,6 @@ else
 	new_location ();
 function new_location() {
 	global $objLocation, $loggedUser, $objContrast, $baseURL;
-	// TODO: View location when not logged in... DOES NOT WORK...
 	echo "<form>
 			<div class=\"form-inline\">
 	         <input type=\"text\" class=\"form-control\" id=\"address\" onkeypress=\"searchKeyPress(event);\" placeholder=\"La Silla, Chile\" autofocus></input>
