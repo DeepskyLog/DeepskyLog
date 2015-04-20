@@ -1,27 +1,18 @@
 <?php
 global $baseURL, $objObservations, $objObserver, $objUtil;
 
-echo "<div class=\"jumbotron\" style=\"background-image: url(" . $baseURL . "images/logo.png); background-size: 100%;\">";
-echo "<div class=\"container\">";
-echo "<h1>DeepskyLog ";
-echo "<small>Online deepsky planning and logging tool</small></h1>";
+echo "<div class=\"container-fluid\">
+		<img class=\"img-responsive img-rounded\" src=\"" . $baseURL . "images/logo.png\">";
+echo "</div>";
 echo "<br />";
-echo "<br />";
-echo "<br />";
-echo "<br />";
-echo "<br />";
-echo "<br />";
-echo "<br />";
-echo "<br />";
-echo "</div></div>";
 
 if (! $loggedUser) {
 	echo IntroText;
 	echo "<br /><br />";
 }
 
-// TODO : Add new logo.
-// TODO : Make sure the logo shows ok, also on smaller screens. (All <br />-tags should be removed...)
+// TODO : Add new logo with text.
+// TODO : Test logo on smaller screens. 
 // TODO : Translate 'Nieuwe tekeningen'.
 // TODO : Add new observations.
 
