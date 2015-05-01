@@ -45,9 +45,15 @@ try
   		      "</p>
   		     </ul>";
   
-  // Add logo for oal
+  // Add fork me on GitHub button
   echo "<ul class=\"nav navbar-nav navbar-right\">";
   
+  echo "<li><a href=\"https://github.com/DeepskyLog/DeepskyLog/fork\" rel=\"external\">
+  		      <img src=\"" . $baseURL . "images/GitHub.png\" alt=\"Fork me on GitHub\"/>
+		    </a>
+  		</li>";
+  
+  // Add logo for oal
   echo "<li><a href=\"http://groups.google.com/group/openastronomylog\" rel=\"external\">";
   echo "<img width=\"24\" height=\"24\" src=\"".$baseURL."styles/images/oallogo_small.jpg\" alt=\"OAL\"/>";
   echo "</a></li>";
