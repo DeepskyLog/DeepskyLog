@@ -112,8 +112,6 @@ class Observers {
 	public function showTopObservers($catalog, $rank) {
 		global $baseURL, $objObservation, $objUtil, $objObserver, $objObject, $DSOcatalogsLists;
 		$outputtable = "";
-		$objectsInCatalog = $objObject->getNumberOfObjectsInCatalog ( $catalog );
-		
 		if ($catalog != "") {
 			if (! strcmp ( $catalog, "-----------" )) {
 				echo "<div><table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
@@ -125,6 +123,8 @@ class Observers {
 			echo "<div><table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 			$catalog = "M";
 		}
+		$objectsInCatalog = $objObject->getNumberOfObjectsInCatalog ( $catalog );
+		
 		echo "<thead>";
 		echo "<tr>";
 		echo "<th>" . LangTopObserversHeader1 . "</th>";

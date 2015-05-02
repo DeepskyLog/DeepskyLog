@@ -84,7 +84,6 @@ class Sessions {
 			$start_ts = strtotime($session_begindate);
 			$end_ts = strtotime($session_enddate);
 			$user_ts = strtotime($begindate);
-			
 			// Check that user date is between start & end
 			if (($user_ts >= $start_ts) && ($user_ts <= $end_ts)) {
 				$return = true;
