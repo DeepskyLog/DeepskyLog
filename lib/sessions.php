@@ -20,6 +20,11 @@ class Sessions {
 		global $objDatabase;
 		return $objDatabase->selectRecordsetArray ( "SELECT * FROM sessions WHERE observerid=\"" . $user . "\"" );
 	}
+	public function getAllActiveSessionsForUser($user) 	// returns all the active sessions for a given user
+	{
+		global $objDatabase;
+		return $objDatabase->selectRecordsetArray ( "SELECT * FROM sessions WHERE observerid=\"" . $user . "\" and active=\"1\"" );
+	}
 	public function validateSession() {
 		global $loggedUser, $instDir, $_FILES;
 		if (! ($loggedUser))
@@ -68,7 +73,7 @@ class Sessions {
 		$enddate = date ( 'Y-m-d H:i:s', mktime ( $endhours, $endminutes, 0, $endmonth, $endday, $endyear ) );
 		
 		// Check if the date already is used in another session.
-		$existing_sessions = $this->getAllSessionsForUser ( $loggedUser );
+		$existing_sessions = $this->getAllActiveSessionsForUser ( $loggedUser );
 		$return = false;
 		for($i = 0; $i < count ( $existing_sessions ); $i ++) {
 			$session_begindate = $existing_sessions [$i] ['begindate'];
