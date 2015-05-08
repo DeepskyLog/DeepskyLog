@@ -39,7 +39,6 @@ function head() {
 		<link href=\"styles/tablesorter.theme.bootstrap.css\" rel=\"stylesheet\">";
 	echo "<link href=\"" . $baseURL . "styles/deepskylog.css\" rel=\"stylesheet\" type=\"text/css\" />";
 	
-	$DSLTitle = "DeepskyLog";
 	$TitleText = "";
 	$theDispatch = $objUtil->checkRequestKey ( 'indexAction' );
 	$theObject = $objUtil->checkRequestKey ( 'object' );
@@ -187,7 +186,7 @@ function head() {
 		elseif ($objUtil->checkRequestKey ( 'newObservationQuickPick', '' ))
 			$TitleText = "DSL: " . LangQuickPickNewObservation . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
 	}
-	echo "<title>" . $DSLTitle . ($TitleText ? ": " . $TitleText : "") . "</title>";
+	echo "<title>" . ($TitleText ? ": " . $TitleText : "") . "</title>";
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 	
 	echo "<script type=\"text/javascript\">
