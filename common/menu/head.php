@@ -60,7 +60,7 @@ function head() {
 	elseif ($includeFile == 'deepsky/content/new_listdatacsv.php')
 		$TitleText = LangCSVListTitle;
 	elseif ($includeFile == 'deepsky/content/tolist.php')
-		$TitleText = LangList . " - " . $listname;
+		$TitleText = $listname;
 	elseif ($includeFile == 'deepsky/content/manage_objects_csv.php')
 		$TitleText = LangCSVObjectTitle;
 	elseif ($includeFile == 'deepsky/content/setup_objects_query.php')
@@ -175,18 +175,18 @@ function head() {
 	elseif ($includeFile == 'comets/content/setup_objects_query.php')
 		$TitleText = LangQueryObjectsTitle;
 	elseif ($objUtil->checkRequestKey ( 'title' ))
-		$TitleText = "DSL: " . $objUtil->checkRequestKey ( 'title', '' ); // 20081209 Here should come a better solution, see bug report 44
+		$TitleText = $objUtil->checkRequestKey ( 'title', '' ); // 20081209 Here should come a better solution, see bug report 44
 	elseif ($objUtil->checkRequestKey ( ('titleobject') ))
-		$TitleText = "DSL: " . $objUtil->checkRequestKey ( 'titleobject', '' ) . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
+		$TitleText = $objUtil->checkRequestKey ( 'titleobject', '' ) . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
 	elseif ($objUtil->checkRequestKey ( ('titleobjectaction') )) {
 		if ($objUtil->checkRequestKey ( 'searchObjectQuickPickQuickPick', '' ))
-			$TitleText = "DSL: " . LangSelectedObjectsTitle . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
+			$TitleText = LangSelectedObjectsTitle . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
 		elseif ($objUtil->checkRequestKey ( 'searchObservationsQuickPick', '' ))
-			$TitleText = "DSL: " . LangSelectedObservationsTitle2 . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
+			$TitleText = LangSelectedObservationsTitle2 . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
 		elseif ($objUtil->checkRequestKey ( 'newObservationQuickPick', '' ))
-			$TitleText = "DSL: " . LangQuickPickNewObservation . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
+			$TitleText = LangQuickPickNewObservation . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
 	}
-	if ($TitleText == "") {
+	if ($TitleText == "" || $TitleText == "Home") {
 		$TitleText = "DeepskyLog";
 	}
 	echo "<title>" . $TitleText . "</title>";
