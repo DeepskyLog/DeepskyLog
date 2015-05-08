@@ -186,7 +186,10 @@ function head() {
 		elseif ($objUtil->checkRequestKey ( 'newObservationQuickPick', '' ))
 			$TitleText = "DSL: " . LangQuickPickNewObservation . " - " . $objUtil->checkGetKey ( 'object' ); // 20081209 Here should come a better solution, see bug report 44
 	}
-	echo "<title>" . ($TitleText ? ": " . $TitleText : "") . "</title>";
+	if ($TitleText == "") {
+		$TitleText = "DeepskyLog";
+	}
+	echo "<title>" . $TitleText . "</title>";
 	echo "<script type=\"text/javascript\" src=\"".$baseURL."lib/javascript/presentation.js\"></script>";
 	
 	echo "<script type=\"text/javascript\">
