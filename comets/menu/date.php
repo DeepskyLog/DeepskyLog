@@ -14,7 +14,6 @@ else
 function menu_date() {
 	global $baseURL, $loggedUser, $thisDay, $thisMonth, $thisYear;
 	if ($loggedUser) {
-		echo "  <script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/CalendarPopupCC.js\"></script>";
 		echo "<div class=\"menuDivExtended\">";
 		$link = $baseURL . "index.php?";
 		reset ( $_GET );

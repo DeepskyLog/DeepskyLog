@@ -617,10 +617,8 @@ class Objects {
 		
 		$ObsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ", 'ObsCnt' );
 		
-		// TODO: add link to own observations.
 		// TODO: Make sure the date is displayed as a real date.
 		// TODO: Add a link to own drawings.
-		// TODO: Add the total number of drawings + link
 		// TODO: Adapt language files
 		echo "<table class=\"table table-condensed table-striped table-hover\">";
 		echo " <tr>";
@@ -646,7 +644,7 @@ class Objects {
 			if ($get3->PersObsCnt > 0) {
 				echo " <tr>";
 				echo "  <td>Number of personal observations</td>";
-				echo "  <td>" . $get3->PersObsCnt . "</td>";
+				echo "  <td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog=" . $cat . "&number=" . $number . "&observer=" . $loggedUser . "\">" . $get3->PersObsCnt . "</a></td>";
 				echo " </tr>";
 				// echo "<br />";
 				// echo "Last personal observation: " . $get3->PersObsMaxDate;
