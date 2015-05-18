@@ -69,7 +69,7 @@ function view_observation() {
 		$AOid = array ();
 	}
 	while ( list ( $key, $LOid ) = each ( $AOid ) ) {
-		echo "<strong>Observation of " . $object . "</strong>";
+		echo "<strong>" . LangObservationOf . $object . "</strong>";
 		$objObservation->showObservation ( $LOid );
 	}
 	if ($loggedUser != "") {
