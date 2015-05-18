@@ -23,7 +23,7 @@ function view_observation() {
 	
 	echo "<h4>" . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "</h4>";
 	echo $objPresentations->getDSSDeepskyLiveLinks1 ( $object );
-
+	
 	$topline = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\">" . LangViewObjectViewNearbyObject . " " . $object_ss . "</a>";
 	if (substr ( $objObject->getSeen ( $object ), 0, 1 ) != '-')
 		$topline .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\">" . LangViewObjectObservations . "&nbsp;" . $object_ss . "</a>";
@@ -40,8 +40,8 @@ function view_observation() {
 	echo "<hr />";
 	$objObject->showObject ( $object );
 	$content = '';
-	if ($loggedUser) 	// LOGGED IN
-	{
+	if ($loggedUser) // LOGGED IN
+{
 		if ($_GET ['dalm'] != "D")
 			$content = "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_observation&amp;observation=" . $observationid . "&amp;dalm=D\" title=\"" . LangDetail . "\">" . LangDetailText . "</a>" . "&nbsp;";
 		if ($_GET ["dalm"] != "AO")
@@ -57,18 +57,21 @@ function view_observation() {
 		echo "<br /><br />";
 	}
 	$objObservation->showObservation ( $_GET ['observation'] );
-	if ($_GET ['dalm'] == "AO")
+	if ($_GET ['dalm'] == "AO") {
 		$AOid = $objObservation->getAOObservationsId ( $object, $_GET ['observation'] );
-	elseif ($_GET ['dalm'] == "MO")
+	} elseif ($_GET ['dalm'] == "MO") {
 		$AOid = $objObservation->getMOObservationsId ( $object, $loggedUser, $_GET ['observation'] );
-	elseif ($_GET ['dalm'] == "LO")
+	} elseif ($_GET ['dalm'] == "LO") {
 		$AOid = array (
 				$objObservation->getLOObservationId ( $object, $loggedUser, $_GET ['observation'] ) 
 		);
-	else
+	} else {
 		$AOid = array ();
-	while ( list ( $key, $LOid ) = each ( $AOid ) )
+	}
+	while ( list ( $key, $LOid ) = each ( $AOid ) ) {
+		echo "<strong>Observation of " . $object . "</strong>";
 		$objObservation->showObservation ( $LOid );
+	}
 	if ($loggedUser != "") {
 		$observerid = $objObservation->getDsObservationProperty ( $_GET ['observation'], 'observerid' );
 		$name = $objObserver->getObserverProperty ( $observerid, 'firstname' ) . " " . $objObserver->getObserverProperty ( $observerid, 'name' ) . " ";
