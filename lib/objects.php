@@ -619,7 +619,6 @@ class Objects {
 		
 		// TODO: add link to own observations.
 		// TODO: Make sure the date is displayed as a real date.
-		// TODO: Show a nice table.
 		// TODO: Add a link to own drawings.
 		// TODO: Add the total number of drawings + link
 		// TODO: Adapt language files
@@ -629,14 +628,26 @@ class Objects {
 		echo " </tr>";
 		echo " <tr>";
 		echo "  <td>Number of drawings</td>";
-		echo "  <td></td>";
+		$run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As totDraw FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 AND hasDrawing=1" );
+		$totDraw = $run4->fetch ( PDO::FETCH_OBJ )->totDraw;
+		if ($totDraw > 0) {
+			$obj =  preg_split("/ /", $object);
+			$cat = $obj[0];
+			$number = $obj[1];
+			echo "  <td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog=" . $cat . "&number=" . $number . "&drawings=on\">" . $totDraw . "</a></td>";
+		} else {
+			echo "  <td>0</td>";
+		}
 		echo " </tr>";
 		
 		if ($loggedUser) {
 			$run3 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7" );
 			$get3 = $run3->fetch ( PDO::FETCH_OBJ );
 			if ($get3->PersObsCnt > 0) {
-				// echo "Number of personal observations: " . $get3->PersObsCnt;
+				echo " <tr>";
+				echo "  <td>Number of personal observations</td>";
+				echo "  <td>" . $get3->PersObsCnt . "</td>";
+				echo " </tr>";
 				// echo "<br />";
 				// echo "Last personal observation: " . $get3->PersObsMaxDate;
 				// echo "<br />";
