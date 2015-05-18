@@ -590,8 +590,8 @@ class Objects {
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT objectpartof.partofname FROM objectpartof WHERE objectpartof.objectname = \"" . $name . "\"", 'partofname' );
 	}
-	public function getSeen($object) // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
-{
+	public function getSeen($object) {
+		// Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
 		global $loggedUser, $objDatabase;
 		$seen = '-';
 		if ($ObsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ", 'ObsCnt' )) {
@@ -601,10 +601,46 @@ class Objects {
 				$get3 = $run3->fetch ( PDO::FETCH_OBJ );
 				if ($get3->PersObsCnt > 0) {
 					$run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7 AND hasDrawing=1" );
-					if ($run4->fetch ( PDO::FETCH_OBJ )->PersObsCnt > 0)
+					if ($run4->fetch ( PDO::FETCH_OBJ )->PersObsCnt > 0) {
 						$seen = 'YD(' . $ObsCnt . '/' . $get3->PersObsCnt . ')&nbsp;' . $get3->PersObsMaxDate;
-					else
+					} else {
 						$seen = 'Y(' . $ObsCnt . '/' . $get3->PersObsCnt . ')&nbsp;' . $get3->PersObsMaxDate;
+					}
+				}
+			}
+		}
+		return $seen;
+	}
+	public function getSeenComprehensive($object) {
+		// Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
+		global $loggedUser, $objDatabase;
+		
+		$ObsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ", 'ObsCnt' );
+
+		// TODO: add link to own observations.
+		// TODO: Make sure the date is displayed as a real date.
+		// TODO: Show a nice table.
+		// TODO: Add a link to own drawings.
+		// TODO: Add the total number of drawings + link
+		// TODO: Display correctly in view_observation.php
+		echo "Number of observations: <a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectYSeen . "\">" . $ObsCnt . "</a>";
+		echo "<br />";
+		if ($loggedUser) {
+			$run3 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7" );
+			$get3 = $run3->fetch ( PDO::FETCH_OBJ );
+			if ($get3->PersObsCnt > 0) {
+				echo "Number of personal observations: " . $get3->PersObsCnt;
+				echo "<br />";
+				echo "Last personal observation: " . $get3->PersObsMaxDate;
+				echo "<br />";
+				echo "Number of drawings: ";
+				echo "<br />";
+				echo "Number of personal drawings: ";
+				$run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7 AND hasDrawing=1" );
+				if ($run4->fetch ( PDO::FETCH_OBJ )->PersObsCnt > 0) {
+					echo "YES";
+				} else {
+					echo "NO";
 				}
 			}
 		}
