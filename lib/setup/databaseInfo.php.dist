@@ -10,7 +10,7 @@ else databaseInfo();
 function databaseInfo()
 { 
   global $host,$user,$pass,$dbname,$developversion,$googleAnalytics,$domainName,
-         $instDir,$baseURL,$tempDir,$mailFrom,$mailTo,$dirAtlasses,
+         $instDir,$baseURL,$tempDir,$mailFrom,$mailTo,$dirAtlasses,$copyright,
          $title,$browsertitle,$vvsInfo,$dslInfo,$objectInfo,$w3cInfo,
          $register,$dateformat,$defaultLanguage,$languageMenu,$maxFileSize,$modules,
          $standardLanguagesForObservationsDuringRegistration,$languagesDuringRegistration,$dirAstroImageCatalogs;
