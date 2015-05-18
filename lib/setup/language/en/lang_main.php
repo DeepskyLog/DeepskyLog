@@ -466,7 +466,7 @@ define("ReportSectionBarWidthbase"                             ,"Width of the se
 define("ReportShowElements"                                    ,"Show (t) title, (h) made up for, (e) efemerides, (p) page numbers, (l) legend, (s) separation lines, (i) index");
 define("Reportobjectseen"                                      ,"Object seen by you or others");
 define("Reportobjectlastseen"                                  ,"Object last seen date");
-define("Reportshowname"                                        ,"Object name as in query (e.b. Caldwell number)");
+define("Reportshowname"                                        ,"Object name as in search (e.g. Caldwell number)");
 define("Reportobjectname"                                      ,"Object prinicpal name");
 define("Reportaltname"                                         ,"Alternative object names");
 define("Reportobjecttype"                                      ,"Object type abbreviation");
@@ -934,7 +934,7 @@ define("LangChangeAccountButton"													,"Change");
 define("LangChangeAccountField10"													,"ICQ observercode");
 define("LangChangeAccountField10Expl"											,"<a href=\"http://cfa-www.harvard.edu/icq/icq.html\" rel=\"external\">ICQ</a> code for comet observations");
 define("LangChangeAccountField11"													,"Use local time");
-define("LangChangeAccountField11Expl"											,"Use local time to enter and query observations");
+define("LangChangeAccountField11Expl"											,"Use local time to enter and search observations");
 define("LangChangeAccountField13"													,"Motivation");
 define("LangChangeAccountField13Expl"											,"Please tell us briefly why you register, this allows us to eliminate automatic registrations.");
 
@@ -948,9 +948,9 @@ define("LangLoginMenuRegister"														,"Register");
 define("LangSearchMenuTitle"															,"View");
 define("LangSearchMenuItem1"															,"My observations");
 define("LangSearchMenuItem2"															,"All observations");
-define("LangSearchMenuItem3"															,"Query observations");
+define("LangSearchMenuItem3"															,"Search observations");
 define("LangSearchMenuItem4"															,"All objects");
-define("LangSearchMenuItem5"															,"Query objects");
+define("LangSearchMenuItem5"															,"Search objects");
 define("LangSearchMenuItem6"															,"Observers");
 define("LangSearchMenuItem7"															,"Popular objects");
 define("LangSearchMenuItem8"                              ,"Year of observations");
@@ -1207,11 +1207,11 @@ define("LangOverviewObjectsHeader10"											,"Size");
 
 define("LangSelectedObjectsTitle"													,"Overview selected objects");
 define("LangExecuteQueryObjectsMessage1"									,"Perform another search");
-define("LangExecuteQueryObjectsMessage2"									,"Sorry, your query did not yield any results.");
+define("LangExecuteQueryObjectsMessage2"									,"Sorry, no objects found!");
 define("LangExecuteQueryObjectsMessage2a"									,"Perform another search");
 define("LangExecuteQueryObjectsMessage2b"									," or ");
 define("LangExecuteQueryObjectsMessage2c"									,"View all objects");
-define("LangExecuteQueryObjectsMessage3"									,"You didn't specify any queries to search on.");
+define("LangExecuteQueryObjectsMessage3"									,"You didn't specify any parameters to search on.");
 define("LangExecuteQueryObjectsMessage4"									,"Download file:");
 define("LangExecuteQueryObjectsMessage4a"									,"pdf");
 define("LangExecuteQueryObjectsMessage4b"									,"names pdf");
@@ -1642,7 +1642,7 @@ define("LangValidateInstrumentMessage"										,"Message");
 
 // content/setup_query_objects.php
 
-define("LangQueryObjectsTitle"														,"Query objects");
+define("LangQueryObjectsTitle"														,"Search objects");
 define("LangQueryObjectsField1"														,"Object&nbsp;name");
 define("LangQueryObjectsField2"														,"Constellation");
 define("LangQueryObjectsField3"														,"Magnitude fainter than");
@@ -1665,7 +1665,7 @@ define("LangQueryObjectsField17"													,"Maximum contrast reserve");
 define("LangQueryObjectsField18"													,"Minimum contrast reserve");
 define("LangQueryObjectsField19"													,"In the list");
 define("LangQueryObjectsField20"													,"Not in the list");
-define("LangQueryObjectsButton1"													,"Submit query");
+define("LangQueryObjectsButton1"													,"Search");
 define("LangQueryObjectsButton2"													,"Clear fields");
 define("LangQueryObjectsUrano"														,"Uranometria");
 define("LangQueryObjectsUranonew"													,"Uranometria (2nd edition)");
@@ -1730,7 +1730,7 @@ define("LangTopObjectsHeader5"														,"Number of observations");
 
 // content/setup_observations_query.php
  
-define("LangQueryObservationsTitle"												,"Query observations");
+define("LangQueryObservationsTitle"												,"Search observations");
 define("LangQueryObservationsMessage1"										,"Only observations with drawing");
 define("LangQueryObservationsMessage1b"										,"without drawing");
 define("LangObservationQueryError1b"											,"There is no object with those specifications.");
@@ -1741,8 +1741,8 @@ define("LangObservationQueryError1"												,"You didn't specify any queries 
 define("LangObservationOR"																,"or");
 define("LangObservationQueryError2"												,"Perform another search");
 define("LangObservationQueryError3"												,"View all observations");
-define("LangObservationNoResults"													,"Sorry, your query did not yield any results"); 
-define("LangQueryObservationsButton1"											,"Submit Query");
+define("LangObservationNoResults"													,"Sorry, no observations found!"); 
+define("LangQueryObservationsButton1"											,"Search");
 define("LangQueryObservationsButton2"											,"Clear Fields");
 
 // remove instrument/location column
