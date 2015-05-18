@@ -112,7 +112,13 @@ function view_observer() {
 		echo "</div></div>";
 		echo "<div class=\"form-group\">";
 		echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField8 . "</label>";
-		echo "<div class=\"col-sm-5\"><p class=\"form-control-static\">" . ($instrumentname ? "<a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $objObserver->getObserverProperty ( $user, 'stdtelescope' ) ) . "\">" . (($instrumentname == "Naked eye") ? InstrumentsNakedEye : $instrumentname) . "</a>" : "");
+		// Here, we set the name of the default instrument. For the current user, we need to make it possible to change the default instrument.
+		echo "<div class=\"col-sm-5\"><p class=\"form-control-static\">";
+		if ($instrumentname) {
+			echo "<a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $objObserver->getObserverProperty ( $user, 'stdtelescope' ) ) . "\">" . (($instrumentname == "Naked eye") ? InstrumentsNakedEye : $instrumentname) . "</a>";
+		} else {
+			echo "";
+		}
 		echo "</p></div></div>";
 		echo "</form>";
 	} else {
