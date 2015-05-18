@@ -13,19 +13,8 @@ function view_observation() {
 	global $baseURL, $object, $loggedUser, $myList, $observationid, $listname_ss, $objObservation, $objObject, $objPresentations, $objUtil, $objList, $objObserver;
 	echo "<div id=\"main\">";
 	$object_ss = stripslashes ( $object );
-	$seen = "<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectNSeen . "\">-</a>";
+	echo "<h4>" . LangViewObjectTitle . "&nbsp;-&nbsp;<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\">" . $object_ss . "</a></h4>";
 	$seenDetails = $objObject->getSeenComprehensive ( $object );
-	if (substr ( $seenDetails, 0, 1 ) == "X") {
-		$seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectXSeen . "\">"
-				  . $seenDetails . "</a>";
-	}
-	if ($loggedUser) {
-		if (substr ( $seenDetails, 0, 1 ) == "Y") {
-			$seen = "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectYSeen . "\">" 
-				  . $seenDetails . "</a>";
-		}
-	}
-	echo "<h4>" . LangViewObjectTitle . "&nbsp;-&nbsp;" . $object_ss . "&nbsp;-&nbsp;" . LangOverviewObjectsHeader7 . "&nbsp;:&nbsp;" . $seen . "</h4>";
 	echo $objPresentations->getDSSDeepskyLiveLinks1 ( $object );
 	
 	$topline = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\">" . LangViewObjectViewNearbyObject . " " . $object_ss . "</a>";

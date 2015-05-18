@@ -622,7 +622,6 @@ class Objects {
 		// TODO: Show a nice table.
 		// TODO: Add a link to own drawings.
 		// TODO: Add the total number of drawings + link
-		// TODO: Display correctly in view_observation.php
 		echo "Number of observations: <a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectYSeen . "\">" . $ObsCnt . "</a>";
 		echo "<br />";
 		if ($loggedUser) {
