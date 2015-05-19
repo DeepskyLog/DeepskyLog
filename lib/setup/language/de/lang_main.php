@@ -1,5 +1,8 @@
 <?php //GE
 // This is version 5.0
+define("LangNumberOfPersonalDrawings", "Number of own drawings");
+define("LangLastPersonalObservation", "Last own observation");
+define("LangPersonalObservations", "Number of own observations");
 define("LangObservationOf", "Observation of ");
 define("LangReportIssue","Report issue");
 define("LangViewNotActive","Not active");

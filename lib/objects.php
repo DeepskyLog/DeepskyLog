@@ -616,16 +616,15 @@ class Objects {
 		global $loggedUser, $objDatabase, $baseURL, $dateformat;
 		
 		$ObsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ", 'ObsCnt' );
-		
-		// TODO: Adapt language files
+
 		echo "<div class=\"row\">
 		       <div class=\"col-md-6\">";
 		echo "<table class=\"table table-bordered table-condensed table-striped table-hover table-responsive\">";
 		echo " <tr>";
-		echo "  <td>Number of observations</td><td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectYSeen . "\">" . $ObsCnt . "</a></td>";
+		echo "  <td>" . LangViewObserverNumberOfObservations . "</td><td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectYSeen . "\">" . $ObsCnt . "</a></td>";
 		echo " </tr>";
 		echo " <tr>";
-		echo "  <td>Number of drawings</td>";
+		echo "  <td>" . LangTopObserversHeader7 . "</td>";
 		$run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As totDraw FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 AND hasDrawing=1" );
 		$totDraw = $run4->fetch ( PDO::FETCH_OBJ )->totDraw;
 		if ($totDraw > 0) {
@@ -644,13 +643,13 @@ class Objects {
 			if ($get3->PersObsCnt > 0) {
 				// The number of personal observations of this object.
 				echo " <tr>";
-				echo "  <td>Number of personal observations</td>";
+				echo "  <td>" . LangPersonalObservations . "</td>";
 				echo "  <td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog=" . $cat . "&number=" . $number . "&observer=" . $loggedUser . "\">" . $get3->PersObsCnt . "</a></td>";
 				echo " </tr>";
 				
 				// The date of observer's last observation of this object.
 				echo " <tr>";
-				echo "  <td>Last personal observation</td>";
+				echo "  <td>" . LangLastPersonalObservation . "</td>";
 				$date = $get3->PersObsMaxDate;
 				$dateArray = sscanf ( $date, "%4d%2d%2d" );
 				echo "  <td>" . date ( $dateformat, mktime ( 0, 0, 0, $dateArray [1], $dateArray [2], $dateArray [0] ) ) . "</td>";
@@ -658,7 +657,7 @@ class Objects {
 				
 				// The number of drawings the observer has made.
 				echo " <tr>";
-				echo "  <td>Number of personal drawings</td>";
+				echo "  <td>" . LangNumberOfPersonalDrawings . "</td>";
 				$run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7 AND hasDrawing=1" );
 				$persDrawings = $run4->fetch ( PDO::FETCH_OBJ )->PersObsCnt;
 				if ($persDrawings > 0) {
