@@ -613,12 +613,12 @@ class Objects {
 	}
 	public function getSeenComprehensive($object) {
 		// Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
-		global $loggedUser, $objDatabase, $baseURL;
+		global $loggedUser, $objDatabase, $baseURL, $dateformat;
 		
 		$ObsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ", 'ObsCnt' );
 		
-		// TODO: Make sure the date is displayed as a real date.
 		// TODO: Add a link to own drawings.
+		// TODO: Make more enjoyable to view: Uses batches, make smaller
 		// TODO: Adapt language files
 		echo "<table class=\"table table-condensed table-striped table-hover\">";
 		echo " <tr>";
@@ -642,13 +642,19 @@ class Objects {
 			$run3 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7" );
 			$get3 = $run3->fetch ( PDO::FETCH_OBJ );
 			if ($get3->PersObsCnt > 0) {
+				// The number of personal observations of this object.
 				echo " <tr>";
 				echo "  <td>Number of personal observations</td>";
 				echo "  <td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog=" . $cat . "&number=" . $number . "&observer=" . $loggedUser . "\">" . $get3->PersObsCnt . "</a></td>";
 				echo " </tr>";
-				// echo "<br />";
-				// echo "Last personal observation: " . $get3->PersObsMaxDate;
-				// echo "<br />";
+				
+				// The date of observer's last observation of this object.
+				echo " <tr>";
+				echo "  <td>Last personal observation</td>";
+				$date = $get3->PersObsMaxDate;
+				$dateArray = sscanf($date, "%4d%2d%2d");
+				echo "  <td>" . date ( $dateformat, mktime ( 0, 0, 0, $dateArray[1], $dateArray[2], $dateArray[0] ) ) . "</td>";
+				echo " </tr>";
 				// echo "Number of personal drawings: ";
 				// $run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7 AND hasDrawing=1" );
 				// if ($run4->fetch ( PDO::FETCH_OBJ )->PersObsCnt > 0) {
