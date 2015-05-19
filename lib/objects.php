@@ -617,7 +617,6 @@ class Objects {
 		
 		$ObsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ", 'ObsCnt' );
 		
-		// TODO: Add a link to own drawings.
 		// TODO: Make more enjoyable to view: Uses batches, make smaller
 		// TODO: Adapt language files
 		echo "<table class=\"table table-condensed table-striped table-hover\">";
@@ -629,9 +628,9 @@ class Objects {
 		$run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As totDraw FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 AND hasDrawing=1" );
 		$totDraw = $run4->fetch ( PDO::FETCH_OBJ )->totDraw;
 		if ($totDraw > 0) {
-			$obj =  preg_split("/ /", $object);
-			$cat = $obj[0];
-			$number = $obj[1];
+			$obj = preg_split ( "/ /", $object );
+			$cat = $obj [0];
+			$number = $obj [1];
 			echo "  <td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog=" . $cat . "&number=" . $number . "&drawings=on\">" . $totDraw . "</a></td>";
 		} else {
 			echo "  <td>0</td>";
@@ -652,16 +651,21 @@ class Objects {
 				echo " <tr>";
 				echo "  <td>Last personal observation</td>";
 				$date = $get3->PersObsMaxDate;
-				$dateArray = sscanf($date, "%4d%2d%2d");
-				echo "  <td>" . date ( $dateformat, mktime ( 0, 0, 0, $dateArray[1], $dateArray[2], $dateArray[0] ) ) . "</td>";
+				$dateArray = sscanf ( $date, "%4d%2d%2d" );
+				echo "  <td>" . date ( $dateformat, mktime ( 0, 0, 0, $dateArray [1], $dateArray [2], $dateArray [0] ) ) . "</td>";
 				echo " </tr>";
-				// echo "Number of personal drawings: ";
-				// $run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7 AND hasDrawing=1" );
-				// if ($run4->fetch ( PDO::FETCH_OBJ )->PersObsCnt > 0) {
-				// echo "YES";
-				// } else {
-				// echo "NO";
-				// }
+				
+				// The number of drawings the observer has made.
+				echo " <tr>";
+				echo "  <td>Number of personal drawings</td>";
+				$run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7 AND hasDrawing=1" );
+				$persDrawings = $run4->fetch ( PDO::FETCH_OBJ )->PersObsCnt;
+				if ($persDrawings > 0) {
+					echo "  <td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&query=Search&seen=A&catalog=" . $cat . "&number=" . $number . "&observer=" . $loggedUser . "&drawings=on\">" . $persDrawings . "</a></td>";
+				} else {
+					echo "<td>" . $persDrawings . "</td>";
+				}
+				echo " </tr>";
 			}
 		}
 		echo "</table>";
