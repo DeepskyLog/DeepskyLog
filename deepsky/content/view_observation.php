@@ -16,7 +16,9 @@ function view_observation() {
 	echo "<h4>" . LangViewObjectTitle . "&nbsp;-&nbsp;<a href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\">" . $object_ss . "</a></h4>";
 	$seenDetails = $objObject->getSeenComprehensive ( $object );
 	echo $objPresentations->getDSSDeepskyLiveLinks1 ( $object );
-	
+	echo $objPresentations->getDSSDeepskyLiveLinks2 ( $object );
+	echo "</div>";
+
 	$topline = "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=detail_object&amp;object=" . urlencode ( $object ) . "\">" . LangViewObjectViewNearbyObject . " " . $object_ss . "</a>";
 	if (substr ( $objObject->getSeen ( $object ), 0, 1 ) != '-')
 		$topline .= "&nbsp;&nbsp;<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\">" . LangViewObjectObservations . "&nbsp;" . $object_ss . "</a>";
@@ -28,9 +30,8 @@ function view_observation() {
 		else
 			$topline .= "&nbsp;&nbsp;" . "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "&amp;addObjectToList=" . urlencode ( $object ) . "&amp;showname=" . urlencode ( $object ) . "\">" . $object_ss . LangListQueryObjectsMessage2 . $listname_ss . "</a>";
 	}
-	echo $objPresentations->getDSSDeepskyLiveLinks2 ( $object );
 	echo $topline;
-	echo "<hr />";
+	echo "<br /><br />";
 	$objObject->showObject ( $object );
 	$content = '';
 	if ($loggedUser) // LOGGED IN

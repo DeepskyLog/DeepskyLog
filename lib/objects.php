@@ -617,9 +617,10 @@ class Objects {
 		
 		$ObsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ", 'ObsCnt' );
 		
-		// TODO: Make more enjoyable to view: Uses batches, make smaller
 		// TODO: Adapt language files
-		echo "<table class=\"table table-condensed table-striped table-hover\">";
+		echo "<div class=\"row\">
+		       <div class=\"col-md-6\">";
+		echo "<table class=\"table table-bordered table-condensed table-striped table-hover table-responsive\">";
 		echo " <tr>";
 		echo "  <td>Number of observations</td><td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectYSeen . "\">" . $ObsCnt . "</a></td>";
 		echo " </tr>";
@@ -669,6 +670,7 @@ class Objects {
 			}
 		}
 		echo "</table>";
+		echo "</div>";
 	}
 	public function getPartOfs($objects) {
 		global $objDatabase;
