@@ -69,8 +69,8 @@ function view_observer() {
 	
 	echo "<div id=\"my-tab-content\" class=\"tab-content\">";
 	echo "<div class=\"tab-pane active\" id=\"info\">";
-	if (array_key_exists ( 'admin', $_SESSION ) && ($_SESSION ['admin'] == "yes")) 	// admin logged in
-	{
+	if (array_key_exists ( 'admin', $_SESSION ) && ($_SESSION ['admin'] == "yes")) {
+		// admin logged in
 		echo "<br />";
 		echo "<form class=\"form-horizontal\" role=\"form\" action=\"" . $baseURL . "index.php\" >";
 		echo "<input type=\"hidden\" name=\"indexAction\" value=\"change_emailNameFirstname_Password\" />";
@@ -112,7 +112,13 @@ function view_observer() {
 		echo "</div></div>";
 		echo "<div class=\"form-group\">";
 		echo "<label class=\"col-sm-2 control-label\">" . LangChangeAccountField8 . "</label>";
-		echo "<div class=\"col-sm-5\"><p class=\"form-control-static\">" . ($instrumentname ? "<a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $objObserver->getObserverProperty ( $user, 'stdtelescope' ) ) . "\">" . (($instrumentname == "Naked eye") ? InstrumentsNakedEye : $instrumentname) . "</a>" : "");
+		// Here, we set the name of the default instrument. For the current user, we need to make it possible to change the default instrument.
+		echo "<div class=\"col-sm-5\"><p class=\"form-control-static\">";
+		if ($instrumentname) {
+			echo "<a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $objObserver->getObserverProperty ( $user, 'stdtelescope' ) ) . "\">" . (($instrumentname == "Naked eye") ? InstrumentsNakedEye : $instrumentname) . "</a>";
+		} else {
+			echo "";
+		}
 		echo "</p></div></div>";
 		echo "</form>";
 	} else {
@@ -126,15 +132,73 @@ function view_observer() {
 		        <td>" . LangChangeAccountField4 . "</td>
 		        <td>" . $objObserver->getObserverProperty ( $user, 'name' ) . "</td>
 		       </tr>";
+		// Setting the default location
 		echo " <tr>
-				    <td>" . LangChangeAccountField7 . "</td>
-	          <td><a href=\"" . $baseURL . "index.php?indexAction=detail_location&amp;location=" . urlencode ( $location_id ) . "\">" . $location_name . "</a> 
+				<td>" . LangChangeAccountField7 . "</td>";
+		echo "<td>";
+		if ($loggedUser == $user) {
+			if (array_key_exists ( 'activeLocationId', $_GET ) && $_GET ['activeLocationId']) {
+				$objObserver->setObserverProperty ( $loggedUser, 'stdlocation', $_GET ['activeLocationId'] );
+				if (array_key_exists ( 'Qobj', $_SESSION ))
+					$_SESSION ['Qobj'] = $objObject->getObjectVisibilities ( $_SESSION ['Qobj'] );
+			}
+			$result = $objLocation->getSortedLocations ( 'name', $loggedUser, 1 );
+			$loc = $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' );
+			
+			if ($result) {
+				echo "<div class=\"btn-group\">
+			      <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">
+					" . $objLocation->getLocationPropertyFromId ( $loc, 'name' ) . "&nbsp;<span class=\"caret\"></span>";
+				echo "</button> <ul class=\"dropdown-menu\">";
+				
+				$url = $baseURL . "index.php?indexAction=detail_observer&user=" . $loggedUser;
+				while ( list ( $key, $value ) = each ( $result ) ) {
+					echo "  <li><a href=\"" . $url . "&amp;activeLocationId=" . $value . "\">" . $objLocation->getLocationPropertyFromId ( $value, 'name' ) . "</a></li>";
+				}
+				
+				echo " </ul>";
+				echo "</li>
+			          </div>";
+			}
+			echo "</td>";
+		} else {
+			echo "<a href=\"" . $baseURL . "index.php?indexAction=detail_location&amp;location=" . urlencode ( $location_id ) . "\">" . $location_name . "</a> 
 	          </td>
 	         </tr>";
+		}
+		// Setting the default instrument
 		echo " <tr>
-	          <td>" . LangChangeAccountField8 . "</td>
- 	          <td>" . ($instrumentname ? "<a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $objObserver->getObserverProperty ( $user, 'stdtelescope' ) ) . "\">" . (($instrumentname == "Naked eye") ? InstrumentsNakedEye : $instrumentname) . "</a>" : "") . "</td>
+	          <td>" . LangChangeAccountField8 . "</td>";
+		echo "<td>";
+		if ($loggedUser == $user) {
+			if (array_key_exists ( 'activeTelescopeId', $_GET ) && $_GET ['activeTelescopeId']) {
+				$objObserver->setObserverProperty ( $loggedUser, 'stdtelescope', $_GET ['activeTelescopeId'] );
+				if (array_key_exists ( 'Qobj', $_SESSION ))
+					$_SESSION ['Qobj'] = $objObject->getObjectVisibilities ( $_SESSION ['Qobj'] );
+			}
+			$result = $objInstrument->getSortedInstruments ( 'name', $loggedUser, 1 );
+			$inst = $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' );
+			
+			if ($result) {
+				echo "<div class=\"btn-group\">
+			      <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">
+					" . $objInstrument->getInstrumentPropertyFromId ( $inst, 'name' ) . "&nbsp;<span class=\"caret\"></span>";
+				echo "</button> <ul class=\"dropdown-menu\">";
+				
+				$url = $baseURL . "index.php?indexAction=detail_observer&user=" . $loggedUser;
+				while ( list ( $key, $value ) = each ( $result ) ) {
+					echo "  <li><a href=\"" . $url . "&amp;activeTelescopeId=" . $value . "\">" . $objInstrument->getInstrumentPropertyFromId ( $value, 'name' ) . "</a></li>";
+				}
+				
+				echo " </ul>";
+				echo "</li>
+			          </div>";
+			}
+			echo "</td>";
+		} else {
+			echo ($instrumentname ? "<a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $objObserver->getObserverProperty ( $user, 'stdtelescope' ) ) . "\">" . (($instrumentname == "Naked eye") ? InstrumentsNakedEye : $instrumentname) . "</a>" : "") . "</td>
  	         </tr>";
+		}
 	}
 	if ($objUtil->checkSessionKey ( 'admin' ) == "yes") {
 		echo "<form class=\"form-horizontal\" role=\"form\" action=\"" . $baseURL . "index.php\" >";
@@ -162,8 +226,8 @@ function view_observer() {
 			echo "<label class=\"col-sm-2 control-label\">" . LangViewObserverRole . "</label>";
 			echo "<div class=\"col-sm-5\">" . LangViewObserverWaitlist;
 			echo "</div></div>";
-		} else 		// fixed admin role
-		{
+		} else // fixed admin role
+{
 			echo "<div class=\"form-group\">";
 			echo "<label class=\"col-sm-2 control-label\">" . LangViewObserverRole . "</label>";
 			echo "<div class=\"col-sm-5\">" . LangViewObserverAdmin;
@@ -833,7 +897,7 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getGalaxyDrawingsRookie ( $user ), 10, "rookie", $objUtil->getDrawAccomplishment ( 10 ), $objUtil->getDrawToAccomplish ( 10 ) );
 	drawStar ( $objAccomplishments->getGalaxyDrawingsBeginner ( $user ), 25, "beginner", $objUtil->getDrawAccomplishment ( 25 ), $objUtil->getDrawToAccomplish ( 25 ) );
 	drawStar ( $objAccomplishments->getGalaxyDrawingsTalented ( $user ), 50, "talented", $objUtil->getDrawAccomplishment ( 50 ), $objUtil->getDrawToAccomplish ( 50 ) );
-	drawStar ( $objAccomplishments->getGalaxyDrawingsSkilled ( $user ), 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100) );
+	drawStar ( $objAccomplishments->getGalaxyDrawingsSkilled ( $user ), 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100 ) );
 	drawStar ( $objAccomplishments->getGalaxyDrawingsIntermediate ( $user ), 250, "intermediate", $objUtil->getDrawAccomplishment ( 250 ), $objUtil->getDrawToAccomplish ( 250 ) );
 	drawStar ( $objAccomplishments->getGalaxyDrawingsExperienced ( $user ), 500, "experienced", $objUtil->getDrawAccomplishment ( 500 ), $objUtil->getDrawToAccomplish ( 500 ) );
 	drawStar ( $objAccomplishments->getGalaxyDrawingsAdvanced ( $user ), 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
@@ -866,7 +930,7 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getNebulaDrawingsRookie ( $user ), 2, "rookie", $objUtil->getDrawAccomplishment ( 2 ), $objUtil->getDrawToAccomplish ( 2 ) );
 	drawStar ( $objAccomplishments->getNebulaDrawingsBeginner ( $user ), 3, "beginner", $objUtil->getDrawAccomplishment ( 3 ), $objUtil->getDrawToAccomplish ( 3 ) );
 	drawStar ( $objAccomplishments->getNebulaDrawingsTalented ( $user ), 4, "talented", $objUtil->getDrawAccomplishment ( 4 ), $objUtil->getDrawToAccomplish ( 4 ) );
-	drawStar ( $objAccomplishments->getNebulaDrawingsSkilled ( $user ), (int) (384 / 50), "skilled", $objUtil->getDrawAccomplishment ( 384 / 50 ), $objUtil->getDrawToAccomplish ( 384 / 50 ) );
+	drawStar ( $objAccomplishments->getNebulaDrawingsSkilled ( $user ), ( int ) (384 / 50), "skilled", $objUtil->getDrawAccomplishment ( 384 / 50 ), $objUtil->getDrawToAccomplish ( 384 / 50 ) );
 	drawStar ( $objAccomplishments->getNebulaDrawingsIntermediate ( $user ), ( int ) (384 / 20), "intermediate", $objUtil->getDrawAccomplishment ( 384 / 20 ), $objUtil->getDrawToAccomplish ( 384 / 20 ) );
 	drawStar ( $objAccomplishments->getNebulaDrawingsExperienced ( $user ), ( int ) (384 / 10), "experienced", $objUtil->getDrawAccomplishment ( 384 / 10 ), $objUtil->getDrawToAccomplish ( 384 / 10 ) );
 	drawStar ( $objAccomplishments->getNebulaDrawingsAdvanced ( $user ), ( int ) (384 / 5), "advanced", $objUtil->getDrawAccomplishment ( 384 / 5 ), $objUtil->getDrawToAccomplish ( 384 / 5 ) );
@@ -899,7 +963,7 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getObjectsDrawingsRookie ( $user ), 10, "rookie", $objUtil->getDrawAccomplishment ( 10 ), $objUtil->getDrawToAccomplish ( 10 ) );
 	drawStar ( $objAccomplishments->getObjectsDrawingsBeginner ( $user ), 25, "beginner", $objUtil->getDrawAccomplishment ( 25 ), $objUtil->getDrawToAccomplish ( 25 ) );
 	drawStar ( $objAccomplishments->getObjectsDrawingsTalented ( $user ), 50, "talented", $objUtil->getDrawAccomplishment ( 50 ), $objUtil->getDrawToAccomplish ( 50 ) );
-	drawStar ( $objAccomplishments->getObjectsDrawingsSkilled ( $user ), 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100) );
+	drawStar ( $objAccomplishments->getObjectsDrawingsSkilled ( $user ), 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100 ) );
 	drawStar ( $objAccomplishments->getObjectsDrawingsIntermediate ( $user ), 250, "intermediate", $objUtil->getDrawAccomplishment ( 250 ), $objUtil->getDrawToAccomplish ( 250 ) );
 	drawStar ( $objAccomplishments->getObjectsDrawingsExperienced ( $user ), 500, "experienced", $objUtil->getDrawAccomplishment ( 500 ), $objUtil->getDrawToAccomplish ( 500 ) );
 	drawStar ( $objAccomplishments->getObjectsDrawingsAdvanced ( $user ), 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
@@ -949,7 +1013,7 @@ function view_observer() {
 	drawStar ( $objAccomplishments->getCometDrawingsRookie ( $user ), 10, "rookie", $objUtil->getDrawAccomplishment ( 10 ), $objUtil->getDrawToAccomplish ( 10 ) );
 	drawStar ( $objAccomplishments->getCometDrawingsBeginner ( $user ), 25, "beginner", $objUtil->getDrawAccomplishment ( 25 ), $objUtil->getDrawToAccomplish ( 25 ) );
 	drawStar ( $objAccomplishments->getCometDrawingsTalented ( $user ), 50, "talented", $objUtil->getDrawAccomplishment ( 50 ), $objUtil->getDrawToAccomplish ( 50 ) );
-	drawStar ( $objAccomplishments->getCometDrawingsSkilled ( $user ), 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100) );
+	drawStar ( $objAccomplishments->getCometDrawingsSkilled ( $user ), 100, "skilled", $objUtil->getDrawAccomplishment ( 100 ), $objUtil->getDrawToAccomplish ( 100 ) );
 	drawStar ( $objAccomplishments->getCometDrawingsIntermediate ( $user ), 250, "intermediate", $objUtil->getDrawAccomplishment ( 250 ), $objUtil->getDrawToAccomplish ( 250 ) );
 	drawStar ( $objAccomplishments->getCometDrawingsExperienced ( $user ), 500, "experienced", $objUtil->getDrawAccomplishment ( 500 ), $objUtil->getDrawToAccomplish ( 500 ) );
 	drawStar ( $objAccomplishments->getCometDrawingsAdvanced ( $user ), 1000, "advanced", $objUtil->getDrawAccomplishment ( 1000 ), $objUtil->getDrawToAccomplish ( 1000 ) );
