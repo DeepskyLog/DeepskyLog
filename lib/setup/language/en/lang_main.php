@@ -10,14 +10,14 @@ In close collaboration with the Astronomical Society of Belgium (<a href=\"http:
     <li>observing lists with different deepsky objects,</li>
     <li>you can share your observations with other observers,</li>
     <li>translate function to read observations in other languages,</li>
-    <li>free atlasses,</li>
+    <li>free atlases,</li>
     <li>create your own file with maps and DSS images of the objects,</li>
     <li>interactive star atlas down to magnitude 16,</li>
     <li>suggestions for objects visible in your instruments,</li>
     <li>information about the objects that are visible from your observation sites.</li>
 </ul>
 To start recording your observations, you need an account, which you can get after registration. Please contact the <a href=\"mailto:developers@deepskylog.be\">DeepskyLog developers</a> if you encounter problems or have questions.");
-define("LangDownloadAtlasses","Download atlasses");
+define("LangDownloadAtlasses","Download atlases");
 define("LangMessageRealMail","Send as real mail");
 define("LangChangeAccountSendMailExpl","Send messages as email.");
 define("LangChangeAccountSendMail","Send emails");
@@ -177,7 +177,7 @@ define('LangSendMessage'          ,'Send message');
 // This is version 4.3
 define('LangUnderHorizon'				,'under the horizon');
 define('LangAtlasChoosePageLayout'      ,'First choose your page layout');
-define('LangAtlasBrowserInfo'           ,'The personalised atlasses are only available in Firefox, Chrome and Opera at this time.');
+define('LangAtlasBrowserInfo'           ,'The personalised atlases are only available in Firefox, Chrome and Opera at this time.');
 define('atlasPageCenteredOn'            ,'Centered on ');
 define('LangNoIndexEntries'             ,"No index entries");
 define('LangAtlasPageOrientation'       ,"Page orientation:");
@@ -210,7 +210,7 @@ define("GraphObservationsTitle"         ,"Observations per year");
 define("GraphObservationsType"          ,"Object types observed");
 define("AtlasExample"                   ,"Lookup atlas page for M 45");
 define("ImageCatalogExample"            ,"Example page for Abell 84");
-define("ImageCatalogDescription1"       ,"DeepskyLog is a very powerful tool, where you can create personalized atlasses and image catalogs.");
+define("ImageCatalogDescription1"       ,"DeepskyLog is a very powerful tool, where you can create personalized atlases and image catalogs.");
 define("ImageCatalogDescription2"       ,"However, making your own image catalog is time consuming. To help you, we created some interesting image catalogs and made them available for download.");
 define("ImageCatalogDescription3"       ,"They are very useful for telescopes with a goto system, where the goto system guides you to the neighbourhood of the object. Using the images, it is very easy to find the final object.");
 define("ImageCatalogDescription4"       ,"Catalogs sorted by name");
@@ -220,22 +220,22 @@ define("LangpdfOrientation"             ,"Page orientation: ");
 define("LangpdfOrientationPortrait"     ,"portrait");
 define("LangpdfOrientationLandscape"    ,"landscape");
 define("LangSearchMenuItem14"           ,"Image Catalogs");
-define("LangSearchMenuItem13"           ,"Atlasses");
-define('LangAtlassesIntro00'            ,'DeepskyLog atlasses');
-define('LangAtlassesIntro01'            ,"The <b>overview</b> atlasses have pages of 20 degrees, and show stars to magnitude 10.");
-define('LangAtlassesIntro01a'           ,"The <b>lookup</b> atlasses have pages of 12 degrees, and show stars to magnitude 12.");
-define('LangAtlassesIntro01b'           ,"The <b>detail</b> atlasses have page of 6 degrees, and show stars to magnitude 15.");
-define('LangAtlassesIntro01c'           ,"The atlasses mention if the objects are already seen in Deepskylog (dotted underline)<br />
-                                           or by yourself (personalised atlasses for registered users, full underline, or overline if sketched).");
-define('LangAtlassesIntro02'            ,'General Atlasses / Personalised Atlasses');
-define('LangAtlassesIntro03'            ,'You can either go for general atlasses, or (if you are a registered user) personalised atlasses.<br>
-                                          - General atlasses are precompiled and are ready to download as one big pdf file.<br/>
-                                          - Personalised atlasses are generated, page per page, for you in pdf format.<br /><br />
-                                          Personalised atlasses take some time (one page) or much more time (complete atlas) to generate and <br />
+define("LangSearchMenuItem13"           ,"Atlases");
+define('LangAtlassesIntro00'            ,'DeepskyLog atlases');
+define('LangAtlassesIntro01'            ,"The <b>overview</b> atlases have pages of 20 degrees, and show stars to magnitude 10.");
+define('LangAtlassesIntro01a'           ,"The <b>lookup</b> atlases have pages of 12 degrees, and show stars to magnitude 12.");
+define('LangAtlassesIntro01b'           ,"The <b>detail</b> atlases have page of 6 degrees, and show stars to magnitude 15.");
+define('LangAtlassesIntro01c'           ,"The atlases mention if the objects are already seen in Deepskylog (dotted underline)<br />
+                                           or by yourself (personalised atlases for registered users, full underline, or overline if sketched).");
+define('LangAtlassesIntro02'            ,'General Atlases / Personalised Atlases');
+define('LangAtlassesIntro03'            ,'You can either go for general atlases, or (if you are a registered user) personalised atlases.<br>
+                                          - General atlases are precompiled and are ready to download as one big pdf file.<br/>
+                                          - Personalised atlases are generated, page per page, for you in pdf format.<br /><br />
+                                          Personalised atlases take some time (one page) or much more time (complete atlas) to generate and <br />
                                           you will have to use some software to put the pages together yourself for the complete atlas.');
-define('LangAtlassesIntro04'            ,'General Atlasses');
+define('LangAtlassesIntro04'            ,'General Atlases');
 define('LangAtlassesIntro05'            ,'Choose one of the three available formats, they will download as a pdf:');
-define('LangAtlassesIntro06'            ,'Personalised Atlasses');
+define('LangAtlassesIntro06'            ,'Personalised Atlases');
 define('LangAtlassesIntro07'            ,"You can download an individual page, with top-left coordinates to be specified by you,<br />
                                           or you can download all the pages of the complete helisphere.");
 define("LangAddSessionField12"					,"Picture");
@@ -1988,7 +1988,7 @@ $Month10Short="Oct";
 $Month11Short="Nov";
 $Month12Short="Dec";
 
-// Names of Atlasses
+// Names of Atlases
 $AtlasNameurano 				="Uranometria";
 $AtlasNameurano_new 		="Uranometria (2nd edition)";
 $AtlasNamesky 					="Sky Atlas";
