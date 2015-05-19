@@ -2776,7 +2776,9 @@ class Utils {
                  // column status, true = display, false = hide
                  // disable = do not display on list
                  columnSelector_columns : {
-                   0: 'disable' /* set to disabled; not allowed to unselect it */
+                   0: 'disable',  /* set to disabled; not allowed to unselect it */
+				   1 : false,     /* start with column hidden */
+    			   2 : true,      /* start with column visible; default for undefined columns */
                  },
                  // remember selected columns (requires $.tablesorter.storage)
                  columnSelector_saveColumns: true,
@@ -2792,7 +2794,7 @@ class Utils {
                  // toggle checkbox name
                  columnSelector_mediaqueryName: 'Auto: ',
                  // breakpoints checkbox initial setting
-                 columnSelector_mediaqueryState: true,
+                 columnSelector_mediaqueryState: false,
                  // responsive table hides columns with priority 1-6 at these breakpoints
                  // see http://view.jquerymobile.com/1.3.2/dist/demos/widgets/table-column-toggle/#Applyingapresetbreakpoint
                  // *** set to false to disable ***

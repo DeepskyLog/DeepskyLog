@@ -1659,9 +1659,9 @@ class Objects {
 		echo "<th data-priority=\"7\" id=\"objectmagnitude\">" . LangOverviewObjectsHeader3 . "</th>";
 		echo "<th data-priority=\"7\" id=\"objectsurfacebrightness\">" . LangOverviewObjectsHeader3b . "</th>";
 		echo "<th data-priority=\"6\" id=\"objecttypefull\">" . LangOverviewObjectsHeader4 . "</th>";
-		echo "<th data-priority=\"6\" id=\"objectsizepa\">" . LangOverviewObjectsHeader10 . "</th>";
-		echo "<th data-priority=\"6\" id=\"objectradecl\">" . LangOverviewObjectsHeader5 . "</th>";
-		echo "<th data-priority=\"6\" id=\"objectdecl\" class=\"sorter-digit\">" . LangOverviewObjectsHeader6 . "</th>";
+		echo "<th data-priority=\"6\" class=\"columnSelector-false\" id=\"objectsizepa\">" . LangOverviewObjectsHeader10 . "</th>";
+		echo "<th data-priority=\"6\" class=\"columnSelector-false\" id=\"objectradecl\">" . LangOverviewObjectsHeader5 . "</th>";
+		echo "<th data-priority=\"6\" id=\"objectdecl\" class=\"columnSelector-false sorter-digit\">" . LangOverviewObjectsHeader6 . "</th>";
 		if ($loggedUser) {
 			$atlas = $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' );
 			echo "<th data-priority=\"6\" id=\"" . $atlas . "\">" . $objAtlas->atlasCodes [$atlas] . "</th>";
