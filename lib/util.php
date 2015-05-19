@@ -2781,7 +2781,8 @@ class Utils {
     			   2 : true,      /* start with column visible; default for undefined columns */
                  },
                  // remember selected columns (requires $.tablesorter.storage)
-                 columnSelector_saveColumns: true,
+                 // TODO: Set back to true
+				 columnSelector_saveColumns: false,
 
                  // container layout
                  columnSelector_layout : '<label><input type=\"checkbox\">{name}</label>',

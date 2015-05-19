@@ -1646,7 +1646,7 @@ class Objects {
 		echo "<tr>";
 		if ($loggedUser) {
 			if ($showRank)
-				echo "<th id=\"objectpositioninlist\">" . LangOverviewObjectsHeader9 . "</th>";
+				echo "<th id=\"objectpositioninlist\">#</th>";
 			if (($myList) && ($pageListAction == "addAllObjectsFromPageToList"))
 				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\"><a href=\"" . $link . "&amp;addAllObjectsFromPageToList=true\" title=\"" . LangListQueryObjectsMessage1 . $listname_ss . "\">&nbsp;P&nbsp;</a></td>");
 			elseif (($myList) && ($pageListAction == "removePageObjectsFromList"))
@@ -1654,10 +1654,16 @@ class Objects {
 			elseif ($myList)
 				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangList . "</td>");
 		}
+		
+		// TODO: Readd columnSelector_saveColumns: true in util.php
+		// TODO: Add column with short constellation
+		// TODO: Add column with short type
+		// TODO: Remove columns?
+		// TODO: Rename long titles: Constellation, Preferred magnification, ...
 		echo "<th data-priority=\"critical\" id=\"showname\">" . LangOverviewObjectsHeader1 . "</th>";
 		echo "<th data-priority=\"5\" id=\"objectconstellationfull\">" . LangOverviewObjectsHeader2 . "</th>";
 		echo "<th data-priority=\"7\" id=\"objectmagnitude\">" . LangOverviewObjectsHeader3 . "</th>";
-		echo "<th data-priority=\"7\" id=\"objectsurfacebrightness\">" . LangOverviewObjectsHeader3b . "</th>";
+		echo "<th data-priority=\"7\" class=\"columnSelector-false\"  id=\"objectsurfacebrightness\">" . LangOverviewObjectsHeader3b . "</th>";
 		echo "<th data-priority=\"6\" id=\"objecttypefull\">" . LangOverviewObjectsHeader4 . "</th>";
 		echo "<th data-priority=\"6\" class=\"columnSelector-false\" id=\"objectsizepa\">" . LangOverviewObjectsHeader10 . "</th>";
 		echo "<th data-priority=\"6\" class=\"columnSelector-false\" id=\"objectradecl\">" . LangOverviewObjectsHeader5 . "</th>";
@@ -1667,9 +1673,9 @@ class Objects {
 			echo "<th data-priority=\"6\" id=\"" . $atlas . "\">" . $objAtlas->atlasCodes [$atlas] . "</th>";
 			echo "<th data-priority=\"7\" id=\"objectcontrast\">" . LangViewObjectFieldContrastReserve . "</th>";
 			echo "<th data-priority=\"6\" id=\"objectoptimalmagnification\">" . LangViewObjectFieldMagnification . "</th>";
-			echo "<th data-priority=\"6\" id=\"objectriseorder\" class=\"sorter-astrotime\">" . LangMoonRise . "</th>";
-			echo "<th data-priority=\"6\" id=\"objecttransitorder\" class=\"sorter-astrotime\">" . LangTransit . "</th>";
-			echo "<th data-priority=\"6\" id=\"objectsetorder\" class=\"sorter-astrotime\">" . LangMoonSet . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectriseorder\" class=\"columnSelector-false sorter-astrotime\">" . LangMoonRise . "</th>";
+			echo "<th data-priority=\"6\" id=\"objecttransitorder\" class=\"columnSelector-false sorter-astrotime\">" . LangTransit . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectsetorder\" class=\"columnSelector-false sorter-astrotime\">" . LangMoonSet . "</th>";
 			echo "<th data-priority=\"5\" id=\"objectbestorder\" class=\"sorter-astrotime\">" . LangBest . "</th>";
 			echo "<th data-priority=\"6\" id=\"objectmaxaltitude\" class=\"sorter-degrees\">" . LangMaxAltitude . "</th>";
 			echo "<th data-priority=\"3\" id=\"objectseen\">" . LangOverviewObjectsHeader7 . "</th>";
@@ -1677,8 +1683,8 @@ class Objects {
 		}
 		if ($loggedUser && $objObserver->getObserverProperty ( $loggedUser, 'stdLocation' )) {
 			echo "<th data-priority=\"6\" id=\"objectmaxalt\" class=\"sorter-degrees\">" . LangObjectHighestAlt . "</th>";
-			echo "<th data-priority=\"6\" id=\"objectmaxaltstart\" class=\"sorter-months\">" . LangObjectHighestFrom . "</th>";
-			echo "<th data-priority=\"6\" id=\"objectmaxaltend\" class=\"sorter-months\">" . LangObjectHighestTo . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectmaxaltstart\" class=\"columnSelector-false sorter-months\">" . LangObjectHighestFrom . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectmaxaltend\" class=\"columnSelector-false sorter-months\">" . LangObjectHighestTo . "</th>";
 			echo "<th data-priority=\"7\" id=\"objectmaxaltmid\" class=\"sorter-months\">" . LangObjectHighestAround . "</th>";
 		}
 		echo "</tr>";
@@ -1735,9 +1741,10 @@ class Objects {
 					$seenclass = "seenX";
 				else
 					$seenclass = "seenN";
+//print_r($_SESSION ['Qobj'] [$count] );
 				echo "<td onmouseover=\"Tip('" . $objAtlas->atlasCodes [$atlas] . ": " . $page . "')\">" . $page . "</td>";
 				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objectcontrastpopup'] . "')\"><span class=\"" . $_SESSION ['Qobj'] [$count] ['objectcontrasttype'] . "\" >" . $_SESSION ['Qobj'] [$count] ['objectcontrast'] . "</span></td>";
-				echo "<td onmouseover=\"Tip('" . LangViewObjectFieldMagnification . ": " . $_SESSION ['Qobj'] [$count] ['objectoptimalmagnification'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectoptimalmagnification'] . "</td>";
+				echo "<td onmouseover=\"Tip('" . LangViewObjectFieldMagnification . ": " . $_SESSION ['Qobj'] [$count] ['objectoptimalmagnification'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectoptimalmagnificationvalue'] . "</td>";
 				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objectrisepopup'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectrise'] . "</td>";
 				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objecttransitpopup'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objecttransit'] . "</td>";
 				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objectsetpopup'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectset'] . "</td>";
