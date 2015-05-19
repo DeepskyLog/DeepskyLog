@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("LangObservationOf", "Waarneming van ");
 define("LangViewNotActive","Niet actief");
 define("LangViewLocationElevation", "Hoogte");
 define("LangViewLocationWeatherPrediction", "Weersvoorspelling");
