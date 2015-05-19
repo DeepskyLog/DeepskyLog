@@ -1415,7 +1415,7 @@ class Observations {
 		if ($objUtil->checkAdminOrUserID ( $this->getDsObservationProperty ( $LOid, 'observerid' ) )) {
 			$bottomline = "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=add_observation&amp;observation=" . $LOid . "\">" . LangChangeObservationTitle . "</a>";
 			$bottomline .= "&nbsp;<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=validate_delete_observation&amp;observationid=" . $LOid . "\">" . LangDeleteObservation . "</a>";
-			echo $bottomline;
+			echo $bottomline . "<br /><br />";
 		}
 	}
 	public function validateDeleteDSObservation() 	// removes the observation with id = $id
