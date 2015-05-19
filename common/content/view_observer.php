@@ -134,7 +134,7 @@ function view_observer() {
 		       </tr>";
 		// Setting the default location
 		echo " <tr>
-				    <td>" . LangChangeAccountField7 . "</td>";
+				<td>" . LangChangeAccountField7 . "</td>";
 		echo "<td>";
 		if ($loggedUser == $user) {
 			if (array_key_exists ( 'activeLocationId', $_GET ) && $_GET ['activeLocationId']) {
@@ -166,10 +166,39 @@ function view_observer() {
 	          </td>
 	         </tr>";
 		}
+		// Setting the default instrument
 		echo " <tr>
-	          <td>" . LangChangeAccountField8 . "</td>
- 	          <td>" . ($instrumentname ? "<a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $objObserver->getObserverProperty ( $user, 'stdtelescope' ) ) . "\">" . (($instrumentname == "Naked eye") ? InstrumentsNakedEye : $instrumentname) . "</a>" : "") . "</td>
+	          <td>" . LangChangeAccountField8 . "</td>";
+		echo "<td>";
+		if ($loggedUser == $user) {
+			if (array_key_exists ( 'activeTelescopeId', $_GET ) && $_GET ['activeTelescopeId']) {
+				$objObserver->setObserverProperty ( $loggedUser, 'stdtelescope', $_GET ['activeTelescopeId'] );
+				if (array_key_exists ( 'Qobj', $_SESSION ))
+					$_SESSION ['Qobj'] = $objObject->getObjectVisibilities ( $_SESSION ['Qobj'] );
+			}
+			$result = $objInstrument->getSortedInstruments ( 'name', $loggedUser, 1 );
+			$inst = $objObserver->getObserverProperty ( $loggedUser, 'stdtelescope' );
+			
+			if ($result) {
+				echo "<div class=\"btn-group\">
+			      <button type=\"button\" class=\"btn btn-default dropdown-toggle\" data-toggle=\"dropdown\" aria-expanded=\"false\">
+					" . $objInstrument->getInstrumentPropertyFromId ( $inst, 'name' ) . "&nbsp;<span class=\"caret\"></span>";
+				echo "</button> <ul class=\"dropdown-menu\">";
+				
+				$url = $baseURL . "index.php?indexAction=detail_observer&user=" . $loggedUser;
+				while ( list ( $key, $value ) = each ( $result ) ) {
+					echo "  <li><a href=\"" . $url . "&amp;activeTelescopeId=" . $value . "\">" . $objInstrument->getInstrumentPropertyFromId ( $value, 'name' ) . "</a></li>";
+				}
+				
+				echo " </ul>";
+				echo "</li>
+			          </div>";
+			}
+			echo "</td>";
+		} else {
+			echo ($instrumentname ? "<a href=\"" . $baseURL . "index.php?indexAction=detail_instrument&amp;instrument=" . urlencode ( $objObserver->getObserverProperty ( $user, 'stdtelescope' ) ) . "\">" . (($instrumentname == "Naked eye") ? InstrumentsNakedEye : $instrumentname) . "</a>" : "") . "</td>
  	         </tr>";
+		}
 	}
 	if ($objUtil->checkSessionKey ( 'admin' ) == "yes") {
 		echo "<form class=\"form-horizontal\" role=\"form\" action=\"" . $baseURL . "index.php\" >";
