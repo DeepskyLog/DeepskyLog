@@ -1,6 +1,7 @@
 <?php //GE
 // This is version 5.0
 define("LangObservationOf", "Observation of ");
+define("LangReportIssue","Report issue");
 define("LangViewNotActive","Not active");
 define("LangViewLocationElevation", "Elevation");
 define("LangViewLocationWeatherPrediction", "Weather forecast");
