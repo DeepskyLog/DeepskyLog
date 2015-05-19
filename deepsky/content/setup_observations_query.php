@@ -11,7 +11,6 @@ function setup_observations_query() {
 	if (array_key_exists ( 'QobsParams', $_SESSION ))
 		if (! (($_SESSION ['QobsParams'] ['mindate'] == date ( 'Ymd', strtotime ( '-1 year' ) )) && ($_SESSION ['QobsParams'] ['catalog'] == '%')))
 			$QobsParamsCount = 41;
-	echo "	<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/CalendarPopupCC.js\"></script>";
 	echo "	<script type=\"text/javascript\" >";
 	echo "	var cal = new CalendarPopup();";
 	echo "  function SetMultipleValuesFromDate(y,m,d)";

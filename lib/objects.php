@@ -590,8 +590,8 @@ class Objects {
 		global $objDatabase;
 		return $objDatabase->selectSingleArray ( "SELECT objectpartof.partofname FROM objectpartof WHERE objectpartof.objectname = \"" . $name . "\"", 'partofname' );
 	}
-	public function getSeen($object) // Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
-{
+	public function getSeen($object) {
+		// Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
 		global $loggedUser, $objDatabase;
 		$seen = '-';
 		if ($ObsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ", 'ObsCnt' )) {
@@ -601,14 +601,75 @@ class Objects {
 				$get3 = $run3->fetch ( PDO::FETCH_OBJ );
 				if ($get3->PersObsCnt > 0) {
 					$run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7 AND hasDrawing=1" );
-					if ($run4->fetch ( PDO::FETCH_OBJ )->PersObsCnt > 0)
+					if ($run4->fetch ( PDO::FETCH_OBJ )->PersObsCnt > 0) {
 						$seen = 'YD(' . $ObsCnt . '/' . $get3->PersObsCnt . ')&nbsp;' . $get3->PersObsMaxDate;
-					else
+					} else {
 						$seen = 'Y(' . $ObsCnt . '/' . $get3->PersObsCnt . ')&nbsp;' . $get3->PersObsMaxDate;
+					}
 				}
 			}
 		}
 		return $seen;
+	}
+	public function getSeenComprehensive($object) {
+		// Returns -, X(totalnr) or Y(totalnr/personalnr) depending on the seen-degree of the objects
+		global $loggedUser, $objDatabase, $baseURL, $dateformat;
+		
+		$ObsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ", 'ObsCnt' );
+
+		echo "<div class=\"row\">
+		       <div class=\"col-md-6\">";
+		echo "<table class=\"table table-bordered table-condensed table-striped table-hover table-responsive\">";
+		echo " <tr>";
+		echo "  <td>" . LangViewObserverNumberOfObservations . "</td><td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;object=" . urlencode ( $object ) . "\" title=\"" . LangObjectYSeen . "\">" . $ObsCnt . "</a></td>";
+		echo " </tr>";
+		echo " <tr>";
+		echo "  <td>" . LangTopObserversHeader7 . "</td>";
+		$run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As totDraw FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 AND hasDrawing=1" );
+		$totDraw = $run4->fetch ( PDO::FETCH_OBJ )->totDraw;
+		if ($totDraw > 0) {
+			$obj = preg_split ( "/ /", $object );
+			$cat = $obj [0];
+			$number = $obj [1];
+			echo "  <td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog=" . $cat . "&number=" . $number . "&drawings=on\">" . $totDraw . "</a></td>";
+		} else {
+			echo "  <td>0</td>";
+		}
+		echo " </tr>";
+		
+		if ($loggedUser) {
+			$run3 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt, MAX(observations.date) As PersObsMaxDate FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7" );
+			$get3 = $run3->fetch ( PDO::FETCH_OBJ );
+			if ($get3->PersObsCnt > 0) {
+				// The number of personal observations of this object.
+				echo " <tr>";
+				echo "  <td>" . LangPersonalObservations . "</td>";
+				echo "  <td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&query=Submit+Query&seen=A&catalog=" . $cat . "&number=" . $number . "&observer=" . $loggedUser . "\">" . $get3->PersObsCnt . "</a></td>";
+				echo " </tr>";
+				
+				// The date of observer's last observation of this object.
+				echo " <tr>";
+				echo "  <td>" . LangLastPersonalObservation . "</td>";
+				$date = $get3->PersObsMaxDate;
+				$dateArray = sscanf ( $date, "%4d%2d%2d" );
+				echo "  <td>" . date ( $dateformat, mktime ( 0, 0, 0, $dateArray [1], $dateArray [2], $dateArray [0] ) ) . "</td>";
+				echo " </tr>";
+				
+				// The number of drawings the observer has made.
+				echo " <tr>";
+				echo "  <td>" . LangNumberOfPersonalDrawings . "</td>";
+				$run4 = $objDatabase->selectRecordset ( "SELECT COUNT(observations.id) As PersObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND observerid = \"" . $loggedUser . "\" AND visibility != 7 AND hasDrawing=1" );
+				$persDrawings = $run4->fetch ( PDO::FETCH_OBJ )->PersObsCnt;
+				if ($persDrawings > 0) {
+					echo "  <td><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&query=Search&seen=A&catalog=" . $cat . "&number=" . $number . "&observer=" . $loggedUser . "&drawings=on\">" . $persDrawings . "</a></td>";
+				} else {
+					echo "<td>" . $persDrawings . "</td>";
+				}
+				echo " </tr>";
+			}
+		}
+		echo "</table>";
+		echo "</div>";
 	}
 	public function getPartOfs($objects) {
 		global $objDatabase;

@@ -15,7 +15,6 @@ else
 function change_session() {
 	global $baseURL, $loggedUserName, $objSession, $loggedUser, $objObserver, $objLocation, $objPresentations, $objUtil, $objLanguage;
 	
-	echo "	<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/CalendarPopupCC.js\"></script>";
 	echo "	<script type=\"text/javascript\" >";
 	echo "	var calBegin = new CalendarPopup();";
 	echo "  function SetObsDateBegin(y,m,d)";

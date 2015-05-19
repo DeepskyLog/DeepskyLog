@@ -1,5 +1,8 @@
 <?php //NL
 // This is version 5.0
+define("LangNumberOfPersonalDrawings", "Aantal eigen tekeningen");
+define("LangLastPersonalObservation", "Laatste eigen tekening");
+define("LangPersonalObservations", "Aantal eigen waarnemingen");
 define("LangObservationOf", "Waarneming van ");
 define("LangReportIssue","Rapporteer probleem");
 define("LangViewNotActive","Niet actief");
