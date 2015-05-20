@@ -1208,6 +1208,7 @@ define("LangOverviewObjectsHeader0"												,"Nr");
 define("LangOverviewObjectsHeader1"												,"Name");
 define("LangOverviewObjectsHeader1bis"										,"Alternativer Name");
 define("LangOverviewObjectsHeader2"												,"Sternbild");
+define("LangOverviewObjectsHeader2Short"										,"Sternb.");
 define("LangOverviewObjectsHeader3"												,"Mag");
 define("LangOverviewObjectsHeader3b"											,"SB");
 define("LangOverviewObjectsHeader4"												,"Typ");

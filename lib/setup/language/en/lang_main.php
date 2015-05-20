@@ -1197,6 +1197,7 @@ define("LangOverviewObjectsHeader0"												,"Nr");
 define("LangOverviewObjectsHeader1"												,"Name");
 define("LangOverviewObjectsHeader1bis"										,"Alternative name");
 define("LangOverviewObjectsHeader2"												,"Constellation");
+define("LangOverviewObjectsHeader2Short"										,"Const.");
 define("LangOverviewObjectsHeader3"												,"Mag");
 define("LangOverviewObjectsHeader3b"											,"SB");
 define("LangOverviewObjectsHeader4"												,"Type");

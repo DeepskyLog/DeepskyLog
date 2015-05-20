@@ -1193,6 +1193,7 @@ define("LangOverviewObjectsHeader0"												,"Nr");
 define("LangOverviewObjectsHeader1"												,"Naam");
 define("LangOverviewObjectsHeader1bis"										,"Alternatieve naam");
 define("LangOverviewObjectsHeader2"												,"Sterrenbeeld");
+define("LangOverviewObjectsHeader2Short"										,"Sterrenb.");
 define("LangOverviewObjectsHeader3"												,"Mag");
 define("LangOverviewObjectsHeader3b"											,"SB");
 define("LangOverviewObjectsHeader4"												,"Type");
