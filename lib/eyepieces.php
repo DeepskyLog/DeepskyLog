@@ -53,7 +53,7 @@ class Eyepieces
 	 echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 	 echo "<thead><tr>";
      echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">".LangViewActive."</td>";
-     echo "<th>".LangViewEyepieceName."</th>";
+     echo "<th data-priority=\"critical\">".LangViewEyepieceName."</th>";
      echo "<th>".LangViewEyepieceFocalLength."</th>";
      echo "<th>".LangViewEyepieceMaxFocalLength."</th>";
      echo "<th>".LangViewEyepieceApparentFieldOfView."</th>";

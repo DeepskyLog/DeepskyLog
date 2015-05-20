@@ -95,7 +95,7 @@ class Instruments {
 			echo "<thead>";
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangViewActive . "</td>";
 			
-			echo "<th>" . LangOverviewInstrumentsName . "</th>";
+			echo "<th data-priority=\"critical\">" . LangOverviewInstrumentsName . "</th>";
 			echo "<th>" . LangOverviewInstrumentsDiameter . "</th>";
 			echo "<th>" . LangOverviewInstrumentsFD . "</th>";
 			echo "<th>" . LangOverviewInstrumentsFixedMagnification . "</th>";

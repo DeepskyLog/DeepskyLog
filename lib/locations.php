@@ -201,7 +201,7 @@ class Locations {
 			echo "<thead><tr>";
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangViewActive . "</td>";
 			
-			echo "<th>" . LangViewLocationLocation . "</th>";
+			echo "<th data-priority=\"critical\">" . LangViewLocationLocation . "</th>";
 			echo "<th>" . LangViewLocationWeatherPrediction . "</th>";
 			echo "<th>" . LangViewLocationCountry . "</th>";
 			echo "<th>" . LangViewLocationElevation . "</th>";

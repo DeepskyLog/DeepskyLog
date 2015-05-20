@@ -1,5 +1,7 @@
 <?php //NL
 // This is version 5.0
+define("LangOverviewObjectsHeader4Short", "Typ");
+define("LangViewObjectFieldMagnificationHeader", "Best");
 define("LangNumberOfPersonalDrawings", "Aantal eigen tekeningen");
 define("LangLastPersonalObservation", "Laatste eigen tekening");
 define("LangPersonalObservations", "Aantal eigen waarnemingen");
@@ -534,7 +536,7 @@ define("profilephotosizesselect"                         ,"foto 1 / foto 2");
 
 
 
-define('LangBest'                                        ,'Best');
+define('LangBest'                                        ,'Beste tijd');
 define('LangToday'                                       ,'Vandaag');
 define('LangDate'                                        ,'Datum');
 define('LangCircumpolar'                                 ,' is circumpolair');
@@ -593,7 +595,7 @@ define("LangMoonTwilight"                                 ,"Schemering");
 define("LangMoonNaut"                                     ,"Naut.");
 define("LangMoonAstro"                                    ,"Astro.");
 define("LangAstronomicalTwilight"                         ,"Astronomische schemering");
-define("LangNauticalTwilight"                             ,"Maritieme chemering");
+define("LangNauticalTwilight"                             ,"Maritieme schemering");
 
 // text for Atlas page help
 define("LangAtlasPage"                                    ,"Interactieve atlas");
@@ -1192,6 +1194,7 @@ define("LangOverviewObjectsHeader0"												,"Nr");
 define("LangOverviewObjectsHeader1"												,"Naam");
 define("LangOverviewObjectsHeader1bis"										,"Alternatieve naam");
 define("LangOverviewObjectsHeader2"												,"Sterrenbeeld");
+define("LangOverviewObjectsHeader2Short"										,"Sterrenb.");
 define("LangOverviewObjectsHeader3"												,"Mag");
 define("LangOverviewObjectsHeader3b"											,"SB");
 define("LangOverviewObjectsHeader4"												,"Type");
@@ -1287,7 +1290,7 @@ define("LangViewObjectField23"														,"Deepskylog Opzoeken Portrait");
 define("LangViewObjectField24"														,"Deepskylog Overzicht Landscape");
 define("LangViewObjectField25"														,"Deepskylog Overzicht Portrait");
 define("LangViewObjectFieldContrastReserve"								,"Contrast reserve");
-define("LangViewObjectFieldMagnification"									,"Aanbevolen vergroting");
+define("LangViewObjectFieldMagnification"									,"Beste vergroting");
 define("LangViewObjectFieldOptimumDetectionMagnification"	,"Optimale detectie vergroting");
 define("LangViewObjectDSS"																,"Bekijk DSS beeld");
 define("LangViewObjectDSL"																,"Deepskylog kaart");

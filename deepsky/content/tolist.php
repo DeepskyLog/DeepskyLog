@@ -66,25 +66,6 @@ function tolist() {
 			echo "<hr />";
 			echo LangToListEmptyList; 
 		}
-		echo "<script type=\"text/javascript\">";
-		echo "
-	  function pageOnKeyDownToList(event)
-	  { if(event.keyCode==37)
-	      if(event.shiftKey)
-	        if(event.ctrlKey)
-	          location=html_entity_decode('" . $link . "&amp;multiplepagenr=0" . "');    
-	        else
-	          location=html_entity_decode('" . $link . "&amp;multiplepagenr=" . $pageleft . "');
-	    if(event.keyCode==39)
-	      if(event.shiftKey) 
-	        if(event.ctrlKey)
-	          location=html_entity_decode('" . $link . "&amp;multiplepagenr=" . $pagemax . "');
-	        else  
-	          location=html_entity_decode('" . $link . "&amp;multiplepagenr=" . $pageright . "');
-	  }
-	  this.onKeyDownFns[this.onKeyDownFns.length] = pageOnKeyDownToList;
-	  ";
-		echo "</script>";
 	}
 	echo "</div>";
 }

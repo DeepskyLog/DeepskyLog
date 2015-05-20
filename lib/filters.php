@@ -115,7 +115,7 @@ class Filters
 	 echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 	 echo "<thead><tr>";
      echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">".LangViewActive."</th>";
-     echo "<th>".LangViewFilterName."</th>";
+     echo "<th data-priority=\"critical\">".LangViewFilterName."</th>";
      echo "<th>".LangViewFilterType."</th>";
      echo "<th>".LangViewFilterColor."</th>";
      echo "<th>".LangViewFilterWratten."</th>";

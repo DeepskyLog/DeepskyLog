@@ -1,5 +1,6 @@
 <?php //FR
 // This is version 5.0
+define("LangOverviewObjectsHeader4Short", "Typ");
 define("LangNumberOfPersonalDrawings", "Number of own drawings");
 define("LangLastPersonalObservation", "Last own observation");
 define("LangPersonalObservations", "Number of own observations");
@@ -186,6 +187,7 @@ define('LangAtlasBrowserInfo'           ,'Les atlas personnalis&eacute;s ne sont
 
 
 // This is version 4.3
+define("LangViewObjectFieldMagnificationHeader", "Meilleur");
 define('atlasPageCenteredOn'            ,'Centr&eacute; sur ');
 define('LangNoIndexEntries'             ,"Pas d'entr&eacute;es dans l'index");
 define('LangAtlasPageOrientation'       ,"Orientation de la page");
@@ -577,7 +579,7 @@ define("LangOwnColor"                                     , "Marquez mes propres
 
 // Text for transit
 define("LangTransit"                                      ,"Passage");
-define("LangMaxAltitude"                                  ,"Altitude max.");
+define("LangMaxAltitude"                                  ,"Alt. max.");
 
 // Text for moon menu
 define("LangMoonMenuTitle"                                ,"Lune");
@@ -1165,6 +1167,7 @@ define("LangOverviewObjectsHeader0"												,"N&#176;");
 define("LangOverviewObjectsHeader1"												,"Nom");
 define("LangOverviewObjectsHeader1bis"										,"Nom alternatif");
 define("LangOverviewObjectsHeader2"												,"Constellation");
+define("LangOverviewObjectsHeader2Short"										,"Const.");
 define("LangOverviewObjectsHeader3"												,"Mag");
 define("LangOverviewObjectsHeader3b"											,"MS");
 define("LangOverviewObjectsHeader4"												,"Type");
@@ -1260,7 +1263,7 @@ define("LangViewObjectField23"														,"Deepskylog Opzoeken Portrait");
 define("LangViewObjectField24"														,"Deepskylog Overzicht Landscape");
 define("LangViewObjectField25"														,"Deepskylog Overzicht Portrait");
 define("LangViewObjectFieldContrastReserve"								,"R&eacute;serve de contrast");
-define("LangViewObjectFieldMagnification"									,"Agrandissement pr&#233;f&#233;r&#233;");
+define("LangViewObjectFieldMagnification"									,"Agrand. pr&#233;f&#233;r&#233;");
 define("LangViewObjectFieldOptimumDetectionMagnification"	,"Agrandissement de d&#233;tection optimale");
 define("LangViewObjectDSS"																,"Voir l'image DSS");
 define("LangViewObjectDSL"																,"Voir la carte Deepskylog");

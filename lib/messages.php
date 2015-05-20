@@ -220,7 +220,7 @@ class Messages {
 		
 		// Making the header for the mails
 		echo "<thead><tr>";
-		echo "<th>";
+		echo "<th data-priority=\"critical\">";
 		echo LangMessageSubject;
 		echo "</th>";
 		echo "<th>";
