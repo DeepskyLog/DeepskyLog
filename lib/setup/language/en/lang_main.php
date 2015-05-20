@@ -1,5 +1,11 @@
 <?php //EN
 // This is version 5.0
+define("LangViewLenses", "My lenses");
+define("LangAddLensExisting"															,"Select an existing lens");
+define("LangChangeMenuTitle"															,"Add");
+define("LangChangeMenuItem2"															,"Observation");
+define("LangChangeMenuItem5"															,"Object");
+
 define("LangOverviewObjectsHeader4Short", "Typ");
 define("LangViewObjectFieldMagnificationHeader", "Best");
 define("LangNumberOfPersonalDrawings", "Number of own drawings");
@@ -964,12 +970,9 @@ define("LangSearchMenuItem10"                             ,"Catalogs");
 define("LangSearchAllLanguages"														,"Look again, using all languages.");
 define("LangSearchDetailPage"															,"Set up a detailed search.");
 
-define("LangChangeMenuTitle"															,"Change");
 define("LangChangeMenuItem1"															,"Settings");
-define("LangChangeMenuItem2"															,"New observation");
 define("LangChangeMenuItem3"															,"Instruments");
 define("LangChangeMenuItem4"															,"Locations");
-define("LangChangeMenuItem5"															,"New object");
 define("LangChangeMenuItem6"															,"Eyepieces");
 define("LangChangeMenuItem7"															,"Filters");
 define("LangChangeMenuItem8"															,"Lenses");
@@ -1015,7 +1018,6 @@ define("LangOverviewLensTitle1"														,"Overview Lenses");
 define("LangViewLensName"																	,"Name");
 define("LangViewLensFactor"																,"Factor");
 define("LangAddLensTitle"																	,"Add a new lens");
-define("LangAddLensExisting"															,"Add an existing lens");
 define("LangAddLensFieldManually"													,"specify your lens details manually");
 define("LangAddLensField1"																,"Name");
 define("LangAddLensField1Expl"														,"eg. Televue 2x Barlow");

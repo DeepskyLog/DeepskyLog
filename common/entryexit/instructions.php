@@ -447,7 +447,7 @@ function instructions()
 	}	
 	if($objUtil->checkGetKey('indexAction')=="validate_lens")                                                          // validate lens
 	{ $entryMessage.=$objLens->validateSaveLens();
-	  $_GET['indexAction']='add_lens';
+	  $_GET['indexAction']='view_lenses';
 	}
   if($objUtil->checkPostKey('indexAction')=="validate_site")                                                          // validate location
 	{ $entryMessage.=$objLocation->validateSaveLocation();
