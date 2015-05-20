@@ -1654,16 +1654,14 @@ class Objects {
 			elseif ($myList)
 				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangList . "</td>");
 		}
-		
-		// TODO: Readd columnSelector_saveColumns: true in util.php
-		// TODO: Make sure the sorting on short type and short constellation works in PDF, CSV, ...
+
 		echo "<th data-priority=\"critical\" id=\"showname\">" . LangOverviewObjectsHeader1 . "</th>";
 		echo "<th data-priority=\"5\" id=\"objectconstellationfull\">" . LangOverviewObjectsHeader2 . "</th>";
-		echo "<th data-priority=\"9\" class=\"columnSelector-false\" id=\"objectconstellationshort\">" . LangOverviewObjectsHeader2Short . "</th>";
+		echo "<th data-priority=\"9\" class=\"columnSelector-false\" id=\"objectconstellationfull\">" . LangOverviewObjectsHeader2Short . "</th>";
 		echo "<th data-priority=\"7\" id=\"objectmagnitude\">" . LangOverviewObjectsHeader3 . "</th>";
 		echo "<th data-priority=\"7\" class=\"columnSelector-false\"  id=\"objectsurfacebrightness\">" . LangOverviewObjectsHeader3b . "</th>";
 		echo "<th data-priority=\"6\" id=\"objecttypefull\">" . LangOverviewObjectsHeader4 . "</th>";
-		echo "<th data-priority=\"9\" class=\"columnSelector-false\" id=\"objecttypeshort\">" . LangOverviewObjectsHeader4Short . "</th>";
+		echo "<th data-priority=\"9\" class=\"columnSelector-false\" id=\"objecttypefull\">" . LangOverviewObjectsHeader4Short . "</th>";
 		echo "<th data-priority=\"6\" class=\"columnSelector-false\" id=\"objectsizepa\">" . LangOverviewObjectsHeader10 . "</th>";
 		echo "<th data-priority=\"6\" class=\"columnSelector-false\" id=\"objectradecl\">" . LangOverviewObjectsHeader5 . "</th>";
 		echo "<th data-priority=\"6\" id=\"objectdecl\" class=\"columnSelector-false sorter-digit\">" . LangOverviewObjectsHeader6 . "</th>";
