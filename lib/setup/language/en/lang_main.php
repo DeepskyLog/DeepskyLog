@@ -8,7 +8,8 @@ define("LangChangeMenuItem5"															,"Object");
 // remove instrument/location column
 define("LangRemove"																				,"Delete");
 define("LangViewFilters", "My filters");
-define("LangAddFilterExisting"														,"Select an existing filter");
+define("LangAddFilterExisting" ,"Select an existing filter");
+define("LangViewEyepieces", "My eyepieces");
 
 
 define("LangOverviewObjectsHeader4Short", "Typ");

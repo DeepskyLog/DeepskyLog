@@ -384,9 +384,9 @@ function instructions()
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_eyepiece")                                               // delete eyepiece
 	{ $entryMessage.=$objEyepiece->validateDeleteEyepiece();
 	  if($_SESSION['admin']=='yes')
-	    $_GET['indexAction']='view_eyepieces';
+	    $_GET['indexAction']='overview_eyepieces';
 	  else
-	    $_GET['indexAction']='add_eyepiece';
+	    $_GET['indexAction']='view_eyepieces';
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_existingsession")                                        // delete existing session
 	{ $entryMessage.=$objSession->validateDeleteSession();
@@ -435,7 +435,7 @@ function instructions()
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_eyepiece")                                                      // validate eyepiece
 	{ $entryMessage.=$objEyepiece->validateSaveEyepiece();
-	  $_GET['indexAction']='add_eyepiece';
+	  $_GET['indexAction']='view_eyepieces';
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_filter")                                                        // validate filter
 	{ $entryMessage.=$objFilter->validateSaveFilter();
