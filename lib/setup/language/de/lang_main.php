@@ -1,5 +1,6 @@
 <?php //GE
 // This is version 5.0
+define("LangViewObjectFieldMagnificationHeader", "Best");
 define("LangNumberOfPersonalDrawings", "Number of own drawings");
 define("LangLastPersonalObservation", "Last own observation");
 define("LangPersonalObservations", "Number of own observations");
@@ -1302,7 +1303,7 @@ define("LangViewObjectField23"														,"Deepskylog Lookup Portrait");
 define("LangViewObjectField24"														,"Deepskylog Overview Landscape");
 define("LangViewObjectField25"														,"Deepskylog Overview Portrait");
 define("LangViewObjectFieldContrastReserve"								,"Kontrast Reserve");
-define("LangViewObjectFieldMagnification"									,"Bevorzugte Vergr&Ouml;&szlig;erung");
+define("LangViewObjectFieldMagnification"									,"Beste Vergr&Ouml;&szlig;");
 define("LangViewObjectFieldOptimumDetectionMagnification"	,"Beste Vergr&Ouml;&szlig;erung");
 define("LangViewObjectDSS"																,"Download DSS Bild");
 define("LangViewObjectDSL"																,"Deepskylog Karte");

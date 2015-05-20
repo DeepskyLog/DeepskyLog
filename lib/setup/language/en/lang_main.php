@@ -1,5 +1,6 @@
 <?php //EN
 // This is version 5.0
+define("LangViewObjectFieldMagnificationHeader", "Best");
 define("LangNumberOfPersonalDrawings", "Number of own drawings");
 define("LangLastPersonalObservation", "Last own observation");
 define("LangPersonalObservations", "Number of own observations");
@@ -534,7 +535,7 @@ define("profilephotosizesselect"                         ,"photo 1 / photo 2");
 
 
 
-define('LangBest'                                        ,'Best');
+define('LangBest'                                        ,'Best Time');
 define('LangToday'                                       ,'Today');
 define('LangDate'                                        ,'Date');
 define('LangCircumpolar'                                 ,' is circumpolar');
@@ -578,7 +579,7 @@ define("LangOwnColor"                                     , "Highlight own obser
 
 // Text for transit
 define("LangTransit"                                      ,"Transit");
-define("LangMaxAltitude"                                  ,"Max altitude");
+define("LangMaxAltitude"                                  ,"Max Alt");
 
 // Text for moon menu
 define("LangMoonMenuTitle"                                ,"Moon");
@@ -1291,7 +1292,7 @@ define("LangViewObjectField23"														,"Deepskylog Lookup Portrait");
 define("LangViewObjectField24"														,"Deepskylog Overview Landscape");
 define("LangViewObjectField25"														,"Deepskylog Overview Portrait");
 define("LangViewObjectFieldContrastReserve"								,"Contrast reserve");
-define("LangViewObjectFieldMagnification"									,"Preferred magnification");
+define("LangViewObjectFieldMagnification"									,"Best magnification");
 define("LangViewObjectFieldOptimumDetectionMagnification"	,"Optimum detection magnification");
 define("LangViewObjectDSS"																,"Retrieve DSS image");
 define("LangViewObjectDSL"																,"Deepskylog chart");

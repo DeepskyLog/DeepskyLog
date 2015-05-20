@@ -186,6 +186,7 @@ define('LangAtlasBrowserInfo'           ,'Les atlas personnalis&eacute;s ne sont
 
 
 // This is version 4.3
+define("LangViewObjectFieldMagnificationHeader", "Meilleur");
 define('atlasPageCenteredOn'            ,'Centr&eacute; sur ');
 define('LangNoIndexEntries'             ,"Pas d'entr&eacute;es dans l'index");
 define('LangAtlasPageOrientation'       ,"Orientation de la page");
@@ -577,7 +578,7 @@ define("LangOwnColor"                                     , "Marquez mes propres
 
 // Text for transit
 define("LangTransit"                                      ,"Passage");
-define("LangMaxAltitude"                                  ,"Altitude max.");
+define("LangMaxAltitude"                                  ,"Alt. max.");
 
 // Text for moon menu
 define("LangMoonMenuTitle"                                ,"Lune");
@@ -1260,7 +1261,7 @@ define("LangViewObjectField23"														,"Deepskylog Opzoeken Portrait");
 define("LangViewObjectField24"														,"Deepskylog Overzicht Landscape");
 define("LangViewObjectField25"														,"Deepskylog Overzicht Portrait");
 define("LangViewObjectFieldContrastReserve"								,"R&eacute;serve de contrast");
-define("LangViewObjectFieldMagnification"									,"Agrandissement pr&#233;f&#233;r&#233;");
+define("LangViewObjectFieldMagnification"									,"Agrand. pr&#233;f&#233;r&#233;");
 define("LangViewObjectFieldOptimumDetectionMagnification"	,"Agrandissement de d&#233;tection optimale");
 define("LangViewObjectDSS"																,"Voir l'image DSS");
 define("LangViewObjectDSL"																,"Voir la carte Deepskylog");

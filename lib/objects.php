@@ -1659,7 +1659,6 @@ class Objects {
 		// TODO: Add column with short constellation
 		// TODO: Add column with short type
 		// TODO: Remove columns?
-		// TODO: Rename long titles: Constellation, Preferred magnification, ...
 		echo "<th data-priority=\"critical\" id=\"showname\">" . LangOverviewObjectsHeader1 . "</th>";
 		echo "<th data-priority=\"5\" id=\"objectconstellationfull\">" . LangOverviewObjectsHeader2 . "</th>";
 		echo "<th data-priority=\"7\" id=\"objectmagnitude\">" . LangOverviewObjectsHeader3 . "</th>";
@@ -1672,7 +1671,7 @@ class Objects {
 			$atlas = $objObserver->getObserverProperty ( $loggedUser, 'standardAtlasCode', 'urano' );
 			echo "<th data-priority=\"6\" id=\"" . $atlas . "\">" . $objAtlas->atlasCodes [$atlas] . "</th>";
 			echo "<th data-priority=\"7\" id=\"objectcontrast\">" . LangViewObjectFieldContrastReserve . "</th>";
-			echo "<th data-priority=\"6\" id=\"objectoptimalmagnification\">" . LangViewObjectFieldMagnification . "</th>";
+			echo "<th data-priority=\"6\" id=\"objectoptimalmagnification\">" . LangViewObjectFieldMagnificationHeader . "</th>";
 			echo "<th data-priority=\"6\" id=\"objectriseorder\" class=\"columnSelector-false sorter-astrotime\">" . LangMoonRise . "</th>";
 			echo "<th data-priority=\"6\" id=\"objecttransitorder\" class=\"columnSelector-false sorter-astrotime\">" . LangTransit . "</th>";
 			echo "<th data-priority=\"6\" id=\"objectsetorder\" class=\"columnSelector-false sorter-astrotime\">" . LangMoonSet . "</th>";
