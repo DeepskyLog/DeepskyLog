@@ -116,8 +116,6 @@ function head() {
 		$TitleText = LangAddInstrumentAdd;
 	elseif ($includeFile == 'common/content/new_lens.php')
 		$TitleText = LangAddLensButton;
-	elseif ($includeFile == 'common/content/locations.php')
-		$TitleText = LangAddSiteButton;
 	elseif ($includeFile == 'common/content/message.php')
 		$TitleText = "";
 	elseif ($includeFile == 'common/content/search_locations.php')
@@ -174,6 +172,18 @@ function head() {
 		$TitleText = LangQueryObservationsTitle;
 	elseif ($includeFile == 'comets/content/setup_objects_query.php')
 		$TitleText = LangQueryObjectsTitle;
+	elseif ($includeFile == 'common/content/view_instruments.php')
+		$TitleText = LangViewInstruments;
+	elseif ($includeFile == 'common/content/view_eyepieces.php')
+		$TitleText = LangViewEyepieces;
+	elseif ($includeFile == 'common/content/view_filters.php')
+		$TitleText = LangViewFilters;
+	elseif ($includeFile == 'common/content/view_lenses.php')
+		$TitleText = LangViewLenses;
+	elseif ($includeFile == 'common/content/new_location.php')
+		$TitleText = LangAddSiteButton;
+	elseif ($includeFile == 'common/content/locations.php')
+		$TitleText = LangViewLocations;
 	elseif ($objUtil->checkRequestKey ( 'title' ))
 		$TitleText = $objUtil->checkRequestKey ( 'title', '' ); // 20081209 Here should come a better solution, see bug report 44
 	elseif ($objUtil->checkRequestKey ( ('titleobject') ))

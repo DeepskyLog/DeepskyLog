@@ -1,19 +1,21 @@
 <?php //EN
 // This is version 5.0
 define("LangViewLenses", "My lenses");
+define("LangViewFilters", "My filters");
+define("LangViewEyepieces", "My eyepieces");
+define("LangViewLocations", "My locations");
+define("LangViewInstruments", "My instruments");
+
 define("LangAddLensExisting"															,"Select an existing lens");
 define("LangChangeMenuTitle"															,"Add");
 define("LangChangeMenuItem2"															,"Observation");
 define("LangChangeMenuItem5"															,"Object");
 // remove instrument/location column
 define("LangRemove"																				,"Delete");
-define("LangViewFilters", "My filters");
 define("LangAddFilterExisting" ,"Select an existing filter");
-define("LangViewEyepieces", "My eyepieces");
-define("LangViewLocations", "My locations");
 define("LangAddEyepieceExisting","Select an existing eyepiece");
-define("LangViewInstruments", "My instruments");
 define("LangAddInstrumentExisting", "Select an existing instrument");
+
 
 define("LangOverviewObjectsHeader4Short", "Typ");
 define("LangViewObjectFieldMagnificationHeader", "Best");
