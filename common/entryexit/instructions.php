@@ -406,9 +406,9 @@ function instructions()
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_instrument")                                             // delete instrument 
 	{ $entryMessage.=$objInstrument->validateDeleteInstrument();
 	  if($_SESSION['admin']=='yes')
-	    $_GET['indexAction']='view_instruments';
+	    $_GET['indexAction']='overview_instruments';
 	  else
-	    $_GET['indexAction']='add_instrument';
+	    $_GET['indexAction']='view_instruments';
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_lens")                                                   // delete lens
 	{ $entryMessage.=$objLens->validateDeleteLens();
@@ -443,7 +443,7 @@ function instructions()
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_instrument")                                                    // validate instrument
 	{  $entryMessage.=$objInstrument->validateSaveInstrument();
-	   $_GET['indexAction']='add_instrument';
+	   $_GET['indexAction']='view_instruments';
 	}	
 	if($objUtil->checkGetKey('indexAction')=="validate_lens")                                                          // validate lens
 	{ $entryMessage.=$objLens->validateSaveLens();

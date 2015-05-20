@@ -101,6 +101,7 @@ class Instruments {
 			echo "<th>" . LangOverviewInstrumentsFixedMagnification . "</th>";
 			echo "<th>" . LangOverviewInstrumentsType . "</th>";
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangChangeAccountField8 . "</th>";
+			echo "<th>" . LangRemove . "</th>";
 			echo "<th>" . LangTopObserversHeader3 . "</th>";
 			echo "</thead>";
 			while ( list ( $key, $value ) = each ( $insts ) ) {
@@ -136,16 +137,20 @@ class Instruments {
 				else
 					echo ("<input type=\"radio\" name=\"stdtelescope\" value=\"" . $value . "\" onclick=\"submit();\"/>&nbsp;<br />");
 				echo "</td>";
+				
+				// Make it possible to delete the instrument.
 				echo "<td>";
 				if (! ($obsCnt = $objInstrument->getInstrumentUsedFromId ( $value ))) {
-					echo "<a href=\"" . $baseURL . "index.php?indexAction=validate_delete_instrument&amp;instrumentid=" . urlencode ( $value ) . "\">" . LangRemove . "</a>";
+					echo "<a href=\"" . $baseURL . "index.php?indexAction=validate_delete_instrument&amp;instrumentid=" . urlencode ( $value ) . "\"><span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></a>";
+				}
+				echo "</td>";
+				// Show the number of observations for this instrument.
+				echo "<td>";
+				echo "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . $loggedUser . "&amp;instrument=" . $value . "&amp;exactinstrumentlocation=true\">";
+				if ($obsCnt != 1) {
+					echo $obsCnt . ' ' . LangGeneralObservations . "</a>";
 				} else {
-					echo "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . $loggedUser . "&amp;instrument=" . $value . "&amp;exactinstrumentlocation=true\">";
-					if ($obsCnt > 1) {
-						echo $obsCnt . ' ' . LangGeneralObservations . "</a>";
-					} else {
-						echo $obsCnt . ' ' . LangGeneralObservation . "</a>";
-					}
+					echo $obsCnt . ' ' . LangGeneralObservation . "</a>";
 				}
 				echo "</td>";
 				echo "</tr>";
@@ -192,7 +197,7 @@ class Instruments {
 					$fd = $objUtil->checkPostKey ( 'fd', 1.0 );
 			}
 			if ($objUtil->checkPostKey ( 'add' )) {
-				if (!isset($fd)) {
+				if (! isset ( $fd )) {
 					$fd = 0.0;
 				}
 				if ($fd > 1.0)

@@ -12,6 +12,8 @@ define("LangAddFilterExisting" ,"Select an existing filter");
 define("LangViewEyepieces", "My eyepieces");
 define("LangViewLocations", "My locations");
 define("LangAddEyepieceExisting","Select an existing eyepiece");
+define("LangViewInstruments", "My instruments");
+define("LangAddInstrumentExisting", "Select an existing instrument");
 
 define("LangOverviewObjectsHeader4Short", "Typ");
 define("LangViewObjectFieldMagnificationHeader", "Best");
@@ -1146,7 +1148,6 @@ define("LangAddInstrumentField6Expl"											,"Only for binoculars, finder sco
 define("LangAddInstrumentOr"															,"or");
 define("LangAddInstrumentAdd"															,"Add instrument");
 define("LangAddInstrumentStdTelescope"										,"Adapt standard telescope");
-define("LangAddInstrumentExisting"											  ,"Add an existing instrument");
 define("LangAddInstrumentManually"												,"add instrument manually");
 define("LangDetailInstrument"                             ,"Details instrument");
 

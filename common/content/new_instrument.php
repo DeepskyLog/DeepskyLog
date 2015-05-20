@@ -10,9 +10,6 @@ else
 function new_instrument() {
 	global $baseURL, $loggedUserName, $objInstrument, $objPresentations, $objUtil;
 	echo "<div id=\"main\">";
-	echo "<h4>" . LangOverviewInstrumentsTitle . " " . $loggedUserName . "</h4>"; 
-	echo "<hr />";
-	$objInstrument->showInstrumentsObserver ();
 	$insts = $objInstrument->getSortedInstruments ( 'name', "", true );
 	echo "<form role=\"form\" action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_instrument\" />";
