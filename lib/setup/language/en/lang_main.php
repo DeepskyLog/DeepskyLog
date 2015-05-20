@@ -10,7 +10,8 @@ define("LangRemove"																				,"Delete");
 define("LangViewFilters", "My filters");
 define("LangAddFilterExisting" ,"Select an existing filter");
 define("LangViewEyepieces", "My eyepieces");
-
+define("LangViewLocations", "My locations");
+define("LangAddEyepieceExisting","Select an existing eyepiece");
 
 define("LangOverviewObjectsHeader4Short", "Typ");
 define("LangViewObjectFieldMagnificationHeader", "Best");
@@ -1004,7 +1005,6 @@ define("LangOverviewSiteTitle"														,"Observing sites of");
 define("LangAddSiteExisting"															,"Add existing location");
 
 define("LangOverviewEyepieceTitle"												,"Eyepieces of");
-define("LangAddEyepieceExisting"													,"Select the eyepiece details from the list");
 define("LangAddEyepieceManually"													,"specify your eyepiece details manually");
 define("LangAddEyepieceTitle"															,"Add a new eyepiece");
 define("LangAddEyepieceField1"														,"Name");

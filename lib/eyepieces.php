@@ -84,12 +84,12 @@ class Eyepieces {
 				echo "</td>";
 				// Show the number of observations for this lens.
 				echo "<td>";
-					echo "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . $loggedUser . "&amp;eyepiece=" . $value . "&amp;exactinstrumentlocation=true\">";
-					if ($obsCnt != 1) {
-						echo $obsCnt . ' ' . LangGeneralObservations . "</a>";
-					} else {
-						echo $obsCnt . ' ' . LangGeneralObservation . "</a>";
-					}
+				echo "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . $loggedUser . "&amp;eyepiece=" . $value . "&amp;exactinstrumentlocation=true\">";
+				if ($obsCnt != 1) {
+					echo $obsCnt . ' ' . LangGeneralObservations . "</a>";
+				} else {
+					echo $obsCnt . ' ' . LangGeneralObservation . "</a>";
+				}
 				echo "</td></tr>";
 			}
 			echo "</table>";

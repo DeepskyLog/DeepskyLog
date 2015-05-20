@@ -23,7 +23,7 @@ function menu_change() {
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_object\">" . LangChangeMenuItem5 . "</a></li>";
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_session\">" . LangChangeMenuItem9 . "</a></li>";
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_instrument\">" . LangChangeMenuItem3 . "</a></li>";
-		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_site\">" . LangChangeMenuItem4 . "</a></li>";
+		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_location\">" . LangChangeMenuItem4 . "</a></li>";
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_eyepiece\">" . LangChangeMenuItem6 . "</a></li>";
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_filter\">" . LangChangeMenuItem7 . "</a></li>";
 		echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=add_lens\">" . LangChangeMenuItem8 . "</a></li>";

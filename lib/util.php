@@ -2513,7 +2513,7 @@ class Utils {
 																																			if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_filter', 'common/content/new_filter.php' )))
 																																				if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_instrument', 'common/content/new_instrument.php' )))
 																																					if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_lens', 'common/content/new_lens.php' )))
-																																						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_site', 'common/content/locations.php' )))
+																																						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_sites', 'common/content/locations.php' )))
 																																							if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_eyepiece', 'common/content/change_eyepiece.php' )))
 																																								if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_filter', 'common/content/change_filter.php' )))
 																																									if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_instrument', 'common/content/change_instrument.php' )))

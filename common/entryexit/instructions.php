@@ -422,7 +422,7 @@ function instructions()
 	  if($_SESSION['admin']=='yes')
 	    $_GET['indexAction']='view_locations';
 	  else
-	    $_GET['indexAction']='add_site';
+	    $_GET['indexAction']='view_sites';
 	}  
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_message")                                                // delete message
 	{ $entryMessage.=$objMessages->validateDeleteMessage();
@@ -451,7 +451,7 @@ function instructions()
 	}
   if($objUtil->checkPostKey('indexAction')=="validate_site")                                                          // validate location
 	{ $entryMessage.=$objLocation->validateSaveLocation();
-	  $_GET['indexAction']="add_site";
+	  $_GET['indexAction']="view_sites";
 	}
 	//============================================================================== DEEPSKY INSTRUCTIONS
 	$object=$objUtil->checkPostKey('object',$objUtil->checkGetKey('object'));
