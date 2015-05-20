@@ -5,6 +5,9 @@ define("LangAddLensExisting"															,"Select an existing lens");
 define("LangChangeMenuTitle"															,"Add");
 define("LangChangeMenuItem2"															,"Observation");
 define("LangChangeMenuItem5"															,"Object");
+// remove instrument/location column
+define("LangRemove"																				,"Delete");
+
 
 define("LangOverviewObjectsHeader4Short", "Typ");
 define("LangViewObjectFieldMagnificationHeader", "Best");
@@ -1752,9 +1755,6 @@ define("LangObservationQueryError3"												,"View all observations");
 define("LangObservationNoResults"													,"Sorry, no observations found!"); 
 define("LangQueryObservationsButton1"											,"Search");
 define("LangQueryObservationsButton2"											,"Clear Fields");
-
-// remove instrument/location column
-define("LangRemove"																				,"delete");
 
 // content/new_observationcsv.php
 define("LangCSVTitle"																			,"Import observations from a CSV file");

@@ -415,7 +415,7 @@ function instructions()
 	  if($_SESSION['admin']=='yes')
 	    $_GET['indexAction']='view_lenses';
 	  else
-	    $_GET['indexAction']="add_lens";
+	    $_GET['indexAction']="view_lenses";
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_location")                                               // delete location
 	{ $entryMessage.=$objLocation->validateDeleteLocation();

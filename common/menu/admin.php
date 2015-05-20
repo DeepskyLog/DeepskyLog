@@ -19,7 +19,7 @@ function admin()
 	  echo "  <li><a href=\"".$baseURL."index.php?indexAction=view_instruments\">".LangAdminMenuItem3."</a></li>";
 	  echo "  <li><a href=\"".$baseURL."index.php?indexAction=view_eyepieces\">".LangAdminMenuItem4."</a></li>";
 	  echo "  <li><a href=\"".$baseURL."index.php?indexAction=view_filters\">".LangAdminMenuItem5."</a></li>";
-	  echo "  <li><a href=\"".$baseURL."index.php?indexAction=view_lenses\">".LangAdminMenuItem6."</a></li>";
+	  echo "  <li><a href=\"".$baseURL."index.php?indexAction=overview_lenses\">".LangAdminMenuItem6."</a></li>";
 	  echo "  <li><a href=\"".$baseURL."index.php?indexAction=admin_check_objects\">".LangAdminMenuItem7."</a></li>";
 	  echo "  <li><a href=\"".$baseURL."index.php?indexAction=new_message&amp;receiver=all\">".LangAdminMenuItem8."</a></li>";
 	  echo " </ul>";
