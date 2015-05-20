@@ -48,7 +48,7 @@ class Lenses
 		  echo "<table class=\"table sort-table table-condensed table-striped table-hover tablesorter custom-popup\">";
 		  echo "<thead><tr>";
       echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">".LangViewActive."</td>";
-		  echo "<th>".LangViewLensName."</th>";
+		  echo "<th data-priority=\"critical\">".LangViewLensName."</th>";
 		  echo "<th>".LangViewLensFactor."</th>";
 		  echo "<th>".LangTopObserversHeader3."</th>";
 		  echo "</tr></thead>";
