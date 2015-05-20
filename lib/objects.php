@@ -1656,14 +1656,14 @@ class Objects {
 		}
 		
 		// TODO: Readd columnSelector_saveColumns: true in util.php
-		// TODO: Add column with short type
-		// TODO: Remove columns?
+		// TODO: Make sure the sorting on short type and short constellation works in PDF, CSV, ...
 		echo "<th data-priority=\"critical\" id=\"showname\">" . LangOverviewObjectsHeader1 . "</th>";
 		echo "<th data-priority=\"5\" id=\"objectconstellationfull\">" . LangOverviewObjectsHeader2 . "</th>";
 		echo "<th data-priority=\"9\" class=\"columnSelector-false\" id=\"objectconstellationshort\">" . LangOverviewObjectsHeader2Short . "</th>";
 		echo "<th data-priority=\"7\" id=\"objectmagnitude\">" . LangOverviewObjectsHeader3 . "</th>";
 		echo "<th data-priority=\"7\" class=\"columnSelector-false\"  id=\"objectsurfacebrightness\">" . LangOverviewObjectsHeader3b . "</th>";
 		echo "<th data-priority=\"6\" id=\"objecttypefull\">" . LangOverviewObjectsHeader4 . "</th>";
+		echo "<th data-priority=\"9\" class=\"columnSelector-false\" id=\"objecttypeshort\">" . LangOverviewObjectsHeader4Short . "</th>";
 		echo "<th data-priority=\"6\" class=\"columnSelector-false\" id=\"objectsizepa\">" . LangOverviewObjectsHeader10 . "</th>";
 		echo "<th data-priority=\"6\" class=\"columnSelector-false\" id=\"objectradecl\">" . LangOverviewObjectsHeader5 . "</th>";
 		echo "<th data-priority=\"6\" id=\"objectdecl\" class=\"columnSelector-false sorter-digit\">" . LangOverviewObjectsHeader6 . "</th>";
@@ -1728,6 +1728,7 @@ class Objects {
 			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader3 . ": " . $_SESSION ['Qobj'] [$count] ['objectmagnitude'] . "')\">" . (($_SESSION ['Qobj'] [$count] ['objectmagnitude'] == 99.9) || ($_SESSION ['Qobj'] [$count] ['objectmagnitude'] == '') ? "&nbsp;&nbsp;-&nbsp;" : sprintf ( "%01.1f", $_SESSION ['Qobj'] [$count] ['objectmagnitude'] )) . "</td>";
 			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader3b . ": " . $_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] . "')\">" . (($_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] == 99.9) || ($_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] == '') ? "&nbsp;&nbsp;-&nbsp;" : sprintf ( "%01.1f", $_SESSION ['Qobj'] [$count] ['objectsurfacebrightness'] )) . "</td>";
 			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader4 . ": " . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objecttype']] . "')\">" . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objecttype']] . "</td>";
+			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader4 . ": " . $GLOBALS [$_SESSION ['Qobj'] [$count] ['objecttype']] . "')\">" . $_SESSION ['Qobj'] [$count] ['objecttype'] . "</td>";
 			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader10 . ": " . addslashes ( $_SESSION ['Qobj'] [$count] ['objectsizepa'] ) . "')\">" . $_SESSION ['Qobj'] [$count] ['objectsizepa'] . "</td>";
 			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader5 . ": " . addslashes ( $_SESSION ['Qobj'] [$count] ['objectrahms'] ) . "')\">" . $_SESSION ['Qobj'] [$count] ['objectrahms'] . "</td>";
 			echo "<td onmouseover=\"Tip('" . LangOverviewObjectsHeader6 . ": " . addslashes ( $_SESSION ['Qobj'] [$count] ['objectdecldms'] ) . "')\">" . $_SESSION ['Qobj'] [$count] ['objectdecldms'] . "</td>";
@@ -1741,7 +1742,6 @@ class Objects {
 					$seenclass = "seenX";
 				else
 					$seenclass = "seenN";
-//print_r($_SESSION ['Qobj'] [$count] );
 				echo "<td onmouseover=\"Tip('" . $objAtlas->atlasCodes [$atlas] . ": " . $page . "')\">" . $page . "</td>";
 				echo "<td onmouseover=\"Tip('" . $_SESSION ['Qobj'] [$count] ['objectcontrastpopup'] . "')\"><span class=\"" . $_SESSION ['Qobj'] [$count] ['objectcontrasttype'] . "\" >" . $_SESSION ['Qobj'] [$count] ['objectcontrast'] . "</span></td>";
 				echo "<td onmouseover=\"Tip('" . LangViewObjectFieldMagnification . ": " . $_SESSION ['Qobj'] [$count] ['objectoptimalmagnification'] . "')\">" . $_SESSION ['Qobj'] [$count] ['objectoptimalmagnificationvalue'] . "</td>";

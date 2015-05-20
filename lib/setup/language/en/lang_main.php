@@ -1,5 +1,6 @@
 <?php //EN
 // This is version 5.0
+define("LangOverviewObjectsHeader4Short", "Typ");
 define("LangViewObjectFieldMagnificationHeader", "Best");
 define("LangNumberOfPersonalDrawings", "Number of own drawings");
 define("LangLastPersonalObservation", "Last own observation");
