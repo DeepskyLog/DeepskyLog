@@ -10,9 +10,6 @@ else
 function new_filter() {
 	global $baseURL, $loggedUserName, $objFilter, $objPresentations, $objUtil;
 	echo "<div id=\"main\">";
-	echo "<h4>" . LangOverviewFilterTitle . " " . $loggedUserName . "</h4>"; 
-	echo "<hr />";
-	$objFilter->showFiltersObserver ();
 	echo "<h4>" . LangAddFilterTitle . "</h4>";
 	$filts = $objFilter->getSortedFilters ( 'name', "" );
 	echo "<form action=\"" . $baseURL . "index.php\" method=\"post\"><div>";

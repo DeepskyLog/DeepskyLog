@@ -7,6 +7,8 @@ define("LangChangeMenuItem2"															,"Observation");
 define("LangChangeMenuItem5"															,"Object");
 // remove instrument/location column
 define("LangRemove"																				,"Delete");
+define("LangViewFilters", "My filters");
+define("LangAddFilterExisting"														,"Select an existing filter");
 
 
 define("LangOverviewObjectsHeader4Short", "Typ");
@@ -1043,7 +1045,6 @@ define("LangViewFilterColor"															,"Color");
 define("LangViewFilterWratten"														,"Wratten number");
 define("LangViewFilterSchott"															,"Schott number");
 define("LangAddFilterTitle"																,"Add new filter");
-define("LangAddFilterExisting"														,"Add an existing filter");
 define("LangAddFilterFieldManually"												,"specify your filter details manually");
 define("LangAddFilterField1"															,"Name");
 define("LangAddFilterField1Expl"													,"(ex Lumicon O-III)"); 

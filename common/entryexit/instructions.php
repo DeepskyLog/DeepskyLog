@@ -399,9 +399,9 @@ function instructions()
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_filter")                                                 // delete filter
 	{ $entryMessage.=$objFilter->validateDeleteFilter();
 	  if($_SESSION['admin']=='yes')
-	    $_GET['indexAction']='view_filters';
+	    $_GET['indexAction']='overview_filters';
 	  else
-	    $_GET['indexAction']='add_filter';
+	    $_GET['indexAction']='view_filters';
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_instrument")                                             // delete instrument 
 	{ $entryMessage.=$objInstrument->validateDeleteInstrument();
@@ -439,7 +439,7 @@ function instructions()
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_filter")                                                        // validate filter
 	{ $entryMessage.=$objFilter->validateSaveFilter();
-	  $_GET['indexAction']='add_filter';
+	  $_GET['indexAction']='view_filters';
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_instrument")                                                    // validate instrument
 	{  $entryMessage.=$objInstrument->validateSaveInstrument();
