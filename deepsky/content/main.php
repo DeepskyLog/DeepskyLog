@@ -20,7 +20,7 @@ echo "<div class=\"row\">";
 echo " <div class=\"col-sm-2 col-md-2\">";
 echo "  <div class=\"thumbnail\">";
 echo "   <a href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObservationsQuickPick=Zoek�waarnemingen\">";
-echo "    <img class=\"thumbnail\" src=\"" . $baseURL . "images/findObservation.png\">";
+echo "    <img src=\"" . $baseURL . "images/findObservation.png\">";
 echo "    <div class=\"caption\">";
 echo "     <h3>" . LangSearchMenuItem3 . "</h3>";
 echo "    </div>";
@@ -61,10 +61,10 @@ if ($loggedUser) {
 
 	echo " <div class=\"col-sm-2 col-md-2\">";
 	echo "  <div class=\"thumbnail\">";
-	echo "   <a href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming\">";
+	echo "   <a href=\"" . $baseURL . "index.php?indexAction=listaction\">";
 	echo "    <img src=\"" . $baseURL . "images/clipboard.png\">";
 	echo "    <div class=\"caption\">";
-	echo "     <h3>" . LangChangeMenuItem2 . "</h3>";
+	echo "     <h3>" . LangAddList . "</h3>";
 	echo "    </div>";
 	echo "   </a>";
 	echo "  </div>";
