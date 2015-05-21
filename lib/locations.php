@@ -208,6 +208,7 @@ class Locations {
 			echo "<th>" . LangViewLocationLimMag . "</th>";
 			echo "<th>" . LangViewLocationSB . "</th>";
 			echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangViewLocationStd . "</th>";
+			echo "<th>" . LangRemove . "</th>";
 			echo "<th>" . LangTopObserversHeader3 . "</th>";
 			echo "</tr></thead>";
 			while ( list ( $key, $value ) = each ( $sites ) ) {
@@ -244,16 +245,19 @@ class Locations {
 					echo "<td>" . $limmag . "</td>";
 					echo "<td>" . $sb . "</td>";
 					echo "<td><input type=\"radio\" name=\"stdlocation\" value=\"" . $value . "\"" . (($value == $objObserver->getObserverProperty ( $loggedUser, 'stdlocation' )) ? " checked=\"checked\" " : "") . " onclick=\"submit();\" />&nbsp;<br /></td>";
+					// Make it possible to delete the lenses
 					echo "<td>";
 					if (! ($obsCnt = $objLocation->getLocationUsedFromId ( $value ))) {
-						echo "<a href=\"" . $baseURL . "index.php?indexAction=validate_delete_location&amp;locationid=" . urlencode ( $value ) . "\">" . LangRemove . "</a>";
+						echo "<a href=\"" . $baseURL . "index.php?indexAction=validate_delete_location&amp;locationid=" . urlencode ( $value ) . "\"><span class=\"glyphicon glyphicon-trash\" aria-hidden=\"true\"></span></a>";
+					}
+					echo "</td>";
+					// Show the number of observations for this lens.
+					echo "<td>";
+					echo "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . $loggedUser . "&amp;site=" . $value . "&amp;exactinstrumentlocation=true\">";
+					if ($obsCnt != 1) {
+						echo $obsCnt . ' ' . LangGeneralObservations . "</a>";
 					} else {
-						echo "<a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . $loggedUser . "&amp;site=" . $value . "&amp;exactinstrumentlocation=true\">";
-						if ($obsCnt > 1) {
-							echo $obsCnt . ' ' . LangGeneralObservations . "</a>";
-						} else {
-							echo $obsCnt . ' ' . LangGeneralObservation . "</a>";
-						}
+						echo $obsCnt . ' ' . LangGeneralObservation . "</a>";
 					}
 					echo "</td>";
 					echo "</tr>";

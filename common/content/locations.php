@@ -10,38 +10,7 @@ else
 function locations() {
 	global $baseURL, $loggedUser, $loggedUserName, $sites, $objLocation, $objObserver, $objPresentations, $objUtil;
 	$sort = $objUtil->checkRequestKey ( 'sort', 'name' );
-	$locationid = $objUtil->checkRequestKey ( 'locationid' );
-	$tempCountryList = "<select name=\"country\" class=\"form-control\">";
-	$countries = $objLocation->getCountries ();
-	$tempCountryList .= "<option value=\"\">-----</option>";
-	while ( list ( $key, $value ) = each ( $countries ) ) {
-		$sites = $objLocation->getSortedLocations ( $sort, $loggedUser );
-		$locs = $objObserver->getListOfLocations ();
-		if ($objUtil->checkRequestKey ( 'country' ) == $value)
-			$tempCountryList .= "<option selected=\"selected\" value=\"" . $value . "\">" . $value . "</option>";
-		elseif ($locationid && ($objLocation->getLocationPropertyFromId ( $locationid, 'country' ) == $value))
-			$tempCountryList .= "<option selected=\"selected\" value=\"" . $value . "\">" . $value . "</option>";
-		else
-			$tempCountryList .= "<option value=\"" . $value . "\">" . $value . "</option>";
-	}
-	$tempCountryList .= "</select>";
-	$latitudedeg = $objUtil->checkRequestKey ( 'latitude' );
-	$latitudemin = $objUtil->checkRequestKey ( 'latitudemin' );
-	$longitudedeg = $objUtil->checkRequestKey ( 'longitude' );
-	$longitudemin = $objUtil->checkRequestKey ( 'longitudemin' );
-	if ($locationid = $objUtil->checkRequestKey ( 'locationid' )) {
-		// TODO: ROUND???
-		$latitudestr = $objLocation->getLocationPropertyFromId ( $locationid, 'latitude' );
-		$latitudedeg = ( int ) ($latitudestr);
-		$latitudeminfloat = ( (( float ) ($latitudestr) - ( int ) ($latitudestr)) * 60.0 );
-		$latitudemin = (int)  $latitudeminfloat;
-		$latitudesec = ($latitudeminfloat - $latitudemin) * 60.0;
-		$longitudestr = $objLocation->getLocationPropertyFromId ( $locationid, 'longitude' );
-		$longitudedeg = ( int ) ($longitudestr);
-		$longitudeminfloat = ( (( float ) ($longitudestr) - ( int ) ($longitudestr)) * 60 );
-		$longitudemin = (int)  $longitudeminfloat;
-		$longitudesec = ($longitudeminfloat - $longitudemin) * 60.0;
-	}
+	$sites = $objLocation->getSortedLocations ( $sort, $loggedUser );
 	echo "<div id=\"main\">";
 	echo "<h4>" . LangOverviewSiteTitle . " " . $loggedUserName . "</h4>";
 	echo "<hr />";

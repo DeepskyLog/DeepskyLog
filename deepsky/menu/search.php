@@ -25,6 +25,11 @@ function menu_search() {
 		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=result_selected_sessions&amp;observer=" . urlencode ( $loggedUser ) . "\">" . LangSearchMenuItem11 . "</a></li>";
 	}
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=result_selected_sessions\">" . LangSearchMenuItem12 . "</a></li>";
+	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=view_instruments\">" . LangViewInstruments . "</a></li>";
+	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=view_sites\">" . LangViewLocations . "</a></li>";
+	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=view_eyepieces\">" . LangViewEyepieces . "</a></li>";
+	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=view_filters\">" . LangViewFilters . "</a></li>";
+	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=view_lenses\">" . LangViewLenses . "</a></li>";
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=rank_observers\">" . LangSearchMenuItem6 . "</a></li>";
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=rank_objects\">" . LangSearchMenuItem7 . "</a></li>";
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=view_catalogs\">" . LangSearchMenuItem10 . "</a></li>";

@@ -384,9 +384,9 @@ function instructions()
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_eyepiece")                                               // delete eyepiece
 	{ $entryMessage.=$objEyepiece->validateDeleteEyepiece();
 	  if($_SESSION['admin']=='yes')
-	    $_GET['indexAction']='view_eyepieces';
+	    $_GET['indexAction']='overview_eyepieces';
 	  else
-	    $_GET['indexAction']='add_eyepiece';
+	    $_GET['indexAction']='view_eyepieces';
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_existingsession")                                        // delete existing session
 	{ $entryMessage.=$objSession->validateDeleteSession();
@@ -399,30 +399,30 @@ function instructions()
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_filter")                                                 // delete filter
 	{ $entryMessage.=$objFilter->validateDeleteFilter();
 	  if($_SESSION['admin']=='yes')
-	    $_GET['indexAction']='view_filters';
+	    $_GET['indexAction']='overview_filters';
 	  else
-	    $_GET['indexAction']='add_filter';
+	    $_GET['indexAction']='view_filters';
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_instrument")                                             // delete instrument 
 	{ $entryMessage.=$objInstrument->validateDeleteInstrument();
 	  if($_SESSION['admin']=='yes')
-	    $_GET['indexAction']='view_instruments';
+	    $_GET['indexAction']='overview_instruments';
 	  else
-	    $_GET['indexAction']='add_instrument';
+	    $_GET['indexAction']='view_instruments';
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_lens")                                                   // delete lens
 	{ $entryMessage.=$objLens->validateDeleteLens();
 	  if($_SESSION['admin']=='yes')
 	    $_GET['indexAction']='view_lenses';
 	  else
-	    $_GET['indexAction']="add_lens";
+	    $_GET['indexAction']="view_lenses";
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_location")                                               // delete location
 	{ $entryMessage.=$objLocation->validateDeleteLocation();
 	  if($_SESSION['admin']=='yes')
 	    $_GET['indexAction']='view_locations';
 	  else
-	    $_GET['indexAction']='add_site';
+	    $_GET['indexAction']='view_sites';
 	}  
 	if($objUtil->checkGetKey('indexAction')=="validate_delete_message")                                                // delete message
 	{ $entryMessage.=$objMessages->validateDeleteMessage();
@@ -435,23 +435,23 @@ function instructions()
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_eyepiece")                                                      // validate eyepiece
 	{ $entryMessage.=$objEyepiece->validateSaveEyepiece();
-	  $_GET['indexAction']='add_eyepiece';
+	  $_GET['indexAction']='view_eyepieces';
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_filter")                                                        // validate filter
 	{ $entryMessage.=$objFilter->validateSaveFilter();
-	  $_GET['indexAction']='add_filter';
+	  $_GET['indexAction']='view_filters';
 	}
 	if($objUtil->checkGetKey('indexAction')=="validate_instrument")                                                    // validate instrument
 	{  $entryMessage.=$objInstrument->validateSaveInstrument();
-	   $_GET['indexAction']='add_instrument';
+	   $_GET['indexAction']='view_instruments';
 	}	
 	if($objUtil->checkGetKey('indexAction')=="validate_lens")                                                          // validate lens
 	{ $entryMessage.=$objLens->validateSaveLens();
-	  $_GET['indexAction']='add_lens';
+	  $_GET['indexAction']='view_lenses';
 	}
   if($objUtil->checkPostKey('indexAction')=="validate_site")                                                          // validate location
 	{ $entryMessage.=$objLocation->validateSaveLocation();
-	  $_GET['indexAction']="add_site";
+	  $_GET['indexAction']="view_sites";
 	}
 	//============================================================================== DEEPSKY INSTRUCTIONS
 	$object=$objUtil->checkPostKey('object',$objUtil->checkGetKey('object'));

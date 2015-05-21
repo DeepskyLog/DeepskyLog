@@ -1,5 +1,11 @@
 <?php //GE
 // This is version 5.0
+define("LangViewLenses", "My lenses");
+define("LangViewFilters", "My filters");
+define("LangViewEyepieces", "My eyepieces");
+define("LangViewLocations", "My locations");
+define("LangViewInstruments", "My instruments");
+
 define("LangOverviewObjectsHeader4Short", "Typ");
 define("LangViewObjectFieldMagnificationHeader", "Best");
 define("LangNumberOfPersonalDrawings", "Number of own drawings");
@@ -976,11 +982,11 @@ define("LangSearchMenuItem10"                             ,"Catalogs");         
 define("LangSearchAllLanguages"														,"Suche nochmal in allen Sprachen.");
 define("LangSearchDetailPage"															,"Detailierte Suche.");
 
-define("LangChangeMenuTitle"															,"&Auml;ndern");
-define("LangChangeMenuItem2"															,"Neue Beobachtung anlegen");
+define("LangChangeMenuTitle"															,"Neue");
+define("LangChangeMenuItem2"															,"Beobachtung");
 define("LangChangeMenuItem3"															,"Beobachtungsger&auml;t");
 define("LangChangeMenuItem4"															,"Beobachtungsplatz");
-define("LangChangeMenuItem5"															,"Neues Objekt anlegen");
+define("LangChangeMenuItem5"															,"Objekt");
 define("LangChangeMenuItem6"															,"Okulare");
 define("LangChangeMenuItem7"															,"Filter");
 define("LangChangeMenuItem8"															,"Linsen");

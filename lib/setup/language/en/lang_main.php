@@ -1,5 +1,19 @@
 <?php //EN
 // This is version 5.0
+define("LangViewLenses", "My lenses");
+define("LangViewFilters", "My filters");
+define("LangViewEyepieces", "My eyepieces");
+define("LangViewLocations", "My locations");
+define("LangViewInstruments", "My instruments");
+define("LangAddLensExisting"															,"Select an existing lens");
+define("LangChangeMenuTitle"															,"Add");
+define("LangChangeMenuItem2"															,"Observation");
+define("LangChangeMenuItem5"															,"Object");
+// remove instrument/location column
+define("LangRemove"																				,"Delete");
+define("LangAddFilterExisting" ,"Select an existing filter");
+define("LangAddEyepieceExisting","Select an existing eyepiece");
+define("LangAddInstrumentExisting", "Select an existing instrument");
 define("LangOverviewObjectsHeader4Short", "Typ");
 define("LangViewObjectFieldMagnificationHeader", "Best");
 define("LangNumberOfPersonalDrawings", "Number of own drawings");
@@ -964,12 +978,9 @@ define("LangSearchMenuItem10"                             ,"Catalogs");
 define("LangSearchAllLanguages"														,"Look again, using all languages.");
 define("LangSearchDetailPage"															,"Set up a detailed search.");
 
-define("LangChangeMenuTitle"															,"Change");
 define("LangChangeMenuItem1"															,"Settings");
-define("LangChangeMenuItem2"															,"New observation");
 define("LangChangeMenuItem3"															,"Instruments");
 define("LangChangeMenuItem4"															,"Locations");
-define("LangChangeMenuItem5"															,"New object");
 define("LangChangeMenuItem6"															,"Eyepieces");
 define("LangChangeMenuItem7"															,"Filters");
 define("LangChangeMenuItem8"															,"Lenses");
@@ -995,7 +1006,6 @@ define("LangOverviewSiteTitle"														,"Observing sites of");
 define("LangAddSiteExisting"															,"Add existing location");
 
 define("LangOverviewEyepieceTitle"												,"Eyepieces of");
-define("LangAddEyepieceExisting"													,"Select the eyepiece details from the list");
 define("LangAddEyepieceManually"													,"specify your eyepiece details manually");
 define("LangAddEyepieceTitle"															,"Add a new eyepiece");
 define("LangAddEyepieceField1"														,"Name");
@@ -1015,7 +1025,6 @@ define("LangOverviewLensTitle1"														,"Overview Lenses");
 define("LangViewLensName"																	,"Name");
 define("LangViewLensFactor"																,"Factor");
 define("LangAddLensTitle"																	,"Add a new lens");
-define("LangAddLensExisting"															,"Add an existing lens");
 define("LangAddLensFieldManually"													,"specify your lens details manually");
 define("LangAddLensField1"																,"Name");
 define("LangAddLensField1Expl"														,"eg. Televue 2x Barlow");
@@ -1038,7 +1047,6 @@ define("LangViewFilterColor"															,"Color");
 define("LangViewFilterWratten"														,"Wratten number");
 define("LangViewFilterSchott"															,"Schott number");
 define("LangAddFilterTitle"																,"Add new filter");
-define("LangAddFilterExisting"														,"Add an existing filter");
 define("LangAddFilterFieldManually"												,"specify your filter details manually");
 define("LangAddFilterField1"															,"Name");
 define("LangAddFilterField1Expl"													,"(ex Lumicon O-III)"); 
@@ -1139,7 +1147,6 @@ define("LangAddInstrumentField6Expl"											,"Only for binoculars, finder sco
 define("LangAddInstrumentOr"															,"or");
 define("LangAddInstrumentAdd"															,"Add instrument");
 define("LangAddInstrumentStdTelescope"										,"Adapt standard telescope");
-define("LangAddInstrumentExisting"											  ,"Add an existing instrument");
 define("LangAddInstrumentManually"												,"add instrument manually");
 define("LangDetailInstrument"                             ,"Details instrument");
 
@@ -1750,9 +1757,6 @@ define("LangObservationQueryError3"												,"View all observations");
 define("LangObservationNoResults"													,"Sorry, no observations found!"); 
 define("LangQueryObservationsButton1"											,"Search");
 define("LangQueryObservationsButton2"											,"Clear Fields");
-
-// remove instrument/location column
-define("LangRemove"																				,"delete");
 
 // content/new_observationcsv.php
 define("LangCSVTitle"																			,"Import observations from a CSV file");

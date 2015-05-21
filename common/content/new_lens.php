@@ -10,9 +10,6 @@ else
 function new_lens() {
 	global $baseURL, $loggedUserName, $objLens, $objPresentations, $objUtil;
 	echo "<div id=\"main\">";
-	echo "<h4>" . LangOverviewLensTitle . " " . $loggedUserName . "</h4>";
-	echo "<hr />";
-	$objLens->showLensesObserver ();
 	echo "<h4>" . LangAddLensTitle . "</h4>";
 	$lns = $objLens->getSortedLenses ( 'name' );
 	echo "<form role=\"form\" action=\"" . $baseURL . "index.php\" method=\"post\"><div>";

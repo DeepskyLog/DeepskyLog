@@ -1358,7 +1358,7 @@ class Utils {
 		$pdf->ezStream ();
 	}
 	public function sortResult($result) {
-		// Sort the result based on the 'sortOrder' cookie.		
+		// Sort the result based on the 'sortOrder' cookie.
 		$sortOrderArray = explode ( ",", trim ( $_COOKIE ['sortOrder'], "|" ) );
 		
 		foreach ( $sortOrderArray as $sort ) {
@@ -1376,9 +1376,9 @@ class Utils {
 			foreach ( $result as $k => $v ) {
 				if ($v [$sName] == "") {
 					if ($sortOrder [$cnt] == 1) {
-						$sort [$sName] [$k] = -99.0;
+						$sort [$sName] [$k] = - 99.0;
 					} else {
-						$sort [$sName] [$k] = +99.0;
+						$sort [$sName] [$k] = + 99.0;
 					}
 				} else {
 					$sort [$sName] [$k] = $v [$sName];
@@ -2493,72 +2493,76 @@ class Utils {
 															if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'query_observations', 'deepsky/content/setup_observations_query.php' )))
 																if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'rank_objects', 'deepsky/content/top_objects.php' )))
 																	if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'rank_observers', 'deepsky/content/top_observers.php' )))
-																		if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'result_query_objects', 'deepsky/content/selected_objects.php' )))
-																			if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'result_selected_observations', 'deepsky/content/selected_observations.php' )))
-																				if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'result_selected_sessions', 'deepsky/content/selected_sessions.php' )))
-																					if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_observer_catalog', 'deepsky/content/details_observer_catalog.php' )))
-																						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'objectsSets', 'common/content/objectsSets.php' )))
-																							if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_atlaspages', 'common/content/atlasPages.php' )))
-																								if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'change_account', 'common/content/change_account.php' )))
-																									if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_eyepiece', 'common/content/change_eyepiece.php' )))
-																										if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_filter', 'common/content/change_filter.php' )))
-																											if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_instrument', 'common/content/change_instrument.php' )))
-																												if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_lens', 'common/content/change_lens.php' )))
-																													if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_site', 'common/content/change_site.php' )))
-																														if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_session', 'deepsky/content/change_session.php' )))
-																															if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_session', 'deepsky/content/new_session.php' )))
-																																if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_eyepiece', 'common/content/new_eyepiece.php' )))
-																																	if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_filter', 'common/content/new_filter.php' )))
-																																		if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_instrument', 'common/content/new_instrument.php' )))
-																																			if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_lens', 'common/content/new_lens.php' )))
-																																				if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_site', 'common/content/locations.php' )))
-																																					if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_eyepiece', 'common/content/change_eyepiece.php' )))
-																																						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_filter', 'common/content/change_filter.php' )))
-																																							if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_instrument', 'common/content/change_instrument.php' )))
-																																								if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_lens', 'common/content/change_lens.php' )))
-																																									if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_location', 'common/content/change_site.php' )))
-																																										if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_observer', 'common/content/view_observer.php' )))
-																																											if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_observer1', 'common/content/view_observer1.php' )))
-																																												if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_observer2', 'common/content/view_observer2.php' )))
-																																													if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_observer3', 'common/content/view_observer3.php' )))
-																																														if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'message', 'common/content/message.php' )))
-																																															if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'reportsLayout', 'common/content/reportslayout.php' )))
-																																																if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'search_sites', 'common/content/search_locations.php' )))
-																																																	if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'site_result', 'common/content/getLocation.php' )))
-																																																		if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'subscribe', 'common/content/register.php' )))
-																																																			if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'validate_lens', 'common/control/validate_lens.php' )))
-																																																				if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_eyepieces', 'common/content/overview_eyepieces.php' )))
-																																																					if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_filters', 'common/content/overview_filters.php' )))
-																																																						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_instruments', 'common/content/overview_instruments.php' )))
-																																																							if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_lenses', 'common/content/overview_lenses.php' )))
-																																																								if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_locations', 'common/content/overview_locations.php' )))
-																																																									if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_location', 'common/content/new_location.php' )))
-																																																										if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_observers', 'common/content/overview_observers.php' )))
-																																																										if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'show_messages', 'common/content/messages.php' )))
-																																																											if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_message', 'common/content/view_message.php' )))
-																																																												if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'new_message', 'common/content/new_message.php' )))
-																																																													if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'admin_check_objects', 'deepsky/control/admincheckobjects.php' )))
-																																																														
-																																																														if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_all_observations', 'comets/content/overview_observations.php' )))
-																																																															if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_detail_object', 'comets/content/view_object.php' )))
-																																																																if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_detail_observation', 'comets/content/view_observation.php' )))
-																																																																	if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'comets_adapt_observation', 'comets/content/new_observation.php' )))
-																																																																		if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'comets_add_observation', 'comets/content/new_observation.php' )))
-																																																																			if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_result_query_observations', 'comets/content/selected_observations.php' )))
+																		if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_lenses', 'common/content/view_lenses.php' )))
+																			if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAdmin ( 'overview_lenses', 'common/content/overview_lenses.php' )))
+																				if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'result_query_objects', 'deepsky/content/selected_objects.php' )))
+																					if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'result_selected_observations', 'deepsky/content/selected_observations.php' )))
+																						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'result_selected_sessions', 'deepsky/content/selected_sessions.php' )))
+																							if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_observer_catalog', 'deepsky/content/details_observer_catalog.php' )))
+																								if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'objectsSets', 'common/content/objectsSets.php' )))
+																									if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_atlaspages', 'common/content/atlasPages.php' )))
+																										if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'change_account', 'common/content/change_account.php' )))
+																											if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_eyepiece', 'common/content/change_eyepiece.php' )))
+																												if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_filter', 'common/content/change_filter.php' )))
+																													if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_instrument', 'common/content/change_instrument.php' )))
+																														if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_lens', 'common/content/change_lens.php' )))
+																															if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_site', 'common/content/change_site.php' )))
+																																if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'adapt_session', 'deepsky/content/change_session.php' )))
+																																	if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_session', 'deepsky/content/new_session.php' )))
+																																		if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_eyepiece', 'common/content/new_eyepiece.php' )))
+																																			if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_filter', 'common/content/new_filter.php' )))
+																																				if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_instrument', 'common/content/new_instrument.php' )))
+																																					if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_lens', 'common/content/new_lens.php' )))
+																																						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_sites', 'common/content/locations.php' )))
+																																							if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_eyepiece', 'common/content/change_eyepiece.php' )))
+																																								if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_filter', 'common/content/change_filter.php' )))
+																																									if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_instrument', 'common/content/change_instrument.php' )))
+																																										if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_lens', 'common/content/change_lens.php' )))
+																																											if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_location', 'common/content/change_site.php' )))
+																																												if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_observer', 'common/content/view_observer.php' )))
+																																													if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_observer1', 'common/content/view_observer1.php' )))
+																																														if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_observer2', 'common/content/view_observer2.php' )))
+																																															if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'detail_observer3', 'common/content/view_observer3.php' )))
+																																																if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'message', 'common/content/message.php' )))
+																																																	if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'reportsLayout', 'common/content/reportslayout.php' )))
+																																																		if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'search_sites', 'common/content/search_locations.php' )))
+																																																			if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'site_result', 'common/content/getLocation.php' )))
+																																																				if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'subscribe', 'common/content/register.php' )))
+																																																					if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'overview_eyepieces', 'common/content/overview_eyepieces.php' )))
+																																																						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_eyepieces', 'common/content/view_eyepieces.php' )))
+																																																							if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_filters', 'common/content/view_filters.php' )))
+																																																								if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'overview_filters', 'common/content/overview_filters.php' )))
+																																																									if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_instruments', 'common/content/view_instruments.php' )))
+																																																									if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'overview_instruments', 'common/content/overview_instruments.php' )))
+																																																										if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_lenses', 'common/content/overview_lenses.php' )))
+																																																											if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'overview_locations', 'common/content/overview_locations.php' )))
+																																																												if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_location', 'common/content/new_location.php' )))
+																																																													if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_observers', 'common/content/overview_observers.php' )))
+																																																														if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'show_messages', 'common/content/messages.php' )))
+																																																															if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'view_message', 'common/content/view_message.php' )))
+																																																																if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'new_message', 'common/content/new_message.php' )))
+																																																																	if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'admin_check_objects', 'deepsky/control/admincheckobjects.php' )))
+																																																																		
+																																																																		if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_all_observations', 'comets/content/overview_observations.php' )))
+																																																																			if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_detail_object', 'comets/content/view_object.php' )))
 																																																																				if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_detail_observation', 'comets/content/view_observation.php' )))
-																																																																					if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'comets_add_object', 'comets/content/new_object.php' )))
-																																																																						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_detail_object', 'comets/content/view_object.php' )))
-																																																																							if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_view_objects', 'comets/content/overview_objects.php' )))
-																																																																								if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_all_observations', 'comets/content/overview_observations.php' )))
-																																																																									if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_result_query_objects', 'comets/content/execute_query_objects.php' )))
-																																																																										if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_result_selected_observations', 'comets/content/selected_observations2.php' )))
-																																																																											if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_rank_observers', 'comets/content/top_observers.php' )))
-																																																																												if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_rank_objects', 'comets/content/top_objects.php' )))
-																																																																													if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_query_observations', 'comets/content/setup_observations_query.php' )))
-																																																																														if (! ($indexActionInclude = $this->utilitiesCheckIndexActionall ( 'comets_query_objects', 'comets/content/setup_objects_query.php' )))
-																																																																															if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'main', 'deepsky/content/main.php' )))
-																																																																																if (! ($indexActionInclude = $this->utilitiesCheckIndexActionDSquickPick ()))
-																																																																																	$indexActionInclude = $this->utilitiesGetIndexActionDefaultAction ();
+																																																																					if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'comets_adapt_observation', 'comets/content/new_observation.php' )))
+																																																																						if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'comets_add_observation', 'comets/content/new_observation.php' )))
+																																																																							if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_result_query_observations', 'comets/content/selected_observations.php' )))
+																																																																								if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_detail_observation', 'comets/content/view_observation.php' )))
+																																																																									if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'comets_add_object', 'comets/content/new_object.php' )))
+																																																																										if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_detail_object', 'comets/content/view_object.php' )))
+																																																																											if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_view_objects', 'comets/content/overview_objects.php' )))
+																																																																												if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_all_observations', 'comets/content/overview_observations.php' )))
+																																																																													if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_result_query_objects', 'comets/content/execute_query_objects.php' )))
+																																																																														if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_result_selected_observations', 'comets/content/selected_observations2.php' )))
+																																																																															if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_rank_observers', 'comets/content/top_observers.php' )))
+																																																																																if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_rank_objects', 'comets/content/top_objects.php' )))
+																																																																																	if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'comets_query_observations', 'comets/content/setup_observations_query.php' )))
+																																																																																		if (! ($indexActionInclude = $this->utilitiesCheckIndexActionall ( 'comets_query_objects', 'comets/content/setup_objects_query.php' )))
+																																																																																			if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'main', 'deepsky/content/main.php' )))
+																																																																																				if (! ($indexActionInclude = $this->utilitiesCheckIndexActionDSquickPick ()))
+																																																																																					$indexActionInclude = $this->utilitiesGetIndexActionDefaultAction ();
 		return $indexActionInclude;
 	}
 	private function utilitiesGetIndexActionDefaultAction() {
@@ -2612,16 +2616,16 @@ class Utils {
 		}
 	}
 	public function getDrawAccomplishment($number) {
-		return LangDrawAccomplishment1 . (int) $number . LangDrawAccomplishment2;
+		return LangDrawAccomplishment1 . ( int ) $number . LangDrawAccomplishment2;
 	}
 	public function getDrawToAccomplish($number) {
-		return LangDrawToAccomplish1 . (int) $number . LangDrawToAccomplish2;
+		return LangDrawToAccomplish1 . ( int ) $number . LangDrawToAccomplish2;
 	}
 	public function getSeenAccomplishment($number) {
-		return LangSeenAccomplishment1 . (int) $number . LangSeenAccomplishment2;
+		return LangSeenAccomplishment1 . ( int ) $number . LangSeenAccomplishment2;
 	}
 	public function getSeenToAccomplish($number) {
-		return LangSeenToAccomplish1 . (int) $number . LangSeenToAccomplish2;
+		return LangSeenToAccomplish1 . ( int ) $number . LangSeenToAccomplish2;
 	}
 	
 	// Add the table

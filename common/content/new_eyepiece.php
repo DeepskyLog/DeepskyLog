@@ -14,10 +14,6 @@ function new_eyepiece() {
 		$mfl = stripslashes ( $objEyepiece->getEyepiecePropertyFromId ( $eyepieceid, 'maxFocalLength' ) );
 	if ($mfl < 0)
 		$mfl = '';
-	echo "<div id=\"main\">";
-	echo "<h4>" . LangOverviewEyepieceTitle . " " . $loggedUserName . "</h4>";
-	echo "<hr />";
-	$objEyepiece->showEyepiecesObserver ();
 	$eyeps = $objEyepiece->getSortedEyepieces ( 'focalLength' );
 	echo "<form role=\"form\" action=\"" . $baseURL . "index.php\" method=\"post\"><div>";
 	echo "<input type=\"hidden\" name=\"indexAction\" value=\"validate_eyepiece\" />";
