@@ -2535,7 +2535,7 @@ class Utils {
 																																																									if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_instruments', 'common/content/view_instruments.php' )))
 																																																									if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'overview_instruments', 'common/content/overview_instruments.php' )))
 																																																										if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_lenses', 'common/content/overview_lenses.php' )))
-																																																											if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_locations', 'common/content/overview_locations.php' )))
+																																																											if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'overview_locations', 'common/content/overview_locations.php' )))
 																																																												if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'add_location', 'common/content/new_location.php' )))
 																																																													if (! ($indexActionInclude = $this->utilitiesCheckIndexActionMember ( 'view_observers', 'common/content/overview_observers.php' )))
 																																																														if (! ($indexActionInclude = $this->utilitiesCheckIndexActionAll ( 'show_messages', 'common/content/messages.php' )))
