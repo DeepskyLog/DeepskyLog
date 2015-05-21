@@ -5,7 +5,6 @@ define("LangViewFilters", "My filters");
 define("LangViewEyepieces", "My eyepieces");
 define("LangViewLocations", "My locations");
 define("LangViewInstruments", "My instruments");
-
 define("LangAddLensExisting"															,"Select an existing lens");
 define("LangChangeMenuTitle"															,"Add");
 define("LangChangeMenuItem2"															,"Observation");
@@ -15,8 +14,6 @@ define("LangRemove"																				,"Delete");
 define("LangAddFilterExisting" ,"Select an existing filter");
 define("LangAddEyepieceExisting","Select an existing eyepiece");
 define("LangAddInstrumentExisting", "Select an existing instrument");
-
-
 define("LangOverviewObjectsHeader4Short", "Typ");
 define("LangViewObjectFieldMagnificationHeader", "Best");
 define("LangNumberOfPersonalDrawings", "Number of own drawings");

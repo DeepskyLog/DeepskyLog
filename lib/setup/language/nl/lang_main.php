@@ -1,5 +1,11 @@
 <?php //NL
 // This is version 5.0
+define("LangViewLenses", "Mijn lenzen");
+define("LangViewFilters", "Mijn filers");
+define("LangViewEyepieces", "Mijn oculairs");
+define("LangViewLocations", "Mijn locaties");
+define("LangViewInstruments", "Mijn instrumenten");
+
 define("LangOverviewObjectsHeader4Short", "Typ");
 define("LangViewObjectFieldMagnificationHeader", "Best");
 define("LangNumberOfPersonalDrawings", "Aantal eigen tekeningen");
@@ -960,12 +966,12 @@ define("LangSearchMenuItem10"                             ,"Catalogi");
 define("LangSearchAllLanguages"														,"Opnieuw zoeken, in alle talen.");
 define("LangSearchDetailPage"															,"Een gedetailleerde zoekopdracht maken.");
 
-define("LangChangeMenuTitle"															,"Wijzigen");
+define("LangChangeMenuTitle"															,"Toevoegen");
 define("LangChangeMenuItem1"															,"Instellingen");
-define("LangChangeMenuItem2"															,"Nieuwe waarneming");
+define("LangChangeMenuItem2"															,"Waarneming");
 define("LangChangeMenuItem3"															,"Instrumenten");
 define("LangChangeMenuItem4"															,"Waarneemplaatsen");
-define("LangChangeMenuItem5"															,"Nieuw object");
+define("LangChangeMenuItem5"															,"Object");
 define("LangChangeMenuItem6"															,"Oculairs");
 define("LangChangeMenuItem7"															,"Filters");
 define("LangChangeMenuItem8"															,"Lenzen");
@@ -1011,7 +1017,7 @@ define("LangOverviewLensTitle1"														,"Overzicht lenzen");
 define("LangViewLensName"																	,"Naam");
 define("LangViewLensFactor"																,"Factor");
 define("LangAddLensTitle"																	,"Nieuwe lens");
-define("LangAddLensExisting"															,"Voeg bestaande lens toe");
+define("LangAddLensExisting"															,"Selecteer bestaande lens");
 define("LangAddLensFieldManually"													,"voeg de gegevens manueel in");
 define("LangAddLensField1"																,"Naam");
 define("LangAddLensField1Expl"														,"Bijv. Televue 2x Barlow");
@@ -1034,7 +1040,7 @@ define("LangViewFilterColor"															,"Kleur");
 define("LangViewFilterWratten"														,"Wratten nummer");
 define("LangViewFilterSchott"															,"Schott nummer");
 define("LangAddFilterTitle"																,"Nieuwe filter");
-define("LangAddFilterExisting"														,"Voeg bestaande filter toe");
+define("LangAddFilterExisting"														,"Selecteer bestaande filter");
 define("LangAddFilterFieldManually"												,"voeg de gegevens manueel in");
 define("LangAddFilterField1"															,"Naam");
 define("LangAddFilterField1Expl"													,"(bv Lumicon O-III)");
@@ -1135,7 +1141,7 @@ define("LangAddInstrumentField6Expl"											,"Enkel voor verrekijkers, zoeker
 define("LangAddInstrumentOr"															,"of");
 define("LangAddInstrumentAdd"															,"Voeg instrument toe");
 define("LangAddInstrumentStdTelescope"										,"Pas standaard instrument aan");
-define("LangAddInstrumentExisting"												,"Voeg een bestaand instrument toe");
+define("LangAddInstrumentExisting"												,"Selecteer een bestaand instrument");
 define("LangAddInstrumentManually"												,"voeg de gegevens manueel in");
 define("LangDetailInstrument"                             ,"Details instrument");
 
@@ -1749,7 +1755,7 @@ define("LangQueryObservationsButton1"											,"Zoek waarnemingen");
 define("LangQueryObservationsButton2"											,"Wis velden");
 
 // remove instrument/location column
-define("LangRemove"																				,"verwijder");
+define("LangRemove"																				,"Verwijder");
 
 // content/new_observationcsv.php
 define("LangCSVTitle"																			,"Importeer waarnemingen vanuit CSV bestand");

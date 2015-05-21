@@ -1,5 +1,11 @@
 <?php //FR
 // This is version 5.0
+define("LangViewLenses", "My lenses");
+define("LangViewFilters", "My filters");
+define("LangViewEyepieces", "My eyepieces");
+define("LangViewLocations", "My locations");
+define("LangViewInstruments", "My instruments");
+
 define("LangOverviewObjectsHeader4Short", "Typ");
 define("LangNumberOfPersonalDrawings", "Number of own drawings");
 define("LangLastPersonalObservation", "Last own observation");
@@ -934,11 +940,11 @@ define("LangSearchMenuItem10"                             ,"Catalogues");
 define("LangSearchAllLanguages"														,"Une nouvelle rechrerche dans toutes les languages.");
 define("LangSearchDetailPage"															,"Faire une recherche d&eacute;taill&eacute;e.");
 
-define("LangChangeMenuTitle"															,"Modifiez");
-define("LangChangeMenuItem2"															,"Nouvelle observation");
+define("LangChangeMenuTitle"															,"Ajoutez");
+define("LangChangeMenuItem2"															,"Observation");
 define("LangChangeMenuItem3"															,"Instruments");
 define("LangChangeMenuItem4"															,"Endroits d'observation");
-define("LangChangeMenuItem5"															,"Nouvel objet");
+define("LangChangeMenuItem5"															,"Objet");
 define("LangChangeMenuItem6"															,"Oculaires");
 define("LangChangeMenuItem7"															,"Filtres");
 define("LangChangeMenuItem8"															,"Lentilles Barlow");
