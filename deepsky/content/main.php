@@ -11,24 +11,23 @@ if (! $loggedUser) {
 	echo "<br /><br />";
 }
 
-// TODO : Add new logo with text.
-// TODO : Test logo on smaller screens. 
-// TODO : Translate 'Nieuwe tekeningen'.
-// TODO : Add new observations.
+// TODO: Add icon to create a new observing list
+// TODO: Translate 'Nieuwe tekeningen'.
+// TODO: Add new observations.
 
 // Show the icons with to search, add a new observation, download.
 echo "<div class=\"row\">";
-echo " <div class=\"col-sm-3 col-md-3\">";
+echo " <div class=\"col-sm-2 col-md-2\">";
 echo "  <div class=\"thumbnail\">";
 echo "   <a href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObservationsQuickPick=Zoek�waarnemingen\">";
-echo "    <img src=\"" . $baseURL . "images/findObservation.png\">";
+echo "    <img class=\"thumbnail\" src=\"" . $baseURL . "images/findObservation.png\">";
 echo "    <div class=\"caption\">";
 echo "     <h3>" . LangSearchMenuItem3 . "</h3>";
 echo "    </div>";
 echo "   </a>";
 echo "  </div>";
 echo " </div>";
-echo " <div class=\"col-sm-3 col-md-3\">";
+echo " <div class=\"col-sm-2 col-md-2\">";
 echo "  <div class=\"thumbnail\">";
 echo "   <a href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObjectQuickPickQuickPick=Zoek%C2%A0object\">";
 echo "    <img src=\"" . $baseURL . "images/findObject.png\">";
@@ -38,7 +37,7 @@ echo "    </div>";
 echo "   </a>";
 echo "  </div>";
 echo " </div>";
-echo " <div class=\"col-sm-3 col-md-3\">";
+echo " <div class=\"col-sm-2 col-md-2\">";
 echo "  <div class=\"thumbnail\">";
 echo "   <a href=\"" . $baseURL . "index.php?indexAction=view_atlaspages\">";
 echo "    <img src=\"" . $baseURL . "images/downloadAtlas.png\">";
@@ -49,10 +48,21 @@ echo "   </a>";
 echo "  </div>";
 echo " </div>";
 if ($loggedUser) {
-	echo " <div class=\"col-sm-3 col-md-3\">";
+	echo " <div class=\"col-sm-2 col-md-2\">";
 	echo "  <div class=\"thumbnail\">";
 	echo "   <a href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming\">";
 	echo "    <img src=\"" . $baseURL . "images/pencil.png\">";
+	echo "    <div class=\"caption\">";
+	echo "     <h3>" . LangChangeMenuItem2 . "</h3>";
+	echo "    </div>";
+	echo "   </a>";
+	echo "  </div>";
+	echo " </div>";
+
+	echo " <div class=\"col-sm-2 col-md-2\">";
+	echo "  <div class=\"thumbnail\">";
+	echo "   <a href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming\">";
+	echo "    <img src=\"" . $baseURL . "images/clipboard.png\">";
 	echo "    <div class=\"caption\">";
 	echo "     <h3>" . LangChangeMenuItem2 . "</h3>";
 	echo "    </div>";
