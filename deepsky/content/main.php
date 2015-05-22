@@ -11,6 +11,8 @@ if (! $loggedUser) {
 	echo "<br /><br />";
 }
 
+// TODO: Add extra icon
+// TODO: Make sure that the text do not sometimes take two lines or one line.
 // TODO: Add icon to create a new observing list
 // TODO: Translate 'Nieuwe tekeningen'.
 // TODO: Add new observations.
@@ -22,7 +24,7 @@ echo "  <div class=\"thumbnail\">";
 echo "   <a href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObservationsQuickPick=Zoek�waarnemingen\">";
 echo "    <img src=\"" . $baseURL . "images/findObservation.png\">";
 echo "    <div class=\"caption\">";
-echo "     <h3>" . LangSearchMenuItem3 . "</h3>";
+echo "     <h4>" . LangSearchMenuItem3 . "</h4>";
 echo "    </div>";
 echo "   </a>";
 echo "  </div>";
@@ -32,7 +34,7 @@ echo "  <div class=\"thumbnail\">";
 echo "   <a href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObjectQuickPickQuickPick=Zoek%C2%A0object\">";
 echo "    <img src=\"" . $baseURL . "images/findObject.png\">";
 echo "    <div class=\"caption\">";
-echo "     <h3>" . LangSearchMenuItem5 . "</h3>";
+echo "     <h4>" . LangSearchMenuItem5 . "</h4>";
 echo "    </div>";
 echo "   </a>";
 echo "  </div>";
@@ -42,7 +44,7 @@ echo "  <div class=\"thumbnail\">";
 echo "   <a href=\"" . $baseURL . "index.php?indexAction=view_atlaspages\">";
 echo "    <img src=\"" . $baseURL . "images/downloadAtlas.png\">";
 echo "    <div class=\"caption\">";
-echo "     <h3>" . LangDownloadAtlasses . "</h3>";
+echo "     <h4>" . LangDownloadAtlasses . "</h4>";
 echo "    </div>";
 echo "   </a>";
 echo "  </div>";
@@ -53,7 +55,7 @@ if ($loggedUser) {
 	echo "   <a href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming\">";
 	echo "    <img src=\"" . $baseURL . "images/pencil.png\">";
 	echo "    <div class=\"caption\">";
-	echo "     <h3>" . LangChangeMenuItem2 . "</h3>";
+	echo "     <h4>" . LangViewObservationButton1 . "</h4>";
 	echo "    </div>";
 	echo "   </a>";
 	echo "  </div>";
@@ -64,7 +66,7 @@ if ($loggedUser) {
 	echo "   <a href=\"" . $baseURL . "index.php?indexAction=listaction\">";
 	echo "    <img src=\"" . $baseURL . "images/clipboard.png\">";
 	echo "    <div class=\"caption\">";
-	echo "     <h3>" . LangAddList . "</h3>";
+	echo "     <h4>" . LangAddList . "</h4>";
 	echo "    </div>";
 	echo "   </a>";
 	echo "  </div>";

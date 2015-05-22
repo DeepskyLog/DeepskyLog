@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("LangAddList", "Maak lijst aan");
 define("LangViewLenses", "Mijn lenzen");
 define("LangViewFilters", "Mijn filers");
 define("LangViewEyepieces", "Mijn oculairs");
