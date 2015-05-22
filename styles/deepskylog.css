@@ -1,3 +1,8 @@
+.thumbnail-no-border {
+    border: 0 none;
+    box-shadow: none;
+}
+
 .accomplishmentRow {
 	clear:both;
 	height: 140px;
