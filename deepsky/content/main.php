@@ -11,8 +11,7 @@ if (! $loggedUser) {
 	echo "<br /><br />";
 }
 
-// TODO: Translate 'Nieuwe tekeningen'.
-// TODO: Add new observations.
+// TODO: Add icon for 'See new observations'
 
 // Show the icons with to search, add a new observation, download.
 echo "<div class=\"row\">";
@@ -61,7 +60,7 @@ if ($loggedUser) {
 }
 echo "</div>";
 
-echo "<h2>" . "Nieuwe tekeningen" . "</h2>";
+echo "<h2>" . LangNewDrawings . "</h2>";
 $drawings = $objObservation->getLastObservationsWithDrawing ();
 echo "<div class=\"row\">";
 foreach ( $drawings as $drawing => $key ) {

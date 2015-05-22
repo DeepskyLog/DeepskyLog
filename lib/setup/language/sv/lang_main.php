@@ -1,5 +1,6 @@
 <?php //SV
 // This is version 5.0
+define("LangNewDrawings", "New drawings");
 define("LangAddList", "Create list");
 define("LangViewLenses", "My lenses");
 define("LangViewFilters", "My filters");
