@@ -34,23 +34,43 @@ function menu_date() {
 	$link2 = substr ( $link2, 0, strlen ( $link2 ) - 1 );
 	
 	echo "<script>
-	  			  $(function() {
+			// Here we set the dates of the new moon.
+			// How can we be sure that we only calculate the new moon for the displayed month?
+            var eventDates = {};
+			// Watch out: Here, we must use the American style date 
+            eventDates[ new Date( '06/16/2015' )] = 1;
+            eventDates[ new Date( '05/18/2015' )] = 1;
+
+			$(function() {
+			
+			// An array of dates
+			
               $( \"#datepicker\" ).datepicker({
-	  		        dateFormat: \"dd/mm/yy\",
-	  		        showButtonPanel: true,
+	  		    showButtonPanel: true,
                 changeMonth: true,
                 changeYear: true,
-	  		        defaultDate: -7,
-	  		        onSelect: function(dateText) {
-	  		          var day = dateText.substring(0, 2);
-	  		          var month = dateText.substring(3, 5);
-	  		          var year = dateText.substring(6, 10);
-	  		          var link = \"" . $link2 . "&changeDay=\" + day + \"&changeMonth=\" + month + \"&changeYear=\" + year;
-	  		          location.href = link;
-	              }
+			    beforeShowDay: function(date) {
+                  var highlight = eventDates[date];
+                  if (highlight) {
+			        // TODO: Add to language file
+			        return [true, \"event\", \"New Moon\"];
+                  } else {
+                    return [true, '', ''];
+                  }
+                },
+			    // TODO: Make sure we use the correct date format
+                dateFormat: \"dd/mm/yy\",
+			    defaultDate: -7,
+	  		    onSelect: function(dateText) {
+	  		      var day = dateText.substring(0, 2);
+	  		      var month = dateText.substring(3, 5);
+	  		      var year = dateText.substring(6, 10);
+	  		      var link = \"" . $link2 . "&changeDay=\" + day + \"&changeMonth=\" + month + \"&changeYear=\" + year;
+	  		      location.href = link;
+	            }
               });
         	});
-	  		  </script>";
+	  		</script>";
 	echo "<form class=\"nav navbar-nav navbar-right\">";
 	
  	echo "<div class=\"form-group\">";
