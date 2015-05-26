@@ -11,58 +11,56 @@ if (! $loggedUser) {
 	echo "<br /><br />";
 }
 
-// TODO : Add new logo with text.
-// TODO : Test logo on smaller screens. 
-// TODO : Translate 'Nieuwe tekeningen'.
-// TODO : Add new observations.
+// TODO: Add icon for 'See new observations'
 
 // Show the icons with to search, add a new observation, download.
 echo "<div class=\"row\">";
-echo " <div class=\"col-sm-3 col-md-3\">";
-echo "  <div class=\"thumbnail\">";
-echo "   <a href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObservationsQuickPick=Zoek�waarnemingen\">";
+echo " <div class=\"col-sm-2 col-md-2\">";
+echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObservationsQuickPick=Zoek�waarnemingen\">";
 echo "    <img src=\"" . $baseURL . "images/findObservation.png\">";
 echo "    <div class=\"caption\">";
-echo "     <h3>" . LangSearchMenuItem3 . "</h3>";
+echo "     <h4 class=\"text-center\">" . LangSearchMenuItem3 . "</h4>";
 echo "    </div>";
 echo "   </a>";
-echo "  </div>";
 echo " </div>";
-echo " <div class=\"col-sm-3 col-md-3\">";
-echo "  <div class=\"thumbnail\">";
-echo "   <a href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObjectQuickPickQuickPick=Zoek%C2%A0object\">";
+echo " <div class=\"col-sm-2 col-md-2\">";
+echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObjectQuickPickQuickPick=Zoek%C2%A0object\">";
 echo "    <img src=\"" . $baseURL . "images/findObject.png\">";
 echo "    <div class=\"caption\">";
-echo "     <h3>" . LangSearchMenuItem5 . "</h3>";
+echo "     <h4 class=\"text-center\">" . LangSearchMenuItem5 . "</h4>";
 echo "    </div>";
 echo "   </a>";
-echo "  </div>";
 echo " </div>";
-echo " <div class=\"col-sm-3 col-md-3\">";
-echo "  <div class=\"thumbnail\">";
-echo "   <a href=\"" . $baseURL . "index.php?indexAction=view_atlaspages\">";
+echo " <div class=\"col-sm-2 col-md-2\">";
+echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=view_atlaspages\">";
 echo "    <img src=\"" . $baseURL . "images/downloadAtlas.png\">";
 echo "    <div class=\"caption\">";
-echo "     <h3>" . LangDownloadAtlasses . "</h3>";
+echo "     <h4 class=\"text-center\">" . LangDownloadAtlasses . "</h4>";
 echo "    </div>";
 echo "   </a>";
-echo "  </div>";
 echo " </div>";
 if ($loggedUser) {
-	echo " <div class=\"col-sm-3 col-md-3\">";
-	echo "  <div class=\"thumbnail\">";
-	echo "   <a href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming\">";
+	echo " <div class=\"col-sm-2 col-md-2\">";
+	echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming\">";
 	echo "    <img src=\"" . $baseURL . "images/pencil.png\">";
 	echo "    <div class=\"caption\">";
-	echo "     <h3>" . LangChangeMenuItem2 . "</h3>";
+	echo "     <h4 class=\"text-center\">" . LangViewObservationButton1 . "</h4>";
 	echo "    </div>";
 	echo "   </a>";
-	echo "  </div>";
+	echo " </div>";
+
+	echo " <div class=\"col-sm-2 col-md-2\">";
+	echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=listaction\">";
+	echo "    <img src=\"" . $baseURL . "images/clipboard.png\">";
+	echo "    <div class=\"caption\">";
+	echo "     <h4 class=\"text-center\">" . LangAddList . "</h4>";
+	echo "    </div>";
+	echo "   </a>";
 	echo " </div>";
 }
 echo "</div>";
 
-echo "<h2>" . "Nieuwe tekeningen" . "</h2>";
+echo "<h2>" . LangNewDrawings . "</h2>";
 $drawings = $objObservation->getLastObservationsWithDrawing ();
 echo "<div class=\"row\">";
 foreach ( $drawings as $drawing => $key ) {
