@@ -11,9 +11,8 @@ if (! $loggedUser) {
 	echo "<br /><br />";
 }
 
-// TODO: Add icon for 'See new observations'
-
 // Show the icons with to search, add a new observation, download.
+// Add icon for 'Search observations'
 echo "<div class=\"row\">";
 echo " <div class=\"col-sm-2 col-md-2\">";
 echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObservationsQuickPick=Zoek�waarnemingen\">";
@@ -23,6 +22,7 @@ echo "     <h4 class=\"text-center\">" . LangSearchMenuItem3 . "</h4>";
 echo "    </div>";
 echo "   </a>";
 echo " </div>";
+// Add icon for 'Search objects'
 echo " <div class=\"col-sm-2 col-md-2\">";
 echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObjectQuickPickQuickPick=Zoek%C2%A0object\">";
 echo "    <img src=\"" . $baseURL . "images/findObject.png\">";
@@ -31,6 +31,16 @@ echo "     <h4 class=\"text-center\">" . LangSearchMenuItem5 . "</h4>";
 echo "    </div>";
 echo "   </a>";
 echo " </div>";
+// Add icon for 'See new observations'
+echo " <div class=\"col-sm-2 col-md-2\">";
+echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&searchObjectQuickPickQuickPick=Zoek%C2%A0object\">";
+echo "    <img src=\"" . $baseURL . "images/new_badge.png\">";
+echo "    <div class=\"caption\">";
+echo "     <h4 class=\"text-center\">" . LangSearchMenuItem9 . "</h4>";
+echo "    </div>";
+echo "   </a>";
+echo " </div>";
+// Add icon for 'Download atlases'
 echo " <div class=\"col-sm-2 col-md-2\">";
 echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=view_atlaspages\">";
 echo "    <img src=\"" . $baseURL . "images/downloadAtlas.png\">";
@@ -40,6 +50,7 @@ echo "    </div>";
 echo "   </a>";
 echo " </div>";
 if ($loggedUser) {
+    // Add icon for 'Add observation'
 	echo " <div class=\"col-sm-2 col-md-2\">";
 	echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=quickpick&titleobjectaction=Zoeken&source=quickpick&myLanguages=true&object=&newObservationQuickPick=Nieuwe%C2%A0waarneming\">";
 	echo "    <img src=\"" . $baseURL . "images/pencil.png\">";
@@ -49,6 +60,7 @@ if ($loggedUser) {
 	echo "   </a>";
 	echo " </div>";
 
+	// Add icon for 'Create list'
 	echo " <div class=\"col-sm-2 col-md-2\">";
 	echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=listaction\">";
 	echo "    <img src=\"" . $baseURL . "images/clipboard.png\">";
