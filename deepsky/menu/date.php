@@ -37,9 +37,7 @@ function menu_date() {
 			// Here we set the dates of the new moon.
 			// How can we be sure that we only calculate the new moon for the displayed month?
             var eventDates = {};
-			// Watch out: Here, we must use the American style date 
-            eventDates[ new Date( '06/16/2015' )] = 1;
-            eventDates[ new Date( '05/18/2015' )] = 1;
+			
 
 			$(function() {
 			
@@ -49,7 +47,21 @@ function menu_date() {
 	  		    showButtonPanel: true,
                 changeMonth: true,
                 changeYear: true,
+			    onChangeMonthYear: function(year, month) {
+			      // This is executed for every day in the month that will be displayed
+			      // TODO: Calculate all new moons for this month
+			      alert(\"TEST: \" + year + \", \" + month); 
+			    },
+			    beforeShow: function() {
+			      // TODO: Calculate the new moons for the selected month
+			      // Watch out: Here, we must use the American style date 
+			      eventDates[ new Date( '06/16/2015' )] = 1;
+                  eventDates[ new Date( '05/18/2015' )] = 1;
+			      alert(\"TEST 3 " . $_SESSION ['globalMonth'] . "/" . $_SESSION ['globalYear'] . "\");
+			    },
 			    beforeShowDay: function(date) {
+			      // This is executed for every day in the month that will be displayed
+			      //alert(\"TEST 2\"); 
                   var highlight = eventDates[date];
                   if (highlight) {
 			        // TODO: Add to language file
