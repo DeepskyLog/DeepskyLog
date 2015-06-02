@@ -52,12 +52,23 @@ function menu_date() {
 			      // TODO: Calculate all new moons for this month
 			      alert(\"TEST: \" + year + \", \" + month); 
 			    },
-			    beforeShow: function() {
-			      // TODO: Calculate the new moons for the selected month
-			      // Watch out: Here, we must use the American style date 
-			      eventDates[ new Date( '06/16/2015' )] = 1;
-                  eventDates[ new Date( '05/18/2015' )] = 1;
-			      alert(\"TEST 3 " . $_SESSION ['globalMonth'] . "/" . $_SESSION ['globalYear'] . "\");
+			    beforeShow: function() {";
+			      // Calculate the new moons for the selected month
+			      // We calculated the new moon from the first of the month and from the 15th of the month.
+	              $phases = array();
+	              $date = $_SESSION['globalYear'] . "-" . $_SESSION ['globalMonth'] . "-01";
+	              $phases = phasehunt(strtotime($date));
+			      $newmoon = date("m/d/Y", $phases[4]);
+			      echo "
+			      eventDates[ new Date( '" . $newmoon . "' )] = 1;";
+			      
+			      $phases = array();
+			      $date = $_SESSION['globalYear'] . "-" . $_SESSION ['globalMonth'] . "-15";
+			      $phases = phasehunt(strtotime($date));
+			      $newmoon = date("m/d/Y", $phases[4]);
+
+			      echo "
+                  eventDates[ new Date( '" . $newmoon . "' )] = 1;
 			    },
 			    beforeShowDay: function(date) {
 			      // This is executed for every day in the month that will be displayed
