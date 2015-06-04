@@ -50,6 +50,7 @@ function menu_date() {
 			    onChangeMonthYear: function(year, month) {
 			      // This is executed for every day in the month that will be displayed
 			      // TODO: Calculate all new moons for this month
+			      // TODO: We should use a method in javascript for this...
 			      alert(\"TEST: \" + year + \", \" + month); 
 			    },
 			    beforeShow: function() {";
