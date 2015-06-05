@@ -33,24 +33,85 @@ function menu_date() {
 			$link2 .= $key . '=' . urlencode ( $value ) . '&';
 	$link2 = substr ( $link2, 0, strlen ( $link2 ) - 1 );
 	
-	echo "<script>
-	  			  $(function() {
+	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/degrees.js\"></script>
+          <script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/astro.js\"></script>
+          <script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/moon.js\"></script>
+	
+		  <script>
+			// Here we set the dates of the new moon.
+			// How can we be sure that we only calculate the new moon for the displayed month?
+            var eventDates = {};
+			
+
+			$(function() {
+			
+			// An array of dates
+			
               $( \"#datepicker\" ).datepicker({
-	  		        dateFormat: \"dd/mm/yy\",
-	  		        showButtonPanel: true,
+	  		    showButtonPanel: true,
                 changeMonth: true,
                 changeYear: true,
-	  		        defaultDate: -7,
-	  		        onSelect: function(dateText) {
-	  		          var day = dateText.substring(0, 2);
-	  		          var month = dateText.substring(3, 5);
-	  		          var year = dateText.substring(6, 10);
-	  		          var link = \"" . $link2 . "&changeDay=\" + day + \"&changeMonth=\" + month + \"&changeYear=\" + year;
-	  		          location.href = link;
-	              }
+			    onChangeMonthYear: function(year, month) {
+			      // Calculate all new moons for this month
+			      // We use a method in javascript for this...
+                  var moon = new MoonQuarters(year, month, 1);
+                  var date = jdtocd(moon[0]);
+                  eventDates[ new Date( date[1] + '/' + date[2] + '/'  + date[0] )] = 1;
+          		
+          		  if (month - 1 < 1) {
+          		    var moon = new MoonQuarters(year - 1, 12, 1);
+          		  } else {
+          		    var moon = new MoonQuarters(year, month - 1, 1);
+          		  }
+                  var date = jdtocd(moon[0]);
+          		  eventDates[ new Date( date[1] + '/' + date[2] + '/'  + date[0] )] = 1;
+
+           		  if (month + 1 > 12) {
+           		    var moon = new MoonQuarters(year + 1, 1, 1);
+           		  } else {
+           		    var moon = new MoonQuarters(year, month + 1, 1);
+           		  }
+                  var date = jdtocd(moon[0]);
+          		  eventDates[ new Date( date[1] + '/' + date[2] + '/'  + date[0] )] = 1;
+			    },
+			    beforeShow: function() {";
+			      // Calculate the new moons for the selected month
+			      // We calculated the new moon from the first of the month and from the 15th of the month.
+	              $phases = array();
+	              $date = $_SESSION['globalYear'] . "-" . $_SESSION ['globalMonth'] . "-01";
+	              $phases = phasehunt(strtotime($date));
+			      $newmoon = date("m/d/Y", $phases[4]);
+			      echo "
+			      eventDates[ new Date( '" . $newmoon . "' )] = 1;";
+			      
+			      $phases = array();
+			      $date = $_SESSION['globalYear'] . "-" . $_SESSION ['globalMonth'] . "-15";
+			      $phases = phasehunt(strtotime($date));
+			      $newmoon = date("m/d/Y", $phases[4]);
+
+			      echo "
+                  eventDates[ new Date( '" . $newmoon . "' )] = 1;
+			    },
+			    beforeShowDay: function(date) {
+                  var highlight = eventDates[date];
+                  if (highlight) {
+			        return [true, \"event\", \"" . LangMoonMenuNewMoon . "\"];
+                  } else {
+                    return [true, '', ''];
+                  }
+                },
+                dateFormat: \"dd/mm/yy\",
+			    defaultDate: -7,
+	  		    onSelect: function(dateText) {
+	  		      var day = dateText.substring(0, 2);
+	  		      var month = dateText.substring(3, 5);
+	  		      var year = dateText.substring(6, 10);
+	  		      var link = \"" . $link2 . "&changeDay=\" + day + \"&changeMonth=\" + month + \"&changeYear=\" + year;
+	  		      location.href = link;
+	            }
               });
         	});
-	  		  </script>";
+	  		</script>";
 	echo "<form class=\"nav navbar-nav navbar-right\">";
 	
  	echo "<div class=\"form-group\">";
