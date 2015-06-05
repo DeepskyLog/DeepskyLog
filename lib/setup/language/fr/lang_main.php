@@ -1,5 +1,6 @@
 <?php //FR
 // This is version 5.0
+define("LangAddNewList", "Observing list");
 define("LangNewDrawings", "New drawings");
 define("LangAddList", "Create list");
 define("LangViewLenses", "My lenses");
