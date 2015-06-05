@@ -33,7 +33,11 @@ function menu_date() {
 			$link2 .= $key . '=' . urlencode ( $value ) . '&';
 	$link2 = substr ( $link2, 0, strlen ( $link2 ) - 1 );
 	
-	echo "<script>
+	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/degrees.js\"></script>
+          <script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/astro.js\"></script>
+          <script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/moon.js\"></script>
+	
+		  <script>
 			// Here we set the dates of the new moon.
 			// How can we be sure that we only calculate the new moon for the displayed month?
             var eventDates = {};
@@ -48,10 +52,27 @@ function menu_date() {
                 changeMonth: true,
                 changeYear: true,
 			    onChangeMonthYear: function(year, month) {
-			      // This is executed for every day in the month that will be displayed
-			      // TODO: Calculate all new moons for this month
-			      // TODO: We should use a method in javascript for this...
-			      alert(\"TEST: \" + year + \", \" + month); 
+			      // Calculate all new moons for this month
+			      // We use a method in javascript for this...
+                  var moon = new MoonQuarters(year, month, 1);
+                  var date = jdtocd(moon[0]);
+                  eventDates[ new Date( date[1] + '/' + date[2] + '/'  + date[0] )] = 1;
+          		
+          		  if (month - 1 < 1) {
+          		    var moon = new MoonQuarters(year - 1, 12, 1);
+          		  } else {
+          		    var moon = new MoonQuarters(year, month - 1, 1);
+          		  }
+                  var date = jdtocd(moon[0]);
+          		  eventDates[ new Date( date[1] + '/' + date[2] + '/'  + date[0] )] = 1;
+
+           		  if (month + 1 > 12) {
+           		    var moon = new MoonQuarters(year + 1, 1, 1);
+           		  } else {
+           		    var moon = new MoonQuarters(year, month + 1, 1);
+           		  }
+                  var date = jdtocd(moon[0]);
+          		  eventDates[ new Date( date[1] + '/' + date[2] + '/'  + date[0] )] = 1;
 			    },
 			    beforeShow: function() {";
 			      // Calculate the new moons for the selected month
@@ -72,8 +93,6 @@ function menu_date() {
                   eventDates[ new Date( '" . $newmoon . "' )] = 1;
 			    },
 			    beforeShowDay: function(date) {
-			      // This is executed for every day in the month that will be displayed
-			      //alert(\"TEST 2\"); 
                   var highlight = eventDates[date];
                   if (highlight) {
 			        // TODO: Add to language file
@@ -82,7 +101,6 @@ function menu_date() {
                     return [true, '', ''];
                   }
                 },
-			    // TODO: Make sure we use the correct date format
                 dateFormat: \"dd/mm/yy\",
 			    defaultDate: -7,
 	  		    onSelect: function(dateText) {
