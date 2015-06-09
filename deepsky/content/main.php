@@ -62,7 +62,7 @@ if ($loggedUser) {
 
 	// Add icon for 'Create list'
 	echo " <div class=\"col-sm-2 col-md-2\">";
-	echo "   <a class=\"thumbnail thumbnail-no-border\" href=\"" . $baseURL . "index.php?indexAction=add_list\">";
+	echo "   <a class=\"thumbnail thumbnail-no-border\" data-toggle=\"modal\" data-target=\"#addList\">";
 	echo "    <img src=\"" . $baseURL . "images/clipboard.png\">";
 	echo "    <div class=\"caption\">";
 	echo "     <h4 class=\"text-center\">" . LangAddList . "</h4>";
