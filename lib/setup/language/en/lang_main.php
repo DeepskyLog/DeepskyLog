@@ -3,6 +3,7 @@
 define("LangAddNewList", "Observing list");
 define("LangNewDrawings", "New drawings");
 define("LangAddList", "Create list");
+define("LangAddObservingList", "Create a new observing list");
 define("LangViewLenses", "My lenses");
 define("LangViewFilters", "My filters");
 define("LangViewEyepieces", "My eyepieces");

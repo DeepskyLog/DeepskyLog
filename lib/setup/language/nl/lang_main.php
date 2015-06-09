@@ -3,6 +3,7 @@
 define("LangAddNewList", "Waarneemlijst");
 define("LangNewDrawings", "Nieuwe tekeningen");
 define("LangAddList", "Maak lijst aan");
+define("LangAddObservingList", "Maak een nieuwe waarneemlijst aan");
 define("LangViewLenses", "Mijn lenzen");
 define("LangViewFilters", "Mijn filers");
 define("LangViewEyepieces", "Mijn oculairs");
