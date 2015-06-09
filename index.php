@@ -2,6 +2,7 @@
 // index.php
 // main entrance to DeepskyLog
 try {
+	global $loggedUser;
 	$inIndex = true;
 	$language = "nl";
 	if (! array_key_exists ( 'indexAction', $_GET ) && array_key_exists ( 'indexAction', $_POST ))
@@ -85,11 +86,10 @@ if ($includeFile == 'deepsky/content/view_catalogs.php') {
 }
 echo "</script>";
 
-// TODO: Check if we are logged in.
 // TODO: Adapt the modal.
 // TODO: Make sure the modal works.
 // if(isset()
-if ($_SESSION ['module'] == 'deepsky') {
+if ($_SESSION ['module'] == 'deepsky' && $loggedUser) {
 	echo "<div class=\"modal fade\" id=\"addList\">
         <div class=\"modal-dialog\">
          <div class=\"modal-content\">
