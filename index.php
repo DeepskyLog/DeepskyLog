@@ -105,11 +105,11 @@ if ($_SESSION ['module'] == 'deepsky' && $loggedUser) {
              <input type=\"text\" name=\"addlistname\" class=\"form-control\" required autofocus>
              <br /><br />
              <input type=\"checkbox\" name=\"PublicList\" value=\"" . LangToListPublic . "\" />&nbsp;" . LangToListPublic . "
-			</form>
-          </div>
-          <div class=\"modal-footer\">
-           <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
-           <button type=\"button\" class=\"btn btn-primary\">" . LangAddList . "</button>
+            </div>
+            <div class=\"modal-footer\">
+            <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
+            <input class=\"btn btn-success\" type=\"submit\" name=\"addList\" value=\"" . LangAddList . "\" /></button>
+		   </form>
           </div>
          </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
