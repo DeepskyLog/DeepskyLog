@@ -1,5 +1,7 @@
 <?php //GE
 // This is version 5.0
+define("LangToListPublic", "Make this list a public list");
+define("LangNameNewList", "Name for the new observing list");
 define("LangAddNewList", "Observing list");
 define("LangNewDrawings", "New drawings");
 define("LangAddList", "Create list");
@@ -865,7 +867,6 @@ define("LangToListRenamed"																,"The list is renamed in \"");
 define("LangToListAddNew"																	,"Neue Liste: ");
 define("LangToListAdd"																		,"Hinzuf&uuml;gen");
 define("LangToListRename"																	,"Umbenennen");
-define("LangToListPublic"																	,"&Ouml;ffentliche Liste");
 define("LangToListEmpty"																	,"Liste l&Ouml;schen");
 define("LangToListMyLists"																,"Meine Listen: ");
 define("LangToListMyListsView"														,"Bearbeiten");

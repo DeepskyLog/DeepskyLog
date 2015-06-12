@@ -1,5 +1,6 @@
 <?php //EN
 // This is version 5.0
+define("LangNameNewList", "Name for the new observing list");
 define("LangAddNewList", "Observing list");
 define("LangNewDrawings", "New drawings");
 define("LangAddList", "Create list");
@@ -856,7 +857,7 @@ define("LangToListNotExists"															,"\" does not exist.");
 define("LangToListAddNew"																	,"New list: ");
 define("LangToListAdd"																		,"Add");
 define("LangToListRename"																	,"Rename");
-define("LangToListPublic"																	,"Public List");
+define("LangToListPublic"																	,"Make this list a public list");
 define("LangToListEmpty"																	,"Empty the List");
 define("LangToListMyLists"																,"My lists: ");
 define("LangToListMyListsView"														,"Consult");

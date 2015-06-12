@@ -98,11 +98,18 @@ if ($_SESSION ['module'] == 'deepsky' && $loggedUser) {
            <h4 class=\"modal-title\">" . LangAddObservingList . "</h4>
           </div>
           <div class=\"modal-body\">
-           <p>One fine body&hellip;</p>
+           <!-- Ask for the name of the list. -->
+           <h1 class=\"text-center login-title\">" . LangNameNewList . "</h1>
+            <form action=\"".$baseURL."index.php?indexAction=listaction\">
+             <input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />
+             <input type=\"text\" name=\"addlistname\" class=\"form-control\" required autofocus>
+             <br /><br />
+             <input type=\"checkbox\" name=\"PublicList\" value=\"" . LangToListPublic . "\" />&nbsp;" . LangToListPublic . "
+			</form>
           </div>
           <div class=\"modal-footer\">
            <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
-           <button type=\"button\" class=\"btn btn-primary\">Save changes</button>
+           <button type=\"button\" class=\"btn btn-primary\">" . LangAddList . "</button>
           </div>
          </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->

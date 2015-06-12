@@ -1,5 +1,7 @@
 <?php //NL
 // This is version 5.0
+define("LangToListPublic", "Maak van deze lijst een publieke lijst");
+define("LangNameNewList", "Naam voor de nieuwe waarneemlijst");
 define("LangAddNewList", "Waarneemlijst");
 define("LangNewDrawings", "Nieuwe tekeningen");
 define("LangAddList", "Maak lijst aan");
@@ -844,7 +846,6 @@ define("LangToListRenamed"																, "De lijst noemt nu \"");
 define("LangToListAddNew"																	, "Nieuwe lijst: ");
 define("LangToListAdd"																		, "Voeg toe");
 define("LangToListRename"																	, "Hernoem");
-define("LangToListPublic"																	, "Publieke lijst");
 define("LangToListEmpty"																	, "Lijst leeg maken");
 define("LangToListMyLists"																, "Mijn lijsten: ");
 define("LangToListMyListsView"														, "Bekijk");
