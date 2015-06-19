@@ -189,9 +189,10 @@ class Lists {
 		return $objDatabase->selectSingleArray ( "SELECT DISTINCT observerobjectlist.listname FROM observerobjectlist WHERE observerid = \"" . $loggedUser . "\"", 'listname' );
 	}
 	public function showLists($public = false) {
+		global $objUtil;
+		
 		// Get all the lists of the observer
 		$lists = $this->getMyLists ();
-		
 		
 		if ($public) {
 			foreach ( $lists as $list ) {
@@ -208,7 +209,36 @@ class Lists {
 				}
 			}
 		}
-		print_r ( $results );
+		
+		echo "<table class=\"table sort-tableobjectlist table-condensed table-striped table-hover tablesorter custom-popup\">";
+		echo "<thead>";
+		echo "<th>";
+		echo LangListName;
+		echo "</th>";
+		echo "</thead>";
+		echo "<tbody>";
+		
+		foreach ( $results as $listname ) {
+			if ($listname != "") {
+				echo "<tr>";
+				echo "<td>";
+				
+				echo $listname;
+				
+				echo "</td>";
+				echo "</tr>";
+			}
+		}
+		
+		echo "</tbody></table>";
+		
+		$tablename = "observinglist";
+		if ($public) {
+			$tablename .= "Public";
+		}
+		echo $objUtil->addTablePager ( $tablename );
+		
+		echo $objUtil->addTableJavascript ( $tablename );
 	}
 	public function getObjectsFromList($theListname) {
 		global $objObject, $objDatabase, $loggedUser;

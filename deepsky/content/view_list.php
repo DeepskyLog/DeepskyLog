@@ -24,4 +24,5 @@
   $objList->showLists(false);
   
   // TODO: Show button to move from private to public list.
+  // TODO: Make it possible to rename lists.
 ?>
