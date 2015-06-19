@@ -219,6 +219,9 @@ class Lists {
  		echo "<thead>";
 		echo "<tr><th>";
 		echo LangListName;
+		echo "</th>";
+		echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">";
+		echo LangChangeName;
 		echo "</th></tr>";
  		echo "</thead>";
  		echo "<tbody>";
@@ -238,7 +241,15 @@ class Lists {
 				echo "</td>";
 				
 				// TODO: Add a button to change the name.
+				echo "<td style=\"vertical-align: middle\">";
 				
+				echo "<button type=\"button\" title=\"" . LangChangeName . "\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#changeListName" . str_replace(' ', '_', $listname) . "\" >
+                 <span class=\"glyphicon glyphicon-pencil\"></span>
+                </button>";
+				
+				
+				echo "</td>";
+
 				// TODO: Add a button to make Public / private
 				echo "</tr>";
 			}

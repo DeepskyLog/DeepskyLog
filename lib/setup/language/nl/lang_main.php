@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("LangChangeName", "Verander naam");
 define("LangActiveList", "Actieve lijst");
 define("LangActiveList1", " is jouw actieve lijst. Je kan objecten zoeken en deze toevoegen aan jouw actieve lijst (");
 define("LangActiveList2", "Je hebt geen actieve lijst geselecteerd. Kies &eacute;&eacute;n van de lijsten om deze lijst actief te maken. Je kan objecten zoeken en deze toevoegen aan jouw actieve lijsten.");
