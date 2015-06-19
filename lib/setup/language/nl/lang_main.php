@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("LangPrivateLists", "Private lijsten van ");
 define("LangPublicLists", "Publieke lijsten van ");
 define("LangViewLists", "Mijn waarneemlijsten");
 define("LangToListPublic", "Maak van deze lijst een publieke lijst");

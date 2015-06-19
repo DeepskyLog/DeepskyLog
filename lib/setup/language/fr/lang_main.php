@@ -1,5 +1,6 @@
 <?php //FR
 // This is version 5.0
+define("LangPrivateLists", "Private lists of ");
 define("LangPublicLists", "Public lists of ");
 define("LangViewLists", "My observing lists");
 define("LangToListPublic", "Make this list a public list");
