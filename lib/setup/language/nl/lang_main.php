@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("LangViewLists", "Mijn waarneemlijsten");
 define("LangToListPublic", "Maak van deze lijst een publieke lijst");
 define("LangNameNewList", "Naam voor de nieuwe waarneemlijst");
 define("LangAddNewList", "Waarneemlijst");

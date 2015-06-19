@@ -1,5 +1,6 @@
 <?php //EN
 // This is version 5.0
+define("LangViewLists", "My observing lists");
 define("LangNameNewList", "Name for the new observing list");
 define("LangAddNewList", "Observing list");
 define("LangNewDrawings", "New drawings");

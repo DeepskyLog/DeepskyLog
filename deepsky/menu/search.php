@@ -24,6 +24,7 @@ function menu_search() {
 		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=result_selected_observations&amp;observer=" . urlencode ( $loggedUser ) . "\">" . LangSearchMenuItem1 . "</a></li>";
 		echo "<li><a href=\"" . $baseURL . "index.php?indexAction=result_selected_sessions&amp;observer=" . urlencode ( $loggedUser ) . "\">" . LangSearchMenuItem11 . "</a></li>";
 	}
+	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=view_lists\">" . LangViewLists . "</a></li>";
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=result_selected_sessions\">" . LangSearchMenuItem12 . "</a></li>";
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=view_instruments\">" . LangViewInstruments . "</a></li>";
 	echo "  <li><a href=\"" . $baseURL . "index.php?indexAction=view_sites\">" . LangViewLocations . "</a></li>";

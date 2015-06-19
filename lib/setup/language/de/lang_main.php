@@ -1,5 +1,6 @@
 <?php //GE
 // This is version 5.0
+define("LangViewLists", "My observing lists");
 define("LangToListPublic", "Make this list a public list");
 define("LangNameNewList", "Name for the new observing list");
 define("LangAddNewList", "Observing list");
