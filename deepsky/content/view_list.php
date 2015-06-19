@@ -2,9 +2,13 @@
   global $loggedUser, $loggedUserName;
   
   // First, we show the public lists of the observer.
-  echo "<h2>" . LangPublicLists . $loggedUserName . "</h2>";
+  echo "<h2>" . LangPublicLists . $loggedUserName;
   
-  // TODO: Add a button to add a new list.
+  // Add a button to add a new list.
+  echo " <a class=\"btn btn-success pull-right\" data-toggle=\"modal\" data-target=\"#addList\">
+  		 <span class=\"glyphicon glyphicon-plus\"></span>&nbsp;" . LangAddObservingList . "</a>" . "</h2>";
+  
+  
   // TODO: Show all public lists
   // TODO: Show button to move from public to private list.
   // TODO: Show all personal lists
