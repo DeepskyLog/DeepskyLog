@@ -86,9 +86,7 @@ if ($includeFile == 'deepsky/content/view_catalogs.php') {
 }
 echo "</script>";
 
-// TODO: Adapt the modal.
-// TODO: Make sure the modal works.
-// if(isset()
+// Modal to make a new list
 if ($_SESSION ['module'] == 'deepsky' && $loggedUser) {
 	echo "<div class=\"modal fade\" id=\"addList\">
         <div class=\"modal-dialog\">

@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("LangNewNameList", "Nieuwe naam voor de waarneemlijst");
 define("LangChangeName", "Verander naam");
 define("LangActiveList", "Actieve lijst");
 define("LangActiveList1", " is jouw actieve lijst. Je kan objecten zoeken en deze toevoegen aan jouw actieve lijst (");

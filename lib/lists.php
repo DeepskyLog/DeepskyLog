@@ -209,22 +209,22 @@ class Lists {
 				}
 			}
 		}
-
+		
 		$tablename = "obslist";
 		if ($public) {
 			$tablename .= "pub";
 		}
 		
 		echo "<table class=\"table sort-table" . $tablename . " table-condensed table-striped table-hover tablesorter custom-popup\">";
- 		echo "<thead>";
+		echo "<thead>";
 		echo "<tr><th>";
 		echo LangListName;
 		echo "</th>";
 		echo "<th class=\"filter-false columnSelector-disable\" data-sorter=\"false\">";
 		echo LangChangeName;
 		echo "</th></tr>";
- 		echo "</thead>";
- 		echo "<tbody>";
+		echo "</thead>";
+		echo "<tbody>";
 		
 		foreach ( $results as $listname ) {
 			if ($listname != "") {
@@ -233,34 +233,79 @@ class Lists {
 				
 				// Add a link to see and activate the list.
 				echo "<a href=\"" . $baseURL . "index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . $listname . "\">";
-								
+				
 				echo $listname;
 				
 				echo "</a>";
 				
 				echo "</td>";
 				
-				// TODO: Add a button to change the name.
+				// Add a button to change the name.
 				echo "<td style=\"vertical-align: middle\">";
 				
-				echo "<button type=\"button\" title=\"" . LangChangeName . "\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#changeListName" . str_replace(' ', '_', $listname) . "\" >
-                 <span class=\"glyphicon glyphicon-pencil\"></span>
-                </button>";
-				
+				echo "<button type=\"button\" title=\"" . LangChangeName . "\" class=\"btn btn-default\" data-toggle=\"modal\" data-target=\"#changeListName" . str_replace ( ' ', '_', str_replace ( ':', '_', $listname ) ) . "\" >
+                       <span class=\"glyphicon glyphicon-pencil\"></span>
+                      </button>";
 				
 				echo "</td>";
-
+				
 				// TODO: Add a button to make Public / private
+				
+				// TODO: Add a button to remove the list.
+				
+				// TODO: Check if we change the name, that a public list stays a public list. 
+				// TODO: Check if we change the name, that the name is indeed changed.
+				// TODO: Check if we change the name, that we can change the list from public to private.
 				echo "</tr>";
 			}
 		}
-
+		
 		echo "</tbody>";
 		echo "</table>";
-
+		
 		echo $objUtil->addTablePager ( $tablename );
-
+		
 		echo $objUtil->addTableJavascript ( $tablename );
+		
+		foreach ( $results as $listname ) {
+			if ($listname != "") {
+				echo "<div class=\"modal fade\" id=\"changeListName" . str_replace ( ' ', '_', str_replace ( ':', '_', $listname ) ) . "\">
+                       <div class=\"modal-dialog\">
+                        <div class=\"modal-content\">
+                         <div class=\"modal-header\">
+                          <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>
+                          <h4 class=\"modal-title\">" . LangChangeName . "</h4>
+                         </div>
+                         <div class=\"modal-body\">
+                          <!-- Ask for the new name of the list. -->
+                          <h1 class=\"text-center login-title\">" . LangNewNameList . "</h1>
+                          <form action=\"" . $baseURL . "index.php?indexAction=listaction\">
+                           <input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
+				if (substr ( $listname, 0, 7 ) == "Public:") {
+					$listToPrint = substr ( $listname, 8 );
+					$publicList = true;
+				} else {
+					$listToPrint = $listname;
+					$publicList = false;
+				}
+				echo "     <input type=\"text\" name=\"addlistname\" class=\"form-control\" required autofocus value=\"" . $listToPrint . "\">
+                           <br /><br />
+                           <input type=\"checkbox\" ";
+				if ($publicList) {
+					echo "checked ";
+				}
+				echo "    name=\"PublicList\" value=\"" . LangToListPublic . "\" />&nbsp;" . LangToListPublic . "
+                          </div>
+                          <div class=\"modal-footer\">
+                           <button type=\"button\" class=\"btn btn-default\" data-dismiss=\"modal\">Close</button>
+                           <input class=\"btn btn-success\" type=\"submit\" name=\"renameList\" value=\"" . LangToListRename . "\" /></button>
+   		                  </form>
+                         </div>
+                        </div><!-- /.modal-content -->
+                       </div><!-- /.modal-dialog -->
+                      </div><!-- /.modal -->";
+			}
+		}
 	}
 	public function getObjectsFromList($theListname) {
 		global $objObject, $objDatabase, $loggedUser;

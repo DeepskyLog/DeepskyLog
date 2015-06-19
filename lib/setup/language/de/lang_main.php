@@ -1,5 +1,6 @@
 <?php //GE
 // This is version 5.0
+define("LangNewNameList", "New name for the observing list");
 define("LangChangeName", "Change name");
 define("LangActiveList", "Active list");
 define("LangActiveList1", " is your active list. You can search for objects and add these objects to your active list (");
