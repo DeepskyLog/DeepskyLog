@@ -11,8 +11,6 @@
   // Show all public lists
   $objList->showLists(true);
 
-  // TODO: Show button to move from public to private list.
-
   // We show the private lists of the observer.
   echo "<h2>" . LangPrivateLists . $loggedUserName;
   
@@ -22,7 +20,4 @@
 
   // Show all personal lists
   $objList->showLists(false);
-  
-  // TODO: Show button to move from private to public list.
-  // TODO: Make it possible to rename lists.
 ?>

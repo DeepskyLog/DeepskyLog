@@ -209,35 +209,42 @@ class Lists {
 				}
 			}
 		}
+
+		$tablename = "obslist";
+		if ($public) {
+			$tablename .= "pub";
+		}
 		
-		echo "<table class=\"table sort-tableobjectlist table-condensed table-striped table-hover tablesorter custom-popup\">";
-		echo "<thead>";
-		echo "<th>";
+		echo "<table class=\"table sort-table" . $tablename . " table-condensed table-striped table-hover tablesorter custom-popup\">";
+ 		echo "<thead>";
+		echo "<tr><th>";
 		echo LangListName;
-		echo "</th>";
-		echo "</thead>";
-		echo "<tbody>";
+		echo "</th></tr>";
+ 		echo "</thead>";
+ 		echo "<tbody>";
 		
 		foreach ( $results as $listname ) {
 			if ($listname != "") {
 				echo "<tr>";
 				echo "<td>";
 				
+				// TODO: Add a link to see the list.
 				echo $listname;
 				
 				echo "</td>";
+				
+				// TODO: Add a button to change the name.
+				
+				// TODO: Add a button to make Public / private
 				echo "</tr>";
 			}
 		}
-		
-		echo "</tbody></table>";
-		
-		$tablename = "observinglist";
-		if ($public) {
-			$tablename .= "Public";
-		}
+
+		echo "</tbody>";
+		echo "</table>";
+
 		echo $objUtil->addTablePager ( $tablename );
-		
+
 		echo $objUtil->addTableJavascript ( $tablename );
 	}
 	public function getObjectsFromList($theListname) {
