@@ -229,9 +229,15 @@ class Lists {
 				echo "<td>";
 				
 				// TODO: Add a link to see the list.
+				echo "<a href=\"" . $baseURL . "index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . $listname . "\">";
+								
 				echo $listname;
 				
+				echo "</a>";
+				
 				echo "</td>";
+				
+				// TODO: Show active list and go to the list.
 				
 				// TODO: Add a button to change the name.
 				
