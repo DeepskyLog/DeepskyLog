@@ -53,8 +53,12 @@ function tolist() {
 			$content1 .= "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\">" . LangToListMyListsRemove . "</a>  ";
 			$content1 .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;addobservationstolist=longest\">" . LangToListMyListsAddLongestObsDescription . "</a>  ";
 			$content1 .= "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeobservationsfromlist=all\">" . LangToListMyListsRemoveObsDescription . "</a>";
-		} else
-			$content1 = "(" . LangToListListBy . $objObserver->getObserverProperty ( ($listowner = $objList->getListOwner ()), 'firstname' ) . ' ' . $objObserver->getObserverProperty ( $listowner, 'name' ) . ")";
+		} else {
+			// Add a link to send a message to the creator of the list.
+ 			$name = LangToListListBy . "<a href=\"" . $baseURL . "/index.php?indexAction=new_message&receiver=" . ($listowner = $objList->getListOwner () ). "\">";
+ 			$name .= $objObserver->getObserverProperty ( $listowner, 'firstname' ) . ' ' . $objObserver->getObserverProperty ( $listowner, 'name' ) . "</a>";
+ 			$content1 = "(" . $name . ")";
+		}
 		$content1 .= "  <a class=\"btn btn-success\" href=\"" . $link . "&amp;noShowName=noShowName\">" . LangListQueryObjectsMessage17 . "</a>";
 		echo $content1;
 		
