@@ -565,9 +565,6 @@ function instructions()
 	}
 	if($objUtil->checkGetKey('addList')&&($listnameToAdd=$objUtil->checkGetKey('addlistname')))
 	{ unset($_SESSION['QobjParams']);
-	  if(array_key_exists("PublicList",$_GET))
-	    if(substr($listnameToAdd,0,7)!="Public:")
-	      $listnameToAdd="Public: ".$listnameToAdd;  
 	  if($objList->checkList($listnameToAdd)!=0)
 	    $entryMessage.=LangToListList.stripslashes($listnameToAdd).LangToListExists;
 	  else
@@ -583,9 +580,6 @@ function instructions()
 	if($objUtil->checkGetKey('renameList')&&($listnameToAdd=$objUtil->checkGetKey('addlistname'))&&$myList)
 	{ unset($_SESSION['QobjParams']);
 	  $listnameTo=$_GET['addlistname'];
-	  if(array_key_exists("PublicList",$_GET))
-		  if(substr($listnameTo,0,7)!="Public:")
-		    $listnameTo="Public: ".$listnameTo;  
 	  if($objList->checkList($listnameTo)!=0)
 	     $entryMessage.=LangToListList.stripslashes($listnameTo).LangToListExists;
 	  else
