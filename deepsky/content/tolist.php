@@ -47,6 +47,8 @@ function tolist() {
 				$link .= '&amp;' . urlencode ( $key ) . '=' . urlencode ( $value );
 		echo "<h4>" . LangSelectedObjectsTitle . " " . $listname_ss . "</h4>";
 		$content1 = "";
+		$listowner = $objList->getListOwner ();
+		
 		if ($myList) {
 			$content1 = "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=import_csv_list\">" . LangToListImport . "</a>  ";
 			$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;emptyList=emptyList\">" . LangToListEmpty . "</a>  ";
@@ -54,14 +56,26 @@ function tolist() {
 			$content1 .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;addobservationstolist=longest\">" . LangToListMyListsAddLongestObsDescription . "</a>  ";
 			$content1 .= "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeobservationsfromlist=all\">" . LangToListMyListsRemoveObsDescription . "</a>";
 		} else {
+			// Show a picture of the creator of the list.
+			$dir = opendir ( $instDir . 'common/observer_pics' );
+			while ( FALSE !== ($file = readdir ( $dir )) ) {
+				if (("." == $file) or (".." == $file))
+					continue; // skip current directory and directory above
+				if (fnmatch ( $listowner . ".gif", $file ) || fnmatch ( $listowner . ".jpg", $file ) || fnmatch ( $listowner . ".png", $file )) {
+					echo "<img height=\"72\" src=\"" . $baseURL . "/common/observer_pics/" . $file . "\" class=\"img-rounded pull-right\">";
+				}
+			}
+			
 			// Add a link to send a message to the creator of the list.
- 			$name = LangToListListBy . "<a href=\"" . $baseURL . "/index.php?indexAction=new_message&receiver=" . ($listowner = $objList->getListOwner () ). "\">";
- 			$name .= $objObserver->getObserverProperty ( $listowner, 'firstname' ) . ' ' . $objObserver->getObserverProperty ( $listowner, 'name' ) . "</a>";
- 			$content1 = "(" . $name . ")";
+			$name = LangToListListBy . "<a href=\"" . $baseURL . "/index.php?indexAction=new_message&receiver=" . $listowner . "\">";
+			$name .= $objObserver->getObserverProperty ( $listowner, 'firstname' ) . ' ' . $objObserver->getObserverProperty ( $listowner, 'name' ) . "</a>";
+			$content1 = "(" . $name . ")";
 		}
 		$content1 .= "  <a class=\"btn btn-success\" href=\"" . $link . "&amp;noShowName=noShowName\">" . LangListQueryObjectsMessage17 . "</a>";
+		
 		echo $content1;
 		
+		echo "<br /><br /><br />";
 		if (count ( $_SESSION ['Qobj'] ) > 0) { // OUTPUT RESULT
 			echo "<hr />";
 			$objObject->showObjects ( $link, '', 1, "removePageObjectsFromList", "tolist" );

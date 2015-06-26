@@ -249,8 +249,8 @@ class Lists {
 				
 				echo "</td>";
 				
-				// TODO: When showing a Public list, you see the name of the creator of the list. Add a picture and a link to write a message.
-				// TODO: Make DeepskyLog work without the 'Public' string in front of the name.
+				// TODO: When showing a (Public) list, change the 'Switch Names' button: Issue #294. (in tolist.php)
+				// TODO: Make DeepskyLog work without the 'Public' string in front of the name -> search for "Public: " in the sourcecode and TEST, TEST, TEST
 
 				// TODO: Check if we change the name, that a public list stays a public list.
 				// TODO: Check if we change the name, that the name is indeed changed.
