@@ -389,8 +389,13 @@ class Lists {
 			unset ( $_SESSION ['QobjParams'] );
 	}
 	public function renameList($nameFrom, $nameTo) {
+		// TODO: Make the selection of the list show the Public lists again.
+		// TODO: Move Public to the language files
+		// TODO: Make DeepskyLog work without the 'Public' string in front of the name
+		// TODO: Update the database for Docker to use the new 'public field'
 		global $loggedUser, $objDatabase, $myList, $objMessages, $objObserver, $baseURL;
-		if ($loggedUser && $myList) { // Send mail when we are creating a public list
+		if ($loggedUser && $myList) { 
+			// Send mail when we are creating a public list
 			$pos = strpos ( $nameTo, "Public" );
 			$posOld = strpos ( $nameFrom, "Public" );
 			
