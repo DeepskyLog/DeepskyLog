@@ -27,7 +27,7 @@ function menu_list() {
 		$result1 [] = $get->listname;
 		$get = $run->fetch ( PDO::FETCH_OBJ );
 	}
-	$sql = "SELECT DISTINCT observerobjectlist.listname " . "FROM observerobjectlist " . "WHERE observerid <> \"" . $loggedUser . "\"" . "AND listname LIKE \"Public: %\" ORDER BY observerobjectlist.listname";
+	$sql = "SELECT DISTINCT observerobjectlist.listname " . "FROM observerobjectlist " . "WHERE observerid <> \"" . $loggedUser . "\"" . "AND public=\"1\" ORDER BY observerobjectlist.listname";
 	$run = $objDatabase->selectRecordset ( $sql );
 	$get = $run->fetch ( PDO::FETCH_OBJ );
 	echo "&nbsp;&nbsp;";
@@ -42,10 +42,15 @@ function menu_list() {
 		if ((! array_key_exists ( 'listname', $_SESSION )) || (! $_SESSION ['listname']))
 			$_SESSION ['listname'] = "----------";
 		while ( list ( $key, $value ) = each ( $result ) ) {
+			if (in_array($value, $result2)) {
+				$listname = LangPublicList . $value;
+			} else {
+				$listname = $value;
+			}
 			if ((($value == $_SESSION ['listname']) && $myList) || ((! $myList) && ($value == "----------")))
-				echo ("<option selected=\"selected\" value=\"" . $baseURL . "index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . $value . "\">" . $value . "</option>");
+				echo ("<option selected=\"selected\" value=\"" . $baseURL . "index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . $value . "\">" . $listname . "</option>");
 			elseif (! (array_key_exists ( 'removeList', $_GET ) && ($_SESSION ['listname'] == $value)))
-				echo ("<option value=\"" . $baseURL . "index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . $value . "\">" . $value . "</option>");
+				echo ("<option value=\"" . $baseURL . "index.php?indexAction=listaction&amp;activateList=true&amp;listname=" . $value . "\">" . $listname . "</option>");
 		}
 		echo "</select>";
 	}

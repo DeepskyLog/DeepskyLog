@@ -1,5 +1,6 @@
 <?php //NL
 // This is version 5.0
+define("LangPublicList", "Publiek: ");
 define("LangNewNameList", "Nieuwe naam voor de waarneemlijst");
 define("LangChangeName", "Verander naam");
 define("LangActiveList", "Actieve lijst");

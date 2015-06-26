@@ -1,5 +1,6 @@
 <?php //SV
 // This is version 5.0
+define("LangPublicList", "Public: ");
 define("LangNewNameList", "New name for the observing list");
 define("LangChangeName", "Change name");
 define("LangActiveList", "Active list");
