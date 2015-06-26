@@ -4,7 +4,7 @@ define("LangPublicList", "Publiek: ");
 define("LangNewNameList", "Nieuwe naam voor de waarneemlijst");
 define("LangChangeName", "Verander naam");
 define("LangActiveList", "Actieve lijst");
-define("LangActiveList1", " is jouw actieve lijst. Je kan objecten zoeken en deze toevoegen aan jouw actieve lijst (");
+define("LangActiveList1", " is jouw actieve lijst. Je kan objecten zoeken en deze toevoegen aan deze lijst.");
 define("LangActiveList2", "Je hebt geen actieve lijst geselecteerd. Kies &eacute;&eacute;n van de lijsten om deze lijst actief te maken. Je kan objecten zoeken en deze toevoegen aan jouw actieve lijsten.");
 define("LangListName", "Naam");
 define("LangPrivateLists", "Private lijsten van ");

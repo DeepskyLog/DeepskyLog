@@ -197,14 +197,14 @@ class Lists {
 		if ($public) {
 			foreach ( $lists as $list ) {
 				// Only add the public lists to the results
-				if (substr ( $list, 0, 7 ) == "Public:") {
+				if ($this->isPublic ( $list )) {
 					$results [] = $list;
 				}
 			}
 		} else {
 			foreach ( $lists as $list ) {
 				// Only add the private lists to the results
-				if (substr ( $list, 0, 7 ) != "Public:") {
+				if (! $this->isPublic ( $list )) {
 					$results [] = $list;
 				}
 			}
@@ -249,13 +249,17 @@ class Lists {
 				
 				echo "</td>";
 				
+				// TODO: Make DeepskyLog work without the 'Public' string in front of the name
+				
+				// TODO: Check if we change the name, that a public list stays a public list.
+				// TODO: Check if we change the name, that the name is indeed changed.
+				// TODO: Check if we change the name, that we can change the list from public to private.
+				
 				// TODO: Add a button to make Public / private
 				
 				// TODO: Add a button to remove the list.
 				
-				// TODO: Check if we change the name, that a public list stays a public list. 
-				// TODO: Check if we change the name, that the name is indeed changed.
-				// TODO: Check if we change the name, that we can change the list from public to private.
+				// TODO: Update the database for Docker to use the new 'public field'
 				echo "</tr>";
 			}
 		}
@@ -388,13 +392,14 @@ class Lists {
 		if (array_key_exists ( 'QobjParams', $_SESSION ) && array_key_exists ( 'source', $_SESSION ['QobjParams'] ) && ($_SESSION ['QobjParams'] ['source'] == 'tolist'))
 			unset ( $_SESSION ['QobjParams'] );
 	}
+	public function isPublic($listName) {
+		global $objDatabase;
+		$sql = "SELECT public from observerobjectlist where listname=\"" . $listName . "\" AND public=\"1\";";
+		return $objDatabase->selectSingleValue ( $sql, "public", 0 );
+	}
 	public function renameList($nameFrom, $nameTo) {
-		// TODO: Make the selection of the list show the Public lists again.
-		// TODO: Move Public to the language files
-		// TODO: Make DeepskyLog work without the 'Public' string in front of the name
-		// TODO: Update the database for Docker to use the new 'public field'
 		global $loggedUser, $objDatabase, $myList, $objMessages, $objObserver, $baseURL;
-		if ($loggedUser && $myList) { 
+		if ($loggedUser && $myList) {
 			// Send mail when we are creating a public list
 			$pos = strpos ( $nameTo, "Public" );
 			$posOld = strpos ( $nameFrom, "Public" );

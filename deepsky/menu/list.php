@@ -12,7 +12,7 @@ elseif (! ($objUtil->checkAdminOrUserID ( $loggedUser )))
 else
 	menu_list ();
 function menu_list() {
-	global $baseURL, $loggedUser, $myList, $objDatabase;
+	global $baseURL, $loggedUser, $myList, $objDatabase, $objList;
 	echo "<form class=\"nav navbar-nav form-inline\">";
 	echo "<div class=\"form-group\">";
 	echo "<p class=\"navbar-text\">" . LangListsTitle;
@@ -42,7 +42,8 @@ function menu_list() {
 		if ((! array_key_exists ( 'listname', $_SESSION )) || (! $_SESSION ['listname']))
 			$_SESSION ['listname'] = "----------";
 		while ( list ( $key, $value ) = each ( $result ) ) {
-			if (in_array($value, $result2)) {
+			// If the list is a Public list, we add 'Public: ' to the name of the list.
+			if ($objList->isPublic($value)) {
 				$listname = LangPublicList . $value;
 			} else {
 				$listname = $value;

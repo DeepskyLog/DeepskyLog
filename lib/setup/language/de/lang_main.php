@@ -4,7 +4,7 @@ define("LangPublicList", "Public: ");
 define("LangNewNameList", "New name for the observing list");
 define("LangChangeName", "Change name");
 define("LangActiveList", "Active list");
-define("LangActiveList1", " is your active list. You can search for objects and add these objects to your active list (");
+define("LangActiveList1", " is your active list. You can search for objects and add these objects to this list.");
 define("LangActiveList2", "There is no active list. Select one of the lists to make that list active. You can search for objects and add these objects to your active lists.");
 define("LangListName", "Name");
 define("LangPrivateLists", "Private lists of ");
