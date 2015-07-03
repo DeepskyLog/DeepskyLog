@@ -249,16 +249,14 @@ class Lists {
 				
 				echo "</td>";
 				
-				// TODO: Remove the possibility to add a new list when viewing another list.
+				// TODO: Make DeepskyLog work without the 'Public' string in front of the name -> search for "Public: " in the sourcecode and TEST, TEST, TEST  
+				// TODO: Add a button to make Public / private
+				// TODO: Make the button to change 'public' / 'private' work in tolist.php
+
 				// TODO: Check if we change the name, that a public list stays a public list. (SEE tolist.php)
 				// TODO: Check if we change the name, that the name is indeed changed. (SEE tolist.php)
 				// TODO: Check if we change the name, that we can change the list from public to private. (SEE tolist.php)
-				
-				// TODO: Make DeepskyLog work without the 'Public' string in front of the name -> search for "Public: " in the sourcecode and TEST, TEST, TEST
 
-				
-				// TODO: Add a button to make Public / private
-				
 				// TODO: Add a button to remove the list.
 				
 				// TODO: Update the database for Docker to use the new 'public field'
