@@ -249,6 +249,8 @@ class Lists {
 				
 				echo "</td>";
 				
+				// TODO: Most active observers -> Does not work to change the catalog or list to see how much objects you have observed.
+				//      -> Has nothing to do with the lists... 
 				// TODO: Make DeepskyLog work without the 'Public' string in front of the name -> search for "Public: " in the sourcecode and TEST, TEST, TEST
 				// TODO: Add a button to make Public / private
 				// TODO: Make the button to change 'public' / 'private' work in tolist.php

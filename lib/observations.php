@@ -694,13 +694,14 @@ class Observations {
 	}
 	public function getObservedCountFromCatalogOrList($id, $catalog) {
 		global $objDatabase, $loggedUser;
-		if (substr ( $catalog, 0, 5 ) == 'List:')
+		if (substr ( $catalog, 0, 5 ) == 'List:') {
 			if (substr ( $catalog, 5, 7 ) == "Public:")
 				$sql = "SELECT COUNT(DISTINCT observations.objectname) AS CatCnt " . "FROM observations " . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " . "JOIN observers on observations.observerid = observers.id " . "WHERE observerobjectlist.listname=\"" . substr ( $catalog, 5 ) . "\" " . "AND observations.observerid=\"" . $id . "\" " . "AND observations.visibility != 7 ";
 			else
 				$sql = "SELECT COUNT(DISTINCT observations.objectname) AS CatCnt " . "FROM observations " . "JOIN observerobjectlist on observerobjectlist.objectname=observations.objectname " . "JOIN observers on observations.observerid = observers.id " . "WHERE observerobjectlist.listname=\"" . substr ( $catalog, 5 ) . "\" " . "AND observerobjectlist.observerid = \"" . $loggedUser . "\" " . "AND observations.observerid=\"" . $id . "\" " . "AND observations.visibility != 7 ";
-		else
+		} else {
 			$sql = "SELECT COUNT(DISTINCT objectnames.catindex) AS CatCnt FROM objectnames " . "INNER JOIN observations ON observations.objectname = objectnames.objectname " . "WHERE objectnames.catalog = \"" . $catalog . "\" " . "AND observations.observerid=\"" . $id . "\" " . "AND observations.visibility != 7 ";
+		}
 		return $objDatabase->selectSingleValue ( $sql, 'CatCnt', 0 );
 	}
 	public function getDrawingsCountFromCatalog($id, $catalog) {
