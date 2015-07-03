@@ -249,11 +249,13 @@ class Lists {
 				
 				echo "</td>";
 				
+				// TODO: Remove the possibility to add a new list when viewing another list.
+				// TODO: Check if we change the name, that a public list stays a public list. (SEE tolist.php)
+				// TODO: Check if we change the name, that the name is indeed changed. (SEE tolist.php)
+				// TODO: Check if we change the name, that we can change the list from public to private. (SEE tolist.php)
+				
 				// TODO: Make DeepskyLog work without the 'Public' string in front of the name -> search for "Public: " in the sourcecode and TEST, TEST, TEST
 
-				// TODO: Check if we change the name, that a public list stays a public list.
-				// TODO: Check if we change the name, that the name is indeed changed.
-				// TODO: Check if we change the name, that we can change the list from public to private.
 				
 				// TODO: Add a button to make Public / private
 				

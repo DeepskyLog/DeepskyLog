@@ -11,21 +11,6 @@ function tolist() {
 	global $baseURL, $loggedUser, $listname, $myList, $listname_ss, $FF, $step, $objObject, $objObserver, $objPresentations, $objUtil, $objList, $instDir;
 	echo "<script type=\"text/javascript\" src=\"" . $baseURL . "lib/javascript/presentation.js\"></script>";
 	echo "<div id=\"main\">";
-	if ($loggedUser) {
-		echo "<span class=\"form-inline\">";
-		echo "<form action=\"" . $baseURL . "index.php?indexAction=listaction\"><div>";
-		echo "<input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
-		$content1 = LangToListAddNew;
-		$content1 .= "<input type=\"text\" class=\"form-control\" name=\"addlistname\" value=\"\" />";
-		$content1 .= "&nbsp;<input type=\"checkbox\" name=\"PublicList\" value=\"" . LangToListPublic . "\" />" . LangToListPublic;
-		$content1 .= "<span class=\"pull-right\">&nbsp;<input class=\"btn btn-success\" type=\"submit\" name=\"addList\" value=\"" . LangToListAdd . "\" />&nbsp;";
-		if ($myList)
-			$content1 .= "&nbsp;<input class=\"btn btn-success\" type=\"submit\" name=\"renameList\" value=\"" . LangToListRename . "\" />&nbsp;";
-		echo "</span>";
-		echo $content1;
-		echo "</div></form></span>";
-		echo "<hr />";
-	}
 	if ($listname) {
 		$link = $baseURL . "index.php?indexAction=listaction";
 		reset ( $_GET );
@@ -50,11 +35,26 @@ function tolist() {
 		$listowner = $objList->getListOwner ();
 		
 		if ($myList) {
-			$content1 = "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=import_csv_list\">" . LangToListImport . "</a>  ";
-			$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;emptyList=emptyList\">" . LangToListEmpty . "</a>  ";
-			$content1 .= "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\">" . LangToListMyListsRemove . "</a>  ";
-			$content1 .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;addobservationstolist=longest\">" . LangToListMyListsAddLongestObsDescription . "</a>  ";
-			$content1 .= "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeobservationsfromlist=all\">" . LangToListMyListsRemoveObsDescription . "</a>";
+			$content1 = "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\"><span class=\"glyphicon glyphicon-remove\" aria-hidden=\"true\"></span>&nbsp;" . LangToListMyListsRemove . "</a>  ";
+			// TODO: Make renaming the list work!
+			$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\"><span class=\"glyphicon glyphicon-pencil\" aria-hidden=\"true\"></span>&nbsp;" . LangToListRename . "</a>  ";
+			// Add a button to change from private to public or vice-versa
+			// TODO: Make this button work!
+			if ($objList->isPublic($listname_ss)) {
+				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\"><span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>&nbsp;Make private</a>  ";
+			} else {
+				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\"><span class=\"glyphicon glyphicon-share\" aria-hidden=\"true\"></span>&nbsp;Make public</a>  ";
+			}
+			// Add a button to create a new list
+			$content1 .= "<a class=\"btn btn-success pull-right\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\"><span class=\"glyphicon glyphicon-plus\" aria-hidden=\"true\"></span>&nbsp;Add new list</a>  ";
+				
+			$content2 = "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=import_csv_list\">" . LangToListImport . "</a>  ";
+			$content2 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;emptyList=emptyList\">" . LangToListEmpty . "</a>  ";
+			$content2 .= "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;addobservationstolist=longest\">" . LangToListMyListsAddLongestObsDescription . "</a>  ";
+			$content2 .= "<a class=\"btn btn-danger\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeobservationsfromlist=all\">" . LangToListMyListsRemoveObsDescription . "</a>";
+			
+			echo $content1 . "<br /><br />";
+			echo $content2;
 		} else {
 			// Show a picture of the creator of the list.
 			$dir = opendir ( $instDir . 'common/observer_pics' );
@@ -69,10 +69,8 @@ function tolist() {
 			// Add a link to send a message to the creator of the list.
 			$name = LangToListListBy . "<a href=\"" . $baseURL . "/index.php?indexAction=new_message&receiver=" . $listowner . "\">";
 			$name .= $objObserver->getObserverProperty ( $listowner, 'firstname' ) . ' ' . $objObserver->getObserverProperty ( $listowner, 'name' ) . "</a>";
-			$content1 = "(" . $name . ")";
+			echo "(" . $name . ")";
 		}
-		
-		echo $content1;
 		
 		echo "<br /><br /><br />";
 		if (count ( $_SESSION ['Qobj'] ) > 0) { // OUTPUT RESULT
