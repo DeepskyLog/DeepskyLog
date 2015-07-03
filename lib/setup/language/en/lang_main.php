@@ -1,5 +1,6 @@
 <?php //EN
 // This is version 5.0
+define("LangNewList", "Add new list");
 define("LangListQueryObjectsMessage17"										,"Switch names and alternative names");
 define("LangPublicList", "Public: ");
 define("LangNewNameList", "New name for the observing list");

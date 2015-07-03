@@ -48,9 +48,11 @@ function tolist() {
 			} else {
 				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\"><span class=\"glyphicon glyphicon-share\" aria-hidden=\"true\"></span>&nbsp;Make public</a>  ";
 			}
+
 			// Add a button to create a new list
-			// TODO: Make this button work!
-			$content1 .= "<a class=\"btn btn-success pull-right\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\"><span class=\"glyphicon glyphicon-plus\" aria-hidden=\"true\"></span>&nbsp;Add new list</a>  ";
+			$content1 .= "<button type=\"button\" title=\"" . LangChangeName . "\" class=\"btn btn-success pull-right\" data-toggle=\"modal\" data-target=\"#addList\" >
+							<span class=\"glyphicon glyphicon-plus\"></span>&nbsp;" . LangNewList . "
+                      	  </button>&nbsp;";
 				
 			$content2 = "<a class=\"btn btn-success\" href=\"" . $baseURL . "index.php?indexAction=import_csv_list\">" . LangToListImport . "</a>  ";
 			$content2 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;emptyList=emptyList\">" . LangToListEmpty . "</a>  ";
