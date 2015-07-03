@@ -44,7 +44,7 @@ function tolist() {
 			
 			// Add a button to change from private to public or vice-versa
 			// TODO: Make this button work!
-			if ($objList->isPublic ( $listname_ss )) {
+			if ($objList->isPublic ( $listname )) {
 				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\"><span class=\"glyphicon glyphicon-user\" aria-hidden=\"true\"></span>&nbsp;Make private</a>  ";
 			} else {
 				$content1 .= "<a class=\"btn btn-warning\" href=\"" . $baseURL . "index.php?indexAction=listaction&amp;removeList=removeList\"><span class=\"glyphicon glyphicon-share\" aria-hidden=\"true\"></span>&nbsp;Make public</a>  ";
@@ -101,13 +101,9 @@ function tolist() {
                           <h1 class=\"text-center login-title\">" . LangNewNameList . "</h1>
                           <form action=\"" . $baseURL . "index.php?indexAction=listaction\">
                            <input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
-		if (substr ( $listname, 0, 7 ) == "Public:") {
-			$listToPrint = substr ( $listname, 8 );
-			$publicList = true;
-		} else {
-			$listToPrint = $listname;
-			$publicList = false;
-		}
+		
+		$publicList = $objList->isPublic ( $listname );
+		$listToPrint = $listname;
 		echo "     <input type=\"text\" name=\"addlistname\" class=\"form-control\" required autofocus value=\"" . $listToPrint . "\">
                            <br /><br />
                            <input type=\"checkbox\" ";

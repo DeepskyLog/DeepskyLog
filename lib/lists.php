@@ -249,14 +249,14 @@ class Lists {
 				
 				echo "</td>";
 				
-				// TODO: Make DeepskyLog work without the 'Public' string in front of the name -> search for "Public: " in the sourcecode and TEST, TEST, TEST  
+				// TODO: Make DeepskyLog work without the 'Public' string in front of the name -> search for "Public: " in the sourcecode and TEST, TEST, TEST
 				// TODO: Add a button to make Public / private
 				// TODO: Make the button to change 'public' / 'private' work in tolist.php
-
+				
 				// TODO: Check if we change the name, that a public list stays a public list. (SEE tolist.php)
 				// TODO: Check if we change the name, that the name is indeed changed. (SEE tolist.php)
 				// TODO: Check if we change the name, that we can change the list from public to private. (SEE tolist.php)
-
+				
 				// TODO: Add a button to remove the list.
 				
 				// TODO: Update the database for Docker to use the new 'public field'
@@ -285,13 +285,12 @@ class Lists {
                           <h1 class=\"text-center login-title\">" . LangNewNameList . "</h1>
                           <form action=\"" . $baseURL . "index.php?indexAction=listaction\">
                            <input type=\"hidden\" name=\"indexAction\" value=\"listaction\" />";
-				if (substr ( $listname, 0, 7 ) == "Public:") {
-					$listToPrint = substr ( $listname, 8 );
+				if ($this->isPublic ( $listname )) {
 					$publicList = true;
 				} else {
-					$listToPrint = $listname;
 					$publicList = false;
 				}
+				$listToPrint = $listname;
 				echo "     <input type=\"text\" name=\"addlistname\" class=\"form-control\" required autofocus value=\"" . $listToPrint . "\">
                            <br /><br />
                            <input type=\"checkbox\" ";
