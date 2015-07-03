@@ -522,8 +522,6 @@ function instructions()
 	    if(strpos($_SESSION["Qobj"][$key]["showname"],"("))
 	      $_SESSION["Qobj"][$key]["showname"]=substr($_SESSION["Qobj"][$key]["showname"],strpos($_SESSION["Qobj"][$key]["showname"],"(")+1,strpos($_SESSION["Qobj"][$key]["showname"],")")-strpos($_SESSION["Qobj"][$key]["showname"],"(")-1)." (".substr($_SESSION["Qobj"][$key]["showname"],0,strpos($_SESSION["Qobj"][$key]["showname"],"(")-1).")";
 	  reset($_SESSION["Qobj"]);
-	  if($_SESSION['QobjSort']=='showname')
-	    $_SESSION['QobjSort']='oldshowname';
 	}  
 	  
 	// ============================================================================ LIST COMMANDS
