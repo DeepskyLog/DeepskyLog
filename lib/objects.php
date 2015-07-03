@@ -616,7 +616,7 @@ class Objects {
 		global $loggedUser, $objDatabase, $baseURL, $dateformat;
 		
 		$ObsCnt = $objDatabase->selectSingleValue ( "SELECT COUNT(observations.id) As ObsCnt FROM observations WHERE objectname = \"" . $object . "\" AND visibility != 7 ", 'ObsCnt' );
-
+		
 		echo "<div class=\"row\">
 		       <div class=\"col-md-6\">";
 		echo "<table class=\"table table-bordered table-condensed table-striped table-hover table-responsive\">";
@@ -1618,8 +1618,9 @@ class Objects {
 		$theEphemerides ['altitude'] = $ristraset [3];
 		return $theEphemerides;
 	}
-	public function showObjects($link, $ownShow = '', $showRank = 0, $pageListAction = "addAllObjectsFromPageToList", $columnSource = "") // ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
-{
+	public function showObjects($link, $ownShow = '', $showRank = 0, $pageListAction = "addAllObjectsFromPageToList", $columnSource = "", $observingList = false) 
+	// ownShow => object to show in a different color (type3) in the list showRank = 0 for normal operation, 1 for List show, 2 for top objects
+	{
 		global $objFormLayout, $objAtlas, $objObserver, $objLocation, $myList, $listname, $listname_ss, $loggedUser, $baseURL, $objUtil, $objPresentations, $objList;
 		$atlas = '';
 		$c = 0;
@@ -1641,6 +1642,9 @@ class Objects {
 			}
 		}
 		
+		if ($observingList) {
+			echo "  <a class=\"btn btn-success\" href=\"" . $link . "&amp;noShowName=noShowName\">" . LangListQueryObjectsMessage17 . "</a>";
+		}
 		echo "<table class=\"table sort-tableobjectlist table-condensed table-striped table-hover tablesorter custom-popup\"  data-sortlist=\"[[" . $nameLocation . ",0]]\">";
 		echo "<thead>";
 		echo "<tr>";
@@ -1654,7 +1658,7 @@ class Objects {
 			elseif ($myList)
 				echo ("<th data-priority=\"1\" class=\"filter-false columnSelector-disable\" data-sorter=\"false\">" . LangList . "</td>");
 		}
-
+		
 		echo "<th data-priority=\"critical\" id=\"showname\">" . LangOverviewObjectsHeader1 . "</th>";
 		echo "<th data-priority=\"5\" id=\"objectconstellationfull\">" . LangOverviewObjectsHeader2 . "</th>";
 		echo "<th data-priority=\"9\" class=\"columnSelector-false\" id=\"objectconstellationfull\">" . LangOverviewObjectsHeader2Short . "</th>";
